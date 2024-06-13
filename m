@@ -1,750 +1,637 @@
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59E04084E;
-	Thu, 13 Jun 2024 04:27:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F6AA13440F;
+	Thu, 13 Jun 2024 06:17:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718252858; cv=none; b=W3wTJ/41nuc0vCee2ubMpe3qAVuN+xEiD+V/sQNjiYpvnADzObusNuAZPyXHGVEWr9QLaULl7NhveRswD50Vs256mBSxThBdaxob/UxAWRm6C2P2dSs93ejlQlKrs1fl7DaX3i7pMtzBGiH1jUvsTYqy8mbsuGG0Bch9UBz6RMU=
+	t=1718259470; cv=none; b=f/vC/cpwbPUDiliD8bbQ8F0tIz9eUqtwR0TBiYy8XD0a8dlp3MzUH6QNeGKO0nw+vmHViiZBa6Ped6/flcMXa7PbA/g7MkaMxwuQd02xtejKQN33vRNmA/PlznG7Vs+RRPNigzu8ZwIc2XkzkczUSxGk6Aj5iPqcowoM8fIBpKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718252858; c=relaxed/simple;
-	bh=q+/ZoOoPYnClF9t7L4f+xIrrziAS2Md2xj1u2vxqRPQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=D2QJ7jyyssYdaPp0FeYBX3jb8do3eaAAK+hjhWTW1RCtmouGvCUKK63RxX3yLKVT+rtQ6sQKcZtpPtrMTkQjn723E7G6rsjpgrarYwVj91+dPmNNraDpJgJGb6O6U0aXJaLhsrTToatPqIzSKHPReCary1SWbnhRbtPUjagFffo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aI0bqMZ8; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aI0bqMZ8"
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-627ebbefd85so6828597b3.3;
-        Wed, 12 Jun 2024 21:27:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718252855; x=1718857655; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=t+9kO1Bf8WBlBJp5UGjZvzU+fEXiJb+0qO6s4CUuqhY=;
-        b=aI0bqMZ8BU3qB4P6e0AjHZYw7R43AT/JEvrBllEWxctuIiTgfyLCPdkmowmKMxUVhi
-         tQWb3rT+DrT6RvdCL18yeLRNiv9p5N4Z4AQ5dW5yYS8OsvtGI2dEBf8TCCtGJm2tEHso
-         bIg4PNU+Zgg4GRm88RUebI+MUwIY/dGa8VSU4+DWoZxNyIjk7JSVGlYx+cxZM0ebl4kO
-         hBSo4+vWEB3NFW86xwzyuGXRSMHZVi8/wWekj/5h/UTNi5Q90aLJDuUShR/w0mavpML/
-         sv0otJzGxyOaqbF/oCcowlYC89TSRyhfzRxzHwr8fM89rCu8qtMzBpJu9DPABuZIiFHp
-         Xesw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718252855; x=1718857655;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=t+9kO1Bf8WBlBJp5UGjZvzU+fEXiJb+0qO6s4CUuqhY=;
-        b=gCU/Saf3iPDgGp11e1AJwQbEMX07fa2xUtNsfxQmGr1l6rq1o77lv4TyYPJ1CAbg4H
-         +tJLZXEDTzGpndbyZnwzMopN3CdrjG+SA7dqphW9WxjKYBxdn6gN/bAqjRjVVRe9IOrg
-         UGIN3pc9183uWtlifX8zsus82rSebfuqPOylSmcf3w93tq/PyVOGSua+4equgiEYmJgk
-         Qj4Cg16AuL6OqIubDuxchjWGRg2CzXiy26wTIiMPkbHlb4nH2db+XEY4XUUQpF+bLqG2
-         +L7IQaExpgEEwXCOCUjj3e9sugcU3RxERlgPLgZAfIMLibWtO6ojSgZmEVNOmBYR5Qgd
-         pm1A==
-X-Forwarded-Encrypted: i=1; AJvYcCW5+j9/d2BMH5qx8CQWRujvOQ35vIONR6eTX34ilYjaG5PX8IYHkm2HfhYUvaruTabtQPPlZ7iQaHImTv8dSdanpQ+MQoqxzTV2FEufgs7q2SXe46g0S8aJM+DTbiMh0N7XIpcfwoFz+Sh3ohENjYDAZgm5b8b80nsa/FibaSi1GcDBMxGvb9+60quZhThe0lVJtdu39QTFHgLLyAFhBa2GcUM/sVI5HpJ2hg==
-X-Gm-Message-State: AOJu0YxLWZhhRSZXaquybJkZ8ClBZGSYPiL+NIARzwY9TYV32AFGzSAF
-	uYap4ojbK+aGRh1TyZvxO1MbWKwpxa1yWuL+/U8Hn/qiS/k1wqJP
-X-Google-Smtp-Source: AGHT+IEGKZGby4tSb3umiNaFA6H7CDbHHfy1qVEq8enJBoBxgafNyPetFRWm1a9w7+caL8KuwPGfuQ==
-X-Received: by 2002:a05:690c:6612:b0:61b:14a8:7944 with SMTP id 00721157ae682-62fc9ebfa84mr46393657b3.39.1718252854478;
-        Wed, 12 Jun 2024 21:27:34 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.49.105])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f043f1sm3019005ad.204.2024.06.12.21.27.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jun 2024 21:27:34 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	mic@digikod.net,
-	gnoack@google.com,
-	linux-perf-users@vger.kernel.org,
+	s=arc-20240116; t=1718259470; c=relaxed/simple;
+	bh=KLpiAmqur20HWq3al7TvNFaUOZ9PR8NlsStEVB0QZyg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=miipNXL4JCEY8iLyjn5JSA1WEsPF913hUv4gq9LPRRnpLo6LVRPXyoS4nsKBNiBTguSQyS38QbWeEG0uDdfUTfzKrgvPms2Bj0qQrNyyTMQNjwcz9f9uz7WDD02I1wirIhdpQ8WPenmO5beWuSmTRzAa6DXykZcpvmGTlQemnBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACDEB1063;
+	Wed, 12 Jun 2024 23:18:09 -0700 (PDT)
+Received: from a077893.arm.com (unknown [10.163.44.128])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9085A3F5A1;
+	Wed, 12 Jun 2024 23:17:39 -0700 (PDT)
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH v4] perf trace: BTF-based enum pretty printing
-Date: Thu, 13 Jun 2024 12:27:47 +0800
-Message-ID: <20240613042747.3770204-1-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V18 0/9] arm64/perf: Enable branch stack sampling
+Date: Thu, 13 Jun 2024 11:47:22 +0530
+Message-Id: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-changes in v4:
+This series enables perf branch stack sampling support on arm64 platform
+via a new arch feature called Branch Record Buffer Extension (BRBE). All
+the relevant register definitions could be accessed here.
 
-- Add enum support to tracepoint arguments
+https://developer.arm.com/documentation/ddi0601/2021-12/AArch64-Registers
 
-- For tracing syscalls, move trace__load_vmlinux_btf() to
-syscall__set_arg_fmts() to make it more elegant
+This series applies on 6.10-rc3.
 
-changes in v3:
+Also this series is being hosted below for quick access, review and test.
 
-- Fixed another awkward formatting issue in trace__load_vmlinux_btf()
+https://git.gitlab.arm.com/linux-arm/linux-anshuman.git (brbe_v18)
 
-changes in v2:
+- Anshuman
 
-- Fix formatting issues
+========== Perf Branch Stack Sampling Support (arm64 platforms) ===========
 
-- Pass a &use_btf to syscall_arg_fmt__init_array(), instead of
-traversing all the arguments again.
+Currently arm64 platform does not support perf branch stack sampling. Hence
+any event requesting for branch stack records i.e PERF_SAMPLE_BRANCH_STACK
+marked in event->attr.sample_type, will be rejected in armpmu_event_init().
 
-- Add a trace__load_vmlinux_btf() function to load vmlinux BTF
+static int armpmu_event_init(struct perf_event *event)
+{
+	........
+        /* does not support taken branch sampling */
+        if (has_branch_stack(event))
+                return -EOPNOTSUPP;
+	........
+}
 
-- Add member 'btf_entry' in 'struct syscall_arg_fmt' to save the entry to
-the corresponding 'struct btf_member' object, without having to do
-btf__find_by_name(), btf__type_by_id(), btf_enum(), and btf_vlen()
-everytime a syscall enters.
+$perf record -j any,u,k ls
+Error:
+cycles:P: PMU Hardware or event type doesn't support branch stack sampling.
 
-=3D=3D=3D
+-------------------- CONFIG_ARM64_BRBE and FEAT_BRBE ----------------------
 
-v4 notes
+After this series, perf branch stack sampling feature gets enabled on arm64
+platforms where FEAT_BRBE HW feature is supported, and CONFIG_ARM64_BRBE is
+also selected during build. Let's observe all all possible scenarios here.
 
-before:
+1. Feature not built (!CONFIG_ARM64_BRBE):
 
-perf $ ./perf trace -e timer:hrtimer_start --max-events=3D1
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466c25f18, function: =
-0xffffffff89da5be0, expires: 377432432256753, softexpires: 377432432256753,=
- mode: 10)
+Falls back to the current behaviour i.e event gets rejected.
 
-after:
+2. Feature built but HW not supported (CONFIG_ARM64_BRBE && !FEAT_BRBE):
 
-perf $ ./perf trace -e timer:hrtimer_start --max-events=3D1
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466c25f18, function: =
-0xffffffff89da5be0, expires: 377732805560049, softexpires: 377732805560049,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
+Falls back to the current behaviour i.e event gets rejected.
 
-HRTIMER_MODE_ABS_PINNED_HARD is:
+3. Feature built and HW supported (CONFIG_ARM64_BRBE && FEAT_BRBE):
 
-perf $ pahole hrtimer_mode
-enum hrtimer_mode {
-        HRTIMER_MODE_ABS             =3D 0,
-        HRTIMER_MODE_REL             =3D 1,
-        HRTIMER_MODE_PINNED          =3D 2,
-        HRTIMER_MODE_SOFT            =3D 4,
-        HRTIMER_MODE_HARD            =3D 8,
-        HRTIMER_MODE_ABS_PINNED      =3D 2,
-        HRTIMER_MODE_REL_PINNED      =3D 3,
-        HRTIMER_MODE_ABS_SOFT        =3D 4,
-        HRTIMER_MODE_REL_SOFT        =3D 5,
-        HRTIMER_MODE_ABS_PINNED_SOFT =3D 6,
-        HRTIMER_MODE_REL_PINNED_SOFT =3D 7,
-        HRTIMER_MODE_ABS_HARD        =3D 8,
-        HRTIMER_MODE_REL_HARD        =3D 9,
-        HRTIMER_MODE_ABS_PINNED_HARD =3D 10,
-        HRTIMER_MODE_REL_PINNED_HARD =3D 11,
-};
+Platform supports branch stack sampling requests. Let's observe through a
+simple example here.
 
-this: HRTIMER_MODE_ABS_PINNED_HARD =3D 10,
+$perf record -j any_call,u,k,save_type ls
 
-Can also be tested by
+[Please refer perf-record man pages for all possible branch filter options]
 
-./perf trace -e pagemap:mm_lru_insertion,timer:hrtimer_start,timer:hrtimer_=
-init,skb:kfree_skb --max-events=3D10
+$perf report
+-------------------------- Snip ----------------------
+# Overhead  Command  Source Shared Object  Source Symbol                                 Target Symbol                                 Basic Block Cycles
+# ........  .......  ....................  ............................................  ............................................  ..................
+#
+     3.52%  ls       [kernel.kallsyms]     [k] sched_clock_noinstr                       [k] arch_counter_get_cntpct                   16
+     3.52%  ls       [kernel.kallsyms]     [k] sched_clock                               [k] sched_clock_noinstr                       9
+     1.85%  ls       [kernel.kallsyms]     [k] sched_clock_cpu                           [k] sched_clock                               5
+     1.80%  ls       [kernel.kallsyms]     [k] irqtime_account_irq                       [k] sched_clock_cpu                           20
+     1.58%  ls       [kernel.kallsyms]     [k] gic_handle_irq                            [k] generic_handle_domain_irq                 19
+     1.58%  ls       [kernel.kallsyms]     [k] call_on_irq_stack                         [k] gic_handle_irq                            9
+     1.58%  ls       [kernel.kallsyms]     [k] do_interrupt_handler                      [k] call_on_irq_stack                         23
+     1.58%  ls       [kernel.kallsyms]     [k] generic_handle_domain_irq                 [k] __irq_resolve_mapping                     6
+     1.58%  ls       [kernel.kallsyms]     [k] __irq_resolve_mapping                     [k] __rcu_read_lock                           10
+-------------------------- Snip ----------------------
 
-(Chose these 4 tracepoints because they happen quite frequently.)
+$perf report -D | grep cycles
+-------------------------- Snip ----------------------
+.....  1: ffff800080dd3334 -> ffff800080dd759c 39 cycles  P   0 IND_CALL
+.....  2: ffff800080ffaea0 -> ffff800080ffb688 16 cycles  P   0 IND_CALL
+.....  3: ffff800080139918 -> ffff800080ffae64 9  cycles  P   0 CALL
+.....  4: ffff800080dd3324 -> ffff8000801398f8 7  cycles  P   0 CALL
+.....  5: ffff8000800f8548 -> ffff800080dd330c 21 cycles  P   0 IND_CALL
+.....  6: ffff8000800f864c -> ffff8000800f84ec 6  cycles  P   0 CALL
+.....  7: ffff8000800f86dc -> ffff8000800f8638 11 cycles  P   0 CALL
+.....  8: ffff8000800f86d4 -> ffff800081008630 16 cycles  P   0 CALL
+-------------------------- Snip ----------------------
 
-By using the command above, I got:
+perf script and other tooling can also be applied on the captured perf.data
+Similarly branch stack sampling records can be collected via direct system
+call i.e perf_event_open() method after setting 'struct perf_event_attr' as
+required.
 
-perf $ ./perf trace -e pagemap:mm_lru_insertion,timer:hrtimer_start,timer:h=
-rtimer_init,skb:kfree_skb --max-events=3D10
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466c25f18, function: =
-0xffffffff89da5be0, expires: 376189979047665, softexpires: 376189979047665,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.053 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376230939043569, softexpires: 376230939043569,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.099 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376111885722141, softexpires: 376111885722141,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.242 tmux: server/296019 timer:hrtimer_init(hrtimer: 0xffffb872caa1f6=
-28, clockid: 1, mode: HRTIMER_MODE_ABS)
-     0.244 tmux: server/296019 timer:hrtimer_start(hrtimer: 0xffffb872caa1f=
-628, function: 0xffffffff89d90420, expires: 376111894496606, softexpires: 3=
-76111894446606, mode: HRTIMER_MODE_ABS)
-     0.349 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376230939043569, softexpires: 376230939043569,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.486 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376111885722141, softexpires: 376111885722141,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.499 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376230939043569, softexpires: 376230939043569,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.501 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376111885722141, softexpires: 376111885722141,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.506 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466ca5f18, function: =
-0xffffffff89da5be0, expires: 376230939043569, softexpires: 376230939043569,=
- mode: HRTIMER_MODE_ABS_PINNED_HARD)
+event->attr.sample_type |= PERF_SAMPLE_BRANCH_STACK
+event->attr.branch_sample_type |= PERF_SAMPLE_BRANCH_<FILTER_1> |
+				  PERF_SAMPLE_BRANCH_<FILTER_2> |
+				  PERF_SAMPLE_BRANCH_<FILTER_3> |
+				  ...............................
 
-If you want to test all tracepoints that has enum arguments, and
-that enum argument is retrievable in vmlinux:
+But all branch filters might not be supported on the platform.
 
-./perf trace -e power:dev_pm_qos_add_request,power:dev_pm_qos_remove_reques=
-t,power:dev_pm_qos_update_request,error_report:error_report_end,error_repor=
-t:error_report_end,timer:hrtimer_init,timer:hrtimer_start,i2c_slave:i2c_sla=
-ve,cfg80211:cfg80211_get_bss,pagemap:mm_lru_insertion,migrate:mm_migrate_pa=
-ges,migrate:mm_migrate_pages_start,cfg80211:rdev_auth,cfg80211:rdev_connect=
-,cfg80211:rdev_start_ap,cfg80211:cfg80211_chandef_dfs_required,cfg80211:cfg=
-80211_ch_switch_notify,cfg80211:cfg80211_ch_switch_started_notify,cfg80211:=
-cfg80211_get_bss,cfg80211:cfg80211_ibss_joined,cfg80211:cfg80211_inform_bss=
-_frame,cfg80211:cfg80211_radar_event,cfg80211:cfg80211_ready_on_channel_exp=
-ired,cfg80211:cfg80211_ready_on_channel,cfg80211:cfg80211_reg_can_beacon,cf=
-g80211:cfg80211_return_bss,cfg80211:cfg80211_tx_mgmt_expired,cfg80211:rdev_=
-channel_switch,cfg80211:rdev_inform_bss,cfg80211:rdev_libertas_set_mesh_cha=
-nnel,cfg80211:rdev_mgmt_tx,cfg80211:rdev_remain_on_channel,cfg80211:rdev_re=
-turn_chandef,cfg80211:rdev_return_int_survey_info,cfg80211:rdev_set_ap_chan=
-width,cfg80211:rdev_set_monitor_channel,cfg80211:rdev_set_radar_background,=
-cfg80211:rdev_start_ap,cfg80211:rdev_start_radar_detection,cfg80211:rdev_td=
-ls_channel_switch,cfg80211:cfg80211_reg_can_beacon,cfg80211:rdev_add_virtua=
-l_intf,cfg80211:rdev_change_virtual_intf,sched:sched_skip_vma_numa,power:pm=
-_qos_update_flags,power:pm_qos_update_target,pwm:pwm_apply,pwm:pwm_get,skb:=
-kfree_skb,thermal:thermal_zone_trip,xen:xen_mc_batch,xen:xen_mc_issue,xen:x=
-en_mc_extend_args,xen:xen_mc_extend_args,xen:xen_mc_flush_reason,xen:xen_mc=
-_flush_reason,compaction:mm_compaction_defer_compaction,compaction:mm_compa=
-ction_deferred,compaction:mm_compaction_defer_reset,compaction:mm_compactio=
-n_finished,compaction:mm_compaction_kcompactd_wake,compaction:mm_compaction=
-_suitable,compaction:mm_compaction_wakeup_kcompactd --max-events=3D20
+----------------------- BRBE Branch Filters Support -----------------------
 
-But whether this enum is in vmlinux may vary on different versions.
-If you want to find out which enum type is in vmlinux, please use:
+- Following branch filters are supported on arm64.
 
-vmlinux_dir $ bpftool btf dump file /sys/kernel/btf/vmlinux > vmlinux
+	PERF_SAMPLE_BRANCH_USER		/* Branch privilege filters */
+	PERF_SAMPLE_BRANCH_KERNEL
+	PERF_SAMPLE_BRANCH_HV
 
-vmlinux_dir $  while read l; do grep "ENUM '$l'" vmlinux; done < <(grep fie=
-ld:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | u=
-niq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g"
-dev_pm_qos_req_type
-error_detector
-hrtimer_mode
-i2c_slave_event
-ieee80211_bss_type
-lru_list
-migrate_mode
-nl80211_auth_type
-nl80211_band
-nl80211_iftype
-numa_vmaskip_reason
-pm_qos_req_action
-pwm_polarity
-skb_drop_reason
-thermal_trip_type
-xen_lazy_mode
-xen_mc_extend_args
-xen_mc_flush_reason
-zone_type
+	PERF_SAMPLE_BRANCH_ANY		/* Branch type filters */
+	PERF_SAMPLE_BRANCH_ANY_CALL
+	PERF_SAMPLE_BRANCH_ANY_RETURN
+	PERF_SAMPLE_BRANCH_IND_CALL
+	PERF_SAMPLE_BRANCH_COND
+	PERF_SAMPLE_BRANCH_IND_JUMP
+	PERF_SAMPLE_BRANCH_CALL
 
-And what tracepoints have these enum types as their arguments:
+	PERF_SAMPLE_BRANCH_NO_FLAGS	/* Branch record flags */
+	PERF_SAMPLE_BRANCH_NO_CYCLES
+	PERF_SAMPLE_BRANCH_TYPE_SAVE
+	PERF_SAMPLE_BRANCH_HW_INDEX
+	PERF_SAMPLE_BRANCH_PRIV_SAVE
 
-vmlinux_dir $ while read l; do grep "ENUM '$l'" vmlinux; done < <(grep fiel=
-d:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | un=
-iq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g" > good_enums
+- Following branch filters are not supported on arm64.
 
-vmlinux_dir $ cat good_enums
-dev_pm_qos_req_type
-error_detector
-hrtimer_mode
-i2c_slave_event
-ieee80211_bss_type
-lru_list
-migrate_mode
-nl80211_auth_type
-nl80211_band
-nl80211_iftype
-numa_vmaskip_reason
-pm_qos_req_action
-pwm_polarity
-skb_drop_reason
-thermal_trip_type
-xen_lazy_mode
-xen_mc_extend_args
-xen_mc_flush_reason
-zone_type
+	PERF_SAMPLE_BRANCH_ABORT_TX
+	PERF_SAMPLE_BRANCH_IN_TX
+	PERF_SAMPLE_BRANCH_NO_TX
+	PERF_SAMPLE_BRANCH_CALL_STACK
 
-vmlinux_dir $ grep -f good_enums -l /sys/kernel/tracing/events/*/*/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_chandef_dfs_required/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_notify/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_started_notify/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_get_bss/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ibss_joined/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_inform_bss_frame/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_radar_event/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel_expired/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_reg_can_beacon/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_return_bss/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_tx_mgmt_expired/format
-/sys/kernel/tracing/events/cfg80211/rdev_add_virtual_intf/format
-/sys/kernel/tracing/events/cfg80211/rdev_auth/format
-/sys/kernel/tracing/events/cfg80211/rdev_change_virtual_intf/format
-/sys/kernel/tracing/events/cfg80211/rdev_channel_switch/format
-/sys/kernel/tracing/events/cfg80211/rdev_connect/format
-/sys/kernel/tracing/events/cfg80211/rdev_inform_bss/format
-/sys/kernel/tracing/events/cfg80211/rdev_libertas_set_mesh_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_mgmt_tx/format
-/sys/kernel/tracing/events/cfg80211/rdev_remain_on_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_return_chandef/format
-/sys/kernel/tracing/events/cfg80211/rdev_return_int_survey_info/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_ap_chanwidth/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_monitor_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_radar_background/format
-/sys/kernel/tracing/events/cfg80211/rdev_start_ap/format
-/sys/kernel/tracing/events/cfg80211/rdev_start_radar_detection/format
-/sys/kernel/tracing/events/cfg80211/rdev_tdls_channel_switch/format
-/sys/kernel/tracing/events/compaction/mm_compaction_defer_compaction/format
-/sys/kernel/tracing/events/compaction/mm_compaction_deferred/format
-/sys/kernel/tracing/events/compaction/mm_compaction_defer_reset/format
-/sys/kernel/tracing/events/compaction/mm_compaction_finished/format
-/sys/kernel/tracing/events/compaction/mm_compaction_kcompactd_wake/format
-/sys/kernel/tracing/events/compaction/mm_compaction_suitable/format
-/sys/kernel/tracing/events/compaction/mm_compaction_wakeup_kcompactd/format
-/sys/kernel/tracing/events/error_report/error_report_end/format
-/sys/kernel/tracing/events/i2c_slave/i2c_slave/format
-/sys/kernel/tracing/events/migrate/mm_migrate_pages/format
-/sys/kernel/tracing/events/migrate/mm_migrate_pages_start/format
-/sys/kernel/tracing/events/pagemap/mm_lru_insertion/format
-/sys/kernel/tracing/events/power/dev_pm_qos_add_request/format
-/sys/kernel/tracing/events/power/dev_pm_qos_remove_request/format
-/sys/kernel/tracing/events/power/dev_pm_qos_update_request/format
-/sys/kernel/tracing/events/power/pm_qos_update_flags/format
-/sys/kernel/tracing/events/power/pm_qos_update_target/format
-/sys/kernel/tracing/events/pwm/pwm_apply/format
-/sys/kernel/tracing/events/pwm/pwm_get/format
-/sys/kernel/tracing/events/sched/sched_skip_vma_numa/format
-/sys/kernel/tracing/events/skb/kfree_skb/format
-/sys/kernel/tracing/events/thermal/thermal_zone_trip/format
-/sys/kernel/tracing/events/timer/hrtimer_init/format
-/sys/kernel/tracing/events/timer/hrtimer_start/format
-/sys/kernel/tracing/events/xen/xen_mc_batch/format
-/sys/kernel/tracing/events/xen/xen_mc_extend_args/format
-/sys/kernel/tracing/events/xen/xen_mc_flush_reason/format
-/sys/kernel/tracing/events/xen/xen_mc_issue/format
+Events requesting above non-supported branch filters get rejected.
 
-This is how I got the crazy long list of tracepoints above.
+--------------------------- Virtualisation support ------------------------
 
-From there, please use the command below to get the events, and use it as .=
-/perf trace -e's
-argument
+- No guest support
 
-vmlinux_dir $ grep -f good_enums -l /sys/kernel/tracing/events/*/*/format |=
- sed "s/.*events\/\(.*\)\/\(.*\)\/.*/\1:\2/g"
-cfg80211:cfg80211_chandef_dfs_required
-cfg80211:cfg80211_ch_switch_notify
-cfg80211:cfg80211_ch_switch_started_notify
-cfg80211:cfg80211_get_bss
-cfg80211:cfg80211_ibss_joined
-cfg80211:cfg80211_inform_bss_frame
-cfg80211:cfg80211_radar_event
-cfg80211:cfg80211_ready_on_channel_expired
-cfg80211:cfg80211_ready_on_channel
-cfg80211:cfg80211_reg_can_beacon
-cfg80211:cfg80211_return_bss
-cfg80211:cfg80211_tx_mgmt_expired
-cfg80211:rdev_add_virtual_intf
-cfg80211:rdev_auth
-cfg80211:rdev_change_virtual_intf
-cfg80211:rdev_channel_switch
-cfg80211:rdev_connect
-cfg80211:rdev_inform_bss
-cfg80211:rdev_libertas_set_mesh_channel
-cfg80211:rdev_mgmt_tx
-cfg80211:rdev_remain_on_channel
-cfg80211:rdev_return_chandef
-cfg80211:rdev_return_int_survey_info
-cfg80211:rdev_set_ap_chanwidth
-cfg80211:rdev_set_monitor_channel
-cfg80211:rdev_set_radar_background
-cfg80211:rdev_start_ap
-cfg80211:rdev_start_radar_detection
-cfg80211:rdev_tdls_channel_switch
-compaction:mm_compaction_defer_compaction
-compaction:mm_compaction_deferred
-compaction:mm_compaction_defer_reset
-compaction:mm_compaction_finished
-compaction:mm_compaction_kcompactd_wake
-compaction:mm_compaction_suitable
-compaction:mm_compaction_wakeup_kcompactd
-error_report:error_report_end
-i2c_slave:i2c_slave
-migrate:mm_migrate_pages
-migrate:mm_migrate_pages_start
-pagemap:mm_lru_insertion
-power:dev_pm_qos_add_request
-power:dev_pm_qos_remove_request
-power:dev_pm_qos_update_request
-power:pm_qos_update_flags
-power:pm_qos_update_target
-pwm:pwm_apply
-pwm:pwm_get
-sched:sched_skip_vma_numa
-skb:kfree_skb
-thermal:thermal_zone_trip
-timer:hrtimer_init
-timer:hrtimer_start
-xen:xen_mc_batch
-xen:xen_mc_extend_args
-xen:xen_mc_flush_reason
-xen:xen_mc_issue
+-------------------------------- Testing ---------------------------------
 
-=3D=3D=3D
+- Cross compiled for both arm64 and arm32 platforms
+- Passes all branch tests with 'perf test branch' on arm64
 
-v2 notes
+Changes in V18:
 
-In 'struct syscall_arg_fmt':
-```
-	struct {
-		void	*entry;
-		u16	nr_entries;
-	}	   btf_entry;
-```
+- Changed BRBIDR0_EL1 register fields CC and FORMAT, updated the commit message
+- Replaced BRBIDR0_EL1_FORMAT_0 as BRBIDR0_EL1_FORMAT_FORMAT_0 in BRBE driver
+- Dropped ifdef CONFIG_ARM64_BRBE around __init_el2_brbe()
+- Updated in code comment around __init_el2_brbe()
+- Dropped the write up for EL2->EL1 transition, also moved up the EL3 write up
+- Unconditionally capture branch record type and privilege information
+- Scan valid branch stack events in armpmu_start() to create merged filter
+- Dropped branch_sample_type override in armv8pmu_branch_stack_add()
+- Dropped branch filter mismatch between PMU and event in read_branch_records()
+- Added SW filtering framework in read_branch_records() during filter mismatch
+- Added SW filtering for privilege modes
+- Used host_data_ptr() to access host_debug_state.brbcr_el1 register
+- Changed DEBUG_STATE_SAVE_BRBE to use BIT(7)
+- Reverted back iflags as u8
 
-This is the new member btf_entry. 'struct btf_member' object, so that
-we don't have to do btf__find_by_name(), btf__type_by_id(), btf_enum(),
-and btf_vlen() everytime a landlock_add_rule() syscall entered.
+https://lore.kernel.org/all/20240405024639.1179064-1-anshuman.khandual@arm.com/
 
-Note that entry is of type 'void *', because this btf_entry can also be
-applied to 'struct btf_member *' for 'BTF_KIND_STRUCT', hopefully in the
-future.
+Changes in V17:
 
-=3D=3D=3D
+- Added back Reviewed-by tags from Mark Brown
+- Updated the commit message regarding the field BRBINFx_EL1_TYPE_IMPDEF_TRAP_EL3
+- Added leading 0s for all values as BRBIDR0_EL1.NUMREC is a 8 bit field
+- Added leading 0s for all values as BRBFCR_EL1.BANK is a 2 bit field
+- Reordered BRBCR_EL1/BRBCR_EL12/BRBCR_EL2 registers as per sysreg encodings
+- Renamed s/FIRST/BANK_0 and s/SECOND/BANK_1 in BRBFCR_EL1.BANK
+- Renamed s/UNCOND_DIRECT/DIRECT_UNCOND in BRBINFx_EL1.TYPE
+- Renamed s/COND_DIRECT/DIRECT_COND in BRBINFx_EL1.TYPE
+- Dropped __SYS_BRBINF/__SYS_BRBSRC/__SYS_BRBTGT and their expansions
+- Moved all existing BRBE registers from sysreg.h header to tools/sysreg format
+- Updated the commit message including about sys_insn_descs[]
+- Changed KVM to use existing SYS_BRBSRC/TGT/INF_EL1(n) format
+- Moved the BRBE instructions into sys_insn_descs[] array
+- ARM PMUV3 changes have been moved into the BRBE driver patch instead
+- Moved down branch_stack_add() in armpmu_add() after event's basic checks
+- Added new callbacks in struct arm_pmu e.g branch_stack_[init|add|del]()
+- Renamed struct arm_pmu callback branch_reset() as branch_stack_reset()
+- Dropped the comment in armpmu_event_init()
+- Renamed 'pmu_hw_events' elements from 'brbe_' to more generic 'branch_'
+- Separated out from the BRBE driver implementation patch
+- Dropped the comment in __init_el2_brbe()
+- Updated __init_el2_brbe() with BRBCR_EL2.MPRED requirements
+- Updated __init_el2_brbe() with __check_hvhe() constructs
+- Updated booting.rst regarding MPRED, MDCR_EL3 and fine grained control
+- Dropped Documentation/arch/arm64/brbe.rst
+- Renamed armv8pmu_branch_reset() as armv8pmu_branch_stack_reset()
+- Separated out booting.rst and EL2 boot requirements into a new patch
+- Dropped process_branch_aborts() completely
+- Added an warning if transaction states get detected unexpectedly
+- Dropped enum brbe_bank_idx from the driver
+- Defined armv8pmu_branch_stack_init/add/del() callbacks in the driver
+- Changed BRBE driver to use existing SYS_BRBSRC/TGT/INF_EL1(n) format
+- Dropped isb() call sites in  __debug_[save|restore]_brbe()
+- Changed to [read|write]_sysreg_el1() accessors in __debug_[save|restore]_brbe()
 
-v1 notes
+Changes in V16
 
-This is a feature implemented on the basis of the previous bug fix
-https://lore.kernel.org/linux-perf-users/d18a9606-ac9f-4ca7-afaf-fcf4c951cb=
-90@web.de/T/#t
+https://lore.kernel.org/all/20240125094119.2542332-1-anshuman.khandual@arm.com/
 
-In this patch, BTF is used to turn enum value to the corresponding
-name. There is only one system call that uses enum value as its
-argument, that is `landlock_add_rule()`.
+- Updated BRBINFx_EL1.TYPE = 0b110000 as field IMPDEF_TRAP_EL3
+- Updated BRBCR_ELx[9] as field FZPSS
+- Updated BRBINFINJ_EL1 to use sysreg field BRBINFx_EL1
+- Added BRB_INF_SRC_TGT_EL1 macro for corresponding BRB_[INF|SRC|TGT] expansion
+- Renamed arm_brbe.h as arm_pmuv3_branch.h
+- Updated perf_sample_save_brstack()'s new argument requirements with NULL
+- Fixed typo (s/informations/information) in Documentation/arch/arm64/brbe.rst
+- Added SPDX-License-Identifier in Documentation/arch/arm64/brbe.rst
+- Added new PERF_SAMPLE_BRANCH_COUNTERS into BRBE_EXCLUDE_BRANCH_FILTERS
+- Dropped BRBFCR_EL1 and BRBCR_EL1 from enum vcpu_sysreg
+- Reverted back the KVM NVHE patch - use host_debug_state based 'brbcr_el1'
+  element and dropped the previous dependency on Jame's coresight series
 
-The vmlinux btf is loaded lazily, when user decided to trace the
-`landlock_add_rule` syscall. But if one decide to run `perf trace`
-without any arguments, the behaviour is to trace `landlock_add_rule`,
-so vmlinux btf will be loaded by default.
+Changes in V15:
 
-The laziest behaviour is to load vmlinux btf when a
-`landlock_add_rule` syscall hits. But I think you could lose some
-samples when loading vmlinux btf at run time, for it can delay the
-handling of other samples. I might need your precious opinions on
-this...
+https://lore.kernel.org/all/20231201053906.1261704-1-anshuman.khandual@arm.com/
 
-before:
+- Added a comment for armv8pmu_branch_probe() regarding single cpu probe
+- Added a text in brbe.rst regarding single cpu probe
+- Dropped runtime BRBE enable for setting DEBUG_STATE_SAVE_BRBE
+- Dropped zero_branch_stack based zero branch records mechanism
+- Replaced BRBFCR_EL1_DEFAULT_CONFIG with BRBFCR_EL1_CONFIG_MASK
+- Added BRBFCR_EL1_CONFIG_MASK masking in branch_type_to_brbfcr()
+- Moved BRBE helpers from arm_brbe.h into arm_brbe.c
+- Moved armv8_pmu_xxx() declaration inside arm_brbe.h for arm64 (CONFIG_ARM64_BRBE)
+- Moved armv8_pmu_xxx() stub definitions inside arm_brbe.h for arm32 (!CONFIG_ARM64_BRBE)
+- Included arm_brbe.h header both in arm_pmuv3.c and arm_brbe.c
+- Dropped BRBE custom pr_fmt()
+- Dropped CONFIG_PERF_EVENTS wrapping from header entries
+- Flush branch records when a cpu bound event follows a task bound event
+- Dropped BRBFCR_EL1 from __debug_save_brbe()/__debug_restore_brbe()
+- Always save the live SYS_BRBCR_EL1 in host context and then check if
+  BRBE was enabled before resetting SYS_BRBCR_EL1 for the host
 
-```
-perf $ ./perf trace -e landlock_add_rule
-     0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: 2)  =
-                                     =3D -1 EBADFD (File descriptor in bad =
-state)
-     0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: 1)  =
-                                     =3D -1 EBADFD (File descriptor in bad =
-state)
-```
+Changes in V14:
 
-after:
+https://lore.kernel.org/all/20231114051329.327572-1-anshuman.khandual@arm.com/
 
-```
-perf $ ./perf trace -e landlock_add_rule
-     0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LAND=
-LOCK_RULE_NET_PORT)                  =3D -1 EBADFD (File descriptor in bad =
-state)
-     0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LAND=
-LOCK_RULE_PATH_BENEATH)              =3D -1 EBADFD (File descriptor in bad =
-state)
-```
+- This series has been reorganised as suggested during V13
+- There are just eight patches now i.e 5 enablement and 3 perf branch tests
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/builtin-trace.c | 121 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 111 insertions(+), 10 deletions(-)
+- Fixed brackets problem in __SYS_BRBINFO/BRBSRC/BRBTGT() macros
+- Renamed the macro i.e s/__SYS_BRBINFO/__SYS_BRBINF/
+- Renamed s/BRB_IALL/BRB_IALL_INSN and s/BRBE_INJ/BRB_INJ_INSN
+- Moved BRB_IALL_INSN and SYS_BRB_INSN instructions to sysreg patch
+- Changed E1BRE as ExBRE in sysreg fields inside BRBCR_ELx
+- Used BRBCR_ELx for defining all BRBCR_EL1, BRBCR_EL2, and BRBCR_EL12 (new)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5cbe1748911d..0a168cb9b0c2 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -19,6 +19,7 @@
- #ifdef HAVE_LIBBPF_SUPPORT
- #include <bpf/bpf.h>
- #include <bpf/libbpf.h>
-+#include <bpf/btf.h>
- #ifdef HAVE_BPF_SKEL
- #include "bpf_skel/augmented_raw_syscalls.skel.h"
- #endif
-@@ -110,6 +111,11 @@ struct syscall_arg_fmt {
- 	const char *name;
- 	u16	   nr_entries; // for arrays
- 	bool	   show_zero;
-+	bool	   is_enum;
-+	struct {
-+		void	*entry;
-+		u16	nr_entries;
-+	}	   btf_entry;
- };
-=20
- struct syscall_fmt {
-@@ -140,6 +146,7 @@ struct trace {
- #ifdef HAVE_BPF_SKEL
- 	struct augmented_raw_syscalls_bpf *skel;
- #endif
-+	struct btf		*btf;
- 	struct record_opts	opts;
- 	struct evlist	*evlist;
- 	struct machine		*host;
-@@ -887,6 +894,56 @@ static size_t syscall_arg__scnprintf_getrandom_flags(c=
-har *bf, size_t size,
-=20
- #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
-=20
-+static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall=
-_arg_fmt *arg_fmt)
-+{
-+	const struct btf_type *bt;
-+	char enum_prefix[][16] =3D { "enum", "const enum" }, *ep;
-+	int id;
-+	size_t i;
-+
-+	for (i =3D 0; i < ARRAY_SIZE(enum_prefix); i++) {
-+		ep =3D enum_prefix[i];
-+		if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
-+			type +=3D strlen(ep) + 1;
-+	}
-+
-+	id =3D btf__find_by_name(btf, type);
-+	if (id < 0)
-+		return -1;
-+
-+	bt =3D btf__type_by_id(btf, id);
-+	if (bt =3D=3D NULL)
-+		return -1;
-+
-+	arg_fmt->btf_entry.entry      =3D btf_enum(bt);
-+	arg_fmt->btf_entry.nr_entries =3D btf_vlen(bt);
-+
-+	return 0;
-+}
-+
-+static size_t btf_enum_scnprintf(char *bf, size_t size, int val, struct bt=
-f *btf, char *type,
-+				 struct syscall_arg_fmt *arg_fmt)
-+{
-+	struct btf_enum *be;
-+	int i;
-+
-+	/* if btf_entry is NULL, find and save it to arg_fmt */
-+	if (arg_fmt->btf_entry.entry =3D=3D NULL)
-+		if (btf_enum_find_entry(btf, type, arg_fmt))
-+			return 0;
-+
-+	be =3D (struct btf_enum *)arg_fmt->btf_entry.entry;
-+
-+	for (i =3D 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
-+		if (be->val =3D=3D val) {
-+			return scnprintf(bf, size, "%s",
-+					 btf__name_by_offset(btf, be->name_off));
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- #define STRARRAY(name, array) \
- 	  { .scnprintf	=3D SCA_STRARRAY, \
- 	    .strtoul	=3D STUL_STRARRAY, \
-@@ -1238,6 +1295,7 @@ struct syscall {
- 	bool		    is_exit;
- 	bool		    is_open;
- 	bool		    nonexistent;
-+	bool		    use_btf;
- 	struct tep_format_field *args;
- 	const char	    *name;
- 	const struct syscall_fmt  *fmt;
-@@ -1699,6 +1757,15 @@ static void trace__symbols__exit(struct trace *trace)
- 	symbol__exit();
- }
-=20
-+static void trace__load_vmlinux_btf(struct trace *trace)
-+{
-+	trace->btf =3D btf__load_vmlinux_btf();
-+	if (verbose > 0) {
-+		fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
-+						    "Failed to load vmlinux BTF\n");
-+	}
-+}
-+
- static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
- {
- 	int idx;
-@@ -1744,7 +1811,8 @@ static const struct syscall_arg_fmt *syscall_arg_fmt_=
-_find_by_name(const char *n
- }
-=20
- static struct tep_format_field *
--syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format=
-_field *field)
-+syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format=
-_field *field,
-+			    bool *use_btf)
- {
- 	struct tep_format_field *last_field =3D NULL;
- 	int len;
-@@ -1756,6 +1824,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *a=
-rg, struct tep_format_field
- 			continue;
-=20
- 		len =3D strlen(field->name);
-+		arg->is_enum =3D false;
-=20
- 		if (strcmp(field->type, "const char *") =3D=3D 0 &&
- 		    ((len >=3D 4 && strcmp(field->name + len - 4, "name") =3D=3D 0) ||
-@@ -1782,6 +1851,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *a=
-rg, struct tep_format_field
- 			 * 7 unsigned long
- 			 */
- 			arg->scnprintf =3D SCA_FD;
-+		} else if (strstr(field->type, "enum") && use_btf !=3D NULL) {
-+			*use_btf =3D arg->is_enum =3D true;
- 		} else {
- 			const struct syscall_arg_fmt *fmt =3D
- 				syscall_arg_fmt__find_by_name(field->name);
-@@ -1796,9 +1867,14 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *=
-arg, struct tep_format_field
- 	return last_field;
- }
-=20
--static int syscall__set_arg_fmts(struct syscall *sc)
-+static int syscall__set_arg_fmts(struct trace *trace, struct syscall *sc)
- {
--	struct tep_format_field *last_field =3D syscall_arg_fmt__init_array(sc->a=
-rg_fmt, sc->args);
-+	bool use_btf;
-+	struct tep_format_field *last_field =3D syscall_arg_fmt__init_array(sc->a=
-rg_fmt, sc->args,
-+									  &use_btf);
-+
-+	if (use_btf && trace->btf =3D=3D NULL)
-+		trace__load_vmlinux_btf(trace);
-=20
- 	if (last_field)
- 		sc->args_size =3D last_field->offset + last_field->size;
-@@ -1883,15 +1959,20 @@ static int trace__read_syscall_info(struct trace *t=
-race, int id)
- 	sc->is_exit =3D !strcmp(name, "exit_group") || !strcmp(name, "exit");
- 	sc->is_open =3D !strcmp(name, "open") || !strcmp(name, "openat");
-=20
--	return syscall__set_arg_fmts(sc);
-+	return syscall__set_arg_fmts(trace, sc);
- }
-=20
--static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
-+static int evsel__init_tp_arg_scnprintf(struct trace *trace, struct evsel =
-*evsel)
- {
- 	struct syscall_arg_fmt *fmt =3D evsel__syscall_arg_fmt(evsel);
-+	bool use_btf;
-=20
- 	if (fmt !=3D NULL) {
--		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
-+		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, &use_b=
-tf);
-+
-+		if (use_btf && trace->btf =3D=3D NULL)
-+			trace__load_vmlinux_btf(trace);
-+
- 		return 0;
- 	}
-=20
-@@ -2103,6 +2184,16 @@ static size_t syscall__scnprintf_args(struct syscall=
- *sc, char *bf, size_t size,
- 			if (trace->show_arg_names)
- 				printed +=3D scnprintf(bf + printed, size - printed, "%s: ", field->na=
-me);
-=20
-+			if (sc->arg_fmt[arg.idx].is_enum && trace->btf) {
-+				size_t p =3D btf_enum_scnprintf(bf + printed, size - printed, val,
-+							      trace->btf, field->type,
-+							      &sc->arg_fmt[arg.idx]);
-+				if (p) {
-+					printed +=3D p;
-+					continue;
-+				}
-+			}
-+
- 			printed +=3D syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
- 								  bf + printed, size - printed, &arg, val);
- 		}
-@@ -2791,7 +2882,7 @@ static size_t trace__fprintf_tp_fields(struct trace *=
-trace, struct evsel *evsel,
- 		val =3D syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
-=20
- 		/* Suppress this argument if its value is zero and show_zero property is=
-n't set. */
--		if (val =3D=3D 0 && !trace->show_zeros && !arg->show_zero)
-+		if (val =3D=3D 0 && !trace->show_zeros && !arg->show_zero && !arg->is_en=
-um)
- 			continue;
-=20
- 		printed +=3D scnprintf(bf + printed, size - printed, "%s", printed ? ", =
-" : "");
-@@ -2799,6 +2890,15 @@ static size_t trace__fprintf_tp_fields(struct trace =
-*trace, struct evsel *evsel,
- 		if (trace->show_arg_names)
- 			printed +=3D scnprintf(bf + printed, size - printed, "%s: ", field->nam=
-e);
-=20
-+		if (arg->is_enum && trace->btf) {
-+			size_t p =3D btf_enum_scnprintf(bf + printed, size - printed, val, trac=
-e->btf,
-+						      field->type, arg);
-+			if (p) {
-+				printed +=3D p;
-+				continue;
-+			}
-+		}
-+
- 		printed +=3D syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - pr=
-inted, &syscall_arg, val);
- 	}
-=20
-@@ -4461,8 +4561,9 @@ static void evsel__set_syscall_arg_fmt(struct evsel *=
-evsel, const char *name)
- 	}
- }
-=20
--static int evlist__set_syscall_tp_fields(struct evlist *evlist)
-+static int evlist__set_syscall_tp_fields(struct trace *trace)
- {
-+	struct evlist *evlist =3D trace->evlist;
- 	struct evsel *evsel;
-=20
- 	evlist__for_each_entry(evlist, evsel) {
-@@ -4470,7 +4571,7 @@ static int evlist__set_syscall_tp_fields(struct evlis=
-t *evlist)
- 			continue;
-=20
- 		if (strcmp(evsel->tp_format->system, "syscalls")) {
--			evsel__init_tp_arg_scnprintf(evsel);
-+			evsel__init_tp_arg_scnprintf(trace, evsel);
- 			continue;
- 		}
-=20
-@@ -4949,7 +5050,7 @@ int cmd_trace(int argc, const char **argv)
-=20
- 	if (trace.evlist->core.nr_entries > 0) {
- 		evlist__set_default_evsel_handler(trace.evlist, trace__event_handler);
--		if (evlist__set_syscall_tp_fields(trace.evlist)) {
-+		if (evlist__set_syscall_tp_fields(&trace)) {
- 			perror("failed to set syscalls:* tracepoint fields");
- 			goto out;
- 		}
---=20
-2.45.2
+- Folded the following three patches into a single patch i.e [PATCH 3/8]
+
+  drivers: perf: arm_pmu: Add new sched_task() callback
+  arm64/perf: Add branch stack support in struct arm_pmu
+  arm64/perf: Add branch stack support in struct pmu_hw_events
+  arm64/perf: Add branch stack support in ARMV8 PMU
+  arm64/perf: Add PERF_ATTACH_TASK_DATA to events with has_branch_stack()
+
+- All armv8pmu_branch_xxxx() stub definitions have been moved inside
+  include/linux/perf/arm_pmuv3.h for easy access from both arm32 and arm64
+- Added brbe_users, brbe_context and brbe_sample_type in struct pmu_hw_events
+- Added comments for all the above new elements in struct pmu_hw_events
+- Added branch_reset() and sched_task() callbacks
+- Changed and optimized branch records processing during a PMU IRQ
+- NO branch records get captured for event with mismatched brbe_sample_type
+- Branch record context is tracked from armpmu_del() & armpmu_add()
+- Branch record hardware is driven from armv8pmu_start() & armv8pmu_stop()
+- Dropped NULL check for 'pmu_ctx' inside armv8pmu_sched_task()
+- Moved down PERF_ATTACH_TASK_DATA assignment with a preceding comment
+- In conflicting branch sample type requests, first event takes precedence
+
+- Folded the following five patches from V13 into a single patch i.e
+  [PATCH 4/8]
+
+  arm64/perf: Enable branch stack events via FEAT_BRBE
+  arm64/perf: Add struct brbe_regset helper functions
+  arm64/perf: Implement branch records save on task sched out
+  arm64/perf: Implement branch records save on PMU IRQ
+
+- Fixed the year in copyright statement
+- Added Documentation/arch/arm64/brbe.rst
+- Updated Documentation/arch/arm64/booting.rst (BRBCR_EL2.CC for EL1 entry)
+- Added __init_el2_brbe() which enables branch record cycle count support
+- Disabled EL2 traps in __init_el2_fgt() while accessing BRBE registers and
+  executing instructions
+- Changed CONFIG_ARM64_BRBE user visible description
+- Fixed a typo in CONFIG_ARM64_BRBE config option description text
+- Added BUILD_BUG_ON() co-relating BRBE_BANK_MAX_ENTRIES and MAX_BRANCH_RECORDS
+- Dropped arm64_create_brbe_task_ctx_kmem_cache()
+- Moved down comment for PERF_SAMPLE_BRANCH_KERNEL in branch_type_to_brbcr()
+- Renamed BRBCR_ELx_DEFAULT_CONFIG as BRBCR_ELx_CONFIG_MASK
+- Replaced BRBCR_ELx_DEFAULT_TS with BRBCR_ELx_TS_MASK in BRBCR_ELx_CONFIG_MASK
+- Replaced BRBCR_ELx_E1BRE instances with BRBCR_ELx_ExBRE
+
+- Added BRBE specific branch stack sampling perf test patches into the series
+- Added a patch to prevent guest accesses into BRBE registers and instructions
+- Added a patch to save the BRBE host context in NVHE environment
+- Updated most commit messages
+
+Changes in V13:
+
+https://lore.kernel.org/all/20230711082455.215983-1-anshuman.khandual@arm.com/
+https://lore.kernel.org/all/20230622065351.1092893-1-anshuman.khandual@arm.com/
+
+- Added branch callback stubs for aarch32 pmuv3 based platforms
+- Updated the comments for capture_brbe_regset()
+- Deleted the comments in __read_brbe_regset()
+- Reversed the arguments order in capture_brbe_regset() and brbe_branch_save()
+- Fixed BRBE_BANK[0|1]_IDX_MAX indices comparison in armv8pmu_branch_read()
+- Fixed BRBE_BANK[0|1]_IDX_MAX indices comparison in capture_brbe_regset()
+
+Changes in V12:
+
+https://lore.kernel.org/all/20230615133239.442736-1-anshuman.khandual@arm.com/
+
+- Replaced branch types with complete DIRECT/INDIRECT prefixes/suffixes
+- Replaced branch types with complete INSN/ALIGN prefixes/suffixes
+- Replaced return branch types as simple RET/ERET
+- Replaced time field GST_PHYSICAL as GUEST_PHYSICAL
+- Added 0 padding for BRBIDR0_EL1.NUMREC enum values
+- Dropped helper arm_pmu_branch_stack_supported()
+- Renamed armv8pmu_branch_valid() as armv8pmu_branch_attr_valid()
+- Separated perf_task_ctx_cache setup from arm_pmu private allocation
+- Collected changes to branch_records_alloc() in a single patch [5/10]
+- Reworked and cleaned up branch_records_alloc()
+- Reworked armv8pmu_branch_read() with new loop iterations in patch [6/10]
+- Reworked capture_brbe_regset() with new loop iterations in patch [8/10]
+- Updated the comment in branch_type_to_brbcr()
+- Fixed the comment before stitch_stored_live_entries()
+- Fixed BRBINFINJ_EL1 definition for VALID_FULL enum field
+- Factored out helper __read_brbe_regset() from capture_brbe_regset()
+- Dropped the helper copy_brbe_regset()
+- Simplified stitch_stored_live_entries() with memcpy(), memmove()
+- Reworked armv8pmu_probe_pmu() to bail out early with !probe.present
+- Rework brbe_attributes_probe() without 'struct brbe_hw_attr'
+- Dropped 'struct brbe_hw_attr' argument from capture_brbe_regset()
+- Dropped 'struct brbe_hw_attr' argument from brbe_branch_save()
+- Dropped arm_pmu->private and added arm_pmu->reg_trbidr instead
+
+Changes in V11:
+
+https://lore.kernel.org/all/20230531040428.501523-1-anshuman.khandual@arm.com/
+
+- Fixed the crash for per-cpu events without event->pmu_ctx->task_ctx_data
+
+Changes in V10:
+
+https://lore.kernel.org/all/20230517022410.722287-1-anshuman.khandual@arm.com/
+
+- Rebased the series on v6.4-rc2
+- Moved ARMV8 PMUV3 changes inside drivers/perf/arm_pmuv3.c
+- Moved BRBE driver changes inside drivers/perf/arm_brbe.[c|h]
+- Moved the WARN_ON() inside the if condition in armv8pmu_handle_irq()
+
+Changes in V9:
+
+https://lore.kernel.org/all/20230315051444.1683170-1-anshuman.khandual@arm.com/
+
+- Fixed build problem with has_branch_stack() in arm64 header
+- BRBINF_EL1 definition has been changed from 'Sysreg' to 'SysregFields'
+- Renamed all BRBINF_EL1 call sites as BRBINFx_EL1
+- Dropped static const char branch_filter_error_msg[]
+- Implemented a positive list check for BRBE supported perf branch filters
+- Added a comment in armv8pmu_handle_irq()
+- Implemented per-cpu allocation for struct branch_record records
+- Skipped looping through bank 1 if an invalid record is detected in bank 0
+- Added comment in armv8pmu_branch_read() explaining prohibited region etc
+- Added comment warning about erroneously marking transactions as aborted
+- Replaced the first argument (perf_branch_entry) in capture_brbe_flags()
+- Dropped the last argument (idx) in capture_brbe_flags()
+- Dropped the brbcr argument from capture_brbe_flags()
+- Used perf_sample_save_brstack() to capture branch records for perf_sample_data
+- Added comment explaining rationale for setting BRBCR_EL1_FZP for user only traces
+- Dropped BRBE prohibited state mechanism while in armv8pmu_branch_read()
+- Implemented event task context based branch records save mechanism
+
+Changes in V8:
+
+https://lore.kernel.org/all/20230123125956.1350336-1-anshuman.khandual@arm.com/
+
+- Replaced arm_pmu->features as arm_pmu->has_branch_stack, updated its helper
+- Added a comment and line break before arm_pmu->private element
+- Added WARN_ON_ONCE() in helpers i.e armv8pmu_branch_[read|valid|enable|disable]()
+- Dropped comments in armv8pmu_enable_event() and armv8pmu_disable_event()
+- Replaced open bank encoding in BRBFCR_EL1 with SYS_FIELD_PREP()
+- Changed brbe_hw_attr->brbe_version from 'bool' to 'int'
+- Updated pr_warn() as pr_warn_once() with values in brbe_get_perf_[type|priv]()
+- Replaced all pr_warn_once() as pr_debug_once() in armv8pmu_branch_valid()
+- Added a comment in branch_type_to_brbcr() for the BRBCR_EL1 privilege settings
+- Modified the comment related to BRBINFx_EL1.LASTFAILED in capture_brbe_flags()
+- Modified brbe_get_perf_entry_type() as brbe_set_perf_entry_type()
+- Renamed brbe_valid() as brbe_record_is_complete()
+- Renamed brbe_source() as brbe_record_is_source_only()
+- Renamed brbe_target() as brbe_record_is_target_only()
+- Inverted checks for !brbe_record_is_[target|source]_only() for info capture
+- Replaced 'fetch' with 'get' in all helpers that extract field value
+- Dropped 'static int brbe_current_bank' optimization in select_brbe_bank()
+- Dropped select_brbe_bank_index() completely, added capture_branch_entry()
+- Process captured branch entries in two separate loops one for each BRBE bank
+- Moved branch_records_alloc() inside armv8pmu_probe_pmu()
+- Added a forward declaration for the helper has_branch_stack()
+- Added new callbacks armv8pmu_private_alloc() and armv8pmu_private_free()
+- Updated armv8pmu_probe_pmu() to allocate the private structure before SMP call
+
+Changes in V7:
+
+https://lore.kernel.org/all/20230105031039.207972-1-anshuman.khandual@arm.com/
+
+- Folded [PATCH 7/7] into [PATCH 3/7] which enables branch stack sampling event
+- Defined BRBFCR_EL1_BRANCH_FILTERS, BRBCR_EL1_DEFAULT_CONFIG in the header
+- Defined BRBFCR_EL1_DEFAULT_CONFIG in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_FZP
+- Defined BRBCR_EL1_DEFAULT_TS in the header
+- Updated BRBCR_EL1_DEFAULT_CONFIG with BRBCR_EL1_DEFAULT_TS
+- Moved BRBCR_EL1_DEFAULT_CONFIG check inside branch_type_to_brbcr()
+- Moved down BRBCR_EL1_CC, BRBCR_EL1_MPRED later in branch_type_to_brbcr()
+- Also set BRBE in paused state in armv8pmu_branch_disable()
+- Dropped brbe_paused(), set_brbe_paused() helpers
+- Extracted error string via branch_filter_error_msg[] for armv8pmu_branch_valid()
+- Replaced brbe_v1p1 with brbe_version in struct brbe_hw_attr
+- Added valid_brbe_[cc, format, version]() helpers
+- Split a separate brbe_attributes_probe() from armv8pmu_branch_probe()
+- Capture event->attr.branch_sample_type earlier in armv8pmu_branch_valid()
+- Defined enum brbe_bank_idx with possible values for BRBE bank indices
+- Changed armpmu->hw_attr into armpmu->private
+- Added missing space in stub definition for armv8pmu_branch_valid()
+- Replaced both kmalloc() with kzalloc()
+- Added BRBE_BANK_MAX_ENTRIES
+- Updated comment for capture_brbe_flags()
+- Updated comment for struct brbe_hw_attr
+- Dropped space after type cast in couple of places
+- Replaced inverse with negation for testing BRBCR_EL1_FZP in armv8pmu_branch_read()
+- Captured cpuc->branches->branch_entries[idx] in a local variable
+- Dropped saved_priv from armv8pmu_branch_read()
+- Reorganize PERF_SAMPLE_BRANCH_NO_[CYCLES|NO_FLAGS] related configuration
+- Replaced with FIELD_GET() and FIELD_PREP() wherever applicable
+- Replaced BRBCR_EL1_TS_PHYSICAL with BRBCR_EL1_TS_VIRTUAL
+- Moved valid_brbe_nr(), valid_brbe_cc(), valid_brbe_format(), valid_brbe_version()
+  select_brbe_bank(), select_brbe_bank_index() helpers inside the C implementation
+- Reorganized brbe_valid_nr() and dropped the pr_warn() message
+- Changed probe sequence in brbe_attributes_probe()
+- Added 'brbcr' argument into capture_brbe_flags() to ascertain correct state
+- Disable BRBE before disabling the PMU event counter
+- Enable PERF_SAMPLE_BRANCH_HV filters when is_kernel_in_hyp_mode()
+- Guard armv8pmu_reset() & armv8pmu_sched_task() with arm_pmu_branch_stack_supported()
+
+Changes in V6:
+
+https://lore.kernel.org/linux-arm-kernel/20221208084402.863310-1-anshuman.khandual@arm.com/
+
+- Restore the exception level privilege after reading the branch records
+- Unpause the buffer after reading the branch records
+- Decouple BRBCR_EL1_EXCEPTION/ERTN from perf event privilege level
+- Reworked BRBE implementation and branch stack sampling support on arm pmu
+- BRBE implementation is now part of overall ARMV8 PMU implementation
+- BRBE implementation moved from drivers/perf/ to inside arch/arm64/kernel/
+- CONFIG_ARM_BRBE_PMU renamed as CONFIG_ARM64_BRBE in arch/arm64/Kconfig
+- File moved - drivers/perf/arm_pmu_brbe.c -> arch/arm64/kernel/brbe.c
+- File moved - drivers/perf/arm_pmu_brbe.h -> arch/arm64/kernel/brbe.h
+- BRBE name has been dropped from struct arm_pmu and struct hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in arm_pmu and hw_pmu_events
+- BRBE name has been abstracted out as 'branches' in ARMV8 PMU implementation
+- Added sched_task() callback into struct arm_pmu
+- Added 'hw_attr' into struct arm_pmu encapsulating possible PMU HW attributes
+- Dropped explicit attributes brbe_(v1p1, nr, cc, format) from struct arm_pmu
+- Dropped brbfcr, brbcr, registers scratch area from struct hw_pmu_events
+- Dropped brbe_users, brbe_context tracking in struct hw_pmu_events
+- Added 'features' tracking into struct arm_pmu with ARM_PMU_BRANCH_STACK flag
+- armpmu->hw_attr maps into 'struct brbe_hw_attr' inside BRBE implementation
+- Set ARM_PMU_BRANCH_STACK in 'arm_pmu->features' after successful BRBE probe
+- Added armv8pmu_branch_reset() inside armv8pmu_branch_enable()
+- Dropped brbe_supported() as events will be rejected via ARM_PMU_BRANCH_STACK
+- Dropped set_brbe_disabled() as well
+- Reformated armv8pmu_branch_valid() warnings while rejecting unsupported events
+
+Changes in V5:
+
+https://lore.kernel.org/linux-arm-kernel/20221107062514.2851047-1-anshuman.khandual@arm.com/
+
+- Changed BRBCR_EL1.VIRTUAL from 0b1 to 0b01
+- Changed BRBFCR_EL1.EnL into BRBFCR_EL1.EnI
+- Changed config ARM_BRBE_PMU from 'tristate' to 'bool'
+
+Changes in V4:
+
+https://lore.kernel.org/all/20221017055713.451092-1-anshuman.khandual@arm.com/
+
+- Changed ../tools/sysreg declarations as suggested
+- Set PERF_SAMPLE_BRANCH_STACK in data.sample_flags
+- Dropped perfmon_capable() check in armpmu_event_init()
+- s/pr_warn_once/pr_info in armpmu_event_init()
+- Added brbe_format element into struct pmu_hw_events
+- Changed v1p1 as brbe_v1p1 in struct pmu_hw_events
+- Dropped pr_info() from arm64_pmu_brbe_probe(), solved LOCKDEP warning
+
+Changes in V3:
+
+https://lore.kernel.org/all/20220929075857.158358-1-anshuman.khandual@arm.com/
+
+- Moved brbe_stack from the stack and now dynamically allocated
+- Return PERF_BR_PRIV_UNKNOWN instead of -1 in brbe_fetch_perf_priv()
+- Moved BRBIDR0, BRBCR, BRBFCR registers and fields into tools/sysreg
+- Created dummy BRBINF_EL1 field definitions in tools/sysreg
+- Dropped ARMPMU_EVT_PRIV framework which cached perfmon_capable()
+- Both exception and exception return branche records are now captured
+  only if the event has PERF_SAMPLE_BRANCH_KERNEL which would already
+  been checked in generic perf via perf_allow_kernel()
+
+Changes in V2:
+
+https://lore.kernel.org/all/20220908051046.465307-1-anshuman.khandual@arm.com/
+
+- Dropped branch sample filter helpers consolidation patch from this series
+- Added new hw_perf_event.flags element ARMPMU_EVT_PRIV to cache perfmon_capable()
+- Use cached perfmon_capable() while configuring BRBE branch record filters
+
+Changes in V1:
+
+https://lore.kernel.org/linux-arm-kernel/20220613100119.684673-1-anshuman.khandual@arm.com/
+
+- Added CONFIG_PERF_EVENTS wrapper for all branch sample filter helpers
+- Process new perf branch types via PERF_BR_EXTEND_ABI
+
+Changes in RFC V2:
+
+https://lore.kernel.org/linux-arm-kernel/20220412115455.293119-1-anshuman.khandual@arm.com/
+
+- Added branch_sample_priv() while consolidating other branch sample filter helpers
+- Changed all SYS_BRBXXXN_EL1 register definition encodings per Marc
+- Changed the BRBE driver as per proposed BRBE related perf ABI changes (V5)
+- Added documentation for struct arm_pmu changes, updated commit message
+- Updated commit message for BRBE detection infrastructure patch
+- PERF_SAMPLE_BRANCH_KERNEL gets checked during arm event init (outside the driver)
+- Branch privilege state capture mechanism has now moved inside the driver
+
+Changes in RFC V1:
+
+https://lore.kernel.org/all/1642998653-21377-1-git-send-email-anshuman.khandual@arm.com/
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: James Clark <james.clark@arm.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Suzuki Poulose <suzuki.poulose@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-perf-users@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (6):
+  arm64/sysreg: Add BRBE registers and fields
+  KVM: arm64: Explicitly handle BRBE traps as UNDEFINED
+  drivers: perf: arm_pmu: Add infrastructure for branch stack sampling
+  arm64/boot: Enable EL2 requirements for BRBE
+  drivers: perf: arm_pmuv3: Enable branch stack sampling via FEAT_BRBE
+  KVM: arm64: nvhe: Disable branch generation in nVHE guests
+
+James Clark (3):
+  perf: test: Speed up running brstack test on an Arm model
+  perf: test: Remove empty lines from branch filter test output
+  perf: test: Extend branch stack sampling test for Arm64 BRBE
+
+ Documentation/arch/arm64/booting.rst   |   23 +-
+ arch/arm64/include/asm/el2_setup.h     |   87 +-
+ arch/arm64/include/asm/kvm_host.h      |    3 +
+ arch/arm64/include/asm/sysreg.h        |   17 +-
+ arch/arm64/kvm/debug.c                 |    5 +
+ arch/arm64/kvm/hyp/nvhe/debug-sr.c     |   31 +
+ arch/arm64/kvm/sys_regs.c              |   56 ++
+ arch/arm64/tools/sysreg                |  131 +++
+ drivers/perf/Kconfig                   |   11 +
+ drivers/perf/Makefile                  |    1 +
+ drivers/perf/arm_brbe.c                | 1198 ++++++++++++++++++++++++
+ drivers/perf/arm_pmu.c                 |   42 +-
+ drivers/perf/arm_pmuv3.c               |  160 +++-
+ drivers/perf/arm_pmuv3_branch.h        |   83 ++
+ include/linux/perf/arm_pmu.h           |   37 +-
+ tools/perf/tests/builtin-test.c        |    1 +
+ tools/perf/tests/shell/test_brstack.sh |   57 +-
+ tools/perf/tests/tests.h               |    1 +
+ tools/perf/tests/workloads/Build       |    2 +
+ tools/perf/tests/workloads/traploop.c  |   39 +
+ 20 files changed, 1959 insertions(+), 26 deletions(-)
+ create mode 100644 drivers/perf/arm_brbe.c
+ create mode 100644 drivers/perf/arm_pmuv3_branch.h
+ create mode 100644 tools/perf/tests/workloads/traploop.c
+
+-- 
+2.25.1
 
