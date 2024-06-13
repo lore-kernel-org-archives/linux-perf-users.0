@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 367FE1369BE;
-	Thu, 13 Jun 2024 06:18:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74588136E1D;
+	Thu, 13 Jun 2024 06:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718259487; cv=none; b=hqGAD7R6TvhnreYq1AHhXqFnx79xFXbirpCgi9jCil0r73pZia7YBdKOl0nILUBuFt8dtfRwj8sgQWNzjibzQ9WY7qW06gtGeQLBnlwGZbEYBxPQUiRsEluxmGri5EsQBkYdih/zhnokLx/dJRkHcVTY6xY5mneqT7cUDlS5JhQ=
+	t=1718259494; cv=none; b=fn5VmDgmDN+XsyB2zBsc4dIEXm1dCJthll5hqkYl8neBEG0VEoxg+yYYGrAanqAfQ/CDl2A+rKXiPEBjiLFT3vcTxAHQq99ulkP+zf96zRkQ8A9VYGpO+CdRB6bDvQnXPdRVbzcnY86Z3z44bXeatxxHkzHIqy5HB1bXWYidiCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718259487; c=relaxed/simple;
-	bh=0rlJbjnWrbU1YFpHEX1+qRwV9O7p3rM4r1PQprGPLik=;
+	s=arc-20240116; t=1718259494; c=relaxed/simple;
+	bh=qhBXhccKxvRUSEPkOSbWFc32meqmS1mdGjzuJrBVfoM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ipAf8aJriINTk3GQ9GXQnZmrWRZ1aMoYzQ3KSnHHwhbVVFWCkR66lqVQNJzpZ221llQxmSXXhT7e7e/B7YxQoQLb7xy4QTwCz8PFx7J+wOs6yKFi6j94XZ0/tEJguxfKiNA/nOZl7elvNPaMsfLJ5Bb6it9LVhJyNIlYtx62VjA=
+	 MIME-Version; b=a3tXLrZzSOPbK9Nvsmv76OCyBhFJ5lxCWixROKMGoRHxD8MMsGyBrGctTnRCmAAsCfv/cIoZ9g2C8AVDA30Jaq1Tv6tcy/56VSDZIIAK50UaEvWe57rjyPvzjbkTmgWpIbua84K+DYMKV0tjFLYDT/qafCM2RYJo/I7A6dRHa2w=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 591EA1477;
-	Wed, 12 Jun 2024 23:18:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 647C81063;
+	Wed, 12 Jun 2024 23:18:36 -0700 (PDT)
 Received: from a077893.arm.com (unknown [10.163.44.128])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 764723F5A1;
-	Wed, 12 Jun 2024 23:17:59 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6A2AB3F5A1;
+	Wed, 12 Jun 2024 23:18:05 -0700 (PDT)
 From: Anshuman Khandual <anshuman.khandual@arm.com>
 To: linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
@@ -33,10 +33,13 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V18 3/9] drivers: perf: arm_pmu: Add infrastructure for branch stack sampling
-Date: Thu, 13 Jun 2024 11:47:25 +0530
-Message-Id: <20240613061731.3109448-4-anshuman.khandual@arm.com>
+	linux-perf-users@vger.kernel.org,
+	Jonathan Corbet <corbet@lwn.net>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	linux-doc@vger.kernel.org
+Subject: [PATCH V18 4/9] arm64/boot: Enable EL2 requirements for BRBE
+Date: Thu, 13 Jun 2024 11:47:26 +0530
+Message-Id: <20240613061731.3109448-5-anshuman.khandual@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240613061731.3109448-1-anshuman.khandual@arm.com>
 References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
@@ -48,178 +51,200 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In order to support the Branch Record Buffer Extension (BRBE), we need to
-extend the arm_pmu framework with some basic infrastructure for branch
-stack sampling which arm_pmu drivers can opt-in to using. Subsequent
-patches will use this to add support for BRBE in the PMUv3 driver.
+Fine grained trap control for BRBE registers, and instructions access need
+to be configured in HDFGRTR_EL2, HDFGWTR_EL2 and HFGITR_EL2 registers when
+kernel enters at EL1 but EL2 is present. This changes __init_el2_fgt() as
+required.
 
-With BRBE, the hardware records branches into a hardware FIFO, which will
-be sampled by software when perf events overflow. A task may be context-
-switched an arbitrary number of times between overflows, and to avoid
-losing samples we need to save the current records when a task is context-
-switched out. To do these we'll need to use the pmu::sched_task() callback,
-and we'll also need to allocate some per-task storage space via event flag
-PERF_ATTACH_TASK_DATA.
+Similarly cycle and mis-prediction capture need to be enabled in BRBCR_EL1
+and BRBCR_EL2 when the kernel enters either into EL1 or EL2. This adds new
+__init_el2_brbe() to achieve this objective.
+
+This also updates Documentation/arch/arm64/booting.rst with all the above
+EL2 along with MDRC_EL3.SBRBE requirements.
+
+First this replaces an existing hard encoding (1 << 62) with corresponding
+applicable macro HDFGRTR_EL2_nPMSNEVFR_EL1_MASK.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>
 Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 ----
 Changes in V18:
 
-- Scan valid branch stack events in armpmu_start() to create merged filter
-- Updated the commit message
+- Dropped ifdef CONFIG_ARM64_BRBE around __init_el2_brbe()
+- Updated the in code comment around __init_el2_brbe()
+- Dropped the write up for EL2->EL1 transition, moved up the EL3 write up
 
- drivers/perf/arm_pmu.c       | 42 +++++++++++++++++++++++++++++++++---
- include/linux/perf/arm_pmu.h | 32 ++++++++++++++++++++++++++-
- 2 files changed, 70 insertions(+), 4 deletions(-)
+ Documentation/arch/arm64/booting.rst | 21 +++++++
+ arch/arm64/include/asm/el2_setup.h   | 87 +++++++++++++++++++++++++++-
+ 2 files changed, 105 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/perf/arm_pmu.c b/drivers/perf/arm_pmu.c
-index 8458fe2cebb4..219c1e276327 100644
---- a/drivers/perf/arm_pmu.c
-+++ b/drivers/perf/arm_pmu.c
-@@ -289,6 +289,23 @@ static void armpmu_start(struct perf_event *event, int flags)
- {
- 	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
- 	struct hw_perf_event *hwc = &event->hw;
-+	struct pmu_hw_events *cpuc = this_cpu_ptr(armpmu->hw_events);
-+	int idx;
-+
-+	/*
-+	 * Merge all branch filter requests from different perf
-+	 * events being added into this PMU. This includes both
-+	 * privilege and branch type filters.
-+	 */
-+	if (armpmu->has_branch_stack) {
-+		cpuc->branch_sample_type = 0;
-+		for (idx = 0; idx < ARMPMU_MAX_HWEVENTS; idx++) {
-+			struct perf_event *event_idx = cpuc->events[idx];
-+
-+			if (event_idx && has_branch_stack(event_idx))
-+				cpuc->branch_sample_type |= event_idx->attr.branch_sample_type;
-+		}
-+	}
+diff --git a/Documentation/arch/arm64/booting.rst b/Documentation/arch/arm64/booting.rst
+index b57776a68f15..c8a17c021968 100644
+--- a/Documentation/arch/arm64/booting.rst
++++ b/Documentation/arch/arm64/booting.rst
+@@ -349,6 +349,27 @@ Before jumping into the kernel, the following conditions must be met:
  
- 	/*
- 	 * ARM pmu always has to reprogram the period, so ignore
-@@ -317,6 +334,9 @@ armpmu_del(struct perf_event *event, int flags)
- 	struct hw_perf_event *hwc = &event->hw;
- 	int idx = hwc->idx;
+     - HWFGWTR_EL2.nSMPRI_EL1 (bit 54) must be initialised to 0b01.
  
-+	if (has_branch_stack(event))
-+		armpmu->branch_stack_del(event, hw_events);
++  For CPUs with feature Branch Record Buffer Extension (FEAT_BRBE):
 +
- 	armpmu_stop(event, PERF_EF_UPDATE);
- 	hw_events->events[idx] = NULL;
- 	armpmu->clear_event_idx(hw_events, event);
-@@ -342,6 +362,9 @@ armpmu_add(struct perf_event *event, int flags)
- 	if (idx < 0)
- 		return idx;
- 
-+	if (has_branch_stack(event))
-+		armpmu->branch_stack_add(event, hw_events);
++  - If EL3 is present:
 +
- 	/*
- 	 * If there is an event in the counter we are going to use then make
- 	 * sure it is disabled.
-@@ -511,13 +534,25 @@ static int armpmu_event_init(struct perf_event *event)
- 		!cpumask_test_cpu(event->cpu, &armpmu->supported_cpus))
- 		return -ENOENT;
- 
--	/* does not support taken branch sampling */
--	if (has_branch_stack(event))
--		return -EOPNOTSUPP;
-+	if (has_branch_stack(event)) {
-+		if (!armpmu->has_branch_stack)
-+			return -EOPNOTSUPP;
++    - MDCR_EL3.SBRBE (bits 33:32) must be initialised to 0b11.
 +
-+		if (!armpmu->branch_stack_init(event))
-+			return -EOPNOTSUPP;
-+	}
- 
- 	return __hw_perf_event_init(event);
- }
- 
-+static void armpmu_sched_task(struct perf_event_pmu_context *pmu_ctx, bool sched_in)
-+{
-+	struct arm_pmu *armpmu = to_arm_pmu(pmu_ctx->pmu);
++  - If the kernel is entered at EL1 and EL2 is present:
 +
-+	if (armpmu->sched_task)
-+		armpmu->sched_task(pmu_ctx, sched_in);
-+}
++    - BRBCR_EL2.CC (bit 3) must be initialised to 0b1.
++    - BRBCR_EL2.MPRED (bit 4) must be initialised to 0b1.
 +
- static void armpmu_enable(struct pmu *pmu)
- {
- 	struct arm_pmu *armpmu = to_arm_pmu(pmu);
-@@ -864,6 +899,7 @@ struct arm_pmu *armpmu_alloc(void)
- 	}
++    - HDFGRTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
++    - HDFGRTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
++    - HDFGRTR_EL2.nBRBIDR  (bit 59) must be initialised to 0b1.
++
++    - HDFGWTR_EL2.nBRBDATA (bit 61) must be initialised to 0b1.
++    - HDFGWTR_EL2.nBRBCTL  (bit 60) must be initialised to 0b1.
++
++    - HFGITR_EL2.nBRBIALL (bit 56) must be initialised to 0b1.
++    - HFGITR_EL2.nBRBINJ  (bit 55) must be initialised to 0b1.
++
+   For CPUs with the Scalable Matrix Extension FA64 feature (FEAT_SME_FA64):
  
- 	pmu->pmu = (struct pmu) {
-+		.sched_task	= armpmu_sched_task,
- 		.pmu_enable	= armpmu_enable,
- 		.pmu_disable	= armpmu_disable,
- 		.event_init	= armpmu_event_init,
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index b3b34f6670cf..9eda16dd684e 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -46,6 +46,18 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_63BIT) == ARMPMU_EVT_63BIT);
- 	},								\
- }
+   - If EL3 is present:
+diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm/el2_setup.h
+index fd87c4b8f984..1c7b131ad2be 100644
+--- a/arch/arm64/include/asm/el2_setup.h
++++ b/arch/arm64/include/asm/el2_setup.h
+@@ -155,6 +155,40 @@
+ .Lskip_set_cptr_\@:
+ .endm
  
 +/*
-+ * Maximum branch record entries which could be processed
-+ * for core perf branch stack sampling support, regardless
-+ * of the hardware support available on a given ARM PMU.
++ * Enable BRBE to record cycle counts and branch mispredicts.
++ *
++ * At any EL, to record cycle counts BRBE requires that both
++ * BRBCR_EL2.CC=1 and BRBCR_EL1.CC=1.
++ *
++ * At any EL, to record branch mispredicts BRBE requires that both
++ * BRBCR_EL2.MPRED=1 and BRBCR_EL1.MPRED=1.
++ *
++ * When HCR_EL2.E2H=1, the BRBCR_EL1 encoding is redirected to
++ * BRBCR_EL2, but the {CC,MPRED} bits in the real BRBCR_EL1 register
++ * still apply.
++ *
++ * Set {CC,MPRBED} in both BRBCR_EL2 and BRBCR_EL1 so that at runtime we
++ * only need to enable/disable thse in BRBCR_EL1 regardless of whether
++ * the kernel ends up executing in EL1 or EL2.
 + */
-+#define MAX_BRANCH_RECORDS 64
++.macro __init_el2_brbe
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_\@
 +
-+struct branch_records {
-+	struct perf_branch_stack	branch_stack;
-+	struct perf_branch_entry	branch_entries[MAX_BRANCH_RECORDS];
-+};
++	mov_q	x0, BRBCR_ELx_CC | BRBCR_ELx_MPRED
++	msr_s	SYS_BRBCR_EL2, x0
 +
- /* The events for a given PMU register set. */
- struct pmu_hw_events {
- 	/*
-@@ -66,6 +78,17 @@ struct pmu_hw_events {
- 	struct arm_pmu		*percpu_pmu;
++	__check_hvhe .Lset_brbe_nvhe_\@, x1
++	msr_s	SYS_BRBCR_EL12, x0	// VHE
++	b	.Lskip_brbe_\@
++
++.Lset_brbe_nvhe_\@:
++	msr_s	SYS_BRBCR_EL1, x0	// NVHE
++.Lskip_brbe_\@:
++.endm
++
+ /* Disable any fine grained traps */
+ .macro __init_el2_fgt
+ 	mrs	x1, id_aa64mmfr0_el1
+@@ -162,16 +196,48 @@
+ 	cbz	x1, .Lskip_fgt_\@
  
- 	int irq;
+ 	mov	x0, xzr
++	mov	x2, xzr
+ 	mrs	x1, id_aa64dfr0_el1
+ 	ubfx	x1, x1, #ID_AA64DFR0_EL1_PMSVer_SHIFT, #4
+ 	cmp	x1, #3
+ 	b.lt	.Lset_debug_fgt_\@
 +
-+	struct branch_records	*branches;
-+
-+	/* Active context for task events */
-+	void			*branch_context;
-+
-+	/* Active events requesting branch records */
-+	unsigned int		branch_users;
-+
-+	/* Active branch sample type filters */
-+	unsigned long		branch_sample_type;
- };
+ 	/* Disable PMSNEVFR_EL1 read and write traps */
+-	orr	x0, x0, #(1 << 62)
++	orr	x0, x0, #HDFGRTR_EL2_nPMSNEVFR_EL1_MASK
++	orr	x2, x2, #HDFGWTR_EL2_nPMSNEVFR_EL1_MASK
  
- enum armpmu_attr_groups {
-@@ -96,8 +119,15 @@ struct arm_pmu {
- 	void		(*stop)(struct arm_pmu *);
- 	void		(*reset)(void *);
- 	int		(*map_event)(struct perf_event *event);
-+	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
-+	bool		(*branch_stack_init)(struct perf_event *event);
-+	void		(*branch_stack_add)(struct perf_event *event, struct pmu_hw_events *cpuc);
-+	void		(*branch_stack_del)(struct perf_event *event, struct pmu_hw_events *cpuc);
-+	void		(*branch_stack_reset)(void);
- 	int		num_events;
--	bool		secure_access; /* 32-bit ARM only */
-+	unsigned int	secure_access	: 1, /* 32-bit ARM only */
-+			has_branch_stack: 1, /* 64-bit ARM only */
-+			reserved	: 30;
- #define ARMV8_PMUV3_MAX_COMMON_EVENTS		0x40
- 	DECLARE_BITMAP(pmceid_bitmap, ARMV8_PMUV3_MAX_COMMON_EVENTS);
- #define ARMV8_PMUV3_EXT_COMMON_EVENT_BASE	0x4000
+ .Lset_debug_fgt_\@:
++#ifdef CONFIG_ARM64_BRBE
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_reg_fgt_\@
++
++	/*
++	 * Disable read traps for the following registers
++	 *
++	 * [BRBSRC|BRBTGT|RBINF]_EL1
++	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
++	 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBDATA_MASK
++
++	/*
++	 * Disable write traps for the following registers
++	 *
++	 * [BRBSRCINJ|BRBTGTINJ|BRBINFINJ|BRBTS]_EL1
++	 */
++	orr	x2, x2, #HDFGWTR_EL2_nBRBDATA_MASK
++
++	/* Disable read and write traps for [BRBCR|BRBFCR]_EL1 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBCTL_MASK
++	orr	x2, x2, #HDFGWTR_EL2_nBRBCTL_MASK
++
++	/* Disable read traps for BRBIDR_EL1 */
++	orr	x0, x0, #HDFGRTR_EL2_nBRBIDR_MASK
++
++.Lskip_brbe_reg_fgt_\@:
++#endif /* CONFIG_ARM64_BRBE */
+ 	msr_s	SYS_HDFGRTR_EL2, x0
+-	msr_s	SYS_HDFGWTR_EL2, x0
++	msr_s	SYS_HDFGWTR_EL2, x2
+ 
+ 	mov	x0, xzr
+ 	mrs	x1, id_aa64pfr1_el1
+@@ -194,7 +260,21 @@
+ .Lset_fgt_\@:
+ 	msr_s	SYS_HFGRTR_EL2, x0
+ 	msr_s	SYS_HFGWTR_EL2, x0
+-	msr_s	SYS_HFGITR_EL2, xzr
++	mov	x0, xzr
++#ifdef CONFIG_ARM64_BRBE
++	mrs	x1, id_aa64dfr0_el1
++	ubfx	x1, x1, #ID_AA64DFR0_EL1_BRBE_SHIFT, #4
++	cbz	x1, .Lskip_brbe_insn_fgt_\@
++
++	/* Disable traps for BRBIALL instruction */
++	orr	x0, x0, #HFGITR_EL2_nBRBIALL_MASK
++
++	/* Disable traps for BRBINJ instruction */
++	orr	x0, x0, #HFGITR_EL2_nBRBINJ_MASK
++
++.Lskip_brbe_insn_fgt_\@:
++#endif /* CONFIG_ARM64_BRBE */
++	msr_s	SYS_HFGITR_EL2, x0
+ 
+ 	mrs	x1, id_aa64pfr0_el1		// AMU traps UNDEF without AMU
+ 	ubfx	x1, x1, #ID_AA64PFR0_EL1_AMU_SHIFT, #4
+@@ -229,6 +309,7 @@
+ 	__init_el2_nvhe_idregs
+ 	__init_el2_cptr
+ 	__init_el2_fgt
++	__init_el2_brbe
+ .endm
+ 
+ #ifndef __KVM_NVHE_HYPERVISOR__
 -- 
 2.25.1
 
