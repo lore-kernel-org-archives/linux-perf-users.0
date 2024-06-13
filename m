@@ -1,86 +1,81 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D3DE1E519
-	for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 13:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76A71459F3;
+	Thu, 13 Jun 2024 14:10:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718286508; cv=none; b=HOmHr6d21I5nL5S7ICJtZa1Crao+AwdHbvtGRppGKq4QcEGfXdlJb8Zd/Fk1yzvfCAKo4Nq+gWFs1+5DWD9rrYJLUgytX7Qau77VywGSjYr4WGlqlr58ymRt9n6s530v7X/ZVmdCqKrWBEbBGik+TqdBelHUqtpG/IiP54aHXUY=
+	t=1718287848; cv=none; b=Q2Gl3aJZ2Rxdn2DpW5WzJnZnkHtSYAsN3ThzLa/pwCKZLvaqM5GFp3mBWPN3ccv9wPVwkp3alt/ImBfhT/veitG+lQ2KGAdxNMXlniFZfRZTLEUuAiW8CX6Uailnn3rdTd23NZhcprD7lI3iBMqONxAnqnTTafeyTzSEGvfs/ZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718286508; c=relaxed/simple;
-	bh=CVGRkuKZN8tL9dIgYW9AdXLHSULaMuz/Q8UAe0uT92U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=CkrIkiWk5gDjUxZs72sCVXJuwttwy8XDSeeT/Pn4efUtwImapDmBSdWeqLYVdd9Uv2RFdWJr1at6STot0HD3s6leO1XrqlR4Wm80kl6BvBrgs3TrtHY5ATLq7mMoKhtipZcimiRSX/BZ73fSji4821mMZC3aEpd68FF/cCsnWko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zh3a+ugQ; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1718287848; c=relaxed/simple;
+	bh=dv9A01TA9xjZbgc+DNQkcTYDgrGwnMovOaQAcNnXn3k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gUYSsYWp+NXdzhXUzQImvbkaLX2zeLrmSzukHLiwL3K2E9RQWT3ZW61HFEsl38I+CQ+ZnAAh+7FZSA8icX+SNox7IMviJ5lmk54RgWCaj4pbUCQyN42cZ3J25lXmnP4SoPdnne+79aEvEiWuvejDAaB2Yn2Sijr78bnSMosyBa0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=egs4SJDu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zh3a+ugQ"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso170805ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 13 Jun 2024 06:48:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718286506; x=1718891306; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CVGRkuKZN8tL9dIgYW9AdXLHSULaMuz/Q8UAe0uT92U=;
-        b=zh3a+ugQYAnYeO3iMJvmvbbyGch8Wrsn60zkz3syrDrRHQg0ap3xYDAMNYodWKFo9f
-         soZxvKTkSQ10/fS5q8xJEEiEPQsrK3IsE5GZB+fECLLXuy868pdVjqNNnkEZK2S/vgsc
-         iiytkrGEUvuEHx79eh2xjFNw0B4NhPrrmAsxr2rwtmBtR4cxhqDDY7hv6Z+P2ZBndhor
-         V4rCWxJxPnwukSor9i6Z8iasMphz14fzMiR7/B1rLSJ0AnwtnSlVLnWTZMGsHvc2whHc
-         GXrYYqms+iypf14nelQO/owzFhV5MtUbZ5NM8Aek9HOQo75lnY7pmmbm0AFo8oUp51oo
-         G0Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718286506; x=1718891306;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CVGRkuKZN8tL9dIgYW9AdXLHSULaMuz/Q8UAe0uT92U=;
-        b=oOiE7ErTtsioF4Lv4YxvvlsCb9YIX3g0OhMa8pqvY+RBaItwjLml/aHLm0IzkxHCnc
-         +Lew4HlfnpY00C2y1q7R2oHfU7D2/0ZgK7VI9/94wursbOMSxZoAjBJ3fpNx698UFh9Z
-         8T9pba1NSNTupSQeGCbONg94t8bUnQCGRnHj8pjA86yqDvgr2/xVmPQ31uNQTZGPevid
-         QteuqvDhfztDYzun0mcdw0SeQ5ATVN9D1sdkgHZi4oo/kEYGFjoZTAsg7wyDzKAnMG6q
-         KdPFXzc30j4WpcRbeO4vcyJGFYj9WUGSLgsEtHYDMyssQbRWRgCQwtdELtmdAuPQWywr
-         AUjg==
-X-Gm-Message-State: AOJu0YzmyrPUqXqvGS0sA2EfBPvq2El7wPaRSHwzNOEHtJADNAPeQ0F3
-	1XWs6piMqCdl28HylVPFrtyfL/NprhKtgs+rnTHsXn7ZHq5FyAWuiTYrPfNr3ALMXbdG601EXiF
-	uiJ75qz21siiaJACO9dM5oo5tvPf1x1sngImxCXqUtgy0M8cOaKWm8qw=
-X-Google-Smtp-Source: AGHT+IG3+y+F9NN5CUf8cLbNkVMLV2pFiOfkehsDFipgWzjEPkRo1/7LrK9f2s4y1XsZC4nM3WNBNvzq6oVlVdn8Xag=
-X-Received: by 2002:a17:902:bcc7:b0:1f4:50b4:a50b with SMTP id
- d9443c01a7336-1f84fde63b4mr3085835ad.18.1718286505748; Thu, 13 Jun 2024
- 06:48:25 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="egs4SJDu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D53FC2BBFC;
+	Thu, 13 Jun 2024 14:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718287848;
+	bh=dv9A01TA9xjZbgc+DNQkcTYDgrGwnMovOaQAcNnXn3k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=egs4SJDumCcvLr8/Jqc+1qr2WuYchZktSRDlH1/iIjL9FbXnK0w3AZt6A+HbeaEKK
+	 KqydAZbU2Bik7JkZCZvfnEA8aRnbPA/ztR2mPbJCkung14wOFpbM2xmHsJfeV3/QrP
+	 hUBJZZc2795HhCLeo/wzKwXATuyl6/BBEWas+N/Q5YmorDTsd02PSLTsyQMxQqFvSY
+	 DaKU4z8JZ5rfDFkM6pAfiouYwy1Mkh4AyQhF6n8jWOdzlwQ5UfAlAjMhWKJ0pg0cUv
+	 q+DqDzcHt8E41sA+6IPwtwsUJpp5+LhaNwaJ6tQgPwdfhmwXd+RjMrqd1y1Nqbq8n5
+	 j2QycU/UMjryw==
+Date: Thu, 13 Jun 2024 11:10:41 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: peterz@infradead.org, mingo@redhat.com, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, mic@digikod.net, gnoack@google.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v4] perf trace: BTF-based enum pretty printing
+Message-ID: <Zmr94cx8pYvXi9Hj@x1>
+References: <20240613042747.3770204-1-howardchu95@gmail.com>
+ <ZmrqQs64TvAt8XjK@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
- <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
-In-Reply-To: <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 13 Jun 2024 06:48:14 -0700
-Message-ID: <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To: linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	chu howard <howardchu95@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZmrqQs64TvAt8XjK@x1>
 
-Hi,
+On Thu, Jun 13, 2024 at 09:47:02AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jun 13, 2024 at 12:27:47PM +0800, Howard Chu wrote:
+> > perf $ ./perf trace -e landlock_add_rule
+> >      0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)                  = -1 EBADFD (File descriptor in bad state)
+> >      0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH)              = -1 EBADFD (File descriptor in bad state)
+> > ```
 
-3rd week of Google Summer-of-Code. Office hours this week are the same
-as last week:
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 
-Linux perf tool office hours
-Friday, June 14 =C2=B7 8:00 =E2=80=93 9:00am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/tif-efem-uiq
-Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+And when someone suggests you do something and you implement it, a
+Suggested-by: tag is as documented in:
 
-Thanks,
-Ian
+⬢[acme@toolbox perf-tools-next]$ grep -A5 Suggested-by Documentation/process/submitting-patches.rst
+Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
+----------------------------------------------------------------------
+
+The Reported-by tag gives credit to people who find bugs and report them and it
+hopefully inspires them to help us again in the future. The tag is intended for
+bugs; please do not use it to credit feature requests. The tag should be
+--
+A Suggested-by: tag indicates that the patch idea is suggested by the person
+named and ensures credit to the person for the idea. Please note that this
+tag should not be added without the reporter's permission, especially if the
+idea was not posted in a public forum. That said, if we diligently credit our
+idea reporters, they will, hopefully, be inspired to help us again in the
+future.
+⬢[acme@toolbox perf-tools-next]$
+
+- Arnaldo
