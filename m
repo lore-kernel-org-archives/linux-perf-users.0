@@ -1,142 +1,245 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F5D57E574;
-	Fri, 14 Jun 2024 10:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E031A14D29B;
+	Fri, 14 Jun 2024 12:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718360242; cv=none; b=G3lzhbJjWr5zeeLjTniW9eGPRk0XYLidG+3zqLFGUaLOL5PqlWlsrTDLzLxZ+COlfZUY56UnccV9vkMXtYB5djmKfIPgk0oiBDyr5sReq6taFwgzmfapJ6nPRjLRr2PGQd73MI7EcMf1HYG1Fu/c+rwJau/lq7IkAS1LOL2SvdA=
+	t=1718368420; cv=none; b=bj496EQ0uqQfhpuMF3LH8EquAjZfaL48fREU57feuPWuC/lx8ROPVDlcgnkDurTYJsHIpot6roCJtNHDGjad0TiNtBt9U1lq6B45zzptqI1cgS3Ae1uH4a/eKY5GuKz8VF+E4ckFhKQ6nS+LPU1uH/5gdOTifhw7b8K87kY1eYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718360242; c=relaxed/simple;
-	bh=5UOI7ykyIyrWv0zV25WvSOXZAgPx774trB7YoT24aP0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fi1cdQsjCQVdg943CH0oM2sGYYQhk0Z8LslcuBV+KeuaLW2Fu2BpBtx2mo+jaKT36hEgYYAxWGR6aDGnCTrXksy+uA1Pt9zrgAeltGkaUxcGFdFvoPzTmr111gQj8zXsmdTZ5DL5VF1KUFmiYk7EPahrZKQYogoWZP1iLO71b58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=HYUtGoYv; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718368420; c=relaxed/simple;
+	bh=GLgMoYqQYcCbuXGoGXD8j9JN7q1v3yKblwBp8qWBNDg=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SfsyXCtVV+KOCKAGXa8kcY4BxE/9lbmtG4EAie1ic9X0REKthLFmWaSZ6BPo4H+jFOmPCPkj6tPgdcI6Ra4T3ahnaAD6js9IlA9gyA8PuK4hrAAX9fNBT1V3mfOKQI9tezjyMieNQJmkm2wUim+yFSXpO4IRT4+pJP3N8ZS5HNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcvHrAOq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HYUtGoYv"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=k/WitOts9waE0REDVUa/TgAzlnqg2Mvxo9iE/34dOyo=; b=HYUtGoYvGRE2zm+CNMKLePHJIh
-	vlNllM4XgHCgzvNSR6e5AnDk1IlfE2r5F6jRr6acX6KD6hh0r7UvG4UippR3oCzsrYNDfqSpnvYo2
-	+Zj38/Z9xOXgi4DhomllOfd/Q1+c0DCEUlmP37JsBcUFZP91x9DK69ZgwyFrQpaj5KUdrb5kczq2s
-	izci46WAkikfrc39KsKes/mLwJOBlAPOzcbeQ9xQ+2C89jhHbsPdD4I654fV2rANyJ4hgp9XHzUaC
-	n8Zlc/3M1VsQHxywX2/1scV6dJX1j14P2ypXdPkKDdD2n2f+7UaIKRw487pICLDAHen7AvUv/fWSD
-	OV4rSkxw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sI3zZ-0000000Grmk-1B9w;
-	Fri, 14 Jun 2024 10:17:09 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id DFCBD300886; Fri, 14 Jun 2024 12:17:08 +0200 (CEST)
-Date: Fri, 14 Jun 2024 12:17:08 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcvHrAOq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A45EC2BD10;
+	Fri, 14 Jun 2024 12:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718368419;
+	bh=GLgMoYqQYcCbuXGoGXD8j9JN7q1v3yKblwBp8qWBNDg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rcvHrAOqi7cmNK2hFeCL7mbpMGmgqrkr6N49QVPhLOWr5S8WjJFX0GYBoPBV7trxu
+	 ZRB+kKsmsKVpgZ7ZVgACEy4v7DwvXhTnNrQpv0hIuM+v/+dvM/xVzIMEZ3kNHzJ7mR
+	 R3ZcuDSWDGVvCK2+iAwsF1BNEtdYTuJV7uqSVtfHvu+4x97PDKoPsHkq9kuqycwzVx
+	 SbYBqbpFZA4IUdxaKRBi7ukGp0Tr65TZhdZk/fl8ZrUASGKm0rBS4QFLgaDdW5F37B
+	 au5NprFajJ/GHL6J7ArBL1doaJfhrQEPKSKs4VBA9HGJU8SXZURILQtPHDlwaBRBjn
+	 VkzcRoq0YscPQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1sI67d-003upH-Cb;
+	Fri, 14 Jun 2024 13:33:37 +0100
+Date: Fri, 14 Jun 2024 13:33:37 +0100
+Message-ID: <86sexfk8ke.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	will@kernel.org,
+	catalin.marinas@arm.com,
+	mark.rutland@arm.com,
+	Mark Brown <broonie@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH V18 2/9] KVM: arm64: Explicitly handle BRBE traps as UNDEFINED
+In-Reply-To: <20240613061731.3109448-3-anshuman.khandual@arm.com>
+References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+	<20240613061731.3109448-3-anshuman.khandual@arm.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406121530.D9DB956C8@keescook>
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > I'm happy to take patches. And for this bikeshed, this would be better
-> > > named under the size_*() helpers which are trying to keep size_t
-> > > calculations from overflowing (by saturating). i.e.:
-> > > 
-> > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> > 
-> > Fine I suppose, but what if we want something not size_t? Are we waiting
-> > for the type system extension?
+On Thu, 13 Jun 2024 07:17:24 +0100,
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 > 
-> Because of C's implicit promotion/truncation, we can't do anything
-> sanely with return values of arbitrary type size; we have to capture the
-> lvalue type somehow so the checking can happen without C doing silent
-> garbage.
-
-So sizeof() returns the native (built-in) size_t, right? If that type
-the nooverflow qualifier on, then:
-
-	sizeof(*p) + num*sizeof(p->foo[0])
-
-should all get the nooverflow semantics right? Because size_t is
-effectively 'nooverflow unsigned long' the multiplication should promote
-'num' to some 'long'.
-
-Now, I've re-read the rules and I don't see qualifiers mentioned, so
-can't we state that the overflow/nooverflow qualifiers are to be
-preserved on (implicit) promotion and when nooverflow and overflow are
-combined the 'safe' nooverflow takes precedence?
-
-I mean, when we're adding qualifiers we can make up rules about them
-too, right?
-
-If 'people' don't want to adorn the built-in size_t, we can always do
-something like:
-
-#define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
-
-and 'fix' it ourselves.
-
-> > But none of that is showing me generated asm for the various cases. As
-> > such, I don't consider myself informed enough.
+> The Branch Record Buffer Extension (BRBE) adds a number of system registers
+> and instructions, which we don't currently intend to expose to guests. Our
+> existing logic handles this safely, but this could be improved with some
+> explicit handling of BRBE.
 > 
-> Gotcha. For the compile-time stuff it's all just looking at
-> known-at-compile-time sizes. So for something like this, we get a
-> __compiletime_warning() emitted:
+> The presence of BRBE is currently hidden from guests as the cpufeature
+> code's ftr_id_aa64dfr0[] table doesn't have an entry for the BRBE field,
+> and so this will be zero in the sanitised value of ID_AA64DFR0 exposed to
+> guests via read_sanitised_id_aa64dfr0_el1(). As the ftr_id_aa64dfr0[] table
+> may gain an entry for the BRBE field in future, for robustness we should
+> explicitly mask out the BRBE field in read_sanitised_id_aa64dfr0_el1().
 > 
-> 	const char src[] = "Hello there";
-> 	char dst[10];
+> The BRBE system registers and instructions are currently trapped by the
+> existing configuration of the fine-grained traps. As neither the registers
+> nor the instructions are described in the sys_reg_descs[] table,
+> emulate_sys_reg() will warn that these are unknown before injecting an
+> UNDEFINED exception into the guest.
 > 
-> 	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
+> Well-behaved guests shouldn't try to use the registers or instructions, but
+> badly-behaved guests could use these, resulting in unnecessary warnings. To
+> avoid those warnings, we should explicitly handle the BRBE registers and
+> instructions as UNDEFINED.
 > 
-> For run-time checks it's basically just using the regular WARN()
-> infrastructure with __builtin_dynamic_object_size(). Here's a simplified
-> userspace example with assert():
+> Address the above by having read_sanitised_id_aa64dfr0_el1() mask out the
+> ID_AA64DFR0.BRBE field, and explicitly handling all of the BRBE system
+> registers and instructions as UNDEFINED.
 > 
-> https://godbolt.org/z/zMrKnMxn5
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ----
+> Changes in V18:
 > 
-> The kernel's FORTIFY_SOURCE is much more complex in how it does the
-> checking, how it does the reporting (for helping people figure out what's
-> gone weird), etc.
+> - Updated the commit message
+> 
+>  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+> index 22b45a15d068..3d4686abe5ee 100644
+> --- a/arch/arm64/kvm/sys_regs.c
+> +++ b/arch/arm64/kvm/sys_regs.c
+> @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
+>  	return 0;
+>  }
+>  
+> +#define BRB_INF_SRC_TGT_EL1(n)				\
+> +	{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
+> +	{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
+> +	{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
+> +
+>  /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
+>  #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
+>  	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
+> @@ -1722,6 +1727,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
+>  	/* Hide SPE from guests */
+>  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
+>  
+> +	/* Hide BRBE from guests */
+> +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
+> +
+>  	return val;
+>  }
+>  
+> @@ -2240,6 +2248,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
+>  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
+>  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
+>  
+> +	/*
+> +	 * BRBE branch record sysreg address space is interleaved between
+> +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
+> +	 */
+> +	BRB_INF_SRC_TGT_EL1(0),
+> +	BRB_INF_SRC_TGT_EL1(16),
+> +	BRB_INF_SRC_TGT_EL1(1),
+> +	BRB_INF_SRC_TGT_EL1(17),
+> +	BRB_INF_SRC_TGT_EL1(2),
+> +	BRB_INF_SRC_TGT_EL1(18),
+> +	BRB_INF_SRC_TGT_EL1(3),
+> +	BRB_INF_SRC_TGT_EL1(19),
+> +	BRB_INF_SRC_TGT_EL1(4),
+> +	BRB_INF_SRC_TGT_EL1(20),
+> +	BRB_INF_SRC_TGT_EL1(5),
+> +	BRB_INF_SRC_TGT_EL1(21),
+> +	BRB_INF_SRC_TGT_EL1(6),
+> +	BRB_INF_SRC_TGT_EL1(22),
+> +	BRB_INF_SRC_TGT_EL1(7),
+> +	BRB_INF_SRC_TGT_EL1(23),
+> +	BRB_INF_SRC_TGT_EL1(8),
+> +	BRB_INF_SRC_TGT_EL1(24),
+> +	BRB_INF_SRC_TGT_EL1(9),
+> +	BRB_INF_SRC_TGT_EL1(25),
+> +	BRB_INF_SRC_TGT_EL1(10),
+> +	BRB_INF_SRC_TGT_EL1(26),
+> +	BRB_INF_SRC_TGT_EL1(11),
+> +	BRB_INF_SRC_TGT_EL1(27),
+> +	BRB_INF_SRC_TGT_EL1(12),
+> +	BRB_INF_SRC_TGT_EL1(28),
+> +	BRB_INF_SRC_TGT_EL1(13),
+> +	BRB_INF_SRC_TGT_EL1(29),
+> +	BRB_INF_SRC_TGT_EL1(14),
+> +	BRB_INF_SRC_TGT_EL1(30),
+> +	BRB_INF_SRC_TGT_EL1(15),
+> +	BRB_INF_SRC_TGT_EL1(31),
+> +
+> +	/* Remaining BRBE sysreg addresses space */
+> +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
+> +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
+> +
+>  	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
+>  	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
+>  	// DBGDTR[TR]X_EL0 share the same encoding
+> @@ -2751,6 +2805,8 @@ static struct sys_reg_desc sys_insn_descs[] = {
+>  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
+>  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
+>  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
+> +	{ SYS_DESC(OP_BRB_IALL), undef_access },
+> +	{ SYS_DESC(OP_BRB_INJ), undef_access },
+>  };
+>  
+>  static const struct sys_reg_desc *first_idreg;
 
-Thanks, I'll go have a look at that.
+I don't think we need any update to the sys_reg table to handle
+this. Instead, we should make use of the FGU infrastructure that has
+been in since 6.9 to make this stuff UNDEF unconditionally.
+
+It should be as simple as:
+
+diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
+index ee33f5467ce5..7cafe3f72c01 100644
+--- a/arch/arm64/kvm/sys_regs.c
++++ b/arch/arm64/kvm/sys_regs.c
+@@ -4964,6 +4964,11 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
+ 		kvm->arch.fgu[HAFGRTR_GROUP] |= ~(HAFGRTR_EL2_RES0 |
+ 						  HAFGRTR_EL2_RES1);
+ 
++	if (!kvm_has_feat(kvm, ID_AA64DFR0_EL1, BRBE, IMP))
++		kvm->arch.fgu[HDFGRTR_GROUP] |= (HDFGRTR_nBRBDATA |
++						 HDFGRTR_nBRBCTL  |
++						 HDFGRTR_nBRBIDR);
++
+ 	set_bit(KVM_ARCH_FLAG_FGU_INITIALIZED, &kvm->arch.flags);
+ out:
+ 	mutex_unlock(&kvm->arch.config_lock);
+
+which is of course untested, but that I expect to be correct.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
