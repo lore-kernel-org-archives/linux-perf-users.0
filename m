@@ -1,32 +1,32 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3353146582;
-	Fri, 14 Jun 2024 03:48:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2AE146A90;
+	Fri, 14 Jun 2024 03:55:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718336909; cv=none; b=XfAGUtWrOCxyn4nsvCcgPXJULywCwS/dBxiXFJ0RPeWKX/4PgLg9tZsvBWUawV8anWD4tJrXLjglGDzG+k9Nerw5mjJ+zV7JhChEzvkFr4YXrLA7IX9eRIAsg14HRXD2+wU+uyCEFS4O2VuRyBk0ii+rZS3sryL+Cmq5MLOB11k=
+	t=1718337309; cv=none; b=g9SKzfpvh3rbgGbEH7bo2926GKlMWmK58uN7lrK7y2CxRse4dDY/a/E4YinYz/6rbfUFPhJTKQo0/I/W8KSen9g5MgYlpJGiAObwEd6G/vwmiLWnnjW3sVzjTOvmn3aNmq4zbJ83Uqs7USN68abVRZdBojW57W7m/lTYAmtIXzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718336909; c=relaxed/simple;
-	bh=tOdcNuf2kRMwiFSwcr6k9xuklL/HpB+Iw5uNR7FPc44=;
+	s=arc-20240116; t=1718337309; c=relaxed/simple;
+	bh=DRCCeEjTSrpOxV55wmObarqnuntQRUzJ2p5ODapp/eo=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=ruJNm9QnpKNWJnK6biH+ETb2QEupoSaqIU7i0bE2btlzzFl23SVZkQAc0aIQNyIcPe2bHnldDpiYeeTBc0qXKozuWu4YKoDgnm/h9T6jzFPZcptZPBCw9PD8aY0HbVkdkgxfBcoJe51jo660i1N+I1gz9FHLfZt3m9P5BW0s6a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	 Content-Type:MIME-Version; b=UjukrLt2xFatNQvIP0/A6niTL1AddaGeOfckUSAAt8DY7xBAI7o9JoSg2ZWZXnXLG725hhi9oFuIhfqzIAgNavLlqC0LSiNTxBH0EDUcmAX6wKgXT7RQhYwwpPDJc5Q28DPb0GAhUkshTq4IrMZBHaJ/Y6nK0qqaQWFkKEfUyTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W0lVx4w1pzmYsS;
-	Fri, 14 Jun 2024 11:43:37 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1BAD318007C;
-	Fri, 14 Jun 2024 11:48:24 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W0lgQ0DKHzwS3s;
+	Fri, 14 Jun 2024 11:50:58 +0800 (CST)
+Received: from kwepemd200010.china.huawei.com (unknown [7.221.188.124])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1E0B114059F;
+	Fri, 14 Jun 2024 11:55:06 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ kwepemd200010.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 14 Jun 2024 11:48:23 +0800
+ 15.2.1258.34; Fri, 14 Jun 2024 11:55:05 +0800
 Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
  kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Fri, 14 Jun 2024 11:48:23 +0800
+ Fri, 14 Jun 2024 11:55:05 +0800
 From: duchangbin <changbin.du@huawei.com>
 To: Adrian Hunter <adrian.hunter@intel.com>
 CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
@@ -40,17 +40,17 @@ CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
 	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH 2/2] perf: disasm: prefer symsrc_filename for filename
-Thread-Topic: [PATCH 2/2] perf: disasm: prefer symsrc_filename for filename
-Thread-Index: AQHavVvh9tYwOTcSHEG6bdTlEhoGM7HE0t8AgACesgD//4X1gIABqREA
-Date: Fri, 14 Jun 2024 03:48:23 +0000
-Message-ID: <4b420b265a6d4c298315807725734a31@huawei.com>
+Subject: Re: [PATCH 1/2] perf: support specify vdso path in cmdline
+Thread-Topic: [PATCH 1/2] perf: support specify vdso path in cmdline
+Thread-Index: AQHavVvgPApptK0OsE6+S63iYUbWKrHE1RgAgACeKQD//4I5AIABrPmA
+Date: Fri, 14 Jun 2024 03:55:05 +0000
+Message-ID: <d5309643a85144b4abbb8705b6e7bd8e@huawei.com>
 References: <20240613063510.348692-1-changbin.du@huawei.com>
- <20240613063510.348692-3-changbin.du@huawei.com>
- <395cfff7-9692-4123-96b6-353752007f46@intel.com>
- <39be46d6a5194b6390ed31be67689c6c@huawei.com>
- <6abf540f-5f11-4b2b-b8c1-69783a71277b@intel.com>
-In-Reply-To: <6abf540f-5f11-4b2b-b8c1-69783a71277b@intel.com>
+ <20240613063510.348692-2-changbin.du@huawei.com>
+ <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
+ <1e17854b16fe46a4b384b6ddec05029a@huawei.com>
+ <dfc9a604-6857-46af-a778-5c354fe199be@intel.com>
+In-Reply-To: <dfc9a604-6857-46af-a778-5c354fe199be@intel.com>
 Accept-Language: en-US
 Content-Language: zh-CN
 X-MS-Has-Attach:
@@ -58,7 +58,7 @@ X-MS-TNEF-Correlator:
 x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
 x-ms-exchange-messagesentrepresentingtype: 1
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C4B1CA3441B83140B661C4C905215D26@huawei.com>
+Content-ID: <4469B8DA2F78264E8F076DE6BAD8C2B3@huawei.com>
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -67,38 +67,53 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-On Thu, Jun 13, 2024 at 01:26:39PM +0300, Adrian Hunter wrote:
-> On 13/06/24 12:43, duchangbin wrote:
-> > On Thu, Jun 13, 2024 at 11:15:28AM +0300, Adrian Hunter wrote:
+On Thu, Jun 13, 2024 at 01:19:20PM +0300, Adrian Hunter wrote:
+> On 13/06/24 12:49, duchangbin wrote:
+> > On Thu, Jun 13, 2024 at 11:23:26AM +0300, Adrian Hunter wrote:
 > >> On 13/06/24 09:35, Changbin Du wrote:
-> >>> If we already found a debugging version when loading symbols for that=
- dso,
-> >>> then use the same file for disasm instead of looking up in buildid-ca=
-che.
+> >>> The vdso dumped from process memory (in buildid-cache) lacks debuggin=
+g
+> >>> info. To annotate vdso symbols with source lines we need specify a
+> >>> debugging version.
+> >>>
+> >>> For x86, we can find them from your local build as
+> >>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
+> >>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
+> >>> the buildid has to match.
+> >>>
+> >>> $ sudo perf record -a
+> >>> $ sudo perf report --objdump=3Dllvm-objdump \
+> >>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32=
+.so.dbg
+> >>>
+> >>> When doing cross platform analysis, we also need specify the vdso pat=
+h if
+> >>> we are interested in its symbols.
 > >>
-> >> In the past, there have been cases where the debugging version has not
-> >> worked for reading object code.  I don't remember the details, but the
-> >> symbols and debugging information was OK while the object code was not=
+> >> We already have logic to find debug files, and to deal with a symbol s=
+ource
+> >> (syms_ss) and runtime symbol source (runtime_ss).
+> >>
+> >> Can't we make that work transparently for vdso so that the user does
+> >> not have to.
+> >>
+> > For Ubuntu, we can find the debug files of vdso in
+> > /lib/modules/<version>/vdso/vdso{32,64}.so. These two are debug version=
 .
-> >>
-> >> In general, using anything other than the file that was actually execu=
-ted
-> >> for reading object code seems like a bad idea.
-> >>
-> > Is this a platform specific issue? AFAIK, the binary code in debugging =
-and
-> > non-debugging version should be identical.=20
+> >=20
+> > For local build, seems vdso{32,64}.so.dbg are not installed in /lib/mod=
+ules/ nor
+> > other locations.
 >=20
-> "should be" !=3D "guaranteed to be".  Simpler to avoid the issue and
-> stick with the file that was actually executed.  We already support
-> having separate symbol sources, so there should not really be a
-> problem.
->
-ok, so for vdso I think we can flow the kernel part in dso__disassemble_fil=
-ename.
-I'll add vdso processing here.
+> Isn't there /lib/modules/<version>/build symbolic link to follow?
+>=20
+hm, we can try /lib/modules/<version>/build/arch/x86/entry/vdso/vdso*.so.db=
+g.
+Other arches are similar.
 
->=20
+So, we will try these pathes internally. And keep '--vdso' if someone reall=
+y
+want a special path. (just like vmlinux)
 
 --=20
 Cheers,
