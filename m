@@ -1,110 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC3C613BAC8;
-	Fri, 14 Jun 2024 09:33:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEE25190477;
+	Fri, 14 Jun 2024 09:46:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718357604; cv=none; b=gakURmPBh/FCM2pNBkZb7CivF23gQfvMw7QsPyoLrNXRorUnrfJ3Jinov39WXGLfL+zs0+EDpzjrxLslGtE8YqWbBEZielt/9v/J1Fv3kraX+lcnSE9J7zPtS7nDYLlqHkEEYvpsymq4n+G+R+7SKelKK+yFqn4qlo6rbat8N7U=
+	t=1718358373; cv=none; b=Li4xsMSJUkjxvCG+0HTNZkqScutCDh0rb8n/sY9C/IqY0QLl+3yM4hNXFSW/C/3UtHtYvjjrKw7NiBMAmK3hrmOckf7heNESEhio1CjhHsLFj3FsgWVCiKUxHIZbYvOUz1wEtqAKShZ/8rWM6/uyzgD8o9j/1HqhiuqTBy5x3MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718357604; c=relaxed/simple;
-	bh=alNjwI+btsiWPla7LU9S2BAYfdjopRvQwWLaXrO6asA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=U+H1TcGsxT0eCEKzgNQwHYjHxhQjRQvN2FviXWmqPDsntEPqRpssoou3/sWnA1J3NptbCPJr7dhR4QeiMyjD44gtBzzdf3Rkg758NHzd3qUMVPLyCmc4vNWMdf4TSddumYUoPY6rwlUje2k5oxnZudbnYtnP0oG+hVwHgi6T8f8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E0C3AFEC;
-	Fri, 14 Jun 2024 02:33:44 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CD0E3F5A1;
-	Fri, 14 Jun 2024 02:33:14 -0700 (PDT)
-Message-ID: <fedf6b3f-0338-4666-a7b6-4856ab626681@arm.com>
-Date: Fri, 14 Jun 2024 10:33:13 +0100
+	s=arc-20240116; t=1718358373; c=relaxed/simple;
+	bh=BUESmvx+Cq07zK8KsbYwgMGM/ijq7/n/y0539SFZ2F4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=sfVrox+/gF8Tg7XuySMgI4x19hm3iWgLkNcBayjxPRsTrdpjwDwOaTnIVXM9sGsR2yzfilQwAHD+g0NkZy2RxGcKFHKJt+jMqHck1nVHtc0VszUfJHKK54CibBLz3F/en/biqiYPz9+0Fgz1VEkHytDn/7snpKrDDDsPSdrQcQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4W0vSp5Vt1z2Ck6M;
+	Fri, 14 Jun 2024 17:42:18 +0800 (CST)
+Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A5BF1A0188;
+	Fri, 14 Jun 2024 17:46:08 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 14 Jun 2024 17:46:07 +0800
+From: Junhao He <hejunhao3@huawei.com>
+To: <peterz@infradead.org>, <acme@redhat.com>, <irogers@google.com>
+CC: <jonathan.cameron@huawei.com>, <yangyicong@huawei.com>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <hejunhao3@huawei.com>,
+	<adrian.hunter@intel.com>, <alexander.shishkin@linux.intel.com>,
+	<cuigaosheng1@huawei.com>, <mingo@redhat.com>, <james.clark@arm.com>,
+	<renyu.zj@linux.alibaba.com>, <jolsa@kernel.org>, <john.g.garry@oracle.com>,
+	<kjain@linux.ibm.com>, <kan.liang@linux.intel.com>, <mark.rutland@arm.com>,
+	<namhyung@kernel.org>, <ravi.bangoria@amd.com>, <robh@kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+Subject: [PATCH] perf pmus: Fixes always false when compare duplicates aliases
+Date: Fri, 14 Jun 2024 17:43:18 +0800
+Message-ID: <20240614094318.11607-1-hejunhao3@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/8] perf build: Add '*.a' to clean targets
-To: Ian Rogers <irogers@google.com>
-References: <20240613233122.3564730-1-irogers@google.com>
- <20240613233122.3564730-2-irogers@google.com>
-Content-Language: en-US
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>,
- Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
- <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Suzuki K Poulose <suzuki.poulose@arm.com>,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
- Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng
- <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
- =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl
- <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>,
- Andrei Vagin <avagin@google.com>, Athira Jajeev
- <atrajeev@linux.vnet.ibm.com>, Oliver Upton <oliver.upton@linux.dev>,
- Ze Gao <zegao2021@gmail.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-csky@vger.kernel.org, linux-riscv@lists.infradead.org,
- coresight@lists.linaro.org, rust-for-linux@vger.kernel.org,
- bpf@vger.kernel.org
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240613233122.3564730-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500002.china.huawei.com (7.185.36.158)
 
+In the previous loop, all the members in the aliases[j-1] have been freed
+and set to NULL. But in this loop, the function pmu_alias_is_duplicate()
+compares the aliases[j] with the aliases[j-1] that has already been
+disposed, so the function will always return false and duplicate aliases
+will never be discarded.
 
+If we find duplicate aliases, it skips the zfree aliases[j], which is
+accompanied by a memory leak.
 
-On 14/06/2024 00:31, Ian Rogers wrote:
-> Fix some excessively long lines by deploying '\'.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/Makefile.perf | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
+We can use the next aliases[j+1] to theck for duplicate aliases to
+fixes the aliases NULL pointer dereference, then goto zfree code snippet
+to release it.
 
-Reviewed-by: James Clark <james.clark@arm.com>
+After patch testing:
+ $ perf list --unit=hisi_sicl,cpa pmu
 
-> diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-> index 5c35c0d89306..acc41a6717db 100644
-> --- a/tools/perf/Makefile.perf
-> +++ b/tools/perf/Makefile.perf
-> @@ -1201,12 +1201,19 @@ endif # CONFIG_PERF_BPF_SKEL
->  bpf-skel-clean:
->  	$(call QUIET_CLEAN, bpf-skel) $(RM) -r $(SKEL_TMP_OUT) $(SKELETONS) $(SKEL_OUT)/vmlinux.h
->  
-> -clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean tests-coresight-targets-clean
-> -	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive $(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> -	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '\.*.cmd' -delete -o -name '\.*.d' -delete -o -name '*.shellcheck_log' -delete
-> +clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(LIBPERF)-clean \
-> +		arm64-sysreg-defs-clean fixdep-clean python-clean bpf-skel-clean \
-> +		tests-coresight-targets-clean
-> +	$(call QUIET_CLEAN, core-objs)  $(RM) $(LIBPERF_A) $(OUTPUT)perf-archive \
-> +		$(OUTPUT)perf-iostat $(LANG_BINDINGS)
-> +	$(Q)find $(or $(OUTPUT),.) -name '*.o' -delete -o -name '*.a' -delete -o \
-> +		-name '\.*.cmd' -delete -o -name '\.*.d' -delete -o -name '*.shellcheck_log' -delete
->  	$(Q)$(RM) $(OUTPUT).config-detected
-> -	$(call QUIET_CLEAN, core-progs) $(RM) $(ALL_PROGRAMS) perf perf-read-vdso32 perf-read-vdsox32 $(OUTPUT)$(LIBJVMTI).so
-> -	$(call QUIET_CLEAN, core-gen)   $(RM)  *.spec *.pyc *.pyo */*.pyc */*.pyo $(OUTPUT)common-cmds.h TAGS tags cscope* $(OUTPUT)PERF-VERSION-FILE $(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
-> +	$(call QUIET_CLEAN, core-progs) $(RM) $(ALL_PROGRAMS) perf perf-read-vdso32 \
-> +		perf-read-vdsox32 $(OUTPUT)$(LIBJVMTI).so
-> +	$(call QUIET_CLEAN, core-gen)   $(RM)  *.spec *.pyc *.pyo */*.pyc */*.pyo \
-> +		$(OUTPUT)common-cmds.h TAGS tags cscope* $(OUTPUT)PERF-VERSION-FILE \
-> +		$(OUTPUT)FEATURE-DUMP $(OUTPUT)util/*-bison* $(OUTPUT)util/*-flex* \
->  		$(OUTPUT)util/intel-pt-decoder/inat-tables.c \
->  		$(OUTPUT)tests/llvm-src-{base,kbuild,prologue,relocation}.c \
->  		$(OUTPUT)pmu-events/pmu-events.c \
+ uncore cpa:
+   cpa_p0_rd_dat_32b
+        [Number of read ops transmitted by the P0 port which size is 32 bytes.
+         Unit: hisi_sicl,cpa]
+   cpa_p0_rd_dat_64b
+        [Number of read ops transmitted by the P0 port which size is 64 bytes.
+         Unit: hisi_sicl,cpa]
+
+Fixes: c3245d2093c1 ("perf pmu: Abstract alias/event struct")
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
+---
+ tools/perf/util/pmus.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index b9b4c5eb5002..6907e3e7fbd1 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -477,8 +477,8 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+ 	for (int j = 0; j < len; j++) {
+ 		/* Skip duplicates */
+-		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
+-			continue;
++		if (j < len - 1 && pmu_alias_is_duplicate(&aliases[j], &aliases[j + 1]))
++			goto free;
+ 
+ 		print_cb->print_event(print_state,
+ 				aliases[j].pmu_name,
+@@ -491,6 +491,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 				aliases[j].desc,
+ 				aliases[j].long_desc,
+ 				aliases[j].encoding_desc);
++free:
+ 		zfree(&aliases[j].name);
+ 		zfree(&aliases[j].alias);
+ 		zfree(&aliases[j].scale_unit);
+-- 
+2.33.0
 
