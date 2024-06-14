@@ -1,63 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DBE51487DC
-	for <linux-perf-users@vger.kernel.org>; Fri, 14 Jun 2024 23:02:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8688B158872
+	for <linux-perf-users@vger.kernel.org>; Fri, 14 Jun 2024 23:02:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718406163; cv=none; b=aE2vyx87M7oiYE+7feq5qLEb7sHnoZcE6OkO3iZiYJHGxcMG5cLo+jFuTETdi1eK8BDiJuIng/QSavN6a/N891pH/xiS+9o8Qiui6Lnx0iwnX2+0wUhM0lWFTO/6xrhVNcwWxD0USA0qfFRfm8Luz3Ldf5Y4xpavKhGSJO36yk8=
+	t=1718406173; cv=none; b=kVBHMD7jbntPeUfQUmAwF6fNE24Nwnxyb+EncRnrgSP0b9zKXnXfOZb5TH+juF3FjsCAySV8+Z9nc8/CsotSNjZS3rPmPEY7THZHp7qv9+vHyZP3z8vQNOaaf7kMuJdX2iE+3Kwiia3IDq2KttlhvSkc+uUULQuQctz69kKlMN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718406163; c=relaxed/simple;
-	bh=V5tjq7qVXoR2D+BcjbSEdGJLjQdVrFZqg6lZSGWU9FU=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=TE/uTnbMMb0Q31mJR5TPgDnovToPaYKBRcvgvOT2Crj25vvq79+lommb3kQMLJ7Er+AGPWbzpjH/y7vgJZAaXeXKMfU3/taEiNOHP/56Q2P+LMl6yOUxmrSpm+4Vryll5BVqOyFmK4smi+VT2p1BsXHKFGd54Z7Os7Kdy3lM7kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cIkcl1rE; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1718406173; c=relaxed/simple;
+	bh=QgNQ2e//2i3b1oZSAIpvFIgcIXsqquisZaNnVS8KBJo=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Cc:Content-Type; b=IQU4bClOvDtaFZq1wdMndysAEoaX8R+OaYtKHlZaoNZr9T7UGthoAqdqVptPD56ZTMC+f//VZLOD2JTEBAIk48pkDGWg3I0a2eETx5metu85jLdeJISfFjTWVF0Ues3QGpAJz+dt6ZNaCHEONDG+OLrAX5A/IBgNPCP2l9z3+DE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G+lCvQI+; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cIkcl1rE"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-632cdb75d5aso15640327b3.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jun 2024 16:02:41 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G+lCvQI+"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dff1bcbc104so1838301276.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 14 Jun 2024 16:02:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718406160; x=1719010960; darn=vger.kernel.org;
-        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=0diGVJGsTO4ujuerBuKSs63Jnf6lkZZe9VmQlFxdlCg=;
-        b=cIkcl1rEkOex7HGeo1kSh4gT8/rwnTlKumKEdP0CFoq7/z1YXqa9T49ekzsPV+oSuk
-         XXrf3gHNvYzIEp0FdmgvOsuu0UDhzWJjkLfVGqM4UGgzzRGK/1WBr68Oy7r+BXm7Xuci
-         Up1rYSHMtaEt5715fgC9/D5VgaRyyuOK7YNdYvc31lJCTO/js/tqWL+nJ0fOF3WcaDVq
-         q3jJKR5wwGGs8dxcXwVF5HNZEBWvlSsaK9XkZ766UztjlokbKGsxlWnjx18HXk6cKLgn
-         FEg7gsO883q7M53LIVb43MBtHzXsaaMazlNzGv6BTULQwkkuWG94mLQZFicrWAFx3VDN
-         c5dA==
+        d=google.com; s=20230601; t=1718406168; x=1719010968; darn=vger.kernel.org;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=TcxiHFaneedyL24fLpoQZPCk8m0D66tcKp5fFUAawYI=;
+        b=G+lCvQI+FE/TsluMGIL8hwcRZ1wrR35pHK1lLgwcuaSMpzCGF77ABPo9CYoHtJMV8t
+         knQwCtVUWTT5ALPBfrSP03gnaJyfSb5PnpnjlJ1T+spBWjMe5Au864WprZYS+PX60xdD
+         uPUWLckbo5QM2X7Mc1x9g7QerSggbBYTAf+Ir4GEA3/mGNS2d9Bs98xnseYLnlND4rxR
+         mmbW8EwNkTOtSLNYkgCe0lqmDriEXefERx2ftHBUDZ5u+7HAIwv21RK0jwNjmDkEg0UQ
+         fCqCy0x8wtjKehXaLIfswueub/wuJs6+o5aIPgjftaAkWJxJjj5e31Fzlw4xcUlConGS
+         6Tcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718406160; x=1719010960;
-        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0diGVJGsTO4ujuerBuKSs63Jnf6lkZZe9VmQlFxdlCg=;
-        b=oau6lDUJ7NtORV+HBZsw2ECehNt9LnGsNAlFwZw0VLjgBGAejoNaCAnSvprxCdlyWY
-         3bGuEkm8gmJJwxAg35wCuyBrk1q6dFEEhu5aoEn4+fCkDkIhaP+exKlfnksgvgnXkHMx
-         ZuqHhrVWaq9ow+IvbWortxNkx+5ZWPji0w/EbISLV8X/Vvt8/XNgx3K5Ljq7yIouCG8R
-         yNGkO771HP9Bq7C+x8TUvqKgF/qfq5Za6p0TOkicWNiNptxe6vdBmRTv7a0bfmKgMauZ
-         5zh2GnKAB8/ivrdXeNT2xzma4rWxf3fqLItdPJ1YghLXD0T78+rg1cjwGT8SA01FAWPD
-         M9LA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeT3Hhhlw84lsi9z7Dm75FfZpU05h1wYiwZ+YgdG5LlwkAdAYCVjnhhmVqS3ov+1Qiz0X3fQqPWykLX/kVUgEhRki5kCU5LHLRXbHNKgH7KA==
-X-Gm-Message-State: AOJu0YwuGR0sL3WtrXN0+KJrc0JZBorT8K6EYvT35kXvb3VSBm52OqlT
-	Pd3HVMs3COfjr+wTmWpnSzzmKlTMSq6YIeEiEkmhc+cqP7XsvHNoekpCfusrSOpLdNdXbA4AS0u
-	IBx5Ltw==
-X-Google-Smtp-Source: AGHT+IGrBjmGjagzMAK7gzPiZ1wVhqRMJic1XtG2Kh7P5EdDepLlp/fT57nKRFMSrxPGUdUJL+Nr8WrMVoYx
+        d=1e100.net; s=20230601; t=1718406168; x=1719010968;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TcxiHFaneedyL24fLpoQZPCk8m0D66tcKp5fFUAawYI=;
+        b=FdrKERBsEC469JPpe9zOmdqT2EXb7hCaX3PxkAPae7AAvqkI9UfeoWmViBPc+iPtLf
+         EIazr/xdE8Eojhux7UBF+5Zit9dopsADi708n2LUKoDrpa1cJX2zTFSJu9MHjiBWd6KB
+         6S710FI19b1xEHyd68na8Cr1WTGh0xeOJN5tmezj51idd/wISuYCK1av3XP3aIM5tFfM
+         hx+KtIL9Nxxl+0UhuCnY5E+gt4FzUg7ok4h39d/jgIeKYRHg9UNpY/vXL9O774OZRBnZ
+         Onli/GtUspKT1RRws5QaXmqwYroC4URul7gPVALDu6xGfH6x04Nh4UY0/Ba5omckr/e9
+         +4+g==
+X-Forwarded-Encrypted: i=1; AJvYcCVIDKdPFvwwQtO6zCfVXYzoy6YHLFqQoYL2IDxN9KOtSQ3SvA0QmVjKsIBQ5GZi36v66EStReKSj3K489ljcshSM/Tq06R+20swZ8x1Vt9ncg==
+X-Gm-Message-State: AOJu0YwSqEjRR17LqnU7AsWzRK3v+DmW2OOb3x1Ym9ZhWziyPr52Ahus
+	NZsftyW0ASoLJgVT/Kcx0i6Oe8TpbmS/YGPy20QRsTCcQD0Y0C+iW/E3miQ1P99PW2/i5JlxvNe
+	kHoSysQ==
+X-Google-Smtp-Source: AGHT+IEQ30yB0m7tKNGBAR0lOvukscy9iT988X5W8XqCn+Z1fuSsYkbtZ9Y7KKa8ntuBfYMF0owBZsFDOaTh
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:714a:5e65:12a1:603])
- (user=irogers job=sendgmr) by 2002:a05:690c:a84:b0:61b:e6d8:1c01 with SMTP id
- 00721157ae682-632258a3ee7mr9266417b3.10.1718406160106; Fri, 14 Jun 2024
- 16:02:40 -0700 (PDT)
-Date: Fri, 14 Jun 2024 16:01:08 -0700
-Message-Id: <20240614230146.3783221-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:2b04:b0:dfd:a911:5722 with SMTP
+ id 3f1490d57ef6-dff1550b4f4mr555261276.8.1718406168498; Fri, 14 Jun 2024
+ 16:02:48 -0700 (PDT)
+Date: Fri, 14 Jun 2024 16:01:11 -0700
+In-Reply-To: <20240614230146.3783221-1-irogers@google.com>
+Message-Id: <20240614230146.3783221-4-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240614230146.3783221-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Subject: [PATCH v1 00/37] Update Intel perf vendor events
+Subject: [PATCH v1 03/37] perf vendor events: Add bonnell counter information
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -70,555 +73,2217 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Cc: Weilin Wang <weilin.wang@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Update Intel perf vendor events from:
-https://github.com/intel/perfmon
-Adds new events and updates TMA metrics to v4.8.
-Add counter and experimental event tags.
+Add counter information necessary for optimizing event grouping the
+perf tool.
+
+The most recent RFC patch set using this information:
+https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
+
+The information was added in:
+https://github.com/intel/perfmon/commit/475892a9690cb048949e593fe39cee65cd4765e1
+and later patches.
 
 Co-authored-by: Weilin Wang <weilin.wang@intel.com>
 Co-authored-by: Caleb Biggers <caleb.biggers@intel.com>
-
-Ian Rogers (37):
-  perf vendor events: Update alderlake events/metrics
-  perf vendor events: Update alderlaken events/metrics
-  perf vendor events: Add bonnell counter information
-  perf vendor events: Update broadwell metrics add event counter
-    information
-  perf vendor events: Update broadwellde metrics add event counter
-    information
-  perf vendor events: Update broadwellx metrics add event counter
-    information
-  perf vendor events: Update cascadelakex events/metrics
-  perf vendor events: Update elkhartlake events
-  perf vendor events: Add/update emeraldrapids events/metrics
-  perf vendor events: Add goldmont counter information
-  perf vendor events: Add goldmontplus counter information
-  perf vendor events: Update/add grandridge events/metrics
-  perf vendor events: Update grandridge events and add counter
-    information
-  perf vendor events: Add haswell counter information
-  perf vendor events: Update haswellx metrics add event counter
-    information
-  perf vendor events: Add/update icelake events/metrics
-  perf vendor events: Add/update icelakex events/metrics
-  perf vendor events: Update ivybridge metrics add event counter
-    information
-  perf vendor events: Update ivytown metrics add event counter
-    information
-  perf vendor events: Update jaketown metrics add event counter
-    information
-  perf vendor events: Add knightslanding counter information
-  perf vendor events: Add lunarlake counter information
-  perf vendor events: Update meteorlake events and add counter
-    information
-  perf vendor events: Add nehalemep counter information
-  perf vendor events: Add nehalemex counter information
-  perf vendor events: Add/update rocketlake events/metrics
-  perf vendor events: Update sandybridge metrics add event counter
-    information
-  perf vendor events: Add/update sapphirerapids events/metrics
-  perf vendor events: Add/update sierraforest events/metrics
-  perf vendor events: Add silvermont counter information
-  perf vendor events: Add/update skylake events/metrics
-  perf vendor events: Add/update skylakex events/metrics
-  perf vendor events: Add snowridgex counter information
-  perf vendor events: Add/update tigerlake events/metrics
-  perf vendor events: Add westmereep-dp counter information
-  perf vendor events: Add westmereep-sp counter information
-  perf vendor events: Add westmereex counter information
-
- .../arch/x86/alderlake/adl-metrics.json       |  988 +++--
- .../pmu-events/arch/x86/alderlake/cache.json  |  184 +-
- .../arch/x86/alderlake/floating-point.json    |   20 +
- .../arch/x86/alderlake/frontend.json          |   56 +-
- .../pmu-events/arch/x86/alderlake/memory.json |   44 +
- .../arch/x86/alderlake/metricgroups.json      |   23 +-
- .../pmu-events/arch/x86/alderlake/other.json  |   37 +
- .../arch/x86/alderlake/pipeline.json          |  214 +
- .../x86/alderlake/uncore-interconnect.json    |   19 +
- .../arch/x86/alderlake/uncore-memory.json     |   25 +
- .../arch/x86/alderlake/uncore-other.json      |    1 +
- .../arch/x86/alderlake/virtual-memory.json    |   26 +
- .../arch/x86/alderlaken/adln-metrics.json     |  658 ++-
- .../pmu-events/arch/x86/alderlaken/cache.json |   50 +-
- .../arch/x86/alderlaken/floating-point.json   |    2 +
- .../arch/x86/alderlaken/frontend.json         |    3 +
- .../arch/x86/alderlaken/memory.json           |   11 +
- .../arch/x86/alderlaken/metricgroups.json     |   21 +-
- .../pmu-events/arch/x86/alderlaken/other.json |   13 +
- .../arch/x86/alderlaken/pipeline.json         |   80 +
- .../x86/alderlaken/uncore-interconnect.json   |   19 +
- .../arch/x86/alderlaken/uncore-memory.json    |   25 +
- .../arch/x86/alderlaken/uncore-other.json     |    1 +
- .../arch/x86/alderlaken/virtual-memory.json   |    6 +
- .../pmu-events/arch/x86/bonnell/cache.json    |   93 +
- .../pmu-events/arch/x86/bonnell/counter.json  |    7 +
- .../arch/x86/bonnell/floating-point.json      |   32 +
- .../pmu-events/arch/x86/bonnell/frontend.json |   11 +
- .../pmu-events/arch/x86/bonnell/memory.json   |   19 +
- .../pmu-events/arch/x86/bonnell/other.json    |   56 +
- .../pmu-events/arch/x86/bonnell/pipeline.json |   44 +
- .../arch/x86/bonnell/virtual-memory.json      |   15 +
- .../arch/x86/broadwell/bdw-metrics.json       |   80 +-
- .../pmu-events/arch/x86/broadwell/cache.json  |  275 ++
- .../arch/x86/broadwell/counter.json           |   22 +
- .../arch/x86/broadwell/floating-point.json    |   22 +
- .../arch/x86/broadwell/frontend.json          |   28 +
- .../pmu-events/arch/x86/broadwell/memory.json |  240 ++
- .../arch/x86/broadwell/metricgroups.json      |   11 +
- .../pmu-events/arch/x86/broadwell/other.json  |    4 +
- .../arch/x86/broadwell/pipeline.json          |  137 +
- .../arch/x86/broadwell/uncore-cache.json      |   24 +
- .../x86/broadwell/uncore-interconnect.json    |    7 +
- .../arch/x86/broadwell/uncore-other.json      |   10 -
- .../arch/x86/broadwell/virtual-memory.json    |   38 +
- .../arch/x86/broadwellde/bdwde-metrics.json   |   80 +-
- .../arch/x86/broadwellde/cache.json           |   76 +
- .../arch/x86/broadwellde/counter.json         |   42 +
- .../arch/x86/broadwellde/floating-point.json  |   22 +
- .../arch/x86/broadwellde/frontend.json        |   28 +
- .../arch/x86/broadwellde/memory.json          |   39 +
- .../arch/x86/broadwellde/metricgroups.json    |   11 +
- .../arch/x86/broadwellde/other.json           |    4 +
- .../arch/x86/broadwellde/pipeline.json        |  137 +
- .../arch/x86/broadwellde/uncore-cache.json    |  382 ++
- .../x86/broadwellde/uncore-interconnect.json  |   70 +
- .../arch/x86/broadwellde/uncore-io.json       |   62 +
- .../arch/x86/broadwellde/uncore-memory.json   |  322 ++
- .../arch/x86/broadwellde/uncore-power.json    |   57 +
- .../arch/x86/broadwellde/virtual-memory.json  |   38 +
- .../arch/x86/broadwellx/bdx-metrics.json      |  128 +-
- .../pmu-events/arch/x86/broadwellx/cache.json |   88 +
- .../arch/x86/broadwellx/counter.json          |   57 +
- .../arch/x86/broadwellx/floating-point.json   |   22 +
- .../arch/x86/broadwellx/frontend.json         |   28 +
- .../arch/x86/broadwellx/memory.json           |   58 +
- .../arch/x86/broadwellx/metricgroups.json     |   11 +
- .../pmu-events/arch/x86/broadwellx/other.json |    4 +
- .../arch/x86/broadwellx/pipeline.json         |  137 +
- .../arch/x86/broadwellx/uncore-cache.json     |  399 ++
- .../x86/broadwellx/uncore-interconnect.json   |  454 ++
- .../arch/x86/broadwellx/uncore-io.json        |   62 +
- .../arch/x86/broadwellx/uncore-memory.json    |  326 ++
- .../arch/x86/broadwellx/uncore-power.json     |   57 +
- .../arch/x86/broadwellx/virtual-memory.json   |   38 +
- .../arch/x86/cascadelakex/cache.json          | 1245 ++++++
- .../arch/x86/cascadelakex/clx-metrics.json    |  310 +-
- .../arch/x86/cascadelakex/counter.json        |   52 +
- .../arch/x86/cascadelakex/floating-point.json |   16 +
- .../arch/x86/cascadelakex/frontend.json       |   49 +
- .../arch/x86/cascadelakex/memory.json         |  743 ++++
- .../arch/x86/cascadelakex/metricgroups.json   |   13 +
- .../arch/x86/cascadelakex/other.json          |  168 +
- .../arch/x86/cascadelakex/pipeline.json       |  104 +-
- .../arch/x86/cascadelakex/uncore-cache.json   | 2293 ++++++++++
- .../x86/cascadelakex/uncore-interconnect.json | 2536 ++++++++++++
- .../arch/x86/cascadelakex/uncore-io.json      |  703 ++++
- .../arch/x86/cascadelakex/uncore-memory.json  |  985 +++++
- .../arch/x86/cascadelakex/uncore-power.json   |   50 +
- .../arch/x86/cascadelakex/virtual-memory.json |   28 +
- .../arch/x86/elkhartlake/cache.json           |  101 +
- .../arch/x86/elkhartlake/counter.json         |    7 +
- .../arch/x86/elkhartlake/floating-point.json  |    3 +
- .../arch/x86/elkhartlake/frontend.json        |    9 +
- .../arch/x86/elkhartlake/memory.json          |   40 +
- .../arch/x86/elkhartlake/other.json           |   61 +
- .../arch/x86/elkhartlake/pipeline.json        |   60 +
- .../arch/x86/elkhartlake/virtual-memory.json  |   31 +
- .../arch/x86/emeraldrapids/cache.json         |  159 +-
- .../arch/x86/emeraldrapids/counter.json       |   82 +
- .../arch/x86/emeraldrapids/emr-metrics.json   | 2186 ++++++++++
- .../x86/emeraldrapids/floating-point.json     |   28 +
- .../arch/x86/emeraldrapids/frontend.json      |   50 +
- .../arch/x86/emeraldrapids/memory.json        |   50 +
- .../arch/x86/emeraldrapids/metricgroups.json  |  137 +
- .../arch/x86/emeraldrapids/other.json         |   43 +
- .../arch/x86/emeraldrapids/pipeline.json      |  133 +
- .../arch/x86/emeraldrapids/uncore-cache.json  | 1288 ++++++
- .../arch/x86/emeraldrapids/uncore-cxl.json    |  110 +
- .../emeraldrapids/uncore-interconnect.json    | 1427 +++++++
- .../arch/x86/emeraldrapids/uncore-io.json     |  743 ++++
- .../arch/x86/emeraldrapids/uncore-memory.json |  742 ++++
- .../arch/x86/emeraldrapids/uncore-power.json  |   49 +
- .../x86/emeraldrapids/virtual-memory.json     |   20 +
- .../pmu-events/arch/x86/goldmont/cache.json   |  103 +
- .../pmu-events/arch/x86/goldmont/counter.json |    7 +
- .../arch/x86/goldmont/floating-point.json     |    3 +
- .../arch/x86/goldmont/frontend.json           |    8 +
- .../pmu-events/arch/x86/goldmont/memory.json  |    3 +
- .../pmu-events/arch/x86/goldmont/other.json   |    5 +
- .../arch/x86/goldmont/pipeline.json           |   40 +
- .../arch/x86/goldmont/virtual-memory.json     |    7 +
- .../arch/x86/goldmontplus/cache.json          |  101 +
- .../arch/x86/goldmontplus/counter.json        |    7 +
- .../arch/x86/goldmontplus/floating-point.json |    3 +
- .../arch/x86/goldmontplus/frontend.json       |    8 +
- .../arch/x86/goldmontplus/memory.json         |    3 +
- .../arch/x86/goldmontplus/other.json          |    5 +
- .../arch/x86/goldmontplus/pipeline.json       |   42 +
- .../arch/x86/goldmontplus/virtual-memory.json |   18 +
- .../pmu-events/arch/x86/grandridge/cache.json |   97 +-
- .../arch/x86/grandridge/counter.json          |   42 +
- .../arch/x86/grandridge/floating-point.json   |   54 +-
- .../arch/x86/grandridge/frontend.json         |    5 +-
- .../arch/x86/grandridge/grr-metrics.json      |  849 ++++
- .../arch/x86/grandridge/memory.json           |   13 +-
- .../arch/x86/grandridge/metricgroups.json     |   23 +
- .../pmu-events/arch/x86/grandridge/other.json |   15 +-
- .../arch/x86/grandridge/pipeline.json         |   97 +-
- .../arch/x86/grandridge/uncore-cache.json     |  267 ++
- .../x86/grandridge/uncore-interconnect.json   |   30 +
- .../arch/x86/grandridge/uncore-io.json        |  181 +
- .../arch/x86/grandridge/uncore-memory.json    |   66 +
- .../arch/x86/grandridge/uncore-power.json     |    1 +
- .../arch/x86/grandridge/virtual-memory.json   |   17 +
- .../arch/x86/graniterapids/cache.json         |  825 ++++
- .../arch/x86/graniterapids/counter.json       |   77 +
- .../x86/graniterapids/floating-point.json     |  242 ++
- .../arch/x86/graniterapids/frontend.json      |  469 ++-
- .../arch/x86/graniterapids/memory.json        |  175 +-
- .../arch/x86/graniterapids/other.json         |  150 +-
- .../arch/x86/graniterapids/pipeline.json      | 1009 ++++-
- .../arch/x86/graniterapids/uncore-cache.json  | 3674 +++++++++++++++++
- .../arch/x86/graniterapids/uncore-cxl.json    |   31 +
- .../graniterapids/uncore-interconnect.json    | 1849 +++++++++
- .../arch/x86/graniterapids/uncore-io.json     | 1901 +++++++++
- .../arch/x86/graniterapids/uncore-memory.json |  449 ++
- .../arch/x86/graniterapids/uncore-power.json  |   11 +
- .../x86/graniterapids/virtual-memory.json     |  159 +
- .../pmu-events/arch/x86/haswell/cache.json    |   94 +
- .../pmu-events/arch/x86/haswell/counter.json  |   22 +
- .../arch/x86/haswell/floating-point.json      |   10 +
- .../pmu-events/arch/x86/haswell/frontend.json |   29 +
- .../arch/x86/haswell/hsw-metrics.json         |   66 +-
- .../pmu-events/arch/x86/haswell/memory.json   |   60 +
- .../arch/x86/haswell/metricgroups.json        |   11 +
- .../pmu-events/arch/x86/haswell/other.json    |    4 +
- .../pmu-events/arch/x86/haswell/pipeline.json |  130 +
- .../arch/x86/haswell/uncore-cache.json        |   33 +
- .../arch/x86/haswell/uncore-interconnect.json |    6 +
- .../arch/x86/haswell/uncore-other.json        |    1 +
- .../arch/x86/haswell/virtual-memory.json      |   49 +
- .../pmu-events/arch/x86/haswellx/cache.json   |   97 +
- .../pmu-events/arch/x86/haswellx/counter.json |   57 +
- .../arch/x86/haswellx/floating-point.json     |   10 +
- .../arch/x86/haswellx/frontend.json           |   29 +
- .../arch/x86/haswellx/hsx-metrics.json        |  114 +-
- .../pmu-events/arch/x86/haswellx/memory.json  |   67 +
- .../arch/x86/haswellx/metricgroups.json       |   11 +
- .../pmu-events/arch/x86/haswellx/other.json   |    4 +
- .../arch/x86/haswellx/pipeline.json           |  130 +
- .../arch/x86/haswellx/uncore-cache.json       |  398 ++
- .../x86/haswellx/uncore-interconnect.json     |  448 ++
- .../arch/x86/haswellx/uncore-io.json          |   59 +
- .../arch/x86/haswellx/uncore-memory.json      |  325 ++
- .../arch/x86/haswellx/uncore-power.json       |   62 +
- .../arch/x86/haswellx/virtual-memory.json     |   49 +
- .../pmu-events/arch/x86/icelake/cache.json    |  109 +
- .../pmu-events/arch/x86/icelake/counter.json  |   17 +
- .../arch/x86/icelake/floating-point.json      |   13 +
- .../pmu-events/arch/x86/icelake/frontend.json |   41 +-
- .../arch/x86/icelake/icl-metrics.json         |  308 +-
- .../pmu-events/arch/x86/icelake/memory.json   |   44 +
- .../arch/x86/icelake/metricgroups.json        |   13 +
- .../pmu-events/arch/x86/icelake/other.json    |   27 +
- .../pmu-events/arch/x86/icelake/pipeline.json |   94 +
- .../arch/x86/icelake/uncore-interconnect.json |   34 +-
- .../arch/x86/icelake/uncore-other.json        |    1 +
- .../arch/x86/icelake/virtual-memory.json      |   20 +
- .../pmu-events/arch/x86/icelakex/cache.json   |  106 +
- .../pmu-events/arch/x86/icelakex/counter.json |   57 +
- .../arch/x86/icelakex/floating-point.json     |   13 +
- .../arch/x86/icelakex/frontend.json           |   38 +
- .../arch/x86/icelakex/icx-metrics.json        |  340 +-
- .../pmu-events/arch/x86/icelakex/memory.json  |   45 +
- .../arch/x86/icelakex/metricgroups.json       |   13 +
- .../pmu-events/arch/x86/icelakex/other.json   |   52 +
- .../arch/x86/icelakex/pipeline.json           |   92 +
- .../arch/x86/icelakex/uncore-cache.json       | 2149 +++++++++-
- .../x86/icelakex/uncore-interconnect.json     | 3344 +++++++++++++++
- .../arch/x86/icelakex/uncore-io.json          | 1829 ++++++++
- .../arch/x86/icelakex/uncore-memory.json      |  338 ++
- .../arch/x86/icelakex/uncore-power.json       |   51 +
- .../arch/x86/icelakex/virtual-memory.json     |   22 +
- .../pmu-events/arch/x86/ivybridge/cache.json  |  104 +
- .../arch/x86/ivybridge/counter.json           |   17 +
- .../arch/x86/ivybridge/floating-point.json    |   17 +
- .../arch/x86/ivybridge/frontend.json          |   30 +
- .../arch/x86/ivybridge/ivb-metrics.json       |   68 +-
- .../pmu-events/arch/x86/ivybridge/memory.json |   19 +
- .../arch/x86/ivybridge/metricgroups.json      |   11 +
- .../pmu-events/arch/x86/ivybridge/other.json  |    4 +
- .../arch/x86/ivybridge/pipeline.json          |  126 +
- .../arch/x86/ivybridge/uncore-cache.json      |   25 +
- .../x86/ivybridge/uncore-interconnect.json    |    9 +
- .../arch/x86/ivybridge/virtual-memory.json    |   18 +
- .../pmu-events/arch/x86/ivytown/cache.json    |  118 +
- .../pmu-events/arch/x86/ivytown/counter.json  |   52 +
- .../arch/x86/ivytown/floating-point.json      |   17 +
- .../pmu-events/arch/x86/ivytown/frontend.json |   30 +
- .../arch/x86/ivytown/ivt-metrics.json         |   68 +-
- .../pmu-events/arch/x86/ivytown/memory.json   |   41 +
- .../arch/x86/ivytown/metricgroups.json        |   11 +
- .../pmu-events/arch/x86/ivytown/other.json    |    4 +
- .../pmu-events/arch/x86/ivytown/pipeline.json |  126 +
- .../arch/x86/ivytown/uncore-cache.json        |  349 ++
- .../arch/x86/ivytown/uncore-interconnect.json |  385 ++
- .../arch/x86/ivytown/uncore-io.json           |   61 +
- .../arch/x86/ivytown/uncore-memory.json       |  198 +
- .../arch/x86/ivytown/uncore-power.json        |   74 +
- .../arch/x86/ivytown/virtual-memory.json      |   20 +
- .../pmu-events/arch/x86/jaketown/cache.json   |  123 +
- .../pmu-events/arch/x86/jaketown/counter.json |   52 +
- .../arch/x86/jaketown/floating-point.json     |   15 +
- .../arch/x86/jaketown/frontend.json           |   32 +
- .../arch/x86/jaketown/jkt-metrics.json        |   24 +-
- .../pmu-events/arch/x86/jaketown/memory.json  |   35 +
- .../arch/x86/jaketown/metricgroups.json       |   11 +
- .../pmu-events/arch/x86/jaketown/other.json   |    6 +
- .../arch/x86/jaketown/pipeline.json           |  127 +
- .../arch/x86/jaketown/uncore-cache.json       |  205 +
- .../x86/jaketown/uncore-interconnect.json     |  207 +
- .../arch/x86/jaketown/uncore-io.json          |   36 +
- .../arch/x86/jaketown/uncore-memory.json      |   51 +
- .../arch/x86/jaketown/uncore-power.json       |   39 +
- .../arch/x86/jaketown/virtual-memory.json     |   16 +
- .../arch/x86/knightslanding/cache.json        |  213 +
- .../arch/x86/knightslanding/counter.json      |   37 +
- .../x86/knightslanding/floating-point.json    |    3 +
- .../arch/x86/knightslanding/frontend.json     |    7 +
- .../arch/x86/knightslanding/memory.json       |  101 +
- .../arch/x86/knightslanding/pipeline.json     |   45 +
- .../arch/x86/knightslanding/uncore-cache.json |  421 ++
- .../arch/x86/knightslanding/uncore-io.json    |   24 +
- .../x86/knightslanding/uncore-memory.json     |   14 +
- .../x86/knightslanding/virtual-memory.json    |    7 +
- .../pmu-events/arch/x86/lunarlake/cache.json  |   20 +
- .../arch/x86/lunarlake/frontend.json          |    3 +
- .../pmu-events/arch/x86/lunarlake/memory.json |   15 +
- .../pmu-events/arch/x86/lunarlake/other.json  |    6 +
- .../arch/x86/lunarlake/pipeline.json          |   36 +
- .../arch/x86/lunarlake/virtual-memory.json    |    6 +
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   34 +-
- .../pmu-events/arch/x86/meteorlake/cache.json |  223 +-
- .../arch/x86/meteorlake/floating-point.json   |   86 +-
- .../arch/x86/meteorlake/frontend.json         |   69 +-
- .../arch/x86/meteorlake/memory.json           |   62 +-
- .../pmu-events/arch/x86/meteorlake/other.json |   19 +-
- .../arch/x86/meteorlake/pipeline.json         |  300 +-
- .../arch/x86/meteorlake/uncore-cache.json     |    2 +
- .../x86/meteorlake/uncore-interconnect.json   |    8 +
- .../arch/x86/meteorlake/uncore-memory.json    |   16 +
- .../arch/x86/meteorlake/uncore-other.json     |    1 +
- .../arch/x86/meteorlake/virtual-memory.json   |   37 +
- .../pmu-events/arch/x86/nehalemep/cache.json  |  320 ++
- .../arch/x86/nehalemep/counter.json           |    7 +
- .../arch/x86/nehalemep/floating-point.json    |   28 +
- .../arch/x86/nehalemep/frontend.json          |    3 +
- .../pmu-events/arch/x86/nehalemep/memory.json |   67 +
- .../pmu-events/arch/x86/nehalemep/other.json  |   18 +
- .../arch/x86/nehalemep/pipeline.json          |  109 +
- .../arch/x86/nehalemep/virtual-memory.json    |   13 +
- .../pmu-events/arch/x86/nehalemex/cache.json  |  315 ++
- .../arch/x86/nehalemex/counter.json           |    7 +
- .../arch/x86/nehalemex/floating-point.json    |   28 +
- .../arch/x86/nehalemex/frontend.json          |    3 +
- .../pmu-events/arch/x86/nehalemex/memory.json |   67 +
- .../pmu-events/arch/x86/nehalemex/other.json  |   18 +
- .../arch/x86/nehalemex/pipeline.json          |  109 +
- .../arch/x86/nehalemex/virtual-memory.json    |   13 +
- .../pmu-events/arch/x86/rocketlake/cache.json |  109 +
- .../arch/x86/rocketlake/counter.json          |   17 +
- .../arch/x86/rocketlake/floating-point.json   |   13 +
- .../arch/x86/rocketlake/frontend.json         |   41 +-
- .../arch/x86/rocketlake/memory.json           |   44 +
- .../arch/x86/rocketlake/metricgroups.json     |   13 +
- .../pmu-events/arch/x86/rocketlake/other.json |   27 +
- .../arch/x86/rocketlake/pipeline.json         |   94 +
- .../arch/x86/rocketlake/rkl-metrics.json      |  308 +-
- .../x86/rocketlake/uncore-interconnect.json   |   28 +-
- .../arch/x86/rocketlake/uncore-other.json     |    1 +
- .../arch/x86/rocketlake/virtual-memory.json   |   20 +
- .../arch/x86/sandybridge/cache.json           |  173 +
- .../arch/x86/sandybridge/counter.json         |   17 +
- .../arch/x86/sandybridge/floating-point.json  |   15 +
- .../arch/x86/sandybridge/frontend.json        |   32 +
- .../arch/x86/sandybridge/memory.json          |   37 +
- .../arch/x86/sandybridge/metricgroups.json    |   11 +
- .../arch/x86/sandybridge/other.json           |    6 +
- .../arch/x86/sandybridge/pipeline.json        |  128 +
- .../arch/x86/sandybridge/snb-metrics.json     |   24 +-
- .../arch/x86/sandybridge/uncore-cache.json    |   25 +
- .../x86/sandybridge/uncore-interconnect.json  |    9 +
- .../arch/x86/sandybridge/virtual-memory.json  |   16 +
- .../arch/x86/sapphirerapids/cache.json        |  161 +-
- .../arch/x86/sapphirerapids/counter.json      |   82 +
- .../x86/sapphirerapids/floating-point.json    |   28 +
- .../arch/x86/sapphirerapids/frontend.json     |   50 +
- .../arch/x86/sapphirerapids/memory.json       |   50 +
- .../arch/x86/sapphirerapids/metricgroups.json |   13 +
- .../arch/x86/sapphirerapids/other.json        |   48 +
- .../arch/x86/sapphirerapids/pipeline.json     |  133 +
- .../arch/x86/sapphirerapids/spr-metrics.json  |  411 +-
- .../arch/x86/sapphirerapids/uncore-cache.json | 1244 ++++++
- .../arch/x86/sapphirerapids/uncore-cxl.json   |  110 +
- .../sapphirerapids/uncore-interconnect.json   | 1427 +++++++
- .../arch/x86/sapphirerapids/uncore-io.json    |  679 +++
- .../x86/sapphirerapids/uncore-memory.json     |  742 ++++
- .../arch/x86/sapphirerapids/uncore-power.json |   49 +
- .../x86/sapphirerapids/virtual-memory.json    |   20 +
- .../arch/x86/sierraforest/cache.json          |   97 +-
- .../arch/x86/sierraforest/counter.json        |   77 +
- .../arch/x86/sierraforest/floating-point.json |   54 +-
- .../arch/x86/sierraforest/frontend.json       |    5 +-
- .../arch/x86/sierraforest/memory.json         |   13 +-
- .../arch/x86/sierraforest/metricgroups.json   |   23 +
- .../arch/x86/sierraforest/other.json          |   15 +-
- .../arch/x86/sierraforest/pipeline.json       |   97 +-
- .../arch/x86/sierraforest/srf-metrics.json    |  927 +++++
- .../arch/x86/sierraforest/uncore-cache.json   |  549 ++-
- .../arch/x86/sierraforest/uncore-cxl.json     |   21 +
- .../x86/sierraforest/uncore-interconnect.json |  267 ++
- .../arch/x86/sierraforest/uncore-io.json      |  267 ++
- .../arch/x86/sierraforest/uncore-memory.json  |   66 +
- .../arch/x86/sierraforest/uncore-power.json   |    1 +
- .../arch/x86/sierraforest/virtual-memory.json |   17 +
- .../pmu-events/arch/x86/silvermont/cache.json |   77 +
- .../arch/x86/silvermont/counter.json          |    7 +
- .../arch/x86/silvermont/floating-point.json   |    1 +
- .../arch/x86/silvermont/frontend.json         |    8 +
- .../arch/x86/silvermont/memory.json           |    1 +
- .../pmu-events/arch/x86/silvermont/other.json |    2 +
- .../arch/x86/silvermont/pipeline.json         |   34 +
- .../arch/x86/silvermont/virtual-memory.json   |    7 +
- .../pmu-events/arch/x86/skylake/cache.json    |  250 ++
- .../pmu-events/arch/x86/skylake/counter.json  |   22 +
- .../arch/x86/skylake/floating-point.json      |   10 +
- .../pmu-events/arch/x86/skylake/frontend.json |   49 +
- .../pmu-events/arch/x86/skylake/memory.json   |  131 +
- .../arch/x86/skylake/metricgroups.json        |   13 +
- .../pmu-events/arch/x86/skylake/other.json    |    2 +
- .../pmu-events/arch/x86/skylake/pipeline.json |  103 +-
- .../arch/x86/skylake/skl-metrics.json         |  196 +-
- .../arch/x86/skylake/uncore-cache.json        |   23 +
- .../arch/x86/skylake/uncore-interconnect.json |    8 +
- .../arch/x86/skylake/uncore-other.json        |   10 -
- .../arch/x86/skylake/virtual-memory.json      |   28 +
- .../pmu-events/arch/x86/skylakex/cache.json   |  155 +
- .../pmu-events/arch/x86/skylakex/counter.json |   52 +
- .../arch/x86/skylakex/floating-point.json     |   13 +
- .../arch/x86/skylakex/frontend.json           |   49 +
- .../pmu-events/arch/x86/skylakex/memory.json  |  115 +
- .../arch/x86/skylakex/metricgroups.json       |   13 +
- .../pmu-events/arch/x86/skylakex/other.json   |   15 +
- .../arch/x86/skylakex/pipeline.json           |  104 +-
- .../arch/x86/skylakex/skx-metrics.json        |  310 +-
- .../arch/x86/skylakex/uncore-cache.json       | 2274 ++++++++++
- .../x86/skylakex/uncore-interconnect.json     | 2521 +++++++++++
- .../arch/x86/skylakex/uncore-io.json          |  703 ++++
- .../arch/x86/skylakex/uncore-memory.json      |  804 ++++
- .../arch/x86/skylakex/uncore-power.json       |   50 +
- .../arch/x86/skylakex/virtual-memory.json     |   28 +
- .../pmu-events/arch/x86/snowridgex/cache.json |  101 +
- .../arch/x86/snowridgex/counter.json          |   47 +
- .../arch/x86/snowridgex/floating-point.json   |    3 +
- .../arch/x86/snowridgex/frontend.json         |    9 +
- .../arch/x86/snowridgex/memory.json           |   40 +
- .../pmu-events/arch/x86/snowridgex/other.json |   61 +
- .../arch/x86/snowridgex/pipeline.json         |   60 +
- .../arch/x86/snowridgex/uncore-cache.json     | 1548 ++++++-
- .../x86/snowridgex/uncore-interconnect.json   | 1403 +++++++
- .../arch/x86/snowridgex/uncore-io.json        | 1743 ++++++++
- .../arch/x86/snowridgex/uncore-memory.json    |  103 +
- .../arch/x86/snowridgex/uncore-power.json     |   51 +
- .../arch/x86/snowridgex/virtual-memory.json   |   31 +
- .../pmu-events/arch/x86/tigerlake/cache.json  |   73 +
- .../arch/x86/tigerlake/counter.json           |   17 +
- .../arch/x86/tigerlake/floating-point.json    |   13 +
- .../arch/x86/tigerlake/frontend.json          |   41 +-
- .../pmu-events/arch/x86/tigerlake/memory.json |   24 +
- .../arch/x86/tigerlake/metricgroups.json      |   13 +
- .../pmu-events/arch/x86/tigerlake/other.json  |    4 +
- .../arch/x86/tigerlake/pipeline.json          |   95 +
- .../arch/x86/tigerlake/tgl-metrics.json       |  198 +-
- .../x86/tigerlake/uncore-interconnect.json    |   19 +
- .../arch/x86/tigerlake/uncore-memory.json     |    6 +
- .../arch/x86/tigerlake/uncore-other.json      |    1 +
- .../arch/x86/tigerlake/virtual-memory.json    |   20 +
- .../arch/x86/westmereep-dp/cache.json         |  282 ++
- .../arch/x86/westmereep-dp/counter.json       |    7 +
- .../x86/westmereep-dp/floating-point.json     |   28 +
- .../arch/x86/westmereep-dp/frontend.json      |    3 +
- .../arch/x86/westmereep-dp/memory.json        |   69 +
- .../arch/x86/westmereep-dp/other.json         |   28 +
- .../arch/x86/westmereep-dp/pipeline.json      |  111 +
- .../x86/westmereep-dp/virtual-memory.json     |   21 +
- .../arch/x86/westmereep-sp/cache.json         |  321 ++
- .../arch/x86/westmereep-sp/counter.json       |    7 +
- .../x86/westmereep-sp/floating-point.json     |   28 +
- .../arch/x86/westmereep-sp/frontend.json      |    3 +
- .../arch/x86/westmereep-sp/memory.json        |   67 +
- .../arch/x86/westmereep-sp/other.json         |   28 +
- .../arch/x86/westmereep-sp/pipeline.json      |  111 +
- .../x86/westmereep-sp/virtual-memory.json     |   18 +
- .../pmu-events/arch/x86/westmereex/cache.json |  320 ++
- .../arch/x86/westmereex/counter.json          |    7 +
- .../arch/x86/westmereex/floating-point.json   |   28 +
- .../arch/x86/westmereex/frontend.json         |    3 +
- .../arch/x86/westmereex/memory.json           |   68 +
- .../pmu-events/arch/x86/westmereex/other.json |   28 +
- .../arch/x86/westmereex/pipeline.json         |  111 +
- .../arch/x86/westmereex/virtual-memory.json   |   21 +
- 442 files changed, 76139 insertions(+), 2883 deletions(-)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../pmu-events/arch/x86/bonnell/cache.json    | 93 +++++++++++++++++++
+ .../pmu-events/arch/x86/bonnell/counter.json  |  7 ++
+ .../arch/x86/bonnell/floating-point.json      | 32 +++++++
+ .../pmu-events/arch/x86/bonnell/frontend.json | 11 +++
+ .../pmu-events/arch/x86/bonnell/memory.json   | 19 ++++
+ .../pmu-events/arch/x86/bonnell/other.json    | 56 +++++++++++
+ .../pmu-events/arch/x86/bonnell/pipeline.json | 44 +++++++++
+ .../arch/x86/bonnell/virtual-memory.json      | 15 +++
+ 8 files changed, 277 insertions(+)
  create mode 100644 tools/perf/pmu-events/arch/x86/bonnell/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwell/counter.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/broadwell/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellde/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/broadwellx/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/cascadelakex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/elkhartlake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/emeraldrapids/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/emeraldrapids/emr-metrics.json
- create mode 100644 tools/perf/pmu-events/arch/x86/emeraldrapids/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/goldmont/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/goldmontplus/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/grr-metrics.json
- create mode 100644 tools/perf/pmu-events/arch/x86/grandridge/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/floating-point.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-cache.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-cxl.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-io.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json
- create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-power.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswell/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/haswellx/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/icelakex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/ivybridge/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/ivytown/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/jaketown/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/knightslanding/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/nehalemep/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/nehalemex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/rocketlake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sandybridge/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sapphirerapids/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/metricgroups.json
- create mode 100644 tools/perf/pmu-events/arch/x86/sierraforest/srf-metrics.json
- create mode 100644 tools/perf/pmu-events/arch/x86/silvermont/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylake/counter.json
- delete mode 100644 tools/perf/pmu-events/arch/x86/skylake/uncore-other.json
- create mode 100644 tools/perf/pmu-events/arch/x86/skylakex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/snowridgex/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/tigerlake/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/westmereep-dp/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/westmereep-sp/counter.json
- create mode 100644 tools/perf/pmu-events/arch/x86/westmereex/counter.json
 
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/cache.json b/tools/perf/pmu-events/arch/x86/bonnell/cache.json
+index 1ca95a70d48a..86582bb8aa39 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/cache.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/cache.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "L1 Data Cacheable reads and writes",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.ALL_CACHE_REF",
+         "SampleAfterValue": "2000000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "L1 Data reads and writes",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.ALL_REF",
+         "SampleAfterValue": "2000000",
+@@ -15,6 +17,7 @@
+     },
+     {
+         "BriefDescription": "Modified cache lines evicted from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.EVICT",
+         "SampleAfterValue": "200000",
+@@ -22,6 +25,7 @@
+     },
+     {
+         "BriefDescription": "L1 Cacheable Data Reads",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.LD",
+         "SampleAfterValue": "2000000",
+@@ -29,6 +33,7 @@
+     },
+     {
+         "BriefDescription": "L1 Data line replacements",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.REPL",
+         "SampleAfterValue": "200000",
+@@ -36,6 +41,7 @@
+     },
+     {
+         "BriefDescription": "Modified cache lines allocated in the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.REPLM",
+         "SampleAfterValue": "200000",
+@@ -43,6 +49,7 @@
+     },
+     {
+         "BriefDescription": "L1 Cacheable Data Writes",
++        "Counter": "0,1",
+         "EventCode": "0x40",
+         "EventName": "L1D_CACHE.ST",
+         "SampleAfterValue": "2000000",
+@@ -50,6 +57,7 @@
+     },
+     {
+         "BriefDescription": "Cycles L2 address bus is in use.",
++        "Counter": "0,1",
+         "EventCode": "0x21",
+         "EventName": "L2_ADS.SELF",
+         "SampleAfterValue": "200000",
+@@ -57,6 +65,7 @@
+     },
+     {
+         "BriefDescription": "All data requests from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x2C",
+         "EventName": "L2_DATA_RQSTS.SELF.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -64,6 +73,7 @@
+     },
+     {
+         "BriefDescription": "All data requests from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x2C",
+         "EventName": "L2_DATA_RQSTS.SELF.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -71,6 +81,7 @@
+     },
+     {
+         "BriefDescription": "All data requests from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x2C",
+         "EventName": "L2_DATA_RQSTS.SELF.MESI",
+         "SampleAfterValue": "200000",
+@@ -78,6 +89,7 @@
+     },
+     {
+         "BriefDescription": "All data requests from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x2C",
+         "EventName": "L2_DATA_RQSTS.SELF.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -85,6 +97,7 @@
+     },
+     {
+         "BriefDescription": "All data requests from the L1 data cache",
++        "Counter": "0,1",
+         "EventCode": "0x2C",
+         "EventName": "L2_DATA_RQSTS.SELF.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -92,6 +105,7 @@
+     },
+     {
+         "BriefDescription": "Cycles the L2 cache data bus is busy.",
++        "Counter": "0,1",
+         "EventCode": "0x22",
+         "EventName": "L2_DBUS_BUSY.SELF",
+         "SampleAfterValue": "200000",
+@@ -99,6 +113,7 @@
+     },
+     {
+         "BriefDescription": "Cycles the L2 transfers data to the core.",
++        "Counter": "0,1",
+         "EventCode": "0x23",
+         "EventName": "L2_DBUS_BUSY_RD.SELF",
+         "SampleAfterValue": "200000",
+@@ -106,6 +121,7 @@
+     },
+     {
+         "BriefDescription": "L2 cacheable instruction fetch requests",
++        "Counter": "0,1",
+         "EventCode": "0x28",
+         "EventName": "L2_IFETCH.SELF.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -113,6 +129,7 @@
+     },
+     {
+         "BriefDescription": "L2 cacheable instruction fetch requests",
++        "Counter": "0,1",
+         "EventCode": "0x28",
+         "EventName": "L2_IFETCH.SELF.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -120,6 +137,7 @@
+     },
+     {
+         "BriefDescription": "L2 cacheable instruction fetch requests",
++        "Counter": "0,1",
+         "EventCode": "0x28",
+         "EventName": "L2_IFETCH.SELF.MESI",
+         "SampleAfterValue": "200000",
+@@ -127,6 +145,7 @@
+     },
+     {
+         "BriefDescription": "L2 cacheable instruction fetch requests",
++        "Counter": "0,1",
+         "EventCode": "0x28",
+         "EventName": "L2_IFETCH.SELF.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -134,6 +153,7 @@
+     },
+     {
+         "BriefDescription": "L2 cacheable instruction fetch requests",
++        "Counter": "0,1",
+         "EventCode": "0x28",
+         "EventName": "L2_IFETCH.SELF.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -141,6 +161,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.ANY.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -148,6 +169,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.ANY.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -155,6 +177,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.ANY.MESI",
+         "SampleAfterValue": "200000",
+@@ -162,6 +185,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.ANY.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -169,6 +193,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.ANY.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -176,6 +201,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.DEMAND.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -183,6 +209,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.DEMAND.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -190,6 +217,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.DEMAND.MESI",
+         "SampleAfterValue": "200000",
+@@ -197,6 +225,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.DEMAND.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -204,6 +233,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.DEMAND.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -211,6 +241,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.PREFETCH.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -218,6 +249,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.PREFETCH.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -225,6 +257,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.PREFETCH.MESI",
+         "SampleAfterValue": "200000",
+@@ -232,6 +265,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.PREFETCH.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -239,6 +273,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache reads",
++        "Counter": "0,1",
+         "EventCode": "0x29",
+         "EventName": "L2_LD.SELF.PREFETCH.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -246,6 +281,7 @@
+     },
+     {
+         "BriefDescription": "All read requests from L1 instruction and data caches",
++        "Counter": "0,1",
+         "EventCode": "0x2D",
+         "EventName": "L2_LD_IFETCH.SELF.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -253,6 +289,7 @@
+     },
+     {
+         "BriefDescription": "All read requests from L1 instruction and data caches",
++        "Counter": "0,1",
+         "EventCode": "0x2D",
+         "EventName": "L2_LD_IFETCH.SELF.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -260,6 +297,7 @@
+     },
+     {
+         "BriefDescription": "All read requests from L1 instruction and data caches",
++        "Counter": "0,1",
+         "EventCode": "0x2D",
+         "EventName": "L2_LD_IFETCH.SELF.MESI",
+         "SampleAfterValue": "200000",
+@@ -267,6 +305,7 @@
+     },
+     {
+         "BriefDescription": "All read requests from L1 instruction and data caches",
++        "Counter": "0,1",
+         "EventCode": "0x2D",
+         "EventName": "L2_LD_IFETCH.SELF.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -274,6 +313,7 @@
+     },
+     {
+         "BriefDescription": "All read requests from L1 instruction and data caches",
++        "Counter": "0,1",
+         "EventCode": "0x2D",
+         "EventName": "L2_LD_IFETCH.SELF.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -281,6 +321,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache misses.",
++        "Counter": "0,1",
+         "EventCode": "0x24",
+         "EventName": "L2_LINES_IN.SELF.ANY",
+         "SampleAfterValue": "200000",
+@@ -288,6 +329,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache misses.",
++        "Counter": "0,1",
+         "EventCode": "0x24",
+         "EventName": "L2_LINES_IN.SELF.DEMAND",
+         "SampleAfterValue": "200000",
+@@ -295,6 +337,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache misses.",
++        "Counter": "0,1",
+         "EventCode": "0x24",
+         "EventName": "L2_LINES_IN.SELF.PREFETCH",
+         "SampleAfterValue": "200000",
+@@ -302,6 +345,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache lines evicted.",
++        "Counter": "0,1",
+         "EventCode": "0x26",
+         "EventName": "L2_LINES_OUT.SELF.ANY",
+         "SampleAfterValue": "200000",
+@@ -309,6 +353,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache lines evicted.",
++        "Counter": "0,1",
+         "EventCode": "0x26",
+         "EventName": "L2_LINES_OUT.SELF.DEMAND",
+         "SampleAfterValue": "200000",
+@@ -316,6 +361,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache lines evicted.",
++        "Counter": "0,1",
+         "EventCode": "0x26",
+         "EventName": "L2_LINES_OUT.SELF.PREFETCH",
+         "SampleAfterValue": "200000",
+@@ -323,6 +369,7 @@
+     },
+     {
+         "BriefDescription": "L2 locked accesses",
++        "Counter": "0,1",
+         "EventCode": "0x2B",
+         "EventName": "L2_LOCK.SELF.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -330,6 +377,7 @@
+     },
+     {
+         "BriefDescription": "L2 locked accesses",
++        "Counter": "0,1",
+         "EventCode": "0x2B",
+         "EventName": "L2_LOCK.SELF.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -337,6 +385,7 @@
+     },
+     {
+         "BriefDescription": "L2 locked accesses",
++        "Counter": "0,1",
+         "EventCode": "0x2B",
+         "EventName": "L2_LOCK.SELF.MESI",
+         "SampleAfterValue": "200000",
+@@ -344,6 +393,7 @@
+     },
+     {
+         "BriefDescription": "L2 locked accesses",
++        "Counter": "0,1",
+         "EventCode": "0x2B",
+         "EventName": "L2_LOCK.SELF.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -351,6 +401,7 @@
+     },
+     {
+         "BriefDescription": "L2 locked accesses",
++        "Counter": "0,1",
+         "EventCode": "0x2B",
+         "EventName": "L2_LOCK.SELF.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -358,6 +409,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache line modifications.",
++        "Counter": "0,1",
+         "EventCode": "0x25",
+         "EventName": "L2_M_LINES_IN.SELF",
+         "SampleAfterValue": "200000",
+@@ -365,6 +417,7 @@
+     },
+     {
+         "BriefDescription": "Modified lines evicted from the L2 cache",
++        "Counter": "0,1",
+         "EventCode": "0x27",
+         "EventName": "L2_M_LINES_OUT.SELF.ANY",
+         "SampleAfterValue": "200000",
+@@ -372,6 +425,7 @@
+     },
+     {
+         "BriefDescription": "Modified lines evicted from the L2 cache",
++        "Counter": "0,1",
+         "EventCode": "0x27",
+         "EventName": "L2_M_LINES_OUT.SELF.DEMAND",
+         "SampleAfterValue": "200000",
+@@ -379,6 +433,7 @@
+     },
+     {
+         "BriefDescription": "Modified lines evicted from the L2 cache",
++        "Counter": "0,1",
+         "EventCode": "0x27",
+         "EventName": "L2_M_LINES_OUT.SELF.PREFETCH",
+         "SampleAfterValue": "200000",
+@@ -386,6 +441,7 @@
+     },
+     {
+         "BriefDescription": "Cycles no L2 cache requests are pending",
++        "Counter": "0,1",
+         "EventCode": "0x32",
+         "EventName": "L2_NO_REQ.SELF",
+         "SampleAfterValue": "200000",
+@@ -393,6 +449,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.ANY.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -400,6 +457,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.ANY.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -407,6 +465,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.ANY.MESI",
+         "SampleAfterValue": "200000",
+@@ -414,6 +473,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.ANY.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -421,6 +481,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.ANY.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -428,6 +489,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -435,6 +497,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -442,6 +505,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.MESI",
+         "SampleAfterValue": "200000",
+@@ -449,6 +513,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -456,6 +521,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.DEMAND.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -463,6 +529,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -470,6 +537,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -477,6 +545,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.MESI",
+         "SampleAfterValue": "200000",
+@@ -484,6 +553,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -491,6 +561,7 @@
+     },
+     {
+         "BriefDescription": "Rejected L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x30",
+         "EventName": "L2_REJECT_BUSQ.SELF.PREFETCH.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -498,6 +569,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.ANY.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -505,6 +577,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.ANY.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -512,6 +585,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.ANY.MESI",
+         "SampleAfterValue": "200000",
+@@ -519,6 +593,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.ANY.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -526,6 +601,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.ANY.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -533,6 +609,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.DEMAND.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -540,6 +617,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache demand requests from this core that missed the L2",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.DEMAND.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -547,6 +625,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache demand requests from this core",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.DEMAND.MESI",
+         "SampleAfterValue": "200000",
+@@ -554,6 +633,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.DEMAND.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -561,6 +641,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.DEMAND.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -568,6 +649,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.PREFETCH.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -575,6 +657,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.PREFETCH.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -582,6 +665,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.PREFETCH.MESI",
+         "SampleAfterValue": "200000",
+@@ -589,6 +673,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.PREFETCH.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -596,6 +681,7 @@
+     },
+     {
+         "BriefDescription": "L2 cache requests",
++        "Counter": "0,1",
+         "EventCode": "0x2E",
+         "EventName": "L2_RQSTS.SELF.PREFETCH.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -603,6 +689,7 @@
+     },
+     {
+         "BriefDescription": "L2 store requests",
++        "Counter": "0,1",
+         "EventCode": "0x2A",
+         "EventName": "L2_ST.SELF.E_STATE",
+         "SampleAfterValue": "200000",
+@@ -610,6 +697,7 @@
+     },
+     {
+         "BriefDescription": "L2 store requests",
++        "Counter": "0,1",
+         "EventCode": "0x2A",
+         "EventName": "L2_ST.SELF.I_STATE",
+         "SampleAfterValue": "200000",
+@@ -617,6 +705,7 @@
+     },
+     {
+         "BriefDescription": "L2 store requests",
++        "Counter": "0,1",
+         "EventCode": "0x2A",
+         "EventName": "L2_ST.SELF.MESI",
+         "SampleAfterValue": "200000",
+@@ -624,6 +713,7 @@
+     },
+     {
+         "BriefDescription": "L2 store requests",
++        "Counter": "0,1",
+         "EventCode": "0x2A",
+         "EventName": "L2_ST.SELF.M_STATE",
+         "SampleAfterValue": "200000",
+@@ -631,6 +721,7 @@
+     },
+     {
+         "BriefDescription": "L2 store requests",
++        "Counter": "0,1",
+         "EventCode": "0x2A",
+         "EventName": "L2_ST.SELF.S_STATE",
+         "SampleAfterValue": "200000",
+@@ -638,6 +729,7 @@
+     },
+     {
+         "BriefDescription": "Retired loads that hit the L2 cache (precise event).",
++        "Counter": "0,1",
+         "EventCode": "0xCB",
+         "EventName": "MEM_LOAD_RETIRED.L2_HIT",
+         "SampleAfterValue": "200000",
+@@ -645,6 +737,7 @@
+     },
+     {
+         "BriefDescription": "Retired loads that miss the L2 cache",
++        "Counter": "0,1",
+         "EventCode": "0xCB",
+         "EventName": "MEM_LOAD_RETIRED.L2_MISS",
+         "SampleAfterValue": "10000",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/counter.json b/tools/perf/pmu-events/arch/x86/bonnell/counter.json
+new file mode 100644
+index 000000000000..eb89b55f31bd
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/x86/bonnell/counter.json
+@@ -0,0 +1,7 @@
++[
++    {
++        "Unit": "core",
++        "CountersNumFixed": "4",
++        "CountersNumGeneric": "2"
++    }
++]
+\ No newline at end of file
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json b/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
+index 18bf5ec47e72..d1bd5be95a15 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/floating-point.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Floating point assists for retired operations.",
++        "Counter": "0,1",
+         "EventCode": "0x11",
+         "EventName": "FP_ASSIST.AR",
+         "SampleAfterValue": "10000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "Floating point assists.",
++        "Counter": "0,1",
+         "EventCode": "0x11",
+         "EventName": "FP_ASSIST.S",
+         "SampleAfterValue": "10000",
+@@ -15,12 +17,14 @@
+     },
+     {
+         "BriefDescription": "SIMD assists invoked.",
++        "Counter": "0,1",
+         "EventCode": "0xCD",
+         "EventName": "SIMD_ASSIST",
+         "SampleAfterValue": "100000"
+     },
+     {
+         "BriefDescription": "Retired computational Streaming SIMD Extensions (SSE) packed-single instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xCA",
+         "EventName": "SIMD_COMP_INST_RETIRED.PACKED_SINGLE",
+         "SampleAfterValue": "2000000",
+@@ -28,6 +32,7 @@
+     },
+     {
+         "BriefDescription": "Retired computational Streaming SIMD Extensions 2 (SSE2) scalar-double instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xCA",
+         "EventName": "SIMD_COMP_INST_RETIRED.SCALAR_DOUBLE",
+         "SampleAfterValue": "2000000",
+@@ -35,6 +40,7 @@
+     },
+     {
+         "BriefDescription": "Retired computational Streaming SIMD Extensions (SSE) scalar-single instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xCA",
+         "EventName": "SIMD_COMP_INST_RETIRED.SCALAR_SINGLE",
+         "SampleAfterValue": "2000000",
+@@ -42,12 +48,14 @@
+     },
+     {
+         "BriefDescription": "SIMD Instructions retired.",
++        "Counter": "0,1",
+         "EventCode": "0xCE",
+         "EventName": "SIMD_INSTR_RETIRED",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Retired Streaming SIMD Extensions (SSE) packed-single instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC7",
+         "EventName": "SIMD_INST_RETIRED.PACKED_SINGLE",
+         "SampleAfterValue": "2000000",
+@@ -55,6 +63,7 @@
+     },
+     {
+         "BriefDescription": "Retired Streaming SIMD Extensions 2 (SSE2) scalar-double instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC7",
+         "EventName": "SIMD_INST_RETIRED.SCALAR_DOUBLE",
+         "SampleAfterValue": "2000000",
+@@ -62,6 +71,7 @@
+     },
+     {
+         "BriefDescription": "Retired Streaming SIMD Extensions (SSE) scalar-single instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC7",
+         "EventName": "SIMD_INST_RETIRED.SCALAR_SINGLE",
+         "SampleAfterValue": "2000000",
+@@ -69,6 +79,7 @@
+     },
+     {
+         "BriefDescription": "Retired Streaming SIMD Extensions 2 (SSE2) vector instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC7",
+         "EventName": "SIMD_INST_RETIRED.VECTOR",
+         "SampleAfterValue": "2000000",
+@@ -76,12 +87,14 @@
+     },
+     {
+         "BriefDescription": "Saturated arithmetic instructions retired.",
++        "Counter": "0,1",
+         "EventCode": "0xCF",
+         "EventName": "SIMD_SAT_INSTR_RETIRED",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "SIMD saturated arithmetic micro-ops retired.",
++        "Counter": "0,1",
+         "EventCode": "0xB1",
+         "EventName": "SIMD_SAT_UOP_EXEC.AR",
+         "SampleAfterValue": "2000000",
+@@ -89,12 +102,14 @@
+     },
+     {
+         "BriefDescription": "SIMD saturated arithmetic micro-ops executed.",
++        "Counter": "0,1",
+         "EventCode": "0xB1",
+         "EventName": "SIMD_SAT_UOP_EXEC.S",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "SIMD micro-ops retired (excluding stores).",
++        "Counter": "0,1",
+         "EventCode": "0xB0",
+         "EventName": "SIMD_UOPS_EXEC.AR",
+         "PEBS": "2",
+@@ -103,12 +118,14 @@
+     },
+     {
+         "BriefDescription": "SIMD micro-ops executed (excluding stores).",
++        "Counter": "0,1",
+         "EventCode": "0xB0",
+         "EventName": "SIMD_UOPS_EXEC.S",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "SIMD packed arithmetic micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.ARITHMETIC.AR",
+         "SampleAfterValue": "2000000",
+@@ -116,6 +133,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed arithmetic micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.ARITHMETIC.S",
+         "SampleAfterValue": "2000000",
+@@ -123,6 +141,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed logical micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.LOGICAL.AR",
+         "SampleAfterValue": "2000000",
+@@ -130,6 +149,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed logical micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.LOGICAL.S",
+         "SampleAfterValue": "2000000",
+@@ -137,6 +157,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed multiply micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.MUL.AR",
+         "SampleAfterValue": "2000000",
+@@ -144,6 +165,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed multiply micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.MUL.S",
+         "SampleAfterValue": "2000000",
+@@ -151,6 +173,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.PACK.AR",
+         "SampleAfterValue": "2000000",
+@@ -158,6 +181,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.PACK.S",
+         "SampleAfterValue": "2000000",
+@@ -165,6 +189,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed shift micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.SHIFT.AR",
+         "SampleAfterValue": "2000000",
+@@ -172,6 +197,7 @@
+     },
+     {
+         "BriefDescription": "SIMD packed shift micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.SHIFT.S",
+         "SampleAfterValue": "2000000",
+@@ -179,6 +205,7 @@
+     },
+     {
+         "BriefDescription": "SIMD unpacked micro-ops retired",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.UNPACK.AR",
+         "SampleAfterValue": "2000000",
+@@ -186,6 +213,7 @@
+     },
+     {
+         "BriefDescription": "SIMD unpacked micro-ops executed",
++        "Counter": "0,1",
+         "EventCode": "0xB3",
+         "EventName": "SIMD_UOP_TYPE_EXEC.UNPACK.S",
+         "SampleAfterValue": "2000000",
+@@ -193,6 +221,7 @@
+     },
+     {
+         "BriefDescription": "Floating point computational micro-ops retired.",
++        "Counter": "0,1",
+         "EventCode": "0x10",
+         "EventName": "X87_COMP_OPS_EXE.ANY.AR",
+         "PEBS": "2",
+@@ -201,6 +230,7 @@
+     },
+     {
+         "BriefDescription": "Floating point computational micro-ops executed.",
++        "Counter": "0,1",
+         "EventCode": "0x10",
+         "EventName": "X87_COMP_OPS_EXE.ANY.S",
+         "SampleAfterValue": "2000000",
+@@ -208,6 +238,7 @@
+     },
+     {
+         "BriefDescription": "FXCH uops retired.",
++        "Counter": "0,1",
+         "EventCode": "0x10",
+         "EventName": "X87_COMP_OPS_EXE.FXCH.AR",
+         "PEBS": "2",
+@@ -216,6 +247,7 @@
+     },
+     {
+         "BriefDescription": "FXCH uops executed.",
++        "Counter": "0,1",
+         "EventCode": "0x10",
+         "EventName": "X87_COMP_OPS_EXE.FXCH.S",
+         "SampleAfterValue": "2000000",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
+index 42284c02c11d..7657fd6d3a11 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/frontend.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "BACLEARS asserted.",
++        "Counter": "0,1",
+         "EventCode": "0xE6",
+         "EventName": "BACLEARS.ANY",
+         "SampleAfterValue": "2000000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "Cycles during which instruction fetches are  stalled.",
++        "Counter": "0,1",
+         "EventCode": "0x86",
+         "EventName": "CYCLES_ICACHE_MEM_STALLED.ICACHE_MEM_STALLED",
+         "SampleAfterValue": "2000000",
+@@ -15,6 +17,7 @@
+     },
+     {
+         "BriefDescription": "Decode stall due to IQ full",
++        "Counter": "0,1",
+         "EventCode": "0x87",
+         "EventName": "DECODE_STALL.IQ_FULL",
+         "SampleAfterValue": "2000000",
+@@ -22,6 +25,7 @@
+     },
+     {
+         "BriefDescription": "Decode stall due to PFB empty",
++        "Counter": "0,1",
+         "EventCode": "0x87",
+         "EventName": "DECODE_STALL.PFB_EMPTY",
+         "SampleAfterValue": "2000000",
+@@ -29,6 +33,7 @@
+     },
+     {
+         "BriefDescription": "Instruction fetches.",
++        "Counter": "0,1",
+         "EventCode": "0x80",
+         "EventName": "ICACHE.ACCESSES",
+         "SampleAfterValue": "200000",
+@@ -36,6 +41,7 @@
+     },
+     {
+         "BriefDescription": "Icache hit",
++        "Counter": "0,1",
+         "EventCode": "0x80",
+         "EventName": "ICACHE.HIT",
+         "SampleAfterValue": "200000",
+@@ -43,6 +49,7 @@
+     },
+     {
+         "BriefDescription": "Icache miss",
++        "Counter": "0,1",
+         "EventCode": "0x80",
+         "EventName": "ICACHE.MISSES",
+         "SampleAfterValue": "200000",
+@@ -50,6 +57,7 @@
+     },
+     {
+         "BriefDescription": "All Instructions decoded",
++        "Counter": "0,1",
+         "EventCode": "0xAA",
+         "EventName": "MACRO_INSTS.ALL_DECODED",
+         "SampleAfterValue": "2000000",
+@@ -57,6 +65,7 @@
+     },
+     {
+         "BriefDescription": "CISC macro instructions decoded",
++        "Counter": "0,1",
+         "EventCode": "0xAA",
+         "EventName": "MACRO_INSTS.CISC_DECODED",
+         "SampleAfterValue": "2000000",
+@@ -64,6 +73,7 @@
+     },
+     {
+         "BriefDescription": "Non-CISC macro instructions decoded",
++        "Counter": "0,1",
+         "EventCode": "0xAA",
+         "EventName": "MACRO_INSTS.NON_CISC_DECODED",
+         "SampleAfterValue": "2000000",
+@@ -71,6 +81,7 @@
+     },
+     {
+         "BriefDescription": "This event counts the cycles where 1 or more uops are issued by the micro-sequencer (MS), including microcode assists and inserted flows, and written to the IQ.",
++        "Counter": "0,1",
+         "CounterMask": "1",
+         "EventCode": "0xA9",
+         "EventName": "UOPS.MS_CYCLES",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/memory.json b/tools/perf/pmu-events/arch/x86/bonnell/memory.json
+index ac02dc2482c8..f8b45b6fb4d3 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/memory.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/memory.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Nonzero segbase 1 bubble",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.BUBBLE",
+         "SampleAfterValue": "200000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "Nonzero segbase load 1 bubble",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.LD_BUBBLE",
+         "SampleAfterValue": "200000",
+@@ -15,6 +17,7 @@
+     },
+     {
+         "BriefDescription": "Load splits",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.LD_SPLIT",
+         "SampleAfterValue": "200000",
+@@ -22,6 +25,7 @@
+     },
+     {
+         "BriefDescription": "Load splits (At Retirement)",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.LD_SPLIT.AR",
+         "SampleAfterValue": "200000",
+@@ -29,6 +33,7 @@
+     },
+     {
+         "BriefDescription": "Nonzero segbase ld-op-st 1 bubble",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.RMW_BUBBLE",
+         "SampleAfterValue": "200000",
+@@ -36,6 +41,7 @@
+     },
+     {
+         "BriefDescription": "ld-op-st splits",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.RMW_SPLIT",
+         "SampleAfterValue": "200000",
+@@ -43,6 +49,7 @@
+     },
+     {
+         "BriefDescription": "Memory references that cross an 8-byte boundary.",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.SPLIT",
+         "SampleAfterValue": "200000",
+@@ -50,6 +57,7 @@
+     },
+     {
+         "BriefDescription": "Memory references that cross an 8-byte boundary (At Retirement)",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.SPLIT.AR",
+         "SampleAfterValue": "200000",
+@@ -57,6 +65,7 @@
+     },
+     {
+         "BriefDescription": "Nonzero segbase store 1 bubble",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.ST_BUBBLE",
+         "SampleAfterValue": "200000",
+@@ -64,6 +73,7 @@
+     },
+     {
+         "BriefDescription": "Store splits",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.ST_SPLIT",
+         "SampleAfterValue": "200000",
+@@ -71,6 +81,7 @@
+     },
+     {
+         "BriefDescription": "Store splits (Ar Retirement)",
++        "Counter": "0,1",
+         "EventCode": "0x5",
+         "EventName": "MISALIGN_MEM_REF.ST_SPLIT.AR",
+         "SampleAfterValue": "200000",
+@@ -78,6 +89,7 @@
+     },
+     {
+         "BriefDescription": "L1 hardware prefetch request",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.HW_PREFETCH",
+         "SampleAfterValue": "2000000",
+@@ -85,6 +97,7 @@
+     },
+     {
+         "BriefDescription": "Streaming SIMD Extensions (SSE) Prefetch NTA instructions executed",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.PREFETCHNTA",
+         "SampleAfterValue": "200000",
+@@ -92,6 +105,7 @@
+     },
+     {
+         "BriefDescription": "Streaming SIMD Extensions (SSE) PrefetchT0 instructions executed.",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.PREFETCHT0",
+         "SampleAfterValue": "200000",
+@@ -99,6 +113,7 @@
+     },
+     {
+         "BriefDescription": "Streaming SIMD Extensions (SSE) PrefetchT1 instructions executed.",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.PREFETCHT1",
+         "SampleAfterValue": "200000",
+@@ -106,6 +121,7 @@
+     },
+     {
+         "BriefDescription": "Streaming SIMD Extensions (SSE) PrefetchT2 instructions executed.",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.PREFETCHT2",
+         "SampleAfterValue": "200000",
+@@ -113,6 +129,7 @@
+     },
+     {
+         "BriefDescription": "Any Software prefetch",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.SOFTWARE_PREFETCH",
+         "SampleAfterValue": "200000",
+@@ -120,6 +137,7 @@
+     },
+     {
+         "BriefDescription": "Any Software prefetch",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.SOFTWARE_PREFETCH.AR",
+         "SampleAfterValue": "200000",
+@@ -127,6 +145,7 @@
+     },
+     {
+         "BriefDescription": "Streaming SIMD Extensions (SSE) PrefetchT1 and PrefetchT2 instructions executed",
++        "Counter": "0,1",
+         "EventCode": "0x7",
+         "EventName": "PREFETCH.SW_L2",
+         "SampleAfterValue": "200000",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/other.json b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+index 782594c8bda5..3a55c101fbf7 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/other.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/other.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Bus queue is empty.",
++        "Counter": "0,1",
+         "EventCode": "0x7D",
+         "EventName": "BUSQ_EMPTY.SELF",
+         "SampleAfterValue": "200000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "Number of Bus Not Ready signals asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x61",
+         "EventName": "BUS_BNR_DRV.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -15,12 +17,14 @@
+     },
+     {
+         "BriefDescription": "Number of Bus Not Ready signals asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x61",
+         "EventName": "BUS_BNR_DRV.THIS_AGENT",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "Bus cycles while processor receives data.",
++        "Counter": "0,1",
+         "EventCode": "0x64",
+         "EventName": "BUS_DATA_RCV.SELF",
+         "SampleAfterValue": "200000",
+@@ -28,6 +32,7 @@
+     },
+     {
+         "BriefDescription": "Bus cycles when data is sent on the bus.",
++        "Counter": "0,1",
+         "EventCode": "0x62",
+         "EventName": "BUS_DRDY_CLOCKS.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -35,12 +40,14 @@
+     },
+     {
+         "BriefDescription": "Bus cycles when data is sent on the bus.",
++        "Counter": "0,1",
+         "EventCode": "0x62",
+         "EventName": "BUS_DRDY_CLOCKS.THIS_AGENT",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "HITM signal asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x7B",
+         "EventName": "BUS_HITM_DRV.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -48,12 +55,14 @@
+     },
+     {
+         "BriefDescription": "HITM signal asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x7B",
+         "EventName": "BUS_HITM_DRV.THIS_AGENT",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "HIT signal asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x7A",
+         "EventName": "BUS_HIT_DRV.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -61,12 +70,14 @@
+     },
+     {
+         "BriefDescription": "HIT signal asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x7A",
+         "EventName": "BUS_HIT_DRV.THIS_AGENT",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "IO requests waiting in the bus queue.",
++        "Counter": "0,1",
+         "EventCode": "0x7F",
+         "EventName": "BUS_IO_WAIT.SELF",
+         "SampleAfterValue": "200000",
+@@ -74,6 +85,7 @@
+     },
+     {
+         "BriefDescription": "Bus cycles when a LOCK signal is asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x63",
+         "EventName": "BUS_LOCK_CLOCKS.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -81,6 +93,7 @@
+     },
+     {
+         "BriefDescription": "Bus cycles when a LOCK signal is asserted.",
++        "Counter": "0,1",
+         "EventCode": "0x63",
+         "EventName": "BUS_LOCK_CLOCKS.SELF",
+         "SampleAfterValue": "200000",
+@@ -88,6 +101,7 @@
+     },
+     {
+         "BriefDescription": "Outstanding cacheable data read bus requests duration.",
++        "Counter": "0,1",
+         "EventCode": "0x60",
+         "EventName": "BUS_REQUEST_OUTSTANDING.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -95,6 +109,7 @@
+     },
+     {
+         "BriefDescription": "Outstanding cacheable data read bus requests duration.",
++        "Counter": "0,1",
+         "EventCode": "0x60",
+         "EventName": "BUS_REQUEST_OUTSTANDING.SELF",
+         "SampleAfterValue": "200000",
+@@ -102,6 +117,7 @@
+     },
+     {
+         "BriefDescription": "All bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x70",
+         "EventName": "BUS_TRANS_ANY.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -109,6 +125,7 @@
+     },
+     {
+         "BriefDescription": "All bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x70",
+         "EventName": "BUS_TRANS_ANY.SELF",
+         "SampleAfterValue": "200000",
+@@ -116,6 +133,7 @@
+     },
+     {
+         "BriefDescription": "Burst read bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x65",
+         "EventName": "BUS_TRANS_BRD.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -123,6 +141,7 @@
+     },
+     {
+         "BriefDescription": "Burst read bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x65",
+         "EventName": "BUS_TRANS_BRD.SELF",
+         "SampleAfterValue": "200000",
+@@ -130,6 +149,7 @@
+     },
+     {
+         "BriefDescription": "Burst (full cache-line) bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6E",
+         "EventName": "BUS_TRANS_BURST.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -137,6 +157,7 @@
+     },
+     {
+         "BriefDescription": "Burst (full cache-line) bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6E",
+         "EventName": "BUS_TRANS_BURST.SELF",
+         "SampleAfterValue": "200000",
+@@ -144,6 +165,7 @@
+     },
+     {
+         "BriefDescription": "Deferred bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6D",
+         "EventName": "BUS_TRANS_DEF.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -151,6 +173,7 @@
+     },
+     {
+         "BriefDescription": "Deferred bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6D",
+         "EventName": "BUS_TRANS_DEF.SELF",
+         "SampleAfterValue": "200000",
+@@ -158,6 +181,7 @@
+     },
+     {
+         "BriefDescription": "Instruction-fetch bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x68",
+         "EventName": "BUS_TRANS_IFETCH.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -165,6 +189,7 @@
+     },
+     {
+         "BriefDescription": "Instruction-fetch bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x68",
+         "EventName": "BUS_TRANS_IFETCH.SELF",
+         "SampleAfterValue": "200000",
+@@ -172,6 +197,7 @@
+     },
+     {
+         "BriefDescription": "Invalidate bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x69",
+         "EventName": "BUS_TRANS_INVAL.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -179,6 +205,7 @@
+     },
+     {
+         "BriefDescription": "Invalidate bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x69",
+         "EventName": "BUS_TRANS_INVAL.SELF",
+         "SampleAfterValue": "200000",
+@@ -186,6 +213,7 @@
+     },
+     {
+         "BriefDescription": "IO bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6C",
+         "EventName": "BUS_TRANS_IO.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -193,6 +221,7 @@
+     },
+     {
+         "BriefDescription": "IO bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6C",
+         "EventName": "BUS_TRANS_IO.SELF",
+         "SampleAfterValue": "200000",
+@@ -200,6 +229,7 @@
+     },
+     {
+         "BriefDescription": "Memory bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6F",
+         "EventName": "BUS_TRANS_MEM.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -207,6 +237,7 @@
+     },
+     {
+         "BriefDescription": "Memory bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6F",
+         "EventName": "BUS_TRANS_MEM.SELF",
+         "SampleAfterValue": "200000",
+@@ -214,6 +245,7 @@
+     },
+     {
+         "BriefDescription": "Partial bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6B",
+         "EventName": "BUS_TRANS_P.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -221,6 +253,7 @@
+     },
+     {
+         "BriefDescription": "Partial bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x6B",
+         "EventName": "BUS_TRANS_P.SELF",
+         "SampleAfterValue": "200000",
+@@ -228,6 +261,7 @@
+     },
+     {
+         "BriefDescription": "Partial write bus transaction.",
++        "Counter": "0,1",
+         "EventCode": "0x6A",
+         "EventName": "BUS_TRANS_PWR.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -235,6 +269,7 @@
+     },
+     {
+         "BriefDescription": "Partial write bus transaction.",
++        "Counter": "0,1",
+         "EventCode": "0x6A",
+         "EventName": "BUS_TRANS_PWR.SELF",
+         "SampleAfterValue": "200000",
+@@ -242,6 +277,7 @@
+     },
+     {
+         "BriefDescription": "RFO bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x66",
+         "EventName": "BUS_TRANS_RFO.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -249,6 +285,7 @@
+     },
+     {
+         "BriefDescription": "RFO bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x66",
+         "EventName": "BUS_TRANS_RFO.SELF",
+         "SampleAfterValue": "200000",
+@@ -256,6 +293,7 @@
+     },
+     {
+         "BriefDescription": "Explicit writeback bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x67",
+         "EventName": "BUS_TRANS_WB.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -263,6 +301,7 @@
+     },
+     {
+         "BriefDescription": "Explicit writeback bus transactions.",
++        "Counter": "0,1",
+         "EventCode": "0x67",
+         "EventName": "BUS_TRANS_WB.SELF",
+         "SampleAfterValue": "200000",
+@@ -270,6 +309,7 @@
+     },
+     {
+         "BriefDescription": "Cycles during which interrupts are disabled.",
++        "Counter": "0,1",
+         "EventCode": "0xC6",
+         "EventName": "CYCLES_INT_MASKED.CYCLES_INT_MASKED",
+         "SampleAfterValue": "2000000",
+@@ -277,6 +317,7 @@
+     },
+     {
+         "BriefDescription": "Cycles during which interrupts are pending and disabled.",
++        "Counter": "0,1",
+         "EventCode": "0xC6",
+         "EventName": "CYCLES_INT_MASKED.CYCLES_INT_PENDING_AND_MASKED",
+         "SampleAfterValue": "2000000",
+@@ -284,6 +325,7 @@
+     },
+     {
+         "BriefDescription": "Memory cluster signals to block micro-op dispatch for any reason",
++        "Counter": "0,1",
+         "EventCode": "0x9",
+         "EventName": "DISPATCH_BLOCKED.ANY",
+         "SampleAfterValue": "200000",
+@@ -291,12 +333,14 @@
+     },
+     {
+         "BriefDescription": "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
++        "Counter": "0,1",
+         "EventCode": "0x3A",
+         "EventName": "EIST_TRANS",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.ALL_AGENTS.ANY",
+         "SampleAfterValue": "200000",
+@@ -304,6 +348,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.ALL_AGENTS.CLEAN",
+         "SampleAfterValue": "200000",
+@@ -311,6 +356,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.ALL_AGENTS.HIT",
+         "SampleAfterValue": "200000",
+@@ -318,6 +364,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.ALL_AGENTS.HITM",
+         "SampleAfterValue": "200000",
+@@ -325,6 +372,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.THIS_AGENT.ANY",
+         "SampleAfterValue": "200000",
+@@ -332,6 +380,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.THIS_AGENT.CLEAN",
+         "SampleAfterValue": "200000",
+@@ -339,6 +388,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.THIS_AGENT.HIT",
+         "SampleAfterValue": "200000",
+@@ -346,6 +396,7 @@
+     },
+     {
+         "BriefDescription": "External snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x77",
+         "EventName": "EXT_SNOOP.THIS_AGENT.HITM",
+         "SampleAfterValue": "200000",
+@@ -353,12 +404,14 @@
+     },
+     {
+         "BriefDescription": "Hardware interrupts received.",
++        "Counter": "0,1",
+         "EventCode": "0xC8",
+         "EventName": "HW_INT_RCV",
+         "SampleAfterValue": "200000"
+     },
+     {
+         "BriefDescription": "Number of segment register loads.",
++        "Counter": "0,1",
+         "EventCode": "0x6",
+         "EventName": "SEGMENT_REG_LOADS.ANY",
+         "SampleAfterValue": "200000",
+@@ -366,6 +419,7 @@
+     },
+     {
+         "BriefDescription": "Bus stalled for snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x7E",
+         "EventName": "SNOOP_STALL_DRV.ALL_AGENTS",
+         "SampleAfterValue": "200000",
+@@ -373,6 +427,7 @@
+     },
+     {
+         "BriefDescription": "Bus stalled for snoops.",
++        "Counter": "0,1",
+         "EventCode": "0x7E",
+         "EventName": "SNOOP_STALL_DRV.SELF",
+         "SampleAfterValue": "200000",
+@@ -380,6 +435,7 @@
+     },
+     {
+         "BriefDescription": "Number of thermal trips",
++        "Counter": "0,1",
+         "EventCode": "0x3B",
+         "EventName": "THERMAL_TRIP",
+         "SampleAfterValue": "200000",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+index 91b98ee8ba9a..9ff032ab11e2 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/pipeline.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Bogus branches",
++        "Counter": "0,1",
+         "EventCode": "0xE4",
+         "EventName": "BOGUS_BR",
+         "SampleAfterValue": "2000000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "Branch instructions decoded",
++        "Counter": "0,1",
+         "EventCode": "0xE0",
+         "EventName": "BR_INST_DECODED",
+         "SampleAfterValue": "2000000",
+@@ -15,12 +17,14 @@
+     },
+     {
+         "BriefDescription": "Retired branch instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.ANY",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Retired branch instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.ANY1",
+         "SampleAfterValue": "2000000",
+@@ -28,6 +32,7 @@
+     },
+     {
+         "BriefDescription": "Retired mispredicted branch instructions (precise event).",
++        "Counter": "0,1",
+         "EventCode": "0xC5",
+         "EventName": "BR_INST_RETIRED.MISPRED",
+         "PEBS": "1",
+@@ -35,6 +40,7 @@
+     },
+     {
+         "BriefDescription": "Retired branch instructions that were mispredicted not-taken.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.MISPRED_NOT_TAKEN",
+         "SampleAfterValue": "200000",
+@@ -42,6 +48,7 @@
+     },
+     {
+         "BriefDescription": "Retired branch instructions that were mispredicted taken.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.MISPRED_TAKEN",
+         "SampleAfterValue": "200000",
+@@ -49,6 +56,7 @@
+     },
+     {
+         "BriefDescription": "Retired branch instructions that were predicted not-taken.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.PRED_NOT_TAKEN",
+         "SampleAfterValue": "2000000",
+@@ -56,6 +64,7 @@
+     },
+     {
+         "BriefDescription": "Retired branch instructions that were predicted taken.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.PRED_TAKEN",
+         "SampleAfterValue": "2000000",
+@@ -63,6 +72,7 @@
+     },
+     {
+         "BriefDescription": "Retired taken branch instructions.",
++        "Counter": "0,1",
+         "EventCode": "0xC4",
+         "EventName": "BR_INST_RETIRED.TAKEN",
+         "SampleAfterValue": "2000000",
+@@ -70,6 +80,7 @@
+     },
+     {
+         "BriefDescription": "All macro conditional branch instructions.",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.COND",
+         "SampleAfterValue": "2000000",
+@@ -77,6 +88,7 @@
+     },
+     {
+         "BriefDescription": "Only taken macro conditional branch instructions",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.COND_TAKEN",
+         "SampleAfterValue": "2000000",
+@@ -84,6 +96,7 @@
+     },
+     {
+         "BriefDescription": "All non-indirect calls",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.DIR_CALL",
+         "SampleAfterValue": "2000000",
+@@ -91,6 +104,7 @@
+     },
+     {
+         "BriefDescription": "All indirect branches that are not calls.",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.IND",
+         "SampleAfterValue": "2000000",
+@@ -98,6 +112,7 @@
+     },
+     {
+         "BriefDescription": "All indirect calls, including both register and memory indirect.",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.IND_CALL",
+         "SampleAfterValue": "2000000",
+@@ -105,6 +120,7 @@
+     },
+     {
+         "BriefDescription": "All indirect branches that have a return mnemonic",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.RET",
+         "SampleAfterValue": "2000000",
+@@ -112,6 +128,7 @@
+     },
+     {
+         "BriefDescription": "All macro unconditional branch instructions, excluding calls and indirects",
++        "Counter": "0,1",
+         "EventCode": "0x88",
+         "EventName": "BR_INST_TYPE_RETIRED.UNCOND",
+         "SampleAfterValue": "2000000",
+@@ -119,6 +136,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted cond branch instructions retired",
++        "Counter": "0,1",
+         "EventCode": "0x89",
+         "EventName": "BR_MISSP_TYPE_RETIRED.COND",
+         "SampleAfterValue": "200000",
+@@ -126,6 +144,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted and taken cond branch instructions retired",
++        "Counter": "0,1",
+         "EventCode": "0x89",
+         "EventName": "BR_MISSP_TYPE_RETIRED.COND_TAKEN",
+         "SampleAfterValue": "200000",
+@@ -133,6 +152,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted ind branches that are not calls",
++        "Counter": "0,1",
+         "EventCode": "0x89",
+         "EventName": "BR_MISSP_TYPE_RETIRED.IND",
+         "SampleAfterValue": "200000",
+@@ -140,6 +160,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted indirect calls, including both register and memory indirect.",
++        "Counter": "0,1",
+         "EventCode": "0x89",
+         "EventName": "BR_MISSP_TYPE_RETIRED.IND_CALL",
+         "SampleAfterValue": "200000",
+@@ -147,6 +168,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted return branches",
++        "Counter": "0,1",
+         "EventCode": "0x89",
+         "EventName": "BR_MISSP_TYPE_RETIRED.RETURN",
+         "SampleAfterValue": "200000",
+@@ -154,6 +176,7 @@
+     },
+     {
+         "BriefDescription": "Bus cycles when core is not halted",
++        "Counter": "0,1",
+         "EventCode": "0x3C",
+         "EventName": "CPU_CLK_UNHALTED.BUS",
+         "SampleAfterValue": "200000",
+@@ -161,24 +184,28 @@
+     },
+     {
+         "BriefDescription": "Core cycles when core is not halted",
++        "Counter": "Fixed counter 2",
+         "EventCode": "0xA",
+         "EventName": "CPU_CLK_UNHALTED.CORE",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Core cycles when core is not halted",
++        "Counter": "0,1",
+         "EventCode": "0x3C",
+         "EventName": "CPU_CLK_UNHALTED.CORE_P",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Reference cycles when core is not halted.",
++        "Counter": "Fixed counter 3",
+         "EventCode": "0xA",
+         "EventName": "CPU_CLK_UNHALTED.REF",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Cycles the divider is busy.",
++        "Counter": "0,1",
+         "EventCode": "0x14",
+         "EventName": "CYCLES_DIV_BUSY",
+         "SampleAfterValue": "2000000",
+@@ -186,6 +213,7 @@
+     },
+     {
+         "BriefDescription": "Divide operations retired",
++        "Counter": "0,1",
+         "EventCode": "0x13",
+         "EventName": "DIV.AR",
+         "SampleAfterValue": "2000000",
+@@ -193,6 +221,7 @@
+     },
+     {
+         "BriefDescription": "Divide operations executed.",
++        "Counter": "0,1",
+         "EventCode": "0x13",
+         "EventName": "DIV.S",
+         "SampleAfterValue": "2000000",
+@@ -200,12 +229,14 @@
+     },
+     {
+         "BriefDescription": "Instructions retired.",
++        "Counter": "Fixed counter 1",
+         "EventCode": "0xA",
+         "EventName": "INST_RETIRED.ANY",
+         "SampleAfterValue": "2000000"
+     },
+     {
+         "BriefDescription": "Instructions retired (precise event).",
++        "Counter": "0,1",
+         "EventCode": "0xC0",
+         "EventName": "INST_RETIRED.ANY_P",
+         "PEBS": "2",
+@@ -213,6 +244,7 @@
+     },
+     {
+         "BriefDescription": "Self-Modifying Code detected.",
++        "Counter": "0,1",
+         "EventCode": "0xC3",
+         "EventName": "MACHINE_CLEARS.SMC",
+         "SampleAfterValue": "200000",
+@@ -220,6 +252,7 @@
+     },
+     {
+         "BriefDescription": "Multiply operations retired",
++        "Counter": "0,1",
+         "EventCode": "0x12",
+         "EventName": "MUL.AR",
+         "SampleAfterValue": "2000000",
+@@ -227,6 +260,7 @@
+     },
+     {
+         "BriefDescription": "Multiply operations executed.",
++        "Counter": "0,1",
+         "EventCode": "0x12",
+         "EventName": "MUL.S",
+         "SampleAfterValue": "2000000",
+@@ -234,6 +268,7 @@
+     },
+     {
+         "BriefDescription": "Micro-op reissues for any cause",
++        "Counter": "0,1",
+         "EventCode": "0x3",
+         "EventName": "REISSUE.ANY",
+         "SampleAfterValue": "200000",
+@@ -241,6 +276,7 @@
+     },
+     {
+         "BriefDescription": "Micro-op reissues for any cause (At Retirement)",
++        "Counter": "0,1",
+         "EventCode": "0x3",
+         "EventName": "REISSUE.ANY.AR",
+         "SampleAfterValue": "200000",
+@@ -248,6 +284,7 @@
+     },
+     {
+         "BriefDescription": "Micro-op reissues on a store-load collision",
++        "Counter": "0,1",
+         "EventCode": "0x3",
+         "EventName": "REISSUE.OVERLAP_STORE",
+         "SampleAfterValue": "200000",
+@@ -255,6 +292,7 @@
+     },
+     {
+         "BriefDescription": "Micro-op reissues on a store-load collision (At Retirement)",
++        "Counter": "0,1",
+         "EventCode": "0x3",
+         "EventName": "REISSUE.OVERLAP_STORE.AR",
+         "SampleAfterValue": "200000",
+@@ -262,6 +300,7 @@
+     },
+     {
+         "BriefDescription": "Cycles issue is stalled due to div busy.",
++        "Counter": "0,1",
+         "EventCode": "0xDC",
+         "EventName": "RESOURCE_STALLS.DIV_BUSY",
+         "SampleAfterValue": "2000000",
+@@ -269,6 +308,7 @@
+     },
+     {
+         "BriefDescription": "All store forwards",
++        "Counter": "0,1",
+         "EventCode": "0x2",
+         "EventName": "STORE_FORWARDS.ANY",
+         "SampleAfterValue": "200000",
+@@ -276,6 +316,7 @@
+     },
+     {
+         "BriefDescription": "Good store forwards",
++        "Counter": "0,1",
+         "EventCode": "0x2",
+         "EventName": "STORE_FORWARDS.GOOD",
+         "SampleAfterValue": "200000",
+@@ -283,6 +324,7 @@
+     },
+     {
+         "BriefDescription": "Micro-ops retired.",
++        "Counter": "0,1",
+         "EventCode": "0xC2",
+         "EventName": "UOPS_RETIRED.ANY",
+         "SampleAfterValue": "2000000",
+@@ -290,6 +332,7 @@
+     },
+     {
+         "BriefDescription": "Cycles no micro-ops retired.",
++        "Counter": "0,1",
+         "EventCode": "0xC2",
+         "EventName": "UOPS_RETIRED.STALLED_CYCLES",
+         "SampleAfterValue": "2000000",
+@@ -297,6 +340,7 @@
+     },
+     {
+         "BriefDescription": "Periods no micro-ops retired.",
++        "Counter": "0,1",
+         "EventCode": "0xC2",
+         "EventName": "UOPS_RETIRED.STALLS",
+         "SampleAfterValue": "2000000",
+diff --git a/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json b/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
+index 82e07c73cff0..e8512c585572 100644
+--- a/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/bonnell/virtual-memory.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Memory accesses that missed the DTLB.",
++        "Counter": "0,1",
+         "EventCode": "0x8",
+         "EventName": "DATA_TLB_MISSES.DTLB_MISS",
+         "SampleAfterValue": "200000",
+@@ -8,6 +9,7 @@
+     },
+     {
+         "BriefDescription": "DTLB misses due to load operations.",
++        "Counter": "0,1",
+         "EventCode": "0x8",
+         "EventName": "DATA_TLB_MISSES.DTLB_MISS_LD",
+         "SampleAfterValue": "200000",
+@@ -15,6 +17,7 @@
+     },
+     {
+         "BriefDescription": "DTLB misses due to store operations.",
++        "Counter": "0,1",
+         "EventCode": "0x8",
+         "EventName": "DATA_TLB_MISSES.DTLB_MISS_ST",
+         "SampleAfterValue": "200000",
+@@ -22,6 +25,7 @@
+     },
+     {
+         "BriefDescription": "L0 DTLB misses due to load operations.",
++        "Counter": "0,1",
+         "EventCode": "0x8",
+         "EventName": "DATA_TLB_MISSES.L0_DTLB_MISS_LD",
+         "SampleAfterValue": "200000",
+@@ -29,6 +33,7 @@
+     },
+     {
+         "BriefDescription": "L0 DTLB misses due to store operations",
++        "Counter": "0,1",
+         "EventCode": "0x8",
+         "EventName": "DATA_TLB_MISSES.L0_DTLB_MISS_ST",
+         "SampleAfterValue": "200000",
+@@ -36,6 +41,7 @@
+     },
+     {
+         "BriefDescription": "ITLB flushes.",
++        "Counter": "0,1",
+         "EventCode": "0x82",
+         "EventName": "ITLB.FLUSH",
+         "SampleAfterValue": "200000",
+@@ -43,6 +49,7 @@
+     },
+     {
+         "BriefDescription": "ITLB hits.",
++        "Counter": "0,1",
+         "EventCode": "0x82",
+         "EventName": "ITLB.HIT",
+         "SampleAfterValue": "200000",
+@@ -50,6 +57,7 @@
+     },
+     {
+         "BriefDescription": "ITLB misses.",
++        "Counter": "0,1",
+         "EventCode": "0x82",
+         "EventName": "ITLB.MISSES",
+         "PEBS": "2",
+@@ -58,6 +66,7 @@
+     },
+     {
+         "BriefDescription": "Retired loads that miss the DTLB (precise event).",
++        "Counter": "0,1",
+         "EventCode": "0xCB",
+         "EventName": "MEM_LOAD_RETIRED.DTLB_MISS",
+         "PEBS": "1",
+@@ -66,6 +75,7 @@
+     },
+     {
+         "BriefDescription": "Duration of page-walks in core cycles",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.CYCLES",
+         "SampleAfterValue": "2000000",
+@@ -73,6 +83,7 @@
+     },
+     {
+         "BriefDescription": "Duration of D-side only page walks",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.D_SIDE_CYCLES",
+         "SampleAfterValue": "2000000",
+@@ -80,6 +91,7 @@
+     },
+     {
+         "BriefDescription": "Number of D-side only page walks",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.D_SIDE_WALKS",
+         "SampleAfterValue": "200000",
+@@ -87,6 +99,7 @@
+     },
+     {
+         "BriefDescription": "Duration of I-Side page walks",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.I_SIDE_CYCLES",
+         "SampleAfterValue": "2000000",
+@@ -94,6 +107,7 @@
+     },
+     {
+         "BriefDescription": "Number of I-Side page walks",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.I_SIDE_WALKS",
+         "SampleAfterValue": "200000",
+@@ -101,6 +115,7 @@
+     },
+     {
+         "BriefDescription": "Number of page-walks executed.",
++        "Counter": "0,1",
+         "EventCode": "0xC",
+         "EventName": "PAGE_WALKS.WALKS",
+         "SampleAfterValue": "200000",
 -- 
 2.45.2.627.g7a2c4fd464-goog
 
