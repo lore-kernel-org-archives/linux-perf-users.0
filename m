@@ -1,187 +1,336 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC37315FA73;
-	Fri, 14 Jun 2024 15:23:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B313383;
+	Fri, 14 Jun 2024 17:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718378607; cv=none; b=dqGrUL0+uhSQ9WsEBrs6S5YBkgxoxDxA7/zNtRpYjEqrLzoAKq/EzsDL3i/paWjfJGrtEF2EojlqreuMAgUt9JtK9tiFJA4PqDtTvtFbwpWo6Q7rJF79qYh+KXqQK0cJaAn4FTw+H0kZwLRVmrwHtEGqn/E1JDVZioyYKzlQIzQ=
+	t=1718386027; cv=none; b=j+5sV6QPTkmZjVQS/cGYETaTeN8me188iRRQnoXRmoGxCYIkhwV+eTV8stjg4YgM2xpJOUMjXVmyjnhaFD1UmoG2f8bcfCuP+G7ne3TwkDVhmLiVSsP3MTVI36d2RiIliKO/2wdb7O8rUa8IbGOzTCEcmLl1IVWw7hkkV4RFD+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718378607; c=relaxed/simple;
-	bh=EL0yGZvLp178iwjqGXn1neHj8u1yfXcPxngFTq3rdXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rbbc/vUDdmFPm6alZvJ13IJYjpjTkiIEiVe0dIbNly29qBB2XaYmGU2SfGGt4z6WZe3nVu+n70V7gYNNRZ3ISjkwQB6oxMyLipMstov4QinOLzobH0LVnEqLBNhGTbu9j/3Dth619QhIuhUxEHyVxUUdavIsdshzhawn2m8y72Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7FF4FEC;
-	Fri, 14 Jun 2024 08:23:48 -0700 (PDT)
-Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5DE43F5A1;
-	Fri, 14 Jun 2024 08:23:21 -0700 (PDT)
-Date: Fri, 14 Jun 2024 16:23:18 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	will@kernel.org, catalin.marinas@arm.com,
-	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
-Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
- nVHE guests
-Message-ID: <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
- <20240613061731.3109448-7-anshuman.khandual@arm.com>
+	s=arc-20240116; t=1718386027; c=relaxed/simple;
+	bh=R/SM5j/uz4rbTYco73QV1O1tFu3/B5mORKkwHeenn6Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=aY+A9M6mgeuNOyvJ7TJIhiVcijk/acZWhy3ISDlo90ZVc3n8g717AbDEOlhpzUQpWola7tkCXs+HvwBMtOmvh1PNdrvpqcMV9YB8cdP1ayQEgJU9CMa3DNz0I+NHIvmIsXmMnLHNgCCODtErVYYzcSBunQTWnjN+mBn+jSzQbfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=kHtUAmG1; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="kHtUAmG1"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EGREAO021070;
+	Fri, 14 Jun 2024 17:26:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-type
+	:content-transfer-encoding:mime-version; s=pp1; bh=qG86JUGwbKJIj
+	Mp1qPFmHuF4zhPD4ibq70EnCE9Bhbg=; b=kHtUAmG1BqIwXloE3XuxJFad36nXs
+	mOjCWcpKDwF7LZgEue6GmoG/dOhQ00d0QcRN6ZfGzr0q7YHvNQmb0EeVRzTSceCp
+	H4ULbaSjZDbHdIlmcUXQUGI24VzxaeqaW7sucJaC9pIXZcjsyKzxPf+3V11j/uYv
+	/II04rKHIxoOMRC1blUvVmqeS6o2Ejweq+sW4vINGSqROYNlqCRME9Ccm8j6QzSR
+	wXrkiDH0HtWzRzFXqprwhFDrPzurJB4l4xTOC1rEL2zqhWHtdTMFfm/Gw7fwkwtT
+	DF19ZXfQGIzZBG0YbCyRAj/xVF7Fq34F5+Yws0QyObYH3RaVu0m+P0aTg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0dkh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:48 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHQmDq013283;
+	Fri, 14 Jun 2024 17:26:48 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrqnp0dkc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:48 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EH0GE8020066;
+	Fri, 14 Jun 2024 17:26:46 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn34nud2n-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 14 Jun 2024 17:26:46 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQfjv49152308
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 14 Jun 2024 17:26:43 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0BA9E20040;
+	Fri, 14 Jun 2024 17:26:41 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3A53A2004D;
+	Fri, 14 Jun 2024 17:26:38 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.82.18])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 14 Jun 2024 17:26:38 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
+        christophe.leroy@csgroup.eu
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [V4 00/16] Add data type profiling support for powerpc
+Date: Fri, 14 Jun 2024 22:56:15 +0530
+Message-Id: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: AAX4IDYQQw9TjPguOv-toObVzUICpRUq
+X-Proofpoint-ORIG-GUID: oDwy_ar1BlCsWq4XZIUTuKON4Gqe-Isq
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240613061731.3109448-7-anshuman.khandual@arm.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 clxscore=1015 phishscore=0 spamscore=0
+ malwarescore=0 priorityscore=1501 mlxlogscore=999 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406140119
 
-On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
-> Disable the BRBE before we enter the guest, saving the status and enable it
-> back once we get out of the guest. This avoids capturing branch records in
-> the guest kernel or userspace, which would be confusing the host samples.
+The patchset from Namhyung added support for data type profiling
+in perf tool. This enabled support to associate PMU samples to data
+types they refer using DWARF debug information. With the upstream
+perf, currently it possible to run perf report or perf annotate to
+view the data type information on x86.
 
-It'd be good to explain why we need to do this for nVHE, but not for
-VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
-when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
-out-of-reset.
+Initial patchset posted here had changes need to enable data type
+profiling support for powerpc.
 
-What should a user do if they *want* samples from a guest? Is that
-possible to do on other architectures, or do is that always prevented?
+https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup.eu/T/
 
-Mark.
+Main change were:
+1. powerpc instruction nmemonic table to associate load/store
+instructions with move_ops which is use to identify if instruction
+is a memory access one.
+2. To get register number and access offset from the given
+instruction, code uses fields from "struct arch" -> objump.
+Added entry for powerpc here.
+3. A get_arch_regnum to return register number from the
+register name string.
 
-> 
-> Cc: Marc Zyngier <maz@kernel.org>
-> Cc: Oliver Upton <oliver.upton@linux.dev>
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: kvmarm@lists.linux.dev
-> Cc: linux-arm-kernel@lists.infradead.org
-> CC: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ----
-> Changes in V18:
-> 
-> - Used host_data_ptr() to access host_debug_state.brbcr_el1 register
-> - Changed DEBUG_STATE_SAVE_BRBE to use BIT(7)
-> - Reverted back iflags as u8
-> 
->  arch/arm64/include/asm/kvm_host.h  |  3 +++
->  arch/arm64/kvm/debug.c             |  5 +++++
->  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 31 ++++++++++++++++++++++++++++++
->  3 files changed, 39 insertions(+)
-> 
-> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> index 36b8e97bf49e..db922c10bd2a 100644
-> --- a/arch/arm64/include/asm/kvm_host.h
-> +++ b/arch/arm64/include/asm/kvm_host.h
-> @@ -579,6 +579,7 @@ struct kvm_host_data {
->  		u64 trfcr_el1;
->  		/* Values of trap registers for the host before guest entry. */
->  		u64 mdcr_el2;
-> +		u64 brbcr_el1;
->  	} host_debug_state;
->  };
->  
-> @@ -842,6 +843,8 @@ struct kvm_vcpu_arch {
->  #define DEBUG_STATE_SAVE_SPE	__vcpu_single_flag(iflags, BIT(5))
->  /* Save TRBE context if active  */
->  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
-> +/* Save BRBE context if active  */
-> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(7))
->  
->  /* SVE enabled for host EL0 */
->  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
-> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
-> index ce8886122ed3..8fa648943f0f 100644
-> --- a/arch/arm64/kvm/debug.c
-> +++ b/arch/arm64/kvm/debug.c
-> @@ -336,10 +336,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
->  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
->  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
->  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +
-> +	/* Check if we have BRBE implemented and available at the host */
-> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
-> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
->  
->  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
->  {
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
->  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
-> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
->  }
-> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> index 53efda0235cf..97e861df1b45 100644
-> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
-> @@ -79,6 +79,32 @@ static void __debug_restore_trace(u64 trfcr_el1)
->  	write_sysreg_el1(trfcr_el1, SYS_TRFCR);
->  }
->  
-> +static void __debug_save_brbe(u64 *brbcr_el1)
-> +{
-> +	*brbcr_el1 = 0;
-> +
-> +	/* Check if the BRBE is enabled */
-> +	if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
-> +		return;
-> +
-> +	/*
-> +	 * Prohibit branch record generation while we are in guest.
-> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
-> +	 * modify the filtering set by the host.
-> +	 */
-> +	*brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
-> +	write_sysreg_el1(0, SYS_BRBCR);
-> +}
-> +
-> +static void __debug_restore_brbe(u64 brbcr_el1)
-> +{
-> +	if (!brbcr_el1)
-> +		return;
-> +
-> +	/* Restore BRBE controls */
-> +	write_sysreg_el1(brbcr_el1, SYS_BRBCR);
-> +}
-> +
->  void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->  {
->  	/* Disable and flush SPE data generation */
-> @@ -87,6 +113,9 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->  	/* Disable and flush Self-Hosted Trace generation */
->  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
->  		__debug_save_trace(host_data_ptr(host_debug_state.trfcr_el1));
-> +	/* Disable BRBE branch records */
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_save_brbe(host_data_ptr(host_debug_state.brbcr_el1));
->  }
->  
->  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
-> @@ -100,6 +129,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
->  		__debug_restore_spe(*host_data_ptr(host_debug_state.pmscr_el1));
->  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
->  		__debug_restore_trace(*host_data_ptr(host_debug_state.trfcr_el1));
-> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
-> +		__debug_restore_brbe(*host_data_ptr(host_debug_state.brbcr_el1));
->  }
->  
->  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
-> -- 
-> 2.25.1
-> 
+But the apporach used in the initial patchset used parsing of
+disassembled code which the current perf tool implementation does.
+
+Example: lwz     r10,0(r9)
+
+This line "lwz r10,0(r9)" is parsed to extract instruction name,
+registers names and offset. Also to find whether there is a memory
+reference in the operands, "memory_ref_char" field of objdump is used.
+For x86, "(" is used as memory_ref_char to tackle instructions of the
+form "mov  (%rax), %rcx".
+
+In case of powerpc, not all instructions using "(" are the only memory
+instructions. Example, above instruction can also be of extended form (X
+form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+and extract the source/target registers, second patchset added support to use
+raw instruction. With raw instruction, macros are added to extract opcode
+and register fields.
+Link to second patchset:
+https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.ibm.com/
+
+Example representation using --show-raw-insn in objdump gives result:
+
+38 01 81 e8     ld      r4,312(r1)
+
+Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+this translates to instruction form: "ld RT,DS(RA)" and binary code
+as:
+  _____________________________________
+  | 58 |  RT  |  RA |      DS       | |
+  -------------------------------------
+0    6     11    16              30 31
+
+Second patchset used "objdump" again to read the raw instruction.
+But since there is no need to disassemble and binary code can be read
+directly from the DSO, third patchset (ie this patchset) uses below
+apporach. The apporach preferred in powerpc to parse sample for data
+type profiling in V3 patchset is:
+- Read directly from DSO using dso__data_read_offset
+- If that fails for any case, fallback to using libcapstone
+- If libcapstone is not supported, approach will use objdump
+
+Patchset adds support to pick the opcode and reg fields from this
+raw/binary instruction code. This approach came in from review comment
+by Segher Boessenkool and Christophe for the initial patchset.
+
+Apart from that, instruction tracking is enabled for powerpc and
+support function is added to find variables defined as registers
+Example, in powerpc, below two registers are
+defined to represent variable:
+1. r13: represents local_paca
+register struct paca_struct *local_paca asm("r13");
+
+2. r1: represents stack_pointer
+register void *__stack_pointer asm("r1");
+
+These are handled in this patchset.
+
+- Patch 1 is to rearrange register state type structures to header file
+so that it can referred from other arch specific files
+- Patch 2 is to make instruction tracking as a callback to"struct arch"
+so that it can be implemented by other archs easily and defined in arch
+specific files
+- Patch 3 adds support to capture and parse raw instruction in powerpc
+using dso__data_read_offset utility
+- Patch 4 adds logic to support using objdump when doing default "perf
+report" or "perf annotate" since it that needs disassembled instruction.
+- Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
+- Patch 6 update parameters for reg extract functions to use raw
+instruction on powerpc
+- Patch 7 add support to identify memory instructions of opcode 31 in
+powerpc
+- Patch 8 adds more instructions to support instruction tracking in powerpc
+- Patch 9 and 10 handles instruction tracking for powerpc.
+- Patch 11, 12 and 13 add support to use libcapstone in powerpc
+- Patch 14 and patch 15 handles support to find global register variables
+- Patch 16 handles insn-stat option for perf annotate
+
+Note:
+- There are remaining unknowns (25%) as seen in annotate Instruction stats
+below.
+- This patchset is not tested on powerpc32. In next step of enhancements
+along with handling remaining unknowns, plan to cover powerpc32 changes
+based on how testing goes.
+
+With the current patchset:
+
+ ./perf record -a -e mem-loads sleep 1
+ ./perf report -s type,typeoff --hierarchy --group --stdio
+ ./perf annotate --data-type --insn-stat
+
+perf annotate logs:
+==================
+
+Annotate Instruction stats
+total 609, ok 446 (73.2%), bad 163 (26.8%)
+
+  Name/opcode:  Good   Bad
+  -----------------------------------------------------------
+  58                  :   323    80
+  32                  :    49    43
+  34                  :    33    11
+  OP_31_XOP_LDX       :     8    20
+  40                  :    23     0
+  OP_31_XOP_LWARX     :     5     1
+  OP_31_XOP_LWZX      :     2     3
+  OP_31_XOP_LDARX     :     3     0
+  33                  :     0     2
+  OP_31_XOP_LBZX      :     0     1
+  OP_31_XOP_LWAX      :     0     1
+  OP_31_XOP_LHZX      :     0     1
+
+perf report logs:
+=================
+
+  Total Lost Samples: 0
+
+  Samples: 1K of event 'mem-loads'
+  Event count (approx.): 937238
+
+  Overhead  Data Type  Data Type Offset
+ ........  .........  ................
+
+    48.60%  (unknown)  (unknown) +0 (no field)
+    12.85%  long unsigned int  long unsigned int +0 (current_stack_pointer)
+     4.68%  struct paca_struct  struct paca_struct +2312 (__current)
+     4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
+     2.69%  struct paca_struct  struct paca_struct +2808 (canary)
+     2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
+     2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
+     1.41%  struct vm_fault  struct vm_fault +0 (vma)
+     1.29%  struct task_struct  struct task_struct +276 (flags)
+     1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
+     0.90%  struct security_hook_list  struct security_hook_list +0 (list.next)
+     0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
+     0.76%  struct rq  struct rq +2856 (cpu)
+
+Thanks
+Athira Rajeev
+
+Changelog:
+From v3->v4:
+- Addressed review comments from Ian by using capston_init from
+  "util/print_insn.c" instead of "open_capston_handle".
+- Addressed review comment from Namhyung by moving "opcode"
+  field from "struct ins" to "struct disasm_line"
+
+From v2->v3:
+- Addressed review comments from Christophe and Namhyung for V2
+- Changed the apporach in powerpc to parse sample for data
+  type profiling as:
+  Read directly from DSO using dso__data_read_offset
+  If that fails for any case, fallback to using libcapstone
+  If libcapstone is not supported, approach will use objdump
+- Include instructions with opcode as 31 and correctly categorize
+  them as memory or arithmetic instructions.
+- Include more instructions for instruction tracking in powerpc
+
+From v1->v2:
+- Addressed suggestion from Christophe Leroy and Segher Boessenkool
+  to use the binary code (raw insn) to fetch opcode, register and
+  offset fields.
+- Added support for instruction tracking in powerpc
+- Find the register defined variables (r13 and r1 which points to
+  local_paca and current_stack_pointer in powerpc)
+
+Athira Rajeev (16):
+  tools/perf: Move the data structures related to register type to
+    header file
+  tools/perf: Add "update_insn_state" callback function to handle arch
+    specific instruction tracking
+  tools/perf: Add support to capture and parse raw instruction in
+    powerpc using dso__data_read_offset utility
+  tools/perf: Use sort keys to determine whether to pick objdump to
+    disassemble
+  tools/perf: Add disasm_line__parse to parse raw instruction for
+    powerpc
+  tools/perf: Update parameters for reg extract functions to use raw
+    instruction on powerpc
+  tools/perf: Add support to identify memory instructions of opcode 31
+    in powerpc
+  tools/perf: Add some of the arithmetic instructions to support
+    instruction tracking in powerpc
+  tools/perf: Add more instructions for instruction tracking
+  tools/perf: Update instruction tracking for powerpc
+  tools/perf: Make capstone_init non-static so that it can be used
+    during symbol disassemble
+  tools/perf: Use capstone_init and remove open_capstone_handle from
+    disasm.c
+  tools/perf: Add support to use libcapstone in powerpc
+  tools/perf: Add support to find global register variables using
+    find_data_type_global_reg
+  tools/perf: Add support for global_die to capture name of variable in
+    case of register defined variable
+  tools/perf: Set instruction name to be used with insn-stat when using
+    raw instruction
+
+ tools/include/linux/string.h                  |   2 +
+ tools/lib/string.c                            |  13 +
+ tools/perf/arch/arm64/annotate/instructions.c |   3 +-
+ .../arch/loongarch/annotate/instructions.c    |   6 +-
+ .../perf/arch/powerpc/annotate/instructions.c | 260 +++++++++
+ tools/perf/arch/powerpc/util/dwarf-regs.c     |  53 ++
+ tools/perf/arch/s390/annotate/instructions.c  |   5 +-
+ tools/perf/arch/x86/annotate/instructions.c   | 383 +++++++++++++
+ tools/perf/builtin-annotate.c                 |   4 +-
+ tools/perf/util/annotate-data.c               | 519 +++---------------
+ tools/perf/util/annotate-data.h               |  78 +++
+ tools/perf/util/annotate.c                    |  35 +-
+ tools/perf/util/annotate.h                    |   6 +-
+ tools/perf/util/disasm.c                      | 475 ++++++++++++++--
+ tools/perf/util/disasm.h                      |  13 +-
+ tools/perf/util/dwarf-aux.c                   |   1 +
+ tools/perf/util/dwarf-aux.h                   |   1 +
+ tools/perf/util/include/dwarf-regs.h          |   4 +
+ tools/perf/util/print_insn.c                  |  15 +-
+ tools/perf/util/print_insn.h                  |   5 +
+ tools/perf/util/sort.c                        |   7 +-
+ 21 files changed, 1386 insertions(+), 502 deletions(-)
+
+-- 
+2.43.0
+
