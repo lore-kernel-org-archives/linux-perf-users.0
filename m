@@ -1,24 +1,24 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CA1819E7CC;
-	Fri, 14 Jun 2024 15:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC37315FA73;
+	Fri, 14 Jun 2024 15:23:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718377324; cv=none; b=Yji2nVV/WvJfJSsqO6oYHlEc939HO7BS+G9/ameJ7MfmUAwHpIqhntYVzUNM+4CUO6bs/v6pBwsuB1Cx+pWr/sR7YbtQYv9alQBg2PtJcKpVktalU8Xh3Qdf06almce1Q1hE0podUxjRlG1ZXirACNZHO+nDM/zJSgs6esns+Bk=
+	t=1718378607; cv=none; b=dqGrUL0+uhSQ9WsEBrs6S5YBkgxoxDxA7/zNtRpYjEqrLzoAKq/EzsDL3i/paWjfJGrtEF2EojlqreuMAgUt9JtK9tiFJA4PqDtTvtFbwpWo6Q7rJF79qYh+KXqQK0cJaAn4FTw+H0kZwLRVmrwHtEGqn/E1JDVZioyYKzlQIzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718377324; c=relaxed/simple;
-	bh=qkWL93xJiBFm741aewrWA5fb6uRq1PuR7yWIPq9P0T8=;
+	s=arc-20240116; t=1718378607; c=relaxed/simple;
+	bh=EL0yGZvLp178iwjqGXn1neHj8u1yfXcPxngFTq3rdXU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AuWo4J0VA2JpOmmf5KCmVp1+Qb9iQKyzzU3m20ZXGahkkgQ5L6cHTZDx/zzIQ9zG32h63Ls4poAjmLEfuQHMMc/avA4Gj7oPqr8kzza8Doyn5TKnb1JbTCAIoxPaY5g7TWk5NuXR32566u7bBdPP8O9hByF29Yi43pzwHlsTY1g=
+	 Content-Type:Content-Disposition:In-Reply-To; b=rbbc/vUDdmFPm6alZvJ13IJYjpjTkiIEiVe0dIbNly29qBB2XaYmGU2SfGGt4z6WZe3nVu+n70V7gYNNRZ3ISjkwQB6oxMyLipMstov4QinOLzobH0LVnEqLBNhGTbu9j/3Dth619QhIuhUxEHyVxUUdavIsdshzhawn2m8y72Q=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7BD06176B;
-	Fri, 14 Jun 2024 08:02:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7FF4FEC;
+	Fri, 14 Jun 2024 08:23:48 -0700 (PDT)
 Received: from J2N7QTR9R3.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C06023F8A4;
-	Fri, 14 Jun 2024 08:02:00 -0700 (PDT)
-Date: Fri, 14 Jun 2024 16:01:55 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A5DE43F5A1;
+	Fri, 14 Jun 2024 08:23:21 -0700 (PDT)
+Date: Fri, 14 Jun 2024 16:23:18 +0100
 From: Mark Rutland <mark.rutland@arm.com>
 To: Anshuman Khandual <anshuman.khandual@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
@@ -29,12 +29,14 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V18 3/9] drivers: perf: arm_pmu: Add infrastructure for
- branch stack sampling
-Message-ID: <ZmxbYxE5PBl4CHzE@J2N7QTR9R3.cambridge.arm.com>
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Message-ID: <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
 References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
- <20240613061731.3109448-4-anshuman.khandual@arm.com>
+ <20240613061731.3109448-7-anshuman.khandual@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,104 +45,143 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240613061731.3109448-4-anshuman.khandual@arm.com>
+In-Reply-To: <20240613061731.3109448-7-anshuman.khandual@arm.com>
 
-On Thu, Jun 13, 2024 at 11:47:25AM +0530, Anshuman Khandual wrote:
-> @@ -289,6 +289,23 @@ static void armpmu_start(struct perf_event *event, int flags)
->  {
->  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
->  	struct hw_perf_event *hwc = &event->hw;
-> +	struct pmu_hw_events *cpuc = this_cpu_ptr(armpmu->hw_events);
-> +	int idx;
-> +
-> +	/*
-> +	 * Merge all branch filter requests from different perf
-> +	 * events being added into this PMU. This includes both
-> +	 * privilege and branch type filters.
-> +	 */
-> +	if (armpmu->has_branch_stack) {
-> +		cpuc->branch_sample_type = 0;
-> +		for (idx = 0; idx < ARMPMU_MAX_HWEVENTS; idx++) {
-> +			struct perf_event *event_idx = cpuc->events[idx];
-> +
-> +			if (event_idx && has_branch_stack(event_idx))
-> +				cpuc->branch_sample_type |= event_idx->attr.branch_sample_type;
-> +		}
-> +	}
+On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
+> Disable the BRBE before we enter the guest, saving the status and enable it
+> back once we get out of the guest. This avoids capturing branch records in
+> the guest kernel or userspace, which would be confusing the host samples.
 
-When we spoke about this, I meant that we should do this under armpmu::start(),
-or a callee or caller thereof once we know all the events are configured, just
-before we actually enable the PMU.
+It'd be good to explain why we need to do this for nVHE, but not for
+VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
+when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
+out-of-reset.
 
-For example, this could live in armv8pmu_branch_enable(), which'd allow
-all the actual logic to be added in the BRBE enablement patch.
-
-Doing this in armpmu_start() doesn't work as well because it won't handle
-events being removed.
-
-[...]
-
-> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> index b3b34f6670cf..9eda16dd684e 100644
-> --- a/include/linux/perf/arm_pmu.h
-> +++ b/include/linux/perf/arm_pmu.h
-> @@ -46,6 +46,18 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_63BIT) == ARMPMU_EVT_63BIT);
->  	},								\
->  }
->  
-> +/*
-> + * Maximum branch record entries which could be processed
-> + * for core perf branch stack sampling support, regardless
-> + * of the hardware support available on a given ARM PMU.
-> + */
-> +#define MAX_BRANCH_RECORDS 64
-> +
-> +struct branch_records {
-> +	struct perf_branch_stack	branch_stack;
-> +	struct perf_branch_entry	branch_entries[MAX_BRANCH_RECORDS];
-> +};
-> +
->  /* The events for a given PMU register set. */
->  struct pmu_hw_events {
->  	/*
-> @@ -66,6 +78,17 @@ struct pmu_hw_events {
->  	struct arm_pmu		*percpu_pmu;
->  
->  	int irq;
-> +
-> +	struct branch_records	*branches;
-> +
-> +	/* Active context for task events */
-> +	void			*branch_context;
-
-Using 'void *' here makes this harder to reason about and hides type
-safety issues.
-
-Give this a real type. IIUC it should be 'perf_event_context *'.
-
-> +
-> +	/* Active events requesting branch records */
-> +	unsigned int		branch_users;
-> +
-> +	/* Active branch sample type filters */
-> +	unsigned long		branch_sample_type;
->  };
->  
->  enum armpmu_attr_groups {
-> @@ -96,8 +119,15 @@ struct arm_pmu {
->  	void		(*stop)(struct arm_pmu *);
->  	void		(*reset)(void *);
->  	int		(*map_event)(struct perf_event *event);
-> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
-> +	bool		(*branch_stack_init)(struct perf_event *event);
-> +	void		(*branch_stack_add)(struct perf_event *event, struct pmu_hw_events *cpuc);
-> +	void		(*branch_stack_del)(struct perf_event *event, struct pmu_hw_events *cpuc);
-> +	void		(*branch_stack_reset)(void);
-
-The reset callback isn't used in this series; s
-
-Subsequent patches call armv8pmu_branch_stack_reset() directly from
-PMUv3 and the BRBE driver, and arm_pmu::branch_stack_reset() is never
-used, so we can delete it.
+What should a user do if they *want* samples from a guest? Is that
+possible to do on other architectures, or do is that always prevented?
 
 Mark.
+
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Oliver Upton <oliver.upton@linux.dev>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: kvmarm@lists.linux.dev
+> Cc: linux-arm-kernel@lists.infradead.org
+> CC: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ----
+> Changes in V18:
+> 
+> - Used host_data_ptr() to access host_debug_state.brbcr_el1 register
+> - Changed DEBUG_STATE_SAVE_BRBE to use BIT(7)
+> - Reverted back iflags as u8
+> 
+>  arch/arm64/include/asm/kvm_host.h  |  3 +++
+>  arch/arm64/kvm/debug.c             |  5 +++++
+>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 31 ++++++++++++++++++++++++++++++
+>  3 files changed, 39 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> index 36b8e97bf49e..db922c10bd2a 100644
+> --- a/arch/arm64/include/asm/kvm_host.h
+> +++ b/arch/arm64/include/asm/kvm_host.h
+> @@ -579,6 +579,7 @@ struct kvm_host_data {
+>  		u64 trfcr_el1;
+>  		/* Values of trap registers for the host before guest entry. */
+>  		u64 mdcr_el2;
+> +		u64 brbcr_el1;
+>  	} host_debug_state;
+>  };
+>  
+> @@ -842,6 +843,8 @@ struct kvm_vcpu_arch {
+>  #define DEBUG_STATE_SAVE_SPE	__vcpu_single_flag(iflags, BIT(5))
+>  /* Save TRBE context if active  */
+>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+> +/* Save BRBE context if active  */
+> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(7))
+>  
+>  /* SVE enabled for host EL0 */
+>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> index ce8886122ed3..8fa648943f0f 100644
+> --- a/arch/arm64/kvm/debug.c
+> +++ b/arch/arm64/kvm/debug.c
+> @@ -336,10 +336,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +
+> +	/* Check if we have BRBE implemented and available at the host */
+> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+>  
+>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+>  {
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+>  }
+> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> index 53efda0235cf..97e861df1b45 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> @@ -79,6 +79,32 @@ static void __debug_restore_trace(u64 trfcr_el1)
+>  	write_sysreg_el1(trfcr_el1, SYS_TRFCR);
+>  }
+>  
+> +static void __debug_save_brbe(u64 *brbcr_el1)
+> +{
+> +	*brbcr_el1 = 0;
+> +
+> +	/* Check if the BRBE is enabled */
+> +	if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> +		return;
+> +
+> +	/*
+> +	 * Prohibit branch record generation while we are in guest.
+> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> +	 * modify the filtering set by the host.
+> +	 */
+> +	*brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
+> +	write_sysreg_el1(0, SYS_BRBCR);
+> +}
+> +
+> +static void __debug_restore_brbe(u64 brbcr_el1)
+> +{
+> +	if (!brbcr_el1)
+> +		return;
+> +
+> +	/* Restore BRBE controls */
+> +	write_sysreg_el1(brbcr_el1, SYS_BRBCR);
+> +}
+> +
+>  void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  {
+>  	/* Disable and flush SPE data generation */
+> @@ -87,6 +113,9 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  	/* Disable and flush Self-Hosted Trace generation */
+>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+>  		__debug_save_trace(host_data_ptr(host_debug_state.trfcr_el1));
+> +	/* Disable BRBE branch records */
+> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_save_brbe(host_data_ptr(host_debug_state.brbcr_el1));
+>  }
+>  
+>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+> @@ -100,6 +129,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+>  		__debug_restore_spe(*host_data_ptr(host_debug_state.pmscr_el1));
+>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+>  		__debug_restore_trace(*host_data_ptr(host_debug_state.trfcr_el1));
+> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> +		__debug_restore_brbe(*host_data_ptr(host_debug_state.brbcr_el1));
+>  }
+>  
+>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+> -- 
+> 2.25.1
+> 
