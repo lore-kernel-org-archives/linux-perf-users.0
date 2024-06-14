@@ -1,281 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CACA26ACA;
-	Fri, 14 Jun 2024 13:09:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EB51854;
+	Fri, 14 Jun 2024 13:31:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718370582; cv=none; b=prVjWTB5x6SH27a2GMKLTpLKLKsG2PXmBk/8osjXouWRFyMi7qtfPwpFzjLo/Lx7gA+k/DMo3neLzLKaVKMsq3jBF8uFjv+qpGc6YgojfvlRmtIGiqDngUtrfXn/sbMVucJzSaG7uuHc5As5wtp0kLNYCM+fBK6kw1v+2hgD6lo=
+	t=1718371880; cv=none; b=bd1toGjvQKbRHEIn9eZQUa/qbmScKaoIeSrnR1nY1j7c7d8AeaQaohojgO8RBxt1uQHGVHsp6fyEg3aIMTBP0yTzd92rS2X3GaFrVQ/Demy13iJLiVvF7SallPE+5ToLMqXMi8CNAhQCX1B8AGGTkIJumhXCQNOsZRmmpOkswJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718370582; c=relaxed/simple;
-	bh=e6kELu63/VjfYReNnjC+nzRVVQndtg244gQ0BkXtEas=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JQTA2k8nWiNhz0rIaQ5U9fMhBIH74UhNLXq1LXPw5UheJyuAzG9wVBVap5VKI4HAH04T54z5cPW9RrEao4Dz7KH9zk8JcFI7aHGNAD+cWOmm1+Q6udFyOlMU/INj3+UrRh1CXWVnWE0yHw8LuSn0rdxukuq27DsfJEMQAeMgrFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMdkC05s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718371880; c=relaxed/simple;
+	bh=XhkHg7eU0fmPQAAgNc8nWOI+aXEfsTCZvQ0c8OcUjGA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=atgGoTHGLHQxkanW7qlCSO6GZoLJ5eOf76os7E2GRWaj56bVB+P8m4SaNQWcB5Rg8nEpS0LePgxClJo8deyxdYRhpvKMgtcBK0MgasH3pSXGkDhuHpWX2739IzQuRhV1S8ZEN0VZDKhSGwBqYQN9P1OPPXus4n8SimKh4ssgT+E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fbh9QE+b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMdkC05s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA75C2BD10;
-	Fri, 14 Jun 2024 13:09:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fbh9QE+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 511E6C2BD10;
+	Fri, 14 Jun 2024 13:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718370581;
-	bh=e6kELu63/VjfYReNnjC+nzRVVQndtg244gQ0BkXtEas=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=GMdkC05sdOfXAbzWVw0x4cllrfBOw1WbwFkTaZEPbGHlTbCEV8CdBnTOTAfbqtV81
-	 L/dc5s0btl5IxUF5kDlDfPylNBSwg3XrdCLfwSZ6ofWioZqGGKC6LqLU/chSlmVnFc
-	 r07SteGAipSte7fIC4OHHpBFdCdw4rSkyAD++A1aSWu9QgJfJEOIpUUJ0cvVZ/75Gl
-	 iZMq94ZyrhE2eDTbvZpGt+0H/KV7vD9oaz91xb1HLDnV0a0F9GFEMLmV6iSi+3xlJ5
-	 OJLf03OciKF0H67qiS6ng98tIuGQwMLW741PPu1XMIpwgPSaCBk8EJYhktskfGhhMP
-	 VmW6eYg2DXWoQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sI6gV-003vHX-96;
-	Fri, 14 Jun 2024 14:09:39 +0100
-Date: Fri, 14 Jun 2024 14:09:38 +0100
-Message-ID: <86r0czk6wd.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
+	s=k20201202; t=1718371879;
+	bh=XhkHg7eU0fmPQAAgNc8nWOI+aXEfsTCZvQ0c8OcUjGA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=fbh9QE+bN55WIEOEv8V1EivkDvHZBYwy6N9155V93U3nz2MbMb5Dlq3O4MpETQE0D
+	 qUsKMkVfsiNJZuhrWTcP1qKjvbKL3og3sQsujO8l+xQKW03+HSUbHZC7FnhzoW5etj
+	 +Qkc3iecTcJMMBfeBQy4/9aDoWRBdrSQXh/9X79cj04yXw09jPyy/mmlTikVZd3dWI
+	 a/OdMte/DuhU04/4le9B4yT1ZD8DlkkMOFS5OwcfthS6W+PrL6fivi66npqysp/hiE
+	 bLNS7ADPMNxHUB3S+WZ6MVr6vSXCT7krtp3kRGWAhQ0rsagwZKCl5DEXEBQnlEqCAk
+	 qI3l4G1e2xiwQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
 	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH V18 2/9] KVM: arm64: Explicitly handle BRBE traps as UNDEFINED
-In-Reply-To: <86sexfk8ke.wl-maz@kernel.org>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
-	<20240613061731.3109448-3-anshuman.khandual@arm.com>
-	<86sexfk8ke.wl-maz@kernel.org>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	linux-kernel@vger.kernel.org,
+	Ian Rogers <irogers@google.com>
+Cc: Milian Wolff <milian.wolff@kdab.com>
+Subject: Re: [PATCH v2] perf record: Ensure space for lost samples
+Date: Fri, 14 Jun 2024 06:31:16 -0700
+Message-ID: <171837125174.3039059.16928717312076037768.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
+In-Reply-To: <20240611050626.1223155-1-irogers@google.com>
+References: <20240611050626.1223155-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Jun 2024 13:33:37 +0100,
-Marc Zyngier <maz@kernel.org> wrote:
+On Mon, 10 Jun 2024 22:06:26 -0700, Ian Rogers wrote:
+
+> Previous allocation didn't account for sample ID written after the
+> lost samples event. Switch from malloc/free to a stack allocation.
 > 
-> On Thu, 13 Jun 2024 07:17:24 +0100,
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> > 
-> > The Branch Record Buffer Extension (BRBE) adds a number of system registers
-> > and instructions, which we don't currently intend to expose to guests. Our
-> > existing logic handles this safely, but this could be improved with some
-> > explicit handling of BRBE.
-> > 
-> > The presence of BRBE is currently hidden from guests as the cpufeature
-> > code's ftr_id_aa64dfr0[] table doesn't have an entry for the BRBE field,
-> > and so this will be zero in the sanitised value of ID_AA64DFR0 exposed to
-> > guests via read_sanitised_id_aa64dfr0_el1(). As the ftr_id_aa64dfr0[] table
-> > may gain an entry for the BRBE field in future, for robustness we should
-> > explicitly mask out the BRBE field in read_sanitised_id_aa64dfr0_el1().
-> > 
-> > The BRBE system registers and instructions are currently trapped by the
-> > existing configuration of the fine-grained traps. As neither the registers
-> > nor the instructions are described in the sys_reg_descs[] table,
-> > emulate_sys_reg() will warn that these are unknown before injecting an
-> > UNDEFINED exception into the guest.
-> > 
-> > Well-behaved guests shouldn't try to use the registers or instructions, but
-> > badly-behaved guests could use these, resulting in unnecessary warnings. To
-> > avoid those warnings, we should explicitly handle the BRBE registers and
-> > instructions as UNDEFINED.
-> > 
-> > Address the above by having read_sanitised_id_aa64dfr0_el1() mask out the
-> > ID_AA64DFR0.BRBE field, and explicitly handling all of the BRBE system
-> > registers and instructions as UNDEFINED.
-> > 
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Oliver Upton <oliver.upton@linux.dev>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: kvmarm@lists.linux.dev
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> > ----
-> > Changes in V18:
-> > 
-> > - Updated the commit message
-> > 
-> >  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> > Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-> > ---
-> >  arch/arm64/kvm/sys_regs.c | 56 +++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 56 insertions(+)
-> > 
-> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> > index 22b45a15d068..3d4686abe5ee 100644
-> > --- a/arch/arm64/kvm/sys_regs.c
-> > +++ b/arch/arm64/kvm/sys_regs.c
-> > @@ -1304,6 +1304,11 @@ static int set_pmcr(struct kvm_vcpu *vcpu, const struct sys_reg_desc *r,
-> >  	return 0;
-> >  }
-> >  
-> > +#define BRB_INF_SRC_TGT_EL1(n)				\
-> > +	{ SYS_DESC(SYS_BRBINF_EL1(n)), undef_access },	\
-> > +	{ SYS_DESC(SYS_BRBSRC_EL1(n)), undef_access },	\
-> > +	{ SYS_DESC(SYS_BRBTGT_EL1(n)), undef_access }	\
-> > +
-> >  /* Silly macro to expand the DBG{BCR,BVR,WVR,WCR}n_EL1 registers in one go */
-> >  #define DBG_BCR_BVR_WCR_WVR_EL1(n)					\
-> >  	{ SYS_DESC(SYS_DBGBVRn_EL1(n)),					\
-> > @@ -1722,6 +1727,9 @@ static u64 read_sanitised_id_aa64dfr0_el1(struct kvm_vcpu *vcpu,
-> >  	/* Hide SPE from guests */
-> >  	val &= ~ID_AA64DFR0_EL1_PMSVer_MASK;
-> >  
-> > +	/* Hide BRBE from guests */
-> > +	val &= ~ID_AA64DFR0_EL1_BRBE_MASK;
-> > +
-> >  	return val;
-> >  }
-> >  
-> > @@ -2240,6 +2248,52 @@ static const struct sys_reg_desc sys_reg_descs[] = {
-> >  	{ SYS_DESC(SYS_DBGCLAIMCLR_EL1), trap_raz_wi },
-> >  	{ SYS_DESC(SYS_DBGAUTHSTATUS_EL1), trap_dbgauthstatus_el1 },
-> >  
-> > +	/*
-> > +	 * BRBE branch record sysreg address space is interleaved between
-> > +	 * corresponding BRBINF<N>_EL1, BRBSRC<N>_EL1, and BRBTGT<N>_EL1.
-> > +	 */
-> > +	BRB_INF_SRC_TGT_EL1(0),
-> > +	BRB_INF_SRC_TGT_EL1(16),
-> > +	BRB_INF_SRC_TGT_EL1(1),
-> > +	BRB_INF_SRC_TGT_EL1(17),
-> > +	BRB_INF_SRC_TGT_EL1(2),
-> > +	BRB_INF_SRC_TGT_EL1(18),
-> > +	BRB_INF_SRC_TGT_EL1(3),
-> > +	BRB_INF_SRC_TGT_EL1(19),
-> > +	BRB_INF_SRC_TGT_EL1(4),
-> > +	BRB_INF_SRC_TGT_EL1(20),
-> > +	BRB_INF_SRC_TGT_EL1(5),
-> > +	BRB_INF_SRC_TGT_EL1(21),
-> > +	BRB_INF_SRC_TGT_EL1(6),
-> > +	BRB_INF_SRC_TGT_EL1(22),
-> > +	BRB_INF_SRC_TGT_EL1(7),
-> > +	BRB_INF_SRC_TGT_EL1(23),
-> > +	BRB_INF_SRC_TGT_EL1(8),
-> > +	BRB_INF_SRC_TGT_EL1(24),
-> > +	BRB_INF_SRC_TGT_EL1(9),
-> > +	BRB_INF_SRC_TGT_EL1(25),
-> > +	BRB_INF_SRC_TGT_EL1(10),
-> > +	BRB_INF_SRC_TGT_EL1(26),
-> > +	BRB_INF_SRC_TGT_EL1(11),
-> > +	BRB_INF_SRC_TGT_EL1(27),
-> > +	BRB_INF_SRC_TGT_EL1(12),
-> > +	BRB_INF_SRC_TGT_EL1(28),
-> > +	BRB_INF_SRC_TGT_EL1(13),
-> > +	BRB_INF_SRC_TGT_EL1(29),
-> > +	BRB_INF_SRC_TGT_EL1(14),
-> > +	BRB_INF_SRC_TGT_EL1(30),
-> > +	BRB_INF_SRC_TGT_EL1(15),
-> > +	BRB_INF_SRC_TGT_EL1(31),
-> > +
-> > +	/* Remaining BRBE sysreg addresses space */
-> > +	{ SYS_DESC(SYS_BRBCR_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBFCR_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBTS_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBINFINJ_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBSRCINJ_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBTGTINJ_EL1), undef_access },
-> > +	{ SYS_DESC(SYS_BRBIDR0_EL1), undef_access },
-> > +
-> >  	{ SYS_DESC(SYS_MDCCSR_EL0), trap_raz_wi },
-> >  	{ SYS_DESC(SYS_DBGDTR_EL0), trap_raz_wi },
-> >  	// DBGDTR[TR]X_EL0 share the same encoding
-> > @@ -2751,6 +2805,8 @@ static struct sys_reg_desc sys_insn_descs[] = {
-> >  	{ SYS_DESC(SYS_DC_CISW), access_dcsw },
-> >  	{ SYS_DESC(SYS_DC_CIGSW), access_dcgsw },
-> >  	{ SYS_DESC(SYS_DC_CIGDSW), access_dcgsw },
-> > +	{ SYS_DESC(OP_BRB_IALL), undef_access },
-> > +	{ SYS_DESC(OP_BRB_INJ), undef_access },
-> >  };
-> >  
-> >  static const struct sys_reg_desc *first_idreg;
 > 
-> I don't think we need any update to the sys_reg table to handle
-> this. Instead, we should make use of the FGU infrastructure that has
-> been in since 6.9 to make this stuff UNDEF unconditionally.
-> 
-> It should be as simple as:
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index ee33f5467ce5..7cafe3f72c01 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -4964,6 +4964,11 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
->  		kvm->arch.fgu[HAFGRTR_GROUP] |= ~(HAFGRTR_EL2_RES0 |
->  						  HAFGRTR_EL2_RES1);
->  
-> +	if (!kvm_has_feat(kvm, ID_AA64DFR0_EL1, BRBE, IMP))
-> +		kvm->arch.fgu[HDFGRTR_GROUP] |= (HDFGRTR_nBRBDATA |
-> +						 HDFGRTR_nBRBCTL  |
-> +						 HDFGRTR_nBRBIDR);
-> +
->  	set_bit(KVM_ARCH_FLAG_FGU_INITIALIZED, &kvm->arch.flags);
->  out:
->  	mutex_unlock(&kvm->arch.config_lock);
-> 
-> which is of course untested, but that I expect to be correct.
 
-Actually, to disable the *instructions*, a similar hack must be
-applied to HFGITR_EL2. The resulting patch should be something like:
+Applied to perf-tools-next, thanks!
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index ee33f5467ce5..49d86dae8d80 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -4964,6 +4964,15 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
- 		kvm->arch.fgu[HAFGRTR_GROUP] |= ~(HAFGRTR_EL2_RES0 |
- 						  HAFGRTR_EL2_RES1);
- 
-+	if (!kvm_has_feat(kvm, ID_AA64DFR0_EL1, BRBE, IMP)) {
-+		kvm->arch.fgu[HDFGRTR_GROUP] |= (HDFGRTR_nBRBDATA  |
-+						 HDFGRTR_nBRBCTL   |
-+						 HDFGRTR_nBRBIDR);
-+		kvm->arch.fgu[HFGITR_GROUP] |= (HFGITR_EL2_nBRBINJ |
-+						HFGITR_EL2_nBRBIALL);
-+	}
-+
-+
- 	set_bit(KVM_ARCH_FLAG_FGU_INITIALIZED, &kvm->arch.flags);
- out:
- 	mutex_unlock(&kvm->arch.config_lock);
+Arnaldo, I'll resolve the conflict when I merge perf-tools later which
+has the revert.
 
-The implicit dependency here is that FGT is always present on a system
-that implements BRBE. The architecture supports this assertion:
-
-- BRBE is not available before ARMv9.1
-- FGT is mandatory from ARMv8.6
-
-Given that v9.1 is congruent to v8.6, we have the required overlap.
-
-Thanks,
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+Best regards,
+Namhyung
