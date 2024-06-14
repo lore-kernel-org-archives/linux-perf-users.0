@@ -1,64 +1,64 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2B0C9441;
-	Fri, 14 Jun 2024 17:27:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E4819CCE9;
+	Fri, 14 Jun 2024 17:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718386027; cv=none; b=BuuIdKXCqFRZ/SdUOtP2SUsutvzM9ZtVhu2ionogF737beTdOeSCIegDG2XGGeDrljSZFzTOlPX8uPXi0KqirGYv4scMdtAImDKLrIJd5k7vz/Gk/7KX8mtMlyIefu95IvtDxe7jP92V7SH0zaXOuN98b/b+tW2KeCK5fRXWDHU=
+	t=1718386029; cv=none; b=YEt6rIqZU+wkX7U0k4AZeuv6k1lNmZA3/Px71AC5aYJ+lAvbBVcc8b/NwH5500nFCEPfYi12LHl8W/NesggfIIUyzgi3tyLFAQLWs+luJ7vNLSElXUz8+0UoqLxUzEFdI7+yPt1b8l8JgN1Ordl2M2WNuO/wZ3eHgrd/h7NDHmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718386027; c=relaxed/simple;
-	bh=T1z7IECuKP+etDpZmtJwL6v9sd6XGtj1+Jyyq7XS2gE=;
+	s=arc-20240116; t=1718386029; c=relaxed/simple;
+	bh=VwQEjpvbrgC4ij4kAyO2nlIKkFx8XCcxzHH6k0U1M7E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MRb3bSMgbkvEBPYmDty9oY4OFW0U9femD4GZaVjUeeHfdpjJTklk20OqERUm2lerdeTrTLHgNYHcCsjNxtIeOyoOiZ65yKtABWgvqrJSIwxblJPquzaEnJYLtopLtFsJp+2iriC+n6OIVThDT5Ns+yVx6GrZAsKbB6tjenKSOi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HLV12VmY; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=GMEwyp9SFj9up6tQ1++AEWqkXgM+ZF1p7S3KiI9fnerx8LcNT6NGUKuxzB7FYc3tdy/d6xGVOGCQULuAeUjnHyMOjH0xsUqBIRzDk7cfeUcARIaReJR0vlb0UctxdeC4W6LZKmXJ3HA3BcmXlaKxWsjAEVyl3APgmNbiTwxMwEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ZE1pRZIl; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HLV12VmY"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EGcJie010803;
-	Fri, 14 Jun 2024 17:26:51 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ZE1pRZIl"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45EHQwEW029727;
+	Fri, 14 Jun 2024 17:26:58 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=co57nuNrHPYEE
-	66TT44hKD3LaG//aQrqYGNHuVsyeuY=; b=HLV12VmYsrfWJd1ExrQiGO+/A1uz6
-	L6ihSadu0clIsJw1ADki2PQXH6N9eZ2Oz00xlNdAA1WiUZWD/wlW7CnzdDeSJjLr
-	9CBRLrvzZ/dLdUaeUw5nTTM7wN2jzSvawqViS3Xuk8Tj2M8adYvzyl2BqeQhTCK6
-	34Tq5yBvoHiJl0BOkQoiHpPUSSo4/ZqPfwCC9yEB7pLodE4SY5CDCpER0uJTk11g
-	0fpt4s9o06b/hE2BLcLr4plQspWpiMpFJD9UHMJ72vHp9z0E02XEqH1IZDb4zskl
-	JQBEDyi6j0ZT26wqkDn4zsZvAbpJkywjRSWBrAEuRcDbq/frpJQZHbE7Q==
+	:mime-version:content-transfer-encoding; s=pp1; bh=nMhp8ksQP47hN
+	oOLyKczGfyhfX0UNSuKW/1x8tc/LWo=; b=ZE1pRZIlhz8edJM2E6tLkv7sq+09V
+	nLRyaMNCb6d3RHLcO3UnTua3iLZX1xcLWUP6vGvgnF5P+HmCAYFw953dSHvGlnII
+	HOgHPqYTu0HwQGO1RjSwFADlqgAbWo86B3mayEslXb4ESGbqc5HQ30JowB0r4slR
+	fkQTM8dApR5NauLB12WfNqTTH57Hngxb9+sIQ6nChjTzeN8lDRI/KuEChndBk5E+
+	ATNx5kMNUtoS+D8MkvPcDacb5QYVswZpxYHsekgjA5/OqQzl3Cj0rIs7DL1B+Jok
+	U8p/F7T2IW2sb0FsGooWK6qQ2hOnL+s7aSZnfrAH3RPapGiXEiaqJWJzQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrsja85en-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05m1-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:26:51 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHQoXF025347;
-	Fri, 14 Jun 2024 17:26:50 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrsja85ek-1
+	Fri, 14 Jun 2024 17:26:58 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45EHQvFK029708;
+	Fri, 14 Jun 2024 17:26:57 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yrryk05kv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:26:50 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EGGQcR027246;
-	Fri, 14 Jun 2024 17:26:50 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn211kkwc-1
+	Fri, 14 Jun 2024 17:26:57 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45EH0GEC020066;
+	Fri, 14 Jun 2024 17:26:56 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yn34nud3b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 14 Jun 2024 17:26:50 +0000
+	Fri, 14 Jun 2024 17:26:56 +0000
 Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQiTG44761564
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45EHQolf30409400
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 14 Jun 2024 17:26:46 GMT
+	Fri, 14 Jun 2024 17:26:52 GMT
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 385E720040;
-	Fri, 14 Jun 2024 17:26:44 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 80DC620040;
+	Fri, 14 Jun 2024 17:26:50 +0000 (GMT)
 Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5D44420043;
-	Fri, 14 Jun 2024 17:26:41 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id B378D20043;
+	Fri, 14 Jun 2024 17:26:47 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.43.82.18])
 	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 14 Jun 2024 17:26:41 +0000 (GMT)
+	Fri, 14 Jun 2024 17:26:47 +0000 (GMT)
 From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
         irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
@@ -67,9 +67,9 @@ Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
         maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [V4 01/16] tools/perf: Move the data structures related to register type to header file
-Date: Fri, 14 Jun 2024 22:56:16 +0530
-Message-Id: <20240614172631.56803-2-atrajeev@linux.vnet.ibm.com>
+Subject: [V4 03/16] tools/perf: Add support to capture and parse raw instruction in powerpc using dso__data_read_offset utility
+Date: Fri, 14 Jun 2024 22:56:18 +0530
+Message-Id: <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.35.1
 In-Reply-To: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
 References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
@@ -81,191 +81,183 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Tvpa_wW7tyV71PHvIjkvWyrZIoMo3Nbb
-X-Proofpoint-GUID: HNOsJHHA5Qd4NzxTP-6t7ZJkVXE-r85L
+X-Proofpoint-GUID: xwj9z1BnmB5dP9fXttT3RN-6pJyr9K12
+X-Proofpoint-ORIG-GUID: -fMqKB81Jv7XvQj0ZoPR_epoGfPe9fBF
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-06-14_15,2024-06-14_03,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- priorityscore=1501 lowpriorityscore=0 mlxscore=0 adultscore=0
- clxscore=1015 suspectscore=0 spamscore=0 mlxlogscore=999 impostorscore=0
- phishscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 mlxscore=0 adultscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2405170001 definitions=main-2406140119
 
-Data type profiling uses instruction tracking by checking each
-instruction and updating the register type state in some data
-structures. This is useful to find the data type in cases when the
-register state gets transferred from one reg to another. Example, in
-x86, "mov" instruction and in powerpc, "mr" instruction. Currently these
-structures are defined in annotate-data.c and instruction tracking is
-implemented only for x86. Move these data structures to
-"annotate-data.h" header file so that other arch implementations can use
-it in arch specific files as well.
+Add support to capture and parse raw instruction in powerpc.
+Currently, the perf tool infrastructure uses two ways to disassemble
+and understand the instruction. One is objdump and other option is
+via libcapstone.
+
+Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
+with "objdump" while disassemble. Example from powerpc with this option
+for an instruction address is:
+
+Snippet from:
+objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
+
+c0000000010224b4:	lwz     r10,0(r9)
+
+This line "lwz r10,0(r9)" is parsed to extract instruction name,
+registers names and offset. Also to find whether there is a memory
+reference in the operands, "memory_ref_char" field of objdump is used.
+For x86, "(" is used as memory_ref_char to tackle instructions of the
+form "mov  (%rax), %rcx".
+
+In case of powerpc, not all instructions using "(" are the only memory
+instructions. Example, above instruction can also be of extended form (X
+form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+and extract the source/target registers, patch adds support to use raw
+instruction for powerpc. Approach used is to read the raw instruction
+directly from the DSO file using "dso__data_read_offset" utility which
+is already implemented in perf infrastructure in "util/dso.c".
+
+Example:
+
+38 01 81 e8     ld      r4,312(r1)
+
+Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+this translates to instruction form: "ld RT,DS(RA)" and binary code
+as:
+
+   | 58 |  RT  |  RA |      DS       | |
+   -------------------------------------
+   0    6     11    16              30 31
+
+Function "symbol__disassemble_dso" is updated to read raw instruction
+directly from DSO using dso__data_read_offset utility. In case of
+above example, this captures:
+line:    38 01 81 e8
 
 Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 ---
- tools/perf/util/annotate-data.c | 53 +------------------------------
- tools/perf/util/annotate-data.h | 55 +++++++++++++++++++++++++++++++++
- 2 files changed, 56 insertions(+), 52 deletions(-)
+ tools/perf/util/disasm.c | 98 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 98 insertions(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 965da6c0b542..a4c7f98a75e3 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -31,15 +31,6 @@
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index b5fe3a7508bb..f19496133bf0 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+ }
+ #endif
  
- static void delete_var_types(struct die_var_type *var_types);
- 
--enum type_state_kind {
--	TSR_KIND_INVALID = 0,
--	TSR_KIND_TYPE,
--	TSR_KIND_PERCPU_BASE,
--	TSR_KIND_CONST,
--	TSR_KIND_POINTER,
--	TSR_KIND_CANARY,
--};
--
- #define pr_debug_dtp(fmt, ...)					\
- do {								\
- 	if (debug_type_profile)					\
-@@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
++static int symbol__disassemble_dso(char *filename, struct symbol *sym,
++					struct annotate_args *args)
++{
++	struct annotation *notes = symbol__annotation(sym);
++	struct map *map = args->ms.map;
++	struct dso *dso = map__dso(map);
++	u64 start = map__rip_2objdump(map, sym->start);
++	u64 end = map__rip_2objdump(map, sym->end);
++	u64 len = end - start;
++	u64 offset;
++	int i, count;
++	u8 *buf = NULL;
++	char disasm_buf[512];
++	struct disasm_line *dl;
++	u32 *line;
++
++	/* Return if objdump is specified explicitly */
++	if (args->options->objdump_path)
++		return -1;
++
++	pr_debug("Reading raw instruction from : %s using dso__data_read_offset\n", filename);
++
++	buf = malloc(len);
++	if (buf == NULL)
++		goto err;
++
++	count = dso__data_read_offset(dso, NULL, sym->start, buf, len);
++
++	line = (u32 *)buf;
++
++	if ((u64)count != len)
++		goto err;
++
++	/* add the function address and name */
++	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
++		  start, sym->name);
++
++	args->offset = -1;
++	args->line = disasm_buf;
++	args->line_nr = 0;
++	args->fileloc = NULL;
++	args->ms.sym = sym;
++
++	dl = disasm_line__new(args);
++	if (dl == NULL)
++		goto err;
++
++	annotation_line__add(&dl->al, &notes->src->source);
++
++	/* Each raw instruction is 4 byte */
++	count = len/4;
++
++	for (i = 0, offset = 0; i < count; i++) {
++		args->offset = offset;
++		sprintf(args->line, "%x", line[i]);
++		dl = disasm_line__new(args);
++		if (dl == NULL)
++			goto err;
++
++		annotation_line__add(&dl->al, &notes->src->source);
++		offset += 4;
++	}
++
++	/* It failed in the middle */
++	if (offset != len) {
++		struct list_head *list = &notes->src->source;
++
++		/* Discard all lines and fallback to objdump */
++		while (!list_empty(list)) {
++			dl = list_first_entry(list, struct disasm_line, al.node);
++
++			list_del_init(&dl->al.node);
++			disasm_line__free(dl);
++		}
++		count = -1;
++	}
++
++out:
++	free(buf);
++	return count < 0 ? count : 0;
++
++err:
++	count = -1;
++	goto out;
++}
+ /*
+  * Possibly create a new version of line with tabs expanded. Returns the
+  * existing or new line, storage is updated if a new line is allocated. If
+@@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+ 		strcpy(symfs_filename, tmp);
  	}
- }
  
--/*
-- * Type information in a register, valid when @ok is true.
-- * The @caller_saved registers are invalidated after a function call.
-- */
--struct type_state_reg {
--	Dwarf_Die type;
--	u32 imm_value;
--	bool ok;
--	bool caller_saved;
--	u8 kind;
--};
--
--/* Type information in a stack location, dynamically allocated */
--struct type_state_stack {
--	struct list_head list;
--	Dwarf_Die type;
--	int offset;
--	int size;
--	bool compound;
--	u8 kind;
--};
--
--/* FIXME: This should be arch-dependent */
--#define TYPE_STATE_MAX_REGS  16
--
--/*
-- * State table to maintain type info in each register and stack location.
-- * It'll be updated when new variable is allocated or type info is moved
-- * to a new location (register or stack).  As it'd be used with the
-- * shortest path of basic blocks, it only maintains a single table.
-- */
--struct type_state {
--	/* state of general purpose registers */
--	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
--	/* state of stack location */
--	struct list_head stack_vars;
--	/* return value register */
--	int ret_reg;
--	/* stack pointer register */
--	int stack_reg;
--};
--
--static bool has_reg_type(struct type_state *state, int reg)
-+bool has_reg_type(struct type_state *state, int reg)
- {
- 	return (unsigned)reg < ARRAY_SIZE(state->regs);
- }
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 0a57d9f5ee78..ef235b1b15e1 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -6,6 +6,9 @@
- #include <linux/compiler.h>
- #include <linux/rbtree.h>
- #include <linux/types.h>
-+#include "dwarf-aux.h"
-+#include "annotate.h"
-+#include "debuginfo.h"
- 
- struct annotated_op_loc;
- struct debuginfo;
-@@ -15,6 +18,15 @@ struct hist_entry;
- struct map_symbol;
- struct thread;
- 
-+enum type_state_kind {
-+	TSR_KIND_INVALID = 0,
-+	TSR_KIND_TYPE,
-+	TSR_KIND_PERCPU_BASE,
-+	TSR_KIND_CONST,
-+	TSR_KIND_POINTER,
-+	TSR_KIND_CANARY,
-+};
++	/*
++	 * For powerpc data type profiling, use the dso__data_read_offset
++	 * to read raw instruction directly and interpret the binary code
++	 * to understand instructions and register fields. For sort keys as
++	 * type and typeoff, disassemble to mnemonic notation is
++	 * not required in case of powerpc.
++	 */
++	if (arch__is(args->arch, "powerpc")) {
++		err = symbol__disassemble_dso(symfs_filename, sym, args);
++		if (err == 0)
++			goto out_remove_tmp;
++	}
 +
- /**
-  * struct annotated_member - Type of member field
-  * @node: List entry in the parent list
-@@ -142,6 +154,48 @@ struct annotated_data_stat {
- };
- extern struct annotated_data_stat ann_data_stat;
- 
-+/*
-+ * Type information in a register, valid when @ok is true.
-+ * The @caller_saved registers are invalidated after a function call.
-+ */
-+struct type_state_reg {
-+	Dwarf_Die type;
-+	u32 imm_value;
-+	bool ok;
-+	bool caller_saved;
-+	u8 kind;
-+};
-+
-+/* Type information in a stack location, dynamically allocated */
-+struct type_state_stack {
-+	struct list_head list;
-+	Dwarf_Die type;
-+	int offset;
-+	int size;
-+	bool compound;
-+	u8 kind;
-+};
-+
-+/* FIXME: This should be arch-dependent */
-+#define TYPE_STATE_MAX_REGS  32
-+
-+/*
-+ * State table to maintain type info in each register and stack location.
-+ * It'll be updated when new variable is allocated or type info is moved
-+ * to a new location (register or stack).  As it'd be used with the
-+ * shortest path of basic blocks, it only maintains a single table.
-+ */
-+struct type_state {
-+	/* state of general purpose registers */
-+	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-+	/* state of stack location */
-+	struct list_head stack_vars;
-+	/* return value register */
-+	int ret_reg;
-+	/* stack pointer register */
-+	int stack_reg;
-+};
-+
- #ifdef HAVE_DWARF_SUPPORT
- 
- /* Returns data type at the location (ip, reg, offset) */
-@@ -160,6 +214,7 @@ void global_var_type__tree_delete(struct rb_root *root);
- 
- int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
- 
-+bool has_reg_type(struct type_state *state, int reg);
- #else /* HAVE_DWARF_SUPPORT */
- 
- static inline struct annotated_data_type *
+ #ifdef HAVE_LIBCAPSTONE_SUPPORT
+ 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
+ 	if (err == 0)
 -- 
 2.43.0
 
