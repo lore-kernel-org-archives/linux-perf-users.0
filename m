@@ -1,120 +1,145 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from smtp-fw-6002.amazon.com (smtp-fw-6002.amazon.com [52.95.49.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F2AE146A90;
-	Fri, 14 Jun 2024 03:55:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC7F14659D;
+	Fri, 14 Jun 2024 07:35:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.95.49.90
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718337309; cv=none; b=g9SKzfpvh3rbgGbEH7bo2926GKlMWmK58uN7lrK7y2CxRse4dDY/a/E4YinYz/6rbfUFPhJTKQo0/I/W8KSen9g5MgYlpJGiAObwEd6G/vwmiLWnnjW3sVzjTOvmn3aNmq4zbJ83Uqs7USN68abVRZdBojW57W7m/lTYAmtIXzs=
+	t=1718350538; cv=none; b=GHfVqSARLbI6ciY6hrr3r+hE1EgBYyH2mwnHd8AMJHp34zYWA4sUW65dWFVA5hC0t8AIWcEgoRPJ/9zd5R+5K43bzVT4MvwRL7810iLh8DkkLMenDx/Bf83EKDecqSQAFz37Stpjr6M9EzEXYd7DUFE20gFPJ4pkxr+MTQaLL7g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718337309; c=relaxed/simple;
-	bh=DRCCeEjTSrpOxV55wmObarqnuntQRUzJ2p5ODapp/eo=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UjukrLt2xFatNQvIP0/A6niTL1AddaGeOfckUSAAt8DY7xBAI7o9JoSg2ZWZXnXLG725hhi9oFuIhfqzIAgNavLlqC0LSiNTxBH0EDUcmAX6wKgXT7RQhYwwpPDJc5Q28DPb0GAhUkshTq4IrMZBHaJ/Y6nK0qqaQWFkKEfUyTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W0lgQ0DKHzwS3s;
-	Fri, 14 Jun 2024 11:50:58 +0800 (CST)
-Received: from kwepemd200010.china.huawei.com (unknown [7.221.188.124])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1E0B114059F;
-	Fri, 14 Jun 2024 11:55:06 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd200010.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
+	s=arc-20240116; t=1718350538; c=relaxed/simple;
+	bh=zzbz9Wanpkr35AX5R0+HsXH0pco4+GUM0zXv7LOp2R0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cyixTf9V0gH1bSG5kjn2E9ldgl3t7NQsXyC4o6+67IRyCkgR/Amz1JJRo88HZXoKV2rcGSykcoCvFWvmzCdGLHZgSQwzlOviFgWiXubARt43Sx4XAx1a6d4p5TzQwm/2jMy4ZDGTvP5FwGMYHpz+aI35/HFJu/W3wHlnD+aX2Ao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=mQoUF+6C; arc=none smtp.client-ip=52.95.49.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mQoUF+6C"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1718350538; x=1749886538;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P7p3pFfy9IomOWnf8uMXjciduYMrQ/Z31QJee1iffv4=;
+  b=mQoUF+6CXvTY47t23t19UvwgiJCiHc7PP5wCzKAL3hd9nWNECBsyDFmj
+   ejQ3GKu92mUaqWmZRa0KYTBrA1q9XIqZVIAyoOmS8PKfTpjBP05oWGmEQ
+   V3rWfB4+ohWEYJj46SWK3LRMYjdvDndHB4IbSyR6uB4ijpXlI5+2nsuzi
+   o=;
+X-IronPort-AV: E=Sophos;i="6.08,237,1712620800"; 
+   d="scan'208";a="413389174"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-east-1.prod.farcaster.email.amazon.dev) ([10.43.8.6])
+  by smtp-border-fw-6002.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2024 07:35:35 +0000
+Received: from EX19MTAEUB002.ant.amazon.com [10.0.10.100:45130]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.7.69:2525] with esmtp (Farcaster)
+ id 6930515c-e5e5-4621-a4ba-ecf3e8a0f2ba; Fri, 14 Jun 2024 07:35:33 +0000 (UTC)
+X-Farcaster-Flow-ID: 6930515c-e5e5-4621-a4ba-ecf3e8a0f2ba
+Received: from EX19D003EUB001.ant.amazon.com (10.252.51.97) by
+ EX19MTAEUB002.ant.amazon.com (10.252.51.59) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 14 Jun 2024 11:55:05 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Fri, 14 Jun 2024 11:55:05 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Adrian Hunter <adrian.hunter@intel.com>
-CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
- Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
-	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
-	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH 1/2] perf: support specify vdso path in cmdline
-Thread-Topic: [PATCH 1/2] perf: support specify vdso path in cmdline
-Thread-Index: AQHavVvgPApptK0OsE6+S63iYUbWKrHE1RgAgACeKQD//4I5AIABrPmA
-Date: Fri, 14 Jun 2024 03:55:05 +0000
-Message-ID: <d5309643a85144b4abbb8705b6e7bd8e@huawei.com>
-References: <20240613063510.348692-1-changbin.du@huawei.com>
- <20240613063510.348692-2-changbin.du@huawei.com>
- <961fe800-7160-4c53-a3a0-f16700c433cd@intel.com>
- <1e17854b16fe46a4b384b6ddec05029a@huawei.com>
- <dfc9a604-6857-46af-a778-5c354fe199be@intel.com>
-In-Reply-To: <dfc9a604-6857-46af-a778-5c354fe199be@intel.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <4469B8DA2F78264E8F076DE6BAD8C2B3@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+ 15.2.1258.34; Fri, 14 Jun 2024 07:35:33 +0000
+Received: from dev-dsk-sieberf-metal-1a-7543e84d.eu-west-1.amazon.com
+ (172.19.116.227) by EX19D003EUB001.ant.amazon.com (10.252.51.97) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Fri, 14 Jun
+ 2024 07:35:30 +0000
+From: Fernand Sieber <sieberf@amazon.com>
+To:
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Fernand Sieber <sieberf@amazon.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Subject: [PATCH] perf: sched map skips redundant lines with cpu filters
+Date: Fri, 14 Jun 2024 09:35:17 +0200
+Message-ID: <20240614073517.94974-1-sieberf@amazon.com>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWC001.ant.amazon.com (10.13.139.213) To
+ EX19D003EUB001.ant.amazon.com (10.252.51.97)
 
-On Thu, Jun 13, 2024 at 01:19:20PM +0300, Adrian Hunter wrote:
-> On 13/06/24 12:49, duchangbin wrote:
-> > On Thu, Jun 13, 2024 at 11:23:26AM +0300, Adrian Hunter wrote:
-> >> On 13/06/24 09:35, Changbin Du wrote:
-> >>> The vdso dumped from process memory (in buildid-cache) lacks debuggin=
-g
-> >>> info. To annotate vdso symbols with source lines we need specify a
-> >>> debugging version.
-> >>>
-> >>> For x86, we can find them from your local build as
-> >>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
-> >>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
-> >>> the buildid has to match.
-> >>>
-> >>> $ sudo perf record -a
-> >>> $ sudo perf report --objdump=3Dllvm-objdump \
-> >>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32=
-.so.dbg
-> >>>
-> >>> When doing cross platform analysis, we also need specify the vdso pat=
-h if
-> >>> we are interested in its symbols.
-> >>
-> >> We already have logic to find debug files, and to deal with a symbol s=
-ource
-> >> (syms_ss) and runtime symbol source (runtime_ss).
-> >>
-> >> Can't we make that work transparently for vdso so that the user does
-> >> not have to.
-> >>
-> > For Ubuntu, we can find the debug files of vdso in
-> > /lib/modules/<version>/vdso/vdso{32,64}.so. These two are debug version=
-.
-> >=20
-> > For local build, seems vdso{32,64}.so.dbg are not installed in /lib/mod=
-ules/ nor
-> > other locations.
->=20
-> Isn't there /lib/modules/<version>/build symbolic link to follow?
->=20
-hm, we can try /lib/modules/<version>/build/arch/x86/entry/vdso/vdso*.so.db=
-g.
-Other arches are similar.
+perf sched map supports cpu filter.
+However, even with cpu filters active, any context switch currently
+corresponds to a separate line.
+As result, context switches on irrelevant cpus result to redundant lines,
+which makes the output particlularly difficult to read on wide
+architectures.
 
-So, we will try these pathes internally. And keep '--vdso' if someone reall=
-y
-want a special path. (just like vmlinux)
+Fix it by skipping printing for irrelevant CPUs.
 
---=20
-Cheers,
-Changbin Du
+Example snippet of output before fix:
+
+  *B0       1.461147 secs
+   B0
+   B0
+   B0
+  *G0       1.517139 secs
+
+After fix:
+
+  *B0       1.461147 secs
+  *G0       1.517139 secs
+
+Signed-off-by: Fernand Sieber <sieberf@amazon.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+---
+ tools/perf/builtin-sched.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 7422c930abaf..aa59f763ca46 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -1594,8 +1594,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 
+ 	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+ 
+-	printf("  ");
+-
+ 	new_shortname = 0;
+ 	if (!tr->shortname[0]) {
+ 		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+@@ -1622,6 +1620,11 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 		new_shortname = 1;
+ 	}
+ 
++	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
++		goto out;
++
++	printf("  ");
++
+ 	for (i = 0; i < cpus_nr; i++) {
+ 		struct perf_cpu cpu = {
+ 			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+@@ -1656,9 +1659,6 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 			color_fprintf(stdout, color, "   ");
+ 	}
+ 
+-	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
+-		goto out;
+-
+ 	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+ 	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+ 	if (new_shortname || tr->comm_changed || (verbose > 0 && thread__tid(sched_in))) {
+@@ -1675,9 +1675,9 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+ 	if (sched->map.comp && new_cpu)
+ 		color_fprintf(stdout, color, " (CPU %d)", this_cpu);
+ 
+-out:
+ 	color_fprintf(stdout, color, "\n");
+ 
++out:
+ 	thread__put(sched_in);
+ 
+ 	return 0;
+-- 
+2.40.1
+
