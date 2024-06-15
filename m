@@ -1,29 +1,29 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AAA8156CF;
-	Sat, 15 Jun 2024 09:20:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14892E62C;
+	Sat, 15 Jun 2024 09:20:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718443246; cv=none; b=nApCwdwbgX67dW2JYI/QHnMzmdQw+DHsD/uXuK1dFYUzIOfdOXnZ042ivONfZ3KXTN3qzFO5CL84cgO42FvqYNNk6gmFG4QkEKULPENR4YyvgKPuasN38/CV6wfgVdk9i29gyGxx8W62bI3cywkvvcadnxgPPBdH0X4+gCDkbdw=
+	t=1718443247; cv=none; b=HIwAZUTOiFv8LBIiFAUDT1uFYItCKorM6/lU8XGcdYR6+x6Q6Woagjv2Su+c54lVuMYqyMbHqN+4npOtNA7tSaloMNZBqx2Ytp0ofLMLWUNzERlNKS706AyEdPfftpaXQlHVpjtRI9iS9SxNcdyTcDi+jsl9/vnovX/IublVy1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718443246; c=relaxed/simple;
-	bh=YovWnQCUn5/Lz+pkf0LK7nOx1JZCjeR8Saq7TlagfeY=;
+	s=arc-20240116; t=1718443247; c=relaxed/simple;
+	bh=JrKS3CyUqPxaMZBI/KWBgU6EbAGxygnzOr3+O9jwQdo=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=t2a/0iHYpDz0KjcrUc6OY+igWZa3Ek/NTTv/uTnwxz7kQ5d6Jgs83KO4WeuDX7ynE9mV0RJ4+Ipdja0KhQnadLnnE9ROVDvoFOdX3urtY2unGKvvbG5WqupEglp/9iAmMF6Y79FtVG065yLkmr6tFcf5W6q0pMuAiCIKny48EsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	 MIME-Version:Content-Type; b=MUr7m8146xzTkjswAQcfUHm/KKauYY+CxE68vEr5vZpjGNQLyL2+mrA9TVKTqQKWmw2Fn2cWK0Fot0lS/laxwwGAcHFN++f0TMxrLks4P2yw+thipziTR/MLvj6qK3K/gVVoj3vI7aOBgcEa4J9pwSEEmzG0DshscuC9Whba6DQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W1VsJ2vh5zPqv5;
-	Sat, 15 Jun 2024 17:17:08 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4W1Vvj3q5Pz1xsSb;
+	Sat, 15 Jun 2024 17:19:13 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id AD8F5140258;
-	Sat, 15 Jun 2024 17:20:36 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 1D83E140381;
+	Sat, 15 Jun 2024 17:20:38 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sat, 15 Jun 2024 17:20:35 +0800
+ 15.2.1258.34; Sat, 15 Jun 2024 17:20:36 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
@@ -35,9 +35,9 @@ CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
 	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2 3/4] perf: symbol: generalize vmlinux path searching
-Date: Sat, 15 Jun 2024 17:20:14 +0800
-Message-ID: <20240615092015.1820362-4-changbin.du@huawei.com>
+Subject: [PATCH v2 4/4] perf: symbol: try to seach vdso path if not given by user
+Date: Sat, 15 Jun 2024 17:20:15 +0800
+Message-ID: <20240615092015.1820362-5-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240615092015.1820362-1-changbin.du@huawei.com>
 References: <20240615092015.1820362-1-changbin.du@huawei.com>
@@ -52,240 +52,206 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemd100011.china.huawei.com (7.221.188.204)
 
-This generalizes the vmlinux path searching logic. Later we will add
-another instance for vdso.
+Just like vmlinux, try to search vdso in predefined path if it's not given
+by user. The searched path usually has debugging info.
 
-The search pattern is described by struct dso_filename_pattern, and the
-formatted paths are hold in struct dso_filename_paths.
+For example, the vdso can be found in
+/lib/modules/<version>/build/arch/x86/entry/vdso/vdso*.so.dbg for local
+build on x86.
 
+Cc: Adrian Hunter <adrian.hunter@intel.com>
 Signed-off-by: Changbin Du <changbin.du@huawei.com>
 ---
- tools/perf/util/machine.c |   4 +-
- tools/perf/util/symbol.c  | 112 +++++++++++++++++++++-----------------
- tools/perf/util/symbol.h  |   8 ++-
- 3 files changed, 70 insertions(+), 54 deletions(-)
+ tools/perf/builtin-annotate.c   |  1 +
+ tools/perf/builtin-kallsyms.c   |  2 ++
+ tools/perf/builtin-probe.c      |  2 ++
+ tools/perf/builtin-top.c        |  2 ++
+ tools/perf/tests/builtin-test.c |  3 ++-
+ tools/perf/util/symbol.c        | 40 +++++++++++++++++++++++++++++++++
+ tools/perf/util/symbol.h        |  1 +
+ tools/perf/util/symbol_conf.h   |  1 +
+ 8 files changed, 51 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 8477edefc299..68315520f15b 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -896,9 +896,9 @@ size_t machine__fprintf_vmlinux_path(struct machine *machine, FILE *fp)
- 			printed += fprintf(fp, "[0] %s\n", filename);
- 	}
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index ff466882065d..6c5019c39068 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -883,6 +883,7 @@ int cmd_annotate(int argc, const char **argv)
+ 		goto out_delete;
  
--	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
-+	for (i = 0; i < vmlinux_paths.nr_entries; ++i) {
- 		printed += fprintf(fp, "[%d] %s\n", i + dso__has_build_id(kdso),
--				   vmlinux_path[i]);
-+				   vmlinux_paths.paths[i]);
- 	}
- 	return printed;
- }
+ 	symbol_conf.try_vmlinux_path = true;
++	symbol_conf.try_vdso_path = true;
+ 
+ 	ret = symbol__init(&annotate.session->header.env);
+ 	if (ret < 0)
+diff --git a/tools/perf/builtin-kallsyms.c b/tools/perf/builtin-kallsyms.c
+index a3c2ffdc1af8..d049025a4959 100644
+--- a/tools/perf/builtin-kallsyms.c
++++ b/tools/perf/builtin-kallsyms.c
+@@ -63,6 +63,8 @@ int cmd_kallsyms(int argc, const char **argv)
+ 		usage_with_options(kallsyms_usage, options);
+ 
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
++	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
++				     symbol_conf.vdso_name[1] == NULL);
+ 	if (symbol__init(NULL) < 0)
+ 		return -1;
+ 
+diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
+index 003a3bcebfdf..91770eda37c0 100644
+--- a/tools/perf/builtin-probe.c
++++ b/tools/perf/builtin-probe.c
+@@ -667,6 +667,8 @@ __cmd_probe(int argc, const char **argv)
+ 	 * Only consider the user's kernel image path if given.
+ 	 */
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
++	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
++				     symbol_conf.vdso_name[1] == NULL);
+ 
+ 	/*
+ 	 * Except for --list, --del and --add, other command doesn't depend
+diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
+index a3cce4e76eb9..5a2dc7a0dbb8 100644
+--- a/tools/perf/builtin-top.c
++++ b/tools/perf/builtin-top.c
+@@ -1792,6 +1792,8 @@ int cmd_top(int argc, const char **argv)
+ 	annotation_config__init();
+ 
+ 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
++	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
++				     symbol_conf.vdso_name[1] == NULL);
+ 	status = symbol__init(NULL);
+ 	if (status < 0)
+ 		goto out_delete_evlist;
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index c3d84b67ca8e..176196e3c183 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -575,7 +575,8 @@ int cmd_test(int argc, const char **argv)
+ 
+ 	symbol_conf.priv_size = sizeof(int);
+ 	symbol_conf.try_vmlinux_path = true;
+-
++	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
++				     symbol_conf.vdso_name[1] == NULL);
+ 	if (symbol__init(NULL) < 0)
+ 		return -1;
+ 
 diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index a90c647d37e1..83e5c3807a2c 100644
+index 83e5c3807a2c..93bdaf213d1e 100644
 --- a/tools/perf/util/symbol.c
 +++ b/tools/perf/util/symbol.c
-@@ -48,8 +48,7 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
- static int dso__load_vdso_sym(struct dso *dso, struct map *map);
+@@ -49,11 +49,13 @@ static int dso__load_vdso_sym(struct dso *dso, struct map *map);
  static bool symbol__is_idle(const char *name);
  
--int vmlinux_path__nr_entries;
--char **vmlinux_path;
-+struct dso_filename_paths vmlinux_paths;
+ struct dso_filename_paths vmlinux_paths;
++struct dso_filename_paths vdso_paths;
  
  struct symbol_conf symbol_conf = {
  	.nanosecs		= false,
-@@ -2043,10 +2042,10 @@ int dso__load_vmlinux_path(struct dso *dso, struct map *map)
- 	char *filename = NULL;
+ 	.use_modules		= true,
+ 	.try_vmlinux_path	= true,
++	.try_vdso_path		= true,
+ 	.demangle		= true,
+ 	.demangle_kernel	= false,
+ 	.cumulate_callchain	= true,
+@@ -2304,6 +2306,15 @@ struct dso_filename_pattern vmlinux_patterns[] = {
+ 	{"/usr/lib/debug/boot/vmlinux-%s.debug", 1},
+ };
  
- 	pr_debug("Looking at the vmlinux_path (%d entries long)\n",
--		 vmlinux_path__nr_entries + 1);
-+		 vmlinux_paths.nr_entries + 1);
- 
--	for (i = 0; i < vmlinux_path__nr_entries; ++i) {
--		err = dso__load_vmlinux(dso, map, vmlinux_path[i], false);
-+	for (i = 0; i < vmlinux_paths.nr_entries; ++i) {
-+		err = dso__load_vmlinux(dso, map, vmlinux_paths.paths[i], false);
- 		if (err > 0)
- 			goto out;
- 	}
-@@ -2210,7 +2209,7 @@ static int dso__load_kernel_sym(struct dso *dso, struct map *map)
- 			return err;
- 	}
- 
--	if (!symbol_conf.ignore_vmlinux && vmlinux_path != NULL) {
-+	if (!symbol_conf.ignore_vmlinux && vmlinux_paths.paths != NULL) {
- 		err = dso__load_vmlinux_path(dso, map);
- 		if (err > 0)
- 			return err;
-@@ -2285,57 +2284,55 @@ static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map)
++struct dso_filename_pattern vdso_patterns[] = {
++	{"/lib/modules/%s/vdso/vdso64.so", 1},
++	{"/lib/modules/%s/vdso/vdso32.so", 1},
++	{"/lib/modules/%s/build/arch/%s/entry/vdso/vdso32.so.dbg", 2},
++	{"/lib/modules/%s/build/arch/%s/entry/vdso/vdso64.so.dbg", 2},
++	{"/lib/modules/%s/build/arch/%s/kernel/vdso/vdso.so.dbg", 2},
++	{"/lib/modules/%s/build/arch/%s/vdso/vdso.so.dbg", 2},
++};
++
+ static int dso_filename_path__add(struct dso_filename_paths *paths, const char *new_entry)
+ {
+ 	paths->paths[paths->nr_entries] = strdup(new_entry);
+@@ -2418,6 +2429,22 @@ static int dso__load_vdso(struct dso *dso, struct map *map,
  	return err;
  }
  
--static void vmlinux_path__exit(void)
--{
--	while (--vmlinux_path__nr_entries >= 0)
--		zfree(&vmlinux_path[vmlinux_path__nr_entries]);
--	vmlinux_path__nr_entries = 0;
--
--	zfree(&vmlinux_path);
--}
--
--static const char * const vmlinux_paths[] = {
--	"vmlinux",
--	"/boot/vmlinux"
-+struct dso_filename_pattern {
-+	const char *pattern;
-+	/*
-+	 * 0 for matching directly,
-+	 * 1 for matching by kernel_version,
-+	 * 2 for matching by kernel_version + arch.
-+	 */
-+	int match_type;
- };
- 
--static const char * const vmlinux_paths_upd[] = {
--	"/boot/vmlinux-%s",
--	"/usr/lib/debug/boot/vmlinux-%s",
--	"/lib/modules/%s/build/vmlinux",
--	"/usr/lib/debug/lib/modules/%s/vmlinux",
--	"/usr/lib/debug/boot/vmlinux-%s.debug"
-+struct dso_filename_pattern vmlinux_patterns[] = {
-+	{"vmlinux", 0},
-+	{"/boot/vmlinux", 0},
-+	{"/boot/vmlinux-%s", 1},
-+	{"/usr/lib/debug/boot/vmlinux-%s", 1},
-+	{"/lib/modules/%s/build/vmlinux", 1},
-+	{"/usr/lib/debug/lib/modules/%s/vmlinux", 1},
-+	{"/usr/lib/debug/boot/vmlinux-%s.debug", 1},
- };
- 
--static int vmlinux_path__add(const char *new_entry)
-+static int dso_filename_path__add(struct dso_filename_paths *paths, const char *new_entry)
- {
--	vmlinux_path[vmlinux_path__nr_entries] = strdup(new_entry);
--	if (vmlinux_path[vmlinux_path__nr_entries] == NULL)
-+	paths->paths[paths->nr_entries] = strdup(new_entry);
-+	if (paths->paths[paths->nr_entries] == NULL)
- 		return -1;
--	++vmlinux_path__nr_entries;
-+	++paths->nr_entries;
- 
- 	return 0;
- }
- 
--static int vmlinux_path__init(struct perf_env *env)
-+static void dso_filename_path__exit(struct dso_filename_paths *paths)
- {
--	struct utsname uts;
--	char bf[PATH_MAX];
--	char *kernel_version;
--	unsigned int i;
-+	while (--paths->nr_entries >= 0)
-+		zfree(&paths->paths[paths->nr_entries]);
-+	paths->nr_entries = 0;
- 
--	vmlinux_path = malloc(sizeof(char *) * (ARRAY_SIZE(vmlinux_paths) +
--			      ARRAY_SIZE(vmlinux_paths_upd)));
--	if (vmlinux_path == NULL)
--		return -1;
--
--	for (i = 0; i < ARRAY_SIZE(vmlinux_paths); i++)
--		if (vmlinux_path__add(vmlinux_paths[i]) < 0)
--			goto out_fail;
-+	zfree(&paths->paths);
-+}
- 
--	/* only try kernel version if no symfs was given */
--	if (symbol_conf.symfs[0] != 0)
--		return 0;
-+static int dso_filename_path__init(struct dso_filename_paths *paths,
-+				   struct dso_filename_pattern *patterns,
-+				   int nr_patterns,
-+				   struct perf_env *env)
++static int dso__load_vdso_path(struct dso *dso, struct map *map)
 +{
-+	struct utsname uts;
-+	char bf[PATH_MAX];
-+	const char *kernel_version;
-+	const char *arch = perf_env__arch(env);
-+	int i;
- 
- 	if (env) {
- 		kernel_version = env->os_release;
-@@ -2346,16 +2343,28 @@ static int vmlinux_path__init(struct perf_env *env)
- 		kernel_version = uts.release;
- 	}
- 
--	for (i = 0; i < ARRAY_SIZE(vmlinux_paths_upd); i++) {
--		snprintf(bf, sizeof(bf), vmlinux_paths_upd[i], kernel_version);
--		if (vmlinux_path__add(bf) < 0)
-+	paths->paths = malloc(sizeof(char *) * nr_patterns);
-+	if (paths->paths == NULL)
-+		return -1;
++	int i, ret = 0;
 +
-+	for (i = 0; i < nr_patterns; i++) {
-+		if (patterns[i].match_type == 0)
-+			strlcpy(bf, patterns[i].pattern, sizeof(bf));
-+		else if (symbol_conf.symfs[0] == 0) {
-+			/* only try kernel version if no symfs was given */
-+			if (patterns[i].match_type == 1)
-+				snprintf(bf, sizeof(bf), patterns[i].pattern, kernel_version);
-+			else if (patterns[i].match_type == 2)
-+				snprintf(bf, sizeof(bf), patterns[i].pattern, kernel_version, arch);
-+		}
-+		if (dso_filename_path__add(paths, bf) < 0)
- 			goto out_fail;
++	pr_debug("Looking at the vdso_path (%d entries long)\n",
++		 vdso_paths.nr_entries + 1);
++
++	for (i = 0; i < vdso_paths.nr_entries; ++i) {
++		ret = dso__load_vdso(dso, map, vdso_paths.paths[i]);
++		if (ret > 0)
++			return ret;
++	}
++
++	return ret;
++}
++
+ static int dso__load_vdso_sym(struct dso *dso, struct map *map)
+ {
+ 	int ret;
+@@ -2433,6 +2460,12 @@ static int dso__load_vdso_sym(struct dso *dso, struct map *map)
+ 		}
  	}
  
- 	return 0;
- 
- out_fail:
--	vmlinux_path__exit();
-+	dso_filename_path__exit(paths);
++	if (vdso_paths.paths != NULL) {
++		ret = dso__load_vdso_path(dso, map);
++		if (ret > 0)
++			return ret;
++	}
++
  	return -1;
  }
  
-@@ -2551,8 +2560,11 @@ int symbol__init(struct perf_env *env)
- 
- 	symbol__elf_init();
- 
--	if (symbol_conf.try_vmlinux_path && vmlinux_path__init(env) < 0)
-+	if (symbol_conf.try_vmlinux_path &&
-+	    dso_filename_path__init(&vmlinux_paths, vmlinux_patterns,
-+				    ARRAY_SIZE(vmlinux_patterns), env) < 0) {
+@@ -2566,6 +2599,12 @@ int symbol__init(struct perf_env *env)
  		return -1;
-+	}
+ 	}
  
++	if (symbol_conf.try_vdso_path &&
++	    dso_filename_path__init(&vdso_paths, vdso_patterns,
++				    ARRAY_SIZE(vdso_patterns), env) < 0) {
++		return -1;
++	}
++
  	if (symbol_conf.field_sep && *symbol_conf.field_sep == '.') {
  		pr_err("'.' is the only non valid --field-separator argument\n");
-@@ -2629,7 +2641,7 @@ void symbol__exit(void)
- 	intlist__delete(symbol_conf.tid_list);
+ 		return -1;
+@@ -2642,6 +2681,7 @@ void symbol__exit(void)
  	intlist__delete(symbol_conf.pid_list);
  	intlist__delete(symbol_conf.addr_list);
--	vmlinux_path__exit();
-+	dso_filename_path__exit(&vmlinux_paths);
+ 	dso_filename_path__exit(&vmlinux_paths);
++	dso_filename_path__exit(&vdso_paths);
  	symbol_conf.sym_list = symbol_conf.dso_list = symbol_conf.comm_list = NULL;
  	symbol_conf.bt_stop_list = NULL;
  	symbol_conf.initialized = false;
 diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 3fb5d146d9b1..30056884945b 100644
+index 30056884945b..08c339594d4e 100644
 --- a/tools/perf/util/symbol.h
 +++ b/tools/perf/util/symbol.h
-@@ -101,8 +101,12 @@ static inline int __symbol__join_symfs(char *bf, size_t size, const char *path)
+@@ -107,6 +107,7 @@ struct dso_filename_paths {
+ };
  
- #define symbol__join_symfs(bf, path) __symbol__join_symfs(bf, sizeof(bf), path)
- 
--extern int vmlinux_path__nr_entries;
--extern char **vmlinux_path;
-+struct dso_filename_paths {
-+	int nr_entries;
-+	char **paths;
-+};
-+
-+extern struct dso_filename_paths vmlinux_paths;
+ extern struct dso_filename_paths vmlinux_paths;
++extern struct dso_filename_paths vdso_paths;
  
  static inline void *symbol__priv(struct symbol *sym)
  {
+diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
+index 108356e3c981..58c4c4358ece 100644
+--- a/tools/perf/util/symbol_conf.h
++++ b/tools/perf/util/symbol_conf.h
+@@ -12,6 +12,7 @@ struct symbol_conf {
+ 	bool		nanosecs;
+ 	unsigned short	priv_size;
+ 	bool		try_vmlinux_path,
++			try_vdso_path,
+ 			init_annotation,
+ 			force,
+ 			ignore_vmlinux,
 -- 
 2.34.1
 
