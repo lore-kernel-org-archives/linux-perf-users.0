@@ -1,257 +1,159 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from mailrelay.tugraz.at (mailrelay.tugraz.at [129.27.2.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14892E62C;
-	Sat, 15 Jun 2024 09:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411F41DFED;
+	Sat, 15 Jun 2024 16:21:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=129.27.2.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718443247; cv=none; b=HIwAZUTOiFv8LBIiFAUDT1uFYItCKorM6/lU8XGcdYR6+x6Q6Woagjv2Su+c54lVuMYqyMbHqN+4npOtNA7tSaloMNZBqx2Ytp0ofLMLWUNzERlNKS706AyEdPfftpaXQlHVpjtRI9iS9SxNcdyTcDi+jsl9/vnovX/IublVy1o=
+	t=1718468470; cv=none; b=PdIHYTWLDOEUEMrFJO0TW8TnJ5mA0L1L567ZsK4d/yXaGXjbcfaiS31i4Sgy5gmj+havklJW9LiWZL539zT2Yj40bzRdjOi4XGigPZ4lL3Nz6iHxsdNQrZl04N+jnZMZfjp8N6jPttBZN0A0tplpdCzxv5DZAg/qovaG1m6baQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718443247; c=relaxed/simple;
-	bh=JrKS3CyUqPxaMZBI/KWBgU6EbAGxygnzOr3+O9jwQdo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MUr7m8146xzTkjswAQcfUHm/KKauYY+CxE68vEr5vZpjGNQLyL2+mrA9TVKTqQKWmw2Fn2cWK0Fot0lS/laxwwGAcHFN++f0TMxrLks4P2yw+thipziTR/MLvj6qK3K/gVVoj3vI7aOBgcEa4J9pwSEEmzG0DshscuC9Whba6DQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4W1Vvj3q5Pz1xsSb;
-	Sat, 15 Jun 2024 17:19:13 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1D83E140381;
-	Sat, 15 Jun 2024 17:20:38 +0800 (CST)
-Received: from M910t.huawei.com (10.110.54.157) by
- kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Sat, 15 Jun 2024 17:20:36 +0800
-From: Changbin Du <changbin.du@huawei.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
- Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
- Kan" <kan.liang@linux.intel.com>, Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
-Subject: [PATCH v2 4/4] perf: symbol: try to seach vdso path if not given by user
-Date: Sat, 15 Jun 2024 17:20:15 +0800
-Message-ID: <20240615092015.1820362-5-changbin.du@huawei.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240615092015.1820362-1-changbin.du@huawei.com>
-References: <20240615092015.1820362-1-changbin.du@huawei.com>
+	s=arc-20240116; t=1718468470; c=relaxed/simple;
+	bh=/6ch+qcDo2MnkoBjVji3kQHm7RQTr+qczYnFfSjaNGI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=nABw1rw8rLHatipeFN5FcFY8F9bA/8RcidapYuHeRtB1m/B4bB7AYwhyYmKK3OdsrIdMD3upEQWznGaHE8CQAwdcsqD/c/ZULLX8sH62wYEBVfe3UxQfrb12UJ/9t+fGZyFYlCh7f2bgTFLA5BZAZs/Mfe79XrZySULJJG3c/X4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at; spf=pass smtp.mailfrom=tugraz.at; dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b=JcExtjxI; arc=none smtp.client-ip=129.27.2.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tugraz.at
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=tugraz.at header.i=@tugraz.at header.b="JcExtjxI"
+Received: from vra-174-141.tugraz.at (vra-174-141.tugraz.at [129.27.174.141])
+	by mailrelay.tugraz.at (Postfix) with ESMTPSA id 4W1h0h32dlz3wV6;
+	Sat, 15 Jun 2024 18:09:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tugraz.at;
+	s=mailrelay; t=1718467750;
+	bh=Igjx9GfiOHGZFSH3MO+mk+/P1QADm/jiDsEmEwOLM6A=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=JcExtjxIcH4p61MtHvpDIteBnwfOz51tS8q5VDIYZI+NpJKKdBykTD9MF+auMH0gv
+	 nRpGkZ8wiqt21vJ92fMlv2TD3fQC7DD0VpoTzbPNocoCPNvnvWiCaaMcQRcSwRThCk
+	 mT/+fqYdLYEQgJHJizSid5Nle80AsJ519MKqmu88=
+Message-ID: <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+From: Martin Uecker <uecker@tugraz.at>
+To: Peter Zijlstra <peterz@infradead.org>, Kees Cook <kees@kernel.org>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+  Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+ <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander
+ Shishkin <alexander.shishkin@linux.intel.com>,  Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, Adrian Hunter
+ <adrian.hunter@intel.com>,  "Liang, Kan" <kan.liang@linux.intel.com>,
+ Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>,  Dave
+ Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>, Nathan Chancellor
+ <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Bill
+ Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>,  Matthew Wilcox
+ <mawilcox@microsoft.com>, x86@kernel.org, linux-perf-users@vger.kernel.org,
+  linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+ llvm@lists.linux.dev
+Date: Sat, 15 Jun 2024 18:09:07 +0200
+In-Reply-To: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+References: 
+	<AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+	 <202406101010.E1C77AE9D@keescook>
+	 <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+	 <202406101438.BC43514F@keescook>
+	 <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+	 <202406121148.688240B@keescook>
+	 <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+	 <202406121530.D9DB956C8@keescook>
+	 <20240614101708.GO8774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd100011.china.huawei.com (7.221.188.204)
+X-TUG-Backscatter-control: G/VXY7/6zeyuAY/PU2/0qw
+X-Spam-Scanner: SpamAssassin 3.003001 
+X-Spam-Score-relay: -1.9
+X-Scanned-By: MIMEDefang 2.74 on 129.27.10.117
 
-Just like vmlinux, try to search vdso in predefined path if it's not given
-by user. The searched path usually has debugging info.
+Am Freitag, dem 14.06.2024 um 12:17 +0200 schrieb Peter Zijlstra:
+> On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
+> > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
+> > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
+> > > > I'm happy to take patches. And for this bikeshed, this would be bet=
+ter
+> > > > named under the size_*() helpers which are trying to keep size_t
+> > > > calculations from overflowing (by saturating). i.e.:
+> > > >=20
+> > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
+> > >=20
+> > > Fine I suppose, but what if we want something not size_t? Are we wait=
+ing
+> > > for the type system extension?
+> >=20
+> > Because of C's implicit promotion/truncation, we can't do anything
+> > sanely with return values of arbitrary type size; we have to capture th=
+e
+> > lvalue type somehow so the checking can happen without C doing silent
+> > garbage.
 
-For example, the vdso can be found in
-/lib/modules/<version>/build/arch/x86/entry/vdso/vdso*.so.dbg for local
-build on x86.
+What is the specific problem here?
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Changbin Du <changbin.du@huawei.com>
----
- tools/perf/builtin-annotate.c   |  1 +
- tools/perf/builtin-kallsyms.c   |  2 ++
- tools/perf/builtin-probe.c      |  2 ++
- tools/perf/builtin-top.c        |  2 ++
- tools/perf/tests/builtin-test.c |  3 ++-
- tools/perf/util/symbol.c        | 40 +++++++++++++++++++++++++++++++++
- tools/perf/util/symbol.h        |  1 +
- tools/perf/util/symbol_conf.h   |  1 +
- 8 files changed, 51 insertions(+), 1 deletion(-)
+>=20
+> So sizeof() returns the native (built-in) size_t, right? If that type
+> the nooverflow qualifier on, then:
+>=20
+> 	sizeof(*p) + num*sizeof(p->foo[0])
+>=20
+> should all get the nooverflow semantics right? Because size_t is
+> effectively 'nooverflow unsigned long' the multiplication should promote
+> 'num' to some 'long'.
+>=20
+> Now, I've re-read the rules and I don't see qualifiers mentioned, so
+> can't we state that the overflow/nooverflow qualifiers are to be
+> preserved on (implicit) promotion and when nooverflow and overflow are
+> combined the 'safe' nooverflow takes precedence?
+>=20
+> I mean, when we're adding qualifiers we can make up rules about them
+> too, right?
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index ff466882065d..6c5019c39068 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -883,6 +883,7 @@ int cmd_annotate(int argc, const char **argv)
- 		goto out_delete;
- 
- 	symbol_conf.try_vmlinux_path = true;
-+	symbol_conf.try_vdso_path = true;
- 
- 	ret = symbol__init(&annotate.session->header.env);
- 	if (ret < 0)
-diff --git a/tools/perf/builtin-kallsyms.c b/tools/perf/builtin-kallsyms.c
-index a3c2ffdc1af8..d049025a4959 100644
---- a/tools/perf/builtin-kallsyms.c
-+++ b/tools/perf/builtin-kallsyms.c
-@@ -63,6 +63,8 @@ int cmd_kallsyms(int argc, const char **argv)
- 		usage_with_options(kallsyms_usage, options);
- 
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
-+	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
-+				     symbol_conf.vdso_name[1] == NULL);
- 	if (symbol__init(NULL) < 0)
- 		return -1;
- 
-diff --git a/tools/perf/builtin-probe.c b/tools/perf/builtin-probe.c
-index 003a3bcebfdf..91770eda37c0 100644
---- a/tools/perf/builtin-probe.c
-+++ b/tools/perf/builtin-probe.c
-@@ -667,6 +667,8 @@ __cmd_probe(int argc, const char **argv)
- 	 * Only consider the user's kernel image path if given.
- 	 */
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
-+	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
-+				     symbol_conf.vdso_name[1] == NULL);
- 
- 	/*
- 	 * Except for --list, --del and --add, other command doesn't depend
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index a3cce4e76eb9..5a2dc7a0dbb8 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1792,6 +1792,8 @@ int cmd_top(int argc, const char **argv)
- 	annotation_config__init();
- 
- 	symbol_conf.try_vmlinux_path = (symbol_conf.vmlinux_name == NULL);
-+	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
-+				     symbol_conf.vdso_name[1] == NULL);
- 	status = symbol__init(NULL);
- 	if (status < 0)
- 		goto out_delete_evlist;
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c3d84b67ca8e..176196e3c183 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -575,7 +575,8 @@ int cmd_test(int argc, const char **argv)
- 
- 	symbol_conf.priv_size = sizeof(int);
- 	symbol_conf.try_vmlinux_path = true;
--
-+	symbol_conf.try_vdso_path = (symbol_conf.vdso_name[0] == NULL &&
-+				     symbol_conf.vdso_name[1] == NULL);
- 	if (symbol__init(NULL) < 0)
- 		return -1;
- 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 83e5c3807a2c..93bdaf213d1e 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -49,11 +49,13 @@ static int dso__load_vdso_sym(struct dso *dso, struct map *map);
- static bool symbol__is_idle(const char *name);
- 
- struct dso_filename_paths vmlinux_paths;
-+struct dso_filename_paths vdso_paths;
- 
- struct symbol_conf symbol_conf = {
- 	.nanosecs		= false,
- 	.use_modules		= true,
- 	.try_vmlinux_path	= true,
-+	.try_vdso_path		= true,
- 	.demangle		= true,
- 	.demangle_kernel	= false,
- 	.cumulate_callchain	= true,
-@@ -2304,6 +2306,15 @@ struct dso_filename_pattern vmlinux_patterns[] = {
- 	{"/usr/lib/debug/boot/vmlinux-%s.debug", 1},
- };
- 
-+struct dso_filename_pattern vdso_patterns[] = {
-+	{"/lib/modules/%s/vdso/vdso64.so", 1},
-+	{"/lib/modules/%s/vdso/vdso32.so", 1},
-+	{"/lib/modules/%s/build/arch/%s/entry/vdso/vdso32.so.dbg", 2},
-+	{"/lib/modules/%s/build/arch/%s/entry/vdso/vdso64.so.dbg", 2},
-+	{"/lib/modules/%s/build/arch/%s/kernel/vdso/vdso.so.dbg", 2},
-+	{"/lib/modules/%s/build/arch/%s/vdso/vdso.so.dbg", 2},
-+};
-+
- static int dso_filename_path__add(struct dso_filename_paths *paths, const char *new_entry)
- {
- 	paths->paths[paths->nr_entries] = strdup(new_entry);
-@@ -2418,6 +2429,22 @@ static int dso__load_vdso(struct dso *dso, struct map *map,
- 	return err;
- }
- 
-+static int dso__load_vdso_path(struct dso *dso, struct map *map)
-+{
-+	int i, ret = 0;
-+
-+	pr_debug("Looking at the vdso_path (%d entries long)\n",
-+		 vdso_paths.nr_entries + 1);
-+
-+	for (i = 0; i < vdso_paths.nr_entries; ++i) {
-+		ret = dso__load_vdso(dso, map, vdso_paths.paths[i]);
-+		if (ret > 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+}
-+
- static int dso__load_vdso_sym(struct dso *dso, struct map *map)
- {
- 	int ret;
-@@ -2433,6 +2460,12 @@ static int dso__load_vdso_sym(struct dso *dso, struct map *map)
- 		}
- 	}
- 
-+	if (vdso_paths.paths != NULL) {
-+		ret = dso__load_vdso_path(dso, map);
-+		if (ret > 0)
-+			return ret;
-+	}
-+
- 	return -1;
- }
- 
-@@ -2566,6 +2599,12 @@ int symbol__init(struct perf_env *env)
- 		return -1;
- 	}
- 
-+	if (symbol_conf.try_vdso_path &&
-+	    dso_filename_path__init(&vdso_paths, vdso_patterns,
-+				    ARRAY_SIZE(vdso_patterns), env) < 0) {
-+		return -1;
-+	}
-+
- 	if (symbol_conf.field_sep && *symbol_conf.field_sep == '.') {
- 		pr_err("'.' is the only non valid --field-separator argument\n");
- 		return -1;
-@@ -2642,6 +2681,7 @@ void symbol__exit(void)
- 	intlist__delete(symbol_conf.pid_list);
- 	intlist__delete(symbol_conf.addr_list);
- 	dso_filename_path__exit(&vmlinux_paths);
-+	dso_filename_path__exit(&vdso_paths);
- 	symbol_conf.sym_list = symbol_conf.dso_list = symbol_conf.comm_list = NULL;
- 	symbol_conf.bt_stop_list = NULL;
- 	symbol_conf.initialized = false;
-diff --git a/tools/perf/util/symbol.h b/tools/perf/util/symbol.h
-index 30056884945b..08c339594d4e 100644
---- a/tools/perf/util/symbol.h
-+++ b/tools/perf/util/symbol.h
-@@ -107,6 +107,7 @@ struct dso_filename_paths {
- };
- 
- extern struct dso_filename_paths vmlinux_paths;
-+extern struct dso_filename_paths vdso_paths;
- 
- static inline void *symbol__priv(struct symbol *sym)
- {
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 108356e3c981..58c4c4358ece 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -12,6 +12,7 @@ struct symbol_conf {
- 	bool		nanosecs;
- 	unsigned short	priv_size;
- 	bool		try_vmlinux_path,
-+			try_vdso_path,
- 			init_annotation,
- 			force,
- 			ignore_vmlinux,
--- 
-2.34.1
+It should probably be a type attribute.
+
+>=20
+> If 'people' don't want to adorn the built-in size_t, we can always do
+> something like:
+>=20
+> #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
+>=20
+> and 'fix' it ourselves.
+
+This is likely a stupid question, but making it signed=C2=A0
+wouldn't work?   Or is a signed size_t too small=C2=A0=C2=A0
+or some architectures? Or would this change break too much?
+
+
+Martin
+
+>=20
+> > > But none of that is showing me generated asm for the various cases. A=
+s
+> > > such, I don't consider myself informed enough.
+> >=20
+> > Gotcha. For the compile-time stuff it's all just looking at
+> > known-at-compile-time sizes. So for something like this, we get a
+> > __compiletime_warning() emitted:
+> >=20
+> > 	const char src[] =3D "Hello there";
+> > 	char dst[10];
+> >=20
+> > 	strscpy(dst, src); /* Compiler yells since src is bigger than dst. */
+> >=20
+> > For run-time checks it's basically just using the regular WARN()
+> > infrastructure with __builtin_dynamic_object_size(). Here's a simplifie=
+d
+> > userspace example with assert():
+> >=20
+> > https://godbolt.org/z/zMrKnMxn5
+> >=20
+> > The kernel's FORTIFY_SOURCE is much more complex in how it does the
+> > checking, how it does the reporting (for helping people figure out what=
+'s
+> > gone weird), etc.
+>=20
+> Thanks, I'll go have a look at that.
 
