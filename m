@@ -1,55 +1,55 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 706C2C153;
-	Sat, 15 Jun 2024 01:53:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 676058C0B;
+	Sat, 15 Jun 2024 03:27:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718416426; cv=none; b=a2aly9Rqg5rU9NQ0Q2OVnnTTGrrKN1g2JFpas1gKU3wfc7dZYGS1uxYY4d+nbK2P7fs49ByrqWlapqmH+84BorX2g68wfPcoeKDxq+RgRM9+A+5WeNA/F5aoKwi6LaQxnDqn5Rgb5CJlUIG97Wa+DLTagvPgtZwkLAYkg94NRoc=
+	t=1718422078; cv=none; b=NxleycU4uJYq/iNf4J3EDs4EkPrWBuREWAG5jp5TrUZPdcgP1jpreLjQLqh0W6Xscs7HWQEEhskqYZqYnHtAukR0u/RmzDWqHbxb5IkFZX+PxeaOj70lvt9TS3gjavERL09IpPyYDPl27OaJiiyKteCx56rVuAqK9T1nyAklTbs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718416426; c=relaxed/simple;
-	bh=qY19UZhPA2bTp4GBh41w50lOAkvM+FXG8RAsmb/Nv/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GfzFaVcCjxFPUcVnze0QKQ6dqt7nDGo7g19YEbi6vkwk0dmArU041wiRZgx39f91AW/l0v35VkN5uPrW5Vu9aMhhWDgxmH8RDc58bE/VcVALXgm9bAcZldGNnG7M6LlBDcxzHXKgeMrqgH0g/Tj4boIT7+gr3vzfwOyxdJ7qaO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=g+GeYPp8; arc=none smtp.client-ip=209.85.214.177
+	s=arc-20240116; t=1718422078; c=relaxed/simple;
+	bh=eUnYZ6dsq24ODgZVgABMAhd0T6ohsMkbjPbqYMPO6AA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HX+luiSxfLrQ4vjpQnvrW0Q3yCfwUi856JGYupA2ERLHteYNPEdsVq1vJlbNEo9YXiUxhAXSQJwcDlQU1cUfTyo2zomSu8AO6zU6w5dFpx46Ik0Wytow2SUAmF0Q0nuFEzXavHEW9ZH85Cd/5DAX1AmAHHB2Vx/S9IJYvqdw6c4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xd49wXFL; arc=none smtp.client-ip=209.85.210.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+GeYPp8"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f44b45d6abso21666915ad.0;
-        Fri, 14 Jun 2024 18:53:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xd49wXFL"
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6f8d0a1e500so1844684a34.3;
+        Fri, 14 Jun 2024 20:27:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718416424; x=1719021224; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718422075; x=1719026875; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5t3lCO/aliWaX3lRu3qs/sWr5aScOQ+/zbL8ye5TNf0=;
-        b=g+GeYPp8heHpjQXKwW61qst1z9ORgUVsbJPNqgvqV+I2/AP/zQbwU/AHQx+ZW/2HWh
-         gAtX/9HhxAZHHHwIVy0+vLcz22PDvr/wnUs4xLyfnZ3MaNT2DYeIAmk1ptIkpT7uc/dz
-         bCyAC60jmF4VKOvrWmEeXamAc4rMI6js8oy8lhPZqiLW8Jp/R7f7BBE+ZP3eSUeGvybE
-         2Lb80jxkW2L06Pbig9f+cYJF6ej21izJ20uy+QyjHJUdVniQ54TAiegvsXKhHNm/8mvX
-         PA+8ki0Okwh4cs5JxI36e2SJya0I5X10OHpToNk54PEXI5drtJjndIRLFb6aLSKaKlDQ
-         nPaQ==
+        bh=ZaRZNxrV1NEonmvgnByb6dIvOd8uaxHy8naR0k2YNoo=;
+        b=Xd49wXFLrB08DzQRj5MQcWfxtXK6nlBuC5m9kVW0K8EoabEdeftx6tYGROO0ZQc6NY
+         1GBhQ14C4opRS7blB1ioTddrtlW01GrSmWh36tJ+4zwxlY6DC4r4a9gz+uTXVV3nI7xw
+         mnZY/u/wOR2dfGTFwBh34dZy5ZKaCW0Gbo6QREsLC2b6nwZf1Gu7ysUrtXu1CJ4p6uS9
+         iFiW53rugsY9z+CIQ7LrUHjQT1O/mpo6IHJtQFlab9jE/W2f12Jcl7WINwAMdiYGnzFS
+         AwkldEWsI2k9S0gIkS4MC0VqS1fXcaFSOuHgQW81O/M7Ci6yN9erBDM4YAkrANNU1DDo
+         m0XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718416424; x=1719021224;
+        d=1e100.net; s=20230601; t=1718422075; x=1719026875;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5t3lCO/aliWaX3lRu3qs/sWr5aScOQ+/zbL8ye5TNf0=;
-        b=YeOj7tjAP7rbpisfpa6VPZkRISjvH5TaCV0VtIBdqnyap9KKjO/OaiXTe587YRqnu8
-         KIc4UB/18CqYQlFKcIXDSqnwexo2DFxOu6R08zb9QVu0Hi9z+XUr3wm3x+DzbUimEHKu
-         33RsHbvphAvBdaSibyp2yWAp1d1DS25gNJhdW3q2gO0ItZ8Tuc3teijoJ46EeGCo6+lK
-         jS6Jg8arXhkcBHOlTrGuQRyLaGhXtmGtAUZQjwJfmRedw10E1t3+nTn4/UEzVB1gHKRE
-         uWl9pm23Tt2xcp0DYqkztfuDDJ98S5HrYhyBcPlVntFCNYO+AKMlesUm1kHmnuKTuN9/
-         cKSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVm458OmTMy//84nm0iF1pqiM+bqW8nx4FEpUN+pt+ny3PV2sKgsvHBsEBdA0/wkm/CiejCpaPzOVU4NU9VjkdCJECqypgli/GGUnPoeqsYoOSLESuvkiwcnIC+PC7RTN+6BPqeIMX7q3rd/UFg4kYt+cizN5TGrOKMY1QnSmBHwq6wbiz4XisHwUdlRo2LNUlKK6hnRmKCE/kRRZjGxaQmiRiO+cVPz7BFoA==
-X-Gm-Message-State: AOJu0YzNZ5t6gnwH7bIlj2WTnkx8oXMIKaB0DOG21GU/PycFW37Kxo1f
-	+FTXotDbY8DdSB3rH5AEMGrm+yJAqUkpkaY8nCPaMuGyEFQm3GCmVSq1/oKGlPeZww==
-X-Google-Smtp-Source: AGHT+IHRBbU6N6tCxc5X6jt7eouN1BMNkyvMjIA8uDYP9C5/s5KJmmEGEm9PBXbexO0lAvnO9EFq/A==
-X-Received: by 2002:a17:902:eb82:b0:1f7:90e:6d47 with SMTP id d9443c01a7336-1f8625cf286mr44852325ad.25.1718416423470;
-        Fri, 14 Jun 2024 18:53:43 -0700 (PDT)
+        bh=ZaRZNxrV1NEonmvgnByb6dIvOd8uaxHy8naR0k2YNoo=;
+        b=oisAeP8r1pcUsKpKK5OH3R6PoBwheRIBCVK3LQf5A36T5oOnmtwO9r4aZFek0cXXyP
+         oicofO4LZf6z7YZuHyKJDTeqDTkkW7ur9fHtmeNkgYjkQDgd5Fplv7jn0LeCHIVzqD4t
+         Rn2jEvdb466NhHeRpdhKhQWcAy77dQUq1TDLVBi7/DSvJ0renUw8wewhNrQH/JP9AZbU
+         GuL84Gv9ItCZP02fubg4fzEy2sUyTJzlgvRK5C0csgXeQm1aWpZuXI3Kj8ZAG3MOv9SS
+         SMmRSSUf/Iy2JL9McZSk4DrhvEtxnMzVAD/sdLYsa2acsf8pRVLWt5AfCD2GkpG0+NZJ
+         QlCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZ4oQtLp3ozP0d4G7J4y5V1QkCUsVw6PGOiNv+nrHgM9olr1+NW919bnBFfHUgT3t7jPvHuMD+mfemAwKANI0PwCY15pbDHAFKGLW4KEFJwye8ITW3syHYRsUN1La2z3y4LaJAOxTfkdGEEtqyEw==
+X-Gm-Message-State: AOJu0Yxpk/3pE22OJo3c810aacnYrQ+1Yo5X0HQw3kU7A3ZP6N1zq1uR
+	dZjfwF06NNdke4O480MNjiismAe4IwtIT3YGNGTixEozfwAYX6rF
+X-Google-Smtp-Source: AGHT+IFsnLdoXbO34kMVgxxuXZLphOIhvoAB7ZLKrThC9O+As2iZcq6+/KeZyudSSvR8XydooAGwWw==
+X-Received: by 2002:a05:6870:612c:b0:254:9433:c88 with SMTP id 586e51a60fabf-2584293535amr4964969fac.27.1718422075150;
+        Fri, 14 Jun 2024 20:27:55 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.105])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55e5fsm39246745ad.59.2024.06.14.18.53.39
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cc96868dsm3792193b3a.65.2024.06.14.20.27.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jun 2024 18:53:43 -0700 (PDT)
+        Fri, 14 Jun 2024 20:27:54 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: peterz@infradead.org
 Cc: mingo@redhat.com,
@@ -61,15 +61,11 @@ Cc: mingo@redhat.com,
 	irogers@google.com,
 	adrian.hunter@intel.com,
 	kan.liang@linux.intel.com,
-	mic@digikod.net,
-	gnoack@google.com,
 	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: [PATCH v1] perf trace: Augment enum syscall arguments with BTF
-Date: Sat, 15 Jun 2024 09:54:00 +0800
-Message-ID: <20240615015400.1889540-1-howardchu95@gmail.com>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] perf trace: Augment non-syscall tracepoints with enum arguments with BTF
+Date: Sat, 15 Jun 2024 11:27:43 +0800
+Message-ID: <20240615032743.112750-1-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -79,67 +75,152 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This is a feature implemented on the basis of the previous bug fix
-https://lore.kernel.org/linux-perf-users/d18a9606-ac9f-4ca7-afaf-fcf4c951cb90@web.de/T/#t
+Before:
 
-In this patch, BTF is used to turn enum value to the corresponding
-enum variable name. There is only one system call that uses enum value
-as its argument, that is `landlock_add_rule()`.
+perf $ ./perf trace -e timer:hrtimer_start --max-events=1
+     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466c25f18, function: 0xffffffff89da5be0, expires: 377432432256753, softexpires: 377432432256753, mode: 10)
 
-The vmlinux btf is loaded lazily, when user decided to trace the
-`landlock_add_rule` syscall. But if one decides to run `perf trace`
-without any arguments, the behaviour is to trace `landlock_add_rule`,
-so vmlinux btf will be loaded by default.
+After:
 
-before:
+perf $ ./perf trace -e timer:hrtimer_start --max-events=1
+     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 4382442895089, softexpires: 4382442895089, mode: HRTIMER_MODE_ABS_PINNED_HARD)
 
-```
-perf $ ./perf trace -e landlock_add_rule
-     0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: 2)                                       = -1 EBADFD (File descriptor in bad state)
-     0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: 1)                                       = -1 EBADFD (File descriptor in bad state)
-```
+in which HRTIMER_MODE_ABS_PINNED_HARD is:
 
-after:
+perf $ pahole hrtimer_mode
+enum hrtimer_mode {
+        HRTIMER_MODE_ABS             = 0,
+        HRTIMER_MODE_REL             = 1,
+        HRTIMER_MODE_PINNED          = 2,
+        HRTIMER_MODE_SOFT            = 4,
+        HRTIMER_MODE_HARD            = 8,
+        HRTIMER_MODE_ABS_PINNED      = 2,
+        HRTIMER_MODE_REL_PINNED      = 3,
+        HRTIMER_MODE_ABS_SOFT        = 4,
+        HRTIMER_MODE_REL_SOFT        = 5,
+        HRTIMER_MODE_ABS_PINNED_SOFT = 6,
+        HRTIMER_MODE_REL_PINNED_SOFT = 7,
+        HRTIMER_MODE_ABS_HARD        = 8,
+        HRTIMER_MODE_REL_HARD        = 9,
+        HRTIMER_MODE_ABS_PINNED_HARD = 10,
+        HRTIMER_MODE_REL_PINNED_HARD = 11,
+};
 
-```
-perf $ ./perf trace -e landlock_add_rule
-     0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)                  = -1 EBADFD (File descriptor in bad state)
-     0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH)              = -1 EBADFD (File descriptor in bad state)
-```
+Can also be tested by
 
-This patch can be tested using this program, calling landlock_add_rule
-syscall (created by Arnaldo Carvalho de Melo <acme@kernel.org>):
+./perf trace -e pagemap:mm_lru_insertion,timer:hrtimer_start,timer:hrtimer_init,skb:kfree_skb --max-events=10
 
-#include <linux/landlock.h>  /* Definition of LANDLOCK_* constants */
-#include <sys/syscall.h>     /* Definition of SYS_* constants */
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdint.h>
-#include <stdio.h>
+(Chose these 4 events because they happen quite frequently.)
 
-/* Provide own perf_event_open stub because glibc doesn't */
-__attribute__((weak))
-int landlock_add_rule(int ruleset_fd, enum landlock_rule_type rule_type, const void *rule_attr, uint32_t flags)
-{
-        return syscall(SYS_landlock_add_rule, ruleset_fd, rule_type, rule_attr, flags);
-}
+However some enum arguments may not be contained in vmlinux BTF. To see
+what enum arguments are supported, use:
 
-int main(int argc, char *argv[])
-{
-        struct landlock_path_beneath_attr attr = { .allowed_access = 1, };
-        int err = landlock_add_rule(1, LANDLOCK_RULE_PATH_BENEATH, &attr, 0);
+vmlinux_dir $ bpftool btf dump file /sys/kernel/btf/vmlinux > vmlinux
 
-        printf("landlock_add_rule(1, LANDLOCK_RULE_PATH_BENEATH, { .allowed_access = 1, }, 0) = %d (%s)\n", err, strerror(errno));
+vmlinux_dir $  while read l; do grep "ENUM '$l'" vmlinux; done < <(grep field:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | uniq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g"
+dev_pm_qos_req_type
+error_detector
+hrtimer_mode
+i2c_slave_event
+ieee80211_bss_type
+lru_list
+migrate_mode
+nl80211_auth_type
+nl80211_band
+nl80211_iftype
+numa_vmaskip_reason
+pm_qos_req_action
+pwm_polarity
+skb_drop_reason
+thermal_trip_type
+xen_lazy_mode
+xen_mc_extend_args
+xen_mc_flush_reason
+zone_type
 
-        attr = (struct landlock_path_beneath_attr){ .parent_fd = 222, };
+And what tracepoints have these enum types as their arguments:
 
-        err = landlock_add_rule(2, LANDLOCK_RULE_NET_PORT, &attr, 0);
+vmlinux_dir $ while read l; do grep "ENUM '$l'" vmlinux; done < <(grep field:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | uniq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g" > good_enums
 
-        printf("landlock_add_rule(2, LANDLOCK_RULE_NET_PORT, { .parent_fd = 222, }, 0) = %d (%s)\n", err, strerror(errno));
+vmlinux_dir $ cat good_enums
+dev_pm_qos_req_type
+error_detector
+hrtimer_mode
+i2c_slave_event
+ieee80211_bss_type
+lru_list
+migrate_mode
+nl80211_auth_type
+nl80211_band
+nl80211_iftype
+numa_vmaskip_reason
+pm_qos_req_action
+pwm_polarity
+skb_drop_reason
+thermal_trip_type
+xen_lazy_mode
+xen_mc_extend_args
+xen_mc_flush_reason
+zone_type
 
-        return err;
-}
+vmlinux_dir $ grep -f good_enums -l /sys/kernel/tracing/events/*/*/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_chandef_dfs_required/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_notify/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_started_notify/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_get_bss/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_ibss_joined/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_inform_bss_frame/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_radar_event/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel_expired/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_reg_can_beacon/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_return_bss/format
+/sys/kernel/tracing/events/cfg80211/cfg80211_tx_mgmt_expired/format
+/sys/kernel/tracing/events/cfg80211/rdev_add_virtual_intf/format
+/sys/kernel/tracing/events/cfg80211/rdev_auth/format
+/sys/kernel/tracing/events/cfg80211/rdev_change_virtual_intf/format
+/sys/kernel/tracing/events/cfg80211/rdev_channel_switch/format
+/sys/kernel/tracing/events/cfg80211/rdev_connect/format
+/sys/kernel/tracing/events/cfg80211/rdev_inform_bss/format
+/sys/kernel/tracing/events/cfg80211/rdev_libertas_set_mesh_channel/format
+/sys/kernel/tracing/events/cfg80211/rdev_mgmt_tx/format
+/sys/kernel/tracing/events/cfg80211/rdev_remain_on_channel/format
+/sys/kernel/tracing/events/cfg80211/rdev_return_chandef/format
+/sys/kernel/tracing/events/cfg80211/rdev_return_int_survey_info/format
+/sys/kernel/tracing/events/cfg80211/rdev_set_ap_chanwidth/format
+/sys/kernel/tracing/events/cfg80211/rdev_set_monitor_channel/format
+/sys/kernel/tracing/events/cfg80211/rdev_set_radar_background/format
+/sys/kernel/tracing/events/cfg80211/rdev_start_ap/format
+/sys/kernel/tracing/events/cfg80211/rdev_start_radar_detection/format
+/sys/kernel/tracing/events/cfg80211/rdev_tdls_channel_switch/format
+/sys/kernel/tracing/events/compaction/mm_compaction_defer_compaction/format
+/sys/kernel/tracing/events/compaction/mm_compaction_deferred/format
+/sys/kernel/tracing/events/compaction/mm_compaction_defer_reset/format
+/sys/kernel/tracing/events/compaction/mm_compaction_finished/format
+/sys/kernel/tracing/events/compaction/mm_compaction_kcompactd_wake/format
+/sys/kernel/tracing/events/compaction/mm_compaction_suitable/format
+/sys/kernel/tracing/events/compaction/mm_compaction_wakeup_kcompactd/format
+/sys/kernel/tracing/events/error_report/error_report_end/format
+/sys/kernel/tracing/events/i2c_slave/i2c_slave/format
+/sys/kernel/tracing/events/migrate/mm_migrate_pages/format
+/sys/kernel/tracing/events/migrate/mm_migrate_pages_start/format
+/sys/kernel/tracing/events/pagemap/mm_lru_insertion/format
+/sys/kernel/tracing/events/power/dev_pm_qos_add_request/format
+/sys/kernel/tracing/events/power/dev_pm_qos_remove_request/format
+/sys/kernel/tracing/events/power/dev_pm_qos_update_request/format
+/sys/kernel/tracing/events/power/pm_qos_update_flags/format
+/sys/kernel/tracing/events/power/pm_qos_update_target/format
+/sys/kernel/tracing/events/pwm/pwm_apply/format
+/sys/kernel/tracing/events/pwm/pwm_get/format
+/sys/kernel/tracing/events/sched/sched_skip_vma_numa/format
+/sys/kernel/tracing/events/skb/kfree_skb/format
+/sys/kernel/tracing/events/thermal/thermal_zone_trip/format
+/sys/kernel/tracing/events/timer/hrtimer_init/format
+/sys/kernel/tracing/events/timer/hrtimer_start/format
+/sys/kernel/tracing/events/xen/xen_mc_batch/format
+/sys/kernel/tracing/events/xen/xen_mc_extend_args/format
+/sys/kernel/tracing/events/xen/xen_mc_flush_reason/format
+/sys/kernel/tracing/events/xen/xen_mc_issue/format
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -147,195 +228,99 @@ Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Reviewed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 
 ---
- tools/perf/builtin-trace.c | 96 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 91 insertions(+), 5 deletions(-)
+ tools/perf/builtin-trace.c | 29 ++++++++++++++++++++++-------
+ 1 file changed, 22 insertions(+), 7 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index c4fa8191253d..d93f34e9af74 100644
+index d93f34e9af74..bd16679fb4c0 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -19,6 +19,7 @@
- #ifdef HAVE_LIBBPF_SUPPORT
- #include <bpf/bpf.h>
- #include <bpf/libbpf.h>
-+#include <bpf/btf.h>
- #ifdef HAVE_BPF_SKEL
- #include "bpf_skel/augmented_raw_syscalls.skel.h"
- #endif
-@@ -110,6 +111,11 @@ struct syscall_arg_fmt {
- 	const char *name;
- 	u16	   nr_entries; // for arrays
- 	bool	   show_zero;
-+	bool	   is_enum;
-+	struct {
-+		void	*entries;
-+		u16	nr_entries;
-+	}	   btf_entry;
- };
- 
- struct syscall_fmt {
-@@ -140,6 +146,7 @@ struct trace {
- #ifdef HAVE_BPF_SKEL
- 	struct augmented_raw_syscalls_bpf *skel;
- #endif
-+	struct btf		*btf;
- 	struct record_opts	opts;
- 	struct evlist	*evlist;
- 	struct machine		*host;
-@@ -897,6 +904,56 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
- 	    .strtoul	= STUL_STRARRAY_FLAGS, \
- 	    .parm	= &strarray__##array, }
- 
-+static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall_arg_fmt *arg_fmt)
-+{
-+	const struct btf_type *bt;
-+	char enum_prefix[][16] = { "enum", "const enum" }, *ep;
-+	int id;
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(enum_prefix); i++) {
-+		ep = enum_prefix[i];
-+		if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
-+			type += strlen(ep) + 1;
-+	}
-+
-+	id = btf__find_by_name(btf, type);
-+	if (id < 0)
-+		return -1;
-+
-+	bt = btf__type_by_id(btf, id);
-+	if (bt == NULL)
-+		return -1;
-+
-+	arg_fmt->btf_entry.entries    = btf_enum(bt);
-+	arg_fmt->btf_entry.nr_entries = btf_vlen(bt);
-+
-+	return 0;
-+}
-+
-+static size_t btf_enum_scnprintf(char *bf, size_t size, int val, struct btf *btf, char *type,
-+				 struct syscall_arg_fmt *arg_fmt)
-+{
-+	struct btf_enum *be;
-+	int i;
-+
-+	/* if btf_entry is NULL, find and save it to arg_fmt */
-+	if (arg_fmt->btf_entry.entries == NULL)
-+		if (btf_enum_find_entry(btf, type, arg_fmt))
-+			return 0;
-+
-+	be = (struct btf_enum *)arg_fmt->btf_entry.entries;
-+
-+	for (i = 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
-+		if (be->val == val) {
-+			return scnprintf(bf, size, "%s",
-+					 btf__name_by_offset(btf, be->name_off));
-+		}
-+	}
-+
-+	return 0;
-+}
-+
- #include "trace/beauty/arch_errno_names.c"
- #include "trace/beauty/eventfd.c"
- #include "trace/beauty/futex_op.c"
-@@ -1699,6 +1756,15 @@ static void trace__symbols__exit(struct trace *trace)
- 	symbol__exit();
+@@ -1962,12 +1962,12 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	return err;
  }
  
-+static void trace__load_vmlinux_btf(struct trace *trace)
-+{
-+	trace->btf = btf__load_vmlinux_btf();
-+	if (verbose > 0) {
-+		fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
-+						    "Failed to load vmlinux BTF\n");
-+	}
-+}
-+
- static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+-static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
++static int evsel__init_tp_arg_scnprintf(struct evsel *evsel, bool *use_btf)
  {
- 	int idx;
-@@ -1744,7 +1810,7 @@ static const struct syscall_arg_fmt *syscall_arg_fmt__find_by_name(const char *n
- }
- 
- static struct tep_format_field *
--syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
-+syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field, bool *use_btf)
- {
- 	struct tep_format_field *last_field = NULL;
- 	int len;
-@@ -1782,6 +1848,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			 * 7 unsigned long
- 			 */
- 			arg->scnprintf = SCA_FD;
-+		} else if (strstr(field->type, "enum") && use_btf != NULL) {
-+			*use_btf = arg->is_enum = true;
- 		} else {
- 			const struct syscall_arg_fmt *fmt =
- 				syscall_arg_fmt__find_by_name(field->name);
-@@ -1796,9 +1864,10 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 	return last_field;
- }
- 
--static int syscall__set_arg_fmts(struct syscall *sc)
-+static int syscall__set_arg_fmts(struct syscall *sc, bool *use_btf)
- {
--	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
-+	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args,
-+									  use_btf);
- 
- 	if (last_field)
- 		sc->args_size = last_field->offset + last_field->size;
-@@ -1810,7 +1879,9 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- {
- 	char tp_name[128];
- 	struct syscall *sc;
-+	int err;
- 	const char *name = syscalltbl__name(trace->sctbl, id);
-+	bool use_btf = false;
- 
- #ifdef HAVE_SYSCALL_TABLE_SUPPORT
- 	if (trace->syscalls.table == NULL) {
-@@ -1883,7 +1954,12 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
- 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
- 
--	return syscall__set_arg_fmts(sc);
-+	err = syscall__set_arg_fmts(sc, &use_btf);
-+
-+	if (use_btf && trace->btf == NULL)
-+		trace__load_vmlinux_btf(trace);
-+
-+	return err;
- }
- 
- static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
-@@ -1891,7 +1967,7 @@ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
  	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
  
  	if (fmt != NULL) {
--		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
-+		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, NULL);
+-		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, NULL);
++		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, use_btf);
  		return 0;
  	}
  
-@@ -2103,6 +2179,16 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			if (trace->show_arg_names)
- 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+@@ -2171,7 +2171,8 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			 * property isn't set.
+ 			 */
+ 			if (val == 0 && !trace->show_zeros &&
+-			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
++			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero) &&
++			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].is_enum))
+ 				continue;
  
-+			if (sc->arg_fmt[arg.idx].is_enum && trace->btf) {
-+				size_t p = btf_enum_scnprintf(bf + printed, size - printed, val,
-+							      trace->btf, field->type,
-+							      &sc->arg_fmt[arg.idx]);
-+				if (p) {
-+					printed += p;
-+					continue;
-+				}
+ 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+@@ -2877,7 +2878,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
+ 
+ 		/* Suppress this argument if its value is zero and show_zero property isn't set. */
+-		if (val == 0 && !trace->show_zeros && !arg->show_zero)
++		if (val == 0 && !trace->show_zeros && !arg->show_zero && !arg->is_enum)
+ 			continue;
+ 
+ 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
+@@ -2885,6 +2886,15 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		if (trace->show_arg_names)
+ 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+ 
++		if (arg->is_enum && trace->btf) {
++			size_t p = btf_enum_scnprintf(bf + printed, size - printed, val, trace->btf,
++						      field->type, arg);
++			if (p) {
++				printed += p;
++				continue;
 +			}
++		}
 +
- 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
- 								  bf + printed, size - printed, &arg, val);
+ 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
+ 	}
+ 
+@@ -4537,7 +4547,7 @@ static void evsel__set_syscall_arg_fmt(struct evsel *evsel, const char *name)
+ 	}
+ }
+ 
+-static int evlist__set_syscall_tp_fields(struct evlist *evlist)
++static int evlist__set_syscall_tp_fields(struct evlist *evlist, bool *use_btf)
+ {
+ 	struct evsel *evsel;
+ 
+@@ -4546,7 +4556,7 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
+ 			continue;
+ 
+ 		if (strcmp(evsel->tp_format->system, "syscalls")) {
+-			evsel__init_tp_arg_scnprintf(evsel);
++			evsel__init_tp_arg_scnprintf(evsel, use_btf);
+ 			continue;
  		}
+ 
+@@ -5024,11 +5034,16 @@ int cmd_trace(int argc, const char **argv)
+ 	}
+ 
+ 	if (trace.evlist->core.nr_entries > 0) {
++		bool use_btf = false;
++
+ 		evlist__set_default_evsel_handler(trace.evlist, trace__event_handler);
+-		if (evlist__set_syscall_tp_fields(trace.evlist)) {
++		if (evlist__set_syscall_tp_fields(trace.evlist, &use_btf)) {
+ 			perror("failed to set syscalls:* tracepoint fields");
+ 			goto out;
+ 		}
++
++		if (use_btf && trace.btf == NULL)
++			trace__load_vmlinux_btf(&trace);
+ 	}
+ 
+ 	if (trace.sort_events) {
 -- 
 2.45.2
 
