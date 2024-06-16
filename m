@@ -1,51 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B883AD53B;
-	Sun, 16 Jun 2024 03:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C54946F
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Jun 2024 03:40:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718508750; cv=none; b=ZNU/m+6wesaqXU1dYi6zxYgQzY7UTCZpr8iGrJ2nDoukCmOlCKf67N9XidUu/cVu866m3tOY0B4ZubCfqG8ITBz41xzyiuLBBfG5M3XpZ+bEnod2ykgq/FrnoDBz+UT4YIrl0jMdo3LGNIfKK0vU8RNQeMhheOcGxT0D3v1C8dQ=
+	t=1718509235; cv=none; b=iEs+i50Ixd2eMknzu/2VT6RXM/Wgmrm3bRm9cE6gQ0ephfU59/ZM1DVe9YPH8ee97Dwp2/30Vc4wJjh0GFY0MiUyEbd4Udrn00G0Pemlhpk5HgXY7NuyG2yscFaAD7HVMUtIHrnO6vcGRNekPbKlTCH2DBf4NCJuwB4ObxaFiJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718508750; c=relaxed/simple;
-	bh=h2Rupb3bRR++IkyJmTxLp/G1ivGk3oFy6DUp33fuDJQ=;
+	s=arc-20240116; t=1718509235; c=relaxed/simple;
+	bh=W/8+qxL9c+ZKuUzm1/w4fdRg0jsp4nJ/sFa1lAs9PZQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dBkIHNXaSLF4cS7iL7hOdiyXdJHme41SAp5072X6888nh9YVouk0/s7cM5+MOXd4/nh8jAAKLv5zoxPPpbcaME+zQYhpXhVLo80CYh4fhKD9J05J89hFYRyWMiEsmZv5f0WZojyCWB7E9R3Sr/ImYVfmR0kkx7AZt5SbR6bq5fM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JruMbUdf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=ApgdhtrBsSrSyxBkLpC6E8wYI56TLjHIm4cdQ4HwQwgiEXqVblGsD5VkCFe4+7yoOFuoz6wfmln/6DBZGq3OcoWexVN5fCkuGPdDWgVgEuaVmrp9BfDRyR+5vdotfgwYui+qHSTTncfHwEYiJgz6erVxvOSdkxF2g5nilDX3kAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3KVnqgP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JruMbUdf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1206FC3277B;
-	Sun, 16 Jun 2024 03:32:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3KVnqgP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AEDC2BBFC;
+	Sun, 16 Jun 2024 03:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718508750;
-	bh=h2Rupb3bRR++IkyJmTxLp/G1ivGk3oFy6DUp33fuDJQ=;
+	s=k20201202; t=1718509234;
+	bh=W/8+qxL9c+ZKuUzm1/w4fdRg0jsp4nJ/sFa1lAs9PZQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JruMbUdfJQ9hvfk7YNxEY/g13sfle3Smr9l3hDu7HgWQhCkuacKMoKnbczDvXyZMf
-	 x7F+5cPGqSFbfvce/GvdNLgOBFWJ3OC/rQCrll2Bz0KBLNQ81wZGtlro5tAt7KAvMA
-	 S+bnCwsoH2C2GhTOON4ecldJT0/rgf6uwkccwCzSk2vUfOefoi1ee7p3Pg7MmqmepR
-	 orcGLddxVkCgcCaDEE9ydUVkF33gbLDFknxOG9GfiPCViVivCLjJDf67Y+WRdEX093
-	 fQfxexOYcj2OQDaK36uzMeSwRh/qFCKg/II4E2KbgwndXxknOhwR9KinWI5M0/8AxY
-	 VvIRZBHp0HApw==
-Date: Sat, 15 Jun 2024 20:32:25 -0700
+	b=Q3KVnqgPWY7FQRgVmIZaGwO5/JNq6xQaid5QxA9s77PBuqDN8Yzhep8b16QHnULu0
+	 algLSplMHFslnGq9F76ofyRMvKN/vxYRJEJ81JGKsS56CAIG5PW77WeriuqMexNb23
+	 QsSENHK2BzOKDkGHLfd7l1v3OzMqrKQuNhII+qLAGfHWLNhApLhhJEkNC0TDBWYDBs
+	 IZPFdAtH/rF+cMHDUw3Myc+ws4lxr9QkQ4pYDVtCQB79z6YbpzhVc+dttL1I9tVVgo
+	 y/ffCiQCvgB3lF5t6OEzZdkaW+JwSt9sxYT14iWx+WrRwVqp01aWbkGR5aGr0Bi5iG
+	 yS5AHo7z/aofQ==
+Date: Sat, 15 Jun 2024 20:40:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v13 9/9] perf test: Add test for Intel TPEBS counting
- mode
-Message-ID: <Zm5cydyXAuf71s71@google.com>
-References: <20240613033631.199800-1-weilin.wang@intel.com>
- <20240613033631.199800-10-weilin.wang@intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: James Clark <james.clark@arm.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	Leo Yan <leo.yan@arm.com>
+Subject: Re: Perf Wiki Appears Broken
+Message-ID: <Zm5esBevamPzcrl_@google.com>
+References: <87365604-bfa5-4153-b41a-84bf87fb4cfd@arm.com>
+ <a68343ee-b450-4ae1-a5dc-da6e1c865dcb@arm.com>
+ <Zmrtr5Mw_V8a01pD@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,69 +45,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240613033631.199800-10-weilin.wang@intel.com>
+In-Reply-To: <Zmrtr5Mw_V8a01pD@x1>
 
-Hello Weilin,
-
-On Wed, Jun 12, 2024 at 11:36:29PM -0400, weilin.wang@intel.com wrote:
-> From: Weilin Wang <weilin.wang@intel.com>
+On Thu, Jun 13, 2024 at 10:01:35AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jun 13, 2024 at 01:55:08PM +0100, James Clark wrote:
+> > On 10/06/2024 10:19, James Clark wrote:
+> > > Hi Arnaldo,
+> > > 
+> > > I'm not sure if you're still the admin of the Perf wiki, but I'm getting
+> > > a login error:
+> > > 
+> > >  Wiki uses cookies to log in users. You have cookies disabled. Please
+> > >  enable them and try again.
+> > > 
+> > > From a quick Google I think this might be a disk space or configuration
+> > > issue.
+> > > 
+> > > I was planning to add a dockerfile for cross compiling an Arm Perf on
+> > > x86. I suppose we can also discuss here if anyone thinks that's useful
+> > > or the right place for it.
+> > > 
+> > > Thanks
+> > > James
+> > > 
+> > 
+> > I'm able to log in now. If you poked it, thanks!
 > 
-> Intel TPEBS sampling mode is supported through perf record. The counting mode
-> code uses perf record to capture retire_latency value and use it in metric
-> calculation. This test checks the counting mode code.
+> Great! Probably was something transient and the admins fixed it.
 > 
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  .../perf/tests/shell/test_stat_intel_tpebs.sh  | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> 
-> diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> new file mode 100755
-> index 000000000000..3c8763b39bd4
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> @@ -0,0 +1,18 @@
-> +#!/bin/bash
-> +# test Intel TPEBS counting mode
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set e
-> +
-> +# Use this event for testing because it should exist in all platforms
-> +e=cache-misses:R
-> +
-> +# Without this cmd option, default value or zero is returned
-> +echo "Testing without --enable-tpebs-recording"
-> +result=$(perf stat -e "$e" true 2>&1)
-> +[[ "$result" =~ "$e" ]] || exit 1
-> +
-> +# In platforms that do not support TPEBS, it should execute without error.
-> +echo "Testing with --enable-tpebs-recording"
-> +result=$(perf stat -e "$e" --enable-tpebs-recording -a sleep 0.01 2>&1)
-> +[[ "$result" =~ "perf record" && "$result" =~ "$e" ]] || exit 1
+> I tried poking a friend that was the admin in the past but he told me he
+> wasn't doing it anymore.
 
-This still gives me errors like:
-
-  In tests/shell/test_stat_intel_tpebs.sh line 13:                                
-  [[ "$result" =~ "$e" ]] || exit 1                                               
-                  ^--^ SC2076 (warning): Remove quotes from right-hand side of =~ to match as a regex rather than literally.
-                                                                                  
-                                                                                  
-  In tests/shell/test_stat_intel_tpebs.sh line 18:                                
-  [[ "$result" =~ "perf record" && "$result" =~ "$e" ]] || exit 1                 
-                                                ^--^ SC2076 (warning): Remove quotes from right-hand side of =~ to match as a regex rather than literally.
-                                                                                  
-  For more information:                                                           
-    https://www.shellcheck.net/wiki/SC2076 -- Remove quotes from right-hand sid...
-  make[4]: *** [tests/Build:90: tests/shell/test_stat_intel_tpebs.sh.shellcheck_log] Error 1
-  make[4]: *** Waiting for unfinished jobs....
-
-Please install shellcheck and check the build.
-
-I'm not sure what's the correct fix but it seems the shellcheck
-suggested to match '$' as a regex special character.  You may
-disable the shellcheck if it's a false alarm.
+I'm still having a problem with login. :(
 
 Thanks,
 Namhyung
