@@ -1,45 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC4933C0;
-	Sun, 16 Jun 2024 04:45:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBADC33C0;
+	Sun, 16 Jun 2024 04:45:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718513122; cv=none; b=QaBO7n4DTC+r5grRyeaX3Dg2OSlbYKpa/NHU9GUwMtNgPrDRpuyxcOxrkgUQdGFU5+syIMdo/jFiPUungksqY+BaTUyKldoyUiykHiTNcIr4uv3B3JbYBcQpHy1k9Y1gCYnGdzMZVgr3yOKYLgFy6J3Cv3siRaLb+RrP65l3YTA=
+	t=1718513142; cv=none; b=WxRLTkgLrD1JXdSCw6T7u8kr6f/ANcyHdCYLeTDt8vSL1NzSYpOhQHaezGUPynidgZeqbo85+8I0D6KldfF/r31i8yHCDpQYeeaeZm0d3h0EkoN4wNsvmKwP9dQOjHDAe5gtCW+daS5MytRnbf9iIS+dnpxPVSMawL1F+w8uJqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718513122; c=relaxed/simple;
-	bh=Tug9r/9sB2whRuKjWf9yY2mNcI6AE7+f0WvRKIKwpeo=;
+	s=arc-20240116; t=1718513142; c=relaxed/simple;
+	bh=y9FBf/cLkqyXE6NbECmzQZqoc60kHgjvTjgwH28Zzow=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=d4pVnlkWPlGB4PP/CKUdMd0Do7rwMPLr4+m31ftKnkkC2inAgnT6ouMas1t11UOPLDKUU7YO/HlnNQ6D5Zm/h7PedtW31X1G2aUJjsMJ7/F7cJAlOqF0Y5p//QI5PCV4NhT4vbZUeUzT5lSoLcbuPePJ9EbWLl5EB8cED2EEUrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFyPce7M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ZKhgGjz7kLP7V0Lj3kaPYdT0R5tT1lL+AkI9Fx1mjQRBOAgsGTPU0LyRIrULeWNA291txO3dGet0RoQNP+bCbwmIVs9+X3aJLHQD5LuTRpzzt9SuIboCD3h9NzW4rTuCi/Mu0HdBiYSXoBr53d+Fv6wgVBy1oksThWdtw/FguKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO938OLJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFyPce7M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DEDDC2BBFC;
-	Sun, 16 Jun 2024 04:45:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO938OLJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F838C2BBFC;
+	Sun, 16 Jun 2024 04:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718513121;
-	bh=Tug9r/9sB2whRuKjWf9yY2mNcI6AE7+f0WvRKIKwpeo=;
+	s=k20201202; t=1718513140;
+	bh=y9FBf/cLkqyXE6NbECmzQZqoc60kHgjvTjgwH28Zzow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cFyPce7MspPPTwvupbaGao7V6B4YAE2AUTZM2Xe0FiJt07EAfhbSEpPztUOkB8V0r
-	 UIFGJ4+dvqGYDc9o7wJ1dDas/JGUC0nrHjFXWbMPwzVlxmVkn24haxUcquc23fqYGE
-	 K9GqDCJaNV3+kRjFHLmFKwakZ/CBc2m6Oj2UGLSsW17XFGb9AIpKf1G1EooZa9H222
-	 434ddxWq2PsH6WjEI0AH6j0jq0+1/GeXngDncNTyHeCasI74b/sHo0nlgrIuOPK65y
-	 XfA5J1xIVO7TSYE5Jqc/lKDbpwJrHAWF7VdNA+5apZw3a/wNXfXT6kJDw82oj/JR0s
-	 Tg0ijdpUQI/Ig==
+	b=MO938OLJzyBafwp2amZ8qk/cacYhelHw7qhs4NwoRgQMtZ3vAq2znisg0LdH1UOID
+	 U/gGuGhQrJRAsDmAncXq6PJN1gDeRC3xuzuxlxKmguQZM5zpjP7kZEPwEMB2774pA0
+	 nQTO3yp1QjyHfbjGFKwcAoACtW3iNwvh0cBpAEmwuWvjmhllIasLjcc244skYavUo3
+	 ZmOfcGanQ6/97SiI6yXCZt0O0mpexIIcE484k+jTxPPUHX4abknJDJG0VAbpPG/NHT
+	 F5iLhq28G+VHf29E0hmKYh91y2H5KC+iKM+ZLLc8DzJ5tCuBuKM9MVimVFnHh0b6EA
+	 GQytbLIRFKvvA==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Fernand Sieber <sieberf@amazon.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Subject: Re: [PATCH] perf: sched map skips redundant lines with cpu filters
-Date: Sat, 15 Jun 2024 21:45:16 -0700
-Message-ID: <171851309820.4148858.2521638179521677418.b4-ty@kernel.org>
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/4] perf report: Omit dummy events in the output (v3)
+Date: Sat, 15 Jun 2024 21:45:38 -0700
+Message-ID: <171851312624.4149164.12595885460954386799.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-In-Reply-To: <20240614073517.94974-1-sieberf@amazon.com>
-References: <20240614073517.94974-1-sieberf@amazon.com>
+In-Reply-To: <20240607202918.2357459-1-namhyung@kernel.org>
+References: <20240607202918.2357459-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,14 +52,16 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Fri, 14 Jun 2024 09:35:17 +0200, Fernand Sieber wrote:
+On Fri, 07 Jun 2024 13:29:14 -0700, Namhyung Kim wrote:
 
-> perf sched map supports cpu filter.
-> However, even with cpu filters active, any context switch currently
-> corresponds to a separate line.
-> As result, context switches on irrelevant cpus result to redundant lines,
-> which makes the output particlularly difficult to read on wide
-> architectures.
+> This work is to make the output compact by removing dummy events in
+> the output.  The dummy events are used to save side-band information
+> like task creation or memory address space change using mmap(2).  But
+> after collecting these, it's not used because it won't have any
+> samples.
+> 
+>  v2 changes)
+>  * just hide the (dummy) event instead of removing it from evlist
 > 
 > [...]
 
