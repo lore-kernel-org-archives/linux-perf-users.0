@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C54946F
-	for <linux-perf-users@vger.kernel.org>; Sun, 16 Jun 2024 03:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E7A923DE
+	for <linux-perf-users@vger.kernel.org>; Sun, 16 Jun 2024 03:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718509235; cv=none; b=iEs+i50Ixd2eMknzu/2VT6RXM/Wgmrm3bRm9cE6gQ0ephfU59/ZM1DVe9YPH8ee97Dwp2/30Vc4wJjh0GFY0MiUyEbd4Udrn00G0Pemlhpk5HgXY7NuyG2yscFaAD7HVMUtIHrnO6vcGRNekPbKlTCH2DBf4NCJuwB4ObxaFiJI=
+	t=1718510177; cv=none; b=MFMKMQBRQfL+0DUmYV6sO9jfYinKEcWCDscN+t3pOizoqfiLzVXI+vbeVafbpLUusGMS40VLCYeuKZTN6DUAs0xhNoKXt+PqstgjpHz8MyzWeqdZSENNJi+7Ygq/2s+QapCndNunlBaDXKS+MzqMVgTBz+Y3QeSEjC0xdek4OME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718509235; c=relaxed/simple;
-	bh=W/8+qxL9c+ZKuUzm1/w4fdRg0jsp4nJ/sFa1lAs9PZQ=;
+	s=arc-20240116; t=1718510177; c=relaxed/simple;
+	bh=qiRQdMrDaZnTKsyPqjkqTIwelaI2cKFQQ2ak3bzDeuE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ApgdhtrBsSrSyxBkLpC6E8wYI56TLjHIm4cdQ4HwQwgiEXqVblGsD5VkCFe4+7yoOFuoz6wfmln/6DBZGq3OcoWexVN5fCkuGPdDWgVgEuaVmrp9BfDRyR+5vdotfgwYui+qHSTTncfHwEYiJgz6erVxvOSdkxF2g5nilDX3kAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3KVnqgP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jqlvg2f/+F/d2GlGxmen49EFsOB1FhqnV3kYsKhBIWEd2P+bwiFWDb5gXFerGLg0+yenYxDuWjAMIedZEEijn+RoyxR1aDclGr5+aexyE1Iqfty7EIo3r/+Oq+KE8No0WjJbT/ShtUX32baT1zl7jVF1AvRkVUYmv5Ah/uwirv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJJg0+TZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3KVnqgP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81AEDC2BBFC;
-	Sun, 16 Jun 2024 03:40:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJJg0+TZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BB06C2BBFC;
+	Sun, 16 Jun 2024 03:56:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718509234;
-	bh=W/8+qxL9c+ZKuUzm1/w4fdRg0jsp4nJ/sFa1lAs9PZQ=;
+	s=k20201202; t=1718510176;
+	bh=qiRQdMrDaZnTKsyPqjkqTIwelaI2cKFQQ2ak3bzDeuE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Q3KVnqgPWY7FQRgVmIZaGwO5/JNq6xQaid5QxA9s77PBuqDN8Yzhep8b16QHnULu0
-	 algLSplMHFslnGq9F76ofyRMvKN/vxYRJEJ81JGKsS56CAIG5PW77WeriuqMexNb23
-	 QsSENHK2BzOKDkGHLfd7l1v3OzMqrKQuNhII+qLAGfHWLNhApLhhJEkNC0TDBWYDBs
-	 IZPFdAtH/rF+cMHDUw3Myc+ws4lxr9QkQ4pYDVtCQB79z6YbpzhVc+dttL1I9tVVgo
-	 y/ffCiQCvgB3lF5t6OEzZdkaW+JwSt9sxYT14iWx+WrRwVqp01aWbkGR5aGr0Bi5iG
-	 yS5AHo7z/aofQ==
-Date: Sat, 15 Jun 2024 20:40:32 -0700
+	b=qJJg0+TZ9Nlymq6zzY+R92tY0Bs/QE6rcQotZlDOloU6rwqwTFiB3ZQHfqpVWugNx
+	 BgKn0g+NxUQaacSj5F7IQ/XeC7y3B01CCViT/enRUPfQQbUcGuYadSlOD/u06hChmI
+	 bzTauY1BLMxv2aVkuXlJaqzQuR+37CV5cqUVn2O/P1Y+46QZtnukBiAkNrTw9kpSYK
+	 AVRyDlz8FFy/D+q6bpQsI24r0sora/UYMVWh47jH0cDX+Z50a1ZQkGYJptCBSMwvB0
+	 DWW+yqF5gOBw8CFEWje6jqFF76edsHWVJbd+kI7mG6G8FLCZRmC3WPlwITYaeFmn/e
+	 kakBHJU4I0+hw==
+Date: Sat, 15 Jun 2024 20:56:14 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: James Clark <james.clark@arm.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	Leo Yan <leo.yan@arm.com>
-Subject: Re: Perf Wiki Appears Broken
-Message-ID: <Zm5esBevamPzcrl_@google.com>
-References: <87365604-bfa5-4153-b41a-84bf87fb4cfd@arm.com>
- <a68343ee-b450-4ae1-a5dc-da6e1c865dcb@arm.com>
- <Zmrtr5Mw_V8a01pD@x1>
+To: Michael Petlan <mpetlan@redhat.com>
+Cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, acme@kernel.org,
+	acme@redhat.com
+Subject: Re: [PATCH] perf test stat_bpf_counter.sh: Remove comparison of
+ separate runs
+Message-ID: <Zm5iXuQFE6TmztkC@google.com>
+References: <20240604153111.105548-1-vmolnaro@redhat.com>
+ <Zl-x8uob6NT3HlfT@google.com>
+ <alpine.LRH.2.20.2406131407370.4040@Diego>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,38 +45,124 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <Zmrtr5Mw_V8a01pD@x1>
+In-Reply-To: <alpine.LRH.2.20.2406131407370.4040@Diego>
 
-On Thu, Jun 13, 2024 at 10:01:35AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Jun 13, 2024 at 01:55:08PM +0100, James Clark wrote:
-> > On 10/06/2024 10:19, James Clark wrote:
-> > > Hi Arnaldo,
+Hello,
+
+On Thu, Jun 13, 2024 at 04:20:58PM +0200, Michael Petlan wrote:
+> On Tue, 4 Jun 2024, Namhyung Kim wrote:
+> > On Tue, Jun 04, 2024 at 05:31:11PM +0200, vmolnaro@redhat.com wrote:
+> > > From: Veronika Molnarova <vmolnaro@redhat.com>
 > > > 
-> > > I'm not sure if you're still the admin of the Perf wiki, but I'm getting
-> > > a login error:
+> > > The test has been failing for some time when two separate runs of
+> > > perf benchmarks are recorded and the counts of the samples are compared,
+> > > while once the recording was done with option --bpf-counters and once
+> > > without it. It is expected that the count of the samples should within
+> > > a certain range, firstly the difference should have been within 10%,
+> > > which was then later raised to 20%. However, the test case keeps failing
+> > > on certain architectures as recording the same benchmark can provide
+> > > completely different counts samples based on the current load of the
+> > > system.
 > > > 
-> > >  Wiki uses cookies to log in users. You have cookies disabled. Please
-> > >  enable them and try again.
+> > > Sampling two separate runs on intel-eaglestream-spr-13 of "perf stat
+> > > --no-big-num -e cycles -- perf bench sched messaging -g 1 -l 100 -t":
 > > > 
-> > > From a quick Google I think this might be a disk space or configuration
-> > > issue.
+> > >  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
 > > > 
-> > > I was planning to add a dockerfile for cross compiling an Arm Perf on
-> > > x86. I suppose we can also discuss here if anyone thinks that's useful
-> > > or the right place for it.
+> > >          396782898      cycles
 > > > 
-> > > Thanks
-> > > James
+> > >        0.010051983 seconds time elapsed
 > > > 
+> > >        0.008664000 seconds user
+> > >        0.097058000 seconds sys
+> > > 
+> > >  Performance counter stats for 'perf bench sched messaging -g 1 -l 100 -t':
+> > > 
+> > >         1431133032      cycles
+> > > 
+> > >        0.021803714 seconds time elapsed
+> > > 
+> > >        0.023377000 seconds user
+> > >        0.349918000 seconds sys
+> > > 
+> > > , which is ranging from 400mil to 1400mil samples.
+> > > 
+> > > From the testing point of view, it does not make sense to compare two
+> > > separate runs against each other when the conditions may change
+> > > significantly. Remove the comparison of two separate runs and check only
+> > > whether the stating works as expected for the --bpf-counters option. Compare
+> > > the samples count only when the samples are recorded simultaneously
+> > > ensuring the same conditions.
 > > 
-> > I'm able to log in now. If you poked it, thanks!
+> > Hmm.. but having a test which checks if the output is sane can be
+> > useful.  If it's a problem of dynamic changes in cpu cycles, maybe
+> > we can use 'instructions' event instead (probably with :u) to get
+> > more stable values?
 > 
-> Great! Probably was something transient and the admins fixed it.
+> Hello.
 > 
-> I tried poking a friend that was the admin in the past but he told me he
-> wasn't doing it anymore.
+> As far as I understand it, nowadays, the test checks two things:
+> 
+>   test_bpf_counters()
+>     record $workload twice (with and without --bpf-counters)
+> 	check that there are numeric results
+> 	compare the results
+> 
+>   test_bpf_modifier()
+>     record $workload once with and without modifier (which should be what
+> 	--bpf-counters switch does to the events, right?)
+> 	check that there are numeric results
+> 	compare the results
+> 	
+> The problem here is not only the "dynamic changes in cpu-cycles", it
+> is rather in the testcase design itself. A testcase that compares two
+> metrics should get rid of all possible variable effects that influence it.
+> 
+> The second function actually compares the values correctly, since they
+> are measured against the same identical workload.
+> 
+> So, in my opinion, a better test design would be:
+> 
+>   (1) check that record without --bpf-counters works as a reference run
 
-I'm still having a problem with login. :(
+Do you mean by `perf stat record`?  Or saving the output of `perf stat`
+in a text file?
+
+
+>   (2) check that record with --bpf-counters works too
+>       (if not, we may compare to (1) to find out if whole `record` is broken
+> 	  or just the --bpf-counters option)
+
+Ditto.
+
+
+>   (3) possibly run `perf evlist` to check that --bpf-counters has added the
+>       '/b' modifier
+
+The `perf evlist` would work only for `perf stat record`.  Then I think
+it's a completely new test case.
+
+
+>   (4) check with versus without "b", such as current test_bpf_modifier()
+>       function does
+> 
+> I like what Veronika suggests, it is basically the above, except of (3).
+> 
+> ...
+> 
+> In case we want preserve two separate runs in test_bpf_counters() _and_
+> also check the numbers, then we should:
+>   - use some more predictable workload:
+>     - in an ideal case a statically linked simple binary
+> 	- in less-than-ideal case `perf test -w something`
+>   - use instructions instead of cycles
+> However, I don't like that idea very much, because of the design principles
+> mentioned above.
+
+I understand it's not ideal.. maybe it's fine not to check the numbers
+here because we do that in the test_bpf_modifier.  But it'd be nice to
+have that.  Let's try with instructions event first, change it later if
+it doesn't go well.
 
 Thanks,
 Namhyung
