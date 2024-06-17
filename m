@@ -1,203 +1,184 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403228FA;
-	Mon, 17 Jun 2024 01:36:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F824819;
+	Mon, 17 Jun 2024 04:38:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718588186; cv=none; b=bJeGzo9f6fg86Ptor96sjN0e9M7WYVZpvdq6gqc2NPisUWsoKti0/+3KaGKc67deQhxnwOmJmHplBHHXNJQFpTHZri3Z44ohRm6LvP+s6kZSIxlJldrsJVMf5JLMGtQTV9hTEcqqiEJ1EOTy6sm3cwPb07bRndgvDt0mVleg8+c=
+	t=1718599088; cv=none; b=pSmeBm9oteuy8swqzDocas019w6KSCCht8Ap35MfL5H3EPGFCrzw9mz/sqOAatR9XvpMvrAI39QSZMNyKxeq/06hphhM044AXgku9H7aiWFv0hr+ho+eHbxEYs0woJYMBtUikrv8myTWL1SIWd6WEbR/ZgtYMLI5w8/D4HSY/1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718588186; c=relaxed/simple;
-	bh=9H1/J8OKKqVwu2xDiBQTLiXvt6EywQ1255mf6P8udi8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KGPgEKyrYpz8LXyUbtxUTEF83zFYEPs+s0ZDztDZCZ1PpXZG11DC7ehk031R/HFbu+fLDY7LeCNT365MUbZ6GfavBxJZUoIYv881KLfM8Xt0XNZ8nZTBKKzSzChenb+LuE5yuCM6ZBaO/aKaI1aEgSllFtx24N+N4W7ksTW0rOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W2XVs1DvKzdbN5;
-	Mon, 17 Jun 2024 09:34:45 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id AAB32140258;
-	Mon, 17 Jun 2024 09:36:14 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 17 Jun 2024 09:36:13 +0800
-Message-ID: <c5b6aca7-4673-f529-45ec-edbacca7a2ac@huawei.com>
-Date: Mon, 17 Jun 2024 09:36:12 +0800
+	s=arc-20240116; t=1718599088; c=relaxed/simple;
+	bh=eJIz2tyShgz40sZq8k/Py1zA+0bWXqJRV39NwDCcjHI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=retyccuwxMD7vB7FhP8G/PeNuggdVB+eVlw9mPTG+9fkU/atMC7Zz1RvUnyRtq5qP+YqougdeztGIzrTNf9UQh5dCnFCJjOs1wKho2Ze716PY+GEhyYgp1UgKHMB8FgGl3hqUGZ2SX9hJu94zJ1iaCz/HUYai5qMbl/w+X9guuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98B96DA7;
+	Sun, 16 Jun 2024 21:38:28 -0700 (PDT)
+Received: from [10.162.16.42] (a077893.blr.arm.com [10.162.16.42])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2DDAC3F64C;
+	Sun, 16 Jun 2024 21:37:59 -0700 (PDT)
+Message-ID: <e7307246-95e4-406c-802e-c1d190e39b36@arm.com>
+Date: Mon, 17 Jun 2024 10:07:57 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v2] riscv: stacktrace: Add USER_STACKTRACE support
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V18 3/9] drivers: perf: arm_pmu: Add infrastructure for
+ branch stack sampling
 Content-Language: en-US
-To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<dev.mbstr@gmail.com>, <samuel.holland@sifive.com>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240604034729.841930-1-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20240604034729.841930-1-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+ James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users@vger.kernel.org
+References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+ <20240613061731.3109448-4-anshuman.khandual@arm.com>
+ <ZmxbYxE5PBl4CHzE@J2N7QTR9R3.cambridge.arm.com>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZmxbYxE5PBl4CHzE@J2N7QTR9R3.cambridge.arm.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi100008.china.huawei.com (7.221.188.57)
 
- Gentle ping.
 
-On 2024/6/4 11:47, Jinjie Ruan wrote:
-> Currently, userstacktrace is unsupported for riscv. So use the
-> perf_callchain_user() code as blueprint to implement the
-> arch_stack_walk_user() which add userstacktrace support on riscv.
-> Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
-> of perf_callchain_user().
+
+On 6/14/24 20:31, Mark Rutland wrote:
+> On Thu, Jun 13, 2024 at 11:47:25AM +0530, Anshuman Khandual wrote:
+>> @@ -289,6 +289,23 @@ static void armpmu_start(struct perf_event *event, int flags)
+>>  {
+>>  	struct arm_pmu *armpmu = to_arm_pmu(event->pmu);
+>>  	struct hw_perf_event *hwc = &event->hw;
+>> +	struct pmu_hw_events *cpuc = this_cpu_ptr(armpmu->hw_events);
+>> +	int idx;
+>> +
+>> +	/*
+>> +	 * Merge all branch filter requests from different perf
+>> +	 * events being added into this PMU. This includes both
+>> +	 * privilege and branch type filters.
+>> +	 */
+>> +	if (armpmu->has_branch_stack) {
+>> +		cpuc->branch_sample_type = 0;
+>> +		for (idx = 0; idx < ARMPMU_MAX_HWEVENTS; idx++) {
+>> +			struct perf_event *event_idx = cpuc->events[idx];
+>> +
+>> +			if (event_idx && has_branch_stack(event_idx))
+>> +				cpuc->branch_sample_type |= event_idx->attr.branch_sample_type;
+>> +		}
+>> +	}
 > 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406012109.PDAjXm2i-lkp@intel.com/
-> ---
-> v2:
-> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
-> ---
->  arch/riscv/Kconfig                 |  1 +
->  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
->  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
->  3 files changed, 47 insertions(+), 43 deletions(-)
+> When we spoke about this, I meant that we should do this under armpmu::start(),
+> or a callee or caller thereof once we know all the events are configured, just
+> before we actually enable the PMU.
 > 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0525ee2d63c7..6ed96d935b8f 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -193,6 +193,7 @@ config RISCV
->  	select THREAD_INFO_IN_TASK
->  	select TRACE_IRQFLAGS_SUPPORT
->  	select UACCESS_MEMCPY if !MMU
-> +	select USER_STACKTRACE_SUPPORT
->  	select ZONE_DMA32 if 64BIT
->  
->  config CLANG_SUPPORTS_DYNAMIC_FTRACE
-> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-> index 3348a61de7d9..c7468af77c66 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -6,37 +6,9 @@
->  
->  #include <asm/stacktrace.h>
->  
-> -/*
-> - * Get the return address for a single stackframe and return a pointer to the
-> - * next frame tail.
-> - */
-> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
-> -				    unsigned long fp, unsigned long reg_ra)
-> +static bool fill_callchain(void *entry, unsigned long pc)
->  {
-> -	struct stackframe buftail;
-> -	unsigned long ra = 0;
-> -	unsigned long __user *user_frame_tail =
-> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> -
-> -	/* Check accessibility of one struct frame_tail beyond */
-> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> -		return 0;
-> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> -				      sizeof(buftail)))
-> -		return 0;
-> -
-> -	if (reg_ra != 0)
-> -		ra = reg_ra;
-> -	else
-> -		ra = buftail.ra;
-> -
-> -	fp = buftail.fp;
-> -	if (ra != 0)
-> -		perf_callchain_store(entry, ra);
-> -	else
-> -		return 0;
-> -
-> -	return fp;
-> +	return perf_callchain_store(entry, pc) == 0;
->  }
->  
->  /*
-> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
->  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  			 struct pt_regs *regs)
->  {
-> -	unsigned long fp = 0;
-> -
-> -	fp = regs->s0;
-> -	perf_callchain_store(entry, regs->epc);
-> -
-> -	fp = user_backtrace(entry, fp, regs->ra);
-> -	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
-> -		fp = user_backtrace(entry, fp, 0);
-> -}
-> -
-> -static bool fill_callchain(void *entry, unsigned long pc)
-> -{
-> -	return perf_callchain_store(entry, pc) == 0;
-> +	arch_stack_walk_user(fill_callchain, entry, regs);
->  }
->  
->  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> index 528ec7cc9a62..9685a2baa5d9 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -161,3 +161,46 @@ noinline void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie
->  {
->  	walk_stackframe(task, regs, consume_entry, cookie);
->  }
-> +
-> +/*
-> + * Get the return address for a single stackframe and return a pointer to the
-> + * next frame tail.
-> + */
-> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_entry,
-> +				       void *cookie, unsigned long fp,
-> +				       unsigned long reg_ra)
-> +{
-> +	struct stackframe buftail;
-> +	unsigned long ra = 0;
-> +	unsigned long __user *user_frame_tail =
-> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> +
-> +	/* Check accessibility of one struct frame_tail beyond */
-> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> +		return 0;
-> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> +				      sizeof(buftail)))
-> +		return 0;
-> +
-> +	ra = reg_ra ? : buftail.ra;
-> +
-> +	fp = buftail.fp;
-> +	if (!ra || !consume_entry(cookie, ra))
-> +		return 0;
-> +
-> +	return fp;
-> +}
-> +
-> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> +			  const struct pt_regs *regs)
-> +{
-> +	unsigned long fp = 0;
-> +
-> +	fp = regs->s0;
-> +	if (!consume_entry(cookie, regs->epc))
-> +		return;
-> +
-> +	fp = unwind_user_frame(consume_entry, cookie, fp, regs->ra);
-> +	while (fp && !(fp & 0x3))
-> +		fp = unwind_user_frame(consume_entry, cookie, fp, 0);
-> +}
+> For example, this could live in armv8pmu_branch_enable(), which'd allow
+> all the actual logic to be added in the BRBE enablement patch.
+> 
+> Doing this in armpmu_start() doesn't work as well because it won't handle
+> events being removed.
+
+Sure, will move this filter aggregation inside armv8pmu_branch_enable() instead
+which is being added via the BRBE driver.
+
+diff --git a/drivers/perf/arm_brbe.c b/drivers/perf/arm_brbe.c
+index d795e8fd646f..9cf824bdc8b7 100644
+--- a/drivers/perf/arm_brbe.c
++++ b/drivers/perf/arm_brbe.c
+@@ -856,6 +856,22 @@ void armv8pmu_branch_enable(struct arm_pmu *arm_pmu)
+ {
+        struct pmu_hw_events *cpuc = this_cpu_ptr(arm_pmu->hw_events);
+        u64 brbfcr, brbcr;
++       int idx;
++
++       /*
++        * Merge all branch filter requests from different perf
++        * events being added into this PMU. This includes both
++        * privilege and branch type filters.
++        */
++       if (arm_pmu->has_branch_stack) {
++               cpuc->branch_sample_type = 0;
++               for (idx = 0; idx < ARMPMU_MAX_HWEVENTS; idx++) {
++                       struct perf_event *event_idx = cpuc->events[idx];
++
++                       if (event_idx && has_branch_stack(event_idx))
++                               cpuc->branch_sample_type |= event_idx->attr.branch_sample_type;
++               }
++       }
+ 
+        if (!(cpuc->branch_sample_type && cpuc->branch_users))
+                return;
+
+> 
+> [...]
+> 
+>> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+>> index b3b34f6670cf..9eda16dd684e 100644
+>> --- a/include/linux/perf/arm_pmu.h
+>> +++ b/include/linux/perf/arm_pmu.h
+>> @@ -46,6 +46,18 @@ static_assert((PERF_EVENT_FLAG_ARCH & ARMPMU_EVT_63BIT) == ARMPMU_EVT_63BIT);
+>>  	},								\
+>>  }
+>>  
+>> +/*
+>> + * Maximum branch record entries which could be processed
+>> + * for core perf branch stack sampling support, regardless
+>> + * of the hardware support available on a given ARM PMU.
+>> + */
+>> +#define MAX_BRANCH_RECORDS 64
+>> +
+>> +struct branch_records {
+>> +	struct perf_branch_stack	branch_stack;
+>> +	struct perf_branch_entry	branch_entries[MAX_BRANCH_RECORDS];
+>> +};
+>> +
+>>  /* The events for a given PMU register set. */
+>>  struct pmu_hw_events {
+>>  	/*
+>> @@ -66,6 +78,17 @@ struct pmu_hw_events {
+>>  	struct arm_pmu		*percpu_pmu;
+>>  
+>>  	int irq;
+>> +
+>> +	struct branch_records	*branches;
+>> +
+>> +	/* Active context for task events */
+>> +	void			*branch_context;
+> 
+> Using 'void *' here makes this harder to reason about and hides type
+> safety issues.
+> 
+> Give this a real type. IIUC it should be 'perf_event_context *'.
+
+Sure, will change the type.
+
+> 
+>> +
+>> +	/* Active events requesting branch records */
+>> +	unsigned int		branch_users;
+>> +
+>> +	/* Active branch sample type filters */
+>> +	unsigned long		branch_sample_type;
+>>  };
+>>  
+>>  enum armpmu_attr_groups {
+>> @@ -96,8 +119,15 @@ struct arm_pmu {
+>>  	void		(*stop)(struct arm_pmu *);
+>>  	void		(*reset)(void *);
+>>  	int		(*map_event)(struct perf_event *event);
+>> +	void		(*sched_task)(struct perf_event_pmu_context *pmu_ctx, bool sched_in);
+>> +	bool		(*branch_stack_init)(struct perf_event *event);
+>> +	void		(*branch_stack_add)(struct perf_event *event, struct pmu_hw_events *cpuc);
+>> +	void		(*branch_stack_del)(struct perf_event *event, struct pmu_hw_events *cpuc);
+>> +	void		(*branch_stack_reset)(void);
+> 
+> The reset callback isn't used in this series; s
+> 
+> Subsequent patches call armv8pmu_branch_stack_reset() directly from
+> PMUv3 and the BRBE driver, and arm_pmu::branch_stack_reset() is never
+> used, so we can delete it.
+
+Sure, will drop branch_stack_reset() callback.
