@@ -1,135 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 239E31862B0;
-	Mon, 17 Jun 2024 07:41:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 733BD38396;
+	Mon, 17 Jun 2024 07:51:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718610070; cv=none; b=OC+GejGietqShjNzCa1VgJX5SRPj0WMr2W8eu1q8FbnB4LKi8YQMkPQ426hiw4FdGL4gEfLMTl+x7WP2ByhcALzbWz0X6ndoIjJHv11rT1J52VRLr1pyFaGuApN80nFCMYcRbvxIfOMfaSxbi4JtO/3jjifI96AC5e8xOCVoon8=
+	t=1718610701; cv=none; b=e7HlzFe/Mef0mbyFcRPc7OIifp5zuq/QNujbQnCcaB2eD6VmaYFRossxlWDYKeUey5sXr6DdyuLK3Lzl7uzylC6G2f4OaPbmZQK1T9RxG+cW/DKu3eLH0WWKeEI3h4G1bY4Qx5Qwmc8CXHnk8aXCvVPqm3ntawnWBX+UBhyUHHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718610070; c=relaxed/simple;
-	bh=6fjH5+2JhBPufwYdBrMxQDSsZf/nxe3KJGcBk5Ezhkc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=aJYvIihCDIMu+x0ds61MRgKTWPRBxu899GFB09geug3cZt8sFT7C+mFSLha9ibsNZP7GQtRJjya6/kSn5byY0f7+2/JnglBUCAyaS1dJ4nwdnWSsUHew5X6UR8dMmaoy0jtDhsvcBMkY/eUc8qQFxBGF0jMRXCvcrZfV1AFsK4E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nsv0LF/G; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718610701; c=relaxed/simple;
+	bh=NG8gvLsGeGERZcnN9LKe5/vwkRczxp/GUoWZxf+l7ME=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rAZJ6JELNk8GN51oOq8oB6q80zl6cQPL6dnsiUiykM7mHvXF85ijWQu3m5KP8CuFSx/xjHGFhjj8cEX0nfv9avtTOYEDqRd8+fO0tLOD0c9HFte8mpfupxVcEiXkFdtGklLzJg2eA2CA/L9I0Ks4uDuyUouGpJoGOEvJDucqwIw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=vQ85Xupg; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nsv0LF/G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A7EC2BD10;
-	Mon, 17 Jun 2024 07:41:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718610069;
-	bh=6fjH5+2JhBPufwYdBrMxQDSsZf/nxe3KJGcBk5Ezhkc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nsv0LF/GFpgY/pRBcbkxLmyR1g1fwMIdIGJaLsL2g8c+CfHSj69vnY4zknfKNxe3l
-	 U14QXZsflSOVucEVMbM4yftigMouJHfSxgqjPplx9g2E28FvTn79fU3AEPRwmvExm+
-	 ArEzC08FlVwZcNkgEdO6YVkOzdLT1jbZE/Z/mW1lGL6CdjPnd/G4V0cqFpaXMAt+gt
-	 xCSGbV0Q0iwaaLuEjv/nxT4f2Wj6/az/JFG4vdbuj2+IvOCHRyO5Z8rIvKDcjsDMXr
-	 kK1CpArdycQRz1yDT8H47XiWhT0fPbhTzCopNinn1VBwfkaqMH8G0KBw5uW/XHG1ky
-	 NYQLWsVFROEhQ==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1sJ6zD-004VaC-4P;
-	Mon, 17 Jun 2024 08:41:07 +0100
-Date: Mon, 17 Jun 2024 08:41:06 +0100
-Message-ID: <86jzioj9t9.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Anshuman Khandual <anshuman.khandual@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	will@kernel.org,
-	catalin.marinas@arm.com,
-	mark.rutland@arm.com,
-	Mark Brown <broonie@kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Suzuki Poulose <suzuki.poulose@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	kvmarm@lists.linux.dev
-Subject: Re: [PATCH V18 2/9] KVM: arm64: Explicitly handle BRBE traps as UNDEFINED
-In-Reply-To: <df348434-85af-4bae-a31a-4a4a93c3cf49@arm.com>
-References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
-	<20240613061731.3109448-3-anshuman.khandual@arm.com>
-	<86sexfk8ke.wl-maz@kernel.org>
-	<86r0czk6wd.wl-maz@kernel.org>
-	<df348434-85af-4bae-a31a-4a4a93c3cf49@arm.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vQ85Xupg"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=IAmKegLYI+0e826keswLRf8FGni5PR5ZQKaV8HRzyrU=; b=vQ85Xupglat8LtsLeL3JFW9akS
+	FbnIJABe9IR7/BZY3pzSg0IESab/IIpQvTUyjwOsi1nWVgMiBHw6aNkbEt/vDNWV5KzQ61PQPUiBz
+	CJxQ9zujfWM2bEPI3ubIS+lFg2ypvCdr5KfcuaBEEqarM5huIcxWVPm5JWNoa6wvBGXqeOpgwnBvk
+	b4Z+jJMzAvU78zgIxbG5jVonU3bo/lAL9OmfRm6bbU2SwrIy6be6a2+1j//ZO1N88I0ThlNrdvx1p
+	ZM+B3fWx0sSlmuHpCv4Upz6kM4ohLlbZMSpYuPYp24ZdUis+SJwczJYp9logGtSxUpmQpWKiW7D+5
+	g8T42pkg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sJ799-00000001v2O-3R7x;
+	Mon, 17 Jun 2024 07:51:25 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 332EB30088D; Mon, 17 Jun 2024 09:51:23 +0200 (CEST)
+Date: Mon, 17 Jun 2024 09:51:23 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
+Message-ID: <20240617075123.GX40213@noisy.programming.kicks-ass.net>
+References: <20240506053020.3911940-8-mizhang@google.com>
+ <20240507085807.GS40213@noisy.programming.kicks-ass.net>
+ <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
+ <20240611120641.GF8774@noisy.programming.kicks-ass.net>
+ <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+ <20240612111732.GW40213@noisy.programming.kicks-ass.net>
+ <e72c847f-a069-43e4-9e49-37c0bf9f0a8b@linux.intel.com>
+ <20240613091507.GA17707@noisy.programming.kicks-ass.net>
+ <3755c323-6244-4e75-9e79-679bd05b13a4@linux.intel.com>
+ <f4da2fb2-fa09-4d2b-a78d-1b459ada6d09@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, mark.rutland@arm.com, broonie@kernel.org, james.clark@arm.com, robh@kernel.org, suzuki.poulose@arm.com, peterz@infradead.org, mingo@redhat.com, acme@kernel.org, linux-perf-users@vger.kernel.org, oliver.upton@linux.dev, james.morse@arm.com, kvmarm@lists.linux.dev
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4da2fb2-fa09-4d2b-a78d-1b459ada6d09@linux.intel.com>
 
-On Mon, 17 Jun 2024 07:27:13 +0100,
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> On 6/14/24 18:39, Marc Zyngier wrote:
-> > On Fri, 14 Jun 2024 13:33:37 +0100,
-> >
-> > Actually, to disable the *instructions*, a similar hack must be
-> > applied to HFGITR_EL2. The resulting patch should be something like:
-> > 
-> > diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> > index ee33f5467ce5..49d86dae8d80 100644
-> > --- a/arch/arm64/kvm/sys_regs.c
-> > +++ b/arch/arm64/kvm/sys_regs.c
-> > @@ -4964,6 +4964,15 @@ void kvm_init_sysreg(struct kvm_vcpu *vcpu)
-> >  		kvm->arch.fgu[HAFGRTR_GROUP] |= ~(HAFGRTR_EL2_RES0 |
-> >  						  HAFGRTR_EL2_RES1);
-> >  
-> > +	if (!kvm_has_feat(kvm, ID_AA64DFR0_EL1, BRBE, IMP)) {
-> > +		kvm->arch.fgu[HDFGRTR_GROUP] |= (HDFGRTR_nBRBDATA  |
-> > +						 HDFGRTR_nBRBCTL   |
-> > +						 HDFGRTR_nBRBIDR);
-
-Obviously, this needs to be spelled HDFGRTR_EL2_nBRB* so that it
-actually compiles.
-
-> > +		kvm->arch.fgu[HFGITR_GROUP] |= (HFGITR_EL2_nBRBINJ |
-> > +						HFGITR_EL2_nBRBIALL);
-> > +	}
-> > +
-> > +
-> >  	set_bit(KVM_ARCH_FLAG_FGU_INITIALIZED, &kvm->arch.flags);
-> >  out:
-> >  	mutex_unlock(&kvm->arch.config_lock);
+On Thu, Jun 13, 2024 at 02:04:36PM -0400, Liang, Kan wrote:
+> >>  static enum event_type_t get_event_type(struct perf_event *event)
+> >> @@ -3340,9 +3388,14 @@ ctx_sched_out(struct perf_event_context
+> >>  	 * would only update time for the pinned events.
+> >>  	 */
+> >>  	if (is_active & EVENT_TIME) {
+> >> +		bool stop;
+> >> +
+> >> +		stop = !((ctx->is_active & event_type) & EVENT_ALL) &&
+> >> +		       ctx == &cpuctx->ctx;
+> >> +			
+> >>  		/* update (and stop) ctx time */
+> >>  		update_context_time(ctx);
+> >> -		update_cgrp_time_from_cpuctx(cpuctx, ctx == &cpuctx->ctx);
+> >> +		update_cgrp_time_from_cpuctx(cpuctx, stop);
 > 
-> This makes sense, will remove all the changes to sys_reg table and
-> instead fold the above suggestion into the patch.
+> For the event_type == EVENT_GUEST, the "stop" should always be the same
+> as "ctx == &cpuctx->ctx". Because the ctx->is_active never set the
+> EVENT_GUEST bit.
+> Why the stop is introduced?
+
+Because the ctx_sched_out() for vPMU should not stop time, only the
+'normal' sched-out should stop time.
+
+
+> >> @@ -3949,6 +4015,8 @@ ctx_sched_in(struct perf_event_context *
+> >>  		return;
+> >>  
+> >>  	if (!(is_active & EVENT_TIME)) {
+> >> +		/* EVENT_TIME should be active while the guest runs */
+> >> +		WARN_ON_ONCE(event_type & EVENT_GUEST);
+> >>  		/* start ctx time */
+> >>  		__update_context_time(ctx, false);
+> >>  		perf_cgroup_set_timestamp(cpuctx);
+> >> @@ -3979,8 +4047,11 @@ ctx_sched_in(struct perf_event_context *
+> >>  		 * the exclude_guest events.
+> >>  		 */
+> >>  		update_context_time(ctx);
+> >> -	} else
+> >> +		update_cgrp_time_from_cpuctx(cpuctx, false);
 > 
-> > 
-> > The implicit dependency here is that FGT is always present on a system
-> > that implements BRBE. The architecture supports this assertion:
-> > 
-> > - BRBE is not available before ARMv9.1
-> > - FGT is mandatory from ARMv8.6
-> > 
-> > Given that v9.1 is congruent to v8.6, we have the required overlap.
 > 
-> So this overlap need not be asserted in software again ?
+> In the above ctx_sched_out(), the cgrp_time is stopped and the cgrp has
+> been set to inactive.
+> I think we need a perf_cgroup_set_timestamp(cpuctx) here to restart the
+> cgrp_time, Right?
 
-I don't think there's a need for that.
+So the idea was to not stop time when we schedule out for the vPMU, as
+per the above.
 
-We went through the same thing with SME (which has the exact same
-dependency), and concluded that there was no need to paper over broken
-implementations at the moment (only QEMU was affected, and that was
-quickly fixed). If we find an implementation in the wild that didn't
-get the memo, we can add a workaround at that time.
+> Also, I think the cgrp_time is different from the normal ctx->time. When
+> a guest is running, there must be no cgroup. It's OK to disable the
+> cgrp_time. If so, I don't think we need to track the guest_time for the
+> cgrp.
 
-	M.
+Uh, the vCPU thread is/can-be part of a cgroup, and different guests
+part of different cgroups. The CPU wide 'guest' time is all time spend
+in guets, but the cgroup view of things might differ, depending on how
+the guets are arranged in cgroups, no?
 
--- 
-Without deviation from the norm, progress is not possible.
+As such, we need per cgroup guest tracking.
+
