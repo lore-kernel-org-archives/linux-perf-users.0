@@ -1,209 +1,215 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10AB196C90
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 09:38:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0ECA194A68;
+	Mon, 17 Jun 2024 09:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718617118; cv=none; b=mKRq0ezs2GBbMn7yIY7CQ28gceHXs1R5XN5GpTyMJl5b0cMAqp7na8QAiVlZjQQLqHzlI4mAp8G47yy9AzInDIt94bSnyQ4oCpJIML7o6hMdvdzZ1ScYMyke0D2yzqNmq/9ZHoKkKjrATOo1xXdnvn2qeDdI7u3dbgCh59EDRLI=
+	t=1718617182; cv=none; b=jdkGsM6B7Dy1l+2wyJ+PgK6cki9qB7AmCjPh0hrY06WrYgK9nIENG5Xn5LF/kWC/vlsLyr+Yv+hF+qb/GL7cTLSzGXkE7ZOwKJAK3J7/0R5VsoP5ly3A8pc4ZOOm4cDWR/USXKDZ+0QxBcrJKMB6rDOmUNgWPQpuYWQmoqrI7a8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718617118; c=relaxed/simple;
-	bh=sr/HExMB2KmpIxEyu/qgU81RvDcP2SyCdvUAXFbeUzg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p4jApdPIkhGtSFpKZWKhG8dLNuPkzQ8U6ymtAh9HMG2jLwpwtIfz3TyHI3pQdtt/kIP6+JQtQ3/rVNsLRv2GR+lXdkvCmdTFoaKLNRzWTHoRr0BFSu5bKorZ23n3mQGtIu9q07fI/qeHBasBgXXDFqtGLaIzElzm5cEZ/S7Tago=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=a0Aki5Rj; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="a0Aki5Rj"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-62a08092c4dso40723357b3.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 02:38:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1718617115; x=1719221915; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ygiGn4cC18Me/bv30acpykkQziugaNdxLwcBfmb6qSw=;
-        b=a0Aki5Rj6OlgAkauKimMCNxX0mj5jezy75a2YcvDNOEbOj3tNAHyIVC6wusgAmR8vk
-         3oX7QM5QWlPjoMA5nxVyuuDV6Z+PKIh5QbM83K2FDhfmH2oMof1gZk+vH+HkRSom6l1C
-         wX5JDHG+Z4cDy1IdLUC7EwTYbdjP2EK4uLaV0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718617115; x=1719221915;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ygiGn4cC18Me/bv30acpykkQziugaNdxLwcBfmb6qSw=;
-        b=oEhX35cx5WAs2MB8v9HGfswxIvnW2jqevmFn9MSyjShCb4AnvgptE8YbTaKEDfJF0a
-         SvB4Wvwqv7S8+Ah87bx6pVGjyiZUNFFIneZLqPkHo9K6g+OqLJzFmcIFZJZMvfBeA0Ja
-         giZdRKZdyOFj8rfxadD2rON9DG2AOPqHRju1brFA7cRv48+Ie3RBoAnvKWy886W1k3QV
-         fJAqoPOFZdB2JcOO933zaIfohq3bpSZWsO4ou4Pa9XGZRcRopcfF42Mulgk9OSMmgUBS
-         h4pLPhuXBMMb2cX7Z8f0L5Q6sgpZ83j7QJBAiTziz9iYmk45h3R9IfJ6X0fLV4LwhlMN
-         bMqw==
-X-Forwarded-Encrypted: i=1; AJvYcCXS4iuSx5DN0KKFV6DHzWpZTukkE/qrMDjP+zZcysW1/PCvT7w4oHDtuiz9huite5tq7SkJCmzi3u0D02Rj1dkP4cwXLon48ZFRl3S5Npf3Xw==
-X-Gm-Message-State: AOJu0YydUNmHTWJPXp8v9V7H8pWD8vK/43biun9RqPCYSzbqh1H2s7zy
-	3P2gsw5jFxkc/8ne20o08s6uzPTpukKs1jQAP0slKT/lIjs/IG8rV+vFv2K3jrk=
-X-Google-Smtp-Source: AGHT+IFC+D8ny/Dw5rvJfiAdV//IJGVVyL9jjkV7lcw389qZjtEYyNdxSITDCmMdMGELAiOGjGLRug==
-X-Received: by 2002:a0d:e612:0:b0:632:ca12:8af with SMTP id 00721157ae682-6355f1a8952mr23183507b3.32.1718617115585;
-        Mon, 17 Jun 2024 02:38:35 -0700 (PDT)
-Received: from [10.125.226.166] ([160.101.139.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c32428sm52942136d6.64.2024.06.17.02.38.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 02:38:35 -0700 (PDT)
-Message-ID: <14d5ed1b-db72-4676-bce2-1ff3637a7e56@citrix.com>
-Date: Mon, 17 Jun 2024 10:38:32 +0100
+	s=arc-20240116; t=1718617182; c=relaxed/simple;
+	bh=82Kgz56fEOBwI0Oe2j7E2biK3+jLx5BWv7jf30JXV/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ttMlLX3W6mEVCsd8wmnHyE4W6lr7JnLCM3RTFpBxLK0votSGKfgvuwUBloWLRAT+dXoG6uutM84VOCVSSIv8LVnkWeMYwVqBOJv3jjVjKA4FAhp0s04RY3IJR4ly50hTxdI61sOzWgn565T5eZSHG5ov0q46OhFeahFRSO9xTxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF7BEDA7;
+	Mon, 17 Jun 2024 02:40:03 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BEC6D3F64C;
+	Mon, 17 Jun 2024 02:39:36 -0700 (PDT)
+Date: Mon, 17 Jun 2024 10:39:34 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	will@kernel.org, catalin.marinas@arm.com,
+	Mark Brown <broonie@kernel.org>, James Clark <james.clark@arm.com>,
+	Rob Herring <robh@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Suzuki Poulose <suzuki.poulose@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Message-ID: <ZnAEVlVZFR3DLHHb@J2N7QTR9R3>
+References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+ <20240613061731.3109448-7-anshuman.khandual@arm.com>
+ <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
+ <774a63cb-21e6-4ef2-b2ab-0ff8937523b2@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH PATCH 8/9] x86/bugs: Declutter vulnerable CPU list
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-8-b88998c01e76@linux.intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- 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
- 6+ahAA==
-In-Reply-To: <20240617-add-cpu-type-v1-8-b88998c01e76@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <774a63cb-21e6-4ef2-b2ab-0ff8937523b2@arm.com>
 
-On 17/06/2024 10:12 am, Pawan Gupta wrote:
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index d4e539d4e158..7e3b09b0f82c 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -1229,43 +1232,45 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
->  #define RFDS		BIT(7)
->  
->  static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
-> -	VULNBL_INTEL_STEPPINGS(INTEL_IVYBRIDGE,		X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL,		X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_L,		X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_G,		X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_X,		X86_STEPPING_ANY,		MMIO),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_D,	X86_STEPPING_ANY,		MMIO),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_G,	X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_X,	X86_STEPPING_ANY,		MMIO),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL,		X86_STEPPING_ANY,		SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE_X,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE_L,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_KABYLAKE_L,	X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_KABYLAKE,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_CANNONLAKE_L,	X86_STEPPING_ANY,		RETBLEED),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_L,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_D,		X86_STEPPING_ANY,		MMIO | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_X,		X86_STEPPING_ANY,		MMIO | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE_L,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_TIGERLAKE_L,	X86_STEPPING_ANY,		GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_TIGERLAKE,		X86_STEPPING_ANY,		GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_LAKEFIELD,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ROCKETLAKE,	X86_STEPPING_ANY,		MMIO | RETBLEED | GDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ALDERLAKE,		X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ALDERLAKE_L,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE_P,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE_S,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GRACEMONT,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT_D,	X86_STEPPING_ANY,		MMIO | RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT_L,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT_D,	X86_STEPPING_ANY,		RFDS),
-> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT_PLUS, X86_STEPPING_ANY,		RFDS),
-> +	VULNBL_INTEL(IVYBRIDGE,		SRBDS),
-> +	VULNBL_INTEL(HASWELL,		SRBDS),
-> +	VULNBL_INTEL(HASWELL_L,		SRBDS),
-> +	VULNBL_INTEL(HASWELL_G,		SRBDS),
-> +	VULNBL_INTEL(HASWELL_X,		MMIO),
-> +	VULNBL_INTEL(BROADWELL_D,	MMIO),
-> +	VULNBL_INTEL(BROADWELL_G,	SRBDS),
-> +	VULNBL_INTEL(BROADWELL_X,	MMIO),
-> +	VULNBL_INTEL(BROADWELL,		SRBDS),
-> +	VULNBL_INTEL(SKYLAKE_X,		MMIO | RETBLEED | GDS),
-> +	VULNBL_INTEL(SKYLAKE_L,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(SKYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(KABYLAKE_L,	MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(KABYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(CANNONLAKE_L,	RETBLEED),
-> +	VULNBL_INTEL(ICELAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL(ICELAKE_D,		MMIO | GDS),
-> +	VULNBL_INTEL(ICELAKE_X,		MMIO | GDS),
-> +	VULNBL_INTEL(COMETLAKE,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL(TIGERLAKE_L,	GDS),
-> +	VULNBL_INTEL(TIGERLAKE,		GDS),
-> +	VULNBL_INTEL(LAKEFIELD,		MMIO | MMIO_SBDS | RETBLEED),
-> +	VULNBL_INTEL(ROCKETLAKE,	MMIO | RETBLEED | GDS),
-> +	VULNBL_INTEL(ALDERLAKE,		RFDS),
-> +	VULNBL_INTEL(ALDERLAKE_L,	RFDS),
-> +	VULNBL_INTEL(RAPTORLAKE,	RFDS),
-> +	VULNBL_INTEL(RAPTORLAKE_P,	RFDS),
-> +	VULNBL_INTEL(RAPTORLAKE_S,	RFDS),
-> +	VULNBL_INTEL(ATOM_GRACEMONT,	RFDS),
-> +	VULNBL_INTEL(ATOM_TREMONT,	MMIO | MMIO_SBDS | RFDS),
-> +	VULNBL_INTEL(ATOM_TREMONT_D,	MMIO | RFDS),
-> +	VULNBL_INTEL(ATOM_TREMONT_L,	MMIO | MMIO_SBDS | RFDS),
-> +	VULNBL_INTEL(ATOM_GOLDMONT,	RFDS),
-> +	VULNBL_INTEL(ATOM_GOLDMONT_D,	RFDS),
-> +	VULNBL_INTEL(ATOM_GOLDMONT_PLUS, RFDS),
+On Mon, Jun 17, 2024 at 12:15:15PM +0530, Anshuman Khandual wrote:
+> 
+> 
+> On 6/14/24 20:53, Mark Rutland wrote:
+> > On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
+> >> Disable the BRBE before we enter the guest, saving the status and enable it
+> >> back once we get out of the guest. This avoids capturing branch records in
+> >> the guest kernel or userspace, which would be confusing the host samples.
+> > 
+> > It'd be good to explain why we need to do this for nVHE, but not for
+> > VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
+> > when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
+> > out-of-reset.
+> 
+> That's right, there is no possibility for the host and guest BRBE config
+> to overlap.
+> 
+> > What should a user do if they *want* samples from a guest? Is that
+> 
+> That is not supported currently. But in order to enable capturing guest
+> branch samples from inside the host - BRBCR_EL2 configs need to migrate
+> into BRBCR_EL1 when the guest runs on the cpu.
+> 
+> > possible to do on other architectures, or do is that always prevented?
+> 
+> I am not sure about other architectures, but for now this falls within
+> guest support which might be looked into later. But is not the proposed
+> patch complete in itself without any further guest support ?
 
-Take the opportunity to realign and fix this ?
+My concern here is ABI rather than actual support.
 
-~Andrew
+It's not clear to me how this works across architectures, and we should
+have some idea of how this would work (e.g. if we're going to require
+new ABI or not), so that we don't have to break ABI later on.
+
+Mark.
+
+> 
+> > 
+> > Mark.
+> > 
+> >>
+> >> Cc: Marc Zyngier <maz@kernel.org>
+> >> Cc: Oliver Upton <oliver.upton@linux.dev>
+> >> Cc: James Morse <james.morse@arm.com>
+> >> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> >> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> >> Cc: Will Deacon <will@kernel.org>
+> >> Cc: kvmarm@lists.linux.dev
+> >> Cc: linux-arm-kernel@lists.infradead.org
+> >> CC: linux-kernel@vger.kernel.org
+> >> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> >> ----
+> >> Changes in V18:
+> >>
+> >> - Used host_data_ptr() to access host_debug_state.brbcr_el1 register
+> >> - Changed DEBUG_STATE_SAVE_BRBE to use BIT(7)
+> >> - Reverted back iflags as u8
+> >>
+> >>  arch/arm64/include/asm/kvm_host.h  |  3 +++
+> >>  arch/arm64/kvm/debug.c             |  5 +++++
+> >>  arch/arm64/kvm/hyp/nvhe/debug-sr.c | 31 ++++++++++++++++++++++++++++++
+> >>  3 files changed, 39 insertions(+)
+> >>
+> >> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> >> index 36b8e97bf49e..db922c10bd2a 100644
+> >> --- a/arch/arm64/include/asm/kvm_host.h
+> >> +++ b/arch/arm64/include/asm/kvm_host.h
+> >> @@ -579,6 +579,7 @@ struct kvm_host_data {
+> >>  		u64 trfcr_el1;
+> >>  		/* Values of trap registers for the host before guest entry. */
+> >>  		u64 mdcr_el2;
+> >> +		u64 brbcr_el1;
+> >>  	} host_debug_state;
+> >>  };
+> >>  
+> >> @@ -842,6 +843,8 @@ struct kvm_vcpu_arch {
+> >>  #define DEBUG_STATE_SAVE_SPE	__vcpu_single_flag(iflags, BIT(5))
+> >>  /* Save TRBE context if active  */
+> >>  #define DEBUG_STATE_SAVE_TRBE	__vcpu_single_flag(iflags, BIT(6))
+> >> +/* Save BRBE context if active  */
+> >> +#define DEBUG_STATE_SAVE_BRBE	__vcpu_single_flag(iflags, BIT(7))
+> >>  
+> >>  /* SVE enabled for host EL0 */
+> >>  #define HOST_SVE_ENABLED	__vcpu_single_flag(sflags, BIT(0))
+> >> diff --git a/arch/arm64/kvm/debug.c b/arch/arm64/kvm/debug.c
+> >> index ce8886122ed3..8fa648943f0f 100644
+> >> --- a/arch/arm64/kvm/debug.c
+> >> +++ b/arch/arm64/kvm/debug.c
+> >> @@ -336,10 +336,15 @@ void kvm_arch_vcpu_load_debug_state_flags(struct kvm_vcpu *vcpu)
+> >>  	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_TraceBuffer_SHIFT) &&
+> >>  	    !(read_sysreg_s(SYS_TRBIDR_EL1) & TRBIDR_EL1_P))
+> >>  		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> >> +
+> >> +	/* Check if we have BRBE implemented and available at the host */
+> >> +	if (cpuid_feature_extract_unsigned_field(dfr0, ID_AA64DFR0_EL1_BRBE_SHIFT))
+> >> +		vcpu_set_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+> >>  }
+> >>  
+> >>  void kvm_arch_vcpu_put_debug_state_flags(struct kvm_vcpu *vcpu)
+> >>  {
+> >>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_SPE);
+> >>  	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_TRBE);
+> >> +	vcpu_clear_flag(vcpu, DEBUG_STATE_SAVE_BRBE);
+> >>  }
+> >> diff --git a/arch/arm64/kvm/hyp/nvhe/debug-sr.c b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> >> index 53efda0235cf..97e861df1b45 100644
+> >> --- a/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> >> +++ b/arch/arm64/kvm/hyp/nvhe/debug-sr.c
+> >> @@ -79,6 +79,32 @@ static void __debug_restore_trace(u64 trfcr_el1)
+> >>  	write_sysreg_el1(trfcr_el1, SYS_TRFCR);
+> >>  }
+> >>  
+> >> +static void __debug_save_brbe(u64 *brbcr_el1)
+> >> +{
+> >> +	*brbcr_el1 = 0;
+> >> +
+> >> +	/* Check if the BRBE is enabled */
+> >> +	if (!(read_sysreg_el1(SYS_BRBCR) & (BRBCR_ELx_E0BRE | BRBCR_ELx_ExBRE)))
+> >> +		return;
+> >> +
+> >> +	/*
+> >> +	 * Prohibit branch record generation while we are in guest.
+> >> +	 * Since access to BRBCR_EL1 is trapped, the guest can't
+> >> +	 * modify the filtering set by the host.
+> >> +	 */
+> >> +	*brbcr_el1 = read_sysreg_el1(SYS_BRBCR);
+> >> +	write_sysreg_el1(0, SYS_BRBCR);
+> >> +}
+> >> +
+> >> +static void __debug_restore_brbe(u64 brbcr_el1)
+> >> +{
+> >> +	if (!brbcr_el1)
+> >> +		return;
+> >> +
+> >> +	/* Restore BRBE controls */
+> >> +	write_sysreg_el1(brbcr_el1, SYS_BRBCR);
+> >> +}
+> >> +
+> >>  void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+> >>  {
+> >>  	/* Disable and flush SPE data generation */
+> >> @@ -87,6 +113,9 @@ void __debug_save_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+> >>  	/* Disable and flush Self-Hosted Trace generation */
+> >>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+> >>  		__debug_save_trace(host_data_ptr(host_debug_state.trfcr_el1));
+> >> +	/* Disable BRBE branch records */
+> >> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> >> +		__debug_save_brbe(host_data_ptr(host_debug_state.brbcr_el1));
+> >>  }
+> >>  
+> >>  void __debug_switch_to_guest(struct kvm_vcpu *vcpu)
+> >> @@ -100,6 +129,8 @@ void __debug_restore_host_buffers_nvhe(struct kvm_vcpu *vcpu)
+> >>  		__debug_restore_spe(*host_data_ptr(host_debug_state.pmscr_el1));
+> >>  	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_TRBE))
+> >>  		__debug_restore_trace(*host_data_ptr(host_debug_state.trfcr_el1));
+> >> +	if (vcpu_get_flag(vcpu, DEBUG_STATE_SAVE_BRBE))
+> >> +		__debug_restore_brbe(*host_data_ptr(host_debug_state.brbcr_el1));
+> >>  }
+> >>  
+> >>  void __debug_switch_to_host(struct kvm_vcpu *vcpu)
+> >> -- 
+> >> 2.25.1
+> >>
