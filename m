@@ -1,185 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99660FC1D;
-	Sun, 16 Jun 2024 15:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8403228FA;
+	Mon, 17 Jun 2024 01:36:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718552229; cv=none; b=UamqiqSGUwG66sHny8sFnbief7MpQCxBYaOxYmPf3mQDj62i2DM2LLLlsLEtrZe+QtSsmJrK00/4qfuVvzBFpnBlaF6ctm9bnCxENS6g3y1Y/NhDDlXraWLtdQVMvEACRT3+aSlgteMQ7/o5iTnpnDG+k7RM3GPgTSVw9CCiqWA=
+	t=1718588186; cv=none; b=bJeGzo9f6fg86Ptor96sjN0e9M7WYVZpvdq6gqc2NPisUWsoKti0/+3KaGKc67deQhxnwOmJmHplBHHXNJQFpTHZri3Z44ohRm6LvP+s6kZSIxlJldrsJVMf5JLMGtQTV9hTEcqqiEJ1EOTy6sm3cwPb07bRndgvDt0mVleg8+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718552229; c=relaxed/simple;
-	bh=grOLrtXokBRxCb602pJ2qqigELqTN7tvSkwUgOFBVHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Z2hqzxhdxxozP0YSqoeJCCxZUhOmxVHM31PO28LgCAxf2PqILN9pW9uT8Z5fVVfzl4VM6RmYPN2c3OrTZsZ+m9f/W1OPCwhizrAWCciv4UaqXGMq3vpiMhlB7uKcMDb6FCQAA3LOJnrGZboY45K0YRyV1innua1S+viLMv3mVug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KvNoz0JE; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KvNoz0JE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718552228; x=1750088228;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=grOLrtXokBRxCb602pJ2qqigELqTN7tvSkwUgOFBVHc=;
-  b=KvNoz0JEJnWKGTNXTSmRCfYKIWF94F/TTB7cJVtbQTbEPKmn0gEr5s0z
-   xFldNIepPmH9Q7SAkboXlgxeu/9EXQluV+1IG9vESQho1ovJMrI0PTIyH
-   syJ8PhfCnKXXbc4E//2sDrL/9P7VVvcbucY3C2TGy3aXBsLxxQ4lf7sbV
-   JBNgAP9mkjHkZ3bLmZ4GYCe5veADeYdJtMk1tgyTWnSaB4nMkaZZ4OGwi
-   9Y+Kj2iWEM/ea3Cy77giWVIfNGHuWvi1J994lnYyvy+to9uY/tf0DQCTj
-   bLCjnNy8A2azzSd3NQNvdIS5AtfYnzJBSdfGFd+Cq94StcTNU7IBcO5bg
-   A==;
-X-CSE-ConnectionGUID: UwO1IabZS6GBr3WsgPWmkQ==
-X-CSE-MsgGUID: Re4ydOO3QDeLCo/vJCV+iQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="19213772"
-X-IronPort-AV: E=Sophos;i="6.08,242,1712646000"; 
-   d="scan'208";a="19213772"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 08:37:07 -0700
-X-CSE-ConnectionGUID: 7N5rMaRiSTmnktZf+InDXg==
-X-CSE-MsgGUID: MCBI5qRfTkqf3EKk0KW+UA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,242,1712646000"; 
-   d="scan'208";a="72185210"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jun 2024 08:37:03 -0700
-Message-ID: <5d9a9842-9b8a-428c-898f-e1ff866a6e66@intel.com>
-Date: Sun, 16 Jun 2024 18:37:01 +0300
+	s=arc-20240116; t=1718588186; c=relaxed/simple;
+	bh=9H1/J8OKKqVwu2xDiBQTLiXvt6EywQ1255mf6P8udi8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KGPgEKyrYpz8LXyUbtxUTEF83zFYEPs+s0ZDztDZCZ1PpXZG11DC7ehk031R/HFbu+fLDY7LeCNT365MUbZ6GfavBxJZUoIYv881KLfM8Xt0XNZ8nZTBKKzSzChenb+LuE5yuCM6ZBaO/aKaI1aEgSllFtx24N+N4W7ksTW0rOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W2XVs1DvKzdbN5;
+	Mon, 17 Jun 2024 09:34:45 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id AAB32140258;
+	Mon, 17 Jun 2024 09:36:14 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 17 Jun 2024 09:36:13 +0800
+Message-ID: <c5b6aca7-4673-f529-45ec-edbacca7a2ac@huawei.com>
+Date: Mon, 17 Jun 2024 09:36:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] tools/perf: Fix the string match for
- "/tmp/perf-$PID.map" files in dso__load
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
- jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
- kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20240614172742.56976-1-atrajeev@linux.vnet.ibm.com>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v2] riscv: stacktrace: Add USER_STACKTRACE support
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240614172742.56976-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
+To: <paul.walmsley@sifive.com>, <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<dev.mbstr@gmail.com>, <samuel.holland@sifive.com>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+References: <20240604034729.841930-1-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20240604034729.841930-1-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On 14/06/24 20:27, Athira Rajeev wrote:
-> Perf test for perf probe of function from different CU fails
-> as below:
+ Gentle ping.
+
+On 2024/6/4 11:47, Jinjie Ruan wrote:
+> Currently, userstacktrace is unsupported for riscv. So use the
+> perf_callchain_user() code as blueprint to implement the
+> arch_stack_walk_user() which add userstacktrace support on riscv.
+> Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
+> of perf_callchain_user().
 > 
-> 	./perf test -vv "test perf probe of function from different CU"
-> 	116: test perf probe of function from different CU:
-> 	--- start ---
-> 	test child forked, pid 2679
-> 	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa7iy89bx/testfile
-> 	  Error: Failed to add events.
-> 	--- Cleaning up ---
-> 	"foo" does not hit any event.
-> 	  Error: Failed to delete events.
-> 	---- end(-1) ----
-> 	116: test perf probe of function from different CU                   : FAILED!
-> 
-> The test does below to probe function "foo" :
-> 
-> 	# gcc -g -Og -flto -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.c
-> 	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-> 	# gcc -g -Og -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.c
-> 	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
-> 	# gcc -g -Og -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-> 	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-> 	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
-> 
-> 	# ./perf probe -x /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile foo
-> 	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-> 	   Error: Failed to add events.
-> 
-> Perf probe fails to find symbol foo in the executable placed in
-> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
-> 
-> Simple reproduce:
-> 
->  # mktemp -d /tmp/perf-checkXXXXXXXXXX
->    /tmp/perf-checkcWpuLRQI8j
-> 
->  # gcc -g -o test test.c
->  # cp test /tmp/perf-checkcWpuLRQI8j/
->  # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
->    00000000100006bc T foo
-> 
->  # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
->    Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
->       Error: Failed to add events.
-> 
-> But it works with any files like /tmp/perf/test. Only for
-> patterns with "/tmp/perf-", this fails.
-> 
-> Further debugging, commit 80d496be89ed ("perf report: Add support
-> for profiling JIT generated code") added support for profiling JIT
-> generated code. This patch handles dso's of form
-> "/tmp/perf-$PID.map" .
-> 
-> The check used "if (strncmp(self->name, "/tmp/perf-", 10) == 0)"
-> to match "/tmp/perf-$PID.map". With this commit, any dso in
-> /tmp/perf- folder will be considered separately for processing
-> (not only JIT created map files ). Fix this by changing the
-> string pattern to check for regex of form "/tmp/perf-*.map"
-> 
-> With the fix,
-> 	# ./perf test "test perf probe of function from different CU"
-> 	117: test perf probe of function from different CU                   : Ok
-> 
-> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202406012109.PDAjXm2i-lkp@intel.com/
 > ---
->  tools/perf/util/symbol.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
+> v2:
+> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
+> ---
+>  arch/riscv/Kconfig                 |  1 +
+>  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
+>  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
+>  3 files changed, 47 insertions(+), 43 deletions(-)
 > 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9e5940b5bc59..bfb88a4b0987 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -41,6 +41,7 @@
->  #include <limits.h>
->  #include <symbol/kallsyms.h>
->  #include <sys/utsname.h>
-> +#include <regex.h>
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 0525ee2d63c7..6ed96d935b8f 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -193,6 +193,7 @@ config RISCV
+>  	select THREAD_INFO_IN_TASK
+>  	select TRACE_IRQFLAGS_SUPPORT
+>  	select UACCESS_MEMCPY if !MMU
+> +	select USER_STACKTRACE_SUPPORT
+>  	select ZONE_DMA32 if 64BIT
 >  
->  static int dso__load_kernel_sym(struct dso *dso, struct map *map);
->  static int dso__load_guest_kernel_sym(struct dso *dso, struct map *map);
-> @@ -1797,9 +1798,18 @@ int dso__load(struct dso *dso, struct map *map)
->  	struct nscookie nsc;
->  	char newmapname[PATH_MAX];
->  	const char *map_path = dso__long_name(dso);
-> +	regex_t    regex;
-> +	const char *pattern =  "(^/tmp/perf-).*(map)";
+>  config CLANG_SUPPORTS_DYNAMIC_FTRACE
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+> index 3348a61de7d9..c7468af77c66 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
+> @@ -6,37 +6,9 @@
 >  
->  	mutex_lock(dso__lock(dso));
-> -	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
-> +	if (regcomp(&regex, pattern, REG_EXTENDED)) {
-> +		pr_debug("regcomp() failed in dso__load\n");
-> +		ret = -1;
-> +		goto out;
-> +	}
+>  #include <asm/stacktrace.h>
+>  
+> -/*
+> - * Get the return address for a single stackframe and return a pointer to the
+> - * next frame tail.
+> - */
+> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
+> -				    unsigned long fp, unsigned long reg_ra)
+> +static bool fill_callchain(void *entry, unsigned long pc)
+>  {
+> -	struct stackframe buftail;
+> -	unsigned long ra = 0;
+> -	unsigned long __user *user_frame_tail =
+> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
+> -
+> -	/* Check accessibility of one struct frame_tail beyond */
+> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
+> -		return 0;
+> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
+> -				      sizeof(buftail)))
+> -		return 0;
+> -
+> -	if (reg_ra != 0)
+> -		ra = reg_ra;
+> -	else
+> -		ra = buftail.ra;
+> -
+> -	fp = buftail.fp;
+> -	if (ra != 0)
+> -		perf_callchain_store(entry, ra);
+> -	else
+> -		return 0;
+> -
+> -	return fp;
+> +	return perf_callchain_store(entry, pc) == 0;
+>  }
+>  
+>  /*
+> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
+>  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  			 struct pt_regs *regs)
+>  {
+> -	unsigned long fp = 0;
+> -
+> -	fp = regs->s0;
+> -	perf_callchain_store(entry, regs->epc);
+> -
+> -	fp = user_backtrace(entry, fp, regs->ra);
+> -	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
+> -		fp = user_backtrace(entry, fp, 0);
+> -}
+> -
+> -static bool fill_callchain(void *entry, unsigned long pc)
+> -{
+> -	return perf_callchain_store(entry, pc) == 0;
+> +	arch_stack_walk_user(fill_callchain, entry, regs);
+>  }
+>  
+>  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+> index 528ec7cc9a62..9685a2baa5d9 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+> @@ -161,3 +161,46 @@ noinline void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie
+>  {
+>  	walk_stackframe(task, regs, consume_entry, cookie);
+>  }
 > +
-> +	perfmap = !regexec(&regex, dso__name(dso), 0, NULL, 0);
-
-This isn't the only place that checks for that name.  Perhaps
-create a helper function:
-
-bool is_perf_pid_map_name(const char *name);
-
-Regex looks over complicated.  Maybe sscanf
-
-	int tid;
-
-	return sscanf(name, "/tmp/perf-%d.map", &tid) == 1;
-
+> +/*
+> + * Get the return address for a single stackframe and return a pointer to the
+> + * next frame tail.
+> + */
+> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_entry,
+> +				       void *cookie, unsigned long fp,
+> +				       unsigned long reg_ra)
+> +{
+> +	struct stackframe buftail;
+> +	unsigned long ra = 0;
+> +	unsigned long __user *user_frame_tail =
+> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
 > +
->  	if (perfmap) {
->  		if (dso__nsinfo(dso) &&
->  		    (dso__find_perf_map(newmapname, sizeof(newmapname),
-
+> +	/* Check accessibility of one struct frame_tail beyond */
+> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
+> +		return 0;
+> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
+> +				      sizeof(buftail)))
+> +		return 0;
+> +
+> +	ra = reg_ra ? : buftail.ra;
+> +
+> +	fp = buftail.fp;
+> +	if (!ra || !consume_entry(cookie, ra))
+> +		return 0;
+> +
+> +	return fp;
+> +}
+> +
+> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+> +			  const struct pt_regs *regs)
+> +{
+> +	unsigned long fp = 0;
+> +
+> +	fp = regs->s0;
+> +	if (!consume_entry(cookie, regs->epc))
+> +		return;
+> +
+> +	fp = unwind_user_frame(consume_entry, cookie, fp, regs->ra);
+> +	while (fp && !(fp & 0x3))
+> +		fp = unwind_user_frame(consume_entry, cookie, fp, 0);
+> +}
