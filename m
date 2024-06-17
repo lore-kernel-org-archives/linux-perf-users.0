@@ -1,59 +1,77 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD8755888;
-	Mon, 17 Jun 2024 15:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DFEC847A;
+	Mon, 17 Jun 2024 15:45:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636461; cv=none; b=iFCiMzN82Zig9d1ASSb8immBR/lyCj9BlBVkz5U7e1lHpLtcNGe2Y9WNna4vFDNr7B5fwnFeV4bETPKXvb2K29Br+Ltu4JRcfmiTSAqVnAxcwbut6x7DimQnzY8V8APgo50mNUH7eS5P5rp4y2jJHg/gLHUulVAXSNq70pZo8TU=
+	t=1718639113; cv=none; b=iqhGrTTT4yCf1eS3aVpSArtb8fR4jmXZ6bwDKu3HzuRNfoO9/H9NA4jbo8FjeIsDGleqw21UM99EhHQY21noEPc2Wc6cDlKn3XQaF+LpiUO2ouoB9+EaUtrsFvhGewILqQbZLKK5hEliFXTl789yBzTf6XMFNrhZyOnGE3Sqwf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636461; c=relaxed/simple;
-	bh=kNhCpF9yy4ozI+EhT1JRqFNTV1nZBZe9zUnBYVOWTKE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ppM6sFJIvdmATaSMV4lQxE3LD+e10iRXCAyhCDClp2QzfeOM47mOUyZZBmcnokpvbpO5NZuJTEvryfqwmMkKmVXbThmwMaGlSCs6qX7RyqsTx9Jr+pePj/DlE57iaJaEHSRIC/jUPBgAFa6oRmeXMkZDpIg0TS+F4u6XJtSv4nU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MD4o4Y5B; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718639113; c=relaxed/simple;
+	bh=MZFJlKDbBJ6eK0OqtV0dh2c+XfyBVqooU/cWzg8IwKU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ds7OT+paSMfmzoPjUGh4yH0PZf5L2ARrG2F/8+jjSvgasSSGcwyZU01OlXn+Q+80JEdpujf7tE2t9QKo9P+BVwLQPFP5rl+g/cOdLhNPwc0MWIxCsNkxeZbBSfPjPK7wIPo8wkQ55QmHF6AbgHelF2u9zSMfqAko7kunhmMVwWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GX7DWanE; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MD4o4Y5B"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=ob7EjVWS74YHIzO0+xs/iszj8jCcXUxw7ZhVkRSF93I=; b=MD4o4Y5BSNU0Xp6t440QmxGt2Q
-	NdXHS2ibYHTvzEAkzK9x1hm6Cuh/5jGqpvKe2w2yO+LWvImKXyRLWkgVQSoS997pacOJ9qttRpU67
-	l2mGnE/dVsAILaOmeuRkcmcvVyEeVTAyDvL3DunWbTVjHcvlg1oNOoQxu1UsCD5VCGoyqwvZXn6Ry
-	dslJrdK6UbXNF9bza8KYgduB7zrdjQgsgPrI7AsfjM+axd1KKSYcCTUxYxGpYJvstVBpa5hnMSkj1
-	LtLcDjqrPiaooftmnqSBWAob627cLkFTl49GRp9RJGNEXto0Y3B+FzVpy0xeEpTF0vY0kKZLtrY1h
-	tJYHqYjw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJDqe-00000002Dyl-04tO;
-	Mon, 17 Jun 2024 15:00:44 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id E97AE30024D; Mon, 17 Jun 2024 17:00:38 +0200 (CEST)
-Date: Mon, 17 Jun 2024 17:00:38 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Mingwei Zhang <mizhang@google.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Xiong Zhang <xiong.y.zhang@intel.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>,
-	Kan Liang <kan.liang@intel.com>,
-	Zhenyu Wang <zhenyuw@linux.intel.com>,
-	Manali Shukla <manali.shukla@amd.com>,
-	Sandipan Das <sandipan.das@amd.com>,
-	Jim Mattson <jmattson@google.com>,
-	Stephane Eranian <eranian@google.com>,
-	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-	gce-passthrou-pmu-dev@google.com,
-	Samantha Alt <samantha.alt@intel.com>,
-	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
-	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
-	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GX7DWanE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718639112; x=1750175112;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MZFJlKDbBJ6eK0OqtV0dh2c+XfyBVqooU/cWzg8IwKU=;
+  b=GX7DWanE6g1vf9lsvTiLT6GE+P4ojLiSiZ+mS2/XG2waAWM/pJaurSow
+   VoNFf3KeB94n7VBRbj6QJDiMKW1hbe4h2h0VZ1itZX+Pu7Jvsw19JKY9w
+   hNOFkjiRgBpVdpVR4pwHyrjxuPCkyo7vWUSNGP6iHIljmlLoHSzCFL3AT
+   JyY4BIXTm/QNH6JrZUAIwd3gUNZlcrkNTYOSlpGcuBujh/RmmRIYRIhwk
+   VnUqDfkcgxl5bKvv1GYKsJ4W+l4pMZSShjNJi5gNr+TLv3Y8kIbcT9lzd
+   bprLqOyAjb0ejknWmarXUsnANPf9SLKEKIH0MDjVAEdwM0R73y2pYddPr
+   Q==;
+X-CSE-ConnectionGUID: MilMomKlSG6laStTR+zPng==
+X-CSE-MsgGUID: xxO9EZxIQ/STWwPRs0AmXg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="26050531"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="26050531"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 08:45:11 -0700
+X-CSE-ConnectionGUID: MRGidVNXTOyjKyJ2SkOCsA==
+X-CSE-MsgGUID: Av24Ueh2QiiwrLdAEZ+Ybg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41094189"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 08:45:11 -0700
+Received: from [10.212.91.105] (kliang2-mobl1.ccr.corp.intel.com [10.212.91.105])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 1DA7920B5703;
+	Mon, 17 Jun 2024 08:45:07 -0700 (PDT)
+Message-ID: <d0eb2af0-4188-440a-ab90-1f90b88820ee@linux.intel.com>
+Date: Mon, 17 Jun 2024 11:45:06 -0400
+Precedence: bulk
+X-Mailing-List: linux-perf-users@vger.kernel.org
+List-Id: <linux-perf-users.vger.kernel.org>
+List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
-Message-ID: <20240617150038.GW8774@noisy.programming.kicks-ass.net>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
+ Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
+ <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>,
+ Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+ kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
 References: <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
  <20240611120641.GF8774@noisy.programming.kicks-ass.net>
  <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
@@ -64,63 +82,31 @@ References: <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
  <f4da2fb2-fa09-4d2b-a78d-1b459ada6d09@linux.intel.com>
  <20240617075123.GX40213@noisy.programming.kicks-ass.net>
  <5fcf4471-bcf9-43af-93a0-dcc4fae27449@linux.intel.com>
-Precedence: bulk
-X-Mailing-List: linux-perf-users@vger.kernel.org
-List-Id: <linux-perf-users.vger.kernel.org>
-List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5fcf4471-bcf9-43af-93a0-dcc4fae27449@linux.intel.com>
+ <20240617150038.GW8774@noisy.programming.kicks-ass.net>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240617150038.GW8774@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jun 17, 2024 at 09:34:15AM -0400, Liang, Kan wrote:
-> 
-> 
-> On 2024-06-17 3:51 a.m., Peter Zijlstra wrote:
-> > On Thu, Jun 13, 2024 at 02:04:36PM -0400, Liang, Kan wrote:
-> >>>>  static enum event_type_t get_event_type(struct perf_event *event)
-> >>>> @@ -3340,9 +3388,14 @@ ctx_sched_out(struct perf_event_context
-> >>>>  	 * would only update time for the pinned events.
-> >>>>  	 */
-> >>>>  	if (is_active & EVENT_TIME) {
-> >>>> +		bool stop;
-> >>>> +
-> >>>> +		stop = !((ctx->is_active & event_type) & EVENT_ALL) &&
-> >>>> +		       ctx == &cpuctx->ctx;
-> >>>> +			
-> >>>>  		/* update (and stop) ctx time */
-> >>>>  		update_context_time(ctx);
-> >>>> -		update_cgrp_time_from_cpuctx(cpuctx, ctx == &cpuctx->ctx);
-> >>>> +		update_cgrp_time_from_cpuctx(cpuctx, stop);
-> >>
-> >> For the event_type == EVENT_GUEST, the "stop" should always be the same
-> >> as "ctx == &cpuctx->ctx". Because the ctx->is_active never set the
-> >> EVENT_GUEST bit.
-> >> Why the stop is introduced?
-> > 
-> > Because the ctx_sched_out() for vPMU should not stop time, 
-> 
-> But the implementation seems stop the time.
-> 
-> The ctx->is_active should be (EVENT_ALL | EVENT_TIME) for most of cases.
-> 
-> When a vPMU is scheduling in (invoke ctx_sched_out()), the event_type
-> should only be EVENT_GUEST.
-> 
-> !((ctx->is_active & event_type) & EVENT_ALL) should be TRUE.
 
-Hmm.. yeah, I think I might've gotten that wrong.
 
-> > only the
-> > 'normal' sched-out should stop time.
-> 
-> If the guest is the only case which we want to keep the time for, I
-> think we may use a straightforward check as below.
-> 
-> 	stop = !(event_type & EVENT_GUEST) && ctx == &cpuctx->ctx;
+On 2024-06-17 11:00 a.m., Peter Zijlstra wrote:
+>>> only the
+>>> 'normal' sched-out should stop time.
+>> If the guest is the only case which we want to keep the time for, I
+>> think we may use a straightforward check as below.
+>>
+>> 	stop = !(event_type & EVENT_GUEST) && ctx == &cpuctx->ctx;
+> So I think I was trying to get stop true when there weren't in fact
+> events on, that is when we got in without EVENT_ALL bits, but perhaps
+> that case isn't relevant.
 
-So I think I was trying to get stop true when there weren't in fact
-events on, that is when we got in without EVENT_ALL bits, but perhaps
-that case isn't relevant.
+It should be irrelevant. Here I think we just need to make sure that the
+guest is not the reason for stopping the time if there is an active
+time. For the others, there is nothing changed.
+The __this_cpu_read(perf_in_guest) check will guarantee that both guest
+time and host time sync when any updates occur in the guest mode.
 
+Thanks,
+Kan
