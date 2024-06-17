@@ -1,50 +1,25 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6515C16A949;
-	Mon, 17 Jun 2024 14:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0EB823B8;
+	Mon, 17 Jun 2024 15:00:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718635857; cv=none; b=VNReNHQUAqIEE4dslj09uX5OTJAbYogcAz/aI/acQlDFZdmRShl+wO5IJskah/ovy11t5IG4KKRlLN9RgvXtxoge7M3uC/JUzodCF+DnLegq5FZvQ9MYJBKKVQ+++6ZMmNbOQDBw+G9/1AQ8J78iOcL/fV/yeN4yl2Gvs3vyX6k=
+	t=1718636413; cv=none; b=e0EWrrw/GYFODDATU0rL5juVc42ZFX+wwTLq7iPOWcGPDUaE8NUQ/NR5bNSUNFZ1Zq+MnqTk1wV1QYvyjSVdSbUAcXhlx+hvqt9wiOifS0j8gWx6z7JBekJIIg6o4aF9vPaSKSISZ/oauzOOIftIj9VFHo2vJps6tBu/fdYwdqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718635857; c=relaxed/simple;
-	bh=ji2gr3OUItz8IUriY5KGessBCcc7eVzh5gqFGiSaWD0=;
+	s=arc-20240116; t=1718636413; c=relaxed/simple;
+	bh=VtX9hVDLR0eiTAXx2qCuh+/KQ1kO+ysSwbv+qE8urU0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=is5FIsCIqh1j7B+87NSyb+f4pvR8XUID3bTQ5DFvapi0ccJUgwwJe1my7zE4g053Je5hcmAnSVP5DdbLnuzlcGXbQmKrN5ribGkyvr+ZVRZsR/RncuzxAZR9U5jdS7fG6Q0h8UbVm47LTgRs7mDHLdmABFLZtOr/GQfAH530WWI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iJFvSGFt; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iJFvSGFt"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718635856; x=1750171856;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=ji2gr3OUItz8IUriY5KGessBCcc7eVzh5gqFGiSaWD0=;
-  b=iJFvSGFtJmOVlJg1bLTyQCTj+Zj7hjEag2eS1pcwFJj9dOV66ZVzJuTX
-   Va9XAsAAwZkybJo3pDn6VN+bmfJwDOPu+uAAnv20Q5l4mgmOQhQH4fahl
-   ikZkzh42kT3C7bzeaNav/ASOouY9GELYnEyMLbZukDexeF6cGdZnE8w5r
-   9BTxmQM2O573MoyFw4JFNUkygpIXXEnSY1knPojPhZ8P5l4j5EiNn9qw3
-   19qJi6nWVMi+AN0S2X1aAIjwC6QZzi/Vl9ne5gZ3RfvXdA1vg3kBKqD2T
-   9TzNlZpHymQWRSVa7YnudEuc16PVM79C2uvoGWQW0q+umXnbqcyKF5jRq
-   Q==;
-X-CSE-ConnectionGUID: clMEeHonStGtnPLwMxXcWA==
-X-CSE-MsgGUID: 2iR1OZgRQvqXyTSCLzqzVQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="15589475"
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="15589475"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:50:55 -0700
-X-CSE-ConnectionGUID: B/77jqxFTfG0jOBQO/EB7Q==
-X-CSE-MsgGUID: V84zeNX7RqCHglRue/rN+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
-   d="scan'208";a="41314816"
-Received: from kinlongk-mobl1.amr.corp.intel.com (HELO [10.125.111.154]) ([10.125.111.154])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:50:54 -0700
-Message-ID: <7c4978b4-ac69-480e-b8cf-a473b64ed917@intel.com>
-Date: Mon, 17 Jun 2024 07:50:53 -0700
+	 In-Reply-To:Content-Type; b=Ah/NnrNMOWPS11pucyGQviYOCqK93rd/Qr2XAXXP954gYqSdmRBAr+0m7u1tTY6IQynKVfIa2wMJAPcXddGh3b/NrTlp+n5eFLxtK2NuWTkZHUEDpYJhOhPlammxzeDm4YyRO2jzAT+l5hzt4ooMycFdHCdobgxgbwiwD1VteSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F7CEDA7;
+	Mon, 17 Jun 2024 08:00:35 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A9E03F6A8;
+	Mon, 17 Jun 2024 08:00:08 -0700 (PDT)
+Message-ID: <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
+Date: Mon, 17 Jun 2024 16:00:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,79 +27,201 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH PATCH 3/9] perf/x86/intel: Use topology_cpu_type() to get
- cpu-type
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-3-b88998c01e76@linux.intel.com>
-From: Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
+ fail when kernel debuginfo is not present
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
+ kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, acme@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+ namhyung@kernel.org
+References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
 Content-Language: en-US
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-In-Reply-To: <20240617-add-cpu-type-v1-3-b88998c01e76@linux.intel.com>
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 6/17/24 02:11, Pawan Gupta wrote:
-> find_hybrid_pmu_for_cpu() uses get_this_hybrid_cpu_type() to get the CPU
-> type, but it returns an invalid cpu-type when X86_FEATURE_HYBRID_CPU is not
-> set. Some hybrid variants do enumerate cpu-type regardless of
-> X86_FEATURE_HYBRID_CPU.
 
-I'm not fully sure what point this is trying to make.
 
-Is this trying to make the case that get_this_hybrid_cpu_type() and
-topology_cpu_type() are equivalent or pointing out a difference?
+On 17/06/2024 13:21, Athira Rajeev wrote:
+> Running "perftool-testsuite_probe" fails as below:
+> 
+> 	./perf test -v "perftool-testsuite_probe"
+> 	83: perftool-testsuite_probe  : FAILED
+> 
+> There are three fails:
+> 
+> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+> 
 
+On a machine where NO_DEBUGINFO gets set, this one skips for me. But on
+a machine where there _is_ debug info this test still fails.
+
+But in both cases the probe looks like it was added successfully. So I'm
+wondering if this one does need to be skipped, or it's just always
+failing? Do you have this test passing anywhere where there is debug info?
+
+The list command looks like it successfully lists the probe for me in
+both cases, it just doesn't have an address on the end:
+
+ perf list 'probe:*'
+
+   probe:inode_permission (on inode_permission)
+
+Does the missing address mean anything or is it just not handled
+properly by the test?
+
+Ironically the machine that _does_ pass the debug info test also prints
+this, but it looks like it still adds and lists the probe correctly:
+
+  perf probe -l probe:*
+
+  Failed to find debug information for address 0xffff80008047ac30
+    probe:inode_permission (on inode_permission)
+
+
+> 2. Regexp not found: "probe:vfs_mknod"
+>    Regexp not found: "probe:vfs_create"
+>    Regexp not found: "probe:vfs_rmdir"
+>    Regexp not found: "probe:vfs_link"
+>    Regexp not found: "probe:vfs_write"
+>    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+> 
+> 3. Regexp not found: "Failed to find"
+>    Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>    Regexp not found: "in this function|at this address"
+>    Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+>    Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+> 
+> These three tests depends on kernel debug info.
+> 1. Fail 1 expects file name along with probe which needs debuginfo
+> 2. Fail 2 :
+>     perf probe -nf --max-probes=512 -a 'vfs_* $params'
+>     Debuginfo-analysis is not supported.
+>      Error: Failed to add events.
+> 
+> 3. Fail 3 :
+>    perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+>    Debuginfo-analysis is not supported.
+>    Error: Failed to add events.
+> 
+> There is already helper function skip_if_no_debuginfo in
+> lib/probe_vfs_getname.sh which does perf probe and returns
+> "2" if debug info is not present. Use the skip_if_no_debuginfo
+> function and skip only the three tests which needs debuginfo
+> based on the result.
+> 
+> With the patch:
+> 
+>     83: perftool-testsuite_probe:
+>    --- start ---
+>    test child forked, pid 3927
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission ::
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: -a
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: --add
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf list
+>    Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe (should NOT be listed)
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding probe
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: first probe adding
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (without force)
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (with force)
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+>    Regexp not found: "probe:vfs_mknod"
+>    Regexp not found: "probe:vfs_create"
+>    Regexp not found: "probe:vfs_rmdir"
+>    Regexp not found: "probe:vfs_link"
+>    Regexp not found: "probe:vfs_write"
+>    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>    Regexp not found: "Failed to find"
+>    Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>    Regexp not found: "in this function|at this address"
+>    Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+>    Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+>    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: record
+>    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument probing :: script
+>    ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
+>    ---- end(0) ----
+>    83: perftool-testsuite_probe                                        : Ok
+> 
+> Only the three specific tests are skipped and remaining
+> ran successfully.
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  .../shell/base_probe/test_adding_kernel.sh    | 31 +++++++++++++++++--
+>  1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> index 63bb8974b38e..187dc8d4b163 100755
+> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+> @@ -21,8 +21,18 @@
+>  THIS_TEST_NAME=`basename $0 .sh`
+>  TEST_RESULT=0
+>  
+> +# shellcheck source=lib/probe_vfs_getname.sh
+> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
+> +
+>  TEST_PROBE=${TEST_PROBE:-"inode_permission"}
+>  
+> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
+> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
+> +skip_if_no_debuginfo
+> +if [ $? -eq 2 ]; then
+> +	NO_DEBUGINFO=1
+> +fi
+> +
+>  check_kprobes_available
+>  if [ $? -ne 0 ]; then
+>  	print_overall_skipped
+> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=$?
+>  ../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
+>  CHECK_EXIT_CODE=$?
+>  
+> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
+> +if [ $NO_DEBUGINFO ] ; then
+> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+> +else
+> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
+> +fi
+> +
+>  (( TEST_RESULT += $? ))
+>  
+>  
+> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=$?
+>  ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
+>  CHECK_EXIT_CODE=$?
+>  
+> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
+> +if [ $NO_DEBUGINFO ] ; then
+> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+> +else
+> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
+> +fi
+> +
+>  (( TEST_RESULT += $? ))
+>  
+>  
+> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=$?
+>  ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
+>  (( CHECK_EXIT_CODE += $? ))
+>  
+> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
+> +if [ $NO_DEBUGINFO ]; then
+> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+> +else
+> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
+> +fi
+> +
+>  (( TEST_RESULT += $? ))
+>  
+>  
