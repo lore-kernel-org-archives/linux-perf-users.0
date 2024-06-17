@@ -1,104 +1,139 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9761684B6;
-	Mon, 17 Jun 2024 13:59:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 754391BF2B;
+	Mon, 17 Jun 2024 14:01:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632768; cv=none; b=a7nI14qgUrj8ifp1YzrD/u0NLBu+N6QRkU34nnaKY7AeJYpATjLXO/CLOcn1MVYjYnA8YU8XNppbcLVYwgatis3PH175Nh7ks2DExvxGwsYcbHErmwmmf/V3IUmIWPHvEu8yQx7iy+an8mlyeuEb5MuicKuH2flUeTw5qWsIwBk=
+	t=1718632920; cv=none; b=i6aB0f/DIdE9m4woZsPzB39ctrZm3YISqeW7prFEST1VGgslzKqM1v4cEhX4qW3HlHTzXUP7byftqliskE5CqWgR+LXbbKtivbO3naxQd5gUKwL2WzPQ8Yn18jENKou+MgK9/ri1HQn3gHcNViHlcFG9aDknUKOaDO3JhvEMfJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632768; c=relaxed/simple;
-	bh=qdz+/LRXQIV++o3JtvvYR+akKHKW8FT2nKWVuStn+Qo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q6VfEABWlYrzVTkWgcaL+HMqLy0NO4gbKCyZqfTQItrVd0zral5OKABKMjcx64FCVcChlcd0dRQ8ddXcRFGSBZHulBcrGdOB1+LHpakWRE+ssp9dGi88EYx1KqRmQ4P8f/jGYvtJpxlDwP88D39xyDMQ0SwNvGLj3olEoL7itts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76244DA7;
-	Mon, 17 Jun 2024 06:59:50 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 284DA3F6A8;
-	Mon, 17 Jun 2024 06:59:24 -0700 (PDT)
-Message-ID: <30cdabb5-4c36-40c6-a2c0-8059e4afb371@arm.com>
-Date: Mon, 17 Jun 2024 14:59:22 +0100
+	s=arc-20240116; t=1718632920; c=relaxed/simple;
+	bh=+5sMLlQjXiSMPvX/MsyRTJLDa/2Lz5M1r4ucStNkDvc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T3Vj2OfvzN2hrRDPH15ZP7Ijenp7vbxxBWh0BDl5IcqLlWOrI/WLNCenWagn0X9au7sRyk1vbPmrJZYaA9sUCjDkTVZiqX2a8Org2kxxt8JVr2GZ8mleOw5dRBgV9je7YJohxfTeNy1QRVhVn2sI2SQNkJLcdao49NyfrmhK4oU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rsc3o/oY; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rsc3o/oY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718632918; x=1750168918;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+5sMLlQjXiSMPvX/MsyRTJLDa/2Lz5M1r4ucStNkDvc=;
+  b=Rsc3o/oYYGZNT8lyN0KYI6/hqTbwiBOgTfkI/WpDqNQRJofAqClV1GBm
+   fTsPiDgNUF//piBwkUgAxkpXLubLAkdU+borJmK42sAJD5sh+jaZe8N8z
+   JScAy7h2ipQj0oZ766Da7dV+yPZa4/GeefDXVpiihnTJkeslCpYDT2b2j
+   exXEivj55avVzgm2EiIJ0tWSsym6LNp9YHNFBzUCmB5R6VI8+vpHmt9jf
+   MOG4XUdoeR3cNYQH1076nI63A6klZ2c1M7NP5nxnSuzakD0TsXlN9kxlZ
+   +vz7egyZky+nb3H6MSiRGmH+uU9SCS9bo6J07nfugm1ayTRsy5YmOhnHo
+   Q==;
+X-CSE-ConnectionGUID: dkz9inBET7qhuT3142bz2A==
+X-CSE-MsgGUID: Ug0mVlf8SLG4yO6VkOGAJQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="26854368"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="26854368"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 07:01:58 -0700
+X-CSE-ConnectionGUID: cbI57oqLSgWWTV2s2HHveQ==
+X-CSE-MsgGUID: xQJ3PNCfRoGXp2R8jjn5FQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41304066"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 17 Jun 2024 07:01:54 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJCvf-0004MH-2e;
+	Mon, 17 Jun 2024 14:01:51 +0000
+Date: Mon, 17 Jun 2024 22:01:18 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, daniel.sneddon@linux.intel.com,
+	tony.luck@intel.com, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 2/9] cpufreq: intel_pstate: Use topology_cpu_type()
+ to get cpu-type
+Message-ID: <202406172134.ICqkbkNm-lkp@intel.com>
+References: <20240617-add-cpu-type-v1-2-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/3] tools/perf: Use is_perf_pid_map_name helper
- function to check dso's of pattern /tmp/perf-%d.map
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
- kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, acme@kernel.org,
- jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
- namhyung@kernel.org
-References: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
- <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617-add-cpu-type-v1-2-b88998c01e76@linux.intel.com>
+
+Hi Pawan,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
+base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-2-b88998c01e76%40linux.intel.com
+patch subject: [PATCH PATCH 2/9] cpufreq: intel_pstate: Use topology_cpu_type() to get cpu-type
+config: i386-buildonly-randconfig-001-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172134.ICqkbkNm-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172134.ICqkbkNm-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172134.ICqkbkNm-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   drivers/cpufreq/intel_pstate.c: In function 'hwp_get_cpu_scaling':
+>> drivers/cpufreq/intel_pstate.c:1959:25: error: 'X86_CPU_TYPE_INTEL_CORE' undeclared (first use in this function)
+    1959 |         if (cpu_type == X86_CPU_TYPE_INTEL_CORE)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/cpufreq/intel_pstate.c:1959:25: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/cpufreq/intel_pstate.c:1963:25: error: 'X86_CPU_TYPE_INTEL_ATOM' undeclared (first use in this function)
+    1963 |         if (cpu_type == X86_CPU_TYPE_INTEL_ATOM)
+         |                         ^~~~~~~~~~~~~~~~~~~~~~~
 
 
+vim +/X86_CPU_TYPE_INTEL_CORE +1959 drivers/cpufreq/intel_pstate.c
 
-On 17/06/2024 14:03, Athira Rajeev wrote:
-> commit 80d496be89ed ("perf report: Add support for profiling JIT
-> generated code") added support for profiling JIT generated code.
-> This patch handles dso's of form "/tmp/perf-$PID.map".
-> 
-> Some of the references doesn't check exactly for same pattern.
-> some uses "if (!strncmp(dso_name, "/tmp/perf-", 10))". Fix
-> this by using helper function is_perf_pid_map_name which looks
-> for proper pattern of form: "/tmp/perf-$PID.map" for these checks.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/util/dsos.c    | 2 +-
->  tools/perf/util/srcline.c | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-> index ab3d0c01dd63..23cd02aa701d 100644
-> --- a/tools/perf/util/dsos.c
-> +++ b/tools/perf/util/dsos.c
-> @@ -275,7 +275,7 @@ static void dso__set_basename(struct dso *dso)
->  	char *base, *lname;
->  	int tid;
->  
-> -	if (sscanf(dso__long_name(dso), "/tmp/perf-%d.map", &tid) == 1) {
-> +	if (is_perf_pid_map_name(dso__long_name(dso))) {
->  		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
->  			return;
->  	} else {
-> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
-> index 9d670d8c1c08..51eb78993fe2 100644
-> --- a/tools/perf/util/srcline.c
-> +++ b/tools/perf/util/srcline.c
-> @@ -39,7 +39,7 @@ static const char *srcline_dso_name(struct dso *dso)
->  	if (dso_name[0] == '[')
->  		return NULL;
->  
-> -	if (!strncmp(dso_name, "/tmp/perf-", 10))
-> +	if (is_perf_pid_map_name(dso_name))
->  		return NULL;
->  
->  	return dso_name;
+  1953	
+  1954	static int hwp_get_cpu_scaling(int cpu)
+  1955	{
+  1956		u8 cpu_type = topology_cpu_type(cpu);
+  1957	
+  1958		/* P-cores have a smaller perf level-to-freqency scaling factor. */
+> 1959		if (cpu_type == X86_CPU_TYPE_INTEL_CORE)
+  1960			return hybrid_scaling_factor;
+  1961	
+  1962		/* Use default core scaling for E-cores */
+> 1963		if (cpu_type == X86_CPU_TYPE_INTEL_ATOM)
+  1964			return core_get_scaling();
+  1965	
+  1966		/*
+  1967		 * If reached here, this system is either non-hybrid (like Tiger
+  1968		 * Lake) or hybrid-capable (like Alder Lake or Raptor Lake) with
+  1969		 * no E cores (in which case CPUID for hybrid support is 0).
+  1970		 *
+  1971		 * The CPPC nominal_frequency field is 0 for non-hybrid systems,
+  1972		 * so the default core scaling will be used for them.
+  1973		 */
+  1974		return intel_pstate_cppc_get_scaling(cpu);
+  1975	}
+  1976	
 
-Duplicate of [1] but the latest version of the other one looks like it
-might have a mistake in it.
-
-For this one I get this compilation error:
-
-util/dsos.c: In function ‘dso__set_basename’:
-util/dsos.c:279:21: error: ‘tid’ may be used uninitialized
-[-Werror=maybe-uninitialized]
-  279 |                 if (asprintf(&base, "[JIT] tid %d", tid) < 0)
-
-
-
-[1]:
-https://lore.kernel.org/linux-perf-users/20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com/
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
