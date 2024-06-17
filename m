@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D8B197A8C
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 13:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9761684B6;
+	Mon, 17 Jun 2024 13:59:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632377; cv=none; b=GmM3SauOFdZ4RtMrb9dVOxxIdILez8BwqpX49k8jD576aIDaA+UyXty2BSy4nnmCI+pIgAwse1jRqWVMtNdQFMIuUXPbDLi/5katHHjWCNdvnyv1Y9ypAs4vYEFrNOR/xOoJ7e6RH66L3HouYRWiAHRknL1TH4TNepmO9dqwh90=
+	t=1718632768; cv=none; b=a7nI14qgUrj8ifp1YzrD/u0NLBu+N6QRkU34nnaKY7AeJYpATjLXO/CLOcn1MVYjYnA8YU8XNppbcLVYwgatis3PH175Nh7ks2DExvxGwsYcbHErmwmmf/V3IUmIWPHvEu8yQx7iy+an8mlyeuEb5MuicKuH2flUeTw5qWsIwBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632377; c=relaxed/simple;
-	bh=mn4AKGj+59AeBy0CFIAacQr9WPJ8o3lkuZsEUO0gzoQ=;
+	s=arc-20240116; t=1718632768; c=relaxed/simple;
+	bh=qdz+/LRXQIV++o3JtvvYR+akKHKW8FT2nKWVuStn+Qo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pm4Vxgv5Shrl21nCaZCMA5lqXUbA/GGcwOVkjfCBWMm021kAAxxn3WSNzdW66lzLjys+RmJ5QVauQi7jx2H5JMP8hau0q+q5v9FvB7dds+QfY07yJ14O/6NM4EwDOaQ7vacrBPi2Ioy8yWLyy8ThSKtGR39aEqWlHwXg3A13bWI=
+	 In-Reply-To:Content-Type; b=q6VfEABWlYrzVTkWgcaL+HMqLy0NO4gbKCyZqfTQItrVd0zral5OKABKMjcx64FCVcChlcd0dRQ8ddXcRFGSBZHulBcrGdOB1+LHpakWRE+ssp9dGi88EYx1KqRmQ4P8f/jGYvtJpxlDwP88D39xyDMQ0SwNvGLj3olEoL7itts=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32A5CDA7;
-	Mon, 17 Jun 2024 06:53:19 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76244DA7;
+	Mon, 17 Jun 2024 06:59:50 -0700 (PDT)
 Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 197343F6A8;
-	Mon, 17 Jun 2024 06:52:53 -0700 (PDT)
-Message-ID: <371abb9c-41a5-4bf0-928f-a60848776bfc@arm.com>
-Date: Mon, 17 Jun 2024 14:52:52 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 284DA3F6A8;
+	Mon, 17 Jun 2024 06:59:24 -0700 (PDT)
+Message-ID: <30cdabb5-4c36-40c6-a2c0-8059e4afb371@arm.com>
+Date: Mon, 17 Jun 2024 14:59:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,56 +27,78 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 09/10] perf tools: Only treat files as map files when
- they have the extension .map
-To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
- linux-perf-users@vger.kernel.org
-Cc: anshuman.khandual@arm.com
-References: <20240601125946.1741414-1-ChaitanyaS.Prakash@arm.com>
- <20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com>
+Subject: Re: [PATCH V2 2/3] tools/perf: Use is_perf_pid_map_name helper
+ function to check dso's of pattern /tmp/perf-%d.map
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
+ kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, acme@kernel.org,
+ jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
+ namhyung@kernel.org
+References: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
+ <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
 Content-Language: en-US
 From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com>
+In-Reply-To: <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
 
-On 01/06/2024 13:59, Chaitanya S Prakash wrote:
-> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+On 17/06/2024 14:03, Athira Rajeev wrote:
+> commit 80d496be89ed ("perf report: Add support for profiling JIT
+> generated code") added support for profiling JIT generated code.
+> This patch handles dso's of form "/tmp/perf-$PID.map".
 > 
-> Strengthen the check to locate symbol map files in the tool's /tmp
-> directory. As the existing check allows non map files named in
-> "/tmp/perf-" pattern, it leads to possible dwarf library corruption
-> when perf is built with NO_DWARF=1. The try_to_find_probe_trace_events()
-> function behaves differently when built in that manner. Extending the
-> current check condition using the str_has_suffix() function to not only
-> validate the pattern but also ensure the file is of ".map" type allows
-> test perf probe of function from different CU to pass when built with
-> NO_DWARF=1.
+> Some of the references doesn't check exactly for same pattern.
+> some uses "if (!strncmp(dso_name, "/tmp/perf-", 10))". Fix
+> this by using helper function is_perf_pid_map_name which looks
+> for proper pattern of form: "/tmp/perf-$PID.map" for these checks.
 > 
-> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 > ---
->  tools/perf/util/symbol.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  tools/perf/util/dsos.c    | 2 +-
+>  tools/perf/util/srcline.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9e5940b5bc59..fbcc189edd8d 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
->  	const char *map_path = dso__long_name(dso);
+> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
+> index ab3d0c01dd63..23cd02aa701d 100644
+> --- a/tools/perf/util/dsos.c
+> +++ b/tools/perf/util/dsos.c
+> @@ -275,7 +275,7 @@ static void dso__set_basename(struct dso *dso)
+>  	char *base, *lname;
+>  	int tid;
 >  
->  	mutex_lock(dso__lock(dso));
-> -	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
-> +	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0 &&
-> +		  str_has_prefix(dso__name(dso), ".map") != 0;
+> -	if (sscanf(dso__long_name(dso), "/tmp/perf-%d.map", &tid) == 1) {
+> +	if (is_perf_pid_map_name(dso__long_name(dso))) {
+>  		if (asprintf(&base, "[JIT] tid %d", tid) < 0)
+>  			return;
+>  	} else {
+> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> index 9d670d8c1c08..51eb78993fe2 100644
+> --- a/tools/perf/util/srcline.c
+> +++ b/tools/perf/util/srcline.c
+> @@ -39,7 +39,7 @@ static const char *srcline_dso_name(struct dso *dso)
+>  	if (dso_name[0] == '[')
+>  		return NULL;
+>  
+> -	if (!strncmp(dso_name, "/tmp/perf-", 10))
+> +	if (is_perf_pid_map_name(dso_name))
+>  		return NULL;
+>  
+>  	return dso_name;
 
-Does this work? Shouldn't it be str_has_suffix()?
+Duplicate of [1] but the latest version of the other one looks like it
+might have a mistake in it.
 
-For reference, there's another fix for the same issue here:
-https://lore.kernel.org/linux-perf-users/20240617130332.13427-1-atrajeev@linux.vnet.ibm.com/T/#m9b1e62f0cdbcd4caf019f2ad97d69b29df568522
+For this one I get this compilation error:
 
->  	if (perfmap) {
->  		if (dso__nsinfo(dso) &&
->  		    (dso__find_perf_map(newmapname, sizeof(newmapname),
+util/dsos.c: In function ‘dso__set_basename’:
+util/dsos.c:279:21: error: ‘tid’ may be used uninitialized
+[-Werror=maybe-uninitialized]
+  279 |                 if (asprintf(&base, "[JIT] tid %d", tid) < 0)
+
+
+
+[1]:
+https://lore.kernel.org/linux-perf-users/20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com/
