@@ -1,57 +1,57 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75681193060
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 09:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10AB196C90
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 09:38:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718616922; cv=none; b=NI1w3FtbqmPIWVe142DVxGJXdl0kNYdERYVxkRSy97JT31WwVQSS6uyI/9GQhrjUVMJP8spfpGZJazPYouCbX0xh7XcYaXAEVf8s22JCIdq83BHa5EFNtVFE3uZ115Ek6gZEYp0perDHtrZ4/7NMNjAYGO1nue7LLIELZ4A6jg0=
+	t=1718617118; cv=none; b=mKRq0ezs2GBbMn7yIY7CQ28gceHXs1R5XN5GpTyMJl5b0cMAqp7na8QAiVlZjQQLqHzlI4mAp8G47yy9AzInDIt94bSnyQ4oCpJIML7o6hMdvdzZ1ScYMyke0D2yzqNmq/9ZHoKkKjrATOo1xXdnvn2qeDdI7u3dbgCh59EDRLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718616922; c=relaxed/simple;
-	bh=QeyjTSziSsVFe1DChrP/yRnOREqQL0sosAgzfMWH/J8=;
+	s=arc-20240116; t=1718617118; c=relaxed/simple;
+	bh=sr/HExMB2KmpIxEyu/qgU81RvDcP2SyCdvUAXFbeUzg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hmil6GGJ82wuc8/hTasktsS/v/ZV8GnEfAtzU/SaykcQ/YmYJfquv5aQ3fZdkxWS2rj6RvleYHHKVKduiViGoo/oB1XV+3JbmDNJv+rH23gTNKRT0hQuoQz0e/W6QA46qgy+LmqNtkGUJFLQoWLZ7OpEbe5zWfeExLC0UBkpvx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=SMv6SDFZ; arc=none smtp.client-ip=209.85.222.180
+	 In-Reply-To:Content-Type; b=p4jApdPIkhGtSFpKZWKhG8dLNuPkzQ8U6ymtAh9HMG2jLwpwtIfz3TyHI3pQdtt/kIP6+JQtQ3/rVNsLRv2GR+lXdkvCmdTFoaKLNRzWTHoRr0BFSu5bKorZ23n3mQGtIu9q07fI/qeHBasBgXXDFqtGLaIzElzm5cEZ/S7Tago=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=a0Aki5Rj; arc=none smtp.client-ip=209.85.128.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="SMv6SDFZ"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7955ddc6516so302162685a.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 02:35:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="a0Aki5Rj"
+Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-62a08092c4dso40723357b3.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 02:38:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1718616920; x=1719221720; darn=vger.kernel.org;
+        d=citrix.com; s=google; t=1718617115; x=1719221915; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZzV45iNv0Ldf9zk8+wWWXuniGWZT5cS9IFQO5nsD4k=;
-        b=SMv6SDFZGsQ2cng1kRTcug84syzHiuXCNBZ42axgHRsC3BggWWRZUMWmTKuNO/IqFT
-         mdwrFXVlKFf2fwyVT+djVUngDPRauODJmvdgiw+alwpMsdm01dEo20sunFZ2q0q83vsm
-         89roBV80JOLo+roVucRrFRmhNv5GkW2LPt23w=
+        bh=ygiGn4cC18Me/bv30acpykkQziugaNdxLwcBfmb6qSw=;
+        b=a0Aki5Rj6OlgAkauKimMCNxX0mj5jezy75a2YcvDNOEbOj3tNAHyIVC6wusgAmR8vk
+         3oX7QM5QWlPjoMA5nxVyuuDV6Z+PKIh5QbM83K2FDhfmH2oMof1gZk+vH+HkRSom6l1C
+         wX5JDHG+Z4cDy1IdLUC7EwTYbdjP2EK4uLaV0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718616920; x=1719221720;
+        d=1e100.net; s=20230601; t=1718617115; x=1719221915;
         h=content-transfer-encoding:in-reply-to:autocrypt:from
          :content-language:references:cc:to:subject:user-agent:mime-version
          :date:message-id:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hZzV45iNv0Ldf9zk8+wWWXuniGWZT5cS9IFQO5nsD4k=;
-        b=kjzgzmdihEF2IC3DygFv9D+6nwV9oYCLYyox9szhUeE4CUtZ9MaYkm027SEbpBEWpC
-         3lCT26vvE0SIrozLucuY0v+YKA608AxQFqnMhNISEjraMTDEp5tu0dI4tLepNZyXGGbD
-         DG0db7uYMfmae2a+XpTMVS2prj784CCACeu7YTP4HVTKo2Q2tTOqRgdtWuRisOLAAAJI
-         Fp0Lf2fzxHxxB/vrm5KCptm0GiBkoaaiN5LbhZ9QFWRms2DnpCs0L4AgQRxJeFBYtC8Y
-         lStwLomwhxHc91pCGlv98krVjuTlfqSknr1wiBNh79vQU6m91o2EcjydSfR4mLjU9O5j
-         Up5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXNa3x8eGNL30oFrGuJqvSF8KjmH2SFBL9pCIx5LZb/MKnzFdNPTEZH+r1upkSs8bel3wv6N1RSf1+k5cBPyjf3A/ajyrvRjJ8+QGI/fIzJ/A==
-X-Gm-Message-State: AOJu0YzQsoYP0MRYIDoIp4LyWWkPOwGG/B78k9rp4vTQV+/hnZHWB6iG
-	jTbu8NdB3QZo4EfI1LIHXLvo8o1etxbY3mnoilS4Va7ScPAzivSrAgTYA3INmsE=
-X-Google-Smtp-Source: AGHT+IF2aZVz2wdsoed5g5hsJNVZ5D0M7nSHyyRJA+LASgY7f1atiDw7hH6bBcRtto7990SD6YfPFg==
-X-Received: by 2002:ad4:4381:0:b0:6b0:6965:511 with SMTP id 6a1803df08f44-6b2afc6ca64mr87440946d6.7.1718616920332;
-        Mon, 17 Jun 2024 02:35:20 -0700 (PDT)
+        bh=ygiGn4cC18Me/bv30acpykkQziugaNdxLwcBfmb6qSw=;
+        b=oEhX35cx5WAs2MB8v9HGfswxIvnW2jqevmFn9MSyjShCb4AnvgptE8YbTaKEDfJF0a
+         SvB4Wvwqv7S8+Ah87bx6pVGjyiZUNFFIneZLqPkHo9K6g+OqLJzFmcIFZJZMvfBeA0Ja
+         giZdRKZdyOFj8rfxadD2rON9DG2AOPqHRju1brFA7cRv48+Ie3RBoAnvKWy886W1k3QV
+         fJAqoPOFZdB2JcOO933zaIfohq3bpSZWsO4ou4Pa9XGZRcRopcfF42Mulgk9OSMmgUBS
+         h4pLPhuXBMMb2cX7Z8f0L5Q6sgpZ83j7QJBAiTziz9iYmk45h3R9IfJ6X0fLV4LwhlMN
+         bMqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXS4iuSx5DN0KKFV6DHzWpZTukkE/qrMDjP+zZcysW1/PCvT7w4oHDtuiz9huite5tq7SkJCmzi3u0D02Rj1dkP4cwXLon48ZFRl3S5Npf3Xw==
+X-Gm-Message-State: AOJu0YydUNmHTWJPXp8v9V7H8pWD8vK/43biun9RqPCYSzbqh1H2s7zy
+	3P2gsw5jFxkc/8ne20o08s6uzPTpukKs1jQAP0slKT/lIjs/IG8rV+vFv2K3jrk=
+X-Google-Smtp-Source: AGHT+IFC+D8ny/Dw5rvJfiAdV//IJGVVyL9jjkV7lcw389qZjtEYyNdxSITDCmMdMGELAiOGjGLRug==
+X-Received: by 2002:a0d:e612:0:b0:632:ca12:8af with SMTP id 00721157ae682-6355f1a8952mr23183507b3.32.1718617115585;
+        Mon, 17 Jun 2024 02:38:35 -0700 (PDT)
 Received: from [10.125.226.166] ([160.101.139.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5bf2832sm53569346d6.24.2024.06.17.02.35.17
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c32428sm52942136d6.64.2024.06.17.02.38.33
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 02:35:19 -0700 (PDT)
-Message-ID: <f4242edf-6c78-421c-8e21-63627b13c35f@citrix.com>
-Date: Mon, 17 Jun 2024 10:35:15 +0100
+        Mon, 17 Jun 2024 02:38:35 -0700 (PDT)
+Message-ID: <14d5ed1b-db72-4676-bce2-1ff3637a7e56@citrix.com>
+Date: Mon, 17 Jun 2024 10:38:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,8 +59,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
- cpuinfo_topology
+Subject: Re: [PATCH PATCH 8/9] x86/bugs: Declutter vulnerable CPU list
 To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
  Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
  Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
@@ -73,7 +72,7 @@ Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
  Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
  "Liang, Kan" <kan.liang@linux.intel.com>
 References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
+ <20240617-add-cpu-type-v1-8-b88998c01e76@linux.intel.com>
 Content-Language: en-GB
 From: Andrew Cooper <andrew.cooper3@citrix.com>
 Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
@@ -119,40 +118,92 @@ Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
  B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
  d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
  6+ahAA==
-In-Reply-To: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
+In-Reply-To: <20240617-add-cpu-type-v1-8-b88998c01e76@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 17/06/2024 10:11 am, Pawan Gupta wrote:
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-> index cb4f6c513c48..f310a7fb4e00 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -95,6 +95,9 @@ struct cpuinfo_topology {
->  	// Core ID relative to the package
->  	u32			core_id;
+On 17/06/2024 10:12 am, Pawan Gupta wrote:
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index d4e539d4e158..7e3b09b0f82c 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -1229,43 +1232,45 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
+>  #define RFDS		BIT(7)
 >  
-> +	// CPU-type e.g. performance, efficiency etc.
-> +	u8			cpu_type;
-> +
+>  static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
+> -	VULNBL_INTEL_STEPPINGS(INTEL_IVYBRIDGE,		X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL,		X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_L,		X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_G,		X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_HASWELL_X,		X86_STEPPING_ANY,		MMIO),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_D,	X86_STEPPING_ANY,		MMIO),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_G,	X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL_X,	X86_STEPPING_ANY,		MMIO),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_BROADWELL,		X86_STEPPING_ANY,		SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE_X,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE_L,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_SKYLAKE,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_KABYLAKE_L,	X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_KABYLAKE,		X86_STEPPING_ANY,		MMIO | RETBLEED | GDS | SRBDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_CANNONLAKE_L,	X86_STEPPING_ANY,		RETBLEED),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_L,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_D,		X86_STEPPING_ANY,		MMIO | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ICELAKE_X,		X86_STEPPING_ANY,		MMIO | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_COMETLAKE_L,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_TIGERLAKE_L,	X86_STEPPING_ANY,		GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_TIGERLAKE,		X86_STEPPING_ANY,		GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_LAKEFIELD,		X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RETBLEED),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ROCKETLAKE,	X86_STEPPING_ANY,		MMIO | RETBLEED | GDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ALDERLAKE,		X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ALDERLAKE_L,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE_P,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_RAPTORLAKE_S,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GRACEMONT,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT_D,	X86_STEPPING_ANY,		MMIO | RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_TREMONT_L,	X86_STEPPING_ANY,		MMIO | MMIO_SBDS | RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT_D,	X86_STEPPING_ANY,		RFDS),
+> -	VULNBL_INTEL_STEPPINGS(INTEL_ATOM_GOLDMONT_PLUS, X86_STEPPING_ANY,		RFDS),
+> +	VULNBL_INTEL(IVYBRIDGE,		SRBDS),
+> +	VULNBL_INTEL(HASWELL,		SRBDS),
+> +	VULNBL_INTEL(HASWELL_L,		SRBDS),
+> +	VULNBL_INTEL(HASWELL_G,		SRBDS),
+> +	VULNBL_INTEL(HASWELL_X,		MMIO),
+> +	VULNBL_INTEL(BROADWELL_D,	MMIO),
+> +	VULNBL_INTEL(BROADWELL_G,	SRBDS),
+> +	VULNBL_INTEL(BROADWELL_X,	MMIO),
+> +	VULNBL_INTEL(BROADWELL,		SRBDS),
+> +	VULNBL_INTEL(SKYLAKE_X,		MMIO | RETBLEED | GDS),
+> +	VULNBL_INTEL(SKYLAKE_L,		MMIO | RETBLEED | GDS | SRBDS),
+> +	VULNBL_INTEL(SKYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
+> +	VULNBL_INTEL(KABYLAKE_L,	MMIO | RETBLEED | GDS | SRBDS),
+> +	VULNBL_INTEL(KABYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
+> +	VULNBL_INTEL(CANNONLAKE_L,	RETBLEED),
+> +	VULNBL_INTEL(ICELAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> +	VULNBL_INTEL(ICELAKE_D,		MMIO | GDS),
+> +	VULNBL_INTEL(ICELAKE_X,		MMIO | GDS),
+> +	VULNBL_INTEL(COMETLAKE,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> +	VULNBL_INTEL(TIGERLAKE_L,	GDS),
+> +	VULNBL_INTEL(TIGERLAKE,		GDS),
+> +	VULNBL_INTEL(LAKEFIELD,		MMIO | MMIO_SBDS | RETBLEED),
+> +	VULNBL_INTEL(ROCKETLAKE,	MMIO | RETBLEED | GDS),
+> +	VULNBL_INTEL(ALDERLAKE,		RFDS),
+> +	VULNBL_INTEL(ALDERLAKE_L,	RFDS),
+> +	VULNBL_INTEL(RAPTORLAKE,	RFDS),
+> +	VULNBL_INTEL(RAPTORLAKE_P,	RFDS),
+> +	VULNBL_INTEL(RAPTORLAKE_S,	RFDS),
+> +	VULNBL_INTEL(ATOM_GRACEMONT,	RFDS),
+> +	VULNBL_INTEL(ATOM_TREMONT,	MMIO | MMIO_SBDS | RFDS),
+> +	VULNBL_INTEL(ATOM_TREMONT_D,	MMIO | RFDS),
+> +	VULNBL_INTEL(ATOM_TREMONT_L,	MMIO | MMIO_SBDS | RFDS),
+> +	VULNBL_INTEL(ATOM_GOLDMONT,	RFDS),
+> +	VULNBL_INTEL(ATOM_GOLDMONT_D,	RFDS),
+> +	VULNBL_INTEL(ATOM_GOLDMONT_PLUS, RFDS),
 
-End of the structure?  At least that way new additions are less likely
-to add more padding.
-
-> diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
-> index 9a6069e7133c..be82c8769bb2 100644
-> --- a/arch/x86/kernel/cpu/topology_common.c
-> +++ b/arch/x86/kernel/cpu/topology_common.c
-> @@ -140,6 +140,14 @@ static void parse_topology(struct topo_scan *tscan, bool early)
->  	}
->  }
->  
-> +static void topo_set_cpu_type(struct cpuinfo_x86 *c)
-> +{
-> +	c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
-> +
-> +	if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
-
-c->cpuid_level ?
+Take the opportunity to realign and fix this ?
 
 ~Andrew
