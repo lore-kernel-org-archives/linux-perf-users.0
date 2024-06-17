@@ -1,188 +1,136 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31849160884;
-	Mon, 17 Jun 2024 16:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBBDA16CD0C;
+	Mon, 17 Jun 2024 17:19:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718643283; cv=none; b=s3r9qVL3H+13/YScEOI2cuVN/GjpzQu7slzOP6ht2gRZPZO0xHIMenb5ER1PiaHeQSVjl1VYAGHCDr1OfF3+28McyzAN4sgHLAWdPINg8RxjQgSOiPrIRdhn5hCuVsONrSMd2aW0HSiPdohPvgBQ9pzPIm4BFVLN8rsC+nWu8EM=
+	t=1718644756; cv=none; b=JWXY/uctcgfuV1vn/fsRj3pGDjGO+k5apLAn09ZeAaQxLRRdL1ToDKeracVRLUz1r93xrNipNy90xH9CrZuw96Fbns5NjCmy5CQOcslxgk5YX1oSnwtQBuZ2QhtSZr206qZHkbTXEitJj7/V+uNIPx+AWaWISDgqluqDod9qy4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718643283; c=relaxed/simple;
-	bh=t+5KdUOnc00LdFQ1IUBq0zdE0lD1r3nd04eCrzMotWs=;
-	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
-	 References:To:MIME-Version; b=i0O13i6V8oqSEF06aM+j7SDtnu8nn12UQ/YYRS3CIBPKBv4hfXkgV+kujDoaDHqSH0eOUmobYjMoKjlxyKbhedqfBXndJN12VWJ4l4m5wGkLQTiDQA3saNSpW74NlBGrVPFAE8Lm4VaYtPkiuCgfBS0NDKnRvLhgngESQJA4v/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vw2FKnIo; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1718644756; c=relaxed/simple;
+	bh=ELiGKN2fHBN+ynIfeSKCNIu1f4FOFyPukTCFTs3BlS4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DAULSwAr0sO0YoMSvL6d0PAqrK7+E1eanGgvZC9ERg2t4zKNCrWHXFzuRGXUfowCs3go+nJe84bsIFoROYlIRDZ44X/IvB2aMk3y+x+ut5Rrswc8Z69HGn7TZdjfhLQ7aioKkQ/gThSur+SfrcHBcL21YTqzMCQe0ET7jHk2vN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WUhmfwiB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vw2FKnIo"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HGZwYC005595;
-	Mon, 17 Jun 2024 16:54:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:subject:from:in-reply-to:date:cc:message-id
-	:references:to:content-transfer-encoding:mime-version; s=pp1;
-	 bh=5moioqHMw+p0O+/zSVi6gRBX+7JUnVJckQcSkqOJkQ4=; b=Vw2FKnIo7N6H
-	Z73n7R3umr2MDSH8yfXWsYN2f+7sDtjmk03def6imZGF63bJgqZ/5fTwYg35HuNm
-	FiSsgXObD07N/X23hIV/ZvzBthuUfP9Jqt0atwGMvYLhs8kTTM9BmYyaBvClV+sQ
-	4Vj7HUtpoJE23sWRQ/oTuMRb4gRKIcmMENmAEqRvZZhyp2Je3VY2E4d0pfoKlq7j
-	9y6bqT9nN4Pt/vWbeAUroo8sg2WEatV3WsRWyaenVTEZWSuipjOXcMzjcMIe3F4B
-	SUlSRuAfjooQojxzALHsbKjiGTBkkMLzvbu1kr3UveD4jXiVlXLMyox0fKO9dckD
-	IIg/ybtouw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytqcqr9fu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:54:21 +0000 (GMT)
-Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HGsLad003557;
-	Mon, 17 Jun 2024 16:54:21 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytqcqr9fn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:54:21 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HGPSdx009941;
-	Mon, 17 Jun 2024 16:54:20 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgmbka2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 16:54:20 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HGsEmJ34865760
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 16:54:16 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 79C3620040;
-	Mon, 17 Jun 2024 16:54:14 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EDD0A20043;
-	Mon, 17 Jun 2024 16:54:11 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.76.136])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Mon, 17 Jun 2024 16:54:11 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
-Subject: Re: [PATCH V2 2/3] tools/perf: Use is_perf_pid_map_name helper
- function to check dso's of pattern /tmp/perf-%d.map
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <30cdabb5-4c36-40c6-a2c0-8059e4afb371@arm.com>
-Date: Mon, 17 Jun 2024 22:23:59 +0530
-Cc: LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, namhyung@kernel.org
-Message-Id: <B752E4BA-8EB0-4617-9CB1-479027802533@linux.vnet.ibm.com>
-References: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
- <20240617130332.13427-2-atrajeev@linux.vnet.ibm.com>
- <30cdabb5-4c36-40c6-a2c0-8059e4afb371@arm.com>
-To: James Clark <james.clark@arm.com>,
-        Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: fCo0TbqLTDsB5BYctdo7pwIXG9M906vJ
-X-Proofpoint-GUID: AEKvjbPGLMsU8J6BA7wFSLsjw1tkCehP
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WUhmfwiB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E7A3C2BD10;
+	Mon, 17 Jun 2024 17:19:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718644756;
+	bh=ELiGKN2fHBN+ynIfeSKCNIu1f4FOFyPukTCFTs3BlS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WUhmfwiBLTadekoZLK/cJ1hPrtE8wCKxrmUiSi1VKMnPoUkfBxZUhjaKqMVeWPByu
+	 CwDmlBvvlnpvj3U8hHr6ZF1ZtwXIK0vgYV6mEH3eKXA4Dy5K70RaMHiCf0TMCtICpo
+	 7aquv5NzpLTgD0JOg4u9xUS4l26MoZiOK3087DwODru4hcuvtJOzXoCbgRhdYNJ8kO
+	 OgE8g/A+22sSv1+lfM2g8kOsNFSwgnlUDU8dVtBtdaXO/VnVwWQM3e8tUF6vYbIYUL
+	 I3lkEL7A7AM2K2/KokNMhtY+ya/piXuq6h5KEP2Phif80DNvDBu08CnGE30u/QP+D5
+	 ntPTbG3PeNZ5A==
+Date: Mon, 17 Jun 2024 10:19:15 -0700
+From: Kees Cook <kees@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Justin Stitt <justinstitt@google.com>
+Cc: Erick Archer <erick.archer@outlook.com>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
+Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
+Message-ID: <202406170957.3269DA2@keescook>
+References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
+ <202406101010.E1C77AE9D@keescook>
+ <20240610200544.GY8774@noisy.programming.kicks-ass.net>
+ <202406101438.BC43514F@keescook>
+ <20240611075542.GD8774@noisy.programming.kicks-ass.net>
+ <202406121148.688240B@keescook>
+ <20240612220821.GA18881@noisy.programming.kicks-ass.net>
+ <202406121530.D9DB956C8@keescook>
+ <20240614101708.GO8774@noisy.programming.kicks-ass.net>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- suspectscore=0 spamscore=0 malwarescore=0 priorityscore=1501 adultscore=0
- clxscore=1011 lowpriorityscore=0 mlxlogscore=999 phishscore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406170131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240614101708.GO8774@noisy.programming.kicks-ass.net>
 
+On Fri, Jun 14, 2024 at 12:17:08PM +0200, Peter Zijlstra wrote:
+> On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
+> > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
+> > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
+> > > > I'm happy to take patches. And for this bikeshed, this would be better
+> > > > named under the size_*() helpers which are trying to keep size_t
+> > > > calculations from overflowing (by saturating). i.e.:
+> > > > 
+> > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
+> > > 
+> > > Fine I suppose, but what if we want something not size_t? Are we waiting
+> > > for the type system extension?
+> > 
+> > Because of C's implicit promotion/truncation, we can't do anything
+> > sanely with return values of arbitrary type size; we have to capture the
+> > lvalue type somehow so the checking can happen without C doing silent
+> > garbage.
+> 
+> So sizeof() returns the native (built-in) size_t, right? If that type
+> the nooverflow qualifier on, then:
+> 
+> 	sizeof(*p) + num*sizeof(p->foo[0])
+> 
+> should all get the nooverflow semantics right? Because size_t is
+> effectively 'nooverflow unsigned long' the multiplication should promote
+> 'num' to some 'long'.
 
+Hmmm. This is an interesting point. I'll see what Justin has found as
+he's been working on limiting the overflow sanitizer to specific types.
 
-> On 17 Jun 2024, at 7:29=E2=80=AFPM, James Clark <james.clark@arm.com> wro=
-te:
->=20
->=20
->=20
-> On 17/06/2024 14:03, Athira Rajeev wrote:
->> commit 80d496be89ed ("perf report: Add support for profiling JIT
->> generated code") added support for profiling JIT generated code.
->> This patch handles dso's of form "/tmp/perf-$PID.map".
->>=20
->> Some of the references doesn't check exactly for same pattern.
->> some uses "if (!strncmp(dso_name, "/tmp/perf-", 10))". Fix
->> this by using helper function is_perf_pid_map_name which looks
->> for proper pattern of form: "/tmp/perf-$PID.map" for these checks.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/perf/util/dsos.c    | 2 +-
->> tools/perf/util/srcline.c | 2 +-
->> 2 files changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
->> index ab3d0c01dd63..23cd02aa701d 100644
->> --- a/tools/perf/util/dsos.c
->> +++ b/tools/perf/util/dsos.c
->> @@ -275,7 +275,7 @@ static void dso__set_basename(struct dso *dso)
->> char *base, *lname;
->> int tid;
->>=20
->> - if (sscanf(dso__long_name(dso), "/tmp/perf-%d.map", &tid) =3D=3D 1) {
->> + if (is_perf_pid_map_name(dso__long_name(dso))) {
->> if (asprintf(&base, "[JIT] tid %d", tid) < 0)
->> return;
->> } else {
->> diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
->> index 9d670d8c1c08..51eb78993fe2 100644
->> --- a/tools/perf/util/srcline.c
->> +++ b/tools/perf/util/srcline.c
->> @@ -39,7 +39,7 @@ static const char *srcline_dso_name(struct dso *dso)
->> if (dso_name[0] =3D=3D '[')
->> return NULL;
->>=20
->> - if (!strncmp(dso_name, "/tmp/perf-", 10))
->> + if (is_perf_pid_map_name(dso_name))
->> return NULL;
->>=20
->> return dso_name;
->=20
-> Duplicate of [1] but the latest version of the other one looks like it
-> might have a mistake in it.
->=20
-> For this one I get this compilation error:
->=20
-> util/dsos.c: In function =E2=80=98dso__set_basename=E2=80=99:
-> util/dsos.c:279:21: error: =E2=80=98tid=E2=80=99 may be used uninitialized
-> [-Werror=3Dmaybe-uninitialized]
->  279 |                 if (asprintf(&base, "[JIT] tid %d", tid) < 0)
->=20
+It doesn't help this (unfortunately common) code pattern, though:
 
-Hi James,
+	int size;
 
-Thanks for pointing this. I had my first version here: https://lore.kernel.=
-org/linux-perf-users/5d9a9842-9b8a-428c-898f-e1ff866a6e66@intel.com/T/#m5fb=
-fa712a411c0e09b8177d31fc1c2d12f437fa5 which used regex for matching the dso=
- name in util/symbol.c
+	size = sizeof(*p) + num*sizeof(p->foo[0]);
+	p = kmalloc(size, GFP_KERNEL);
 
-Got suggestion from Adrian to use =E2=80=9Csscanf=E2=80=9D and have a helpe=
-r function since this /tmp/perf-%d.map check is done in other places as wel=
-l ( in util/dsos.c, util/srcline.c ). This V2 address those changes. I didn=
-=E2=80=99t hit the compile error, but that is a valid one which you reporte=
-d since =E2=80=9Ctid=E2=80=9D needs to be taken care of. I will check this =
-compile error
+But that was going to be a problem either way.
 
-Thanks
-Athira=20
->=20
->=20
-> [1]:
-> https://lore.kernel.org/linux-perf-users/20240601125946.1741414-10-Chaita=
-nyaS.Prakash@arm.com/
+> Now, I've re-read the rules and I don't see qualifiers mentioned, so
+> can't we state that the overflow/nooverflow qualifiers are to be
+> preserved on (implicit) promotion and when nooverflow and overflow are
+> combined the 'safe' nooverflow takes precedence?
+> 
+> I mean, when we're adding qualifiers we can make up rules about them
+> too, right?
 
+Yup, that is the design of the "wraps" attribute (though it is the
+reverse: it _allows_ for wrap-around, since we want to the default state
+to be mitigation).
+
+> If 'people' don't want to adorn the built-in size_t, we can always do
+> something like:
+> 
+> #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
+> 
+> and 'fix' it ourselves.
+
+Right, though my hope is still we get the result of "nooverflow" by
+marking that which was expected to overflow.
+
+-- 
+Kees Cook
