@@ -1,149 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C67C21B1500;
-	Mon, 17 Jun 2024 13:44:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E03B197A77;
+	Mon, 17 Jun 2024 13:45:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718631885; cv=none; b=M/eYuPBkwzjUtrz9wS69NQ4aOJF+IN4ZXsmFDtpc5YsZ/MIbjSV0Lhduc2Rt1CDB3y/MbnfUEvyIq/01+IiyXFQpyyZ2S6Vh3sVmRgRvfEQus+uQETIA3eKHEcB6xWwkXBprcQmiBS4ULvNVHjceOXF1yzg+8f1uXh2sZpvtcEs=
+	t=1718631957; cv=none; b=ImoalIA8YWRWhrdGEv+pmYFUMPH/QH2bPUx1s4Vt0ANf92SlGTHcz6EYHLDAhAuLPJnncJE2SD9DtAAE9hj/V+USGwAaeBn67btX6GUxW2Sp2hgzjJ5/aTrtTxk28ldRRuEAxQyYSS40CsGioK6l2j/ZyZogfSHCYjdY6niVR4c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718631885; c=relaxed/simple;
-	bh=Gsnd0zvN4Us9YUc6L20+5iLhVWMkT+Vfavnt0sxap00=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L4KMd4wLGTBPRQb4BvzEVUiYBFuj9tJ1YIshLMLyFQnC2Ba77FP3uvRmRrzauIw8s1mGoNuDa1ULL2D63avVjzOu8sRgM6EYeT5Jtp/pXvhbSZ+Wx3euMhKnsGcaKYos8WYPFcImn1yIByZNItxw7PjKSBNST7ZyWkeSNbkevyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1E2FDA7;
-	Mon, 17 Jun 2024 06:45:07 -0700 (PDT)
-Received: from e127643.broadband (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA0683F64C;
-	Mon, 17 Jun 2024 06:44:40 -0700 (PDT)
-From: James Clark <james.clark@arm.com>
-To: linux-perf-users@vger.kernel.org,
-	irogers@google.com,
-	robin.murphy@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	s=arc-20240116; t=1718631957; c=relaxed/simple;
+	bh=uxUyG9w3kzRRDkCmDR9ae5S/qbGPu4o5T0wPuhZOZm4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MScUIVKurqsJjTzGykrd2N6Xnn6RvTVF6EBgGvI1hrKJ3Y/t8eBVV0JdUM/eokcF1LzmVz4xJ0bKNQUPPiIRZrFc5/g8xcB+t9Zq15xXlP9WGHUmeUIelrIHOqZXBW0ugYgcsoqDCjpCUaCIn/8bGASRBI0IrAXVU7ez2uzMm+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m4FWWIGl; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m4FWWIGl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718631954; x=1750167954;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=uxUyG9w3kzRRDkCmDR9ae5S/qbGPu4o5T0wPuhZOZm4=;
+  b=m4FWWIGlGGVbWNWRZBG1ZnFWiEBVfpv64QJHDn0TX8ctBzyRAx7I+sZm
+   DExisWi1Jvv23UKvQ068BnxVXU//4D3F7L7mVhkPiHo71Oqn7yP2UpWOx
+   tFLJzzvbpai5XRCPgiWsJ6sMN1rgEuQ5blDJO63pR9+34+fcjZ2o+llOd
+   JhBAfl94jiMxwVoLj0iqNM7gF2+NdrEfLpN2stXrnIyh+luovVd88xtUm
+   RV2GNDjAuSzoMSWvEk0kwLR4geP5AVFJcpj78+0l5kAS639dqApwCK2iX
+   TT/BkyMxgIcaoIlSzaRyfwoUxVOcFkNismlmjxiaKzgMYYRaRsYlWQaEL
+   Q==;
+X-CSE-ConnectionGUID: iYXybY+xTI+IiWLZjdo0tg==
+X-CSE-MsgGUID: LxOHWzXiSW6RPI3tw7WW9A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="15423009"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="15423009"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:45:54 -0700
+X-CSE-ConnectionGUID: yRDSuFj8TKGtE6IfgTep9g==
+X-CSE-MsgGUID: 3AxYSsRuSoWIkXxrMDqhRQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="64394193"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 17 Jun 2024 06:45:49 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJCg7-0004LF-26;
+	Mon, 17 Jun 2024 13:45:47 +0000
+Date: Mon, 17 Jun 2024 21:45:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: oe-kbuild-all@lists.linux.dev, daniel.sneddon@linux.intel.com,
+	tony.luck@intel.com, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf pmu: Don't de-duplicate core PMUs
-Date: Mon, 17 Jun 2024 14:43:45 +0100
-Message-Id: <20240617134348.208241-3-james.clark@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240617134348.208241-1-james.clark@arm.com>
-References: <20240617134348.208241-1-james.clark@arm.com>
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <202406172100.6R91rhbf-lkp@intel.com>
+References: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 
-Arm PMUs have a suffix, either a single decimal (armv8_pmuv3_0) or 3 hex
-digits which (armv8_cortex_a53) which Perf assumes are both strippable
-suffixes for the purposes of deduplication. S390 "cpum_cf" is a
-similarly suffixed core PMU but is only two characters so is not treated
-as strippable because the rules are a minimum of 3 hex characters or 1
-decimal character.
+Hi Pawan,
 
-There are two paths involved in listing PMU events:
+kernel test robot noticed the following build errors:
 
- * HW/cache event printing assumes core PMUs don't have suffixes so
-   doesn't try to strip.
- * Sysfs PMU events share the printing function with uncore PMUs which
-   strips.
+[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
 
-This results in slightly inconsistent Perf list behavior if a core PMU
-has a suffix:
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
+base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-1-b88998c01e76%40linux.intel.com
+patch subject: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct cpuinfo_topology
+config: i386-buildonly-randconfig-003-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172100.6R91rhbf-lkp@intel.com/config)
+compiler: gcc-9 (Ubuntu 9.5.0-4ubuntu2) 9.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172100.6R91rhbf-lkp@intel.com/reproduce)
 
-  # perf list
-  ...
-  armv8_pmuv3_0/branch-load-misses/
-  armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
-  ...
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172100.6R91rhbf-lkp@intel.com/
 
-Fix it by partially reverting back to the old list behavior where
-stripping was only done for uncore PMUs. For example commit 8d9f5146f5da
-("perf pmus: Sort pmus by name then suffix") mentions that only PMUs
-starting 'uncore_' are considered to have a potential suffix. This
-change doesn't go back that far, but does only strip PMUs that are
-!is_core. This keeps the desirable behavior where the many possibly
-duplicated uncore PMUs aren't repeated, but it doesn't break listing for
-core PMUs.
+All errors (new ones prefixed by >>):
 
-Searching for a PMU continues to use the new stripped comparison
-functions, meaning that it's still possible to request an event by
-specifying the common part of a PMU name, or even open events on
-multiple similarly named PMUs. For example:
+   arch/x86/kernel/cpu/topology_common.c: In function 'topo_set_cpu_type':
+>> arch/x86/kernel/cpu/topology_common.c:145:21: error: 'X86_CPU_TYPE_UNKNOWN' undeclared (first use in this function)
+     145 |  c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+         |                     ^~~~~~~~~~~~~~~~~~~~
+   arch/x86/kernel/cpu/topology_common.c:145:21: note: each undeclared identifier is reported only once for each function it appears in
+>> arch/x86/kernel/cpu/topology_common.c:148:41: error: 'X86_CPU_TYPE_INTEL_SHIFT' undeclared (first use in this function)
+     148 |   c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+         |                                         ^~~~~~~~~~~~~~~~~~~~~~~~
 
-  # perf stat -e armv8_cortex/inst_retired/
 
-  5777173628      armv8_cortex_a53/inst_retired/          (99.93%)
-  7469626951      armv8_cortex_a57/inst_retired/          (49.88%)
+vim +/X86_CPU_TYPE_UNKNOWN +145 arch/x86/kernel/cpu/topology_common.c
 
-Fixes: 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu")
-Signed-off-by: James Clark <james.clark@arm.com>
----
- tools/perf/util/pmu.c | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
+   142	
+   143	static void topo_set_cpu_type(struct cpuinfo_x86 *c)
+   144	{
+ > 145		c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+   146	
+   147		if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
+ > 148			c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+   149	}
+   150	
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 97d74fe6d816..b73946ba9d05 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -847,6 +847,22 @@ __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
- 	return perf_pmu__find_metrics_table(NULL);
- }
- 
-+/**
-+ * Return the length of the PMU name not including the suffix for uncore PMUs.
-+ *
-+ * We want to deduplicate many similar uncore PMUs by stripping their suffixes,
-+ * but there are never going to be too many core PMUs and the suffixes might be
-+ * interesting. "arm_cortex_a53" vs "arm_cortex_a57" or "cpum_cf" for example.
-+ *
-+ * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are visible
-+ */
-+static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, bool skip_duplicate_pmus)
-+{
-+	return skip_duplicate_pmus && !pmu->is_core
-+		? pmu_name_len_no_suffix(pmu->name)
-+		: strlen(pmu->name);
-+}
-+
- /**
-  * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
-  *                                   trailing suffix? The Suffix must be in form
-@@ -1796,9 +1812,7 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
- 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
- {
- 	struct parse_events_term *term;
--	size_t pmu_name_len = skip_duplicate_pmus
--		? pmu_name_len_no_suffix(pmu->name)
--		: strlen(pmu->name);
-+	size_t pmu_name_len = pmu_deduped_name_len(pmu, skip_duplicate_pmus);
- 	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
- 
- 	list_for_each_entry(term, &alias->terms.terms, list) {
-@@ -1839,9 +1853,7 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
- 		size_t buf_used, pmu_name_len;
- 
- 		info.pmu_name = event->pmu_name ?: pmu->name;
--		pmu_name_len = skip_duplicate_pmus
--			? pmu_name_len_no_suffix(info.pmu_name)
--			: strlen(info.pmu_name);
-+		pmu_name_len = pmu_deduped_name_len(pmu, skip_duplicate_pmus);
- 		info.alias = NULL;
- 		if (event->desc) {
- 			info.name = event->name;
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
