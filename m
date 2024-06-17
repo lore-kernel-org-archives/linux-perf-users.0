@@ -1,101 +1,82 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9D34198A2D;
-	Mon, 17 Jun 2024 13:47:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19D8B197A8C
+	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 13:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718632028; cv=none; b=caAl0QS+62DgV8slR1dDbpVAJthZUS0yL8G1OP6QtTH9KV8H8oQwA7YiQCBek+WifCDOdr5GOAGtW1OrV+d/R6poiDX0WDVG98eGBeSpn6qz4hkoUNOGAOiB2wWWhQJkcUADhhmefqACBn1xky1fHk4cbuCeJZH2kdXkbcXGLKI=
+	t=1718632377; cv=none; b=GmM3SauOFdZ4RtMrb9dVOxxIdILez8BwqpX49k8jD576aIDaA+UyXty2BSy4nnmCI+pIgAwse1jRqWVMtNdQFMIuUXPbDLi/5katHHjWCNdvnyv1Y9ypAs4vYEFrNOR/xOoJ7e6RH66L3HouYRWiAHRknL1TH4TNepmO9dqwh90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718632028; c=relaxed/simple;
-	bh=2NB43eu1ZnhJn+dbsU/poLUXcczLkoG/+P5pzf4DTBE=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=UU/M2TZElNS1j87X6luaYBaFR+EC01REyEUMI8IdiPwYTn4IUS/FXL2dns4DkAUsR3Xbu0C1HyJUEat5ZNesJxYR5J8TY/q44Z37BsYK3PlxJCyf8x826KuAuUp9udbYmnMg4YDE5pYVnFxEmlgIXZ24RrFd9ngeI4tL3Qo3cyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=oQTxDdVQ; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="oQTxDdVQ"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45HDkTn01572680
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 17 Jun 2024 06:46:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45HDkTn01572680
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1718631990;
-	bh=o/p3WriqvPQ9emXsAa+PuJT6Sy/sb6jthDAPSr/Ca1s=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=oQTxDdVQK3GcDy9FfiD30CnOzinaTHDW0AaA9TyFPaXQGLqX9qfnPs5uOlZKw0t18
-	 ln64nIOmmerDa97WyjSeco3Dg2Wyj/ZY3oV2t2wEKlNoe9iHlEHAOvgvsJWjiYJ7x5
-	 FCdK5WvKksNmdgPXKYFchMHwBtnbbq7DcT+JLv7Juy8uDebJ58wdIisiCp7meHBJV6
-	 SOKq4y3M02x0BEa4g3DWEoWFOu2Rw+aPYNIWGdErPqS4a9GM6CWkQaXEBHyoKhcmEu
-	 d1t8joXMZscFO7PSaHHkEKAtxsxNcVB699tiwvYOG8k18WKDKZ7HgAU24LxhlpWH3U
-	 +DbLJlkTRr/KQ==
-Date: Mon, 17 Jun 2024 06:46:28 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-CC: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, will@kernel.org,
-        peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
-        namhyung@kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BRESEND_v1_2/3=5D_x86/cpufeatures=3A_Generat?=
- =?US-ASCII?Q?e_a_feature_mask_header_based_on_build_config?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <99208d95-d3de-44d0-8b08-f508759aabca@zytor.com>
-References: <20240509205340.275568-1-xin@zytor.com> <20240509205340.275568-3-xin@zytor.com> <99208d95-d3de-44d0-8b08-f508759aabca@zytor.com>
-Message-ID: <8F9E89A4-B05B-493C-8BED-52AC6777D915@zytor.com>
+	s=arc-20240116; t=1718632377; c=relaxed/simple;
+	bh=mn4AKGj+59AeBy0CFIAacQr9WPJ8o3lkuZsEUO0gzoQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pm4Vxgv5Shrl21nCaZCMA5lqXUbA/GGcwOVkjfCBWMm021kAAxxn3WSNzdW66lzLjys+RmJ5QVauQi7jx2H5JMP8hau0q+q5v9FvB7dds+QfY07yJ14O/6NM4EwDOaQ7vacrBPi2Ioy8yWLyy8ThSKtGR39aEqWlHwXg3A13bWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32A5CDA7;
+	Mon, 17 Jun 2024 06:53:19 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 197343F6A8;
+	Mon, 17 Jun 2024 06:52:53 -0700 (PDT)
+Message-ID: <371abb9c-41a5-4bf0-928f-a60848776bfc@arm.com>
+Date: Mon, 17 Jun 2024 14:52:52 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 09/10] perf tools: Only treat files as map files when
+ they have the extension .map
+To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
+ linux-perf-users@vger.kernel.org
+Cc: anshuman.khandual@arm.com
+References: <20240601125946.1741414-1-ChaitanyaS.Prakash@arm.com>
+ <20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On June 16, 2024 12:26:48 AM PDT, Xin Li <xin@zytor=2Ecom> wrote:
->On 5/9/2024 1:53 PM, Xin Li (Intel) wrote:
->> From: "H=2E Peter Anvin (Intel)" <hpa@zytor=2Ecom>
->>=20
->> Introduce an AWK script to auto-generate a header with required and
->> disabled feature masks based on <asm/cpufeatures=2Eh> and current build
->> config=2E Thus for any CPU feature with a build config, e=2Eg=2E, X86_F=
-RED,
->> simply add
->
->=2E=2E=2E
->
->> +
->> +		printf "\n#define %s_MASKS ", s;
->> +		pfx =3D "{";
->> +		for (i =3D 0; i < ncapints; i++) {
->> +			printf "%s \\\n\t%s_MASK_%d", pfx, s, i;
->> +			pfx =3D ",";
->> +		}
->> +		printf " \\\n}\n\n";
->> +
->> +		printf "#define %s_FEATURE(x) \\\n", s;
->> +		printf "\t((( ";
->> +		for (i =3D 0; i < ncapints; i++) {
->> +			if (masks[i]) {
->> +				printf "\\\n\t\t((x) >> 5) =3D=3D %2d ? %s_MASK%-3d : ", i, s, i;
->> +			}
->> +		}
->> +		printf "0 \\\n";
->> +		printf "\t) >> ((x) & 31)) & 1)\n\n";
->
->This code generates macros {REQUIRED,DISABLED}_FEATURE(x) to tell if a
->CPU feature, e=2Eg=2E, X86_FEATURE_FRED, is a required or disabled featur=
-e
->for this particular compile-time configuration=2E
->
->But they are NOT currently used, so I prefer to remove them for now=2E
->
->Thanks!
->    Xin
 
-The goal with these is that it can eliminate the handwritten code that tes=
-ts a long list of masks=2E Again, automation=2E
+
+On 01/06/2024 13:59, Chaitanya S Prakash wrote:
+> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> 
+> Strengthen the check to locate symbol map files in the tool's /tmp
+> directory. As the existing check allows non map files named in
+> "/tmp/perf-" pattern, it leads to possible dwarf library corruption
+> when perf is built with NO_DWARF=1. The try_to_find_probe_trace_events()
+> function behaves differently when built in that manner. Extending the
+> current check condition using the str_has_suffix() function to not only
+> validate the pattern but also ensure the file is of ".map" type allows
+> test perf probe of function from different CU to pass when built with
+> NO_DWARF=1.
+> 
+> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> ---
+>  tools/perf/util/symbol.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+> index 9e5940b5bc59..fbcc189edd8d 100644
+> --- a/tools/perf/util/symbol.c
+> +++ b/tools/perf/util/symbol.c
+> @@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
+>  	const char *map_path = dso__long_name(dso);
+>  
+>  	mutex_lock(dso__lock(dso));
+> -	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
+> +	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0 &&
+> +		  str_has_prefix(dso__name(dso), ".map") != 0;
+
+Does this work? Shouldn't it be str_has_suffix()?
+
+For reference, there's another fix for the same issue here:
+https://lore.kernel.org/linux-perf-users/20240617130332.13427-1-atrajeev@linux.vnet.ibm.com/T/#m9b1e62f0cdbcd4caf019f2ad97d69b29df568522
+
+>  	if (perfmap) {
+>  		if (dso__nsinfo(dso) &&
+>  		    (dso__find_perf_map(newmapname, sizeof(newmapname),
