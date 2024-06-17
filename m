@@ -1,165 +1,246 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988D81957E3
-	for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 09:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18966F06E;
+	Mon, 17 Jun 2024 12:21:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718617393; cv=none; b=SaXUBuIhhAlMcZe9M9T1iiwUk21Q108OO1BDv0YXULePRsqiSe5ErWwg13wgwxzRzVaw2g/MYVkTW1vhfLh9l3Ak8GrTNXQ5avEBbeJvfFJLcoLw/pbc6m14TedZD/lSUEmylt7osUa2ZFAe0NxXi0oJTNmQ7MwVs9WqmG6ZruU=
+	t=1718626907; cv=none; b=ZYGm8gZ8XDyDxCuo8EmQgTXzqcTQZKV6kM17QzCJMI4TpM45yN+Ot+0rvb+J1U9MJiMYG8vRvaTbX3zNsMTD+va3IGQdNt/9wbeiVpEwvQHb60CGqQCqOY3EPTq2kgLeows2tYxt1K4sUCPMlT4YJROLlMsRcLc2lZ24k14/8fw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718617393; c=relaxed/simple;
-	bh=rF5PzwgVYWS34FJ5aHOJf19Ffkj1uLw1E57bSfTzcNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=imIMHglH174zZucQocZsz3p6j3chLFgG8N0QvCnPC/0/x4k0lZWuaZ38tJM4zSZr3E0LHfkO2b9Tl56A1ni4R4VB7yF9QLKtuclw2QgWYtbhuLeNMpzAqa1pzDExMIplgN2rETnMTbGACArc68YhtlDzlpM+SRiHcDDVMDn3nkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=MZ68j2wP; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
+	s=arc-20240116; t=1718626907; c=relaxed/simple;
+	bh=qA0FxWdD0CxeAZS9ko/E4ZthUr4EyscfMDrv7aXy9SY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nz7o3lwy9HImmf56DX0PN20dMq1Idwkvap2SbMgeOeZUf7T5a4h76x9pEvxApGmhb/rFNV5vAYatHaJla/1+N93kRMxtzUSps6Ghd4iWzOf7sKi495NlOe7YvbtbV3eotUtu3iYnIH34Big0Fl3lCAnqaTsq6LVfITf7kt+6r3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=AU7dbtN2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="MZ68j2wP"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7961fb2d1cfso350567285a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 17 Jun 2024 02:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=citrix.com; s=google; t=1718617390; x=1719222190; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=DdebO2avCx3Dwy3b1qGLNiajhQdcHp42Pj1pkryPF70=;
-        b=MZ68j2wPy7t0f6umBnO4ydOWtRf6Qw7B6qzSHK/Bs3C360OXtCJKdMwf2VepHVXoBW
-         BFNI/iQFZO+QRTFrq7DZzPQYqX4TfxRzQtskr/y7UNalCem2v40E8pz3ZHrYw5gvApid
-         rHvb9t41wglw0TOnIOYSrgyiM1Yy+sYzADxQk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718617390; x=1719222190;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DdebO2avCx3Dwy3b1qGLNiajhQdcHp42Pj1pkryPF70=;
-        b=Ag94CoSGRKi6Og88BNEUKtG5M+y/iT8vx0/spoH2wTEQ/2NjVYlkSyy6w+m/s5Qi5b
-         w0kUp7XK7pgQV7RS/RTe+1Q3ojU0sC+FxVlC0iDoL0fGiJwl5z+gxKV1h1jtZ4mCEWw6
-         et0FP2lhWDeUJ2bcQca4A7bEEikpXX1J4Adol853DyKZaNvTpbyas/pmuxWXsrf7Bi0B
-         sxwwMN/U5OgR6YVjWc0thF2EaqKO+EL+3Vmikv9IIq2+XVHq1xWs6Du0wj8Xw5VfOjrw
-         ZqALdr2fq2dl96c4Xb7+ODXbTXSRvHeNz70qgZ1PCW8GR2XU8ZS21GJNCdHQiScfeSrd
-         wx/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWOV3jutYgaLaJC9cTbvyy+kG1p0qA09NcHDO6ovJKcnwvtYMnt/YKQLMJ0qZgkKQ+5P5ZR+0gu1bjzhlmiVrZG7yn4UgMs9O72QDcMmMGoAg==
-X-Gm-Message-State: AOJu0YxDIfThYUJSitYbiQsKhQDZOgB9JJrkSNQhrj3LTIyDsNW2YEiM
-	DrrW8i2/LOc2v6vhUDnQTXgPEfum2Wjx66Vz8OxryTPLuciT/MDG/m88Q2iRQuo=
-X-Google-Smtp-Source: AGHT+IEVa8I+X3/+dsdE5gFsINpX0K4f/QujrkbhBVv7cYBqJZXVfWjr7vQeA1ulKXZt61/5zrWrNQ==
-X-Received: by 2002:a05:6214:1027:b0:6b2:bdcc:f45b with SMTP id 6a1803df08f44-6b2bdccf621mr63967336d6.47.1718617390520;
-        Mon, 17 Jun 2024 02:43:10 -0700 (PDT)
-Received: from [10.125.226.166] ([160.101.139.1])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b2a5c110aasm53440006d6.36.2024.06.17.02.43.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Jun 2024 02:43:10 -0700 (PDT)
-Message-ID: <d7c70d92-4d19-4c1e-81c9-d4c0cd34eda8@citrix.com>
-Date: Mon, 17 Jun 2024 10:43:07 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="AU7dbtN2"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HAUAOW029547;
+	Mon, 17 Jun 2024 12:21:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding; s=pp1; bh=le9S76vTlRn1tWalgExIm7rVoW
+	9z4NJZfMgeQwexxIA=; b=AU7dbtN2WWur0MtUfCsm3UFJQjL5jbyoMcY1GEzlzq
+	7uKMheOP6EAAruV6QuqUHV5TZKnn5l+LYlebPcTty64TnNdjrBz4MrWdU4IjgkRr
+	gbpMNhw3C1DvEcPXoy7lNtVnTk/mN3kVBmT4Qv0lGLM4VOC+Y+z/l/jBWGpqdj9p
+	K71wpIUBnAyrMU4x8w9mDSfVHwskC5SE78C5xhdKEUeZy+ZzJizCYEo0jzgViyVF
+	f1YzTfEh6UgEjE5hDQw26M4jUtVzvkvvXR5uL7/E3F2W5ClugN87grIpx/RQvRrb
+	LLf5bNgr0GLBhJ2wczesvUdDd1h3nYaArGv9T4l5NJ9A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytke688m2-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 12:21:34 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HCLYQ7002161;
+	Mon, 17 Jun 2024 12:21:34 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytke688m1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 12:21:34 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HC2qu9011010;
+	Mon, 17 Jun 2024 12:21:33 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yspsmsswf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 12:21:33 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HCLRDd41419244
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 12:21:29 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 826FC20043;
+	Mon, 17 Jun 2024 12:21:27 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ACB7A20040;
+	Mon, 17 Jun 2024 12:21:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.43.120.136])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 17 Jun 2024 12:21:24 +0000 (GMT)
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+        irogers@google.com, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases fail when kernel debuginfo is not present
+Date: Mon, 17 Jun 2024 17:51:21 +0530
+Message-Id: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.35.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH PATCH 9/9] x86/rfds: Exclude P-only parts from the RFDS
- affected list
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-9-b88998c01e76@linux.intel.com>
-Content-Language: en-GB
-From: Andrew Cooper <andrew.cooper3@citrix.com>
-Autocrypt: addr=andrew.cooper3@citrix.com; keydata=
- xsFNBFLhNn8BEADVhE+Hb8i0GV6mihnnr/uiQQdPF8kUoFzCOPXkf7jQ5sLYeJa0cQi6Penp
- VtiFYznTairnVsN5J+ujSTIb+OlMSJUWV4opS7WVNnxHbFTPYZVQ3erv7NKc2iVizCRZ2Kxn
- srM1oPXWRic8BIAdYOKOloF2300SL/bIpeD+x7h3w9B/qez7nOin5NzkxgFoaUeIal12pXSR
- Q354FKFoy6Vh96gc4VRqte3jw8mPuJQpfws+Pb+swvSf/i1q1+1I4jsRQQh2m6OTADHIqg2E
- ofTYAEh7R5HfPx0EXoEDMdRjOeKn8+vvkAwhviWXTHlG3R1QkbE5M/oywnZ83udJmi+lxjJ5
- YhQ5IzomvJ16H0Bq+TLyVLO/VRksp1VR9HxCzItLNCS8PdpYYz5TC204ViycobYU65WMpzWe
- LFAGn8jSS25XIpqv0Y9k87dLbctKKA14Ifw2kq5OIVu2FuX+3i446JOa2vpCI9GcjCzi3oHV
- e00bzYiHMIl0FICrNJU0Kjho8pdo0m2uxkn6SYEpogAy9pnatUlO+erL4LqFUO7GXSdBRbw5
- gNt25XTLdSFuZtMxkY3tq8MFss5QnjhehCVPEpE6y9ZjI4XB8ad1G4oBHVGK5LMsvg22PfMJ
- ISWFSHoF/B5+lHkCKWkFxZ0gZn33ju5n6/FOdEx4B8cMJt+cWwARAQABzSlBbmRyZXcgQ29v
- cGVyIDxhbmRyZXcuY29vcGVyM0BjaXRyaXguY29tPsLBegQTAQgAJAIbAwULCQgHAwUVCgkI
- CwUWAgMBAAIeAQIXgAUCWKD95wIZAQAKCRBlw/kGpdefoHbdD/9AIoR3k6fKl+RFiFpyAhvO
- 59ttDFI7nIAnlYngev2XUR3acFElJATHSDO0ju+hqWqAb8kVijXLops0gOfqt3VPZq9cuHlh
- IMDquatGLzAadfFx2eQYIYT+FYuMoPZy/aTUazmJIDVxP7L383grjIkn+7tAv+qeDfE+txL4
- SAm1UHNvmdfgL2/lcmL3xRh7sub3nJilM93RWX1Pe5LBSDXO45uzCGEdst6uSlzYR/MEr+5Z
- JQQ32JV64zwvf/aKaagSQSQMYNX9JFgfZ3TKWC1KJQbX5ssoX/5hNLqxMcZV3TN7kU8I3kjK
- mPec9+1nECOjjJSO/h4P0sBZyIUGfguwzhEeGf4sMCuSEM4xjCnwiBwftR17sr0spYcOpqET
- ZGcAmyYcNjy6CYadNCnfR40vhhWuCfNCBzWnUW0lFoo12wb0YnzoOLjvfD6OL3JjIUJNOmJy
- RCsJ5IA/Iz33RhSVRmROu+TztwuThClw63g7+hoyewv7BemKyuU6FTVhjjW+XUWmS/FzknSi
- dAG+insr0746cTPpSkGl3KAXeWDGJzve7/SBBfyznWCMGaf8E2P1oOdIZRxHgWj0zNr1+ooF
- /PzgLPiCI4OMUttTlEKChgbUTQ+5o0P080JojqfXwbPAyumbaYcQNiH1/xYbJdOFSiBv9rpt
- TQTBLzDKXok86M7BTQRS4TZ/ARAAkgqudHsp+hd82UVkvgnlqZjzz2vyrYfz7bkPtXaGb9H4
- Rfo7mQsEQavEBdWWjbga6eMnDqtu+FC+qeTGYebToxEyp2lKDSoAsvt8w82tIlP/EbmRbDVn
- 7bhjBlfRcFjVYw8uVDPptT0TV47vpoCVkTwcyb6OltJrvg/QzV9f07DJswuda1JH3/qvYu0p
- vjPnYvCq4NsqY2XSdAJ02HrdYPFtNyPEntu1n1KK+gJrstjtw7KsZ4ygXYrsm/oCBiVW/OgU
- g/XIlGErkrxe4vQvJyVwg6YH653YTX5hLLUEL1NS4TCo47RP+wi6y+TnuAL36UtK/uFyEuPy
- wwrDVcC4cIFhYSfsO0BumEI65yu7a8aHbGfq2lW251UcoU48Z27ZUUZd2Dr6O/n8poQHbaTd
- 6bJJSjzGGHZVbRP9UQ3lkmkmc0+XCHmj5WhwNNYjgbbmML7y0fsJT5RgvefAIFfHBg7fTY/i
- kBEimoUsTEQz+N4hbKwo1hULfVxDJStE4sbPhjbsPCrlXf6W9CxSyQ0qmZ2bXsLQYRj2xqd1
- bpA+1o1j2N4/au1R/uSiUFjewJdT/LX1EklKDcQwpk06Af/N7VZtSfEJeRV04unbsKVXWZAk
- uAJyDDKN99ziC0Wz5kcPyVD1HNf8bgaqGDzrv3TfYjwqayRFcMf7xJaL9xXedMcAEQEAAcLB
- XwQYAQgACQUCUuE2fwIbDAAKCRBlw/kGpdefoG4XEACD1Qf/er8EA7g23HMxYWd3FXHThrVQ
- HgiGdk5Yh632vjOm9L4sd/GCEACVQKjsu98e8o3ysitFlznEns5EAAXEbITrgKWXDDUWGYxd
- pnjj2u+GkVdsOAGk0kxczX6s+VRBhpbBI2PWnOsRJgU2n10PZ3mZD4Xu9kU2IXYmuW+e5KCA
- vTArRUdCrAtIa1k01sPipPPw6dfxx2e5asy21YOytzxuWFfJTGnVxZZSCyLUO83sh6OZhJkk
- b9rxL9wPmpN/t2IPaEKoAc0FTQZS36wAMOXkBh24PQ9gaLJvfPKpNzGD8XWR5HHF0NLIJhgg
- 4ZlEXQ2fVp3XrtocHqhu4UZR4koCijgB8sB7Tb0GCpwK+C4UePdFLfhKyRdSXuvY3AHJd4CP
- 4JzW0Bzq/WXY3XMOzUTYApGQpnUpdOmuQSfpV9MQO+/jo7r6yPbxT7CwRS5dcQPzUiuHLK9i
- nvjREdh84qycnx0/6dDroYhp0DFv4udxuAvt1h4wGwTPRQZerSm4xaYegEFusyhbZrI0U9tJ
- B8WrhBLXDiYlyJT6zOV2yZFuW47VrLsjYnHwn27hmxTC/7tvG3euCklmkn9Sl9IAKFu29RSo
- d5bD8kMSCYsTqtTfT6W4A3qHGvIDta3ptLYpIAOD2sY3GYq2nf3Bbzx81wZK14JdDDHUX2Rs
- 6+ahAA==
-In-Reply-To: <20240617-add-cpu-type-v1-9-b88998c01e76@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 0yb8LJq94yIHYtfgbqDMuS1Ki8KqcugS
+X-Proofpoint-ORIG-GUID: LySWQPJ0JAqI6EJCL471a4XWoTzo5Azx
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_10,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ lowpriorityscore=0 suspectscore=0 phishscore=0 spamscore=0 clxscore=1015
+ mlxlogscore=999 impostorscore=0 mlxscore=0 adultscore=0 malwarescore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406170092
 
-On 17/06/2024 10:12 am, Pawan Gupta wrote:
-> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-> index 7e3b09b0f82c..73ec66321758 100644
-> --- a/arch/x86/kernel/cpu/common.c
-> +++ b/arch/x86/kernel/cpu/common.c
-> @@ -1209,6 +1209,9 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
->  #define VULNBL_INTEL_STEPPINGS(vfm, steppings, issues)	\
->  	X86_MATCH_VFM_STEPPINGS(INTEL_##vfm, steppings, issues)
->  
-> +#define VULNBL_INTEL_CPU_TYPE(vfm, cpu_type, issues)	\
-> +	X86_MATCH_VFM_CPU_TYPE(INTEL_##vfm, cpu_type, issues)
-> +
->  #define VULNBL_AMD(family, blacklist)		\
->  	VULNBL(AMD, family, X86_MODEL_ANY, blacklist)
->  
-> @@ -1255,9 +1258,7 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
->  	VULNBL_INTEL(TIGERLAKE,		GDS),
->  	VULNBL_INTEL(LAKEFIELD,		MMIO | MMIO_SBDS | RETBLEED),
->  	VULNBL_INTEL(ROCKETLAKE,	MMIO | RETBLEED | GDS),
-> -	VULNBL_INTEL(ALDERLAKE,		RFDS),
->  	VULNBL_INTEL(ALDERLAKE_L,	RFDS),
-> -	VULNBL_INTEL(RAPTORLAKE,	RFDS),
->  	VULNBL_INTEL(RAPTORLAKE_P,	RFDS),
->  	VULNBL_INTEL(RAPTORLAKE_S,	RFDS),
->  	VULNBL_INTEL(ATOM_GRACEMONT,	RFDS),
-> @@ -1271,6 +1272,8 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
->  	/* Match more than Vendor/Family/Model */
->  	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
->  	VULNBL_INTEL	      (COMETLAKE_L,					MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL_CPU_TYPE (RAPTORLAKE,	X86_CPU_TYPE_INTEL_ATOM,	RFDS),
-> +	VULNBL_INTEL_CPU_TYPE (ALDERLAKE,	X86_CPU_TYPE_INTEL_ATOM,	RFDS),
+Running "perftool-testsuite_probe" fails as below:
 
-How does this work?
+	./perf test -v "perftool-testsuite_probe"
+	83: perftool-testsuite_probe  : FAILED
 
-Being __initconst, this is only evaluated on the BSP.
+There are three fails:
 
-P-only and mixed P/E systems won't see X86_CPU_TYPE_INTEL_ATOM, even if
-there are ATOM APs to bring up later.
+1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
 
-~Andrew
+2. Regexp not found: "probe:vfs_mknod"
+   Regexp not found: "probe:vfs_create"
+   Regexp not found: "probe:vfs_rmdir"
+   Regexp not found: "probe:vfs_link"
+   Regexp not found: "probe:vfs_write"
+   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+
+3. Regexp not found: "Failed to find"
+   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+   Regexp not found: "in this function|at this address"
+   Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+
+These three tests depends on kernel debug info.
+1. Fail 1 expects file name along with probe which needs debuginfo
+2. Fail 2 :
+    perf probe -nf --max-probes=512 -a 'vfs_* $params'
+    Debuginfo-analysis is not supported.
+     Error: Failed to add events.
+
+3. Fail 3 :
+   perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+   Debuginfo-analysis is not supported.
+   Error: Failed to add events.
+
+There is already helper function skip_if_no_debuginfo in
+lib/probe_vfs_getname.sh which does perf probe and returns
+"2" if debug info is not present. Use the skip_if_no_debuginfo
+function and skip only the three tests which needs debuginfo
+based on the result.
+
+With the patch:
+
+    83: perftool-testsuite_probe:
+   --- start ---
+   test child forked, pid 3927
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission ::
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: -a
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: --add
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf list
+   Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe (should NOT be listed)
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding probe
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: first probe adding
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (without force)
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (with force)
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+   Regexp not found: "probe:vfs_mknod"
+   Regexp not found: "probe:vfs_create"
+   Regexp not found: "probe:vfs_rmdir"
+   Regexp not found: "probe:vfs_link"
+   Regexp not found: "probe:vfs_write"
+   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+   Regexp not found: "Failed to find"
+   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+   Regexp not found: "in this function|at this address"
+   Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: record
+   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument probing :: script
+   ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
+   ---- end(0) ----
+   83: perftool-testsuite_probe                                        : Ok
+
+Only the three specific tests are skipped and remaining
+ran successfully.
+
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+---
+ .../shell/base_probe/test_adding_kernel.sh    | 31 +++++++++++++++++--
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+index 63bb8974b38e..187dc8d4b163 100755
+--- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
++++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+@@ -21,8 +21,18 @@
+ THIS_TEST_NAME=`basename $0 .sh`
+ TEST_RESULT=0
+ 
++# shellcheck source=lib/probe_vfs_getname.sh
++. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
++
+ TEST_PROBE=${TEST_PROBE:-"inode_permission"}
+ 
++# set NO_DEBUGINFO to skip testcase if debuginfo is not present
++# skip_if_no_debuginfo returns 2 if debuginfo is not present
++skip_if_no_debuginfo
++if [ $? -eq 2 ]; then
++	NO_DEBUGINFO=1
++fi
++
+ check_kprobes_available
+ if [ $? -ne 0 ]; then
+ 	print_overall_skipped
+@@ -67,7 +77,12 @@ PERF_EXIT_CODE=$?
+ ../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
+ CHECK_EXIT_CODE=$?
+ 
+-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
++if [ $NO_DEBUGINFO ] ; then
++	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
++else
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
++fi
++
+ (( TEST_RESULT += $? ))
+ 
+ 
+@@ -208,7 +223,12 @@ PERF_EXIT_CODE=$?
+ ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
+ CHECK_EXIT_CODE=$?
+ 
+-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
++if [ $NO_DEBUGINFO ] ; then
++	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
++else
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
++fi
++
+ (( TEST_RESULT += $? ))
+ 
+ 
+@@ -232,7 +252,12 @@ CHECK_EXIT_CODE=$?
+ ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
+ (( CHECK_EXIT_CODE += $? ))
+ 
+-print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
++if [ $NO_DEBUGINFO ]; then
++	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
++else
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
++fi
++
+ (( TEST_RESULT += $? ))
+ 
+ 
+-- 
+2.35.3
+
