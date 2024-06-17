@@ -1,377 +1,412 @@
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A47CB15D5CA;
-	Mon, 17 Jun 2024 16:34:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CFB74500C;
+	Mon, 17 Jun 2024 16:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718642064; cv=none; b=V7IPCV/iYFDyxjTQL8fK8m31mW8bUQz2hYLzdnwNu8FrN4XMfiWiSltqoB+Tm1sZe0nwonTr03SHHFYGFcpTQBuZrVhs2qddEJKXJ/YMX/mmX4wDHM8p1b7iQYbp5X8c+p+dR7uYvfI8hvFSrd1qzObiWze6OJAmCFiEqXbjuX8=
+	t=1718642864; cv=none; b=a71jLtN5PL1utXkGytd0RWZyoSfHsYFW347K6AslxvUGawX2tIWD24Eqatr9+uj01TcXPwddL52YmSqubPfNb0CBQNYRuYB2tbTO3YHh89Fu/3bXClNNrVaIt3AE8Phki/utAIdUrJpRND+cDH2DWDas+ZLO9zDKF2ADpaAtKhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718642064; c=relaxed/simple;
-	bh=Kc6npoJ2c6U5oWy4Wj721fvTk0TfMA38JQT4sIU1xD0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V3s2JwPZlpikdPdenBMolGd7vf44+iU4aRmiA/USOsC6M13XGdphUOpzBBA+2/fFRyX4Cqpw2JcaXw+yk0qOAq5YIqbeuwjprbvIxstVeRDr8UaSJKbG4KbRG591hpRLTkM+qHzHfKXycwbX/5LakEZE/uxLpVfrsCzKsMi+OLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ID5b0mPe; arc=none smtp.client-ip=209.85.208.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718642864; c=relaxed/simple;
+	bh=aM9RnoGXr8emv7Tq4e0WP1W2t4kOtvT3myzG7ANBYtE=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=X3mP4ruVjDTr3twxBmEIUps7JOrNX0sTrlVbtEnUdmxNQt6daYkqRadBnvhBoVPhhzWjZFgnh5iMZIqwawBy6UzIiQF3/2jZihdgfB2pgFjVebtpLYsCWPK1olOexX8ffuyQ0lgP/vXMPRmLkz0fjMKmRpgK4dxa8bmKaKERvGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=NeXkydqz; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ID5b0mPe"
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ebe3bac675so41333911fa.1;
-        Mon, 17 Jun 2024 09:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718642061; x=1719246861; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ogcq2cw4LW99KAx92DCfmRE6i+NEPsTdaF/G7XCqinM=;
-        b=ID5b0mPemZdpqct47rkFmsfqNFkpkfKXvAmOL8HTMpsqUwm3ebUMwTuQ5xTuoKhJ/w
-         4uuPOjGhMnfCxh/bhRc7iGMj5mbMvW5lvN/FuJzG6qzhoXBWwl8ksq+lPyxPgioYATH8
-         JOzSXar1zA6zLZ6ruMDRAUz1m0Srzq18uPlf/8AUcneeydLZH+juGIlus1m4ntazcgc1
-         lNvNfvP3ZDBXBuiMR/GWaEGLpGRTGy0WuyAYceEoRtEyrHA/7Gv2rBwqNomVGQrsE7Do
-         zbfCRcRKE3JA7X49Gk1acIpdQp+dfHB37e58Nr/5gozBryZkQRJJRLED4wh1/bbIOQI9
-         1umw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718642061; x=1719246861;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ogcq2cw4LW99KAx92DCfmRE6i+NEPsTdaF/G7XCqinM=;
-        b=Zwz82PyxoTVZEDqvw+PHTwEiVyN8trE1Cpdhj3VMixQCoekQXCr8lQGQqmTGJWDsE3
-         wuLGB58MC11m+9aehw68+gUDyh7uzDOH3DV134XUfI0Ynkt5cUJ/mOuhY/70Yii7AO3F
-         9NEwHBKZ3yLD8fdF2nIBkw6SS/64YDKQr2IsKpo7AM9oVyZNtcVRfkJq6uS6dVc0xw+E
-         WWgsundsbxz5fJSNXQKqSBZDMuE08XnTosFb03porVnNXFemBgS+ht6RAVoPlRzI0A84
-         2Dcpvvbedc+g2Ur1wdlnUQmCPleFyp6KI0Ko/05VSdG+lHBDb3vEwwp0K5dx5BFfTA17
-         WOEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsfODOxCTHI2Mudl315HKvcUlX1bekWklcaKdLYBirW/K+tu4SfwipThynTj0Hp5E+rzTHb8UYLuaZVbaztEqslGpkQfdn66Qux/KORnlK+w==
-X-Gm-Message-State: AOJu0YwPLXrAjNjC1q61TRL6WUsbESeuXKjnyBJsCkVvzJ9sZIBuL/Po
-	be806p9ejaCcFojxYE4vzbCToJ9h4vxdo0NRvqYPvo+gyUBw5itQLFg0FD9ztZRFxMCDf8Ailla
-	3Ov3srJ9X9T4twmo9Y0ehO95odw==
-X-Google-Smtp-Source: AGHT+IGivdcE+iPtGE5o0xUHNTlSBmox16QCHyEMdFMr0hg3nXWE6hx+5o4C1UsIaS3/+c5jjJQzaXwXeomAQqT76Rs=
-X-Received: by 2002:a2e:9f41:0:b0:2ec:13f9:930c with SMTP id
- 38308e7fff4ca-2ec346421f7mr504261fa.5.1718642060507; Mon, 17 Jun 2024
- 09:34:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="NeXkydqz"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HGaLB5001925;
+	Mon, 17 Jun 2024 16:47:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=pp1; bh=P
+	hYpQRcKjYLNv02jVjWeC2p16m9d11AocHNjE7/LYBs=; b=NeXkydqziIaXvjxJo
+	xisfknjclVdmvVYMmABeKU960RwJPf3FLmSn8NOI3vhq1pNQd2rQql/aYb1X1PdM
+	CwLytNDx+8x8jQ4ibU4cUJICcR90h7rQ3bz7/PdTfNAJkfP5tq8hHbGpswoRMbw2
+	NPZgciZlirBmIFFMRHZss4Z0AlpHiXIp2PBExm6l9t99d+FOFEGNN/LbUMG6/F04
+	NWtxOOIhPmrxvgXjF8IPwPTa8k2Wksxyk1RG8iHIElPXpp6NRazgzP8vcQVlbqmX
+	8b30ViPX/wk/c5JN7ABdFpxLYi9eRlTmd7Fc5JQcK37q9n+eLzoHOrYyCFjRDxtz
+	qfmuQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytrpyg25v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 16:47:26 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HGhsMJ016207;
+	Mon, 17 Jun 2024 16:47:26 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytrpyg25r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 16:47:25 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HFc8sv023889;
+	Mon, 17 Jun 2024 16:47:25 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3ysp9puv8f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 17 Jun 2024 16:47:25 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HGlJev55968118
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 17 Jun 2024 16:47:21 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E53F220069;
+	Mon, 17 Jun 2024 16:47:18 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 538C620043;
+	Mon, 17 Jun 2024 16:47:16 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.76.136])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon, 17 Jun 2024 16:47:16 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240616085743.1100704-1-xin@zytor.com> <20240616085743.1100704-3-xin@zytor.com>
-In-Reply-To: <20240616085743.1100704-3-xin@zytor.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Mon, 17 Jun 2024 12:34:09 -0400
-Message-ID: <CAMzpN2jQrgaPR2R_=sBRmjGvbpX1ZSCrr9zJ+TM9N1ymg5_OiA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] x86/cpufeatures: Generate a feature mask header
- based on build config
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, 
-	peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org, 
-	namhyung@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
+ fail when kernel debuginfo is not present
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
+Date: Mon, 17 Jun 2024 22:17:04 +0530
+Cc: LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
 Content-Transfer-Encoding: quoted-printable
+Message-Id: <DA51C986-34EE-4849-B9C4-DB69E2ECF75C@linux.vnet.ibm.com>
+References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
+ <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
+To: James Clark <james.clark@arm.com>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: PDF8rStCNfiBRYeiGThJsCtGO_CMIBvI
+X-Proofpoint-GUID: RHQcb8kY_a5qBb4qu-H26rxOJr7Ykx5N
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-17_14,2024-06-17_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ clxscore=1011 mlxlogscore=999 spamscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 adultscore=0 mlxscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2405170001 definitions=main-2406170127
 
-On Sun, Jun 16, 2024 at 4:58=E2=80=AFAM Xin Li (Intel) <xin@zytor.com> wrot=
-e:
->
-> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
->
-> Introduce an AWK script to auto-generate a header with required and
-> disabled feature masks based on <asm/cpufeatures.h> and current build
-> config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-> simply add
->
-> config X86_DISABLED_FEATURE_FRED
->         def_bool y
->         depends on !X86_FRED
->
-> to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-> feature disable flag, e.g., DISABLE_FRED.
->
-> Lastly the generated required and disabled feature masks will be added
-> to their corresponding feature masks for this particular compile-time
-> configuration.
->
-> [ Xin: build integration improvements ]
->
-> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->
-> Change since v1:
-> * Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
->   to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
->   disabled feature for this particular compile-time configuration.
-> ---
->  arch/x86/Makefile                  | 17 +++++-
->  arch/x86/boot/cpucheck.c           |  3 +-
->  arch/x86/boot/cpuflags.c           |  1 -
->  arch/x86/boot/mkcpustr.c           |  3 +-
->  arch/x86/include/asm/Kbuild        |  1 +
->  arch/x86/include/asm/cpufeature.h  |  1 +
->  arch/x86/include/asm/cpufeatures.h |  8 ---
->  arch/x86/kernel/verify_cpu.S       |  1 +
->  arch/x86/tools/featuremasks.awk    | 90 ++++++++++++++++++++++++++++++
->  9 files changed, 111 insertions(+), 14 deletions(-)
->  create mode 100755 arch/x86/tools/featuremasks.awk
->
-> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-> index 801fd85c3ef6..211c0820b150 100644
-> --- a/arch/x86/Makefile
-> +++ b/arch/x86/Makefile
-> @@ -261,9 +261,22 @@ archscripts: scripts_basic
->         $(Q)$(MAKE) $(build)=3Darch/x86/tools relocs
->
->  ###
-> -# Syscall table generation
-> +# Feature masks header and syscall table generation
->
-> -archheaders:
-> +out :=3D arch/x86/include/generated/asm
-> +featuremasks_hdr :=3D featuremasks.h
-> +featuremasks_awk :=3D $(srctree)/arch/x86/tools/featuremasks.awk
-> +cpufeatures_hdr :=3D $(srctree)/arch/x86/include/asm/cpufeatures.h
-> +quiet_cmd_gen_featuremasks =3D GEN     $@
-> +      cmd_gen_featuremasks =3D $(AWK) -f $(featuremasks_awk) $(cpufeatur=
-es_hdr) $(KCONFIG_CONFIG) > $@
-> +
-> +$(out)/$(featuremasks_hdr): $(featuremasks_awk) $(cpufeatures_hdr) $(KCO=
-NFIG_CONFIG) FORCE
-> +       $(shell mkdir -p $(out))
-> +       $(call if_changed,gen_featuremasks)
-> +
-> +targets +=3D $(out)/$(featuremasks_hdr)
-> +
-> +archheaders: $(out)/$(featuremasks_hdr)
->         $(Q)$(MAKE) $(build)=3Darch/x86/entry/syscalls all
->
->  ###
-> diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
-> index 0aae4d4ed615..8d03a741d1b2 100644
-> --- a/arch/x86/boot/cpucheck.c
-> +++ b/arch/x86/boot/cpucheck.c
-> @@ -22,10 +22,11 @@
->  # include "boot.h"
->  #endif
->  #include <linux/types.h>
-> +#include <asm/featuremasks.h>
->  #include <asm/intel-family.h>
->  #include <asm/processor-flags.h>
-> -#include <asm/required-features.h>
->  #include <asm/msr-index.h>
-> +
->  #include "string.h"
->  #include "msr.h"
->
-> diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
-> index d75237ba7ce9..0cabdacb2a2f 100644
-> --- a/arch/x86/boot/cpuflags.c
-> +++ b/arch/x86/boot/cpuflags.c
-> @@ -3,7 +3,6 @@
->  #include "bitops.h"
->
->  #include <asm/processor-flags.h>
-> -#include <asm/required-features.h>
->  #include <asm/msr-index.h>
->  #include "cpuflags.h"
->
-> diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
-> index da0ccc5de538..b90110109675 100644
-> --- a/arch/x86/boot/mkcpustr.c
-> +++ b/arch/x86/boot/mkcpustr.c
-> @@ -12,8 +12,6 @@
->
->  #include <stdio.h>
->
-> -#include "../include/asm/required-features.h"
-> -#include "../include/asm/disabled-features.h"
->  #include "../include/asm/cpufeatures.h"
->  #include "../include/asm/vmxfeatures.h"
->  #include "../kernel/cpu/capflags.c"
-> @@ -23,6 +21,7 @@ int main(void)
->         int i, j;
->         const char *str;
->
-> +       printf("#include <asm/featuremasks.h>\n\n");
->         printf("static const char x86_cap_strs[] =3D\n");
->
->         for (i =3D 0; i < NCAPINTS; i++) {
-> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-> index a192bdea69e2..29c3481f40fc 100644
-> --- a/arch/x86/include/asm/Kbuild
-> +++ b/arch/x86/include/asm/Kbuild
-> @@ -8,6 +8,7 @@ generated-y +=3D syscalls_x32.h
->  generated-y +=3D unistd_32_ia32.h
->  generated-y +=3D unistd_64_x32.h
->  generated-y +=3D xen-hypercalls.h
-> +generated-y +=3D featuremasks.h
->
->  generic-y +=3D early_ioremap.h
->  generic-y +=3D mcs_spinlock.h
-> diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpu=
-feature.h
-> index 0b9611da6c53..8332f596ba3c 100644
-> --- a/arch/x86/include/asm/cpufeature.h
-> +++ b/arch/x86/include/asm/cpufeature.h
-> @@ -9,6 +9,7 @@
->  #include <asm/asm.h>
->  #include <linux/bitops.h>
->  #include <asm/alternative.h>
-> +#include <asm/featuremasks.h>
->
->  enum cpuid_leafs
->  {
-> diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cp=
-ufeatures.h
-> index 3c7434329661..05503448b94d 100644
-> --- a/arch/x86/include/asm/cpufeatures.h
-> +++ b/arch/x86/include/asm/cpufeatures.h
-> @@ -2,14 +2,6 @@
->  #ifndef _ASM_X86_CPUFEATURES_H
->  #define _ASM_X86_CPUFEATURES_H
->
-> -#ifndef _ASM_X86_REQUIRED_FEATURES_H
-> -#include <asm/required-features.h>
-> -#endif
-> -
-> -#ifndef _ASM_X86_DISABLED_FEATURES_H
-> -#include <asm/disabled-features.h>
-> -#endif
-> -
->  /*
->   * Defines x86 CPU feature bits
->   */
-> diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-> index 1258a5872d12..3205cbb47b9c 100644
-> --- a/arch/x86/kernel/verify_cpu.S
-> +++ b/arch/x86/kernel/verify_cpu.S
-> @@ -29,6 +29,7 @@
->   */
->
->  #include <asm/cpufeatures.h>
-> +#include <asm/featuremasks.h>
->  #include <asm/msr-index.h>
->
->  SYM_FUNC_START_LOCAL(verify_cpu)
-> diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremask=
-s.awk
-> new file mode 100755
-> index 000000000000..c96e6cf43161
-> --- /dev/null
-> +++ b/arch/x86/tools/featuremasks.awk
-> @@ -0,0 +1,90 @@
-> +#!/usr/bin/awk
-> +#
-> +# Convert cpufeatures.h to a list of compile-time masks
-> +# Note: this blithly assumes that each word has at least one
-> +# feature defined in it; if not, something else is wrong!
-> +#
-> +
-> +BEGIN {
-> +       printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
-> +       printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
-> +
-> +       file =3D 0
-> +}
-> +
-> +BEGINFILE {
-> +       switch (++file) {
-> +       case 1:                 # cpufeatures.h
-> +               FPAT =3D "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
-> +               break;
-> +       case 2:                 # .config
-> +               FPAT =3D "CONFIG_[A-Z0-9_]+|is not set|[yn]";
-> +               break;
-> +       }
-> +}
-> +
-> +file =3D=3D 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
-> +$3 =3D=3D "(" && $5 =3D=3D "*" && $7 =3D=3D "+" && $9 =3D=3D ")" {
-> +       nfeat =3D $4 * $6 + $8;
-> +       feat =3D $2;
-> +       sub(/^X86_FEATURE_/, "", feat);
-> +       feats[nfeat] =3D feat;
-> +}
-> +file =3D=3D 1 && $1 ~ /^#[ \t]*define$/ && $2 =3D=3D "NCAPINTS" {
-> +       ncapints =3D strtonum($3);
-> +}
-> +
-> +file =3D=3D 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
-> +       on =3D ($2 =3D=3D "y");
-> +       printf "/* %s =3D %s (%d) */\n", $1, $2, on;
 
-This looks like extra debugging output that doesn't need to be in the
-final release.
 
-> +       if (split($1, fs, "CONFIG_X86_|_FEATURE_") =3D=3D 3) {
-> +               printf "/* %s %s =3D %d */\n", fs[2], fs[3], on;
+> On 17 Jun 2024, at 8:30=E2=80=AFPM, James Clark <james.clark@arm.com> =
+wrote:
+>=20
+>=20
+>=20
+> On 17/06/2024 13:21, Athira Rajeev wrote:
+>> Running "perftool-testsuite_probe" fails as below:
+>>=20
+>> ./perf test -v "perftool-testsuite_probe"
+>> 83: perftool-testsuite_probe  : FAILED
+>>=20
+>> There are three fails:
+>>=20
+>> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
+inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added =
+probe :: perf probe -l (output regexp parsing)
+>>=20
+>=20
+> On a machine where NO_DEBUGINFO gets set, this one skips for me. But =
+on
+> a machine where there _is_ debug info this test still fails.
+>=20
+> But in both cases the probe looks like it was added successfully. So =
+I'm
+> wondering if this one does need to be skipped, or it's just always
+> failing? Do you have this test passing anywhere where there is debug =
+info?
+>=20
+> The list command looks like it successfully lists the probe for me in
+> both cases, it just doesn't have an address on the end:
+>=20
+> perf list 'probe:*'
+>=20
+>   probe:inode_permission (on inode_permission)
+>=20
+> Does the missing address mean anything or is it just not handled
+> properly by the test?
+>=20
+> Ironically the machine that _does_ pass the debug info test also =
+prints
+> this, but it looks like it still adds and lists the probe correctly:
+>=20
+>  perf probe -l probe:*
+>=20
+>  Failed to find debug information for address 0xffff80008047ac30
+>    probe:inode_permission (on inode_permission)
 
-Same.
+Hi James,
 
-> +               featstat[fs[2], fs[3]] =3D on;
-> +       }
-> +}
-> +
-> +END {
-> +       sets[1] =3D "REQUIRED";
-> +       sets[2] =3D "DISABLED";
-> +
-> +       for (ns in sets) {
-> +               s =3D sets[ns];
-> +
-> +               printf "/*\n";
-> +               printf " * %s features:\n", s;
-> +               printf " *\n";
-> +               fstr =3D "";
-> +               for (i =3D 0; i < ncapints; i++) {
-> +                       mask =3D 0;
-> +                       for (j =3D 0; j < 32; j++) {
-> +                               nfeat =3D i*32 + j;
-> +                               feat =3D feats[nfeat];
-> +                               if (feat) {
-> +                                       st =3D !!featstat[s, feat];
-> +                                       if (st) {
-> +                                               nfstr =3D fstr " " feat;
-> +                                               if (length(nfstr) > 72) {
-> +                                                       printf " *   %s\n=
-", fstr;
-> +                                                       nfstr =3D " " fea=
-t;
-> +                                               }
-> +                                               fstr =3D nfstr;
-> +                                       }
-> +                                       mask +=3D st * (2 ^ j);
-> +                               }
-> +                       }
-> +                       masks[i] =3D mask;
-> +               }
-> +               printf " *   %s\n */\n\n", fstr;
-> +
-> +               for (i =3D 0; i < ncapints; i++) {
-> +                       printf "#define %s_MASK%-3d 0x%08x\n", s, i, mask=
-s[i];
-> +               }
-> +
-> +               printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS =
-!=3D %d)\n\n", s, ncapints;
-> +       }
-> +
-> +       printf "#define SSE_MASK\t\\\n";
-> +       printf "\t(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X=
-86_FEATURE_XMM2 & 31))))\n\n";
+Thanks for checking this patch.
 
-This could be moved to verify_cpu.S, since that is the only place it is use=
-d.
+In environment where kernel is compiled with debuginfo:
 
-> +       printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
-> +}
-> --
-> 2.45.1
->
->
+1) Add probe point
 
-You could also generate {REQUIRED|DISABLED}_MASK_BIT_SET() in this
-script, so that they are always in sync with NCAPINTS.
+# ./perf probe --add inode_permission
+Added new event:
+  probe:inode_permission (on inode_permission)
 
-Brian Gerst
+You can now use it in all perf tools, such as:
+
+perf record -e probe:inode_permission -aR sleep 1
+
+
+2) Check using perf probe -l
+
+# ./perf probe -l
+probe:inode_permission (on inode_permission:2@fs/namei.c)
+
+With debuginfo, the result has additional info.
+ The test looks for matching pattern =
+"\s*probe:inode_permission(?:_\d+)?\s+\(on =
+inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)=E2=80=9D in result
+where it is expecting "inode_permission:2@fs/namei.c=E2=80=9D . The =
+=E2=80=9C@fs/namei.c=E2=80=9D info needs debuginfo here.
+
+The function I am using in patch to check for debuginfo =
+(skip_if_no_debuginfo) is from "tests/shell/lib/probe_vfs_getname.sh"
+
+skip_if_no_debuginfo() {
+        add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the =
+path for the kernel|Debuginfo-analysis is not supported)|(file has no =
+debug information)" && return 2
+        return 1
+}
+
+So the debuginfo test passes in your case since the log has "Failed to =
+find debug information=E2=80=9D which is not present in above grep =
+string.=20
+
+James,
+
+Only =E2=80=9Cperf probe -l=E2=80=9D subtest fails with debuginfo =
+enabled or other two subtests as well? Can you also share result on how =
+other two subtests behaves ?=20
+
+1. Fail 2 :
+   perf probe -nf --max-probes=3D512 -a 'vfs_* $params=E2=80=99
+ =20
+
+2. Fail 3 :
+  perf probe 'vfs_read =
+somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+
+
+Also since you mentioned this gets skipped when debuginfo is not =
+enabled, curious to know what is debuginfo message from your setup with =
+debuginfo disabled.
+
+Thanks again for checking.
+
+Athira
+
+>=20
+
+
+>=20
+>> 2. Regexp not found: "probe:vfs_mknod"
+>>   Regexp not found: "probe:vfs_create"
+>>   Regexp not found: "probe:vfs_rmdir"
+>>   Regexp not found: "probe:vfs_link"
+>>   Regexp not found: "probe:vfs_write"
+>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
+support (command exitcode + output regexp parsing)
+>>=20
+>> 3. Regexp not found: "Failed to find"
+>>   Regexp not found: =
+"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>>   Regexp not found: "in this function|at this address"
+>>   Line did not match any pattern: "The /boot/vmlinux file has no =
+debug information."
+>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, =
+or install an appropriate debuginfo package."
+>>=20
+>> These three tests depends on kernel debug info.
+>> 1. Fail 1 expects file name along with probe which needs debuginfo
+>> 2. Fail 2 :
+>>    perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
+>>    Debuginfo-analysis is not supported.
+>>     Error: Failed to add events.
+>>=20
+>> 3. Fail 3 :
+>>   perf probe 'vfs_read =
+somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+>>   Debuginfo-analysis is not supported.
+>>   Error: Failed to add events.
+>>=20
+>> There is already helper function skip_if_no_debuginfo in
+>> lib/probe_vfs_getname.sh which does perf probe and returns
+>> "2" if debug info is not present. Use the skip_if_no_debuginfo
+>> function and skip only the three tests which needs debuginfo
+>> based on the result.
+>>=20
+>> With the patch:
+>>=20
+>>    83: perftool-testsuite_probe:
+>>   --- start ---
+>>   test child forked, pid 3927
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission ::
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission :: -a
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe =
+inode_permission :: --add
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added =
+probe :: perf list
+>>   Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on =
+inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
+to missing debuginfo :: testcase skipped
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added =
+probe
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added =
+probe
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed =
+probe (should NOT be listed)
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: =
+adding probe
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
+probes :: first probe adding
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
+probes :: second probe adding (without force)
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding =
+probes :: second probe adding (with force)
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled =
+probe
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing =
+multiple probes
+>>   Regexp not found: "probe:vfs_mknod"
+>>   Regexp not found: "probe:vfs_create"
+>>   Regexp not found: "probe:vfs_rmdir"
+>>   Regexp not found: "probe:vfs_link"
+>>   Regexp not found: "probe:vfs_write"
+>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
+to missing debuginfo :: testcase skipped
+>>   Regexp not found: "Failed to find"
+>>   Regexp not found: =
+"somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>>   Regexp not found: "in this function|at this address"
+>>   Line did not match any pattern: "The /boot/vmlinux file has no =
+debug information."
+>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy, =
+or install an appropriate debuginfo package."
+>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
+to missing debuginfo :: testcase skipped
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
+retval :: add
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with =
+retval :: record
+>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function =
+argument probing :: script
+>>   ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
+>>   ---- end(0) ----
+>>   83: perftool-testsuite_probe                                        =
+: Ok
+>>=20
+>> Only the three specific tests are skipped and remaining
+>> ran successfully.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> .../shell/base_probe/test_adding_kernel.sh    | 31 =
++++++++++++++++++--
+>> 1 file changed, 28 insertions(+), 3 deletions(-)
+>>=20
+>> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
+b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>> index 63bb8974b38e..187dc8d4b163 100755
+>> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>> @@ -21,8 +21,18 @@
+>> THIS_TEST_NAME=3D`basename $0 .sh`
+>> TEST_RESULT=3D0
+>>=20
+>> +# shellcheck source=3Dlib/probe_vfs_getname.sh
+>> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
+>> +
+>> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
+>>=20
+>> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
+>> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
+>> +skip_if_no_debuginfo
+>> +if [ $? -eq 2 ]; then
+>> + NO_DEBUGINFO=3D1
+>> +fi
+>> +
+>> check_kprobes_available
+>> if [ $? -ne 0 ]; then
+>> print_overall_skipped
+>> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=3D$?
+>> ../common/check_all_patterns_found.pl =
+"\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on =
+${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < =
+$LOGS_DIR/adding_kernel_list-l.log
+>> CHECK_EXIT_CODE=3D$?
+>>=20
+>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe =
+:: perf probe -l"
+>> +if [ $NO_DEBUGINFO ] ; then
+>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
+missing debuginfo"
+>> +else
+>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe =
+:: perf probe -l"
+>> +fi
+>> +
+>> (( TEST_RESULT +=3D $? ))
+>>=20
+>>=20
+>> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=3D$?
+>> ../common/check_all_patterns_found.pl "probe:vfs_mknod" =
+"probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" =
+< $LOGS_DIR/adding_kernel_adding_wildcard.err
+>> CHECK_EXIT_CODE=3D$?
+>>=20
+>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding =
+support"
+>> +if [ $NO_DEBUGINFO ] ; then
+>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
+missing debuginfo"
+>> +else
+>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding =
+support"
+>> +fi
+>> +
+>> (( TEST_RESULT +=3D $? ))
+>>=20
+>>=20
+>> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=3D$?
+>> ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < =
+$LOGS_DIR/adding_kernel_nonexisting.err
+>> (( CHECK_EXIT_CODE +=3D $? ))
+>>=20
+>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing =
+variable"
+>> +if [ $NO_DEBUGINFO ]; then
+>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
+missing debuginfo"
+>> +else
+>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing =
+variable"
+>> +fi
+>> +
+>> (( TEST_RESULT +=3D $? ))
+>>=20
+>>=20
+
