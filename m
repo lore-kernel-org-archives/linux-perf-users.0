@@ -1,227 +1,126 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F0EB823B8;
-	Mon, 17 Jun 2024 15:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACD8755888;
+	Mon, 17 Jun 2024 15:00:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718636413; cv=none; b=e0EWrrw/GYFODDATU0rL5juVc42ZFX+wwTLq7iPOWcGPDUaE8NUQ/NR5bNSUNFZ1Zq+MnqTk1wV1QYvyjSVdSbUAcXhlx+hvqt9wiOifS0j8gWx6z7JBekJIIg6o4aF9vPaSKSISZ/oauzOOIftIj9VFHo2vJps6tBu/fdYwdqQ=
+	t=1718636461; cv=none; b=iFCiMzN82Zig9d1ASSb8immBR/lyCj9BlBVkz5U7e1lHpLtcNGe2Y9WNna4vFDNr7B5fwnFeV4bETPKXvb2K29Br+Ltu4JRcfmiTSAqVnAxcwbut6x7DimQnzY8V8APgo50mNUH7eS5P5rp4y2jJHg/gLHUulVAXSNq70pZo8TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718636413; c=relaxed/simple;
-	bh=VtX9hVDLR0eiTAXx2qCuh+/KQ1kO+ysSwbv+qE8urU0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ah/NnrNMOWPS11pucyGQviYOCqK93rd/Qr2XAXXP954gYqSdmRBAr+0m7u1tTY6IQynKVfIa2wMJAPcXddGh3b/NrTlp+n5eFLxtK2NuWTkZHUEDpYJhOhPlammxzeDm4YyRO2jzAT+l5hzt4ooMycFdHCdobgxgbwiwD1VteSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4F7CEDA7;
-	Mon, 17 Jun 2024 08:00:35 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A9E03F6A8;
-	Mon, 17 Jun 2024 08:00:08 -0700 (PDT)
-Message-ID: <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
-Date: Mon, 17 Jun 2024 16:00:07 +0100
+	s=arc-20240116; t=1718636461; c=relaxed/simple;
+	bh=kNhCpF9yy4ozI+EhT1JRqFNTV1nZBZe9zUnBYVOWTKE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ppM6sFJIvdmATaSMV4lQxE3LD+e10iRXCAyhCDClp2QzfeOM47mOUyZZBmcnokpvbpO5NZuJTEvryfqwmMkKmVXbThmwMaGlSCs6qX7RyqsTx9Jr+pePj/DlE57iaJaEHSRIC/jUPBgAFa6oRmeXMkZDpIg0TS+F4u6XJtSv4nU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=MD4o4Y5B; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="MD4o4Y5B"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ob7EjVWS74YHIzO0+xs/iszj8jCcXUxw7ZhVkRSF93I=; b=MD4o4Y5BSNU0Xp6t440QmxGt2Q
+	NdXHS2ibYHTvzEAkzK9x1hm6Cuh/5jGqpvKe2w2yO+LWvImKXyRLWkgVQSoS997pacOJ9qttRpU67
+	l2mGnE/dVsAILaOmeuRkcmcvVyEeVTAyDvL3DunWbTVjHcvlg1oNOoQxu1UsCD5VCGoyqwvZXn6Ry
+	dslJrdK6UbXNF9bza8KYgduB7zrdjQgsgPrI7AsfjM+axd1KKSYcCTUxYxGpYJvstVBpa5hnMSkj1
+	LtLcDjqrPiaooftmnqSBWAob627cLkFTl49GRp9RJGNEXto0Y3B+FzVpy0xeEpTF0vY0kKZLtrY1h
+	tJYHqYjw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sJDqe-00000002Dyl-04tO;
+	Mon, 17 Jun 2024 15:00:44 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id E97AE30024D; Mon, 17 Jun 2024 17:00:38 +0200 (CEST)
+Date: Mon, 17 Jun 2024 17:00:38 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Mingwei Zhang <mizhang@google.com>,
+	Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Xiong Zhang <xiong.y.zhang@intel.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>,
+	Kan Liang <kan.liang@intel.com>,
+	Zhenyu Wang <zhenyuw@linux.intel.com>,
+	Manali Shukla <manali.shukla@amd.com>,
+	Sandipan Das <sandipan.das@amd.com>,
+	Jim Mattson <jmattson@google.com>,
+	Stephane Eranian <eranian@google.com>,
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	gce-passthrou-pmu-dev@google.com,
+	Samantha Alt <samantha.alt@intel.com>,
+	Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+	maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
+	kvm@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 07/54] perf: Add generic exclude_guest support
+Message-ID: <20240617150038.GW8774@noisy.programming.kicks-ass.net>
+References: <902c40cc-6e0b-4b2f-826c-457f533a0a76@linux.intel.com>
+ <20240611120641.GF8774@noisy.programming.kicks-ass.net>
+ <0a403a6c-8d55-42cb-a90c-c13e1458b45e@linux.intel.com>
+ <20240612111732.GW40213@noisy.programming.kicks-ass.net>
+ <e72c847f-a069-43e4-9e49-37c0bf9f0a8b@linux.intel.com>
+ <20240613091507.GA17707@noisy.programming.kicks-ass.net>
+ <3755c323-6244-4e75-9e79-679bd05b13a4@linux.intel.com>
+ <f4da2fb2-fa09-4d2b-a78d-1b459ada6d09@linux.intel.com>
+ <20240617075123.GX40213@noisy.programming.kicks-ass.net>
+ <5fcf4471-bcf9-43af-93a0-dcc4fae27449@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
- fail when kernel debuginfo is not present
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
- kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com, acme@kernel.org,
- jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
- namhyung@kernel.org
-References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5fcf4471-bcf9-43af-93a0-dcc4fae27449@linux.intel.com>
 
-
-
-On 17/06/2024 13:21, Athira Rajeev wrote:
-> Running "perftool-testsuite_probe" fails as below:
+On Mon, Jun 17, 2024 at 09:34:15AM -0400, Liang, Kan wrote:
 > 
-> 	./perf test -v "perftool-testsuite_probe"
-> 	83: perftool-testsuite_probe  : FAILED
 > 
-> There are three fails:
+> On 2024-06-17 3:51 a.m., Peter Zijlstra wrote:
+> > On Thu, Jun 13, 2024 at 02:04:36PM -0400, Liang, Kan wrote:
+> >>>>  static enum event_type_t get_event_type(struct perf_event *event)
+> >>>> @@ -3340,9 +3388,14 @@ ctx_sched_out(struct perf_event_context
+> >>>>  	 * would only update time for the pinned events.
+> >>>>  	 */
+> >>>>  	if (is_active & EVENT_TIME) {
+> >>>> +		bool stop;
+> >>>> +
+> >>>> +		stop = !((ctx->is_active & event_type) & EVENT_ALL) &&
+> >>>> +		       ctx == &cpuctx->ctx;
+> >>>> +			
+> >>>>  		/* update (and stop) ctx time */
+> >>>>  		update_context_time(ctx);
+> >>>> -		update_cgrp_time_from_cpuctx(cpuctx, ctx == &cpuctx->ctx);
+> >>>> +		update_cgrp_time_from_cpuctx(cpuctx, stop);
+> >>
+> >> For the event_type == EVENT_GUEST, the "stop" should always be the same
+> >> as "ctx == &cpuctx->ctx". Because the ctx->is_active never set the
+> >> EVENT_GUEST bit.
+> >> Why the stop is introduced?
+> > 
+> > Because the ctx_sched_out() for vPMU should not stop time, 
 > 
-> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+> But the implementation seems stop the time.
 > 
+> The ctx->is_active should be (EVENT_ALL | EVENT_TIME) for most of cases.
+> 
+> When a vPMU is scheduling in (invoke ctx_sched_out()), the event_type
+> should only be EVENT_GUEST.
+> 
+> !((ctx->is_active & event_type) & EVENT_ALL) should be TRUE.
 
-On a machine where NO_DEBUGINFO gets set, this one skips for me. But on
-a machine where there _is_ debug info this test still fails.
+Hmm.. yeah, I think I might've gotten that wrong.
 
-But in both cases the probe looks like it was added successfully. So I'm
-wondering if this one does need to be skipped, or it's just always
-failing? Do you have this test passing anywhere where there is debug info?
-
-The list command looks like it successfully lists the probe for me in
-both cases, it just doesn't have an address on the end:
-
- perf list 'probe:*'
-
-   probe:inode_permission (on inode_permission)
-
-Does the missing address mean anything or is it just not handled
-properly by the test?
-
-Ironically the machine that _does_ pass the debug info test also prints
-this, but it looks like it still adds and lists the probe correctly:
-
-  perf probe -l probe:*
-
-  Failed to find debug information for address 0xffff80008047ac30
-    probe:inode_permission (on inode_permission)
-
-
-> 2. Regexp not found: "probe:vfs_mknod"
->    Regexp not found: "probe:vfs_create"
->    Regexp not found: "probe:vfs_rmdir"
->    Regexp not found: "probe:vfs_link"
->    Regexp not found: "probe:vfs_write"
->    -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+> > only the
+> > 'normal' sched-out should stop time.
 > 
-> 3. Regexp not found: "Failed to find"
->    Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->    Regexp not found: "in this function|at this address"
->    Line did not match any pattern: "The /boot/vmlinux file has no debug information."
->    Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+> If the guest is the only case which we want to keep the time for, I
+> think we may use a straightforward check as below.
 > 
-> These three tests depends on kernel debug info.
-> 1. Fail 1 expects file name along with probe which needs debuginfo
-> 2. Fail 2 :
->     perf probe -nf --max-probes=512 -a 'vfs_* $params'
->     Debuginfo-analysis is not supported.
->      Error: Failed to add events.
-> 
-> 3. Fail 3 :
->    perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
->    Debuginfo-analysis is not supported.
->    Error: Failed to add events.
-> 
-> There is already helper function skip_if_no_debuginfo in
-> lib/probe_vfs_getname.sh which does perf probe and returns
-> "2" if debug info is not present. Use the skip_if_no_debuginfo
-> function and skip only the three tests which needs debuginfo
-> based on the result.
-> 
-> With the patch:
-> 
->     83: perftool-testsuite_probe:
->    --- start ---
->    test child forked, pid 3927
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission ::
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: -a
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: --add
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf list
->    Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
->    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe (should NOT be listed)
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding probe
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: first probe adding
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (without force)
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (with force)
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
->    Regexp not found: "probe:vfs_mknod"
->    Regexp not found: "probe:vfs_create"
->    Regexp not found: "probe:vfs_rmdir"
->    Regexp not found: "probe:vfs_link"
->    Regexp not found: "probe:vfs_write"
->    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
->    Regexp not found: "Failed to find"
->    Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
->    Regexp not found: "in this function|at this address"
->    Line did not match any pattern: "The /boot/vmlinux file has no debug information."
->    Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
->    -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: record
->    -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument probing :: script
->    ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
->    ---- end(0) ----
->    83: perftool-testsuite_probe                                        : Ok
-> 
-> Only the three specific tests are skipped and remaining
-> ran successfully.
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  .../shell/base_probe/test_adding_kernel.sh    | 31 +++++++++++++++++--
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> index 63bb8974b38e..187dc8d4b163 100755
-> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> @@ -21,8 +21,18 @@
->  THIS_TEST_NAME=`basename $0 .sh`
->  TEST_RESULT=0
->  
-> +# shellcheck source=lib/probe_vfs_getname.sh
-> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
-> +
->  TEST_PROBE=${TEST_PROBE:-"inode_permission"}
->  
-> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
-> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
-> +skip_if_no_debuginfo
-> +if [ $? -eq 2 ]; then
-> +	NO_DEBUGINFO=1
-> +fi
-> +
->  check_kprobes_available
->  if [ $? -ne 0 ]; then
->  	print_overall_skipped
-> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=$?
->  ../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
->  CHECK_EXIT_CODE=$?
->  
-> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
-> +if [ $NO_DEBUGINFO ] ; then
-> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
-> +else
-> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
-> +fi
-> +
->  (( TEST_RESULT += $? ))
->  
->  
-> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=$?
->  ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
->  CHECK_EXIT_CODE=$?
->  
-> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
-> +if [ $NO_DEBUGINFO ] ; then
-> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
-> +else
-> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
-> +fi
-> +
->  (( TEST_RESULT += $? ))
->  
->  
-> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=$?
->  ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
->  (( CHECK_EXIT_CODE += $? ))
->  
-> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
-> +if [ $NO_DEBUGINFO ]; then
-> +	print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
-> +else
-> +	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
-> +fi
-> +
->  (( TEST_RESULT += $? ))
->  
->  
+> 	stop = !(event_type & EVENT_GUEST) && ctx == &cpuctx->ctx;
+
+So I think I was trying to get stop true when there weren't in fact
+events on, that is when we got in without EVENT_ALL bits, but perhaps
+that case isn't relevant.
+
