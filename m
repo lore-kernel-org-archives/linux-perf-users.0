@@ -1,146 +1,124 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94D80199237;
-	Mon, 17 Jun 2024 13:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9B3197A9A;
+	Mon, 17 Jun 2024 13:24:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718629445; cv=none; b=Ollh0fF8drq2UhN4gxhXSCPkyLlvGK3WHIMyjrMaV3w8w6zcJSLWO5jB2/31W7mbz4uYPJ8y7o5fLd6e75yD/OzW+ac5cIxFdBr5sHYX2szSLr4MPcu6CW4gPelPDD6ywgomiphEDwZxJFAmqpaSQ9XUVQY2zjJUEIUrhO4thw8=
+	t=1718630695; cv=none; b=tRrmTfa2OWj/PqlsGm/jVepelKA3ckDrSYlBWYtHTizYoatNQnN+8/mTCoi6vGx+btXw860AuAbelcjLe56FCBVZYMs0cYZSx32hVjKwexqpmC2ulEtPSbj4nSO/2XvRgmbaTixBhx/IRvgy09YfYEFueEi0E8qhnOybEq6bYJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718629445; c=relaxed/simple;
-	bh=XbvpTuTFZSjOFb0Dl0+7xfLw8Q3eqPKqKNAbu6xICKs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=evAsZVivyk6lfR99938EF2n0efNx3QAhKU1sRkYhMDB09acjlLW65MCnQRhZOY27RYRnBPn0ymh30ReuW1oNHTdyiFKVXxTW/Zp6c7hcbeMcYCdcJQOuGnqaxljJ3t+HiTpOntRHAo7Va+dQzytiaGRDO7JK6b77G3PhUaDk4gc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=D5WEAjyC; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1718630695; c=relaxed/simple;
+	bh=3W7OKXAyhdPAO8/WbYF1gIWUxeS2ZzVMV22aj1YWSPw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=H21BhmQaBnN2tn70XxQ25Y8FmoKz3Nl13pZdLaIiLlYqh+7sJZvbmctSCFJU/Eu4uCrCjDhCJaR36hsMBoj7K1t6VDonk7p+xu2VSQesotoVXbQ+yjD8wZfQKmR3mxYkErLunT0vr0Da0Td1YaBEPxRqaLXTw0Z6+n43mGKj3Lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MOOivvcY; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="D5WEAjyC"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45HCuJ2P029439;
-	Mon, 17 Jun 2024 13:03:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=jMWoQhTKi5b+U
-	4EY97mVeZVcSB908Ae2+adgmdY4C28=; b=D5WEAjyCnNLDzowIsv5IuDkReuXZ0
-	+KJGCQQAM+fWfNXDqure/NzHtBPqnT07ODMNW0/dzBeeS8N65yrgrtiaUOk52k2W
-	xWrmdVA/A7om5dKzufH+zgj2GIsgS63FgVF/QmCGP+D/bXc4O2mu864wgzWiJ9aw
-	h7wFqIsujclmbAjiv71cYQeXC/o1F9PXV5Ic7BuV+N14OYTdeXjhMo+3aUp6U+xM
-	oyoULsejyeL3097natSITb9a+3VOzjs18NKggZGlZncZw3q+b9sH3x0qLpHyX3qO
-	2mnP8vDsH7UxLvxrh8LcWaPwBLeqw6TLTatq8pHiaNA48JuApEVZmJfYg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytkv60abn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:51 +0000 (GMT)
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45HD3pKF010037;
-	Mon, 17 Jun 2024 13:03:51 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3ytkv60abm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:50 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45HC82Ui011355;
-	Mon, 17 Jun 2024 13:03:49 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yspsmt2mu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 17 Jun 2024 13:03:49 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45HD3hU949217794
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 17 Jun 2024 13:03:45 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B0CC22004B;
-	Mon, 17 Jun 2024 13:03:43 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 247C92005A;
-	Mon, 17 Jun 2024 13:03:41 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.120.218])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon, 17 Jun 2024 13:03:40 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: [PATCH V2 3/3] tools/perf: Fix parallel-perf python script to replace new python syntax ":=" usage
-Date: Mon, 17 Jun 2024 18:33:32 +0530
-Message-Id: <20240617130332.13427-3-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
-References: <20240617130332.13427-1-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MOOivvcY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718630694; x=1750166694;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3W7OKXAyhdPAO8/WbYF1gIWUxeS2ZzVMV22aj1YWSPw=;
+  b=MOOivvcYQUY3oqHCTbuRtvglayhtkHYI9zkY8QrpdtB27syy4duzUME4
+   uwAajMiElokhpzyMeSjN7Q8sddWb3wT+EeNn3rVUjI6C64D9n9P4wy4Iu
+   rukunao0vCaaR2qKpSSLRHzvl/9iB4zHqvZ7yrgtupak4xmod0IvGuFYH
+   o/cab5XVEL1Y+gwhfszLk26jyuqph32z5T9dU/y1RyVk4c/5LwAxXGvMO
+   LcbIUk9QMppJ2brifwUynJTP66x0JHnRpq8oaAesWjG7qS2QXZ5WONs3y
+   /g26dZQR31FWPm4lUhi9SHCOnFXdr9pC3pW5ktzI6z17INoU6pXpVJDu4
+   Q==;
+X-CSE-ConnectionGUID: P7YNUh9zSLKHiNjMgYn1Qg==
+X-CSE-MsgGUID: Wi9yrzuZR46S18uVzNnsRQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11105"; a="18372708"
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="18372708"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 06:24:53 -0700
+X-CSE-ConnectionGUID: PPRLjr1UQsmF05dkhgQ1ZA==
+X-CSE-MsgGUID: eC9cEVyMRymH4ArabPUkbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,244,1712646000"; 
+   d="scan'208";a="41072411"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by fmviesa006.fm.intel.com with ESMTP; 17 Jun 2024 06:24:49 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sJCLm-0004KB-34;
+	Mon, 17 Jun 2024 13:24:46 +0000
+Date: Mon, 17 Jun 2024 21:24:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <202406172104.aOlpCnvb-lkp@intel.com>
+References: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: uR2z0rw8GBcd15yO0Jw7F-yTq8IAimiq
-X-Proofpoint-ORIG-GUID: cHytTiVi8hICKZBOJR5ishlNk1lpsILG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-17_11,2024-06-17_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- suspectscore=0 phishscore=0 lowpriorityscore=0 clxscore=1015 spamscore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2405170001
- definitions=main-2406170100
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
 
-perf test "perf script tests" fails as below in systems
-with python 3.6
+Hi Pawan,
 
-	File "/home/athira/linux/tools/perf/tests/shell/../../scripts/python/parallel-perf.py", line 442
-	if line := p.stdout.readline():
-             ^
-	SyntaxError: invalid syntax
-	--- Cleaning up ---
-	---- end(-1) ----
-	92: perf script tests: FAILED!
+kernel test robot noticed the following build errors:
 
-This happens because ":=" is a new syntax that assigns values
-to variables as part of a larger expression. This is introduced
-from python 3.8 and hence fails in setup with python 3.6
-Address this by splitting the large expression and check the
-value in two steps:
-Previous line: if line := p.stdout.readline():
-Current change:
-	line = p.stdout.readline()
-	if line:
+[auto build test ERROR on 83a7eefedc9b56fe7bfeff13b6c7356688ffa670]
 
-With patch
+url:    https://github.com/intel-lab-lkp/linux/commits/Pawan-Gupta/x86-cpu-topology-Add-x86_cpu_type-to-struct-cpuinfo_topology/20240617-172542
+base:   83a7eefedc9b56fe7bfeff13b6c7356688ffa670
+patch link:    https://lore.kernel.org/r/20240617-add-cpu-type-v1-1-b88998c01e76%40linux.intel.com
+patch subject: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct cpuinfo_topology
+config: i386-buildonly-randconfig-004-20240617 (https://download.01.org/0day-ci/archive/20240617/202406172104.aOlpCnvb-lkp@intel.com/config)
+compiler: clang version 18.1.5 (https://github.com/llvm/llvm-project 617a15a9eac96088ae5e9134248d8236e34b91b1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240617/202406172104.aOlpCnvb-lkp@intel.com/reproduce)
 
-	./perf test "perf script tests"
-	 93: perf script tests:  Ok
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202406172104.aOlpCnvb-lkp@intel.com/
 
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
----
-Changelog:
- v1 -> v2
- Added "Acked-by" from Adrian
+All errors (new ones prefixed by >>):
 
- tools/perf/scripts/python/parallel-perf.py | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+>> arch/x86/kernel/cpu/topology_common.c:145:21: error: use of undeclared identifier 'X86_CPU_TYPE_UNKNOWN'
+     145 |         c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+         |                            ^
+>> arch/x86/kernel/cpu/topology_common.c:148:41: error: use of undeclared identifier 'X86_CPU_TYPE_INTEL_SHIFT'
+     148 |                 c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+         |                                                       ^
+   2 errors generated.
 
-diff --git a/tools/perf/scripts/python/parallel-perf.py b/tools/perf/scripts/python/parallel-perf.py
-index 21f32ec5ed46..be85fd7f6632 100755
---- a/tools/perf/scripts/python/parallel-perf.py
-+++ b/tools/perf/scripts/python/parallel-perf.py
-@@ -439,7 +439,8 @@ def ProcessCommandOutputLines(cmd, per_cpu, fn, *x):
- 	pat = re.compile(r"\s*\[[0-9]+\]")
- 	p = subprocess.Popen(cmd, stdout=subprocess.PIPE)
- 	while True:
--		if line := p.stdout.readline():
-+		line = p.stdout.readline()
-+		if line:
- 			line = line.decode("utf-8")
- 			if pat.match(line):
- 				line = line.split()
+
+vim +/X86_CPU_TYPE_UNKNOWN +145 arch/x86/kernel/cpu/topology_common.c
+
+   142	
+   143	static void topo_set_cpu_type(struct cpuinfo_x86 *c)
+   144	{
+ > 145		c->topo.cpu_type = X86_CPU_TYPE_UNKNOWN;
+   146	
+   147		if (c->x86_vendor == X86_VENDOR_INTEL && cpuid_eax(0) >= 0x1a)
+ > 148			c->topo.cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+   149	}
+   150	
+
 -- 
-2.35.3
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
