@@ -1,99 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFDD719B5A1;
-	Tue, 18 Jun 2024 03:19:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EF441B94F;
+	Tue, 18 Jun 2024 03:23:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718680778; cv=none; b=KW1vXDTvPVr6U/0Vc20o2YTLFAI/4XrpGHUtuc+nfHL7ybEXj/91lH+w+dfMSkILaYXcbzG8ahrDgCpkEur9HAyMU1RY215kUu6tMHGZeMby4TpRvqJY8iXFu8/8H4lcBKeQz0/YVOYdAHm9e0RkfnyBfpxx17KlRao4asEE/hM=
+	t=1718681035; cv=none; b=QbaG5K2vqQUD7H9/Ou1OXXiH/y8qs0N8z05RrtV5i+n6MuMoJMoEIxcoj9O2HC8AZHubrcW6P18ezFHrmTnHWoMXdX0/dIYYQzqqpYuxS1fsFpSEDCWQj/hVD1zFREfG7jgqxt+b4VmfaYWzQ8E5X9Y7AlWStLdXNhBFAoen/JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718680778; c=relaxed/simple;
-	bh=99N3wYgXfmP8yLL2zt9y6M00HE8MEtz5oXGsxIcsNAY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NOSEesOtceyjhdFUJKH/pH/5Y4uPdTHAI4ATHC1ffd4I0vogLXgXQfUNVY+KvRXfBE0dEF2RfC5bXtkik4EJUqs1Te4cfr4b4ChviGLbfLObbiSryTxFsF+tI7RIzvhHj4Y3b9htNXEXq+FuNzAoIrTESARkaapyvDWTAKJZdpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U2L22yhI; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U2L22yhI"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718680777; x=1750216777;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=99N3wYgXfmP8yLL2zt9y6M00HE8MEtz5oXGsxIcsNAY=;
-  b=U2L22yhIs9G4LTakxLYv0a6rgtClfDmeOtWTGn96HQGlb8BR/iSS0JDT
-   90ZJxHgWusV1iFhSwPMZt0ky14uKc0GgmAcK1nITbDAQ6E+yx2wSLPqc9
-   z2c2gWk5hhbRg1DVWLHij2mvgQRET2QBupS+v7ZFpJBS7wZrt3FR59vi5
-   4BvIT5hdr29x18HIWGDE6kPhnvf+JKWDEdnOrW+gMQrbWkpnP5KUajR56
-   /77vewWiTRG/m6mA+5kKrCuifky+BWPN2mrTRe4Ao1TdMj27INxriLezs
-   ruNNdKNmoNcRKjopG5OSGksy4t1o+qiWbXVHrOu/qYrqkca4zmQBRKfIC
-   Q==;
-X-CSE-ConnectionGUID: mlXVFsAHQUSD+Jn4vJycHw==
-X-CSE-MsgGUID: LBxU4RPcQzOZD/CZnKi5SQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11106"; a="26165737"
-X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
-   d="scan'208";a="26165737"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 20:19:36 -0700
-X-CSE-ConnectionGUID: TIYcuCUNSlK3O7/CnpfH8Q==
-X-CSE-MsgGUID: 5ANnw6iAS7uqRzdTDXiOiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,246,1712646000"; 
-   d="scan'208";a="41516482"
-Received: from jdoman-desk1.amr.corp.intel.com (HELO desk) ([10.124.220.84])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2024 20:19:35 -0700
-Date: Mon, 17 Jun 2024 20:19:24 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: "Luck, Tony" <tony.luck@intel.com>
-Cc: "Hansen, Dave" <dave.hansen@intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"x86@kernel.org" <x86@kernel.org>,
-	"daniel.sneddon@linux.intel.com" <daniel.sneddon@linux.intel.com>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	"andrew.cooper3@citrix.com" <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH PATCH 8/9] x86/bugs: Declutter vulnerable CPU list
-Message-ID: <20240618031924.be57xugsmcq4kmxh@desk>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-8-b88998c01e76@linux.intel.com>
- <fb789f0a-0c80-49f3-ab7e-d22fc2793a49@intel.com>
- <20240617235216.qqvfh2nvffuh7oot@desk>
- <SJ1PR11MB6083ECEC27A376E2CA898F93FCCE2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+	s=arc-20240116; t=1718681035; c=relaxed/simple;
+	bh=Y+l45UM8hj2e/jO4PRlD7W9+/iyxkKt5sUyQW6vA+U4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TaPQkDsVM4fHl0p+9y+nvn34+DbGUvV2ICVEQf+e/oc+YcErYCInZRy6kvlTmxIr/M91nwZkKAvodaP+fqfMCgAQp9sSjY6PonF6Y1nX1MDK1DM0IOkMxG3K2ZFsnwB5uBOuln208vx1CQYji+I2NymhnbVYLAhPcQovVKCjRHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4W3BpB3gcMzPr07;
+	Tue, 18 Jun 2024 11:20:18 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id BFC9518007A;
+	Tue, 18 Jun 2024 11:23:49 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 18 Jun
+ 2024 11:23:48 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <linux@armlinux.org.uk>, <will@kernel.org>, <mark.rutland@arm.com>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <alexander.shishkin@linux.intel.com>,
+	<jolsa@kernel.org>, <irogers@google.com>, <adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>, <arnd@arndb.de>, <afd@ti.com>,
+	<akpm@linux-foundation.org>, <rmk+kernel@armlinux.org.uk>,
+	<linus.walleij@linaro.org>, <eric.devolder@oracle.com>, <robh@kernel.org>,
+	<ardb@kernel.org>, <broonie@kernel.org>, <lihuafei1@huawei.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH 0/2] ARM: 9259/1: stacktrace: Add USER_STACKTRACE support
+Date: Tue, 18 Jun 2024 11:26:18 +0800
+Message-ID: <20240618032620.2445395-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SJ1PR11MB6083ECEC27A376E2CA898F93FCCE2@SJ1PR11MB6083.namprd11.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Tue, Jun 18, 2024 at 12:08:18AM +0000, Luck, Tony wrote:
-> > $ size vmlinux.before vmlinux.after
-> > text		data		bss		dec		hex	filename
-> > 33128289        23039446        19767300        75935035        486ad3b vmlinux.before
-> > 33128289        23039446        19767300        75935035        486ad3b vmlinux.after
-> 
-> Same size != same contents.
+Add USER_STACKTRACE support and Fix callchain_trace() return value bug
+by the way.
 
-Right. I did get that thought, but did not act on it :\
+Jinjie Ruan (2):
+  ARM: 9258/1: Fix callchain_trace() return value
+  ARM: 9259/1: stacktrace: Add USER_STACKTRACE support
 
-> What if you:
-> 
-> $ cmp -l arch/x86/kernel/cpu/before-common.o arch/x86/kernel/cpu/after-common.o
-> 
-> Or
-> 
-> $ diff <(objdump -d arch/x86/kernel/cpu/before-common.o) <(objdump -d arch/x86/kernel/cpu/after-common.o)
+ arch/arm/Kconfig                 |  1 +
+ arch/arm/kernel/perf_callchain.c | 73 +++-----------------------------
+ arch/arm/kernel/stacktrace.c     | 65 ++++++++++++++++++++++++++++
+ 3 files changed, 73 insertions(+), 66 deletions(-)
 
-Thanks for pointers. I am not seeing any difference in the disassembly too.
+-- 
+2.34.1
+
