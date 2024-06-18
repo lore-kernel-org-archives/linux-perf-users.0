@@ -1,25 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB72155736;
-	Tue, 18 Jun 2024 13:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E0612B95;
+	Tue, 18 Jun 2024 13:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718715892; cv=none; b=jh7sObEgsokD+knFIIRhm8RT42f4qlPllFyEHbPUMzwJqxaCfxQvYFDng3qHd2f+ktgQlXLaPBmjlO7isTe4G/KYjORmOwrzeY1hoD8K2D4SmfBiMG2q23ef0s54gw/Ti4djdWTF9JUMDt4XIPj/KJH0a7zcSNwvFh/URo02ONs=
+	t=1718718320; cv=none; b=WfUuckxgg8GbSfZhBDojaugwEW1EE6iA0v38IHbN5v8nGlhctDEl6z17cFWpTtvbiuBi/CubYWTdVpAVEUDTG60enbIAcy4J6CEqNJVMBy1yH83rF6UJDjDvNgLunQ+UREsyTcNRbbTBfur/AQJhhTQI8bRhQWV0F3bnZIbg95M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718715892; c=relaxed/simple;
-	bh=utGAo2ifRsMXL+0U5Vdjs3fahesCbSupcZDfbwU3OYs=;
+	s=arc-20240116; t=1718718320; c=relaxed/simple;
+	bh=qIRP7WziDihj3AiKzpO4qsVfd9h7I4nske+kKM6qQOM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BLGAqJbl2kSLvHj0YNVAdsumDDvWpGUkhIzH6JOu7PF61Wk8y4HW3WQpoC93CVKrA1bMEKO+tuXYWkHm9SuBGi4/j0FlErijqry3V6UbZEKL+U5ed/YliITbeSzoev5+bDySn4wM4NyOtVdI8RS5qJy2cWwFhWm9oUXuXVS3EHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38E46DA7;
-	Tue, 18 Jun 2024 06:05:11 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6257D3F64C;
-	Tue, 18 Jun 2024 06:04:44 -0700 (PDT)
-Message-ID: <f435e2d2-f864-4a34-bc38-cb06ce140a6f@arm.com>
-Date: Tue, 18 Jun 2024 14:04:42 +0100
+	 In-Reply-To:Content-Type; b=MvPUarzy079TCb4g5YF1aL6zl5FTca0xgneuYn79V4VWkik6NLXTOObliO2UG+cO21w6ty/d99LWO8ckmldFUWU5qwQKAzsoeRkly+7MFojcEjkXxWgNmXYQhp+IwuIK4hrf7kC22l0SeAy8PQfn3mOJWWGnWz6n+Cd9/3w2eNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GQj3DfAp; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GQj3DfAp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718718319; x=1750254319;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=qIRP7WziDihj3AiKzpO4qsVfd9h7I4nske+kKM6qQOM=;
+  b=GQj3DfAp+5sS/nbjDFxugvM1QjbgCHi+RrZQ6tZeuxWIBxxdLXqwV5Wm
+   +nAHD5SHAQkb+wECF3vZcPHtLqnj9rFGanFOIok9toqX5TveXXdv8xKTI
+   1mvaSUNiJSxANNSkFtdUtsBXPLNGk0oPjfSycgwfPHKY9XoDAfwhVQqvD
+   pxNhFiXRQrf+cJ/kwJW7gkmlmucoHD0arEFyST/JHqrnt0HxApLdRnaVf
+   +oWxCncCJtP+JdRKHLCLll9Vn9T8UzpwzVVjFTk513NAiYHBy2KXFpwtC
+   rPLyckVQQdCGW7MXgP+NQE1kd7eIwWnnkfHQF9Fbj8yJQkP+RcL49svL+
+   Q==;
+X-CSE-ConnectionGUID: eLBePovlT/KbZ5KZ01b7dQ==
+X-CSE-MsgGUID: zPbksVpqT5mWLcLDBElfFA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15740819"
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="15740819"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 06:45:18 -0700
+X-CSE-ConnectionGUID: RYQDIZYjSV6Vn+hV2fR+kA==
+X-CSE-MsgGUID: pxtX/aX1SxmRGvkmobxipQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
+   d="scan'208";a="45922331"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 06:45:17 -0700
+Received: from [10.212.26.15] (kliang2-mobl1.ccr.corp.intel.com [10.212.26.15])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 9EDCF20B5703;
+	Tue, 18 Jun 2024 06:45:15 -0700 (PDT)
+Message-ID: <00ac4787-c290-424f-8461-7ba300a4c1a9@linux.intel.com>
+Date: Tue, 18 Jun 2024 09:45:14 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,115 +58,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf sched replay: Fix -r/--repeat command line option
- for infinity
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Chen Yu <yu.c.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH v1 13/37] perf vendor events: Update grandridge events and
+ add counter information
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
- Fernand Sieber <sieberf@amazon.com>,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240618112907.15131-1-vineethr@linux.ibm.com>
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: Weilin Wang <weilin.wang@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>
+References: <20240614230146.3783221-1-irogers@google.com>
+ <20240614230146.3783221-14-irogers@google.com>
 Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <20240618112907.15131-1-vineethr@linux.ibm.com>
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240614230146.3783221-14-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
+On 2024-06-14 7:01 p.m., Ian Rogers wrote:
+> Update events from v1.01 to v1.02.
 
-On 18/06/2024 12:29, Madadi Vineeth Reddy wrote:
-> Currently, the -r/--repeat option accepts values from 0 and complains
-> for -1. The help section specifies:
-> -r, --repeat <n>      repeat the workload replay N times (-1: infinite)
-> 
+The subject has a typo. It should be "perf vendor events: Update
+graniterapids events and add counter information", not grandridge.
 
-I was wondering if this was a regression or was always like this but
-it's at least been broken long before it becomes difficult to build
-Perf for me.
+Thanks,
+Kan
 
-> The -r -1 option raises an error because replay_repeat is defined as
-> an unsigned int.
 > 
-> In the current implementation, the workload is repeated n times when
-> -r <n> is used, except when n is 0.
+> Bring in the event updates v1.02:
+> https://github.com/intel/perfmon/commit/0ff9f681bd07d0e84026c52f4941d21b1cd4c171
 > 
-> When -r is set to 0, the workload is also repeated once. This happens
-> because when -r=0, the run_one_test function is not called. (Note that
-> mutex unlocking, which is essential for child threads spawned to emulate
-> the workload, happens in run_one_test.) However, mutex unlocking is
-> still performed in the destroy_tasks function. Thus, -r=0 results in the
-> workload running once coincidentally.
+> Add counter information. The most recent RFC patch set using this
+> information:
+> https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
 > 
-
-I also saw an intermittent hang waiting in destroy_tasks() which is now
-fixed.
- 
-> To clarify and maintain the existing logic for -r >= 1 (which runs the
-> workload the specified number of times) and to fix the issue with infinite
-> runs, make -r=0 perform an infinite run.
+> There are over 1000 new events.
 > 
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> Co-authored-by: Weilin Wang <weilin.wang@intel.com>
+> Co-authored-by: Caleb Biggers <caleb.biggers@intel.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
 > ---
->  tools/perf/Documentation/perf-sched.txt | 7 +++++++
->  tools/perf/builtin-sched.c              | 8 ++++++--
->  2 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index a216d2991b19..f1be8f0b249e 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -202,6 +202,13 @@ OPTIONS for 'perf sched timehist'
->  --state::
->  	Show task state when it switched out.
->  
-> +OPTIONS for 'perf sched replay'
-> +------------------------------
-> +
-> +-r::
-> +--repeat <n>::
-> +	repeat the workload n times (0: infinite). Default is 10.
-> +
->  SEE ALSO
->  --------
->  linkperf:perf-record[1]
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 8cdf18139a7e..2c4ed5c2d695 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -3383,8 +3383,12 @@ static int perf_sched__replay(struct perf_sched *sched)
->  	sched->thread_funcs_exit = false;
->  	create_tasks(sched);
->  	printf("------------------------------------------------------------\n");
-> -	for (i = 0; i < sched->replay_repeat; i++)
-> +
-> +	i = 0;
-> +	while (sched->replay_repeat == 0 || i < sched->replay_repeat) {
-
-Very minor nit, but you don't really need to remove the for loop, just add
-the new condition to the existing one. Not sure if it's worth re-spinning
-for though.
-
-Reviewed-by: James Clark <james.clark@arm.com>
-
->  		run_one_test(sched);
-> +		i++;
-> +	}
->  
->  	sched->thread_funcs_exit = true;
->  	destroy_tasks(sched);
-> @@ -3548,7 +3552,7 @@ int cmd_sched(int argc, const char **argv)
->  	};
->  	const struct option replay_options[] = {
->  	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
-> -		     "repeat the workload replay N times (-1: infinite)"),
-> +		     "repeat the workload replay N times (0: infinite)"),
->  	OPT_PARENT(sched_options)
->  	};
->  	const struct option map_options[] = {
+>  .../arch/x86/graniterapids/cache.json         |  825 ++++
+>  .../arch/x86/graniterapids/counter.json       |   77 +
+>  .../x86/graniterapids/floating-point.json     |  242 ++
+>  .../arch/x86/graniterapids/frontend.json      |  469 ++-
+>  .../arch/x86/graniterapids/memory.json        |  175 +-
+>  .../arch/x86/graniterapids/other.json         |  150 +-
+>  .../arch/x86/graniterapids/pipeline.json      | 1009 ++++-
+>  .../arch/x86/graniterapids/uncore-cache.json  | 3674 +++++++++++++++++
+>  .../arch/x86/graniterapids/uncore-cxl.json    |   31 +
+>  .../graniterapids/uncore-interconnect.json    | 1849 +++++++++
+>  .../arch/x86/graniterapids/uncore-io.json     | 1901 +++++++++
+>  .../arch/x86/graniterapids/uncore-memory.json |  449 ++
+>  .../arch/x86/graniterapids/uncore-power.json  |   11 +
+>  .../x86/graniterapids/virtual-memory.json     |  159 +
+>  tools/perf/pmu-events/arch/x86/mapfile.csv    |    2 +-
+>  15 files changed, 10975 insertions(+), 48 deletions(-)
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/counter.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/floating-point.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-cache.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-cxl.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-interconnect.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-io.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-memory.json
+>  create mode 100644 tools/perf/pmu-events/arch/x86/graniterapids/uncore-power.json
