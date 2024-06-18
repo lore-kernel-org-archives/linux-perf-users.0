@@ -1,206 +1,376 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C906F307;
-	Tue, 18 Jun 2024 15:26:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB74945977;
+	Tue, 18 Jun 2024 15:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718724379; cv=none; b=VkLD+m9zsSaXOBlorq+EJx3/jzCvlCuIkn5dK+Gk/MeihO7NSX82mAbtHwW+EKtbP4B96++IhpKXyAMsPUxs4bo1vTo25dAN5T/7P4BXesxp7CDQ8TSRgrPdtwB1RWABQ7vgglXlcJ4mSGAyBPxtN/ztE6AjhxpyGFjMYexopQg=
+	t=1718725627; cv=none; b=pcK9Kh2cwcxcay+rofcaGQ/RG9j72Wwm8Q6S9UuKha1ilHTkL/QPF4U9b+LKUS1MS1FqO2yb1JU0nEuVRFljAc2aPkgDf6Pe96PNms6xoSQD1dHDXRWIJoHGY8ZY9Ha9uwltP6X5PUe90a3Ci5reYj39xm+NA64teJYtBZLA4C0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718724379; c=relaxed/simple;
-	bh=KacarSMJ2WTh7lJDtLEVdRO+H2BB7UwFV8aZDrR0HBs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RvmZBiHpVypNfSikcsIOeD7I4rCOaFJyjjFWhSQYbqUSgyTs1XvQlPoc0k5xaPtaDwXcK054R71AAVPWdvGemsnCuBIdmYRTEm7DN6XjxwdIA2rAlO1hS5KlXJULXy6vltmtM5+7Jbdhj+VD80VNtw2//NvvYUcksQjrbl5v42g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=auvvxpp2; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="auvvxpp2"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7061d37dc9bso871733b3a.2;
-        Tue, 18 Jun 2024 08:26:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718724378; x=1719329178; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0hkvZkfg/GcNlPEHzOoz4co9rHTk55S0Yh7Q8va3D4Q=;
-        b=auvvxpp2Sp3dYKZaFxjdE9ADRuRLThDR7cZUXKKEOD7aoirKynqM5dYgVeJoSwPJPv
-         5l98e8W9RyCjc8gGelXtvMkNGC2eyPEdhhaPAWVCJeGzzSEKf2Ww8uILRtdSpuKWIGvK
-         1fa3a0KfN61WySRJavU/fmTkWxEUCNZWSvbfIbCK7xjPNmoOq4V2HWQL8S1Hd1axfoaB
-         kSpx48z8Givte5CgysL0FswOJJGLbPix36r+9hlWoHCmFE5q7Dn4wndMWXwF/4RdqKIb
-         PDU7ACmBbMkvfDcamhx/C5Q5ST4q4XUnqbKpZBKrq6zDzoWIT1PWLLBnBGYa/FACjh9s
-         3Pvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718724378; x=1719329178;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0hkvZkfg/GcNlPEHzOoz4co9rHTk55S0Yh7Q8va3D4Q=;
-        b=DbhygaWEjUugvNnWuEwvdp4mxKGhxCW2uI1xymU6fiz1F4BdCMftvxGVgDId8E85vK
-         qBXQ0AbfYPUaFgZoTQwalu3ygV33+Ie8y6aIOQY0mJnZcfjPqPXvB6CgHQPxUC7X5bOO
-         hqTZ4u2NsfNOeO16kKUGECRYZNkzXMh65EjCOC/eM1F/OIi+JgyOpZ3y1wYaGxVqCSym
-         CBNr7R48cY7y0lMeHCqlyB7RdN5nhx+AGyImRW06RylWW/0jRw61fZPNjxvIgwobo+IW
-         wEcCoMEPUSQ1PgMa2W2UPkhK9e7d1JIlMNEt2Dbf5Dp4IAcpYrlQJmXCftuN8yxyaq6W
-         DAqA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHxbHjfOzaaBzHwWy3jxPBx5SfyAxCoBZoXQYvFYg86fj35UkfIzQYJnyhmKYwzHJzzjg4Z4q0RChvP/TcIAAjQBQUF+hAuiM79N08d1v0s0Hfc+jVTqW8aecAnexhnO6OPlXG11B2Ik2nAhxNbA==
-X-Gm-Message-State: AOJu0Yzqh4qEQtH9wdbBeSm+oG+RFL7v6o/NxB2kQUhxWR/IzrGdoiXF
-	D42opAmPWW2CgpVqcOUA40kii5SYlCaeLRQ92P42+UFPoE6K4byj
-X-Google-Smtp-Source: AGHT+IHVbXPCeIWuYQGFM4Jjl8JWCQvhHH5BHXSuStg2xo0hpePlgku4VHHkhCrUZdCVvBzQC2YcbA==
-X-Received: by 2002:aa7:8702:0:b0:705:b81b:6ee2 with SMTP id d2e1a72fcca58-705d7155f7dmr12156188b3a.19.1718724377923;
-        Tue, 18 Jun 2024 08:26:17 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.49.95])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705ccb4265esm9071388b3a.116.2024.06.18.08.26.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Jun 2024 08:26:17 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v1 5/5] perf trace: Add test for enum augmentation
-Date: Tue, 18 Jun 2024 23:26:52 +0800
-Message-ID: <20240618152652.3446472-6-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240618152652.3446472-1-howardchu95@gmail.com>
-References: <20240618152652.3446472-1-howardchu95@gmail.com>
+	s=arc-20240116; t=1718725627; c=relaxed/simple;
+	bh=98CaGpIMSjTGpSnwdRUz0iVS0zux+9+dKOQTDIj8x90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HovmdQu9051MnRAuZKSE6GMzBM0mzpNLOyBf4AnKJe67i6F2fCye2j277ahGI3AEGguheqnHTaPRyRIGzgpN3F/9cJbWUzWG+Vl6BBm6zI+VB/CpB7qoXXxJMDZIEe+lSM4lPWTSeM34iBmW26IuBv8WDAEHNfBUKbaMb3hwVQA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0ADADA7;
+	Tue, 18 Jun 2024 08:47:28 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6EAA23F6A8;
+	Tue, 18 Jun 2024 08:47:02 -0700 (PDT)
+Message-ID: <fa69d868-5229-4ea2-b32e-c7928706d27a@arm.com>
+Date: Tue, 18 Jun 2024 16:47:01 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf pmu: Restore full PMU name wildcard support
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20240617134348.208241-1-james.clark@arm.com>
+ <20240617134348.208241-2-james.clark@arm.com>
+ <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
+ <b2008905-686b-4494-a10d-c3357cce91da@arm.com>
+ <CAP-5=fUkZnG0gaJ_76Azn643DXZSq9xhpX=+U6Mjhtnko8PyLw@mail.gmail.com>
+ <197e62e3-d34a-442a-97cf-6edf6c8c013f@arm.com>
+ <CAP-5=fVqf0B+Fs8vSAvyPf7UpUo1U8HMkDbgb3csJ4s0O1kiog@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <CAP-5=fVqf0B+Fs8vSAvyPf7UpUo1U8HMkDbgb3csJ4s0O1kiog@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Check for vmlinux's existence in sysfs as prerequisite.
 
-Compile and run a script which calls landlock_add_rule syscall,
-trace the syscall to judge if the output is desirable.
 
-Trace the non-syscall tracepoint 'timer:hrtimer_init' and
-'timer:hrtimer_start', see if the 'mode' argument is augmented,
-the 'mode' enum argument has the prefix of 'HRTIMER_MODE_'
-in its name.
+On 18/06/2024 16:25, Ian Rogers wrote:
+> On Tue, Jun 18, 2024, 8:06 AM James Clark <james.clark@arm.com> wrote:
+> 
+>>
+>>
+>> On 18/06/2024 15:23, Ian Rogers wrote:
+>>> On Tue, Jun 18, 2024, 3:59 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>>>
+>>>>
+>>>> On 17/06/2024 22:25, Ian Rogers wrote:
+>>>>> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
+>>>>>
+>>>>>> Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in
+>> dynamic
+>>>>>> pmu events") gives the following example for wildcarding a subset of
+>>>>>> PMUs:
+>>>>>>
+>>>>>>   E.g., in a system with the following dynamic pmus:
+>>>>>>
+>>>>>>         mypmu_0
+>>>>>>         mypmu_1
+>>>>>>         mypmu_2
+>>>>>>         mypmu_4
+>>>>>>
+>>>>>>   perf stat -e mypmu_[01]/<config>/
+>>>>>>
+>>>>>> Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"),
+>> only
+>>>>>> "*" has been supported, removing the ability to subset PMUs, even
+>> though
+>>>>>> parse-events.l still supports ? and [] characters.
+>>>>>>
+>>>>>> Fix it by using fnmatch() when any glob character is detected and add
+>> a
+>>>>>> test which covers that and other scenarios of
+>>>>>> perf_pmu__match_ignoring_suffix().
+>>>>>>
+>>>>>> Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+>>>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>>>>
+>>>>>
+>>>>> We use regular expression matching elsewhere rather than fnmatch. We
+>> can
+>>>>> also precompile the matchers using lex. I'm not sure we shouldn't be
+>>>>> looking for an opportunity to remove fnmatch rather than expand upon
+>> it.
+>>>>>
+>>>>> Thanks,
+>>>>> Ian
+>>>>>
+>>>>
+>>>> Presumably you mean we can do the removal of fnmatch after this fix goes
+>>>> in,
+>>>> rather than instead of? Because this is a user facing change in
+>> behaviour
+>>>> but the removal of fnmatch would be an non-user facing code refactor?
+>>>>
+>>>> It's technically not an "expansion" because we always used fnmatch and
+>> the
+>>>> linked commit hasn't made it to a release yet.
+>>>>
+>>>
+>>> The main place the expansion gets added is parse-events.c, previously
+>>> parse-events.y. If we're adding the expansion ourselves then we can
+>> choose
+>>> the form we add it. Some coming servers will have 100s of PMUs and so I'm
+>>> worried about the scanning cost when a PMU isn't specified.
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>
+>> I think I might not be following. If a PMU isn't specified then
+>> perf_pmu__match() is never called so no cost is incurred. I also don't
+>> add any new calls to fnmatch().
+>>
+>> I only updated the gate on whether the existing fnmatch() is called from
+>> "*" to "*[?". So it only happens when one of those characters is in the
+>> PMU name, but it already happens when '*' is in the name.
+>>
+> 
+> Right. I'm not saying there is anything wrong in the change or an
+> additional cost, what the issue is is that currently only really '*'
+> requires fnmatch and that's because the event parsing adds it. It could
 
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/tests/shell/trace_btf_enum.sh | 104 +++++++++++++++++++++++
- 1 file changed, 104 insertions(+)
- create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+It's not only '*' that requires it, see the example I added in the
+commit message:
 
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-new file mode 100755
-index 000000000000..14c73b0b594d
---- /dev/null
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -0,0 +1,104 @@
-+#!/bin/sh
-+# perf trace enum augmentation tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+err=0
-+set -e
-+
-+syscall="landlock_add_rule"
-+non_syscall="timer:hrtimer_init,timer:hrtimer_start"
-+
-+landlock_script=$(mktemp /tmp/landlock-XXXXX.c)
-+landlock_ex=$(echo $landlock_script | sed -E 's/(.*).c$/\1/g')
-+
-+landlock_fd=24
-+landlock_flags=25
-+
-+. "$(dirname $0)"/lib/probe.sh
-+skip_if_no_perf_trace || exit 2
-+
-+enum_aug_prereq() {
-+  echo "Checking perf trace enum augmentation prerequisites"
-+  if ! ls /sys/kernel/btf/vmlinux 1>/dev/null 2>&1
-+  then
-+    echo "trace+enum test [Skipped missing vmlinux BTF support]"
-+    err=2
-+    return
-+  fi
-+}
-+
-+prepare_landlock_script() {
-+  echo "Preparing script for ${syscall} syscall"
-+
-+  cat > $landlock_script << EOF
-+#define _GNU_SOURCE
-+#include <unistd.h>
-+#include <linux/landlock.h>
-+#include <sys/syscall.h>
-+
-+int main()
-+{
-+	int fd = ${landlock_fd};
-+	int flags = ${landlock_flags};
-+	struct landlock_path_beneath_attr path_beneath_attr = {
-+	    .allowed_access = LANDLOCK_ACCESS_FS_READ_FILE,
-+	};
-+	struct landlock_net_port_attr net_port_attr = {
-+	    .allowed_access = LANDLOCK_ACCESS_NET_CONNECT_TCP,
-+	    .port = 443,
-+	};
-+
-+	syscall(SYS_landlock_add_rule, fd, LANDLOCK_RULE_PATH_BENEATH,
-+		&path_beneath_attr, flags);
-+
-+	syscall(SYS_landlock_add_rule, fd, LANDLOCK_RULE_NET_PORT,
-+		&net_port_attr, flags);
-+
-+	return 0;
-+}
-+EOF
-+
-+  gcc $landlock_script -o $landlock_ex
-+}
-+
-+trace_landlock() {
-+  echo "Tracing syscall ${syscall}"
-+  if perf trace -e $syscall $landlock_ex 2>&1 | \
-+     grep -q -E ".*landlock_add_rule\(ruleset_fd: ${landlock_fd}, rule_type: (LANDLOCK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags: ${landlock_flags}\) = -1.*"
-+  then
-+    err=0
-+  else
-+    err=1
-+  fi
-+}
-+
-+trace_non_syscall() {
-+  echo "Tracing non-syscall tracepoint ${non-syscall}"
-+  if perf trace -e $non_syscall --max-events=1 2>&1 | \
-+     grep -q -E '.*timer:hrtimer_.*\(.*mode: HRTIMER_MODE_.*\)$'
-+  then
-+    err=0
-+  else
-+    err=1
-+  fi
-+}
-+
-+cleanup() {
-+  rm -f $landlock_script $landlock_ex
-+}
-+
-+enum_aug_prereq
-+
-+prepare_landlock_script
-+
-+if [ $err = 0 ]; then
-+  trace_landlock
-+fi
-+
-+if [ $err = 0 ]; then
-+  trace_non_syscall
-+fi
-+
-+cleanup
-+
-+exit $err
--- 
-2.45.2
+  ./perf stat -e mypmu_[01]/<config>/
 
+'?' was supported before as well which could be useful.
+
+> similarly add '.*' if we did regular expression matching. By expanding what
+> we pass to fnmatch from the command line the more committed we are to
+> fnmatch rather than regular expressions - which is what we use everywhere
+> else in the code. So maybe it was a feature that this wasn't working.
+> 
+
+But we haven't had a release of Perf yet where more is passed to
+fnmatch(). Before f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+everything was passed to fnmatch(). After that unreleased commit only
+things with '*' are. Now with this change only "*?[", so it's less not more.
+
+I don't think there is any commitment to keep it, we can always remove
+fnmatch in the future. But it looks like a mistake to me because the
+title says "refactor" when it actually removes a feature.
+
+> Thanks,
+> Ian
+
+
+> 
+> 
+> But yes I agree about the potential performance issues. With a large
+>> number of PMUs if regex is faster we can update it to use that instead.
+>> But we should make sure the regex supports the same wildcarding options
+>> as before (unless we want to remove the range options, but that's a
+>> separate thing I suppose).
+>>
+>>>>>
+>>>>> ---
+>>>>>>  tools/perf/tests/pmu.c | 78
+>> ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>  tools/perf/util/pmu.c  |  2 +-
+>>>>>>  2 files changed, 79 insertions(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+>>>>>> index cc88b5920c3e..fd07331b2d6e 100644
+>>>>>> --- a/tools/perf/tests/pmu.c
+>>>>>> +++ b/tools/perf/tests/pmu.c
+>>>>>> @@ -437,12 +437,90 @@ static int test__name_cmp(struct test_suite
+>> *test
+>>>>>> __maybe_unused, int subtest __
+>>>>>>         return TEST_OK;
+>>>>>>  }
+>>>>>>
+>>>>>> +/**
+>>>>>> + * Test perf_pmu__match() that's used to search for a PMU given a
+>> name
+>>>>>> passed
+>>>>>> + * on the command line. The name that's passed may also be a filename
+>>>>>> type glob
+>>>>>> + * match.
+>>>>>> + */
+>>>>>> +static int test__pmu_match(struct test_suite *test __maybe_unused,
+>> int
+>>>>>> subtest __maybe_unused)
+>>>>>> +{
+>>>>>> +       struct perf_pmu test_pmu;
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmuname";
+>>>>>> +       TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),      true);
+>>>>>> +       TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu,
+>>>>>> "longertoken"), false);
+>>>>>> +       TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu,
+>>>>>> "pmu"),        false);
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmuname_10";
+>>>>>> +       TEST_ASSERT_EQUAL("Diff suffix_", perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_2"),  false);
+>>>>>> +       TEST_ASSERT_EQUAL("Sub suffix_",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_1"),  true);
+>>>>>> +       TEST_ASSERT_EQUAL("Same suffix_", perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_10"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("No suffix_",   perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),    true);
+>>>>>> +       TEST_ASSERT_EQUAL("Underscore_",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_"),   true);
+>>>>>> +       TEST_ASSERT_EQUAL("Substring_",   perf_pmu__match(&test_pmu,
+>>>>>> "pmuna"),      false);
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmuname_ab23";
+>>>>>> +       TEST_ASSERT_EQUAL("Diff suffix hex_",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_2"),    false);
+>>>>>> +       TEST_ASSERT_EQUAL("Sub suffix hex_",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_ab"),   true);
+>>>>>> +       TEST_ASSERT_EQUAL("Same suffix hex_",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_ab23"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("No suffix hex_",
+>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),      true);
+>>>>>> +       TEST_ASSERT_EQUAL("Underscore hex_",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_"),     true);
+>>>>>> +       TEST_ASSERT_EQUAL("Substring hex_",
+>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuna"),       false);
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmuname10";
+>>>>>> +       TEST_ASSERT_EQUAL("Diff suffix", perf_pmu__match(&test_pmu,
+>>>>>> "pmuname2"),  false);
+>>>>>> +       TEST_ASSERT_EQUAL("Sub suffix",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname1"),  true);
+>>>>>> +       TEST_ASSERT_EQUAL("Same suffix", perf_pmu__match(&test_pmu,
+>>>>>> "pmuname10"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("No suffix",   perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),   true);
+>>>>>> +       TEST_ASSERT_EQUAL("Underscore",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_"),  false);
+>>>>>> +       TEST_ASSERT_EQUAL("Substring",   perf_pmu__match(&test_pmu,
+>>>>>> "pmuna"),     false);
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmunameab23";
+>>>>>> +       TEST_ASSERT_EQUAL("Diff suffix hex",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname2"),    false);
+>>>>>> +       TEST_ASSERT_EQUAL("Sub suffix hex",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmunameab"),   true);
+>>>>>> +       TEST_ASSERT_EQUAL("Same suffix hex",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmunameab23"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("No suffix hex",
+>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),     true);
+>>>>>> +       TEST_ASSERT_EQUAL("Underscore hex",
+>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_"),    false);
+>>>>>> +       TEST_ASSERT_EQUAL("Substring hex",
+>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuna"),       false);
+>>>>>> +
+>>>>>> +       /*
+>>>>>> +        * 2 hex chars or less are not considered suffixes so it
+>>>> shouldn't
+>>>>>> be
+>>>>>> +        * possible to wildcard by skipping the suffix. Therefore
+>> there
+>>>>>> are more
+>>>>>> +        * false results here than above.
+>>>>>> +        */
+>>>>>> +       test_pmu.name = "pmuname_a3";
+>>>>>> +       TEST_ASSERT_EQUAL("Diff suffix 2 hex_",
+>>>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_2"),  false);
+>>>>>> +       /*
+>>>>>> +        * This one should be false, but because pmuname_a3 ends in 3
+>>>>>> which is
+>>>>>> +        * decimal, it's not possible to determine if it's a short hex
+>>>>>> suffix or
+>>>>>> +        * a normal decimal suffix following text. And we want to
+>> match
+>>>> on
+>>>>>> any
+>>>>>> +        * length of decimal suffix. Run the test anyway and expect
+>> the
+>>>>>> wrong
+>>>>>> +        * result. And slightly fuzzy matching shouldn't do too much
+>>>> harm.
+>>>>>> +        */
+>>>>>> +       TEST_ASSERT_EQUAL("Sub suffix 2 hex_",
+>>>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_a"),  true);
+>>>>>> +       TEST_ASSERT_EQUAL("Same suffix 2 hex_",
+>>>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_a3"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("No suffix 2 hex_",
+>>>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname"),    false);
+>>>>>> +       TEST_ASSERT_EQUAL("Underscore 2 hex_",
+>>>> perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_"),   false);
+>>>>>> +       TEST_ASSERT_EQUAL("Substring 2 hex_",
+>>>>  perf_pmu__match(&test_pmu,
+>>>>>> "pmuna"),      false);
+>>>>>> +
+>>>>>> +       test_pmu.name = "pmuname_5";
+>>>>>> +       TEST_ASSERT_EQUAL("Glob 1", perf_pmu__match(&test_pmu,
+>> "pmu*"),
+>>>>>>         true);
+>>>>>> +       TEST_ASSERT_EQUAL("Glob 2", perf_pmu__match(&test_pmu,
+>>>>>> "nomatch*"),        false);
+>>>>>> +       TEST_ASSERT_EQUAL("Seq 1",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_[12345]"), true);
+>>>>>> +       TEST_ASSERT_EQUAL("Seq 2",  perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_[67890]"), false);
+>>>>>> +       TEST_ASSERT_EQUAL("? 1",    perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_?"),       true);
+>>>>>> +       TEST_ASSERT_EQUAL("? 2",    perf_pmu__match(&test_pmu,
+>>>>>> "pmuname_1?"),      false);
+>>>>>> +
+>>>>>> +       return TEST_OK;
+>>>>>> +}
+>>>>>> +
+>>>>>>  static struct test_case tests__pmu[] = {
+>>>>>>         TEST_CASE("Parsing with PMU format directory", pmu_format),
+>>>>>>         TEST_CASE("Parsing with PMU event", pmu_events),
+>>>>>>         TEST_CASE("PMU event names", pmu_event_names),
+>>>>>>         TEST_CASE("PMU name combining", name_len),
+>>>>>>         TEST_CASE("PMU name comparison", name_cmp),
+>>>>>> +       TEST_CASE("PMU cmdline match", pmu_match),
+>>>>>>         {       .name = NULL, }
+>>>>>>  };
+>>>>>>
+>>>>>> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+>>>>>> index c94a91645b21..97d74fe6d816 100644
+>>>>>> --- a/tools/perf/util/pmu.c
+>>>>>> +++ b/tools/perf/util/pmu.c
+>>>>>> @@ -2150,7 +2150,7 @@ void perf_pmu__warn_invalid_config(struct
+>> perf_pmu
+>>>>>> *pmu, __u64 config,
+>>>>>>  bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
+>>>>>>  {
+>>>>>>         const char *name = pmu->name;
+>>>>>> -       bool need_fnmatch = strchr(tok, '*') != NULL;
+>>>>>> +       bool need_fnmatch = strisglob(tok);
+>>>>>>
+>>>>>>         if (!strncmp(tok, "uncore_", 7))
+>>>>>>                 tok += 7;
+>>>>>> --
+>>>>>> 2.34.1
+>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+> 
