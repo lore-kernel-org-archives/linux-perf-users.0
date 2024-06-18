@@ -1,59 +1,25 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF4314C5B5;
-	Tue, 18 Jun 2024 12:49:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BB72155736;
+	Tue, 18 Jun 2024 13:04:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718714958; cv=none; b=e+CaphvEyfYXnqXgD+cttOq73FsZdtZ1+uI9i0YVNHcc65cfA0J53+1kgSlBIHRazum6Ysr5Ovi1NqOzpki9NF63y66wAHPAguIcnS7tzwMeXJsbU1Pe1LJ9cb5+AEejiqMYRQp/DBcJz86VqM1H37PSf9cYtCIOgdhLlA4Ykv8=
+	t=1718715892; cv=none; b=jh7sObEgsokD+knFIIRhm8RT42f4qlPllFyEHbPUMzwJqxaCfxQvYFDng3qHd2f+ktgQlXLaPBmjlO7isTe4G/KYjORmOwrzeY1hoD8K2D4SmfBiMG2q23ef0s54gw/Ti4djdWTF9JUMDt4XIPj/KJH0a7zcSNwvFh/URo02ONs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718714958; c=relaxed/simple;
-	bh=4VhvBr7Wg/7G3Jr6+g/s22i5535HMilESlb5EOVncww=;
+	s=arc-20240116; t=1718715892; c=relaxed/simple;
+	bh=utGAo2ifRsMXL+0U5Vdjs3fahesCbSupcZDfbwU3OYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VCc0/c0Z/E954P/xDh233BRo3z1GbfXxUNSCYmj6vcLl9DClsoDUZay1JGuZrXV4BHG0ryCLvpW9xi9wSOZ7pc9HosjlK8vGy34EaPq94oV1iTO0F7LtdU/ec92qK5GfGo8p2r1pDT+vYYR5E4Ij1ueW2NtfSYioSWY9iv2iFNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cWiZYPGY; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWiZYPGY"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5295e488248so5940400e87.2;
-        Tue, 18 Jun 2024 05:49:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718714955; x=1719319755; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2sXcETfbHlUWfisUUTj4CxNKCJIy4cebBQ7DHfUnh8U=;
-        b=cWiZYPGYotLQVdSV44h4iwtpvWBOEBBJ0iqcydKBRN0BUO5PIj/uenL6T24Z5+hlvy
-         u7r5JlJprgvqLuKcLOkhH3OhgarVGjdjmC6oAXdpOE7ltv454Z+THUQ6D+28aq6ZcJ4h
-         5/A2UnCa5jAlVakSTr7Arh8uId5YGsYNFf+FDNrtc3QbP7Ukco5VA5sxmuakAqtyTiZB
-         mL1EmS1yaiTj1YwEStkGf4j5y/PeH7mkio3kD4qjonbEBYQhpYG83qj/m1/JWF+5X8zz
-         DNpzuF3wBFwYA+XNMVWYeenDaETwcKiKVViWpBRr8/VS3jmcSm+jHmUp7nKiBflOqJPq
-         2IZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718714955; x=1719319755;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2sXcETfbHlUWfisUUTj4CxNKCJIy4cebBQ7DHfUnh8U=;
-        b=a2TqSq2ytBun82XvPFm80eKvK/8gRUXYmt4ps9mjVvVdu9Nw+wqTu0jQn5G3aeHJ24
-         j/jGtLZ4cg1bgBLLqV8tk8W34if/rHmeolFCH91pWCGJM/RWrVQ+lEgdiMGbRhy8/a8U
-         atBM70kgJItbOY35odmf35t4X/kCgn5MkMHXhkX/vPjFkRoZvf+TzUlKtNQatia94lCV
-         GrkxQZRwfz09DBkEh3voaGZyCMaYWEC9JcNrLufFstZlV1Fq3ET9Ay905CzIMCl7kv6G
-         4wiZZOIvRq5wxmHtYSQhyBEE2ufVYAvIIDHkj8Fh5ie3tSSwVhSPIq/MuSOwUIyf2KLf
-         gccA==
-X-Forwarded-Encrypted: i=1; AJvYcCXVwYRbAkD1s0BS7GMbBwPkV1fmY1KpWlj0vJjhrf/d/FYwYvFYhgnITKjrp++g/MA0LUvJbNDzyk1HSRBHwkb1g2Su4l6zOItJT/xW0xsDe7CrHj5UUIBUeLiqOldEoTRpu3JQ6znIOGJJZ+S2bClLyHXEHrY1GtvHNO+PHEDEucke5bn2NHo8
-X-Gm-Message-State: AOJu0YzADQ2fbqz8Ju36cXWn51K83mYsBLB54vG6BYCNGys3KRu2Bb+a
-	Wv1+iWkW+5+zCjWhiOw1twCaLGcDrcCNnyPObx4OKR40N2g+q5kG
-X-Google-Smtp-Source: AGHT+IE9w4ry/QbXHWhMJuXWgGLSRBogwWxoMLLzS2ARV8udDGzJ2qhBtUyqMZQvjogK7z5+J9SxIw==
-X-Received: by 2002:ac2:46e3:0:b0:52b:7d16:2c7a with SMTP id 2adb3069b0e04-52ca6e55d4bmr8257740e87.3.1718714954496;
-        Tue, 18 Jun 2024 05:49:14 -0700 (PDT)
-Received: from ?IPV6:2001:660:6102:320:d6c5:cc21:7a1a:7498? ([2001:660:6102:320:d6c5:cc21:7a1a:7498])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42471584306sm8662155e9.0.2024.06.18.05.49.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Jun 2024 05:49:14 -0700 (PDT)
-Message-ID: <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
-Date: Tue, 18 Jun 2024 14:49:10 +0200
+	 In-Reply-To:Content-Type; b=BLGAqJbl2kSLvHj0YNVAdsumDDvWpGUkhIzH6JOu7PF61Wk8y4HW3WQpoC93CVKrA1bMEKO+tuXYWkHm9SuBGi4/j0FlErijqry3V6UbZEKL+U5ed/YliITbeSzoev5+bDySn4wM4NyOtVdI8RS5qJy2cWwFhWm9oUXuXVS3EHA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38E46DA7;
+	Tue, 18 Jun 2024 06:05:11 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6257D3F64C;
+	Tue, 18 Jun 2024 06:04:44 -0700 (PDT)
+Message-ID: <f435e2d2-f864-4a34-bc38-cb06ce140a6f@arm.com>
+Date: Tue, 18 Jun 2024 14:04:42 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,60 +27,115 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/9] Add CPU-type to topology
+Subject: Re: [PATCH] perf sched replay: Fix -r/--repeat command line option
+ for infinity
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Chen Yu <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+ Fernand Sieber <sieberf@amazon.com>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240618112907.15131-1-vineethr@linux.ibm.com>
 Content-Language: en-US
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
-From: Brice Goglin <brice.goglin@gmail.com>
-In-Reply-To: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-
-Le 17/06/2024 à 11:11, Pawan Gupta a écrit :
-> Hi,
->
-> This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
-> differentiate between hybrid variants P+E, P-only, E-only that share the
-> same Family/Model/Stepping. One of the use case for CPU-type is the
-> affected CPU table for CPU vulnerabilities, which can now use the CPU-type
-> to filter the unaffected variants.
->
-> * Patch 1 adds cpu-type to CPU topology structure and introduces
->    topology_cpu_type() to get the CPU-type.
->
-> * Patch 2-4 replaces usages of get_this_hybrid_cpu_type() with
->    topology_cpu_type().
->
-> * Patch 5-7 Updates CPU-matching infrastructure to use CPU-type.
->
-> * Patch 8 cleans up the affected CPU list.
->
-> * Patch 9 uses the CPU-type to exclude P-only parts from the RFDS affected
->    list.
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240618112907.15131-1-vineethr@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
-Hello
 
-Is there still a plan to expose this info in sysfs? Userspace currently 
-uses frequencies to guess which cores are E or P. Intel sent some 
-patches several years ago [1], but they got abandoned nowhere as far as 
-I know. There was also some discussion about using a "capacity" field 
-like ARM does, but IIRC Intel didn't like the idea in the end.
+On 18/06/2024 12:29, Madadi Vineeth Reddy wrote:
+> Currently, the -r/--repeat option accepts values from 0 and complains
+> for -1. The help section specifies:
+> -r, --repeat <n>      repeat the workload replay N times (-1: infinite)
+> 
 
-Thanks
+I was wondering if this was a regression or was always like this but
+it's at least been broken long before it becomes difficult to build
+Perf for me.
 
-Brice
+> The -r -1 option raises an error because replay_repeat is defined as
+> an unsigned int.
+> 
+> In the current implementation, the workload is repeated n times when
+> -r <n> is used, except when n is 0.
+> 
+> When -r is set to 0, the workload is also repeated once. This happens
+> because when -r=0, the run_one_test function is not called. (Note that
+> mutex unlocking, which is essential for child threads spawned to emulate
+> the workload, happens in run_one_test.) However, mutex unlocking is
+> still performed in the destroy_tasks function. Thus, -r=0 results in the
+> workload running once coincidentally.
+> 
 
-[1] https://lkml.org/lkml/2020/10/2/1208
+I also saw an intermittent hang waiting in destroy_tasks() which is now
+fixed.
+ 
+> To clarify and maintain the existing logic for -r >= 1 (which runs the
+> workload the specified number of times) and to fix the issue with infinite
+> runs, make -r=0 perform an infinite run.
+> 
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>  tools/perf/Documentation/perf-sched.txt | 7 +++++++
+>  tools/perf/builtin-sched.c              | 8 ++++++--
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index a216d2991b19..f1be8f0b249e 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -202,6 +202,13 @@ OPTIONS for 'perf sched timehist'
+>  --state::
+>  	Show task state when it switched out.
+>  
+> +OPTIONS for 'perf sched replay'
+> +------------------------------
+> +
+> +-r::
+> +--repeat <n>::
+> +	repeat the workload n times (0: infinite). Default is 10.
+> +
+>  SEE ALSO
+>  --------
+>  linkperf:perf-record[1]
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 8cdf18139a7e..2c4ed5c2d695 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3383,8 +3383,12 @@ static int perf_sched__replay(struct perf_sched *sched)
+>  	sched->thread_funcs_exit = false;
+>  	create_tasks(sched);
+>  	printf("------------------------------------------------------------\n");
+> -	for (i = 0; i < sched->replay_repeat; i++)
+> +
+> +	i = 0;
+> +	while (sched->replay_repeat == 0 || i < sched->replay_repeat) {
 
+Very minor nit, but you don't really need to remove the for loop, just add
+the new condition to the existing one. Not sure if it's worth re-spinning
+for though.
+
+Reviewed-by: James Clark <james.clark@arm.com>
+
+>  		run_one_test(sched);
+> +		i++;
+> +	}
+>  
+>  	sched->thread_funcs_exit = true;
+>  	destroy_tasks(sched);
+> @@ -3548,7 +3552,7 @@ int cmd_sched(int argc, const char **argv)
+>  	};
+>  	const struct option replay_options[] = {
+>  	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
+> -		     "repeat the workload replay N times (-1: infinite)"),
+> +		     "repeat the workload replay N times (0: infinite)"),
+>  	OPT_PARENT(sched_options)
+>  	};
+>  	const struct option map_options[] = {
