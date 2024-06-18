@@ -1,155 +1,85 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp-fw-80009.amazon.com (smtp-fw-80009.amazon.com [99.78.197.220])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B2501AB8F2;
-	Tue, 18 Jun 2024 08:28:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 509FC14EC7A;
+	Tue, 18 Jun 2024 08:44:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718699328; cv=none; b=FmwkC7D6h0ULzgLfR3ke6oODBb3k+THAAirs8Z/3RUDUnjxZ6eceIgLHzIAHJkINxS32zE4b2e+x2BxQFHoQ9ah8zAbj7iVlQvhgrk1I/tNwlXzhcY17O3fhb4zhg5Yv2zMke5tJS11IKhVIbxtAgpA9DIe2Nf5KofT4lwZOaX8=
+	t=1718700281; cv=none; b=saO2XaxS/BotpdFusVGIWwpN502ID7P8QTlrsR5MKqXTsxQjcmVyuTWLQGH02FLuwJtIB4eUeq+FkkjJMoIBdL13X9XWsmL5oZnfu5Q6Sv0rYEL+T1gFfKslS0eOt0uqkB4ghw1PDmvE2Qald4SFdRBd6tFY+Gv+X4jNDA7KRWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718699328; c=relaxed/simple;
-	bh=BdSJQOWhhnbvbjhJs7yzyr7yzcdDh4L6lLxL6lQDSEM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MF7H9P3ZEubNCENYcNhHXvW6C4kuC1lhgBh8bfTCcgTovhMtcc/Bh5f4TMwkGzNBMJyppNy1fnfO7mZvzZMSxO1T8sezFaZr6Asslvb2Em9iSsR4IeWvg5GUQ65mtve8dqeBddsDSV5rvbvFCiKALlWBEIdzDLvKrb/CpO3PPC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d+IDEF4l; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1718700281; c=relaxed/simple;
+	bh=6wsrRJKNZP5MFzt9At7Hpo1MMh9ZUz5h5ZdQoHnGy6g=;
+	h=Subject:From:To:CC:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=PqCK69LvL3p6IF4EfJAlyxSk1cet1bNPQicLe2n7FGMIUX7r5a8w03jSbiuJoI19g4fAjMHn3abwMvhgEpZojeTwMX+xfrm/HAhqxiwHj+rmd9XGpBK90FRQfvz2gL3pCn6aDc59dmdXx+CbEp6cJJhkica4LHV72xyWGlI6PYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.com; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=SIfasgAL; arc=none smtp.client-ip=99.78.197.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d+IDEF4l"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=J/cBIU1B1ZzX5KCj0SQv24mrW9j+05d7us3cvGVoDXQ=; b=d+IDEF4lBi26tNltBxJT/32itv
-	XiKQ2wxAmFp2q0v4pih1+WFvQF5w1FvLLd3HjYMEYMpDau68yCCVQEibqpgaNZU+6pt9tjLsabKvp
-	qm8VglynG9YDyta0slbCiRo2OFI1oL+jAU1Gxn6F86p/ALAk+/8DHmHePyu6CMkj2ZJaTAX3kXB2s
-	y+syK8kRDNvJhaJCMru9vgNn+l73TV/M9Yo7aplYSCTqKsbIeWRj3Wd8OGLIizm57v2hG9Sr8GSwI
-	FphfiOdYlc5xhSaSegzEfWRlIz8JPJ9XSXquTE2N/wxe/UQjp0/6KH+OfnSrxBNwhieDv3Bfvxtop
-	e018SnsQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sJUCf-00000002z9Y-2a71;
-	Tue, 18 Jun 2024 08:28:33 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 10CC0300886; Tue, 18 Jun 2024 10:28:29 +0200 (CEST)
-Date: Tue, 18 Jun 2024 10:28:28 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Kees Cook <kees@kernel.org>
-Cc: Justin Stitt <justinstitt@google.com>,
-	Erick Archer <erick.archer@outlook.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <20240618082828.GD31592@noisy.programming.kicks-ass.net>
-References: <AS8PR02MB7237F5BFDAA793E15692B3998BFD2@AS8PR02MB7237.eurprd02.prod.outlook.com>
- <202406101010.E1C77AE9D@keescook>
- <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
- <20240614101708.GO8774@noisy.programming.kicks-ass.net>
- <202406170957.3269DA2@keescook>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="SIfasgAL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1718700280; x=1750236280;
+  h=from:to:cc:date:message-id:references:in-reply-to:
+   content-transfer-encoding:mime-version:subject;
+  bh=6wsrRJKNZP5MFzt9At7Hpo1MMh9ZUz5h5ZdQoHnGy6g=;
+  b=SIfasgAL70JBoDweG+jB+vYB9JrmnflGMZZC6lQeNA8qtMFFyDlcxfUR
+   vnCFqT/Pi6HpLgj94qMMOpR+w4WHLPeED6Jbth8xGeubwgz6EyMNw3aXJ
+   lAsG/GGNzF5Fz/y5eRTjiv2Y6d0uCj7idY+tTVx7gOJvZ10sz0dn7d985
+   A=;
+X-IronPort-AV: E=Sophos;i="6.08,247,1712620800"; 
+   d="scan'208";a="97525173"
+Subject: Re: [PATCH] perf: Timehist account sch delay for scheduled out running
+Thread-Topic: [PATCH] perf: Timehist account sch delay for scheduled out running
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80009.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 08:44:36 +0000
+Received: from EX19MTAEUB001.ant.amazon.com [10.0.17.79:11682]
+ by smtpin.naws.eu-west-1.prod.farcaster.email.amazon.dev [10.0.22.205:2525] with esmtp (Farcaster)
+ id ef085b91-7167-4b04-9514-55ec948feebd; Tue, 18 Jun 2024 08:44:35 +0000 (UTC)
+X-Farcaster-Flow-ID: ef085b91-7167-4b04-9514-55ec948feebd
+Received: from EX19D003EUB002.ant.amazon.com (10.252.51.90) by
+ EX19MTAEUB001.ant.amazon.com (10.252.51.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 18 Jun 2024 08:44:35 +0000
+Received: from EX19D003EUB001.ant.amazon.com (10.252.51.97) by
+ EX19D003EUB002.ant.amazon.com (10.252.51.90) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 18 Jun 2024 08:44:34 +0000
+Received: from EX19D003EUB001.ant.amazon.com ([fe80::f153:3fae:905b:eb06]) by
+ EX19D003EUB001.ant.amazon.com ([fe80::f153:3fae:905b:eb06%3]) with mapi id
+ 15.02.1258.034; Tue, 18 Jun 2024 08:44:34 +0000
+From: "Sieber, Fernand" <sieberf@amazon.com>
+To: "20240613185906.31082-1-sieberf@amazon.com"
+	<20240613185906.31082-1-sieberf@amazon.com>
+CC: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>
+Thread-Index: AQHavcPKRPBk0WtIL0Om6mdPU7kGjbHJT+uAgAPr3dQ=
+Date: Tue, 18 Jun 2024 08:44:34 +0000
+Message-ID: <e78393a53b49416088b4d3e849f75686@amazon.com>
+References: <20240613185906.31082-1-sieberf@amazon.com>,<1bb99f6f-532f-47cb-963c-c5c0262e383c@linux.ibm.com>
+In-Reply-To: <1bb99f6f-532f-47cb-963c-c5c0262e383c@linux.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202406170957.3269DA2@keescook>
 
-On Mon, Jun 17, 2024 at 10:19:15AM -0700, Kees Cook wrote:
-> On Fri, Jun 14, 2024 at 12:17:08PM +0200, Peter Zijlstra wrote:
-> > On Wed, Jun 12, 2024 at 04:23:31PM -0700, Kees Cook wrote:
-> > > On Thu, Jun 13, 2024 at 12:08:21AM +0200, Peter Zijlstra wrote:
-> > > > On Wed, Jun 12, 2024 at 12:01:19PM -0700, Kees Cook wrote:
-> > > > > I'm happy to take patches. And for this bikeshed, this would be better
-> > > > > named under the size_*() helpers which are trying to keep size_t
-> > > > > calculations from overflowing (by saturating). i.e.:
-> > > > > 
-> > > > > 	size_add_mult(sizeof(*p), sizeof(*p->member), num)
-> > > > 
-> > > > Fine I suppose, but what if we want something not size_t? Are we waiting
-> > > > for the type system extension?
-> > > 
-> > > Because of C's implicit promotion/truncation, we can't do anything
-> > > sanely with return values of arbitrary type size; we have to capture the
-> > > lvalue type somehow so the checking can happen without C doing silent
-> > > garbage.
-> > 
-> > So sizeof() returns the native (built-in) size_t, right? If that type
-> > the nooverflow qualifier on, then:
-> > 
-> > 	sizeof(*p) + num*sizeof(p->foo[0])
-> > 
-> > should all get the nooverflow semantics right? Because size_t is
-> > effectively 'nooverflow unsigned long' the multiplication should promote
-> > 'num' to some 'long'.
-> 
-> Hmmm. This is an interesting point. I'll see what Justin has found as
-> he's been working on limiting the overflow sanitizer to specific types.
-> 
-> It doesn't help this (unfortunately common) code pattern, though:
-> 
-> 	int size;
-> 
-> 	size = sizeof(*p) + num*sizeof(p->foo[0]);
-> 	p = kmalloc(size, GFP_KERNEL);
-> 
-> But that was going to be a problem either way.
+Hi Maladi,
 
-Well, you can add a warning on implicitly casting away nooverflow.
+Ok, thanks for the feedback. I will submit another revision with the update=
+d man page then. In my opinion it makes more sense to measure the schedulin=
+g delay as the runnable delay (wakeup and pre empted), as we need to consid=
+er both cases when benchmarking scheduling policies. However if there is/wa=
+s a specific reason to restrict scheduling delay in timehist as the measure=
+ of wakeup delay only please let me know.
 
-New qualifier, we get to make up the rules etc.. it probably means we
-need to change the signature of the allocator functions to take a
-'nooverflow' type, otherwise those will trigger this new warning, but
-that should not be a problem.
-
-> > Now, I've re-read the rules and I don't see qualifiers mentioned, so
-> > can't we state that the overflow/nooverflow qualifiers are to be
-> > preserved on (implicit) promotion and when nooverflow and overflow are
-> > combined the 'safe' nooverflow takes precedence?
-> > 
-> > I mean, when we're adding qualifiers we can make up rules about them
-> > too, right?
-> 
-> Yup, that is the design of the "wraps" attribute (though it is the
-> reverse: it _allows_ for wrap-around, since we want to the default state
-> to be mitigation).
-
-Yeah, I feel strongly about that (just mailed you in the other
-sub-thread) that this is the wrong way around.
-
-> > If 'people' don't want to adorn the built-in size_t, we can always do
-> > something like:
-> > 
-> > #define sizeof(x) ((nooverflow unsigned long)(sizeof(x)))
-> > 
-> > and 'fix' it ourselves.
-> 
-> Right, though my hope is still we get the result of "nooverflow" by
-> marking that which was expected to overflow.
-
-You cannot sell that as a proper language extension because it will
-break world+dog.
+--Fernand=
