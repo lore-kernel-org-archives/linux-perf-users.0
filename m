@@ -1,261 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1467F157E79;
-	Tue, 18 Jun 2024 10:59:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F46418E758;
+	Tue, 18 Jun 2024 11:06:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718708372; cv=none; b=MJCVhF6fla4rkb3kbWPK6Dl00345s4RHJ5EeLU41KwNYJjGka6YJA/+kGO4EQm35HKzCe7Cz1hdfaeOt0JIVAuQYLSAre+R8zQsqU9HkJK7KrWP+9DZypHDBjl0MVo2lgf7AfhgKTLM7Bv3f7nFKoFaU4w6AE7qnNNUYvXRxCMo=
+	t=1718708788; cv=none; b=XgbyV1AO0AkPowbiZEPb0vLEXROX9y4DC9a4gr6W2428MVTdasK5mBEGOdemPK+k9xt4FrpPmQ3PASbJANrAkgKxXn0w7cL9JerQRwDBJKIpdLlH0L7SIymvBa4dLqwbztlhFNGY43kmzixeHJl9Nc+Z1Vx01vOSVOmJz+akk8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718708372; c=relaxed/simple;
-	bh=sLgffBKoBJ6aMUkm765UO/39o2Z0dni9gNP916z8otY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W2St3RxnU/rKq2JPPodReriTJ775/X/Ti2GK8yhemrQwAuqei+Z7/ozk4ZbNztmLIkO1sKB6dbsiNsToPg3I8nlyxqYQp70MKXduzYbcjoeC1OgS89Pe3i2MyBSg9GnUMBKbe8rA2pxCEbxQOyLbEQeckOkh1MWh/NDfjB2gpqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D56C3DA7;
-	Tue, 18 Jun 2024 03:59:53 -0700 (PDT)
-Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9253F3F6A8;
-	Tue, 18 Jun 2024 03:59:27 -0700 (PDT)
-Message-ID: <b2008905-686b-4494-a10d-c3357cce91da@arm.com>
-Date: Tue, 18 Jun 2024 11:59:26 +0100
+	s=arc-20240116; t=1718708788; c=relaxed/simple;
+	bh=fWqSplAoFa04GcT05kw5kN3zYDG+MX+9z+2UF9duoDI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MlR6N/ddp8q87Atqb5gI2voeCAjMe154yc/fVac6rsrmNVaxpzeRBafXAAjz48Rol/xDJZcmmzUV5/sFpN9vc1mK42Wyq2UAUy4xiOatTxxJyMgEqJSiImWO2sPToQAFoYtYs1u9TuLMzUfp8bBnVgnk1vRLWIrdFNSPw6UQ6vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Oqc+dmZJ; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oqc+dmZJ"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-35f090093d8so4181149f8f.0;
+        Tue, 18 Jun 2024 04:06:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718708784; x=1719313584; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S0UnVYkWBTkFsEPFcgOdyQEFi6q3Dg5tPMGBVAy98v4=;
+        b=Oqc+dmZJlhn8qNJqGpZ4lpbp/hpHjiftlXvOxmKEiNlTD5VejUQmtH8TjmCwmGC8sJ
+         hN3TIlt2suyGRfvr7ILDHELf9dgytKISUHjoNi1HfsOeBbEjQZrbtJ7AiE9opVEY3La6
+         7gNVqO/QwYuFU21VqwNRLw/APv48A2p4QUuMQF3iucamh5HrMA5JjAQIoGTh5/kGVMLb
+         9kkXOfFm78mtVgnwb/vc9mQQmB4JN1Pjp3w7eRDa6rbPRmLvgC3haV7MtHC70+QpGEPk
+         EI+ottceTvCpbB4T+ixI49XgRubrdW2Vkrde6UpXLjcM3jwcH8N7ucotDbGzOrr2DUK+
+         AxPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718708784; x=1719313584;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S0UnVYkWBTkFsEPFcgOdyQEFi6q3Dg5tPMGBVAy98v4=;
+        b=o+7Dhy+SMozZUeW/hBgA5AX32VoGYwGgVbiqw5vwaEHnHjT44viRGn3H1Uq7A3UkNX
+         /q3ZsIjxk8KEB+tYwUJM28/0qEwF+UArxZA/YHyVaMHvc4tEomI41WwLUpQ4KzI7nwPa
+         iWOyTf0nzw67eVB6KkeMs2JvYNcmcJquucUBjKbFDLOSkpjwy9Hjn7A39iSaqMeW4Ldn
+         NvsUPeS4nBb7dDiEu//UG4TwSQWWUU9GbTYBRFNn4cJNoyOyEJLPNYjol1p0YhJLdP+/
+         ATvTaojLAc/jt7G65fcovg4G9rq4AgcL02rY1rNRteS9I+LPfSxUcshAK/lSdQymXNFL
+         3CJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZO8kdeKaNMieXoU0oaCc+K/EGlviLCXDgu/HJQxkakKtj30EkT+nLj3kIuAuR39DmbUp1kJIgoQKOrEXO6FV0RCvJ5WiRGlJeL0bB
+X-Gm-Message-State: AOJu0YzsV8rJnl1ts+GBH3JM8zDZyK846CWjreV/O80GwXiXiDsHToO/
+	iRcbhSVVTn4/UtNPYBrqpCX46oI/FvtAshbutSeRUesvLHVDp6WnskMMKpoO5uU=
+X-Google-Smtp-Source: AGHT+IEqjETPhT3RToeGvat7HY15Res7AG+JP0QHL3cLZWmoqQzDRKcpHLUl1JgxNDxqFPKQsUNPmg==
+X-Received: by 2002:adf:fd0a:0:b0:362:8e0a:337a with SMTP id ffacd0b85a97d-3628e0a34c1mr470620f8f.53.1718708784110;
+        Tue, 18 Jun 2024 04:06:24 -0700 (PDT)
+Received: from localhost.localdomain ([93.51.30.197])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-360750f23dasm13781939f8f.68.2024.06.18.04.06.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Jun 2024 04:06:23 -0700 (PDT)
+From: Marco Cavenati <cavenati.marco@gmail.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	hpa@zytor.com,
+	Marco Cavenati <cavenati.marco@gmail.com>
+Subject: [PATCH] perf/x86/intel/pt: Update topa_entry base len to support 52-bit physical addresses
+Date: Tue, 18 Jun 2024 13:06:17 +0200
+Message-Id: <20240618110617.22626-1-cavenati.marco@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf pmu: Restore full PMU name wildcard support
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20240617134348.208241-1-james.clark@arm.com>
- <20240617134348.208241-2-james.clark@arm.com>
- <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Increase topa_entry base to 40 bits to accommodate page addresses in
+systems with 52-bit physical addresses.
+The Base Physical Address field (base) has a length of MAXPHYADDR - 12 as
+stated in Intel's SDM chapter 33.2.7.2.
+The maximum MAXPHYADDR is 52 as stated in SDM 4.1.4.
+Therefore, the maximum base bit length is 40.
 
+Signed-off-by: Marco Cavenati <cavenati.marco@gmail.com>
+---
+ arch/x86/events/intel/pt.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 17/06/2024 22:25, Ian Rogers wrote:
-> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
-> 
->> Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in dynamic
->> pmu events") gives the following example for wildcarding a subset of
->> PMUs:
->>
->>   E.g., in a system with the following dynamic pmus:
->>
->>         mypmu_0
->>         mypmu_1
->>         mypmu_2
->>         mypmu_4
->>
->>   perf stat -e mypmu_[01]/<config>/
->>
->> Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"), only
->> "*" has been supported, removing the ability to subset PMUs, even though
->> parse-events.l still supports ? and [] characters.
->>
->> Fix it by using fnmatch() when any glob character is detected and add a
->> test which covers that and other scenarios of
->> perf_pmu__match_ignoring_suffix().
->>
->> Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
->> Signed-off-by: James Clark <james.clark@arm.com>
->>
-> 
-> We use regular expression matching elsewhere rather than fnmatch. We can
-> also precompile the matchers using lex. I'm not sure we shouldn't be
-> looking for an opportunity to remove fnmatch rather than expand upon it.
-> 
-> Thanks,
-> Ian
-> 
+diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
+index 96906a62aacd..f5e46c04c145 100644
+--- a/arch/x86/events/intel/pt.h
++++ b/arch/x86/events/intel/pt.h
+@@ -33,8 +33,8 @@ struct topa_entry {
+ 	u64	rsvd2	: 1;
+ 	u64	size	: 4;
+ 	u64	rsvd3	: 2;
+-	u64	base	: 36;
+-	u64	rsvd4	: 16;
++	u64	base	: 40;
++	u64	rsvd4	: 12;
+ };
+ 
+ /* TSC to Core Crystal Clock Ratio */
+-- 
+2.39.2
 
-Presumably you mean we can do the removal of fnmatch after this fix goes in,
-rather than instead of? Because this is a user facing change in behaviour
-but the removal of fnmatch would be an non-user facing code refactor?
-
-It's technically not an "expansion" because we always used fnmatch and the
-linked commit hasn't made it to a release yet.
-
-> 
-> ---
->>  tools/perf/tests/pmu.c | 78 ++++++++++++++++++++++++++++++++++++++++++
->>  tools/perf/util/pmu.c  |  2 +-
->>  2 files changed, 79 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
->> index cc88b5920c3e..fd07331b2d6e 100644
->> --- a/tools/perf/tests/pmu.c
->> +++ b/tools/perf/tests/pmu.c
->> @@ -437,12 +437,90 @@ static int test__name_cmp(struct test_suite *test
->> __maybe_unused, int subtest __
->>         return TEST_OK;
->>  }
->>
->> +/**
->> + * Test perf_pmu__match() that's used to search for a PMU given a name
->> passed
->> + * on the command line. The name that's passed may also be a filename
->> type glob
->> + * match.
->> + */
->> +static int test__pmu_match(struct test_suite *test __maybe_unused, int
->> subtest __maybe_unused)
->> +{
->> +       struct perf_pmu test_pmu;
->> +
->> +       test_pmu.name = "pmuname";
->> +       TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu,
->> "pmuname"),      true);
->> +       TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu,
->> "longertoken"), false);
->> +       TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu,
->> "pmu"),        false);
->> +
->> +       test_pmu.name = "pmuname_10";
->> +       TEST_ASSERT_EQUAL("Diff suffix_", perf_pmu__match(&test_pmu,
->> "pmuname_2"),  false);
->> +       TEST_ASSERT_EQUAL("Sub suffix_",  perf_pmu__match(&test_pmu,
->> "pmuname_1"),  true);
->> +       TEST_ASSERT_EQUAL("Same suffix_", perf_pmu__match(&test_pmu,
->> "pmuname_10"), true);
->> +       TEST_ASSERT_EQUAL("No suffix_",   perf_pmu__match(&test_pmu,
->> "pmuname"),    true);
->> +       TEST_ASSERT_EQUAL("Underscore_",  perf_pmu__match(&test_pmu,
->> "pmuname_"),   true);
->> +       TEST_ASSERT_EQUAL("Substring_",   perf_pmu__match(&test_pmu,
->> "pmuna"),      false);
->> +
->> +       test_pmu.name = "pmuname_ab23";
->> +       TEST_ASSERT_EQUAL("Diff suffix hex_", perf_pmu__match(&test_pmu,
->> "pmuname_2"),    false);
->> +       TEST_ASSERT_EQUAL("Sub suffix hex_",  perf_pmu__match(&test_pmu,
->> "pmuname_ab"),   true);
->> +       TEST_ASSERT_EQUAL("Same suffix hex_", perf_pmu__match(&test_pmu,
->> "pmuname_ab23"), true);
->> +       TEST_ASSERT_EQUAL("No suffix hex_",   perf_pmu__match(&test_pmu,
->> "pmuname"),      true);
->> +       TEST_ASSERT_EQUAL("Underscore hex_",  perf_pmu__match(&test_pmu,
->> "pmuname_"),     true);
->> +       TEST_ASSERT_EQUAL("Substring hex_",   perf_pmu__match(&test_pmu,
->> "pmuna"),       false);
->> +
->> +       test_pmu.name = "pmuname10";
->> +       TEST_ASSERT_EQUAL("Diff suffix", perf_pmu__match(&test_pmu,
->> "pmuname2"),  false);
->> +       TEST_ASSERT_EQUAL("Sub suffix",  perf_pmu__match(&test_pmu,
->> "pmuname1"),  true);
->> +       TEST_ASSERT_EQUAL("Same suffix", perf_pmu__match(&test_pmu,
->> "pmuname10"), true);
->> +       TEST_ASSERT_EQUAL("No suffix",   perf_pmu__match(&test_pmu,
->> "pmuname"),   true);
->> +       TEST_ASSERT_EQUAL("Underscore",  perf_pmu__match(&test_pmu,
->> "pmuname_"),  false);
->> +       TEST_ASSERT_EQUAL("Substring",   perf_pmu__match(&test_pmu,
->> "pmuna"),     false);
->> +
->> +       test_pmu.name = "pmunameab23";
->> +       TEST_ASSERT_EQUAL("Diff suffix hex", perf_pmu__match(&test_pmu,
->> "pmuname2"),    false);
->> +       TEST_ASSERT_EQUAL("Sub suffix hex",  perf_pmu__match(&test_pmu,
->> "pmunameab"),   true);
->> +       TEST_ASSERT_EQUAL("Same suffix hex", perf_pmu__match(&test_pmu,
->> "pmunameab23"), true);
->> +       TEST_ASSERT_EQUAL("No suffix hex",   perf_pmu__match(&test_pmu,
->> "pmuname"),     true);
->> +       TEST_ASSERT_EQUAL("Underscore hex",  perf_pmu__match(&test_pmu,
->> "pmuname_"),    false);
->> +       TEST_ASSERT_EQUAL("Substring hex",   perf_pmu__match(&test_pmu,
->> "pmuna"),       false);
->> +
->> +       /*
->> +        * 2 hex chars or less are not considered suffixes so it shouldn't
->> be
->> +        * possible to wildcard by skipping the suffix. Therefore there
->> are more
->> +        * false results here than above.
->> +        */
->> +       test_pmu.name = "pmuname_a3";
->> +       TEST_ASSERT_EQUAL("Diff suffix 2 hex_", perf_pmu__match(&test_pmu,
->> "pmuname_2"),  false);
->> +       /*
->> +        * This one should be false, but because pmuname_a3 ends in 3
->> which is
->> +        * decimal, it's not possible to determine if it's a short hex
->> suffix or
->> +        * a normal decimal suffix following text. And we want to match on
->> any
->> +        * length of decimal suffix. Run the test anyway and expect the
->> wrong
->> +        * result. And slightly fuzzy matching shouldn't do too much harm.
->> +        */
->> +       TEST_ASSERT_EQUAL("Sub suffix 2 hex_",  perf_pmu__match(&test_pmu,
->> "pmuname_a"),  true);
->> +       TEST_ASSERT_EQUAL("Same suffix 2 hex_", perf_pmu__match(&test_pmu,
->> "pmuname_a3"), true);
->> +       TEST_ASSERT_EQUAL("No suffix 2 hex_",   perf_pmu__match(&test_pmu,
->> "pmuname"),    false);
->> +       TEST_ASSERT_EQUAL("Underscore 2 hex_",  perf_pmu__match(&test_pmu,
->> "pmuname_"),   false);
->> +       TEST_ASSERT_EQUAL("Substring 2 hex_",   perf_pmu__match(&test_pmu,
->> "pmuna"),      false);
->> +
->> +       test_pmu.name = "pmuname_5";
->> +       TEST_ASSERT_EQUAL("Glob 1", perf_pmu__match(&test_pmu, "pmu*"),
->>         true);
->> +       TEST_ASSERT_EQUAL("Glob 2", perf_pmu__match(&test_pmu,
->> "nomatch*"),        false);
->> +       TEST_ASSERT_EQUAL("Seq 1",  perf_pmu__match(&test_pmu,
->> "pmuname_[12345]"), true);
->> +       TEST_ASSERT_EQUAL("Seq 2",  perf_pmu__match(&test_pmu,
->> "pmuname_[67890]"), false);
->> +       TEST_ASSERT_EQUAL("? 1",    perf_pmu__match(&test_pmu,
->> "pmuname_?"),       true);
->> +       TEST_ASSERT_EQUAL("? 2",    perf_pmu__match(&test_pmu,
->> "pmuname_1?"),      false);
->> +
->> +       return TEST_OK;
->> +}
->> +
->>  static struct test_case tests__pmu[] = {
->>         TEST_CASE("Parsing with PMU format directory", pmu_format),
->>         TEST_CASE("Parsing with PMU event", pmu_events),
->>         TEST_CASE("PMU event names", pmu_event_names),
->>         TEST_CASE("PMU name combining", name_len),
->>         TEST_CASE("PMU name comparison", name_cmp),
->> +       TEST_CASE("PMU cmdline match", pmu_match),
->>         {       .name = NULL, }
->>  };
->>
->> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
->> index c94a91645b21..97d74fe6d816 100644
->> --- a/tools/perf/util/pmu.c
->> +++ b/tools/perf/util/pmu.c
->> @@ -2150,7 +2150,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu
->> *pmu, __u64 config,
->>  bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
->>  {
->>         const char *name = pmu->name;
->> -       bool need_fnmatch = strchr(tok, '*') != NULL;
->> +       bool need_fnmatch = strisglob(tok);
->>
->>         if (!strncmp(tok, "uncore_", 7))
->>                 tok += 7;
->> --
->> 2.34.1
->>
->>
-> 
