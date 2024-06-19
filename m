@@ -1,123 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6258E8175E;
-	Wed, 19 Jun 2024 10:00:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3862D78C91;
+	Wed, 19 Jun 2024 10:35:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718791247; cv=none; b=CHWqC7dLjHrGtB6rlqIx7t7PU0B1ty4PbK+STXkbLmG9YdJ2x1GJpdUgYp4DQqR2gKyeOkuOzovIwZrC5nkwAGGrrH+h2BBXI9lJsPJ8TJtIoQbMzPiFUVUzJZBEeFfMy1hpKdZlGpIEe7GX/qh2bQwZHnR4VeQLgbb1mHs5TQ0=
+	t=1718793307; cv=none; b=ZfgfRLZ1E25/jWjReKG6RVwACb9VBXDqTeutwt8KwPJWDGfvO0aBndWXyRxSJN2yg7XgY61KOWMpsOMx1dYPyQSCq4kL30zfY7H2DY1bdAsC63kWuJVMqt+vBdfDb+Xnp0rDTRb9/MgpSSrCRfoC8E9s/bay+vvtc1diF43nK3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718791247; c=relaxed/simple;
-	bh=eayWKS6Wu7Bqf8vNh/QlnwnY/rDj8Fs1l2UlPp8StoI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r84Nt1fdAKPXw8/CB9vEBJWpSc2mP8xUoL5EUDLeWXZtEEZrLhhLJBt7lEnwBUBBQtFRYOBOqfQCTFiElCc9w++rMP0+8KA3nw/5fF3Aa9B8qdabRX/pZlhZaN/MHi+IE6DBuvkHzmzwTOlWnnBDh2Uc/d65Rga87intDiPC4A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TcihEThj; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1718793307; c=relaxed/simple;
+	bh=rAkZoulyRqoWcGhfxv3cdCzwzCQF6KLQPe1hqhtmVBQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QG14v0lWeLtGBU0QwUAKsSKQ+WRvd3jggRebdRwD85ACGj05GWd/vfnO+oueinW8NWbH1MhCsHO7Z1vw48zgFvJMHdYGq1Dzxqardl+3at2lz9wGhbkMm8zNHB99FbPKScRhy++kW0pdjQ0qR6fZxxBII0acTIS37Em68Nxk+vI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LwmLBZ/H; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TcihEThj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LwmLBZ/H"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718791246; x=1750327246;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=eayWKS6Wu7Bqf8vNh/QlnwnY/rDj8Fs1l2UlPp8StoI=;
-  b=TcihEThjv4rH4R0OOdBrrZW+V4YUoLT6jlMmYwqS7fHGJbJVpqNarJqT
-   5fwosxa5HqyYIw9YyyKaCBGWFxfo4Wd6ccwcaX1XR1rJc586cSPCLgjN5
-   Sfi6pthmk5qMPbIjF5mh3sk25TOGeQBcTNKZ/OaGMWca+ot65bxi5KDJf
-   yff/i0atcNMV+dQtQ9Y71fa7xEjU1dpcU+coktbqFagoQf5KUmtak4EZG
-   cQG2l3/DsP1YJaAS/t82CTFyF7/VWyp5R/QCtJrsMylG8B/L6K9l/YL8X
-   2E1/HGR0l5Pt0SkBJcRq82ysiRue7VXTufzWldZe0hMXhym+c4+U2VJRT
+  t=1718793305; x=1750329305;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=rAkZoulyRqoWcGhfxv3cdCzwzCQF6KLQPe1hqhtmVBQ=;
+  b=LwmLBZ/HEG9lGlSclIZO8jMiiiWYz93rs4LcgDjNiryfzciSu8vq3Wl3
+   SuCtXbX/YwjyI8qQ8LFUPPVyQiCZFjxiIaivkkSpRa5mZImkGroNRkHux
+   RTEBRWeuygOxxcfjrc6UYYPwaV/hFzYN3HRkhFiYVsXdMvOpBE0eOo/3A
+   7L7g3mBnjxWjxvvlGZRsvkxPmbE/0644wnX798zBAkZU8dsfr1aTUpMO8
+   HSCPFMcGA/2a8SoF+Wx+c8R3IhODWsJ9aZyP7p4bp8Tf4ZHy4BkvilSdR
+   xGtaQ5HVYNdfRMdIOSBJNdr1Qt/ELLv0P0OGHUD0/Ntje7UfHrOGmTqOp
    g==;
-X-CSE-ConnectionGUID: qSjihEZMQNeYs1RXfNxrBw==
-X-CSE-MsgGUID: niW3AjgcT/ykYgZc+eGY2Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="15849381"
+X-CSE-ConnectionGUID: cK4+lQJPRzOFUFxuu7z+Zg==
+X-CSE-MsgGUID: 6EnvEt65QY6ERkurd+lspg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19596813"
 X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="15849381"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:00:45 -0700
-X-CSE-ConnectionGUID: wc5mkL1JRqyiNrZZRxpFrw==
-X-CSE-MsgGUID: IL9k4KU/R9iAllvTymSjlQ==
+   d="scan'208";a="19596813"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:35:04 -0700
+X-CSE-ConnectionGUID: UjQFZ2qzTJ6GiLj/nm1kiA==
+X-CSE-MsgGUID: oN9ZG3u6TViQwpUipDLVZw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,250,1712646000"; 
-   d="scan'208";a="72608683"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:00:40 -0700
-Message-ID: <6ab8c7fd-c718-49ff-bbbb-9241293127f7@intel.com>
-Date: Wed, 19 Jun 2024 13:00:34 +0300
+   d="scan'208";a="41987288"
+Received: from spandruv-desk.jf.intel.com ([10.54.75.19])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2024 03:34:47 -0700
+Message-ID: <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+From: srinivas pandruvada <srinivas.pandruvada@linux.intel.com>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Brice Goglin
+	 <brice.goglin@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org,  daniel.sneddon@linux.intel.com, tony.luck@intel.com, 
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Ricardo Neri
+ <ricardo.neri-calderon@linux.intel.com>,  "Liang, Kan"
+ <kan.liang@linux.intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>
+Date: Wed, 19 Jun 2024 03:34:46 -0700
+In-Reply-To: <20240619015315.3ei5f6rovzdnxovo@desk>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+	 <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+	 <20240619015315.3ei5f6rovzdnxovo@desk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel/pt: Update topa_entry base len to support
- 52-bit physical addresses
-To: Dave Hansen <dave.hansen@intel.com>,
- Marco Cavenati <cavenati.marco@gmail.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com, jolsa@kernel.org,
- irogers@google.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com
-References: <20240618110617.22626-1-cavenati.marco@gmail.com>
- <efc3a224-27b3-4259-a9a3-0296ccbf3e8d@intel.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <efc3a224-27b3-4259-a9a3-0296ccbf3e8d@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 18/06/24 20:59, Dave Hansen wrote:
-> On 6/18/24 04:06, Marco Cavenati wrote:
->> Increase topa_entry base to 40 bits to accommodate page addresses in
->> systems with 52-bit physical addresses.
->> The Base Physical Address field (base) has a length of MAXPHYADDR - 12 as
->> stated in Intel's SDM chapter 33.2.7.2.
->> The maximum MAXPHYADDR is 52 as stated in SDM 4.1.4.
->> Therefore, the maximum base bit length is 40.
-> 
-> This makes it sound like it's _adding_ support for larger physical
-> addresses.  It really was a bug from day one.  MAXPHYADDR has been
-> defined to be "at most 52" for a long, long time.  I think it was well
-> before 5-level paging came on the scene and actual MAXPHYADDR=52 systems
-> came along.
-> 
-> It probably needs to say something more along the lines of:
-> 
-> 	topa_entry->base needs to store a pfn.  It obviously needs to be
-> 	large enough to store the largest possible x86 pfn which is
-> 	MAXPHYADDR-PAGE_SIZE (52-12).  So it is 4 bits too small.
-> 
-> This isn't the only bug in the area:
-> 
->> static void *pt_buffer_region(struct pt_buffer *buf)
->> {
->>         return phys_to_virt(TOPA_ENTRY(buf->cur, buf->cur_idx)->base << TOPA_SHIFT);
->> }
-> 
-> At this point, ->base is still a 40-bit (or 36-bit before this patch)
-> type.  If it has anything in the high 12 bits, a <<TOPA_SHIFT will just
-> lose those bits.
+On Tue, 2024-06-18 at 18:53 -0700, Pawan Gupta wrote:
+> On Tue, Jun 18, 2024 at 02:49:10PM +0200, Brice Goglin wrote:
+> > Le 17/06/2024 =C3=A0 11:11, Pawan Gupta a =C3=A9crit=C2=A0:
+> > > Hi,
+> > >=20
+> > > This series adds support for CPU-type (CPUID.1A.EAX[31-24] on
+> > > Intel) to
+> > > differentiate between hybrid variants P+E, P-only, E-only that
+> > > share the
+> > > same Family/Model/Stepping. One of the use case for CPU-type is
+> > > the
+> > > affected CPU table for CPU vulnerabilities, which can now use the
+> > > CPU-type
+> > > to filter the unaffected variants.
+> > >=20
+> > > * Patch 1 adds cpu-type to CPU topology structure and introduces
+> > > =C2=A0=C2=A0 topology_cpu_type() to get the CPU-type.
+> > >=20
+> > > * Patch 2-4 replaces usages of get_this_hybrid_cpu_type() with
+> > > =C2=A0=C2=A0 topology_cpu_type().
+> > >=20
+> > > * Patch 5-7 Updates CPU-matching infrastructure to use CPU-type.
+> > >=20
+> > > * Patch 8 cleans up the affected CPU list.
+> > >=20
+> > > * Patch 9 uses the CPU-type to exclude P-only parts from the RFDS
+> > > affected
+> > > =C2=A0=C2=A0 list.
+> >=20
+> >=20
+> > Hello
+> >=20
+> > Is there still a plan to expose this info in sysfs?
+>=20
+> Sure, if it helps userspace.
+>=20
+> > Userspace currently uses frequencies to guess which cores are E or
+> > P.
+> > Intel sent some patches several years ago [1], but they got
+> > abandoned
+> > nowhere as far as I know. There was also some discussion about
+> > using a
+> > "capacity" field like ARM does, but IIRC Intel didn't like the idea
+> > in
+> > the end.
+>=20
+> There can be many ways to expose this information in sysfs. Like this
+> ...
+>=20
+> > [1] https://lkml.org/lkml/2020/10/2/1208
+>=20
+> ... exposes /sys/devices/system/cpu/types which, in hybrid parts,
+> creates a
+> subdirectory for each type of CPU. Each subdirectory contains a CPU
+> list
+> and a CPU map that user space can query.
+>=20
+> The other way is to expose the CPU-type in a file:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/sys/devices/system/cpu/c=
+puN/type
+>=20
+> that could return the CPU-type of the CPU N. Is there a preference?
 
-Yes
+But you still have to look at frequency or caches as there are Low
+power E-cores which will have same type but different capabilities.
 
-> 
-> But maybe I'm reading it wrong.  If I'm right, this malfunctions at pfns
-> over 36-12=24 bits, or 64GB of RAM.  Is it possible nobody has ever
-> allocated a 'struct pt_buffer' over 64GB?  Or is this somehow tolerant
-> of reading garbage?
+Thanks,
+Srinivas
 
-Yes, it will go wrong with any physical address above 64GB - 1.
-i.e. the machine just needs more than 64GB of memory.
 
-However that code is used only in one place which is conditional on
-!intel_pt_validate_hw_cap(PT_CAP_topa_multiple_entries) which is true
-only for Broadwell.  Also "snapshot" (and sampling) modes are
-unaffected.
-
-Testing on a Broadwell with 400GB of memory confirmed the issue.
 
