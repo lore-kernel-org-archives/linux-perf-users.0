@@ -1,151 +1,271 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5224D28DD2
-	for <linux-perf-users@vger.kernel.org>; Wed, 19 Jun 2024 14:40:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425A335A7;
+	Wed, 19 Jun 2024 14:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718808039; cv=none; b=G7SUgZtnrdqV91lJEUbgjKWvD5X0qQ++pXGS6ogpcpSDnP4g9RRgtSZfAH6pUpDuWK8EiAIR90kEBhyA2vQiYCCbPg+mHZWEDfVIoy204p5jE2c4BzTNfOR7HgdJs9X1zRoJEcdBq1gKCLNNn765zd0WmX1rdyT5u+xtmzsI++4=
+	t=1718808675; cv=none; b=HyqwggOo8n+uMTP82bg5ZGT+ewEoceqqk02Qp1OFgeLsoL8EqbTuC+D0ot1jYH1cbfVTSzeZdPSeMvUnUJwsIItIc8ZlTZbosXpMcalBCve6UcFrt+K+ocVYi/B7PhbkSm778DigReTgJoHcdsolV89868VgaGW+ebPD75Xhj2Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718808039; c=relaxed/simple;
-	bh=z0Mpv6gcJa3VDpSzPcPg/SCmOnYRbY7zuWvo13wbiqQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RNj3BT+7uvs/XxCQlKINgLX45Xe4i6+mRLgQZ+dB5dW1KsqCUBLiRhkI5RCYYFfK5jDI2/Q/yxhY98bu2XhQfOcKjjdcLbfzG1NnyyPTTEQYXO14qlJjsKkYbwewGBNKm92Ikzc2cATOinmBdkveBQOjuEwq18ljxQDB7oh89tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Kwq0stU3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kwq0stU3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718808037;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0q4qMgcNqiwKOKLULuCG3ztTE8UvFIWH7RjHNIB9mr0=;
-	b=Kwq0stU3hcq/K6I7gNapxa01p4+9h3QMcziTKZz7/5UcTAmYDcF9Zi8TIN1dycDLoshGmG
-	DkCfcfZwgSn8FPHRHx114L9PJaJoVUNSwipXaY6syAzqrBiVdhSzLihXGsEjdkCPdpfBL3
-	5OTybBcOnUnWv++M0qXZARH8de38eUk=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-62-6uouwswPPmOORU9DfPV1ug-1; Wed,
- 19 Jun 2024 10:40:33 -0400
-X-MC-Unique: 6uouwswPPmOORU9DfPV1ug-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF2FF19560B3;
-	Wed, 19 Jun 2024 14:40:30 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.168])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 4C3F51955E83;
-	Wed, 19 Jun 2024 14:40:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Jun 2024 16:38:59 +0200 (CEST)
-Date: Wed, 19 Jun 2024 16:38:52 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	nathan@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-Message-ID: <20240619143852.GA24240@redhat.com>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
+	s=arc-20240116; t=1718808675; c=relaxed/simple;
+	bh=ejFVPxL2Cbfs4eg3yoSzWasTDViAd+04TbnoBet+RR8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s9Y6QzjBGU4iS19yPc7Ec1M+jbH7v+q+aQKdl+r7CYmwg0sUeeCWU95q6Ly16fwcSjDl0tVwFSvT+nW9SIdzHIwwHtjB0hwjSQR2zaa330YW/2ROWf6+rWE1l69zKIRRa9coBxQEcK3nzu6ybREph4Px8rDid6u6QhWBue/Eb3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6bce380eb9bso3910419a12.0;
+        Wed, 19 Jun 2024 07:51:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718808673; x=1719413473;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7ajs9iVzkp72InwEDYOdKR9Ht6Xu0dx3o2OGDillctA=;
+        b=U5rklNASsY9+2My3UpYB4fGioQQvg8I+E5PbHRQpCWDDWm8npCTGAUwmcJdFwGhg8L
+         zcHh6b4oda0T1qY8l+WIJA3vrJ3Il5kkdmrqfBWCuVxaSfZoZNkNHIUQM+Ad/Yf9O3JZ
+         HuZUWn0SgdVaDKlAwYd6voAJpGSBMkZ6CIfyFkBsvjAFX6YPe0XLI/ZkMamK5Cxy6NmK
+         P+FUiQhqVgKQt3I3cHBhxWkl1qyj8Y0DpKc50FpPo+liTrmyL2v86vdKQ1C0mvEatTit
+         tKM/oI3wCqrdsnjSBHm9ocDd0zk3xHeabDHeu25WCT5ceRSlmro8+FDt/cHgO/d2boGg
+         M77g==
+X-Forwarded-Encrypted: i=1; AJvYcCXlS7RY5S3+PKa4OGkrs1XLKvSKDblsH9gUp9VuiPL2p1UXZjXTD697YCaYn1Pd7aDlly9tPCcSnTFFC+TSVpJZvBuxMa/abrxLZ/93dXRTI+lB6A+PDvvpYJ/H1ol5ZCsH/oJyZtcuHeGrG+fvOg==
+X-Gm-Message-State: AOJu0YzFWqsy9u3vDkSLfMKxlz1XXCX9eidp3vN3QfCGsiJ/5c8Ra31E
+	HoGtjabVsnbFim20qIESItWW5cAwzO0a54wdzt5Y5So6BBwiHzps3yJzXlcE1RfR1oRWi9Vmumm
+	tQ/XPfU/uetjc3fKoFwT8naffS9Y=
+X-Google-Smtp-Source: AGHT+IGy+4YxdJeCaNbJh9tTzf2ag/kTCv+ttsFhbIC4FykVzC/6jaIAOOoHpKmJ9sVJSYht/B3kR5+DaclHwBLrv5w=
+X-Received: by 2002:a17:90a:1fc7:b0:2c7:c788:d34d with SMTP id
+ 98e67ed59e1d1-2c7c788d4dcmr1547027a91.38.1718808672525; Wed, 19 Jun 2024
+ 07:51:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619013411.756995-1-liaochang1@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+References: <20240619092234.1165-1-ravi.bangoria@amd.com>
+In-Reply-To: <20240619092234.1165-1-ravi.bangoria@amd.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 19 Jun 2024 07:51:01 -0700
+Message-ID: <CAM9d7chpM4k+BRNNf6V0OS1PRX7c9f+QXa0EwKWjPPzAZVYZBw@mail.gmail.com>
+Subject: Re: [PATCH] perf doc: Add AMD IBS usage document
+To: Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org, 
+	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	yangjihong1@huawei.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, sandipan.das@amd.com, 
+	ananth.narayan@amd.com, santosh.shukla@amd.com, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 06/19, Liao Chang wrote:
+Hello,
+
+Adding Stephane to CC.
+
+On Wed, Jun 19, 2024 at 2:23=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
+m> wrote:
 >
-> When the new uretprobe system call was added [1], the xol slots reserved
-> for the uretprobe trampoline might be insufficient on some architecture.
+> Add a perf man page document that describes how to exploit AMD IBS with
+> Linux perf. Brief intro about IBS and simple one-liner examples will help
+> naive users to get started. This is not meant to be an exhaustive IBS
+> guide. User should refer latest AMD64 Architecture Programmer's Manual
+> for detailed description of IBS.
+>
+> Usage:
+>
+>   $ man perf-amd-ibs
+>
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
 
-Confused... this doesn't depend on the change above?
+Thanks a lot for adding this documentation!  A nitpick below..
 
-> For example, on arm64, the trampoline is consist of three instructions
-> at least. So it should mark enough bits in area->bitmaps and
-> and area->slot_count for the reserved slots.
 
-Do you mean that on arm64 UPROBE_SWBP_INSN_SIZE > UPROBE_XOL_SLOT_BYTES ?
-
-From arch/arm64/include/asm/uprobes.h
-
-	#define MAX_UINSN_BYTES		AARCH64_INSN_SIZE
-
-	#define UPROBE_SWBP_INSN	cpu_to_le32(BRK64_OPCODE_UPROBES)
-	#define UPROBE_SWBP_INSN_SIZE	AARCH64_INSN_SIZE
-	#define UPROBE_XOL_SLOT_BYTES	MAX_UINSN_BYTES
-
-	typedef __le32 uprobe_opcode_t;
-
-	struct arch_uprobe_task {
-	};
-
-	struct arch_uprobe {
-		union {
-			u8 insn[MAX_UINSN_BYTES];
-			u8 ixol[MAX_UINSN_BYTES];
-
-So it seems that UPROBE_SWBP_INSN_SIZE == MAX_UINSN_BYTES and it must
-be less than UPROBE_XOL_SLOT_BYTES, otherwise
-
-arch_uprobe_copy_ixol(..., uprobe->arch.ixol, sizeof(uprobe->arch.ixol))
-in xol_get_insn_slot() won't fit the slot as well?
-
-OTOH, it look as if UPROBE_SWBP_INSN_SIZE == UPROBE_XOL_SLOT_BYTES, so
-I don't understand the problem...
-
-Oleg.
-
-> [1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
-> 
-> Signed-off-by: Liao Chang <liaochang1@huawei.com>
 > ---
->  kernel/events/uprobes.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2816e65729ac..efd2d7f56622 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
->  static struct xol_area *__create_xol_area(unsigned long vaddr)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	unsigned long insns_size;
-> +	unsigned long insns_size, slot_nr;
->  	struct xol_area *area;
->  	void *insns;
->  
-> @@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  
->  	area->vaddr = vaddr;
->  	init_waitqueue_head(&area->wq);
-> -	/* Reserve the 1st slot for get_trampoline_vaddr() */
-> -	set_bit(0, area->bitmap);
-> -	atomic_set(&area->slot_count, 1);
->  	insns = arch_uprobe_trampoline(&insns_size);
-> +	/* Reserve enough slots for the uretprobe trampoline */
-> +	for (slot_nr = 0;
-> +	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
-> +	     slot_nr++)
-> +		set_bit(slot_nr, area->bitmap);
-> +	atomic_set(&area->slot_count, slot_nr);
->  	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
->  
->  	if (!xol_add_vma(mm, area))
-> -- 
-> 2.34.1
-> 
+>  tools/perf/Documentation/perf-amd-ibs.txt | 126 ++++++++++++++++++++++
+>  tools/perf/Documentation/perf.txt         |   3 +-
+>  2 files changed, 128 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/perf/Documentation/perf-amd-ibs.txt
+>
+> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Docum=
+entation/perf-amd-ibs.txt
+> new file mode 100644
+> index 000000000000..d3dfa71e320c
+> --- /dev/null
+> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
+> @@ -0,0 +1,126 @@
+> +perf-amd-ibs(1)
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +NAME
+> +----
+> +perf-amd-ibs - Support for AMD Instruction-Based Sampling with perf tool
+> +
+> +SYNOPSIS
+> +--------
+> +[verse]
+> +'perf record' -e ibs_op//
+> +'perf record' -e ibs_fetch//
+> +
+> +DESCRIPTION
+> +-----------
+> +
+> +Instruction-Based Sampling (IBS) provides precise Instruction Pointer (I=
+P)
+> +profiling support on AMD platforms. IBS has two independent components: =
+IBS
+> +Op and IBS Fetch. IBS Op sampling provides information about instruction
+> +execution (micro-op execution to be precise) with details like d-cache
+> +hit/miss, d-TLB hit/miss, cache miss latency, load/store data source, br=
+anch
+> +behavior etc. IBS Fetch sampling provides information about instruction =
+fetch
+> +with details like i-cache hit/miss, i-TLB hit/miss, fetch latency etc. I=
+BS is
+> +per-smt-thread i.e. each SMT hardware thread contains standalone IBS uni=
+ts.
+> +
+> +Both, IBS Op and IBS Fetch, are exposed as PMUs by Linux and can be expl=
+oited
+> +using Linux perf utility. Following files will be created at boot time i=
+f IBS
+> +is supported by the hardware and kernel.
+> +
+> +  /sys/bus/event_source/devices/ibs_op/
+> +  /sys/bus/event_source/devices/ibs_fetch/
+> +
+> +IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supp=
+orts
+> +one event: fetch ops.
+> +
+> +IBS VS. REGULAR CORE PMU
+> +------------------------
+> +
+> +IBS gives samples with precise IP, i.e. the IP recorded with IBS sample =
+has
+> +no skid. Whereas the IP recorded by regular core PMU will have some skid
+> +(sample was generated at IP X but perf would record it at IP X+n). Hence=
+,
+> +regular core PMU might not help for profiling with instruction level
+> +precision. Further, IBS provides additional information about the sample=
+ in
+> +question. On the other hand, regular core PMU has it's own advantages li=
+ke
+> +plethora of events, counting mode (less interference), up to 6 parallel
+> +counters, event grouping support, filtering capabilities etc.
+> +
+> +EXAMPLES
+> +--------
+> +
+> +IBS Op PMU
+> +~~~~~~~~~~
+> +
+> +System-wide profile, cycles event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_op// -c 100000 -a
+> +
+> +Per-cpu profile (cpu10), cycles event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_op// -c 100000 -C 10
+> +
+> +Per-cpu profile (cpu10), cycles event, sampling freq: 1000
+> +
+> +       $ sudo perf record -e ibs_op// -F 1000 -C 10
+> +
+> +System-wide profile, uOps event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -a
+> +
+> +Same command, but also capture IBS register raw dump along with perf sam=
+ple:
+> +
+> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -a --raw-samp=
+les
+> +
+> +System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Ze=
+n4 onward)
+> +
+> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1,l3missonly=3D1/ -c 10000=
+0 -a
+> +
+> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -p 1234
+> +
+> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -- ls
+> +
+> +To analyse recorded profile in aggregate mode
+> +
+> +       $ sudo perf report
+> +       /* Select a line and press 'a' to drill down at instruction level=
+. */
+> +
+> +To go over each sample
+> +
+> +       $ sudo perf script
+> +
+> +Raw dump of IBS registers when profiled with --raw-samples
+> +
+> +       $ sudo perf report -D
+> +       /* Look for PERF_RECORD_SAMPLE */
+> +
+> +IBS applied in a real world usecase
+> +
+> +~90% regression was observed in tbench with specific scheduler hint whic=
+h
+> +was counter intuitive. IBS profile of good and bad run captured using pe=
+rf
+> +helped in identifying exact cause of the problem:
+> +
+> +       https://lore.kernel.org/r/20220921063638.2489-1-kprateek.nayak@am=
+d.com
+> +
+> +IBS Fetch PMU
+> +~~~~~~~~~~~~~
+> +
+> +Similar commands can be used with Fetch PMU as well.
+> +
+> +System-wide profile, fetch ops event, sampling period: 100000
+> +
+> +       $ sudo perf record -e ibs_fetch// -c 100000 -a
+> +
+> +System-wide profile, fetch ops event, sampling period: 100000, Random en=
+able
 
+Can you please add a brief description of what 'random enable' means?
+
+Thanks,
+Namhyung
+
+
+> +
+> +       $ sudo perf record -e ibs_fetch/rand_en=3D1/ -c 100000 -a
+> +
+> +etc.
+> +
+> +SEE ALSO
+> +--------
+> +
+> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1=
+]
+> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation=
+/perf.txt
+> index 09f516f3fdfb..cbcc2e4d557e 100644
+> --- a/tools/perf/Documentation/perf.txt
+> +++ b/tools/perf/Documentation/perf.txt
+> @@ -82,7 +82,8 @@ linkperf:perf-stat[1], linkperf:perf-top[1],
+>  linkperf:perf-record[1], linkperf:perf-report[1],
+>  linkperf:perf-list[1]
+>
+> -linkperf:perf-annotate[1],linkperf:perf-archive[1],linkperf:perf-arm-spe=
+[1],
+> +linkperf:perf-amd-ibs[1], linkperf:perf-annotate[1],
+> +linkperf:perf-archive[1], linkperf:perf-arm-spe[1],
+>  linkperf:perf-bench[1], linkperf:perf-buildid-cache[1],
+>  linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
+>  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
+> --
+> 2.45.2
+>
