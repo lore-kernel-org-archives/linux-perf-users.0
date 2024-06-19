@@ -1,55 +1,55 @@
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF015748C;
-	Wed, 19 Jun 2024 18:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D05B15252C;
+	Wed, 19 Jun 2024 18:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718821544; cv=none; b=hOvcTFPHKug4NGtjpkOkhYx3T2zBMcuIBGlytjTX8GntPYrVA+QVUNJWZST/eQ6pc/dU39OO9HMcJJT35u3B+MAHuIl9PQ+TKYyTRRfJhk8OZQzE5iWuEp6nXUPC/01fY9zfZbMCMIKbbBcNThgFEibWjzq3lCDEO1MDKgbM4aQ=
+	t=1718821627; cv=none; b=sDXOpdoY85Z6wlp49nEfrnvSSgxrJwPkY3IrWLTbjOW6PxAoBTvplugdHaQMp0izMUJa5bEez/8ME8yX9BGGlggBAlo3zp7v8u2qszUL4bk2qOMzIcLds7VnmWvZbZ3uimn2k/I/T/QKY+hRbCtO+AiKM2459VqYr2PF81XsuBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718821544; c=relaxed/simple;
-	bh=cNU4k4Z9vt2ZVTeVLys4gCrez6b7RfRDUbs2t8p/kSA=;
+	s=arc-20240116; t=1718821627; c=relaxed/simple;
+	bh=KABG2wuzIOaQNn7+dKSaXBK4oIWHzA/QfCI3cMYlNRs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kwbE4CPfxO5fMPS29z8/viXnWIkAcEZqeHoxfegFX838aDTm1J8OSVgEszYAbIc71rn+h42044Ww72hTxG0QOe9BBpRw3OfNAQb7m17Z9+hyzKe7T8v+PX7Qh3+RtwtgkJgk9R83Jv+qOO54IVbVV0Bo44vFi2tJTG/TsbUVJrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gBaxKp5q; arc=none smtp.client-ip=209.85.219.181
+	 To:Cc:Content-Type; b=O474cP8UGKLEGJymctXpUKJ4PrV7rVPaF+SOYQO1dwRLof+Csr8Tw2KLX2TPyRbjhmkf+KXPoFMekXeGLm2GR3npkuKKDyw6fZ+SryTgMBElGsSTyKHCH0vyokmrJromsyZu9VJE5JJq7/5EDVvXWE8P6pEwZqcqbhSpa5RohP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YxWKKm7+; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gBaxKp5q"
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dff06b3f413so42070276.3;
-        Wed, 19 Jun 2024 11:25:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxWKKm7+"
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-63267c30eaaso162107b3.1;
+        Wed, 19 Jun 2024 11:27:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718821542; x=1719426342; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718821625; x=1719426425; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nRPhb4LcEfmXog7Vq9PBNDJLtn9KBxrQUGmQ/CKFcK8=;
-        b=gBaxKp5qqj3hVL3m7DfFdg7Gonlmb/6pR+Ps4y8cSGgbA+VT5JZ3c1DRgfBzTXooEM
-         SDm4G0Qhe9UhUcpNqLs2nov3bwzWysR1k/Cur1UWszDJOrOdnLnjf2eQCdnuaZ5Uq7X9
-         7bHLrzCyQ0HBAULtrRCC4ypkvgFNpxLV5pq2EHWREgeySD1unXbVRS5+EAA61JHhfpks
-         m6fIehZeKizByy/2e6qlJHoOnaOwS1Cx0iQUZGWA8G7i7gm73SylXfBm7Z2z+c64GxKC
-         URgUcrNYAfcIODlIlaztH/4IToUEpG7oTVEXWKSLUR2Gl+R4+osyTdKQ12h+Yo1l6VQ7
-         /Png==
+        bh=bwDJUI/coNCTREvHUkwFtmxjLL4Y9HIlzwN2rs8t5Cg=;
+        b=YxWKKm7+dwmJEeyS08sLnHvfV/7vFa6MSX2M6SHWCRhr8KTN5fC91OmNIyQ24mYRez
+         oMGwoU1Uxf0jytb1AtJcrnnj4rSpd2n8KscH2jAQPhg6yIAjR+Obg6YeCBi332c08PWi
+         tztioTVCnzKIw6s4+OaNakgxrY0ztWi5oDKjaV8pg2/QkqltW+PCMoA4nvJwLzBhnXHv
+         vpUioLgERO6CzGl8UBEuNOsqkwQq2RpGSGEFvWFNooxV+W8gdBMC2chP9T09r+NrK9VN
+         QtQNOzsN0x72pPy5INWucCHr1fmJvZhnexWN3UUSunkGhHNsh0/8MvbYr3+mhK1QZBe+
+         IoZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718821542; x=1719426342;
+        d=1e100.net; s=20230601; t=1718821625; x=1719426425;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nRPhb4LcEfmXog7Vq9PBNDJLtn9KBxrQUGmQ/CKFcK8=;
-        b=w4pCVREHMNOjx949qGP5K/ho1p4pvujxVPIjrus1kDXCJiYbe0xiqs/LzYyDV4gx5T
-         Mmg7mILipK/dbk77AbYYUQYN4NzcKRiWoMx+t6x1MYK5+hQyc/q9xfmwr2zD4lStzwJu
-         Clm7BuG1YbGwlN7SdsbxAMg6wUoggTPAiQ4feUqyxeQrc8HYDUggUggZT7pb+7l9reiN
-         1sr0tmihbYdu7fC2XFJKr+l9QWPHIU6FDpxQ+7Syi+BFwkiTxWOxWsTUj2ZbBwzC1k3y
-         NE4gxTBsSagX+b2GNOuiUcFKsXjoC4qvLZvsO5nuOmOK1MsGbzbGzLAkRWeXrg14eQJc
-         f17g==
-X-Forwarded-Encrypted: i=1; AJvYcCU3kT7zGLyl9RFSXa3azsq/bwcqjfbuGwnNGEM470lPAKj25VO0+JRspD1J+o+VaFfSgOndplgExVg87FYrlr3z9mLB/RRTLGezBesMrPGJqbaVyv+DORwUKjym/vywvvx+JiHyurrHoKpTSteH0Q==
-X-Gm-Message-State: AOJu0YzeZaZQR0wRw9W0nId/U+m4FoG3vNp9Vb5A21pPp7W9Wt3q5BFO
-	LSKVAwLf+yxy6QMILCTQy2Kn6a/g98r8C6vHVSx+inqu6z+gSHvmCWee7s96WBgGuaOrwNvR/Jb
-	ygkGnizdC9ReR/lrldQk2KVN9ZWW6/RYgtbBQaQ==
-X-Google-Smtp-Source: AGHT+IFBqPeCafDYX98OBfIHDMdNXxq0533UQn/rqrzPYZG3GXmQAYQdzhHwVxBSZpPaRgZPDWT48kPDLYdJLzfphj0=
-X-Received: by 2002:a25:a2c1:0:b0:dfb:e1c:c799 with SMTP id
- 3f1490d57ef6-e02bdf625f8mr3693344276.0.1718821541823; Wed, 19 Jun 2024
- 11:25:41 -0700 (PDT)
+        bh=bwDJUI/coNCTREvHUkwFtmxjLL4Y9HIlzwN2rs8t5Cg=;
+        b=mYUuTJsFi7Z/HIfGnZxL5Z8Hogqgddwjj6lPsP/GbMPRX+EvCYB+2RIA4ZMu+98VSQ
+         GP8vc7r2AkrEDMn8Y3E/jZvYUkdpXkNXHzChoAF59G2i5Brqhj0OCSYE6MH7wjc+MN5f
+         m6JJ31zCieMWp+jw1QVUhccQ0GiZKofHF3+pLBfKcn0v1Nq1/rJSE76JSO441fJYUGd6
+         TxnTONKYkvPEsqv22vE9woeWLd0I1t6Zmd7TI1CzxaKTotZMpSmkFLB1/8YFxl99gQ7Y
+         MkSxrzEKV/vh2w7wbbQ/JW761vgswYZdDQ7deVw69s20HRL8+P/AWThR7UZkopwHAHW8
+         b70Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUvqnsa4sZ24eZp53MIhbQVYOYOTTGdVNYvVRSnYUTPNYtVM4J/uWy++wmGXdfEkk3Py4hPjl761/1yBeVpzQCaw+CrXKDucJ6RcmpOWqT3E367fVf6OP/l1/6cyPVXb58F1KvvRhWYaOutcA9nrQ==
+X-Gm-Message-State: AOJu0Yzo60UWksn4uUbWZX0BnrD8BbtZdxiuMfWSXRLuosESP3NAW6YT
+	8XoXfXidPn6ndTwS/yti5EJmsj1c14xtJ9wDxvADOgYtEMrPv2+fgM9bmAbmVa4aXqoNNkUAPPf
+	a6RQojoKejZ4WXEVnYN+9dx/kFsU=
+X-Google-Smtp-Source: AGHT+IGL0lxlQ7j+RDA1jORWHAc/B1SokDm1CZBwo+MTUz8A6W1WHSRs91Jh4B9CH7SVzvSdCrVNv1WyelwCBZOkhlA=
+X-Received: by 2002:a81:ef11:0:b0:622:cc0d:62c3 with SMTP id
+ 00721157ae682-63a8e2d1256mr35838767b3.28.1718821625320; Wed, 19 Jun 2024
+ 11:27:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,12 +57,12 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240619082042.4173621-1-howardchu95@gmail.com>
- <ZnLjT_m90EDtRFE0@x1> <CAM9d7ci+TEXG49=-7oLfFpTakUMHikxGFc-=NhEPPG0sf-UC9g@mail.gmail.com>
-In-Reply-To: <CAM9d7ci+TEXG49=-7oLfFpTakUMHikxGFc-=NhEPPG0sf-UC9g@mail.gmail.com>
+ <20240619082042.4173621-6-howardchu95@gmail.com> <ZnLianWCCEF6ydVO@x1> <CAM9d7cg7yccjLJ8p7DG3JOOmafofJB1jOjsLmfVpjk=xmNBBSw@mail.gmail.com>
+In-Reply-To: <CAM9d7cg7yccjLJ8p7DG3JOOmafofJB1jOjsLmfVpjk=xmNBBSw@mail.gmail.com>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Thu, 20 Jun 2024 02:25:32 +0800
-Message-ID: <CAH0uvoiFvHu-iKJFNHeO1TcQHLMgo60N+1zXFQx3QrLibgEU6w@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] perf trace: Augment enum arguments with BTF
+Date: Thu, 20 Jun 2024 02:26:56 +0800
+Message-ID: <CAH0uvog-ef980ZJ5-LVZLBaogJQGCbh0QoHMZ33XtcMpJVbScA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] perf trace: Add test for enum augmentation
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
 	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
@@ -70,63 +70,102 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ia
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024 at 2:19=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Wed, Jun 19, 2024 at 10:37=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 >
-> Hello,
+> Hi,
 >
-> On Wed, Jun 19, 2024 at 9:55=E2=80=AFAM Arnaldo Carvalho de Melo
+> On Wed, Jun 19, 2024 at 6:51=E2=80=AFAM Arnaldo Carvalho de Melo
 > <acme@kernel.org> wrote:
 > >
-> > On Wed, Jun 19, 2024 at 04:20:37PM +0800, Howard Chu wrote:
-> > > changes in v2:
-> > > - Move inline landlock_add_rule c code to tests/workloads
-> > > - Rename 'enum_aug_prereq' to 'check_vmlinux'
-> >
-> > Usually the versions descriptions comes at the end, after your signatur=
-e
-> > line, just before the list of csets in the series.
-> >
-> > > Augment enum arguments in perf trace, including syscall arguments and
-> > > non-syscall tracepoint arguments. The augmentation is implemented usi=
-ng
-> > > BTF.
+> > On Wed, Jun 19, 2024 at 04:20:42PM +0800, Howard Chu wrote:
+> > > Check for vmlinux's existence in sysfs as prerequisite.
 > > >
-> > > This patch series also includes a bug fix by Arnaldo Carvalho de Melo
-> > > <acme@redhat.com>, which makes more syscalls to be traceable by perf =
-trace.
+> > > Add landlock_add_rule.c workload. Trace landlock_add_rule syscall to =
+see
+> > > if the output is desirable.
 > > >
-> > > Test is included.
+> > > Trace the non-syscall tracepoint 'timer:hrtimer_init' and
+> > > 'timer:hrtimer_start', see if the 'mode' argument is augmented,
+> > > the 'mode' enum argument has the prefix of 'HRTIMER_MODE_'
+> > > in its name.
+> > >
+> > > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > > ---
+> [SNIP]
+> > > diff --git a/tools/perf/tests/workloads/landlock_add_rule.c b/tools/p=
+erf/tests/workloads/landlock_add_rule.c
+> > > new file mode 100644
+> > > index 000000000000..529b5f1ea5a7
+> > > --- /dev/null
+> > > +++ b/tools/perf/tests/workloads/landlock_add_rule.c
+> > > @@ -0,0 +1,32 @@
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +#include <linux/compiler.h>
+> > > +#include <uapi/asm-generic/unistd.h> // for __NR_landlock_add_rule
+> > > +#include <unistd.h>
+> > > +#include <linux/landlock.h>
 > >
-> > Thanks, the patch submission is now very good, at some point you'll be
-> > able to point to a git tree from where to do a pull, then have it with =
-a
-> > signed tag, etc, all this is not necessary at this point in our
-> > collaboration, but as you evolve as a kernel developer, it eventually
-> > will be asked from you.
+> > This file was introduced on linux in 2021, unsure if it will be present
+> > in some of the older distros we test, I'll check with my container test
+> > suite.
 > >
-> > And it comes with a test that introduces a 'perf test -w' workload,
-> > super great!
-> >
-> > - Arnaldo
-> >
-> > > Howard Chu (5):
-> > >   perf trace: Fix iteration of syscall ids in syscalltbl->entries
-> > >   perf trace: Augment enum syscall arguments with BTF
-> > >   perf trace: Augment enum tracepoint arguments with BTF
-> > >   perf trace: Filter enum arguments with enum names
-> > >   perf trace: Add test for enum augmentation
+> > Maybe we'll have to just define those LANDLOCK_ACCESS_FS_READ_FILE,
+> > LANDLOCK_ACCESS_NET_CONNECT_TCP, etc as plain #define to make sure it
+> > builds ok with uCLibc, musl libc and older glibc.
 >
-> Please make sure that your change doesn't break the build
-> in case libbpf is not available.  For example, a build without
-> libelf seems to be broken.
+> Maybe we can check if the syscall number is defined first and
+> include the landlock header.
 >
->   $ make NO_LIBELF=3D1
+> #ifdef __NR_landlock_add_rule
+> #include <linux/landlock.h>
+> ...
 >
-> Thanks,
-> Namhyung
+> Then we need a way to skip the test if it's not defined.
 
-Thank you, I'll fix this.
+Thanks for the suggestion. I'll add this to the workload script.
 
 Thanks,
 Howard
+
+>
+> Thanks,
+> Namhyung
+>
+>
+> >
+> > - Arnaldo
+> >
+> > > +#include "../tests.h"
+> > > +
+> > > +static int landlock_add_rule(int argc __maybe_unused, const char **a=
+rgv __maybe_unused)
+> > > +{
+> > > +     int fd =3D 11;
+> > > +     int flags =3D 45;
+> > > +
+> > > +     struct landlock_path_beneath_attr path_beneath_attr =3D {
+> > > +         .allowed_access =3D LANDLOCK_ACCESS_FS_READ_FILE,
+> > > +         .parent_fd =3D 14,
+> > > +     };
+> > > +
+> > > +     struct landlock_net_port_attr net_port_attr =3D {
+> > > +         .port =3D 19,
+> > > +         .allowed_access =3D LANDLOCK_ACCESS_NET_CONNECT_TCP,
+> > > +     };
+> > > +
+> > > +     syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_PATH_BENEATH,
+> > > +             &path_beneath_attr, flags);
+> > > +
+> > > +     syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_NET_PORT,
+> > > +             &net_port_attr, flags);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +DEFINE_WORKLOAD(landlock_add_rule);
+> > > --
+> > > 2.45.2
+> > >
+> >
