@@ -1,270 +1,321 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B1314E2F5;
-	Wed, 19 Jun 2024 13:28:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FDB1E492;
+	Wed, 19 Jun 2024 13:44:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718803707; cv=none; b=XoHUgIdInMU4sG94L8DrnO4QT0vZn7un7XQs1QV/06OWX2+XKp9DDPA5YRwXp5RmaE7PGJcKVVrf/TB9PmAdO42HS1GA5vpFimChCIkmkHgxspd+fikWizPjfV/i5j6BHiF0NzNk/3GozfJe4nMwG13JqO0m94VMl2ZonEQYh1M=
+	t=1718804664; cv=none; b=SWyysccYEJyLa972ZHdu+5k0dneX1c65NspsMo38hLattT/OKDbLerfF7UP32dNpporWahikOOhECDS3BLjZEB8hJtOAcw6G4u55zjf80WZdOUsBeK7fgPKW7XvgiPuICg9vPx1rW0d1YMCZ1jjKk7u6TE+joes2/CzGslVZ6Z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718803707; c=relaxed/simple;
-	bh=q2wQ31q4JEnfnDeXHlVSXpsQVlkgKJUdKeicKGWjQGQ=;
+	s=arc-20240116; t=1718804664; c=relaxed/simple;
+	bh=Wkexoc0cDdq8jJKOXWR0FU3hrNxUSmtW5T6O6D7F3Yw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qh11tdBW+gKDHlHzEWaqWSn5EcEvavUdyJB4Y9DHUaO7lNHBT56f0eD0vDLJogN98mFq7tOh9EBtTRifvGXrvcdiUwUdcMe33++q4RpZJyUCpyaxgz7ufLQ2wqGIlKQwyi9EHNZkqt5fUykCuBwYkduC/AAL0dy4ipdBB/5dJA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KT2ZcKx6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mV7jZXVS+bwDoo/T0RL7LJg1YJXNy7vNt3mTmpC5AAbQfQqmElVbfNQGdr6/q7jnyjAGe4gvxgk90w8NsdYUXJZe2xBw5r1d+bXUyBVizXTkEP49baGR2315S9oxRUn8JW8P7AwRBtYrQGTZQWNM2yQu4o0xM1mI/NeKpJtWrGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ObJ/Z1FC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KT2ZcKx6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB6A3C4AF49;
-	Wed, 19 Jun 2024 13:28:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ObJ/Z1FC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA67C32781;
+	Wed, 19 Jun 2024 13:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718803706;
-	bh=q2wQ31q4JEnfnDeXHlVSXpsQVlkgKJUdKeicKGWjQGQ=;
+	s=k20201202; t=1718804664;
+	bh=Wkexoc0cDdq8jJKOXWR0FU3hrNxUSmtW5T6O6D7F3Yw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KT2ZcKx6W8Zb6w/izWxY3Xm8FOXdwj8pEvRuzFfmG8W+xizt29tRyx0DwolGUX0vv
-	 W/9hzrVa1lkObVLiYy9RwshGBaHj7fg7YCGc1XiJcQi5vbIkX8LEq/TV5dlwXcAj+j
-	 sgCICaD1wMXYAHGWgGWwIi3Ak6zYK9FyV+GQ0tUkCJ5THp/0eL0mTXZH7n9YRig5sv
-	 +o4DijQQ9dlmnr2X/1PM10Xa7487Ralo1abIIrFL0ASDBUn6Nn489izklkWKfKrVE7
-	 myjp9ar3H0VPbXpQUIOAB5t7wkSicYf6iapiE3qCa6HWuGDFGT6RWoxVtPNN0TBoe6
-	 vc3h81uwIWe1A==
-Date: Wed, 19 Jun 2024 10:28:21 -0300
+	b=ObJ/Z1FCQR6mn0JbTmkcT53fSUEgKgpO/D9aU5ce1jKEF+Ht6qH3Ut7hpkgNvs5aJ
+	 Lzb54kmMWEcq9nQV9PqrReJMnFs6bgYfBCmAdHwVCtC+PJNXKfuH8ISGbnmmXoQBbj
+	 spgVjR6ZGn6/O8kRGUsDfgmEevnk6IDLD3ZEtfSPYdg893QirSIF2tvW4EaoirFzPt
+	 nrJWe29+ObJuD3GkkQ4WjymWrpDhWrh9UZkKNs4K6po8TQtqPR1z1Jk/dMrEeGGWZO
+	 8IBXYfGk/Bk+Pwt+u/767WJFT3NXjEI2AsAmGF/0rWrfNlTmMsQVL6zx7e9BG7h92V
+	 JqEpmWLZtGw/Q==
+Date: Wed, 19 Jun 2024 10:44:18 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: namhyung@kernel.org, irogers@google.com, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	yangjihong1@huawei.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, sandipan.das@amd.com,
-	ananth.narayan@amd.com, santosh.shukla@amd.com
-Subject: Re: [PATCH] perf doc: Add AMD IBS usage document
-Message-ID: <ZnLc9V9UHBFvuqRg@x1>
-References: <20240619092234.1165-1-ravi.bangoria@amd.com>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 2/5] perf trace: Augment enum syscall arguments with
+ BTF
+Message-ID: <ZnLgstTgrFRYu0aD@x1>
+References: <20240619082042.4173621-1-howardchu95@gmail.com>
+ <20240619082042.4173621-3-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240619092234.1165-1-ravi.bangoria@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240619082042.4173621-3-howardchu95@gmail.com>
 
-On Wed, Jun 19, 2024 at 09:22:34AM +0000, Ravi Bangoria wrote:
-> Add a perf man page document that describes how to exploit AMD IBS with
-> Linux perf. Brief intro about IBS and simple one-liner examples will help
-> naive users to get started. This is not meant to be an exhaustive IBS
-> guide. User should refer latest AMD64 Architecture Programmer's Manual
-> for detailed description of IBS.
+On Wed, Jun 19, 2024 at 04:20:39PM +0800, Howard Chu wrote:
+> This is a feature implemented on the basis of the previous bug fix
+> https://lore.kernel.org/linux-perf-users/d18a9606-ac9f-4ca7-afaf-fcf4c951cb90@web.de/T/#t
 > 
-> Usage:
+> In this patch, BTF is used to turn enum value to the corresponding
+> enum variable name. There is only one system call that uses enum value
+> as its argument, that is `landlock_add_rule()`.
 > 
->   $ man perf-amd-ibs
+> The vmlinux btf is loaded lazily, when user decided to trace the
+> `landlock_add_rule` syscall. But if one decides to run `perf trace`
+> without any arguments, the behaviour is to trace `landlock_add_rule`,
+> so vmlinux btf will be loaded by default.
 > 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> before:
+> 
+> ```
+> perf $ ./perf trace -e landlock_add_rule
+>      0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: 2)                                       = -1 EBADFD (File descriptor in bad state)
+>      0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: 1)                                       = -1 EBADFD (File descriptor in bad state)
+> ```
+> 
+> after:
+> 
+> ```
+> perf $ ./perf trace -e landlock_add_rule
+>      0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)                  = -1 EBADFD (File descriptor in bad state)
+>      0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH)              = -1 EBADFD (File descriptor in bad state)
+> ```
+> Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Reviewed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
 > ---
->  tools/perf/Documentation/perf-amd-ibs.txt | 126 ++++++++++++++++++++++
->  tools/perf/Documentation/perf.txt         |   3 +-
->  2 files changed, 128 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/Documentation/perf-amd-ibs.txt
+>  tools/perf/builtin-trace.c | 96 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 91 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-> new file mode 100644
-> index 000000000000..d3dfa71e320c
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
-> @@ -0,0 +1,126 @@
-> +perf-amd-ibs(1)
-> +===============
-> +
-> +NAME
-> +----
-> +perf-amd-ibs - Support for AMD Instruction-Based Sampling with perf tool
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf record' -e ibs_op//
-> +'perf record' -e ibs_fetch//
-> +
-> +DESCRIPTION
-> +-----------
-> +
-> +Instruction-Based Sampling (IBS) provides precise Instruction Pointer (IP)
-> +profiling support on AMD platforms. IBS has two independent components: IBS
-> +Op and IBS Fetch. IBS Op sampling provides information about instruction
-> +execution (micro-op execution to be precise) with details like d-cache
-> +hit/miss, d-TLB hit/miss, cache miss latency, load/store data source, branch
-> +behavior etc. IBS Fetch sampling provides information about instruction fetch
-> +with details like i-cache hit/miss, i-TLB hit/miss, fetch latency etc. IBS is
-> +per-smt-thread i.e. each SMT hardware thread contains standalone IBS units.
-> +
-> +Both, IBS Op and IBS Fetch, are exposed as PMUs by Linux and can be exploited
-> +using Linux perf utility. Following files will be created at boot time if IBS
-        the                  The
-> +is supported by the hardware and kernel.
-> +
-> +  /sys/bus/event_source/devices/ibs_op/
-> +  /sys/bus/event_source/devices/ibs_fetch/
-> +
-> +IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supports
-> +one event: fetch ops.
-> +
-> +IBS VS. REGULAR CORE PMU
-> +------------------------
-> +
-> +IBS gives samples with precise IP, i.e. the IP recorded with IBS sample has
-> +no skid. Whereas the IP recorded by regular core PMU will have some skid
-> +(sample was generated at IP X but perf would record it at IP X+n). Hence,
-> +regular core PMU might not help for profiling with instruction level
-> +precision. Further, IBS provides additional information about the sample in
-> +question. On the other hand, regular core PMU has it's own advantages like
-> +plethora of events, counting mode (less interference), up to 6 parallel
-> +counters, event grouping support, filtering capabilities etc.
-
-IIRC if one does:
-
-   perf record -e cycles:P
-
-on AMD systems it maps it to 
-
-   ibs_op//
-
-No?
-
-I don't have access right now to my 5950X, so its from memory, about
-"IBS invocation from core PMUs with precise_ip set"
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=78075d947534013b4575687d19ebcbbb6d3addcd
-
-One other thing to mention is 'perf mem record' that will use ibs_op//
-as we can see in the cover letter for this perf-tools merge commit
-upstream:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9d64bf433c53cab2f48a3fff7a1f2a696bc5229a
-
-         # perf mem record -a --filter 'mem_op == load || mem_op == store, ip > 0x8000000000000000'
-         ^C[ perf record: Woken up 1 times to write data ]
-         [ perf record: Captured and wrote 2.199 MB perf.data (2913 samples) ]
-         #
-         # ls -la perf.data
-         -rw-------. 1 root root 2346486 Jan  9 18:36 perf.data
-         # perf evlist
-         ibs_op//
-         dummy:u
-         # perf evlist -v
-         ibs_op//: type: 11, size: 136, config: 0, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT, read_format: ID, disabled: 1, inherit: 1, freq: 1, sample_id_all: 1
-
-Another examples available in the merge commit of when ibs_op support
-was added to 'perf c2c' and 'perf mem':
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=d465bff130bf4ca17b6980abe51164ace1e0cba4
-
-Showing how you can use 'perf report -D' to extract info about these
-samples should be interesting as well:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0429796e45ec17eee26d7a59de92271c275d7666
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=291dcb98d7ee5cd719f4c5991d977794b1829c16
-
-> +EXAMPLES
-> +--------
-> +
-> +IBS Op PMU
-> +~~~~~~~~~~
-> +
-> +System-wide profile, cycles event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_op// -c 100000 -a
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_op// -c 100000 -C 10
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling freq: 1000
-> +
-> +	$ sudo perf record -e ibs_op// -F 1000 -C 10
-> +
-> +System-wide profile, uOps event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_op/cnt_ctl=1/ -c 100000 -a
-> +
-> +Same command, but also capture IBS register raw dump along with perf sample:
-> +
-> +	$ sudo perf record -e ibs_op/cnt_ctl=1/ -c 100000 -a --raw-samples
-> +
-> +System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Zen4 onward)
-> +
-> +	$ sudo perf record -e ibs_op/cnt_ctl=1,l3missonly=1/ -c 100000 -a
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_op/cnt_ctl=1/ -c 100000 -p 1234
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_op/cnt_ctl=1/ -c 100000 -- ls
-> +
-> +To analyse recorded profile in aggregate mode
-> +
-> +	$ sudo perf report
-> +	/* Select a line and press 'a' to drill down at instruction level. */
-> +
-> +To go over each sample
-> +
-> +	$ sudo perf script
-
-Here I think it would be to have an example of such output.
-> +
-> +Raw dump of IBS registers when profiled with --raw-samples
-> +
-> +	$ sudo perf report -D
-> +	/* Look for PERF_RECORD_SAMPLE */
-
-Ditto
-
-> +
-> +IBS applied in a real world usecase
-> +
-> +~90% regression was observed in tbench with specific scheduler hint which
-> +was counter intuitive. IBS profile of good and bad run captured using perf
-> +helped in identifying exact cause of the problem:
-> +
-> +	https://lore.kernel.org/r/20220921063638.2489-1-kprateek.nayak@amd.com
-> +
-> +IBS Fetch PMU
-> +~~~~~~~~~~~~~
-> +
-> +Similar commands can be used with Fetch PMU as well.
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000
-> +
-> +	$ sudo perf record -e ibs_fetch// -c 100000 -a
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000, Random enable
-> +
-> +	$ sudo perf record -e ibs_fetch/rand_en=1/ -c 100000 -a
-> +
-> +etc.
-> +
-> +SEE ALSO
-> +--------
-> +
-> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1]
-
-perf-mem, perf-c2c
-
-> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-> index 09f516f3fdfb..cbcc2e4d557e 100644
-> --- a/tools/perf/Documentation/perf.txt
-> +++ b/tools/perf/Documentation/perf.txt
-> @@ -82,7 +82,8 @@ linkperf:perf-stat[1], linkperf:perf-top[1],
->  linkperf:perf-record[1], linkperf:perf-report[1],
->  linkperf:perf-list[1]
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index c4fa8191253d..d93f34e9af74 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -19,6 +19,7 @@
+>  #ifdef HAVE_LIBBPF_SUPPORT
+>  #include <bpf/bpf.h>
+>  #include <bpf/libbpf.h>
+> +#include <bpf/btf.h>
+>  #ifdef HAVE_BPF_SKEL
+>  #include "bpf_skel/augmented_raw_syscalls.skel.h"
+>  #endif
+> @@ -110,6 +111,11 @@ struct syscall_arg_fmt {
+>  	const char *name;
+>  	u16	   nr_entries; // for arrays
+>  	bool	   show_zero;
+> +	bool	   is_enum;
+> +	struct {
+> +		void	*entries;
+> +		u16	nr_entries;
+> +	}	   btf_entry;
+>  };
 >  
-> -linkperf:perf-annotate[1],linkperf:perf-archive[1],linkperf:perf-arm-spe[1],
-> +linkperf:perf-amd-ibs[1], linkperf:perf-annotate[1],
-> +linkperf:perf-archive[1], linkperf:perf-arm-spe[1],
->  linkperf:perf-bench[1], linkperf:perf-buildid-cache[1],
->  linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
->  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
+>  struct syscall_fmt {
+> @@ -140,6 +146,7 @@ struct trace {
+>  #ifdef HAVE_BPF_SKEL
+>  	struct augmented_raw_syscalls_bpf *skel;
+>  #endif
+> +	struct btf		*btf;
+>  	struct record_opts	opts;
+>  	struct evlist	*evlist;
+>  	struct machine		*host;
+> @@ -897,6 +904,56 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+>  	    .strtoul	= STUL_STRARRAY_FLAGS, \
+>  	    .parm	= &strarray__##array, }
+>  
+> +static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall_arg_fmt *arg_fmt)
+> +{
+> +	const struct btf_type *bt;
+> +	char enum_prefix[][16] = { "enum", "const enum" }, *ep;
+> +	int id;
+> +	size_t i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(enum_prefix); i++) {
+> +		ep = enum_prefix[i];
+> +		if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
+
+No need for the strlen test? I.e. plain using strstarts() should be
+enough?
+
+> +			type += strlen(ep) + 1;
+> +	}
+> +
+> +	id = btf__find_by_name(btf, type);
+> +	if (id < 0)
+> +		return -1;
+> +
+> +	bt = btf__type_by_id(btf, id);
+> +	if (bt == NULL)
+
+a pr_debug() stating that something that tracefs says should be in BTF
+and isn't found there seems to be of value here.
+
+> +		return -1;
+> +
+> +	arg_fmt->btf_entry.entries    = btf_enum(bt);
+> +	arg_fmt->btf_entry.nr_entries = btf_vlen(bt);
+> +
+> +	return 0;
+> +}
+> +
+> +static size_t btf_enum_scnprintf(char *bf, size_t size, int val, struct btf *btf, char *type,
+> +				 struct syscall_arg_fmt *arg_fmt)
+> +{
+> +	struct btf_enum *be;
+> +	int i;
+> +
+> +	/* if btf_entry is NULL, find and save it to arg_fmt */
+> +	if (arg_fmt->btf_entry.entries == NULL)
+> +		if (btf_enum_find_entry(btf, type, arg_fmt))
+> +			return 0;
+> +
+> +	be = (struct btf_enum *)arg_fmt->btf_entry.entries;
+
+	struct btf_enum *be = (struct btf_enum *)arg_fmt->btf_entry.entries;
+
+ arg_fmt->btf_entry.entries is (void *), so we don't need the (struct
+btf_enum *) cast here, removing it makes the code more compact. And
+since we move the declaration to the same line, the info about its type
+is there as well.
+
+> +
+> +	for (i = 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
+
+         
+	for (int i = 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
+
+⬢[acme@toolbox perf-tools-next]$ git grep 'for (int ' tools/perf/ | wc -l
+99
+⬢[acme@toolbox perf-tools-next]$
+
+Doing it this way makes the code more compact and is allowed even in
+kernel code since some time ago:
+
+⬢[acme@toolbox perf-tools-next]$ git grep 'for (int ' drivers/ | wc -l
+294
+⬢[acme@toolbox perf-tools-next]$ git grep 'for (int ' kernel/ | wc -l
+12
+⬢[acme@toolbox perf-tools-next]$ git grep 'for (int ' net/ | wc -l
+3
+⬢[acme@toolbox perf-tools-next]$ git grep 'for (int ' mm/ | wc -l
+21
+⬢[acme@toolbox perf-tools-next]$
+
+> +		if (be->val == val) {
+> +			return scnprintf(bf, size, "%s",
+> +					 btf__name_by_offset(btf, be->name_off));
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  #include "trace/beauty/arch_errno_names.c"
+>  #include "trace/beauty/eventfd.c"
+>  #include "trace/beauty/futex_op.c"
+> @@ -1699,6 +1756,15 @@ static void trace__symbols__exit(struct trace *trace)
+>  	symbol__exit();
+>  }
+>  
+> +static void trace__load_vmlinux_btf(struct trace *trace)
+> +{
+> +	trace->btf = btf__load_vmlinux_btf();
+> +	if (verbose > 0) {
+> +		fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
+> +						    "Failed to load vmlinux BTF\n");
+> +	}
+> +}
+> +
+>  static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+>  {
+>  	int idx;
+> @@ -1744,7 +1810,7 @@ static const struct syscall_arg_fmt *syscall_arg_fmt__find_by_name(const char *n
+>  }
+>  
+>  static struct tep_format_field *
+> -syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
+> +syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field, bool *use_btf)
+>  {
+>  	struct tep_format_field *last_field = NULL;
+>  	int len;
+> @@ -1782,6 +1848,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+>  			 * 7 unsigned long
+>  			 */
+>  			arg->scnprintf = SCA_FD;
+> +		} else if (strstr(field->type, "enum") && use_btf != NULL) {
+> +			*use_btf = arg->is_enum = true;
+
+Here you have to check if use_btf is NULL, as you, in this patch, later
+call syscall_arg_fmt__init_array(arg, field, NULL) in
+evsel__init_tp_arg_scnprintf(), probably you tested it all at the end of
+the patch series, we have to make sure that it works after each patch,
+so that we keep the codebase bisectable.
+
+>  		} else {
+>  			const struct syscall_arg_fmt *fmt =
+>  				syscall_arg_fmt__find_by_name(field->name);
+> @@ -1796,9 +1864,10 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+>  	return last_field;
+>  }
+>  
+> -static int syscall__set_arg_fmts(struct syscall *sc)
+> +static int syscall__set_arg_fmts(struct syscall *sc, bool *use_btf)
+>  {
+> -	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
+> +	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args,
+> +									  use_btf);
+>  
+>  	if (last_field)
+>  		sc->args_size = last_field->offset + last_field->size;
+> @@ -1810,7 +1879,9 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+>  {
+>  	char tp_name[128];
+>  	struct syscall *sc;
+> +	int err;
+>  	const char *name = syscalltbl__name(trace->sctbl, id);
+> +	bool use_btf = false;
+>  
+>  #ifdef HAVE_SYSCALL_TABLE_SUPPORT
+>  	if (trace->syscalls.table == NULL) {
+> @@ -1883,7 +1954,12 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+>  	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+>  	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+>  
+> -	return syscall__set_arg_fmts(sc);
+> +	err = syscall__set_arg_fmts(sc, &use_btf);
+> +
+> +	if (use_btf && trace->btf == NULL)
+> +		trace__load_vmlinux_btf(trace);
+> +
+> +	return err;
+>  }
+>  
+>  static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+> @@ -1891,7 +1967,7 @@ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+>  	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
+>  
+>  	if (fmt != NULL) {
+> -		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
+> +		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, NULL);
+>  		return 0;
+>  	}
+>  
+> @@ -2103,6 +2179,16 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+>  			if (trace->show_arg_names)
+>  				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+>  
+> +			if (sc->arg_fmt[arg.idx].is_enum && trace->btf) {
+> +				size_t p = btf_enum_scnprintf(bf + printed, size - printed, val,
+> +							      trace->btf, field->type,
+> +							      &sc->arg_fmt[arg.idx]);
+> +				if (p) {
+> +					printed += p;
+> +					continue;
+> +				}
+> +			}
+> +
+>  			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+>  								  bf + printed, size - printed, &arg, val);
+>  		}
 > -- 
 > 2.45.2
+> 
