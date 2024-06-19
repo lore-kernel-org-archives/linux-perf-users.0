@@ -1,502 +1,337 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFB582495;
-	Wed, 19 Jun 2024 18:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4E1F320F;
+	Wed, 19 Jun 2024 18:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718820278; cv=none; b=gg072KmwZ8T4RrkpunSdvZUl8P67f+g+kVV93nsBvMb+eZFz4yMkkubL59ZDEh8cirgZapzpUE/P32tNq1Vdq48HFT1Tr5Ddy728gKbU3v3HcnunSsyjHOA0XXlNV250cAfkoo3G/gkyMHwtx59cNq9Ec4jGCs/qHTVkP9zxnjQ=
+	t=1718821143; cv=none; b=PypiJeWfnwOls9wxjtx7whNYSNTMp7x7EranRuaPZ//tTH5UgSGQB8UaS0yNpuHpB50Dg5kOzLvXuDsLRMd1YWvxlKa93VymZ+IKd8AwR51DYlhHF3C+rc22oyLxo0uVNprMzuF5xUKERg01zUE52jPidm3YUG6mib72YU88zL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718820278; c=relaxed/simple;
-	bh=AaoDLJ47aPjIgQWiVaFoz4g2wqoXtP83LKSzDA2nboE=;
+	s=arc-20240116; t=1718821143; c=relaxed/simple;
+	bh=S+3Vqh5QpZi+T0ckYeETyCuU0PraOYcKQ8R5+e90PfM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GPsBTkAIwvZF0ttC6QBxiY0vP3mDs6ScU5C0QB2LzbCx7yPcajN6TEULAnaLuhrXughmjUJA3OJBLlUTUPCSNuasR9AY7Q960aeG3J3SZatHSvMdXbCVtWK1WO2fHssXIdCzBiXdlRVa/oARcW7kUrcIiV0arPTFxhdQlOhL1kk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	 To:Cc:Content-Type; b=SRfB9oPJ9CcQyRdUJpq8UT1+56mA1LiES/ODUk7WNmG30RkUOrhtws4C8qV8Ii3uxjiIWqaw5GfHqgSB7vCNtijxg94fPI/o5RSt69O0EfOhG4ZfsFN4zkt+QN2F81C1xwLn/LhgtMSLCXjtnXsTCXvaFqXy0f96ryrBjjdyM7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nh++6Q/u; arc=none smtp.client-ip=209.85.219.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-2c7ab3d2c87so96647a91.0;
-        Wed, 19 Jun 2024 11:04:36 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nh++6Q/u"
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-e026a2238d8so68101276.0;
+        Wed, 19 Jun 2024 11:19:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718821141; x=1719425941; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BEu13VmwcSkhfhpPbkBAnM2Q6uhPY+UHM/UDHukSj8A=;
+        b=nh++6Q/usgTVd2A82Lufk1vyizvOZ5uE/eGjsv6uamPITlIluNKmo74mRBchGjiX6r
+         iQJYv31Oil2P5Ipt9RHbtWRLgezL6n7xvb7njUNS2UsWfSdTlq/Keiln6S0SN9Yhnj4g
+         eeOg5uMwZWJjd9bFcGkdg3ox0OW5hWESr+EtjYzitfL03BXou6P10dofK7IVo6SB0CZn
+         LtKpkzW1MTL0yWcv9AJp4bxaE75eMWljF8XVKwG0qK+sfvyFNR0+9ge/XCJFlRO67WVV
+         2BGuXewie4/Pj2iSWZC9IF01rBBhAdLtN5p2EYRF1cPbmq8Ez4OhcAkS/D0ZZId9iq2J
+         MerQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718820276; x=1719425076;
+        d=1e100.net; s=20230601; t=1718821141; x=1719425941;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=A8ZhsocAv7mxK4+EAYdNO5DKRdJ2Di9Hukmg9ZVB8uw=;
-        b=TCZeiDZ1bzLCeAVzq+A8RNSWg4Ns9hZRfDljjhL9qweYUOM+G0wIkARLrz6LzmNtBH
-         mIZxdHpwUT8qZDj0bCsXLkKUr0j6xwCNLwZuMINkoutzCNdNPDCBUgRjhV8tazwJYzDC
-         H6qHqu1XVOYzJqUyatGssUvfKFPGjX5rOVTPjejOfT3qsMOnhhhntTsvh0gViCVCFaGk
-         AOR7d5TP8fwAO2WYxD/U7y0UClfEgGzbRfdWdYi/05QKKnpB5jQCfHtQSqKczSf4GP3Z
-         IM065+NaNS8a9ZmxdtEE30pKQdW+Z9Vqy3CTE7FRuUpNznFKUhXkTb1OCJBRhLhXyKvu
-         y1WA==
-X-Forwarded-Encrypted: i=1; AJvYcCUaNWoPHvmO/w/khEQbE5RjZdPrEiZZID63G+IMfQvll7F1Q5M4Ct3nvTc/Qx0CdQtUv0/c52lVGkiv+z1A/qPOM4LQZfuCAcf/wHTI8afVO1BG6oVCGYOi1x5Fg8kEVrz0+hKCgTUZ/8+gOgGmeg==
-X-Gm-Message-State: AOJu0Yy2oXnNe4WnDOG2TQsPKNhLZH2zg/XWJreDUURJf0IbdRPqYsvy
-	oTrHF+eKR+L+1k5zfXCsOypmFAAexRAd+McOofZ+NRdp7h5/2kGYhGCyNamB0U4JiERTXrCJJif
-	VNBSk7F0+1pNzvdDuDygkbCipaK8=
-X-Google-Smtp-Source: AGHT+IES3BRiSafkq/0FIS7PiugsFIc+I9+nOLDPRn5tQz4oHO2BHLdvXkBXrA3qH1jaaMYOhef/hGRffXHoDq6+Wg0=
-X-Received: by 2002:a17:90a:e28e:b0:2c2:f6c1:4d87 with SMTP id
- 98e67ed59e1d1-2c7b5cc9ff5mr3310261a91.20.1718820275579; Wed, 19 Jun 2024
- 11:04:35 -0700 (PDT)
+        bh=BEu13VmwcSkhfhpPbkBAnM2Q6uhPY+UHM/UDHukSj8A=;
+        b=SQydkvEPX7QrSjQot8VZWdIvYDgBY+e3YHVJ8z88BCxsWohJvS4k1pbUPIaabj6Dy0
+         gomSNmOURG8rEy5atrYMKJXBYYzhclr/L1eRHCkt8ZqZcBMu4UFAv+bUi9EZOIVvo+jP
+         JM7o9EXk2dayjdZBtX4Gr/EX50cfS1ZZGZnrKE3208ZQ1YDCb7/vJ/xO3BX/2yE9DF1D
+         4rX6wlOdB6qsipRM03M06bErTkb2J8hYwmiiI15n0uxE2SvWSjh+jca87YDdJPtTWTDt
+         gSJ/Qu4u8AHdQzUk8fnQnzGm1ejy1/lxjdKMCI13myNFdkyURHqGEBVGQP7JY2vixfFz
+         jZxQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUvivDRyodxXBFXxIdDdM6OYyx5gA+Slx67NTwdezJeElm3eSWiTnvrucdEcU58jiF3GHm6TSWALKQFWH0uLF3MTvRhYvQ7QYLkvVkXm15qotupxsh7SzyRx3zklV7dRoEP9w47HnwIxaV4O2qb5w==
+X-Gm-Message-State: AOJu0YzCfJnQ1EIBuCwPCZzPgXfv/EdczzZt1oLl1tH5aSF+Gdos71If
+	iUMVd8DTkINvGjv+4H/hkhCKKm9rXKjFYNaG2Kx9FHYk4XOfZGgpm7zywKxJUCEYI3XMIwGbAWU
+	VvAtwYOFTBKwHZno1QP/4AZlUQVSba/xPnpxiDGw6
+X-Google-Smtp-Source: AGHT+IE2+h+HBJ/WO5HggIuHtfZercrlYGnR/xp47MaSNvxeZ9Prc8MjI9IKBWX6AqC+LuY1/Nnfwa2GLYVH152nZog=
+X-Received: by 2002:a25:bc91:0:b0:dfb:97b:479a with SMTP id
+ 3f1490d57ef6-e02be20b8f8mr3711631276.50.1718821140691; Wed, 19 Jun 2024
+ 11:19:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
- <588beeaf-2015-40f4-a34b-e36556e20707@arm.com> <DA51C986-34EE-4849-B9C4-DB69E2ECF75C@linux.vnet.ibm.com>
- <5a0edf86-fe42-41d6-aa9a-8e88c1ad3f4c@arm.com>
-In-Reply-To: <5a0edf86-fe42-41d6-aa9a-8e88c1ad3f4c@arm.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 19 Jun 2024 14:04:24 -0400
-Message-ID: <CAM9d7cj6dRjppQtncwKuu_XhJPv33PKZWG7_kAgBXG9Y0fYH3Q@mail.gmail.com>
-Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
- fail when kernel debuginfo is not present
-To: James Clark <james.clark@arm.com>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, LKML <linux-kernel@vger.kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com, 
-	Madhavan Srinivasan <maddy@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Disha Goel <disgoel@linux.vnet.ibm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ian Rogers <irogers@google.com>, Veronika Molnarova <vmolnaro@redhat.com>, 
-	Michael Petlan <mpetlan@redhat.com>
+References: <20240619082042.4173621-1-howardchu95@gmail.com>
+ <20240619082042.4173621-5-howardchu95@gmail.com> <ZnLhwFuQvP59p1BJ@x1>
+In-Reply-To: <ZnLhwFuQvP59p1BJ@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 20 Jun 2024 02:18:51 +0800
+Message-ID: <CAH0uvoiUOQngNGPh+tK957vEdbyyzqyy8T4jJGpyqMD9PDKAbA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] perf trace: Filter enum arguments with enum names
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+You are right! What a silly mistake, I duplicated a line of code.
+Sorry about that.
 
-Adding Veronika and Michael to CC.
-
-Thanks,
-Namhyung
-
-
-On Tue, Jun 18, 2024 at 6:44=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Wed, Jun 19, 2024 at 9:48=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
+> On Wed, Jun 19, 2024 at 04:20:41PM +0800, Howard Chu wrote:
+> > Before:
+> >
+> > perf $ ./perf trace -e timer:hrtimer_start --filter=3D'mode!=3DHRTIMER_=
+MODE_ABS_PINNED_HARD' --max-events=3D1
+> > No resolver (strtoul) for "mode" in "timer:hrtimer_start", can't set fi=
+lter "(mode!=3DHRTIMER_MODE_ABS_PINNED_HARD) && (common_pid !=3D 281988)"
+> >
+> > After:
+> >
+> > perf $ ./perf trace -e timer:hrtimer_start --filter=3D'mode!=3DHRTIMER_=
+MODE_ABS_PINNED_HARD' --max-events=3D1
+> >      0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, functi=
+on: 0xffffffffa77a5be0, expires: 12351248764875, softexpires: 1235124876487=
+5, mode: HRTIMER_MODE_ABS)
+> >
+> > && and ||:
+> >
+> > perf $ ./perf trace -e timer:hrtimer_start --filter=3D'mode !=3D HRTIME=
+R_MODE_ABS_PINNED_HARD && mode !=3D HRTIMER_MODE_ABS' --max-events=3D1
+> >      0.000 Hyprland/534 timer:hrtimer_start(hrtimer: 0xffff9497801a84d0=
+, function: 0xffffffffc04cdbe0, expires: 12639434638458, softexpires: 12639=
+433638458, mode: HRTIMER_MODE_REL)
+> >
+> > perf $ ./perf trace -e timer:hrtimer_start --filter=3D'mode =3D=3D HRTI=
+MER_MODE_REL || mode =3D=3D HRTIMER_MODE_PINNED' --max-events=3D1
+> >      0.000 ldlck-test/60639 timer:hrtimer_start(hrtimer: 0xffffb16404ee=
+7bf8, function: 0xffffffffa7790420, expires: 12772614418016, softexpires: 1=
+2772614368016, mode: HRTIMER_MODE_REL)
+> >
+> > Switching it up, using both enum name and integer value(--filter=3D'mod=
+e =3D=3D HRTIMER_MODE_ABS_PINNED_HARD || mode =3D=3D 0'):
+> >
+> > perf $ ./perf trace -e timer:hrtimer_start --filter=3D'mode =3D=3D HRTI=
+MER_MODE_ABS_PINNED_HARD || mode =3D=3D 0' --max-events=3D3
+> >      0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, functi=
+on: 0xffffffffa77a5be0, expires: 12601748739825, softexpires: 1260174873982=
+5, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+> >      0.036 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, functi=
+on: 0xffffffffa77a5be0, expires: 12518758748124, softexpires: 1251875874812=
+4, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+> >      0.172 tmux: server/41881 timer:hrtimer_start(hrtimer: 0xffffb16408=
+1e7838, function: 0xffffffffa7790420, expires: 12518768255836, softexpires:=
+ 12518768205836, mode: HRTIMER_MODE_ABS)
+> >
+> > P.S.
+> > perf $ pahole hrtimer_mode
+> > enum hrtimer_mode {
+> >         HRTIMER_MODE_ABS             =3D 0,
+> >         HRTIMER_MODE_REL             =3D 1,
+> >         HRTIMER_MODE_PINNED          =3D 2,
+> >         HRTIMER_MODE_SOFT            =3D 4,
+> >         HRTIMER_MODE_HARD            =3D 8,
+> >         HRTIMER_MODE_ABS_PINNED      =3D 2,
+> >         HRTIMER_MODE_REL_PINNED      =3D 3,
+> >         HRTIMER_MODE_ABS_SOFT        =3D 4,
+> >         HRTIMER_MODE_REL_SOFT        =3D 5,
+> >         HRTIMER_MODE_ABS_PINNED_SOFT =3D 6,
+> >         HRTIMER_MODE_REL_PINNED_SOFT =3D 7,
+> >         HRTIMER_MODE_ABS_HARD        =3D 8,
+> >         HRTIMER_MODE_REL_HARD        =3D 9,
+> >         HRTIMER_MODE_ABS_PINNED_HARD =3D 10,
+> >         HRTIMER_MODE_REL_PINNED_HARD =3D 11,
+> > };
+> >
+> > Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Reviewed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/builtin-trace.c | 89 ++++++++++++++++++++++++++++++++------
+> >  1 file changed, 76 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index bd16679fb4c0..1148c3edee97 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -904,11 +904,36 @@ static size_t syscall_arg__scnprintf_getrandom_fl=
+ags(char *bf, size_t size,
+> >           .strtoul    =3D STUL_STRARRAY_FLAGS, \
+> >           .parm       =3D &strarray__##array, }
+> >
+> > -static int btf_enum_find_entry(struct btf *btf, char *type, struct sys=
+call_arg_fmt *arg_fmt)
+> > +#define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
 >
+> The above seems unrelated? (The definition of SCA_GETRANDOM_FLAGS) as it
+> is not used in any other place in this patch, right?
 >
-> On 17/06/2024 17:47, Athira Rajeev wrote:
-> >
-> >
-> >> On 17 Jun 2024, at 8:30=E2=80=AFPM, James Clark <james.clark@arm.com> =
-wrote:
-> >>
-> >>
-> >>
-> >> On 17/06/2024 13:21, Athira Rajeev wrote:
-> >>> Running "perftool-testsuite_probe" fails as below:
-> >>>
-> >>> ./perf test -v "perftool-testsuite_probe"
-> >>> 83: perftool-testsuite_probe  : FAILED
-> >>>
-> >>> There are three fails:
-> >>>
-> >>> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode=
-_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
-> >>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added pr=
-obe :: perf probe -l (output regexp parsing)
-> >>>
-> >>
-> >> On a machine where NO_DEBUGINFO gets set, this one skips for me. But o=
-n
-> >> a machine where there _is_ debug info this test still fails.
-> >>
-> >> But in both cases the probe looks like it was added successfully. So I=
-'m
-> >> wondering if this one does need to be skipped, or it's just always
-> >> failing? Do you have this test passing anywhere where there is debug i=
-nfo?
-> >>
-> >> The list command looks like it successfully lists the probe for me in
-> >> both cases, it just doesn't have an address on the end:
-> >>
-> >> perf list 'probe:*'
-> >>
-> >>   probe:inode_permission (on inode_permission)
-> >>
-> >> Does the missing address mean anything or is it just not handled
-> >> properly by the test?
-> >>
-> >> Ironically the machine that _does_ pass the debug info test also print=
-s
-> >> this, but it looks like it still adds and lists the probe correctly:
-> >>
-> >>  perf probe -l probe:*
-> >>
-> >>  Failed to find debug information for address 0xffff80008047ac30
-> >>    probe:inode_permission (on inode_permission)
-> >
-> > Hi James,
-> >
-> > Thanks for checking this patch.
-> >
-> > In environment where kernel is compiled with debuginfo:
-> >
-> > 1) Add probe point
-> >
-> > # ./perf probe --add inode_permission
-> > Added new event:
-> >   probe:inode_permission (on inode_permission)
-> >
-> > You can now use it in all perf tools, such as:
-> >
-> > perf record -e probe:inode_permission -aR sleep 1
-> >
-> >
-> > 2) Check using perf probe -l
-> >
-> > # ./perf probe -l
-> > probe:inode_permission (on inode_permission:2@fs/namei.c)
-> >
-> > With debuginfo, the result has additional info.
-> >  The test looks for matching pattern "\s*probe:inode_permission(?:_\d+)=
-?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)=E2=80=9D in result
-> > where it is expecting "inode_permission:2@fs/namei.c=E2=80=9D . The =E2=
-=80=9C@fs/namei.c=E2=80=9D info needs debuginfo here.
-> >
+> - Arnaldo
 >
-> Hi Athira,
->
-> Maybe there is a real bug and this patch is ok to go in and we should lea=
-ve
-> it as failing. Probe -L shows there is debug info available for inode_per=
-mission:
->
->    $ ./perf probe -L inode_permission
->
->   <inode_permission@linux/fs/namei.c:0>
->       0  int inode_permission(struct mnt_idmap *idmap,
->                              struct inode *inode, int mask)
->   ... more source code ...
->
-> But probe -l has an error which could be related to the following
-> line not showing the filename details:
->
->   $ ./perf probe -l
->
->   Failed to find debug information for address 0xffff80008047ac30
->     probe:inode_permission (on inode_permission)
->
-> I'm running a clang kernel and sometimes I see issues with debug
-> info or toolchain stuff, that could be the reason.
->
-> > The function I am using in patch to check for debuginfo (skip_if_no_deb=
-uginfo) is from "tests/shell/lib/probe_vfs_getname.sh"
+> > +
+> > +static const struct btf_type *btf_find_type(struct btf *btf, char *typ=
+e)
+> >  {
+> >       const struct btf_type *bt;
+> > +     int id =3D btf__find_by_name(btf, type);
+> > +
+> > +     if (id < 0)
+> > +             return NULL;
+> > +
+> > +     bt =3D btf__type_by_id(btf, id);
+> > +     if (bt =3D=3D NULL)
+> > +             return NULL;
+> > +
+> > +     return bt;
+> > +}
+> > +
+> > +struct btf_parm {
+> > +     struct btf *btf;
+> > +     char *type;
+> > +};
+> > +
+> > +static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struc=
+t syscall_arg *arg, u64 *val)
+> > +{
+> > +     struct btf_parm *bparm =3D arg->parm;
+> > +     struct btf *btf =3D bparm->btf;
+> > +     char *type      =3D bparm->type;
+> >       char enum_prefix[][16] =3D { "enum", "const enum" }, *ep;
+> > -     int id;
+> > +     struct btf_enum *be;
+> > +     const struct btf_type *bt;
+> >       size_t i;
 > >
-> > skip_if_no_debuginfo() {
-> >         add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find th=
-e path for the kernel|Debuginfo-analysis is not supported)|(file has no deb=
-ug information)" && return 2
-> >         return 1
-> > }
+> >       for (i =3D 0; i < ARRAY_SIZE(enum_prefix); i++) {
+> > @@ -917,11 +942,38 @@ static int btf_enum_find_entry(struct btf *btf, c=
+har *type, struct syscall_arg_f
+> >                       type +=3D strlen(ep) + 1;
+> >       }
 > >
-> > So the debuginfo test passes in your case since the log has "Failed to =
-find debug information=E2=80=9D which is not present in above grep string.
+> > -     id =3D btf__find_by_name(btf, type);
+> > -     if (id < 0)
+> > -             return -1;
+> > +     bt =3D btf_find_type(btf, type);
+> > +     if (bt =3D=3D NULL)
+> > +             return false;
 > >
->
-> It passes because there is debug info for getname_flags() which is what t=
-he
-> debug info check looks for. After some greps and seds it ultimately does =
-this
-> which succeeds:
->
->  $ perf probe "vfs_getname=3Dgetname_flags:72 pathname=3Dresult->name:str=
-ing"
->
->  Added new event:
->     probe:vfs_getname    (on getname_flags:72 with pathname=3Dresult->nam=
-e:string)
->
-> "Failed to find debug information for address" is only ever printed
-> with "perf probe -l" when there are probes added. The stderr
-> of that command is never piped into any grep anyway, which is why I
-> see it on the test output.
->
-> So "probe -L" is working but "probe -l" isn't. Ultimately it looks like a=
- real
-> issue and we should leave the failure in.
->
-> > James,
+> > -     bt =3D btf__type_by_id(btf, id);
+> > +     for (be =3D btf_enum(bt), i =3D 0; i < btf_vlen(bt); ++i, ++be) {
+> > +             const char *name =3D btf__name_by_offset(btf, be->name_of=
+f);
+> > +             int max_len =3D max(size, strlen(name));
+> > +
+> > +             if (strncmp(name, bf, max_len) =3D=3D 0) {
+> > +                     *val =3D be->val;
+> > +                     return true;
+> > +             }
+> > +     }
+> > +
+> > +     return false;
+> > +}
+> > +
+> > +#define STUL_BTF_ENUM syscall_arg__strtoul_btf_enum
+> > +
+> > +static int btf_enum_find_entry(struct btf *btf, char *type, struct sys=
+call_arg_fmt *arg_fmt)
+> > +{
+> > +     char enum_prefix[][16] =3D { "enum", "const enum" }, *ep;
+> > +     const struct btf_type *bt;
+> > +     size_t i;
+> > +
+> > +     for (i =3D 0; i < ARRAY_SIZE(enum_prefix); i++) {
+> > +             ep =3D enum_prefix[i];
+> > +             if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
+> > +                     type +=3D strlen(ep) + 1;
+> > +     }
+> > +
+> > +     bt =3D btf_find_type(btf, type);
+> >       if (bt =3D=3D NULL)
+> >               return -1;
 > >
-> > Only =E2=80=9Cperf probe -l=E2=80=9D subtest fails with debuginfo enabl=
-ed or other two subtests as well? Can you also share result on how other tw=
-o subtests behaves ?
+> > @@ -1850,6 +1902,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fm=
+t *arg, struct tep_format_field
+> >                       arg->scnprintf =3D SCA_FD;
+> >               } else if (strstr(field->type, "enum") && use_btf !=3D NU=
+LL) {
+> >                       *use_btf =3D arg->is_enum =3D true;
+> > +                     arg->strtoul =3D STUL_BTF_ENUM;
+> >               } else {
+> >                       const struct syscall_arg_fmt *fmt =3D
+> >                               syscall_arg_fmt__find_by_name(field->name=
+);
+> > @@ -3776,7 +3829,8 @@ static int ordered_events__deliver_event(struct o=
+rdered_events *oe,
+> >       return __trace__deliver_event(trace, event->event);
+> >  }
 > >
-> > 1. Fail 2 :
-> >    perf probe -nf --max-probes=3D512 -a 'vfs_* $params=E2=80=99
+> > -static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(str=
+uct evsel *evsel, char *arg)
+> > +static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(str=
+uct evsel *evsel, char *arg,
+> > +                                                                char *=
+*type)
+> >  {
+> >       struct tep_format_field *field;
+> >       struct syscall_arg_fmt *fmt =3D __evsel__syscall_arg_fmt(evsel);
+> > @@ -3785,8 +3839,10 @@ static struct syscall_arg_fmt *evsel__find_sysca=
+ll_arg_fmt_by_name(struct evsel
+> >               return NULL;
 > >
+> >       for (field =3D evsel->tp_format->format.fields; field; field =3D =
+field->next, ++fmt)
+> > -             if (strcmp(field->name, arg) =3D=3D 0)
+> > +             if (strcmp(field->name, arg) =3D=3D 0) {
+> > +                     *type =3D field->type;
+> >                       return fmt;
+> > +             }
 > >
-> > 2. Fail 3 :
-> >   perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongo=
-revenlongertoexceed64'
+> >       return NULL;
+> >  }
+> > @@ -3824,14 +3880,14 @@ static int trace__expand_filter(struct trace *t=
+race __maybe_unused, struct evsel
+> >                       struct syscall_arg_fmt *fmt;
+> >                       int left_size =3D tok - left,
+> >                           right_size =3D right_end - right;
+> > -                     char arg[128];
+> > +                     char arg[128], *type;
 > >
->
-> Here's the full output:
->
-> $ sudo ./perf test -vvv "testsuite_probe"
->  84: perftool-testsuite_probe:
-> --- start ---
-> test child forked, pid 4872
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_per=
-mission ::
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_per=
-mission :: -a
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_per=
-mission :: --add
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe ::=
- perf list
-> Failed to find debug information for address 0xffff80008047ac30
-> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permis=
-sion(?:[:\+][0-9A-Fa-f]+)?@.+\)"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe ::=
- perf probe -l (output regexp parsing)
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe =
-(should NOT be listed)
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding prob=
-e
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes ::=
- first probe adding
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes ::=
- second probe adding (without force)
-> Failed to find debug information for address 0xffff80008047ac30
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes ::=
- second probe adding (with force)
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple prob=
-es
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: wildcard adding suppor=
-t
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: non-existing variable
-> -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :=
-: add
-> Regexp not found: "^\[\s+perf\s+record:\s+Woken up [0-9\.]+ times? to wri=
-te data\s+\].*$"
-> Regexp not found: "^\[\s+perf\s+record:\s+Captured and wrote [0-9\.]+\s*M=
-B\s+(?:[\w\+\.-]*(?:(?:[\w\+\.-]+)?(?:\/[\w\+\.-]+)+)?\/)?perf\.data(?:\.\d=
-+)?\s*\(~?[0-9\.]+ samples\)\s+\].*$"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: function with retval :=
-: record (command exitcode + output regexp parsing)
-> zero-sized data (/tmp/perftool-testsuite_probe.VMU/perf_probe/perf.data),=
- nothing to do!
-> Regexp not found: "\s*cat\s+[0-9\.]+\s+\[[0-9\.]+\]\s+[0-9\.]+:\s+probe:i=
-node_permission\w*:\s+\([0-9A-Fa-f]+\s+<\-\s+[0-9A-Fa-f]+\)\s+arg1=3D[0-9A-=
-Fa-f]+"
-> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: function argument prob=
-ing :: script (command exitcode + output regexp parsing)
-> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures fou=
-nd
-> ---- end(-1) ----
->  84: perftool-testsuite_probe                                        : FA=
-ILED!
->
->
+> >                       while (isspace(left[left_size - 1]))
+> >                               --left_size;
 > >
-> > Also since you mentioned this gets skipped when debuginfo is not enable=
-d, curious to know what is debuginfo message from your setup with debuginfo=
- disabled.
+> >                       scnprintf(arg, sizeof(arg), "%.*s", left_size, le=
+ft);
 > >
->
->   $ sudo ./perf probe -L getname_flags
->   Failed to find the path for the kernel: Invalid ELF file
->     Error: Failed to show lines.
->
-> > Thanks again for checking.
+> > -                     fmt =3D evsel__find_syscall_arg_fmt_by_name(evsel=
+, arg);
+> > +                     fmt =3D evsel__find_syscall_arg_fmt_by_name(evsel=
+, arg, &type);
+> >                       if (fmt =3D=3D NULL) {
+> >                               pr_err("\"%s\" not found in \"%s\", can't=
+ set filter \"%s\"\n",
+> >                                      arg, evsel->name, evsel->filter);
+> > @@ -3843,9 +3899,16 @@ static int trace__expand_filter(struct trace *tr=
+ace __maybe_unused, struct evsel
 > >
-> > Athira
+> >                       if (fmt->strtoul) {
+> >                               u64 val;
+> > -                             struct syscall_arg syscall_arg =3D {
+> > -                                     .parm =3D fmt->parm,
+> > -                             };
+> > +                             struct syscall_arg syscall_arg;
+> > +                             struct btf_parm bparm;
+> > +
+> > +                             if (fmt->is_enum) {
+> > +                                     bparm.btf  =3D trace->btf;
+> > +                                     bparm.type =3D type;
+> > +                                     syscall_arg.parm =3D &bparm;
+> > +                             } else {
+> > +                                     syscall_arg.parm =3D fmt->parm;
+> > +                             }
 > >
-> >>
-> >
-> >
-> >>
-> >>> 2. Regexp not found: "probe:vfs_mknod"
-> >>>   Regexp not found: "probe:vfs_create"
-> >>>   Regexp not found: "probe:vfs_rmdir"
-> >>>   Regexp not found: "probe:vfs_link"
-> >>>   Regexp not found: "probe:vfs_write"
-> >>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding =
-support (command exitcode + output regexp parsing)
-> >>>
-> >>> 3. Regexp not found: "Failed to find"
-> >>>   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongo=
-revenlongertoexceed64"
-> >>>   Regexp not found: "in this function|at this address"
-> >>>   Line did not match any pattern: "The /boot/vmlinux file has no debu=
-g information."
-> >>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy=
-, or install an appropriate debuginfo package."
-> >>>
-> >>> These three tests depends on kernel debug info.
-> >>> 1. Fail 1 expects file name along with probe which needs debuginfo
-> >>> 2. Fail 2 :
-> >>>    perf probe -nf --max-probes=3D512 -a 'vfs_* $params'
-> >>>    Debuginfo-analysis is not supported.
-> >>>     Error: Failed to add events.
-> >>>
-> >>> 3. Fail 3 :
-> >>>   perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylon=
-gorevenlongertoexceed64'
-> >>>   Debuginfo-analysis is not supported.
-> >>>   Error: Failed to add events.
-> >>>
-> >>> There is already helper function skip_if_no_debuginfo in
-> >>> lib/probe_vfs_getname.sh which does perf probe and returns
-> >>> "2" if debug info is not present. Use the skip_if_no_debuginfo
-> >>> function and skip only the three tests which needs debuginfo
-> >>> based on the result.
-> >>>
-> >>> With the patch:
-> >>>
-> >>>    83: perftool-testsuite_probe:
-> >>>   --- start ---
-> >>>   test child forked, pid 3927
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe ino=
-de_permission ::
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe ino=
-de_permission :: -a
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe ino=
-de_permission :: --add
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added pr=
-obe :: perf list
-> >>>   Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_=
-permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
-> >>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added prob=
-e
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added p=
-robe
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed =
-probe (should NOT be listed)
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: addin=
-g probe
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding pro=
-bes :: first probe adding
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding pro=
-bes :: second probe adding (without force)
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding pro=
-bes :: second probe adding (with force)
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled pr=
-obe
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multipl=
-e probes
-> >>>   Regexp not found: "probe:vfs_mknod"
-> >>>   Regexp not found: "probe:vfs_create"
-> >>>   Regexp not found: "probe:vfs_rmdir"
-> >>>   Regexp not found: "probe:vfs_link"
-> >>>   Regexp not found: "probe:vfs_write"
-> >>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
-> >>>   Regexp not found: "Failed to find"
-> >>>   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongo=
-revenlongertoexceed64"
-> >>>   Regexp not found: "in this function|at this address"
-> >>>   Line did not match any pattern: "The /boot/vmlinux file has no debu=
-g information."
-> >>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=3Dy=
-, or install an appropriate debuginfo package."
-> >>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due =
-to missing debuginfo :: testcase skipped
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with re=
-tval :: add
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with re=
-tval :: record
-> >>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argumen=
-t probing :: script
-> >>>   ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
-> >>>   ---- end(0) ----
-> >>>   83: perftool-testsuite_probe                                       =
- : Ok
-> >>>
-> >>> Only the three specific tests are skipped and remaining
-> >>> ran successfully.
-> >>>
-> >>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >>> ---
-> >>> .../shell/base_probe/test_adding_kernel.sh    | 31 +++++++++++++++++-=
--
-> >>> 1 file changed, 28 insertions(+), 3 deletions(-)
-> >>>
-> >>> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh =
-b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> >>> index 63bb8974b38e..187dc8d4b163 100755
-> >>> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> >>> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
-> >>> @@ -21,8 +21,18 @@
-> >>> THIS_TEST_NAME=3D`basename $0 .sh`
-> >>> TEST_RESULT=3D0
-> >>>
-> >>> +# shellcheck source=3Dlib/probe_vfs_getname.sh
-> >>> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
-> >>> +
-> >>> TEST_PROBE=3D${TEST_PROBE:-"inode_permission"}
-> >>>
-> >>> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
-> >>> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
-> >>> +skip_if_no_debuginfo
-> >>> +if [ $? -eq 2 ]; then
-> >>> + NO_DEBUGINFO=3D1
-> >>> +fi
-> >>> +
-> >>> check_kprobes_available
-> >>> if [ $? -ne 0 ]; then
-> >>> print_overall_skipped
-> >>> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=3D$?
-> >>> ../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)=
-?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_ker=
-nel_list-l.log
-> >>> CHECK_EXIT_CODE=3D$?
-> >>>
-> >>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe =
-:: perf probe -l"
-> >>> +if [ $NO_DEBUGINFO ] ; then
-> >>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
-> >>> +else
-> >>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe=
- :: perf probe -l"
-> >>> +fi
-> >>> +
-> >>> (( TEST_RESULT +=3D $? ))
-> >>>
-> >>>
-> >>> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=3D$?
-> >>> ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_cr=
-eate" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/addi=
-ng_kernel_adding_wildcard.err
-> >>> CHECK_EXIT_CODE=3D$?
-> >>>
-> >>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding supp=
-ort"
-> >>> +if [ $NO_DEBUGINFO ] ; then
-> >>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
-> >>> +else
-> >>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding sup=
-port"
-> >>> +fi
-> >>> +
-> >>> (( TEST_RESULT +=3D $? ))
-> >>>
-> >>>
-> >>> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=3D$?
-> >>> ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/addin=
-g_kernel_nonexisting.err
-> >>> (( CHECK_EXIT_CODE +=3D $? ))
-> >>>
-> >>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variabl=
-e"
-> >>> +if [ $NO_DEBUGINFO ]; then
-> >>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to =
-missing debuginfo"
-> >>> +else
-> >>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variab=
-le"
-> >>> +fi
-> >>> +
-> >>> (( TEST_RESULT +=3D $? ))
-> >>>
-> >>>
+> >                               if (fmt->strtoul(right, right_size, &sysc=
+all_arg, &val)) {
+> >                                       char *n, expansion[19];
+> > --
+> > 2.45.2
 > >
