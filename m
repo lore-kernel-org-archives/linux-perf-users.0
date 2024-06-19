@@ -1,55 +1,55 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7472476413;
-	Wed, 19 Jun 2024 20:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 686BC46426;
+	Wed, 19 Jun 2024 20:42:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718829299; cv=none; b=kJ3+a4H/20/iv6o6TLzolAq8R/Og4Xk51fUAsHFWXhrQMQxULdxiRigFER6cUfw7EnOyz6YuQV/iaDVZiVR61nX76bnQYk06IgEENldv26Nqn3HJbrM5npp4yuQ1j2qx7XhDjeneQ8OugO7avRlGS/KjPC/dYCJ1o6CPLaL2l/4=
+	t=1718829762; cv=none; b=qxJF//0RQuoHD5Dn5uNp+I+FKclWHaup1XrIrIHamZP3cQX+FS/i85P0FTMJEQOF543ucv1u04TL/V0s/raO4Mh0IWyiRnrTI/TT0QztIRAwPGHopDQPQUyRy/wJ0iyxNH/z/NUQ5Iuhv2DW65AecnnO52LoE8Xh41fLknJdPWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718829299; c=relaxed/simple;
-	bh=eoZsWCyz46BwfGOG4rsxhKZ0GxuqzP0HRwkUyqxuPqY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bin5T1qMFrmwLosThsiEKkO+abJsJTqzlR6ESEbwpms7bMvaHQWgGt+RPv2PTL8nnvw7XM3mnkh/JBtCqnohksLbGe3blEkKqjSgsy3VAHq5k4EFXe9jHWMuBjTZ+qG2pgSgDjsbQ3B1AR6CTsMb7LZR4v5OD+CsDBWKhNWVBGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQaLe2JL; arc=none smtp.client-ip=209.85.216.50
+	s=arc-20240116; t=1718829762; c=relaxed/simple;
+	bh=D9CKnHm8Mga/iQVySnp3DBkc8z1KAq2U2xMIajbreb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NFx6ofKXB5nUXKmzWyLpSkuyvDuvvcUPLMV50WqvyxqLVjtLdMKnGok3zjhaQzrxcXgCbYk7CuAYRLuB8oCyBGz54FPQGue3W48x1eD2XsOufYKO+JbQ8kRiw9kbLWuLT4w70ahyBE1vSHgCTjA6aUfQXiTr62szmloBotoo2FA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=moXwfYrW; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQaLe2JL"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2c2e31d319eso202640a91.1;
-        Wed, 19 Jun 2024 13:34:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moXwfYrW"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f6da06ba24so1271945ad.2;
+        Wed, 19 Jun 2024 13:42:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718829298; x=1719434098; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718829760; x=1719434560; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4DS3cNh/vcalK9KkDVuzjtEYuT0eMhqV0xIlZuHxLSw=;
-        b=DQaLe2JLeRRF33MpgD20Ly8wgNUkPC79sCD35mbRo6XOk/EGC8fnTmImunKmlk6O/w
-         SLHPFOO/SyAFfecKsye2xBg1rwIGlc3V+WJRIesk1M4j4UmJaKKvZq2bN/qhDHmzv4ZT
-         pkSC4FIye6LrFpTKUGaUnxVRH4RcEb5Mee749aBMiK0aXJcCuGkpTO+PxF0IAHWRX8Q7
-         bD6hsIeMo2k77q006SH2vxlZH6zAmFrfbK/Xp7MKgSqUDAMP4L7tLB85iR/Cmk6M3F8q
-         sp9j2jRNlEBz8O0iQAUF3Tuk1G1lRpY2k4SHP+1b9d+Mrxj7cXhsU7Zxl/6kKPJp90ys
-         c0rg==
+        bh=Uxz4VqLQLmREYFYF+b7YOv+fmdIW8c4422sFxBtw+fU=;
+        b=moXwfYrW56xNAJ8K7IWXkVKwfS27jeJACa3Su/1tvWRSUNMM9ocpqppwzWYoS29CUw
+         o+LM01MVydhDyzMW6SNuLtW7fpiSZaUWATrFpjn/C5a0CdrNkrnkwRccNlQCjTwlCJTL
+         aNKIzVJtfADPafg4TnasQr2jTFeNVDjhCCzPrhR8iL0EMBpvjQgWhryEH0gdZdI3C0zP
+         qg6vvgZLc8B5hIeU0m96f6HbRkpO+AIpVW1R+MrCOKDd3WPgt0rl1pb67dQrKLchMWxx
+         qOzitBwsC7WibgBCLqpIYtFF6qDu6mjYFFw66AaiXEkv7JlyeLT2/59+zAaeHEDaNIwd
+         iDGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718829298; x=1719434098;
+        d=1e100.net; s=20230601; t=1718829760; x=1719434560;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=4DS3cNh/vcalK9KkDVuzjtEYuT0eMhqV0xIlZuHxLSw=;
-        b=RpG4eod0AJQuNPYn+cy73K1ByMPV9ZfhYzOCDeI4XuTNDDfEITKKJjoTx6KT7YA6y/
-         xtlRK/GCf2D2jFpj43l0capRkn8CxM174gSou8P0EmwdGf8jszSBgMsQgQdisCAEsPgB
-         lsuWA5ymvPMz6+pch2dyhwUec9JJ44u/YOWhXCU/PUvCvcjp5L4xrMJsDEmkXD9einha
-         9O8tCUWE/YYX/wPy4PRSTcwsYPwNcfbDAHOmkOrWqoRzxQdq6O7SBQHKFnG3F2fO1X6F
-         HpbZKBEFkH7SVAOxSAUx3iXsfvDlyGKbaUrenooRBI6DPPLTLNMq1zb+3nBqIhBSQwHx
-         r6iw==
-X-Forwarded-Encrypted: i=1; AJvYcCUaZe0htbuutdgJZuM5Zm4thP1deA81p11ida1jKd0F1ksoNvDkNYd6opWEtsqjYaqp3H1rczG74cJU9Tq6iX7vrd6VEkAKLleh9qXaXSnYBo/GYabA9ysiS89UIg87oxCz2fmwCspYDs/+nyk0zw==
-X-Gm-Message-State: AOJu0Yxs0VQyp8HaCKk0HIIs4nke2DTy5l7vkUYTKupLHMZn2ziQck2D
-	7zFbmpwJ0EQ84yD8wOJV9Ev1yqgM6c82jFNUzkCnRehngVV87D8f
-X-Google-Smtp-Source: AGHT+IFeG+EapPWgZ6mTFZ7yoMrOyJtLSgvcivUB6RyRNZ+Et8z7BvAK5o11a1I/QNJNzA7V5Rhh0g==
-X-Received: by 2002:a17:90a:e2d7:b0:2c6:edb4:1c96 with SMTP id 98e67ed59e1d1-2c7b5cc6e77mr3870786a91.23.1718829297722;
-        Wed, 19 Jun 2024 13:34:57 -0700 (PDT)
+        bh=Uxz4VqLQLmREYFYF+b7YOv+fmdIW8c4422sFxBtw+fU=;
+        b=l7plZvT3/mpmW7bCwMMBk0SZ0o0kZZJA5HBW8fJdeyAUOqooO4Nl6VgDFvIZIlLs7F
+         HgCc79Ztyjx/aPbSApJ/DXUg8enkiQbvbRGEk9cBNG/p1Ae6kcI9It4mw2xDtZD8omGs
+         cLDcUzNV9SzFAPHYu6b/QrzCXHU2xmJbxcTkNdHzmj9cF3HpjEV+lf4W48V0DLvoSOjj
+         s2HAqjswx+y7p6L1R2/1ZU5wceDq97wjihE13ZJzyo15GQbojk/aCtjN17QVa5vEya1n
+         o9LG3IHFLg1Fhm0DMQ6CW9+y5Rw1vqcPxXJy7tgL7n28mV/vPesF6fgn0S6I6rIzoM/L
+         sTrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUTP5RdbR1SkrGRYl0zNwb3WDiUAZ4fycKpWJ1z2mnqfVQhBXQvm/ZkeW4VccubumuyDeDhMkMajVCDn+bGw2PUdTGUfKbcJWy4FVeX03T0XaCI3ofPMS6R994jlW+iVOUiGDZ6OAi3H/N6zloHdQ==
+X-Gm-Message-State: AOJu0YwSKQUbP/xCXrZsA7VR+tWJvZfq/nKzRUT6hHNUn5Q/t+NuDxm1
+	ObAXPOc7KFcOH8oB5IG8Y8n9NKMVIlfrTbrUXgzBgsORxcQpFvBd
+X-Google-Smtp-Source: AGHT+IFMCYWnUzQ20k9uHazgNQHQLq2exNGlYO6Xg7klSyxBlwOQ+GWc+KL+7u1jhI6ix7gkhzEtow==
+X-Received: by 2002:a17:903:41d0:b0:1f7:4021:5092 with SMTP id d9443c01a7336-1f9aa413407mr41236675ad.41.1718829760502;
+        Wed, 19 Jun 2024 13:42:40 -0700 (PDT)
 Received: from localhost.localdomain ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c7e5ad1f1csm66188a91.51.2024.06.19.13.34.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855e55d7dsm121992165ad.14.2024.06.19.13.42.36
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 19 Jun 2024 13:34:57 -0700 (PDT)
+        Wed, 19 Jun 2024 13:42:40 -0700 (PDT)
 From: yskelg@gmail.com
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -68,9 +68,9 @@ Cc: kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Yunseong Kim <yskelg@gmail.com>
-Subject: [PATCH] util: constant -1 with expression of type char
-Date: Thu, 20 Jun 2024 05:34:29 +0900
-Message-ID: <20240619203428.6330-2-yskelg@gmail.com>
+Subject: [PATCH] perf unwind-libunwind: Add malloc() failure handling
+Date: Thu, 20 Jun 2024 05:42:12 +0900
+Message-ID: <20240619204211.6438-2-yskelg@gmail.com>
 X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -82,32 +82,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Yunseong Kim <yskelg@gmail.com>
 
-This patch resolve following warning.
-
-tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
--1 with expression of type 'char' is always false
- -Werror,-Wtautological-constant-out-of-range-compare
- 1620 |                 if (c == -1)
-      |                     ~ ^  ~~
+Add malloc() failure handling in unread_unwind_spec_debug_frame().
+This make caller find_proc_info() works well when the allocation failure.
 
 Signed-off-by: Yunseong Kim <yskelg@gmail.com>
 ---
- tools/perf/util/evsel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/unwind-libunwind-local.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 25857894c047..bc603193c477 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1620,7 +1620,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index cde267ea3e99..a424eae6d308 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -390,6 +390,11 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 			char *debuglink = malloc(PATH_MAX);
+ 			int ret = 0;
  
- static bool read_until_char(struct io *io, char e)
- {
--	char c;
-+	int c;
- 
- 	do {
- 		c = io__get_char(io);
++			if (debuglink == NULL) {
++				pr_err("unwind: Can't read unwind spec debug frame.\n");
++				return -ENOMEM;
++			}
++
+ 			ret = dso__read_binary_type_filename(
+ 				dso, DSO_BINARY_TYPE__DEBUGLINK,
+ 				machine->root_dir, debuglink, PATH_MAX);
 -- 
 2.45.2
 
