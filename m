@@ -1,53 +1,52 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D73818E20;
-	Wed, 19 Jun 2024 01:53:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8B82139C7;
+	Wed, 19 Jun 2024 03:31:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718762005; cv=none; b=tGz7cGeWO8v3Rg2EniQgJROLhMYc6JgVhaiVu4Y3oseA+UKg3//VKdvKLGWiLA+dauopblpqyJdEpyLTAVA1Q3863a7gzmkIJE+wMJnVkhY9WdStvjHe50AfabPtJ1ah1Y36i6pIO3tF6KlnhkXO6USZ/++UUTfUAz8u2rsupLM=
+	t=1718767898; cv=none; b=OgZ4DXyzgrtwSsK0EoqPCtU2H/LZBAJ5OccKEddGbpcc6FzHr6xoxsxm1RQggGvImT+CyyumHSZWx6j+kjIM4QLsC9c0TaeLWVBqOLoRuLtucJ/3Z2QvrTjgnsTQus+Hkday9gPecpcHxZ+cDdqW7Vp3AXQK2vCiSnsq13g5ny4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718762005; c=relaxed/simple;
-	bh=y4h/IiEH9QhlxPRAVfEhG72ug8DRAf2ofzXJM2sJ1qM=;
+	s=arc-20240116; t=1718767898; c=relaxed/simple;
+	bh=L3Agqx8KBfjUeqD0z7eZyby9TiHtKcMLxKVU3pjcaiU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oeQyHsIH23PL4dW27TTjXWSbiBIibT1oQrJigz2YbMM7NsxR1McWtVQXo+rC636k2DzvzFH/uLpXfM28LT/9qmWUaH+C6STxwYZgQa70LFFvvINvsVC2+s1rsg/hMQjOHP6x6brQdZf5Wezw00itijcl2DzcqGXeZEbgfrz8dbw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lDGSa2+B; arc=none smtp.client-ip=198.175.65.15
+	 Content-Type:Content-Disposition:In-Reply-To; b=OCxnRLym0Ed0F7TIwTGe52fO3O+ispQGcstfPZXo1BvFY8gRNSFMA5cBAtIhMJFt0i/pURJNAmcH8/sjwDzSE5BTifpOB1jAN2xINgC+Q49DwFlmUCcvHWJ9zu9jcXnayPJpOXaPwkyk+XEjguRIsSXAhjshlQ6eu2+IuCEKq/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MrURF4P9; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lDGSa2+B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MrURF4P9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718762004; x=1750298004;
+  t=1718767896; x=1750303896;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=y4h/IiEH9QhlxPRAVfEhG72ug8DRAf2ofzXJM2sJ1qM=;
-  b=lDGSa2+BTjeRlCO7QZBVk9jvT/m+L6mSOOx+kaMYYdzGKmmyCbg0WW4g
-   /op5LaQxaNl03nT974jJEJmbG8ieZLTKHIrTkcnmuw14/RQFYDGNYSHMH
-   nY5SC/xuTmaCH+cuD+SqCasdrEU43pJC5edlOv17ByAVf6OBqwebUbFDp
-   3Jdnx2p39OBF2HXmVj7bwXkv6BEWjf5s+SPf6C1Zyf95QEwR3vxEtFBS/
-   vTvuoFTXjQ17pRuyK0hnE3gLqh7Bcza7sfsYnf9xpatdBOSpO6OBxEiiU
-   K7yQff5vDm9FL6TnNVXCkTATlqmVFvHdi+x8MWRqMjN4WPffzp9pYP+pD
-   Q==;
-X-CSE-ConnectionGUID: G3UI+FqiQSKdITeppl7nxA==
-X-CSE-MsgGUID: t78bVsbRRNWZ5mWeeM5fSQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="19461672"
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="19461672"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 18:53:23 -0700
-X-CSE-ConnectionGUID: 2/1oZ4ocRuGCLo1eL49vLg==
-X-CSE-MsgGUID: jtHcrt+CSm6csXi6+iqLjw==
+   mime-version:in-reply-to;
+  bh=L3Agqx8KBfjUeqD0z7eZyby9TiHtKcMLxKVU3pjcaiU=;
+  b=MrURF4P9YGSAAMMxwnO2e/Svi5PJq6WTecCz2zQnju+kFnfmPP67esaI
+   1kP/K37LpU9YBoTCvATupzn4oMA+hhZ75uNF725K4k0EFHHD11IIV8YYC
+   rDcZNG/HsWqoUMZ/I28cNbUp8rNxLYmBc0ZZdJ5ub7slIiiPmPr6bIfUx
+   I7eNoOLkfHnO07yXDg4WGi6otEcJCKl3CE5SKwRPGiRTbGUOSoE/tdHf4
+   B1jbDH/NCh+NO9L75wDTeItVhqMo4iYkKRnOCnM+bFGF78AVHzuWauwIn
+   Ab/KTxMNa5GS4jI0w0E8kxgJgNzFKewVc4Eg08DAT06b+lgFJwRyQcpdT
+   w==;
+X-CSE-ConnectionGUID: Rru7XicaQVCyhnVIkMBvSg==
+X-CSE-MsgGUID: ETuy7RvBSQKp1/DfLpk7Vw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11107"; a="33226705"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="33226705"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 20:31:33 -0700
+X-CSE-ConnectionGUID: DbkMGVtASk6nZmqKOH8n7w==
+X-CSE-MsgGUID: aBF2ySp7RRaKXW/WWTH50Q==
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,247,1712646000"; 
-   d="scan'208";a="41672159"
+X-IronPort-AV: E=Sophos;i="6.08,249,1712646000"; 
+   d="scan'208";a="46327824"
 Received: from cgroden-mobl.amr.corp.intel.com (HELO desk) ([10.209.70.214])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 18:53:22 -0700
-Date: Tue, 18 Jun 2024 18:53:15 -0700
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2024 20:31:34 -0700
+Date: Tue, 18 Jun 2024 20:31:26 -0700
 From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Brice Goglin <brice.goglin@gmail.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
 	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
 	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
@@ -58,67 +57,80 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH 0/9] Add CPU-type to topology
-Message-ID: <20240619015315.3ei5f6rovzdnxovo@desk>
+Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
+ cpuinfo_topology
+Message-ID: <20240619033126.irudoer3pw4fb5be@desk>
 References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+ <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
+ <20240618212801.GJZnH74Q4yknT-4X12@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+In-Reply-To: <20240618212801.GJZnH74Q4yknT-4X12@fat_crate.local>
 
-On Tue, Jun 18, 2024 at 02:49:10PM +0200, Brice Goglin wrote:
-> Le 17/06/2024 à 11:11, Pawan Gupta a écrit :
-> > Hi,
-> > 
-> > This series adds support for CPU-type (CPUID.1A.EAX[31-24] on Intel) to
-> > differentiate between hybrid variants P+E, P-only, E-only that share the
-> > same Family/Model/Stepping. One of the use case for CPU-type is the
-> > affected CPU table for CPU vulnerabilities, which can now use the CPU-type
-> > to filter the unaffected variants.
-> > 
-> > * Patch 1 adds cpu-type to CPU topology structure and introduces
-> >    topology_cpu_type() to get the CPU-type.
-> > 
-> > * Patch 2-4 replaces usages of get_this_hybrid_cpu_type() with
-> >    topology_cpu_type().
-> > 
-> > * Patch 5-7 Updates CPU-matching infrastructure to use CPU-type.
-> > 
-> > * Patch 8 cleans up the affected CPU list.
-> > 
-> > * Patch 9 uses the CPU-type to exclude P-only parts from the RFDS affected
-> >    list.
+On Tue, Jun 18, 2024 at 11:28:01PM +0200, Borislav Petkov wrote:
+> On Mon, Jun 17, 2024 at 02:11:26AM -0700, Pawan Gupta wrote:
+> > --- a/arch/x86/include/asm/processor.h
+> > +++ b/arch/x86/include/asm/processor.h
+> > @@ -95,6 +95,9 @@ struct cpuinfo_topology {
+> >  	// Core ID relative to the package
+> >  	u32			core_id;
+> >  
+> > +	// CPU-type e.g. performance, efficiency etc.
+> > +	u8			cpu_type;
+> > +
+> >  	// Logical ID mappings
+> >  	u32			logical_pkg_id;
+> >  	u32			logical_die_id;
+> > diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+> > index abe3a8f22cbd..b28ad9422afb 100644
+> > --- a/arch/x86/include/asm/topology.h
+> > +++ b/arch/x86/include/asm/topology.h
+> > @@ -41,6 +41,14 @@
+> >  /* Mappings between logical cpu number and node number */
+> >  DECLARE_EARLY_PER_CPU(int, x86_cpu_to_node_map);
+> >  
+> > +#define X86_CPU_TYPE_INTEL_SHIFT	24
+> > +
+> > +enum x86_topo_cpu_type {
+> > +	X86_CPU_TYPE_UNKNOWN		= 0,
+> > +	X86_CPU_TYPE_INTEL_ATOM		= 0x20,
+> > +	X86_CPU_TYPE_INTEL_CORE		= 0x40,
 > 
+> Can we unify those core types and do our own (our == Linux) defines instead of
+> using Intels or AMDs?
+
+As Dave pointed out in the other email, atleast mitigations have a use case
+to match the raw CPU type defined by the vendor. It could get tricky if
+ever there will be different types of performance cores, with different
+hardware characteristics.
+
+> There will be AMD variants too soon:
 > 
-> Hello
+> https://lore.kernel.org/r/7aad57a98b37fa5893d4fe602d3dcef5c3f755d5.1718606975.git.perry.yuan@amd.com
 > 
-> Is there still a plan to expose this info in sysfs?
+> so can we have generic defines like
+> 
+> PERF_CORE
+> EFF_CORE
+> bla_CORE
+> 
+> and so on
+> 
+> ?
+> 
+> And then map each vendor's types to the Linux types?
 
-Sure, if it helps userspace.
+I am no expert, but I do think generic Linux types could also be useful in
+future. Hypothetically speaking, these can be used to make better
+scheduling decisions. For example, CPU bound processes can be scheduled
+more on performance cores and I/O bound on efficiency cores.
 
-> Userspace currently uses frequencies to guess which cores are E or P.
-> Intel sent some patches several years ago [1], but they got abandoned
-> nowhere as far as I know. There was also some discussion about using a
-> "capacity" field like ARM does, but IIRC Intel didn't like the idea in
-> the end.
-
-There can be many ways to expose this information in sysfs. Like this ...
-
-> [1] https://lkml.org/lkml/2020/10/2/1208
-
-... exposes /sys/devices/system/cpu/types which, in hybrid parts, creates a
-subdirectory for each type of CPU. Each subdirectory contains a CPU list
-and a CPU map that user space can query.
-
-The other way is to expose the CPU-type in a file:
-
-	/sys/devices/system/cpu/cpuN/type
-
-that could return the CPU-type of the CPU N. Is there a preference?
+To accommodate for that we can name the vendor specific types in this
+series as vendor_cpu_type. And if we ever need to add generic types, we can
+call them cpu_type?
