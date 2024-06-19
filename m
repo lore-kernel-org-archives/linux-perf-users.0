@@ -1,57 +1,57 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C905E7D414;
-	Wed, 19 Jun 2024 08:19:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4E067EEF5;
+	Wed, 19 Jun 2024 08:20:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718785201; cv=none; b=fnnAtBF3relQ+IKtWZWdZl20gxB/04D0N4V9YmQRLhiMrOpsDomsn7G8wxvWwPCvX8VYwD3DUHMLp1bNlxWLzgA10YsuAXLdad4DaX0I0WEGrK8/3l8LFBxdfYAa+XGgctppFl0YRqr+l8zdTQ6zAoW90EAq8SdmuRLyJ7mZuPk=
+	t=1718785205; cv=none; b=RPLhBk+MeMNmBZ/SNyti0NqCzxIcWzoMSfmVvMn91N4GMutPqWBTipmT0mgU6puP5oYxBBjf5BNmqat2IqoKBhO5JpGI9DuJkHTKL7mWFsUL9H73bLkY7rM/4qIAEIwQeqSIqAIKj8/HawYkU0vB+XQd5AmHxylLrkQ+ME4bOik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718785201; c=relaxed/simple;
-	bh=80xKGi15F2H5LmV7pq8mcuOQUaXk733xW6wRhxSn5l8=;
+	s=arc-20240116; t=1718785205; c=relaxed/simple;
+	bh=/LZWj7oaqNHKukw2mT2SK+cZhXWIt6cUnNRXQtMon/w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rVCRVfESQRLLQFtZ9tYElEUE/Ab5bEL9+Lud22NyueRbSl8hX68fB4jVE9hI8Eg6JFl9Yn7amnm9k0jFGLlCUZbz+ylvy+HwF0FjOzSS15dHbZYNthWc97iTo+QDTuVjVPsuk7ScV465kCMmuXy0HAZC4jw8eaoL4ClCHFBy8ow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ejx9Ny4D; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=E9Rdg4dxYKVPQnKzLEczjKmjIO+laXYRtf9hPJ94ElF0CnqO9BALjc4uA5rQZQzOGE3s/+nA/odDAmQMHcfRWqpZJYpG8ogE+JFrknGQkeNlxAValjo+RDX//oM+n/IMv2WSxWODixu9iq0dt+T68zOxVChqEKt/r5oVMiw2sIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ITupTZh4; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ejx9Ny4D"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1f9b364faddso2594355ad.3;
-        Wed, 19 Jun 2024 01:19:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ITupTZh4"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1f862f7c7edso42739515ad.3;
+        Wed, 19 Jun 2024 01:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718785199; x=1719389999; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1718785203; x=1719390003; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BbEWQHo+YQ1yR/+BSBiAM4ZCezg7MYt6LeR5q7fVzzE=;
-        b=ejx9Ny4DN+Q0/umbwoTHUQYaFBvgL8ZF3hitm9PlwMNsKz/hvr11SQJbr/cqcWgO9E
-         BullMWVeb3Ll1sIJWU7wSRbXSTkYmswkXowBfdMZ8XGaklI0Z9+qyfU7/TOjh84hztIw
-         ve+D9rPbvUhD3OAYFwF3xBnXdmsbJfsfxiIMD1d5y0/QtuxJ4a7e0p3JDTadVro1l+CI
-         LfznXlRTTbXEqlfLr67vUUabm0tCsf4XP+xw82l7HKaG5jUtItVBXokPWPpJdH/wZpza
-         Rwy0j/+SgsAPv8Dc4r/fbX///Hp0NTS6pgN8Bb/Axgctk9pBVD4fq1onWZBVuWSeyWzR
-         cVhg==
+        bh=kAYmpGaIlWdxgsMDkaG8zIxFictKgFkTjRCndchDMo8=;
+        b=ITupTZh4jZraFr5Q0S27dAQQ/8/EF8/J8EIReWlTwh2mt/YuEnzLZUGVArmT97PhGO
+         yLSeOQ4BfqNuwrLjsE2rJIaHgt4yyd/DAEUx++HM+whSB4Z17858Dm5T+XaunafqMwSI
+         91XDHWtUkr/eW6qozrAmp/Q7++hzmMDfjsJVyz3Z0OXnlt3Sf9//pxOptyrdUemKsM0X
+         613ZigSeHYRM/cnnEamIwZUseg97Zs8k6JWjVnWWU3aHmlhHKO7CEYZbGO40xf6s33bA
+         YcEsxtOGCWy8DcQLQN4Jjv+M3tGUed5XYBgNFQpYBkoTQ75lo44jmJYUQcc1kP4FEp+f
+         BBGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718785199; x=1719389999;
+        d=1e100.net; s=20230601; t=1718785203; x=1719390003;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BbEWQHo+YQ1yR/+BSBiAM4ZCezg7MYt6LeR5q7fVzzE=;
-        b=SXX0Sas9Rjm8pcEuS6IeN66QW3aQfohHSz7Qt+Ljeak0OYTnGpcsNe6R1qm1ghUwsX
-         Q+KpOpSfR09YqCi1k9v21mu+KcsDesGMtXBbwkkjhzpk/BXI9/I3oEOm2XzumV7/f6o+
-         3BGNx521MNlU0r7/HKGhDMQIYrwQIxd9Bl1eStxgbUv+Lj1TkCWOxxg3hSSBxFHubkD8
-         +XV3zOEprDHtxyFhglLZvvBBnUw6FboyLHl2YGgqTcYY26Re9tYP5Kb5EzappsAck3WX
-         hDn0cN0yw+zAmdOfRvPPdtmoDuCZSqukkLG39hD/QbUmB38jQmXcwuyVoAfGNdJxv94S
-         vDSA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtp30Ejyt8qD6ay4Oe+M6P41arggQ1ZFhUTd/3AiaB91/kB2u+ox9P3pxHdrJ9OX9kiADfO92p7ntxG5N6weD3+Up1HZLZ8p70khKHsC1d46LRYvbWw5gk7i5MKJnnftQxqLileJQXJNO0aDS82Q==
-X-Gm-Message-State: AOJu0YzuC/1xZrhAMDhvNp/b0svg3kqh4P8+HcaV+Gvy3RzwexkzClW5
-	fhXdmnPydc3vo+dmS0yKAURowHYGuq1L3ckJEMQHfvpprl+fRD5y
-X-Google-Smtp-Source: AGHT+IFsiY/HM7Ugi61FCq9ktvY8AK428+KhGZ7u4y5guDshlh1fjW/xFKQmrUGPrAl7PgT1bh5+MA==
-X-Received: by 2002:a17:902:e5c6:b0:1f9:b681:1956 with SMTP id d9443c01a7336-1f9b6811d1dmr5001095ad.61.1718785199034;
-        Wed, 19 Jun 2024 01:19:59 -0700 (PDT)
+        bh=kAYmpGaIlWdxgsMDkaG8zIxFictKgFkTjRCndchDMo8=;
+        b=XWZW2FGfGAIDZnLEOf98gHqNtN1zXCOLZhpr5P11xf5XGiifopwND13mIb5eKtfokz
+         D9AxbZBdqOYQHW03shr25L+HsNw0/BengWBof3szcOnWDRMm3JpI1KZKaLXuUyZ3KR5M
+         dHJIJg/0dhYC+aAvNgYSs2erXU1Wr40CRaRHd1BY+WY6Gi3QhFuS6xQGhYK9/hJ1QcO1
+         XSrvEK3EL8xwVFCnF8g9VtgrIgUYQ5PkoyoCIBSRGaSy8vvsBdMN30fupOnO/4zpRXz3
+         msQ3nZ8MSvLjk2l50Cqq+SrdxfAQ3GlXModj64wgpqzX04FwE0IKZlBlX+b/wDdyh+Rm
+         YCUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZXqPOAmDGcMU7t59aUwNjhtCSWfbkIp2er6GVE3DMzyOoRxnvFcL+mktxn86296d2uTRmzZs4R3i5ASS3JmIDYUmt2yoO7mtL3BKyXaCco+F2SOEjwU1HrKt0vDpBhL35IwS6NH+LDf9R8oZvVw==
+X-Gm-Message-State: AOJu0YzUkL+XBoC02fk7DJCCDFDmKsSL1spPYEt1cRTNmnlNTiIaXFl+
+	wIFOQBNMSXQlE3WqSdSLX5HOt39Mb4+4T/hDjNF3AfgbohyOJFPW
+X-Google-Smtp-Source: AGHT+IFgftcucoFbUM8uwfsYsAAE572uQqDK+s6ybdqzlvlcyet5YSsOUg7O/GR6vGlt5OY27tW7Qw==
+X-Received: by 2002:a17:903:1c2:b0:1f7:1687:3062 with SMTP id d9443c01a7336-1f9aa46582dmr23615645ad.61.1718785203190;
+        Wed, 19 Jun 2024 01:20:03 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.95])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f1decfsm110368105ad.250.2024.06.19.01.19.55
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f855f1decfsm110368105ad.250.2024.06.19.01.19.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 01:19:58 -0700 (PDT)
+        Wed, 19 Jun 2024 01:20:02 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Jiri Olsa <jolsa@kernel.org>,
@@ -61,9 +61,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Kan Liang <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2 3/5] perf trace: Augment enum tracepoint arguments with BTF
-Date: Wed, 19 Jun 2024 16:20:40 +0800
-Message-ID: <20240619082042.4173621-4-howardchu95@gmail.com>
+Subject: [PATCH v2 4/5] perf trace: Filter enum arguments with enum names
+Date: Wed, 19 Jun 2024 16:20:41 +0800
+Message-ID: <20240619082042.4173621-5-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240619082042.4173621-1-howardchu95@gmail.com>
 References: <20240619082042.4173621-1-howardchu95@gmail.com>
@@ -77,16 +77,30 @@ Content-Transfer-Encoding: 8bit
 
 Before:
 
-perf $ ./perf trace -e timer:hrtimer_start --max-events=1
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466c25f18, function: 0xffffffff89da5be0, expires: 377432432256753, softexpires: 377432432256753, mode: 10)
+perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
+No resolver (strtoul) for "mode" in "timer:hrtimer_start", can't set filter "(mode!=HRTIMER_MODE_ABS_PINNED_HARD) && (common_pid != 281988)"
 
 After:
 
-perf $ ./perf trace -e timer:hrtimer_start --max-events=1
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff974466d25f18, function: 0xffffffff89da5be0, expires: 488283834504945, softexpires: 488283834504945, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
+     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12351248764875, softexpires: 12351248764875, mode: HRTIMER_MODE_ABS)
 
-HRTIMER_MODE_ABS_PINNED_HARD is:
+&& and ||:
 
+perf $ ./perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS_PINNED_HARD && mode != HRTIMER_MODE_ABS' --max-events=1
+     0.000 Hyprland/534 timer:hrtimer_start(hrtimer: 0xffff9497801a84d0, function: 0xffffffffc04cdbe0, expires: 12639434638458, softexpires: 12639433638458, mode: HRTIMER_MODE_REL)
+
+perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_REL || mode == HRTIMER_MODE_PINNED' --max-events=1
+     0.000 ldlck-test/60639 timer:hrtimer_start(hrtimer: 0xffffb16404ee7bf8, function: 0xffffffffa7790420, expires: 12772614418016, softexpires: 12772614368016, mode: HRTIMER_MODE_REL)
+
+Switching it up, using both enum name and integer value(--filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0'):
+
+perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0' --max-events=3
+     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12601748739825, softexpires: 12601748739825, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+     0.036 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12518758748124, softexpires: 12518758748124, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+     0.172 tmux: server/41881 timer:hrtimer_start(hrtimer: 0xffffb164081e7838, function: 0xffffffffa7790420, expires: 12518768255836, softexpires: 12518768205836, mode: HRTIMER_MODE_ABS)
+
+P.S.
 perf $ pahole hrtimer_mode
 enum hrtimer_mode {
         HRTIMER_MODE_ABS             = 0,
@@ -106,220 +120,167 @@ enum hrtimer_mode {
         HRTIMER_MODE_REL_PINNED_HARD = 11,
 };
 
-Can also be tested by
-
-./perf trace -e pagemap:mm_lru_insertion,timer:hrtimer_start,timer:hrtimer_init,skb:kfree_skb --max-events=10
-
-(Chose these 4 events because they happen quite frequently.)
-
-However some enum arguments may not be contained in vmlinux BTF. To see
-what enum arguments are supported, use:
-
-vmlinux_dir $ bpftool btf dump file /sys/kernel/btf/vmlinux > vmlinux
-
-vmlinux_dir $  while read l; do grep "ENUM '$l'" vmlinux; done < <(grep field:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | uniq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g"
-dev_pm_qos_req_type
-error_detector
-hrtimer_mode
-i2c_slave_event
-ieee80211_bss_type
-lru_list
-migrate_mode
-nl80211_auth_type
-nl80211_band
-nl80211_iftype
-numa_vmaskip_reason
-pm_qos_req_action
-pwm_polarity
-skb_drop_reason
-thermal_trip_type
-xen_lazy_mode
-xen_mc_extend_args
-xen_mc_flush_reason
-zone_type
-
-And what tracepoints have these enum types as their arguments:
-
-vmlinux_dir $ while read l; do grep "ENUM '$l'" vmlinux; done < <(grep field:enum /sys/kernel/tracing/events/*/*/format | awk '{print $3}' | sort | uniq) | awk '{print $3}' | sed "s/'\(.*\)'/\1/g" > good_enums
-
-vmlinux_dir $ cat good_enums
-dev_pm_qos_req_type
-error_detector
-hrtimer_mode
-i2c_slave_event
-ieee80211_bss_type
-lru_list
-migrate_mode
-nl80211_auth_type
-nl80211_band
-nl80211_iftype
-numa_vmaskip_reason
-pm_qos_req_action
-pwm_polarity
-skb_drop_reason
-thermal_trip_type
-xen_lazy_mode
-xen_mc_extend_args
-xen_mc_flush_reason
-zone_type
-
-vmlinux_dir $ grep -f good_enums -l /sys/kernel/tracing/events/*/*/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_chandef_dfs_required/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_notify/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ch_switch_started_notify/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_get_bss/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ibss_joined/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_inform_bss_frame/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_radar_event/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel_expired/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_ready_on_channel/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_reg_can_beacon/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_return_bss/format
-/sys/kernel/tracing/events/cfg80211/cfg80211_tx_mgmt_expired/format
-/sys/kernel/tracing/events/cfg80211/rdev_add_virtual_intf/format
-/sys/kernel/tracing/events/cfg80211/rdev_auth/format
-/sys/kernel/tracing/events/cfg80211/rdev_change_virtual_intf/format
-/sys/kernel/tracing/events/cfg80211/rdev_channel_switch/format
-/sys/kernel/tracing/events/cfg80211/rdev_connect/format
-/sys/kernel/tracing/events/cfg80211/rdev_inform_bss/format
-/sys/kernel/tracing/events/cfg80211/rdev_libertas_set_mesh_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_mgmt_tx/format
-/sys/kernel/tracing/events/cfg80211/rdev_remain_on_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_return_chandef/format
-/sys/kernel/tracing/events/cfg80211/rdev_return_int_survey_info/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_ap_chanwidth/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_monitor_channel/format
-/sys/kernel/tracing/events/cfg80211/rdev_set_radar_background/format
-/sys/kernel/tracing/events/cfg80211/rdev_start_ap/format
-/sys/kernel/tracing/events/cfg80211/rdev_start_radar_detection/format
-/sys/kernel/tracing/events/cfg80211/rdev_tdls_channel_switch/format
-/sys/kernel/tracing/events/compaction/mm_compaction_defer_compaction/format
-/sys/kernel/tracing/events/compaction/mm_compaction_deferred/format
-/sys/kernel/tracing/events/compaction/mm_compaction_defer_reset/format
-/sys/kernel/tracing/events/compaction/mm_compaction_finished/format
-/sys/kernel/tracing/events/compaction/mm_compaction_kcompactd_wake/format
-/sys/kernel/tracing/events/compaction/mm_compaction_suitable/format
-/sys/kernel/tracing/events/compaction/mm_compaction_wakeup_kcompactd/format
-/sys/kernel/tracing/events/error_report/error_report_end/format
-/sys/kernel/tracing/events/i2c_slave/i2c_slave/format
-/sys/kernel/tracing/events/migrate/mm_migrate_pages/format
-/sys/kernel/tracing/events/migrate/mm_migrate_pages_start/format
-/sys/kernel/tracing/events/pagemap/mm_lru_insertion/format
-/sys/kernel/tracing/events/power/dev_pm_qos_add_request/format
-/sys/kernel/tracing/events/power/dev_pm_qos_remove_request/format
-/sys/kernel/tracing/events/power/dev_pm_qos_update_request/format
-/sys/kernel/tracing/events/power/pm_qos_update_flags/format
-/sys/kernel/tracing/events/power/pm_qos_update_target/format
-/sys/kernel/tracing/events/pwm/pwm_apply/format
-/sys/kernel/tracing/events/pwm/pwm_get/format
-/sys/kernel/tracing/events/sched/sched_skip_vma_numa/format
-/sys/kernel/tracing/events/skb/kfree_skb/format
-/sys/kernel/tracing/events/thermal/thermal_zone_trip/format
-/sys/kernel/tracing/events/timer/hrtimer_init/format
-/sys/kernel/tracing/events/timer/hrtimer_start/format
-/sys/kernel/tracing/events/xen/xen_mc_batch/format
-/sys/kernel/tracing/events/xen/xen_mc_extend_args/format
-/sys/kernel/tracing/events/xen/xen_mc_flush_reason/format
-/sys/kernel/tracing/events/xen/xen_mc_issue/format
-
 Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Reviewed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/builtin-trace.c | 29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c | 89 ++++++++++++++++++++++++++++++++------
+ 1 file changed, 76 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d93f34e9af74..bd16679fb4c0 100644
+index bd16679fb4c0..1148c3edee97 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -1962,12 +1962,12 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- 	return err;
- }
+@@ -904,11 +904,36 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+ 	    .strtoul	= STUL_STRARRAY_FLAGS, \
+ 	    .parm	= &strarray__##array, }
  
--static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
-+static int evsel__init_tp_arg_scnprintf(struct evsel *evsel, bool *use_btf)
+-static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall_arg_fmt *arg_fmt)
++#define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
++
++static const struct btf_type *btf_find_type(struct btf *btf, char *type)
  {
- 	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
+ 	const struct btf_type *bt;
++	int id = btf__find_by_name(btf, type);
++
++	if (id < 0)
++		return NULL;
++
++	bt = btf__type_by_id(btf, id);
++	if (bt == NULL)
++		return NULL;
++
++	return bt;
++}
++
++struct btf_parm {
++	struct btf *btf;
++	char *type;
++};
++
++static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struct syscall_arg *arg, u64 *val)
++{
++	struct btf_parm *bparm = arg->parm;
++	struct btf *btf = bparm->btf;
++	char *type      = bparm->type;
+ 	char enum_prefix[][16] = { "enum", "const enum" }, *ep;
+-	int id;
++	struct btf_enum *be;
++	const struct btf_type *bt;
+ 	size_t i;
  
- 	if (fmt != NULL) {
--		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, NULL);
-+		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, use_btf);
- 		return 0;
+ 	for (i = 0; i < ARRAY_SIZE(enum_prefix); i++) {
+@@ -917,11 +942,38 @@ static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall_arg_f
+ 			type += strlen(ep) + 1;
  	}
  
-@@ -2171,7 +2171,8 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			 * property isn't set.
- 			 */
- 			if (val == 0 && !trace->show_zeros &&
--			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero))
-+			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero) &&
-+			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].is_enum))
- 				continue;
+-	id = btf__find_by_name(btf, type);
+-	if (id < 0)
+-		return -1;
++	bt = btf_find_type(btf, type);
++	if (bt == NULL)
++		return false;
  
- 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-@@ -2877,7 +2878,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
- 
- 		/* Suppress this argument if its value is zero and show_zero property isn't set. */
--		if (val == 0 && !trace->show_zeros && !arg->show_zero)
-+		if (val == 0 && !trace->show_zeros && !arg->show_zero && !arg->is_enum)
- 			continue;
- 
- 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-@@ -2885,6 +2886,15 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		if (trace->show_arg_names)
- 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
- 
-+		if (arg->is_enum && trace->btf) {
-+			size_t p = btf_enum_scnprintf(bf + printed, size - printed, val, trace->btf,
-+						      field->type, arg);
-+			if (p) {
-+				printed += p;
-+				continue;
-+			}
+-	bt = btf__type_by_id(btf, id);
++	for (be = btf_enum(bt), i = 0; i < btf_vlen(bt); ++i, ++be) {
++		const char *name = btf__name_by_offset(btf, be->name_off);
++		int max_len = max(size, strlen(name));
++
++		if (strncmp(name, bf, max_len) == 0) {
++			*val = be->val;
++			return true;
 +		}
++	}
 +
- 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
- 	}
++	return false;
++}
++
++#define STUL_BTF_ENUM syscall_arg__strtoul_btf_enum
++
++static int btf_enum_find_entry(struct btf *btf, char *type, struct syscall_arg_fmt *arg_fmt)
++{
++	char enum_prefix[][16] = { "enum", "const enum" }, *ep;
++	const struct btf_type *bt;
++	size_t i;
++
++	for (i = 0; i < ARRAY_SIZE(enum_prefix); i++) {
++		ep = enum_prefix[i];
++		if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
++			type += strlen(ep) + 1;
++	}
++
++	bt = btf_find_type(btf, type);
+ 	if (bt == NULL)
+ 		return -1;
  
-@@ -4537,7 +4547,7 @@ static void evsel__set_syscall_arg_fmt(struct evsel *evsel, const char *name)
- 	}
+@@ -1850,6 +1902,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			arg->scnprintf = SCA_FD;
+ 		} else if (strstr(field->type, "enum") && use_btf != NULL) {
+ 			*use_btf = arg->is_enum = true;
++			arg->strtoul = STUL_BTF_ENUM;
+ 		} else {
+ 			const struct syscall_arg_fmt *fmt =
+ 				syscall_arg_fmt__find_by_name(field->name);
+@@ -3776,7 +3829,8 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
+ 	return __trace__deliver_event(trace, event->event);
  }
  
--static int evlist__set_syscall_tp_fields(struct evlist *evlist)
-+static int evlist__set_syscall_tp_fields(struct evlist *evlist, bool *use_btf)
+-static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel *evsel, char *arg)
++static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel *evsel, char *arg,
++								   char **type)
  {
- 	struct evsel *evsel;
+ 	struct tep_format_field *field;
+ 	struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
+@@ -3785,8 +3839,10 @@ static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel
+ 		return NULL;
  
-@@ -4546,7 +4556,7 @@ static int evlist__set_syscall_tp_fields(struct evlist *evlist)
- 			continue;
+ 	for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
+-		if (strcmp(field->name, arg) == 0)
++		if (strcmp(field->name, arg) == 0) {
++			*type = field->type;
+ 			return fmt;
++		}
  
- 		if (strcmp(evsel->tp_format->system, "syscalls")) {
--			evsel__init_tp_arg_scnprintf(evsel);
-+			evsel__init_tp_arg_scnprintf(evsel, use_btf);
- 			continue;
- 		}
+ 	return NULL;
+ }
+@@ -3824,14 +3880,14 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
+ 			struct syscall_arg_fmt *fmt;
+ 			int left_size = tok - left,
+ 			    right_size = right_end - right;
+-			char arg[128];
++			char arg[128], *type;
  
-@@ -5024,11 +5034,16 @@ int cmd_trace(int argc, const char **argv)
- 	}
+ 			while (isspace(left[left_size - 1]))
+ 				--left_size;
  
- 	if (trace.evlist->core.nr_entries > 0) {
-+		bool use_btf = false;
+ 			scnprintf(arg, sizeof(arg), "%.*s", left_size, left);
+ 
+-			fmt = evsel__find_syscall_arg_fmt_by_name(evsel, arg);
++			fmt = evsel__find_syscall_arg_fmt_by_name(evsel, arg, &type);
+ 			if (fmt == NULL) {
+ 				pr_err("\"%s\" not found in \"%s\", can't set filter \"%s\"\n",
+ 				       arg, evsel->name, evsel->filter);
+@@ -3843,9 +3899,16 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
+ 
+ 			if (fmt->strtoul) {
+ 				u64 val;
+-				struct syscall_arg syscall_arg = {
+-					.parm = fmt->parm,
+-				};
++				struct syscall_arg syscall_arg;
++				struct btf_parm bparm;
 +
- 		evlist__set_default_evsel_handler(trace.evlist, trace__event_handler);
--		if (evlist__set_syscall_tp_fields(trace.evlist)) {
-+		if (evlist__set_syscall_tp_fields(trace.evlist, &use_btf)) {
- 			perror("failed to set syscalls:* tracepoint fields");
- 			goto out;
- 		}
-+
-+		if (use_btf && trace.btf == NULL)
-+			trace__load_vmlinux_btf(&trace);
- 	}
++				if (fmt->is_enum) {
++					bparm.btf  = trace->btf;
++					bparm.type = type;
++					syscall_arg.parm = &bparm;
++				} else {
++					syscall_arg.parm = fmt->parm;
++				}
  
- 	if (trace.sort_events) {
+ 				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
+ 					char *n, expansion[19];
 -- 
 2.45.2
 
