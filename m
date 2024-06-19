@@ -1,130 +1,422 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EECE01848;
-	Wed, 19 Jun 2024 16:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F6955884;
+	Wed, 19 Jun 2024 17:59:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718814138; cv=none; b=XRt47QCflbTaFBlzqhgFl74I8DjJ/3zM8bImXnOqJmD5UoHt6tJq6yk/tmpV2pSHKVzm2dS6pr2LqH35MRqcP3mZ1ILD/xMzF9+KK+x8crAzrHtF55wQrIbN8y0XQ++EvauzwhhdqfZSr4QQpiAM91Ew4HpH6pfN5jGeNAQbsMQ=
+	t=1718819990; cv=none; b=lmDZg+YBwDdd7TME/XoV73OQPoE/svS26ZpN8DlujtiiRFWRAHLsR9XhMqDivoAf2S9TBopIBPYZyJmXo1zmkbi6fH04aqjJUPYZv+ChKee0JExVXmZAJFWHeQx3EgLsQQZSKiDtfi8wvAtURUzP4EUiXS8fZsPZc3BQrR7ShDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718814138; c=relaxed/simple;
-	bh=IsSvs8vJzAB6QrmDJJuINQX8sXAnwZ1o3/A6u9zFI6c=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+KqoIjm9KM/yGjPpX5f1QZIYZyPhkEjNffNCS/3kjVa51dO604d5Mtz/L/5TGz3qVrG0kE8GjEioEm6IoBO03IBtSC0FHzGDj4JjuntoHPXt2EPcldtec2q1lH+1U33Se9ClNELxwt3XRs4q/n5nIJPxovI6OQ1EOidMloEDak=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HEloc2u/; arc=none smtp.client-ip=209.85.221.51
+	s=arc-20240116; t=1718819990; c=relaxed/simple;
+	bh=MRxQH7jc60bamFYUV1mnjkSvceoQHvZzsjcbBvOTmg8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KSYJxtAAIeUgHba2j149mfMhBc33c19jlo4/MWAIm1wwvI+K1TIcgUKhShq79K5c+8WaihX8tV2iIATGSZz1X1pA38ZLMdAVpoN1CzxlYfYXCvq394IawOLkTVbaR6u8M+231joRRSjdA+/H5Vq9OkFVgJIhXAZLq9Z3nZCvh5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUjqocRl; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HEloc2u/"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-362bc731810so1503501f8f.1;
-        Wed, 19 Jun 2024 09:22:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUjqocRl"
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dfe41f7852cso37265276.1;
+        Wed, 19 Jun 2024 10:59:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718814135; x=1719418935; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P8Nq2A2G674garxMhqxXT5D8eJ9itPY7dy4g98ctkCk=;
-        b=HEloc2u/RIu07aiM2LYsCylA7qOK1Pp9T2pEuuF6qvr24RfiKk8caBEkgZCX0T5dqW
-         RPG2Jt3guMS1nG348QzCfIMltDq+BPxlsvYjMQ7iCZpkI+RcBJKYbq80q+Zp8Gl0CZ1Q
-         RKjK5Xrhud9pNofq4HhR5wE7H68iVkCrlBovmlm7MR8BWcgHYIZuzO4r+2bk2HpyR2j+
-         lGpsBRZyNvuKdwRfRT1Xw4MlB9CCyFwIIzVRbbInhIAKs+rfcTmB9JjQB21v8klaXY3i
-         fl+iwxd+2zgP0AH7ZdFXBownR4LmLrzR/9cVLmrJynuWUUmFnbyT+vEw7YqcR63zEpqo
-         amBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718814135; x=1719418935;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1718819987; x=1719424787; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P8Nq2A2G674garxMhqxXT5D8eJ9itPY7dy4g98ctkCk=;
-        b=IXcCY6L8UnoeonpeNSv5iGgDC2nlQ0e0JXEY9BbQbsnz8x0l4A8dDdei0w7YxKMesq
-         pH44IWzS80qvA5jBT98rYSwKS4svf/rw7FVuwPoA2MdHmlSecHcFKudEsE+TTB8ZFxUB
-         GzdiL6H1pdEtVsruoQRQqevmL8MAHaGaABd1lDqn+x3AYdIDQZ3f40P8OkcqlDykdJeB
-         7l9dT+4ElvSw1ZQPdk6A5UbItx11XBoIvkbzQt0xoWD4f9gJmiD6J8UnJNVRY2ot8iID
-         Ka8RN106psUMiy61T4WANJrulpSilRSq3MGLL4xmKJI5Z2B1ENOkH67wLDD6QIlxdaoX
-         jMXA==
-X-Forwarded-Encrypted: i=1; AJvYcCUE6kKeE6ao5d7bT7iKj2vWKDsNnRbjBc2t+rVgI7EfOE/QsJiIJNcKub/jeqbBAtXWW5QUpThzhUQtHibUIEw40DGK8rwI+jH3RaDv15k1FGWqpRcwOlBAZcEtvf90EM/g21MPkOdcziBRGUHrtg1ScuhzbyPHiVgOEOhweK+YsLTFcg==
-X-Gm-Message-State: AOJu0YyfRp+qaZs0cOjdD888N/761wUPF2wP4Ed4gCbtDXom2YJGPOVV
-	f3goA0tiJMeriGkunYnxvl6Qp2SJEgSEp+Vg8Kfud0R9DWxU8Vie
-X-Google-Smtp-Source: AGHT+IHEq2/vpeV2ZS149nVdu+6aXWdzIsTynQteI9ekppwXCQ6c7CKWhpb/9Ytanm/P3y+Q7f7bYg==
-X-Received: by 2002:adf:e9c8:0:b0:35f:3189:ddd2 with SMTP id ffacd0b85a97d-36317c79ba6mr2590075f8f.35.1718814135013;
-        Wed, 19 Jun 2024 09:22:15 -0700 (PDT)
-Received: from krava (85-193-35-215.rib.o2.cz. [85.193.35.215])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42286fe9230sm269539285e9.17.2024.06.19.09.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jun 2024 09:22:14 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 19 Jun 2024 18:22:12 +0200
-To: Liao Chang <liaochang1@huawei.com>
-Cc: rostedt@goodmis.org, mhiramat@kernel.org, oleg@redhat.com,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	nathan@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-Message-ID: <ZnMFtCsRCVZ6pkp8@krava>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
+        bh=Yh6SELLxS74xotWhYGb10CwkHQAzhtYrWYT84oO1EEo=;
+        b=TUjqocRlci2yLZ7cG15PCCj6j5WL1FoAIe8PC9wS50Wiu5HB4nf/8/x72x2dLGO+vw
+         E8IdKoRHIJyjlpOw5uVw1tjzxVeuw1GonJgNWdFemEZ5VGArV6U6VDqYN+SACC2gXOSD
+         enQ7DBMRoLbz1mtMX4HM4aAMNLzbD9Ff1JeJ5BXPoYoKxjU5BTk7zH/bZ7Uh0iRiC80A
+         qphSB/gzkl76/8+9542rQ17T/fXqCBqZ8ohwTCYALLn5qbLE6N1vgOtmbxZiq/1zYVmw
+         pbBv1gU26AI51AOIt0B35h6HcAbWT7b17QiXYGUuUOxqLWPgn8K+0um1oCuURXRY+kkB
+         bPXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718819987; x=1719424787;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yh6SELLxS74xotWhYGb10CwkHQAzhtYrWYT84oO1EEo=;
+        b=B7keYysvWfJ2fLLUI6CdtAr1WNHC/erME/45nQRziFOlz95VxJqLPTEdFwbDChvtjn
+         WKqzaFKyriRqVgyOoQMqtKk/FVLbCjEaG5OhXr0LJdWRUPmnQh/gG4wa9/7n3mJZKqi2
+         MuDduRW36STFyG0/SoMNg7TNtI/lazd6XuQSCSu4//fqmxpjn8p7oZa65HTdPsXEm/hd
+         wIdlb93rFltZKbCb/iy7fRoz+cF8X/sxQVoDm5dDpLf6Sds7HnHkhZXSbjxgWHqLgbCK
+         jr+biQUCXyDgD42nBpIbNz26T/kJsglRh8FEv8ftAgXwiAa1ZkoR4jIdAcmCXtHMSG71
+         kMjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuRgtjlxDnqqOU+uAPqChNRGiWarO0AGWEu4P9cJXs12lIoYxtLlYQN53mvVerIF1WSPQrc8FWH8SkpYON1cYSaFuK9w/P0LyX0JyCxPfRclA/1SVL+spDn5AJk2eKGt8VdAkjE7PC7XXxKhwqHA==
+X-Gm-Message-State: AOJu0YzyAHAG8A2+DQIz/6eJ6569cuEdujjt89aksBTlaNJ0UtsW2Do/
+	mmZBhqab2jmzIZEJunSx956TjJrNWqqQPHA5psTb1eJBxc08Q+kVKp8gmXGm1GXd+SgT/2HfzPA
+	LAG4bbDJ7EkGo8g/VX5gdnInRPpo=
+X-Google-Smtp-Source: AGHT+IH7X5VOgYS74U+X51Cbr9w88gzD41wpkrgOOxN9gZ6gaqX623RqnjMRxIH4QKZuTj8+9UYU6NG/AcP4zjAsYl8=
+X-Received: by 2002:a5b:60c:0:b0:e02:b910:cb52 with SMTP id
+ 3f1490d57ef6-e02be2475d0mr3273276276.65.1718819986952; Wed, 19 Jun 2024
+ 10:59:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240619013411.756995-1-liaochang1@huawei.com>
+References: <20240619082042.4173621-1-howardchu95@gmail.com>
+ <20240619082042.4173621-3-howardchu95@gmail.com> <ZnLgstTgrFRYu0aD@x1>
+In-Reply-To: <ZnLgstTgrFRYu0aD@x1>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 20 Jun 2024 01:59:37 +0800
+Message-ID: <CAH0uvohKGrfwApZXfJZaWx4LQgPXct+uQ_N7snmqSo4VeCxVUA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] perf trace: Augment enum syscall arguments with BTF
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 19, 2024 at 01:34:11AM +0000, Liao Chang wrote:
-> When the new uretprobe system call was added [1], the xol slots reserved
-> for the uretprobe trampoline might be insufficient on some architecture.
+Hello,
 
-hum, uretprobe syscall is x86_64 specific, nothing was changed wrt slots
-or other architectures.. could you be more specific in what's changed?
+Thanks for the in-depth review.
 
-thanks,
-jirka
+On Wed, Jun 19, 2024 at 9:44=E2=80=AFPM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Wed, Jun 19, 2024 at 04:20:39PM +0800, Howard Chu wrote:
+> > This is a feature implemented on the basis of the previous bug fix
+> > https://lore.kernel.org/linux-perf-users/d18a9606-ac9f-4ca7-afaf-fcf4c9=
+51cb90@web.de/T/#t
+> >
+> > In this patch, BTF is used to turn enum value to the corresponding
+> > enum variable name. There is only one system call that uses enum value
+> > as its argument, that is `landlock_add_rule()`.
+> >
+> > The vmlinux btf is loaded lazily, when user decided to trace the
+> > `landlock_add_rule` syscall. But if one decides to run `perf trace`
+> > without any arguments, the behaviour is to trace `landlock_add_rule`,
+> > so vmlinux btf will be loaded by default.
+> >
+> > before:
+> >
+> > ```
+> > perf $ ./perf trace -e landlock_add_rule
+> >      0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: =
+2)                                       =3D -1 EBADFD (File descriptor in =
+bad state)
+> >      0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: =
+1)                                       =3D -1 EBADFD (File descriptor in =
+bad state)
+> > ```
+> >
+> > after:
+> >
+> > ```
+> > perf $ ./perf trace -e landlock_add_rule
+> >      0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: =
+LANDLOCK_RULE_NET_PORT)                  =3D -1 EBADFD (File descriptor in =
+bad state)
+> >      0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: =
+LANDLOCK_RULE_PATH_BENEATH)              =3D -1 EBADFD (File descriptor in =
+bad state)
+> > ```
+> > Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Reviewed-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/builtin-trace.c | 96 ++++++++++++++++++++++++++++++++++++--
+> >  1 file changed, 91 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > index c4fa8191253d..d93f34e9af74 100644
+> > --- a/tools/perf/builtin-trace.c
+> > +++ b/tools/perf/builtin-trace.c
+> > @@ -19,6 +19,7 @@
+> >  #ifdef HAVE_LIBBPF_SUPPORT
+> >  #include <bpf/bpf.h>
+> >  #include <bpf/libbpf.h>
+> > +#include <bpf/btf.h>
+> >  #ifdef HAVE_BPF_SKEL
+> >  #include "bpf_skel/augmented_raw_syscalls.skel.h"
+> >  #endif
+> > @@ -110,6 +111,11 @@ struct syscall_arg_fmt {
+> >       const char *name;
+> >       u16        nr_entries; // for arrays
+> >       bool       show_zero;
+> > +     bool       is_enum;
+> > +     struct {
+> > +             void    *entries;
+> > +             u16     nr_entries;
+> > +     }          btf_entry;
+> >  };
+> >
+> >  struct syscall_fmt {
+> > @@ -140,6 +146,7 @@ struct trace {
+> >  #ifdef HAVE_BPF_SKEL
+> >       struct augmented_raw_syscalls_bpf *skel;
+> >  #endif
+> > +     struct btf              *btf;
+> >       struct record_opts      opts;
+> >       struct evlist   *evlist;
+> >       struct machine          *host;
+> > @@ -897,6 +904,56 @@ static size_t syscall_arg__scnprintf_getrandom_fla=
+gs(char *bf, size_t size,
+> >           .strtoul    =3D STUL_STRARRAY_FLAGS, \
+> >           .parm       =3D &strarray__##array, }
+> >
+> > +static int btf_enum_find_entry(struct btf *btf, char *type, struct sys=
+call_arg_fmt *arg_fmt)
+> > +{
+> > +     const struct btf_type *bt;
+> > +     char enum_prefix[][16] =3D { "enum", "const enum" }, *ep;
+> > +     int id;
+> > +     size_t i;
+> > +
+> > +     for (i =3D 0; i < ARRAY_SIZE(enum_prefix); i++) {
+> > +             ep =3D enum_prefix[i];
+> > +             if (strlen(type) > strlen(ep) + 1 && strstarts(type, ep))
+>
+> No need for the strlen test? I.e. plain using strstarts() should be
+> enough?
 
-> For example, on arm64, the trampoline is consist of three instructions
-> at least. So it should mark enough bits in area->bitmaps and
-> and area->slot_count for the reserved slots.
-> 
-> [1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
-> 
-> Signed-off-by: Liao Chang <liaochang1@huawei.com>
-> ---
->  kernel/events/uprobes.c | 11 +++++++----
->  1 file changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 2816e65729ac..efd2d7f56622 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
->  static struct xol_area *__create_xol_area(unsigned long vaddr)
->  {
->  	struct mm_struct *mm = current->mm;
-> -	unsigned long insns_size;
-> +	unsigned long insns_size, slot_nr;
->  	struct xol_area *area;
->  	void *insns;
->  
-> @@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  
->  	area->vaddr = vaddr;
->  	init_waitqueue_head(&area->wq);
-> -	/* Reserve the 1st slot for get_trampoline_vaddr() */
-> -	set_bit(0, area->bitmap);
-> -	atomic_set(&area->slot_count, 1);
->  	insns = arch_uprobe_trampoline(&insns_size);
-> +	/* Reserve enough slots for the uretprobe trampoline */
-> +	for (slot_nr = 0;
-> +	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
-> +	     slot_nr++)
-> +		set_bit(slot_nr, area->bitmap);
-> +	atomic_set(&area->slot_count, slot_nr);
->  	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
->  
->  	if (!xol_add_vma(mm, area))
-> -- 
-> 2.34.1
-> 
+Agree. Thanks for pointing that out. Although if string 'type' is
+'enum' and prefix is 'enum', strstarts() will be true, but to do 'type
++=3D strlen(ep) + 1', and then access 'type', might give us an
+out-of-range access, but I don't think 'type' will ever be just 'enum'
+or 'const enum', so I'll delete it then.
+
+>
+> > +                     type +=3D strlen(ep) + 1;
+> > +     }
+> > +
+> > +     id =3D btf__find_by_name(btf, type);
+> > +     if (id < 0)
+> > +             return -1;
+> > +
+> > +     bt =3D btf__type_by_id(btf, id);
+> > +     if (bt =3D=3D NULL)
+>
+> a pr_debug() stating that something that tracefs says should be in BTF
+> and isn't found there seems to be of value here.
+
+Sure.
+
+>
+> > +             return -1;
+> > +
+> > +     arg_fmt->btf_entry.entries    =3D btf_enum(bt);
+> > +     arg_fmt->btf_entry.nr_entries =3D btf_vlen(bt);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static size_t btf_enum_scnprintf(char *bf, size_t size, int val, struc=
+t btf *btf, char *type,
+> > +                              struct syscall_arg_fmt *arg_fmt)
+> > +{
+> > +     struct btf_enum *be;
+> > +     int i;
+> > +
+> > +     /* if btf_entry is NULL, find and save it to arg_fmt */
+> > +     if (arg_fmt->btf_entry.entries =3D=3D NULL)
+> > +             if (btf_enum_find_entry(btf, type, arg_fmt))
+> > +                     return 0;
+> > +
+> > +     be =3D (struct btf_enum *)arg_fmt->btf_entry.entries;
+>
+>         struct btf_enum *be =3D (struct btf_enum *)arg_fmt->btf_entry.ent=
+ries;
+>
+>  arg_fmt->btf_entry.entries is (void *), so we don't need the (struct
+> btf_enum *) cast here, removing it makes the code more compact. And
+> since we move the declaration to the same line, the info about its type
+> is there as well.
+
+Sure, thanks.
+
+>
+> > +
+> > +     for (i =3D 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
+>
+>
+>         for (int i =3D 0; i < arg_fmt->btf_entry.nr_entries; ++i, ++be) {
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep 'for (int ' tools/perf/=
+ | wc -l
+> 99
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> Doing it this way makes the code more compact and is allowed even in
+> kernel code since some time ago:
+
+Sure.
+
+>
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep 'for (int ' drivers/ | =
+wc -l
+> 294
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep 'for (int ' kernel/ | w=
+c -l
+> 12
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep 'for (int ' net/ | wc -=
+l
+> 3
+> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep 'for (int ' mm/ | wc -l
+> 21
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> > +             if (be->val =3D=3D val) {
+> > +                     return scnprintf(bf, size, "%s",
+> > +                                      btf__name_by_offset(btf, be->nam=
+e_off));
+> > +             }
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  #include "trace/beauty/arch_errno_names.c"
+> >  #include "trace/beauty/eventfd.c"
+> >  #include "trace/beauty/futex_op.c"
+> > @@ -1699,6 +1756,15 @@ static void trace__symbols__exit(struct trace *t=
+race)
+> >       symbol__exit();
+> >  }
+> >
+> > +static void trace__load_vmlinux_btf(struct trace *trace)
+> > +{
+> > +     trace->btf =3D btf__load_vmlinux_btf();
+> > +     if (verbose > 0) {
+> > +             fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n=
+" :
+> > +                                                 "Failed to load vmlin=
+ux BTF\n");
+> > +     }
+> > +}
+> > +
+> >  static int syscall__alloc_arg_fmts(struct syscall *sc, int nr_args)
+> >  {
+> >       int idx;
+> > @@ -1744,7 +1810,7 @@ static const struct syscall_arg_fmt *syscall_arg_=
+fmt__find_by_name(const char *n
+> >  }
+> >
+> >  static struct tep_format_field *
+> > -syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_fo=
+rmat_field *field)
+> > +syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_fo=
+rmat_field *field, bool *use_btf)
+> >  {
+> >       struct tep_format_field *last_field =3D NULL;
+> >       int len;
+> > @@ -1782,6 +1848,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fm=
+t *arg, struct tep_format_field
+> >                        * 7 unsigned long
+> >                        */
+> >                       arg->scnprintf =3D SCA_FD;
+> > +             } else if (strstr(field->type, "enum") && use_btf !=3D NU=
+LL) {
+> > +                     *use_btf =3D arg->is_enum =3D true;
+>
+> Here you have to check if use_btf is NULL, as you, in this patch, later
+> call syscall_arg_fmt__init_array(arg, field, NULL) in
+> evsel__init_tp_arg_scnprintf(), probably you tested it all at the end of
+> the patch series, we have to make sure that it works after each patch,
+> so that we keep the codebase bisectable.
+
+I'm sorry, could you enlighten me on this? I thought:
+```
+else if (strstr(field->type, "enum") && use_btf !=3D NULL) {
+```
+is doing the NULL checking. If you mean making sure the NULL checking
+appears in all patches, I thought this is where we should introduce
+the checking. Tiny reminder, the [1/5] patch is your syscalltbl
+traversal bug fix.
+
+>
+> >               } else {
+> >                       const struct syscall_arg_fmt *fmt =3D
+> >                               syscall_arg_fmt__find_by_name(field->name=
+);
+> > @@ -1796,9 +1864,10 @@ syscall_arg_fmt__init_array(struct syscall_arg_f=
+mt *arg, struct tep_format_field
+> >       return last_field;
+> >  }
+> >
+> > -static int syscall__set_arg_fmts(struct syscall *sc)
+> > +static int syscall__set_arg_fmts(struct syscall *sc, bool *use_btf)
+> >  {
+> > -     struct tep_format_field *last_field =3D syscall_arg_fmt__init_arr=
+ay(sc->arg_fmt, sc->args);
+> > +     struct tep_format_field *last_field =3D syscall_arg_fmt__init_arr=
+ay(sc->arg_fmt, sc->args,
+> > +                                                                      =
+ use_btf);
+> >
+> >       if (last_field)
+> >               sc->args_size =3D last_field->offset + last_field->size;
+> > @@ -1810,7 +1879,9 @@ static int trace__read_syscall_info(struct trace =
+*trace, int id)
+> >  {
+> >       char tp_name[128];
+> >       struct syscall *sc;
+> > +     int err;
+> >       const char *name =3D syscalltbl__name(trace->sctbl, id);
+> > +     bool use_btf =3D false;
+> >
+> >  #ifdef HAVE_SYSCALL_TABLE_SUPPORT
+> >       if (trace->syscalls.table =3D=3D NULL) {
+> > @@ -1883,7 +1954,12 @@ static int trace__read_syscall_info(struct trace=
+ *trace, int id)
+> >       sc->is_exit =3D !strcmp(name, "exit_group") || !strcmp(name, "exi=
+t");
+> >       sc->is_open =3D !strcmp(name, "open") || !strcmp(name, "openat");
+> >
+> > -     return syscall__set_arg_fmts(sc);
+> > +     err =3D syscall__set_arg_fmts(sc, &use_btf);
+> > +
+> > +     if (use_btf && trace->btf =3D=3D NULL)
+> > +             trace__load_vmlinux_btf(trace);
+> > +
+> > +     return err;
+> >  }
+> >
+> >  static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+> > @@ -1891,7 +1967,7 @@ static int evsel__init_tp_arg_scnprintf(struct ev=
+sel *evsel)
+> >       struct syscall_arg_fmt *fmt =3D evsel__syscall_arg_fmt(evsel);
+> >
+> >       if (fmt !=3D NULL) {
+> > -             syscall_arg_fmt__init_array(fmt, evsel->tp_format->format=
+.fields);
+> > +             syscall_arg_fmt__init_array(fmt, evsel->tp_format->format=
+.fields, NULL);
+> >               return 0;
+> >       }
+> >
+> > @@ -2103,6 +2179,16 @@ static size_t syscall__scnprintf_args(struct sys=
+call *sc, char *bf, size_t size,
+> >                       if (trace->show_arg_names)
+> >                               printed +=3D scnprintf(bf + printed, size=
+ - printed, "%s: ", field->name);
+> >
+> > +                     if (sc->arg_fmt[arg.idx].is_enum && trace->btf) {
+> > +                             size_t p =3D btf_enum_scnprintf(bf + prin=
+ted, size - printed, val,
+> > +                                                           trace->btf,=
+ field->type,
+> > +                                                           &sc->arg_fm=
+t[arg.idx]);
+> > +                             if (p) {
+> > +                                     printed +=3D p;
+> > +                                     continue;
+> > +                             }
+> > +                     }
+> > +
+> >                       printed +=3D syscall_arg_fmt__scnprintf_val(&sc->=
+arg_fmt[arg.idx],
+> >                                                                 bf + pr=
+inted, size - printed, &arg, val);
+> >               }
+> > --
+> > 2.45.2
+> >
+
+Thanks,
+Howard
