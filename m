@@ -1,126 +1,133 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 933C015748B;
-	Wed, 19 Jun 2024 18:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 043C6157E93;
+	Wed, 19 Jun 2024 18:39:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718822246; cv=none; b=rAK1Dp5jrJytBKwRoDRNUGKdHyY+kJtObQEWucO7n47Ych7MAjo7Z0qJkXxCT1mZzyXSXJXJjyX/8cIU3uDVJXaGuXAAAzFzhoSAJhxdBOUbRvKa2+hoSzZnNZZtqIw1EVzEpPQDTxFVKELqRL7GO1xsbqM+wet07zzzAf/OlDs=
+	t=1718822373; cv=none; b=WngyvmvjvfQQopFeFseO4FkU9SIdGTNTWTBjL3RWHzWfzhIF6FbtfA2YmmCtbGorFAyxlGtLHOq6pvsgJBtxJg4pipOlo6x87SghwT+SubJrRHiz53mh8P5rvvUPyQSws46tVzdgL3zUAc0l0mo5CQLfTkvGby1fpwvZm5ixR44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718822246; c=relaxed/simple;
-	bh=QhUYoWBf63AsJ/OW0Yna5f3rQ3Zd7nBKGpP/7eph1Oo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RXh7VkfPgPsoZsqafwvbcHOxHvqJuT8jNl10qPgEtctHkIOG45zuAym8jUzwMnzW4wIA3Ft51z9xYWETfUItbKSaWk8iPmtiKikeWEvbz70sjKdeLnwn2b13DNGghtry9dZJo8qf/bhWtU+pWRl79Enge+GFWF7/hQKEPHstyHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+	s=arc-20240116; t=1718822373; c=relaxed/simple;
+	bh=ZEqVVV8hma1sBW8JEOiV4irpaUFqN8hKsPQLx0n1r24=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rdnLcbE+YlXTXuIexIHwvFu9GXIUmGfKrVSxSyd9h7ssYFM4R1PDw6MwCTK+k/PUHi6Z5qCvU1k6MPX+Xe6Y6lN5CJ42bLJzxwsokWHrJMkuB0WAhD5SOpPrQt169YT5KQ0qKOI6WjWBP+RnN7NK30G8c5R4z5qeanePtawaED0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DyDTbCdE; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-705cffc5bcfso148739b3a.3;
-        Wed, 19 Jun 2024 11:37:25 -0700 (PDT)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DyDTbCdE"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-705e9e193caso100166b3a.2;
+        Wed, 19 Jun 2024 11:39:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718822371; x=1719427171; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bSSF8rCLCqfCwCteTtDEL5pGKT4d+aFWwNIMPEJ041A=;
+        b=DyDTbCdE+UJKHUwswPtf94oa8qrOLF6HLVhoeoLbx7piyvGUV8w8f9nMm3iQSwqurp
+         UBqVweWY16hNIkjBe2WJcT21s/9UOZ6PoWov2jx5pzKPQORVDtWeYXLTmk9hzbXg0llu
+         SXBeHiRiytBoJW7ettE1x4ZefxxtQS8lUG67rUtW3VLkkje7spAQxhC4UrKmDqsbXlXG
+         YBMSI0PBCEOeij+cI60akS3qeVKVsFt9IBaZNIN6nd8DISsA84hiz5e6bUeXsi9AQXV4
+         vEJvDX1YDWOJJU7juJqjKlage1igsUGAFIiF9RP4uBt9TkyGJdo25LSXQ3VFjmzXDO2Z
+         GASg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718822245; x=1719427045;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gW/h20d34xs/p3I5YUoc4XTJZsGBJiaZGRgH62s/GAA=;
-        b=XAgoHWa+3z4MwYM63kS3ABkgH0Lijgbwues+rrCdK/Gm1t7mYH0CcmbH6K1coJVeZR
-         3k1hJLL4GSDM4uPxQq6Mq9l5Ow9YINTie2tjuTdeuSCJllX5lkM66y0K2aD34GJQlugj
-         1SxXNjOcYj8BzkrE1H2MCCay0L856SFujpqgvk9rYPY6kMIj/qA/AuxOXYCaiWKc8gJM
-         zDozNrXw77BqqPWGYUC7eBAG1KKZYtn7adsQSMLZki3ZTLIEgJQdQApmI2tATHLiztoP
-         V7FrHw6+IkhV7ObUGt29/Vn9phMZ2y1Wi5gk+fHcKwlwAIfao8iVm23/UaWDyVTmerOE
-         nleA==
-X-Forwarded-Encrypted: i=1; AJvYcCX9cLDrAtr6mW/zlNJWzewUdKWhWBEjeXvkIcOfJKfc1elUqbozyvQphBSZ61HkeoojbjXEn9OE4MjwbbOggfl724zqEXpioz+i0jLaRE1Wf4gW8HIuIzNTfMBXieb6JxUDZRZX+8AfnA1RRc43nQ==
-X-Gm-Message-State: AOJu0YzsPL9VXbDuv3lHJhq4Ix2Wr6hFujtjq/SoZmhvIxJd1itcrbFV
-	vCUXz8TTAnbUOWt4Hx2mocnLqriTp4MWJdhW34lmojLf8FOCbRF+vc2IEZ4qZKeHm5+iuvV4bqD
-	v3NnKZuvjPBOCHjU7g4Pqa/iLBoY=
-X-Google-Smtp-Source: AGHT+IFB3pt44wbgHuiQLRJ0LsGXwaW2pjJyI/BCA7wLetbqAMxPqLHjp99ZCqaHNXJgJDfpJPmOp/bP+X6Dn3p4zK4=
-X-Received: by 2002:a05:6a20:4694:b0:1b8:5ac6:4bd8 with SMTP id
- adf61e73a8af0-1bcbb56afadmr3063880637.28.1718822244550; Wed, 19 Jun 2024
- 11:37:24 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1718822371; x=1719427171;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=bSSF8rCLCqfCwCteTtDEL5pGKT4d+aFWwNIMPEJ041A=;
+        b=FnayTHydNC0lqREKosFQL1/aQd+kFe/rxA645Elxk71Au70k2HwXG5rhBdRSY0BvNj
+         Mv452hjY2JUtbyMXKCFAKY5y+fBbgr1MF5jlec1mnWcvcjNfj1VRwX8uRq7yEEVbLtd9
+         CQvRY8lBkKlfMHYXZZTRZUGc7IJM5FzbexRfiIXoIKsDScyI2wFdzma31JreqYOVcHrj
+         He2dX1iALxYWWNoB+0fuvKtpiozOAYqGScyQsThWD/GvpD1B5i22XPb0R1SESspAVQlC
+         EtMG0bpHgMJAJm+V5vM2eEpqh8XpcPjqzh/woFOOBO/RmMuTNfgEYmntTgN1pzCSrl0w
+         cp7w==
+X-Forwarded-Encrypted: i=1; AJvYcCVXXQ+g1e8fc6U1PI7rDA6uRlcEy1/FuEGHKKuO9I6dkP6DoT2aTXSj45Daqnk0cSCYXD8Jk4GMUlAriFBI9EoYH1rihJgkRYBII5INAalDFCDhD0mSNZn4qEZ4AsgGeSuzYVvd1T6fCtU99FUCjA==
+X-Gm-Message-State: AOJu0Ywe/heWoD/2Hb/nYJOi0RrzXSVNrFT/c7SOSD1laWzDqTfrcLSS
+	PyZgQJZQPrKYoFF6qd+G3Ne9yqo4Hc9wfgoWL+0K2nh1niaLUcSu
+X-Google-Smtp-Source: AGHT+IFJtOOlPWSGh3/opZRzsT39XE+oljsAdMMNoEFNhTior3dSrfJaeYZvt/cqYQpNizzmFULgcA==
+X-Received: by 2002:a05:6a00:2d89:b0:6f8:f020:af02 with SMTP id d2e1a72fcca58-70629d01686mr4187972b3a.34.1718822371185;
+        Wed, 19 Jun 2024 11:39:31 -0700 (PDT)
+Received: from localhost.localdomain ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-705cf12142bsm10798238b3a.86.2024.06.19.11.39.27
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Wed, 19 Jun 2024 11:39:30 -0700 (PDT)
+From: yskelg@gmail.com
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: kan.liang@linux.intel.com,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Ze Gao <zegao2021@gmail.com>,
+	Leo Yan <leo.yan@linux.dev>,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Austin Kim <austindh.kim@gmail.com>,
+	shjy180909@gmail.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yunseong Kim <yskelg@gmail.com>
+Subject: [PATCH] util: constant -1 with expression of type char and allocation failure handling
+Date: Thu, 20 Jun 2024 03:38:58 +0900
+Message-ID: <20240619183857.4819-2-yskelg@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202406180932.84be448c-oliver.sang@intel.com>
-In-Reply-To: <202406180932.84be448c-oliver.sang@intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 19 Jun 2024 14:37:13 -0400
-Message-ID: <CAM9d7cjzuJCGXLe_5Jzmcu2iiRtb07WwATnrz01sR7g++b6Frg@mail.gmail.com>
-Subject: Re: [linus:master] [perf dsos] 7a9418cf7f: util/dsos.c:184:8: runtime
- error: null pointer passed as argument 2, which is declared to never be null
-To: kernel test robot <oliver.sang@intel.com>
-Cc: Ian Rogers <irogers@google.com>, oe-lkp@lists.linux.dev, lkp@intel.com, 
-	linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, 
-	=?UTF-8?Q?Ahelenia_Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Ben Gainey <ben.gainey@arm.com>, 
-	Changbin Du <changbin.du@huawei.com>, Chengen Du <chengen.du@canonical.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Dima Kogan <dima@secretsauce.net>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Ingo Molnar <mingo@redhat.com>, 
-	James Clark <james.clark@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
-	K Prateek Nayak <kprateek.nayak@amd.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Leo Yan <leo.yan@linux.dev>, Li Dong <lidong@vivo.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Paran Lee <p4ranlee@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Song Liu <song@kernel.org>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, Thomas Richter <tmricht@linux.ibm.com>, 
-	Tiezhu Yang <yangtiezhu@loongson.cn>, Yanteng Si <siyanteng@loongson.cn>, 
-	zhaimingbing <zhaimingbing@cmss.chinamobile.com>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Yunseong Kim <yskelg@gmail.com>
 
-On Mon, Jun 17, 2024 at 9:45=E2=80=AFPM kernel test robot <oliver.sang@inte=
-l.com> wrote:
->
->
->
-> Hello,
->
-> kernel test robot noticed "util/dsos.c:184:8: runtime error: null pointer=
- passed as argument 2, which is declared to never be null" on:
->
-> commit: 7a9418cf7f05a74cbc9d4c750ee1bfddaa11f121 ("perf dsos: Switch hand=
- crafted code to bsearch()")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
->
-> [test failed on linus/master      a3e18a540541325a8c8848171f71e0d45ad30b2=
-c]
-> [test failed on linux-next/master 6906a84c482f098d31486df8dc98cead21cce2d=
-0]
->
->
->
-> the issue can be reproduced by below commands:
->
-> $ sudo make WERROR=3D0 ARCH=3D DEBUG=3D1 EXTRA_CFLAGS=3D'-fno-omit-frame-=
-pointer -fsanitize=3Dundefined -fsanitize=3Daddress'
-> $ sudo ./perf record  -e 'cpu/branch-instructions/' -- sleep 1
-> util/dsos.c:184:8: runtime error: null pointer passed as argument 2, whic=
-h is declared to never be null
+This patch resolve this warning.
 
-It seems we need to return early from the function when
-dsos->dsos is NULL since there's nothing to search.
+tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
+-1 with expression of type 'char' is always false
+ -Werror,-Wtautological-constant-out-of-range-compare
+ 1620 |                 if (c == -1)
+      |                     ~ ^  ~~
 
-Thanks,
-Namhyung
+Add handling on unread_unwind_spec_debug_frame().
+This make caller find_proc_info() works well when the allocation failure.
 
->
->
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202406180932.84be448c-oliver.san=
-g@intel.com
->
->
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
->
->
+Signed-off-by: Yunseong Kim <yskelg@gmail.com>
+---
+ tools/perf/util/evsel.c                  | 2 +-
+ tools/perf/util/unwind-libunwind-local.c | 5 +++++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 25857894c047..bc603193c477 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1620,7 +1620,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+ 
+ static bool read_until_char(struct io *io, char e)
+ {
+-	char c;
++	int c;
+ 
+ 	do {
+ 		c = io__get_char(io);
+diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/unwind-libunwind-local.c
+index cde267ea3e99..a424eae6d308 100644
+--- a/tools/perf/util/unwind-libunwind-local.c
++++ b/tools/perf/util/unwind-libunwind-local.c
+@@ -390,6 +390,11 @@ static int read_unwind_spec_debug_frame(struct dso *dso,
+ 			char *debuglink = malloc(PATH_MAX);
+ 			int ret = 0;
+ 
++			if (debuglink == NULL) {
++				pr_err("unwind: Can't read unwind spec debug frame.\n");
++				return -ENOMEM;
++			}
++
+ 			ret = dso__read_binary_type_filename(
+ 				dso, DSO_BINARY_TYPE__DEBUGLINK,
+ 				machine->root_dir, debuglink, PATH_MAX);
+-- 
+2.44.0
+
