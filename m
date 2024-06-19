@@ -1,271 +1,89 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C425A335A7;
-	Wed, 19 Jun 2024 14:51:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649AA1F95A
+	for <linux-perf-users@vger.kernel.org>; Wed, 19 Jun 2024 15:17:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718808675; cv=none; b=HyqwggOo8n+uMTP82bg5ZGT+ewEoceqqk02Qp1OFgeLsoL8EqbTuC+D0ot1jYH1cbfVTSzeZdPSeMvUnUJwsIItIc8ZlTZbosXpMcalBCve6UcFrt+K+ocVYi/B7PhbkSm778DigReTgJoHcdsolV89868VgaGW+ebPD75Xhj2Q=
+	t=1718810232; cv=none; b=ZxvCjDBxybF3cnRXzzX2cgxWlytBUoqwBcS2DePy1pZiUO7200/2bUd26SXDOag4wJHs/xUiJsg2xJGdFD1XGVWaWos05bE1YEzQoDEMZepxyFejLlll3oVufPq1yIHqf2ibiQQOhjWFawRvTw51WlBG4xQ0GilkCBHawwAyueQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718808675; c=relaxed/simple;
-	bh=ejFVPxL2Cbfs4eg3yoSzWasTDViAd+04TbnoBet+RR8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s9Y6QzjBGU4iS19yPc7Ec1M+jbH7v+q+aQKdl+r7CYmwg0sUeeCWU95q6Ly16fwcSjDl0tVwFSvT+nW9SIdzHIwwHtjB0hwjSQR2zaa330YW/2ROWf6+rWE1l69zKIRRa9coBxQEcK3nzu6ybREph4Px8rDid6u6QhWBue/Eb3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-6bce380eb9bso3910419a12.0;
-        Wed, 19 Jun 2024 07:51:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718808673; x=1719413473;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7ajs9iVzkp72InwEDYOdKR9Ht6Xu0dx3o2OGDillctA=;
-        b=U5rklNASsY9+2My3UpYB4fGioQQvg8I+E5PbHRQpCWDDWm8npCTGAUwmcJdFwGhg8L
-         zcHh6b4oda0T1qY8l+WIJA3vrJ3Il5kkdmrqfBWCuVxaSfZoZNkNHIUQM+Ad/Yf9O3JZ
-         HuZUWn0SgdVaDKlAwYd6voAJpGSBMkZ6CIfyFkBsvjAFX6YPe0XLI/ZkMamK5Cxy6NmK
-         P+FUiQhqVgKQt3I3cHBhxWkl1qyj8Y0DpKc50FpPo+liTrmyL2v86vdKQ1C0mvEatTit
-         tKM/oI3wCqrdsnjSBHm9ocDd0zk3xHeabDHeu25WCT5ceRSlmro8+FDt/cHgO/d2boGg
-         M77g==
-X-Forwarded-Encrypted: i=1; AJvYcCXlS7RY5S3+PKa4OGkrs1XLKvSKDblsH9gUp9VuiPL2p1UXZjXTD697YCaYn1Pd7aDlly9tPCcSnTFFC+TSVpJZvBuxMa/abrxLZ/93dXRTI+lB6A+PDvvpYJ/H1ol5ZCsH/oJyZtcuHeGrG+fvOg==
-X-Gm-Message-State: AOJu0YzFWqsy9u3vDkSLfMKxlz1XXCX9eidp3vN3QfCGsiJ/5c8Ra31E
-	HoGtjabVsnbFim20qIESItWW5cAwzO0a54wdzt5Y5So6BBwiHzps3yJzXlcE1RfR1oRWi9Vmumm
-	tQ/XPfU/uetjc3fKoFwT8naffS9Y=
-X-Google-Smtp-Source: AGHT+IGy+4YxdJeCaNbJh9tTzf2ag/kTCv+ttsFhbIC4FykVzC/6jaIAOOoHpKmJ9sVJSYht/B3kR5+DaclHwBLrv5w=
-X-Received: by 2002:a17:90a:1fc7:b0:2c7:c788:d34d with SMTP id
- 98e67ed59e1d1-2c7c788d4dcmr1547027a91.38.1718808672525; Wed, 19 Jun 2024
- 07:51:12 -0700 (PDT)
+	s=arc-20240116; t=1718810232; c=relaxed/simple;
+	bh=hgEb586LrO9KPIUgZrYV++LUVTqkU6h8UN3b41kMY14=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jpi8IWKb6WrmzNE+F7ve2WynL0KtSWNV3xDzCyQOTh1F6GQqDJsKRT+AP8kmIvq1tgih8NbMt0a/Ssq0C77Zl2eP1g68mj2dLZSexD7aJNpgsvCcKr3X3tYhDXYyo1E5OO6c0tl/3FZGhFK3fBtq9ihC/z34SIaiQxFJyaPbljc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dnB8NUuN; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dnB8NUuN"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1718810230;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gC7WNA1QA+YwkrX8gjXlglJDeCpaBidYafu3xduhGfM=;
+	b=dnB8NUuNvVrcYPoceYP9IKrQ3EUQGbOkuOj/ClFnpgiHxUDyCNigWXTjFxMb47WxxQj/T7
+	0xrB1HwVsXyiCl7ulsB3tDqLBDu6yM+7jU86eJqJlclsbwNFi0JdyOKKKoFTWitpIJwquO
+	hv/9MpJQvsGhlu0zOyqMLAZ+vCS6ii0=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-615-xiTvddoYPcSYiaLGHLgSeQ-1; Wed,
+ 19 Jun 2024 11:17:04 -0400
+X-MC-Unique: xiTvddoYPcSYiaLGHLgSeQ-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09CA41955E82;
+	Wed, 19 Jun 2024 15:17:02 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.168])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5D1551956087;
+	Wed, 19 Jun 2024 15:16:56 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Jun 2024 17:15:30 +0200 (CEST)
+Date: Wed, 19 Jun 2024 17:15:24 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: hw_breakpoint: Save privilege of access control
+ via ptrace
+Message-ID: <20240619151524.GB24240@redhat.com>
+References: <20240618071010.11214-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240619092234.1165-1-ravi.bangoria@amd.com>
-In-Reply-To: <20240619092234.1165-1-ravi.bangoria@amd.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 19 Jun 2024 07:51:01 -0700
-Message-ID: <CAM9d7chpM4k+BRNNf6V0OS1PRX7c9f+QXa0EwKWjPPzAZVYZBw@mail.gmail.com>
-Subject: Re: [PATCH] perf doc: Add AMD IBS usage document
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org, 
-	mingo@redhat.com, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	yangjihong1@huawei.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, sandipan.das@amd.com, 
-	ananth.narayan@amd.com, santosh.shukla@amd.com, 
-	Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240618071010.11214-1-yangtiezhu@loongson.cn>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-Hello,
+I don't understand what this patch does, but...
 
-Adding Stephane to CC.
-
-On Wed, Jun 19, 2024 at 2:23=E2=80=AFAM Ravi Bangoria <ravi.bangoria@amd.co=
-m> wrote:
+On 06/18, Tiezhu Yang wrote:
 >
-> Add a perf man page document that describes how to exploit AMD IBS with
-> Linux perf. Brief intro about IBS and simple one-liner examples will help
-> naive users to get started. This is not meant to be an exhaustive IBS
-> guide. User should refer latest AMD64 Architecture Programmer's Manual
-> for detailed description of IBS.
->
-> Usage:
->
->   $ man perf-amd-ibs
->
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -467,6 +467,7 @@ struct perf_event_attr {
+>  		__u32		wakeup_watermark; /* bytes before wakeup   */
+>  	};
+>  
+> +	__u8			bp_priv;
+>  	__u32			bp_type;
 
-Thanks a lot for adding this documentation!  A nitpick below..
+Is it safe to add the new member in the middle of uapi struct?
+This will break userspace...
 
+Oleg.
 
-> ---
->  tools/perf/Documentation/perf-amd-ibs.txt | 126 ++++++++++++++++++++++
->  tools/perf/Documentation/perf.txt         |   3 +-
->  2 files changed, 128 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/Documentation/perf-amd-ibs.txt
->
-> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Docum=
-entation/perf-amd-ibs.txt
-> new file mode 100644
-> index 000000000000..d3dfa71e320c
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
-> @@ -0,0 +1,126 @@
-> +perf-amd-ibs(1)
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +NAME
-> +----
-> +perf-amd-ibs - Support for AMD Instruction-Based Sampling with perf tool
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf record' -e ibs_op//
-> +'perf record' -e ibs_fetch//
-> +
-> +DESCRIPTION
-> +-----------
-> +
-> +Instruction-Based Sampling (IBS) provides precise Instruction Pointer (I=
-P)
-> +profiling support on AMD platforms. IBS has two independent components: =
-IBS
-> +Op and IBS Fetch. IBS Op sampling provides information about instruction
-> +execution (micro-op execution to be precise) with details like d-cache
-> +hit/miss, d-TLB hit/miss, cache miss latency, load/store data source, br=
-anch
-> +behavior etc. IBS Fetch sampling provides information about instruction =
-fetch
-> +with details like i-cache hit/miss, i-TLB hit/miss, fetch latency etc. I=
-BS is
-> +per-smt-thread i.e. each SMT hardware thread contains standalone IBS uni=
-ts.
-> +
-> +Both, IBS Op and IBS Fetch, are exposed as PMUs by Linux and can be expl=
-oited
-> +using Linux perf utility. Following files will be created at boot time i=
-f IBS
-> +is supported by the hardware and kernel.
-> +
-> +  /sys/bus/event_source/devices/ibs_op/
-> +  /sys/bus/event_source/devices/ibs_fetch/
-> +
-> +IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supp=
-orts
-> +one event: fetch ops.
-> +
-> +IBS VS. REGULAR CORE PMU
-> +------------------------
-> +
-> +IBS gives samples with precise IP, i.e. the IP recorded with IBS sample =
-has
-> +no skid. Whereas the IP recorded by regular core PMU will have some skid
-> +(sample was generated at IP X but perf would record it at IP X+n). Hence=
-,
-> +regular core PMU might not help for profiling with instruction level
-> +precision. Further, IBS provides additional information about the sample=
- in
-> +question. On the other hand, regular core PMU has it's own advantages li=
-ke
-> +plethora of events, counting mode (less interference), up to 6 parallel
-> +counters, event grouping support, filtering capabilities etc.
-> +
-> +EXAMPLES
-> +--------
-> +
-> +IBS Op PMU
-> +~~~~~~~~~~
-> +
-> +System-wide profile, cycles event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_op// -c 100000 -a
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_op// -c 100000 -C 10
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling freq: 1000
-> +
-> +       $ sudo perf record -e ibs_op// -F 1000 -C 10
-> +
-> +System-wide profile, uOps event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -a
-> +
-> +Same command, but also capture IBS register raw dump along with perf sam=
-ple:
-> +
-> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -a --raw-samp=
-les
-> +
-> +System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Ze=
-n4 onward)
-> +
-> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1,l3missonly=3D1/ -c 10000=
-0 -a
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -p 1234
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_op/cnt_ctl=3D1/ -c 100000 -- ls
-> +
-> +To analyse recorded profile in aggregate mode
-> +
-> +       $ sudo perf report
-> +       /* Select a line and press 'a' to drill down at instruction level=
-. */
-> +
-> +To go over each sample
-> +
-> +       $ sudo perf script
-> +
-> +Raw dump of IBS registers when profiled with --raw-samples
-> +
-> +       $ sudo perf report -D
-> +       /* Look for PERF_RECORD_SAMPLE */
-> +
-> +IBS applied in a real world usecase
-> +
-> +~90% regression was observed in tbench with specific scheduler hint whic=
-h
-> +was counter intuitive. IBS profile of good and bad run captured using pe=
-rf
-> +helped in identifying exact cause of the problem:
-> +
-> +       https://lore.kernel.org/r/20220921063638.2489-1-kprateek.nayak@am=
-d.com
-> +
-> +IBS Fetch PMU
-> +~~~~~~~~~~~~~
-> +
-> +Similar commands can be used with Fetch PMU as well.
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000
-> +
-> +       $ sudo perf record -e ibs_fetch// -c 100000 -a
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000, Random en=
-able
-
-Can you please add a brief description of what 'random enable' means?
-
-Thanks,
-Namhyung
-
-
-> +
-> +       $ sudo perf record -e ibs_fetch/rand_en=3D1/ -c 100000 -a
-> +
-> +etc.
-> +
-> +SEE ALSO
-> +--------
-> +
-> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1=
-]
-> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation=
-/perf.txt
-> index 09f516f3fdfb..cbcc2e4d557e 100644
-> --- a/tools/perf/Documentation/perf.txt
-> +++ b/tools/perf/Documentation/perf.txt
-> @@ -82,7 +82,8 @@ linkperf:perf-stat[1], linkperf:perf-top[1],
->  linkperf:perf-record[1], linkperf:perf-report[1],
->  linkperf:perf-list[1]
->
-> -linkperf:perf-annotate[1],linkperf:perf-archive[1],linkperf:perf-arm-spe=
-[1],
-> +linkperf:perf-amd-ibs[1], linkperf:perf-annotate[1],
-> +linkperf:perf-archive[1], linkperf:perf-arm-spe[1],
->  linkperf:perf-bench[1], linkperf:perf-buildid-cache[1],
->  linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
->  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
-> --
-> 2.45.2
->
