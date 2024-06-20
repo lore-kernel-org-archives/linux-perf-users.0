@@ -1,57 +1,57 @@
-Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD9D1BBBEC
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 18:20:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B96D1BBBE8
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 18:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718907709; cv=none; b=QPGwAMQkCFiAxKlUfZnquZT/3itOxZfWue8Zx2SHt8X2+BZV2Rz6Y5b7IqBhdQPOFwfBMDO2imljSUmo9/+43YTZcsMt58GgNcYqdxld6T/saN19mX2zUIfimju3pDXlM09x57jCdBq/HjC85j3/bDC6StFmRsSilxraOjnyI18=
+	t=1718907711; cv=none; b=P9d5zbHrfaEVCEb8aV/YYq2gKiBpYMr/LO8VJ6onX3HWTWYklLx6lajhlQmq0NGLiemGNG0ioiz9UH3ijQgsnVvJOyx8769ERKree5fjYxXnY5q2uzGaR4hlguaSZ75fxnZlk3rF6uXI2uVhyU0fIzCsOasQDdanh7KZXDlz8oc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718907709; c=relaxed/simple;
-	bh=57YwNp8uJU2YyIe9P28jhDPDUo2fZPXkje1CZR6CMU4=;
+	s=arc-20240116; t=1718907711; c=relaxed/simple;
+	bh=sLLprGUMaEHw9dSDTxowgsrC8YcrS5cxBupdhoAOc1E=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=OUPM9vMygETYn4L/6ReZ+U9O3AU9OzTrL4rP9Ayi7F9g0cY4fQyzSSYgd4kelGiIc8unnPicfm9rp/kLkp4/Sr/zREjnPNFVnREozQIVrjxBAQDhMfc1CwnrQKLdR0cOQVqfSXnEbUlfd+BAcER5DaMZ6E4m5bkMY8JHbFSWSRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wScaJYHr; arc=none smtp.client-ip=209.85.210.202
+	 To:Cc:Content-Type; b=E0f80ZLqkbX1UXdIjVLEtTCXDmxkFtDapKbdTn1/5LMW5BxpkWBXqXfPh2SASGucXArJwK1cjFCv6sCSyUtZg/WHZ0/jGMIxI4i3ooOl1841jbtvh1ldK9townXPxSwUmCTRW1SxMeWcgMApQKjD0wfxqZT483nCTtTXxEz0OTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WGN0Gxa4; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wScaJYHr"
-Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-705cade7accso1209075b3a.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 11:20:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WGN0Gxa4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02c30d4ff5so2124084276.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 11:20:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718907644; x=1719512444; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1718907642; x=1719512442; darn=vger.kernel.org;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hPn/ZjvusIEuZstimbvn8wFmIjQr637R1jN4zRKnI60=;
-        b=wScaJYHrqIuTtMok7dsnSCvg7W7SRsFpGS9O9DJgEkpLdFoB5HLxwcU11ppx0Bnyzz
-         0lncU2zd9atW1HqFEjrFB0g8xncgC0bkz9TtJzswCE67vD2Vxpvvw/u4eip+gcoglFFK
-         z9xUsX10lalu7xK/t+xG3UrN4yNjEZy5mp6Fqp2SS1pxm+3UeVA8J6RR0uJ963RLlADP
-         H4QrwVrDZSfAarO7GrUHhgs0WXZnEAYGWNXCHcwxXRnR37pmV6slKL0q3bV5KjXm/1tr
-         OSGrGIe69d98HSMz0Ai9mmIGZxsHpi2v+IuIKemL2gLhjf0lQPMcpFsMlZ9w6kgfDEWi
-         mnmA==
+        bh=P3qeMzrWwuWjr3xg0GbSRZjPOoWYQyYSCOq6sb6d+VU=;
+        b=WGN0Gxa4BCOyDEHnhk/XaGsy2XcbGuMapRbEHavMcM8Rvl48b07xjVwv+WP37jsO6i
+         LibbxGfe9jyoq0uE06VCJ7QQXC+5VyaT6Ir6E40Gc1NmtwlY8bOREHhCUGNLt8WVELci
+         I06/yEzV0AmE4ksjGmUjKpVIkVccgyf3VCKoTKsYA9o3cv92IyFx4kqmp196EZFjSXip
+         Zl26HyR+bgzo6XhZLPslBiodHYhfNc9iT39xzyMz+g0CSryTdNiG6QOUOtEPJr58pxHJ
+         yTVh4PPk/8RsVRUdiALY6asJKtAFlKcYTNfShx9A2ghhzNjhV7BzF6ClydsMhYPGGDwi
+         TBWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718907644; x=1719512444;
+        d=1e100.net; s=20230601; t=1718907642; x=1719512442;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hPn/ZjvusIEuZstimbvn8wFmIjQr637R1jN4zRKnI60=;
-        b=UGNFK2c+fDmB0Kwe1rAvcI48EltpTmyXIi7nqIIkz1ZCRiADqN1SNNZejaGBr2EJwn
-         WZyiAACdxuuUAnuN7XHiPW7aKoVjmT1R8RS6dx0TJDNtfzCa7K37niN9MN6WAx2QBsTk
-         Osu1zFhIGj3gnLEiMD8OhOt76AnC427YMDgOLKMEUkUf6hMe/H58OnPsnCNwUCvIvb28
-         bMRS5xSMVoZqQV3Q0kyufzh9EY9/yR+LkFjtnUjlEpZ7DJSyW9ga5HzOYGcDMSU4d4RD
-         twVsPgG83lMGlUGM/tXWcciI1c08Ok0BwBPp1t/v9/TdUt5GlFfHcZGHpn2OrxSpp7EL
-         W7mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUjwEZOXwBIplepzryfLpqSd/tEJCDoYh/YUv03gEeUa1DJYRTASShRjyyg6rNV0eyl1u2wJS+1hsxcKO9P7wDO82k4Q5wXlP/fAe1AJuiSbQ==
-X-Gm-Message-State: AOJu0Yz7A2t/pXHXIg0+woW/r0FK/aTdgojCCxeD5dmzrG9lqz1VcyXq
-	0RPiNxQ9WpD510jOiN3kJ/zgyyGXSC0smZFKrVtN+J3+9iq13kiOVM8585vK9dl99aVmY2KPg1m
-	msHVPUA==
-X-Google-Smtp-Source: AGHT+IH/7DaJuDzjUY22A/gD7AUiTemSYrekau+NG9aXWcqQjgTioJZqwA6CX13nUSid+P7mhD+oySYIsWQY
+        bh=P3qeMzrWwuWjr3xg0GbSRZjPOoWYQyYSCOq6sb6d+VU=;
+        b=oosZC9Fk3oxWGmvsE+Q/bNlde3MqH5dfJVeIprOt0D+c+MXGCLQwD1IQZp/0jwjzVg
+         i2TH/gHdf02NRH2wS49SZbOyt08qr/EptoHMGiU5JXc2oWA0+875PBHScifoaL17bDal
+         7pdhLGbAcUSG1ua2GSS0hsbvrz7M6izFpZlGtZ0qW+KNGU+rfYHPTMDloNUiEZE1pK3e
+         5/UmDdqfddtoAHcGJl9+Wu1AHktwqcdCLCai3TZCnPgu7I6eD9MmWLJ4/hfv8I7xMeME
+         RuTAOepzhFa8O6NC7E5guv/8WedtxYD2yFcWAwV0AFts2B+4hpcyHrFzWLRQ+4q4Tvds
+         6ndA==
+X-Forwarded-Encrypted: i=1; AJvYcCWgQwwz1R9MTq+E/crtGtpLvfxi0n7a/4aZw7uqmWbPCArPIZ5nzKGz7WgbmI5+xbNsLh/1jfpDla70tBNmFvShnU6uJcveU1gdxgs+JBqQYw==
+X-Gm-Message-State: AOJu0YxeUjd+d937H/hsPL5D7NK7MjM+OG9f3ukmb62x5nqxi9QQbJl9
+	Jq6PQL8oSg2I7mf/8PHNb1cJZcAP2BNvH+6WE1VzpVcLsd5YTGGwuAQU2DAjxTztIXEvRUSzWEK
+	vlX6gqg==
+X-Google-Smtp-Source: AGHT+IGFs3kJsOLiTNVVtSL8rv/vvy/mSIrzw2Rvw9gdSVQhSMtcTH6+tUvHsd5Fx/GyfyZjKA6E2VlDSOzB
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a6b7:dc01:68ba:649])
- (user=irogers job=sendgmr) by 2002:a05:6a00:6c81:b0:6ec:ee42:b143 with SMTP
- id d2e1a72fcca58-70629c228d9mr46462b3a.2.1718907644062; Thu, 20 Jun 2024
- 11:20:44 -0700 (PDT)
-Date: Thu, 20 Jun 2024 11:17:51 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:c0e:b0:df4:a381:5172 with SMTP id
+ 3f1490d57ef6-e02be1f61ecmr1883887276.8.1718907641805; Thu, 20 Jun 2024
+ 11:20:41 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:17:50 -0700
 In-Reply-To: <20240620181752.3945845-1-irogers@google.com>
-Message-Id: <20240620181752.3945845-38-irogers@google.com>
+Message-Id: <20240620181752.3945845-37-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240620181752.3945845-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Subject: [PATCH v2 37/37] perf vendor events: Add westmereex counter information
+Subject: [PATCH v2 36/37] perf vendor events: Add westmereep-sp counter information
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -88,21 +88,21 @@ Co-authored-by: Caleb Biggers <caleb.biggers@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- .../pmu-events/arch/x86/westmereex/cache.json | 320 ++++++++++++++++++
- .../arch/x86/westmereex/counter.json          |   7 +
- .../arch/x86/westmereex/floating-point.json   |  28 ++
- .../arch/x86/westmereex/frontend.json         |   3 +
- .../arch/x86/westmereex/memory.json           |  68 ++++
- .../pmu-events/arch/x86/westmereex/other.json |  28 ++
- .../arch/x86/westmereex/pipeline.json         | 111 ++++++
- .../arch/x86/westmereex/virtual-memory.json   |  21 ++
- 8 files changed, 586 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/westmereex/counter.json
+ .../arch/x86/westmereep-sp/cache.json         | 321 ++++++++++++++++++
+ .../arch/x86/westmereep-sp/counter.json       |   7 +
+ .../x86/westmereep-sp/floating-point.json     |  28 ++
+ .../arch/x86/westmereep-sp/frontend.json      |   3 +
+ .../arch/x86/westmereep-sp/memory.json        |  67 ++++
+ .../arch/x86/westmereep-sp/other.json         |  28 ++
+ .../arch/x86/westmereep-sp/pipeline.json      | 111 ++++++
+ .../x86/westmereep-sp/virtual-memory.json     |  18 +
+ 8 files changed, 583 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/x86/westmereep-sp/counter.json
 
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/cache.json b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
-index 18d61d43e4c9..9f922370ee8b 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
+index d025e2c0cf1c..90cb367f5798 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/cache.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -842,10 +842,10 @@ index 18d61d43e4c9..9f922370ee8b 100644
 @@ -697,6 +789,7 @@
      },
      {
-         "BriefDescription": "Load instructions retired local dram and remote cache HIT data sources (Precise Event)",
+         "BriefDescription": "Load instructions retired with a data source of local DRAM or locally homed remote hitm (Precise Event)",
 +        "Counter": "0,1,2,3",
          "EventCode": "0xF",
-         "EventName": "MEM_UNCORE_RETIRED.LOCAL_DRAM_AND_REMOTE_CACHE_HIT",
+         "EventName": "MEM_UNCORE_RETIRED.LOCAL_DRAM",
          "PEBS": "1",
 @@ -705,6 +798,7 @@
      },
@@ -853,23 +853,23 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "BriefDescription": "Load instructions retired that HIT modified data in sibling core (Precise Event)",
 +        "Counter": "0,1,2,3",
          "EventCode": "0xF",
-         "EventName": "MEM_UNCORE_RETIRED.LOCAL_HITM",
+         "EventName": "MEM_UNCORE_RETIRED.OTHER_CORE_L2_HITM",
          "PEBS": "1",
 @@ -713,6 +807,7 @@
+     },
+     {
+         "BriefDescription": "Load instructions retired remote cache HIT data source (Precise Event)",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xF",
+         "EventName": "MEM_UNCORE_RETIRED.REMOTE_CACHE_LOCAL_HOME_HIT",
+         "PEBS": "1",
+@@ -721,6 +816,7 @@
      },
      {
          "BriefDescription": "Load instructions retired remote DRAM and remote home-remote cache HITM (Precise Event)",
 +        "Counter": "0,1,2,3",
          "EventCode": "0xF",
          "EventName": "MEM_UNCORE_RETIRED.REMOTE_DRAM",
-         "PEBS": "1",
-@@ -721,6 +816,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that hit remote socket in modified state (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF",
-         "EventName": "MEM_UNCORE_RETIRED.REMOTE_HITM",
          "PEBS": "1",
 @@ -729,6 +825,7 @@
      },
@@ -938,12 +938,20 @@ index 18d61d43e4c9..9f922370ee8b 100644
 @@ -786,6 +890,7 @@
      },
      {
+         "BriefDescription": "Offcore uncached memory accesses",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB0",
+         "EventName": "OFFCORE_REQUESTS.UNCACHED_MEM",
+         "SampleAfterValue": "100000",
+@@ -793,6 +898,7 @@
+     },
+     {
          "BriefDescription": "Outstanding offcore reads",
 +        "Counter": "0",
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.ANY.READ",
          "SampleAfterValue": "2000000",
-@@ -793,6 +898,7 @@
+@@ -800,6 +906,7 @@
      },
      {
          "BriefDescription": "Cycles offcore reads busy",
@@ -951,7 +959,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "CounterMask": "1",
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.ANY.READ_NOT_EMPTY",
-@@ -801,6 +907,7 @@
+@@ -808,6 +915,7 @@
      },
      {
          "BriefDescription": "Outstanding offcore demand code reads",
@@ -959,7 +967,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_CODE",
          "SampleAfterValue": "2000000",
-@@ -808,6 +915,7 @@
+@@ -815,6 +923,7 @@
      },
      {
          "BriefDescription": "Cycles offcore demand code read busy",
@@ -967,7 +975,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "CounterMask": "1",
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_CODE_NOT_EMPTY",
-@@ -816,6 +924,7 @@
+@@ -823,6 +932,7 @@
      },
      {
          "BriefDescription": "Outstanding offcore demand data reads",
@@ -975,7 +983,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_DATA",
          "SampleAfterValue": "2000000",
-@@ -823,6 +932,7 @@
+@@ -830,6 +940,7 @@
      },
      {
          "BriefDescription": "Cycles offcore demand data read busy",
@@ -983,7 +991,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "CounterMask": "1",
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.READ_DATA_NOT_EMPTY",
-@@ -831,6 +941,7 @@
+@@ -838,6 +949,7 @@
      },
      {
          "BriefDescription": "Outstanding offcore demand RFOs",
@@ -991,7 +999,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.RFO",
          "SampleAfterValue": "2000000",
-@@ -838,6 +949,7 @@
+@@ -845,6 +957,7 @@
      },
      {
          "BriefDescription": "Cycles offcore demand RFOs busy",
@@ -999,7 +1007,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "CounterMask": "1",
          "EventCode": "0x60",
          "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND.RFO_NOT_EMPTY",
-@@ -846,6 +958,7 @@
+@@ -853,6 +966,7 @@
      },
      {
          "BriefDescription": "Offcore requests blocked due to Super Queue full",
@@ -1007,1631 +1015,1631 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0xB2",
          "EventName": "OFFCORE_REQUESTS_SQ_FULL",
          "SampleAfterValue": "100000",
-@@ -853,6 +966,7 @@
+@@ -860,6 +974,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -862,6 +976,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -869,6 +984,7 @@
      },
      {
          "BriefDescription": "All offcore data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -871,6 +986,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -878,6 +994,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -880,6 +996,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -887,6 +1004,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -889,6 +1006,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -896,6 +1014,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -898,6 +1016,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -905,6 +1024,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -907,6 +1026,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -914,6 +1034,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -916,6 +1036,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -923,6 +1044,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -925,6 +1046,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -932,6 +1054,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -934,6 +1056,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -941,6 +1064,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -943,6 +1066,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -950,6 +1074,7 @@
      },
      {
          "BriefDescription": "Offcore data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -952,6 +1076,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -959,6 +1084,7 @@
      },
      {
          "BriefDescription": "Offcore data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -961,6 +1086,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -968,6 +1094,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -970,6 +1096,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -977,6 +1104,7 @@
      },
      {
          "BriefDescription": "All offcore code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -979,6 +1106,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -986,6 +1114,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -988,6 +1116,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -995,6 +1124,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -997,6 +1126,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1004,6 +1134,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1006,6 +1136,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1013,6 +1144,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1015,6 +1146,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1022,6 +1154,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1024,6 +1156,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1031,6 +1164,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1033,6 +1166,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1040,6 +1174,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1042,6 +1176,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1049,6 +1184,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1051,6 +1186,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1058,6 +1194,7 @@
      },
      {
          "BriefDescription": "Offcore code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1060,6 +1196,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1067,6 +1204,7 @@
      },
      {
          "BriefDescription": "Offcore code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1069,6 +1206,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1076,6 +1214,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1078,6 +1216,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1085,6 +1224,7 @@
      },
      {
          "BriefDescription": "All offcore requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1087,6 +1226,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1094,6 +1234,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1096,6 +1236,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1103,6 +1244,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1105,6 +1246,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1112,6 +1254,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1114,6 +1256,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1121,6 +1264,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1123,6 +1266,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1130,6 +1274,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1132,6 +1276,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1139,6 +1284,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1141,6 +1286,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1148,6 +1294,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1150,6 +1296,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1157,6 +1304,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1159,6 +1306,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1166,6 +1314,7 @@
      },
      {
          "BriefDescription": "Offcore requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1168,6 +1316,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1175,6 +1324,7 @@
      },
      {
          "BriefDescription": "Offcore requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1177,6 +1326,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1184,6 +1334,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1186,6 +1336,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1193,6 +1344,7 @@
      },
      {
          "BriefDescription": "All offcore RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1195,6 +1346,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1202,6 +1354,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1204,6 +1356,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1211,6 +1364,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1213,6 +1366,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1220,6 +1374,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1222,6 +1376,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1229,6 +1384,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1231,6 +1386,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1238,6 +1394,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1240,6 +1396,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1247,6 +1404,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1249,6 +1406,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1256,6 +1414,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1258,6 +1416,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1265,6 +1424,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1267,6 +1426,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1274,6 +1434,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1276,6 +1436,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1283,6 +1444,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1285,6 +1446,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1292,6 +1454,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1294,6 +1456,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1301,6 +1464,7 @@
      },
      {
          "BriefDescription": "All offcore writebacks",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1303,6 +1466,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1310,6 +1474,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1312,6 +1476,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1319,6 +1484,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1321,6 +1486,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1328,6 +1494,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1330,6 +1496,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1337,6 +1504,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1339,6 +1506,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1346,6 +1514,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1348,6 +1516,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1355,6 +1524,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1357,6 +1526,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1364,6 +1534,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1366,6 +1536,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1373,6 +1544,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1375,6 +1546,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1382,6 +1554,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1384,6 +1556,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1391,6 +1564,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1393,6 +1566,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1400,6 +1574,7 @@
      },
      {
          "BriefDescription": "All offcore code or data read requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1402,6 +1576,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1409,6 +1584,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1411,6 +1586,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1418,6 +1594,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1420,6 +1596,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1427,6 +1604,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1429,6 +1606,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1436,6 +1614,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1438,6 +1616,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1445,6 +1624,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1447,6 +1626,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1454,6 +1634,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1456,6 +1636,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1463,6 +1644,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1465,6 +1646,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1472,6 +1654,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1474,6 +1656,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1481,6 +1664,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1483,6 +1666,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1490,6 +1674,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1492,6 +1676,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1499,6 +1684,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = any cache_dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1501,6 +1686,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1508,6 +1694,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = any location",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1510,6 +1696,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1517,6 +1704,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1519,6 +1706,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1526,6 +1714,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1528,6 +1716,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1535,6 +1724,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1537,6 +1726,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1544,6 +1734,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1546,6 +1736,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1553,6 +1744,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = local cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1555,6 +1746,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1562,6 +1754,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = local cache or dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1564,6 +1756,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1571,6 +1764,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1573,6 +1766,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1580,6 +1774,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = remote cache or dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1582,6 +1776,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1589,6 +1784,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1591,6 +1786,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1598,6 +1794,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1600,6 +1796,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1607,6 +1804,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1609,6 +1806,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1616,6 +1814,7 @@
      },
      {
          "BriefDescription": "All offcore demand data requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1618,6 +1816,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1625,6 +1824,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1627,6 +1826,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1634,6 +1834,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1636,6 +1836,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1643,6 +1844,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1645,6 +1846,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1652,6 +1854,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1654,6 +1856,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1661,6 +1864,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1663,6 +1866,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1670,6 +1874,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1672,6 +1876,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1679,6 +1884,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1681,6 +1886,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1688,6 +1894,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1690,6 +1896,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1697,6 +1904,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1699,6 +1906,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1706,6 +1914,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1708,6 +1916,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1715,6 +1924,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1717,6 +1926,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1724,6 +1934,7 @@
      },
      {
          "BriefDescription": "All offcore demand data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1726,6 +1936,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1733,6 +1944,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1735,6 +1946,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1742,6 +1954,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1744,6 +1956,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1751,6 +1964,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1753,6 +1966,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1760,6 +1974,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1762,6 +1976,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1769,6 +1984,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1771,6 +1986,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1778,6 +1994,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1780,6 +1996,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1787,6 +2004,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1789,6 +2006,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1796,6 +2014,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1798,6 +2016,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1805,6 +2024,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1807,6 +2026,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1814,6 +2034,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1816,6 +2036,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1823,6 +2044,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1825,6 +2046,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1832,6 +2054,7 @@
      },
      {
          "BriefDescription": "All offcore demand code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1834,6 +2056,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1841,6 +2064,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1843,6 +2066,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1850,6 +2074,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1852,6 +2076,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1859,6 +2084,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1861,6 +2086,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1868,6 +2094,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1870,6 +2096,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1877,6 +2104,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1879,6 +2106,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1886,6 +2114,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1888,6 +2116,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1895,6 +2124,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1897,6 +2126,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1904,6 +2134,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1906,6 +2136,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1913,6 +2144,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1915,6 +2146,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1922,6 +2154,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1924,6 +2156,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1931,6 +2164,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1933,6 +2166,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1940,6 +2174,7 @@
      },
      {
          "BriefDescription": "All offcore demand RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1942,6 +2176,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1949,6 +2184,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1951,6 +2186,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1958,6 +2194,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1960,6 +2196,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1967,6 +2204,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1969,6 +2206,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1976,6 +2214,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1978,6 +2216,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1985,6 +2224,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1987,6 +2226,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1994,6 +2234,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1996,6 +2236,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2003,6 +2244,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2005,6 +2246,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2012,6 +2254,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2014,6 +2256,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2021,6 +2264,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2023,6 +2266,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2030,6 +2274,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2032,6 +2276,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2039,6 +2284,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2041,6 +2286,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2048,6 +2294,7 @@
      },
      {
          "BriefDescription": "All offcore other requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2050,6 +2296,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2057,6 +2304,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2059,6 +2306,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2066,6 +2314,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2068,6 +2316,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2075,6 +2324,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2077,6 +2326,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2084,6 +2334,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2086,6 +2336,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2093,6 +2344,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2095,6 +2346,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2102,6 +2354,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2104,6 +2356,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2111,6 +2364,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2113,6 +2366,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2120,6 +2374,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2122,6 +2376,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2129,6 +2384,7 @@
      },
      {
          "BriefDescription": "Offcore other requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2131,6 +2386,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2138,6 +2394,7 @@
      },
      {
          "BriefDescription": "Offcore other requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2140,6 +2396,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2147,6 +2404,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2149,6 +2406,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2156,6 +2414,7 @@
      },
      {
          "BriefDescription": "All offcore prefetch data requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2158,6 +2416,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2165,6 +2424,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2167,6 +2426,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2174,6 +2434,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2176,6 +2436,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2183,6 +2444,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2185,6 +2446,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2192,6 +2454,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2194,6 +2456,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2201,6 +2464,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2203,6 +2466,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2210,6 +2474,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2212,6 +2476,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2219,6 +2484,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2221,6 +2486,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2228,6 +2494,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2230,6 +2496,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2237,6 +2504,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2239,6 +2506,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2246,6 +2514,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2248,6 +2516,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2255,6 +2524,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2257,6 +2526,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2264,6 +2534,7 @@
      },
      {
          "BriefDescription": "All offcore prefetch data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2266,6 +2536,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2273,6 +2544,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2275,6 +2546,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2282,6 +2554,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2284,6 +2556,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2291,6 +2564,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2293,6 +2566,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2300,6 +2574,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2302,6 +2576,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2309,6 +2584,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2311,6 +2586,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2318,6 +2594,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2320,6 +2596,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2327,6 +2604,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2329,6 +2606,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2336,6 +2614,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2338,6 +2616,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2345,6 +2624,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2347,6 +2626,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2354,6 +2634,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2356,6 +2636,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2363,6 +2644,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2365,6 +2646,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2372,6 +2654,7 @@
      },
      {
          "BriefDescription": "All offcore prefetch code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2374,6 +2656,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2381,6 +2664,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2383,6 +2666,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2390,6 +2674,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2392,6 +2676,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2399,6 +2684,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2401,6 +2686,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2408,6 +2694,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2410,6 +2696,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2417,6 +2704,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2419,6 +2706,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2426,6 +2714,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2428,6 +2716,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2435,6 +2724,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2437,6 +2726,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2444,6 +2734,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2446,6 +2736,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2453,6 +2744,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2455,6 +2746,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2462,6 +2754,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2464,6 +2756,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2471,6 +2764,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2473,6 +2766,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2480,6 +2774,7 @@
      },
      {
          "BriefDescription": "All offcore prefetch RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2482,6 +2776,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2489,6 +2784,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2491,6 +2786,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2498,6 +2794,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2500,6 +2796,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2507,6 +2804,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2509,6 +2806,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2516,6 +2814,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2518,6 +2816,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2525,6 +2824,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2527,6 +2826,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2534,6 +2834,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2536,6 +2836,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2543,6 +2844,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2545,6 +2846,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2552,6 +2854,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2554,6 +2856,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2561,6 +2864,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2563,6 +2866,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2570,6 +2874,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2572,6 +2876,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2579,6 +2884,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2581,6 +2886,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2588,6 +2894,7 @@
      },
      {
          "BriefDescription": "All offcore prefetch requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2590,6 +2896,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2597,6 +2904,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2599,6 +2906,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2606,6 +2914,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2608,6 +2916,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2615,6 +2924,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2617,6 +2926,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2624,6 +2934,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2626,6 +2936,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2633,6 +2944,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2635,6 +2946,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2642,6 +2954,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2644,6 +2956,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2651,6 +2964,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2653,6 +2966,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2660,6 +2974,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2662,6 +2976,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2669,6 +2984,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2671,6 +2986,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2678,6 +2994,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2680,6 +2996,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -2687,6 +3004,7 @@
      },
      {
          "BriefDescription": "Super Queue LRU hints sent to LLC",
@@ -2639,7 +2647,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0xF4",
          "EventName": "SQ_MISC.LRU_HINTS",
          "SampleAfterValue": "2000000",
-@@ -2687,6 +3004,7 @@
+@@ -2694,6 +3012,7 @@
      },
      {
          "BriefDescription": "Super Queue lock splits across a cache line",
@@ -2647,7 +2655,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0xF4",
          "EventName": "SQ_MISC.SPLIT_LOCK",
          "SampleAfterValue": "2000000",
-@@ -2694,6 +3012,7 @@
+@@ -2701,6 +3020,7 @@
      },
      {
          "BriefDescription": "Loads delayed with at-Retirement block code",
@@ -2655,7 +2663,7 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0x6",
          "EventName": "STORE_BLOCKS.AT_RET",
          "SampleAfterValue": "200000",
-@@ -2701,6 +3020,7 @@
+@@ -2708,6 +3028,7 @@
      },
      {
          "BriefDescription": "Cacheable loads delayed with L1D block code",
@@ -2663,11 +2671,11 @@ index 18d61d43e4c9..9f922370ee8b 100644
          "EventCode": "0x6",
          "EventName": "STORE_BLOCKS.L1D_BLOCK",
          "SampleAfterValue": "200000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/counter.json b/tools/perf/pmu-events/arch/x86/westmereex/counter.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/counter.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/counter.json
 new file mode 100644
 index 000000000000..ecf0795dceab
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/counter.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/counter.json
 @@ -0,0 +1,7 @@
 +[
 +    {
@@ -2677,10 +2685,10 @@ index 000000000000..ecf0795dceab
 +    }
 +]
 \ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
 index 196ae1d9b157..9bac9313b65c 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/floating-point.json
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/floating-point.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -2905,10 +2913,10 @@ index 196ae1d9b157..9bac9313b65c 100644
          "EventCode": "0xFD",
          "EventName": "SIMD_INT_64.UNPACK",
          "SampleAfterValue": "200000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/frontend.json b/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
 index f7f28510e3ae..c561ac24d91d 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/frontend.json
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/frontend.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -2933,558 +2941,550 @@ index f7f28510e3ae..c561ac24d91d 100644
          "EventCode": "0x19",
          "EventName": "TWO_UOP_INSTS_DECODED",
          "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/memory.json b/tools/perf/pmu-events/arch/x86/westmereex/memory.json
-index f3c0d2d4bc6a..aaa7c43a7fec 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
+index b65c5294bcf1..37a69ffe8521 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/memory.json
 @@ -1,6 +1,7 @@
  [
      {
-         "BriefDescription": "Misaligned store references",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x5",
-         "EventName": "MISALIGN_MEM_REF.STORE",
-         "SampleAfterValue": "200000",
-@@ -8,6 +9,7 @@
-     },
-     {
          "BriefDescription": "Offcore data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -17,6 +19,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -10,6 +11,7 @@
      },
      {
          "BriefDescription": "Offcore data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -26,6 +29,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -19,6 +21,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -35,6 +39,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -28,6 +31,7 @@
      },
      {
          "BriefDescription": "Offcore data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -44,6 +49,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -37,6 +41,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -53,6 +59,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -46,6 +51,7 @@
      },
      {
          "BriefDescription": "Offcore code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -62,6 +69,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -55,6 +61,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -71,6 +79,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -64,6 +71,7 @@
      },
      {
          "BriefDescription": "Offcore code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -80,6 +89,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -73,6 +81,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -89,6 +99,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -82,6 +91,7 @@
      },
      {
          "BriefDescription": "Offcore requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -98,6 +109,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -91,6 +101,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -107,6 +119,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -100,6 +111,7 @@
      },
      {
          "BriefDescription": "Offcore requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -116,6 +129,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -109,6 +121,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -125,6 +139,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -118,6 +131,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -134,6 +149,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -127,6 +141,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -143,6 +159,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -136,6 +151,7 @@
      },
      {
          "BriefDescription": "Offcore RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -152,6 +169,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -145,6 +161,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -161,6 +179,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -154,6 +171,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -170,6 +189,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -163,6 +181,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -179,6 +199,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -172,6 +191,7 @@
      },
      {
          "BriefDescription": "Offcore writebacks to a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -188,6 +209,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -181,6 +201,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -197,6 +219,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -190,6 +211,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -206,6 +229,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -199,6 +221,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -215,6 +239,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -208,6 +231,7 @@
      },
      {
          "BriefDescription": "Offcore code or data read requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -224,6 +249,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -217,6 +241,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -233,6 +259,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -226,6 +251,7 @@
      },
      {
          "BriefDescription": "Offcore request = all data, response = any LLC miss",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -242,6 +269,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -235,6 +261,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the local DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -251,6 +279,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -244,6 +271,7 @@
      },
      {
          "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -260,6 +289,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -253,6 +281,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -269,6 +299,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -262,6 +291,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -278,6 +309,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -271,6 +301,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -287,6 +319,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -280,6 +311,7 @@
      },
      {
          "BriefDescription": "Offcore demand data requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -296,6 +329,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -289,6 +321,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -305,6 +339,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -298,6 +331,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -314,6 +349,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -307,6 +341,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -323,6 +359,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -316,6 +351,7 @@
      },
      {
          "BriefDescription": "Offcore demand data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -332,6 +369,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -325,6 +361,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -341,6 +379,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -334,6 +371,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -350,6 +389,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -343,6 +381,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -359,6 +399,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -352,6 +391,7 @@
      },
      {
          "BriefDescription": "Offcore demand code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -368,6 +409,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -361,6 +401,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -377,6 +419,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -370,6 +411,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -386,6 +429,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -379,6 +421,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -395,6 +439,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -388,6 +431,7 @@
      },
      {
          "BriefDescription": "Offcore demand RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -404,6 +449,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -397,6 +441,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -413,6 +459,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -406,6 +451,7 @@
      },
      {
          "BriefDescription": "Offcore other requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -422,6 +469,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -415,6 +461,7 @@
      },
      {
          "BriefDescription": "Offcore other requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -431,6 +479,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -424,6 +471,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -440,6 +489,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -433,6 +481,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -449,6 +499,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -442,6 +491,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -458,6 +509,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -451,6 +501,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -467,6 +519,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -460,6 +511,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -476,6 +529,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -469,6 +521,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -485,6 +539,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -478,6 +531,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -494,6 +549,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -487,6 +541,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -503,6 +559,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -496,6 +551,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -512,6 +569,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -505,6 +561,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -521,6 +579,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -514,6 +571,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -530,6 +589,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -523,6 +581,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -539,6 +599,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -532,6 +591,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -548,6 +609,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -541,6 +601,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -557,6 +619,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -550,6 +611,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -566,6 +629,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -559,6 +621,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -575,6 +639,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -568,6 +631,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -584,6 +649,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -577,6 +641,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -593,6 +659,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -586,6 +651,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -602,6 +669,7 @@
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -595,6 +661,7 @@
      },
      {
          "BriefDescription": "Offcore prefetch requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
++        "Counter": "0,1,2,3",
+         "EventCode": "0xB7, 0xBB",
          "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/other.json b/tools/perf/pmu-events/arch/x86/westmereex/other.json
+         "MSRIndex": "0x1a6,0x1a7",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
 index 488274980564..bcf5bcf637c0 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/other.json
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/other.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -3709,10 +3709,10 @@ index 488274980564..bcf5bcf637c0 100644
          "EventCode": "0xF6",
          "EventName": "SQ_FULL_STALL_CYCLES",
          "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json b/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json
-index 026236558d05..e8cac8622b30 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/pipeline.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
+index a29ed3522779..0267788d9dce 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/pipeline.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -3764,7 +3764,7 @@ index 026236558d05..e8cac8622b30 100644
 @@ -46,6 +52,7 @@
      },
      {
-         "BriefDescription": "Early Branch Prediction Unit clears",
+         "BriefDescription": "Early Branch Prediciton Unit clears",
 +        "Counter": "0,1,2,3",
          "EventCode": "0xE8",
          "EventName": "BPU_CLEARS.EARLY",
@@ -4394,23 +4394,23 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.CORE_ACTIVE_CYCLES_NO_PORT5",
-@@ -630,6 +716,7 @@
-     },
+@@ -631,6 +717,7 @@
      {
+         "AnyThread": "1",
          "BriefDescription": "Uops executed on any port (core count)",
 +        "Counter": "0,1,2,3",
          "CounterMask": "1",
          "EdgeDetect": "1",
          "EventCode": "0xB1",
-@@ -640,6 +727,7 @@
-     },
+@@ -642,6 +729,7 @@
      {
+         "AnyThread": "1",
          "BriefDescription": "Uops executed on ports 0-4 (core count)",
 +        "Counter": "0,1,2,3",
          "CounterMask": "1",
          "EdgeDetect": "1",
          "EventCode": "0xB1",
-@@ -651,6 +739,7 @@
+@@ -653,6 +741,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Cycles no Uops issued on any port (core count)",
@@ -4418,7 +4418,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.CORE_STALL_CYCLES",
-@@ -661,6 +750,7 @@
+@@ -663,6 +752,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Cycles no Uops issued on ports 0-4 (core count)",
@@ -4426,7 +4426,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.CORE_STALL_CYCLES_NO_PORT5",
-@@ -670,6 +760,7 @@
+@@ -672,6 +762,7 @@
      },
      {
          "BriefDescription": "Uops executed on port 0",
@@ -4434,7 +4434,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT0",
          "SampleAfterValue": "2000000",
-@@ -677,6 +768,7 @@
+@@ -679,6 +770,7 @@
      },
      {
          "BriefDescription": "Uops issued on ports 0, 1 or 5",
@@ -4442,7 +4442,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT015",
          "SampleAfterValue": "2000000",
-@@ -684,6 +776,7 @@
+@@ -686,6 +778,7 @@
      },
      {
          "BriefDescription": "Cycles no Uops issued on ports 0, 1 or 5",
@@ -4450,7 +4450,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT015_STALL_CYCLES",
-@@ -693,6 +786,7 @@
+@@ -695,6 +788,7 @@
      },
      {
          "BriefDescription": "Uops executed on port 1",
@@ -4458,7 +4458,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT1",
          "SampleAfterValue": "2000000",
-@@ -701,6 +795,7 @@
+@@ -703,6 +797,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Uops issued on ports 2, 3 or 4",
@@ -4466,7 +4466,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT234_CORE",
          "SampleAfterValue": "2000000",
-@@ -709,6 +804,7 @@
+@@ -711,6 +806,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Uops executed on port 2 (core count)",
@@ -4474,7 +4474,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT2_CORE",
          "SampleAfterValue": "2000000",
-@@ -717,6 +813,7 @@
+@@ -719,6 +815,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Uops executed on port 3 (core count)",
@@ -4482,7 +4482,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT3_CORE",
          "SampleAfterValue": "2000000",
-@@ -725,6 +822,7 @@
+@@ -727,6 +824,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Uops executed on port 4 (core count)",
@@ -4490,7 +4490,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT4_CORE",
          "SampleAfterValue": "2000000",
-@@ -732,6 +830,7 @@
+@@ -734,6 +832,7 @@
      },
      {
          "BriefDescription": "Uops executed on port 5",
@@ -4498,7 +4498,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xB1",
          "EventName": "UOPS_EXECUTED.PORT5",
          "SampleAfterValue": "2000000",
-@@ -739,6 +838,7 @@
+@@ -741,6 +840,7 @@
      },
      {
          "BriefDescription": "Uops issued",
@@ -4506,7 +4506,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xE",
          "EventName": "UOPS_ISSUED.ANY",
          "SampleAfterValue": "2000000",
-@@ -747,6 +847,7 @@
+@@ -749,6 +849,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Cycles no Uops were issued on any thread",
@@ -4514,7 +4514,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xE",
          "EventName": "UOPS_ISSUED.CORE_STALL_CYCLES",
-@@ -757,6 +858,7 @@
+@@ -759,6 +860,7 @@
      {
          "AnyThread": "1",
          "BriefDescription": "Cycles Uops were issued on either thread",
@@ -4522,7 +4522,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xE",
          "EventName": "UOPS_ISSUED.CYCLES_ALL_THREADS",
-@@ -765,6 +867,7 @@
+@@ -767,6 +869,7 @@
      },
      {
          "BriefDescription": "Fused Uops issued",
@@ -4530,7 +4530,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xE",
          "EventName": "UOPS_ISSUED.FUSED",
          "SampleAfterValue": "2000000",
-@@ -772,6 +875,7 @@
+@@ -774,6 +877,7 @@
      },
      {
          "BriefDescription": "Cycles no Uops were issued",
@@ -4538,7 +4538,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xE",
          "EventName": "UOPS_ISSUED.STALL_CYCLES",
-@@ -781,6 +885,7 @@
+@@ -783,6 +887,7 @@
      },
      {
          "BriefDescription": "Cycles Uops are being retired",
@@ -4546,7 +4546,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.ACTIVE_CYCLES",
-@@ -790,6 +895,7 @@
+@@ -792,6 +897,7 @@
      },
      {
          "BriefDescription": "Uops retired (Precise Event)",
@@ -4554,7 +4554,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.ANY",
          "PEBS": "1",
-@@ -798,6 +904,7 @@
+@@ -800,6 +906,7 @@
      },
      {
          "BriefDescription": "Macro-fused Uops retired (Precise Event)",
@@ -4562,7 +4562,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.MACRO_FUSED",
          "PEBS": "1",
-@@ -806,6 +913,7 @@
+@@ -808,6 +915,7 @@
      },
      {
          "BriefDescription": "Retirement slots used (Precise Event)",
@@ -4570,7 +4570,7 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.RETIRE_SLOTS",
          "PEBS": "1",
-@@ -814,6 +922,7 @@
+@@ -816,6 +924,7 @@
      },
      {
          "BriefDescription": "Cycles Uops are not retiring (Precise Event)",
@@ -4578,7 +4578,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "1",
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.STALL_CYCLES",
-@@ -824,6 +933,7 @@
+@@ -826,6 +935,7 @@
      },
      {
          "BriefDescription": "Total cycles using precise uop retired event (Precise Event)",
@@ -4586,7 +4586,7 @@ index 026236558d05..e8cac8622b30 100644
          "CounterMask": "16",
          "EventCode": "0xC2",
          "EventName": "UOPS_RETIRED.TOTAL_CYCLES",
-@@ -834,6 +944,7 @@
+@@ -836,6 +946,7 @@
      },
      {
          "BriefDescription": "Uop unfusions due to FP exceptions",
@@ -4594,10 +4594,10 @@ index 026236558d05..e8cac8622b30 100644
          "EventCode": "0xDB",
          "EventName": "UOP_UNFUSION",
          "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
-index 6c92b2be2d06..0c3501e6e5a3 100644
---- a/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/westmereex/virtual-memory.json
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
+index 80efcfd48239..e7affdf7f41b 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-sp/virtual-memory.json
 @@ -1,6 +1,7 @@
  [
      {
@@ -4609,20 +4609,12 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
 @@ -8,6 +9,7 @@
      },
      {
-         "BriefDescription": "DTLB load miss large page walks",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x8",
-         "EventName": "DTLB_LOAD_MISSES.LARGE_WALK_COMPLETED",
-         "SampleAfterValue": "200000",
-@@ -15,6 +17,7 @@
-     },
-     {
          "BriefDescription": "DTLB load miss caused by low part of address",
 +        "Counter": "0,1,2,3",
          "EventCode": "0x8",
          "EventName": "DTLB_LOAD_MISSES.PDE_MISS",
          "SampleAfterValue": "200000",
-@@ -22,6 +25,7 @@
+@@ -15,6 +17,7 @@
      },
      {
          "BriefDescription": "DTLB second level hit",
@@ -4630,7 +4622,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x8",
          "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
          "SampleAfterValue": "2000000",
-@@ -29,6 +33,7 @@
+@@ -22,6 +25,7 @@
      },
      {
          "BriefDescription": "DTLB load miss page walks complete",
@@ -4638,7 +4630,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x8",
          "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
          "SampleAfterValue": "200000",
-@@ -36,6 +41,7 @@
+@@ -29,6 +33,7 @@
      },
      {
          "BriefDescription": "DTLB load miss page walk cycles",
@@ -4646,7 +4638,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x8",
          "EventName": "DTLB_LOAD_MISSES.WALK_CYCLES",
          "SampleAfterValue": "200000",
-@@ -43,6 +49,7 @@
+@@ -36,6 +41,7 @@
      },
      {
          "BriefDescription": "DTLB misses",
@@ -4654,7 +4646,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x49",
          "EventName": "DTLB_MISSES.ANY",
          "SampleAfterValue": "200000",
-@@ -50,6 +57,7 @@
+@@ -43,6 +49,7 @@
      },
      {
          "BriefDescription": "DTLB miss large page walks",
@@ -4662,15 +4654,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x49",
          "EventName": "DTLB_MISSES.LARGE_WALK_COMPLETED",
          "SampleAfterValue": "200000",
-@@ -57,6 +65,7 @@
-     },
-     {
-         "BriefDescription": "DTLB misses caused by low part of address. Count also includes 2M page references because 2M pages do not use the PDE.",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x49",
-         "EventName": "DTLB_MISSES.PDE_MISS",
-         "SampleAfterValue": "200000",
-@@ -64,6 +73,7 @@
+@@ -50,6 +57,7 @@
      },
      {
          "BriefDescription": "DTLB first level misses but second level hit",
@@ -4678,7 +4662,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x49",
          "EventName": "DTLB_MISSES.STLB_HIT",
          "SampleAfterValue": "200000",
-@@ -71,6 +81,7 @@
+@@ -57,6 +65,7 @@
      },
      {
          "BriefDescription": "DTLB miss page walks",
@@ -4686,7 +4670,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x49",
          "EventName": "DTLB_MISSES.WALK_COMPLETED",
          "SampleAfterValue": "200000",
-@@ -78,6 +89,7 @@
+@@ -64,6 +73,7 @@
      },
      {
          "BriefDescription": "DTLB miss page walk cycles",
@@ -4694,7 +4678,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x49",
          "EventName": "DTLB_MISSES.WALK_CYCLES",
          "SampleAfterValue": "2000000",
-@@ -85,6 +97,7 @@
+@@ -71,6 +81,7 @@
      },
      {
          "BriefDescription": "Extended Page Table walk cycles",
@@ -4702,7 +4686,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x4F",
          "EventName": "EPT.WALK_CYCLES",
          "SampleAfterValue": "2000000",
-@@ -92,6 +105,7 @@
+@@ -78,6 +89,7 @@
      },
      {
          "BriefDescription": "ITLB flushes",
@@ -4710,7 +4694,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0xAE",
          "EventName": "ITLB_FLUSH",
          "SampleAfterValue": "2000000",
-@@ -99,6 +113,7 @@
+@@ -85,6 +97,7 @@
      },
      {
          "BriefDescription": "ITLB miss",
@@ -4718,15 +4702,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x85",
          "EventName": "ITLB_MISSES.ANY",
          "SampleAfterValue": "200000",
-@@ -106,6 +121,7 @@
-     },
-     {
-         "BriefDescription": "ITLB miss large page walks",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x85",
-         "EventName": "ITLB_MISSES.LARGE_WALK_COMPLETED",
-         "SampleAfterValue": "200000",
-@@ -113,6 +129,7 @@
+@@ -92,6 +105,7 @@
      },
      {
          "BriefDescription": "ITLB miss page walks",
@@ -4734,7 +4710,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x85",
          "EventName": "ITLB_MISSES.WALK_COMPLETED",
          "SampleAfterValue": "200000",
-@@ -120,6 +137,7 @@
+@@ -99,6 +113,7 @@
      },
      {
          "BriefDescription": "ITLB miss page walk cycles",
@@ -4742,7 +4718,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0x85",
          "EventName": "ITLB_MISSES.WALK_CYCLES",
          "SampleAfterValue": "2000000",
-@@ -127,6 +145,7 @@
+@@ -106,6 +121,7 @@
      },
      {
          "BriefDescription": "Retired instructions that missed the ITLB (Precise Event)",
@@ -4750,7 +4726,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0xC8",
          "EventName": "ITLB_MISS_RETIRED",
          "PEBS": "1",
-@@ -135,6 +154,7 @@
+@@ -114,6 +130,7 @@
      },
      {
          "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
@@ -4758,7 +4734,7 @@ index 6c92b2be2d06..0c3501e6e5a3 100644
          "EventCode": "0xCB",
          "EventName": "MEM_LOAD_RETIRED.DTLB_MISS",
          "PEBS": "1",
-@@ -143,6 +163,7 @@
+@@ -122,6 +139,7 @@
      },
      {
          "BriefDescription": "Retired stores that miss the DTLB (Precise Event)",
