@@ -1,101 +1,83 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4450621A19;
-	Thu, 20 Jun 2024 11:27:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC60B40858;
+	Thu, 20 Jun 2024 11:31:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718882849; cv=none; b=I3QDTbPb8Rc7UnZZWzfsp/q9+EALc+VZjerE/K4Ofj7fHAe+kJ9BVxpj0IuYlf5/e9AF1310zpm48PlZGEYPqHyJTA8T8gSbyLsV+TTsdoY9WwP/20WUzwccdMstsicP+GrzPWLCz2PDtfUKAHakwQRtCv3EdTcantHuCc29CFQ=
+	t=1718883101; cv=none; b=Wn8i4ukvZYWcS4ajV921nSivvRB1PlfVg5doaTi9eElikwLRBlIY8LuYiu1DERC0pP3nnRQuEE1Dik0bTfOpvatd7/xBX0r59AFXBpoknWVgFFgnN6c3DBez3TnzXp9v8surq0I8DiiWTBnxyxQBIe9mZLRbzOz2fJMWM6wwQi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718882849; c=relaxed/simple;
-	bh=nU8lEdZZ5H6b2ve8JzNasuCw99ZtNV1kYCetk91R0Bc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=aBqVrTMIEpMb6hLi7nrsr2ZWuBqzjPp2iKBq+AuzzYPcaOMgifkdUw/vj1zOyGpmg4tO2BafAwMIgW5oFW/q+QKgEUbHxM6+N0MuhKgL+/xizih7gUZKiQDwctaX7Ia0CmOEmGs+RncJS6Gkpc22Ug7lbs2EM5YRQOibzItnRoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4W4dTQ2qTRzdcLG;
-	Thu, 20 Jun 2024 19:25:46 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 76369180087;
-	Thu, 20 Jun 2024 19:27:17 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 19:27:16 +0800
-Message-ID: <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
-Date: Thu, 20 Jun 2024 19:27:16 +0800
+	s=arc-20240116; t=1718883101; c=relaxed/simple;
+	bh=2EUsRJP1y8Ffm/L1rJ/hNw8Xvk/M9bkzEuSmMifuQyI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VqjEZSauL2aJGqw7rL7tW9Iv5miLEvrK9mtfES/c8ffYweeq3Y3p1WfA7n50p8LkjdHNBZB7x5XI4KWZ0Ul+GU8A4rcsWM0i2IYHCUq5CatNQlPNinnAZaJpTF4fuHKjyMwSMtc530XJ6wfSH7pWvhebD0PLx8Ak1NuFZyHgHd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95142DA7;
+	Thu, 20 Jun 2024 04:32:03 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65CDC3F6A8;
+	Thu, 20 Jun 2024 04:31:37 -0700 (PDT)
+Message-ID: <3ab8410a-6c74-4dc1-997d-7b1a00fba877@arm.com>
+Date: Thu, 20 Jun 2024 12:31:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-To: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>
-CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <ast@kernel.org>,
-	<daniel@iogearbox.net>, <andrii@kernel.org>, <nathan@kernel.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<bpf@vger.kernel.org>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
- <20240619143852.GA24240@redhat.com>
- <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
- <20240620083602.GB30070@redhat.com> <ZnPxFbUJVUQd80hs@krava>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZnPxFbUJVUQd80hs@krava>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] arm64: hw_breakpoint: Save privilege of access control
+ via ptrace
+To: Oleg Nesterov <oleg@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240618071010.11214-1-yangtiezhu@loongson.cn>
+ <20240619151524.GB24240@redhat.com>
+ <9cc6d314-2431-c1b5-3d46-63c0ac80ed4d@loongson.cn>
+ <20240620090807.GC30070@redhat.com>
+ <93d96e55-c180-444a-9b3f-f96db5f9e37d@loongson.cn>
+ <20240620103600.GD30070@redhat.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <20240620103600.GD30070@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 
 
-在 2024/6/20 17:06, Jiri Olsa 写道:
-> On Thu, Jun 20, 2024 at 10:36:02AM +0200, Oleg Nesterov wrote:
->> On 06/20, Liao, Chang wrote:
+On 20/06/2024 11:36, Oleg Nesterov wrote:
+> Again, I can't really comment, I know almost nothing about perf, but
+> 
+> On 06/20, Tiezhu Yang wrote:
+>>
+>> On 06/20/2024 05:08 PM, Oleg Nesterov wrote:
 >>>
->>> However, when i asm porting uretprobe trampoline to arm64
->>> to explore its benefits on that architecture, i discovered the problem that
->>> single slot is not large enought for trampoline code.
+>>> But to me the very idea of arm64-specific and "kernel only" member in
+>>> perf_event_attr looks a bit strange.
+>>
+>> I noticed that there is a similar arm64-specific change in
+>> commit 09519ec3b19e ("perf: Add perf_event_attr::config3")
 > 
-> ah ok, makes sense now.. x86_64 has the slot big enough for the trampoline,
-> but arm64 does not
+> but this is another thing even if I have no idea what .config3 means.
 > 
->>
->> Ah, but then I'd suggest to make the changelog more clear. It looks as
->> if the problem was introduced by the patch from Jiri. Note that we was
->> confused as well ;)
->>
->> And,
->>
->> 	+	/* Reserve enough slots for the uretprobe trampoline */
->> 	+	for (slot_nr = 0;
->> 	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
->> 	+	     slot_nr++)
->>
->> this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
->> I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
->>
->> And perhaps it would be better to send this change along with
->> uretprobe_trampoline_for_arm64 ?
-> 
-> +1, also I'm curious what's the gain on arm64?
+> If nothing else, what do you think, say, tools/perf can do with ->bp_priv?
 
-I am currently finalizing the uretprobe trampoline and syscall implementation on arm64.
-While i have addressed most of issues, there are stiil a few bugs that reguire more effort.
-Once these are fixed, i will use Redis to evaluate the performance gains on arm64. In the
-next revision, i will submit a patchset that includes all relevant code changs, testcases
-and benchmark data, which will allows a comprehensive review and dicussion.
+Yeah, including the tools side change in the same series might help to
+explain. It's not obvious what the end goal is from the commit message.
+
+Thanks
+James
 
 > 
-> thanks,
-> jirka
-
--- 
-BR
-Liao, Chang
+> What should sys_perf_event_open() do if bp_priv != 0 comes from user space?
+> 
+> Nevermind, please forget, I leave this to you and maintainers.
+> 
+> Oleg.
+> 
+> 
