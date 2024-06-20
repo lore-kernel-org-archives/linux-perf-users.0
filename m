@@ -1,57 +1,59 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA4F1AC248
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 18:20:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ED61BA09A
+	for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 18:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718907649; cv=none; b=CoPdW62Fw137Ru/Dy2odYSnMVe0TzcRjG4zGbeiNLIAikicbUUMt7gQEvc9iOUpzy5aNAhs3kHcZJeLQIrqrTdDzHnbUkk1qVTB7q2+EMfLJ2vOEpdUgveyMo90qU4pMjZYR2xRg1WkElSqIU0aRpkBG6rF78gJjvVAtjWkIlgc=
+	t=1718907651; cv=none; b=R9H+tipRKdx+MHVpCFjxey3E+mT2+M0g8qSuLIBlU/F+tvYQ5ZkT5FF7ZZVD4z+LBf8rvc5wwGK5MVJO8z7loEwEA9I/L5nujD9wLVNarKMNiAvL/y6unBsEXg4YOkB3sdj1gi20T8if8yDbkBFa9+UpuLWi+eGAOKdO1kStGWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718907649; c=relaxed/simple;
-	bh=fPX5FeHf0JNNzdCuf0Jn4fzXMGdwAigX1IZGSLisNvw=;
+	s=arc-20240116; t=1718907651; c=relaxed/simple;
+	bh=9ckohT6secJLj9XA37BoXc4/6ah83QKq95eC3+6L3aw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Cc:Content-Type; b=cCHAQvnfppyYB9Zxv2y8n+uQBKz7/K7jz7OHAl4TbafZvpFB5+GY0QK98JsnSE81GXGfxKg72Qz/Y7e/+nnHwb5QekwdJ0qrNGwHpc6fDNNUy4CLzErPcXDuCOMGUOo9ZCT1Pj2Ta62hE9tlTLVqQSm92guZsg3+7dQnpF5yTgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sy64cT9T; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=F6MK89BqwD/wz6vt6vT2cyyLy7IifWlleudKyukTru+Za78naDbULQrf7BFHQzXc6P2aflcd2sy7t0UKeMV0HqrzKvS+uu1d5xWpWNLIuH6OxMGS13NHoN/gUWnREioUHwWfMx1vmgdbxIL9Dvp+93ihqb/e004uTo6wJoeYe8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qv/fRTRy; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sy64cT9T"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfeac23fe6eso2249609276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 11:20:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qv/fRTRy"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02ba91b9f4so2560032276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 11:20:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1718907613; x=1719512413; darn=vger.kernel.org;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xglnf5wX3V9kPMBTJHdga5FzRy4QzuRsDzBSglYVVhc=;
-        b=sy64cT9T52c4ciJUaA5S5VhS5Fyl0zPtzyqYIWM8oIBMnniR3tL6h6qJgK9vR1W1Jc
-         cmk2vKM5F9EInSFzAc1yBy4hjNC/Ua/RT7miXdMGTirakOcD498345IxfWHG9LZ5oxmD
-         RqHS4yDdcfJ5k9gv7X0RuLZmoyo8FJXze4IwsfzeifpiIE10eL2Y9GIZUABVZJ5UEEAe
-         sD5juX3jV32E1lLpAZ6k6tHmc8Fuo3qvumUjfE2X3jNjDvUC6P0cE2i6UfkSWSa6dkfi
-         Hl03x8XxDf36ClGKQ9USgsVS0eHoVEu7OxlSp4yv+xyVEoLeaPaHox5NFsUL1gbgETqr
-         +EYg==
+        d=google.com; s=20230601; t=1718907608; x=1719512408; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=65Ni6aP+euRNJtqFuNy4t/iX2lZvWCfhoLrqsea3aSQ=;
+        b=qv/fRTRy/uzdNXUo4lNj/FoLE63AT2NHQmb3tN3aeVsbQWrRCT3UxXNG75VTTj1d57
+         P1T22eLih7jDmvfrUAkenvxgxwxjnnFmqzLXL3Yjt2mGXBp6T5qKRhR3XHuxlOznMgIi
+         ihRYEcirwI8FipJC33bkgh6zhw5gfwKbOLFK+rGBIGMfAqJTka9+HiP/klJG9URZhudU
+         iTydkvF9LtxUWlFe1QO0c/AeQznUk7ayQiy8W8iWYsHZPpVRfVo4eP7yFsiIpZhdHlt0
+         jZgbBActOrEkGdJWEj4FjUHLze9ortvDAvPwntnJG6Ww/Dgw6vCC9iZ7+Bg6CJUvO08y
+         w+jg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718907613; x=1719512413;
-        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xglnf5wX3V9kPMBTJHdga5FzRy4QzuRsDzBSglYVVhc=;
-        b=bgmrpAHskTOUUKra4m4kPjrud2wJp6mv70IJ28lq/R4qUJFLgIkL0Shyb+oZ2EAtZh
-         eigjb0pvVf0CI2g6+t8bRLBlgvYjwwekx9evOz6Z1SMbDJHr1tGK6D/ZIdcFVnS0/5XV
-         ppjz0+SIwiD7YvKvd9AsUMgra7f98v3E80Fj/gPhC7lbdN3+u2mUCCp5zZ659lrp8aB3
-         ziYNsi9wQpTDLXmeQ3vsD6XsCQ1lKfvLTOpaqLdrt6Ffufy1VVa/qLNkBskecFVHiCVd
-         nb/mfbKL/bSookLo9tQDn7yE5G+wNmLh4TqkDgNPaTKdsOkKUXX0WPutsS+pNBf3v1+O
-         2RSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXUvGyh9mNMauohEYHWNH8++OlyCUzUWtcgbl543bUqFPnwtmv2+QrlkC1THQfvFU69KeuJTkdNwcY+qH2B1br9OzNSZrEJLnK+dXDnRZceRg==
-X-Gm-Message-State: AOJu0Yz8O/cZqygWBp1j2RpjOVcOIQjlzPJlXM40zHh/x8kiJ+jp/++l
-	Y6jm4LJljFItYIcTG7h19/HLsWr6hMVQJF9KXwS07F+EP1jiHoMmimej17Mg4COxSZfFJuCGkOh
-	ZZObcwA==
-X-Google-Smtp-Source: AGHT+IEGj2i3qkm9Cl18l5Sh8kIXKj447fli3TZ8o9AdaAc+l7ybHvsxTY9hWao9WTdkghBEKiF3PVrPSZVt
+        d=1e100.net; s=20230601; t=1718907608; x=1719512408;
+        h=content-transfer-encoding:cc:to:from:subject:references
+         :mime-version:message-id:in-reply-to:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=65Ni6aP+euRNJtqFuNy4t/iX2lZvWCfhoLrqsea3aSQ=;
+        b=Fvg4VXEMscQEQN3jApgNO0gq+oq2GJUO4AXUs5LBGXIZWMw0tdFED7AhV0n4uzfNmK
+         JM+m2in0CMZZ3Pf26lQoJaNSs2aporw8u77PYrA8rTvwDKPYHwt4hBkPHe3P1yVTDsU9
+         Bs6dRaZACl4iZulaKxxWNCXsapJ+YDNdViSK/Yt6Pbf6yi9QEMN70zN8NLcLCwmm6Svf
+         5+M9apfoQANcwbOB7h2kRHgHkpmy/Qd86LV5y/nLGXtDqO2vFXa8GhNkUXB8AUBk5qmQ
+         5VOcM+okllhZ+RqfC4NNQnAh00wnkCEhG11nYh/uqeRJ5C8zS4Z5vBdYw4xLqpBl3wAr
+         iZjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW+k4ndacreGqY+6r/O2yqon8xqnn17iI6qdsz+c69+KfdMkt5DnZAptYTuVNawY3xZDsOMIXt2aoqy8Ze6WKyslSxLdUhJ/Al3AU+BmOrweg==
+X-Gm-Message-State: AOJu0YxEjoxLB7FPGtaBmAGlnoBRT4SZ2eXfc73LS+B2q3IZVruWqZ7P
+	vOtM6mwTsVgd+cT70fRyeb6yTaHthQXwSmkkf9clgMRmdcj19rzuOnnff1jkoyqXi+9excI3gVU
+	2VDtbRg==
+X-Google-Smtp-Source: AGHT+IEfXB/S4bFKKyHu30JjKrhGwZ97ut45x862lGWIOmUKqiCQip+h/C8uqsFU1cgkbCOtc7QRoko7jWqa
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:a6b7:dc01:68ba:649])
- (user=irogers job=sendgmr) by 2002:a25:8b0d:0:b0:e01:ec7b:c40f with SMTP id
- 3f1490d57ef6-e02be1bcd50mr1159949276.7.1718907613166; Thu, 20 Jun 2024
- 11:20:13 -0700 (PDT)
-Date: Thu, 20 Jun 2024 11:17:39 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1885:b0:dff:484b:a20a with SMTP
+ id 3f1490d57ef6-e02be190945mr1677631276.2.1718907608318; Thu, 20 Jun 2024
+ 11:20:08 -0700 (PDT)
+Date: Thu, 20 Jun 2024 11:17:37 -0700
 In-Reply-To: <20240620181752.3945845-1-irogers@google.com>
-Message-Id: <20240620181752.3945845-26-irogers@google.com>
+Message-Id: <20240620181752.3945845-24-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +62,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240620181752.3945845-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.627.g7a2c4fd464-goog
-Subject: [PATCH v2 25/37] perf vendor events: Add nehalemex counter information
+Subject: [PATCH v2 23/37] perf vendor events: Update meteorlake events and add
+ counter information
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,4492 +75,5637 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org
 Cc: Weilin Wang <weilin.wang@intel.com>, Caleb Biggers <caleb.biggers@intel.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add counter information necessary for optimizing event grouping the
-perf tool.
+Update events from v1.08 to v1.10.
 
-The most recent RFC patch set using this information:
+Bring in the event updates v1.10:
+https://github.com/intel/perfmon/commit/3bee3dc150164df0bec5980ca5586930730=
+e5778
+v1.09:
+https://github.com/intel/perfmon/commit/01c8c99f17a72460b2eaf7efe3495913f36=
+c9d42
+
+Add counter information. The most recent RFC patch set using this
+information:
 https://lore.kernel.org/lkml/20240412210756.309828-1-weilin.wang@intel.com/
 
-The information was added in:
-https://github.com/intel/perfmon/commit/475892a9690cb048949e593fe39cee65cd4765e1
-and later patches.
+New events are:
+EXE_ACTIVITY.2_3_PORTS_UTIL,
+FP_INST_RETIRED.128B_DP,
+FP_INST_RETIRED.128B_SP,
+FP_INST_RETIRED.256B_DP,
+FP_INST_RETIRED.32B_SP,
+FP_INST_RETIRED.64B_DP,
+FP_VINT_UOPS_EXECUTED.STD,
+L2_LINES_OUT.USELESS_HWPF,
+L2_RQSTS.SWPF_HIT,
+L2_RQSTS.SWPF_MISS,
+LOAD_HIT_PREFETCH.SWPF,
+MACHINE_CLEARS.ANY,
+MACHINE_CLEARS.MRN_NUKE,
+MISC_RETIRED.LBR_INSERTS,
+SW_PREFETCH_ACCESS.ANY.
+
+The metrics aren't updated as they require retirement latency support
+that is added in this series:
+https://lore.kernel.org/lkml/20240613033631.199800-1-weilin.wang@intel.com/
 
 Co-authored-by: Weilin Wang <weilin.wang@intel.com>
 Co-authored-by: Caleb Biggers <caleb.biggers@intel.com>
 Signed-off-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- .../pmu-events/arch/x86/nehalemex/cache.json  | 315 ++++++++++++++++++
- .../arch/x86/nehalemex/counter.json           |   7 +
- .../arch/x86/nehalemex/floating-point.json    |  28 ++
- .../arch/x86/nehalemex/frontend.json          |   3 +
- .../pmu-events/arch/x86/nehalemex/memory.json |  67 ++++
- .../pmu-events/arch/x86/nehalemex/other.json  |  18 +
- .../arch/x86/nehalemex/pipeline.json          | 109 ++++++
- .../arch/x86/nehalemex/virtual-memory.json    |  13 +
- 8 files changed, 560 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/nehalemex/counter.json
+ tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
+ .../pmu-events/arch/x86/meteorlake/cache.json | 223 +++++++++----
+ .../arch/x86/meteorlake/floating-point.json   |  86 ++++-
+ .../arch/x86/meteorlake/frontend.json         |  69 ++--
+ .../arch/x86/meteorlake/memory.json           |  62 ++--
+ .../pmu-events/arch/x86/meteorlake/other.json |  19 +-
+ .../arch/x86/meteorlake/pipeline.json         | 300 ++++++++++++++----
+ .../arch/x86/meteorlake/uncore-cache.json     |   2 +
+ .../x86/meteorlake/uncore-interconnect.json   |   8 +
+ .../arch/x86/meteorlake/uncore-memory.json    |  16 +
+ .../arch/x86/meteorlake/uncore-other.json     |   1 +
+ .../arch/x86/meteorlake/virtual-memory.json   |  37 +++
+ 12 files changed, 641 insertions(+), 184 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/cache.json b/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
-index 0042e53fdc78..2c0ea6f8c4e0 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/cache.json
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
+ents/arch/x86/mapfile.csv
+index 9056784e23f7..1040f68fee94 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -21,7 +21,7 @@ GenuineIntel-6-3E,v24,ivytown,core
+ GenuineIntel-6-2D,v24,jaketown,core
+ GenuineIntel-6-(57|85),v16,knightslanding,core
+ GenuineIntel-6-BD,v1.01,lunarlake,core
+-GenuineIntel-6-A[AC],v1.08,meteorlake,core
++GenuineIntel-6-A[AC],v1.10,meteorlake,core
+ GenuineIntel-6-1[AEF],v4,nehalemep,core
+ GenuineIntel-6-2E,v4,nehalemex,core
+ GenuineIntel-6-A7,v1.02,rocketlake,core
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json b/tools/p=
+erf/pmu-events/arch/x86/meteorlake/cache.json
+index af7acb15f661..908e3c7f6d6e 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/cache.json
 @@ -1,6 +1,7 @@
  [
      {
-         "BriefDescription": "Cycles L1D locked",
-+        "Counter": "0,1",
-         "EventCode": "0x63",
-         "EventName": "CACHE_LOCK_CYCLES.L1D",
-         "SampleAfterValue": "2000000",
-@@ -8,6 +9,7 @@
-     },
-     {
-         "BriefDescription": "Cycles L1D and L2 locked",
-+        "Counter": "0,1",
-         "EventCode": "0x63",
-         "EventName": "CACHE_LOCK_CYCLES.L1D_L2",
-         "SampleAfterValue": "2000000",
-@@ -15,6 +17,7 @@
-     },
-     {
-         "BriefDescription": "L1D cache lines replaced in M state",
-+        "Counter": "0,1",
+         "BriefDescription": "L1D.HWPF_MISS",
++        "Counter": "0,1,2,3",
          "EventCode": "0x51",
-         "EventName": "L1D.M_EVICT",
-         "SampleAfterValue": "2000000",
-@@ -22,6 +25,7 @@
-     },
-     {
-         "BriefDescription": "L1D cache lines allocated in the M state",
-+        "Counter": "0,1",
-         "EventCode": "0x51",
-         "EventName": "L1D.M_REPL",
-         "SampleAfterValue": "2000000",
-@@ -29,6 +33,7 @@
-     },
-     {
-         "BriefDescription": "L1D snoop eviction of cache lines in M state",
-+        "Counter": "0,1",
-         "EventCode": "0x51",
-         "EventName": "L1D.M_SNOOP_EVICT",
-         "SampleAfterValue": "2000000",
-@@ -36,6 +41,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache lines allocated",
-+        "Counter": "0,1",
-         "EventCode": "0x51",
-         "EventName": "L1D.REPL",
-         "SampleAfterValue": "2000000",
-@@ -43,6 +49,7 @@
-     },
-     {
-         "BriefDescription": "All references to the L1 data cache",
-+        "Counter": "0,1",
-         "EventCode": "0x43",
-         "EventName": "L1D_ALL_REF.ANY",
-         "SampleAfterValue": "2000000",
-@@ -50,6 +57,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cacheable reads and writes",
-+        "Counter": "0,1",
-         "EventCode": "0x43",
-         "EventName": "L1D_ALL_REF.CACHEABLE",
-         "SampleAfterValue": "2000000",
-@@ -57,6 +65,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache read in E state",
-+        "Counter": "0,1",
-         "EventCode": "0x40",
-         "EventName": "L1D_CACHE_LD.E_STATE",
-         "SampleAfterValue": "2000000",
-@@ -64,6 +73,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache read in I state (misses)",
-+        "Counter": "0,1",
-         "EventCode": "0x40",
-         "EventName": "L1D_CACHE_LD.I_STATE",
-         "SampleAfterValue": "2000000",
-@@ -71,6 +81,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache reads",
-+        "Counter": "0,1",
-         "EventCode": "0x40",
-         "EventName": "L1D_CACHE_LD.MESI",
-         "SampleAfterValue": "2000000",
-@@ -78,6 +89,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache read in M state",
-+        "Counter": "0,1",
-         "EventCode": "0x40",
-         "EventName": "L1D_CACHE_LD.M_STATE",
-         "SampleAfterValue": "2000000",
-@@ -85,6 +97,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache read in S state",
-+        "Counter": "0,1",
-         "EventCode": "0x40",
-         "EventName": "L1D_CACHE_LD.S_STATE",
-         "SampleAfterValue": "2000000",
-@@ -92,6 +105,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache load locks in E state",
-+        "Counter": "0,1",
-         "EventCode": "0x42",
-         "EventName": "L1D_CACHE_LOCK.E_STATE",
-         "SampleAfterValue": "2000000",
-@@ -99,6 +113,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache load lock hits",
-+        "Counter": "0,1",
-         "EventCode": "0x42",
-         "EventName": "L1D_CACHE_LOCK.HIT",
-         "SampleAfterValue": "2000000",
-@@ -106,6 +121,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache load locks in M state",
-+        "Counter": "0,1",
-         "EventCode": "0x42",
-         "EventName": "L1D_CACHE_LOCK.M_STATE",
-         "SampleAfterValue": "2000000",
-@@ -113,6 +129,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache load locks in S state",
-+        "Counter": "0,1",
-         "EventCode": "0x42",
-         "EventName": "L1D_CACHE_LOCK.S_STATE",
-         "SampleAfterValue": "2000000",
-@@ -120,6 +137,7 @@
-     },
-     {
-         "BriefDescription": "L1D load lock accepted in fill buffer",
-+        "Counter": "0,1",
-         "EventCode": "0x53",
-         "EventName": "L1D_CACHE_LOCK_FB_HIT",
-         "SampleAfterValue": "2000000",
-@@ -127,6 +145,7 @@
-     },
-     {
-         "BriefDescription": "L1D prefetch load lock accepted in fill buffer",
-+        "Counter": "0,1",
-         "EventCode": "0x52",
-         "EventName": "L1D_CACHE_PREFETCH_LOCK_FB_HIT",
-         "SampleAfterValue": "2000000",
-@@ -134,6 +153,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache stores in E state",
-+        "Counter": "0,1",
-         "EventCode": "0x41",
-         "EventName": "L1D_CACHE_ST.E_STATE",
-         "SampleAfterValue": "2000000",
-@@ -141,6 +161,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache stores in M state",
-+        "Counter": "0,1",
-         "EventCode": "0x41",
-         "EventName": "L1D_CACHE_ST.M_STATE",
-         "SampleAfterValue": "2000000",
-@@ -148,6 +169,7 @@
-     },
-     {
-         "BriefDescription": "L1 data cache stores in S state",
-+        "Counter": "0,1",
-         "EventCode": "0x41",
-         "EventName": "L1D_CACHE_ST.S_STATE",
-         "SampleAfterValue": "2000000",
-@@ -155,6 +177,7 @@
-     },
-     {
-         "BriefDescription": "L1D hardware prefetch misses",
-+        "Counter": "0,1",
-         "EventCode": "0x4E",
-         "EventName": "L1D_PREFETCH.MISS",
-         "SampleAfterValue": "200000",
-@@ -162,6 +185,7 @@
-     },
-     {
-         "BriefDescription": "L1D hardware prefetch requests",
-+        "Counter": "0,1",
-         "EventCode": "0x4E",
-         "EventName": "L1D_PREFETCH.REQUESTS",
-         "SampleAfterValue": "200000",
-@@ -169,6 +193,7 @@
-     },
-     {
-         "BriefDescription": "L1D hardware prefetch requests triggered",
-+        "Counter": "0,1",
-         "EventCode": "0x4E",
-         "EventName": "L1D_PREFETCH.TRIGGERS",
-         "SampleAfterValue": "200000",
-@@ -176,6 +201,7 @@
-     },
-     {
-         "BriefDescription": "L1 writebacks to L2 in E state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x28",
-         "EventName": "L1D_WB_L2.E_STATE",
-         "SampleAfterValue": "100000",
-@@ -183,6 +209,7 @@
-     },
-     {
-         "BriefDescription": "L1 writebacks to L2 in I state (misses)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x28",
-         "EventName": "L1D_WB_L2.I_STATE",
-         "SampleAfterValue": "100000",
-@@ -190,6 +217,7 @@
-     },
-     {
-         "BriefDescription": "All L1 writebacks to L2",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x28",
-         "EventName": "L1D_WB_L2.MESI",
-         "SampleAfterValue": "100000",
-@@ -197,6 +225,7 @@
-     },
-     {
-         "BriefDescription": "L1 writebacks to L2 in M state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x28",
-         "EventName": "L1D_WB_L2.M_STATE",
-         "SampleAfterValue": "100000",
-@@ -204,6 +233,7 @@
-     },
-     {
-         "BriefDescription": "L1 writebacks to L2 in S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x28",
-         "EventName": "L1D_WB_L2.S_STATE",
-         "SampleAfterValue": "100000",
-@@ -211,6 +241,7 @@
-     },
-     {
-         "BriefDescription": "All L2 data requests",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.ANY",
-         "SampleAfterValue": "200000",
-@@ -218,6 +249,7 @@
-     },
-     {
-         "BriefDescription": "L2 data demand loads in E state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.DEMAND.E_STATE",
-         "SampleAfterValue": "200000",
-@@ -225,6 +257,7 @@
-     },
-     {
-         "BriefDescription": "L2 data demand loads in I state (misses)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.DEMAND.I_STATE",
-         "SampleAfterValue": "200000",
-@@ -232,6 +265,7 @@
-     },
-     {
-         "BriefDescription": "L2 data demand requests",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.DEMAND.MESI",
-         "SampleAfterValue": "200000",
-@@ -239,6 +273,7 @@
-     },
-     {
-         "BriefDescription": "L2 data demand loads in M state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.DEMAND.M_STATE",
-         "SampleAfterValue": "200000",
-@@ -246,6 +281,7 @@
-     },
-     {
-         "BriefDescription": "L2 data demand loads in S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.DEMAND.S_STATE",
-         "SampleAfterValue": "200000",
-@@ -253,6 +289,7 @@
-     },
-     {
-         "BriefDescription": "L2 data prefetches in E state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.PREFETCH.E_STATE",
-         "SampleAfterValue": "200000",
-@@ -260,6 +297,7 @@
-     },
-     {
-         "BriefDescription": "L2 data prefetches in the I state (misses)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.PREFETCH.I_STATE",
-         "SampleAfterValue": "200000",
-@@ -267,6 +305,7 @@
-     },
-     {
-         "BriefDescription": "All L2 data prefetches",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.PREFETCH.MESI",
-         "SampleAfterValue": "200000",
-@@ -274,6 +313,7 @@
-     },
-     {
-         "BriefDescription": "L2 data prefetches in M state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.PREFETCH.M_STATE",
-         "SampleAfterValue": "200000",
-@@ -281,6 +321,7 @@
-     },
-     {
-         "BriefDescription": "L2 data prefetches in the S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x26",
-         "EventName": "L2_DATA_RQSTS.PREFETCH.S_STATE",
-         "SampleAfterValue": "200000",
-@@ -288,6 +329,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines allocated",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF1",
-         "EventName": "L2_LINES_IN.ANY",
-         "SampleAfterValue": "100000",
-@@ -295,6 +337,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines allocated in the E state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF1",
-         "EventName": "L2_LINES_IN.E_STATE",
-         "SampleAfterValue": "100000",
-@@ -302,6 +345,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines allocated in the S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF1",
-         "EventName": "L2_LINES_IN.S_STATE",
-         "SampleAfterValue": "100000",
-@@ -309,6 +353,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines evicted",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF2",
-         "EventName": "L2_LINES_OUT.ANY",
-         "SampleAfterValue": "100000",
-@@ -316,6 +361,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines evicted by a demand request",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF2",
-         "EventName": "L2_LINES_OUT.DEMAND_CLEAN",
-         "SampleAfterValue": "100000",
-@@ -323,6 +369,7 @@
-     },
-     {
-         "BriefDescription": "L2 modified lines evicted by a demand request",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF2",
-         "EventName": "L2_LINES_OUT.DEMAND_DIRTY",
-         "SampleAfterValue": "100000",
-@@ -330,6 +377,7 @@
-     },
-     {
-         "BriefDescription": "L2 lines evicted by a prefetch request",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF2",
-         "EventName": "L2_LINES_OUT.PREFETCH_CLEAN",
-         "SampleAfterValue": "100000",
-@@ -337,6 +385,7 @@
-     },
-     {
-         "BriefDescription": "L2 modified lines evicted by a prefetch request",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF2",
-         "EventName": "L2_LINES_OUT.PREFETCH_DIRTY",
-         "SampleAfterValue": "100000",
-@@ -344,6 +393,7 @@
-     },
-     {
-         "BriefDescription": "L2 instruction fetches",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.IFETCHES",
-         "SampleAfterValue": "200000",
-@@ -351,6 +401,7 @@
-     },
-     {
-         "BriefDescription": "L2 instruction fetch hits",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.IFETCH_HIT",
-         "SampleAfterValue": "200000",
-@@ -358,6 +409,7 @@
-     },
-     {
-         "BriefDescription": "L2 instruction fetch misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.IFETCH_MISS",
-         "SampleAfterValue": "200000",
-@@ -365,6 +417,7 @@
-     },
-     {
-         "BriefDescription": "L2 load hits",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.LD_HIT",
-         "SampleAfterValue": "200000",
-@@ -372,6 +425,7 @@
-     },
-     {
-         "BriefDescription": "L2 load misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.LD_MISS",
-         "SampleAfterValue": "200000",
-@@ -379,6 +433,7 @@
-     },
-     {
-         "BriefDescription": "L2 requests",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.LOADS",
-         "SampleAfterValue": "200000",
-@@ -386,6 +441,7 @@
-     },
-     {
-         "BriefDescription": "All L2 misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.MISS",
-         "SampleAfterValue": "200000",
-@@ -393,6 +449,7 @@
-     },
-     {
-         "BriefDescription": "All L2 prefetches",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.PREFETCHES",
-         "SampleAfterValue": "200000",
-@@ -400,6 +457,7 @@
-     },
-     {
-         "BriefDescription": "L2 prefetch hits",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.PREFETCH_HIT",
-         "SampleAfterValue": "200000",
-@@ -407,6 +465,7 @@
-     },
-     {
-         "BriefDescription": "L2 prefetch misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.PREFETCH_MISS",
-         "SampleAfterValue": "200000",
-@@ -414,6 +473,7 @@
-     },
-     {
-         "BriefDescription": "All L2 requests",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.REFERENCES",
-         "SampleAfterValue": "200000",
-@@ -421,6 +481,7 @@
-     },
-     {
-         "BriefDescription": "L2 RFO requests",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.RFOS",
-         "SampleAfterValue": "200000",
-@@ -428,6 +489,7 @@
-     },
-     {
-         "BriefDescription": "L2 RFO hits",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.RFO_HIT",
-         "SampleAfterValue": "200000",
-@@ -435,6 +497,7 @@
-     },
-     {
-         "BriefDescription": "L2 RFO misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x24",
-         "EventName": "L2_RQSTS.RFO_MISS",
-         "SampleAfterValue": "200000",
-@@ -442,6 +505,7 @@
-     },
-     {
-         "BriefDescription": "All L2 transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.ANY",
-         "SampleAfterValue": "200000",
-@@ -449,6 +513,7 @@
-     },
-     {
-         "BriefDescription": "L2 fill transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.FILL",
-         "SampleAfterValue": "200000",
-@@ -456,6 +521,7 @@
-     },
-     {
-         "BriefDescription": "L2 instruction fetch transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.IFETCH",
-         "SampleAfterValue": "200000",
-@@ -463,6 +529,7 @@
-     },
-     {
-         "BriefDescription": "L1D writeback to L2 transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.L1D_WB",
-         "SampleAfterValue": "200000",
-@@ -470,6 +537,7 @@
-     },
-     {
-         "BriefDescription": "L2 Load transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.LOAD",
-         "SampleAfterValue": "200000",
-@@ -477,6 +545,7 @@
-     },
-     {
-         "BriefDescription": "L2 prefetch transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.PREFETCH",
-         "SampleAfterValue": "200000",
-@@ -484,6 +553,7 @@
-     },
-     {
-         "BriefDescription": "L2 RFO transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.RFO",
-         "SampleAfterValue": "200000",
-@@ -491,6 +561,7 @@
-     },
-     {
-         "BriefDescription": "L2 writeback to LLC transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF0",
-         "EventName": "L2_TRANSACTIONS.WB",
-         "SampleAfterValue": "200000",
-@@ -498,6 +569,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand lock RFOs in E state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.E_STATE",
-         "SampleAfterValue": "100000",
-@@ -505,6 +577,7 @@
-     },
-     {
-         "BriefDescription": "All demand L2 lock RFOs that hit the cache",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.HIT",
-         "SampleAfterValue": "100000",
-@@ -512,6 +585,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand lock RFOs in I state (misses)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.I_STATE",
-         "SampleAfterValue": "100000",
-@@ -519,6 +593,7 @@
-     },
-     {
-         "BriefDescription": "All demand L2 lock RFOs",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.MESI",
-         "SampleAfterValue": "100000",
-@@ -526,6 +601,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand lock RFOs in M state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.M_STATE",
-         "SampleAfterValue": "100000",
-@@ -533,6 +609,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand lock RFOs in S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.LOCK.S_STATE",
-         "SampleAfterValue": "100000",
-@@ -540,6 +617,7 @@
-     },
-     {
-         "BriefDescription": "All L2 demand store RFOs that hit the cache",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.RFO.HIT",
-         "SampleAfterValue": "100000",
-@@ -547,6 +625,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand store RFOs in I state (misses)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.RFO.I_STATE",
-         "SampleAfterValue": "100000",
-@@ -554,6 +633,7 @@
-     },
-     {
-         "BriefDescription": "All L2 demand store RFOs",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.RFO.MESI",
-         "SampleAfterValue": "100000",
-@@ -561,6 +641,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand store RFOs in M state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.RFO.M_STATE",
-         "SampleAfterValue": "100000",
-@@ -568,6 +649,7 @@
-     },
-     {
-         "BriefDescription": "L2 demand store RFOs in S state",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x27",
-         "EventName": "L2_WRITE.RFO.S_STATE",
-         "SampleAfterValue": "100000",
-@@ -575,6 +657,7 @@
-     },
-     {
-         "BriefDescription": "Longest latency cache miss",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x2E",
-         "EventName": "LONGEST_LAT_CACHE.MISS",
-         "SampleAfterValue": "100000",
-@@ -582,6 +665,7 @@
-     },
-     {
-         "BriefDescription": "Longest latency cache reference",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x2E",
-         "EventName": "LONGEST_LAT_CACHE.REFERENCE",
-         "SampleAfterValue": "200000",
-@@ -589,6 +673,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 0 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_0",
-         "MSRIndex": "0x3F6",
-@@ -598,6 +683,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 1024 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_1024",
-         "MSRIndex": "0x3F6",
-@@ -608,6 +694,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 128 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_128",
-         "MSRIndex": "0x3F6",
-@@ -618,6 +705,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 16 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_16",
-         "MSRIndex": "0x3F6",
-@@ -628,6 +716,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 16384 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_16384",
-         "MSRIndex": "0x3F6",
-@@ -638,6 +727,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 2048 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_2048",
-         "MSRIndex": "0x3F6",
-@@ -648,6 +738,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 256 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_256",
-         "MSRIndex": "0x3F6",
-@@ -658,6 +749,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 32 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_32",
-         "MSRIndex": "0x3F6",
-@@ -668,6 +760,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 32768 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_32768",
-         "MSRIndex": "0x3F6",
-@@ -678,6 +771,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 4 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_4",
-         "MSRIndex": "0x3F6",
-@@ -688,6 +782,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 4096 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_4096",
-         "MSRIndex": "0x3F6",
-@@ -698,6 +793,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 512 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_512",
-         "MSRIndex": "0x3F6",
-@@ -708,6 +804,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 64 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_64",
-         "MSRIndex": "0x3F6",
-@@ -718,6 +815,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 8 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_8",
-         "MSRIndex": "0x3F6",
-@@ -728,6 +826,7 @@
-     },
-     {
-         "BriefDescription": "Memory instructions retired above 8192 clocks (Precise Event)",
-+        "Counter": "3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LATENCY_ABOVE_THRESHOLD_8192",
-         "MSRIndex": "0x3F6",
-@@ -738,6 +837,7 @@
-     },
-     {
-         "BriefDescription": "Instructions retired which contains a load (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.LOADS",
-         "PEBS": "1",
-@@ -746,6 +846,7 @@
-     },
-     {
-         "BriefDescription": "Instructions retired which contains a store (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB",
-         "EventName": "MEM_INST_RETIRED.STORES",
-         "PEBS": "1",
-@@ -754,6 +855,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that miss L1D and hit an previously allocated LFB (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.HIT_LFB",
-         "PEBS": "1",
-@@ -762,6 +864,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that hit the L1 data cache (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.L1D_HIT",
-         "PEBS": "1",
-@@ -770,6 +873,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that hit the L2 cache (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.L2_HIT",
-         "PEBS": "1",
-@@ -778,6 +882,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that miss the LLC cache (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.LLC_MISS",
-         "PEBS": "1",
-@@ -786,6 +891,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that hit valid versions in the LLC cache (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.LLC_UNSHARED_HIT",
-         "PEBS": "1",
-@@ -794,6 +900,7 @@
-     },
-     {
-         "BriefDescription": "Retired loads that hit sibling core's L2 in modified or unmodified states (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.OTHER_CORE_L2_HIT_HITM",
-         "PEBS": "1",
-@@ -802,6 +909,7 @@
-     },
-     {
-         "BriefDescription": "Offcore L1 data cache writebacks",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB0",
-         "EventName": "OFFCORE_REQUESTS.L1D_WRITEBACK",
-         "SampleAfterValue": "100000",
-@@ -809,6 +917,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests blocked due to Super Queue full",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB2",
-         "EventName": "OFFCORE_REQUESTS_SQ_FULL",
-         "SampleAfterValue": "100000",
-@@ -816,6 +925,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -825,6 +935,7 @@
-     },
-     {
-         "BriefDescription": "All offcore data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -834,6 +945,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -843,6 +955,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -852,6 +965,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -861,6 +975,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -870,6 +985,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -879,6 +995,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -888,6 +1005,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -897,6 +1015,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -906,6 +1025,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -915,6 +1035,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -924,6 +1045,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -933,6 +1055,7 @@
-     },
-     {
-         "BriefDescription": "All offcore code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -942,6 +1065,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -951,6 +1075,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -960,6 +1085,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -969,6 +1095,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -978,6 +1105,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -987,6 +1115,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -996,6 +1125,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1005,6 +1135,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1014,6 +1145,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1023,6 +1155,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1032,6 +1165,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1041,6 +1175,7 @@
-     },
-     {
-         "BriefDescription": "All offcore requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1050,6 +1185,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1059,6 +1195,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1068,6 +1205,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1077,6 +1215,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1086,6 +1225,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1095,6 +1235,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1104,6 +1245,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1113,6 +1255,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1122,6 +1265,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1131,6 +1275,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1140,6 +1285,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1149,6 +1295,7 @@
-     },
-     {
-         "BriefDescription": "All offcore RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1158,6 +1305,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1167,6 +1315,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1176,6 +1325,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1185,6 +1335,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1194,6 +1345,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1203,6 +1355,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1212,6 +1365,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1221,6 +1375,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1230,6 +1385,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1239,6 +1395,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1248,6 +1405,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1257,6 +1415,7 @@
-     },
-     {
-         "BriefDescription": "All offcore writebacks",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1266,6 +1425,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1275,6 +1435,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1284,6 +1445,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1293,6 +1455,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1302,6 +1465,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1311,6 +1475,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1320,6 +1485,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1329,6 +1495,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1338,6 +1505,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1347,6 +1515,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1356,6 +1525,7 @@
-     },
-     {
-         "BriefDescription": "All offcore code or data read requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1365,6 +1535,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1374,6 +1545,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1383,6 +1555,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1392,6 +1565,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1401,6 +1575,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1410,6 +1585,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1419,6 +1595,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1428,6 +1605,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1437,6 +1615,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1446,6 +1625,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1455,6 +1635,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = any cache_dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1464,6 +1645,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = any location",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1473,6 +1655,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1482,6 +1665,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1491,6 +1675,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1500,6 +1685,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1509,6 +1695,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = local cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1518,6 +1705,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = local cache or dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1527,6 +1715,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1536,6 +1725,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = remote cache or dram",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1545,6 +1735,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1554,6 +1745,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1563,6 +1755,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1572,6 +1765,7 @@
-     },
-     {
-         "BriefDescription": "All offcore demand data requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1581,6 +1775,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1590,6 +1785,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1599,6 +1795,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1608,6 +1805,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1617,6 +1815,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1626,6 +1825,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1635,6 +1835,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1644,6 +1845,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1653,6 +1855,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1662,6 +1865,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1671,6 +1875,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1680,6 +1885,7 @@
-     },
-     {
-         "BriefDescription": "All offcore demand data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1689,6 +1895,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1698,6 +1905,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1707,6 +1915,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1716,6 +1925,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1725,6 +1935,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1734,6 +1945,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1743,6 +1955,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1752,6 +1965,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1761,6 +1975,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1770,6 +1985,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1779,6 +1995,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1788,6 +2005,7 @@
-     },
-     {
-         "BriefDescription": "All offcore demand code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1797,6 +2015,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1806,6 +2025,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1815,6 +2035,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1824,6 +2045,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1833,6 +2055,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1842,6 +2065,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1851,6 +2075,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1860,6 +2085,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1869,6 +2095,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1878,6 +2105,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1887,6 +2115,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1896,6 +2125,7 @@
-     },
-     {
-         "BriefDescription": "All offcore demand RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -1905,6 +2135,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -1914,6 +2145,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -1923,6 +2155,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1932,6 +2165,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1941,6 +2175,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1950,6 +2185,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1959,6 +2195,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -1968,6 +2205,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -1977,6 +2215,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -1986,6 +2225,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -1995,6 +2235,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2004,6 +2245,7 @@
-     },
-     {
-         "BriefDescription": "All offcore other requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2013,6 +2255,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2022,6 +2265,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2031,6 +2275,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2040,6 +2285,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2049,6 +2295,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2058,6 +2305,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2067,6 +2315,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2076,6 +2325,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2085,6 +2335,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2094,6 +2345,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2103,6 +2355,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by any cache or DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2112,6 +2365,7 @@
-     },
-     {
-         "BriefDescription": "All offcore prefetch data requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2121,6 +2375,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the IO, CSR, MMIO unit.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2130,6 +2385,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2139,6 +2395,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2148,6 +2405,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2157,6 +2415,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2166,6 +2425,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2175,6 +2435,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2184,6 +2445,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2193,6 +2455,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2202,6 +2465,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2211,6 +2475,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2220,6 +2485,7 @@
-     },
-     {
-         "BriefDescription": "All offcore prefetch data reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2229,6 +2495,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2238,6 +2505,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2247,6 +2515,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2256,6 +2525,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2265,6 +2535,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2274,6 +2545,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2283,6 +2555,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2292,6 +2565,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2301,6 +2575,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2310,6 +2585,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2319,6 +2595,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2328,6 +2605,7 @@
-     },
-     {
-         "BriefDescription": "All offcore prefetch code reads",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2337,6 +2615,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2346,6 +2625,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2355,6 +2635,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2364,6 +2645,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2373,6 +2655,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2382,6 +2665,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2391,6 +2675,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2400,6 +2685,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2409,6 +2695,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2418,6 +2705,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2427,6 +2715,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2436,6 +2725,7 @@
-     },
-     {
-         "BriefDescription": "All offcore prefetch RFO requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2445,6 +2735,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2454,6 +2745,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2463,6 +2755,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2472,6 +2765,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2481,6 +2775,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2490,6 +2785,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2499,6 +2795,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2508,6 +2805,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2517,6 +2815,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2526,6 +2825,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2535,6 +2835,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by any cache or DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2544,6 +2845,7 @@
-     },
-     {
-         "BriefDescription": "All offcore prefetch requests",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LOCATION",
-         "MSRIndex": "0x1A6",
-@@ -2553,6 +2855,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the IO, CSR, MMIO unit",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.IO_CSR_MMIO",
-         "MSRIndex": "0x1A6",
-@@ -2562,6 +2865,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the LLC and not found in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_NO_OTHER_CORE",
-         "MSRIndex": "0x1A6",
-@@ -2571,6 +2875,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the LLC and HIT in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2580,6 +2885,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the LLC  and HITM in a sibling core",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LLC_HIT_OTHER_CORE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2589,6 +2895,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2598,6 +2905,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the LLC or local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2607,6 +2915,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE",
-         "MSRIndex": "0x1A6",
-@@ -2616,6 +2925,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by a remote cache or remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -2625,6 +2935,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests that HIT in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HIT",
-         "MSRIndex": "0x1A6",
-@@ -2634,6 +2945,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests that HITM in a remote cache",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_CACHE_HITM",
-         "MSRIndex": "0x1A6",
-@@ -2643,6 +2955,7 @@
-     },
-     {
-         "BriefDescription": "Super Queue lock splits across a cache line",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF4",
-         "EventName": "SQ_MISC.SPLIT_LOCK",
-         "SampleAfterValue": "2000000",
-@@ -2650,6 +2963,7 @@
-     },
-     {
-         "BriefDescription": "Loads delayed with at-Retirement block code",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x6",
-         "EventName": "STORE_BLOCKS.AT_RET",
-         "SampleAfterValue": "200000",
-@@ -2657,6 +2971,7 @@
-     },
-     {
-         "BriefDescription": "Cacheable loads delayed with L1D block code",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x6",
-         "EventName": "STORE_BLOCKS.L1D_BLOCK",
-         "SampleAfterValue": "200000",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/counter.json b/tools/perf/pmu-events/arch/x86/nehalemex/counter.json
-new file mode 100644
-index 000000000000..ecf0795dceab
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/counter.json
-@@ -0,0 +1,7 @@
-+[
-+    {
-+        "Unit": "core",
-+        "CountersNumFixed": "4",
-+        "CountersNumGeneric": "4"
-+    }
-+]
-\ No newline at end of file
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-index 196ae1d9b157..9bac9313b65c 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/floating-point.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "X87 Floating point assists (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF7",
-         "EventName": "FP_ASSIST.ALL",
-         "PEBS": "1",
+         "EventName": "L1D.HWPF_MISS",
+         "SampleAfterValue": "1000003",
 @@ -9,6 +10,7 @@
      },
      {
-         "BriefDescription": "X87 Floating point assists for invalid input value (Precise Event)",
+         "BriefDescription": "Counts the number of cache lines replaced in =
+L1 data cache.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xF7",
-         "EventName": "FP_ASSIST.INPUT",
-         "PEBS": "1",
-@@ -17,6 +19,7 @@
-     },
-     {
-         "BriefDescription": "X87 Floating point assists for invalid output value (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF7",
-         "EventName": "FP_ASSIST.OUTPUT",
-         "PEBS": "1",
-@@ -25,6 +28,7 @@
-     },
-     {
-         "BriefDescription": "MMX Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.MMX",
-         "SampleAfterValue": "2000000",
-@@ -32,6 +36,7 @@
-     },
-     {
-         "BriefDescription": "SSE2 integer Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE2_INTEGER",
-         "SampleAfterValue": "2000000",
-@@ -39,6 +44,7 @@
-     },
-     {
-         "BriefDescription": "SSE* FP double precision Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE_DOUBLE_PRECISION",
-         "SampleAfterValue": "2000000",
-@@ -46,6 +52,7 @@
-     },
-     {
-         "BriefDescription": "SSE and SSE2 FP Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE_FP",
-         "SampleAfterValue": "2000000",
-@@ -53,6 +60,7 @@
-     },
-     {
-         "BriefDescription": "SSE FP packed Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE_FP_PACKED",
-         "SampleAfterValue": "2000000",
-@@ -60,6 +68,7 @@
-     },
-     {
-         "BriefDescription": "SSE FP scalar Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE_FP_SCALAR",
-         "SampleAfterValue": "2000000",
-@@ -67,6 +76,7 @@
-     },
-     {
-         "BriefDescription": "SSE* FP single precision Uops",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.SSE_SINGLE_PRECISION",
-         "SampleAfterValue": "2000000",
-@@ -74,6 +84,7 @@
-     },
-     {
-         "BriefDescription": "Computational floating-point operations executed",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x10",
-         "EventName": "FP_COMP_OPS_EXE.X87",
-         "SampleAfterValue": "2000000",
-@@ -81,6 +92,7 @@
-     },
-     {
-         "BriefDescription": "All Floating Point to and from MMX transitions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCC",
-         "EventName": "FP_MMX_TRANS.ANY",
-         "SampleAfterValue": "2000000",
-@@ -88,6 +100,7 @@
-     },
-     {
-         "BriefDescription": "Transitions from MMX to Floating Point instructions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCC",
-         "EventName": "FP_MMX_TRANS.TO_FP",
-         "SampleAfterValue": "2000000",
-@@ -95,6 +108,7 @@
-     },
-     {
-         "BriefDescription": "Transitions from Floating Point to MMX instructions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCC",
-         "EventName": "FP_MMX_TRANS.TO_MMX",
-         "SampleAfterValue": "2000000",
-@@ -102,6 +116,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer pack operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.PACK",
-         "SampleAfterValue": "200000",
-@@ -109,6 +124,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer arithmetic operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.PACKED_ARITH",
-         "SampleAfterValue": "200000",
-@@ -116,6 +132,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer logical operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.PACKED_LOGICAL",
-         "SampleAfterValue": "200000",
-@@ -123,6 +140,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer multiply operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.PACKED_MPY",
-         "SampleAfterValue": "200000",
-@@ -130,6 +148,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer shift operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.PACKED_SHIFT",
-         "SampleAfterValue": "200000",
-@@ -137,6 +156,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer shuffle/move operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.SHUFFLE_MOVE",
-         "SampleAfterValue": "200000",
-@@ -144,6 +164,7 @@
-     },
-     {
-         "BriefDescription": "128 bit SIMD integer unpack operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x12",
-         "EventName": "SIMD_INT_128.UNPACK",
-         "SampleAfterValue": "200000",
-@@ -151,6 +172,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit pack operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.PACK",
-         "SampleAfterValue": "200000",
-@@ -158,6 +180,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit arithmetic operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.PACKED_ARITH",
-         "SampleAfterValue": "200000",
-@@ -165,6 +188,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit logical operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.PACKED_LOGICAL",
-         "SampleAfterValue": "200000",
-@@ -172,6 +196,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit packed multiply operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.PACKED_MPY",
-         "SampleAfterValue": "200000",
-@@ -179,6 +204,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit shift operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.PACKED_SHIFT",
-         "SampleAfterValue": "200000",
-@@ -186,6 +212,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit shuffle/move operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.SHUFFLE_MOVE",
-         "SampleAfterValue": "200000",
-@@ -193,6 +220,7 @@
-     },
-     {
-         "BriefDescription": "SIMD integer 64 bit unpack operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xFD",
-         "EventName": "SIMD_INT_64.UNPACK",
-         "SampleAfterValue": "200000",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/frontend.json b/tools/perf/pmu-events/arch/x86/nehalemex/frontend.json
-index f7f28510e3ae..c561ac24d91d 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/frontend.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/frontend.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "Instructions decoded",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD0",
-         "EventName": "MACRO_INSTS.DECODED",
-         "SampleAfterValue": "2000000",
-@@ -8,6 +9,7 @@
-     },
-     {
-         "BriefDescription": "Macro-fused instructions decoded",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA6",
-         "EventName": "MACRO_INSTS.FUSIONS_DECODED",
-         "SampleAfterValue": "2000000",
-@@ -15,6 +17,7 @@
-     },
-     {
-         "BriefDescription": "Two Uop instructions decoded",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x19",
-         "EventName": "TWO_UOP_INSTS_DECODED",
-         "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/memory.json b/tools/perf/pmu-events/arch/x86/nehalemex/memory.json
-index f810880a295e..dc732c8baf12 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/memory.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "Offcore data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -10,6 +11,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -19,6 +21,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -28,6 +31,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -37,6 +41,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -46,6 +51,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -55,6 +61,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -64,6 +71,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -73,6 +81,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -82,6 +91,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -91,6 +101,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -100,6 +111,7 @@
-     },
-     {
-         "BriefDescription": "Offcore requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_REQUEST.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -109,6 +121,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -118,6 +131,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -127,6 +141,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -136,6 +151,7 @@
-     },
-     {
-         "BriefDescription": "Offcore RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.ANY_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -145,6 +161,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -154,6 +171,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -163,6 +181,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -172,6 +191,7 @@
-     },
-     {
-         "BriefDescription": "Offcore writebacks to a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.COREWB.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -181,6 +201,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -190,6 +211,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -199,6 +221,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -208,6 +231,7 @@
-     },
-     {
-         "BriefDescription": "Offcore code or data read requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -217,6 +241,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -226,6 +251,7 @@
-     },
-     {
-         "BriefDescription": "Offcore request = all data, response = any LLC miss",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -235,6 +261,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the local DRAM.",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -244,6 +271,7 @@
-     },
-     {
-         "BriefDescription": "Offcore data reads, RFOs, and prefetches satisfied by the remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DATA_IN.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -253,6 +281,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -262,6 +291,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -271,6 +301,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -280,6 +311,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -289,6 +321,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -298,6 +331,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -307,6 +341,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -316,6 +351,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_DATA_RD.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -325,6 +361,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -334,6 +371,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -343,6 +381,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -352,6 +391,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -361,6 +401,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -370,6 +411,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -379,6 +421,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -388,6 +431,7 @@
-     },
-     {
-         "BriefDescription": "Offcore demand RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.DEMAND_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -397,6 +441,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -406,6 +451,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -415,6 +461,7 @@
-     },
-     {
-         "BriefDescription": "Offcore other requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.OTHER.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -424,6 +471,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -433,6 +481,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -442,6 +491,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -451,6 +501,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -460,6 +511,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -469,6 +521,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -478,6 +531,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -487,6 +541,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch data reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_DATA_RD.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -496,6 +551,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -505,6 +561,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -514,6 +571,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -523,6 +581,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch code reads satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_IFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -532,6 +591,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -541,6 +601,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -550,6 +611,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -559,6 +621,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch RFO requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PF_RFO.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -568,6 +631,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by any DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -577,6 +641,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests that missed the LLC",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.ANY_LLC_MISS",
-         "MSRIndex": "0x1A6",
-@@ -586,6 +651,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by the local DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.LOCAL_DRAM",
-         "MSRIndex": "0x1A6",
-@@ -595,6 +661,7 @@
-     },
-     {
-         "BriefDescription": "Offcore prefetch requests satisfied by a remote DRAM",
-+        "Counter": "2",
-         "EventCode": "0xB7",
-         "EventName": "OFFCORE_RESPONSE.PREFETCH.REMOTE_DRAM",
-         "MSRIndex": "0x1A6",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/other.json b/tools/perf/pmu-events/arch/x86/nehalemex/other.json
-index fb706cb51832..f6887b234b0e 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/other.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/other.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "ES segment renames",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD5",
-         "EventName": "ES_REG_RENAMES",
-         "SampleAfterValue": "2000000",
-@@ -8,6 +9,7 @@
-     },
-     {
-         "BriefDescription": "I/O transactions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x6C",
-         "EventName": "IO_TRANSACTIONS",
-         "SampleAfterValue": "2000000",
-@@ -15,6 +17,7 @@
-     },
-     {
-         "BriefDescription": "L1I instruction fetch stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x80",
-         "EventName": "L1I.CYCLES_STALLED",
-         "SampleAfterValue": "2000000",
-@@ -22,6 +25,7 @@
-     },
-     {
-         "BriefDescription": "L1I instruction fetch hits",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x80",
-         "EventName": "L1I.HITS",
-         "SampleAfterValue": "2000000",
-@@ -29,6 +33,7 @@
-     },
-     {
-         "BriefDescription": "L1I instruction fetch misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x80",
-         "EventName": "L1I.MISSES",
-         "SampleAfterValue": "2000000",
-@@ -36,6 +41,7 @@
-     },
-     {
-         "BriefDescription": "L1I Instruction fetches",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x80",
-         "EventName": "L1I.READS",
-         "SampleAfterValue": "2000000",
-@@ -43,6 +49,7 @@
-     },
-     {
-         "BriefDescription": "Large ITLB hit",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x82",
-         "EventName": "LARGE_ITLB.HIT",
-         "SampleAfterValue": "200000",
-@@ -50,6 +57,7 @@
-     },
-     {
-         "BriefDescription": "All loads dispatched",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x13",
-         "EventName": "LOAD_DISPATCH.ANY",
-         "SampleAfterValue": "2000000",
-@@ -57,6 +65,7 @@
-     },
-     {
-         "BriefDescription": "Loads dispatched from the MOB",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x13",
-         "EventName": "LOAD_DISPATCH.MOB",
-         "SampleAfterValue": "2000000",
-@@ -64,6 +73,7 @@
-     },
-     {
-         "BriefDescription": "Loads dispatched that bypass the MOB",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x13",
-         "EventName": "LOAD_DISPATCH.RS",
-         "SampleAfterValue": "2000000",
-@@ -71,6 +81,7 @@
-     },
-     {
-         "BriefDescription": "Loads dispatched from stage 305",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x13",
-         "EventName": "LOAD_DISPATCH.RS_DELAYED",
-         "SampleAfterValue": "2000000",
-@@ -78,6 +89,7 @@
-     },
-     {
-         "BriefDescription": "False dependencies due to partial address aliasing",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x7",
-         "EventName": "PARTIAL_ADDRESS_ALIAS",
-         "SampleAfterValue": "200000",
-@@ -85,6 +97,7 @@
-     },
-     {
-         "BriefDescription": "All Store buffer stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x4",
-         "EventName": "SB_DRAIN.ANY",
-         "SampleAfterValue": "200000",
-@@ -92,6 +105,7 @@
-     },
-     {
-         "BriefDescription": "Segment rename stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD4",
-         "EventName": "SEG_RENAME_STALLS",
-         "SampleAfterValue": "2000000",
-@@ -99,6 +113,7 @@
-     },
-     {
-         "BriefDescription": "Thread responded HIT to snoop",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB8",
-         "EventName": "SNOOP_RESPONSE.HIT",
-         "SampleAfterValue": "100000",
-@@ -106,6 +121,7 @@
-     },
-     {
-         "BriefDescription": "Thread responded HITE to snoop",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB8",
-         "EventName": "SNOOP_RESPONSE.HITE",
-         "SampleAfterValue": "100000",
-@@ -113,6 +129,7 @@
-     },
-     {
-         "BriefDescription": "Thread responded HITM to snoop",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB8",
-         "EventName": "SNOOP_RESPONSE.HITM",
-         "SampleAfterValue": "100000",
-@@ -120,6 +137,7 @@
-     },
-     {
-         "BriefDescription": "Super Queue full stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xF6",
-         "EventName": "SQ_FULL_STALL_CYCLES",
-         "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/pipeline.json b/tools/perf/pmu-events/arch/x86/nehalemex/pipeline.json
-index c45f2ffa861e..869c84fa7c60 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/pipeline.json
-@@ -1,6 +1,7 @@
- [
-     {
-         "BriefDescription": "Cycles the divider is busy",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x14",
-         "EventName": "ARITH.CYCLES_DIV_BUSY",
-         "SampleAfterValue": "2000000",
-@@ -8,6 +9,7 @@
-     },
-     {
-         "BriefDescription": "Divide Operations executed",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EdgeDetect": "1",
-         "EventCode": "0x14",
+         "EventCode": "0x51",
+         "EventName": "L1D.REPLACEMENT",
+         "PublicDescription": "Counts L1D data line replacements including =
+opportunistic replacements, and replacements that require stall-for-replace=
+ or block-for-replace.",
 @@ -18,6 +20,7 @@
      },
      {
-         "BriefDescription": "Multiply operations executed",
+         "BriefDescription": "Number of cycles a demand request has waited =
+due to L1D Fill Buffer (FB) unavailability.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x14",
-         "EventName": "ARITH.MUL",
-         "SampleAfterValue": "2000000",
-@@ -25,6 +28,7 @@
+         "EventCode": "0x48",
+         "EventName": "L1D_PEND_MISS.FB_FULL",
+         "PublicDescription": "Counts number of cycles a demand request has=
+ waited due to L1D Fill Buffer (FB) unavailability. Demand requests include=
+ cacheable/uncacheable demand load, store, lock or SW prefetch accesses.",
+@@ -27,6 +30,7 @@
      },
      {
-         "BriefDescription": "BACLEAR asserted with bad target address",
+         "BriefDescription": "Number of phases a demand request has waited =
+due to L1D Fill Buffer (FB) unavailability.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE6",
-         "EventName": "BACLEAR.BAD_TARGET",
-         "SampleAfterValue": "2000000",
-@@ -32,6 +36,7 @@
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0x48",
+@@ -38,6 +42,7 @@
      },
      {
-         "BriefDescription": "BACLEAR asserted, regardless of cause",
+         "BriefDescription": "Number of cycles a demand request has waited =
+due to L1D due to lack of L2 resources.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE6",
-         "EventName": "BACLEAR.CLEAR",
-         "SampleAfterValue": "2000000",
-@@ -39,6 +44,7 @@
+         "EventCode": "0x48",
+         "EventName": "L1D_PEND_MISS.L2_STALLS",
+         "PublicDescription": "Counts number of cycles a demand request has=
+ waited due to L1D due to lack of L2 resources. Demand requests include cac=
+heable/uncacheable demand load, store, lock or SW prefetch accesses.",
+@@ -47,6 +52,7 @@
      },
      {
-         "BriefDescription": "Instruction queue forced BACLEAR",
+         "BriefDescription": "Number of L1D misses that are outstanding",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xA7",
-         "EventName": "BACLEAR_FORCE_IQ",
-         "SampleAfterValue": "2000000",
-@@ -46,6 +52,7 @@
+         "EventCode": "0x48",
+         "EventName": "L1D_PEND_MISS.PENDING",
+         "PublicDescription": "Counts number of L1D misses that are outstan=
+ding in each cycle, that is each cycle the number of Fill Buffers (FB) outs=
+tanding required by Demand Reads. FB either is held by demand loads, or it =
+is held by non-demand loads and gets hit at least once by demand. The valid=
+ outstanding interval is defined until the FB deallocation by one of the fo=
+llowing ways: from FB allocation, if FB is allocated by demand from the dem=
+and Hit FB, if it is allocated by hardware or software prefetch. Note: In t=
+he L1D, a Demand Read contains cacheable or noncacheable demand loads, incl=
+uding ones causing cache-line splits and reads due to page walks resulted f=
+rom any request type.",
+@@ -56,6 +62,7 @@
      },
      {
-         "BriefDescription": "Early Branch Prediciton Unit clears",
+         "BriefDescription": "Cycles with L1D load Misses outstanding.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE8",
-         "EventName": "BPU_CLEARS.EARLY",
-         "SampleAfterValue": "2000000",
-@@ -53,6 +60,7 @@
+         "CounterMask": "1",
+         "EventCode": "0x48",
+         "EventName": "L1D_PEND_MISS.PENDING_CYCLES",
+@@ -66,6 +73,7 @@
      },
      {
-         "BriefDescription": "Late Branch Prediction Unit clears",
+         "BriefDescription": "L2 cache lines filling L2",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE8",
-         "EventName": "BPU_CLEARS.LATE",
-         "SampleAfterValue": "2000000",
-@@ -60,6 +68,7 @@
+         "EventCode": "0x25",
+         "EventName": "L2_LINES_IN.ALL",
+         "PublicDescription": "Counts the number of L2 cache lines filling =
+the L2. Counting does not cover rejects.",
+@@ -75,6 +83,7 @@
      },
      {
-         "BriefDescription": "Branch prediction unit missed call or return",
+         "BriefDescription": "Modified cache lines that are evicted by L2 c=
+ache when triggered by an L2 cache fill.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE5",
-         "EventName": "BPU_MISSED_CALL_RET",
-         "SampleAfterValue": "2000000",
-@@ -67,6 +76,7 @@
+         "EventCode": "0x26",
+         "EventName": "L2_LINES_OUT.NON_SILENT",
+         "PublicDescription": "Counts the number of lines that are evicted =
+by L2 cache when triggered by an L2 cache fill. Those lines are in Modified=
+ state. Modified lines are written back to L3",
+@@ -84,6 +93,7 @@
      },
      {
-         "BriefDescription": "Branch instructions decoded",
+         "BriefDescription": "Non-modified cache lines that are silently dr=
+opped by L2 cache when triggered by an L2 cache fill.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xE0",
-         "EventName": "BR_INST_DECODED",
-         "SampleAfterValue": "2000000",
-@@ -74,6 +84,7 @@
+         "EventCode": "0x26",
+         "EventName": "L2_LINES_OUT.SILENT",
+         "PublicDescription": "Counts the number of lines that are silently=
+ dropped by L2 cache when triggered by an L2 cache fill. These lines are ty=
+pically in Shared or Exclusive state. A non-threaded event.",
+@@ -91,8 +101,19 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
      },
-     {
-         "BriefDescription": "Branch instructions executed",
++    {
++        "BriefDescription": "Cache lines that have been L2 hardware prefet=
+ched but not used by demand accesses",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.ANY",
-         "SampleAfterValue": "200000",
-@@ -81,6 +92,7 @@
-     },
++        "EventCode": "0x26",
++        "EventName": "L2_LINES_OUT.USELESS_HWPF",
++        "PublicDescription": "Counts the number of cache lines that have b=
+een prefetched by the L2 hardware prefetcher but not used by demand access =
+when evicted from the L2 cache",
++        "SampleAfterValue": "200003",
++        "UMask": "0x4",
++        "Unit": "cpu_core"
++    },
      {
-         "BriefDescription": "Conditional branch instructions executed",
+         "BriefDescription": "All accesses to L2 cache [This event is alias=
+ to L2_RQSTS.REFERENCES]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.COND",
-         "SampleAfterValue": "200000",
-@@ -88,6 +100,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_REQUEST.ALL",
+         "PublicDescription": "Counts all requests that were hit or true mi=
+sses in L2 cache. True-miss excludes misses that were merged with ongoing L=
+2 misses. [This event is alias to L2_RQSTS.REFERENCES]",
+@@ -102,6 +123,7 @@
      },
      {
-         "BriefDescription": "Unconditional branches executed",
+         "BriefDescription": "All requests that hit L2 cache. [This event i=
+s alias to L2_RQSTS.HIT]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.DIRECT",
-         "SampleAfterValue": "200000",
-@@ -95,6 +108,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_REQUEST.HIT",
+         "PublicDescription": "Counts all requests that hit L2 cache. [This=
+ event is alias to L2_RQSTS.HIT]",
+@@ -111,6 +133,7 @@
      },
      {
-         "BriefDescription": "Unconditional call branches executed",
+         "BriefDescription": "Read requests with true-miss in L2 cache [Thi=
+s event is alias to L2_RQSTS.MISS]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.DIRECT_NEAR_CALL",
-         "SampleAfterValue": "20000",
-@@ -102,6 +116,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_REQUEST.MISS",
+         "PublicDescription": "Counts read requests of any type with true-m=
+iss in the L2 cache. True-miss excludes L2 misses that were merged with ong=
+oing L2 misses. [This event is alias to L2_RQSTS.MISS]",
+@@ -120,6 +143,7 @@
      },
      {
-         "BriefDescription": "Indirect call branches executed",
+         "BriefDescription": "L2 code requests",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.INDIRECT_NEAR_CALL",
-         "SampleAfterValue": "20000",
-@@ -109,6 +124,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_CODE_RD",
+         "PublicDescription": "Counts the total number of L2 code requests.=
+",
+@@ -129,6 +153,7 @@
      },
      {
-         "BriefDescription": "Indirect non call branches executed",
+         "BriefDescription": "Demand Data Read access L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.INDIRECT_NON_CALL",
-         "SampleAfterValue": "20000",
-@@ -116,6 +132,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_DEMAND_DATA_RD",
+         "PublicDescription": "Counts Demand Data Read requests accessing t=
+he L2 cache. These requests may hit or miss L2 cache. True-miss exclude mis=
+ses that were merged with ongoing L2 misses. An access is counted once.",
+@@ -138,6 +163,7 @@
      },
      {
-         "BriefDescription": "Call branches executed",
+         "BriefDescription": "Demand requests that miss L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.NEAR_CALLS",
-         "SampleAfterValue": "20000",
-@@ -123,6 +140,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_DEMAND_MISS",
+         "PublicDescription": "Counts demand requests that miss L2 cache.",
+@@ -147,6 +173,7 @@
      },
      {
-         "BriefDescription": "All non call branches executed",
+         "BriefDescription": "Demand requests to L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.NON_CALLS",
-         "SampleAfterValue": "200000",
-@@ -130,6 +148,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_DEMAND_REFERENCES",
+         "PublicDescription": "Counts demand requests to L2 cache.",
+@@ -156,6 +183,7 @@
      },
      {
-         "BriefDescription": "Indirect return branches executed",
+         "BriefDescription": "L2_RQSTS.ALL_HWPF",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.RETURN_NEAR",
-         "SampleAfterValue": "20000",
-@@ -137,6 +156,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_HWPF",
+         "SampleAfterValue": "200003",
+@@ -164,6 +192,7 @@
      },
      {
-         "BriefDescription": "Taken branches executed",
+         "BriefDescription": "RFO requests to L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x88",
-         "EventName": "BR_INST_EXEC.TAKEN",
-         "SampleAfterValue": "200000",
-@@ -144,6 +164,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.ALL_RFO",
+         "PublicDescription": "Counts the total number of RFO (read for own=
+ership) requests to L2 cache. L2 RFO requests include both L1D demand RFO m=
+isses as well as L1D RFO prefetches.",
+@@ -173,6 +202,7 @@
      },
      {
-         "BriefDescription": "Retired branch instructions (Precise Event)",
+         "BriefDescription": "L2 cache hits when fetching instructions, cod=
+e reads.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
-         "PEBS": "1",
-@@ -152,6 +173,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.CODE_RD_HIT",
+         "PublicDescription": "Counts L2 cache hits when fetching instructi=
+ons, code reads.",
+@@ -182,6 +212,7 @@
      },
      {
-         "BriefDescription": "Retired conditional branch instructions (Precise Event)",
+         "BriefDescription": "L2 cache misses when fetching instructions",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.CONDITIONAL",
-         "PEBS": "1",
-@@ -160,6 +182,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.CODE_RD_MISS",
+         "PublicDescription": "Counts L2 cache misses when fetching instruc=
+tions.",
+@@ -191,6 +222,7 @@
      },
      {
-         "BriefDescription": "Retired near call instructions (Precise Event)",
+         "BriefDescription": "Demand Data Read requests that hit L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC4",
-         "EventName": "BR_INST_RETIRED.NEAR_CALL",
-         "PEBS": "1",
-@@ -168,6 +191,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.DEMAND_DATA_RD_HIT",
+         "PublicDescription": "Counts the number of demand Data Read reques=
+ts initiated by load instructions that hit L2 cache.",
+@@ -200,6 +232,7 @@
      },
      {
-         "BriefDescription": "Mispredicted branches executed",
+         "BriefDescription": "Demand Data Read miss L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.ANY",
-         "SampleAfterValue": "20000",
-@@ -175,6 +199,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.DEMAND_DATA_RD_MISS",
+         "PublicDescription": "Counts demand Data Read requests with true-m=
+iss in the L2 cache. True-miss excludes misses that were merged with ongoin=
+g L2 misses. An access is counted once.",
+@@ -209,6 +242,7 @@
      },
      {
-         "BriefDescription": "Mispredicted conditional branches executed",
+         "BriefDescription": "All requests that hit L2 cache. [This event i=
+s alias to L2_REQUEST.HIT]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.COND",
-         "SampleAfterValue": "20000",
-@@ -182,6 +207,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.HIT",
+         "PublicDescription": "Counts all requests that hit L2 cache. [This=
+ event is alias to L2_REQUEST.HIT]",
+@@ -218,6 +252,7 @@
      },
      {
-         "BriefDescription": "Mispredicted unconditional branches executed",
+         "BriefDescription": "L2_RQSTS.HWPF_MISS",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.DIRECT",
-         "SampleAfterValue": "20000",
-@@ -189,6 +215,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.HWPF_MISS",
+         "SampleAfterValue": "200003",
+@@ -226,6 +261,7 @@
      },
      {
-         "BriefDescription": "Mispredicted non call branches executed",
+         "BriefDescription": "Read requests with true-miss in L2 cache [Thi=
+s event is alias to L2_REQUEST.MISS]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.DIRECT_NEAR_CALL",
-         "SampleAfterValue": "2000",
-@@ -196,6 +223,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.MISS",
+         "PublicDescription": "Counts read requests of any type with true-m=
+iss in the L2 cache. True-miss excludes L2 misses that were merged with ong=
+oing L2 misses. [This event is alias to L2_REQUEST.MISS]",
+@@ -235,6 +271,7 @@
      },
      {
-         "BriefDescription": "Mispredicted indirect call branches executed",
+         "BriefDescription": "All accesses to L2 cache [This event is alias=
+ to L2_REQUEST.ALL]",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.INDIRECT_NEAR_CALL",
-         "SampleAfterValue": "2000",
-@@ -203,6 +231,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.REFERENCES",
+         "PublicDescription": "Counts all requests that were hit or true mi=
+sses in L2 cache. True-miss excludes misses that were merged with ongoing L=
+2 misses. [This event is alias to L2_REQUEST.ALL]",
+@@ -244,6 +281,7 @@
      },
      {
-         "BriefDescription": "Mispredicted indirect non call branches executed",
+         "BriefDescription": "RFO requests that hit L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.INDIRECT_NON_CALL",
-         "SampleAfterValue": "2000",
-@@ -210,6 +239,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.RFO_HIT",
+         "PublicDescription": "Counts the RFO (Read-for-Ownership) requests=
+ that hit L2 cache.",
+@@ -253,6 +291,7 @@
      },
      {
-         "BriefDescription": "Mispredicted call branches executed",
+         "BriefDescription": "RFO requests that miss L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.NEAR_CALLS",
-         "SampleAfterValue": "2000",
-@@ -217,6 +247,7 @@
+         "EventCode": "0x24",
+         "EventName": "L2_RQSTS.RFO_MISS",
+         "PublicDescription": "Counts the RFO (Read-for-Ownership) requests=
+ that miss L2 cache.",
+@@ -260,8 +299,29 @@
+         "UMask": "0x22",
+         "Unit": "cpu_core"
      },
-     {
-         "BriefDescription": "Mispredicted non call branches executed",
++    {
++        "BriefDescription": "SW prefetch requests that hit L2 cache.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.NON_CALLS",
-         "SampleAfterValue": "20000",
-@@ -224,6 +255,7 @@
-     },
-     {
-         "BriefDescription": "Mispredicted return branches executed",
++        "EventCode": "0x24",
++        "EventName": "L2_RQSTS.SWPF_HIT",
++        "PublicDescription": "Counts Software prefetch requests that hit t=
+he L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when =
+FB is not full.",
++        "SampleAfterValue": "200003",
++        "UMask": "0xc8",
++        "Unit": "cpu_core"
++    },
++    {
++        "BriefDescription": "SW prefetch requests that miss L2 cache.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.RETURN_NEAR",
-         "SampleAfterValue": "2000",
-@@ -231,6 +263,7 @@
-     },
++        "EventCode": "0x24",
++        "EventName": "L2_RQSTS.SWPF_MISS",
++        "PublicDescription": "Counts Software prefetch requests that miss =
+the L2 cache. Accounts for PREFETCHNTA and PREFETCHT0/1/2 instructions when=
+ FB is not full.",
++        "SampleAfterValue": "200003",
++        "UMask": "0x28",
++        "Unit": "cpu_core"
++    },
      {
-         "BriefDescription": "Mispredicted taken branches executed",
+         "BriefDescription": "L2 writebacks that access L2 cache",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x89",
-         "EventName": "BR_MISP_EXEC.TAKEN",
-         "SampleAfterValue": "20000",
-@@ -238,6 +271,7 @@
+         "EventCode": "0x23",
+         "EventName": "L2_TRANS.L2_WB",
+         "PublicDescription": "Counts L2 writebacks that access L2 cache.",
+@@ -271,6 +331,7 @@
      },
      {
-         "BriefDescription": "Mispredicted near retired calls (Precise Event)",
+         "BriefDescription": "Cycles when L1D is locked",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC5",
-         "EventName": "BR_MISP_RETIRED.NEAR_CALL",
-         "PEBS": "1",
-@@ -246,11 +280,13 @@
+         "EventCode": "0x42",
+         "EventName": "LOCK_CYCLES.CACHE_LOCK_DURATION",
+         "PublicDescription": "This event counts the number of cycles when =
+the L1D is locked. It is a superset of the 0x1 mask (BUS_LOCK_CLOCKS.BUS_LO=
+CK_DURATION).",
+@@ -280,15 +341,17 @@
      },
      {
-         "BriefDescription": "Reference cycles when thread is not halted (fixed counter)",
-+        "Counter": "Fixed counter 3",
-         "EventName": "CPU_CLK_UNHALTED.REF",
-         "SampleAfterValue": "2000000"
+         "BriefDescription": "Counts the number of cacheable memory request=
+s that miss in the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2e",
+         "EventName": "LONGEST_LAT_CACHE.MISS",
+-        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 =
+cache. Counts on a per core basis.",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that miss in the Last Level Cache (LLC). Requests include demand loads, =
+reads for ownership (RFO), instruction fetches and L1 HW prefetches. If the=
+ core has access to an L3 cache, the LLC is the L3 cache, otherwise it is t=
+he L2 cache. Counts on a per core basis.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x41",
+         "Unit": "cpu_atom"
      },
      {
-         "BriefDescription": "Reference base clock (133 Mhz) cycles when thread is not halted (programmable counter)",
+         "BriefDescription": "Core-originated cacheable requests that misse=
+d L3  (Except hardware prefetches to the L3)",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2e",
+         "EventName": "LONGEST_LAT_CACHE.MISS",
+         "PublicDescription": "Counts core-originated cacheable requests th=
+at miss the L3 cache (Longest Latency cache). Requests include data and cod=
+e reads, Reads-for-Ownership (RFOs), speculative accesses and hardware pref=
+etches to the L1 and L2.  It does not include hardware prefetches to the L3=
+, and may not count other types of requests to the L3.",
+@@ -298,15 +361,17 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cacheable memory request=
+s that access the LLC. Counts on a per core basis.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2e",
+         "EventName": "LONGEST_LAT_CACHE.REFERENCE",
+-        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+platform has an L3 cache, the LLC is the L3 cache, otherwise it is the L2 c=
+ache. Counts on a per core basis.",
++        "PublicDescription": "Counts the number of cacheable memory reques=
+ts that access the Last Level Cache (LLC). Requests include demand loads, r=
+eads for ownership (RFO), instruction fetches and L1 HW prefetches. If the =
+core has access to an L3 cache, the LLC is the L3 cache, otherwise it is th=
+e L2 cache. Counts on a per core basis.",
+         "SampleAfterValue": "200003",
+         "UMask": "0x4f",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Core-originated cacheable requests that refer=
+ to L3 (Except hardware prefetches to the L3)",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x2e",
+         "EventName": "LONGEST_LAT_CACHE.REFERENCE",
+         "PublicDescription": "Counts core-originated cacheable requests to=
+ the L3 cache (Longest Latency cache). Requests include data and code reads=
+, Reads-for-Ownership (RFOs), speculative accesses and hardware prefetches =
+to the L1 and L2.  It does not include hardware prefetches to the L3, and m=
+ay not count other types of requests to the L3.",
+@@ -316,6 +381,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to an instruction cache or TLB miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x35",
+         "EventName": "MEM_BOUND_STALLS_IFETCH.ALL",
+         "SampleAfterValue": "1000003",
+@@ -324,6 +390,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to an instruction cache or TLB miss which hit in the L2 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x35",
+         "EventName": "MEM_BOUND_STALLS_IFETCH.L2_HIT",
+         "PublicDescription": "Counts the number of cycles the core is stal=
+led due to an instruction cache or Translation Lookaside Buffer (TLB) miss =
+which hit in the L2 cache.",
+@@ -333,6 +400,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to an icache or itlb miss which hit in the LLC.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x35",
+         "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_HIT",
+         "SampleAfterValue": "1000003",
+@@ -341,6 +409,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to an icache or itlb miss which missed all the caches.=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x35",
+         "EventName": "MEM_BOUND_STALLS_IFETCH.LLC_MISS",
+         "SampleAfterValue": "1000003",
+@@ -349,6 +418,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to an L1 demand load miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x34",
+         "EventName": "MEM_BOUND_STALLS_LOAD.ALL",
+         "SampleAfterValue": "1000003",
+@@ -357,6 +427,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles the core is stall=
+ed due to a demand load which hit in the L2 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x34",
+         "EventName": "MEM_BOUND_STALLS_LOAD.L2_HIT",
+         "PublicDescription": "Counts the number of cycles a core is stalle=
+d due to a demand load which hit in the L2 cache.",
+@@ -366,6 +437,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to a demand load miss which hit in the LLC.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x34",
+         "EventName": "MEM_BOUND_STALLS_LOAD.LLC_HIT",
+         "SampleAfterValue": "1000003",
+@@ -374,6 +446,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted cycles when the=
+ core is stalled due to a demand load miss which missed all the local cache=
+s.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x34",
+         "EventName": "MEM_BOUND_STALLS_LOAD.LLC_MISS",
+         "SampleAfterValue": "1000003",
+@@ -382,6 +455,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x3C",
-         "EventName": "CPU_CLK_UNHALTED.REF_P",
-         "SampleAfterValue": "100000",
-@@ -258,17 +294,20 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.ALL_LOADS",
+@@ -393,6 +467,7 @@
      },
      {
-         "BriefDescription": "Cycles when thread is not halted (fixed counter)",
-+        "Counter": "Fixed counter 2",
-         "EventName": "CPU_CLK_UNHALTED.THREAD",
-         "SampleAfterValue": "2000000"
-     },
-     {
-         "BriefDescription": "Cycles when thread is not halted (programmable counter)",
+         "BriefDescription": "Retired store instructions.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x3C",
-         "EventName": "CPU_CLK_UNHALTED.THREAD_P",
-         "SampleAfterValue": "2000000"
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.ALL_STORES",
+@@ -404,6 +479,7 @@
      },
      {
-         "BriefDescription": "Total CPU cycles",
+         "BriefDescription": "All retired memory instructions.",
 +        "Counter": "0,1,2,3",
-         "CounterMask": "2",
-         "EventCode": "0x3C",
-         "EventName": "CPU_CLK_UNHALTED.TOTAL_CYCLES",
-@@ -277,6 +316,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.ANY",
+@@ -415,6 +491,7 @@
      },
      {
-         "BriefDescription": "Any Instruction Length Decoder stall cycles",
+         "BriefDescription": "Retired load instructions with locked access.=
+",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.ANY",
-         "SampleAfterValue": "2000000",
-@@ -284,6 +324,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.LOCK_LOADS",
+@@ -426,6 +503,7 @@
      },
      {
-         "BriefDescription": "Instruction Queue full stall cycles",
+         "BriefDescription": "Retired load instructions that split across a=
+ cacheline boundary.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.IQ_FULL",
-         "SampleAfterValue": "2000000",
-@@ -291,6 +332,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.SPLIT_LOADS",
+@@ -437,6 +515,7 @@
      },
      {
-         "BriefDescription": "Length Change Prefix stall cycles",
+         "BriefDescription": "Retired store instructions that split across =
+a cacheline boundary.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.LCP",
-         "SampleAfterValue": "2000000",
-@@ -298,6 +340,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.SPLIT_STORES",
+@@ -448,6 +527,7 @@
      },
      {
-         "BriefDescription": "Stall cycles due to BPU MRU bypass",
+         "BriefDescription": "Retired load instructions that hit the STLB."=
+,
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.MRU",
-         "SampleAfterValue": "2000000",
-@@ -305,6 +348,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.STLB_HIT_LOADS",
+@@ -459,6 +539,7 @@
      },
      {
-         "BriefDescription": "Regen stall cycles",
+         "BriefDescription": "Retired store instructions that hit the STLB.=
+",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x87",
-         "EventName": "ILD_STALL.REGEN",
-         "SampleAfterValue": "2000000",
-@@ -312,6 +356,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.STLB_HIT_STORES",
+@@ -470,6 +551,7 @@
      },
      {
-         "BriefDescription": "Instructions that must be decoded by decoder 0",
+         "BriefDescription": "Retired load instructions that miss the STLB.=
+",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x18",
-         "EventName": "INST_DECODED.DEC0",
-         "SampleAfterValue": "2000000",
-@@ -319,6 +364,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.STLB_MISS_LOADS",
+@@ -481,6 +563,7 @@
      },
      {
-         "BriefDescription": "Instructions written to instruction queue.",
+         "BriefDescription": "Retired store instructions that miss the STLB=
+.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x17",
-         "EventName": "INST_QUEUE_WRITES",
-         "SampleAfterValue": "2000000",
-@@ -326,6 +372,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_INST_RETIRED.STLB_MISS_STORES",
+@@ -492,6 +575,7 @@
      },
      {
-         "BriefDescription": "Cycles instructions are written to the instruction queue",
+         "BriefDescription": "Completed demand load uops that miss the L1 d=
+-cache.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0x1E",
-         "EventName": "INST_QUEUE_WRITE_CYCLES",
-         "SampleAfterValue": "2000000",
-@@ -333,11 +380,13 @@
+         "EventCode": "0x43",
+         "EventName": "MEM_LOAD_COMPLETED.L1_MISS_ANY",
+         "PublicDescription": "Number of completed demand load requests tha=
+t missed the L1 data cache including shadow misses (FB hits, merge to an on=
+going L1D miss)",
+@@ -501,6 +585,7 @@
      },
      {
-         "BriefDescription": "Instructions retired (fixed counter)",
-+        "Counter": "Fixed counter 1",
-         "EventName": "INST_RETIRED.ANY",
-         "SampleAfterValue": "2000000"
-     },
-     {
-         "BriefDescription": "Instructions retired (Programmable counter and Precise Event)",
+         "BriefDescription": "Retired load instructions whose data sources =
+were HitM responses from shared L3",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.ANY_P",
-         "PEBS": "1",
-@@ -346,6 +395,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd2",
+         "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_FWD",
+@@ -510,30 +595,9 @@
+         "UMask": "0x4",
+         "Unit": "cpu_core"
      },
+-    {
+-        "BriefDescription": "Retired load instructions whose data sources =
+were L3 and cross-core snoop hits in on-pkg core cache",
+-        "Data_LA": "1",
+-        "EventCode": "0xd2",
+-        "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT",
+-        "PEBS": "1",
+-        "PublicDescription": "Counts retired load instructions whose data =
+sources were L3 and cross-core snoop hits in on-pkg core cache.",
+-        "SampleAfterValue": "20011",
+-        "UMask": "0x2",
+-        "Unit": "cpu_core"
+-    },
+-    {
+-        "BriefDescription": "Retired load instructions whose data sources =
+were HitM responses from shared L3",
+-        "Data_LA": "1",
+-        "EventCode": "0xd2",
+-        "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM",
+-        "PEBS": "1",
+-        "PublicDescription": "Counts retired load instructions whose data =
+sources were HitM responses from shared L3.",
+-        "SampleAfterValue": "20011",
+-        "UMask": "0x4",
+-        "Unit": "cpu_core"
+-    },
      {
-         "BriefDescription": "Retired MMX instructions (Precise Event)",
+         "BriefDescription": "Retired load instructions whose data sources =
+were L3 hit and cross-core snoop missed in on-pkg core cache.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.MMX",
-         "PEBS": "1",
-@@ -354,6 +404,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd2",
+         "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_MISS",
+@@ -545,6 +609,7 @@
      },
      {
-         "BriefDescription": "Total cycles (Precise Event)",
+         "BriefDescription": "Retired load instructions whose data sources =
+were hits in L3 without snoops required",
 +        "Counter": "0,1,2,3",
-         "CounterMask": "16",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.TOTAL_CYCLES",
-@@ -364,6 +415,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd2",
+         "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_NONE",
+@@ -556,6 +621,7 @@
      },
      {
-         "BriefDescription": "Total cycles (Precise Event)",
+         "BriefDescription": "Retired load instructions whose data sources =
+were L3 and cross-core snoop hits in on-pkg core cache",
 +        "Counter": "0,1,2,3",
-         "CounterMask": "16",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.TOTAL_CYCLES_PS",
-@@ -374,6 +426,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd2",
+         "EventName": "MEM_LOAD_L3_HIT_RETIRED.XSNP_NO_FWD",
+@@ -567,6 +633,7 @@
      },
      {
-         "BriefDescription": "Retired floating-point operations (Precise Event)",
+         "BriefDescription": "Retired load instructions which data sources =
+missed L3 but serviced from local dram",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC0",
-         "EventName": "INST_RETIRED.X87",
-         "PEBS": "1",
-@@ -382,6 +435,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd3",
+         "EventName": "MEM_LOAD_L3_MISS_RETIRED.LOCAL_DRAM",
+@@ -578,6 +645,7 @@
      },
      {
-         "BriefDescription": "Load operations conflicting with software prefetches",
+         "BriefDescription": "Retired instructions with at least 1 uncachea=
+ble load or lock.",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd4",
+         "EventName": "MEM_LOAD_MISC_RETIRED.UC",
+@@ -589,6 +657,7 @@
+     },
+     {
+         "BriefDescription": "Number of completed demand load requests that=
+ missed the L1, but hit the FB(fill buffer), because a preceding miss to th=
+e same cacheline initiated the line to be brought into L1, but data is not =
+yet ready in L1.",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.FB_HIT",
+@@ -600,6 +669,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions with L1 cache hits =
+as data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L1_HIT",
+@@ -611,6 +681,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions missed L1 cache as =
+data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L1_MISS",
+@@ -622,6 +693,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions with L2 cache hits =
+as data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L2_HIT",
+@@ -633,6 +705,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions missed L2 cache as =
+data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L2_MISS",
+@@ -644,6 +717,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions with L3 cache hits =
+as data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L3_HIT",
+@@ -655,6 +729,7 @@
+     },
+     {
+         "BriefDescription": "Retired load instructions missed L3 cache as =
+data sources",
++        "Counter": "0,1,2,3",
+         "Data_LA": "1",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_RETIRED.L3_MISS",
+@@ -666,69 +741,70 @@
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that mi=
+ss the L3 cache and hit in DRAM",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd4",
+         "EventName": "MEM_LOAD_UOPS_MISC_RETIRED.LOCAL_DRAM",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that hi=
+t the L1 data cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_HIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that mi=
+ss in the L1 data cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L1_MISS",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x40",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that hi=
+t in the L2 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_HIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that mi=
+ss in the L2 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L2_MISS",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x80",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired that hi=
+t in the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.L3_HIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x1c",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of loads that hit in a writ=
+e combining buffer (WCB), excluding the first load that caused the WCB to a=
+llocate.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xd1",
+         "EventName": "MEM_LOAD_UOPS_RETIRED.WCB_HIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x20",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that uops are blo=
+cked for any of the following reasons:  load buffer, store buffer or RSV fu=
+ll.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x04",
+         "EventName": "MEM_SCHEDULER_BLOCK.ALL",
+         "SampleAfterValue": "20003",
+@@ -737,6 +813,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that uops are blo=
+cked due to a load buffer full condition.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x04",
+         "EventName": "MEM_SCHEDULER_BLOCK.LD_BUF",
+         "SampleAfterValue": "20003",
+@@ -745,6 +822,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that uops are blo=
+cked due to an RSV full condition.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x04",
+         "EventName": "MEM_SCHEDULER_BLOCK.RSV",
+         "SampleAfterValue": "20003",
+@@ -753,6 +831,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that uops are blo=
+cked due to a store buffer full condition.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x04",
+         "EventName": "MEM_SCHEDULER_BLOCK.ST_BUF",
+         "SampleAfterValue": "20003",
+@@ -761,6 +840,7 @@
+     },
+     {
+         "BriefDescription": "MEM_STORE_RETIRED.L2_HIT",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x44",
+         "EventName": "MEM_STORE_RETIRED.L2_HIT",
+         "SampleAfterValue": "200003",
+@@ -769,196 +849,197 @@
+     },
+     {
+         "BriefDescription": "Counts the number of load ops retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.ALL_LOADS",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x81",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of store ops retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.ALL_STORES",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x82",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
 +        "Counter": "0,1",
-         "EventCode": "0x4C",
-         "EventName": "LOAD_HIT_PRE",
-         "SampleAfterValue": "200000",
-@@ -389,6 +443,7 @@
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_1024",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x400",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
      },
      {
-         "BriefDescription": "Cycles when uops were delivered by the LSD",
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_128",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x80",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_16",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x10",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_2048",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x800",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_256",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x100",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_32",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x20",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_4",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x4",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_512",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x200",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_64",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x40",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of tagged load uops retired=
+ that exceed the latency threshold defined in MEC_CR_PEBS_LD_LAT_THRESHOLD =
+- Only counts with PEBS enabled.",
++        "Counter": "0,1",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOAD_LATENCY_GT_8",
+         "MSRIndex": "0x3F6",
+         "MSRValue": "0x8",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x5",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of load uops retired that p=
+erformed one or more locks",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.LOCK_LOADS",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x21",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of memory uops retired that=
+ were splits.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.SPLIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x43",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of retired split load uops.=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.SPLIT_LOADS",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x41",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of retired split store uops=
+.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.SPLIT_STORES",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x42",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of  stores uops retired sam=
+e as MEM_UOPS_RETIRED.ALL_STORES",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xd0",
+         "EventName": "MEM_UOPS_RETIRED.STORE_LATENCY",
+-        "PEBS": "2",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x6",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Retired memory uops for any access",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe5",
+         "EventName": "MEM_UOP_RETIRED.ANY",
+         "PublicDescription": "Number of retired micro-operations (uops) fo=
+r load or store memory accesses",
+@@ -968,6 +1049,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -978,6 +1060,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
+ forwarded.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -988,6 +1071,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that resulted in a s=
+noop hit in another cores caches, data forwarding is required as the data i=
+s modified.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -998,6 +1082,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, but no data was forwa=
+rded.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_NO_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1008,6 +1093,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and non-modified data=
+ was forwarded.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1018,6 +1104,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that resulted in a s=
+noop hit in another cores caches which forwarded the unmodified data to the=
+ requesting core.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_HIT.SNOOP_HIT_WITH_FWD",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1028,6 +1115,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.L3_HIT",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1038,6 +1126,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
+ forwarded.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1048,6 +1137,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that resulte=
+d in a snoop hit in another cores caches, data forwarding is required as th=
+e data is modified.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.L3_HIT.SNOOP_HITM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -1058,6 +1148,7 @@
+     },
+     {
+         "BriefDescription": "Any memory transaction that reached the SQ.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.ALL_REQUESTS",
+         "PublicDescription": "Counts memory transactions reached the super=
+ queue including requests initiated by the core, all L3 prefetches, page wa=
+lks, etc..",
+@@ -1067,6 +1158,7 @@
+     },
+     {
+         "BriefDescription": "Demand and prefetch data reads",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.DATA_RD",
+         "PublicDescription": "Counts the demand and prefetch data reads. A=
+ll Core Data Reads include cacheable 'Demands' and L2 prefetchers (not L3 p=
+refetchers). Counting also covers reads due to page walks resulted from any=
+ request type.",
+@@ -1076,6 +1168,7 @@
+     },
+     {
+         "BriefDescription": "Cacheable and Non-Cacheable code read request=
+s",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.DEMAND_CODE_RD",
+         "PublicDescription": "Counts both cacheable and Non-Cacheable code=
+ read requests.",
+@@ -1085,6 +1178,7 @@
+     },
+     {
+         "BriefDescription": "Demand Data Read requests sent to uncore",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.DEMAND_DATA_RD",
+         "PublicDescription": "Counts the Demand Data Read requests sent to=
+ uncore. Use it in conjunction with OFFCORE_REQUESTS_OUTSTANDING to determi=
+ne average latency in the uncore.",
+@@ -1094,6 +1188,7 @@
+     },
+     {
+         "BriefDescription": "Demand RFO requests including regular RFOs, l=
+ocks, ItoM",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.DEMAND_RFO",
+         "PublicDescription": "Counts the demand RFO (read for ownership) r=
+equests including regular RFOs, locks, ItoM.",
+@@ -1103,6 +1198,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when offcore outstanding cacheable Cor=
+e Data Read transactions are present in SuperQueue (SQ), queue to uncore.",
 +        "Counter": "0,1,2,3",
          "CounterMask": "1",
-         "EventCode": "0xA8",
-         "EventName": "LSD.ACTIVE",
-@@ -397,6 +452,7 @@
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DATA_RD",
+@@ -1113,6 +1209,7 @@
      },
      {
-         "BriefDescription": "Cycles no uops were delivered by the LSD",
+         "BriefDescription": "Cycles with offcore outstanding Code Reads tr=
+ansactions in the SuperQueue (SQ), queue to uncore.",
 +        "Counter": "0,1,2,3",
          "CounterMask": "1",
-         "EventCode": "0xA8",
-         "EventName": "LSD.INACTIVE",
-@@ -406,6 +462,7 @@
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_CODE=
+_RD",
+@@ -1123,6 +1220,7 @@
      },
      {
-         "BriefDescription": "Loops that can't stream from the instruction queue",
+         "BriefDescription": "Cycles where at least 1 outstanding demand da=
+ta read request is pending.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_DATA=
+_RD",
+@@ -1132,6 +1230,7 @@
+     },
+     {
+         "BriefDescription": "Cycles with offcore outstanding demand rfo re=
+ads transactions in SuperQueue (SQ), queue to uncore.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_RFO"=
+,
+@@ -1142,6 +1241,7 @@
+     },
+     {
+         "BriefDescription": "OFFCORE_REQUESTS_OUTSTANDING.DATA_RD",
 +        "Counter": "0,1,2,3",
          "EventCode": "0x20",
-         "EventName": "LSD_OVERFLOW",
-         "SampleAfterValue": "2000000",
-@@ -413,6 +470,7 @@
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DATA_RD",
+         "SampleAfterValue": "1000003",
+@@ -1150,6 +1250,7 @@
      },
      {
-         "BriefDescription": "Cycles machine clear asserted",
+         "BriefDescription": "Offcore outstanding Code Reads transactions i=
+n the SuperQueue (SQ), queue to uncore, every cycle.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC3",
-         "EventName": "MACHINE_CLEARS.CYCLES",
-         "SampleAfterValue": "20000",
-@@ -420,6 +478,7 @@
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_CODE_RD",
+         "PublicDescription": "Counts the number of offcore outstanding Cod=
+e Reads transactions in the super queue every cycle. The 'Offcore outstandi=
+ng' state of the transaction lasts from the L2 miss until the sending trans=
+action completion to requestor (SQ deallocation). See the corresponding Uma=
+sk under OFFCORE_REQUESTS.",
+@@ -1159,6 +1260,7 @@
      },
      {
-         "BriefDescription": "Execution pipeline restart due to Memory ordering conflicts",
+         "BriefDescription": "For every cycle, increments by the number of =
+outstanding demand data read requests pending.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC3",
-         "EventName": "MACHINE_CLEARS.MEM_ORDER",
-         "SampleAfterValue": "20000",
-@@ -427,6 +486,7 @@
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD",
+         "PublicDescription": "For every cycle, increments by the number of=
+ outstanding demand data read requests pending.   Requests are considered o=
+utstanding from the time they miss the core's L2 cache until the transactio=
+n completion message is sent to the requestor.",
+@@ -1166,17 +1268,9 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Cycles with at least 6 offcore outstanding De=
+mand Data Read transactions in uncore queue.",
+-        "CounterMask": "6",
+-        "EventCode": "0x20",
+-        "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD_GE_6",
+-        "SampleAfterValue": "2000003",
+-        "UMask": "0x1",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Store Read transactions pending for off-core.=
+ Highly correlated.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_RFO",
+         "PublicDescription": "Counts the number of off-core outstanding re=
+ad-for-ownership (RFO) store transactions every cycle. An RFO transaction i=
+s considered to be in the Off-core outstanding state between L2 cache miss =
+and transaction completion.",
+@@ -1186,6 +1280,7 @@
      },
      {
-         "BriefDescription": "Self-Modifying Code detected",
+         "BriefDescription": "Counts bus locks, accounts for cache line spl=
+it locks and UC locks.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC3",
-         "EventName": "MACHINE_CLEARS.SMC",
-         "SampleAfterValue": "20000",
-@@ -434,6 +494,7 @@
+         "EventCode": "0x2c",
+         "EventName": "SQ_MISC.BUS_LOCK",
+         "PublicDescription": "Counts the more expensive bus lock needed to=
+ enforce cache coherency for certain memory accesses that need to be done a=
+tomically.  Can be created by issuing an atomic instruction (via the LOCK p=
+refix) which causes a cache line split or accesses uncacheable memory.",
+@@ -1193,8 +1288,18 @@
+         "UMask": "0x10",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of PREFETCHNTA, PREFETCHW, =
+PREFETCHT0, PREFETCHT1 or PREFETCHT2 instructions executed.",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x40",
++        "EventName": "SW_PREFETCH_ACCESS.ANY",
++        "SampleAfterValue": "100003",
++        "UMask": "0xf",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Number of PREFETCHNTA instructions executed."=
+,
++        "Counter": "0,1,2,3",
+         "EventCode": "0x40",
+         "EventName": "SW_PREFETCH_ACCESS.NTA",
+         "PublicDescription": "Counts the number of PREFETCHNTA instruction=
+s executed.",
+@@ -1204,6 +1309,7 @@
      },
      {
-         "BriefDescription": "All RAT stall cycles",
+         "BriefDescription": "Number of PREFETCHW instructions executed.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xD2",
-         "EventName": "RAT_STALLS.ANY",
-         "SampleAfterValue": "2000000",
-@@ -441,6 +502,7 @@
+         "EventCode": "0x40",
+         "EventName": "SW_PREFETCH_ACCESS.PREFETCHW",
+         "PublicDescription": "Counts the number of PREFETCHW instructions =
+executed.",
+@@ -1213,6 +1319,7 @@
      },
      {
-         "BriefDescription": "Flag stall cycles",
+         "BriefDescription": "Number of PREFETCHT0 instructions executed.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xD2",
-         "EventName": "RAT_STALLS.FLAGS",
-         "SampleAfterValue": "2000000",
-@@ -448,6 +510,7 @@
+         "EventCode": "0x40",
+         "EventName": "SW_PREFETCH_ACCESS.T0",
+         "PublicDescription": "Counts the number of PREFETCHT0 instructions=
+ executed.",
+@@ -1222,6 +1329,7 @@
      },
      {
-         "BriefDescription": "Partial register stall cycles",
+         "BriefDescription": "Number of PREFETCHT1 or PREFETCHT2 instructio=
+ns executed.",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xD2",
-         "EventName": "RAT_STALLS.REGISTERS",
-         "SampleAfterValue": "2000000",
-@@ -455,6 +518,7 @@
+         "EventCode": "0x40",
+         "EventName": "SW_PREFETCH_ACCESS.T1_T2",
+         "PublicDescription": "Counts the number of PREFETCHT1 or PREFETCHT=
+2 instructions executed.",
+@@ -1231,6 +1339,7 @@
      },
      {
-         "BriefDescription": "ROB read port stalls cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD2",
-         "EventName": "RAT_STALLS.ROB_READ_PORT",
-         "SampleAfterValue": "2000000",
-@@ -462,6 +526,7 @@
-     },
-     {
-         "BriefDescription": "Scoreboard stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD2",
-         "EventName": "RAT_STALLS.SCOREBOARD",
-         "SampleAfterValue": "2000000",
-@@ -469,6 +534,7 @@
-     },
-     {
-         "BriefDescription": "Resource related stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.ANY",
-         "SampleAfterValue": "2000000",
-@@ -476,6 +542,7 @@
-     },
-     {
-         "BriefDescription": "FPU control word write stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.FPCW",
-         "SampleAfterValue": "2000000",
-@@ -483,6 +550,7 @@
-     },
-     {
-         "BriefDescription": "Load buffer stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.LOAD",
-         "SampleAfterValue": "2000000",
-@@ -490,6 +558,7 @@
-     },
-     {
-         "BriefDescription": "MXCSR rename stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.MXCSR",
-         "SampleAfterValue": "2000000",
-@@ -497,6 +566,7 @@
-     },
-     {
-         "BriefDescription": "Other Resource related stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.OTHER",
-         "SampleAfterValue": "2000000",
-@@ -504,6 +574,7 @@
-     },
-     {
-         "BriefDescription": "ROB full stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.ROB_FULL",
-         "SampleAfterValue": "2000000",
-@@ -511,6 +582,7 @@
-     },
-     {
-         "BriefDescription": "Reservation Station full stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.RS_FULL",
-         "SampleAfterValue": "2000000",
-@@ -518,6 +590,7 @@
-     },
-     {
-         "BriefDescription": "Store buffer stall cycles",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xA2",
-         "EventName": "RESOURCE_STALLS.STORE",
-         "SampleAfterValue": "2000000",
-@@ -525,6 +598,7 @@
-     },
-     {
-         "BriefDescription": "SIMD Packed-Double Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC7",
-         "EventName": "SSEX_UOPS_RETIRED.PACKED_DOUBLE",
-         "PEBS": "1",
-@@ -533,6 +607,7 @@
-     },
-     {
-         "BriefDescription": "SIMD Packed-Single Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC7",
-         "EventName": "SSEX_UOPS_RETIRED.PACKED_SINGLE",
-         "PEBS": "1",
-@@ -541,6 +616,7 @@
-     },
-     {
-         "BriefDescription": "SIMD Scalar-Double Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC7",
-         "EventName": "SSEX_UOPS_RETIRED.SCALAR_DOUBLE",
-         "PEBS": "1",
-@@ -549,6 +625,7 @@
-     },
-     {
-         "BriefDescription": "SIMD Scalar-Single Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC7",
-         "EventName": "SSEX_UOPS_RETIRED.SCALAR_SINGLE",
-         "PEBS": "1",
-@@ -557,6 +634,7 @@
-     },
-     {
-         "BriefDescription": "SIMD Vector Integer Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC7",
-         "EventName": "SSEX_UOPS_RETIRED.VECTOR_INTEGER",
-         "PEBS": "1",
-@@ -565,6 +643,7 @@
-     },
-     {
-         "BriefDescription": "Stack pointer instructions decoded",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD1",
-         "EventName": "UOPS_DECODED.ESP_FOLDING",
-         "SampleAfterValue": "2000000",
-@@ -572,6 +651,7 @@
-     },
-     {
-         "BriefDescription": "Stack pointer sync operations",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xD1",
-         "EventName": "UOPS_DECODED.ESP_SYNC",
-         "SampleAfterValue": "2000000",
-@@ -579,6 +659,7 @@
-     },
-     {
-         "BriefDescription": "Uops decoded by Microcode Sequencer",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xD1",
-         "EventName": "UOPS_DECODED.MS_CYCLES_ACTIVE",
-@@ -587,6 +668,7 @@
-     },
-     {
-         "BriefDescription": "Cycles no Uops are decoded",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xD1",
-         "EventName": "UOPS_DECODED.STALL_CYCLES",
-@@ -597,6 +679,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles Uops executed on any port (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.CORE_ACTIVE_CYCLES",
-@@ -606,6 +689,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles Uops executed on ports 0-4 (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.CORE_ACTIVE_CYCLES_NO_PORT5",
-@@ -615,6 +699,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops executed on any port (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EdgeDetect": "1",
-         "EventCode": "0xB1",
-@@ -626,6 +711,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops executed on ports 0-4 (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EdgeDetect": "1",
-         "EventCode": "0xB1",
-@@ -637,6 +723,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles no Uops issued on any port (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.CORE_STALL_CYCLES",
-@@ -647,6 +734,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles no Uops issued on ports 0-4 (core count)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.CORE_STALL_CYCLES_NO_PORT5",
-@@ -656,6 +744,7 @@
-     },
-     {
-         "BriefDescription": "Uops executed on port 0",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT0",
-         "SampleAfterValue": "2000000",
-@@ -663,6 +752,7 @@
-     },
-     {
-         "BriefDescription": "Uops issued on ports 0, 1 or 5",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT015",
-         "SampleAfterValue": "2000000",
-@@ -670,6 +760,7 @@
-     },
-     {
-         "BriefDescription": "Cycles no Uops issued on ports 0, 1 or 5",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT015_STALL_CYCLES",
-@@ -679,6 +770,7 @@
-     },
-     {
-         "BriefDescription": "Uops executed on port 1",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT1",
-         "SampleAfterValue": "2000000",
-@@ -687,6 +779,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops issued on ports 2, 3 or 4",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT234_CORE",
-         "SampleAfterValue": "2000000",
-@@ -695,6 +788,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops executed on port 2 (core count)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT2_CORE",
-         "SampleAfterValue": "2000000",
-@@ -703,6 +797,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops executed on port 3 (core count)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT3_CORE",
-         "SampleAfterValue": "2000000",
-@@ -711,6 +806,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Uops executed on port 4 (core count)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT4_CORE",
-         "SampleAfterValue": "2000000",
-@@ -718,6 +814,7 @@
-     },
-     {
-         "BriefDescription": "Uops executed on port 5",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xB1",
-         "EventName": "UOPS_EXECUTED.PORT5",
-         "SampleAfterValue": "2000000",
-@@ -725,6 +822,7 @@
-     },
-     {
-         "BriefDescription": "Uops issued",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xE",
-         "EventName": "UOPS_ISSUED.ANY",
-         "SampleAfterValue": "2000000",
-@@ -733,6 +831,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles no Uops were issued on any thread",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xE",
-         "EventName": "UOPS_ISSUED.CORE_STALL_CYCLES",
-@@ -743,6 +842,7 @@
-     {
-         "AnyThread": "1",
-         "BriefDescription": "Cycles Uops were issued on either thread",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xE",
-         "EventName": "UOPS_ISSUED.CYCLES_ALL_THREADS",
-@@ -751,6 +851,7 @@
-     },
-     {
-         "BriefDescription": "Fused Uops issued",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xE",
-         "EventName": "UOPS_ISSUED.FUSED",
-         "SampleAfterValue": "2000000",
-@@ -758,6 +859,7 @@
-     },
-     {
-         "BriefDescription": "Cycles no Uops were issued",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xE",
-         "EventName": "UOPS_ISSUED.STALL_CYCLES",
-@@ -767,6 +869,7 @@
-     },
-     {
-         "BriefDescription": "Cycles Uops are being retired",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.ACTIVE_CYCLES",
-@@ -776,6 +879,7 @@
-     },
-     {
-         "BriefDescription": "Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.ANY",
-         "PEBS": "1",
-@@ -784,6 +888,7 @@
-     },
-     {
-         "BriefDescription": "Macro-fused Uops retired (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.MACRO_FUSED",
-         "PEBS": "1",
-@@ -792,6 +897,7 @@
-     },
-     {
-         "BriefDescription": "Retirement slots used (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.RETIRE_SLOTS",
-         "PEBS": "1",
-@@ -800,6 +906,7 @@
-     },
-     {
-         "BriefDescription": "Cycles Uops are not retiring (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "1",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.STALL_CYCLES",
-@@ -810,6 +917,7 @@
-     },
-     {
-         "BriefDescription": "Total cycles using precise uop retired event (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "CounterMask": "16",
-         "EventCode": "0xC2",
-         "EventName": "UOPS_RETIRED.TOTAL_CYCLES",
-@@ -820,6 +928,7 @@
-     },
-     {
-         "BriefDescription": "Uop unfusions due to FP exceptions",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xDB",
-         "EventName": "UOP_UNFUSION",
-         "SampleAfterValue": "2000000",
-diff --git a/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json b/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
-index c434cd4ef4f1..e88c0802e679 100644
---- a/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/nehalemex/virtual-memory.json
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to an icache miss",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ICACHE",
+         "SampleAfterValue": "1000003",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/floating-point.json =
+b/tools/perf/pmu-events/arch/x86/meteorlake/floating-point.json
+index 30e604d2120f..28dc5e06ee31 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/floating-point.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/floating-point.json
 @@ -1,6 +1,7 @@
  [
      {
-         "BriefDescription": "DTLB load misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x8",
-         "EventName": "DTLB_LOAD_MISSES.ANY",
-         "SampleAfterValue": "200000",
-@@ -8,6 +9,7 @@
+         "BriefDescription": "Counts the number of cycles when any of the f=
+loating point dividers are active.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.FPDIV_ACTIVE",
+@@ -10,6 +11,7 @@
      },
      {
-         "BriefDescription": "DTLB load miss caused by low part of address",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x8",
-         "EventName": "DTLB_LOAD_MISSES.PDE_MISS",
-         "SampleAfterValue": "200000",
-@@ -15,6 +17,7 @@
+         "BriefDescription": "This event counts the cycles the floating poi=
+nt divider is busy.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb0",
+         "EventName": "ARITH.FPDIV_ACTIVE",
+@@ -19,6 +21,7 @@
      },
      {
-         "BriefDescription": "DTLB second level hit",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x8",
-         "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
-         "SampleAfterValue": "2000000",
-@@ -22,6 +25,7 @@
+         "BriefDescription": "Counts all microcode FP assists.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+         "EventName": "ASSISTS.FP",
+         "PublicDescription": "Counts all microcode Floating Point assists.=
+",
+@@ -28,6 +31,7 @@
      },
      {
-         "BriefDescription": "DTLB load miss page walks complete",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x8",
-         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
-         "SampleAfterValue": "200000",
-@@ -29,6 +33,7 @@
+         "BriefDescription": "ASSISTS.SSE_AVX_MIX",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+         "EventName": "ASSISTS.SSE_AVX_MIX",
+         "SampleAfterValue": "1000003",
+@@ -36,6 +40,7 @@
      },
      {
-         "BriefDescription": "DTLB misses",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x49",
-         "EventName": "DTLB_MISSES.ANY",
-         "SampleAfterValue": "200000",
-@@ -36,6 +41,7 @@
+         "BriefDescription": "FP_ARITH_DISPATCHED.PORT_0 [This event is ali=
+as to FP_ARITH_DISPATCHED.V0]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_0",
+         "SampleAfterValue": "2000003",
+@@ -44,6 +49,7 @@
      },
      {
-         "BriefDescription": "DTLB first level misses but second level hit",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x49",
-         "EventName": "DTLB_MISSES.STLB_HIT",
-         "SampleAfterValue": "200000",
-@@ -43,6 +49,7 @@
+         "BriefDescription": "FP_ARITH_DISPATCHED.PORT_1 [This event is ali=
+as to FP_ARITH_DISPATCHED.V1]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_1",
+         "SampleAfterValue": "2000003",
+@@ -52,6 +58,7 @@
      },
      {
-         "BriefDescription": "DTLB miss page walks",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0x49",
-         "EventName": "DTLB_MISSES.WALK_COMPLETED",
-         "SampleAfterValue": "200000",
-@@ -50,6 +57,7 @@
+         "BriefDescription": "FP_ARITH_DISPATCHED.PORT_5 [This event is ali=
+as to FP_ARITH_DISPATCHED.V2]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.PORT_5",
+         "SampleAfterValue": "2000003",
+@@ -60,6 +67,7 @@
      },
      {
-         "BriefDescription": "ITLB flushes",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xAE",
-         "EventName": "ITLB_FLUSH",
-         "SampleAfterValue": "2000000",
-@@ -57,6 +65,7 @@
+         "BriefDescription": "FP_ARITH_DISPATCHED.V0 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_0]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.V0",
+         "SampleAfterValue": "2000003",
+@@ -68,6 +76,7 @@
      },
      {
-         "BriefDescription": "ITLB miss",
+         "BriefDescription": "FP_ARITH_DISPATCHED.V1 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_1]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.V1",
+         "SampleAfterValue": "2000003",
+@@ -76,6 +85,7 @@
+     },
+     {
+         "BriefDescription": "FP_ARITH_DISPATCHED.V2 [This event is alias t=
+o FP_ARITH_DISPATCHED.PORT_5]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb3",
+         "EventName": "FP_ARITH_DISPATCHED.V2",
+         "SampleAfterValue": "2000003",
+@@ -84,6 +94,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational 128-bi=
+t packed double precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 2 computation=
+ operations, one for each element.  Applies to SSE* and AVX* packed double =
+precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN=
+ MAX SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice =
+as they perform 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE",
+         "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed double precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 2 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed double precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as the=
+y perform 2 calculations per element. The DAZ and FTZ flags in the MXCSR re=
+gister need to be set when using these events.",
+@@ -93,6 +104,7 @@
+     },
+     {
+         "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
+d single precision floating-point instructions retired; some instructions w=
+ill count twice as noted below.  Each count represents 4 computation operat=
+ions, one for each element.  Applies to SSE* and AVX* packed single precisi=
+on floating-point instructions: ADD SUB MUL DIV MIN MAX RCP14 RSQRT14 SQRT =
+DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count twice as they pe=
+rform 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.128B_PACKED_SINGLE",
+         "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed single precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 4 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed single precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
+ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
+e MXCSR register need to be set when using these events.",
+@@ -102,6 +114,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational 256-bi=
+t packed double precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 4 computation=
+ operations, one for each element.  Applies to SSE* and AVX* packed double =
+precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN=
+ MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions count twice as they perf=
+orm 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE",
+         "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
+ed double precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 4 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed double precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions count twice as they perform 2 =
+calculations per element. The DAZ and FTZ flags in the MXCSR register need =
+to be set when using these events.",
+@@ -111,6 +124,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational 256-bi=
+t packed single precision floating-point instructions retired; some instruc=
+tions will count twice as noted below.  Each count represents 8 computation=
+ operations, one for each element.  Applies to SSE* and AVX* packed single =
+precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN=
+ MAX SQRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions co=
+unt twice as they perform 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.256B_PACKED_SINGLE",
+         "PublicDescription": "Number of SSE/AVX computational 256-bit pack=
+ed single precision floating-point instructions retired; some instructions =
+will count twice as noted below.  Each count represents 8 computation opera=
+tions, one for each element.  Applies to SSE* and AVX* packed single precis=
+ion floating-point instructions: ADD SUB HADD HSUB SUBADD MUL DIV MIN MAX S=
+QRT RSQRT RCP DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB instructions count tw=
+ice as they perform 2 calculations per element. The DAZ and FTZ flags in th=
+e MXCSR register need to be set when using these events.",
+@@ -120,6 +134,7 @@
+     },
+     {
+         "BriefDescription": "Number of SSE/AVX computational 128-bit packe=
+d single and 256-bit packed double precision FP instructions retired; some =
+instructions will count twice as noted below.  Each count represents 2 or/a=
+nd 4 computation operations, 1 for each element.  Applies to SSE* and AVX* =
+packed single precision and packed double precision FP instructions: ADD SU=
+B HADD HSUB SUBADD MUL DIV MIN MAX RCP14 RSQRT14 SQRT DPP FM(N)ADD/SUB.  DP=
+P and FM(N)ADD/SUB count twice as they perform 2 calculations per element."=
+,
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.4_FLOPS",
+         "PublicDescription": "Number of SSE/AVX computational 128-bit pack=
+ed single precision and 256-bit packed double precision  floating-point ins=
+tructions retired; some instructions will count twice as noted below.  Each=
+ count represents 2 or/and 4 computation operations, one for each element. =
+ Applies to SSE* and AVX* packed single precision floating-point and packed=
+ double precision floating-point instructions: ADD SUB HADD HSUB SUBADD MUL=
+ DIV MIN MAX RCP14 RSQRT14 SQRT DPP FM(N)ADD/SUB.  DPP and FM(N)ADD/SUB ins=
+tructions count twice as they perform 2 calculations per element. The DAZ a=
+nd FTZ flags in the MXCSR register need to be set when using these events."=
+,
+@@ -129,6 +144,7 @@
+     },
+     {
+         "BriefDescription": "Number of SSE/AVX computational scalar floati=
+ng-point instructions retired; some instructions will count twice as noted =
+below.  Applies to SSE* and AVX* scalar, double and single precision floati=
+ng-point: ADD SUB MUL DIV MIN MAX RCP14 RSQRT14 RANGE SQRT DPP FM(N)ADD/SUB=
+.  DPP and FM(N)ADD/SUB instructions count twice as they perform multiple c=
+alculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR",
+         "PublicDescription": "Number of SSE/AVX computational scalar singl=
+e precision and double precision floating-point instructions retired; some =
+instructions will count twice as noted below.  Each count represents 1 comp=
+utational operation. Applies to SSE* and AVX* scalar single precision float=
+ing-point instructions: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB=
+.  FM(N)ADD/SUB instructions count twice as they perform 2 calculations per=
+ element. The DAZ and FTZ flags in the MXCSR register need to be set when u=
+sing these events.",
+@@ -138,6 +154,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational scalar=
+ double precision floating-point instructions retired; some instructions wi=
+ll count twice as noted below.  Each count represents 1 computational opera=
+tion. Applies to SSE* and AVX* scalar double precision floating-point instr=
+uctions: ADD SUB MUL DIV MIN MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructi=
+ons count twice as they perform 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_DOUBLE",
+         "PublicDescription": "Number of SSE/AVX computational scalar doubl=
+e precision floating-point instructions retired; some instructions will cou=
+nt twice as noted below.  Each count represents 1 computational operation. =
+Applies to SSE* and AVX* scalar double precision floating-point instruction=
+s: ADD SUB MUL DIV MIN MAX SQRT FM(N)ADD/SUB.  FM(N)ADD/SUB instructions co=
+unt twice as they perform 2 calculations per element. The DAZ and FTZ flags=
+ in the MXCSR register need to be set when using these events.",
+@@ -147,6 +164,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of SSE/AVX computational scalar=
+ single precision floating-point instructions retired; some instructions wi=
+ll count twice as noted below.  Each count represents 1 computational opera=
+tion. Applies to SSE* and AVX* scalar single precision floating-point instr=
+uctions: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB.  FM(N)ADD/SUB=
+ instructions count twice as they perform 2 calculations per element.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.SCALAR_SINGLE",
+         "PublicDescription": "Number of SSE/AVX computational scalar singl=
+e precision floating-point instructions retired; some instructions will cou=
+nt twice as noted below.  Each count represents 1 computational operation. =
+Applies to SSE* and AVX* scalar single precision floating-point instruction=
+s: ADD SUB MUL DIV MIN MAX SQRT RSQRT RCP FM(N)ADD/SUB.  FM(N)ADD/SUB instr=
+uctions count twice as they perform 2 calculations per element. The DAZ and=
+ FTZ flags in the MXCSR register need to be set when using these events.",
+@@ -156,6 +174,7 @@
+     },
+     {
+         "BriefDescription": "Number of any Vector retired FP arithmetic in=
+structions",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc7",
+         "EventName": "FP_ARITH_INST_RETIRED.VECTOR",
+         "PublicDescription": "Number of any Vector retired FP arithmetic i=
+nstructions.  The DAZ and FTZ flags in the MXCSR register need to be set wh=
+en using these events.",
+@@ -165,53 +184,108 @@
+     },
+     {
+         "BriefDescription": "Counts the number of all types of floating po=
+int operations per uop with all default weighting",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc8",
+         "EventName": "FP_FLOPS_RETIRED.ALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x3",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "This event is deprecated. [This event is alia=
+s to FP_FLOPS_RETIRED.FP64]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Deprecated": "1",
+         "EventCode": "0xc8",
+         "EventName": "FP_FLOPS_RETIRED.DP",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of floating point operation=
+s that produce 32 bit single precision results [This event is alias to FP_F=
+LOPS_RETIRED.SP]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc8",
+         "EventName": "FP_FLOPS_RETIRED.FP32",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of floating point operation=
+s that produce 64 bit double precision results [This event is alias to FP_F=
+LOPS_RETIRED.DP]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc8",
+         "EventName": "FP_FLOPS_RETIRED.FP64",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "This event is deprecated. [This event is alia=
+s to FP_FLOPS_RETIRED.FP32]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Deprecated": "1",
+         "EventCode": "0xc8",
+         "EventName": "FP_FLOPS_RETIRED.SP",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the total number of  floating point re=
+tired instructions.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc7",
++        "EventName": "FP_INST_RETIRED.128B_DP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x8",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of retired instructions who=
+se sources are a packed 128 bit single precision floating point. This may b=
+e SSE or AVX.128 operations.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc7",
++        "EventName": "FP_INST_RETIRED.128B_SP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x4",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of retired instructions who=
+se sources are a packed 256 bit double precision floating point.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc7",
++        "EventName": "FP_INST_RETIRED.256B_DP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x20",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of retired instructions who=
+se sources are a scalar 32bit single precision floating point.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc7",
++        "EventName": "FP_INST_RETIRED.32B_SP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of retired instructions who=
+se sources are a scalar 64 bit double precision floating point.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc7",
++        "EventName": "FP_INST_RETIRED.64B_DP",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x2",
++        "Unit": "cpu_atom"
++    },
++    {
++        "BriefDescription": "Counts the number of uops executed on floatin=
+g point and vector integer store data port.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xb2",
++        "EventName": "FP_VINT_UOPS_EXECUTED.STD",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x1",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of floating point operation=
+s retired that required microcode assist.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.FP_ASSIST",
+         "PublicDescription": "Counts the number of floating point operatio=
+ns retired that required microcode assist, which is not a reflection of the=
+ number of FP operations, instructions or uops.",
+@@ -221,9 +295,9 @@
+     },
+     {
+         "BriefDescription": "Counts the number of floating point divide uo=
+ps retired (x87 and sse, including x87 sqrt).",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.FPDIV",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x8",
+         "Unit": "cpu_atom"
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json b/tool=
+s/perf/pmu-events/arch/x86/meteorlake/frontend.json
+index f3b7b211afb5..b6c52f7385fc 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/frontend.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Counts the total number of BACLEARS due to al=
+l branch types including conditional and unconditional jumps, returns, and =
+indirect branches.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe6",
+         "EventName": "BACLEARS.ANY",
+         "PublicDescription": "Counts the total number of BACLEARS, which o=
+ccur when the Branch Target Buffer (BTB) prediction or lack thereof, was co=
+rrected by a later branch predictor in the frontend.  Includes BACLEARS due=
+ to all branch types including conditional and unconditional jumps, returns=
+, and indirect branches.",
+@@ -10,6 +11,7 @@
+     },
+     {
+         "BriefDescription": "Clears due to Unknown Branches.",
 +        "Counter": "0,1,2,3",
+         "EventCode": "0x60",
+         "EventName": "BACLEARS.ANY",
+         "PublicDescription": "Number of times the front-end is resteered w=
+hen it finds a branch instruction in a fetch line. This is called Unknown B=
+ranch which occurs for the first time a branch instruction is fetched or wh=
+en the branch is not tracked by the BPU (Branch Prediction Unit) anymore.",
+@@ -19,6 +21,7 @@
+     },
+     {
+         "BriefDescription": "Stalls caused by changing prefix length of th=
+e instruction.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x87",
+         "EventName": "DECODE.LCP",
+         "PublicDescription": "Counts cycles that the Instruction Length de=
+coder (ILD) stalls occurred due to dynamically changing prefix length of th=
+e decoded instruction (by operand size prefix instruction 0x66, address siz=
+e prefix instruction 0x67 or REX.W for Intel64). Count is proportional to t=
+he number of prefixes in a 16B-line. This may result in a three-cycle penal=
+ty for each LCP (Length changing prefix) in a 16-byte chunk.",
+@@ -28,6 +31,7 @@
+     },
+     {
+         "BriefDescription": "Cycles the Microcode Sequencer is busy.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x87",
+         "EventName": "DECODE.MS_BUSY",
+         "SampleAfterValue": "500009",
+@@ -36,6 +40,7 @@
+     },
+     {
+         "BriefDescription": "DSB-to-MITE switch true penalty cycles.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x61",
+         "EventName": "DSB2MITE_SWITCHES.PENALTY_CYCLES",
+         "PublicDescription": "Decode Stream Buffer (DSB) is a Uop-cache th=
+at holds translations of previously fetched instructions that were decoded =
+by the legacy x86 decode pipeline (MITE). This event counts fetch penalty c=
+ycles when a transition occurs from DSB to MITE.",
+@@ -43,16 +48,9 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "DSB_FILL.FB_STALL_OT",
+-        "EventCode": "0x62",
+-        "EventName": "DSB_FILL.FB_STALL_OT",
+-        "SampleAfterValue": "1000003",
+-        "UMask": "0x10",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Retired ANT branches",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.ANY_ANT",
+         "MSRIndex": "0x3F7",
+@@ -65,6 +63,7 @@
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced DSB miss=
+.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.ANY_DSB_MISS",
+         "MSRIndex": "0x3F7",
+@@ -77,6 +76,7 @@
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced a critic=
+al DSB miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.DSB_MISS",
+         "MSRIndex": "0x3F7",
+@@ -89,15 +89,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of instructions retired tha=
+t were tagged because empty issue slots were seen before the uop due to ITL=
+B miss",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.ITLB_MISS",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x10",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced iTLB tru=
+e miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.ITLB_MISS",
+         "MSRIndex": "0x3F7",
+@@ -110,6 +111,7 @@
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced Instruct=
+ion L1 Cache true miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.L1I_MISS",
+         "MSRIndex": "0x3F7",
+@@ -122,6 +124,7 @@
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced Instruct=
+ion L2 Cache true miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.L2_MISS",
+         "MSRIndex": "0x3F7",
+@@ -134,6 +137,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions after front-end starvati=
+on of at least 1 cycle",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_1",
+         "MSRIndex": "0x3F7",
+@@ -146,6 +150,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 128 cycles=
+ which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_128",
+         "MSRIndex": "0x3F7",
+@@ -158,6 +163,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 16 cycles =
+which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_16",
+         "MSRIndex": "0x3F7",
+@@ -170,6 +176,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions after front-end starvati=
+on of at least 2 cycles",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_2",
+         "MSRIndex": "0x3F7",
+@@ -182,6 +189,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 256 cycles=
+ which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_256",
+         "MSRIndex": "0x3F7",
+@@ -194,6 +202,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end had at least 1 bubble-slot for a period of 2=
+ cycles which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_2_BUBBLES_GE_1",
+         "MSRIndex": "0x3F7",
+@@ -206,6 +215,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 32 cycles =
+which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_32",
+         "MSRIndex": "0x3F7",
+@@ -218,6 +228,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 4 cycles w=
+hich was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_4",
+         "MSRIndex": "0x3F7",
+@@ -230,6 +241,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 512 cycles=
+ which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_512",
+         "MSRIndex": "0x3F7",
+@@ -242,6 +254,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 64 cycles =
+which was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_64",
+         "MSRIndex": "0x3F7",
+@@ -254,6 +267,7 @@
+     },
+     {
+         "BriefDescription": "Retired instructions that are fetched after a=
+n interval where the front-end delivered no uops for a period of 8 cycles w=
+hich was not interrupted by a back-end stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.LATENCY_GE_8",
+         "MSRIndex": "0x3F7",
+@@ -266,6 +280,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted Retired ANT branches",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.MISP_ANT",
+         "MSRIndex": "0x3F7",
+@@ -278,6 +293,7 @@
+     },
+     {
+         "BriefDescription": "FRONTEND_RETIRED.MS_FLOWS",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.MS_FLOWS",
+         "MSRIndex": "0x3F7",
+@@ -289,6 +305,7 @@
+     },
+     {
+         "BriefDescription": "Retired Instructions who experienced STLB (2n=
+d level TLB) true miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.STLB_MISS",
+         "MSRIndex": "0x3F7",
+@@ -301,6 +318,7 @@
+     },
+     {
+         "BriefDescription": "FRONTEND_RETIRED.UNKNOWN_BRANCH",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc6",
+         "EventName": "FRONTEND_RETIRED.UNKNOWN_BRANCH",
+         "MSRIndex": "0x3F7",
+@@ -312,6 +330,7 @@
+     },
+     {
+         "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x80",
+         "EventName": "ICACHE.ACCESSES",
+         "SampleAfterValue": "200003",
+@@ -320,6 +339,7 @@
+     },
+     {
+         "BriefDescription": "Counts every time the code stream enters into=
+ a new cache line by walking sequential from the previous line or being red=
+irected by a jump and the instruction cache registers bytes are not present=
+. -",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x80",
+         "EventName": "ICACHE.MISSES",
+         "SampleAfterValue": "200003",
+@@ -328,6 +348,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where a code fetch is stalled due to L=
+1 instruction cache miss.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x80",
+         "EventName": "ICACHE_DATA.STALLS",
+         "PublicDescription": "Counts cycles where a code line fetch is sta=
+lled due to an L1 instruction cache miss. The decode pipeline works at a 32=
+ Byte granularity.",
+@@ -337,6 +358,7 @@
+     },
+     {
+         "BriefDescription": "ICACHE_DATA.STALL_PERIODS",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0x80",
+@@ -345,17 +367,9 @@
+         "UMask": "0x4",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Instruction fetch tag lookups that hit in the=
+ instruction cache (L1I). Counts at 64-byte cache-line granularity.",
+-        "EventCode": "0x83",
+-        "EventName": "ICACHE_TAG.HIT",
+-        "PublicDescription": "Counts instruction fetch tag lookups that hi=
+t in the instruction cache (L1I). Counts at 64-byte cache-line granularity.=
+ Accounts for both cacheable and uncacheable accesses.",
+-        "SampleAfterValue": "200003",
+-        "UMask": "0x1",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Cycles where a code fetch is stalled due to L=
+1 instruction cache tag miss.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x83",
+         "EventName": "ICACHE_TAG.STALLS",
+         "PublicDescription": "Counts cycles where a code fetch is stalled =
+due to L1 instruction cache tag miss.",
+@@ -365,6 +379,7 @@
+     },
+     {
+         "BriefDescription": "Cycles Decode Stream Buffer (DSB) is deliveri=
+ng any Uop",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x79",
+         "EventName": "IDQ.DSB_CYCLES_ANY",
+@@ -375,6 +390,7 @@
+     },
+     {
+         "BriefDescription": "Cycles DSB is delivering optimal number of Uo=
+ps",
++        "Counter": "0,1,2,3",
+         "CounterMask": "6",
+         "EventCode": "0x79",
+         "EventName": "IDQ.DSB_CYCLES_OK",
+@@ -385,6 +401,7 @@
+     },
+     {
+         "BriefDescription": "Uops delivered to Instruction Decode Queue (I=
+DQ) from the Decode Stream Buffer (DSB) path",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x79",
+         "EventName": "IDQ.DSB_UOPS",
+         "PublicDescription": "Counts the number of uops delivered to Instr=
+uction Decode Queue (IDQ) from the Decode Stream Buffer (DSB) path.",
+@@ -394,6 +411,7 @@
+     },
+     {
+         "BriefDescription": "Cycles MITE is delivering any Uop",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x79",
+         "EventName": "IDQ.MITE_CYCLES_ANY",
+@@ -404,6 +422,7 @@
+     },
+     {
+         "BriefDescription": "Cycles MITE is delivering optimal number of U=
+ops",
++        "Counter": "0,1,2,3",
+         "CounterMask": "6",
+         "EventCode": "0x79",
+         "EventName": "IDQ.MITE_CYCLES_OK",
+@@ -414,6 +433,7 @@
+     },
+     {
+         "BriefDescription": "Uops delivered to Instruction Decode Queue (I=
+DQ) from MITE path",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x79",
+         "EventName": "IDQ.MITE_UOPS",
+         "PublicDescription": "Counts the number of uops delivered to Instr=
+uction Decode Queue (IDQ) from the MITE path. This also means that uops are=
+ not being delivered from the Decode Stream Buffer (DSB).",
+@@ -423,6 +443,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when uops are being delivered to IDQ w=
+hile MS is busy",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x79",
+         "EventName": "IDQ.MS_CYCLES_ANY",
+@@ -433,6 +454,7 @@
+     },
+     {
+         "BriefDescription": "Number of switches from DSB or MITE to the MS=
+",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0x79",
+@@ -444,6 +466,7 @@
+     },
+     {
+         "BriefDescription": "Uops initiated by MITE or Decode Stream Buffe=
+r (DSB) and delivered to Instruction Decode Queue (IDQ) while Microcode Seq=
+uencer (MS) is busy",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x79",
+         "EventName": "IDQ.MS_UOPS",
+         "PublicDescription": "Counts the number of uops initiated by MITE =
+or Decode Stream Buffer (DSB) and delivered to Instruction Decode Queue (ID=
+Q) while the Microcode Sequencer (MS) is busy. Counting includes uops that =
+may 'bypass' the IDQ.",
+@@ -452,16 +475,18 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that were no operation was delivered to the back-end pipeline due =
+to instruction fetch limitations when the back-end could have accepted more=
+ operations. Common examples include instruction cache misses or x86 instru=
+ction decode limitations.",
++        "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that when no operation was delivered to the back-end pipeline due =
+to instruction fetch limitations when the back-end could have accepted more=
+ operations. Common examples include instruction cache misses or x86 instru=
+ction decode limitations.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_BUBBLES.CORE",
+-        "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that were no operation was delivered to the back-end pipeline due=
+ to instruction fetch limitations when the back-end could have accepted mor=
+e operations. Common examples include instruction cache misses or x86 instr=
+uction decode limitations. The count may be distributed among unhalted logi=
+cal processors (hyper-threads) who share the same physical core, in process=
+ors that support Intel Hyper-Threading Technology. Software can use this ev=
+ent as the numerator for the Frontend Bound metric (or top-level category) =
+of the Top-down Microarchitecture Analysis method.",
++        "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that when no operation was delivered to the back-end pipeline due=
+ to instruction fetch limitations when the back-end could have accepted mor=
+e operations. Common examples include instruction cache misses or x86 instr=
+uction decode limitations. The count may be distributed among unhalted logi=
+cal processors (hyper-threads) who share the same physical core, in process=
+ors that support Intel Hyper-Threading Technology. Software can use this ev=
+ent as the numerator for the Frontend Bound metric (or top-level category) =
+of the Top-down Microarchitecture Analysis method.",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
+     {
+         "BriefDescription": "Cycles when no uops are not delivered by the =
+IDQ when backend of the machine is not stalled [This event is alias to IDQ_=
+UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "6",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_BUBBLES.CYCLES_0_UOPS_DELIV.CORE",
+@@ -472,6 +497,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when optimal number of uops was delive=
+red to the back-end when the back-end is not stalled [This event is alias t=
+o IDQ_UOPS_NOT_DELIVERED.CYCLES_FE_WAS_OK]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_BUBBLES.CYCLES_FE_WAS_OK",
+@@ -483,6 +509,7 @@
+     },
+     {
+         "BriefDescription": "Uops not delivered by IDQ when backend of the=
+ machine is not stalled",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_UOPS_NOT_DELIVERED.CORE",
+         "PublicDescription": "Counts the number of uops not delivered to b=
+y the Instruction Decode Queue (IDQ) to the back-end of the pipeline when t=
+here was no back-end stalls. This event counts for one SMT thread in a give=
+n cycle.",
+@@ -492,6 +519,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when no uops are not delivered by the =
+IDQ when backend of the machine is not stalled [This event is alias to IDQ_=
+BUBBLES.CYCLES_0_UOPS_DELIV.CORE]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "6",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_UOPS_NOT_DELIVERED.CYCLES_0_UOPS_DELIV.CORE",
+@@ -502,6 +530,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when optimal number of uops was delive=
+red to the back-end when the back-end is not stalled [This event is alias t=
+o IDQ_BUBBLES.CYCLES_FE_WAS_OK]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0x9c",
+         "EventName": "IDQ_UOPS_NOT_DELIVERED.CYCLES_FE_WAS_OK",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/memory.json b/tools/=
+perf/pmu-events/arch/x86/meteorlake/memory.json
+index 617d0e255fd5..b464a8ab32ca 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/memory.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/memory.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Cycles while L3 cache miss demand load is out=
+standing.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "2",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.CYCLES_L3_MISS",
+@@ -10,6 +11,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L3 cache miss demand l=
+oad is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "6",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.STALLS_L3_MISS",
+@@ -19,6 +21,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to any number of reasons, incl=
+uding an L1 miss, WCB full, pagewalk, store address block or store data blo=
+ck, on a load that retires.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.ANY_AT_RET",
+         "SampleAfterValue": "1000003",
+@@ -27,6 +30,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer is stalled due to a core bound stall includin=
+g a store address match, a DTLB miss or a page walk that detains the load f=
+rom retiring.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.L1_BOUND_AT_RET",
+         "SampleAfterValue": "1000003",
+@@ -35,6 +39,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a DL1 =
+miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.L1_MISS_AT_RET",
+         "SampleAfterValue": "1000003",
+@@ -43,6 +48,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to other =
+block cases.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.OTHER_AT_RET",
+         "PublicDescription": "Counts the number of cycles that the head (o=
+ldest load) of the load buffer and retirement are both stalled due to other=
+ block cases such as pipeline conflicts, fences, etc.",
+@@ -52,6 +58,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a page=
+walk.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.PGWALK_AT_RET",
+         "SampleAfterValue": "1000003",
+@@ -60,6 +67,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a stor=
+e address match.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.ST_ADDR_AT_RET",
+         "SampleAfterValue": "1000003",
+@@ -68,6 +76,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of machine clears due to me=
+mory ordering caused by a snoop from an external agent. Does not count inte=
+rnally generated machine clears such as those due to memory disambiguation.=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
+         "SampleAfterValue": "20003",
+@@ -76,6 +85,7 @@
+     },
+     {
+         "BriefDescription": "Number of machine clears due to memory orderi=
+ng conflicts.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.MEMORY_ORDERING",
+         "PublicDescription": "Counts the number of Machine Clears detected=
+ dye to memory ordering. Memory Ordering Machine Clears may apply when a me=
+mory read may not conform to the memory ordering rules of the x86 architect=
+ure",
+@@ -85,6 +95,7 @@
+     },
+     {
+         "BriefDescription": "Cycles while L1 cache miss demand load is out=
+standing.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "2",
+         "EventCode": "0x47",
+         "EventName": "MEMORY_ACTIVITY.CYCLES_L1D_MISS",
+@@ -94,6 +105,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L1 cache miss demand l=
+oad is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "3",
+         "EventCode": "0x47",
+         "EventName": "MEMORY_ACTIVITY.STALLS_L1D_MISS",
+@@ -103,6 +115,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L2 cache miss demand c=
+acheable load request is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "5",
+         "EventCode": "0x47",
+         "EventName": "MEMORY_ACTIVITY.STALLS_L2_MISS",
+@@ -113,6 +126,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L3 cache miss demand c=
+acheable load request is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "9",
+         "EventCode": "0x47",
+         "EventName": "MEMORY_ACTIVITY.STALLS_L3_MISS",
+@@ -121,24 +135,9 @@
+         "UMask": "0x9",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "MEMORY_ORDERING.MD_NUKE",
+-        "EventCode": "0x09",
+-        "EventName": "MEMORY_ORDERING.MD_NUKE",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x1",
+-        "Unit": "cpu_core"
+-    },
+-    {
+-        "BriefDescription": "Counts the number of memory ordering machine =
+clears due to memory renaming.",
+-        "EventCode": "0x09",
+-        "EventName": "MEMORY_ORDERING.MRN_NUKE",
+-        "SampleAfterValue": "100003",
+-        "UMask": "0x2",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 1024 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_1024",
+@@ -152,6 +151,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 128 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_128",
+@@ -165,6 +165,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 16 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_16",
+@@ -178,6 +179,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 2048 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_2048",
+@@ -191,6 +193,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 256 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_256",
+@@ -204,6 +207,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 32 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_32",
+@@ -217,6 +221,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 4 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_4",
+@@ -230,6 +235,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 512 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_512",
+@@ -243,6 +249,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 64 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_64",
+@@ -256,6 +263,7 @@
+     },
+     {
+         "BriefDescription": "Counts randomly selected loads when the laten=
+cy from first dispatch to completion is greater than 8 cycles.",
++        "Counter": "1,2,3,4,5,6,7",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.LOAD_LATENCY_GT_8",
+@@ -269,6 +277,7 @@
+     },
+     {
+         "BriefDescription": "Retired memory store access operations. A PDi=
+st event for PEBS Store Latency Facility.",
++        "Counter": "0",
+         "Data_LA": "1",
+         "EventCode": "0xcd",
+         "EventName": "MEM_TRANS_RETIRED.STORE_SAMPLE",
+@@ -280,24 +289,25 @@
+     },
+     {
+         "BriefDescription": "Counts misaligned loads that are 4K page spli=
+ts.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x13",
+         "EventName": "MISALIGN_MEM_REF.LOAD_PAGE_SPLIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts misaligned stores that are 4K page spl=
+its.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x13",
+         "EventName": "MISALIGN_MEM_REF.STORE_PAGE_SPLIT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x4",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -308,6 +318,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were not suppli=
+ed by the L3 cache.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -318,6 +329,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
+ed by the L3 cache.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -328,6 +340,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that were no=
+t supplied by the L3 cache.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.L3_MISS",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -338,6 +351,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data read requests that miss th=
+e L3 cache.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x21",
+         "EventName": "OFFCORE_REQUESTS.L3_MISS_DEMAND_DATA_RD",
+         "SampleAfterValue": "100003",
+@@ -346,6 +360,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where data return is pending for a Dem=
+and Data Read request who miss L3 cache.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_L3_MISS_DEM=
+AND_DATA_RD",
+@@ -356,21 +371,12 @@
+     },
+     {
+         "BriefDescription": "For every cycle, increments by the number of =
+demand data read requests pending that are known to have missed the L3 cach=
+e.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x20",
+         "EventName": "OFFCORE_REQUESTS_OUTSTANDING.L3_MISS_DEMAND_DATA_RD"=
+,
+         "PublicDescription": "For every cycle, increments by the number of=
+ demand data read requests pending that are known to have missed the L3 cac=
+he.  Note that this does not capture all elapsed cycles while requests are =
+outstanding - only cycles from when the requests were known by the requesti=
+ng core to have missed the L3 cache.",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x10",
+         "Unit": "cpu_core"
+-    },
+-    {
+-        "BriefDescription": "Cycles where the core is waiting on at least =
+6 outstanding demand data read requests known to have missed the L3 cache."=
+,
+-        "CounterMask": "6",
+-        "EventCode": "0x20",
+-        "EventName": "OFFCORE_REQUESTS_OUTSTANDING.L3_MISS_DEMAND_DATA_RD_=
+GE_6",
+-        "PublicDescription": "Cycles where the core is waiting on at least=
+ 6 outstanding demand data read requests known to have missed the L3 cache.=
+  Note that this event does not capture all elapsed cycles while the reques=
+ts are outstanding - only cycles from when the requests were known to have =
+missed the L3 cache.",
+-        "SampleAfterValue": "2000003",
+-        "UMask": "0x10",
+-        "Unit": "cpu_core"
+     }
+ ]
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/other.json b/tools/p=
+erf/pmu-events/arch/x86/meteorlake/other.json
+index 0bc2cb2eabb3..53d23d8decc6 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/other.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/other.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "ASSISTS.PAGE_FAULT",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+         "EventName": "ASSISTS.PAGE_FAULT",
+         "SampleAfterValue": "1000003",
+@@ -9,16 +10,17 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. [This event is alia=
+s to MISC_RETIRED.LBR_INSERTS]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Deprecated": "1",
+         "EventCode": "0xe4",
+         "EventName": "LBR_INSERTS.ANY",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -29,6 +31,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that have any type o=
+f response.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -39,6 +42,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -49,6 +53,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand data reads that were supplied b=
+y DRAM.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_DATA_RD.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -59,6 +64,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
+f response.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -69,6 +75,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand read for ownership (RFO) reques=
+ts and software prefetches for exclusive ownership (PREFETCHW) that have an=
+y type of response.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -79,6 +86,7 @@
+     },
+     {
+         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
+oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
+y DRAM.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.DEMAND_RFO.DRAM",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -89,6 +97,7 @@
+     },
+     {
+         "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xB7",
+         "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -99,6 +108,7 @@
+     },
+     {
+         "BriefDescription": "Counts streaming stores that have any type of=
+ response.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x2A,0x2B",
+         "EventName": "OCR.STREAMING_WR.ANY_RESPONSE",
+         "MSRIndex": "0x1a6,0x1a7",
+@@ -109,6 +119,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when Reservation Station (RS) is empty=
+ for the thread.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa5",
+         "EventName": "RS.EMPTY",
+         "PublicDescription": "Counts cycles during which the reservation s=
+tation (RS) is empty for this logical processor. This is usually caused whe=
+n the front-end pipeline runs into starvation periods (e.g. branch mispredi=
+ctions or i-cache misses)",
+@@ -118,6 +129,7 @@
+     },
+     {
+         "BriefDescription": "Counts end of periods where the Reservation S=
+tation (RS) was empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0xa5",
+@@ -129,7 +141,8 @@
+         "Unit": "cpu_core"
+     },
+     {
+-        "BriefDescription": "RS.EMPTY_RESOURCE",
++        "BriefDescription": "Cycles when RS was empty and a resource alloc=
+ation stall is asserted",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa5",
+         "EventName": "RS.EMPTY_RESOURCE",
+         "SampleAfterValue": "1000003",
+@@ -138,6 +151,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots in a UMWAIT =
+or TPAUSE instruction where no uop issues due to the instruction putting th=
+e CPU into the C0.1 activity state.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x75",
+         "EventName": "SERIALIZATION.C01_MS_SCB",
+         "SampleAfterValue": "200003",
+@@ -146,6 +160,7 @@
+     },
+     {
+         "BriefDescription": "Cycles the uncore cannot take further request=
+s",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x2d",
+         "EventName": "XQ.FULL_CYCLES",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json b/tool=
+s/perf/pmu-events/arch/x86/meteorlake/pipeline.json
+index 5ff4a7a32250..bc806c7330f4 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/pipeline.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Counts the number of cycles when any of the d=
+ividers are active.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xcd",
+         "EventName": "ARITH.DIV_ACTIVE",
+@@ -10,6 +11,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when divide unit is busy executing div=
+ide or square root operations.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb0",
+         "EventName": "ARITH.DIV_ACTIVE",
+@@ -20,6 +22,7 @@
+     },
+     {
+         "BriefDescription": "This event counts the cycles the integer divi=
+der is busy.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb0",
+         "EventName": "ARITH.IDIV_ACTIVE",
+@@ -29,6 +32,7 @@
+     },
+     {
+         "BriefDescription": "Number of occurrences where a microcode assis=
+t is invoked by hardware.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc1",
+         "EventName": "ASSISTS.ANY",
+         "PublicDescription": "Counts the number of occurrences where a mic=
+rocode assist is invoked by hardware. Examples include AD (page Access Dirt=
+y), FP and AVX related assists.",
+@@ -38,15 +42,16 @@
+     },
+     {
+         "BriefDescription": "Counts the total number of branch instruction=
+s retired for all branch types.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
+-        "PEBS": "1",
+         "PublicDescription": "Counts the total number of instructions in w=
+hich the instruction pointer (IP) of the processor is resteered due to a br=
+anch instruction and the branch instruction successfully retires.  All bran=
+ch type instructions are accounted for.",
+         "SampleAfterValue": "200003",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "All branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.ALL_BRANCHES",
+         "PEBS": "1",
+@@ -56,15 +61,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retired JCC (Jump on Con=
+ditional Code) branch instructions retired, includes both taken and not tak=
+en branches.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.COND",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x7e",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Conditional branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.COND",
+         "PEBS": "1",
+@@ -75,6 +81,7 @@
+     },
+     {
+         "BriefDescription": "Not taken branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.COND_NTAKEN",
+         "PEBS": "1",
+@@ -85,15 +92,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of taken JCC (Jump on Condi=
+tional Code) branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.COND_TAKEN",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xfe",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Taken conditional branch instructions retired=
+.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.COND_TAKEN",
+         "PEBS": "1",
+@@ -104,15 +112,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of far branch instructions =
+retired, includes far jump, far call and return, and interrupt call and ret=
+urn.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xbf",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Far branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.FAR_BRANCH",
+         "PEBS": "1",
+@@ -123,15 +132,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of near indirect JMP and ne=
+ar indirect CALL branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.INDIRECT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xeb",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Indirect near branch instructions retired (ex=
+cluding returns)",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.INDIRECT",
+         "PEBS": "1",
+@@ -142,34 +152,35 @@
+     },
+     {
+         "BriefDescription": "Counts the number of near indirect CALL branc=
+h instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.INDIRECT_CALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xfb",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "This event is deprecated. Refer to new event =
+BR_INST_RETIRED.INDIRECT_CALL",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Deprecated": "1",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.IND_CALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xfb",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of near CALL branch instruc=
+tions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.NEAR_CALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xf9",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Direct and indirect near call instructions re=
+tired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.NEAR_CALL",
+         "PEBS": "1",
+@@ -180,15 +191,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of near RET branch instruct=
+ions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.NEAR_RETURN",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xf7",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Return instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.NEAR_RETURN",
+         "PEBS": "1",
+@@ -199,6 +211,7 @@
+     },
+     {
+         "BriefDescription": "Taken branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc4",
+         "EventName": "BR_INST_RETIRED.NEAR_TAKEN",
+         "PEBS": "1",
+@@ -209,15 +222,16 @@
+     },
+     {
+         "BriefDescription": "Counts the total number of mispredicted branc=
+h instructions retired for all branch types.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
+-        "PEBS": "1",
+         "PublicDescription": "Counts the total number of mispredicted bran=
+ch instructions retired.  All branch type instructions are accounted for.  =
+Prediction of the branch target address enables the processor to begin exec=
+uting instructions before the non-speculative execution path is known. The =
+branch prediction unit (BPU) predicts the target address based on the instr=
+uction pointer (IP) of the branch and on the execution path through which e=
+xecution reached this IP.    A branch misprediction occurs when the predict=
+ion is wrong, and results in discarding all instructions executed in the sp=
+eculative path and re-fetching from the correct path.",
+         "SampleAfterValue": "200003",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "All mispredicted branch instructions retired.=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES",
+         "PEBS": "1",
+@@ -227,6 +241,7 @@
+     },
+     {
+         "BriefDescription": "All mispredicted branch instructions retired.=
+ This precise event may be used to get the misprediction cost via the Retir=
+e_Latency field of PEBS. It fires on the instruction that immediately follo=
+ws the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.ALL_BRANCHES_COST",
+         "PEBS": "1",
+@@ -236,15 +251,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted JCC (Jump o=
+n Conditional Code) branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x7e",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Mispredicted conditional branch instructions =
+retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND",
+         "PEBS": "1",
+@@ -255,6 +271,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted conditional branch instructions =
+retired. This precise event may be used to get the misprediction cost via t=
+he Retire_Latency field of PEBS. It fires on the instruction that immediate=
+ly follows the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_COST",
+         "PEBS": "1",
+@@ -264,6 +281,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted non-taken conditional branch ins=
+tructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_NTAKEN",
+         "PEBS": "1",
+@@ -274,6 +292,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted non-taken conditional branch ins=
+tructions retired. This precise event may be used to get the misprediction =
+cost via the Retire_Latency field of PEBS. It fires on the instruction that=
+ immediately follows the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_NTAKEN_COST",
+         "PEBS": "1",
+@@ -283,15 +302,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted taken JCC (=
+Jump on Conditional Code) branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_TAKEN",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xfe",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "number of branch instructions retired that we=
+re mispredicted and taken.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_TAKEN",
+         "PEBS": "1",
+@@ -302,6 +322,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted taken conditional branch instruc=
+tions retired. This precise event may be used to get the misprediction cost=
+ via the Retire_Latency field of PEBS. It fires on the instruction that imm=
+ediately follows the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.COND_TAKEN_COST",
+         "PEBS": "1",
+@@ -311,15 +332,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted near indire=
+ct JMP and near indirect CALL branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xeb",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Miss-predicted near indirect branch instructi=
+ons retired (excluding returns)",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT",
+         "PEBS": "1",
+@@ -330,15 +352,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted near indire=
+ct CALL branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xfb",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Mispredicted indirect CALL retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT_CALL",
+         "PEBS": "1",
+@@ -349,6 +372,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted indirect CALL retired. This prec=
+ise event may be used to get the misprediction cost via the Retire_Latency =
+field of PEBS. It fires on the instruction that immediately follows the mis=
+predicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT_CALL_COST",
+         "PEBS": "1",
+@@ -358,6 +382,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted near indirect branch instruction=
+s retired (excluding returns). This precise event may be used to get the mi=
+sprediction cost via the Retire_Latency field of PEBS. It fires on the inst=
+ruction that immediately follows the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.INDIRECT_COST",
+         "PEBS": "1",
+@@ -367,15 +392,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted near taken =
+branch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0x80",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Number of near branch instructions retired th=
+at were mispredicted and taken.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN",
+         "PEBS": "1",
+@@ -386,6 +412,7 @@
+     },
+     {
+         "BriefDescription": "Mispredicted taken near branch instructions r=
+etired. This precise event may be used to get the misprediction cost via th=
+e Retire_Latency field of PEBS. It fires on the instruction that immediatel=
+y follows the mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.NEAR_TAKEN_COST",
+         "PEBS": "1",
+@@ -395,6 +422,7 @@
+     },
+     {
+         "BriefDescription": "This event counts the number of mispredicted =
+ret instructions retired. Non PEBS",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.RET",
+         "PEBS": "1",
+@@ -405,15 +433,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of mispredicted near RET br=
+anch instructions retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.RETURN",
+-        "PEBS": "1",
+         "SampleAfterValue": "200003",
+         "UMask": "0xf7",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Mispredicted ret instructions retired. This p=
+recise event may be used to get the misprediction cost via the Retire_Laten=
+cy field of PEBS. It fires on the instruction that immediately follows the =
+mispredicted branch.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc5",
+         "EventName": "BR_MISP_RETIRED.RET_COST",
+         "PEBS": "1",
+@@ -423,6 +452,7 @@
+     },
+     {
+         "BriefDescription": "Core clocks when the thread is in the C0.1 li=
+ght-weight slower wakeup time but more power saving optimized state.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+         "EventName": "CPU_CLK_UNHALTED.C01",
+         "PublicDescription": "Counts core clocks when the thread is in the=
+ C0.1 light-weight slower wakeup time but more power saving optimized state=
+.  This state can be entered via the TPAUSE or UMWAIT instructions.",
+@@ -432,6 +462,7 @@
+     },
+     {
+         "BriefDescription": "Core clocks when the thread is in the C0.2 li=
+ght-weight faster wakeup time but less power saving optimized state.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+         "EventName": "CPU_CLK_UNHALTED.C02",
+         "PublicDescription": "Counts core clocks when the thread is in the=
+ C0.2 light-weight faster wakeup time but less power saving optimized state=
+.  This state can be entered via the TPAUSE or UMWAIT instructions.",
+@@ -441,6 +472,7 @@
+     },
+     {
+         "BriefDescription": "Core clocks when the thread is in the C0.1 or=
+ C0.2 or running a PAUSE in C0 ACPI state.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+         "EventName": "CPU_CLK_UNHALTED.C0_WAIT",
+         "PublicDescription": "Counts core clocks when the thread is in the=
+ C0.1 or C0.2 power saving optimized states (TPAUSE or UMWAIT instructions)=
+ or running the PAUSE instruction.",
+@@ -450,6 +482,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles",
++        "Counter": "Fixed counter 1",
+         "EventName": "CPU_CLK_UNHALTED.CORE",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2",
+@@ -457,6 +490,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.THREAD_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.CORE_P",
+         "SampleAfterValue": "2000003",
+@@ -464,6 +498,7 @@
+     },
+     {
+         "BriefDescription": "Cycle counts are evenly distributed between a=
+ctive threads in the Core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+         "EventName": "CPU_CLK_UNHALTED.DISTRIBUTED",
+         "PublicDescription": "This event distributes cycle counts between =
+active hyperthreads, i.e., those in C0.  A hyperthread becomes inactive whe=
+n it executes the HLT or MWAIT instructions.  If all other hyperthreads are=
+ inactive (or disabled or do not exist), all counts are attributed to this =
+hyperthread. To obtain the full count when the Core is active, sum the coun=
+ts from each hyperthread.",
+@@ -473,6 +508,7 @@
+     },
+     {
+         "BriefDescription": "Core crystal clock cycles when this thread is=
+ unhalted and the other thread is halted.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.ONE_THREAD_ACTIVE",
+         "PublicDescription": "Counts Core crystal clock cycles when curren=
+t thread is unhalted and the other thread is halted.",
+@@ -482,6 +518,7 @@
+     },
+     {
+         "BriefDescription": "CPU_CLK_UNHALTED.PAUSE",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xec",
+         "EventName": "CPU_CLK_UNHALTED.PAUSE",
+         "SampleAfterValue": "2000003",
+@@ -490,6 +527,7 @@
+     },
+     {
+         "BriefDescription": "CPU_CLK_UNHALTED.PAUSE_INST",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0xec",
+@@ -500,6 +538,7 @@
+     },
+     {
+         "BriefDescription": "Core crystal clock cycles. Cycle counts are e=
+venly distributed between active threads in the Core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.REF_DISTRIBUTED",
+         "PublicDescription": "This event distributes Core crystal clock cy=
+cle counts between active hyperthreads, i.e., those in C0 sleep-state. A hy=
+perthread becomes inactive when it executes the HLT or MWAIT instructions. =
+If one thread is active in a core, all counts are attributed to this hypert=
+hread. To obtain the full count when the Core is active, sum the counts fro=
+m each hyperthread.",
+@@ -509,6 +548,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+reference clock cycles",
++        "Counter": "Fixed counter 2",
+         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x3",
+@@ -516,6 +556,7 @@
+     },
+     {
+         "BriefDescription": "Reference cycles when the core is not in halt=
+ state.",
++        "Counter": "Fixed counter 2",
+         "EventName": "CPU_CLK_UNHALTED.REF_TSC",
+         "PublicDescription": "Counts the number of reference cycles when t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction or the MWAIT instruction. This event is not affe=
+cted by core frequency changes (for example, P states, TM2 transitions) but=
+ has the same incrementing frequency as the time stamp counter. This event =
+can approximate elapsed time while the core was not in a halt state. It is =
+counted on a dedicated fixed counter, leaving the eight programmable counte=
+rs available for other events. Note: On all current platforms this event st=
+ops counting during 'throttling (TM)' states duty off periods the processor=
+ is 'halted'.  The counter update is done at a lower clock rate then the co=
+re clock the overflow status bit for this counter may appear 'sticky'.  Aft=
+er the counter has overflowed and software clears the overflow status bit a=
+nd resets the counter to less than MAX. The reset value to the counter is n=
+ot clocked immediately so the overflow status bit will flip 'high (1)' and =
+generate another PMI (if enabled) after which the reset value gets clocked =
+into the counter. Therefore, software will get the interrupt, read the over=
+flow status bit '1 for bit 34 while the counter value is less than MAX. Sof=
+tware should ignore this case.",
+         "SampleAfterValue": "2000003",
+@@ -524,6 +565,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted reference clock=
+ cycles at TSC frequency.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
+         "PublicDescription": "Counts the number of reference cycles that t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction. This event is not affected by core frequency ch=
+anges and increments at a fixed frequency that is also used for the Time St=
+amp Counter (TSC). This event uses a programmable general purpose performan=
+ce counter.",
+@@ -533,6 +575,7 @@
+     },
+     {
+         "BriefDescription": "Reference cycles when the core is not in halt=
+ state.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.REF_TSC_P",
+         "PublicDescription": "Counts the number of reference cycles when t=
+he core is not in a halt state. The core enters the halt state when it is r=
+unning the HLT instruction or the MWAIT instruction. This event is not affe=
+cted by core frequency changes (for example, P states, TM2 transitions) but=
+ has the same incrementing frequency as the time stamp counter. This event =
+can approximate elapsed time while the core was not in a halt state. It is =
+counted on a dedicated fixed counter, leaving the four (eight when Hyperthr=
+eading is disabled) programmable counters available for other events. Note:=
+ On all current platforms this event stops counting during 'throttling (TM)=
+' states duty off periods the processor is 'halted'.  The counter update is=
+ done at a lower clock rate then the core clock the overflow status bit for=
+ this counter may appear 'sticky'.  After the counter has overflowed and so=
+ftware clears the overflow status bit and resets the counter to less than M=
+AX. The reset value to the counter is not clocked immediately so the overfl=
+ow status bit will flip 'high (1)' and generate another PMI (if enabled) af=
+ter which the reset value gets clocked into the counter. Therefore, softwar=
+e will get the interrupt, read the overflow status bit '1 for bit 34 while =
+the counter value is less than MAX. Software should ignore this case.",
+@@ -542,6 +585,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of unhalted =
+core clock cycles",
++        "Counter": "Fixed counter 1",
+         "EventName": "CPU_CLK_UNHALTED.THREAD",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2",
+@@ -549,6 +593,7 @@
+     },
+     {
+         "BriefDescription": "Core cycles when the thread is not in halt st=
+ate",
++        "Counter": "Fixed counter 1",
+         "EventName": "CPU_CLK_UNHALTED.THREAD",
+         "PublicDescription": "Counts the number of core cycles while the t=
+hread is not in a halt state. The thread enters the halt state when it is r=
+unning the HLT instruction. This event is a component in many key event rat=
+ios. The core frequency may change from time to time due to transitions ass=
+ociated with Enhanced Intel SpeedStep Technology or TM2. For this reason th=
+is event may have a changing ratio with regards to time. When the core freq=
+uency is constant, this event can approximate elapsed time while the core w=
+as not in the halt state. It is counted on a dedicated fixed counter, leavi=
+ng the eight programmable counters available for other events.",
+         "SampleAfterValue": "2000003",
+@@ -557,6 +602,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of unhalted core clock cycl=
+es [This event is alias to CPU_CLK_UNHALTED.CORE_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.THREAD_P",
+         "SampleAfterValue": "2000003",
+@@ -564,6 +610,7 @@
+     },
+     {
+         "BriefDescription": "Thread cycles when thread is not in halt stat=
+e",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x3c",
+         "EventName": "CPU_CLK_UNHALTED.THREAD_P",
+         "PublicDescription": "This is an architectural event that counts t=
+he number of thread cycles while the thread is not in a halt state. The thr=
+ead enters the halt state when it is running the HLT instruction. The core =
+frequency may change from time to time due to power or thermal throttling. =
+For this reason, this event may have a changing ratio with regards to wall =
+clock time.",
+@@ -572,6 +619,7 @@
+     },
+     {
+         "BriefDescription": "Cycles while L1 cache miss demand load is out=
+standing.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "8",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.CYCLES_L1D_MISS",
+@@ -581,6 +629,7 @@
+     },
+     {
+         "BriefDescription": "Cycles while L2 cache miss demand load is out=
+standing.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.CYCLES_L2_MISS",
+@@ -590,6 +639,7 @@
+     },
+     {
+         "BriefDescription": "Cycles while memory subsystem has an outstand=
+ing load.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "16",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.CYCLES_MEM_ANY",
+@@ -599,6 +649,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L1 cache miss demand l=
+oad is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "12",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.STALLS_L1D_MISS",
+@@ -608,6 +659,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while L2 cache miss demand l=
+oad is outstanding.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "5",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.STALLS_L2_MISS",
+@@ -617,6 +669,7 @@
+     },
+     {
+         "BriefDescription": "Total execution stalls.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "4",
+         "EventCode": "0xa3",
+         "EventName": "CYCLE_ACTIVITY.STALLS_TOTAL",
+@@ -626,6 +679,7 @@
+     },
+     {
+         "BriefDescription": "Cycles total of 1 uop is executed on all port=
+s and Reservation Station was not empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.1_PORTS_UTIL",
+         "PublicDescription": "Counts cycles during which a total of 1 uop =
+was executed on all ports and Reservation Station (RS) was not empty.",
+@@ -633,8 +687,18 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Cycles total of 2 or 3 uops are executed on a=
+ll ports and Reservation Station (RS) was not empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xa6",
++        "EventName": "EXE_ACTIVITY.2_3_PORTS_UTIL",
++        "SampleAfterValue": "2000003",
++        "UMask": "0xc",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Cycles total of 2 uops are executed on all po=
+rts and Reservation Station was not empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.2_PORTS_UTIL",
+         "PublicDescription": "Counts cycles during which a total of 2 uops=
+ were executed on all ports and Reservation Station (RS) was not empty.",
+@@ -644,6 +708,7 @@
+     },
+     {
+         "BriefDescription": "Cycles total of 3 uops are executed on all po=
+rts and Reservation Station was not empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.3_PORTS_UTIL",
+         "PublicDescription": "Cycles total of 3 uops are executed on all p=
+orts and Reservation Station (RS) was not empty.",
+@@ -653,6 +718,7 @@
+     },
+     {
+         "BriefDescription": "Cycles total of 4 uops are executed on all po=
+rts and Reservation Station was not empty.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.4_PORTS_UTIL",
+         "PublicDescription": "Cycles total of 4 uops are executed on all p=
+orts and Reservation Station (RS) was not empty.",
+@@ -662,6 +728,7 @@
+     },
+     {
+         "BriefDescription": "Execution stalls while memory subsystem has a=
+n outstanding load.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "5",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.BOUND_ON_LOADS",
+@@ -671,6 +738,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where the Store Buffer was full and no=
+ loads caused an execution stall.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "2",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.BOUND_ON_STORES",
+@@ -681,6 +749,7 @@
+     },
+     {
+         "BriefDescription": "Cycles no uop executed while RS was not empty=
+, the SB was not full and there was no outstanding load.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa6",
+         "EventName": "EXE_ACTIVITY.EXE_BOUND_0_PORTS",
+         "PublicDescription": "Number of cycles total of 0 uops executed on=
+ all ports, Reservation Station (RS) was not empty, the Store Buffer (SB) w=
+as not full and there was no outstanding load.",
+@@ -690,6 +759,7 @@
+     },
+     {
+         "BriefDescription": "Instruction decoders utilized in a cycle",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x75",
+         "EventName": "INST_DECODED.DECODERS",
+         "PublicDescription": "Number of decoders utilized in a cycle when =
+the MITE (legacy decode pipeline) fetches instructions.",
+@@ -699,6 +769,7 @@
+     },
+     {
+         "BriefDescription": "Fixed Counter: Counts the number of instructi=
+ons retired",
++        "Counter": "Fixed counter 0",
+         "EventName": "INST_RETIRED.ANY",
+         "PEBS": "1",
+         "SampleAfterValue": "2000003",
+@@ -707,6 +778,7 @@
+     },
+     {
+         "BriefDescription": "Number of instructions retired. Fixed Counter=
+ - architectural event",
++        "Counter": "Fixed counter 0",
+         "EventName": "INST_RETIRED.ANY",
+         "PEBS": "1",
+         "PublicDescription": "Counts the number of X86 instructions retire=
+d - an Architectural PerfMon event. Counting continues during hardware inte=
+rrupts, traps, and inside interrupt handlers. Notes: INST_RETIRED.ANY is co=
+unted by a designated fixed counter freeing up programmable counters to cou=
+nt other events. INST_RETIRED.ANY_P is counted by a programmable counter.",
+@@ -716,14 +788,15 @@
+     },
+     {
+         "BriefDescription": "Counts the number of instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.ANY_P",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Number of instructions retired. General Count=
+er - architectural event",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.ANY_P",
+         "PEBS": "1",
+@@ -733,6 +806,7 @@
+     },
+     {
+         "BriefDescription": "INST_RETIRED.MACRO_FUSED",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.MACRO_FUSED",
+         "PEBS": "1",
+@@ -742,6 +816,7 @@
+     },
+     {
+         "BriefDescription": "Retired NOP instructions.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.NOP",
+         "PEBS": "1",
+@@ -752,6 +827,7 @@
+     },
+     {
+         "BriefDescription": "Precise instruction retired with PEBS precise=
+-distribution",
++        "Counter": "Fixed counter 0",
+         "EventName": "INST_RETIRED.PREC_DIST",
+         "PEBS": "1",
+         "PublicDescription": "A version of INST_RETIRED that allows for a =
+precise distribution of samples across instructions retired. It utilizes th=
+e Precise Distribution of Instructions Retired (PDIR++) feature to fix bias=
+ in how retired instructions get sampled. Use on Fixed Counter 0.",
+@@ -761,6 +837,7 @@
+     },
+     {
+         "BriefDescription": "Iterations of Repeat string retired instructi=
+ons.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc0",
+         "EventName": "INST_RETIRED.REP_ITERATION",
+         "PEBS": "1",
+@@ -769,18 +846,9 @@
+         "UMask": "0x8",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Cycles the Backend cluster is recovering afte=
+r a miss-speculation or a Store Buffer or Load Buffer drain stall.",
+-        "CounterMask": "1",
+-        "EventCode": "0xad",
+-        "EventName": "INT_MISC.ALL_RECOVERY_CYCLES",
+-        "PublicDescription": "Counts cycles the Backend cluster is recover=
+ing after a miss-speculation or a Store Buffer or Load Buffer drain stall."=
+,
+-        "SampleAfterValue": "2000003",
+-        "UMask": "0x3",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Clears speculative count",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0xad",
+@@ -792,6 +860,7 @@
+     },
+     {
+         "BriefDescription": "Counts cycles after recovery from a branch mi=
+sprediction or machine clear till the first uop is issued from the resteere=
+d path.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.CLEAR_RESTEER_CYCLES",
+         "PublicDescription": "Cycles after recovery from a branch mispredi=
+ction or machine clear till the first uop is issued from the resteered path=
+.",
+@@ -799,17 +868,9 @@
+         "UMask": "0x80",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Cycles when Resource Allocation Table (RAT) e=
+xternal stall is sent to Instruction Decode Queue (IDQ) for the thread",
+-        "EventCode": "0xad",
+-        "EventName": "INT_MISC.RAT_STALLS",
+-        "PublicDescription": "This event counts the number of cycles durin=
+g which Resource Allocation Table (RAT) external stall is sent to Instructi=
+on Decode Queue (IDQ) for the current thread. This also includes the cycles=
+ during which the Allocator is serving another thread.",
+-        "SampleAfterValue": "1000003",
+-        "UMask": "0x8",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Core cycles the allocator was stalled due to =
+recovery from earlier clear event for this thread",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.RECOVERY_CYCLES",
+         "PublicDescription": "Counts core cycles when the Resource allocat=
+or was stalled due to recovery from an earlier branch misprediction or mach=
+ine clear event.",
+@@ -819,6 +880,7 @@
+     },
+     {
+         "BriefDescription": "Bubble cycles of BAClear (Unknown Branch).",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.UNKNOWN_BRANCH_CYCLES",
+         "MSRIndex": "0x3F7",
+@@ -829,6 +891,7 @@
+     },
+     {
+         "BriefDescription": "TMA slots where uops got dropped",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xad",
+         "EventName": "INT_MISC.UOP_DROPPING",
+         "PublicDescription": "Estimated number of Top-down Microarchitectu=
+re Analysis slots that got dropped due to non front-end reasons",
+@@ -838,6 +901,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.128BIT",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.128BIT",
+         "SampleAfterValue": "1000003",
+@@ -846,6 +910,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.256BIT",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.256BIT",
+         "SampleAfterValue": "1000003",
+@@ -854,6 +919,7 @@
+     },
+     {
+         "BriefDescription": "integer ADD, SUB, SAD 128-bit vector instruct=
+ions.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.ADD_128",
+         "PublicDescription": "Number of retired integer ADD/SUB (regular o=
+r horizontal), SAD 128-bit vector instructions.",
+@@ -863,6 +929,7 @@
+     },
+     {
+         "BriefDescription": "integer ADD, SUB, SAD 256-bit vector instruct=
+ions.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.ADD_256",
+         "PublicDescription": "Number of retired integer ADD/SUB (regular o=
+r horizontal), SAD 256-bit vector instructions.",
+@@ -872,6 +939,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.MUL_256",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.MUL_256",
+         "SampleAfterValue": "1000003",
+@@ -880,6 +948,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.SHUFFLES",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.SHUFFLES",
+         "SampleAfterValue": "1000003",
+@@ -888,6 +957,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.VNNI_128",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.VNNI_128",
+         "SampleAfterValue": "1000003",
+@@ -896,6 +966,7 @@
+     },
+     {
+         "BriefDescription": "INT_VEC_RETIRED.VNNI_256",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe7",
+         "EventName": "INT_VEC_RETIRED.VNNI_256",
+         "SampleAfterValue": "1000003",
+@@ -904,15 +975,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retired loads that are b=
+locked because it initially appears to be store forward blocked, but subseq=
+uently is shown not to be blocked based on 4K alias check.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x4",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "False dependencies in MOB due to partial comp=
+are on address.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.ADDRESS_ALIAS",
+         "PublicDescription": "Counts the number of times a load got blocke=
+d due to false dependencies in MOB due to partial compare on address.",
+@@ -922,15 +994,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retired loads that are b=
+locked because its address exactly matches an older store whose data is not=
+ ready.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.DATA_UNKNOWN",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "The number of times that split load operation=
+s are temporarily blocked because all resources for handling the split acce=
+sses are in use.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.NO_SR",
+         "PublicDescription": "Counts the number of times that split load o=
+perations are temporarily blocked because all resources for handling the sp=
+lit accesses are in use.",
+@@ -940,15 +1013,16 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retired loads that are b=
+locked because its address partially overlapped with an older store.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.STORE_FORWARD",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Loads blocked due to overlapping with a prece=
+ding store that cannot be forwarded.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x03",
+         "EventName": "LD_BLOCKS.STORE_FORWARD",
+         "PublicDescription": "Counts the number of times where store forwa=
+rding was prevented for a load operation. The most common case is a load bl=
+ocked due to the address of memory access (partially) overlapping with a pr=
+eceding uncompleted store. Note: See the table of not supported store forwa=
+rds in the Optimization Guide.",
+@@ -956,8 +1030,19 @@
+         "UMask": "0x82",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the number of demand load dispatches t=
+hat hit L1D fill buffer (FB) allocated for software prefetch.",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x4c",
++        "EventName": "LOAD_HIT_PREFETCH.SWPF",
++        "PublicDescription": "Counts all not software-prefetch load dispat=
+ches that hit the fill buffer (FB) allocated for the software prefetch. It =
+can also be incremented by some lock instructions. So it should only be use=
+d with profiling so that the locks can be excluded by ASM (Assembly File) i=
+nspection of the nearby instructions.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x1",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Cycles Uops delivered by the LSD, but didn't =
+come from the decoder.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xa8",
+         "EventName": "LSD.CYCLES_ACTIVE",
+@@ -968,6 +1053,7 @@
+     },
+     {
+         "BriefDescription": "Cycles optimal number of Uops delivered by th=
+e LSD, but did not come from the decoder.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "6",
+         "EventCode": "0xa8",
+         "EventName": "LSD.CYCLES_OK",
+@@ -978,6 +1064,7 @@
+     },
+     {
+         "BriefDescription": "Number of Uops delivered by the LSD.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa8",
+         "EventName": "LSD.UOPS",
+         "PublicDescription": "Counts the number of uops delivered to the b=
+ack-end by the LSD(Loop Stream Detector).",
+@@ -985,8 +1072,17 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
++    {
++        "BriefDescription": "Counts the total number of machine clears for=
+ any reason including, but not limited to, memory ordering, memory disambig=
+uation, SMC, and FP assist.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.ANY",
++        "SampleAfterValue": "20003",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Number of machine clears (nukes) of any type.=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EdgeDetect": "1",
+         "EventCode": "0xc3",
+@@ -998,14 +1094,25 @@
+     },
+     {
+         "BriefDescription": "Counts the number of machine clears due to me=
+mory ordering in which an internal load passes an older store within the sa=
+me CPU.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.DISAMBIGUATION",
+         "SampleAfterValue": "20003",
+         "UMask": "0x8",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Counts the number of machines clears due to m=
+emory renaming.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xc3",
++        "EventName": "MACHINE_CLEARS.MRN_NUKE",
++        "SampleAfterValue": "1000003",
++        "UMask": "0x80",
++        "Unit": "cpu_atom"
++    },
+     {
+         "BriefDescription": "Counts the number of machine clears due to a =
+page fault.  Counts both I-Side and D-Side (Loads/Stores) page faults.  A p=
+age fault occurs when either the page is not present, or an access violatio=
+n occurs.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.PAGE_FAULT",
+         "SampleAfterValue": "20003",
+@@ -1014,6 +1121,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of machine clears that flus=
+h the pipeline and restart the machine with the use of microcode due to SMC=
+, MEMORY_ORDERING, FP_ASSISTS, PAGE_FAULT, DISAMBIGUATION, and FPC_VIRTUAL_=
+TRAP.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.SLOW",
+         "SampleAfterValue": "20003",
+@@ -1022,6 +1130,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of machine clears due to pr=
+ogram modifying data (self modifying code) within 1K of a recently fetched =
+code page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.SMC",
+         "SampleAfterValue": "20003",
+@@ -1030,6 +1139,7 @@
+     },
+     {
+         "BriefDescription": "Self-modifying code (SMC) detected.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc3",
+         "EventName": "MACHINE_CLEARS.SMC",
+         "PublicDescription": "Counts self-modifying code (SMC) detected, w=
+hich causes a machine clear.",
+@@ -1039,6 +1149,7 @@
+     },
+     {
+         "BriefDescription": "LFENCE instructions retired",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe0",
+         "EventName": "MISC2_RETIRED.LFENCE",
+         "PublicDescription": "number of LFENCE retired instructions",
+@@ -1048,15 +1159,26 @@
+     },
+     {
+         "BriefDescription": "Counts the number of Last Branch Record (LBR)=
+ entries. Requires LBRs to be enabled and configured in IA32_LBR_CTL. [This=
+ event is alias to LBR_INSERTS.ANY]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xe4",
+         "EventName": "MISC_RETIRED.LBR_INSERTS",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
++    {
++        "BriefDescription": "Increments whenever there is an update to the=
+ LBR array.",
++        "Counter": "0,1,2,3,4,5,6,7",
++        "EventCode": "0xcc",
++        "EventName": "MISC_RETIRED.LBR_INSERTS",
++        "PublicDescription": "Increments when an entry is added to the Las=
+t Branch Record (LBR) array (or removed from the array in case of RETURNs i=
+n call stack mode). The event requires LBR enable via IA32_DEBUGCTL MSR and=
+ branch type selection via MSR_LBR_SELECT.",
++        "SampleAfterValue": "100003",
++        "UMask": "0x20",
++        "Unit": "cpu_core"
++    },
+     {
+         "BriefDescription": "Counts cycles where the pipeline is stalled d=
+ue to serializing operations.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa2",
+         "EventName": "RESOURCE_STALLS.SCOREBOARD",
+         "SampleAfterValue": "100003",
+@@ -1065,6 +1187,7 @@
+     },
+     {
+         "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that were not consumed by the back-end pipeline due to lack of bac=
+k-end resources, as a result of memory subsystem delays, execution units li=
+mitations, or other conditions.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa4",
+         "EventName": "TOPDOWN.BACKEND_BOUND_SLOTS",
+         "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that were not consumed by the back-end pipeline due to lack of ba=
+ck-end resources, as a result of memory subsystem delays, execution units l=
+imitations, or other conditions. The count is distributed among unhalted lo=
+gical processors (hyper-threads) who share the same physical core, in proce=
+ssors that support Intel Hyper-Threading Technology. Software can use this =
+event as the numerator for the Backend Bound metric (or top-level category)=
+ of the Top-down Microarchitecture Analysis method.",
+@@ -1074,6 +1197,7 @@
+     },
+     {
+         "BriefDescription": "TMA slots wasted due to incorrect speculation=
+s.",
++        "Counter": "0",
+         "EventCode": "0xa4",
+         "EventName": "TOPDOWN.BAD_SPEC_SLOTS",
+         "PublicDescription": "Number of slots of TMA method that were wast=
+ed due to incorrect speculation. It covers all types of control-flow or dat=
+a-related mis-speculations.",
+@@ -1083,6 +1207,7 @@
+     },
+     {
+         "BriefDescription": "TMA slots wasted due to incorrect speculation=
+ by branch mispredictions",
++        "Counter": "0",
+         "EventCode": "0xa4",
+         "EventName": "TOPDOWN.BR_MISPREDICT_SLOTS",
+         "PublicDescription": "Number of TMA slots that were wasted due to =
+incorrect speculation by (any type of) branch mispredictions. This event es=
+timates number of speculative operations that were issued but not retired a=
+s well as the out-of-order engine recovery past a branch misprediction.",
+@@ -1092,6 +1217,7 @@
+     },
+     {
+         "BriefDescription": "TOPDOWN.MEMORY_BOUND_SLOTS",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa4",
+         "EventName": "TOPDOWN.MEMORY_BOUND_SLOTS",
+         "SampleAfterValue": "10000003",
+@@ -1100,6 +1226,7 @@
+     },
+     {
+         "BriefDescription": "TMA slots available for an unhalted logical p=
+rocessor. Fixed counter - architectural event",
++        "Counter": "Fixed counter 3",
+         "EventName": "TOPDOWN.SLOTS",
+         "PublicDescription": "Number of available slots for an unhalted lo=
+gical processor. The event increments by machine-width of the narrowest pip=
+eline as employed by the Top-down Microarchitecture Analysis method (TMA). =
+The count is distributed among unhalted logical processors (hyper-threads) =
+who share the same physical core. Software can use this event as the denomi=
+nator for the top-level metrics of the TMA method. This architectural event=
+ is counted on a designated fixed counter (Fixed Counter 3).",
+         "SampleAfterValue": "10000003",
+@@ -1108,6 +1235,7 @@
+     },
+     {
+         "BriefDescription": "TMA slots available for an unhalted logical p=
+rocessor. General counter - architectural event",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xa4",
+         "EventName": "TOPDOWN.SLOTS_P",
+         "PublicDescription": "Counts the number of available slots for an =
+unhalted logical processor. The event increments by machine-width of the na=
+rrowest pipeline as employed by the Top-down Microarchitecture Analysis met=
+hod. The count is distributed among unhalted logical processors (hyper-thre=
+ads) who share the same physical core.",
+@@ -1117,6 +1245,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear. [This event is alias to TOPDOWN_BAD_SPECULATION=
+.ALL_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.ALL",
+         "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear. =
+[This event is alias to TOPDOWN_BAD_SPECULATION.ALL_P]",
+@@ -1125,6 +1254,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots that were no=
+t consumed by the backend because allocation is stalled due to a mispredict=
+ed jump or a machine clear. [This event is alias to TOPDOWN_BAD_SPECULATION=
+.ALL]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.ALL_P",
+         "PublicDescription": "Counts the total number of issue slots that =
+were not consumed by the backend because allocation is stalled due to a mis=
+predicted jump or a machine clear. Only issue slots wasted due to fast nuke=
+s such as memory ordering nukes are counted. Other nukes are not accounted =
+for. Counts all issue slots blocked during this recovery window, including =
+relevant microcode flows, and while uops are not yet available in the instr=
+uction queue (IQ) or until an FE_BOUND event occurs besides OTHER and CISC.=
+ Also includes the issue slots that were consumed by the backend but were t=
+hrown away because they were younger than the mispredict or machine clear. =
+[This event is alias to TOPDOWN_BAD_SPECULATION.ALL]",
+@@ -1133,6 +1263,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to Fast Nukes such as  Memory Ord=
+ering Machine clears and MRN nukes",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.FASTNUKE",
+         "SampleAfterValue": "1000003",
+@@ -1141,6 +1272,7 @@
+     },
+     {
+         "BriefDescription": "Counts the total number of issue slots that w=
+ere not consumed by the backend because allocation is stalled due to a mach=
+ine clear (nuke) of any kind including memory ordering and memory disambigu=
+ation.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.MACHINE_CLEARS",
+         "SampleAfterValue": "1000003",
+@@ -1149,6 +1281,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to Branch Mispredict",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.MISPREDICT",
+         "SampleAfterValue": "1000003",
+@@ -1157,6 +1290,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to a machine clear (nuke).",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x73",
+         "EventName": "TOPDOWN_BAD_SPECULATION.NUKE",
+         "SampleAfterValue": "1000003",
+@@ -1165,6 +1299,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls [This event is alias to TOPDOWN_BE_BOUND.ALL_P]=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.ALL",
+         "SampleAfterValue": "1000003",
+@@ -1172,6 +1307,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to due to certain allocation rest=
+rictions",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.ALLOC_RESTRICTIONS",
+         "SampleAfterValue": "1000003",
+@@ -1180,6 +1316,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to backend stalls [This event is alias to TOPDOWN_BE_BOUND.ALL]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.ALL_P",
+         "SampleAfterValue": "1000003",
+@@ -1187,6 +1324,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to memory reservation stall (sche=
+duler not being able to accept another uop).  This could be caused by RSV f=
+ull or load/store buffer block.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.MEM_SCHEDULER",
+         "SampleAfterValue": "1000003",
+@@ -1195,6 +1333,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to IEC and FPC RAT stalls - which=
+ can be due to the FIQ and IEC reservation station stall (integer, FP and S=
+IMD scheduler not being able to accept another uop. )",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.NON_MEM_SCHEDULER",
+         "SampleAfterValue": "1000003",
+@@ -1203,6 +1342,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to mrbl stall.  A 'marble' refers=
+ to a physical register file entry, also known as the physical destination =
+(PDST).",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.REGISTER",
+         "SampleAfterValue": "1000003",
+@@ -1211,6 +1351,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to ROB full",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.REORDER_BUFFER",
+         "SampleAfterValue": "1000003",
+@@ -1219,6 +1360,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not consumed by the backend due to iq/jeu scoreboards or ms scb",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x74",
+         "EventName": "TOPDOWN_BE_BOUND.SERIALIZATION",
+         "SampleAfterValue": "1000003",
+@@ -1227,6 +1369,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls [This event is alias to TOPDOWN_FE_BOUND.ALL_=
+P]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ALL",
+         "SampleAfterValue": "1000003",
+@@ -1234,6 +1377,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of retirement slots not con=
+sumed due to front end stalls [This event is alias to TOPDOWN_FE_BOUND.ALL]=
+",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ALL_P",
+         "SampleAfterValue": "1000003",
+@@ -1241,6 +1385,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to BAClear",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.BRANCH_DETECT",
+         "SampleAfterValue": "1000003",
+@@ -1249,6 +1394,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to BTClear",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.BRANCH_RESTEER",
+         "SampleAfterValue": "1000003",
+@@ -1257,6 +1403,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to ms",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.CISC",
+         "SampleAfterValue": "1000003",
+@@ -1265,6 +1412,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to decode stall",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.DECODE",
+         "SampleAfterValue": "1000003",
+@@ -1273,6 +1421,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to frontend bandwidth restricti=
+ons due to decode, predecode, cisc, and other limitations.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.FRONTEND_BANDWIDTH",
+         "SampleAfterValue": "1000003",
+@@ -1281,6 +1430,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to latency related stalls inclu=
+ding BACLEARs, BTCLEARs, ITLB misses, and ICache misses.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.FRONTEND_LATENCY",
+         "SampleAfterValue": "1000003",
+@@ -1289,6 +1439,7 @@
+     },
+     {
+         "BriefDescription": "This event is deprecated. [This event is alia=
+s to TOPDOWN_FE_BOUND.ITLB_MISS]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "Deprecated": "1",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ITLB",
+@@ -1298,6 +1449,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to itlb miss [This event is ali=
+as to TOPDOWN_FE_BOUND.ITLB]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.ITLB_MISS",
+         "SampleAfterValue": "1000003",
+@@ -1306,6 +1458,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend that do not categorize into any oth=
+er common frontend stall",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.OTHER",
+         "SampleAfterValue": "1000003",
+@@ -1314,6 +1467,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of issue slots every cycle =
+that were not delivered by the frontend due to predecode wrong",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x71",
+         "EventName": "TOPDOWN_FE_BOUND.PREDECODE",
+         "SampleAfterValue": "1000003",
+@@ -1321,23 +1475,24 @@
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL [This event is alias to TOPDOWN_RETIRING.AL=
+L_P]",
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s. [This event is alias to TOPDOWN_RETIRING.ALL_P]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x72",
+         "EventName": "TOPDOWN_RETIRING.ALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "Unit": "cpu_atom"
+     },
+     {
+-        "BriefDescription": "Counts the number of consumed retirement slot=
+s.  Similar to UOPS_RETIRED.ALL [This event is alias to TOPDOWN_RETIRING.AL=
+L]",
++        "BriefDescription": "Counts the number of consumed retirement slot=
+s. [This event is alias to TOPDOWN_RETIRING.ALL]",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x72",
+         "EventName": "TOPDOWN_RETIRING.ALL_P",
+-        "PEBS": "1",
+         "SampleAfterValue": "1000003",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Number of non dec-by-all uops decoded by deco=
+der",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x76",
+         "EventName": "UOPS_DECODED.DEC0_UOPS",
+         "PublicDescription": "This event counts the number of not dec-by-a=
+ll uops decoded by decoder 0.",
+@@ -1347,6 +1502,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on port 0",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_0",
+         "PublicDescription": "Number of uops dispatch to execution  port 0=
+.",
+@@ -1356,6 +1512,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on port 1",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_1",
+         "PublicDescription": "Number of uops dispatch to execution  port 1=
+.",
+@@ -1365,6 +1522,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on ports 2, 3 and 10",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_2_3_10",
+         "PublicDescription": "Number of uops dispatch to execution ports 2=
+, 3 and 10",
+@@ -1374,6 +1532,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on ports 4 and 9",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_4_9",
+         "PublicDescription": "Number of uops dispatch to execution ports 4=
+ and 9",
+@@ -1383,6 +1542,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on ports 5 and 11",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_5_11",
+         "PublicDescription": "Number of uops dispatch to execution ports 5=
+ and 11",
+@@ -1392,6 +1552,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on port 6",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_6",
+         "PublicDescription": "Number of uops dispatch to execution  port 6=
+.",
+@@ -1401,6 +1562,7 @@
+     },
+     {
+         "BriefDescription": "Uops executed on ports 7 and 8",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb2",
+         "EventName": "UOPS_DISPATCHED.PORT_7_8",
+         "PublicDescription": "Number of uops dispatch to execution  ports =
+7 and 8.",
+@@ -1410,6 +1572,7 @@
+     },
+     {
+         "BriefDescription": "Number of uops executed on the core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CORE",
+         "PublicDescription": "Counts the number of uops executed from any =
+thread.",
+@@ -1419,6 +1582,7 @@
+     },
+     {
+         "BriefDescription": "Cycles at least 1 micro-op is executed from a=
+ny thread on physical core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CORE_CYCLES_GE_1",
+@@ -1429,6 +1593,7 @@
+     },
+     {
+         "BriefDescription": "Cycles at least 2 micro-op is executed from a=
+ny thread on physical core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "2",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CORE_CYCLES_GE_2",
+@@ -1439,6 +1604,7 @@
+     },
+     {
+         "BriefDescription": "Cycles at least 3 micro-op is executed from a=
+ny thread on physical core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "3",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CORE_CYCLES_GE_3",
+@@ -1449,6 +1615,7 @@
+     },
+     {
+         "BriefDescription": "Cycles at least 4 micro-op is executed from a=
+ny thread on physical core.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "4",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CORE_CYCLES_GE_4",
+@@ -1459,6 +1626,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where at least 1 uop was executed per-=
+thread",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CYCLES_GE_1",
+@@ -1469,6 +1637,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where at least 2 uops were executed pe=
+r-thread",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "2",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CYCLES_GE_2",
+@@ -1479,6 +1648,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where at least 3 uops were executed pe=
+r-thread",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "3",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CYCLES_GE_3",
+@@ -1489,6 +1659,7 @@
+     },
+     {
+         "BriefDescription": "Cycles where at least 4 uops were executed pe=
+r-thread",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "4",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.CYCLES_GE_4",
+@@ -1499,6 +1670,7 @@
+     },
+     {
+         "BriefDescription": "Counts number of cycles no uops were dispatch=
+ed to be executed on this thread.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.STALLS",
+@@ -1510,6 +1682,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of uops to be executed per-=
+thread each cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.THREAD",
+         "SampleAfterValue": "2000003",
+@@ -1518,6 +1691,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of x87 uops dispatched.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xb1",
+         "EventName": "UOPS_EXECUTED.X87",
+         "PublicDescription": "Counts the number of x87 uops executed.",
+@@ -1527,6 +1701,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of uops issued by the front=
+ end every cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x0e",
+         "EventName": "UOPS_ISSUED.ANY",
+         "PublicDescription": "Counts the number of uops issued by the fron=
+t end every cycle. When 4-uops are requested and only 2-uops are delivered,=
+ the event counts 2.  Uops_issued correlates to the number of ROB entries. =
+ If uop takes 2 ROB slots it counts as 2 uops_issued.",
+@@ -1535,6 +1710,7 @@
+     },
+     {
+         "BriefDescription": "Uops that RAT issues to RS",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xae",
+         "EventName": "UOPS_ISSUED.ANY",
+         "PublicDescription": "Counts the number of uops that the Resource =
+Allocation Table (RAT) issues to the Reservation Station (RS).",
+@@ -1544,6 +1720,7 @@
+     },
+     {
+         "BriefDescription": "UOPS_ISSUED.CYCLES",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xae",
+         "EventName": "UOPS_ISSUED.CYCLES",
+@@ -1551,27 +1728,17 @@
+         "UMask": "0x1",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Cycles when RAT does not issue Uops to RS for=
+ the thread",
+-        "CounterMask": "1",
+-        "EventCode": "0xae",
+-        "EventName": "UOPS_ISSUED.STALLS",
+-        "Invert": "1",
+-        "PublicDescription": "Counts cycles during which the Resource Allo=
+cation Table (RAT) does not issue any Uops to the reservation station (RS) =
+for the current thread.",
+-        "SampleAfterValue": "1000003",
+-        "UMask": "0x1",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Counts the total number of uops retired.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.ALL",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Cycles with retired uop(s).",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.CYCLES",
+@@ -1582,6 +1749,7 @@
+     },
+     {
+         "BriefDescription": "Retired uops except the last uop of each inst=
+ruction.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.HEAVY",
+         "PublicDescription": "Counts the number of retired micro-operation=
+s (uops) except the last uop of each instruction. An instruction that is de=
+coded into less than two uops does not contribute to the count.",
+@@ -1591,24 +1759,25 @@
+     },
+     {
+         "BriefDescription": "Counts the number of integer divide uops reti=
+red.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.IDIV",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x10",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "Counts the number of uops that are from the c=
+omplex flows issued by the micro-sequencer (MS).  This includes uops from f=
+lows due to complex instructions, faults, assists, and inserted flows.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.MS",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x1",
+         "Unit": "cpu_atom"
+     },
+     {
+         "BriefDescription": "UOPS_RETIRED.MS",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.MS",
+         "MSRIndex": "0x3F7",
+@@ -1619,6 +1788,7 @@
+     },
+     {
+         "BriefDescription": "This event counts a subset of the Topdown Slo=
+ts event that are utilized by operations that eventually get retired (commi=
+tted) by the processor pipeline. Usually, this event positively correlates =
+with higher performance  for example, as measured by the instructions-per-c=
+ycle metric.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.SLOTS",
+         "PublicDescription": "This event counts a subset of the Topdown Sl=
+ots event that are utilized by operations that eventually get retired (comm=
+itted) by the processor pipeline. Usually, this event positively correlates=
+ with higher performance  for example, as measured by the instructions-per-=
+cycle metric. Software can use this event as the numerator for the Retiring=
+ metric (or top-level category) of the Top-down Microarchitecture Analysis =
+method.",
+@@ -1628,6 +1798,7 @@
+     },
+     {
+         "BriefDescription": "Cycles without actually retired uops.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "CounterMask": "1",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.STALLS",
+@@ -1637,22 +1808,11 @@
+         "UMask": "0x2",
+         "Unit": "cpu_core"
+     },
+-    {
+-        "BriefDescription": "Cycles with less than 10 actually retired uop=
+s.",
+-        "CounterMask": "10",
+-        "EventCode": "0xc2",
+-        "EventName": "UOPS_RETIRED.TOTAL_CYCLES",
+-        "Invert": "1",
+-        "PublicDescription": "Counts the number of cycles using always tru=
+e condition (uops_ret < 16) applied to non PEBS uops retired event.",
+-        "SampleAfterValue": "1000003",
+-        "UMask": "0x2",
+-        "Unit": "cpu_core"
+-    },
+     {
+         "BriefDescription": "Counts the number of x87 uops retired, includ=
+es those in ms flows",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0xc2",
+         "EventName": "UOPS_RETIRED.X87",
+-        "PEBS": "1",
+         "SampleAfterValue": "2000003",
+         "UMask": "0x2",
+         "Unit": "cpu_atom"
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json b/=
+tools/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json
+index 188843be4caf..f294852dfbe6 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/uncore-cache.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Number of all entries allocated. Includes als=
+o retries.",
++        "Counter": "0,1",
+         "EventCode": "0x35",
+         "EventName": "UNC_HAC_CBO_TOR_ALLOCATION.ALL",
+         "PerPkg": "1",
+@@ -9,6 +10,7 @@
+     },
+     {
+         "BriefDescription": "Asserted on coherent DRD + DRdPref  allocatio=
+ns into the queue. Cacheable only",
++        "Counter": "0,1",
+         "EventCode": "0x35",
+         "EventName": "UNC_HAC_CBO_TOR_ALLOCATION.DRD",
+         "PerPkg": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.=
+json b/tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.json
+index 901d8510f90f..a2f4386a8379 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/uncore-interconnect.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Each cycle counts number of coherent reads pe=
+nding on data return from memory controller that were issued by any core.",
++        "Counter": "0",
          "EventCode": "0x85",
-         "EventName": "ITLB_MISSES.ANY",
-         "SampleAfterValue": "200000",
-@@ -64,6 +73,7 @@
+         "EventName": "UNC_ARB_DAT_OCCUPANCY.RD",
+         "PerPkg": "1",
+@@ -9,14 +10,17 @@
      },
      {
-         "BriefDescription": "ITLB miss page walks",
+         "BriefDescription": "Number of entries allocated. Account for Any =
+type: e.g. Snoop,  etc.",
++        "Counter": "0,1",
+         "EventCode": "0x84",
+         "EventName": "UNC_HAC_ARB_COH_TRK_REQUESTS.ALL",
++        "Experimental": "1",
+         "PerPkg": "1",
+         "UMask": "0x1",
+         "Unit": "HAC_ARB"
+     },
+     {
+         "BriefDescription": "Number of all coherent Data Read entries. Doe=
+sn't include prefetches",
++        "Counter": "0,1",
+         "EventCode": "0x81",
+         "EventName": "UNC_HAC_ARB_REQ_TRK_REQUEST.DRD",
+         "PerPkg": "1",
+@@ -25,6 +29,7 @@
+     },
+     {
+         "BriefDescription": "Number of all CMI transactions",
++        "Counter": "0,1",
+         "EventCode": "0x8A",
+         "EventName": "UNC_HAC_ARB_TRANSACTIONS.ALL",
+         "PerPkg": "1",
+@@ -33,6 +38,7 @@
+     },
+     {
+         "BriefDescription": "Number of all CMI reads",
++        "Counter": "0,1",
+         "EventCode": "0x8A",
+         "EventName": "UNC_HAC_ARB_TRANSACTIONS.READS",
+         "PerPkg": "1",
+@@ -41,6 +47,7 @@
+     },
+     {
+         "BriefDescription": "Number of all CMI writes not including Mflush=
+",
++        "Counter": "0,1",
+         "EventCode": "0x8A",
+         "EventName": "UNC_HAC_ARB_TRANSACTIONS.WRITES",
+         "PerPkg": "1",
+@@ -49,6 +56,7 @@
+     },
+     {
+         "BriefDescription": "Total number of all outgoing entries allocate=
+d. Accounts for Coherent and non-coherent traffic.",
++        "Counter": "0,1",
+         "EventCode": "0x81",
+         "EventName": "UNC_HAC_ARB_TRK_REQUESTS.ALL",
+         "PerPkg": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-memory.json b=
+/tools/perf/pmu-events/arch/x86/meteorlake/uncore-memory.json
+index c9d248d1042e..783a4f7fd05b 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-memory.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/uncore-memory.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Counts every CAS read command sent from the M=
+emory Controller 0 to DRAM (sum of all channels).",
++        "Counter": "0",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC0_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+@@ -10,6 +11,7 @@
+     },
+     {
+         "BriefDescription": "Counts every read and write request entering =
+the Memory Controller 0.",
++        "Counter": "2",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC0_TOTAL_REQCOUNT_FREERUN",
+         "PerPkg": "1",
+@@ -19,6 +21,7 @@
+     },
+     {
+         "BriefDescription": "Counts every CAS write command sent from the =
+Memory Controller 0 to DRAM (sum of all channels).",
++        "Counter": "1",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC0_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+@@ -28,6 +31,7 @@
+     },
+     {
+         "BriefDescription": "Counts every CAS read command sent from the M=
+emory Controller 1 to DRAM (sum of all channels).",
++        "Counter": "3",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC1_RDCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+@@ -37,6 +41,7 @@
+     },
+     {
+         "BriefDescription": "Counts every read and write request entering =
+the Memory Controller 1.",
++        "Counter": "5",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC1_TOTAL_REQCOUNT_FREERUN",
+         "PerPkg": "1",
+@@ -46,6 +51,7 @@
+     },
+     {
+         "BriefDescription": "Counts every CAS write command sent from the =
+Memory Controller 1 to DRAM (sum of all channels).",
++        "Counter": "4",
+         "EventCode": "0xff",
+         "EventName": "UNC_MC1_WRCAS_COUNT_FREERUN",
+         "PerPkg": "1",
+@@ -55,6 +61,7 @@
+     },
+     {
+         "BriefDescription": "ACT command for a read request sent to DRAM",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x24",
+         "EventName": "UNC_M_ACT_COUNT_RD",
+         "PerPkg": "1",
+@@ -62,6 +69,7 @@
+     },
+     {
+         "BriefDescription": "ACT command sent to DRAM",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x26",
+         "EventName": "UNC_M_ACT_COUNT_TOTAL",
+         "PerPkg": "1",
+@@ -69,6 +77,7 @@
+     },
+     {
+         "BriefDescription": "ACT command for a write request sent to DRAM"=
+,
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x25",
+         "EventName": "UNC_M_ACT_COUNT_WR",
+         "PerPkg": "1",
+@@ -76,6 +85,7 @@
+     },
+     {
+         "BriefDescription": "Read CAS command sent to DRAM",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x22",
+         "EventName": "UNC_M_CAS_COUNT_RD",
+         "PerPkg": "1",
+@@ -83,6 +93,7 @@
+     },
+     {
+         "BriefDescription": "Write CAS command sent to DRAM",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x23",
+         "EventName": "UNC_M_CAS_COUNT_WR",
+         "PerPkg": "1",
+@@ -90,6 +101,7 @@
+     },
+     {
+         "BriefDescription": "PRE command sent to DRAM due to page table id=
+le timer expiration",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x28",
+         "EventName": "UNC_M_PRE_COUNT_IDLE",
+         "PerPkg": "1",
+@@ -97,6 +109,7 @@
+     },
+     {
+         "BriefDescription": "PRE command sent to DRAM for a read/write req=
+uest",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x27",
+         "EventName": "UNC_M_PRE_COUNT_PAGE_MISS",
+         "PerPkg": "1",
+@@ -104,6 +117,7 @@
+     },
+     {
+         "BriefDescription": "Number of bytes read from DRAM, in 32B chunks=
+. Counter increments by 1 after receiving 32B chunk data.",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x3A",
+         "EventName": "UNC_M_RD_DATA",
+         "PerPkg": "1",
+@@ -111,6 +125,7 @@
+     },
+     {
+         "BriefDescription": "Total number of read and write byte transfers=
+ to/from DRAM, in 32B chunks. Counter increments by 1 after sending or rece=
+iving 32B chunk data.",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x3C",
+         "EventName": "UNC_M_TOTAL_DATA",
+         "PerPkg": "1",
+@@ -118,6 +133,7 @@
+     },
+     {
+         "BriefDescription": "Number of bytes written to DRAM, in 32B chunk=
+s. Counter increments by 1 after sending 32B chunk data.",
++        "Counter": "0,1,2,3,4",
+         "EventCode": "0x3B",
+         "EventName": "UNC_M_WR_DATA",
+         "PerPkg": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-other.json b/=
+tools/perf/pmu-events/arch/x86/meteorlake/uncore-other.json
+index 2af92e43b28a..1ac5b5ef8094 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/uncore-other.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/uncore-other.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "This 48-bit fixed counter counts the UCLK cyc=
+les.",
++        "Counter": "FIXED",
+         "EventCode": "0xff",
+         "EventName": "UNC_CLOCK.SOCKET",
+         "PerPkg": "1",
+diff --git a/tools/perf/pmu-events/arch/x86/meteorlake/virtual-memory.json =
+b/tools/perf/pmu-events/arch/x86/meteorlake/virtual-memory.json
+index 55798e64c58a..305b96b26a4e 100644
+--- a/tools/perf/pmu-events/arch/x86/meteorlake/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/meteorlake/virtual-memory.json
+@@ -1,6 +1,7 @@
+ [
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to a demand load that did not start a page walk. A=
+ccounts for all page sizes. Will result in a DTLB write from STLB.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x08",
+         "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
+         "SampleAfterValue": "200003",
+@@ -9,6 +10,7 @@
+     },
+     {
+         "BriefDescription": "Loads that miss the DTLB and hit the STLB.",
 +        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.STLB_HIT",
+         "PublicDescription": "Counts loads that miss the DTLB (Data TLB) a=
+nd hit the STLB (Second level TLB).",
+@@ -18,6 +20,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when at least one PMH is busy with a p=
+age walk for a demand load.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_ACTIVE",
+@@ -28,6 +31,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x08",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
+         "SampleAfterValue": "200003",
+@@ -36,6 +40,7 @@
+     },
+     {
+         "BriefDescription": "Load miss in all TLB levels causes a page wal=
+k that completes. (All page sizes)",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED",
+         "PublicDescription": "Counts completed page walks  (all page sizes=
+) caused by demand data loads. This implies it missed in the DTLB and furth=
+er levels of TLB. The page walk can end with or without a fault.",
+@@ -45,6 +50,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data loa=
+d to a 1G page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_1G",
+         "PublicDescription": "Counts completed page walks  (1G sizes) caus=
+ed by demand data loads. This implies address translations missed in the DT=
+LB and further levels of TLB. The page walk can end with or without a fault=
+.",
+@@ -54,6 +60,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to a 2M or 4M page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x08",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to loads (including SW prefetches) whose address translations missed in a=
+ll Translation Lookaside Buffer (TLB) levels and were mapped to 2M or 4M pa=
+ges. Includes page walks that page fault.",
+@@ -63,6 +70,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data loa=
+d to a 2M/4M page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts completed page walks  (2M/4M sizes) c=
+aused by demand data loads. This implies address translations missed in the=
+ DTLB and further levels of TLB. The page walk can end with or without a fa=
+ult.",
+@@ -72,6 +80,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to load DTLB misses to a 4K page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x08",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to loads (including SW prefetches) whose address translations missed in a=
+ll Translation Lookaside Buffer (TLB) levels and were mapped to 4K pages. I=
+ncludes page walks that page fault.",
+@@ -81,6 +90,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data loa=
+d to a 4K page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts completed page walks  (4K sizes) caus=
+ed by demand data loads. This implies address translations missed in the DT=
+LB and further levels of TLB. The page walk can end with or without a fault=
+.",
+@@ -90,6 +100,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks outstanding f=
+or Loads (demand or SW prefetch) in PMH every cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x08",
+         "EventName": "DTLB_LOAD_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+for Loads (demand or SW prefetch) in PMH every cycle.  A PMH page walk is o=
+utstanding from page walk start till PMH becomes idle again (ready to serve=
+ next walk). Includes EPT-walk intervals.",
+@@ -99,6 +110,7 @@
+     },
+     {
+         "BriefDescription": "Number of page walks outstanding for a demand=
+ load in the PMH each cycle.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x12",
+         "EventName": "DTLB_LOAD_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+for a demand load in the PMH (Page Miss Handler) each cycle.",
+@@ -108,6 +120,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to stores that did not start a page walk. Accounts=
+ for all pages sizes. Will result in a DTLB write from STLB.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x49",
+         "EventName": "DTLB_STORE_MISSES.STLB_HIT",
+         "SampleAfterValue": "2000003",
+@@ -116,6 +129,7 @@
+     },
+     {
+         "BriefDescription": "Stores that miss the DTLB and hit the STLB.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.STLB_HIT",
+         "PublicDescription": "Counts stores that miss the DTLB (Data TLB) =
+and hit the STLB (2nd Level TLB).",
+@@ -125,6 +139,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when at least one PMH is busy with a p=
+age walk for a store.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_ACTIVE",
+@@ -135,6 +150,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to a 1G page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x49",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
+         "SampleAfterValue": "2000003",
+@@ -143,6 +159,7 @@
+     },
+     {
+         "BriefDescription": "Store misses in all TLB levels causes a page =
+walk that completes. (All page sizes)",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED",
+         "PublicDescription": "Counts completed page walks  (all page sizes=
+) caused by demand data stores. This implies it missed in the DTLB and furt=
+her levels of TLB. The page walk can end with or without a fault.",
+@@ -152,6 +169,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data sto=
+re to a 1G page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_1G",
+         "PublicDescription": "Counts completed page walks  (1G sizes) caus=
+ed by demand data stores. This implies address translations missed in the D=
+TLB and further levels of TLB. The page walk can end with or without a faul=
+t.",
+@@ -161,6 +179,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to a 2M or 4M page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x49",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to 2M or 4M pages.  Includes page walks=
+ that page fault.",
+@@ -170,6 +189,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data sto=
+re to a 2M/4M page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts completed page walks  (2M/4M sizes) c=
+aused by demand data stores. This implies address translations missed in th=
+e DTLB and further levels of TLB. The page walk can end with or without a f=
+ault.",
+@@ -179,6 +199,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to store DTLB misses to a 4K page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x49",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to stores whose address translations missed in all Translation Lookaside =
+Buffer (TLB) levels and were mapped to 4K pages.  Includes page walks that =
+page fault.",
+@@ -188,6 +209,7 @@
+     },
+     {
+         "BriefDescription": "Page walks completed due to a demand data sto=
+re to a 4K page.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts completed page walks  (4K sizes) caus=
+ed by demand data stores. This implies address translations missed in the D=
+TLB and further levels of TLB. The page walk can end with or without a faul=
+t.",
+@@ -197,6 +219,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks outstanding i=
+n the page miss handler (PMH) for stores every cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x49",
+         "EventName": "DTLB_STORE_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+in the page miss handler (PMH) for stores every cycle. A PMH page walk is o=
+utstanding from page walk start till PMH becomes idle again (ready to serve=
+ next walk). Includes EPT-walk intervals.",
+@@ -206,6 +229,7 @@
+     },
+     {
+         "BriefDescription": "Number of page walks outstanding for a store =
+in the PMH each cycle.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x13",
+         "EventName": "DTLB_STORE_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+for a store in the PMH (Page Miss Handler) each cycle.",
+@@ -215,6 +239,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks initiated by =
+a instruction fetch that missed the first and second level TLBs.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.MISS_CAUSED_WALK",
+         "SampleAfterValue": "1000003",
+@@ -223,6 +248,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of first level TLB misses b=
+ut second level hits due to an instruction fetch that did not start a page =
+walk. Account for all pages sizes. Will result in an ITLB write from STLB."=
+,
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.STLB_HIT",
+         "SampleAfterValue": "2000003",
+@@ -231,6 +257,7 @@
+     },
+     {
+         "BriefDescription": "Instruction fetch requests that miss the ITLB=
+ and hit the STLB.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.STLB_HIT",
+         "PublicDescription": "Counts instruction fetch requests that miss =
+the ITLB (Instruction TLB) and hit the STLB (Second-level TLB).",
+@@ -240,6 +267,7 @@
+     },
+     {
+         "BriefDescription": "Cycles when at least one PMH is busy with a p=
+age walk for code (instruction fetch) request.",
++        "Counter": "0,1,2,3",
+         "CounterMask": "1",
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.WALK_ACTIVE",
+@@ -250,6 +278,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to any page size.",
++        "Counter": "0,1,2,3,4,5,6,7",
          "EventCode": "0x85",
          "EventName": "ITLB_MISSES.WALK_COMPLETED",
-         "SampleAfterValue": "200000",
-@@ -71,6 +81,7 @@
+         "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to any page size.  Include=
+s page walks that page fault.",
+@@ -259,6 +288,7 @@
      },
      {
-         "BriefDescription": "Retired instructions that missed the ITLB (Precise Event)",
+         "BriefDescription": "Code miss in all TLB levels causes a page wal=
+k that completes. (All page sizes)",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC8",
-         "EventName": "ITLB_MISS_RETIRED",
-         "PEBS": "1",
-@@ -79,6 +90,7 @@
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.WALK_COMPLETED",
+         "PublicDescription": "Counts completed page walks (all page sizes)=
+ caused by a code fetch. This implies it missed in the ITLB (Instruction TL=
+B) and further levels of TLB. The page walk can end with or without a fault=
+.",
+@@ -268,6 +298,7 @@
      },
      {
-         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
-+        "Counter": "0,1,2,3",
-         "EventCode": "0xCB",
-         "EventName": "MEM_LOAD_RETIRED.DTLB_MISS",
-         "PEBS": "1",
-@@ -87,6 +99,7 @@
+         "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to a 2M or 4M page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to 2M or 4M pages.  Includ=
+es page walks that page fault.",
+@@ -277,6 +308,7 @@
      },
      {
-         "BriefDescription": "Retired stores that miss the DTLB (Precise Event)",
+         "BriefDescription": "Code miss in all TLB levels causes a page wal=
+k that completes. (2M/4M)",
 +        "Counter": "0,1,2,3",
-         "EventCode": "0xC",
-         "EventName": "MEM_STORE_RETIRED.DTLB_MISS",
-         "PEBS": "1",
--- 
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.WALK_COMPLETED_2M_4M",
+         "PublicDescription": "Counts completed page walks (2M/4M page size=
+s) caused by a code fetch. This implies it missed in the ITLB (Instruction =
+TLB) and further levels of TLB. The page walk can end with or without a fau=
+lt.",
+@@ -286,6 +318,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks completed due=
+ to instruction fetch misses to a 4K page.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts the number of page walks completed du=
+e to instruction fetches whose address translations missed in all Translati=
+on Lookaside Buffer (TLB) levels and were mapped to 4K pages.  Includes pag=
+e walks that page fault.",
+@@ -295,6 +328,7 @@
+     },
+     {
+         "BriefDescription": "Code miss in all TLB levels causes a page wal=
+k that completes. (4K)",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.WALK_COMPLETED_4K",
+         "PublicDescription": "Counts completed page walks (4K page sizes) =
+caused by a code fetch. This implies it missed in the ITLB (Instruction TLB=
+) and further levels of TLB. The page walk can end with or without a fault.=
+",
+@@ -304,6 +338,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of page walks outstanding f=
+or iside in PMH every cycle.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x85",
+         "EventName": "ITLB_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+for iside in PMH every cycle.  A PMH page walk is outstanding from page wal=
+k start till PMH becomes idle again (ready to serve next walk). Includes EP=
+T-walk intervals.  Walks could be counted by edge detecting on this event, =
+but would count restarted suspended walks.",
+@@ -313,6 +348,7 @@
+     },
+     {
+         "BriefDescription": "Number of page walks outstanding for an outst=
+anding code request in the PMH each cycle.",
++        "Counter": "0,1,2,3",
+         "EventCode": "0x11",
+         "EventName": "ITLB_MISSES.WALK_PENDING",
+         "PublicDescription": "Counts the number of page walks outstanding =
+for an outstanding code (instruction fetch) request in the PMH (Page Miss H=
+andler) each cycle.",
+@@ -322,6 +358,7 @@
+     },
+     {
+         "BriefDescription": "Counts the number of cycles that the head (ol=
+dest load) of the load buffer and retirement are both stalled due to a DTLB=
+ miss.",
++        "Counter": "0,1,2,3,4,5,6,7",
+         "EventCode": "0x05",
+         "EventName": "LD_HEAD.DTLB_MISS_AT_RET",
+         "SampleAfterValue": "1000003",
+--=20
 2.45.2.627.g7a2c4fd464-goog
 
