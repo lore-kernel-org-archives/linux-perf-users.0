@@ -1,291 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A1B1AD491;
-	Thu, 20 Jun 2024 13:59:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7643F1ACE94;
+	Thu, 20 Jun 2024 15:06:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718891951; cv=none; b=FJQy3YPdETOF6N9pqfOGZ4e3tDn+xr4K0s0qfi8YwCEuDqJ4ayIwzILktiTkulMj1eV6VYy/ecotDQ9H8cPb+O8r81VHM5Qiif2BnzN1qEmAm91xEIAFrL/9Ng+B4iJmvmt04tOmGw/2cLPc2xGJXM9IZbqown3VQ9KLCNSWr40=
+	t=1718896007; cv=none; b=qcEaMv3sXNPlW6Hhb8ha0KmRjvG9pJU1Jle+fUvxeox6mpKuozXqstyf4F+PiHqd50GDRSAwyDLQ/6u2+Gy2HAS35o2RJqIjwKLO5LxldebfJubeVwogiv+ZizR0Z0nyiiYpJNcnq+nrwfg2BKASRtmvm7vfc0cH7fJUvXkQ7eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718891951; c=relaxed/simple;
-	bh=lksZ8VJcoa6+dcROVfr/oRLVM94ZSm0pB9WTINjKpNo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BBDfUa6gAoA07wo8hNuzaV7lt+4jmaxD4Y4m0SYjGHnGOFdbJnxDlWrPdsopYQaG8XHqAMG2H/f4meZHv2lG8T8SkOVKuSMXb2UCqgLfmWZ2oJ9K6cklRjRega6eYNiamuY9t4gJNoM9bY7vOBhMriTVluYPo/cbYrmkVsAPkz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xmromx6Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718896007; c=relaxed/simple;
+	bh=ed/xn1fU6JjQTrIiEBjf8dyuhmUDQHuxYh4o0DIqoMU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Nl+Je2mQqNBjithmm+Mj6zkyQ0q/9yW2TdWALBob0I9/dTozAt28wdkeWL6rgniq7zn6Lm3lfFLuwMsCPlh0va/bfh3eNqfbUAuy8yybPiQ0yS+1sNl+LwSYHbemkwW41v9+4HKYQWfzT8vF2EdCml28jFwvQjWkCeKVM4J2H/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dqvxlAHk; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xmromx6Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 526B1C2BD10;
-	Thu, 20 Jun 2024 13:59:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718891950;
-	bh=lksZ8VJcoa6+dcROVfr/oRLVM94ZSm0pB9WTINjKpNo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Xmromx6QAZ3vslIX5ixykSUVpHJ1uLzJucSNzzSsJl/ZfMXTbu8za/IWNKHQwM3WJ
-	 yZqGuoYZzySC473QzftNYk2pK+uV+uWLA49p53qFNQLjRn54OdIvHnxrB2d6/eM5za
-	 2YLLTWHVzv2hYHdjbrCIAWlexNq4HGoOxmMoD7VgEwtHVSdc1yUBO3ecO8Hp4IKVu7
-	 cuJ3Fbwedvmjl7pl9LkXfWNwzULvcPOj2g8z7Nw3jts5Yl7phbSzbTkFEXgnrC8nlU
-	 H/HxxW2isGWfqpxm0afQZ8dSR7tI6O855QF4cJoPpwugxbD5yqm+QNQR1f15KoU8XR
-	 v8ngJ1eXYq0qg==
-Date: Thu, 20 Jun 2024 10:59:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ravi Bangoria <ravi.bangoria@amd.com>
-Cc: namhyung@kernel.org, irogers@google.com, peterz@infradead.org,
-	mingo@redhat.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, kan.liang@linux.intel.com,
-	yangjihong1@huawei.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, sandipan.das@amd.com,
-	ananth.narayan@amd.com, santosh.shukla@amd.com
-Subject: Re: [PATCH v2] perf doc: Add AMD IBS usage document
-Message-ID: <ZnQ1q-EGKA1qCHdh@x1>
-References: <20240620054104.815-1-ravi.bangoria@amd.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dqvxlAHk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1718896006; x=1750432006;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ed/xn1fU6JjQTrIiEBjf8dyuhmUDQHuxYh4o0DIqoMU=;
+  b=dqvxlAHkIZAAqnt5kKtZ6HdR+4RwZXmXVDz6OODj+am2TnYYEslKKp3i
+   69H4HdIP0C5em8/D0IVRBQzDqIrLQtN3knjFZ3vLdyVg31aSUJl3YLviA
+   /ByHSnGKhlQI6wO0hlvGn0afefcjmCz6cddPiTPxqe2YO610xBMjKHqHh
+   ulSoHESForfeUxgWooSqYgvu2iHV5XnEB+wwrBTPbLMEE1/o62knCRRN4
+   vwJ3f/JvnxYw4xkJD12QgcV61OWYgFgY5H9gu8JE7MwpHYcEGWGxOb1tc
+   pfNWmw785MvXNUL59V0CQqtyEc5+f+P4qH8oXVN4WpSFDkOJcf99mASd2
+   g==;
+X-CSE-ConnectionGUID: a18qrktbQFyLxbWVjfTVPQ==
+X-CSE-MsgGUID: A2ocguk1SreAne1EaC2VwQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11108"; a="27008525"
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="27008525"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 08:06:13 -0700
+X-CSE-ConnectionGUID: VWRy/8V3RGehZ8d4gd5lJQ==
+X-CSE-MsgGUID: WdHXzhEnTba4SjG473V2qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,252,1712646000"; 
+   d="scan'208";a="42385046"
+Received: from bmurrell-mobl.amr.corp.intel.com (HELO [10.124.221.1]) ([10.124.221.1])
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 08:06:09 -0700
+Message-ID: <1b99017a-6964-46de-ba3a-09552e7cf072@intel.com>
+Date: Thu, 20 Jun 2024 08:06:11 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620054104.815-1-ravi.bangoria@amd.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/9] Add CPU-type to topology
+To: Brice Goglin <brice.goglin@gmail.com>,
+ srinivas pandruvada <srinivas.pandruvada@linux.intel.com>,
+ Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+ linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Andrew Cooper <andrew.cooper3@citrix.com>
+References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
+ <8d757ea3-87a3-4663-ac76-66b04e33e6b3@gmail.com>
+ <20240619015315.3ei5f6rovzdnxovo@desk>
+ <bc75ff55161671e4470849ed51baa547f619889d.camel@linux.intel.com>
+ <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <0021f5f2-67c5-4b20-939d-48c9c1c60cdb@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 20, 2024 at 05:41:04AM +0000, Ravi Bangoria wrote:
-> Add a perf man page document that describes how to exploit AMD IBS with
-> Linux perf. Brief intro about IBS and simple one-liner examples will help
-> naive users to get started. This is not meant to be an exhaustive IBS
-> guide. User should refer latest AMD64 Architecture Programmer's Manual
-> for detailed description of IBS.
+On 6/19/24 14:25, Brice Goglin wrote:
+> Good point. From this patch series, I understand that the current kernel
+> side doesn't care about these different E-cores. However it might be
+> good to expose them as different cpu-types (or better name) to userspace ?
 > 
-> Usage:
-> 
->   $ man perf-amd-ibs
+> Something like type 0 = P-core, 1 = normal E-core, 2 = low power E-core ?
 
-Reviewed-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+The first priority here is getting the kernel to comprehend these types
+for architectural purposes: when there are functional differences
+between the cores.
 
-- Arnaldo
- 
-> Signed-off-by: Ravi Bangoria <ravi.bangoria@amd.com>
-> ---
-> v1: https://lore.kernel.org/r/20240619092234.1165-1-ravi.bangoria@amd.com
-> v1->v2:
->  - Describe core PMU to IBS event forwarding
->  - Describe perf mem and perf c2c in brief
->  - Add example of IBS register raw dump
->  - Describe rand_en flag of IBS Fetch PMU
-> 
->  tools/perf/Documentation/perf-amd-ibs.txt | 189 ++++++++++++++++++++++
->  tools/perf/Documentation/perf.txt         |   3 +-
->  2 files changed, 191 insertions(+), 1 deletion(-)
->  create mode 100644 tools/perf/Documentation/perf-amd-ibs.txt
-> 
-> diff --git a/tools/perf/Documentation/perf-amd-ibs.txt b/tools/perf/Documentation/perf-amd-ibs.txt
-> new file mode 100644
-> index 000000000000..ce8ac51d4ce2
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-amd-ibs.txt
-> @@ -0,0 +1,189 @@
-> +perf-amd-ibs(1)
-> +===============
-> +
-> +NAME
-> +----
-> +perf-amd-ibs - Support for AMD Instruction-Based Sampling (IBS) with perf tool
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf record' -e ibs_op//
-> +'perf record' -e ibs_fetch//
-> +
-> +DESCRIPTION
-> +-----------
-> +
-> +Instruction-Based Sampling (IBS) provides precise Instruction Pointer (IP)
-> +profiling support on AMD platforms. IBS has two independent components: IBS
-> +Op and IBS Fetch. IBS Op sampling provides information about instruction
-> +execution (micro-op execution to be precise) with details like d-cache
-> +hit/miss, d-TLB hit/miss, cache miss latency, load/store data source, branch
-> +behavior etc. IBS Fetch sampling provides information about instruction fetch
-> +with details like i-cache hit/miss, i-TLB hit/miss, fetch latency etc. IBS is
-> +per-smt-thread i.e. each SMT hardware thread contains standalone IBS units.
-> +
-> +Both, IBS Op and IBS Fetch, are exposed as PMUs by Linux and can be exploited
-> +using the Linux perf utility. The following files will be created at boot time
-> +if IBS is supported by the hardware and kernel.
-> +
-> +  /sys/bus/event_source/devices/ibs_op/
-> +  /sys/bus/event_source/devices/ibs_fetch/
-> +
-> +IBS Op PMU supports two events: cycles and micro ops. IBS Fetch PMU supports
-> +one event: fetch ops.
-> +
-> +IBS PMUs do not have user/kernel filtering capability and thus it requires
-> +CAP_SYS_ADMIN or CAP_PERFMON privilege.
-> +
-> +IBS VS. REGULAR CORE PMU
-> +------------------------
-> +
-> +IBS gives samples with precise IP, i.e. the IP recorded with IBS sample has
-> +no skid. Whereas the IP recorded by regular core PMU will have some skid
-> +(sample was generated at IP X but perf would record it at IP X+n). Hence,
-> +regular core PMU might not help for profiling with instruction level
-> +precision. Further, IBS provides additional information about the sample in
-> +question. On the other hand, regular core PMU has it's own advantages like
-> +plethora of events, counting mode (less interference), up to 6 parallel
-> +counters, event grouping support, filtering capabilities etc.
-> +
-> +Three regular core PMU events are internally forwarded to IBS Op PMU when
-> +precise_ip attribute is set:
-> +
-> +	-e cpu-cycles:p becomes -e ibs_op//
-> +	-e r076:p becomes -e ibs_op//
-> +	-e r0C1:p becomes -e ibs_op/cnt_ctl=1/
-> +
-> +EXAMPLES
-> +--------
-> +
-> +IBS Op PMU
-> +~~~~~~~~~~
-> +
-> +System-wide profile, cycles event, sampling period: 100000
-> +
-> +	# perf record -e ibs_op// -c 100000 -a
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling period: 100000
-> +
-> +	# perf record -e ibs_op// -c 100000 -C 10
-> +
-> +Per-cpu profile (cpu10), cycles event, sampling freq: 1000
-> +
-> +	# perf record -e ibs_op// -F 1000 -C 10
-> +
-> +System-wide profile, uOps event, sampling period: 100000
-> +
-> +	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -a
-> +
-> +Same command, but also capture IBS register raw dump along with perf sample:
-> +
-> +	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -a --raw-samples
-> +
-> +System-wide profile, uOps event, sampling period: 100000, L3MissOnly (Zen4 onward)
-> +
-> +	# perf record -e ibs_op/cnt_ctl=1,l3missonly=1/ -c 100000 -a
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -p 1234
-> +
-> +Per process(upstream v6.2 onward), uOps event, sampling period: 100000
-> +
-> +	# perf record -e ibs_op/cnt_ctl=1/ -c 100000 -- ls
-> +
-> +To analyse recorded profile in aggregate mode
-> +
-> +	# perf report
-> +	/* Select a line and press 'a' to drill down at instruction level. */
-> +
-> +To go over each sample
-> +
-> +	# perf script
-> +
-> +Raw dump of IBS registers when profiled with --raw-samples
-> +
-> +	# perf report -D
-> +	/* Look for PERF_RECORD_SAMPLE */
-> +
-> +	Example register raw dump:
-> +
-> +	ibs_op_ctl:     000002c30006186a MaxCnt    100000 L3MissOnly 0 En 1
-> +		Val 1 CntCtl 0=cycles CurCnt       707
-> +	IbsOpRip:       ffffffff8204aea7
-> +	ibs_op_data:    0000010002550001 CompToRetCtr     1 TagToRetCtr   597
-> +		BrnRet 0  RipInvalid 0 BrnFuse 0 Microcode 1
-> +	ibs_op_data2:   0000000000000013 RmtNode 1 DataSrc 3=DRAM
-> +	ibs_op_data3:   0000000031960092 LdOp 0 StOp 1 DcL1TlbMiss 0
-> +		DcL2TlbMiss 0 DcL1TlbHit2M 1 DcL1TlbHit1G 0 DcL2TlbHit2M 0
-> +		DcMiss 1 DcMisAcc 0 DcWcMemAcc 0 DcUcMemAcc 0 DcLockedOp 0
-> +		DcMissNoMabAlloc 0 DcLinAddrValid 1 DcPhyAddrValid 1
-> +		DcL2TlbHit1G 0 L2Miss 1 SwPf 0 OpMemWidth 32 bytes
-> +		OpDcMissOpenMemReqs 12 DcMissLat     0 TlbRefillLat     0
-> +	IbsDCLinAd:     ff110008a5398920
-> +	IbsDCPhysAd:    00000008a5398920
-> +
-> +IBS applied in a real world usecase
-> +
-> +	~90% regression was observed in tbench with specific scheduler hint
-> +	which was counter intuitive. IBS profile of good and bad run captured
-> +	using perf helped in identifying exact cause of the problem:
-> +
-> +	https://lore.kernel.org/r/20220921063638.2489-1-kprateek.nayak@amd.com
-> +
-> +IBS Fetch PMU
-> +~~~~~~~~~~~~~
-> +
-> +Similar commands can be used with Fetch PMU as well.
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000
-> +
-> +	# perf record -e ibs_fetch// -c 100000 -a
-> +
-> +System-wide profile, fetch ops event, sampling period: 100000, Random enable
-> +
-> +	# perf record -e ibs_fetch/rand_en=1/ -c 100000 -a
-> +
-> +	Random enable adds small degree of variability to sample period. This
-> +	helps in cases like long running loops where PMU is tagging the same
-> +	instruction over and over because of fixed sample period.
-> +
-> +etc.
-> +
-> +PERF MEM AND PERF C2C
-> +---------------------
-> +
-> +perf mem is a memory access profiler tool and perf c2c is a shared data
-> +cacheline analyser tool. Both of them internally uses IBS Op PMU on AMD.
-> +Below is a simple example of the perf mem tool.
-> +
-> +	# perf mem record -c 100000 -- make
-> +	# perf mem report
-> +
-> +A normal perf mem report output will provide detailed memory access profile.
-> +However, it can also be aggregated based on output fields. For example:
-> +
-> +	# perf mem report -F mem,sample,snoop
-> +	Samples: 3M of event 'ibs_op//', Event count (approx.): 23524876
-> +	Memory access                                 Samples  Snoop
-> +	N/A                                           1903343  N/A
-> +	L1 hit                                        1056754  N/A
-> +	L2 hit                                          75231  N/A
-> +	L3 hit                                           9496  HitM
-> +	L3 hit                                           2270  N/A
-> +	RAM hit                                          8710  N/A
-> +	Remote node, same socket RAM hit                 3241  N/A
-> +	Remote core, same node Any cache hit             1572  HitM
-> +	Remote core, same node Any cache hit              514  N/A
-> +	Remote node, same socket Any cache hit           1216  HitM
-> +	Remote node, same socket Any cache hit            350  N/A
-> +	Uncached hit                                       18  N/A
-> +
-> +Please refer to their man page for more detail.
-> +
-> +SEE ALSO
-> +--------
-> +
-> +linkperf:perf-record[1], linkperf:perf-script[1], linkperf:perf-report[1],
-> +linkperf:perf-mem[1], linkperf:perf-c2c[1]
-> diff --git a/tools/perf/Documentation/perf.txt b/tools/perf/Documentation/perf.txt
-> index 09f516f3fdfb..cbcc2e4d557e 100644
-> --- a/tools/perf/Documentation/perf.txt
-> +++ b/tools/perf/Documentation/perf.txt
-> @@ -82,7 +82,8 @@ linkperf:perf-stat[1], linkperf:perf-top[1],
->  linkperf:perf-record[1], linkperf:perf-report[1],
->  linkperf:perf-list[1]
->  
-> -linkperf:perf-annotate[1],linkperf:perf-archive[1],linkperf:perf-arm-spe[1],
-> +linkperf:perf-amd-ibs[1], linkperf:perf-annotate[1],
-> +linkperf:perf-archive[1], linkperf:perf-arm-spe[1],
->  linkperf:perf-bench[1], linkperf:perf-buildid-cache[1],
->  linkperf:perf-buildid-list[1], linkperf:perf-c2c[1],
->  linkperf:perf-config[1], linkperf:perf-data[1], linkperf:perf-diff[1],
-> -- 
-> 2.45.2
+Let's get that in place, first.  Then we can discuss the possibility of
+new ABI in the area.
+
+Did the ARM folks ever do a sysfs ABI for big.LITTLE?  I don't see
+anything obvious in Documentation/ABI/testing/sysfs-devices-system-cpu.
+
+
