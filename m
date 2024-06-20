@@ -1,61 +1,73 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241E6EDB
-	for <linux-perf-users@vger.kernel.org>; Thu, 20 Jun 2024 08:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 158E450288;
+	Thu, 20 Jun 2024 09:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718872668; cv=none; b=djJum5mB+kI9pKlgFz2ySDYd+JzC228+O0+8SVUfXm/KBeVQ8gyau5m3SMyCkhHB1eSpoCiPzjoKaaHcttV81Gbqx7e805ILZORHHn8kcoQ9fjOGPTXX1WFQL5mQIEGtt+n+7IrNFdhBucn4mhsNWmXS7svbgeMTKPRi3AWVY5M=
+	t=1718874395; cv=none; b=jUEgoiRSjonQzs1nPwfmB9LMc4crgZ/QIm6tQC3vDwT/noM7SmxOwbHDCGPhpwTPvcF67rfxcGADu3/xwUAOVAaarJ0OFglqCvLHlnY3erv/QjhxEnMpeBi3xKnCvcifpcE4Iek9NwYj8RZGFDUDSdmh7ejhLfErOO6taJ9IjVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718872668; c=relaxed/simple;
-	bh=E2Ju9fp2WTW1iR8HjEuO5MAtycedFCSY0cqdWH009NQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=em7P1KRdVA6fuFvfKz0614w5phuXARvWXEpuPuquJsd2R3ZwpxJpZ6xk0CkHBmO4st60mlwh30eRPO/5Uj05phgmU3fE0OxBNMBlDnZmYVmyLNGfz51kdLATxRrIsfMuFb+3xf3U1EDO7QW8X2jw4GQYxtDiT1ARZXfZ4CgxHrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LAbMTxU3; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1718874395; c=relaxed/simple;
+	bh=a/KjCti6R+6JZx72P0n0Q+rTyMBKjYD4Fta1C7UK/Dg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YfF2ou/LL0XBII4bdrs/uibszvqhJIWMzqZ1KOpQwSkQjAcu6dp73JznNdaU3mNVgQBu0LUtwn7N7iguV94XenedJ9emdBCAgUNRev4WCRNlGxq7++bpfLUyGA5Pzq9EiPiplF10N9XBep9m5cE2u9DAg2WUqhxF6xigHe3QDjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jir7Gk5k; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LAbMTxU3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1718872666;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SToOFzrIKhKXuIiPgWYwTICjEcUL7XQf34Si3tl9FLg=;
-	b=LAbMTxU3oqIYgmiedcSu9Z98Hf6qWuBIv3Z9sFrv7deYPVZ6sHyl46lVSl5KZFM5e4Uy3f
-	wpioiJmR6sfZWEb09ZG39qkmG2omXz65BIXhPr+aqURCk3HuqktnutpWNY2R/lVtfGv0yf
-	IsrwbMJvEypcm+l9ZyMfzpghIx4zapY=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-159-et_w7DOJNQurUU5Y8eXvqw-1; Thu,
- 20 Jun 2024 04:37:42 -0400
-X-MC-Unique: et_w7DOJNQurUU5Y8eXvqw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8358519560B2;
-	Thu, 20 Jun 2024 08:37:40 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.26])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1FD841956087;
-	Thu, 20 Jun 2024 08:37:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu, 20 Jun 2024 10:36:08 +0200 (CEST)
-Date: Thu, 20 Jun 2024 10:36:02 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-	ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-	nathan@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	mark.rutland@arm.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jir7Gk5k"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-57d07f07a27so593974a12.3;
+        Thu, 20 Jun 2024 02:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718874392; x=1719479192; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=78uUzESMOdQTWvfYAcQTyK+lGm1Zw7Sc2BeqHShFKEI=;
+        b=Jir7Gk5kNfhCYEt0NirnD6d/ESSK/L9UOjKDGvprzRHr9T91XncFkO6OjOP0KpuduG
+         PZ7I1ejlB88Q/5XktVtR2GD6pF4VOdPxWNam6Ej71r1uyhHh44Wnn5Z6qLHZRQN5oZfA
+         4Sax6s/8geTXeVmvqebpLMaxB1bvkMvqGyqynReWJUNb6q03rJ+AHAsPmmUEm8wMqaih
+         nhg0yrSvzy+WCHDht6Xy9WUAB1v3heD38D85dm3RJxNTnGq8+FQxjcfm0pdpbZ5TG2ZT
+         EDhO028UdCPprBOQczSMfDZZsRblPxm4mawTyLBM0kXTI6GR17tbEu2UCWg4NqTyc4/b
+         Zygw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718874392; x=1719479192;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=78uUzESMOdQTWvfYAcQTyK+lGm1Zw7Sc2BeqHShFKEI=;
+        b=ppKLu+6yTJZ5/Jd1580MZIGgtd1VPE7yRUUGSsPFS+Uo1J/hPTgKC4fT9+uSVCgzlP
+         wZ65qpd52fAaC92gwLNc3e7w4p/WmZcW91U9usH9defGsG1u7OT2MDzBEiwxb6b01Loh
+         Jqr3ny7uWkudnmB5TIFUhyH9jfpuUFhyGUTZasFN6yraSXNitptAv29obfBr9E3Tmiii
+         iC5F6FbwQpv6RUudC+/hg0FaYB9ZtucIOyPz07Pvb2Jr3xBBlwvLFY0P41sQBVgGG4nw
+         eMqun5JeD6HmqyOZ5QTH9QRDXhN+PozIAKcR0gixQTNIHYOLHOcPADqrUF9UsBe8fY63
+         HkAA==
+X-Forwarded-Encrypted: i=1; AJvYcCUVlHWnd18XYhPg8FiX+JEjdzSpYPj3gjyPnAovSxPtirG68ASGJnQAC2znAsjSsJrKuM8vuknw1HJpgtAFCFnfhP/F+qnobW1OfEUmA0g/Z3IfaVZ5kNQ3R+gj7UmjHz0Yi64x67R2j5uY5VMTqt2+FcSH+qzVkUhkWGRuh8e1SuemWg==
+X-Gm-Message-State: AOJu0Yz0boHNerDZ3NFnW1b27tD7/0WvkMSDy4UlmGvD2kV6jxlO6Nmi
+	aiJBoqqzft6tGYkSSVj3QUJV+mAgkFVSKnnmYl7Lgtd6DrSwAipG
+X-Google-Smtp-Source: AGHT+IGYHPCmAg0EcgWW8sBLz05Oi1dwLaRAw/0OftwpRGxvbdEiRWcysCyM3L2qUl1b/QeM9haRcA==
+X-Received: by 2002:a50:d613:0:b0:579:e7c5:1001 with SMTP id 4fb4d7f45d1cf-57d07e6f4ecmr2570839a12.23.1718874392134;
+        Thu, 20 Jun 2024 02:06:32 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-57d27198948sm45831a12.54.2024.06.20.02.06.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Jun 2024 02:06:31 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Thu, 20 Jun 2024 11:06:29 +0200
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: "Liao, Chang" <liaochang1@huawei.com>, rostedt@goodmis.org,
+	mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+	andrii@kernel.org, nathan@kernel.org, peterz@infradead.org,
+	mingo@redhat.com, mark.rutland@arm.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
 Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
  uretprobe trampoline
-Message-ID: <20240620083602.GB30070@redhat.com>
+Message-ID: <ZnPxFbUJVUQd80hs@krava>
 References: <20240619013411.756995-1-liaochang1@huawei.com>
  <20240619143852.GA24240@redhat.com>
  <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
+ <20240620083602.GB30070@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,32 +76,37 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+In-Reply-To: <20240620083602.GB30070@redhat.com>
 
-On 06/20, Liao, Chang wrote:
->
-> However, when i asm porting uretprobe trampoline to arm64
-> to explore its benefits on that architecture, i discovered the problem that
-> single slot is not large enought for trampoline code.
+On Thu, Jun 20, 2024 at 10:36:02AM +0200, Oleg Nesterov wrote:
+> On 06/20, Liao, Chang wrote:
+> >
+> > However, when i asm porting uretprobe trampoline to arm64
+> > to explore its benefits on that architecture, i discovered the problem that
+> > single slot is not large enought for trampoline code.
 
-Ah, but then I'd suggest to make the changelog more clear. It looks as
-if the problem was introduced by the patch from Jiri. Note that we was
-confused as well ;)
+ah ok, makes sense now.. x86_64 has the slot big enough for the trampoline,
+but arm64 does not
 
-And,
+> 
+> Ah, but then I'd suggest to make the changelog more clear. It looks as
+> if the problem was introduced by the patch from Jiri. Note that we was
+> confused as well ;)
+> 
+> And,
+> 
+> 	+	/* Reserve enough slots for the uretprobe trampoline */
+> 	+	for (slot_nr = 0;
+> 	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
+> 	+	     slot_nr++)
+> 
+> this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
+> I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
+> 
+> And perhaps it would be better to send this change along with
+> uretprobe_trampoline_for_arm64 ?
 
-	+	/* Reserve enough slots for the uretprobe trampoline */
-	+	for (slot_nr = 0;
-	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
-	+	     slot_nr++)
++1, also I'm curious what's the gain on arm64?
 
-this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
-I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
-
-And perhaps it would be better to send this change along with
-uretprobe_trampoline_for_arm64 ?
-
-Oleg.
-
+thanks,
+jirka
