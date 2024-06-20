@@ -1,157 +1,392 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B92BA176FAB;
-	Thu, 20 Jun 2024 08:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44D3D19EED6;
+	Thu, 20 Jun 2024 08:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718870775; cv=none; b=aMGqf/aRRwY7eIW2MPiTWBoZBPEsjStI/P+2G9UEzLwXPIYj5cBNsF7ldZl1P2ZVyChRUylf8oDl5ft9lbZQoAhDg5RNG953kd8QnaP1EbXb96xvQGWuKj69asJxQuI2L2SHJVQUsIrArLe74QG/yR4Q/6DEqjpM7z1l6k/K6q4=
+	t=1718872410; cv=none; b=fleisCbj2M2xSbXBkvSxJQVRJiXRkmhC1IeMAa6nccQwejtMMr/rSW2K/KN0I6gDXqpcGfxKwEdjFG7igpnnx/E1SAZBzMQbMkpb5jS338G+nRtL/QnTGo/hn8kSTQ675khYT5PpAGVOZycJKqfXj4hN8ca1CZQCPbGksqUhsaw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718870775; c=relaxed/simple;
-	bh=khxZuLNnlOBsNJrXTBa58zLjY2vHMddMsycJQQOcWc8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=B/9gr4X0w/T6uIqgU38C9y9ZE/fOSR9q/9QHFeRDr+kcbtUQiw5sNCoUI4K2YMDQer5sy6WyHR3vNJN8VJFZJN1i55Z/6RI2PVSO58Wi8FRJl9mdakP1eq9zGHVIrXTQW18WVcOsMY7J4mCjQ863fOTsKMEUnbhXHodjIx87zgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gmo1romH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gmo1romH"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45K7wguG005744;
-	Thu, 20 Jun 2024 08:06:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	vGuUl/ve6yHgWLHOyONffSjElv0EqPmsEFzjhBZ3SCQ=; b=gmo1romHgQllBoKr
-	VJiI8bL/om79dKtI5qZvVPDUEKJufLs1j7xGx7TGAoONuaIAxBufuTwhHa3qzCVt
-	YH8Au5cqzx+eC9Q5NIOAgebMEnAoaSeutlI0iTKGpUyz1LkbVflWLdjXfPoNlHS3
-	p+9pCFpN5+npoY98a6V7znolIKy6kuxgS5uj9BkgFkucnT2SdwXhdQjuSDjM2z8I
-	hk+EHouqyCKDp/qeuxa+SsbZjPqHX+rtcOIsZ54wHF1+lunA+5Tmw2x/v/EVCYaZ
-	e96Nw14RQPHuVRz5uVC90dC/qBDKJz2JMT46aC+tFLveS1DsiBuO6HEUGc84gvT9
-	Wu+d0w==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yvggs80jv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 08:06:02 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45K76g4a009425;
-	Thu, 20 Jun 2024 08:06:01 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3ysqgn3nsd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Jun 2024 08:06:01 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45K85v1R49742268
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 20 Jun 2024 08:05:59 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D37672004B;
-	Thu, 20 Jun 2024 08:05:57 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B585220043;
-	Thu, 20 Jun 2024 08:05:57 +0000 (GMT)
-Received: from [9.152.212.23] (unknown [9.152.212.23])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 20 Jun 2024 08:05:57 +0000 (GMT)
-Message-ID: <fb82c22e-e72d-4d0b-9e66-29e3975919a4@linux.ibm.com>
-Date: Thu, 20 Jun 2024 10:05:57 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next:master] [perf test] 658a8805cb:
- perf-sanity-tests.perf_annotate_basic_tests.fail
-To: Namhyung Kim <namhyung@kernel.org>,
-        kernel test robot <oliver.sang@intel.com>
-Cc: lkp@intel.com, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <202406181535.eacba363-oliver.sang@intel.com>
- <CAM9d7cgDUQL82ToJN5kXJpdEm0aTEJmU1iuxCwSK5Vhi2jnpPQ@mail.gmail.com>
-Content-Language: en-US
-From: Thomas Richter <tmricht@linux.ibm.com>
-Organization: IBM
-In-Reply-To: <CAM9d7cgDUQL82ToJN5kXJpdEm0aTEJmU1iuxCwSK5Vhi2jnpPQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ZZdbU0iY0_nBJsnT_klbXoAjXM8fo25d
-X-Proofpoint-ORIG-GUID: ZZdbU0iY0_nBJsnT_klbXoAjXM8fo25d
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	s=arc-20240116; t=1718872410; c=relaxed/simple;
+	bh=4sCayta4Xgqg0rpdM1WQ6ZP96jaFXpewsU5omKUbGk8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=M7ioFHrmFaNJ5f/t3zdtn9FzfqbBJ9ry6YYXtwmfN1GqyUko8wbYQ3Mp+E+UpG6ENWv6YICPO7QLnWDGtY5yZlRN0j9UUTzei5rn3wt90SPgqzcjxPJeBbkXN1snqWoF700P5D6L99E7rYfJUKGJJ/jS9A9D5eKqSlGvJjug7Pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BBDBDA7;
+	Thu, 20 Jun 2024 01:33:51 -0700 (PDT)
+Received: from [192.168.1.100] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C169B3F64C;
+	Thu, 20 Jun 2024 01:33:24 -0700 (PDT)
+Message-ID: <b31a73f6-b5fe-4ea8-8259-652b344a4cff@arm.com>
+Date: Thu, 20 Jun 2024 09:33:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-20_04,2024-06-19_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 mlxscore=0
- adultscore=0 bulkscore=0 lowpriorityscore=0 phishscore=0 clxscore=1011
- malwarescore=0 priorityscore=1501 impostorscore=0 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2405170001 definitions=main-2406200056
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases
+ fail when kernel debuginfo is not present
+From: James Clark <james.clark@arm.com>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+ Madhavan Srinivasan <maddy@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Disha Goel <disgoel@linux.vnet.ibm.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>
+References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
+ <588beeaf-2015-40f4-a34b-e36556e20707@arm.com>
+ <DA51C986-34EE-4849-B9C4-DB69E2ECF75C@linux.vnet.ibm.com>
+ <5a0edf86-fe42-41d6-aa9a-8e88c1ad3f4c@arm.com>
+Content-Language: en-US
+In-Reply-To: <5a0edf86-fe42-41d6-aa9a-8e88c1ad3f4c@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/19/24 20:34, Namhyung Kim wrote:
-> Hello,
+
+
+On 18/06/2024 11:44, James Clark wrote:
 > 
-> On Tue, Jun 18, 2024 at 3:54 AM kernel test robot <oliver.sang@intel.com> wrote:
->>
->>
->>
->> Hello,
->>
->> kernel test robot noticed "perf-sanity-tests.perf_annotate_basic_tests.fail" on:
->>
->> commit: 658a8805cb604260ae9f35ae5e50012e3d1ed5e3 ("perf test: Speed up test case 70 annotate basic tests")
->> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>
->> [test failed on linux-next/master 6906a84c482f098d31486df8dc98cead21cce2d0]
->>
->> in testcase: perf-sanity-tests
->> version:
->> with following parameters:
->>
->>         perf_compiler: gcc
->>
->>
->>
->> compiler: gcc-13
->> test machine: 4 threads Intel(R) Core(TM) i5-6500 CPU @ 3.20GHz (Skylake) with 32G memory
->>
->> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>
->>
->> we didn't observed the issue on parent.
->>
->> f5803651b4a4b67d 658a8805cb604260ae9f35ae5e5
->> ---------------- ---------------------------
->>        fail:runs  %reproduction    fail:runs
->>            |             |             |
->>            :6          100%           6:6     perf-sanity-tests.perf_annotate_basic_tests.fail
 > 
-> Hmm.. strange.  The only change in the commit is to save
-> the output of perf annotate into a file.  I'm not sure if it'd affect
-> the test result.  Maybe because of sanitizers..?
-> 
-> Thanks,
-> Namhyung
-> 
-
-Apologies that this patches causes trouble.
-I retried the patch again on my Intel virtual machine and it did succeed.
-I do not know how to help to get this fixed. Please advise.
-
-Thanks a lot
-
->> 0-DAY CI Kernel Test Service
->> https://github.com/intel/lkp-tests/wiki
+> On 17/06/2024 17:47, Athira Rajeev wrote:
 >>
-> -- 
-Thomas Richter, Dept 3303, IBM s390 Linux Development, Boeblingen, Germany
---
-IBM Deutschland Research & Development GmbH
+>>
+>>> On 17 Jun 2024, at 8:30 PM, James Clark <james.clark@arm.com> wrote:
+>>>
+>>>
+>>>
+>>> On 17/06/2024 13:21, Athira Rajeev wrote:
+>>>> Running "perftool-testsuite_probe" fails as below:
+>>>>
+>>>> ./perf test -v "perftool-testsuite_probe"
+>>>> 83: perftool-testsuite_probe  : FAILED
+>>>>
+>>>> There are three fails:
+>>>>
+>>>> 1. Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>>>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+>>>>
+>>>
+>>> On a machine where NO_DEBUGINFO gets set, this one skips for me. But on
+>>> a machine where there _is_ debug info this test still fails.
+>>>
+>>> But in both cases the probe looks like it was added successfully. So I'm
+>>> wondering if this one does need to be skipped, or it's just always
+>>> failing? Do you have this test passing anywhere where there is debug info?
+>>>
+>>> The list command looks like it successfully lists the probe for me in
+>>> both cases, it just doesn't have an address on the end:
+>>>
+>>> perf list 'probe:*'
+>>>
+>>>   probe:inode_permission (on inode_permission)
+>>>
+>>> Does the missing address mean anything or is it just not handled
+>>> properly by the test?
+>>>
+>>> Ironically the machine that _does_ pass the debug info test also prints
+>>> this, but it looks like it still adds and lists the probe correctly:
+>>>
+>>>  perf probe -l probe:*
+>>>
+>>>  Failed to find debug information for address 0xffff80008047ac30
+>>>    probe:inode_permission (on inode_permission)
+>>
+>> Hi James,
+>>
+>> Thanks for checking this patch.
+>>
+>> In environment where kernel is compiled with debuginfo:
+>>
+>> 1) Add probe point
+>>
+>> # ./perf probe --add inode_permission
+>> Added new event:
+>>   probe:inode_permission (on inode_permission)
+>>
+>> You can now use it in all perf tools, such as:
+>>
+>> perf record -e probe:inode_permission -aR sleep 1
+>>
+>>
+>> 2) Check using perf probe -l
+>>
+>> # ./perf probe -l
+>> probe:inode_permission (on inode_permission:2@fs/namei.c)
+>>
+>> With debuginfo, the result has additional info.
+>>  The test looks for matching pattern "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)” in result
+>> where it is expecting "inode_permission:2@fs/namei.c” . The “@fs/namei.c” info needs debuginfo here.
+>>
+> 
+> Hi Athira,
+> 
+> Maybe there is a real bug and this patch is ok to go in and we should leave
+> it as failing. Probe -L shows there is debug info available for inode_permission:
+> 
+>    $ ./perf probe -L inode_permission
+> 
+>   <inode_permission@linux/fs/namei.c:0>
+>       0  int inode_permission(struct mnt_idmap *idmap,
+>                              struct inode *inode, int mask)
+>   ... more source code ...
+> 
+> But probe -l has an error which could be related to the following
+> line not showing the filename details:
+> 
+>   $ ./perf probe -l
+>   
+>   Failed to find debug information for address 0xffff80008047ac30
+>     probe:inode_permission (on inode_permission)
+> 
+> I'm running a clang kernel and sometimes I see issues with debug
+> info or toolchain stuff, that could be the reason.
+> 
+>> The function I am using in patch to check for debuginfo (skip_if_no_debuginfo) is from "tests/shell/lib/probe_vfs_getname.sh"
+>>
+>> skip_if_no_debuginfo() {
+>>         add_probe_vfs_getname -v 2>&1 | grep -E -q "^(Failed to find the path for the kernel|Debuginfo-analysis is not supported)|(file has no debug information)" && return 2
+>>         return 1
+>> }
+>>
+>> So the debuginfo test passes in your case since the log has "Failed to find debug information” which is not present in above grep string. 
+>>
+> 
+> It passes because there is debug info for getname_flags() which is what the
+> debug info check looks for. After some greps and seds it ultimately does this
+> which succeeds:
+> 
+>  $ perf probe "vfs_getname=getname_flags:72 pathname=result->name:string"
+> 
+>  Added new event:
+>     probe:vfs_getname    (on getname_flags:72 with pathname=result->name:string)
+> 
+> "Failed to find debug information for address" is only ever printed
+> with "perf probe -l" when there are probes added. The stderr
+> of that command is never piped into any grep anyway, which is why I
+> see it on the test output.
+> 
+> So "probe -L" is working but "probe -l" isn't. Ultimately it looks like a real
+> issue and we should leave the failure in.
+> 
 
-Vorsitzender des Aufsichtsrats: Wolfgang Wendt
+To avoid confusion, by leave it in I mean this debuginfo patch is ok and
+the failure I'm seeing is caused by something else.
 
-Geschäftsführung: David Faller
+Reviewed-by: James Clark <james.clark@arm.com>
 
-Sitz der Gesellschaft: Böblingen / Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+>> James,
+>>
+>> Only “perf probe -l” subtest fails with debuginfo enabled or other two subtests as well? Can you also share result on how other two subtests behaves ? 
+>>
+>> 1. Fail 2 :
+>>    perf probe -nf --max-probes=512 -a 'vfs_* $params’
+>>   
+>>
+>> 2. Fail 3 :
+>>   perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+>>
+> 
+> Here's the full output:
+> 
+> $ sudo ./perf test -vvv "testsuite_probe"
+>  84: perftool-testsuite_probe:
+> --- start ---
+> test child forked, pid 4872
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: 
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: -a
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: --add
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf list
+> Failed to find debug information for address 0xffff80008047ac30
+> Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf probe -l (output regexp parsing)
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe (should NOT be listed)
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding probe
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: first probe adding
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (without force)
+> Failed to find debug information for address 0xffff80008047ac30
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (with force)
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: wildcard adding support
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: non-existing variable
+> -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
+> Regexp not found: "^\[\s+perf\s+record:\s+Woken up [0-9\.]+ times? to write data\s+\].*$"
+> Regexp not found: "^\[\s+perf\s+record:\s+Captured and wrote [0-9\.]+\s*MB\s+(?:[\w\+\.-]*(?:(?:[\w\+\.-]+)?(?:\/[\w\+\.-]+)+)?\/)?perf\.data(?:\.\d+)?\s*\(~?[0-9\.]+ samples\)\s+\].*$"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: function with retval :: record (command exitcode + output regexp parsing)
+> zero-sized data (/tmp/perftool-testsuite_probe.VMU/perf_probe/perf.data), nothing to do!
+> Regexp not found: "\s*cat\s+[0-9\.]+\s+\[[0-9\.]+\]\s+[0-9\.]+:\s+probe:inode_permission\w*:\s+\([0-9A-Fa-f]+\s+<\-\s+[0-9A-Fa-f]+\)\s+arg1=[0-9A-Fa-f]+"
+> -- [ FAIL ] -- perf_probe :: test_adding_kernel :: function argument probing :: script (command exitcode + output regexp parsing)
+> ## [ FAIL ] ## perf_probe :: test_adding_kernel SUMMARY :: 3 failures found
+> ---- end(-1) ----
+>  84: perftool-testsuite_probe                                        : FAILED!
+> 
+> 
+>>
+>> Also since you mentioned this gets skipped when debuginfo is not enabled, curious to know what is debuginfo message from your setup with debuginfo disabled.
+>>
+> 
+>   $ sudo ./perf probe -L getname_flags
+>   Failed to find the path for the kernel: Invalid ELF file
+>     Error: Failed to show lines.
+> 
+>> Thanks again for checking.
+>>
+>> Athira
+>>
+>>>
+>>
+>>
+>>>
+>>>> 2. Regexp not found: "probe:vfs_mknod"
+>>>>   Regexp not found: "probe:vfs_create"
+>>>>   Regexp not found: "probe:vfs_rmdir"
+>>>>   Regexp not found: "probe:vfs_link"
+>>>>   Regexp not found: "probe:vfs_write"
+>>>>   -- [ FAIL ] -- perf_probe :: test_adding_kernel :: wildcard adding support (command exitcode + output regexp parsing)
+>>>>
+>>>> 3. Regexp not found: "Failed to find"
+>>>>   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>>>>   Regexp not found: "in this function|at this address"
+>>>>   Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+>>>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+>>>>
+>>>> These three tests depends on kernel debug info.
+>>>> 1. Fail 1 expects file name along with probe which needs debuginfo
+>>>> 2. Fail 2 :
+>>>>    perf probe -nf --max-probes=512 -a 'vfs_* $params'
+>>>>    Debuginfo-analysis is not supported.
+>>>>     Error: Failed to add events.
+>>>>
+>>>> 3. Fail 3 :
+>>>>   perf probe 'vfs_read somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64'
+>>>>   Debuginfo-analysis is not supported.
+>>>>   Error: Failed to add events.
+>>>>
+>>>> There is already helper function skip_if_no_debuginfo in
+>>>> lib/probe_vfs_getname.sh which does perf probe and returns
+>>>> "2" if debug info is not present. Use the skip_if_no_debuginfo
+>>>> function and skip only the three tests which needs debuginfo
+>>>> based on the result.
+>>>>
+>>>> With the patch:
+>>>>
+>>>>    83: perftool-testsuite_probe:
+>>>>   --- start ---
+>>>>   test child forked, pid 3927
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission ::
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: -a
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: adding probe inode_permission :: --add
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing added probe :: perf list
+>>>>   Regexp not found: "\s*probe:inode_permission(?:_\d+)?\s+\(on inode_permission(?:[:\+][0-9A-Fa-f]+)?@.+\)"
+>>>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using added probe
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: deleting added probe
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: listing removed probe (should NOT be listed)
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: dry run :: adding probe
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: first probe adding
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (without force)
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: force-adding probes :: second probe adding (with force)
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: using doubled probe
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: removing multiple probes
+>>>>   Regexp not found: "probe:vfs_mknod"
+>>>>   Regexp not found: "probe:vfs_create"
+>>>>   Regexp not found: "probe:vfs_rmdir"
+>>>>   Regexp not found: "probe:vfs_link"
+>>>>   Regexp not found: "probe:vfs_write"
+>>>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>>>>   Regexp not found: "Failed to find"
+>>>>   Regexp not found: "somenonexistingrandomstuffwhichisalsoprettylongorevenlongertoexceed64"
+>>>>   Regexp not found: "in this function|at this address"
+>>>>   Line did not match any pattern: "The /boot/vmlinux file has no debug information."
+>>>>   Line did not match any pattern: "Rebuild with CONFIG_DEBUG_INFO=y, or install an appropriate debuginfo package."
+>>>>   -- [ SKIP ] -- perf_probe :: test_adding_kernel :: 2 2 Skipped due to missing debuginfo :: testcase skipped
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: add
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function with retval :: record
+>>>>   -- [ PASS ] -- perf_probe :: test_adding_kernel :: function argument probing :: script
+>>>>   ## [ PASS ] ## perf_probe :: test_adding_kernel SUMMARY
+>>>>   ---- end(0) ----
+>>>>   83: perftool-testsuite_probe                                        : Ok
+>>>>
+>>>> Only the three specific tests are skipped and remaining
+>>>> ran successfully.
+>>>>
+>>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>>>> ---
+>>>> .../shell/base_probe/test_adding_kernel.sh    | 31 +++++++++++++++++--
+>>>> 1 file changed, 28 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>>>> index 63bb8974b38e..187dc8d4b163 100755
+>>>> --- a/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>>>> +++ b/tools/perf/tests/shell/base_probe/test_adding_kernel.sh
+>>>> @@ -21,8 +21,18 @@
+>>>> THIS_TEST_NAME=`basename $0 .sh`
+>>>> TEST_RESULT=0
+>>>>
+>>>> +# shellcheck source=lib/probe_vfs_getname.sh
+>>>> +. "$(dirname "$0")/../lib/probe_vfs_getname.sh"
+>>>> +
+>>>> TEST_PROBE=${TEST_PROBE:-"inode_permission"}
+>>>>
+>>>> +# set NO_DEBUGINFO to skip testcase if debuginfo is not present
+>>>> +# skip_if_no_debuginfo returns 2 if debuginfo is not present
+>>>> +skip_if_no_debuginfo
+>>>> +if [ $? -eq 2 ]; then
+>>>> + NO_DEBUGINFO=1
+>>>> +fi
+>>>> +
+>>>> check_kprobes_available
+>>>> if [ $? -ne 0 ]; then
+>>>> print_overall_skipped
+>>>> @@ -67,7 +77,12 @@ PERF_EXIT_CODE=$?
+>>>> ../common/check_all_patterns_found.pl "\s*probe:${TEST_PROBE}(?:_\d+)?\s+\(on ${TEST_PROBE}(?:[:\+]$RE_NUMBER_HEX)?@.+\)" < $LOGS_DIR/adding_kernel_list-l.log
+>>>> CHECK_EXIT_CODE=$?
+>>>>
+>>>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
+>>>> +if [ $NO_DEBUGINFO ] ; then
+>>>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+>>>> +else
+>>>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing added probe :: perf probe -l"
+>>>> +fi
+>>>> +
+>>>> (( TEST_RESULT += $? ))
+>>>>
+>>>>
+>>>> @@ -208,7 +223,12 @@ PERF_EXIT_CODE=$?
+>>>> ../common/check_all_patterns_found.pl "probe:vfs_mknod" "probe:vfs_create" "probe:vfs_rmdir" "probe:vfs_link" "probe:vfs_write" < $LOGS_DIR/adding_kernel_adding_wildcard.err
+>>>> CHECK_EXIT_CODE=$?
+>>>>
+>>>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
+>>>> +if [ $NO_DEBUGINFO ] ; then
+>>>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+>>>> +else
+>>>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "wildcard adding support"
+>>>> +fi
+>>>> +
+>>>> (( TEST_RESULT += $? ))
+>>>>
+>>>>
+>>>> @@ -232,7 +252,12 @@ CHECK_EXIT_CODE=$?
+>>>> ../common/check_no_patterns_found.pl "$RE_SEGFAULT" < $LOGS_DIR/adding_kernel_nonexisting.err
+>>>> (( CHECK_EXIT_CODE += $? ))
+>>>>
+>>>> -print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
+>>>> +if [ $NO_DEBUGINFO ]; then
+>>>> + print_testcase_skipped $NO_DEBUGINFO $NO_DEBUGINFO "Skipped due to missing debuginfo"
+>>>> +else
+>>>> + print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "non-existing variable"
+>>>> +fi
+>>>> +
+>>>> (( TEST_RESULT += $? ))
+>>>>
+>>>>
+>>
+> 
