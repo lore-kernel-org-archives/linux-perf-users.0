@@ -1,143 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB0F1B5819;
-	Thu, 20 Jun 2024 18:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F7EC1B47AF;
+	Thu, 20 Jun 2024 19:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718908014; cv=none; b=u3yEJpakyXym3dOOlQMA5mon9aVoMYPQ3pNCaYN5v1DKKSOGlx4Q2FekyzJTTAMPSsHD612JLPC/YQGYhw2IIO7wHg9HSNVAqQz/FpSf/fh05Vr5/PD1jOG1ONpQaPpxMEdwweSf1ZRavmY77NKjaKLnt0YAWkjOOWya4fn+G9A=
+	t=1718910784; cv=none; b=aurUpm2Tf1CxdNvnKDmOG4bHutfZXtnMraVUf+cpxoiW/obgy4+egCXFOeC6SksHzUTvmoGKXd7B4B1Xr0vNcWBqASYzQJqmaSNHqRT5MLCoi9RuwLsfl8qoyIub6JLhr83wy+8dae7fEgsuQccmO5dK8CuJf45+TOFoNBa08gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718908014; c=relaxed/simple;
-	bh=LYqT1Uu1OecCU2BJJQ+Io08qzbyYl4zJUIcAQBPlWbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PGsscAJIZ9oVFZERLY1GPSRGl3sZhBt811498urNLAxcdldypWk2wh1DXOzxaCh+g6kAcMyXXGEV8jA2tUzC/GmpL2rwZna59SpU2ZjkWFDg99MRJWBAD3+4YGe1Wmb+LahdltWsfNJL9hq8BiV/zBryZuNizjwABVwCEtSAriU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g49SGkRN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718910784; c=relaxed/simple;
+	bh=PtOuu6kZTUlqJSxFa4kAha8tsp0h6MEzBH1ssp/uCPA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZuBxpznJx45lnsdAEGo5TeXbggLGAQfJ9GgNYgFg4/kuxGabv575bkRHKaTqbM4oZVI+MBpvm+hTn11EtRwwXMuuDADNKOWws1eKWO3c80bjxoZsDq+Q3AEpExWlt/wzuj8cST/t0o6SIc8baEN0edf+Eb/n4ghd2WGBu5AC6Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZXdOMYcz; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g49SGkRN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06A53C4AF19;
-	Thu, 20 Jun 2024 18:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718908013;
-	bh=LYqT1Uu1OecCU2BJJQ+Io08qzbyYl4zJUIcAQBPlWbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g49SGkRN8S2Mavl5RmCW9iL6JIMmlqPrDdntU8UCFVwhWkThAc4SMvqtMJTwPd+PT
-	 EOCOpfq+PKwzRJcCV5f61H10I75SKvULhS1vpydKnaI5RqC/WqJtlQNUj3ncCAX0A3
-	 vYEyL/JSYCmoaByhW1MRhwnvrJz297pQiz1TdTH3bR3jXmAo2YQsA+BPVP7zTr/iyg
-	 qW80cv3MIXoZahNSP11DW9rJkXZRopSfKhKZUagLlOuvyj6G+R3GqLp9ooQ/iitMOG
-	 q8VyLLI4n5Oh/Zr8qdoeooQkaQt+d32NAGMSRmDLSdELiAGOwm756dTyyJhR6QB+5U
-	 9+uYD4vgdDngg==
-Date: Thu, 20 Jun 2024 11:26:52 -0700
-From: Kees Cook <kees@kernel.org>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Martin Uecker <uecker@tugraz.at>,
-	Erick Archer <erick.archer@outlook.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	Matthew Wilcox <mawilcox@microsoft.com>, x86@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org, llvm@lists.linux.dev
-Subject: Re: [PATCH v4 0/3] Hardening perf subsystem
-Message-ID: <202406201120.C1629ACFE@keescook>
-References: <20240610200544.GY8774@noisy.programming.kicks-ass.net>
- <202406101438.BC43514F@keescook>
- <20240611075542.GD8774@noisy.programming.kicks-ass.net>
- <202406121148.688240B@keescook>
- <20240612220821.GA18881@noisy.programming.kicks-ass.net>
- <202406121530.D9DB956C8@keescook>
- <20240614101708.GO8774@noisy.programming.kicks-ass.net>
- <c8234b8e2c9c1122eec73c97901e36586160f0cb.camel@tugraz.at>
- <202406171019.9F0127F@keescook>
- <20240618082242.GC31592@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZXdOMYcz"
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dfdff9771f8so1119670276.1;
+        Thu, 20 Jun 2024 12:13:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1718910782; x=1719515582; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJihJ2XjNSJujbGLQU/mlrPfH9EVduDFdZBkjvA0LOQ=;
+        b=ZXdOMYcz5qPjMefTgRgRom92dVvpeDSUaHn0NQKDZV5bUbytHbDsAknerTMFOgY94R
+         gV+0+jhG6x+9g4QU6HgGs7zoHvNQxvZseurP/bTnKUiXEInD7KnFnQM5rsHSgvCyCn3r
+         iIHo+0XWnh8ZvOdxII2wa02cHGBIm5d2zf3YPd/4MbQq9accqejfWaqyuuF6PwpcsxyM
+         bHqT1m/XLQwzKsNrbXPOB8RAnrj+VOREQcTUt3VeqVuJ+k3N6KnvgSSOqXJteGcPqvR+
+         aG2u6wkJWs5sI84gIarw0D2+uWWeEOBmke4WlJp+EFVmPCJXaFPFW/BdMbRMcShPat+g
+         T6Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1718910782; x=1719515582;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SJihJ2XjNSJujbGLQU/mlrPfH9EVduDFdZBkjvA0LOQ=;
+        b=Bat4rBMfWoHnSmiGXaEqi2b9BRaU+gh1YANfLCT/3LfUReXdwnD+uz/EU+PED/Sdt+
+         Z3BD+0voZTMuFCk1IWlaOjEHJkltJ0PBTKpwJahUqFmR7oapd8QLFLwkNImfKK5DgwJr
+         qpxc8O9LwpQmqB7tGJbaNOc2dQ4WuEwHY6WnD0qkvkWtMABJkR8DXPh+lProR/iBSUIj
+         xNyQ8xk0RB7Xo1n/4knCPIxBuyClD8VPqpORLGNdn9h59ofWwjSXTOuRBcqmnR6tC83m
+         cBb+lGsK83Lp8kkqTen+VZU/ZWh9+dR+oBtzl3njXJyRr0CCA5UX8OYtcDXWbod10CJX
+         nE/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUkHCvfYAUUvVbfwJ9n3eJ0JeO+4wmTLrAwAMAghdONiqmOAR38WAGIRIoIpG2w9HvlH95OnqQsWyjzLlutNRzagK7dXURgRWS5Oa/1ualdQA1vOKZtAnRX5NCJTSoIyCkY4SpL37BS52p+2cVzUg==
+X-Gm-Message-State: AOJu0YwF6Y40y/c/U8qRf9B841799qpn42SwfBIxtKLwO79r1DGCVp5b
+	PminrNr5D9JvKPlX5isfwKWDRpOwfZH5dyzIk0gxmcaObS2pV2PMARDyIyd8uadzKUno5F2Snfa
+	UnyaMKU60pM2pfVDe3/6LjitPM88CWU0YaPFdxw==
+X-Google-Smtp-Source: AGHT+IG9IxxcGqXPxN0WIStMRgSoeydwG5S4iSwCWw0r3GJUCAjE98dwQra2tCzymn+Ow/PiJUsEWr6PrHrajTidu/U=
+X-Received: by 2002:a5b:1ca:0:b0:dfe:3de:87a0 with SMTP id 3f1490d57ef6-e02be142101mr6000616276.24.1718910782151;
+ Thu, 20 Jun 2024 12:13:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618082242.GC31592@noisy.programming.kicks-ass.net>
+References: <20240619082042.4173621-1-howardchu95@gmail.com>
+ <ZnLjT_m90EDtRFE0@x1> <CAM9d7ci+TEXG49=-7oLfFpTakUMHikxGFc-=NhEPPG0sf-UC9g@mail.gmail.com>
+ <CAH0uvoiFvHu-iKJFNHeO1TcQHLMgo60N+1zXFQx3QrLibgEU6w@mail.gmail.com>
+In-Reply-To: <CAH0uvoiFvHu-iKJFNHeO1TcQHLMgo60N+1zXFQx3QrLibgEU6w@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Fri, 21 Jun 2024 03:12:54 +0800
+Message-ID: <CAH0uvojwF0j4=9qP83Re3YMVg0tT3RtURRNkxnXWXqC6CKPxeA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] perf trace: Augment enum arguments with BTF
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 18, 2024 at 10:22:42AM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 17, 2024 at 10:28:20AM -0700, Kees Cook wrote:
-> 
-> > But, using type attributes we have much more flexibility. Hence, the
-> > proposed "wraps" attribute:
-> > https://github.com/llvm/llvm-project/pull/86618
-> 
-> So I still think that's going about things backwards.
-> 
-> unsigned explicitly wraps. signed is UB.
-> 
-> When using -fwrapv signed is well defined as 2s complement, which takes
-> away the UB and makes it implicitly wrap.
-> 
-> When extending the language, it is important to not break existing code,
-> so the default must remain wrap. This in turn means you need to add a
-> 'nowrap' thingy.
+Hello,
 
-Well, we still disagree about this, but I guess we'll see how the size_t
-work comes along. Maybe I will come to agree with you. :)
+Now $ make NO_LIBELF=3D1 can build successfully, and if
+__NR_landlock_add_rule is not defined, we'll skip the test. The fixes
+that Arnaldo suggested are also included.
 
-> Also, I would very much not make this an attribute, but a full type
-> qualifier. Furthermore, add type promotion rules to ensure nowrap takes
-> precedence and is preserved throughout expressions. Such that:
-> 
->   'long' + 'nowrap int' -> 'nowrap long'
-> 
-> Then, once you have this, you can go do things like:
-> 
-> typedef nowrap unsigned long size_t;
-> #define sizeof(x) ((size_t)sizeof(x))
-> 
-> and things will just work. Hmm?
+I added too many things, changed some behaviors, figured it's probably
+easier for you to merge from my source tree.
 
-Right. Currently this is being plumbed through the sanitizers, so the
-type selection will happen there (for this version of it). The current
-experiment is to basically tell the sanitizers to ignore all types
-except a given list, and our initial list will be just size_t.
+The fixes are on the perf-tools-next branch at:
+https://github.com/Sberm/linux.git
 
-Before this, Justin is finishing up the initial set of idiom exclusions.
-.e.g.:
+please use
+```
+git pull https://github.com/Sberm/linux.git perf-tools-next
+```
 
-	size_t var, offset;
-	...
-	if (var + offset < var) { ... }
+I'm no git expert so please tell me if something is wrong.
 
-This will not freak out if "var + offset" wraps.
+P.S. not my proudest patch, changed too many things, might be buggy.
+If there're bugs please let me know.
 
-
-And "negative unsigned constants" will be ignored:
-
-	#define MASK	-2ULL
-	...
-	size_t mask = MASK;
-
-
-And loop post decrements wrapping will get ignored too:
-
-	size_t count = ...;
-	...
-	while (count--) { ... }
-
-
-After we get it all nailed down, we'll see if anything new pops up. :)
-
--- 
-Kees Cook
+On Thu, Jun 20, 2024 at 2:25=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
+wrote:
+>
+> On Thu, Jun 20, 2024 at 2:19=E2=80=AFAM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > On Wed, Jun 19, 2024 at 9:55=E2=80=AFAM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Wed, Jun 19, 2024 at 04:20:37PM +0800, Howard Chu wrote:
+> > > > changes in v2:
+> > > > - Move inline landlock_add_rule c code to tests/workloads
+> > > > - Rename 'enum_aug_prereq' to 'check_vmlinux'
+> > >
+> > > Usually the versions descriptions comes at the end, after your signat=
+ure
+> > > line, just before the list of csets in the series.
+> > >
+> > > > Augment enum arguments in perf trace, including syscall arguments a=
+nd
+> > > > non-syscall tracepoint arguments. The augmentation is implemented u=
+sing
+> > > > BTF.
+> > > >
+> > > > This patch series also includes a bug fix by Arnaldo Carvalho de Me=
+lo
+> > > > <acme@redhat.com>, which makes more syscalls to be traceable by per=
+f trace.
+> > > >
+> > > > Test is included.
+> > >
+> > > Thanks, the patch submission is now very good, at some point you'll b=
+e
+> > > able to point to a git tree from where to do a pull, then have it wit=
+h a
+> > > signed tag, etc, all this is not necessary at this point in our
+> > > collaboration, but as you evolve as a kernel developer, it eventually
+> > > will be asked from you.
+> > >
+> > > And it comes with a test that introduces a 'perf test -w' workload,
+> > > super great!
+> > >
+> > > - Arnaldo
+> > >
+> > > > Howard Chu (5):
+> > > >   perf trace: Fix iteration of syscall ids in syscalltbl->entries
+> > > >   perf trace: Augment enum syscall arguments with BTF
+> > > >   perf trace: Augment enum tracepoint arguments with BTF
+> > > >   perf trace: Filter enum arguments with enum names
+> > > >   perf trace: Add test for enum augmentation
+> >
+> > Please make sure that your change doesn't break the build
+> > in case libbpf is not available.  For example, a build without
+> > libelf seems to be broken.
+> >
+> >   $ make NO_LIBELF=3D1
+> >
+> > Thanks,
+> > Namhyung
+>
+> Thank you, I'll fix this.
+>
+> Thanks,
+> Howard
