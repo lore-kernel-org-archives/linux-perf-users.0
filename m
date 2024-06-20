@@ -1,149 +1,116 @@
-Received: from szxga07-in.huawei.com (szxga07-in.huawei.com [45.249.212.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB2617721;
-	Thu, 20 Jun 2024 02:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.35
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 613632110F;
+	Thu, 20 Jun 2024 04:22:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718852351; cv=none; b=mKnJsdacpKyHjOeCRVIaI5D4MkZGhqAVX6t7ejEVpdIJmn3ow2fw1p8aLxkZVPkfsOPz96SZOS8ACGMYR2wLL+qtaLu2HcMGeCthDauaKTOMmdHiWB3oW/ZyBeSVfu8tP8XHRikuwIYO2ExffshEqs0pCQa83nsW78Xy5s+FWd4=
+	t=1718857337; cv=none; b=qTASlxFf94YeQswDV3NFO6R/NEfH9FIkawzMCAkFQREA7+ryCUUaJ7jioE41aMtQa9NrNdTTrv51nRYu4Zuspw6NvFdn9eczgtK3jtoTthS9v+7llFaJc72YSWswHQDXWwcel+u9/+tWSgyCg4FMWIz7xtE9GkqDmejya56NHIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718852351; c=relaxed/simple;
-	bh=vuTW9cPwOPrJ7ddPWRGrsEOT4sKaReYqjycgd8vf8ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rrW24zCCxdcOcb9nmDAyFK4tlEc0THPsAURfXcZvjZ+6mJHoM7NRPWQTPXhxfNs3zfSIyYZQe7UxhO/1i5mjH703yaCUbIg7CS4C8d4yBgSo37C5IXrEohhSxcJGP7vpXVAZ03yQdktyp1/v1cQPfZb5aHdA9laBGTO1egle0Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4W4Q8851z6z1X3tr;
-	Thu, 20 Jun 2024 10:55:04 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 690F2140153;
-	Thu, 20 Jun 2024 10:58:59 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 20 Jun 2024 10:58:58 +0800
-Message-ID: <5cb622c9-46f4-c1e4-9932-774be4ed0735@huawei.com>
-Date: Thu, 20 Jun 2024 10:58:58 +0800
+	s=arc-20240116; t=1718857337; c=relaxed/simple;
+	bh=QAdSu372sRUEYjNOdGuHPm3EQh6YcNhJYHxcXC6ObeU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M1wHZx5O3VJO4GVH352TLce56bFOGWYVh/y5gw15bmVFZSIJV+0TBcNWlsxZp2hynIc//P4PJE+CYEImQGeePuRosCHLNzGYhiJOGb68T/vX/gCbMTcGltfbO3VfbmST/MEzvktil5Qf5UktFi9o0tCAbFvBUKIQ22IXAoevf2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AFB6DA7;
+	Wed, 19 Jun 2024 21:22:39 -0700 (PDT)
+Received: from [10.163.46.59] (unknown [10.163.46.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B3D13F64C;
+	Wed, 19 Jun 2024 21:22:08 -0700 (PDT)
+Message-ID: <ccfc2b96-acf3-4511-920a-2633305f940d@arm.com>
+Date: Thu, 20 Jun 2024 09:52:05 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
- uretprobe trampoline
-To: Jiri Olsa <olsajiri@gmail.com>
-CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<nathan@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<mark.rutland@arm.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-References: <20240619013411.756995-1-liaochang1@huawei.com>
- <ZnMFtCsRCVZ6pkp8@krava>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <ZnMFtCsRCVZ6pkp8@krava>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V18 6/9] KVM: arm64: nvhe: Disable branch generation in
+ nVHE guests
+Content-Language: en-US
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ will@kernel.org, catalin.marinas@arm.com, Mark Brown <broonie@kernel.org>,
+ James Clark <james.clark@arm.com>, Rob Herring <robh@kernel.org>,
+ Marc Zyngier <maz@kernel.org>, Suzuki Poulose <suzuki.poulose@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+ James Morse <james.morse@arm.com>, kvmarm@lists.linux.dev
+References: <20240613061731.3109448-1-anshuman.khandual@arm.com>
+ <20240613061731.3109448-7-anshuman.khandual@arm.com>
+ <ZmxgZqxXWnRqwbDC@J2N7QTR9R3.cambridge.arm.com>
+ <774a63cb-21e6-4ef2-b2ab-0ff8937523b2@arm.com> <ZnAEVlVZFR3DLHHb@J2N7QTR9R3>
+From: Anshuman Khandual <anshuman.khandual@arm.com>
+In-Reply-To: <ZnAEVlVZFR3DLHHb@J2N7QTR9R3>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi, Jiri
 
-在 2024/6/20 0:22, Jiri Olsa 写道:
-> On Wed, Jun 19, 2024 at 01:34:11AM +0000, Liao Chang wrote:
->> When the new uretprobe system call was added [1], the xol slots reserved
->> for the uretprobe trampoline might be insufficient on some architecture.
+
+On 6/17/24 15:09, Mark Rutland wrote:
+> On Mon, Jun 17, 2024 at 12:15:15PM +0530, Anshuman Khandual wrote:
+>>
+>>
+>> On 6/14/24 20:53, Mark Rutland wrote:
+>>> On Thu, Jun 13, 2024 at 11:47:28AM +0530, Anshuman Khandual wrote:
+>>>> Disable the BRBE before we enter the guest, saving the status and enable it
+>>>> back once we get out of the guest. This avoids capturing branch records in
+>>>> the guest kernel or userspace, which would be confusing the host samples.
+>>>
+>>> It'd be good to explain why we need to do this for nVHE, but not for
+>>> VHE. I *think* that you're relying on BRBCR_EL2.EL0HBRE being ignored
+>>> when HCR_EL2.TGE == 0, and BRBCR_EL1.E{1,0}BRE being initialized to 0
+>>> out-of-reset.
+>>
+>> That's right, there is no possibility for the host and guest BRBE config
+>> to overlap.
+>>
+>>> What should a user do if they *want* samples from a guest? Is that
+>>
+>> That is not supported currently. But in order to enable capturing guest
+>> branch samples from inside the host - BRBCR_EL2 configs need to migrate
+>> into BRBCR_EL1 when the guest runs on the cpu.
+>>
+>>> possible to do on other architectures, or do is that always prevented?
+>>
+>> I am not sure about other architectures, but for now this falls within
+>> guest support which might be looked into later. But is not the proposed
+>> patch complete in itself without any further guest support ?
 > 
-> hum, uretprobe syscall is x86_64 specific, nothing was changed wrt slots
-> or other architectures.. could you be more specific in what's changed?
-
-I observed a significant performance degradation when using uprobe to trace Redis
-on arm64 machine. redis-benchmark showed a decrease of around 7% with uprobes
-attached to two hot functions, and a much worse result with uprobes on more hot
-functions. Here is a samll snapshot of benchmark result.
-
-No uprobe
----------
-SET: 73686.54 rps
-GET: 73702.83 rps
-
-Uprobes on two hot functions
-----------------------------
-SET: 68441.59 rps, -7.1%
-GET: 68951.25 rps, -6.4%
-
-Uprobes at three hot functions
-------------------------------
-SET: 40953.39 rps，-44.4%
-GET: 41609.45 rps，-43.5%
-
-To investigate the potential improvements, i ported the uretprobe syscall and
-trampoline feature for arm64. The trampoline code used on arm64 looks like this:
-
-uretprobe_trampoline_for_arm64:
-	str x8, [sp, #-8]!
-	mov x8, __NR_uretprobe
-	svc #0
-
-Due to arm64 uses fixed-lenghth instruction of 4 bytes, the total size of the trampoline
-code is 12 bytes, since the ixol slot size is typical 4 bytes, the misfit bewteen the
-slot size of trampoline size requires more than one slot to reserve.
-
-Thanks.
+> My concern here is ABI rather than actual support.
+I am trying to understand how this is an ABI problem. Because perf debug
+tools could be described as - a best effort based sample collection. All
+samples that could be collected for a given perf_event_attr request might
+change if the underlying assumptions change later on. AFAICT semantics of
+expectations for a given attribute request is not a hard ABI requirement.
 
 > 
-> thanks,
-> jirka
-> 
->> For example, on arm64, the trampoline is consist of three instructions
->> at least. So it should mark enough bits in area->bitmaps and
->> and area->slot_count for the reserved slots.
->>
->> [1] https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
->>
->> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->> ---
->>  kernel/events/uprobes.c | 11 +++++++----
->>  1 file changed, 7 insertions(+), 4 deletions(-)
->>
->> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
->> index 2816e65729ac..efd2d7f56622 100644
->> --- a/kernel/events/uprobes.c
->> +++ b/kernel/events/uprobes.c
->> @@ -1485,7 +1485,7 @@ void * __weak arch_uprobe_trampoline(unsigned long *psize)
->>  static struct xol_area *__create_xol_area(unsigned long vaddr)
->>  {
->>  	struct mm_struct *mm = current->mm;
->> -	unsigned long insns_size;
->> +	unsigned long insns_size, slot_nr;
->>  	struct xol_area *area;
->>  	void *insns;
->>  
->> @@ -1508,10 +1508,13 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->>  
->>  	area->vaddr = vaddr;
->>  	init_waitqueue_head(&area->wq);
->> -	/* Reserve the 1st slot for get_trampoline_vaddr() */
->> -	set_bit(0, area->bitmap);
->> -	atomic_set(&area->slot_count, 1);
->>  	insns = arch_uprobe_trampoline(&insns_size);
->> +	/* Reserve enough slots for the uretprobe trampoline */
->> +	for (slot_nr = 0;
->> +	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
->> +	     slot_nr++)
->> +		set_bit(slot_nr, area->bitmap);
->> +	atomic_set(&area->slot_count, slot_nr);
->>  	arch_uprobe_copy_ixol(area->pages[0], 0, insns, insns_size);
->>  
->>  	if (!xol_add_vma(mm, area))
->> -- 
->> 2.34.1
->>
+> It's not clear to me how this works across architectures, and we should
+> have some idea of how this would work (e.g. if we're going to require
+> new ABI or not), so that we don't have to break ABI later on.
 
--- 
-BR
-Liao, Chang
+BRBE HW does not have any guest filter in itself, unless BRBCR_EL2 gets
+migrated across BRBCR_EL1 during guest transition, guest branch records
+would not be captured.
+
+event->attr.exclude_guest = 0 could have been denied during armpmu_add()
+for preventing events with guest branch sample requests being scheduled
+on the PMU. But it turns out to be not a very reliable parameter in that
+sense as well.
+
+event->attr.exclude_guest = 0 remains clear even for a standard session.
+
+./perf record -e instructions:k -j any_call,save_type ls
+
+perf tools will need some changes in order to avoid the above scenarios
+as a default behaviour which would not be desirable as well.
+
+These semantics could be worked out later on when BRBE guest support gets
+included, and the current proposal would not prevent any potential future
+changes in this regard.
+
+> 
+> Mark.
