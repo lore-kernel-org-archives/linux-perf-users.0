@@ -1,23 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2422B14E2E4;
-	Fri, 21 Jun 2024 07:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22C74259C;
+	Fri, 21 Jun 2024 07:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718955559; cv=none; b=erlqNHXxs9TtXNb+c76r1PVo1oH5GV3ZpMcoSXBa0g9vplJMetJXC4L9cjIXt0MD1Tmnvo63GeVrhlDceFJ/I2/V4osqn1VwB7ca+tel/jY8Wgk5kEPFx38ADuF5HhQjmHOM86Ti9pcYc1K9b+dh4V0tNooCX3KfAQm9l0HchTU=
+	t=1718955559; cv=none; b=dGPhrZQ67SB5WNQr+U1Kt/OZckTusII2s3Tv5UXrzZWUI0Uwrx1Rh0jFBlDCIpg3tSfPjemArXd+l6PQdHX89Un7q35TG63uD9ShF0IkGie16gcdgczKP+h0FUyTzc0CI0Cr1LpZ2YhVaxgvtMqk5+6nr8rD4VUD5PwxHsPvw04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1718955559; c=relaxed/simple;
-	bh=F2cVgjrXCbwRCF4R9vYLdMvZMxEHN/Q7drWoe4lk+eM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LN8UlFhidaJFgNB85JrVf8J00eUsnDnoH4WMlLqcJMQrEx3on1J2IN4ikhm2hJiOWpmGUxp5jk8gaIta2yknBzr4zjWvB6mbwCiTeEppkN2x/V+bOxpvISudoPbGMPpqIxafoYMUchFkQU9FbEB9jf0ZfuGCoDLpRgj9WSNSU3A=
+	bh=ppG0XSkNgecIfzGrMB63byd0fkNXG6e93Jv4TzajFg8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AQEBPR+qbDFQbu62LQNJRkij96icIP/OaCIhOOWLFscz2IRtJaAwNkGoD31X5IQAWwv7/M2gtvqPGguXKRClT7FNoWXhjqXaXzpgLlsD3H04Gb76lBoRDxI1zzm21WBlWF6QMLA3ZFJ5hpzT0xPcErlh/+zl/o5vRe69KXbvDg8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Bxb+shLnVmnMsIAA--.35252S3;
-	Fri, 21 Jun 2024 15:39:13 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPMcfLnVmIjgrAA--.39322S4;
+	by gateway (Coremail) with SMTP id _____8DxFPAgLnVmjssIAA--.35648S3;
 	Fri, 21 Jun 2024 15:39:12 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPMcfLnVmIjgrAA--.39322S2;
+	Fri, 21 Jun 2024 15:39:11 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Will Deacon <will@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
@@ -31,12 +30,10 @@ To: Will Deacon <will@kernel.org>,
 Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/3] arm: hw_breakpoint: Save privilege of access control via ptrace
-Date: Fri, 21 Jun 2024 15:39:09 +0800
-Message-ID: <20240621073910.8465-3-yangtiezhu@loongson.cn>
+Subject: [PATCH v2 0/3] hw_breakpoint: Save privilege of access control via ptrace
+Date: Fri, 21 Jun 2024 15:39:07 +0800
+Message-ID: <20240621073910.8465-1-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240621073910.8465-1-yangtiezhu@loongson.cn>
-References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,78 +41,56 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:AQAAf8DxPMcfLnVmIjgrAA--.39322S4
+X-CM-TRANSID:AQAAf8DxPMcfLnVmIjgrAA--.39322S2
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7urWrKryxGw4rKw45ZrWUtrc_yoW8uryrp3
-	sxCw1qqr4DCa10ga9xtrs5ZanxGwnFgry7Wa4DKw4Yyr1Yvr93GFykGr9I9393tr40q34S
-	q39Yqr4aqw17WabCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkE
-	bVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I0E74
-	80Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0
-	I7IYx2IY67AKxVW5JVW7JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04
-	k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7Cj
-	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jr9NsUUUUU=
+X-Coremail-Antispam: 1Uk129KBj9xXoWrKFy5XF48ZF18WFykXrW7KFX_yoWktwc_WF
+	yIya4DKw109r1Fya45tw1fZF93Kw4Y9rn0vw1vgrZxGF9ava4ruws5AF95u347XF4avrWD
+	Xw15Ww1qvrnIgosvyTuYvTs0mTUanT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvT
+	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
+	cSsGvfJTRUUUbSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
+	vaj40_Wr0E3s1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
+	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
+	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+	6r4UJVWxJr1ln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
+	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8V
+	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E
+	14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4YLvDUUUU
 
-Currently, decode_ctrl_reg() saves the privilege of access control
-which is not used anymore, arch_build_bp_info() checks whether bp
-virtual address is in kernel space to construct hw->ctrl.privilege,
-the process seems not reasonable.
+Hi all,
 
-The value of ctrl->privilege saved in decode_ctrl_reg() can be used
-in arch_build_bp_info(), there is no need to check bp virtual address
-to assign value for hw->ctrl.privilege, just make use of "bp_priv" in
-the struct perf_event_attr to save the privilege of access control via
-ptrace for hardware breakpoint.
+Thank you very much for your feedbacks in the v1 patch.
+This series is based on 6.10-rc4, cross compile tested only.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/arm/kernel/hw_breakpoint.c | 4 +---
- arch/arm/kernel/ptrace.c        | 2 ++
- 2 files changed, 3 insertions(+), 3 deletions(-)
+As far as I can tell, these changes are not relevant with tools/perf,
+on some archs such as ARM, ARM64 and LoongArch which have privilege
+level of breakpoint, the initial aim is to make use of the value of
+ctrl->privilege saved in decode_ctrl_reg() and then remove the check
+whether bp virtual address is in kernel space to assign value for
+hw->ctrl.privilege in arch_build_bp_info().
 
-diff --git a/arch/arm/kernel/hw_breakpoint.c b/arch/arm/kernel/hw_breakpoint.c
-index a12efd0f43e8..7720d39473d9 100644
---- a/arch/arm/kernel/hw_breakpoint.c
-+++ b/arch/arm/kernel/hw_breakpoint.c
-@@ -568,9 +568,7 @@ static int arch_build_bp_info(struct perf_event *bp,
- 	hw->address = attr->bp_addr;
- 
- 	/* Privilege */
--	hw->ctrl.privilege = ARM_BREAKPOINT_USER;
--	if (arch_check_bp_in_kernelspace(hw))
--		hw->ctrl.privilege |= ARM_BREAKPOINT_PRIV;
-+	hw->ctrl.privilege = attr->bp_priv;
- 
- 	/* Enabled? */
- 	hw->ctrl.enabled = !attr->disabled;
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index c421a899fc84..0d6d6b2a57a0 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -422,6 +422,7 @@ static struct perf_event *ptrace_hbp_create(struct task_struct *tsk, int type)
- 	attr.bp_addr	= 0;
- 	attr.bp_len	= HW_BREAKPOINT_LEN_4;
- 	attr.bp_type	= type;
-+	attr.bp_priv	= ARM_BREAKPOINT_USER;
- 	attr.disabled	= 1;
- 
- 	return register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL,
-@@ -530,6 +531,7 @@ static int ptrace_sethbpregs(struct task_struct *tsk, long num,
- 
- 		attr.bp_len	= gen_len;
- 		attr.bp_type	= gen_type;
-+		attr.bp_priv	= ctrl.privilege;
- 		attr.disabled	= !ctrl.enabled;
- 	}
- 
+v2:
+  -- Put the new member "bp_priv" at the end of the uapi
+     struct perf_event_attr and add PERF_ATTR_SIZE_VER9.
+  -- Update the commit message to make the goal clear.
+
+Tiezhu Yang (3):
+  perf: Add perf_event_attr::bp_priv
+  arm: hw_breakpoint: Save privilege of access control via ptrace
+  arm64: hw_breakpoint: Save privilege of access control via ptrace
+
+ arch/arm/kernel/hw_breakpoint.c   |  4 +---
+ arch/arm/kernel/ptrace.c          |  2 ++
+ arch/arm64/kernel/hw_breakpoint.c | 11 ++---------
+ arch/arm64/kernel/ptrace.c        |  2 ++
+ include/uapi/linux/perf_event.h   |  3 +++
+ kernel/events/hw_breakpoint.c     |  1 +
+ 6 files changed, 11 insertions(+), 12 deletions(-)
+
 -- 
 2.42.0
 
