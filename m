@@ -1,129 +1,160 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C596816F907;
-	Fri, 21 Jun 2024 22:24:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8564208C4;
+	Fri, 21 Jun 2024 22:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719008642; cv=none; b=T6mdvpaJCh9YjKWvjy5KgXTSOg7m3Df4sN7mnoAB3TGxbeutrtMjpJ5amylgVZbkTYFNA1ad4HJ9/drvKWLut6R36CXxP46fHvSLRXc6yvwinCBe+gIUqS7WRVPlyXVvoe0cV8V1ZU8sXoKEf+4mn0vH/jxhF4BHnCQYilqyjk4=
+	t=1719009298; cv=none; b=GLg8XNmrdmPx+Yvrhs/MCYqkY0NFfnGuM6Z4aerAVbHtyHffwbs8OUSSlp/gGOtgDkplTu8dv1KX1JyzZ2Rl4TQx/v/tL1onFMmAp2dX/tG4zo7+CTaMquR1MBs6tjiOxsqsNohpRNfeot0THUGce2lAjztLpmtTUGdikcqVHFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719008642; c=relaxed/simple;
-	bh=atSs/tRSRRAIPe/BSsP+YIRgCS9mtgue7bFyinAh7kw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uDtf53IPoFl2aGIvjLoTW+CpKceB4afAkKucs5WZctRolzHacSSSI8+QO5PcVdzdlAcqs+kPTeQg2theBIyzRo41oDxvjZwnHFQegmeew7MDrIpVDWuzlBtTyFrtm0l0caS/ipledFi2VXtzph2Wbx+n+A5iTE3s7PHz4e2WPkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Oi/ROPRI; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Oi/ROPRI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1209CC4AF0C;
-	Fri, 21 Jun 2024 22:24:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719008642;
-	bh=atSs/tRSRRAIPe/BSsP+YIRgCS9mtgue7bFyinAh7kw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Oi/ROPRIQ6aaqy3ukSpzi+iy26Z3fMt4gV5N+sh2qtcqGMg+iXME3OE4221mSkFD1
-	 Vi5DF5vnX0XfIhZPzQWazmN4/Cj3rABdaax6dM5ON0CvQWSWgXMRVgtFjq1lJApuQJ
-	 gzb3RNiEK+7T+63SWdhrAQoVCoOgBYnHQFlMgTDLOKgCm+s+1MBLRqO+KmJdzjYt5P
-	 mrHYLM7fMZe4OcPuQ8DZKDGDUqyLZ6P/4Fno+TgQ4s+rJo+IVlphLDKFkrEZ5qWExz
-	 d9JMF+yBLcgfieuTcB6Qr1Dsye4nYkRpuGoq78NyxRvR+UO+Cej9LhiRBT6ZvxB2mu
-	 U3JOyN9y1kXyA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 8/8] perf test: Update sample filtering test
-Date: Fri, 21 Jun 2024 15:23:57 -0700
-Message-ID: <20240621222357.717374-9-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-In-Reply-To: <20240621222357.717374-1-namhyung@kernel.org>
-References: <20240621222357.717374-1-namhyung@kernel.org>
+	s=arc-20240116; t=1719009298; c=relaxed/simple;
+	bh=zgYm8XSEvUPvMbKn2+8mwq09JBRYLIZQITMP22XLbsM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fSoLWMAeePMviIWbpISqisfZqGTWSuarhbnvtCaQExPi4AnI+QFM1e+CqYxcJHUhi03xEOE94it/KANydNaT5ejzMoe0RCwNnlATwXofsoXfaTnbntMuWxZZ7fjevS9E/sp5VPtw9I/NGopQyulylE89W9+/Id6ZgHsdcPgiifA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-6eab07ae82bso1771500a12.3;
+        Fri, 21 Jun 2024 15:34:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719009295; x=1719614095;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2IWpuNhQGuFo/RdmFczsMH8ijmOsAG0nFTrt9FOYt8U=;
+        b=A6VM9rOOINy2IsqwXILamGpkMkRAcF7MjtBdSqpcKEOlUB8wivu6HmKMX7BAC67S1r
+         kKjrOQR/H6YoGzN3v6QQA9x0TMV8ftpVOJcSNtqn+kxNMgze6+I73A1jnW1s0SxzrSJG
+         ni/QOTQfli4ipI89efphI/KM0irpJ5cG13yCsIti8RAzA5KKNJaHBgH5RZu6UXX8Hi1Q
+         Nv1g/wywTw11Q8GxfOI5Na+JypLupz5TTFR1Nc3ppnz3GDBF06XcVhdZRF3uFLX6VeVx
+         JuIjG8eLA8yXufm5i21IU0Cv38+ehVEcRreNrPBS61M1QQKw7uFEM8oqeZvcbsT0fype
+         o7rQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVU1ISNxSLKJAi1PAI+vo+FYtO2SyEqfKUl8FRHCocH2nJ8AzfLqLdQL47dm4IK8Pxfgc7iXD8ZCrj+YToC+bjQZVci1BNIsUU5fU4VWZva2FugHT2/iQhoD9YD5wXTxyzV1p5p4tpePopNnDYEiZ/1QQBARLYk7KZg88UPAVmKQ2UNlg==
+X-Gm-Message-State: AOJu0YxcuWixbF/FxmSXZ8VafpOD7EHhQHxaNy0/m4ctZ9+KMFkWYjYm
+	I/3aucVsj9wtUiXrrGZ/NegfLyMWPpchN9pgSzRvpGKx1AIH3PYY7C0gelaE0rooK5fCqJkHGuk
+	h2n+i3/bDIjWq/E2AW/CW0r2/zpg=
+X-Google-Smtp-Source: AGHT+IEcARhlBbiGRZfC5xEromMPnH9+AkUCgppzFFSQjAmir49ujqJtA4OXYgdnK2WomsVNURlS2ZwpD7Bilkf0QVU=
+X-Received: by 2002:a17:90a:fc83:b0:2a4:b831:5017 with SMTP id
+ 98e67ed59e1d1-2c7b5dae403mr9504425a91.48.1719009294813; Fri, 21 Jun 2024
+ 15:34:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240621222357.717374-1-namhyung@kernel.org>
+In-Reply-To: <20240621222357.717374-1-namhyung@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 21 Jun 2024 15:34:43 -0700
+Message-ID: <CAM9d7chz7+aqmzWwRG9MRmXh_SY-YBRNPQsLDnPAfht_ECViOg@mail.gmail.com>
+Subject: Re: [RFC/PATCHSET 0/8] perf record: Use a pinned BPF program for
+ filter (v2)
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, 
+	Stephane Eranian <eranian@google.com>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Now it can run the BPF filtering test with normal user if the BPF
-objects are pinned by 'sudo perf record --setup-filter pin'.  Let's
-update the test case to verify the behavior.  It'll skip the test if the
-filter check is failed from a normal user, but it shows a message how to
-set up the filters.
+Ugh, forgot to CC bpf list/folks.. ;-p
 
-First, run the test as a normal user and it fails.
 
-  $ perf test -vv filtering
-   95: perf record sample filtering (by BPF) tests:
-  --- start ---
-  test child forked, pid 425677
-  Checking BPF-filter privilege
-  try 'sudo perf record --setup-filter pin' first.       <<<--- here
-  bpf-filter test [Skipped permission]
-  ---- end(-2) ----
-   95: perf record sample filtering (by BPF) tests                     : Skip
 
-According to the message, run the perf record command to pin the BPF
-objects.
-
-  $ sudo perf record --setup-filter pin
-
-And re-run the test as a normal user.
-
-  $ perf test -vv filtering
-   95: perf record sample filtering (by BPF) tests:
-  --- start ---
-  test child forked, pid 424486
-  Checking BPF-filter privilege
-  Basic bpf-filter test
-  Basic bpf-filter test [Success]
-  Failing bpf-filter test
-  Error: task-clock event does not have PERF_SAMPLE_CPU
-  Failing bpf-filter test [Success]
-  Group bpf-filter test
-  Error: task-clock event does not have PERF_SAMPLE_CPU
-  Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-  Group bpf-filter test [Success]
-  ---- end(0) ----
-   95: perf record sample filtering (by BPF) tests                     : Ok
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/record_bpf_filter.sh | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
-diff --git a/tools/perf/tests/shell/record_bpf_filter.sh b/tools/perf/tests/shell/record_bpf_filter.sh
-index 31c593966e8c..c5882d620db7 100755
---- a/tools/perf/tests/shell/record_bpf_filter.sh
-+++ b/tools/perf/tests/shell/record_bpf_filter.sh
-@@ -22,15 +22,16 @@ trap trap_cleanup EXIT TERM INT
- test_bpf_filter_priv() {
-   echo "Checking BPF-filter privilege"
- 
--  if [ "$(id -u)" != 0 ]
--  then
--    echo "bpf-filter test [Skipped permission]"
--    err=2
--    return
--  fi
-   if ! perf record -e task-clock --filter 'period > 1' \
- 	  -o /dev/null --quiet true 2>&1
-   then
-+    if [ "$(id -u)" != 0 ]
-+    then
-+      echo "try 'sudo perf record --setup-filter pin' first."
-+      echo "bpf-filter test [Skipped permission]"
-+      err=2
-+      return
-+    fi
-     echo "bpf-filter test [Skipped missing BPF support]"
-     err=2
-     return
--- 
-2.45.2.741.gdbec12cfda-goog
-
+On Fri, Jun 21, 2024 at 3:25=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> Hello,
+>
+> This is to support the unprivileged BPF filter for profiling per-task eve=
+nts.
+> Until now only root (or any user with CAP_BPF) can use the filter and we
+> cannot add a new unprivileged BPF program types.  After talking with the =
+BPF
+> folks at LSF/MM/BPF 2024, I was told that this is the way to go.  Finally=
+ I
+> managed to make it working with pinned BPF objects. :)
+>
+> v2 changes)
+>  * rebased onto Ian's UID/GID (non-sample data based) filter term change
+>  * support separate lost counts for each use case
+>  * update the test case to allow normal users (if supported)
+>
+>
+> This only supports the per-task mode for normal users and root still uses
+> its own instance of the same BPF program - not shared with other users.
+> But it requires the one-time setup (by root) before using it by normal us=
+ers
+> like below.
+>
+>   $ sudo perf record --setup-filter pin
+>
+> This will load the BPF program and maps and pin them in the BPF-fs.  Then
+> normal users can use the filter.
+>
+>   $ perf record -o- -e cycles:u --filter 'period < 10000' perf test -w no=
+ploop | perf script -i-
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.011 MB - ]
+>         perf  759982 448227.214189:          1 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214195:          1 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214196:          7 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214196:        223 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214198:       9475 cycles:u:  ffffffff8ee012a=
+0 [unknown] ([unknown])
+>         perf  759982 448227.548608:          1 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548611:          1 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548612:         12 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548613:        466 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>
+> It's also possible to unload (and unpin, of course) using this command:
+>
+>   $ sudo perf record --setup-filter unpin
+>
+> The code is avaiable in 'perf/pinned-filter-v2' branch at
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (8):
+>   perf bpf-filter: Make filters map a single entry hashmap
+>   perf bpf-filter: Pass 'target' to perf_bpf_filter__prepare()
+>   perf bpf-filter: Split per-task filter use case
+>   perf bpf-filter: Support pin/unpin BPF object
+>   perf bpf-filter: Support separate lost counts for each filter
+>   perf record: Fix a potential error handling issue
+>   perf record: Add --setup-filter option
+>   perf test: Update sample filtering test
+>
+>  tools/perf/Documentation/perf-record.txt     |   5 +
+>  tools/perf/builtin-record.c                  |  23 +-
+>  tools/perf/builtin-stat.c                    |   2 +-
+>  tools/perf/builtin-top.c                     |   2 +-
+>  tools/perf/builtin-trace.c                   |   2 +-
+>  tools/perf/tests/shell/record_bpf_filter.sh  |  13 +-
+>  tools/perf/util/bpf-filter.c                 | 406 +++++++++++++++++--
+>  tools/perf/util/bpf-filter.h                 |  19 +-
+>  tools/perf/util/bpf_skel/sample-filter.h     |   2 +
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c |  75 +++-
+>  tools/perf/util/evlist.c                     |   5 +-
+>  tools/perf/util/evlist.h                     |   4 +-
+>  tools/perf/util/python.c                     |   3 +-
+>  13 files changed, 485 insertions(+), 76 deletions(-)
+>
+> --
+> 2.45.2.741.gdbec12cfda-goog
+>
+>
