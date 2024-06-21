@@ -1,91 +1,123 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4EBB67D
-	for <linux-perf-users@vger.kernel.org>; Fri, 21 Jun 2024 17:30:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39CDC128812;
+	Fri, 21 Jun 2024 17:33:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718991053; cv=none; b=HfULH53oAyrdSKiBZ18c/qzu754wjdjLOHLcu2uFXO8qKwEC4YevMPOntGPkZvCytzS7l/QEpAoFo+FrqKXbKHHFls9Rv4nvJ1UjvNg6d9ftE+1NZ0KNNNi4eSbsUlQynHtnjyp55OZRo7pz4dhzIOXN1z6CDkgjzULaBQTzu68=
+	t=1718991192; cv=none; b=P/fDdI5D2E5CzctB+7ZCw4ZInpGS+5iFXGUBHzlVyBbcOEH4vFHJjd0ZO5bGDWdxWm3z4xScVoftCX77HkTo8XRd6d+AHkL1UtEN8NOPAyj1p3S0P7rNdPo30fyoaK2IcvmnGe7IqFLZDSsNZRxdKNIGuYO9i+nsynAc0fXApAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718991053; c=relaxed/simple;
-	bh=mOHEGgNSPhdPGF+RRp4j7BBTOJHNRqU1bKNW1P5IqZ4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LrL5ebGUwOOboZs7Fj0VHkrnzKdS4I/lH8Oro45BFzdYzdhxg2cdC1lta/G7nicK01khvZb9RXd13SBLs/KpxSO60zvkYAPPSKHwEvBVVRtxT/QvVXA4GeVYOyShfmvwitOfJpLCVf4OWPdDbwN3VX/G2xBYumgyXB1YrfqZpBo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IZyLsg+D; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1718991192; c=relaxed/simple;
+	bh=5VRvJRsLhxyImQgvICYSbl5XZTyKkvy3XVaQTzwx/SI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FEBg/U0+OQTaFd9WpS+d1a0VbGKAnj5slsBRZPlPX8DyMIe0stwkC4j6Fwcn/6KMIzvW4C/t3ti8bve7YdTssHttOCcGqNyC/FFgKMISZOvbjqU+ja+UfmwK6otFWCykQcobscKOHHolMy574jYhnXP77sRpy0woRkAQ5AqmRP8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=is+THI1y; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IZyLsg+D"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f64ecb1766so17592205ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 21 Jun 2024 10:30:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1718991051; x=1719595851; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mOHEGgNSPhdPGF+RRp4j7BBTOJHNRqU1bKNW1P5IqZ4=;
-        b=IZyLsg+Dc6nR0Vw8E5vVMLXrRiqZH9IX0dOZGLluW3eVUKnORS6YoHmggrQwNsQghe
-         +KMXZzI+S/4caQ5b0ZWPk9ZIMNTYDljbqtOp/yG6jA2p7fJLeIrsLVChEQZ7kuc1uKeU
-         /zN5GAtFApqdj5A6zTSNi6zms6lLfP4dUPsgc29flrLWi7Ei3fczihVSaeDyEnR75DTX
-         4ssCSJmTQKAxBwEyLIhFedW3MSjpTl0neUnYZ9LVbakx/8fbxj/f4ZkiPhbSPMKTBunV
-         EGEKBqeRzW7/Mcs0VzaWwEfZtCzz0piAJilEcRAtMdLo7k/jYLgDbZDz/gZYtwi1iqhz
-         NOhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1718991051; x=1719595851;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mOHEGgNSPhdPGF+RRp4j7BBTOJHNRqU1bKNW1P5IqZ4=;
-        b=ucNe1LDIhq/zNqTgT11F/f+Q4fXNVzHKzcVmLOrrlevfzjYAtPMIAt/PTBnDMvlSWO
-         e0wm3zPbCOXTRVfijhw0DTfpEFNhQ4SkJkwNOImqoPXO8Q1tVx/mOt+OA+f0TM3XBKRu
-         PquasZTCpiALspRYb3pYoQtfVM7duidNHOOCHd2Zndql7Cbd6DtStX2CZuheC+p23roV
-         0BEIqjSD/83gKRVS+q0ITYOq4HL2T2d5s8IeN5eCa/zsCLqirFvwYgLB/Yt4TTIOCqxR
-         kEQ6g3HTCCKzDyxQzJEg/grCuYgC3oXpGO7kV0cO4dxk+hK8daNOrCbdDK/m70tJGNu7
-         XbLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUV98jjP13QhpwN/NP6EU/kivYvVkqor0zPudzUn8qgMttcWtpDGqPI884fgFexfauE41NtIankp6CoXZhT61cbli9SvN3lp+7cp0F6NuervA==
-X-Gm-Message-State: AOJu0YxOj2vWstcCnU6yIx0yjbP4UGOwzBvKzVbkP87/h1iImrBr7It+
-	yJkJs7tzgDQ5tA+ClcGtK+64gO221v1H+gk1SNmmEuepf1QZlbqgEnMRzw==
-X-Google-Smtp-Source: AGHT+IFu8eGoKQaGIXTde5sNjhToWzTaBsGp4+M2GELmD7em0H+09OrVsnvbBMMZBOMP+CquXfzz5Q==
-X-Received: by 2002:a17:903:2445:b0:1f9:cf2f:507c with SMTP id d9443c01a7336-1f9cf2f5301mr50283045ad.41.1718991051286;
-        Fri, 21 Jun 2024 10:30:51 -0700 (PDT)
-Received: from localhost.localdomain ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb3c591bsm16560065ad.165.2024.06.21.10.30.49
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Fri, 21 Jun 2024 10:30:50 -0700 (PDT)
-From: yskelg@gmail.com
-To: namhyung@kernel.org
-Cc: acme@kernel.org,
-	james.clark@arm.com,
-	leo.yan@arm.com,
-	linux-perf-users@vger.kernel.org,
-	Yunseong Kim <yskelg@gmail.com>
-Subject: Re: Perf Wiki Appears Broken
-Date: Sat, 22 Jun 2024 02:22:51 +0900
-Message-ID: <20240621172250.5798-2-yskelg@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <Zm5esBevamPzcrl_@google.com>
-References: <Zm5esBevamPzcrl_@google.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="is+THI1y"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 2416E40E01F9;
+	Fri, 21 Jun 2024 17:33:08 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id yfj0BQ_yC9uh; Fri, 21 Jun 2024 17:33:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1718991183; bh=Rhva3/MPW5AdxxQuixV5zRlTNA/U0pgCD1iJBw3vFIA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=is+THI1yaShkfTTz+5TA+uIIdjaB22NopFKAtePkMzH83YipmOrD6kZ79HplRhUjW
+	 B9B4LyXFRb5LcbX5GB3yX76pCLFkXbrg4T5PNx7l/1omt0uD1jslQFYyaRlFYWWkzy
+	 IMS0OfON1Sb1NUqgN0XWyziAnm6hiBskG2Va9H+XrM54FEKGiXA0wkSGVPaT1aIenQ
+	 2jSqdeW61CHbuN3Uf8gtM2wGSkIJV1RLbuUI9wPmBTwZwgf9U8aYMMWgfZke07onqf
+	 gAi1HWSmPe24fjglExG8/Inr6m8DZ4Jn396RwH0lyls5+FnuQd09vzky82SQMjeK2L
+	 4BQAIHw9cxILg+DHvdtZZEZH4Z16A7YuHyz50nniakFqRPj4ehG6a8i8ULD2RDAC3L
+	 w010BPBi3qqU5QDTb9jNoSKD+WUExx8QB/mmR2KHiFLYFDZgISEXkPArHO0lgS9t1P
+	 6dR+u+uNhnf7mKWmrxQp+0rLdNwJ1qfvNHUsrOMF3YoR9KXYixFWDTqZhW/cROGyXK
+	 VgpVryr4ffKid2rGOfarsj1KCQDph7b5FT4vCwWTUXZVSAgixQ8CYOUDYvxNY6YyWe
+	 be1AdcDaRYDoZWZQDQMTF7hfkLk+NzkR1tyccEEtpC3i3jwqle1UkT7xm5pJMMuXTl
+	 Vt9KCrcWglQrv3aJbObkPmaM=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id AD60640E01D6;
+	Fri, 21 Jun 2024 17:32:50 +0000 (UTC)
+Date: Fri, 21 Jun 2024 19:32:45 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, will@kernel.org,
+	peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
+	namhyung@kernel.org
+Subject: Re: [PATCH v2 1/3] x86/cpufeatures: Add {required,disabled} feature
+ configs
+Message-ID: <20240621173245.GKZnW5PVnf4ota5pL4@fat_crate.local>
+References: <20240616085743.1100704-1-xin@zytor.com>
+ <20240616085743.1100704-2-xin@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240616085743.1100704-2-xin@zytor.com>
 
-From: Yunseong Kim <yskelg@gmail.com>
+On Sun, Jun 16, 2024 at 01:57:41AM -0700, Xin Li (Intel) wrote:
+> diff --git a/arch/x86/Kconfig.cpufeatures b/arch/x86/Kconfig.cpufeatures
+> new file mode 100644
+> index 000000000000..5ed24e45df87
+> --- /dev/null
+> +++ b/arch/x86/Kconfig.cpufeatures
+> @@ -0,0 +1,197 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +#
+> +# x86 feature bits (see arch/x86/include/asm/cpufeatures.h) that are
+> +# either REQUIRED to be enabled, or DISABLED (always ignored) for this
+> +# particular compile-time configuration.  The tests for these features
+> +# are turned into compile-time constants via the generated
+> +# <asm/featuremasks.h>.
+> +#
+> +# The naming of these variables *must* match asm/cpufeatures.h, e.g.,
+> +#     X86_FEATURE_ALWAYS <==> X86_REQUIRED_FEATURE_ALWAYS
+> +#     X86_FEATURE_FRED   <==> X86_DISABLED_FEATURE_FRED
+> +#
+> +# And these REQUIRED and DISABLED config options are manipulated in an
+> +# AWK script as the following example:
+> +#
+> +#                          +----------------------+
+> +#                          |    X86_FRED = y ?    |
+> +#                          +----------------------+
+> +#                              /             \
+> +#                           Y /               \ N
+> +#  +-------------------------------------+   +-------------------------------+
+> +#  | X86_DISABLED_FEATURE_FRED undefined |   | X86_DISABLED_FEATURE_FRED = y |
+> +#  +-------------------------------------+   +-------------------------------+
+> +#                                                        |
+> +#                                                        |
+> +#     +-------------------------------------------+      |
+> +#     | X86_FEATURE_FRED: feature word 12, bit 17 | ---->|
+> +#     +-------------------------------------------+      |
+> +#                                                        |
+> +#                                                        |
+> +#                                     +-------------------------------+
+> +#                                     | set bit 17 of DISABLED_MASK12 |
+> +#                                     +-------------------------------+
+> +#
 
-Hi,
+Look ma, a picture. :-)
 
-I want to create account perf wiki and make more enhancements,
-but I was not enable to making account.
+But yeah, this is better.
 
-This is Error message.
+Thx.
 
-Error sending mail:
-Failed to connect to tls://email-smtp.us-west-2.amazonaws.com:465 [SMTP: Failed to connect socket: fsockopen(): unable to connect to tls://email-smtp.us-west-2.amazonaws.com:465 (Unknown error) (code: -1, response: )]
+-- 
+Regards/Gruss,
+    Boris.
 
-I hope it resumes soon so I can contribute perf wiki. :)
-
-Warm Regards,
-Yunseong Kim
+https://people.kernel.org/tglx/notes-about-netiquette
