@@ -1,50 +1,54 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2A2286A6;
-	Fri, 21 Jun 2024 14:35:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D89C208CE;
+	Fri, 21 Jun 2024 14:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718980521; cv=none; b=L+J+kXykT1YZkg+Ble3JAWL7DORiYNocYAQa+6HiTRTedhcTaBjprPwDXf4kda4kmQpyjJyOWBsjNvENpKmjReV1Qh9AyEzCP5nFE3sSGx0uoYbJ1Q4J6GVAtG+0BlFHyb2qSp17tgZX2JTtW1tAjfcW8MsHOEYR2Z6EZgX+4Q8=
+	t=1718980541; cv=none; b=fModIEkkR5qyGsLoJP1Fg9Ah4/17VUWqqJwsIuoiMTVXTwOZ+5csNMjfET6AZ88kzNmh2Fsz6RaXgk8Fh2ih702a9gioNe5Ex8U+pw39dZD+iQkk+GBJmgisa5OM6JvQHN23jyz55JP7ujCj4zLmGKd5QF8LNiGRYIDl99l0uFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718980521; c=relaxed/simple;
-	bh=bacV9qUz1S8RFon+sqH650IT1ishlSaDQ291gdu4JQE=;
+	s=arc-20240116; t=1718980541; c=relaxed/simple;
+	bh=UJ+SRvU/bulfahxJZqM9gPX5fFpLKj0ALCN9+nL+mkc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=u50h4uy9fRYDG9CDXSBzUjmEYgthY8ah5drNrigPFrwMhvy++xe48nm8uJyh6EYXmLALv+S2+8NaFtMiq7hi247qOncHmYhBZ8Kb8G+Ma7KfbRWbOXOLKQ07tjNoX6na/O6GquaJhX9klLAlTsVi1aY2ZM25VSWBHvS5p/mVqQ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VmXARohn; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=YmFSxUgzN5L7GoNdOeFx2leUZvZx1wGD1lO2VPGOiRL7JVL6T5II/R+F1UnTucVCgSjJ1iRVkAb32l17BwfuKgjOCvR1oNQLjYhm7GsLCjF90VwDrN5xK17iZxbV5up25677HdiVlIOh88p008+YzMH707c6G7TqYbf7JKKuetk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uYnrNgxb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VmXARohn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5EB3C2BBFC;
-	Fri, 21 Jun 2024 14:35:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uYnrNgxb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB343C2BBFC;
+	Fri, 21 Jun 2024 14:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718980521;
-	bh=bacV9qUz1S8RFon+sqH650IT1ishlSaDQ291gdu4JQE=;
+	s=k20201202; t=1718980541;
+	bh=UJ+SRvU/bulfahxJZqM9gPX5fFpLKj0ALCN9+nL+mkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VmXARohnjZhs6FfkbLGT2X9/8dihi2sfBpFQWgW4BDyRKFzLufeXMWFWB15SZ89n0
-	 fA2aHtOAsy9HzVtn6IGgk/oSe80J6C8/h/vkueq07wAKvo5VCAVDCq6J7ZdG24mNKI
-	 PLZCb6RhP2YAwT+Iqo24rR2Jm8jNuoVSd+qezkYsGMdOw/uTaPUhZOID+PAmBPB306
-	 B74RBOze1WQgWDbry0MyFoL4ffcpGJNIizfsFKBRCTcJaYn7rvyhFnrAY7YfOvmiSh
-	 5T6Tgc0bfpHp1B0c1KdGY7pnAR7w7FjhJrpWSZR8dp4SsyhQPFvthNxa+A3U/26/b9
-	 Ja8qml6P6uMNA==
+	b=uYnrNgxbIJoeVfw6BM1pUffYaquyHRbDCcE7eH5Q5xXl2/repXtsOfPkJ5Ql9pxdT
+	 Lz+Si9qcXQMdECcHQb/IhXA4fWgkDIGiWH4ejh6xBUm4wzcKnSIcFKALNlJgm6MBzS
+	 Q0WYRts0EIwTUqQt3VtbLoJDDFD3DF+jV9Vtd9xsVdCqCV9OHq0ijt1AarJsux3IUq
+	 ImoFxauC4O5PQ+SsIScR/QN8agKQFyVmiXAqgTyD0Xu7GzWixRkLd2JPE3FW5UdqON
+	 o5X44EFEnGoQBAzIDl9vgxK/HiIy5pN9NOOUNYTe4yJb9qwInvYQ8+/+QAC4uQZfLK
+	 JvA3QY7t5nK5g==
 From: Namhyung Kim <namhyung@kernel.org>
 To: acme@kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>
+Cc: irogers@google.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org,
 	adrian.hunter@intel.com,
-	irogers@google.com,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org,
+	kan.liang@linux.intel.com,
+	yangjihong1@huawei.com,
+	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com,
-	maddy@linux.ibm.com,
-	kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH] tools/perf: Handle perftool-testsuite_probe testcases fail when kernel debuginfo is not present
-Date: Fri, 21 Jun 2024 07:35:13 -0700
-Message-ID: <171898041590.3877092.8139322744366715128.b4-ty@kernel.org>
+	sandipan.das@amd.com,
+	ananth.narayan@amd.com,
+	santosh.shukla@amd.com
+Subject: Re: [PATCH v2] perf doc: Add AMD IBS usage document
+Date: Fri, 21 Jun 2024 07:35:39 -0700
+Message-ID: <171898052835.3878160.8196161443570128436.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-In-Reply-To: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
-References: <20240617122121.7484-1-atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <20240620054104.815-1-ravi.bangoria@amd.com>
+References: <20240620054104.815-1-ravi.bangoria@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,14 +58,15 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Jun 2024 17:51:21 +0530, Athira Rajeev wrote:
+On Thu, 20 Jun 2024 05:41:04 +0000, Ravi Bangoria wrote:
 
-> Running "perftool-testsuite_probe" fails as below:
+> Add a perf man page document that describes how to exploit AMD IBS with
+> Linux perf. Brief intro about IBS and simple one-liner examples will help
+> naive users to get started. This is not meant to be an exhaustive IBS
+> guide. User should refer latest AMD64 Architecture Programmer's Manual
+> for detailed description of IBS.
 > 
-> 	./perf test -v "perftool-testsuite_probe"
-> 	83: perftool-testsuite_probe  : FAILED
-> 
-> There are three fails:
+> Usage:
 > 
 > [...]
 
