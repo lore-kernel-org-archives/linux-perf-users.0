@@ -1,89 +1,114 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D49B413C802;
-	Fri, 21 Jun 2024 06:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22CCA14D449;
+	Fri, 21 Jun 2024 07:39:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718951826; cv=none; b=gjsfheqByAGf7QbH1wU/BAxhlp76zEiYCttk6OSQ7XYBiXq7jgDabB74Rggvw8vaQmYuswvo4O5B1zRMykFvjDjW4mFnSpM9kRGXTXR3z/t0LZBuISbmwmEEw/6qYTIbmZWFw6P9RZ8Ih4A9A9VSaJZCHMbbrdrKBLD3Igbvg64=
+	t=1718955558; cv=none; b=lYMujcPX+C0vPZ0Yh86NeYLyDRs/Tg5QZoiznFZ4Ar9Av9/NOBjvu6eU3OrPkaLduerGsno9mvpqOHRpu1MC3gf7q5URsA/nwDAu0h1d99R54A5itmipEDH1TAvvqAk0pE03J6OfKpXfQCfSHaqdMcuH3JmYt6Sdoi3rTVxXTtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718951826; c=relaxed/simple;
-	bh=PILEGcto9L0Fv29TPcqXWioRKaLwrMhrClPCWXIU4iY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lhTsHweFr7QhsjfwfBBpRFThNbvajoqSLT2bpiS7sPinAxpESsYcDq0sT4XLERdXzqxX8+ezqTZ8bqpboBX0UP0rlLrDQ/gVxfrGmFanJQ7w4QIWGyD3drPdxJg5IenjayLEFW4sRUKkh1hWUp6jbhryt7iG+ap+s7t82u3jI2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GsF8gVfB; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GsF8gVfB"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1718951825; x=1750487825;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=PILEGcto9L0Fv29TPcqXWioRKaLwrMhrClPCWXIU4iY=;
-  b=GsF8gVfBCLQ8ilC8PQPxhoFLpKcwoHa7GclRc1UOGvh6RBeXsgz/W2aj
-   ty0UoJhzUudXtngLpsI1gX0fPERG0hDBI0623DtL3wktv/OaEYdhzC+sy
-   7NaQOOTcntXvTQpGTCLl7iZE4CTfSmZLeyk9kNnt20e91li5DqhYAvscT
-   SEDXMILhrPH8EFpU9Ix4kasq51fdoRtpyW+QemWld5tAtSjPlefy+d6Zl
-   TulgTZIN76whqrCUl7Tlvj/4Z1hiZl1SpUhGSmtal8ijAxFxKBaqI0P/h
-   aTg1rKfSKfCTtKtL362qDdKV47cTAmuKd15jaOxF3E5fXtSZma7POE3rS
-   w==;
-X-CSE-ConnectionGUID: cMQNhvsBT9OyNNQY0OEi2g==
-X-CSE-MsgGUID: cflb9Y1bShmiU2DFOxK6Ag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11109"; a="27391478"
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="27391478"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 23:37:05 -0700
-X-CSE-ConnectionGUID: ZQVcD7i3Se2Thk4cdWxn9Q==
-X-CSE-MsgGUID: otw7n1PbQTqHJo2zGZIGag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,253,1712646000"; 
-   d="scan'208";a="42602423"
-Received: from mesincla-mobl1.amr.corp.intel.com (HELO desk) ([10.209.40.87])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jun 2024 23:37:03 -0700
-Date: Thu, 20 Jun 2024 23:36:54 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	s=arc-20240116; t=1718955558; c=relaxed/simple;
+	bh=fny5qmN5Zof2ylj9b+oRQj/l3DHFhHzzbmYllH4d2Fs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=cZlOzO9w/ctDuly4VoceXS4BGOTeJMl3Yk1UpZHKk7jCp3gZ99O+9knYNmaA1jKYQUw9YFebCGY3+bfReW9ahKB0KUimANSssPtdeF4nrQs4L4U43n+sKpWn3z6rJjzsVgM26lrFDy6/oiwj9GHLtECU82cGGlPzyuUEYBmNeWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Dx2OkhLnVmlcsIAA--.23038S3;
+	Fri, 21 Jun 2024 15:39:13 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8DxPMcfLnVmIjgrAA--.39322S3;
+	Fri, 21 Jun 2024 15:39:12 +0800 (CST)
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH PATCH 1/9] x86/cpu/topology: Add x86_cpu_type to struct
- cpuinfo_topology
-Message-ID: <20240621063654.eabkd337tujqs6p2@desk>
-References: <20240617-add-cpu-type-v1-0-b88998c01e76@linux.intel.com>
- <20240617-add-cpu-type-v1-1-b88998c01e76@linux.intel.com>
- <20240618212801.GJZnH74Q4yknT-4X12@fat_crate.local>
- <20240619033126.irudoer3pw4fb5be@desk>
- <20240620155111.GIZnRP7-XYvJZPY0_6@fat_crate.local>
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 1/3] perf: Add perf_event_attr::bp_priv
+Date: Fri, 21 Jun 2024 15:39:08 +0800
+Message-ID: <20240621073910.8465-2-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.42.0
+In-Reply-To: <20240621073910.8465-1-yangtiezhu@loongson.cn>
+References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240620155111.GIZnRP7-XYvJZPY0_6@fat_crate.local>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8DxPMcfLnVmIjgrAA--.39322S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Zr1DAr1fZF45Cw13Gw47KFX_yoW8WFyrpr
+	ZrZrn5K3y8JayS9w13Ga1q9345JrZ7W39Fgay5Kw4FyFs8u393GasrWFnIvFn5Wr4jyayS
+	qwnFqr4qqa4UtFXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	tVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7V
+	AKI48JMxkF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY
+	6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7
+	xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xII
+	jxv20xvE14v26r4j6ryUMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr1lIxAIcVC2z280aVCY1x02
+	67AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8XTm3UUUUU==
 
-On Thu, Jun 20, 2024 at 05:51:11PM +0200, Borislav Petkov wrote:
-> On Tue, Jun 18, 2024 at 08:31:26PM -0700, Pawan Gupta wrote:
-> > To accommodate for that we can name the vendor specific types in this
-> > series as vendor_cpu_type. And if we ever need to add generic types, we can
-> > call them cpu_type?
-> 
-> Yes, then that member you're adding should not just be called "cpu_type" but
-> either "vendor_cpu_type" or "hw_cpu_type" or whatnot and every vendor can then
-> put its own values there.
+Add a member "bp_priv" at the end of the uapi struct perf_event_attr
+to make a bridge between ptrace and hardware breakpoint.
 
-I like hw_cpu_type better, as it leaves room for architecture defined
-types as well.
+This is preparation for later patch on some archs such as ARM, ARM64
+and LoongArch which have privilege level of breakpoint.
+
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ include/uapi/linux/perf_event.h | 3 +++
+ kernel/events/hw_breakpoint.c   | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..f9f917e854e6 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -379,6 +379,7 @@ enum perf_event_read_format {
+ #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+ #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+ #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
++#define PERF_ATTR_SIZE_VER9	144	/* add: bp_priv */
+ 
+ /*
+  * Hardware event_id to monitor via a performance monitoring event:
+@@ -522,6 +523,8 @@ struct perf_event_attr {
+ 	__u64	sig_data;
+ 
+ 	__u64	config3; /* extension of config2 */
++
++	__u8	bp_priv; /* privilege level of breakpoint */
+ };
+ 
+ /*
+diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+index 6c2cb4e4f48d..3ad16b226e4f 100644
+--- a/kernel/events/hw_breakpoint.c
++++ b/kernel/events/hw_breakpoint.c
+@@ -754,6 +754,7 @@ static void hw_breakpoint_copy_attr(struct perf_event_attr *to,
+ 	to->bp_addr = from->bp_addr;
+ 	to->bp_type = from->bp_type;
+ 	to->bp_len  = from->bp_len;
++	to->bp_priv = from->bp_priv;
+ 	to->disabled = from->disabled;
+ }
+ 
+-- 
+2.42.0
+
