@@ -1,231 +1,254 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B233728F1;
-	Sat, 22 Jun 2024 00:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719014796; cv=none; b=TVq1wDnMxocrn3hzqQlbaU7Ip6mS9rx67jmyKUJlS65n1qau36LkaRvg6P7MnCeIvojL9Qk4HUZq6B425Yv8iF2Fp/QioQilj8G5iIZGmRBDOxFn2WzHmttqGcwxQVZzQ84rVnJJmtnMdRRKiHhndjdgHSdhmnjrZCPlCWKf8Uk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719014796; c=relaxed/simple;
-	bh=WiVqt52hzMLAeBX8UtUgQuCV4HjtrANjoiU7an0ykWE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qZRVEcu8mYHtyLZe6nSptEoYgtKJ0+UhpEABNvGxJJXMkRpmMWVc5dxQN1PIQvu+ca1Bi8D1zuB2i1mAssJwJiJ6YB7+E5eGF3dYdBkxAVm7JQXD4q1AzPfXKEFPr3f+Gx3k1blNWYnNZlVA/LO82I27nQhYpR73++v171WnWzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tXODp2mk; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 551394A06;
+	Sat, 22 Jun 2024 01:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.14
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719018502; cv=fail; b=GaEszdulORkQSlAmM7foTIj7WugdUY699qizhxPtcbhERqCoLO04u9GWWXIAJi2OP5T5lcZX6oBJnOAbMNXht2jArwshz0OIC1SMmqZK69iaQksEzLxuTzBWf25OpV/Nlcn03jA5hjlaACDw+1eCKK3NvzCQoPM3VGB1mZ8SIUI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719018502; c=relaxed/simple;
+	bh=+XMMl0RYhA7YlqNIbezAuwuh++7M12GIeYAk+WfCjH8=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=I1AGRsgRJExIqfshYMes02E1xDNSK0G+M8YQYHw9p0wm+Gs9LbM+6ZmLDGFtFv8Nyk0Jv3Hsf/dsyAdpW8dlfGFHdG1DKCEjE0X6ff2v8p8NGv9LYUHANKxVbHQ6heZkLiqUBnwwABmZMPrUSvTR6aFi7XZaQ7fG9m8WwM5QPkc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TfGmXoWE; arc=fail smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tXODp2mk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA1E0C2BBFC;
-	Sat, 22 Jun 2024 00:06:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719014796;
-	bh=WiVqt52hzMLAeBX8UtUgQuCV4HjtrANjoiU7an0ykWE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tXODp2mk+szphHJvZuIflFYNpzNivWHTSyZlSJfakOaEo/Ah8Lz0Mbyqi3XIFvz3+
-	 IVYFco8aCNBe2SDKRsM8XOUi/Zo0hi5/PZ2ilsaEfTNbxtyTfJPTqM8ldL4rjVkK2Q
-	 GyJDsYW1YGHtbLBLmxSp1BDSRkfvE+PPO/IpeDjerJ9IyIYNuKVft5gQu+yjd3z/EY
-	 6kI5wTLf9SvUm2eoZu7X4ND4PBxcONEH1EhCUOdNV8//8E1UxZMadtJz4bFWQZkZPf
-	 nRjkDDyke6yetM3Kp6+yxiT9yX4lCg4fZjgZMrHQCi/ZNpLmYKBnIVTyi6+y/s9r4Q
-	 8Btx13c7Hcjqg==
-Date: Fri, 21 Jun 2024 17:06:34 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [V4 00/16] Add data type profiling support for powerpc
-Message-ID: <ZnYVitG1tffUNTn6@google.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <C84A4D8E-3BCD-47A7-B41E-1B39744AECDF@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TfGmXoWE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719018500; x=1750554500;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=+XMMl0RYhA7YlqNIbezAuwuh++7M12GIeYAk+WfCjH8=;
+  b=TfGmXoWExf0EWbwGMGtAQBqabzzdXS9/XcYkzyA8RbnlptWTm32ARK5q
+   htL7xLHk80+XK+GyZYS6h7SjVnJ/1CCkIsID/GMuQdCy7sudB7HCdV52E
+   0aCyR4REsi0Pr7p0Qpyo+MaVgRXsHQSCitYlthq+z1K1k5MwOb7dMReDM
+   Q2u1+PDi/juqIb8kmTgMbJ8BnF7NxO1ciYdSeLkGYeeHYgljSht9KJh7v
+   iELoFjbf25oXO0ccvkmTibNp4VjahjHReBnS50XR9J6zHDa6loQwkAzx4
+   00x6iUO8Rcu+NcQOqAqi9/NHcT2xdp6xciFZNMb5PUbIDbWFrRKfvTW13
+   g==;
+X-CSE-ConnectionGUID: KEk7UWNGTAyKD1S0X+rScw==
+X-CSE-MsgGUID: GZuPthEZSR+21EJaidWB7A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11110"; a="19880732"
+X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
+   d="scan'208";a="19880732"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jun 2024 18:08:19 -0700
+X-CSE-ConnectionGUID: zdUAxxhCRS6Xm+yL94sEYg==
+X-CSE-MsgGUID: aITe1eA2SFyoMsyBVuZISQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,256,1712646000"; 
+   d="scan'208";a="73493984"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by orviesa002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 21 Jun 2024 18:08:20 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 21 Jun 2024 18:08:18 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Fri, 21 Jun 2024 18:08:18 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.169)
+ by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Fri, 21 Jun 2024 18:08:17 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QaXb8a/NWlCs9C2CVF9CVIkGfr5Drz9Qh61VVnRRwVOjegRDi20QTrLDiloCn1TZgtEDimO5spHL/yanBNQ7bM5LJ+1mqT/+AzxrGgkH5Xc52Lmkmd+0lL8YO8u16WgFqc2ctFfZv05jGwUQmqbmqwJtmy3/yFPa+xFcyNOU6f6CzolzWwD40XejRw8XPrsLpIpwImJb5NbakCKeqNFMIMHRzK/UcBGZytAQrkHLER0Esu53i86lq2jCfzCbwUIAwucmGI05Tu/8HhFLvUNvxqOM0NoAbho93RSV3TymA64LcPuDpuQHVKT3Oe4wxco/NDBMCdBtQp9KWj+OpEclfA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=eJfaz3yWyqhF1YNIXp+EvWg6CpIFk0pdvGD/exTvDRE=;
+ b=W3pNXd8vV18+rUUQ3QkAdCipeX2zlOQFu999dueLuS/jxNlHVPR114dxfjIaMtf02obctfwNt/1M/5ZGA0R4E4eRSTExgBWcP0bCqIg/8WwFTH5J4ePXncTd7lZ+Eo/0ltR78eKnpRWIcGkrE3tciX0iEN/7iQXvgQ3c8nx7V+leOsuFS5e/SiZMTSEURL3mnDHatakJTtPxoNVI72dgsKjgE2cLxb5Nfwn7r75wxyLDA+kjwpG3X2o8F98o1XCFo0ijRyeprqp+kVdm+UKQXUzoq45hu1fb6eI12cy/TWbZXr9qJHNY0aA/OPbMl9f9BMw+Hkzu0+02byLETobLeQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by SN7PR11MB7568.namprd11.prod.outlook.com (2603:10b6:806:34e::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.21; Sat, 22 Jun
+ 2024 01:08:16 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%5]) with mapi id 15.20.7698.017; Sat, 22 Jun 2024
+ 01:08:15 +0000
+Message-ID: <004f6400-0d35-4c5e-ad31-094be8860f08@intel.com>
+Date: Fri, 21 Jun 2024 18:08:14 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting
+ CPU feature
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, "H.
+ Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, <linux-perf-users@vger.kernel.org>, Peter Zijlstra
+	<peterz@infradead.org>, Andi Kleen <andi.kleen@intel.com>, Xin Li
+	<xin3.li@intel.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+ <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
+ <b3b10d29-857e-402b-95b9-1696baa88e81@intel.com>
+ <20240621164615.051217c4@jacob-builder>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <20240621164615.051217c4@jacob-builder>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR13CA0051.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c2::26) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <C84A4D8E-3BCD-47A7-B41E-1B39744AECDF@linux.vnet.ibm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|SN7PR11MB7568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5944f57c-d166-4e2b-2bcd-08dc9257cbbf
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|376011|1800799021|366013;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?T2dpZWJmU25PM3hYSm9FaWxOV01HcmZia3pJQ3lndmtaM3dhZlFqdk5FbUcv?=
+ =?utf-8?B?V002VTlCVHhIZnpJNVk0cXpraTlIRy9YWmg0R0VtU2ZQODNHamw1elBRdlI3?=
+ =?utf-8?B?cEFseXY4QmsyTEp4UmRxak8xOUg1b1NEam1tb0RXWVpGNXJuVzZsWUFqa0lZ?=
+ =?utf-8?B?eEk3WlNia2JUUnNIZlBqYmdmMkxBWW45aHhXSVh0a05uSy9FWXRsRFVzVDFF?=
+ =?utf-8?B?ZG9LMTJ5ejNUd3BFYW1iUFR2UFhmRVFlUkl4eUdsdFJaNkRLUDN0QnptQTRF?=
+ =?utf-8?B?UjgrcmJqNjVOZmV0UTVjemRWUjQzK2RGbVVyRjEzakI5SE9qU0JDRHZDUng0?=
+ =?utf-8?B?VGdHUmpQWFhPL3ZTK0NHTE41S2t4RllOWUphQjFmOXRkbXU4cHRHNEVabW1D?=
+ =?utf-8?B?VmNDSmkxY2QxcWtXTC8rRnhnRzBpOVBTSUZVK1BscHYwa2ZTS3lOSWRqakhW?=
+ =?utf-8?B?NzFXeDVvOTNqdkhNSkIwcTRyY2JEYk1jbHNxU3dkS3JLM2VkRXhvTTY3Z1Fa?=
+ =?utf-8?B?cEEvbFIyNCtVNk4yM1RYY1BSeXdySWE0QXhJY3lyOUlvL2ZrZ2JvQjB4Mk45?=
+ =?utf-8?B?dE50WmZOaUdOUjdZTGx3Yk5MWVpUTHNxMzU1ckUrL2gyVUdhcFM0c0JNR1ZZ?=
+ =?utf-8?B?RVoxL1gvVnozbWFabzE2VGdhTFgvSDJ5bVQ5VzJSWDNyT0F1bG9MdzVEbHd6?=
+ =?utf-8?B?MDREVEREZ0c3YjFWc2F4U285VEtldE5KblJuNDBzRUppVjVvUGVvRlM3Vklk?=
+ =?utf-8?B?VzZXR0U3blhGY2x6aUNFd0VZaEkzeFQvbHdpU25JUU1uSUFXK0Zqc1FLSXdw?=
+ =?utf-8?B?QVBiOXdrN3ZaczJ3eEY4RTNqbDdxZElSakF5Z202SFRtRVZQNktoSVJncGpC?=
+ =?utf-8?B?czJxdVRHRlE2eEZZYVc4T1VkL3BxeTFmcmdxTmNSYW95dDFRbzNlcXlwODJn?=
+ =?utf-8?B?WEVKb2dTbVhlVjM0UUlGalRsZGFWV3N3SHNBYlBRTW1tSjV6ZUh2d1VUM2ds?=
+ =?utf-8?B?Y2hXNWViMGlLZWFFaVB0RjNhaEsrck9OMW03ZEJFd2Jad1VjNmFKWlNGTWxO?=
+ =?utf-8?B?bGV4Sk40OWhFOGFPNStPTkt4eDQ4NTBnaUJKVU1MNTFqQldzd001RzlNSGRv?=
+ =?utf-8?B?bGVVR1dFcFBiTHRtNVZrWUR0OHJJdUJqZDBNcE9VY0tMOHdJdjIvZlNESno0?=
+ =?utf-8?B?Z0t2amcxbStPUTNnNDRvbU5aeVRHbkhiR2w1emIza24yRUF0dGMrbnBNb2ZF?=
+ =?utf-8?B?WGJxMjV0czFYOEt4UUdCZ2xIQ1k5d3pmK29iblJNNm1PSS8yVVZqcEc2bGhK?=
+ =?utf-8?B?R1U5dzFwL2wxVjZIcTE0czJYK1Z0dXBqRFRyaVJKMDEzVEtzZ3BhT3hTbURx?=
+ =?utf-8?B?dkJDd3FNZ04vNnhhMFJXR0x5Qjc3WjVJVUZsV0tnRVdwZ2krTkt2S3lVMzVx?=
+ =?utf-8?B?VkRqYlZ3aThJdU9lNzJDNlQvcitSUlV3VzZTc2JHd1lzYXdVVlVpSUJPUkxw?=
+ =?utf-8?B?Z003REdaZGI4MVpDRE9HSk15QW1qUlJJZkkrY0xxekVnTWRFM1NjTnVDN1Zr?=
+ =?utf-8?B?ZWZjWEZvZXRQTFg0dStaRGtmT1FxY2pHVTlCcGI5emFSR1h6NEUreTZUSEI5?=
+ =?utf-8?B?dGlFM3p6bmFSZVpDNThpakNOdlovUGxKeWhBZFduM0RLeGNSYnZ1SVlaZmlT?=
+ =?utf-8?B?K2J2bWFhQUQzbW9sN09ZcFU5UG1ianZGeEpHcjlnZmx3SExINEdmQzZjQTds?=
+ =?utf-8?Q?xy3r8Tii1Horda+Z1Jbkx0eptQ3cyL8DYJ9Zuz+?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(366013);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TTE4eFJ5VXBxNVByVWtkQ0psNjcvOFVGS3BlcjY3Yk1pbU1BS1Y0VVorTWt6?=
+ =?utf-8?B?QWJhM20yQ05ER2ZHZTM2Wm90OXhrQ0VwK1NqMlo0cWlzeGIzT1NRRjZIaE9v?=
+ =?utf-8?B?M00yTDJvbnBDams0S1pCUDAzSjdiRUJ6aCsxQVFZazFpQVkrczhDVkV4dmg5?=
+ =?utf-8?B?SURLVjQ4NGE0R3FYRm5YcHlhRUNDWDJqZjg1UjZUOGU5MW1iQnFqTnhyamI4?=
+ =?utf-8?B?TjdmcCtqR1Ntb3B6aCtZYlB4YnFPQ2dVM1JXeEszTWp3am00VEZpRjFHNzBL?=
+ =?utf-8?B?RDZoMFRHaVl3SDgxMmlRSHZEVmh0TG9YZmpjdzhlMUFrNUZOOGJ6Q2RxUWx3?=
+ =?utf-8?B?dE9iU1pFZXN3UHN6M09QdW9FMjB1Wmt6R0tobWRIL2prenU5ai9TUlB0WGcv?=
+ =?utf-8?B?bnhUVkZsZjgvSG9RWlcyYXhxdmZ3aThtb041b3pVeXJQamUxTzE4SHVhdmIx?=
+ =?utf-8?B?TmwzZUpKRFUrNXVoZXZVRzEwbisvZ2l4eHV5NlV4azZqNW1OUVpBcDBnSURr?=
+ =?utf-8?B?bVB2ajdqY3ZRMExaZTRGTXgzZTJoWWJ3RzVab0l2M2VKTEtGNzFDR0VxUjVO?=
+ =?utf-8?B?RWFvd2hSWnJKaWIwL09NYWxRZGk1RjBqTlUwdkRocHZZd25XbTNSOFdZY1Nt?=
+ =?utf-8?B?Qm0xbmhmaGlwRkxBWDJ3L3M1dk9GcGVoSVhmbjZSR1VYaDE3L3kwdmkxM0RW?=
+ =?utf-8?B?WjhnZWpSUC9qampOM3dGeG9JQmJSRWc4U2xHU0FNeldnODYrdTY1TmNsY0JV?=
+ =?utf-8?B?ek1PZTJORTFsYUZaOVZzRDdqMXhlMFAyYnVNaUZrWHNXMlI3Y2w4OWxobGt5?=
+ =?utf-8?B?VFIyRmVnNWJDTnQrZnYvS2pHdzdmbnRVSnpnU0pRdGQ1U1lUSkdvY1lyUUJB?=
+ =?utf-8?B?aWVmODJjQldoTmk2bzFBbXZubmZpbWsvTVk4bCs0bGV2c1phckJvd0hSZDBZ?=
+ =?utf-8?B?YVpuOUNESDVzcEdtcGN6elY5Wi93N1NFNWt6STVVRnAzak1aSGFCdWUxZDUw?=
+ =?utf-8?B?cnhzUDVSbnp2TlgzOEtlM2hHNHgrazdLVG9QZzBmM040Y3BWK2c1bGZHZXpy?=
+ =?utf-8?B?N2ozOWJLY3hSVXU5NjVEUEN3b25DR3FMMUVDMU9UQklDVmpJRiswMWMyTzZo?=
+ =?utf-8?B?cDhLUEpLaCs5dnVIZXB6VHgvVGZUWW92Rm9GM1d2Q2o4Nk9QYXFLVlZ0b0t3?=
+ =?utf-8?B?WmFFMFlxTnZkSTkwTTczQWcvTEVzc1N2TjdSc0VtM1FYTThIbnBwMHpkTDBp?=
+ =?utf-8?B?dzFRVG5WSzFmTnAraExsS1NlQ0pCbG9nMjVHTTlBNTRTU1UwUm1UVXp3L3k4?=
+ =?utf-8?B?dDErUFVYbzhZckxGZTArY0JnQjdYdy9zNTN4WGxsOXlpUHo4ZG9ybHY3UEFz?=
+ =?utf-8?B?ckxyclJ5dHo4YnFCdjg3b0RSVGErOXlKQVArdnZiaWNqMEdBSXArNVpiUFk4?=
+ =?utf-8?B?bjdKRDcvQXAwT1A1SDdoWTUwQnEyNzFteVViUUc2VGZqMjVDdXZNSnYxWVlI?=
+ =?utf-8?B?Y0VRdDBGaWpsM0RPL1h4eWRacHFsNkt0S2tKN0p1Y3FHUSt3NGNkbWkwTGR0?=
+ =?utf-8?B?N0haVk1vakVxQnZJNnFiOXY1bk03aitTK01RR0txOTdIQ1d4Ni9LRkJocSs3?=
+ =?utf-8?B?USswRjg1OG9SUFdQd1dQeG9lbWJHY3AxaGpqc2RHSFJRd0lHNXZjMVRLVnhx?=
+ =?utf-8?B?dC94QUNJYTdtVHY1ejh0R2tnS2xYbG44YVROZk9SWXZwRUtWMEZxYTBaRVdN?=
+ =?utf-8?B?Y3R4Y1hsenRYeWk1Q0sxY0paNDlOcnl5bTRZRk5RTGczUVpsTGorQnJQb1Q0?=
+ =?utf-8?B?akRndEIvM29FZ1FQNXh4WUhJT3lhVkUyeGMrVkM2MkxhSkRsUHdOWCtjVVJk?=
+ =?utf-8?B?b2JpWkJKVWtPbWRtSGNzUlJzNi9SbitONndETmxBOERWSnRiRis3RFZFSzNo?=
+ =?utf-8?B?NEh1N0pxamk2dzhnam5CNmMwQTA1dzV2UUcwdE1vMGRnZjFZVXV0b3lZY1pV?=
+ =?utf-8?B?blRHaHMxSENFdkttZzR4UHhuM1lJSktOeVl5L3NGMDlpZ2d5MGprQmJhV1NP?=
+ =?utf-8?B?S0lGcnpaODF1Qkdodjc0MlhZazRKQnRSMnNPWm1LLzBQcTVIMHBsSEhUbS9s?=
+ =?utf-8?Q?nPJfGKOSIquyrqPsz6Uykjx1T?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5944f57c-d166-4e2b-2bcd-08dc9257cbbf
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2024 01:08:15.8827
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NAl17+UEDI6oUOYgEs0eEz8P94l672S9HWJ8uCLBktooPtaBIJSRpejKBYYjF/GJ++95eKW2TwZSG1hqCR4+CQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB7568
+X-OriginatorOrg: intel.com
 
-Hello,
 
-On Thu, Jun 20, 2024 at 09:01:01PM +0530, Athira Rajeev wrote:
+>> diff --git a/arch/x86/kernel/cpu/cpuid-deps.c
+>> b/arch/x86/kernel/cpu/cpuid-deps.c
+>> index b7d9f530ae16..39526041e91a 100644
+>> --- a/arch/x86/kernel/cpu/cpuid-deps.c
+>> +++ b/arch/x86/kernel/cpu/cpuid-deps.c
+>> @@ -84,6 +84,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+>>         { X86_FEATURE_SHSTK,                    X86_FEATURE_XSAVES    },
+>>         { X86_FEATURE_FRED,                     X86_FEATURE_LKGS      },
+>>         { X86_FEATURE_FRED,                     X86_FEATURE_WRMSRNS   },
+>> +       { X86_FEATURE_NMI_SOURCE,		X86_FEATURE_FRED      },
+>>         {}
+>>  };
+> If FRED is never reported by CPUID, then there would not be any calls to
+> setup_clear_cpu_cap(X86_FEATURE_FRED), so this table does not help clear
+> the dependent NMI_SOURCE, right?
 > 
-> 
-> > On 14 Jun 2024, at 10:56 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
-> > 
-> > The patchset from Namhyung added support for data type profiling
-> > in perf tool. This enabled support to associate PMU samples to data
-> > types they refer using DWARF debug information. With the upstream
-> > perf, currently it possible to run perf report or perf annotate to
-> > view the data type information on x86.
-> > 
-> > Initial patchset posted here had changes need to enable data type
-> > profiling support for powerpc.
-> > 
-> > https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup.eu/T/
-> > 
-> > Main change were:
-> > 1. powerpc instruction nmemonic table to associate load/store
-> > instructions with move_ops which is use to identify if instruction
-> > is a memory access one.
-> > 2. To get register number and access offset from the given
-> > instruction, code uses fields from "struct arch" -> objump.
-> > Added entry for powerpc here.
-> > 3. A get_arch_regnum to return register number from the
-> > register name string.
-> > 
-> > But the apporach used in the initial patchset used parsing of
-> > disassembled code which the current perf tool implementation does.
-> > 
-> > Example: lwz     r10,0(r9)
-> > 
-> > This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> > registers names and offset. Also to find whether there is a memory
-> > reference in the operands, "memory_ref_char" field of objdump is used.
-> > For x86, "(" is used as memory_ref_char to tackle instructions of the
-> > form "mov  (%rax), %rcx".
-> > 
-> > In case of powerpc, not all instructions using "(" are the only memory
-> > instructions. Example, above instruction can also be of extended form (X
-> > form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
-> > and extract the source/target registers, second patchset added support to use
-> > raw instruction. With raw instruction, macros are added to extract opcode
-> > and register fields.
-> > Link to second patchset:
-> > https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.ibm.com/
-> > 
-> > Example representation using --show-raw-insn in objdump gives result:
-> > 
-> > 38 01 81 e8     ld      r4,312(r1)
-> > 
-> > Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> > this translates to instruction form: "ld RT,DS(RA)" and binary code
-> > as:
-> >  _____________________________________
-> >  | 58 |  RT  |  RA |      DS       | |
-> >  -------------------------------------
-> > 0    6     11    16              30 31
-> > 
-> > Second patchset used "objdump" again to read the raw instruction.
-> > But since there is no need to disassemble and binary code can be read
-> > directly from the DSO, third patchset (ie this patchset) uses below
-> > apporach. The apporach preferred in powerpc to parse sample for data
-> > type profiling in V3 patchset is:
-> > - Read directly from DSO using dso__data_read_offset
-> > - If that fails for any case, fallback to using libcapstone
-> > - If libcapstone is not supported, approach will use objdump
-> > 
-> > Patchset adds support to pick the opcode and reg fields from this
-> > raw/binary instruction code. This approach came in from review comment
-> > by Segher Boessenkool and Christophe for the initial patchset.
-> > 
-> > Apart from that, instruction tracking is enabled for powerpc and
-> > support function is added to find variables defined as registers
-> > Example, in powerpc, below two registers are
-> > defined to represent variable:
-> > 1. r13: represents local_paca
-> > register struct paca_struct *local_paca asm("r13");
-> > 
-> > 2. r1: represents stack_pointer
-> > register void *__stack_pointer asm("r1");
-> > 
-> > These are handled in this patchset.
-> > 
-> > - Patch 1 is to rearrange register state type structures to header file
-> > so that it can referred from other arch specific files
-> > - Patch 2 is to make instruction tracking as a callback to"struct arch"
-> > so that it can be implemented by other archs easily and defined in arch
-> > specific files
-> > - Patch 3 adds support to capture and parse raw instruction in powerpc
-> > using dso__data_read_offset utility
-> > - Patch 4 adds logic to support using objdump when doing default "perf
-> > report" or "perf annotate" since it that needs disassembled instruction.
-> > - Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
-> > - Patch 6 update parameters for reg extract functions to use raw
-> > instruction on powerpc
-> > - Patch 7 add support to identify memory instructions of opcode 31 in
-> > powerpc
-> > - Patch 8 adds more instructions to support instruction tracking in powerpc
-> > - Patch 9 and 10 handles instruction tracking for powerpc.
-> > - Patch 11, 12 and 13 add support to use libcapstone in powerpc
-> > - Patch 14 and patch 15 handles support to find global register variables
-> > - Patch 16 handles insn-stat option for perf annotate
-> > 
-> > Note:
-> > - There are remaining unknowns (25%) as seen in annotate Instruction stats
-> > below.
-> > - This patchset is not tested on powerpc32. In next step of enhancements
-> > along with handling remaining unknowns, plan to cover powerpc32 changes
-> > based on how testing goes.
-> > 
-> > With the current patchset:
-> > 
-> > ./perf record -a -e mem-loads sleep 1
-> > ./perf report -s type,typeoff --hierarchy --group --stdio
-> > ./perf annotate --data-type --insn-stat
-> > 
-> > perf annotate logs:
-> > ==================
-> > 
-> > Annotate Instruction stats
-> > total 609, ok 446 (73.2%), bad 163 (26.8%)
-> > 
-> >  Name/opcode:  Good   Bad
-> >  -----------------------------------------------------------
-> >  58                  :   323    80
-> >  32                  :    49    43
-> >  34                  :    33    11
-> >  OP_31_XOP_LDX       :     8    20
-> >  40                  :    23     0
-> >  OP_31_XOP_LWARX     :     5     1
-> >  OP_31_XOP_LWZX      :     2     3
-> >  OP_31_XOP_LDARX     :     3     0
-> >  33                  :     0     2
-> >  OP_31_XOP_LBZX      :     0     1
-> >  OP_31_XOP_LWAX      :     0     1
-> >  OP_31_XOP_LHZX      :     0     1
-> > 
-> > perf report logs:
-> > =================
-> > 
-> >  Total Lost Samples: 0
-> > 
-> >  Samples: 1K of event 'mem-loads'
-> >  Event count (approx.): 937238
-> > 
-> >  Overhead  Data Type  Data Type Offset
-> > ........  .........  ................
-> > 
-> >    48.60%  (unknown)  (unknown) +0 (no field)
-> >    12.85%  long unsigned int  long unsigned int +0 (current_stack_pointer)
-> >     4.68%  struct paca_struct  struct paca_struct +2312 (__current)
-> >     4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
-> >     2.69%  struct paca_struct  struct paca_struct +2808 (canary)
-> >     2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
-> >     2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
-> >     1.41%  struct vm_fault  struct vm_fault +0 (vma)
-> >     1.29%  struct task_struct  struct task_struct +276 (flags)
-> >     1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
-> >     0.90%  struct security_hook_list  struct security_hook_list +0 (list.next)
-> >     0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
-> >     0.76%  struct rq  struct rq +2856 (cpu)
-> > 
-> > Thanks
-> > Athira Rajeev
-> 
-> Hi All
-> 
-> Requesting for review comments for this patchset
 
-Sorry about the delay, I was traveling and busy with other things.
-I'll review this next week!
+I thought there was a common function for all features. I expected it to
+go through each feature and clear the ones whose dependency is missing.
+But I can't find it easily. Maybe someone else knows this better.
 
-Thanks,
-Namhyung
+However, anytime do_clear_cpu_cap() is called for any feature it does
+the below and scans the cpuid_deps table to clear all features with
+missing dependencies. That would cause X86_FEATURE_NMI_SOURCE to be
+cleared one way or another.
+
+
+	/* Loop until we get a stable state. */
+	do {
+		changed = false;
+		for (d = cpuid_deps; d->feature; d++) {
+			if (!test_bit(d->depends, disable))
+				continue;
+			if (__test_and_set_bit(d->feature, disable))
+				continue;
+
+			changed = true;
+			clear_feature(c, d->feature);
+		}
+	} while (changed);
+
+
+> In the next version, I will add runtime disable if HW malfunctions. i.e. no
+> valid bitmask.
+> 
+
+I don't think we do this for other features that have a missing
+dependency. It doesn't seem NMI source is any different from them.
+
+> Maybe we can also add a big WARN_ON like this:
+> if (WARN_ON_ONCE(!cpu_feature_enabled(X86_FEATURE_FRED) &&
+> 		cpu_feature_enabled(X86_FEATURE_NMI_SOURCE)) 
+> 	setup_clear_cpu_cap(X86_FEATURE_NMI_SOURCE);
+> 
+> Thanks,
+> 
+> Jacob
+
