@@ -1,185 +1,217 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 726DE149E06;
-	Sun, 23 Jun 2024 15:26:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC8C31CD25;
+	Sun, 23 Jun 2024 20:28:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719156420; cv=none; b=XdyAxlmq2pX9vgjrSFjKZl+wmI5zAjIS1/VBH5u0XSH0hXBb3EKniR/N0Y0DYl16OtFV3eAJYLbeesvejTtoN3v5TaopfsnhI+4PkFDEt9dFupdelW+a4ltDK2m+vr+iZJ9U7IhRM9tobIvs9ziqMHK8EcTjvcRjkbrWLd/6aYE=
+	t=1719174517; cv=none; b=gcPA7k+JlbmqVMFDopILWZNFJip73xdc3pRKX09iO1d34uyERnSIih3SNKhNlMY+li78YplOxt0HrjGFAqtgGCRSJav+VZ4wESR9ZT5vkLRDg3o2OKPF2UvmFyXQKAvS3XV38O5cU4x7b8oCVECbSyMiur0Sa25c//sn8qnfqmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719156420; c=relaxed/simple;
-	bh=x5Ahe6u/PLVDIcy5ljmDMPszO0GBhjHEnvRgD5+FYmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BNS9toymJiuTpWfpz1VWIIHoCRegTERVPgc/8J95gZvd/NLdb1nwPw53rRyXgrqJc8VZwSRMSWfeCdFuS548nEQMxMHCRHQKA2gLmWKDqq05aUJgZPIka+PlHvT7/PsScAzH6LmZFgMGoWJ5IOi0q5mBSowyzyidqDlez7+i0v0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48645DA7;
-	Sun, 23 Jun 2024 08:27:21 -0700 (PDT)
-Received: from [10.163.46.232] (unknown [10.163.46.232])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 633E53F766;
-	Sun, 23 Jun 2024 08:26:52 -0700 (PDT)
-Message-ID: <adc971c5-f2a7-4f2d-97d8-40ed0cfe03c0@arm.com>
-Date: Sun, 23 Jun 2024 20:56:41 +0530
+	s=arc-20240116; t=1719174517; c=relaxed/simple;
+	bh=YFvfxvE76NNhMU8FqQudjgn6c9l+8BTuE2icP0o/XVw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pvOZJpIX1g/5xEPTqDV9bvwtw++1Piz6ruYYkuIAE2KaPjICWA48W/CDN9mnXqtr7ASjzhKZjiLCqV4CF9fimgUZwjzY2dwT1RHCM9BDH8lySeECCm2GcVPaNGlbIpN8lek9/Pr5atC44mySSe0HygQZMrJmdWAzKpJfjw86TrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CK1XyLX4; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CK1XyLX4"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2eaa89464a3so43108961fa.3;
+        Sun, 23 Jun 2024 13:28:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719174514; x=1719779314; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N8CMu+bnwf8iQgK3whroeuHcNetbi7+WotVePUC3qdY=;
+        b=CK1XyLX49eimOG3IzhTSJbfsxZPutfPTaEXM4mJYKjWUxBz6bkRbuGWeAub+eGX5OX
+         bLNV/2F/k5LShBRmovfiwoppg7SDSbWwbj/YHX5heaelIdnNZAjy+TDDu3GMJ4rzUQIM
+         LipGPmHAQvqsEFAWm3FswKHB0LeBURVb+RO1EYTDAUavf0n0mMmE6X57bLpB9zxu/qOU
+         aPLow2u+XBwKcXNaBjyxb+6bnx8dYwQuQlT760KwPE9V263u12QKuo5aILQKAJDOoSQf
+         fymMbfkgEa42iYYJb2egAHgcURI560x2KegVF9AjY1++oTG5r7EvJ5K68mQeE7ypZV5g
+         oLqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719174514; x=1719779314;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N8CMu+bnwf8iQgK3whroeuHcNetbi7+WotVePUC3qdY=;
+        b=rpnzzwr2BCv+q8GmV14yfX91FZfx5Px+Ntxbn9A3pEYkNdXXgMSzDthgCJn3E0thTs
+         Wb1DQyT8GfnsXiG250nC1q+Q6MAF7+A/145mL2gkkVhbg3nqaoxvKbkzjHf5PdgXMwc+
+         Qg/3UnpTzo+LEVKSsAZ4GYBfgTE7IbIrf9BrbMK99fdmfTpUN7jG0VIUZP/CfAwFpQC0
+         SZHmcK675qLLW9e1W1iCi0MZvu3XSNTSMttVPGMxakNEtxY8R4v87HfW+hri8Oq42/Ek
+         XdTJOKwWkWQqPsenxSqa6+PcXnTg1KnepCVLcR/COUIq1nYSHADy454PrDcRvDECaI+6
+         GvjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVIyfVp6YPeJCgF1VrsnTI1N/utd088zJaO7k5TGlUsLWysWp37y9NRZ5PoTrtPCgAdBNLnokhBWtGmlro8RwqfM6eUJ+FnD+gueW9IUfM36Q==
+X-Gm-Message-State: AOJu0YwMS7IVVRr6hrT2HzdDwzHBqBcgS1YzgoK2Lx+0flB232JBxSxS
+	4fdaF5+70fi6KBmzzlucLxEpgPd6AKGFcI+PkLcz1hddZzpuAa6w0yG3pDNH+qF0y8rynoQ3+wT
+	CuxiupeZkXqpnBt1y14WvcPrEPA==
+X-Google-Smtp-Source: AGHT+IEX14JMbb/K/wn8L6aNGbNjffLqDc2fa0MiCQ1eDwU56MCzQF/hrmNNJwSWmYxu06HWhzLfXEIbqeNb9TqyThY=
+X-Received: by 2002:a2e:b0f3:0:b0:2ec:5785:ee94 with SMTP id
+ 38308e7fff4ca-2ec579fefd8mr23125731fa.52.1719174513680; Sun, 23 Jun 2024
+ 13:28:33 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V3 1/3] tools/perf: Fix the string match for
- "/tmp/perf-$PID.map" files in dso__load
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org,
- jolsa@kernel.org, adrian.hunter@intel.com, irogers@google.com,
- namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com, maddy@linux.ibm.com,
- kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20240618140354.5765-1-atrajeev@linux.vnet.ibm.com>
-Content-Language: en-US
-From: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
-In-Reply-To: <20240618140354.5765-1-atrajeev@linux.vnet.ibm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240622171435.3725548-1-xin@zytor.com> <20240622171435.3725548-5-xin@zytor.com>
+In-Reply-To: <20240622171435.3725548-5-xin@zytor.com>
+From: Brian Gerst <brgerst@gmail.com>
+Date: Sun, 23 Jun 2024 16:28:22 -0400
+Message-ID: <CAMzpN2hMP8c9PXy=0YV4Ln+u_1n1spJP2jaYXKzEABWLh0+hkQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/4] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+To: "Xin Li (Intel)" <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
+	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org, 
+	peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org, 
+	namhyung@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-
-On 6/18/24 19:33, Athira Rajeev wrote:
-> Perf test for perf probe of function from different CU fails
-> as below:
+On Sat, Jun 22, 2024 at 1:14=E2=80=AFPM Xin Li (Intel) <xin@zytor.com> wrot=
+e:
 >
-> 	./perf test -vv "test perf probe of function from different CU"
-> 	116: test perf probe of function from different CU:
-> 	--- start ---
-> 	test child forked, pid 2679
-> 	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa7iy89bx/testfile
-> 	  Error: Failed to add events.
-> 	--- Cleaning up ---
-> 	"foo" does not hit any event.
-> 	  Error: Failed to delete events.
-> 	---- end(-1) ----
-> 	116: test perf probe of function from different CU                   : FAILED!
+> Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+> script that generates the required and disabled feature mask header.
 >
-> The test does below to probe function "foo" :
->
-> 	# gcc -g -Og -flto -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.c
-> 	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-> 	# gcc -g -Og -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.c
-> 	-o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
-> 	# gcc -g -Og -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-> 	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
-> 	/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
->
-> 	# ./perf probe -x /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile foo
-> 	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
-> 	   Error: Failed to add events.
->
-> Perf probe fails to find symbol foo in the executable placed in
-> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
->
-> Simple reproduce:
->
->   # mktemp -d /tmp/perf-checkXXXXXXXXXX
->     /tmp/perf-checkcWpuLRQI8j
->
->   # gcc -g -o test test.c
->   # cp test /tmp/perf-checkcWpuLRQI8j/
->   # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
->     00000000100006bc T foo
->
->   # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
->     Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
->        Error: Failed to add events.
->
-> But it works with any files like /tmp/perf/test. Only for
-> patterns with "/tmp/perf-", this fails.
->
-> Further debugging, commit 80d496be89ed ("perf report: Add support
-> for profiling JIT generated code") added support for profiling JIT
-> generated code. This patch handles dso's of form
-> "/tmp/perf-$PID.map" .
->
-> The check used "if (strncmp(self->name, "/tmp/perf-", 10) == 0)"
-> to match "/tmp/perf-$PID.map". With this commit, any dso in
-> /tmp/perf- folder will be considered separately for processing
-> (not only JIT created map files ). Fix this by changing the
-> string pattern to check for "/tmp/perf-%d.map". Add a helper
-> function is_perf_pid_map_name to do this check.
->
-> With the fix,
-> 	# ./perf test "test perf probe of function from different CU"
-> 	117: test perf probe of function from different CU                   : Ok
->
-> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
+> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 > ---
-> Changelog:
-> v2 -> v3:
-> Addressed review comment from Adrian and James.
-> Added perf_pid_map_tid to save the tid and modified
-> is_perf_pid_map_name to use this internally.
+>  arch/x86/include/asm/cpufeature.h | 69 -------------------------------
+>  arch/x86/tools/featuremasks.awk   | 12 +++++-
+>  2 files changed, 11 insertions(+), 70 deletions(-)
 >
-> v1 -> v2:
-> Addressed review comments from Adrian.
-> Added helper function is_perf_pid_map_name to check
-> dso name of form "/tmp/perf-%d.map". Used sscanf
-> instead of regex comparison.
+> diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpu=
+feature.h
+> index 8332f596ba3c..8161dfb3255c 100644
+> --- a/arch/x86/include/asm/cpufeature.h
+> +++ b/arch/x86/include/asm/cpufeature.h
+> @@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+>  #define test_cpu_cap(c, bit)                                           \
+>          arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
 >
->   tools/perf/util/dso.c    | 12 ++++++++++++
->   tools/perf/util/dso.h    |  4 ++++
->   tools/perf/util/symbol.c |  3 ++-
->   3 files changed, 18 insertions(+), 1 deletion(-)
+> -/*
+> - * There are 32 bits/features in each mask word.  The high bits
+> - * (selected with (bit>>5) give us the word number and the low 5
+> - * bits give us the bit/feature number inside the word.
+> - * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
+> - * see if it is set in the mask word.
+> - */
+> -#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)    \
+> -       (((bit)>>5)=3D=3D(word) && (1UL<<((bit)&31) & maskname##word ))
+> -
+> -/*
+> - * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
+> - * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, a=
+ll
+> - * header macros which use NCAPINTS need to be changed. The duplicated m=
+acro
+> - * use causes the compiler to issue errors for all headers so that all u=
+sage
+> - * sites can be corrected.
+> - */
+> -#define REQUIRED_MASK_BIT_SET(feature_bit)             \
+> -        ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||    \
+> -          REQUIRED_MASK_CHECK                                    ||    \
+> -          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22))
+> -
+> -#define DISABLED_MASK_BIT_SET(feature_bit)                             \
+> -        ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||    \
+> -          CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||    \
+> -          DISABLED_MASK_CHECK                                    ||    \
+> -          BUILD_BUG_ON_ZERO(NCAPINTS !=3D 22))
+> -
+>  #define cpu_has(c, bit)                                                 =
+       \
+>         (__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :  \
+>          test_cpu_cap(c, bit))
+> diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremask=
+s.awk
+> index 989b021e73d3..f6fe979a8fae 100755
+> --- a/arch/x86/tools/featuremasks.awk
+> +++ b/arch/x86/tools/featuremasks.awk
+> @@ -77,7 +77,17 @@ END {
+>                         printf "#define %s_MASK%d\t0x%08x\n", s, i, masks=
+[i];
+>                 }
 >
-> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> index dde706b71da7..2340c4f6d0c2 100644
-> --- a/tools/perf/util/dso.c
-> +++ b/tools/perf/util/dso.c
-> @@ -1652,3 +1652,15 @@ int dso__strerror_load(struct dso *dso, char *buf, size_t buflen)
->   	scnprintf(buf, buflen, "%s", dso_load__error_str[idx]);
->   	return 0;
->   }
-> +
-> +bool perf_pid_map_tid(const char *dso_name, int *tid)
-> +{
-> +	return sscanf(dso_name, "/tmp/perf-%d.map", tid) == 1;
-> +}
-> +
-> +bool is_perf_pid_map_name(const char *dso_name)
-> +{
-> +	int tid;
-> +
-> +	return perf_pid_map_tid(dso_name, &tid);
-> +}
-> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-> index df2c98402af3..d72f3b8c37f6 100644
-> --- a/tools/perf/util/dso.h
-> +++ b/tools/perf/util/dso.h
-> @@ -809,4 +809,8 @@ void reset_fd_limit(void);
->   u64 dso__find_global_type(struct dso *dso, u64 addr);
->   u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
->   
-> +/* Check if dso name is of format "/tmp/perf-%d.map" */
-> +bool perf_pid_map_tid(const char *dso_name, int *tid);
-> +bool is_perf_pid_map_name(const char *dso_name);
-> +
->   #endif /* __PERF_DSO */
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 9e5940b5bc59..aee0a4cfb383 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
->   	const char *map_path = dso__long_name(dso);
->   
->   	mutex_lock(dso__lock(dso));
-> -	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
-> +	perfmap = is_perf_pid_map_name(map_path);
-> +
->   	if (perfmap) {
->   		if (dso__nsinfo(dso) &&
->   		    (dso__find_perf_map(newmapname, sizeof(newmapname),
+> -               printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS =
+!=3D %d)\n\n", s, ncapints;
+> +               printf "\n#define %s_FEATURE(x)\t\t\t\t\\\n", s;
+> +               printf "\t((\t\t\t\t\t";
+> +               for (i =3D 0; i < ncapints; i++) {
+> +                       if (masks[i])
+> +                               printf "\t\\\n\t\t((x) >> 5) =3D=3D %2d ?=
+ %s_MASK%d :", i, s, i;
+> +               }
+> +               printf " 0\t\\\n";
+> +               printf "\t) & (1 << ((x) & 31)))\n";
 
-Reviewed-by: Chaitanya S Prakash<chaitanyas.prakash@arm.com>
+The original macro had 1UL here.  I don't know if it is strictly
+necessary in this case since we're using 32-bit masks, but it would
+probably be safer.
 
-I will drop my fix for the same.
-https://lore.kernel.org/all/20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com/
+> +
+> +               printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
+> +               printf "\t(%s_FEATURE(x) || BUILD_BUG_ON_ZERO(NCAPINTS !=
+=3D %d))\n\n", s, ncapints;
 
-The rest of my series can be reviewed as a string function tidy up.
+Checking NCAPINTS isn't necessary anymore.  It was needed when these
+macros had to be manually updated, but now if cpufeatures.h changes
+this header will be regenerated.
 
+>         }
+>
+>         printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+> --
+> 2.45.2
+>
+
+Otherwise, it looks good.
+
+
+Brian Gerst
