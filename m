@@ -1,199 +1,314 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2043.outbound.protection.outlook.com [40.107.22.43])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2047.outbound.protection.outlook.com [40.107.92.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A45C22615;
-	Mon, 24 Jun 2024 06:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D88293BBC2;
+	Mon, 24 Jun 2024 06:39:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.47
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719210344; cv=fail; b=m5PvdRjmfdHmxelk4Y5Hi9qzjH1qXQOHFU0kKEDXxP5mIkoKGVVNpSSn8sAhcc5AibZgpaoEkvI0YHgv4ZMCNBKOYwyp/Yvwzh1H34vVoTQ6ZCE2NdV8HGgaDQ2Q7V9FUlxB9pyEH5yOAQr3TDmv8e7ezGpBCT7WXNQhDMcY5S4=
+	t=1719211159; cv=fail; b=vCIFElg5Bn8BNNFpVTSO1myopiaCjGR/NgxM1FdrsE3WOryRaxZXvTUcM5nv9qgI8rsEIt0HcZkV58VxYGZ/v5tLJZXbMcbq8JXdZQdv5EF+WiLhvzyXLOVIJP/HLFzG11NSLc86MV0B24GDKxRwbneqFNTjsLzlHwGQkw9nWpU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719210344; c=relaxed/simple;
-	bh=QVOFDnV3b1rViTnFYoImzQTqieeg28+g9aiZ0ss5gok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=CDDlj4O+8odlJKIAfUOoQVhYLb1Q9PjtYx14tAFRjJqq9XDZUTYBk0cxRqy5Z2rDmUeUfBA+42k8pGhHxDNwbbvBsLrdFnfX4BScsWaOkkjOEouRWe+++EbWF4H/GuoUGNDWvyJU35/nGGdYJ52Xti43uJIWN5kuTTzZVs/SKoM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Vw54RhsD; arc=fail smtp.client-ip=40.107.22.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1719211159; c=relaxed/simple;
+	bh=z79sT/BGkOzVjZNG6SYShpQp+1hOy+Rh4hau3hczsa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=Xc4cP6v4/PozgtJJxk8IO9Cy7Hc9PVziEzxJyyjZMYVFXLDX0SarFm7r2eG/ppPuuvRXHH7ippouVKGUtuPpeYiKiZAPwFLsTZassK2t568eIMBBnGj31jSKkEGOEmusRifTafYjnhczcRS7UIqa/L+ZwcKCIu+RB+78ebilopU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=sfzSSg0R; arc=fail smtp.client-ip=40.107.92.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Vw54RhsD"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="sfzSSg0R"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hx5NWUiGurVzq9tqUoTeN87UlgRvMIMuWRjNDaQXpqI0j++qhfi22U01eeqoOjJFEGvG3IDYrx5ZGEv5vO3TasZ4JWno6RQmNFbsem8p02cATVJfys2x4wZhk0Vq3Kuphx54Qbbej37c28sHk8EnTOOkC+N3o5rvc8JKCgEkOGoOnjhwgysxVt5vFASz6oIy4/+RZ+uYBP1hrmavZ7aCrJnzzAi0VCV2cM32Q4XZUEYBjkza0mryVSKMkUmUiV1KZQQOmZ9jedhSm2r+CVs979Zut8OzLWgPRQQAvmEOskXwVYVrjC8LrQvZtaJTlUMqLgCVuRd7O13WxnClJpcSWw==
+ b=Kz/YpudkTnexXX3GSNFRw10hrFLKbz/RsCByC/YbzjX7yb3f3xSw878VSkGLWUJaPSdHPtlRDAeGUyR5yaZGSZd9MAHVgSo9l5RUBN4SzOdFoAM4VkNWUKhwrohzKDPrCTxANsC3WGOQNAmasIbLYnO7Ri/BoMmBbxPO0KjTimDcfUzUDWQ/kCP+BIvTWup26wmMbi9S3BFmMXdkZpI3z0NR0+xvnXBdO+EyWLiiCze2k5ckOZjxCndYWJ3reUvY6gT9eYR/XSP6y2lKXac73m4W/lFb/UkVoQOsk0vPlThvdZ953HKJB9LgLIE0TQsAZuD2cvOJUj6H7E8dDiRGcw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=p6S6YSye4rj61aZo4J1wgzQXn1pgKBFst34Z5pUuTzs=;
- b=PCjxC951XF1kUb7GU5sSPMsO6TvvUVOtvU8/L0hx35zPtrXQvTcSQ2fEo+IftoHhz9AzkMoma7YWk2jPrCSr7RoCx4U4DhtVKjRu1ttgjXwaRTk6wskrfc7f4lwfSnM49RYZACkeyT7Bd2S//ukLD/LU7lFDcjMG5iOAYrzkpT7cDi1PAIPCSC6eY22T4KWBmyXu/lyjmBp+DL/Gn63mLg+CSMoXNCPCvdAnLaeH0n4GuYqIDaLddTJzyMs68/Ja/w2RK5iWhiEacODPSKNvm+rrPrh4vTE/z+O020brzpfJzq5xwvl+G63qqYoqTxAwMdzI1lg74y2WDovspQZHtw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ bh=PJOPF+/q8MQ7xRB7Z6D6kDajcKnyujjYO3CWF0fQ6F8=;
+ b=KHNJI/cxR9BybmICLCLjz81KT5WxQTgfEQE96rZuo2d6Vn1sVpZ+VSmj8cwy8fRnK5gyeBgkA99+ShBgzlKl3qMqhy7X62uGf5cu6pxtBYJoaz4hiTpTTsRnrGQxs01F7YWt/F4H9h4JfThxxALcxjjsLQtQTuzBmOi/rbcHCMKbbwVi0j9p2zWzUID6OI0r7lQmdSmINlp4ZsnpmUscwGibnPEtOaZurnF8epe3DYPZnqLshfxF70/VZUUWFL5+9QfsQoqHkJd2U0SyjTw6vZwuo0MAqy0D5QeCQiMpJulnt6i9PtLlYF1FVdYb5JK5xFJ2vmD4NluhBgkk/132HQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p6S6YSye4rj61aZo4J1wgzQXn1pgKBFst34Z5pUuTzs=;
- b=Vw54RhsDkLKmnruP4zl7Ma2BTUoygDc6hAsAqtR0sLNlRk/a9DdKbuYR2H5x8h1vm8urs7SzskEgtTr/vnUXwIX/pptA18K8DeGYfdm7p/ULX3wlu6u9DKE3hlrTxKfDt3tqrAjqVGW2VH5HNMydZ+brlzoQdI22zAeAOyl2xes=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by DU4PR04MB11079.eurprd04.prod.outlook.com (2603:10a6:10:589::10) with
+ bh=PJOPF+/q8MQ7xRB7Z6D6kDajcKnyujjYO3CWF0fQ6F8=;
+ b=sfzSSg0ROkpQ/L6WUlhSkyXDq9dn2OUYRMzhrMPUvkSaKjKVvrWYaA/zJ3qlYfbifYc1RnFnyr0qAh6lwLbn6qmC3cXMVtuFHiUV6W0p5W/hWZKRHEqmRjXXANzYpCersINd9eM+dzIvCFRjVM1sNZLkkykrPAiUUl5dYpw67ic=
+Received: from CH0PR04CA0061.namprd04.prod.outlook.com (2603:10b6:610:74::6)
+ by SA1PR12MB6704.namprd12.prod.outlook.com (2603:10b6:806:254::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
- 2024 06:25:39 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7%5]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
- 06:25:39 +0000
-Date: Mon, 24 Jun 2024 14:23:34 +0800
-From: Xu Yang <xu.yang_2@nxp.com>
-To: frank.li@nxp.com, will@kernel.org, mark.rutland@arm.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
-	kernel@pengutronix.de, festevam@gmail.com, john.g.garry@oracle.com,
-	jolsa@kernel.org, namhyung@kernel.org, irogers@google.com
-Cc: mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v12 1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95
- compatible
-Message-ID: <20240624062334.lpygfmbpmstrn6kd@hippo>
-References: <20240529080358.703784-1-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529080358.703784-1-xu.yang_2@nxp.com>
-X-ClientProxiedBy: AS4P191CA0021.EURP191.PROD.OUTLOOK.COM
- (2603:10a6:20b:5d9::6) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.25; Mon, 24 Jun
+ 2024 06:39:13 +0000
+Received: from DS3PEPF0000C37E.namprd04.prod.outlook.com
+ (2603:10b6:610:74:cafe::46) by CH0PR04CA0061.outlook.office365.com
+ (2603:10b6:610:74::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7677.38 via Frontend
+ Transport; Mon, 24 Jun 2024 06:39:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF0000C37E.mail.protection.outlook.com (10.167.23.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7677.15 via Frontend Transport; Mon, 24 Jun 2024 06:39:13 +0000
+Received: from [10.136.36.140] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Jun
+ 2024 01:39:06 -0500
+Message-ID: <0afc09f6-da93-dde5-45ad-d4784b9b4227@amd.com>
+Date: Mon, 24 Jun 2024 12:09:03 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [PATCH v3 00/10] Add per-core RAPL energy counter support for AMD
+ CPUs
+Content-Language: en-US
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+CC: <rui.zhang@intel.com>, <mingo@redhat.com>, <acme@kernel.org>,
+	<irogers@google.com>, <mark.rutland@arm.com>, <jolsa@kernel.org>,
+	<alexander.shishkin@linux.intel.com>, <peterz@infradead.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-hardening@vger.kernel.org>, <ananth.narayan@amd.com>,
+	<gautham.shenoy@amd.com>, <ravi.bangoria@amd.com>, <sandipan.das@amd.com>,
+	<linux-pm@vger.kernel.org>, <namhyung@kernel.org>, <adrian.hunter@intel.com>,
+	<kan.liang@linux.intel.com>, <tglx@linutronix.de>, <bp@alien8.de>,
+	<dave.hansen@linux.intel.com>, <x86@kernel.org>, <kees@kernel.org>,
+	<gustavoars@kernel.org>, <oleksandr@natalenko.name>
+References: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
+From: K Prateek Nayak <kprateek.nayak@amd.com>
+In-Reply-To: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|DU4PR04MB11079:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ee22b15-d0dc-4abe-2835-08dc94167759
+X-MS-TrafficTypeDiagnostic: DS3PEPF0000C37E:EE_|SA1PR12MB6704:EE_
+X-MS-Office365-Filtering-Correlation-Id: e86476be-0b67-42e3-c445-08dc94185c91
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230037|376011|1800799021|52116011|7416011|366013|921017|38350700011;
+	BCL:0;ARA:13230037|1800799021|82310400023|7416011|36860700010|376011;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?XfX4OF6a/Dl1fwVi80jaZFhb8eV7prlDYiGabgcoBtxzAWTjNYn0AJDa5+sN?=
- =?us-ascii?Q?FInr2gWSDu29TdYh4mUvHRZzIIn5uzrsYIvjTH/K0kSHiQyZg6sNWkcDNcQ3?=
- =?us-ascii?Q?BeqDBsI3OKf0MeymjynVP51+kHglKyNajqbyMjBY5uB330S6pQrl8uxOHFbc?=
- =?us-ascii?Q?IlNAX30TSqfuTqlL2RZSoodHBDhffYyh2FSCB0ryyNR/crgVYo3+H4qJbro0?=
- =?us-ascii?Q?0WY2B1yhd9B4MHowZ3sxJRnxI6INdTIwauz23H3BrXugYqcKcH6D7KfQDIa9?=
- =?us-ascii?Q?pycNBrAO7Tnl8d3ebYglvIIjrmdh9/mqEnU3RrPpgZh0mcDS8MtciCmnLvB0?=
- =?us-ascii?Q?HItKi8O4Uc3wh337mGvJ7OE3oWmXd7T224pbrUj123vybKcRngk4jdUZQAkM?=
- =?us-ascii?Q?XC85ZEjfwVp0QgpWaffCjtoeenPxwaA5BcEO6PKMhreTliqPONA0lhwsg6h3?=
- =?us-ascii?Q?o2EiAvGyCjUWECzgGrFCuqGgsr3bhSTAPnQhSHMd6JNsLj130yC8TQFeA4V1?=
- =?us-ascii?Q?e/P3PxmeWFYs1c3juLcSM3zreNEhy5t7+M0Sl2Rr3aI4flME+6d3XnSdRKUW?=
- =?us-ascii?Q?JAi2tmQ/h5NWXQPKmxHTaCdZjMXsVnpepyz3P3h2mALtAKOrgyjzmHRLTxYR?=
- =?us-ascii?Q?EtCHsIRGq/3So5TdcBYjkx7ni3EcUnQnZzXGEzJH2u9H9N2BYjQ7IfIm/zBR?=
- =?us-ascii?Q?0/lWBo5OX0aepcJBahO1vYFf3GTWq8PcFagOK1fSfKiumsabuLK4ICFCv5AD?=
- =?us-ascii?Q?SnDhGQzlZ5wQb5vxZAeTMIUG7gYaAaR5F+6kXIRPLhSsq+Jz4Zp+uYZxe3oB?=
- =?us-ascii?Q?GTNQJcl5QzEfA1Ml+lA97k58XRZfQWpkATc78hAWXflUTPpAMV5Jxsyv/h2u?=
- =?us-ascii?Q?1je1HRSOZT3KB0X54xn8zmuOLKn/KPfn1XMMlypZcBTbniqAc7rGKCRO+IHf?=
- =?us-ascii?Q?gATfvEEZWRS1V7+vk2ijUYAqVDoAy7Vy9RcRF1SKUrRKAD78l6RM40mNZ6o+?=
- =?us-ascii?Q?ymQqNDLwf0X3em3JesdXSPNx/ToOshu1Lf58q6YJ0lWThDhM0//QlGMZnilt?=
- =?us-ascii?Q?4M5iSICeQe6CHcfCdaC+grJF50zey3nHTAvrqxhFCsfAQonY2lwE2k9e+IxY?=
- =?us-ascii?Q?aDzgnbwN0GTf8uBRUfmqSmFcmxkmwc5PadW3UHKtSJqmfvoBonrRvNXcCsKt?=
- =?us-ascii?Q?3Q2HGqKSWq8UcIFIZGkxXK++ZkxBJlDBMFQx8NxwA5lRM9XLF0ObD5Rwc52y?=
- =?us-ascii?Q?uIG+aFZE8o1MmVVhRDuqk7E8NzebRj3G0/CBjl13VDgdvqQBlpUskA6SQxUp?=
- =?us-ascii?Q?v9VRkgSR5RH6MCD/2e514gueCO5QKarMt5tN7q2f7Rq2cn8a7MZzQnHtV7fZ?=
- =?us-ascii?Q?xZMZeHCJ9RTy+gut+LmFLqkRvSkI?=
+	=?utf-8?B?K3Rqc0x6dmVJTU9jTG53cDJ1eTRpblVtcU5OeXhPK0s2QzhoaldmclFaN3Nm?=
+ =?utf-8?B?QUxJMVN6M0FsWTZSUW9HUUExMkF6Vzdrc3l6dnozNmc4N1Ftek0yMTQrUjZt?=
+ =?utf-8?B?TUhkbFJlbTlZdm9CUDVUa3FkU3VvS01OUjI4Z25PZnJWT1N3aTFKcm1Id0tF?=
+ =?utf-8?B?dkloLzJkbnVGbzkwRjYyYmRUMTRzbENydzNuVVNvVm1tSm1yVGtFZEFYeUJm?=
+ =?utf-8?B?dkx2eFJ3cFozQ1NWc2Q3dm1UemhQMzJPRnVUWmFYWUQwWitmKzlHdi9VUVQr?=
+ =?utf-8?B?Y0NoTUFHUWxIdFdMbG9sVERuY09GNDVaVzdiQkx5VzJkbC9XVWFrd2NVem1G?=
+ =?utf-8?B?Z0J3WG80Z3BycUhwK1kxaDZBRmM0cUhKZjE2ZmNYTFpHdUxMNnBtckIzalVL?=
+ =?utf-8?B?QkliUkdsTkNxTkdYbU8yT3cyeEFrRDkrMHRLMXJBay95RWxmcXF5bTRpUmpF?=
+ =?utf-8?B?dG8yZG5BVnVVY2R1ZTQ1dnlFczlxRldSanFrRTBOUi95YkpxRG9hNVJlaWpW?=
+ =?utf-8?B?U1VDVHdhYlpJKy9wWGpra3VDQk01STdsdjlURTZCSVQ3NUVld28wN1UzeW9G?=
+ =?utf-8?B?eWkrVG1jTUYxTDdyajlJbEdQa3BDRVRpN3hLeG5rTElsREQ4T2hjSkJSN2FF?=
+ =?utf-8?B?OHZqT2J3UUNMTzdwdWEvOU14RjR6aGlBTTBDRVlxNUNHUTZYY05GQ2lsb0da?=
+ =?utf-8?B?MEFxczE3ZmVMT0pDYTMyQ3ZPZzNodWMvTjJlV3B5UEExcUEzdDVpS1E0cHRL?=
+ =?utf-8?B?dU41a3h3MnJLdlJXZzFaL2xLR1phTUxwcEFuOTBEeElXSkk0clB0STFUZXN1?=
+ =?utf-8?B?RlM2S2RzN2RnaFVucGRva2JLV0RWU2h3cXRQWkxiVUFQYmpJYXZWVUxCL2RM?=
+ =?utf-8?B?emR3MjUrTFpoMks0U1NramZDck10Vkh2SzRGay9QMlZHVU1DWnY4R2toZTZh?=
+ =?utf-8?B?SE9vZkhlUU9SY200Y3NXcDhJL0tGNU9Ecm40aDZYbXVqL2MvMU1hcmxpbjdM?=
+ =?utf-8?B?dFlWV1NGdnhINE1kdmErZWRQVy9xSVFxVEdVeFJzckVXUC9BSWlnSzVncGU3?=
+ =?utf-8?B?bS8yc01LcUg0MEhOZmpUbEovb09jL0FVYmRHMVEyVXNxNFR1aUp2eTRDd3R5?=
+ =?utf-8?B?a25COGVRRlgyZXIwdUZZRmx2VWtBRHJZOG9TZzdBMEpDS3FrUmFSTmdNOTE4?=
+ =?utf-8?B?Z3Vlck1GT2t0cVc2aytJcG9qTzcxMHhtQU8rRExuNFVDWkp3aHBFZVcrMElU?=
+ =?utf-8?B?MURvcXNyRVZoYmNub0dJSFhTbWVOY29LY3VIaXlQby9GdExJendrbFZ5RERx?=
+ =?utf-8?B?MzZ0ZnFQbjFVbjYyejVsaFVZeEpGUGgzY2Z1eVdqbTZlLzdPQ0NuZXZuZjNs?=
+ =?utf-8?B?NkxMM01ITURSdWp4UEIvazBHVWpHMmE3VlZJWFFoeUtsV0VtOXFRRGQyeFcv?=
+ =?utf-8?B?akZnUWE5VEF1T3ZIcnFVMkZuaG5TbnVMOHF3Mm1oZkxVQlhGTDdmbXZDZmZR?=
+ =?utf-8?B?U1JEV1l0Mi9rQmhDQlZPR2wrcmJUSXgyMjVFYXduc2lTZWE5TWV6UVUvdmFm?=
+ =?utf-8?B?dENNVFRBdVhDckJGWm8vRXBGaEMyK2RoaGtZWG5Vd3l4MWVkdm9FNE5TR3lL?=
+ =?utf-8?B?akFoYmc3a1VrSXdXVWdiVDQ3cHo5d0tyTnFPa0oxZVVZYi8ya3l6bDhCN2RW?=
+ =?utf-8?B?LzZkYTl6SUs1NDNyVTFVNTdHM25tNHVMVHdtUWQ2WWYyQlpiR2lFU0J3N3Uv?=
+ =?utf-8?B?eElVZzJNbWlrbmUvdDFYdG5kZnVrNklqZ0txMkVZNmRGQ1hPN3dIWlRpd3BN?=
+ =?utf-8?Q?dn1BrUpCNQoRH63LLro3rJKqlyMJ8T3gCmDI0=3D?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(376011)(1800799021)(52116011)(7416011)(366013)(921017)(38350700011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?pRoc6uxMOr8iUVp9xKjrbZbwdRWCi0nzbsDMp3SBnG/j5X8E+IUXXVUiZARz?=
- =?us-ascii?Q?YMzUz35fPq1sBUtDnmte++3fV4iiRRpFPrzlQNUin1lMXjg9ofCxkcS8L1rS?=
- =?us-ascii?Q?hqJEcaqHua9t6MiDJy+gcCo1uSHZ2mpP/00U0RlcXk3joxtO0Rx9TiP+ToqZ?=
- =?us-ascii?Q?OT3HuB9Is9XQlG7ajROmuLPl0vGSf7b1+JYz/Dsaqm+plk/MeG2VGs7n4SQH?=
- =?us-ascii?Q?Mhi6S7GAZwcWIIiilPzs4wiDyNSbTEovw/8lfxR38X7ZTIRUWda9qBRTuFDr?=
- =?us-ascii?Q?Foe69FnZvNVNLfFkpyn26aSNpMeKcSAJe/3YWOxaAwth09YbeOuBOe2SElBz?=
- =?us-ascii?Q?kUwGzK9lL6ruRxomyJ91DgU6IvIp6qCRVwYhqmIBfLQRzgtpMcDvGViW1M7D?=
- =?us-ascii?Q?aSxYyfQkPkmI5Mrs7IbaorqTgiWUgaLoN8g0z0buxo/3Jq/XdKPUMSvcxyjO?=
- =?us-ascii?Q?KpHX+5BEnvzFUIxRSjc9CVRnAFuyYo3FBxmlMqzZNMkRDYNZbRWopFKOl9H5?=
- =?us-ascii?Q?QMdcNywEdWhs+63Lu/KzwTpP5hq9+GKNQUbOtl6AzrhXfRFenPeo8sQQ27Oz?=
- =?us-ascii?Q?8wUbmf20WcRxHVG7WmoxNa3bcoJ00G1wPIbAn2Rs1sd/uHDvT3Gc1wy0XSl7?=
- =?us-ascii?Q?S+7kR0wO1fZIVTiFhCOHiZLynaFRnuxzJRAJWQXlUEl7Xynu9HOUzp3o4CDz?=
- =?us-ascii?Q?Mtjohg1uVzfu0s7RkpUgPr7NVtRz8OTUsw0a113kHZ/v2H5PfRNRv8U351TG?=
- =?us-ascii?Q?f+FOVXNS/vJ2Wd4tls5/saimcfSH8rO6tf0vHWjcfdnqiMWpgDTm065ROVOt?=
- =?us-ascii?Q?+wGXf5A32NQDoYaIHSNoCQr/k8Ml505xl6i9UitlrCG8VyGF28dvHXllaptR?=
- =?us-ascii?Q?aTmKL5GDVAX/BAbBMohysmXQ+bEW/0Q6mf8VhwQfCkq6zUHiYvWBMOKcTgrd?=
- =?us-ascii?Q?Tn9dOlXC6D/JKj5WvMkQ0Z5H4MAzp/TpeUNHfQDx2jPXaCXl7QgqhSFMv4Jb?=
- =?us-ascii?Q?LCaMvPSbTMxH4GdnvWrLcUTJxkdTsV0AWxgVCwXtb1TqWAX/Mib9wm+ReLKa?=
- =?us-ascii?Q?MKymMEAEOTHTwMCH5q0/lWGEoUUrTFKJVNsttqMGOux+VsL7gxLXa1FIBtZl?=
- =?us-ascii?Q?4lz66pmE6djqQPVbFg2ZgvBKcczv5XP1cLJ7vgfhOihc5s/eC/8f3e22frFN?=
- =?us-ascii?Q?Dh1jGuCgzMB0Jbi12CXOjBtOaQ75X49DY3NqoWhCOhhkohwQtlSJuk9vRrKo?=
- =?us-ascii?Q?2b3YbYwx33dV0bHKZjKb0jGqVy0w8ak9PwXKczCg6amuX5ipRjmK2WZhcO1R?=
- =?us-ascii?Q?WOjsTX6O+YCEyOuEAgX0caEBeWo6an0KTgigIt3li8rjB2TwAFdWXL/gzwnQ?=
- =?us-ascii?Q?2Q0PWoxa5YMoSRgZNH1B4Rmsdd1GRgEeLsth6pPG2AChpt/96hvK87vhvqht?=
- =?us-ascii?Q?qJGNDU3tzeHGDfN6VUOeJ31Ei87DorMRA35RK17EE0IdM79BMjEGmQghXnh0?=
- =?us-ascii?Q?2trA83eC98ktWVvzRaIJZcsJ2b064ukutipoviZTKmkuF7PX15/8kcalL4Q9?=
- =?us-ascii?Q?gL3ATQVDRW4qweqEacr2aDzEG2LLOejCksGJhI+S?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ee22b15-d0dc-4abe-2835-08dc94167759
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 06:25:39.3724
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230037)(1800799021)(82310400023)(7416011)(36860700010)(376011);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 06:39:13.1700
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FAJC/se5C2oz2H1nyJYVYUtwWZDHfZhf2PuT/YHhzr2Pc6KiUPPUaUfAGVgY5aGwFzgcvHbvPzi2EDUwZNnS3g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU4PR04MB11079
+X-MS-Exchange-CrossTenant-Network-Message-Id: e86476be-0b67-42e3-c445-08dc94185c91
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF0000C37E.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6704
 
-On Wed, May 29, 2024 at 04:03:51PM +0800, Xu Yang wrote:
-> i.MX95 has a DDR pmu. This will add a compatible for it.
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
-> 
-> ---
-> Changes in v2:
->  - no changes
-> Changes in v3:
->  - let imx95 compatilbe with imx93
-> Changes in v4:
->  - add Acked-by tag
-> Changes in v5:
->  - no changes
-> Changes in v6:
->  - no changes
-> Changes in v7:
->  - no changes
-> Changes in v8:
->  - no changes
-> Changes in v9:
->  - no changes
-> Changes in v10:
->  - no changes
-> Changes in v11:
->  - no changes
-> Changes in v12:
->  - no changes
-> ---
->  Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> index 6c96a4204e5d..37e8b98f2cdc 100644
-> --- a/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> +++ b/Documentation/devicetree/bindings/perf/fsl-imx-ddr.yaml
-> @@ -30,6 +30,9 @@ properties:
->        - items:
->            - const: fsl,imx8dxl-ddr-pmu
->            - const: fsl,imx8-ddr-pmu
-> +      - items:
-> +          - const: fsl,imx95-ddr-pmu
-> +          - const: fsl,imx93-ddr-pmu
->  
->    reg:
->      maxItems: 1
+Hello Dhananjay,
 
-A gentle ping.
-
-> -- 
-> 2.34.1
+On 6/24/2024 11:28 AM, Dhananjay Ugwekar wrote:
+> Currently the energy-cores event in the power PMU aggregates energy
+> consumption data at a package level. On the other hand the core energy
+> RAPL counter in AMD CPUs has a core scope (which means the energy
+> consumption is recorded separately for each core). Earlier efforts to add
+> the core event in the power PMU had failed [1], due to the difference in
+> the scope of these two events. Hence, there is a need for a new core scope
+> PMU.
 > 
+> This patchset adds a new "power_per_core" PMU alongside the existing
+> "power" PMU, which will be responsible for collecting the new
+> "energy-per-core" event.
+> 
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+> 
+> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa
+> machine:
+> 
+> $ perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 1
+> 
+>   Performance counter stats for 'system wide':
+> 
+> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+
+Tested a bunch of scenarios on my 2P 3rd Generation EPYC server and this
+time around I'm seeing the expected behavior. I'll leave some of
+scenarios I've tested below:
+
+   $ for i in `seq 0 63`; do taskset -c $i loop & done
+   $ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 5
+
+   S0-D0-C0              1              10.82 Joules power_per_core/energy-per-core/
+   S0-D0-C1              1              10.87 Joules power_per_core/energy-per-core/
+   S0-D0-C2              1              10.86 Joules power_per_core/energy-per-core/
+   S0-D0-C3              1              10.89 Joules power_per_core/energy-per-core/
+   S0-D0-C4              1              10.91 Joules power_per_core/energy-per-core/
+   ...
+   S0-D0-C63             1              11.03 Joules power_per_core/energy-per-core/
+   S1-D1-C0              1               0.19 Joules power_per_core/energy-per-core/
+   S1-D1-C1              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C2              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C3              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C4              1               0.00 Joules power_per_core/energy-per-core/
+   ...
+   S1-D1-C63             1               0.00 Joules power_per_core/energy-per-core/
+
+   $ for i in `seq 64 127`; do taskset -c $i loop & done
+   $ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 5
+
+   S0-D0-C0              1               0.17 Joules power_per_core/energy-per-core/
+   S0-D0-C1              1               0.00 Joules power_per_core/energy-per-core/
+   S0-D0-C2              1               0.00 Joules power_per_core/energy-per-core/
+   S0-D0-C3              1               0.00 Joules power_per_core/energy-per-core/
+   S0-D0-C4              1               0.00 Joules power_per_core/energy-per-core/
+   ...
+   S0-D0-C63             1               0.01 Joules power_per_core/energy-per-core/
+   S1-D1-C0              1              10.51 Joules power_per_core/energy-per-core/
+   S1-D1-C1              1              10.50 Joules power_per_core/energy-per-core/
+   S1-D1-C2              1              10.52 Joules power_per_core/energy-per-core/
+   S1-D1-C3              1              10.51 Joules power_per_core/energy-per-core/
+   S1-D1-C4              1              10.51 Joules power_per_core/energy-per-core/
+   ...
+   S1-D1-C63             1              10.59 Joules power_per_core/energy-per-core/
+
+   $ for i in `seq 0 15`; do taskset -c $i loop & done
+   $ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 5
+
+   S0-D0-C0              1              11.16 Joules power_per_core/energy-per-core/
+   S0-D0-C1              1              11.21 Joules power_per_core/energy-per-core/
+   S0-D0-C2              1              11.20 Joules power_per_core/energy-per-core/
+   S0-D0-C3              1              11.24 Joules power_per_core/energy-per-core/
+   S0-D0-C4              1              11.25 Joules power_per_core/energy-per-core/
+   S0-D0-C5              1              11.26 Joules power_per_core/energy-per-core/
+   S0-D0-C6              1              11.25 Joules power_per_core/energy-per-core/
+   S0-D0-C7              1              11.25 Joules power_per_core/energy-per-core/
+   S0-D0-C8              1              11.42 Joules power_per_core/energy-per-core/
+   S0-D0-C9              1              11.43 Joules power_per_core/energy-per-core/
+   S0-D0-C10             1              11.47 Joules power_per_core/energy-per-core/
+   S0-D0-C11             1              11.43 Joules power_per_core/energy-per-core/
+   S0-D0-C12             1              11.44 Joules power_per_core/energy-per-core/
+   S0-D0-C13             1              11.41 Joules power_per_core/energy-per-core/
+   S0-D0-C14             1              11.40 Joules power_per_core/energy-per-core/
+   S0-D0-C15             1              11.41 Joules power_per_core/energy-per-core/
+   S0-D0-C16             1               0.33 Joules power_per_core/energy-per-core/
+   ...
+   S0-D0-C63             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C0              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C1              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C2              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C3              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C4              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C5              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C6              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C7              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C8              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C9              1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C10             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C11             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C12             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C13             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C14             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C15             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C16             1               0.00 Joules power_per_core/energy-per-core/
+   ...
+   S1-D1-C63             1               0.01 Joules power_per_core/energy-per-core/
+
+   $ for i in `seq 0 7` `seq 128 131` `seq 64 71` `seq 192 199`; do taskset -c $i loop & done
+   $ sudo perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 5
+
+   S0-D0-C0              1              18.68 Joules power_per_core/energy-per-core/
+   S0-D0-C1              1              18.20 Joules power_per_core/energy-per-core/
+   S0-D0-C2              1              18.27 Joules power_per_core/energy-per-core/
+   S0-D0-C3              1              18.41 Joules power_per_core/energy-per-core/
+   S0-D0-C4              1              16.94 Joules power_per_core/energy-per-core/
+   S0-D0-C5              1              16.95 Joules power_per_core/energy-per-core/
+   S0-D0-C6              1              16.92 Joules power_per_core/energy-per-core/
+   S0-D0-C7              1              16.94 Joules power_per_core/energy-per-core/
+   S0-D0-C8              1               0.39 Joules power_per_core/energy-per-core/
+   ...
+   S0-D0-C63             1               0.00 Joules power_per_core/energy-per-core/
+   S1-D1-C0              1              18.59 Joules power_per_core/energy-per-core/
+   S1-D1-C1              1              18.39 Joules power_per_core/energy-per-core/
+   S1-D1-C2              1              17.50 Joules power_per_core/energy-per-core/
+   S1-D1-C3              1              18.29 Joules power_per_core/energy-per-core/
+   S1-D1-C4              1              18.58 Joules power_per_core/energy-per-core/
+   S1-D1-C5              1              17.62 Joules power_per_core/energy-per-core/
+   S1-D1-C6              1              17.75 Joules power_per_core/energy-per-core/
+   S1-D1-C7              1              17.53 Joules power_per_core/energy-per-core/
+   S1-D1-C8              1               0.00 Joules power_per_core/energy-per-core/
+   ...
+   S1-D1-C63             1               0.00 Joules power_per_core/energy-per-core/
+
+Unlike last time, each socket is reporting accurate values for all the
+scenarios I've tried above.
+
+> 
+> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@linux.intel.com/
+> 
+> This patchset applies cleanly on top of v6.10-rc4 as well as latest
+> tip/master.
+
+P.S. I tested this on top of v6.10-rc4 this time around.
+
+Tested-by: K Prateek Nayak <kprateek.nayak@amd.com>
+
+> 
+> v3 changes:
+> * Patch 1 added to introduce the logical_core_id which is unique across
+>    the system (Prateek)
+> * Use the unique topology_logical_core_id() instead of
+>    topology_core_id() (which is only unique within a package on tested
+>    AMD and Intel systems) in Patch 10
+> 
+> [..snip..]
+> 
+
+-- 
+Thanks and Regards,
+Prateek
