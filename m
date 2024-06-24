@@ -1,43 +1,43 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC02C13D52F
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29FD413D600
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719234529; cv=none; b=MTN/yY1qHOsrSV+0MM8VjQNLPEsp8cb6eDAOO0oqfXLsi3o7+kw+5Khp6QZel8/R0vcJS9XhKUyn8wuiHFHLbzXrkgvuNuBs/927xwOACiBSPxQ1/foinp1TrKfbh6QtBsl50VKgcKNK3FOz1w+oDh3VQk81Gxgk/MdPWulAKH4=
+	t=1719234532; cv=none; b=W0aKJWvwc0s2eGzyRJm1F+kJAi+bakK8NtnbeALwYNMTrMVcmv8q5QFX3ol5XuKWIv9xJL7s+6hxH+TIW6Swy/fN2x2xgVU4YzRAPJ6Ef1flqKn5b0CbXOiE7c1yYepv6ZcGiT7/H3pIV4Eb4LMKLC6zIgmJdeX9uIZ75JOeXk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719234529; c=relaxed/simple;
-	bh=9oPTwnban7OgMI5L5+T0rkmS2hWbN6oH4XMubK/XgRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=m/uwhfg5VDWEp63cGOEir91+JH7E4rY3hXSvYc4UoOxJrRx/W3l5TL3KkQPRvyGcHyIY/mV2+5evskAEcE6/CQAbEzMULCwqzBwCCpeiglw1ejp+eJ09HGy7mxDWeDG1u0U1VdwypqIcncONhIadt72pcVeQqwflxkSbvGStPMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NE/xLYtN; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1719234532; c=relaxed/simple;
+	bh=Ib0ASa6/svFYnhBNqfCht8mSttUAH1DsYhHGzcPC/sk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=hRb8lmGoJu/uXklDA5MViUfwRDXbuKluKtmMYJE3jVqVVMKQ3hkwTMl5/hfsteFkVWOXtu62n1RdcKxN1P5koZwsZ3KoRHOHvwQPx3QBMFkv7kxIw/2uRTTA8HW3Qdz8WnpOH073IRylc1v1traLQm8peM5huw97vO7UMSIcGH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UUfCf4jo; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NE/xLYtN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UUfCf4jo"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719234527;
+	s=mimecast20190719; t=1719234530;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=b5JtwStAUJUFCt62lM+PdOVKC0YAYa7F6NLwZq77M3E=;
-	b=NE/xLYtNGE3Tg4xbPrJIr9phxiIZ6XtYiecoYzboTBwSYL+CGNAljCPwC9VLbHFgpxXtE6
-	Wl9jrVOYt+UHzW9Fcrf3wkYc40ZDU5GJh0suQOCMX4lSfQ4T+WWB+ScFQUggtNzmThNHWl
-	TTYY/EKKsPvmiEowHmpzQ8Q/XYwiL7Y=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=tQCOEfx9EQj0HuL3pFsmgUmPYanTsemBahn60gx6AFQ=;
+	b=UUfCf4joCOJq5uhiOom3NNwsvnipH3akEWloKmuQnRrwT1ScjR3OAF4/p4PKpxnGY3/lAo
+	G+P/xzS50jw+EKVHWQRoFTHhh07fl1Kwr0IT++tICAPxKJaAD2LiKsZblIF7lr1AepmorH
+	cRm3CdZumKYsOMbTzcDIODZikkgbvTw=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-YgF-lknMOcq8BqO2oAX0_w-1; Mon,
- 24 Jun 2024 09:08:42 -0400
-X-MC-Unique: YgF-lknMOcq8BqO2oAX0_w-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-556-l3VMb2rFNvSdDWWUanUsBQ-1; Mon,
+ 24 Jun 2024 09:08:47 -0400
+X-MC-Unique: l3VMb2rFNvSdDWWUanUsBQ-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAA5D1956088;
-	Mon, 24 Jun 2024 13:08:40 +0000 (UTC)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AA2C619560AB;
+	Mon, 24 Jun 2024 13:08:45 +0000 (UTC)
 Received: from Diego.redhat.com (unknown [10.39.208.42])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5DAB21956087;
-	Mon, 24 Jun 2024 13:08:37 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5AECA1956087;
+	Mon, 24 Jun 2024 13:08:41 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	vmolnaro@redhat.com,
@@ -47,9 +47,9 @@ Cc: acme@kernel.org,
 	irogers@google.com,
 	atrajeev@linux.vnet.ibm.com,
 	masami.hiramatsu.pt@hitachi.com
-Subject: [PATCH 04/11] perf testsuite probe: Add test for blacklisted kprobes handling
-Date: Mon, 24 Jun 2024 15:08:02 +0200
-Message-Id: <20240624130809.1612-5-mpetlan@redhat.com>
+Subject: [PATCH 05/11] perf testsuite probe: Add test for basic perf-probe options
+Date: Mon, 24 Jun 2024 15:08:03 +0200
+Message-Id: <20240624130809.1612-6-mpetlan@redhat.com>
 In-Reply-To: <20240624130809.1612-1-mpetlan@redhat.com>
 References: <20240624130809.1612-1-mpetlan@redhat.com>
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
@@ -61,35 +61,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Test perf probe interface. Blacklisted functions should be rejected
-when there is an attempt to set a kprobe to them.
+Test basic behavior of perf-probe subcommand. It is run as a part of
+perftool-testsuite_probe test case.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- .../base_probe/test_adding_blacklisted.sh     | 67 +++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100755 tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+ .../perf/tests/shell/base_probe/test_basic.sh | 80 +++++++++++++++++++
+ 1 file changed, 80 insertions(+)
+ create mode 100755 tools/perf/tests/shell/base_probe/test_basic.sh
 
-diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+diff --git a/tools/perf/tests/shell/base_probe/test_basic.sh b/tools/perf/tests/shell/base_probe/test_basic.sh
 new file mode 100755
-index 000000000000..b5dc10b2a738
+index 000000000000..09669ec479f2
 --- /dev/null
-+++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-@@ -0,0 +1,67 @@
++++ b/tools/perf/tests/shell/base_probe/test_basic.sh
+@@ -0,0 +1,80 @@
 +#!/bin/bash
 +
 +# SPDX-License-Identifier: GPL-2.0
 +
 +#
-+#	test_adding_blacklisted of perf_probe test
-+#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
++#	test_basic of perf_probe test
 +#	Author: Michael Petlan <mpetlan@redhat.com>
++#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 +#
 +#	Description:
 +#
-+#		Blacklisted functions should not be added successfully as probes,
-+#	they must be skipped.
++#		This test tests basic functionality of perf probe command.
 +#
 +
 +# include working environment
@@ -97,47 +96,61 @@ index 000000000000..b5dc10b2a738
 +
 +TEST_RESULT=0
 +
-+# skip if not supported
-+BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
-+if [ -z "$BLACKFUNC" ]; then
++if ! check_kprobes_available; then
 +	print_overall_skipped
 +	exit 0
 +fi
 +
-+# remove all previously added probes
-+clear_all_probes
++
++### help message
++
++if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
++	# test that a help message is shown and looks reasonable
++	$CMD_PERF probe --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
++	PERF_EXIT_CODE=$?
++
++	../common/check_all_patterns_found.pl "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" < $LOGS_DIR/basic_helpmsg.log
++	CHECK_EXIT_CODE=$?
++	../common/check_all_patterns_found.pl "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
++	(( CHECK_EXIT_CODE += $? ))
++	../common/check_all_patterns_found.pl "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" "list.*EVENT" "line=" "vars=" "externs" < $LOGS_DIR/basic_helpmsg.log
++	(( CHECK_EXIT_CODE += $? ))
++	../common/check_all_patterns_found.pl "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" "max-probes" "exec=" "demangle-kernel" < $LOGS_DIR/basic_helpmsg.log
++	(( CHECK_EXIT_CODE += $? ))
++	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
++	(( CHECK_EXIT_CODE += $? ))
++
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
++	(( TEST_RESULT += $? ))
++else
++	print_testcase_skipped "help message"
++fi
 +
 +
-+### adding blacklisted function
++### usage message
 +
-+# functions from blacklist should be skipped by perf probe
-+! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
-+PERF_EXIT_CODE=$?
++# without any args perf-probe should print usage
++$CMD_PERF probe 2> $LOGS_DIR/basic_usage.log > /dev/null
 +
-+REGEX_SCOPE_FAIL="Failed to find scope of probe point"
-+REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
-+REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
-+REGEX_ERROR_MESSAGE="Error: Failed to add events."
-+REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
-+REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
-+REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
-+../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
++../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < $LOGS_DIR/basic_usage.log
 +CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
++print_results 0 $CHECK_EXIT_CODE "usage message"
 +(( TEST_RESULT += $? ))
 +
 +
-+### listing not-added probe
++### quiet switch
 +
-+# blacklisted probes should NOT appear in perf-list output
-+$CMD_PERF list probe:\* > $LOGS_DIR/adding_blacklisted_list.log
++# '--quiet' should mute all output
++$CMD_PERF probe --quiet --add vfs_read > $LOGS_DIR/basic_quiet01.log 2> $LOGS_DIR/basic_quiet01.err
 +PERF_EXIT_CODE=$?
++$CMD_PERF probe --quiet --del vfs_read > $LOGS_DIR/basic_quiet03.log 2> $LOGS_DIR/basic_quiet02.err
++(( PERF_EXIT_CODE += $? ))
 +
-+../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_blacklisted_list.log
++test "`cat $LOGS_DIR/basic_quiet*log $LOGS_DIR/basic_quiet*err | wc -l`" -eq 0
 +CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (should NOT be listed)"
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "quiet switch"
 +(( TEST_RESULT += $? ))
 +
 +
