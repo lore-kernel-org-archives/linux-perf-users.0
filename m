@@ -1,140 +1,119 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4645E14264C
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 15:32:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF1A013DDC6
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 16:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719243141; cv=none; b=arOnnAOzLDzuPOws0sBPbVtf9ogwW0mqEDxC4mFHmYIyoEZ/VhL5GTSMFsmXg9yK5Ahi3jITcf6J6JXaaoC8fIIgEne4KnsNJ/PyE+fgJiyVj5zwT/R+Pv9LgGzhVw0N47FejA94s4l77XUWL5SipynHFYyBd1mbjXzPKG76vAk=
+	t=1719245818; cv=none; b=tzKUu5pMqIJ5wxqQW5hYHHQQIU+uRDODJ0biKkTTcg0PACb+zgWvSrT9VKC5oBdeg5suaNEqlFlHKVMoUssVZoqKS+CVIKMyjCITiBXEUwKj7CrneZ5+O4KFrX7eO3i5L2qvWxqRjESrun86jtWfjWyrqbtHk+DiAT9NEfO88xU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719243141; c=relaxed/simple;
-	bh=WawAVsLJ2wrVp06E1yLAnPzm2a05JueYQ9ExxNigc3k=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Ogl3zIZu4G8khwkYMZcjZfpORzx8DlsaizXnm+uXglf6q2pf0yFUOD2LDUDTtTWXuqqM84qvZpUBYcCURK7dZ0DV0s7G+WZlY+ij9gb2O8AUULjC4mU5JewMfl1HdgIuWCZb+inxFClPUcs+P/Am0BO77V8K8YMBGcS8vIkqgoc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TvMM90c1; arc=none smtp.client-ip=209.85.216.74
+	s=arc-20240116; t=1719245818; c=relaxed/simple;
+	bh=VC15zHdju7sXcUQrdV4uuCooM3b/QyNaod6e42Iz/lE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=i++lVn3g2q3MgpSJafL1xmQd2J7wwMyfbIgAxH1AiQQcTfyQi7drSqGqvTdrGPg9JAxzJv0pe7AazORMZHajZ343Fk1A40FrLKT+fyBWNNYmSoAz/BwF/z7c/v04NCdqLSPI2rT8ansN6HmFYeEwVxisWqzTEXycxYo5DeBJtXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y1uzcEEI; arc=none smtp.client-ip=209.85.160.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TvMM90c1"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2c7d2380cb8so3818676a91.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 08:32:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y1uzcEEI"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-443580f290dso1067951cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 09:16:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719243139; x=1719847939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WawAVsLJ2wrVp06E1yLAnPzm2a05JueYQ9ExxNigc3k=;
-        b=TvMM90c1T3lspcTvhf+MQif0P69AkOpxsXtHy7HTSgIH9maV1MPeh2YDFFuA4PJlHN
-         ai4xDI1jKy71w3xqzwfzOSAgQ+Bvx6pq8iZxwvaZGSIGqI/TblQ9UuNskTMk+XzvP7lr
-         uHV+N5nrSunIhubTM5DbLeYy4uMARSZFPbpgjfKQWaj8VL2b2z8weLOszTdM5rT+B16j
-         iEuvsBXCLFDx+bPinW3LPVC8V1KSf3aryN2vmDCja/TrIqkfMxYwW5rPauEKSqbLso1T
-         eSe98bnDQPcI41ZN5p28m2Pa4rzIZm2EtzqinMFi1Xt1RJDjbyXhAug66LPZnMjmBNDb
-         +7wg==
+        d=google.com; s=20230601; t=1719245815; x=1719850615; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CoCuTTuRP9nik68N2jcDiJ0+UlXT5uhKxb/k4JLFLE4=;
+        b=Y1uzcEEI8IpE/6wnXy4rk7DAaesQ8JfIDKdwO4kTcQ3lpR6FeCAH81vqQq6OIj0zGS
+         x4/+2dTkOSRudYIbSscF9mZ1FKh21tUrGaIbOueoGiJHfZqtFARgqZPFR8Zhu/YZrxLZ
+         YM9V4LxSjNXgzZ+PrV7cph8wNn1L83XzFdSqganPtDmB2IErnqTCa2iLy0cN9CC7QosW
+         RnzCGeY5DT072t21kegqql/ncigBxFGwuISKrke+LhrJJWN6R/EQHzunI2q8DPKoutqt
+         KXv3bUUO1ckLL1RSS6n1Ee7+YTE8tv8mydPgpjGTU3Hjn0lEt/si+sHMavEH3ITbmT2C
+         t1Cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719243139; x=1719847939;
-        h=content-transfer-encoding:cc:to:from:subject:message-id:references
-         :mime-version:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=WawAVsLJ2wrVp06E1yLAnPzm2a05JueYQ9ExxNigc3k=;
-        b=CFkGIme1j7xKfstsHv6wgtg4f8EFQ4Djh7hET41hycGCbYmCz26wc6qIcqsdpH/mPd
-         jjINwPpNE2UPRbzfHNt5uhWu8ETUVytKEckyhczGtgllNpFqXWylHPg8vnYziusendhT
-         rgkCFutGhv5SEuOe7RAvVFIfk6+BGm3j2LgK1ZOvudJ/EJxA4UgzdXdpguawSxjR5Y5c
-         rRELtvwJuXSa9KD0MU8RSUJsxWGvKyK+wlfcs7dg2wbUW2p8OtBMwPAGealn5osbWQ61
-         O6wwErKdtAICD5HdQ4BH28vSn/qDjJz4C61oi77oWQshWoaB2foeEaeQVM+OwwW598Jm
-         z08w==
-X-Forwarded-Encrypted: i=1; AJvYcCWZRS6cL49LCWe+u2dOreo1Qb2t3gJN2WuAU7FdStYZ/ZUECYlgOUstUzXYQCrbfy1NLl3q/4Wu/o8S15ljHTYjMyLax6ff1XLTAz7jYlKDHw==
-X-Gm-Message-State: AOJu0YxO246k8+l1h+eCuDTbVO4Z8ZwtCWOQagBtSadmMpZRXQv+YGaE
-	hkF5ULpuEHzstMH6ak/WcN7+iY+FdiBY3364MbeDuwWZGQpLq5DiFFF/ZkXRl+78aL8GnoUDrK/
-	nag==
-X-Google-Smtp-Source: AGHT+IEtazAEW7Z9YwGGcKXL++Dckd0kAEwC6pBQKn1v/nxqOqzOdwWoLb56caKLmrQdFmUesETPkh89cIs=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:90a:2ecc:b0:2c6:d13f:3f9e with SMTP id
- 98e67ed59e1d1-2c8489b9ed7mr123696a91.1.1719243139430; Mon, 24 Jun 2024
- 08:32:19 -0700 (PDT)
-Date: Mon, 24 Jun 2024 08:32:18 -0700
-In-Reply-To: <504fa0a7264d4762afda2f13c3525ce5@huawei.com>
+        d=1e100.net; s=20230601; t=1719245815; x=1719850615;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CoCuTTuRP9nik68N2jcDiJ0+UlXT5uhKxb/k4JLFLE4=;
+        b=A0F8S6SPXUWvjGABlzyqbP0K+91v9vN0MBY/A80QG5bUf1ADK4j9IWyU6/0a8N41Qy
+         sjVPY90gbphnZ01T25GzAh8P2zEjaTIiKvMlBc6P01G7hrGWb/U8/lgjxv+NdLbx/Zul
+         9CBwUAXLjJFsBkq2LdPMPx4kx9FkUauT8zqs0tv6ADZa+Snfas7TDmJE9An4OkrmitTW
+         nFCGsr1yUoSvZtsj9wUlsI0BIXqoEhUqMXiP5GonOydLzBipH6VD+oQaGEhCO1N1BYYb
+         Q1gh0RJRFXiJMSQExnDFea7Rue4Sj/sVfOOWiqv5IH33iIT8LEBndD4KSo7vA24dRL03
+         Dq9w==
+X-Forwarded-Encrypted: i=1; AJvYcCViDuRs0JvK5U0JZaWon5bkb3UxyD9sRXT6RgQKIZ9GZ+JyP1xvzEqjBOfBM09zCGux/Ql2elFc/iIz09u9QguM/u3PTarPQoL0+JmL4TdDrw==
+X-Gm-Message-State: AOJu0YxtmlJWSoNDDbM6eifa8bAHYjFkaf/UWJO+nXVF/By7+1Hd/lVz
+	/T71gSqYSk+2rqBkmRx3NPiph90KIJqYFpo3NH6v9def4wROSVTvb2Z5TU4X7ejeO2TtVlWnTlp
+	wYWXURpNy4N/WwsYy3IRs9bpfUe3e5hXvBUmV
+X-Google-Smtp-Source: AGHT+IFsUsVaP9g9yLLpm3p1FMcIJY7mfKyNWsnIZ1899ae8yEIlyhLVmzgItOvSQQeU2kn7xvkZJb87BjIxIWBySJ4=
+X-Received: by 2002:a05:622a:14c7:b0:444:c3f3:231f with SMTP id
+ d75a77b69052e-444ce2eac12mr5751141cf.16.1719245814685; Mon, 24 Jun 2024
+ 09:16:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20230916003118.2540661-1-seanjc@google.com> <504fa0a7264d4762afda2f13c3525ce5@huawei.com>
-Message-ID: <ZnmRgqD6FmXNNzzI@google.com>
-Subject: Re: [PATCH 00/26] KVM: vfio: Hide KVM internals from others
-From: Sean Christopherson <seanjc@google.com>
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	Huacai Chen <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, 
-	Anup Patel <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, 
-	Alexander Gordeev <agordeev@linux.ibm.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, 
-	Janosch Frank <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Tony Krowiak <akrowiak@linux.ibm.com>, 
-	Halil Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>, 
-	Harald Freudenberger <freude@linux.ibm.com>, Alex Williamson <alex.williamson@redhat.com>, 
-	Andy Lutomirski <luto@kernel.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>, 
-	"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>, 
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, 
-	"kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>, 
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, Anish Ghulati <aghulati@google.com>, 
-	Venkatesh Srinivas <venkateshs@chromium.org>, Andrew Thornton <andrewth@google.com>
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+References: <20240623133437.222736-1-leo.yan@arm.com> <20240623133437.222736-2-leo.yan@arm.com>
+In-Reply-To: <20240623133437.222736-2-leo.yan@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 24 Jun 2024 09:16:43 -0700
+Message-ID: <CAP-5=fWgGR-L6V5RNNpTHdHyT0wTOqKd3CQ8xQSQDAJ1D2edYA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf arm-spe: Support multiple Arm SPE PMUs
+To: Leo Yan <leo.yan@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, James Clark <james.clark@arm.com>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, coresight@lists.linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 20, 2024, Shameerali Kolothum Thodi wrote:
-> > This is a borderline RFC series to hide KVM's internals from the rest o=
-f
-> > the kernel, where "internals" means data structures, enums, #defines,
-> > APIs, etc. that are intended to be KVM-only, but are exposed everywhere
-> > due to kvm_host.h (and other headers) living in the global include path=
-s.
+On Sun, Jun 23, 2024 at 6:34=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
 >
-> Hi Sean,
->=20
-> Just thought of checking with you on this series. Do you have plans to re=
-vive this
-> series?
-
-Yep!
-
-> The reason I am asking is, on ARM64/KVM side we do have a requirement
-> to share the KVM VMID with SMMUV3. Please see the RFC I sent out earlier =
-this
-> year[1]. The series basically provides a way for KVM to pin a VMID and al=
-so
-> associates an iommufd ctx with a struct kvm * to retrieve that VMID.=20
->=20
-> As mentioned above, some of the patches in this series(especially 1-4 & 6=
-) that
-> does the VFIO cleanups and dropping CONFIG_KVM_VFIO looks very straightfo=
-rward
-> and useful. I am thinking of including those when I re-spin my RFC series=
-, if
-> that=E2=80=99s ok.
-
-Please don't include them, as the patch they build towards (patch 5) is bug=
-gy[*],
-and I am fairly certain that at least some of the patches will change signi=
-ficantly.
-
-I expect to re-start working on the series in ~2 weeks, and am planning on =
-actively
-pushing the series (i.e. not ignoring it for months on end).
-
-[*] https://lore.kernel.org/all/ZWp_q1w01NCZi8KX@google.com
-
-> Please let me know your thoughts.
+> A platform can have more than one Arm SPE PMU. For example, a system
+> with multiple clusters may have each cluster enabled with its own Arm
+> SPE instance. In such case, the PMU devices will be named 'arm_spe_0',
+> 'arm_spe_1', and so on.
 >
-> [1]. https://lore.kernel.org/linux-iommu/20240209115824.GA2922446@myrica=
-=20
+> Currently, the tool only supports 'arm_spe_0'. This commit extends
+> support to multiple Arm SPE PMUs by detecting the substring 'arm_spe'.
+>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/arch/arm/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pm=
+u.c
+> index 8b7cb68ba1a8..29cfa1e427ed 100644
+> --- a/tools/perf/arch/arm/util/pmu.c
+> +++ b/tools/perf/arch/arm/util/pmu.c
+> @@ -27,7 +27,7 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_u=
+nused)
+>                 pmu->selectable =3D true;
+>                 pmu->is_uncore =3D false;
+>                 pmu->perf_event_attr_init_default =3D arm_spe_pmu_default=
+_config;
+> -               if (!strcmp(pmu->name, "arm_spe_0"))
+> +               if (strstr(pmu->name, "arm_spe"))
+
+Why not use strstarts?
+
+Thanks,
+Ian
+
+
+>                         pmu->mem_events =3D perf_mem_events_arm;
+>         } else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
+>                 pmu->selectable =3D true;
+> --
+> 2.34.1
+>
