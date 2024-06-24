@@ -1,435 +1,224 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404041A2563
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 22:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719269265; cv=none; b=kfTsi0X5kTdpqTfLg2Lzab814n5Y4HTROK0NMub5/khit87gOuoMWkIKc3bPOg99+9RdnqSUnZeGgAj+UJB8LOODrqvgcZdZMl272emvcKgNmzjjqlzPQSbO6I+c5OmLIQkC168X7UgKfMOYmrXa0QfHmyv37i8Ol6cS1gUtPkg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719269265; c=relaxed/simple;
-	bh=ASSsJOjbEdI1PzC2Ylkpp7Z1rLuOrPbctP9n9FEWCdQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gZairbnW1fZj2tpgbjUDhrIR8bC3RAZ9IsWgQYpfikEnaDztCwFcv04jBPDwUMganT0MDGTnRjARAPx53YyzozBC/JZPkAQ7sbFCpULDrgh54gH/w2wXHQzBXnSkQu6rnQC8R0PrU8OWWt5+FM6xt3jTysLvgVGmPKqNwkpv/Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFJ9ZMtH; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C07349655;
+	Mon, 24 Jun 2024 23:17:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719271058; cv=fail; b=trlYvUYMCf6979kRFLG4iXiarbw4+YVbmUjlugtxm+lmc+G30edjvj6N4vplqYAr/CMv9BYmxJ0y+1I56FXuxoYu3xKzT3NQniXYqzniXsNHfMBMAYxi3qEPuZj9MHcVDZWsAteiVF3CkieIQIkzFZbI4kYdIond7ME10gdUZh0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719271058; c=relaxed/simple;
+	bh=oOUBSEV3IK47MipBuPnKwDoQUsy65LsE+YJma+mNvnA=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=PPbFn2PQX5jDb+JoKQPZhiioe2oG74by4U4vazg9W5s/qE64a16DaqHX1crzogvjB3lIjL8GeXold33bC08NgWrs89HRELZWWfaFDyc7CHcuAhsTfnia8CRGMn5oh5zn4Q+Y66lT7ovGd6qui9hM5NKfjb6YHYbRuKmPj5PXojs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ezu5KSTa; arc=fail smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFJ9ZMtH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30184C4AF0E;
-	Mon, 24 Jun 2024 22:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719269264;
-	bh=ASSsJOjbEdI1PzC2Ylkpp7Z1rLuOrPbctP9n9FEWCdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WFJ9ZMtHBWjOqZvv/GzYT71ehfvFiQfMbzqHeL9UMuwf6FxJbTb0HCnFqjpGQ8R2t
-	 S9J4PG0mjIYdpyv6gzdCYn/U60h2B72isAM6UZZQI+vNEnZc+ePqcfxXT/TMn0S2hf
-	 1lcUY2czIkXLnHE5kQBOacYl1KpoRiwvdxZOqYZe+7gmcGApMo9JMIIpG8bFpUYMme
-	 Nr1YwITWnpjsWMnRtqrntgyj5y9TqtMY09ft8Ee9D8cAzWIhMOppwbtCuFU3/+zBpA
-	 HCbVnuWlEsLLt76yVe1VZeNo0r+hbZzaI1puy0B8NIt6GY3dulnxZDWerEqJy3PTME
-	 bqi6FyvcVGCJw==
-Date: Mon, 24 Jun 2024 15:47:42 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v9 1/4] perf check: introduce check subcommand
-Message-ID: <Znn3jpTqz-oFb0uB@google.com>
-References: <20240617065036.1194041-1-adityag@linux.ibm.com>
- <20240617065036.1194041-2-adityag@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ezu5KSTa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719271056; x=1750807056;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=oOUBSEV3IK47MipBuPnKwDoQUsy65LsE+YJma+mNvnA=;
+  b=Ezu5KSTahpoxFAu3Yv24B6bPTUtukRp+l5k8dRqqpDz7nUF0Z4Kyo4J1
+   vBWVJOmOtFM24/+R8rqkEHMkHdVJlJmAnRVJXLpG782LYAoF6rEfgjlua
+   GY0hXZFHaxSWkGpjnJugRiN8zDmxTWkzltsez6A5xSU6+QwNBbmO3j/ZT
+   /P596KVggH7zanperLRDXil5LY3uiCj8kVljKhtDUZucRcO4ODHC7k9LE
+   YLLp7i0MeBaX/+Me23xOzkTOeFXiV5LC5Wve2BR694JiMVk+kvFYv49QL
+   lSV1fsiRaMdetBgg+zG68xK0s/stkTf8qnkWGg5twhvo0E7Buje5FyiOv
+   g==;
+X-CSE-ConnectionGUID: aWjpL2ElRvaNhYjvtGI4KA==
+X-CSE-MsgGUID: iL9EKFVDQbyJQqzQnXUQIw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="12227559"
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="12227559"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 16:17:35 -0700
+X-CSE-ConnectionGUID: eyD0xNI+SOqTBRVWw84PMQ==
+X-CSE-MsgGUID: OqXNjYP9Q1eRE4Wn3rwELA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="44141658"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orviesa008.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 24 Jun 2024 16:17:35 -0700
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 24 Jun 2024 16:17:35 -0700
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 24 Jun 2024 16:16:56 -0700
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 24 Jun 2024 16:16:56 -0700
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 24 Jun 2024 16:16:56 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ee0NrDlwK3SDeyRPClZ6aVjgAt8IZ6nE3AUZk2I2LQBokeZ8nQsk3Lzu1+/Gc8nLzJ4DTJsdKMUaivNZ8oZvGMGiu9iE6KPUiGx3t/uy/gIkVivxxsW9GWussGDAlNswJdG3a3f4RmP1MLbXx+f+T6V4fW9T4n/wIVG6vDYP1QIc59BGYog7bxU2AQkNoHMi4V3B098Td0g59vfZyb2gq2M22OcQ1C1GLCRQxcRmW/04h57kFwLF60OQpsaTa5pr3swdW+mb6yxXpHCCW6Y4Y1s/U0u1Lu6Kzf2XLJFK3gldsXOQ9qMbyngUaw0wSFCZXjv2ytFmDK9RNBnPwwDwmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nTsb2Mp2/cVLdnDwr446yAitOqlEBkaH8LEF8Hq5SWs=;
+ b=Zp6NfXJr4jRexY9Z6SZBH92/F5vmxO/YBeYXZkXN+NmBPxqcIgq4mT+M27zufv6l4edlnjNcQtVPaUXNqbHeJmoAX+zNOhkrqFrS/MuADSThrC/857DNcwKrqQSZnTthp2ftX/UYyG/v44x/1YvJV346vfTEIm9dDNUZdy5AnEHhd1olxsCvUH4bE5Z91oz+y0XChCy06R4j624ArtkHLrI5LGN6UQpi+TtmqhcEqFPqA0nDIU1NGW+bWhf5Mi3YqxodRkS6pL7I9k7MnLhkOzs7FaWST70EMwSaZSHw2Jt/6BJvAZo+5iz7NPXLEWcwvPUPH0+ZwYr5XQ0VvmiiCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
+ by MW4PR11MB6788.namprd11.prod.outlook.com (2603:10b6:303:208::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.29; Mon, 24 Jun
+ 2024 23:16:54 +0000
+Received: from BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
+ ([fe80::e8c4:59e3:f1d5:af3b%5]) with mapi id 15.20.7698.025; Mon, 24 Jun 2024
+ 23:16:54 +0000
+Message-ID: <9057390e-1a15-43e7-b4bc-803651b951ed@intel.com>
+Date: Mon, 24 Jun 2024 16:16:52 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/6] x86/irq: Extend NMI handler registration interface
+ to include source
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+	Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, "Ingo
+ Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	<linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>
+CC: Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>
+References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
+ <20240611165457.156364-3-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+From: Sohil Mehta <sohil.mehta@intel.com>
+In-Reply-To: <20240611165457.156364-3-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MW4PR03CA0358.namprd03.prod.outlook.com
+ (2603:10b6:303:dc::33) To BYAPR11MB3320.namprd11.prod.outlook.com
+ (2603:10b6:a03:18::25)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240617065036.1194041-2-adityag@linux.ibm.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|MW4PR11MB6788:EE_
+X-MS-Office365-Filtering-Correlation-Id: b80673e9-c7a1-4518-8d9e-08dc94a3bc94
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230037|1800799021|366013|376011|921017;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?d0tkKzI1dHdIWGRIVDl3Q2pZRHNyWTUwWTd0SjBMbzFWeGdRTEpHTE9CazBk?=
+ =?utf-8?B?cVlJa3h6ZC9Qb1dXTGpVaVoyT0tQUDV4a3pabmlnbjdlMVlRc0NjSmFOMC9G?=
+ =?utf-8?B?MG95SUpPQW9lTktGaFpiNk1PWUozSzl2M1RXbTR6djlVYWh2UnJRbTNtakxn?=
+ =?utf-8?B?dC9WWjljZ2hpYy9heWQzTHNiM0lFdnp0R0xUT1phM0t4QmoxTWtkOElNM0sz?=
+ =?utf-8?B?aXpqNXVSLy9nRXVlazhpVVNJeTN0VytEM1hjK21mN1lnVklLU3o0TlVEakFG?=
+ =?utf-8?B?dDBLM0d6L1pHVXU5L3VUMmw0ODBoVjFRQkJ0L256am9yUFA3bS9VSVg4dXh2?=
+ =?utf-8?B?ZEdLZ0JjVTN5RnJVY3U1b3RLU0R0b1BoR3BrR0hYVGVydHVjeC9QK2VrajhN?=
+ =?utf-8?B?Q3FsZXJZOE8rWG1ZbUY5L2dYM1pNSGlhUE14bVRKUXM1bEJTQ2Qxd2hZRUJU?=
+ =?utf-8?B?RlRnQVJwcWJHNWdLemVCZnpxMkUrR3dvNmxaRDA1aUtVeXhJS1pnTWFIdjls?=
+ =?utf-8?B?ekNZVEljdHB2Ymh4clJvTDVBd2dONzBkcnp0Q2kxZDdwejIyd2ovUGhxVTA4?=
+ =?utf-8?B?dHFEamVseFZYNXF0NXRmUnJaMEduaGkvTlN0U1FtUDFscG16bDFvRUJQd1JS?=
+ =?utf-8?B?ZTBvdk1MY2xmUGIxMG1SekorSVRKQ2pKOWRvT3pYT1JsaFRsNE82WkV4TVhU?=
+ =?utf-8?B?MzBnYXVTcitXUjhDSWpaVE1salIxNUJTTUxTTWlEZHVLeHFhVjgxcERxSE9Y?=
+ =?utf-8?B?L2laTWw3UFFCNmt3d09vSVlKYXJveDh5V1pscEhiNFROTmVQSnJlTllheDNq?=
+ =?utf-8?B?ZkY0RlhXK1pnM0FTaG5XaTFoMWx3anpxMkFGRHNKZ1FjRVNmdW5Na29ZOWpK?=
+ =?utf-8?B?TG13MVUxdXptUlJCdU5YdWNMSThvUmhJUVFVaXo1emtLZmhZY1NWeFNjcHpi?=
+ =?utf-8?B?bmpDdmYyNUZVQ0N1bURETklVOEQ5YjZMOUxPTk9XOGNMMGgzamx1MU1BeTZJ?=
+ =?utf-8?B?U0RSRWZreXBuOVhsZ09WVUJ5eCtBcE1oQkpMbUxLSklUNk5GaUJiMk5KWlJ0?=
+ =?utf-8?B?cnR5K2FXWTB3WVRGb3k4UkpoNlg4SEJKRDF0R3ByNGVHUE1ibWEzQ1IwUU5I?=
+ =?utf-8?B?TGdVaEI4RzYwRzFCNEVBL0xYaHEyN3pna2tHZG43MENUWkJJRmlKYkl2NlhW?=
+ =?utf-8?B?MmZRamM5L3c1OVkzdStOWThBSzkxTzE3ckIxMVpWTTJRUllvakNaRk1aR0xo?=
+ =?utf-8?B?NHpOU2tWY0EwWUJxNEFIc1d0U0hSZkltSXo2ZUs3UDd3VTBkdjVmR1ord0tu?=
+ =?utf-8?B?elRMa1l6b2hvbFBvSTZtSERqc2tSZ2ZwNWF1b1QxK0FVb3FIWjlhMytuTlVH?=
+ =?utf-8?B?L2xOa1J5SjdZbnQvU3BWbFJCSnU2WFk1Wmg4UzVxa0Rwb3Fvc0xmTURCdFVa?=
+ =?utf-8?B?dENLMEx4NmZUaDFQZ1BJUkFiV1pzK3ViZGJQUmUrNnNkNTJjQVZINGhOUDVs?=
+ =?utf-8?B?MDJ0ZFZtK2J4MmpFSUZrblpPcm1xc3RRcTFjcDFRM0hYdDNLUkNUQUhBaFNN?=
+ =?utf-8?B?SlU0b0xVYUY4U3RJcHVOUnREYjJPUGJ3cU0yWTJnTjkrNmxLSkhGc25wcW5N?=
+ =?utf-8?B?Y2U4TlFJVzczd3V3cVp2MSsxbkpKTE56V3pIR1hTQkFMME85ZkFPTUh3cGxP?=
+ =?utf-8?B?cmJJa0ltamRwNHE5K0Qxa3d2YzE0R3VKNFFCSktIa0hRTCtCOGRCQ0haRWY1?=
+ =?utf-8?B?OWdjRkxXY05tZ0FXNkk4QThiV0cxNm45bFlOS1JXdVNQWVJVbjNFZGZrdENF?=
+ =?utf-8?Q?JHHLAO9qCnfATXcHodMXPBZEqhFrz120XJrAU=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230037)(1800799021)(366013)(376011)(921017);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?K2RHN0NteXM0SFh5N0N1NXplM21FVVpzRXVuVzdYeVhseTEyUEFaSnVXckF2?=
+ =?utf-8?B?VDNIWnlnOWRObDJpYTZwMlZMS0IwbWJieFhXemdUKzlrZmhySm5HSmhTUlkz?=
+ =?utf-8?B?bHdSZ01EbXZKNlh3a1JqSlNHRU14dTh3WmdEcGs2ak5QdkFXOE5Gb25jVlMv?=
+ =?utf-8?B?c1owRks2TnRrMkJMSFErMnRtY0pNRitKNmFBMmt3TXJOSEoyejQxbUpEV0FC?=
+ =?utf-8?B?dUFmNjhLeU5TdXNGcG9xaWV5aVZZb2h3dzJRRDduSlNvT3ZHbUZTVWRiRkt3?=
+ =?utf-8?B?NzllY2x2ZjZCUER4Zjg4UWxSbFROMlZoNDJoOXZBQTUyUWYyWHZrWnFlbzVM?=
+ =?utf-8?B?Y0VZVzFzVk04QjNOZkFtRVBoeHFDMHJaM1lyY3IxUmdpVGw1MkpkQk5tUXd0?=
+ =?utf-8?B?Q0tRcnRGbUtrbkpvK25nR1pNWFBGVVpNanpWckZmc0ZaNzBwMTJXdWZpVzFC?=
+ =?utf-8?B?L3lYdGFwQi9OU3g1NFRDVVA4dFdMYlM2N00xYVdkMEc5d2VOYzR1dzJobWdI?=
+ =?utf-8?B?NnpYSXR0NnpYTjM5MHV0S0FHcWtlaTBJUHUyOTBTeEtWOVZPWStXOXk1Ni81?=
+ =?utf-8?B?Y3dxNWxMSVZiZVNHYjJzVG43bnhQL3h0ZHZZbVBYM0tCMEQ0dTRvNDNWbzZk?=
+ =?utf-8?B?UG5qSjZPYmdscFFNRTMvNmlSZ294TENWdExWZVdoWmtyQURyeEVodTBsQkpo?=
+ =?utf-8?B?d0dTRHpnbzBWaVA3QTY2L2I5YU9tMG1SVnFIQUh2UUMwekg5VHE4NUhpVzY4?=
+ =?utf-8?B?d3hlbHFteWVpbGxaUllxNy8vdnc1bW9EUnMzZFJNZUVDQ0xIZzhiZDVUMHln?=
+ =?utf-8?B?SGxxRm93dzZiWHErNlNLbnJxV2xXME43Y244c1JmeFYxaVdzVndldnBzbHhi?=
+ =?utf-8?B?ZktHS1kzOStLbmUrUmU2dHIweXdoeHoxQVRlN3ZNMWZsRGNqU3N0bEpkaXJx?=
+ =?utf-8?B?dTZSK0dUK2haTHZsRThmT050N0FmSjNoNW1ZMXBKVFlKYUE2THB5ekliRlBM?=
+ =?utf-8?B?WjJOWHBCalB5L1BlS201RWlZK2U3bS8rYWFuOXF6NmxoOGR3YzQvTFdnbFli?=
+ =?utf-8?B?TzNKcC8zT010S0c3S3VwNDhjTng4RU01QzlvM25IWEJuS3ZQYjlXUUhseGRu?=
+ =?utf-8?B?a1RKTDBMY3NVakdiQnFSMkZBenlDMEptemVzT2xsS0pFYXBweWJIb0EwM09M?=
+ =?utf-8?B?cXFDZitwcWwrRWsvNEZZSktwVU9GOVJTT254bElpRDlMeTdndjBhOERKSG5j?=
+ =?utf-8?B?dWh3OFNaV3JKVDhUWkRJSS90T3VvSlNCQkxacS96MGtnTlpYSXhNNmFvRGRh?=
+ =?utf-8?B?bTN1ZjBabzArQ0NtM3pSTjBoNi9RUVU4emhkMTJZRis1aDh0MWNsNFYydGFE?=
+ =?utf-8?B?ekZDR3ludUk0OHFnR1gwZlcrYnBLb0ZkY2RkWWpMdGdwMTRHSTdNalZZaXYv?=
+ =?utf-8?B?NTRqWkpmY3BEVWkwK21OcDVBQlpxaWxPdFNxWE9sOGRIZVRNQzVxalJiQTB5?=
+ =?utf-8?B?WDhnTjVhS2wyY1hiZmE0ZUcyMExCNXo0b2xVRkYxTGhMOThoeFY4elRhY2pT?=
+ =?utf-8?B?eXNsdFFBQVkxMHVhZ2s2Mk1LMmJESmF3T0JTMEZva3BBYVc5d1piajcvbHBW?=
+ =?utf-8?B?bnBHZzlKcXFTdmpjRDhJa2tJcGYvTmxiMTRiVElEc1l1ZTluR2Nvem1xNGdk?=
+ =?utf-8?B?RSsvZkQwREFiODBuanR3MHdOendKRmZIL0VQb0RMMzZESlVRS0V0T2FRdnlI?=
+ =?utf-8?B?Nk1UUFdid1AvWkhFNHV2enRIVTVYY3dlQ3U0Y2xXWnNnYjJNWk5namFxblZi?=
+ =?utf-8?B?bGd2YzR2TDJGR0Jtb1JwUFhhWW9sL1NqNnZtUmNwMTFlNGI4YThDMmJ6dTJB?=
+ =?utf-8?B?SERodXVocm91ekFQVVRsVXVueHhlSU1FVGVSQldwc09iS2sxM2tZN25EbFFJ?=
+ =?utf-8?B?NnhPMmFwWm13U1RFZEI2WHhnNnVEQXhRdkJmcEpGUjBQSDQ1eGZ3Zm1PMGZZ?=
+ =?utf-8?B?dmlNNGJzMjBGZ1VNdEhBb25zck9GcTByb3JaVkMyZnM3QjJkTlBRK2F0S3I0?=
+ =?utf-8?B?N3JBNUhWV3Fma21FYlZLMllZSjlCNHJoUEQ2aEJ4K2JDSUNKUkpwY3F4L1l4?=
+ =?utf-8?Q?LPj+QSlvGjnShafwCB3e+OT3H?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b80673e9-c7a1-4518-8d9e-08dc94a3bc94
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jun 2024 23:16:54.5455
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: oIC73+NgTwL5z9rFWSoefgURibeNoYJ1k8MREGexz6Gajg0BayT9dqjDnYDdbs6ysqH6UyQh1EiU094B+Kt8UQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR11MB6788
+X-OriginatorOrg: intel.com
 
-Hello,
+On 6/11/2024 9:54 AM, Jacob Pan wrote:
+> Add a source vector argument to register_nmi_handler() such that designated
+> NMI originators can leverage NMI source reporting feature. For those who
+> do not use NMI source reporting, 0 (unknown) is used as the source vector. NMI
+> source vectors (up to 16) are pre-defined.
+> 
 
-On Mon, Jun 17, 2024 at 12:20:33PM +0530, Aditya Gupta wrote:
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
-> 
->     perf version --build-options | grep " on .* HAVE_FEATURE"
-> 
-> Instead of this, introduce a subcommand "perf check feature", with which
-> scripts can test for presence of a feature, such as:
-> 
->     perf check feature HAVE_FEATURE
-> 
-> 'perf check feature' command is expected to have exit status of 0 if
-> feature is built-in, and 1 if it's not built-in or if feature is not known.
-> 
-> Multiple features can also be passed as a comma-separated list, in which
-> case the exit status will be 1 only if all of the passed features are
-> built-in. For example, with below command, it will have exit status of 0 only
-> if both libtraceevent and bpf are enabled, else 1 in all other cases
-> 
->     perf check feature libtraceevent,bpf
-> 
-> The arguments are case-insensitive.
-> An array 'supported_features' has also been introduced that can be used by
-> other commands like 'perf version --build-options', so that new features
-> can be added in one place, with the array
-> 
-> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> 
-> ---
-> The entries in 'supported_features' array is just sorted list of
-> features mentioned in 'library_status' function in builtin-version.c
-> ---
-> ---
->  tools/perf/Build                        |   1 +
->  tools/perf/Documentation/perf-check.txt |  79 +++++++++++
->  tools/perf/builtin-check.c              | 178 ++++++++++++++++++++++++
->  tools/perf/builtin.h                    |  17 +++
->  tools/perf/perf.c                       |   1 +
->  5 files changed, 276 insertions(+)
->  create mode 100644 tools/perf/Documentation/perf-check.txt
->  create mode 100644 tools/perf/builtin-check.c
-> 
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index b0cb7ad8e6ac..7635cc823565 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -1,5 +1,6 @@
->  perf-y += builtin-bench.o
->  perf-y += builtin-annotate.o
-> +perf-y += builtin-check.o
->  perf-y += builtin-config.o
->  perf-y += builtin-diff.o
->  perf-y += builtin-evlist.o
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> new file mode 100644
-> index 000000000000..896bc2ed67a5
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -0,0 +1,79 @@
-> +perf-check(1)
-> +===============
-> +
-> +NAME
-> +----
-> +perf-check - check features in perf
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf check' [<options>]
-> +'perf check' {feature <feature_list>} [<options>]
-> +
-> +DESCRIPTION
-> +-----------
-> +With no options given, the 'perf check' just prints the perf version
-> +on the standard output.
-> +
-> +If the subcommand 'feature' is used, then status of feature is printed
-> +on the standard output (unless '-q' is also passed), ie. whether it is
-> +compiled-in/built-in or not.
-> +Also, 'perf check feature' returns with exit status 0 if the feature
-> +is built-in, otherwise returns with exit status 1.
-> +
-> +SUBCOMMANDS
-> +-----------
-> +
-> +feature::
-> +
-> +        Print whether feature(s) is compiled-in or not, and also returns with an
-> +        exit status of 0, if passed feature(s) are compiled-in, else 1.
-> +
-> +        It expects a feature list as an argument. There can be a single feature
-> +        name/macro, or multiple features can also be passed as a comma-separated
-> +        list, in which case the exit status will be 0 only if all of the passed
-> +        features are compiled-in.
-> +
-> +        The feature names/macros are case-insensitive.
-> +
-> +        Example Usage:
-> +                perf check feature libtraceevent
-> +                perf check feature HAVE_LIBTRACEEVENT
-> +                perf check feature libtraceevent,bpf
-> +
-> +        Supported feature names/macro:
-> +                aio                     /  HAVE_AIO_SUPPORT
-> +                bpf                     /  HAVE_LIBBPF_SUPPORT
-> +                bpf_skeletons           /  HAVE_BPF_SKEL
-> +                debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
-> +                dwarf                   /  HAVE_DWARF_SUPPORT
-> +                dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
-> +                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
-> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-> +                libaudit                /  HAVE_LIBAUDIT_SUPPORT
-> +                libbfd                  /  HAVE_LIBBFD_SUPPORT
-> +                libelf                  /  HAVE_LIBELF_SUPPORT
-> +                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-> +                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-> +                libnuma                 /  HAVE_LIBNUMA_SUPPORT
-> +                libperl                 /  HAVE_LIBPERL_SUPPORT
-> +                libpfm4                 /  HAVE_LIBPFM
-> +                libpython               /  HAVE_LIBPYTHON_SUPPORT
-> +                libslang                /  HAVE_SLANG_SUPPORT
-> +                libtraceevent           /  HAVE_LIBTRACEEVENT
-> +                libunwind               /  HAVE_LIBUNWIND_SUPPORT
-> +                lzma                    /  HAVE_LZMA_SUPPORT
-> +                syscall_table           /  HAVE_SYSCALL_TABLE_SUPPORT
-> +                zlib                    /  HAVE_ZLIB_SUPPORT
-> +                zstd                    /  HAVE_ZSTD_SUPPORT
-> +
-> +OPTIONS
-> +-------
-> +-q::
+What determines whether a source supports the new reporting vs some that
+don't? It might be useful to add that reasoning to the commit message as
+well.
 
---quiet::
+I am guessing there is some connection to NMI_LOCAL based on
+use_nmi_source() definition but I am not sure.
+
+Also, would it be worthwhile to split this patch into 2? One part that
+extents the register_nmi_handler() API and another that allocates the
+source vectors to certain sources.
 
 
-> +        Do not print any messages or warnings
-> +
-> +        This can be used along with subcommands such as 'perf check feature'
-> +        to hide unnecessary output in test scripts, eg.
-> +        'perf check feature --quiet libtraceevent'
-> +
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> new file mode 100644
-> index 000000000000..c5f75f159191
-> --- /dev/null
-> +++ b/tools/perf/builtin-check.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "builtin.h"
-> +#include "color.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include <tools/config.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <subcmd/parse-options.h>
-> +
-> +static const char * const check_subcommands[] = { "feature", NULL };
-> +static struct option check_options[] = {
-> +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-> +	OPT_END()
-> +};
-> +static struct option check_feature_options[] = { OPT_END() };
-> +
-> +static const char *check_usage[] = { NULL };
-> +static const char *check_feature_usage[] = {
-> +	"perf check feature <feature_list>",
-> +	NULL
-> +};
-> +
-> +struct feature_status supported_features[] = {
-> +	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
-> +	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
-> +	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
-> +	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-> +	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-> +	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
-> +	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-> +	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
-> +	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
-> +	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
-> +	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-> +	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
-> +	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
-> +	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-> +	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
-> +	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
-> +	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
-> +	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
-> +	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
-> +	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
-> +	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-> +	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
-> +	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
-> +
-> +	/* this should remain at end, to know the array end */
-> +	FEATURE_STATUS(NULL, _)
-> +};
-> +
-> +static void on_off_print(const char *status)
+> +static inline bool use_nmi_source(unsigned int type, struct nmiaction *a)
 > +{
-> +	printf("[ ");
-> +
-> +	if (!strcmp(status, "OFF"))
-> +		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-> +	else
-> +		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-> +
-> +	printf(" ]");
+> +	return (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) &&
+> +		type == NMI_LOCAL && a->source_vec);
 > +}
 > +
-> +/* Helper function to print status of a feature along with name/macro */
-> +static void status_print(const char *name, const char *macro,
-> +			 const char *status)
-> +{
-> +	printf("%22s: ", name);
-> +	on_off_print(status);
-> +	printf("  # %s\n", macro);
-> +}
-> +
-> +#define STATUS(feature)                                   \
-> +do {                                                      \
-> +	if (feature.is_builtin)                               \
-> +		status_print(feature.name, feature.macro, "on");  \
-> +	else                                                  \
-> +		status_print(feature.name, feature.macro, "OFF"); \
-> +} while (0)
-> +
-> +/**
-> + * check whether "feature" is built-in with perf
-> + *
-> + * returns:
-> + *    0: NOT built-in or Feature not known
-> + *    1: Built-in
-> + */
-> +static int has_support(const char *feature)
-> +{
-> +	for (int i = 0; supported_features[i].name; ++i) {
-> +		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
-> +		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
-> +			if (!quiet)
-> +				STATUS(supported_features[i]);
-> +			return supported_features[i].is_builtin;
-> +		}
-> +	}
-> +
-> +	if (!quiet)
-> +		pr_err("Feature not known: '%s'\n", feature);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +/**
-> + * Usage: 'perf check feature <feature_list>'
-> + *
-> + * <feature_list> can be a single feature name/macro, or a comma-separated list
-> + * of feature names/macros
-> + * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
-> + *
-> + * In case of a comma-separated list, feature_enabled will be 1, only if
-> + * all features passed in the string are supported
-> + *
-> + * Note that argv will get modified
-> + */
-> +static int subcommand_feature(int argc, const char **argv)
-> +{
-> +	char *feature_list;
-> +	char *feature_name;
-> +	int feature_enabled;
-> +	int buf_len;
-> +
-> +	argc = parse_options(argc, argv, check_feature_options,
-> +			check_feature_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_feature_usage, check_feature_options);
-> +
-> +	if (argc > 1) {
-> +		pr_err("Too many arguments passed to 'perf check feature'\n");
-> +		return -1;
-> +	}
-> +
-> +	feature_enabled = 1;
-> +	buf_len = strlen(argv[0]) + 1;
-> +	/* feature_list is a non-const copy of 'argv[1]' */
-> +	feature_list = malloc(buf_len * sizeof(char));
 
-Can it be just strdup(argv[0]) ?
-
-Thanks,
-Namhyung
-
-
-> +	if (!feature_list) {
-> +		pr_err("ERROR: failed to allocate memory for feature list\n");
-> +		return -1;
-> +	}
-> +
-> +	memcpy(feature_list, argv[0], buf_len);
-> +	feature_name = strtok(feature_list, ",");
-> +
-> +	while (feature_name) {
-> +		feature_enabled &= has_support(feature_name);
-> +		feature_name = strtok(NULL, ",");
-> +	}
-> +
-> +	free(feature_list);
-> +
-> +	return !feature_enabled;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +	argc = parse_options_subcommand(argc, argv, check_options,
-> +			check_subcommands, check_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_usage, check_options);
-> +
-> +	if (strcmp(argv[0], "feature") == 0)
-> +		return subcommand_feature(argc, argv);
-> +
-> +	/* If no subcommand matched above, print usage help */
-> +	usage_with_options(check_usage, check_options);
-> +	return 0;
-> +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f4375deabfa3..0cdb11b9efec 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,22 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
->  
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_status {
-> +	const char *name;
-> +	const char *macro;
-> +	int is_builtin;
-> +};
-> +
-> +#define FEATURE_STATUS(name_, macro_) { \
-> +	.name = name_,                       \
-> +	.macro = #macro_,                    \
-> +	.is_builtin = IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_status supported_features[];
->  struct cmdnames;
->  
->  void list_common_cmds_help(void);
-> @@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index bd3f80b5bb46..4def800f4089 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
->  	{ "archive",	NULL,	0 },
->  	{ "buildid-cache", cmd_buildid_cache, 0 },
->  	{ "buildid-list", cmd_buildid_list, 0 },
-> +	{ "check",	cmd_check,	0 },
->  	{ "config",	cmd_config,	0 },
->  	{ "c2c",	cmd_c2c,	0 },
->  	{ "diff",	cmd_diff,	0 },
-> -- 
-> 2.45.2
-> 
+Sohil
