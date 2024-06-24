@@ -1,189 +1,119 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C09B31A0B12
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 21:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EE6213C901;
+	Mon, 24 Jun 2024 22:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719265629; cv=none; b=fLdWz95mIEIB2M07LXAogiLs/13f03EIN+nCjyEqPx/cyskPDECGt5WxiTnQbrxwPUwXz9G7EE2jAp/IZ8J48IAGv9AmTnKx0ZJC7xakMJdfDfLmJDnQ6VROEZYBS8VK8Gi0q7ysMssk3HN4UCMQPOPPLnAU675weNashFFr4es=
+	t=1719266790; cv=none; b=hatZzgSalZHCtChgURqb6Ee9GKcdUzNfJBllaRRoaZXCyzvRhTekIm9Ur4Uy0mtVQxA4Sqco/BndPvegNx8eZUV+E2t2pRNo6VR5MNVp8oqefvVbZJkBGqA1sQYdJajVpUX88KooxlUHUP4wdlKXC7tOpSFxCI7PW8DNsFQPGPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719265629; c=relaxed/simple;
-	bh=1uVEUqdRcUo/rJ5R+c++NPkM94ZB+DuQFRakCKBJoYE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=TxgwxnA0WlBQX6u3W9HbKCPg7Ob2yxv8wn9K0YKht6IIEOO3gy6celmgI263rq486XbHH62QMlo62KdXIPX7kiGtQAXWUmmKd1cLyor0YS1az2soPuBrpH6E2QjhkvU646Uei0J7QdWPjekVeWT7cSle/kTMsInc6uWEaXeAYTU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=p6MrxJ+j; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719266790; c=relaxed/simple;
+	bh=v5EkkTErtysweJ6YBb/ej7mjjeGRSkbHCB9ia2QeuFc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BzvCMBG5EDWm7BBHiHm9jwpBleHBPvBKhb+5wmv6Eu9GFMBjwVb4CMnIRBpOs9XgBEmWicxGa5VUGeV7vH9iuhA042ZG1WhJ561CoknBZiir6DHgHY43w/9NpVDVU3SajYExuwsJATo6TAlVzgl0yQPrwev5IwXB/UzUJVLeCho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvjTQ5rg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p6MrxJ+j"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fa3086cf25so19735ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 14:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719265627; x=1719870427; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ryU5o2yVn1i6Iaousq7WSn7w6bux8oEB7sHmGtnV9uI=;
-        b=p6MrxJ+jFadwPQYB2bHJdf5etvquPE/wVv4H4PFnScMPuSlB/CVYR2Ud654BOpa0Xn
-         2dWTZ6vAIagU9M+Zs7ET+mXeOXs9Bwb24fZgEkIM7IS6hnqGvuLpmxoy96S6gQOPkG7v
-         Q2GtoHE3/KQ7ReSiMrIyysU64VRv7V93DpwMnL09085nDIbe+jNu93pyTry0RJiDWztD
-         aaMXEAWPODT4HfQSga2PE6Tp76pHDBiy1rZHDgk8IH+x2iVh6Pg3HNI4YJyvhSVa8MOM
-         nUXBzleVL1gYSPi2hxDU6r7dh7OQ65FJvubVyMeGTulzvYngqMNPyuKL7CPwI7QuqGok
-         KohA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719265627; x=1719870427;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ryU5o2yVn1i6Iaousq7WSn7w6bux8oEB7sHmGtnV9uI=;
-        b=tXTCUaCK+KTMj/tHd+aSubU7yAsEO7klCAYx2lhnH0SnaIu/vr1amEaXYPPRj4Rn9b
-         n2uNn2wkQkNGh+hlr5bwJN2e3jhs/IbJDC31/vVz0KdnMqk/0w+FTLwGxos+iwyDG4/P
-         T/ahy1jOryM5z3bwEOJSdFWPw9uxQQ6p1McPuhDUhmyip5qXIUCqxjXQ5XvX9LZVwtHN
-         FALGIzM1kASyk/sdXZZbdHHggr94y0/MqDhCykYIdpAOUawdA9iFFZi5OqXteXrk1RwD
-         sJ+DyHWZhqPT2rP4KOtUuQMgRHvFLVsA6OABBvhQ/RmJ45HxA/v5mb3qwIVDdfqan2Li
-         xWrQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWvwSTSSCwppphF//7Se/QgB91A42aY6+vLGMDiJ7rn1BFecqAyuwkoej8Tcme9/iRfIPJ0vNMFFUCs9Qs9YKVlvAjYQIfN6fy3x5eDaez2Xw==
-X-Gm-Message-State: AOJu0YwExRKpqxKAJhQUod2hb5B5ShJn2VOpaRxf7Q/el3M4CNBpvoxA
-	oPDs8MQ+ndkKNn6dol6icZTSqA1OQw6OyiaM0VRZo4CB+3YuVuwvWJ+tO5gjxhNE+mE7NjssiJx
-	WYx47oW9rDMiRHp6Xt3K9NE2FwzVePySnqPo9
-X-Google-Smtp-Source: AGHT+IEJrMsRDVKc4wpx0FBdMJnJosYDDYfqfwciz733n6udVWvghsvDjxQCFEC37EnR/1LLitbb/jf7rxP7dJ9fEkQ=
-X-Received: by 2002:a17:902:bd47:b0:1f7:1c96:d2e8 with SMTP id
- d9443c01a7336-1fa68fb23efmr1044215ad.10.1719265626724; Mon, 24 Jun 2024
- 14:47:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvjTQ5rg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93567C2BBFC;
+	Mon, 24 Jun 2024 22:06:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719266790;
+	bh=v5EkkTErtysweJ6YBb/ej7mjjeGRSkbHCB9ia2QeuFc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HvjTQ5rgu3zGt9wN2MRPnEvNll8mjcQ6CS1kmgzj5nt9VOwCAl4HVUoQSiy0WsPZf
+	 N+dvkL1GVSMPJCuLXXf0BfueooXspVvUMf3zCUq77PYwkytXL6RTxmuOcMK0kVoNtQ
+	 igxE/jSUPkfUPdK3EDumWTuzhXv088yN8ej/ISKT3/vQc1ZEHcWhEiwc/Ci4U45apT
+	 d4+/FmnxiSXdVe92T9/RYNhA7y5uQdCODpQ66bv5pUbcNqqLFW9EBCa69e3H4V/AwX
+	 R12FM2R2BIoChA2gnOClYF3E3LhMAHgGQclWvn3LcJTOZYQjBrOZWUxU4VJPB4KGXE
+	 2AhqYfkPYRI3A==
+Date: Mon, 24 Jun 2024 19:06:26 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
+	kan.liang@linux.intel.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/8] perf trace: Augment enum arguments with BTF
+Message-ID: <Znnt4sTOx6ANJZPV@x1>
+References: <20240624181345.124764-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613233122.3564730-1-irogers@google.com>
-In-Reply-To: <20240613233122.3564730-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 24 Jun 2024 14:46:54 -0700
-Message-ID: <CAP-5=fWZDZWvrysEzL7H2kAXNBhFd3=kcmz1N=W+HgwGPsBPDg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/8] Refactor perf python module build
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>, 
-	Andrei Vagin <avagin@google.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, coresight@lists.linaro.org, 
-	rust-for-linux@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240624181345.124764-1-howardchu95@gmail.com>
 
-On Thu, Jun 13, 2024 at 4:31=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> Refactor the perf python module build to instead of building C files
-> it links libraries. To support this make static libraries for tests,
-> ui, util and pmu-events. Doing this allows fewer functions to be
-> stubbed out, importantly parse_events is no longer stubbed out which
-> will improve the ability to work with heterogeneous cores.
->
-> By not building .c files for the python module and for the build of
-> perf, this should also help build times.
->
-> Patch 1 adds '*.a' cleanup to the clean target.
->
-> Patches 2 to 6 add static libraries for existing parts of the perf
-> build.
->
-> Patch 7 adds the python build using libraries rather than C source
-> files.
->
-> Patch 8 cleans up the python dependencies and removes the no longer
-> needed python-ext-sources.
->
-> v3: Add missed xtensa directory for the util build. Remove adding the
->     arch directory to perf-y as it creates an empty object file that
->     breaks with GCC and LTO.
-> v2: Add '*.a' cleanup to clean target. Add reviewed-by James Clark.
+On Tue, Jun 25, 2024 at 02:13:37AM +0800, Howard Chu wrote:
+> In this patch, BTF is used to turn enum value to the corresponding
+> enum variable name. There is only one system call that uses enum value
+> as its argument, that is `landlock_add_rule()`.
+> 
+> Enum arguments of non-syscall tracepoints can also be augmented, for
+> instance timer:hrtimer_start and timer:hrtimer_init's 'mode' argument.
+> 
+> Changes in v3:
 
-Ping.
+Did a quick test, from a quick look you did the adjustments we agreed
+(if (val == 0 && !trace->show_zeros && !arg->show_zero && arg->strtoul
+!= STUL_BTF_TYPE), etc), thanks!
 
-Thanks,
-Ian
+And that is the way for collaboration we go on talking on the mailing
+list and sometimes writing code, making it available for review and
+adopting what we deem best at that point, rinse repeat.
 
-> Ian Rogers (8):
->   perf build: Add '*.a' to clean targets
->   perf ui: Make ui its own library
->   perf pmu-events: Make pmu-events a library
->   perf test: Make tests its own library
->   perf bench: Make bench its own library
->   perf util: Make util its own library
->   perf python: Switch module to linking libraries from building source
->   perf python: Clean up build dependencies
->
->  tools/perf/Build                              |  14 +-
->  tools/perf/Makefile.config                    |   5 +
->  tools/perf/Makefile.perf                      |  83 +++-
->  tools/perf/arch/Build                         |   5 +-
->  tools/perf/arch/arm/Build                     |   4 +-
->  tools/perf/arch/arm/tests/Build               |   8 +-
->  tools/perf/arch/arm/util/Build                |  10 +-
->  tools/perf/arch/arm64/Build                   |   4 +-
->  tools/perf/arch/arm64/tests/Build             |   8 +-
->  tools/perf/arch/arm64/util/Build              |  20 +-
->  tools/perf/arch/csky/Build                    |   2 +-
->  tools/perf/arch/csky/util/Build               |   6 +-
->  tools/perf/arch/loongarch/Build               |   2 +-
->  tools/perf/arch/loongarch/util/Build          |   8 +-
->  tools/perf/arch/mips/Build                    |   2 +-
->  tools/perf/arch/mips/util/Build               |   6 +-
->  tools/perf/arch/powerpc/Build                 |   4 +-
->  tools/perf/arch/powerpc/tests/Build           |   6 +-
->  tools/perf/arch/powerpc/util/Build            |  24 +-
->  tools/perf/arch/riscv/Build                   |   2 +-
->  tools/perf/arch/riscv/util/Build              |   8 +-
->  tools/perf/arch/s390/Build                    |   2 +-
->  tools/perf/arch/s390/util/Build               |  16 +-
->  tools/perf/arch/sh/Build                      |   2 +-
->  tools/perf/arch/sh/util/Build                 |   2 +-
->  tools/perf/arch/sparc/Build                   |   2 +-
->  tools/perf/arch/sparc/util/Build              |   2 +-
->  tools/perf/arch/x86/Build                     |   6 +-
->  tools/perf/arch/x86/tests/Build               |  20 +-
->  tools/perf/arch/x86/util/Build                |  42 +-
->  tools/perf/arch/xtensa/Build                  |   2 +-
->  tools/perf/bench/Build                        |  46 +-
->  tools/perf/scripts/Build                      |   4 +-
->  tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
->  .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
->  tools/perf/tests/Build                        | 140 +++----
->  tools/perf/tests/workloads/Build              |  12 +-
->  tools/perf/ui/Build                           |  18 +-
->  tools/perf/ui/browsers/Build                  |  14 +-
->  tools/perf/ui/tui/Build                       |   8 +-
->  tools/perf/util/Build                         | 394 +++++++++---------
->  tools/perf/util/arm-spe-decoder/Build         |   2 +-
->  tools/perf/util/cs-etm-decoder/Build          |   2 +-
->  tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
->  tools/perf/util/intel-pt-decoder/Build        |   2 +-
->  tools/perf/util/perf-regs-arch/Build          |  18 +-
->  tools/perf/util/python-ext-sources            |  53 ---
->  tools/perf/util/python.c                      | 271 +++++-------
->  tools/perf/util/scripting-engines/Build       |   4 +-
->  tools/perf/util/setup.py                      |  33 +-
->  50 files changed, 625 insertions(+), 729 deletions(-)
->  delete mode 100644 tools/perf/util/python-ext-sources
->
-> --
-> 2.45.2.627.g7a2c4fd464-goog
->
+Now I think it would be great if someone like Namhyung or Ian could try
+this last patch.
+
+I have to comb thru it but, again, from a quick look and test, it seems
+great and probably ready for merging.
+
+Thanks a lot!
+
+- Arnaldo
+ 
+> - Add trace__btf_scnprintf() helper function
+> - Remove is_enum memeber in struct syscall_arg_fmt, replace it with 
+> btf_is_enum()
+> - Add syscall_arg_fmt__cache_btf_enum() to cache btf_type only
+> - Resolve NO_LIBBPF=1 build error
+> - Skip BTF augmentation test if landlock_add_rule syscall and LIBBPF are not
+> available
+> - Rename landlock.c workload, add a comment to landlock.c workload
+> - Change the way of skipping 'enum ' prefix
+> - Add type_name member to struct syscall_arg
+> 
+> Changes in v2:
+> 
+> - Add trace_btf_enum regression test, and landlock workload
+> 
+> Arnaldo Carvalho de Melo (2):
+>   perf trace: Introduce trace__btf_scnprintf()
+>   perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
+> 
+> Howard Chu (6):
+>   perf trace: Fix iteration of syscall ids in syscalltbl->entries
+>   perf trace: BTF-based enum pretty printing for syscall args
+>   perf trace: Augment non-syscall tracepoints with enum arguments with
+>     BTF
+>   perf trace: Filter enum arguments with enum names
+>   perf test: Add landlock workload
+>   perf test trace_btf_enum: Add regression test for the BTF augmentation
+>     of enums in 'perf trace'
+> 
+>  tools/perf/builtin-trace.c               | 229 ++++++++++++++++++++---
+>  tools/perf/tests/builtin-test.c          |   1 +
+>  tools/perf/tests/shell/trace_btf_enum.sh |  61 ++++++
+>  tools/perf/tests/tests.h                 |   1 +
+>  tools/perf/tests/workloads/Build         |   1 +
+>  tools/perf/tests/workloads/landlock.c    |  39 ++++
+>  tools/perf/trace/beauty/beauty.h         |   1 +
+>  tools/perf/util/syscalltbl.c             |   7 +
+>  tools/perf/util/syscalltbl.h             |   1 +
+>  9 files changed, 317 insertions(+), 24 deletions(-)
+>  create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+>  create mode 100644 tools/perf/tests/workloads/landlock.c
+> 
+> -- 
+> 2.45.2
