@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A75D1A2540;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0F791A0B13;
 	Mon, 24 Jun 2024 22:20:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719267651; cv=none; b=kHR2HIFNCorIzCr+vxcPsN0l4qzSMrLF/uyT+LQiaqP4A1alzyOcO1TOk1ss/tnQ96Hk+spsrprQ4vMGd5szy66LxOI2ROPZjrq2oSnn+/YOD4jhSboQGGurMukaPrV6N+qzbvFf/rNBjlBe3OAcWsD7PxWmgeKYcDum3gyTP5A=
+	t=1719267651; cv=none; b=B+iYtTqYrUpc6Z/jTdlRCZ9dJcCs73sUs2Q2kWgfV3LLMbJPXBHLctacluIuYW7TrWDTBsxUIC6B6ih9R2D612q3o/3TJAC34l2Ll2taVJ+etDcYdATSnRAYPxbEWoF2HrCiR3GzAkp08V8/BGJLo6hiv3qlhtXR8bCK74l/nYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719267651; c=relaxed/simple;
-	bh=vR8jfYXJdI15bBOehCyynFHtKG7m2066TjDODzNfBJ8=;
+	bh=RXZZgYpVPJmTENPOxvNBYpoLNzBLvnpxcU7D+HlLKH0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FfZ42p+y5kGij4A1aqlGpf6zkXvY/k6OXFUh6jrcsrw2596LzRI5ZyGlH41exio1kdwvY7WWl0JU1DJpsqLj/7MWF0H49uWZfU3pOLQEnZvinxw+Mb7GmxFZSNUpkDzuEqQ0nYNkpL8Igw2Ur+ZVo5zVcfkB8g5N0uu6IJJCK5A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XzKU+3Qf; arc=none smtp.client-ip=192.198.163.7
+	 MIME-Version; b=H75+5K2jJawxUSa/+lQTaSxavHca39PdRqJFL0iqZ8pFZYgydUSnOwUxI/tsAi7XEHQlfGZLll2vZe4eIa7r1B+t9tZf6MO3bm7/146TnqwK9yp/4Ig4gxpJKpqrKWv5gEg+JyBQu7qOmcZHVCq1va5UGMF852EEt99pLBhev4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZdxQEO1x; arc=none smtp.client-ip=192.198.163.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XzKU+3Qf"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZdxQEO1x"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1719267650; x=1750803650;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vR8jfYXJdI15bBOehCyynFHtKG7m2066TjDODzNfBJ8=;
-  b=XzKU+3QfuMlOGQooGg8rKyN8J6y65R/TwT50dQW3AKVKAAT9WtVjINUI
-   3CpIX2pLqgBetATjkLycBC59/0QrZHM0P5dIZbvBDgsOg0L6Pe9NJEuvr
-   W6FtTQU6kfSTeDHM74XUbkEDpwhl/PD3yMdmmG3LIs/5nVjoSPgjoCFJB
-   HOx+fgSeBFDUWCC9XFgFIaMnZPNCxu3RjEK+JoKXy0HK6Ge5WoCwJ6l6Y
-   D2QKAzJyuDEJwMlUMfO5vT3lRjpAdomHgBLY+nKxtjiPEUrLdYaHpwAAY
-   oy4T9n1k+03Unol0gnO3GBAzXRt/SCT6OlT8NBhNotkvmU8X408JL3AfV
-   A==;
-X-CSE-ConnectionGUID: /PPnk6lwRu6M7RtKWgsExQ==
-X-CSE-MsgGUID: Fn+Tw08WS5mONKeGwPiryw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="41681617"
+  bh=RXZZgYpVPJmTENPOxvNBYpoLNzBLvnpxcU7D+HlLKH0=;
+  b=ZdxQEO1x06bIuGHDFLyRzSVn5TVg3+Bg33Cd3P360xrXBpfpF6a0uuE3
+   +hdRPuMvZ0TDjk0xwf9uTscex1h73RAC7ulJXppb23tNfwqfXpGorL8pg
+   inGr2hTBnBdpie9idb+f6fNj2ZulEeRzMwtj1vYUTpNMe7yxmZ9llYB76
+   G7N20gdYAqvHxEvZZJpVPVeD1gOs3kD86rJK3bX7O1tDxProbuJkiylPF
+   LtEtsbhzuc4yVl3vhXkYKvTqc6oxq37fbVKTFf5/ocyfiFWswET/UxAXl
+   T50x7g3SsyoQCgitUgA9NfX7KqrlPwyDxC3Ae4rfY6VSfQDLTQUHXdmXW
+   w==;
+X-CSE-ConnectionGUID: rGZ/1NtbQo6ILqmDoLP0qA==
+X-CSE-MsgGUID: 8rNz+AacQYyoGkn5qCjsMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="41681612"
 X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="41681617"
+   d="scan'208";a="41681612"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
   by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 15:20:46 -0700
-X-CSE-ConnectionGUID: VMDK7RDWSQ21K5Ey6qJpSg==
-X-CSE-MsgGUID: Tqc9SESSS9GX3vnxniWmZw==
+X-CSE-ConnectionGUID: JDib7xc/SLqBOVIbWR9Dnw==
+X-CSE-MsgGUID: vnSPq2BhTxKkIPdw6Eyd3g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
-   d="scan'208";a="48608227"
+   d="scan'208";a="48608224"
 Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
   by orviesa004.jf.intel.com with ESMTP; 24 Jun 2024 15:20:46 -0700
 From: weilin.wang@intel.com
@@ -59,9 +59,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Perry Taylor <perry.taylor@intel.com>,
 	Samantha Alt <samantha.alt@intel.com>,
 	Caleb Biggers <caleb.biggers@intel.com>
-Subject: [RFC PATCH v14 4/8] perf stat: Plugin retire_lat value from sampled data to evsel
-Date: Mon, 24 Jun 2024 18:20:20 -0400
-Message-ID: <20240624222026.229401-5-weilin.wang@intel.com>
+Subject: [RFC PATCH v14 3/8] perf stat: Fork and launch perf record when perf stat needs to get retire latency value for a metric.
+Date: Mon, 24 Jun 2024 18:20:19 -0400
+Message-ID: <20240624222026.229401-4-weilin.wang@intel.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20240624222026.229401-1-weilin.wang@intel.com>
 References: <20240624222026.229401-1-weilin.wang@intel.com>
@@ -75,109 +75,657 @@ Content-Transfer-Encoding: 8bit
 
 From: Weilin Wang <weilin.wang@intel.com>
 
-In current :R parsing implementation, the parser would recognize events with
-retire_latency modifier and insert them into the evlist like a normal event.
-Ideally, we need to avoid counting these events.
+When retire_latency value is used in a metric formula, evsel would fork a perf
+record process with "-e" and "-W" options. Perf record will collect required
+retire_latency values in parallel while perf stat is collecting counting values.
 
-In this commit, at the time when a retire_latency evsel is read, set the retire
-latency value processed from the sampled data to count value. This sampled
-retire latency value will be used for metric calculation and final event count
-print out. No special metric calculation and event print out code required for
-retire_latency events.
+At the point of time that perf stat stops counting, evsel would stop perf record
+by sending sigterm signal to perf record process. Sampled data will be process
+to get retire latency value. Another thread is required to synchronize between
+perf stat and perf record when we pass data through pipe.
+
+Retire_latency evsel is not opened for perf stat so that there is no counter
+wasted on it. This commit includes code suggested by Namhyung to adjust reading
+size for groups that include retire_latency evsels.
 
 Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 ---
- tools/perf/arch/x86/util/evlist.c |  6 ++++++
- tools/perf/util/evsel.c           | 21 +++++++++++++++++++++
- tools/perf/util/evsel.h           |  5 +++++
- 3 files changed, 32 insertions(+)
+ tools/perf/builtin-stat.c     |   4 +
+ tools/perf/util/Build         |   1 +
+ tools/perf/util/evlist.c      |   4 +
+ tools/perf/util/evsel.c       |  70 +++++-
+ tools/perf/util/intel-tpebs.c | 407 ++++++++++++++++++++++++++++++++++
+ tools/perf/util/intel-tpebs.h |  35 +++
+ 6 files changed, 519 insertions(+), 2 deletions(-)
+ create mode 100644 tools/perf/util/intel-tpebs.c
+ create mode 100644 tools/perf/util/intel-tpebs.h
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index b1ce0c52d88d..cebdd483149e 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -89,6 +89,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 			return 1;
- 	}
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 661832756a24..68125bd75b37 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -70,6 +70,7 @@
+ #include "util/bpf_counter.h"
+ #include "util/iostat.h"
+ #include "util/util.h"
++#include "util/intel-tpebs.h"
+ #include "asm/bug.h"
  
-+	/* Retire latency event should not be group leader*/
-+	if (lhs->retire_lat && !rhs->retire_lat)
-+		return 1;
-+	if (!lhs->retire_lat && rhs->retire_lat)
-+		return -1;
+ #include <linux/time64.h>
+@@ -683,6 +684,9 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
+ 
+ 	if (child_pid != -1)
+ 		kill(child_pid, SIGTERM);
 +
- 	/* Default ordering by insertion index. */
- 	return lhs->core.idx - rhs->core.idx;
++	tpebs_delete();
++
+ 	return COUNTER_FATAL;
  }
+ 
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index da64efd8718f..26ef80641f9f 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -154,6 +154,7 @@ perf-y += clockid.o
+ perf-y += list_sort.o
+ perf-y += mutex.o
+ perf-y += sharded_mutex.o
++perf-$(CONFIG_X86_64) += intel-tpebs.o
+ 
+ perf-$(CONFIG_LIBBPF) += bpf_map.o
+ perf-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index 3a719edafc7a..394ea7634b95 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -33,6 +33,7 @@
+ #include "util/bpf-filter.h"
+ #include "util/stat.h"
+ #include "util/util.h"
++#include "util/intel-tpebs.h"
+ #include <signal.h>
+ #include <unistd.h>
+ #include <sched.h>
+@@ -179,6 +180,9 @@ void evlist__delete(struct evlist *evlist)
+ 	if (evlist == NULL)
+ 		return;
+ 
++#ifndef PYTHON_PERF
++	tpebs_delete();
++#endif
+ 	evlist__free_stats(evlist);
+ 	evlist__munmap(evlist);
+ 	evlist__close(evlist);
 diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 06dcaa36c3f3..f7791879b661 100644
+index 28c54897a97e..06dcaa36c3f3 100644
 --- a/tools/perf/util/evsel.c
 +++ b/tools/perf/util/evsel.c
-@@ -58,6 +58,7 @@
- #include <internal/xyarray.h>
- #include <internal/lib.h>
- #include <internal/threadmap.h>
-+#include "util/intel-tpebs.h"
- 
- #include <linux/ctype.h>
- 
-@@ -1532,6 +1533,13 @@ static int evsel__read_one(struct evsel *evsel, int cpu_map_idx, int thread)
- 	return perf_evsel__read(&evsel->core, cpu_map_idx, thread, count);
+@@ -1547,6 +1547,60 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
+ 	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
  }
  
-+#ifndef PYTHON_PERF
-+static int evsel__read_retire_lat(struct evsel *evsel, int cpu_map_idx, int thread)
++static bool evsel__group_has_tpebs(struct evsel *leader)
 +{
-+	return tpebs_set_evsel(evsel, cpu_map_idx, thread);
-+}
-+#endif
++	struct evsel *evsel;
 +
- static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
- 			     u64 val, u64 ena, u64 run, u64 lost)
- {
-@@ -1539,6 +1547,14 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
- 
- 	count = perf_counts(counter->counts, cpu_map_idx, thread);
- 
-+#ifndef PYTHON_PERF
-+	if (counter->retire_lat) {
-+		evsel__read_retire_lat(counter, cpu_map_idx, thread);
-+		perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
-+		return;
++	for_each_group_evsel(evsel, leader) {
++		if (evsel__is_retire_lat(evsel))
++			return true;
 +	}
-+#endif
++	return false;
++}
 +
- 	count->val    = val;
- 	count->ena    = ena;
- 	count->run    = run;
-@@ -1831,6 +1847,11 @@ int evsel__read_counter(struct evsel *evsel, int cpu_map_idx, int thread)
- 	if (evsel__is_tool(evsel))
- 		return evsel__read_tool(evsel, cpu_map_idx, thread);
++static u64 evsel__group_read_nr_members(struct evsel *leader)
++{
++	u64 nr = leader->core.nr_members;
++	struct evsel *evsel;
++
++	for_each_group_evsel(evsel, leader) {
++		if (evsel__is_retire_lat(evsel))
++			nr--;
++	}
++	return nr;
++}
++
++static u64 evsel__group_read_size(struct evsel *leader)
++{
++	u64 read_format = leader->core.attr.read_format;
++	int entry = sizeof(u64); /* value */
++	int size = 0;
++	int nr = 1;
++
++	if (!evsel__group_has_tpebs(leader))
++		return perf_evsel__read_size(&leader->core);
++
++	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
++		size += sizeof(u64);
++
++	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
++		size += sizeof(u64);
++
++	if (read_format & PERF_FORMAT_ID)
++		entry += sizeof(u64);
++
++	if (read_format & PERF_FORMAT_LOST)
++		entry += sizeof(u64);
++
++	if (read_format & PERF_FORMAT_GROUP) {
++		nr = evsel__group_read_nr_members(leader);
++		size += sizeof(u64);
++	}
++
++	size += entry * nr;
++	return size;
++}
++
+ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int thread, u64 *data)
+ {
+ 	u64 read_format = leader->core.attr.read_format;
+@@ -1555,7 +1609,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
+ 
+ 	nr = *data++;
+ 
+-	if (nr != (u64) leader->core.nr_members)
++	if (nr != evsel__group_read_nr_members(leader))
+ 		return -EINVAL;
+ 
+ 	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
+@@ -1585,7 +1639,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
+ {
+ 	struct perf_stat_evsel *ps = leader->stats;
+ 	u64 read_format = leader->core.attr.read_format;
+-	int size = perf_evsel__read_size(&leader->core);
++	int size = evsel__group_read_size(leader);
+ 	u64 *data = ps->group_data;
+ 
+ 	if (!(read_format & PERF_FORMAT_ID))
+@@ -2193,6 +2247,11 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 		return 0;
+ 	}
  
 +#ifndef PYTHON_PERF
 +	if (evsel__is_retire_lat(evsel))
-+		return evsel__read_retire_lat(evsel, cpu_map_idx, thread);
++		return tpebs_start(evsel->evlist);
 +#endif
 +
- 	if (evsel->core.attr.read_format & PERF_FORMAT_GROUP)
- 		return evsel__read_group(evsel, cpu_map_idx, thread);
+ 	err = __evsel__prepare_open(evsel, cpus, threads);
+ 	if (err)
+ 		return err;
+@@ -2385,6 +2444,10 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
  
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 14f777b9e03e..a5da4b03bb1c 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -311,6 +311,11 @@ static inline bool evsel__is_tool(const struct evsel *evsel)
- 	return evsel->tool_event != PERF_TOOL_NONE;
+ void evsel__close(struct evsel *evsel)
+ {
++#ifndef PYTHON_PERF
++	if (evsel__is_retire_lat(evsel))
++		tpebs_delete();
++#endif
+ 	perf_evsel__close(&evsel->core);
+ 	perf_evsel__free_id(&evsel->core);
  }
+@@ -3350,6 +3413,9 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
+ {
+ 	int cpu_map_idx, thread;
  
-+static inline bool evsel__is_retire_lat(const struct evsel *evsel)
++	if (evsel__is_retire_lat(evsel))
++		return 0;
++
+ 	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
+ 		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
+ 		     thread++) {
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+new file mode 100644
+index 000000000000..2bf57e10a959
+--- /dev/null
++++ b/tools/perf/util/intel-tpebs.c
+@@ -0,0 +1,407 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * intel_tpebs.c: Intel TPEBS support
++ */
++
++
++#include <sys/param.h>
++#include <subcmd/run-command.h>
++#include <thread.h>
++#include "intel-tpebs.h"
++#include <linux/list.h>
++#include <linux/zalloc.h>
++#include <linux/err.h>
++#include "sample.h"
++#include "debug.h"
++#include "evlist.h"
++#include "evsel.h"
++#include "session.h"
++#include "tool.h"
++#include "cpumap.h"
++#include "metricgroup.h"
++#include <sys/stat.h>
++#include <sys/file.h>
++#include <poll.h>
++#include <math.h>
++
++#define PERF_DATA		"-"
++
++bool tpebs_recording;
++static pid_t tpebs_pid = -1;
++static size_t tpebs_event_size;
++static LIST_HEAD(tpebs_results);
++static pthread_t tpebs_reader_thread;
++static struct child_process *tpebs_cmd;
++
++struct tpebs_retire_lat {
++	struct list_head nd;
++	/* Event name */
++	const char *name;
++	/* Event name with the TPEBS modifier R */
++	const char *tpebs_name;
++	/* Count of retire_latency values found in sample data */
++	size_t count;
++	/* Sum of all the retire_latency values in sample data */
++	int sum;
++	/* Average of retire_latency, val = sum / count */
++	double val;
++};
++
++static int get_perf_record_args(const char **record_argv, char buf[],
++				const char *cpumap_buf)
 +{
-+	return evsel->retire_lat;
++	struct tpebs_retire_lat *e;
++	int i = 0;
++
++	pr_debug("Prepare perf record for retire_latency\n");
++
++	record_argv[i++] = "perf";
++	record_argv[i++] = "record";
++	record_argv[i++] = "-W";
++	record_argv[i++] = "--synth=no";
++	record_argv[i++] = buf;
++
++	if (cpumap_buf) {
++		record_argv[i++] = "-C";
++		record_argv[i++] = cpumap_buf;
++	} else {
++		pr_err("Require cpumap list to run sampling.\n");
++		return -ECANCELED;
++	}
++
++	list_for_each_entry(e, &tpebs_results, nd) {
++		record_argv[i++] = "-e";
++		record_argv[i++] = e->name;
++	}
++
++	record_argv[i++] = "-o";
++	record_argv[i++] = PERF_DATA;
++
++	return 0;
 +}
 +
- const char *evsel__group_name(struct evsel *evsel);
- int evsel__group_desc(struct evsel *evsel, char *buf, size_t size);
- 
++static int prepare_run_command(const char **argv)
++{
++	tpebs_cmd = zalloc(sizeof(struct child_process));
++	if (!tpebs_cmd)
++		return -ENOMEM;
++	tpebs_cmd->argv = argv;
++	tpebs_cmd->out = -1;
++	return 0;
++}
++
++static int start_perf_record(int control_fd[], int ack_fd[],
++				const char *cpumap_buf)
++{
++	const char **record_argv;
++	int ret;
++	char buf[32];
++
++	scnprintf(buf, sizeof(buf), "--control=fd:%d,%d", control_fd[0], ack_fd[1]);
++
++	record_argv = calloc(12 + 2 * tpebs_event_size, sizeof(char *));
++	if (!record_argv)
++		return -ENOMEM;
++
++	ret = get_perf_record_args(record_argv, buf, cpumap_buf);
++	if (ret)
++		goto out;
++
++	ret = prepare_run_command(record_argv);
++	if (ret)
++		goto out;
++	ret = start_command(tpebs_cmd);
++out:
++	free(record_argv);
++	return ret;
++}
++
++static int process_sample_event(struct perf_tool *tool __maybe_unused,
++				union perf_event *event __maybe_unused,
++				struct perf_sample *sample,
++				struct evsel *evsel,
++				struct machine *machine __maybe_unused)
++{
++	int ret = 0;
++	const char *evname;
++	struct tpebs_retire_lat *t;
++
++	evname = evsel__name(evsel);
++
++	/*
++	 * Need to handle per core results? We are assuming average retire
++	 * latency value will be used. Save the number of samples and the sum of
++	 * retire latency value for each event.
++	 */
++	list_for_each_entry(t, &tpebs_results, nd) {
++		if (!strcmp(evname, t->name)) {
++			t->count += 1;
++			t->sum += sample->retire_lat;
++			t->val = (double) t->sum / t->count;
++			break;
++		}
++	}
++
++	return ret;
++}
++
++static int process_feature_event(struct perf_session *session,
++				 union perf_event *event)
++{
++	if (event->feat.feat_id < HEADER_LAST_FEATURE)
++		return perf_event__process_feature(session, event);
++	return 0;
++}
++
++static void *__sample_reader(void *arg)
++{
++	struct child_process *child = arg;
++	struct perf_session *session;
++	struct perf_data data = {
++		.mode = PERF_DATA_MODE_READ,
++		.path = PERF_DATA,
++		.file.fd = child->out,
++	};
++	struct perf_tool tool = {
++		.sample = process_sample_event,
++		.feature = process_feature_event,
++		.attr = perf_event__process_attr,
++	};
++
++	session = perf_session__new(&data, &tool);
++	if (IS_ERR(session))
++		return NULL;
++	perf_session__process_events(session);
++	perf_session__delete(session);
++
++	return NULL;
++}
++
++/*
++ * tpebs_stop - stop the sample data read thread and the perf record process.
++ */
++static int tpebs_stop(void)
++{
++	int ret = 0;
++
++	/* Like tpebs_start, we should only run tpebs_end once. */
++	if (tpebs_pid != -1) {
++		kill(tpebs_cmd->pid, SIGTERM);
++		tpebs_pid = -1;
++		pthread_join(tpebs_reader_thread, NULL);
++		close(tpebs_cmd->out);
++		ret = finish_command(tpebs_cmd);
++		if (ret == -ERR_RUN_COMMAND_WAITPID_SIGNAL)
++			ret = 0;
++	}
++	return ret;
++}
++
++/*
++ * tpebs_start - start tpebs execution.
++ * @evsel_list: retire_latency evsels in this list will be selected and sampled
++ * to get the average retire_latency value.
++ *
++ * This function will be called from evlist level later when evlist__open() is
++ * called consistently.
++ */
++int tpebs_start(struct evlist *evsel_list)
++{
++	int ret = 0;
++	struct evsel *evsel;
++	char cpumap_buf[50];
++
++	/*
++	 * We should only run tpebs_start when tpebs_recording is enabled.
++	 * And we should only run it once with all the required events.
++	 */
++	if (tpebs_pid != -1 || !tpebs_recording)
++		return 0;
++
++	cpu_map__snprint(evsel_list->core.user_requested_cpus, cpumap_buf, sizeof(cpumap_buf));
++	/*
++	 * Prepare perf record for sampling event retire_latency before fork and
++	 * prepare workload
++	 */
++	evlist__for_each_entry(evsel_list, evsel) {
++		int i;
++		char *name;
++		struct tpebs_retire_lat *new;
++
++		if (!evsel->retire_lat)
++			continue;
++
++		pr_debug("Retire_latency of event %s is required\n", evsel->name);
++		for (i = strlen(evsel->name) - 1; i > 0; i--) {
++			if (evsel->name[i] == 'R')
++				break;
++		}
++		if (i <= 0 || evsel->name[i] != 'R') {
++			ret = -1;
++			goto err;
++		}
++
++		name = strdup(evsel->name);
++		if (!name) {
++			ret = -ENOMEM;
++			goto err;
++		}
++		name[i] = 'p';
++
++		new = zalloc(sizeof(*new));
++		if (!new) {
++			ret = -1;
++			zfree(name);
++			goto err;
++		}
++		new->name = name;
++		new->tpebs_name = evsel->name;
++		list_add_tail(&new->nd, &tpebs_results);
++		tpebs_event_size += 1;
++	}
++
++	if (tpebs_event_size > 0) {
++		int control_fd[2], ack_fd[2], len;
++		char ack_buf[8];
++
++		/*Create control and ack fd for --control*/
++		if (pipe(control_fd) < 0) {
++			pr_err("Failed to create control fifo");
++			ret = -1;
++			goto out;
++		}
++		if (pipe(ack_fd) < 0) {
++			pr_err("Failed to create control fifo");
++			ret = -1;
++			goto out;
++		}
++
++		ret = start_perf_record(control_fd, ack_fd, cpumap_buf);
++		if (ret)
++			goto out;
++		tpebs_pid = tpebs_cmd->pid;
++		if (pthread_create(&tpebs_reader_thread, NULL, __sample_reader, tpebs_cmd)) {
++			kill(tpebs_cmd->pid, SIGTERM);
++			close(tpebs_cmd->out);
++			pr_err("Could not create thread to process sample data.\n");
++			ret = -1;
++			goto out;
++		}
++		/* Wait for perf record initialization.*/
++		len = strlen("enable");
++		ret = write(control_fd[1], "enable", len);
++		if (ret != len) {
++			pr_err("perf record control write control message failed\n");
++			goto out;
++		}
++
++		ret = read(ack_fd[0], ack_buf, sizeof(ack_buf));
++		if (ret > 0)
++			ret = strcmp(ack_buf, "ack\n");
++		else {
++			pr_err("perf record control ack failed\n");
++			goto out;
++		}
++out:
++		close(control_fd[0]);
++		close(control_fd[1]);
++		close(ack_fd[0]);
++		close(ack_fd[1]);
++	}
++err:
++	if (ret)
++		tpebs_delete();
++	return ret;
++}
++
++
++int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
++{
++	__u64 val;
++	bool found = false;
++	struct tpebs_retire_lat *t;
++	struct perf_counts_values *count;
++
++	/* Non reitre_latency evsel should never enter this function. */
++	if (!evsel__is_retire_lat(evsel))
++		return -1;
++
++	/*
++	 * Need to stop the forked record to ensure get sampled data from the
++	 * PIPE to process and get non-zero retire_lat value for hybrid.
++	 */
++	tpebs_stop();
++	count = perf_counts(evsel->counts, cpu_map_idx, thread);
++
++	list_for_each_entry(t, &tpebs_results, nd) {
++		if (t->tpebs_name == evsel->name || !strcmp(t->tpebs_name, evsel->metric_id)) {
++			found = true;
++			break;
++		}
++	}
++
++	/* Set ena and run to non-zero */
++	count->ena = count->run = 1;
++	count->lost = 0;
++
++	if (!found) {
++		/*
++		 * Set default value or 0 when retire_latency for this event is
++		 * not found from sampling data (enable_tpebs_recording not set
++		 * or 0 sample recorded).
++		 */
++		count->val = 0;
++		return 0;
++	}
++
++	/*
++	 * Only set retire_latency value to the first CPU and thread.
++	 */
++	if (cpu_map_idx == 0 && thread == 0)
++		val = rint(t->val);
++	else
++		val = 0;
++
++	count->val = val;
++	return 0;
++}
++
++static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
++{
++	zfree(&r->name);
++	free(r);
++}
++
++
++/*
++ * tpebs_delete - delete tpebs related data and stop the created thread and
++ * process by calling tpebs_stop().
++ *
++ * This function is called from evlist_delete() and also from builtin-stat
++ * stat_handle_error(). If tpebs_start() is called from places other then perf
++ * stat, need to ensure tpebs_delete() is also called to safely free mem and
++ * close the data read thread and the forked perf record process.
++ *
++ * This function is also called in evsel__close() to be symmetric with
++ * tpebs_start() being called in evsel__open(). We will update this call site
++ * when move tpebs_start() to evlist level.
++ */
++void tpebs_delete(void)
++{
++	struct tpebs_retire_lat *r, *rtmp;
++
++	if (tpebs_pid == -1)
++		return;
++
++	tpebs_stop();
++
++	list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
++		list_del_init(&r->nd);
++		tpebs_retire_lat__delete(r);
++	}
++
++	if (tpebs_cmd) {
++		free(tpebs_cmd);
++		tpebs_cmd = NULL;
++	}
++}
+diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
+new file mode 100644
+index 000000000000..766b3fbd79f1
+--- /dev/null
++++ b/tools/perf/util/intel-tpebs.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * intel_tpebs.h: Intel TEPBS support
++ */
++#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
++#define INCLUDE__PERF_INTEL_TPEBS_H__
++
++#include "stat.h"
++#include "evsel.h"
++
++#ifdef HAVE_ARCH_X86_64_SUPPORT
++
++extern bool tpebs_recording;
++int tpebs_start(struct evlist *evsel_list);
++void tpebs_delete(void);
++int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
++
++#else
++
++static inline int tpebs_start(struct evlist *evsel_list __maybe_unused)
++{
++	return 0;
++}
++
++static inline void tpebs_delete(void) {};
++
++static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
++				int cpu_map_idx  __maybe_unused,
++				int thread  __maybe_unused)
++{
++	return 0;
++}
++
++#endif
++#endif
 -- 
 2.43.0
 
