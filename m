@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91C1D1A2FC3
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 23:29:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2784E1A0732
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 23:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719271796; cv=none; b=idif9lr3iwsBX2QeEUKPCv78dQyqeW9042I4bDtrmLNyGv4LAg8twDOzavshGUnaG2UQxY/NtrVcIt6PHituItF9cNpYdhZhiYIrr+lQRo01NKdy0h74zlbVZG/1Vzx/FkX5LwBd3FatmLKFZvzx/6nHDXs3Mp31qr/aHJb5B8c=
+	t=1719271849; cv=none; b=SVTkcUGK6KmaAQ9Z9heNXitNO9inhW8jeocV5F+wzl/xbaznGLviRALp4nBnoTKY8nnEwM2vYFmnZeQUZoiRTSrBeUgoUKWsbMj16nO2Pa3kKMP9a1almxNzB4uBncBCcAG55VD9h0qAIWwvMC69KnNk3tu/9UmIors+1lpvwg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719271796; c=relaxed/simple;
-	bh=Zw61pUBa1NFKDQ+LhNLeeTliRVvzZlnUGsjm8zzvV+s=;
+	s=arc-20240116; t=1719271849; c=relaxed/simple;
+	bh=f3I56ppX9JD2HnC7ZrgXP5EmxLeJqntX9v/Q2hy2Cvs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZUf7krlAyfaC6D5r37bdgc3Tj5nf/dtLZbvGtZ3ddSHAoTnxJKh0nMubreYzDkiUGRUf0SNY+yEfORfAhGxcA+37s87vQuSN5e/jtldTxtMdLkGZqQGA+d6gwIKAho6wiNAlvHMKmOF1G7sYjySM8kTC04Di0hjv8QuUJsrKInA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nTx02qnS; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=j71E4Tceehe/BlYm5OcbJq0DMORdk9+ImUr+VtlaxDRER+o07UzPJIdRnuolgIuWO68aEWa2030RLC1vhIbActkRDp1imoC603V5gQ/clPQ0zB3ZswiZrFCr3Z45EitZE9yFWFhR0bvZa6NP6np19YD4wIcXlywFDeuBPJAV9gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3nHwVQ/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nTx02qnS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2B34C32789;
-	Mon, 24 Jun 2024 23:29:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3nHwVQ/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BB95C2BBFC;
+	Mon, 24 Jun 2024 23:30:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719271796;
-	bh=Zw61pUBa1NFKDQ+LhNLeeTliRVvzZlnUGsjm8zzvV+s=;
+	s=k20201202; t=1719271848;
+	bh=f3I56ppX9JD2HnC7ZrgXP5EmxLeJqntX9v/Q2hy2Cvs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nTx02qnS/x7KHnx/ewu2TJr4caQVaLcTspgNT1/18vJftFUH+fckLEGqtaoijWhVS
-	 xp602r9IEDUWaeyAej1q98wf3JSrnBtoFPrqW0ITuXdr6DdTMrdtFU2sT1JDlcLYdm
-	 LFZ+aCdoXShyX+kSCY2HFQTbXagqB1DcSkSSGAoGJF/1dFByXlRO84C1lyfEgpGfXK
-	 +at40j6t5fi3BZiVnywxJYx04Fi3GQsDPPvmOZ7YfxoMuFSuNnygixa+NWAFbyhkhc
-	 mGU2kpN6Er+8Xed5xwlNYliaI3n5xGsaj0PlYlVu4SdkHhDpFIRehBRro97KRxJR7R
-	 /bkIshyJKr3Xw==
-Date: Mon, 24 Jun 2024 16:29:54 -0700
+	b=F3nHwVQ/lQe0IypRaWBnJhe4DONOXNkk7VESKrYRpXopmX9g0C06wDRKyE7tl+hea
+	 nPHKGsRWdyCttTM6thYzEHdf8nxq3sAAFbDMvyNP9Zr1Z9vl2iFl6xYid0J+/KSiug
+	 shR4knfb/79s3uvD0jleHv6a4NkBaoC+N1kU9vMdfYz6DNLy1kfUI5fGIh2D9c5xSd
+	 Zczb7s1YWTWi2m8sIvZlGHdpxakRb+7NDDQyvI3C4n5rSLM/WJWCjNPHbQwDRPJZEe
+	 RzGQHrWnZpT8xYiaGhaThKSuPRj1w7Emr+XZsVywvSEHeOJbBk7Qm5OTMEqQtmdZok
+	 41nnwzY5L4OyQ==
+Date: Mon, 24 Jun 2024 16:30:47 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: James Clark <james.clark@arm.com>
-Cc: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>,
-	linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com
-Subject: Re: [PATCH V3 09/10] perf tools: Only treat files as map files when
- they have the extension .map
-Message-ID: <ZnoBcgVcEwPFsH5Z@google.com>
+To: Chaitanya S Prakash <ChaitanyaS.Prakash@arm.com>
+Cc: linux-perf-users@vger.kernel.org, anshuman.khandual@arm.com,
+	james.clark@arm.com
+Subject: Re: [PATCH V3 10/10] perf test: Check output of the probe ...
+ --funcs command
+Message-ID: <ZnoBpxbuZ1shXBR7@google.com>
 References: <20240601125946.1741414-1-ChaitanyaS.Prakash@arm.com>
- <20240601125946.1741414-10-ChaitanyaS.Prakash@arm.com>
- <371abb9c-41a5-4bf0-928f-a60848776bfc@arm.com>
+ <20240601125946.1741414-11-ChaitanyaS.Prakash@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,63 +44,46 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <371abb9c-41a5-4bf0-928f-a60848776bfc@arm.com>
+In-Reply-To: <20240601125946.1741414-11-ChaitanyaS.Prakash@arm.com>
 
-Hello,
-
-On Mon, Jun 17, 2024 at 02:52:52PM +0100, James Clark wrote:
+On Sat, Jun 01, 2024 at 06:29:46PM +0530, Chaitanya S Prakash wrote:
+> From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
 > 
+> Test "perf probe of function from different CU" only checks if the perf
+> command has failed and doesn't test the --funcs output. In the issue
+> reported in the previous commit, the garbage output of the --funcs
+> command was being ignored by the test when it could have been caught.
 > 
-> On 01/06/2024 13:59, Chaitanya S Prakash wrote:
-> > From: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-> > 
-> > Strengthen the check to locate symbol map files in the tool's /tmp
-> > directory. As the existing check allows non map files named in
-> > "/tmp/perf-" pattern, it leads to possible dwarf library corruption
-> > when perf is built with NO_DWARF=1. The try_to_find_probe_trace_events()
-> > function behaves differently when built in that manner. Extending the
-> > current check condition using the str_has_suffix() function to not only
-> > validate the pattern but also ensure the file is of ".map" type allows
-> > test perf probe of function from different CU to pass when built with
-> > NO_DWARF=1.
-> > 
-> > Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
-> > ---
-> >  tools/perf/util/symbol.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> > index 9e5940b5bc59..fbcc189edd8d 100644
-> > --- a/tools/perf/util/symbol.c
-> > +++ b/tools/perf/util/symbol.c
-> > @@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
-> >  	const char *map_path = dso__long_name(dso);
-> >  
-> >  	mutex_lock(dso__lock(dso));
-> > -	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0;
-> > +	perfmap = strncmp(dso__name(dso), "/tmp/perf-", 10) == 0 &&
-> > +		  str_has_prefix(dso__name(dso), ".map") != 0;
-> 
-> Does this work? Shouldn't it be str_has_suffix()?
+> The script first makes use of --funcs option with the perf probe command
+> to check if the function "foo" exists in the testfile before adding a
+> probe to it in the next command. The output of probe...--funcs command
+> is redirected to stdout, therefore, add '| grep "foo"' to validate the
+> result.
 
-Yep, I think it should be
-
-  perfmap = str_has_prefix(dso__name(dso), "/tmp/perf-") &&
-            str_has_suffix(dso__name(dso), ".map"));
-
-> 
-> For reference, there's another fix for the same issue here:
-> https://lore.kernel.org/linux-perf-users/20240617130332.13427-1-atrajeev@linux.vnet.ibm.com/T/#m9b1e62f0cdbcd4caf019f2ad97d69b29df568522
-
-Right, it seems this patchset is posted earlier than the above.  But I
-prefer Athira's fix as it touches less codes basically and contains more
-fixes.
+Ok, I think this can be applied separately.
 
 Thanks,
 Namhyung
 
-
 > 
-> >  	if (perfmap) {
-> >  		if (dso__nsinfo(dso) &&
-> >  		    (dso__find_perf_map(newmapname, sizeof(newmapname),
+> Signed-off-by: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+> ---
+>  tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> index 319f36ebb9a4..82bc774a078a 100755
+> --- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> +++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
+> @@ -77,7 +77,7 @@ gcc -g -Og -flto -c ${temp_dir}/testfile-foo.c -o ${temp_dir}/testfile-foo.o
+>  gcc -g -Og -c ${temp_dir}/testfile-main.c -o ${temp_dir}/testfile-main.o
+>  gcc -g -Og -o ${temp_dir}/testfile ${temp_dir}/testfile-foo.o ${temp_dir}/testfile-main.o
+>  
+> -perf probe -x ${temp_dir}/testfile --funcs foo
+> +perf probe -x ${temp_dir}/testfile --funcs foo | grep "foo"
+>  perf probe -x ${temp_dir}/testfile foo
+>  
+>  cleanup
+> -- 
+> 2.34.1
+> 
