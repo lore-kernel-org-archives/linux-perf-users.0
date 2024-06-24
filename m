@@ -1,43 +1,43 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1807C1311A1
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC02C13D52F
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719234524; cv=none; b=k8NWMmO5PP8PQrvUdEK439KQkHZVWyUTOEIeniyiOEISq0lYVSwVnT4kiRAgOHc4cmtgTrt/+SI/U7OVV2a+uYxZnFXSkwyI5fT3uRNneGLSHvt7HfH5m9MLRMX7J/3F63OmrSufXw74qygfGiQ12622pXJwiVAIAz58JjktPXY=
+	t=1719234529; cv=none; b=MTN/yY1qHOsrSV+0MM8VjQNLPEsp8cb6eDAOO0oqfXLsi3o7+kw+5Khp6QZel8/R0vcJS9XhKUyn8wuiHFHLbzXrkgvuNuBs/927xwOACiBSPxQ1/foinp1TrKfbh6QtBsl50VKgcKNK3FOz1w+oDh3VQk81Gxgk/MdPWulAKH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719234524; c=relaxed/simple;
-	bh=9hTO8tdU58fOl9iHTBfy5wzlr9pDus+knMHAdQIy96w=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=DWULKZzRdHIDlnRZHpAW3/3cWLrWCZtnlI3QeHt95D+V60wCpR0wXodXpX59MXUHGkEtgATehguXrKwYvO3Kku4dY3kQKJb1CY5eFCq4StZeowlN2KlvMv+lAz7631Rm+zQ758ul8xzo12/PUZzZSa8JkOdBmvkGUkRqRgygsFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IbyFboBL; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1719234529; c=relaxed/simple;
+	bh=9oPTwnban7OgMI5L5+T0rkmS2hWbN6oH4XMubK/XgRU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=m/uwhfg5VDWEp63cGOEir91+JH7E4rY3hXSvYc4UoOxJrRx/W3l5TL3KkQPRvyGcHyIY/mV2+5evskAEcE6/CQAbEzMULCwqzBwCCpeiglw1ejp+eJ09HGy7mxDWeDG1u0U1VdwypqIcncONhIadt72pcVeQqwflxkSbvGStPMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NE/xLYtN; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IbyFboBL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NE/xLYtN"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719234522;
+	s=mimecast20190719; t=1719234527;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=sVPV00sK4LDaiXMBu7OwdtRezRW9LN6tWlHP7FniCqk=;
-	b=IbyFboBL9jR+FZDwqUFiSGMbmoHa8j3lt1ku1zjtOavfCnSmXMuA5A3sVXQQnZDpzzGqbA
-	KE2skxTSoXPiR8E2DLMuOTSxE+fT60ySAUpFpDxOCxldE3dfwbGM8KP35o9696zgWrfTwr
-	8kP3mUhNyEjVyRZbmvCmcpe7vPsUcwo=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+	bh=b5JtwStAUJUFCt62lM+PdOVKC0YAYa7F6NLwZq77M3E=;
+	b=NE/xLYtNGE3Tg4xbPrJIr9phxiIZ6XtYiecoYzboTBwSYL+CGNAljCPwC9VLbHFgpxXtE6
+	Wl9jrVOYt+UHzW9Fcrf3wkYc40ZDU5GJh0suQOCMX4lSfQ4T+WWB+ScFQUggtNzmThNHWl
+	TTYY/EKKsPvmiEowHmpzQ8Q/XYwiL7Y=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-210-Idd3QHuHOwCxKiQ7bJiHpg-1; Mon,
- 24 Jun 2024 09:08:38 -0400
-X-MC-Unique: Idd3QHuHOwCxKiQ7bJiHpg-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-464-YgF-lknMOcq8BqO2oAX0_w-1; Mon,
+ 24 Jun 2024 09:08:42 -0400
+X-MC-Unique: YgF-lknMOcq8BqO2oAX0_w-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9AE3A19560B2;
-	Mon, 24 Jun 2024 13:08:36 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AAA5D1956088;
+	Mon, 24 Jun 2024 13:08:40 +0000 (UTC)
 Received: from Diego.redhat.com (unknown [10.39.208.42])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 10DB419560AB;
-	Mon, 24 Jun 2024 13:08:32 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5DAB21956087;
+	Mon, 24 Jun 2024 13:08:37 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	vmolnaro@redhat.com,
@@ -47,9 +47,9 @@ Cc: acme@kernel.org,
 	irogers@google.com,
 	atrajeev@linux.vnet.ibm.com,
 	masami.hiramatsu.pt@hitachi.com
-Subject: [PATCH 03/11] perf testsuite: Fix shellcheck warnings
-Date: Mon, 24 Jun 2024 15:08:01 +0200
-Message-Id: <20240624130809.1612-4-mpetlan@redhat.com>
+Subject: [PATCH 04/11] perf testsuite probe: Add test for blacklisted kprobes handling
+Date: Mon, 24 Jun 2024 15:08:02 +0200
+Message-Id: <20240624130809.1612-5-mpetlan@redhat.com>
 In-Reply-To: <20240624130809.1612-1-mpetlan@redhat.com>
 References: <20240624130809.1612-1-mpetlan@redhat.com>
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
@@ -61,89 +61,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Shellcheck is becoming a standard when building perf to prevent
-any unnecessary mistakes. Fix shellcheck warnings in perf testsuite.
+Test perf probe interface. Blacklisted functions should be rejected
+when there is an attempt to set a kprobe to them.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- tools/perf/tests/shell/common/init.sh     | 8 ++++----
- tools/perf/tests/shell/common/settings.sh | 9 +++++----
- 2 files changed, 9 insertions(+), 8 deletions(-)
+ .../base_probe/test_adding_blacklisted.sh     | 67 +++++++++++++++++++
+ 1 file changed, 67 insertions(+)
+ create mode 100755 tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
 
-diff --git a/tools/perf/tests/shell/common/init.sh b/tools/perf/tests/shell/common/init.sh
-index b99fba50ba94..075f17623c8e 100644
---- a/tools/perf/tests/shell/common/init.sh
-+++ b/tools/perf/tests/shell/common/init.sh
-@@ -26,8 +26,8 @@ print_results()
- 	PERF_RETVAL="$1"; shift
- 	CHECK_RETVAL="$1"; shift
- 	FAILURE_REASON=""
--	TASK_COMMENT="$@"
--	if [ $PERF_RETVAL -eq 0 -a $CHECK_RETVAL -eq 0 ]; then
-+	TASK_COMMENT="$*"
-+	if [ $PERF_RETVAL -eq 0 ] && [ $CHECK_RETVAL -eq 0 ]; then
- 		_echo "$MPASS-- [ PASS ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT"
- 		return 0
- 	else
-@@ -56,7 +56,7 @@ print_overall_results()
- 
- print_testcase_skipped()
- {
--	TASK_COMMENT="$@"
-+	TASK_COMMENT="$*"
- 	_echo "$MSKIP-- [ SKIP ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $TASK_COMMENT :: testcase skipped"
- 	return 0
- }
-@@ -69,7 +69,7 @@ print_overall_skipped()
- 
- print_warning()
- {
--	WARN_COMMENT="$@"
-+	WARN_COMMENT="$*"
- 	_echo "$MWARN-- [ WARN ] --$MEND $TEST_NAME :: $THIS_TEST_NAME :: $WARN_COMMENT"
- 	return 0
- }
-diff --git a/tools/perf/tests/shell/common/settings.sh b/tools/perf/tests/shell/common/settings.sh
-index dcdb7d49ac00..2e50dd0bff9b 100644
---- a/tools/perf/tests/shell/common/settings.sh
-+++ b/tools/perf/tests/shell/common/settings.sh
-@@ -45,7 +45,7 @@ export TEST_IGNORE_MISSING_PMU=${TEST_IGNORE_MISSING_PMU:-n}
- export LC_ALL=C
- 
- #### colors
--if [ -t 1 -o "$TESTLOG_FORCE_COLOR" = "yes" ]; then
-+if [ -t 1 ] || [ "$TESTLOG_FORCE_COLOR" = "yes" ]; then
- 	export MPASS="\e[32m"
- 	export MALLPASS="\e[1;32m"
- 	export MFAIL="\e[31m"
-@@ -68,15 +68,15 @@ fi
- ### general info
- DIR_PATH=`dirname "$(readlink -e "$0")"`
- 
--export TEST_NAME=`basename $DIR_PATH | sed 's/base/perf/'`
--export MY_ARCH=`arch`
-+TEST_NAME=`basename $DIR_PATH | sed 's/base/perf/'`; export TEST_NAME
-+MY_ARCH=`arch`; export MY_ARCH
- 
- # storing logs and temporary files variables
- if [ -n "$PERFSUITE_RUN_DIR" ]; then
- 	# when $PERFSUITE_RUN_DIR is set to something, all the logs and temp files will be placed there
- 	# --> the $PERFSUITE_RUN_DIR/perf_something/examples and $PERFSUITE_RUN_DIR/perf_something/logs
- 	#     dirs will be used for that
--	export PERFSUITE_RUN_DIR=`readlink -f $PERFSUITE_RUN_DIR`
-+	PERFSUITE_RUN_DIR=`readlink -f $PERFSUITE_RUN_DIR`; export PERFSUITE_RUN_DIR
- 	export CURRENT_TEST_DIR="$PERFSUITE_RUN_DIR/$TEST_NAME"
- 	export MAKE_TARGET_DIR="$CURRENT_TEST_DIR/examples"
- 	export LOGS_DIR="$CURRENT_TEST_DIR/logs"
-@@ -93,6 +93,7 @@ fi
- if [ ! -d ./common ]; then
- 	# set parameters based on runmode
- 	if [ -f ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh ]; then
-+		# shellcheck source=/dev/null
- 		. ../common/parametrization.$PERFTOOL_TESTSUITE_RUNMODE.sh
- 	fi
- 	# if some parameters haven't been set until now, set them to default
+diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+new file mode 100755
+index 000000000000..b5dc10b2a738
+--- /dev/null
++++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+@@ -0,0 +1,67 @@
++#!/bin/bash
++
++# SPDX-License-Identifier: GPL-2.0
++
++#
++#	test_adding_blacklisted of perf_probe test
++#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
++#	Author: Michael Petlan <mpetlan@redhat.com>
++#
++#	Description:
++#
++#		Blacklisted functions should not be added successfully as probes,
++#	they must be skipped.
++#
++
++# include working environment
++. ../common/init.sh
++
++TEST_RESULT=0
++
++# skip if not supported
++BLACKFUNC=`head -n 1 /sys/kernel/debug/kprobes/blacklist 2> /dev/null | cut -f2`
++if [ -z "$BLACKFUNC" ]; then
++	print_overall_skipped
++	exit 0
++fi
++
++# remove all previously added probes
++clear_all_probes
++
++
++### adding blacklisted function
++
++# functions from blacklist should be skipped by perf probe
++! $CMD_PERF probe $BLACKFUNC > $LOGS_DIR/adding_blacklisted.log 2> $LOGS_DIR/adding_blacklisted.err
++PERF_EXIT_CODE=$?
++
++REGEX_SCOPE_FAIL="Failed to find scope of probe point"
++REGEX_SKIP_MESSAGE=" is blacklisted function, skip it\."
++REGEX_NOT_FOUND_MESSAGE="Probe point \'$BLACKFUNC\' not found."
++REGEX_ERROR_MESSAGE="Error: Failed to add events."
++REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
++REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
++REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
++../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
++CHECK_EXIT_CODE=$?
++
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
++(( TEST_RESULT += $? ))
++
++
++### listing not-added probe
++
++# blacklisted probes should NOT appear in perf-list output
++$CMD_PERF list probe:\* > $LOGS_DIR/adding_blacklisted_list.log
++PERF_EXIT_CODE=$?
++
++../common/check_all_lines_matched.pl "$RE_LINE_EMPTY" "List of pre-defined events" "Metric Groups:" < $LOGS_DIR/adding_blacklisted_list.log
++CHECK_EXIT_CODE=$?
++
++print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "listing blacklisted probe (should NOT be listed)"
++(( TEST_RESULT += $? ))
++
++
++# print overall results
++print_overall_results "$TEST_RESULT"
++exit $?
 -- 
 2.43.0
 
