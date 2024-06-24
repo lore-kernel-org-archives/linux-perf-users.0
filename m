@@ -1,43 +1,43 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C965C13D600
-	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C66213D52F
+	for <linux-perf-users@vger.kernel.org>; Mon, 24 Jun 2024 13:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719234537; cv=none; b=FayBi5v770abtqzhP48/PZqLtrL8I0vEs4E+2RBneidPw7sgnVPL9ZDkrMLCP+O/sVu6+MeCh6AEnALj5F+B4z49uSH2ReTAhMwPuv1TGmybGaCfylDqeP5FPZ++18b48FPEfmM4HOLXUtbc0+NowRRl74TOgeSiVnXVHZ4KIPs=
+	t=1719234541; cv=none; b=WfEStNsvucr7pPFnT2SOQc+LUTO3VTqhyU+gtVzu4bMHTttfzxE9fGILfpXEtU3AAnarfo/UFRFM1gISnbV91IRJVICVa8AbfHjYldE7jrxBVz6qRZdmcUsQc038Ora6PXunIDMKYqHapUF9mbubPAY87d+fEJamqfYbEUOZLEk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719234537; c=relaxed/simple;
-	bh=SNQixkk2dI2K2omjTLx6x7oXdy83UonW6Nyd76j2Sio=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=RppsotnySID2s8fs3mAyGGaOr6hh8NiR95rkd/t2vEU1jYUDOG+1HZqaPCEd6RhLAm1UHibaZbz3ell3s3jvziYMI5HKvx+dtSu0x3//doOerj+MQGO3UXo0fPnSbeih/O373Xo64+xblvhw9N5bcbgRY+bnZc47wlj3pblCAfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FDHryRt1; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1719234541; c=relaxed/simple;
+	bh=zSv3nrgT1VYKO+JNUyCmb6hwjrYPb9SY8M0DXFzyWOI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=Bq1cr4yundEJ91666CMUHANYQjLjBMnUhMg/8J8d8pCuAWxXZj9Fybj4JLj2dnhqIYoR4so6YFDl0RRivMkqCcuNgM3VziXL6d+p72AxO1FNpVcCXdpKw+fMpOkte7A5q//BsQROo4xf0EZhIyPakwnsfMEltGo4YYe5IBgZqJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LPghEJeH; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FDHryRt1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LPghEJeH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719234534;
+	s=mimecast20190719; t=1719234538;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-	bh=4yfLP96bzdw8ILZXZyIOLLxBMkEVNJMorHem0bRnJoc=;
-	b=FDHryRt1e6wZNENMg+L7PXPT+QBuGLpSLbRJ6RrWmkJuB0PzB9UaiURcJxe/2Qy+VTF4/0
-	VxX9MiONeVq2e/cGOAGpnxMBhHZe+J8VAyLlNhf1PEpnONF/gGeIIhSLiu1vui/CNIhenr
-	UrpYEWo7JK9KKQj3faXu9P+CG1XbT8o=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+	bh=bJ7m91oGs7drB4P9mLxf4yDLL7zr64IT3wn7pw1eAq0=;
+	b=LPghEJeHv5+NyaOffxFPXpOmvgE/oqJKdrWVJJTeZFeDaoO4Gyl/LzzuP/A3QKuc9QNCN4
+	UmYgZTVSKJLqtMBh1pi5SJhAaMaGDvQEc+EyPJFbfJKVND/gNm6JwhTm25d0djiwz0wHMl
+	XQecXqWIxCmhBgRsPb3Im7rWrc5GtYU=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-640-RPAXeLF2PW6GTj2HKe_1ug-1; Mon,
- 24 Jun 2024 09:08:50 -0400
-X-MC-Unique: RPAXeLF2PW6GTj2HKe_1ug-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-654-on6gPMaZONGY0fvNC60wOg-1; Mon,
+ 24 Jun 2024 09:08:54 -0400
+X-MC-Unique: on6gPMaZONGY0fvNC60wOg-1
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 43ADA19560AF;
-	Mon, 24 Jun 2024 13:08:49 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id AD00B195609F;
+	Mon, 24 Jun 2024 13:08:52 +0000 (UTC)
 Received: from Diego.redhat.com (unknown [10.39.208.42])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 3502F1956087;
-	Mon, 24 Jun 2024 13:08:45 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 9F7371956087;
+	Mon, 24 Jun 2024 13:08:49 +0000 (UTC)
 From: Michael Petlan <mpetlan@redhat.com>
 To: linux-perf-users@vger.kernel.org,
 	vmolnaro@redhat.com,
@@ -47,9 +47,9 @@ Cc: acme@kernel.org,
 	irogers@google.com,
 	atrajeev@linux.vnet.ibm.com,
 	masami.hiramatsu.pt@hitachi.com
-Subject: [PATCH 06/11] perf testsuite probe: Add test for invalid options
-Date: Mon, 24 Jun 2024 15:08:04 +0200
-Message-Id: <20240624130809.1612-7-mpetlan@redhat.com>
+Subject: [PATCH 07/11] perf testsuite probe: Add test for line semantics
+Date: Mon, 24 Jun 2024 15:08:05 +0200
+Message-Id: <20240624130809.1612-8-mpetlan@redhat.com>
 In-Reply-To: <20240624130809.1612-1-mpetlan@redhat.com>
 References: <20240624130809.1612-1-mpetlan@redhat.com>
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
@@ -61,34 +61,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Test if various incompatible options are correctly handled-rejected.
-It is run as a part of perftool-testsuite_probe test case.
+The perf-probe command uses a specific semantics to describe probes.
+Test some patterns that are known to be both valid and invalid if
+they are handled appropriately.
+
+This test is run as a part of perftool-testsuite_probe test case.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- .../shell/base_probe/test_invalid_options.sh  | 79 +++++++++++++++++++
- 1 file changed, 79 insertions(+)
- create mode 100755 tools/perf/tests/shell/base_probe/test_invalid_options.sh
+ .../shell/base_probe/test_line_semantics.sh   | 55 +++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100755 tools/perf/tests/shell/base_probe/test_line_semantics.sh
 
-diff --git a/tools/perf/tests/shell/base_probe/test_invalid_options.sh b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
+diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
 new file mode 100755
-index 000000000000..1fedfd8b0d0d
+index 000000000000..d8f4bde0f585
 --- /dev/null
-+++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
-@@ -0,0 +1,79 @@
++++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
+@@ -0,0 +1,55 @@
 +#!/bin/bash
 +
 +# SPDX-License-Identifier: GPL-2.0
 +
 +#
-+#	test_invalid_options of perf_probe test
++#	test_line_semantics of perf_probe test
 +#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 +#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
 +#
-+#		This test checks whether the invalid and incompatible options are reported
++#		This test checks whether the semantic errors of line option's
++#		arguments are properly reported.
 +#
 +
 +# include working environment
@@ -102,54 +106,29 @@ index 000000000000..1fedfd8b0d0d
 +fi
 +
 +
-+### missing argument
++### acceptable --line descriptions
 +
-+# some options require an argument
-+for opt in '-a' '-d' '-L' '-V'; do
-+	! $CMD_PERF probe $opt 2> $LOGS_DIR/invalid_options_missing_argument$opt.err
-+	PERF_EXIT_CODE=$?
-+
-+	../common/check_all_patterns_found.pl "Error: switch .* requires a value" < $LOGS_DIR/invalid_options_missing_argument$opt.err
++# testing acceptance of valid patterns for the '--line' option
++VALID_PATTERNS="func func:10 func:0-10 func:2+10 func@source.c func@source.c:1 source.c:1 source.c:1+1 source.c:1-10"
++for desc in $VALID_PATTERNS; do
++	! ( $CMD_PERF probe --line $desc 2>&1 | grep -q "Semantic error" )
 +	CHECK_EXIT_CODE=$?
 +
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing argument for $opt"
++	print_results 0 $CHECK_EXIT_CODE "acceptable descriptions :: $desc"
 +	(( TEST_RESULT += $? ))
 +done
 +
 +
-+### unnecessary argument
++### unacceptable --line descriptions
 +
-+# some options may omit the argument
-+for opt in '-F' '-l'; do
-+	$CMD_PERF probe -F > /dev/null 2> $LOGS_DIR/invalid_options_unnecessary_argument$opt.err
-+	PERF_EXIT_CODE=$?
-+
-+	test ! -s $LOGS_DIR/invalid_options_unnecessary_argument$opt.err
++# testing handling of invalid patterns for the '--line' option
++INVALID_PATTERNS="func:foo func:1-foo func:1+foo func;lazy\*pattern"
++for desc in $INVALID_PATTERNS; do
++	$CMD_PERF probe --line $desc 2>&1 | grep -q "Semantic error"
 +	CHECK_EXIT_CODE=$?
 +
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "unnecessary argument for $opt"
++	print_results 0 $CHECK_EXIT_CODE "unacceptable descriptions :: $desc"
 +	(( TEST_RESULT += $? ))
-+done
-+
-+
-+### mutually exclusive options
-+
-+# some options are mutually exclusive
-+test -e $LOGS_DIR/invalid_options_mutually_exclusive.log && rm -f $LOGS_DIR/invalid_options_mutually_exclusive.log
-+for opt in '-a xxx -d xxx' '-a xxx -L foo' '-a xxx -V foo' '-a xxx -l' '-a xxx -F' \
-+		'-d xxx -L foo' '-d xxx -V foo' '-d xxx -l' '-d xxx -F' \
-+		'-L foo -V bar' '-L foo -l' '-L foo -F' '-V foo -l' '-V foo -F' '-l -F'; do
-+	! $CMD_PERF probe $opt > /dev/null 2> $LOGS_DIR/aux.log
-+	PERF_EXIT_CODE=$?
-+
-+	../common/check_all_patterns_found.pl "Error: switch .+ cannot be used with switch .+" < $LOGS_DIR/aux.log
-+	CHECK_EXIT_CODE=$?
-+
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "mutually exclusive options :: $opt"
-+	(( TEST_RESULT += $? ))
-+
-+	# gather the logs
-+	cat $LOGS_DIR/aux.log | grep "Error" >> $LOGS_DIR/invalid_options_mutually_exclusive.log
 +done
 +
 +
