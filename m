@@ -1,138 +1,107 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7456C19F461;
-	Mon, 24 Jun 2024 19:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D72CF1A01D0;
+	Mon, 24 Jun 2024 20:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719256897; cv=none; b=p9LsJygSTcPl4Be8uWetWkmcOUhL9V3FOuTezDdKxL/F3j0U4q/IkeKpi+m8kbZDK3whlKeX/cUnCvrdQlbZkNs6apdL3savT45DGr2ukSSrARcqrLfgiZTZwcy2HSGp3/R84U+2tcCHgWHnp4n12trfNJJDTCCYdQbRK3DdGWM=
+	t=1719259879; cv=none; b=jSlLP70+Ub8Dz0IzoqhDPpI+plnUdecC7I7NFDxBqp97wDDRMEbgoNkhXtCbvt+G99MHhDQjgVN9mkygRF9YuYwAMBEKYPJXOJiDRk4T3HfRANjiVLNYluFQ5mM/7gl2WO/h68A5qoEyMvVRUpZ8GggpWAJ27HZJl5a20m6TWaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719256897; c=relaxed/simple;
-	bh=xRc0tfAmHzcT7bB+7OIpdXbgsxBNZVUcTnYQk5Jdt7g=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=tt5zmtoVVWqZIxGovobxGjqhcW0gkBoOURfPV2oL5QoBqkH6uggF2ZRKlnGS6NlMxgQbY3sathAtq9xNVDL41+AZH3DfktIeIVSFXZJPhvqLZlv3JnP5YWIGXk/u6bi86M8jBEMSfUi+McZOrW7EtWDRzE6jEvjNGDFY0fhPxKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4W7Hpd4xrHz6K9g7;
-	Tue, 25 Jun 2024 03:19:53 +0800 (CST)
-Received: from lhrpeml100004.china.huawei.com (unknown [7.191.162.219])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1AD10140A70;
-	Tue, 25 Jun 2024 03:21:33 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (7.191.163.240) by
- lhrpeml100004.china.huawei.com (7.191.162.219) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Jun 2024 20:21:32 +0100
-Received: from lhrpeml500005.china.huawei.com ([7.191.163.240]) by
- lhrpeml500005.china.huawei.com ([7.191.163.240]) with mapi id 15.01.2507.039;
- Mon, 24 Jun 2024 20:21:32 +0100
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-To: Sean Christopherson <seanjc@google.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, "Huacai
- Chen" <chenhuacai@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, "Anup
- Patel" <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	"Palmer Dabbelt" <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
-	"Heiko Carstens" <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>,
-	"Alexander Gordeev" <agordeev@linux.ibm.com>, Christian Borntraeger
-	<borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, "Claudio
- Imbrenda" <imbrenda@linux.ibm.com>, Thomas Gleixner <tglx@linutronix.de>,
-	"Ingo Molnar" <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen
-	<dave.hansen@linux.intel.com>, "x86@kernel.org" <x86@kernel.org>, "Peter
- Zijlstra" <peterz@infradead.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Paolo Bonzini <pbonzini@redhat.com>, Tony Krowiak <akrowiak@linux.ibm.com>,
-	Halil Pasic <pasic@linux.ibm.com>, Jason Herne <jjherne@linux.ibm.com>,
-	Harald Freudenberger <freude@linux.ibm.com>, Alex Williamson
-	<alex.williamson@redhat.com>, Andy Lutomirski <luto@kernel.org>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "kvmarm@lists.linux.dev"
-	<kvmarm@lists.linux.dev>, "linux-mips@vger.kernel.org"
-	<linux-mips@vger.kernel.org>, "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-	"kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
-	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-	"linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, "Anish
- Ghulati" <aghulati@google.com>, Venkatesh Srinivas <venkateshs@chromium.org>,
-	Andrew Thornton <andrewth@google.com>
-Subject: RE: [PATCH 00/26] KVM: vfio: Hide KVM internals from others
-Thread-Topic: [PATCH 00/26] KVM: vfio: Hide KVM internals from others
-Thread-Index: AQHZ6DUkZqOCX4TQLUabDzpapjtX9LHSHHZQgAaZwQCAAFBCQA==
-Date: Mon, 24 Jun 2024 19:21:32 +0000
-Message-ID: <ec1e168193ed45dea22117606cabacc5@huawei.com>
-References: <20230916003118.2540661-1-seanjc@google.com>
- <504fa0a7264d4762afda2f13c3525ce5@huawei.com> <ZnmRgqD6FmXNNzzI@google.com>
-In-Reply-To: <ZnmRgqD6FmXNNzzI@google.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1719259879; c=relaxed/simple;
+	bh=TbEKbDJ/ZjUziE9xkUnuTlXoBMKO5tvT0ihWYvPGHnQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qLNcHcDXwyzLx4Kl9yx5WWauetXa+ej05+D2G+dj2LxfyGunqkuKfQMJj3P7VINAr0MBipXEDBKi8sY2739Gtg3ecSC1Z7X1ldeL56heCozV1ErlCTKJLBeoVBz6X2hS4ppQ9O9x/ETO5paL88Z54ABMo+RV8PQtw4zWvCRbzf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZOIcq/wC; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZOIcq/wC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719259876; x=1750795876;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=TbEKbDJ/ZjUziE9xkUnuTlXoBMKO5tvT0ihWYvPGHnQ=;
+  b=ZOIcq/wCDuaisMyxoD1M1GfaX+0qkdQRio/CsKB8hHIPCh68WRsh2JQb
+   2EyL3e2K5zqdAt0qk4LtP4ghySlivnyL1HRnoYW5Ey05hJQ6dQ2n6zbX/
+   qkZjMAaj0cBphpm1kRqW+Xs54Bgor9vZ+W4j3ytcpl8laT3LkkhpI6srj
+   L4hP/LrpX3QxJZFPNosIdUPbFm1sh6TCxY5KvMWgU0ck/GMD0/LiNHFcd
+   Tt1lf+qgYpKMQ8ZSt/PBW9YpAmF48aVCuccVdCT1EftY8pCSAfduiEpHU
+   HtcgceuBQwKd33HdEldVX0JCxauQm2qk0zT7/qB52JrT6s+jRsY+A3+9e
+   g==;
+X-CSE-ConnectionGUID: d3CjHIZKRxSirjt3U2VxkA==
+X-CSE-MsgGUID: I5X0/rUqQlaiHQJG0ARvbQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="16127983"
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="16127983"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 13:11:16 -0700
+X-CSE-ConnectionGUID: /4BSYLjrREGqlQrK6hRjjw==
+X-CSE-MsgGUID: G6J1CdrwTFmI3oJiVXmwpw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,262,1712646000"; 
+   d="scan'208";a="43387260"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.94.249.84])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 13:11:12 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Marco Cavenati <cavenati.marco@gmail.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/7] perf: Intel PT and 64-bit AUX area size fixes
+Date: Mon, 24 Jun 2024 23:10:54 +0300
+Message-Id: <20240624201101.60186-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Transfer-Encoding: 8bit
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2VhbiBDaHJpc3RvcGhl
-cnNvbiA8c2VhbmpjQGdvb2dsZS5jb20+DQo+IFNlbnQ6IE1vbmRheSwgSnVuZSAyNCwgMjAyNCA0
-OjMyIFBNDQo+IFRvOiBTaGFtZWVyYWxpIEtvbG90aHVtIFRob2RpIDxzaGFtZWVyYWxpLmtvbG90
-aHVtLnRob2RpQGh1YXdlaS5jb20+DQo+IENjOiBDYXRhbGluIE1hcmluYXMgPGNhdGFsaW4ubWFy
-aW5hc0Bhcm0uY29tPjsgV2lsbCBEZWFjb24NCj4gPHdpbGxAa2VybmVsLm9yZz47IE1hcmMgWnlu
-Z2llciA8bWF6QGtlcm5lbC5vcmc+OyBPbGl2ZXIgVXB0b24NCj4gPG9saXZlci51cHRvbkBsaW51
-eC5kZXY+OyBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNhaUBrZXJuZWwub3JnPjsgTWljaGFlbA0KPiBF
-bGxlcm1hbiA8bXBlQGVsbGVybWFuLmlkLmF1PjsgQW51cCBQYXRlbCA8YW51cEBicmFpbmZhdWx0
-Lm9yZz47IFBhdWwNCj4gV2FsbXNsZXkgPHBhdWwud2FsbXNsZXlAc2lmaXZlLmNvbT47IFBhbG1l
-ciBEYWJiZWx0DQo+IDxwYWxtZXJAZGFiYmVsdC5jb20+OyBBbGJlcnQgT3UgPGFvdUBlZWNzLmJl
-cmtlbGV5LmVkdT47IEhlaWtvDQo+IENhcnN0ZW5zIDxoY2FAbGludXguaWJtLmNvbT47IFZhc2ls
-eSBHb3JiaWsgPGdvckBsaW51eC5pYm0uY29tPjsNCj4gQWxleGFuZGVyIEdvcmRlZXYgPGFnb3Jk
-ZWV2QGxpbnV4LmlibS5jb20+OyBDaHJpc3RpYW4gQm9ybnRyYWVnZXINCj4gPGJvcm50cmFlZ2Vy
-QGxpbnV4LmlibS5jb20+OyBKYW5vc2NoIEZyYW5rIDxmcmFua2phQGxpbnV4LmlibS5jb20+Ow0K
-PiBDbGF1ZGlvIEltYnJlbmRhIDxpbWJyZW5kYUBsaW51eC5pYm0uY29tPjsgVGhvbWFzIEdsZWl4
-bmVyDQo+IDx0Z2x4QGxpbnV0cm9uaXguZGU+OyBJbmdvIE1vbG5hciA8bWluZ29AcmVkaGF0LmNv
-bT47IEJvcmlzbGF2IFBldGtvdg0KPiA8YnBAYWxpZW44LmRlPjsgRGF2ZSBIYW5zZW4gPGRhdmUu
-aGFuc2VuQGxpbnV4LmludGVsLmNvbT47DQo+IHg4NkBrZXJuZWwub3JnOyBQZXRlciBaaWpsc3Ry
-YSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+OyBBcm5hbGRvIENhcnZhbGhvIGRlDQo+IE1lbG8gPGFj
-bWVAa2VybmVsLm9yZz47IFBhb2xvIEJvbnppbmkgPHBib256aW5pQHJlZGhhdC5jb20+OyBUb255
-DQo+IEtyb3dpYWsgPGFrcm93aWFrQGxpbnV4LmlibS5jb20+OyBIYWxpbCBQYXNpYyA8cGFzaWNA
-bGludXguaWJtLmNvbT47DQo+IEphc29uIEhlcm5lIDxqamhlcm5lQGxpbnV4LmlibS5jb20+OyBI
-YXJhbGQgRnJldWRlbmJlcmdlcg0KPiA8ZnJldWRlQGxpbnV4LmlibS5jb20+OyBBbGV4IFdpbGxp
-YW1zb24gPGFsZXgud2lsbGlhbXNvbkByZWRoYXQuY29tPjsNCj4gQW5keSBMdXRvbWlyc2tpIDxs
-dXRvQGtlcm5lbC5vcmc+OyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+
-IGt2bWFybUBsaXN0cy5saW51eC5kZXY7IGxpbnV4LW1pcHNAdmdlci5rZXJuZWwub3JnOyBrdm1A
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsga3ZtLXJp
-c2N2QGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LQ0KPiByaXNjdkBsaXN0cy5pbmZyYWRlYWQu
-b3JnOyBsaW51eC1zMzkwQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBBbmlzaCBHaHVsYXRp
-DQo+IDxhZ2h1bGF0aUBnb29nbGUuY29tPjsgVmVua2F0ZXNoIFNyaW5pdmFzIDx2ZW5rYXRlc2hz
-QGNocm9taXVtLm9yZz47DQo+IEFuZHJldyBUaG9ybnRvbiA8YW5kcmV3dGhAZ29vZ2xlLmNvbT4N
-Cj4gU3ViamVjdDogUmU6IFtQQVRDSCAwMC8yNl0gS1ZNOiB2ZmlvOiBIaWRlIEtWTSBpbnRlcm5h
-bHMgZnJvbSBvdGhlcnMNCj4gDQo+IE9uIFRodSwgSnVuIDIwLCAyMDI0LCBTaGFtZWVyYWxpIEtv
-bG90aHVtIFRob2RpIHdyb3RlOg0KPiA+ID4gVGhpcyBpcyBhIGJvcmRlcmxpbmUgUkZDIHNlcmll
-cyB0byBoaWRlIEtWTSdzIGludGVybmFscyBmcm9tIHRoZSByZXN0IG9mDQo+ID4gPiB0aGUga2Vy
-bmVsLCB3aGVyZSAiaW50ZXJuYWxzIiBtZWFucyBkYXRhIHN0cnVjdHVyZXMsIGVudW1zLCAjZGVm
-aW5lcywNCj4gPiA+IEFQSXMsIGV0Yy4gdGhhdCBhcmUgaW50ZW5kZWQgdG8gYmUgS1ZNLW9ubHks
-IGJ1dCBhcmUgZXhwb3NlZA0KPiBldmVyeXdoZXJlDQo+ID4gPiBkdWUgdG8ga3ZtX2hvc3QuaCAo
-YW5kIG90aGVyIGhlYWRlcnMpIGxpdmluZyBpbiB0aGUgZ2xvYmFsIGluY2x1ZGUgcGF0aHMuDQo+
-ID4NCj4gPiBIaSBTZWFuLA0KPiA+DQo+ID4gSnVzdCB0aG91Z2h0IG9mIGNoZWNraW5nIHdpdGgg
-eW91IG9uIHRoaXMgc2VyaWVzLiBEbyB5b3UgaGF2ZSBwbGFucyB0bw0KPiByZXZpdmUgdGhpcw0K
-PiA+IHNlcmllcz8NCj4gDQo+IFllcCENCj4gDQo+ID4gVGhlIHJlYXNvbiBJIGFtIGFza2luZyBp
-cywgb24gQVJNNjQvS1ZNIHNpZGUgd2UgZG8gaGF2ZSBhIHJlcXVpcmVtZW50DQo+ID4gdG8gc2hh
-cmUgdGhlIEtWTSBWTUlEIHdpdGggU01NVVYzLiBQbGVhc2Ugc2VlIHRoZSBSRkMgSSBzZW50IG91
-dA0KPiBlYXJsaWVyIHRoaXMNCj4gPiB5ZWFyWzFdLiBUaGUgc2VyaWVzIGJhc2ljYWxseSBwcm92
-aWRlcyBhIHdheSBmb3IgS1ZNIHRvIHBpbiBhIFZNSUQgYW5kIGFsc28NCj4gPiBhc3NvY2lhdGVz
-IGFuIGlvbW11ZmQgY3R4IHdpdGggYSBzdHJ1Y3Qga3ZtICogdG8gcmV0cmlldmUgdGhhdCBWTUlE
-Lg0KPiA+DQo+ID4gQXMgbWVudGlvbmVkIGFib3ZlLCBzb21lIG9mIHRoZSBwYXRjaGVzIGluIHRo
-aXMgc2VyaWVzKGVzcGVjaWFsbHkgMS00ICYgNikNCj4gdGhhdA0KPiA+IGRvZXMgdGhlIFZGSU8g
-Y2xlYW51cHMgYW5kIGRyb3BwaW5nIENPTkZJR19LVk1fVkZJTyBsb29rcyB2ZXJ5DQo+IHN0cmFp
-Z2h0Zm9yd2FyZA0KPiA+IGFuZCB1c2VmdWwuIEkgYW0gdGhpbmtpbmcgb2YgaW5jbHVkaW5nIHRo
-b3NlIHdoZW4gSSByZS1zcGluIG15IFJGQyBzZXJpZXMsIGlmDQo+ID4gdGhhdOKAmXMgb2suDQo+
-IA0KPiBQbGVhc2UgZG9uJ3QgaW5jbHVkZSB0aGVtLCBhcyB0aGUgcGF0Y2ggdGhleSBidWlsZCB0
-b3dhcmRzIChwYXRjaCA1KSBpcw0KPiBidWdneVsqXSwNCj4gYW5kIEkgYW0gZmFpcmx5IGNlcnRh
-aW4gdGhhdCBhdCBsZWFzdCBzb21lIG9mIHRoZSBwYXRjaGVzIHdpbGwgY2hhbmdlDQo+IHNpZ25p
-ZmljYW50bHkuDQoNCk9rLiBHb3QgaXQuIFRoYW5rcyBmb3IgdGFraW5nIGEgbG9vayBhdCB0aGUg
-S1ZNIHBpbm5lZCBWTUlEIHNlcmllcyBhbmQgY29tbWVudHMNCnRoZXJlLg0KDQpTaGFtZWVyDQo=
+Hi
+
+Here are some fixes.
+
+I have taken the liberty of re-posting Marco Cavenati's patch from:
+
+	https://lore.kernel.org/lkml/20240618110617.22626-1-cavenati.marco@gmail.com/
+
+with updated commit suggested by Dave Hansen.
+
+
+Adrian Hunter (6):
+      perf/x86/intel/pt: Fix a topa_entry base address calculation
+      perf/x86/intel/pt: Fix pt_topa_entry_for_page() address calculation
+      perf: Fix perf_aux_size() for greater-than 32-bit size
+      perf: Prevent passing zero nr_pages to rb_alloc_aux()
+      perf: Fix default aux_watermark calculation
+      perf: Make rb_alloc_aux() return an error immediately if nr_pages <= 0
+
+Marco Cavenati (1):
+      perf/x86/intel/pt: Fix topa_entry base length
+
+ arch/x86/events/intel/pt.c  | 4 ++--
+ arch/x86/events/intel/pt.h  | 4 ++--
+ kernel/events/core.c        | 2 ++
+ kernel/events/internal.h    | 2 +-
+ kernel/events/ring_buffer.c | 7 ++++++-
+ 5 files changed, 13 insertions(+), 6 deletions(-)
+
+
+Regards
+Adrian
