@@ -1,177 +1,237 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7914430A;
-	Tue, 25 Jun 2024 05:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA28C1CABB;
+	Tue, 25 Jun 2024 05:29:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719293002; cv=none; b=mmTej4/YViaJCpcwWjCr/Md8lpD7oDcCxtJGK6kXCP1dkiNvybHznpNlU/iRHpOdzPiAz33S99QShMHGo1MUkhxWfe+SzXbE2Kb4ZktFSAHgledA6GTD9R2Cm0rlpZ2VQ19xrcz9+TvJlInQQYztUeps4TqKFxPstKh/yy/Mje8=
+	t=1719293345; cv=none; b=Ig5y5h9gvjzS83C9ufMsYc14UihpL2ZYlwLLjpYk7nHEoAzcEvhUeogtfT8HEZJygztvU/sIN/kZq13wvPYYt8EeAq7uF5d9zVluhS+AW9uQSvvDvHn0dY3+hRRh87hdbMXKFeg0z/Q6LhKljZ1XzXgdj/BPMprwzfSheaejHr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719293002; c=relaxed/simple;
-	bh=jVLXeRuB4Y1W07aCWmpukXhZYCzc8LgRbeBwlKDWBsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ER7j6+KtlEjHCgyyc58jxU1RHzXDhZ4n+Mc1sySMVVK0MJU2N6BJqgkeKEFp36u483rhchQ/Ige3acdK3BItISPGL0Q89PXGNnm71mGrm1VVx1LDwP0z4010dxJsKr57RlU5Dsd4wQhtFuCfR+jV7g3oNfhzFzskalmF7MeyRsk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cc2bnfre; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719293345; c=relaxed/simple;
+	bh=LFjHwemcdLE3RjWfSMOIzmFSkp1A8AtvyedlXK7t8pw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QflbRNvDdvuszMavZwaVykpS3BgOKj8/y8MDgIbW3v16lyFQfAz2GPn7kzXPnRAM04J3byMp4NUPVgh+Pi2ZeKVbFHiIOYDjk6VFl1ds6BmRb/IxemT7mJWuoAcYSknUcVfWzPRGyo9/slXp0wsbNF2rXF3xquX69PqmXc6H5tQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WFOh9e1U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cc2bnfre"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45P5MeEK1244996
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Mon, 24 Jun 2024 22:22:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45P5MeEK1244996
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719292965;
-	bh=h/dSDgvdZc16fP/Z1So0qkiak4w7w3PlGGSBWgwhA10=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Cc2bnfrebZPb0RYkskmvITTpW76gxHo1uOwYrx/YtQaHAHjCz9kGwsWz75sl8OmlB
-	 BrXNoatx04ZivIZSUPSZ6nqX80jyV0iKLwvjJbU7WVdWlUZMceZt/1UlMQA7BMk9aZ
-	 1il3Y6T1NudhK7f4jCQInUVvq4guoCp8wJDC8IuRyBHsSsUyRwM5JI4dU7sWTdVXMX
-	 rZTDV1NMhJxW6xcb0CrFKvDJ+srZeDRBlpMOVDDBb75jZWf9ZR6ddgqAEaI/Chzb2+
-	 JwulTgex/39AVX8apc+D5GJYkhCGpGVl6QmFsEPZ+PX1bniw01aBUNNokw4hYtksGJ
-	 0o3BIh22xxUHw==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
-        andrew.cooper3@citrix.com
-Subject: [PATCH v3B 4/4] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
-Date: Mon, 24 Jun 2024 22:22:39 -0700
-Message-ID: <20240625052239.1244986-1-xin@zytor.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <d0083546-f945-45e4-a0c3-96794ef76caa@citrix.com>
-References: <d0083546-f945-45e4-a0c3-96794ef76caa@citrix.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WFOh9e1U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDF01C32782;
+	Tue, 25 Jun 2024 05:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719293345;
+	bh=LFjHwemcdLE3RjWfSMOIzmFSkp1A8AtvyedlXK7t8pw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WFOh9e1UamzVzR7qSL/yChRjYlxaBXB6f8W5q8tw8hoYeS29+3rL/a+apGHJSHDzE
+	 2OcUL8Dw0boWrZUGYX9s9lEg5VMWD0Z6BAqUgqiKhAn9h+lBo2DiGjZXdxjs9phJIm
+	 A9llAwF0m0nErvkjo60MNHszvFkkuY45WeJ+GER84SvY3fUgmsxIp+KUU5+PuR6wwt
+	 28lcLCCZh/9Grkq4O5iCvQFv5RDTuVSDDKP3rbYVOklJblkCrxLON5Otcrvbv54c5+
+	 NlkSixGGSqRWzZT7NkT7rfljL2hABX5T/V0EYe4qhukBYW8XpViUQKR5C9Ym+FV4NM
+	 WDV/GSEdzo+gg==
+Date: Mon, 24 Jun 2024 22:29:03 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, segher@kernel.crashing.org,
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [V4 03/16] tools/perf: Add support to capture and parse raw
+ instruction in powerpc using dso__data_read_offset utility
+Message-ID: <ZnpVn1yLtDnRnTBh@google.com>
+References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+ <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
 
-Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
-script that generates the required and disabled feature mask header.
+On Fri, Jun 14, 2024 at 10:56:18PM +0530, Athira Rajeev wrote:
+> Add support to capture and parse raw instruction in powerpc.
+> Currently, the perf tool infrastructure uses two ways to disassemble
+> and understand the instruction. One is objdump and other option is
+> via libcapstone.
+> 
+> Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
+> with "objdump" while disassemble. Example from powerpc with this option
+> for an instruction address is:
+> 
+> Snippet from:
+> objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
+> 
+> c0000000010224b4:	lwz     r10,0(r9)
 
-Suggested-by: Brian Gerst <brgerst@gmail.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
----
+What about removing --no-show-raw-insn and parse the raw byte code in
+the output for powerpc?  I think it's better to support normal
+annotation together.
 
-Change since v3A:
-* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
+> 
+> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+> registers names and offset. Also to find whether there is a memory
+> reference in the operands, "memory_ref_char" field of objdump is used.
+> For x86, "(" is used as memory_ref_char to tackle instructions of the
+> form "mov  (%rax), %rcx".
+> 
+> In case of powerpc, not all instructions using "(" are the only memory
+> instructions. Example, above instruction can also be of extended form (X
+> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+> and extract the source/target registers, patch adds support to use raw
+> instruction for powerpc. Approach used is to read the raw instruction
+> directly from the DSO file using "dso__data_read_offset" utility which
+> is already implemented in perf infrastructure in "util/dso.c".
+> 
+> Example:
+> 
+> 38 01 81 e8     ld      r4,312(r1)
+> 
+> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+> this translates to instruction form: "ld RT,DS(RA)" and binary code
+> as:
+> 
+>    | 58 |  RT  |  RA |      DS       | |
+>    -------------------------------------
+>    0    6     11    16              30 31
+> 
+> Function "symbol__disassemble_dso" is updated to read raw instruction
+> directly from DSO using dso__data_read_offset utility. In case of
+> above example, this captures:
+> line:    38 01 81 e8
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/util/disasm.c | 98 ++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 98 insertions(+)
+> 
+> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> index b5fe3a7508bb..f19496133bf0 100644
+> --- a/tools/perf/util/disasm.c
+> +++ b/tools/perf/util/disasm.c
+> @@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
+>  }
+>  #endif
+>  
+> +static int symbol__disassemble_dso(char *filename, struct symbol *sym,
 
-Change since v3:
-* Checking NCAPINTS isn't necessary anymore.  It was needed when these
-  macros had to be manually updated, but now if cpufeatures.h changes
-  this header will be regenerated (Brian Gerst).
----
- arch/x86/include/asm/cpufeature.h | 69 -------------------------------
- arch/x86/tools/featuremasks.awk   |  9 +++-
- 2 files changed, 8 insertions(+), 70 deletions(-)
+Maybe rename to symbol__disassemble_raw() ?
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 8332f596ba3c..8161dfb3255c 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
- #define test_cpu_cap(c, bit)						\
- 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
- 
--/*
-- * There are 32 bits/features in each mask word.  The high bits
-- * (selected with (bit>>5) give us the word number and the low 5
-- * bits give us the bit/feature number inside the word.
-- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
-- * see if it is set in the mask word.
-- */
--#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
--	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
--
--/*
-- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
-- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
-- * header macros which use NCAPINTS need to be changed. The duplicated macro
-- * use causes the compiler to issue errors for all headers so that all usage
-- * sites can be corrected.
-- */
--#define REQUIRED_MASK_BIT_SET(feature_bit)		\
--	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
--	   REQUIRED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
--#define DISABLED_MASK_BIT_SET(feature_bit)				\
--	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
--	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
--	   DISABLED_MASK_CHECK					  ||	\
--	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
--
- #define cpu_has(c, bit)							\
- 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
- 	 test_cpu_cap(c, bit))
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-index 989b021e73d3..e0383683e630 100755
---- a/arch/x86/tools/featuremasks.awk
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -77,7 +77,14 @@ END {
- 			printf "#define %s_MASK%d\t0x%08x\n", s, i, masks[i];
- 		}
- 
--		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
-+		printf "\t((\t\t\t\t\t";
-+		for (i = 0; i < ncapints; i++) {
-+			if (masks[i])
-+				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
-+		}
-+		printf " 0\t\\\n";
-+		printf "\t) & (1U << ((x) & 31)))\n";
- 	}
- 
- 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
--- 
-2.45.2
+> +					struct annotate_args *args)
+> +{
+> +	struct annotation *notes = symbol__annotation(sym);
+> +	struct map *map = args->ms.map;
+> +	struct dso *dso = map__dso(map);
+> +	u64 start = map__rip_2objdump(map, sym->start);
+> +	u64 end = map__rip_2objdump(map, sym->end);
+> +	u64 len = end - start;
+> +	u64 offset;
+> +	int i, count;
+> +	u8 *buf = NULL;
+> +	char disasm_buf[512];
+> +	struct disasm_line *dl;
+> +	u32 *line;
+> +
+> +	/* Return if objdump is specified explicitly */
+> +	if (args->options->objdump_path)
+> +		return -1;
+> +
+> +	pr_debug("Reading raw instruction from : %s using dso__data_read_offset\n", filename);
 
+You may want to print the actual offset and remove the "using
+dso__data_read_offset" part.
+
+Thanks,
+Namhyung
+
+> +
+> +	buf = malloc(len);
+> +	if (buf == NULL)
+> +		goto err;
+> +
+> +	count = dso__data_read_offset(dso, NULL, sym->start, buf, len);
+> +
+> +	line = (u32 *)buf;
+> +
+> +	if ((u64)count != len)
+> +		goto err;
+> +
+> +	/* add the function address and name */
+> +	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
+> +		  start, sym->name);
+> +
+> +	args->offset = -1;
+> +	args->line = disasm_buf;
+> +	args->line_nr = 0;
+> +	args->fileloc = NULL;
+> +	args->ms.sym = sym;
+> +
+> +	dl = disasm_line__new(args);
+> +	if (dl == NULL)
+> +		goto err;
+> +
+> +	annotation_line__add(&dl->al, &notes->src->source);
+> +
+> +	/* Each raw instruction is 4 byte */
+> +	count = len/4;
+> +
+> +	for (i = 0, offset = 0; i < count; i++) {
+> +		args->offset = offset;
+> +		sprintf(args->line, "%x", line[i]);
+> +		dl = disasm_line__new(args);
+> +		if (dl == NULL)
+> +			goto err;
+> +
+> +		annotation_line__add(&dl->al, &notes->src->source);
+> +		offset += 4;
+> +	}
+> +
+> +	/* It failed in the middle */
+> +	if (offset != len) {
+> +		struct list_head *list = &notes->src->source;
+> +
+> +		/* Discard all lines and fallback to objdump */
+> +		while (!list_empty(list)) {
+> +			dl = list_first_entry(list, struct disasm_line, al.node);
+> +
+> +			list_del_init(&dl->al.node);
+> +			disasm_line__free(dl);
+> +		}
+> +		count = -1;
+> +	}
+> +
+> +out:
+> +	free(buf);
+> +	return count < 0 ? count : 0;
+> +
+> +err:
+> +	count = -1;
+> +	goto out;
+> +}
+>  /*
+>   * Possibly create a new version of line with tabs expanded. Returns the
+>   * existing or new line, storage is updated if a new line is allocated. If
+> @@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
+>  		strcpy(symfs_filename, tmp);
+>  	}
+>  
+> +	/*
+> +	 * For powerpc data type profiling, use the dso__data_read_offset
+> +	 * to read raw instruction directly and interpret the binary code
+> +	 * to understand instructions and register fields. For sort keys as
+> +	 * type and typeoff, disassemble to mnemonic notation is
+> +	 * not required in case of powerpc.
+> +	 */
+> +	if (arch__is(args->arch, "powerpc")) {
+> +		err = symbol__disassemble_dso(symfs_filename, sym, args);
+> +		if (err == 0)
+> +			goto out_remove_tmp;
+> +	}
+> +
+>  #ifdef HAVE_LIBCAPSTONE_SUPPORT
+>  	err = symbol__disassemble_capstone(symfs_filename, sym, args);
+>  	if (err == 0)
+> -- 
+> 2.43.0
+> 
