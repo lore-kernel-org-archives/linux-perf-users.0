@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE0713B59B;
-	Tue, 25 Jun 2024 16:49:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 128A616FF59;
+	Tue, 25 Jun 2024 17:08:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719334164; cv=none; b=p8q0aCqa2de5S+KqvfuxtK3d+LlyCoiFFNeQcscferE2UScjJMEKiVJK141+GzXKGiP5rMnk8Ww9BxEIEXX2reCLFSlVXRxFUIVUcSFyNEvCutIzw3+6cNij3zUBP96c81vEsAaF76ZMlAHt+end49fpxHW5gRK2GavqvmPrza4=
+	t=1719335317; cv=none; b=VJk/Tml0Zo+UDTngQ+PzaQJrZ5G/XMWkgrtKbXqq78mSRW/LPZMuMMI0LhAXJP7RRX9SI+lA44tRRllX8Vk3TwkZuYq00hW2AEFYtgv9nFqn2wAB2tBWQGM7XIw4tDYnHRynUsnQ9lumsBqkNCInU4FCS0SF6iYsvSIIlJcml3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719334164; c=relaxed/simple;
-	bh=KU29cSyrpGCrZGGbLe3egrdUubbv/YWZgRMXLPSd0Fo=;
+	s=arc-20240116; t=1719335317; c=relaxed/simple;
+	bh=9b/Jh7qZF1wPuFccwNXsPDYutEtI+mhVJ27rAd7t4Kg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m2GDrFXOOFhVo9r47BdHnxtSZO+fQB4zaIFrxYpsDfzD6WOZRhzpiYxbiu7eP2WLmIxBxYGxPzVPEBcX9PfCLVQXptl/yWtCVSCl2H0s/covINx/zTTstrZCNUMTJYFSlfxyOooYEGLevZq0nyXDJfh7maqSWP6otjX7G3UiLTc=
+	 In-Reply-To:Content-Type; b=fKqEZ8O/3EOnS1twfAYmoUwHE4TZBVcO/GWF0fJAjoS5u4jKvDS7NbQc/7Ea9OKSnOITjSlr5tvyMKYnZcXVgpuf2WsGbo+AGSSUJ+HYKq/R8b/NpFj7j0intsUrdWjBFVcNzTF68T8gseqKLdx8KgOspJYXQpaFK90ygfd8LaA=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CA7B339;
-	Tue, 25 Jun 2024 09:49:45 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44EBC339;
+	Tue, 25 Jun 2024 10:08:59 -0700 (PDT)
 Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1CBC53F73B;
-	Tue, 25 Jun 2024 09:49:18 -0700 (PDT)
-Message-ID: <86fd1484-7b9a-4da3-8e1d-91e5881df832@arm.com>
-Date: Tue, 25 Jun 2024 17:49:16 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B257C3F73B;
+	Tue, 25 Jun 2024 10:08:31 -0700 (PDT)
+Message-ID: <55b8a9a7-f566-4462-94b5-729a808b0609@arm.com>
+Date: Tue, 25 Jun 2024 18:08:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,60 +27,110 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/2] perf arm-spe: Support multiple Arm SPE PMUs
-To: Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v2 1/6] perf: build: Setup PKG_CONFIG_LIBDIR for cross
+ compilation
+To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- James Clark <james.clark@arm.com>, Suzuki K Poulose
- <suzuki.poulose@arm.com>, Mike Leach <mike.leach@linaro.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Kajol Jain <kjain@linux.ibm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240623133437.222736-1-leo.yan@arm.com>
- <20240623133437.222736-2-leo.yan@arm.com>
- <CAP-5=fWgGR-L6V5RNNpTHdHyT0wTOqKd3CQ8xQSQDAJ1D2edYA@mail.gmail.com>
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, Nick Terrell <terrelln@fb.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Quentin Monnet <qmo@kernel.org>,
+ Changbin Du <changbin.du@huawei.com>, Fangrui Song <maskray@google.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ Guilherme Amadio <amadio@gentoo.org>
+References: <20240610095433.336295-1-leo.yan@arm.com>
+ <20240610095433.336295-2-leo.yan@arm.com> <ZnYKUfr4f-0NFw6r@google.com>
 Content-Language: en-US
 From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <CAP-5=fWgGR-L6V5RNNpTHdHyT0wTOqKd3CQ8xQSQDAJ1D2edYA@mail.gmail.com>
+In-Reply-To: <ZnYKUfr4f-0NFw6r@google.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Ian,
 
-On 6/24/24 17:16, Ian Rogers wrote:
-> On Sun, Jun 23, 2024 at 6:34 AM Leo Yan <leo.yan@arm.com> wrote:
+Hi Namhyung,
+
+On 6/22/24 00:18, Namhyung Kim wrote:
+> 
+> Hello,
+> 
+> On Mon, Jun 10, 2024 at 10:54:28AM +0100, Leo Yan wrote:
+>> On recent Linux distros like Ubuntu Noble and Debian Bookworm, the
+>> 'pkg-config-aarch64-linux-gnu' package is missing. As a result, the
+>> aarch64-linux-gnu-pkg-config command is not available, which causes
+>> build failures.
 >>
->> A platform can have more than one Arm SPE PMU. For example, a system
->> with multiple clusters may have each cluster enabled with its own Arm
->> SPE instance. In such case, the PMU devices will be named 'arm_spe_0',
->> 'arm_spe_1', and so on.
->>
->> Currently, the tool only supports 'arm_spe_0'. This commit extends
->> support to multiple Arm SPE PMUs by detecting the substring 'arm_spe'.
+>> When a build passes the environment variables PKG_CONFIG_LIBDIR or
+>> PKG_CONFIG_PATH, like a user uses make command or a build system
+>> (like Yocto, Buildroot, etc) prepares the variables and passes to the
+>> Perf's Makefile, the commit keeps these variables for package
+>> configuration. Otherwise, this commit sets the PKG_CONFIG_LIBDIR
+>> variable to use the Multiarch libs for the cross compilation.
 >>
 >> Signed-off-by: Leo Yan <leo.yan@arm.com>
 >> ---
->>   tools/perf/arch/arm/util/pmu.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>   tools/build/feature/Makefile | 26 +++++++++++++++++++++++++-
+>>   tools/perf/Makefile.perf     | 26 +++++++++++++++++++++++++-
+>>   2 files changed, 50 insertions(+), 2 deletions(-)
 >>
->> diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
->> index 8b7cb68ba1a8..29cfa1e427ed 100644
->> --- a/tools/perf/arch/arm/util/pmu.c
->> +++ b/tools/perf/arch/arm/util/pmu.c
->> @@ -27,7 +27,7 @@ void perf_pmu__arch_init(struct perf_pmu *pmu __maybe_unused)
->>                  pmu->selectable = true;
->>                  pmu->is_uncore = false;
->>                  pmu->perf_event_attr_init_default = arm_spe_pmu_default_config;
->> -               if (!strcmp(pmu->name, "arm_spe_0"))
->> +               if (strstr(pmu->name, "arm_spe"))
+>> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
+>> index ed54cef450f5..084f803093c3 100644
+>> --- a/tools/build/feature/Makefile
+>> +++ b/tools/build/feature/Makefile
+>> @@ -82,7 +82,31 @@ FILES=                                          \
+>>
+>>   FILES := $(addprefix $(OUTPUT),$(FILES))
+>>
+>> -PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+>> +# Some distros provide the command $(CROSS_COMPILE)pkg-config for
+>> +# searching packges installed with Multiarch. Use it for cross
+>> +# compilation if it is existed.
+>> +ifneq (, $(shell which $(CROSS_COMPILE)pkg-config))
+>> +  PKG_CONFIG ?= $(CROSS_COMPILE)pkg-config
+>> +else
+>> +  PKG_CONFIG ?= pkg-config
+>> +
+>> +  # PKG_CONFIG_PATH or PKG_CONFIG_LIBDIR is required for the cross
+>> +  # compilation. If both is not set, try to set the lib paths installed
+>> +  # by multiarch.
+>> +  ifdef CROSS_COMPILE
+>> +    ifeq ($(PKG_CONFIG_LIBDIR)$(PKG_CONFIG_PATH),)
 > 
-> Why not use strstarts?
+> Maybe you want to check PKG_CONFIG_SYSROOT_DIR too.
 
-Indeed, strstarts() is better, will spin for this.
+IIRC, the manual says PKG_CONFIG_SYSROOT_DIR is used alongside
+PKG_CONFIG_LIBDIR or PKG_CONFIG_PATH for prepending prefix for
+the package paths.
 
-Thank for suggestion.
+I can add checking PKG_CONFIG_SYSROOT_DIR in the new patch set.
+
+>> +      CROSS_ARCH = $(shell $(CC) -dumpmachine)
+>> +      PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
+>> +      PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
+>> +      PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
+>> +      PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+>> +      PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
+> 
+> I'm not sure why this ordering.. don't you want to check
+> CROSS_ARCH directories first and then /usr/local/share and
+> /usr/share directory?
+
+I mainly refered to the script [1] which is an obselete package
+('aarch64-linux-gnu-pkg-config') on old Debian/Ubuntu distros.
+
+Your suggestion makes sense to me. I will change order as:
+
+   PKG_CONFIG_LIBDIR := /usr/local/$(CROSS_ARCH)/lib/pkgconfig/
+   PKG_CONFIG_LIBDIR := 
+$(PKG_CONFIG_LIBDIR):/usr/local/lib/$(CROSS_ARCH)/pkgconfig/
+   PKG_CONFIG_LIBDIR := 
+$(PKG_CONFIG_LIBDIR):/usr/lib/$(CROSS_ARCH)/pkgconfig/
+   PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/local/share/pkgconfig/
+   PKG_CONFIG_LIBDIR := $(PKG_CONFIG_LIBDIR):/usr/share/pkgconfig/
+
+Thanks,
 Leo
+
+[1] https://gist.github.com/doug65536/ea9c52f9a65a655a2fd5cc4997e8443b
