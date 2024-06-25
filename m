@@ -1,57 +1,57 @@
 Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D3FD179956
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 17:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D1F176AA7
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 17:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719336404; cv=none; b=ilRGssCY4HtPVBFnylcrSMxWVZmRCb1HGCBhqiAuyZsKFFD6T+o/TsFXrJadjEYoXA+PLHxjZyhd312M1LM57bKPt7URnqGrk4MHw21rx0+0jndPNRfp31125DY6SSfyW5shieiNEIx4RADIkjun5VXiw1H7Y0X3elf6ABPFiQI=
+	t=1719336406; cv=none; b=CRxg7D77aPFEARplKpbB24XvqmKVwYN8lbWW3Q9eGHxi0Kw5LsIK7dfnokTAygZpKeAyS7TiHe4/8G0Rw5APQvVSXs2TFMpUwbaQmfnc8/G4hzt7pn7gUVTeBY8f4iL1dHSq7oBQSFeQIVwzCB0hp4sdfWtJE5GEDwv9oBVUvvs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719336404; c=relaxed/simple;
-	bh=4w87sKvNwVN1XhdwrvqeSGrSkFFASpDkmJtJS5HZHW4=;
+	s=arc-20240116; t=1719336406; c=relaxed/simple;
+	bh=RFO7PSbSKcfjn2e7ecGFImKzioMgq51018O+b5jRqoA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=rKR2Syn7TZ5v6V5E6vJN1M3io/QlwRfIeulgfuY6SB4SgXXQIxrEXGvWTcr24ywYmCqDZCt8S85oE6ZW1xS+BG2gCtZNBJSfLt2wfidFlnohp9jwblHQI3mCZgP17+7fqEMGoajlSAT00Db6qTcdSk6/fU3B3PxuL9NjDVgJlrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=h0ab1/0C; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=R/P+QzQv4LMkM7trfLdooHAkImWkVlz6XqdJqOviU/WkUwU3cfOVIAg/B2eu7q6jl7zjBoJ7n/3t2qdHM67UJyn6K/DinJ5pRDk2I9dHJtXr4I7axtha5oH0Uttb7N6tBiaoSNxBX4gZDiFDDptUVgxVoojkwUHppv0FBLhge+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iotnGEH3; arc=none smtp.client-ip=209.85.128.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h0ab1/0C"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-63bf23f8fbcso131890897b3.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 10:26:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iotnGEH3"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-632588b1bdeso110178877b3.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 10:26:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719336401; x=1719941201; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719336404; x=1719941204; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=m0zVM37WL2jQNln7xrBKCslp+8pFTT04OTNtW91i/Qc=;
-        b=h0ab1/0CrMSfJqJVKSvn6/LSFYaay6Y8ghZmI1QnywaP8z/5pzMnE1d5OM8+kFFqJ0
-         d/gs55ycP57N4FSTG4fUiXPSzkiF5beNEg7/RHcfX7a+ixFMGJuZDO4Z+B7vhqBaeRB8
-         NMyda2Rn+nnwL0XpHJzt2qSbIaUDABy3MQduLoVnX1vEsYXZnJNboxPhQVd9kE28zqSB
-         l6MVSfnfXw7YWCMDtfsn9V/hRxn0N8DVbTqKamTNBuWFtt233qLX5LVr0wOKJfx/AiiU
-         AiePTG602uJ25nEf5UEo3uoEMs2m9I8hgXW/5059/UypNdm6YgFJ2ANb6cJrAv+WTgkR
-         ngKQ==
+        bh=IMpGpliqYqiRoqn4cN7c6adPMyNbVkdw3pW74xYyguE=;
+        b=iotnGEH3ppKuTJ8SGpiPDjiQ7TY1jTmCZM0wMIEazJgB5qulXOauIWyFdRgBaOyORl
+         CIBPO6pcxeWF4suqdAqzdZ/czmZehW+YD+JoEgko8Ld0wZgogNP3lipPgLxdp0nAH9KP
+         VxBM77qnSZldmEPLQb70v2F00g+NKjzTIHUgXyZk1q3Hj904H3cvk6/kHPn2x7Rd+idz
+         Cp6d4GqNcIW7rFDbLj8MEAs1CzAmlyTOFeMdVBWjweD8KpavFlgxiwq9bgug8P3xG2qA
+         mPK20zWOmrLgmazh3iLsc+NKYq+KNTZz4bamrHEH3TZvdeidqpuIiydXT8V32ViqZAAI
+         PBiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719336401; x=1719941201;
+        d=1e100.net; s=20230601; t=1719336404; x=1719941204;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m0zVM37WL2jQNln7xrBKCslp+8pFTT04OTNtW91i/Qc=;
-        b=oRTVGCDJCuG+w+clPfuB201cfEcQ2slWdly9mfDT5SpT+ppYQ/Pa0D0fLq0/XLQh93
-         7fnuu7z9CMLbnXT0AQ5QNJ5I8G6aXcbTyL06UgZRdEy0nbZjbYeb/Su8cfCIupm8n26A
-         X86Wcy2puVTE6jvdyGwN/totjztbdJjnFpwebhW2ID8pkLgqJfPA6c1QVnrcm9Rg7Xv4
-         wff1puXN8uCC1IR9rCbCmDZxaAscPWOdxAnqsXE4LlWjdLVC6rLS1TlWfti2yRk77VHj
-         NR6tC5vOQyRTk0mbajGHrjC1amathFcizO5nz23USxHN9KBs6x7aJBLX9bSaL7GVytNS
-         42Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCUrHYuaVR/KCmqkNCBhcJPbThv9gIuv/07530pihvpFrKYVJLSH0tiTMaNJSEcbDaBTEMRA4pGyN3eaCT9of1d/2l7prcQtzHEpmYFVygNBDg==
-X-Gm-Message-State: AOJu0Yzu+mAd5WPJsz21Ghiamq5K9lFBT9CIEw/wwbaC+ZFRm5PqoE80
-	S+eBepXsd4IShPUiP3oOfwLO/atWxQ6ssbfuptkEtn3J5U9D2XpHB3OxUOrAtvN0JY03pK+1X0K
-	uXw8yuQ==
-X-Google-Smtp-Source: AGHT+IFvDkg7Os7n6xpJOjx9/jstK5lqUN/rfGvGweJEa9x1d/tx4A52g63ZVLlFVQ0ULV4tujWDGTNgrxUA
+        bh=IMpGpliqYqiRoqn4cN7c6adPMyNbVkdw3pW74xYyguE=;
+        b=u383CyiAmU9sx0hiaG6Ti8KcUZMjzLDMlY8Rnqf7B3pqgRA0rgFXBDlSkBtxl2HeRn
+         dDQeZgy4vYTxwtWidOpKt9h1Jf/1bryz5BNFfPCU5hqeys0irlVCoMDia3k7BNQgdBYK
+         sRbWzYZBN0IbpYWAqrrgJIBtJwIHPTsZkpPnT2b1FpetgtTk67Dneat7VVONtH/97r3X
+         HA6Dlt6Dkg2t2boXDFzTm6Lo7Uj7meY+pU9t1tVRlmC5l3eS3Cr/9+/0uiuPsryQF1kN
+         gpEm7UZ9d7Beq1H3Xlw0UAfCWiaNA+33bBG0c6lbH1H5kkVXVNvhqkjjZQpAXD1dAzp8
+         p28g==
+X-Forwarded-Encrypted: i=1; AJvYcCW+eng8bYURjkYUCJSyHO/rEg13OPu4UFjrcGokeLis3W8ftEYfqKeqixlqBm/dG8bbGwszNKShjpY4p8HkaJqtV274UJtwen1qUU2U+evOGg==
+X-Gm-Message-State: AOJu0Yzw3NxQCQzWmVHPNeraazm+zi6RfiAvevdGMoz8Tv/WLoZen91V
+	bwb2erKM14VRcMXSjWTo4kJKvQx4FcVtxXlt4cbVOugdKm5kOZeuWSmv+sS7fjsC6cRaKbwY3+3
+	4fbz9rg==
+X-Google-Smtp-Source: AGHT+IH7+5ZWTBKKbbXiYf9Ov/UKvq0gkd8VKcekY3d+qTX2IBw8lJ9SfVOmE3ieuJ+wxA4bu4ed7gUqIOcD
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
- (user=irogers job=sendgmr) by 2002:a05:690c:6e0d:b0:62c:67f4:4f5 with SMTP id
- 00721157ae682-643ae44f5e5mr4148627b3.9.1719336401598; Tue, 25 Jun 2024
- 10:26:41 -0700 (PDT)
-Date: Tue, 25 Jun 2024 10:25:51 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:ec4:b0:61b:e689:7347 with SMTP id
+ 00721157ae682-64298a5efd3mr300097b3.2.1719336404050; Tue, 25 Jun 2024
+ 10:26:44 -0700 (PDT)
+Date: Tue, 25 Jun 2024 10:25:52 -0700
 In-Reply-To: <20240625172603.900667-1-irogers@google.com>
-Message-Id: <20240625172603.900667-15-irogers@google.com>
+Message-Id: <20240625172603.900667-16-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240625172603.900667-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v1 14/26] perf stat: Use perf_tool__init
+Subject: [PATCH v1 15/26] perf annotate: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -85,45 +85,69 @@ and not relying on perf_tool__fill_defaults.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-stat.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/builtin-annotate.c | 42 +++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-index d460c46f15fd..a3d77a55d17f 100644
---- a/tools/perf/builtin-stat.c
-+++ b/tools/perf/builtin-stat.c
-@@ -2271,15 +2271,6 @@ static const char * const stat_report_usage[] = {
- };
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index e2d784c5fdd6..0a96656fee46 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -686,28 +686,7 @@ static const char * const annotate_usage[] = {
  
- static struct perf_stat perf_stat = {
--	.tool = {
--		.attr		= perf_event__process_attr,
--		.event_update	= perf_event__process_event_update,
--		.thread_map	= process_thread_map_event,
--		.cpu_map	= process_cpu_map_event,
--		.stat_config	= process_stat_config_event,
--		.stat		= perf_event__process_stat_event,
--		.stat_round	= process_stat_round_event,
--	},
- 	.aggr_mode	= AGGR_UNSET,
- 	.aggr_level	= 0,
- };
-@@ -2322,6 +2313,15 @@ static int __cmd_report(int argc, const char **argv)
- 	perf_stat.data.path = input_name;
- 	perf_stat.data.mode = PERF_DATA_MODE_READ;
+ int cmd_annotate(int argc, const char **argv)
+ {
+-	struct perf_annotate annotate = {
+-		.tool = {
+-			.sample	= process_sample_event,
+-			.mmap	= perf_event__process_mmap,
+-			.mmap2	= perf_event__process_mmap2,
+-			.comm	= perf_event__process_comm,
+-			.exit	= perf_event__process_exit,
+-			.fork	= perf_event__process_fork,
+-			.namespaces = perf_event__process_namespaces,
+-			.attr	= perf_event__process_attr,
+-			.build_id = perf_event__process_build_id,
+-#ifdef HAVE_LIBTRACEEVENT
+-			.tracing_data   = perf_event__process_tracing_data,
+-#endif
+-			.id_index	= perf_event__process_id_index,
+-			.auxtrace_info	= perf_event__process_auxtrace_info,
+-			.auxtrace	= perf_event__process_auxtrace,
+-			.feature	= process_feature_event,
+-			.ordered_events = true,
+-			.ordering_requires_timestamps = true,
+-		},
+-	};
++	struct perf_annotate annotate = {};
+ 	struct perf_data data = {
+ 		.mode  = PERF_DATA_MODE_READ,
+ 	};
+@@ -864,6 +843,25 @@ int cmd_annotate(int argc, const char **argv)
  
-+	perf_tool__init(&perf_stat.tool, /*ordered_events=*/false);
-+	perf_stat.tool.attr		= perf_event__process_attr;
-+	perf_stat.tool.event_update	= perf_event__process_event_update;
-+	perf_stat.tool.thread_map	= process_thread_map_event;
-+	perf_stat.tool.cpu_map		= process_cpu_map_event;
-+	perf_stat.tool.stat_config	= process_stat_config_event;
-+	perf_stat.tool.stat		= perf_event__process_stat_event;
-+	perf_stat.tool.stat_round	= process_stat_round_event;
+ 	data.path = input_name;
+ 
++	perf_tool__init(&annotate.tool, /*ordered_events=*/true);
++	annotate.tool.sample	= process_sample_event;
++	annotate.tool.mmap	= perf_event__process_mmap;
++	annotate.tool.mmap2	= perf_event__process_mmap2;
++	annotate.tool.comm	= perf_event__process_comm;
++	annotate.tool.exit	= perf_event__process_exit;
++	annotate.tool.fork	= perf_event__process_fork;
++	annotate.tool.namespaces = perf_event__process_namespaces;
++	annotate.tool.attr	= perf_event__process_attr;
++	annotate.tool.build_id = perf_event__process_build_id;
++#ifdef HAVE_LIBTRACEEVENT
++	annotate.tool.tracing_data   = perf_event__process_tracing_data;
++#endif
++	annotate.tool.id_index	= perf_event__process_id_index;
++	annotate.tool.auxtrace_info	= perf_event__process_auxtrace_info;
++	annotate.tool.auxtrace	= perf_event__process_auxtrace;
++	annotate.tool.feature	= process_feature_event;
++	annotate.tool.ordering_requires_timestamps = true;
 +
- 	session = perf_session__new(&perf_stat.data, &perf_stat.tool);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
+ 	annotate.session = perf_session__new(&data, &annotate.tool);
+ 	if (IS_ERR(annotate.session))
+ 		return PTR_ERR(annotate.session);
 -- 
 2.45.2.741.gdbec12cfda-goog
 
