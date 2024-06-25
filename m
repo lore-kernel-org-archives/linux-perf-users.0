@@ -1,234 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E03012581;
-	Tue, 25 Jun 2024 00:08:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3AF28BEA;
+	Tue, 25 Jun 2024 00:28:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719274101; cv=none; b=BAcKmDxq/uvZdvdjQ5iC4dYwsKBB3N1Pe+f5McXojNX1BwAAExVYMy9Qjre6UlNaqWcCxba2kxK8K2AY4hQphbnAQ0K8ZAboCH3ZRxS0v5a+7hV29Jv4koRs6SQK9Fbk9B1tB4DwtMAsL34TL4BF7DgNm18qLVWdpIy22FHL1ng=
+	t=1719275322; cv=none; b=djT7YPxEu+cq5bD5hOy+pkM6ZAdNuyS4lp6ksmk0NC95CQkHdrlmlDW6QQ/eaQEziRKWP7rBIDwkoZCfvT2kkcKe69K3rOLQFzfy+1NpMrMwVw2ZPgyqx5TN4yAL6k93SJTz9JoxRcA1kYhP7cvtMopChZMarsuSDAplp+ItT1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719274101; c=relaxed/simple;
-	bh=Z1ymqVurKMGJhAdz+Smjwd5aS+D3jPtOq7UUWfHem/8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YcVJ1VhJAmHsfKe3UJVW7m9Be/puaeo10F9w5NvGep3aXRGeLoHAxVw2nPEU9FkLWs6KaQKHrXQ1CykyAfzq1p6MLrycHfSYS4V8mKydpA8v0Zd5iK2/+umGwh/BLMk0gHX146RNmdGWdrXIqwdYpkCor+iFjueVxkuHJR42IKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HygrTUzg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719275322; c=relaxed/simple;
+	bh=yxIW5coRtYQrSaBRZJgMqdo/5lnDyuIt7gtZMHoyzds=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=lVrbqdKNMXnbUU93v+MklZc1ZtdW2EP6ig6tJg/WG4DIlJbRI+L9fQFAYRmQmpgplnox+ghamXjJRBPVav7Y0eNAhyRNjJZvTMVENypgfiT+lg5unZibuMV/YqGDf8zbDSap5F2whWN2HaCqYgbfjxPzUreG4rlX85N4zlrvHk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GOAOIdZ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HygrTUzg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4401C2BBFC;
-	Tue, 25 Jun 2024 00:08:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GOAOIdZ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A876CC2BBFC;
+	Tue, 25 Jun 2024 00:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719274100;
-	bh=Z1ymqVurKMGJhAdz+Smjwd5aS+D3jPtOq7UUWfHem/8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HygrTUzgGlihHXceCpNZ2WhNQ1SjDQdU/PbyIFof+TkUoM7myS4qPoo0g8JDJX82R
-	 QwiQvl/PJpnj8hAkZgD8lk+HsYcLLyYx7D0ieXdOAycYnemyCy/6LcHi7al326RNVV
-	 nH4E6pu8S81cF39+HIXcszPee7NwDUWQPgwrvLpVRpD0FijrIDXHWozhnqC+xYDsSN
-	 AxFYu1ag9fm0hcDUABGsM3ewhQQiijolkbMR21bgxUEme67Gmp6ohrEmToK1UXo9gb
-	 EPpqq0ASLldj82wY0jr8BRJKD5dv5AF2jXaWDRKRzjoyZIkCaq49Jcr9nKVhkVVN5G
-	 tKZB8oRYwiDxg==
-Date: Mon, 24 Jun 2024 17:08:18 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH v3 2/4] perf: disasm: use build_id_path if fallback failed
-Message-ID: <ZnoKcoHtjvJgjETL@google.com>
-References: <20240618015530.3699434-1-changbin.du@huawei.com>
- <20240618015530.3699434-3-changbin.du@huawei.com>
+	s=k20201202; t=1719275321;
+	bh=yxIW5coRtYQrSaBRZJgMqdo/5lnDyuIt7gtZMHoyzds=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=GOAOIdZ6if4YuZLyTAuJJJfszUbUiUlen/ltKVOBy6uhcnoJt7PjeYFEye8494st1
+	 OywBsARWToQfiK4SE37zG56njzevkzI8ckwOg/515oxYc4aap8+hQpdqZxycyaq2Lf
+	 cqteKSTvFptZMQXzXIpxqD4p91mw2ez14nrJucbUAsb8PeqahFeNlpJCtvtRGEdfKe
+	 iz/1D9ePUmzeGWJVMFNYE1s5lLvkpqGPGON6U4zHx3WyxFitB4UTHbwGHUQRknscz3
+	 Bji4hs/ktG77WpPnl86b64rpWLI0B4yJsOTR2iK5U7ufwZhRSIVDUZG0eWpFhS9sX8
+	 V3sxGwS5IHitw==
+Date: Tue, 25 Jun 2024 09:28:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, x86@kernel.org,
+ peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+ bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] uprobes: rename get_trampoline_vaddr() and make
+ it global
+Message-Id: <20240625092836.cf20dc28e0ad86a0e24db44f@kernel.org>
+In-Reply-To: <20240522013845.1631305-2-andrii@kernel.org>
+References: <20240522013845.1631305-1-andrii@kernel.org>
+	<20240522013845.1631305-2-andrii@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240618015530.3699434-3-changbin.du@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On Tue, 21 May 2024 18:38:42 -0700
+Andrii Nakryiko <andrii@kernel.org> wrote:
 
-On Tue, Jun 18, 2024 at 09:55:28AM +0800, Changbin Du wrote:
-> If we can not fallback for special dso (vmlinx and vdso), use the
-> build_id_path found previously.
+> This helper is needed in another file, so make it a bit more uniquely
+> named and expose it internally.
 > 
-> To make change easy, this change first refactors the code by extracting
-> two functions read_buildid_linkname() and fallback_filename().
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-Can you please split the refactoring from the actual change?  It'd be
-easier to review and to maintain the code.
+Looks good to me.
 
-Thanks,
-Namhyung
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+Thank you
+
 > ---
->  tools/perf/util/disasm.c | 121 ++++++++++++++++++++++++---------------
->  1 file changed, 75 insertions(+), 46 deletions(-)
+>  include/linux/uprobes.h | 1 +
+>  kernel/events/uprobes.c | 6 +++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
 > 
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 442e9802a772..3075daa61916 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -1092,14 +1092,72 @@ int symbol__strerror_disassemble(struct map_symbol *ms, int errnum, char *buf, s
->  	return 0;
->  }
->  
-> -static int dso__disassemble_filename(struct dso *dso, char *filename, size_t filename_size)
-> +static int read_buildid_linkname(char *filename, char *linkname, size_t linkname_size)
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index f46e0ca0169c..0c57eec85339 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -138,6 +138,7 @@ extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
+>  extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
+>  extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+>  					 void *src, unsigned long len);
+> +extern unsigned long uprobe_get_trampoline_vaddr(void);
+>  #else /* !CONFIG_UPROBES */
+>  struct uprobes_state {
+>  };
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 8ae0eefc3a34..d60d24f0f2f4 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1827,7 +1827,7 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
+>   *
+>   * Returns -1 in case the xol_area is not allocated.
+>   */
+> -static unsigned long get_trampoline_vaddr(void)
+> +unsigned long uprobe_get_trampoline_vaddr(void)
 >  {
-> -	char linkname[PATH_MAX];
-> -	char *build_id_filename;
->  	char *build_id_path = NULL;
->  	char *pos;
->  	int len;
+>  	struct xol_area *area;
+>  	unsigned long trampoline_vaddr = -1;
+> @@ -1878,7 +1878,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+>  	if (!ri)
+>  		return;
 >  
-> +	build_id_path = strdup(filename);
-> +	if (!build_id_path)
-> +		return ENOMEM;
-> +
-> +	/*
-> +	 * old style build-id cache has name of XX/XXXXXXX.. while
-> +	 * new style has XX/XXXXXXX../{elf,kallsyms,vdso}.
-> +	 * extract the build-id part of dirname in the new style only.
-> +	 */
-> +	pos = strrchr(build_id_path, '/');
-> +	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
-> +		dirname(build_id_path);
-> +
-> +	len = readlink(build_id_path, linkname, linkname_size);
-> +	if (len < 0) {
-> +		free(build_id_path);
-> +		return -1;
-> +	}
-> +
-> +	linkname[len] = '\0';
-> +	free(build_id_path);
-> +	return 0;
-> +}
-> +
-> +static int fallback_filename(struct dso *dso, char *filename, size_t filename_size)
-> +{
-> +	char filepath[PATH_MAX];
-> +
-> +	/*
-> +	 * If we don't have build-ids or the build-id file isn't in the
-> +	 * cache, or is just a kallsyms file, well, lets hope that this
-> +	 * DSO is the same as when 'perf record' ran.
-> +	 */
-> +	if ((dso__kernel(dso) || dso__is_vdso(dso)) && dso__long_name(dso)[0] == '/')
-> +		snprintf(filepath, sizeof(filepath), "%s", dso__long_name(dso));
-> +	else
-> +		__symbol__join_symfs(filepath, sizeof(filepath), dso__long_name(dso));
-> +
-> +	mutex_lock(dso__lock(dso));
-> +	if (access(filepath, R_OK) && errno == ENOENT && dso__nsinfo(dso)) {
-> +		char *new_name = dso__filename_with_chroot(dso, filepath);
-> +		if (new_name) {
-> +			strlcpy(filepath, new_name, sizeof(filepath));
-> +			free(new_name);
-> +		}
-> +	}
-> +	mutex_unlock(dso__lock(dso));
-> +
-> +	if (access(filepath, R_OK) && errno == ENOENT)
-> +		return ENOENT;
-> +
-> +	snprintf(filename, filename_size, "%s", filepath);
-> +	return 0;
-> +}
-> +
-> +static int dso__disassemble_filename(struct dso *dso, char *filename, size_t filename_size)
-> +{
-> +	char linkname[PATH_MAX];
-> +	char *build_id_filename;
-> +
->  	if (dso__symtab_type(dso) == DSO_BINARY_TYPE__KALLSYMS &&
->  	    !dso__is_kcore(dso))
->  		return SYMBOL_ANNOTATE_ERRNO__NO_VMLINUX;
-> @@ -1111,57 +1169,28 @@ static int dso__disassemble_filename(struct dso *dso, char *filename, size_t fil
->  	} else {
->  		if (dso__has_build_id(dso))
->  			return ENOMEM;
-> -		goto fallback;
-> +		return fallback_filename(dso, filename, filename_size);
->  	}
+> -	trampoline_vaddr = get_trampoline_vaddr();
+> +	trampoline_vaddr = uprobe_get_trampoline_vaddr();
+>  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
+>  	if (orig_ret_vaddr == -1)
+>  		goto fail;
+> @@ -2187,7 +2187,7 @@ static void handle_swbp(struct pt_regs *regs)
+>  	int is_swbp;
 >  
-> -	build_id_path = strdup(filename);
-> -	if (!build_id_path)
-> -		return ENOMEM;
-> -
-> -	/*
-> -	 * old style build-id cache has name of XX/XXXXXXX.. while
-> -	 * new style has XX/XXXXXXX../{elf,kallsyms,vdso}.
-> -	 * extract the build-id part of dirname in the new style only.
-> -	 */
-> -	pos = strrchr(build_id_path, '/');
-> -	if (pos && strlen(pos) < SBUILD_ID_SIZE - 2)
-> -		dirname(build_id_path);
-> +	if (access(filename, R_OK))
-> +		return fallback_filename(dso, filename, filename_size);
+>  	bp_vaddr = uprobe_get_swbp_addr(regs);
+> -	if (bp_vaddr == get_trampoline_vaddr())
+> +	if (bp_vaddr == uprobe_get_trampoline_vaddr())
+>  		return handle_trampoline(regs);
 >  
-> -	if (dso__is_kcore(dso))
-> +	if (dso__is_kcore(dso) || dso__is_vdso(dso))
->  		goto fallback;
->  
-> -	len = readlink(build_id_path, linkname, sizeof(linkname) - 1);
-> -	if (len < 0)
-> -		goto fallback;
-> +	if (!read_buildid_linkname(filename, linkname, sizeof(linkname) - 1) &&
-> +	    (!strstr(linkname, DSO__NAME_KALLSYMS) && !strstr(linkname, DSO__NAME_VDSO))) {
-> +		/* not kallsysms or vdso, use build_id path found above */
-> +		goto out;
-> +	}
->  
-> -	linkname[len] = '\0';
-> -	if (strstr(linkname, DSO__NAME_KALLSYMS) || strstr(linkname, DSO__NAME_VDSO) ||
-> -		access(filename, R_OK)) {
->  fallback:
-> -		/*
-> -		 * If we don't have build-ids or the build-id file isn't in the
-> -		 * cache, or is just a kallsyms file, well, lets hope that this
-> -		 * DSO is the same as when 'perf record' ran.
-> -		 */
-> -		if ((dso__kernel(dso) || dso__is_vdso(dso)) && dso__long_name(dso)[0] == '/')
-> -			snprintf(filename, filename_size, "%s", dso__long_name(dso));
-> -		else
-> -			__symbol__join_symfs(filename, filename_size, dso__long_name(dso));
-> -
-> -		mutex_lock(dso__lock(dso));
-> -		if (access(filename, R_OK) && errno == ENOENT && dso__nsinfo(dso)) {
-> -			char *new_name = dso__filename_with_chroot(dso, filename);
-> -			if (new_name) {
-> -				strlcpy(filename, new_name, filename_size);
-> -				free(new_name);
-> -			}
-> -		}
-> -		mutex_unlock(dso__lock(dso));
-> -	} else if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND) {
-> -		dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
-> +	if (fallback_filename(dso, filename, filename_size)) {
-> +		/* if fallback failed, use build_id path found above */
-> +out:
-> +		if (dso__binary_type(dso) == DSO_BINARY_TYPE__NOT_FOUND)
-> +			dso__set_binary_type(dso, DSO_BINARY_TYPE__BUILD_ID_CACHE);
->  	}
-> -
-> -	free(build_id_path);
->  	return 0;
->  }
->  
+>  	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
 > -- 
-> 2.34.1
+> 2.43.0
 > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
