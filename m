@@ -1,154 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C8817591;
-	Tue, 25 Jun 2024 00:39:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B73DD946F
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 00:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719275992; cv=none; b=blcnU4Z9bu2fD/yvv3mFAgYly/cEO4Xqqzn5xeiit8vBznA4v8SgyvRzJ9YGaAEzaYUQAaSm83nl7CN2Y4KLXqoaD8AkbAW9YJkALO+YTeXuuYXUPBfAIHSVs9BJIC2/1n+3iA3YsO7G54W3PaQpTPQIuJYDG0hW8LqOw1ftDIQ=
+	t=1719276162; cv=none; b=pzv6u9EHzoULaZNXRxwhHg5zO7y/uYc3ICjmFujDS1izQlD3EIWAxZaWuJ7RwaI7Rg7iEHD5BYvvBH7pw6lc2acXQnNpSGm+FoZI3sXZ9pnKeACHfatfVNKOyCwXraGJfbBpL2942c3sk1Ejdb7tRmJiiNSDHOBICqITU4UNYqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719275992; c=relaxed/simple;
-	bh=oFL9+b7Ab63zTrAXhoI15K6xtFTGBNznRanhql6FtP8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=RMUFexcF5ihaqqeE4c5sxvn6QzYoLuAQIubD+21cQrCJgZHHQPjUyQ8C2IorgdhMlrE/AzVEhoNtNt1FQcBUvh9/PgNM/LsadCmsZHmoLk4AG6RG7DuXJ/ZiSkY+Oo0z9R1G7zqGfOrOyo+s4C/0oQmbZrbUoeRws+tRx7DpM3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+H+4JXH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719276162; c=relaxed/simple;
+	bh=i9C/s15/iV1aO9tsxvbeWKF+0zEzxt7Hy+keKzhqQd4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iDqB8FrdQzabXAmg/Cg47qJH1ciwa9yCqtssOCgXosEpq+qWseMwjiHW5WOM/1R6CI6wqIwpgnbnbzMI75n50DE8TBkz3y2KOq0EaIcnwuJhPQUuYPFZwa5InDt5NnLlAQO61RrHupUNYUA+5/uy+3mRlNoBeAqLitoQZx3tnIQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aW6bx3iQ; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+H+4JXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 521A9C2BBFC;
-	Tue, 25 Jun 2024 00:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719275992;
-	bh=oFL9+b7Ab63zTrAXhoI15K6xtFTGBNznRanhql6FtP8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=o+H+4JXHFlcrfMoUhjstrg4jg9xw/+I1V87yOMlOw+yS2ONRQLNsfhpd4+iKz8piM
-	 P+2exlngN1c4O+hyfVzWMNeUkVyfcty1Yb/+QzKma1RVSnMk8iJsFPKVhOXLDL+Blm
-	 hZJBeVffrM6B3MrHjHO0wT8lblTiOenhnYUn0p9IWCwQPWdjL+EQD0ROsDcVUuX8Pb
-	 vY8KAtSMr3vbXwqj4EeYhGVmnWpJBDdo5vUXXb3JZQRO80+QMyCKaFTX9Yq5RVy+kn
-	 pX1Gh7hz07XMF7H3Dbe/mtgEGtw1UGZ3bqcXkL/xJDSLtV5TDziO9TTsxYJ/uD+hyR
-	 MET8G78UynWKA==
-Date: Tue, 25 Jun 2024 09:39:47 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
- rostedt@goodmis.org, x86@kernel.org, peterz@infradead.org,
- mingo@redhat.com, tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com,
- linux-perf-users@vger.kernel.org, Riham Selim <rihams@meta.com>
-Subject: Re: [PATCH v2 2/4] perf,uprobes: fix user stack traces in the
- presence of pending uretprobes
-Message-Id: <20240625093947.85401db681715219a7c8b8e3@kernel.org>
-In-Reply-To: <CAEf4BzbWM0Jd59cadyfhpmV5DC+QAoLTwAfjzT9mt4HkoAeGpA@mail.gmail.com>
-References: <20240522013845.1631305-1-andrii@kernel.org>
-	<20240522013845.1631305-3-andrii@kernel.org>
-	<20240604231314.e924c51f7b9a18428a8a7f0f@kernel.org>
-	<CAEf4BzbneP7Zoo5q54eh4=DVgcwPSiZh3=bZk6T2to88613dnw@mail.gmail.com>
-	<CAEf4BzY0VWXDo_PUUZmRwfGZc3YfNy4+DDLLPT3+b3m6T57f8w@mail.gmail.com>
-	<CAEf4BzbWM0Jd59cadyfhpmV5DC+QAoLTwAfjzT9mt4HkoAeGpA@mail.gmail.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aW6bx3iQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719276161; x=1750812161;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=i9C/s15/iV1aO9tsxvbeWKF+0zEzxt7Hy+keKzhqQd4=;
+  b=aW6bx3iQoo6bITao77rfpUYfwAyQVyBu+39zTBxiMtAUHbv/FeuDpQ4b
+   +uzXeKgdLgTVd0iUIAxe2lhHAprowi0gHeX9ubak2QabBxoKltsRYqnAD
+   vBJkzrz67ItDRqoAVXi4fBqpzNjw7gj/N/ilu3j6lv3n4v9qRf91x+qgD
+   S5zWAdpH7Pz0+U+dQToKuqRmGkOhgZZLcw11OeEuje0VvAQBvUIEjveT6
+   mUD//8oakxILmYNQhmM3cmZLot5NHI5gcENty5ItA3SnLE9zkWL0lC1Yg
+   5zKswUTIhW+YvkNrPb4NvTswmfXE3bCriqKMzjx+rOBXLWsXwpDE2zty+
+   g==;
+X-CSE-ConnectionGUID: DgYn2GzXTBSmJVZBkuBuzg==
+X-CSE-MsgGUID: IEdoZ55SR5SeLQvvurCYxA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="27680385"
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="27680385"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:42:40 -0700
+X-CSE-ConnectionGUID: 5MWwh2CqRvqh51uubK9ODw==
+X-CSE-MsgGUID: LPKCeEJSTpuQH04aboEyDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
+   d="scan'208";a="43451505"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:42:40 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 1/2] perf script: Fix perf script -F +metric
+Date: Mon, 24 Jun 2024 17:42:31 -0700
+Message-ID: <20240625004232.1852705-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Jun 2024 13:32:35 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+This fixes a regression with perf script -F +metric originally caused by :
 
-> On Mon, Jun 17, 2024 at 3:37 PM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Tue, Jun 4, 2024 at 10:16 AM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Jun 4, 2024 at 7:13 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > >
-> > > > On Tue, 21 May 2024 18:38:43 -0700
-> > > > Andrii Nakryiko <andrii@kernel.org> wrote:
-> > > >
-> > > > > When kernel has pending uretprobes installed, it hijacks original user
-> > > > > function return address on the stack with a uretprobe trampoline
-> > > > > address. There could be multiple such pending uretprobes (either on
-> > > > > different user functions or on the same recursive one) at any given
-> > > > > time within the same task.
-> > > > >
-> > > > > This approach interferes with the user stack trace capture logic, which
-> > > > > would report suprising addresses (like 0x7fffffffe000) that correspond
-> > > > > to a special "[uprobes]" section that kernel installs in the target
-> > > > > process address space for uretprobe trampoline code, while logically it
-> > > > > should be an address somewhere within the calling function of another
-> > > > > traced user function.
-> > > > >
-> > > > > This is easy to correct for, though. Uprobes subsystem keeps track of
-> > > > > pending uretprobes and records original return addresses. This patch is
-> > > > > using this to do a post-processing step and restore each trampoline
-> > > > > address entries with correct original return address. This is done only
-> > > > > if there are pending uretprobes for current task.
-> > > > >
-> > > > > This is a similar approach to what fprobe/kretprobe infrastructure is
-> > > > > doing when capturing kernel stack traces in the presence of pending
-> > > > > return probes.
-> > > > >
-> > > >
-> > > > This looks good to me because this trampoline information is only
-> > > > managed in uprobes. And it should be provided when unwinding user
-> > > > stack.
-> > > >
-> > > > Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > >
-> > > > Thank you!
-> > >
-> > > Great, thanks for reviewing, Masami!
-> > >
-> > > Would you take this fix through your tree, or where should it be routed to?
-> > >
-> >
-> > Ping! What would you like me to do with this patch set? Should I
-> > resend it without patch 3 (the one that tries to guess whether we are
-> > at the entry to the function?), or did I manage to convince you that
-> > this heuristic is OK, given perf's stack trace capturing logic already
-> > makes heavy assumption of rbp register being used for frame pointer?
-> >
-> > Please let me know your preference, I could drop patch 3 and send it
-> > separately, if that helps move the main fix forward. Thanks!
-> 
-> Masami,
-> 
-> Another week went by with absolutely no action or reaction from you.
-> Is there any way I can help improve the collaboration here?
+commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
+Author: Ian Rogers <irogers@google.com>
+Date:   Sun Feb 19 01:28:46 2023 -0800
 
-OK, if there is no change without [3/4], let me pick the others on
-probes/for-next directly. [3/4] I need other x86 maintainer's
-comments. And it should be handled by PMU maintainers.
+    perf metric: Directly use counts rather than saved_value
 
-Thanks,
+In the perf script environment the evsel wouldn't allocate an aggr
+values array, which led to a -1 reference because the metric
+evaluation would try to reference NULL - 1 (for aggr_idx)
 
+Give the perf script evsels a single CPU aggr setup. That's
+enough because the groups are always contiguous, so no need
+to store more than one CPU's worth of values.
 
-> 
-> I'm preparing more patches for uprobes and about to submit them. If
-> each reviewed and ready to be applied patch set has to sit idle for
-> multiple weeks for no good reason, we all will soon be lost just plain
-> forgetting the context in which the patch was prepared.
-> 
-> Please, prioritize handling patches that are meant to be routed
-> through your tree in a more timely fashion. Or propose some
-> alternative acceptable arrangement.
-> 
-> Thank you.
-> 
-> >
-> > > >
-> > > > > Reported-by: Riham Selim <rihams@meta.com>
-> > > > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > > > > ---
-> > > > >  kernel/events/callchain.c | 43 ++++++++++++++++++++++++++++++++++++++-
-> > > > >  kernel/events/uprobes.c   |  9 ++++++++
-> > > > >  2 files changed, 51 insertions(+), 1 deletion(-)
-> > > > >
-> > >
-> > > [...]
+Before
 
+% perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+% perf script -F +metric
+Segmentation fault (core dumped)
 
+After:
+
+% perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+...
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
+% perf script -F +metric
+       perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+       perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+       perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
+...
+
+Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/builtin-script.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c16224b1fef3..4aab194b4b1a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -84,7 +84,7 @@ static bool			system_wide;
+ static bool			print_flags;
+ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+-static struct perf_stat_config	stat_config;
++static struct perf_stat_config	stat_config = { .aggr_map = &(struct cpu_aggr_map){ .nr = 1 } };
+ static int			max_blocks;
+ static bool			native_arch;
+ static struct dlfilter		*dlfilter;
+@@ -2133,12 +2133,14 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 	if (evsel_script(leader)->gnum++ == 0)
+ 		perf_stat__reset_shadow_stats();
+ 	val = sample->period * evsel->scale;
++	/* Always use CPU 0 storage because the groups are contiguous. */
++	evsel->stats->aggr[0].counts.val = val;
+ 	evsel_script(evsel)->val = val;
+ 	if (evsel_script(leader)->gnum == leader->core.nr_members) {
+ 		for_each_group_member (ev2, leader) {
+ 			perf_stat__print_shadow_stats(&stat_config, ev2,
+ 						      evsel_script(ev2)->val,
+-						      sample->cpu,
++						      0,
+ 						      &ctx,
+ 						      NULL);
+ 		}
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.45.2
+
