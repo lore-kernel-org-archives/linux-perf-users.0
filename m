@@ -1,57 +1,57 @@
-Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6768817B4FA
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 17:26:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BACF17C7A4
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 17:26:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719336382; cv=none; b=OSTD43utdvR27E+7C0V7MwMVbkwqrMTJXmd2gf54A4fQfvFQV1y58MCDEb27yaar8tVcSiU6eobjWSuqoF6GTto/hIlpdQvkiheTEDyGQNTnh3RTlGvmIatJUNC/6QmFenAqJuoGfdPKwGkI06kzhINpUGKhb4qvOrtqV+teTgs=
+	t=1719336384; cv=none; b=NqHJcIBmjeZm98L2peT8/cIqq5N3pynz5lY1/IHY2P2kDRrs/Mph5qsv4UPpftQhTDWpyt0CHCgyqWTDs8O/Q3U1KOgXjhnLALRQcjGjkpfb5btDvR26BjpKkm/2S55W/HbfDwD8h/oH/xn/InjAUId/4NikuytpwOMSotbhHpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719336382; c=relaxed/simple;
-	bh=qFwb7pD5p1ottsupqVtJ+t1WOnePId5UkLvj0dZnRLg=;
+	s=arc-20240116; t=1719336384; c=relaxed/simple;
+	bh=4f3xu/fTKlsZKLAxp35O5+huY8NAWRnMLMbKlqWg7eI=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Sqt9POJcSZ1Tk/cnqnc3qSRFkL1Ljwqy3NwtbCdhHy03/gTL5LS3XUTURv+IO4+vukMwB+/bxqeHoJRnYT3W0V4MpDWH6JaWVOvZQIfuTWvTS8rEE349rcxP8J5iMs+tM3T239xSRqwGfCEA0irqkFWVE5UiSgzXkAH5+gjSqu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Gi/AvZg; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=UiIhUgu2m9mmLbEtTGaxqnEzcvRln1pVLn5K+jMnndq1UfdhO3WUWp8ceqfhhZpMjfs5wU8E429zIBNI+XGH4ToYgQsHopuAW1Tr+NNQtXnoQ/5LhDlJeGxo5OSy/4BLU/RYjvktG3C3lzhJnn+ZpkUnAFJpE3kLngQGrii96yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dvDEkXGo; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Gi/AvZg"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-dfa7a8147c3so12200489276.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 10:26:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvDEkXGo"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-63bf44b87d4so65856217b3.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 10:26:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719336379; x=1719941179; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719336382; x=1719941182; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=GBBi2BhFlB8lzPr0QxAvcmIjepeVZAePgHWd4re5Qfg=;
-        b=1Gi/AvZgG27j2gMdSPV+/Prm9LEj0NJnMIG4bjNQDgLqRXfmdmS1dNNdVd4iR4ADxq
-         /5OETdghSiKuprtw8H5eiHXZZii0LZEDAOtng9gzuy3CqhlaPIMDGyU2ubstMEFCE2SQ
-         ET3cmLgISlYUSQu82kRA4RjlPhul67jAuq2gOuGgC1iiD7EXrEiblFAlfBA/LPDTsx3R
-         BMAK/xVa0KAqs9LZrP2h3Fozzclfl5IVAfYtebNL26t3Gtbqu08x/3ys4k0ghufFngGP
-         TF6wL24AV8vlYMvExxwIJNLw9ggkwWf5Tx3nEG3cclxJ01nTQRDZa5R2FIvRx7h1ccTa
-         Fvhw==
+        bh=0D3Ll4YJxFSzRg0DxL5KKZwtYxMwAkaxOfW7jAWfCz0=;
+        b=dvDEkXGoJFB/3MouB5XDJ7dgmWHHS/tz9iRyILDKwObsk40Xj8GPw/oz/JtiUCkuY/
+         YHAi6BUChX5pIHWlijdX+PFC/sTcVCqIXc3Oro0F9Ne0Khxgo57pwnukyX/HKCVvUclp
+         hKpVV4oJQCcC4YeCG9ov5EvAjPQSch6RINkuyRJ8VbUcT0uYyfj/aoAnwBU/98CrTm3i
+         LTYdMgBF/c2fKlw6f+U7STc6Ahk3DCAEJVFqnXJOREcxmQGubzive2YNPbwytyZXZXYX
+         XyAK0J0zWL2iA+Dmw77AT/7U7tNirxP9br0sDqh7stxfwEnANpefGqvOrX4SMsWTcRkF
+         jWHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719336379; x=1719941179;
+        d=1e100.net; s=20230601; t=1719336382; x=1719941182;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=GBBi2BhFlB8lzPr0QxAvcmIjepeVZAePgHWd4re5Qfg=;
-        b=Fbolj+cd4YOHLkMERhP7FGxU7l2KMuOYG0rAZsG7WAXxq6gQb/2kpJOAAuQxVlSH15
-         lb5s2BkjY/G8QUwYgMgHlJKHsP6D1tEjzvAz323MCKMw+7995L2qU4jUsEwrRS4v9NR9
-         JWmuiVKjnMGsJFGRG+YODLQ/w8Iqhr453N6biMcpz+QPl6CPJdENrS5HZb/gC9tp3RWW
-         tNDktE+I6+scB9EzhCk2JgNWjijhk49lkmnpN+Eb/w6uMb1mn4iw3qDGvpMgUuAddo1c
-         +dWwmhZ73ecHbvD/9jdVqZnMTGaZHON3m1hB9VcXoyIIGDk9wLIO21YcDzL/gujx8vRm
-         w2mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUs7KnU/ub0nTchI5jBNtW8Dx7UqKui7HhvIoqaoRCT6zsn8KRrnAH2zGtYMZeDvquOm7nE7w98CL50mmIs9UmDuGcaKuMB1YT4YdVkEswsnQ==
-X-Gm-Message-State: AOJu0YxAaev7qKvjIIspmpUSvL985RtJX02OPYTpUc41ilhN4Kf1HXnV
-	8Ny8nErBkvdq8GV3z+u6vZCWq/vXaFeMN2DvcyvE5w5OSjq9oiQpio12xAkdxyFbJUXVH/dw51L
-	LEt8N+Q==
-X-Google-Smtp-Source: AGHT+IH3xURcUFh3IT94S8610CPB/kJYX47BxDXnoWu3+iWBw+bBvzAF+MqOxV6WXWw2nzO2TBS/LwBZCFFl
+        bh=0D3Ll4YJxFSzRg0DxL5KKZwtYxMwAkaxOfW7jAWfCz0=;
+        b=tg8r9QFG3Wt4QJX2HdGC85Z2kGZJaXzb+GN/8GFTsotyiHwfP2xWtdS0F7rixziE0S
+         oCBX2y66QRUW9WcdhvhHxj6BTioYLs5f9W/OXAkkMTIVoZc7cl3Q9LNKnUHrEZWyfmBO
+         0XEsG/eMstidMyGbEJsXK+LZleUPYhFrUWhKQfXXviCZZTtgUqxIuMzN/BGJ9z7/uSWH
+         nIzXmfujwTiWXt4BxKIZ2Fa8gB8rsWTQezOMzw0QawaKPwQI4ddB619l0nbqayRa4Q33
+         BdKUGEj8KEmgY1NvXnvH5ZhzRsR6WonqytmUbbfiAQByy6aQLkweJ+tZZm68MtYeEljh
+         AhFw==
+X-Forwarded-Encrypted: i=1; AJvYcCXKtVzZIAwfGv0zY5PplX0eng/MONVHx1YnAzb4E4VeMJHoScTrXmvVgWM87PRtTmp44o/3IeDlFZtAt5Il9VIekPpefGob6Jq+Ofl48NMTMg==
+X-Gm-Message-State: AOJu0YyIgqNe22/s5NTTXv9/A/NRYo647c8vF/+Dk8aiv8TEA0Q4ULh+
+	il8DwwEQE8Jdz8tCN7Ty/wtwg+UrTaXurKsXLZqCTIjeJPqwndlfm8EpIF/TvWnBQF1d++iqQ7y
+	ccf9jew==
+X-Google-Smtp-Source: AGHT+IHTa5kZKd9h8ifXYMe2T99DgFi/uV4x8OfhUXLRdl9AjprPNPjesq9BkyxfvYvf643IgrcWtu2wbIrp
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
- (user=irogers job=sendgmr) by 2002:a25:6885:0:b0:e02:ba8f:2bd2 with SMTP id
- 3f1490d57ef6-e0303ff5b8dmr152939276.11.1719336379521; Tue, 25 Jun 2024
- 10:26:19 -0700 (PDT)
-Date: Tue, 25 Jun 2024 10:25:42 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:f09:b0:62f:1f93:939e with SMTP id
+ 00721157ae682-642544fa2a5mr2623767b3.2.1719336381892; Tue, 25 Jun 2024
+ 10:26:21 -0700 (PDT)
+Date: Tue, 25 Jun 2024 10:25:43 -0700
 In-Reply-To: <20240625172603.900667-1-irogers@google.com>
-Message-Id: <20240625172603.900667-6-irogers@google.com>
+Message-Id: <20240625172603.900667-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240625172603.900667-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v1 05/26] perf buildid-list: Use perf_tool__init
+Subject: [PATCH v1 06/26] perf kvm: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,154 +80,59 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Reduce scope of build_id__mark_dso_hit_ops to the scope of function
-perf_session__list_build_ids, its only use, and use perf_tool__init
-for the default values. Move perf_event__exit_del_thread to event.[ch]
-so it can be used in builtin-buildid-list.c.
+Use perf_tool__init so that more uses of struct perf_tool can be const
+and not relying on perf_tool__fill_defaults.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-buildid-list.c | 10 ++++++++++
- tools/perf/util/build-id.c        | 32 -------------------------------
- tools/perf/util/build-id.h        |  4 +---
- tools/perf/util/event.c           | 20 +++++++++++++++++++
- tools/perf/util/event.h           |  4 ++++
- 5 files changed, 35 insertions(+), 35 deletions(-)
+ tools/perf/builtin-kvm.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-buildid-list.c b/tools/perf/builtin-buildid-list.c
-index 383d5de36ce4..52dfacaff8e3 100644
---- a/tools/perf/builtin-buildid-list.c
-+++ b/tools/perf/builtin-buildid-list.c
-@@ -89,6 +89,7 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index a3b903cf4311..692267b1b7e8 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -1603,19 +1603,17 @@ static int read_events(struct perf_kvm_stat *kvm)
+ {
+ 	int ret;
+ 
+-	struct perf_tool eops = {
+-		.sample			= process_sample_event,
+-		.comm			= perf_event__process_comm,
+-		.namespaces		= perf_event__process_namespaces,
+-		.ordered_events		= true,
+-	};
+ 	struct perf_data file = {
+ 		.path  = kvm->file_name,
  		.mode  = PERF_DATA_MODE_READ,
- 		.force = force,
+ 		.force = kvm->force,
  	};
-+	struct perf_tool build_id__mark_dso_hit_ops;
  
- 	symbol__elf_init();
- 	/*
-@@ -97,6 +98,15 @@ static int perf_session__list_build_ids(bool force, bool with_hits)
- 	if (filename__fprintf_build_id(input_name, stdout) > 0)
- 		goto out;
- 
-+	perf_tool__init(&build_id__mark_dso_hit_ops, /*ordered_events=*/true);
-+	build_id__mark_dso_hit_ops.sample	= build_id__mark_dso_hit;
-+	build_id__mark_dso_hit_ops.mmap		= perf_event__process_mmap;
-+	build_id__mark_dso_hit_ops.mmap2	= perf_event__process_mmap2;
-+	build_id__mark_dso_hit_ops.fork		= perf_event__process_fork;
-+	build_id__mark_dso_hit_ops.exit		= perf_event__exit_del_thread;
-+	build_id__mark_dso_hit_ops.attr		= perf_event__process_attr;
-+	build_id__mark_dso_hit_ops.build_id	= perf_event__process_build_id;
+-	kvm->tool = eops;
++	perf_tool__init(&kvm->tool, /*ordered_events=*/true);
++	kvm->tool.sample	= process_sample_event;
++	kvm->tool.comm		= perf_event__process_comm;
++	kvm->tool.namespaces	= perf_event__process_namespaces;
 +
- 	session = perf_session__new(&data, &build_id__mark_dso_hit_ops);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 098fcc625d91..451d145fa4ed 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -67,38 +67,6 @@ int build_id__mark_dso_hit(const struct perf_tool *tool __maybe_unused,
- 	return 0;
- }
+ 	kvm->session = perf_session__new(&file, &kvm->tool);
+ 	if (IS_ERR(kvm->session)) {
+ 		pr_err("Initializing perf session failed\n");
+@@ -1919,14 +1917,13 @@ static int kvm_events_live(struct perf_kvm_stat *kvm,
  
--static int perf_event__exit_del_thread(const struct perf_tool *tool __maybe_unused,
--				       union perf_event *event,
--				       struct perf_sample *sample
--				       __maybe_unused,
--				       struct machine *machine)
--{
--	struct thread *thread = machine__findnew_thread(machine,
--							event->fork.pid,
--							event->fork.tid);
--
--	dump_printf("(%d:%d):(%d:%d)\n", event->fork.pid, event->fork.tid,
--		    event->fork.ppid, event->fork.ptid);
--
--	if (thread) {
--		machine__remove_thread(machine, thread);
--		thread__put(thread);
--	}
--
--	return 0;
--}
--
--struct perf_tool build_id__mark_dso_hit_ops = {
--	.sample	= build_id__mark_dso_hit,
--	.mmap	= perf_event__process_mmap,
--	.mmap2	= perf_event__process_mmap2,
--	.fork	= perf_event__process_fork,
--	.exit	= perf_event__exit_del_thread,
--	.attr		 = perf_event__process_attr,
--	.build_id	 = perf_event__process_build_id,
--	.ordered_events	 = true,
--};
--
- int build_id__sprintf(const struct build_id *build_id, char *bf)
- {
- 	char *bid = bf;
-diff --git a/tools/perf/util/build-id.h b/tools/perf/util/build-id.h
-index ae87c4c58d5b..a212497bfdb0 100644
---- a/tools/perf/util/build-id.h
-+++ b/tools/perf/util/build-id.h
-@@ -16,11 +16,9 @@ struct build_id {
- 	size_t	size;
- };
  
--struct nsinfo;
--
--extern struct perf_tool build_id__mark_dso_hit_ops;
- struct dso;
- struct feat_fd;
-+struct nsinfo;
+ 	/* event handling */
++	perf_tool__init(&kvm->tool, /*ordered_events=*/true);
+ 	kvm->tool.sample = process_sample_event;
+ 	kvm->tool.comm   = perf_event__process_comm;
+ 	kvm->tool.exit   = perf_event__process_exit;
+ 	kvm->tool.fork   = perf_event__process_fork;
+ 	kvm->tool.lost   = process_lost_event;
+ 	kvm->tool.namespaces  = perf_event__process_namespaces;
+-	kvm->tool.ordered_events = true;
+-	perf_tool__fill_defaults(&kvm->tool);
  
- void build_id__init(struct build_id *bid, const u8 *data, size_t size);
- int build_id__sprintf(const struct build_id *build_id, char *bf);
-diff --git a/tools/perf/util/event.c b/tools/perf/util/event.c
-index c2f0e7f40ad5..aac96d5d1917 100644
---- a/tools/perf/util/event.c
-+++ b/tools/perf/util/event.c
-@@ -426,6 +426,26 @@ int perf_event__process_exit(const struct perf_tool *tool __maybe_unused,
- 	return machine__process_exit_event(machine, event, sample);
- }
- 
-+int perf_event__exit_del_thread(const struct perf_tool *tool __maybe_unused,
-+				union perf_event *event,
-+				struct perf_sample *sample __maybe_unused,
-+				struct machine *machine)
-+{
-+	struct thread *thread = machine__findnew_thread(machine,
-+							event->fork.pid,
-+							event->fork.tid);
-+
-+	dump_printf("(%d:%d):(%d:%d)\n", event->fork.pid, event->fork.tid,
-+		    event->fork.ppid, event->fork.ptid);
-+
-+	if (thread) {
-+		machine__remove_thread(machine, thread);
-+		thread__put(thread);
-+	}
-+
-+	return 0;
-+}
-+
- size_t perf_event__fprintf_aux(union perf_event *event, FILE *fp)
- {
- 	return fprintf(fp, " offset: %#"PRI_lx64" size: %#"PRI_lx64" flags: %#"PRI_lx64" [%s%s%s]\n",
-diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
-index 4b24f1c580fd..f8742e6230a5 100644
---- a/tools/perf/util/event.h
-+++ b/tools/perf/util/event.h
-@@ -319,6 +319,10 @@ int perf_event__process_exit(const struct perf_tool *tool,
- 			     union perf_event *event,
- 			     struct perf_sample *sample,
- 			     struct machine *machine);
-+int perf_event__exit_del_thread(const struct perf_tool *tool,
-+				union perf_event *event,
-+				struct perf_sample *sample,
-+				struct machine *machine);
- int perf_event__process_ksymbol(const struct perf_tool *tool,
- 				union perf_event *event,
- 				struct perf_sample *sample,
+ 	/* set defaults */
+ 	kvm->display_time = 1;
 -- 
 2.45.2.741.gdbec12cfda-goog
 
