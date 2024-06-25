@@ -1,150 +1,132 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12F336CDBA;
-	Tue, 25 Jun 2024 02:53:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F87D26ACD;
+	Tue, 25 Jun 2024 03:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719284008; cv=none; b=pxm4+LSnyqJ6ASjCdFvXs4OJPjGUVyXUgcoAvQSTwI0JasHSfpISqODSWqnFRzwuIe+t06uK1Oo/D7A3YPBMYj94aVEU3iNPyBwGOqLKZ9UkRYh6Zkq0r1fBT49FQC8rnxeFLzmk6E/c6BFkZaKAkH9rzgxPygxVUwHuOaEFb0Q=
+	t=1719286689; cv=none; b=ogiqOCnO6Lf2QTxMB7aAatGECIEkv2Gls2aAmRO7DR6DzTBd5MQCxIBGiZiKDgu4g7G3mRrOVb8KOO1ZP5p0Y8NGVHKzUdLxr5rWT9V0F/BiNWhccwUdThvEg4Oe7fe046u6umfx1LFl3qaqKphwqpp1nzNz7RO6866rl/SZZy8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719284008; c=relaxed/simple;
-	bh=4ctsB64TjeAHYT6A5ga0eengrAz6yVkTwMZJwIrPvys=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tXXDEvVi0khxZ1TWiYNJTPti3gFuXW61HVbOG2L63UpP+7BbMttykiPmbDhK8YWjWwhP1dg2o/F28MG7UvdRYDs3VQtbS/vMwW0VM5b0e80pSTT+//mvzzcfpjsBQe3EYaNrNw+r3jiqKsJ2cLVSYWO5XUkjBaAxs4VYbdCRQtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OW85Wt2y; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OW85Wt2y"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2c722e54db8so3897370a91.2;
-        Mon, 24 Jun 2024 19:53:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719284006; x=1719888806; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9uV4t+w32GLoyq5UQG9yphsh92JGonRXBYrmNqhwTfo=;
-        b=OW85Wt2yGMVCcrbsn/hl9c7YSEBE88IAsu3gi0lN9+xUntZKgni2hdV4QsVjukWMjv
-         J/H1PVZGTOFVb2oAW9e0pttcK5/xnFZHGXymXQp1Q4CuH7lG0rTxkbzRMk/Rmwl+6QbS
-         HZBhJxRTLfOcBubeVUIhUBQObicAunm1FofrcKjg1ERRkV8mQNwjIGBeehiD21qEit5r
-         3CqQhRVy9yWWFkQCctZ4tbOHBHl/bfpWGx0p04VuCG/A29zzpS+qWJJSzUFxhuN2sf9G
-         Gs9GzkWlM4spXv1dIM8+kKGAKZmKShJUMtsNMjxeytqISeVAolguAOD9amgqe9euv9V2
-         Wy9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719284006; x=1719888806;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9uV4t+w32GLoyq5UQG9yphsh92JGonRXBYrmNqhwTfo=;
-        b=jUkTZA946ckhyIQ9/UjTa9Uf8UpN587+fbsoajY7DelH2wd2rETkJNZguSEaWEeOpj
-         GD6TQV3wy0rqCzunwLlUMa5H5/Yu3iCvq73sHoxk08doJrXsxtTQHeY2xsqnY3wZ/7gJ
-         lvPtXsaBCg70/bS9/IRY9CBsRNiM7PCFxzDQS+3FrPynTcrLY+R7Xz8/jNDZrmhBz4II
-         wkpLuM0F8EC8ProPJgid6QQ7Wqn/LsoCpQqFlHgpaLGqnHpwZWtWuTxT6n+eAMMyehX6
-         y5LQpx29Gwr3HNguK3tze6HcI5nfQ9m8Vju7SI16HkWn+kow9PYuptyR+hLW0wIeG+Lj
-         1h+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVqb4J8UxhPhJmvHXx77QDw7nhQMDrbbip4MD79ndMVG/1vDruef0duapU8e+h8hpe2whDP3vc4n+/E8oP7EPi9c+5rK1gQJVghr0eqrGrwliubW4U4GK/EFP4lQBw0zfJXLiRwnFoCO/MdH07mnoznVV88DR+zdTExBpyTjZCVJF0KkK+YVx8t4A==
-X-Gm-Message-State: AOJu0YwbWZKbLatP2S1DaE6bHeMELgCSlBdA2D86OL/UZwXoFnysH5ZY
-	fVad6ijTMNbacUKYaw2YdagphAzCt3HGSHyB0THQs5xe5b/jInwXogT3lHxtn5LMwilKHqtXTru
-	BmW2vAsl8hclCHWi+bti24rSge4c=
-X-Google-Smtp-Source: AGHT+IG5eCNdsYEwOrns65apGYwDqCAOPSmA8xBZ+2KbBP+jS3lsN0qs8xVaHdVZhhOUX0BPQdxplR4ioJ2npO+TVxs=
-X-Received: by 2002:a17:90b:218e:b0:2c8:647:35c with SMTP id
- 98e67ed59e1d1-2c861409a36mr5549258a91.29.1719284006202; Mon, 24 Jun 2024
- 19:53:26 -0700 (PDT)
+	s=arc-20240116; t=1719286689; c=relaxed/simple;
+	bh=dszVw76g6BcOGNPoIPoOuFqo3nET3iG/lHb4lRNIeiQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=thuERU86niRZNnTnp5F4UBLBX/60SJhkTtJ0G0EPAjyNaXAFYj5M3NB6SfYnt+c9hkGkU2BYgAO9Dd2KRIY83HOSdXARyDCu145drKetG/rox/kQxy9ORuokqwptCWL8ZXE4OpNQc9kg1YSB5K5lAnvzsxAsbgIlBin1XMtKEic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4W7Vpx1bcGz2FbCJ;
+	Tue, 25 Jun 2024 11:35:53 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
+	by mail.maildlp.com (Postfix) with ESMTPS id 312E2140109;
+	Tue, 25 Jun 2024 11:38:02 +0800 (CST)
+Received: from M910t.huawei.com (10.110.54.157) by
+ kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Tue, 25 Jun 2024 11:38:00 +0800
+From: Changbin Du <changbin.du@huawei.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
+	<namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, "Liang,
+ Kan" <kan.liang@linux.intel.com>, Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<llvm@lists.linux.dev>, Changbin Du <changbin.du@huawei.com>
+Subject: [PATCH v4 0/5] perf: support specify vdso path in cmdline
+Date: Tue, 25 Jun 2024 11:37:35 +0800
+Message-ID: <20240625033740.223009-1-changbin.du@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522013845.1631305-1-andrii@kernel.org> <20240522013845.1631305-5-andrii@kernel.org>
- <20240625101446.9dd0f4767392462e9923f0ba@kernel.org>
-In-Reply-To: <20240625101446.9dd0f4767392462e9923f0ba@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 24 Jun 2024 19:53:14 -0700
-Message-ID: <CAEf4BzbTuZZUKGDbONQHH9PhvJi0TQD=piKUYTzpnOz9gewtMw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] selftests/bpf: add test validating
- uprobe/uretprobe stack traces
-To: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, x86@kernel.org, peterz@infradead.org, mingo@redhat.com, 
-	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd100011.china.huawei.com (7.221.188.204)
 
-On Mon, Jun 24, 2024 at 6:14=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
-rg> wrote:
->
-> On Tue, 21 May 2024 18:38:45 -0700
-> Andrii Nakryiko <andrii@kernel.org> wrote:
->
-> > Add a set of tests to validate that stack traces captured from or in th=
-e
-> > presence of active uprobes and uretprobes are valid and complete.
-> >
-> > For this we use BPF program that are installed either on entry or exit
-> > of user function, plus deep-nested USDT. One of target funtions
-> > (target_1) is recursive to generate two different entries in the stack
-> > trace for the same uprobe/uretprobe, testing potential edge conditions.
-> >
-> > Without fixes in this patch set, we get something like this for one of
-> > the scenarios:
-> >
-> >  caller: 0x758fff - 0x7595ab
-> >  target_1: 0x758fd5 - 0x758fff
-> >  target_2: 0x758fca - 0x758fd5
-> >  target_3: 0x758fbf - 0x758fca
-> >  target_4: 0x758fb3 - 0x758fbf
-> >  ENTRY #0: 0x758fb3 (in target_4)
-> >  ENTRY #1: 0x758fd3 (in target_2)
-> >  ENTRY #2: 0x758ffd (in target_1)
-> >  ENTRY #3: 0x7fffffffe000
-> >  ENTRY #4: 0x7fffffffe000
-> >  ENTRY #5: 0x6f8f39
-> >  ENTRY #6: 0x6fa6f0
-> >  ENTRY #7: 0x7f403f229590
-> >
-> > Entry #3 and #4 (0x7fffffffe000) are uretprobe trampoline addresses
-> > which obscure actual target_1 and another target_1 invocations. Also
-> > note that between entry #0 and entry #1 we are missing an entry for
-> > target_3, which is fixed in patch #2.
->
-> Please avoid using `patch #2` because after commit, this means nothing.
+The vdso dumped from process memory (in buildid-cache) lacks debugging
+info. To annotate vdso symbols with source lines we need specify a
+debugging version.
 
-Yep, makes sense, sorry about that, will keep descriptions a bit more
-general going forward.
+For x86, we can find them from your local build as
+'arch/x86/entry/vdso/vdso{32,64}.so.dbg'. Or they may resides in
+'/lib/modules/<version>/vdso/vdso{32,64}.so' on Ubuntu. But notice that the
+builid has to match. 
 
->
-> Thank you,
->
-> >
-> > With all the fixes, we get desired full stack traces:
-> >
-> >  caller: 0x758fff - 0x7595ab
-> >  target_1: 0x758fd5 - 0x758fff
-> >  target_2: 0x758fca - 0x758fd5
-> >  target_3: 0x758fbf - 0x758fca
-> >  target_4: 0x758fb3 - 0x758fbf
-> >  ENTRY #0: 0x758fb7 (in target_4)
-> >  ENTRY #1: 0x758fc8 (in target_3)
-> >  ENTRY #2: 0x758fd3 (in target_2)
-> >  ENTRY #3: 0x758ffd (in target_1)
-> >  ENTRY #4: 0x758ff3 (in target_1)
-> >  ENTRY #5: 0x75922c (in caller)
-> >  ENTRY #6: 0x6f8f39
-> >  ENTRY #7: 0x6fa6f0
-> >  ENTRY #8: 0x7f986adc4cd0
-> >
-> > Now there is a logical and complete sequence of function calls.
-> >
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> > ---
-> >  .../bpf/prog_tests/uretprobe_stack.c          | 186 ++++++++++++++++++
-> >  .../selftests/bpf/progs/uretprobe_stack.c     |  96 +++++++++
-> >  2 files changed, 282 insertions(+)
-> >  create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_st=
-ack.c
-> >  create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_stack.c
-> >
+If user doesn't specify the path, perf will search them internally as long
+as vmlinux.
 
-[...]
+Below samples are captured on my local build kernel. perf succesfully
+find debugging version vdso and we can annotate with source without
+specifying vdso path.
+
+$ sudo perf record -a
+$ sudo perf report --objdump=llvm-objdump
+
+Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+__vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+Percent│       movq    -48(%rbp),%rsi
+       │       testq   %rax,%rax
+       │     ;               return vread_hvclock();
+       │       movq    %rax,%rdx
+       │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
+       │     ↑ js      eb
+       │     ↑ jmp     74
+       │     ;               ts->tv_sec = vdso_ts->sec;
+  0.02 │147:   leaq    2(%rbx),%rax
+       │       shlq    $4, %rax
+       │       addq    %r10,%rax
+       │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
+  9.38 │152:   movl    (%r10),%ecx
+
+When doing cross platform analysis, we need to specify the vdso path if
+we are interested in its symbols. At most two vdso can be given.
+
+$ sudo perf report --objdump=llvm-objdump \
+      --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
+
+v4:
+  - split the refactoring from the actual change.
+v3:
+  - update documentation.
+v2:
+  - now search vdso automatically as long as vmlinux, as suggested by Adrian.
+  - remove change 'prefer symsrc_filename for filename'.
+
+Changbin Du (5):
+  perf: support specify vdso path in cmdline
+  perf: disasm: refactor function dso__disassemble_filename
+  perf: disasm: use build_id_path if fallback failed
+  perf: symbol: generalize vmlinux path searching
+  perf: symbol: try to seach vdso path if not given by user
+
+ tools/perf/Documentation/perf-annotate.txt |   3 +
+ tools/perf/Documentation/perf-c2c.txt      |   3 +
+ tools/perf/Documentation/perf-inject.txt   |   3 +
+ tools/perf/Documentation/perf-report.txt   |   3 +
+ tools/perf/Documentation/perf-script.txt   |   3 +
+ tools/perf/Documentation/perf-top.txt      |   3 +
+ tools/perf/builtin-annotate.c              |   3 +
+ tools/perf/builtin-c2c.c                   |   2 +
+ tools/perf/builtin-inject.c                |   2 +
+ tools/perf/builtin-kallsyms.c              |   2 +
+ tools/perf/builtin-probe.c                 |   2 +
+ tools/perf/builtin-report.c                |   2 +
+ tools/perf/builtin-script.c                |   2 +
+ tools/perf/builtin-top.c                   |   4 +
+ tools/perf/tests/builtin-test.c            |   3 +-
+ tools/perf/util/disasm.c                   | 122 +++++++----
+ tools/perf/util/machine.c                  |   4 +-
+ tools/perf/util/symbol.c                   | 233 ++++++++++++++++-----
+ tools/perf/util/symbol.h                   |   9 +-
+ tools/perf/util/symbol_conf.h              |   6 +
+ 20 files changed, 312 insertions(+), 102 deletions(-)
+
+-- 
+2.34.1
+
