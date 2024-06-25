@@ -1,299 +1,253 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7E9E16F902;
-	Tue, 25 Jun 2024 15:00:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A186174EC6;
+	Tue, 25 Jun 2024 16:42:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719327632; cv=none; b=Zvd6frk2XAxJJEIuwzWm9H49A5OvISZeUCEtJHB/H5T67yzjs33W2pUhoEGhqR1dVA2VBXVY2c2lkuY1qe4pOktph5RKGU0ILP2i+cX3m6Qu9Zna3utvaarWSi0jh/BgXOnEdhwCmvjFIp/RlYgKXgnqqSpD2IUhHFinCBepu54=
+	t=1719333734; cv=none; b=mBFyi0+8rYZ8Wvbx51PWfWZpdIU2vylN7yi0jxAH49Obi+scTVvrUsmzzda5TByKjOutHVbcIrLe43aGTylMe9OlnBND+lPACMq9MXTMeDto04En5mxX3oxU5MdhbLKpaKpH9Uh4yYoQn60h9t/A2Txv1ZNUUV9cRcj6uEi3JuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719327632; c=relaxed/simple;
-	bh=nEtb+g2Rq7X61OxETKCfKwTOWku4feoQj/E5VaA8RJg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Swm1cNThux7GFgvzdgO3qt6jJ4Q1qNN245e91zn62bB+VTB4XsKfkZL4NVjvDy2enhFDNe78yUIw0EsUdIvdcQOU7/sEn9GRB9XqxcisWLc1nG6FkefCR4NW/RglVtoc6++H/Cwef5/ZJrKVl9DMlkGIZLuzreQd+8UIZxDNIcA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AC0C339;
-	Tue, 25 Jun 2024 08:00:48 -0700 (PDT)
-Received: from [192.168.4.86] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7758D3F766;
-	Tue, 25 Jun 2024 08:00:20 -0700 (PDT)
-Message-ID: <36714d76-f978-4dca-8ada-0de902d23a29@arm.com>
-Date: Tue, 25 Jun 2024 16:00:19 +0100
+	s=arc-20240116; t=1719333734; c=relaxed/simple;
+	bh=Wf5d1cAbraKNNLLsxaDY7HIAmqmsnAVAz5zc31fMG9g=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=bcnYpjh1Cd0/XqgDEun6/wRs5JTQ1qMQAxjjXS+mGanXMsrQtZvm10oBBUtouQGt8bv8RgGjZDyvo6bJy2xeHPZ2WVgfyDoev5pJIMHpVSrJEq+7iCbqb9bTwlx7O1qqdtgz0jh8eURS5raqvjVKzsDP0lS8XOGPyWxZTLmUCa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=EK8w1ZsM; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EK8w1ZsM"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PFT00u016014;
+	Tue, 25 Jun 2024 16:42:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=ZARhP07FHH8u9nngY6BsvG1uJZmY+u9zga9ydRnpEXE=; b=EK8w1ZsMyz2B
+	P3BMLqfzuE/aZpn0SjoZMjGSfizBkEUCLYDeyPJiLjZGUWmQEw8kYZ/lZYY0nJ3A
+	RDahhEXcKOkdYmhgxU/HCxieDwnqqq1SR6XzxiFGTqas6GT2e2pP67QDfWzfDaVw
+	LXx50x5OvBwqCPYg8Q1+d/x9hLsVYg+o4f3L4YRJbU7gpp9NN65kcSH5rLHj48nZ
+	3W2d5K1JL60NHwvaBQ/JMHXsku17VAgUBgTOfkE5rwga1yY39N3GMYMHSnH69Gct
+	Rj9aId4Rry26veXCIVLtkQIpGi9PbgJ/91HahgKxY+lgcQUApO8SFujoBKgBFHBK
+	F5fVGG3lnw==
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4000jj85ve-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 16:42:10 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45PEUI0j008184;
+	Tue, 25 Jun 2024 16:42:10 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yx9b0qj5f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 16:42:09 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45PGg6qN19464448
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Jun 2024 16:42:08 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E46E420043;
+	Tue, 25 Jun 2024 16:42:05 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 84D452005A;
+	Tue, 25 Jun 2024 16:42:03 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.74.23])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Jun 2024 16:42:03 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V3 1/3] tools/perf: Fix the string match for
+ "/tmp/perf-$PID.map" files in dso__load
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <adc971c5-f2a7-4f2d-97d8-40ed0cfe03c0@arm.com>
+Date: Tue, 25 Jun 2024 22:11:51 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+Message-Id: <D86EB354-77A9-494B-BE89-61FD6EC269A8@linux.vnet.ibm.com>
+References: <20240618140354.5765-1-atrajeev@linux.vnet.ibm.com>
+ <adc971c5-f2a7-4f2d-97d8-40ed0cfe03c0@arm.com>
+To: Chaitanya S Prakash <chaitanyas.prakash@arm.com>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: R4zC742nlgAmM6T5Q2NbKRczbjMC9Iaw
+X-Proofpoint-ORIG-GUID: R4zC742nlgAmM6T5Q2NbKRczbjMC9Iaw
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 15/17] coresight: Remove pending trace ID release
- mechanism
-Content-Language: en-GB
-To: James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
- gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
- leo.yan@linux.dev, anshuman.khandual@arm.com, jszu@nvidia.com,
- bwicaksono@nvidia.com
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
-References: <20240625133105.671245-1-james.clark@arm.com>
- <20240625133105.671245-16-james.clark@arm.com>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20240625133105.671245-16-james.clark@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 25/06/2024 14:30, James Clark wrote:
-> Pending the release of IDs was a way of managing concurrent sysfs and
-> Perf sessions in a single global ID map. Perf may have finished while
-> sysfs hadn't, and Perf shouldn't release the IDs in use by sysfs and
-> vice versa.
-> 
-> Now that Perf uses its own exclusive ID maps, pending release doesn't
-> result in any different behavior than just releasing all IDs when the
-> last Perf session finishes. As part of the per-sink trace ID change, we
-> would have still had to make the pending mechanism work on a per-sink
-> basis, due to the overlapping ID allocations, so instead of making that
-> more complicated, just remove it.
-> 
-> Signed-off-by: James Clark <james.clark@arm.com>
-> ---
->   .../hwtracing/coresight/coresight-etm-perf.c  | 11 ++--
->   .../hwtracing/coresight/coresight-trace-id.c  | 62 +++++--------------
->   .../hwtracing/coresight/coresight-trace-id.h  | 31 +++++-----
->   include/linux/coresight.h                     |  6 +-
->   4 files changed, 34 insertions(+), 76 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 7fb55dafb639..17fa29969643 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -232,15 +232,14 @@ static void free_event_data(struct work_struct *work)
->   		if (!(IS_ERR_OR_NULL(*ppath))) {
->   			struct coresight_device *sink = coresight_get_sink(*ppath);
->   
-> -			coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
-> +			/* mark perf event as done for trace id allocator */
-> +			coresight_trace_id_perf_stop(&sink->perf_sink_id_map);
-
-See my comment below. It may be a good idea to add/copyt comment here to
-explain why we don't "put_cpu_id" anymore.
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_11,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ impostorscore=0 priorityscore=1501 malwarescore=0 adultscore=0 bulkscore=0
+ clxscore=1015 phishscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250118
 
 
-> +
->   			coresight_release_path(*ppath);
->   		}
->   		*ppath = NULL;
->   	}
->   
-> -	/* mark perf event as done for trace id allocator */
-> -	coresight_trace_id_perf_stop();
-> -
->   	free_percpu(event_data->path);
->   	kfree(event_data);
->   }
-> @@ -328,9 +327,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->   		sink = user_sink = coresight_get_sink_by_id(id);
->   	}
->   
-> -	/* tell the trace ID allocator that a perf event is starting up */
-> -	coresight_trace_id_perf_start();
-> -
->   	/* check if user wants a coresight configuration selected */
->   	cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
->   	if (cfg_hash) {
-> @@ -411,6 +407,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->   			continue;
->   		}
->   
-> +		coresight_trace_id_perf_start(&sink->perf_sink_id_map);
->   		*etm_event_cpu_path_ptr(event_data, cpu) = path;
->   	}
->   
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-> index 8a777c0af6ea..1e70892f5beb 100644
-> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-> @@ -18,12 +18,6 @@ static struct coresight_trace_id_map id_map_default = {
->   	.cpu_map = &id_map_default_cpu_ids
->   };
->   
-> -/* maintain a record of the pending releases per cpu */
-> -static cpumask_t cpu_id_release_pending;
-> -
-> -/* perf session active counter */
-> -static atomic_t perf_cs_etm_session_active = ATOMIC_INIT(0);
-> -
->   /* lock to protect id_map and cpu data  */
->   static DEFINE_SPINLOCK(id_map_lock);
->   
-> @@ -122,34 +116,18 @@ static void coresight_trace_id_free(int id, struct coresight_trace_id_map *id_ma
->   	clear_bit(id, id_map->used_ids);
->   }
->   
-> -static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
-> -{
-> -	if (WARN(!IS_VALID_CS_TRACE_ID(id), "Invalid Trace ID %d\n", id))
-> -		return;
-> -	set_bit(id, id_map->pend_rel_ids);
-> -}
-> -
->   /*
-> - * release all pending IDs for all current maps & clear CPU associations
-> - *
-> - * This currently operates on the default id map, but may be extended to
-> - * operate on all registered id maps if per sink id maps are used.
-> + * Release all IDs and clear CPU associations.
->    */
-> -static void coresight_trace_id_release_all_pending(void)
-> +static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map)
->   {
-> -	struct coresight_trace_id_map *id_map = &id_map_default;
->   	unsigned long flags;
-> -	int cpu, bit;
-> +	int cpu;
->   
->   	spin_lock_irqsave(&id_map_lock, flags);
-> -	for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_ID_RES_TOP) {
-> -		clear_bit(bit, id_map->used_ids);
-> -		clear_bit(bit, id_map->pend_rel_ids);
-> -	}
-> -	for_each_cpu(cpu, &cpu_id_release_pending) {
-> -		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
-> -		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
-> -	}
-> +	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
-> +	for_each_possible_cpu(cpu)
-> +		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
->   	spin_unlock_irqrestore(&id_map_lock, flags);
->   	DUMP_ID_MAP(id_map);
->   }
-> @@ -164,7 +142,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
->   	/* check for existing allocation for this CPU */
->   	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
->   	if (id)
-> -		goto get_cpu_id_clr_pend;
-> +		goto get_cpu_id_out_unlock;
->   
->   	/*
->   	 * Find a new ID.
-> @@ -185,11 +163,6 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
->   	/* allocate the new id to the cpu */
->   	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
->   
-> -get_cpu_id_clr_pend:
-> -	/* we are (re)using this ID - so ensure it is not marked for release */
-> -	cpumask_clear_cpu(cpu, &cpu_id_release_pending);
-> -	clear_bit(id, id_map->pend_rel_ids);
-> -
->   get_cpu_id_out_unlock:
->   	spin_unlock_irqrestore(&id_map_lock, flags);
->   
-> @@ -210,15 +183,8 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
->   
->   	spin_lock_irqsave(&id_map_lock, flags);
->   
-> -	if (atomic_read(&perf_cs_etm_session_active)) {
-> -		/* set release at pending if perf still active */
-> -		coresight_trace_id_set_pend_rel(id, id_map);
-> -		cpumask_set_cpu(cpu, &cpu_id_release_pending);
-> -	} else {
-> -		/* otherwise clear id */
-> -		coresight_trace_id_free(id, id_map);
-> -		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
-> -	}
-> +	coresight_trace_id_free(id, id_map);
-> +	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
->   
->   	spin_unlock_irqrestore(&id_map_lock, flags);
->   	DUMP_ID_CPU(cpu, id);
-> @@ -302,17 +268,17 @@ void coresight_trace_id_put_system_id(int id)
->   }
->   EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
->   
-> -void coresight_trace_id_perf_start(void)
-> +void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map)
->   {
-> -	atomic_inc(&perf_cs_etm_session_active);
-> +	atomic_inc(&id_map->perf_cs_etm_session_active);
->   	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
->   }
->   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
->   
-> -void coresight_trace_id_perf_stop(void)
-> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map)
->   {
-> -	if (!atomic_dec_return(&perf_cs_etm_session_active))
-> -		coresight_trace_id_release_all_pending();
-> +	if (!atomic_dec_return(&id_map->perf_cs_etm_session_active))
-> +		coresight_trace_id_release_all(id_map);
->   	PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
 
-minor nit: The global variable perf_cs_etm_session_active is no longer 
-needed and must be updated to use the id_map variant. Same as above.
+> On 23 Jun 2024, at 8:56=E2=80=AFPM, Chaitanya S Prakash <chaitanyas.praka=
+sh@arm.com> wrote:
+>=20
+>=20
+> On 6/18/24 19:33, Athira Rajeev wrote:
+>> Perf test for perf probe of function from different CU fails
+>> as below:
+>>=20
+>> ./perf test -vv "test perf probe of function from different CU"
+>> 116: test perf probe of function from different CU:
+>> --- start ---
+>> test child forked, pid 2679
+>> Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa7iy89bx=
+/testfile
+>>  Error: Failed to add events.
+>> --- Cleaning up ---
+>> "foo" does not hit any event.
+>>  Error: Failed to delete events.
+>> ---- end(-1) ----
+>> 116: test perf probe of function from different CU                   : F=
+AILED!
+>>=20
+>> The test does below to probe function "foo" :
+>>=20
+>> # gcc -g -Og -flto -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfi=
+le-foo.c
+>> -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
+>> # gcc -g -Og -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-mai=
+n.c
+>> -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
+>> # gcc -g -Og -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
+>> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
+>> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
+>>=20
+>> # ./perf probe -x /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile f=
+oo
+>> Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7=
+/testfile
+>>   Error: Failed to add events.
+>>=20
+>> Perf probe fails to find symbol foo in the executable placed in
+>> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
+>>=20
+>> Simple reproduce:
+>>=20
+>>  # mktemp -d /tmp/perf-checkXXXXXXXXXX
+>>    /tmp/perf-checkcWpuLRQI8j
+>>=20
+>>  # gcc -g -o test test.c
+>>  # cp test /tmp/perf-checkcWpuLRQI8j/
+>>  # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
+>>    00000000100006bc T foo
+>>=20
+>>  # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
+>>    Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
+>>       Error: Failed to add events.
+>>=20
+>> But it works with any files like /tmp/perf/test. Only for
+>> patterns with "/tmp/perf-", this fails.
+>>=20
+>> Further debugging, commit 80d496be89ed ("perf report: Add support
+>> for profiling JIT generated code") added support for profiling JIT
+>> generated code. This patch handles dso's of form
+>> "/tmp/perf-$PID.map" .
+>>=20
+>> The check used "if (strncmp(self->name, "/tmp/perf-", 10) =3D=3D 0)"
+>> to match "/tmp/perf-$PID.map". With this commit, any dso in
+>> /tmp/perf- folder will be considered separately for processing
+>> (not only JIT created map files ). Fix this by changing the
+>> string pattern to check for "/tmp/perf-%d.map". Add a helper
+>> function is_perf_pid_map_name to do this check.
+>>=20
+>> With the fix,
+>> # ./perf test "test perf probe of function from different CU"
+>> 117: test perf probe of function from different CU                   : Ok
+>>=20
+>> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
+>> ---
+>> Changelog:
+>> v2 -> v3:
+>> Addressed review comment from Adrian and James.
+>> Added perf_pid_map_tid to save the tid and modified
+>> is_perf_pid_map_name to use this internally.
+>>=20
+>> v1 -> v2:
+>> Addressed review comments from Adrian.
+>> Added helper function is_perf_pid_map_name to check
+>> dso name of form "/tmp/perf-%d.map". Used sscanf
+>> instead of regex comparison.
+>>=20
+>>  tools/perf/util/dso.c    | 12 ++++++++++++
+>>  tools/perf/util/dso.h    |  4 ++++
+>>  tools/perf/util/symbol.c |  3 ++-
+>>  3 files changed, 18 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+>> index dde706b71da7..2340c4f6d0c2 100644
+>> --- a/tools/perf/util/dso.c
+>> +++ b/tools/perf/util/dso.c
+>> @@ -1652,3 +1652,15 @@ int dso__strerror_load(struct dso *dso, char *buf=
+, size_t buflen)
+>>   scnprintf(buf, buflen, "%s", dso_load__error_str[idx]);
+>>   return 0;
+>>  }
+>> +
+>> +bool perf_pid_map_tid(const char *dso_name, int *tid)
+>> +{
+>> + return sscanf(dso_name, "/tmp/perf-%d.map", tid) =3D=3D 1;
+>> +}
+>> +
+>> +bool is_perf_pid_map_name(const char *dso_name)
+>> +{
+>> + int tid;
+>> +
+>> + return perf_pid_map_tid(dso_name, &tid);
+>> +}
+>> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+>> index df2c98402af3..d72f3b8c37f6 100644
+>> --- a/tools/perf/util/dso.h
+>> +++ b/tools/perf/util/dso.h
+>> @@ -809,4 +809,8 @@ void reset_fd_limit(void);
+>>  u64 dso__find_global_type(struct dso *dso, u64 addr);
+>>  u64 dso__findnew_global_type(struct dso *dso, u64 addr, u64 offset);
+>>  +/* Check if dso name is of format "/tmp/perf-%d.map" */
+>> +bool perf_pid_map_tid(const char *dso_name, int *tid);
+>> +bool is_perf_pid_map_name(const char *dso_name);
+>> +
+>>  #endif /* __PERF_DSO */
+>> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+>> index 9e5940b5bc59..aee0a4cfb383 100644
+>> --- a/tools/perf/util/symbol.c
+>> +++ b/tools/perf/util/symbol.c
+>> @@ -1799,7 +1799,8 @@ int dso__load(struct dso *dso, struct map *map)
+>>   const char *map_path =3D dso__long_name(dso);
+>>     mutex_lock(dso__lock(dso));
+>> - perfmap =3D strncmp(dso__name(dso), "/tmp/perf-", 10) =3D=3D 0;
+>> + perfmap =3D is_perf_pid_map_name(map_path);
+>> +
+>>   if (perfmap) {
+>>   if (dso__nsinfo(dso) &&
+>>      (dso__find_perf_map(newmapname, sizeof(newmapname),
+>=20
+> Reviewed-by: Chaitanya S Prakash<chaitanyas.prakash@arm.com>
 
+Thanks Chaitanya for the reviewed-by
 
->   }
->   EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-> index 840babdd0794..9aae50a553ca 100644
-> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-> @@ -17,9 +17,10 @@
->    * released when done.
->    *
->    * In order to ensure that a consistent cpu / ID matching is maintained
-> - * throughout a perf cs_etm event session - a session in progress flag will
-> - * be maintained, and released IDs not cleared until the perf session is
-> - * complete. This allows the same CPU to be re-allocated its prior ID.
-> + * throughout a perf cs_etm event session - a session in progress flag will be
-> + * maintained for each sink, and IDs are cleared when all the perf sessions
-> + * complete. This allows the same CPU to be re-allocated its prior ID when
-> + * events are scheduled in and out.
->    *
->    *
->    * Trace ID maps will be created and initialised to prevent architecturally
-> @@ -66,11 +67,7 @@ int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id
->   /**
->    * Release an allocated trace ID associated with the CPU.
->    *
-> - * This will release the CoreSight trace ID associated with the CPU,
-> - * unless a perf session is in operation.
-> - *
-> - * If a perf session is in operation then the ID will be marked as pending
-> - * release.
-> + * This will release the CoreSight trace ID associated with the CPU.
->    *
->    * @cpu: The CPU index to release the associated trace ID.
->    */
-> @@ -133,21 +130,21 @@ void coresight_trace_id_put_system_id(int id);
->   /**
->    * Notify the Trace ID allocator that a perf session is starting.
->    *
-> - * Increase the perf session reference count - called by perf when setting up
-> - * a trace event.
-> + * Increase the perf session reference count - called by perf when setting up a
-> + * trace event.
->    *
-> - * This reference count is used by the ID allocator to ensure that trace IDs
-> - * associated with a CPU cannot change or be released during a perf session.
-> + * Perf sessions never free trace IDs to ensure that the ID associated with a
-> + * CPU cannot change during their and other's concurrent sessions. Instead,
-> + * this refcount is used so that the last event to finish always frees all IDs.
-
-minor nit: I think it better to keep/copy the above comment to the 
-etm_event_stop where we don't do "put_trace_id"
-
-Suzuki
-
+Athira
+>=20
+> I will drop my fix for the same.
+> https://lore.kernel.org/all/20240601125946.1741414-10-ChaitanyaS.Prakash@=
+arm.com/
+>=20
+> The rest of my series can be reviewed as a string function tidy up.
+>=20
 
