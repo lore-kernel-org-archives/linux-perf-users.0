@@ -1,113 +1,167 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C9E361448D9;
-	Tue, 25 Jun 2024 18:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F4C178385
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 18:14:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719338949; cv=none; b=qqOKgehPvvOwe99TWLaTCzbsC+xaaOm3tGzkIaHXlin7qwHGwDcMKwsaMZeREycjcHOS28ri7BnL6brrBXmMuauD39cpmtb9D4+UNgRX98juFUx9vqKVphl2ZDzowbF41axrD+KTnzQVi0rBc5D8TfV4BjRu7HGv+4/iEjt5AjU=
+	t=1719339295; cv=none; b=RifIwkpH1VbScuIB1Jep05wBkivK5gWreTH+uamwOipOoaWOd9Fy3WKCEGjuE1MneUWz2IeDA50HcyJN/gZqgR0NCQvktbkcn9++ucMDrJa0HBq9vdMcLHaQVlahrqlnE7edzGxuk5p8D2TcDmSmLJItVd7QXvjQZJX3UMnW62A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719338949; c=relaxed/simple;
-	bh=X6dODJt9HRGZcv6YOgMM8RDXMQm+Ja6irJod0YhbYwI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l1MKJ8KRj+TmQ8eWJ+6Sa03KPSLOprt7ZQuLfFP5aBTWJm1E6e82x9lmVwDeOfsv+3wdD9kweW3cSIH1/4/yO4RaPBeRKwF8TWpeQjkogSsN9HlqDzD+EJTl1CfqGTjYYcnU77LfNshJyWVWKLqVUTXVT2Xilr+j+FCDg5c4e1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12325339;
-	Tue, 25 Jun 2024 11:09:31 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7B5DD3F73B;
-	Tue, 25 Jun 2024 11:09:03 -0700 (PDT)
-Message-ID: <1237a235-3d80-464d-8db7-a7895d45aa4a@arm.com>
-Date: Tue, 25 Jun 2024 19:09:02 +0100
+	s=arc-20240116; t=1719339295; c=relaxed/simple;
+	bh=cdQG2QH6nCCll3rEP3ihKpXMBl8SgxnP/VREmcfD5Ao=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CU/n9ULcAQ//0ICVtsAy2IdnyvjqSy3E5/RW23bBQ+TmOH6zqewI7VgbviwFE+e/mWkxO960nv00nX9ZiKWFCsJNW3h3qLtVXDqAH6K97kGJIFrQFw66KHTrnCLW7A9IChe/CT2sDs1/HfeW0BYm3obMTRv4gdcHVFyd9zOjdsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ilfeOTiW; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ilfeOTiW"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fa3086cf25so17415ad.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 11:14:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719339294; x=1719944094; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pHQujU8w2HsPdHSeJ+eNtyrJA2jnQulGAF+h4XWMpkg=;
+        b=ilfeOTiWWiDCkMojlYgXzyqB+pgSXFWG0HocVT5g04vZ4yrJq0EA5qjbmKSEKSnu+q
+         5s359fkGoLtsanHQSSR5jp5chQv3/LGsFN3Ek3u9+NlvN8IfYtvdMfiYQwaZToZ5sLs0
+         2LUNchm10K1JoitnEcmKkK1mDo22zJE3VsM+sl+DeI1jxT2xD6fJoyT7/6bgGNCKyrzy
+         rrp3RimpRH+scvHiNkGoYGZbUHo9tz7cx7O8xcUpMecsT39cAQXHPnKz9isg0Utt4xye
+         8PS+K/h5H10mwg+Zk5+LhUZvJ81KI3HfRU4H3dVg4dNWcAtkaAUlnedLWxM/6HLvYFLt
+         kNKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719339294; x=1719944094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pHQujU8w2HsPdHSeJ+eNtyrJA2jnQulGAF+h4XWMpkg=;
+        b=GI4xhYygGdrDoYiNX6QAhMGT+IfhdkU93S0mGTJlppbqMu6eR9HIRT9x/GQCALrWEM
+         0GlTidcA5xGDEe40iHWsfZ0XhDAMWIUguMGXkeaQXIgXBaC3roYES/InwmLcO4EzN/Ba
+         lP7JxXXCfVFLy6RtTvVB1RzyAd6Hg4iXNgVCzEujYkp8PhgnZENzBRSH5fv4m8qpzpIo
+         kjeZuEDATmCjN92P/ZDGsmIHyorYpGgj1zwUFjMh7FY80CPXFTFgaTBmkSAp5tjOv84H
+         g8Ga81e/fbCiZHPj+2Ih9c/yOsSX7sJTOkhNPnb1KUXt6QNFIU7GDDuYli8CwfirjXGY
+         EvuA==
+X-Forwarded-Encrypted: i=1; AJvYcCXY0zUKDsjdVJ6xk/CtUIv5PeTcRHOCD29l+jwkRO05lpj6k2rl1o4JGfYvY1h92uM7TUFNWOSwFXWTQSAKsG2ahDaAQi0vIxFWm0xTZElpCw==
+X-Gm-Message-State: AOJu0YwiVCUZkpJa2pmUA2NgLDvjrU1Z3Ovk+aC7dv1is9fJD5OdAFJT
+	DtpKYzrj1/tNNM4iyoTJDhatJEXUsa84XcydOxA8JDmBguX4z53TH9xvw7D0tpeaOzWnRHvtTm/
+	Nz8mRTxhaSfv/KM4gyhmvLzyFUGinw638xy8g
+X-Google-Smtp-Source: AGHT+IHUWVP8jMWtzNNtwGhAuozDrDLNiGYVxTa6bvSAKS2s/Xp4TEwNkFy5eyfDDb3O7LxCBZEQyj5jnib9lTc8oa8=
+X-Received: by 2002:a17:903:603:b0:1f7:3764:1e19 with SMTP id
+ d9443c01a7336-1fa8886e8d6mr213265ad.20.1719339293473; Tue, 25 Jun 2024
+ 11:14:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] perf: build: Only link libebl.a for old libdw
+References: <20240613233122.3564730-1-irogers@google.com> <20240613233122.3564730-8-irogers@google.com>
+ <Znnyi2IPC79jMd9y@google.com> <1fdf637d-3571-4145-8008-f2b5f8fc8bca@arm.com> <CAM9d7cjy8+Ys-Y_35V7O=KGQL0v3+B9z6hhytmAiKKN9pO9yow@mail.gmail.com>
+In-Reply-To: <CAM9d7cjy8+Ys-Y_35V7O=KGQL0v3+B9z6hhytmAiKKN9pO9yow@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 25 Jun 2024 11:14:42 -0700
+Message-ID: <CAP-5=fXKLxo9VufpsvjNJ-Z+oA+6k7zYOz6qH69xSAiRA2K8zg@mail.gmail.com>
+Subject: Re: [PATCH v3 7/8] perf python: Switch module to linking libraries
+ from building source
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, James Clark <james.clark@arm.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Nick Terrell <terrelln@fb.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Quentin Monnet <qmo@kernel.org>,
- Changbin Du <changbin.du@huawei.com>, Fangrui Song <maskray@google.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- Guilherme Amadio <amadio@gentoo.org>
-References: <20240610095433.336295-1-leo.yan@arm.com>
- <20240610095433.336295-4-leo.yan@arm.com> <ZnYPev8QPeNOFAR7@google.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <ZnYPev8QPeNOFAR7@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Cc: James Clark <james.clark@arm.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
+	Alice Ryhl <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>, 
+	Andrei Vagin <avagin@google.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
+	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, coresight@lists.linaro.org, 
+	rust-for-linux@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 25, 2024 at 10:48=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> Hello,
+>
+> On Tue, Jun 25, 2024 at 5:24=E2=80=AFAM James Clark <james.clark@arm.com>=
+ wrote:
+> >
+> >
+> >
+> > On 24/06/2024 23:26, Namhyung Kim wrote:
+> > > On Thu, Jun 13, 2024 at 04:31:21PM -0700, Ian Rogers wrote:
+> > >> setup.py was building most perf sources causing setup.py to mimic th=
+e
+> > >> Makefile logic as well as flex/bison code to be stubbed out, due to
+> > >> complexity building. By using libraries fewer functions are stubbed
+> > >> out, the build is faster and the Makefile logic is reused which shou=
+ld
+> > >> simplify updating. The libraries are passed through LDFLAGS to avoid
+> > >> complexity in python.
+> > >>
+> > >> Force the -fPIC flag for libbpf.a to ensure it is suitable for linki=
+ng
+> > >> into the perf python module.
+> > >>
+> > >> Signed-off-by: Ian Rogers <irogers@google.com>
+> > >> Reviewed-by: James Clark <james.clark@arm.com>
+> > >> ---
+> > >>  tools/perf/Makefile.config |   5 +
+> > >>  tools/perf/Makefile.perf   |   6 +-
+> > >>  tools/perf/util/python.c   | 271 ++++++++++++++--------------------=
+---
+> > >>  tools/perf/util/setup.py   |  33 +----
+> > >>  4 files changed, 110 insertions(+), 205 deletions(-)
+> > >>
+> > >> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > >> index 7f1e016a9253..639be696f597 100644
+> > >> --- a/tools/perf/Makefile.config
+> > >> +++ b/tools/perf/Makefile.config
+> > >> @@ -910,6 +910,11 @@ else
+> > >>           endif
+> > >>           CFLAGS +=3D -DHAVE_LIBPYTHON_SUPPORT
+> > >>           $(call detected,CONFIG_LIBPYTHON)
+> > >> +     ifeq ($(filter -fPIC,$(CFLAGS)),)
+> > >
+> > > Nitpick: mixed TAB and SPACEs.
 
-On 6/22/24 00:40, Namhyung Kim wrote:
-> 
-> On Mon, Jun 10, 2024 at 10:54:30AM +0100, Leo Yan wrote:
->> Since libdw version 0.177, elfutils has merged libebl.a into libdw (see
->> the commit "libebl: Don't install libebl.a, libebl.h and remove backends
->> from spec." in the elfutils repository).
->>
->> As a result, libebl.a does not exist on Debian Bullseye and newer
->> releases, causing static perf builds to fail on these distributions.
-> 
-> What about libebl.so?  I'm curious why it's ok with dynamic build and
-> causing a problem with static builds.
+Will fix it in v2.
 
-For the new Debian / Ubuntu distros, libebl has been merged in libdw so
-merged into libdw, so libebl.so doesn't exist.
+> > >
+> > >
+> > >> +           # Building a shared library requires position independen=
+t code.
+> > >> +           CFLAGS +=3D -fPIC
+> > >> +           CXXFLAGS +=3D -fPIC
+> > >> +         endif
+> > >
+> > >
+> > > I'm curious if it's ok for static libraries too..
+> > >
+> > > Thanks,
+> > > Namhyung
+> > >
+> >
+> > I think I tested the whole set with a static build so it should be ok.
+>
+> Ok, thanks for checking that!
 
-'-lebl' is only included only for static building (see below code piece,
-it detects '-static' in ${LDFLAGS}).  This is why dynamic build has no
-issue.
-
->> This commit checks the libdw version and only links libebl.a if it
->> detects that the libdw version is older than 0.177.
-> 
-> Have you tested on the older versions too?
-
-IIRC, I did test on the Debian buster (which contains the libdw version
-is 0.176).
-
->> Signed-off-by: Leo Yan <leo.yan@arm.com>
->> ---
->>   tools/build/feature/Makefile | 12 +++++++++++-
->>   tools/perf/Makefile.config   | 12 +++++++++++-
->>   2 files changed, 22 insertions(+), 2 deletions(-)
->>
->> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
->> index 084f803093c3..b23b3e8ad5e4 100644
->> --- a/tools/build/feature/Makefile
->> +++ b/tools/build/feature/Makefile
->> @@ -171,7 +171,17 @@ $(OUTPUT)test-libopencsd.bin:
->>
->>   DWARFLIBS := -ldw
->>   ifeq ($(findstring -static,${LDFLAGS}),-static)
->> -DWARFLIBS += -lelf -lebl -lz -llzma -lbz2
->> +  DWARFLIBS += -lelf -lz -llzma -lbz2
->> +
->> +  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw)
->> +  LIBDW_VERSION_1 := $(word 1, $(subst ., ,$(LIBDW_VERSION)))
->> +  LIBDW_VERSION_2 := $(word 2, $(subst ., ,$(LIBDW_VERSION)))
->> +
->> +  # Elfutils merged libebl.a into libdw.a starting from version 0.177,
->> +  # Link libebl.a only if libdw is older than this version.
->> +  ifeq ($(shell test $(LIBDW_VERSION_2) -lt 177; echo $$?),0)
->> +    DWARFLIBS += -lebl
-> 
-> I'm not sure if it's ok to change the order as libebl might depend on
-> later libraries like libz.
-
-I confirmed that this change works on Debian Buster (Debian 10) and
-Bookworm (Debian 12).
+Even with a static build it is often the case that the executable is
+position independent (-fPIE, and related compiler options) and so
+would need this too.
 
 Thanks,
-Leo
+Ian
+
+> Namhyung
