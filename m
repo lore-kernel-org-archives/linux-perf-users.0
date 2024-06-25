@@ -1,239 +1,189 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EBD333C0;
-	Tue, 25 Jun 2024 05:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8788714264F;
+	Tue, 25 Jun 2024 05:22:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719292551; cv=none; b=IIgmNrT5e1czqrv4ck0MjOeAT22YVbeVFqlvtRbwCcCjCGn2F86WSM4X5kFI6GnE6WPS85fp3esXnIZWks8IUfOsL6fK45Exf3Rx2nGn1i7LntzwrivO1ZWwhN9y2eLomasHLSUyXwbfVa3xwD9/KhQMu9ppguA0zs8znnuDzfM=
+	t=1719292980; cv=none; b=iGxhJD6DE+c3ApGu1jVpl5KsZXIWAbJF8/5E4L2Axce2s6sjGDUW7/YGbbh/RH5U5mm2/q/F9nC55JLzj3KYImrEJIwlmNeG3B3hAUHUFrAeaOGk2unMM7P4JIVYAzeRF+exKADVMjvFTOaktJaGc6JU6DtGaKR/8pc4+Gypz5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719292551; c=relaxed/simple;
-	bh=OsYRJd0mzx38fP7IO/+BLKZK+fyo5KZ7vxvkr6QdFYQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=q3Rsshhs8P72bhlmRoDQTmPocWB8lmYY1MZur6np4OJTBZSZIHsgDS/Vqf0qOMpAaj8n0LKTnntC+wgn2jsGqEPQgGjkfZcCVhfR5NmZo1Hz6OP+eh/MRodjK4SuY1V1hdf2URRhms/W7uZGIhq6o4RVzKD50ygGuyomOHQ5f/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SyJ7bffH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719292980; c=relaxed/simple;
+	bh=k4OQ7xGQtrVC2kJgX9J9ALOCLy/UGD0t7wbhmHHno90=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V1ADtC4DYLrS8fbEyaHhf5IRjqPRQSYS8Mo4vGNDFNB9dcYr3ahx3MkskE7H4AbY/hLj4KlxIJkEYFBxPWAzdXWCm0Y86pBbwywP2jQ4yyJ5HhulfXzAUh0xkA9w3Ny1wmbitSuakUADcW4LisAij2aOORWc+P30EEqqcXijxvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m6P1zB1W; arc=none smtp.client-ip=209.85.214.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SyJ7bffH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 972B7C32782;
-	Tue, 25 Jun 2024 05:15:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719292551;
-	bh=OsYRJd0mzx38fP7IO/+BLKZK+fyo5KZ7vxvkr6QdFYQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SyJ7bffHFjF0pg7enO0XmALW6yes20XyqJ5tG/IAr8Fo091xIFVqhX5RYFm56xXj3
-	 OF0Ed4lAIw5jHYSMkJ177gcGQzt0xGLhR9OGUAHp0EnDBkUQcMqMVrLbc1k50qhkeB
-	 3VrEW+hOFOq8KzswEdXWGWaqeA59OZOcWYCjQIP3JPtMktRv5D6DF3rmTDAhniKG53
-	 +M6T7AWvrZGApb7YCDGght9Q4+6o+GtPlYnercTYnq6NmqCTtQU5mfhunhXvxo1dBW
-	 lvQLIT5ANbfV5hj0XRjPAxL9qFNAtKomb0M0F2w8TkajwbLYcwa6mfyI2519rV2smS
-	 hK0fB1F1xnIpQ==
-Date: Mon, 24 Jun 2024 22:15:49 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [V4 01/16] tools/perf: Move the data structures related to
- register type to header file
-Message-ID: <ZnpShR7zd9cVdxSj@google.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <20240614172631.56803-2-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6P1zB1W"
+Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f47f07aceaso39941065ad.0;
+        Mon, 24 Jun 2024 22:22:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719292979; x=1719897779; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vyOQS+2avZap4j8E0kSaNckBLidUkjghHNyRVXogiQU=;
+        b=m6P1zB1WSwDilQ5zNig5U/hQRaHqrXZp92HeIbCsRaXC1dIh7xqYJPt4SgrDSRmuN/
+         ygwipiEtk5KtoTuHfrPa62KsVTFWBXEMLbXXmYKby1bi5/ahclX8zLplFBN1owsBMkuo
+         GDDmnt9sbK9nXd08CoDQltTopsz/DHAhlhi8Taafzj1ZxEvCOPZ+KUpO0SC+772a0cmH
+         nwUiVOWIWUHyTnA+b6pUQPNB37asaTggM9kAGVt5LecFLs0yGxoPOcIrWsxs2Q8X/xtv
+         3Dx1yyrCHdWtdJWhF+zM/Q4WW9KwyzAU4odrO06VTKFpXlMBm11vlIOhA+EHgUwqU60d
+         7LDg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719292979; x=1719897779;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vyOQS+2avZap4j8E0kSaNckBLidUkjghHNyRVXogiQU=;
+        b=evOcUN5VnoD3t+OVsqhYK8xJ/RMgSzhJmo5g0eLGvB12QZan5IDnmbNJCEZw2vA9LN
+         YO4Wavucf/Gl/QHLNzjZg1q41f7RjFHFIzADqffS4BCKfF7J7p0dwnYFGTFNF4cytMz9
+         mJFc3aOf5GLAVcLq9zgNJ7zfQlVNXoWtwlD64XFoBykUimRYW+83wc2EhZa60gYvxHtz
+         EvIJV1k/1XCnPkJ0r8vn+jRakA6mmN4/V0mgEkXPb33ewpyzVgVSz7STyvVXaUQ9fwC3
+         WtNGeWWvw760Lr/8ybNoFpMeIdyITooKldcE2Bg2+dR35EPNGs1GyD1ALwe6rV5yWS7i
+         8BCQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWpE2Bte+dg0dH11E+/wWPiimYZS0+UinloCk10lD1uvl0augWW2+NiDsQKejI0/vMFNsxNk7BCPzxRnVKsNpwgtrnvOXlCtTaX+Rv9Fh/mF7nFPXs878bLsdd9RwdOLdEj5g2ywMajBLP+Wr2elg==
+X-Gm-Message-State: AOJu0YztiMubOEVWq1f9LxFDDk9QSsayElVCBhaRin8CZ3SiAr1+z7H4
+	CBYSt4V1pIqPbX/2lzqj/WRwbX1XzVpOo1ayeiVfSdOODbrUlC+A
+X-Google-Smtp-Source: AGHT+IG6mRLr4fSYHgaC2+ZBazI2kHMfLIMEgFt4bU7wY3j2ghjQnti7P4sDSZ6eeaW2a6qK0qsT8w==
+X-Received: by 2002:a17:902:c406:b0:1fa:487:d930 with SMTP id d9443c01a7336-1fa15943643mr85357025ad.56.1719292978779;
+        Mon, 24 Jun 2024 22:22:58 -0700 (PDT)
+Received: from [192.168.50.95] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb321a83sm71889965ad.95.2024.06.24.22.22.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Jun 2024 22:22:58 -0700 (PDT)
+Message-ID: <8a6a5de3-cc0a-4522-a885-c1ef454158a8@gmail.com>
+Date: Tue, 25 Jun 2024 14:22:52 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240614172631.56803-2-atrajeev@linux.vnet.ibm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] util: constant -1 with expression of type char and
+ allocation failure handling
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>,
+ Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Austin Kim <austindh.kim@gmail.com>, shjy180909@gmail.com,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>
+References: <20240619183857.4819-2-yskelg@gmail.com>
+ <CAP-5=fWm-Tij+vjqOa-18RsiO+1_ytWnKkDvp3vz5hv1O9aMCw@mail.gmail.com>
+ <5c1f3b54-da71-47b7-a30c-0011a23195c8@gmail.com>
+ <ZnpO8TKWSiterMwC@google.com>
+Content-Language: en-US
+From: Yunseong Kim <yskelg@gmail.com>
+In-Reply-To: <ZnpO8TKWSiterMwC@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Namhyung,
 
-On Fri, Jun 14, 2024 at 10:56:16PM +0530, Athira Rajeev wrote:
-> Data type profiling uses instruction tracking by checking each
-> instruction and updating the register type state in some data
-> structures. This is useful to find the data type in cases when the
-> register state gets transferred from one reg to another. Example, in
-> x86, "mov" instruction and in powerpc, "mr" instruction. Currently these
-> structures are defined in annotate-data.c and instruction tracking is
-> implemented only for x86. Move these data structures to
-> "annotate-data.h" header file so that other arch implementations can use
-> it in arch specific files as well.
+On 6/25/24 2:00 오후, Namhyung Kim wrote:
+> Hello,
 > 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/util/annotate-data.c | 53 +------------------------------
->  tools/perf/util/annotate-data.h | 55 +++++++++++++++++++++++++++++++++
->  2 files changed, 56 insertions(+), 52 deletions(-)
+> On Thu, Jun 20, 2024 at 04:10:53AM +0900, Yunseong Kim wrote:
+>> Hi Ian,
+>>
+>> On 6/20/24 4:03 오전, Ian Rogers wrote:
+>>>
+>>>
+>>> On Wed, Jun 19, 2024, 11:39 AM <yskelg@gmail.com
+>>> <mailto:yskelg@gmail.com>> wrote:
+>>>
+>>>     From: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
+>>>
+>>>     This patch resolve this warning.
+>>>
+>>>     tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
+>>>     -1 with expression of type 'char' is always false
+>>>      -Werror,-Wtautological-constant-out-of-range-compare
+>>>      1620 |                 if (c == -1)
+>>>           |                     ~ ^  ~~
+>>>
+>>>     Add handling on unread_unwind_spec_debug_frame().
+>>>     This make caller find_proc_info() works well when the allocation
+>>>     failure.
+>>>
+>>>     Signed-off-by: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
+>>>
+>>>
+>>>
+>>> Both changes look good. Could you make them 2 commits? If so add my: 
+>>
+>> No problem! I'll send it right away.
+>>
+>> Thank you for the code review.
+>>
+>>> Reviewed-by: Ian Rogers <irogers@google.com <mailto:irogers@google.com>>
 > 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 965da6c0b542..a4c7f98a75e3 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -31,15 +31,6 @@
->  
->  static void delete_var_types(struct die_var_type *var_types);
->  
-> -enum type_state_kind {
-> -	TSR_KIND_INVALID = 0,
-> -	TSR_KIND_TYPE,
-> -	TSR_KIND_PERCPU_BASE,
-> -	TSR_KIND_CONST,
-> -	TSR_KIND_POINTER,
-> -	TSR_KIND_CANARY,
-> -};
-> -
->  #define pr_debug_dtp(fmt, ...)					\
->  do {								\
->  	if (debug_type_profile)					\
-> @@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
->  	}
->  }
->  
-> -/*
-> - * Type information in a register, valid when @ok is true.
-> - * The @caller_saved registers are invalidated after a function call.
-> - */
-> -struct type_state_reg {
-> -	Dwarf_Die type;
-> -	u32 imm_value;
-> -	bool ok;
-> -	bool caller_saved;
-> -	u8 kind;
-> -};
-> -
-> -/* Type information in a stack location, dynamically allocated */
-> -struct type_state_stack {
-> -	struct list_head list;
-> -	Dwarf_Die type;
-> -	int offset;
-> -	int size;
-> -	bool compound;
-> -	u8 kind;
-> -};
-> -
-> -/* FIXME: This should be arch-dependent */
-> -#define TYPE_STATE_MAX_REGS  16
-> -
-> -/*
-> - * State table to maintain type info in each register and stack location.
-> - * It'll be updated when new variable is allocated or type info is moved
-> - * to a new location (register or stack).  As it'd be used with the
-> - * shortest path of basic blocks, it only maintains a single table.
-> - */
-> -struct type_state {
-> -	/* state of general purpose registers */
-> -	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-> -	/* state of stack location */
-> -	struct list_head stack_vars;
-> -	/* return value register */
-> -	int ret_reg;
-> -	/* stack pointer register */
-> -	int stack_reg;
-> -};
-> -
-> -static bool has_reg_type(struct type_state *state, int reg)
-> +bool has_reg_type(struct type_state *state, int reg)
->  {
->  	return (unsigned)reg < ARRAY_SIZE(state->regs);
->  }
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index 0a57d9f5ee78..ef235b1b15e1 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -6,6 +6,9 @@
->  #include <linux/compiler.h>
->  #include <linux/rbtree.h>
->  #include <linux/types.h>
-> +#include "dwarf-aux.h"
-> +#include "annotate.h"
-> +#include "debuginfo.h"
->  
->  struct annotated_op_loc;
->  struct debuginfo;
-> @@ -15,6 +18,15 @@ struct hist_entry;
->  struct map_symbol;
->  struct thread;
->  
-> +enum type_state_kind {
-> +	TSR_KIND_INVALID = 0,
-> +	TSR_KIND_TYPE,
-> +	TSR_KIND_PERCPU_BASE,
-> +	TSR_KIND_CONST,
-> +	TSR_KIND_POINTER,
-> +	TSR_KIND_CANARY,
-> +};
-> +
->  /**
->   * struct annotated_member - Type of member field
->   * @node: List entry in the parent list
-> @@ -142,6 +154,48 @@ struct annotated_data_stat {
->  };
->  extern struct annotated_data_stat ann_data_stat;
->  
-> +/*
-> + * Type information in a register, valid when @ok is true.
-> + * The @caller_saved registers are invalidated after a function call.
-> + */
-> +struct type_state_reg {
-> +	Dwarf_Die type;
-> +	u32 imm_value;
-> +	bool ok;
-> +	bool caller_saved;
-> +	u8 kind;
-> +};
-> +
-> +/* Type information in a stack location, dynamically allocated */
-> +struct type_state_stack {
-> +	struct list_head list;
-> +	Dwarf_Die type;
-> +	int offset;
-> +	int size;
-> +	bool compound;
-> +	u8 kind;
-> +};
-> +
-> +/* FIXME: This should be arch-dependent */
-> +#define TYPE_STATE_MAX_REGS  32
-
-Can you please define this for powerpc separately?  I think x86 should
-remain in 16.
-
-Thanks,
-Namhyung
-
-> +
-> +/*
-> + * State table to maintain type info in each register and stack location.
-> + * It'll be updated when new variable is allocated or type info is moved
-> + * to a new location (register or stack).  As it'd be used with the
-> + * shortest path of basic blocks, it only maintains a single table.
-> + */
-> +struct type_state {
-> +	/* state of general purpose registers */
-> +	struct type_state_reg regs[TYPE_STATE_MAX_REGS];
-> +	/* state of stack location */
-> +	struct list_head stack_vars;
-> +	/* return value register */
-> +	int ret_reg;
-> +	/* stack pointer register */
-> +	int stack_reg;
-> +};
-> +
->  #ifdef HAVE_DWARF_SUPPORT
->  
->  /* Returns data type at the location (ip, reg, offset) */
-> @@ -160,6 +214,7 @@ void global_var_type__tree_delete(struct rb_root *root);
->  
->  int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
->  
-> +bool has_reg_type(struct type_state *state, int reg);
->  #else /* HAVE_DWARF_SUPPORT */
->  
->  static inline struct annotated_data_type *
-> -- 
-> 2.43.0
+> You forgot to add Ian's Reviewed-by in the next patches.
+> I can add it to them this time, but please do so next time.
 > 
+> Thanks,
+> Namhyung
+
+Thank you Namhyung for the code review. Oops, I completely forgot about
+that, I'm so sorry.
+
+>>> Thanks, 
+>>> Ian
+>>>
+>>>     ---
+>>>      tools/perf/util/evsel.c                  | 2 +-
+>>>      tools/perf/util/unwind-libunwind-local.c | 5 +++++
+>>>      2 files changed, 6 insertions(+), 1 deletion(-)
+>>>
+>>>     diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+>>>     index 25857894c047..bc603193c477 100644
+>>>     --- a/tools/perf/util/evsel.c
+>>>     +++ b/tools/perf/util/evsel.c
+>>>     @@ -1620,7 +1620,7 @@ static int evsel__read_group(struct evsel
+>>>     *leader, int cpu_map_idx, int thread)
+>>>
+>>>      static bool read_until_char(struct io *io, char e)
+>>>      {
+>>>     -       char c;
+>>>     +       int c;
+>>>
+>>>             do {
+>>>                     c = io__get_char(io);
+>>>     diff --git a/tools/perf/util/unwind-libunwind-local.c
+>>>     b/tools/perf/util/unwind-libunwind-local.c
+>>>     index cde267ea3e99..a424eae6d308 100644
+>>>     --- a/tools/perf/util/unwind-libunwind-local.c
+>>>     +++ b/tools/perf/util/unwind-libunwind-local.c
+>>>     @@ -390,6 +390,11 @@ static int read_unwind_spec_debug_frame(struct
+>>>     dso *dso,
+>>>                             char *debuglink = malloc(PATH_MAX);
+>>>                             int ret = 0;
+>>>
+>>>     +                       if (debuglink == NULL) {
+>>>     +                               pr_err("unwind: Can't read unwind
+>>>     spec debug frame.\n");
+>>>     +                               return -ENOMEM;
+>>>     +                       }
+>>>     +
+>>>                             ret = dso__read_binary_type_filename(
+>>>                                     dso, DSO_BINARY_TYPE__DEBUGLINK,
+>>>                                     machine->root_dir, debuglink, PATH_MAX);
+>>>     -- 
+>>>     2.44.0
+>>>
+>>
+>> Warm Regards,
+>> Yunseong Kim
+
+Thank you for your hard working and for always being.
+
+Best regards,
+
+Yunseong Kim
