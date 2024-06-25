@@ -1,112 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07156C2FD
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 00:42:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32378DDC3;
+	Tue, 25 Jun 2024 01:02:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719276164; cv=none; b=FKgxxI17R8W0Y1nBvD2oMEdaM0C5n6xSLdT1JhtB6KH5fE3+Uyqbt79neoPtrgyOPK7F3x8TegFFH9oXzum54QB4WQMybVYsdPEyKxgeLQC3bEewtvJwZxmh3p3cFHCWbbikMjmWT/16FmHypJpxNeJPX/kqfaQ0vRP3EJuY+64=
+	t=1719277361; cv=none; b=ndTk7MTeDRFbkubauoyGxmQgSUK+5/YCkNsC9Y7BUKpUOzjia4ToPdjjMi/uOJQFJBPlsYzmeoaOap0OvvWB1OEfzVzcFjppoe6dyr4uAghZqK3py84XL9xdIKdWE67KyzvVdc9zG34cKvHqGPwm3xJbQTaa7gSUfijrREtv3Ig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719276164; c=relaxed/simple;
-	bh=rVsys7A/1FPDDFfjxcDEk1mcYhBj27VmpR3xVq6Ha/4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WsKsv01B8A3qQmDOCBdQCCpvpRc+hKypLV+wocnriTCIFAQcKbQXCKWMz9U3DygiAvMiLLr0u+lYg/KefUxPYkZfVzWggyIO3aQgVAEyUaRYAqCmUi1czEFVj5Geti8YbVrlR3Hy8Z2Q9VCVt4muOZqTwdd/R4fAQtlT9/txMlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PgbxTurM; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719277361; c=relaxed/simple;
+	bh=cNul+CjnJxu3p3xp/0OzfRTbo9IvW9F4g1jY4fo1kbo=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=spIJL9enMDTvicMt9VnERWzFtohIaPUcp/hYFCeCXgZyb9QuodkSZvd99hdcSTnXYJpry/wlKqOGmjuuqJsAEr2ZBf2MjBkS2uLb9TYkC2BQQ/et3vRZi4rfh0uYKJSBZb9dLltiwKnJV4wQFaH2Bz2G4/tiqER8X9CxSA3hFdI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UqhoR+/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PgbxTurM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719276163; x=1750812163;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=rVsys7A/1FPDDFfjxcDEk1mcYhBj27VmpR3xVq6Ha/4=;
-  b=PgbxTurMdM+CHT4CG8gIsPFwHPnWz70bZOtcwneb15s7DaRjTSEVTzBb
-   IzQTSU8o91tpHApiIst3QG/NptP+ZorJCW+YO+dwVr+QSf4BKg9MDYlTB
-   zvkofFQbk8IP+Vo0i+R3jEM8QEsLkdYrbSsDDDqzEddzITMTRs1CPpk/O
-   Ny+kC+ApMX7fXaAPwTD4SLuvt6gcOHlVbnAZPZ8EynKWijU6iGaJbVILu
-   adxOJAHwwA6GtgXiPjUfnEW2G5qum7v3bxrsiMZKXlsMUuwjCfrRT2dhc
-   e4Z7wDo7QmXeOqkWmxd5CgEZI6Rc/wz9kWluzqZpQJ01Mz66XrmG58i/a
-   Q==;
-X-CSE-ConnectionGUID: iB/08WhwSlKJfHEhd5tUoQ==
-X-CSE-MsgGUID: MnNDlsiKQl6LhAZS4vBmhA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="27680386"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="27680386"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:42:40 -0700
-X-CSE-ConnectionGUID: n1X8dOctTsWLdcc6jcE6yg==
-X-CSE-MsgGUID: DC/B/vsPS6ex9doW31vKSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="43451506"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jun 2024 17:42:40 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 2/2] Add a test case for perf script -F +metric
-Date: Mon, 24 Jun 2024 17:42:32 -0700
-Message-ID: <20240625004232.1852705-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240625004232.1852705-1-ak@linux.intel.com>
-References: <20240625004232.1852705-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UqhoR+/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92978C2BBFC;
+	Tue, 25 Jun 2024 01:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719277361;
+	bh=cNul+CjnJxu3p3xp/0OzfRTbo9IvW9F4g1jY4fo1kbo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UqhoR+/20BMq9LaSp6XFqCeZxDTtbqSbcPPKxxa5hVmdOiz1GVe50eNnE6vxvL6Pc
+	 Zc5fUXT5iCti8oNmbc1OACdSTeg0rCNNVpLuPTo7O1eaHszmQf0bsOP/QNPCxJKi23
+	 mHwtpRhauwSgwFGm1RycHC3KI017gMzNJYAPlixFnQgrR9DkDy0NO3H4/+dc6bP6gg
+	 WOdHvlnewPBxeo8HBBlc/BNqbrBxugeUBO+C+RZXIT/hsj6qPnbM0ceoWouQ6DCgNR
+	 R6okR5hZ/ffqzglPjauaw0uLQkBwyl0hl3MyoOzi9uXoutseq84xuoy3sqnxgbfr89
+	 nZdjjSF9W6Xpw==
+Date: Tue, 25 Jun 2024 10:02:36 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org, x86@kernel.org,
+ peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+ bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] uprobes: rename get_trampoline_vaddr() and make
+ it global
+Message-Id: <20240625100236.75d923b42d1bcf5a2f15fb9b@kernel.org>
+In-Reply-To: <20240522013845.1631305-2-andrii@kernel.org>
+References: <20240522013845.1631305-1-andrii@kernel.org>
+	<20240522013845.1631305-2-andrii@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Just a simple test
+On Tue, 21 May 2024 18:38:42 -0700
+Andrii Nakryiko <andrii@kernel.org> wrote:
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/tests/shell/script.sh | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+> This helper is needed in another file, so make it a bit more uniquely
+> named and expose it internally.
+> 
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
 
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index c1a603653662..cd9d41734021 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf script tests
- # SPDX-License-Identifier: GPL-2.0
- 
-@@ -7,6 +7,7 @@ set -e
- temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
- 
- perfdatafile="${temp_dir}/perf.data"
-+scriptoutput="${temp_dir}/script"
- db_test="${temp_dir}/db_test.py"
- 
- err=0
-@@ -88,8 +89,21 @@ test_parallel_perf()
- 	echo "parallel-perf test [Success]"
- }
- 
-+test_metric()
-+{
-+	echo "script metric test"
-+	if ! perf list | grep -q cycles ; then return ; fi
-+	if ! perf list | grep -q instructions ; then return ; fi
-+	perf record -e '{cycles,instructions}' -o "${perfdatafile}" bash -c 'for i in `seq 1000` ; do true ; done'
-+	perf script -i "${perfdatafile}" -F +metric  > $scriptoutput
-+	test $(grep -c metric $scriptoutput) -gt 5
-+	grep metric $scriptoutput | head
-+	echo "script metric test [Success]"
-+}
-+
- test_db
- test_parallel_perf
-+test_metric
- 
- cleanup
- 
+Sorry, I think this conflicts with
+
+https://lore.kernel.org/all/20240611112158.40795-4-jolsa@kernel.org/
+
+And that is already picked.
+
+Thanks,
+
+> ---
+>  include/linux/uprobes.h | 1 +
+>  kernel/events/uprobes.c | 6 +++---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> index f46e0ca0169c..0c57eec85339 100644
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -138,6 +138,7 @@ extern bool arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
+>  extern bool arch_uprobe_ignore(struct arch_uprobe *aup, struct pt_regs *regs);
+>  extern void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+>  					 void *src, unsigned long len);
+> +extern unsigned long uprobe_get_trampoline_vaddr(void);
+>  #else /* !CONFIG_UPROBES */
+>  struct uprobes_state {
+>  };
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 8ae0eefc3a34..d60d24f0f2f4 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1827,7 +1827,7 @@ void uprobe_copy_process(struct task_struct *t, unsigned long flags)
+>   *
+>   * Returns -1 in case the xol_area is not allocated.
+>   */
+> -static unsigned long get_trampoline_vaddr(void)
+> +unsigned long uprobe_get_trampoline_vaddr(void)
+>  {
+>  	struct xol_area *area;
+>  	unsigned long trampoline_vaddr = -1;
+> @@ -1878,7 +1878,7 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+>  	if (!ri)
+>  		return;
+>  
+> -	trampoline_vaddr = get_trampoline_vaddr();
+> +	trampoline_vaddr = uprobe_get_trampoline_vaddr();
+>  	orig_ret_vaddr = arch_uretprobe_hijack_return_addr(trampoline_vaddr, regs);
+>  	if (orig_ret_vaddr == -1)
+>  		goto fail;
+> @@ -2187,7 +2187,7 @@ static void handle_swbp(struct pt_regs *regs)
+>  	int is_swbp;
+>  
+>  	bp_vaddr = uprobe_get_swbp_addr(regs);
+> -	if (bp_vaddr == get_trampoline_vaddr())
+> +	if (bp_vaddr == uprobe_get_trampoline_vaddr())
+>  		return handle_trampoline(regs);
+>  
+>  	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+> -- 
+> 2.43.0
+> 
+
+
 -- 
-2.45.2
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
