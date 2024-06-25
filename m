@@ -1,125 +1,311 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77E214B064;
-	Tue, 25 Jun 2024 10:45:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01B581494A0;
+	Tue, 25 Jun 2024 11:48:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719312353; cv=none; b=oMRaOwTT4GEHPxLFOX5YtVtJ3u7h3RVP8hhSjPuaGApyc8EEp4AhMr6nCLahziG5LruwQjj3/dwhvWCAGA98AVU+2rzMV1n0l34amFG6SamyNqC3JO7HrQGNoPUDHupUg8v50ZtRtHFcLhtk3EIxAHL+C0B4BpjM378HzdPNrrY=
+	t=1719316129; cv=none; b=pCE6J6FeAOsjYsSozNfsX27lKtAiKbIANlHy0MfqSQsMyuNC++vKRaEc02EpeC/uHfqbJjqlGE46SLOp3Ic+im3InG27c0hqboBg5HGrM0NT2ZdcCl08LZ2kzgQr4Jk2WHmz3rUv6O8Kpxo6A/G/NimJ4cF87HDnCK6HnUnwEfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719312353; c=relaxed/simple;
-	bh=VJPVCROmtOiH6sjFGzeDB78N5WlBrQkj9XvlsKi//L4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=alD6t0BJw8lJ1Fj2cBW8oaUQ+vaAgfjVoy8LTJEW4uUPfejhHa5VknCgkd1uxFZ+4NuBrKFYHK3BFCyL20mfBTLKqhCm661DaxOk9kyDR6OCu5xohLHWcLTnhkOQFofOeomv9HsKfOiDsvBsAThGVTYSPUQzBJXAHOaTCyFLLbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QCd8uB++; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719316129; c=relaxed/simple;
+	bh=Q69OCz7ZRS/rC3enEzWLPTObmcriBlwPCJJnLNGLq/w=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=gFluu81NWM5D9fX2PAmp6xLYD8Gf6qhRtnS4NszyEbtfD9fhyQSURQr2gBa26ewvie613zfn9TSXpKyCWxPPNqpBc4t57cHInJNVPJ9WO9vO3BSQWHdEFlx/ziqsiT+uhpB9WrmJryJgIveMliyINvcXBf26XDB2HgAhrnuhfZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LfQ9I13T; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QCd8uB++"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719312351; x=1750848351;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=VJPVCROmtOiH6sjFGzeDB78N5WlBrQkj9XvlsKi//L4=;
-  b=QCd8uB++E70lTaUs28UfHkJPOodC5Qb+17i3UdukvH8E6bADB4BnpMHL
-   dAzKegjPpVtRJHV7keXyHLFDCoyWDpZi197oanYvDUxP8+bVQFlbr+ZQq
-   uE6l0xKTLhhhXZvFGRvYjKCoaNHnQZiv+QKCzyS7gxVWJnceyNM1cUbgO
-   rW3bs1+mqJ8kR6F7RuWVa4awB+6SrwKkNLW3eipZefPQJffbAF0u+hz8R
-   3UivFdt0HW2Ug3ZJKlzeDnAoUKbfJcU2ZfpEQi999YY3hsvrgCLjO5/Sa
-   jlCBkNhX+++/TGS4f+hvg60JaFsBbl3w1783n5XF0L0dHJjC+7IBN/v2C
-   Q==;
-X-CSE-ConnectionGUID: 8If3fibVTgCZExxgCYrKcg==
-X-CSE-MsgGUID: OCs1vZCZRuK8iWhS77Twrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11113"; a="26944152"
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="26944152"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 03:45:51 -0700
-X-CSE-ConnectionGUID: t6mhsIm6TlirH7izwFEGMQ==
-X-CSE-MsgGUID: h6zD50IlRFGH+gPHSEUuCA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,263,1712646000"; 
-   d="scan'208";a="43676519"
-Received: from gcivario-mobl.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.48.191])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 03:45:48 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf intel-pt: Fix exclude_guest setting
-Date: Tue, 25 Jun 2024 13:45:32 +0300
-Message-Id: <20240625104532.11990-3-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240625104532.11990-1-adrian.hunter@intel.com>
-References: <20240625104532.11990-1-adrian.hunter@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LfQ9I13T"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45PBaHn4000691;
+	Tue, 25 Jun 2024 11:48:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:mime-version:subject:from:in-reply-to:date:cc
+	:content-transfer-encoding:message-id:references:to; s=pp1; bh=W
+	ICUOPn6G8vaIEnI5sjdZgE7qeNqV5Cn8Hfz1bsE0NU=; b=LfQ9I13T3l0ZpsRrX
+	3Yf13itfYwyPr0MwnJK+JFnWz7iQ2C1HbZkNlMpGBoN9WmarIqrGPboQddClUyFE
+	tpoJEg8ShxUB1V5VoBKO109UOKMVbp4e2V1rnH9aAWnTSHDGLIpuuLTvDdtbor6I
+	akEtRToF5iROjzj9dxzKAjGFm5d8Y03Sm7yMit2JwwfOu8lKlnGcGFDFiXxb7E2q
+	2kSbF+udQD3pscvaebgjxNXaKMsMR+bnAgnn9okjrbduGurKF3KlBb0+0/C5zSd4
+	xuCOZZBXnXOqDExekPmHefJCc9KmbbyBTZ1WmfYao0zYDhAhW9X78kJDOomIvCYL
+	4cXvA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw22016v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:32 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45PBmVj3017340;
+	Tue, 25 Jun 2024 11:48:31 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3yyw22016r-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:31 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45PAWAdv018093;
+	Tue, 25 Jun 2024 11:48:31 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yx8xu6c73-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 25 Jun 2024 11:48:30 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45PBmP2M46465520
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 25 Jun 2024 11:48:27 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 68B1B2004B;
+	Tue, 25 Jun 2024 11:48:25 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id CA48420040;
+	Tue, 25 Jun 2024 11:48:22 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.30.249])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue, 25 Jun 2024 11:48:22 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
+Subject: Re: [V4 01/16] tools/perf: Move the data structures related to
+ register type to header file
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZnpShR7zd9cVdxSj@google.com>
+Date: Tue, 25 Jun 2024 16:24:58 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0AF30B3F-AD13-4398-AC0F-AA6B5425D4AA@linux.vnet.ibm.com>
+References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+ <20240614172631.56803-2-atrajeev@linux.vnet.ibm.com>
+ <ZnpShR7zd9cVdxSj@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Wx4xQ1HC-ykBn5uzAbPblL6G-qjztymv
+X-Proofpoint-ORIG-GUID: JwmN6Qul-YFYonxRwifTiBMGpHnaCfmb
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-25_06,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 spamscore=0 adultscore=0 mlxscore=0 clxscore=1015 phishscore=0
+ mlxlogscore=999 impostorscore=0 suspectscore=0 lowpriorityscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406250084
 
-In the past, the exclude_guest setting has had no effect on Intel PT
-tracing, but that may not be the case in the future.
 
-Set the flag correctly based upon whether KVM is using Intel PT
-"Host/Guest" mode, which is determined by the kvm_intel module
-parameter pt_mode:
 
- pt_mode=0	System-wide mode : host and guest output to host buffer
- pt_mode=1	Host/Guest mode : host/guest output to host/guest
-                buffers respectively
+> On 25 Jun 2024, at 10:45=E2=80=AFAM, Namhyung Kim =
+<namhyung@kernel.org> wrote:
+>=20
+> Hello,
+>=20
+> On Fri, Jun 14, 2024 at 10:56:16PM +0530, Athira Rajeev wrote:
+>> Data type profiling uses instruction tracking by checking each
+>> instruction and updating the register type state in some data
+>> structures. This is useful to find the data type in cases when the
+>> register state gets transferred from one reg to another. Example, in
+>> x86, "mov" instruction and in powerpc, "mr" instruction. Currently =
+these
+>> structures are defined in annotate-data.c and instruction tracking is
+>> implemented only for x86. Move these data structures to
+>> "annotate-data.h" header file so that other arch implementations can =
+use
+>> it in arch specific files as well.
+>>=20
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> ---
+>> tools/perf/util/annotate-data.c | 53 +------------------------------
+>> tools/perf/util/annotate-data.h | 55 =
++++++++++++++++++++++++++++++++++
+>> 2 files changed, 56 insertions(+), 52 deletions(-)
+>>=20
+>> diff --git a/tools/perf/util/annotate-data.c =
+b/tools/perf/util/annotate-data.c
+>> index 965da6c0b542..a4c7f98a75e3 100644
+>> --- a/tools/perf/util/annotate-data.c
+>> +++ b/tools/perf/util/annotate-data.c
+>> @@ -31,15 +31,6 @@
+>>=20
+>> static void delete_var_types(struct die_var_type *var_types);
+>>=20
+>> -enum type_state_kind {
+>> - TSR_KIND_INVALID =3D 0,
+>> - TSR_KIND_TYPE,
+>> - TSR_KIND_PERCPU_BASE,
+>> - TSR_KIND_CONST,
+>> - TSR_KIND_POINTER,
+>> - TSR_KIND_CANARY,
+>> -};
+>> -
+>> #define pr_debug_dtp(fmt, ...) \
+>> do { \
+>> if (debug_type_profile) \
+>> @@ -140,49 +131,7 @@ static void pr_debug_location(Dwarf_Die *die, =
+u64 pc, int reg)
+>> }
+>> }
+>>=20
+>> -/*
+>> - * Type information in a register, valid when @ok is true.
+>> - * The @caller_saved registers are invalidated after a function =
+call.
+>> - */
+>> -struct type_state_reg {
+>> - Dwarf_Die type;
+>> - u32 imm_value;
+>> - bool ok;
+>> - bool caller_saved;
+>> - u8 kind;
+>> -};
+>> -
+>> -/* Type information in a stack location, dynamically allocated */
+>> -struct type_state_stack {
+>> - struct list_head list;
+>> - Dwarf_Die type;
+>> - int offset;
+>> - int size;
+>> - bool compound;
+>> - u8 kind;
+>> -};
+>> -
+>> -/* FIXME: This should be arch-dependent */
+>> -#define TYPE_STATE_MAX_REGS  16
+>> -
+>> -/*
+>> - * State table to maintain type info in each register and stack =
+location.
+>> - * It'll be updated when new variable is allocated or type info is =
+moved
+>> - * to a new location (register or stack).  As it'd be used with the
+>> - * shortest path of basic blocks, it only maintains a single table.
+>> - */
+>> -struct type_state {
+>> - /* state of general purpose registers */
+>> - struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+>> - /* state of stack location */
+>> - struct list_head stack_vars;
+>> - /* return value register */
+>> - int ret_reg;
+>> - /* stack pointer register */
+>> - int stack_reg;
+>> -};
+>> -
+>> -static bool has_reg_type(struct type_state *state, int reg)
+>> +bool has_reg_type(struct type_state *state, int reg)
+>> {
+>> return (unsigned)reg < ARRAY_SIZE(state->regs);
+>> }
+>> diff --git a/tools/perf/util/annotate-data.h =
+b/tools/perf/util/annotate-data.h
+>> index 0a57d9f5ee78..ef235b1b15e1 100644
+>> --- a/tools/perf/util/annotate-data.h
+>> +++ b/tools/perf/util/annotate-data.h
+>> @@ -6,6 +6,9 @@
+>> #include <linux/compiler.h>
+>> #include <linux/rbtree.h>
+>> #include <linux/types.h>
+>> +#include "dwarf-aux.h"
+>> +#include "annotate.h"
+>> +#include "debuginfo.h"
+>>=20
+>> struct annotated_op_loc;
+>> struct debuginfo;
+>> @@ -15,6 +18,15 @@ struct hist_entry;
+>> struct map_symbol;
+>> struct thread;
+>>=20
+>> +enum type_state_kind {
+>> + TSR_KIND_INVALID =3D 0,
+>> + TSR_KIND_TYPE,
+>> + TSR_KIND_PERCPU_BASE,
+>> + TSR_KIND_CONST,
+>> + TSR_KIND_POINTER,
+>> + TSR_KIND_CANARY,
+>> +};
+>> +
+>> /**
+>> * struct annotated_member - Type of member field
+>> * @node: List entry in the parent list
+>> @@ -142,6 +154,48 @@ struct annotated_data_stat {
+>> };
+>> extern struct annotated_data_stat ann_data_stat;
+>>=20
+>> +/*
+>> + * Type information in a register, valid when @ok is true.
+>> + * The @caller_saved registers are invalidated after a function =
+call.
+>> + */
+>> +struct type_state_reg {
+>> + Dwarf_Die type;
+>> + u32 imm_value;
+>> + bool ok;
+>> + bool caller_saved;
+>> + u8 kind;
+>> +};
+>> +
+>> +/* Type information in a stack location, dynamically allocated */
+>> +struct type_state_stack {
+>> + struct list_head list;
+>> + Dwarf_Die type;
+>> + int offset;
+>> + int size;
+>> + bool compound;
+>> + u8 kind;
+>> +};
+>> +
+>> +/* FIXME: This should be arch-dependent */
+>> +#define TYPE_STATE_MAX_REGS  32
+>=20
+> Can you please define this for powerpc separately?  I think x86 should
+> remain in 16.
+>=20
+> Thanks,
+> Namhyung
 
-Fixes: 6e86bfdc4a60 ("perf intel-pt: Support decoding of guest kernel")
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/arch/x86/util/intel-pt.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Sure, I will have this change in V5
+>=20
+>> +
+>> +/*
+>> + * State table to maintain type info in each register and stack =
+location.
+>> + * It'll be updated when new variable is allocated or type info is =
+moved
+>> + * to a new location (register or stack).  As it'd be used with the
+>> + * shortest path of basic blocks, it only maintains a single table.
+>> + */
+>> +struct type_state {
+>> + /* state of general purpose registers */
+>> + struct type_state_reg regs[TYPE_STATE_MAX_REGS];
+>> + /* state of stack location */
+>> + struct list_head stack_vars;
+>> + /* return value register */
+>> + int ret_reg;
+>> + /* stack pointer register */
+>> + int stack_reg;
+>> +};
+>> +
+>> #ifdef HAVE_DWARF_SUPPORT
+>>=20
+>> /* Returns data type at the location (ip, reg, offset) */
+>> @@ -160,6 +214,7 @@ void global_var_type__tree_delete(struct rb_root =
+*root);
+>>=20
+>> int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel =
+*evsel);
+>>=20
+>> +bool has_reg_type(struct type_state *state, int reg);
+>> #else /* HAVE_DWARF_SUPPORT */
+>>=20
+>> static inline struct annotated_data_type *
+>> --=20
+>> 2.43.0
 
-diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-index c8fa15f280d2..4b710e875953 100644
---- a/tools/perf/arch/x86/util/intel-pt.c
-+++ b/tools/perf/arch/x86/util/intel-pt.c
-@@ -32,6 +32,7 @@
- #include "../../../util/tsc.h"
- #include <internal/lib.h> // page_size
- #include "../../../util/intel-pt.h"
-+#include <api/fs/fs.h>
- 
- #define KiB(x) ((x) * 1024)
- #define MiB(x) ((x) * 1024 * 1024)
-@@ -428,6 +429,16 @@ static int intel_pt_track_switches(struct evlist *evlist)
- }
- #endif
- 
-+static bool intel_pt_exclude_guest(void)
-+{
-+	int pt_mode;
-+
-+	if (sysfs__read_int("module/kvm_intel/parameters/pt_mode", &pt_mode))
-+		pt_mode = 0;
-+
-+	return pt_mode == 1;
-+}
-+
- static void intel_pt_valid_str(char *str, size_t len, u64 valid)
- {
- 	unsigned int val, last = 0, state = 1;
-@@ -620,6 +631,7 @@ static int intel_pt_recording_options(struct auxtrace_record *itr,
- 			}
- 			evsel->core.attr.freq = 0;
- 			evsel->core.attr.sample_period = 1;
-+			evsel->core.attr.exclude_guest = intel_pt_exclude_guest();
- 			evsel->no_aux_samples = true;
- 			evsel->needs_auxtrace_mmap = true;
- 			intel_pt_evsel = evsel;
--- 
-2.34.1
 
