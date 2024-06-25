@@ -1,137 +1,159 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCC44437A;
-	Tue, 25 Jun 2024 17:48:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 277CF1448E0;
+	Tue, 25 Jun 2024 17:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719337700; cv=none; b=bxGtKsX0fBVku7j5BlX11w/HUDbbblFOrtPrRzTMEpqiOvA2UlPpJrigXi3i1olILvcWZuFJQ4GqPTuNmMgB3H5ssnsU5sX4i2djFW84DyixjCU1Fvde88CrfMqMViqsQI6s2UAaUahx/8iEy4QJ5gInYeV9q2os7DN7lqVC1dU=
+	t=1719338397; cv=none; b=dmyu4wQlCEkbO12BJk6rOYVVsuXF+oJ8fTOgiap9dkfd/rocFHwCbhW/JaCivwNIFw7tyPrHrhHI2nISVh12BoodYpO19i7V90G4TleYV9LEvCn5WcuSqonuPK+OVjhGHkq/JkN+W4rS+K2vTRi0xvAv+lBtF3EXNmkl8oBqqEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719337700; c=relaxed/simple;
-	bh=FCUFi8Q0u58wW+GVe+dgRDwlEGV2MEeqC/CdwTfsCO0=;
+	s=arc-20240116; t=1719338397; c=relaxed/simple;
+	bh=hpOYBpdg6gThR5b1N227DpI9cC6+qivPwLINqm+V7N0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i4ZOFNt439n322dDIhNv+ztov8qr+4RqT6WrW6NovdxFmaLEQqVowjDMktRmD0NKrq/lK6hxyoXYbIzQru8KfFqoaUrzaV2qtUK+r8gq3HLfQRCpHbFkoaK+0/kxcROHAshFJoUJcg6TDM1otmsjevW1IMQHiGInj84SlvrDqQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.53
+	 To:Cc:Content-Type; b=Ia7V9ZLNnY7y91AQCxXJf9OROUKZKOgjUnAuK3cpuLhRMekzIAvovUWcTIqxLj1uQ/7XLF6UIZYheDFTZ5/ddFwXEMK3XEc3Fq1aXp7jk5imS8kpkhRcKY9IhYSFLpjSJyh6uux0UaHhBoAXEKXVleIIuQGTNLJfbF4eXMcMvU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2c7a6da20f2so4525084a91.0;
-        Tue, 25 Jun 2024 10:48:19 -0700 (PDT)
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-6e3741519d7so3984518a12.2;
+        Tue, 25 Jun 2024 10:59:55 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719337698; x=1719942498;
+        d=1e100.net; s=20230601; t=1719338395; x=1719943195;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9xtHXiqQf1XxUxrjysf1LF5IvMCFepz3wpLAFkq/vI8=;
-        b=kBw5whK+DjwJhBxpzvM7eVWfLyeW/TR6poIsy/hvgPkn+jI7EdUnbjoPLMjskayxdx
-         lzuLGDm8UWZcSL85kU7hwz6yu5HWfo9Ng2ZpO67vxmvBo1lG5FynVlX+FV38etpGv+G1
-         sCF3QQUg1f9oZ4e45psMWQsLYLGjrUtIoq127aJDCCHjdik9VkUltiUrxLl4Cnu8zV2F
-         tjZcZvgi6Mi33ZwsIqpELU48Ssxb8h7SjVXnGfD+K3Fajzil2vhn86PzUKfYI6Ykmo51
-         5sAh0xdx8IP4MmDqlarDVUY+8T7Tglum0WwHCKKeLecFRPjOI7ConUQimmswuYqSXq9x
-         HYew==
-X-Forwarded-Encrypted: i=1; AJvYcCVUyqi9nAxIEbpFkve7jKYWfme0MzxJ90AOgrAGPvwKnk9poUOUU9/wZwNOEnEW09IAhO2Q4YKei8ePQnbEYL5UgMgcEPznXHMjbxwTocdva12+1AfsE80KOdpj0KzupQP4Oh8AdZVpZxYZA2F4pcsy2/lv2PdgtEb5zSTc6KvITPOLwEGrNCJfrn8P91APhSWfSNRczGARiiajrHNsUMwC6oyw1NiUsrUIJ+sxZjDruz4TBvzUKaIDI/ZXuVEWCg==
-X-Gm-Message-State: AOJu0YyuTqW6lzALidXcU74yhXjQwPeTxBlTSBWDKJR1/yGqYnb5jK7/
-	obOCGXz4wyKrUBZNZtkP8KwU7L2eh2CZu5E9NXsa6P/117iH2+LB84TXZwtcmyGDAJG1IkZK8fW
-	AQ9ZGXzgWHOOH1oIJqRpaKtr5SHo=
-X-Google-Smtp-Source: AGHT+IGYzAZ+Bn0UI2LyfXB+0Uof3O9NdbXsei8hjTG9FhXGaHhlgu5/ywEXYZKH6auDRwKGOVRfEO1r10gy0evqwL8=
-X-Received: by 2002:a17:90a:668a:b0:2c2:faf7:67a0 with SMTP id
- 98e67ed59e1d1-2c8504f656bmr7440529a91.16.1719337698260; Tue, 25 Jun 2024
- 10:48:18 -0700 (PDT)
+        bh=f5PoShk9ER6oKuETO3bdJUevSzjYujmcfx3i8qQ0MKo=;
+        b=WyGMrdA1r8KVw5KZriQ0MtWosR81TcjYDQKVJdCzqi38c88RvqtvuCFa2YQMJjImU0
+         NhdKzlm2TPFbGbQbjquq6rRAtwjnU6gtDKpG961FxsIyQxXSUa4ZqUDPDjLdRMsv6Fl5
+         qZx9F/JNL0SQi21uroe/TkDmF3MwX5Gw2CLbbkYkoZDa9x0biw/j2P3xlaXI1OIy4S21
+         mVNyNB/evfFj/je5B1ZdavAST+q+0XgHLN6oN3WIZDdShYvoEioL6QJATWvh8IhiMDao
+         wor879eeOQmUbu8/rNZxJGoaa3bqTns6o5gbus14vVenrjyg05sgkTIj9u8pCnfJS5Lo
+         MPnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV47idPos36259TTI4SPksLk/pFt1qiNN+bU9QbaV+Fs5w3qNRSS9m+8H8K2rfpG08hj3cHuccFv4YiXS3xOl5wQZuNYkEKU/rEtGEb44vH4kPSjskPqcdM7MfbHcF661Ed+ZmZBEl3Tz5QLPM8Yg==
+X-Gm-Message-State: AOJu0YwAr8lgeLJAwCYv7yPiUIqj/K6kHlni9jkDFRGVAO+HqIjJLkiD
+	zc3ITFOd3WgtUGDSeF4as0zxH5tmHHMg5MQ6mMEhBkNVVH/U6G0ycNfiHLOehOOXri40ajZkOmB
+	vCbnjWo29p94lEPtf7XYe2V/PAio=
+X-Google-Smtp-Source: AGHT+IGG+13e+IM6YaHCDjgHhxzZwK9iqPFhSJtEBdaJ14Pj4FVkbJjvKOBZjXrBtApOOtBEaVA2FM1ujUiSxA6mseE=
+X-Received: by 2002:a05:6a20:7b1b:b0:1b5:5ee0:378a with SMTP id
+ adf61e73a8af0-1bcee771ca1mr7839615637.36.1719338395163; Tue, 25 Jun 2024
+ 10:59:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240613233122.3564730-1-irogers@google.com> <20240613233122.3564730-8-irogers@google.com>
- <Znnyi2IPC79jMd9y@google.com> <1fdf637d-3571-4145-8008-f2b5f8fc8bca@arm.com>
-In-Reply-To: <1fdf637d-3571-4145-8008-f2b5f8fc8bca@arm.com>
+References: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
+ <722cb4bc-89d4-4e03-a80d-ffe05be52c05@intel.com> <f65ff3cf-1724-45a1-ad88-200d72251042@intel.com>
+In-Reply-To: <f65ff3cf-1724-45a1-ad88-200d72251042@intel.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 25 Jun 2024 10:48:06 -0700
-Message-ID: <CAM9d7cjy8+Ys-Y_35V7O=KGQL0v3+B9z6hhytmAiKKN9pO9yow@mail.gmail.com>
-Subject: Re: [PATCH v3 7/8] perf python: Switch module to linking libraries
- from building source
-To: James Clark <james.clark@arm.com>
-Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@samsung.com>, 
-	Alice Ryhl <aliceryhl@google.com>, Nick Terrell <terrelln@fb.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Kees Cook <keescook@chromium.org>, 
-	Andrei Vagin <avagin@google.com>, Athira Jajeev <atrajeev@linux.vnet.ibm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-csky@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, coresight@lists.linaro.org, 
-	rust-for-linux@vger.kernel.org, bpf@vger.kernel.org
+Date: Tue, 25 Jun 2024 10:59:44 -0700
+Message-ID: <CAM9d7ci2raJmUjb7X2m6O1mCJm5xYLEWS8g_gC7tTjvshm1XFQ@mail.gmail.com>
+Subject: Re: [PATCH V4 1/3] tools/perf: Fix the string match for
+ "/tmp/perf-$PID.map" files in dso__load
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, acme@kernel.org, jolsa@kernel.org, 
+	irogers@google.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com, 
+	disgoel@linux.vnet.ibm.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-On Tue, Jun 25, 2024 at 5:24=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
+On Tue, Jun 25, 2024 at 5:02=E2=80=AFAM Adrian Hunter <adrian.hunter@intel.=
+com> wrote:
 >
->
->
-> On 24/06/2024 23:26, Namhyung Kim wrote:
-> > On Thu, Jun 13, 2024 at 04:31:21PM -0700, Ian Rogers wrote:
-> >> setup.py was building most perf sources causing setup.py to mimic the
-> >> Makefile logic as well as flex/bison code to be stubbed out, due to
-> >> complexity building. By using libraries fewer functions are stubbed
-> >> out, the build is faster and the Makefile logic is reused which should
-> >> simplify updating. The libraries are passed through LDFLAGS to avoid
-> >> complexity in python.
+> On 25/06/24 14:57, Adrian Hunter wrote:
+> > On 23/06/24 09:48, Athira Rajeev wrote:
+> >> Perf test for perf probe of function from different CU fails
+> >> as below:
 > >>
-> >> Force the -fPIC flag for libbpf.a to ensure it is suitable for linking
-> >> into the perf python module.
+> >>      ./perf test -vv "test perf probe of function from different CU"
+> >>      116: test perf probe of function from different CU:
+> >>      --- start ---
+> >>      test child forked, pid 2679
+> >>      Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa=
+7iy89bx/testfile
+> >>        Error: Failed to add events.
+> >>      --- Cleaning up ---
+> >>      "foo" does not hit any event.
+> >>        Error: Failed to delete events.
+> >>      ---- end(-1) ----
+> >>      116: test perf probe of function from different CU               =
+    : FAILED!
 > >>
-> >> Signed-off-by: Ian Rogers <irogers@google.com>
-> >> Reviewed-by: James Clark <james.clark@arm.com>
-> >> ---
-> >>  tools/perf/Makefile.config |   5 +
-> >>  tools/perf/Makefile.perf   |   6 +-
-> >>  tools/perf/util/python.c   | 271 ++++++++++++++----------------------=
--
-> >>  tools/perf/util/setup.py   |  33 +----
-> >>  4 files changed, 110 insertions(+), 205 deletions(-)
+> >> The test does below to probe function "foo" :
 > >>
-> >> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> >> index 7f1e016a9253..639be696f597 100644
-> >> --- a/tools/perf/Makefile.config
-> >> +++ b/tools/perf/Makefile.config
-> >> @@ -910,6 +910,11 @@ else
-> >>           endif
-> >>           CFLAGS +=3D -DHAVE_LIBPYTHON_SUPPORT
-> >>           $(call detected,CONFIG_LIBPYTHON)
-> >> +     ifeq ($(filter -fPIC,$(CFLAGS)),)
+> >>      # gcc -g -Og -flto -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7=
+/testfile-foo.c
+> >>      -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
+> >>      # gcc -g -Og -c /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testf=
+ile-main.c
+> >>      -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
+> >>      # gcc -g -Og -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testf=
+ile
+> >>      /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
+> >>      /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
+> >>
+> >>      # ./perf probe -x /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/tes=
+tfile foo
+> >>      Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Xni=
+NxNEVT7/testfile
+> >>         Error: Failed to add events.
+> >>
+> >> Perf probe fails to find symbol foo in the executable placed in
+> >> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
+> >>
+> >> Simple reproduce:
+> >>
+> >>  # mktemp -d /tmp/perf-checkXXXXXXXXXX
+> >>    /tmp/perf-checkcWpuLRQI8j
+> >>
+> >>  # gcc -g -o test test.c
+> >>  # cp test /tmp/perf-checkcWpuLRQI8j/
+> >>  # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
+> >>    00000000100006bc T foo
+> >>
+> >>  # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
+> >>    Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
+> >>       Error: Failed to add events.
+> >>
+> >> But it works with any files like /tmp/perf/test. Only for
+> >> patterns with "/tmp/perf-", this fails.
+> >>
+> >> Further debugging, commit 80d496be89ed ("perf report: Add support
+> >> for profiling JIT generated code") added support for profiling JIT
+> >> generated code. This patch handles dso's of form
+> >> "/tmp/perf-$PID.map" .
+> >>
+> >> The check used "if (strncmp(self->name, "/tmp/perf-", 10) =3D=3D 0)"
+> >> to match "/tmp/perf-$PID.map". With this commit, any dso in
+> >> /tmp/perf- folder will be considered separately for processing
+> >> (not only JIT created map files ). Fix this by changing the
+> >> string pattern to check for "/tmp/perf-%d.map". Add a helper
+> >> function is_perf_pid_map_name to do this check. In "struct dso",
+> >> dso->long_name holds the long name of the dso file. Since the
+> >> /tmp/perf-$PID.map check uses the complete name, use dso___long_name f=
+or
+> >> the string name.
+> >>
+> >> With the fix,
+> >>      # ./perf test "test perf probe of function from different CU"
+> >>      117: test perf probe of function from different CU               =
+    : Ok
+> >>
+> >> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
 > >
-> > Nitpick: mixed TAB and SPACEs.
-> >
-> >
-> >> +           # Building a shared library requires position independent =
-code.
-> >> +           CFLAGS +=3D -fPIC
-> >> +           CXXFLAGS +=3D -fPIC
-> >> +         endif
-> >
-> >
-> > I'm curious if it's ok for static libraries too..
-> >
-> > Thanks,
-> > Namhyung
+> > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 > >
 >
-> I think I tested the whole set with a static build so it should be ok.
+> Although it could use a Fixes tag
+>
 
-Ok, thanks for checking that!
+Thanks, I will add
+
+Fixes: 56cbeacf1435 ("perf probe: Add test for regression introduced
+by switch to die_get_decl_file()")
 
 Namhyung
