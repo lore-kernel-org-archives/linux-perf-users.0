@@ -1,511 +1,315 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF6A17C7B8
-	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 18:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BEC1369B6;
+	Tue, 25 Jun 2024 18:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340970; cv=none; b=epHcquNOZVYdJZB3zZ7oe7mhj09kUf+gom0jEAzSaVEC6a8c6no81OIOoLsMqaXv0P3c1bMqJd+idlvh0QEKuSwhHxatsY2HwLOgtGcyKS6nYouO9KNAzwfA7IGayeT3u75y7JKrqRDlPSCVrYedxGNK5V4azWJyidskVW30px8=
+	t=1719341114; cv=none; b=lDWy5AkI5IpbNFtMVWJJM53g4g1ho4OdeUcHYYs2z9rwiLia90Uxe4jUnjbB1vRn9Ad/17hw3/L+K2GAOPVeJYsvIaHnrRetn3BVbDX773mLWe8gPa+xNDwxkyPYv2m5ssuqq/r7J/Yr5ElfgvQTdvB84bMWvfHz2vEGp7WA7iA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340970; c=relaxed/simple;
-	bh=3L4VCPu5Gi0E3loQZRfPWXHSalpI7X3sqJEW5i53YJ0=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=pxszntPmETtwDKT2jPnCTUdee7VhyBSRM2QTnso+RRCJmP6gzyfzHTHrN896PhE+IJJ6VwuXHqMq3qE/fDT6ZF08TkYOeLRuimaDjc1peqY/XCtkiUW7nH48gWqfGfD9f37VCRh4rXge07YmCFN6xRrninm6yP3BDKuArPJRNe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=q8mGwibu; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1719341114; c=relaxed/simple;
+	bh=ls1xBJfcDVgd5ISX3BpuHHrzrDMD41ZZn9MNlv/YzYc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ma+w3PcAFde5t2nCKWGUcvm7zgiLec3C5+t71w0tQySG0XRSON6OWoA6WsADZDwOtllrrJyqTG22HL3n8axOB6RnhvpUJ4KETHqQeiF1jKK0zXab0zLJMXpX0EAMYMhV1IocVyZMlQspkX6NowF6rqYnsa+Bx0eXk/Bbd0FkXbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3H0cwxB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q8mGwibu"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dfe71fc2ab1so13417913276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 11:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719340967; x=1719945767; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5WhEzrAKR6etY4+8+J3I2144onDLe33a/pW/pB3BVA=;
-        b=q8mGwibuW8iWsMKlvrXpfpjeM0MKVNYTH+6Se3SvqH0tC7qKEjcjbLXQyzMI8o/l4F
-         40NXPt9tb0djKakV6qxx2l8DNJ3tJlteKQxnKOJznXRKURkTil6S8+yFYENNVeC7Vly9
-         GYk535HU1t+M9tVh9qXahQbvTeIvsX57aA8CpauxqaEqVWoYFYrcVZ+z22KDpsA7+z3X
-         ndmG+fpYcI6df5JrK1CAP+LrEu20h6QB3PR7TtasLzuC3At6+G8dd5sGpWfQD0J61fj7
-         IKfVmqg916COVbHoAAjNtXHyKnOKr3umMIEj4v3DTVDnbqD7zMRe8CMPg5GEGkb6owuZ
-         y1fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719340967; x=1719945767;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z5WhEzrAKR6etY4+8+J3I2144onDLe33a/pW/pB3BVA=;
-        b=PeEx2AyVFALIU1ij1lzoxlWVO25V6tS+w5XtEg4J9qv8XZuzbieX+Ek+D/n8/drsYe
-         UlwLjr21Ic758R4VnFfRf0vLNZrXOfsoyukW2tKEuRv80BhObHa1BNJlU3e3VK6zltlJ
-         exqO6ilU/ZVru2lnv5X7HiDnfCAM3+cQWZ/JhVd5y8sKF4mwo5wfiXAopUlxB52jjZz4
-         Kw2zIlk4wVq/GbxUe3FRMf4tHmEiiKtlpoDYlbadEux8T+P2HIhRJuHPvjF73/Z50wAn
-         tSeH2wgohny8Qx548D9J5g9ZHdZe9VhxjUhkKi9nuAwVgTjC6hQ8GsOR1N2UbX68H6f7
-         KLfA==
-X-Forwarded-Encrypted: i=1; AJvYcCW6fAy5rBb6rbFdNWGXxLRPj9hHbv7wpXjT7REYbZyEXWFiKFzcqp3zeTH2xsjBTH9jv0W2A1yEgR6ggZieYDIRaaTrePdKw113Tr4S5cRkMQ==
-X-Gm-Message-State: AOJu0Yz83FNPokWK4rrOQhmgVbM+BEruALN8Awgaiefa51ghJ3kGQ/6Z
-	e1oGerGkV5kvr9/itZI9jC9oNsvasRi3geHoB7QKaUtomzdvSRMA7Aw1Z30AxLD0T/Lu3HER8iB
-	ttoBjtQ==
-X-Google-Smtp-Source: AGHT+IHFfDudTcZpYBJ7DaBhhH5rSWVcGGVlqxAdq4qgt3qZon/zWZ6TMzj+Mka5n/0q6UdKITjOTlDeHHoG
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
- (user=irogers job=sendgmr) by 2002:a05:6902:188a:b0:e02:b7b3:94c4 with SMTP
- id 3f1490d57ef6-e0303ecc8f1mr355061276.3.1719340967268; Tue, 25 Jun 2024
- 11:42:47 -0700 (PDT)
-Date: Tue, 25 Jun 2024 11:42:24 -0700
-In-Reply-To: <20240625184224.929018-1-irogers@google.com>
-Message-Id: <20240625184224.929018-8-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3H0cwxB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92B7EC32781;
+	Tue, 25 Jun 2024 18:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719341114;
+	bh=ls1xBJfcDVgd5ISX3BpuHHrzrDMD41ZZn9MNlv/YzYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U3H0cwxBlzZtci8ZSnTO2Itkyv++pbeNQRaUu0ZLzGQE4JkDqUKXSUJAjjsI6DcLH
+	 Eims4gCOmTQPyzXYzcXzzNEkgnmR7AuLwfqNF2J1M11I49DOUF3FzH8BYYVX6zZrps
+	 vKKo6Ca+SA8Y3zeWGPAVFsd32SjNYqfIoIVW3uA/6CWzeGZo9KprQl4V0lPcRVWl8o
+	 whehrG/Ik6okPGL3JSzJd3L56+iM3F5hCnyP3f961Lh6s6xAjgfw35qrcyyXv9mKg9
+	 MQW5xpvbeoecP5xhrPTNZBx17zD5up4v9hrdiy/39XrvTA+YBVhhEwvVvhRiNMUWc/
+	 UhXHplo11xr3Q==
+Date: Tue, 25 Jun 2024 11:45:12 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Segher Boessenkool <segher@kernel.crashing.org>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+	akanksha@linux.ibm.com, Madhavan Srinivasan <maddy@linux.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Disha Goel <disgoel@linux.vnet.ibm.com>
+Subject: Re: [V4 05/16] tools/perf: Add disasm_line__parse to parse raw
+ instruction for powerpc
+Message-ID: <ZnsQOD3arkR0qoPJ@google.com>
+References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
+ <20240614172631.56803-6-atrajeev@linux.vnet.ibm.com>
+ <ZnpYBvXLhyAqZzvh@google.com>
+ <E2A1A4AA-E344-4B42-86CE-E0EDD82A398F@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240625184224.929018-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v4 7/7] perf python: Switch module to linking libraries from
- building source
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
-	Nick Terrell <terrelln@fb.com>, Andrei Vagin <avagin@google.com>, Kees Cook <keescook@chromium.org>, 
-	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <E2A1A4AA-E344-4B42-86CE-E0EDD82A398F@linux.vnet.ibm.com>
 
-setup.py was building most perf sources causing setup.py to mimic the
-Makefile logic as well as flex/bison code to be stubbed out, due to
-complexity building. By using libraries fewer functions are stubbed
-out, the build is faster and the Makefile logic is reused which should
-simplify updating. The libraries are passed through LDFLAGS to avoid
-complexity in python.
+On Tue, Jun 25, 2024 at 06:12:51PM +0530, Athira Rajeev wrote:
+> 
+> 
+> > On 25 Jun 2024, at 11:09 AM, Namhyung Kim <namhyung@kernel.org> wrote:
+> > 
+> > On Fri, Jun 14, 2024 at 10:56:20PM +0530, Athira Rajeev wrote:
+> >> Currently, the perf tool infrastructure disasm_line__parse function to
+> >> parse disassembled line.
+> >> 
+> >> Example snippet from objdump:
+> >> objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
+> >> 
+> >> c0000000010224b4: lwz     r10,0(r9)
+> >> 
+> >> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+> >> registers names and offset. In powerpc, the approach for data type
+> >> profiling uses raw instruction instead of result from objdump to identify
+> >> the instruction category and extract the source/target registers.
+> >> 
+> >> Example: 38 01 81 e8     ld      r4,312(r1)
+> >> 
+> >> Here "38 01 81 e8" is the raw instruction representation. Add function
+> >> "disasm_line__parse_powerpc" to handle parsing of raw instruction.
+> >> Also update "struct disasm_line" to save the binary code/
+> >> With the change, function captures:
+> >> 
+> >> line -> "38 01 81 e8     ld      r4,312(r1)"
+> >> raw instruction "38 01 81 e8"
+> >> 
+> >> Raw instruction is used later to extract the reg/offset fields. Macros
+> >> are added to extract opcode and register fields. "struct disasm_line"
+> >> is updated to carry union of "bytes" and "raw_insn" of 32 bit to carry raw
+> >> code (raw). Function "disasm_line__parse_powerpc fills the raw
+> >> instruction hex value and can use macros to get opcode. There is no
+> >> changes in existing code paths, which parses the disassembled code.
+> >> The architecture using the instruction name and present approach is
+> >> not altered. Since this approach targets powerpc, the macro
+> >> implementation is added for powerpc as of now.
+> >> 
+> >> Since the disasm_line__parse is used in other cases (perf annotate) and
+> >> not only data tye profiling, the powerpc callback includes changes to
+> >> work with binary code as well as mneumonic representation. Also in case
+> >> if the DSO read fails and libcapstone is not supported, the approach
+> >> fallback to use objdump as option. Hence as option, patch has changes to
+> >> ensure objdump option also works well.
+> >> 
+> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> >> ---
+> >> tools/include/linux/string.h                  |  2 +
+> >> tools/lib/string.c                            | 13 ++++
+> >> .../perf/arch/powerpc/annotate/instructions.c |  1 +
+> >> tools/perf/arch/powerpc/util/dwarf-regs.c     |  9 +++
+> >> tools/perf/util/annotate.h                    |  5 +-
+> >> tools/perf/util/disasm.c                      | 59 ++++++++++++++++++-
+> >> 6 files changed, 87 insertions(+), 2 deletions(-)
+> >> 
+> >> diff --git a/tools/include/linux/string.h b/tools/include/linux/string.h
+> >> index db5c99318c79..0acb1fc14e19 100644
+> >> --- a/tools/include/linux/string.h
+> >> +++ b/tools/include/linux/string.h
+> >> @@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char *);
+> >> 
+> >> extern char *strim(char *);
+> >> 
+> >> +extern void remove_spaces(char *s);
+> >> +
+> >> extern void *memchr_inv(const void *start, int c, size_t bytes);
+> >> #endif /* _TOOLS_LINUX_STRING_H_ */
+> >> diff --git a/tools/lib/string.c b/tools/lib/string.c
+> >> index 8b6892f959ab..3126d2cff716 100644
+> >> --- a/tools/lib/string.c
+> >> +++ b/tools/lib/string.c
+> >> @@ -153,6 +153,19 @@ char *strim(char *s)
+> >> return skip_spaces(s);
+> >> }
+> >> 
+> >> +/*
+> >> + * remove_spaces - Removes whitespaces from @s
+> >> + */
+> >> +void remove_spaces(char *s)
+> >> +{
+> >> + char *d = s;
+> >> +
+> >> + do {
+> >> + while (*d == ' ')
+> >> + ++d;
+> >> + } while ((*s++ = *d++));
+> >> +}
+> >> +
+> >> /**
+> >>  * strreplace - Replace all occurrences of character in string.
+> >>  * @s: The string to operate on.
+> >> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
+> >> index a3f423c27cae..d57fd023ef9c 100644
+> >> --- a/tools/perf/arch/powerpc/annotate/instructions.c
+> >> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
+> >> @@ -55,6 +55,7 @@ static int powerpc__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+> >> arch->initialized = true;
+> >> arch->associate_instruction_ops = powerpc__associate_instruction_ops;
+> >> arch->objdump.comment_char      = '#';
+> >> + annotate_opts.show_asm_raw = true;
+> > 
+> > Right, I think this will add the raw insn in the output of objdump, no?
+> > Why not using the information?
+> 
+> Shared response in previous patch
 
-Force the -fPIC flag for libbpf.a to ensure it is suitable for linking
-into the perf python module.
+Ok, now I understand it's a fallback. :)
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: James Clark <james.clark@arm.com>
----
- tools/perf/Makefile.config |   5 +
- tools/perf/Makefile.perf   |   6 +-
- tools/perf/util/python.c   | 274 +++++++++++++------------------------
- tools/perf/util/setup.py   |  33 +----
- 4 files changed, 110 insertions(+), 208 deletions(-)
+> > 
+> >> }
+> >> 
+> >> return 0;
+> >> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c b/tools/perf/arch/powerpc/util/dwarf-regs.c
+> >> index 0c4f4caf53ac..430623ca5612 100644
+> >> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
+> >> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
+> >> @@ -98,3 +98,12 @@ int regs_query_register_offset(const char *name)
+> >> return roff->ptregs_offset;
+> >> return -EINVAL;
+> >> }
+> >> +
+> >> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
+> >> +#define PPC_RA(a) (((a) >> 16) & 0x1f)
+> >> +#define PPC_RT(t) (((t) >> 21) & 0x1f)
+> >> +#define PPC_RB(b) (((b) >> 11) & 0x1f)
+> >> +#define PPC_D(D) ((D) & 0xfffe)
+> >> +#define PPC_DS(DS) ((DS) & 0xfffc)
+> >> +#define OP_LD 58
+> >> +#define OP_STD 62
+> >> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> >> index d5c821c22f79..9ba772f46270 100644
+> >> --- a/tools/perf/util/annotate.h
+> >> +++ b/tools/perf/util/annotate.h
+> >> @@ -113,7 +113,10 @@ struct annotation_line {
+> >> struct disasm_line {
+> >> struct ins  ins;
+> >> struct ins_operands  ops;
+> >> -
+> >> + union {
+> >> + u8 bytes[4];
+> >> + u32 raw_insn;
+> >> + } raw;
+> >> /* This needs to be at the end. */
+> >> struct annotation_line  al;
+> >> };
+> >> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> >> index b81cdcf4d6b4..1e8568738b38 100644
+> >> --- a/tools/perf/util/disasm.c
+> >> +++ b/tools/perf/util/disasm.c
+> >> @@ -45,6 +45,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
+> >> 
+> >> static void ins__sort(struct arch *arch);
+> >> static int disasm_line__parse(char *line, const char **namep, char **rawp);
+> >> +static int disasm_line__parse_powerpc(struct disasm_line *dl);
+> >> 
+> >> static __attribute__((constructor)) void symbol__init_regexpr(void)
+> >> {
+> >> @@ -844,6 +845,59 @@ static int disasm_line__parse(char *line, const char **namep, char **rawp)
+> >> return -1;
+> >> }
+> >> 
+> >> +/*
+> >> + * Parses the result captured from symbol__disassemble_*
+> >> + * Example, line read from DSO file in powerpc:
+> >> + * line:    38 01 81 e8
+> >> + * opcode: fetched from arch specific get_opcode_insn
+> >> + * rawp_insn: e8810138
+> >> + *
+> >> + * rawp_insn is used later to extract the reg/offset fields
+> >> + */
+> >> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
+> >> +
+> >> +static int disasm_line__parse_powerpc(struct disasm_line *dl)
+> >> +{
+> >> + char *line = dl->al.line;
+> >> + const char **namep = &dl->ins.name;
+> >> + char **rawp = &dl->ops.raw;
+> >> + char tmp, *tmp_raw_insn, *name_raw_insn = skip_spaces(line);
+> >> + char *name = skip_spaces(name_raw_insn + 11);
+> >> + int objdump = 0;
+> >> +
+> >> + if (strlen(line) > 11)
+> >> + objdump = 1;
+> >> +
+> >> + if (name_raw_insn[0] == '\0')
+> >> + return -1;
+> >> +
+> >> + if (objdump) {
+> >> + *rawp = name + 1;
+> >> + while ((*rawp)[0] != '\0' && !isspace((*rawp)[0]))
+> >> + ++*rawp;
+> >> + tmp = (*rawp)[0];
+> >> + (*rawp)[0] = '\0';
+> >> +
+> >> + *namep = strdup(name);
+> >> + if (*namep == NULL)
+> >> + return -1;
+> >> +
+> >> + (*rawp)[0] = tmp;
+> >> + *rawp = strim(*rawp);
+> >> + } else
+> >> + *namep = "";
 
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 81f73f68d256..5271a4c1d2b3 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -908,6 +908,11 @@ else
-          endif
-          CFLAGS += -DHAVE_LIBPYTHON_SUPPORT
-          $(call detected,CONFIG_LIBPYTHON)
-+         ifeq ($(filter -fPIC,$(CFLAGS)),)
-+           # Building a shared library requires position independent code.
-+           CFLAGS += -fPIC
-+           CXXFLAGS += -fPIC
-+         endif
-       endif
-     endif
-   endif
-diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-index ff03f0431013..4a1a9f09fa09 100644
---- a/tools/perf/Makefile.perf
-+++ b/tools/perf/Makefile.perf
-@@ -715,9 +715,9 @@ all: shell_compatibility_test $(ALL_PROGRAMS) $(LANG_BINDINGS) $(OTHER_PROGRAMS)
- # Create python binding output directory if not already present
- $(shell [ -d '$(OUTPUT)python' ] || mkdir -p '$(OUTPUT)python')
- 
--$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(LIBPERF) $(LIBSUBCMD)
-+$(OUTPUT)python/perf$(PYTHON_EXTENSION_SUFFIX): $(PYTHON_EXT_SRCS) $(PYTHON_EXT_DEPS) $(PERFLIBS)
- 	$(QUIET_GEN)LDSHARED="$(CC) -pthread -shared" \
--        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS)' \
-+        CFLAGS='$(CFLAGS)' LDFLAGS='$(LDFLAGS) $(LIBS)' \
- 	  $(PYTHON_WORD) util/setup.py \
- 	  --quiet build_ext; \
- 	cp $(PYTHON_EXTBUILD_LIB)perf*.so $(OUTPUT)python/
-@@ -933,7 +933,7 @@ $(LIBAPI)-clean:
- $(LIBBPF): FORCE | $(LIBBPF_OUTPUT)
- 	$(Q)$(MAKE) -C $(LIBBPF_DIR) FEATURES_DUMP=$(FEATURE_DUMP_EXPORT) \
- 		O= OUTPUT=$(LIBBPF_OUTPUT)/ DESTDIR=$(LIBBPF_DESTDIR) prefix= subdir= \
--		$@ install_headers
-+		EXTRA_CFLAGS="-fPIC" $@ install_headers
- 
- $(LIBBPF)-clean:
- 	$(call QUIET_CLEAN, libbpf)
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index 88f98f2772fb..3be882b2e845 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -10,22 +10,19 @@
- #endif
- #include <perf/mmap.h>
- #include "evlist.h"
--#include "callchain.h"
- #include "evsel.h"
- #include "event.h"
- #include "print_binary.h"
- #include "thread_map.h"
- #include "trace-event.h"
- #include "mmap.h"
--#include "stat.h"
--#include "metricgroup.h"
- #include "util/bpf-filter.h"
- #include "util/env.h"
--#include "util/pmu.h"
--#include "util/pmus.h"
--#include "util/symbol_conf.h"
-+#include "util/kvm-stat.h"
-+#include "util/kwork.h"
-+#include "util/lock-contention.h"
- #include <internal/lib.h>
--#include "util.h"
-+#include "../builtin.h"
- 
- #if PY_MAJOR_VERSION < 3
- #define _PyUnicode_FromString(arg) \
-@@ -51,168 +48,6 @@
- #define Py_TYPE(ob) (((PyObject*)(ob))->ob_type)
- #endif
- 
--struct symbol_conf symbol_conf;
--
--/*
-- * Avoid bringing in event parsing.
-- */
--int parse_event(struct evlist *evlist __maybe_unused, const char *str __maybe_unused)
--{
--	return 0;
--}
--
--/*
-- * Provide these two so that we don't have to link against callchain.c and
-- * start dragging hist.c, etc.
-- */
--struct callchain_param callchain_param;
--
--int parse_callchain_record(const char *arg __maybe_unused,
--			   struct callchain_param *param __maybe_unused)
--{
--	return 0;
--}
--
--/*
-- * Add these not to drag util/env.c
-- */
--struct perf_env perf_env;
--
--const char *perf_env__cpuid(struct perf_env *env __maybe_unused)
--{
--	return NULL;
--}
--
--// This one is a bit easier, wouldn't drag too much, but leave it as a stub we need it here
--const char *perf_env__arch(struct perf_env *env __maybe_unused)
--{
--	return NULL;
--}
--
--/*
-- * These ones are needed not to drag the PMU bandwagon, jevents generated
-- * pmu_sys_event_tables, etc and evsel__find_pmu() is used so far just for
-- * doing per PMU perf_event_attr.exclude_guest handling, not really needed, so
-- * far, for the perf python binding known usecases, revisit if this become
-- * necessary.
-- */
--struct perf_pmu *evsel__find_pmu(const struct evsel *evsel __maybe_unused)
--{
--	return NULL;
--}
--
--int perf_pmu__scan_file(const struct perf_pmu *pmu, const char *name, const char *fmt, ...)
--{
--	return EOF;
--}
--
--const char *perf_pmu__name_from_config(struct perf_pmu *pmu __maybe_unused, u64 config __maybe_unused)
--{
--	return NULL;
--}
--
--struct perf_pmu *perf_pmus__find_by_type(unsigned int type __maybe_unused)
--{
--	return NULL;
--}
--
--int perf_pmus__num_core_pmus(void)
--{
--	return 1;
--}
--
--bool evsel__is_aux_event(const struct evsel *evsel __maybe_unused)
--{
--	return false;
--}
--
--bool perf_pmus__supports_extended_type(void)
--{
--	return false;
--}
--
--/*
-- * Add this one here not to drag util/metricgroup.c
-- */
--int metricgroup__copy_metric_events(struct evlist *evlist, struct cgroup *cgrp,
--				    struct rblist *new_metric_events,
--				    struct rblist *old_metric_events)
--{
--	return 0;
--}
--
--/*
-- * Add this one here not to drag util/trace-event-info.c
-- */
--char *tracepoint_id_to_name(u64 config)
--{
--	return NULL;
--}
--
--/*
-- * XXX: All these evsel destructors need some better mechanism, like a linked
-- * list of destructors registered when the relevant code indeed is used instead
-- * of having more and more calls in perf_evsel__delete(). -- acme
-- *
-- * For now, add some more:
-- *
-- * Not to drag the BPF bandwagon...
-- */
--void bpf_counter__destroy(struct evsel *evsel);
--int bpf_counter__install_pe(struct evsel *evsel, int cpu, int fd);
--int bpf_counter__disable(struct evsel *evsel);
--
--void bpf_counter__destroy(struct evsel *evsel __maybe_unused)
--{
--}
--
--int bpf_counter__install_pe(struct evsel *evsel __maybe_unused, int cpu __maybe_unused, int fd __maybe_unused)
--{
--	return 0;
--}
--
--int bpf_counter__disable(struct evsel *evsel __maybe_unused)
--{
--	return 0;
--}
--
--// not to drag util/bpf-filter.c
--#ifdef HAVE_BPF_SKEL
--int perf_bpf_filter__prepare(struct evsel *evsel __maybe_unused)
--{
--	return 0;
--}
--
--int perf_bpf_filter__destroy(struct evsel *evsel __maybe_unused)
--{
--	return 0;
--}
--#endif
--
--/*
-- * Support debug printing even though util/debug.c is not linked.  That means
-- * implementing 'verbose' and 'eprintf'.
-- */
--int verbose;
--int debug_kmaps;
--int debug_peo_args;
--
--int eprintf(int level, int var, const char *fmt, ...);
--
--int eprintf(int level, int var, const char *fmt, ...)
--{
--	va_list args;
--	int ret = 0;
--
--	if (var >= level) {
--		va_start(args, fmt);
--		ret = vfprintf(stderr, fmt, args);
--		va_end(args);
--	}
--
--	return ret;
--}
--
- /* Define PyVarObject_HEAD_INIT for python 2.5 */
- #ifndef PyVarObject_HEAD_INIT
- # define PyVarObject_HEAD_INIT(type, size) PyObject_HEAD_INIT(type) size,
-@@ -1513,15 +1348,102 @@ PyMODINIT_FUNC PyInit_perf(void)
- #endif
- }
- 
--/*
-- * Dummy, to avoid dragging all the test_attr infrastructure in the python
-- * binding.
-- */
--void test_attr__open(struct perf_event_attr *attr, pid_t pid, struct perf_cpu cpu,
--                     int fd, int group_fd, unsigned long flags)
-+
-+/* The following are stubs to avoid dragging in builtin-* objects. */
-+/* TODO: move the code out of the builtin-* file into util. */
-+
-+unsigned int scripting_max_stack = PERF_MAX_STACK_DEPTH;
-+
-+bool kvm_entry_event(struct evsel *evsel __maybe_unused)
- {
-+	return false;
-+}
-+
-+bool kvm_exit_event(struct evsel *evsel __maybe_unused)
-+{
-+	return false;
-+}
-+
-+bool exit_event_begin(struct evsel *evsel __maybe_unused,
-+		      struct perf_sample *sample  __maybe_unused,
-+		      struct event_key *key  __maybe_unused)
-+{
-+	return false;
-+}
-+
-+bool exit_event_end(struct evsel *evsel __maybe_unused,
-+		    struct perf_sample *sample __maybe_unused,
-+		    struct event_key *key __maybe_unused)
-+{
-+	return false;
-+}
-+
-+void exit_event_decode_key(struct perf_kvm_stat *kvm __maybe_unused,
-+			   struct event_key *key __maybe_unused,
-+			   char *decode __maybe_unused)
-+{
-+}
-+
-+int find_scripts(char **scripts_array  __maybe_unused, char **scripts_path_array  __maybe_unused,
-+		int num  __maybe_unused, int pathlen __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+void perf_stat__set_no_csv_summary(int set __maybe_unused)
-+{
-+}
-+
-+void perf_stat__set_big_num(int set __maybe_unused)
-+{
-+}
-+
-+int script_spec_register(const char *spec __maybe_unused, struct scripting_ops *ops __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+arch_syscalls__strerrno_t *arch_syscalls__strerrno_function(const char *arch __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+struct kwork_work *perf_kwork_add_work(struct perf_kwork *kwork __maybe_unused,
-+				       struct kwork_class *class __maybe_unused,
-+				       struct kwork_work *key  __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+void script_fetch_insn(struct perf_sample *sample __maybe_unused,
-+		struct thread *thread __maybe_unused,
-+		struct machine *machine __maybe_unused)
-+{
-+}
-+
-+int perf_sample__sprintf_flags(u32 flags __maybe_unused, char *str __maybe_unused,
-+			size_t sz __maybe_unused)
-+{
-+	return -1;
-+}
-+
-+bool match_callstack_filter(struct machine *machine __maybe_unused, u64 *callstack __maybe_unused)
-+{
-+	return false;
-+}
-+
-+struct lock_stat *lock_stat_find(u64 addr __maybe_unused)
-+{
-+	return NULL;
-+}
-+
-+struct lock_stat *lock_stat_findnew(u64 addr __maybe_unused, const char *name __maybe_unused,
-+				int flags __maybe_unused)
-+{
-+	return NULL;
- }
- 
--void evlist__free_stats(struct evlist *evlist)
-+int cmd_inject(int argc __maybe_unused, const char *argv[] __maybe_unused)
- {
-+	return -1;
- }
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index 3107f5aa8c9a..142e9d447ce7 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -60,7 +60,7 @@ class install_lib(_install_lib):
- 
- cflags = getenv('CFLAGS', '').split()
- # switch off several checks (need to be at the end of cflags list)
--cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls', '-DPYTHON_PERF' ]
-+cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
- if cc_is_clang:
-     cflags += ["-Wno-unused-command-line-argument" ]
- else:
-@@ -72,36 +72,11 @@ cflags += [ "-Wno-declaration-after-statement" ]
- src_perf  = getenv('srctree') + '/tools/perf'
- build_lib = getenv('PYTHON_EXTBUILD_LIB')
- build_tmp = getenv('PYTHON_EXTBUILD_TMP')
--libtraceevent = getenv('LIBTRACEEVENT')
--libapikfs = getenv('LIBAPI')
--libperf = getenv('LIBPERF')
--
--ext_sources = [f.strip() for f in open('util/python-ext-sources')
--				if len(f.strip()) > 0 and f[0] != '#']
--
--extra_libraries = []
--
--if '-DHAVE_LIBTRACEEVENT' in cflags:
--    extra_libraries += [ 'traceevent' ]
--else:
--    ext_sources.remove('util/trace-event.c')
--    ext_sources.remove('util/trace-event-parse.c')
--
--# use full paths with source files
--ext_sources = list(map(lambda x: '%s/%s' % (src_perf, x) , ext_sources))
--
--if '-DHAVE_LIBNUMA_SUPPORT' in cflags:
--    extra_libraries += [ 'numa' ]
--if '-DHAVE_LIBCAP_SUPPORT' in cflags:
--    extra_libraries += [ 'cap' ]
- 
- perf = Extension('perf',
--		  sources = ext_sources,
--		  include_dirs = ['util/include'],
--		  libraries = extra_libraries,
--		  extra_compile_args = cflags,
--		  extra_objects = [ x for x in [libtraceevent, libapikfs, libperf]
--                                    if x is not None],
-+                 sources = [ src_perf + '/util/python.c' ],
-+		         include_dirs = ['util/include'],
-+		         extra_compile_args = cflags,
-                  )
- 
- setup(name='perf',
--- 
-2.45.2.741.gdbec12cfda-goog
+Then can you handle this logic under if (annotate_opts.show_raw_insn)
+in disasm_line__parse() instead of adding a new function?
 
+Thanks,
+Namhyung
+
+
+> >> +
+> >> + tmp_raw_insn = strdup(name_raw_insn);
+> >> + tmp_raw_insn[11] = '\0';
+> >> + remove_spaces(tmp_raw_insn);
+> >> +
+> >> + dl->raw.raw_insn = strtol(tmp_raw_insn, NULL, 16);
+> >> + if (objdump)
+> >> + dl->raw.raw_insn = be32_to_cpu(strtol(tmp_raw_insn, NULL, 16));
+> > 
+> > Hmm.. can you use a sscanf() instead?
+> > 
+> >  sscanf(line, "%x %x %x %x", &dl->raw.bytes[0], &dl->raw.bytes[1], ...)
+> > 
+> > Thanks,
+> > Namhyung
+> > 
+> Sure will address in V5
+> 
+> Thanks
+> Athira
+> >> +
+> >> + return 0;
+> >> +}
+> >> +
+> >> static void annotation_line__init(struct annotation_line *al,
+> >>   struct annotate_args *args,
+> >>   int nr)
+> >> @@ -897,7 +951,10 @@ struct disasm_line *disasm_line__new(struct annotate_args *args)
+> >> goto out_delete;
+> >> 
+> >> if (args->offset != -1) {
+> >> - if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
+> >> + if (arch__is(args->arch, "powerpc")) {
+> >> + if (disasm_line__parse_powerpc(dl) < 0)
+> >> + goto out_free_line;
+> >> + } else if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < 0)
+> >> goto out_free_line;
+> >> 
+> >> disasm_line__init_ins(dl, args->arch, &args->ms);
+> >> -- 
+> >> 2.43.0
+> 
+> 
