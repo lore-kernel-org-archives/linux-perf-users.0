@@ -1,292 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E07615382E;
-	Tue, 25 Jun 2024 18:39:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544D117C7D8
+	for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 18:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719340756; cv=none; b=PTmiHwDKo0xCLRihiPE7o16fOuwZM+aAFJIGDQ9SqS2hLjt7deehALUeZLLQM7Y/SUYHUncmGoKtLV3okxPn0XbcToB1NKI4/LmkXfO+kTvbD1F3hzFffRcJO37YaN8yPbcwQoM0Cow5CSWbwlMZ0U0jOMa1R2ps3TQSsyEUb0k=
+	t=1719340954; cv=none; b=n80/1K/0qb1kGxVgwrEChV1eiELm7CsbIQnKpX7KyrHlvSSe94be31ggZWYkbjCJwIdX6hV8QkWds3irrziKmiQm+7PDGl3bOv6Ct4AVO95nzKJayaR/jUY54BRu16fN3E1la34YML/5w3DUD6cpXfE70dAepknVa9jXSieBI0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719340756; c=relaxed/simple;
-	bh=mwdzdxZpVEVZ1zCBE51emz8QymqVopARr8duAzP6eC0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=opU/dtLO4552LfrtwofgiCPsUPUOQTfRckOO7YgSAL6SpTBtavsxvwtAxwmwhfLnFU3Mv4eiLL9J9t719Pr5KyWqt2tXAIIVgc97Am/GFI0v1yJDy6vBQz+L9ruWWw7T2Ps+90Nlao43Kk/sJXS3U3DiQqzZ6wVJAn2qSL+DP+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMRdTTMx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719340954; c=relaxed/simple;
+	bh=uRakYP9YwtSrkRypd0sus0mo63iXTbShYivQP4vojDY=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=Ko1E4ycpHDPa263uJndvF0t/Zw0AjBT0E+CSibdA92QJFIobmQ48FEU8/UHrOEO+dHGVuU1PI+zf8G91hdfIPioXm2GKYl8paZdbjvBmGdyz98kKwPnXcgUNIK1AY6QzxtijgQYVyAM4jf2q/cGkLU1Exg37l+2Z7LHEuYbm620=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UYwFQfrY; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMRdTTMx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 851A3C32781;
-	Tue, 25 Jun 2024 18:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719340756;
-	bh=mwdzdxZpVEVZ1zCBE51emz8QymqVopARr8duAzP6eC0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hMRdTTMxtJyc8KClWxIWxTd2HSHixHI0soc287gjuE9L7gNr3/mWMcxYnVTAi3F/U
-	 S1FGa6xwXF3EUtoMnTNCIIB1rmsNoyGs8iddiyKXuaJqL2Bw7RuWj801D6Eu/D/HT6
-	 W66t8Zj0z/DHpSm8+0dhMdOuFL8YnRzlNvN7FMK/l8UrdReQOEhJqkMTnkG/f5xD2g
-	 dbM9aUnr1rNZM9zLK3sy7lO/eBLltrsKZXQ/2BzMDbrUtnWVB6WMU8GxONYvg5kPek
-	 0IQnHlMfX3x4tERmEVZZVqEXs1EQlXSbTyRt6uz+v6vuv5PdJDWN9abmvzpXo87tyu
-	 oVtNKA9kD4KtQ==
-Date: Tue, 25 Jun 2024 11:39:13 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Segher Boessenkool <segher@kernel.crashing.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-	maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [V4 03/16] tools/perf: Add support to capture and parse raw
- instruction in powerpc using dso__data_read_offset utility
-Message-ID: <ZnsO0cmpL640TxJp@google.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
- <ZnpVn1yLtDnRnTBh@google.com>
- <B834FFD2-AC2E-4F7F-9B0B-15CBFB19A6A7@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYwFQfrY"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02b7adfb95so13151221276.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 25 Jun 2024 11:42:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719340951; x=1719945751; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=eTeAroXO/wxI5kEA8VbI1l6499SWylVFeT71mGO4Lpo=;
+        b=UYwFQfrYws0+D2MvOckrNyr3sHMZwDDUw25Og0reG7qDZRKstQd+k4Vt/v1XLE5bBp
+         X/BcHdmwqVF7ya9rh/9o3OTgvdm8M+db1G48MGi80DJaDLS7XVvfzSWRCjkW4Yp6NtrZ
+         z8jRI6jBda9iA2Fu7CasOMWMLXBL6lqRxbG+G9LyaIjkcgSSiruyd1kb/BWGnY0FF0Dr
+         933ZYALLub86KlGmYQASH1QoXkTGgk2mbDghvDlPkimTt7Rj9DGX4qmozdc0uwl8o4j+
+         +t6Q5StjkeMf9UluSapnLmJIPBNwg7OHgl9nyxJd+eSrfLj+f4e/Uw79ltvLwQN/BA8i
+         0GTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719340951; x=1719945751;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eTeAroXO/wxI5kEA8VbI1l6499SWylVFeT71mGO4Lpo=;
+        b=MuaGsAI6ckKoJYGgGulwSYEuybSrJcyLAHofNUg/HWe6yn08DJk/e6mVPELnABFFMu
+         GcvubaqR0GiEfeEnosqCYlZcwLmFHWCgQmmWJSLterXEZQeb/GxD+EsvHRjwNBn96cjl
+         voj/s25UXof39QW+m+U7IPf9cORo8ytnQ1DdjkxSAo73v8ql1LlLkOe/FDNA5OoKKUVQ
+         z8/G4/N/57aZhVG0oGLX76blnL844+WBwiwDaHmDpxO4dSli7MUM5K9HydovxHbBLIRH
+         1jt9FbB6WSNLT8who4IBamSE+oX9PnL49Zrka2TSYuavlW1zij+0Rb6X0opoIVc1rly7
+         2ghA==
+X-Forwarded-Encrypted: i=1; AJvYcCVBPglUDvJoxDmulgks84oM5iipJKd0E+Ft8hyoosEfhcOfAEagRDA7X/NkpmXInoh0r/oXc3wmMvcXs6avBz4LHMQuDVbJSym3PeJFCJB2DA==
+X-Gm-Message-State: AOJu0YxiVA8PGUl23oeRlTs6Y1YxXyAnFbki1zyJcLsqXCpO2EH8qmB8
+	Nz/pdZ/OEPbBSNlgfHnSbba4/FEBu05UsnZo5bhUBFHU3QMuCFeHnie25Aa2RWhdsNmaBW157v+
+	PPGg1Fw==
+X-Google-Smtp-Source: AGHT+IFyZ7kXRo1fobxWOpR60+105e2CUJB1svUXS6WY+BeDAegQYQ5D1PdonDyHNqGhZMEWQteOMSmoioOM
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b4cb:a52b:f9ea:8678])
+ (user=irogers job=sendgmr) by 2002:a05:6902:1208:b0:dfa:59bc:8857 with SMTP
+ id 3f1490d57ef6-e03040ff7bamr193288276.9.1719340951339; Tue, 25 Jun 2024
+ 11:42:31 -0700 (PDT)
+Date: Tue, 25 Jun 2024 11:42:17 -0700
+Message-Id: <20240625184224.929018-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <B834FFD2-AC2E-4F7F-9B0B-15CBFB19A6A7@linux.vnet.ibm.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
+Subject: [PATCH v4 0/7] Refactor perf python module build
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, Guo Ren <guoren@kernel.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
+	Yicong Yang <yangyicong@hisilicon.com>, Jonathan Cameron <jonathan.cameron@huawei.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
+	Andreas Hindborg <a.hindborg@samsung.com>, Alice Ryhl <aliceryhl@google.com>, 
+	Nick Terrell <terrelln@fb.com>, Andrei Vagin <avagin@google.com>, Kees Cook <keescook@chromium.org>, 
+	Oliver Upton <oliver.upton@linux.dev>, Ze Gao <zegao2021@gmail.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 25, 2024 at 06:08:49PM +0530, Athira Rajeev wrote:
-> 
-> 
-> > On 25 Jun 2024, at 10:59 AM, Namhyung Kim <namhyung@kernel.org> wrote:
-> > 
-> > On Fri, Jun 14, 2024 at 10:56:18PM +0530, Athira Rajeev wrote:
-> >> Add support to capture and parse raw instruction in powerpc.
-> >> Currently, the perf tool infrastructure uses two ways to disassemble
-> >> and understand the instruction. One is objdump and other option is
-> >> via libcapstone.
-> >> 
-> >> Currently, the perf tool infrastructure uses "--no-show-raw-insn" option
-> >> with "objdump" while disassemble. Example from powerpc with this option
-> >> for an instruction address is:
-> >> 
-> >> Snippet from:
-> >> objdump  --start-address=<address> --stop-address=<address>  -d --no-show-raw-insn -C <vmlinux>
-> >> 
-> >> c0000000010224b4: lwz     r10,0(r9)
-> > 
-> > What about removing --no-show-raw-insn and parse the raw byte code in
-> > the output for powerpc?  I think it's better to support normal
-> > annotation together.
-> Hi Namhyung,
-> 
-> Yes, In the other patch in same series, I have added support for normal annotation together.
-> Patch 5 includes changes to work with binary code as well as mneumonic representation.
-> 
-> Example representation using --show-raw-insn in objdump gives result:
-> 
-> 38 01 81 e8 ld r4,312(r1)
-> 
-> Patch5 has changes to use “objdump” with --show-raw-insn to read the raw instruction and also support normal annotation.
+Refactor the perf python module build to instead of building C files
+it links libraries. To support this make static libraries for tests,
+ui, util and pmu-events. Doing this allows fewer functions to be
+stubbed out, importantly parse_events is no longer stubbed out which
+will improve the ability to work with heterogeneous cores.
 
-Ok, that's good!
+By not building .c files for the python module and for the build of
+perf, this should also help build times.
 
+Patch 1 adds '*.a' cleanup to the clean target.
 
-> In case of data type profiling, with only sort keys, (type, typeoff) there is no need to disassemble and then get raw byte code.
-> Binary code can be read directly from the DSO. Compared to using objdump, directly reading from DSO will be faster in this case.
+Patches 2 to 6 add static libraries for existing parts of the perf
+build.
 
-Sounds like an optimization.  Then I think you'd better handle the
-general case first and optimize later.  Probably you want to merge
-patch 3 and 4 together.
+Patch 7 adds the python build using libraries rather than C source
+files.
 
-Thanks,
-Namhyung
+Patch 8 cleans up the python dependencies and removes the no longer
+needed python-ext-sources.
 
+v4: Rebase past conflict with commit eae7044b67a6 ("perf hist: Honor
+    symbol_conf.skip_empty") - fixes like this commit won't be
+    necessary after these changes. Swap a tab for spaces for better
+    consistency.
+v3: Add missed xtensa directory for the util build. Remove adding the
+    arch directory to perf-y as it creates an empty object file that
+    breaks with GCC and LTO.
+v2: Add '*.a' cleanup to clean target. Add reviewed-by James Clark.
 
-> In summary, current patchset uses below approach:
-> 
-> 1. Read directly from DSO using dso__data_read_offset if only “type, typeoff” is needed.
-> 2. If in any case reading directly from DSO fails, fallback to using libcapstone. Using libcapstone to read is faster than objdump
-> 3. If libcapstone is not supported, approach will use objdump. Patchset has changes to handle objdump result created with show-raw-ins in powerpc. 
-> 4. Also for normal perf report or perf annotate, approach will use objdump
-> 
-> NOTE:
-> libcapstone is used currently only for reading raw binary code. Disassemble is currently not enabled. While attempting to do cs_disasm, observation is that some of the instructions were not identified (ex: extswsli, maddld) and it had to fallback to use objdump. Hence enabling "cs_disasm" is added in comment section as a TODO for powerpc. Patch number 13. 
-> 
-> Thanks
-> Athira
-> 
-> > 
-> >> 
-> >> This line "lwz r10,0(r9)" is parsed to extract instruction name,
-> >> registers names and offset. Also to find whether there is a memory
-> >> reference in the operands, "memory_ref_char" field of objdump is used.
-> >> For x86, "(" is used as memory_ref_char to tackle instructions of the
-> >> form "mov  (%rax), %rcx".
-> >> 
-> >> In case of powerpc, not all instructions using "(" are the only memory
-> >> instructions. Example, above instruction can also be of extended form (X
-> >> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
-> >> and extract the source/target registers, patch adds support to use raw
-> >> instruction for powerpc. Approach used is to read the raw instruction
-> >> directly from the DSO file using "dso__data_read_offset" utility which
-> >> is already implemented in perf infrastructure in "util/dso.c".
-> >> 
-> >> Example:
-> >> 
-> >> 38 01 81 e8     ld      r4,312(r1)
-> >> 
-> >> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
-> >> this translates to instruction form: "ld RT,DS(RA)" and binary code
-> >> as:
-> >> 
-> >>   | 58 |  RT  |  RA |      DS       | |
-> >>   -------------------------------------
-> >>   0    6     11    16              30 31
-> >> 
-> >> Function "symbol__disassemble_dso" is updated to read raw instruction
-> >> directly from DSO using dso__data_read_offset utility. In case of
-> >> above example, this captures:
-> >> line:    38 01 81 e8
-> >> 
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >> ---
-> >> tools/perf/util/disasm.c | 98 ++++++++++++++++++++++++++++++++++++++++
-> >> 1 file changed, 98 insertions(+)
-> >> 
-> >> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> >> index b5fe3a7508bb..f19496133bf0 100644
-> >> --- a/tools/perf/util/disasm.c
-> >> +++ b/tools/perf/util/disasm.c
-> >> @@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
-> >> }
-> >> #endif
-> >> 
-> >> +static int symbol__disassemble_dso(char *filename, struct symbol *sym,
-> > 
-> > Maybe rename to symbol__disassemble_raw() ?
-> 
-> This is specifically using dso__data_read_offset. Hence using symbol__disassemble_dso 
-> > 
-> >> + struct annotate_args *args)
-> >> +{
-> >> + struct annotation *notes = symbol__annotation(sym);
-> >> + struct map *map = args->ms.map;
-> >> + struct dso *dso = map__dso(map);
-> >> + u64 start = map__rip_2objdump(map, sym->start);
-> >> + u64 end = map__rip_2objdump(map, sym->end);
-> >> + u64 len = end - start;
-> >> + u64 offset;
-> >> + int i, count;
-> >> + u8 *buf = NULL;
-> >> + char disasm_buf[512];
-> >> + struct disasm_line *dl;
-> >> + u32 *line;
-> >> +
-> >> + /* Return if objdump is specified explicitly */
-> >> + if (args->options->objdump_path)
-> >> + return -1;
-> >> +
-> >> + pr_debug("Reading raw instruction from : %s using dso__data_read_offset\n", filename);
-> > 
-> > You may want to print the actual offset and remove the "using
-> > dso__data_read_offset" part.
-> 
-> Ok Sure
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> >> +
-> >> + buf = malloc(len);
-> >> + if (buf == NULL)
-> >> + goto err;
-> >> +
-> >> + count = dso__data_read_offset(dso, NULL, sym->start, buf, len);
-> >> +
-> >> + line = (u32 *)buf;
-> >> +
-> >> + if ((u64)count != len)
-> >> + goto err;
-> >> +
-> >> + /* add the function address and name */
-> >> + scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-> >> +   start, sym->name);
-> >> +
-> >> + args->offset = -1;
-> >> + args->line = disasm_buf;
-> >> + args->line_nr = 0;
-> >> + args->fileloc = NULL;
-> >> + args->ms.sym = sym;
-> >> +
-> >> + dl = disasm_line__new(args);
-> >> + if (dl == NULL)
-> >> + goto err;
-> >> +
-> >> + annotation_line__add(&dl->al, &notes->src->source);
-> >> +
-> >> + /* Each raw instruction is 4 byte */
-> >> + count = len/4;
-> >> +
-> >> + for (i = 0, offset = 0; i < count; i++) {
-> >> + args->offset = offset;
-> >> + sprintf(args->line, "%x", line[i]);
-> >> + dl = disasm_line__new(args);
-> >> + if (dl == NULL)
-> >> + goto err;
-> >> +
-> >> + annotation_line__add(&dl->al, &notes->src->source);
-> >> + offset += 4;
-> >> + }
-> >> +
-> >> + /* It failed in the middle */
-> >> + if (offset != len) {
-> >> + struct list_head *list = &notes->src->source;
-> >> +
-> >> + /* Discard all lines and fallback to objdump */
-> >> + while (!list_empty(list)) {
-> >> + dl = list_first_entry(list, struct disasm_line, al.node);
-> >> +
-> >> + list_del_init(&dl->al.node);
-> >> + disasm_line__free(dl);
-> >> + }
-> >> + count = -1;
-> >> + }
-> >> +
-> >> +out:
-> >> + free(buf);
-> >> + return count < 0 ? count : 0;
-> >> +
-> >> +err:
-> >> + count = -1;
-> >> + goto out;
-> >> +}
-> >> /*
-> >>  * Possibly create a new version of line with tabs expanded. Returns the
-> >>  * existing or new line, storage is updated if a new line is allocated. If
-> >> @@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
-> >> strcpy(symfs_filename, tmp);
-> >> }
-> >> 
-> >> + /*
-> >> +  * For powerpc data type profiling, use the dso__data_read_offset
-> >> +  * to read raw instruction directly and interpret the binary code
-> >> +  * to understand instructions and register fields. For sort keys as
-> >> +  * type and typeoff, disassemble to mnemonic notation is
-> >> +  * not required in case of powerpc.
-> >> +  */
-> >> + if (arch__is(args->arch, "powerpc")) {
-> >> + err = symbol__disassemble_dso(symfs_filename, sym, args);
-> >> + if (err == 0)
-> >> + goto out_remove_tmp;
-> >> + }
-> >> +
-> >> #ifdef HAVE_LIBCAPSTONE_SUPPORT
-> >> err = symbol__disassemble_capstone(symfs_filename, sym, args);
-> >> if (err == 0)
-> >> -- 
-> >> 2.43.0
-> 
-> 
+Ian Rogers (7):
+  perf build: Add '*.a' to clean targets
+  perf ui: Make ui its own library
+  perf pmu-events: Make pmu-events a library
+  perf test: Make tests its own library
+  perf bench: Make bench its own library
+  perf util: Make util its own library
+  perf python: Switch module to linking libraries from building source
+
+ tools/perf/Build                              |  14 +-
+ tools/perf/Makefile.config                    |   5 +
+ tools/perf/Makefile.perf                      |  75 +++-
+ tools/perf/arch/Build                         |   5 +-
+ tools/perf/arch/arm/Build                     |   4 +-
+ tools/perf/arch/arm/tests/Build               |   8 +-
+ tools/perf/arch/arm/util/Build                |  10 +-
+ tools/perf/arch/arm64/Build                   |   4 +-
+ tools/perf/arch/arm64/tests/Build             |   8 +-
+ tools/perf/arch/arm64/util/Build              |  20 +-
+ tools/perf/arch/csky/Build                    |   2 +-
+ tools/perf/arch/csky/util/Build               |   6 +-
+ tools/perf/arch/loongarch/Build               |   2 +-
+ tools/perf/arch/loongarch/util/Build          |   8 +-
+ tools/perf/arch/mips/Build                    |   2 +-
+ tools/perf/arch/mips/util/Build               |   6 +-
+ tools/perf/arch/powerpc/Build                 |   4 +-
+ tools/perf/arch/powerpc/tests/Build           |   6 +-
+ tools/perf/arch/powerpc/util/Build            |  24 +-
+ tools/perf/arch/riscv/Build                   |   2 +-
+ tools/perf/arch/riscv/util/Build              |   8 +-
+ tools/perf/arch/s390/Build                    |   2 +-
+ tools/perf/arch/s390/util/Build               |  16 +-
+ tools/perf/arch/sh/Build                      |   2 +-
+ tools/perf/arch/sh/util/Build                 |   2 +-
+ tools/perf/arch/sparc/Build                   |   2 +-
+ tools/perf/arch/sparc/util/Build              |   2 +-
+ tools/perf/arch/x86/Build                     |   6 +-
+ tools/perf/arch/x86/tests/Build               |  20 +-
+ tools/perf/arch/x86/util/Build                |  42 +-
+ tools/perf/arch/xtensa/Build                  |   2 +-
+ tools/perf/bench/Build                        |  46 +-
+ tools/perf/scripts/Build                      |   4 +-
+ tools/perf/scripts/perl/Perf-Trace-Util/Build |   2 +-
+ .../perf/scripts/python/Perf-Trace-Util/Build |   2 +-
+ tools/perf/tests/Build                        | 140 +++----
+ tools/perf/tests/workloads/Build              |  12 +-
+ tools/perf/ui/Build                           |  18 +-
+ tools/perf/ui/browsers/Build                  |  14 +-
+ tools/perf/ui/tui/Build                       |   8 +-
+ tools/perf/util/Build                         | 394 +++++++++---------
+ tools/perf/util/arm-spe-decoder/Build         |   2 +-
+ tools/perf/util/cs-etm-decoder/Build          |   2 +-
+ tools/perf/util/hisi-ptt-decoder/Build        |   2 +-
+ tools/perf/util/intel-pt-decoder/Build        |   2 +-
+ tools/perf/util/perf-regs-arch/Build          |  18 +-
+ tools/perf/util/python.c                      | 274 +++++-------
+ tools/perf/util/scripting-engines/Build       |   4 +-
+ tools/perf/util/setup.py                      |  33 +-
+ 49 files changed, 625 insertions(+), 671 deletions(-)
+
+-- 
+2.45.2.741.gdbec12cfda-goog
+
