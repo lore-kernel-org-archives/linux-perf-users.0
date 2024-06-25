@@ -1,189 +1,177 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8788714264F;
-	Tue, 25 Jun 2024 05:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6D7914430A;
+	Tue, 25 Jun 2024 05:23:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719292980; cv=none; b=iGxhJD6DE+c3ApGu1jVpl5KsZXIWAbJF8/5E4L2Axce2s6sjGDUW7/YGbbh/RH5U5mm2/q/F9nC55JLzj3KYImrEJIwlmNeG3B3hAUHUFrAeaOGk2unMM7P4JIVYAzeRF+exKADVMjvFTOaktJaGc6JU6DtGaKR/8pc4+Gypz5s=
+	t=1719293002; cv=none; b=mmTej4/YViaJCpcwWjCr/Md8lpD7oDcCxtJGK6kXCP1dkiNvybHznpNlU/iRHpOdzPiAz33S99QShMHGo1MUkhxWfe+SzXbE2Kb4ZktFSAHgledA6GTD9R2Cm0rlpZ2VQ19xrcz9+TvJlInQQYztUeps4TqKFxPstKh/yy/Mje8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719292980; c=relaxed/simple;
-	bh=k4OQ7xGQtrVC2kJgX9J9ALOCLy/UGD0t7wbhmHHno90=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V1ADtC4DYLrS8fbEyaHhf5IRjqPRQSYS8Mo4vGNDFNB9dcYr3ahx3MkskE7H4AbY/hLj4KlxIJkEYFBxPWAzdXWCm0Y86pBbwywP2jQ4yyJ5HhulfXzAUh0xkA9w3Ny1wmbitSuakUADcW4LisAij2aOORWc+P30EEqqcXijxvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m6P1zB1W; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719293002; c=relaxed/simple;
+	bh=jVLXeRuB4Y1W07aCWmpukXhZYCzc8LgRbeBwlKDWBsQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ER7j6+KtlEjHCgyyc58jxU1RHzXDhZ4n+Mc1sySMVVK0MJU2N6BJqgkeKEFp36u483rhchQ/Ige3acdK3BItISPGL0Q89PXGNnm71mGrm1VVx1LDwP0z4010dxJsKr57RlU5Dsd4wQhtFuCfR+jV7g3oNfhzFzskalmF7MeyRsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Cc2bnfre; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m6P1zB1W"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1f47f07aceaso39941065ad.0;
-        Mon, 24 Jun 2024 22:22:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719292979; x=1719897779; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vyOQS+2avZap4j8E0kSaNckBLidUkjghHNyRVXogiQU=;
-        b=m6P1zB1WSwDilQ5zNig5U/hQRaHqrXZp92HeIbCsRaXC1dIh7xqYJPt4SgrDSRmuN/
-         ygwipiEtk5KtoTuHfrPa62KsVTFWBXEMLbXXmYKby1bi5/ahclX8zLplFBN1owsBMkuo
-         GDDmnt9sbK9nXd08CoDQltTopsz/DHAhlhi8Taafzj1ZxEvCOPZ+KUpO0SC+772a0cmH
-         nwUiVOWIWUHyTnA+b6pUQPNB37asaTggM9kAGVt5LecFLs0yGxoPOcIrWsxs2Q8X/xtv
-         3Dx1yyrCHdWtdJWhF+zM/Q4WW9KwyzAU4odrO06VTKFpXlMBm11vlIOhA+EHgUwqU60d
-         7LDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719292979; x=1719897779;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vyOQS+2avZap4j8E0kSaNckBLidUkjghHNyRVXogiQU=;
-        b=evOcUN5VnoD3t+OVsqhYK8xJ/RMgSzhJmo5g0eLGvB12QZan5IDnmbNJCEZw2vA9LN
-         YO4Wavucf/Gl/QHLNzjZg1q41f7RjFHFIzADqffS4BCKfF7J7p0dwnYFGTFNF4cytMz9
-         mJFc3aOf5GLAVcLq9zgNJ7zfQlVNXoWtwlD64XFoBykUimRYW+83wc2EhZa60gYvxHtz
-         EvIJV1k/1XCnPkJ0r8vn+jRakA6mmN4/V0mgEkXPb33ewpyzVgVSz7STyvVXaUQ9fwC3
-         WtNGeWWvw760Lr/8ybNoFpMeIdyITooKldcE2Bg2+dR35EPNGs1GyD1ALwe6rV5yWS7i
-         8BCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWpE2Bte+dg0dH11E+/wWPiimYZS0+UinloCk10lD1uvl0augWW2+NiDsQKejI0/vMFNsxNk7BCPzxRnVKsNpwgtrnvOXlCtTaX+Rv9Fh/mF7nFPXs878bLsdd9RwdOLdEj5g2ywMajBLP+Wr2elg==
-X-Gm-Message-State: AOJu0YztiMubOEVWq1f9LxFDDk9QSsayElVCBhaRin8CZ3SiAr1+z7H4
-	CBYSt4V1pIqPbX/2lzqj/WRwbX1XzVpOo1ayeiVfSdOODbrUlC+A
-X-Google-Smtp-Source: AGHT+IG6mRLr4fSYHgaC2+ZBazI2kHMfLIMEgFt4bU7wY3j2ghjQnti7P4sDSZ6eeaW2a6qK0qsT8w==
-X-Received: by 2002:a17:902:c406:b0:1fa:487:d930 with SMTP id d9443c01a7336-1fa15943643mr85357025ad.56.1719292978779;
-        Mon, 24 Jun 2024 22:22:58 -0700 (PDT)
-Received: from [192.168.50.95] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f9eb321a83sm71889965ad.95.2024.06.24.22.22.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Jun 2024 22:22:58 -0700 (PDT)
-Message-ID: <8a6a5de3-cc0a-4522-a885-c1ef454158a8@gmail.com>
-Date: Tue, 25 Jun 2024 14:22:52 +0900
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Cc2bnfre"
+Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45P5MeEK1244996
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+	Mon, 24 Jun 2024 22:22:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45P5MeEK1244996
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719292965;
+	bh=h/dSDgvdZc16fP/Z1So0qkiak4w7w3PlGGSBWgwhA10=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Cc2bnfrebZPb0RYkskmvITTpW76gxHo1uOwYrx/YtQaHAHjCz9kGwsWz75sl8OmlB
+	 BrXNoatx04ZivIZSUPSZ6nqX80jyV0iKLwvjJbU7WVdWlUZMceZt/1UlMQA7BMk9aZ
+	 1il3Y6T1NudhK7f4jCQInUVvq4guoCp8wJDC8IuRyBHsSsUyRwM5JI4dU7sWTdVXMX
+	 rZTDV1NMhJxW6xcb0CrFKvDJ+srZeDRBlpMOVDDBb75jZWf9ZR6ddgqAEaI/Chzb2+
+	 JwulTgex/39AVX8apc+D5GJYkhCGpGVl6QmFsEPZ+PX1bniw01aBUNNokw4hYtksGJ
+	 0o3BIh22xxUHw==
+From: "Xin Li (Intel)" <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+        andrew.cooper3@citrix.com
+Subject: [PATCH v3B 4/4] x86/cpufeatures: Use AWK to generate {REQUIRED|DISABLED}_MASK_BIT_SET
+Date: Mon, 24 Jun 2024 22:22:39 -0700
+Message-ID: <20240625052239.1244986-1-xin@zytor.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <d0083546-f945-45e4-a0c3-96794ef76caa@citrix.com>
+References: <d0083546-f945-45e4-a0c3-96794ef76caa@citrix.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] util: constant -1 with expression of type char and
- allocation failure handling
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>,
- Leo Yan <leo.yan@linux.dev>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Austin Kim <austindh.kim@gmail.com>, shjy180909@gmail.com,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>
-References: <20240619183857.4819-2-yskelg@gmail.com>
- <CAP-5=fWm-Tij+vjqOa-18RsiO+1_ytWnKkDvp3vz5hv1O9aMCw@mail.gmail.com>
- <5c1f3b54-da71-47b7-a30c-0011a23195c8@gmail.com>
- <ZnpO8TKWSiterMwC@google.com>
-Content-Language: en-US
-From: Yunseong Kim <yskelg@gmail.com>
-In-Reply-To: <ZnpO8TKWSiterMwC@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Namhyung,
+Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
+script that generates the required and disabled feature mask header.
 
-On 6/25/24 2:00 오후, Namhyung Kim wrote:
-> Hello,
-> 
-> On Thu, Jun 20, 2024 at 04:10:53AM +0900, Yunseong Kim wrote:
->> Hi Ian,
->>
->> On 6/20/24 4:03 오전, Ian Rogers wrote:
->>>
->>>
->>> On Wed, Jun 19, 2024, 11:39 AM <yskelg@gmail.com
->>> <mailto:yskelg@gmail.com>> wrote:
->>>
->>>     From: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
->>>
->>>     This patch resolve this warning.
->>>
->>>     tools/perf/util/evsel.c:1620:9: error: result of comparison of constant
->>>     -1 with expression of type 'char' is always false
->>>      -Werror,-Wtautological-constant-out-of-range-compare
->>>      1620 |                 if (c == -1)
->>>           |                     ~ ^  ~~
->>>
->>>     Add handling on unread_unwind_spec_debug_frame().
->>>     This make caller find_proc_info() works well when the allocation
->>>     failure.
->>>
->>>     Signed-off-by: Yunseong Kim <yskelg@gmail.com <mailto:yskelg@gmail.com>>
->>>
->>>
->>>
->>> Both changes look good. Could you make them 2 commits? If so add my: 
->>
->> No problem! I'll send it right away.
->>
->> Thank you for the code review.
->>
->>> Reviewed-by: Ian Rogers <irogers@google.com <mailto:irogers@google.com>>
-> 
-> You forgot to add Ian's Reviewed-by in the next patches.
-> I can add it to them this time, but please do so next time.
-> 
-> Thanks,
-> Namhyung
+Suggested-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+---
 
-Thank you Namhyung for the code review. Oops, I completely forgot about
-that, I'm so sorry.
+Change since v3A:
+* Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
 
->>> Thanks, 
->>> Ian
->>>
->>>     ---
->>>      tools/perf/util/evsel.c                  | 2 +-
->>>      tools/perf/util/unwind-libunwind-local.c | 5 +++++
->>>      2 files changed, 6 insertions(+), 1 deletion(-)
->>>
->>>     diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->>>     index 25857894c047..bc603193c477 100644
->>>     --- a/tools/perf/util/evsel.c
->>>     +++ b/tools/perf/util/evsel.c
->>>     @@ -1620,7 +1620,7 @@ static int evsel__read_group(struct evsel
->>>     *leader, int cpu_map_idx, int thread)
->>>
->>>      static bool read_until_char(struct io *io, char e)
->>>      {
->>>     -       char c;
->>>     +       int c;
->>>
->>>             do {
->>>                     c = io__get_char(io);
->>>     diff --git a/tools/perf/util/unwind-libunwind-local.c
->>>     b/tools/perf/util/unwind-libunwind-local.c
->>>     index cde267ea3e99..a424eae6d308 100644
->>>     --- a/tools/perf/util/unwind-libunwind-local.c
->>>     +++ b/tools/perf/util/unwind-libunwind-local.c
->>>     @@ -390,6 +390,11 @@ static int read_unwind_spec_debug_frame(struct
->>>     dso *dso,
->>>                             char *debuglink = malloc(PATH_MAX);
->>>                             int ret = 0;
->>>
->>>     +                       if (debuglink == NULL) {
->>>     +                               pr_err("unwind: Can't read unwind
->>>     spec debug frame.\n");
->>>     +                               return -ENOMEM;
->>>     +                       }
->>>     +
->>>                             ret = dso__read_binary_type_filename(
->>>                                     dso, DSO_BINARY_TYPE__DEBUGLINK,
->>>                                     machine->root_dir, debuglink, PATH_MAX);
->>>     -- 
->>>     2.44.0
->>>
->>
->> Warm Regards,
->> Yunseong Kim
+Change since v3:
+* Checking NCAPINTS isn't necessary anymore.  It was needed when these
+  macros had to be manually updated, but now if cpufeatures.h changes
+  this header will be regenerated (Brian Gerst).
+---
+ arch/x86/include/asm/cpufeature.h | 69 -------------------------------
+ arch/x86/tools/featuremasks.awk   |  9 +++-
+ 2 files changed, 8 insertions(+), 70 deletions(-)
 
-Thank you for your hard working and for always being.
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 8332f596ba3c..8161dfb3255c 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -55,75 +55,6 @@ extern const char * const x86_bug_flags[NBUGINTS*32];
+ #define test_cpu_cap(c, bit)						\
+ 	 arch_test_bit(bit, (unsigned long *)((c)->x86_capability))
+ 
+-/*
+- * There are 32 bits/features in each mask word.  The high bits
+- * (selected with (bit>>5) give us the word number and the low 5
+- * bits give us the bit/feature number inside the word.
+- * (1UL<<((bit)&31) gives us a mask for the feature_bit so we can
+- * see if it is set in the mask word.
+- */
+-#define CHECK_BIT_IN_MASK_WORD(maskname, word, bit)	\
+-	(((bit)>>5)==(word) && (1UL<<((bit)&31) & maskname##word ))
+-
+-/*
+- * {REQUIRED,DISABLED}_MASK_CHECK below may seem duplicated with the
+- * following BUILD_BUG_ON_ZERO() check but when NCAPINTS gets changed, all
+- * header macros which use NCAPINTS need to be changed. The duplicated macro
+- * use causes the compiler to issue errors for all headers so that all usage
+- * sites can be corrected.
+- */
+-#define REQUIRED_MASK_BIT_SET(feature_bit)		\
+-	 ( CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(REQUIRED_MASK, 21, feature_bit) ||	\
+-	   REQUIRED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+-#define DISABLED_MASK_BIT_SET(feature_bit)				\
+-	 ( CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  0, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  1, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  2, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  3, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  4, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  5, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  6, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  7, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  8, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK,  9, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 10, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 11, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 12, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 13, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 14, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 15, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 16, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 17, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 18, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 19, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 20, feature_bit) ||	\
+-	   CHECK_BIT_IN_MASK_WORD(DISABLED_MASK, 21, feature_bit) ||	\
+-	   DISABLED_MASK_CHECK					  ||	\
+-	   BUILD_BUG_ON_ZERO(NCAPINTS != 22))
+-
+ #define cpu_has(c, bit)							\
+ 	(__builtin_constant_p(bit) && REQUIRED_MASK_BIT_SET(bit) ? 1 :	\
+ 	 test_cpu_cap(c, bit))
+diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
+index 989b021e73d3..e0383683e630 100755
+--- a/arch/x86/tools/featuremasks.awk
++++ b/arch/x86/tools/featuremasks.awk
+@@ -77,7 +77,14 @@ END {
+ 			printf "#define %s_MASK%d\t0x%08x\n", s, i, masks[i];
+ 		}
+ 
+-		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
++		printf "\n#define %s_MASK_BIT_SET(x)\t\t\t\\\n", s;
++		printf "\t((\t\t\t\t\t";
++		for (i = 0; i < ncapints; i++) {
++			if (masks[i])
++				printf "\t\\\n\t\t((x) >> 5) == %2d ? %s_MASK%d :", i, s, i;
++		}
++		printf " 0\t\\\n";
++		printf "\t) & (1U << ((x) & 31)))\n";
+ 	}
+ 
+ 	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+-- 
+2.45.2
 
-Best regards,
-
-Yunseong Kim
