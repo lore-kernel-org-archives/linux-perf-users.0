@@ -1,218 +1,463 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723C17E911
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 11:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D2A61802AC
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 13:16:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719401778; cv=none; b=bQ4646hSP5u9CL71tHKScAzVWQKpcXTOlIT+TKJJILqW5PNN9uMXIK1GSfuqJou+XTnKdCbEID2NQvJRCqWE2zX6LhDTjfU9p9trPFnwSoIPhXCbrt6UIYvfN3Jk060lK77YIuCg9RLU0okvHdcHaawhnT2j2gl7djfS6/Cmo0A=
+	t=1719407818; cv=none; b=jDgwRP1xj9kvpDgOKQQmpuak7vSRAC784Bg1mU0gTWdtHKfscOiB0+HRHsmZgZAbpK+MpgFid/OAU00KP70q2iPzYRS0cJmRxDHneQfUVgCRGFLK8qnZT/MnhhiLyRvXupACFNIK6HwEWkG6BWH4Qh7s71DTnzTOierWuojX6w0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719401778; c=relaxed/simple;
-	bh=7kxtBK25xovD9hnasOmXym1Dqzb8xYXCkDVgPyX+fcU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YnSYyX5QAVXHgXRugwOl7L62qDDPAatVSYsxpj9+j2pHPARo+uKYiiGeISYXGRC6USqEQezh+jjTBEAyDavv2yuUrm1CBWmLR3U49P+3VRYiqDkxt4LFANBJsmZwjCZRrl+ZyGE8buED8oBSO/pdD3yFwJnNWK4OXw/GBt9vvxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TGt/ZUz1; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1719407818; c=relaxed/simple;
+	bh=BiDkTmRFRay9HK7HVx5bCNCLfqk0258Ceuw7N67jw6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pEvibIUyFBFRiRVaseDKXUaCUFsKzl5hcte5r2ZcgtpYZ5GDyaCACJDNKR8jiZGdR7xelv93inie6nhPl7wRA5rwhPrg0jmQKrfbgKqMew2aTqqJfQ2JkJfwfnAJnEzjTNteJOXEgOnzOG2MTb7y+kJUwZEpUMi85Hqnd5Fzmrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=d0wB0i8f; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TGt/ZUz1"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cecba8d11so2294359e87.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 04:36:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719401775; x=1720006575; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cMuzpY4Z872AyWI1aK61/MVe81tb/rCrS4Gors5C2F0=;
-        b=TGt/ZUz1HGQGhfzvWKYGkdEocIa85dHpu/hO2yWQHIOzwwV4mtPXq3Rv2pPZ/0NElF
-         81oKUjwvWUX95cUf6kDWpyM6Hg5pr09cPg1ykvzyDTW56b1NFaH1Mvhz3ROLZYD/wYjf
-         G429Gym3StU2gXb6adrajCkZnwh5qD/1cT+9dCSbtgV9gKQMYc4DzZReZr4XCgEuNCzT
-         Itwg5xklgJ1y3wGDuVAYGg2eMJ4YUWznmyTwXUkWSyikLsz8fs/IBLj4OvYZxCuZ5sCS
-         p3I0bqTs5hwoyRA563UWrCZj3DnAL0fUV4PisOLJSRiETcPWYYVwYa3G3ETtQarqxt6l
-         NJ9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719401775; x=1720006575;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cMuzpY4Z872AyWI1aK61/MVe81tb/rCrS4Gors5C2F0=;
-        b=orh96oEOd/WHRKU9qFcjqgFlyqQP8ygqWxD8pNSvzEdn9DJMk4sABNDMzqHdFHAy9H
-         xc+Tw7NcR51m5XtFh726dyR8wB4LkaXjlqzb2fInOtU2k4oywqYJ+etMLY406VF423YL
-         +Hy/wYLfysJPT39k7PK+4yuUL3p2iOET+jdiLBD0Wfq6gSzpXSsB1MJ6XQm+I9QSjJZm
-         2vgRr8HQBQGXmMlBXW9aPKNNOXPI68TKzFDe1mtGu4u51f+9yTrcE/QQu4TJhFjPntxJ
-         f7kKF0+pFMdB6t+xxRnow40wBDwLDELIOW+e0S4dz9DWC39o26ryMAjUMx+LuWflfnje
-         vrxA==
-X-Forwarded-Encrypted: i=1; AJvYcCWeumRRXHBgTQh3+xXnfrRkZtiFn3Xx9ALtvaC3Ulr5Ol5hqARyLVP4L6cH7yDgj9xip4M8DpryUrmAuvwCAj4g8KoHyW6j5DqFbW8syVMbwg==
-X-Gm-Message-State: AOJu0YyC5vlH4P9vid3sZVG0aj63ZenW9uHUmWeQaq25h4bnK7OZsK0U
-	X1xjiHUyZcSv0MbRA/KANnOGuPYrgpNKoGC/GHBipXwVU/EPNbffD5xWdRc9A6c=
-X-Google-Smtp-Source: AGHT+IEPEpCRb3cEZBmhNT1f7PAwFW+p+uWIp3od7KrxRjrljO66wKi6YdCFGUJvQkzMblj3tBvohQ==
-X-Received: by 2002:a05:6512:31d2:b0:52c:e3bd:c708 with SMTP id 2adb3069b0e04-52ce3bdc757mr8165299e87.10.1719401774812;
-        Wed, 26 Jun 2024 04:36:14 -0700 (PDT)
-Received: from ?IPV6:2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366f973b7e5sm6762226f8f.14.2024.06.26.04.36.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 26 Jun 2024 04:36:14 -0700 (PDT)
-Message-ID: <5aeaaecf-0eb6-4934-b14e-2285eff6cc62@suse.com>
-Date: Wed, 26 Jun 2024 14:36:12 +0300
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="d0wB0i8f"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45QBRCD6022554;
+	Wed, 26 Jun 2024 13:16:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:mime-version:content-transfer-encoding; s=pp1; bh=lPl/gd1xZv3ZN
+	i8LVGFL0HdTta8NMiF46UqJLyg6mKg=; b=d0wB0i8f6QgffMqvQfWNupKkdRuCW
+	ZIlS+32JCsSvaI3E5Ozgd6rDsucdzLFyfiT1UXkDllg1Um30Kk7c72A+Lb4NMyxh
+	8IuZqolDFWkIHEJId89AiTt72GGIPe+aTPKBOl9X2oNKHl4vcsa86WIzjhac3rEH
+	x2/7RWc7sN2XfoYdyPUBCKJ318dQqmRjI6SNeAWJXL7+pwX84zO08YMZ//nYi64w
+	AvFUfYMt9tnvBE72/UMMmclek8vFUb7EmG0m8mDEmJcoEB4K6GEKSHDsxkfEqIlh
+	BRv/hOifkmRLXp5LxguwPh1bMD6249v1CUk9HlMQPXH4EaZHsTiggaMEw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400hq80a05-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 13:16:50 +0000 (GMT)
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45QDGo3T020484;
+	Wed, 26 Jun 2024 13:16:50 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400hq80a02-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 13:16:50 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45QACPP7019963;
+	Wed, 26 Jun 2024 13:16:49 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxb5mm8x3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 26 Jun 2024 13:16:49 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45QDGi2728377848
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 26 Jun 2024 13:16:46 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1F8EE20043;
+	Wed, 26 Jun 2024 13:16:44 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ECBF520040;
+	Wed, 26 Jun 2024 13:16:41 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.124.217.114])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 26 Jun 2024 13:16:41 +0000 (GMT)
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH v10 1/4] perf check: introduce check subcommand
+Date: Wed, 26 Jun 2024 18:46:35 +0530
+Message-ID: <20240626131638.597544-2-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240626131638.597544-1-adityag@linux.ibm.com>
+References: <20240626131638.597544-1-adityag@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] x86/cpufeatures: Generate a feature mask header
- based on build config
-To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org,
- peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
- namhyung@kernel.org, brgerst@gmail.com
-References: <20240622171435.3725548-1-xin@zytor.com>
- <20240622171435.3725548-3-xin@zytor.com>
-From: Nikolay Borisov <nik.borisov@suse.com>
-Content-Language: en-US
-In-Reply-To: <20240622171435.3725548-3-xin@zytor.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Pp9E75vJuYKtPnuwxtWl98hgSDtjRCTg
+X-Proofpoint-GUID: 5jDcZODcNpn5Y149gXHzsKTUrs5jsl_8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-26_07,2024-06-25_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ phishscore=0 lowpriorityscore=0 adultscore=0 spamscore=0 suspectscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406260096
 
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-On 22.06.24 г. 20:14 ч., Xin Li (Intel) wrote:
-> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
-> 
-> Introduce an AWK script to auto-generate a header with required and
-> disabled feature masks based on <asm/cpufeatures.h> and current build
-> config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-> simply add
-> 
-> config X86_DISABLED_FEATURE_FRED
-> 	def_bool y
-> 	depends on !X86_FRED
-> 
-> to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-> feature disable flag, e.g., DISABLE_FRED.
-> 
-> Lastly the generated required and disabled feature masks will be added
-> to their corresponding feature masks for this particular compile-time
-> configuration.
-> 
-> [ Xin: build integration improvements ]
-> 
-> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Instead of this, introduce a subcommand "perf check feature", with which
+scripts can test for presence of a feature, such as:
 
-Overall LGTM, some minor points below.
+    perf check feature HAVE_FEATURE
 
+'perf check feature' command is expected to have exit status of 0 if
+feature is built-in, and 1 if it's not built-in or if feature is not known.
 
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
+Multiple features can also be passed as a comma-separated list, in which
+case the exit status will be 1 only if all of the passed features are
+built-in. For example, with below command, it will have exit status of 0
+only if both libtraceevent and bpf are enabled, else 1 in all other cases
 
+    perf check feature libtraceevent,bpf
 
-<snip>
+The arguments are case-insensitive.
+An array 'supported_features' has also been introduced that can be used by
+other commands like 'perf version --build-options', so that new features
+can be added in one place, with the array
 
-> diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-> new file mode 100755
-> index 000000000000..989b021e73d3
-> --- /dev/null
-> +++ b/arch/x86/tools/featuremasks.awk
-> @@ -0,0 +1,84 @@
-> +#!/usr/bin/awk
-> +#
-> +# Convert cpufeatures.h to a list of compile-time masks
-> +# Note: this blithly assumes that each word has at least one
-> +# feature defined in it; if not, something else is wrong!
-> +#
-> +
-> +BEGIN {
-> +	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
-> +	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
-> +
-> +	file = 0
-> +}
-> +
-> +BEGINFILE {
-> +	switch (++file) {
-> +	case 1:			# cpufeatures.h
-> +		FPAT = "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
-> +		break;
-> +	case 2:			# .config
-> +		FPAT = "CONFIG_[A-Z0-9_]+|is not set|[yn]";
-> +		break;
-> +	}
-> +}
-> +
+Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 
-IMO this script could use a bit of high-level comments. Something like:
+---
+The entries in 'supported_features' array is just sorted list of
+features mentioned in 'library_status' function in builtin-version.c
+---
+---
+ tools/perf/Build                        |   1 +
+ tools/perf/Documentation/perf-check.txt |  79 +++++++++++
+ tools/perf/builtin-check.c              | 178 ++++++++++++++++++++++++
+ tools/perf/builtin.h                    |  17 +++
+ tools/perf/perf.c                       |   1 +
+ 5 files changed, 276 insertions(+)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
 
+diff --git a/tools/perf/Build b/tools/perf/Build
+index b0cb7ad8e6ac..7635cc823565 100644
+--- a/tools/perf/Build
++++ b/tools/perf/Build
+@@ -1,5 +1,6 @@
+ perf-y += builtin-bench.o
+ perf-y += builtin-annotate.o
++perf-y += builtin-check.o
+ perf-y += builtin-config.o
+ perf-y += builtin-diff.o
+ perf-y += builtin-evlist.o
+diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
+new file mode 100644
+index 000000000000..77a8ce7b523a
+--- /dev/null
++++ b/tools/perf/Documentation/perf-check.txt
+@@ -0,0 +1,79 @@
++perf-check(1)
++===============
++
++NAME
++----
++perf-check - check features in perf
++
++SYNOPSIS
++--------
++[verse]
++'perf check' [<options>]
++'perf check' {feature <feature_list>} [<options>]
++
++DESCRIPTION
++-----------
++With no options given, the 'perf check' just prints the perf version
++on the standard output.
++
++If the subcommand 'feature' is used, then status of feature is printed
++on the standard output (unless '-q' is also passed), ie. whether it is
++compiled-in/built-in or not.
++Also, 'perf check feature' returns with exit status 0 if the feature
++is built-in, otherwise returns with exit status 1.
++
++SUBCOMMANDS
++-----------
++
++feature::
++
++        Print whether feature(s) is compiled-in or not, and also returns with an
++        exit status of 0, if passed feature(s) are compiled-in, else 1.
++
++        It expects a feature list as an argument. There can be a single feature
++        name/macro, or multiple features can also be passed as a comma-separated
++        list, in which case the exit status will be 0 only if all of the passed
++        features are compiled-in.
++
++        The feature names/macros are case-insensitive.
++
++        Example Usage:
++                perf check feature libtraceevent
++                perf check feature HAVE_LIBTRACEEVENT
++                perf check feature libtraceevent,bpf
++
++        Supported feature names/macro:
++                aio                     /  HAVE_AIO_SUPPORT
++                bpf                     /  HAVE_LIBBPF_SUPPORT
++                bpf_skeletons           /  HAVE_BPF_SKEL
++                debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
++                dwarf                   /  HAVE_DWARF_SUPPORT
++                dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
++                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
++                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
++                libaudit                /  HAVE_LIBAUDIT_SUPPORT
++                libbfd                  /  HAVE_LIBBFD_SUPPORT
++                libelf                  /  HAVE_LIBELF_SUPPORT
++                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
++                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
++                libnuma                 /  HAVE_LIBNUMA_SUPPORT
++                libperl                 /  HAVE_LIBPERL_SUPPORT
++                libpfm4                 /  HAVE_LIBPFM
++                libpython               /  HAVE_LIBPYTHON_SUPPORT
++                libslang                /  HAVE_SLANG_SUPPORT
++                libtraceevent           /  HAVE_LIBTRACEEVENT
++                libunwind               /  HAVE_LIBUNWIND_SUPPORT
++                lzma                    /  HAVE_LZMA_SUPPORT
++                syscall_table           /  HAVE_SYSCALL_TABLE_SUPPORT
++                zlib                    /  HAVE_ZLIB_SUPPORT
++                zstd                    /  HAVE_ZSTD_SUPPORT
++
++OPTIONS
++-------
++--quiet::
++        Do not print any messages or warnings
++
++        This can be used along with subcommands such as 'perf check feature'
++        to hide unnecessary output in test scripts, eg.
++        'perf check feature --quiet libtraceevent'
++
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+new file mode 100644
+index 000000000000..b8a90ba43426
+--- /dev/null
++++ b/tools/perf/builtin-check.c
+@@ -0,0 +1,178 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "builtin.h"
++#include "color.h"
++#include "util/debug.h"
++#include "util/header.h"
++#include <tools/config.h>
++#include <stdbool.h>
++#include <stdio.h>
++#include <string.h>
++#include <subcmd/parse-options.h>
++
++static const char * const check_subcommands[] = { "feature", NULL };
++static struct option check_options[] = {
++	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
++	OPT_END()
++};
++static struct option check_feature_options[] = { OPT_END() };
++
++static const char * const check_usage[] = {
++	"perf check [<subcommand>] [<options>]",
++	NULL
++};
++static const char * const check_feature_usage[] = {
++	"perf check feature <feature_list>",
++	NULL
++};
++
++struct feature_status supported_features[] = {
++	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
++	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
++	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
++	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
++	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
++	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
++	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
++	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
++	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
++	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
++	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
++	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
++	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
++	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
++	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
++	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
++	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
++	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
++	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
++	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
++	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
++	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
++	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
++	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
++	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
++	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
++	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
++
++	/* this should remain at end, to know the array end */
++	FEATURE_STATUS(NULL, _)
++};
++
++static void on_off_print(const char *status)
++{
++	printf("[ ");
++
++	if (!strcmp(status, "OFF"))
++		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
++	else
++		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
++
++	printf(" ]");
++}
++
++/* Helper function to print status of a feature along with name/macro */
++static void status_print(const char *name, const char *macro,
++			 const char *status)
++{
++	printf("%22s: ", name);
++	on_off_print(status);
++	printf("  # %s\n", macro);
++}
++
++#define STATUS(feature)                                   \
++do {                                                      \
++	if (feature.is_builtin)                               \
++		status_print(feature.name, feature.macro, "on");  \
++	else                                                  \
++		status_print(feature.name, feature.macro, "OFF"); \
++} while (0)
++
++/**
++ * check whether "feature" is built-in with perf
++ *
++ * returns:
++ *    0: NOT built-in or Feature not known
++ *    1: Built-in
++ */
++static int has_support(const char *feature)
++{
++	for (int i = 0; supported_features[i].name; ++i) {
++		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
++		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
++			if (!quiet)
++				STATUS(supported_features[i]);
++			return supported_features[i].is_builtin;
++		}
++	}
++
++	if (!quiet)
++		pr_err("Feature not known: '%s'\n", feature);
++
++	return 0;
++}
++
++
++/**
++ * Usage: 'perf check feature <feature_list>'
++ *
++ * <feature_list> can be a single feature name/macro, or a comma-separated list
++ * of feature names/macros
++ * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
++ *
++ * In case of a comma-separated list, feature_enabled will be 1, only if
++ * all features passed in the string are supported
++ *
++ * Note that argv will get modified
++ */
++static int subcommand_feature(int argc, const char **argv)
++{
++	char *feature_list;
++	char *feature_name;
++	int feature_enabled;
++
++	argc = parse_options(argc, argv, check_feature_options,
++			check_feature_usage, 0);
++
++	if (!argc)
++		usage_with_options(check_feature_usage, check_feature_options);
++
++	if (argc > 1) {
++		pr_err("Too many arguments passed to 'perf check feature'\n");
++		return -1;
++	}
++
++	feature_enabled = 1;
++	/* feature_list is a non-const copy of 'argv[1]' */
++	feature_list = strdup(argv[0]);
++	if (!feature_list) {
++		pr_err("ERROR: failed to allocate memory for feature list\n");
++		return -1;
++	}
++
++	feature_name = strtok(feature_list, ",");
++
++	while (feature_name) {
++		feature_enabled &= has_support(feature_name);
++		feature_name = strtok(NULL, ",");
++	}
++
++	free(feature_list);
++
++	return !feature_enabled;
++}
++
++int cmd_check(int argc, const char **argv)
++{
++	argc = parse_options_subcommand(argc, argv, check_options,
++			check_subcommands, check_usage, 0);
++
++	if (!argc)
++		usage_with_options(check_usage, check_options);
++
++	if (strcmp(argv[0], "feature") == 0)
++		return subcommand_feature(argc, argv);
++
++	/* If no subcommand matched above, print usage help */
++	usage_with_options(check_usage, check_options);
++	return 0;
++}
+diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+index f4375deabfa3..0cdb11b9efec 100644
+--- a/tools/perf/builtin.h
++++ b/tools/perf/builtin.h
+@@ -2,6 +2,22 @@
+ #ifndef BUILTIN_H
+ #define BUILTIN_H
+ 
++#include <stddef.h>
++#include <linux/compiler.h>
++#include <tools/config.h>
++
++struct feature_status {
++	const char *name;
++	const char *macro;
++	int is_builtin;
++};
++
++#define FEATURE_STATUS(name_, macro_) { \
++	.name = name_,                       \
++	.macro = #macro_,                    \
++	.is_builtin = IS_BUILTIN(macro_) }
++
++extern struct feature_status supported_features[];
+ struct cmdnames;
+ 
+ void list_common_cmds_help(void);
+@@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
+ int cmd_bench(int argc, const char **argv);
+ int cmd_buildid_cache(int argc, const char **argv);
+ int cmd_buildid_list(int argc, const char **argv);
++int cmd_check(int argc, const char **argv);
+ int cmd_config(int argc, const char **argv);
+ int cmd_c2c(int argc, const char **argv);
+ int cmd_diff(int argc, const char **argv);
+diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+index bd3f80b5bb46..4def800f4089 100644
+--- a/tools/perf/perf.c
++++ b/tools/perf/perf.c
+@@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
+ 	{ "archive",	NULL,	0 },
+ 	{ "buildid-cache", cmd_buildid_cache, 0 },
+ 	{ "buildid-list", cmd_buildid_list, 0 },
++	{ "check",	cmd_check,	0 },
+ 	{ "config",	cmd_config,	0 },
+ 	{ "c2c",	cmd_c2c,	0 },
+ 	{ "diff",	cmd_diff,	0 },
+-- 
+2.45.2
 
-# Create a dictionary of sorts, containing all defined feature bits
-> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
-> +$3 == "(" && $5 == "*" && $7 == "+" && $9 == ")" {
-> +	nfeat = $4 * $6 + $8;
-> +	feat = $2;
-> +	sub(/^X86_FEATURE_/, "", feat);
-> +	feats[nfeat] = feat;
-> +}
-
-> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 == "NCAPINTS" {
-> +	ncapints = strtonum($3);
-> +}
-> +
-
-# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
-
-> +file == 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
-> +	on = ($2 == "y");
-> +	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
-> +		featstat[fs[2], fs[3]] = on;
-> +}
-> +
-> +END {
-> +	sets[1] = "REQUIRED";
-> +	sets[2] = "DISABLED";
-> +
-> +	for (ns in sets) {
-> +		s = sets[ns];
-> +
-> +		printf "/*\n";
-> +		printf " * %s features:\n", s;
-> +		printf " *\n";
-> +		fstr = "";
-> +		for (i = 0; i < ncapints; i++) {
-> +			mask = 0;
-> +			for (j = 0; j < 32; j++) {
-> +				nfeat = i*32 + j;
-> +				feat = feats[nfeat];
-> +				if (feat) {
-> +					st = !!featstat[s, feat];
-> +					if (st) {
-> +						nfstr = fstr " " feat;
-> +						if (length(nfstr) > 72) {
-> +							printf " *   %s\n", fstr;
-> +							nfstr = " " feat;
-> +						}
-> +						fstr = nfstr;
-> +					}
-> +					mask += st * (2 ^ j);
-
-nit: This expression can be changed to mask += (2 ^j) and moved inside 
-the 'if (st)' branch. Essentially only add a bit iff that status of the 
-relevant feature in the kconfig is y, which is signified by the value of 
-'st' variable.
-
-> +				}
-> +			}
-> +			masks[i] = mask;
-> +		}
-> +		printf " *   %s\n */\n\n", fstr;
-> +
-> +		for (i = 0; i < ncapints; i++) {
-> +			printf "#define %s_MASK%d\t0x%08x\n", s, i, masks[i];
-> +		}
-> +
-> +		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-> +	}
-> +
-> +	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
-> +}
