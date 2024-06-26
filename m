@@ -1,72 +1,46 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2062.outbound.protection.outlook.com [40.107.244.62])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32BF15D5CA;
-	Wed, 26 Jun 2024 07:50:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.62
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719388202; cv=fail; b=W/ZxIAfnhj/9jZtxFBhG2cJ14EZ2Qf/p4/bvzBARhfPFrU0EDI9mJwX4Izqa5hNDb94oXF2WSw1LShFe6UqOtOO6RmJ8cKaOnAb4vOwlAW0qm31XLtNZiCjZ22gmldEfLx0LTAhagolx3M6HDa4cmA+pOXiQM0d56fdHyKWg6gg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719388202; c=relaxed/simple;
-	bh=o4rPm1WxRWsQBJ3HvdPHlUrQfvp8VEmu+9nCdB44s1Y=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=a3GlyFJhX0I4cMEvbsIhO/MEXloBgBsJ91gGiPXxKgqh1NcC+iPDh/BJRHq12Wpy8+g8E9adV39i3aQQFYE6dsbndgOD+Cf2/8+rhTfrSDJW6uO8xjGcuuS00QfHIZwP+uG4Xxz4oK933B56nRbCDgWYBYjofoMDsWvuaZEv7qY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=tnPNUu9z; arc=fail smtp.client-ip=40.107.244.62
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="tnPNUu9z"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dn9eSthX96rprhjg8mQvdFp98sX+UJ73XHVT8ekPWl1YE0Mjik32anj7XAj5gDd5kSsbqO1sJsJm2csQegCTK3WNgglYvsbasINMW4pqW+pjEhWlm8Elk1DF1qSh05zgPOhHoUz0idPRj9QBnsO+40ESGNLG+6v4EtiAjv0WQrodKoR+IX9iM7tU80kE86pKlsetuudcVRYjbfQsO1wAVLLOUzHwS15N1wqtzqnxS5ODyZra3+KBDY3wM/DTPh9L9f5CFLlCpKzPsghZVkdojahCMmARTn1Zkb6l49B1lSXp7lx+7frCxA+mxZtzYU4WQ2g6xy7Q2c81HwIimWDfDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=dLtK8IHiVk17QQaFubPYdvk2aL29qqSqCfzIrBSBfME=;
- b=AUeF0ybD/rvKWnpcersuW9t8RvNj7BJj5V9tovm3IgeUNztX5+N9cWxgg2n2TU+2tdwl3pfRifI6LUSLEfWc+MKBl0pmUvKl1DntAGWxnl4VQthSoCJyHqZ5AVfSLAR24ju0E2K/ueleh3U2bk/rJ1ZpOHqGR8U2xdcQY9AyJptE6HdJ9nKP97ET4FvxN9570E+UUEOmp02PHWbFgfRtwybUNYaTPnx+mh3L4C8H944WRLS2WG8uFIWNFQUvXDJKrFaI3Z49Ysm5iJKT332BA7+/3gtenlMJS2MVqeTfPsEIaLyM69xDpBsW1E9DBv+Zsf2tMVIEBmgNA9g2v4K8kA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLtK8IHiVk17QQaFubPYdvk2aL29qqSqCfzIrBSBfME=;
- b=tnPNUu9zc1O9wQANhkM4LPhDddQ4mWjilrjwUFc63PWazwrGlkvzZfG0Uz0KxhdiZ6CSrztqIK4ANT7Ui6ZPV7AHB4DsWD+DzaIa6xkVjh8O4iV0lMokn7xOojeZ24dTs7EnmIAQ9UYhNq4glXW6hGc4xhVvRNr2SQW34AWZ1o8=
-Received: from SJ0PR05CA0027.namprd05.prod.outlook.com (2603:10b6:a03:33b::32)
- by IA0PR12MB8256.namprd12.prod.outlook.com (2603:10b6:208:407::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.32; Wed, 26 Jun
- 2024 07:49:56 +0000
-Received: from SJ1PEPF00002320.namprd03.prod.outlook.com
- (2603:10b6:a03:33b:cafe::be) by SJ0PR05CA0027.outlook.office365.com
- (2603:10b6:a03:33b::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.22 via Frontend
- Transport; Wed, 26 Jun 2024 07:49:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- SJ1PEPF00002320.mail.protection.outlook.com (10.167.242.86) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7677.15 via Frontend Transport; Wed, 26 Jun 2024 07:49:56 +0000
-Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Jun
- 2024 02:49:50 -0500
-From: Sandipan Das <sandipan.das@amd.com>
-To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <x86@kernel.org>, <peterz@infradead.org>, <mingo@kernel.org>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<hpa@zytor.com>, <kprateek.nayak@amd.com>, <ravi.bangoria@amd.com>,
-	<ananth.narayan@amd.com>, <sandipan.das@amd.com>
-Subject: [PATCH] perf/x86/amd/uncore: Fix DF and UMC domain identification
-Date: Wed, 26 Jun 2024 13:19:42 +0530
-Message-ID: <20240626074942.1044818-1-sandipan.das@amd.com>
-X-Mailer: git-send-email 2.43.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 891E5154456
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 08:15:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719389730; cv=none; b=XqMRnQDmvRH2xh8tCkN1fRYSCECNHSqOiCsaYW8/WT2SLnMn40gsqQQqDK8aLF33j9zhR1JzEGgibHYOsFucFLpb3kytR4pGt4bjScDWP5XR7FkQrRyD+JRnJDhMafRZIgWc+QpMpW10q1jF6XqI4inKT9bKOuEuCm72TRXBLwo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719389730; c=relaxed/simple;
+	bh=jvcvQ5ufJMxPui64COMk6YKkVfi4dDfpQJoHNpA0LHo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=anbEblx7uuqdRxmHYgaESPODSxDZZAjo5Oyf0oy2wuPhvpWw3GPime61GmYKmWGbrNKFcUuDvlkhRdmqCyY9hpJf6g6ag3V6Wo47UZnD7aJ7qUUWA52nj5tHFVoE/XcdElfm6EOVpgq9i1TFHgMVaz0n7xLNxb66l1RwEBnDnEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4W8Dt11T9ZzxTqJ;
+	Wed, 26 Jun 2024 16:11:05 +0800 (CST)
+Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
+	by mail.maildlp.com (Postfix) with ESMTPS id DF66C18006E;
+	Wed, 26 Jun 2024 16:15:24 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 26 Jun 2024 16:15:24 +0800
+From: Junhao He <hejunhao3@huawei.com>
+To: <irogers@google.com>, <namhyung@kernel.org>, <acme@redhat.com>
+CC: <kan.liang@linux.intel.com>, <adrian.hunter@intel.com>,
+	<ahmad.yasin@intel.com>, <alexander.shishkin@linux.intel.com>,
+	<ak@linux.intel.com>, <atrajeev@linux.vnet.ibm.com>,
+	<caleb.biggers@intel.com>, <edward.baker@intel.com>,
+	<florian.fischer@muhq.space>, <mingo@redhat.com>, <jolsa@kernel.org>,
+	<john.g.garry@oracle.com>, <kjain@linux.ibm.com>, <tegongkang@gmail.com>,
+	<leo.yan@linaro.org>, <mark.rutland@arm.com>, <perry.taylor@intel.com>,
+	<peterz@infradead.org>, <ravi.bangoria@amd.com>, <robh@kernel.org>,
+	<samantha.alt@intel.com>, <eranian@google.com>,
+	<jonathan.cameron@huawei.com>, <yangyicong@huawei.com>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>,
+	<linux-perf-users@vger.kernel.org>
+Subject: [PATCH] perf parse-events: Back to support for parsing of field "-"
+Date: Wed, 26 Jun 2024 16:12:25 +0800
+Message-ID: <20240626081225.51752-1-hejunhao3@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -75,100 +49,81 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002320:EE_|IA0PR12MB8256:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac403265-c970-4dc1-d9e9-08dc95b49287
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230038|36860700011|376012|7416012|1800799022|82310400024;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?D8yU1AQMD0bBCNoqiIQP3CICFuXQgQ31w0Vt6D35tEiT+m6iWe3ewk/dAlV5?=
- =?us-ascii?Q?2YqoBPmjrKEncpwB+ujK2fj7ntZyeZ+IR3i4wyxumciQlfNjhGcLi2WQBwzV?=
- =?us-ascii?Q?ChdV6rvvXkynmajNAnKGWFRZohVsbkN3a9/nKd72/HVGj4WJcrwtbfZHyfS/?=
- =?us-ascii?Q?rBRMsp1BAgDAV2EA4u5VDXNP3y1S/QE3MjSYFN3P6fGTiQNfWDDugSO+Bhqt?=
- =?us-ascii?Q?uEVt6XaGi5uwaLEbjHGoI0sVrGwmll1C06UsRiLm+i7SgBB81AQqQBh10u5D?=
- =?us-ascii?Q?jHmGVNHWxeFTpMwO4FrG3LmnqzbL+azV7LWKVsM9SNFLRggaoAKKI/2GmkSW?=
- =?us-ascii?Q?KCh2Vtv2CpS0ek/lPXOn/lst6qAdTfOQZEc09G2IApy0yJWRo+winhjmxmZZ?=
- =?us-ascii?Q?dwvuKTCm0Q9AKejAiOe3w+4PgmyX8WVXIf9fAmRkgeUvYUIblObiYyJF2QHm?=
- =?us-ascii?Q?bsjJAXCP77hhg9aLj4cqiFnYjZS+TUkKUSPbC6m3h8ZpODQIODBRbqu45IW7?=
- =?us-ascii?Q?CaVaL2I9g0d4nICNLCIB40EyfeKie5CSX7nrwNDSq6Pgdmd63V+DC7QiczXS?=
- =?us-ascii?Q?RvIxfYd2HPleOQ1cxq4SCSoiWJnI5shFEtctHW5Xaeu9OQuo7VsDXeZU4x8u?=
- =?us-ascii?Q?gxPpGmTcmIlmg5zVyBAWOo26c9IUwcwzTUsIuD1a/IBXoN87EitEoX6fjGnv?=
- =?us-ascii?Q?+N57ii8FHMe1giedB4X5Cu4Bv4N/6FCVIo1LRvk5fP4luMnyZi8AZJew4wu/?=
- =?us-ascii?Q?PIH5MjYOCZ9Mp+E91x1OfNsG3eqIoiUs8fP/2WXj1jw7RutJkaLYLZz/anLS?=
- =?us-ascii?Q?n8uOG+egVYTjcxYNvfcRsGQlTFDj4dZzmY6PecMp+m0U0mSidwH52TLkpEPs?=
- =?us-ascii?Q?273Jb/e3ipabAIEBGSdDMI1Z0rYc6vI4gyZgm/4GklbyiQypCDPoH75G/FSW?=
- =?us-ascii?Q?OUXGuFYJb1aEkl8+jjebrhUdMK7jIQQeT7Wou8Ua1gUCfPbyNSmcteFTM7Jq?=
- =?us-ascii?Q?Cq7YkE/So8EmKZ5L5nQfIfvs+KOSn3Gb5zbOQ2iuAKn5JGKiKb/sXZGlkcSA?=
- =?us-ascii?Q?VDTnS51VvqVtogWAQBZTYuIVLzD9L0iGZbzre7cY+45zP0X2UMmHnxUipdej?=
- =?us-ascii?Q?FKxY5IJOLpRkxCk3R7rEYLtxGtMlHXA9rZalqWXyGaY8sl6i/OfjU3woK9Pu?=
- =?us-ascii?Q?yK/nlkXcD7IUmIxgVR+9MLvWvR6Qg5Vhpdud0q1vAsPRV3CjZfoL0wKV7VKp?=
- =?us-ascii?Q?XXJTaJkK6jOJ9Cr2V6cDAkvSzCbyfRV5vwEbRuimcbQ6fgk1JyDL8U/dNCdy?=
- =?us-ascii?Q?oeLc6izGNJVv4fbBGvD4o/fI4SS6fo5wCdz0QIImPs58Foa0CrTLcgSLc/mI?=
- =?us-ascii?Q?l0iEyZ73SqZtnDilvp142NPVdo1FX/iWb32NTI6cZP3TIpKg9c6WODEs3OBB?=
- =?us-ascii?Q?EeVsy7hd+ltiwq+9D8LqzSUbHtfbt4WS?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230038)(36860700011)(376012)(7416012)(1800799022)(82310400024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 07:49:56.3390
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac403265-c970-4dc1-d9e9-08dc95b49287
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002320.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8256
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500002.china.huawei.com (7.185.36.158)
 
-For uncore PMUs, a single context is shared across all CPUs in a domain.
-The domain can be a CCX, like in the case of the L3 PMU, or a socket,
-like in the case of DF and UMC PMUs. This information is available via
-the PMU's cpumask.
+When merger the patch [1], event_term can not parse the field of "-".
+When use the following cmd, "-5/5-/5--" gives the same result as
+"5", and the value collected by the PMU is 0 when user input "--5",
+which is not the expected result?
 
-For contexts shared across a socket, the domain is currently determined
-from topology_die_id() which is incorrect after the introduction of
-commit 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD
-0x80000026 leaf") as it now returns a CCX identifier on Zen 4 and later
-systems which support CPUID leaf 0x80000026.
+If the first field after "=" of PE_TERM is "-", this means the user has
+entered a negative number. If the field of PE_TERM is followed by two
+consecutive hyphens "-", this means that the entry may not be valid.
+So if the user input "--5/-5/5-/5--" the perf tool may need return false
+or unsupport.
 
-Use topology_logical_package_id() instead as it always returns a socket
-identifier irrespective of the availability of CPUID leaf 0x80000026.
+                 0      -e armv8_pmuv3_0/event=--5/
+             1,359      -e armv8_pmuv3_0/event=-5/
+             1,359      -e armv8_pmuv3_0/event=5/
+             1,359      -e armv8_pmuv3_0/event=5-/
+             1,359      -e armv8_pmuv3_0/event=5--/
 
-Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+If user enters "-" followed by the event alias name or event number
+(such as r0010), perf also works, and this format is more like an options
+to stat cmd than the -e argument.
+
+  $ perf stat -e -r0010 -e -cycles -e cycles
+	     11288      -e -r0010
+	     7084679    -e -cycles
+	     7084631    -e cycles
+
+Back to support for parsing of field "-", they have the same results as
+apply the patch and before patch [1].
+
+Testing:
+1) $ perf stat -e armv8_pmuv3_0/event=-5/ sleep 1
+   event syntax error: '..uv3_0/event=-5/'
+                                     \___ parser error
+
+2) $ perf stat -e armv8_pmuv3_0/event=--5/ sleep 1
+   event syntax error: '..uv3_0/event=--5/'
+                                     \___ parser error
+
+3) $ perf stat -e armv8_pmuv3_0/event=5-/ -- sleep 1
+   event syntax error: '..v3_0/event=5-/'
+                                    \___ parser error
+
+4) $ perf stat -e armv8_pmuv3_0/event=5--/ -- sleep 1
+   event syntax error: '..v3_0/event=5--/'
+                                    \___ parser error
+
+5) $ perf stat -e -r0010 sleep 1
+   event syntax error: '-r0010'
+                        \___ parser error
+
+6) $ perf stat -e r0010 -e cycles -b cycles sleep 1
+   Error: unknown switch `b'
+
+[1] commit 70c90e4a6b2f ("perf parse-events: Avoid scanning PMUs before parsing")
+
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
 ---
- arch/x86/events/amd/uncore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/parse-events.l | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
-index 4ccb8fa483e6..5219c8dbe61b 100644
---- a/arch/x86/events/amd/uncore.c
-+++ b/arch/x86/events/amd/uncore.c
-@@ -639,7 +639,7 @@ void amd_uncore_df_ctx_scan(struct amd_uncore *uncore, unsigned int cpu)
- 	info.split.aux_data = 0;
- 	info.split.num_pmcs = NUM_COUNTERS_NB;
- 	info.split.gid = 0;
--	info.split.cid = topology_die_id(cpu);
-+	info.split.cid = topology_logical_package_id(cpu);
- 
- 	if (pmu_version >= 2) {
- 		ebx.full = cpuid_ebx(EXT_PERFMON_DEBUG_FEATURES);
-@@ -893,8 +893,8 @@ void amd_uncore_umc_ctx_scan(struct amd_uncore *uncore, unsigned int cpu)
- 	cpuid(EXT_PERFMON_DEBUG_FEATURES, &eax, &ebx.full, &ecx, &edx);
- 	info.split.aux_data = ecx;	/* stash active mask */
- 	info.split.num_pmcs = ebx.split.num_umc_pmc;
--	info.split.gid = topology_die_id(cpu);
--	info.split.cid = topology_die_id(cpu);
-+	info.split.gid = topology_logical_package_id(cpu);
-+	info.split.cid = topology_logical_package_id(cpu);
- 	*per_cpu_ptr(uncore->info, cpu) = info;
- }
+diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
+index 16045c383ada..1f0bdb89c43b 100644
+--- a/tools/perf/util/parse-events.l
++++ b/tools/perf/util/parse-events.l
+@@ -426,6 +426,7 @@ r{num_raw_hex}		{ return str(yyscanner, PE_RAW); }
+ "{"			{ BEGIN(event); return '{'; }
+ "}"			{ return '}'; }
+ =			{ return '='; }
++-			{ return '-'; }
+ \n			{ }
+ .			{ }
  
 -- 
-2.43.0
+2.33.0
 
