@@ -1,53 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E53374D9;
-	Wed, 26 Jun 2024 03:53:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E79995916B;
+	Wed, 26 Jun 2024 03:55:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719373991; cv=none; b=EJYDXgah0eOKWu6Q3ZYCV7M43h52ZDC8OCbTjCEKhHE3eLwhVsRKIZQWI7JE8SliVqXvTDCXFuQEkhN+TeZv3oLal6zAjC1nwGkVcxGF3tITrwpRuiO+ArmPg3kYl1SunErMiNiOcmVMfNjYfItto7trqHlKARn0+5ouemQP/Ik=
+	t=1719374127; cv=none; b=aJ1YkHKIGO8ADUyQwXAEsWQS3pFLJnG6XksQF9F31HRFPmkNo/GHJ1vLgDytlOpoHHUKRV/JASu2yLfL2dAdkBA1T5ta3vZagfGiERu2z/MgqsLVbObnnhA/xP0rMDaWXrj4JVn00wbQ+SAvjBetJxDWseGdMLLKsvP5mcwDMA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719373991; c=relaxed/simple;
-	bh=U9pyu9yrz6dqp36FW3J9PLBA8l1JLbg9jGMFE4kDsEY=;
+	s=arc-20240116; t=1719374127; c=relaxed/simple;
+	bh=cZW15rkezFij8vUtEoWV8jBJvT/WhVRdxJxw5hfrtMA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OPC5dggH0ttFzy+AxRRR30flOP6Tx1i0NeD/6V+R3N+YlLSZt8t6lqUvA5Z13LI4SCAhxJHBcfwUl/6Wh80iA1Lay0OaVDSHoVD7NL43JYx6M1seRBw9poEjsWPe57VuFxfKdjH9kSwmlhQ0MZ1mpSQmbMBpVhsPekHg90Dz2Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ikbWON6A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=ReqLipfiNKSE5bfwWVCFkYtinNVNSEGM2GBdLKluze0qotori8mlWxso190MYHOXRm/EI4Y/qGUsjJ/Eudjvsuebzo4nlAz9OtogwgkdEfFvdUsZ1zE3HkhZpIY3jmohjU//Zolypst0d3mGsI0KMTGZnyykHWyjR2FxoKuI+xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hLvaWupV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ikbWON6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6416C2BD10;
-	Wed, 26 Jun 2024 03:53:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hLvaWupV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FAA7C2BD10;
+	Wed, 26 Jun 2024 03:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719373991;
-	bh=U9pyu9yrz6dqp36FW3J9PLBA8l1JLbg9jGMFE4kDsEY=;
+	s=k20201202; t=1719374126;
+	bh=cZW15rkezFij8vUtEoWV8jBJvT/WhVRdxJxw5hfrtMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ikbWON6AU/WppYVB27ag1hPlWGbugorL2dRBnAqR2nd9eD0g6oU3OPSybvwuLbMW7
-	 h5VvROptHFw0vpovPBikzam2i/uONqIhTJEpuKnTSW1GW5X0CzQKWZSgxkmAppjuqm
-	 72KfpW4qH2Gk6dTbOyaQLrmczEDbVBSzZTvyOMOwkA0PJy3tG0/Yo1JjQuKleO5j4f
-	 QoIA2Zd558idBqlNQpeyDUS2I/TXG1k4V6OhmCctovjpSPahGTgXiP1A48A3pKVbvt
-	 p5uj5SRISQG3J6aVEnqxaVEH4dTlyucblzVHLkc2X+p1mPCaXI9OgHWEDWqtc7rgGP
-	 E59wdcXUsGN2g==
+	b=hLvaWupV2+pyLqQ1moqG1DnqXIbAqZZdQshb2jBLYdrwteEqjEDb/KscZWKlA7WFo
+	 UreXe96oeTjZH1ZIjklxxj2UHZEVPrpkhW+bZzovAVrS9lh+QzkoQtxf0aH7MWT7Rw
+	 D7XXiBtkGx5hWVkZCCnWeHWiaa9DxhF9vyN5coC6bykOGFh6rq9lAIPhPjAws/qVSZ
+	 xlNsxmzhPg2wct7GGcRyGPFxzs5m1XOA7ZfxK+n08UV3/8e7JnJdOD1Nk0K9B23aRx
+	 DV8RdXMbZ6bM3z4bZvhguwaB77MkFjemUHfj+DGCdntL0cbyBX3+IBd4qDOUmN4OWX
+	 /VMQUqqHXWl+Q==
 From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Spoorthy S <spoorts2@in.ibm.com>,
-	German Gomez <german.gomez@arm.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test: Make test_arm_callgraph_fp.sh more robust
-Date: Tue, 25 Jun 2024 20:53:07 -0700
-Message-ID: <171937396645.2856613.6564241960168759110.b4-ty@kernel.org>
+To: acme@kernel.org,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	irogers@google.com,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com,
+	maddy@linux.ibm.com,
+	kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH V4 1/3] tools/perf: Fix the string match for "/tmp/perf-$PID.map" files in dso__load
+Date: Tue, 25 Jun 2024 20:55:23 -0700
+Message-ID: <171937399821.2856850.15411826419678386958.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-In-Reply-To: <20240612140316.3006660-1-james.clark@arm.com>
-References: <20240612140316.3006660-1-james.clark@arm.com>
+In-Reply-To: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
+References: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,18 +54,26 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 12 Jun 2024 15:03:14 +0100, James Clark wrote:
+On Sun, 23 Jun 2024 12:18:48 +0530, Athira Rajeev wrote:
 
-> The 2 second sleep can cause the test to fail on very slow network file
-> systems because Perf ends up being killed before it finishes starting
-> up.
+> Perf test for perf probe of function from different CU fails
+> as below:
 > 
-> Fix it by making the leafloop workload end after a fixed time like the
-> other workloads so there is no need to kill it after 2 seconds.
+> 	./perf test -vv "test perf probe of function from different CU"
+> 	116: test perf probe of function from different CU:
+> 	--- start ---
+> 	test child forked, pid 2679
+> 	Failed to find symbol foo in /tmp/perf-uprobe-different-cu-sh.Msa7iy89bx/testfile
+> 	  Error: Failed to add events.
+> 	--- Cleaning up ---
+> 	"foo" does not hit any event.
+> 	  Error: Failed to delete events.
+> 	---- end(-1) ----
+> 	116: test perf probe of function from different CU                   : FAILED!
 > 
 > [...]
 
-Applied to perf-tools-next, thanks!
+Applied the series to perf-tools-next, thanks!
 
 Best regards,
 Namhyung
