@@ -1,178 +1,94 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BC7166300;
-	Wed, 26 Jun 2024 09:28:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6883AEEDD
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 09:50:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719394088; cv=none; b=heEVP9091RzunAMysqIVPsF9n5m74KuoNAWHsqcK2HXTKjhsPu40icka8VPFWDjR8maUXGDMRQlJZ3C/05CmWA1f8DDuRywKMRX3JCTKH6+N3UMuxlofBwBL2WIWSJsUbrfWYeh/ZP7Iusgv+ia2FzRcs4k0mxIi6QQEpIlhroM=
+	t=1719395449; cv=none; b=p3EIRAZai85DUkqerHsnGFYmmQM9V9p7XSHra2RFePIdxmlNrprzyiOY7pfD8GcIz2cy/0qkGoEjSa/EP3odnFFf6IjQoyEo6jAXHS6U7VKVZDT8GbyjshIycsE05qz6byP458xPs2NYMIRsgQUJNjPC1fZeWCK82WYhvELXfMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719394088; c=relaxed/simple;
-	bh=CK1/6HJ/6fsWsXTixqXnrVrYCHv6hyAJG7T2CgGocFU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fx8OVOLC/xgNgU97E9jSXSxBBHfBs7z8pWHMGy3D5j21c3JBUwXzd0s43b7CqrUw+3YH6ykvVHecyFvuIkZzug+ctaHrcRh1wj1OjRZu2QBML8go+Ij99SnIOTIMSg3RkjS7P7nCKThYWf46rBVc1iluaExdBhGw6TPg/1+KCiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EA03339;
-	Wed, 26 Jun 2024 02:28:29 -0700 (PDT)
-Received: from [10.1.39.67] (unknown [10.1.39.67])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CED713F6A8;
-	Wed, 26 Jun 2024 02:28:01 -0700 (PDT)
-Message-ID: <ea85f7f7-04b5-4de1-b0a1-d25d286ee065@arm.com>
-Date: Wed, 26 Jun 2024 10:27:59 +0100
+	s=arc-20240116; t=1719395449; c=relaxed/simple;
+	bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DYjH3ypuLw97fqUDVDXS76nnp/Z4czZbQkSbR5KYoB9FvlRxR5t0sgjmUpz5Ae2ep2I/NeY7xR5+Ihcsl9kV6/vxcebRwZN8YAt/+LNXV/Z2HuCH8hk8CCjHfytMSuuiM5L63bG4Zmom76y2rbq+rMShGQCoBosdaxjysWS4HNc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UM3sUncr; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UM3sUncr"
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-52ce9ba0cedso3788677e87.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 02:50:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1719395445; x=1720000245; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+        b=UM3sUncrWN6zhe36o3vEJ8ZFcJtCBJHXNPzWKNx3PUGfSw7V/Od8UOK1OMQUbe7Wg9
+         ssEEA+cP+Adjz9O5fTGUcn0CaGYVV/NC8suICwgGQdfgbTpZuW6Juw7VzLuQQ6TcqWfd
+         EYcfjHFs7c1P1BV9CtTy6FtWwOExlVUSR/sLTWme32MWq+6MsZBhieavMNmMV4IUKEGk
+         3IfjT796ajjL+W1xxOm7d3vr0+vTGz5TpxR7Z736KjeAFqGCmCNKezmCbpb6OG7KaHet
+         vNTc2xrqygHMhPWnrcI2Kc6pIChdnHXSlrwZRkqCgWgJtu2LWEUjKA1BJMU/EbJoZIkN
+         DtBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719395445; x=1720000245;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=B8XMw0Lq/znZjV0KsDQqRopt02tCEu5Vs8kv9SLuKd8=;
+        b=Ra6+jeCY7uO6fmKTSSwKCkHbauK3HcKsGuFO87Ukw+CNBVQbAxiGoMMkiyBL/hfTPE
+         N7WEnTs/u6/RLZH8HdtdK6rqqxddJydOKPd/aRY/ouFXc9P/iZ0MIFEkMI6oG3qPVh+b
+         z2MDSoyzgy+YucsGiALTUQcknPc6BDYBRvMqGSSM9zLHuJo7Ca/HBi+KDAWv8NGMDKTy
+         eTA4QqLcEPGy+xbMQOOjCv3GqKcCs21lXtIbZcZkxVFPKYHUrNzX4lLziVUdaFyixkFZ
+         NNjozIXvleDisB/KUmfO67RcgyLEzxbx1DF1LhTLpuw2TxNJMFcDaDmQ35n03UaMC3kS
+         65qg==
+X-Forwarded-Encrypted: i=1; AJvYcCXR8P+frJGMtdTr1mF24S42ppX+qF4+wRk/fjJAYd4TAD5akqfde62LPBTYpJ/BDLvmhcLo5nvTFhYkTTF1GIsPrzC5lQGY5I2ujSakFpCG2Q==
+X-Gm-Message-State: AOJu0YzTC8cznD0nk4g3GKE9yNA8aeJnAUczPWCW/zdoeWZ06nTXjINj
+	Sj89lGEwISxdIpUExaAHsrM9o29HN2ppQcafYJKauQ5N+ngCxLvhJKRiAadJmBCsWz5vsGeJBRh
+	6aPU5OwwQfexFv2CwP2o7cLgbJCOL2wwJAslteg==
+X-Google-Smtp-Source: AGHT+IGSObvqboJ4ZZ6yoQ1c/G7L7JssRKsKX/b79P3e90H6Lvbk2DOvVW3Js3s99JnAusteMlXmpMMT3T35ygpYy94=
+X-Received: by 2002:a05:6512:3449:b0:52c:dbf9:7e54 with SMTP id
+ 2adb3069b0e04-52ce1836330mr6750930e87.41.1719395445554; Wed, 26 Jun 2024
+ 02:50:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] perf pmu: Restore full PMU name wildcard support
-To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
- Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
-References: <20240617134348.208241-1-james.clark@arm.com>
- <20240617134348.208241-2-james.clark@arm.com>
- <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
- <b2008905-686b-4494-a10d-c3357cce91da@arm.com>
- <CAP-5=fUkZnG0gaJ_76Azn643DXZSq9xhpX=+U6Mjhtnko8PyLw@mail.gmail.com>
- <197e62e3-d34a-442a-97cf-6edf6c8c013f@arm.com>
- <CAP-5=fVqf0B+Fs8vSAvyPf7UpUo1U8HMkDbgb3csJ4s0O1kiog@mail.gmail.com>
- <fa69d868-5229-4ea2-b32e-c7928706d27a@arm.com> <ZnuVbnOyXmjT4Njo@google.com>
-Content-Language: en-US
-From: James Clark <james.clark@arm.com>
-In-Reply-To: <ZnuVbnOyXmjT4Njo@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240618032620.2445395-1-ruanjinjie@huawei.com> <20240618032620.2445395-2-ruanjinjie@huawei.com>
+In-Reply-To: <20240618032620.2445395-2-ruanjinjie@huawei.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 26 Jun 2024 11:50:33 +0200
+Message-ID: <CACRpkdYAjKMSGmR4pc+LEfZ4NQArvgCEwy=ujzjOQus0K9j40w@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ARM: 9258/1: Fix callchain_trace() return value
+To: Jinjie Ruan <ruanjinjie@huawei.com>
+Cc: linux@armlinux.org.uk, will@kernel.org, mark.rutland@arm.com, 
+	peterz@infradead.org, mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, arnd@arndb.de, afd@ti.com, 
+	akpm@linux-foundation.org, rmk+kernel@armlinux.org.uk, 
+	eric.devolder@oracle.com, robh@kernel.org, ardb@kernel.org, 
+	broonie@kernel.org, lihuafei1@huawei.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jun 18, 2024 at 5:23=E2=80=AFAM Jinjie Ruan <ruanjinjie@huawei.com>=
+ wrote:
 
+> perf_callchain_store() return 0 on success, -1 otherwise, fix
+> callchain_trace() to return correct bool value. So walk_stackframe() can
+> have a chance to stop walking the stack ahead.
+>
+> Fixes: 70ccc7c0667b ("ARM: 9258/1: stacktrace: Make stack walk callback c=
+onsistent with generic code")
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 
-On 26/06/2024 05:13, Namhyung Kim wrote:
-> On Tue, Jun 18, 2024 at 04:47:01PM +0100, James Clark wrote:
->>
->>
->> On 18/06/2024 16:25, Ian Rogers wrote:
->>> On Tue, Jun 18, 2024, 8:06 AM James Clark <james.clark@arm.com> wrote:
->>>
->>>>
->>>>
->>>> On 18/06/2024 15:23, Ian Rogers wrote:
->>>>> On Tue, Jun 18, 2024, 3:59 AM James Clark <james.clark@arm.com> wrote:
->>>>>
->>>>>>
->>>>>>
->>>>>> On 17/06/2024 22:25, Ian Rogers wrote:
->>>>>>> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
->>>>>>>
->>>>>>>> Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in
->>>> dynamic
->>>>>>>> pmu events") gives the following example for wildcarding a subset of
->>>>>>>> PMUs:
->>>>>>>>
->>>>>>>>   E.g., in a system with the following dynamic pmus:
->>>>>>>>
->>>>>>>>         mypmu_0
->>>>>>>>         mypmu_1
->>>>>>>>         mypmu_2
->>>>>>>>         mypmu_4
->>>>>>>>
->>>>>>>>   perf stat -e mypmu_[01]/<config>/
->>>>>>>>
->>>>>>>> Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"),
->>>> only
->>>>>>>> "*" has been supported, removing the ability to subset PMUs, even
->>>> though
->>>>>>>> parse-events.l still supports ? and [] characters.
->>>>>>>>
->>>>>>>> Fix it by using fnmatch() when any glob character is detected and add
->>>> a
->>>>>>>> test which covers that and other scenarios of
->>>>>>>> perf_pmu__match_ignoring_suffix().
->>>>>>>>
->>>>>>>> Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
->>>>>>>> Signed-off-by: James Clark <james.clark@arm.com>
->>>>>>>>
->>>>>>>
->>>>>>> We use regular expression matching elsewhere rather than fnmatch. We
->>>> can
->>>>>>> also precompile the matchers using lex. I'm not sure we shouldn't be
->>>>>>> looking for an opportunity to remove fnmatch rather than expand upon
->>>> it.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Ian
->>>>>>>
->>>>>>
->>>>>> Presumably you mean we can do the removal of fnmatch after this fix goes
->>>>>> in,
->>>>>> rather than instead of? Because this is a user facing change in
->>>> behaviour
->>>>>> but the removal of fnmatch would be an non-user facing code refactor?
->>>>>>
->>>>>> It's technically not an "expansion" because we always used fnmatch and
->>>> the
->>>>>> linked commit hasn't made it to a release yet.
->>>>>>
->>>>>
->>>>> The main place the expansion gets added is parse-events.c, previously
->>>>> parse-events.y. If we're adding the expansion ourselves then we can
->>>> choose
->>>>> the form we add it. Some coming servers will have 100s of PMUs and so I'm
->>>>> worried about the scanning cost when a PMU isn't specified.
->>>>>
->>>>> Thanks,
->>>>> Ian
->>>>>
->>>>
->>>> I think I might not be following. If a PMU isn't specified then
->>>> perf_pmu__match() is never called so no cost is incurred. I also don't
->>>> add any new calls to fnmatch().
->>>>
->>>> I only updated the gate on whether the existing fnmatch() is called from
->>>> "*" to "*[?". So it only happens when one of those characters is in the
->>>> PMU name, but it already happens when '*' is in the name.
->>>>
->>>
->>> Right. I'm not saying there is anything wrong in the change or an
->>> additional cost, what the issue is is that currently only really '*'
->>> requires fnmatch and that's because the event parsing adds it. It could
->>
->> It's not only '*' that requires it, see the example I added in the
->> commit message:
->>
->>   ./perf stat -e mypmu_[01]/<config>/
->>
->> '?' was supported before as well which could be useful.
->>
->>> similarly add '.*' if we did regular expression matching. By expanding what
->>> we pass to fnmatch from the command line the more committed we are to
->>> fnmatch rather than regular expressions - which is what we use everywhere
->>> else in the code. So maybe it was a feature that this wasn't working.
->>>
->>
->> But we haven't had a release of Perf yet where more is passed to
->> fnmatch(). Before f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
->> everything was passed to fnmatch(). After that unreleased commit only
->> things with '*' are. Now with this change only "*?[", so it's less not more.
->>
->> I don't think there is any commitment to keep it, we can always remove
->> fnmatch in the future. But it looks like a mistake to me because the
->> title says "refactor" when it actually removes a feature.
-> 
-> Ian, are you ok with this now?
-> 
-> Thanks,
-> Namhyung
-> 
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I don't feel too strongly about this one, unless anyone really is still
-using my_pmu[01].
+Please put this into Russell's patch tracker.
 
-For patch 2 I was going to resend with Ian's suggested-by tag, but I
-think we should try to get that one in as a test is failing.
-
+Yours,
+Linus Walleij
