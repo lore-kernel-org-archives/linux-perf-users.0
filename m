@@ -1,111 +1,149 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072CE53364
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 22:22:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B3C168483;
+	Wed, 26 Jun 2024 22:32:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719440535; cv=none; b=r3OndKLCwmxUUhMbtMHWZENlO4Y4s2KpttjY8nPxojbhWpl9KODkHS+1UFf7IncSTWG57P200w9bhVymk0+fKAY/dGFeWULPvQzzhwbCyuNnCHVuDRA9WdBUIULjkFp70keshlTwE1SQY1PQQ4JgsALKvpH/PWJdRZUKSA5g4dY=
+	t=1719441157; cv=none; b=dFNoZyGdyW0wS/2J5frnJ9ZSgtcYdSyqB1mYnus17lF4J0zDm04VUP9k9tPA7X6TFoBjyqgyw/kq8z9++TK+Y48fsw6serfS/FQIKcUcR96C5tu1Vb6Cs/S1lm+qbgYZrQTSUln/SZfFNzN3H7WgXD4ItcIbwcHlBkNiNvh9iq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719440535; c=relaxed/simple;
-	bh=ugZA6cpa9UcOC/1dDaq60iB9g2fiyJluPesBF18xT/Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hz1FI/VfnVwwbC3a44ho0IDrGL/zMlUjWotnwurJqSlrv5OzYJFkfmT4b2snWuOASwLDYhorxUsVlCXIt8Wj8RLvDR6k9OtWV/eg+XsNlgCzDDSxn863QlUprwfL354cvnPa64/6C2WgEcSvTssMgJB4M9oGncxUiMd+WaWlQaQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IM62ArNx; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719441157; c=relaxed/simple;
+	bh=kk9N8S/9pjJldXV6CMVRpAD3Z0nGrY99ofJV3fvXtDg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=klwskcUDOMgYLdXm1Zm9fVSHd1HgThvF1lHqUa+pHK0FZB2ojfAswwaN3f/El9ktZMxBAV/8ULPpZIRLH3Npc48t2hUANQmUOxF3YmFSCsa96dyoza5liRoHbm6SrwLBl8nPOmAe/Xm0EbqkscwYdtlvHfjQ3d0Yk7Tes2KsrfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LenWavY3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IM62ArNx"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-375bb80e5b8so25115ab.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 15:22:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719440532; x=1720045332; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FF2hjKbTwUFm0fD1hWkC36rvvKOjxPrzvvCMoCJluRM=;
-        b=IM62ArNxHse1QpXVfW0sArHj+jNaXVAJ+PpmJ27upyKAph98KUQkbCrx4AiTk5ixRB
-         YEot404hD7U8VPSmzBF/taQVi0tcB4tWaAVKfekpANAhHsiSL3WXfgESTsZjzP7wc9Df
-         ilDxzGKktOHNEpFJriTT+ACstou/Yd1VqQSsmUxfpEbPamcQUUzPgAb46VhNXgSgyy4n
-         +ya6G3pxxYfGoUwpraUZ+maU5A155busfKwXlsWIRBIat4SI8cCNJeWDjiYDbq6l0OcQ
-         xmwYhfNBAtWfNHzJprxCSAjUZQneRQUHoMka11NgmqpxuAiErXuI0M9x6UYsbMXoJ5mN
-         Wphg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719440532; x=1720045332;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FF2hjKbTwUFm0fD1hWkC36rvvKOjxPrzvvCMoCJluRM=;
-        b=LR8NPtwD3w9ro7W4MqGs0IRbVjm2aJ+9dxplphW24janLph0emVbcsjUlUKeRUOMNn
-         eVuB//awyVJAw70MikHDB/3s9i46uwOzNOA2iWOp3f5uK91C+OOwWF2wcUQ6ssSUIIj+
-         JrG9Wx/sD0eR49u54VtXYxeQmw5LoxNlkAmrTXO+2XgBtqOxyrj2Cv3OynqWF148RIap
-         5XcxtNiRqtJZlLCbt7DvrXNcGztpx8acHR0OQDznxG+aR0LbtiZgoJc+wwhKD5sIpvB/
-         hhLxfCWmI78D//6vQgzinK11nVIS5/8C4YvXwUbp+EaUIocvEMP796DR0DuGTCchFpls
-         BX2A==
-X-Gm-Message-State: AOJu0YxA2yzVfb88U/X4u0r6GWhbIHHPqwDIhwcy3v8ASccxh/2O0WZJ
-	FsTvXG+crltQIJ13D1qgc2IwCLT6jVmP9ZOP6rhbR4fBAZ/BmalibD0dgmTffuhhH29FY3sLGDM
-	stBsLf87/JmC+hrnp+2kN8rgWNIPoerzcIOY47w51dwmMUOjYfzN/
-X-Google-Smtp-Source: AGHT+IFZzu2WbqXj3dP57bIN2IP2fOiu1vpAo4Rf9Dvwe/X0+u6Jf+VnQ64MthuU8Ate1W1PrdllWADewA5O7Nf2k/w=
-X-Received: by 2002:a05:6e02:1e08:b0:375:b377:5c8f with SMTP id
- e9e14a558f8ab-3795d0f35e3mr1403245ab.14.1719440531865; Wed, 26 Jun 2024
- 15:22:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LenWavY3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C10BFC116B1;
+	Wed, 26 Jun 2024 22:32:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719441157;
+	bh=kk9N8S/9pjJldXV6CMVRpAD3Z0nGrY99ofJV3fvXtDg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LenWavY3RR1u7fsla77j3LoWys7mobMCJ868xPwsHHjVhhrGa2zkR8FfKufAQNyKW
+	 8Halrva5mTGE0v3uBo3PXs0ytVoM3tJaJ9nzH07p+MGQUuHminXLoJ3nMecRe9P1tq
+	 Z5RQ6jskfaq08g133uVl2FlVocD8raPacTpI3CZR5AfoA7i61foKrpSGRVE2SswBnf
+	 ltRutt1pcygewz0dduJXRGFRj8ZyZhH8gnGnbnU/L7+X3/qO5C2Xl1NAU6YxJjz7Om
+	 w2TuGRS556hg2TtDOLNRj4+3oEssYXiSDCBT9Zz1X8jx3DtZvoLYfFfD3tnJUrocot
+	 /ag5Jm/ExjRFA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v2 00/12] arm64: Add support for Armv9.4 PMU fixed
+ instruction counter
+Date: Wed, 26 Jun 2024 16:32:24 -0600
+Message-Id: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626145448.896746-1-james.clark@arm.com>
-In-Reply-To: <20240626145448.896746-1-james.clark@arm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 26 Jun 2024 15:22:00 -0700
-Message-ID: <CAP-5=fWVA9sEn5JbokUipRTzu24HZxxYyHGPrM5soKRb4D8_Kw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] perf pmu: Event parsing and listing fixes
-To: James Clark <james.clark@arm.com>
-Cc: linux-perf-users@vger.kernel.org, namhyung@kernel.org, 
-	robin.murphy@arm.com, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPiWfGYC/32NQQ6CQAxFr0K6tqYMKMrKexgWMFOgUQbSQaIh3
+ N2RA7h8L/nvrxBYhQOUyQrKiwQZfQRzSMD2te8YxUUGQyanMxVY64DT8MIMryjWz4qUZ8XJOUd
+ 0MRB3k3Ir7715ryL3EuZRP/vFkv7sv9qSIqEtGmec5bbNmtuD1fPzOGoH1bZtX5matbyzAAAA
+To: Russell King <linux@armlinux.org.uk>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, Will Deacon <will@kernel.org>, 
+ Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
+ James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Zenghui Yu <yuzenghui@huawei.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ James Clark <james.clark@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+X-Mailer: b4 0.14-dev
 
-On Wed, Jun 26, 2024 at 7:55=E2=80=AFAM James Clark <james.clark@arm.com> w=
-rote:
->
-> The second fix is related to the discussion here [1].
->
-> The first fix is unrelated but I just noticed it while fixing the
-> listing issue.
->
-> [1]: https://lore.kernel.org/all/ce31a50b-53db-4c6f-9cb1-242280b0951c@arm=
-.com/
->
-> Changes since v1:
->
->  * Add Ian's suggested-by tag on patch 2
->  * Fix mistake where info.pmu_name instead of pmu->name should have
->    been used in perf_pmu__for_each_event()
->
-> James Clark (2):
->   perf pmu: Restore full PMU name wildcard support
->   perf pmu: Don't de-duplicate core PMUs
+This series adds support for the optional fixed instruction counter 
+added in Armv9.4 PMU. Most of the series is a refactoring to remove the 
+index to counter number conversion which dates back to the Armv7 PMU 
+driver. Removing it is necessary in order to support more than 32 
+counters without a bunch of conditional code further complicating the 
+conversion.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Patches 1-2 are a fix and cleanup for the threshold support. Patch 1 is 
+a dependency of patch 12.
 
-Looking forward to an update on the bugs in:
-https://lore.kernel.org/lkml/CAP-5=3DfWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9=
-nDsrQQw@mail.gmail.com/
+Patches 3-4 move the 32-bit Arm PMU drivers into drivers/perf/ and drop 
+non-DT probe support. These can be taken first if there's no comments on 
+them.
 
-Thanks,
-Ian
+Patch 5 is new to v2 and implements the common pattern of the linux/ 
+header including the asm/ header of the same name.
 
+Patch 6 changes struct arm_pmu.num_events to a bitmap of events, and 
+updates all the users. This removes the index to counter conversion 
+on the PMUv3 and Armv7 drivers.
 
->  tools/perf/tests/pmu.c | 78 ++++++++++++++++++++++++++++++++++++++++++
->  tools/perf/util/pmu.c  | 29 ++++++++++++----
->  2 files changed, 100 insertions(+), 7 deletions(-)
->
-> --
-> 2.34.1
->
+Patch 7 updates various register accessors to use 64-bit values matching 
+the register size.
+
+Patches 8-9 update KVM PMU register accesses to use shared accessors 
+from asm/arm_pmuv3.h.
+
+Patches 10-11 rework KVM and perf PMU defines for counter indexes and 
+number of counters.
+
+Patch 12 finally adds support for the fixed instruction counter.
+
+I tested this on FVP with VHE host and a guest. I tested the Armv7 PMU 
+changes with QEMU.
+
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Changes in v2:
+- Include threshold fix patches and account for threshold support in 
+  counter assignment.
+- Add patch including asm/arm_pmuv3.h from linux/perf/arm_pmuv3.h
+- Fix compile error for Apple PMU
+- Minor review comments detailed in individual patches
+- Link to v1: https://lore.kernel.org/r/20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org
+
+---
+Rob Herring (Arm) (12):
+      perf: arm_pmuv3: Avoid assigning fixed cycle counter with threshold
+      perf: arm_pmuv3: Drop unnecessary IS_ENABLED(CONFIG_ARM64) check
+      perf/arm: Move 32-bit PMU drivers to drivers/perf/
+      perf: arm_v6/7_pmu: Drop non-DT probe support
+      perf: arm_pmuv3: Include asm/arm_pmuv3.h from linux/perf/arm_pmuv3.h
+      perf: arm_pmu: Remove event index to counter remapping
+      perf: arm_pmuv3: Prepare for more than 32 counters
+      KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+      KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+      arm64: perf/kvm: Use a common PMU cycle counter define
+      KVM: arm64: Refine PMU defines for number of counters
+      perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
+
+ arch/arm/include/asm/arm_pmuv3.h                   |  20 +++
+ arch/arm/kernel/Makefile                           |   2 -
+ arch/arm64/include/asm/arm_pmuv3.h                 |  55 +++++++-
+ arch/arm64/include/asm/kvm_host.h                  |   8 +-
+ arch/arm64/include/asm/sysreg.h                    |   1 -
+ arch/arm64/kvm/pmu-emul.c                          |  15 +-
+ arch/arm64/kvm/pmu.c                               |  87 +++---------
+ arch/arm64/kvm/sys_regs.c                          |  11 +-
+ arch/arm64/tools/sysreg                            |  30 ++++
+ drivers/perf/Kconfig                               |  12 ++
+ drivers/perf/Makefile                              |   3 +
+ drivers/perf/apple_m1_cpu_pmu.c                    |   4 +-
+ drivers/perf/arm_pmu.c                             |  11 +-
+ drivers/perf/arm_pmuv3.c                           | 154 +++++++++++----------
+ .../perf_event_v6.c => drivers/perf/arm_v6_pmu.c   |  26 +---
+ .../perf_event_v7.c => drivers/perf/arm_v7_pmu.c   |  90 ++++--------
+ .../perf/arm_xscale_pmu.c                          |  15 +-
+ include/kvm/arm_pmu.h                              |   8 +-
+ include/linux/perf/arm_pmu.h                       |  10 +-
+ include/linux/perf/arm_pmuv3.h                     |  11 +-
+ 20 files changed, 301 insertions(+), 272 deletions(-)
+---
+base-commit: 1613e604df0cd359cf2a7fbd9be7a0bcfacfabd0
+change-id: 20240607-arm-pmu-3-9-icntr-04375ddd0082
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
+
