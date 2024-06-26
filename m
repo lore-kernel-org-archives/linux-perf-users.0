@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C0FC1755A;
-	Wed, 26 Jun 2024 14:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7392B1850B8;
+	Wed, 26 Jun 2024 14:55:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719413724; cv=none; b=DgFxdGg9vwzi3t6NrfjKwrrVdN6ZdJctBfJ+LEE/XaKNxZqI/QvcN5Ox6/s83vurXfUi2bpOj4UgOQyoETErw7jaqglfUcQXg1Zm0l52qVdYxLmgmuDcvXAbo2pn1iT1wzen4sGpqbUmYPLGzXJGZeVXyCCTUJMRqTtov3o0ab0=
+	t=1719413729; cv=none; b=o1UiRUa9ZcS/EGY9ZfTS6vqJ9BBuNnqdL8LtwqL7UYDMpcbD2xdyuLtJfyslwuQ8GrrDpu/yPmEfGSyBF2hNErd0FVI+d9PAdOoiLTBfmIxTQaPGifb997Unj0C258d7R5BNulRRoXn9JZOfbD8Yt7br0VGidn+2bGE+OqT/xqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719413724; c=relaxed/simple;
-	bh=fjANHNvY+xvOjk7zCTH+6WPmIzWFkUzFb3xWhgvj8G0=;
+	s=arc-20240116; t=1719413729; c=relaxed/simple;
+	bh=KcANrdZ7y8VoQfMbuEJKrubTtZ2yiWBODLZMnaA5OY4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CwEedbzjtOC6zuSWNiMtHOsYPECmNDjm8UFLVc+0o20eHElVurj/p0ErrLOO3Q163DiqHYB1apek3xXxgfWIm6UyTSN2DYUowZ902YlYbcgGMlDNo7q7L6E/kpTXHc5OEFeECEsu7MpM+fpSkwyHUzRXylwMDJbBhqUlnKLZkP8=
+	 MIME-Version; b=oKw6RK+Uw4qbh3pRS0bn3VQfCyUuoYLYrCLlQh6Eja94IJWNXSN/w7kpn1KK56wGkdqwRUUdELU5oAUWtRLDQyKDy/y1mbtJVFY+w45iHzHo8gLks0EOZ4DcBoBaqGt0e8dvciPsdU45gx25ZIoy7p3W91jOx6rMeE+F4+gk0ms=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4368D367;
-	Wed, 26 Jun 2024 07:55:46 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C487DDA7;
+	Wed, 26 Jun 2024 07:55:51 -0700 (PDT)
 Received: from e127643.cambridge.arm.com (e127643.arm.com [10.1.33.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 222ED3F73B;
-	Wed, 26 Jun 2024 07:55:18 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 89D703F73B;
+	Wed, 26 Jun 2024 07:55:23 -0700 (PDT)
 From: James Clark <james.clark@arm.com>
 To: linux-perf-users@vger.kernel.org,
 	irogers@google.com,
@@ -33,9 +33,9 @@ Cc: robin.murphy@arm.com,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/2] perf pmu: Restore full PMU name wildcard support
-Date: Wed, 26 Jun 2024 15:54:45 +0100
-Message-Id: <20240626145448.896746-2-james.clark@arm.com>
+Subject: [PATCH v2 2/2] perf pmu: Don't de-duplicate core PMUs
+Date: Wed, 26 Jun 2024 15:54:46 +0100
+Message-Id: <20240626145448.896746-3-james.clark@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240626145448.896746-1-james.clark@arm.com>
 References: <20240626145448.896746-1-james.clark@arm.com>
@@ -47,142 +47,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in dynamic
-pmu events") gives the following example for wildcarding a subset of
-PMUs:
+Arm PMUs have a suffix, either a single decimal (armv8_pmuv3_0) or 3 hex
+digits which (armv8_cortex_a53) which Perf assumes are both strippable
+suffixes for the purposes of deduplication. S390 "cpum_cf" is a
+similarly suffixed core PMU but is only two characters so is not treated
+as strippable because the rules are a minimum of 3 hex characters or 1
+decimal character.
 
-  E.g., in a system with the following dynamic pmus:
+There are two paths involved in listing PMU events:
 
-        mypmu_0
-        mypmu_1
-        mypmu_2
-        mypmu_4
+ * HW/cache event printing assumes core PMUs don't have suffixes so
+   doesn't try to strip.
+ * Sysfs PMU events share the printing function with uncore PMUs which
+   strips.
 
-  perf stat -e mypmu_[01]/<config>/
+This results in slightly inconsistent Perf list behavior if a core PMU
+has a suffix:
 
-Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"), only
-"*" has been supported, removing the ability to subset PMUs, even though
-parse-events.l still supports ? and [] characters.
+  # perf list
+  ...
+  armv8_pmuv3_0/branch-load-misses/
+  armv8_pmuv3/l3d_cache_wb/          [Kernel PMU event]
+  ...
 
-Fix it by using fnmatch() when any glob character is detected and add a
-test which covers that and other scenarios of
-perf_pmu__match_ignoring_suffix().
+Fix it by partially reverting back to the old list behavior where
+stripping was only done for uncore PMUs. For example commit 8d9f5146f5da
+("perf pmus: Sort pmus by name then suffix") mentions that only PMUs
+starting 'uncore_' are considered to have a potential suffix. This
+change doesn't go back that far, but does only strip PMUs that are
+!is_core. This keeps the desirable behavior where the many possibly
+duplicated uncore PMUs aren't repeated, but it doesn't break listing for
+core PMUs.
 
-Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+Searching for a PMU continues to use the new stripped comparison
+functions, meaning that it's still possible to request an event by
+specifying the common part of a PMU name, or even open events on
+multiple similarly named PMUs. For example:
+
+  # perf stat -e armv8_cortex/inst_retired/
+
+  5777173628      armv8_cortex_a53/inst_retired/          (99.93%)
+  7469626951      armv8_cortex_a57/inst_retired/          (49.88%)
+
+Fixes: 3241d46f5f54 ("perf pmus: Sort/merge/aggregate PMUs like mrvl_ddr_pmu")
+Suggested-by: Ian Rogers <irogers@google.com>
 Signed-off-by: James Clark <james.clark@arm.com>
 ---
- tools/perf/tests/pmu.c | 78 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/pmu.c  |  2 +-
- 2 files changed, 79 insertions(+), 1 deletion(-)
+ tools/perf/util/pmu.c | 27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 201df4446f7c..40132655ccd1 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -453,12 +453,90 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
- 	return TEST_OK;
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 97d74fe6d816..28af48ea803f 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -847,6 +847,23 @@ __weak const struct pmu_metrics_table *pmu_metrics_table__find(void)
+ 	return perf_pmu__find_metrics_table(NULL);
  }
  
 +/**
-+ * Test perf_pmu__match() that's used to search for a PMU given a name passed
-+ * on the command line. The name that's passed may also be a filename type glob
-+ * match.
++ * Return the length of the PMU name not including the suffix for uncore PMUs.
++ *
++ * We want to deduplicate many similar uncore PMUs by stripping their suffixes,
++ * but there are never going to be too many core PMUs and the suffixes might be
++ * interesting. "arm_cortex_a53" vs "arm_cortex_a57" or "cpum_cf" for example.
++ *
++ * @skip_duplicate_pmus: False in verbose mode so all uncore PMUs are visible
 + */
-+static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
++static size_t pmu_deduped_name_len(const struct perf_pmu *pmu, const char *name,
++				   bool skip_duplicate_pmus)
 +{
-+	struct perf_pmu test_pmu;
-+
-+	test_pmu.name = "pmuname";
-+	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
-+	TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
-+	TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),	     false);
-+
-+	test_pmu.name = "pmuname_10";
-+	TEST_ASSERT_EQUAL("Diff suffix_", perf_pmu__match(&test_pmu, "pmuname_2"),  false);
-+	TEST_ASSERT_EQUAL("Sub suffix_",  perf_pmu__match(&test_pmu, "pmuname_1"),  true);
-+	TEST_ASSERT_EQUAL("Same suffix_", perf_pmu__match(&test_pmu, "pmuname_10"), true);
-+	TEST_ASSERT_EQUAL("No suffix_",   perf_pmu__match(&test_pmu, "pmuname"),    true);
-+	TEST_ASSERT_EQUAL("Underscore_",  perf_pmu__match(&test_pmu, "pmuname_"),   true);
-+	TEST_ASSERT_EQUAL("Substring_",   perf_pmu__match(&test_pmu, "pmuna"),      false);
-+
-+	test_pmu.name = "pmuname_ab23";
-+	TEST_ASSERT_EQUAL("Diff suffix hex_", perf_pmu__match(&test_pmu, "pmuname_2"),    false);
-+	TEST_ASSERT_EQUAL("Sub suffix hex_",  perf_pmu__match(&test_pmu, "pmuname_ab"),   true);
-+	TEST_ASSERT_EQUAL("Same suffix hex_", perf_pmu__match(&test_pmu, "pmuname_ab23"), true);
-+	TEST_ASSERT_EQUAL("No suffix hex_",   perf_pmu__match(&test_pmu, "pmuname"),      true);
-+	TEST_ASSERT_EQUAL("Underscore hex_",  perf_pmu__match(&test_pmu, "pmuname_"),     true);
-+	TEST_ASSERT_EQUAL("Substring hex_",   perf_pmu__match(&test_pmu, "pmuna"),	 false);
-+
-+	test_pmu.name = "pmuname10";
-+	TEST_ASSERT_EQUAL("Diff suffix", perf_pmu__match(&test_pmu, "pmuname2"),  false);
-+	TEST_ASSERT_EQUAL("Sub suffix",  perf_pmu__match(&test_pmu, "pmuname1"),  true);
-+	TEST_ASSERT_EQUAL("Same suffix", perf_pmu__match(&test_pmu, "pmuname10"), true);
-+	TEST_ASSERT_EQUAL("No suffix",   perf_pmu__match(&test_pmu, "pmuname"),   true);
-+	TEST_ASSERT_EQUAL("Underscore",  perf_pmu__match(&test_pmu, "pmuname_"),  false);
-+	TEST_ASSERT_EQUAL("Substring",   perf_pmu__match(&test_pmu, "pmuna"),     false);
-+
-+	test_pmu.name = "pmunameab23";
-+	TEST_ASSERT_EQUAL("Diff suffix hex", perf_pmu__match(&test_pmu, "pmuname2"),    false);
-+	TEST_ASSERT_EQUAL("Sub suffix hex",  perf_pmu__match(&test_pmu, "pmunameab"),   true);
-+	TEST_ASSERT_EQUAL("Same suffix hex", perf_pmu__match(&test_pmu, "pmunameab23"), true);
-+	TEST_ASSERT_EQUAL("No suffix hex",   perf_pmu__match(&test_pmu, "pmuname"),     true);
-+	TEST_ASSERT_EQUAL("Underscore hex",  perf_pmu__match(&test_pmu, "pmuname_"),    false);
-+	TEST_ASSERT_EQUAL("Substring hex",   perf_pmu__match(&test_pmu, "pmuna"),	false);
-+
-+	/*
-+	 * 2 hex chars or less are not considered suffixes so it shouldn't be
-+	 * possible to wildcard by skipping the suffix. Therefore there are more
-+	 * false results here than above.
-+	 */
-+	test_pmu.name = "pmuname_a3";
-+	TEST_ASSERT_EQUAL("Diff suffix 2 hex_", perf_pmu__match(&test_pmu, "pmuname_2"),  false);
-+	/*
-+	 * This one should be false, but because pmuname_a3 ends in 3 which is
-+	 * decimal, it's not possible to determine if it's a short hex suffix or
-+	 * a normal decimal suffix following text. And we want to match on any
-+	 * length of decimal suffix. Run the test anyway and expect the wrong
-+	 * result. And slightly fuzzy matching shouldn't do too much harm.
-+	 */
-+	TEST_ASSERT_EQUAL("Sub suffix 2 hex_",  perf_pmu__match(&test_pmu, "pmuname_a"),  true);
-+	TEST_ASSERT_EQUAL("Same suffix 2 hex_", perf_pmu__match(&test_pmu, "pmuname_a3"), true);
-+	TEST_ASSERT_EQUAL("No suffix 2 hex_",   perf_pmu__match(&test_pmu, "pmuname"),    false);
-+	TEST_ASSERT_EQUAL("Underscore 2 hex_",  perf_pmu__match(&test_pmu, "pmuname_"),   false);
-+	TEST_ASSERT_EQUAL("Substring 2 hex_",   perf_pmu__match(&test_pmu, "pmuna"),	  false);
-+
-+	test_pmu.name = "pmuname_5";
-+	TEST_ASSERT_EQUAL("Glob 1", perf_pmu__match(&test_pmu, "pmu*"),		   true);
-+	TEST_ASSERT_EQUAL("Glob 2", perf_pmu__match(&test_pmu, "nomatch*"),	   false);
-+	TEST_ASSERT_EQUAL("Seq 1",  perf_pmu__match(&test_pmu, "pmuname_[12345]"), true);
-+	TEST_ASSERT_EQUAL("Seq 2",  perf_pmu__match(&test_pmu, "pmuname_[67890]"), false);
-+	TEST_ASSERT_EQUAL("? 1",    perf_pmu__match(&test_pmu, "pmuname_?"),	   true);
-+	TEST_ASSERT_EQUAL("? 2",    perf_pmu__match(&test_pmu, "pmuname_1?"),	   false);
-+
-+	return TEST_OK;
++	return skip_duplicate_pmus && !pmu->is_core
++		? pmu_name_len_no_suffix(name)
++		: strlen(name);
 +}
 +
- static struct test_case tests__pmu[] = {
- 	TEST_CASE("Parsing with PMU format directory", pmu_format),
- 	TEST_CASE("Parsing with PMU event", pmu_events),
- 	TEST_CASE("PMU event names", pmu_event_names),
- 	TEST_CASE("PMU name combining", name_len),
- 	TEST_CASE("PMU name comparison", name_cmp),
-+	TEST_CASE("PMU cmdline match", pmu_match),
- 	{	.name = NULL, }
- };
- 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c94a91645b21..97d74fe6d816 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -2150,7 +2150,7 @@ void perf_pmu__warn_invalid_config(struct perf_pmu *pmu, __u64 config,
- bool perf_pmu__match(const struct perf_pmu *pmu, const char *tok)
+ /**
+  * perf_pmu__match_ignoring_suffix - Does the pmu_name match tok ignoring any
+  *                                   trailing suffix? The Suffix must be in form
+@@ -1796,9 +1813,8 @@ static char *format_alias(char *buf, int len, const struct perf_pmu *pmu,
+ 			  const struct perf_pmu_alias *alias, bool skip_duplicate_pmus)
  {
- 	const char *name = pmu->name;
--	bool need_fnmatch = strchr(tok, '*') != NULL;
-+	bool need_fnmatch = strisglob(tok);
+ 	struct parse_events_term *term;
+-	size_t pmu_name_len = skip_duplicate_pmus
+-		? pmu_name_len_no_suffix(pmu->name)
+-		: strlen(pmu->name);
++	size_t pmu_name_len = pmu_deduped_name_len(pmu, pmu->name,
++						   skip_duplicate_pmus);
+ 	int used = snprintf(buf, len, "%.*s/%s", (int)pmu_name_len, pmu->name, alias->name);
  
- 	if (!strncmp(tok, "uncore_", 7))
- 		tok += 7;
+ 	list_for_each_entry(term, &alias->terms.terms, list) {
+@@ -1839,9 +1855,8 @@ int perf_pmu__for_each_event(struct perf_pmu *pmu, bool skip_duplicate_pmus,
+ 		size_t buf_used, pmu_name_len;
+ 
+ 		info.pmu_name = event->pmu_name ?: pmu->name;
+-		pmu_name_len = skip_duplicate_pmus
+-			? pmu_name_len_no_suffix(info.pmu_name)
+-			: strlen(info.pmu_name);
++		pmu_name_len = pmu_deduped_name_len(pmu, info.pmu_name,
++						    skip_duplicate_pmus);
+ 		info.alias = NULL;
+ 		if (event->desc) {
+ 			info.name = event->name;
 -- 
 2.34.1
 
