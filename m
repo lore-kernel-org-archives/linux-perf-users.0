@@ -1,164 +1,210 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2074.outbound.protection.outlook.com [40.107.100.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A93C10A11;
-	Wed, 26 Jun 2024 06:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719385178; cv=none; b=kCztIXzKYazEWnpquJyv8S2qeEQEX8P5CfaK3f8g+AJ0NOOjaEAc3Wg5lI8eDjYBN16INuDWCUP0PiHvfsbW+3JsLRhdL9e/UweSDLsjzP3mPvfs7gTxS+r8iI/m1tiiFPser5yxM+V2jByRRjQDHKhTiDYp2MuBKL8JkNQ+POU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719385178; c=relaxed/simple;
-	bh=F7Vpya+7j+dMbuEFDpaXdFPnPs9r3oWYBeeZVByqmkM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=AQnNKhm4RADOP331mywIxDpfJO/8+X8iAKkS5g0y7m1LmMBJU2XFbV+v7hgD5waNBdR56/tAZDR98ZAelgu0dLo/RM/ASlSg6V0tZ6RZEO2DERgV+ecKwgfctDSydnzz2b5uVCYXZcNjWYCaDWL45GbJmoxMGLClx3SQsykkoQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXq7/gMR; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB6215B980;
+	Wed, 26 Jun 2024 07:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.74
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719387867; cv=fail; b=kp+NxQlhtfx6k+gEAaHtuN9RfxOhCfJ/4Eh/dAi92bfu1Jl3JajDE8/VELF7HDOhHPRmYOIfXKDlnleZ2KPlvj5zrbWofpUenhNntiPozHGGn9n0ZsLvq+uSezouRR6oHKPO0k95grNCN/1Qo7MBr4fxOp2wDW6IWzLk8nJ8znQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719387867; c=relaxed/simple;
+	bh=Dgt3icfkmQsAyKl5DP8ipKYrWEE0JqUlQ2tpRNZMbDU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Lntz39V7UfYkTqRYUi+JKrl9Hzn3LoH0AuLlxvoBK1KgYBTrAAE6V3jS71LROYUZCNhSUZv/ccVJyrJoxKz9lbFaIUMDil+Hq5Yp2j0jQObuhX61kRrUwMdZPIulp45xU4QG9jl/wNDqrGfPbi3z9sp6Rj/eTwR+jjfqV0euE9M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=N8/5WSXV; arc=fail smtp.client-ip=40.107.100.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXq7/gMR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719385177; x=1750921177;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=F7Vpya+7j+dMbuEFDpaXdFPnPs9r3oWYBeeZVByqmkM=;
-  b=hXq7/gMR010eHnMHkvExEOLCHWweICft4AICZZAE8sywjTtuOPGnMw/F
-   YKwRmZWCTgSM4JISlrLBzx/MTWcNwHy9pRQ0LqB3kBVALolEdluBlBXr5
-   JO43H+F+EWkEsv85nZ7yH+O8Ef6SXkJKjrIqbvWIz1hB9HTjF75NhJyIf
-   HhWOMPJ8Uq/q2PhCyt4fjnjS9aWNU8M6BZizeoRHNO6++HEouI4jE27QE
-   c8smoNkAq4n54ECJFa1yDSMS3KOYbCv35PunudF5eVWIgivvfDvSQeooI
-   W4SpDU9EDQS2ggpe+COr79OF0shpSkvbHFmoPuhWYWSCRCsjJo6Ya7svg
-   g==;
-X-CSE-ConnectionGUID: +UihRZYOSXuazyHV5fjwBw==
-X-CSE-MsgGUID: oLcULofwReqVIeUEY3JtoQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16317354"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="16317354"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 23:59:36 -0700
-X-CSE-ConnectionGUID: Ad4KmJhCS3ehFjR9r2Vaww==
-X-CSE-MsgGUID: 4x5SIM5PQ0qrOKTevQo+gA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="48494075"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 23:59:29 -0700
-Message-ID: <5db205f3-550f-4b9b-8bf4-aaa8054043aa@intel.com>
-Date: Wed, 26 Jun 2024 09:59:23 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="N8/5WSXV"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nXBjxQWZQn8vQAVJ3/QBJPp4hR2/l8u68g+24Ly/7yLIopHVldALpYNL+AyrAL4x6DjpGtHcFWZM/kuLRXbj7Ho83j2A1R6bRzMH7dJqK/xBjyKieOL88geOJ+FNxdI+oRmE3e24uXgUkG04M4Ul+y0o0VFE9aqBv6hcIM4sqfV7Au/a8CwDa1lM8Zt8AX1X9MUqnVRTVW/6LNfBainRnqIzG+kdzdneOUz/tYfch5u79RZJ9kUFWh5K5rPAdQZKuOCQXZRvK8MRZzcn8CRoMRkHOUVCNzOgiJQ7+okNALIDbNMgwy5AXsbUjdgwLj2knMETP/WzxvV8gZbQ5QG+Aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2LYXGth3DQap4L+9NSPyjx/dxhgr4c5CraECk/HdOUo=;
+ b=bkKvHjcJE9MMS1cgKcdifib8IWHY6fEadOi5BT0AJUoJ+Lbp2rhapQRGhUxgCvTU3mxPyZuPhpQ2m1z41hpyWGQo+FgZUWEMLxQtR4+e38iDmhB9b2ukUosXFNPjLQwAZgCtXeU0D3BzsuNR6rFoXzuy6yeBSJAm0tFAwErRq/rC9upkRUSfYkg2EkRfwO1094Fb29IoZLasJ86yGz7VenEj7oURVaclwVADGBuY1jCYacMeKikYJ+Wv04u9CjcdVhYXGvSnbYgV4WYJiC7Y3POA4H1mKKFcvjjhXjCiQB39dPsaqX+BePDI9OQZbzS0EnK6WtRWZHO7UQPPCzkW6w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2LYXGth3DQap4L+9NSPyjx/dxhgr4c5CraECk/HdOUo=;
+ b=N8/5WSXVxnF/hOsgHeQEfKwVWn0bvTGvQNIBFUOF9G/LpW+QHEwURjh/4MyZZYA65JPHssExvJKJnlEqwllmOGItY2VV5kdkSA/PNPon0FTwZQcZTR+YcWil0jDOZunULNIaAvV7PLN6JYPGZyH/9tVMDRbNX+skNrZlMCJ8FOk=
+Received: from MW4P223CA0007.NAMP223.PROD.OUTLOOK.COM (2603:10b6:303:80::12)
+ by CH3PR12MB8209.namprd12.prod.outlook.com (2603:10b6:610:123::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7698.30; Wed, 26 Jun
+ 2024 07:44:22 +0000
+Received: from CO1PEPF000044FB.namprd21.prod.outlook.com
+ (2603:10b6:303:80:cafe::c1) by MW4P223CA0007.outlook.office365.com
+ (2603:10b6:303:80::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.23 via Frontend
+ Transport; Wed, 26 Jun 2024 07:44:22 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044FB.mail.protection.outlook.com (10.167.241.201) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7741.0 via Frontend Transport; Wed, 26 Jun 2024 07:44:21 +0000
+Received: from sindhu.amdval.net (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 26 Jun
+ 2024 02:44:12 -0500
+From: Sandipan Das <sandipan.das@amd.com>
+To: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <x86@kernel.org>, <peterz@infradead.org>, <mingo@kernel.org>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<hpa@zytor.com>, <ravi.bangoria@amd.com>, <ananth.narayan@amd.com>,
+	<sandipan.das@amd.com>
+Subject: [PATCH] perf/x86/amd/uncore: Avoid PMU registration if counters are unavailable
+Date: Wed, 26 Jun 2024 13:14:04 +0530
+Message-ID: <20240626074404.1044230-1-sandipan.das@amd.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 22/26] perf auxevent: Add explicit dummy tool
- initialization
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240625172603.900667-1-irogers@google.com>
- <20240625172603.900667-23-irogers@google.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240625172603.900667-23-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044FB:EE_|CH3PR12MB8209:EE_
+X-MS-Office365-Filtering-Correlation-Id: e1a09c9b-ca13-462d-9284-08dc95b3cb3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230038|1800799022|82310400024|36860700011|7416012|376012;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?HAHbiQsMWJ7ABXSynZWb2oaPqvRIzjy9CQWMdl6rNDpSO+hl0pOtDCGNFwrE?=
+ =?us-ascii?Q?ddZIMUiOOx22oR7E4wWGAlIkdlx927JyXLk+Jg6goi5q8gxKgH8J6Tcbqmbn?=
+ =?us-ascii?Q?qBGWUivLfqTQHL3k49exXiEyOfRlDwxvfGGWvObHDNU4gzbN6oPW4MCB2Pto?=
+ =?us-ascii?Q?zVZxYOsYqEi6vJfIhfY9oeZdy2LvKqzQLDj6trR4heUvpYeAzK5H+YQOiBYG?=
+ =?us-ascii?Q?RvYtSofFvqsuWseq4Z7ZRtt3t+zVpvQcPsZ5m7DyL3n/GJtv3JNkcSuxNdeJ?=
+ =?us-ascii?Q?nTS5yb/siug3W9CKSZwBwqx/Da66tI1d1oRDkalOWxbP/qtB7ovMU5wBzEM2?=
+ =?us-ascii?Q?hNkEtGp78RnkDQmNz5KouDyE3qbTFQ2I1SU7ZZL8sno2UEv0Kx9YsynyJcAy?=
+ =?us-ascii?Q?3se8A68FiVFJvirCKmuJWU2le62mMm1k9arkVdcgPNyKgSsqD4kQB0cMXjPi?=
+ =?us-ascii?Q?ZDQa7sZjjgwaXTwIMJDtCsL4fBkC3/ulH8aHSvAm+B6F3kR90jczapOSqOzO?=
+ =?us-ascii?Q?/OSrtiuGhidy52Od3AoMFCMhfPOvHe9IPe5TjTPdrZpngg+kk+J/IeO2mAJH?=
+ =?us-ascii?Q?I8GTMdflcO/w2AR65J05YHOsNgzd++cXkeH6NfNZ3VXkR+K0hVhtUuTWAMVe?=
+ =?us-ascii?Q?pGdudN9IViZrUCsm6Yl55MtrZILlI0VZpxsn533HXTHMcllusOKH62mPbHNW?=
+ =?us-ascii?Q?N1rqOvxG7XzRQgHaAxxy6S7p/BTprxFv7dDH5N9fn2gVVm2iOnxxJWKShZ6Z?=
+ =?us-ascii?Q?GPQyyJF/p3ppmrGiiipytIqKy1OXBCiFEP+ntpXrqDbyG7vdcX1paSCJpJWJ?=
+ =?us-ascii?Q?MbfRxc3p5TtdU1pNVdHJ4dMKD7YhU+P8JhlSI4EbWYQ84G7Czk3GU6ekhezd?=
+ =?us-ascii?Q?kjw0i+cWIYPc8+notS7jtTvsVNmjLESWEGuUdJ38ejsmZGA4dtmMbyRWcg1H?=
+ =?us-ascii?Q?H1E7E1tu5wYsK8LaJNVYVRL0cpGcELUyLQ/jhMYHAaAGaHEpluBcasna9LUX?=
+ =?us-ascii?Q?iBd05X4q4JbtD6rMshy8gUsxemlDUoXjn4UnmAn4ZP3Q7ShJ5WyLqSpv1onS?=
+ =?us-ascii?Q?p9CPukfNuQDlfPz/LUNIud2+BNU8ZXyf4oN9bOiI/Uhv7zEaNANj6riwr82B?=
+ =?us-ascii?Q?0vV4THS9Tcymmy4vR2MlbqrRKTzTP2vaIUC9GjLFtl3RRb5z+MBYRos+GZEU?=
+ =?us-ascii?Q?YVdMZt/Fb7mnYWsXvuXd1kX7W5P/jmweEDX7Pydy6qF/J7Jpo8w2sM1crLLD?=
+ =?us-ascii?Q?23UpQdTv01wbXY+LdVwPuRQnbbc1pFtTtt+TONQNFrA/Q6++5RW3oWSFgp5j?=
+ =?us-ascii?Q?F7MC8fsbTKq6bcesfBKrkRNryIRpR9Dyb8WR6nzg8s4vUMTqUwvuHOR4t0Z6?=
+ =?us-ascii?Q?+ZL/HTjKHSFNEeWh/IAPtFZNpOEBsalyzDjNd6ahxIJrOn9vzw=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230038)(1800799022)(82310400024)(36860700011)(7416012)(376012);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2024 07:44:21.9674
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: e1a09c9b-ca13-462d-9284-08dc95b3cb3f
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044FB.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8209
 
-On 25/06/24 20:25, Ian Rogers wrote:
-> Ensure tool is initialized to avoid lazy initialization pattern so
-> that more uses of struct perf_tool can be made const.
+X86_FEATURE_PERFCTR_NB and X86_FEATURE_PERFCTR_LLC are derived from
+CPUID leaf 0x80000001 ECX bits 24 and 28 respectively and denote the
+availability of DF and L3 counters. When these bits are not set, the
+corresponding PMUs have no counters and hence, should not be registered.
 
-This does not look necessary.
+Fixes: 07888daa056e ("perf/x86/amd/uncore: Move discovery and registration")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+---
+ arch/x86/events/amd/uncore.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-The dummy tool is not used, and is not subject to lazy initialization,
-so the existing initialization to zero is fine.
-
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/arm-spe.c     | 1 +
->  tools/perf/util/cs-etm.c      | 1 +
->  tools/perf/util/intel-bts.c   | 1 +
->  tools/perf/util/intel-pt.c    | 2 +-
->  tools/perf/util/s390-cpumsf.c | 1 -
->  5 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index 70bad18c4a0d..06a198b2f483 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -1097,6 +1097,7 @@ static int arm_spe_synth_event(struct perf_session *session,
->  
->  	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
->  	arm_spe_synth.session = session;
-> +	perf_tool__init(&arm_spe_synth.dummy_tool, /*ordered_events=*/false);
->  
->  	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
->  					   &id, arm_spe_event_synth);
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 231cd833c012..02eb5b3eed14 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1619,6 +1619,7 @@ static int cs_etm__synth_event(struct perf_session *session,
->  
->  	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
->  	cs_etm_synth.session = session;
-> +	perf_tool__init(&cs_etm_synth.dummy_tool, /*ordered_events=*/false);
->  
->  	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
->  					   &id, cs_etm__event_synth);
-> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-> index 779982c478e0..ae97109542be 100644
-> --- a/tools/perf/util/intel-bts.c
-> +++ b/tools/perf/util/intel-bts.c
-> @@ -761,6 +761,7 @@ static int intel_bts_synth_event(struct perf_session *session,
->  
->  	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
->  	intel_bts_synth.session = session;
-> +	perf_tool__init(&intel_bts_synth.dummy_tool, /*ordered_events=*/false);
->  
->  	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
->  					   &id, intel_bts_event_synth);
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index bed35029e1f6..48ed60e521ed 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -3687,7 +3687,7 @@ static int intel_pt_synth_event(struct perf_session *session, const char *name,
->  
->  	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
->  	intel_pt_synth.session = session;
-> -
-> +	perf_tool__init(&intel_pt_synth.dummy_tool, /*ordered_events=*/false);
->  	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
->  					  &id, intel_pt_event_synth);
->  	if (err)
-> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
-> index 5834bad6ac0f..eb835e531cd6 100644
-> --- a/tools/perf/util/s390-cpumsf.c
-> +++ b/tools/perf/util/s390-cpumsf.c
-> @@ -953,7 +953,6 @@ s390_cpumsf_process_event(struct perf_session *session,
->  }
->  
->  struct s390_cpumsf_synth {
-> -	struct perf_tool cpumsf_tool;
->  	struct perf_session *session;
->  };
->  
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 4ccb8fa483e6..b78e05ab4a73 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -654,17 +654,20 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ {
+ 	struct attribute **df_attr = amd_uncore_df_format_attr;
+ 	struct amd_uncore_pmu *pmu;
++	int num_counters;
+ 
+ 	/* Run just once */
+ 	if (uncore->init_done)
+ 		return amd_uncore_ctx_init(uncore, cpu);
+ 
++	num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
++
+ 	/* No grouping, single instance for a system */
+ 	uncore->pmus = kzalloc(sizeof(*uncore->pmus), GFP_KERNEL);
+-	if (!uncore->pmus) {
+-		uncore->num_pmus = 0;
++	if (!uncore->pmus)
+ 		goto done;
+-	}
+ 
+ 	/*
+ 	 * For Family 17h and above, the Northbridge counters are repurposed
+@@ -674,7 +677,7 @@ int amd_uncore_df_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu = &uncore->pmus[0];
+ 	strscpy(pmu->name, boot_cpu_data.x86 >= 0x17 ? "amd_df" : "amd_nb",
+ 		sizeof(pmu->name));
+-	pmu->num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	pmu->num_counters = num_counters;
+ 	pmu->msr_base = MSR_F15H_NB_PERF_CTL;
+ 	pmu->rdpmc_base = RDPMC_BASE_NB;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
+@@ -785,17 +788,20 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ {
+ 	struct attribute **l3_attr = amd_uncore_l3_format_attr;
+ 	struct amd_uncore_pmu *pmu;
++	int num_counters;
+ 
+ 	/* Run just once */
+ 	if (uncore->init_done)
+ 		return amd_uncore_ctx_init(uncore, cpu);
+ 
++	num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	if (!num_counters)
++		goto done;
++
+ 	/* No grouping, single instance for a system */
+ 	uncore->pmus = kzalloc(sizeof(*uncore->pmus), GFP_KERNEL);
+-	if (!uncore->pmus) {
+-		uncore->num_pmus = 0;
++	if (!uncore->pmus)
+ 		goto done;
+-	}
+ 
+ 	/*
+ 	 * For Family 17h and above, L3 cache counters are available instead
+@@ -805,7 +811,7 @@ int amd_uncore_l3_ctx_init(struct amd_uncore *uncore, unsigned int cpu)
+ 	pmu = &uncore->pmus[0];
+ 	strscpy(pmu->name, boot_cpu_data.x86 >= 0x17 ? "amd_l3" : "amd_l2",
+ 		sizeof(pmu->name));
+-	pmu->num_counters = amd_uncore_ctx_num_pmcs(uncore, cpu);
++	pmu->num_counters = num_counters;
+ 	pmu->msr_base = MSR_F16H_L2I_PERF_CTL;
+ 	pmu->rdpmc_base = RDPMC_BASE_LLC;
+ 	pmu->group = amd_uncore_ctx_gid(uncore, cpu);
+-- 
+2.43.0
 
