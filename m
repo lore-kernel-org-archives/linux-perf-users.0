@@ -1,215 +1,164 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBEE44C84;
-	Wed, 26 Jun 2024 05:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A93C10A11;
+	Wed, 26 Jun 2024 06:59:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719378279; cv=none; b=YWo+CW3PWzMsi3k+R1SbwlgK2dUUQgkQdzDVL84oRvSVc5UvBArzrfIOwgH1YFXyCiWhw9iDnpSPGcfIK0uTZbw0HPyfpIuQtu+J2UNKrbv7h+y1kR7yzM2WA1sDmMS1YpMybLIKVvZThJiIoNSfCd4gaOiRcRH8HW48gBnLD6Q=
+	t=1719385178; cv=none; b=kCztIXzKYazEWnpquJyv8S2qeEQEX8P5CfaK3f8g+AJ0NOOjaEAc3Wg5lI8eDjYBN16INuDWCUP0PiHvfsbW+3JsLRhdL9e/UweSDLsjzP3mPvfs7gTxS+r8iI/m1tiiFPser5yxM+V2jByRRjQDHKhTiDYp2MuBKL8JkNQ+POU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719378279; c=relaxed/simple;
-	bh=3f0mE/4mzIp6wtCcpHKP6DnnLRcQQV5PsqbfjtH6/v8=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=gF3FjE+/6Fg+glvwMYjg23DGQKeDPlVWW6NfGMxVVjPNHLjNQ5cZSVsOBEcKeQaFwQbFDVgP3o8+Rl2Z1iZ7ziYt5K55QU0/6n7COI7ryZLl0YMUesFRpao02jX4zHTscOYTC7et23xUbN6mc7OfUrQVwoifI7M8MqVN48RyOp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Vg3LFFNu; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1719385178; c=relaxed/simple;
+	bh=F7Vpya+7j+dMbuEFDpaXdFPnPs9r3oWYBeeZVByqmkM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AQnNKhm4RADOP331mywIxDpfJO/8+X8iAKkS5g0y7m1LmMBJU2XFbV+v7hgD5waNBdR56/tAZDR98ZAelgu0dLo/RM/ASlSg6V0tZ6RZEO2DERgV+ecKwgfctDSydnzz2b5uVCYXZcNjWYCaDWL45GbJmoxMGLClx3SQsykkoQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hXq7/gMR; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Vg3LFFNu"
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45Q4u0kS032238;
-	Wed, 26 Jun 2024 05:04:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=I
-	RcWdAktzJsy1wZBlGKvwOpueAhV8pRseCZB5gpHOGk=; b=Vg3LFFNuvwD29LT3f
-	bCPgW2dtVGx1q7nsCQHt/wD1S1Km9sAVoabkDb47sHZEuiG5yGv4ZiAlcf8hQbXE
-	DMT4Gs8uy1b+kmtzys0+Cwdhf4L2+/RJaPoZ36eEuyoqOvqPawOOShsTVgTpOya6
-	GgM/M/yIsYDtZ0vmqF5NFrhyv416VunyXlGNCuJV88e+K1AVaNhul9s0+bWmkL/3
-	pqDb20FVprh3HLUdcathO1RYs+Q662BU7zDdMidHdHu91UV9bmKiJZx78Qz33yc5
-	kFHEqgfviO3A7ueRhpRLDViQBPynkQ8SHHmChrP93zbPHNf4dtVthz/AKSdj/kQp
-	MWyFw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400anwr6x3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 05:04:28 +0000 (GMT)
-Received: from m0353726.ppops.net (m0353726.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45Q54RoR013085;
-	Wed, 26 Jun 2024 05:04:27 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400anwr6x1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 05:04:27 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45Q3VLtt000397;
-	Wed, 26 Jun 2024 05:04:26 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxbn39y4t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 05:04:26 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45Q54KjC42991884
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jun 2024 05:04:23 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C934D20049;
-	Wed, 26 Jun 2024 05:04:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A289E20040;
-	Wed, 26 Jun 2024 05:04:18 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.122.99])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 26 Jun 2024 05:04:18 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hXq7/gMR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719385177; x=1750921177;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=F7Vpya+7j+dMbuEFDpaXdFPnPs9r3oWYBeeZVByqmkM=;
+  b=hXq7/gMR010eHnMHkvExEOLCHWweICft4AICZZAE8sywjTtuOPGnMw/F
+   YKwRmZWCTgSM4JISlrLBzx/MTWcNwHy9pRQ0LqB3kBVALolEdluBlBXr5
+   JO43H+F+EWkEsv85nZ7yH+O8Ef6SXkJKjrIqbvWIz1hB9HTjF75NhJyIf
+   HhWOMPJ8Uq/q2PhCyt4fjnjS9aWNU8M6BZizeoRHNO6++HEouI4jE27QE
+   c8smoNkAq4n54ECJFa1yDSMS3KOYbCv35PunudF5eVWIgivvfDvSQeooI
+   W4SpDU9EDQS2ggpe+COr79OF0shpSkvbHFmoPuhWYWSCRCsjJo6Ya7svg
+   g==;
+X-CSE-ConnectionGUID: +UihRZYOSXuazyHV5fjwBw==
+X-CSE-MsgGUID: oLcULofwReqVIeUEY3JtoQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="16317354"
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="16317354"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 23:59:36 -0700
+X-CSE-ConnectionGUID: Ad4KmJhCS3ehFjR9r2Vaww==
+X-CSE-MsgGUID: 4x5SIM5PQ0qrOKTevQo+gA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
+   d="scan'208";a="48494075"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jun 2024 23:59:29 -0700
+Message-ID: <5db205f3-550f-4b9b-8bf4-aaa8054043aa@intel.com>
+Date: Wed, 26 Jun 2024 09:59:23 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V4 1/3] tools/perf: Fix the string match for
- "/tmp/perf-$PID.map" files in dso__load
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <CAM9d7ci2raJmUjb7X2m6O1mCJm5xYLEWS8g_gC7tTjvshm1XFQ@mail.gmail.com>
-Date: Wed, 26 Jun 2024 10:34:06 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Ian Rogers <irogers@google.com>, LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        Disha Goel <disgoel@linux.vnet.ibm.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <41C6FBA0-98FB-458A-AA01-77B9604D56C2@linux.vnet.ibm.com>
-References: <20240623064850.83720-1-atrajeev@linux.vnet.ibm.com>
- <722cb4bc-89d4-4e03-a80d-ffe05be52c05@intel.com>
- <f65ff3cf-1724-45a1-ad88-200d72251042@intel.com>
- <CAM9d7ci2raJmUjb7X2m6O1mCJm5xYLEWS8g_gC7tTjvshm1XFQ@mail.gmail.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: VqVtTy1pBQUK1kYK-MFx1i6-MM_B1xml
-X-Proofpoint-GUID: fuqKPiywl43EIW4S8iLYmijvQYqCAObm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_02,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 phishscore=0
- impostorscore=0 priorityscore=1501 mlxlogscore=999 mlxscore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2406140001
- definitions=main-2406260036
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 22/26] perf auxevent: Add explicit dummy tool
+ initialization
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240625172603.900667-1-irogers@google.com>
+ <20240625172603.900667-23-irogers@google.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240625172603.900667-23-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 25/06/24 20:25, Ian Rogers wrote:
+> Ensure tool is initialized to avoid lazy initialization pattern so
+> that more uses of struct perf_tool can be made const.
 
+This does not look necessary.
 
-> On 25 Jun 2024, at 11:29=E2=80=AFPM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->=20
-> Hello,
->=20
-> On Tue, Jun 25, 2024 at 5:02=E2=80=AFAM Adrian Hunter =
-<adrian.hunter@intel.com> wrote:
->>=20
->> On 25/06/24 14:57, Adrian Hunter wrote:
->>> On 23/06/24 09:48, Athira Rajeev wrote:
->>>> Perf test for perf probe of function from different CU fails
->>>> as below:
->>>>=20
->>>>     ./perf test -vv "test perf probe of function from different CU"
->>>>     116: test perf probe of function from different CU:
->>>>     --- start ---
->>>>     test child forked, pid 2679
->>>>     Failed to find symbol foo in =
-/tmp/perf-uprobe-different-cu-sh.Msa7iy89bx/testfile
->>>>       Error: Failed to add events.
->>>>     --- Cleaning up ---
->>>>     "foo" does not hit any event.
->>>>       Error: Failed to delete events.
->>>>     ---- end(-1) ----
->>>>     116: test perf probe of function from different CU              =
-     : FAILED!
->>>>=20
->>>> The test does below to probe function "foo" :
->>>>=20
->>>>     # gcc -g -Og -flto -c =
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.c
->>>>     -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
->>>>     # gcc -g -Og -c =
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.c
->>>>     -o /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
->>>>     # gcc -g -Og -o =
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
->>>>     /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-foo.o
->>>>     /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile-main.o
->>>>=20
->>>>     # ./perf probe -x =
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile foo
->>>>     Failed to find symbol foo in =
-/tmp/perf-uprobe-different-cu-sh.XniNxNEVT7/testfile
->>>>        Error: Failed to add events.
->>>>=20
->>>> Perf probe fails to find symbol foo in the executable placed in
->>>> /tmp/perf-uprobe-different-cu-sh.XniNxNEVT7
->>>>=20
->>>> Simple reproduce:
->>>>=20
->>>> # mktemp -d /tmp/perf-checkXXXXXXXXXX
->>>>   /tmp/perf-checkcWpuLRQI8j
->>>>=20
->>>> # gcc -g -o test test.c
->>>> # cp test /tmp/perf-checkcWpuLRQI8j/
->>>> # nm /tmp/perf-checkcWpuLRQI8j/test | grep foo
->>>>   00000000100006bc T foo
->>>>=20
->>>> # ./perf probe -x /tmp/perf-checkcWpuLRQI8j/test foo
->>>>   Failed to find symbol foo in /tmp/perf-checkcWpuLRQI8j/test
->>>>      Error: Failed to add events.
->>>>=20
->>>> But it works with any files like /tmp/perf/test. Only for
->>>> patterns with "/tmp/perf-", this fails.
->>>>=20
->>>> Further debugging, commit 80d496be89ed ("perf report: Add support
->>>> for profiling JIT generated code") added support for profiling JIT
->>>> generated code. This patch handles dso's of form
->>>> "/tmp/perf-$PID.map" .
->>>>=20
->>>> The check used "if (strncmp(self->name, "/tmp/perf-", 10) =3D=3D =
-0)"
->>>> to match "/tmp/perf-$PID.map". With this commit, any dso in
->>>> /tmp/perf- folder will be considered separately for processing
->>>> (not only JIT created map files ). Fix this by changing the
->>>> string pattern to check for "/tmp/perf-%d.map". Add a helper
->>>> function is_perf_pid_map_name to do this check. In "struct dso",
->>>> dso->long_name holds the long name of the dso file. Since the
->>>> /tmp/perf-$PID.map check uses the complete name, use =
-dso___long_name for
->>>> the string name.
->>>>=20
->>>> With the fix,
->>>>     # ./perf test "test perf probe of function from different CU"
->>>>     117: test perf probe of function from different CU              =
-     : Ok
->>>>=20
->>>> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
->>>=20
->>> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
->>>=20
->>=20
->> Although it could use a Fixes tag
->>=20
->=20
-> Thanks, I will add
->=20
-> Fixes: 56cbeacf1435 ("perf probe: Add test for regression introduced
-> by switch to die_get_decl_file()")
->=20
-> Namhyung
->=20
-Hi Adrian,
-Thanks for the review.
+The dummy tool is not used, and is not subject to lazy initialization,
+so the existing initialization to zero is fine.
 
-Thanks Namhyung for adding the Fixes tag and pulling the fix
-
-Athira
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/arm-spe.c     | 1 +
+>  tools/perf/util/cs-etm.c      | 1 +
+>  tools/perf/util/intel-bts.c   | 1 +
+>  tools/perf/util/intel-pt.c    | 2 +-
+>  tools/perf/util/s390-cpumsf.c | 1 -
+>  5 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index 70bad18c4a0d..06a198b2f483 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -1097,6 +1097,7 @@ static int arm_spe_synth_event(struct perf_session *session,
+>  
+>  	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
+>  	arm_spe_synth.session = session;
+> +	perf_tool__init(&arm_spe_synth.dummy_tool, /*ordered_events=*/false);
+>  
+>  	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
+>  					   &id, arm_spe_event_synth);
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 231cd833c012..02eb5b3eed14 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1619,6 +1619,7 @@ static int cs_etm__synth_event(struct perf_session *session,
+>  
+>  	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
+>  	cs_etm_synth.session = session;
+> +	perf_tool__init(&cs_etm_synth.dummy_tool, /*ordered_events=*/false);
+>  
+>  	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
+>  					   &id, cs_etm__event_synth);
+> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+> index 779982c478e0..ae97109542be 100644
+> --- a/tools/perf/util/intel-bts.c
+> +++ b/tools/perf/util/intel-bts.c
+> @@ -761,6 +761,7 @@ static int intel_bts_synth_event(struct perf_session *session,
+>  
+>  	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
+>  	intel_bts_synth.session = session;
+> +	perf_tool__init(&intel_bts_synth.dummy_tool, /*ordered_events=*/false);
+>  
+>  	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
+>  					   &id, intel_bts_event_synth);
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index bed35029e1f6..48ed60e521ed 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -3687,7 +3687,7 @@ static int intel_pt_synth_event(struct perf_session *session, const char *name,
+>  
+>  	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
+>  	intel_pt_synth.session = session;
+> -
+> +	perf_tool__init(&intel_pt_synth.dummy_tool, /*ordered_events=*/false);
+>  	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
+>  					  &id, intel_pt_event_synth);
+>  	if (err)
+> diff --git a/tools/perf/util/s390-cpumsf.c b/tools/perf/util/s390-cpumsf.c
+> index 5834bad6ac0f..eb835e531cd6 100644
+> --- a/tools/perf/util/s390-cpumsf.c
+> +++ b/tools/perf/util/s390-cpumsf.c
+> @@ -953,7 +953,6 @@ s390_cpumsf_process_event(struct perf_session *session,
+>  }
+>  
+>  struct s390_cpumsf_synth {
+> -	struct perf_tool cpumsf_tool;
+>  	struct perf_session *session;
+>  };
+>  
 
