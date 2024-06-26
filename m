@@ -1,390 +1,179 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2603B770EC;
-	Wed, 26 Jun 2024 04:09:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2419D770EC;
+	Wed, 26 Jun 2024 04:13:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719374980; cv=none; b=fz6HyWNxZRAiPwYPs7uXKut3qPWxXJ8NPsa3wBiWZU8PniBGGxRJirehbfgKxWofd7LoGpoqw4uiDpNXz0mtoHE26bLYYNo8Op+1HU41CNWN6sAHdga6Mzner8peQYpqC6U6sfkG37O7wVQZaRmH6oalH5nWYRSmSMRd0/L3IJA=
+	t=1719375217; cv=none; b=XJ+9PqtJx0kj74fPy8GNWI52ZFJItYttdMdApqHCDIoN96sHe8DFkha0DAFu0HoexCeAgPL4XM5HRPNL4KhLuc8XjHLEmNOfUUQ9qJKl+HRWYXWmaQ2VCp9KnvlRuVscrZqh9v1IazukhwQUYL+0zizkdDCAuh1w2kLSGRyuaSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719374980; c=relaxed/simple;
-	bh=CPH5QISrsx8Vk3n+NLKqrmj965xZbR+nHy7ycJ4yn5E=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=bX2mOgWmgyl5nksirpsiObPU1UENBkv6c3+uI9mJosSJocYAKBuIphuFqXubgknY+fFID7CzO8j47ATX2Zme3Mcl/B8w6L3sldM7jugTh/moXfnQPP8lr/dXF9UcuT9TMkhJRsEeFoIk07sYsF5DXsNcDkdanFISa9tuEM/44tk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QXEG5BlM; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1719375217; c=relaxed/simple;
+	bh=UPDHBoCVzIDbFSBsqoVLTZDNXdQT2C1pQXnDIU9g8W8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=l2y2EaUhKhFAtIcjN76OwxVAlhtdRTQZK6YpJPs6187f8L/zH0fl0DEJ1MmhHaYhTnknN1PvbJPKEFtjdxRmbmMn5fdsbiNsByCX770s5YX7rMlN9XUZZwyAavOpJ9VL7qNFGuzXEPAxuQRRbvrJoFgXx40pfTWegoobi42fMNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/xsreQg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QXEG5BlM"
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45Q3utJT012611;
-	Wed, 26 Jun 2024 04:09:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=F
-	wqBzyFo0lRA1vjiha94hve7wlVfIvDn8pfjdn0wQ/8=; b=QXEG5BlMbwca5x5uD
-	xQnaMDo7Ctvf9PC2oE69Yqw93ESREC9wNpwnHLsvFDLMAxsIZEVHQ9bzyEsB9/v+
-	MV4eQGYjo/Qst9QcZ+/+BAK32M9J+OQVU601Y9tIup7Uo9bhkhZO33OZ6GCdX9cF
-	Yf3rB4NZhscLb+xZaCgEho5zwqE2LsCgLkBLYN6D1rjfn9rBcBhL2JvfKi4K6huL
-	gWttcswId8Sz0LQ8s5/0G8oQLdb+RL9BOqWadD0/g/7EyvmiJetQhY1dRwruePOP
-	sXoaZD9cNHn3GQOcjO+u2R1Cd8UVd6YxbrjeaANigq2mRvpEzZB3JselHsU4NeSw
-	lD/nA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400b42r21r-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 04:09:25 +0000 (GMT)
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45Q49Pu2030080;
-	Wed, 26 Jun 2024 04:09:25 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400b42r21p-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 04:09:25 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45Q2e0Z6019800;
-	Wed, 26 Jun 2024 04:09:24 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxb5mhw9m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 04:09:24 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45Q49JOO56361376
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jun 2024 04:09:21 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1FCBD20040;
-	Wed, 26 Jun 2024 04:09:19 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9A2CC20043;
-	Wed, 26 Jun 2024 04:09:16 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.122.99])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 26 Jun 2024 04:09:16 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/xsreQg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31AE5C4AF09;
+	Wed, 26 Jun 2024 04:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719375216;
+	bh=UPDHBoCVzIDbFSBsqoVLTZDNXdQT2C1pQXnDIU9g8W8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=S/xsreQgKVu5MkLMmwJBFtSwww4pLUOdcK8efxwjYC4mi2A1sXv1/gM00IOtPlcsS
+	 /BrIbE3cBLqO2UFNKmlP2IwZvRFcUwbhprxvfJiT4zPEtiqdAvE8IuZIPdcw+qFqdj
+	 pfTI+aAjx2JxhuEh7g/yQzlVVKD/gU5QhLl/6RxBkUgbX9NjGeZIwvQ3MhRrhVZ4cA
+	 uLEjr4XoqDtQ9ES6N483gy3cpemSCxCNW0r9sm7bQsT9EZV2XTNKwlrpLvVANEUsGh
+	 hZo9WhA5dlQ7PN42+z1EynGIkb2yMoLCs1ytZ5URG+y0fmnePS9vd8yJS5FyM21mcb
+	 zS/N5wNE1ohrw==
+Date: Tue, 25 Jun 2024 21:13:34 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: James Clark <james.clark@arm.com>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] perf pmu: Restore full PMU name wildcard support
+Message-ID: <ZnuVbnOyXmjT4Njo@google.com>
+References: <20240617134348.208241-1-james.clark@arm.com>
+ <20240617134348.208241-2-james.clark@arm.com>
+ <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
+ <b2008905-686b-4494-a10d-c3357cce91da@arm.com>
+ <CAP-5=fUkZnG0gaJ_76Azn643DXZSq9xhpX=+U6Mjhtnko8PyLw@mail.gmail.com>
+ <197e62e3-d34a-442a-97cf-6edf6c8c013f@arm.com>
+ <CAP-5=fVqf0B+Fs8vSAvyPf7UpUo1U8HMkDbgb3csJ4s0O1kiog@mail.gmail.com>
+ <fa69d868-5229-4ea2-b32e-c7928706d27a@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [V4 03/16] tools/perf: Add support to capture and parse raw
- instruction in powerpc using dso__data_read_offset utility
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZnsO0cmpL640TxJp@google.com>
-Date: Wed, 26 Jun 2024 09:39:05 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <5E86F354-6425-4251-9FA5-BE04F36C80B3@linux.vnet.ibm.com>
-References: <20240614172631.56803-1-atrajeev@linux.vnet.ibm.com>
- <20240614172631.56803-4-atrajeev@linux.vnet.ibm.com>
- <ZnpVn1yLtDnRnTBh@google.com>
- <B834FFD2-AC2E-4F7F-9B0B-15CBFB19A6A7@linux.vnet.ibm.com>
- <ZnsO0cmpL640TxJp@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 1mN6C35b9BeMyRI5aO6ltTQlA62WeYmr
-X-Proofpoint-GUID: ZOr3ZUlYycK4zUBrxNSM94DhFjhP45p-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_01,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999
- adultscore=0 priorityscore=1501 phishscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406260029
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <fa69d868-5229-4ea2-b32e-c7928706d27a@arm.com>
 
+On Tue, Jun 18, 2024 at 04:47:01PM +0100, James Clark wrote:
+> 
+> 
+> On 18/06/2024 16:25, Ian Rogers wrote:
+> > On Tue, Jun 18, 2024, 8:06 AM James Clark <james.clark@arm.com> wrote:
+> > 
+> >>
+> >>
+> >> On 18/06/2024 15:23, Ian Rogers wrote:
+> >>> On Tue, Jun 18, 2024, 3:59 AM James Clark <james.clark@arm.com> wrote:
+> >>>
+> >>>>
+> >>>>
+> >>>> On 17/06/2024 22:25, Ian Rogers wrote:
+> >>>>> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
+> >>>>>
+> >>>>>> Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in
+> >> dynamic
+> >>>>>> pmu events") gives the following example for wildcarding a subset of
+> >>>>>> PMUs:
+> >>>>>>
+> >>>>>>   E.g., in a system with the following dynamic pmus:
+> >>>>>>
+> >>>>>>         mypmu_0
+> >>>>>>         mypmu_1
+> >>>>>>         mypmu_2
+> >>>>>>         mypmu_4
+> >>>>>>
+> >>>>>>   perf stat -e mypmu_[01]/<config>/
+> >>>>>>
+> >>>>>> Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"),
+> >> only
+> >>>>>> "*" has been supported, removing the ability to subset PMUs, even
+> >> though
+> >>>>>> parse-events.l still supports ? and [] characters.
+> >>>>>>
+> >>>>>> Fix it by using fnmatch() when any glob character is detected and add
+> >> a
+> >>>>>> test which covers that and other scenarios of
+> >>>>>> perf_pmu__match_ignoring_suffix().
+> >>>>>>
+> >>>>>> Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+> >>>>>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>>>>>
+> >>>>>
+> >>>>> We use regular expression matching elsewhere rather than fnmatch. We
+> >> can
+> >>>>> also precompile the matchers using lex. I'm not sure we shouldn't be
+> >>>>> looking for an opportunity to remove fnmatch rather than expand upon
+> >> it.
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Ian
+> >>>>>
+> >>>>
+> >>>> Presumably you mean we can do the removal of fnmatch after this fix goes
+> >>>> in,
+> >>>> rather than instead of? Because this is a user facing change in
+> >> behaviour
+> >>>> but the removal of fnmatch would be an non-user facing code refactor?
+> >>>>
+> >>>> It's technically not an "expansion" because we always used fnmatch and
+> >> the
+> >>>> linked commit hasn't made it to a release yet.
+> >>>>
+> >>>
+> >>> The main place the expansion gets added is parse-events.c, previously
+> >>> parse-events.y. If we're adding the expansion ourselves then we can
+> >> choose
+> >>> the form we add it. Some coming servers will have 100s of PMUs and so I'm
+> >>> worried about the scanning cost when a PMU isn't specified.
+> >>>
+> >>> Thanks,
+> >>> Ian
+> >>>
+> >>
+> >> I think I might not be following. If a PMU isn't specified then
+> >> perf_pmu__match() is never called so no cost is incurred. I also don't
+> >> add any new calls to fnmatch().
+> >>
+> >> I only updated the gate on whether the existing fnmatch() is called from
+> >> "*" to "*[?". So it only happens when one of those characters is in the
+> >> PMU name, but it already happens when '*' is in the name.
+> >>
+> > 
+> > Right. I'm not saying there is anything wrong in the change or an
+> > additional cost, what the issue is is that currently only really '*'
+> > requires fnmatch and that's because the event parsing adds it. It could
+> 
+> It's not only '*' that requires it, see the example I added in the
+> commit message:
+> 
+>   ./perf stat -e mypmu_[01]/<config>/
+> 
+> '?' was supported before as well which could be useful.
+> 
+> > similarly add '.*' if we did regular expression matching. By expanding what
+> > we pass to fnmatch from the command line the more committed we are to
+> > fnmatch rather than regular expressions - which is what we use everywhere
+> > else in the code. So maybe it was a feature that this wasn't working.
+> > 
+> 
+> But we haven't had a release of Perf yet where more is passed to
+> fnmatch(). Before f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+> everything was passed to fnmatch(). After that unreleased commit only
+> things with '*' are. Now with this change only "*?[", so it's less not more.
+> 
+> I don't think there is any commitment to keep it, we can always remove
+> fnmatch in the future. But it looks like a mistake to me because the
+> title says "refactor" when it actually removes a feature.
 
+Ian, are you ok with this now?
 
-> On 26 Jun 2024, at 12:09=E2=80=AFAM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->=20
-> On Tue, Jun 25, 2024 at 06:08:49PM +0530, Athira Rajeev wrote:
->>=20
->>=20
->>> On 25 Jun 2024, at 10:59=E2=80=AFAM, Namhyung Kim =
-<namhyung@kernel.org> wrote:
->>>=20
->>> On Fri, Jun 14, 2024 at 10:56:18PM +0530, Athira Rajeev wrote:
->>>> Add support to capture and parse raw instruction in powerpc.
->>>> Currently, the perf tool infrastructure uses two ways to =
-disassemble
->>>> and understand the instruction. One is objdump and other option is
->>>> via libcapstone.
->>>>=20
->>>> Currently, the perf tool infrastructure uses "--no-show-raw-insn" =
-option
->>>> with "objdump" while disassemble. Example from powerpc with this =
-option
->>>> for an instruction address is:
->>>>=20
->>>> Snippet from:
->>>> objdump  --start-address=3D<address> --stop-address=3D<address>  -d =
---no-show-raw-insn -C <vmlinux>
->>>>=20
->>>> c0000000010224b4: lwz     r10,0(r9)
->>>=20
->>> What about removing --no-show-raw-insn and parse the raw byte code =
-in
->>> the output for powerpc?  I think it's better to support normal
->>> annotation together.
->> Hi Namhyung,
->>=20
->> Yes, In the other patch in same series, I have added support for =
-normal annotation together.
->> Patch 5 includes changes to work with binary code as well as =
-mneumonic representation.
->>=20
->> Example representation using --show-raw-insn in objdump gives result:
->>=20
->> 38 01 81 e8 ld r4,312(r1)
->>=20
->> Patch5 has changes to use =E2=80=9Cobjdump=E2=80=9D with =
---show-raw-insn to read the raw instruction and also support normal =
-annotation.
->=20
-> Ok, that's good!
->=20
->=20
->> In case of data type profiling, with only sort keys, (type, typeoff) =
-there is no need to disassemble and then get raw byte code.
->> Binary code can be read directly from the DSO. Compared to using =
-objdump, directly reading from DSO will be faster in this case.
->=20
-> Sounds like an optimization.  Then I think you'd better handle the
-> general case first and optimize later.  Probably you want to merge
-> patch 3 and 4 together.
->=20
-> Thanks,
-> Namhyung
-
-Sure, will do that.
-
-Thanks
-Athira
->=20
->=20
->> In summary, current patchset uses below approach:
->>=20
->> 1. Read directly from DSO using dso__data_read_offset if only =
-=E2=80=9Ctype, typeoff=E2=80=9D is needed.
->> 2. If in any case reading directly from DSO fails, fallback to using =
-libcapstone. Using libcapstone to read is faster than objdump
->> 3. If libcapstone is not supported, approach will use objdump. =
-Patchset has changes to handle objdump result created with show-raw-ins =
-in powerpc.=20
->> 4. Also for normal perf report or perf annotate, approach will use =
-objdump
->>=20
->> NOTE:
->> libcapstone is used currently only for reading raw binary code. =
-Disassemble is currently not enabled. While attempting to do cs_disasm, =
-observation is that some of the instructions were not identified (ex: =
-extswsli, maddld) and it had to fallback to use objdump. Hence enabling =
-"cs_disasm" is added in comment section as a TODO for powerpc. Patch =
-number 13.=20
->>=20
->> Thanks
->> Athira
->>=20
->>>=20
->>>>=20
->>>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->>>> registers names and offset. Also to find whether there is a memory
->>>> reference in the operands, "memory_ref_char" field of objdump is =
-used.
->>>> For x86, "(" is used as memory_ref_char to tackle instructions of =
-the
->>>> form "mov  (%rax), %rcx".
->>>>=20
->>>> In case of powerpc, not all instructions using "(" are the only =
-memory
->>>> instructions. Example, above instruction can also be of extended =
-form (X
->>>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction =
-category
->>>> and extract the source/target registers, patch adds support to use =
-raw
->>>> instruction for powerpc. Approach used is to read the raw =
-instruction
->>>> directly from the DSO file using "dso__data_read_offset" utility =
-which
->>>> is already implemented in perf infrastructure in "util/dso.c".
->>>>=20
->>>> Example:
->>>>=20
->>>> 38 01 81 e8     ld      r4,312(r1)
->>>>=20
->>>> Here "38 01 81 e8" is the raw instruction representation. In =
-powerpc,
->>>> this translates to instruction form: "ld RT,DS(RA)" and binary code
->>>> as:
->>>>=20
->>>>  | 58 |  RT  |  RA |      DS       | |
->>>>  -------------------------------------
->>>>  0    6     11    16              30 31
->>>>=20
->>>> Function "symbol__disassemble_dso" is updated to read raw =
-instruction
->>>> directly from DSO using dso__data_read_offset utility. In case of
->>>> above example, this captures:
->>>> line:    38 01 81 e8
->>>>=20
->>>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->>>> ---
->>>> tools/perf/util/disasm.c | 98 =
-++++++++++++++++++++++++++++++++++++++++
->>>> 1 file changed, 98 insertions(+)
->>>>=20
->>>> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->>>> index b5fe3a7508bb..f19496133bf0 100644
->>>> --- a/tools/perf/util/disasm.c
->>>> +++ b/tools/perf/util/disasm.c
->>>> @@ -1586,6 +1586,91 @@ static int symbol__disassemble_capstone(char =
-*filename, struct symbol *sym,
->>>> }
->>>> #endif
->>>>=20
->>>> +static int symbol__disassemble_dso(char *filename, struct symbol =
-*sym,
->>>=20
->>> Maybe rename to symbol__disassemble_raw() ?
->>=20
->> This is specifically using dso__data_read_offset. Hence using =
-symbol__disassemble_dso
->>>=20
->>>> + struct annotate_args *args)
->>>> +{
->>>> + struct annotation *notes =3D symbol__annotation(sym);
->>>> + struct map *map =3D args->ms.map;
->>>> + struct dso *dso =3D map__dso(map);
->>>> + u64 start =3D map__rip_2objdump(map, sym->start);
->>>> + u64 end =3D map__rip_2objdump(map, sym->end);
->>>> + u64 len =3D end - start;
->>>> + u64 offset;
->>>> + int i, count;
->>>> + u8 *buf =3D NULL;
->>>> + char disasm_buf[512];
->>>> + struct disasm_line *dl;
->>>> + u32 *line;
->>>> +
->>>> + /* Return if objdump is specified explicitly */
->>>> + if (args->options->objdump_path)
->>>> + return -1;
->>>> +
->>>> + pr_debug("Reading raw instruction from : %s using =
-dso__data_read_offset\n", filename);
->>>=20
->>> You may want to print the actual offset and remove the "using
->>> dso__data_read_offset" part.
->>=20
->> Ok Sure
->>>=20
->>> Thanks,
->>> Namhyung
->>>=20
->>>> +
->>>> + buf =3D malloc(len);
->>>> + if (buf =3D=3D NULL)
->>>> + goto err;
->>>> +
->>>> + count =3D dso__data_read_offset(dso, NULL, sym->start, buf, len);
->>>> +
->>>> + line =3D (u32 *)buf;
->>>> +
->>>> + if ((u64)count !=3D len)
->>>> + goto err;
->>>> +
->>>> + /* add the function address and name */
->>>> + scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
->>>> +   start, sym->name);
->>>> +
->>>> + args->offset =3D -1;
->>>> + args->line =3D disasm_buf;
->>>> + args->line_nr =3D 0;
->>>> + args->fileloc =3D NULL;
->>>> + args->ms.sym =3D sym;
->>>> +
->>>> + dl =3D disasm_line__new(args);
->>>> + if (dl =3D=3D NULL)
->>>> + goto err;
->>>> +
->>>> + annotation_line__add(&dl->al, &notes->src->source);
->>>> +
->>>> + /* Each raw instruction is 4 byte */
->>>> + count =3D len/4;
->>>> +
->>>> + for (i =3D 0, offset =3D 0; i < count; i++) {
->>>> + args->offset =3D offset;
->>>> + sprintf(args->line, "%x", line[i]);
->>>> + dl =3D disasm_line__new(args);
->>>> + if (dl =3D=3D NULL)
->>>> + goto err;
->>>> +
->>>> + annotation_line__add(&dl->al, &notes->src->source);
->>>> + offset +=3D 4;
->>>> + }
->>>> +
->>>> + /* It failed in the middle */
->>>> + if (offset !=3D len) {
->>>> + struct list_head *list =3D &notes->src->source;
->>>> +
->>>> + /* Discard all lines and fallback to objdump */
->>>> + while (!list_empty(list)) {
->>>> + dl =3D list_first_entry(list, struct disasm_line, al.node);
->>>> +
->>>> + list_del_init(&dl->al.node);
->>>> + disasm_line__free(dl);
->>>> + }
->>>> + count =3D -1;
->>>> + }
->>>> +
->>>> +out:
->>>> + free(buf);
->>>> + return count < 0 ? count : 0;
->>>> +
->>>> +err:
->>>> + count =3D -1;
->>>> + goto out;
->>>> +}
->>>> /*
->>>> * Possibly create a new version of line with tabs expanded. Returns =
-the
->>>> * existing or new line, storage is updated if a new line is =
-allocated. If
->>>> @@ -1710,6 +1795,19 @@ int symbol__disassemble(struct symbol *sym, =
-struct annotate_args *args)
->>>> strcpy(symfs_filename, tmp);
->>>> }
->>>>=20
->>>> + /*
->>>> +  * For powerpc data type profiling, use the dso__data_read_offset
->>>> +  * to read raw instruction directly and interpret the binary code
->>>> +  * to understand instructions and register fields. For sort keys =
-as
->>>> +  * type and typeoff, disassemble to mnemonic notation is
->>>> +  * not required in case of powerpc.
->>>> +  */
->>>> + if (arch__is(args->arch, "powerpc")) {
->>>> + err =3D symbol__disassemble_dso(symfs_filename, sym, args);
->>>> + if (err =3D=3D 0)
->>>> + goto out_remove_tmp;
->>>> + }
->>>> +
->>>> #ifdef HAVE_LIBCAPSTONE_SUPPORT
->>>> err =3D symbol__disassemble_capstone(symfs_filename, sym, args);
->>>> if (err =3D=3D 0)
->>>> --=20
->>>> 2.43.0
->>=20
->>=20
->=20
+Thanks,
+Namhyung
 
