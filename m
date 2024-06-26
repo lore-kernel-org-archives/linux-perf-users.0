@@ -1,209 +1,178 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7248168486;
-	Wed, 26 Jun 2024 09:17:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93BC7166300;
+	Wed, 26 Jun 2024 09:28:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719393442; cv=none; b=YTaZw0+taiulPkQInH4p0gnS31ysykLtaakIzAf/PzejlrAjIo9WiwLI6e+fhUbAZO5QnKstua/Yj6U5qP2YfOcb73OIxLutp0gLoovWe/tWX68y2dUTRrh62+O1+yGYtzNtdIiYOgxW3tNL9kSQks5weyzgQft/pLMNMBXAWL0=
+	t=1719394088; cv=none; b=heEVP9091RzunAMysqIVPsF9n5m74KuoNAWHsqcK2HXTKjhsPu40icka8VPFWDjR8maUXGDMRQlJZ3C/05CmWA1f8DDuRywKMRX3JCTKH6+N3UMuxlofBwBL2WIWSJsUbrfWYeh/ZP7Iusgv+ia2FzRcs4k0mxIi6QQEpIlhroM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719393442; c=relaxed/simple;
-	bh=tYPyX6886SAJdc9m6hgCgPEn28NWpQzFqWmfB546fS8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TXlhGu2F0BCrCEgOvP22UEagijm8o4btdDQyk8vmdtUYGE0K8ZQfVHpNr4jIKApWv9MJ1fBduSP8sQvWXST823y+3XdmLPoiDf+vFsg+/ThpzVqvuS2WPwCQVGvaNVQTA1eed/am6KUzrgFytbiw+vR6iuEY3NmgD2j2ULE+HDk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=a39n9O97; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="a39n9O97"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45Q8SXeH006364;
-	Wed, 26 Jun 2024 09:17:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=YTbEobxX0rS76
-	TFeDHHtgoJ3WXZMfYodjrAvpvqJhJE=; b=a39n9O97KESMHoqrEfcY8d2K0UyRJ
-	HbtDnngVCwFDudbc/7MBwtouaMcemNSyGoGOyiQ0F06/sXNh32AlOw/FHy2OTcIq
-	/bacGFLuc10ti7DRkgKTZsfMnahqXXSend4zkZ3wXOsK0rx8C6QrDSKqSDtbK5T2
-	9lKWLzIxiabv5gq07HfGY45ZtLykkT6HlOzsDcxs29Voq3jigeSMOo5woOfnS7ow
-	bqZtB8aIPVIkNHIY1j2WmKj8JVDP506bN4gr20pjQc3njoF11S1vW7ncywn6NOdM
-	kzWQiilQtmPBegLBw+o0foLG+tvJrDAvsQMYgvT2lJrZAHdLKF0Favi1Q==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400fgng3nc-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:08 +0000 (GMT)
-Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45Q9H7JC014220;
-	Wed, 26 Jun 2024 09:17:07 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 400fgng3n7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:07 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45Q7UlDf000402;
-	Wed, 26 Jun 2024 09:17:06 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 3yxbn3ayt7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 26 Jun 2024 09:17:06 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45Q9H3dx49479998
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 26 Jun 2024 09:17:05 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E8A082005A;
-	Wed, 26 Jun 2024 09:17:02 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E70E2004B;
-	Wed, 26 Jun 2024 09:16:56 +0000 (GMT)
-Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.51.102])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 26 Jun 2024 09:16:55 +0000 (GMT)
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Chen Yu <yu.c.chen@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-        Fernand Sieber <sieberf@amazon.com>,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: [PATCH v5 3/3] perf sched map: Add --fuzzy-name option for fuzzy matching in task names
-Date: Wed, 26 Jun 2024 14:45:50 +0530
-Message-ID: <20240626091550.46707-4-vineethr@linux.ibm.com>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240626091550.46707-1-vineethr@linux.ibm.com>
-References: <20240626091550.46707-1-vineethr@linux.ibm.com>
+	s=arc-20240116; t=1719394088; c=relaxed/simple;
+	bh=CK1/6HJ/6fsWsXTixqXnrVrYCHv6hyAJG7T2CgGocFU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Fx8OVOLC/xgNgU97E9jSXSxBBHfBs7z8pWHMGy3D5j21c3JBUwXzd0s43b7CqrUw+3YH6ykvVHecyFvuIkZzug+ctaHrcRh1wj1OjRZu2QBML8go+Ij99SnIOTIMSg3RkjS7P7nCKThYWf46rBVc1iluaExdBhGw6TPg/1+KCiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EA03339;
+	Wed, 26 Jun 2024 02:28:29 -0700 (PDT)
+Received: from [10.1.39.67] (unknown [10.1.39.67])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CED713F6A8;
+	Wed, 26 Jun 2024 02:28:01 -0700 (PDT)
+Message-ID: <ea85f7f7-04b5-4de1-b0a1-d25d286ee065@arm.com>
+Date: Wed, 26 Jun 2024 10:27:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] perf pmu: Restore full PMU name wildcard support
+To: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>,
+ Robin Murphy <robin.murphy@arm.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, LKML <linux-kernel@vger.kernel.org>
+References: <20240617134348.208241-1-james.clark@arm.com>
+ <20240617134348.208241-2-james.clark@arm.com>
+ <CAP-5=fUZkAs9h+fLiJOeL9p_K3auQcn30mXvXZWRYMchmT9ZPA@mail.gmail.com>
+ <b2008905-686b-4494-a10d-c3357cce91da@arm.com>
+ <CAP-5=fUkZnG0gaJ_76Azn643DXZSq9xhpX=+U6Mjhtnko8PyLw@mail.gmail.com>
+ <197e62e3-d34a-442a-97cf-6edf6c8c013f@arm.com>
+ <CAP-5=fVqf0B+Fs8vSAvyPf7UpUo1U8HMkDbgb3csJ4s0O1kiog@mail.gmail.com>
+ <fa69d868-5229-4ea2-b32e-c7928706d27a@arm.com> <ZnuVbnOyXmjT4Njo@google.com>
+Content-Language: en-US
+From: James Clark <james.clark@arm.com>
+In-Reply-To: <ZnuVbnOyXmjT4Njo@google.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: eLGAuKoBOWZ16HksXPOGGGszb8clGvKc
-X-Proofpoint-GUID: _NnUdIRmtGhsYSwgeFaeFf_tsdxUrRMZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-26_03,2024-06-25_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- suspectscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- priorityscore=1501 bulkscore=0 malwarescore=0 phishscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406260067
 
-The --fuzzy-name option can be used if fuzzy name matching is required.
-For example, "taskname" can be matched to any string that contains
-"taskname" as its substring.
 
-Sample output for --task-name wdav --fuzzy-name
-=============
- .  *A0  .   .   .   .   -   .   131040.641346 secs A0 => wdavdaemon:62509
- .   A0 *B0  .   .   .   -   .   131040.641378 secs B0 => wdavdaemon:62274
- -  *-   -   -   -   -   -   -   131040.641379 secs
-*C0  .   B0  .   .   .   .   .   131040.641572 secs C0 => wdavdaemon:62283
- C0  .   B0  .  *D0  .   .   .   131040.641572 secs D0 => wdavdaemon:62277
- C0  .   B0  .   D0  .  *E0  .   131040.641578 secs E0 => wdavdaemon:62270
-*-   -   -   -   -   -   -   -   131040.641581 secs
 
-Suggested-by: Chen Yu <yu.c.chen@intel.com>
-Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
----
- tools/perf/Documentation/perf-sched.txt |  3 +++
- tools/perf/builtin-sched.c              | 22 +++++++++++++++-------
- 2 files changed, 18 insertions(+), 7 deletions(-)
+On 26/06/2024 05:13, Namhyung Kim wrote:
+> On Tue, Jun 18, 2024 at 04:47:01PM +0100, James Clark wrote:
+>>
+>>
+>> On 18/06/2024 16:25, Ian Rogers wrote:
+>>> On Tue, Jun 18, 2024, 8:06 AM James Clark <james.clark@arm.com> wrote:
+>>>
+>>>>
+>>>>
+>>>> On 18/06/2024 15:23, Ian Rogers wrote:
+>>>>> On Tue, Jun 18, 2024, 3:59 AM James Clark <james.clark@arm.com> wrote:
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>> On 17/06/2024 22:25, Ian Rogers wrote:
+>>>>>>> On Mon, Jun 17, 2024, 6:44 AM James Clark <james.clark@arm.com> wrote:
+>>>>>>>
+>>>>>>>> Commit b2b9d3a3f021 ("perf pmu: Support wildcards on pmu name in
+>>>> dynamic
+>>>>>>>> pmu events") gives the following example for wildcarding a subset of
+>>>>>>>> PMUs:
+>>>>>>>>
+>>>>>>>>   E.g., in a system with the following dynamic pmus:
+>>>>>>>>
+>>>>>>>>         mypmu_0
+>>>>>>>>         mypmu_1
+>>>>>>>>         mypmu_2
+>>>>>>>>         mypmu_4
+>>>>>>>>
+>>>>>>>>   perf stat -e mypmu_[01]/<config>/
+>>>>>>>>
+>>>>>>>> Since commit f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()"),
+>>>> only
+>>>>>>>> "*" has been supported, removing the ability to subset PMUs, even
+>>>> though
+>>>>>>>> parse-events.l still supports ? and [] characters.
+>>>>>>>>
+>>>>>>>> Fix it by using fnmatch() when any glob character is detected and add
+>>>> a
+>>>>>>>> test which covers that and other scenarios of
+>>>>>>>> perf_pmu__match_ignoring_suffix().
+>>>>>>>>
+>>>>>>>> Fixes: f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+>>>>>>>> Signed-off-by: James Clark <james.clark@arm.com>
+>>>>>>>>
+>>>>>>>
+>>>>>>> We use regular expression matching elsewhere rather than fnmatch. We
+>>>> can
+>>>>>>> also precompile the matchers using lex. I'm not sure we shouldn't be
+>>>>>>> looking for an opportunity to remove fnmatch rather than expand upon
+>>>> it.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Ian
+>>>>>>>
+>>>>>>
+>>>>>> Presumably you mean we can do the removal of fnmatch after this fix goes
+>>>>>> in,
+>>>>>> rather than instead of? Because this is a user facing change in
+>>>> behaviour
+>>>>>> but the removal of fnmatch would be an non-user facing code refactor?
+>>>>>>
+>>>>>> It's technically not an "expansion" because we always used fnmatch and
+>>>> the
+>>>>>> linked commit hasn't made it to a release yet.
+>>>>>>
+>>>>>
+>>>>> The main place the expansion gets added is parse-events.c, previously
+>>>>> parse-events.y. If we're adding the expansion ourselves then we can
+>>>> choose
+>>>>> the form we add it. Some coming servers will have 100s of PMUs and so I'm
+>>>>> worried about the scanning cost when a PMU isn't specified.
+>>>>>
+>>>>> Thanks,
+>>>>> Ian
+>>>>>
+>>>>
+>>>> I think I might not be following. If a PMU isn't specified then
+>>>> perf_pmu__match() is never called so no cost is incurred. I also don't
+>>>> add any new calls to fnmatch().
+>>>>
+>>>> I only updated the gate on whether the existing fnmatch() is called from
+>>>> "*" to "*[?". So it only happens when one of those characters is in the
+>>>> PMU name, but it already happens when '*' is in the name.
+>>>>
+>>>
+>>> Right. I'm not saying there is anything wrong in the change or an
+>>> additional cost, what the issue is is that currently only really '*'
+>>> requires fnmatch and that's because the event parsing adds it. It could
+>>
+>> It's not only '*' that requires it, see the example I added in the
+>> commit message:
+>>
+>>   ./perf stat -e mypmu_[01]/<config>/
+>>
+>> '?' was supported before as well which could be useful.
+>>
+>>> similarly add '.*' if we did regular expression matching. By expanding what
+>>> we pass to fnmatch from the command line the more committed we are to
+>>> fnmatch rather than regular expressions - which is what we use everywhere
+>>> else in the code. So maybe it was a feature that this wasn't working.
+>>>
+>>
+>> But we haven't had a release of Perf yet where more is passed to
+>> fnmatch(). Before f91fa2ae6360 ("perf pmu: Refactor perf_pmu__match()")
+>> everything was passed to fnmatch(). After that unreleased commit only
+>> things with '*' are. Now with this change only "*?[", so it's less not more.
+>>
+>> I don't think there is any commitment to keep it, we can always remove
+>> fnmatch in the future. But it looks like a mistake to me because the
+>> title says "refactor" when it actually removes a feature.
+> 
+> Ian, are you ok with this now?
+> 
+> Thanks,
+> Namhyung
+> 
 
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 3095e280eb92..938b41a3befa 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -137,6 +137,9 @@ OPTIONS for 'perf sched map'
- 	task name(s).
- 	('-' indicates other tasks while '.' is idle).
- 
-+--fuzzy-name::
-+	Given task name(s) can be partially matched (fuzzy matching).
-+
- OPTIONS for 'perf sched timehist'
- ---------------------------------
- -k::
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index ecb43deb9d74..c801c38e8b9a 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -157,6 +157,7 @@ struct perf_sched_map {
- 	struct perf_cpu_map	*color_cpus;
- 	const char		*color_cpus_str;
- 	const char		*task_name;
-+	bool			fuzzy;
- 	struct perf_cpu_map	*cpus;
- 	const char		*cpus_str;
- };
-@@ -1599,12 +1600,16 @@ static struct CommandList *parse_commands(const char *commands)
- 	return cmd_list;
- }
- 
--static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list)
-+static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list, bool fuzzy_match)
- {
- 	bool match_found = false;
- 
--	for (int i = 0; i < cmd_list->command_count && !match_found; i++)
--		match_found = !strcmp(comm_str, cmd_list->command_list[i]);
-+	for (int i = 0; i < cmd_list->command_count && !match_found; i++) {
-+		if (fuzzy_match)
-+			match_found = !!strstr(comm_str, cmd_list->command_list[i]);
-+		else
-+			match_found = !strcmp(comm_str, cmd_list->command_list[i]);
-+	}
- 
- 	return match_found;
- }
-@@ -1727,7 +1732,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 			 */
- 			tr->shortname[0] = '.';
- 			tr->shortname[1] = ' ';
--		} else if (!sched->map.task_name || sched_match_task(str, cmd_list)) {
-+		} else if (!sched->map.task_name || sched_match_task(str, cmd_list,
-+								sched->map.fuzzy)) {
- 			tr->shortname[0] = sched->next_shortname1;
- 			tr->shortname[1] = sched->next_shortname2;
- 
-@@ -1756,15 +1762,15 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
- 	 * Check which of sched_in and sched_out matches the passed --task-name
- 	 * arguments and call the corresponding print_sched_map.
- 	 */
--	if (sched->map.task_name && !sched_match_task(str, cmd_list)) {
--		if (!sched_match_task(thread__comm_str(sched_out), cmd_list))
-+	if (sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)) {
-+		if (!sched_match_task(thread__comm_str(sched_out), cmd_list, sched->map.fuzzy))
- 			goto out;
- 		else
- 			goto sched_out;
- 
- 	} else {
- 		str = thread__comm_str(sched_out);
--		if (!(sched->map.task_name && !sched_match_task(str, cmd_list)))
-+		if (!(sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)))
- 			proceed = 1;
- 	}
- 
-@@ -3707,6 +3713,8 @@ int cmd_sched(int argc, const char **argv)
-                     "display given CPUs in map"),
- 	OPT_STRING(0, "task-name", &sched.map.task_name, "task",
- 		"map output only for the given task name(s)."),
-+	OPT_BOOLEAN(0, "fuzzy-name", &sched.map.fuzzy,
-+		"given command name can be partially matched (fuzzy matching)"),
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option timehist_options[] = {
--- 
-2.43.2
+I don't feel too strongly about this one, unless anyone really is still
+using my_pmu[01].
+
+For patch 2 I was going to resend with Ian's suggested-by tag, but I
+think we should try to get that one in as a test is failing.
 
