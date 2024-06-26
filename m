@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 364CE19885E
-	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 20:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0582198A29
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 20:37:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719434256; cv=none; b=T5GEdDL1h2cPGTALo1OtXd2aw8fl2osIArrs4XYtE2AlXRlMkjYzbnavcDUTYiUq3okNuuQZqXr9k1HryNSV8GkIwfOtlzM7x/4XvQGfeRtiJnS/ltmdRpRDSgTsbDzJib1lcpzbqs7tqRV6Zm6oR1t6TR4Gwi/PhJxe2bpeRJA=
+	t=1719434259; cv=none; b=O3R1KyirQwAvURRjN/h9mZzAUBdhtYyiMzdkKJATUqHTHOJepfa5scEeQc7e1NIt+uuDSfk0I9c2q64n7UKVka98y+S/0fPUUGUEv6DvgvIgnpN5ZJY0HQCFIfk7PxLxx7cB6Q1wqZdPxSG51y27nincRskvpOaOIEPcdgUDEus=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719434256; c=relaxed/simple;
-	bh=vLAWwP6pxeZ3+8l+944tuEizrGnbW644ZT2RUZBRZLw=;
+	s=arc-20240116; t=1719434259; c=relaxed/simple;
+	bh=k7QXVgVjC5ziryU8iqEZw+jIGB8CNwx93bpexssSTVM=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ScCD5Ct47Dno81QUWSd8te+Pt7XVjqlpKTRJrukAfgocgwsujBxW3e7gCIT0L1ajp/BzKcMRnuMtWutwO8tPm2CT440LjTlnx1bPVoz2wfGgdeLJsRwyRb6WsP7gtMfOD5bjfKR6wXDP0l2AFrMKIlPRr+Y8PHHfgzF+oqDdx/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KWHjCidm; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=i7SE6h9oBr+f496aAMaMuyG68sDOTv/1j0N0L/YbuPHRBXtcPyqS+0iWUhaAIYbkzN1LeAdab9OaOCLT7tANkhaHpHwEq26SYv8r2SXl6p/wOzhtbhE6tW/N+map5jJGI9zMZcDWcLD/iSQT5bmWlAJIHG5wPmkIs/+h6MIz3b4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=csLlomA4; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KWHjCidm"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02bb41247dso12730537276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 13:37:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="csLlomA4"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e033554101bso2078917276.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 13:37:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719434254; x=1720039054; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1719434257; x=1720039057; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=TFHYu3Nth2gR5eivBBGcLrTyqj+GOTAKJL2cvnIsazU=;
-        b=KWHjCidmBAyCkFGW6EIyO48NzgysWZZxlcV9NlHN2Zg6eWifjpyWwi5k3YBFVSEoiY
-         5y1lUY85q+T3atzhq7Pd7eZKSzKImyRG0l/hP40Dg1/kfDNdZSbosF9GbJtSxSUdcPsd
-         Y2c91tVAtccs4XJgF9jAl6SgySMS7+K4GPVyN0lQRhldTCIuS+FLR+Y2bh7WrC6Vch5A
-         C2Pqbwp6Mvi0zQ+TpB9aJPeUdlnocKxpDZn/HBE6ZPoEvjz7KFEA4zsKuAXSUzHvlu+v
-         Ql1MSq/nqsjckuMaOm4NObCxD1O6QyvfJpjT63DSk7RJJ4YD7ALn2rhFR0EclqgDsbeU
-         895A==
+        bh=wAL+qN5eeqrm/YV9CC2nA0bNTj605bqM/+2MNtl5Dek=;
+        b=csLlomA4V33m+n0q2DIs3soA7tA9GynU/l3cLSo0YWQXJyqDq0wbg4pS30Hs4Ilu3n
+         18hvqw5wSngwnL1bPhgvRm96ku6aOeJIncDgBS1PrYJi2tKv9HUgqMr/XxZKeeP70ah0
+         vQHZ2IJ8XvIUg3NCP1hkPWdB5KbNA0zbXMqbjb6ddWMvOOPf286UhtAw9weQAB4LFxeF
+         xnr/+Zs0mnjBqi7EK3SyH0vm2CTjOk4xMwGK7eBbIiFNkbDnQHpio/nzjMV6T00OzChw
+         mzeRM9rOzKKOrQrECZ+YLQ6JjvFRL7ystxiLyrgGtARh7F7PFKnN6q5hZDNn2eFmhh3a
+         vtTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719434254; x=1720039054;
+        d=1e100.net; s=20230601; t=1719434257; x=1720039057;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TFHYu3Nth2gR5eivBBGcLrTyqj+GOTAKJL2cvnIsazU=;
-        b=QFDtKn2441AAqP+Edril9L5IpKo49XniKRooEt9itHy0j9NNHTydjKwaAiH8BMjrPq
-         R2w4XwHoQc+YaUU5x5aEfc2tpvhERgXEb/QHz1TL07vJeP6AumnY/o/8ePwbHp7tbpiH
-         udm9HN/EwIiHsM6vYvKboKufPE6avs9dl//kGxX7/TZS6hgvxnxLMNaoFQwq4qzFemPa
-         vH9Y+uou2p4UIaU/Oe8oDBGpc2BoUmYWXpIAYI9NR6Myn5Z1dzDk+MCC8eFtz4UjmSux
-         hX9GpYXmj98ZKS8yC37PgiWnNAh0mGrm5bCsGNES5Tk4UuaS/eWnrUPnSdjJ0/ISxqMb
-         GbXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGYF/jlmNaCr7IgrrjO+w9Gx4ExwyRvN3+Ys+Oa3jL1bAKD3Z9GzsS4EX/K2qBE9Zy1dV341DwAUk9Nj0a3bLCLydEl5zpUOTgtqPT2FaqOA==
-X-Gm-Message-State: AOJu0YxKJ8K2AjaYpWP4pkoZmhhy6Sa2nk4MyS5XHK6rnOho1vnilwP8
-	DIqFmADOgvSrfkTr/mhKkfBggBBTpDWxnt2dybDWbO3J0xOPWHzP5F3SXWdAFT9mGasvhmWMn64
-	fsJQerw==
-X-Google-Smtp-Source: AGHT+IH9TuYO+WiPmgRtSFFWHjHBH655rX65a4zVzk7gaz2aQTP23YgHXVJikjgfAs5bm2nu+W28AwUbyUSL
+        bh=wAL+qN5eeqrm/YV9CC2nA0bNTj605bqM/+2MNtl5Dek=;
+        b=TyCvEgkkbEFf5/GHwLtqLfG/JnZIf8LHK+w1H+9rzuyZZ0+yTZTZD0RpS4E43OyjVD
+         JgTs0YK5CRXNBUgCSYUhJq9aVUtU1nBTiSPArCFHAutb0yceJNMENZ0TPLew6crVlIQA
+         EiBKI3nKSxCPmmXZQOEvVi+LmW7H5dnEA0z5/3lWwLh/+7ryIgyasqSgGOzPpo/CABcw
+         OycUgVOlPwlOOi/A2ouz4oUgeGQU5hLAwGraOP6bLqirM3HRaY1w2nUf8Y39WxrzixmE
+         BzlfhlQu+FRwL479vlYIYIJFRQU1MhknNUwaSyGKdk7aSdwKHqUZKfc5K43gmr70lvJq
+         TY0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUDIuBMXCvohG6fW1L66GCykeg28vKGMHULJ8w67+CHv5vYja5bRkRueQA1TJecnNSl2DgFKMeb9XtLUhk0Hf9lrCbPscbR4lU4TcbJbG77tA==
+X-Gm-Message-State: AOJu0YzjI8N4JI9TmMC8Z/F2NZsbP3oN69oskIE4DO4oOnIZOFEbjNH4
+	Mh7/aCK5atMoKgi/jERdEB2fNSmH7pDddqwsoeNAbAWe7/j8ny8vHObKGFjhbhCJiuHopVErMhB
+	MZoI4Mw==
+X-Google-Smtp-Source: AGHT+IFNDgaSsvKWEhCLp/cJqqx8LLIcQIa91shbF03zPhK2DmfMDZISVjpcNxywqGfQrHzWLCzDwMoXnqBo
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:23a1:25b9:2412:56de])
- (user=irogers job=sendgmr) by 2002:a05:6902:1081:b0:dff:3096:85e1 with SMTP
- id 3f1490d57ef6-e030104fe43mr68452276.10.1719434254286; Wed, 26 Jun 2024
- 13:37:34 -0700 (PDT)
-Date: Wed, 26 Jun 2024 13:36:26 -0700
+ (user=irogers job=sendgmr) by 2002:a25:dcd3:0:b0:e03:40f0:bdcd with SMTP id
+ 3f1490d57ef6-e0340f0bf60mr1486276.4.1719434256549; Wed, 26 Jun 2024 13:37:36
+ -0700 (PDT)
+Date: Wed, 26 Jun 2024 13:36:27 -0700
 In-Reply-To: <20240626203630.1194748-1-irogers@google.com>
-Message-Id: <20240626203630.1194748-25-irogers@google.com>
+Message-Id: <20240626203630.1194748-26-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240626203630.1194748-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.741.gdbec12cfda-goog
-Subject: [PATCH v2 24/27] perf test event_update: Ensure tools is initialized
+Subject: [PATCH v2 25/27] perf kwork: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,26 +80,43 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Ensure tool is initialized to avoid lazy initialization pattern so
-that more uses of struct perf_tool can be made const.
+Use perf_tool__init so that more uses of struct perf_tool can be const
+and not relying on perf_tool__fill_defaults.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/event_update.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/builtin-kwork.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/tests/event_update.c b/tools/perf/tests/event_update.c
-index fdecad920f59..d6b4ce3ef4ee 100644
---- a/tools/perf/tests/event_update.c
-+++ b/tools/perf/tests/event_update.c
-@@ -103,6 +103,7 @@ static int test__event_update(struct test_suite *test __maybe_unused, int subtes
- 	TEST_ASSERT_VAL("failed to synthesize attr update scale",
- 			!perf_event__synthesize_event_update_scale(NULL, evsel, process_event_scale));
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 8ffaa80a2d1d..6a4281b8fd10 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -2322,12 +2322,6 @@ int cmd_kwork(int argc, const char **argv)
+ {
+ 	static struct perf_kwork kwork = {
+ 		.class_list          = LIST_HEAD_INIT(kwork.class_list),
+-		.tool = {
+-			.mmap		= perf_event__process_mmap,
+-			.mmap2		= perf_event__process_mmap2,
+-			.sample		= perf_kwork__process_tracepoint_sample,
+-			.ordered_events = true,
+-		},
+ 		.atom_page_list      = LIST_HEAD_INIT(kwork.atom_page_list),
+ 		.sort_list           = LIST_HEAD_INIT(kwork.sort_list),
+ 		.cmp_id              = LIST_HEAD_INIT(kwork.cmp_id),
+@@ -2462,6 +2456,11 @@ int cmd_kwork(int argc, const char **argv)
+ 		"record", "report", "latency", "timehist", "top", NULL
+ 	};
  
-+	perf_tool__init(&tmp.tool, /*ordered_events=*/false);
- 	tmp.name = evsel__name(evsel);
- 
- 	TEST_ASSERT_VAL("failed to synthesize attr update name",
++	perf_tool__init(&kwork.tool, /*ordered_events=*/true);
++	kwork.tool.mmap	  = perf_event__process_mmap;
++	kwork.tool.mmap2  = perf_event__process_mmap2;
++	kwork.tool.sample = perf_kwork__process_tracepoint_sample;
++
+ 	argc = parse_options_subcommand(argc, argv, kwork_options,
+ 					kwork_subcommands, kwork_usage,
+ 					PARSE_OPT_STOP_AT_NON_OPTION);
 -- 
 2.45.2.741.gdbec12cfda-goog
 
