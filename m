@@ -1,50 +1,59 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1C1517B433;
-	Wed, 26 Jun 2024 10:32:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A723C17E911
+	for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 11:36:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719397974; cv=none; b=ao46CKf153aNXPClmaqyaTR+G1tDnrxhHjTiY40sDY29bL36//JksRYF/igDepz/C64NzbCC33SakQpCC3A1AgLyVNG2bRHVeOlmkesDRyr6jYLrkIaksp6dz9v4X/Zt026UxdfFwlBMvoFFZoqjluUqqGQPMIKcdHbcixUCfYI=
+	t=1719401778; cv=none; b=bQ4646hSP5u9CL71tHKScAzVWQKpcXTOlIT+TKJJILqW5PNN9uMXIK1GSfuqJou+XTnKdCbEID2NQvJRCqWE2zX6LhDTjfU9p9trPFnwSoIPhXCbrt6UIYvfN3Jk060lK77YIuCg9RLU0okvHdcHaawhnT2j2gl7djfS6/Cmo0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719397974; c=relaxed/simple;
-	bh=3izx0B3mI55jofLEkEwXdEAp1lB1IbFcARH6Cmm5Bnc=;
+	s=arc-20240116; t=1719401778; c=relaxed/simple;
+	bh=7kxtBK25xovD9hnasOmXym1Dqzb8xYXCkDVgPyX+fcU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DjMVOJSrUKaDLp6HHOHLkIlmugb+NwVgDyZb/IESDJu+wkNN1+k3/YIuKp2pcfJZxShg6fA8huzxRvh1N/NLE5fdYgKu3EHavC4QZ/uUuBdIVqI4ltsga6/SCMFyuzxvpntDTYYY2Y1+OIaCOmFr/NTBMtuBuUxNO8IZ6INi3p8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=atagzg1L; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 In-Reply-To:Content-Type; b=YnSYyX5QAVXHgXRugwOl7L62qDDPAatVSYsxpj9+j2pHPARo+uKYiiGeISYXGRC6USqEQezh+jjTBEAyDavv2yuUrm1CBWmLR3U49P+3VRYiqDkxt4LFANBJsmZwjCZRrl+ZyGE8buED8oBSO/pdD3yFwJnNWK4OXw/GBt9vvxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=TGt/ZUz1; arc=none smtp.client-ip=209.85.167.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="atagzg1L"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719397973; x=1750933973;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3izx0B3mI55jofLEkEwXdEAp1lB1IbFcARH6Cmm5Bnc=;
-  b=atagzg1Lve7YXSJv6mhp8xnds06aI1DFhCpFfAiaeJJcYlt8w/OotuGX
-   egMxpabTk40wYfW/DE6egxVCO5it9MY1T9fHlTCJ/aizM9P/PgyckfSiv
-   FnmXIa6ix2/ub0gZntK8DfB3UUKi4bH//XdF4BgBRyAf/AwaKfnb9LVEa
-   Y/vKQHPIxWkMq4iKMgBsLtlB2EDqnIkhbzGB2BN7L+Bl8E6b3lqOsL9aX
-   lVJZwp1P1ZwsXevjbxipszV5P1BNqK73JYPxHX8kpJpLp1Q7Ch1xIevpw
-   hKh6TojSWEOdl8dcbnB/5CNnl4dac/ePHunXYZcLtuNCjEH+f5iIl1Mdv
-   w==;
-X-CSE-ConnectionGUID: /twzRki/ReyftWVbrSz/Ag==
-X-CSE-MsgGUID: YUc/gPA5T2O83jFpqc4MLQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11114"; a="27864747"
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="27864747"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:32:52 -0700
-X-CSE-ConnectionGUID: qrXbhX2PS1q+W2TPO99iqQ==
-X-CSE-MsgGUID: r2KSOniWSa2Xeu3HhYGpuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.08,266,1712646000"; 
-   d="scan'208";a="48403102"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jun 2024 03:32:48 -0700
-Message-ID: <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
-Date: Wed, 26 Jun 2024 13:32:42 +0300
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="TGt/ZUz1"
+Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-52cecba8d11so2294359e87.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 26 Jun 2024 04:36:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719401775; x=1720006575; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=cMuzpY4Z872AyWI1aK61/MVe81tb/rCrS4Gors5C2F0=;
+        b=TGt/ZUz1HGQGhfzvWKYGkdEocIa85dHpu/hO2yWQHIOzwwV4mtPXq3Rv2pPZ/0NElF
+         81oKUjwvWUX95cUf6kDWpyM6Hg5pr09cPg1ykvzyDTW56b1NFaH1Mvhz3ROLZYD/wYjf
+         G429Gym3StU2gXb6adrajCkZnwh5qD/1cT+9dCSbtgV9gKQMYc4DzZReZr4XCgEuNCzT
+         Itwg5xklgJ1y3wGDuVAYGg2eMJ4YUWznmyTwXUkWSyikLsz8fs/IBLj4OvYZxCuZ5sCS
+         p3I0bqTs5hwoyRA563UWrCZj3DnAL0fUV4PisOLJSRiETcPWYYVwYa3G3ETtQarqxt6l
+         NJ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719401775; x=1720006575;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=cMuzpY4Z872AyWI1aK61/MVe81tb/rCrS4Gors5C2F0=;
+        b=orh96oEOd/WHRKU9qFcjqgFlyqQP8ygqWxD8pNSvzEdn9DJMk4sABNDMzqHdFHAy9H
+         xc+Tw7NcR51m5XtFh726dyR8wB4LkaXjlqzb2fInOtU2k4oywqYJ+etMLY406VF423YL
+         +Hy/wYLfysJPT39k7PK+4yuUL3p2iOET+jdiLBD0Wfq6gSzpXSsB1MJ6XQm+I9QSjJZm
+         2vgRr8HQBQGXmMlBXW9aPKNNOXPI68TKzFDe1mtGu4u51f+9yTrcE/QQu4TJhFjPntxJ
+         f7kKF0+pFMdB6t+xxRnow40wBDwLDELIOW+e0S4dz9DWC39o26ryMAjUMx+LuWflfnje
+         vrxA==
+X-Forwarded-Encrypted: i=1; AJvYcCWeumRRXHBgTQh3+xXnfrRkZtiFn3Xx9ALtvaC3Ulr5Ol5hqARyLVP4L6cH7yDgj9xip4M8DpryUrmAuvwCAj4g8KoHyW6j5DqFbW8syVMbwg==
+X-Gm-Message-State: AOJu0YyC5vlH4P9vid3sZVG0aj63ZenW9uHUmWeQaq25h4bnK7OZsK0U
+	X1xjiHUyZcSv0MbRA/KANnOGuPYrgpNKoGC/GHBipXwVU/EPNbffD5xWdRc9A6c=
+X-Google-Smtp-Source: AGHT+IEPEpCRb3cEZBmhNT1f7PAwFW+p+uWIp3od7KrxRjrljO66wKi6YdCFGUJvQkzMblj3tBvohQ==
+X-Received: by 2002:a05:6512:31d2:b0:52c:e3bd:c708 with SMTP id 2adb3069b0e04-52ce3bdc757mr8165299e87.10.1719401774812;
+        Wed, 26 Jun 2024 04:36:14 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a? ([2a10:bac0:b000:7579:7285:c2ff:fedd:7e3a])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-366f973b7e5sm6762226f8f.14.2024.06.26.04.36.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 26 Jun 2024 04:36:14 -0700 (PDT)
+Message-ID: <5aeaaecf-0eb6-4934-b14e-2285eff6cc62@suse.com>
+Date: Wed, 26 Jun 2024 14:36:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,137 +61,158 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
-To: duchangbin <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-References: <20240625033740.223009-1-changbin.du@huawei.com>
- <20240625033740.223009-2-changbin.du@huawei.com>
- <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
- <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
+Subject: Re: [PATCH v3 2/4] x86/cpufeatures: Generate a feature mask header
+ based on build config
+To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, will@kernel.org,
+ peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
+ namhyung@kernel.org, brgerst@gmail.com
+References: <20240622171435.3725548-1-xin@zytor.com>
+ <20240622171435.3725548-3-xin@zytor.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
 Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20240622171435.3725548-3-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-On 26/06/24 05:26, duchangbin wrote:
-> On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
->> On 25/06/24 06:37, Changbin Du wrote:
->>> The vdso dumped from process memory (in buildid-cache) lacks debugging
->>> info. To annotate vdso symbols with source lines we need specify a
->>> debugging version.
->>>
->>> For x86, we can find them from your local build as
->>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
->>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
->>> the buildid has to match.
->>>
->>> $ sudo perf record -a
->>> $ sudo perf report --objdump=llvm-objdump \
->>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
->>>
->>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
->>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
->>> Percent│       movq    -48(%rbp),%rsi
->>>        │       testq   %rax,%rax
->>>        │     ;               return vread_hvclock();
->>>        │       movq    %rax,%rdx
->>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
->>>        │     ↑ js      eb
->>>        │     ↑ jmp     74
->>>        │     ;               ts->tv_sec = vdso_ts->sec;
->>>   0.02 │147:   leaq    2(%rbx),%rax
->>>        │       shlq    $4, %rax
->>>        │       addq    %r10,%rax
->>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
->>>   9.38 │152:   movl    (%r10),%ecx
->>>
->>> When doing cross platform analysis, we also need specify the vdso path if
->>> we are interested in its symbols.
->>
->> Would it be possible to add vdso and vdso debug to the build-id
->> cache and ensure perf can find it there?
->>
->> Typically, getting dsos from another machine is handled via
->> build-id cache e.g. what perf-archive does
->>
-> Hmm. I agree this is better alternative approach for cross-machine analysis.
-> When collecting vdsos to buildid cache, I think we can use the local searched
-> objects (with debug symbols) instead if its build-id matches vdsos from process
-> dumping (the real code ran).
+
+
+On 22.06.24 г. 20:14 ч., Xin Li (Intel) wrote:
+> From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
 > 
-> Currently I just follow what perf does for vmlinux so to reuse most of existing
-> code. Maybe vmlinux is too big to add to buildid-cahce?
+> Introduce an AWK script to auto-generate a header with required and
+> disabled feature masks based on <asm/cpufeatures.h> and current build
+> config. Thus for any CPU feature with a build config, e.g., X86_FRED,
+> simply add
 > 
-> Can we keep our current strategy for now? I'll think about above options when
-> I have more time.
+> config X86_DISABLED_FEATURE_FRED
+> 	def_bool y
+> 	depends on !X86_FRED
 > 
+> to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
+> feature disable flag, e.g., DISABLE_FRED.
+> 
+> Lastly the generated required and disabled feature masks will be added
+> to their corresponding feature masks for this particular compile-time
+> configuration.
+> 
+> [ Xin: build integration improvements ]
+> 
+> Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
 
-I tried adding vdso via perf buildid-cache.  It doesn't work only
-because the lookup expects the basename to be "vdso" but it is
-"elf".
+Overall LGTM, some minor points below.
 
-Adding a link from "vdso" to "elf" made it work e.g.
 
-$ cat gettimeofday-test.c
-#include <stdio.h>
-#include <sys/time.h>
+Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
 
-int main()
-{
-        struct timeval tv;
-        int ret;
 
-        ret = gettimeofday(&tv, NULL);
-        if (ret == -1) {
-                fprintf(stderr, "gettimeofday failed\n");
-                return 1;
-        }
+<snip>
 
-        printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
+> diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
+> new file mode 100755
+> index 000000000000..989b021e73d3
+> --- /dev/null
+> +++ b/arch/x86/tools/featuremasks.awk
+> @@ -0,0 +1,84 @@
+> +#!/usr/bin/awk
+> +#
+> +# Convert cpufeatures.h to a list of compile-time masks
+> +# Note: this blithly assumes that each word has at least one
+> +# feature defined in it; if not, something else is wrong!
+> +#
+> +
+> +BEGIN {
+> +	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
+> +	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
+> +
+> +	file = 0
+> +}
+> +
+> +BEGINFILE {
+> +	switch (++file) {
+> +	case 1:			# cpufeatures.h
+> +		FPAT = "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
+> +		break;
+> +	case 2:			# .config
+> +		FPAT = "CONFIG_[A-Z0-9_]+|is not set|[yn]";
+> +		break;
+> +	}
+> +}
+> +
 
-        return 0;
-$ perf record -e intel_pt//u ./gettimeofday-test
-1719397042.892837
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.026 MB perf.data ]
-$ perf script --itrace=e
-$ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-$ perf script --itrace=e
-Warning:
-2 instruction trace errors
- instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
- instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-$ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-$ perf script --itrace=e
-Warning:
-2 instruction trace errors
- instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
- instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-$ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
-~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
-~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
-total 36
--rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
--rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
-lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
-/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
-$ perf script --itrace=e
-$ 
+IMO this script could use a bit of high-level comments. Something like:
 
-So maybe a change could be made to build_id_cache__add() to add
-the extra link if the file name matches vdso
 
+# Create a dictionary of sorts, containing all defined feature bits
+> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
+> +$3 == "(" && $5 == "*" && $7 == "+" && $9 == ")" {
+> +	nfeat = $4 * $6 + $8;
+> +	feat = $2;
+> +	sub(/^X86_FEATURE_/, "", feat);
+> +	feats[nfeat] = feat;
+> +}
+
+> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 == "NCAPINTS" {
+> +	ncapints = strtonum($3);
+> +}
+> +
+
+# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
+
+> +file == 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
+> +	on = ($2 == "y");
+> +	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
+> +		featstat[fs[2], fs[3]] = on;
+> +}
+> +
+> +END {
+> +	sets[1] = "REQUIRED";
+> +	sets[2] = "DISABLED";
+> +
+> +	for (ns in sets) {
+> +		s = sets[ns];
+> +
+> +		printf "/*\n";
+> +		printf " * %s features:\n", s;
+> +		printf " *\n";
+> +		fstr = "";
+> +		for (i = 0; i < ncapints; i++) {
+> +			mask = 0;
+> +			for (j = 0; j < 32; j++) {
+> +				nfeat = i*32 + j;
+> +				feat = feats[nfeat];
+> +				if (feat) {
+> +					st = !!featstat[s, feat];
+> +					if (st) {
+> +						nfstr = fstr " " feat;
+> +						if (length(nfstr) > 72) {
+> +							printf " *   %s\n", fstr;
+> +							nfstr = " " feat;
+> +						}
+> +						fstr = nfstr;
+> +					}
+> +					mask += st * (2 ^ j);
+
+nit: This expression can be changed to mask += (2 ^j) and moved inside 
+the 'if (st)' branch. Essentially only add a bit iff that status of the 
+relevant feature in the kconfig is y, which is signified by the value of 
+'st' variable.
+
+> +				}
+> +			}
+> +			masks[i] = mask;
+> +		}
+> +		printf " *   %s\n */\n\n", fstr;
+> +
+> +		for (i = 0; i < ncapints; i++) {
+> +			printf "#define %s_MASK%d\t0x%08x\n", s, i, masks[i];
+> +		}
+> +
+> +		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
+> +	}
+> +
+> +	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
+> +}
