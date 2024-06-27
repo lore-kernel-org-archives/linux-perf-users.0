@@ -1,220 +1,283 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2D01A08D6;
-	Thu, 27 Jun 2024 23:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.15
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719530459; cv=fail; b=Jzq+veCzdzsmOdgXyUyTGbfYQiMI/630SIRORNhAf/G+liFGybFBqleFXUEwiBjl8xgBSjAdRUe5zZNaowJJLUL3YJJNu4M0kojVKp6IK+DkJ8G7KlYntF7IXXx31E3C6d0FLRaCPWl/eUKgVX4R9mAm/12+aD6388k8ie6iRSQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719530459; c=relaxed/simple;
-	bh=XiuXJ96rUzEE0Q6AnugY4bxDi16xVRU7ix3szu4H9ws=;
-	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=fEqAtm9lQCH71nEY0wC9Kf8xaYtpQuqx29pJN0b7qOPdBla2XghAveR44SNHO+3Nrgn1p5ijQqbS56VyXq/kFsKS2a/tFhDh9iKCM5mSDbqE7RzHtefqY6TADRo6ULKfGpMY9vY9+kvY4ZgDYQtPzJu2vl5gzvvishiIl5/jJ/U=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QHiJYkM6; arc=fail smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9554E199E93;
+	Thu, 27 Jun 2024 23:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719531384; cv=none; b=gv0GlpTBst4vqOc0pawe/LfOx1eobzmetGabu4VJXY9AqxQkObyANk/hdh6TU1gKh8LtVQgjcgHhIeoFfGylIyFEaUAV/qQPoc6Ig0O5tgdXe7W1ki+Yr/E230f+/3lzG8hbpnhv3G/buMVDjKAqIpXDMkv9ksHnEbQmvP47fOs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719531384; c=relaxed/simple;
+	bh=YlHR2LPPMByutX599IR6915akRVbXvoukaiuOwUQaYY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VW6vnB7saRpCW76KFMb9k9aFuZlM9odmFICT02SY6Kbw6vGeeMLXhCsd9kbAwA9mEv2cIiEIlab3S2jI2nuzb2bioGhhSOwB53ocKKcta4r7SEezoD8BNE12tdb+RXIY66zb1Tn18COwT5SLy7ZCqeqvfxSC9NnuHcuEyF9XfEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rk1T/b3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QHiJYkM6"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719530457; x=1751066457;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=XiuXJ96rUzEE0Q6AnugY4bxDi16xVRU7ix3szu4H9ws=;
-  b=QHiJYkM6MsTIOHbXweqklgXQVQfcO15FUiyyn6Q5mpYs1Xk17h7KRDiR
-   UnjXz0MCG+eWtDIi4F0QDKI/Dkz5BigvAdGSOUKWS1tC4neWiG7z0a9eb
-   lTVUtjMsufOsSoOUxrGlq79hY78cu/5FwMUnHWaCklE06iGkDH6oFA22i
-   zTKYKBVum7/M8/FZmzRT3fr7NyEcDrYlY6NF6bvvZi42YZfyEYz0v7ubT
-   M/W3aT4x95OBdcAJgsCUQmjQ6moQ7oi4X4CJcg7fcg56jltTAZZIWkhdT
-   FsP3WhnlTeXJGmTLJXCgPuUJ/7LQwJXzj3G2g7VrW72w/Zb1VVbtLNjYp
-   w==;
-X-CSE-ConnectionGUID: A20q9bdKTWi5wcZwGyy2/w==
-X-CSE-MsgGUID: 8ngF/l7FSwK5KjvjFD+g/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="20458244"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="20458244"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 16:20:56 -0700
-X-CSE-ConnectionGUID: CY+PNPaARIS9/jGhzOdELQ==
-X-CSE-MsgGUID: X9i5KR1uS1yHORmLL8m2Ag==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="67748732"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 27 Jun 2024 16:20:56 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Thu, 27 Jun 2024 16:20:55 -0700
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Thu, 27 Jun 2024 16:20:55 -0700
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 27 Jun 2024 16:20:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P+69IAJtN/NIqROcxpwQtKKqnDWs2/EXvlEXUp0NEZ5looP4KQcz0w51k0VdqI5zPpf9gHLeEYJU+SbzxAwNbRXyuaPF0gxghDDu/Q8lwphzzkUxAzohP2orUXdms7SErReVytUd1wlmqShceVznUeeptvmNZCpl5fko6uy7UgpraELJXUa1ce5Lz1n2kzZra/1jQJAt2829peaSimqcZR9NcYB6g7+GQqUeI4p2rPF6VwGOXFSlZZR5nv0yKjZsCBu5Kb3GrmCaOcuo4D+iSV/nVmSaWzEOpjbFopaysbJWT4gBG876sBrBrWX1SOg9+8CpYJ+QUktdyy9uHh6/bQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2uHq8miOj7kIRusmcn3viwcsDyuwf6nXkM7qdGa1nFg=;
- b=ioK58lu6gQawVsIrtqapmh/V6mb8dADzN2y7zyRfj5r63LBTn8uTEBGTfAxKRIp821Sa1I75l8lC2EekQBKM0RBQYfJOsNTZwCVKNvk+UtA1O4vXZAPMFzKkrglZkrAre0u+gIT7/Ze0dmfsJ4Wcx5TV9ciZrU+Ur/rFPTm9DGM+mcj4dqvfFeJgfXu45/Wqx+0biMA/YEviE7zDTVxfzYtzRfPabX3pzxONz6kxvqTkfWL1ocq+v+FWCI0KZlubFiMRtv5h0FpfW+257nfFp+N4in3OQd1MLun6MrxwrDfVspMXFhm342WX9iqDKQdVTIdOTrvL69WnRS7+4rMRmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com (2603:10b6:a03:18::25)
- by DM4PR11MB5996.namprd11.prod.outlook.com (2603:10b6:8:5f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.26; Thu, 27 Jun
- 2024 23:20:48 +0000
-Received: from BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b]) by BYAPR11MB3320.namprd11.prod.outlook.com
- ([fe80::e8c4:59e3:f1d5:af3b%3]) with mapi id 15.20.7698.033; Thu, 27 Jun 2024
- 23:20:48 +0000
-Message-ID: <7e0097d6-a542-4778-913b-3c374d36f5c3@intel.com>
-Date: Thu, 27 Jun 2024 16:20:45 -0700
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting
- CPU feature
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC: X86 Kernel <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>, "Thomas
- Gleixner" <tglx@linutronix.de>, Dave Hansen <dave.hansen@intel.com>, "H.
- Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
-	<bp@alien8.de>, <linux-perf-users@vger.kernel.org>, Peter Zijlstra
-	<peterz@infradead.org>, Andi Kleen <andi.kleen@intel.com>, Xin Li
-	<xin3.li@intel.com>
-References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
- <20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
- <b3b10d29-857e-402b-95b9-1696baa88e81@intel.com>
- <20240621164615.051217c4@jacob-builder>
- <004f6400-0d35-4c5e-ad31-094be8860f08@intel.com>
- <20240627152102.592a20f5@jacob-builder>
-Content-Language: en-US
-From: Sohil Mehta <sohil.mehta@intel.com>
-In-Reply-To: <20240627152102.592a20f5@jacob-builder>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MW4P222CA0021.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:303:114::26) To BYAPR11MB3320.namprd11.prod.outlook.com
- (2603:10b6:a03:18::25)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rk1T/b3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B99C2BBFC;
+	Thu, 27 Jun 2024 23:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719531384;
+	bh=YlHR2LPPMByutX599IR6915akRVbXvoukaiuOwUQaYY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Rk1T/b3O35FrCfDoNan/hmqA8EFzFFclfO87fFxyDw8bHgqk3uf+zevzfwbno7/SL
+	 tcH7qSL766kN3IZmLK464Izx3a9uEdA5D0DHiYrT4CTfLk6ULtNLgcWnohg9qIpRnL
+	 fz7gfk3ef9CAX9p7DjEtauQoOPIfi3yziJnYs5oy5Un8jTM4kLoEOCr+kMeGOqjyUd
+	 /ANIEjhqZlVuYqDe46t3EVK5mlXHbXjRf40KjiV6WwrQFj5j1Rl1vbhnSH0+uu2IQp
+	 XFI+kPzD+Pjh9QSUW9BHsRR1WeYZ5VPB4vz0b+dcoZuP/SCefNuTyU7g8L8uxqB84m
+	 AobsiTx6Jgy6Q==
+Date: Thu, 27 Jun 2024 16:36:22 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Chen Yu <yu.c.chen@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+	Fernand Sieber <sieberf@amazon.com>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 2/3] perf sched map: Add support for multiple task
+ names using CSV
+Message-ID: <Zn33dkUPuDdVD8KV@google.com>
+References: <20240626091550.46707-1-vineethr@linux.ibm.com>
+ <20240626091550.46707-3-vineethr@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR11MB3320:EE_|DM4PR11MB5996:EE_
-X-MS-Office365-Filtering-Correlation-Id: d6b9a6c2-a5f1-4c33-67e5-08dc96ffc747
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?V3pudEt4ZUtkdUVwWWxTbjlrMzlsYWdtOCtianRHVXNrRVBYd3lqelRjdmRY?=
- =?utf-8?B?VG5qWUptMFozNG1TZURrcUtnODdoQ01GQWxHZXFMQ0htZXozRHJNVnI5bFk2?=
- =?utf-8?B?VEN6T0xnSWJZWVg2Mkw5UEpoTCtGcUZmWVNsTmZJZnZkK0c2MElFRGNDSDdn?=
- =?utf-8?B?Z3YwS21QR0UxV2d4RjNrTWpOQjIxN1hWZkFGL3NqOHhmdlZrNHBYTDloRm9k?=
- =?utf-8?B?TkFPZ3orSldQYTBEdXhRVVBLdXpZQTFwdVVqdEJNYm5UeERMMWdHZnpqWWVW?=
- =?utf-8?B?VFFwT2tuNkw1WnRYQUsyWCtqVWorV2VCVWhIVVA1dWUydjZyUUltUUg3aWZn?=
- =?utf-8?B?UEdLcnJmQjc4b2M1MUNON0hvcXVrMEFpUDZxcWE3MkZMWmJralZmK1Q1YXZl?=
- =?utf-8?B?b1ovWkZPckZvR2ZHK01rbXoyUFNLQVQ1UHBaN0lkaDZ3cWpiS0RmSzVYc3Mw?=
- =?utf-8?B?ZWlBbUwwZ3IxUG1helNMZE5KdFdUTE5wOTZjYWJyWDFwVUJUZUtLNFNOMmlF?=
- =?utf-8?B?OVZ6bG96QmMxaGVqRXAxTmcvd1ZHdUZOQ1BzNjlaTFBYekZDOXhSNUVUSG1k?=
- =?utf-8?B?VkVOU2RyS0NvL2hBSTA5VXM0b0ZFNitkU1FISFZ0ZzY2V0NnWHVDKzBhbEox?=
- =?utf-8?B?Y3Zwa3dKVEdBbnpQYUlJVEZXNGxRdlhKOEYwZ0VOWXVwQW40UEY5am82Qk1u?=
- =?utf-8?B?NnVYM0dndEdpMTZtVGs3K0pkREhmbVViVnpBWU42U240V1J4YlJFMFMwK0J0?=
- =?utf-8?B?QkJlWXFBMWxpN2hJazJkS3N2aFEzL3F5TGtiREZqZERNZjVkV2RvWkVmNWd6?=
- =?utf-8?B?THhCaFdkZXpSM1VldWw0MjFvcC9OYUlNSitJY1h5ZHNWRGVDMVQwZGlwRFYr?=
- =?utf-8?B?WUlDQ3d4d0M0RDE3djk0b0dpQTVnMkQwaVJBM0NKaXpUQkRqQXErOHFOdDk3?=
- =?utf-8?B?QzVpYXBBd29ucTNtSVpQc05Hclh1VE9PczNtMk9LWmNjQWQ1YUkySXJxaEFn?=
- =?utf-8?B?Q1FiR2QzdUtzOWxVL3lYaEJscVFOSU5nYTFiNDVlVG4rUlNyS3ZBdlk3bDI5?=
- =?utf-8?B?ZFFpK2FzcjBjMVZyTmNnT2NTbjF2YnFINlNyVlRKeTNtVWxjUndMUUJzMnJF?=
- =?utf-8?B?U3Z1Q3FBVVA3UXA1UnRhZGtLUWU4RDNyaWF6Sm02R0xCMThxRE43d3ZGcmxS?=
- =?utf-8?B?eURObDkxdHV3NHk2UGgraUFtTCtNcXFoWlRRbktjVG9ROWZMeGI4RkVrRXIw?=
- =?utf-8?B?WldTQnZod2ZJbm5IU0NCR3laZkg5cEZXaW1LYThnZVlRZkw0NllKc0hxL01i?=
- =?utf-8?B?ZGxla0JaN0lIK0tvdmY1OVNadzRBY2UwUVVtanJUeldncVQ5dm9RTU5Fc3R0?=
- =?utf-8?B?dTd2eGVkcFBvdm9yTHZPam1uTXJTUDNWVWRObnhxM003cVlYR0c2aWF3ZzNY?=
- =?utf-8?B?TW0rNnhWSXFWd2VEbjRDNngxK1NvemtXcHB2TithVlZIQXg0aXhmd3FYRS8z?=
- =?utf-8?B?TDVVWDdocFVhS3FiQXAzWnl6YzVOZ2h2WVA4NG9sUE5pRXk3aGRJZ09JZ1VH?=
- =?utf-8?B?Z0owZk5DWGl5MCtnM01OYjYzbm1wNGIvQ1ZyTXh3bXlmWG5JMGhCVkVuMG45?=
- =?utf-8?B?RVFKbFJOalMzRnFZdW9URnB0TVBuc3YyQnAwTVhSaVRVK3h1N3kyMkhrUzJL?=
- =?utf-8?B?S01KU3NyeHd6RitkUzdqanBpOTQrYlk4bmZ0TU5tSmZIa3BCWUtQUXVqcWda?=
- =?utf-8?B?S0NwdmdOQUd3VGh3d1RJYWJGRzFpdDVPc090SVdqd2FhY0xQcXdveERtS2hz?=
- =?utf-8?B?d2NVSXd0eDllQWFPUDFRQT09?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR11MB3320.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aENoOUN2alFpK0VjOHh2MGdQdmw3cE9PME5Bbmh1c2NnYnVreElsTHJ5czBq?=
- =?utf-8?B?djJQNjEyNEp0NE9KNXFlM0xDUlgrcTd4cmpwNVhLQy9md0R6d0lURG1TV3BE?=
- =?utf-8?B?MW4wc0xJeVJzQzJlNmpDbzNxYTFrVWFhaGRZNCtBdklRMitZY0Y4VHQ5THp1?=
- =?utf-8?B?MUphWitzSW56Qi9zYlh1djl5d2JEaWtOeFQxUGxpdUh2ckVvOWpyR3g3VnFr?=
- =?utf-8?B?MDgyN013akZDS3QzaTRBZDBKQTkyY3Q5SUdNc3p1d0hNYlFiM2g0UU9ZYzZr?=
- =?utf-8?B?OXM1d05Pbml0MUdSbGEzUlU0ODl2cExZaGNEVGcxRGVqYUNNbGo2QmpSVC8v?=
- =?utf-8?B?YmlVZFZrOU5ESlRpQllXdWZycnVTdlpxcFpGcTFRWnVmVDZJTEVGSWh5bDQ1?=
- =?utf-8?B?aThMS21abXJxWTNPUm1MZDlkOUI3U050RUpFL0NYNFFrUDhPN25CTGZOZlZ0?=
- =?utf-8?B?c01NQ0lVVnIvRFpCaXNIQU9HVUpIeTJ5MUJ0YUJkRUdtekdGMnBKamdJa3lQ?=
- =?utf-8?B?UHhvMHB0MW9SZkU4Y28zNzhrRjBkeWpCcWFEQzhicFRCQVRnUHhBdHFYcS8y?=
- =?utf-8?B?TnBNSWcrSU1PRGJpY3hETytEU0w2QVM4UEI4R01xTGVNb1RiL1dBaHd2Lzd0?=
- =?utf-8?B?L1lXazRKNFd0dWNuSjZNaVJyYzd1VW9URVBiNjArVWlscVppOWxSU3pCUkVu?=
- =?utf-8?B?NWRwWHh0QjFSbFdFY1RTOFFrTHFaMFMzaGZMeWpvLzNpUFQvQXVVV0NWWnRy?=
- =?utf-8?B?L2ZiZDRCWC9UNTZkM29ZalRZdEpPZE53S093V1NMNHhob2h6VEk2eVNMWXRJ?=
- =?utf-8?B?VGh3alA1M0FlaXR0UUN3RmNoalRzZUViTTJRbEtRMUNFbTdZUXE1SWM3Mm54?=
- =?utf-8?B?aEVxaXQralZXb1B0Y3RER3VpajJMQUdFbHhCKzNiRTAvL3p6dWIxWmFZbnd1?=
- =?utf-8?B?dGpaMGs1VjVPejBWNkZSTnZNRE93eE53K2lRZ2M4ZjhNT2U2QmwzOW4venV4?=
- =?utf-8?B?ajVheGNTNG1QdnlFanR4bHVud0x3VUw3a2lXWWhjU2VnZ2JSMW9acDkvN1Z6?=
- =?utf-8?B?N051SGZWcmdvU0Z1UGtKSUFYSVBkOEQ4Q3oxN2hMaHM4S080VlZnTUo4ZXRK?=
- =?utf-8?B?RzVsSGQwU1Q1amV0UUNnUnFjQVFUMlpiU1c4OG1QMmJ6NFBTUzYrUjdXOUQ1?=
- =?utf-8?B?bW1Jb2loYTZ4MS9nM1U4V2tzL3BxZDlnakl4MFlrbEFkdXNDRlVzWWxaV21u?=
- =?utf-8?B?VGtkVHdLTmcyU00xUU1jUitBWmh1bkR2OVFTU2xTOVJ0MnJRdG1NUkp2Q1lR?=
- =?utf-8?B?ZUN2MzN2TFFTd2pXRVhhQ3lwREpMTk1YaUNLTGpIL3Uzd25GdnBBSHhKYlZX?=
- =?utf-8?B?aDN3SGprd3ZkNDZ0Y1BTQnl2UmFWOXE2NlNHbWQ4eGZZVFhJTGZ3eDcrOVhx?=
- =?utf-8?B?NDFpS3J4YXp2VnJaVThKM05RT2dyQWp0Z291VG1sb3IwblNWcVdvbWYvVUpC?=
- =?utf-8?B?UEhsQm1QMTQwdm91YW5GQmFNc2hVR0Z2Umd0ZFduNGgya1p3aE53bWszUmZv?=
- =?utf-8?B?ZERaZS9YVWZ4b0RoL25KM2pMNWsvL2s5bjNzSGtUeFhUM2xIMERQa0ZqbFl2?=
- =?utf-8?B?OUhDckkrcWYzWTBrTHpHTUV3bWZLZ1hnYkhCb0dpeWE1NC9rbG5KUVVyNSsy?=
- =?utf-8?B?aWZSamo3bHR0c0x1R2Z6MTVoanY0TXJKSmZpN1ZybnVSVjBtQnJnMEx2RDF1?=
- =?utf-8?B?VFNRSXV0elhUTUQ3SjgwVWtkZFZyTk1Ea096dWZtcHhMaUx0TVF5bytUd2pO?=
- =?utf-8?B?UnBtQmVsUG9ORTlxSGxQcmc2aEhFaDZtOE4yMjJSaW81elJrKzdJNXUvQXZT?=
- =?utf-8?B?eHdTczFHZFpJWmVwdWg5WERUcE5vR3A2c1hnbEpraUJaaUwzOEVXeUpJWHNl?=
- =?utf-8?B?cG51THdIZGFMNWNVd2tCdDFRKzlSeTRSZ09mdzY2R1hVU05RMndBMDZId2Zi?=
- =?utf-8?B?QjRaUy9zZDJvRXU0bDRCNjlHZWxQVEprMTJaVjI4YVdaQmtuNjQzVTBXaFdW?=
- =?utf-8?B?Y2t2bUJoaHVFakxJckF2b2luQXd3dFFWRFg2eC9vMWNxa1NTaGNMejQyVGFs?=
- =?utf-8?Q?4XrozBslMyaDl1nlJFHvRcHQG?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6b9a6c2-a5f1-4c33-67e5-08dc96ffc747
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR11MB3320.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jun 2024 23:20:48.5094
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ch8VwK1kQWhf7lrOGUR/IPvgncHIcD3MAuNCMxSugjLO90zukllqLJUsXNgBOagbm6qt7ZWne2H2ZFHoGKgurw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR11MB5996
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240626091550.46707-3-vineethr@linux.ibm.com>
 
-On 6/27/2024 3:23 PM, Jacob Pan wrote:
-
-> I don't think this is true. For a simplified example:
-> cpuid_deps has the following feature-depends pairs.
-> [1, 3]
-> [2, 3]
-> now, do_clear_cpu_cap(c, 2)
+On Wed, Jun 26, 2024 at 02:45:49PM +0530, Madadi Vineeth Reddy wrote:
+> To track the scheduling patterns of multiple tasks simultaneously,
+> multiple task names can be specified using a comma separator
+> without any whitespace.
 > 
-> Before the loop below __set_bit(feature, disable), bit 2 is set. 
+> Sample output for --task-name perf,wdavdaemon
+> =============
+>  .  *A0  .   .   .   .   -   .   131040.641346 secs A0 => wdavdaemon:62509
+>  .   A0 *B0  .   .   .   -   .   131040.641378 secs B0 => wdavdaemon:62274
+>  -  *-   -   -   -   -   -   -   131040.641379 secs
+> *C0  .   B0  .   .   .   .   .   131040.641572 secs C0 => wdavdaemon:62283
 > 
-> Since there is no other features depend on 2, the loop below will not clear
-> any other features. no?
+> ...
 > 
+>  -  *-   -   -   -   -   -   -   131041.395649 secs
+>  .   .   .   .   .   .   .  *X2  131041.403969 secs X2 => perf:70211
+>  -   -   -   -   -   -   -  *-   131041.404006 secs
+> 
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>  tools/perf/Documentation/perf-sched.txt |  5 +-
+>  tools/perf/builtin-sched.c              | 77 +++++++++++++++++++++----
+>  2 files changed, 69 insertions(+), 13 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index 3255e5b8e74b..3095e280eb92 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -131,9 +131,10 @@ OPTIONS for 'perf sched map'
+>  	Highlight the given pids.
+>  
+>  --task-name <task>::
+> -	Map output only for the given task name. The sched-out
+> +	Map output only for the given task name(s). Separate the
+> +	task names with a comma (without whitespace). The sched-out
+>  	time is printed and is represented by '*-' for the given
+> -	task name
+> +	task name(s).
+>  	('-' indicates other tasks while '.' is idle).
+>  
+>  OPTIONS for 'perf sched timehist'
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 57f166662d54..ecb43deb9d74 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -1540,24 +1540,72 @@ map__findnew_thread(struct perf_sched *sched, struct machine *machine, pid_t pid
+>  	return thread;
+>  }
+>  
+> -static bool sched_match_task(const char *comm_str, const char *commands)
+> +struct CommandList {
 
-You are right. The table-scan only processes the dependencies of the
-feature that is being disabled but not of any other features that might
-have a missing dependency.
+Please don't use camel case.
 
-Maybe it might be useful to have a common function that scans through
-all the dependencies at boot. It would mainly help detect hardware (or
-VMM) inconsistencies sooner than later.
+> +	char **command_list;
+> +	int command_count;
 
+If you name the list as commands (or cmds) you can remove the prefix and
+use it like commands->list or cmds->count.
+
+Actually I was thinking about strlist API and it'd do most of the work
+you did here.  You may want to add the fuzzy (or substring) matching
+there.
+
+> +};
+> +
+> +static void free_command_list(struct CommandList *cmd_list)
+> +{
+> +	if (cmd_list) {
+> +		for (int i = 0; i < cmd_list->command_count; i++)
+> +			free(cmd_list->command_list[i]);
+> +		free(cmd_list->command_list);
+> +		free(cmd_list);
+> +	}
+
+Then it could be just strlist__delete().
+
+
+> +}
+> +
+> +static struct CommandList *parse_commands(const char *commands)
+>  {
+>  	char *commands_copy = NULL;
+> +	struct CommandList *cmd_list = NULL;
+>  	char *token = NULL;
+> -	bool match_found = false;
+>  
+>  	commands_copy = strdup(commands);
+>  	if (commands_copy == NULL)
+>  		return NULL;
+>  
+> +	cmd_list = malloc(sizeof(struct CommandList));
+> +	if (cmd_list == NULL) {
+> +		free(commands_copy);
+> +		return NULL;
+> +	}
+> +
+> +	cmd_list->command_count = 0;
+> +	cmd_list->command_list = NULL;
+
+You can use zalloc() and remove the zero initialization.
+
+
+> +
+>  	token = strtok(commands_copy, ",");
+> +	while (token != NULL) {
+> +		cmd_list->command_list = realloc(cmd_list->command_list, sizeof(char *)
+> +							*(cmd_list->command_count + 1));
+> +		if (cmd_list->command_list == NULL) {
+> +			free_command_list(cmd_list);
+> +			free(commands_copy);
+> +			return NULL;
+> +		}
+>  
+> -	while (token != NULL && !match_found) {
+> -		match_found = !strcmp(comm_str, token);
+> +		cmd_list->command_list[cmd_list->command_count] = strdup(token);
+> +		if (cmd_list->command_list[cmd_list->command_count] == NULL) {
+> +			free_command_list(cmd_list);
+> +			free(commands_copy);
+> +			return NULL;
+> +		}
+> +
+> +		cmd_list->command_count++;
+>  		token = strtok(NULL, ",");
+>  	}
+>  
+>  	free(commands_copy);
+> +	return cmd_list;
+
+And this could be just `strlist__new(commands, NULL)`.
+
+Thanks,
+Namhyung
+
+
+> +}
+> +
+> +static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list)
+> +{
+> +	bool match_found = false;
+> +
+> +	for (int i = 0; i < cmd_list->command_count && !match_found; i++)
+> +		match_found = !strcmp(comm_str, cmd_list->command_list[i]);
+> +
+>  	return match_found;
+>  }
+>  
+> @@ -1624,6 +1672,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	char stimestamp[32];
+>  	const char *str;
+>  
+> +	struct CommandList *cmd_list = NULL;
+> +
+>  	BUG_ON(this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0);
+>  
+>  	if (this_cpu.cpu > sched->max_cpu.cpu)
+> @@ -1664,7 +1714,11 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+>  	sched->curr_out_thread[this_cpu.cpu] = thread__get(sched_out);
+>  
+> +	if (sched->map.task_name)
+> +		cmd_list = parse_commands(sched->map.task_name);
+> +
+>  	new_shortname = 0;
+> +	str = thread__comm_str(sched_in);
+>  	if (!tr->shortname[0]) {
+>  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
+>  			/*
+> @@ -1673,8 +1727,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  			 */
+>  			tr->shortname[0] = '.';
+>  			tr->shortname[1] = ' ';
+> -		} else if (!sched->map.task_name || sched_match_task(thread__comm_str(sched_in),
+> -								sched->map.task_name)) {
+> +		} else if (!sched->map.task_name || sched_match_task(str, cmd_list)) {
+>  			tr->shortname[0] = sched->next_shortname1;
+>  			tr->shortname[1] = sched->next_shortname2;
+>  
+> @@ -1703,15 +1756,15 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	 * Check which of sched_in and sched_out matches the passed --task-name
+>  	 * arguments and call the corresponding print_sched_map.
+>  	 */
+> -	if (sched->map.task_name && !sched_match_task(str, sched->map.task_name)) {
+> -		if (!sched_match_task(thread__comm_str(sched_out), sched->map.task_name))
+> +	if (sched->map.task_name && !sched_match_task(str, cmd_list)) {
+> +		if (!sched_match_task(thread__comm_str(sched_out), cmd_list))
+>  			goto out;
+>  		else
+>  			goto sched_out;
+>  
+>  	} else {
+>  		str = thread__comm_str(sched_out);
+> -		if (!(sched->map.task_name && !sched_match_task(str, sched->map.task_name)))
+> +		if (!(sched->map.task_name && !sched_match_task(str, cmd_list)))
+>  			proceed = 1;
+>  	}
+>  
+> @@ -1758,8 +1811,10 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	color_fprintf(stdout, color, "\n");
+>  
+>  out:
+> -	if (sched->map.task_name)
+> +	if (sched->map.task_name) {
+> +		free_command_list(cmd_list);
+>  		thread__put(sched_out);
+> +	}
+>  
+>  	thread__put(sched_in);
+>  
+> @@ -3651,7 +3706,7 @@ int cmd_sched(int argc, const char **argv)
+>  	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
+>                      "display given CPUs in map"),
+>  	OPT_STRING(0, "task-name", &sched.map.task_name, "task",
+> -		"map output only for the given task name"),
+> +		"map output only for the given task name(s)."),
+>  	OPT_PARENT(sched_options)
+>  	};
+>  	const struct option timehist_options[] = {
+> -- 
+> 2.43.2
+> 
