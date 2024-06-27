@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9554E199E93;
-	Thu, 27 Jun 2024 23:36:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0751199E93;
+	Thu, 27 Jun 2024 23:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719531384; cv=none; b=gv0GlpTBst4vqOc0pawe/LfOx1eobzmetGabu4VJXY9AqxQkObyANk/hdh6TU1gKh8LtVQgjcgHhIeoFfGylIyFEaUAV/qQPoc6Ig0O5tgdXe7W1ki+Yr/E230f+/3lzG8hbpnhv3G/buMVDjKAqIpXDMkv9ksHnEbQmvP47fOs=
+	t=1719531544; cv=none; b=P7CI3fDvW7HyRUlr8z/Xjd+aHIFZdYWx6DJJUFYmmF1tEM1iJCuQ3WUKyxg1U0UaNk3+9TEyKNoEDN3F9mzSxLgh2xmj6g8MBmncDVWaVyc2bcgUsnAodhXoK4bxEzb2Yx40eS2haAtgkpqmKaMjHugTxA4Gdwra8ElweWl04ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719531384; c=relaxed/simple;
-	bh=YlHR2LPPMByutX599IR6915akRVbXvoukaiuOwUQaYY=;
+	s=arc-20240116; t=1719531544; c=relaxed/simple;
+	bh=FFq0TXZ/6J0HYddLoW7PqgXGwAYdWstngZhZmw/yigc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VW6vnB7saRpCW76KFMb9k9aFuZlM9odmFICT02SY6Kbw6vGeeMLXhCsd9kbAwA9mEv2cIiEIlab3S2jI2nuzb2bioGhhSOwB53ocKKcta4r7SEezoD8BNE12tdb+RXIY66zb1Tn18COwT5SLy7ZCqeqvfxSC9NnuHcuEyF9XfEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rk1T/b3O; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=oTS86h0OgfSDTxdTgd1wJsDLYOxeGrNvbKFOtEPnkRf5TigNb5OWVhQ5AG4h63NcwKuzzNVS3ZD4n+od34PhBDn9WRcqTv5CHcFWAA0jVt4/6wbiLjG/ZRQ/vcKiB0NPa2Jtoa0b6H0Ea3q2apfBm+iCZX5Tlkc7LEmqmpjBo6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PmTvxEH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rk1T/b3O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6B99C2BBFC;
-	Thu, 27 Jun 2024 23:36:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PmTvxEH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 429ACC2BBFC;
+	Thu, 27 Jun 2024 23:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719531384;
-	bh=YlHR2LPPMByutX599IR6915akRVbXvoukaiuOwUQaYY=;
+	s=k20201202; t=1719531543;
+	bh=FFq0TXZ/6J0HYddLoW7PqgXGwAYdWstngZhZmw/yigc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rk1T/b3O35FrCfDoNan/hmqA8EFzFFclfO87fFxyDw8bHgqk3uf+zevzfwbno7/SL
-	 tcH7qSL766kN3IZmLK464Izx3a9uEdA5D0DHiYrT4CTfLk6ULtNLgcWnohg9qIpRnL
-	 fz7gfk3ef9CAX9p7DjEtauQoOPIfi3yziJnYs5oy5Un8jTM4kLoEOCr+kMeGOqjyUd
-	 /ANIEjhqZlVuYqDe46t3EVK5mlXHbXjRf40KjiV6WwrQFj5j1Rl1vbhnSH0+uu2IQp
-	 XFI+kPzD+Pjh9QSUW9BHsRR1WeYZ5VPB4vz0b+dcoZuP/SCefNuTyU7g8L8uxqB84m
-	 AobsiTx6Jgy6Q==
-Date: Thu, 27 Jun 2024 16:36:22 -0700
+	b=PmTvxEH58qOOfxpyn7D/OsZKg1RIHjIFZHZo067UiFsAwu1jPC8jeDaOntCyxJLXz
+	 zHaAEubTiDuGjDDUPQobS/RX8Y+/Qa4N8q9Gd/PVeGL5tTPTU4u+BzdI5hOkZ5dR9a
+	 RVvnBy8gnEeC6Q4DHRZcBLdwIdPRNz9Ia+y8BKjD2hrBGl83Ok7F6oMQa1KqiLY05a
+	 jFWoaOE59GGfML3ZyKVz+lA/zvMBG/jWrdBEC7pHxLA+QmVwswCoicuR0hanGLc6Gc
+	 aPBdLhzMpaDzIMAepWkY0lPnNhvujb0JytMdZRL+Fx8F1mV7TzNnfSIGsy4iXVu8di
+	 lrSKSq6eiduFQ==
+Date: Thu, 27 Jun 2024 16:39:01 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -42,11 +42,11 @@ Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Fernand Sieber <sieberf@amazon.com>,
 	linux-perf-users <linux-perf-users@vger.kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 2/3] perf sched map: Add support for multiple task
- names using CSV
-Message-ID: <Zn33dkUPuDdVD8KV@google.com>
+Subject: Re: [PATCH v5 3/3] perf sched map: Add --fuzzy-name option for fuzzy
+ matching in task names
+Message-ID: <Zn34FZxPLh3llxy9@google.com>
 References: <20240626091550.46707-1-vineethr@linux.ibm.com>
- <20240626091550.46707-3-vineethr@linux.ibm.com>
+ <20240626091550.46707-4-vineethr@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -55,226 +55,121 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240626091550.46707-3-vineethr@linux.ibm.com>
+In-Reply-To: <20240626091550.46707-4-vineethr@linux.ibm.com>
 
-On Wed, Jun 26, 2024 at 02:45:49PM +0530, Madadi Vineeth Reddy wrote:
-> To track the scheduling patterns of multiple tasks simultaneously,
-> multiple task names can be specified using a comma separator
-> without any whitespace.
+On Wed, Jun 26, 2024 at 02:45:50PM +0530, Madadi Vineeth Reddy wrote:
+> The --fuzzy-name option can be used if fuzzy name matching is required.
+> For example, "taskname" can be matched to any string that contains
+> "taskname" as its substring.
 > 
-> Sample output for --task-name perf,wdavdaemon
+> Sample output for --task-name wdav --fuzzy-name
 > =============
 >  .  *A0  .   .   .   .   -   .   131040.641346 secs A0 => wdavdaemon:62509
 >  .   A0 *B0  .   .   .   -   .   131040.641378 secs B0 => wdavdaemon:62274
 >  -  *-   -   -   -   -   -   -   131040.641379 secs
+
+   -  *-   B0  -   -   -   -   -   131040.641379 secs
+
 > *C0  .   B0  .   .   .   .   .   131040.641572 secs C0 => wdavdaemon:62283
-> 
-> ...
-> 
->  -  *-   -   -   -   -   -   -   131041.395649 secs
->  .   .   .   .   .   .   .  *X2  131041.403969 secs X2 => perf:70211
->  -   -   -   -   -   -   -  *-   131041.404006 secs
-> 
-> Suggested-by: Namhyung Kim <namhyung@kernel.org>
-> Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> ---
->  tools/perf/Documentation/perf-sched.txt |  5 +-
->  tools/perf/builtin-sched.c              | 77 +++++++++++++++++++++----
->  2 files changed, 69 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> index 3255e5b8e74b..3095e280eb92 100644
-> --- a/tools/perf/Documentation/perf-sched.txt
-> +++ b/tools/perf/Documentation/perf-sched.txt
-> @@ -131,9 +131,10 @@ OPTIONS for 'perf sched map'
->  	Highlight the given pids.
->  
->  --task-name <task>::
-> -	Map output only for the given task name. The sched-out
-> +	Map output only for the given task name(s). Separate the
-> +	task names with a comma (without whitespace). The sched-out
->  	time is printed and is represented by '*-' for the given
-> -	task name
-> +	task name(s).
->  	('-' indicates other tasks while '.' is idle).
->  
->  OPTIONS for 'perf sched timehist'
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 57f166662d54..ecb43deb9d74 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -1540,24 +1540,72 @@ map__findnew_thread(struct perf_sched *sched, struct machine *machine, pid_t pid
->  	return thread;
->  }
->  
-> -static bool sched_match_task(const char *comm_str, const char *commands)
-> +struct CommandList {
+>  C0  .   B0  .  *D0  .   .   .   131040.641572 secs D0 => wdavdaemon:62277
+>  C0  .   B0  .   D0  .  *E0  .   131040.641578 secs E0 => wdavdaemon:62270
+> *-   -   -   -   -   -   -   -   131040.641581 secs
 
-Please don't use camel case.
-
-> +	char **command_list;
-> +	int command_count;
-
-If you name the list as commands (or cmds) you can remove the prefix and
-use it like commands->list or cmds->count.
-
-Actually I was thinking about strlist API and it'd do most of the work
-you did here.  You may want to add the fuzzy (or substring) matching
-there.
-
-> +};
-> +
-> +static void free_command_list(struct CommandList *cmd_list)
-> +{
-> +	if (cmd_list) {
-> +		for (int i = 0; i < cmd_list->command_count; i++)
-> +			free(cmd_list->command_list[i]);
-> +		free(cmd_list->command_list);
-> +		free(cmd_list);
-> +	}
-
-Then it could be just strlist__delete().
-
-
-> +}
-> +
-> +static struct CommandList *parse_commands(const char *commands)
->  {
->  	char *commands_copy = NULL;
-> +	struct CommandList *cmd_list = NULL;
->  	char *token = NULL;
-> -	bool match_found = false;
->  
->  	commands_copy = strdup(commands);
->  	if (commands_copy == NULL)
->  		return NULL;
->  
-> +	cmd_list = malloc(sizeof(struct CommandList));
-> +	if (cmd_list == NULL) {
-> +		free(commands_copy);
-> +		return NULL;
-> +	}
-> +
-> +	cmd_list->command_count = 0;
-> +	cmd_list->command_list = NULL;
-
-You can use zalloc() and remove the zero initialization.
-
-
-> +
->  	token = strtok(commands_copy, ",");
-> +	while (token != NULL) {
-> +		cmd_list->command_list = realloc(cmd_list->command_list, sizeof(char *)
-> +							*(cmd_list->command_count + 1));
-> +		if (cmd_list->command_list == NULL) {
-> +			free_command_list(cmd_list);
-> +			free(commands_copy);
-> +			return NULL;
-> +		}
->  
-> -	while (token != NULL && !match_found) {
-> -		match_found = !strcmp(comm_str, token);
-> +		cmd_list->command_list[cmd_list->command_count] = strdup(token);
-> +		if (cmd_list->command_list[cmd_list->command_count] == NULL) {
-> +			free_command_list(cmd_list);
-> +			free(commands_copy);
-> +			return NULL;
-> +		}
-> +
-> +		cmd_list->command_count++;
->  		token = strtok(NULL, ",");
->  	}
->  
->  	free(commands_copy);
-> +	return cmd_list;
-
-And this could be just `strlist__new(commands, NULL)`.
+  *-   -   B0  -   D0  -   E0  -   131040.641581 secs
 
 Thanks,
 Namhyung
 
-
-> +}
+> 
+> Suggested-by: Chen Yu <yu.c.chen@intel.com>
+> Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> ---
+>  tools/perf/Documentation/perf-sched.txt |  3 +++
+>  tools/perf/builtin-sched.c              | 22 +++++++++++++++-------
+>  2 files changed, 18 insertions(+), 7 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index 3095e280eb92..938b41a3befa 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -137,6 +137,9 @@ OPTIONS for 'perf sched map'
+>  	task name(s).
+>  	('-' indicates other tasks while '.' is idle).
+>  
+> +--fuzzy-name::
+> +	Given task name(s) can be partially matched (fuzzy matching).
 > +
-> +static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list)
-> +{
-> +	bool match_found = false;
-> +
-> +	for (int i = 0; i < cmd_list->command_count && !match_found; i++)
-> +		match_found = !strcmp(comm_str, cmd_list->command_list[i]);
-> +
->  	return match_found;
+>  OPTIONS for 'perf sched timehist'
+>  ---------------------------------
+>  -k::
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index ecb43deb9d74..c801c38e8b9a 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -157,6 +157,7 @@ struct perf_sched_map {
+>  	struct perf_cpu_map	*color_cpus;
+>  	const char		*color_cpus_str;
+>  	const char		*task_name;
+> +	bool			fuzzy;
+>  	struct perf_cpu_map	*cpus;
+>  	const char		*cpus_str;
+>  };
+> @@ -1599,12 +1600,16 @@ static struct CommandList *parse_commands(const char *commands)
+>  	return cmd_list;
 >  }
 >  
-> @@ -1624,6 +1672,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  	char stimestamp[32];
->  	const char *str;
+> -static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list)
+> +static bool sched_match_task(const char *comm_str, struct CommandList *cmd_list, bool fuzzy_match)
+>  {
+>  	bool match_found = false;
 >  
-> +	struct CommandList *cmd_list = NULL;
-> +
->  	BUG_ON(this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0);
+> -	for (int i = 0; i < cmd_list->command_count && !match_found; i++)
+> -		match_found = !strcmp(comm_str, cmd_list->command_list[i]);
+> +	for (int i = 0; i < cmd_list->command_count && !match_found; i++) {
+> +		if (fuzzy_match)
+> +			match_found = !!strstr(comm_str, cmd_list->command_list[i]);
+> +		else
+> +			match_found = !strcmp(comm_str, cmd_list->command_list[i]);
+> +	}
 >  
->  	if (this_cpu.cpu > sched->max_cpu.cpu)
-> @@ -1664,7 +1714,11 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
->  	sched->curr_out_thread[this_cpu.cpu] = thread__get(sched_out);
->  
-> +	if (sched->map.task_name)
-> +		cmd_list = parse_commands(sched->map.task_name);
-> +
->  	new_shortname = 0;
-> +	str = thread__comm_str(sched_in);
->  	if (!tr->shortname[0]) {
->  		if (!strcmp(thread__comm_str(sched_in), "swapper")) {
->  			/*
-> @@ -1673,8 +1727,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>  	return match_found;
+>  }
+> @@ -1727,7 +1732,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
 >  			 */
 >  			tr->shortname[0] = '.';
 >  			tr->shortname[1] = ' ';
-> -		} else if (!sched->map.task_name || sched_match_task(thread__comm_str(sched_in),
-> -								sched->map.task_name)) {
-> +		} else if (!sched->map.task_name || sched_match_task(str, cmd_list)) {
+> -		} else if (!sched->map.task_name || sched_match_task(str, cmd_list)) {
+> +		} else if (!sched->map.task_name || sched_match_task(str, cmd_list,
+> +								sched->map.fuzzy)) {
 >  			tr->shortname[0] = sched->next_shortname1;
 >  			tr->shortname[1] = sched->next_shortname2;
 >  
-> @@ -1703,15 +1756,15 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+> @@ -1756,15 +1762,15 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
 >  	 * Check which of sched_in and sched_out matches the passed --task-name
 >  	 * arguments and call the corresponding print_sched_map.
 >  	 */
-> -	if (sched->map.task_name && !sched_match_task(str, sched->map.task_name)) {
-> -		if (!sched_match_task(thread__comm_str(sched_out), sched->map.task_name))
-> +	if (sched->map.task_name && !sched_match_task(str, cmd_list)) {
-> +		if (!sched_match_task(thread__comm_str(sched_out), cmd_list))
+> -	if (sched->map.task_name && !sched_match_task(str, cmd_list)) {
+> -		if (!sched_match_task(thread__comm_str(sched_out), cmd_list))
+> +	if (sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)) {
+> +		if (!sched_match_task(thread__comm_str(sched_out), cmd_list, sched->map.fuzzy))
 >  			goto out;
 >  		else
 >  			goto sched_out;
 >  
 >  	} else {
 >  		str = thread__comm_str(sched_out);
-> -		if (!(sched->map.task_name && !sched_match_task(str, sched->map.task_name)))
-> +		if (!(sched->map.task_name && !sched_match_task(str, cmd_list)))
+> -		if (!(sched->map.task_name && !sched_match_task(str, cmd_list)))
+> +		if (!(sched->map.task_name && !sched_match_task(str, cmd_list, sched->map.fuzzy)))
 >  			proceed = 1;
 >  	}
 >  
-> @@ -1758,8 +1811,10 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
->  	color_fprintf(stdout, color, "\n");
->  
->  out:
-> -	if (sched->map.task_name)
-> +	if (sched->map.task_name) {
-> +		free_command_list(cmd_list);
->  		thread__put(sched_out);
-> +	}
->  
->  	thread__put(sched_in);
->  
-> @@ -3651,7 +3706,7 @@ int cmd_sched(int argc, const char **argv)
->  	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
+> @@ -3707,6 +3713,8 @@ int cmd_sched(int argc, const char **argv)
 >                      "display given CPUs in map"),
 >  	OPT_STRING(0, "task-name", &sched.map.task_name, "task",
-> -		"map output only for the given task name"),
-> +		"map output only for the given task name(s)."),
+>  		"map output only for the given task name(s)."),
+> +	OPT_BOOLEAN(0, "fuzzy-name", &sched.map.fuzzy,
+> +		"given command name can be partially matched (fuzzy matching)"),
 >  	OPT_PARENT(sched_options)
 >  	};
 >  	const struct option timehist_options[] = {
