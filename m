@@ -1,243 +1,173 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
+Received: from mail-yw1-f194.google.com (mail-yw1-f194.google.com [209.85.128.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6883819F49C
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 20:48:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C2A4D8B1
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 21:36:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719521317; cv=none; b=JvYS7oPJVy05AGrs5/Yn2WSLTa/n+RqjF7EWbd7cyd2oPcAIcyapYuY+CBOjo6nBhdowvURJbQ1uJw2uvF23QTOKuUYlI0kMxCPlCUo9B37L8QSkM13z+Rnw4WBwL5+BPM/aHMShcrwh77SKlI52YNgffjqxkjFv3DSMbcvDE1I=
+	t=1719524192; cv=none; b=i+jE5T8dAEAqy3lmYV5dRlkYbMY7Zmy89ykahSwQLF03cWC99z8yYrn4UdGP5iodaQQAVGk/tkArrQgsolEgzxzvN7wKAX10jlPBUL5dt3SncOIlemDfa6FIrwdxN4aIMKKEN6GHbIpoqKVGWl+LOICSA86YualTinoegmgj4wM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719521317; c=relaxed/simple;
-	bh=qoFj5uz5uYzgeuzAusO67gMf3OCHa5+yeZMlTId4hvo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hFD++91VglLjFYj+31mVEwX08imc7m/zRXEv1FRRvvsInDWAMczCDBnPYt0i+RENktPYlt2bbm/z+uEjg4goKQPD+hkdO91t1PfvQxEcIaB4Cf4Fu5ih+2grj2thteyJ49sH7M/CsE1ImfXCfxo0+KyICEuXzaI9+2I1wnrNONI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dNBWbx0N; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719524192; c=relaxed/simple;
+	bh=+00x/7DmOxtwRusaJY5Tk/kmn/X4YxK4Gc1yVLLlLZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jJoqJG4ZmfXqZcRsr9NqIrNqMuEqvLCs2QDY79+T2SDUJohXV52lxzuXmQc7gKAIhwg5Bc5Krft6RpIPmEhMzD2YKa7ChrjWEtsne4oBxoMTxzxIDr/yvrP4YYqSRTRhBjynNi5dl+9cRkxDZosMPaAZMK4A8aBtRsFsM/ch8k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=RUn+aJeo; arc=none smtp.client-ip=209.85.128.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dNBWbx0N"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-37624917c2dso11585ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 13:48:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="RUn+aJeo"
+Received: by mail-yw1-f194.google.com with SMTP id 00721157ae682-648b16e5e47so20225137b3.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 14:36:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719521313; x=1720126113; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=blQSr0euuO4eezaJrwlJMFZXhqIsm2poiLoEpcG/FhQ=;
-        b=dNBWbx0NVhuwzoYae3l6yY8f6D/nixYs6DdzsXvL7JcJR6ysQzL5+sbKkvp1zxdmZy
-         pAO/5fngcb0p9GZ4nLTR8S8JjmvS1ULUY/s0EQaNXEzGu4KpnhvTG0hfgsNbOf0iiTS3
-         3qAqyFqxf5phUmc3LrgtSL6soOM6lhhp4FxVs6ZmzISiYt0liW/UP+6OmD9/XKzDjkCd
-         He4OmyHu2ADramz8ciMGIrm31Y1226pgEHzwGRS4vQs4F0EhqgnNPTiZXQDjojmgBd6S
-         XlU8aeqnG18jzOL0pvVyegulpg/BrnT1uGFkJGPTESvj9yhCGjPd6KRPceCgS5X/dIf7
-         n7XQ==
+        d=purestorage.com; s=google2022; t=1719524189; x=1720128989; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ji44MXud8LABg7yyad8M2tfmvrGyhfTENkhmYXgIXRc=;
+        b=RUn+aJeoilZqqZqT2GlDM/9smCYeaTFtuVx6CXrHv4rMxTxvaqsNkikXMAlDSZgYXz
+         Fst0cFLkbCSM/cqDKXCbxBb5+Rr8dBbIMTuHIboWW+z9ZR2Fei7vka1W7IXg1VN30poK
+         WUmyNxxA6YcHB7xek7XAsXNm4pWFefZ5tFsRgx9NC2WunzbH5uJjL/r9v2XHG4GLbER5
+         FhgVDYL41LWKTw1K+KdlMMutRjfn4bAyjvJWrS1pWW3n8Z0EUGyrauoiPP6e806EAEZA
+         v/sAoMPo+tdFZA9Wrtlbud0An0YH6pIgass5LyWJB+peG93JwAAFeVQ6y3qhf9QnK35t
+         8rZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719521313; x=1720126113;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=blQSr0euuO4eezaJrwlJMFZXhqIsm2poiLoEpcG/FhQ=;
-        b=A621JJMCav4Ar1QHyZGEitk1ddxU3d77vSTnqpcZv3dS51CxNiLS6lbwoPAX/PdNhj
-         L6pJEwUp2CeshWU9VbKCQEHFOHdWjXODolBmoqXSqJ2l+J/OowIOs3lZkbxXjOPsNKZr
-         y8SW5S+Kg/bw6ThEiAbCU94SIBSoWMxg0O/94QThBoUPSf+INYFPtJdvxy/uSi1A5i2n
-         iVPel0hnta5o75e+/r+cUiZ06vBFdkWyLXnu4ioUVgZU515FXCMha+Ze5JnuDp0UUl8O
-         TFrhwpsAU62SGfah/LZRTrg9fGsh8ZBVW5+Qgmesf7jfWIR4GWyG0Qsw2etq2apBrB3r
-         NAeA==
-X-Forwarded-Encrypted: i=1; AJvYcCUZKgkYh2xUEd4h7+XF7ltcHoVxqlNXj73LGfX9FF7wva4TvElx3nwZggTs0RvFjHaPhuN7WpKeZtr6qAJ2cTH3i1h3MhfXkMCmBicSESraOw==
-X-Gm-Message-State: AOJu0Yxd9F/RjoDBAbWGzoDEfAW9jZLiZSHGU218y1b3RUhn5T555GEh
-	C9tm+ciH7lPJSp0KU8iBmGGXio11ZmaPTLGTWjt0VP71QziadahgGosVYruYVClL4+t3RXThuNK
-	rYTmwPG0CN8wm2ANp/SyvNmaH+QZWpa0qSyIY
-X-Google-Smtp-Source: AGHT+IE1F1i+e3raVm832rRV/DRDaaBH2wOUTm9EaKzOpa2G8ZW3pLzyybRW6BIwCR8pT2sKUHefxc9eyamcwfg6yes=
-X-Received: by 2002:a05:6e02:2162:b0:375:e16c:2011 with SMTP id
- e9e14a558f8ab-37afc4ce703mr138575ab.5.1719521313326; Thu, 27 Jun 2024
- 13:48:33 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1719524189; x=1720128989;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ji44MXud8LABg7yyad8M2tfmvrGyhfTENkhmYXgIXRc=;
+        b=Iu5UopiBdgbg8Cx1QH4/OPw7JCCos0IkcEbm1maiRzwIFv0aRv6dOdjruL1HN71d0n
+         MSyImk8Rya28GtG8WgOeRuFbF95GpHWTRwx5VJx3giTwJzmfP4uQwAuk9aegc6/LVQ8O
+         BnTPPeegVm5DWMkbEMMHtrqhVLmC1qWAe2z5QlbZ8PTeSoE1E2MbzrYBuqprb4WzlbVT
+         41ld/uKvGrjVHLMYF8yEFh2ukqSPhKo6YaNJX9GZtvp/vk+yrjQA46BNEGVhTRkmwkMf
+         dldE/lg7U80cDq0M0Rz+9cm50TpjL0tgtkVTlwaSF8w0VlQWlwLHZDZMiq3FKH/8wGRd
+         6vBg==
+X-Gm-Message-State: AOJu0YzauL9pgHF4RvCs0OrQ91XsQvCc672kn0Ji01NbaMbvKQ6qnooU
+	zov9AoFHNxQ2HY1liGtpeyISamVi+Hg7K8eWvn60Ai7l/4sIVavORHZPp32HzDZtTdbTEuNkreM
+	/qjBzq5GC9JpjuGELfEf0KWMVOrGQIfd88KhEeDk36RhuyELQH4aTIvW+6ygu5zOlHwqbFso1Gw
+	sHe1//gZWmT7AwrCfIU25qKklqwiA1a7oEwsb0TyLf8UcE+yDIpFJ6t5GhMs+KmRA=
+X-Google-Smtp-Source: AGHT+IHlB3hanocdQQtbdzk/oWYOgyfpsuBvUCbY2YEjV8K7faHcWFcGutcMDfD7PNOLeR7AVc3kBg==
+X-Received: by 2002:a81:ad26:0:b0:645:25d:b741 with SMTP id 00721157ae682-645026cf997mr126348947b3.11.1719524188824;
+        Thu, 27 Jun 2024 14:36:28 -0700 (PDT)
+Received: from dev-cachen.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id 00721157ae682-64a99c717c0sm1009467b3.2.2024.06.27.14.36.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Jun 2024 14:36:28 -0700 (PDT)
+From: Casey Chen <cachen@purestorage.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yzhong@purestorage.com,
+	Casey Chen <cachen@purestorage.com>
+Subject: [PATCH 0/1] perf report: fix missing references to maps and map in thread__find_map
+Date: Thu, 27 Jun 2024 15:36:17 -0600
+Message-ID: <20240627213619.718-1-cachen@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627200353.1230407-1-namhyung@kernel.org>
-In-Reply-To: <20240627200353.1230407-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Jun 2024 13:48:22 -0700
-Message-ID: <CAP-5=fWSpM7NL7UjXZBN8WHNAE7hGe1ghQ6_DqFe2VjTCGoA7A@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf stat: Use field separator in the metric header
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 1:03=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> It didn't use the passed field separator (using -x option) when it
-> prints the metric headers and always put "," between the fields.
->
-> Before:
->   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only t=
-rue
->   core,cpus,%  tma_core_bound:     <<<--- here: "core,cpus," but ":" expe=
-cted
->   S0-D0-C0:2:10.5:
->   S0-D0-C1:2:14.8:
->   S0-D0-C2:2:9.9:
->   S0-D0-C3:2:13.2:
->
-> After:
->   $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only t=
-rue
->   core:cpus:%  tma_core_bound:
->   S0-D0-C0:2:10.5:
->   S0-D0-C1:2:15.0:
->   S0-D0-C2:2:16.5:
->   S0-D0-C3:2:12.5:
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++--------
->  1 file changed, 29 insertions(+), 8 deletions(-)
->
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-displa=
-y.c
-> index 91d2f7f65df7..e8673c9f6b49 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -47,16 +47,27 @@ static int aggr_header_lens[] =3D {
->  };
->
->  static const char *aggr_header_csv[] =3D {
-> -       [AGGR_CORE]     =3D       "core,cpus,",
-> -       [AGGR_CACHE]    =3D       "cache,cpus,",
-> -       [AGGR_DIE]      =3D       "die,cpus,",
-> -       [AGGR_SOCKET]   =3D       "socket,cpus,",
-> -       [AGGR_NONE]     =3D       "cpu,",
-> -       [AGGR_THREAD]   =3D       "comm-pid,",
-> -       [AGGR_NODE]     =3D       "node,",
-> +       [AGGR_CORE]     =3D       "core%scpus%s",
-> +       [AGGR_CACHE]    =3D       "cache%scpus%s",
-> +       [AGGR_DIE]      =3D       "die%scpus%s",
-> +       [AGGR_SOCKET]   =3D       "socket%scpus%s",
-> +       [AGGR_NONE]     =3D       "cpu%s",
-> +       [AGGR_THREAD]   =3D       "comm-pid%s",
-> +       [AGGR_NODE]     =3D       "node%s",
->         [AGGR_GLOBAL]   =3D       ""
->  };
->
-> +static int aggr_header_num[] =3D {
-> +       [AGGR_CORE]     =3D       2,
-> +       [AGGR_CACHE]    =3D       2,
-> +       [AGGR_DIE]      =3D       2,
-> +       [AGGR_SOCKET]   =3D       2,
-> +       [AGGR_NONE]     =3D       1,
-> +       [AGGR_THREAD]   =3D       1,
-> +       [AGGR_NODE]     =3D       1,
-> +       [AGGR_GLOBAL]   =3D       0,
-> +};
-> +
->  static const char *aggr_header_std[] =3D {
->         [AGGR_CORE]     =3D       "core",
->         [AGGR_CACHE]    =3D       "cache",
-> @@ -1185,8 +1196,18 @@ static void print_metric_headers_csv(struct perf_s=
-tat_config *config,
->  {
->         if (config->interval)
->                 fputs("time,", config->output);
-> -       if (!config->iostat_run)
-> +       if (config->iostat_run)
-> +               return;
-> +
+We found a segfault when run perf report on raw perf_data from perf record.
+Basically with 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
+thread__find_map() would return with al->maps being NULL when cpumode is 3
+(macro PERF_RECORD_MISC_HYPERVISOR). Later dereferencing maps->machine would crash.
 
-Having a static count of commas seems somewhat error prone, perhaps:
-```
-const char *header =3D aggr_header_csv[config->aggr_mode];
-if (config->csv_sep =3D=3D ',' || !strchr(header, ',')) {
-  fputs(config->output, header);
-} else {
-  char *tmp =3D strdup(header);
-  char *p =3D tmp;
-   while (p && *p) {
-      if (p =3D=3D ',')
-        *p =3D config->csv_sep;
-     p++;
-   }
-  fputs(config->output, tmp);
-  free(tmp);
-}
-```
-I'm somewhat surprised that we have no metric tests in the stat output
-tests like tools/perf/tests/shell/stat+csv_output.sh. Perhaps we can
-add the following:
-```
-diff --git a/tools/perf/tests/shell/lib/stat_output.sh
-b/tools/perf/tests/shell/lib/stat_output.sh
-index 9a176ceae4a3..a920b2d78abb 100644
---- a/tools/perf/tests/shell/lib/stat_output.sh
-+++ b/tools/perf/tests/shell/lib/stat_output.sh
-@@ -148,6 +148,14 @@ check_per_socket()
-       echo "[Success]"
-}
+The fix is to add back references to struct maps/map in thread__find_map(),
+please see 0001-perf-probe-fix-missing-references-to-maps-and-map-in.patch,
+which is made and tested on afcd48134c58 ("Merge tag
+'mm-hotfixes-stable-2024-06-26-17-28' of
+git://git.kernel.org/pub/scm/linux/kernel/git/akpm/mm")
 
-+check_metric_only()
-+{
-+        echo -n "Checking $1 output: metric only "
-+        perf stat --metric-only $2 -e instructions,cycles true
-+        commachecker --metric-only
-+        echo "[Success]"
-+}
-+
-# The perf stat options for per-socket, per-core, per-die
-# and -A ( no_aggr mode ) uses the info fetched from this
-# directory: "/sys/devices/system/cpu/cpu*/topology". For
-diff --git a/tools/perf/tests/shell/stat+csv_output.sh
-b/tools/perf/tests/shell/stat+csv_output.sh
-index fc2d8cc6e5e0..d6807dbab931 100755
---- a/tools/perf/tests/shell/stat+csv_output.sh
-+++ b/tools/perf/tests/shell/stat+csv_output.sh
-@@ -44,6 +44,7 @@ function commachecker()
-       ;; "--per-die")         exp=3D8
-       ;; "--per-cluster")     exp=3D8
-       ;; "--per-cache")       exp=3D8
-+        ;; "--metric-only")     exp=3D2
-       esac
+Debug diffs made on 0dd5041c9a0e is attached as
+0002-debug-patch-for-perf-report-segfault.patch
 
-       while read line
-@@ -83,6 +84,7 @@ then
-       check_per_cluster "CSV" "$perf_cmd"
-       check_per_die "CSV" "$perf_cmd"
-       check_per_socket "CSV" "$perf_cmd"
-+        check_metric_only "CSV" "$perf_cmd"
-else
-       echo "[Skip] Skipping tests for system_wide_no_aggr, per_core,
-per_die and per_socket since
-socket id exposed via topology is invalid"
-fi
-```
-It is using the hard coded metrics and it looks like the header
-printing for that is broken, but this is so often the case for stat
-output :-(
+Steps to reproduce and what are observed:
+1. Run 'gdb ./perf'
+2. Initial gdb output. cpumode is 3 and address of node->ms is 0x55555684aee8.
 
-Thanks,
-Ian
+(gdb) run report --stdio -v -i ~/perf_data
+...
+add_callchain_ip: i'm here! al.map (nil) al.sym (nil) ip >= PERF_CONTEXT_MAX: 0 cpumode 3 ip 0x8348fb8948535441
+callchain_cursor_append addr of node->ms 0x55555684aee8 ms 0x7fffffff9e70 has no maps map (nil) symbol (nil)
+Failed to open /tmp/perf-31239.map, continuing without symbols
+callchain_cursor_commit: cursor 0x7ffff7a17b98 curr 0x55555684aee0 ms 0x55555684aee8
+callchain_cursor_commit: cursor 0x7ffff7a17b98 curr 0x55555684aee0 ms 0x55555684aee8
+callchain_cursor_commit: cursor 0x7ffff7a17b98 curr 0x55555684aee0 ms 0x55555684aee8
 
-> +       if (aggr_header_num[config->aggr_mode] =3D=3D 1) {
-> +               fprintf(config->output, aggr_header_csv[config->aggr_mode=
-],
-> +                       config->csv_sep);
-> +       } else if (aggr_header_num[config->aggr_mode] =3D=3D 2) {
-> +               fprintf(config->output, aggr_header_csv[config->aggr_mode=
-],
-> +                       config->csv_sep, config->csv_sep);
-> +       } else {
->                 fputs(aggr_header_csv[config->aggr_mode], config->output)=
-;
-> +       }
->  }
->
->  static void print_metric_headers_json(struct perf_stat_config *config __=
-maybe_unused,
-> --
-> 2.45.2.803.g4e1b14247a-goog
->
+Program received signal SIGSEGV, Segmentation fault.
+fill_callchain_info (al=0x7fffffffa120, node=0x55555684aee0, hide_unresolved=false) at util/callchain.c:1119
+1119            struct machine *machine = maps__machine(node->ms.maps);
+
+3. Backtrace from gdb
+(gdb) bt
+#0  fill_callchain_info (al=0x7fffffffa120, node=0x55555684aee0, hide_unresolved=false) at util/callchain.c:1119
+#1  0x00005555556bdbc6 in hist_entry_iter__add (iter=iter@entry=0x7fffffffa160, al=al@entry=0x7fffffffa120, max_stack_depth=<optimized out>, arg=arg@entry=0x7fffffffb570) at util/hist.c:1245
+#2  0x00005555555cd098 in process_sample_event (tool=0x7fffffffb570, event=0x7fffeb58be78, sample=0x7fffffffa210, evsel=<optimized out>, machine=0x55555585b8e0) at builtin-report.c:332
+#3  0x00005555556958e3 in perf_session__deliver_event (session=0x55555585b730, event=0x7fffeb58be78, tool=0x7fffffffb570, file_offset=12656248, file_path=0x55555585ade0 "/root/perf_data/1/ct1/perf_data") at util/session.c:1645
+#4  0x000055555569a5c1 in do_flush (show_progress=false, oe=0x555555862268) at util/ordered-events.c:245
+#5  __ordered_events__flush (oe=0x555555862268, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:324
+#6  0x0000555555695cf5 in perf_session__process_user_event (session=0x55555585b730, event=0x7fffec19f7f8, file_offset=25319416, file_path=<optimized out>) at util/session.c:1698
+#7  0x00005555556962a8 in reader__read_event (rd=rd@entry=0x7fffffffaef0, session=session@entry=0x55555585b730, prog=prog@entry=0x7fffffffaec0) at util/session.c:2371
+#8  0x0000555555697e41 in reader__process_events (prog=0x7fffffffaec0, session=0x55555585b730, rd=0x7fffffffaef0) at util/session.c:2420
+#9  __perf_session__process_events (session=0x55555585b730) at util/session.c:2467
+#10 perf_session__process_events (session=session@entry=0x55555585b730) at util/session.c:2633
+#11 0x00005555555cffcd in __cmd_report (rep=0x7fffffffb570) at builtin-report.c:991
+#12 cmd_report (argc=<optimized out>, argv=<optimized out>) at builtin-report.c:1711
+#13 0x0000555555631250 in run_builtin (p=p@entry=0x555555840d40 <commands+288>, argc=argc@entry=5, argv=argv@entry=0x7fffffffddd0) at perf.c:323
+#14 0x00005555555b6179 in handle_internal_command (argv=0x7fffffffddd0, argc=5) at perf.c:377
+#15 run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at perf.c:421
+#16 main (argc=5, argv=0x7fffffffddd0) at perf.c:537
+
+4. The line of code at fault. We can see that deferencing maps->machine caused segfault.
+(gdb) disas
+Dump of assembler code for function fill_callchain_info:
+   0x0000555555684100 <+0>:     endbr64
+   0x0000555555684104 <+4>:     push   %rbp
+   0x0000555555684105 <+5>:     mov    %rsp,%rbp
+   0x0000555555684108 <+8>:     push   %r14
+   0x000055555568410a <+10>:    push   %r13
+   0x000055555568410c <+12>:    mov    %rsi,%r13
+   0x000055555568410f <+15>:    push   %r12
+   0x0000555555684111 <+17>:    mov    %rdi,%r12
+   0x0000555555684114 <+20>:    push   %rbx
+   0x0000555555684115 <+21>:    mov    %edx,%ebx
+   0x0000555555684117 <+23>:    sub    $0x10,%rsp
+   0x000055555568411b <+27>:    mov    %fs:0x28,%rax
+   0x0000555555684124 <+36>:    mov    %rax,-0x28(%rbp)
+   0x0000555555684128 <+40>:    mov    0x8(%rsi),%rax
+=> 0x000055555568412c <+44>:    mov    0x40(%rax),%r14
+
+...
+(gdb) list *0x000055555568412c
+0x55555568412c is in fill_callchain_info (util/maps.h:81).
+76              return &RC_CHK_ACCESS(maps)->entries;
+77      }
+78
+79      static inline struct machine *maps__machine(struct maps *maps)
+80      {
+81              return RC_CHK_ACCESS(maps)->machine;
+82      }
+83
+84      static inline struct rw_semaphore *maps__lock(struct maps *maps)
+85      {
+
+(gdb) p/x &(((struct maps *)0)->machine)
+$1 = 0x40
+
+5. Data structure in trouble. struct maps from node->ms are empty. The address of node->ms is 0x55555684aee8.
+(gdb) p/x *node
+$2 = {ip = 0x8348fb8948535441, ms = {maps = 0x0, map = 0x0, sym = 0x0}, srcline = 0x0, valid = 0x0, branch = 0x0, branch_flags = {{value = 0x0, {mispred = 0x0, predicted = 0x0, in_tx = 0x0, abort = 0x0, cycles = 0x0, type = 0x0, spec = 0x0, new_type = 0x0, priv = 0x0,
+        reserved = 0x0}}}, branch_from = 0x0, nr_loop_iter = 0x0, iter_cycles = 0x0, next = 0x555556813730}
+(gdb) p/x &(node->ms)
+$3 = 0x55555684aee8
+
+Casey Chen (1):
+  perf probe: fix missing references to maps and map in thread__find_map
+
+ tools/perf/util/event.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+-- 
+2.45.2
+
