@@ -1,134 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDE241BF38;
-	Thu, 27 Jun 2024 18:19:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B254513A276;
+	Thu, 27 Jun 2024 18:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719512358; cv=none; b=ayeCNiEllfZT8CqcQk5QGoAW1Y8Quqsl8bxO+GGke2zy1w8/VqDlvLyRr3UGY4ZhGop5Bd6nniZAx+8xiXtMZoAEiOLdqtcfazuwChcidLeTcF5fWGDo3Dj0/frvUVhrLAykelOyuu4J08DXpsPPSsCDcU9fPLKhlW/iW4L5qbE=
+	t=1719512434; cv=none; b=VKLoqW8EEA9wVpy0WauZYcdDCICAbV0Iij1F3y6ulnTRUOhGaFTHuc1kzh5fdKrmNH9qVhmi9OAPNMtNEo9lJr5/OX/6AptG7BLwo6gMMt2PDhz9p7kz5GDXQOgvOwDVhMu98nAvlsUDLDWXSqxKwFlV2xZh1uCRnnbj6+WSNrM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719512358; c=relaxed/simple;
-	bh=gr6oWfFtPj7v+3PQUG98mSXnWnFpCuUOqhVB7V63gZM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nDFYAM1NGquLSlqzvBBZAd8WSDGhKJ/yg2rFM9fdX19i34HltYcWToIT2OjdTnFtbLpXIt5pffZVS/0TTS/opGrH8l02x3m1nf8XukmkIXCVEH1fOMo3KkQRJ+fROgizNj2SqckEvluEWU2TLBIsRihljKQZ8VIOzHArPRRrXQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hpLILaJb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719512434; c=relaxed/simple;
+	bh=ImO7nqNkX62aoEXY5o0kjRa1kqA0yhh4nelvbAn/Hs4=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=YWXP0z6IEUTZAmgnbZH2c1w0VfQ70LdeGLJqe5mRI5DrLjHumS+kSXSiYK8Gfws+bNcW7moPo6kHdl8RygJBeADykv4YTZJ+dHT58HcUMZ87AMmhfxvIdnXU80y9bNrRyjotTmOHTBNkPfcyzkYw2PRr8ELXLeawBYkJ/kQTN+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vPJ7OtE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hpLILaJb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 476DEC2BBFC;
-	Thu, 27 Jun 2024 18:19:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vPJ7OtE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A9EC2BBFC;
+	Thu, 27 Jun 2024 18:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719512357;
-	bh=gr6oWfFtPj7v+3PQUG98mSXnWnFpCuUOqhVB7V63gZM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hpLILaJbJWrO+OYKP1h8ISPFZla8fe6/QyKYA0orOJW8pjUDXalNav1lYxQXlWYAI
-	 lJ2bxQxb2EDzcbiYhDTcsAJEi86RyTgXRJYnG8v89nEVVHVAsBIiU6aszVsVex7KiX
-	 wZu5A0kbGg20n5WQ3rKXeKmR6dA3NnxQCRGWs8gVLRm7gK5xp89tIMqtgypmw11IQU
-	 wy0lM7y0/ziqzBhXfztZZP0yn1nyDRgTLgbg9MOJUWCw7jiB73cjTAt8/z22WICDIS
-	 EM+2gpxlA6p5Nfh6Fg0I50y9j78yvoUW2et5wyeMefPTopWc3+OMxupnX0A6OWe4UD
-	 4FqLPzDCGSbrQ==
+	s=k20201202; t=1719512434;
+	bh=ImO7nqNkX62aoEXY5o0kjRa1kqA0yhh4nelvbAn/Hs4=;
+	h=From:To:Subject:Date:In-Reply-To:References:From;
+	b=vPJ7OtE2Z3UJXOVMel7bQY73mLBmaQhgz9yaAwxZxOHzdDjdL0XHsmyMWBNuQIfPV
+	 BYDB+IkzOwZEdXGfN080JLfgq0ETlpQ07bLUaPVWtwRkyF8SZ2AfaQPCU4qr8SC8j5
+	 b8mb8pI2acm53Fw4xJQY2GSKquq/MLDyjXt46HauFMsgS9++9e1h58MRC/CN0A4egp
+	 IyYOs8fKvHk+rYjG3dF076PMrZ84PCh5QP13Lsoxv7+fiH9E2jdjXQNFlNtjFLcw8d
+	 0EjW7AsRajVrSWVlhDQNeZkEMCCziEZ70QxTh3KjLD5RW0Ii1ND7/cRnMhp4q7w7vP
+	 t+WeyL0v07FLg==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf report: Display pregress bar on redirected pipe data
-Date: Thu, 27 Jun 2024 11:19:16 -0700
-Message-ID: <20240627181916.1202110-1-namhyung@kernel.org>
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Guo Ren <guoren@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Wedson Almeida Filho <wedsonaf@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@samsung.com>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Nick Terrell <terrelln@fb.com>,
+	Andrei Vagin <avagin@google.com>,
+	Kees Cook <keescook@chromium.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Ze Gao <zegao2021@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v5 0/8] Refactor perf python module build
+Date: Thu, 27 Jun 2024 11:20:29 -0700
+Message-ID: <171951241289.5789.4704334640425838387.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240625214117.953777-1-irogers@google.com>
+References: <20240625214117.953777-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-It's possible to save pipe output of perf record into a file.
+On Tue, 25 Jun 2024 14:41:09 -0700, Ian Rogers wrote:
 
-  $ perf record -o- ... > pipe.data
+> Refactor the perf python module build to instead of building C files
+> it links libraries. To support this make static libraries for tests,
+> ui, util and pmu-events. Doing this allows fewer functions to be
+> stubbed out, importantly parse_events is no longer stubbed out which
+> will improve the ability to work with heterogeneous cores.
+> 
+> By not building .c files for the python module and for the build of
+> perf, this should also help build times.
+> 
+> [...]
 
-And you can use the data same as the normal perf data.
+Applied to perf-tools-next, thanks!
 
-  $ perf report -i pipe.data
-
-In that case, perf tools will treat the input as a pipe, but it can get
-the total size of the input.  This means it can show the progress bar
-unlike the normal pipe input (which doesn't know the total size in
-advance).
-
-While at it, fix the string in __perf_session__process_dir_events().
-
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/session.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 0ec92d47373c..5596bed1b8c8 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -2050,6 +2050,7 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
- 	struct perf_tool *tool = session->tool;
-+	struct ui_progress prog;
- 	union perf_event *event;
- 	uint32_t size, cur_size = 0;
- 	void *buf = NULL;
-@@ -2057,9 +2058,21 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	u64 head;
- 	ssize_t err;
- 	void *p;
-+	bool update_prog = false;
- 
- 	perf_tool__fill_defaults(tool);
- 
-+	/*
-+	 * If it's from a file saving pipe data (by redirection), it would have
-+	 * a file name other than "-".  Then we can get the total size and show
-+	 * the progress.
-+	 */
-+	if (strcmp(session->data->path, "-") && session->data->file.size) {
-+		ui_progress__init_size(&prog, session->data->file.size,
-+				       "Processing events...");
-+		update_prog = true;
-+	}
-+
- 	head = 0;
- 	cur_size = sizeof(union perf_event);
- 
-@@ -2131,6 +2144,9 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	if (err)
- 		goto out_err;
- 
-+	if (update_prog)
-+		ui_progress__update(&prog, size);
-+
- 	if (!session_done())
- 		goto more;
- done:
-@@ -2144,6 +2160,8 @@ static int __perf_session__process_pipe_events(struct perf_session *session)
- 	err = perf_session__flush_thread_stacks(session);
- out_err:
- 	free(buf);
-+	if (update_prog)
-+		ui_progress__finish();
- 	if (!tool->no_warn)
- 		perf_session__warn_about_errors(session);
- 	ordered_events__free(&session->ordered_events);
-@@ -2523,7 +2541,7 @@ static int __perf_session__process_dir_events(struct perf_session *session)
- 
- 	perf_tool__fill_defaults(tool);
- 
--	ui_progress__init_size(&prog, total_size, "Sorting events...");
-+	ui_progress__init_size(&prog, total_size, "Processing events...");
- 
- 	nr_readers = 1;
- 	for (i = 0; i < data->dir.nr; i++) {
--- 
-2.45.2.803.g4e1b14247a-goog
-
+Best regards,
+Namhyung
