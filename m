@@ -1,175 +1,135 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F296F4D8AC
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 19:41:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E233319D098;
+	Thu, 27 Jun 2024 20:03:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719517277; cv=none; b=TxVCnvoUXzncEJUeo+XQOt0IVoISjZ0yvzN2v4VmgXCoHSBJgKmHtd1mlf5kjYMCrn7BJaypi7XEbwqkcJbAZl3oPGNI9AoandIooqm5IyNnoQcaxZKwfBMSmfa1vEe4daHJpmOSLg6s0/LZ7Lr+oEyW1Zsh0KfHprQ//5vhkGI=
+	t=1719518635; cv=none; b=SGqv1KIpShi83Ns7mj+yooWxeIDrJkI3MZizO/BrvTtLFSXJphpWkbttH+905kdvuncTGJdz2BNZ/TbCN1hoaCyUCEjqPaRsn/cP+rjubVeYMRZ2sAZzohcigiclOCw4HQCx5QMHhdPNuLGBvrhExZbX9ht+PB40pD8XlrWuM7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719517277; c=relaxed/simple;
-	bh=0kAkK0o6XZJCAD+3AEnbv9lXRzFAHdfwRGLiKLG75cU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EkGKoLkkRcbnA+YduoV9i64urcMA0wX4mMbJ+RAyN6/j70/FrgpSWf/wK44ShStnJQk1SfpnvxLjRannjfccBC3bSIQxELDgbA8OjP88f9b1SjI6h87RRnKvQjzZukvkQGRDTtIceRJLu0DpSKMvkVKD/DpiEimi1CEfE0RZi4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sCf/c9co; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1719518635; c=relaxed/simple;
+	bh=5fhM/yWehiXwJfbP82u1cStk7xDHumCVqpfOvwP3aPY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O7Vp4PaEKrFVtMZ/W0DCgnkBrlz+Vody56QldhuHjd1BaYVXS9Ig0CMYLnGzgB9Stifj+upGTqML8u/RtoWuxnNa6MUAYN5GcpsupwLTjflvGErWgTBg9nMWFl9dpDtNkwmjrp5J6phDBuU4yp2ut7e7um1ICDc62qynNJrCmM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIkz3zRU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sCf/c9co"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fa901ad6f3so1785ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 12:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1719517274; x=1720122074; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5GJBz5qRWyHEg+kYWarwppQLKBcrVyqnbOuru3tw6vk=;
-        b=sCf/c9co2u9ZPvSCvycgOgngiwUnUYV7pg9YqOLjpIouPpVsR+LLq3n91EJwsVgdI6
-         glDwu/vw8Lmg8IxnC6adyzD6QiW+Ns0VRaF0ACb2L+s9TgKsp22IaOPbmljVDdLZJRAu
-         AlQncndBVf+jtEpQIUXJNaGUN6GjNMJTaTtWNAiZAD+UzphTEf2mUihPXEJpNPoi/mXl
-         TEO1HOIeKNwHaI4bmur/zVjcd0GDnjx7yYp7ENjwejZENYshgczcfakKw8tRNLwfHzbI
-         uEQp6hWQzfaNbO3CGIBQzICaKV/6hQRa11JsDAZGWQEfui2BbMSYCw02RRF8qCRRB1iQ
-         eWGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719517274; x=1720122074;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5GJBz5qRWyHEg+kYWarwppQLKBcrVyqnbOuru3tw6vk=;
-        b=Mi7QoFK7SbjtxIe6/c8nWc9nzyfCdu6ZLVJh7OSY5i+zDMks//xePGOztECnxo4lxN
-         JeahlyEqJ0MtGLJ/a1vORDL3yE/vysaWAFuKMY7FmFJnTP3cHScYIdUWZ6gdJgNsOOag
-         OSfY0d7f9RzEIiCVYM0S2yCa2w5eg1p6z5O4WLcPk22kPHqUsiZjRfMxXDcZnwYhe7AS
-         xqwKYCkbASsxYKvlc1+UFQKW0ovh/C5BM9ywPt+ZWVwThSEf7QO+mLcpoeuKUc9YrDU2
-         ozyWWT+Bjz2Ot0khudtmooL1ypsbLnf6KcaFx8KUDYXSmYfBXBg5Pfhyul0Lv4QhXxsv
-         WLiw==
-X-Forwarded-Encrypted: i=1; AJvYcCU7cmin2J/Vw2QPY26R3D4YHHpM+fZEaKOSt0gojnwjkEjMKsR7AFOwwR7pe855SiwEKcLKB9ueQUZEGloDYF79QyhxItXT6si8eRiEtNhqRg==
-X-Gm-Message-State: AOJu0YzHGJIW0YuX8gT3KSNr+1+7rstMbaqdKYFmyDAGztJ7b0v92zsZ
-	STL1DBLNMqZBiQ8jJNZL100tbh70bXRszlafVkiRuKvVqzNdShipsKk8fvRderEk2i7mzG1gYzr
-	1RzeokcP1o7New/fKvkqNA+sE6WARrUYu1JaX
-X-Google-Smtp-Source: AGHT+IG4+Z3xJiV9ViaWtv31UpnV1skRcMhxR7k7G8ZnUoTpuU39PguHRFK808rdh7qCDZMQ9EjNKCp+2N6os6m57CQ=
-X-Received: by 2002:a17:902:bd48:b0:1fa:9b24:c1d0 with SMTP id
- d9443c01a7336-1fac142b62cmr596565ad.8.1719517274063; Thu, 27 Jun 2024
- 12:41:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIkz3zRU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C331C4AF07;
+	Thu, 27 Jun 2024 20:03:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719518634;
+	bh=5fhM/yWehiXwJfbP82u1cStk7xDHumCVqpfOvwP3aPY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XIkz3zRUFOvLndmiZH7wyShAc8OMS+kNQO2KqTczjT/ICUOPcN4BLLJF9GgnzwqAS
+	 qlYua9VFVQzSzxeepPtkL4H6tkY4tPs5Jz+wWsrpv9/FdY+cmezyXzjZRX2F0DMulD
+	 +KXKsB4XSYYcrzOBhsHxL/W19UBDphBlgRFatn1zIkqnak1B+6qbPevGRqB11ebizk
+	 DZRFMIz/r/lJkXwk0/ETHBqkYwT5RSAtGqxEfz3S3xwbsGuT+EYx+NTWmrLW6ARGDd
+	 faRJ4oA/felcv2sLRp9/WHEr/zbA0YBUmf8K4LrEweMKv37CZLUr3Mmj1eSpCv+bfG
+	 Ie14wYxKBaxMA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 1/2] perf stat: Use field separator in the metric header
+Date: Thu, 27 Jun 2024 13:03:52 -0700
+Message-ID: <20240627200353.1230407-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627181916.1202110-1-namhyung@kernel.org>
-In-Reply-To: <20240627181916.1202110-1-namhyung@kernel.org>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 27 Jun 2024 12:41:02 -0700
-Message-ID: <CAP-5=fU82iBJbBOE6=hehP3JHBURfCwJi4r1Zf_StHJf4SzR_A@mail.gmail.com>
-Subject: Re: [PATCH] perf report: Display pregress bar on redirected pipe data
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jun 27, 2024 at 11:19=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
- wrote:
->
-> It's possible to save pipe output of perf record into a file.
->
->   $ perf record -o- ... > pipe.data
->
-> And you can use the data same as the normal perf data.
->
->   $ perf report -i pipe.data
->
-> In that case, perf tools will treat the input as a pipe, but it can get
-> the total size of the input.  This means it can show the progress bar
-> unlike the normal pipe input (which doesn't know the total size in
-> advance).
->
-> While at it, fix the string in __perf_session__process_dir_events().
->
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+It didn't use the passed field separator (using -x option) when it
+prints the metric headers and always put "," between the fields.
 
-Reviewed-by: Ian Rogers <irogers@google.com>
+Before:
+  $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
+  core,cpus,%  tma_core_bound:     <<<--- here: "core,cpus," but ":" expected
+  S0-D0-C0:2:10.5:
+  S0-D0-C1:2:14.8:
+  S0-D0-C2:2:9.9:
+  S0-D0-C3:2:13.2:
 
-Thanks,
-Ian
+After:
+  $ sudo ./perf stat -a -x : --per-core -M tma_core_bound --metric-only true
+  core:cpus:%  tma_core_bound:
+  S0-D0-C0:2:10.5:
+  S0-D0-C1:2:15.0:
+  S0-D0-C2:2:16.5:
+  S0-D0-C3:2:12.5:
 
-> ---
->  tools/perf/util/session.c | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 0ec92d47373c..5596bed1b8c8 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -2050,6 +2050,7 @@ static int __perf_session__process_pipe_events(stru=
-ct perf_session *session)
->  {
->         struct ordered_events *oe =3D &session->ordered_events;
->         struct perf_tool *tool =3D session->tool;
-> +       struct ui_progress prog;
->         union perf_event *event;
->         uint32_t size, cur_size =3D 0;
->         void *buf =3D NULL;
-> @@ -2057,9 +2058,21 @@ static int __perf_session__process_pipe_events(str=
-uct perf_session *session)
->         u64 head;
->         ssize_t err;
->         void *p;
-> +       bool update_prog =3D false;
->
->         perf_tool__fill_defaults(tool);
->
-> +       /*
-> +        * If it's from a file saving pipe data (by redirection), it woul=
-d have
-> +        * a file name other than "-".  Then we can get the total size an=
-d show
-> +        * the progress.
-> +        */
-> +       if (strcmp(session->data->path, "-") && session->data->file.size)=
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/stat-display.c | 37 ++++++++++++++++++++++++++--------
+ 1 file changed, 29 insertions(+), 8 deletions(-)
+
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 91d2f7f65df7..e8673c9f6b49 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -47,16 +47,27 @@ static int aggr_header_lens[] = {
+ };
+ 
+ static const char *aggr_header_csv[] = {
+-	[AGGR_CORE] 	= 	"core,cpus,",
+-	[AGGR_CACHE]	= 	"cache,cpus,",
+-	[AGGR_DIE] 	= 	"die,cpus,",
+-	[AGGR_SOCKET] 	= 	"socket,cpus,",
+-	[AGGR_NONE] 	= 	"cpu,",
+-	[AGGR_THREAD] 	= 	"comm-pid,",
+-	[AGGR_NODE] 	= 	"node,",
++	[AGGR_CORE] 	= 	"core%scpus%s",
++	[AGGR_CACHE]	= 	"cache%scpus%s",
++	[AGGR_DIE] 	= 	"die%scpus%s",
++	[AGGR_SOCKET] 	= 	"socket%scpus%s",
++	[AGGR_NONE] 	= 	"cpu%s",
++	[AGGR_THREAD] 	= 	"comm-pid%s",
++	[AGGR_NODE] 	= 	"node%s",
+ 	[AGGR_GLOBAL] 	=	""
+ };
+ 
++static int aggr_header_num[] = {
++	[AGGR_CORE] 	= 	2,
++	[AGGR_CACHE]	= 	2,
++	[AGGR_DIE] 	= 	2,
++	[AGGR_SOCKET] 	= 	2,
++	[AGGR_NONE] 	= 	1,
++	[AGGR_THREAD] 	= 	1,
++	[AGGR_NODE] 	= 	1,
++	[AGGR_GLOBAL] 	=	0,
++};
++
+ static const char *aggr_header_std[] = {
+ 	[AGGR_CORE] 	= 	"core",
+ 	[AGGR_CACHE] 	= 	"cache",
+@@ -1185,8 +1196,18 @@ static void print_metric_headers_csv(struct perf_stat_config *config,
  {
-> +               ui_progress__init_size(&prog, session->data->file.size,
-> +                                      "Processing events...");
-> +               update_prog =3D true;
-> +       }
-> +
->         head =3D 0;
->         cur_size =3D sizeof(union perf_event);
->
-> @@ -2131,6 +2144,9 @@ static int __perf_session__process_pipe_events(stru=
-ct perf_session *session)
->         if (err)
->                 goto out_err;
->
-> +       if (update_prog)
-> +               ui_progress__update(&prog, size);
-> +
->         if (!session_done())
->                 goto more;
->  done:
-> @@ -2144,6 +2160,8 @@ static int __perf_session__process_pipe_events(stru=
-ct perf_session *session)
->         err =3D perf_session__flush_thread_stacks(session);
->  out_err:
->         free(buf);
-> +       if (update_prog)
-> +               ui_progress__finish();
->         if (!tool->no_warn)
->                 perf_session__warn_about_errors(session);
->         ordered_events__free(&session->ordered_events);
-> @@ -2523,7 +2541,7 @@ static int __perf_session__process_dir_events(struc=
-t perf_session *session)
->
->         perf_tool__fill_defaults(tool);
->
-> -       ui_progress__init_size(&prog, total_size, "Sorting events...");
-> +       ui_progress__init_size(&prog, total_size, "Processing events...")=
-;
->
->         nr_readers =3D 1;
->         for (i =3D 0; i < data->dir.nr; i++) {
-> --
-> 2.45.2.803.g4e1b14247a-goog
->
+ 	if (config->interval)
+ 		fputs("time,", config->output);
+-	if (!config->iostat_run)
++	if (config->iostat_run)
++		return;
++
++	if (aggr_header_num[config->aggr_mode] == 1) {
++		fprintf(config->output, aggr_header_csv[config->aggr_mode],
++			config->csv_sep);
++	} else if (aggr_header_num[config->aggr_mode] == 2) {
++		fprintf(config->output, aggr_header_csv[config->aggr_mode],
++			config->csv_sep, config->csv_sep);
++	} else {
+ 		fputs(aggr_header_csv[config->aggr_mode], config->output);
++	}
+ }
+ 
+ static void print_metric_headers_json(struct perf_stat_config *config __maybe_unused,
+-- 
+2.45.2.803.g4e1b14247a-goog
+
