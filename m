@@ -1,56 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38B3113E04F;
-	Thu, 27 Jun 2024 23:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D91A3BB1
+	for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 23:58:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719532401; cv=none; b=oF+dTE0uBlIZEMvOZwqg/XIzDp73dETjMs4wSErMSN8ZVRAFP4eoRWWIGAIUL8N6OOliKpUF2foMy0F05cCF1FkCjET7+w93NRvmJQlA8pnNkdQYQsIQAE3cGaZ67ZNc8PsalpZIW/2lYGN/s6tbyoJ0Rd7OI3QkNcrCX3WhY0c=
+	t=1719532714; cv=none; b=HKk6K5qSjENtEcnifZMooi49O93Vhi48FUXdOFtGQlsAPCmpBWS7EYziYZBG7Kqh7MGFf98YDgYtiWdC+9a0lwNOUm0NcZDSehxs3dtik2mo0VGuYScp5iJbSqjQw5rrIPRnPxWxFY1qqGvSbUb2T/NTzB8+wXAl2CznC39C4Xw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719532401; c=relaxed/simple;
-	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
+	s=arc-20240116; t=1719532714; c=relaxed/simple;
+	bh=6vrZCSujFa7l8YWXfTSBHsy8lHoQ5tK50JT6lDmYahk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UE+9HHL/ZRkb3yDaHKwp4G9DZ4rxook8vAP0fj0ReUrVWvbtedYtCq9g6JJ0S7kH+M1iYvYpLhjqdX3rN6oRwk0X1/1urGZmuS+JyMklRvKeF6oLelMoFnawJqFBtAXIOzzAGvzDu6HxBJDk5joB7q9v1x4HvM//DnAk+kLSZW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjVsghK1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=H264Js0p3UNzkfyHi5UnO7fGdfJkzi/0yAe+z8ILiYJCTP/AuR89JrPd1kiBBWFzg9gkHYWAeSo+aRo+Oj6QbGnXSopl9mVFI6Uhpc5DPjtGMJL0ttJKqguQs9i+DnDUM4z6rMt0pi1uvJaYmn22HkF/4hHPQ6VnsAM4czyQdNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afKxmrdr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjVsghK1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F06BCC2BBFC;
-	Thu, 27 Jun 2024 23:53:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afKxmrdr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBFFC2BBFC;
+	Thu, 27 Jun 2024 23:58:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719532400;
-	bh=2Jc74u8zqMtpyZa6rfWUbAVGrZ5Inv4IOZxhPgIBgnc=;
+	s=k20201202; t=1719532714;
+	bh=6vrZCSujFa7l8YWXfTSBHsy8lHoQ5tK50JT6lDmYahk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SjVsghK1G8sKmUjRTt8AewGite3J7sFm9+zlIBLfOT0bCRojIzfuclmz21voco4Xw
-	 0DdS43K5tjYwfL2FIYD6b96x+6id8OEgYDqVb1joUzYRVi9b3uw7vW/rLMvhkhD/ZY
-	 JYEMGYzRKFBH/8emZuaWc9P0UaxEN0vh4pHXPIjrzJ9ivfkKtbevcVonKiRSDhXuFt
-	 ndX8hFLtHB8O/Z3fo5cpFqb1+N9j+7ouMcS020up8qBBW51eRx/AlUOtmbpP+YJTEM
-	 gJiphFZfZYxNKVlNMsQj7BGs7OT2FAgYHKqMlsNzCTa5H1/AIyxAt4NUdfcGNs7zDc
-	 JPTN1JUsApXiQ==
-Date: Thu, 27 Jun 2024 16:53:18 -0700
+	b=afKxmrdr0jXF+MyiWahlejE7y79m8+7symDK/Mw0FdgOMa/iwASZEl3ncgtCjfCkt
+	 SZchYimA/Xxyp8A8IkYw81qYKlJrY7pC26b5smw77N99+w0DrOcY01tJaYM8gUmwqX
+	 vjY7lOpjADDmQFFAUxJRU0djAmqvI5i56vpAeAY288+4faaGfofGviW++okgrBoKO7
+	 YydAM4E87y8BtD4PiGzDvnJl1fXoYDu0KEuzyRV9SpSp9SRYgLtG4Af6MmMKFgBSMS
+	 TrqTp0ybdpQUS/lUIYemCp8s3/2JiSznt022rJ1A60jtDMnLufTN+//xUCO8DcSRUW
+	 TqoFx953lfSBw==
+Date: Thu, 27 Jun 2024 16:58:32 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: duchangbin <changbin.du@huawei.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"llvm@lists.linux.dev" <llvm@lists.linux.dev>
-Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
-Message-ID: <Zn37bj4LER_A1bX1@google.com>
-References: <20240625033740.223009-1-changbin.du@huawei.com>
- <20240625033740.223009-2-changbin.du@huawei.com>
- <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
- <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
- <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v10 1/4] perf check: introduce check subcommand
+Message-ID: <Zn38qPXvOZjcaRh6@google.com>
+References: <20240626131638.597544-1-adityag@linux.ibm.com>
+ <20240626131638.597544-2-adityag@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,125 +45,394 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
+In-Reply-To: <20240626131638.597544-2-adityag@linux.ibm.com>
 
-Hello guys,
+On Wed, Jun 26, 2024 at 06:46:35PM +0530, Aditya Gupta wrote:
+> Currently the presence of a feature is checked with a combination of
+> perf version --build-options and greps, such as:
+> 
+>     perf version --build-options | grep " on .* HAVE_FEATURE"
+> 
+> Instead of this, introduce a subcommand "perf check feature", with which
+> scripts can test for presence of a feature, such as:
+> 
+>     perf check feature HAVE_FEATURE
+> 
+> 'perf check feature' command is expected to have exit status of 0 if
+> feature is built-in, and 1 if it's not built-in or if feature is not known.
+> 
+> Multiple features can also be passed as a comma-separated list, in which
+> case the exit status will be 1 only if all of the passed features are
+> built-in. For example, with below command, it will have exit status of 0
+> only if both libtraceevent and bpf are enabled, else 1 in all other cases
+> 
+>     perf check feature libtraceevent,bpf
+> 
+> The arguments are case-insensitive.
+> An array 'supported_features' has also been introduced that can be used by
+> other commands like 'perf version --build-options', so that new features
+> can be added in one place, with the array
+> 
+> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+> 
+> ---
+> The entries in 'supported_features' array is just sorted list of
+> features mentioned in 'library_status' function in builtin-version.c
+> ---
+> ---
+>  tools/perf/Build                        |   1 +
+>  tools/perf/Documentation/perf-check.txt |  79 +++++++++++
+>  tools/perf/builtin-check.c              | 178 ++++++++++++++++++++++++
+>  tools/perf/builtin.h                    |  17 +++
+>  tools/perf/perf.c                       |   1 +
+>  5 files changed, 276 insertions(+)
+>  create mode 100644 tools/perf/Documentation/perf-check.txt
+>  create mode 100644 tools/perf/builtin-check.c
+> 
+> diff --git a/tools/perf/Build b/tools/perf/Build
+> index b0cb7ad8e6ac..7635cc823565 100644
+> --- a/tools/perf/Build
+> +++ b/tools/perf/Build
+> @@ -1,5 +1,6 @@
+>  perf-y += builtin-bench.o
+>  perf-y += builtin-annotate.o
+> +perf-y += builtin-check.o
+>  perf-y += builtin-config.o
+>  perf-y += builtin-diff.o
+>  perf-y += builtin-evlist.o
+> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
+> new file mode 100644
+> index 000000000000..77a8ce7b523a
+> --- /dev/null
+> +++ b/tools/perf/Documentation/perf-check.txt
+> @@ -0,0 +1,79 @@
+> +perf-check(1)
+> +===============
+> +
+> +NAME
+> +----
+> +perf-check - check features in perf
+> +
+> +SYNOPSIS
+> +--------
+> +[verse]
+> +'perf check' [<options>]
+> +'perf check' {feature <feature_list>} [<options>]
+> +
+> +DESCRIPTION
+> +-----------
+> +With no options given, the 'perf check' just prints the perf version
+> +on the standard output.
+> +
+> +If the subcommand 'feature' is used, then status of feature is printed
+> +on the standard output (unless '-q' is also passed), ie. whether it is
+> +compiled-in/built-in or not.
+> +Also, 'perf check feature' returns with exit status 0 if the feature
+> +is built-in, otherwise returns with exit status 1.
+> +
+> +SUBCOMMANDS
+> +-----------
+> +
+> +feature::
+> +
+> +        Print whether feature(s) is compiled-in or not, and also returns with an
+> +        exit status of 0, if passed feature(s) are compiled-in, else 1.
+> +
+> +        It expects a feature list as an argument. There can be a single feature
+> +        name/macro, or multiple features can also be passed as a comma-separated
+> +        list, in which case the exit status will be 0 only if all of the passed
+> +        features are compiled-in.
+> +
+> +        The feature names/macros are case-insensitive.
+> +
+> +        Example Usage:
+> +                perf check feature libtraceevent
+> +                perf check feature HAVE_LIBTRACEEVENT
+> +                perf check feature libtraceevent,bpf
+> +
+> +        Supported feature names/macro:
+> +                aio                     /  HAVE_AIO_SUPPORT
+> +                bpf                     /  HAVE_LIBBPF_SUPPORT
+> +                bpf_skeletons           /  HAVE_BPF_SKEL
+> +                debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
+> +                dwarf                   /  HAVE_DWARF_SUPPORT
+> +                dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
+> +                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
+> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
+> +                libaudit                /  HAVE_LIBAUDIT_SUPPORT
+> +                libbfd                  /  HAVE_LIBBFD_SUPPORT
+> +                libelf                  /  HAVE_LIBELF_SUPPORT
+> +                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
+> +                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
+> +                libnuma                 /  HAVE_LIBNUMA_SUPPORT
+> +                libperl                 /  HAVE_LIBPERL_SUPPORT
+> +                libpfm4                 /  HAVE_LIBPFM
+> +                libpython               /  HAVE_LIBPYTHON_SUPPORT
+> +                libslang                /  HAVE_SLANG_SUPPORT
+> +                libtraceevent           /  HAVE_LIBTRACEEVENT
+> +                libunwind               /  HAVE_LIBUNWIND_SUPPORT
+> +                lzma                    /  HAVE_LZMA_SUPPORT
+> +                syscall_table           /  HAVE_SYSCALL_TABLE_SUPPORT
+> +                zlib                    /  HAVE_ZLIB_SUPPORT
+> +                zstd                    /  HAVE_ZSTD_SUPPORT
+> +
+> +OPTIONS
+> +-------
+> +--quiet::
 
-On Wed, Jun 26, 2024 at 01:32:42PM +0300, Adrian Hunter wrote:
-> On 26/06/24 05:26, duchangbin wrote:
-> > On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
-> >> On 25/06/24 06:37, Changbin Du wrote:
-> >>> The vdso dumped from process memory (in buildid-cache) lacks debugging
-> >>> info. To annotate vdso symbols with source lines we need specify a
-> >>> debugging version.
-> >>>
-> >>> For x86, we can find them from your local build as
-> >>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
-> >>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
-> >>> the buildid has to match.
-> >>>
-> >>> $ sudo perf record -a
-> >>> $ sudo perf report --objdump=llvm-objdump \
-> >>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
-> >>>
-> >>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
-> >>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
-> >>> Percent│       movq    -48(%rbp),%rsi
-> >>>        │       testq   %rax,%rax
-> >>>        │     ;               return vread_hvclock();
-> >>>        │       movq    %rax,%rdx
-> >>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
-> >>>        │     ↑ js      eb
-> >>>        │     ↑ jmp     74
-> >>>        │     ;               ts->tv_sec = vdso_ts->sec;
-> >>>   0.02 │147:   leaq    2(%rbx),%rax
-> >>>        │       shlq    $4, %rax
-> >>>        │       addq    %r10,%rax
-> >>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
-> >>>   9.38 │152:   movl    (%r10),%ecx
-> >>>
-> >>> When doing cross platform analysis, we also need specify the vdso path if
-> >>> we are interested in its symbols.
-> >>
-> >> Would it be possible to add vdso and vdso debug to the build-id
-> >> cache and ensure perf can find it there?
-> >>
-> >> Typically, getting dsos from another machine is handled via
-> >> build-id cache e.g. what perf-archive does
-> >>
-> > Hmm. I agree this is better alternative approach for cross-machine analysis.
-> > When collecting vdsos to buildid cache, I think we can use the local searched
-> > objects (with debug symbols) instead if its build-id matches vdsos from process
-> > dumping (the real code ran).
-> > 
-> > Currently I just follow what perf does for vmlinux so to reuse most of existing
-> > code. Maybe vmlinux is too big to add to buildid-cahce?
-> > 
-> > Can we keep our current strategy for now? I'll think about above options when
-> > I have more time.
-> > 
-> 
-> I tried adding vdso via perf buildid-cache.  It doesn't work only
-> because the lookup expects the basename to be "vdso" but it is
-> "elf".
-> 
-> Adding a link from "vdso" to "elf" made it work e.g.
-> 
-> $ cat gettimeofday-test.c
-> #include <stdio.h>
-> #include <sys/time.h>
-> 
-> int main()
-> {
->         struct timeval tv;
->         int ret;
-> 
->         ret = gettimeofday(&tv, NULL);
->         if (ret == -1) {
->                 fprintf(stderr, "gettimeofday failed\n");
->                 return 1;
->         }
-> 
->         printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
-> 
->         return 0;
-> $ perf record -e intel_pt//u ./gettimeofday-test
-> 1719397042.892837
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.026 MB perf.data ]
-> $ perf script --itrace=e
-> $ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-> $ perf script --itrace=e
-> Warning:
-> 2 instruction trace errors
->  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-> $ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
-> $ perf script --itrace=e
-> Warning:
-> 2 instruction trace errors
->  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
-> $ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
-> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
-> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
-> total 36
-> -rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
-> -rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
-> lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
-> /.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
-> $ perf script --itrace=e
-> $ 
-> 
-> So maybe a change could be made to build_id_cache__add() to add
-> the extra link if the file name matches vdso
- 
-Thanks for doing this!  I noticed buildid_cache__basename() will handle
-the name properly once it realizes the file is a vdso.  Maybe we can
-check the filepath with some patterns, or simply add an command line
-option to say it's a vdso.
+Oh, I meant to have both -q and --quiet together.
 
-Thanks,
-Namhyung
 
+> +        Do not print any messages or warnings
+> +
+> +        This can be used along with subcommands such as 'perf check feature'
+> +        to hide unnecessary output in test scripts, eg.
+> +        'perf check feature --quiet libtraceevent'
+> +
+> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+> new file mode 100644
+> index 000000000000..b8a90ba43426
+> --- /dev/null
+> +++ b/tools/perf/builtin-check.c
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +#include "builtin.h"
+> +#include "color.h"
+> +#include "util/debug.h"
+> +#include "util/header.h"
+> +#include <tools/config.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <string.h>
+> +#include <subcmd/parse-options.h>
+> +
+> +static const char * const check_subcommands[] = { "feature", NULL };
+> +static struct option check_options[] = {
+> +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
+> +	OPT_END()
+> +};
+> +static struct option check_feature_options[] = { OPT_END() };
+> +
+> +static const char * const check_usage[] = {
+> +	"perf check [<subcommand>] [<options>]",
+> +	NULL
+> +};
+> +static const char * const check_feature_usage[] = {
+> +	"perf check feature <feature_list>",
+> +	NULL
+> +};
+> +
+> +struct feature_status supported_features[] = {
+> +	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
+> +	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
+> +	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
+> +	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
+> +	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
+> +	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
+> +	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
+> +	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
+> +	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
+> +	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
+> +	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
+> +	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
+> +	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
+> +	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
+> +	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
+> +	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
+> +	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
+> +	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
+> +	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
+> +	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
+> +	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
+> +	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
+> +	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
+> +	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
+> +	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
+> +	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
+> +	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
+> +
+> +	/* this should remain at end, to know the array end */
+> +	FEATURE_STATUS(NULL, _)
+> +};
+> +
+> +static void on_off_print(const char *status)
+> +{
+> +	printf("[ ");
+> +
+> +	if (!strcmp(status, "OFF"))
+> +		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
+> +	else
+> +		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
+> +
+> +	printf(" ]");
+> +}
+> +
+> +/* Helper function to print status of a feature along with name/macro */
+> +static void status_print(const char *name, const char *macro,
+> +			 const char *status)
+> +{
+> +	printf("%22s: ", name);
+> +	on_off_print(status);
+> +	printf("  # %s\n", macro);
+> +}
+> +
+> +#define STATUS(feature)                                   \
+> +do {                                                      \
+> +	if (feature.is_builtin)                               \
+> +		status_print(feature.name, feature.macro, "on");  \
+> +	else                                                  \
+> +		status_print(feature.name, feature.macro, "OFF"); \
+
+It'd be nice if you could align the trailing backslashes.
+
+
+> +} while (0)
+> +
+> +/**
+> + * check whether "feature" is built-in with perf
+> + *
+> + * returns:
+> + *    0: NOT built-in or Feature not known
+> + *    1: Built-in
+> + */
+> +static int has_support(const char *feature)
+> +{
+> +	for (int i = 0; supported_features[i].name; ++i) {
+> +		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
+> +		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
+> +			if (!quiet)
+> +				STATUS(supported_features[i]);
+> +			return supported_features[i].is_builtin;
+> +		}
+> +	}
+> +
+> +	if (!quiet)
+> +		pr_err("Feature not known: '%s'\n", feature);
+> +
+> +	return 0;
+> +}
+> +
+> +
+> +/**
+> + * Usage: 'perf check feature <feature_list>'
+> + *
+> + * <feature_list> can be a single feature name/macro, or a comma-separated list
+> + * of feature names/macros
+> + * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
+> + *
+> + * In case of a comma-separated list, feature_enabled will be 1, only if
+> + * all features passed in the string are supported
+> + *
+> + * Note that argv will get modified
+> + */
+> +static int subcommand_feature(int argc, const char **argv)
+> +{
+> +	char *feature_list;
+> +	char *feature_name;
+> +	int feature_enabled;
+> +
+> +	argc = parse_options(argc, argv, check_feature_options,
+> +			check_feature_usage, 0);
+> +
+> +	if (!argc)
+> +		usage_with_options(check_feature_usage, check_feature_options);
+> +
+> +	if (argc > 1) {
+> +		pr_err("Too many arguments passed to 'perf check feature'\n");
+> +		return -1;
+> +	}
+> +
+> +	feature_enabled = 1;
+> +	/* feature_list is a non-const copy of 'argv[1]' */
+
+You meant argv[0], right?
+
+
+> +	feature_list = strdup(argv[0]);
+> +	if (!feature_list) {
+> +		pr_err("ERROR: failed to allocate memory for feature list\n");
+> +		return -1;
+> +	}
+> +
+> +	feature_name = strtok(feature_list, ",");
+> +
+> +	while (feature_name) {
+> +		feature_enabled &= has_support(feature_name);
+> +		feature_name = strtok(NULL, ",");
+> +	}
+> +
+> +	free(feature_list);
+> +
+> +	return !feature_enabled;
+> +}
+> +
+> +int cmd_check(int argc, const char **argv)
+> +{
+> +	argc = parse_options_subcommand(argc, argv, check_options,
+> +			check_subcommands, check_usage, 0);
+> +
+> +	if (!argc)
+> +		usage_with_options(check_usage, check_options);
+> +
+> +	if (strcmp(argv[0], "feature") == 0)
+> +		return subcommand_feature(argc, argv);
+> +
+> +	/* If no subcommand matched above, print usage help */
+> +	usage_with_options(check_usage, check_options);
+> +	return 0;
+> +}
+> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
+> index f4375deabfa3..0cdb11b9efec 100644
+> --- a/tools/perf/builtin.h
+> +++ b/tools/perf/builtin.h
+> @@ -2,6 +2,22 @@
+>  #ifndef BUILTIN_H
+>  #define BUILTIN_H
+>  
+> +#include <stddef.h>
+> +#include <linux/compiler.h>
+> +#include <tools/config.h>
+> +
+> +struct feature_status {
+> +	const char *name;
+> +	const char *macro;
+> +	int is_builtin;
+> +};
+> +
+> +#define FEATURE_STATUS(name_, macro_) { \
+
+Align please.
+
+
+> +	.name = name_,                       \
+> +	.macro = #macro_,                    \
+> +	.is_builtin = IS_BUILTIN(macro_) }
+> +
+> +extern struct feature_status supported_features[];
+>  struct cmdnames;
+>  
+>  void list_common_cmds_help(void);
+> @@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
+>  int cmd_bench(int argc, const char **argv);
+>  int cmd_buildid_cache(int argc, const char **argv);
+>  int cmd_buildid_list(int argc, const char **argv);
+> +int cmd_check(int argc, const char **argv);
+>  int cmd_config(int argc, const char **argv);
+>  int cmd_c2c(int argc, const char **argv);
+>  int cmd_diff(int argc, const char **argv);
+> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
+> index bd3f80b5bb46..4def800f4089 100644
+> --- a/tools/perf/perf.c
+> +++ b/tools/perf/perf.c
+> @@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
+>  	{ "archive",	NULL,	0 },
+>  	{ "buildid-cache", cmd_buildid_cache, 0 },
+>  	{ "buildid-list", cmd_buildid_list, 0 },
+> +	{ "check",	cmd_check,	0 },
+>  	{ "config",	cmd_config,	0 },
+>  	{ "c2c",	cmd_c2c,	0 },
+>  	{ "diff",	cmd_diff,	0 },
+> -- 
+> 2.45.2
+> 
