@@ -1,438 +1,137 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C85D91A3BB1
-	for <linux-perf-users@vger.kernel.org>; Thu, 27 Jun 2024 23:58:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248547EF
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 00:05:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719532714; cv=none; b=HKk6K5qSjENtEcnifZMooi49O93Vhi48FUXdOFtGQlsAPCmpBWS7EYziYZBG7Kqh7MGFf98YDgYtiWdC+9a0lwNOUm0NcZDSehxs3dtik2mo0VGuYScp5iJbSqjQw5rrIPRnPxWxFY1qqGvSbUb2T/NTzB8+wXAl2CznC39C4Xw=
+	t=1719533105; cv=none; b=uyhuPTzTatnCGFOhMb6+UhI6hODKmTx2nmV2/MNkJDbyr2ItFOeD12agveB7F88He4HLiip6JYguJip/VvfvhGcV+9zn8S1nDP39u8Vaair0cno8d/dJGasn83u3Zwn3P0sPyNTNrRnSqC3MVpvI6/A9MZG6rlmUd6MieIsuP70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719532714; c=relaxed/simple;
-	bh=6vrZCSujFa7l8YWXfTSBHsy8lHoQ5tK50JT6lDmYahk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=H264Js0p3UNzkfyHi5UnO7fGdfJkzi/0yAe+z8ILiYJCTP/AuR89JrPd1kiBBWFzg9gkHYWAeSo+aRo+Oj6QbGnXSopl9mVFI6Uhpc5DPjtGMJL0ttJKqguQs9i+DnDUM4z6rMt0pi1uvJaYmn22HkF/4hHPQ6VnsAM4czyQdNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=afKxmrdr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719533105; c=relaxed/simple;
+	bh=2S2eeAAyVC2kRrfOQfklRvIHNdC0Rf1Ion7XJavKtDo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lwllXTjpgBiSwziJ7+B67A9BRyTmT/hQ9Jr37EvvaCYLymDyug+MSPS3XYeXSMl1szkN2Ggt6xZBTbYrTiSp3pRX0DD+Z0IBjxBS1OmrJNwrgT4t6JxWFI6pP4CLhjfwg7FBc023JV3Bl1sFt6VnptBvGbs2gcLCw6PnH+2Rug0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oBVJmAqy; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="afKxmrdr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBFFC2BBFC;
-	Thu, 27 Jun 2024 23:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719532714;
-	bh=6vrZCSujFa7l8YWXfTSBHsy8lHoQ5tK50JT6lDmYahk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=afKxmrdr0jXF+MyiWahlejE7y79m8+7symDK/Mw0FdgOMa/iwASZEl3ncgtCjfCkt
-	 SZchYimA/Xxyp8A8IkYw81qYKlJrY7pC26b5smw77N99+w0DrOcY01tJaYM8gUmwqX
-	 vjY7lOpjADDmQFFAUxJRU0djAmqvI5i56vpAeAY288+4faaGfofGviW++okgrBoKO7
-	 YydAM4E87y8BtD4PiGzDvnJl1fXoYDu0KEuzyRV9SpSp9SRYgLtG4Af6MmMKFgBSMS
-	 TrqTp0ybdpQUS/lUIYemCp8s3/2JiSznt022rJ1A60jtDMnLufTN+//xUCO8DcSRUW
-	 TqoFx953lfSBw==
-Date: Thu, 27 Jun 2024 16:58:32 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v10 1/4] perf check: introduce check subcommand
-Message-ID: <Zn38qPXvOZjcaRh6@google.com>
-References: <20240626131638.597544-1-adityag@linux.ibm.com>
- <20240626131638.597544-2-adityag@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oBVJmAqy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719533104; x=1751069104;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=2S2eeAAyVC2kRrfOQfklRvIHNdC0Rf1Ion7XJavKtDo=;
+  b=oBVJmAqySv/nJtBKDQgycdqw6biRR1dgWeE5r2bxIwTH9GCe/REmG3E7
+   UXyDH7nsJPSrtJKvBSdOD56UVlCNxHJk+E38MeDFUJvXaghpPFCBocVqm
+   AsjvThtIVfe4MmjkqDG1NaIoq2+R7l4SIGh40pHzb8R20hCqmU6Ze8mhC
+   4ZvDSl8cNCjjZ9fWXJx+QQ8ciFNvWzLyDd7iVkkiUftTUS1PRWN/dEP3s
+   ZcfHBBR8uU/iLUMFF7AUE483kPR5TX8ij64IspoBijNCdHSgj0u0x49nY
+   ivCHhILx9VEqjBsNpoonQ9yy01FKexRHl5qP3vemBS0zjUpyaMfci60Wh
+   w==;
+X-CSE-ConnectionGUID: zG3fkviMS+O4H8zckZmSdA==
+X-CSE-MsgGUID: QoZPdzkLSwubOhp/bQwIcQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16535363"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16535363"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 17:05:04 -0700
+X-CSE-ConnectionGUID: yH2/Fq1/RLqgBgDc8NnfDg==
+X-CSE-MsgGUID: xU1l6+m2RjG4Rvno0CNHqw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="49148548"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 17:05:03 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v2 1/2] perf script: Fix perf script -F +metric
+Date: Thu, 27 Jun 2024 17:04:54 -0700
+Message-ID: <20240628000455.1890269-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240626131638.597544-2-adityag@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jun 26, 2024 at 06:46:35PM +0530, Aditya Gupta wrote:
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
-> 
->     perf version --build-options | grep " on .* HAVE_FEATURE"
-> 
-> Instead of this, introduce a subcommand "perf check feature", with which
-> scripts can test for presence of a feature, such as:
-> 
->     perf check feature HAVE_FEATURE
-> 
-> 'perf check feature' command is expected to have exit status of 0 if
-> feature is built-in, and 1 if it's not built-in or if feature is not known.
-> 
-> Multiple features can also be passed as a comma-separated list, in which
-> case the exit status will be 1 only if all of the passed features are
-> built-in. For example, with below command, it will have exit status of 0
-> only if both libtraceevent and bpf are enabled, else 1 in all other cases
-> 
->     perf check feature libtraceevent,bpf
-> 
-> The arguments are case-insensitive.
-> An array 'supported_features' has also been introduced that can be used by
-> other commands like 'perf version --build-options', so that new features
-> can be added in one place, with the array
-> 
-> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> 
-> ---
-> The entries in 'supported_features' array is just sorted list of
-> features mentioned in 'library_status' function in builtin-version.c
-> ---
-> ---
->  tools/perf/Build                        |   1 +
->  tools/perf/Documentation/perf-check.txt |  79 +++++++++++
->  tools/perf/builtin-check.c              | 178 ++++++++++++++++++++++++
->  tools/perf/builtin.h                    |  17 +++
->  tools/perf/perf.c                       |   1 +
->  5 files changed, 276 insertions(+)
->  create mode 100644 tools/perf/Documentation/perf-check.txt
->  create mode 100644 tools/perf/builtin-check.c
-> 
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index b0cb7ad8e6ac..7635cc823565 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -1,5 +1,6 @@
->  perf-y += builtin-bench.o
->  perf-y += builtin-annotate.o
-> +perf-y += builtin-check.o
->  perf-y += builtin-config.o
->  perf-y += builtin-diff.o
->  perf-y += builtin-evlist.o
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> new file mode 100644
-> index 000000000000..77a8ce7b523a
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -0,0 +1,79 @@
-> +perf-check(1)
-> +===============
-> +
-> +NAME
-> +----
-> +perf-check - check features in perf
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf check' [<options>]
-> +'perf check' {feature <feature_list>} [<options>]
-> +
-> +DESCRIPTION
-> +-----------
-> +With no options given, the 'perf check' just prints the perf version
-> +on the standard output.
-> +
-> +If the subcommand 'feature' is used, then status of feature is printed
-> +on the standard output (unless '-q' is also passed), ie. whether it is
-> +compiled-in/built-in or not.
-> +Also, 'perf check feature' returns with exit status 0 if the feature
-> +is built-in, otherwise returns with exit status 1.
-> +
-> +SUBCOMMANDS
-> +-----------
-> +
-> +feature::
-> +
-> +        Print whether feature(s) is compiled-in or not, and also returns with an
-> +        exit status of 0, if passed feature(s) are compiled-in, else 1.
-> +
-> +        It expects a feature list as an argument. There can be a single feature
-> +        name/macro, or multiple features can also be passed as a comma-separated
-> +        list, in which case the exit status will be 0 only if all of the passed
-> +        features are compiled-in.
-> +
-> +        The feature names/macros are case-insensitive.
-> +
-> +        Example Usage:
-> +                perf check feature libtraceevent
-> +                perf check feature HAVE_LIBTRACEEVENT
-> +                perf check feature libtraceevent,bpf
-> +
-> +        Supported feature names/macro:
-> +                aio                     /  HAVE_AIO_SUPPORT
-> +                bpf                     /  HAVE_LIBBPF_SUPPORT
-> +                bpf_skeletons           /  HAVE_BPF_SKEL
-> +                debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
-> +                dwarf                   /  HAVE_DWARF_SUPPORT
-> +                dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
-> +                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
-> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-> +                libaudit                /  HAVE_LIBAUDIT_SUPPORT
-> +                libbfd                  /  HAVE_LIBBFD_SUPPORT
-> +                libelf                  /  HAVE_LIBELF_SUPPORT
-> +                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-> +                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-> +                libnuma                 /  HAVE_LIBNUMA_SUPPORT
-> +                libperl                 /  HAVE_LIBPERL_SUPPORT
-> +                libpfm4                 /  HAVE_LIBPFM
-> +                libpython               /  HAVE_LIBPYTHON_SUPPORT
-> +                libslang                /  HAVE_SLANG_SUPPORT
-> +                libtraceevent           /  HAVE_LIBTRACEEVENT
-> +                libunwind               /  HAVE_LIBUNWIND_SUPPORT
-> +                lzma                    /  HAVE_LZMA_SUPPORT
-> +                syscall_table           /  HAVE_SYSCALL_TABLE_SUPPORT
-> +                zlib                    /  HAVE_ZLIB_SUPPORT
-> +                zstd                    /  HAVE_ZSTD_SUPPORT
-> +
-> +OPTIONS
-> +-------
-> +--quiet::
+This fixes a regression with perf script -F +metric originally caused by :
 
-Oh, I meant to have both -q and --quiet together.
+commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
+Author: Ian Rogers <irogers@google.com>
+Date:   Sun Feb 19 01:28:46 2023 -0800
 
+    perf metric: Directly use counts rather than saved_value
 
-> +        Do not print any messages or warnings
-> +
-> +        This can be used along with subcommands such as 'perf check feature'
-> +        to hide unnecessary output in test scripts, eg.
-> +        'perf check feature --quiet libtraceevent'
-> +
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> new file mode 100644
-> index 000000000000..b8a90ba43426
-> --- /dev/null
-> +++ b/tools/perf/builtin-check.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "builtin.h"
-> +#include "color.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include <tools/config.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <subcmd/parse-options.h>
-> +
-> +static const char * const check_subcommands[] = { "feature", NULL };
-> +static struct option check_options[] = {
-> +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-> +	OPT_END()
-> +};
-> +static struct option check_feature_options[] = { OPT_END() };
-> +
-> +static const char * const check_usage[] = {
-> +	"perf check [<subcommand>] [<options>]",
-> +	NULL
-> +};
-> +static const char * const check_feature_usage[] = {
-> +	"perf check feature <feature_list>",
-> +	NULL
-> +};
-> +
-> +struct feature_status supported_features[] = {
-> +	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
-> +	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
-> +	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
-> +	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-> +	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-> +	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
-> +	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-> +	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
-> +	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
-> +	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
-> +	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-> +	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
-> +	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
-> +	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-> +	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
-> +	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
-> +	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
-> +	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
-> +	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
-> +	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
-> +	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-> +	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
-> +	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
-> +
-> +	/* this should remain at end, to know the array end */
-> +	FEATURE_STATUS(NULL, _)
-> +};
-> +
-> +static void on_off_print(const char *status)
-> +{
-> +	printf("[ ");
-> +
-> +	if (!strcmp(status, "OFF"))
-> +		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-> +	else
-> +		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-> +
-> +	printf(" ]");
-> +}
-> +
-> +/* Helper function to print status of a feature along with name/macro */
-> +static void status_print(const char *name, const char *macro,
-> +			 const char *status)
-> +{
-> +	printf("%22s: ", name);
-> +	on_off_print(status);
-> +	printf("  # %s\n", macro);
-> +}
-> +
-> +#define STATUS(feature)                                   \
-> +do {                                                      \
-> +	if (feature.is_builtin)                               \
-> +		status_print(feature.name, feature.macro, "on");  \
-> +	else                                                  \
-> +		status_print(feature.name, feature.macro, "OFF"); \
+In the perf script environment the evsel wouldn't allocate an aggr
+values array, which led to a -1 reference because the metric
+evaluation would try to reference NULL - 1 (for aggr_idx)
 
-It'd be nice if you could align the trailing backslashes.
+Give the perf script evsels a single CPU aggr setup. That's
+enough because the groups are always contiguous, so no need
+to store more than one CPU's worth of values.
 
+Before
 
-> +} while (0)
-> +
-> +/**
-> + * check whether "feature" is built-in with perf
-> + *
-> + * returns:
-> + *    0: NOT built-in or Feature not known
-> + *    1: Built-in
-> + */
-> +static int has_support(const char *feature)
-> +{
-> +	for (int i = 0; supported_features[i].name; ++i) {
-> +		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
-> +		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
-> +			if (!quiet)
-> +				STATUS(supported_features[i]);
-> +			return supported_features[i].is_builtin;
-> +		}
-> +	}
-> +
-> +	if (!quiet)
-> +		pr_err("Feature not known: '%s'\n", feature);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +/**
-> + * Usage: 'perf check feature <feature_list>'
-> + *
-> + * <feature_list> can be a single feature name/macro, or a comma-separated list
-> + * of feature names/macros
-> + * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
-> + *
-> + * In case of a comma-separated list, feature_enabled will be 1, only if
-> + * all features passed in the string are supported
-> + *
-> + * Note that argv will get modified
-> + */
-> +static int subcommand_feature(int argc, const char **argv)
-> +{
-> +	char *feature_list;
-> +	char *feature_name;
-> +	int feature_enabled;
-> +
-> +	argc = parse_options(argc, argv, check_feature_options,
-> +			check_feature_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_feature_usage, check_feature_options);
-> +
-> +	if (argc > 1) {
-> +		pr_err("Too many arguments passed to 'perf check feature'\n");
-> +		return -1;
-> +	}
-> +
-> +	feature_enabled = 1;
-> +	/* feature_list is a non-const copy of 'argv[1]' */
+% perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+% perf script -F +metric
+Segmentation fault (core dumped)
 
-You meant argv[0], right?
+After:
 
+% perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+...
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
+% perf script -F +metric
+       perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+       perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+       perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
+...
 
-> +	feature_list = strdup(argv[0]);
-> +	if (!feature_list) {
-> +		pr_err("ERROR: failed to allocate memory for feature list\n");
-> +		return -1;
-> +	}
-> +
-> +	feature_name = strtok(feature_list, ",");
-> +
-> +	while (feature_name) {
-> +		feature_enabled &= has_support(feature_name);
-> +		feature_name = strtok(NULL, ",");
-> +	}
-> +
-> +	free(feature_list);
-> +
-> +	return !feature_enabled;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +	argc = parse_options_subcommand(argc, argv, check_options,
-> +			check_subcommands, check_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_usage, check_options);
-> +
-> +	if (strcmp(argv[0], "feature") == 0)
-> +		return subcommand_feature(argc, argv);
-> +
-> +	/* If no subcommand matched above, print usage help */
-> +	usage_with_options(check_usage, check_options);
-> +	return 0;
-> +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f4375deabfa3..0cdb11b9efec 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,22 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
->  
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_status {
-> +	const char *name;
-> +	const char *macro;
-> +	int is_builtin;
-> +};
-> +
-> +#define FEATURE_STATUS(name_, macro_) { \
+Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-Align please.
+--
 
+v2: Reformat code
+---
+ tools/perf/builtin-script.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-> +	.name = name_,                       \
-> +	.macro = #macro_,                    \
-> +	.is_builtin = IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_status supported_features[];
->  struct cmdnames;
->  
->  void list_common_cmds_help(void);
-> @@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index bd3f80b5bb46..4def800f4089 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
->  	{ "archive",	NULL,	0 },
->  	{ "buildid-cache", cmd_buildid_cache, 0 },
->  	{ "buildid-list", cmd_buildid_list, 0 },
-> +	{ "check",	cmd_check,	0 },
->  	{ "config",	cmd_config,	0 },
->  	{ "c2c",	cmd_c2c,	0 },
->  	{ "diff",	cmd_diff,	0 },
-> -- 
-> 2.45.2
-> 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index c16224b1fef3..0aeff280fa55 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -84,7 +84,9 @@ static bool			system_wide;
+ static bool			print_flags;
+ static const char		*cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+-static struct perf_stat_config	stat_config;
++static struct perf_stat_config	stat_config = {
++	.aggr_map = &(struct cpu_aggr_map){ .nr = 1 }
++};
+ static int			max_blocks;
+ static bool			native_arch;
+ static struct dlfilter		*dlfilter;
+@@ -2133,12 +2135,14 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+ 	if (evsel_script(leader)->gnum++ == 0)
+ 		perf_stat__reset_shadow_stats();
+ 	val = sample->period * evsel->scale;
++	/* Always use CPU 0 storage because the groups are contiguous. */
++	evsel->stats->aggr[0].counts.val = val;
+ 	evsel_script(evsel)->val = val;
+ 	if (evsel_script(leader)->gnum == leader->core.nr_members) {
+ 		for_each_group_member (ev2, leader) {
+ 			perf_stat__print_shadow_stats(&stat_config, ev2,
+ 						      evsel_script(ev2)->val,
+-						      sample->cpu,
++						      0,
+ 						      &ctx,
+ 						      NULL);
+ 		}
+-- 
+2.45.2
+
