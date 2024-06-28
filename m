@@ -1,101 +1,72 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from out30-130.freemail.mail.aliyun.com (out30-130.freemail.mail.aliyun.com [115.124.30.130])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62F0714A85;
-	Fri, 28 Jun 2024 04:55:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE57C219EA;
+	Fri, 28 Jun 2024 05:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719550532; cv=none; b=lyf07cr7itvaukuhZ3mopVnGWW6nVa+dVjwAZeReyb6vgWGjOLj7knxlWiMIP0BaSfH8IntoThWcgk0QRxq2Bn81khGEUGlB+HTcP+uhjleg620PT5WyZwnAosuBr1XTMD3E+QIJc4cgkT6H3xXsC8euUY7ROTjk81rIeAWLTFI=
+	t=1719552662; cv=none; b=qmmlu+JoJsH4WwVC86CW9TQ7DWST1VlfOgsyZc37G3tvYesrnwqRRCNYxr3p4Vu0KNmKElP/+E/VNVhKLQmzLiqAabv5GI/PnlmhfSrJgBB+7n6wd00v65yyBXEFAlTjb+Tk2oXocCx3ebbLQGw86dXAkE9q3TZaiHdsvyhLwRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719550532; c=relaxed/simple;
-	bh=qPily2vNcjUCKxyzaRd/7YcLkUbD8qnthkRccsCu3DE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=a3sg0uCzYvhwzjOWGFyIjaBb6KJvyHclqjdNO1zWk02vhwkkbVd9Z1RJibcP050mnjihH8w3sPzqFechsYDemgK88Tv+s7j+gATsNp9tsCehRpTY/+PEcnttbW04fxKt1+eR5oXRkH0gia5BHkXeCOg90MhmKH1TvWeje9oWriY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Om1pvslR; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719552662; c=relaxed/simple;
+	bh=x3J6Id35ACBNdtacFHlNIG6XTfmXnJgexGO5FyJ6sqk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQEjgSllLEbEGimz6y0YJOlPsLuBmLhll7yKFPX2/Omtz9dHePL4C3JqLtD1ye7T13vOhUpysQ5BBOnKg2fkQNm7X6Cr13EAIMMSIdlfT1sh2WPaeb8Xnc6OuTV0RZFw43Q4+27qUXhKvRK8OBdlUvmUKgQ/Rl09/AXIZRW3Jns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=E0Ta9VNF; arc=none smtp.client-ip=115.124.30.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Om1pvslR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719550530; x=1751086530;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=qPily2vNcjUCKxyzaRd/7YcLkUbD8qnthkRccsCu3DE=;
-  b=Om1pvslR9aTujhybJTfFBQXg2no3ImwqvqpfDgj6dlAO9q9VIpGYSd8y
-   btB/9U2/3FMMn6c0eHCufJa1lS/1SM+jKaXA2GN7vsqxK5AYX8foqX3ZH
-   y2N24xn9cuGEhcRS1KUPNLTbDRCyhAYiuhRvXYXu7h+93VqrXxCYRnvsa
-   h3q8O8CjB+2KpeB9n39e6CwSVu6o4xxI6/9FfsY656i+tZQAL8qpQ2v+5
-   o6MCmP01mLmjpS9TBZtXJ9acnQLoMq50/WnwIgLCKZ2E2cxLroF1GC7Gn
-   eTlxig8ypanDKXD6cKk8IkoIpgk7mJq9hoQdUvp/wfWOz5d+HJL7jTG2i
-   w==;
-X-CSE-ConnectionGUID: sfzK3gxUT5i62uobVJXUeA==
-X-CSE-MsgGUID: 2s65ghChSD6K0w6R/wA3QA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="42136769"
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="42136769"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 21:55:29 -0700
-X-CSE-ConnectionGUID: gEwBv7+AQ5+WaNbDXI02Lw==
-X-CSE-MsgGUID: u9Rc2cosT+CJ+TJr9ANRww==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="44456092"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 21:55:29 -0700
-Date: Thu, 27 Jun 2024 22:00:40 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Xin Li <xin@zytor.com>, "X86 Kernel" <x86@kernel.org>, LKML
- <linux-kernel@vger.kernel.org>, "Thomas Gleixner" <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- <linux-perf-users@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- Andi Kleen <andi.kleen@intel.com>, Xin Li <xin3.li@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v2 1/6] x86/irq: Add enumeration of NMI source reporting
- CPU feature
-Message-ID: <20240627220040.1897cde7@jacob-builder>
-In-Reply-To: <5c1f24aa-79f0-4142-80b2-f13c41b91d76@intel.com>
-References: <20240611165457.156364-1-jacob.jun.pan@linux.intel.com>
-	<20240611165457.156364-2-jacob.jun.pan@linux.intel.com>
-	<de99f490-8b8d-4ae9-9f87-e0336e563aba@zytor.com>
-	<5c1f24aa-79f0-4142-80b2-f13c41b91d76@intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="E0Ta9VNF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1719552651; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=1fN3WKANKl6jeAXJaYcVVTxeU2dGcJfdmR9B6LXBtWs=;
+	b=E0Ta9VNF9bLxlUUb1NRc7Y7YGdAeWrI4ogRnCaYt1pGsZL1NdcSTinSF+v6pB8Vra0Fb2jNVvG/qrG3QiXdFX4MAuv45Av0qvCATFMCvjYTgWs5OF7imdwfpRLZWxS4a5RvPFvogQQALUYOhl0kPEnw/Edz8hmjaxKE8kvNEIc0=
+X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R291e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033037067112;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0W9P713Q_1719552650;
+Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0W9P713Q_1719552650)
+          by smtp.aliyun-inc.com;
+          Fri, 28 Jun 2024 13:30:50 +0800
+From: Yang Li <yang.lee@linux.alibaba.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yang Li <yang.lee@linux.alibaba.com>,
+	Abaci Robot <abaci@linux.alibaba.com>
+Subject: [PATCH -next] perf: pmus: Remove unneeded semicolon
+Date: Fri, 28 Jun 2024 13:30:49 +0800
+Message-Id: <20240628053049.44521-1-yang.lee@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1.7.g153144c
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+./tools/perf/util/pmu.c:1776:49-50: Unneeded semicolon
 
-On Fri, 21 Jun 2024 16:00:47 -0700, Sohil Mehta <sohil.mehta@intel.com>
-wrote:
+Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=9443
+Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+---
+ tools/perf/util/pmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >> +config X86_NMI_SOURCE  
-> > 
-> > Lets reuse X86_FRED instead of adding another hard config option. See
-> > below.
-> >   
-> 
-> I mostly agree with the suggestion here but there seems to be a bit of
-> confusion regarding feature availability and feature activation.
-> 
-> Availability and activation of X86_FEATURE_NMI_SOURCE depends on FRED
-> but not the other way around.
-> 
-> In other words, CONFIG_X86_NMI_SOURCE would only be useful if someone
-> wants to disable NMI_SOURCE even if both X86_FEATURE_FRED and
-> X86_FEATURE_NMI_SOURCE are available on a platform.
-> 
-> This seems unlikely to me. Reusing CONFIG_X86_FRED seems reasonable.
-agreed, will remove CONFIG_X86_NMI_SOURCE
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index c94a91645b21..884eb23445e4 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1773,7 +1773,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+ 	size_t nr;
+ 
+ 	pmu_aliases_parse(pmu);
+-	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;;
++	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;
+ 
+ 	if (pmu->cpu_aliases_added)
+ 		 nr += pmu->cpu_json_aliases;
+-- 
+2.20.1.7.g153144c
 
-
-Thanks,
-
-Jacob
