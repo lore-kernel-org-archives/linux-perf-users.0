@@ -1,161 +1,98 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78EF208D0;
-	Fri, 28 Jun 2024 03:11:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AC414277;
+	Fri, 28 Jun 2024 03:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719544276; cv=none; b=m9Gts2t+wSJnrIkdDcYDHJG6QG353LXsd7AlCNyVFhinR1sHndDkkGLqxxEAC+EUilm+wX9KnQ3uGYFEfAdBwRld5Su0Et4NlhdGGkKLgLA3v3Dy7jX0GN5sR15EYX/xRCEIN0jVdDI/cTRUj7pkfax95Rl5M9zjBvnxvyE3Khk=
+	t=1719544701; cv=none; b=uQu5gZJvAlGyLF+flwy8BYb8wo1nfZvZnEqstz8Q4q3uw+zX1XR7VXg2KBET8m/fDGs8MzwYSJtDped9TsLY6OpAHDLUp93EtOQrWoycVPM/0qsKh2sf/7S2dZ+ITI4VI7DRHRnvTnAQBbUxOfAsygPNTWwe1rDntUNILK6dcIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719544276; c=relaxed/simple;
-	bh=kRo5ctG1rFTQqJeB5tVlcVlT5rJH72i5XfyhsbRL2NQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ilTEHoIg48Xh2wtJEj5/up064MtLwJOQWbaZBE0gf+QjYsQD3EZCUJzs/eltMyowkLAOSi3WzpwviRCFAJhXjFfgn6YLpjiWm7p+m3WDL1azVxMsutz7EJivbf1wnyfE4XC2dlMJlo775ssloBHhbgIdNrfSMWve8x4ggF/rGn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srC9rgHV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719544701; c=relaxed/simple;
+	bh=h92E2HHI/sLLhO3tji/J6FcOrGgu6Iv3Rn34UKirp3s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GezI0PmvQ6d1j6UN4xLSB5Vawf55iQJLvkrhALky8vvTI2AjxWxeG2i/dlC5UiazbwqbVxMGdyNXdc5c4ERR1QRRBWKu29MDj1eoCAQlwcV5PdMn73G5WRR0uI2qTn3SyuEpPasbtqVvuHuZoc5eatQoySnyIvQKNCAI2gtFttI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bfw7UMQr; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srC9rgHV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72F6C116B1;
-	Fri, 28 Jun 2024 03:11:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719544276;
-	bh=kRo5ctG1rFTQqJeB5tVlcVlT5rJH72i5XfyhsbRL2NQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=srC9rgHVUOqPNLuOiWEi6Z+0HkZcbvEnR4sfZftuTSk2F/WB6+zKUb8XFLs/XqWml
-	 nGYm3+hyJCAibINP6QdO2w4ow7e7LWR5ODbWtflHqhoz6A0DNPFwjdIO59olqhqNcb
-	 IBsUQvL9dPJklnV5Q6FjCnMujMCPRTEVOw5+62u6OOXK97SzI0zzM1KyEsr8uNVrmg
-	 R9kAkZ4l47TEiWZ42Ue5yhWhhJSBAscC40jjkxlbBZhxTetKB1SHiDLxkmTwqB53Ig
-	 NFiFU+u9WwcbnzSlV9Zb96U43/uLqZyjxDhciiHEudwlBDpulMPWfgK4wpaKx6Royk
-	 KfstyqM2Zb9pw==
-Date: Thu, 27 Jun 2024 20:11:14 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-	Chen Yu <yu.c.chen@intel.com>, Fernand Sieber <sieberf@amazon.com>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	James Clark <james.clark@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH v2] perf sched replay: Fix -r/--repeat command line
- option for infinity
-Message-ID: <Zn4p0kMIsLNlv04X@google.com>
-References: <20240621171909.24119-1-vineethr@linux.ibm.com>
- <51e9fd2f-7d86-40cb-b307-0b0b396ca32a@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bfw7UMQr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719544700; x=1751080700;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=h92E2HHI/sLLhO3tji/J6FcOrGgu6Iv3Rn34UKirp3s=;
+  b=Bfw7UMQrnURP8+kUKBRK8IkDBA+/UxlE1o9kcSlsR+YdnNH1JTmI6Z0s
+   6a54sxm9kCSj8BxUTfMmGFrqcTCaF18u0JJTblT8sXlUc1BGj2flUmwii
+   PG3JhTIRmx1lEcxybENOvOwk+k298Sn7ynzA5J285M0yDbAxf+Yy6IFfN
+   qlG1x5RnUpP6l3mPvu33ftI/Xbk1MjksmWchgNO1rWLgs4t0GbGksH854
+   nUIF6uILbojm+/CoDreIgVzNUz4ez5TgBhXJe4Rh1KcikSKB9mhpoqiV8
+   WMN89S/q2Yzlzc9U+NIPuhZpmPbfCoHtX22gwjW/0/76K6M8pMsz1Gr81
+   Q==;
+X-CSE-ConnectionGUID: v3kpa4juQpujmLvBXFvvWQ==
+X-CSE-MsgGUID: OOis4k6GQ6qvLNrV1VLdZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16669261"
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="16669261"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:18:20 -0700
+X-CSE-ConnectionGUID: IeQ2OvYkSFmpE7lNL6HNag==
+X-CSE-MsgGUID: WCMYJbTKSdeFBs340tLxNw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
+   d="scan'208";a="44656877"
+Received: from lizhipe3-mobl1.ccr.corp.intel.com (HELO rzhang1-mobl7.ccr.corp.intel.com) ([10.249.171.174])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 20:18:08 -0700
+From: Zhang Rui <rui.zhang@intel.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	x86@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ak@linux.intel.com,
+	kan.liang@linux.intel.com
+Subject: [PATCH V2 0/3] perf/x86/intel/cstate: Update for latest client platforms
+Date: Fri, 28 Jun 2024 11:17:55 +0800
+Message-Id: <20240628031758.43103-1-rui.zhang@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <51e9fd2f-7d86-40cb-b307-0b0b396ca32a@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 28, 2024 at 08:00:14AM +0530, Madadi Vineeth Reddy wrote:
-> On 21/06/24 22:49, Madadi Vineeth Reddy wrote:
-> > Currently, the -r/--repeat option accepts values from 0 and complains
-> > for -1. The help section specifies:
-> > -r, --repeat <n>      repeat the workload replay N times (-1: infinite)
-> > 
-> > The -r -1 option raises an error because replay_repeat is defined as
-> > an unsigned int.
-> > 
-> > In the current implementation, the workload is repeated n times when
-> > -r <n> is used, except when n is 0.
-> > 
-> > When -r is set to 0, the workload is also repeated once. This happens
-> > because when -r=0, the run_one_test function is not called. (Note that
-> > mutex unlocking, which is essential for child threads spawned to emulate
-> > the workload, happens in run_one_test.) However, mutex unlocking is
-> > still performed in the destroy_tasks function. Thus, -r=0 results in the
-> > workload running once coincidentally.
-> > 
-> > To clarify and maintain the existing logic for -r >= 1 (which runs the
-> > workload the specified number of times) and to fix the issue with infinite
-> > runs, make -r=0 perform an infinite run.
-> > 
-> > Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-> > Reviewed-by: James Clark <james.clark@arm.com>
-> > 
-> 
-> Hi all,
-> Any suggestions/comments on this patch?
+There are a couple of cstate changes on latest Intel client platforms.
 
-I think the original intention was to set replay_repeat to UINT_MAX
-using -1.  But it seems to refuse the negative number now.
+Alderlake platform, followed by Raptorlake, Meteorlake and Arrowlake,
+doesn't have PC7/PC9.
+Lunarlake platform doesn't have PC7/PC8/PC9.
 
-Maybe you can simply set it to UNIT_MAX for -r 0.
+Fix current code and update support for new platforms.
 
-Thanks,
-Namhyung
+Patch 1/3 fixes Alderlake/Raptorlake/Meteorlake by removing PC7/PC9
+support.
+Patch 2/3 adds Arrowlake support, which behaves the same as Alderlake.
+Patch 3/3 adds Lunarlake support, which behaves similar to Alderlake,
+but with PC8 removed.
 
+Patch V1 has been posted at
+   https://lore.kernel.org/all/20240419071019.1103953-1-rui.zhang@intel.com/
 
-> > ---
-> > Changes in v2:
-> > - Kept the existing 'for' loop and added a condition for infinite
-> >   looping. (James Clark)
-> > - This change also ensures that integer overflow doesn't occur when
-> >   'replay_repeat' is zero.
-> > - Add Reviewed-by tag from James Clark.
-> > - Rebase against perf-tools-next commit 788c5160526a ("perf vendor
-> >   events: Add westmereex counter information")
-> > - Link to v1: https://lore.kernel.org/all/20240618112907.15131-1-vineethr@linux.ibm.com/
-> > 
-> >  tools/perf/Documentation/perf-sched.txt |  7 +++++++
-> >  tools/perf/builtin-sched.c              | 11 ++++++++---
-> >  2 files changed, 15 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-> > index a216d2991b19..f1be8f0b249e 100644
-> > --- a/tools/perf/Documentation/perf-sched.txt
-> > +++ b/tools/perf/Documentation/perf-sched.txt
-> > @@ -202,6 +202,13 @@ OPTIONS for 'perf sched timehist'
-> >  --state::
-> >  	Show task state when it switched out.
-> >  
-> > +OPTIONS for 'perf sched replay'
-> > +------------------------------
-> > +
-> > +-r::
-> > +--repeat <n>::
-> > +	repeat the workload n times (0: infinite). Default is 10.
-> > +
-> >  SEE ALSO
-> >  --------
-> >  linkperf:perf-record[1]
-> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> > index 8cdf18139a7e..51b3dea404bc 100644
-> > --- a/tools/perf/builtin-sched.c
-> > +++ b/tools/perf/builtin-sched.c
-> > @@ -3383,8 +3383,13 @@ static int perf_sched__replay(struct perf_sched *sched)
-> >  	sched->thread_funcs_exit = false;
-> >  	create_tasks(sched);
-> >  	printf("------------------------------------------------------------\n");
-> > -	for (i = 0; i < sched->replay_repeat; i++)
-> > -		run_one_test(sched);
-> > +	if (sched->replay_repeat == 0) {
-> > +		while (1)
-> > +			run_one_test(sched);
-> > +	} else {
-> > +		for (i = 0; i < sched->replay_repeat; i++)
-> > +			run_one_test(sched);
-> > +	}
-> >  
-> >  	sched->thread_funcs_exit = true;
-> >  	destroy_tasks(sched);
-> > @@ -3548,7 +3553,7 @@ int cmd_sched(int argc, const char **argv)
-> >  	};
-> >  	const struct option replay_options[] = {
-> >  	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
-> > -		     "repeat the workload replay N times (-1: infinite)"),
-> > +		     "repeat the workload replay N times (0: infinite)"),
-> >  	OPT_PARENT(sched_options)
-> >  	};
-> >  	const struct option map_options[] = {
-> 
+Changes since V1:
+- Add Reviewed-by tag from Liang, Kan.
+- Rebase on top of new CPU model macros from Tony.
+- Improve changelog.
+
+----------------------------------------------------------------
+Zhang Rui (3):
+      perf/x86/intel/cstate: Fix Alderlake/Raptorlake/Meteorlake
+      perf/x86/intel/cstate: Add Arrowlake support
+      perf/x86/intel/cstate: Add Lunarlake support
+
+ arch/x86/events/intel/cstate.c | 39 ++++++++++++++++++++++++++-------------
+ 1 file changed, 26 insertions(+), 13 deletions(-)
+
