@@ -1,338 +1,144 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA9E1CCCBF;
-	Fri, 28 Jun 2024 17:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 621D815253B
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 17:52:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719596810; cv=none; b=JnxWIFU86bEUJh7KBL98lI6jDsSh9p4greC8Er02TWMOoDcFLW57I5cXzcSct+ctxxjW6Gcmx66cTwSq5H70ZDJQJ/jejfEVwShrzBqasauApqADH4p7sRlTNYCUQh2Zo32v7Fg+P4n8sWI5xp8JpnZV9IrB9LrOYd+3KUebqw0=
+	t=1719597140; cv=none; b=n0g4bHXV1A5p/o+3I1m61GXqQXoszhK3P25vfxK3vypKhUKiL2I8H/2KeIKwZ4QJxERdBGLQmctkN8TRc2b42gEemM2NNORHreoMQWvHNW4QAiUVSVXWYEA2zhJ7tEkFb2n/rqrjwKaOl4yozqJlYARyWsQ/AYPYNFAdgRHrjjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719596810; c=relaxed/simple;
-	bh=iiJqjysJjbEgVyFlYCfiJ2h75WoEOYwMX1Czst1vvzE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PYSkhUcT42hbmfQM8OUu9scJtfR2hKaRpEDEXgeKqC8CwLmlTTMXRluKICQdaNzromp/CS1KZxPiV54firs6PaUTXVDduq85sVgUauzlBIpIblkljzFauIFI2qmgPK9Oix1eGFu0KksWJv1ZEUCUekih2oVUNtkWi2sdWj7xT70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=eqGy4BDl; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719597140; c=relaxed/simple;
+	bh=gFvyB44eZxW+rZLLLtn4UtRbw9O0gdT48JudAO1dRQ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qyB6uS5H/k4wZGmzm8DCGQKgDUUXyZkpJ2uPrTCKmRJNu+PgZBYf1ETwFMQw75qGc37YoF4sZ9/BCfuaJd9h6XOuhNfPMUqkzuWWVkcnqsB/dei85XZ/RJwIgG804xi6SixMjOQUuT0zrfmSSfNdL7SCeN9LI6R4IhfMcLD8hKU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oh8L48dM; arc=none smtp.client-ip=209.85.166.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="eqGy4BDl"
-Received: from terminus.zytor.com (terminus.zytor.com [IPv6:2607:7c80:54:3:0:0:0:136])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45SHjjqO3118844
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-	Fri, 28 Jun 2024 10:45:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45SHjjqO3118844
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719596753;
-	bh=3NC8TIE68/C5J0cg5bcZUl825OT8Q/dQ/i7AWhVXDFI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eqGy4BDlXmX/7U62MIhKgOYRX6IbXp4jj0dkhhbRo2jR7Oidkxr9e3LtyjcpP9LXI
-	 nKeIL4UjU8SywhcL2QE89/nU322TnXMjP4GmzLU3L+H4fWa4dm3IaWb+4QEIPYoNEK
-	 jE9mQP7Z67v04v1fcGv1UTHWfTdTToS+XIMdmmPLHZlLr/aM/9zS+y5ADrzq0ClWK5
-	 yMr3mDdg2csOdWtqCC46l4NPF2HZ3auPpAENIZrXxvpl1dXzUjGYaqTdmEW8fK4FLm
-	 fqaF79tBXJETIc7Wwi0o9/32f6l7Ofxma1eC7IfQzm4D4hMJBtGWnyPyi7I6wElwy+
-	 2qxnwOMaSaH0Q==
-From: "Xin Li (Intel)" <xin@zytor.com>
-To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
-        andrew.cooper3@citrix.com, nik.borisov@suse.com
-Subject: [PATCH v4 2/4] x86/cpufeatures: Generate a feature mask header based on build config
-Date: Fri, 28 Jun 2024 10:45:42 -0700
-Message-ID: <20240628174544.3118826-3-xin@zytor.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240628174544.3118826-1-xin@zytor.com>
-References: <20240628174544.3118826-1-xin@zytor.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oh8L48dM"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3762775e9ebso13645ab.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 10:52:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719597138; x=1720201938; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fg9T/mfcnl1CD0r165TjIqJmT4cASY+E7dxfeveE1u0=;
+        b=oh8L48dMZO8vwG33ZZNphxYK57ZakgYTpvWzK+/gMV0/Aqp42W+OML6w5NkL6+QUfE
+         E3mlyGFc1kDReRxbNVPcHNTAZkPfnEmcKCLX86zEgrt4ACI/04MistrN/Fj5dCESSXVf
+         rFpoKj5nX5PpYBjc9aX0SoPcSNYPopA1VCGUDoaWm6W6HY4T+Xe8ngVukWySP/CKa6qU
+         ErKSbMb34PUFJMPyF+1hw2JoGNc4fvJmhI9CnDa66UpqM5E7H0etF+IEnvH3ZAGrEwyY
+         +N20pLSGHuzcwSco7aIfn6wO9k095oyxQ0w9b++dSMhXr7oy4Wr83ElYV/XVHljxZRMq
+         Uuhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719597138; x=1720201938;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fg9T/mfcnl1CD0r165TjIqJmT4cASY+E7dxfeveE1u0=;
+        b=xJDKr7LxUFC54oU9DWxnDHm6mmT5Ccek4LeGEl/gBTZ4KOk1SXDzBaD9Dea1qeYDi8
+         nodtb/F8fR76vzqMbk8Mo6S1Pv0SB3v5lR/IkYAxG2Wvi3Lw989gqSDF/ATuVQsj+2ri
+         r8+rWRtHWXdphCphl+3nMJ46WHNeybgocM6R5dmBmxB43k5pidjBaA/UrGZzCMGz242N
+         scdDr0S+FGV1SR2LMgBfN/ekYAq13q9Firv70nQ43kA+61J2jRIEFzU1jkpt/EJuj0AX
+         Pz/37uS9oBnqWPG3QUJV21gI3EZ20CH9OnBVRcpTWXM8vLgb4DWNf5vKNZX3dYTs+oSF
+         Cuhw==
+X-Forwarded-Encrypted: i=1; AJvYcCWVZdfcBGD8g9NvIehJ5a2igZq4kATsVagCWwPaUQZt7e/SJ3UkOgyNYY4zxcVMSln9Xx8gjmoXWzGv+QwLVpX85pm3frumdoPjYyIwXDUIsg==
+X-Gm-Message-State: AOJu0YwSsiPGuKk2aZ4KwoJCLo2oXAo5Y91Rk6OdHiDUvQTbn6UoGT9S
+	vDfcUxBoGHAMf9v1l1HiHt32H/Ub40+C/3l0ymNk0xbcYXc9mOjaVrzjidP7RZWWP0bzVNafI1B
+	DuSClkr1XBBO3ISUy792Njx/MVvwYxQShYR2A
+X-Google-Smtp-Source: AGHT+IH/9la8ID59tweWNYIiYUYSkt6KsWUDgv0y1VttYV5sTQwJHmCUkqes6fLoxa8JK68vFQ/bUOHL6uTiABBZlT4=
+X-Received: by 2002:a05:6e02:17ca:b0:376:44b9:c363 with SMTP id
+ e9e14a558f8ab-37c3d4a8b3bmr119375ab.6.1719597138302; Fri, 28 Jun 2024
+ 10:52:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240626203630.1194748-1-irogers@google.com> <Zn7x6u7cedoFIHSi@google.com>
+In-Reply-To: <Zn7x6u7cedoFIHSi@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 28 Jun 2024 10:52:06 -0700
+Message-ID: <CAP-5=fXQ3nFZQRMTd+7wp2jEecRt2ykJ57oBO2=qqbnEeyQRvA@mail.gmail.com>
+Subject: Re: [PATCH v2 00/27] Constify tool pointers
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Huacai Chen <chenhuacai@kernel.org>, 
+	Yanteng Si <siyanteng@loongson.cn>, Sun Haiyong <sunhaiyong@loongson.cn>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: "H. Peter Anvin (Intel)" <hpa@zytor.com>
+On Fri, Jun 28, 2024 at 10:25=E2=80=AFAM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
+>
+> On Wed, Jun 26, 2024 at 01:36:02PM -0700, Ian Rogers wrote:
+> > struct perf_tool provides a set of function pointers that are called
+> > through when processing perf data. To make filling the pointers less
+> > cumbersome, if they are NULL perf_tools__fill_defaults will add
+> > default do nothing implementations.
+> >
+> > This change refactors struct perf_tool to have an init function that
+> > provides the default implementation. The special use of NULL and
+> > perf_tools__fill_defaults are removed. As a consequence the tool
+> > pointers can then all be made const, which better reflects the
+> > behavior a particular perf command would expect of the tool and to
+> > some extent can reduce the cognitive load on someone working on a
+> > command.
+>
+> I thought you actually wanted to make the tool const (rodata) but it
+> seems you leave it as is but treat it as const.
 
-Introduce an AWK script to auto-generate a header with required and
-disabled feature masks based on <asm/cpufeatures.h> and current build
-config. Thus for any CPU feature with a build config, e.g., X86_FRED,
-simply add
+So I think that is a next step on top of these changes but it would
+need something a bit special as we want to default initialize some
+fields but then initialize others. Something like (which wouldn't
+work):
 
-config X86_DISABLED_FEATURE_FRED
-	def_bool y
-	depends on !X86_FRED
+.tool =3D DEFAULT_TOOL_STUBS({
+               .sample         =3D process_sample_event,
+               .fork           =3D perf_event__process_fork,
+               .exit           =3D perf_event__process_exit,
+               .comm           =3D perf_event__process_comm,
+               .namespaces     =3D perf_event__process_namespaces,
+               .mmap           =3D build_id__process_mmap,
+               .mmap2          =3D build_id__process_mmap2,
+               .itrace_start   =3D process_timestamp_boundary,
+               .aux            =3D process_timestamp_boundary})
 
-to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-feature disable flag, e.g., DISABLE_FRED.
+Being const is just saying hey all these event callbacks aren't going
+to mutate the tool, something I wanted to rule out as part of a change
+I'm working on.
 
-Lastly the generated required and disabled feature masks will be added
-to their corresponding feature masks for this particular compile-time
-configuration.
+> I'm curious if we can change the event delivery code something like:
+>
+>   if (tool->func)
+>       tool->func(...);
+>   else
+>       stub_func(...);
+>
+> Then probably we don't need to touch the tool and make it const.
+> Thoughts?
 
-[ Xin: build integration improvements ]
+It works but the approach needs to change all tool func callers. I
+think it is also more obvious as an API to have a default value and
+override it, rather than giving special properties to NULL that
+callers should adhere to - we're doing a kind of poor man's virtual
+method dispatch and you wouldn't typically expect a NULL check as part
+of that.
 
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
----
+Thanks,
+Ian
 
-Changes since v3:
-* Add a few high-level comments to the AWK script (Nikolay Borisov).
-* Enforce CPU feature mask values to be unsigned.
-
-Changes since v2:
-* Remove AWK code that generates extra debugging comments (Brian Gerst).
-* Move SSE_MASK to verify_cpu.S, the only place it is used (Brian Gerst).
-
-Change since v1:
-* Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
-  to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
-  disabled feature for this particular compile-time configuration.
----
- arch/x86/Makefile                  | 17 +++++-
- arch/x86/boot/cpucheck.c           |  3 +-
- arch/x86/boot/cpuflags.c           |  1 -
- arch/x86/boot/mkcpustr.c           |  3 +-
- arch/x86/include/asm/Kbuild        |  1 +
- arch/x86/include/asm/cpufeature.h  |  1 +
- arch/x86/include/asm/cpufeatures.h |  8 ---
- arch/x86/kernel/verify_cpu.S       |  4 ++
- arch/x86/tools/featuremasks.awk    | 85 ++++++++++++++++++++++++++++++
- 9 files changed, 109 insertions(+), 14 deletions(-)
- create mode 100755 arch/x86/tools/featuremasks.awk
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 801fd85c3ef6..211c0820b150 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -261,9 +261,22 @@ archscripts: scripts_basic
- 	$(Q)$(MAKE) $(build)=arch/x86/tools relocs
- 
- ###
--# Syscall table generation
-+# Feature masks header and syscall table generation
- 
--archheaders:
-+out := arch/x86/include/generated/asm
-+featuremasks_hdr := featuremasks.h
-+featuremasks_awk := $(srctree)/arch/x86/tools/featuremasks.awk
-+cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
-+quiet_cmd_gen_featuremasks = GEN     $@
-+      cmd_gen_featuremasks = $(AWK) -f $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
-+
-+$(out)/$(featuremasks_hdr): $(featuremasks_awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
-+	$(shell mkdir -p $(out))
-+	$(call if_changed,gen_featuremasks)
-+
-+targets += $(out)/$(featuremasks_hdr)
-+
-+archheaders: $(out)/$(featuremasks_hdr)
- 	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
- 
- ###
-diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
-index 0aae4d4ed615..8d03a741d1b2 100644
---- a/arch/x86/boot/cpucheck.c
-+++ b/arch/x86/boot/cpucheck.c
-@@ -22,10 +22,11 @@
- # include "boot.h"
- #endif
- #include <linux/types.h>
-+#include <asm/featuremasks.h>
- #include <asm/intel-family.h>
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
-+
- #include "string.h"
- #include "msr.h"
- 
-diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
-index d75237ba7ce9..0cabdacb2a2f 100644
---- a/arch/x86/boot/cpuflags.c
-+++ b/arch/x86/boot/cpuflags.c
-@@ -3,7 +3,6 @@
- #include "bitops.h"
- 
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
- #include "cpuflags.h"
- 
-diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
-index da0ccc5de538..b90110109675 100644
---- a/arch/x86/boot/mkcpustr.c
-+++ b/arch/x86/boot/mkcpustr.c
-@@ -12,8 +12,6 @@
- 
- #include <stdio.h>
- 
--#include "../include/asm/required-features.h"
--#include "../include/asm/disabled-features.h"
- #include "../include/asm/cpufeatures.h"
- #include "../include/asm/vmxfeatures.h"
- #include "../kernel/cpu/capflags.c"
-@@ -23,6 +21,7 @@ int main(void)
- 	int i, j;
- 	const char *str;
- 
-+	printf("#include <asm/featuremasks.h>\n\n");
- 	printf("static const char x86_cap_strs[] =\n");
- 
- 	for (i = 0; i < NCAPINTS; i++) {
-diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-index a192bdea69e2..29c3481f40fc 100644
---- a/arch/x86/include/asm/Kbuild
-+++ b/arch/x86/include/asm/Kbuild
-@@ -8,6 +8,7 @@ generated-y += syscalls_x32.h
- generated-y += unistd_32_ia32.h
- generated-y += unistd_64_x32.h
- generated-y += xen-hypercalls.h
-+generated-y += featuremasks.h
- 
- generic-y += early_ioremap.h
- generic-y += mcs_spinlock.h
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 0b9611da6c53..8332f596ba3c 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -9,6 +9,7 @@
- #include <asm/asm.h>
- #include <linux/bitops.h>
- #include <asm/alternative.h>
-+#include <asm/featuremasks.h>
- 
- enum cpuid_leafs
- {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 6007462e03d6..4a297a8a376c 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
- /*
-  * Defines x86 CPU feature bits
-  */
-diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-index 1258a5872d12..a23a65d5d177 100644
---- a/arch/x86/kernel/verify_cpu.S
-+++ b/arch/x86/kernel/verify_cpu.S
-@@ -29,8 +29,12 @@
-  */
- 
- #include <asm/cpufeatures.h>
-+#include <asm/featuremasks.h>
- #include <asm/msr-index.h>
- 
-+#define SSE_MASK	\
-+	(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X86_FEATURE_XMM2 & 31))))
-+
- SYM_FUNC_START_LOCAL(verify_cpu)
- 	pushf				# Save caller passed flags
- 	push	$0			# Kill any dangerous flags
-diff --git a/arch/x86/tools/featuremasks.awk b/arch/x86/tools/featuremasks.awk
-new file mode 100755
-index 000000000000..351d5a4c7d64
---- /dev/null
-+++ b/arch/x86/tools/featuremasks.awk
-@@ -0,0 +1,85 @@
-+#!/usr/bin/awk
-+#
-+# Convert cpufeatures.h to a list of compile-time masks
-+# Note: this blithly assumes that each word has at least one
-+# feature defined in it; if not, something else is wrong!
-+#
-+
-+BEGIN {
-+	printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
-+	printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
-+
-+	file = 0
-+}
-+
-+BEGINFILE {
-+	switch (++file) {
-+	case 1:			# cpufeatures.h
-+		FPAT = "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
-+		break;
-+	case 2:			# .config
-+		FPAT = "CONFIG_[A-Z0-9_]+|is not set|[yn]";
-+		break;
-+	}
-+}
-+
-+# Create a dictionary of sorts, containing all defined feature bits
-+file == 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
-+$3 == "(" && $5 == "*" && $7 == "+" && $9 == ")" {
-+	nfeat = $4 * $6 + $8;
-+	feat = $2;
-+	sub(/^X86_FEATURE_/, "", feat);
-+	feats[nfeat] = feat;
-+}
-+file == 1 && $1 ~ /^#[ \t]*define$/ && $2 == "NCAPINTS" {
-+	ncapints = strtonum($3);
-+}
-+
-+# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
-+file == 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
-+	on = ($2 == "y");
-+	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
-+		featstat[fs[2], fs[3]] = on;
-+}
-+
-+END {
-+	sets[1] = "REQUIRED";
-+	sets[2] = "DISABLED";
-+
-+	for (ns in sets) {
-+		s = sets[ns];
-+
-+		printf "/*\n";
-+		printf " * %s features:\n", s;
-+		printf " *\n";
-+		fstr = "";
-+		for (i = 0; i < ncapints; i++) {
-+			mask = 0;
-+			for (j = 0; j < 32; j++) {
-+				nfeat = i*32 + j;
-+				feat = feats[nfeat];
-+				if (feat) {
-+					st = !!featstat[s, feat];
-+					if (st) {
-+						nfstr = fstr " " feat;
-+						if (length(nfstr) > 72) {
-+							printf " *   %s\n", fstr;
-+							nfstr = " " feat;
-+						}
-+						fstr = nfstr;
-+						mask += (2 ^ j);
-+					}
-+				}
-+			}
-+			masks[i] = mask;
-+		}
-+		printf " *   %s\n */\n", fstr;
-+
-+		for (i = 0; i < ncapints; i++)
-+			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
-+
-+		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+	}
-+
-+	printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
-+}
--- 
-2.45.2
-
+> Thanks,
+> Namhyung
