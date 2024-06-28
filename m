@@ -1,57 +1,45 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EB8A38
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 00:05:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B2E28EA;
+	Fri, 28 Jun 2024 00:06:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719533109; cv=none; b=ggddQPzBpZFUCnvkSI4+VghL/8Ra+lXAPUF+IqIjRecdpg0U4eor5ENQ5GI9vD3OK9Ydch9VIw4XWKPKXT3V40JZgLAKXcebMWrd9N1k79fJyyX+8M8h6CQ9LzXUmqrtcH/4uOCCT746BfsQQfUUxjdlw8sBxWpZNu6NStPHfd0=
+	t=1719533165; cv=none; b=jDqphyv1sJkMV2nNsQb1t11JTGAqngJ0k8wN420K2d9I6a9mdvktwFlp4rrP2UXFkc9HlY9bmrHOmMrq2ZWPQTH9Ce15jeMej5x7CyM6lPK/+NgYt4LjPkdB6ltVcK8DCrL+WV9T1iRFV+Qk+xwcKxARthtLC4BMx0hvfNQQHrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719533109; c=relaxed/simple;
-	bh=+UtkRZ8VL3LaMXtO60I+h9bDYJf01QfXntICgEOJHxU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nVnqIvY34FSJtgr85K0CGdQ7xNgzUzifYSouqVpdzjxkN61Hf1NrGBSBAZPfHu6BhE/f+UORo5Fkid+bEpVXoBTL1iJTM5D6VEWzqRbmSEZn6gVHJl4zTbrTukDb/Z3wlDGbv9CJ0D41mZo64agBgALtHiWIfVL/GxUclCtUdk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=J3atN2DC; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719533165; c=relaxed/simple;
+	bh=Xnc0KnqpcWwnpm5ZeJpJChJu9NgyORD56jPFuj9dkIg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/BF7CMsaMmd46i6FeeU+fKSlGUOmbAGxWRxfQ5vp2gnNzgy7T02xwEYsXzvhjK5f0s9M8Fri9AzCS9x05rew8c5oA0O/AgXW4V2dqccjdY5hlIVW69bWTLHkzy3tWpaSnK+DO0wbXZH0dAto1OaYdw3ra2CxYKX+V4xRTjEBiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U2zCw4N6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="J3atN2DC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719533106; x=1751069106;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=+UtkRZ8VL3LaMXtO60I+h9bDYJf01QfXntICgEOJHxU=;
-  b=J3atN2DCCWFsLKnbdhIX9Xb4B1+FcGq8jZpQi+3q8r700QECknTYfxrt
-   AeC2Z6rYND0y4UsRORsgGyo6yFZVuJigCubNI5rpAkt80uVE8T5go9BmU
-   sm+8+zqthLaKm3XD7jsLdueuWV7tA9DVhKdWJgakqVDB3/GnjOPesmMtT
-   JMDcnJYOA/IUw+A6sNj6JdGPSoYR9dRGoz+QOV2BZBgl51DvN3+45rxhZ
-   nVamG4YvNcNp5LR879Eod0X552+penLm3LYiZWsnZVpnayfdpKp2+3R+H
-   qCHnCDCGyu96LXegnlmN9iy/DpojiFmW2j5i5WYYB6ayKp7L4uwvssIU9
-   g==;
-X-CSE-ConnectionGUID: 2ffCUCokSwGlddlMgmzveg==
-X-CSE-MsgGUID: 6XdgsaqPTiaocy19nhLXaA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16535365"
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="16535365"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 17:05:04 -0700
-X-CSE-ConnectionGUID: 5qHc5y5HRPCy79PID0gIkQ==
-X-CSE-MsgGUID: jogx1HZDRw2I5BqRvw/zCQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,167,1716274800"; 
-   d="scan'208";a="49148549"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 17:05:03 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: linux-perf-users@vger.kernel.org
-Cc: Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v2 2/2] Add a test case for perf script -F +metric
-Date: Thu, 27 Jun 2024 17:04:55 -0700
-Message-ID: <20240628000455.1890269-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240628000455.1890269-1-ak@linux.intel.com>
-References: <20240628000455.1890269-1-ak@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U2zCw4N6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCB67C2BBFC;
+	Fri, 28 Jun 2024 00:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719533165;
+	bh=Xnc0KnqpcWwnpm5ZeJpJChJu9NgyORD56jPFuj9dkIg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=U2zCw4N62fMF0F//5yGIuu/Su+CfoaTc7jDF9vRb1UOKytWsaYeL3JA0FhnZHq2Uv
+	 uOJx8j46JO74uG8NmV2Ho1iyWwPRnRkvK+fp0w8VvOAa8RVNg5QDJYwe5ZqPl6bpBb
+	 Yt5bpqS7Pao/h1yeVCTyepKYG0spATh3wjTb0mZh9tMh25KU6tjfXzB7nfrHgkzSlk
+	 tSNDnjOaigpSQVO12RrIPNNH6f7QnIOu/K7QTlmECjMiWIHWL047nNu+vO/zbc0m/7
+	 d8xuqmG5o+JWWF2BB/vuxvzAXZVbtMOHuUQj0GRpU+ktEd3x8Zu00BTPpvsqXP711i
+	 WaCqcQK/bJVqg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Yicong Yang <yangyicong@hisilicon.com>
+Subject: [PATCH v2 1/2] perf stat: Fix a segfault with --per-cluster --metric-only
+Date: Thu, 27 Jun 2024 17:06:03 -0700
+Message-ID: <20240628000604.1296808-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,51 +48,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Just a simple test
+The new --per-cluster option was added recently but it forgot to update
+the aggr_header fields which are used for --metric-only option.  And it
+resulted in a segfault due to NULL string in fputs().
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-
---
-
-v2: Avoid bashisms. Use noploop
+Fixes: cbc917a1b03b ("perf stat: Support per-cluster aggregation")
+Cc: Yicong Yang <yangyicong@hisilicon.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/tests/shell/script.sh | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ tools/perf/util/stat-display.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
-index c1a603653662..de4b1dce55ad 100755
---- a/tools/perf/tests/shell/script.sh
-+++ b/tools/perf/tests/shell/script.sh
-@@ -7,6 +7,7 @@ set -e
- temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
- 
- perfdatafile="${temp_dir}/perf.data"
-+scriptoutput="${temp_dir}/script"
- db_test="${temp_dir}/db_test.py"
- 
- err=0
-@@ -88,8 +89,21 @@ test_parallel_perf()
- 	echo "parallel-perf test [Success]"
- }
- 
-+test_metric()
-+{
-+	echo "script metric test"
-+	if ! perf list | grep -q cycles ; then return ; fi
-+	if ! perf list | grep -q instructions ; then return ; fi
-+	perf record -e '{cycles,instructions}' -o "${perfdatafile}" perf test -w noploop
-+	perf script -i "${perfdatafile}" -F +metric  > $scriptoutput
-+	test `grep -c metric $scriptoutput` -gt 5
-+	grep metric $scriptoutput | head
-+	echo "script metric test [Success]"
-+}
-+
- test_db
- test_parallel_perf
-+test_metric
- 
- cleanup
- 
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index 91d2f7f65df7..186305fd2d0e 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -38,6 +38,7 @@
+ static int aggr_header_lens[] = {
+ 	[AGGR_CORE] 	= 18,
+ 	[AGGR_CACHE]	= 22,
++	[AGGR_CLUSTER]	= 20,
+ 	[AGGR_DIE] 	= 12,
+ 	[AGGR_SOCKET] 	= 6,
+ 	[AGGR_NODE] 	= 6,
+@@ -49,6 +50,7 @@ static int aggr_header_lens[] = {
+ static const char *aggr_header_csv[] = {
+ 	[AGGR_CORE] 	= 	"core,cpus,",
+ 	[AGGR_CACHE]	= 	"cache,cpus,",
++	[AGGR_CLUSTER]	= 	"cluster,cpus,",
+ 	[AGGR_DIE] 	= 	"die,cpus,",
+ 	[AGGR_SOCKET] 	= 	"socket,cpus,",
+ 	[AGGR_NONE] 	= 	"cpu,",
+@@ -60,6 +62,7 @@ static const char *aggr_header_csv[] = {
+ static const char *aggr_header_std[] = {
+ 	[AGGR_CORE] 	= 	"core",
+ 	[AGGR_CACHE] 	= 	"cache",
++	[AGGR_CLUSTER]	= 	"cluster",
+ 	[AGGR_DIE] 	= 	"die",
+ 	[AGGR_SOCKET] 	= 	"socket",
+ 	[AGGR_NONE] 	= 	"cpu",
 -- 
-2.45.2
+2.45.2.803.g4e1b14247a-goog
 
