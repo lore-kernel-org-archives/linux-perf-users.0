@@ -1,120 +1,147 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.gentoo.org (woodpecker.gentoo.org [140.211.166.183])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D24A14D2AB;
-	Fri, 28 Jun 2024 08:59:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30DB413E3FD
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 10:27:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.211.166.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719565168; cv=none; b=KgNOnUtofhLFpzmScEc9DKFUuuocLow3ZvCQ96GPWD2MYCUUlkamkTNwnmUrCpQ84G4ZaVnVzOlpKDy7++Yh9JF2Lxfxqdz+sLNvzX/wfpTD8k+v2V72d7VD9v7u8WeE8AAXns5fokKYxBCt2LFscld0JuENzp/k7ca6h1d2pa4=
+	t=1719570439; cv=none; b=tPJ5Cm8+br0mdtq0z+/jtJ3sTvIaT0SxcdGtw2meCvdeo5NogVbojNNehWyG2n6Tm06FJ7U+tPnsqwx9ZRJrD7z/FdYbowCmkMKhD2pMbI1UzL0a6OMSRxSnCxgrWDUQF030Hx0hOsLdMtXO8w6T0oL3sGSu5AJdxiamwkuiTDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719565168; c=relaxed/simple;
-	bh=fsn7DgqHae5MMi2nZcdrg3QK9TBqy66uY6pL4EIadqI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y+4X5Aw70O5s4R7PQUybqzNGMztIn8/q84gEnqtmB0xhCSdKvWAUSI3CIM1g9ZmZRPI9c61Y7ENbAMSD2YjJPgygCgQnzcEdBjOT908PBkXD4zYYkfjdA5aOB4amoBHFyh0Q7EaR3PomZxG7TrAlAx1I1rfVWApk+P41dAqyEm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L/cxFALA; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L/cxFALA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719565167; x=1751101167;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=fsn7DgqHae5MMi2nZcdrg3QK9TBqy66uY6pL4EIadqI=;
-  b=L/cxFALAE+uLgcWl/XKi+Nq/H1ICiee0842NypSRqCflKWLTsOZDyCan
-   LDOHNFXlR5Kg7IBVh4Zs05sIxcamihSOhRQAQ2gMpCTaoCfwsgKpSxRjg
-   mdID4kIrvs8cSdESTfDOO0IwYrbdcCc7RaLzQvxfsASIciSzIaLGL642Q
-   DHgrLMvG7ZlwMOLbNrQ0HQwuGmz93cD+qHeNDAt/Ey/jCsOdVDg+SO7JO
-   /i+ytQJ58VKnm/EgQdZE1R10CCXkXv8xmHxOrrKZY5gH6HGqOply9gqRG
-   82Sk0g/u0EcLb+jZ+KYKW9OsbH1E6MAJhGQzbVF1Ab6k3J0jlgzeCwe5e
-   Q==;
-X-CSE-ConnectionGUID: ysVfkcyKRoC7Bi2q0cBoSg==
-X-CSE-MsgGUID: 8cryBuhgTmaWNNL9aaG61A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16964150"
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="16964150"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 01:59:26 -0700
-X-CSE-ConnectionGUID: a2q1RSkxRcSf3SQPaf8/7g==
-X-CSE-MsgGUID: nm1Jb91lS9S6fqU3fDhm8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="49278962"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.232.203]) ([10.124.232.203])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 01:59:22 -0700
-Message-ID: <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
-Date: Fri, 28 Jun 2024 16:59:18 +0800
+	s=arc-20240116; t=1719570439; c=relaxed/simple;
+	bh=6oDGBVEaBl3dCfJu+IlZWGgDMbnDY46o2aNX4/z7u70=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IGINUkCzT5Hfyl/iLFK/WOdf/bCKCFrK5WCP0xiEKuYdhf/E36uwuoBJdZO18CmlRW1oJ0ZTnmy0UV8Ls87+rv4wwxXec9fWog/9PCt0KBtcTPz8wufUSYyjo5wsydkZKTj56JkE25pL5MDfsr8eq9Fn3iais+9wQTInc6Y2Xk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org; spf=pass smtp.mailfrom=gentoo.org; arc=none smtp.client-ip=140.211.166.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gentoo.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gentoo.org
+Date: Fri, 28 Jun 2024 12:27:11 +0200
+From: Guilherme Amadio <amadio@gentoo.org>
+To: Thorsten Leemhuis <linux@leemhuis.info>
+Cc: acme@kernel.org, Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH 1/2] perf build: Use pkg-config for feature check for
+ libtrace{event,fs}
+Message-ID: <Zn6P_zAaN7frkjPd@gentoo.org>
+References: <20240606153625.2255470-1-amadio@gentoo.org>
+ <20240606153625.2255470-2-amadio@gentoo.org>
+ <072d3965-7140-4f0b-bf9a-9d7edabbfde9@leemhuis.info>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH PATCH v2 3/9] perf/x86/intel: Use topology_hw_cpu_type()
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org
-Cc: daniel.sneddon@linux.intel.com, tony.luck@intel.com,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>,
- Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Andrew Cooper <andrew.cooper3@citrix.com>,
- Brice Goglin <brice.goglin@gmail.com>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Perry Yuan <Perry.Yuan@amd.com>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <072d3965-7140-4f0b-bf9a-9d7edabbfde9@leemhuis.info>
 
+On Fri, Jun 28, 2024 at 09:13:43AM +0200, Thorsten Leemhuis wrote:
+> On 06.06.24 17:33, amadio@gentoo.org wrote:
+> > From: Guilherme Amadio <amadio@gentoo.org>
+> > 
+> > Needed to add required include directories for the feature detection
+> > to succeed. The header tracefs.h is installed either into the include
+> > directory /usr/include/tracefs/tracefs.h when using the Makefile, or
+> > into /usr/include/libtracefs/tracefs.h when using meson to build
+> > libtracefs. The header tracefs.h uses #include <event-parse.h> from
+> > libtraceevent, so pkg-config needs to pick the correct include directory
+> > for libtracefs and add the one for libtraceevent to succeed.
+> > 
+> > Note that in baa2ca59ec1e31ccbe3f24ff0368152b36f68720 the variable
+> > LIBTRACEEVENT_DIR was introduced, and now the method to compile against
+> > non-standard locations requires PKG_CONFIG_PATH to be set instead, which
+> > works for both libtraceevent and libtracefs.
+> > 
+> > Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+> > Cc: Ian Rogers <irogers@google.com>
+> 
+> Since this patch landed in Linux next as 0f0e1f44569061 ("perf build:
+> Use pkg-config for feature check for libtrace{event,fs}") my vanilla 
+> -next build using the RPM spec file from Fedora fails. I'm not sure if
+> it causes my problems, but it looks likely.
 
-On 6/28/2024 4:44 AM, Pawan Gupta wrote:
-> get_this_hybrid_cpu_type() misses a case when cpu-type is populated
-> regardless of X86_FEATURE_HYBRID_CPU. This is particularly true for hybrid
-> variants that have P or E cores fused off.
->
-> Instead use topology_hw_cpu_type() as it does not rely on hybrid feature to
-> enumerate cpu-type. This can also help avoid the model-specific fixup
-> get_hybrid_cpu_type().
->
-> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> ---
->  arch/x86/events/intel/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 38c1b1f1deaa..0da1fd14b0ea 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4753,7 +4753,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
->  
->  static struct x86_hybrid_pmu *find_hybrid_pmu_for_cpu(void)
->  {
-> -	u8 cpu_type = get_this_hybrid_cpu_type();
-> +	u8 cpu_type = topology_hw_cpu_type(smp_processor_id());
+Thank you for reporting. I think we need to use similar checks in the
+tools/verification/rv/Makefile.config, as it seems the problem comes
+from there:
 
-As Kan said, ARL-H would have two different atom uarchs, so we have to use
-the extra native model id to identify them for PMU enabling. I'm not sure
-if we need a similar helper topology_hw_cpu_native_id(), it may depend on
-if the native id needs to be exposed to user space? such as whether there
-are different vulnerabilities between these two atom uarchs?
++ pushd tools/verification/rv/
+kernel.spec:3000: build rv
+... (compile command lines removed)
 
-For PMU enabling, we don't need to expose the native model ID to user
-space, so we define a new helper get_this_hybrid_cpu_native_id() and
-leverage it to identify the atom uarch.
+Auto-detecting system features:
+...                           libtraceevent: [ on  ]
+...                              libtracefs: [ OFF ]
 
+libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+Makefile.config:46: *** Please, check the errors above..  Stop.
+error: Bad exit status from /var/tmp/rpm-tmp.yNun6A (%build)
 
->  	int i;
->  
->  	/*
->
+I will submit a patch to fix it.
+
+Best regards,
+-Guilherme
+
+> 
+> A log of a failed build can be found here:
+> https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/07670271-next-next-all/builder-live.log.gz
+> 
+> The gist:
+> """
+> 
+> Auto-detecting system features:
+> ...                           libtraceevent: [ on  ]
+> ...                              libtracefs: [ OFF ]
+> 
+> libtracefs is missing. Please install libtracefs-dev/libtracefs-devel
+> Makefile.config:46: *** Please, check the errors above..  Stop.
+> error: Bad exit status from /var/tmp/rpm-tmp.yNun6A (%build)
+> """
+> 
+> But libtracefs-devel is installed and pkgconfig works (output from
+> another machine):
+> 
+> $ pkgconf --cflags libtracefs
+> -I/usr/include/tracefs -I/usr/include/traceevent
+> 
+> From a *quick* looks it seems those flags are not picked up when
+> building tools/verification/rv/feature/test-libtracefs.bin 
+> 
+> """
+> + pkg-config --cflags libtraceevent
+> gcc  -MD -Wall -Werror -o /home/thl/usr/tmp/linux-next/tools/verification/rv/feature/test-libtracefs.bin test-libtracefs.c -ggdb   > /home/thl/usr/tmp/linux-next/tools/verification/rv/feature/test-libtracefs.make.output 2>&1 -I/usr/include/traceevent  -ltracefs
+> + gcc -MD -Wall -Werror -o /home/thl/usr/tmp/linux-next/tools/verification/rv/feature/test-libtracefs.bin test-libtracefs.c -ggdb -I/usr/include/traceevent -ltracefs
+> make: *** [Makefile:216: /home/thl/usr/tmp/linux-next/tools/verification/rv/feature/test-libtracefs.bin] Error 1
+> make: Leaving directory '/home/thl/usr/tmp/linux-next/tools/build/feature'
+> """
+> 
+> And
+> 
+> """
+> $ cat /home/thl/usr/tmp/linux-next/tools/verification/rv/feature/test-libtracefs.make.output 
+> test-libtracefs.c:2:10: fatal error: tracefs.h: No such file or directory
+>     2 | #include <tracefs.h>
+>       |          ^~~~~~~~~~~
+> compilation terminated.
+> """
+> 
+> Then I ran out of time looking where it might missing and decided to write
+> this mail instead.
+> 
+> Ciao, Thorsten
+> 
+> 
+> > ---
+> >  tools/build/feature/test-libtracefs.c |  2 +-
+> >  tools/perf/Makefile.config            | 27 +++++++++++++--------------
+> >  2 files changed, 14 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/tools/build/feature/test-libtracefs.c b/tools/build/feature/test-libtracefs.c
+> > index 8eff16c0c10b..29a757a7d848 100644
+> > --- a/tools/build/feature/test-libtracefs.c
+> > +++ b/tools/build/feature/test-libtracefs.c
+> > @@ -1,5 +1,5 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> > -#include <tracefs/tracefs.h>
+> > +#include <tracefs.h>
+> >
+> > [...]
