@@ -1,42 +1,71 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8462925634
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 18:37:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07AB253362;
+	Fri, 28 Jun 2024 18:51:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719599867; cv=none; b=h37p3J6wHeal35zjWrApo3WlshbJWP2LzHAFP3Yu5pQ3faBMxYDqYYnhnFQnMt/KJJSHjI02ruJ5fkyAq6dSolkAnDVF0MUiEzidwyk5CYSQ/ZB8Vvgz2irdk5fiQ8/wtHbxayf/CS8Eai16rDh4uGgmI42M8yhQ75HUhkytemM=
+	t=1719600708; cv=none; b=t56HQ1O8R/w902YIPwyz+AQkT34xDxY3+n3bxTi3t5ndwDwx+fbCk9bUwSLd+D0e4yvPli3X+9ZIS5Ia8kvVBuP3KQOTl6q3KnLPerZeL90t3loQxYnS/B6567r8wh1UyvgtkAx34kbT3yMZAB8+51xxs3CeNVQfZC+qQ9kw0R4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719599867; c=relaxed/simple;
-	bh=arqojqVuLArHESnq4PDP8+tsFdpLUrHUv3IUH4mJ0JU=;
+	s=arc-20240116; t=1719600708; c=relaxed/simple;
+	bh=0mVwVb8/wsP6Qrhr+3pzhUVx26tygX+NY6MLT5uQ/ZA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gRxs7LMdy9yRBYSnqiRRZt8j5J5WS8JO59WxG8bVlTFfeFXeL1Q935bqGyDucd5+8djE68xfRrxaUUW5k8pzOJ0Gl7TAAZr8WT+Gx98VcLF6tj8DLniEhg4xR1o/qumbpSJdLX4aVoGbJ2Wq+9yX9rCWsF8Kb0YCXV0+U8eLXJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=csnRah5N; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=LbujOd+p+k9r4PK9RkP+eV+ESoGJIpB0y9ldYfc4jwQTKXzr/b0oJowUbdpT12dbv7+AT8SQ1xg+9CG3EdskkjpHaJMPt4A1evyX7c8aly6szuyuXUUNB+jQKxONwZT92454Tvj4zJ+uXcigXudcW7t2sWd3JkG43FBe9WsAzNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JK3dczMm; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="csnRah5N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EFEAC116B1;
-	Fri, 28 Jun 2024 18:37:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719599867;
-	bh=arqojqVuLArHESnq4PDP8+tsFdpLUrHUv3IUH4mJ0JU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=csnRah5NLCIMzHRLxeqIY16k+lwd9UbFCMWIxMLIO4TcR1XnYS2SWxjsBl2wVM5lo
-	 GFrZ5GtID8P9h4xUsNY/9xrnGEIg4a8eEAXOidw7lH+1dzv3VVPL4DhPTTU5LpXLYE
-	 KDoIG0oC2fXUtBu8l8DVdhf+raZnRZeG+tf8Z3wlqMkoPFJ+Dl4E6e+n0sa+QIOlZ7
-	 DSXuCK62yX5w7+E+sHj3lL8+j81mVIqO57EhWGuMuLllZkRPaHycUZ9gQRkaVELCSL
-	 GU/m+u3JQeTOfBo+DwWSNzw7bdZiZTBmSVFS9zlMBbhqpfmbvDEDZ6g7OXMiTiueaU
-	 Hl5X7OlABGb0w==
-Date: Fri, 28 Jun 2024 11:37:45 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
-Message-ID: <Zn8C-XpC1beIRN8t@google.com>
-References: <20240628064236.1123851-1-adityag@linux.ibm.com>
- <20240628064236.1123851-2-adityag@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JK3dczMm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719600706; x=1751136706;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=0mVwVb8/wsP6Qrhr+3pzhUVx26tygX+NY6MLT5uQ/ZA=;
+  b=JK3dczMmrgjqTfs/Gz4esrLaWePRjIvlr9WrH7OjvceDu4AhU1amyJOl
+   UmxwkTGA9gdgIKXeN7NXu+rn8p/7IOsrKppqR+CAI4vjcGogDsUBqxQJJ
+   pIqEX1y44vWAIwGpX5O9eP8rKRCtdqYNSe6BEQTr1lsoHT7MtSK7NzaSr
+   u/SdfIZa8/OX+/XQvMWQE5ttBCiso8pfeQZjGCYBosYtZGDJGjyLVDYda
+   NBFVG558db7AWrGOBoh5S9Y+mld197rXUE28eqFQVppd3UyJ5NtS5eFsg
+   Q9sbStBXX0Yt/NTXtfThBwB962nxp09a8W8DW47vJWHZDvjGxKBgWY8t7
+   A==;
+X-CSE-ConnectionGUID: 2kodwAz3Tn6Z8Q0nOjpQLw==
+X-CSE-MsgGUID: nZE3YfUcTlmrTxBvDvHigA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="27928125"
+X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
+   d="scan'208";a="27928125"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 11:51:45 -0700
+X-CSE-ConnectionGUID: qsaLQJSdR9u+clY8lKiLFA==
+X-CSE-MsgGUID: YKLOq80NR8ienoXA7Lcz/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
+   d="scan'208";a="45243745"
+Received: from tensaeke-mobl1.amr.corp.intel.com (HELO desk) ([10.209.8.52])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 11:51:45 -0700
+Date: Fri, 28 Jun 2024 11:51:36 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>
+Subject: Re: [PATCH v2 3/9] perf/x86/intel: Use topology_hw_cpu_type()
+Message-ID: <20240628185136.6rl4x3no3vl3zben@desk>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-3-f927bde83ad0@linux.intel.com>
+ <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,386 +74,222 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240628064236.1123851-2-adityag@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09000f4e-f373-448f-afef-35d2a413929f@linux.intel.com>
 
-On Fri, Jun 28, 2024 at 12:12:33PM +0530, Aditya Gupta wrote:
-> Currently the presence of a feature is checked with a combination of
-> perf version --build-options and greps, such as:
+On Fri, Jun 28, 2024 at 04:59:18PM +0800, Mi, Dapeng wrote:
 > 
->     perf version --build-options | grep " on .* HAVE_FEATURE"
+> On 6/28/2024 4:44 AM, Pawan Gupta wrote:
+> > get_this_hybrid_cpu_type() misses a case when cpu-type is populated
+> > regardless of X86_FEATURE_HYBRID_CPU. This is particularly true for hybrid
+> > variants that have P or E cores fused off.
+> >
+> > Instead use topology_hw_cpu_type() as it does not rely on hybrid feature to
+> > enumerate cpu-type. This can also help avoid the model-specific fixup
+> > get_hybrid_cpu_type().
+> >
+> > Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > ---
+> >  arch/x86/events/intel/core.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> > index 38c1b1f1deaa..0da1fd14b0ea 100644
+> > --- a/arch/x86/events/intel/core.c
+> > +++ b/arch/x86/events/intel/core.c
+> > @@ -4753,7 +4753,7 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
+> >  
+> >  static struct x86_hybrid_pmu *find_hybrid_pmu_for_cpu(void)
+> >  {
+> > -	u8 cpu_type = get_this_hybrid_cpu_type();
+> > +	u8 cpu_type = topology_hw_cpu_type(smp_processor_id());
 > 
-> Instead of this, introduce a subcommand "perf check feature", with which
-> scripts can test for presence of a feature, such as:
+> As Kan said, ARL-H would have two different atom uarchs, so we have to use
+> the extra native model id to identify them for PMU enabling. I'm not sure
+> if we need a similar helper topology_hw_cpu_native_id(), it may depend on
+> if the native id needs to be exposed to user space? such as whether there
+> are different vulnerabilities between these two atom uarchs?
 > 
->     perf check feature HAVE_FEATURE
-> 
-> 'perf check feature' command is expected to have exit status of 0 if
-> feature is built-in, and 1 if it's not built-in or if feature is not known.
-> 
-> Multiple features can also be passed as a comma-separated list, in which
-> case the exit status will be 1 only if all of the passed features are
-> built-in. For example, with below command, it will have exit status of 0
-> only if both libtraceevent and bpf are enabled, else 1 in all other cases
-> 
->     perf check feature libtraceevent,bpf
-> 
-> The arguments are case-insensitive.
-> An array 'supported_features' has also been introduced that can be used by
-> other commands like 'perf version --build-options', so that new features
-> can be added in one place, with the array
-> 
-> Reviewed-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
-> ---
->  tools/perf/Build                        |   1 +
->  tools/perf/Documentation/perf-check.txt |  79 +++++++++++
->  tools/perf/builtin-check.c              | 178 ++++++++++++++++++++++++
->  tools/perf/builtin.h                    |  17 +++
->  tools/perf/perf.c                       |   1 +
->  5 files changed, 276 insertions(+)
->  create mode 100644 tools/perf/Documentation/perf-check.txt
->  create mode 100644 tools/perf/builtin-check.c
-> 
-> diff --git a/tools/perf/Build b/tools/perf/Build
-> index 1d4957957d75..3e486f7df94b 100644
-> --- a/tools/perf/Build
-> +++ b/tools/perf/Build
-> @@ -1,5 +1,6 @@
->  perf-bench-y += builtin-bench.o
->  perf-y += builtin-annotate.o
-> +perf-y += builtin-check.o
->  perf-y += builtin-config.o
->  perf-y += builtin-diff.o
->  perf-y += builtin-evlist.o
-> diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
-> new file mode 100644
-> index 000000000000..88cfd41a76cc
-> --- /dev/null
-> +++ b/tools/perf/Documentation/perf-check.txt
-> @@ -0,0 +1,79 @@
-> +perf-check(1)
-> +===============
-> +
-> +NAME
-> +----
-> +perf-check - check features in perf
-> +
-> +SYNOPSIS
-> +--------
-> +[verse]
-> +'perf check' [<options>]
-> +'perf check' {feature <feature_list>} [<options>]
-> +
-> +DESCRIPTION
-> +-----------
-> +With no options given, the 'perf check' just prints the perf version
-> +on the standard output.
-> +
-> +If the subcommand 'feature' is used, then status of feature is printed
-> +on the standard output (unless '-q' is also passed), ie. whether it is
-> +compiled-in/built-in or not.
-> +Also, 'perf check feature' returns with exit status 0 if the feature
-> +is built-in, otherwise returns with exit status 1.
-> +
-> +SUBCOMMANDS
-> +-----------
-> +
-> +feature::
-> +
-> +        Print whether feature(s) is compiled-in or not, and also returns with an
-> +        exit status of 0, if passed feature(s) are compiled-in, else 1.
-> +
-> +        It expects a feature list as an argument. There can be a single feature
-> +        name/macro, or multiple features can also be passed as a comma-separated
-> +        list, in which case the exit status will be 0 only if all of the passed
-> +        features are compiled-in.
-> +
-> +        The feature names/macros are case-insensitive.
-> +
-> +        Example Usage:
-> +                perf check feature libtraceevent
-> +                perf check feature HAVE_LIBTRACEEVENT
-> +                perf check feature libtraceevent,bpf
-> +
-> +        Supported feature names/macro:
-> +                aio                     /  HAVE_AIO_SUPPORT
-> +                bpf                     /  HAVE_LIBBPF_SUPPORT
-> +                bpf_skeletons           /  HAVE_BPF_SKEL
-> +                debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
-> +                dwarf                   /  HAVE_DWARF_SUPPORT
-> +                dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
-> +                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
-> +                numa_num_possible_cpus  /  HAVE_LIBNUMA_SUPPORT
-> +                libaudit                /  HAVE_LIBAUDIT_SUPPORT
-> +                libbfd                  /  HAVE_LIBBFD_SUPPORT
-> +                libelf                  /  HAVE_LIBELF_SUPPORT
-> +                libcrypto               /  HAVE_LIBCRYPTO_SUPPORT
-> +                libdw-dwarf-unwind      /  HAVE_DWARF_SUPPORT
-> +                libnuma                 /  HAVE_LIBNUMA_SUPPORT
-> +                libperl                 /  HAVE_LIBPERL_SUPPORT
-> +                libpfm4                 /  HAVE_LIBPFM
-> +                libpython               /  HAVE_LIBPYTHON_SUPPORT
-> +                libslang                /  HAVE_SLANG_SUPPORT
-> +                libtraceevent           /  HAVE_LIBTRACEEVENT
-> +                libunwind               /  HAVE_LIBUNWIND_SUPPORT
-> +                lzma                    /  HAVE_LZMA_SUPPORT
-> +                syscall_table           /  HAVE_SYSCALL_TABLE_SUPPORT
-> +                zlib                    /  HAVE_ZLIB_SUPPORT
-> +                zstd                    /  HAVE_ZSTD_SUPPORT
-> +
-> +OPTIONS
-> +-------
-> +-q::
-> +--quiet::
-> +        Do not print any messages or warnings
-> +
-> +        This can be used along with subcommands such as 'perf check feature'
-> +        to hide unnecessary output in test scripts, eg.
-> +        'perf check feature --quiet libtraceevent'
-> diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
-> new file mode 100644
-> index 000000000000..44ffde6f8dbe
-> --- /dev/null
-> +++ b/tools/perf/builtin-check.c
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +#include "builtin.h"
-> +#include "color.h"
-> +#include "util/debug.h"
-> +#include "util/header.h"
-> +#include <tools/config.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <string.h>
-> +#include <subcmd/parse-options.h>
-> +
-> +static const char * const check_subcommands[] = { "feature", NULL };
-> +static struct option check_options[] = {
-> +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-> +	OPT_END()
-> +};
-> +static struct option check_feature_options[] = { OPT_END() };
+> For PMU enabling, we don't need to expose the native model ID to user
+> space, so we define a new helper get_this_hybrid_cpu_native_id() and
+> leverage it to identify the atom uarch.
 
-It should be OPT_PARENT(check_options) instead of OPT_END().
+As CPUID.1A.EAX returns both the native model ID and core type, we can
+store it raw in topo->hw_cpu_type. Such that topo->hw_cpu_type contains
+both the native model ID and core-type. Then use accessors to get them
+separately?
 
-> +
-> +static const char *check_usage[] = {
-> +	"perf check [<subcommand>] [<options>]",
+As per Intel SDM Vol 2A, table 3-8, combination of core-type and native
+model ID identifies the microarchitecture uniquely:
 
-You can leave this NULL and parse_options_subcommand() will fill the
-first element automatically using check_subcommands[].
+  EAX Enumerates the native model ID and core type.
 
-Please see other commands like 'perf sched' how to handle this.
+	Bits 31-24: Core type*
+		10H: Reserved
+		20H: Intel Atom®
+		30H: Reserved
+		40H: Intel® Core™
 
-Thanks,
-Namhyung
+	Bits 23-00: Native model ID of the core. The core-type and native
+	model ID can be used to uniquely identify the microarchitecture of
+	the core.
 
+Let me know if below patch that implements intel_get_native_model_id()
+would work for your use case:
 
-> +	NULL
-> +};
-> +static const char *check_feature_usage[] = {
-> +	"perf check feature <feature_list>",
-> +	NULL
-> +};
-> +
-> +struct feature_status supported_features[] = {
-> +	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
-> +	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
-> +	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
-> +	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-> +	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-> +	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
-> +	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-> +	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
-> +	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
-> +	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
-> +	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-> +	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-> +	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
-> +	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
-> +	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-> +	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
-> +	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
-> +	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
-> +	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
-> +	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
-> +	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
-> +	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-> +	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-> +	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
-> +	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
-> +
-> +	/* this should remain at end, to know the array end */
-> +	FEATURE_STATUS(NULL, _)
-> +};
-> +
-> +static void on_off_print(const char *status)
-> +{
-> +	printf("[ ");
-> +
-> +	if (!strcmp(status, "OFF"))
-> +		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-> +	else
-> +		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-> +
-> +	printf(" ]");
-> +}
-> +
-> +/* Helper function to print status of a feature along with name/macro */
-> +static void status_print(const char *name, const char *macro,
-> +			 const char *status)
-> +{
-> +	printf("%22s: ", name);
-> +	on_off_print(status);
-> +	printf("  # %s\n", macro);
-> +}
-> +
-> +#define STATUS(feature)                                           \
-> +do {                                                              \
-> +	if (feature.is_builtin)                                   \
-> +		status_print(feature.name, feature.macro, "on");  \
-> +	else                                                      \
-> +		status_print(feature.name, feature.macro, "OFF"); \
-> +} while (0)
-> +
-> +/**
-> + * check whether "feature" is built-in with perf
-> + *
-> + * returns:
-> + *    0: NOT built-in or Feature not known
-> + *    1: Built-in
-> + */
-> +static int has_support(const char *feature)
-> +{
-> +	for (int i = 0; supported_features[i].name; ++i) {
-> +		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
-> +		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
-> +			if (!quiet)
-> +				STATUS(supported_features[i]);
-> +			return supported_features[i].is_builtin;
-> +		}
-> +	}
-> +
-> +	if (!quiet)
-> +		pr_err("Feature not known: '%s'\n", feature);
-> +
-> +	return 0;
-> +}
-> +
-> +
-> +/**
-> + * Usage: 'perf check feature <feature_list>'
-> + *
-> + * <feature_list> can be a single feature name/macro, or a comma-separated list
-> + * of feature names/macros
-> + * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
-> + *
-> + * In case of a comma-separated list, feature_enabled will be 1, only if
-> + * all features passed in the string are supported
-> + *
-> + * Note that argv will get modified
-> + */
-> +static int subcommand_feature(int argc, const char **argv)
-> +{
-> +	char *feature_list;
-> +	char *feature_name;
-> +	int feature_enabled;
-> +
-> +	argc = parse_options(argc, argv, check_feature_options,
-> +			check_feature_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_feature_usage, check_feature_options);
-> +
-> +	if (argc > 1) {
-> +		pr_err("Too many arguments passed to 'perf check feature'\n");
-> +		return -1;
-> +	}
-> +
-> +	feature_enabled = 1;
-> +	/* feature_list is a non-const copy of 'argv[0]' */
-> +	feature_list = strdup(argv[0]);
-> +	if (!feature_list) {
-> +		pr_err("ERROR: failed to allocate memory for feature list\n");
-> +		return -1;
-> +	}
-> +
-> +	feature_name = strtok(feature_list, ",");
-> +
-> +	while (feature_name) {
-> +		feature_enabled &= has_support(feature_name);
-> +		feature_name = strtok(NULL, ",");
-> +	}
-> +
-> +	free(feature_list);
-> +
-> +	return !feature_enabled;
-> +}
-> +
-> +int cmd_check(int argc, const char **argv)
-> +{
-> +	argc = parse_options_subcommand(argc, argv, check_options,
-> +			check_subcommands, check_usage, 0);
-> +
-> +	if (!argc)
-> +		usage_with_options(check_usage, check_options);
-> +
-> +	if (strcmp(argv[0], "feature") == 0)
-> +		return subcommand_feature(argc, argv);
-> +
-> +	/* If no subcommand matched above, print usage help */
-> +	usage_with_options(check_usage, check_options);
-> +	return 0;
-> +}
-> diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> index f4375deabfa3..94f4b3769bf7 100644
-> --- a/tools/perf/builtin.h
-> +++ b/tools/perf/builtin.h
-> @@ -2,6 +2,22 @@
->  #ifndef BUILTIN_H
->  #define BUILTIN_H
->  
-> +#include <stddef.h>
-> +#include <linux/compiler.h>
-> +#include <tools/config.h>
-> +
-> +struct feature_status {
-> +	const char *name;
-> +	const char *macro;
-> +	int is_builtin;
-> +};
-> +
-> +#define FEATURE_STATUS(name_, macro_) {    \
-> +	.name = name_,                     \
-> +	.macro = #macro_,                  \
-> +	.is_builtin = IS_BUILTIN(macro_) }
-> +
-> +extern struct feature_status supported_features[];
->  struct cmdnames;
->  
->  void list_common_cmds_help(void);
-> @@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
->  int cmd_bench(int argc, const char **argv);
->  int cmd_buildid_cache(int argc, const char **argv);
->  int cmd_buildid_list(int argc, const char **argv);
-> +int cmd_check(int argc, const char **argv);
->  int cmd_config(int argc, const char **argv);
->  int cmd_c2c(int argc, const char **argv);
->  int cmd_diff(int argc, const char **argv);
-> diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> index bd3f80b5bb46..4def800f4089 100644
-> --- a/tools/perf/perf.c
-> +++ b/tools/perf/perf.c
-> @@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
->  	{ "archive",	NULL,	0 },
->  	{ "buildid-cache", cmd_buildid_cache, 0 },
->  	{ "buildid-list", cmd_buildid_list, 0 },
-> +	{ "check",	cmd_check,	0 },
->  	{ "config",	cmd_config,	0 },
->  	{ "c2c",	cmd_c2c,	0 },
->  	{ "diff",	cmd_diff,	0 },
-> -- 
-> 2.45.2
-> 
+---
+diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+index 20e491c22b98..eaa84e4e4771 100644
+--- a/arch/x86/include/asm/cpu.h
++++ b/arch/x86/include/asm/cpu.h
+@@ -26,11 +26,13 @@ int mwait_usable(const struct cpuinfo_x86 *);
+ unsigned int x86_family(unsigned int sig);
+ unsigned int x86_model(unsigned int sig);
+ unsigned int x86_stepping(unsigned int sig);
++enum x86_hw_topo_cpu_type x86_get_hw_cpu_type(struct cpuinfo_x86 *c);
+ #ifdef CONFIG_CPU_SUP_INTEL
+ extern void __init sld_setup(struct cpuinfo_x86 *c);
+ extern bool handle_user_split_lock(struct pt_regs *regs, long error_code);
+ extern bool handle_guest_split_lock(unsigned long ip);
+ extern void handle_bus_lock(struct pt_regs *regs);
++u32 intel_get_native_model_id(struct cpuinfo_x86 *c);
+ #else
+ static inline void __init sld_setup(struct cpuinfo_x86 *c) {}
+ static inline bool handle_user_split_lock(struct pt_regs *regs, long error_code)
+@@ -44,6 +46,7 @@ static inline bool handle_guest_split_lock(unsigned long ip)
+ }
+ 
+ static inline void handle_bus_lock(struct pt_regs *regs) {}
++u32 intel_get_native_model_id(struct cpuinfo_x86 *c)  { return 0; }
+ #endif
+ #ifdef CONFIG_IA32_FEAT_CTL
+ void init_ia32_feat_ctl(struct cpuinfo_x86 *c);
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index d8d715fcc25c..08794668750f 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -107,7 +107,7 @@ struct cpuinfo_topology {
+ 	u32			l2c_id;
+ 
+ 	// Hardware defined CPU-type
+-	u8			hw_cpu_type;
++	u32			hw_cpu_type;
+ };
+ 
+ struct cpuinfo_x86 {
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 717fdb928dc3..70f1a9661ce3 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -33,8 +33,6 @@
+ #include <linux/numa.h>
+ #include <linux/cpumask.h>
+ 
+-#define X86_CPU_TYPE_INTEL_SHIFT	24
+-
+ enum x86_hw_topo_cpu_type {
+ 	X86_HW_CPU_TYPE_UNKNOWN		= 0,
+ 	X86_HW_CPU_TYPE_INTEL_ATOM	= 0x20,
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 86e0c69a60f6..151c2377df21 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -1292,6 +1292,11 @@ static bool __init cpu_matches(const struct x86_cpu_id *table, unsigned long whi
+ 	return m && !!(m->driver_data & which);
+ }
+ 
++enum x86_hw_topo_cpu_type __weak x86_get_hw_cpu_type(struct cpuinfo_x86 *c)
++{
++	return X86_HW_CPU_TYPE_UNKNOWN;
++}
++
+ u64 x86_read_arch_cap_msr(void)
+ {
+ 	u64 x86_arch_cap_msr = 0;
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index ac6c68a39051..3a951632d210 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1335,3 +1335,16 @@ void __init sld_setup(struct cpuinfo_x86 *c)
+ 	sld_state_setup();
+ 	sld_state_show();
+ }
++
++#define X86_INTEL_CPU_TYPE_SHIFT	24
++#define X86_INTEL_NATIVE_MODEL_ID_MASK	((1 << X86_INTEL_CPU_TYPE_SHIFT) - 1)
++
++enum x86_hw_topo_cpu_type x86_get_hw_cpu_type(struct cpuinfo_x86 *c)
++{
++	return c->topo.hw_cpu_type >> X86_INTEL_CPU_TYPE_SHIFT;
++}
++
++u32 intel_get_native_model_id(struct cpuinfo_x86 *c)
++{
++	return c->topo.hw_cpu_type & X86_INTEL_NATIVE_MODEL_ID_MASK;
++}
+diff --git a/arch/x86/kernel/cpu/match.c b/arch/x86/kernel/cpu/match.c
+index 85ef17325c06..8493bcd4db0b 100644
+--- a/arch/x86/kernel/cpu/match.c
++++ b/arch/x86/kernel/cpu/match.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <asm/cpu_device_id.h>
+ #include <asm/cpufeature.h>
++#include <asm/cpu.h>
+ #include <linux/cpu.h>
+ #include <linux/export.h>
+ #include <linux/slab.h>
+@@ -22,7 +23,7 @@ static bool x86_match_hw_cpu_type(struct cpuinfo_x86 *c, const struct x86_cpu_id
+ 	if (boot_cpu_has(X86_FEATURE_HYBRID_CPU))
+ 		return true;
+ 
+-	return c->topo.hw_cpu_type == m->cpu_type;
++	return m->cpu_type == x86_get_hw_cpu_type(c);
+ }
+ 
+ /**
+diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+index 8b47bd6b0623..819f850b1960 100644
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -87,6 +87,7 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+ 		.cu_id			= 0xff,
+ 		.llc_id			= BAD_APICID,
+ 		.l2c_id			= BAD_APICID,
++		.hw_cpu_type		= X86_HW_CPU_TYPE_UNKNOWN,
+ 	};
+ 	struct cpuinfo_x86 *c = tscan->c;
+ 	struct {
+@@ -132,6 +133,8 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+ 	case X86_VENDOR_INTEL:
+ 		if (!IS_ENABLED(CONFIG_CPU_SUP_INTEL) || !cpu_parse_topology_ext(tscan))
+ 			parse_legacy(tscan);
++		if (c->cpuid_level >= 0x1a)
++			c->topo.hw_cpu_type = cpuid_eax(0x1a);
+ 		break;
+ 	case X86_VENDOR_HYGON:
+ 		if (IS_ENABLED(CONFIG_CPU_SUP_HYGON))
+@@ -140,14 +143,6 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+ 	}
+ }
+ 
+-static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
+-{
+-	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
+-
+-	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
+-		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+-}
+-
+ static void topo_set_ids(struct topo_scan *tscan, bool early)
+ {
+ 	struct cpuinfo_x86 *c = tscan->c;
+@@ -198,7 +193,6 @@ void cpu_parse_topology(struct cpuinfo_x86 *c)
+ 	}
+ 
+ 	topo_set_ids(&tscan, false);
+-	topo_set_hw_cpu_type(c);
+ }
+ 
+ void __init cpu_init_topology(struct cpuinfo_x86 *c)
