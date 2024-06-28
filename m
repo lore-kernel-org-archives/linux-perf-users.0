@@ -1,185 +1,127 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E621F934;
-	Fri, 28 Jun 2024 07:18:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C95E514375A;
+	Fri, 28 Jun 2024 08:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719559139; cv=none; b=cMbBlHYsDT5KtVWvxBG9ZZdpwBK0mwk17uGDKowQXiL6M0/Y+3PrPIEDUuKZffk8eH5HorkXa7sh0Wg38emNycHgocUIH21EkC+YgH87O6NAj9LEIJ4yGFJXHhYtB8DHWmhmG1voBbH+dnrVpTPJ3pLtHMAYjL7fTTiaxckoTQs=
+	t=1719561793; cv=none; b=joD+uo8j55Yb2FDj00CwgLJlWwa5ggsnCFKMMlgjq1Kyboumzf+fngZXIY3eC73VZ0eQINTbNsWQ6TJ+1EVkwXvqze2cf2MRP+vPbIzEZT8PRqdtMg9gi7+B+T2ervKQpQeHfU1+NDaP7EBtfKegtDzOiJXmcPnForyYSI/fJCw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719559139; c=relaxed/simple;
-	bh=+omgK3V3k7mwk0w+1bKjEPFewXPSIpHMXLQBhfBTCQU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LdPu7kUC3o/4zhYEocpYffDo0gLxaTXVnIRoAghz5fXup1YAy3nm2D/z7nBoGud+CcLADIHTa36YmgNatSeXvmtMFeUMgoB+8CJj8GoQS9EOy0HWhQIpB4+bUV2sRW/A9ZLvjMcLMso/LRjBf1SymV20/Y16tMFwwGTXsy6wu6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YgTMU2jg; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719561793; c=relaxed/simple;
+	bh=yPCtwntitwnq3P1LKmfs4zz3mc8+InZdnuHc3hi9Ylk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KXZ8lvDpMH+IeW+uKKWHihg+X1hEB5UQXbPO6rpugLcw957FA30X37if9kMAHmRk3I/5QvAcehL1IatKh5V34eQE7bfE+iVS4DPQXRZe1M0+HuRj0bx38HsD+QTfpHkYEkdZc1k03ssAPTKJbBVqSDt6qp5HerjhCXxcIlUTv0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=GCLgh/3S; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YgTMU2jg"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45S6tQK0024335;
-	Fri, 28 Jun 2024 07:18:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=pZjZbsjqZksvm+BakShr19nrDjJxArwJM4jxtO/
-	wQAo=; b=YgTMU2jgjLj4bqZ711weT86PHVVIeh56DvKoXuzdbxS7wbcXsdakJIi
-	YD3Tus6v/WE/V10VFmLAWJZd76h4bAOt6ZImvhpZYa51sYDVXO50GcNIv7wHMHvd
-	EA4tHZkzc3rP5Bvn6YebB0vKBV7Sz8YcePYhZZapRob9iptFV0AVLyU1OwBD5GoR
-	qZbtSJVq32NFdC+VOEQ2Bu8i3qdyoHR8ftjeF/glIA6fHDpfgOHIsKSNehjdlO/b
-	/MJi6BDN8ltaNDCPrfiCYuAEcmKMmJFaXtkKxaKSeUYd+hzbHrOJrb1xfZG2YcNg
-	VlRGnCbSPNKUOWepAIsTLfo8vLUx2Fg==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 401qgb8572-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 07:18:38 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45S7IbmK027693;
-	Fri, 28 Jun 2024 07:18:37 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 401qgb856x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 07:18:37 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45S6W7K7000575;
-	Fri, 28 Jun 2024 07:18:36 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 3yxaenf2ec-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 28 Jun 2024 07:18:36 +0000
-Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45S7IWmN20185392
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 28 Jun 2024 07:18:34 GMT
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 96E1B2005A;
-	Fri, 28 Jun 2024 07:18:32 +0000 (GMT)
-Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EFBF22006E;
-	Fri, 28 Jun 2024 07:18:25 +0000 (GMT)
-Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.26.83])
-	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 28 Jun 2024 07:18:25 +0000 (GMT)
-From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        James Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
-        linux-perf-users <linux-perf-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
-Subject: [PATCH v3] perf sched replay: Fix -r/--repeat command line option for infinity
-Date: Fri, 28 Jun 2024 12:48:21 +0530
-Message-ID: <20240628071821.15264-1-vineethr@linux.ibm.com>
-X-Mailer: git-send-email 2.43.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: wTDgxX5rJRhIRVGB6ozhNyfLnHfLramq
-X-Proofpoint-GUID: vqVynXlftA79-lVQNh6pNkmDbmS_IQBH
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="GCLgh/3S"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 728DB40E021A;
+	Fri, 28 Jun 2024 08:03:09 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id JE-v6gqwM-Fi; Fri, 28 Jun 2024 08:03:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1719561786; bh=cVfSEJoYI9K0X4J37xQ+u9NuE3Ao5q+TdjlnQbav5uQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GCLgh/3SKA7iIa6OISo/2RyK4dTZnRR1eaus1F4iNpS0fGSrj95b9hJYqTZTKgkXz
+	 /2oZRRnzy3Ga6cUnjGEcQyXSdtHOV9opsrWvl2dRvgdkfg/ZvK1bN9/zSA9aBTmoi3
+	 +W64B7IZbySGJJefzyFJ2/L+FHoECPjkyr9yx76MLv7Rxb3pDcpsoeQicY3vhMwdXd
+	 4Q5VykYuRSmpE9ZrmK44aoNHdUFF83D9BQFKDUEeJsZO682rkNlPLDsbSpjVSIuZXv
+	 afFrbfUTlpKIM6oawmgpuRuXf/ql/mds8ZmQ+32l4zm0bIsec7ARNz1DGDnBbXvbYQ
+	 JSPeKQDLZaHGjWoIbCGjQ7t2+ZWCmpk21XbcGQG4zNqttTBZdOPUH5hrYa58gGIHVJ
+	 HI9vmI/F40jN9LRqOun6xbX0Xruqcr0/mnwS7EPXqfI7JKaLf2PaMkDfTx5onrD+8c
+	 N967Y8tDCxQhNoaUnRKjD/YL6I38NScreg2i3zHZe3pbQcHK6du8rlAfKD/lkp12f2
+	 vCJ8OLmWenLMP7RvUn7lfiFSdV99yr5adTmAlMGLlFbikTcpZsdc/lZeqWcm2iCagU
+	 QQqax4fFN7CSdzzKvOUouemsQXWBBj48nR5JCU1/Zyqb+7Bs3gQEn5TlXq1d6+fLNa
+	 9Xeg1iUIeJYEZPkq+jC0Om5E=
+Received: from nazgul.tnic (business-24-134-159-81.pool2.vodafone-ip.de [24.134.159.81])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D935140E0219;
+	Fri, 28 Jun 2024 08:02:45 +0000 (UTC)
+Date: Fri, 28 Jun 2024 10:03:05 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-28_02,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406280049
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
 
-Currently, the -r/--repeat option accepts values from 0 and complains
-for -1. The help section specifies:
--r, --repeat <n>      repeat the workload replay N times (-1: infinite)
+On Thu, Jun 27, 2024 at 01:44:06PM -0700, Pawan Gupta wrote:
+> The hw_cpu_type is populated in the below debugfs file:
+> 
+>   # cat /sys/kernel/debug/x86/topo/cpus/#
 
-The -r -1 option raises an error because replay_repeat is defined as
-an unsigned int.
+What "below debugfs file"? A '#'?
 
-In the current implementation, the workload is repeated n times when
--r <n> is used, except when n is 0.
+> diff --git a/arch/x86/kernel/cpu/debugfs.c b/arch/x86/kernel/cpu/debugfs.c
+> index 3baf3e435834..8082e03a5976 100644
+> --- a/arch/x86/kernel/cpu/debugfs.c
+> +++ b/arch/x86/kernel/cpu/debugfs.c
+> @@ -22,6 +22,7 @@ static int cpu_debug_show(struct seq_file *m, void *p)
+>  	seq_printf(m, "die_id:              %u\n", c->topo.die_id);
+>  	seq_printf(m, "cu_id:               %u\n", c->topo.cu_id);
+>  	seq_printf(m, "core_id:             %u\n", c->topo.core_id);
+> +	seq_printf(m, "hw_cpu_type:         %x\n", c->topo.hw_cpu_type);
 
-When -r is set to 0, the workload is also repeated once. This happens
-because when -r=0, the run_one_test function is not called. (Note that
-mutex unlocking, which is essential for child threads spawned to emulate
-the workload, happens in run_one_test.) However, mutex unlocking is
-still performed in the destroy_tasks function. Thus, -r=0 results in the
-workload running once coincidentally.
+Yeah, no, we're not going to perpetuate this silliness of printing hex
+values without a preceding "0x".
 
-To clarify and maintain the existing logic for -r >= 1 (which runs the
-workload the specified number of times) and to fix the issue with infinite
-runs, make -r=0 perform an infinite run.
+>  	seq_printf(m, "logical_pkg_id:      %u\n", c->topo.logical_pkg_id);
+>  	seq_printf(m, "logical_die_id:      %u\n", c->topo.logical_die_id);
+>  	seq_printf(m, "llc_id:              %u\n", c->topo.llc_id);
+> diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+> index 9a6069e7133c..8b47bd6b0623 100644
+> --- a/arch/x86/kernel/cpu/topology_common.c
+> +++ b/arch/x86/kernel/cpu/topology_common.c
+> @@ -140,6 +140,14 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+>  	}
+>  }
+>  
+> +static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
+> +{
+> +	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
+> +
+> +	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
+> +		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+> +}
 
-Reviewed-by: James Clark <james.clark@arm.com>
-Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Why isn't this happening in cpu/intel.c? And then you don't need yet
+another silly function.
 
----
-Changes in v3:
-- Used UINT_MAX for replay_repeat to maintain the original intent
-  of an indefinite loop. (Namhyung Kim)
-- Rebase against perf-tools-next commit e8b86f0311a4 ("perf test
-  stat_bpf_counter.sh: Stabilize the test results")
-- Link to v2: https://lore.kernel.org/all/20240621171909.24119-1-vineethr@linux.ibm.com/
-
-Changes in v2:
-- Kept the existing 'for' loop and added a condition for infinite
-  looping. (James Clark)
-- Add Reviewed-by tag from James Clark.
-- Rebase against perf-tools-next commit 788c5160526a ("perf vendor
-  events: Add westmereex counter information")
-- Link to v1: https://lore.kernel.org/all/20240618112907.15131-1-vineethr@linux.ibm.com/
-
- tools/perf/Documentation/perf-sched.txt | 7 +++++++
- tools/perf/builtin-sched.c              | 5 ++++-
- 2 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 74c812f7a4a4..f0e5617f6652 100644
---- a/tools/perf/Documentation/perf-sched.txt
-+++ b/tools/perf/Documentation/perf-sched.txt
-@@ -202,6 +202,13 @@ OPTIONS for 'perf sched timehist'
- --state::
- 	Show task state when it switched out.
- 
-+OPTIONS for 'perf sched replay'
-+------------------------------
-+
-+-r::
-+--repeat <n>::
-+	repeat the workload n times (0: infinite). Default is 10.
-+
- SEE ALSO
- --------
- linkperf:perf-record[1]
-diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index aa59f763ca46..24e9d83c7bb6 100644
---- a/tools/perf/builtin-sched.c
-+++ b/tools/perf/builtin-sched.c
-@@ -3386,6 +3386,9 @@ static int perf_sched__replay(struct perf_sched *sched)
- 	sched->thread_funcs_exit = false;
- 	create_tasks(sched);
- 	printf("------------------------------------------------------------\n");
-+	if (sched->replay_repeat == 0)
-+		sched->replay_repeat = UINT_MAX;
-+
- 	for (i = 0; i < sched->replay_repeat; i++)
- 		run_one_test(sched);
- 
-@@ -3551,7 +3554,7 @@ int cmd_sched(int argc, const char **argv)
- 	};
- 	const struct option replay_options[] = {
- 	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
--		     "repeat the workload replay N times (-1: infinite)"),
-+		     "repeat the workload replay N times (0: infinite)"),
- 	OPT_PARENT(sched_options)
- 	};
- 	const struct option map_options[] = {
 -- 
-2.31.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
