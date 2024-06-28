@@ -1,258 +1,148 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A591C9EB7;
-	Fri, 28 Jun 2024 17:28:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE6B1C8FA6;
+	Fri, 28 Jun 2024 17:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719595687; cv=none; b=M/r/z+P8+XzE6ne0c4kdwq09u7LiJtukC8id5x0EshRUrbhZBLH2btfRW774MkSAyevfVswwnIdN4Hjl0hGoFqDpo0o8rIXsMswq29BjzaYLhLsANHuytyaOq58x2v2MaQHrNkWKzbqHGZU9ZMTTxV5zw5DUKhrMf4rvuLEQLPk=
+	t=1719595939; cv=none; b=jM3jJJpKsU6fjtJrRN9qIw1aXN20w2NQRp5va2abUiLMTeEK3lYRHkt+x16kBW9W9LanzJrXR8OUE32OFyFqcmUOFKO9Jh5EroAgDsDE9r6cLU7qRdN+T3Wh/+RApxY7cZf8qzSyMeqskTZzehsLReXhISXuTh/Qp1eUMLada6I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719595687; c=relaxed/simple;
-	bh=MDSkmkjQeNK2pLssJRhhqoKutOF8efETS3qkABWcgHc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JmGjH86dkOoqdnxnGi3/0IU/bQZ6Fa0kRJMLKUVKXUtkKMXhE2R27In7GZpKT2MYJpWZU8t+6InLdDAnyEkr5vsSrk8iaqtxu33tJYs5H8Su7LwZ3D8AvcnDN9Kol3+WrZchRkt67DBpC6w0MMSVTjVoQdqZka1rC78lzaNA0mk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lB2vOaNJ; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1719595939; c=relaxed/simple;
+	bh=yD189zsTNT0ABb8plWe5Vq3zbuVs6MhAq8A7Ux/AVjI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ioahcwfNCPpQE89GUgaX36yBkVimF1TikfIaHSkQDtBGYLHQOCp2wS/pe+ZmeynSdhOyni+nT6u4rwwteFK9aGPp1Z6DvCtudv4WFFdPtamTMug9iBJ4dkb+RA5Kok4bP7lW6e87kuGyJJuD+Df+rFoCHAitSTkSm89tNktiu4k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BOdjasbp; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lB2vOaNJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BOdjasbp"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719595686; x=1751131686;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=MDSkmkjQeNK2pLssJRhhqoKutOF8efETS3qkABWcgHc=;
-  b=lB2vOaNJAOfwJA6lgUrxOWQBQprL2+G4J+UKWn6Jsjc8+qZckRy0Ey0F
-   eoGeBkT5xMYuaQEzNNXGazX+fMJKvwxQwwsSGjAMqX0/yFN/I/P+s8IO/
-   iTcQZiIprswaBVkMAeUXOtedQfYpMVxxo9Swjc904c3cU8KMtKyj0DP9J
-   g26LnsHw1OEl0q7hY7CL3ZuZ24RN9TU6EffaDzIQAp2C1P3LbYdoFVecs
-   RMsw+6/9ecCO0bfLRQLMNf22ikVVBfGwaI6nflRw2G8run5iG9tgZHsNb
-   sO0W4MeSHK+aMNlSEa8CtSEXjcxYJcxmFjK9NASbZur8NfU5rKC6cm94u
-   Q==;
-X-CSE-ConnectionGUID: w8KKz1yXT3exn1MohgOfRA==
-X-CSE-MsgGUID: dcacFsq7RIKTgXvxSjN4kQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="20605363"
+  t=1719595937; x=1751131937;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yD189zsTNT0ABb8plWe5Vq3zbuVs6MhAq8A7Ux/AVjI=;
+  b=BOdjasbpJriLymOVE4ig73Eo2CTp+S9xO26Geyikdfla0N4JLExwW1kJ
+   7Hu8vxW5Ypw7Kd91wzQNfuJocLH7wgt9tKMcjpbu6XW+DSasrHVMKOZgA
+   0vLtuU6UkwZsVut5YwBaOi/SHvUisBmcVj0yAi5B/td1t8EbxRbxCgKl1
+   Znz0digjrYdEA9TRbwqLSTTxczShbIx4dYLH/eq8t8XV9r/C2ovoTH82x
+   rtxlMzfp1f2WpObnZJ32DMecEQjsO4pzM4y/UvXYyu1mtUeQfn1PsSIsB
+   ihbXtw2eULI9yjTAPQhsE8Fsb43LelLob92uLEA73ruKzcW2C310tsGcT
+   A==;
+X-CSE-ConnectionGUID: SPTqdt1OTq6MaH5YAEXV+w==
+X-CSE-MsgGUID: 6k2Zy04hS5aV1753ExoaRw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="20605740"
 X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="20605363"
+   d="scan'208";a="20605740"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:28:06 -0700
-X-CSE-ConnectionGUID: +zYI9asqS7yGUyWK400L2Q==
-X-CSE-MsgGUID: A8rPVfOUTFadIy5gYosaZA==
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:32:17 -0700
+X-CSE-ConnectionGUID: Lo1wr3RcRfyp5z0eO/BfNQ==
+X-CSE-MsgGUID: bCwUw97FQYumlfVRsyV2HQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,169,1716274800"; 
-   d="scan'208";a="49141102"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.49.253])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:28:01 -0700
-Message-ID: <18d0ae92-d764-4151-a2d6-f017b22b4c92@intel.com>
-Date: Fri, 28 Jun 2024 20:27:55 +0300
+   d="scan'208";a="49141956"
+Received: from tensaeke-mobl1.amr.corp.intel.com (HELO desk) ([10.209.8.52])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 10:32:16 -0700
+Date: Fri, 28 Jun 2024 10:32:09 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20240628173209.wzpc6pwnw4p6u57h@desk>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
+ <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
-To: duchangbin <changbin.du@huawei.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Nathan Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "llvm@lists.linux.dev" <llvm@lists.linux.dev>
-References: <20240625033740.223009-1-changbin.du@huawei.com>
- <20240625033740.223009-2-changbin.du@huawei.com>
- <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
- <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
- <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
- <Zn37bj4LER_A1bX1@google.com> <1599b5defa46422eb66885e7430cc70f@huawei.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <1599b5defa46422eb66885e7430cc70f@huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
 
-On 28/06/24 07:21, duchangbin wrote:
-> On Thu, Jun 27, 2024 at 04:53:18PM -0700, Namhyung Kim wrote:
->> Hello guys,
->>
->> On Wed, Jun 26, 2024 at 01:32:42PM +0300, Adrian Hunter wrote:
->>> On 26/06/24 05:26, duchangbin wrote:
->>>> On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
->>>>> On 25/06/24 06:37, Changbin Du wrote:
->>>>>> The vdso dumped from process memory (in buildid-cache) lacks debugging
->>>>>> info. To annotate vdso symbols with source lines we need specify a
->>>>>> debugging version.
->>>>>>
->>>>>> For x86, we can find them from your local build as
->>>>>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
->>>>>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
->>>>>> the buildid has to match.
->>>>>>
->>>>>> $ sudo perf record -a
->>>>>> $ sudo perf report --objdump=llvm-objdump \
->>>>>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
->>>>>>
->>>>>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
->>>>>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
->>>>>> Percent│       movq    -48(%rbp),%rsi
->>>>>>        │       testq   %rax,%rax
->>>>>>        │     ;               return vread_hvclock();
->>>>>>        │       movq    %rax,%rdx
->>>>>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
->>>>>>        │     ↑ js      eb
->>>>>>        │     ↑ jmp     74
->>>>>>        │     ;               ts->tv_sec = vdso_ts->sec;
->>>>>>   0.02 │147:   leaq    2(%rbx),%rax
->>>>>>        │       shlq    $4, %rax
->>>>>>        │       addq    %r10,%rax
->>>>>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
->>>>>>   9.38 │152:   movl    (%r10),%ecx
->>>>>>
->>>>>> When doing cross platform analysis, we also need specify the vdso path if
->>>>>> we are interested in its symbols.
->>>>>
->>>>> Would it be possible to add vdso and vdso debug to the build-id
->>>>> cache and ensure perf can find it there?
->>>>>
->>>>> Typically, getting dsos from another machine is handled via
->>>>> build-id cache e.g. what perf-archive does
->>>>>
->>>> Hmm. I agree this is better alternative approach for cross-machine analysis.
->>>> When collecting vdsos to buildid cache, I think we can use the local searched
->>>> objects (with debug symbols) instead if its build-id matches vdsos from process
->>>> dumping (the real code ran).
->>>>
->>>> Currently I just follow what perf does for vmlinux so to reuse most of existing
->>>> code. Maybe vmlinux is too big to add to buildid-cahce?
->>>>
->>>> Can we keep our current strategy for now? I'll think about above options when
->>>> I have more time.
->>>>
->>>
->>> I tried adding vdso via perf buildid-cache.  It doesn't work only
->>> because the lookup expects the basename to be "vdso" but it is
->>> "elf".
->>>
->>> Adding a link from "vdso" to "elf" made it work e.g.
->>>
->>> $ cat gettimeofday-test.c
->>> #include <stdio.h>
->>> #include <sys/time.h>
->>>
->>> int main()
->>> {
->>>         struct timeval tv;
->>>         int ret;
->>>
->>>         ret = gettimeofday(&tv, NULL);
->>>         if (ret == -1) {
->>>                 fprintf(stderr, "gettimeofday failed\n");
->>>                 return 1;
->>>         }
->>>
->>>         printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
->>>
->>>         return 0;
->>> $ perf record -e intel_pt//u ./gettimeofday-test
->>> 1719397042.892837
->>> [ perf record: Woken up 1 times to write data ]
->>> [ perf record: Captured and wrote 0.026 MB perf.data ]
->>> $ perf script --itrace=e
->>> $ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
->>> $ perf script --itrace=e
->>> Warning:
->>> 2 instruction trace errors
->>>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->>>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
->>> $ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
->>> $ perf script --itrace=e
->>> Warning:
->>> 2 instruction trace errors
->>>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
->>>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
->>> $ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
->>> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
->>> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
->>> total 36
->>> -rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
->>> -rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
->>> lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
->>> /.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
->>> $ perf script --itrace=e
->>> $ 
->>>
->>> So maybe a change could be made to build_id_cache__add() to add
->>> the extra link if the file name matches vdso
->>  
->> Thanks for doing this!  I noticed buildid_cache__basename() will handle
->> the name properly once it realizes the file is a vdso.  Maybe we can
->> check the filepath with some patterns, or simply add an command line
->> option to say it's a vdso.
->>
->> Thanks,
->> Namhyung
->>
-> I added some tricks for vdso in build_id_cache__add(). It replace vdso object
-> with debugging one if found. Is this okay?
+On Fri, Jun 28, 2024 at 10:03:05AM +0200, Borislav Petkov wrote:
+> On Thu, Jun 27, 2024 at 01:44:06PM -0700, Pawan Gupta wrote:
+> > The hw_cpu_type is populated in the below debugfs file:
+> > 
+> >   # cat /sys/kernel/debug/x86/topo/cpus/#
+> 
+> What "below debugfs file"? A '#'?
 
-perf has support for storing debug files in the build-id
-cache using the base name "debug" instead of "elf", so really
-it would be better to make that work
+That is the number of the CPU. If it is causing confusion, I can will
+change it to N, or say # means the number of the CPU.
 
+> > diff --git a/arch/x86/kernel/cpu/debugfs.c b/arch/x86/kernel/cpu/debugfs.c
+> > index 3baf3e435834..8082e03a5976 100644
+> > --- a/arch/x86/kernel/cpu/debugfs.c
+> > +++ b/arch/x86/kernel/cpu/debugfs.c
+> > @@ -22,6 +22,7 @@ static int cpu_debug_show(struct seq_file *m, void *p)
+> >  	seq_printf(m, "die_id:              %u\n", c->topo.die_id);
+> >  	seq_printf(m, "cu_id:               %u\n", c->topo.cu_id);
+> >  	seq_printf(m, "core_id:             %u\n", c->topo.core_id);
+> > +	seq_printf(m, "hw_cpu_type:         %x\n", c->topo.hw_cpu_type);
 > 
-> +static char *build_id_cache__find_debug_vdso(const char *sbuild_id)
-> +{
-> +       char sbuild_id_tmp[SBUILD_ID_SIZE];
-> +       struct build_id bid;
-> +       int i, ret = 0;
-> +
-> +       printf("Looking at the vdso_path (%d entries long)\n",
-> +                vdso_paths.nr_entries + 1);
-> +
-> +       for (i = 0; i < vdso_paths.nr_entries; ++i) {
-> +               ret = filename__read_build_id(vdso_paths.paths[i], &bid);
-> +               if (ret < 0)
-> +                       continue;
-> +
-> +               build_id__sprintf(&bid, sbuild_id_tmp);
-> +               if (!strcmp(sbuild_id, sbuild_id_tmp)) {
-> +                       printf("Found debugging vdso %s\n", vdso_paths.paths[i]);
-> +                       return strdup(vdso_paths.paths[i]);
-> +               }
-> +       }
-> +
-> +       return NULL;
-> +}
-> +
->  int
->  build_id_cache__add(const char *sbuild_id, const char *name, const char *realname,
->                     struct nsinfo *nsi, bool is_kallsyms, bool is_vdso,
->                     const char *proper_name, const char *root_dir)
->  {
->         const size_t size = PATH_MAX;
-> -       char *filename = NULL, *dir_name = NULL, *linkname = zalloc(size), *tmp;
-> +       char *filename = NULL, *dir_name = NULL, *vdso_name = NULL, *linkname = zalloc(size), *tmp;
->         char *debugfile = NULL;
->         int err = -1;
-> 
-> +       /* replace vdso object with debugging one if found */
-> +       if (is_vdso) {
-> +               vdso_name = build_id_cache__find_debug_vdso(sbuild_id);
-> +               if (vdso_name)
-> +                       name = realname = vdso_name;
-> +       }
-> +
->         if (!proper_name)
->                 proper_name = name;
-> 
->>
-> 
+> Yeah, no, we're not going to perpetuate this silliness of printing hex
+> values without a preceding "0x".
 
+I thought about that, but the other fields are also printed without a
+preceding "0x":
+
+          seq_printf(m, "initial_apicid:      %x\n", c->topo.initial_apicid);
+          seq_printf(m, "apicid:              %x\n", c->topo.apicid);
+	  ...
+
+I will change those too, probably in a separate patch.
+
+> > +static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
+> > +{
+> > +	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
+> > +
+> > +	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
+> > +		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+> > +}
+> 
+> Why isn't this happening in cpu/intel.c? And then you don't need yet
+> another silly function.
+
+I was preferring to keep the topology related code in one place. Would it
+make sense to keep it in Intel specific leg in parse_topology() as below:
+
+---
+diff --git a/arch/x86/kernel/cpu/topology_common.c b/arch/x86/kernel/cpu/topology_common.c
+index 8b47bd6b0623..c8869e75365f 100644
+--- a/arch/x86/kernel/cpu/topology_common.c
++++ b/arch/x86/kernel/cpu/topology_common.c
+@@ -87,6 +87,7 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+ 		.cu_id			= 0xff,
+ 		.llc_id			= BAD_APICID,
+ 		.l2c_id			= BAD_APICID,
++		.hw_cpu_type		= X86_HW_CPU_TYPE_UNKNOWN,
+ 	};
+ 	struct cpuinfo_x86 *c = tscan->c;
+ 	struct {
+@@ -132,6 +133,8 @@ static void parse_topology(struct topo_scan *tscan, bool early)
+ 	case X86_VENDOR_INTEL:
+ 		if (!IS_ENABLED(CONFIG_CPU_SUP_INTEL) || !cpu_parse_topology_ext(tscan))
+ 			parse_legacy(tscan);
++		if (c->cpuid_level >= 0x1a)
++			c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+ 		break;
+ 	case X86_VENDOR_HYGON:
+ 		if (IS_ENABLED(CONFIG_CPU_SUP_HYGON))
