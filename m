@@ -1,116 +1,161 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53EF37FF;
-	Fri, 28 Jun 2024 02:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C78EF208D0;
+	Fri, 28 Jun 2024 03:11:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719542020; cv=none; b=O1jRPuKCw6pDJuNzqp11bVXsFpkaqzsh7pHnVlLqBlUY3oFoLRTqk/1LhEW5X4Akq+lnot5HiZ7QYBPo41NhmWHW1qqCu3uVBRRvdgcheozL+NjHZOLgxwUkh8Fh6s45xIlkHuCVS/meZnStW2zCD6TOHHbcAmPreRjVOnzf+K8=
+	t=1719544276; cv=none; b=m9Gts2t+wSJnrIkdDcYDHJG6QG353LXsd7AlCNyVFhinR1sHndDkkGLqxxEAC+EUilm+wX9KnQ3uGYFEfAdBwRld5Su0Et4NlhdGGkKLgLA3v3Dy7jX0GN5sR15EYX/xRCEIN0jVdDI/cTRUj7pkfax95Rl5M9zjBvnxvyE3Khk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719542020; c=relaxed/simple;
-	bh=oyDI734ARDefjR3kNiw3Wf7uFfhzW8qVKv93V4DSXiY=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=CueySOmm7jgZAWWlrUvCPNYSNhGXixEuwz3LLmBIXKkhWl9h/GccZwvobWmpR+U9mwzjZ/r3vpCZZi6SDYmNLef1HPaYBgJ4oskCgfsAoBBtAPQVoD/2cZhnODaHBYJqyhLm3p1XPMsLmwqwG9f0BHeEVKNOx2pWeKjGDV5rKdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4W9KBX428Tz1T4JJ;
-	Fri, 28 Jun 2024 10:29:08 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id CF396180088;
-	Fri, 28 Jun 2024 10:33:34 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 28 Jun 2024 10:33:34 +0800
-CC: <yangyicong@hisilicon.com>, Jiri Olsa <jolsa@kernel.org>, Adrian Hunter
-	<adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] perf stat: Fix a segfault with --per-cluster
- --metric-only
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang
-	<kan.liang@linux.intel.com>
-References: <20240628000604.1296808-1-namhyung@kernel.org>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <83aa958a-5bd6-06eb-06a4-39e51e2eb3b5@huawei.com>
-Date: Fri, 28 Jun 2024 10:33:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1719544276; c=relaxed/simple;
+	bh=kRo5ctG1rFTQqJeB5tVlcVlT5rJH72i5XfyhsbRL2NQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ilTEHoIg48Xh2wtJEj5/up064MtLwJOQWbaZBE0gf+QjYsQD3EZCUJzs/eltMyowkLAOSi3WzpwviRCFAJhXjFfgn6YLpjiWm7p+m3WDL1azVxMsutz7EJivbf1wnyfE4XC2dlMJlo775ssloBHhbgIdNrfSMWve8x4ggF/rGn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=srC9rgHV; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="srC9rgHV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B72F6C116B1;
+	Fri, 28 Jun 2024 03:11:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719544276;
+	bh=kRo5ctG1rFTQqJeB5tVlcVlT5rJH72i5XfyhsbRL2NQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=srC9rgHVUOqPNLuOiWEi6Z+0HkZcbvEnR4sfZftuTSk2F/WB6+zKUb8XFLs/XqWml
+	 nGYm3+hyJCAibINP6QdO2w4ow7e7LWR5ODbWtflHqhoz6A0DNPFwjdIO59olqhqNcb
+	 IBsUQvL9dPJklnV5Q6FjCnMujMCPRTEVOw5+62u6OOXK97SzI0zzM1KyEsr8uNVrmg
+	 R9kAkZ4l47TEiWZ42Ue5yhWhhJSBAscC40jjkxlbBZhxTetKB1SHiDLxkmTwqB53Ig
+	 NFiFU+u9WwcbnzSlV9Zb96U43/uLqZyjxDhciiHEudwlBDpulMPWfgK4wpaKx6Royk
+	 KfstyqM2Zb9pw==
+Date: Thu, 27 Jun 2024 20:11:14 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+	Chen Yu <yu.c.chen@intel.com>, Fernand Sieber <sieberf@amazon.com>,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Ian Rogers <irogers@google.com>
+Subject: Re: [PATCH v2] perf sched replay: Fix -r/--repeat command line
+ option for infinity
+Message-ID: <Zn4p0kMIsLNlv04X@google.com>
+References: <20240621171909.24119-1-vineethr@linux.ibm.com>
+ <51e9fd2f-7d86-40cb-b307-0b0b396ca32a@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240628000604.1296808-1-namhyung@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <51e9fd2f-7d86-40cb-b307-0b0b396ca32a@linux.ibm.com>
 
-Hi Namhyung,
-
-On 2024/6/28 8:06, Namhyung Kim wrote:
-> The new --per-cluster option was added recently but it forgot to update
-> the aggr_header fields which are used for --metric-only option.  And it
-> resulted in a segfault due to NULL string in fputs().
+On Fri, Jun 28, 2024 at 08:00:14AM +0530, Madadi Vineeth Reddy wrote:
+> On 21/06/24 22:49, Madadi Vineeth Reddy wrote:
+> > Currently, the -r/--repeat option accepts values from 0 and complains
+> > for -1. The help section specifies:
+> > -r, --repeat <n>      repeat the workload replay N times (-1: infinite)
+> > 
+> > The -r -1 option raises an error because replay_repeat is defined as
+> > an unsigned int.
+> > 
+> > In the current implementation, the workload is repeated n times when
+> > -r <n> is used, except when n is 0.
+> > 
+> > When -r is set to 0, the workload is also repeated once. This happens
+> > because when -r=0, the run_one_test function is not called. (Note that
+> > mutex unlocking, which is essential for child threads spawned to emulate
+> > the workload, happens in run_one_test.) However, mutex unlocking is
+> > still performed in the destroy_tasks function. Thus, -r=0 results in the
+> > workload running once coincidentally.
+> > 
+> > To clarify and maintain the existing logic for -r >= 1 (which runs the
+> > workload the specified number of times) and to fix the issue with infinite
+> > runs, make -r=0 perform an infinite run.
+> > 
+> > Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+> > Reviewed-by: James Clark <james.clark@arm.com>
+> > 
 > 
-> Fixes: cbc917a1b03b ("perf stat: Support per-cluster aggregation")
-> Cc: Yicong Yang <yangyicong@hisilicon.com>
+> Hi all,
+> Any suggestions/comments on this patch?
 
-Thanks for fixing this.
+I think the original intention was to set replay_repeat to UINT_MAX
+using -1.  But it seems to refuse the negative number now.
 
-Reviewed-by: Yicong Yang <yangyicong@hisilicon.com>
+Maybe you can simply set it to UNIT_MAX for -r 0.
 
-Tested on my cluster machine and this patch fixes the issue:
+Thanks,
+Namhyung
 
-[root@localhost perf]# ./perf-before stat -M TopDownL1 --per-cluster --metric-only --timeout 100 -x ,
-Segmentation fault (core dumped)
-[root@localhost perf]# ./perf-after stat -M TopDownL1 --per-cluster --metric-only --timeout 100 -x ,
-cluster,cpus,retiring,bad_speculation,backend_bound,frontend_bound,
-S56-D0-CLS158,4,0.03,0.00,0.96,0.00,
-[...]
 
-So,
-
-Tested-by: Yicong Yang <yangyicong@hisilicon.com>
-
-Thanks.
-
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/util/stat-display.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
-> index 91d2f7f65df7..186305fd2d0e 100644
-> --- a/tools/perf/util/stat-display.c
-> +++ b/tools/perf/util/stat-display.c
-> @@ -38,6 +38,7 @@
->  static int aggr_header_lens[] = {
->  	[AGGR_CORE] 	= 18,
->  	[AGGR_CACHE]	= 22,
-> +	[AGGR_CLUSTER]	= 20,
->  	[AGGR_DIE] 	= 12,
->  	[AGGR_SOCKET] 	= 6,
->  	[AGGR_NODE] 	= 6,
-> @@ -49,6 +50,7 @@ static int aggr_header_lens[] = {
->  static const char *aggr_header_csv[] = {
->  	[AGGR_CORE] 	= 	"core,cpus,",
->  	[AGGR_CACHE]	= 	"cache,cpus,",
-> +	[AGGR_CLUSTER]	= 	"cluster,cpus,",
->  	[AGGR_DIE] 	= 	"die,cpus,",
->  	[AGGR_SOCKET] 	= 	"socket,cpus,",
->  	[AGGR_NONE] 	= 	"cpu,",
-> @@ -60,6 +62,7 @@ static const char *aggr_header_csv[] = {
->  static const char *aggr_header_std[] = {
->  	[AGGR_CORE] 	= 	"core",
->  	[AGGR_CACHE] 	= 	"cache",
-> +	[AGGR_CLUSTER]	= 	"cluster",
->  	[AGGR_DIE] 	= 	"die",
->  	[AGGR_SOCKET] 	= 	"socket",
->  	[AGGR_NONE] 	= 	"cpu",
+> > ---
+> > Changes in v2:
+> > - Kept the existing 'for' loop and added a condition for infinite
+> >   looping. (James Clark)
+> > - This change also ensures that integer overflow doesn't occur when
+> >   'replay_repeat' is zero.
+> > - Add Reviewed-by tag from James Clark.
+> > - Rebase against perf-tools-next commit 788c5160526a ("perf vendor
+> >   events: Add westmereex counter information")
+> > - Link to v1: https://lore.kernel.org/all/20240618112907.15131-1-vineethr@linux.ibm.com/
+> > 
+> >  tools/perf/Documentation/perf-sched.txt |  7 +++++++
+> >  tools/perf/builtin-sched.c              | 11 ++++++++---
+> >  2 files changed, 15 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> > index a216d2991b19..f1be8f0b249e 100644
+> > --- a/tools/perf/Documentation/perf-sched.txt
+> > +++ b/tools/perf/Documentation/perf-sched.txt
+> > @@ -202,6 +202,13 @@ OPTIONS for 'perf sched timehist'
+> >  --state::
+> >  	Show task state when it switched out.
+> >  
+> > +OPTIONS for 'perf sched replay'
+> > +------------------------------
+> > +
+> > +-r::
+> > +--repeat <n>::
+> > +	repeat the workload n times (0: infinite). Default is 10.
+> > +
+> >  SEE ALSO
+> >  --------
+> >  linkperf:perf-record[1]
+> > diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> > index 8cdf18139a7e..51b3dea404bc 100644
+> > --- a/tools/perf/builtin-sched.c
+> > +++ b/tools/perf/builtin-sched.c
+> > @@ -3383,8 +3383,13 @@ static int perf_sched__replay(struct perf_sched *sched)
+> >  	sched->thread_funcs_exit = false;
+> >  	create_tasks(sched);
+> >  	printf("------------------------------------------------------------\n");
+> > -	for (i = 0; i < sched->replay_repeat; i++)
+> > -		run_one_test(sched);
+> > +	if (sched->replay_repeat == 0) {
+> > +		while (1)
+> > +			run_one_test(sched);
+> > +	} else {
+> > +		for (i = 0; i < sched->replay_repeat; i++)
+> > +			run_one_test(sched);
+> > +	}
+> >  
+> >  	sched->thread_funcs_exit = true;
+> >  	destroy_tasks(sched);
+> > @@ -3548,7 +3553,7 @@ int cmd_sched(int argc, const char **argv)
+> >  	};
+> >  	const struct option replay_options[] = {
+> >  	OPT_UINTEGER('r', "repeat", &sched.replay_repeat,
+> > -		     "repeat the workload replay N times (-1: infinite)"),
+> > +		     "repeat the workload replay N times (0: infinite)"),
+> >  	OPT_PARENT(sched_options)
+> >  	};
+> >  	const struct option map_options[] = {
 > 
