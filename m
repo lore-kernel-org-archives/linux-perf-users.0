@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C54A613A89A;
-	Fri, 28 Jun 2024 06:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFA347E0FB;
+	Fri, 28 Jun 2024 06:52:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719557525; cv=none; b=ZR5M6n0BEhasFvG4dVEiw2/nbMI/mkrkSdntVnRrB7gSbs9mrjxycqLjTWGVT5UWT83ejrQwSQFTDeEDtF1pZRX+F7TKnXuj3Va1WIdXZ5fCpH0WRv4dXCgArQ72D6FmDe2U5O7j/de8BPCM0Bejb+DkBtqPc+0Cc8/CqhKD6hs=
+	t=1719557531; cv=none; b=jXysyxDU9t2vQ7dnYSi+K/IzWy1v5G9rB0g7j1jE4eEebdVe4Y4ja8x2Zv8lopc12MPgYaw40SenKuVExH4uGzxGPPYbVT05HmKhlL644sOQ0+NbXfl1Q0dsFGb52Sa0Ubr3/NgEBVOzCLVwRajqHHAQK77klGQgCI1XAV+9TPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719557525; c=relaxed/simple;
-	bh=RR3rwbnMC6ghBhDqx5zv3Qqug9YamguX/X6OJMJG9Fw=;
+	s=arc-20240116; t=1719557531; c=relaxed/simple;
+	bh=Vc4onBiyA081mqZ+u8spT9LVIyOZyH6KyTqbDavfdDU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CqUsoU6c8NQfkp6kA12jwyWnGqOOmed9eI2b33eYhNIvOYRtEbqqZjUiGuQGyKB7zJzFaMPiwUUwbZYNlH7r6AKHZ60hg0egMXWBDUm5JijAvRtbQRb7L4gDrt/6HrcuZpLooT/qBOCZCiFo6SQ0uXpYnUPB5RqGjsaosivLUpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Oz0243M2; arc=none smtp.client-ip=198.175.65.16
+	 MIME-Version; b=EDgpxHX2vtcfhsXk2BW0q6ytk7H7vMAZlSMOdV4tJUuf8gv4GlWDiwXXAd9gDEiI0etSjn7reoc4Hek65PQUHlqSM8XSQEBFm1fdM1YLGk+lVKLSqJMavsd1J7RkJsVzK+Ik3dwoEP1qxOjnfUZ2fynP3NWSEINDDzgTW6bV1sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bIba/CQP; arc=none smtp.client-ip=198.175.65.16
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Oz0243M2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bIba/CQP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719557524; x=1751093524;
+  t=1719557530; x=1751093530;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=RR3rwbnMC6ghBhDqx5zv3Qqug9YamguX/X6OJMJG9Fw=;
-  b=Oz0243M2BkxfsLkvmQ25OtDuQNfw0va1w9C+w7434iWNCWCqJcuQ10Vp
-   jJq5UAmaBUKHPwW1iLwD607quQY2qi/7lHXXrc8dYySL54c4LPnOVKcU1
-   H4yZ4FysvrqdH8BENvcnQ6RLcmZWHHUP6uvsgM4HoenvQN8Qv7EQ4qZ0J
-   crktASVrZnGEXveDVmtgN8HHZXiYGZ+4ls7XIXKX4sbq6/1vxP7cid7zR
-   4QAFovqjqxVwneOKahUzGrp0WWKmIgptlHNsadq21B/VcOaBjdIyklzzx
-   KmR55a1ZgvBVnE9Voluk4NAv8CJm5FA30rSnshi3ii6Tcdhucp2kDtyZf
+  bh=Vc4onBiyA081mqZ+u8spT9LVIyOZyH6KyTqbDavfdDU=;
+  b=bIba/CQPkM6Q37xBspdgUUOQb7frlU+jmIlZGv49EZIad0Sr9s+T5TF/
+   8rwM2h2KqEMJ0yEMTRFdlQuD7U0r1TFvfjkADQotaytjaznFHrFLdzvIB
+   /Zv3N2k6pu/n68ihnOXtazF0Uypmm1DItXAXE9UajL/bUx0QAIHmvA775
+   OdEsT5OrTzVZeEvTMDlxIDHN3L5FZUirY1/1w/k4hzIQcNbM8vPMpoTG6
+   2o/L++fYTQAufNUFwuZEsMPgT2mjbFtTOVDgrvSL7pyfCBXFW5wKsz9Zr
+   g0AAIG/Zn5yuY4yTtRWD2rOFbEASRx8PXW0hZFk0DQGbaiEpsacy0eHCS
    Q==;
-X-CSE-ConnectionGUID: 8ZyRaYmfRpWhis8BBqwvPQ==
-X-CSE-MsgGUID: cWWIiqIORESNrqUAFk8tUw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16857174"
+X-CSE-ConnectionGUID: aKXS4c4XQ3uyq6VAdk3Ofw==
+X-CSE-MsgGUID: kuDZnBCsSL+CL1nTwNsu6w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11116"; a="16857193"
 X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="16857174"
+   d="scan'208";a="16857193"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:52:04 -0700
-X-CSE-ConnectionGUID: dX0AHA12Tyy1S+nDr9PdAg==
-X-CSE-MsgGUID: MfLECR1eRSK0ZrU/H4i2Ow==
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:52:10 -0700
+X-CSE-ConnectionGUID: CbkGTsXURLydXkTNwDvFxw==
+X-CSE-MsgGUID: U89M6cygQZm2V6Hdz9GclA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,168,1716274800"; 
-   d="scan'208";a="75386703"
+   d="scan'208";a="75386706"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.49.253])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:51:58 -0700
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jun 2024 23:52:04 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V8 05/12] perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
-Date: Fri, 28 Jun 2024 09:51:04 +0300
-Message-Id: <20240628065111.59718-6-adrian.hunter@intel.com>
+Subject: [PATCH V8 06/12] perf tools: Add aux_start_paused, aux_pause and aux_resume
+Date: Fri, 28 Jun 2024 09:51:05 +0300
+Message-Id: <20240628065111.59718-7-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240628065111.59718-1-adrian.hunter@intel.com>
 References: <20240628065111.59718-1-adrian.hunter@intel.com>
@@ -81,41 +81,53 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-evsel__is_aux_event() identifies AUX area tracing selected events.
-
-S390_CPUMSF uses a raw event type (PERF_TYPE_RAW - refer
-s390_cpumsf_evsel_is_auxtrace()) not a PMU type value that could be checked
-in evsel__is_aux_event(). However it sets needs_auxtrace_mmap (refer
-auxtrace_record__init()), so check that first.
-
-Currently, the features that use evsel__is_aux_event() are used only by
-Intel PT, but that may change in the future.
+Add struct perf_event_attr members to support pause and resume of AUX area
+tracing.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Acked-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/pmu.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ tools/include/uapi/linux/perf_event.h     | 11 ++++++++++-
+ tools/perf/util/perf_event_attr_fprintf.c |  3 +++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index c94a91645b21..05deea7724eb 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -1182,8 +1182,12 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
- 
- bool evsel__is_aux_event(const struct evsel *evsel)
- {
--	struct perf_pmu *pmu = evsel__find_pmu(evsel);
-+	struct perf_pmu *pmu;
- 
-+	if (evsel->needs_auxtrace_mmap)
-+		return true;
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..0c557f0a17b3 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -511,7 +511,16 @@ struct perf_event_attr {
+ 	__u16	sample_max_stack;
+ 	__u16	__reserved_2;
+ 	__u32	aux_sample_size;
+-	__u32	__reserved_3;
 +
-+	pmu = evsel__find_pmu(evsel);
- 	return pmu && pmu->auxtrace;
- }
++	union {
++		__u32	aux_action;
++		struct {
++			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
++				aux_pause        :  1, /* on overflow, pause AUX area tracing */
++				aux_resume       :  1, /* on overflow, resume AUX area tracing */
++				__reserved_3     : 29;
++		};
++	};
  
+ 	/*
+ 	 * User provided data if sigtrap=1, passed back to user via
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 59fbbba79697..29db0aef9a74 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -335,6 +335,9 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(sample_max_stack, p_unsigned);
+ 	PRINT_ATTRf(aux_sample_size, p_unsigned);
+ 	PRINT_ATTRf(sig_data, p_unsigned);
++	PRINT_ATTRf(aux_start_paused, p_unsigned);
++	PRINT_ATTRf(aux_pause, p_unsigned);
++	PRINT_ATTRf(aux_resume, p_unsigned);
+ 
+ 	return ret;
+ }
 -- 
 2.34.1
 
