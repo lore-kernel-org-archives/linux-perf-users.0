@@ -1,174 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93D2A1E517
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 14:24:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7521514E1;
+	Fri, 28 Jun 2024 14:41:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719584697; cv=none; b=MHGKUeIhtpM7JvX75F9ECktUl+b/fBr23/I8lbk5xZepQLb9Fjif8gRdOrjBh33RrCF/OLWc+e8k04kXutdlUpuGj8MMKHkLTkekFpQBiF8uMuXNe7HjgxLPTWZewvGUiQg6DRfJqIbsYZGqaxVYYhowfKXbEbRLdcPKaasL8vo=
+	t=1719585700; cv=none; b=DCC7NJVDSOHLp/N6sVtvj6LBW27sA4efw0xWLba0JQFVOhAyoP85yY35SD9HAyC9Wf9hWUz+xm3d/tM9h9NPN3Slagb/vBDJHlsiEfafZ5F5T0WbvblVk0PjowBYkjxCKcAKlfU+bene2lt9RvAGOwIlOJ4prqBCOMHKLVxDOAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719584697; c=relaxed/simple;
-	bh=X1810e2Oe/GIjZAP2/QW/UpIBWH4S5qikBGkP9IRpVc=;
+	s=arc-20240116; t=1719585700; c=relaxed/simple;
+	bh=Yj6cy91JoTBSw4EEoKl0+lYXCoG15CGxHS5xc7/9UnQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WNyQC+l42UOGxkdjeBM3z3WYGArN+nQV3cjCZQGBvM27kEMkB9fIruBw4lW/uXkag2jSfWYBrgOnpV+hvCGPMLv4MLYKq6i7qjnu6nd4NjKHw7YEOP/ZY1o//jnS12tFAgsMbFeshahZ6VvJAbke0WSPOWZKxBAaU6G2nuIHKeM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uMOb2KfG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gOwUyvBgwqg0Z++aE+MFhfB0CK7NfTcpMU7ApomppVy/ie7CM6vGpgUllSfW958nw49W4vvvn5EyYg4u9iIYJHRM+1XDuYOgmvRQPYlEcUUjTPdlb1geuBddQysa72xRCFNM692kMGtgVDxJfMQDqc1eG5Ok6c+eomYD6//YZLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SehGggs3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uMOb2KfG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C379C116B1;
-	Fri, 28 Jun 2024 14:24:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SehGggs3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C29DC116B1;
+	Fri, 28 Jun 2024 14:41:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719584697;
-	bh=X1810e2Oe/GIjZAP2/QW/UpIBWH4S5qikBGkP9IRpVc=;
+	s=k20201202; t=1719585699;
+	bh=Yj6cy91JoTBSw4EEoKl0+lYXCoG15CGxHS5xc7/9UnQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uMOb2KfGizOe4OfhoF89F2KNuKokqlai7DeBGGYJ9qqCJUpx2U/ZRTe6jt5GBfV5b
-	 8JHpcDd7XjA0r/hTkRONliomBIhdZ0mqphIfXDWojkaNaf/LHn/Ywu3BrUdWB6OmNR
-	 M64H8nE6O9BGFQm6kESktdlr3OxfC9WaD/e8/mYlyMN/IMi/EDSTwtP+06ISobSLMe
-	 HQ77HCbwPxVxWiMpqdtkwUI4kYb1uErnFItyUhk1HwCElrmgb305MOb23E4Er39FM6
-	 LUYgwsApxVG8gSraC1dH0eddWvwb6KklaAxAcVCqTMIFFXbdYLAWzujdeVaptal7Gh
-	 Ar61gTKB8SXtA==
-Date: Fri, 28 Jun 2024 11:24:53 -0300
+	b=SehGggs3AT6JuDKxcRm9xAd4jqMyleLaDWRlGXMy1iGX+uiF+7L+xlYfkyADO9UaD
+	 3VXdxiuWwNogq5mmpSX6AW1La4RoUj4dHJQpllUr9V/RVv7I2HF1aXgKXsYs7bVVMH
+	 z4PnTV5CSq0Tqvl+MzOhFqWVhdCSNCxaSNi7cNR8pfmy5ciTUkWSJU07CV+Qab3Pg6
+	 8iAmA83XQR+HblOd00vwmXPvGHSlvjxjb2czj9awcki8z/d9VJOV1AVu2rdmxsxhu/
+	 V2ot62V/YauUWSAfbQb8D8Rk2cYy8zMv2Q2vHljs7A0+0i1RW2gGTqTQltnK7pIhhu
+	 m/YAiBqX5POIw==
+Date: Fri, 28 Jun 2024 11:41:37 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v11 1/4] perf check: introduce check subcommand
-Message-ID: <Zn7HtaJb3NL2k5YG@x1>
-References: <20240627100644.772219-1-adityag@linux.ibm.com>
- <20240627100644.772219-2-adityag@linux.ibm.com>
- <Zn7EvDbsnlbLXj4g@x1>
- <Zn7FmltYgUzi6YvV@x1>
- <Zn7GsEKwLxn5bMyN@x1>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
+	kan.liang@linux.intel.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH v3 4/8] perf trace: Filter enum arguments with enum names
+Message-ID: <Zn7LoTU45bhZaihh@x1>
+References: <20240624181345.124764-1-howardchu95@gmail.com>
+ <20240624181345.124764-5-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zn7GsEKwLxn5bMyN@x1>
+In-Reply-To: <20240624181345.124764-5-howardchu95@gmail.com>
 
-On Fri, Jun 28, 2024 at 11:20:35AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Jun 28, 2024 at 11:15:57AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Jun 28, 2024 at 11:12:16AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Thu, Jun 27, 2024 at 03:36:41PM +0530, Aditya Gupta wrote:
-> > > > Currently the presence of a feature is checked with a combination of
-> > > > perf version --build-options and greps, such as:
-> > > > 
-> > > >     perf version --build-options | grep " on .* HAVE_FEATURE"
-> > > > 
-> > > > Instead of this, introduce a subcommand "perf check feature", with which
-> > > > scripts can test for presence of a feature, such as:
-> > > > 
-> > > >     perf check feature HAVE_FEATURE
-> > > > 
-> > > > 'perf check feature' command is expected to have exit status of 0 if
-> > > > feature is built-in, and 1 if it's not built-in or if feature is not known.
-> > > > 
-> > > > Multiple features can also be passed as a comma-separated list, in which
-> > > > case the exit status will be 1 only if all of the passed features are
-> > > > built-in. For example, with below command, it will have exit status of 0
-> > > > only if both libtraceevent and bpf are enabled, else 1 in all other cases
-> > > > 
-> > > >     perf check feature libtraceevent,bpf
-> > > > 
-> > > > The arguments are case-insensitive.
-> > > > An array 'supported_features' has also been introduced that can be used by
-> > > > other commands like 'perf version --build-options', so that new features
-> > > > can be added in one place, with the array
-> > 
-> > Now testing it with just this first patch applied:
-> > 
-> > ⬢[acme@toolbox perf-tools-next]$ perf check feature bpf
-> >                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-> > ⬢[acme@toolbox perf-tools-next]$ echo $?
-> > 0
-> > ⬢[acme@toolbox perf-tools-next]$ perf check bpf,libtrafs
-> > 
-> >  Usage: perf check [<subcommand>] [<options>]
-> > 
-> >     -q, --quiet           do not show any warnings or messages
-> > 
-> > ⬢[acme@toolbox perf-tools-next]$
-> > 
-> > 
-> > I don't see a way to list what features can be tested against, would be
-> > great to have.
-> > 
-> > Also it just says that the usage is wrong, no indication as to why, I
-> > think this would be more informative:
-> > 
-> > 
-> > ⬢[acme@toolbox perf-tools-next]$ perf check bpf,libtrafs
-> > Unkown feature 'libtrafs', please use 'perf check feature --list' to see which ones are available.
+On Tue, Jun 25, 2024 at 02:13:41AM +0800, Howard Chu wrote:
+> Before:
+> 
+> perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
+> No resolver (strtoul) for "mode" in "timer:hrtimer_start", can't set filter "(mode!=HRTIMER_MODE_ABS_PINNED_HARD) && (common_pid != 281988)"
+> 
+> After:
+> 
+> perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
+>      0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12351248764875, softexpires: 12351248764875, mode: HRTIMER_MODE_ABS)
+> 
+> && and ||:
+> 
+> perf $ ./perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS_PINNED_HARD && mode != HRTIMER_MODE_ABS' --max-events=1
+>      0.000 Hyprland/534 timer:hrtimer_start(hrtimer: 0xffff9497801a84d0, function: 0xffffffffc04cdbe0, expires: 12639434638458, softexpires: 12639433638458, mode: HRTIMER_MODE_REL)
+> 
+> perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_REL || mode == HRTIMER_MODE_PINNED' --max-events=1
+>      0.000 ldlck-test/60639 timer:hrtimer_start(hrtimer: 0xffffb16404ee7bf8, function: 0xffffffffa7790420, expires: 12772614418016, softexpires: 12772614368016, mode: HRTIMER_MODE_REL)
+> 
+> Switching it up, using both enum name and integer value(--filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0'):
+> 
+> perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0' --max-events=3
+>      0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12601748739825, softexpires: 12601748739825, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+>      0.036 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12518758748124, softexpires: 12518758748124, mode: HRTIMER_MODE_ABS_PINNED_HARD)
+>      0.172 tmux: server/41881 timer:hrtimer_start(hrtimer: 0xffffb164081e7838, function: 0xffffffffa7790420, expires: 12518768255836, softexpires: 12518768205836, mode: HRTIMER_MODE_ABS)
+> 
+> P.S.
+> perf $ pahole hrtimer_mode
+> enum hrtimer_mode {
+>         HRTIMER_MODE_ABS             = 0,
+>         HRTIMER_MODE_REL             = 1,
+>         HRTIMER_MODE_PINNED          = 2,
+>         HRTIMER_MODE_SOFT            = 4,
+>         HRTIMER_MODE_HARD            = 8,
+>         HRTIMER_MODE_ABS_PINNED      = 2,
+>         HRTIMER_MODE_REL_PINNED      = 3,
+>         HRTIMER_MODE_ABS_SOFT        = 4,
+>         HRTIMER_MODE_REL_SOFT        = 5,
+>         HRTIMER_MODE_ABS_PINNED_SOFT = 6,
+>         HRTIMER_MODE_REL_PINNED_SOFT = 7,
+>         HRTIMER_MODE_ABS_HARD        = 8,
+>         HRTIMER_MODE_REL_HARD        = 9,
+>         HRTIMER_MODE_ABS_PINNED_HARD = 10,
+>         HRTIMER_MODE_REL_PINNED_HARD = 11,
+> };
+> 
+> Committer testing:
 
-Or:
+Further testing:
 
-⬢[acme@toolbox perf-tools-next]$ perf version --build-options
-perf version 6.10.rc1.g25cd7047ff7b
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-            debuginfod: [ on  ]  # HAVE_DEBUGINFOD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-           libcapstone: [ on  ]  # HAVE_LIBCAPSTONE_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-  dwarf-unwind-support: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
-⬢[acme@toolbox perf-tools-next]$
+root@number:~# perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS_PINNED_WRONG'
+"HRTIMER_MODE_ABS_PINNED_WRONG" not found for "mode" in "timer:hrtimer_start", can't set filter "(mode != HRTIMER_MODE_ABS_PINNED_WRONG) && (common_pid != 103306 && common_pid != 3476)"
+root@number:~# 
 
-I.e.:
+Maybe we can list the possibilities, i.e. print all of 'enum
+hrtimer_mode'
 
-Unkown feature 'libtrafs', please use 'perf version --build-options' to see which ones are available.
-
-And while looking at it:
-
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-
-This looks wrong, no? Or at least confusing, have to check the source
-code...
-
-Also:
-
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+This can be on a followup patch, just recording the idea here.
 
 - Arnaldo
-
-> > ⬢[acme@toolbox perf-tools-next]$
-> 
-> Ah, to clarify, these comments are for the v12 series even being replies
-> to the v11 thread, I'll move to the v12 e-mail thread. Using b4 I got
-> the latest version, v12:
-> 
-> Cover: ./v12_20240628_adityag_introduce_perf_check_subcommand.cover
->  Link: https://lore.kernel.org/r/20240628064236.1123851-1-adityag@linux.ibm.com
->  Base: applies clean to current tree
->        git checkout -b v12_20240628_adityag_linux_ibm_com HEAD
->        git am ./v12_20240628_adityag_introduce_perf_check_subcommand.mbx
-> ⬢[acme@toolbox perf-tools-next]$        git am ./v12_20240628_adityag_introduce_perf_check_subcommand.mbx
-> Applying: perf check: introduce check subcommand
-> Applying: perf version: update --build-options to use 'supported_features' array
-> Applying: perf tests task_analyzer: use perf check for libtraceevent support
-> Applying: tools/perf/tests: Update probe_vfs_getname.sh script to use perf check feature
-> ⬢[acme@toolbox perf-tools-next]$
