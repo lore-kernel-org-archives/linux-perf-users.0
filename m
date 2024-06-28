@@ -1,56 +1,47 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829C556448
-	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 19:20:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31541B94F
+	for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 19:28:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719602415; cv=none; b=Jl5KJxAPMSkohyvHeNXSjbwMy+PVEV1eXDKHRwvIx3jVGoo7t8mTWrTk9qQdbw9g5/sENrsWzRiGPYt289wWIM5nmav+l2zyLnfMUxBF5cKRYcYrDudhpyXfuctxq0kANIi5lfcOjdtayVqyCpH5ra+zsO9/s0stpVFhI3tshU4=
+	t=1719602889; cv=none; b=kdw0JY5BjaH7KBDYJug4ekwolxFsylvzJCaumEfvgsjT4slOc7u0VIkY4q0Alerg1uP4QnkgAghzikfpoDB/zNKUQ2bunVEd5the9dpPMzL5onWrHN6KtDyWot9Ep7vAODuFUxuSI7K1aw3EA8P8qETfvQcmUevEZMYqUp8cDS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719602415; c=relaxed/simple;
-	bh=7Ew+cqc+0DdaV0ZwQ+yWHVG9PQ1I4biV+LJtRf0MDOQ=;
+	s=arc-20240116; t=1719602889; c=relaxed/simple;
+	bh=JIHdNoWNNe8lhXbmiwDx+eNXYzr3/G6ldRPHctL5TEw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Oo3c3kGe875sFc+ohDycy/bj9eQbpMxGXidRaYQZgIfhaavt3roLhPL4ajJj3xtCBnz+/dASUMLAzSE7D2S5FNTPxJ39KUmxFvo8edLcrQ3F53Fl/h/1kiHIpo2kcFDf9rYqFg8y5w1mq+e6dbkPYwnqXkSr02RFWVPjP/B/AkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PNed2nxA; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=f1D3s0DChGbFsPXLuFqYXnbZ3KpMKYsS2EqqxSYSju/+/JUvc/32PeYI6yA3Hou46tP1atCJcpQy5ExkarJhCmryR59EomfQx5X+Z05uyW5ji2Ui0sUQoj81HlyVZ1D89lTGQS36VVgzKXI38FcMX6SviozRq7MfqRWRpDhOTWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXS/kVKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PNed2nxA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719602414; x=1751138414;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7Ew+cqc+0DdaV0ZwQ+yWHVG9PQ1I4biV+LJtRf0MDOQ=;
-  b=PNed2nxATyHqU2MS0dM9XqLLQBCdxJ8u9PkKlsd+JRd/b82tbHvphcrX
-   Lu3bQ7RKIShQHd6JzAz27XZ0Yu2c2SwXqhze+1P9NzedcBSMQL2nuk0IQ
-   IdD2lN4Xpgir/Gh8g3hrd2b3Tdaryib7ngn+RB4z9bqIRCUJIUnhtnGd2
-   ngFta6RMuvFSc35G5AokZKbJ9ipYFf8ARFRJSW4WEKaHnGW+GPgN6AmRS
-   gMSTuGtnPTlZb9px0mHsu9hKtENcjcHacNn9btHDBxwIXNI9EcL8a+X4G
-   QscsJ0XnZHqwUAGmiITOdr4RL/7s5xQ2la26qGZD1p6E8Ni1OKJ0lUDgm
-   g==;
-X-CSE-ConnectionGUID: DVjtvDJxSpOsGVG3meECpQ==
-X-CSE-MsgGUID: JHa396dATj+Av2cCSNVYtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11117"; a="16633367"
-X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="16633367"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 12:20:06 -0700
-X-CSE-ConnectionGUID: r9aKir+SQ+Wyr3deEaGR9Q==
-X-CSE-MsgGUID: B7kZz81ERvSFu79jAi9Xuw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,170,1716274800"; 
-   d="scan'208";a="49795321"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2024 12:20:04 -0700
-Date: Fri, 28 Jun 2024 12:19:59 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Artem Savkov <asavkov@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf script: Fix perf script -F +metric
-Message-ID: <Zn8M39dHtqYpRa0o@tassilo>
-References: <20240625004232.1852705-1-ak@linux.intel.com>
- <20240626090924.GA56952@alecto.usersys.redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXS/kVKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AADC116B1;
+	Fri, 28 Jun 2024 19:28:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719602888;
+	bh=JIHdNoWNNe8lhXbmiwDx+eNXYzr3/G6ldRPHctL5TEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SXS/kVKDTBlxZJORnDPN+8q3zFYElRqZkwBuLBcGRR8IIL5o5TU9yiaLpYsb1r9XJ
+	 WAHLdJAvwKqT9CGPRCkS9w6PrMiI/OabNg4xGcMNNVoJBAcmvQWes2A3cDOfgfeF+K
+	 gXHwek/89boXOCv+EHSki/TNlgUDbiUnugwJPg5RwU+sVTUZD/ba/DxhYgwKCc8qiU
+	 9XDqBuoByfM6fYxEHI7guk6JKLyT1ZOqK+qDoVavVDkVrqnCeRLiWfoyIkWdIHLxkK
+	 Z7ctxFLI3gLrSxoMYRVogU1S7oyuJ4k5jty22c37GssRJTrIGBVQKouO5Jj4/KK6ap
+	 Q29aK7Rqfs4Gg==
+Date: Fri, 28 Jun 2024 16:28:06 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Aditya Gupta <adityag@linux.ibm.com>, jolsa@kernel.org,
+	irogers@google.com, linux-perf-users@vger.kernel.org,
+	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+	kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v11 1/4] perf check: introduce check subcommand
+Message-ID: <Zn8OxjRgFlPduRKh@x1>
+References: <20240627100644.772219-1-adityag@linux.ibm.com>
+ <20240627100644.772219-2-adityag@linux.ibm.com>
+ <Zn7EvDbsnlbLXj4g@x1>
+ <Zn7FmltYgUzi6YvV@x1>
+ <Zn7GsEKwLxn5bMyN@x1>
+ <Zn7HtaJb3NL2k5YG@x1>
+ <Zn8AvuvyjXFGa90c@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -59,49 +50,73 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240626090924.GA56952@alecto.usersys.redhat.com>
+In-Reply-To: <Zn8AvuvyjXFGa90c@google.com>
 
-> This works, however there seems to be yet another issue on
-> perf-tools-next branch that breaks script metrics.
+On Fri, Jun 28, 2024 at 11:28:14AM -0700, Namhyung Kim wrote:
+> On Fri, Jun 28, 2024 at 11:24:53AM -0300, Arnaldo Carvalho de Melo wrote:
 > 
-> 617824a7f0f73 (perf parse-events: Prefer sysfs/JSON hardware
-> events over legacy, 2024-04-15) changes event priority so on
-> my host "instructions" have type PERF_TYPE_RAW instead of
-> PERF_TYPE_HARDWARE.
+> > And while looking at it:
+> > 
+> >              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+> > 
+> > This looks wrong, no? Or at least confusing, have to check the source
+> > code...
+> 
+> We have this in Makefile.config
+> 
+> ifndef NO_AUXTRACE
+>   ifeq ($(SRCARCH),x86)
+>     ifeq ($(feature-get_cpuid), 0)
+>       $(warning Your gcc lacks the __get_cpuid() builtin, disables support for auxtrace/Intel PT, please install a newer gcc)
+>       NO_AUXTRACE := 1
+>     endif
+>   endif
 
-FWIW I don't see this on my build on Intel, even with that commit.
+The complete sequence is:
 
-> This results in evsel__stat_type no longer recognizing these as
-> STAT_INSTRUCTIONS.
+ifndef NO_AUXTRACE
+  ifeq ($(SRCARCH),x86)
+    ifeq ($(feature-get_cpuid), 0)
+      $(warning Your gcc lacks the __get_cpuid() builtin, disables support for auxtrace/Intel PT, please install a newer gcc)
+      NO_AUXTRACE := 1
+    endif
+  endif
+  ifndef NO_AUXTRACE
+    $(call detected,CONFIG_AUXTRACE)
+    CFLAGS += -DHAVE_AUXTRACE_SUPPORT
+    ifeq ($(feature-reallocarray), 0)
+      CFLAGS += -DCOMPAT_NEED_REALLOCARRAY
+    endif
+  endif
+endif
 
-I guess we could just fix evsel__stat_type to handle that case
+The most descriptive would be to HAVE_GET_CPUID_SUPPORT and have it used
+in the source code.
 
-Does this patch work?
+That or have:
 
-perf: Workaround event priority problems
-    
-When instructions is not of HARDWARE types anymore, but raw,
-which breaks the shadow stat metrics detection for IPC.
-    
-Reported-by: Artem Savkov <asavkov@redhat.com>
-Fixes: 617824a7f0f73 (perf parse-events: Prefer sysfs/JSON hardware
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 44ffde6f8dbe51f3..ae4a686ff4f265be 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -33,7 +33,7 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
+ 	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
+ 	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
+-	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
++	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
+ 	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
+ 	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
+ 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
 
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 3466aa952442..87a503e47ff0 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -97,9 +97,11 @@ static enum stat_type evsel__stat_type(const struct evsel *evsel)
- 
- 	if (evsel__is_clock(evsel))
- 		return STAT_NSECS;
--	else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES))
-+	else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES) ||
-+			!strcmp(evsel__name((struct evsel *)evsel), "cycles"))
- 		return STAT_CYCLES;
--	else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS))
-+	else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS) ||
-+			!strcmp(evsel__name((struct evsel *)evsel), "instructions"))
- 		return STAT_INSTRUCTIONS;
- 	else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
- 		return STAT_STALLED_CYCLES_FRONT;
+That:
+
+        FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
+
+Should also really be:
+
+        FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
+
+For consistency, the get_cpuid/auxtrace also for consistency, I think.
+
+- Arnaldo
