@@ -1,39 +1,50 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAB15660;
-	Sat, 29 Jun 2024 18:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317744B5A6;
+	Sat, 29 Jun 2024 18:47:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719686325; cv=none; b=IJxFg4vLPVhaOISrrHxjvPOQjp9Jz7325AKRZc0gEViN2UliD7pC1bKKK6AXz/26LDGMHtl7T2q4DLTfEHyea82HRW9nHQWYXxMGcDZeQWVgTEfxiRm97o92Mtr2tXLtjjvWISQCfxaW0wfL1r/xmn+klDk0bVuOLK2OtIdOZZA=
+	t=1719686841; cv=none; b=Aek5sYZfUpx53Obrd8VdgvhO8/VYIYulcdjwIpfRztFrQ1Y1Sm1z+bfXt/QujRqDmSj3qSgOmUkbIDqCsIlfgz2EA1ls5UUvI+nkG8TatNTbMD6FIjBupikorLUHU23kQdXCUluDzKAMZ9dXrqK7nEqPVvhjBcPUeqZFyvsP9iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719686325; c=relaxed/simple;
-	bh=ydeN4nfGc/V7ZiWNo9W4bhoyVSromNzKtrx09K0p+ks=;
+	s=arc-20240116; t=1719686841; c=relaxed/simple;
+	bh=E4zUiywCt0sKLcfWlehSQEbDnjUwj7jC0wCrkGpJNuw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrdvhysCOJMeXtJcHdIHvUDM6oMfmBa6g2o0EO/ozRfOZGTO2R2KZNsBg85OVUkXSvtI673ZZwycMOb2dLVAoDNBu/d7En2HBsMeVoBffO2nMgFZXB4Wt04JC0M7eA9ZAfEQCPg1gWKstr0Nrv5gFpp3kdRMgCZ70DYWfXaqEac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=b9z/WMkg; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	 In-Reply-To:Content-Type; b=NOaPvGyj7etkCR/f5GasozdyGFlx1/SJ+hfIVii0r2y7YZ3kpfa/tkwah0mR1eSstX/EL3q5UWqmZZiShoFOQKbSD/ZLil9GPE9d2FGBJ2h6j+75k3fd2OpRGCTnWw1TgY4f/h72rxaMTOzBSAnT0+VpoJc7TUwjdepc2qdC89w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hYZZxRb1; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b9z/WMkg"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45TIcAka3566514
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 29 Jun 2024 11:38:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45TIcAka3566514
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719686291;
-	bh=QREjH9Gqqog/OBy3UIyRvzAzZFT617sJGPOSTR1kXpY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b9z/WMkg9i8suUdycCAWLaXme3fH2yExsOf1e4ux99+Mb3IeDWxwfjdlrXNG4F4So
-	 Tyu5//0jpboMrEa5R60y0MG/J1TbwaTocXnBzATV398JqWI8h3FN7iuuOr06B5yhAc
-	 1YPi7DRemyan2f2XbWotKNMLjs+EluPrXZp+DUPdmqzQcczIVDE/gFZuVnV9/iAmHs
-	 aZ+GwqUOxww1bDpaCyAkFgQYowuo+0avqtJwCI9NzH7GpJrPr93OS5RNsuyfvss8Co
-	 90fGlt2ONr+cTSnO8HznSbAUCYhd15IwfyKoByC2lXBteNFYy+f7QSbOlxq2D+N59p
-	 z488vjYt2MS8g==
-Message-ID: <ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
-Date: Sat, 29 Jun 2024 11:38:10 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hYZZxRb1"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719686840; x=1751222840;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=E4zUiywCt0sKLcfWlehSQEbDnjUwj7jC0wCrkGpJNuw=;
+  b=hYZZxRb1xD6SDfpTvDpzEadDBlPWN31d3I6TrnzbEaLcAhMhjA0VMxYl
+   QiyXQUv9qZe4qH5Z3gRTGUJkZlwUxzTw3nkvM18cQ9/EKbOLNfdwcoPa2
+   FvuHTOddWrorThKXxaICEtPrDlH7ik8GGB5O6+9mGKYvO8gCmwSY914MX
+   JM7K6CO5c609cayS5nBsKwGNXrVH04cGB3f4Hp3oZs8nGefp6PCCe0HvW
+   2zRekQpttrb+UzqyviUCKfADrPPEKSIfkfOE2Xb5x9Dbc1XVOZEGs6Fbd
+   FDh3bCITfiLDAG71s1n8Sss/cyeMQzbMPvCAuqIraXnY7c0kvCUX0ipoa
+   A==;
+X-CSE-ConnectionGUID: OSElh/ZBQISyBJTqIdynQA==
+X-CSE-MsgGUID: eCtih6ARTqWEGaTFdDQuZQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11118"; a="20609258"
+X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
+   d="scan'208";a="20609258"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 11:47:19 -0700
+X-CSE-ConnectionGUID: shg5fcFPT16nUwGl5IfEgQ==
+X-CSE-MsgGUID: k98idGcUR9uZHX9j9E0ahg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,172,1716274800"; 
+   d="scan'208";a="44968259"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 11:47:13 -0700
+Message-ID: <d7b48d48-1bea-4dec-bf04-ed65602f4c4a@intel.com>
+Date: Sat, 29 Jun 2024 21:47:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,100 +52,171 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] KVM: X86: Use common code for PV IPIs in linux
- guest
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        LKML
- <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
-        kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        Zeng Guang <guang.zeng@intel.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
+Subject: Re: [PATCH v4 1/5] perf: support specify vdso path in cmdline
+To: duchangbin <changbin.du@huawei.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Nathan Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "llvm@lists.linux.dev" <llvm@lists.linux.dev>
+References: <20240625033740.223009-1-changbin.du@huawei.com>
+ <20240625033740.223009-2-changbin.du@huawei.com>
+ <5a9e8dae-e9d9-4a97-98f5-d76be9068342@intel.com>
+ <7eef4826a2f3494ea1dc92ed98d543fb@huawei.com>
+ <05f95eb8-9b4c-4327-a97f-a15654278c41@intel.com>
+ <Zn37bj4LER_A1bX1@google.com> <1599b5defa46422eb66885e7430cc70f@huawei.com>
+ <18d0ae92-d764-4151-a2d6-f017b22b4c92@intel.com>
+ <88e192fb4b82454bbb008b65be94ffae@huawei.com>
 Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <88e192fb4b82454bbb008b65be94ffae@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> Paravirtual apic hooks to enable PV IPIs for KVM if the "send IPI"
+On 29/06/24 05:32, duchangbin wrote:
+> On Fri, Jun 28, 2024 at 08:27:55PM +0300, Adrian Hunter wrote:
+>> On 28/06/24 07:21, duchangbin wrote:
+>>> On Thu, Jun 27, 2024 at 04:53:18PM -0700, Namhyung Kim wrote:
+>>>> Hello guys,
+>>>>
+>>>> On Wed, Jun 26, 2024 at 01:32:42PM +0300, Adrian Hunter wrote:
+>>>>> On 26/06/24 05:26, duchangbin wrote:
+>>>>>> On Tue, Jun 25, 2024 at 04:20:49PM +0300, Adrian Hunter wrote:
+>>>>>>> On 25/06/24 06:37, Changbin Du wrote:
+>>>>>>>> The vdso dumped from process memory (in buildid-cache) lacks debugging
+>>>>>>>> info. To annotate vdso symbols with source lines we need specify a
+>>>>>>>> debugging version.
+>>>>>>>>
+>>>>>>>> For x86, we can find them from your local build as
+>>>>>>>> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
+>>>>>>>> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
+>>>>>>>> the buildid has to match.
+>>>>>>>>
+>>>>>>>> $ sudo perf record -a
+>>>>>>>> $ sudo perf report --objdump=llvm-objdump \
+>>>>>>>>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
+>>>>>>>>
+>>>>>>>> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+>>>>>>>> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+>>>>>>>> Percent│       movq    -48(%rbp),%rsi
+>>>>>>>>        │       testq   %rax,%rax
+>>>>>>>>        │     ;               return vread_hvclock();
+>>>>>>>>        │       movq    %rax,%rdx
+>>>>>>>>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
+>>>>>>>>        │     ↑ js      eb
+>>>>>>>>        │     ↑ jmp     74
+>>>>>>>>        │     ;               ts->tv_sec = vdso_ts->sec;
+>>>>>>>>   0.02 │147:   leaq    2(%rbx),%rax
+>>>>>>>>        │       shlq    $4, %rax
+>>>>>>>>        │       addq    %r10,%rax
+>>>>>>>>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
+>>>>>>>>   9.38 │152:   movl    (%r10),%ecx
+>>>>>>>>
+>>>>>>>> When doing cross platform analysis, we also need specify the vdso path if
+>>>>>>>> we are interested in its symbols.
+>>>>>>>
+>>>>>>> Would it be possible to add vdso and vdso debug to the build-id
+>>>>>>> cache and ensure perf can find it there?
+>>>>>>>
+>>>>>>> Typically, getting dsos from another machine is handled via
+>>>>>>> build-id cache e.g. what perf-archive does
+>>>>>>>
+>>>>>> Hmm. I agree this is better alternative approach for cross-machine analysis.
+>>>>>> When collecting vdsos to buildid cache, I think we can use the local searched
+>>>>>> objects (with debug symbols) instead if its build-id matches vdsos from process
+>>>>>> dumping (the real code ran).
+>>>>>>
+>>>>>> Currently I just follow what perf does for vmlinux so to reuse most of existing
+>>>>>> code. Maybe vmlinux is too big to add to buildid-cahce?
+>>>>>>
+>>>>>> Can we keep our current strategy for now? I'll think about above options when
+>>>>>> I have more time.
+>>>>>>
+>>>>>
+>>>>> I tried adding vdso via perf buildid-cache.  It doesn't work only
+>>>>> because the lookup expects the basename to be "vdso" but it is
+>>>>> "elf".
+>>>>>
+>>>>> Adding a link from "vdso" to "elf" made it work e.g.
+>>>>>
+>>>>> $ cat gettimeofday-test.c
+>>>>> #include <stdio.h>
+>>>>> #include <sys/time.h>
+>>>>>
+>>>>> int main()
+>>>>> {
+>>>>>         struct timeval tv;
+>>>>>         int ret;
+>>>>>
+>>>>>         ret = gettimeofday(&tv, NULL);
+>>>>>         if (ret == -1) {
+>>>>>                 fprintf(stderr, "gettimeofday failed\n");
+>>>>>                 return 1;
+>>>>>         }
+>>>>>
+>>>>>         printf("%lu.%lu\n", (unsigned long)tv.tv_sec, (unsigned long)tv.tv_usec);
+>>>>>
+>>>>>         return 0;
+>>>>> $ perf record -e intel_pt//u ./gettimeofday-test
+>>>>> 1719397042.892837
+>>>>> [ perf record: Woken up 1 times to write data ]
+>>>>> [ perf record: Captured and wrote 0.026 MB perf.data ]
+>>>>> $ perf script --itrace=e
+>>>>> $ perf buildid-cache --remove /lib/modules/6.5.0-41-generic/vdso/vdso64.so
+>>>>> $ perf script --itrace=e
+>>>>> Warning:
+>>>>> 2 instruction trace errors
+>>>>>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
+>>>>>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
+>>>>> $ perf buildid-cache --add /lib/modules/6.5.0-41-generic/vdso/vdso64.so
+>>>>> $ perf script --itrace=e
+>>>>> Warning:
+>>>>> 2 instruction trace errors
+>>>>>  instruction trace error type 1 time 525345.386424204 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e8e00 code 5: Failed to get instruction
+>>>>>  instruction trace error type 1 time 525345.386424829 cpu 4 pid 198976 tid 198976 ip 0x7ffddb0e884d code 5: Failed to get instruction
+>>>>> $ cd ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8
+>>>>> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ln -s elf vdso
+>>>>> ~/.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ ls -l
+>>>>> total 36
+>>>>> -rw-r--r-- 1 ahunter ahunter 33272 Jun 26 13:17 elf
+>>>>> -rw-r----- 1 ahunter ahunter     0 Jun 26 13:17 probes
+>>>>> lrwxrwxrwx 1 ahunter ahunter     3 Jun 26 13:18 vdso -> elf
+>>>>> /.debug/.build-id/c3/530aed66e71bfd10af66039f58cc7c4d2eaba8$ cd
+>>>>> $ perf script --itrace=e
+>>>>> $ 
+>>>>>
+>>>>> So maybe a change could be made to build_id_cache__add() to add
+>>>>> the extra link if the file name matches vdso
+>>>>  
+>>>> Thanks for doing this!  I noticed buildid_cache__basename() will handle
+>>>> the name properly once it realizes the file is a vdso.  Maybe we can
+>>>> check the filepath with some patterns, or simply add an command line
+>>>> option to say it's a vdso.
+>>>>
+>>>> Thanks,
+>>>> Namhyung
+>>>>
+>>> I added some tricks for vdso in build_id_cache__add(). It replace vdso object
+>>> with debugging one if found. Is this okay?
+>>
+>> perf has support for storing debug files in the build-id
+>> cache using the base name "debug" instead of "elf", so really
+>> it would be better to make that work
+>>
+> My thoughts are:
+>   1. add debugging vdso file as "debug" in buildid cache.
+>   2. add a new perf config item 'annotate.prefer_debug_file' (default false) to
+>      annotate with debugging object files.
 
-s/Paravirtual apic/Paravirtualize APIC/
-
-> hypercall is available. Reuse common code for ICR preparation which
-> covers NMI-source reporting if in effect.
-
-I see a lot of "NMI source". Should we use "NMI-source" in all places?
-
-> 
-> Originally-by: Zeng Guang <guang.zeng@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   arch/x86/kernel/kvm.c | 10 +---------
->   1 file changed, 1 insertion(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 263f8aed4e2c..a45d60aa0302 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -516,15 +516,7 @@ static void __send_ipi_mask(const struct cpumask *mask, int vector)
->   
->   	local_irq_save(flags);
->   
-> -	switch (vector) {
-> -	default:
-> -		icr = APIC_DM_FIXED | vector;
-> -		break;
-> -	case NMI_VECTOR:
-> -		icr = APIC_DM_NMI;
-> -		break;
-> -	}
-> -
-> +	icr = __prepare_ICR(0, vector, 0);
->   	for_each_cpu(cpu, mask) {
->   		apic_id = per_cpu(x86_cpu_to_apicid, cpu);
->   		if (!ipi_bitmap) {
+Is that needed?  Isn't the debug information read from
+the "debug" file?  If not, does that need fixing?
 
