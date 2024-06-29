@@ -1,39 +1,39 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAE3F136657;
-	Sat, 29 Jun 2024 18:33:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CAB15660;
+	Sat, 29 Jun 2024 18:38:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719685989; cv=none; b=deEZEI4z5YHCeXfqDtv0t8XZI57Ck6AqVXDaRPhKVDNgHEsJ92zE4Jxh3yfZpInOAvNKaTa1tpFnXntP0xOIGXoH5z02v2VhdYwu9hL80EmcEjL2i/CyVj5ih+PTIxXsYBQhI4xDN+/rWLyjiiXhUKvKTagjnakd2CY1CptoE9Q=
+	t=1719686325; cv=none; b=IJxFg4vLPVhaOISrrHxjvPOQjp9Jz7325AKRZc0gEViN2UliD7pC1bKKK6AXz/26LDGMHtl7T2q4DLTfEHyea82HRW9nHQWYXxMGcDZeQWVgTEfxiRm97o92Mtr2tXLtjjvWISQCfxaW0wfL1r/xmn+klDk0bVuOLK2OtIdOZZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719685989; c=relaxed/simple;
-	bh=LvwoJCao6F3nNuus2bjVRQ+rYqxO5B0hTZiTUTknFjs=;
+	s=arc-20240116; t=1719686325; c=relaxed/simple;
+	bh=ydeN4nfGc/V7ZiWNo9W4bhoyVSromNzKtrx09K0p+ks=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gywiLw3US0HNUB0wtJuESplBsJBvP8k8MUGrxzykYwR8JnaW3Mddmk2iU7YthnsS+CNOJqSIy3XzqOoHLh6zQ5FqGlgQl8bMFYP/Qyn0HpEPV95cLexhKrFrebrkV1jyzakW1X8IdfIK6UUzOBNktAExM2lxiAOwI8p1/+rnpRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ei+sD8MF; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=lrdvhysCOJMeXtJcHdIHvUDM6oMfmBa6g2o0EO/ozRfOZGTO2R2KZNsBg85OVUkXSvtI673ZZwycMOb2dLVAoDNBu/d7En2HBsMeVoBffO2nMgFZXB4Wt04JC0M7eA9ZAfEQCPg1gWKstr0Nrv5gFpp3kdRMgCZ70DYWfXaqEac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=b9z/WMkg; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ei+sD8MF"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="b9z/WMkg"
 Received: from [192.168.7.205] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45TIWAO23565427
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45TIcAka3566514
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Sat, 29 Jun 2024 11:32:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45TIWAO23565427
+	Sat, 29 Jun 2024 11:38:10 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45TIcAka3566514
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719685932;
-	bh=EQ2vMgmQ/iIonY8TFZZEf4+MUqUkNJ4xDoc19GNiIxs=;
+	s=2024061501; t=1719686291;
+	bh=QREjH9Gqqog/OBy3UIyRvzAzZFT617sJGPOSTR1kXpY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ei+sD8MFKYWzgZscpEBrPr4YTSYBYuc6UsJVMnBIa7ccev7eGH4IkbEE0PmLvzk/F
-	 wTqrUQ5i3sRzaQWuq4Qeetvda1nszVkcYqgGiUvGYRfVAYk/1sDRV66Ws4w2UAPxX1
-	 k1duHCmlahn62oTf6RpovAUiwbYZxmrtvvNXbWK9C66kcWWO+Ir7eSkj0ZaO0nUlS4
-	 f1Fn+aKkhJH/M3naWQtxRdcOug3IrTzF2evsIaqZJ+0vnBeHr148zkpGMtfa790B6y
-	 6CJF05s8gpzcPj5q2Jm8KyDWY4hD/ps64mVY0jmKrE9u1+MYwJnslVKfjTmwv9HzJX
-	 WyIotNhBfVUVA==
-Message-ID: <a1d3b2dd-e4d0-4733-85a0-7d9f83c396a7@zytor.com>
-Date: Sat, 29 Jun 2024 11:32:10 -0700
+	b=b9z/WMkg9i8suUdycCAWLaXme3fH2yExsOf1e4ux99+Mb3IeDWxwfjdlrXNG4F4So
+	 Tyu5//0jpboMrEa5R60y0MG/J1TbwaTocXnBzATV398JqWI8h3FN7iuuOr06B5yhAc
+	 1YPi7DRemyan2f2XbWotKNMLjs+EluPrXZp+DUPdmqzQcczIVDE/gFZuVnV9/iAmHs
+	 aZ+GwqUOxww1bDpaCyAkFgQYowuo+0avqtJwCI9NzH7GpJrPr93OS5RNsuyfvss8Co
+	 90fGlt2ONr+cTSnO8HznSbAUCYhd15IwfyKoByC2lXBteNFYy+f7QSbOlxq2D+N59p
+	 z488vjYt2MS8g==
+Message-ID: <ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
+Date: Sat, 29 Jun 2024 11:38:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/11] x86/irq: Define NMI source vectors
+Subject: Re: [PATCH v3 11/11] KVM: X86: Use common code for PV IPIs in linux
+ guest
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
         Sean Christopherson <seanjc@google.com>,
         LKML
@@ -54,9 +55,10 @@ To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
         Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
         kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Zeng Guang <guang.zeng@intel.com>
 References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-3-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -93,73 +95,46 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <20240628201839.673086-3-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> When NMI-source reporting is supported, each logical processor maintains
-> a 16-bit NMI-source bitmap. It is up to the system software to assign NMI
-> sources for their matching vector (bit position) in the bitmap.
+> Paravirtual apic hooks to enable PV IPIs for KVM if the "send IPI"
+
+s/Paravirtual apic/Paravirtualize APIC/
+
+> hypercall is available. Reuse common code for ICR preparation which
+> covers NMI-source reporting if in effect.
+
+I see a lot of "NMI source". Should we use "NMI-source" in all places?
+
 > 
-> Notice that NMI source vector is in a different namespace than the IDT
-> vectors. Though they share the same programming interface/field in the
-> NMI originator.
-> 
-> This initial allocation of the NMI sources are limited to local NMIs in
-> that there is no external device NMI usage yet.
-> 
+> Originally-by: Zeng Guang <guang.zeng@intel.com>
 > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->   arch/x86/include/asm/irq_vectors.h | 28 ++++++++++++++++++++++++++++
->   1 file changed, 28 insertions(+)
+>   arch/x86/kernel/kvm.c | 10 +---------
+>   1 file changed, 1 insertion(+), 9 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/irq_vectors.h b/arch/x86/include/asm/irq_vectors.h
-> index 13aea8fc3d45..e4cd33bc4fef 100644
-> --- a/arch/x86/include/asm/irq_vectors.h
-> +++ b/arch/x86/include/asm/irq_vectors.h
-> @@ -105,6 +105,34 @@
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 263f8aed4e2c..a45d60aa0302 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -516,15 +516,7 @@ static void __send_ipi_mask(const struct cpumask *mask, int vector)
 >   
->   #define NR_VECTORS			 256
+>   	local_irq_save(flags);
 >   
-> +/*
-> + * The NMI senders specify the NMI source vector as an 8bit integer in their
-
-s/The NMI senders/NMI senders/
-
-> + * vector field with NMI delivery mode. A local APIC receiving an NMI will
-> + * set the corresponding bit in a 16bit bitmask, which is accumulated until
-> + * the NMI is delivered.
-> + * When a sender didn't specify an NMI source vector the source vector will
-> + * be 0, which will result in bit 0 of the bitmask being set. For out of
-> + * bounds vectors >= 16 bit 0 will also be set.
-> + * When bit 0 is set, system software must invoke all registered NMI handlers
-> + * as if NMI source feature is not enabled.
-
-Add empty lines in the above paragraph.
-
-> + *
-> + * Vector 2 is reserved for matching IDT NMI vector where it may be hardcoded
-> + * by some external devices.
-> + *
-> + * The NMI source vectors are sorted by descending priority with the exceptions
-> + * of 0 and 2.
-> + */
-> +#define NMI_SOURCE_VEC_UNKNOWN		0
-> +#define NMI_SOURCE_VEC_IPI_REBOOT	1	/* Crash reboot */
-> +#define NMI_SOURCE_VEC_IDT_NMI		2	/* Match IDT NMI vector 2 */
-> +#define NMI_SOURCE_VEC_IPI_SMP_STOP	3	/* Panic stop CPU */
-> +#define NMI_SOURCE_VEC_IPI_BT		4	/* CPU backtrace */
-> +#define NMI_SOURCE_VEC_PMI		5	/* PerfMon counters */
-> +#define NMI_SOURCE_VEC_IPI_KGDB		6	/* KGDB */
-> +#define NMI_SOURCE_VEC_IPI_MCE		7	/* MCE injection */
-> +#define NMI_SOURCE_VEC_IPI_TEST		8	/* For remote and local IPIs */
-> +#define NR_NMI_SOURCE_VECTORS		9
-
-Fix alignment.
-
-> +
->   #ifdef CONFIG_X86_LOCAL_APIC
->   #define FIRST_SYSTEM_VECTOR		POSTED_MSI_NOTIFICATION_VECTOR
->   #else
+> -	switch (vector) {
+> -	default:
+> -		icr = APIC_DM_FIXED | vector;
+> -		break;
+> -	case NMI_VECTOR:
+> -		icr = APIC_DM_NMI;
+> -		break;
+> -	}
+> -
+> +	icr = __prepare_ICR(0, vector, 0);
+>   	for_each_cpu(cpu, mask) {
+>   		apic_id = per_cpu(x86_cpu_to_apicid, cpu);
+>   		if (!ipi_bitmap) {
 
