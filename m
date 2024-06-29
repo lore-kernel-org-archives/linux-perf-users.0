@@ -1,164 +1,188 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593C81CF9B;
-	Sat, 29 Jun 2024 04:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2C533D8
+	for <linux-perf-users@vger.kernel.org>; Sat, 29 Jun 2024 04:54:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719634055; cv=none; b=amYXiEPC8GkQoHERc3WfnuUFdSuNQBvqj/Lr2vnmE5fsO21YsjeNKfEPCrhQhkv84iDxoNqSTHvmOlLr/wLqk0aLa3+Q21VOwlOpmmiuAWYbP0NYnCuDEpSOjOIJfXkhmyI/Mw1CJ1tVK7IyiJskXRhiB3ECTmBwxjJR4m8yMiw=
+	t=1719636851; cv=none; b=s7KKeich2fJMhBz0OHIySfzcC7+4Ybdm3ZDMP84uLh5zUu7/00PnnmF0eO3IkxRAWU9YS2EM906dgjHpZODxDDrqYYya2YxyF8ADbyhDkDakuKC2rEyZmOChjLUu5w6rE05qvbqhl3ibaMYHiJUBcSMMvzP6npFdfCQX+KaQfAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719634055; c=relaxed/simple;
-	bh=v8wYNIfVxJYiz5W/YICynSOpO3HoaR7jGETBNYhB8Ck=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Jom093P6sWuCbZrIa4A+WSa5ynhnkzQgKkoOBUaYDHEz4Ir1kNy0A/61AXy9BCOxr8ax3C4ecLb/DT5EUk5Q3zKg3mon/nYelmRGBQc+xrWbCAuAOkGe0hAOBp51Vc3F38D5nZEU31RhSM38KtS/d6tqSK4IVc+L112fTH+sCrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=j6vlGq2F; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719636851; c=relaxed/simple;
+	bh=ulgnEXeySFIkrktz7yXWAqrrSl4AnoUp7YlCZDC6t6o=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=HRG6rO6AV6itOHfliBywrOhrgutiVtNhVp3guckoGkvEGYkvREhoWXSOqKm80/OjBdAQv/Nj76gfYulLFaHEnsJGCOykcC7FMtgda550ME84v5DZTW7GlYUxYXxbvdjpaZwaSi8EuGWco2ozxRkD4VIWd0YhKyIWma7u4D7RxGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pNDKMXEt; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j6vlGq2F"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45T474G03297363
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 28 Jun 2024 21:07:04 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45T474G03297363
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719634025;
-	bh=TeqD09dJUgpaGeoPpw8n1OcOVWmDg6pgiXZSw4mRkqo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j6vlGq2F8jgnLsR43RaahQe5rePD27CZLAN0J7V6ja/q0qFoh7Kil1/Vi4D1stZYd
-	 d9h+1c4b/Rab9L5F/QhoCoke8G7FQ70L8hKadc4zL/bKiptSr+NnyeguQqfWWSCH2j
-	 ePkwdYE3+GisWgw3I5q7evNdLtwXtOpzxwwnzR88BYwpBVNqrEVu5J5pkehykKd5eB
-	 sA3vdtX4OyP+5D+NC92TYHutj1etsSC9+zaIQlOmAUCeB9U/0e4TABVMB5GFX+H0WJ
-	 c7tfOnk877dcITZIW0+g4vAUkLDfRRHo6R7IXs+/oOEZFeAcz/1qVEjdUM5vnpB9RE
-	 qY/cglOKEPamw==
-Message-ID: <6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
-Date: Fri, 28 Jun 2024 21:07:04 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pNDKMXEt"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-643acc141cbso14177287b3.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 28 Jun 2024 21:54:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1719636848; x=1720241648; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=/0dC8Bwm3vf/Imiu0GWXnmXRUHRnUVX3GhUs/K6jXVQ=;
+        b=pNDKMXEt4vuOwp0Iozt4OYhdV1Vq/DiqEbcyJOd3CONAbytZBmHbI3zfMDihqqyjgk
+         woA4t5A1zMgoQgW4qA2xtDp141OtP0bqfOKq5bZKnBrawFDMZMlMpbqWzTGzTLRhpmGn
+         ne0XRJbRnROJxM8N0ZaL+buLJPK+bcMRJfdyqlwZJI45MdeeIf15MAk6Xm8a8ovsVu3S
+         CLMeN9cNYPZit7cOKXJJDTJCqBtim9ZQ4+fIA7pxbnK/aLIq7mJj9qVLexB8LsNQt6cl
+         fbHeOuuvbtdEls/OgGK2w8KsOhHz6xBlwjJxtwqNZxxDhL3n3hiWtUjO2VME+Z78B0sf
+         pI9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719636848; x=1720241648;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/0dC8Bwm3vf/Imiu0GWXnmXRUHRnUVX3GhUs/K6jXVQ=;
+        b=gBmZ0nHLbrl+dp/PiDIykWHXHlrKpP81ntySATlEKg5urd1rSTD+Gc+Ctr+g9Efpfs
+         dnmDBy/SMNqAuE1612spJ09BQHIjlTbDWC/DLfSXsBLNC1Mvphe+vlKb0GDntmnD6lQS
+         0KMsHifWfEGtPIFZtzxIWrWUnZjTQWM2rQZ8uNOpzxZZX+dYyyxXcyOZLppmGGAK0RBt
+         Q439Wq9V50082J0VGwIxrO5UxP6e608FHinINT6mEfy6BBVcU1ksMF7T0QWj6r3umoye
+         3KSPOgUjl9FpydnHoqBrTP3n5l2ZmqwDHvrArcdTqPnuXTyVj7bacHwnFbL7XRfoHtao
+         CtbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX69AdjHIWV8+vpuUhkNIW+TqG3MxVDcQD81EHWYiY7cm2TR1PuVdM0axtvwrAsJrkvHUwQnF5eSjxyyvXH3b3mf4srVO0KB+rD+pGjSYQR8Q==
+X-Gm-Message-State: AOJu0YwVvN9KxwbhscAPvkIN/tjl5W6BxzauN6RoeP+djuf3guDLU9l4
+	7UOwquWTTKb4HQ2Uzqkq5YWxGKr6OssLJkK3rQzld92x/Vqqccz6hfkZzpVP53cjqhjvcC7/u62
+	GkcT1bw==
+X-Google-Smtp-Source: AGHT+IHoHdrZmEBlrpZ6Zqpk1K2Ypd9vGdWOS5MBKTc36yPJSr3winrBSZVjqq0a+AN9vOt7GZ4Og36DCWr+
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:f9fe:7acd:496e:4edb])
+ (user=irogers job=sendgmr) by 2002:a81:9281:0:b0:648:2f1d:1329 with SMTP id
+ 00721157ae682-64c6b773206mr325697b3.1.1719636848038; Fri, 28 Jun 2024
+ 21:54:08 -0700 (PDT)
+Date: Fri, 28 Jun 2024 21:53:22 -0700
+Message-Id: <20240629045350.285243-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
-        Sean Christopherson <seanjc@google.com>,
-        LKML
- <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
-        kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        Zeng Guang <guang.zeng@intel.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Subject: [PATCH v3 00/28]  Constify tool pointers
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> From: Zeng Guang <guang.zeng@intel.com>
-> 
-> If the "NMI exiting" VM-execution control is 1, the value of the 16-bit NMI
-> source vector is saved in the exit-qualification field in the VMCS when VM
-> exits occur on CPUs that support NMI source.
-> 
-> KVM that is aware of NMI-source reporting will push the bitmask of NMI source
-> vectors as the exceptoin event data field on the stack for then entry of FRED
-> exception. Subsequently, the host NMI exception handler is invoked which
-> will process NMI source information in the event data. This operation is
-> independent of vCPU FRED enabling status.
-> 
-> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->   arch/x86/entry/entry_64_fred.S |  2 +-
->   arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
->   2 files changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-> index a02bc6f3d2e6..0d934a3fcaf8 100644
-> --- a/arch/x86/entry/entry_64_fred.S
-> +++ b/arch/x86/entry/entry_64_fred.S
-> @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
->   	 * +--------+-----------------+
->   	 */
->   	push $0				/* Reserved, must be 0 */
-> -	push $0				/* Event data, 0 for IRQ/NMI */
-> +	push %rsi			/* Event data for IRQ/NMI */
->   	push %rdi			/* fred_ss handed in by the caller */
->   	push %rbp
->   	pushf
+struct perf_tool provides a set of function pointers that are called
+through when processing perf data. To make filling the pointers less
+cumbersome, if they are NULL perf_tools__fill_defaults will add
+default do nothing implementations.
 
-This belongs to the previous patch, it is part of the host changes.
+This change refactors struct perf_tool to have an init function that
+provides the default implementation. The special use of NULL and
+perf_tools__fill_defaults are removed. As a consequence the tool
+pointers can then all be made const, which better reflects the
+behavior a particular perf command would expect of the tool and to
+some extent can reduce the cognitive load on someone working on a
+command.
 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 4e7b36081b76..6719c598fa5f 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
->   	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
->   	    is_nmi(vmx_get_intr_info(vcpu))) {
->   		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
-> -		if (cpu_feature_enabled(X86_FEATURE_FRED))
-> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
-> -		else
-> +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
-> +			unsigned long edata = 0;
-> +
-> +			if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-> +				edata = vmx_get_exit_qual(vcpu);
-> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, edata);
+v3: Just remove auxtrace dummy tools [Adrian] and make s390-cpumsf
+    struct removal its own patch [Adrian].
+v2: Remove dummy tool initialization [Adrian] and make zero sized. Add
+    cs-etm fix for address sanitizer build, found necessary when
+    testing dummy tool change.
 
-Simply do fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 
-vmx_get_exit_qual(vcpu))?
+Ian Rogers (28):
+  perf auxtrace: Remove dummy tools
+  perf s390-cpumsf: Remove unused struct
+  perf cs-etm: Fix address sanitizer dso build failure
+  perf tool: Constify tool pointers
+  perf tool: Move fill defaults into tool.c
+  perf tool: Add perf_tool__init
+  perf kmem: Use perf_tool__init
+  perf buildid-list: Use perf_tool__init
+  perf kvm: Use perf_tool__init
+  perf lock: Use perf_tool__init
+  perf evlist: Use perf_tool__init
+  perf record: Use perf_tool__init
+  perf c2c: Use perf_tool__init
+  perf script: Use perf_tool__init
+  perf inject: Use perf_tool__init
+  perf report: Use perf_tool__init
+  perf stat: Use perf_tool__init
+  perf annotate: Use perf_tool__init
+  perf sched: Use perf_tool__init
+  perf mem: Use perf_tool__init
+  perf timechart: Use perf_tool__init
+  perf diff: Use perf_tool__init
+  perf data convert json: Use perf_tool__init
+  perf data convert ctf: Use perf_tool__init
+  perf test event_update: Ensure tools is initialized
+  perf kwork: Use perf_tool__init
+  perf tool: Remove perf_tool__fill_defaults
+  perf session: Constify tool
 
-> +		} else {
->   			vmx_do_nmi_irqoff();
-> +		}
->   		kvm_after_interrupt(vcpu);
->   	}
->   
+ tools/perf/arch/x86/util/event.c    |   4 +-
+ tools/perf/bench/synthesize.c       |   2 +-
+ tools/perf/builtin-annotate.c       |  44 ++--
+ tools/perf/builtin-buildid-list.c   |  10 +
+ tools/perf/builtin-c2c.c            |  33 ++-
+ tools/perf/builtin-diff.c           |  30 ++-
+ tools/perf/builtin-evlist.c         |  10 +-
+ tools/perf/builtin-inject.c         | 159 ++++++------
+ tools/perf/builtin-kmem.c           |  20 +-
+ tools/perf/builtin-kvm.c            |  19 +-
+ tools/perf/builtin-kwork.c          |  33 ++-
+ tools/perf/builtin-lock.c           |  41 ++-
+ tools/perf/builtin-mem.c            |  37 +--
+ tools/perf/builtin-record.c         |  47 ++--
+ tools/perf/builtin-report.c         |  67 +++--
+ tools/perf/builtin-sched.c          |  50 ++--
+ tools/perf/builtin-script.c         | 106 ++++----
+ tools/perf/builtin-stat.c           |  26 +-
+ tools/perf/builtin-timechart.c      |  25 +-
+ tools/perf/builtin-top.c            |   2 +-
+ tools/perf/builtin-trace.c          |   4 +-
+ tools/perf/tests/cpumap.c           |   6 +-
+ tools/perf/tests/dlfilter-test.c    |   2 +-
+ tools/perf/tests/dwarf-unwind.c     |   2 +-
+ tools/perf/tests/event_update.c     |   9 +-
+ tools/perf/tests/stat.c             |   6 +-
+ tools/perf/tests/thread-map.c       |   2 +-
+ tools/perf/util/Build               |   1 +
+ tools/perf/util/arm-spe.c           |  55 +---
+ tools/perf/util/auxtrace.c          |  12 +-
+ tools/perf/util/auxtrace.h          |  20 +-
+ tools/perf/util/bpf-event.c         |   4 +-
+ tools/perf/util/build-id.c          |  34 +--
+ tools/perf/util/build-id.h          |   8 +-
+ tools/perf/util/cs-etm.c            |  49 +---
+ tools/perf/util/data-convert-bt.c   |  34 ++-
+ tools/perf/util/data-convert-json.c |  47 ++--
+ tools/perf/util/dso.h               |  10 +
+ tools/perf/util/event.c             |  54 ++--
+ tools/perf/util/event.h             |  38 +--
+ tools/perf/util/header.c            |   6 +-
+ tools/perf/util/header.h            |   4 +-
+ tools/perf/util/hisi-ptt.c          |   6 +-
+ tools/perf/util/intel-bts.c         |  37 +--
+ tools/perf/util/intel-pt.c          |  30 +--
+ tools/perf/util/jitdump.c           |   4 +-
+ tools/perf/util/s390-cpumsf.c       |  11 +-
+ tools/perf/util/session.c           | 372 ++++------------------------
+ tools/perf/util/session.h           |   9 +-
+ tools/perf/util/synthetic-events.c  |  80 +++---
+ tools/perf/util/synthetic-events.h  |  70 +++---
+ tools/perf/util/tool.c              | 294 ++++++++++++++++++++++
+ tools/perf/util/tool.h              |  18 +-
+ tools/perf/util/tsc.c               |   2 +-
+ 54 files changed, 998 insertions(+), 1107 deletions(-)
+ create mode 100644 tools/perf/util/tool.c
+
+-- 
+2.45.2.803.g4e1b14247a-goog
 
