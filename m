@@ -1,39 +1,39 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE60138C;
-	Sat, 29 Jun 2024 04:02:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 593C81CF9B;
+	Sat, 29 Jun 2024 04:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719633725; cv=none; b=pqtkFgDagr91+W8x3AYc/jhS5hORQSz/itg7C2MUROAf1Ha0DTr7ZAwbX3B52O+I6kqbGgopaOvCsTFcQihE2Pd4J7owM+u0FranZLFJJPcz53jkI6D1E5WMwlXz+hwSujsBT3PFK6qhlkJAzwf51+YVvQAjRWAgTPeZwfH6vOo=
+	t=1719634055; cv=none; b=amYXiEPC8GkQoHERc3WfnuUFdSuNQBvqj/Lr2vnmE5fsO21YsjeNKfEPCrhQhkv84iDxoNqSTHvmOlLr/wLqk0aLa3+Q21VOwlOpmmiuAWYbP0NYnCuDEpSOjOIJfXkhmyI/Mw1CJ1tVK7IyiJskXRhiB3ECTmBwxjJR4m8yMiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719633725; c=relaxed/simple;
-	bh=T2Pr/QPkNHfZsOWzKDIt+/Ob4dnWcgTO/M5o1oz0+38=;
+	s=arc-20240116; t=1719634055; c=relaxed/simple;
+	bh=v8wYNIfVxJYiz5W/YICynSOpO3HoaR7jGETBNYhB8Ck=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JfVE2GyTkm9rKmUyrE44ru2ERW/INS3BW3Mu151QMg0jMZ/WBOQZLx+xH07LjVzTOsnRzLcvYZj2QvB3IWyahsTFnC7tFyITnWlUkZU0XehpmMNVq/gCeWMiLAPCfo7mofzDWTuOSVcdZn6zlXDn69+gSh7Ly5eg4/5VpwzUTJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Vo68mKhn; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=Jom093P6sWuCbZrIa4A+WSa5ynhnkzQgKkoOBUaYDHEz4Ir1kNy0A/61AXy9BCOxr8ax3C4ecLb/DT5EUk5Q3zKg3mon/nYelmRGBQc+xrWbCAuAOkGe0hAOBp51Vc3F38D5nZEU31RhSM38KtS/d6tqSK4IVc+L112fTH+sCrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=j6vlGq2F; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Vo68mKhn"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="j6vlGq2F"
 Received: from [192.168.7.205] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45T41Sau3294478
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45T474G03297363
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 28 Jun 2024 21:01:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45T41Sau3294478
+	Fri, 28 Jun 2024 21:07:04 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45T474G03297363
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719633690;
-	bh=FnKQq6jWII68DlWsLQbdLHOjfa9rS/WVPjDM8KeE3sA=;
+	s=2024061501; t=1719634025;
+	bh=TeqD09dJUgpaGeoPpw8n1OcOVWmDg6pgiXZSw4mRkqo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Vo68mKhn23yd2xOX6l2jaGVf+9hYmMCt3rgJ3areh1OQxUL/Lf4lFtqeXihNrH+mb
-	 88mOx7gEalGvO3zWtqml1GKOUe5cgsPZhyjtZmt5swuy7t9TDTW5AIPbvJAVG8tf1o
-	 wA99Vrwcx3UtVSMchywt4OwenG15PRZDVEql0J5SpiVsNJIYh0ZKoKjlakDhKZH2zx
-	 qUdBfHFZwoZTIHSlaO3JdXmp5ZLOQFnenkDYmoZHSqJe5QyeigzSL1ebJtb6gDJ6V2
-	 dTuJdeNyCRjTzo1jIoTWMh9tPiT/z5aBXoHkto5F6f1AQ7zpXn4jKcX+5dSLh6xIkL
-	 InEh5f4xMMSfQ==
-Message-ID: <d385c639-d2b1-4068-b386-98c456265926@zytor.com>
-Date: Fri, 28 Jun 2024 21:01:28 -0700
+	b=j6vlGq2F8jgnLsR43RaahQe5rePD27CZLAN0J7V6ja/q0qFoh7Kil1/Vi4D1stZYd
+	 d9h+1c4b/Rab9L5F/QhoCoke8G7FQ70L8hKadc4zL/bKiptSr+NnyeguQqfWWSCH2j
+	 ePkwdYE3+GisWgw3I5q7evNdLtwXtOpzxwwnzR88BYwpBVNqrEVu5J5pkehykKd5eB
+	 sA3vdtX4OyP+5D+NC92TYHutj1etsSC9+zaIQlOmAUCeB9U/0e4TABVMB5GFX+H0WJ
+	 c7tfOnk877dcITZIW0+g4vAUkLDfRRHo6R7IXs+/oOEZFeAcz/1qVEjdUM5vnpB9RE
+	 qY/cglOKEPamw==
+Message-ID: <6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
+Date: Fri, 28 Jun 2024 21:07:04 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/11] KVM: VMX: Expand FRED kvm entry with event data
+Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
         Sean Christopherson <seanjc@google.com>,
         LKML
@@ -57,7 +57,7 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
         "Mehta, Sohil" <sohil.mehta@intel.com>,
         Zeng Guang <guang.zeng@intel.com>
 References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -94,27 +94,71 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 6/28/2024 1:18 PM, Jacob Pan wrote:
 > From: Zeng Guang <guang.zeng@intel.com>
 > 
-> For VM exits caused by events (NMI, #DB, and #PF) delivered by FRED, the
-> event data is saved in the exit-qualification field. (FRED spec. 10.6.2)
-
-I don't like mentioning #DB/#PF here, they belong to the guest that was 
-running, and KVM handles them.
-
-While NMIs belong to host, and the host NMI handler needs event data
-saved in VMCS in NMI induced VM exits.
-
-Or you paint a full picture.
-
-> Expand FRED KVM entry interface to include the event data obtained from
-> the exit qualification.
+> If the "NMI exiting" VM-execution control is 1, the value of the 16-bit NMI
+> source vector is saved in the exit-qualification field in the VMCS when VM
+> exits occur on CPUs that support NMI source.
+> 
+> KVM that is aware of NMI-source reporting will push the bitmask of NMI source
+> vectors as the exceptoin event data field on the stack for then entry of FRED
+> exception. Subsequently, the host NMI exception handler is invoked which
+> will process NMI source information in the event data. This operation is
+> independent of vCPU FRED enabling status.
 > 
 > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
 > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   arch/x86/entry/entry_64_fred.S |  2 +-
+>   arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
+>   2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+> index a02bc6f3d2e6..0d934a3fcaf8 100644
+> --- a/arch/x86/entry/entry_64_fred.S
+> +++ b/arch/x86/entry/entry_64_fred.S
+> @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>   	 * +--------+-----------------+
+>   	 */
+>   	push $0				/* Reserved, must be 0 */
+> -	push $0				/* Event data, 0 for IRQ/NMI */
+> +	push %rsi			/* Event data for IRQ/NMI */
+>   	push %rdi			/* fred_ss handed in by the caller */
+>   	push %rbp
+>   	pushf
+
+This belongs to the previous patch, it is part of the host changes.
+
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 4e7b36081b76..6719c598fa5f 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+>   	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
+>   	    is_nmi(vmx_get_intr_info(vcpu))) {
+>   		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+> -		if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
+> -		else
+> +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+> +			unsigned long edata = 0;
+> +
+> +			if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
+> +				edata = vmx_get_exit_qual(vcpu);
+> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, edata);
+
+Simply do fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 
+vmx_get_exit_qual(vcpu))?
+
+> +		} else {
+>   			vmx_do_nmi_irqoff();
+> +		}
+>   		kvm_after_interrupt(vcpu);
+>   	}
+>   
 
