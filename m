@@ -1,39 +1,39 @@
 Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A23D46BF;
-	Sat, 29 Jun 2024 03:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EE60138C;
+	Sat, 29 Jun 2024 04:02:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719632405; cv=none; b=S8Ousy2YsY//XINm7YuR/20tlryII3jzTQOlDibhFZMl+1KmziLdIEekcLCeC/GARN5alIJmbvuGA3U/Yl9WPwVuDaMMjMbi7aFUdmCWgEynT6Hu/daiE+L465abYMZq+yo7khJtmvstJZe5Tq1mbSNZL9GI2hIlqBt8nRgHW4I=
+	t=1719633725; cv=none; b=pqtkFgDagr91+W8x3AYc/jhS5hORQSz/itg7C2MUROAf1Ha0DTr7ZAwbX3B52O+I6kqbGgopaOvCsTFcQihE2Pd4J7owM+u0FranZLFJJPcz53jkI6D1E5WMwlXz+hwSujsBT3PFK6qhlkJAzwf51+YVvQAjRWAgTPeZwfH6vOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719632405; c=relaxed/simple;
-	bh=oQC+KdQQ62QAgi54o+FyAIkuupA2Q0hcEt+dVsT/T+c=;
+	s=arc-20240116; t=1719633725; c=relaxed/simple;
+	bh=T2Pr/QPkNHfZsOWzKDIt+/Ob4dnWcgTO/M5o1oz0+38=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cDIDXfmcrc+8CtObOC7tJAFJxek3k5QLVtyDENFCJzfIaQHXWxaQPhAiaY0OkxgDaAXhVR4H1kfhWlQ2KCqAcAPqPJAwi54S5QgJF+ZxulFok/y7gnMx7xmh8qMQEl5FRovKAjeA+w6QJHzgMbQUKc74sMZhu21UBPDOKVvNgJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=aZrNZHse; arc=none smtp.client-ip=198.137.202.136
+	 In-Reply-To:Content-Type; b=JfVE2GyTkm9rKmUyrE44ru2ERW/INS3BW3Mu151QMg0jMZ/WBOQZLx+xH07LjVzTOsnRzLcvYZj2QvB3IWyahsTFnC7tFyITnWlUkZU0XehpmMNVq/gCeWMiLAPCfo7mofzDWTuOSVcdZn6zlXDn69+gSh7Ly5eg4/5VpwzUTJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Vo68mKhn; arc=none smtp.client-ip=198.137.202.136
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aZrNZHse"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Vo68mKhn"
 Received: from [192.168.7.205] ([71.202.166.45])
 	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45T3dOED3288717
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 45T41Sau3294478
 	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Fri, 28 Jun 2024 20:39:24 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45T3dOED3288717
+	Fri, 28 Jun 2024 21:01:29 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 45T41Sau3294478
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719632366;
-	bh=fSbrHdLUnBGvxi//CP8K0sMgm0pNU1J6y3lWyreHIt4=;
+	s=2024061501; t=1719633690;
+	bh=FnKQq6jWII68DlWsLQbdLHOjfa9rS/WVPjDM8KeE3sA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aZrNZHseEEX9fliWlsENzGUFK51LQ3oc+Aw6eSb301YK7q8470mtWfpWPNKreyks8
-	 lBfloJnKWbsUf6E9chL2Q2k0o3eP3xzNW8tBcPEvslgosSWTkhZN3HDIM9Jxq+QN5s
-	 84URUUcA9K+V7UEuf+9X5lV+Ril9yGNy0FdqDHzemJhsP79JQDgQlsMLfdp2Ph275Q
-	 38QRJX6SJMMmAzshz9A7VIzACtZzPA2ukJlPt+OLPxLoa+NSHdLTfpbB8jgest7mH2
-	 zGK2oN/D23m3smg6Rr9xd8BeoKM6Wgk5QV1ChnBbKSwVA1JOjUganUx4oaK/zjGzAc
-	 fBTEK61YBQegA==
-Message-ID: <3177880c-6538-4a18-bb2b-2926c69ef434@zytor.com>
-Date: Fri, 28 Jun 2024 20:39:24 -0700
+	b=Vo68mKhn23yd2xOX6l2jaGVf+9hYmMCt3rgJ3areh1OQxUL/Lf4lFtqeXihNrH+mb
+	 88mOx7gEalGvO3zWtqml1GKOUe5cgsPZhyjtZmt5swuy7t9TDTW5AIPbvJAVG8tf1o
+	 wA99Vrwcx3UtVSMchywt4OwenG15PRZDVEql0J5SpiVsNJIYh0ZKoKjlakDhKZH2zx
+	 qUdBfHFZwoZTIHSlaO3JdXmp5ZLOQFnenkDYmoZHSqJe5QyeigzSL1ebJtb6gDJ6V2
+	 dTuJdeNyCRjTzo1jIoTWMh9tPiT/z5aBXoHkto5F6f1AQ7zpXn4jKcX+5dSLh6xIkL
+	 InEh5f4xMMSfQ==
+Message-ID: <d385c639-d2b1-4068-b386-98c456265926@zytor.com>
+Date: Fri, 28 Jun 2024 21:01:28 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/11] x86/irq: Process nmi sources in NMI handler
+Subject: Re: [PATCH v3 06/11] KVM: VMX: Expand FRED kvm entry with event data
 To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
         Sean Christopherson <seanjc@google.com>,
         LKML
@@ -54,9 +54,10 @@ To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
 Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
         Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
         kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Zeng Guang <guang.zeng@intel.com>
 References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
 Content-Language: en-US
 From: Xin Li <xin@zytor.com>
 Autocrypt: addr=xin@zytor.com; keydata=
@@ -93,179 +94,27 @@ Autocrypt: addr=xin@zytor.com; keydata=
  PYbAkjBbm+tuJ/Sm+5Yp5T/BnKz21FoCS8uvTiziHj2H7Cuekn6F8EYhegONm+RVg3vikOpn
  gao85i4HwQTK9/D1wgJIQkdwWXVMZ6q/OALaBp82vQ2U9sjTyFXgDjglgh00VRAHP7u1Rcu4
  l75w1xInsg==
-In-Reply-To: <20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
+In-Reply-To: <20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> With NMI source reporting enabled, NMI handler can prioritize the
-> handling of sources reported explicitly. If the source is unknown, then
-> resume the existing processing flow. i.e. invoke all NMI handlers.
+> From: Zeng Guang <guang.zeng@intel.com>
 > 
+> For VM exits caused by events (NMI, #DB, and #PF) delivered by FRED, the
+> event data is saved in the exit-qualification field. (FRED spec. 10.6.2)
+
+I don't like mentioning #DB/#PF here, they belong to the guest that was 
+running, and KVM handles them.
+
+While NMIs belong to host, and the host NMI handler needs event data
+saved in VMCS in NMI induced VM exits.
+
+Or you paint a full picture.
+
+> Expand FRED KVM entry interface to include the event data obtained from
+> the exit qualification.
+> 
+> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
 > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-
-The code looks good to me, however please improve coding styles and
-comments, see below.
-
-> 
-> ---
-> v3:
->     - Use a static flag to disable NMIs in case of HW failure
->     - Optimize the case when unknown NMIs are mixed with known NMIs(HPA)
-> v2:
->     - Disable NMI source reporting once garbage data is given in FRED
-> return stack. (HPA)
-> ---
->   arch/x86/kernel/nmi.c | 73 +++++++++++++++++++++++++++++++++++++++++--
->   1 file changed, 70 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 639a34e78bc9..c3a10af7f26b 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -149,23 +149,90 @@ static inline int do_handle_nmi(struct nmiaction *a, struct pt_regs *regs, unsig
->   	return thishandled;
->   }
->   
-> +static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *handled_mask)
-> +{
-> +	static bool nmi_source_disabled;
-> +	bool has_unknown_src = false;
-> +	unsigned long source_bitmask;
-> +	struct nmiaction *a;
-> +	int handled = 0;
-> +	int vec = 1;
-> +
-> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
-> +	    type != NMI_LOCAL || nmi_source_disabled)
-
-Harder to read, no need to break into 2 lines.
-
-> +		return 0;
-> +
-> +	source_bitmask = fred_event_data(regs);
-> +	if (!source_bitmask) {
-
-unlikely()?
-
-> +		pr_warn("NMI received without source information! Disable source reporting.\n");
-
-It sounds you're disabling some hardware functionality. Better to say,
-maybe:
-
-Buggy hardware? Disable NMI source handling.
-
-> +		nmi_source_disabled = true;
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Per NMI source specification, there is no guarantee that a valid
-> +	 * NMI vector is always delivered, even when the source specified
-> +	 * one. It is software's responsibility to check all available NMI
-> +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
-
-s/i.e./I.e.,/
-
-> +	 * to call every handler as if we have no NMI source.
-
-This comment is misleading, because you do skip NMI handlers with source
-bits set in polling.
-
-And add an empty line to ease review.
-
-> +	 * On the other hand, if we do get non-zero vectors, we know exactly
-> +	 * what the sources are. So we only call the handlers with the bit set.
-> +	 */
-> +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-> +		pr_warn_ratelimited("NMI received with unknown source\n");
-
-s/source/sources/
-
-> +		has_unknown_src = true;
-> +	}
-> +
-> +	rcu_read_lock();
-
-Add an empty line.
-
-> +	/* Bit 0 is for unknown NMI sources, skip it. */
-
-Put "vec = 1 " close to this comment.
-
-> +	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
-> +		a = rcu_dereference(nmiaction_src_table[vec]);
-> +		if (!a) {
-> +			pr_warn_ratelimited("NMI received %d no handler", vec);
-
-Use a better log message.
-
-> +			continue;
-> +		}
-
-Empty line again.
-
-> +		handled += do_handle_nmi(a, regs, type);
-
-Ditto.
-
-> +		/*
-> +		 * Needs polling if unknown source bit is set, handled_mask is
-
-                                    ^the
-
-> +		 * used to tell the polling code which NMIs can be skipped.
-> +		 */
-> +		if (has_unknown_src)
-> +			*handled_mask |= BIT(vec);
-> +	}
-
-empty line please.
-
-> +	rcu_read_unlock();
-> +
-> +	return handled;
-> +}
-> +
->   static int nmi_handle(unsigned int type, struct pt_regs *regs)
->   {
->   	struct nmi_desc *desc = nmi_to_desc(type);
-> +	unsigned long handled_mask = 0;
->   	struct nmiaction *a;
->   	int handled=0;
->   
-> -	rcu_read_lock();
-> +	/*
-> +	 * Check if the NMI source handling is complete, otherwise polling is
-> +	 * still required. handled_mask is non-zero if NMI source handling is
-> +	 * partial due to unknown NMI sources.
-> +	 */
-> +	handled = nmi_handle_src(type, regs, &handled_mask);
-> +	if (handled && !handled_mask)
-> +		return handled;
->   
-> +	rcu_read_lock();
-
-keep original empty lines around it.
-
->   	/*
->   	 * NMIs are edge-triggered, which means if you have enough
->   	 * of them concurrently, you can lose some because only one
->   	 * can be latched at any given time.  Walk the whole list
->   	 * to handle those situations.
->   	 */
-> -	list_for_each_entry_rcu(a, &desc->head, list)
-> +	list_for_each_entry_rcu(a, &desc->head, list) {
-> +		/* Skip NMIs handled earlier with source info */
-> +		if (BIT(a->source_vec) & handled_mask)
-> +			continue;
->   		handled += do_handle_nmi(a, regs, type);
-> -
-> +	}
->   	rcu_read_unlock();
-
-keep original empty lines around it.
-
->   
->   	/* return total number of NMI events handled */
 
