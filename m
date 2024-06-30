@@ -1,360 +1,134 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2B423A29C
-	for <linux-perf-users@vger.kernel.org>; Sun, 30 Jun 2024 11:37:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39EC4139CFE;
+	Sun, 30 Jun 2024 13:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719747449; cv=none; b=KkGc9ipxPjAR74HNP7svOXsM+vTGO1abem97JBdwvh8/6hINFMS1u8Ndu/oa/PRF90mrMOxMMs5uNQHPhcNat2hAghzxoAaN7lz2sBy0LfoVGB8wMpXA5npw045KmKh28GwVBaPgMM6UyhqqpVvCgs38SmrD+/YZw3qcbZc1uhU=
+	t=1719752688; cv=none; b=WFtoa3yjEpqGJ/BAnsflEah1K1KSbqhZcGhFtpdSgHlzrPK51/bTMJPADhNg+Lu2PwUrvKurmzsrEU6db0rt7X9q+0e1DPD5q6i8ihLqJZCB6o8ZkgoFimiTVJfS0sTgWL5kbLmhQx5jHIYJO9rCrAboSvs2C7LSYO33SV3ZlHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719747449; c=relaxed/simple;
-	bh=zOSnSSqlMq6OAAWFd8hFfNefuAY7unhROG32ud3ayFM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IvhrsA/ny4hmiwaPd+8jNSA3ate7xv9artTguPPPz3pXYbNxWnmZaStAEzHUn4E6LpONG9J2cbZXYFPSCwFW+Izt3f1U1TBYYFa9ZaL0JvbIT8fauQHasPL9jbxtkGhIvnwWMAL3CkEHRNxuaV4dxenGV6gcvBpqnmBgoXcGjNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=bv5p9uad; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1719752688; c=relaxed/simple;
+	bh=RrLWiQBjsoYvNfIZgXYkVgvN4JQKRcw545/SAmBihDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CJI15hVmR35azkhyJwXgTr2G0WzTtqZpP57rJ998Ph3DfKor0d06M6dfnCMAqgApwrRcX9DRCLw1GXfdnQjH6oABEVB+ZMwmv2GAC29IjGU/d62gSUHeIVYcXCiWYXQ9tpQX97hiA2YVdNsTkhUp1/cjKsbHggNqnnIbefAOQ7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=U7CCIXnn; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="bv5p9uad"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45UB0BPX030641;
-	Sun, 30 Jun 2024 11:37:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
-	:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=pp1; bh=+bHO1RFs+3fEk2s+lVO4Au/sDXJ
-	N5+/cjeh2X1vjbsA=; b=bv5p9uadgNytedyJDQdFK6Iz+L8ZMULH9EJLdln8wGO
-	bc0CPmJx7xo5DsBWHiCMhK5mzQKtcZ0+pr5VLWcdGNE0P+xCMVTOm+Z30KlmZ8WR
-	bVA0vUj6nbp2U/YfMsOfPXcmKltHSufBQVumtLvQkDbRT0NGxOlax2JHANAtvhCA
-	GwPi6C3ipmNrNfIPI9c43wtqd7ir3Wr30zlQ9IrQE5lN+UnI34VFVTWac4OiOFiP
-	lH3Ll0Vp0Jo1vnum4nbNryxeYIPsR1lvyIbuo4nAEVPxBUIqBM4Zn0eBrKapSPK0
-	vp0/nPf9xNjFyJwCBi30ggWEPMdPDrLUa3od101iImw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40363cg1yh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Jun 2024 11:37:22 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45UBbLuT018788;
-	Sun, 30 Jun 2024 11:37:21 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40363cg1yg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Jun 2024 11:37:21 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45U9GF4h005945;
-	Sun, 30 Jun 2024 11:37:21 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 402vktt6vh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 30 Jun 2024 11:37:21 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45UBbF8145810100
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 30 Jun 2024 11:37:17 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 821C720043;
-	Sun, 30 Jun 2024 11:37:15 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 0A45920040;
-	Sun, 30 Jun 2024 11:37:13 +0000 (GMT)
-Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.124.221.162])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Sun, 30 Jun 2024 11:37:12 +0000 (GMT)
-Date: Sun, 30 Jun 2024 17:07:10 +0530
-From: Aditya Gupta <adityag@linux.ibm.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
-Message-ID: <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
-References: <20240628064236.1123851-1-adityag@linux.ibm.com>
- <20240628064236.1123851-2-adityag@linux.ibm.com>
- <Zn8C-XpC1beIRN8t@google.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="U7CCIXnn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719752686; x=1751288686;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=RrLWiQBjsoYvNfIZgXYkVgvN4JQKRcw545/SAmBihDA=;
+  b=U7CCIXnnYHJptefMWf1gsdoXYk70fi34CBOwW5Sza8lGt8+lwBmLcumb
+   MfKHcXRA9WIBe6ejoto84kjnaA9U5OaKijjPXIglKPmZtOLnjjqmtCKvu
+   gdjfb8uETPwjQONdGYmjt6CuexEAF4KJbfWgscyHRlMQ2nNedJ9Gwp19N
+   xGMGZjyugwEUKBBYoJjjwy8iDB4KY3e1i/TXepTWerRI9dPRdyU1jx5w+
+   l6Omb3K0Yr6h3djldLXRdWD9NeeAHGgJu5VGXCoDpC77fNMuIGw9OjKNN
+   eVZT+X13KO/pmkU0vuh8lHsUYpEngCmWbYAzDjdoxmXQsfR/ynq5oYonB
+   Q==;
+X-CSE-ConnectionGUID: gkwEg9QwSkupgIAr5JKohA==
+X-CSE-MsgGUID: MWCkjEf8SoCbPARQ6qA+Vg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="17008626"
+X-IronPort-AV: E=Sophos;i="6.09,174,1716274800"; 
+   d="scan'208";a="17008626"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2024 06:04:45 -0700
+X-CSE-ConnectionGUID: 2J2qHSVbSYK4K8q+LkPhsw==
+X-CSE-MsgGUID: JwSXk9YAQ1eH2sbNyLxsKw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,174,1716274800"; 
+   d="scan'208";a="49562294"
+Received: from zengguan-mobl1.ccr.corp.intel.com (HELO [10.125.240.47]) ([10.125.240.47])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2024 06:04:40 -0700
+Message-ID: <eeaf0647-e165-4736-97d0-a2856875c59d@intel.com>
+Date: Sun, 30 Jun 2024 21:04:18 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zn8C-XpC1beIRN8t@google.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: ENTkP5_Q2pTjEG8rw61Jm6zzJel2IpJe
-X-Proofpoint-GUID: V2PP_D54UH1_c_uuEF1m8t9DKcmSshx6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-06-30_09,2024-06-28_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- lowpriorityscore=0 adultscore=0 spamscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 impostorscore=0 mlxlogscore=999
- bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2406300089
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+ Sean Christopherson <seanjc@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
+ Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
+ "Mehta, Sohil" <sohil.mehta@intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+From: Zeng Guang <guang.zeng@intel.com>
+In-Reply-To: <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Namhyung,
 
-> > +static const char * const check_subcommands[] = { "feature", NULL };
-> > +static struct option check_options[] = {
-> > +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-> > +	OPT_END()
-> > +};
-> > +static struct option check_feature_options[] = { OPT_END() };
-> 
-> It should be OPT_PARENT(check_options) instead of OPT_END().
-
-I did not know that. Thank you.
-
-> 
-> > +
-> > +static const char *check_usage[] = {
-> > +	"perf check [<subcommand>] [<options>]",
-> 
-> You can leave this NULL and parse_options_subcommand() will fill the
-> first element automatically using check_subcommands[].
-> 
-> Please see other commands like 'perf sched' how to handle this.
-
-It doesn't seem to be working, hence added that check_usage in v12
-itself.
-
-    $ ./perf check
-	Usage: (null)
-
-    -q, --quiet           do not show any warnings or messages
-
-    $ ./perf sched
-	Usage: (null)
-
-    -D, --dump-raw-trace  dump raw trace in ASCII
-    -f, --force           don't complain, do it
-    -i, --input <file>    input file name
-    -v, --verbose         be more verbose (show symbol address, etc)
-
-Debugging it further, this behaviour was changed in
-
-    commit 230a7a71f9221: libsubcmd: Fix parse-options memory leak
-
-Where the generated usage string is deallocated, and usage[0] string is
-reassigned as NULL.
-
-If expected behaviour was allocation of the usage string, it should be
-okay for the buffer to not get deallocated for the entirety of the perf
-process's lifetime right ?
-
-Thanks,
-Aditya Gupta
-
-> 
-> Thanks,
-> Namhyung
-> 
-> 
-> > +	NULL
-> > +};
-> > +static const char *check_feature_usage[] = {
-> > +	"perf check feature <feature_list>",
-> > +	NULL
-> > +};
-> > +
-> > +struct feature_status supported_features[] = {
-> > +	FEATURE_STATUS("aio", HAVE_AIO_SUPPORT),
-> > +	FEATURE_STATUS("bpf", HAVE_LIBBPF_SUPPORT),
-> > +	FEATURE_STATUS("bpf_skeletons", HAVE_BPF_SKEL),
-> > +	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
-> > +	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
-> > +	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
-> > +	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
-> > +	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
-> > +	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
-> > +	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
-> > +	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
-> > +	FEATURE_STATUS("libcrypto", HAVE_LIBCRYPTO_SUPPORT),
-> > +	FEATURE_STATUS("libdw-dwarf-unwind", HAVE_DWARF_SUPPORT),
-> > +	FEATURE_STATUS("libelf", HAVE_LIBELF_SUPPORT),
-> > +	FEATURE_STATUS("libnuma", HAVE_LIBNUMA_SUPPORT),
-> > +	FEATURE_STATUS("libopencsd", HAVE_CSTRACE_SUPPORT),
-> > +	FEATURE_STATUS("libperl", HAVE_LIBPERL_SUPPORT),
-> > +	FEATURE_STATUS("libpfm4", HAVE_LIBPFM),
-> > +	FEATURE_STATUS("libpython", HAVE_LIBPYTHON_SUPPORT),
-> > +	FEATURE_STATUS("libslang", HAVE_SLANG_SUPPORT),
-> > +	FEATURE_STATUS("libtraceevent", HAVE_LIBTRACEEVENT),
-> > +	FEATURE_STATUS("libunwind", HAVE_LIBUNWIND_SUPPORT),
-> > +	FEATURE_STATUS("lzma", HAVE_LZMA_SUPPORT),
-> > +	FEATURE_STATUS("numa_num_possible_cpus", HAVE_LIBNUMA_SUPPORT),
-> > +	FEATURE_STATUS("syscall_table", HAVE_SYSCALL_TABLE_SUPPORT),
-> > +	FEATURE_STATUS("zlib", HAVE_ZLIB_SUPPORT),
-> > +	FEATURE_STATUS("zstd", HAVE_ZSTD_SUPPORT),
-> > +
-> > +	/* this should remain at end, to know the array end */
-> > +	FEATURE_STATUS(NULL, _)
-> > +};
-> > +
-> > +static void on_off_print(const char *status)
-> > +{
-> > +	printf("[ ");
-> > +
-> > +	if (!strcmp(status, "OFF"))
-> > +		color_fprintf(stdout, PERF_COLOR_RED, "%-3s", status);
-> > +	else
-> > +		color_fprintf(stdout, PERF_COLOR_GREEN, "%-3s", status);
-> > +
-> > +	printf(" ]");
-> > +}
-> > +
-> > +/* Helper function to print status of a feature along with name/macro */
-> > +static void status_print(const char *name, const char *macro,
-> > +			 const char *status)
-> > +{
-> > +	printf("%22s: ", name);
-> > +	on_off_print(status);
-> > +	printf("  # %s\n", macro);
-> > +}
-> > +
-> > +#define STATUS(feature)                                           \
-> > +do {                                                              \
-> > +	if (feature.is_builtin)                                   \
-> > +		status_print(feature.name, feature.macro, "on");  \
-> > +	else                                                      \
-> > +		status_print(feature.name, feature.macro, "OFF"); \
-> > +} while (0)
-> > +
-> > +/**
-> > + * check whether "feature" is built-in with perf
-> > + *
-> > + * returns:
-> > + *    0: NOT built-in or Feature not known
-> > + *    1: Built-in
-> > + */
-> > +static int has_support(const char *feature)
-> > +{
-> > +	for (int i = 0; supported_features[i].name; ++i) {
-> > +		if ((strcasecmp(feature, supported_features[i].name) == 0) ||
-> > +		    (strcasecmp(feature, supported_features[i].macro) == 0)) {
-> > +			if (!quiet)
-> > +				STATUS(supported_features[i]);
-> > +			return supported_features[i].is_builtin;
-> > +		}
-> > +	}
-> > +
-> > +	if (!quiet)
-> > +		pr_err("Feature not known: '%s'\n", feature);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +
-> > +/**
-> > + * Usage: 'perf check feature <feature_list>'
-> > + *
-> > + * <feature_list> can be a single feature name/macro, or a comma-separated list
-> > + * of feature names/macros
-> > + * eg. argument can be "libtraceevent" or "libtraceevent,bpf" etc
-> > + *
-> > + * In case of a comma-separated list, feature_enabled will be 1, only if
-> > + * all features passed in the string are supported
-> > + *
-> > + * Note that argv will get modified
-> > + */
-> > +static int subcommand_feature(int argc, const char **argv)
-> > +{
-> > +	char *feature_list;
-> > +	char *feature_name;
-> > +	int feature_enabled;
-> > +
-> > +	argc = parse_options(argc, argv, check_feature_options,
-> > +			check_feature_usage, 0);
-> > +
-> > +	if (!argc)
-> > +		usage_with_options(check_feature_usage, check_feature_options);
-> > +
-> > +	if (argc > 1) {
-> > +		pr_err("Too many arguments passed to 'perf check feature'\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	feature_enabled = 1;
-> > +	/* feature_list is a non-const copy of 'argv[0]' */
-> > +	feature_list = strdup(argv[0]);
-> > +	if (!feature_list) {
-> > +		pr_err("ERROR: failed to allocate memory for feature list\n");
-> > +		return -1;
-> > +	}
-> > +
-> > +	feature_name = strtok(feature_list, ",");
-> > +
-> > +	while (feature_name) {
-> > +		feature_enabled &= has_support(feature_name);
-> > +		feature_name = strtok(NULL, ",");
-> > +	}
-> > +
-> > +	free(feature_list);
-> > +
-> > +	return !feature_enabled;
-> > +}
-> > +
-> > +int cmd_check(int argc, const char **argv)
-> > +{
-> > +	argc = parse_options_subcommand(argc, argv, check_options,
-> > +			check_subcommands, check_usage, 0);
-> > +
-> > +	if (!argc)
-> > +		usage_with_options(check_usage, check_options);
-> > +
-> > +	if (strcmp(argv[0], "feature") == 0)
-> > +		return subcommand_feature(argc, argv);
-> > +
-> > +	/* If no subcommand matched above, print usage help */
-> > +	usage_with_options(check_usage, check_options);
-> > +	return 0;
-> > +}
-> > diff --git a/tools/perf/builtin.h b/tools/perf/builtin.h
-> > index f4375deabfa3..94f4b3769bf7 100644
-> > --- a/tools/perf/builtin.h
-> > +++ b/tools/perf/builtin.h
-> > @@ -2,6 +2,22 @@
-> >  #ifndef BUILTIN_H
-> >  #define BUILTIN_H
-> >  
-> > +#include <stddef.h>
-> > +#include <linux/compiler.h>
-> > +#include <tools/config.h>
-> > +
-> > +struct feature_status {
-> > +	const char *name;
-> > +	const char *macro;
-> > +	int is_builtin;
-> > +};
-> > +
-> > +#define FEATURE_STATUS(name_, macro_) {    \
-> > +	.name = name_,                     \
-> > +	.macro = #macro_,                  \
-> > +	.is_builtin = IS_BUILTIN(macro_) }
-> > +
-> > +extern struct feature_status supported_features[];
-> >  struct cmdnames;
-> >  
-> >  void list_common_cmds_help(void);
-> > @@ -11,6 +27,7 @@ int cmd_annotate(int argc, const char **argv);
-> >  int cmd_bench(int argc, const char **argv);
-> >  int cmd_buildid_cache(int argc, const char **argv);
-> >  int cmd_buildid_list(int argc, const char **argv);
-> > +int cmd_check(int argc, const char **argv);
-> >  int cmd_config(int argc, const char **argv);
-> >  int cmd_c2c(int argc, const char **argv);
-> >  int cmd_diff(int argc, const char **argv);
-> > diff --git a/tools/perf/perf.c b/tools/perf/perf.c
-> > index bd3f80b5bb46..4def800f4089 100644
-> > --- a/tools/perf/perf.c
-> > +++ b/tools/perf/perf.c
-> > @@ -52,6 +52,7 @@ static struct cmd_struct commands[] = {
-> >  	{ "archive",	NULL,	0 },
-> >  	{ "buildid-cache", cmd_buildid_cache, 0 },
-> >  	{ "buildid-list", cmd_buildid_list, 0 },
-> > +	{ "check",	cmd_check,	0 },
-> >  	{ "config",	cmd_config,	0 },
-> >  	{ "c2c",	cmd_c2c,	0 },
-> >  	{ "diff",	cmd_diff,	0 },
-> > -- 
-> > 2.45.2
-> > 
+On 6/29/2024 4:18 AM, Jacob Pan wrote:
+> From: Zeng Guang <guang.zeng@intel.com>
+>
+> If the "NMI exiting" VM-execution control is 1, the value of the 16-bit NMI
+> source vector is saved in the exit-qualification field in the VMCS when VM
+> exits occur on CPUs that support NMI source.
+>
+> KVM that is aware of NMI-source reporting will push the bitmask of NMI source
+> vectors as the exceptoin event data field on the stack for then entry of FRED
+> exception. Subsequently, the host NMI exception handler is invoked which
+> will process NMI source information in the event data. This operation is
+> independent of vCPU FRED enabling status.
+>
+> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>   arch/x86/entry/entry_64_fred.S |  2 +-
+>   arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
+>   2 files changed, 9 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+> index a02bc6f3d2e6..0d934a3fcaf8 100644
+> --- a/arch/x86/entry/entry_64_fred.S
+> +++ b/arch/x86/entry/entry_64_fred.S
+> @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>   	 * +--------+-----------------+
+>   	 */
+>   	push $0				/* Reserved, must be 0 */
+> -	push $0				/* Event data, 0 for IRQ/NMI */
+> +	push %rsi			/* Event data for IRQ/NMI */
+>   	push %rdi			/* fred_ss handed in by the caller */
+>   	push %rbp
+>   	pushf
+Move this part to previous patch as it changes the common FRED api and 
+prepares for nmi handling in case of nmi
+source enabled in this patch.
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 4e7b36081b76..6719c598fa5f 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+>   	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
+>   	    is_nmi(vmx_get_intr_info(vcpu))) {
+>   		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+> -		if (cpu_feature_enabled(X86_FEATURE_FRED))
+> -			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
+> -		else
+> +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+> +			unsigned long edata = 0;
+> +
+> +			if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
+> +				edata = vmx_get_exit_qual(vcpu);
+> +			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, edata);
+> +		} else {
+>   			vmx_do_nmi_irqoff();
+> +		}
+>   		kvm_after_interrupt(vcpu);
+>   	}
+>   
