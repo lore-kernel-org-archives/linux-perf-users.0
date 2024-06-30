@@ -1,249 +1,495 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE38333FE;
-	Sun, 30 Jun 2024 05:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719724383; cv=fail; b=DEgTGqzPzBCUc718LJgF5PU8gKEDsvP7ZzH5chNxMqOJIr25noJV4sD1LG/FrIrqA2FxGT2i7BLnfu0kCcQeu0KKh3sX234XrQ/NnCiAtIb9QjD3tpX/IFoTL4WSU1kiprxcSGHf7ifuESO/5IGvyiTLRHxnbPyfHOZ5qHKHCNc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719724383; c=relaxed/simple;
-	bh=+iQbodgmJ236C+Cwa+nHO6dvWd2E7fCUgIQNgDy5kgI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Dy/QhcFRFArrkvQbhBOe+qlcslxxu91vNkZxaHMrS9aiPJLk4AAlNlHWmps8gLiIIUqWBLP8nCcY+kfUYoCL88pGEQBxyNhO18l3EHZE42jwisG7zuNJxb/mGiiiLvXcj0Q01QuvvLw6+70m34XK+VNdWP4W6N9T38NbuXNcmYQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BslxJrNX; arc=fail smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E3B92AEE1;
+	Sun, 30 Jun 2024 06:33:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719729208; cv=none; b=g4RdLQzvuD/CZss0ghsQ1JTg/9S2oKMSlprmHlHg6/mH34rsYmj5Ne+gADHNny7IbAI6SkuplN292RC9eZDShGXgAcZ80FKPldBTmhocP20i+WWHxMcZ/n5/pRLxuQXyXxIRDU8+GoSv6AwYBvn13ollL/qjRlCRCoq860Itk+o=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719729208; c=relaxed/simple;
+	bh=HBgKbzkj0SkReyrrdt7Vez/Qcb+RbShgw6yjHP91ATQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EL+g+Iwl1CpIVXCdQY3BBNHbIfnBZmyOxg51WU7yDMlJaR5CYz0ZFr8tmr1Bsz4+NPoLLJ/9LglHiiYEMlQ2NU/glmdLGLV7VbCbLRmhF+uNeO74Wwxqe1WDQxQXmqH55BPRUAG+4wUNVBPspc6xEKSXQrDKfFQ376h8OfuuLN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=gnFpJMZt; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BslxJrNX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719724382; x=1751260382;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=+iQbodgmJ236C+Cwa+nHO6dvWd2E7fCUgIQNgDy5kgI=;
-  b=BslxJrNXZxlNqTDOkSkE2tS4W3tGE1OAKgKvUi8CDjS5G8C+PT/himjh
-   oPNZyHyERHwXKRJvDg9qMsQ4fvID7wHE5O4n5V85CQPl/J9ZaHKYor0S8
-   VMwTgkZhhp/HbP2+WxLqNal77Qd+NpYyjxoWot9UV0ui2xZ4TuRb32p/7
-   czu0H/Zix7+szd9WE9uZVUaU5iocCtm8/AjhSb48jRIqcbUQsazIBNKCT
-   Tw1PuPnpkHq7G89Ra4dc7VjNtlbRql0QbiFEm1oRYXaOjGvlMu4UrVrqy
-   0j4bYKNnJy0dDfWIv1kbiG+2yjjTTJrv8Y5PbldGiqKB6oxemfemb5KVN
-   w==;
-X-CSE-ConnectionGUID: LFYP+E2tTMG/T3ygxEos+Q==
-X-CSE-MsgGUID: WMlGVBYpQ6+enbKJDCVm/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11118"; a="16701248"
-X-IronPort-AV: E=Sophos;i="6.09,173,1716274800"; 
-   d="scan'208";a="16701248"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2024 22:13:02 -0700
-X-CSE-ConnectionGUID: z3B2d3IWQY2xfFyI8Nbzgg==
-X-CSE-MsgGUID: nEYavWJqQqGVxZlTL8PYOw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,173,1716274800"; 
-   d="scan'208";a="45264382"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 29 Jun 2024 22:13:02 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39; Sat, 29 Jun 2024 22:13:00 -0700
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.39 via Frontend Transport; Sat, 29 Jun 2024 22:13:00 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.168)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Sat, 29 Jun 2024 22:13:00 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IIIKl4va9f0zPLpPetzcMdnABi1oP07vQ18qEh2mf0Wp9olHhFFgwOB721r7q6qxcYi1zxKSH3NifPv38p0PhCON1bkhraMT1hMRDUel+VduIwNtS2Mt17q5m8KhWPQ46qwWJLj47Zo3DeBcWQ30KkAEpi2O8mFdmETZj5QX3G4GCiKUvZF3t4SKagTIvqN9Y+DSBmzFcVPhBsi4Sresgjl5vC6+foMnT7jEREZKiLQayErmeBD1xZ2lbZVaZlrgR/O/s01XyRPaKj7mIDtj9KaNVO6rTPjGLopItOur8XKBe89ZlPYWkkWfhofBP/gpnxR5MhzPrvbjtUuEUT9E3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+iQbodgmJ236C+Cwa+nHO6dvWd2E7fCUgIQNgDy5kgI=;
- b=RPRKJGSWl5S4vbePyMMSsIaU4caYRgErIO96p3Z318WqeeiKXH5q58q/vJO7cDuuQEDYsslindai5Q7intwrdUYKcZBW2qKw4mUs2lpFluJxZiz0u3xCLWEisxIKkTb3IyAN08gz6sObsB3IUMSMRwxVPVRh/E9gFC8EOCUxDClH0zTif7Ij+jNwG/KqGCR1b+qCF4KpLd1muja28B2rKNhWRpvk0rhISQQObegTtos/NAgxlmwURGPx++Aix8PZSjQFX449buC2pQysg48lJJlLdMIzJdJRjSo3ukEkS+K/qdhAO7ypAc/qe2LkCNEY7PhJVFG5ZU5c/yFH4sMLmQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com (2603:10b6:5:35f::14)
- by CO1PR11MB5092.namprd11.prod.outlook.com (2603:10b6:303:6e::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.29; Sun, 30 Jun
- 2024 05:12:58 +0000
-Received: from CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::8cfa:1a7f:d9ee:42cf]) by CO6PR11MB5635.namprd11.prod.outlook.com
- ([fe80::8cfa:1a7f:d9ee:42cf%4]) with mapi id 15.20.7719.028; Sun, 30 Jun 2024
- 05:12:58 +0000
-From: "Wang, Weilin" <weilin.wang@intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo
-	<acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar
-	<mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, "Hunter, Adrian" <adrian.hunter@intel.com>, Kan
- Liang <kan.liang@linux.intel.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>,
-	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb"
-	<caleb.biggers@intel.com>
-Subject: RE: [RFC PATCH v14 0/8] TPEBS counting mode support
-Thread-Topic: [RFC PATCH v14 0/8] TPEBS counting mode support
-Thread-Index: AQHaxoTINfG478XFb02KWQ/J2kybpbHaV/8AgAAEcrCAAbjAgIADtR3A
-Date: Sun, 30 Jun 2024 05:12:58 +0000
-Message-ID: <CO6PR11MB5635353A7B7A010FB727C5A5EED22@CO6PR11MB5635.namprd11.prod.outlook.com>
-References: <20240624222026.229401-1-weilin.wang@intel.com>
- <ZnxW4u_TB5agiFJT@google.com>
- <CO6PR11MB563505F0D97C0E2D5949F583EED62@CO6PR11MB5635.namprd11.prod.outlook.com>
- <Zn3MV8lCSHLEEXDG@google.com>
-In-Reply-To: <Zn3MV8lCSHLEEXDG@google.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: CO6PR11MB5635:EE_|CO1PR11MB5092:EE_
-x-ms-office365-filtering-correlation-id: 44a81ba9-eeed-47cc-124e-08dc98c34e99
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016|38070700018;
-x-microsoft-antispam-message-info: =?utf-8?B?bWZlR1phSWhVV1RxSGU1d1BLa00zV2RjR1UyZVRuRnFqcGQ2ZE1LQVBRajJk?=
- =?utf-8?B?TFFWZkp1NFl5VzBGSjVMNnpkNXpUWjB6QzRsS2hvUzdMVmZlb2IvVnZqRkVl?=
- =?utf-8?B?Zndva211WnpzaFpPYlRBSXNKOXFhSWtpWWpCTGVpbVVMWHYrMDN0Q28ybHhW?=
- =?utf-8?B?ZWRWSUh4amltTURoQUVRemVjWkdPVXZWeHRoS3g1M1Y0eXVqTWRxbW1NZHE5?=
- =?utf-8?B?ZTB3T1V3ZFVjMVg5WjNwMHVWYyt0a3lUeThBWXFldmJFSVppcWxCdWJzVzE2?=
- =?utf-8?B?amZGOW04eUFvUWZvTE1TTWNETy9oUFplK0ZaZU1HTEcyWlV1bXlzMzNDUXUw?=
- =?utf-8?B?dzJscnRnQmNZZ2NyNTBubDZSWndTMTh3aWRCWWRGb0FKbE1WWlkrNkZhQ3dj?=
- =?utf-8?B?VkNsTVROVC9MSzBWSjdYZ2svQ3RDQUVwZ0YwaEkxWkpJMWJiM2NIbmVhb0Zy?=
- =?utf-8?B?aGU3U29DcmZ6eWdneWorRVF1SzJWTDkyaWNNbm56dUdZN21zSzRjTDNmUlQ3?=
- =?utf-8?B?QnJxUTBERWxydjBYalZqclArL1ZDdXNTV1NjWDJpak9wUlU2emFUWCt5aEdC?=
- =?utf-8?B?UXRpM1Rva3M2Y2tCVGtHMWNteDE4UFBtakNqSzAzcUcrWFR1T05KZFFYMDlF?=
- =?utf-8?B?VEJmVzlCM09vS2I3Rll1Tlp6Z2lGdU91M0N5TXRTYzNTNFp0QUQ3dUowTjFx?=
- =?utf-8?B?eFVYZmFlUmgyREFzeEJrbmEvRDBHaktlcllyMHZ3eEZrTVlVS01vOUxNbUhZ?=
- =?utf-8?B?VkNsbHJCMUtCSTV2NmpZTi9hYnhGaTNLVmV4d2ZrUXY5K3Vab2xhMytkZlNj?=
- =?utf-8?B?YUNQYVl2L3BGL2YxdVZTeURmQ25SeXJaMWh0ZG5vNWsycTlBb0ZoV3J6Mm5E?=
- =?utf-8?B?SExJTXJYTE9MeHFyZStiSUEwdXhnMEl1dGFCK2ZlV0JmbzFvdnNuZHVISmMv?=
- =?utf-8?B?Q2J1Z2xERWtHa1A4blFLMmdZeGZNd1djWVJOOVc0YW0rNWZDRkE4WDJ4TE1j?=
- =?utf-8?B?cW9qQ3hKclZlVm4yckF1WEZWcnRKN0gvbUhVNlRzZk1qM3NkREorbEVKNWcr?=
- =?utf-8?B?bkROdDJTTTVybWtEY0lNUWoxSE5ZYnRXVU5TVDJrOGVqWEVmMy9xNFVyWThv?=
- =?utf-8?B?RndWbldTS2ZTUDlWMSs2MDN2NnZkUmdncGZsVHlCQ2cwdzA2WnZrSzdSSU5K?=
- =?utf-8?B?K3ZEQzFkNThWb0dsQ0Z5ZUdHcmpic0FxdVYrdGdTVzRCOGNSbThBMm5ldkhw?=
- =?utf-8?B?MStKeFlpWTZBM2sxSGMrTlB1TTJCc1BaeGxJZDhjc1pxNmpoMU1yaHk1VGhN?=
- =?utf-8?B?Z1FYY2VTUHloSU5rdVlQN3NsVHZjWGdYUzVvUnAzbXV5Q1ZDWlZpMnZBeVAv?=
- =?utf-8?B?aW50dENFb1drU3YxNUs5bEIzWVVWSWxXSXJKRFZaK2RsYi93TlN6SzFDQndQ?=
- =?utf-8?B?aHhRTkJKRm1oRktOMCtQdjVKdGxKRTM4ZnozTWlGYWhQbGZ4QmwvbXFsWVJB?=
- =?utf-8?B?ZHVVR0I0U1RaVUVDNVFDUTdtY05ZMDNpb3hiVklqOGhxbGpBUE9WcTZhZXdE?=
- =?utf-8?B?WTBuUnZHZ3VjUCs2WHc0WjVGZlZVTkhUZzZ5aTZVTFF6cHIyeWJGa2trV2t2?=
- =?utf-8?B?M1ZqYjk2NFVYSys4Skswb2NKejJmbjE5RlNNWHI5bkYxd0dVYWRDSC83OFdU?=
- =?utf-8?B?bXgvZVo4MnJCak53amxPaFZVTGs5UHVHL3pQUytUSHRJZ0lOeU16bWZGS29Y?=
- =?utf-8?B?Zlc0Qklwc1NjbEk4ZnpEQXpHdDUyQWo2WDNUS3lqdDdUY1FockprQnROT1Zs?=
- =?utf-8?Q?EipAIu6necn7yklEN+ne1vVLl7yWjncR0KBUU=3D?=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO6PR11MB5635.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Z2NRWnpNSGhBSklnbmd2TzdvY203cE5jWk8xQmIvSUpRZlIxUXNHaFNncHM0?=
- =?utf-8?B?UG9YSU10cFEyd1h3d3U4eWxRencwT2lPWXVET096czJwMXVHV2JDK2RJN212?=
- =?utf-8?B?ME9RYng5ZmRaRHpwUVlxVklaaUdYUVpaYkZZVWxYeS9JQk84ZS9OZUpXR3dq?=
- =?utf-8?B?aEFWd1ZkdWJybmt1M08rUkRZZ1h0S1k2M1dZM2N6Y1NEUEhhZHdERGR4ZWpr?=
- =?utf-8?B?TlFGaUwxR0tmTEF4b1htS1dwV0VzY01CT1RpaXJoTUNJeEdsd2JjVUVVY05O?=
- =?utf-8?B?ZDJuM1JxWXRhL0o4TFkzazZBamhXUWVMczRwWTQwc2Y3MGxreXpQbVVMc3Ja?=
- =?utf-8?B?Q0xMYTlTRTBMUjdNSWN3dWR2T0dJaUdzTnViVlJmWC9TQlBocHV1eXg5dHM0?=
- =?utf-8?B?VkdzWVpTenhlN3ROODMzdWJQN2NXaDNoZE1LN3pMNTVnZThzcU95enltZ0k1?=
- =?utf-8?B?Wkd0UmxycmRLWHo3eE9CRG1lSGJVajd3M3BuN3BDYUc2UmRpMVRoeU8zOW00?=
- =?utf-8?B?RlVGaml0QlhYRTNGNmpuRzhaYWZMaTBkeStXeURrNE91QzloTkUvM2JFZEow?=
- =?utf-8?B?djlPejYrMTd3aUFXaENNcXhST2pvRzZwR0kraDQ5K2UxSE1Nc3NyR0JteGxl?=
- =?utf-8?B?djdoRDJNNVhOUzZNQzkvWjFRMlRNcHp3VmFrSWU0SXd1Zm9Vd05TYlBjdEZV?=
- =?utf-8?B?WE5oRjBOM3dzbEV0ZGNkK21IRjNWaVA1TDdGVzBxa21HRlhNb3kyekhybm55?=
- =?utf-8?B?Yy9uaXVBSFk2d3RuZXlUckNPSWVSTmdqN1luRXRSbGRBWlRGZzJ3T2dPN2s5?=
- =?utf-8?B?S1J0cHo0ajBFWEtGK2Q2Y0tnSVBNOEJ4Y0Era081ZExqN1IrZzB0N0JtV1c5?=
- =?utf-8?B?N2NkNWVHcFcrdnZHZzAxbjhNQ2ZobU5XK0EzNE9GMEZYUGNHNEcwVERoSnhh?=
- =?utf-8?B?Y3dmdWs5ZXJ1SGZDY0xxQ0FQQkJQdFNmdkh4UzNaVmpUeG9NWlcyL2NYZU50?=
- =?utf-8?B?VFZuR3VGekt1NHprN1A3dmxJQUZmYWt2ajhDeFc0d0w0STc4dHRPdHlJaGY0?=
- =?utf-8?B?dEFlOUdOZkc2M3RBU29XcVJzbjFUMWN2S2UzcWppckI1eTcwbmR5c1doRnpp?=
- =?utf-8?B?MUVnMEJRM3VpN0Z4ZDFLaGs3NFNqSk5Ma2JMSElPL1d0SHpxM0gzZW1iVGQr?=
- =?utf-8?B?dyt3VDRGajFTd1ltRnFvZGFaWUtraWg3ZjlKMytoYXgwMnluRmJ6V3VIWlRV?=
- =?utf-8?B?bmFTbnJRVlVZNEl3Z2M5c04xOFNMSnZJSmV3MDZrak5pYzVnVjd0ZWZxb0Y3?=
- =?utf-8?B?S1UwcjlqT2lwbjJUcE1zSEVjdVNrNHRiS2NRTHA3TVdvdmdGT1lNaVpNN3BO?=
- =?utf-8?B?M25MSm9KRGdQZlB0TVN2VnlkNHBsV0lWT21LdXdjcmR2MWwwNWE3Y2hvM2hJ?=
- =?utf-8?B?WWVvUzM4Z29USlFXdjJYejlscUdGVFZCNm1TWFNERTIyM29GNXg1ZktyajJr?=
- =?utf-8?B?VGIzb29laUp6aW9KSjArc3Z4R0hRbHo5dUM1ajlDRUVVWVE1TDRrQlBrTzlr?=
- =?utf-8?B?bWNOZ2tkQVMyeWg5c3huVEI4WDJYNldsVUd2UVVKWUFmUTJXRVpLSUE3M2po?=
- =?utf-8?B?VXIwcFVRdW5MdXNVWUhHWEJJeVUvYmwyaHNuNTQ4NW1sd2FQQXg5V3pSSGZ3?=
- =?utf-8?B?L2N6UXVDbk54MFQ3RTJXb1dXWlRPTEdDTnBMNkp1RzZON1RvSzdaZHNSTXRk?=
- =?utf-8?B?TThzdmpVcm9uZDE4ZzF2YzBNNVVJNUVSUUV1by9Ga0R0WnUzdWFGd1RWSkRp?=
- =?utf-8?B?Zk9ocFpOa1VhU29SbkJYQzYrOVJBYkNvbDRWbnpJbVZIcXJqc2tvQjRBYTUx?=
- =?utf-8?B?b01ndmt1RTdaRTNVaUtnR25iNXlIbTlwSXVQZkt4YkdZTjlYYThzZ004VGZU?=
- =?utf-8?B?aXpoRGkwT21UaHd1azVaTVE0TFlaOVJvTWVXcm5yU2RLZktRQTVqVGd3U0wr?=
- =?utf-8?B?bzgxOTcxcXR3K3huZjZIemNlTzYwbVVyaDJEbHZqVTdJNU0wMnBQNHJyOTlW?=
- =?utf-8?B?bWk1QU9Ka3BVSGZXd0RhaTNZNDNuU0RiYXdnS3RycEMra1RjVWZidlIzUjMv?=
- =?utf-8?Q?3mDWwZ87VlMJs002VyvOpbFqJ?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gnFpJMZt"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 45U6R6Dm026200;
+	Sun, 30 Jun 2024 06:33:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=4
+	Q4u3kImCKhiZGpQGm/yMSvwiDugnXBEQTHE858CdQQ=; b=gnFpJMZtAtSXXExbQ
+	mofefSEkVtBaEFhRYquf2uvMXXg8pLjq32/e4BSqhmLkxUVeu+dZo3kvImhSmJn+
+	GPquyKBwS0w9u+cPWf8408ru8R+//s0akhvRVlGA16XDdlQ9KqrYvuAa1zM84T8n
+	hGJGc1Z+qG4hkgVe6jP2dIVeNza9fBuFhkji02RbsodHCyG23xu9gC42G6ysBfbA
+	p5cX7vv4OjUWl7tToahqRjdowsFJMlEhEEc9csWeiXPBQzCq6izy0sK1ZF6dSYO5
+	lAImCXOH0ODcIILRBC2fV309lA42OWyPrb9yPoBwpWrlzxgvdhXK9eHzFFfPKg48
+	Ys0xA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 402yw6g8a1-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 30 Jun 2024 06:33:11 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 45U6XAUl002375;
+	Sun, 30 Jun 2024 06:33:10 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 402yw6g89x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 30 Jun 2024 06:33:10 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 45U4npXO005985;
+	Sun, 30 Jun 2024 06:33:09 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 402vkts6kc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 30 Jun 2024 06:33:09 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 45U6X6CE13763156
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 30 Jun 2024 06:33:08 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A0E6D5805D;
+	Sun, 30 Jun 2024 06:33:06 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1BA1958054;
+	Sun, 30 Jun 2024 06:32:55 +0000 (GMT)
+Received: from [9.43.35.135] (unknown [9.43.35.135])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Sun, 30 Jun 2024 06:32:54 +0000 (GMT)
+Message-ID: <1b9ab802-d825-4826-b298-b69ef844063b@linux.ibm.com>
+Date: Sun, 30 Jun 2024 12:02:52 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CO6PR11MB5635.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 44a81ba9-eeed-47cc-124e-08dc98c34e99
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2024 05:12:58.4395
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uDNN4JQPZkK4s7XHrhjPBPo1d0rM2Gj6mJuJqSJdCcX6YglD88UVsIq4FPdmjiATSJ5h8ymACuv6KPwnavGTXg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR11MB5092
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] perf sched map: Add task-name option to filter the
+ output map
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Athira Rajeev
+ <atrajeev@linux.vnet.ibm.com>,
+        Chen Yu <yu.c.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+        Fernand Sieber <sieberf@amazon.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+References: <20240626091550.46707-1-vineethr@linux.ibm.com>
+ <20240626091550.46707-2-vineethr@linux.ibm.com> <Zn3yFucQlvxyhzki@google.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <Zn3yFucQlvxyhzki@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: F5tRQ0hpv59dhcSIP31E8ZwBa8eHAwaL
+X-Proofpoint-ORIG-GUID: KusDrHI9Awr5TPsNlbwPRAUHg0C8mBMs
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-06-30_05,2024-06-28_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 spamscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2406300047
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTmFtaHl1bmcgS2ltIDxu
-YW1oeXVuZ0BrZXJuZWwub3JnPg0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAyNywgMjAyNCAxOjMy
-IFBNDQo+IFRvOiBXYW5nLCBXZWlsaW4gPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gQ2M6IElh
-biBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT47IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbw0K
-PiA8YWNtZUBrZXJuZWwub3JnPjsgUGV0ZXIgWmlqbHN0cmEgPHBldGVyekBpbmZyYWRlYWQub3Jn
-PjsgSW5nbyBNb2xuYXINCj4gPG1pbmdvQHJlZGhhdC5jb20+OyBBbGV4YW5kZXIgU2hpc2hraW4N
-Cj4gPGFsZXhhbmRlci5zaGlzaGtpbkBsaW51eC5pbnRlbC5jb20+OyBKaXJpIE9sc2EgPGpvbHNh
-QGtlcm5lbC5vcmc+OyBIdW50ZXIsDQo+IEFkcmlhbiA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+
-OyBLYW4gTGlhbmcgPGthbi5saWFuZ0BsaW51eC5pbnRlbC5jb20+Ow0KPiBsaW51eC1wZXJmLXVz
-ZXJzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgVGF5bG9y
-LCBQZXJyeQ0KPiA8cGVycnkudGF5bG9yQGludGVsLmNvbT47IEFsdCwgU2FtYW50aGEgPHNhbWFu
-dGhhLmFsdEBpbnRlbC5jb20+OyBCaWdnZXJzLA0KPiBDYWxlYiA8Y2FsZWIuYmlnZ2Vyc0BpbnRl
-bC5jb20+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENIIHYxNCAwLzhdIFRQRUJTIGNvdW50aW5n
-IG1vZGUgc3VwcG9ydA0KPiANCj4gT24gV2VkLCBKdW4gMjYsIDIwMjQgYXQgMDY6MTc6MjJQTSAr
-MDAwMCwgV2FuZywgV2VpbGluIHdyb3RlOg0KPiA+DQo+ID4NCj4gPiA+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+ID4gPiBGcm9tOiBOYW1oeXVuZyBLaW0gPG5hbWh5dW5nQGtlcm5lbC5v
-cmc+DQo+ID4gPiBTZW50OiBXZWRuZXNkYXksIEp1bmUgMjYsIDIwMjQgMTA6NTkgQU0NCj4gPiA+
-IFRvOiBXYW5nLCBXZWlsaW4gPHdlaWxpbi53YW5nQGludGVsLmNvbT4NCj4gPiA+IENjOiBJYW4g
-Um9nZXJzIDxpcm9nZXJzQGdvb2dsZS5jb20+OyBBcm5hbGRvIENhcnZhbGhvIGRlIE1lbG8NCj4g
-PiA+IDxhY21lQGtlcm5lbC5vcmc+OyBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5v
-cmc+OyBJbmdvIE1vbG5hcg0KPiA+ID4gPG1pbmdvQHJlZGhhdC5jb20+OyBBbGV4YW5kZXIgU2hp
-c2hraW4NCj4gPiA+IDxhbGV4YW5kZXIuc2hpc2hraW5AbGludXguaW50ZWwuY29tPjsgSmlyaSBP
-bHNhIDxqb2xzYUBrZXJuZWwub3JnPjsgSHVudGVyLA0KPiA+ID4gQWRyaWFuIDxhZHJpYW4uaHVu
-dGVyQGludGVsLmNvbT47IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4LmludGVsLmNvbT47DQo+
-ID4gPiBsaW51eC1wZXJmLXVzZXJzQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgVGF5bG9yLA0KPiBQZXJyeQ0KPiA+ID4gPHBlcnJ5LnRheWxvckBpbnRlbC5j
-b20+OyBBbHQsIFNhbWFudGhhIDxzYW1hbnRoYS5hbHRAaW50ZWwuY29tPjsNCj4gQmlnZ2VycywN
-Cj4gPiA+IENhbGViIDxjYWxlYi5iaWdnZXJzQGludGVsLmNvbT4NCj4gPiA+IFN1YmplY3Q6IFJl
-OiBbUkZDIFBBVENIIHYxNCAwLzhdIFRQRUJTIGNvdW50aW5nIG1vZGUgc3VwcG9ydA0KPiA+ID4N
-Cj4gPiA+IE9uIE1vbiwgSnVuIDI0LCAyMDI0IGF0IDA2OjIwOjE2UE0gLTA0MDAsIHdlaWxpbi53
-YW5nQGludGVsLmNvbQ0KPiB3cm90ZToNCj4gPiA+ID4gRnJvbTogV2VpbGluIFdhbmcgPHdlaWxp
-bi53YW5nQGludGVsLmNvbT4NCj4gPiA+ID4NCj4gPiA+ID4gQ2hhbmdlcyBpbiB2MTQ6DQo+ID4g
-PiA+ICAtIEZpeCB0aGUgcHl0aG9uIGltcG9ydCB0ZXN0IGZhaWx1cmUuIFdlIGNhbm5vdCBzdXBw
-b3J0IFBZVEhPTl9QRVJGDQo+ID4gPiBiZWNhdXNlIGl0DQo+ID4gPiA+ICB3aWxsIHRyaWdnZXIg
-YSBjaGFpbiBvZiBkZXBlbmRlbmN5IGlzc3VlcyBpZiB3ZSBhZGQgaW50ZWwtdHBlYnMuYyB0byBp
-dC4gU28sDQo+ID4gPiA+ICBvbmx5IGVuYWJsZSB0cGVicyBmdW5jdGlvbnMgaW4gZXZzZWwgYW5k
-IGV2bGlzdCB3aGVuIFBZVEhPTl9QRVJGIGlzIG5vdA0KPiA+ID4gPiAgZGVmaW5lZC4NCj4gPiA+
-DQo+ID4gPiBJIHRoaW5rIGl0J3MgZWFzaWVyIGlmIHdlIGhhdmUgSWFuJ3MgcHl0aG9uIGJ1aWxk
-IGNsZWFudXAgZmlyc3QuDQo+ID4gPg0KPiA+ID4gICBodHRwczovL2xvcmUua2VybmVsLm9yZy9s
-aW51eC1wZXJmLXVzZXJzLzIwMjQwNjI1MjE0MTE3Ljk1Mzc3Ny0xLQ0KPiA+ID4gaXJvZ2Vyc0Bn
-b29nbGUuY29tDQo+ID4gPg0KPiA+ID4gTGV0IG1lIHRha2UgYSBsb29rIGF0IGl0Li4NCj4gPg0K
-PiA+IE9rLCBJIHdpbGwgaG9sZCB0aGUgY21kIG9wdGlvbiBuYW1lIHVwZGF0ZSB1bnRpbCB3ZSBj
-b25jbHVkZSBvbiB0aGlzIG9uZS4NCj4gPiBUaGFua3MgYSBsb3QhDQo+IA0KPiBQbGVhc2UgdGFr
-ZSBhIGxvb2sgYXQgdGhlIGN1cnJlbnQgcGVyZi10b29scy1uZXh0IGJyYW5jaC4NCg0KSGkgTmFt
-aHl1bmcsDQoNClRoZSBweXRob24gaW1wb3J0IHRlc3Qgd29ya3MgY29ycmVjdGx5IHdpdGggdGhl
-IGxhdGVzdCBwZXJmLXRvb2xzLW5leHQgYnJhbmNoIA0Kd2l0aG91dCB0aGUgY2hhbmdlIEkgYWRk
-ZWQgaW4gdjE0LiBJIHdpbGwgc2VuZCBhIG5ldyB2ZXJzaW9uIHRoYXQgcmV2ZXJ0cyB0aGlzIA0K
-Y2hhbmdlIGFuZCB1cGRhdGUgdGhlIGNvbW1hbmQgbGluZSBvcHRpb24uIElzIHRoZXJlIGFueSBv
-dGhlciBjaGFuZ2VzIHlvdSdkDQpsaWtlIG1lIHRvIGFkZD8NCg0KVGhhbmtzLA0KV2VpbGluDQoN
-Cj4gDQo+IFRoYW5rcywNCj4gTmFtaHl1bmcNCj4gDQoNCg==
+Hi Namhyung,
+
+On 28/06/24 04:43, Namhyung Kim wrote:
+> Hello,
+> 
+> On Wed, Jun 26, 2024 at 02:45:48PM +0530, Madadi Vineeth Reddy wrote:
+>> By default, perf sched map prints sched-in events for all the tasks
+>> which may not be required all the time as it prints lot of symbols
+>> and rows to the terminal.
+>>
+>> With --task-name option, one could specify the specific task name
+>> for which the map has to be shown. This would help in analyzing the
+>> CPU usage patterns easier for that specific task. Since multiple
+>> PID's might have the same task name, using task-name filter
+>> would be more useful for debugging.
+>>
+>> For other tasks, instead of printing the symbol, '-' is printed and
+>> the same '.' is used to represent idle. '-' is used instead of symbol
+>> for other tasks because it helps in clear visualization of task
+>> of interest and secondly the symbol itself doesn't mean anything
+>> because the sched-in of that symbol will not be printed(first sched-in
+>> contains pid and the corresponding symbol).
+>>
+>> When using the --task-name option, the sched-out time is represented
+>> by a '*-'. Since not all task sched-in events are printed, the sched-out
+>> time of the relevant task might be lost. This representation ensures
+>> that the sched-out time of the interested task is not overlooked.
+>>
+>> 6.10.0-rc1
+>> ==========
+>> *A0                              131040.639793 secs A0 => migration/0:19
+>> *.                               131040.639801 secs .  => swapper:0
+>>  .  *B0                          131040.639830 secs B0 => migration/1:24
+>>  .  *.                           131040.639836 secs
+>>  .   .  *C0                      131040.640108 secs C0 => migration/2:30
+>>  .   .  *.                       131040.640163 secs
+>>  .   .   .  *D0                  131040.640386 secs D0 => migration/3:36
+>>  .   .   .  *.                   131040.640395 secs
+>>
+>> 6.10.0-rc1 + patch (--task-name wdavdaemon)
+>> =============
+>>  .  *A0  .   .   .   .   -   .   131040.641346 secs A0 => wdavdaemon:62509
+>>  .   A0 *B0  .   .   .   -   .   131040.641378 secs B0 => wdavdaemon:62274
+>>  -  *-   -   -   -   -   -   -   131040.641379 secs
+>> *C0  .   B0  .   .   .   .   .   131040.641572 secs C0 => wdavdaemon:62283
+>>  C0  .   B0  .  *D0  .   .   .   131040.641572 secs D0 => wdavdaemon:62277
+>>  C0  .   B0  .   D0  .  *E0  .   131040.641578 secs E0 => wdavdaemon:62270
+>> *-   -   -   -   -   -   -   -   131040.641581 secs
+>>  -   -   -   -   -   -  *-   -   131040.641583 secs
+> 
+> It seems the last two lines should be like below..
+> 
+>   *-   -   B0  -   D0  -   E0  -   131040.641581 secs
+>    -   -   B0  -   D0  -  *-   -   131040.641583 secs
+> 
+
+Sure, I included the line only for sched-out, but I will change it.
+
+>>
+>> Reviewed-and-tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+>> Signed-off-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+>> ---
+>>  tools/perf/Documentation/perf-sched.txt |   6 +
+>>  tools/perf/builtin-sched.c              | 161 ++++++++++++++++++------
+>>  2 files changed, 131 insertions(+), 36 deletions(-)
+>>
+>> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+>> index 74c812f7a4a4..3255e5b8e74b 100644
+>> --- a/tools/perf/Documentation/perf-sched.txt
+>> +++ b/tools/perf/Documentation/perf-sched.txt
+>> @@ -130,6 +130,12 @@ OPTIONS for 'perf sched map'
+>>  --color-pids::
+>>  	Highlight the given pids.
+>>  
+>> +--task-name <task>::
+>> +	Map output only for the given task name. The sched-out
+>> +	time is printed and is represented by '*-' for the given
+>> +	task name
+>> +	('-' indicates other tasks while '.' is idle).
+>> +
+>>  OPTIONS for 'perf sched timehist'
+>>  ---------------------------------
+>>  -k::
+>> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+>> index aa59f763ca46..57f166662d54 100644
+>> --- a/tools/perf/builtin-sched.c
+>> +++ b/tools/perf/builtin-sched.c
+>> @@ -156,6 +156,7 @@ struct perf_sched_map {
+>>  	const char		*color_pids_str;
+>>  	struct perf_cpu_map	*color_cpus;
+>>  	const char		*color_cpus_str;
+>> +	const char		*task_name;
+>>  	struct perf_cpu_map	*cpus;
+>>  	const char		*cpus_str;
+>>  };
+>> @@ -177,6 +178,7 @@ struct perf_sched {
+>>  	struct perf_cpu	 max_cpu;
+>>  	u32		 *curr_pid;
+>>  	struct thread	 **curr_thread;
+>> +	struct thread	 **curr_out_thread;
+>>  	char		 next_shortname1;
+>>  	char		 next_shortname2;
+>>  	unsigned int	 replay_repeat;
+>> @@ -1538,23 +1540,89 @@ map__findnew_thread(struct perf_sched *sched, struct machine *machine, pid_t pid
+>>  	return thread;
+>>  }
+>>  
+>> +static bool sched_match_task(const char *comm_str, const char *commands)
+> 
+> It'd be easier if you pass the sched pointer.
+> 
+> static bool sched_match_task(struct perf_sched *sched, const char *comm_str)
+> {
+>    ...
+> 
+
+Sure.
+
+> 
+>> +{
+>> +	char *commands_copy = NULL;
+>> +	char *token = NULL;
+>> +	bool match_found = false;
+>> +
+>> +	commands_copy = strdup(commands);
+>> +	if (commands_copy == NULL)
+>> +		return NULL;
+>> +
+>> +	token = strtok(commands_copy, ",");
+>> +
+>> +	while (token != NULL && !match_found) {
+>> +		match_found = !strcmp(comm_str, token);
+>> +		token = strtok(NULL, ",");
+>> +	}
+>> +
+>> +	free(commands_copy);
+> 
+> Why is this needed?  I think we only support a single command and then
+> simply check with strcmp().
+> 
+
+Sorry about that, I got confused while splitting into different commits. I'll fix it.
+
+> Also if you add multiple string support, you need to parse the string
+> when you parse the command line arguments, not when you match.
+> 
+
+Right. Will do that.
+
+> 
+>> +	return match_found;
+>> +}
+>> +
+>> +static void print_sched_map(struct perf_sched *sched, struct perf_cpu this_cpu, int cpus_nr,
+>> +								const char *color, bool sched_out)
+>> +{
+>> +	for (int i = 0; i < cpus_nr; i++) {
+>> +		struct perf_cpu cpu = {
+>> +		.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+> 
+> Please fix the indentation.
+> 
+
+Sure. Thank you for the review.
+
+Thanks and Regards
+Madadi Vineeth Reddy
+
+> Thanks,
+> Namhyung
+> 
+> 
+>> +		};
+>> +		struct thread *curr_thread = sched->curr_thread[cpu.cpu];
+>> +		struct thread *curr_out_thread = sched->curr_out_thread[cpu.cpu];
+>> +		struct thread_runtime *curr_tr;
+>> +		const char *pid_color = color;
+>> +		const char *cpu_color = color;
+>> +		char symbol = ' ';
+>> +		struct thread *thread_to_check = sched_out ? curr_out_thread : curr_thread;
+>> +
+>> +		if (thread_to_check && thread__has_color(thread_to_check))
+>> +			pid_color = COLOR_PIDS;
+>> +
+>> +		if (sched->map.color_cpus && perf_cpu_map__has(sched->map.color_cpus, cpu))
+>> +			cpu_color = COLOR_CPUS;
+>> +
+>> +		if (cpu.cpu == this_cpu.cpu)
+>> +			symbol = '*';
+>> +
+>> +		color_fprintf(stdout, cpu.cpu != this_cpu.cpu ? color : cpu_color, "%c", symbol);
+>> +
+>> +		thread_to_check = sched_out ? sched->curr_out_thread[cpu.cpu] :
+>> +								sched->curr_thread[cpu.cpu];
+>> +
+>> +		if (thread_to_check) {
+>> +			curr_tr = thread__get_runtime(thread_to_check);
+>> +			if (curr_tr == NULL)
+>> +				return;
+>> +
+>> +			if (sched_out)
+>> +				color_fprintf(stdout, color, "-  ");
+>> +			else
+>> +				color_fprintf(stdout, pid_color, "%2s ", curr_tr->shortname);
+>> +		} else
+>> +			color_fprintf(stdout, color, "   ");
+>> +	}
+>> +}
+>> +
+>>  static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  			    struct perf_sample *sample, struct machine *machine)
+>>  {
+>>  	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
+>> -	struct thread *sched_in;
+>> +	const u32 prev_pid = evsel__intval(evsel, sample, "prev_pid");
+>> +	struct thread *sched_in, *sched_out;
+>>  	struct thread_runtime *tr;
+>>  	int new_shortname;
+>>  	u64 timestamp0, timestamp = sample->time;
+>>  	s64 delta;
+>> -	int i;
+>>  	struct perf_cpu this_cpu = {
+>>  		.cpu = sample->cpu,
+>>  	};
+>>  	int cpus_nr;
+>> +	int proceed;
+>>  	bool new_cpu = false;
+>>  	const char *color = PERF_COLOR_NORMAL;
+>>  	char stimestamp[32];
+>> +	const char *str;
+>>  
+>>  	BUG_ON(this_cpu.cpu >= MAX_CPUS || this_cpu.cpu < 0);
+>>  
+>> @@ -1583,7 +1651,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  	}
+>>  
+>>  	sched_in = map__findnew_thread(sched, machine, -1, next_pid);
+>> -	if (sched_in == NULL)
+>> +	sched_out = map__findnew_thread(sched, machine, -1, prev_pid);
+>> +	if (sched_in == NULL || sched_out == NULL)
+>>  		return -1;
+>>  
+>>  	tr = thread__get_runtime(sched_in);
+>> @@ -1593,6 +1662,7 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  	}
+>>  
+>>  	sched->curr_thread[this_cpu.cpu] = thread__get(sched_in);
+>> +	sched->curr_out_thread[this_cpu.cpu] = thread__get(sched_out);
+>>  
+>>  	new_shortname = 0;
+>>  	if (!tr->shortname[0]) {
+>> @@ -1603,7 +1673,8 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  			 */
+>>  			tr->shortname[0] = '.';
+>>  			tr->shortname[1] = ' ';
+>> -		} else {
+>> +		} else if (!sched->map.task_name || sched_match_task(thread__comm_str(sched_in),
+>> +								sched->map.task_name)) {
+>>  			tr->shortname[0] = sched->next_shortname1;
+>>  			tr->shortname[1] = sched->next_shortname2;
+>>  
+>> @@ -1616,6 +1687,9 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  				else
+>>  					sched->next_shortname2 = '0';
+>>  			}
+>> +		} else {
+>> +			tr->shortname[0] = '-';
+>> +			tr->shortname[1] = ' ';
+>>  		}
+>>  		new_shortname = 1;
+>>  	}
+>> @@ -1623,42 +1697,28 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  	if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, this_cpu))
+>>  		goto out;
+>>  
+>> -	printf("  ");
+>> -
+>> -	for (i = 0; i < cpus_nr; i++) {
+>> -		struct perf_cpu cpu = {
+>> -			.cpu = sched->map.comp ? sched->map.comp_cpus[i].cpu : i,
+>> -		};
+>> -		struct thread *curr_thread = sched->curr_thread[cpu.cpu];
+>> -		struct thread_runtime *curr_tr;
+>> -		const char *pid_color = color;
+>> -		const char *cpu_color = color;
+>> -
+>> -		if (curr_thread && thread__has_color(curr_thread))
+>> -			pid_color = COLOR_PIDS;
+>> -
+>> -		if (sched->map.cpus && !perf_cpu_map__has(sched->map.cpus, cpu))
+>> -			continue;
+>> -
+>> -		if (sched->map.color_cpus && perf_cpu_map__has(sched->map.color_cpus, cpu))
+>> -			cpu_color = COLOR_CPUS;
+>> -
+>> -		if (cpu.cpu != this_cpu.cpu)
+>> -			color_fprintf(stdout, color, " ");
+>> +	proceed = 0;
+>> +	str = thread__comm_str(sched_in);
+>> +	/*
+>> +	 * Check which of sched_in and sched_out matches the passed --task-name
+>> +	 * arguments and call the corresponding print_sched_map.
+>> +	 */
+>> +	if (sched->map.task_name && !sched_match_task(str, sched->map.task_name)) {
+>> +		if (!sched_match_task(thread__comm_str(sched_out), sched->map.task_name))
+>> +			goto out;
+>>  		else
+>> -			color_fprintf(stdout, cpu_color, "*");
+>> +			goto sched_out;
+>>  
+>> -		if (sched->curr_thread[cpu.cpu]) {
+>> -			curr_tr = thread__get_runtime(sched->curr_thread[cpu.cpu]);
+>> -			if (curr_tr == NULL) {
+>> -				thread__put(sched_in);
+>> -				return -1;
+>> -			}
+>> -			color_fprintf(stdout, pid_color, "%2s ", curr_tr->shortname);
+>> -		} else
+>> -			color_fprintf(stdout, color, "   ");
+>> +	} else {
+>> +		str = thread__comm_str(sched_out);
+>> +		if (!(sched->map.task_name && !sched_match_task(str, sched->map.task_name)))
+>> +			proceed = 1;
+>>  	}
+>>  
+>> +	printf("  ");
+>> +
+>> +	print_sched_map(sched, this_cpu, cpus_nr, color, false);
+>> +
+>>  	timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+>>  	color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+>>  	if (new_shortname || tr->comm_changed || (verbose > 0 && thread__tid(sched_in))) {
+>> @@ -1675,9 +1735,32 @@ static int map_switch_event(struct perf_sched *sched, struct evsel *evsel,
+>>  	if (sched->map.comp && new_cpu)
+>>  		color_fprintf(stdout, color, " (CPU %d)", this_cpu);
+>>  
+>> +	if (proceed != 1) {
+>> +		color_fprintf(stdout, color, "\n");
+>> +		goto out;
+>> +	}
+>> +
+>> +sched_out:
+>> +	if (sched->map.task_name) {
+>> +		tr = thread__get_runtime(sched->curr_out_thread[this_cpu.cpu]);
+>> +		if (strcmp(tr->shortname, "") == 0)
+>> +			goto out;
+>> +
+>> +		if (proceed == 1)
+>> +			color_fprintf(stdout, color, "\n");
+>> +
+>> +		printf("  ");
+>> +		print_sched_map(sched, this_cpu, cpus_nr, color, true);
+>> +		timestamp__scnprintf_usec(timestamp, stimestamp, sizeof(stimestamp));
+>> +		color_fprintf(stdout, color, "  %12s secs ", stimestamp);
+>> +	}
+>> +
+>>  	color_fprintf(stdout, color, "\n");
+>>  
+>>  out:
+>> +	if (sched->map.task_name)
+>> +		thread__put(sched_out);
+>> +
+>>  	thread__put(sched_in);
+>>  
+>>  	return 0;
+>> @@ -3310,6 +3393,10 @@ static int perf_sched__map(struct perf_sched *sched)
+>>  	if (!sched->curr_thread)
+>>  		return rc;
+>>  
+>> +	sched->curr_out_thread = calloc(MAX_CPUS, sizeof(*(sched->curr_out_thread)));
+>> +	if (!sched->curr_out_thread)
+>> +		return rc;
+>> +
+>>  	if (setup_cpus_switch_event(sched))
+>>  		goto out_free_curr_thread;
+>>  
+>> @@ -3563,6 +3650,8 @@ int cmd_sched(int argc, const char **argv)
+>>                      "highlight given CPUs in map"),
+>>  	OPT_STRING(0, "cpus", &sched.map.cpus_str, "cpus",
+>>                      "display given CPUs in map"),
+>> +	OPT_STRING(0, "task-name", &sched.map.task_name, "task",
+>> +		"map output only for the given task name"),
+>>  	OPT_PARENT(sched_options)
+>>  	};
+>>  	const struct option timehist_options[] = {
+>> -- 
+>> 2.43.2
+>>
+
