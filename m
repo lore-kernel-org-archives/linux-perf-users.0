@@ -1,122 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D0216631C;
-	Mon,  1 Jul 2024 17:08:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85F116E883;
+	Mon,  1 Jul 2024 17:09:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853733; cv=none; b=X0BszuGLPRxaErRg6lyrDZ5FBJYZmPqLD7o080rR8oxBG29p5wI07/U+k7TUan+KrykSTa1I5NDqlSnrFJZYs7N3USMBG6hPNec1vwgue+e4NkM9k93UbT1e/r41KZnf9tfYmf223RDdAMObNZKYKkcoAEFxy3QFiSTOx+lUraI=
+	t=1719853783; cv=none; b=ONHapKgixoJMXXhkaxehQoN6vqF+/10nHcNWLiQPrr7QJonyFDZkjIYQ2yT0+/kUNWSGOdy+2tpPr0WyDfkOOYz9abC7O+usG89XPdWeo2GBM2VfV7tHsrOiCnsBvb+YTNYWbMOyBGASXuuYAlSUcRTfJGsh+PLCnJy4/uXLjFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853733; c=relaxed/simple;
-	bh=zsbuHy5w3OfgJ0azDM2BXoti/8qlEfU9xPQTRcEHelw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=De3fillKepmd6Dvu88Xa2HIpwgXoPIqoR2vfDqNeVhnECV5dls8hqIIZDzeU45wasvCGXf/LPo0/AHmjG7inLOi1VRtrWYjPuWtpYVfmohQlG6vpdx3/tbMPDmHEYZ88ZqOllGBUCIwN6vM69KwhM64kj2guqgl7Vg2FokCS4aw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2jnUjY0; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2jnUjY0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD7FC116B1;
-	Mon,  1 Jul 2024 17:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719853732;
-	bh=zsbuHy5w3OfgJ0azDM2BXoti/8qlEfU9xPQTRcEHelw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F2jnUjY0VX/mlOYaaaNOahMAfD4fMzU2DiWaZErPsQyjNQ54vosqhObE2Br7YSC6C
-	 XhzIXAZNPVuU9frlgBdRX2VyQUK6CIBtiXPdJKn6iuGrYIzBtw8rYLsHhWCLaiZjkb
-	 pSOHU3AuRZjehR/LRU0C+OBApkLKBRdvEf2o3wi/1TzazaaTFs5s/YbxP66zS0HHAr
-	 txWK8GIpyb3UBLSfAJbGNjTc68vTU/6u3USm+lkml5zwU4dp61haT9SzTz519ruHiu
-	 mOb46CW+BdcTCdxnyp7QevmaEogoZUIwtlHXrXij1LhDq/F5Vd7de1fyKiOvBhF7M/
-	 6nNjV8zO7HnDA==
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-25cd2b51fd3so429436fac.3;
-        Mon, 01 Jul 2024 10:08:52 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCX2+p8AwhpO+OnofTGUeYndZ8l/QUYstLZP/0FmO97FAjsz33caxHAqVYEW9CtOwkWnYnv2jOp1MP3TNnc1599FiwN8GnNIMDp1S59sidLG5A4Wd/jWWD/cn9W4LNipX7B0efIFnHsqA23HFUplFZ6yvaGWGi7uKW0QC6EpRhcNc9Ong0MYuoP5
-X-Gm-Message-State: AOJu0YwvVtdxRnQ9KbhfcBmYC6C3Z9+z5cc4mDz+4DoE3iBSMhD2L/hu
-	uF1gdi4JgevETCbPU5eFvc5rWVuD+AbCX9y3QQBiKn3zKIInOrfcqB69YSqD9tigMYk0sfbH2n8
-	JflY4d0lBgcjxkZtgP5bnlfkR0jU=
-X-Google-Smtp-Source: AGHT+IHR4xtavs3WYiLzujF4aoqo2c9S9zl3NErTsshLspZCJKaUFkpOeuqq5NUryZB+mKUEOJsqiLWQefG2dVeChEg=
-X-Received: by 2002:a05:6871:71e:b0:25d:707d:2550 with SMTP id
- 586e51a60fabf-25db344441amr6479512fac.2.1719853732094; Mon, 01 Jul 2024
- 10:08:52 -0700 (PDT)
+	s=arc-20240116; t=1719853783; c=relaxed/simple;
+	bh=/0P36xAcbDr1Y49JaZRQ1aDkbz3B2ByND+s9thhdz6o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=orwQdTs4co9AT/ggE083ofTiUSuMWAqExrtAuBeG/bXEd/UE3+pZRrmX358tJqbV1w+neZhW9D4TfGidFgJdY4zn6WEcD8ULXSf+1iwtnkSGpzTc9D3zYcfAkbwe0G8Z08kZ9YFdtRc8GouCbhyFOk2sZBF5arTAsFAksxH6h4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13A7C339;
+	Mon,  1 Jul 2024 10:10:06 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5003F766;
+	Mon,  1 Jul 2024 10:09:37 -0700 (PDT)
+Date: Mon, 1 Jul 2024 18:09:35 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 01/12] perf: arm_pmuv3: Avoid assigning fixed cycle
+ counter with threshold
+Message-ID: <ZoLiz5FoPsd89p5E@J2N7QTR9R3>
+References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
+ <20240626-arm-pmu-3-9-icntr-v2-1-c9784b4f4065@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com> <20240627-add-cpu-type-v2-2-f927bde83ad0@linux.intel.com>
-In-Reply-To: <20240627-add-cpu-type-v2-2-f927bde83ad0@linux.intel.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 1 Jul 2024 19:08:41 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
-Message-ID: <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
-Subject: Re: [PATCH PATCH v2 2/9] cpufreq: intel_pstate: Use topology_cpu_type()
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com, 
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
-	Brice Goglin <brice.goglin@gmail.com>, Mario Limonciello <mario.limonciello@amd.com>, 
-	Perry Yuan <Perry.Yuan@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-1-c9784b4f4065@kernel.org>
 
-On Thu, Jun 27, 2024 at 10:44=E2=80=AFPM Pawan Gupta
-<pawan.kumar.gupta@linux.intel.com> wrote:
->
-> Intel pstate driver uses hybrid_get_type() to get the cpu-type of a given
-> CPU. It uses smp_call_function_single() which is sub-optimal. Avoid it by
-> using topology_hw_cpu_type(cpu) that returns the cached cpu-type.
->
-> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+On Wed, Jun 26, 2024 at 04:32:25PM -0600, Rob Herring (Arm) wrote:
+> If the user has requested a counting threshold for the CPU cycles event,
+> then the fixed cycle counter can't be assigned as it lacks threshold
+> support. Currently, the thresholds will work or not randomly depending
+> on which counter the event is assigned.
+> 
+> While using thresholds for CPU cycles doesn't make much sense, it can be
+> useful for testing purposes.
+> 
+> Fixes: 816c26754447 ("arm64: perf: Add support for event counting threshold")
+> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-and I'm assuming that it will be routed along with the rest of the series.
-
-Thanks!
+Mark.
 
 > ---
->  drivers/cpufreq/intel_pstate.c | 14 +++-----------
->  1 file changed, 3 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstat=
-e.c
-> index 15de5e3d96fd..0a1e832c7536 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -1956,24 +1956,16 @@ static int knl_get_turbo_pstate(int cpu)
->         return ret;
+> This should go to 6.10 and stable. It is also a dependency for ICNTR
+> support.
+> 
+> v2:
+>  - Add and use armv8pmu_event_get_threshold() helper.
+> 
+> v1: https://lore.kernel.org/all/20240611155012.2286044-1-robh@kernel.org/
+> ---
+>  drivers/perf/arm_pmuv3.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
+> index 23fa6c5da82c..8ed5c3358920 100644
+> --- a/drivers/perf/arm_pmuv3.c
+> +++ b/drivers/perf/arm_pmuv3.c
+> @@ -338,6 +338,11 @@ static bool armv8pmu_event_want_user_access(struct perf_event *event)
+>  	return ATTR_CFG_GET_FLD(&event->attr, rdpmc);
 >  }
->
-> -static void hybrid_get_type(void *data)
-> -{
-> -       u8 *cpu_type =3D data;
-> -
-> -       *cpu_type =3D get_this_hybrid_cpu_type();
-> -}
-> -
->  static int hwp_get_cpu_scaling(int cpu)
+>  
+> +static u32 armv8pmu_event_get_threshold(struct perf_event_attr *attr)
+> +{
+> +	return ATTR_CFG_GET_FLD(attr, threshold);
+> +}
+> +
+>  static u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
 >  {
-> -       u8 cpu_type =3D 0;
-> +       u8 cpu_type =3D topology_hw_cpu_type(cpu);
->
-> -       smp_call_function_single(cpu, hybrid_get_type, &cpu_type, 1);
->         /* P-cores have a smaller perf level-to-freqency scaling factor. =
-*/
-> -       if (cpu_type =3D=3D 0x40)
-> +       if (cpu_type =3D=3D X86_HW_CPU_TYPE_INTEL_CORE)
->                 return hybrid_scaling_factor;
->
->         /* Use default core scaling for E-cores */
-> -       if (cpu_type =3D=3D 0x20)
-> +       if (cpu_type =3D=3D X86_HW_CPU_TYPE_INTEL_ATOM)
->                 return core_get_scaling();
->
->         /*
->
-> --
+>  	u8 th_compare = ATTR_CFG_GET_FLD(attr, threshold_compare);
+> @@ -941,7 +946,8 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
+>  	unsigned long evtype = hwc->config_base & ARMV8_PMU_EVTYPE_EVENT;
+>  
+>  	/* Always prefer to place a cycle counter into the cycle counter. */
+> -	if (evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) {
+> +	if ((evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) &&
+> +	    !armv8pmu_event_get_threshold(&event->attr)) {
+>  		if (!test_and_set_bit(ARMV8_IDX_CYCLE_COUNTER, cpuc->used_mask))
+>  			return ARMV8_IDX_CYCLE_COUNTER;
+>  		else if (armv8pmu_event_is_64bit(event) &&
+> @@ -1033,7 +1039,7 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
+>  	 * If FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max) will
+>  	 * be 0 and will also trigger this check, preventing it from being used.
+>  	 */
+> -	th = ATTR_CFG_GET_FLD(attr, threshold);
+> +	th = armv8pmu_event_get_threshold(attr);
+>  	if (th > threshold_max(cpu_pmu)) {
+>  		pr_debug("PMU event threshold exceeds max value\n");
+>  		return -EINVAL;
+> 
+> -- 
+> 2.43.0
+> 
