@@ -1,118 +1,114 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BC0145B09;
-	Mon,  1 Jul 2024 12:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8993E15A849;
+	Mon,  1 Jul 2024 12:59:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719838608; cv=none; b=FMZQzuxkm8vG++wmwNTYMMjF9p9toAqRWfR4qNV0VoFkhEoae5aI4DJxmFPwFxBM3l4PCqk2J/Rm39z24WNKie+zz3MZi5Sw7jvPr8rpPIqxqJNJ9qSsSSJu978YBmS00TRFv4zZP5X1o0DY5+2rj0NAtMsSJ3yfwWBl5wpmKNY=
+	t=1719838780; cv=none; b=ZTsYBxgmCV1h+ZYjtu2HQ7pkaQWTJFFjsaZ0DmnleLv+8ulVy15Wz3S/KnJXXuVe6xZQYe04mkppFUCnblJMKq0uuojxQCxmmxScJJgZrEJNdJiaddYKyNWuINMszudG2RJ+7iPtnu+NZdmhKDYyGF4xz+769WaMoxfmmpL2UB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719838608; c=relaxed/simple;
-	bh=4abuYWviVGcFbfSub23I7YcPpLJIZ0K42garfyxmCmo=;
+	s=arc-20240116; t=1719838780; c=relaxed/simple;
+	bh=EqV4abtVrBCqNL/GCdb8qpcsm3jc7faIH+C/b8k/t2I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WwTmfpAFGdbPKUi3LD5vIFnZFUgSvcnRwo1RkSMgeXzDwZEBvavCpG3rK5ISkcn/jvHhcyms6YO8n6bkwoG01JyVXE6i1YU4jL4YsF/aFtLbf7hE1S/tV9CFJLSskAK8hFQCjE8ih8+q0KJy8KCLB3DgQTzTW/bE7QEptHKdV9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eAf5da1L; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=fzL8enEh; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXfw2WGPHs/yl/mVBWbGGq0u4ewe+cbF2aYR/GL4l46rGzKwuQeqvR0jblgvGLAEDaZFScUBGjfnEgQv42JLI7iwNk3Z5q8bgFEywOT0TYHlV3xXIvlRWKsrq/ueB7Zv2ZfsqLSRRZcMyKfVqCEvOuJD9WzYOhAvNWpjwJDaF0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qKmzYVli; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eAf5da1L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fzL8enEh"
-Date: Mon, 1 Jul 2024 14:56:43 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1719838605;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dBApTZsHAhU7GXzgUJOuBx5pWY7Nk5ITlgRQcEs/IAc=;
-	b=eAf5da1LgJ4oE317XtUcQl8aRT2HlNCAp6sAyTYDBF5uw14Kv2+OnROj1GjN9mJncq4Hvf
-	N+BhsB8Z36XfeJAkO55fhONOUTc19XLVBMb4MU5PM/IYxpwkNg89yNyTINWqEAeVaQJd8n
-	QFmuwPRr7CYm+Ybg3tUBgJalNU4tm+aOU//N7wbMJOWmYLGJXBk3I5I4K+7zXmcoTW4mKF
-	7VGu5l4xvxyL1c7qGrYscaQ79JdWgs3DdoSq0tILBmeiZNukizOw5KzzDxh74rGVprHalO
-	eL5uDsx6+7bWammQbKaI2Jz2sX/Q4+lW4m3kact77PlNGNrli+EUYNkKPgMebw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1719838605;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=dBApTZsHAhU7GXzgUJOuBx5pWY7Nk5ITlgRQcEs/IAc=;
-	b=fzL8enEhiUH9rZou/amr7qFMmFMc1kWGYvki/C7mlMajsDxuZVFxWyMwrbm07yK+N6StgI
-	D2xoCx1eCqPM36BA==
-From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Daniel Bristot de Oliveira <bristot@kernel.org>,
-	Frederic Weisbecker <frederic@kernel.org>,
-	Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>,
-	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
-	Marco Elver <elver@google.com>, Mark Rutland <mark.rutland@arm.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v4 3/6] perf: Shrink the size of the recursion counter.
-Message-ID: <20240701125643.kqJWwrhW@linutronix.de>
-References: <20240624152732.1231678-1-bigeasy@linutronix.de>
- <20240624152732.1231678-4-bigeasy@linutronix.de>
- <20240701123137.GF20127@noisy.programming.kicks-ass.net>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qKmzYVli"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YWMUW1LEMTcUPVRQMHHO4hmc7vT38Q6vHYQXacFSLpM=; b=qKmzYVlivegaiZefvHTin5m6fO
+	6I1XQMeYJ7jxR8qZDS6S6yMYm6lVUTNJHu++zn0BCIWVlk6KeawOhtk9B72Jyh+e/xadsj1QUjmJ6
+	7CDAXBwD3FZBcBJKamSxIHXR0KmLm8nBwY8CmJi30RXSHkMoNccyY/u1DuM+9vczopRcwe9pHqe+t
+	g17ndHL4D1h0Z10WMcz43VBaoEe4DPGlfGsEqJl4W68RaOUFdtTtGNzzLFNsTJHZvhTNOGYSHh5Qr
+	eJPWIl1LqAgpYpfiiTtlDZHDlEQqm6cdSgD7RcPmSpBy6au3sTt181bX4/VT2YYDkjrUyNYPMJ45n
+	qirtuX6g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOGcu-0000000HLb4-3JF7;
+	Mon, 01 Jul 2024 12:59:24 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F29C1300694; Mon,  1 Jul 2024 14:59:21 +0200 (CEST)
+Date: Mon, 1 Jul 2024 14:59:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
+	dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
+	gustavoars@kernel.org, rui.zhang@intel.com,
+	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	ananth.narayan@amd.com, gautham.shenoy@amd.com,
+	kprateek.nayak@amd.com, ravi.bangoria@amd.com, sandipan.das@amd.com,
+	linux-pm@vger.kernel.org
+Subject: Re: [PATCH v3 02/10] perf/x86/rapl: Fix the energy-pkg event for AMD
+ CPUs
+Message-ID: <20240701125921.GG20127@noisy.programming.kicks-ass.net>
+References: <20240624055907.7720-1-Dhananjay.Ugwekar@amd.com>
+ <20240624055907.7720-3-Dhananjay.Ugwekar@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240701123137.GF20127@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240624055907.7720-3-Dhananjay.Ugwekar@amd.com>
 
-On 2024-07-01 14:31:37 [+0200], Peter Zijlstra wrote:
-> On Mon, Jun 24, 2024 at 05:15:16PM +0200, Sebastian Andrzej Siewior wrote:
-> > There are four recursion counter, one for each context. The type of the
-> > counter is `int' but the counter is used as `bool' since it is only
-> > incremented if zero.
-> > 
-> > Reduce the type of the recursion counter to an unsigned char, keep the
-> > increment/ decrement operation.
-> 
-> Does this actually matter? Aren't u8 memops encoded by longer
-> instructions etc..
+On Mon, Jun 24, 2024 at 05:58:59AM +0000, Dhananjay Ugwekar wrote:
+ 	
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index b985ca79cf97..73be25e1f4b4 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -103,6 +103,10 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+>  	.event_str	= str,							\
+>  };
+>  
+> +#define rapl_pmu_is_pkg_scope()				\
+> +	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
+> +	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
+> +
+>  struct rapl_pmu {
+>  	raw_spinlock_t		lock;
+>  	int			n_active;
+> @@ -140,9 +144,21 @@ static unsigned int rapl_cntr_mask;
+>  static u64 rapl_timer_ms;
+>  static struct perf_msr *rapl_msrs;
+>  
+> +static inline unsigned int get_rapl_pmu_idx(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+> +					 topology_logical_die_id(cpu);
+> +}
+> +
+> +static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
+> +					 topology_die_cpumask(cpu);
+> +}
 
-The goal here isn't to reduce the opcodes but to add it to task_struct
-without making it larger by filling a hole.
+This wants a comment. The next time someone looks at this we're going to
+be confused.
 
-But since you made me look at assembly:
-old:
-     316b:       65 48 8b 15 00 00 00    mov    %gs:0x0(%rip),%rdx        # 3173 <perf_swevent_get_recursion_context+0x33>
-     3173:       1c ff                   sbb    $0xff,%al
-     3175:       48 0f be c8             movsbq %al,%rcx
-     3179:       48 8d 94 8a 00 00 00    lea    0x0(%rdx,%rcx,4),%rdx
-     3180:       00
-                         317d: R_X86_64_32S      .data..percpu+0x4c
-     3181:       8b 0a                   mov    (%rdx),%ecx
-     3183:       85 c9                   test   %ecx,%ecx
-     3185:       75 0e                   jne    3195 <perf_swevent_get_recursion_context+0x55>
-     3187:       c7 02 01 00 00 00       movl   $0x1,(%rdx)
-^^^
-     318d:       0f be c0                movsbl %al,%eax
+> @@ -677,6 +696,9 @@ static int __init init_rapl_pmus(void)
+>  {
+>  	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+>  
+> +	if (rapl_pmu_is_pkg_scope())
+> +		nr_rapl_pmu = topology_max_packages();
+> +
 
-new:
-     2ff8:       1c ff                   sbb    $0xff,%al
-     2ffa:       81 e2 00 01 ff 00       and    $0xff0100,%edx
-     3000:       83 fa 01                cmp    $0x1,%edx
-     3003:       1c ff                   sbb    $0xff,%al
-     3005:       48 0f be d0             movsbq %al,%rdx
-     3009:       48 8d 94 11 00 00 00    lea    0x0(%rcx,%rdx,1),%rdx
-     3010:       00
-                         300d: R_X86_64_32S      .data..percpu+0x4c
- 
-     3011:       80 3a 00                cmpb   $0x0,(%rdx)
-     3014:       75 0b                   jne    3021 <perf_swevent_get_recursion_context+0x51>
-     3016:       c6 02 01                movb   $0x1,(%rdx)
-^^^
-     3019:       0f be c0                movsbl %al,%eax
-     301c:       e9 00 00 00 00          jmp    3021 <perf_swevent_get_recursion_context+0x51>
+How about:
 
-So we do even save a few bytes. We could avoid the "movsbl" at 3019 by
-making the return type `unsigned char' ;)
+	int nr_rapl_pmu = topology_max_packages();
+	if (!rapl_pmu_is_pkg_scope())
+		nr_rapl_pmu *= topology_max_dies_per_package();
 
-Sebastian
+hmm?
