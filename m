@@ -1,122 +1,161 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85F116E883;
-	Mon,  1 Jul 2024 17:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A1516CD21;
+	Mon,  1 Jul 2024 17:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853783; cv=none; b=ONHapKgixoJMXXhkaxehQoN6vqF+/10nHcNWLiQPrr7QJonyFDZkjIYQ2yT0+/kUNWSGOdy+2tpPr0WyDfkOOYz9abC7O+usG89XPdWeo2GBM2VfV7tHsrOiCnsBvb+YTNYWbMOyBGASXuuYAlSUcRTfJGsh+PLCnJy4/uXLjFc=
+	t=1719853873; cv=none; b=A/y6Wo8+UDYJxwNeO1uI0GNEmLyhtEZu7fbv13rhIYiF2eYOPf2uogMe5AhO6kmx0fkVw46hSsl7EIXdj9vxjLeuHoap7ykeq+sBsFVxq2k/yqhehfyMWjatUpbYiU7Kr7Uq6y7VXGtkN3drC/s5KshKaLNifu1o1Z3/+PLZ/AQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853783; c=relaxed/simple;
-	bh=/0P36xAcbDr1Y49JaZRQ1aDkbz3B2ByND+s9thhdz6o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orwQdTs4co9AT/ggE083ofTiUSuMWAqExrtAuBeG/bXEd/UE3+pZRrmX358tJqbV1w+neZhW9D4TfGidFgJdY4zn6WEcD8ULXSf+1iwtnkSGpzTc9D3zYcfAkbwe0G8Z08kZ9YFdtRc8GouCbhyFOk2sZBF5arTAsFAksxH6h4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13A7C339;
-	Mon,  1 Jul 2024 10:10:06 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F5003F766;
-	Mon,  1 Jul 2024 10:09:37 -0700 (PDT)
-Date: Mon, 1 Jul 2024 18:09:35 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 01/12] perf: arm_pmuv3: Avoid assigning fixed cycle
- counter with threshold
-Message-ID: <ZoLiz5FoPsd89p5E@J2N7QTR9R3>
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
- <20240626-arm-pmu-3-9-icntr-v2-1-c9784b4f4065@kernel.org>
+	s=arc-20240116; t=1719853873; c=relaxed/simple;
+	bh=/n8yXSU+8Zd0IVWtstzU65ZNdM1aKVu4Wfm3xjGnkGw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=K3Wj00ZVtgHNBkFo8rAtxFiH02n+74w1LiQTr2USTVpXSDVxv93e7p7C7PJlYn51blC0kmpeuzYrZMUKvt5MfgwwAgXTh2KMuHx1bRT5QgCsH9IGGMFyqpsgygX9g88ZcpcIe/ooV6ntsxR/+UYV1CpSoiCMot24VN5aEAEdKK8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h8N4nDHK; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h8N4nDHK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719853873; x=1751389873;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=/n8yXSU+8Zd0IVWtstzU65ZNdM1aKVu4Wfm3xjGnkGw=;
+  b=h8N4nDHKSvIvHrWiTO+GXohWu+mjssrHBeUgLLl96uZXOqOB6POpjyV2
+   u+VcGctfw5vGTovqZITqTbdFJkxWpK+6vgqptI4/j6d82vTWjYwi/AXBH
+   y91ydGgMLjSc7yifDVV2AT2S5/td/n9qiz31AIOJWq34y4Cvo0KE9aQPu
+   7M3npuNLRWyNx3xTp8oHACRkICX+EeKSnjm4TK9B0ubhQqPXpY+7J3ttb
+   rVkSjrQ6By/+oVZp8eVg3iCvsC+lYS2Wc/4NhXmDnU3UIx5rnvm679uQW
+   ptwbSM2Gt8t/zQ/OQHL3rL6zyU3+TwaGdhyYS3ZfoHRfj98TQ5Ahpml3N
+   A==;
+X-CSE-ConnectionGUID: ccy9PmpjQZyO9aRJGUDD7w==
+X-CSE-MsgGUID: pnVRX8s5STqxENJK3oEWTQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="16821015"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="16821015"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:11:08 -0700
+X-CSE-ConnectionGUID: zNo7PBA9QwyMt2yYyUiXAQ==
+X-CSE-MsgGUID: QaFraCjcTsejU2VP8gGe4Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="46328443"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:11:08 -0700
+Date: Mon, 1 Jul 2024 10:16:19 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
+ <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
+ Sohil" <sohil.mehta@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 02/11] x86/irq: Define NMI source vectors
+Message-ID: <20240701101619.63c65106@jacob-builder>
+In-Reply-To: <a1d3b2dd-e4d0-4733-85a0-7d9f83c396a7@zytor.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+	<20240628201839.673086-3-jacob.jun.pan@linux.intel.com>
+	<a1d3b2dd-e4d0-4733-85a0-7d9f83c396a7@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-1-c9784b4f4065@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 26, 2024 at 04:32:25PM -0600, Rob Herring (Arm) wrote:
-> If the user has requested a counting threshold for the CPU cycles event,
-> then the fixed cycle counter can't be assigned as it lacks threshold
-> support. Currently, the thresholds will work or not randomly depending
-> on which counter the event is assigned.
-> 
-> While using thresholds for CPU cycles doesn't make much sense, it can be
-> useful for testing purposes.
-> 
-> Fixes: 816c26754447 ("arm64: perf: Add support for event counting threshold")
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+On Sat, 29 Jun 2024 11:32:10 -0700, Xin Li <xin@zytor.com> wrote:
 
-Mark.
+> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+> > When NMI-source reporting is supported, each logical processor maintains
+> > a 16-bit NMI-source bitmap. It is up to the system software to assign
+> > NMI sources for their matching vector (bit position) in the bitmap.
+> > 
+> > Notice that NMI source vector is in a different namespace than the IDT
+> > vectors. Though they share the same programming interface/field in the
+> > NMI originator.
+> > 
+> > This initial allocation of the NMI sources are limited to local NMIs in
+> > that there is no external device NMI usage yet.
+> > 
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >   arch/x86/include/asm/irq_vectors.h | 28 ++++++++++++++++++++++++++++
+> >   1 file changed, 28 insertions(+)
+> > 
+> > diff --git a/arch/x86/include/asm/irq_vectors.h
+> > b/arch/x86/include/asm/irq_vectors.h index 13aea8fc3d45..e4cd33bc4fef
+> > 100644 --- a/arch/x86/include/asm/irq_vectors.h
+> > +++ b/arch/x86/include/asm/irq_vectors.h
+> > @@ -105,6 +105,34 @@
+> >   
+> >   #define NR_VECTORS			 256
+> >   
+> > +/*
+> > + * The NMI senders specify the NMI source vector as an 8bit integer in
+> > their  
+> 
+> s/The NMI senders/NMI senders/
+will do
 
-> ---
-> This should go to 6.10 and stable. It is also a dependency for ICNTR
-> support.
+> > + * vector field with NMI delivery mode. A local APIC receiving an NMI
+> > will
+> > + * set the corresponding bit in a 16bit bitmask, which is accumulated
+> > until
+> > + * the NMI is delivered.
+> > + * When a sender didn't specify an NMI source vector the source vector
+> > will
+> > + * be 0, which will result in bit 0 of the bitmask being set. For out
+> > of
+> > + * bounds vectors >= 16 bit 0 will also be set.
+> > + * When bit 0 is set, system software must invoke all registered NMI
+> > handlers
+> > + * as if NMI source feature is not enabled.  
 > 
-> v2:
->  - Add and use armv8pmu_event_get_threshold() helper.
+> Add empty lines in the above paragraph.
+sounds good.
+
+> > + *
+> > + * Vector 2 is reserved for matching IDT NMI vector where it may be
+> > hardcoded
+> > + * by some external devices.
+> > + *
+> > + * The NMI source vectors are sorted by descending priority with the
+> > exceptions
+> > + * of 0 and 2.
+> > + */
+> > +#define NMI_SOURCE_VEC_UNKNOWN		0
+> > +#define NMI_SOURCE_VEC_IPI_REBOOT	1	/* Crash reboot */
+> > +#define NMI_SOURCE_VEC_IDT_NMI		2	/* Match IDT
+> > NMI vector 2 */ +#define NMI_SOURCE_VEC_IPI_SMP_STOP	3	/*
+> > Panic stop CPU */ +#define NMI_SOURCE_VEC_IPI_BT
+> > 4	/* CPU backtrace */ +#define NMI_SOURCE_VEC_PMI
+> > 5	/* PerfMon counters */ +#define NMI_SOURCE_VEC_IPI_KGDB
+> > 	6	/* KGDB */ +#define NMI_SOURCE_VEC_IPI_MCE
+> > 	7	/* MCE injection */ +#define
+> > NMI_SOURCE_VEC_IPI_TEST		8	/* For remote and local
+> > IPIs */ +#define NR_NMI_SOURCE_VECTORS		9  
 > 
-> v1: https://lore.kernel.org/all/20240611155012.2286044-1-robh@kernel.org/
-> ---
->  drivers/perf/arm_pmuv3.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+> Fix alignment.
+Do you see alignment problem after the patch is applied? Alignment looks
+good with vi, emacs, etc. passed checkpatch --strict.
+
+> > +
+> >   #ifdef CONFIG_X86_LOCAL_APIC
+> >   #define FIRST_SYSTEM_VECTOR
+> > POSTED_MSI_NOTIFICATION_VECTOR #else  
 > 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 23fa6c5da82c..8ed5c3358920 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -338,6 +338,11 @@ static bool armv8pmu_event_want_user_access(struct perf_event *event)
->  	return ATTR_CFG_GET_FLD(&event->attr, rdpmc);
->  }
->  
-> +static u32 armv8pmu_event_get_threshold(struct perf_event_attr *attr)
-> +{
-> +	return ATTR_CFG_GET_FLD(attr, threshold);
-> +}
-> +
->  static u8 armv8pmu_event_threshold_control(struct perf_event_attr *attr)
->  {
->  	u8 th_compare = ATTR_CFG_GET_FLD(attr, threshold_compare);
-> @@ -941,7 +946,8 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  	unsigned long evtype = hwc->config_base & ARMV8_PMU_EVTYPE_EVENT;
->  
->  	/* Always prefer to place a cycle counter into the cycle counter. */
-> -	if (evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) {
-> +	if ((evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) &&
-> +	    !armv8pmu_event_get_threshold(&event->attr)) {
->  		if (!test_and_set_bit(ARMV8_IDX_CYCLE_COUNTER, cpuc->used_mask))
->  			return ARMV8_IDX_CYCLE_COUNTER;
->  		else if (armv8pmu_event_is_64bit(event) &&
-> @@ -1033,7 +1039,7 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->  	 * If FEAT_PMUv3_TH isn't implemented, then THWIDTH (threshold_max) will
->  	 * be 0 and will also trigger this check, preventing it from being used.
->  	 */
-> -	th = ATTR_CFG_GET_FLD(attr, threshold);
-> +	th = armv8pmu_event_get_threshold(attr);
->  	if (th > threshold_max(cpu_pmu)) {
->  		pr_debug("PMU event threshold exceeds max value\n");
->  		return -EINVAL;
-> 
-> -- 
-> 2.43.0
-> 
+
+
+Thanks,
+
+Jacob
