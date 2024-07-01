@@ -1,132 +1,173 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD8757CBA
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jul 2024 07:04:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6372C859;
+	Mon,  1 Jul 2024 09:51:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719817488; cv=none; b=PrVIQAVNNpgjO2Q0kJo/c9GLWAqCZXeGEO/qSSY1ZhvHu4Qf0xovApm3FP4pfbCt3rRPcbPipagLFePqopmIbrpj7I+m3gO/1CMavfjUWK5Tj4NlAmMBhthgZf9QpA4JtBNAL7A7Dl/ayEwcs85HKOYyLPSPzNI6wtgzrEByflo=
+	t=1719827477; cv=none; b=d/KfX7x4NOmrF4BNOJtL9pA8/ymHJ3PR5WqHWuGbWzuJCXsCEn3ycyY301lY9NwtsJmRWQ+BdUam+Nrm4GsKz35MH2JNvRfVaP7q1z1SHAi8fbpbprQGNoBf8cV8/oeNGz1Orhoif8gZEH8vT2C2qjSblxiK6QSAbgS5mn4+Lig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719817488; c=relaxed/simple;
-	bh=HzH63+31CffggOQJfu/2LqiwyDAQp5h2eo2DtvHmnE4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLQevHqqJLo5skNWe2zvz/2Gt62BlvTN62t3qRAyLdifLVJupaU7LHpU/Zem/M832AKRiA6ErUaj49a2BY7uLZEv/qOVSdfOIGCGkjJF+VZklEWliNOYCYevdEWZ94oemv6tEAUnxHnSj8aVzb5CvTVndq9O2KOd+ipQCNd+BYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=OY+73AeT; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1719827477; c=relaxed/simple;
+	bh=yKWtYTbS3qpNtS6WsmHfq2eHCxVi3Q8AxVnwoo5d3eI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=sudtd20hhwJoG8rjz+EuxnDdeBxAz3/w4MUNR2leAB79lzZxazxh8QrQaJhWbumap7n0lXB4a++rWZu5XaMMDXd8h7WCiRGz5H4iH+RGXX7SPm0bRJ+/wY5Ca3MpOGRM8XuJJhTa9OLM86SkKaRMdL/qxtt9Kqjlk4KcMm54LZ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TeqbyRSS; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OY+73AeT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719817485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Y7IWbgI8OpLFL5NLVkU/tGT5K5w+kDRhC9wqoAvlMj8=;
-	b=OY+73AeT0Xbn6CfoPzguZL53FfN0JvT1jIFIpnRoC6rKyzfR6OMseKbC+8BS2Z0rzuZp/Z
-	TbwQrlwlMCRP6ulXedx4D2iH3MI9lxEzS3iL6/J0TNmEiZzQT+tQVUX+OH1eU+KVIH2J6w
-	dxYTV83tTAPVbpnnW6haVIlNwzIbFYY=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-336-mSaOVyHeMg2ZCrA_uiJeqw-1; Mon,
- 01 Jul 2024 03:04:43 -0400
-X-MC-Unique: mSaOVyHeMg2ZCrA_uiJeqw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8B0DA196CE12;
-	Mon,  1 Jul 2024 07:04:42 +0000 (UTC)
-Received: from alecto.usersys.redhat.com (unknown [10.43.17.6])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6B1721955E80;
-	Mon,  1 Jul 2024 07:04:41 +0000 (UTC)
-Date: Mon, 1 Jul 2024 09:04:38 +0200
-From: Artem Savkov <asavkov@redhat.com>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf script: Fix perf script -F +metric
-Message-ID: <20240701070438.GA12242@alecto.usersys.redhat.com>
-References: <20240625004232.1852705-1-ak@linux.intel.com>
- <20240626090924.GA56952@alecto.usersys.redhat.com>
- <Zn8M39dHtqYpRa0o@tassilo>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TeqbyRSS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719827477; x=1751363477;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yKWtYTbS3qpNtS6WsmHfq2eHCxVi3Q8AxVnwoo5d3eI=;
+  b=TeqbyRSSVzw4pxzhZUlwrD1L9LeF+fEsgt45NBh2nZAXGCpMdxVJ9uZG
+   ZUO+jCKLiI3haYTHlGe/kjm3urH/A1kBVlP9WKQgV2fUrSrCn7Ple/1Uk
+   dMKYSpANjQ+DobKzWCWmV7Za/M5GjGbTzP5qncqQJ5b8p9Pn2bWqXznvj
+   IzvVkap3kMtOdAkZ43diqcKKsfFH4Dt3K3tnMtFFTyhC719h9+QjNcKFb
+   nTnk/zdrr7/uyto1Vm9ZhID1WArw6DsNN1lixWIiVsAldaOnaGKg7r5AH
+   R9J0ApeT2SD8UYnMOI6SBoIpzsId0lF+2LesLTNu4Z5rbcqpRPmbMJcqz
+   g==;
+X-CSE-ConnectionGUID: AVioUNiFSIynu2XC7g5zuw==
+X-CSE-MsgGUID: TFPIBzx+RWOkYQJtiXpitA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="20759822"
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="20759822"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:51:16 -0700
+X-CSE-ConnectionGUID: 6uIx7oc+RGy+i9SpXNbhwA==
+X-CSE-MsgGUID: Ngzqc+JQTQm4LLX2pO3UoQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
+   d="scan'208";a="49795701"
+Received: from xfang-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:51:11 -0700
+Message-ID: <c0a9ffb6-e6ea-4159-9cc0-a23df5e59429@linux.intel.com>
+Date: Mon, 1 Jul 2024 17:51:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Zn8M39dHtqYpRa0o@tassilo>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf topdown: Correct leader selection with sample_read
+ enabled
+To: "Liang, Kan" <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240614213908.352840-1-dapeng1.mi@linux.intel.com>
+ <df56c6e1-5d99-4cbe-abd4-772e7ff948af@linux.intel.com>
+ <4f5dbf6f-3805-43b6-867c-2503ccec7c1a@linux.intel.com>
+ <CAP-5=fVYmUvYawOBtUc_-PVzsTQhpOuMx4wxA7bHjwaZejii8Q@mail.gmail.com>
+ <350e5bf7-23ee-4a7f-8b62-e3d07604cbe1@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <350e5bf7-23ee-4a7f-8b62-e3d07604cbe1@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Jun 28, 2024 at 12:19:59PM -0700, Andi Kleen wrote:
-> > This works, however there seems to be yet another issue on
-> > perf-tools-next branch that breaks script metrics.
-> >
-> > 617824a7f0f73 (perf parse-events: Prefer sysfs/JSON hardware
-> > events over legacy, 2024-04-15) changes event priority so on
-> > my host "instructions" have type PERF_TYPE_RAW instead of
-> > PERF_TYPE_HARDWARE.
->
-> FWIW I don't see this on my build on Intel, even with that commit.
->
-> > This results in evsel__stat_type no longer recognizing these as
-> > STAT_INSTRUCTIONS.
->
-> I guess we could just fix evsel__stat_type to handle that case
->
-> Does this patch work?
 
-It does for this specific example, but there are other events as well.
-From arch/x86/events/intel/core.c:
-
-        static u64 intel_perfmon_event_map[PERF_COUNT_HW_MAX] __read_mostly =
-        {
-                [PERF_COUNT_HW_CPU_CYCLES]		= 0x003c,
-                [PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
-                [PERF_COUNT_HW_CACHE_REFERENCES]	= 0x4f2e,
-                [PERF_COUNT_HW_CACHE_MISSES]		= 0x412e,
-                [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c4,
-                [PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c5,
-                [PERF_COUNT_HW_BUS_CYCLES]		= 0x013c,
-                [PERF_COUNT_HW_REF_CPU_CYCLES]		= 0x0300, /* pseudo-encoding */
-        };
-
-The list is probably different on other arches.
-
-> perf: Workaround event priority problems
+On 6/29/2024 4:27 AM, Liang, Kan wrote:
 >
-> When instructions is not of HARDWARE types anymore, but raw,
-> which breaks the shadow stat metrics detection for IPC.
+> On 2024-06-28 2:28 p.m., Ian Rogers wrote:
+>> On Thu, Jun 27, 2024 at 11:17 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>> On 6/27/2024 11:11 PM, Liang, Kan wrote:
+>>>> On 2024-06-14 5:39 p.m., Dapeng Mi wrote:
+>>>>
+>>>> Besides, we need a test for the sampling read as well.
+>>>> Ian has provided a very good base. Please add a topdown sampling read
+>>>> case on top of it as well.
+>>>> https://lore.kernel.org/lkml/CAP-5=fUkg-cAXTb+3wbFOQCfdXgpQeZw40XHjfrNFbnBD=NMXg@mail.gmail.com/
+>>> Sure. I would look at it and add a test case.
+>> Thanks Dapeng and thanks Kan too! I wonder if we can do a regular
+>> counter and a leader sample counter then compare the counts are
+>> reasonably consistent. Something like this:
+>>
+>> ```
+>> $ perf stat -e instructions perf test -w noploop
+>>
+>> Performance counter stats for '/tmp/perf/perf test -w noploop':
+>>
+>>    25,779,785,496      instructions
+>>
+>>       1.008047696 seconds time elapsed
+>>
+>>       1.003754000 seconds user
+>>       0.003999000 seconds sys
+>> ```
+>>
+>> ```
+>> cat << "_end_of_file_" > a.py
+>> last_count = None
+>>
+>> def process_event(param_dict):
+>>    if ("ev_name" in param_dict and "sample" in param_dict and
+>>        param_dict["ev_name"] == "instructions"):
+>>        sample = param_dict["sample"]
+>>        if "values" in sample:
+>>            global last_count
+>>            last_count = sample["values"][1][1]
+>>
+>> def trace_end():
+>>    global last_count
+>>    print(last_count)
+>> _end_of_file_
+>> $ sudo perf record -o -  -e "{cycles,instructions}:S" perf test -w
+>> noploop|perf script -i - -s ./a.py
+>> [ perf record: Woken up 2 times to write data ]
+>> [ perf record: Captured and wrote 0.459 MB - ]
+>> 22195356100
+>> ```
+>>
+>> I didn't see a simpler way to get count and I don't think it is right.
+> The perf stat can cover the whole life cycle of a workload. But I think
+> the result of perf record can only give the sum from the beginning to
+> the last sample.
+> There are some differences.
 >
-> Reported-by: Artem Savkov <asavkov@redhat.com>
-> Fixes: 617824a7f0f73 (perf parse-events: Prefer sysfs/JSON hardware
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+>> There's some similar perf script checking of data in
+>> tools/perf/tests/shell/test_intel_pt.sh.
+>>
+> I think the case should be to test the output of the perf script, rather
+> than verify the accuracy of an event.
 >
-> diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-> index 3466aa952442..87a503e47ff0 100644
-> --- a/tools/perf/util/stat-shadow.c
-> +++ b/tools/perf/util/stat-shadow.c
-> @@ -97,9 +97,11 @@ static enum stat_type evsel__stat_type(const struct evsel *evsel)
+> If so, we may run two same events. They should show the exact same
+> results in a sample.
 >
->  	if (evsel__is_clock(evsel))
->  		return STAT_NSECS;
-> -	else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES))
-> +	else if (evsel__match(evsel, HARDWARE, HW_CPU_CYCLES) ||
-> +			!strcmp(evsel__name((struct evsel *)evsel), "cycles"))
-
-It is also probably worth to add a PERF_TYPE_RAW check.
-
->  		return STAT_CYCLES;
-> -	else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS))
-> +	else if (evsel__match(evsel, HARDWARE, HW_INSTRUCTIONS) ||
-> +			!strcmp(evsel__name((struct evsel *)evsel), "instructions"))
->  		return STAT_INSTRUCTIONS;
->  	else if (evsel__match(evsel, HARDWARE, HW_STALLED_CYCLES_FRONTEND))
->  		return STAT_STALLED_CYCLES_FRONT;
+> For example,
 >
+> perf record  -e "{branches,branches}:Su" -c 1000000 ./perf test -w brstack
+> perf script
+> perf  752598 349300.123884:    1000002 branches:      7f18676a875a
+> do_lookup_x+0x2fa (/usr/lib64/l>
+> perf  752598 349300.123884:    1000002 branches:      7f18676a875a
+> do_lookup_x+0x2fa (/usr/lib64/l>
+> perf  752598 349300.124854:    1000005 branches:      7f18676a90b6
+> _dl_lookup_symbol_x+0x56 (/usr/>
+> perf  752598 349300.124854:    1000005 branches:      7f18676a90b6
+> _dl_lookup_symbol_x+0x56 (/usr/>
+> perf  752598 349300.125914:     999998 branches:      7f18676a8556
+> do_lookup_x+0xf6 (/usr/lib64/ld>
+> perf  752598 349300.125914:     999998 branches:      7f18676a8556
+> do_lookup_x+0xf6 (/usr/lib64/ld>
+> perf  752598 349300.127401:    1000009 branches:            4c1adf
+> brstack_bench+0x15 (/home/kan/o>
+> perf  752598 349300.127401:    1000009 branches:            4c1adf
+> brstack_bench+0x15 (/home/kan/o>
 
---
- Artem
+This looks a more accurate validation. I would add this test.
 
+
+>
+> Thanks,
+> Kan
+>
+>> Thanks,
+>> Ian
+>>
