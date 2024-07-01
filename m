@@ -1,91 +1,142 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C594916E861;
-	Mon,  1 Jul 2024 17:11:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1016B75B;
+	Mon,  1 Jul 2024 17:14:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853889; cv=none; b=oEPuDZHPKFNMibVOnWFEbmpFBy60bgFYpJ+XLbiCrSU9hbOYBdOsQ3L9QZx8Vtj3yYFs53oa1izk5Qpt8vtmEn5JmN94zQCaZZjqddgQTXOOzm7CssKOkta9f53zUfuwnZ12Kg4zjdyyd14ZRUfF0I+FWn96YITtRDINWQoMGYE=
+	t=1719854055; cv=none; b=iKcLazBlV/lAeetwh8AtLg4fmU2rUcXkO7p8joY95pH+Pu6PGLz5j790tRfU8T+TPrStP1PZkTitHqQsEdUlfjm9gzsN4ED6XkCf3L2NBTS93PrWE4CpEL0ZagBVDq6H06eucKOTErasZKA4n8Qb6PUgrl/Z5QZLOoDEucQaA5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853889; c=relaxed/simple;
-	bh=cQOKEl8T347wYcKXSrP4L6cvaIFsGG1xGX+1gP9kIOQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gqr9yrSGhOPc8OOTeaS6KHEDPWmOTpmiM5zBVfKtEOEGEZWH7xGn3+EZ1ct7NjQdaBwT9Wl0ulYyl+RQRQRh8l7bp7lyFL90n1cVk/aKhKHZ6d0Cprs8/LOrOiyAILhCdm1K6GLUPklvVal5fyQ63UG+FOSPUBi8oOTd2Tj1pP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FD8D339;
-	Mon,  1 Jul 2024 10:11:52 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 614463F766;
-	Mon,  1 Jul 2024 10:11:24 -0700 (PDT)
-Date: Mon, 1 Jul 2024 18:11:21 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 02/12] perf: arm_pmuv3: Drop unnecessary
- IS_ENABLED(CONFIG_ARM64) check
-Message-ID: <ZoLjOTs2ywnw5v_x@J2N7QTR9R3>
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
- <20240626-arm-pmu-3-9-icntr-v2-2-c9784b4f4065@kernel.org>
+	s=arc-20240116; t=1719854055; c=relaxed/simple;
+	bh=2eM0IWCPfi0UleNKIJSytKfnwXJJDTEI6nnVwtMMiDU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LqtI62caGKbnxO4nXUfe5rFGCqoEgtQLvUhfYSWNm/hZSBJOBPIXX1bQsVBCgphPciAYf+oRdSbZLgltAxr6H46blibWms0j5rxJpJ5xC8EuNJFcZIMGFB6E1K4B1zSMRmIDDbsHMvBtivSsTNEB46uxb/T+AYJTZbZRtv1/704=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MPCtIgl5; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MPCtIgl5"
+Received: from [192.168.7.205] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 461HDh7s205329
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 1 Jul 2024 10:13:43 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 461HDh7s205329
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719854025;
+	bh=Jsm8Jgqufv652gfaChqBGeBgH76qq98qTkYkJqe2wdM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MPCtIgl5dncYd3LOeaV8pDR98lLp5gxcut9QCmYY31IrOUfgA0Qy+wXx3i2RbjaMj
+	 fn23T6LIVQXU4GaNd/u80M8f/xTM5zxYJGMI8OhwwGdFndWPwretm6hHgMvZgPiv6G
+	 Y+lHI+RKYWuG7CK+BmOIyNo5BEsCdZGu/JuT1po9YD3+TSuXqLyippTM1mF4Vjb3Ul
+	 l6LC6fmp4JLkbelAGIcz5sONHPxRPwk2Eul499+ksKHRygJ+I2dkgmmWdTunsvBVve
+	 eblpiJkKLNurE+BOIynDkaysCXnCbMOt8H8/j5JpUnMFzRJO5ze3iCVHrROrMx/M46
+	 zMl/nTW88doIQ==
+Message-ID: <37fbf57e-8f3d-447c-acf8-c1485c490b76@zytor.com>
+Date: Mon, 1 Jul 2024 10:13:43 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-2-c9784b4f4065@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 11/11] KVM: X86: Use common code for PV IPIs in linux
+ guest
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+        kan.liang@linux.intel.com, Andi Kleen
+ <andi.kleen@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Zeng Guang <guang.zeng@intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
+ <ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
+ <20240701093847.3f875868@jacob-builder>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20240701093847.3f875868@jacob-builder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Jun 26, 2024 at 04:32:26PM -0600, Rob Herring (Arm) wrote:
-> The IS_ENABLED(CONFIG_ARM64) check for threshold support is unnecessary.
-> The purpose is to not enable thresholds on arm32, but if threshold is
-> non-zero, the check against threshold_max() just above here will have
-> errored out because threshold_max() is always 0 on arm32.
+On 7/1/2024 9:38 AM, Jacob Pan wrote:
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> On Sat, 29 Jun 2024 11:38:10 -0700, Xin Li <xin@zytor.com> wrote:
+> 
+>> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+>>> Paravirtual apic hooks to enable PV IPIs for KVM if the "send IPI"
+>>
+>> s/Paravirtual apic/Paravirtualize APIC/
+> 
+> Paravirtual APIC makes sense to me. This is also the same language used in
+> previous commits.
 
-Acked-by: Mark rutland <mark.rutland@arm.com>
+"Paravirtual apic hooks to enable..."
 
-Mark.
+It needs to start with a verb, I can't read it as adj.
 
-> ---
-> v2:
->  - new patch
-> ---
->  drivers/perf/arm_pmuv3.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index 8ed5c3358920..3e51cd7062b9 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -1045,7 +1045,7 @@ static int armv8pmu_set_event_filter(struct hw_perf_event *event,
->  		return -EINVAL;
->  	}
->  
-> -	if (IS_ENABLED(CONFIG_ARM64) && th) {
-> +	if (th) {
->  		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TH, th);
->  		config_base |= FIELD_PREP(ARMV8_PMU_EVTYPE_TC,
->  					  armv8pmu_event_threshold_control(attr));
+> How about:
 > 
-> -- 
-> 2.43.0
+> "The paravirtual APIC hooks in KVM, some of which are used for sending PV
+> IPIs, can reuse common code for ICR preparation. This shared code also
+> encompasses NMI-source reporting when in effect."
+
+LGTM.
+
 > 
+>>> hypercall is available. Reuse common code for ICR preparation which
+>>> covers NMI-source reporting if in effect.
+>>
+>> I see a lot of "NMI source". Should we use "NMI-source" in all places?
+> Not really, here NMI-source is a compound modifier before noun "reporting".
+> 
+> For other places, hyphen(-) is not needed if it is just a noun. e.g.
+> "partial due to unknown NMI sources"
+> 
+> I will go through the patchset to make sure they are consistent.
+
+Right, make them consistent.
+
