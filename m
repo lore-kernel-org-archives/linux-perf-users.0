@@ -1,142 +1,99 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05F1016B75B;
-	Mon,  1 Jul 2024 17:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A469616E880;
+	Mon,  1 Jul 2024 17:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719854055; cv=none; b=iKcLazBlV/lAeetwh8AtLg4fmU2rUcXkO7p8joY95pH+Pu6PGLz5j790tRfU8T+TPrStP1PZkTitHqQsEdUlfjm9gzsN4ED6XkCf3L2NBTS93PrWE4CpEL0ZagBVDq6H06eucKOTErasZKA4n8Qb6PUgrl/Z5QZLOoDEucQaA5I=
+	t=1719854107; cv=none; b=q5JFXU8yS10kK3grI9aR+9XmOxXLT+V90zebiBOk2zBUoSsgS3rsUQWdrBhRD7CDYrFMVHp2ICeNbxmZL9LwUq6nghFtOZ9Lu6hHlNfTkikGlBPgYzjGGjfqXKN7jR9D8R40sU5/ULHhhSCm02qP+86dVAmVF89ozUvyCZOnZYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719854055; c=relaxed/simple;
-	bh=2eM0IWCPfi0UleNKIJSytKfnwXJJDTEI6nnVwtMMiDU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LqtI62caGKbnxO4nXUfe5rFGCqoEgtQLvUhfYSWNm/hZSBJOBPIXX1bQsVBCgphPciAYf+oRdSbZLgltAxr6H46blibWms0j5rxJpJ5xC8EuNJFcZIMGFB6E1K4B1zSMRmIDDbsHMvBtivSsTNEB46uxb/T+AYJTZbZRtv1/704=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=MPCtIgl5; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1719854107; c=relaxed/simple;
+	bh=E4tGo/UIChU9oL44JjrZYtncmJdcFllLulfgmDghc4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ItQ6k/6XSPoR1nTJ40LYdR+qxAX37MOWFXag4BV35hdKJp3WZJ9YXmOzUy2jhHe5KzP9KC4DtnaL1tqbhejyBLsdRXp4PZYxhZ6nuBi3YSSsaxSyDnS1F3/ZeyVkKYNV3zPb9zL5rjujH9hNaLFY07L9D+um+r5PX8XFSlVCjQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qm0pZK/i; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="MPCtIgl5"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 461HDh7s205329
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Mon, 1 Jul 2024 10:13:43 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 461HDh7s205329
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719854025;
-	bh=Jsm8Jgqufv652gfaChqBGeBgH76qq98qTkYkJqe2wdM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MPCtIgl5dncYd3LOeaV8pDR98lLp5gxcut9QCmYY31IrOUfgA0Qy+wXx3i2RbjaMj
-	 fn23T6LIVQXU4GaNd/u80M8f/xTM5zxYJGMI8OhwwGdFndWPwretm6hHgMvZgPiv6G
-	 Y+lHI+RKYWuG7CK+BmOIyNo5BEsCdZGu/JuT1po9YD3+TSuXqLyippTM1mF4Vjb3Ul
-	 l6LC6fmp4JLkbelAGIcz5sONHPxRPwk2Eul499+ksKHRygJ+I2dkgmmWdTunsvBVve
-	 eblpiJkKLNurE+BOIynDkaysCXnCbMOt8H8/j5JpUnMFzRJO5ze3iCVHrROrMx/M46
-	 zMl/nTW88doIQ==
-Message-ID: <37fbf57e-8f3d-447c-acf8-c1485c490b76@zytor.com>
-Date: Mon, 1 Jul 2024 10:13:43 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qm0pZK/i"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719854106; x=1751390106;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=E4tGo/UIChU9oL44JjrZYtncmJdcFllLulfgmDghc4g=;
+  b=Qm0pZK/i8ZANVdTw5sYQ4J05vUF2DTz8yLsZQ5VGG1cWFnaidTcdO07Q
+   LYAJJVx1Oj24CftvzwlJVI8P55QaLJwcw+o8nnZY1VHLDT63DD+lVGJ8E
+   jFidWSSA3yHp12KM8kWZX5aP5ihdMd1BgvahtwNrr6/JJq28TpthTKjmH
+   apaUvYItqy9AhpMsLtFFFbBVizSHS741NmbHd1p0hUtVG7O6YzPCiSzI4
+   HnwsZCEts+QmcRWwLLSMd19CH7nuB/UPKZYedbEs+gAcYWweLzaX2S4eY
+   H25+0iqXIm2uPCrO8DZXiopXjFGggvo3RqaIKgQjmbfO9KlF9cJAkCxUt
+   w==;
+X-CSE-ConnectionGUID: O7/dLit4STe9Nk66N/yRcg==
+X-CSE-MsgGUID: k2DXVdS6SnWfalEbsPjTng==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34538878"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="34538878"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:15:05 -0700
+X-CSE-ConnectionGUID: anAxlbOqSouXpEKK/BL55A==
+X-CSE-MsgGUID: dmQG5tqPQrWPU1KAvBBnRg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="76769766"
+Received: from aadeosun-mobl.amr.corp.intel.com (HELO desk) ([10.209.8.130])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 10:15:05 -0700
+Date: Mon, 1 Jul 2024 10:14:56 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH PATCH v2 2/9] cpufreq: intel_pstate: Use
+ topology_cpu_type()
+Message-ID: <20240701171456.ahmlmm7vb3gk5rcg@desk>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-2-f927bde83ad0@linux.intel.com>
+ <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 11/11] KVM: X86: Use common code for PV IPIs in linux
- guest
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
-        kan.liang@linux.intel.com, Andi Kleen
- <andi.kleen@intel.com>,
-        "Mehta, Sohil" <sohil.mehta@intel.com>,
-        Zeng Guang <guang.zeng@intel.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
- <ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
- <20240701093847.3f875868@jacob-builder>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <20240701093847.3f875868@jacob-builder>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
 
-On 7/1/2024 9:38 AM, Jacob Pan wrote:
+On Mon, Jul 01, 2024 at 07:08:41PM +0200, Rafael J. Wysocki wrote:
+> On Thu, Jun 27, 2024 at 10:44 PM Pawan Gupta
+> <pawan.kumar.gupta@linux.intel.com> wrote:
+> >
+> > Intel pstate driver uses hybrid_get_type() to get the cpu-type of a given
+> > CPU. It uses smp_call_function_single() which is sub-optimal. Avoid it by
+> > using topology_hw_cpu_type(cpu) that returns the cached cpu-type.
+> >
+> > Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> > Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> > Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
 > 
-> On Sat, 29 Jun 2024 11:38:10 -0700, Xin Li <xin@zytor.com> wrote:
-> 
->> On 6/28/2024 1:18 PM, Jacob Pan wrote:
->>> Paravirtual apic hooks to enable PV IPIs for KVM if the "send IPI"
->>
->> s/Paravirtual apic/Paravirtualize APIC/
-> 
-> Paravirtual APIC makes sense to me. This is also the same language used in
-> previous commits.
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-"Paravirtual apic hooks to enable..."
+Thanks.
 
-It needs to start with a verb, I can't read it as adj.
+> and I'm assuming that it will be routed along with the rest of the series.
 
-> 
-> How about:
-> 
-> "The paravirtual APIC hooks in KVM, some of which are used for sending PV
-> IPIs, can reuse common code for ICR preparation. This shared code also
-> encompasses NMI-source reporting when in effect."
-
-LGTM.
-
-> 
->>> hypercall is available. Reuse common code for ICR preparation which
->>> covers NMI-source reporting if in effect.
->>
->> I see a lot of "NMI source". Should we use "NMI-source" in all places?
-> Not really, here NMI-source is a compound modifier before noun "reporting".
-> 
-> For other places, hyphen(-) is not needed if it is just a noun. e.g.
-> "partial due to unknown NMI sources"
-> 
-> I will go through the patchset to make sure they are consistent.
-
-Right, make them consistent.
-
+I believe yes, as it has a dependency on the first patch.
