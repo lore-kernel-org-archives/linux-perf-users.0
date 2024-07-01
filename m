@@ -1,155 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DCB216D330;
-	Mon,  1 Jul 2024 15:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EF14D2AC;
+	Mon,  1 Jul 2024 16:33:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848984; cv=none; b=sE3oULdir/3r0ykws8k/1mTDPThf98dmTSJimTW4v6nLDLip68N2YtSdZSOmGlV9UBgBBh2blm8ijhbagnwtKoyCFm2Tt+HsGLSboiVba+gflpzubisdv2zCCQfnmbN1eSK41Bc5+FXdE4s1LCFG44vQ5mAC5TjMQZZGozHwAcM=
+	t=1719851617; cv=none; b=aVmsrsJp9tCACyWUtPtl/Vbob6vNHIlJH//vcUhzUjL+MiWQX2iARZJietpS7+CPz6qORQnIskzG2yhIJg4j+qjiWGLe/AIN0KZUnoAwMpMqTCkUMDGy8SxnNmM3+Gs4GxsjXs7d586FDCOhI4Ohc+vzOt4jjxwqzEdj8zxFidg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848984; c=relaxed/simple;
-	bh=FzHTzl2pM6bEFmyfIXnvBqB/szvNEUaYJUNet+Yhy60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DLViBdiBDvDZsIRmlYupqS+ojmP24LcWy41F7i2ucohcjeTRdf3gyCWgw0lMQDr6NHgMDtMEpR8A+3emZW2umD6xkHFa44ee6hM3AmtgFqAmdLNBk8MIMEVep7MVzvX93vTae5HseyV0tCDEgBeDMdhV+7NnN5wtWSCWbGpw8iM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dn16aWsH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719851617; c=relaxed/simple;
+	bh=jbP1tKebowex1to7GOL6gesMVgJqYoDaSfBtDnkom/w=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PEJnuVf+mift7gOvKoSYZskkobZT+89gIi0fGVijpGPljTLOf7x84q3hwRAG/Uj2Y5XAkJT+NE6Kyr1aJmKTCmTQHCqemW2z89ymCWdCWlD11XruMO5k9dAu/kAmUkbCfXs4HzPsypR09zynXPIHTRsebhQSGTa2nQO9Od//u9A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iUK8THQs; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dn16aWsH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24EC0C4AF13;
-	Mon,  1 Jul 2024 15:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719848984;
-	bh=FzHTzl2pM6bEFmyfIXnvBqB/szvNEUaYJUNet+Yhy60=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=dn16aWsHxZ9zj7/LYdbd5j4PuGmEiTb82mRlxgr9353O/WgDP33tFDSXkUEjYCQYV
-	 pnFprls6ofsRKYpZ+nbFVXJwoZ+KnB6yhVUMiHSrPMNMCJ+CthPL6YkXefL6VL8o+P
-	 59wZTA6KDLwuj+LSkp7YfT7oBNXQqvMgHNFDa54UDgrqJxU9UR/heu+9wXE3DPSDka
-	 ztQJhN42TQEMnFxSqtIOLGayWTGclfhEo7XFIQAt/RfshICT8Nrasf+xHuzFQvYRLC
-	 kDRRqZQMqG14k+lxNwSgymYqDvjnjWCnyT38lBTvJBdpyB+iPH518l0x9lWaJaoH6D
-	 mfoDXTCZ5gmIg==
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-52e7145c63cso3661077e87.0;
-        Mon, 01 Jul 2024 08:49:44 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUnTbGXbRmtbUv/SrSNy5YfHOiLueketpcn4gxnWsijOb7Iw7Fj7z4WLX6BRnYR1bGQYQTOsKw44fjxvbBmP+Tr3iiNSTBJx30RO7rFtyPTmso1bjaG2KfdqZCsvRFfRwm3XktW9u+vMuLI09i/Fw==
-X-Gm-Message-State: AOJu0YyDVeFhYKf8bXJcvihm6kxwrjC2CKTaA0pc65VXz1WFUtt4OeyL
-	AlwnhyqHSdYrTJZySy1ZKNlQRdKTjXorAWLu9VpwT/LclXHH0oobh4qFzTQNyHM3U+TDqEBstzp
-	y9fUb1gVsZ2uSU0dHZO4L6wIC0Q==
-X-Google-Smtp-Source: AGHT+IFDs+WM61neTl4W+/aa13iIaRUE/ScfGZW3qLo405X2mESySA3ctabmSZLxw4Jh7wo4i87xPoxH8UwNbBkhmvg=
-X-Received: by 2002:a05:6512:3ca9:b0:52e:8161:4ce6 with SMTP id
- 2adb3069b0e04-52e825cb693mr1822851e87.25.1719848982454; Mon, 01 Jul 2024
- 08:49:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iUK8THQs"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719851616; x=1751387616;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=jbP1tKebowex1to7GOL6gesMVgJqYoDaSfBtDnkom/w=;
+  b=iUK8THQsasnKU+mAVitqkPwawNUGu/xZEbinh3VfN2KcHVG2ibdydxc3
+   Ro+V70ECOuNyi2CaVJWpBV5TzResCEPY6fyRWI0MlSxuAs8Tnpn7zc2RW
+   uzm1rOeBYCzNWjTjjG5hM+6uXPnRiPdygPPvnux+5dc1Q7y2nFx7Xvtbt
+   7AH8tNu4nco75ezrPMCUz2AqP5t28+brkCQjDrHaYlk7HpI3L6PXN8v2u
+   Evk8IHNOyy829Rf5v1YDQx3u+8lE41fh5BdjErlXzYtKiC3PcrN1kqcN+
+   o836+IjKKLGyjvc+fk2RADegCFX4gK6lARaUvxzPLFwAn2sQ6CodBN2jU
+   A==;
+X-CSE-ConnectionGUID: 4GIRvZ0ERfikS8sVmf17jA==
+X-CSE-MsgGUID: 3e8x+xFAQmW+bk0UQwRwBQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="17120641"
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="17120641"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 09:33:35 -0700
+X-CSE-ConnectionGUID: NvlDRiKRSAig7f0SKFg6NQ==
+X-CSE-MsgGUID: axg3MeE2TzSF4iHtuDdYbg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
+   d="scan'208";a="46238427"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 09:33:35 -0700
+Date: Mon, 1 Jul 2024 09:38:47 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: Xin Li <xin@zytor.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
+ <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
+ Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
+ jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 11/11] KVM: X86: Use common code for PV IPIs in linux
+ guest
+Message-ID: <20240701093847.3f875868@jacob-builder>
+In-Reply-To: <ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+	<20240628201839.673086-12-jacob.jun.pan@linux.intel.com>
+	<ca060eaf-0ace-4a8e-af86-a45b6f32340e@zytor.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
- <20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org> <86ikxuir2k.wl-maz@kernel.org>
- <20240701135216.GD2250@willie-the-truck>
-In-Reply-To: <20240701135216.GD2250@willie-the-truck>
-From: Rob Herring <robh@kernel.org>
-Date: Mon, 1 Jul 2024 09:49:29 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKYstLZQy_VQTvg-285jj1mpH+4d9CVJ_1_iAus5_rTRA@mail.gmail.com>
-Message-ID: <CAL_JsqKYstLZQy_VQTvg-285jj1mpH+4d9CVJ_1_iAus5_rTRA@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] perf: arm_pmu: Remove event index to counter remapping
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Russell King <linux@armlinux.org.uk>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu <yuzenghui@huawei.com>, 
-	Catalin Marinas <catalin.marinas@arm.com>, James Clark <james.clark@arm.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 1, 2024 at 7:52=E2=80=AFAM Will Deacon <will@kernel.org> wrote:
->
-> On Thu, Jun 27, 2024 at 12:05:23PM +0100, Marc Zyngier wrote:
-> > On Wed, 26 Jun 2024 23:32:30 +0100,
-> > "Rob Herring (Arm)" <robh@kernel.org> wrote:
-> > >
-> > > Xscale and Armv6 PMUs defined the cycle counter at 0 and event counte=
-rs
-> > > starting at 1 and had 1:1 event index to counter numbering. On Armv7 =
-and
-> > > later, this changed the cycle counter to 31 and event counters start =
-at
-> > > 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
-> > > and introduced an event index to counter conversion. The conversion u=
-ses
-> > > masking to convert from event index to a counter number. This operati=
-on
-> > > relies on having at most 32 counters so that the cycle counter index =
-0
-> > > can be transformed to counter number 31.
-> > >
-> > > Armv9.4 adds support for an additional fixed function counter
-> > > (instructions) which increases possible counters to more than 32, and
-> > > the conversion won't work anymore as a simple subtract and mask. The
-> > > primary reason for the translation (other than history) seems to be t=
-o
-> > > have a contiguous mask of counters 0-N. Keeping that would result in
-> > > more complicated index to counter conversions. Instead, store a mask =
-of
-> > > available counters rather than just number of events. That provides m=
-ore
-> > > information in addition to the number of events.
-> > >
-> > > No (intended) functional changes.
-> > >
-> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> >
-> > [...]
-> >
-> > > diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pm=
-u.h
-> > > index b3b34f6670cf..e5d6d204beab 100644
-> > > --- a/include/linux/perf/arm_pmu.h
-> > > +++ b/include/linux/perf/arm_pmu.h
-> > > @@ -96,7 +96,7 @@ struct arm_pmu {
-> > >     void            (*stop)(struct arm_pmu *);
-> > >     void            (*reset)(void *);
-> > >     int             (*map_event)(struct perf_event *event);
-> > > -   int             num_events;
-> > > +   DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
-> >
-> > I'm slightly worried by this, as this size is never used, let alone
-> > checked by the individual drivers. I can perfectly picture some new
-> > (non-architectural) PMU driver having more counters than that, and
-> > blindly setting bits outside of the allowed range.
->
-> I tend to agree.
->
-> > One way to make it a bit safer would be to add a helper replacing the
-> > various bitmap_set() calls, and enforcing that we never overflow this
-> > bitmap.
->
-> Or perhaps wd could leave the 'num_events' field intact and allocate the
-> new bitmap dynamically?
->
-> Rob -- what do you prefer? I think the rest of the series is ready to go.
 
-I think the list of places we're initializing cntr_mask is short
-enough to check and additions to arm_pmu users are rare enough I would
-not be too worried about it.
+On Sat, 29 Jun 2024 11:38:10 -0700, Xin Li <xin@zytor.com> wrote:
 
-If anything, I think the issue is with the bitmap API in that it has
-no bounds checking. I'm sure it will get on someone's radar to fix at
-some point.
+> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+> > Paravirtual apic hooks to enable PV IPIs for KVM if the "send IPI"  
+> 
+> s/Paravirtual apic/Paravirtualize APIC/
 
-But if we want to have something check, this is what I have:
+Paravirtual APIC makes sense to me. This is also the same language used in
+previous commits.
 
-static inline void armpmu_set_counter_mask(struct arm_pmu *pmu,
-                                          unsigned int start, unsigned int =
-nr)
-{
-       if (WARN_ON(start + nr > ARMPMU_MAX_HWEVENTS))
-               return;
-       bitmap_set(pmu->cntr_mask, start, nr);
-}
+How about:
 
-Rob
+"The paravirtual APIC hooks in KVM, some of which are used for sending PV
+IPIs, can reuse common code for ICR preparation. This shared code also
+encompasses NMI-source reporting when in effect."
+
+> > hypercall is available. Reuse common code for ICR preparation which
+> > covers NMI-source reporting if in effect.  
+> 
+> I see a lot of "NMI source". Should we use "NMI-source" in all places?
+Not really, here NMI-source is a compound modifier before noun "reporting".
+
+For other places, hyphen(-) is not needed if it is just a noun. e.g.
+"partial due to unknown NMI sources"
+
+I will go through the patchset to make sure they are consistent.
+
+> > 
+> > Originally-by: Zeng Guang <guang.zeng@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >   arch/x86/kernel/kvm.c | 10 +---------
+> >   1 file changed, 1 insertion(+), 9 deletions(-)
+> > 
+> > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> > index 263f8aed4e2c..a45d60aa0302 100644
+> > --- a/arch/x86/kernel/kvm.c
+> > +++ b/arch/x86/kernel/kvm.c
+> > @@ -516,15 +516,7 @@ static void __send_ipi_mask(const struct cpumask
+> > *mask, int vector) 
+> >   	local_irq_save(flags);
+> >   
+> > -	switch (vector) {
+> > -	default:
+> > -		icr = APIC_DM_FIXED | vector;
+> > -		break;
+> > -	case NMI_VECTOR:
+> > -		icr = APIC_DM_NMI;
+> > -		break;
+> > -	}
+> > -
+> > +	icr = __prepare_ICR(0, vector, 0);
+> >   	for_each_cpu(cpu, mask) {
+> >   		apic_id = per_cpu(x86_cpu_to_apicid, cpu);
+> >   		if (!ipi_bitmap) {  
+> 
+
+
+Thanks,
+
+Jacob
