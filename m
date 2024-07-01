@@ -1,108 +1,99 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9D5628F4;
-	Mon,  1 Jul 2024 15:34:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18A1928F4;
+	Mon,  1 Jul 2024 15:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719848086; cv=none; b=jDnjx5FpHxHOI8gajn/llJTrOF4+riEuA252mxM2551ONlC4NyENTGAdXZgwvXaNYklAG482tqAL4bRYy8nvRSMkSVwYv6ctJ/fUj+ofnLHS0kTL+NyX+6FXQfoRSXIePzkWo8s8G5/OcPwn7S7uW34i/0wrc8xyjk2QhKZORAY=
+	t=1719848156; cv=none; b=RTNRPyZfh8sNVN9L17G6Q95bVLiUnRod9Qg54qpf7fKhVsfOArYEAxVRW9rJaOXgJc8u+9TgXa6wkA5Oa4x8BW6uYcDyRkxqc4xPycPgV5uRKaraTU4UlcwaI2Pqoy3PrilJTklsmENmoE32F17SUZP+MwcJ3ULgHguCQrKIxBs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719848086; c=relaxed/simple;
-	bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RnT1wDuNTktSuScjWDngLrPqb/FpAPbOeEt5NqWlIQX7s+tfdE9hE0I8XydPEoJz1pmmUSGNV3IUvEYadUcOo57ZmMHUBJHwkKP7AdPf4c0vWV+DNpuucfDl2aOfGfHrf8fHmRkqp1qAEDS3gftdAsvDSAVk4VH35YBgB9EhJMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eW64tHs7; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719848156; c=relaxed/simple;
+	bh=0NfcJ7gYnWszBYiuRk/o3+NWZLSNA+vHBD+/yPg6aHU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=uxo4TeBnptgKdBWxK4OjGj3kJXW2VSZL4fkQh3TR+Er60983oAafmmQdzj76ao5oRyZfUmuvNpouLxQbcZ+ZvTs4emgWtZlKCWY8zgoUeuY/ugegERRlCCIoxizsPhuqSb6aTHm8ewsn0AhZjePnGAmwRjEE7HPv5xb39G6DDYk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=adEJLY5R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eW64tHs7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719848084; x=1751384084;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iq8bWnF6w36ZZ3oKBLDL7Q66Va//VDQRpFTyD5AraCo=;
-  b=eW64tHs7rEe1TdVUZRaLDRCc/bXFVf9LuGFNkqez9CQUAkMxeDxDPJnX
-   +usxlRBqxJTjjaGdDATFHPPvpHryFFtSsolsJSOM1HSWmrfhQWOQqk7YA
-   jbgJSJjMZ8mZVymG6Q96YJm4kBvL4CLSfzy9QCSUVQilOmeS/xf/z7lpF
-   7Focolt2bhn+g21hp0sucOQ/32fUwK9BzYx2+vxB0JjydFT5rIP0kvsaW
-   Efp5Hw3yKYAB1vt0h7Fo9f50APFzWOvoHMMgvJGexDNQOrei58gt8bcJH
-   SBfh2Y4cguOLQojl5ZHAZCgBGPTm+kZ5jm7/OqQbITSynzovECJQGpBxX
-   A==;
-X-CSE-ConnectionGUID: o5KnzWbJRoaa5bdlmehGXw==
-X-CSE-MsgGUID: v5om0M9TRwGLtAK5OvzHEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34527578"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="34527578"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:43 -0700
-X-CSE-ConnectionGUID: YfCSuWqcRQ+x9qFnKqd/Gw==
-X-CSE-MsgGUID: Y6xwroDyRqScS3SLIcaBvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="50446989"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:34:44 -0700
-Date: Mon, 1 Jul 2024 08:39:56 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, Zeng Guang <guang.zeng@intel.com>,
- jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 06/11] KVM: VMX: Expand FRED kvm entry with event
- data
-Message-ID: <20240701083956.4460bb06@jacob-builder>
-In-Reply-To: <d385c639-d2b1-4068-b386-98c456265926@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-7-jacob.jun.pan@linux.intel.com>
-	<d385c639-d2b1-4068-b386-98c456265926@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="adEJLY5R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039DFC32781;
+	Mon,  1 Jul 2024 15:35:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719848155;
+	bh=0NfcJ7gYnWszBYiuRk/o3+NWZLSNA+vHBD+/yPg6aHU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=adEJLY5RjB7i1a+ss7/WhOQVPyqd/27E9tfDpQO4qGHsuVLyQMegZkJ/CrsIGC/eY
+	 mV2PATMpJgqnNGnfQwbFv/eg94xJX46RWkNi2xWNLOF0cRktyHYT5VNbmAKfkhUodV
+	 wch04o5GmxKGupYUTAplE1/fdWDGq6QIwUP/z6CiqrYpEvzU6x+zyH4RJa+yne7fLp
+	 /xAsVaNUB9Y1BPQ4rYXcGwp1L2TlHxMOVJazcpN2hHR++l2cEl2KhF6UEzxdH5EPKp
+	 1go793xIkl8j1Gm/d064OvowLuNGVblH1ckAa9Gf2C10SO13hg2HMBJJMNIc0YwnrQ
+	 hEYeNXIM3L0Rw==
+From: Will Deacon <will@kernel.org>
+To: frank.li@nxp.com,
+	mark.rutland@arm.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	john.g.garry@oracle.com,
+	jolsa@kernel.org,
+	namhyung@kernel.org,
+	irogers@google.com,
+	Xu Yang <xu.yang_2@nxp.com>
+Cc: catalin.marinas@arm.com,
+	kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	mike.leach@linaro.org,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	adrian.hunter@intel.com,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	imx@lists.linux.dev
+Subject: Re: [PATCH v12 1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
+Date: Mon,  1 Jul 2024 16:35:43 +0100
+Message-Id: <171984498139.920238.1487474748064154257.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240529080358.703784-1-xu.yang_2@nxp.com>
+References: <20240529080358.703784-1-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-
-On Fri, 28 Jun 2024 21:01:28 -0700, Xin Li <xin@zytor.com> wrote:
-
-> On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> > From: Zeng Guang <guang.zeng@intel.com>
-> > 
-> > For VM exits caused by events (NMI, #DB, and #PF) delivered by FRED, the
-> > event data is saved in the exit-qualification field. (FRED spec.
-> > 10.6.2)  
+On Wed, 29 May 2024 16:03:51 +0800, Xu Yang wrote:
+> i.MX95 has a DDR pmu. This will add a compatible for it.
 > 
-> I don't like mentioning #DB/#PF here, they belong to the guest that was 
-> running, and KVM handles them.
-It is part of the spec.
-
-> While NMIs belong to host, and the host NMI handler needs event data
-> saved in VMCS in NMI induced VM exits.
-> 
-> Or you paint a full picture.
-I will add your explanation that #DB/#PF belong to the guest so readers can
-get a full picture of both usage and spec.
-> 
-> > Expand FRED KVM entry interface to include the event data obtained from
-> > the exit qualification.
-> > 
-> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
 > 
 
+Applied drivers changes to will (for-next/perf), thanks!
 
-Thanks,
+[1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
+      https://git.kernel.org/will/c/f26f37482457
+[2/8] perf: imx_perf: add macro definitions for parsing config attr
+      https://git.kernel.org/will/c/4773dd10fda0
+[3/8] perf: imx_perf: let the driver manage the counter usage rather the user
+      https://git.kernel.org/will/c/27e4a6523edd
+[4/8] perf: imx_perf: refactor driver for imx93
+      https://git.kernel.org/will/c/fab5e5a866e8
+[5/8] perf: imx_perf: fix counter start and config sequence
+      https://git.kernel.org/will/c/ac9aa295f7a8
+[6/8] perf: imx_perf: add support for i.MX95 platform
+      https://git.kernel.org/will/c/d0d7c66c537d
 
-Jacob
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
