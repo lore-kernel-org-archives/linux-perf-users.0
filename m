@@ -1,190 +1,122 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E08F16DED2;
-	Mon,  1 Jul 2024 17:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D0216631C;
+	Mon,  1 Jul 2024 17:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719853637; cv=none; b=eUrbTcWNnLkvuXz7qCsNNAUGrSTydkAxw5BunKkxkUY7TOKjr0nczcK6+3OhHg/qacj12b6JY6CuTUrgl1Sh7L5tL7BSwnEOP2iYpSPN7lCRtOT0QfUnxL4D0FuaByDpKqV72JhvnVhW23yRNoAvrMoudfgMrv4d5qTTeHHwg6w=
+	t=1719853733; cv=none; b=X0BszuGLPRxaErRg6lyrDZ5FBJYZmPqLD7o080rR8oxBG29p5wI07/U+k7TUan+KrykSTa1I5NDqlSnrFJZYs7N3USMBG6hPNec1vwgue+e4NkM9k93UbT1e/r41KZnf9tfYmf223RDdAMObNZKYKkcoAEFxy3QFiSTOx+lUraI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719853637; c=relaxed/simple;
-	bh=DN/KxO3dGV/2vXtnLWfIBRZu9oosw0hZsA3V8O/408w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t8ugyzcp+db+yLcRxNtliQv9zkLoKnlGxbpTneISXM7x2artsB0TegYDQBFfJH8SljaaaBHsppkdQcyV8CpH3qYX5kjq86EJXL6mfcz0l0V1mY5s37av9SBRD5yMYxmm7U9meWvOJVjjfnCaZzH0WXs2Ldv/sLqbG0NYeS+L3yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6209339;
-	Mon,  1 Jul 2024 10:07:39 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 846AD3F766;
-	Mon,  1 Jul 2024 10:07:11 -0700 (PDT)
-Date: Mon, 1 Jul 2024 18:07:09 +0100
-From: Mark Rutland <mark.rutland@arm.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 10/12] arm64: perf/kvm: Use a common PMU cycle counter
- define
-Message-ID: <ZoLiPaTi3b52nCKh@J2N7QTR9R3>
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
- <20240626-arm-pmu-3-9-icntr-v2-10-c9784b4f4065@kernel.org>
+	s=arc-20240116; t=1719853733; c=relaxed/simple;
+	bh=zsbuHy5w3OfgJ0azDM2BXoti/8qlEfU9xPQTRcEHelw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=De3fillKepmd6Dvu88Xa2HIpwgXoPIqoR2vfDqNeVhnECV5dls8hqIIZDzeU45wasvCGXf/LPo0/AHmjG7inLOi1VRtrWYjPuWtpYVfmohQlG6vpdx3/tbMPDmHEYZ88ZqOllGBUCIwN6vM69KwhM64kj2guqgl7Vg2FokCS4aw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F2jnUjY0; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F2jnUjY0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCD7FC116B1;
+	Mon,  1 Jul 2024 17:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719853732;
+	bh=zsbuHy5w3OfgJ0azDM2BXoti/8qlEfU9xPQTRcEHelw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=F2jnUjY0VX/mlOYaaaNOahMAfD4fMzU2DiWaZErPsQyjNQ54vosqhObE2Br7YSC6C
+	 XhzIXAZNPVuU9frlgBdRX2VyQUK6CIBtiXPdJKn6iuGrYIzBtw8rYLsHhWCLaiZjkb
+	 pSOHU3AuRZjehR/LRU0C+OBApkLKBRdvEf2o3wi/1TzazaaTFs5s/YbxP66zS0HHAr
+	 txWK8GIpyb3UBLSfAJbGNjTc68vTU/6u3USm+lkml5zwU4dp61haT9SzTz519ruHiu
+	 mOb46CW+BdcTCdxnyp7QevmaEogoZUIwtlHXrXij1LhDq/F5Vd7de1fyKiOvBhF7M/
+	 6nNjV8zO7HnDA==
+Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-25cd2b51fd3so429436fac.3;
+        Mon, 01 Jul 2024 10:08:52 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCX2+p8AwhpO+OnofTGUeYndZ8l/QUYstLZP/0FmO97FAjsz33caxHAqVYEW9CtOwkWnYnv2jOp1MP3TNnc1599FiwN8GnNIMDp1S59sidLG5A4Wd/jWWD/cn9W4LNipX7B0efIFnHsqA23HFUplFZ6yvaGWGi7uKW0QC6EpRhcNc9Ong0MYuoP5
+X-Gm-Message-State: AOJu0YwvVtdxRnQ9KbhfcBmYC6C3Z9+z5cc4mDz+4DoE3iBSMhD2L/hu
+	uF1gdi4JgevETCbPU5eFvc5rWVuD+AbCX9y3QQBiKn3zKIInOrfcqB69YSqD9tigMYk0sfbH2n8
+	JflY4d0lBgcjxkZtgP5bnlfkR0jU=
+X-Google-Smtp-Source: AGHT+IHR4xtavs3WYiLzujF4aoqo2c9S9zl3NErTsshLspZCJKaUFkpOeuqq5NUryZB+mKUEOJsqiLWQefG2dVeChEg=
+X-Received: by 2002:a05:6871:71e:b0:25d:707d:2550 with SMTP id
+ 586e51a60fabf-25db344441amr6479512fac.2.1719853732094; Mon, 01 Jul 2024
+ 10:08:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-10-c9784b4f4065@kernel.org>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com> <20240627-add-cpu-type-v2-2-f927bde83ad0@linux.intel.com>
+In-Reply-To: <20240627-add-cpu-type-v2-2-f927bde83ad0@linux.intel.com>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Date: Mon, 1 Jul 2024 19:08:41 +0200
+X-Gmail-Original-Message-ID: <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
+Message-ID: <CAJZ5v0g+ih6Yh3su58Wrj+p04vr_4nmcJc41O-8_OCyzVQFKpA@mail.gmail.com>
+Subject: Re: [PATCH PATCH v2 2/9] cpufreq: intel_pstate: Use topology_cpu_type()
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, 
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com, 
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, Josh Poimboeuf <jpoimboe@kernel.org>, 
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Ricardo Neri <ricardo.neri-calderon@linux.intel.com>, 
+	"Liang, Kan" <kan.liang@linux.intel.com>, Andrew Cooper <andrew.cooper3@citrix.com>, 
+	Brice Goglin <brice.goglin@gmail.com>, Mario Limonciello <mario.limonciello@amd.com>, 
+	Perry Yuan <Perry.Yuan@amd.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 26, 2024 at 04:32:34PM -0600, Rob Herring (Arm) wrote:
-> The PMUv3 and KVM code each have a define for the PMU cycle counter
-> index. Move KVM's define to a shared location and use it for PMUv3
-> driver.
-> 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+On Thu, Jun 27, 2024 at 10:44=E2=80=AFPM Pawan Gupta
+<pawan.kumar.gupta@linux.intel.com> wrote:
+>
+> Intel pstate driver uses hybrid_get_type() to get the cpu-type of a given
+> CPU. It uses smp_call_function_single() which is sub-optimal. Avoid it by
+> using topology_hw_cpu_type(cpu) that returns the cached cpu-type.
+>
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+
+and I'm assuming that it will be routed along with the rest of the series.
+
+Thanks!
+
 > ---
-> v2:
->  - Move ARMV8_PMU_CYCLE_IDX to linux/perf/arm_pmuv3.h
-> ---
->  arch/arm64/kvm/sys_regs.c      |  1 +
->  drivers/perf/arm_pmuv3.c       | 19 +++++++------------
->  include/kvm/arm_pmu.h          |  1 -
->  include/linux/perf/arm_pmuv3.h |  3 +++
->  4 files changed, 11 insertions(+), 13 deletions(-)
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> 
-> diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-> index f8b5db48ea8a..22393ae7ce14 100644
-> --- a/arch/arm64/kvm/sys_regs.c
-> +++ b/arch/arm64/kvm/sys_regs.c
-> @@ -18,6 +18,7 @@
->  #include <linux/printk.h>
->  #include <linux/uaccess.h>
->  
-> +#include <asm/arm_pmuv3.h>
->  #include <asm/cacheflush.h>
->  #include <asm/cputype.h>
->  #include <asm/debug-monitors.h>
-> diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-> index f771242168f1..f58dff49ea7d 100644
-> --- a/drivers/perf/arm_pmuv3.c
-> +++ b/drivers/perf/arm_pmuv3.c
-> @@ -451,11 +451,6 @@ static const struct attribute_group armv8_pmuv3_caps_attr_group = {
->  	.attrs = armv8_pmuv3_caps_attrs,
->  };
->  
-> -/*
-> - * Perf Events' indices
-> - */
-> -#define	ARMV8_IDX_CYCLE_COUNTER	31
+>  drivers/cpufreq/intel_pstate.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstat=
+e.c
+> index 15de5e3d96fd..0a1e832c7536 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -1956,24 +1956,16 @@ static int knl_get_turbo_pstate(int cpu)
+>         return ret;
+>  }
+>
+> -static void hybrid_get_type(void *data)
+> -{
+> -       u8 *cpu_type =3D data;
 > -
->  /*
->   * We unconditionally enable ARMv8.5-PMU long event counter support
->   * (64-bit events) where supported. Indicate if this arm_pmu has long
-> @@ -574,7 +569,7 @@ static u64 armv8pmu_read_counter(struct perf_event *event)
->  	int idx = hwc->idx;
->  	u64 value;
->  
-> -	if (idx == ARMV8_IDX_CYCLE_COUNTER)
-> +	if (idx == ARMV8_PMU_CYCLE_IDX)
->  		value = read_pmccntr();
->  	else
->  		value = armv8pmu_read_hw_counter(event);
-> @@ -607,7 +602,7 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
->  
->  	value = armv8pmu_bias_long_counter(event, value);
->  
-> -	if (idx == ARMV8_IDX_CYCLE_COUNTER)
-> +	if (idx == ARMV8_PMU_CYCLE_IDX)
->  		write_pmccntr(value);
->  	else
->  		armv8pmu_write_hw_counter(event, value);
-> @@ -644,7 +639,7 @@ static void armv8pmu_write_event_type(struct perf_event *event)
->  		armv8pmu_write_evtype(idx - 1, hwc->config_base);
->  		armv8pmu_write_evtype(idx, chain_evt);
->  	} else {
-> -		if (idx == ARMV8_IDX_CYCLE_COUNTER)
-> +		if (idx == ARMV8_PMU_CYCLE_IDX)
->  			write_pmccfiltr(hwc->config_base);
->  		else
->  			armv8pmu_write_evtype(idx, hwc->config_base);
-> @@ -772,7 +767,7 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
->  	/* Clear any unused counters to avoid leaking their contents */
->  	for_each_andnot_bit(i, cpu_pmu->cntr_mask, cpuc->used_mask,
->  			    ARMPMU_MAX_HWEVENTS) {
-> -		if (i == ARMV8_IDX_CYCLE_COUNTER)
-> +		if (i == ARMV8_PMU_CYCLE_IDX)
->  			write_pmccntr(0);
->  		else
->  			armv8pmu_write_evcntr(i, 0);
-> @@ -933,8 +928,8 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
->  	/* Always prefer to place a cycle counter into the cycle counter. */
->  	if ((evtype == ARMV8_PMUV3_PERFCTR_CPU_CYCLES) &&
->  	    !armv8pmu_event_get_threshold(&event->attr)) {
-> -		if (!test_and_set_bit(ARMV8_IDX_CYCLE_COUNTER, cpuc->used_mask))
-> -			return ARMV8_IDX_CYCLE_COUNTER;
-> +		if (!test_and_set_bit(ARMV8_PMU_CYCLE_IDX, cpuc->used_mask))
-> +			return ARMV8_PMU_CYCLE_IDX;
->  		else if (armv8pmu_event_is_64bit(event) &&
->  			   armv8pmu_event_want_user_access(event) &&
->  			   !armv8pmu_has_long_event(cpu_pmu))
-> @@ -1196,7 +1191,7 @@ static void __armv8pmu_probe_pmu(void *info)
->  		   0, FIELD_GET(ARMV8_PMU_PMCR_N, armv8pmu_pmcr_read()));
->  
->  	/* Add the CPU cycles counter */
-> -	set_bit(ARMV8_IDX_CYCLE_COUNTER, cpu_pmu->cntr_mask);
-> +	set_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->cntr_mask);
->  
->  	pmceid[0] = pmceid_raw[0] = read_pmceid0();
->  	pmceid[1] = pmceid_raw[1] = read_pmceid1();
-> diff --git a/include/kvm/arm_pmu.h b/include/kvm/arm_pmu.h
-> index 334d7c5503cf..871067fb2616 100644
-> --- a/include/kvm/arm_pmu.h
-> +++ b/include/kvm/arm_pmu.h
-> @@ -10,7 +10,6 @@
->  #include <linux/perf_event.h>
->  #include <linux/perf/arm_pmuv3.h>
->  
-> -#define ARMV8_PMU_CYCLE_IDX		(ARMV8_PMU_MAX_COUNTERS - 1)
->  
->  #if IS_ENABLED(CONFIG_HW_PERF_EVENTS) && IS_ENABLED(CONFIG_KVM)
->  struct kvm_pmc {
-> diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-> index 792b8e10b72a..f4ec76f725a3 100644
-> --- a/include/linux/perf/arm_pmuv3.h
-> +++ b/include/linux/perf/arm_pmuv3.h
-> @@ -9,6 +9,9 @@
->  #define ARMV8_PMU_MAX_GENERAL_COUNTERS	31
->  #define ARMV8_PMU_MAX_COUNTERS	32
->  
-> +#define ARMV8_PMU_CYCLE_IDX		31
-> +
-> +
->  /*
->   * Common architectural and microarchitectural event numbers.
->   */
-> 
-> -- 
-> 2.43.0
-> 
+> -       *cpu_type =3D get_this_hybrid_cpu_type();
+> -}
+> -
+>  static int hwp_get_cpu_scaling(int cpu)
+>  {
+> -       u8 cpu_type =3D 0;
+> +       u8 cpu_type =3D topology_hw_cpu_type(cpu);
+>
+> -       smp_call_function_single(cpu, hybrid_get_type, &cpu_type, 1);
+>         /* P-cores have a smaller perf level-to-freqency scaling factor. =
+*/
+> -       if (cpu_type =3D=3D 0x40)
+> +       if (cpu_type =3D=3D X86_HW_CPU_TYPE_INTEL_CORE)
+>                 return hybrid_scaling_factor;
+>
+>         /* Use default core scaling for E-cores */
+> -       if (cpu_type =3D=3D 0x20)
+> +       if (cpu_type =3D=3D X86_HW_CPU_TYPE_INTEL_ATOM)
+>                 return core_get_scaling();
+>
+>         /*
+>
+> --
