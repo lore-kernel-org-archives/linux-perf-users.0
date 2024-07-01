@@ -1,74 +1,206 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485D3D3BC;
-	Mon,  1 Jul 2024 14:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896BC166306
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jul 2024 14:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719843750; cv=none; b=n9NlXrmkywy1khHEv3RhxpG+UOgYwXIC6vcs3oFauNKlAwitHV0RHiLz9TpxWmtfRsfktLnQahsv2W4e2qtDT/RW+gUAGOgP4fqhvtlosEV3uB05qyYx9ASABboQInp79Su4Crec4f9WdxbnhYgFuG6P+3XVfIoKmoflK9oAy3k=
+	t=1719844314; cv=none; b=RU05JbcTROqhtRU2FxNBIA7BZn4XJgHxV4UJTFlPBTavAhrmRkr/djFuLUzEKGKT2YRjYPEnHpI4ZoowEnDvvAHd8ynZrigvZhBZBiWBcTkv55ln1tXpNbvxqY5TdNh/Mr1VD+N3xhDMqwR7yrWbc5uCEqrYS09udk4u5A6mplE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719843750; c=relaxed/simple;
-	bh=eROdfnaAt0I1lw6qi3i+9FPGXr4ZyqLymMFA3Dp2S20=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNhzE63O2EdVcTsMfzOETf/yN3I4rOwATn702cIr2NL8Z2XBKJW3zrDC80bgKRo8Mgrl1vAIwaxhzPsd4N5WW7cK9ThNRoLKaJCTnAUbTevGVrbjHk9s7yiRJCsXqbyRrQYYWFaHcsdcw4+gQyrgCOPakyViC3TmfZ68fUJkudw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2Np0kiw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719844314; c=relaxed/simple;
+	bh=48h6l1zqWC6FAJcR5Dg+eeuW3TP8qzIz9t1AHIzUnPw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dNhx3aIKIkDc3OqbsNwXmGayQzWLH7KdvWUyg7LxE76XqcLWRZVB740ltOOXrTfGIUpIa24zzlXpqIRAd75qQsFbB3Y4a+zr1ZM0picneSGBjZ6DN3dqqrlbtZv51P0Pm/5Xui9pOI6TCj+WDDwY5veeA9AsEOdGfv8OCfoThns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=d+E9lBws; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2Np0kiw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98439C116B1;
-	Mon,  1 Jul 2024 14:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719843749;
-	bh=eROdfnaAt0I1lw6qi3i+9FPGXr4ZyqLymMFA3Dp2S20=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=T2Np0kiwPfQiwXvzGNJlmcPmZ1/GHOcJHhjnfEQwhABH1VrapDa37MJTxJM8e6zP6
-	 mgv/rRiqb8R/HNcrKP7vcORZ530T/XVQXwszxMidBYQnLeWncWBzs3ihlcxGcZr4Sh
-	 CA+iKRl+w2PfNEhm39u2cwDsK6Vor9QByI79LkhKGkumGjKV0Xjbo5QN6lq5n1SeyO
-	 VcE0yh1cw0Ma3jONw6DRIqpWoEOgQ4BfxBbT0mUH30VKDn0Du9b/KbjulG8AGbZFte
-	 QqhZKlP/IvihTgXq7wCFqujgnq1XK01b/carQluHLITjZS9MgTmDUrJdI/gJm4cO9i
-	 xNYfqUFKqoVrQ==
-Date: Mon, 1 Jul 2024 15:22:23 +0100
-From: Will Deacon <will@kernel.org>
-To: Yicong Yang <yangyicong@huawei.com>
-Cc: mark.rutland@arm.com, acme@kernel.org, namhyung@kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	peterz@infradead.org, mingo@redhat.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, james.clark@arm.com, dongli.zhang@oracle.com,
-	jonathan.cameron@huawei.com, prime.zeng@hisilicon.com,
-	linuxarm@huawei.com, yangyicong@hisilicon.com
-Subject: Re: [PATCH 0/3] Perf avoid opening events on offline CPUs
-Message-ID: <20240701142222.GA2691@willie-the-truck>
-References: <20240603092812.46616-1-yangyicong@huawei.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="d+E9lBws"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-424acfff613so28090885e9.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jul 2024 07:31:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1719844311; x=1720449111; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1VOCRwVG01ecQmSR0hkjoMDkRKTxz6h3UW2kuLbhAUQ=;
+        b=d+E9lBws2cx75TB+TaLSLqzLM1rvntU+F8jKagodNo1QdVI7cjZ1kT4Vjizkm/wKkU
+         S1+VSm1rTVD2TJ69ihAIbyLwZBlLIUor1NezWV4iTlYXQ/1MkKS8WhopuSirLW8TTvZu
+         q/8wAEYiGUeUYPZ1LcBW4Jc2AUjQL3X64ZQL5pWFb0zAgrtz6TSdmH+BkVPMJk9jb5ht
+         mUbbPDDnbSWY7bPY/kzVMm4UmnKCBlnGIMql+i4VY5xpS4gSIhfkCqzGHcE7jZLqHnNu
+         veUkAnNT8JBwMQ+DBHsx3S5Ood8IEKKH7V9LtccdXrQ1TPt+nxVk2EPj5MuzSoMdWj+y
+         cwfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719844311; x=1720449111;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1VOCRwVG01ecQmSR0hkjoMDkRKTxz6h3UW2kuLbhAUQ=;
+        b=wIVnBFYniiRTQOAYZ92uKjffYNR+lwm/uldszM7RDzeETciqGEiB+JBy68VC+JTWnw
+         vpdkuZVMQhEgoEj+d2A4Mp2qWliA7JToZ3mfGX+ZPfMYHFU3i6CN7nlXzOZXlwG8EQsk
+         BMFD2Ef69x72KD2DK/ouNkScKSjSx8IG2oLdG5SPRtT8TGRnVvMRwJXn3qglktzohT+9
+         7IgvFdBb6hKEswMgkC+ZxQBO7C5SOoMjIs38Iz6dAPU89XLCL0vFdgOGy4XlcfvQc3JH
+         F7RdwdzM+Jnq/w436+W/IoUt5ZS5aBOaweOQoVq/sS6U5FmCm55RlfeeNBF1kE1Ufwqp
+         gKtg==
+X-Forwarded-Encrypted: i=1; AJvYcCXanawrpzGEqMh0ogqsj+98CaA5uPg2zw/agrw4zh7RTs8IosPSTmYscmSr+DbkFo0Sjupcac15xwpFbcHZwPl3riL1olPAaZx3IjFRhHoBqA==
+X-Gm-Message-State: AOJu0Yxc3zw0qUfPxExll7sEEDCCRZoOqfta/gR0F5jo7T8MOCSfuCX5
+	uw7bQ7DoftBDV9H64juntjrUOSGpmAzL2zMaURlD7xR09iJ/e/y1FC+10Y9ORPw=
+X-Google-Smtp-Source: AGHT+IF3+BYcdFigO1y2gkrvWkoFIz9aCZgiw8OoaoL+u9AB3PBsKVkxQgR/E5Y41MvXpCL0Vo/80Q==
+X-Received: by 2002:a05:600c:198e:b0:424:8dba:4a43 with SMTP id 5b1f17b1804b1-42579ffccd2mr46453395e9.5.1719844310885;
+        Mon, 01 Jul 2024 07:31:50 -0700 (PDT)
+Received: from ?IPV6:2a10:bac0:b000:7579:e371:949e:c782:9f94? ([2a10:bac0:b000:7579:e371:949e:c782:9f94])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4256b0c18cfsm158644635e9.45.2024.07.01.07.31.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jul 2024 07:31:50 -0700 (PDT)
+Message-ID: <9cf3eef6-79d9-4969-be94-e5089a0d625b@suse.com>
+Date: Mon, 1 Jul 2024 17:31:48 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240603092812.46616-1-yangyicong@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 05/11] x86/irq: Process nmi sources in NMI handler
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+ Sean Christopherson <seanjc@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
+ Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>,
+ "Mehta, Sohil" <sohil.mehta@intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
+From: Nikolay Borisov <nik.borisov@suse.com>
+Content-Language: en-US
+In-Reply-To: <20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 03, 2024 at 05:28:09PM +0800, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
+
+
+On 28.06.24 г. 23:18 ч., Jacob Pan wrote:
+> With NMI source reporting enabled, NMI handler can prioritize the
+> handling of sources reported explicitly. If the source is unknown, then
+> resume the existing processing flow. i.e. invoke all NMI handlers.
 > 
-> If user doesn't specify the CPUs, perf will try to open events on CPUs
-> of the PMU which is initialized from the PMU's "cpumask" or "cpus" sysfs
-> attributes if provided. But we doesn't check whether the CPUs provided
-> by the PMU are all online. So we may open events on offline CPUs if PMU
-> driver provide offline CPUs and then we'll be rejected by the kernel:
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > 
-> [root@localhost yang]# echo 0 > /sys/devices/system/cpu/cpu0/online
-> [root@localhost yang]# ./perf_static stat -e armv8_pmuv3_0/cycles/ --timeout 100
-> Error:
-> The sys_perf_event_open() syscall returned with 19 (No such device) for event (cpu-clock).
-> /bin/dmesg | grep -i perf may provide additional information.
+> ---
+> v3:
+>     - Use a static flag to disable NMIs in case of HW failure
+>     - Optimize the case when unknown NMIs are mixed with known NMIs(HPA)
+> v2:
+>     - Disable NMI source reporting once garbage data is given in FRED
+> return stack. (HPA)
+> ---
+>   arch/x86/kernel/nmi.c | 73 +++++++++++++++++++++++++++++++++++++++++--
+>   1 file changed, 70 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
+> index 639a34e78bc9..c3a10af7f26b 100644
+> --- a/arch/x86/kernel/nmi.c
+> +++ b/arch/x86/kernel/nmi.c
+> @@ -149,23 +149,90 @@ static inline int do_handle_nmi(struct nmiaction *a, struct pt_regs *regs, unsig
+>   	return thishandled;
+>   }
+>   
+> +static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *handled_mask)
+> +{
+> +	static bool nmi_source_disabled;
+> +	bool has_unknown_src = false;
+> +	unsigned long source_bitmask;
+> +	struct nmiaction *a;
+> +	int handled = 0;
+> +	int vec = 1;
+> +
+> +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
+> +	    type != NMI_LOCAL || nmi_source_disabled)
+> +		return 0;
+> +
+> +	source_bitmask = fred_event_data(regs);
+> +	if (!source_bitmask) {
+> +		pr_warn("NMI received without source information! Disable source reporting.\n");
+> +		nmi_source_disabled = true;
+> +		return 0;
+> +	}
+> +
+> +	/*
+> +	 * Per NMI source specification, there is no guarantee that a valid
+> +	 * NMI vector is always delivered, even when the source specified
+> +	 * one. It is software's responsibility to check all available NMI
+> +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we have
+> +	 * to call every handler as if we have no NMI source.
+> +	 * On the other hand, if we do get non-zero vectors, we know exactly
+> +	 * what the sources are. So we only call the handlers with the bit set.
+> +	 */
+> +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
+> +		pr_warn_ratelimited("NMI received with unknown source\n");
+> +		has_unknown_src = true;
+> +	}
+> +
+> +	rcu_read_lock();
+> +	/* Bit 0 is for unknown NMI sources, skip it. */
+> +	for_each_set_bit_from(vec, &source_bitmask, NR_NMI_SOURCE_VECTORS) {
+> +		a = rcu_dereference(nmiaction_src_table[vec]);
+> +		if (!a) {
+> +			pr_warn_ratelimited("NMI received %d no handler", vec);
+> +			continue;
+> +		}
+> +		handled += do_handle_nmi(a, regs, type);
+> +		/*
+> +		 * Needs polling if unknown source bit is set, handled_mask is
+> +		 * used to tell the polling code which NMIs can be skipped.
+> +		 */
+> +		if (has_unknown_src)
+> +			*handled_mask |= BIT(vec);
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return handled;
+> +}
+> +
+>   static int nmi_handle(unsigned int type, struct pt_regs *regs)
+>   {
+>   	struct nmi_desc *desc = nmi_to_desc(type);
+> +	unsigned long handled_mask = 0;
+>   	struct nmiaction *a;
+>   	int handled=0;
+>   
+> -	rcu_read_lock();
+> +	/*
+> +	 * Check if the NMI source handling is complete, otherwise polling is
+> +	 * still required. handled_mask is non-zero if NMI source handling is
+> +	 * partial due to unknown NMI sources.
+> +	 */
+> +	handled = nmi_handle_src(type, regs, &handled_mask);
+> +	if (handled && !handled_mask)
+> +		return handled;
 
-I still don't see the value in this. CPUs can come and go asynchronously,
-so this is all horribly racy. Furthermore, there are other (racy) ways
-to find out which CPUs are online and whatever we do in the kernel now
-isn't going to help userspace running on older kernels.
+How about renaming handled_mask to "partial_handled_mask" ? Because in 
+addition to it being a mask it's also used as a boolean to signal that 
+an unknown NMI source was encountered.
 
-Will
+>   
+> +	rcu_read_lock();
+>   	/*
+>   	 * NMIs are edge-triggered, which means if you have enough
+>   	 * of them concurrently, you can lose some because only one
+>   	 * can be latched at any given time.  Walk the whole list
+>   	 * to handle those situations.
+>   	 */
+> -	list_for_each_entry_rcu(a, &desc->head, list)
+> +	list_for_each_entry_rcu(a, &desc->head, list) {
+> +		/* Skip NMIs handled earlier with source info */
+> +		if (BIT(a->source_vec) & handled_mask)
+> +			continue;
+>   		handled += do_handle_nmi(a, regs, type);
+> -
+> +	}
+>   	rcu_read_unlock();
+>   
+>   	/* return total number of NMI events handled */
