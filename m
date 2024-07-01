@@ -1,173 +1,89 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6372C859;
-	Mon,  1 Jul 2024 09:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB491509A6;
+	Mon,  1 Jul 2024 10:27:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719827477; cv=none; b=d/KfX7x4NOmrF4BNOJtL9pA8/ymHJ3PR5WqHWuGbWzuJCXsCEn3ycyY301lY9NwtsJmRWQ+BdUam+Nrm4GsKz35MH2JNvRfVaP7q1z1SHAi8fbpbprQGNoBf8cV8/oeNGz1Orhoif8gZEH8vT2C2qjSblxiK6QSAbgS5mn4+Lig=
+	t=1719829637; cv=none; b=LLZrMJ4Du1yzvyOs5bVm0t+tS7iNdNB6PtTp9w8npE8fRBL9yoYn2rK+AEFxFhv7QK89eEPAISGLjsvh6hDP/BH2WM5q/65A6W8Y6l5Fv4W2049Pzl5zOhOf+dV1k2E0shF/zhB/YoQnvdwX+GF1kCjc94g8UCHTB7C9nl8Qiqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719827477; c=relaxed/simple;
-	bh=yKWtYTbS3qpNtS6WsmHfq2eHCxVi3Q8AxVnwoo5d3eI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sudtd20hhwJoG8rjz+EuxnDdeBxAz3/w4MUNR2leAB79lzZxazxh8QrQaJhWbumap7n0lXB4a++rWZu5XaMMDXd8h7WCiRGz5H4iH+RGXX7SPm0bRJ+/wY5Ca3MpOGRM8XuJJhTa9OLM86SkKaRMdL/qxtt9Kqjlk4KcMm54LZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TeqbyRSS; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719829637; c=relaxed/simple;
+	bh=Ae+LjInKCHKU5PQp8DqXlIeZPpw3xgmBwQ9T3U7uWpg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RL7bRvHbuIY454YK9GdRZ+1kLwWGW62/ct4gkWmy5OpItjwRAoXtez05sbHX3unPmCYaY+Tz5DpGRTkfjkUXOgfkOmiaqagxxPzmfhvcK9S1syRngtNvyG1arwheP+TTp2Sg0GeM7Cb/OM4Y8lkIEfxmsdPHKhA5ylnI2HT1aDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qkH4nFpE; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TeqbyRSS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719827477; x=1751363477;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yKWtYTbS3qpNtS6WsmHfq2eHCxVi3Q8AxVnwoo5d3eI=;
-  b=TeqbyRSSVzw4pxzhZUlwrD1L9LeF+fEsgt45NBh2nZAXGCpMdxVJ9uZG
-   ZUO+jCKLiI3haYTHlGe/kjm3urH/A1kBVlP9WKQgV2fUrSrCn7Ple/1Uk
-   dMKYSpANjQ+DobKzWCWmV7Za/M5GjGbTzP5qncqQJ5b8p9Pn2bWqXznvj
-   IzvVkap3kMtOdAkZ43diqcKKsfFH4Dt3K3tnMtFFTyhC719h9+QjNcKFb
-   nTnk/zdrr7/uyto1Vm9ZhID1WArw6DsNN1lixWIiVsAldaOnaGKg7r5AH
-   R9J0ApeT2SD8UYnMOI6SBoIpzsId0lF+2LesLTNu4Z5rbcqpRPmbMJcqz
-   g==;
-X-CSE-ConnectionGUID: AVioUNiFSIynu2XC7g5zuw==
-X-CSE-MsgGUID: TFPIBzx+RWOkYQJtiXpitA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11119"; a="20759822"
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="20759822"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:51:16 -0700
-X-CSE-ConnectionGUID: 6uIx7oc+RGy+i9SpXNbhwA==
-X-CSE-MsgGUID: Ngzqc+JQTQm4LLX2pO3UoQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,175,1716274800"; 
-   d="scan'208";a="49795701"
-Received: from xfang-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 02:51:11 -0700
-Message-ID: <c0a9ffb6-e6ea-4159-9cc0-a23df5e59429@linux.intel.com>
-Date: Mon, 1 Jul 2024 17:51:09 +0800
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qkH4nFpE"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=9c+PJ9qplCm9e71aGNj46Xv63qyZzWb3k6nVOLS8TaI=; b=qkH4nFpE/dI8n+JWCA7Fo5j8FJ
+	jRvlopf2P+DW8DDyAXEeSzskDa9j9Qg8SY9qtBVV9GF7xrUE2lFUNHClTST6qXRFV1XUupHU40uKC
+	T5b7fqy5JpIUiDz6yALapXj82qHS+1TUBgcFd9+ZTJbQ9pGYxRdXmBobO6b0SMi4nJZJlsVI46KKM
+	R9IgSdvaTtkaOCbYPgWJWaSYj6PS9RmK+tDlyvLDQR4+FneoIDA2+7lLaBQrBlIusp/Jjke05T+Nl
+	cP7vt7lx6N1s9lASCOk9v9W+lVpeMMty2ES0+JV5dLbeEFyfU040ecc1agZKovqblwSgR6ygbZ3UY
+	jsd/UG7A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sOEFD-00000009dXr-1eTt;
+	Mon, 01 Jul 2024 10:26:48 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 60C70300694; Mon,  1 Jul 2024 12:26:44 +0200 (CEST)
+Date: Mon, 1 Jul 2024 12:26:44 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V8 01/12] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Message-ID: <20240701102644.GA20127@noisy.programming.kicks-ass.net>
+References: <20240628065111.59718-1-adrian.hunter@intel.com>
+ <20240628065111.59718-2-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf topdown: Correct leader selection with sample_read
- enabled
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240614213908.352840-1-dapeng1.mi@linux.intel.com>
- <df56c6e1-5d99-4cbe-abd4-772e7ff948af@linux.intel.com>
- <4f5dbf6f-3805-43b6-867c-2503ccec7c1a@linux.intel.com>
- <CAP-5=fVYmUvYawOBtUc_-PVzsTQhpOuMx4wxA7bHjwaZejii8Q@mail.gmail.com>
- <350e5bf7-23ee-4a7f-8b62-e3d07604cbe1@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <350e5bf7-23ee-4a7f-8b62-e3d07604cbe1@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240628065111.59718-2-adrian.hunter@intel.com>
 
+On Fri, Jun 28, 2024 at 09:51:00AM +0300, Adrian Hunter wrote:
 
-On 6/29/2024 4:27 AM, Liang, Kan wrote:
->
-> On 2024-06-28 2:28 p.m., Ian Rogers wrote:
->> On Thu, Jun 27, 2024 at 11:17 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>> On 6/27/2024 11:11 PM, Liang, Kan wrote:
->>>> On 2024-06-14 5:39 p.m., Dapeng Mi wrote:
->>>>
->>>> Besides, we need a test for the sampling read as well.
->>>> Ian has provided a very good base. Please add a topdown sampling read
->>>> case on top of it as well.
->>>> https://lore.kernel.org/lkml/CAP-5=fUkg-cAXTb+3wbFOQCfdXgpQeZw40XHjfrNFbnBD=NMXg@mail.gmail.com/
->>> Sure. I would look at it and add a test case.
->> Thanks Dapeng and thanks Kan too! I wonder if we can do a regular
->> counter and a leader sample counter then compare the counts are
->> reasonably consistent. Something like this:
->>
->> ```
->> $ perf stat -e instructions perf test -w noploop
->>
->> Performance counter stats for '/tmp/perf/perf test -w noploop':
->>
->>    25,779,785,496      instructions
->>
->>       1.008047696 seconds time elapsed
->>
->>       1.003754000 seconds user
->>       0.003999000 seconds sys
->> ```
->>
->> ```
->> cat << "_end_of_file_" > a.py
->> last_count = None
->>
->> def process_event(param_dict):
->>    if ("ev_name" in param_dict and "sample" in param_dict and
->>        param_dict["ev_name"] == "instructions"):
->>        sample = param_dict["sample"]
->>        if "values" in sample:
->>            global last_count
->>            last_count = sample["values"][1][1]
->>
->> def trace_end():
->>    global last_count
->>    print(last_count)
->> _end_of_file_
->> $ sudo perf record -o -  -e "{cycles,instructions}:S" perf test -w
->> noploop|perf script -i - -s ./a.py
->> [ perf record: Woken up 2 times to write data ]
->> [ perf record: Captured and wrote 0.459 MB - ]
->> 22195356100
->> ```
->>
->> I didn't see a simpler way to get count and I don't think it is right.
-> The perf stat can cover the whole life cycle of a workload. But I think
-> the result of perf record can only give the sum from the beginning to
-> the last sample.
-> There are some differences.
->
->> There's some similar perf script checking of data in
->> tools/perf/tests/shell/test_intel_pt.sh.
->>
-> I think the case should be to test the output of the perf script, rather
-> than verify the accuracy of an event.
->
-> If so, we may run two same events. They should show the exact same
-> results in a sample.
->
-> For example,
->
-> perf record  -e "{branches,branches}:Su" -c 1000000 ./perf test -w brstack
-> perf script
-> perf  752598 349300.123884:    1000002 branches:      7f18676a875a
-> do_lookup_x+0x2fa (/usr/lib64/l>
-> perf  752598 349300.123884:    1000002 branches:      7f18676a875a
-> do_lookup_x+0x2fa (/usr/lib64/l>
-> perf  752598 349300.124854:    1000005 branches:      7f18676a90b6
-> _dl_lookup_symbol_x+0x56 (/usr/>
-> perf  752598 349300.124854:    1000005 branches:      7f18676a90b6
-> _dl_lookup_symbol_x+0x56 (/usr/>
-> perf  752598 349300.125914:     999998 branches:      7f18676a8556
-> do_lookup_x+0xf6 (/usr/lib64/ld>
-> perf  752598 349300.125914:     999998 branches:      7f18676a8556
-> do_lookup_x+0xf6 (/usr/lib64/ld>
-> perf  752598 349300.127401:    1000009 branches:            4c1adf
-> brstack_bench+0x15 (/home/kan/o>
-> perf  752598 349300.127401:    1000009 branches:            4c1adf
-> brstack_bench+0x15 (/home/kan/o>
+> Add aux_paused to struct perf_event for AUX area events to keep track of
+> the "paused" state. aux_paused is initialized to aux_start_paused.
+	
+> @@ -798,6 +810,9 @@ struct perf_event {
+>  	/* for aux_output events */
+>  	struct perf_event		*aux_event;
+>  
+> +	/* for AUX area events */
+> +	unsigned int			aux_paused;
+> +
+>  	void (*destroy)(struct perf_event *);
+>  	struct rcu_head			rcu_head;
+>  
 
-This looks a more accurate validation. I would add this test.
+Should this not be part of struct hw_perf_event for whatever hw event
+implements this AUX stuff?
 
-
->
-> Thanks,
-> Kan
->
->> Thanks,
->> Ian
->>
+In fact, I would expect PERF_HES_PAUSED or something to go in
+perf_event::hw::state.
