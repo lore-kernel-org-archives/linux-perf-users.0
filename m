@@ -1,113 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D2D16D4F4
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jul 2024 16:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF31B16E873;
+	Mon,  1 Jul 2024 17:04:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719852865; cv=none; b=MBV1UvjCACbFx1fUW8oI/QgXqITHkdQfrrOq/0IApenV6sK9CIutf4c2gI0nrhzrzv8F/KjQ8v0g+/S0mvUJtIrmiCwVCVVb3111n2/SQny7m7WgHvOmZPssQwue/BQvOEUYrgUWg7+El5uA/cOBbIjzjKH67aqUvjWYn1Xs5nQ=
+	t=1719853476; cv=none; b=GwuvYSsS+OKWK+7CL+7WbBsOLowmkWygWEwraPZeZ34LfRfb0aAdw1Hl6L1RAbkO5pp4RDTRuRKaJaeEMbtZe8000TYvmyjhp0bAIrBFeBWZlaAfayYYIY0IrKZAv2a/UMk9g/b4p/LMoNLGUFdoeXUBGBYdRSZjOxdX71wSvkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719852865; c=relaxed/simple;
-	bh=cJtzeZx28kfhlqpJ+/vtKyrGTOoCEpY6mAoitYzlwaM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfPg4hwz0umABE2TmMS6s6SeGtBze1y9/Vw4eCWY31jh0W3TLNBJEjDni5FxvTOc+ueqB1fw4OZdk1nGfiA74vsw6L8GGWnqVmc0a/a8yoVkuA/uL6obMUrEX+oInPLJe7+pxPM313Be1SBaGMZcL+I+ZytuE8pIXOrrrgvtmko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GHt3kflP; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719853476; c=relaxed/simple;
+	bh=lQP6H0vJdE2QnG7W5l3CDY2oHw0bYpLWBAM3FeXZmQQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TR7MRCLeOwqKWEU/RGkFfICcjIUXntEp4YplvJ67ZQIJz+C5AquEum3SiRX6CiI6Rc78BlWx/9/wpElyvgcTjvaXG1Q2m28cp2M7IZlCZYTHfFmJhMbl+7z3p1sUZaQz/veo3ZcCaMydEIsnEImoq0ihtf4fK/GgqSOaTsaAmhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=JBrRqlY4; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GHt3kflP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719852863; x=1751388863;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=cJtzeZx28kfhlqpJ+/vtKyrGTOoCEpY6mAoitYzlwaM=;
-  b=GHt3kflPDj7gISx6945u2fWpYFaYOBt5no45Zm4pqpu0XCp+G4da9Mvv
-   Tx+RsoL7JL4Oauz8WHHNhAgV4pKt3c0a4uJ0c+UX0g+CwVe/N95yeuNlg
-   Xf8Zu5nif1XWNVUTedFYd5U3KBSeJffQeyJ/P13qNfWG3Ifns9gtsJRg7
-   RrbDGI+6ZF/fkBZm9iYRmR/0N3+tFC4atTO0uLBf3tzycmPCT2IhLaVur
-   gi3umag5KrBxK/5R+GMY4OO5/+QbPDyH+fjIJn2fTH62OseKkOMm538QP
-   NJ7JX+nJE5gRCo3uYFnvod/GgTig0ZP1kDmdXYEnGCJ64Fnte6ZUt1/3q
-   A==;
-X-CSE-ConnectionGUID: 03v0/LF3Qy6O4oJr4uGT7Q==
-X-CSE-MsgGUID: qmVACIE2QpSoQdgUbA4CBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="34535980"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="34535980"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 09:54:23 -0700
-X-CSE-ConnectionGUID: eiQXAcd8Q5iGwrNKfqrHng==
-X-CSE-MsgGUID: sEL+79IiSvCW3gknJxzk4Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="76764065"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 09:54:24 -0700
-Date: Mon, 1 Jul 2024 09:54:21 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Artem Savkov <asavkov@redhat.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 1/2] perf script: Fix perf script -F +metric
-Message-ID: <ZoLfPV5-H1HQxgCj@tassilo>
-References: <20240625004232.1852705-1-ak@linux.intel.com>
- <20240626090924.GA56952@alecto.usersys.redhat.com>
- <Zn8M39dHtqYpRa0o@tassilo>
- <20240701070438.GA12242@alecto.usersys.redhat.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JBrRqlY4"
+Received: from [192.168.7.205] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 461H3xOD201438
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 1 Jul 2024 10:03:59 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 461H3xOD201438
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024061501; t=1719853440;
+	bh=bVdgeVqJIxpN5USH6OWlUiB4+5Yn1Ls/laGlGnmMX5o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=JBrRqlY4UqNMQOM+tsQcZo0AkA5FXZKvXGY2wFHZbcWa5yLiYhl57wxjUDgod0QiO
+	 FqyZyqGIot8R5HzyFZAw/MtBVwKMtDvsFvmbx8ZTgfP5Irm6lx1Y62kxtWKQxqpKbN
+	 fws0YcZF8O9rfWU4eRLAEgqFUvK66uezTYWRwmclJCB/08SS90dF4KrNqcJdkcNtdi
+	 igwpUn0q5TkTXqVGOP9ekk/pdQFW/UXJWhtCe+rE4HQu1Ci9R+xoWx+q3bu2i6R7Up
+	 EINlHAQ3hza1NXWgHYl3xpeM9QpjkfLNVjRs+ifALohcRkMAAUhzfRurdLTm6edEPq
+	 L1ZPQ+GG9LGfw==
+Message-ID: <51768b50-96ac-49a7-a63b-02d2b94c2c6a@zytor.com>
+Date: Mon, 1 Jul 2024 10:03:58 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240701070438.GA12242@alecto.usersys.redhat.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 07/11] KVM: VMX: Handle NMI Source report in VM exit
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+        kan.liang@linux.intel.com, Andi Kleen
+ <andi.kleen@intel.com>,
+        "Mehta, Sohil" <sohil.mehta@intel.com>,
+        Zeng Guang <guang.zeng@intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-8-jacob.jun.pan@linux.intel.com>
+ <6c8160e4-3d67-410d-aad0-3ec731a903f8@zytor.com>
+ <20240701084558.1620584f@jacob-builder>
+Content-Language: en-US
+From: Xin Li <xin@zytor.com>
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20240701084558.1620584f@jacob-builder>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jul 01, 2024 at 09:04:38AM +0200, Artem Savkov wrote:
-> On Fri, Jun 28, 2024 at 12:19:59PM -0700, Andi Kleen wrote:
-> > > This works, however there seems to be yet another issue on
-> > > perf-tools-next branch that breaks script metrics.
-> > >
-> > > 617824a7f0f73 (perf parse-events: Prefer sysfs/JSON hardware
-> > > events over legacy, 2024-04-15) changes event priority so on
-> > > my host "instructions" have type PERF_TYPE_RAW instead of
-> > > PERF_TYPE_HARDWARE.
-> >
-> > FWIW I don't see this on my build on Intel, even with that commit.
-> >
-> > > This results in evsel__stat_type no longer recognizing these as
-> > > STAT_INSTRUCTIONS.
-> >
-> > I guess we could just fix evsel__stat_type to handle that case
-> >
-> > Does this patch work?
+On 7/1/2024 8:45 AM, Jacob Pan wrote:
 > 
-> It does for this specific example, but there are other events as well.
-> From arch/x86/events/intel/core.c:
+> On Fri, 28 Jun 2024 21:07:04 -0700, Xin Li <xin@zytor.com> wrote:
 > 
->         static u64 intel_perfmon_event_map[PERF_COUNT_HW_MAX] __read_mostly =
->         {
->                 [PERF_COUNT_HW_CPU_CYCLES]		= 0x003c,
->                 [PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
->                 [PERF_COUNT_HW_CACHE_REFERENCES]	= 0x4f2e,
->                 [PERF_COUNT_HW_CACHE_MISSES]		= 0x412e,
->                 [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c4,
->                 [PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c5,
->                 [PERF_COUNT_HW_BUS_CYCLES]		= 0x013c,
->                 [PERF_COUNT_HW_REF_CPU_CYCLES]		= 0x0300, /* pseudo-encoding */
->         };
+>> On 6/28/2024 1:18 PM, Jacob Pan wrote:
+>>> From: Zeng Guang <guang.zeng@intel.com>
+>>>
+>>> If the "NMI exiting" VM-execution control is 1, the value of the 16-bit
+>>> NMI source vector is saved in the exit-qualification field in the VMCS
+>>> when VM exits occur on CPUs that support NMI source.
+>>>
+>>> KVM that is aware of NMI-source reporting will push the bitmask of NMI
+>>> source vectors as the exceptoin event data field on the stack for then
+>>> entry of FRED exception. Subsequently, the host NMI exception handler
+>>> is invoked which will process NMI source information in the event data.
+>>> This operation is independent of vCPU FRED enabling status.
+>>>
+>>> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+>>> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+>>> ---
+>>>    arch/x86/entry/entry_64_fred.S |  2 +-
+>>>    arch/x86/kvm/vmx/vmx.c         | 11 ++++++++---
+>>>    2 files changed, 9 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/arch/x86/entry/entry_64_fred.S
+>>> b/arch/x86/entry/entry_64_fred.S index a02bc6f3d2e6..0d934a3fcaf8 100644
+>>> --- a/arch/x86/entry/entry_64_fred.S
+>>> +++ b/arch/x86/entry/entry_64_fred.S
+>>> @@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+>>>    	 * +--------+-----------------+
+>>>    	 */
+>>>    	push $0				/* Reserved, must be 0
+>>> */
+>>> -	push $0				/* Event data, 0 for
+>>> IRQ/NMI */
+>>> +	push %rsi			/* Event data for IRQ/NMI */
+>>>    	push %rdi			/* fred_ss handed in by the
+>>> caller */ push %rbp
+>>>    	pushf
+>>
+>> This belongs to the previous patch, it is part of the host changes.
+> right, will do.
 > 
-> The list is probably different on other arches.
+>>
+>>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>>> index 4e7b36081b76..6719c598fa5f 100644
+>>> --- a/arch/x86/kvm/vmx/vmx.c
+>>> +++ b/arch/x86/kvm/vmx/vmx.c
+>>> @@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct
+>>> kvm_vcpu *vcpu, if ((u16)vmx->exit_reason.basic ==
+>>> EXIT_REASON_EXCEPTION_NMI && is_nmi(vmx_get_intr_info(vcpu))) {
+>>>    		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+>>> -		if (cpu_feature_enabled(X86_FEATURE_FRED))
+>>> -			fred_entry_from_kvm(EVENT_TYPE_NMI,
+>>> NMI_VECTOR, 0);
+>>> -		else
+>>> +		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
+>>> +			unsigned long edata = 0;
+>>> +
+>>> +			if
+>>> (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
+>>> +				edata = vmx_get_exit_qual(vcpu);
+>>> +			fred_entry_from_kvm(EVENT_TYPE_NMI,
+>>> NMI_VECTOR, edata);
+>>
+>> Simply do fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR,
+>> vmx_get_exit_qual(vcpu))?
+> I don't have strong preference but having a local variable improves
+> readability IMHO.
 
-Most of them only use the fallback "xxx per second" metric, which
-should work even for raw I think. But yes some would be needed
-(like cache and branches) 
+My point was, do we actually need this check:
+     (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE)?
 
-Probably it needs a more generic solution then, it was somewhat
-of a hack anyways.
+I don't have a strong preference either.
 
-My proposal would be to revert the original patch. Clearly
-it was a bad idea.
+> 
+>>> +		} else {
+>>>    			vmx_do_nmi_irqoff();
+>>> +		}
+>>>    		kvm_after_interrupt(vcpu);
+>>>    	}
+>>>      
+>>
+> 
+> 
+> Thanks,
+> 
+> Jacob
+> 
 
--Andi
- 
