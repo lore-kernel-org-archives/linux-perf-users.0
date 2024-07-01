@@ -1,59 +1,59 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 669B36F077
-	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jul 2024 11:56:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E2C13C9A9
+	for <linux-perf-users@vger.kernel.org>; Mon,  1 Jul 2024 11:57:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719835001; cv=none; b=Y7NA21PC/X6cwyrpRJbjuswqTONGT5leIzDfmQCWYVddiv0fLvza55HbN9+nIW2ugnccd6e3abuxH6u636TTEKQUSrG+zPXoAL4ZMtZxZXBvN9aizZ9tLvTwYPmMsp0U1k7lW6/Fe+4QGcwf6Z6ESBnZBHePPVuMJnRdHc/+w6Y=
+	t=1719835026; cv=none; b=N7zFiqQqUhIhHGLSfezmKxL4MqbLEifRyUo3GU8ACB44JwhbN6npuLfGAWotUD5vqpxwo0Pm39CcTDreHq/Hwth4DbqGJVnH0ilHKI1dV9gb3SGCe2iPcakqb8bIT3oEq/zSeeqrBEp+NkRQP1RmTAVjrwappg3nfUdWyJMWEwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719835001; c=relaxed/simple;
-	bh=Jpl22aqYGSxIo+qDQFAsqVJLvtdunm/X7rOU7kbj6Ko=;
+	s=arc-20240116; t=1719835026; c=relaxed/simple;
+	bh=nQkUCEyoNucsphDLXWSe/1YShtMDQlZ8d9pl7pAPNk8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gmo7R7U6ZD5+AoLOJ+T9w4Cf/OUekEyw2gL29cdrqFEPBqn8+PXKwdT8Cg3WNY1p8cpvBiT5O8yj+v6Z1hIzr9ItrywWZawS5HtU1ADMZNEYEXBnEZwgcjE7KYFxs738hFx73t1JqZF/4dvVSSC7MhIUVD4Y7NnDQOTxUYW7BLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=R6/TngPm; arc=none smtp.client-ip=209.85.128.45
+	 In-Reply-To:Content-Type; b=uRliaz/wlxQZ9GsLB1DuOHNKZE/c+UM5FG3NLQ92gzLLF1aVMfSOsIlGbaiq5hiTkWfBkZYvL8vf0oxFQpnIN2efnFGBuWe7OuC4Q4jGbSXXrWywTM7asdRSYzYCWsBAMnX5rNzlHnmvuUVboYjBrGAHr1lSuQXKMcX604Fb1Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=FYJ331cX; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="R6/TngPm"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4256aee6e4dso21631905e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jul 2024 04:56:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="FYJ331cX"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4256eec963eso20867925e9.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 01 Jul 2024 04:57:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1719834997; x=1720439797; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1719835023; x=1720439823; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=q2+exavIfejK38TBkftpQIKDnT/YCEYLfkFpQAOqMrA=;
-        b=R6/TngPmQnl30Ku6Rc1iyNvQZEc1Gz1WNCrAE3m13ju5+QnzybSYZIMbC4kBgnEfik
-         SPCLcY88gTcntYaB4IgT1ctPlCcXrEBvx5KkCfiU0QyRSfI3aNtO8SqZxujcNfqpujrm
-         U2vc+Yr/52g5+KQnr5D8FQZv/Ge3MBJfUpQN3iCR/fagjvRtQ9H7yt60f2v2viOM/IfM
-         clwtOQfLc6kul40ttpG42S/ksUJWOrCRFz3q+Sr8IXrV0yG/3YNOYvFJqa6Iys319S2O
-         eHR0/oC4OUEdY7ScXg4aJtQ+BYoS15O9TqmNU6+bREgaC5RjrLHOvZXO1z8jdNwxTb+y
-         8zjA==
+        bh=qM6ozT6ipWpUx8fDizJzb5G2gQBWPUGL9xe3Ichxpek=;
+        b=FYJ331cX8EE44WCXWueM5+E44vSdkIbfP728djFFGh/c5jQMlAuPPSMu6dnjlluqbj
+         HOVEx7vUSDsMk6tRbrIFEO+uTahI8uc4Hz0Ez3nJRUu8vp8LFGXMa1XL/7VdeKyqsXJf
+         Tq2+1XH/qZjpum7JOIlk43YwdfuYltUsRi+PN8fsQX2fwvddOTywkwSKO7yhLH6SoxYz
+         YSWSED9t+mbzhrjB79Fhij1moae5TdP0aKjKohTG5LsqlGPElKmhogkMa01nGf4GOdez
+         EaRZlQlfaPPg2ZhDWtDddd/im7a7I2P7b6I5Y1A4tigDgkR+MBILg9h94AOEbcPlb7u8
+         1NBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719834997; x=1720439797;
+        d=1e100.net; s=20230601; t=1719835023; x=1720439823;
         h=content-transfer-encoding:in-reply-to:content-language:from
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=q2+exavIfejK38TBkftpQIKDnT/YCEYLfkFpQAOqMrA=;
-        b=eP++Wk5L9IGrn82mR3Kj3IFHVRW3Z1ZsRiuKpPx0NMeFXFlKdiknZJIsnFVHhiMm3+
-         BC4vit62aM4n5YkPf4GV++3AJZMhGFclEUfWknglSbHYuaWo4iPQ6B/L4E7NpUgOjShL
-         tCDamUn4xuvgPJX1ZxYZAtH6HZbXQBCjVhF+vdDDg9qMYI7G+aSMFWDQWbskoI14zuC8
-         wAVD7znwUFCkSosTj1zF3cnq/fACXaTl34D/OhJgZ5Bbau4SrYoNdzCiy8N9Dx6OK75o
-         jqPp+eMnOo1WTvT3PPzaVmipWFNDyTKcd7pH2AisASQIj33jpntylGaYvhwNgkNv13oH
-         PK1g==
-X-Forwarded-Encrypted: i=1; AJvYcCXuNoaf/md7CpCZBy5ss1vff2/IvL5CBcqCQAitKrb6gQxxDcebQc2pVlAqKFXgL7gYKmeP7VRcF2uDdBSRiB/Lh1Qyj3TkmZ48yEJSSHuVPw==
-X-Gm-Message-State: AOJu0YzxDP0Yy8MJT1AoRMtKGSTRaTM011/4ToMM4N8pdVNuynKSzUCz
-	TtqAE4uC8Bm2AUoTHUfyy49vSWmKzuuE/54pP7vWELZf9udEm8o1MEQNv7yn7eI=
-X-Google-Smtp-Source: AGHT+IFpMs+kMYQhye2xH/ffra8GqlPW6v2h0K68WUFUlcoi1nV6+1EteASUbtPqnC+84XbNqh3VqA==
-X-Received: by 2002:a5d:410f:0:b0:364:d5af:3460 with SMTP id ffacd0b85a97d-36775728ddemr3086296f8f.61.1719834996788;
-        Mon, 01 Jul 2024 04:56:36 -0700 (PDT)
+        bh=qM6ozT6ipWpUx8fDizJzb5G2gQBWPUGL9xe3Ichxpek=;
+        b=kOq/lhSLiIrhhYUwrJt4rDJKS08P7V7Dotq4alfR1T2jC/fXFO1NHVjYH1euag7r5t
+         c/oi2etI2L3eU4JfMGfNrSGxSbfYsvrtcUit3vbCVVkg0ZQwigs4Zb5t/nRQnN0dfPbl
+         OJvA7JEyoXzqWbH5NfrJsE7LASg7mYojZvuniSm8JespvKEmC/SofIzV1qQdbzXzLReF
+         W3WZxF98WET52uJQpqykeEvZnZN6r9fvCDDP/YYixNEHHDrjlxtAsExIUTfvHtVZHAJQ
+         SqZTEUNq3Lg5s7MmVk3hjCXwIGKb0Y5LHA2Jdr3j+S+aIbpHnH4s5Vq9nldVAmohWnl+
+         9CPg==
+X-Forwarded-Encrypted: i=1; AJvYcCV068+PTTV3YwPpGPfMR8+Www+ZfehWbxfSOIouKlkSntnbE1L+6hPRbMC8NUChtADRk1xy/JdtHaOOiBKqWpfZf0Sa5Z/zQUgHulyNoGIZLw==
+X-Gm-Message-State: AOJu0YyY31b5gsf+xr9K8KFiqeZrgkyKHFUUdQF6P0/sY7zVtbndHuXi
+	X1ndFKJJI3JyNKTckt73vNJyNJ8A/Ak+LIM6B8tYWB7Mg4W/w+tP1q+DmuOlZbY=
+X-Google-Smtp-Source: AGHT+IFYVSdRcV9MLSYbS5/vmHR/G4uYFaK3YDbIt8yGK5agQ58wvuLvzBnOMK0fuQtCapDBq2tqBA==
+X-Received: by 2002:adf:f6c2:0:b0:364:3ba5:c5af with SMTP id ffacd0b85a97d-3677572827amr3273332f8f.61.1719835023153;
+        Mon, 01 Jul 2024 04:57:03 -0700 (PDT)
 Received: from ?IPV6:2a10:bac0:b000:7471:9e35:9ca5:4e8a:d8cb? ([2a10:bac0:b000:7471:9e35:9ca5:4e8a:d8cb])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0fb836sm9852925f8f.81.2024.07.01.04.56.35
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3675a0d90casm9755883f8f.32.2024.07.01.04.57.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 01 Jul 2024 04:56:36 -0700 (PDT)
-Message-ID: <b6289862-48e4-41fc-a6e8-0e21c90dacd9@suse.com>
-Date: Mon, 1 Jul 2024 14:56:34 +0300
+        Mon, 01 Jul 2024 04:57:02 -0700 (PDT)
+Message-ID: <e1c4fae6-dbc9-4b79-8dd6-9ca00bf2bf6e@suse.com>
+Date: Mon, 1 Jul 2024 14:57:01 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,8 +61,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 4/4] x86/cpufeatures: Use AWK to generate
- {REQUIRED|DISABLED}_MASK_BIT_SET
+Subject: Re: [PATCH v4 3/4] x86/cpufeatures: Remove
+ {disabled,required}-features.h
 To: "Xin Li (Intel)" <xin@zytor.com>, linux-kernel@vger.kernel.org,
  linux-perf-users@vger.kernel.org
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
@@ -70,21 +70,23 @@ Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
  peterz@infradead.org, akpm@linux-foundation.org, acme@kernel.org,
  namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com
 References: <20240628174544.3118826-1-xin@zytor.com>
- <20240628174544.3118826-5-xin@zytor.com>
+ <20240628174544.3118826-4-xin@zytor.com>
 From: Nikolay Borisov <nik.borisov@suse.com>
 Content-Language: en-US
-In-Reply-To: <20240628174544.3118826-5-xin@zytor.com>
+In-Reply-To: <20240628174544.3118826-4-xin@zytor.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
 On 28.06.24 г. 20:45 ч., Xin Li (Intel) wrote:
-> Generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the newly added AWK
-> script that generates the required and disabled feature mask header.
+> The functionalities of {disabled,required}-features.h are replaced
+> with the auto-generated header cpufeature_masks.h. Thus they are no
+> longer needed. So delete them.
 > 
-> Suggested-by: Brian Gerst <brgerst@gmail.com>
+> None of the macros defined in {disabled,required}-features.h is used
+> in tools, delete them too.
+> 
 > Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> Reviewed-by: Brian Gerst <brgerst@gmail.com>
 
 Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
