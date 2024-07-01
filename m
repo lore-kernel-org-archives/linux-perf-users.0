@@ -1,219 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 349481E871;
-	Mon,  1 Jul 2024 15:31:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60B3A16CD03;
+	Mon,  1 Jul 2024 15:32:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719847880; cv=none; b=emhnq7zYM5KhQq9II8MeooKy5eEBH3KBalY0tYcd+tBJJRGtwlLlf4KCB00igWRjsRvrsebKPaE/n5aXF18F/uhPi6/WyIdP/woqAreENaVQufzZ7M+/cXdhZFk/gn0z8Gv4CtzJBZNTmxp9JwE6n9oDMzA05F1bNKSVOGgZpwE=
+	t=1719847956; cv=none; b=VjzX+wxX3GGONDL9ogcmYwW0ZS08vINre5QnPi3nhd0nZZhOrpdA0QbYlKo/TPg07QFcbnsRvPznP6rjOrR0Bq9+Hw6TfTZEHt/5Ok9UkGQDbq497IWlz+AgPVfaAeuGIC3hlpD3c6edl2TAc400/xpH9/2wO+rd+0MmcdXACSo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719847880; c=relaxed/simple;
-	bh=T2Q1XD5tEeR4cBqImPSELp6NvuCErUaT4Shazy8hl3M=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hK79p5qOjrFaqU3rb7ti+Lnh1T4Y/9ey1RhCUQDJoGEqdCnI+qBr8V8F1hI7bZQOYlBngoej2Ogmk44y5jtTmFxPS27+MFW0s/mz6ci0AGeoISVdIqbO/9HXAIXl5UBAB6OOg0/BjuxVqr7t9cEGKx2TjqA1I7R1RN21HZiLQj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X0AvAVbn; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X0AvAVbn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719847879; x=1751383879;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T2Q1XD5tEeR4cBqImPSELp6NvuCErUaT4Shazy8hl3M=;
-  b=X0AvAVbnc6i1eGPfY6FB7LqRm3qsCuB4jOHQvZ1YgbTXX8yTr8/BuMMF
-   yFJVY81nji6tjDsl4dmAqeyDxXBcWP0HlNKJ/z2oMop0wX6LVwZhlkL1K
-   1vsCiZ5tIwQr4skzlYphYDPra7B9BOXG6qVB1GXVu6BADnqYa/BzLD0G7
-   YFUDQNOswZRrKO4D8bmi2Je/odMQe78eJINWCZGreM5UojZjzp6pJnyEv
-   1ZxlDjWJCKHU1JATeXJiBp9iYFU8OnKse7ss+n661rD2Dtv+rz/DwAVA8
-   v/RFa5EsPl1HvrOs5EJDn6SKIOt26lWMqIhLzOYQSXuRLyZBy66NpOtNb
-   w==;
-X-CSE-ConnectionGUID: wlmedhsSSkuKEzBlL85TiA==
-X-CSE-MsgGUID: cv8DmSiQS4qZ2xzmLnOz7A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11120"; a="27602883"
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="27602883"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:30:53 -0700
-X-CSE-ConnectionGUID: ELzaDbQCRI+LXikilOlfWQ==
-X-CSE-MsgGUID: WYOSE24kSb2f2HjIAivj1g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,176,1716274800"; 
-   d="scan'208";a="76742001"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Jul 2024 08:30:52 -0700
-Date: Mon, 1 Jul 2024 08:36:04 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Nikolay Borisov <nik.borisov@suse.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 05/11] x86/irq: Process nmi sources in NMI handler
-Message-ID: <20240701083604.5dfeb087@jacob-builder>
-In-Reply-To: <9cf3eef6-79d9-4969-be94-e5089a0d625b@suse.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
-	<9cf3eef6-79d9-4969-be94-e5089a0d625b@suse.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1719847956; c=relaxed/simple;
+	bh=IVhApHVVrqzcpAGm2AOfwPzjOHsiNqREx+i5Ma5rj38=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Im3s6Q5inXG0NOAGQWqAgNhEaN2Idz85qXzMCfZHAkiD+u4/P+M1pzXxsKU5qDtSxoKJiEfwG/eryI7nSeCX71h7X4PloDOwWAYoKwEz8JL3sV+QFMQ9w3gGLklySBKUO/hDsqIDHbR+nFsOGqubhw/0hhtnHtfW2MOqAiKU2pk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79F9B339;
+	Mon,  1 Jul 2024 08:32:58 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 670A53F73B;
+	Mon,  1 Jul 2024 08:32:30 -0700 (PDT)
+Date: Mon, 1 Jul 2024 16:32:25 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Will Deacon <will@kernel.org>
+Cc: Marc Zyngier <maz@kernel.org>, "Rob Herring (Arm)" <robh@kernel.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 06/12] perf: arm_pmu: Remove event index to counter
+ remapping
+Message-ID: <ZoLMCS6sLUKHXUuU@J2N7QTR9R3>
+References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
+ <20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org>
+ <86ikxuir2k.wl-maz@kernel.org>
+ <20240701135216.GD2250@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240701135216.GD2250@willie-the-truck>
 
+On Mon, Jul 01, 2024 at 02:52:16PM +0100, Will Deacon wrote:
+> On Thu, Jun 27, 2024 at 12:05:23PM +0100, Marc Zyngier wrote:
+> > On Wed, 26 Jun 2024 23:32:30 +0100,
+> > "Rob Herring (Arm)" <robh@kernel.org> wrote:
+> > > 
+> > > Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
+> > > starting at 1 and had 1:1 event index to counter numbering. On Armv7 and
+> > > later, this changed the cycle counter to 31 and event counters start at
+> > > 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
+> > > and introduced an event index to counter conversion. The conversion uses
+> > > masking to convert from event index to a counter number. This operation
+> > > relies on having at most 32 counters so that the cycle counter index 0
+> > > can be transformed to counter number 31.
+> > > 
+> > > Armv9.4 adds support for an additional fixed function counter
+> > > (instructions) which increases possible counters to more than 32, and
+> > > the conversion won't work anymore as a simple subtract and mask. The
+> > > primary reason for the translation (other than history) seems to be to
+> > > have a contiguous mask of counters 0-N. Keeping that would result in
+> > > more complicated index to counter conversions. Instead, store a mask of
+> > > available counters rather than just number of events. That provides more
+> > > information in addition to the number of events.
+> > > 
+> > > No (intended) functional changes.
+> > > 
+> > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> > 
+> > [...]
+> > 
+> > > diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> > > index b3b34f6670cf..e5d6d204beab 100644
+> > > --- a/include/linux/perf/arm_pmu.h
+> > > +++ b/include/linux/perf/arm_pmu.h
+> > > @@ -96,7 +96,7 @@ struct arm_pmu {
+> > >  	void		(*stop)(struct arm_pmu *);
+> > >  	void		(*reset)(void *);
+> > >  	int		(*map_event)(struct perf_event *event);
+> > > -	int		num_events;
+> > > +	DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
+> > 
+> > I'm slightly worried by this, as this size is never used, let alone
+> > checked by the individual drivers. I can perfectly picture some new
+> > (non-architectural) PMU driver having more counters than that, and
+> > blindly setting bits outside of the allowed range.
+> 
+> I tend to agree.
 
-On Mon, 1 Jul 2024 17:31:48 +0300, Nikolay Borisov <nik.borisov@suse.com>
-wrote:
+It's the same size as other bitmaps and arrays in struct arm_pmu, e.g.
+the first two fields:
 
-> On 28.06.24 =D0=B3. 23:18 =D1=87., Jacob Pan wrote:
-> > With NMI source reporting enabled, NMI handler can prioritize the
-> > handling of sources reported explicitly. If the source is unknown, then
-> > resume the existing processing flow. i.e. invoke all NMI handlers.
-> >=20
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> >=20
-> > ---
-> > v3:
-> >     - Use a static flag to disable NMIs in case of HW failure
-> >     - Optimize the case when unknown NMIs are mixed with known NMIs(HPA)
-> > v2:
-> >     - Disable NMI source reporting once garbage data is given in FRED
-> > return stack. (HPA)
-> > ---
-> >   arch/x86/kernel/nmi.c | 73 +++++++++++++++++++++++++++++++++++++++++--
-> >   1 file changed, 70 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> > index 639a34e78bc9..c3a10af7f26b 100644
-> > --- a/arch/x86/kernel/nmi.c
-> > +++ b/arch/x86/kernel/nmi.c
-> > @@ -149,23 +149,90 @@ static inline int do_handle_nmi(struct nmiaction
-> > *a, struct pt_regs *regs, unsig return thishandled;
-> >   }
-> >  =20
-> > +static int nmi_handle_src(unsigned int type, struct pt_regs *regs,
-> > unsigned long *handled_mask) +{
-> > +	static bool nmi_source_disabled;
-> > +	bool has_unknown_src =3D false;
-> > +	unsigned long source_bitmask;
-> > +	struct nmiaction *a;
-> > +	int handled =3D 0;
-> > +	int vec =3D 1;
-> > +
-> > +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
-> > +	    type !=3D NMI_LOCAL || nmi_source_disabled)
-> > +		return 0;
-> > +
-> > +	source_bitmask =3D fred_event_data(regs);
-> > +	if (!source_bitmask) {
-> > +		pr_warn("NMI received without source information!
-> > Disable source reporting.\n");
-> > +		nmi_source_disabled =3D true;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Per NMI source specification, there is no guarantee that a
-> > valid
-> > +	 * NMI vector is always delivered, even when the source
-> > specified
-> > +	 * one. It is software's responsibility to check all available
-> > NMI
-> > +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we
-> > have
-> > +	 * to call every handler as if we have no NMI source.
-> > +	 * On the other hand, if we do get non-zero vectors, we know
-> > exactly
-> > +	 * what the sources are. So we only call the handlers with the
-> > bit set.
-> > +	 */
-> > +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-> > +		pr_warn_ratelimited("NMI received with unknown
-> > source\n");
-> > +		has_unknown_src =3D true;
-> > +	}
-> > +
-> > +	rcu_read_lock();
-> > +	/* Bit 0 is for unknown NMI sources, skip it. */
-> > +	for_each_set_bit_from(vec, &source_bitmask,
-> > NR_NMI_SOURCE_VECTORS) {
-> > +		a =3D rcu_dereference(nmiaction_src_table[vec]);
-> > +		if (!a) {
-> > +			pr_warn_ratelimited("NMI received %d no
-> > handler", vec);
-> > +			continue;
-> > +		}
-> > +		handled +=3D do_handle_nmi(a, regs, type);
-> > +		/*
-> > +		 * Needs polling if unknown source bit is set,
-> > handled_mask is
-> > +		 * used to tell the polling code which NMIs can be
-> > skipped.
-> > +		 */
-> > +		if (has_unknown_src)
-> > +			*handled_mask |=3D BIT(vec);
-> > +	}
-> > +	rcu_read_unlock();
-> > +
-> > +	return handled;
-> > +}
-> > +
-> >   static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> >   {
-> >   	struct nmi_desc *desc =3D nmi_to_desc(type);
-> > +	unsigned long handled_mask =3D 0;
-> >   	struct nmiaction *a;
-> >   	int handled=3D0;
-> >  =20
-> > -	rcu_read_lock();
-> > +	/*
-> > +	 * Check if the NMI source handling is complete, otherwise
-> > polling is
-> > +	 * still required. handled_mask is non-zero if NMI source
-> > handling is
-> > +	 * partial due to unknown NMI sources.
-> > +	 */
-> > +	handled =3D nmi_handle_src(type, regs, &handled_mask);
-> > +	if (handled && !handled_mask)
-> > +		return handled; =20
->=20
-> How about renaming handled_mask to "partial_handled_mask" ? Because in=20
-> addition to it being a mask it's also used as a boolean to signal that=20
-> an unknown NMI source was encountered.
-yeah, that is better. will do.
+| struct pmu_hw_events {
+|         /*  
+|          * The events that are active on the PMU for the given index.
+|          */
+|         struct perf_event       *events[ARMPMU_MAX_HWEVENTS];
+| 
+|         /*  
+|          * A 1 bit for an index indicates that the counter is being used for
+|          * an event. A 0 means that the counter can be used.
+|          */
+|         DECLARE_BITMAP(used_mask, ARMPMU_MAX_HWEVENTS);
 
-> >  =20
-> > +	rcu_read_lock();
-> >   	/*
-> >   	 * NMIs are edge-triggered, which means if you have enough
-> >   	 * of them concurrently, you can lose some because only one
-> >   	 * can be latched at any given time.  Walk the whole list
-> >   	 * to handle those situations.
-> >   	 */
-> > -	list_for_each_entry_rcu(a, &desc->head, list)
-> > +	list_for_each_entry_rcu(a, &desc->head, list) {
-> > +		/* Skip NMIs handled earlier with source info */
-> > +		if (BIT(a->source_vec) & handled_mask)
-> > +			continue;
-> >   		handled +=3D do_handle_nmi(a, regs, type);
-> > -
-> > +	}
-> >   	rcu_read_unlock();
-> >  =20
-> >   	/* return total number of NMI events handled */ =20
+... so IMO it's fine as-is, since anything not bound by
+ARMPMU_MAX_HWEVENTS would already be wrong today.
 
+> > One way to make it a bit safer would be to add a helper replacing the
+> > various bitmap_set() calls, and enforcing that we never overflow this
+> > bitmap.
+> 
+> Or perhaps wd could leave the 'num_events' field intact and allocate the
+> new bitmap dynamically?
 
-Thanks,
+I don't think we should allocate the bitmap dynamically, since then we'd
+have to do likewise for all the other fields sized by
+ARMPMU_MAX_HWEVENTS.
 
-Jacob
+I'm not averse to a check when setting bits in the new cntr_mask (which
+I guess would WARN() and not set the bit), but as above I think it's
+fine as-is.
+
+Mark.
