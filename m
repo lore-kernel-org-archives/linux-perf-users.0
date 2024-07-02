@@ -1,46 +1,46 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E8715AAC1
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jul 2024 11:13:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C03015AADA
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jul 2024 11:13:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719918832; cv=none; b=WK0z+dHBaOAF0Yl0BexsVnM0RAg7Um+CXUT8u3kyEq6ibDCbtILqF9Ar3agursnAxM9EX0nd3YCtdD2FiDg2RmbP0VghnvNR82lOQ/QTjZTPUf2NXoZBEwwcWvlIB/Cckfb86hOP1rLU8WAfFbwcjLJZSFV6t9cse4YA/gQhDYM=
+	t=1719918837; cv=none; b=dmSMphXNyHB/uhdLxbTvNovn9OK4fShA3SlA8zeQZ4XY3rJbZunAIPpKXnrdZ8K4In3F8MgJ6rYcxlXrQ/K9xiznTXsDhGUCIbVMHU+uSqR1SJkKzjnQz5tczeytiZDpLRI0CqnRVf/oWE9o2tA5opTu8psVd3tauuQft96TNOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719918832; c=relaxed/simple;
-	bh=K/JFy6JZrByr4X6e+GC8VI71SLXinS7qiD2eIvTFy98=;
+	s=arc-20240116; t=1719918837; c=relaxed/simple;
+	bh=C1kXJ+ZcAVxwOSwr69TkxXN5FuRsv75kmbUfKTRZM+E=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZvsggCevETmz7fZPd9oI9WT9OLQ3iH5obj1cfAWjgMH6RK3ZpoXMll56Vtt4bXso0MABG+pON2nl0KPn9E27t6L/VCMKkpFszi9EN0ilMifyxAcPWL6yKl/VNF/IDrS/oLXayDwBmzenX0H63fki0ayd24kGaf38PpPWVgaAG1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=a/lb8jTA; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=iRlWSyghtDoaXSPIFPju3pikXp8hgfU0teSjbYXAOiVFN/hPsG8vHAKsZd1w695mJQZQNXufkSuIWzMEPGVfVdaOf7A1Gu4bOobr4iKhkJEtXEWisC6+Cr9DOfbbFoYyTWCmw6d4EepWxqbyyD7YcUy5UWvnJLtjSVS3WOI07cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hbJX47WS; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a/lb8jTA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hbJX47WS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719918830;
+	s=mimecast20190719; t=1719918834;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=egd9NYINBVrjgvg2t4qazisJdPqm9eKa0p/aKDwcv6o=;
-	b=a/lb8jTAIOORv3hB5KGVeQxc242pCrZbi+Arkxivfh1TFltNjmvFCSw/kA1CJ5ivenvAGB
-	RvyZxQ95ks3V3/RRoJ+bBZp3Avn58rNva8U36gdzjkDS0xOp+DwO7xou/KGj2PbMAPGyE/
-	LJiR080O2gUNj//53vLOSOtbEnvjJnU=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+	bh=ORXDa04eKCHATzYDQeHAm+KBi0pkMTEFjHvt/MqeHvs=;
+	b=hbJX47WSlvPM6tx9jPfI938+/tuwix+38UK5EH0Ll0wD16NgUAMRtoqKBmHr1qDhCMVJCw
+	VxLQUWMk+mv9YTUbtdoKK1+5SDUSiug3TN7MtrvtlkTWRIvayAFluELmyOnJJX9EaaPV+s
+	DrUyDK9PZfml2P89PIiDQWQmUGL1cv8=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-320-IXjDJb4KNAGL5SsDo3Sikw-1; Tue,
- 02 Jul 2024 07:13:47 -0400
-X-MC-Unique: IXjDJb4KNAGL5SsDo3Sikw-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-147-0cCMipoEMdG1_kZymXcpeQ-1; Tue,
+ 02 Jul 2024 07:13:50 -0400
+X-MC-Unique: 0cCMipoEMdG1_kZymXcpeQ-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1C34B1955F1D;
-	Tue,  2 Jul 2024 11:13:46 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3AF68194510D;
+	Tue,  2 Jul 2024 11:13:49 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.225.179])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35CA61956089;
-	Tue,  2 Jul 2024 11:13:42 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 949A21956089;
+	Tue,  2 Jul 2024 11:13:46 +0000 (UTC)
 From: vmolnaro@redhat.com
 To: linux-perf-users@vger.kernel.org,
 	acme@redhat.com,
@@ -50,9 +50,9 @@ Cc: acme@kernel.org,
 	irogers@google.com,
 	atrajeev@linux.vnet.ibm.com,
 	masami.hiramatsu.pt@hitachi.com
-Subject: [PATCH v2 05/11] perf testsuite probe: Add test for basic perf-probe options
-Date: Tue,  2 Jul 2024 13:08:44 +0200
-Message-ID: <20240702110849.31904-7-vmolnaro@redhat.com>
+Subject: [PATCH v2 06/11] perf testsuite probe: Add test for invalid options
+Date: Tue,  2 Jul 2024 13:08:45 +0200
+Message-ID: <20240702110849.31904-8-vmolnaro@redhat.com>
 In-Reply-To: <20240702110849.31904-1-vmolnaro@redhat.com>
 References: <Zn3n0JwfdfFdjbzj@google.com>
  <20240702110849.31904-1-vmolnaro@redhat.com>
@@ -67,34 +67,34 @@ X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Test basic behavior of perf-probe subcommand. It is run as a part of
-perftool-testsuite_probe test case.
+Test if various incompatible options are correctly handled-rejected.
+It is run as a part of perftool-testsuite_probe test case.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- .../perf/tests/shell/base_probe/test_basic.sh | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
- create mode 100755 tools/perf/tests/shell/base_probe/test_basic.sh
+ .../shell/base_probe/test_invalid_options.sh  | 79 +++++++++++++++++++
+ 1 file changed, 79 insertions(+)
+ create mode 100755 tools/perf/tests/shell/base_probe/test_invalid_options.sh
 
-diff --git a/tools/perf/tests/shell/base_probe/test_basic.sh b/tools/perf/tests/shell/base_probe/test_basic.sh
+diff --git a/tools/perf/tests/shell/base_probe/test_invalid_options.sh b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
 new file mode 100755
-index 0000000000..09669ec479
+index 0000000000..1fedfd8b0d
 --- /dev/null
-+++ b/tools/perf/tests/shell/base_probe/test_basic.sh
-@@ -0,0 +1,80 @@
++++ b/tools/perf/tests/shell/base_probe/test_invalid_options.sh
+@@ -0,0 +1,79 @@
 +#!/bin/bash
 +
 +# SPDX-License-Identifier: GPL-2.0
 +
 +#
-+#	test_basic of perf_probe test
-+#	Author: Michael Petlan <mpetlan@redhat.com>
++#	test_invalid_options of perf_probe test
 +#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
++#	Author: Michael Petlan <mpetlan@redhat.com>
 +#
 +#	Description:
 +#
-+#		This test tests basic functionality of perf probe command.
++#		This test checks whether the invalid and incompatible options are reported
 +#
 +
 +# include working environment
@@ -108,56 +108,55 @@ index 0000000000..09669ec479
 +fi
 +
 +
-+### help message
++### missing argument
 +
-+if [ "$PARAM_GENERAL_HELP_TEXT_CHECK" = "y" ]; then
-+	# test that a help message is shown and looks reasonable
-+	$CMD_PERF probe --help > $LOGS_DIR/basic_helpmsg.log 2> $LOGS_DIR/basic_helpmsg.err
++# some options require an argument
++for opt in '-a' '-d' '-L' '-V'; do
++	! $CMD_PERF probe $opt 2> $LOGS_DIR/invalid_options_missing_argument$opt.err
 +	PERF_EXIT_CODE=$?
 +
-+	../common/check_all_patterns_found.pl "PERF-PROBE" "NAME" "SYNOPSIS" "DESCRIPTION" "OPTIONS" "PROBE\s+SYNTAX" "PROBE\s+ARGUMENT" "LINE\s+SYNTAX" < $LOGS_DIR/basic_helpmsg.log
++	../common/check_all_patterns_found.pl "Error: switch .* requires a value" < $LOGS_DIR/invalid_options_missing_argument$opt.err
 +	CHECK_EXIT_CODE=$?
-+	../common/check_all_patterns_found.pl "LAZY\s+MATCHING" "FILTER\s+PATTERN" "EXAMPLES" "SEE\s+ALSO" < $LOGS_DIR/basic_helpmsg.log
-+	(( CHECK_EXIT_CODE += $? ))
-+	../common/check_all_patterns_found.pl "vmlinux" "module=" "source=" "verbose" "quiet" "add=" "del=" "list.*EVENT" "line=" "vars=" "externs" < $LOGS_DIR/basic_helpmsg.log
-+	(( CHECK_EXIT_CODE += $? ))
-+	../common/check_all_patterns_found.pl "no-inlines" "funcs.*FILTER" "filter=FILTER" "force" "dry-run" "max-probes" "exec=" "demangle-kernel" < $LOGS_DIR/basic_helpmsg.log
-+	(( CHECK_EXIT_CODE += $? ))
-+	../common/check_no_patterns_found.pl "No manual entry for" < $LOGS_DIR/basic_helpmsg.err
-+	(( CHECK_EXIT_CODE += $? ))
 +
-+	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "help message"
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "missing argument for $opt"
 +	(( TEST_RESULT += $? ))
-+else
-+	print_testcase_skipped "help message"
-+fi
++done
 +
 +
-+### usage message
++### unnecessary argument
 +
-+# without any args perf-probe should print usage
-+$CMD_PERF probe 2> $LOGS_DIR/basic_usage.log > /dev/null
++# some options may omit the argument
++for opt in '-F' '-l'; do
++	$CMD_PERF probe -F > /dev/null 2> $LOGS_DIR/invalid_options_unnecessary_argument$opt.err
++	PERF_EXIT_CODE=$?
 +
-+../common/check_all_patterns_found.pl "[Uu]sage" "perf probe" "verbose" "quiet" "add" "del" "force" "line" "vars" "externs" "range" < $LOGS_DIR/basic_usage.log
-+CHECK_EXIT_CODE=$?
++	test ! -s $LOGS_DIR/invalid_options_unnecessary_argument$opt.err
++	CHECK_EXIT_CODE=$?
 +
-+print_results 0 $CHECK_EXIT_CODE "usage message"
-+(( TEST_RESULT += $? ))
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "unnecessary argument for $opt"
++	(( TEST_RESULT += $? ))
++done
 +
 +
-+### quiet switch
++### mutually exclusive options
 +
-+# '--quiet' should mute all output
-+$CMD_PERF probe --quiet --add vfs_read > $LOGS_DIR/basic_quiet01.log 2> $LOGS_DIR/basic_quiet01.err
-+PERF_EXIT_CODE=$?
-+$CMD_PERF probe --quiet --del vfs_read > $LOGS_DIR/basic_quiet03.log 2> $LOGS_DIR/basic_quiet02.err
-+(( PERF_EXIT_CODE += $? ))
++# some options are mutually exclusive
++test -e $LOGS_DIR/invalid_options_mutually_exclusive.log && rm -f $LOGS_DIR/invalid_options_mutually_exclusive.log
++for opt in '-a xxx -d xxx' '-a xxx -L foo' '-a xxx -V foo' '-a xxx -l' '-a xxx -F' \
++		'-d xxx -L foo' '-d xxx -V foo' '-d xxx -l' '-d xxx -F' \
++		'-L foo -V bar' '-L foo -l' '-L foo -F' '-V foo -l' '-V foo -F' '-l -F'; do
++	! $CMD_PERF probe $opt > /dev/null 2> $LOGS_DIR/aux.log
++	PERF_EXIT_CODE=$?
 +
-+test "`cat $LOGS_DIR/basic_quiet*log $LOGS_DIR/basic_quiet*err | wc -l`" -eq 0
-+CHECK_EXIT_CODE=$?
++	../common/check_all_patterns_found.pl "Error: switch .+ cannot be used with switch .+" < $LOGS_DIR/aux.log
++	CHECK_EXIT_CODE=$?
 +
-+print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "quiet switch"
-+(( TEST_RESULT += $? ))
++	print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "mutually exclusive options :: $opt"
++	(( TEST_RESULT += $? ))
++
++	# gather the logs
++	cat $LOGS_DIR/aux.log | grep "Error" >> $LOGS_DIR/invalid_options_mutually_exclusive.log
++done
 +
 +
 +# print overall results
