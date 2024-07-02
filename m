@@ -1,149 +1,204 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF561BBBD7;
-	Tue,  2 Jul 2024 16:19:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707EB1C005C;
+	Tue,  2 Jul 2024 17:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719937188; cv=none; b=qJ4en0Sm/zhM1Qbiqk/0q6li55/n+vWS4/rQXdMmtX3ji4X1VpX4Fd+mO/cvLhl50JqxEnBwo5Ea5ivvoGFuiy1BaeU+ihO9tMMMlwUENKTA/8phbrionapytjSLXgJbxCNwpxMJ+dXa85F88YXdytOEz1uJYn0b5Ixk3UfqHac=
+	t=1719940659; cv=none; b=C25ZjwYj01gILL4F9chQYb9Wg5euG+LHa/3yFfs8ec5BrAzA45Oer2PLzO60scoHWlE6w4dLAyTQbzRSFEzaEiUofLo9deLEtl+rMVGcYQgABJTyV7OApdSLNUKdMuvRp5HaJzvvSovolbmgIsUxEkX4R7gN4yCt6dhzt6qs6TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719937188; c=relaxed/simple;
-	bh=lVQmHI+LCB+7I2btTVAeudIE1E/R0zerK0QF7WkCDJg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ozOtPu5sbNM21XrUUesTwAmOqjvwCYiE/7lP3qAhYlwdAd+A8cOzVq0GY811QOCiOcn8n8v6jh9WE+hK4aTDZAUwnbg5h5Oa4tDDe2zH41DAfviCMV9+7MYVtLlsVJOJKIQIV+jsIsBnc5LPy6hZq7XWSHEABxW2FfVT7VxqYXI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KFZN/teI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719940659; c=relaxed/simple;
+	bh=4868Ep+IoY10npVHcVKyoLSgEn/iBhldDS/CKlKIWeo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KfeVGKLQshxovuIJX+d1MHf81ybsyrwFeeplF/MKvM6QlL8ZrT07KeWvwtFcQBqyoCQcP7Tv8thVqNNSW2U5/ub0JH58PCOc7T90NB2feUQ8c8Eybd8YZ4pNZ+fXxPobvv/1tHrtzEUz7JRai8TporTEW6DgGKUFkN1M2RfgCeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XOSqoEri; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KFZN/teI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6965C116B1;
-	Tue,  2 Jul 2024 16:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719937187;
-	bh=lVQmHI+LCB+7I2btTVAeudIE1E/R0zerK0QF7WkCDJg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KFZN/teI9CkmW0iOWqSmXr/ZYdGvy+z/jP2qp+ujTEwwY4xzOjGY3b15+KbrRXlQ4
-	 +Cxy33ZcFI90gE+8LtOphor/Iqn3TU6pCQ7ojazeBHMFkhxWasd2Bts5Ty7i75LSnu
-	 +1LfDYpniU+5H+dDLj14xL+K26hfYqjNgipBlMEOoOFfdg01Cv8+ORHoDGs4+Pm1dg
-	 cC2P+1KG5KIgkezBQLiR98sJ15yvnPB7hgK92wvYXZItkgfsYvNuYz7RAZH9XP4UdK
-	 HjCRxp4GoLEGcnaZM2GrSN3SWHBQfkqAxEF8EhVitwV4QocRoS9UukgANWfn0m7eA0
-	 hKssnf0roWL6g==
-Date: Tue, 2 Jul 2024 17:19:40 +0100
-From: Will Deacon <will@kernel.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, Russell King <linux@armlinux.org.uk>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	James Clark <james.clark@arm.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-Subject: Re: [PATCH v2 06/12] perf: arm_pmu: Remove event index to counter
- remapping
-Message-ID: <20240702161940.GA4460@willie-the-truck>
-References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
- <20240626-arm-pmu-3-9-icntr-v2-6-c9784b4f4065@kernel.org>
- <86ikxuir2k.wl-maz@kernel.org>
- <20240701135216.GD2250@willie-the-truck>
- <CAL_JsqKYstLZQy_VQTvg-285jj1mpH+4d9CVJ_1_iAus5_rTRA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOSqoEri"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2c1a4192d55so2695685a91.2;
+        Tue, 02 Jul 2024 10:17:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719940658; x=1720545458; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ab7Ql4t/fDVRM0N/Hkib1qt1vDXIApr8krme2e4EA7M=;
+        b=XOSqoErisk6s7XXkTiD4NVZHF7EgqsC7/JnYc/tOY2qZ6YJIAnWZxn2vVqiu67U1uJ
+         ei7/dx3rgTlPzCyAE79COtff3YLBSNo1oatA6nOPnovSdIYCc+wK0dKBGMl7v2YFQ2lt
+         a6IBUAsaCQ6nRV+uzdEGhtBiIbtCgD1ChXOmFwCxsKO33krZ7tvUd0/yses+d4gTm/+k
+         uDA8YzoNc5j1xAz3B8VXRDqrkQazukpNHkKqPmkC4WkYEvzbhSvnzhE9QmHOUsH0SWOK
+         TogibV8Ai1+D+CTM1eSBHUvaVDeD8goQf2JLu3qh8Wz6l8JMtl66XDOKLmxPWwhF4kt7
+         +/DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719940658; x=1720545458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ab7Ql4t/fDVRM0N/Hkib1qt1vDXIApr8krme2e4EA7M=;
+        b=iawMCHuQiwYSEyhRCkqccjHxoFa0wkOw24AtHzIWABiP1HUFpXIOeRuxspdSWb6WWb
+         LT7MOHcgeEB5k0HF5fhEmPlTchffeWSB6lqMt3oFl0BM71LzC1KF6+TcK2q8fnQNVOxe
+         ZtO7X8MoUf5gixvFiML4mTkwPKnV8/Oq833O+GIBTnxqkgfIm1jBmF+7TtQwA7o94W5L
+         s1JuL6yQPxTOQG+pNhD+RYZyA+2weUm+tHskIdWyNDUxUDLzWyJR7zCwb9el0Xddqcni
+         W2Io6GF3t5T0v1qYhGHPZMLz5DONv6kVISnLcij4TzfvQxF/iPDEMIUDW+MVQglz9u3v
+         GJ9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUQq4INjdVK14Su4X/mw7W5kuEXf21Sdyhw7D4Z2kSt74LryiJn2VvSnhHQG2Cz/AfRQFb5QvHw3fpo0HjYIwKerIOxTO3t2vsRak1vJ2kQCY3ATK8+cBHFTNqFp8IFyMGIQhMzIplHheDb2b9xDUMCpZURtECQVfIdSkKd7OpwzZssN1L9yz+QCRFRzn3i89AiQyCC6FEsJfnBMipSPnocHGajCi6owg==
+X-Gm-Message-State: AOJu0YxOouXGtHv0A5D/1qEe+qNVr+zY1qHArikpwz3NDsxE0HfgchhE
+	4GS08BmdNRCfcjcp9VVKm1A83lDV0G0prAReFVPJgaRm3AoHFy3KR8Nb1hsarQXrYqCP37AQmfB
+	tv5uXdLyDLXsAZKUA18h2Nb1RdVh17f0/
+X-Google-Smtp-Source: AGHT+IFAHjRiuSEDaf8Hq1+3dk9LMpcf/uGUbkKYmarxsoMEFNojGFS2jiWIoJDgxN+hGNT47VCp7kxlwzAj9WVYrh0=
+X-Received: by 2002:a17:90b:fd1:b0:2c3:11fa:41f with SMTP id
+ 98e67ed59e1d1-2c93d76fbbemr5239692a91.45.1719940657536; Tue, 02 Jul 2024
+ 10:17:37 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_JsqKYstLZQy_VQTvg-285jj1mpH+4d9CVJ_1_iAus5_rTRA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20240701231027.61930-1-andrii@kernel.org> <20240702095036.GE11386@noisy.programming.kicks-ass.net>
+In-Reply-To: <20240702095036.GE11386@noisy.programming.kicks-ass.net>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 2 Jul 2024 10:17:24 -0700
+Message-ID: <CAEf4BzZxXDsB+_Oyu=gDP9_7c5vc4Z6QFfW5TnY3GTA86X6hSQ@mail.gmail.com>
+Subject: Re: [PATCH] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
+	tglx@linutronix.de, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 01, 2024 at 09:49:29AM -0600, Rob Herring wrote:
-> On Mon, Jul 1, 2024 at 7:52 AM Will Deacon <will@kernel.org> wrote:
-> >
-> > On Thu, Jun 27, 2024 at 12:05:23PM +0100, Marc Zyngier wrote:
-> > > On Wed, 26 Jun 2024 23:32:30 +0100,
-> > > "Rob Herring (Arm)" <robh@kernel.org> wrote:
-> > > >
-> > > > Xscale and Armv6 PMUs defined the cycle counter at 0 and event counters
-> > > > starting at 1 and had 1:1 event index to counter numbering. On Armv7 and
-> > > > later, this changed the cycle counter to 31 and event counters start at
-> > > > 0. The drivers for Armv7 and PMUv3 kept the old event index numbering
-> > > > and introduced an event index to counter conversion. The conversion uses
-> > > > masking to convert from event index to a counter number. This operation
-> > > > relies on having at most 32 counters so that the cycle counter index 0
-> > > > can be transformed to counter number 31.
-> > > >
-> > > > Armv9.4 adds support for an additional fixed function counter
-> > > > (instructions) which increases possible counters to more than 32, and
-> > > > the conversion won't work anymore as a simple subtract and mask. The
-> > > > primary reason for the translation (other than history) seems to be to
-> > > > have a contiguous mask of counters 0-N. Keeping that would result in
-> > > > more complicated index to counter conversions. Instead, store a mask of
-> > > > available counters rather than just number of events. That provides more
-> > > > information in addition to the number of events.
-> > > >
-> > > > No (intended) functional changes.
-> > > >
-> > > > Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> > >
-> > > [...]
-> > >
-> > > > diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-> > > > index b3b34f6670cf..e5d6d204beab 100644
-> > > > --- a/include/linux/perf/arm_pmu.h
-> > > > +++ b/include/linux/perf/arm_pmu.h
-> > > > @@ -96,7 +96,7 @@ struct arm_pmu {
-> > > >     void            (*stop)(struct arm_pmu *);
-> > > >     void            (*reset)(void *);
-> > > >     int             (*map_event)(struct perf_event *event);
-> > > > -   int             num_events;
-> > > > +   DECLARE_BITMAP(cntr_mask, ARMPMU_MAX_HWEVENTS);
-> > >
-> > > I'm slightly worried by this, as this size is never used, let alone
-> > > checked by the individual drivers. I can perfectly picture some new
-> > > (non-architectural) PMU driver having more counters than that, and
-> > > blindly setting bits outside of the allowed range.
-> >
-> > I tend to agree.
-> >
-> > > One way to make it a bit safer would be to add a helper replacing the
-> > > various bitmap_set() calls, and enforcing that we never overflow this
-> > > bitmap.
-> >
-> > Or perhaps wd could leave the 'num_events' field intact and allocate the
-> > new bitmap dynamically?
-> >
-> > Rob -- what do you prefer? I think the rest of the series is ready to go.
-> 
-> I think the list of places we're initializing cntr_mask is short
-> enough to check and additions to arm_pmu users are rare enough I would
-> not be too worried about it.
-> 
-> If anything, I think the issue is with the bitmap API in that it has
-> no bounds checking. I'm sure it will get on someone's radar to fix at
-> some point.
-> 
-> But if we want to have something check, this is what I have:
-> 
-> static inline void armpmu_set_counter_mask(struct arm_pmu *pmu,
->                                           unsigned int start, unsigned int nr)
-> {
->        if (WARN_ON(start + nr > ARMPMU_MAX_HWEVENTS))
->                return;
->        bitmap_set(pmu->cntr_mask, start, nr);
-> }
+On Tue, Jul 2, 2024 at 2:50=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+>
+> +Josj +LKML
+>
 
-Fair enough, for the sake of consistency, let's leave the series as-is
-and we can add helpers for all the counter-bound structures later, if we
-want to.
+ack, will add for next revision
 
-Will
+
+> On Mon, Jul 01, 2024 at 04:10:27PM -0700, Andrii Nakryiko wrote:
+> > When tracing user functions with uprobe functionality, it's common to
+> > install the probe (e.g., a BPF program) at the first instruction of the
+> > function. This is often going to be `push %rbp` instruction in function
+> > preamble, which means that within that function frame pointer hasn't
+> > been established yet. This leads to consistently missing an actual
+> > caller of the traced function, because perf_callchain_user() only
+> > records current IP (capturing traced function) and then following frame
+> > pointer chain (which would be caller's frame, containing the address of
+> > caller's caller).
+> >
+> > So when we have target_1 -> target_2 -> target_3 call chain and we are
+> > tracing an entry to target_3, captured stack trace will report
+> > target_1 -> target_3 call chain, which is wrong and confusing.
+> >
+> > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+> > instruction being traced. Given entire kernel implementation of user
+> > space stack trace capturing works under assumption that user space code
+> > was compiled with frame pointer register (%rbp) preservation, it seems
+> > pretty reasonable to use this instruction as a strong indicator that
+> > this is the entry to the function. In that case, return address is stil=
+l
+> > pointed to by %rsp, so we fetch it and add to stack trace before
+> > proceeding to unwind the rest using frame pointer-based logic.
+> >
+> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> > ---
+> >  arch/x86/events/core.c  | 20 ++++++++++++++++++++
+> >  include/linux/uprobes.h |  2 ++
+> >  kernel/events/uprobes.c |  2 ++
+> >  3 files changed, 24 insertions(+)
+> >
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 5b0dd07b1ef1..82d5570b58ff 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -2884,6 +2884,26 @@ perf_callchain_user(struct perf_callchain_entry_=
+ctx *entry, struct pt_regs *regs
+> >               return;
+> >
+> >       pagefault_disable();
+> > +
+> > +#ifdef CONFIG_UPROBES
+> > +     /*
+> > +      * If we are called from uprobe handler, and we are indeed at the=
+ very
+> > +      * entry to user function (which is normally a `push %rbp` instru=
+ction,
+> > +      * under assumption of application being compiled with frame poin=
+ters),
+> > +      * we should read return address from *regs->sp before proceeding
+> > +      * to follow frame pointers, otherwise we'll skip immediate calle=
+r
+> > +      * as %rbp is not yet setup.
+> > +      */
+> > +     if (current->utask) {
+> > +             struct arch_uprobe *auprobe =3D current->utask->auprobe;
+> > +             u64 ret_addr;
+> > +
+> > +             if (auprobe && auprobe->insn[0] =3D=3D 0x55 /* push %rbp =
+*/ &&
+> > +                 !__get_user(ret_addr, (const u64 __user *)regs->sp))
+>
+> This u64 is wrong, perf_callchain_user() is always native size.
+>
+> Additionally, I suppose you should also add a hunk to
+> perf_callchain_user32(), which is the compat case.
+>
+
+Ah, I misunderstood the purpose of perf_callchain_user32(), and so
+assumed u64 is correct here. I get it now, perf_callchain_user32() is
+compat 32-in-64 case, but the general case can be either 32 or 64 bit.
+Will fix it, thanks!
+
+> > +                     perf_callchain_store(entry, ret_addr);
+> > +     }
+> > +#endif
+> > +
+> >       while (entry->nr < entry->max_stack) {
+> >               if (!valid_user_frame(fp, sizeof(frame)))
+> >                       break;
+> > diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+> > index b503fafb7fb3..a270a5892ab4 100644
+> > --- a/include/linux/uprobes.h
+> > +++ b/include/linux/uprobes.h
+> > @@ -76,6 +76,8 @@ struct uprobe_task {
+> >       struct uprobe                   *active_uprobe;
+> >       unsigned long                   xol_vaddr;
+> >
+> > +     struct arch_uprobe              *auprobe;
+> > +
+> >       struct return_instance          *return_instances;
+> >       unsigned int                    depth;
+> >  };
+> > diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> > index 99be2adedbc0..6e22e4d80f1e 100644
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, =
+struct pt_regs *regs)
+> >       bool need_prep =3D false; /* prepare return uprobe, when needed *=
+/
+> >
+> >       down_read(&uprobe->register_rwsem);
+> > +     current->utask->auprobe =3D &uprobe->arch;
+> >       for (uc =3D uprobe->consumers; uc; uc =3D uc->next) {
+> >               int rc =3D 0;
+> >
+> > @@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, =
+struct pt_regs *regs)
+> >
+> >               remove &=3D rc;
+> >       }
+> > +     current->utask->auprobe =3D NULL;
+> >
+> >       if (need_prep && !remove)
+> >               prepare_uretprobe(uprobe, regs); /* put bp at return */
+> > --
+> > 2.43.0
+> >
