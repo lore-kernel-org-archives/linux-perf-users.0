@@ -1,46 +1,46 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 319C015AADA
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jul 2024 11:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E7715A87B
+	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jul 2024 11:14:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719918839; cv=none; b=JlY6CKJuWG8DfvFX9dMw2RpOIEm+l2++LyRWt7J44dxRjiOhQH9iILDtp0LZn2u1OufDIPQlm140R6uhhj8asSXPKAC8C88AhepIqJmEMgGdI2WRqYmlZEyIQfakh5q0tzM1zwOHaswb7qbv38TbUArffxLg7FZdqRpYHg1TdQg=
+	t=1719918843; cv=none; b=JXax2bCAHVw4BWus5sE1X4Cp71e6XZrxsMYO90Z/4Xfw+EBHF7i864+2anYuC67U7v0IfEVab1LNW4134asRURFORrKnS1EV5Nhu/xpkrb67aC6Qj90ouBXqZfKRz9eMTUCy3ZH3WLbrqnsKLkbfcjOvF3hFdOSZRUCo3oB2PyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719918839; c=relaxed/simple;
-	bh=PrL25RUebW6jn8SHJKggslFKwJna0//mlvG5/8aap+Y=;
+	s=arc-20240116; t=1719918843; c=relaxed/simple;
+	bh=gHzMCEZlww5sK+YPZiTLf7uMK/heidVYtDRbhcNp2BQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=djyRJbMuhyO6lyu6iPW4xh2HBOGJ5d+op0ezzYBjmfz+MI0P8/N0zRzsRVsKpqzCjtggsMAdvpY9swTq9VxsI5c9IxdrTDezeTL031Gxy+Z+bdaiFiwUVbtF1dXUa4tUzQ9P1PWwyip69yaaUKBQT7q8A2TAIaSb3hJ1qza2Dw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QhS7oLGw; arc=none smtp.client-ip=170.10.133.124
+	 MIME-Version; b=Dt2GaOl9OUTbviZAOxBqEd7qLcsCdv7yjiHYuwXfAv4YIFTzntYL1iOnC6M+KQD+u46upk8+SMuzoRZYvKysZPome8ECgKaOM1IYaHLjF/p7lSIu4whL8C/9bB5+dk4Q+WUdHZUWfdJkoqbsIv/YEpncagQy6+tjF+rIVDLdXRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HdRMQV0t; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QhS7oLGw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HdRMQV0t"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1719918837;
+	s=mimecast20190719; t=1719918840;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1G3WywszQ1D1m0NDutCN4kxCqdhaAVnfeCGtxORVbJk=;
-	b=QhS7oLGw6QVLXiaMfWF++hwl7LsOdRd9xbKaX4XEgNvDOFJih497hlNySXn8YRHK8L7mbQ
-	5ZDWFgVDQp7i90enI87F9hE0kAGgQYIctQPQ9xfUzo64FM9MMOE08PafDyoBGDwKkq66K+
-	9xK+/Sw3woXniW98lT5C2aCFeCCpmcE=
+	bh=a661Udc/cBIiV730pqdSaDW//QCWTkixQ0QtSICxOnI=;
+	b=HdRMQV0tImtd+M5gce5Iu8rVKmm/9JUkDIy3+icCFnfMG/QkQT5K7izkmdEk4/2MFmzdpU
+	Hc8BDWlFsIeJi2Fb4UlnDm6CZzvgiTEnS3hKsVDSC2MHmK0UuP88kg3x2sBdH+WoXjZl4+
+	dvCgrK09XuaB4q6gcp4yDsZGOmSx+lI=
 Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-622-QA_90NaLMQWjCO0RWZL3HA-1; Tue,
- 02 Jul 2024 07:13:54 -0400
-X-MC-Unique: QA_90NaLMQWjCO0RWZL3HA-1
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-quHyUNHLNWOY5_WdqJi66A-1; Tue,
+ 02 Jul 2024 07:13:58 -0400
+X-MC-Unique: quHyUNHLNWOY5_WdqJi66A-1
 Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8A1831977300;
-	Tue,  2 Jul 2024 11:13:52 +0000 (UTC)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A265C19560BF;
+	Tue,  2 Jul 2024 11:13:56 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.225.179])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A31BE1956089;
-	Tue,  2 Jul 2024 11:13:49 +0000 (UTC)
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 10A6D1956089;
+	Tue,  2 Jul 2024 11:13:52 +0000 (UTC)
 From: vmolnaro@redhat.com
 To: linux-perf-users@vger.kernel.org,
 	acme@redhat.com,
@@ -50,9 +50,9 @@ Cc: acme@kernel.org,
 	irogers@google.com,
 	atrajeev@linux.vnet.ibm.com,
 	masami.hiramatsu.pt@hitachi.com
-Subject: [PATCH v2 07/11] perf testsuite probe: Add test for line semantics
-Date: Tue,  2 Jul 2024 13:08:46 +0200
-Message-ID: <20240702110849.31904-9-vmolnaro@redhat.com>
+Subject: [PATCH v2 08/11] perf testsuite: Add common output checking helper
+Date: Tue,  2 Jul 2024 13:08:47 +0200
+Message-ID: <20240702110849.31904-10-vmolnaro@redhat.com>
 In-Reply-To: <20240702110849.31904-1-vmolnaro@redhat.com>
 References: <Zn3n0JwfdfFdjbzj@google.com>
  <20240702110849.31904-1-vmolnaro@redhat.com>
@@ -67,80 +67,81 @@ X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
 From: Veronika Molnarova <vmolnaro@redhat.com>
 
-The perf-probe command uses a specific semantics to describe probes.
-Test some patterns that are known to be both valid and invalid if
-they are handled appropriately.
+As a form of validation, it is a common practice to check the outputs
+of commands whether they contain expected patterns or match a certain
+regular expression.
 
-This test is run as a part of perftool-testsuite_probe test case.
+This output checking helper is designed to allow checking stderr output
+of perf commands for unexpected messages, while ignoring messages that
+are known to be harmless, e.g.:
+  "Lowering default frequency rate to \d+\."
+  "\d+ out of order events recorded."
+  etc.
 
 Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
 Signed-off-by: Michael Petlan <mpetlan@redhat.com>
 ---
- .../shell/base_probe/test_line_semantics.sh   | 55 +++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100755 tools/perf/tests/shell/base_probe/test_line_semantics.sh
+ .../shell/common/check_errors_whitelisted.pl  | 51 +++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100755 tools/perf/tests/shell/common/check_errors_whitelisted.pl
 
-diff --git a/tools/perf/tests/shell/base_probe/test_line_semantics.sh b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
+diff --git a/tools/perf/tests/shell/common/check_errors_whitelisted.pl b/tools/perf/tests/shell/common/check_errors_whitelisted.pl
 new file mode 100755
-index 0000000000..d8f4bde0f5
+index 0000000000..c57d355dd7
 --- /dev/null
-+++ b/tools/perf/tests/shell/base_probe/test_line_semantics.sh
-@@ -0,0 +1,55 @@
-+#!/bin/bash
-+
++++ b/tools/perf/tests/shell/common/check_errors_whitelisted.pl
+@@ -0,0 +1,51 @@
++#!/usr/bin/perl
 +# SPDX-License-Identifier: GPL-2.0
 +
-+#
-+#	test_line_semantics of perf_probe test
-+#	Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-+#	Author: Michael Petlan <mpetlan@redhat.com>
-+#
-+#	Description:
-+#
-+#		This test checks whether the semantic errors of line option's
-+#		arguments are properly reported.
-+#
++$whitelist_file = shift;
 +
-+# include working environment
-+. ../common/init.sh
++if (defined $whitelist_file)
++{
++	open (INFILE, $whitelist_file) or die "Checker error: Unable to open the whitelist file: $whitelist_file\n";
++	@regexps = <INFILE>;
++	close INFILE or die "Checker error: Unable to close the whitelist file: $whitelist_file\n";
++}
++else
++{
++	@regexps = ();
++}
 +
-+TEST_RESULT=0
++$max_printed_lines = 20;
++$max_printed_lines = $ENV{TESTLOG_ERR_MSG_MAX_LINES} if (defined $ENV{TESTLOG_ERR_MSG_MAX_LINES});
 +
-+if ! check_kprobes_available; then
-+	print_overall_skipped
-+	exit 0
-+fi
++$quiet = 1;
++$quiet = 0 if (defined $ENV{TESTLOG_VERBOSITY} && $ENV{TESTLOG_VERBOSITY} ge 2);
 +
++$passed = 1;
++$lines_printed = 0;
 +
-+### acceptable --line descriptions
++while (<STDIN>)
++{
++	s/\n//;
 +
-+# testing acceptance of valid patterns for the '--line' option
-+VALID_PATTERNS="func func:10 func:0-10 func:2+10 func@source.c func@source.c:1 source.c:1 source.c:1+1 source.c:1-10"
-+for desc in $VALID_PATTERNS; do
-+	! ( $CMD_PERF probe --line $desc 2>&1 | grep -q "Semantic error" )
-+	CHECK_EXIT_CODE=$?
++	$line_matched = 0;
++	for $r (@regexps)
++	{
++		chomp $r;
++		if (/$r/)
++		{
++			$line_matched = 1;
++			last;
++		}
++	}
 +
-+	print_results 0 $CHECK_EXIT_CODE "acceptable descriptions :: $desc"
-+	(( TEST_RESULT += $? ))
-+done
++	unless ($line_matched)
++	{
++		if ($lines_printed++ < $max_printed_lines)
++		{
++			print "Line did not match any pattern: \"$_\"\n" unless $quiet;
++		}
++		$passed = 0;
++	}
++}
 +
-+
-+### unacceptable --line descriptions
-+
-+# testing handling of invalid patterns for the '--line' option
-+INVALID_PATTERNS="func:foo func:1-foo func:1+foo func;lazy\*pattern"
-+for desc in $INVALID_PATTERNS; do
-+	$CMD_PERF probe --line $desc 2>&1 | grep -q "Semantic error"
-+	CHECK_EXIT_CODE=$?
-+
-+	print_results 0 $CHECK_EXIT_CODE "unacceptable descriptions :: $desc"
-+	(( TEST_RESULT += $? ))
-+done
-+
-+
-+# print overall results
-+print_overall_results "$TEST_RESULT"
-+exit $?
++exit ($passed == 0);
 -- 
 2.43.0
 
