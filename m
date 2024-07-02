@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129681DA32A;
-	Tue,  2 Jul 2024 23:51:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 276841DA32A;
+	Tue,  2 Jul 2024 23:51:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719964296; cv=none; b=pNXU74MwmJfPO4IC1ZqIkzIvU/czMrGwpeUdx+VgqFum1JkWlJ/OCZkj2UvBUxiO4QNX5q04gFIsz44kSyqGYBWPtcZsfCU2j2vkIEllt35nwU+i6Byu+U8FsmoaMzqC0aZr1yW9voNf4bs+E/sJY5JhscEIMgn8B1jBvEIOn4U=
+	t=1719964318; cv=none; b=gE98a3dScspoVxzvu1a3n5/cDwvy9umxzgjC6XCL58wlpz1ATRgCMAv1tGNDvS+jI4nl1TawDoOe96YKPFkZ+7lZ78UbBakOI1nMsLTpYng+UuSjWkNL0zHON+Gj4+0ZhG+m2z2Ijui8a7fj4no3MapUwZ1LfeeoW/Ruq2VkVlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719964296; c=relaxed/simple;
-	bh=nHz1v+q1b/0YjOK5wXThuki6AqlPU0j88B9fgnPTwbc=;
+	s=arc-20240116; t=1719964318; c=relaxed/simple;
+	bh=xtGEMklBASK9K0okBDOej3qK+gT+9/BIodo+1smdjCA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U3k/kcsn1vg045ygX7VK5FnZD8WeAR4XUus5DEBI/XACRffchWLSJz4Fu79jjgQRNhvLXhCA86+I4UyNPFBBb3GtK4ZqRyHzhisjfkSjWS7CLejGeTxMkAYqH7UeaBKSArqmq2x6d5AU/nwcTaQTynk4U9lhZW16qZyLmVWrrfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POYSzhvo; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HVf8p3JKjVVbzrjJMPJAjaPKsI/ILbSPd2Q1zH/d5G1YWpfDhiST2HSAzYpPriGFZsNcPpuhWzvC9zYiHfpckA9JKgSd73Dqjg77UIy5x4UuOl/J5WR/Y7/a+fSKOoQs8/O5kIujD+KKJNLqZwawSNKyakwtzrjSXiJ91EP1Tok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jb/HnJBB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POYSzhvo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774DEC116B1;
-	Tue,  2 Jul 2024 23:51:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jb/HnJBB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B1AEC116B1;
+	Tue,  2 Jul 2024 23:51:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719964295;
-	bh=nHz1v+q1b/0YjOK5wXThuki6AqlPU0j88B9fgnPTwbc=;
+	s=k20201202; t=1719964318;
+	bh=xtGEMklBASK9K0okBDOej3qK+gT+9/BIodo+1smdjCA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=POYSzhvokRm1+Seu5OWbvFI0887OQO7wkAHLFB/bs4uT40FVL4m73PGnZMuyKFTAH
-	 xlclxCPB7hqAXTgg9lKYpmY435GWUvmlic7us6q4mARf4fa5+iKTNbmRWs6m63kqKz
-	 wvnzjA3kT4VuKGDwZxHBM7P3uZY0apDhujjz9BAOlLkgPJ8SKPVgF7AIc2jcBG1aW8
-	 nvHbfCl/+NGo3CL3V75Wy/E9R+6weH7Ets50R7wV4oZnznnEzJQjyIajwD2EIoyzRI
-	 GjZ3RkF/21nG4WC54eCTzYS3vOVtXD7lQijB3VJ205Hz6CPZcK/IRaxI0kddm7bQNm
-	 4LLLlzocB+TtA==
-Date: Tue, 2 Jul 2024 16:51:34 -0700
+	b=Jb/HnJBBDEdpZiTmtQAk61Kx2Ohuufbxox3fv5JTpJ+v0sJ/RcZt7JCWNKfXROERb
+	 A2/Sf1N9tG8rdadPsCJO6FESq5C286nF+7jyy+NV8inVWbENWPIGSz+U7sKpv7Rmel
+	 THBM98c0ZjSVR/MZYoBcljxNHV2apRXtAqDdjhTLAs/VgmverZYLo0lAc3QwWTYW2/
+	 hE/CC2emDPLEBn8T4ntA1ju+NMPbBr1L6m+QIRWgkGr+2EhzNEn+xkPYyQ9DNKwVFZ
+	 3F/RaWeRTrlHqS+HiK4SsgS+6XJ/uWS63EcEsd05SqzzfhXzxKWA6uifikbsnOc1eJ
+	 VK8CqhOMLVnuw==
+Date: Tue, 2 Jul 2024 16:51:56 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
+To: Chen Ni <nichen@iscas.ac.cn>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
 	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
 	kan.liang@linux.intel.com, james.clark@arm.com,
-	linux-perf-users@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH] perf pmu: remove one dupliacte ';'
-Message-ID: <ZoSShvCcFSQPQvzJ@google.com>
-References: <20240701030339.56424-1-xu.yang_2@nxp.com>
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf pmu: Remove unneeded semicolon
+Message-ID: <ZoSSnBBXr5kb_zv3@google.com>
+References: <20240701034300.558886-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,14 +45,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240701030339.56424-1-xu.yang_2@nxp.com>
+In-Reply-To: <20240701034300.558886-1-nichen@iscas.ac.cn>
 
 Hello,
 
-On Mon, Jul 01, 2024 at 11:03:39AM +0800, Xu Yang wrote:
-> Remove one dupliacte ';' in function perf_pmu__num_events().
+On Mon, Jul 01, 2024 at 11:43:00AM +0800, Chen Ni wrote:
+> Remove unneeded semicolon.
+> This is detected by coccinelle.
 > 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> Fixes: d9c5f5f94c2d ("perf pmu: Count sys and cpuid JSON events separately")
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
 
 Thanks for the fix but it's already fixed.
 
@@ -65,10 +67,10 @@ Namhyung
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-> index 888ce9912275..d8726ec5368d 100644
+> index c94a91645b21..884eb23445e4 100644
 > --- a/tools/perf/util/pmu.c
 > +++ b/tools/perf/util/pmu.c
-> @@ -1765,7 +1765,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+> @@ -1773,7 +1773,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
 >  	size_t nr;
 >  
 >  	pmu_aliases_parse(pmu);
@@ -78,5 +80,5 @@ Namhyung
 >  	if (pmu->cpu_aliases_added)
 >  		 nr += pmu->cpu_json_aliases;
 > -- 
-> 2.34.1
+> 2.25.1
 > 
