@@ -1,44 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A26FD12F37B;
-	Tue,  2 Jul 2024 23:39:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEAD17DA03;
+	Tue,  2 Jul 2024 23:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719963545; cv=none; b=sAl1iEs7qhqIqtxQkIp5lzIVluQozApJo+3ahH7cgXt97hqowEuX0ITpvbLRmu44J2AUrDH0JmK4/GUk2DBOerEyFYQtJCa8QrL8hYuh5DXJ47Ch9GQnMRG27HtJyW2r9184ph/1zBcPROtPSrg7JiSKrMH/v9cA5rGEYPzKaU4=
+	t=1719963649; cv=none; b=VjpBynwDBuRVgtmSIkEPlmIW2bmopgL6LQnMQl38KK13TBeVCBn1LvZnbcARSDRq/GF/AWJcSwPXFHFf2gt+G70v22t1aqCD7K8JwRxnqtt2qMhiOaUv9L9Qji+kLhgJ3DWrAgufy6p65ClSNI3CWj3QXHv2UYfA2FwyjcwKSd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719963545; c=relaxed/simple;
-	bh=UjxnxLhiGA9d+TthrYHIqBGx+X7+t17Yzvu+fEUiXZI=;
+	s=arc-20240116; t=1719963649; c=relaxed/simple;
+	bh=r6NI3gRk8PvoRVepVbEFbr7nnjKYdoij5IyeZd/5+XU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XPZJc+0HyuNxavOfA+yQL7Dmam3Cj2iwmQdpcVYcBhPr8Oipkiui+Sxrxfaq4RvEdxIOtdzV7p16hKA1qJ80p0XGY2deRQn+Sm3n7wq6rDoJcl8piEuYCM8z5wOfmScELjUWrfk32HaaEkt8Wwdy8n+cxQHZChSbLCZGLYUo3HE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cHx74wJG; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=QYekWS69PtvW/qCBcsoqytZ4Gu2+7l7awjy0bxSpohxOWXkvHQf7DUTViolFDqZjV3tthhniR4QrK1scsefb5uWDbTQ/99K4h/+dGGnWio1z5gmBzbmwQocCmdxX0va4etWM9f/j9PQXCwJK6LKGUQS2cNbMGuXrLO4c02iZ/go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kyFhom0u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cHx74wJG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B950EC116B1;
-	Tue,  2 Jul 2024 23:39:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kyFhom0u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5053AC4AF0D;
+	Tue,  2 Jul 2024 23:40:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719963545;
-	bh=UjxnxLhiGA9d+TthrYHIqBGx+X7+t17Yzvu+fEUiXZI=;
+	s=k20201202; t=1719963648;
+	bh=r6NI3gRk8PvoRVepVbEFbr7nnjKYdoij5IyeZd/5+XU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=cHx74wJGAG7QAn2Ezj2m4UcuEenAq+rfg1ploYBfnJWQ6i7XcgEEktEd6g2e5gltr
-	 +49O5TMnpiAIJBRNterCsrInXLiI22dfCYFd7RSCtj3VGhl16mICOjCs0ST60zIQR7
-	 mlZONVtfOXuLACTF+OaHmTAGFVOCD7iVDgfXZE8PpfOSyHdIg8UcSKm+123AVDIOKT
-	 W2Sq3aRySY4qq+9L4OIhId4dhhiXr85ajQiLfotTjXB7/rQ/899RmXWtvPNnOHgbHx
-	 ZCk66pab69RChBZhqtd/kRHXWyJtMRS5UXpfwqZ++Jp+MNgvbPL4rdqxdtBf08jSrV
-	 TvYwwq1ke9MJA==
-Date: Tue, 2 Jul 2024 16:39:02 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org,
-	mingo@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org, rihams@fb.com,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack
- traces captured in uprobe
-Message-ID: <20240702233902.p42gfhhnxo2veemf@treble>
-References: <20240702171858.187562-1-andrii@kernel.org>
- <20240702233554.slj6kh7dn2mc2w4n@treble>
+	b=kyFhom0uD7GC8yV1UwEOtghiO75l38Bm2NAd0AxMh78KM7zMwK3th806oQv8ZILgE
+	 CBcKOOzSN+i+nKx75Vccmu8JYv0UtrfVk5h3kwX48EeTq3x3eGu7r/cotSOSNrE4zq
+	 pZ+TJOQ1X/lXymtMlD1lNa4/j3lzm7dKfucl5ucAMemrgLWlGTvluc7T4Sn5CnUTNG
+	 WU2Okw0Gd305WApQSPAf8wtDC2vvSYj48qLYMgpp2mUMYySB6tIaPt6ua21yIQYkJD
+	 2TFbdwnUlTck+oLFzbA/0sps42ojnmuZjZS9/BWwyEaLeegzfXVQ2J73lcQviPUMfQ
+	 yRSITSdUogLOg==
+Date: Tue, 2 Jul 2024 16:40:46 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Guilherme Amadio <amadio@gentoo.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] tools: Make pkg-config dependency checks usable
+ by other tools
+Message-ID: <ZoSP_vFMVl83pxES@google.com>
+References: <20240628202608.3273329-1-amadio@gentoo.org>
+ <20240628203432.3273625-1-amadio@gentoo.org>
+ <20240628203432.3273625-3-amadio@gentoo.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,46 +50,76 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240702233554.slj6kh7dn2mc2w4n@treble>
+In-Reply-To: <20240628203432.3273625-3-amadio@gentoo.org>
 
-On Tue, Jul 02, 2024 at 04:35:56PM -0700, Josh Poimboeuf wrote:
-> On Tue, Jul 02, 2024 at 10:18:58AM -0700, Andrii Nakryiko wrote:
-> > When tracing user functions with uprobe functionality, it's common to
-> > install the probe (e.g., a BPF program) at the first instruction of the
-> > function. This is often going to be `push %rbp` instruction in function
-> > preamble, which means that within that function frame pointer hasn't
-> > been established yet. This leads to consistently missing an actual
-> > caller of the traced function, because perf_callchain_user() only
-> > records current IP (capturing traced function) and then following frame
-> > pointer chain (which would be caller's frame, containing the address of
-> > caller's caller).
-> > 
-> > So when we have target_1 -> target_2 -> target_3 call chain and we are
-> > tracing an entry to target_3, captured stack trace will report
-> > target_1 -> target_3 call chain, which is wrong and confusing.
-> > 
-> > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-> > (`push %ebp` on 32-bit architecture) instruction being traced. Given
-> > entire kernel implementation of user space stack trace capturing works
-> > under assumption that user space code was compiled with frame pointer
-> > register (%rbp/%ebp) preservation, it seems pretty reasonable to use
-> > this instruction as a strong indicator that this is the entry to the
-> > function. In that case, return address is still pointed to by %rsp/%esp,
-> > so we fetch it and add to stack trace before proceeding to unwind the
-> > rest using frame pointer-based logic.
-> > 
-> > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
++CC Steve and linux-trace-kernel list.
+
+Thanks,
+Namhyung
+
+On Fri, Jun 28, 2024 at 10:34:29PM +0200, Guilherme Amadio wrote:
+> Other tools, in tools/verification and tools/tracing, make use of
+> libtraceevent and libtracefs as dependencies. This allows setting
+> up the feature check flags for them as well.
 > 
-> Should it also check for ENDBR64?
+> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+> ---
+>  tools/build/Makefile.feature | 20 ++++++++++++++++++++
+>  tools/perf/Makefile.config   | 10 ----------
+>  2 files changed, 20 insertions(+), 10 deletions(-)
 > 
-> When compiled with -fcf-protection=branch, the first instruction of the
-> function will almost always be ENDBR64.  I'm not sure about other
-> distros, but at least Fedora compiles its binaries like that.
-
-BTW, there are some cases (including leaf functions and some stack
-alignment sequences) where a "push %rbp" can happen inside a function.
-Then it would presumably add a bogus trace entry.  Are such false
-positives ok?
-
--- 
-Josh
+> diff --git a/tools/build/Makefile.feature b/tools/build/Makefile.feature
+> index 1e2ab148d5db..79a03e034073 100644
+> --- a/tools/build/Makefile.feature
+> +++ b/tools/build/Makefile.feature
+> @@ -149,6 +149,26 @@ FEATURE_DISPLAY ?=              \
+>  #
+>  FEATURE_GROUP_MEMBERS-libbfd = libbfd-liberty libbfd-liberty-z
+>  
+> +#
+> +# Declare list of feature dependency packages that provide pkg-config files.
+> +#
+> +FEATURE_PKG_CONFIG ?=           \
+> +         libtraceevent          \
+> +         libtracefs
+> +
+> +feature_pkg_config = $(eval $(feature_pkg_config_code))
+> +define feature_pkg_config_code
+> +  ifeq ($(shell $(PKG_CONFIG) --exists $(1) 2>&1 1>/dev/null; echo $$?),0)
+> +    FEATURE_CHECK_CFLAGS-$(1) := $(shell $(PKG_CONFIG) --cflags $(1))
+> +    FEATURE_CHECK_LDFLAGS-$(1) := $(shell $(PKG_CONFIG) --libs $(1))
+> +  endif
+> +endef
+> +
+> +# Set FEATURE_CHECK_(C|LD)FLAGS-$(package) for packages using pkg-config.
+> +ifneq ($(PKG_CONFIG),)
+> +  $(foreach package,$(FEATURE_PKG_CONFIG),$(call feature_pkg_config,$(package)))
+> +endif
+> +
+>  # Set FEATURE_CHECK_(C|LD)FLAGS-all for all FEATURE_TESTS features.
+>  # If in the future we need per-feature checks/flags for features not
+>  # mentioned in this list we need to refactor this ;-).
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index ba51ecfca02b..23f2b54d8ee6 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -187,16 +187,6 @@ ifneq ($(NO_LIBTRACEEVENT),1)
+>    dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
+>    endif
+>  endif
+> -ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
+> -  # for linking with debug library, run like:
+> -  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
+> -  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
+> -  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
+> -endif
+> -ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
+> -  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
+> -  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
+> -endif
+>  
+>  FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
+>  # include ARCH specific config
+> -- 
+> 2.45.2
+> 
