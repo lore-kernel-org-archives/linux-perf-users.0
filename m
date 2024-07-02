@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19FDA1DA312
-	for <linux-perf-users@vger.kernel.org>; Tue,  2 Jul 2024 23:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 129681DA32A;
+	Tue,  2 Jul 2024 23:51:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719964044; cv=none; b=fz1BzeNCzd5eveNFpn+sJGvvQvuM2J9bAxuIcOZxlw0RKgf9Mxh7BByBUWj4eWcHk0lkFgTlG0KeDFeg8SeB0E5D230mfWpHmXB28C39eIgIjSKeXZOCqfQVK6IRT/deCuhmbd0ySPsdyMpBA+/DdM2kFuKp7koOPKOMv+hTHKo=
+	t=1719964296; cv=none; b=pNXU74MwmJfPO4IC1ZqIkzIvU/czMrGwpeUdx+VgqFum1JkWlJ/OCZkj2UvBUxiO4QNX5q04gFIsz44kSyqGYBWPtcZsfCU2j2vkIEllt35nwU+i6Byu+U8FsmoaMzqC0aZr1yW9voNf4bs+E/sJY5JhscEIMgn8B1jBvEIOn4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719964044; c=relaxed/simple;
-	bh=+EoE+E6pjz5BEuv7CHnzADCOs2bA5V91n+DzMpCWAVg=;
+	s=arc-20240116; t=1719964296; c=relaxed/simple;
+	bh=nHz1v+q1b/0YjOK5wXThuki6AqlPU0j88B9fgnPTwbc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EOezsxOW/qLRYv/aYwhiZ2li+oZCFgbwB9pKrw3Ny8gzC59mvZbqmiI0DJtTwA/TjOqNpYhI1BWl7VA3f0HyzSKd7Ot+Dt5iCSHKMOc0Vd6C/ZfLgy3bDN2Sa0k+fRHocVd8eYcX/f3dbC+9rQSn60RGlObLw7MwXyr7HOEwmkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVUjVCaj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=U3k/kcsn1vg045ygX7VK5FnZD8WeAR4XUus5DEBI/XACRffchWLSJz4Fu79jjgQRNhvLXhCA86+I4UyNPFBBb3GtK4ZqRyHzhisjfkSjWS7CLejGeTxMkAYqH7UeaBKSArqmq2x6d5AU/nwcTaQTynk4U9lhZW16qZyLmVWrrfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=POYSzhvo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVUjVCaj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B356C116B1;
-	Tue,  2 Jul 2024 23:47:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="POYSzhvo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 774DEC116B1;
+	Tue,  2 Jul 2024 23:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719964043;
-	bh=+EoE+E6pjz5BEuv7CHnzADCOs2bA5V91n+DzMpCWAVg=;
+	s=k20201202; t=1719964295;
+	bh=nHz1v+q1b/0YjOK5wXThuki6AqlPU0j88B9fgnPTwbc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SVUjVCajjVdaoDxYBybddmpspz+E6/KAvxFfsLeMZUnBk9fQunQLtT+0+XKrAc4SW
-	 PJtPsoRzHsHVgWD8TrWHK9Uh/WB8uzl821d7S8B2ikr9H/w9Y4WrtzeH4LDocD0Fta
-	 pi63spdZPgjDAfO/cUW2LsICN+o/dbiFzW77OjgiIBJ4mZ7fPoUoWVOgvxPssI1Ppp
-	 h+AFYfjFQV2NjHlIURattXqVCtcHEuxKhr6xMbqFBtSlz7U+3RH/3+ASBAG4RXBhpJ
-	 8YpP0ixNvMHjDtVXbhEmJSlREtvAh7fdx2W5yk4mwS/buMWUrssZuGA9fq1znxX9gU
-	 tMjH6sLJQwvIA==
-Date: Tue, 2 Jul 2024 16:47:21 -0700
+	b=POYSzhvokRm1+Seu5OWbvFI0887OQO7wkAHLFB/bs4uT40FVL4m73PGnZMuyKFTAH
+	 xlclxCPB7hqAXTgg9lKYpmY435GWUvmlic7us6q4mARf4fa5+iKTNbmRWs6m63kqKz
+	 wvnzjA3kT4VuKGDwZxHBM7P3uZY0apDhujjz9BAOlLkgPJ8SKPVgF7AIc2jcBG1aW8
+	 nvHbfCl/+NGo3CL3V75Wy/E9R+6weH7Ets50R7wV4oZnznnEzJQjyIajwD2EIoyzRI
+	 GjZ3RkF/21nG4WC54eCTzYS3vOVtXD7lQijB3VJ205Hz6CPZcK/IRaxI0kddm7bQNm
+	 4LLLlzocB+TtA==
+Date: Tue, 2 Jul 2024 16:51:34 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
-Message-ID: <ZoSRiW1aVsV-xrur@google.com>
-References: <20240628064236.1123851-1-adityag@linux.ibm.com>
- <20240628064236.1123851-2-adityag@linux.ibm.com>
- <Zn8C-XpC1beIRN8t@google.com>
- <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
+To: Xu Yang <xu.yang_2@nxp.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, james.clark@arm.com,
+	linux-perf-users@vger.kernel.org, imx@lists.linux.dev
+Subject: Re: [PATCH] perf pmu: remove one dupliacte ';'
+Message-ID: <ZoSShvCcFSQPQvzJ@google.com>
+References: <20240701030339.56424-1-xu.yang_2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,66 +45,38 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
+In-Reply-To: <20240701030339.56424-1-xu.yang_2@nxp.com>
 
-On Sun, Jun 30, 2024 at 05:07:10PM +0530, Aditya Gupta wrote:
-> Hi Namhyung,
-> 
-> > > +static const char * const check_subcommands[] = { "feature", NULL };
-> > > +static struct option check_options[] = {
-> > > +	OPT_BOOLEAN('q', "quiet", &quiet, "do not show any warnings or messages"),
-> > > +	OPT_END()
-> > > +};
-> > > +static struct option check_feature_options[] = { OPT_END() };
-> > 
-> > It should be OPT_PARENT(check_options) instead of OPT_END().
-> 
-> I did not know that. Thank you.
-> 
-> > 
-> > > +
-> > > +static const char *check_usage[] = {
-> > > +	"perf check [<subcommand>] [<options>]",
-> > 
-> > You can leave this NULL and parse_options_subcommand() will fill the
-> > first element automatically using check_subcommands[].
-> > 
-> > Please see other commands like 'perf sched' how to handle this.
-> 
-> It doesn't seem to be working, hence added that check_usage in v12
-> itself.
-> 
->     $ ./perf check
-> 	Usage: (null)
-> 
->     -q, --quiet           do not show any warnings or messages
-> 
->     $ ./perf sched
-> 	Usage: (null)
-> 
->     -D, --dump-raw-trace  dump raw trace in ASCII
->     -f, --force           don't complain, do it
->     -i, --input <file>    input file name
->     -v, --verbose         be more verbose (show symbol address, etc)
-> 
-> Debugging it further, this behaviour was changed in
-> 
->     commit 230a7a71f9221: libsubcmd: Fix parse-options memory leak
-> 
-> Where the generated usage string is deallocated, and usage[0] string is
-> reassigned as NULL.
+Hello,
 
-Ok, thanks for the investigation.  It's a bug then.
-
+On Mon, Jul 01, 2024 at 11:03:39AM +0800, Xu Yang wrote:
+> Remove one dupliacte ';' in function perf_pmu__num_events().
 > 
-> If expected behaviour was allocation of the usage string, it should be
-> okay for the buffer to not get deallocated for the entirety of the perf
-> process's lifetime right ?
+> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
 
-Right, it should not deallocate it in the parse_options_subcommand().
-I think we need to change the exit path of the commands to free the
-usage[0] manually.
+Thanks for the fix but it's already fixed.
 
-Thanks,
+https://lore.kernel.org/linux-perf-users/20240628053049.44521-1-yang.lee@linux.alibaba.com/
+
 Namhyung
 
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 888ce9912275..d8726ec5368d 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1765,7 +1765,7 @@ size_t perf_pmu__num_events(struct perf_pmu *pmu)
+>  	size_t nr;
+>  
+>  	pmu_aliases_parse(pmu);
+> -	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;;
+> +	nr = pmu->sysfs_aliases + pmu->sys_json_aliases;
+>  
+>  	if (pmu->cpu_aliases_added)
+>  		 nr += pmu->cpu_json_aliases;
+> -- 
+> 2.34.1
+> 
