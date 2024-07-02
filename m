@@ -1,29 +1,29 @@
 Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B4F97EEE7;
-	Tue,  2 Jul 2024 04:19:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A9F84DE9;
+	Tue,  2 Jul 2024 04:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719893949; cv=none; b=TF1QjNSpwEv3wY5gOc7ODqNImMIm9swRa6GB7eGKOJFejiSecwmdy7iUjHO/B89ki/711Kxt+A+xLTWnWLOz+yuud353gm8JwS/7fXo0nyv8mdVrxcR7MoSMmMaxCBrhI0P7egpmjzObAuxSDDiHpp/quuqle23SRqWzpijr2fU=
+	t=1719893949; cv=none; b=THS49XmRmFe/wwqWYhtgfd+1eH7O5sQzKuJvR9VNuEtyOl3qY6fNiu0+KM1Inv01Dw7FigtwXl6fiep53ShwBM13DhjI+jHDxZ8C9B00IXMAfuWYqTeyGcMglWlrNiegajg7uliaIfBqqf7WUPXmBgFSYyxLCDp3jHjuFksMlRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1719893949; c=relaxed/simple;
-	bh=6KnXP5/kVbBhp4xtOY0o8D1oZBIYLXMx71oUKcb6ZK4=;
+	bh=BnKwtgbDOBy6xNe23GdjLGT6tsNsyI/9xyn0n4di9lQ=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=DqFiCazQe27z+rw7ed68Vh7nU8gvwozv+fyIhJvkudf6+ncpYysGO6IviDoT81zFMxRxj1Jp7/FJbYPu4zIg9w+iOakhmoY4gP21LGtoCAMvsFWkOL7q9D6kB5BspSJ7w9j4JrGmpnAqztsdS5Ki38wZL2omN41vkfe4FnVyWUM=
+	 MIME-Version:Content-Type; b=qgg3j7BW5Is8ljOMs9c2W1m6jsy5sn97NkY/jL1ublAoteiVtoDCNeVEPw7Om1cpuWpWz5nsVLd3JCE2WhCbwW/1jorxydyF3TzNBMGAOaQUcnAd20Yp7miSOGXchI+xhfAV8YDsKUF/WYusY9I8VqOKtnmGkqadWJxlCXcilG8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WCqPb61qLzdfvf;
-	Tue,  2 Jul 2024 12:17:23 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WCqRH1YMkznYnM;
+	Tue,  2 Jul 2024 12:18:51 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (unknown [7.221.188.204])
-	by mail.maildlp.com (Postfix) with ESMTPS id 646271403D2;
-	Tue,  2 Jul 2024 12:19:00 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 266FC18007E;
+	Tue,  2 Jul 2024 12:19:06 +0800 (CST)
 Received: from M910t.huawei.com (10.110.54.157) by
  kwepemd100011.china.huawei.com (7.221.188.204) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 2 Jul 2024 12:18:58 +0800
+ 15.2.1258.34; Tue, 2 Jul 2024 12:19:04 +0800
 From: Changbin Du <changbin.du@huawei.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
@@ -36,9 +36,9 @@ CC: Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
 	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<llvm@lists.linux.dev>, Hui Wang <hw.huiwang@huawei.com>, Changbin Du
 	<changbin.du@huawei.com>
-Subject: [PATCH v5 4/8] perf: build-id: name debugging vdso as "debug"
-Date: Tue, 2 Jul 2024 12:18:33 +0800
-Message-ID: <20240702041837.5306-5-changbin.du@huawei.com>
+Subject: [PATCH v5 8/8] perf buildid-cache: recognize vdso when adding files
+Date: Tue, 2 Jul 2024 12:18:37 +0800
+Message-ID: <20240702041837.5306-9-changbin.du@huawei.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240702041837.5306-1-changbin.du@huawei.com>
 References: <20240702041837.5306-1-changbin.du@huawei.com>
@@ -53,29 +53,63 @@ Content-Type: text/plain
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemd100011.china.huawei.com (7.221.188.204)
 
-As normal objects, we will add debugging vdso elf to build-id cache later.
-Here we name the debugging one as "debug".
+Identify vdso by file name matching. The vdso objects have name
+as vdso[32,64].so[.dbg].
+
+$ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
+
+Without this change, adding vdso using above command actually will never
+be used.
 
 Signed-off-by: Changbin Du <changbin.du@huawei.com>
 ---
- tools/perf/util/build-id.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/builtin-buildid-cache.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 83a1581e8cf1..15530af2bad9 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -259,8 +259,8 @@ static bool build_id_cache__valid_id(char *sbuild_id)
- static const char *build_id_cache__basename(bool is_kallsyms, bool is_vdso,
- 					    bool is_debug)
- {
--	return is_kallsyms ? "kallsyms" : (is_vdso ? "vdso" : (is_debug ?
--	    "debug" : "elf"));
-+	return is_kallsyms ? "kallsyms" : (is_debug ? "debug" : (is_vdso ?
-+		"vdso" : "elf"));
+diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+index b0511d16aeb6..8edea9044a65 100644
+--- a/tools/perf/builtin-buildid-cache.c
++++ b/tools/perf/builtin-buildid-cache.c
+@@ -172,6 +172,30 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
+ 	return 0;
  }
  
- char *__dso__build_id_filename(const struct dso *dso, char *bf, size_t size,
++static bool filename_is_vdso(const char *filename)
++{
++	char *fname, *bname;
++	static const char * const vdso_names[] = {
++		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
++	};
++
++	fname = strdup(filename);
++	if (!fname) {
++		pr_err("no mememory\n");
++		return false;
++	}
++
++	bname = basename(fname);
++	if (!bname)
++		return false;
++
++	for (unsigned int i = 0; i < ARRAY_SIZE(vdso_names); i++) {
++		if (!strncmp(bname, vdso_names[i], strlen(vdso_names[i])))
++			return true;
++	}
++	return false;
++}
++
+ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
+ {
+ 	char sbuild_id[SBUILD_ID_SIZE];
+@@ -189,7 +213,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
+ 
+ 	build_id__sprintf(&bid, sbuild_id);
+ 	err = build_id_cache__add_s(sbuild_id, filename, nsi,
+-				    false, false);
++				    false, filename_is_vdso(filename));
+ 	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
+ 		 err ? "FAIL" : "Ok");
+ 	return err;
 -- 
 2.34.1
 
