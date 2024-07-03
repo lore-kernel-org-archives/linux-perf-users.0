@@ -1,38 +1,49 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484801DA316
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 21:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B22BB13;
+	Wed,  3 Jul 2024 21:23:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720041054; cv=none; b=fmS1uYqkFvp7GtlEmPKmrHCa6W9qrYXPehfv7YRvCsK+Q5Z5EOFx/m5i49UtWGI8HxslzJFAu8DQP6QgysnVDFPZ9YW2pOmjp90dFRO7ZKcz1drrmYkedOKn6l5Ge0b3gA4/Mc2u8nU5C1qdLOPESw++byxXoZwBAnrKTvLTNU4=
+	t=1720041792; cv=none; b=UWT4sVsXmjdkvtIbtkgW1UhaJdJUrIz/7q7PMYuOTw3ct2pbUX1CsX1YmOV40A7Bfg9oTPgccUOYOS0tehuXgf6/lsAyKT7g9cLyIaBqPX6DVSBkGJibzNu9ELtFByg/6csENg8HSw0+mo8ASA8foKFd0FqgvHUY8P+z1dHmbsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720041054; c=relaxed/simple;
-	bh=9XYSmZ0dmJzYFTcwPlbeKw4EEJX2ZfmgPlVC3Uz2LHo=;
+	s=arc-20240116; t=1720041792; c=relaxed/simple;
+	bh=2ieoZ2IlCs+IyedLZuRseH/oLdEXmhc7vi+zgmr5NVk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R4SrsmS+JNHBt+WJpz9yddIm/tF6wAHTdtN3rqmMbQS+L1GFAaQRZy8jKT7Qk45MCyOqzKN0Sw4vkIX0REoiczxOBWxeoG9p39UwEGDVOHzHqtZF+BIaLDdXJVcsOkZjit8oXbeJURaBRCs/SMVwlDnZ/VE4UheUQHVJUINnXKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CB7EdwL7; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jd6roVsLa47BwlV4SD+CwLEnbcP0t8ck+oJ6zY88XoDih4uet17VOC0T2ARki8w+3j2enuSvAqE/nZNJTZNZBkVvRizbj5u9G6Ffra2A4lgeXe1h2jkyWwEtJR0PrTAqCGzkGo6YOED1AsUQDAudKMuBPHNXWOivl4H2Zy0KNrw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGBKI8ib; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CB7EdwL7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E109C2BD10;
-	Wed,  3 Jul 2024 21:10:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGBKI8ib"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E08BC2BD10;
+	Wed,  3 Jul 2024 21:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720041053;
-	bh=9XYSmZ0dmJzYFTcwPlbeKw4EEJX2ZfmgPlVC3Uz2LHo=;
+	s=k20201202; t=1720041792;
+	bh=2ieoZ2IlCs+IyedLZuRseH/oLdEXmhc7vi+zgmr5NVk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CB7EdwL7JuXEgIuWTgTL5u38pak0a005edxrvewERySVMGtg6/uVBBLi7O07LVoTl
-	 6HP2GN+aQarqFNE61oOC1uzzBi5QegNY0VJ1HE8Q/wKZbq5/ykAjfzEY6Tf/WDQ5SQ
-	 GYWZxHKYg0ASdyCTy2B0rrEHWORjELQHtTK1E0JDiL8tf4uQaDYrLk5/7XpVtryTZP
-	 VlHBnOENVpvbLdOUcCQjUwSXjSEMIMBLjwAhLJLzVKxUDjkpMFxdLs0qjRmx3X2lvE
-	 5oHx1rn4EDGlrCbSyP6WFLHyy6jGUo2SeA7RaeTYVhM1gM1PrKOdkjYV2CyrxwSHw0
-	 Dn26o1ng606SQ==
-Date: Wed, 3 Jul 2024 14:10:52 -0700
+	b=GGBKI8ib5cnvhX/bvlSxYcgnO+YYsZKX7N7OSjy1XJ3glGy+5UzyI6OxXYLr4WRdl
+	 S+7L33X6rlYouoHHrV+AnR64KShEKFLh5ge6KdxUPxVDrLdineoj0NMzFCqZtW84xE
+	 fXhfxBsoKRis985us7/H+lN3MQwDst17PTe6j0DyyPI+gRceicUNdmy+EWy8kBQVLk
+	 MHsz07T4Vz4vUBQfNZObIN9FIMq94SAXGJQF9N52eEIPaKhU2NuNSp1n5KtKpK6j+9
+	 T2HsmSjLi065UDWmiNiUywdaTNYVyzhZrqpIVx2MBUibQYF+Dgl32n2Yli9Aea1Him
+	 S2HcnNGydyFGA==
+Date: Wed, 3 Jul 2024 14:23:10 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] perf script: Fix perf script -F +metric
-Message-ID: <ZoW-XMSCOrLaRoXj@google.com>
-References: <20240703012047.178561-1-ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] perf test: Display number of remaining tests
+Message-ID: <ZoXBPrw0kOtgLu98@google.com>
+References: <20240701044236.475098-1-irogers@google.com>
+ <20240701044236.475098-3-irogers@google.com>
+ <ZoTIDCXKZw0bnthC@google.com>
+ <CAP-5=fUAeVL57Q14hL=girAeNev-xjgz0Wv5Vpc_OMwXoouoTQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,103 +52,139 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240703012047.178561-1-ak@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUAeVL57Q14hL=girAeNev-xjgz0Wv5Vpc_OMwXoouoTQ@mail.gmail.com>
 
-Hello,
+On Tue, Jul 02, 2024 at 09:30:44PM -0700, Ian Rogers wrote:
+> On Tue, Jul 2, 2024 at 8:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > On Sun, Jun 30, 2024 at 09:42:36PM -0700, Ian Rogers wrote:
+> > > Before polling or sleeping to wait for a test to complete, print out
+> > > ": Running (<num> remaining)" where the number of remaining tests is
+> > > determined by iterating over the remaining tests and seeing which
+> > > return true for check_if_command_finished. After the delay, erase the
+> > > line and either update it with the new number of remaining tests, or
+> > > print the test's result. This allows a user to know a test is running
+> > > and in parallel mode (default) how many of the tests are waiting to
+> >
+> > It's not default anymore. :)
+> >
+> >
+> > > complete. If color mode is disabled then avoid displaying the
+> > > "Running" message.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
+> > >  tools/perf/util/color.h         |  1 +
+> > >  2 files changed, 53 insertions(+), 25 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+> > > index c3d84b67ca8e..23be9139f229 100644
+> > > --- a/tools/perf/tests/builtin-test.c
+> > > +++ b/tools/perf/tests/builtin-test.c
+> > > @@ -241,7 +241,10 @@ static int run_test_child(struct child_process *process)
+> > >       return -err;
+> > >  }
+> > >
+> > > -static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
+> > > +#define TEST_RUNNING -3
+> > > +
+> > > +static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width,
+> > > +                          int remaining)
+> > >  {
+> > >       if (has_subtests(t)) {
+> > >               int subw = width > 2 ? width - 2 : width;
+> > > @@ -251,6 +254,9 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
+> > >               pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
+> > >
+> > >       switch (result) {
+> > > +     case TEST_RUNNING:
+> > > +             color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d remaining)\n", remaining);
+> > > +             break;
+> > >       case TEST_OK:
+> > >               pr_info(" Ok\n");
+> > >               break;
+> > > @@ -272,13 +278,15 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
+> > >       return 0;
+> > >  }
+> > >
+> > > -static int finish_test(struct child_test *child_test, int width)
+> > > +static int finish_test(struct child_test **child_tests, int running_test, int child_test_num,
+> > > +                    int width)
+> > >  {
+> > > +     struct child_test *child_test = child_tests[running_test];
+> > >       struct test_suite *t = child_test->test;
+> > >       int i = child_test->test_num;
+> > >       int subi = child_test->subtest;
+> > >       int err = child_test->process.err;
+> > > -     bool err_done = err <= 0;
+> > > +     bool err_done = false;
+> > >       struct strbuf err_output = STRBUF_INIT;
+> > >       int ret;
+> > >
+> > > @@ -293,7 +301,7 @@ static int finish_test(struct child_test *child_test, int width)
+> > >        * Busy loop reading from the child's stdout/stderr that are set to be
+> > >        * non-blocking until EOF.
+> > >        */
+> > > -     if (!err_done)
+> > > +     if (err > 0)
+> > >               fcntl(err, F_SETFL, O_NONBLOCK);
+> > >       if (verbose > 1) {
+> > >               if (has_subtests(t))
+> > > @@ -307,29 +315,48 @@ static int finish_test(struct child_test *child_test, int width)
+> > >                         .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
+> > >                       },
+> > >               };
+> > > -             char buf[512];
+> > > -             ssize_t len;
+> > > -
+> > > -             /* Poll to avoid excessive spinning, timeout set for 100ms. */
+> > > -             poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
+> > > -             if (!err_done && pfds[0].revents) {
+> > > -                     errno = 0;
+> > > -                     len = read(err, buf, sizeof(buf) - 1);
+> > > -
+> > > -                     if (len <= 0) {
+> > > -                             err_done = errno != EAGAIN;
+> > > -                     } else {
+> > > -                             buf[len] = '\0';
+> > > -                             if (verbose > 1)
+> > > -                                     fprintf(stdout, "%s", buf);
+> > > -                             else
+> > > +             if (perf_use_color_default) {
+> > > +                     int tests_in_progress = running_test;
+> > > +
+> > > +                     for (int y = running_test; y < child_test_num; y++) {
+> > > +                             if (check_if_command_finished(&child_tests[y]->process))
+> > > +                                     tests_in_progress++;
+> > > +                     }
+> > > +                     print_test_result(t, i, subi, TEST_RUNNING, width,
+> > > +                                       child_test_num - tests_in_progress);
+> > > +             }
+> > > +
+> > > +             err_done = true;
+> > > +             if (err <= 0) {
+> > > +                     /* No child stderr to poll, sleep for 10ms for child to complete. */
+> > > +                     usleep(10 * 1000);
+> > > +             } else {
+> > > +                     /* Poll to avoid excessive spinning, timeout set for 100ms. */
+> > > +                     poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
+> >
+> > When I tested this patch, I saw it refreshes too often in parallel mode.
+> > Maybe 100ms is too short?  I don't know if it's from usleep (10ms) or
+> > here.
+> 
+> It's usually the poll and I suspect it is the test writing a lot of
+> output. I agree it can look a little flickery but it is also
+> responsive in terms of not waiting too long before moving to the next
+> test. I think it is possible to improve on the code here, the main
+> thing I was after was making the output writing self contained and not
+> split between start test and finish test, as that won't work well in
+> the parallel case.
 
-On Tue, Jul 02, 2024 at 06:20:46PM -0700, Andi Kleen wrote:
-> This fixes a regression with perf script -F +metric originally caused by :
-> 
-> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Sun Feb 19 01:28:46 2023 -0800
-> 
->     perf metric: Directly use counts rather than saved_value
-> 
-> In the perf script environment the evsel wouldn't allocate an aggr
-> values array, which led to a -1 reference because the metric
-> evaluation would try to reference NULL - 1 (for aggr_idx)
-> 
-> Give the perf script evsels a single CPU aggr setup. That's
-> enough because the groups are always contiguous, so no need
-> to store more than one CPU's worth of values.
-> 
-> Before
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> % perf script -F +metric
-> Segmentation fault (core dumped)
-> 
-> After:
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> ...
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
-> % perf script -F +metric
->        perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
-> ...
-> 
-> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> 
-> ----
-> 
-> v2: Reformat code
-> ---
->  tools/perf/builtin-script.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c16224b1fef3..0aeff280fa55 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -84,7 +84,9 @@ static bool			system_wide;
->  static bool			print_flags;
->  static const char		*cpu_list;
->  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
-> -static struct perf_stat_config	stat_config;
-> +static struct perf_stat_config	stat_config = {
-> +	.aggr_map = &(struct cpu_aggr_map){ .nr = 1 }
-> +};
-
-This gives me a build error on CentOS 8 and Opensuse 15.
-
-builtin-script.c:89:1: error: missing initializer for field 'aggr_get_id' of 'struct perf_stat_config' [-Werror=missing-field-initializers]
- };                                                                             
- ^                                                                              
-In file included from util/hist.h:15,                                           
-                 from util/sort.h:6,                                            
-                 from builtin-script.c:23:                                      
-util/stat.h:109:18: note: 'aggr_get_id' declared here                           
-  aggr_get_id_t   aggr_get_id;                                                  
-                  ^~~~~~~~~~~
+Is it possible to skip the rewriting if nothing is changed?
 
 Thanks,
 Namhyung
 
-
->  static int			max_blocks;
->  static bool			native_arch;
->  static struct dlfilter		*dlfilter;
-> @@ -2133,12 +2135,14 @@ static void perf_sample__fprint_metric(struct perf_script *script,
->  	if (evsel_script(leader)->gnum++ == 0)
->  		perf_stat__reset_shadow_stats();
->  	val = sample->period * evsel->scale;
-> +	/* Always use CPU 0 storage because the groups are contiguous. */
-> +	evsel->stats->aggr[0].counts.val = val;
->  	evsel_script(evsel)->val = val;
->  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
->  		for_each_group_member (ev2, leader) {
->  			perf_stat__print_shadow_stats(&stat_config, ev2,
->  						      evsel_script(ev2)->val,
-> -						      sample->cpu,
-> +						      0,
->  						      &ctx,
->  						      NULL);
->  		}
-> -- 
-> 2.45.2
-> 
