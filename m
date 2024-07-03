@@ -1,139 +1,143 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E45D18FC7E;
-	Wed,  3 Jul 2024 20:23:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484801DA316
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 21:10:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720038233; cv=none; b=iy7d7b5Z2BF/wcHht1mHKBoE3pjlEvwNsXuUxSlcIs26eUZJLiidPbd6eV++OzQgqregkV0IE+ttOJG2PCGsEpexSKEBkEnvQrmNvR4mYRWv0zNBCr/7KOSYwwgi2+gB0hLS1vL3nTQxPoOB2AvtaRB0VGcoUUdzvi5s1nJ9t38=
+	t=1720041054; cv=none; b=fmS1uYqkFvp7GtlEmPKmrHCa6W9qrYXPehfv7YRvCsK+Q5Z5EOFx/m5i49UtWGI8HxslzJFAu8DQP6QgysnVDFPZ9YW2pOmjp90dFRO7ZKcz1drrmYkedOKn6l5Ge0b3gA4/Mc2u8nU5C1qdLOPESw++byxXoZwBAnrKTvLTNU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720038233; c=relaxed/simple;
-	bh=lqDVL16W5PbR3pUnUv+XQD4CLo94RjrhSDsC+yXoXSk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qUOhikEWXP4DHfDmdMU7NrFkZ4GdLeQVsK+BNVbohYJ1brNiT4sAWrIcU+WptZwxVYkUE/fGB2Y0i8Nov+xL5xRjEkHA7vtlwYCJTd2r29NwC02deun8YG/O7xPm+kBdy1uHWnnfJ4tanTscXHvHjZMLIcYKhnjtx2GlaQQE8N0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TkVM4a6x; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720041054; c=relaxed/simple;
+	bh=9XYSmZ0dmJzYFTcwPlbeKw4EEJX2ZfmgPlVC3Uz2LHo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=R4SrsmS+JNHBt+WJpz9yddIm/tF6wAHTdtN3rqmMbQS+L1GFAaQRZy8jKT7Qk45MCyOqzKN0Sw4vkIX0REoiczxOBWxeoG9p39UwEGDVOHzHqtZF+BIaLDdXJVcsOkZjit8oXbeJURaBRCs/SMVwlDnZ/VE4UheUQHVJUINnXKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CB7EdwL7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TkVM4a6x"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7041053c0fdso3232749b3a.3;
-        Wed, 03 Jul 2024 13:23:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720038232; x=1720643032; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rwvomoHjIbpct4hwfR4THyZoJBvV1mwfytBaKIOlC+o=;
-        b=TkVM4a6x0VRnfV2L2DLphfkRlxeAeDXsnWyB7sHeYWfnNypKeLHQBe8rLPc46ve46C
-         ggO5iKHZ6qJGevFOhQC/NQ5n3VWXKMape/6g/ns6uQO0y+BHcJIYFM5l7b1ONZnH6wx3
-         ZwzZ6NctNNmiBcPXWMgt/ZRv9ym9A+zAuepWwaBmnrVBcCk4WxrtFacNIB0uoMqIQXnm
-         7faQ6HjEi7mh8/9OdyOo1Vao3lbTXQ+YnpmR1AEunAgmmmhK+wVz0BK4YIJLO9ix6X5W
-         pDFt4oF3QaAPWTwBfoN02bh7GODuWT6dTMc88oPUk8yjpYaPMbtj5/stwlx0KopgOeoJ
-         zOAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720038232; x=1720643032;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rwvomoHjIbpct4hwfR4THyZoJBvV1mwfytBaKIOlC+o=;
-        b=te1Rm+GdB5OFl4oCgBgqssE7CCPUrxUwXm+MtXkCS5aJIqDovDUUloUfV1DdhbcMJk
-         a1bsT7l98csJP34YKcI9XwbiwB9+VyFZ3JlLlBVKrkxNTnwjjYf03V2qhGrQ92iWyKKN
-         kPIQ/hnTjbW15hhPszW85J459NeX1fpsmoleqjmMl5tcEruh43z1YwC/1M2nG79qE+gT
-         xzGN+Bmd+rhHvPuy+YDGy0i++KtU6z0sKKj18P5okY4iY+qmeMMnMeeTa35BAciewgg/
-         iy+AInLr0Tv+5dEkjJC8y6W9LG5IljtBEvLT2zFL4OokLrpcgpvo/KCGMsQ5bGFIF8m/
-         36Ww==
-X-Forwarded-Encrypted: i=1; AJvYcCXLIFKYsAE1XumE0fJ8IBsxvoOawogR0MI2OyLeqd4tF04H4iv+qLnN6qqgFIS08Er/Sx5f9/aNnV+Dpx050U2SKpOS3D0Y334fItiqk1aBEXvOaCxSVnW7b1j+EioBucAqzXGMa20WfOqg3hbySJG+stJ6jZu4DvVIJeQ05voK+NHvDO6s0eqyJxxtbeWHrx9i+5fGwaSVxhsxhTorV4cELxPK7wXfbg==
-X-Gm-Message-State: AOJu0YylrjT+TRkD0lmQuxXg5hW7EMLwioe5yGcXkYTEMcnT6lZzhZnR
-	iZ8ar49swdEnO3jms0NykYQnBlROp+JmDWBaXa076Vies9TG9FevW0FJJLg5QGylNSs/EVQL/iG
-	q4v7zvp5XotF7LqHOnoxr7foH0O8=
-X-Google-Smtp-Source: AGHT+IEkPtR6WJw6D9+mrqSDTc+aTZrIYnAIpKILeYtKnzwURGBRPO835B/vkMpMUBZz2R+28Vqe7LW+nkXMye0Ibv0=
-X-Received: by 2002:a05:6a00:4614:b0:706:726b:ae60 with SMTP id
- d2e1a72fcca58-70aaad60567mr12788838b3a.17.1720038231567; Wed, 03 Jul 2024
- 13:23:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CB7EdwL7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E109C2BD10;
+	Wed,  3 Jul 2024 21:10:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720041053;
+	bh=9XYSmZ0dmJzYFTcwPlbeKw4EEJX2ZfmgPlVC3Uz2LHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CB7EdwL7JuXEgIuWTgTL5u38pak0a005edxrvewERySVMGtg6/uVBBLi7O07LVoTl
+	 6HP2GN+aQarqFNE61oOC1uzzBi5QegNY0VJ1HE8Q/wKZbq5/ykAjfzEY6Tf/WDQ5SQ
+	 GYWZxHKYg0ASdyCTy2B0rrEHWORjELQHtTK1E0JDiL8tf4uQaDYrLk5/7XpVtryTZP
+	 VlHBnOENVpvbLdOUcCQjUwSXjSEMIMBLjwAhLJLzVKxUDjkpMFxdLs0qjRmx3X2lvE
+	 5oHx1rn4EDGlrCbSyP6WFLHyy6jGUo2SeA7RaeTYVhM1gM1PrKOdkjYV2CyrxwSHw0
+	 Dn26o1ng606SQ==
+Date: Wed, 3 Jul 2024 14:10:52 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] perf script: Fix perf script -F +metric
+Message-ID: <ZoW-XMSCOrLaRoXj@google.com>
+References: <20240703012047.178561-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble> <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
- <20240703011153.jfg6jakxaiedyrom@treble> <CAEf4BzbzsKLtzPUOhby0ZOM3FskE0q4bYx-o5bB4P=dVBVPSNw@mail.gmail.com>
- <20240703061119.iamshulwf3qzsdu3@treble>
-In-Reply-To: <20240703061119.iamshulwf3qzsdu3@treble>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 3 Jul 2024 13:23:39 -0700
-Message-ID: <CAEf4Bza6YdQ5HCcuPozOwVx75UrcyZL_1DGnYrJ=2pz=DxJpPQ@mail.gmail.com>
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240703012047.178561-1-ak@linux.intel.com>
 
-On Tue, Jul 2, 2024 at 11:11=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org=
-> wrote:
->
-> On Tue, Jul 02, 2024 at 08:35:08PM -0700, Andrii Nakryiko wrote:
-> > On Tue, Jul 2, 2024 at 6:11=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.=
-org> wrote:
-> > > On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
-> > > > In general, even with false positives, I think it's overwhelmingly
-> > > > better to get correct entry stack trace 99.9% of the time, and in t=
-he
-> > > > rest 0.01% cases it's fine having one extra bogus entry (but the re=
-st
-> > > > should still be correct), which should be easy for humans to recogn=
-ize
-> > > > and filter out, if necessary.
-> > >
-> > > Agreed, this is a definite improvement overall.
-> >
-> > Cool, I'll incorporate that into v3 and send it soon.
-> >
+Hello,
 
-BTW, if you have a chance, please do take a look at v3 and leave your
-ack, if you are ok with it. Thanks!
+On Tue, Jul 02, 2024 at 06:20:46PM -0700, Andi Kleen wrote:
+> This fixes a regression with perf script -F +metric originally caused by :
+> 
+> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Sun Feb 19 01:28:46 2023 -0800
+> 
+>     perf metric: Directly use counts rather than saved_value
+> 
+> In the perf script environment the evsel wouldn't allocate an aggr
+> values array, which led to a -1 reference because the metric
+> evaluation would try to reference NULL - 1 (for aggr_idx)
+> 
+> Give the perf script evsels a single CPU aggr setup. That's
+> enough because the groups are always contiguous, so no need
+> to store more than one CPU's worth of values.
+> 
+> Before
+> 
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> % perf script -F +metric
+> Segmentation fault (core dumped)
+> 
+> After:
+> 
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> ...
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
+> % perf script -F +metric
+>        perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
+> ...
+> 
+> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> ----
+> 
+> v2: Reformat code
+> ---
+>  tools/perf/builtin-script.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index c16224b1fef3..0aeff280fa55 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -84,7 +84,9 @@ static bool			system_wide;
+>  static bool			print_flags;
+>  static const char		*cpu_list;
+>  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> -static struct perf_stat_config	stat_config;
+> +static struct perf_stat_config	stat_config = {
+> +	.aggr_map = &(struct cpu_aggr_map){ .nr = 1 }
+> +};
 
-> > >
-> > > BTW, soon there will be support for sframes instead of frame pointers=
-,
-> > > at which point these checks should only be done for the frame pointer
-> > > case.
-> >
-> > Nice, this is one of the reasons I've been thinking about asynchronous
-> > stack trace capture in BPF (see [0] from recent LSF/MM).
-> >  [0] https://docs.google.com/presentation/d/1k10-HtK7pP5CMMa86dDCdLW55f=
-HOut4co3Zs5akk0t4
->
-> I don't seem to have permission to open it.
->
+This gives me a build error on CentOS 8 and Opensuse 15.
 
-Argh, sorry, it's under my corporate account which doesn't allow
-others to view it. Try this, I "published" it, let me know if that
-still doesn't work:
+builtin-script.c:89:1: error: missing initializer for field 'aggr_get_id' of 'struct perf_stat_config' [-Werror=missing-field-initializers]
+ };                                                                             
+ ^                                                                              
+In file included from util/hist.h:15,                                           
+                 from util/sort.h:6,                                            
+                 from builtin-script.c:23:                                      
+util/stat.h:109:18: note: 'aggr_get_id' declared here                           
+  aggr_get_id_t   aggr_get_id;                                                  
+                  ^~~~~~~~~~~
 
-  [0] https://docs.google.com/presentation/d/e/2PACX-1vRgL3UPbkrznwtNPKn-sS=
-jvan7tFeMqOrIyZAFSSEPYiWG20JGSP80jBmZqGwqMuBGVmv9vyLU4KRTx/pub
+Thanks,
+Namhyung
 
-> > Few questions, while we are at it. Does it mean that
-> > perf_callchain_user() will support working from sleepable context and
-> > will wait for data to be paged in? Is anyone already working on this?
-> > Any pointers?
->
-> I had a prototype here:
->
->   https://lkml.kernel.org/lkml/cover.1699487758.git.jpoimboe@kernel.org
->
-> Hopefully I can get started on v2 soon.
 
-Ok, so you are going to work on this. Please cc me on future revisions
-then. Thanks!
-
->
-> --
-> Josh
+>  static int			max_blocks;
+>  static bool			native_arch;
+>  static struct dlfilter		*dlfilter;
+> @@ -2133,12 +2135,14 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+>  	if (evsel_script(leader)->gnum++ == 0)
+>  		perf_stat__reset_shadow_stats();
+>  	val = sample->period * evsel->scale;
+> +	/* Always use CPU 0 storage because the groups are contiguous. */
+> +	evsel->stats->aggr[0].counts.val = val;
+>  	evsel_script(evsel)->val = val;
+>  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
+>  		for_each_group_member (ev2, leader) {
+>  			perf_stat__print_shadow_stats(&stat_config, ev2,
+>  						      evsel_script(ev2)->val,
+> -						      sample->cpu,
+> +						      0,
+>  						      &ctx,
+>  						      NULL);
+>  		}
+> -- 
+> 2.45.2
+> 
