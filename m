@@ -1,380 +1,196 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E1AC18EB8;
-	Wed,  3 Jul 2024 13:11:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833B23CF73;
+	Wed,  3 Jul 2024 13:50:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720012312; cv=none; b=bhA2cMoUII1LUvRsSNM111yaLv08HVHUkeOsyq536q66S89Ox9lBnhjnqDFME2PNjbE0fa9o8tNE51Ri3rGzmByeWYGcanVsLxRlTzRuhweNu411k22paWzFBrGlmz67yvrmsdky1O+igmyyWrd2fktPg2qltuTqoEicsgkuIQM=
+	t=1720014647; cv=none; b=dZATCGo3l4fDWfU1PCni+KkpjpDLCXcjZqzej6/g/RBtxGNq7iWl7zV1bRICQ0Nj6oANWg7SuF6/ECr89PE9B+2LXSezll5zJ5IhnyAVsnWWzYZan3c7bXSJHyb2G2mbhANBt4RLoUkfnfiNuj40ciGxCy91Ti3MKoA0fiEEvLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720012312; c=relaxed/simple;
-	bh=pcXyHvDWbcaL0Cu5URkSlrgW9CPqadGk2/suIdgNzR0=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=j0KdAt8Pivz61bCMZPVbmt4vcpHNPqanNIeDvAvrzaz5M/RL/A5NUvc4dksm4CgvKv8c/wWVKM0kSnEewKXTv+wl8JzB3MkED3UddTVELHmtHg3+yeaR1D42u245ahCdempEX3TIPUoDmET9jgkSY56KDkWTvOt47J4BYV44pv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QWwVy7lE; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1720014647; c=relaxed/simple;
+	bh=rZw/x5DNDmlgq/YRxFmk4A1MkbVCzgR5o46weJUGkB0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=vEE4BOfDfMs2n6Mcrei/fuJjBVqBeYAXPoHpavZ78ychYWO86Vp1eQ4Zt9J6VrxO9CfIFbLCnzrkqFhK1YqwZSBILF5ZDCDA/kFc77xANRUrayjg/aHIrh5dW7HXWUyKoDb32fMBqshiHEh4LWp0uCAK8Pas28htAJcU6EZ8qX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XLHTD7SP; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QWwVy7lE"
-Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463Cx0f5031395;
-	Wed, 3 Jul 2024 13:11:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=H
-	LSdzLczkH3rSXq4JFMX0v9J8lmqvzuX59aNGsotQ/o=; b=QWwVy7lEci/YaO9Hq
-	s6ElkeKF0V99EXfqUa65OAZ9p/7tUVt7kcUNO62fZ32omKrinLmBMX1Tc5AOHqP7
-	RIsM1PoaBi0FnfwcjodpWn4Uem7TMIXJVZnwdlTDuJQkOHfj6d0LLq5qOr+ZMMBj
-	Ep8UST0e99SS+zAqXo6lTezb+ls+MAx/K8Qudsi31wb15WuOvVIrO6mKeJOa/k5l
-	bS1OqPlWMMzYD+wj5AchJDHvgo3WbqqcmYkixeoyadYr/XyYJWRf/baJxvfuT96p
-	SaO20cXVn3ZK1SnnZvVGyUJycvHH3yPqdhihTbOMizNk0aK+VANVzl0C1ZXS2Ixo
-	hyWQw==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 405746r1f2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 13:11:33 +0000 (GMT)
-Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 463DAZvG018377;
-	Wed, 3 Jul 2024 13:11:33 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 405746r1f0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 13:11:33 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 463A92bu024124;
-	Wed, 3 Jul 2024 13:11:32 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 402ya3j90n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 03 Jul 2024 13:11:32 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 463DBQRL54985180
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 3 Jul 2024 13:11:28 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8DA0A2004E;
-	Wed,  3 Jul 2024 13:11:26 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 107822004D;
-	Wed,  3 Jul 2024 13:11:24 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.44.47])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed,  3 Jul 2024 13:11:23 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XLHTD7SP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720014645; x=1751550645;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=rZw/x5DNDmlgq/YRxFmk4A1MkbVCzgR5o46weJUGkB0=;
+  b=XLHTD7SPrJUm0URnoGNQptovd8/S42KM4oGhkhFoGK13NlI62LLJVYzl
+   UQi6i1Zu8myYetrd1PwLauRXa7xJo3XRSsgcOmkFUxyUiFaUnIOP1SiH1
+   RKhdcF1lGVnx7m8O2oTyWe8ordKH4HFdVycSwe9ai2UV+Rnn3eCcV0ziT
+   SC6wK6Ljc4jqd3916E4dGi49iwmnnqxbaqmM9Sij+//KqNUMYT5BoHSA1
+   thaHEikOIfGHZ1slQv5ZxYxSs/82vn/mXkrJCCLDH7NFwiqh7/9a1AjGn
+   iZXup1rCjfI2jef5+k0bk/vRfdh/GKUwJrvAxnlHYR0st/OSyZVc3x/W1
+   g==;
+X-CSE-ConnectionGUID: lzDxt+VVTHa55YAvsQQwDg==
+X-CSE-MsgGUID: lUIQQwBkT8SlRMasc0RCew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="39761677"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="39761677"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 06:50:45 -0700
+X-CSE-ConnectionGUID: m82/40P5QFmdWB6TJmB5xg==
+X-CSE-MsgGUID: CVkFQwDISqmVo7nByYeJaQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="51109870"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 06:50:45 -0700
+Received: from [10.209.189.42] (kliang2-mobl1.ccr.corp.intel.com [10.209.189.42])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 5A939201A797;
+	Wed,  3 Jul 2024 06:50:43 -0700 (PDT)
+Message-ID: <8b511e2b-defa-491e-af06-2de85377ba97@linux.intel.com>
+Date: Wed, 3 Jul 2024 09:50:42 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V5 04/17] tools/perf: Add disasm_line__parse to parse raw
- instruction for powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZoSmdSlEmZwyuq_b@google.com>
-Date: Wed, 3 Jul 2024 18:41:12 +0530
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <A7397A0E-A76D-4B3E-AA06-29C21BEF3E64@linux.vnet.ibm.com>
-References: <20240701043430.66666-1-atrajeev@linux.vnet.ibm.com>
- <20240701043430.66666-5-atrajeev@linux.vnet.ibm.com>
- <ZoSmdSlEmZwyuq_b@google.com>
-To: Namhyung Kim <namhyung@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: vGu_kmhMnuna08kQOaHV3PQk26oAdMKz
-X-Proofpoint-GUID: GMbBR37r7zh3lLKDW_ueTDw_4rXY_naB
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-03_08,2024-07-03_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 suspectscore=0 impostorscore=0 phishscore=0
- lowpriorityscore=0 mlxlogscore=999 adultscore=0 spamscore=0 mlxscore=0
- malwarescore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2406140001 definitions=main-2407030094
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] perf topdown: Correct leader selection with
+ sample_read enabled
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yanfei Xu <yanfei.xu@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
+ <20240702224037.343958-2-dapeng1.mi@linux.intel.com>
+ <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
+ <5223c6bb-a05b-4a8c-a625-2011db190631@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <5223c6bb-a05b-4a8c-a625-2011db190631@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-> On 3 Jul 2024, at 6:46=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> =
-wrote:
->=20
-> On Mon, Jul 01, 2024 at 10:04:17AM +0530, Athira Rajeev wrote:
->> Currently, the perf tool infrastructure disasm_line__parse function =
-to
->> parse disassembled line.
->>=20
->> Example snippet from objdump:
->> objdump  --start-address=3D<address> --stop-address=3D<address>  -d =
---no-show-raw-insn -C <vmlinux>
->>=20
->> c0000000010224b4: lwz     r10,0(r9)
->>=20
->> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->> registers names and offset. In powerpc, the approach for data type
->> profiling uses raw instruction instead of result from objdump to =
-identify
->> the instruction category and extract the source/target registers.
->>=20
->> Example: 38 01 81 e8     ld      r4,312(r1)
->>=20
->> Here "38 01 81 e8" is the raw instruction representation. Add =
-function
->> "disasm_line__parse_powerpc" to handle parsing of raw instruction.
->> Also update "struct disasm_line" to save the binary code/
->> With the change, function captures:
->>=20
->> line -> "38 01 81 e8     ld      r4,312(r1)"
->> raw instruction "38 01 81 e8"
->>=20
->> Raw instruction is used later to extract the reg/offset fields. =
-Macros
->> are added to extract opcode and register fields. "struct disasm_line"
->> is updated to carry union of "bytes" and "raw_insn" of 32 bit to =
-carry raw
->> code (raw). Function "disasm_line__parse_powerpc fills the raw
->> instruction hex value and can use macros to get opcode. There is no
->> changes in existing code paths, which parses the disassembled code.
->> The size of raw instruction depends on architecture. In case of =
-powerpc,
->> the parsing the disasm line needs to handle cases for reading binary =
-code
->> directly from DSO as well as parsing the objdump result. Hence adding
->> the logic into separate function instead of updating =
-"disasm_line__parse".
->> The architecture using the instruction name and present approach is
->> not altered. Since this approach targets powerpc, the macro
->> implementation is added for powerpc as of now.
->>=20
->> Since the disasm_line__parse is used in other cases (perf annotate) =
-and
->> not only data tye profiling, the powerpc callback includes changes to
->> work with binary code as well as mneumonic representation. Also in =
-case
->> if the DSO read fails and libcapstone is not supported, the approach
->> fallback to use objdump as option. Hence as option, patch has changes =
-to
->> ensure objdump option also works well.
->>=20
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/include/linux/string.h                  |  2 +
->> tools/lib/string.c                            | 13 ++++
->> .../perf/arch/powerpc/annotate/instructions.c |  1 +
->> tools/perf/arch/powerpc/util/dwarf-regs.c     |  9 +++
->> tools/perf/util/annotate.h                    |  5 +-
->> tools/perf/util/disasm.c                      | 59 =
-++++++++++++++++++-
->> 6 files changed, 87 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/include/linux/string.h =
-b/tools/include/linux/string.h
->> index db5c99318c79..0acb1fc14e19 100644
->> --- a/tools/include/linux/string.h
->> +++ b/tools/include/linux/string.h
->> @@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char =
-*);
->>=20
->> extern char *strim(char *);
->>=20
->> +extern void remove_spaces(char *s);
->> +
->> extern void *memchr_inv(const void *start, int c, size_t bytes);
->> #endif /* _TOOLS_LINUX_STRING_H_ */
->> diff --git a/tools/lib/string.c b/tools/lib/string.c
->> index 8b6892f959ab..3126d2cff716 100644
->> --- a/tools/lib/string.c
->> +++ b/tools/lib/string.c
->> @@ -153,6 +153,19 @@ char *strim(char *s)
->> return skip_spaces(s);
->> }
->>=20
->> +/*
->> + * remove_spaces - Removes whitespaces from @s
->> + */
->> +void remove_spaces(char *s)
->> +{
->> + char *d =3D s;
->> +
->> + do {
->> + while (*d =3D=3D ' ')
->> + ++d;
->> + } while ((*s++ =3D *d++));
->> +}
->> +
->> /**
->>  * strreplace - Replace all occurrences of character in string.
->>  * @s: The string to operate on.
->> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c =
-b/tools/perf/arch/powerpc/annotate/instructions.c
->> index a3f423c27cae..d57fd023ef9c 100644
->> --- a/tools/perf/arch/powerpc/annotate/instructions.c
->> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
->> @@ -55,6 +55,7 @@ static int powerpc__annotate_init(struct arch =
-*arch, char *cpuid __maybe_unused)
->> arch->initialized =3D true;
->> arch->associate_instruction_ops =3D =
-powerpc__associate_instruction_ops;
->> arch->objdump.comment_char      =3D '#';
->> + annotate_opts.show_asm_raw =3D true;
->> }
->>=20
->> return 0;
->> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c =
-b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> index 0c4f4caf53ac..430623ca5612 100644
->> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
->> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> @@ -98,3 +98,12 @@ int regs_query_register_offset(const char *name)
->> return roff->ptregs_offset;
->> return -EINVAL;
->> }
->> +
->> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
->> +#define PPC_RA(a) (((a) >> 16) & 0x1f)
->> +#define PPC_RT(t) (((t) >> 21) & 0x1f)
->> +#define PPC_RB(b) (((b) >> 11) & 0x1f)
->> +#define PPC_D(D) ((D) & 0xfffe)
->> +#define PPC_DS(DS) ((DS) & 0xfffc)
->> +#define OP_LD 58
->> +#define OP_STD 62
->> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
->> index d5c821c22f79..9ba772f46270 100644
->> --- a/tools/perf/util/annotate.h
->> +++ b/tools/perf/util/annotate.h
->> @@ -113,7 +113,10 @@ struct annotation_line {
->> struct disasm_line {
->> struct ins  ins;
->> struct ins_operands  ops;
->> -
->> + union {
->> + u8 bytes[4];
->> + u32 raw_insn;
->> + } raw;
->> /* This needs to be at the end. */
->> struct annotation_line  al;
->> };
->> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->> index d2723ba024bf..ddb861a0b043 100644
->> --- a/tools/perf/util/disasm.c
->> +++ b/tools/perf/util/disasm.c
->> @@ -44,6 +44,7 @@ static int call__scnprintf(struct ins *ins, char =
-*bf, size_t size,
->>=20
->> static void ins__sort(struct arch *arch);
->> static int disasm_line__parse(char *line, const char **namep, char =
-**rawp);
->> +static int disasm_line__parse_powerpc(struct disasm_line *dl);
->>=20
->> static __attribute__((constructor)) void symbol__init_regexpr(void)
->> {
->> @@ -845,6 +846,59 @@ static int disasm_line__parse(char *line, const =
-char **namep, char **rawp)
->> return -1;
->> }
->>=20
->> +/*
->> + * Parses the result captured from symbol__disassemble_*
->> + * Example, line read from DSO file in powerpc:
->> + * line:    38 01 81 e8
->> + * opcode: fetched from arch specific get_opcode_insn
->> + * rawp_insn: e8810138
->> + *
->> + * rawp_insn is used later to extract the reg/offset fields
->> + */
->> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
->> +
->> +static int disasm_line__parse_powerpc(struct disasm_line *dl)
->> +{
->> + char *line =3D dl->al.line;
->> + const char **namep =3D &dl->ins.name;
->> + char **rawp =3D &dl->ops.raw;
->> + char tmp, *tmp_raw_insn, *name_raw_insn =3D skip_spaces(line);
->> + char *name =3D skip_spaces(name_raw_insn + 11);
->=20
-> What does 11 mean?  Can you add a macro for it instead?
-> I guess it's the width of the raw codes and spaces.
->=20
-Yes, I will add macro
->=20
->> + int objdump =3D 0;
->> +
->> + if (strlen(line) > 11)
->> + objdump =3D 1;
->> +
->> + if (name_raw_insn[0] =3D=3D '\0')
->> + return -1;
->> +
->> + if (objdump) {
->> + *rawp =3D name + 1;
->> + while ((*rawp)[0] !=3D '\0' && !isspace((*rawp)[0]))
->> + ++*rawp;
->> + tmp =3D (*rawp)[0];
->> + (*rawp)[0] =3D '\0';
->> +
->> + *namep =3D strdup(name);
->> + if (*namep =3D=3D NULL)
->> + return -1;
->> +
->> + (*rawp)[0] =3D tmp;
->> + *rawp =3D strim(*rawp);
->=20
-> Can we just call disasm_line__parse()?
-Yes,=20
->=20
->=20
->> + } else
->> + *namep =3D "";
->> +
->> + tmp_raw_insn =3D strdup(name_raw_insn);
->> + tmp_raw_insn[11] =3D '\0';
->=20
-> You can use strndup().
-Ok
+On 2024-07-02 10:46 p.m., Mi, Dapeng wrote:
+> 
+> On 7/3/2024 12:05 AM, Liang, Kan wrote:
+>>
+>> On 2024-07-02 6:40 p.m., Dapeng Mi wrote:
+>>> Addresses an issue where, in the absence of a topdown metrics event
+>>> within a sampling group, the slots event was incorrectly bypassed as
+>>> the sampling leader when sample_read was enabled.
+>>>
+>>> perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
+>>>
+>>> In this case, the slots event should be sampled as leader but the
+>>> branches event is sampled in fact like the verbose output shows.
+>>>
+>>> perf_event_attr:
+>>>   type                             4 (cpu)
+>>>   size                             168
+>>>   config                           0x400 (slots)
+>>>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+>>>   read_format                      ID|GROUP|LOST
+>>>   disabled                         1
+>>>   sample_id_all                    1
+>>>   exclude_guest                    1
+>>> ------------------------------------------------------------
+>>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>>> ------------------------------------------------------------
+>>> perf_event_attr:
+>>>   type                             0 (PERF_TYPE_HARDWARE)
+>>>   size                             168
+>>>   config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
+>>>   { sample_period, sample_freq }   10000
+>>>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+>>>   read_format                      ID|GROUP|LOST
+>>>   sample_id_all                    1
+>>>   exclude_guest                    1
+>>>
+>>> The sample period of slots event instead of branches event is reset to
+>>> 0.
+>>>
+>>> This fix ensures the slots event remains the leader under these
+>>> conditions.
+>>>
+>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>> ---
+>>>  tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
+>>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+>>> index 3f9a267d4501..5d7b78eb7516 100644
+>>> --- a/tools/perf/arch/x86/util/topdown.c
+>>> +++ b/tools/perf/arch/x86/util/topdown.c
+>>> @@ -1,6 +1,7 @@
+>>>  // SPDX-License-Identifier: GPL-2.0
+>>>  #include "api/fs/fs.h"
+>>>  #include "util/evsel.h"
+>>> +#include "util/evlist.h"
+>>>  #include "util/pmu.h"
+>>>  #include "util/pmus.h"
+>>>  #include "util/topdown.h"
+>>> @@ -41,11 +42,22 @@ bool topdown_sys_has_perf_metrics(void)
+>>>   */
+>>>  bool arch_topdown_sample_read(struct evsel *leader)
+>>>  {
+>>> +	struct evsel *event;
+>>> +
+>>>  	if (!evsel__sys_has_perf_metrics(leader))
+>>>  		return false;
+>>>  
+>>> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
+>>> -		return true;
+>>> +	if (leader->core.attr.config != TOPDOWN_SLOTS)
+>>> +		return false;
+>>> +
+>>> +	/*
+>>> +	 * If slots event as leader event but no topdown metric events in group,
+>>> +	 * slots event should still sample as leader.
+>>> +	 */
+>>> +	evlist__for_each_entry(leader->evlist, event) {
+>>> +		if (event != leader && strcasestr(event->name, "topdown"))
+>> User may uses the RAW format. It may not be good enough to just check
+>> the event name.
+>>
+>> I recall you have a complete support for this in the previous patch. Why
+>> drop it?
+> 
+> 
+> Oh, I ignored the RAW format case. Yes, there is a complete comparison in
+> previous patch, but I originally thought it's over-complicated, so I just
+> simplified it (refer other helpers to compare the name).  If we need to
+> consider the RAW format, it may be not correct for the comparisons in the
+> helpers arch_evsel__must_be_in_group() and arch_evlist__cmp() as well.
+>
 
-Will send next version with these changes
+Right, those need to be fixed as well.
 
-Thanks
-Athira
->=20
-> Thanks,
-> Namhyung
->=20
->=20
->> + remove_spaces(tmp_raw_insn);
->> +
->> + sscanf(tmp_raw_insn, "%x", &dl->raw.raw_insn);
->> + if (objdump)
->> + dl->raw.raw_insn =3D be32_to_cpu(dl->raw.raw_insn);
->> +
->> + return 0;
->> +}
->> +
->> static void annotation_line__init(struct annotation_line *al,
->>   struct annotate_args *args,
->>   int nr)
->> @@ -898,7 +952,10 @@ struct disasm_line *disasm_line__new(struct =
-annotate_args *args)
->> goto out_delete;
->>=20
->> if (args->offset !=3D -1) {
->> - if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < =
-0)
->> + if (arch__is(args->arch, "powerpc")) {
->> + if (disasm_line__parse_powerpc(dl) < 0)
->> + goto out_free_line;
->> + } else if (disasm_line__parse(dl->al.line, &dl->ins.name, =
-&dl->ops.raw) < 0)
->> goto out_free_line;
->>=20
->> disasm_line__init_ins(dl, args->arch, &args->ms);
->> --=20
->> 2.43.0
+> If we want to fix the issue thoroughly, we may have to expose two helpers
+> which check if an event is topdown slots or metrics event and use these two
+> helpers to replace current name comparison.
 
+Yes, you may have to add an extra patch to introduce the two helper
+functions and replace the existing function.
 
+Thanks,
+Kan
+> 
+>>
+>> Thanks,
+>> Kan
+>>
+>>> +			return true;
+>>> +	}
+>>>  
+>>>  	return false;
+>>>  }
