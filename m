@@ -1,144 +1,238 @@
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A70C376;
-	Wed,  3 Jul 2024 00:06:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6418F376;
+	Wed,  3 Jul 2024 00:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719965188; cv=none; b=GdGFeFWrqU2D6xQDMtQPgTh6yffOdLfe5JhfSHLBOOR0hHug586Mf+47PUzPRjiaF5nrnm/jz780sqBr56ooIy4dfQ6ZYcZC/mQPygNvHAWZAiVgl3EiTPFYKk3EgcWle0ZsFpMY9gs2AKkvJzhfVngWDeGvdtmcy40beUurPBA=
+	t=1719965346; cv=none; b=cO90wK6UWI/Lliq8FHagd3A9B1ipkdNKzbEyJBR6mLt/BMAFtcX4eDyt/vrFHbXhAicbFeSzsypZ/4aQf7AqniFvxY1d0STubpr7TPOHEtisBGEywrxHRrZH0818XOE/adU+4pnJ1EzaxnN5mTQq2s+QO8y1/j7A/mpS3oQ59tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719965188; c=relaxed/simple;
-	bh=iLySQHSzUBPABd8UEtGLypSLAhlfTYLP6knK4mQMZUk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Mi/om9N8HoqO6ExqSatnNxa125kxZ8/BZST5+ppM3O+CgiHrt5nQuSkWssZXW+CtBfexGNeVG6yopY27nJFHxDADpoCSKgi5uDgWHGQV/RUKfGwVcCIp9aafNRmNgyhiRuMgcEbl6mf5zeyiueVNVz3MpNcNh3nKtNrGQOCCYA8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Kt9kvy54; arc=none smtp.client-ip=209.85.210.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1719965346; c=relaxed/simple;
+	bh=ePBM8uzJRxVTZEWmIyligoS+xxnug3U4PYJjOKa/19E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=h0ez0ggNSXZH6cEM9X0IePtpzXOLqjzjGG4sYcBx0NtOBSRDzNLWAApj5lzq2TJ0YarFfzPHrVX5TiYDL9BZqPNtA+qtI7s2niQANdMEu47TjQvi1cJRuKSmsYYqNuyuEb2FBQJMSBqrCV6rWy+ABTdC7nbBQGqBYCoYsYn+9RI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lvr/ZTaY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kt9kvy54"
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-70699b6afddso3281272b3a.1;
-        Tue, 02 Jul 2024 17:06:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1719965186; x=1720569986; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/N9kQ3oCI3jCbzKISRrCZxbj25Bb5h+emAQTUEwDQOk=;
-        b=Kt9kvy54jUkY8lkwjv6Q8Vm1K/dduqXmx9fZ7eXE9qqDhGt1d1R6bQ0JkaheVM8HtJ
-         M8pxh9pBBvHESS7pPaNV+l76DMFpyiIETCzP+7iyCv/6dmjhisBnkykWooE4vh4K5LSm
-         VuQgtnPvMtH2LsiDxnt1iR4IN/xrIDAKWBeNwrH41ArlP0q/E2Ph5gIwcvCQn9W/eRDk
-         2WlUIfP8EWvUys2HCEenZjdO3XsgOjZ1ZOK/oBfN+GfAysqyF8rBeRYGakABtfj+FMXx
-         QQldd3Ez68ZYLuOVOqq0vzGahiVeD1MyMmffOY4SQBWSePna00xXm1DHyDiwWTKFUnca
-         a1wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1719965186; x=1720569986;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/N9kQ3oCI3jCbzKISRrCZxbj25Bb5h+emAQTUEwDQOk=;
-        b=I308suFurGWwlxxWzQLcUXZbYYGVaS6QOBvmtxFbE4w38TxwWuln4teCkOzN5g1YfQ
-         iPD36zDaNtrgDAx559yDrsFIkekmYcRb7o5TwG/rRA22Bco3dxEsixBkxQ0yYEuugpZW
-         45KehInKRJuH2zDI2EpNJzAdcKdgfqKuS46Id0kU07CgLnILzTP1ZHGP9/IPUnJKHBOT
-         cdQI7iZQh/iSaY6DYyhy543jZI8yp9zdsDWNTe5RgPW2hG2M+eR34bxOhpjazw5pvrC2
-         0/K6xN4aCZ5Pk+ruhipAMA7lBdLeRnRq22giXhsZRJgxL7T9JVwS1KxKIL7YNb8/DRBI
-         r/lA==
-X-Forwarded-Encrypted: i=1; AJvYcCU3AsyUmGWiiyL28h3U6qkg3ZU+ejmThJvCt1mLlP+Gps8GtHHQ+V8yuj1nnvxYj6m5ZZUwNSoHrxr7x/Zyei9p8ofBdU+hKtgBhk3KeKC2ZY9wdTEToADhbxqaszBTWA9aYtz110wk7xggzXCV4KW1nN0zmFbnLfmBO8jSjar6N0z6o0Ayg9UxIC1snRMqhfVw57y668vMFc1TJhf2K44y61x3RFxC4A==
-X-Gm-Message-State: AOJu0Yw9aP4C/NOwxfX9UkIYYHc/RY7NadVrV2cxEzmIOcM1npWQrueh
-	Xs0XLynjtNtoc850VmqD4Mhzln3tOhjo9CtVCVdfWVYywK+x1pOaZiMyXfD0XTx1WjvyQrqZ2by
-	PSAcl381nozQy4QvUfTjj5Z8kgTw=
-X-Google-Smtp-Source: AGHT+IEt2I99EiAmj3hGz/7iKIEOkBWscqSINfAgiYEzd5JTnR+pwhpKuTwdsTPLb+v8l7Q2zGlQHTCRAm1XB3bHhFs=
-X-Received: by 2002:a05:6a00:3c8b:b0:705:d8b8:682d with SMTP id
- d2e1a72fcca58-70aaaf2523amr9689557b3a.22.1719965186231; Tue, 02 Jul 2024
- 17:06:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lvr/ZTaY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6506EC2BD10;
+	Wed,  3 Jul 2024 00:09:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719965345;
+	bh=ePBM8uzJRxVTZEWmIyligoS+xxnug3U4PYJjOKa/19E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Lvr/ZTaYVRJ9GFS+EgvLaekvn6pqKwXp0nujszy9uerwf5WHRSz1q8pNStd+G6zgR
+	 1AXAX+uAkpReldOxNUA8QVK8HII6G9PNo37nU7fOaSUCb72zfU5epPkholCk/PxcMb
+	 AQ5EeU3tHlW6SuaSzE+HKyf5r/6/ol5tucZIl2wr69tIrnle4FAcHF5ByNXWyYqHeD
+	 /bteuTjUV6iEnDX3uvIhuqFv+2PvDNuO/Lh6zvyWz433gv7Zt78Y0nlgYyO7v9wDdU
+	 4hzQWdRqhM3wiR70fyiOhKvctoTGnsNig5xGK+7bFtWAUGso0ijRVyk0lFSWalqSbA
+	 TlslREdQXBrBQ==
+Date: Tue, 2 Jul 2024 17:09:03 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, segher@kernel.crashing.org,
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH V5 03/17] tools/perf: Update TYPE_STATE_MAX_REGS to
+ include max of regs in powerpc
+Message-ID: <ZoSWn0q8YCxxbylS@google.com>
+References: <20240701043430.66666-1-atrajeev@linux.vnet.ibm.com>
+ <20240701043430.66666-4-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240702171858.187562-1-andrii@kernel.org> <20240702233554.slj6kh7dn2mc2w4n@treble>
- <20240702233902.p42gfhhnxo2veemf@treble>
-In-Reply-To: <20240702233902.p42gfhhnxo2veemf@treble>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 2 Jul 2024 17:06:14 -0700
-Message-ID: <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
-Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Josh Poimboeuf <jpoimboe@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
-	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240701043430.66666-4-atrajeev@linux.vnet.ibm.com>
 
-On Tue, Jul 2, 2024 at 4:39=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
- wrote:
->
-> On Tue, Jul 02, 2024 at 04:35:56PM -0700, Josh Poimboeuf wrote:
-> > On Tue, Jul 02, 2024 at 10:18:58AM -0700, Andrii Nakryiko wrote:
-> > > When tracing user functions with uprobe functionality, it's common to
-> > > install the probe (e.g., a BPF program) at the first instruction of t=
-he
-> > > function. This is often going to be `push %rbp` instruction in functi=
-on
-> > > preamble, which means that within that function frame pointer hasn't
-> > > been established yet. This leads to consistently missing an actual
-> > > caller of the traced function, because perf_callchain_user() only
-> > > records current IP (capturing traced function) and then following fra=
-me
-> > > pointer chain (which would be caller's frame, containing the address =
-of
-> > > caller's caller).
-> > >
-> > > So when we have target_1 -> target_2 -> target_3 call chain and we ar=
-e
-> > > tracing an entry to target_3, captured stack trace will report
-> > > target_1 -> target_3 call chain, which is wrong and confusing.
-> > >
-> > > This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-> > > (`push %ebp` on 32-bit architecture) instruction being traced. Given
-> > > entire kernel implementation of user space stack trace capturing work=
-s
-> > > under assumption that user space code was compiled with frame pointer
-> > > register (%rbp/%ebp) preservation, it seems pretty reasonable to use
-> > > this instruction as a strong indicator that this is the entry to the
-> > > function. In that case, return address is still pointed to by %rsp/%e=
-sp,
-> > > so we fetch it and add to stack trace before proceeding to unwind the
-> > > rest using frame pointer-based logic.
-> > >
-> > > Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> >
-> > Should it also check for ENDBR64?
-> >
+On Mon, Jul 01, 2024 at 10:04:16AM +0530, Athira Rajeev wrote:
+> Add TYPE_STATE_MAX_REGS_X86 and TYPE_STATE_MAX_REGS_PPC. Define
+> TYPE_STATE_MAX_REGS to be 32 which is max size of the array. While
+> checking if reg is valid using has_reg_type, use the max value
+> depending on the architecture. For x86, use TYPE_STATE_MAX_REGS_X86
+> since max number of regs is 16. Update has_reg_type to
+> pass "struct arch" also as one of the parameters.
+> 
+> Signed-off-by: Athira Rajeev<atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/arch/x86/annotate/instructions.c | 20 ++++++++++----------
+>  tools/perf/util/annotate-data.c             | 13 +++++++++----
+>  tools/perf/util/annotate-data.h             |  6 ++++--
+>  3 files changed, 23 insertions(+), 16 deletions(-)
+> 
+> diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
+> index 7b7d462c6c6b..ea1dc686e7b4 100644
+> --- a/tools/perf/arch/x86/annotate/instructions.c
+> +++ b/tools/perf/arch/x86/annotate/instructions.c
+> @@ -263,14 +263,14 @@ static void update_insn_state_x86(struct type_state *state,
+>  		struct map_symbol *ms = dloc->ms;
+>  		u64 ip = ms->sym->start + dl->al.offset;
+>  
+> -		if (!has_reg_type(state, dst->reg1))
+> +		if (!has_reg_type(state, dst->reg1, dloc->arch))
+>  			return;
+>  
+>  		tsr = &state->regs[dst->reg1];
+>  
+>  		if (src->imm)
+>  			imm_value = src->offset;
+> -		else if (has_reg_type(state, src->reg1) &&
+> +		else if (has_reg_type(state, src->reg1, dloc->arch) &&
+>  			 state->regs[src->reg1].kind == TSR_KIND_CONST)
+>  			imm_value = state->regs[src->reg1].imm_value;
+>  		else if (src->reg1 == DWARF_REG_PC) {
+> @@ -321,7 +321,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  
+>  	/* Case 1. register to register or segment:offset to register transfers */
+>  	if (!src->mem_ref && !dst->mem_ref) {
+> -		if (!has_reg_type(state, dst->reg1))
+> +		if (!has_reg_type(state, dst->reg1, dloc->arch))
+>  			return;
+>  
+>  		tsr = &state->regs[dst->reg1];
+> @@ -374,7 +374,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			return;
+>  		}
+>  
+> -		if (!has_reg_type(state, src->reg1) ||
+> +		if (!has_reg_type(state, src->reg1, dloc->arch) ||
+>  		    !state->regs[src->reg1].ok) {
+>  			tsr->ok = false;
+>  			return;
+> @@ -392,7 +392,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  	if (src->mem_ref && !dst->mem_ref) {
+>  		int sreg = src->reg1;
+>  
+> -		if (!has_reg_type(state, dst->reg1))
+> +		if (!has_reg_type(state, dst->reg1, dloc->arch))
+>  			return;
+>  
+>  		tsr = &state->regs[dst->reg1];
+> @@ -427,7 +427,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			pr_debug_type_name(&tsr->type, tsr->kind);
+>  		}
+>  		/* And then dereference the pointer if it has one */
+> -		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+> +		else if (has_reg_type(state, sreg, dloc->arch) && state->regs[sreg].ok &&
+>  			 state->regs[sreg].kind == TSR_KIND_TYPE &&
+>  			 die_deref_ptr_type(&state->regs[sreg].type,
+>  					    src->offset, &type_die)) {
+> @@ -464,7 +464,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			pr_debug_type_name(&type_die, tsr->kind);
+>  		}
+>  		/* And check percpu access with base register */
+> -		else if (has_reg_type(state, sreg) &&
+> +		else if (has_reg_type(state, sreg, dloc->arch) &&
+>  			 state->regs[sreg].kind == TSR_KIND_PERCPU_BASE) {
+>  			u64 ip = dloc->ms->sym->start + dl->al.offset;
+>  			u64 var_addr = src->offset;
+> @@ -473,7 +473,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			if (src->multi_regs) {
+>  				int reg2 = (sreg == src->reg1) ? src->reg2 : src->reg1;
+>  
+> -				if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
+> +				if (has_reg_type(state, reg2, dloc->arch) && state->regs[reg2].ok &&
+>  				    state->regs[reg2].kind == TSR_KIND_CONST)
+>  					var_addr += state->regs[reg2].imm_value;
+>  			}
+> @@ -504,7 +504,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  			}
+>  		}
+>  		/* And then dereference the calculated pointer if it has one */
+> -		else if (has_reg_type(state, sreg) && state->regs[sreg].ok &&
+> +		else if (has_reg_type(state, sreg, dloc->arch) && state->regs[sreg].ok &&
+>  			 state->regs[sreg].kind == TSR_KIND_POINTER &&
+>  			 die_get_member_type(&state->regs[sreg].type,
+>  					     src->offset, &type_die)) {
+> @@ -543,7 +543,7 @@ static void update_insn_state_x86(struct type_state *state,
+>  	}
+>  	/* Case 3. register to memory transfers */
+>  	if (!src->mem_ref && dst->mem_ref) {
+> -		if (!has_reg_type(state, src->reg1) ||
+> +		if (!has_reg_type(state, src->reg1, dloc->arch) ||
+>  		    !state->regs[src->reg1].ok)
+>  			return;
+>  
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index 7a48c3d72b89..fac9d3cdd318 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -131,9 +131,14 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
+>  	}
+>  }
+>  
+> -bool has_reg_type(struct type_state *state, int reg)
+> +bool has_reg_type(struct type_state *state, int reg, struct arch *arch)
+>  {
+> -	return (unsigned)reg < ARRAY_SIZE(state->regs);
+> +	if (arch__is(arch, "x86"))
+> +		return (unsigned)reg < TYPE_STATE_MAX_REGS_x86;
+> +	else if (arch__is(arch, "powerpc"))
+> +		return (unsigned)reg < TYPE_STATE_MAX_REGS_PPC;
+> +	else
+> +		return (unsigned)reg < ARRAY_SIZE(state->regs);
+>  }
+>  
+>  static void init_type_state(struct type_state *state, struct arch *arch)
+> @@ -707,7 +712,7 @@ static void update_var_state(struct type_state *state, struct data_loc_info *dlo
+>  			pr_debug_dtp("var [%"PRIx64"] -%#x(stack)",
+>  				     insn_offset, -var->offset + fb_offset);
+>  			pr_debug_type_name(&mem_die, TSR_KIND_TYPE);
+> -		} else if (has_reg_type(state, var->reg) && var->offset == 0) {
+> +		} else if (has_reg_type(state, var->reg, dloc->arch) && var->offset == 0) {
+>  			struct type_state_reg *reg;
+>  
+>  			reg = &state->regs[var->reg];
+> @@ -943,7 +948,7 @@ static int check_matching_type(struct type_state *state,
+>  			if (dloc->op->reg2 == reg)
+>  				reg2 = dloc->op->reg1;
+>  
+> -			if (has_reg_type(state, reg2) && state->regs[reg2].ok &&
+> +			if (has_reg_type(state, reg2, dloc->arch) && state->regs[reg2].ok &&
+>  			    state->regs[reg2].kind == TSR_KIND_CONST)
+>  				var_addr += state->regs[reg2].imm_value;
+>  		}
+> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+> index 6fe8ee8b8410..4d8682cdc53c 100644
+> --- a/tools/perf/util/annotate-data.h
+> +++ b/tools/perf/util/annotate-data.h
+> @@ -189,7 +189,9 @@ struct type_state_stack {
+>  };
+>  
+>  /* FIXME: This should be arch-dependent */
+> -#define TYPE_STATE_MAX_REGS  16
+> +#define TYPE_STATE_MAX_REGS  32
+> +#define TYPE_STATE_MAX_REGS_x86	16
+> +#define TYPE_STATE_MAX_REGS_PPC	32
 
-Sure, I can add a check for endbr64 as well. endbr64 probably can be
-used not just at function entry, is that right? So it might be another
-case of false positive (which I think is ok, see below).
+How about this?
 
-> > When compiled with -fcf-protection=3Dbranch, the first instruction of t=
-he
-> > function will almost always be ENDBR64.  I'm not sure about other
-> > distros, but at least Fedora compiles its binaries like that.
->
-> BTW, there are some cases (including leaf functions and some stack
-> alignment sequences) where a "push %rbp" can happen inside a function.
-> Then it would presumably add a bogus trace entry.  Are such false
-> positives ok?
+#ifdef __powerpc__  // or something
+# define TYPE_STATE_MAX_REGS  32
+#else
+# define TYPE_STATE_MAX_REGS  16
+#endif
 
-I think such cases should be rare. People mostly seem to trace user
-function entry/exit, rarely if ever they trace something within the
-function, except for USDT cases, where it will be a nop instruction
-that they trace.
+Thanks,
+Namhyung
 
-In general, even with false positives, I think it's overwhelmingly
-better to get correct entry stack trace 99.9% of the time, and in the
-rest 0.01% cases it's fine having one extra bogus entry (but the rest
-should still be correct), which should be easy for humans to recognize
-and filter out, if necessary.
-
->
-> --
-> Josh
+>  
+>  /*
+>   * State table to maintain type info in each register and stack location.
+> @@ -224,7 +226,7 @@ void global_var_type__tree_delete(struct rb_root *root);
+>  
+>  int hist_entry__annotate_data_tty(struct hist_entry *he, struct evsel *evsel);
+>  
+> -bool has_reg_type(struct type_state *state, int reg);
+> +bool has_reg_type(struct type_state *state, int reg, struct arch *arch);
+>  struct type_state_stack *findnew_stack_state(struct type_state *state,
+>  						int offset, u8 kind,
+>  						Dwarf_Die *type_die);
+> -- 
+> 2.43.0
+> 
