@@ -1,128 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444A8136643;
-	Wed,  3 Jul 2024 23:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEBDB17838D;
+	Wed,  3 Jul 2024 23:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720048709; cv=none; b=ARbKkRWCRoxIY0F3ny5ExUXsCVRZmtTvZgAlGpnqF4hKJmoXZTY5/5z7Y+miCV+eXiPJXWdoa+Vz76H5LMA32mb5svz2qkLRC3qjwyM7bIFXXH+paw7/uE5YOYIuHmRIq9Gg4PWS+fr/eHPfd3xucgRc01Ly9m27j0JP8blOisk=
+	t=1720049211; cv=none; b=W4LiBkKQ8tfLYhFx1BPhYx614150i4bidtNiYQfHfirm2WpUXL9T3QaneXi6dzvKmy5omJqBWcjJJeNfjUaNZysuUFgOMvpv+TrLOyR1SRhUILZPWki4jMCfgaxwcQ03NXjR/Gib8My0woRHtIX26n6x7Niz4hdA0FUSZyhGZlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720048709; c=relaxed/simple;
-	bh=leq8VNyokdvpQStEdxb0BGwQSSksYqqYCuQZSbBzsQ4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JlqkcyPNbIkHWR9ZzpeNpRY3NZpldwRzl552R2HQKvK7gCrS+CTDBB15FDSLzAtDBPwR9PizIom8EeCOVcrMiwQLUyTo5AIGtazfPBuhIqiO3oTL9ztfvn/hpTdfDtBHjOS70JtAV4ab5c+gICwLBSmYVjNZ/+Tgdl2wMcjiFlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bp/WzDVC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720049211; c=relaxed/simple;
+	bh=/I4zR2Jxebxcv3lm4liZ8+T/2eec+pcepi3f9aw53bA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UBzKMZUKfb9poVkyto3YonLda4RrlNwo9hFhzuzrhqsyUrvoURjFJCfeQa/URd7DK8um5aDa23PZDoLj6neyNrXOtwAabFrheJoK/vqttiJ3Teeyo7SrVs0mGEOHTQUMvO7bh181JdLsoSMjI8IrRO2uaeVuqb8hnNQVbB7B9Mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BaNBnZSf; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bp/WzDVC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0EAC2BD10;
-	Wed,  3 Jul 2024 23:18:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720048708;
-	bh=leq8VNyokdvpQStEdxb0BGwQSSksYqqYCuQZSbBzsQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Bp/WzDVC4BdTUPn2o2qlmwUR55Hld+30vDvwX7VrDHWNYUeDB+bvBPG+OpCn1W8su
-	 0C6In+U+QOJra838+j9XuCsk0SNM4tMBV7aQ8L8xTK5JxSGUnEoOwu5+hyNcStpns7
-	 p9usbd70QPW0pzUVHK1F6LlZDZ4+HImnLM7JN8uXjXksLExKUbAoRSPkLp2ty8VCTz
-	 0rojh20k7YeJjpEydGkG78SVu/uWoWNvE+Sek6dWoC8koBT2KsN0xX2xY78rWLkSNE
-	 2BzIhr0e+nrVgM6ZEZJ7YUNqVJQWCt62Dk5UgwvOEvvDzcDPt+94agNEM50NHxjsFX
-	 WpBaoDWtfZ4uQ==
-Date: Wed, 3 Jul 2024 16:18:26 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Changbin Du <changbin.du@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Nick Desaulniers <ndesaulniers@google.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
-Subject: Re: [PATCH v5 8/8] perf buildid-cache: recognize vdso when adding
- files
-Message-ID: <ZoXcQunHBf0Z1JIW@google.com>
-References: <20240702041837.5306-1-changbin.du@huawei.com>
- <20240702041837.5306-9-changbin.du@huawei.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaNBnZSf"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3d566d5eda9so49023b6e.0;
+        Wed, 03 Jul 2024 16:26:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720049209; x=1720654009; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8HXePwbqvjghg/jCRXhGgfiZPDFLMmhiGck4biFS5sU=;
+        b=BaNBnZSfIOiXNl3cpwBxxBUIRaCrt7dup/di+kQvAB5fdMDlOwI+AxMCCAwaJXirXB
+         l0LI96J9nuMEKbIAUCIz5KF2XR7YILwaxqRvCbxFil/hfAiaYHBJklo3zRrbNlnWPeqs
+         D96mL7Js6Zw94d+LzsPcsrpdVWfFun4eprMMOxBs4y5kpMwzWb9HkL9RBjqfjWB/v9m4
+         iL0tHkzhwfh+6hdZjGNYcc9UUdWy3uZwhr3SDZ9bfnB2NIJnlkHfMlv8YfJi4unnNlJb
+         Ixq4/gFpulGKu7m3EG1+dqP2xWN0XLy+TMHwiVm6XXkBXE+BmKBzzLNvw/uuE+x/hPnF
+         9j4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720049209; x=1720654009;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8HXePwbqvjghg/jCRXhGgfiZPDFLMmhiGck4biFS5sU=;
+        b=uxVDMY220/Nus0L4hPYxtjlhcExKP+MHwOaAD1BIVD25ZGoggjGkg2BhZ9agEpDkqC
+         RMpjEJ6Nym/5uffbi23FZSWAmkVn+EGKu/LRXccMvkjPeMV7BNak/k2W0KO7fUMOa5Ap
+         ZsMcJlxpUw0kvMXqOsSybtwZoVPq136eQsqL0A4Qhv62AE4DoSfNaQsDozll0B1jUjTn
+         Gq8NmG5S0L/XSLlYbkpwQr8F6dDYhHslz7PsYBsRo1/GJ1sQDMttDJiCxR7CxKa52497
+         274SMOkr0iJnSZkcu6QsOspmcw3a3WbL6zhQilvX+rz0YfXXMzW+ajWh8xMrOcGZ7fRY
+         bGmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWwaZoYXPQnq02/3XEBFoOFtCRyXzDo1m2TXt4Hg4l7s9kN6E4uZv99407SVU0N9G7usTZidhTM7x7H0DOQxwoen3tstyU6Z0VxwYQh0bzovybhjDq0lsWdRUlrmYjaIqVhF2mUc/gesipLm5MrHqZpjCTew6ku+jPXrSF9ipuHq8nJAkbM0EnBZY9JfWSM3Eip8H8a32dBGzPq14+sDK7M6dSV3YBwjQ==
+X-Gm-Message-State: AOJu0Yw1uwAFQT0HhQodL6jQtzvaNeN21Q6PiZIF0OKbZDSHGt0kDtKd
+	/ZLjx+MTGtv4E2g9J4tlIMI9/+HTHaNPV40mMdmE12pDjlg1Ung6LY4tFM7RAcG5sy469H4ZKQv
+	A0p5eqXsHnYFC77R2aXyxgo95PIY=
+X-Google-Smtp-Source: AGHT+IHawKE8y6ADXQN4QpihhsZLlwXk2aAtwmYmiDAT27uTStzJkBHG3ApvbBZ4tqnJtJI4D8hA2umF3on6Joe6pow=
+X-Received: by 2002:a05:6808:1918:b0:3d6:38c2:fcb5 with SMTP id
+ 5614622812f47-3d914c4b21fmr64100b6e.3.1720049208375; Wed, 03 Jul 2024
+ 16:26:48 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240702041837.5306-9-changbin.du@huawei.com>
+References: <20240703040203.3368505-1-andrii@kernel.org> <20240703223927.zby4glzbngjqxemd@treble>
+In-Reply-To: <20240703223927.zby4glzbngjqxemd@treble>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Wed, 3 Jul 2024 16:26:36 -0700
+Message-ID: <CAEf4BzYja7imAz-kW+6WF03dQGkwfugw79p6reVmHbc8BTFOjw@mail.gmail.com>
+Subject: Re: [PATCH v3] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org, 
+	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de, 
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Jul 3, 2024 at 3:39=E2=80=AFPM Josh Poimboeuf <jpoimboe@kernel.org>=
+ wrote:
+>
+> On Tue, Jul 02, 2024 at 09:02:03PM -0700, Andrii Nakryiko wrote:
+> > @@ -2833,6 +2858,18 @@ perf_callchain_user32(struct pt_regs *regs, stru=
+ct perf_callchain_entry_ctx *ent
+> >
+> >       fp =3D compat_ptr(ss_base + regs->bp);
+> >       pagefault_disable();
+> > +
+> > +#ifdef CONFIG_UPROBES
+> > +     /* see perf_callchain_user() below for why we do this */
+> > +     if (current->utask) {
+> > +             u32 ret_addr;
+> > +
+> > +             if (is_uprobe_at_func_entry(regs, current->utask->auprobe=
+) &&
+> > +                 !__get_user(ret_addr, (const u32 __user *)regs->sp))
+>
+> Shouldn't the regs->sp value be checked with __access_ok() before
+> calling __get_user()?
 
-On Tue, Jul 02, 2024 at 12:18:37PM +0800, Changbin Du wrote:
-> Identify vdso by file name matching. The vdso objects have name
-> as vdso[32,64].so[.dbg].
-> 
-> $ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
-> 
-> Without this change, adding vdso using above command actually will never
-> be used.
+Ah, it's __get_user vs get_user quirk, right? Should I just use
+get_user() here? It seems like existing code is trying to avoid two
+__access_ok() checks for two fields of stack_frame, but here we don't
+have that optimization opportunity anyways.
 
-Can we handle /tmp/perf-vdso.so-XXXXXX too?
+>
+> Also, instead of littering functions with ifdefs it would be better to
+> abstract this out into a separate function which has an "always return
+> false" version for !CONFIG_UPROBES.  Then the above could be simplified t=
+o
+> something like:
 
-Thanks,
-Namhyung
+Sure, can do.
 
-> 
-> Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> ---
->  tools/perf/builtin-buildid-cache.c | 26 +++++++++++++++++++++++++-
->  1 file changed, 25 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
-> index b0511d16aeb6..8edea9044a65 100644
-> --- a/tools/perf/builtin-buildid-cache.c
-> +++ b/tools/perf/builtin-buildid-cache.c
-> @@ -172,6 +172,30 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
->  	return 0;
->  }
->  
-> +static bool filename_is_vdso(const char *filename)
-> +{
-> +	char *fname, *bname;
-> +	static const char * const vdso_names[] = {
-> +		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
-> +	};
-> +
-> +	fname = strdup(filename);
-> +	if (!fname) {
-> +		pr_err("no mememory\n");
-> +		return false;
-> +	}
-> +
-> +	bname = basename(fname);
-> +	if (!bname)
-> +		return false;
-> +
-> +	for (unsigned int i = 0; i < ARRAY_SIZE(vdso_names); i++) {
-> +		if (!strncmp(bname, vdso_names[i], strlen(vdso_names[i])))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
->  static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
->  {
->  	char sbuild_id[SBUILD_ID_SIZE];
-> @@ -189,7 +213,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
->  
->  	build_id__sprintf(&bid, sbuild_id);
->  	err = build_id_cache__add_s(sbuild_id, filename, nsi,
-> -				    false, false);
-> +				    false, filename_is_vdso(filename));
->  	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
->  		 err ? "FAIL" : "Ok");
->  	return err;
-> -- 
-> 2.34.1
-> 
+>
+>         ...
+>         pagefault_disable();
+
+But I'd leave pagefault_disable() outside of that function, because
+caller has to do it either way.
+
+>
+>         if (is_uprobe_at_func_entry(regs, current) &&
+>             __access_ok(regs->sp, 4) &&
+>             !__get_user(ret_addr, (const u32 __user *)regs->sp))
+>                 perf_callchain_store(entry, ret_addr);
+>         ...
+>
+> Also it's good practice to wait at least several days before posting new
+> versions to avoid spamming reviewers and to give them time to digest
+> what you've already sent.
+
+I'm not sure about "at least several days", tbh. I generally try to
+not post more often than once a day, and that only if I received some
+meaningful reviewing feedback (like in your case). I do wait a few
+days for reviews before pinging the mailing list again, though.
+
+Would I get this feedback if I haven't posted v3? Or we'd just be
+delaying the inevitable for a few more idle days? This particular
+change (in it's initial version before yours and recent Peter's
+comments) has been sitting under review since May 8th ([0], and then
+posted without changes on May 21st, [1]), so I'm not exactly rushing
+the things here.
+
+Either way, I won't get to this until next week, so I won't spam you
+too much anymore, sorry.
+
+  [0] https://lore.kernel.org/linux-trace-kernel/20240508212605.4012172-4-a=
+ndrii@kernel.org/
+  [1] https://lore.kernel.org/linux-trace-kernel/20240522013845.1631305-4-a=
+ndrii@kernel.org/
+
+>
+> --
+> Josh
