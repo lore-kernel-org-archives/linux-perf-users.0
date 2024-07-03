@@ -1,127 +1,90 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B999B186E5F
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 17:21:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A811836EC
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 17:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720027293; cv=none; b=IerVK47SwZ2Yi15f9B3wcfsbOaXaJcY+dcar9Cs+ZXAD81a2cpNz592s2O7UTVdBu+uXP5XfHwzLskjF3nW/gzZb2cJ+d/BUQuuZvU5rcFo+32uCoWQP9ud+IL2uvvXHoe46E/SJIR0X1+n/bmEQLPDIwjs58jL/y8h2jSsEdNo=
+	t=1720028133; cv=none; b=jENxJhQfQY2KzXICTz0B40C0KtoLf21hkeE1kgRckr95djclrjJi5Ru08EZO2WuKw1mtnwLGgmwilNOuvLVZz+5ivfTpG3Qf2Qg86ZzWEHWvZWiCuYNpBNavT4YMcyD6DEMEPd8nx5wHKIGiKMrTuiBNyGR38ehooSOUST9KO4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720027293; c=relaxed/simple;
-	bh=PyUC4JnOx8t49+z9OfoW03gptn9Bhl8DXa2Hy8+Ghhk=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=L4bE48lHmiZXRL+mAncx3t16rNfN7qyltYaTBFscEyTcWQB9nAOwAh7BFclAMXgWflH+OFqjGYDwGhEYf/Sfnk7VWjBhFe7EpSXf+vnUfg0KPCjQevtxaV2H6sOUL+XpO9vrmDh1M9i3+xJfwxY/8XOjaTgj71plsSYERHWCgJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tumwyInO; arc=none smtp.client-ip=209.85.219.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1720028133; c=relaxed/simple;
+	bh=wJqbm0cbDl3OnGsiCx+j3UvhXYjJ+xSxrF8iQeOZADw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jgizOZi5zTAnTHOSPHOJENDEhcw88QBcGMXmpwai/GmrgqxvT5ggVhc5PO/2V2G62yNrkh/DG76at3wCqoep0PhbSTtZLt6/0iDHntmM5EiSiDwRabAxuMrQAqdCFYhUH1hu9FT6XIPKIvziHVwsYVhzPOOTbUcg0+bneYHCkAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=Ew771wkM; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tumwyInO"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e03a40bd8afso3093766276.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 10:21:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="Ew771wkM"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so2848174a12.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 10:35:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720027289; x=1720632089; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=K0FWSWvUbekODbWV63YGf3s/rZsG/y2vGmr0tGGkdh4=;
-        b=tumwyInOQMVTUdUQfOcAnw6ccxJ5a1K0GQPopHDL7D3Hyac94/jprk2Z3A9TIZc8eD
-         +60Z5kt+pfvxLd/EFKxnLS2IIpuuwc2po/RWFf8SD7DGe0IuAQKCJCWgszxvblTl9vnI
-         VX3HiOWoDj+LWQE05SFUH//AVogKTANegkaVOuOZrTuhVDWCxNiUTFECDd8kAJwLO/kY
-         DF3pchQR+urmu+DCf+eS7VkQYkmQpga5KZhFSCALAmdj0Suo0+vci9VGBQ13ixvQOidw
-         AvhpU0mpBO+YjQ3WG87GZylDdxsnrmu/Vr0qnqL6wOpSaXk9Fj5c0DYSP0L3PLNElNOY
-         OkHg==
+        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1720028129; x=1720632929; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
+        b=Ew771wkMq+bZe9z1mdKOOaCBmlghWM4YQ1pE7iwmJv6xNqWZA//bGGIsqKVXtqHijg
+         A8KEDQrzybsV0tScp0gjMsEOuAhsn5da8O4YVxqMTh5odB1BV8Nh0eoa+2nPiBvYaew2
+         AnxAL9um6v/FsGNM0QmEe5lN1eeZtLtQTTs6z0b+SNubM+CibLB4xgKEoPYWGNdlfx7v
+         8o+X8rZqVYXTpw2wRTwBX1ei7mCrGMVcFwxLWPW8/PSqfz1osR2Vklgg4PKMUvP1MuXR
+         u9p1EECek7zDD8GzEM8TqRz16NOhDY2BecPbKa26K31emH+4R4KjDn/PZeFEhFL9Ihts
+         PKtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720027289; x=1720632089;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=K0FWSWvUbekODbWV63YGf3s/rZsG/y2vGmr0tGGkdh4=;
-        b=T8xAEtMif9zzyqXeAA6OjQ/nh/Y2M0MlK315CqLUEWrPpef5BylsQccxNrtlUZ4EMF
-         /2yPjg/nnoGwTPCK/gFmJdetnrjFAHp8RAoUVcJp8PTFg1L4xFfh0v5/RzpHxuckeGzn
-         L8nHl+mN1tYOMDJHTFALNVq4NfOOihtjAzCfCG3WYHLwqeudSVCZQB4l3Mkq3bOfr//E
-         z0CCZgRIVWzyUMYahd7CHCpaXAZkc0oGXMtCbpPNqCTcqmBlwOkv4sJyP/8mePXNDZHy
-         jiTSDP3o3pxvvFhI2NladxvbJgjrpuRFuQkBIUnfL0QMkZ2WJWlCt8chkWg3O1ba41s4
-         m1iQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVayUuUYa5SSjh5TkbUjjkSoNo53G1pQzHSd63KVaS7UcckfVMFP5Tigep8zgemEGeiYjHyr0Q+NZ5hbD8YYmN8JpinYPqDjmV3NkEEQKTDWw==
-X-Gm-Message-State: AOJu0YxSlJJ7EwqOXO+rVswmdd4D1YZRU6jg5Woc+LfjNsCylavmyvXA
-	HPtWSMuqO4ibrX1pBlp8r5KFeLJ+RKAeMLV1KOxqfwNsmzf/7j5OF0G5ZcQIpllJJWD0BGoGyWN
-	YFU/qvg==
-X-Google-Smtp-Source: AGHT+IGgzf2ypPsf+gg7WY15qEpj68EM85AeI9lS4mElKvh7OEaQdift7C8lBXTuoGY+dMzeU9TsXsOPncCe
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bdc2:f28d:3877:f0f2])
- (user=irogers job=sendgmr) by 2002:a05:6902:c03:b0:dfe:3a4a:bef2 with SMTP id
- 3f1490d57ef6-e036ec62e39mr866543276.11.1720027289687; Wed, 03 Jul 2024
- 10:21:29 -0700 (PDT)
-Date: Wed,  3 Jul 2024 10:21:17 -0700
-In-Reply-To: <20240703172117.810918-1-irogers@google.com>
-Message-Id: <20240703172117.810918-3-irogers@google.com>
+        d=1e100.net; s=20230601; t=1720028129; x=1720632929;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
+        b=BpskSyqF4k5Ukh1m/1/iAHjOhj4vtbvhbi/+x6ffjzJimgQeA0hl863hPqNjdj2czo
+         TM4sluWnGw0j1H7a/dBs/b5QsZxxXMFIKlyxkKJafMkT0YATY65kKk5522gZOg1JBkP8
+         ljhjH07wl+6P9dztVbrHiM4jrtdp0fDoGHcGNdECOkbdiSKG4XpMc0XZ8jmXnXl5GSAx
+         f/wAUcu3hE204dY7zpAhdWZwtRHseNqYlV1kSexs2OXj2qkjoxWf6aWRnFZGilesqzUD
+         xdePKxKXbrOaAHtJDqPwh8LYePZ6QxJIQJhS3iDIgvnsZ2YG2QzDW/ueva/EsPPG+Goj
+         wOow==
+X-Forwarded-Encrypted: i=1; AJvYcCUcdw1cymkfC9jc/vWDWd5P5bxo0CGqfo50y/ZziFOyDLrvadCnfOxvZSbxD5mj1BkRCRLxn3omdW0T2Penp5r8GsoATYvou1uboRHnCerk2w==
+X-Gm-Message-State: AOJu0YyNziGTqKRCdaB0YdT8quL+/UbTpSYMpoMw/caNbtDNMD3eQy17
+	ODoHkjaogB1lJKW5ygeU1eay05VQxocaRKJnIzytY0gnfxwEls9w+rjrIbP8eofPd517+lszkKd
+	AtYzKmPx1jo2KYJ/09N2Fgn75ABhfZC2JXufNbA==
+X-Google-Smtp-Source: AGHT+IFBjLDcJRjLamuVf5zi9ojzKBMa9/VQRJAc3OBE+azv+Z6WVHDWucZC0ZTibSml6j6VgCjcl6c8rGjZ4ILsUhM=
+X-Received: by 2002:a05:6402:2345:b0:58d:10a0:36c0 with SMTP id
+ 4fb4d7f45d1cf-58d10a03b2cmr1425175a12.14.1720028129456; Wed, 03 Jul 2024
+ 10:35:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240703172117.810918-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-Subject: [PATCH v1 2/2] perf dsos: When adding a dso into sorted dsos maintain
- the sort order
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+MIME-Version: 1.0
+References: <20240703172117.810918-1-irogers@google.com> <20240703172117.810918-2-irogers@google.com>
+In-Reply-To: <20240703172117.810918-2-irogers@google.com>
+From: Matt Fleming <matt@readmodwrite.com>
+Date: Wed, 3 Jul 2024 18:35:18 +0100
+Message-ID: <CAENh_SR=4axuur1=ibGnGre8vm7tHNeG0VT-f1UQS1mHCUb-Uw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf comm str: Avoid sort during insert
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
 	Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Steinar Gunderson <sesse@google.com>, Matt Fleming <matt@readmodwrite.com>
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Steinar Gunderson <sesse@google.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-dsos__add would add at the end of the dso array possibly requiring a
-later find to re-sort the array. Patterns of find then add were
-becoming O(n*log n) due to the sorts. Change the add routine to be
-O(n) rather than O(1) but to maintain the sorted-ness of the dsos
-array so that later finds don't need the O(n*log n) sort.
+On Wed, Jul 3, 2024 at 6:21=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> The array is sorted, so just move the elements and insert in order.
+>
+> Reported-by: Matt Fleming <matt@readmodwrite.com>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/comm.c | 29 ++++++++++++++++++-----------
+>  1 file changed, 18 insertions(+), 11 deletions(-)
 
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/dsos.c | 26 +++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+Thanks, this fixes the issue I had where perf-top would spend >40% of
+its time sorting comm_strs.
 
-diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-index 5e5e05f86dd3..d4acdb37f046 100644
---- a/tools/perf/util/dsos.c
-+++ b/tools/perf/util/dsos.c
-@@ -206,11 +206,27 @@ int __dsos__add(struct dsos *dsos, struct dso *dso)
- 		dsos->dsos = temp;
- 		dsos->allocated = to_allocate;
- 	}
--	dsos->dsos[dsos->cnt++] = dso__get(dso);
--	if (dsos->cnt >= 2 && dsos->sorted) {
--		dsos->sorted = dsos__cmp_long_name_id_short_name(&dsos->dsos[dsos->cnt - 2],
--								 &dsos->dsos[dsos->cnt - 1])
--			<= 0;
-+	if (!dsos->sorted) {
-+		dsos->dsos[dsos->cnt++] = dso__get(dso);
-+	} else {
-+		int low = 0, high = dsos->cnt - 1;
-+		int insert = dsos->cnt; /* Default to inserting at the end. */
-+
-+		while (low <= high) {
-+			int mid = low + (high - low) / 2;
-+			int cmp = dsos__cmp_long_name_id_short_name(&dsos->dsos[mid], &dso);
-+
-+			if (cmp < 0) {
-+				low = mid + 1;
-+			} else {
-+				high = mid - 1;
-+				insert = mid;
-+			}
-+		}
-+		memmove(&dsos->dsos[insert + 1], &dsos->dsos[insert],
-+			(dsos->cnt - insert) * sizeof(struct dso *));
-+		dsos->cnt++;
-+		dsos->dsos[insert] = dso__get(dso);
- 	}
- 	dso__set_dsos(dso, dsos);
- 	return 0;
--- 
-2.45.2.803.g4e1b14247a-goog
-
+Tested-by: Matt Fleming <matt@readmodwrite.com>
