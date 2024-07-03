@@ -1,75 +1,52 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110621DA313;
-	Wed,  3 Jul 2024 23:07:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 444A8136643;
+	Wed,  3 Jul 2024 23:18:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720048077; cv=none; b=PPKoQNoANOW9Vx80T8iqME7opMXiFZWLFFFrYW92X7inz03daBaF3hXFfyH88aO3j2g9cUXXQGPzBPgYQzN5zQYlvyx8l3VJFd2EpeL/4w6GMsQMy2DNuGCGjr4VCKRkQoEhoIw48R1DXzE5qe6VjWV2Qct1VAWNMkda4mAJVMs=
+	t=1720048709; cv=none; b=ARbKkRWCRoxIY0F3ny5ExUXsCVRZmtTvZgAlGpnqF4hKJmoXZTY5/5z7Y+miCV+eXiPJXWdoa+Vz76H5LMA32mb5svz2qkLRC3qjwyM7bIFXXH+paw7/uE5YOYIuHmRIq9Gg4PWS+fr/eHPfd3xucgRc01Ly9m27j0JP8blOisk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720048077; c=relaxed/simple;
-	bh=vn+sW8ZyjpsUb2fRe3K0pOkAZ+FDvIED2cRcDMheMq0=;
+	s=arc-20240116; t=1720048709; c=relaxed/simple;
+	bh=leq8VNyokdvpQStEdxb0BGwQSSksYqqYCuQZSbBzsQ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IiWXVjP//FzoZG44DjWEPv32K9703UDLOX4xoQBmglLGeXSv7QgfJkou/uSouhEBmx+3Ciu7iit4axFibTgD2/8Zm607rd0qQbJbIz7jgSDUJrSYUExrtldp0BXEZuUri+EaqYGjskGt2Nh9FB+jz9ILurUM8Q541DCU1rV3EZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SuOlLfAO; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=JlqkcyPNbIkHWR9ZzpeNpRY3NZpldwRzl552R2HQKvK7gCrS+CTDBB15FDSLzAtDBPwR9PizIom8EeCOVcrMiwQLUyTo5AIGtazfPBuhIqiO3oTL9ztfvn/hpTdfDtBHjOS70JtAV4ab5c+gICwLBSmYVjNZ/+Tgdl2wMcjiFlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bp/WzDVC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SuOlLfAO"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8DA2D40E021B;
-	Wed,  3 Jul 2024 23:07:52 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id dccP64wQ6FMy; Wed,  3 Jul 2024 23:07:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1720048069; bh=vARn0lwb52XcUW8aFdtOgDF06W70NUIa2J+3vdggSvg=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bp/WzDVC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0EAC2BD10;
+	Wed,  3 Jul 2024 23:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720048708;
+	bh=leq8VNyokdvpQStEdxb0BGwQSSksYqqYCuQZSbBzsQ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SuOlLfAOzld19ExePQmgbMX3M01B5Mr4oCwu5IS+rFQ/V7dHagmWjYI4GTej63GYF
-	 5tQuwCg+qBMgxjqZEJjjgtZ2YGk9cp6MFLaylP/CaoR9QPlAvni4k1SCPsKfPXkKfh
-	 RP0Qe99/Ze4/0cQ/VdfhYhgj3kozxoI8BNuZYFPX05oPw+Ag3I/JRdLKJraWStglGw
-	 k2R8nB/08AeBOTEubMm/GMZ3kkpvs2qtRZQqDox7FJglxeybYCyPebOavbbFRUo0z4
-	 2gVczO2vfiT26tV5w0F2DgyZEt3f0Ta8V5hqDwUrnu6fJ8BvTB1xUzNTDYRnA2yagu
-	 vv1CSenbNmg9D3Df3L/MqsrfWT0BxI99GgEDXejRfMrvPHCbh5CguOXP19dFEfVIhS
-	 Zx7AwL4rlFB0Zx9/ZiYj1v2j8X5SzYLp+FPA7q/tnj/7wofU0/VDZjAecwHTEjzTeg
-	 aQQGmvL63taD7AivA5PYqVWvcZ5mjfPN23OLTI+IDrGEGbmfQjp3xujFuVKtw8WvZB
-	 GZ7HJAfi23Fcwa9qofH5QiIRcUIOQnwQNCfA0wI0FohXxjbo0Vo1RUYxcJGVaYkidG
-	 prURk4982zgdBi8TY7qZDMDke1KnZ0F2luZDW2oJFO1FYawkInGaz/279T/JmtElNz
-	 9mFxTqQhvy7Q0wmoL1PefuXQ=
-Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 224E140E0185;
-	Wed,  3 Jul 2024 23:07:29 +0000 (UTC)
-Date: Thu, 4 Jul 2024 01:07:24 +0200
-From: Borislav Petkov <bp@alien8.de>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	b=Bp/WzDVC4BdTUPn2o2qlmwUR55Hld+30vDvwX7VrDHWNYUeDB+bvBPG+OpCn1W8su
+	 0C6In+U+QOJra838+j9XuCsk0SNM4tMBV7aQ8L8xTK5JxSGUnEoOwu5+hyNcStpns7
+	 p9usbd70QPW0pzUVHK1F6LlZDZ4+HImnLM7JN8uXjXksLExKUbAoRSPkLp2ty8VCTz
+	 0rojh20k7YeJjpEydGkG78SVu/uWoWNvE+Sek6dWoC8koBT2KsN0xX2xY78rWLkSNE
+	 2BzIhr0e+nrVgM6ZEZJ7YUNqVJQWCt62Dk5UgwvOEvvDzcDPt+94agNEM50NHxjsFX
+	 WpBaoDWtfZ4uQ==
+Date: Wed, 3 Jul 2024 16:18:26 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Changbin Du <changbin.du@huawei.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Nathan Chancellor <nathan@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
 	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
- cpuinfo_topology
-Message-ID: <20240703230724.GEZoXZrIavchI2Kj-P@fat_crate.local>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
- <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
- <20240628173209.wzpc6pwnw4p6u57h@desk>
+	Nick Desaulniers <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>,
+	Justin Stitt <justinstitt@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v5 8/8] perf buildid-cache: recognize vdso when adding
+ files
+Message-ID: <ZoXcQunHBf0Z1JIW@google.com>
+References: <20240702041837.5306-1-changbin.du@huawei.com>
+ <20240702041837.5306-9-changbin.du@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -78,60 +55,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240628173209.wzpc6pwnw4p6u57h@desk>
+In-Reply-To: <20240702041837.5306-9-changbin.du@huawei.com>
 
-On Fri, Jun 28, 2024 at 10:32:09AM -0700, Pawan Gupta wrote:
-> On Fri, Jun 28, 2024 at 10:03:05AM +0200, Borislav Petkov wrote:
-> > On Thu, Jun 27, 2024 at 01:44:06PM -0700, Pawan Gupta wrote:
-> > > The hw_cpu_type is populated in the below debugfs file:
-> > > 
-> > >   # cat /sys/kernel/debug/x86/topo/cpus/#
-> > 
-> > What "below debugfs file"? A '#'?
+Hello,
+
+On Tue, Jul 02, 2024 at 12:18:37PM +0800, Changbin Du wrote:
+> Identify vdso by file name matching. The vdso objects have name
+> as vdso[32,64].so[.dbg].
 > 
-> That is the number of the CPU. If it is causing confusion, I can will
-> change it to N, or say # means the number of the CPU.
-
-Or drop that sentence completely.
-
-For some reason lately it seems to me folks feel the need to explain what the
-patch does. Even if that is visible from the diff.
-
-> I thought about that, but the other fields are also printed without a
-> preceding "0x":
+> $ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
 > 
->           seq_printf(m, "initial_apicid:      %x\n", c->topo.initial_apicid);
->           seq_printf(m, "apicid:              %x\n", c->topo.apicid);
-> 	  ...
+> Without this change, adding vdso using above command actually will never
+> be used.
+
+Can we handle /tmp/perf-vdso.so-XXXXXX too?
+
+Thanks,
+Namhyung
+
 > 
-> I will change those too, probably in a separate patch.
-
-Yes please.
-
-> > > +static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
-> > > +{
-> > > +	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
-> > > +
-> > > +	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
-> > > +		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
-> > > +}
-> > 
-> > Why isn't this happening in cpu/intel.c? And then you don't need yet
-> > another silly function.
+> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> ---
+>  tools/perf/builtin-buildid-cache.c | 26 +++++++++++++++++++++++++-
+>  1 file changed, 25 insertions(+), 1 deletion(-)
 > 
-> I was preferring to keep the topology related code in one place. Would it
-> make sense to keep it in Intel specific leg in parse_topology() as below:
-
-I guess.
-
-Although looking around this code, I wonder why is this hw_cpu_type part of
-the topology and not part of cpuinfo_x86 directly?
-
-struct cpuinfo_topology has all the IDs but the type? Feels out of place
-there.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-buildid-cache.c
+> index b0511d16aeb6..8edea9044a65 100644
+> --- a/tools/perf/builtin-buildid-cache.c
+> +++ b/tools/perf/builtin-buildid-cache.c
+> @@ -172,6 +172,30 @@ static int build_id_cache__add_kcore(const char *filename, bool force)
+>  	return 0;
+>  }
+>  
+> +static bool filename_is_vdso(const char *filename)
+> +{
+> +	char *fname, *bname;
+> +	static const char * const vdso_names[] = {
+> +		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
+> +	};
+> +
+> +	fname = strdup(filename);
+> +	if (!fname) {
+> +		pr_err("no mememory\n");
+> +		return false;
+> +	}
+> +
+> +	bname = basename(fname);
+> +	if (!bname)
+> +		return false;
+> +
+> +	for (unsigned int i = 0; i < ARRAY_SIZE(vdso_names); i++) {
+> +		if (!strncmp(bname, vdso_names[i], strlen(vdso_names[i])))
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +
+>  static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
+>  {
+>  	char sbuild_id[SBUILD_ID_SIZE];
+> @@ -189,7 +213,7 @@ static int build_id_cache__add_file(const char *filename, struct nsinfo *nsi)
+>  
+>  	build_id__sprintf(&bid, sbuild_id);
+>  	err = build_id_cache__add_s(sbuild_id, filename, nsi,
+> -				    false, false);
+> +				    false, filename_is_vdso(filename));
+>  	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
+>  		 err ? "FAIL" : "Ok");
+>  	return err;
+> -- 
+> 2.34.1
+> 
