@@ -1,134 +1,92 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01E417DA03
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 15:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BA3E18309B
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 17:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720022047; cv=none; b=rghxW8X8nDqYu0T1Z/byrF97YPm5gSAz9LoWipcModgD4ixKRuA23MZn4tpQpWSnr3/vkkudXbPQK7V8DsHBmpew0kl+scoPtLfpPLnHuQWbwVr6FGkXVUz/qZRJKbRMXXqrDkJWmPFEo4OoTpwMZ6xQzcP3rmS0Jz3EptchfkY=
+	t=1720027287; cv=none; b=YzNuIlVrx4Spz1h8pLliwa0Dv43RhlOs/ezdPiNPNdCWkRX12bxmI90oY+m/DgkToIGIkNGrTCNYoNwn7+JmsOgHja2ZA37MYQj1Xi8TyEryCIO4v8cjzNVf2nAs6HZ6JyVgMn7rqkRwGrNFqLL/RZKhEjKm8yCJtGhYpn39qpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720022047; c=relaxed/simple;
-	bh=wb28OCOL6XIgWlTK4F54uD0brSLivRMyb33CBcVWIJY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DEcowQEJIXWaGksa2ksmaVv5Q3uP1yqFTkiWu7LMjNsKxkkJ1jRfy30x1rof01SyUJWihl/rqTSm8Mmzi7D9yTnbEj/IXNPUtUP5YGeuTHLcTX3JBf2uV999GD2Fr4olOWoMFiU9JvHJzuXlThCbk/TYm/YIYG0totH7CxgisvM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=LGnrEHYN; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1720027287; c=relaxed/simple;
+	bh=XSLtNpQyYpFfkguGPVVIRjjiBCkd6K/LCJ4NTdjR/E8=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=MGXIMXryeP5gF+TJ6TANgiz2qlq5sEOnkGFLRL47nKRVPTv+DofJf23MFHLw8ectBHBKN71L5wFh5cAS7bClsulg1TT+bGRT4q23IFs0kvtEFTfKZCSNfdXtTZjRypgk8r+pxoO0Xgd50JesajmqLVlOrAlteOxLirr1ANJ+PgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OD9XWGHh; arc=none smtp.client-ip=209.85.128.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="LGnrEHYN"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-58b0dddab63so4084475a12.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 08:54:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OD9XWGHh"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6502e4c5aafso9078907b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 10:21:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1720022043; x=1720626843; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FgKAueHAmsvhRUNxEOXMX0TgnL4O49SNBsQJkiw1bnE=;
-        b=LGnrEHYNcm1XhC9QN3iw6mLY+h0OlcGIRnjpqib/tVJQ+8Xw8zLI8ZnnjimDrGybiH
-         TTa/H0gmI6rKdwYHVB1f9iODuE1QOF8+G38Zs2dKb0bevKf6Td4ms6j8KFAAod4/T8+j
-         wsFK5lecg32CDt1ujJHaDTHal6kCDq5wCVpc2z6g5M1+fwRpDhsuTerQBz8zydk0Z3Kr
-         1GWJ3ldpNQhsqhOwlHBFFzUMXR40e0tIbjnsRitCVbevpvlGRWZk7YR2kriLOv0AjAaY
-         h9GXM6VpV1QKBymHlmdycT4EoJw3lhYU6+bcQK9ssL4PJAIjzgQtkmVOk6ZMZ60ePY5x
-         c98A==
+        d=google.com; s=20230601; t=1720027284; x=1720632084; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=O6DICyukWO//hDnJTxN/2aPKt92AdYPiZHqQbb+7vPI=;
+        b=OD9XWGHhhMPHEVGWrmlRhfoDbz7rSOnPRMDu9h3+lvu12+COAXXiDah5k3ggnG3kW7
+         YoZhA7q4qMmmPDZJ3Z6NGsoJa/NYH+k1Ntp+RUWjUE70h0wqpX5++riCEoH/WS+XWQwV
+         Qy5eDfwhOqbYAN5ZUjFP1GP34R0gtUShemRnbp5Td21ukDB25ogv4LFIC+DbXQ90Qlb8
+         AMr43m0dQSBgJQLCVIexCy1DKRiu8b9SgQ843XRfqsrb1jvYhxvjTIN9oafE7XuNXet/
+         YSjGbPN7JxeQ3ES9j5HqmYeqQYy08Nf9kE1opxJs+X9sVPY1ma+Xt8cdA3M7oVZKLVFU
+         4fYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720022043; x=1720626843;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FgKAueHAmsvhRUNxEOXMX0TgnL4O49SNBsQJkiw1bnE=;
-        b=oFHRMRWxzCGZDElV0gg3XZwEQLVn20onrcJu3Efwbd8SxFJqtRuszskX2jeoHsLPky
-         ki7g+ZxRhfdLJ6XmP0DlqpxwV2MjYrzgJnx0OaAoh0d+wP/XaIDqIwsWLsUhftyalAhi
-         h8XGdAtWq1sUjJDHlQZySYs0JNT1O+eQ5/cErc4ciNuxPj4JIHavYzujUVYZtqa0LgAG
-         XIvBGMgnYLCoQewpdj3NptUyZjilswl4X21h7CIuyptgPEQepmik6Ykrpk2FEPnvXcwK
-         n1k3e7CGjv9YFB1gPZgK5I1L76Zfz9V1YqOPtvHNioZl2s0fJkyg9udUjMmelVrUD2Ag
-         qmvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVNznVqfztrGkAgT1EejS1IRWAcLsOjyofMrysnAtNY9rvMAoeUYWPKdc8NFnAd+ueIrSi3fklmDdQTQtc15JeJVIn2o2fmsv2tiLrPote59w==
-X-Gm-Message-State: AOJu0Yw7Z8MVHHpUjtBAq2TYRI2XgREK1k7mWDNr2GBaBAaTK9YhqD5F
-	auCw0F4zADGYFroAew1ZzRi2YIU1g6ykvUgm163Kq/MqQdZkqflL6C1dP5b6Tac=
-X-Google-Smtp-Source: AGHT+IGN8vmmwbPhk2yzHSQbyP4/LzBLPhHVaIwbElW2ruwjQ31vIWu8z1bU27K7fNs+RY0pX/NXng==
-X-Received: by 2002:a05:6402:2803:b0:57d:10be:6100 with SMTP id 4fb4d7f45d1cf-587a063657fmr8013281a12.29.1720022042560;
-        Wed, 03 Jul 2024 08:54:02 -0700 (PDT)
-Received: from localhost (p50915e7b.dip0.t-ipconnect.de. [80.145.94.123])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-58612c834e1sm7201287a12.1.2024.07.03.08.54.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jul 2024 08:54:01 -0700 (PDT)
-Date: Wed, 3 Jul 2024 17:54:00 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Nicolas Schier <n.schier@avm.de>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf install: Don't propagate subdir to Documentation
- submake
-Message-ID: <psbxdrh74gsqceu5xtgsuhzjxxaf3vspmgr6kjoz6bz2r6kiig@dc2qgrsk6wxv>
-References: <20240523-make-tools-perf-install-v1-1-3903499e637f@avm.de>
+        d=1e100.net; s=20230601; t=1720027284; x=1720632084;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=O6DICyukWO//hDnJTxN/2aPKt92AdYPiZHqQbb+7vPI=;
+        b=H+ZseskWmrqOuaRoxhg9cDAzhDKQPz90gWo++k+RpoQLSWOM7XOlIHO9Dyf0fOuMCH
+         hEUgL6WtK1yZScTBQ9rQXNgFn7ccibQHJX5Nxa6gpPCpGpQ+zLz4FwyUS1b9Gn/zCQ9k
+         AtPvrds6hzSOR9c+P+GoP3WL/9a8yP6S1PS4glFr0sOPYzmzGOfIlimVVeTu9Sxq13gP
+         wFmsYWJTumyQ5TuRhwpAvUw6mBsnK3ZVgbtPVnT84e1A1c2s0XeX3mMi/f+ysMjssUIA
+         u+QZF2JZc7Qh//07ymbJ0w2akXMI6UlnGhhT6NuevUewwUFm3JJYNNp3w2SPiCmblmMD
+         4n9A==
+X-Forwarded-Encrypted: i=1; AJvYcCUxalWFg8IDHHurt5FoPVsYTFOygsWfdXUpOi/cZfXnNoWDaHKJEGH5Zq/m3PyHKtRgJBZrEponaylITfLUi6cv7E73h45rVEY/n8pUmhjvug==
+X-Gm-Message-State: AOJu0YzrDEaU+DNxXgYZOQMY26uYGn2iNR89klE608qBjibRQNj2wFyB
+	67GNQF0rX+Yj4oxlVEJCrvD162P98Er3d5IASoLLCOnEl+Kv+hKZADvRZe5HigQQZgUy6Usa4p0
+	ZmpsifQ==
+X-Google-Smtp-Source: AGHT+IGv2CIYh9To76MKX40LCNyELwQzrEHoDJAI0BU1AT3bkehsbRkH7SSJrQqkR9ENVbfP0BoApbYrhh6S
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bdc2:f28d:3877:f0f2])
+ (user=irogers job=sendgmr) by 2002:a05:690c:c0a:b0:618:5009:cb71 with SMTP id
+ 00721157ae682-651818f0323mr197937b3.5.1720027284599; Wed, 03 Jul 2024
+ 10:21:24 -0700 (PDT)
+Date: Wed,  3 Jul 2024 10:21:15 -0700
+Message-Id: <20240703172117.810918-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lhmzlz7q2j5n55zj"
-Content-Disposition: inline
-In-Reply-To: <20240523-make-tools-perf-install-v1-1-3903499e637f@avm.de>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+Subject: [PATCH v1 0/2] Try to avoid some qsorts
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Steinar Gunderson <sesse@google.com>, Matt Fleming <matt@readmodwrite.com>
+Content-Type: text/plain; charset="UTF-8"
 
+Reference count checking doesn't work well with rbtree due to the need
+for counts on each child and parent edge. As such the reference count
+checking changes removed rbtree and replaced them with sorted
+arrays. There have been instances where sorting has been shown to be a
+regression:
+https://lore.kernel.org/lkml/20240521165109.708593-1-irogers@google.com/
 
---lhmzlz7q2j5n55zj
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+These patches address a further 2 cases in comm and dsos, avoiding a
+sort when the array is already sorted at the cost of an O(n) memmove.
 
-Hello Nicolas,
+Ian Rogers (2):
+  perf comm str: Avoid sort during insert
+  perf dsos: When adding a dso into sorted dsos maintain the sort order
 
-On Thu, May 23, 2024 at 10:06:40AM +0200, Nicolas Schier wrote:
-> Explicitly reset 'subdir' variable when descending to
-> tools/perf/Documentation.  Similar to commit f89fb55714b62 ("perf build:
-> Don't propagate subdir to submakes for install_headers", 2023-01-02),
-> calling the 'tools/perf_install' target via top-levels Makefile results
-> in repeated subdir components when attempting to call the perf
-> documentation installation rules:
->=20
->     $ make tools/perf_install NO_LIBTRACEEVENT=3D1 JOBS=3D1
->     [...]
->     /bin/sh: 1: cd: can't cd to /data/linux/kbuild/tools/perf/tools/perf/
->     ../../scripts/Makefile.include:17: *** output directory "/data/linux/=
-kbuild/tools/perf/tools/perf/" does not exist.  Stop.
->     make[5]: *** [Makefile.perf:1096: try-install-man] Error 2
->     make[4]: *** [Makefile.perf:264: sub-make] Error 2
->     make[3]: *** [Makefile:113: install] Error 2
->     make[2]: *** [Makefile:131: perf_install] Error 2
->=20
-> Resetting 'subdir' fixes the call from top-level Makefile.
->=20
-> Reported-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> Signed-off-by: Nicolas Schier <n.schier@avm.de>
+ tools/perf/util/comm.c | 29 ++++++++++++++++++-----------
+ tools/perf/util/dsos.c | 26 +++++++++++++++++++++-----
+ 2 files changed, 39 insertions(+), 16 deletions(-)
 
-If it helps:
+-- 
+2.45.2.803.g4e1b14247a-goog
 
-Tested-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-
-Did I already thank you? If not: Thanks a lot!
-
-Best regards
-Uwe
-
-
---lhmzlz7q2j5n55zj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmaFdBYACgkQj4D7WH0S
-/k4JnQf8CASfZg0wOKxCWDtiy8OPsDkN1QPEBE0Ely47vXN7v4w6T53/KH5xPGy7
-aM7NyblCIrPYoYJ/GmCC4B8mCHJGWcVKF5NkdKYaREY+zvDg8ojQX8FlnRxmOO32
-E8NR2Cf4zPL3cOFzsq+TVpVzhc0AR98qaNC6ossmX91iiHkpN4rGlpyzcZva+pJx
-ByRWEbnmqQ/6O3uHpmsj07XcS7RrozKicD8nL23qLns/QzqsGu2yrkGsgsN9nxxa
-/94qkvideh6ZASV67Zn+DFD5SHdWnjOwTGSY5rJPF7TzZk0EocgeMPFnOszR4WoL
-IPPWOUzBQEED9moydr+qOv5jBgXrlw==
-=GooX
------END PGP SIGNATURE-----
-
---lhmzlz7q2j5n55zj--
