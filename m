@@ -1,254 +1,215 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924D4FC12;
-	Wed,  3 Jul 2024 03:39:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AA7173336;
+	Wed,  3 Jul 2024 04:02:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719977999; cv=none; b=SYNV9zUPl92O0jHyDuTpG/hgGQmpPCChUntqJKaNQ5SUAlBp+RJAJIYIe7bGklpaoAPocS1EKqgvql6QYJOo/MnI0PL6q4sv59VTKhxgl8ouz3499rODGyAeoY/iBqFKgU8S16pNeAynlaTocm4usUBNOQltgTWZWoS/o9u+Kx0=
+	t=1719979331; cv=none; b=kY3qLA30yDqA/pkIINpoZfg0buikrgukpYcaNCxPoJz+/fFIXmGxcSkt+yQ7Co6sK2gVvLhlKR8a6ejtzyChovSscjwhoHuvn0iVbAV9Cs4I4AtJQz6yfn0igLJOFtHMuRYo49iBvFUC41WpAtvvMxsKh+t9XptNWLSi8ZGl74M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719977999; c=relaxed/simple;
-	bh=XHjEpxo6pYX52KNc9v2EQAaK5Y5dA48r1Bk6OC1VTc4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6TpJf+3VZ8zqq13d3/nDzHvXowjHjW6SMHgBWRi+5Ls/vga8sxO1ZPJlAKfWdCTXqlpm/6pQj/pQQdcDDF2/PGkyrM3PIK6qJ6sUIjgvbJKw+qgqB+2Z42BOT5Gc0ohsLv7QMnE0F56iGbADF9goK0ythgUcsuLMmQriETquMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwECEQm9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719979331; c=relaxed/simple;
+	bh=u0iCOuCZAxX0T/vowtgKwsMPutCav4tuU4WhWrKFBaI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kMxhIv/en8y0nrwjSuowctNs+tL9QK1WENi3QRo4pMxt1MYsFanHLL3fEfhWG+9YE7BDgkFWOXq96QVmkJL95diJfb/xN8Vi9foPf3GGldqdtviQQLz7qv3rClwSx51hK0+aJDmPES2ib1RmjfWMKaRmkPsnTpTt0v3QfdMLuos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fQ7hiiGM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwECEQm9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3432C116B1;
-	Wed,  3 Jul 2024 03:39:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fQ7hiiGM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D292C32781;
+	Wed,  3 Jul 2024 04:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719977999;
-	bh=XHjEpxo6pYX52KNc9v2EQAaK5Y5dA48r1Bk6OC1VTc4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QwECEQm9j1NRqRCtVf/o5qfAqMTP7Gd2Yv2mw0dQ4ZEijnRZKGw/1k3wCDapvZFED
-	 aNMmuuHuyYPfyh34vrIAyX/QmgAVQFCbha9zMepEGb97GHbSEx1pbBphHcZgxO0Ptr
-	 E6j35r9+hxUn7lnayFaM4jkUWkAT4mxe1JsWeCrndKfomieMNiDy+aNU7LZUnCVTwC
-	 5pgAUICXoZXxeykyPTbo/EBMVrjQXFKjxQx6+kf0WGGYFVykoYB9BoNEWfMZMCUNfq
-	 gg+oT4+Ez1YQmdPrL962CzhFPvHjiPcL3CsbBSU8+s/Vxh/cXdvndjv85aYR4BrUcu
-	 Y9riT/xVxlJ8w==
-Date: Tue, 2 Jul 2024 20:39:56 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf test: Display number of remaining tests
-Message-ID: <ZoTIDCXKZw0bnthC@google.com>
-References: <20240701044236.475098-1-irogers@google.com>
- <20240701044236.475098-3-irogers@google.com>
+	s=k20201202; t=1719979330;
+	bh=u0iCOuCZAxX0T/vowtgKwsMPutCav4tuU4WhWrKFBaI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fQ7hiiGMdOkow255dgSmxQeGn9iW2CynZML9fhABtvjestiY7HKO2jeI3H4SnSjSI
+	 F3Yd582XUH2LEpasl8VIjishi5Q+Na8qDT35FjR0JT8jQC8y+adBgRq1hhbDdAboTU
+	 xuTAZW7rqLV4FHBHcZhQ5AZ+X0lnXFc9FCL31w/FEO12+pBVzjBq64ZYW8l9+5MOS3
+	 VtHplGvN4lfR6TKjhBvSHpKReW8y7JanVpWwO9nNNCfS8pYthk+6Uu2IdoftBi3eWc
+	 0mZ4acSzRlnDVOzltyZPF68yWKwavEc3X8N7OywrBIRd1ZE03avSEpn3scmvkxlFAP
+	 FQFumobtj/h/w==
+From: Andrii Nakryiko <andrii@kernel.org>
+To: linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org,
+	rostedt@goodmis.org,
+	mhiramat@kernel.org
+Cc: x86@kernel.org,
+	mingo@redhat.com,
+	tglx@linutronix.de,
+	jpoimboe@redhat.com,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org,
+	rihams@fb.com,
+	linux-perf-users@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH v3] perf,x86: avoid missing caller address in stack traces captured in uprobe
+Date: Tue,  2 Jul 2024 21:02:03 -0700
+Message-ID: <20240703040203.3368505-1-andrii@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240701044236.475098-3-irogers@google.com>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Jun 30, 2024 at 09:42:36PM -0700, Ian Rogers wrote:
-> Before polling or sleeping to wait for a test to complete, print out
-> ": Running (<num> remaining)" where the number of remaining tests is
-> determined by iterating over the remaining tests and seeing which
-> return true for check_if_command_finished. After the delay, erase the
-> line and either update it with the new number of remaining tests, or
-> print the test's result. This allows a user to know a test is running
-> and in parallel mode (default) how many of the tests are waiting to
+When tracing user functions with uprobe functionality, it's common to
+install the probe (e.g., a BPF program) at the first instruction of the
+function. This is often going to be `push %rbp` instruction in function
+preamble, which means that within that function frame pointer hasn't
+been established yet. This leads to consistently missing an actual
+caller of the traced function, because perf_callchain_user() only
+records current IP (capturing traced function) and then following frame
+pointer chain (which would be caller's frame, containing the address of
+caller's caller).
 
-It's not default anymore. :)
+So when we have target_1 -> target_2 -> target_3 call chain and we are
+tracing an entry to target_3, captured stack trace will report
+target_1 -> target_3 call chain, which is wrong and confusing.
 
+This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+(`push %ebp` on 32-bit architecture) instruction being traced. Given
+entire kernel implementation of user space stack trace capturing works
+under assumption that user space code was compiled with frame pointer
+register (%rbp/%ebp) preservation, it seems pretty reasonable to use
+this instruction as a strong indicator that this is the entry to the
+function. In that case, return address is still pointed to by %rsp/%esp,
+so we fetch it and add to stack trace before proceeding to unwind the
+rest using frame pointer-based logic.
 
-> complete. If color mode is disabled then avoid displaying the
-> "Running" message.
-> 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
->  tools/perf/util/color.h         |  1 +
->  2 files changed, 53 insertions(+), 25 deletions(-)
-> 
-> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> index c3d84b67ca8e..23be9139f229 100644
-> --- a/tools/perf/tests/builtin-test.c
-> +++ b/tools/perf/tests/builtin-test.c
-> @@ -241,7 +241,10 @@ static int run_test_child(struct child_process *process)
->  	return -err;
->  }
->  
-> -static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
-> +#define TEST_RUNNING -3
-> +
-> +static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width,
-> +			     int remaining)
->  {
->  	if (has_subtests(t)) {
->  		int subw = width > 2 ? width - 2 : width;
-> @@ -251,6 +254,9 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
->  		pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
->  
->  	switch (result) {
-> +	case TEST_RUNNING:
-> +		color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d remaining)\n", remaining);
-> +		break;
->  	case TEST_OK:
->  		pr_info(" Ok\n");
->  		break;
-> @@ -272,13 +278,15 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
->  	return 0;
->  }
->  
-> -static int finish_test(struct child_test *child_test, int width)
-> +static int finish_test(struct child_test **child_tests, int running_test, int child_test_num,
-> +		       int width)
->  {
-> +	struct child_test *child_test = child_tests[running_test];
->  	struct test_suite *t = child_test->test;
->  	int i = child_test->test_num;
->  	int subi = child_test->subtest;
->  	int err = child_test->process.err;
-> -	bool err_done = err <= 0;
-> +	bool err_done = false;
->  	struct strbuf err_output = STRBUF_INIT;
->  	int ret;
->  
-> @@ -293,7 +301,7 @@ static int finish_test(struct child_test *child_test, int width)
->  	 * Busy loop reading from the child's stdout/stderr that are set to be
->  	 * non-blocking until EOF.
->  	 */
-> -	if (!err_done)
-> +	if (err > 0)
->  		fcntl(err, F_SETFL, O_NONBLOCK);
->  	if (verbose > 1) {
->  		if (has_subtests(t))
-> @@ -307,29 +315,48 @@ static int finish_test(struct child_test *child_test, int width)
->  			  .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
->  			},
->  		};
-> -		char buf[512];
-> -		ssize_t len;
-> -
-> -		/* Poll to avoid excessive spinning, timeout set for 100ms. */
-> -		poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
-> -		if (!err_done && pfds[0].revents) {
-> -			errno = 0;
-> -			len = read(err, buf, sizeof(buf) - 1);
-> -
-> -			if (len <= 0) {
-> -				err_done = errno != EAGAIN;
-> -			} else {
-> -				buf[len] = '\0';
-> -				if (verbose > 1)
-> -					fprintf(stdout, "%s", buf);
-> -				else
-> +		if (perf_use_color_default) {
-> +			int tests_in_progress = running_test;
-> +
-> +			for (int y = running_test; y < child_test_num; y++) {
-> +				if (check_if_command_finished(&child_tests[y]->process))
-> +					tests_in_progress++;
-> +			}
-> +			print_test_result(t, i, subi, TEST_RUNNING, width,
-> +					  child_test_num - tests_in_progress);
-> +		}
-> +
-> +		err_done = true;
-> +		if (err <= 0) {
-> +			/* No child stderr to poll, sleep for 10ms for child to complete. */
-> +			usleep(10 * 1000);
-> +		} else {
-> +			/* Poll to avoid excessive spinning, timeout set for 100ms. */
-> +			poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
+We also check for `endbr64` (for 64-bit modes) as another common pattern
+for function entry, as suggested by Josh Poimboeuf. Even if we get this
+wrong sometimes for uprobes attached not at the function entry, it's OK
+because stack trace will still be overall meaningful, just with one
+extra bogus entry. If we don't detect this, we end up with guaranteed to
+be missing caller function entry in the stack trace, which is worse
+overall.
 
-When I tested this patch, I saw it refreshes too often in parallel mode.
-Maybe 100ms is too short?  I don't know if it's from usleep (10ms) or
-here.
+Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+---
+v2->v3:
+  - added endr64 detection and extracted heuristics into a function (Josh);
+v1->v2:
+  - use native unsigned long for ret_addr (Peter);
+  - add same logic for compat logic in perf_callchain_user32 (Peter).
 
-Thanks,
-Namhyung
+ arch/x86/events/core.c  | 56 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/uprobes.h |  2 ++
+ kernel/events/uprobes.c |  2 ++
+ 3 files changed, 60 insertions(+)
 
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..2174a9d2173e 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2813,6 +2813,31 @@ static unsigned long get_segment_base(unsigned int segment)
+ 	return get_desc_base(desc);
+ }
+ 
++#ifdef CONFIG_UPROBES
++/*
++ * Heuristic-based check if uprobe is installed at the function entry.
++ *
++ * Under assumption of user code being compiled with frame pointers,
++ * `push %rbp/%ebp` is a good indicator that we indeed are.
++ *
++ * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
++ * If we get this wrong, captured stack trace might have one extra bogus
++ * entry, but the rest of stack trace will still be meaningful.
++ */
++static bool is_uprobe_at_func_entry(struct pt_regs *regs, struct arch_uprobe *auprobe)
++{
++	if (!auprobe)
++		return false;
++	/* push %rbp/%ebp */
++	if (auprobe->insn[0] == 0x55)
++		return true;
++	/* endbr64 (64-bit only) */
++	if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
++		return true;
++	return false;
++}
++#endif
++
+ #ifdef CONFIG_IA32_EMULATION
+ 
+ #include <linux/compat.h>
+@@ -2833,6 +2858,18 @@ perf_callchain_user32(struct pt_regs *regs, struct perf_callchain_entry_ctx *ent
+ 
+ 	fp = compat_ptr(ss_base + regs->bp);
+ 	pagefault_disable();
++
++#ifdef CONFIG_UPROBES
++	/* see perf_callchain_user() below for why we do this */
++	if (current->utask) {
++		u32 ret_addr;
++
++		if (is_uprobe_at_func_entry(regs, current->utask->auprobe) &&
++		    !__get_user(ret_addr, (const u32 __user *)regs->sp))
++			perf_callchain_store(entry, ret_addr);
++	}
++#endif
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+@@ -2884,6 +2921,25 @@ perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs
+ 		return;
+ 
+ 	pagefault_disable();
++
++#ifdef CONFIG_UPROBES
++	/*
++	 * If we are called from uprobe handler, and we are indeed at the very
++	 * entry to user function (which is normally a `push %rbp` instruction,
++	 * under assumption of application being compiled with frame pointers),
++	 * we should read return address from *regs->sp before proceeding
++	 * to follow frame pointers, otherwise we'll skip immediate caller
++	 * as %rbp is not yet setup.
++	 */
++	if (current->utask) {
++		unsigned long ret_addr;
++
++		if (is_uprobe_at_func_entry(regs, current->utask->auprobe) &&
++		    !__get_user(ret_addr, (const unsigned long __user *)regs->sp))
++			perf_callchain_store(entry, ret_addr);
++	}
++#endif
++
+ 	while (entry->nr < entry->max_stack) {
+ 		if (!valid_user_frame(fp, sizeof(frame)))
+ 			break;
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index b503fafb7fb3..a270a5892ab4 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -76,6 +76,8 @@ struct uprobe_task {
+ 	struct uprobe			*active_uprobe;
+ 	unsigned long			xol_vaddr;
+ 
++	struct arch_uprobe              *auprobe;
++
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
+ };
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 99be2adedbc0..6e22e4d80f1e 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -2082,6 +2082,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 	bool need_prep = false; /* prepare return uprobe, when needed */
+ 
+ 	down_read(&uprobe->register_rwsem);
++	current->utask->auprobe = &uprobe->arch;
+ 	for (uc = uprobe->consumers; uc; uc = uc->next) {
+ 		int rc = 0;
+ 
+@@ -2096,6 +2097,7 @@ static void handler_chain(struct uprobe *uprobe, struct pt_regs *regs)
+ 
+ 		remove &= rc;
+ 	}
++	current->utask->auprobe = NULL;
+ 
+ 	if (need_prep && !remove)
+ 		prepare_uretprobe(uprobe, regs); /* put bp at return */
+-- 
+2.43.0
 
-> +			if (pfds[0].revents) {
-> +				char buf[512];
-> +				ssize_t len;
-> +
-> +				len = read(err, buf, sizeof(buf) - 1);
-> +
-> +				if (len > 0) {
-> +					err_done = false;
-> +					buf[len] = '\0';
->  					strbuf_addstr(&err_output, buf);
-> +				}
->  			}
->  		}
-> +		if (err_done)
-> +			err_done = check_if_command_finished(&child_test->process);
-> +
-> +		if (perf_use_color_default) {
-> +			/* Erase "Running (.. remaining)" line printed before poll/sleep. */
-> +			fprintf(debug_file(), PERF_COLOR_DELETE_LINE);
-> +		}
->  	}
->  	/* Clean up child process. */
->  	ret = finish_command(&child_test->process);
-> -	if (verbose == 1 && ret == TEST_FAIL) {
-> +	if (verbose > 1 || (verbose == 1 && ret == TEST_FAIL)) {
->  		/* Add header for test that was skipped above. */
->  		if (has_subtests(t))
->  			pr_info("%3d.%1d: %s:\n", i + 1, subi + 1, test_description(t, subi));
-> @@ -338,7 +365,7 @@ static int finish_test(struct child_test *child_test, int width)
->  		fprintf(stderr, "%s", err_output.buf);
->  	}
->  	strbuf_release(&err_output);
-> -	print_test_result(t, i, subi, ret, width);
-> +	print_test_result(t, i, subi, ret, width, /*remaining=*/0);
->  	if (err > 0)
->  		close(err);
->  	return 0;
-> @@ -354,7 +381,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
->  		pr_debug("--- start ---\n");
->  		err = test_function(test, subi)(test, subi);
->  		pr_debug("---- end ----\n");
-> -		print_test_result(test, i, subi, err, width);
-> +		print_test_result(test, i, subi, err, width, /*remaining=*/0);
->  		return 0;
->  	}
->  
-> @@ -379,7 +406,7 @@ static int start_test(struct test_suite *test, int i, int subi, struct child_tes
->  	err = start_command(&(*child)->process);
->  	if (err || !sequential)
->  		return  err;
-> -	return finish_test(*child, width);
-> +	return finish_test(child, /*running_test=*/0, /*child_test_num=*/1, width);
->  }
->  
->  #define for_each_test(j, k, t)					\
-> @@ -464,7 +491,7 @@ static int __cmd_test(int argc, const char *argv[], struct intlist *skiplist)
->  	}
->  	for (i = 0; i < child_test_num; i++) {
->  		if (!sequential) {
-> -			int ret  = finish_test(child_tests[i], width);
-> +			int ret  = finish_test(child_tests, i, child_test_num, width);
->  
->  			if (ret)
->  				return ret;
-> diff --git a/tools/perf/util/color.h b/tools/perf/util/color.h
-> index 01f7bed21c9b..4b9f8d5d4439 100644
-> --- a/tools/perf/util/color.h
-> +++ b/tools/perf/util/color.h
-> @@ -22,6 +22,7 @@
->  #define MIN_GREEN	0.5
->  #define MIN_RED		5.0
->  
-> +#define PERF_COLOR_DELETE_LINE	"\033[A\33[2K\r"
->  /*
->   * This variable stores the value of color.ui
->   */
-> -- 
-> 2.45.2.803.g4e1b14247a-goog
-> 
