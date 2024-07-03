@@ -1,90 +1,135 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A811836EC
-	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 17:35:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEA518628C;
+	Wed,  3 Jul 2024 18:09:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720028133; cv=none; b=jENxJhQfQY2KzXICTz0B40C0KtoLf21hkeE1kgRckr95djclrjJi5Ru08EZO2WuKw1mtnwLGgmwilNOuvLVZz+5ivfTpG3Qf2Qg86ZzWEHWvZWiCuYNpBNavT4YMcyD6DEMEPd8nx5wHKIGiKMrTuiBNyGR38ehooSOUST9KO4g=
+	t=1720030173; cv=none; b=LHWfLsqe26RMwGf2Q5wBo+IERI+KsE0SE43CA5Rn774foWu0JDmN8veDAoswOpAj0CY5Eeq/WXmEpC5OGYyOG0oR9l31BEdiSCop8BRg4Bjss3CUYGIADVJMdtTEZBydoSDNceabBvW31VdiukwqnDWNI1oqz1Jt70JZsuJdpEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720028133; c=relaxed/simple;
-	bh=wJqbm0cbDl3OnGsiCx+j3UvhXYjJ+xSxrF8iQeOZADw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jgizOZi5zTAnTHOSPHOJENDEhcw88QBcGMXmpwai/GmrgqxvT5ggVhc5PO/2V2G62yNrkh/DG76at3wCqoep0PhbSTtZLt6/0iDHntmM5EiSiDwRabAxuMrQAqdCFYhUH1hu9FT6XIPKIvziHVwsYVhzPOOTbUcg0+bneYHCkAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com; spf=none smtp.mailfrom=readmodwrite.com; dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b=Ew771wkM; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=readmodwrite.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=readmodwrite.com
+	s=arc-20240116; t=1720030173; c=relaxed/simple;
+	bh=ly+zdbaT1osIlNv/3aqRM3D0Eq/FlhdjnXjVeuOFpps=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mQfnI06k8mEr6gBOZWFMsShSjYquMcUhKoeuhJpERUzWLgNI1N4vnc7PBmpyhNnbo0JQWOkahOjGwfi5dOFC9iuqwMnd6L3ZqqSVzhaMkHZS6ViMf50YzXJq4DXTrribRsal7dKK3OT5I0ezIGuW9lqjGndnVr/0Fc/Z+roC5oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=R2y2abge; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=readmodwrite-com.20230601.gappssmtp.com header.i=@readmodwrite-com.20230601.gappssmtp.com header.b="Ew771wkM"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-58b966b4166so2848174a12.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 10:35:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=readmodwrite-com.20230601.gappssmtp.com; s=20230601; t=1720028129; x=1720632929; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
-        b=Ew771wkMq+bZe9z1mdKOOaCBmlghWM4YQ1pE7iwmJv6xNqWZA//bGGIsqKVXtqHijg
-         A8KEDQrzybsV0tScp0gjMsEOuAhsn5da8O4YVxqMTh5odB1BV8Nh0eoa+2nPiBvYaew2
-         AnxAL9um6v/FsGNM0QmEe5lN1eeZtLtQTTs6z0b+SNubM+CibLB4xgKEoPYWGNdlfx7v
-         8o+X8rZqVYXTpw2wRTwBX1ei7mCrGMVcFwxLWPW8/PSqfz1osR2Vklgg4PKMUvP1MuXR
-         u9p1EECek7zDD8GzEM8TqRz16NOhDY2BecPbKa26K31emH+4R4KjDn/PZeFEhFL9Ihts
-         PKtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720028129; x=1720632929;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=La/5eaYjg7H10Or0G7dRQblWRQsDom6PBTc29FvwiUA=;
-        b=BpskSyqF4k5Ukh1m/1/iAHjOhj4vtbvhbi/+x6ffjzJimgQeA0hl863hPqNjdj2czo
-         TM4sluWnGw0j1H7a/dBs/b5QsZxxXMFIKlyxkKJafMkT0YATY65kKk5522gZOg1JBkP8
-         ljhjH07wl+6P9dztVbrHiM4jrtdp0fDoGHcGNdECOkbdiSKG4XpMc0XZ8jmXnXl5GSAx
-         f/wAUcu3hE204dY7zpAhdWZwtRHseNqYlV1kSexs2OXj2qkjoxWf6aWRnFZGilesqzUD
-         xdePKxKXbrOaAHtJDqPwh8LYePZ6QxJIQJhS3iDIgvnsZ2YG2QzDW/ueva/EsPPG+Goj
-         wOow==
-X-Forwarded-Encrypted: i=1; AJvYcCUcdw1cymkfC9jc/vWDWd5P5bxo0CGqfo50y/ZziFOyDLrvadCnfOxvZSbxD5mj1BkRCRLxn3omdW0T2Penp5r8GsoATYvou1uboRHnCerk2w==
-X-Gm-Message-State: AOJu0YyNziGTqKRCdaB0YdT8quL+/UbTpSYMpoMw/caNbtDNMD3eQy17
-	ODoHkjaogB1lJKW5ygeU1eay05VQxocaRKJnIzytY0gnfxwEls9w+rjrIbP8eofPd517+lszkKd
-	AtYzKmPx1jo2KYJ/09N2Fgn75ABhfZC2JXufNbA==
-X-Google-Smtp-Source: AGHT+IFBjLDcJRjLamuVf5zi9ojzKBMa9/VQRJAc3OBE+azv+Z6WVHDWucZC0ZTibSml6j6VgCjcl6c8rGjZ4ILsUhM=
-X-Received: by 2002:a05:6402:2345:b0:58d:10a0:36c0 with SMTP id
- 4fb4d7f45d1cf-58d10a03b2cmr1425175a12.14.1720028129456; Wed, 03 Jul 2024
- 10:35:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="R2y2abge"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720030172; x=1751566172;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ly+zdbaT1osIlNv/3aqRM3D0Eq/FlhdjnXjVeuOFpps=;
+  b=R2y2abgejbdr2YwJx3Gg02LNHyd+fuyESIcffiKfszf47vZfXFaehFh2
+   Ld/vBjFfs8ONA/TvU0aA3yql1iijotQn40FIo1xm+BfnqdTqy80DXFq6S
+   aislqyKAWYj3zRFRee4k1n5CTHIwEoVQ2Nmx7bdjXxM6neiNGqZnH7o4E
+   +2TUH7VCPQ9/oHsQItYmKolRovhvWi9Zex83n60ZZxeQmy/i9ADmp2hSM
+   4tOFN+PQkfflNBpYABmccePkPruVsz2Khy9nZdkK4oNyaQ8vpiO2Nb9W9
+   pf0cNVyvFsRp1KVOJW62u8cHyP2BUCYrKoU530egqpOj/MaA09SV5gWcc
+   A==;
+X-CSE-ConnectionGUID: 6LGUO/5RTh+9NLaeM60rYA==
+X-CSE-MsgGUID: 963Vfbe0Q6q5/HKcVUU6kg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17003271"
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="17003271"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 11:09:29 -0700
+X-CSE-ConnectionGUID: BdzLNe5OQraCHrOFUXa1kg==
+X-CSE-MsgGUID: BBz2WTcYS2u1WIxpKn1SGQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,182,1716274800"; 
+   d="scan'208";a="47001484"
+Received: from plborg-mobl.amr.corp.intel.com (HELO desk) ([10.209.72.65])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 11:09:29 -0700
+Date: Wed, 3 Jul 2024 11:09:21 -0700
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+To: Josh Poimboeuf <jpoimboe@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH PATCH v2 8/9] x86/bugs: Declutter vulnerable CPU list
+Message-ID: <20240703180921.gsfqdupitha22nz5@desk>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-8-f927bde83ad0@linux.intel.com>
+ <20240703010018.qov5lxldvou7fhhl@treble>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240703172117.810918-1-irogers@google.com> <20240703172117.810918-2-irogers@google.com>
-In-Reply-To: <20240703172117.810918-2-irogers@google.com>
-From: Matt Fleming <matt@readmodwrite.com>
-Date: Wed, 3 Jul 2024 18:35:18 +0100
-Message-ID: <CAENh_SR=4axuur1=ibGnGre8vm7tHNeG0VT-f1UQS1mHCUb-Uw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf comm str: Avoid sort during insert
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Steinar Gunderson <sesse@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240703010018.qov5lxldvou7fhhl@treble>
 
-On Wed, Jul 3, 2024 at 6:21=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> The array is sorted, so just move the elements and insert in order.
->
-> Reported-by: Matt Fleming <matt@readmodwrite.com>
-> Signed-off-by: Ian Rogers <irogers@google.com>
-> ---
->  tools/perf/util/comm.c | 29 ++++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 11 deletions(-)
+On Tue, Jul 02, 2024 at 06:00:18PM -0700, Josh Poimboeuf wrote:
+> On Thu, Jun 27, 2024 at 01:44:48PM -0700, Pawan Gupta wrote:
+> > The affected processor table has a lot of repetition and redundant
+> > information that can be omitted. For example:
+> > 
+> >   VULNBL_INTEL_STEPPINGS(INTEL_IVYBRIDGE,		X86_STEPPING_ANY,		SRBDS),
+> > 
+> > can easily be simplified to:
+> > 
+> >   VULNBL_INTEL(IVYBRIDGE,	SRBDS),
+> > 
+> > Apply this to all the entries in the affected processor table.
+> > 
+> > No functional change. Disassembly of arch/x86/kernel/cpu/common.o does not
+> > show any difference before and after the change.
+> 
+> This patch only changes data, not code.  So there's not much point in
+> diffing the disassembly ;-)
 
-Thanks, this fixes the issue I had where perf-top would spend >40% of
-its time sorting comm_strs.
+You are right.
 
-Tested-by: Matt Fleming <matt@readmodwrite.com>
+> A diff of the .init.rodata sections actually shows one (non-functional)
+> difference in cpu_vuln_blacklist[].
+> 
+> The COMETLAKE_L entries were moved to a new section below the rest of
+> the entries:
+> 
+> 	/* Match more than Vendor/Family/Model */
+> 	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
+> 	VULNBL_INTEL	      (COMETLAKE_L,					MMIO | MMIO_SBDS | RETBLEED | GDS),
+> 
+> While that's functionally correct, it breaks the visual sorting, which
+> is confusing and even a bit dangerous.  One would reasonably expect the
+> COMETLAKE_L entries to come immediately after COMETLAKE, so it would be
+> quite possible for somebody to come along later and add a new
+> COMETLAKE_L there which conflicts with the later entries.
+> 
+> I'd much rather leave the STEPPINGS entry in the original list where it
+> belongs.  Something like:
+> 
+> 	...
+> 	VULNBL_INTEL(ICELAKE_L,			MMIO | MMIO_SBDS | RETBLEED | GDS),
+> 	VULNBL_INTEL(ICELAKE_D,			MMIO | GDS),
+> 	VULNBL_INTEL(ICELAKE_X,			MMIO | GDS),
+> 	VULNBL_INTEL(COMETLAKE,			MMIO | MMIO_SBDS | RETBLEED | GDS),
+> 	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,
+> 			       X86_STEPPINGS(0x0, 0x0),
+> 			       MMIO | RETBLEED),
+> 	VULNBL_INTEL(COMETLAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
+> 	VULNBL_INTEL(TIGERLAKE_L,		GDS),
+> 	VULNBL_INTEL(TIGERLAKE,			GDS),
+> 	...
+> 
+> Yes, that's a little ugly, but at least the sorting is correct so it's
+> less confusing and more robust overall.
+
+That makes sense, I will make that change.
