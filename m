@@ -1,223 +1,155 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F43513B592;
-	Wed,  3 Jul 2024 09:23:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB58194C7D
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 10:47:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719998617; cv=none; b=l0oZfhSFzGTNFFSPG3OWJDMPhRsIizZZUdY4bk+LF4XDeHuNkRpkvDl7Nlwe8IrsPHguTAmKlXsLHw7G/aRqCgMDoLXjW3DK7+s/O6eT2im4QMDESM+if5uST2u3XnWJTsDvndsNcKhaAjJEzTxWSWAzTorbTqkruBBvUvTlivU=
+	t=1720003654; cv=none; b=C6e8JdQDkJvaXxmFT/Cnb7BIKrNL1tG5TwqeIufXOF2wE3OfkxpJ7UmnRJZxdfs5rdFIUHPvutNu8W2Ce7Xp0Vv2EtUrJB0G1HKXKY6+VFPsRP4DBdbG+CEifQhQCXxXd2IrEzHv7A3pW0Ozggkkq4E/LwsCO8xw/HwzssZP2FI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719998617; c=relaxed/simple;
-	bh=TBGC9Dan9vGqetl5WATjTdps3EQfpzzfRQi+UrwaeVw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oGsaQd/rdLoHHns7mtw1ZYvOL8PFd28JMy074ydjl8EwZesChI9doz4ZvgfAhGSo0FB78L6JyTFofnh72CCL6bn5dfxdq72ntirvKxwnldE8LNx8nnZ2OghgCdQZXXMgNbwUQsD9Q0SlIyoEBtKIUGNnR6jZ6GWwYGmmB0vv7nw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=GkUbEEI4; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1720003654; c=relaxed/simple;
+	bh=lCUReg3/WIKYDhyXKZtjOFDQu5yxswkzLX+AAseY05Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nmFifnB6Z1YP3sXuLV0IiNa2/lN/TMMI7BwrB2arVrx+0PAE1pROaXJYUimmgGgkW51QOtDvQRRpNC9hKQLH2KV+qrvKq6jMzUuFpeXS1A9kD0/MC3zkkeU9vsaQFFa3DW7WVSvefxTah9HJSkBPhE3A1HvW5ylR/jJc04qHEMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=doAjeNJ2; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="GkUbEEI4"
-Received: from [192.168.7.205] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 4639N8KS289555
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 3 Jul 2024 02:23:08 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 4639N8KS289555
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2024061501; t=1719998589;
-	bh=j4XLOK1g+Fi+APGrWOjI5bHBPtCrnTFiV/z2Z8mj4p4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GkUbEEI41cONifmgA3Ovr+k+ZvTNwp7iNNvvMDzmbKg9NbQIm0lyhIUZ7nlzOMboy
-	 fkjkwQWwPmqKwENWM9Kwdi28BBo7/rMz840FhJg6qynsyUDuQEvqyPaLato+v4Htxq
-	 KaRl59VBwuzBFM0igvRGNHCm05jszwAw9m8KUA+5UDunSbcXYopi50VXENarkjH6So
-	 /4OkaSm3Axsb77n94O4WnzB1YMV2F7J6v+EwWnZAgIPsajsBeY3UdSDlqIJ3CbjByy
-	 ov92bUtoCzdmHxwBXRxMNI9Tvi98WONPEJ0F9ZP7ttdUCHFApKWygl5OyvuXpNmQ2r
-	 QgBgyYDfToq4g==
-Message-ID: <8744fbf0-46b9-4df9-951c-4f1ddafd7b36@zytor.com>
-Date: Wed, 3 Jul 2024 02:23:08 -0700
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="doAjeNJ2"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 463AUDgV007238;
+	Wed, 3 Jul 2024 10:47:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date
+	:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=pp1; bh=zrM72+X/FtaEtQY0Moh6jIzGFfB
+	UureXsfJO75PnYFQ=; b=doAjeNJ28wnnCFz2fcMUBYrr1FFzZ8snmCmIrRggF6F
+	h+GgjrSzfxOaDUQazobutjIfiOGzuJ+oq/+Zq4QsgQsHt3UqkaD92QsW1RcPwKYv
+	FwrZh5I+ynWKbrSuByf+2LcuTgLfWAcNonvtqT++dArHIUcP5okZtEi4f148pMIr
+	xmGt4tMA7Urcl6tLuAuP3hgxCqIMbSr4+XCfhnRmiQgEuTQ3UN1/9syXNVQ40KAt
+	yhRb7WMsStCmZHZ0O8jf1mZIkLKD76dI6yvWbu2G2aksl8rkQSiN76sJiEMiDkvP
+	T22XXL1DYMFW0unio0tinDcG8ScIkMrzBIwLd/mrrew==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4054wx81am-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 10:47:22 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 463AlMht000817;
+	Wed, 3 Jul 2024 10:47:22 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4054wx81ak-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 10:47:22 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4637KdPc005948;
+	Wed, 3 Jul 2024 10:47:21 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 402vkuabpt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 03 Jul 2024 10:47:21 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 463AlGJ954591938
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 3 Jul 2024 10:47:18 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EACD320043;
+	Wed,  3 Jul 2024 10:47:15 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BD7F520040;
+	Wed,  3 Jul 2024 10:47:13 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com (unknown [9.109.199.72])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed,  3 Jul 2024 10:47:13 +0000 (GMT)
+Date: Wed, 3 Jul 2024 16:17:09 +0530
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
+Message-ID: <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
+References: <20240628064236.1123851-1-adityag@linux.ibm.com>
+ <20240628064236.1123851-2-adityag@linux.ibm.com>
+ <Zn8C-XpC1beIRN8t@google.com>
+ <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
+ <ZoSRiW1aVsV-xrur@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/4] x86/cpufeatures: Generate a feature mask header
- based on build config
-To: Nikolay Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
-        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
-        andrew.cooper3@citrix.com
-References: <20240628174544.3118826-1-xin@zytor.com>
- <20240628174544.3118826-3-xin@zytor.com>
- <df5b3001-e79b-4bfd-a2a1-c63111feba8a@suse.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <df5b3001-e79b-4bfd-a2a1-c63111feba8a@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZoSRiW1aVsV-xrur@google.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7lHwK3hge79rMtQfQxBjsMc_b0vePVkx
+X-Proofpoint-ORIG-GUID: C7yri-GCBrILZ2zqWECpLlyR31SKjVlo
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-03_06,2024-07-02_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ suspectscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999 adultscore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407030077
 
-On 7/1/2024 3:44 AM, Nikolay Borisov wrote:
+Hi Namhyung,
+
+> > <...snip...>
+> >
+> > > > +static const char *check_usage[] = {
+> > > > +	"perf check [<subcommand>] [<options>]",
+> > > 
+> > > You can leave this NULL and parse_options_subcommand() will fill the
+> > > first element automatically using check_subcommands[].
+> > > 
+> > > Please see other commands like 'perf sched' how to handle this.
+> > 
+> > It doesn't seem to be working, hence added that check_usage in v12
+> > itself.
+> > 
+> >     $ ./perf check
+> > 	Usage: (null)
+> > 
+> >     -q, --quiet           do not show any warnings or messages
+> > 
+> >     $ ./perf sched
+> > 	Usage: (null)
+> > 
+> >     -D, --dump-raw-trace  dump raw trace in ASCII
+> >     -f, --force           don't complain, do it
+> >     -i, --input <file>    input file name
+> >     -v, --verbose         be more verbose (show symbol address, etc)
+> > 
+> > Debugging it further, this behaviour was changed in
+> > 
+> >     commit 230a7a71f9221: libsubcmd: Fix parse-options memory leak
+> > 
+> > Where the generated usage string is deallocated, and usage[0] string is
+> > reassigned as NULL.
 > 
+> Ok, thanks for the investigation.  It's a bug then.
 > 
-> On 28.06.24 г. 20:45 ч., Xin Li (Intel) wrote:
-
-> Overall it's better I still have some minor comments which can be 
-> addressed only if you are going to make another submission.
-
-I can send a v4A for this patch.
-
+> > 
+> > If expected behaviour was allocation of the usage string, it should be
+> > okay for the buffer to not get deallocated for the entirety of the perf
+> > process's lifetime right ?
 > 
->> diff --git a/arch/x86/tools/featuremasks.awk 
->> b/arch/x86/tools/featuremasks.awk
->> new file mode 100755
->> index 000000000000..351d5a4c7d64
->> --- /dev/null
->> +++ b/arch/x86/tools/featuremasks.awk
->> @@ -0,0 +1,85 @@
->> +#!/usr/bin/awk
->> +#
->> +# Convert cpufeatures.h to a list of compile-time masks
->> +# Note: this blithly assumes that each word has at least one
->> +# feature defined in it; if not, something else is wrong!
->> +#
->> +
->> +BEGIN {
->> +    printf "#ifndef _ASM_X86_FEATUREMASKS_H\n";
->> +    printf "#define _ASM_X86_FEATUREMASKS_H\n\n";
->> +
->> +    file = 0
->> +}
->> +
->> +BEGINFILE {
->> +    switch (++file) {
->> +    case 1:            # cpufeatures.h
->> +        FPAT = "#[ \t]*[a-z]+|[A-Za-z0-9_]+|[^ \t]";
->> +        break;
->> +    case 2:            # .config
->> +        FPAT = "CONFIG_[A-Z0-9_]+|is not set|[yn]";
->> +        break;
->> +    }
->> +}
->> +
->> +# Create a dictionary of sorts, containing all defined feature bits
->> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 ~ /^X86_FEATURE_/ &&
->> +$3 == "(" && $5 == "*" && $7 == "+" && $9 == ")" {
->> +    nfeat = $4 * $6 + $8;
->> +    feat = $2;
->> +    sub(/^X86_FEATURE_/, "", feat);
->> +    feats[nfeat] = feat;
->> +}
->> +file == 1 && $1 ~ /^#[ \t]*define$/ && $2 == "NCAPINTS" {
->> +    ncapints = strtonum($3);
->> +}
->> +
->> +# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on 
->> | off
->> +file == 2 && $1 ~ /^CONFIG_X86_[A-Z]*_FEATURE_/ {
->> +    on = ($2 == "y");
->> +    if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
->> +        featstat[fs[2], fs[3]] = on;
-> 
-> nit: 'on' here will either be 0 or 1 (awk doesn't have a separate 
-> boolean type).
+> Right, it should not deallocate it in the parse_options_subcommand().
+> I think we need to change the exit path of the commands to free the
+> usage[0] manually.
 
-No change proposed here, right?
+Sure, I can implement that if you have things in hand, or I am fine with
+you implementing it since you will already have an idea what to do.
+
+Maybe `free(command_usage[0])` or something like
+`parse_options_free_subcommand()` ?
+
+Thanks,
+Aditya Gupta
 
 > 
->> +}
->> +
->> +END {
->> +    sets[1] = "REQUIRED";
->> +    sets[2] = "DISABLED";
->> +
->> +    for (ns in sets) {
->> +        s = sets[ns];
-> nit: 's' -> 'state', though is 'state' the most appropriate word here?
-
-'s' is the tag string, "REQUIRED" or "DISABLED".
-
+> Thanks,
+> Namhyung
 > 
->> +
->> +        printf "/*\n";
->> +        printf " * %s features:\n", s;
->> +        printf " *\n";
->> +        fstr = "";
->> +        for (i = 0; i < ncapints; i++) {
->> +            mask = 0;
->> +            for (j = 0; j < 32; j++) {
->> +                nfeat = i*32 + j;
->> +                feat = feats[nfeat];
->> +                if (feat) {
->> +                    st = !!featstat[s, feat];
-> 
-> No point in doing the !! dance here, the value written there is already 
-> true or false since it comes as a result from the earlier check. Just 
-> drop the !! also what's with the 1 or 2 letter variables. 'st'-> 
-> 'enabled' then the check reads 'if (enabled) { foo }'
-
-Sounds reasonable, I can make the change.
-
-> 
->> +                    if (st) {
->> +                        nfstr = fstr " " feat;
->> +                        if (length(nfstr) > 72) {
->> +                            printf " *   %s\n", fstr;
->> +                            nfstr = " " feat;
->> +                        }
->> +                        fstr = nfstr;
->> +                        mask += (2 ^ j);
->> +                    }
->> +                }
->> +            }
->> +            masks[i] = mask;
->> +        }
->> +        printf " *   %s\n */\n", fstr;
->> +
->> +        for (i = 0; i < ncapints; i++)
->> +            printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
->> +
->> +        printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != 
->> %d)\n\n", s, ncapints;
->> +    }
->> +
->> +    printf "#endif /* _ASM_X86_FEATUREMASKS_H */\n";
->> +}
-> 
-
