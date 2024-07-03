@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF2E522F;
-	Wed,  3 Jul 2024 02:46:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A6D41FAA;
+	Wed,  3 Jul 2024 02:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719974784; cv=none; b=MlbYQNSRAOK1Xow8hEJVhztzioCagcCyHymQX+AZxGWkSJ/iBJlX2As4f36smgdrUl6GW4NnF80F+cKtKiHHjpolZudxuqulf/MfPkpe+yR+4t7xDeefHv9p1RWhq68NNGAkWvTg2V7Ts2cemVdk8i4V8GtbP7X/QFJavBK8eec=
+	t=1719975103; cv=none; b=YwKT3ef9EXY5ZIUi/I1DhX6m4A17o8RFIqokrDXvVjJorzNQsz0V2GLZqmObR2R3H+7lzVZJvFPqtjo7XRq1t4048ONY6yu5QY0PvPxv/baS0bnr1oBj/bAwzv3Q1nwivys85uf8xDaoB2UdjCZlLygGSgO0YiKSUxVabJruDzk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719974784; c=relaxed/simple;
-	bh=HlBx1gRF97fkG+5OJH0WLfFyY+EZd8AUjrhOyXD9IHU=;
+	s=arc-20240116; t=1719975103; c=relaxed/simple;
+	bh=lng4NNQ5ju68/C2l80GS1gkmtl0tqHz0vg5n8om5la8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d0rdro+C+jRiX8m0ItI8rls7rIZceYfT/jJa9bTSDhd8lIgLPVel3gfgLaXcm7cIKnb/RqNP7nr6hTsWNnt+zpOL5O4KWthBsBbVSvNTOUTvwKM2WgEANR5Q+dsZhOBkoDgq3y1y/4gpecZU1Ypn2XvSmghBQdjfMDUJpgFSGvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SeeO0IUu; arc=none smtp.client-ip=192.198.163.13
+	 In-Reply-To:Content-Type; b=Weon3o0hJqdYd5KL8nSCqixy2Cm/fzmnTHBCM2Oin5YR5zs3q0kWCu5oHdEZmWqu9CYhi8ZA/hZIzoGIZWsRQkePVdHQA3ObBAnXuWYeSlwtRq5LhpSWsVHBvQSk6e1S7DwZtIY17jdgLIOHrMlGYj5Juu0CL6McnDrgTDxx3kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mnLGPDMV; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SeeO0IUu"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mnLGPDMV"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719974782; x=1751510782;
+  t=1719975102; x=1751511102;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=HlBx1gRF97fkG+5OJH0WLfFyY+EZd8AUjrhOyXD9IHU=;
-  b=SeeO0IUuF3q/Jr1n1pWX+5lZmUu8rw8ammJBhJNNxCHR5reF+UqOL7/3
-   7Pb0nfHPUkpNbrFj+A5K2tsLpypIyYcOdXdqQUPNHy8AsWwBBjcwMxmEd
-   IPU279k3YsSVwIQFHU4WC+W5SP8GnAAhkq+BgF1VzdfnOMA5y+GVGI6HI
-   8Uv7jOI1bt8TpPkrv1H10i3g9XlmzveIG4LFLNhm3DDc+rEA4bcT5yryN
-   Etm/E0kw83/epLU4p49uNDtDYA/laBszMSDluk4RvQjxEWUmx0RfkE6rY
-   0gTDtx5FlPAlMJn6QlSRcPT7795NQPmgSDqxGAHhABQ9ytfp8wC1KftCN
-   Q==;
-X-CSE-ConnectionGUID: /krxXrNdRE+m2djhTf8oBA==
-X-CSE-MsgGUID: h0mH8gJZQGyveLWSGThoNg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="20085091"
+  bh=lng4NNQ5ju68/C2l80GS1gkmtl0tqHz0vg5n8om5la8=;
+  b=mnLGPDMVpOasU4HOGvksmgYlCyR2AVQNHO3pxeV0vCvkxhRUvfOw1/av
+   6KHLHD5/rUJu6NsZ2u8mjNhJYaAo+xEAvke9XIGbtHW1oGSjzpHzRu0Ns
+   /sHZ1E1SLRbPCDdhiLCPTdIUfgA6A65VazxBTJ4VrpD+U7iafJ1gttgux
+   t12q3+v6LwMgZJzoscj7qbeG/q6VEWkF0COncEmR+uhpDzGdaIeyWvXlD
+   WRcIw8dTf2X/fLR78l5lkfrBzjei9xBPuxtQCVb+rv6HgjuP4r/t33/XH
+   9E1d6h+pRuIgGIYWqTEpb19/MXITd0mEQTwtyv4EjuN4sb0S4cWKGmiNx
+   g==;
+X-CSE-ConnectionGUID: Sg6M/bmhRvalXOGOjGYd9g==
+X-CSE-MsgGUID: IDu3bbv1TR6vUSnU0PY6sg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17393008"
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="20085091"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:46:21 -0700
-X-CSE-ConnectionGUID: ikPRfOyQQ3yLwz1UcfQKjQ==
-X-CSE-MsgGUID: fgek1npPSHuNlfeeOekFdw==
+   d="scan'208";a="17393008"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:51:41 -0700
+X-CSE-ConnectionGUID: ZaH+ySWVSC6/yOTIF5pbaw==
+X-CSE-MsgGUID: 1uvUaHDTTqulPVR5x28RIA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="45881129"
+   d="scan'208";a="69279956"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:46:18 -0700
-Message-ID: <5223c6bb-a05b-4a8c-a625-2011db190631@linux.intel.com>
-Date: Wed, 3 Jul 2024 10:46:15 +0800
+  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:51:37 -0700
+Message-ID: <5edf28db-46f3-431e-820e-4b2575bdb14c@linux.intel.com>
+Date: Wed, 3 Jul 2024 10:51:35 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,8 +52,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/4] perf topdown: Correct leader selection with
- sample_read enabled
+Subject: Re: [PATCH 3/4] perf parse-events: Don't move slots event when no
+ topdwon metrics event
 To: "Liang, Kan" <kan.liang@linux.intel.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -63,115 +63,210 @@ To: "Liang, Kan" <kan.liang@linux.intel.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Yanfei Xu <yanfei.xu@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
- <20240702224037.343958-2-dapeng1.mi@linux.intel.com>
- <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
+ <20240702224037.343958-4-dapeng1.mi@linux.intel.com>
+ <ea062008-1ae3-4568-8491-7d0d785eb0c2@linux.intel.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
+In-Reply-To: <ea062008-1ae3-4568-8491-7d0d785eb0c2@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
-On 7/3/2024 12:05 AM, Liang, Kan wrote:
+On 7/3/2024 2:03 AM, Liang, Kan wrote:
 >
 > On 2024-07-02 6:40 p.m., Dapeng Mi wrote:
->> Addresses an issue where, in the absence of a topdown metrics event
->> within a sampling group, the slots event was incorrectly bypassed as
->> the sampling leader when sample_read was enabled.
+>> Currently the helper arch_evlist__cmp() would unconditionally move slots
+>> event to be the leader event even though there is no topdown metrics
+>> event in the group.
 >>
->> perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
+>> perf stat -e "{instructions,slots}" -C 0 sleep 1
+>> WARNING: events were regrouped to match PMUs
 >>
->> In this case, the slots event should be sampled as leader but the
->> branches event is sampled in fact like the verbose output shows.
+>>  Performance counter stats for 'CPU(s) 0':
 >>
->> perf_event_attr:
->>   type                             4 (cpu)
->>   size                             168
->>   config                           0x400 (slots)
->>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->>   read_format                      ID|GROUP|LOST
->>   disabled                         1
->>   sample_id_all                    1
->>   exclude_guest                    1
->> ------------------------------------------------------------
->> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->> ------------------------------------------------------------
->> perf_event_attr:
->>   type                             0 (PERF_TYPE_HARDWARE)
->>   size                             168
->>   config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
->>   { sample_period, sample_freq }   10000
->>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->>   read_format                      ID|GROUP|LOST
->>   sample_id_all                    1
->>   exclude_guest                    1
+>>         27,581,148      slots
+>>          8,390,827      instructions
 >>
->> The sample period of slots event instead of branches event is reset to
->> 0.
+>>        1.045546595 seconds time elapsed
 >>
->> This fix ensures the slots event remains the leader under these
->> conditions.
+>> This is an overkill. It's not necessary to move slots event as the leader
+>> event if there is no topdown metrics event.
+>>
+>> Thus only regroup events when there are both topdown slots and metrics
+>> events in a group.
 >>
 >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 >> ---
->>  tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
->>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>  tools/perf/arch/x86/util/evlist.c |  6 ++++--
+>>  tools/perf/util/evlist.h          |  7 ++++++-
+>>  tools/perf/util/parse-events.c    | 35 ++++++++++++++++++-------------
+>>  3 files changed, 31 insertions(+), 17 deletions(-)
 >>
->> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
->> index 3f9a267d4501..5d7b78eb7516 100644
->> --- a/tools/perf/arch/x86/util/topdown.c
->> +++ b/tools/perf/arch/x86/util/topdown.c
->> @@ -1,6 +1,7 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  #include "api/fs/fs.h"
->>  #include "util/evsel.h"
->> +#include "util/evlist.h"
->>  #include "util/pmu.h"
->>  #include "util/pmus.h"
->>  #include "util/topdown.h"
->> @@ -41,11 +42,22 @@ bool topdown_sys_has_perf_metrics(void)
->>   */
->>  bool arch_topdown_sample_read(struct evsel *leader)
->>  {
->> +	struct evsel *event;
->> +
->>  	if (!evsel__sys_has_perf_metrics(leader))
->>  		return false;
+>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>> index 7215c7c7b435..a1e78be6ebd1 100644
+>> --- a/tools/perf/arch/x86/util/evlist.c
+>> +++ b/tools/perf/arch/x86/util/evlist.c
+>> @@ -73,9 +73,11 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+>>  	return ___evlist__add_default_attrs(evlist, attrs, nr_attrs);
+>>  }
 >>  
->> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
->> -		return true;
->> +	if (leader->core.attr.config != TOPDOWN_SLOTS)
->> +		return false;
+>> -int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>> +int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs, void *priv)
+>>  {
+>> -	if (topdown_sys_has_perf_metrics() &&
+>> +	struct sort_priv *_priv = priv;
 >> +
->> +	/*
->> +	 * If slots event as leader event but no topdown metric events in group,
->> +	 * slots event should still sample as leader.
->> +	 */
->> +	evlist__for_each_entry(leader->evlist, event) {
->> +		if (event != leader && strcasestr(event->name, "topdown"))
-> User may uses the RAW format. It may not be good enough to just check
-> the event name.
+>> +	if (topdown_sys_has_perf_metrics() && _priv->topdown_metrics_in_group &&
+>>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
+>>  		/* Ensure the topdown slots comes first. */
+>>  		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
+>> diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+>> index cb91dc9117a2..14c858dcf5a2 100644
+>> --- a/tools/perf/util/evlist.h
+>> +++ b/tools/perf/util/evlist.h
+>> @@ -89,6 +89,11 @@ struct evsel_str_handler {
+>>  	void	   *handler;
+>>  };
+>>  
+>> +struct sort_priv {
+>> +	int force_grouped_idx;
+>> +	bool topdown_metrics_in_group;
+> The topdown metrics should be only available in some Intel platforms. I
+> don't think we want to add such platform-specific variable in the
+> generic code.
 >
-> I recall you have a complete support for this in the previous patch. Why
-> drop it?
+> The current code just re-order the events, not re-group. So it doesn't
+> impact the result accuracy.
+> So the issue is just an annoying WARNING, right?
+>
+> It seems the issue has been there for more than 1 year. No complaints
+> except for one internal test case, which can be easily fixed.
+> Considering the complexity of the fix, I guess we may leave it as is.
 
+I was also hesitating on whether posting the patch. Not sure if other tools
+depends on the events output order. If not, it's just an annoying WARNING.
+But I think there should no other tools depending on it as you said no any
+complaints on this.
 
-Oh, I ignored the RAW format case. Yes, there is a complete comparison in
-previous patch, but I originally thought it's over-complicated, so I just
-simplified it (refer other helpers to compare the name).  If we need to
-consider the RAW format, it may be not correct for the comparisons in the
-helpers arch_evsel__must_be_in_group() and arch_evlist__cmp() as well.
+I would drop this patch in next version.
 
-If we want to fix the issue thoroughly, we may have to expose two helpers
-which check if an event is topdown slots or metrics event and use these two
-helpers to replace current name comparison.
 
 >
 > Thanks,
 > Kan
->
->> +			return true;
->> +	}
+>> +};
+>> +
+>>  struct evlist *evlist__new(void);
+>>  struct evlist *evlist__new_default(void);
+>>  struct evlist *evlist__new_dummy(void);
+>> @@ -112,7 +117,7 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+>>  #define evlist__add_default_attrs(evlist, array) \
+>>  	arch_evlist__add_default_attrs(evlist, array, ARRAY_SIZE(array))
 >>  
->>  	return false;
+>> -int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs);
+>> +int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs, void *priv);
+>>  
+>>  int evlist__add_dummy(struct evlist *evlist);
+>>  struct evsel *evlist__add_aux_dummy(struct evlist *evlist, bool system_wide);
+>> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+>> index 6ed0f9c5581d..a3f7173a7ae2 100644
+>> --- a/tools/perf/util/parse-events.c
+>> +++ b/tools/perf/util/parse-events.c
+>> @@ -1962,19 +1962,21 @@ static int evsel__compute_group_pmu_name(struct evsel *evsel,
+>>  	return evsel->group_pmu_name ? 0 : -ENOMEM;
 >>  }
+>>  
+>> -__weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>> +__weak int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs,
+>> +			    void *priv __maybe_unused)
+>>  {
+>>  	/* Order by insertion index. */
+>>  	return lhs->core.idx - rhs->core.idx;
+>>  }
+>>  
+>> -static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct list_head *r)
+>> +static int evlist__cmp(void *_sort_priv, const struct list_head *l, const struct list_head *r)
+>>  {
+>>  	const struct perf_evsel *lhs_core = container_of(l, struct perf_evsel, node);
+>>  	const struct evsel *lhs = container_of(lhs_core, struct evsel, core);
+>>  	const struct perf_evsel *rhs_core = container_of(r, struct perf_evsel, node);
+>>  	const struct evsel *rhs = container_of(rhs_core, struct evsel, core);
+>> -	int *force_grouped_idx = _fg_idx;
+>> +	struct sort_priv *sort_priv = _sort_priv;
+>> +	int force_grouped_idx = sort_priv->force_grouped_idx;
+>>  	int lhs_sort_idx, rhs_sort_idx, ret;
+>>  	const char *lhs_pmu_name, *rhs_pmu_name;
+>>  	bool lhs_has_group, rhs_has_group;
+>> @@ -1992,8 +1994,8 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
+>>  		lhs_sort_idx = lhs_core->leader->idx;
+>>  	} else {
+>>  		lhs_has_group = false;
+>> -		lhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)
+>> -			? *force_grouped_idx
+>> +		lhs_sort_idx = force_grouped_idx != -1 && arch_evsel__must_be_in_group(lhs)
+>> +			? force_grouped_idx
+>>  			: lhs_core->idx;
+>>  	}
+>>  	if (rhs_core->leader != rhs_core || rhs_core->nr_members > 1) {
+>> @@ -2001,8 +2003,8 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
+>>  		rhs_sort_idx = rhs_core->leader->idx;
+>>  	} else {
+>>  		rhs_has_group = false;
+>> -		rhs_sort_idx = *force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)
+>> -			? *force_grouped_idx
+>> +		rhs_sort_idx = force_grouped_idx != -1 && arch_evsel__must_be_in_group(rhs)
+>> +			? force_grouped_idx
+>>  			: rhs_core->idx;
+>>  	}
+>>  
+>> @@ -2019,16 +2021,17 @@ static int evlist__cmp(void *_fg_idx, const struct list_head *l, const struct li
+>>  	}
+>>  
+>>  	/* Architecture specific sorting. */
+>> -	return arch_evlist__cmp(lhs, rhs);
+>> +	return arch_evlist__cmp(lhs, rhs, _sort_priv);
+>>  }
+>>  
+>>  static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>>  {
+>> -	int idx = 0, force_grouped_idx = -1;
+>>  	struct evsel *pos, *cur_leader = NULL;
+>>  	struct perf_evsel *cur_leaders_grp = NULL;
+>>  	bool idx_changed = false, cur_leader_force_grouped = false;
+>>  	int orig_num_leaders = 0, num_leaders = 0;
+>> +	struct sort_priv sort_priv = {-1, false};
+>> +	int idx = 0;
+>>  	int ret;
+>>  
+>>  	/*
+>> @@ -2053,13 +2056,17 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>>  		pos->core.idx = idx++;
+>>  
+>>  		/* Remember an index to sort all forced grouped events together to. */
+>> -		if (force_grouped_idx == -1 && pos == pos_leader && pos->core.nr_members < 2 &&
+>> -		    arch_evsel__must_be_in_group(pos))
+>> -			force_grouped_idx = pos->core.idx;
+>> +		if (sort_priv.force_grouped_idx == -1 && pos == pos_leader &&
+>> +		    pos->core.nr_members < 2 && arch_evsel__must_be_in_group(pos))
+>> +			sort_priv.force_grouped_idx = pos->core.idx;
+>> +
+>> +		if (!sort_priv.topdown_metrics_in_group &&
+>> +		    strcasestr(pos->name, "topdown"))
+>> +			sort_priv.topdown_metrics_in_group = true;
+>>  	}
+>>  
+>>  	/* Sort events. */
+>> -	list_sort(&force_grouped_idx, list, evlist__cmp);
+>> +	list_sort(&sort_priv, list, evlist__cmp);
+>>  
+>>  	/*
+>>  	 * Recompute groups, splitting for PMUs and adding groups for events
+>> @@ -2070,7 +2077,7 @@ static int parse_events__sort_events_and_fix_groups(struct list_head *list)
+>>  		const struct evsel *pos_leader = evsel__leader(pos);
+>>  		const char *pos_pmu_name = pos->group_pmu_name;
+>>  		const char *cur_leader_pmu_name;
+>> -		bool pos_force_grouped = force_grouped_idx != -1 &&
+>> +		bool pos_force_grouped = sort_priv.force_grouped_idx != -1 &&
+>>  			arch_evsel__must_be_in_group(pos);
+>>  
+>>  		/* Reset index and nr_members. */
