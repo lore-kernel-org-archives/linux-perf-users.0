@@ -1,148 +1,137 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3D944964E;
-	Wed,  3 Jul 2024 23:05:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 110621DA313;
+	Wed,  3 Jul 2024 23:07:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720047940; cv=none; b=i3fVFPa4fOGSUJlOZ5iTNacV8H0hgSaEQEToQ6wk66qtnA9lwd4j8q4AupX8w+BQUWwws+wXYHGGKl38GtihOvs3UHRCeLiwioLOUEWYnjRhNePOpJY5Di2bh3vMtUnxYSg78Q2fJ1naF6mepEtlmBms4mKZ5yHIHQ79tmA9sOw=
+	t=1720048077; cv=none; b=PPKoQNoANOW9Vx80T8iqME7opMXiFZWLFFFrYW92X7inz03daBaF3hXFfyH88aO3j2g9cUXXQGPzBPgYQzN5zQYlvyx8l3VJFd2EpeL/4w6GMsQMy2DNuGCGjr4VCKRkQoEhoIw48R1DXzE5qe6VjWV2Qct1VAWNMkda4mAJVMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720047940; c=relaxed/simple;
-	bh=ib2MQP1+VFmSLV17Wu7+aGnrGqFHS1DAxRVpfizpWaw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=h+B5gH9E2tcAMNiMHqJdL0BmOlAp+M3h4xAxPxfCHw03919QVvS0dmUwAbzOUTpVDzwwRF/Yu/XTuB3++D67kVb6InNuva7Cf3E4zSqnklnD6VV2z5xeEBbGAVOxYNWfAXQKIdvirVBylZhmjbLLv8B/a4T4c9TUZ1oZwWJW0HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FcVc/46K; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720048077; c=relaxed/simple;
+	bh=vn+sW8ZyjpsUb2fRe3K0pOkAZ+FDvIED2cRcDMheMq0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IiWXVjP//FzoZG44DjWEPv32K9703UDLOX4xoQBmglLGeXSv7QgfJkou/uSouhEBmx+3Ciu7iit4axFibTgD2/8Zm607rd0qQbJbIz7jgSDUJrSYUExrtldp0BXEZuUri+EaqYGjskGt2Nh9FB+jz9ILurUM8Q541DCU1rV3EZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=SuOlLfAO; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FcVc/46K"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720047939; x=1751583939;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ib2MQP1+VFmSLV17Wu7+aGnrGqFHS1DAxRVpfizpWaw=;
-  b=FcVc/46KZ+7kqlsDhvWbkV1ekFo7JsbkdbD3BF1AqblINE0ICWlmG6vf
-   ttWDentozdiUG1CoxXp2lv4hHfmGo+LgI1iT5v1mCjm2Xo9JP6yy43cZC
-   65uRwMZ1cfxsl0dpEONFeyVbyRtbAVA6pe+iv+8G68QFL9hYKTDaRNXFu
-   z4/nK4cPl/IEiG/ZYR/x6ilJqfaN8iHUMe9kt/hekAZxePKuo6wlSqPn5
-   +CIJ+KHqfPnNbQ8iBUezWk6t8Edety/ieFozA5rl2Zy5YtFdzzLX8/1Db
-   Smj8omCY5eRvhOuROibjZ0Y6Alyf56BHliJhsxac2OGtyGLTY9Ap1RsMW
-   A==;
-X-CSE-ConnectionGUID: Ekg7IIQLRU6RGNmQ3ZulPA==
-X-CSE-MsgGUID: hiDsGiCGRT+IQ9viRRGPjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11122"; a="17259836"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="17259836"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 16:05:39 -0700
-X-CSE-ConnectionGUID: qdl4Jy95Qx+NMw2anMUn9A==
-X-CSE-MsgGUID: BXzv9cMDQseBkyjPW6b29w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="46544441"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Jul 2024 16:05:38 -0700
-Date: Wed, 3 Jul 2024 16:10:51 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 04/11] x86/irq: Factor out common NMI handling code
-Message-ID: <20240703161051.3fb87920@jacob-builder>
-In-Reply-To: <889c06bc-6577-4fac-b61e-b2d30e99bbfb@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-5-jacob.jun.pan@linux.intel.com>
-	<889c06bc-6577-4fac-b61e-b2d30e99bbfb@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="SuOlLfAO"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 8DA2D40E021B;
+	Wed,  3 Jul 2024 23:07:52 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dccP64wQ6FMy; Wed,  3 Jul 2024 23:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720048069; bh=vARn0lwb52XcUW8aFdtOgDF06W70NUIa2J+3vdggSvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SuOlLfAOzld19ExePQmgbMX3M01B5Mr4oCwu5IS+rFQ/V7dHagmWjYI4GTej63GYF
+	 5tQuwCg+qBMgxjqZEJjjgtZ2YGk9cp6MFLaylP/CaoR9QPlAvni4k1SCPsKfPXkKfh
+	 RP0Qe99/Ze4/0cQ/VdfhYhgj3kozxoI8BNuZYFPX05oPw+Ag3I/JRdLKJraWStglGw
+	 k2R8nB/08AeBOTEubMm/GMZ3kkpvs2qtRZQqDox7FJglxeybYCyPebOavbbFRUo0z4
+	 2gVczO2vfiT26tV5w0F2DgyZEt3f0Ta8V5hqDwUrnu6fJ8BvTB1xUzNTDYRnA2yagu
+	 vv1CSenbNmg9D3Df3L/MqsrfWT0BxI99GgEDXejRfMrvPHCbh5CguOXP19dFEfVIhS
+	 Zx7AwL4rlFB0Zx9/ZiYj1v2j8X5SzYLp+FPA7q/tnj/7wofU0/VDZjAecwHTEjzTeg
+	 aQQGmvL63taD7AivA5PYqVWvcZ5mjfPN23OLTI+IDrGEGbmfQjp3xujFuVKtw8WvZB
+	 GZ7HJAfi23Fcwa9qofH5QiIRcUIOQnwQNCfA0wI0FohXxjbo0Vo1RUYxcJGVaYkidG
+	 prURk4982zgdBi8TY7qZDMDke1KnZ0F2luZDW2oJFO1FYawkInGaz/279T/JmtElNz
+	 9mFxTqQhvy7Q0wmoL1PefuXQ=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 224E140E0185;
+	Wed,  3 Jul 2024 23:07:29 +0000 (UTC)
+Date: Thu, 4 Jul 2024 01:07:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20240703230724.GEZoXZrIavchI2Kj-P@fat_crate.local>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
+ <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
+ <20240628173209.wzpc6pwnw4p6u57h@desk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240628173209.wzpc6pwnw4p6u57h@desk>
 
-
-On Fri, 28 Jun 2024 17:31:50 -0700, Xin Li <xin@zytor.com> wrote:
-
-> On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> > In preparation for handling NMIs with explicit source reporting, factor
-> > out common code for reuse.
-> >   
-> 
-> My read is that this patch has no functional change, right?
-> 
-> If yes, please add "No functional change intended."
-will do.
-
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >   arch/x86/kernel/nmi.c | 28 ++++++++++++++++------------
-> >   1 file changed, 16 insertions(+), 12 deletions(-)
+On Fri, Jun 28, 2024 at 10:32:09AM -0700, Pawan Gupta wrote:
+> On Fri, Jun 28, 2024 at 10:03:05AM +0200, Borislav Petkov wrote:
+> > On Thu, Jun 27, 2024 at 01:44:06PM -0700, Pawan Gupta wrote:
+> > > The hw_cpu_type is populated in the below debugfs file:
+> > > 
+> > >   # cat /sys/kernel/debug/x86/topo/cpus/#
 > > 
-> > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> > index 1ebe93edba7a..639a34e78bc9 100644
-> > --- a/arch/x86/kernel/nmi.c
-> > +++ b/arch/x86/kernel/nmi.c
-> > @@ -135,6 +135,20 @@ static void nmi_check_duration(struct nmiaction
-> > *action, u64 duration) action->handler, duration, decimal_msecs);
-> >   }
-> >   
-> > +static inline int do_handle_nmi(struct nmiaction *a, struct pt_regs
-> > *regs, unsigned int type) +{
-> > +	int thishandled;
-> > +	u64 delta;
-> > +
-> > +	delta = sched_clock();
-> > +	thishandled = a->handler(type, regs);
-> > +	delta = sched_clock() - delta;
-> > +	trace_nmi_handler(a->handler, (int)delta, thishandled);
-> > +	nmi_check_duration(a, delta);
-> > +
-> > +	return thishandled;
-> > +}
-> > +
-> >   static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> >   {
-> >   	struct nmi_desc *desc = nmi_to_desc(type);
-> > @@ -149,18 +163,8 @@ static int nmi_handle(unsigned int type, struct
-> > pt_regs *regs)
-> >   	 * can be latched at any given time.  Walk the whole list
-> >   	 * to handle those situations.
-> >   	 */
-> > -	list_for_each_entry_rcu(a, &desc->head, list) {
-> > -		int thishandled;
-> > -		u64 delta;
-> > -
-> > -		delta = sched_clock();
-> > -		thishandled = a->handler(type, regs);
-> > -		handled += thishandled;
-> > -		delta = sched_clock() - delta;
-> > -		trace_nmi_handler(a->handler, (int)delta, thishandled);
-> > -
-> > -		nmi_check_duration(a, delta);
-> > -	}
-> > +	list_for_each_entry_rcu(a, &desc->head, list)
-> > +		handled += do_handle_nmi(a, regs, type);
-> >   
-> >   	rcu_read_unlock();
-> >     
+> > What "below debugfs file"? A '#'?
 > 
-> As this is a preparation patch, better move it earlier before any actual 
-> NMI source changes, maybe the first patch of this series.
-This preparatory patch is utilized immediately by the subsequent patch,
-enhancing the narrative flow, in my opinion.
+> That is the number of the CPU. If it is causing confusion, I can will
+> change it to N, or say # means the number of the CPU.
 
-Thanks,
+Or drop that sentence completely.
 
-Jacob
+For some reason lately it seems to me folks feel the need to explain what the
+patch does. Even if that is visible from the diff.
+
+> I thought about that, but the other fields are also printed without a
+> preceding "0x":
+> 
+>           seq_printf(m, "initial_apicid:      %x\n", c->topo.initial_apicid);
+>           seq_printf(m, "apicid:              %x\n", c->topo.apicid);
+> 	  ...
+> 
+> I will change those too, probably in a separate patch.
+
+Yes please.
+
+> > > +static void topo_set_hw_cpu_type(struct cpuinfo_x86 *c)
+> > > +{
+> > > +	c->topo.hw_cpu_type = X86_HW_CPU_TYPE_UNKNOWN;
+> > > +
+> > > +	if (c->x86_vendor == X86_VENDOR_INTEL && c->cpuid_level >= 0x1a)
+> > > +		c->topo.hw_cpu_type = cpuid_eax(0x1a) >> X86_CPU_TYPE_INTEL_SHIFT;
+> > > +}
+> > 
+> > Why isn't this happening in cpu/intel.c? And then you don't need yet
+> > another silly function.
+> 
+> I was preferring to keep the topology related code in one place. Would it
+> make sense to keep it in Intel specific leg in parse_topology() as below:
+
+I guess.
+
+Although looking around this code, I wonder why is this hw_cpu_type part of
+the topology and not part of cpuinfo_x86 directly?
+
+struct cpuinfo_topology has all the IDs but the type? Feels out of place
+there.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
