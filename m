@@ -1,54 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7156B139D;
-	Wed,  3 Jul 2024 01:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A179F621;
+	Wed,  3 Jul 2024 01:11:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719968676; cv=none; b=GaPOwBwM0FnzhitKmYDlmKYdUlk7gpifEaU7QI08PYUysQHoa8/GccdSN7F/CRDp3fWQKL6WrO9AMw1OiEu/aXY+WOfYJvB4fQnxvRaqRDo1AKTeimWnE/dNIuNmQOhpTY190WLj4VthIC5/+rR50JEc3suXW4j45qOEltawgKs=
+	t=1719969116; cv=none; b=h4SIzL60Tkimu9dqLtkBqSDNyOeNEXC8m2YIQ7gDyd8sr89+/jLzo0IlwNi6vbZVLSOPCAx9NlnXDv/2wubQtUloCWdPgFJtTpPk+pMPDB5R6cUTTtHCZks3wket/DoQVnMgHI8U4S1a7hGKAs+XIPaPe6bN/ycv6cCNA2F2o08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719968676; c=relaxed/simple;
-	bh=LcnahQlqsMIdmoV8uTqbUdIbnrzfrdwjOBwRUmo/5b0=;
+	s=arc-20240116; t=1719969116; c=relaxed/simple;
+	bh=FOInugq3Bs8wKxJEdi/NQCIH6wZP8qlhK38ZRjYYe0I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TV53WIKunlkUNSF5NERt1g7q2JmQdBaDWZntBdy72sSJsJrOPErd7OmvGUUK/efi2KbhpS5ovPPFLX+0blZqwAauQ+zvEwzKuTPT+BK07Zc7hMX33MvEvJJB/hRlkC/z/Mzi3HAldbIZo5CHqNlKwj+IjWcd1x0ANuXtQXqd6Y8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GEaiVgWy; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=juU/fXyrE+KDZy6wumBA8AA9NpvLh7JyAkbC7Z0QrjczVPOD2RPmrHpxZPY8vnQEU1ksVGSP5ngxqKIhwTd3Xdee4Z6ZPqCyqMuOmwIwGPRs84d2aISKHTmYgtxwU2ODdPmPKcdVo1d2clhVyefo6HMro8ofu4thOS3BFWwtmKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8XCyyFl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GEaiVgWy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F4169C32781;
-	Wed,  3 Jul 2024 01:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8XCyyFl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AA8BC116B1;
+	Wed,  3 Jul 2024 01:11:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719968676;
-	bh=LcnahQlqsMIdmoV8uTqbUdIbnrzfrdwjOBwRUmo/5b0=;
+	s=k20201202; t=1719969116;
+	bh=FOInugq3Bs8wKxJEdi/NQCIH6wZP8qlhK38ZRjYYe0I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GEaiVgWy3hKxjdHsqqVx2D8rAU4aFWq/yHxIxYMQa8B5+cEzvd9t81rmLD4donzUr
-	 SFqwfdTdQfIbt+jfG3AzOVsnj5A/WxZ/el9bRx5wmMEWhO+xumc/UjmAZTbFyhvHBz
-	 /AcUvUntaLuqZZcUCqD5JQV3y1r8T4/ITYDGY9sLhZOxGTJZ5avtmGRRamazIc3XDt
-	 fyRob+/r8MrW+uf+5uPGnrv/K6mkRiS2up8q0SPRPXjCtecGe9sBgCN5MbeNZg9Pfs
-	 pDmMeJJZjPbOWUgrr4WZATUs/47HKXcGZSk9EZdYZrmbDt1g4llifmJsHNTWKxPcup
-	 p1otuy+JarWOA==
-Date: Tue, 2 Jul 2024 18:04:33 -0700
+	b=u8XCyyFlIB/6u5hqrAkAwGzJT6FzrIwZp6LURsvQCQr0xaYZx22+gz+HHOwZVYwM3
+	 kq7q/otBXO01Wwbp2GgBejTFnLct/Kfr1CtziwWtMPT8BoILsBA8jP6Ua5x+Bl3x+P
+	 enj+Q7isg2tg+DWF95/8VvAZfTQxs4hs8iwmplQYQXwpsKHC12P0VhFiZzFPnv9ql3
+	 seeQtF8COWYE+jZVe10Is7HAScArtPgfs1EysWjGouHrQk72fv2LwgOxiRs36xN+R8
+	 5TiCAtpxf/Is36PKlPu1tdbBp17mWAHXS8SY7MAlzJTASuSyXGBLtbsuBMnVf/NGP0
+	 vPwJ3SiSS4Nuw==
+Date: Tue, 2 Jul 2024 18:11:53 -0700
 From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH PATCH v2 9/9] x86/rfds: Exclude P-only parts from the
- RFDS affected list
-Message-ID: <20240703010433.2ymzh5g7osth5ch5@treble>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-9-f927bde83ad0@linux.intel.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
+	peterz@infradead.org, rostedt@goodmis.org, mhiramat@kernel.org,
+	x86@kernel.org, mingo@redhat.com, tglx@linutronix.de,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+Message-ID: <20240703011153.jfg6jakxaiedyrom@treble>
+References: <20240702171858.187562-1-andrii@kernel.org>
+ <20240702233554.slj6kh7dn2mc2w4n@treble>
+ <20240702233902.p42gfhhnxo2veemf@treble>
+ <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,29 +49,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240627-add-cpu-type-v2-9-f927bde83ad0@linux.intel.com>
+In-Reply-To: <CAEf4BzZ1GexY6uhO2Mwgbd7DgUnpMeTR2R37G5_5vdchQUAvjA@mail.gmail.com>
 
-On Thu, Jun 27, 2024 at 01:44:55PM -0700, Pawan Gupta wrote:
-> @@ -1255,9 +1260,7 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
->  	VULNBL_INTEL(TIGERLAKE,			GDS),
->  	VULNBL_INTEL(LAKEFIELD,			MMIO | MMIO_SBDS | RETBLEED),
->  	VULNBL_INTEL(ROCKETLAKE,		MMIO | RETBLEED | GDS),
-> -	VULNBL_INTEL(ALDERLAKE,			RFDS),
->  	VULNBL_INTEL(ALDERLAKE_L,		RFDS),
-> -	VULNBL_INTEL(RAPTORLAKE,		RFDS),
->  	VULNBL_INTEL(RAPTORLAKE_P,		RFDS),
->  	VULNBL_INTEL(RAPTORLAKE_S,		RFDS),
->  	VULNBL_INTEL(ATOM_GRACEMONT,		RFDS),
-> @@ -1271,6 +1274,8 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
->  	/* Match more than Vendor/Family/Model */
->  	VULNBL_INTEL_STEPPINGS(COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
->  	VULNBL_INTEL	      (COMETLAKE_L,					MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL_TYPE     (ALDERLAKE,	ATOM,				RFDS),
-> +	VULNBL_INTEL_TYPE     (RAPTORLAKE,	ATOM,				RFDS),
+On Tue, Jul 02, 2024 at 05:06:14PM -0700, Andrii Nakryiko wrote:
+> > > Should it also check for ENDBR64?
+> > >
+> 
+> Sure, I can add a check for endbr64 as well. endbr64 probably can be
+> used not just at function entry, is that right? So it might be another
+> case of false positive (which I think is ok, see below).
 
-Same comment here, these should be inline with the main list.  Maybe
-there's some way to structure the indentations so they align better
-vertically with the STEPPINGS/TYPE variants.
+Yeah, at least theoretically they could happen in the middle of a
+function for implementing C switch jump tables.
+
+> > > When compiled with -fcf-protection=branch, the first instruction of the
+> > > function will almost always be ENDBR64.  I'm not sure about other
+> > > distros, but at least Fedora compiles its binaries like that.
+> >
+> > BTW, there are some cases (including leaf functions and some stack
+> > alignment sequences) where a "push %rbp" can happen inside a function.
+> > Then it would presumably add a bogus trace entry.  Are such false
+> > positives ok?
+> 
+> I think such cases should be rare. People mostly seem to trace user
+> function entry/exit, rarely if ever they trace something within the
+> function, except for USDT cases, where it will be a nop instruction
+> that they trace.
+> 
+> In general, even with false positives, I think it's overwhelmingly
+> better to get correct entry stack trace 99.9% of the time, and in the
+> rest 0.01% cases it's fine having one extra bogus entry (but the rest
+> should still be correct), which should be easy for humans to recognize
+> and filter out, if necessary.
+
+Agreed, this is a definite improvement overall.
+
+BTW, soon there will be support for sframes instead of frame pointers,
+at which point these checks should only be done for the frame pointer
+case.
 
 -- 
 Josh
