@@ -1,238 +1,253 @@
-Received: from EUR02-VI1-obe.outbound.protection.outlook.com (mail-vi1eur02on2071.outbound.protection.outlook.com [40.107.241.71])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C2E73D0A9;
-	Wed,  3 Jul 2024 07:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.241.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719992774; cv=fail; b=YpsNDX1PCgaD9dO2I+KbEqD7kQC2ecJE6FM1lLjLhf8IpJjYy0gbcP2A6H1a46HlkyqWkPQRBk9ZLlIYWg/hNQ8enMxfXAaPZvxGB5dbjPEGB+EwcNS4ATd2OWBJmV3JxVcGtQUd09tBhtMsCDxz1+1c8wPCEEHCOV6UqkJzZfo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719992774; c=relaxed/simple;
-	bh=5rqs9R0bhJuq8X22wDNOWAQSuyYMib8kyD7PXnQPWh0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=WuU7xVV2xE9Z0Lr0IAYlNvH/HMRpON3umejI3yNrEQVSi6IrmWuM3d7XYLje56uCHghK56pCgm6sTOCtfVYZreSZeWdMgq/tBZJpfAH4Brr6dAr2G6S6+/TxVSksUzw/A5hZjuW0cxZCD+0fLdyHSNiXnssQcjPlLacdg3DbLI8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=Ied2XUNp; arc=fail smtp.client-ip=40.107.241.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Ied2XUNp"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZdMuCPFM82oqWktKw0eqOSPeE6PwO5pCOO8df6hKCdwT9cqpyyhSJ2V8E2Dw/qNgu6rva8YXlOKMFbToe30Lmuug0gLhXicA7flDcb4ll9IyiE9p8MW9XX4UXBQ8jwG9SHI+M2jEk5pLPZ1CqqfiR5BWA/ZP7mn919rG26N186EvuJ6WyOLv93LVaZQeKrkdnRo4Z1lsotlpTPMXbRLynMCNCRl5uMRDf3Fhn8iTQKSKBg55PrubBdXdskGUEJS8HHIrz6ZcIQ03MGYDifRQF2XiQbl3d5urxKI1CMTmA77Q6p+dKuHN5hzQOjmFJftVev+eZeNioOCVLPNDy0FWXQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=sVu70dZ+zwiz7dO2dl4mFagjvqd3XaTZv+q8lFufO7w=;
- b=Yir5Ca9P8kvUF8ixR9VDQq71sWQS3unSEFu3xcN5jEk7XLq9pB+REeHsSPyyyAYGNaDt/cfmQTMN2S6SBo0IKzOK7fCCSHwcfY+Edk2Pe7ardPplCBDTNvDmHCnicZVbD94a7b/rMzdkgEKp37GITvrnxZCoLnQz7ui7BWN9SFGOpdI+SPgSrsWzQeqsLUkb+6lYNszXIhLWqDSk88rE3mpMwh2kaYUjEQDPoFSh7eI57686FcLO2nWpzbYy1q4LSoJdprYJ7xkJ60nCvd9erubFn4L7cjnnu0+D3xuxlHYcoaG/AHFkeT2lLvgmHjQ6U2tzD0OVvEnxQybtbPGFbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=sVu70dZ+zwiz7dO2dl4mFagjvqd3XaTZv+q8lFufO7w=;
- b=Ied2XUNpK1xfilQGe4wPyyS4asRH+GHjRjA52WvLA7mcTXavKXq+v8YOnDKOht+l5nj0cyoVB0pMfl1lizWYYONQiibS/4AjYUKPQ6bkElGu/I6nWSbN5APRjAEZ1ErKnormkdNexQTJLZuUi0gofjBzC7XANLFJ7to4RSCG5iE=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com (2603:10a6:10:2e1::11)
- by PA1PR04MB10321.eurprd04.prod.outlook.com (2603:10a6:102:44f::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7719.34; Wed, 3 Jul
- 2024 07:46:09 +0000
-Received: from DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7]) by DU2PR04MB8822.eurprd04.prod.outlook.com
- ([fe80::4e24:c2c7:bd58:c5c7%5]) with mapi id 15.20.7719.028; Wed, 3 Jul 2024
- 07:46:09 +0000
-Date: Wed, 3 Jul 2024 15:44:08 +0800
-From: Xu Yang <xu.yang_2@nxp.com>
-To: acme@redhat.com, frank.li@nxp.com, will@kernel.org,
-	mark.rutland@arm.com, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-	festevam@gmail.com, john.g.garry@oracle.com, jolsa@kernel.org,
-	namhyung@kernel.org, irogers@google.com
-Cc: mike.leach@linaro.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, imx@lists.linux.dev
-Subject: Re: [PATCH v12 7/8] perf vendor events arm64:: Add i.MX93 DDR
- Performance Monitor metrics
-Message-ID: <20240703074408.gbsabrdy7fvxfpuc@hippo>
-References: <20240529080358.703784-1-xu.yang_2@nxp.com>
- <20240529080358.703784-7-xu.yang_2@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240529080358.703784-7-xu.yang_2@nxp.com>
-X-ClientProxiedBy: SI2PR02CA0002.apcprd02.prod.outlook.com
- (2603:1096:4:194::22) To DU2PR04MB8822.eurprd04.prod.outlook.com
- (2603:10a6:10:2e1::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B81413B584;
+	Wed,  3 Jul 2024 08:54:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1719996865; cv=none; b=PufuwjkgxfGT97r6R6U6WqFBastNbBfrDZRzL/w9Wq0Mg6J8eXDq9si7Sb7HIhpRkqUNInsQ9Ztc0Rw4igZ9wzlSiyYrZYBJB7smeqd2i95w5iuKoOf5jVf2VUx/kA0gcDe42KxgYnxKBFoUIYGek6Ii7va0ozcKTI7xlubzsmw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1719996865; c=relaxed/simple;
+	bh=woE19g9vPhpqXW1hrwIwclZfrMDdDIgvIF9jxblDFw8=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
+	 In-Reply-To:Content-Type; b=G+us8vYemZdNHZO44ntLSfCrXvRn8qzCHTDdIP8Hf1UYVrNJTv/rg7UHMrLnavmZNtkQ+JbXZpd80C4vRgz+PcIz2F7NyG1VHLGqdStbqO5zCpbuw22YpjZNGDEkVx9deKZY8ZbB1MjedvyPUws0yuHIaiV9ftjwbAkFAu0w108=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WDYPJ0CYkz1T4w3;
+	Wed,  3 Jul 2024 16:49:40 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 370901402CE;
+	Wed,  3 Jul 2024 16:54:13 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 3 Jul 2024 16:54:12 +0800
+Message-ID: <f04da18d-bded-fb21-301d-1a6dd6b3b6c7@huawei.com>
+Date: Wed, 3 Jul 2024 16:54:11 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU2PR04MB8822:EE_|PA1PR04MB10321:EE_
-X-MS-Office365-Filtering-Correlation-Id: d6c90fdb-7341-4e62-989b-08dc9b3433f4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|52116014|366016|376014|1800799024|921020|38350700014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lX9glFJFqNsJQq+XIMgJvaombx53lLEAF51nsRMO/bVXq0QQTfOiDaHYsflP?=
- =?us-ascii?Q?UeO11n+SiMaSiN8IijtA+F50HV/ccEik9SNon7NpSUssff0Lv3yiBokDs9Ef?=
- =?us-ascii?Q?V8UWOLqQwJYEWKC8qSHBJrD2//JVUfz1D8h/T1Cj7zcha10Kg/gPxbCSVSXF?=
- =?us-ascii?Q?Fkj4PCYT3QdqyvrS2ODv4GK1Ldgl6OqYgD8kzeXIw2yVraWhfRTGgrjSMSqO?=
- =?us-ascii?Q?AEpUtr0DkJRUrpH/J8yeFwFyq2/5Inw9kQz9ebvzwkvUmKYyNUwqlUiU1+zZ?=
- =?us-ascii?Q?2Us8hWva6OCWVpNKAg/KYeS/9oE7uWcJ0i/BnB9UeZ0WENPwOZDZ8adzL7+y?=
- =?us-ascii?Q?Jh1mUdhO8QCAM1bAGk4pjXqEFKW9inwnAcFlz4ZKGy8BTLLT4SbE8KEoUoVc?=
- =?us-ascii?Q?3uXv/AweAFvJzXEAtgJeR9m/5hR88WZLLzfAhyQjfle8O+ER/Tr4NKry5WRX?=
- =?us-ascii?Q?2mtLHU96yi9U9Q2uBNuSnutVtH3hitzpJ0snPImB+GCXzU6oOD9HJZ7PFDVa?=
- =?us-ascii?Q?R+zDBL5lGPj816/DTQ+nMw6Z0Im3rPVRJLfqh61X3Cdoce4MwQ7t+ItNri+h?=
- =?us-ascii?Q?q/e2Vq0iBEucr+5QStRQ3SpaMhyQmhCWdgOwpB7M7iVf8KXFR+v6D8djE+sk?=
- =?us-ascii?Q?hMoKUbmaOwdE+LU9+BuG5k072tdEOia4/oeC+Dv6JZRVDcG+lm6el0S15Jmy?=
- =?us-ascii?Q?LYxIK7Pbk9c5FfkHLbXPnmSBgx0It3Rl9F6yxQuAPQTBbtrR4cRdFXHxGi4n?=
- =?us-ascii?Q?JJ9k2mc/eS/bPdbNWTEglSkubcXtKwZLa5iNwbSQaUfIH4eBeZLJjoY0gUie?=
- =?us-ascii?Q?Meog0USCjSuvuZzgiB/QKTBqZ2/cuD21tWzttJww+lpLNHu3/7maPzfF6HnH?=
- =?us-ascii?Q?6DhySubI9tmwpEEWcrFiKxsCV/PnFV9Z0x8PM2mWeQ25hoogzkO4Qe4CVBsi?=
- =?us-ascii?Q?7I/p0NB7b6OtA+Jol7+ja78UtpOPstoj4ePPnjUdGjo866VHk0s+MPEmKvp0?=
- =?us-ascii?Q?IVkiPIEVIq8ELhjgjbXcMiiJlr6cCDpBsgeuNPNhHII9Wzgawq22pvhfFcWb?=
- =?us-ascii?Q?aFcpY5og9udz7LAhcYE/rwmnZ+hFi/56h5QDUcJ/jOb2fCj5UvTZN2DB595d?=
- =?us-ascii?Q?0thxbl1iPVmLTeHZ3wepFrwI3bcaCra+704gT5Nne6UKQ+ZAULRGZhR0c9Hi?=
- =?us-ascii?Q?672fIicAGxHgyZNynlxdP28Fv12wKa66DsvGpUax1wpyVAU3ovBcbJmxR1Ol?=
- =?us-ascii?Q?y6iNJgCqPgAP3QRfVsUe0LQH+YYWOhbAevWJlQFVjLoUSVtFIMQs/I273J2L?=
- =?us-ascii?Q?0DW1gw2LSN0Ye3nFJWZZickIoF1XGw9PJn0GFMKuPYt+gyTE6f8HNOyU+eHI?=
- =?us-ascii?Q?jEp0Jj+hMc7g7jDFvHpvIO8kg5s8jvX+6zikE45KHIoKhKBvjlPCjGuuk/ve?=
- =?us-ascii?Q?0c0CLYimTPE=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU2PR04MB8822.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(52116014)(366016)(376014)(1800799024)(921020)(38350700014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?VxxoIzlyEMYd0EIdNA33Q7N6LfohQG2lKV6GqwIDn4cMV1FkwuG+F0+L65xE?=
- =?us-ascii?Q?F+uPXDJ0HVoKT1nhYDWvG81+7k8V/CB71qgnKc1n5N5hkKJT2TdE8bAsHh2m?=
- =?us-ascii?Q?wmY8ejQlI9Ax+clXrQzuSq3pHLU9+ZSh9LnDfVvPD9B6W3G6zSN9RjMG9on+?=
- =?us-ascii?Q?Y6OJN/Iea2kEhErYwX2L3ziQ8KZVD0Ev9F6G6Md55BNYhlL+CSiboJrwY/Ul?=
- =?us-ascii?Q?PlAaDzb3o3dot8ty5volf85NrvtkYqo5KZ40YNCwQPJ/ZwoLIFYYe7qIf32H?=
- =?us-ascii?Q?SlWOQyrNjb4cER3eYqA0192J3Q2DcRIv/f2EdMAZeBI4hOM2fxoon2VtJpyg?=
- =?us-ascii?Q?WxUksYOApXFYjykuWnF/D30rwTfvvE1f72JVK9yC9wm9ORfrhXY6icGlGDoh?=
- =?us-ascii?Q?h2ZjCpkdXkmMZKG9CgpEgB4GpN9aFz1dhsnUHHX5ogSPT5zVRKGJDIxhqmF7?=
- =?us-ascii?Q?JLIVgiKLgGYdKSPXvkleBGwkO9N5+sixWbL/fQt2YmgixNqs7/eXPpkZQxeL?=
- =?us-ascii?Q?QynGiF0XAqmU4T19pP7EsBv1DgfeELj1XtRZWr8cFeK3hoHV1C//y5s74+2Q?=
- =?us-ascii?Q?fPu/Jpvj/Edfk7H75Ik3+i8nszwyVbVJOQvSt3CZ0D0cxMaD1tD3EsEbaxun?=
- =?us-ascii?Q?E8A1LLYMbkaRugcxYDIkfLNw5aLiXthDixiasu67QldTi6Zb0HLYyB6hzs1j?=
- =?us-ascii?Q?vXkGUBaPj28AtilvHDRGrrgx66Hr2JZVEdUzWv74CwaO6XkndyN8wQTG+N9u?=
- =?us-ascii?Q?alvQfBKR/4JgiLcdt65yoCMn28j2Ow4fmgvt5LD2+TPPEwc6am6FGmfNKG3o?=
- =?us-ascii?Q?SsV9i718xUrft3d1fxrJESiUpvrLx6nmOjkKD9srYlEsz8C3fwifcUEpb0pM?=
- =?us-ascii?Q?22emChgwtkCkZhvMqk2uuB117WzersJh9q+lYbWIWviTg2iJsO0O+H44LxH+?=
- =?us-ascii?Q?WCDDRod+3UnUhRLUrDWu5qG/XC2BZmBsneRCn5gg9zsRdlEFI6+3LEwaFzFl?=
- =?us-ascii?Q?DNxdQeWni6/TjyOGD5UFc4MZ/G/iWZAfHMXX6+64nZrz1xiw5EbJwTWPI0O1?=
- =?us-ascii?Q?hrcN2hhKht7s51ZXiy4kGQ2FqLTtu3Uqu/JaF8UZejHFFkk1T0VfyHnIUCCE?=
- =?us-ascii?Q?AmZGaPHVwisvrnqq5iz76tA97A6kmLKO8i3iJhsxbETdlc3j42FmhGLHtbme?=
- =?us-ascii?Q?f4jAtppiZOtt+20V+oRwrN2VVNL8y/pFZ9v0Y8QDQZALJSLPhYMbzNsjz8r1?=
- =?us-ascii?Q?TfwlTxlghwzEYK/eDhVEUcrAvkZ+yTB/kmjt1/f6g+Qtnz3HFn/qwzBHqiTw?=
- =?us-ascii?Q?6cCPDr7DFwIWwzWb2ZxIi1o9wgB++yirNq96n7Lu6bokwP6sOud8GOvMopms?=
- =?us-ascii?Q?NzDC4kadWuyR9ysQVDsZ8yZOWQWw06b+g8GB9r66qHPExd40JVJqcMrzLSSv?=
- =?us-ascii?Q?gq4gdejWnLgt1UvI80w0OiEqjw8Lt5DAyTSiFnxbLs56XFMKVDH5v98IQnSk?=
- =?us-ascii?Q?uLodicUXstQcC/YhfDGC9BszfBsgb5AovIgdvLUjGcVYuwlKZjXDl9e8Hd21?=
- =?us-ascii?Q?AhFulXO0Pv8q9qsqMuGb8nBT2yqz9HG9QpTlXRpV?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6c90fdb-7341-4e62-989b-08dc9b3433f4
-X-MS-Exchange-CrossTenant-AuthSource: DU2PR04MB8822.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jul 2024 07:46:09.4604
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sMxxX43AhuTmmHP+fIKho/QP7sKwHBr8LxD/1IiWurPgQOCCdVeFENOqoV5lDJ+m24O9vcxJDjpYqceXdC6kew==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR04MB10321
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH bpf-next] uprobes: Fix the xol slots reserved for
+ uretprobe trampoline
+From: "Liao, Chang" <liaochang1@huawei.com>
+To: Jiri Olsa <olsajiri@gmail.com>, Oleg Nesterov <oleg@redhat.com>
+CC: <rostedt@goodmis.org>, <mhiramat@kernel.org>, <ast@kernel.org>,
+	<daniel@iogearbox.net>, <andrii@kernel.org>, <nathan@kernel.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<bpf@vger.kernel.org>
+References: <20240619013411.756995-1-liaochang1@huawei.com>
+ <20240619143852.GA24240@redhat.com>
+ <7cfa9f1f-d9ce-b6bb-3fe0-687fae9c77c4@huawei.com>
+ <20240620083602.GB30070@redhat.com> <ZnPxFbUJVUQd80hs@krava>
+ <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
+In-Reply-To: <11ae956a-9d0c-ca80-c3a7-a16b2c53e737@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-+Arnaldo
+Hi Jiri and Oleg,
 
-Hi Arnaldo,
-
-On Wed, May 29, 2024 at 04:03:57PM +0800, Xu Yang wrote:
-> Add JSON metrics for i.MX93 DDR Performance Monitor.
+在 2024/6/20 19:27, Liao, Chang 写道:
 > 
-> Reviewed-by: Frank Li <Frank.Li@nxp.com>
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+> 
+> 在 2024/6/20 17:06, Jiri Olsa 写道:
+>> On Thu, Jun 20, 2024 at 10:36:02AM +0200, Oleg Nesterov wrote:
+>>> On 06/20, Liao, Chang wrote:
+>>>>
+>>>> However, when i asm porting uretprobe trampoline to arm64
+>>>> to explore its benefits on that architecture, i discovered the problem that
+>>>> single slot is not large enought for trampoline code.
+>>
+>> ah ok, makes sense now.. x86_64 has the slot big enough for the trampoline,
+>> but arm64 does not
+>>
+>>>
+>>> Ah, but then I'd suggest to make the changelog more clear. It looks as
+>>> if the problem was introduced by the patch from Jiri. Note that we was
+>>> confused as well ;)
+>>>
+>>> And,
+>>>
+>>> 	+	/* Reserve enough slots for the uretprobe trampoline */
+>>> 	+	for (slot_nr = 0;
+>>> 	+	     slot_nr < max((insns_size / UPROBE_XOL_SLOT_BYTES), 1);
+>>> 	+	     slot_nr++)
+>>>
+>>> this doesn't look right. Just suppose that insns_size = UPROBE_XOL_SLOT_BYTES + 1.
+>>> I'd suggest DIV_ROUND_UP(insns_size, UPROBE_XOL_SLOT_BYTES).
+>>>
+>>> And perhaps it would be better to send this change along with
+>>> uretprobe_trampoline_for_arm64 ?
+>>
+>> +1, also I'm curious what's the gain on arm64?
+> 
+> I am currently finalizing the uretprobe trampoline and syscall implementation on arm64.
+> While i have addressed most of issues, there are stiil a few bugs that reguire more effort.
+> Once these are fixed, i will use Redis to evaluate the performance gains on arm64. In the
+> next revision, i will submit a patchset that includes all relevant code changs, testcases
+> and benchmark data, which will allows a comprehensive review and dicussion.
 
-Could you please apply patch 7/8 and 8/8 to tools/perf? They have already
-been reviewed. 
+This is an update on the development of uretprobe syscall for ARM64 architecture.
 
-Many thanks in advance!
+I've recently completed a basic implementation of the uretprobe syscall and trampoline
+code for ARM64, with the uprobe syscall selftest passed. This allow me to revisit the
+performance benchmark using uretprobe. With running Redis benchmark a Kunpeng server,
+I observed a slight performance gain with the uretprobe syscall on ARM64. The performance
+test spawned a Redis-server and Redis-benchmark on seperate cores within the same NUMA
+node. The Redis-server handled each SET and GET request from Redis-benchmark which triggered
+three uretprobe events with attached bpftrace program that increments the counter.
+Here is the benchmark result:
 
-Thanks,
-Xu Yang
+On Kunpeng916 (Hi1616), 4 NUMA nodes, 64 Cores @ 2.4GHz :
+
+-------------------------------------------------------------------------------
+Test case       |  No uretprobe |  uretprobe(breakpoint) |  uretprobe (syscall)
+===============================================================================
+Redis SET (RPS) |  47025        |  40619   -13.6%        |  40670   -13.5%
+-------------------------------------------------------------------------------
+Redis GET (RPS) |  46715        |  41426   -11.3%        |  41274   -11.6%
+-------------------------------------------------------------------------------
+
+The detailed test scripts and bpf program are available upon any request.
+
+Additionally, I've attempted to optimize the implementation of the uretprobe syscall and
+trampoline, but the cause of the lower than expected performance gain compared to x86
+remains unclear. Further investigation is necessary to identify potentail bottlenecks or
+inefficiencies specific to ARM64. It is grateful for any insights or suggestions the
+community might have on the potential reasons for the performance difference between
+ARM64 and X86. The patch for the uretprobe syscall is attached below for reference.
+
+---------------------------%<----------------------------
+diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
+index 8e4be92e25b1..059f38c0857f 100644
+--- a/arch/arm64/kernel/probes/Makefile
++++ b/arch/arm64/kernel/probes/Makefile
+@@ -3,4 +3,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
+ 				   kprobes_trampoline.o		\
+ 				   simulate-insn.o
+ obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
++				   uprobes_trampoline.o		\
+ 				   simulate-insn.o
+diff --git a/arch/arm64/kernel/probes/uprobes.c b/arch/arm64/kernel/probes/uprobes.c
+index d49aef2657cd..632f97afd50f 100644
+--- a/arch/arm64/kernel/probes/uprobes.c
++++ b/arch/arm64/kernel/probes/uprobes.c
+@@ -5,12 +5,69 @@
+ #include <linux/highmem.h>
+ #include <linux/ptrace.h>
+ #include <linux/uprobes.h>
++#include <linux/syscalls.h>
+ #include <asm/cacheflush.h>
+
+ #include "decode-insn.h"
+
+ #define UPROBE_INV_FAULT_CODE	UINT_MAX
+
++extern char uretprobe_trampoline[] __read_mostly;
++extern char uretprobe_trampoline_end[] __read_mostly;
++extern char uretprobe_trampoline_svc[] __read_mostly;
++
++void *arch_uprobe_trampoline(unsigned long *psize)
++{
++	static uprobe_opcode_t insn = UPROBE_SWBP_INSN;
++	struct pt_regs *regs = task_pt_regs(current);
++
++	if (!compat_user_mode(regs)) {
++		*psize = uretprobe_trampoline_end - uretprobe_trampoline;
++		return uretprobe_trampoline;
++	}
++
++	*psize = UPROBE_SWBP_INSN_SIZE;
++	return &insn;
++}
++
++static unsigned long syscall_at_uprobe_trampoline(void)
++{
++	unsigned long tramp = uprobe_get_trampoline_vaddr();
++
++	return tramp + (uretprobe_trampoline_svc - uretprobe_trampoline);
++}
++
++SYSCALL_DEFINE0(uretprobe)
++{
++	int err;
++	struct pt_regs *regs = task_pt_regs(current);
++
++	if (compat_user_mode(regs))
++		goto sigill;
++
++	/* ensure uretprobe syscall invoked from uretprobe trampoline */
++	if ((regs->pc - AARCH64_INSN_SIZE) != syscall_at_uprobe_trampoline())
++		goto sigill;
++
++	/* restore the clobbered context used to invoke uretprobe syscall */
++	err = copy_from_user(&regs->regs[8], (void __user *)(regs->sp - 8),
++			     sizeof(regs->regs[8]));
++	if (err)
++		goto sigill;
++
++	uprobe_handle_trampoline(regs);
++
++	/* restore the real LR before return to the caller. */
++	regs->regs[30] = regs->pc;
++
++	/* use the real return value */
++	return regs->regs[0];
++
++sigill:
++	force_sig(SIGILL);
++	return -1;
++}
++
+ void arch_uprobe_copy_ixol(struct page *page, unsigned long vaddr,
+ 		void *src, unsigned long len)
+ {
+diff --git a/arch/arm64/kernel/probes/uprobes_trampoline.S b/arch/arm64/kernel/probes/uprobes_trampoline.S
+new file mode 100644
+index 000000000000..670d4d9e97ec
+--- /dev/null
++++ b/arch/arm64/kernel/probes/uprobes_trampoline.S
+@@ -0,0 +1,21 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * trampoline entry and return code for uretprobes.
++ */
++
++#include <linux/linkage.h>
++#include <asm/asm-bug.h>
++#include <asm/assembler.h>
++#include <asm/unistd.h>
++
++	.text
++
++SYM_CODE_START(uretprobe_trampoline)
++	str x8, [sp, #-8]
++	mov x8, #__NR_uretprobe
++
++SYM_CODE_START(uretprobe_trampoline_svc)
++	svc #0x000
++
++SYM_CODE_START(uretprobe_trampoline_end)
++	nop
+--------------------------->%----------------------------
+
+Thanks.
 
 > 
-> ---
-> Changes in v7:
->  - new patch
-> Changes in v8:
->  - no changes
-> Changes in v9:
->  - add Rb tag
-> Changes in v10:
->  - no changes
-> Changes in v11:
->  - no changes
-> Changes in v12:
->  - no changes
-> ---
->  .../arch/arm64/freescale/imx93/sys/ddrc.json  |  9 +++++++
->  .../arm64/freescale/imx93/sys/metrics.json    | 26 +++++++++++++++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
->  create mode 100644 tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
+>>
+>> thanks,
+>> jirka
 > 
-> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
-> new file mode 100644
-> index 000000000000..eeeae4d49fce
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/ddrc.json
-> @@ -0,0 +1,9 @@
-> +[
-> +   {
-> +           "BriefDescription": "ddr cycles event",
-> +           "EventCode": "0x00",
-> +           "EventName": "imx93_ddr.cycles",
-> +           "Unit": "imx9_ddr",
-> +           "Compat": "imx93"
-> +   }
-> +]
-> diff --git a/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
-> new file mode 100644
-> index 000000000000..4d2454ca1259
-> --- /dev/null
-> +++ b/tools/perf/pmu-events/arch/arm64/freescale/imx93/sys/metrics.json
-> @@ -0,0 +1,26 @@
-> +[
-> +   {
-> +	    "BriefDescription": "bandwidth usage for lpddr4x evk board",
-> +	    "MetricName": "imx93_bandwidth_usage.lpddr4x",
-> +	    "MetricExpr": "(((( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8 ) + (( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32 )) / duration_time) / (3733 * 1000000 * 2)",
-> +	    "ScaleUnit": "1e2%",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx93"
-> +   },
-> +   {
-> +	    "BriefDescription": "bytes all masters read from ddr",
-> +	    "MetricName": "imx93_ddr_read.all",
-> +	    "MetricExpr": "( imx9_ddr0@ddrc_pm_0@ ) * 2 * 8",
-> +	    "ScaleUnit": "9.765625e-4KB",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx93"
-> +   },
-> +   {
-> +	    "BriefDescription": "bytes all masters write to ddr",
-> +	    "MetricName": "imx93_ddr_write.all",
-> +	    "MetricExpr": "( imx9_ddr0@ddrc_pm_3@ + imx9_ddr0@ddrc_pm_5@ + imx9_ddr0@ddrc_pm_7@ + imx9_ddr0@ddrc_pm_9@ - imx9_ddr0@ddrc_pm_2@ - imx9_ddr0@ddrc_pm_4@ - imx9_ddr0@ddrc_pm_6@ - imx9_ddr0@ddrc_pm_8@ ) * 32",
-> +	    "ScaleUnit": "9.765625e-4KB",
-> +	    "Unit": "imx9_ddr",
-> +	    "Compat": "imx93"
-> +   }
-> +]
-> -- 
-> 2.34.1
-> 
+
+-- 
+BR
+Liao, Chang
