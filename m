@@ -1,225 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F87E18C08;
-	Wed,  3 Jul 2024 14:36:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DC3017BB0D;
+	Wed,  3 Jul 2024 14:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720017404; cv=none; b=gvFmZJvQJRX+TzXduJHEWQYcCDC12QpYaKJDLYD/MYpb0tYRbbTUoRx15a2Qe1pkf4vxDRoKVNCX7fem4JRZTuS+EJSOe7y3dfJ8H8iHQIem0aMcmElkYqFKKK4wsIXIKVIt9aUFKvDsvgC1D0rBldA5nhltiVVJyNzeGy7CeRQ=
+	t=1720017533; cv=none; b=fGxvocfrJvAk16pOY6njXvWfT1eY7XwkIKduxgt3+wM1XvONjnQw6qyIVxWv0JlQkNn7/MATTI1f7i+HPnWe675TPa6+LZKCYUnDKcsYzCcMDsCx9YHozbgxp9r+fo8celfdKVOdGrw+L037DSvkTwQOmeVU5KY2eYs/kY/OSyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720017404; c=relaxed/simple;
-	bh=QwO5Ixp2SXTbYSsPHvTxoG6lPzclCKAikOcW0vCg3XE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=HdmEaR7CAHtkOLC4bc6m0dUxhxYq8sjFC/FU/T9MWkKb1mWp4HyfIpB779yNIOl6FQQEENPXG9LNXUdxDARoEK1MfK/rzvTxrpX1tgU4dZBT2w64lOgma8CVU7fsQLSvVjPoReDKs8Pir1cKE0vK7ERhlIdJu1vh4EFQx6lJQG4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OsDGwI8X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720017533; c=relaxed/simple;
+	bh=MLzXW0zmt8TQcHGK5nYiqQdxT5V+dSydfz7v2Sdsn+Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=IZoIUSUXLB0WtXRL6Ehmrbq2zZzki8HIyYM+42UWUUAJsm9Y88l+s/gpZGs0CC7rzrgF6HGp35cRlNV9OiC9H8YM/y3uc6M6cUz1pZK8+HWY72pqZvv5bE0dWzTcTYFK9v8r2TXw8yXafBlc2HOkqdOd2Bs+J1FC3K+O3+Wx/14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UvzXEd+O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OsDGwI8X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AC7FC2BD10;
-	Wed,  3 Jul 2024 14:36:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UvzXEd+O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E6AC2BD10;
+	Wed,  3 Jul 2024 14:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720017403;
-	bh=QwO5Ixp2SXTbYSsPHvTxoG6lPzclCKAikOcW0vCg3XE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=OsDGwI8Xd/mKysyizFePmoWtuDKVvlwX3xJn4Upq3jB6orK91KOxlztOTzDW+UL8T
-	 aKHwXWEWsl8jx6RRBSLq66YtKZgeXEKE4kw2iBe8eoE3RsvyMDzlh7X8mXlA3yhfoU
-	 YZpHaQTotuIaX8BOaDdHXn+q1kLv3mvkQ2KUkPBfAJ3ihwxNyMFVJQMl1k66hRQ5jB
-	 /s0F83MjAv4JudRu1Zo2poZR7WJ5QmyZ/58HO+7/Jqgcko0IVooxZabC45obJ2t1A8
-	 3LFwFUyV6vqGY9akcbQ7ZIarSnPayLff0txVcrMu6MUcqmsenwk+fScxnoBTIhxZSF
-	 rOXOh2e6RPojg==
-From: =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To: Jinjie Ruan <ruanjinjie@huawei.com>, paul.walmsley@sifive.com,
- palmer@dabbelt.com, aou@eecs.berkeley.edu, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
- jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
- kan.liang@linux.intel.com, dev.mbstr@gmail.com, samuel.holland@sifive.com,
- linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-Cc: ruanjinjie@huawei.com
-Subject: Re: [PATCH v2] riscv: stacktrace: Add USER_STACKTRACE support
-In-Reply-To: <20240604034729.841930-1-ruanjinjie@huawei.com>
-References: <20240604034729.841930-1-ruanjinjie@huawei.com>
-Date: Wed, 03 Jul 2024 16:36:41 +0200
-Message-ID: <87wmm2y22u.fsf@all.your.base.are.belong.to.us>
+	s=k20201202; t=1720017532;
+	bh=MLzXW0zmt8TQcHGK5nYiqQdxT5V+dSydfz7v2Sdsn+Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=UvzXEd+OvZE0GLMzyCnlChXUeaWhWzEJj3t77gcq+UEcXMBtRoDIphusBsCr6EWNK
+	 cb6ncbDUbZ8yHOyZ1ge01dmAPU4OSt0ItHtzAlU18+IIYgDmn21DivLA65n8M8hSXZ
+	 4mAd0279LkOIYcnzbu7cxmzpNPZb5n+Ug0yVV++BH5+DxmgS+NUkXPCKL5Fs+cxutr
+	 +LvJsAIDn9ruMwtdpXAN1u2eO/8Mt6HJAQ6Yj0a4YrQQmnD+8ZHh7kkEBnGGIDFuB0
+	 dfxJEqm3lzV0s9vcNfBtfAD+IaUCmE5S42Puaf2B0VK3HhupOxtVWkunkRKjlZvLtW
+	 GqGKYB49MONug==
+From: Will Deacon <will@kernel.org>
+To: Russell King <linux@armlinux.org.uk>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	James Clark <james.clark@arm.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v2 00/12] arm64: Add support for Armv9.4 PMU fixed instruction counter
+Date: Wed,  3 Jul 2024 15:38:44 +0100
+Message-Id: <172001203729.3396033.17013529444643308853.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
+References: <20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Jinjie Ruan <ruanjinjie@huawei.com> writes:
+On Wed, 26 Jun 2024 16:32:24 -0600, Rob Herring (Arm) wrote:
+> This series adds support for the optional fixed instruction counter
+> added in Armv9.4 PMU. Most of the series is a refactoring to remove the
+> index to counter number conversion which dates back to the Armv7 PMU
+> driver. Removing it is necessary in order to support more than 32
+> counters without a bunch of conditional code further complicating the
+> conversion.
+> 
+> [...]
 
-> Currently, userstacktrace is unsupported for riscv. So use the
-> perf_callchain_user() code as blueprint to implement the
-> arch_stack_walk_user() which add userstacktrace support on riscv.
-> Meanwhile, we can use arch_stack_walk_user() to simplify the implementati=
-on
-> of perf_callchain_user().
->
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202406012109.PDAjXm2i-lkp@i=
-ntel.com/
+Applied to will (for-next/perf), thanks!
 
-For future reference: The LTP tags shouldn't be used when you're
-spinning a new version.
+[01/12] perf: arm_pmuv3: Avoid assigning fixed cycle counter with threshold
+        https://git.kernel.org/will/c/81e15ca3e523
+[02/12] perf: arm_pmuv3: Drop unnecessary IS_ENABLED(CONFIG_ARM64) check
+        https://git.kernel.org/will/c/598c1a2d9f4b
+[03/12] perf/arm: Move 32-bit PMU drivers to drivers/perf/
+        https://git.kernel.org/will/c/8d75537bebfa
+[04/12] perf: arm_v6/7_pmu: Drop non-DT probe support
+        https://git.kernel.org/will/c/12f051c987dc
+[05/12] perf: arm_pmuv3: Include asm/arm_pmuv3.h from linux/perf/arm_pmuv3.h
+        https://git.kernel.org/will/c/d688ffa26942
+[06/12] perf: arm_pmu: Remove event index to counter remapping
+        https://git.kernel.org/will/c/b7e89b0f5bd7
+[07/12] perf: arm_pmuv3: Prepare for more than 32 counters
+        https://git.kernel.org/will/c/12fef9fb7179
+[08/12] KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+        https://git.kernel.org/will/c/6ef2846c17a3
+[09/12] KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+        https://git.kernel.org/will/c/558fdd12c069
+[10/12] arm64: perf/kvm: Use a common PMU cycle counter define
+        https://git.kernel.org/will/c/323bc9e17c01
+[11/12] KVM: arm64: Refine PMU defines for number of counters
+        https://git.kernel.org/will/c/be884dd62461
+[12/12] perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
+        https://git.kernel.org/will/c/dc4c33f753ca
 
-> ---
-> v2:
-> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
-> ---
->  arch/riscv/Kconfig                 |  1 +
->  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
->  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
->  3 files changed, 47 insertions(+), 43 deletions(-)
+Cheers,
+-- 
+Will
 
-[...]
-
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 0525ee2d63c7..6ed96d935b8f 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -193,6 +193,7 @@ config RISCV
->  	select THREAD_INFO_IN_TASK
->  	select TRACE_IRQFLAGS_SUPPORT
->  	select UACCESS_MEMCPY if !MMU
-> +	select USER_STACKTRACE_SUPPORT
->  	select ZONE_DMA32 if 64BIT
->=20=20
->  config CLANG_SUPPORTS_DYNAMIC_FTRACE
-> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_=
-callchain.c
-> index 3348a61de7d9..c7468af77c66 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -6,37 +6,9 @@
->=20=20
->  #include <asm/stacktrace.h>
->=20=20
-> -/*
-> - * Get the return address for a single stackframe and return a pointer t=
-o the
-> - * next frame tail.
-> - */
-> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *ent=
-ry,
-> -				    unsigned long fp, unsigned long reg_ra)
-> +static bool fill_callchain(void *entry, unsigned long pc)
->  {
-> -	struct stackframe buftail;
-> -	unsigned long ra =3D 0;
-> -	unsigned long __user *user_frame_tail =3D
-> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> -
-> -	/* Check accessibility of one struct frame_tail beyond */
-> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> -		return 0;
-> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> -				      sizeof(buftail)))
-> -		return 0;
-> -
-> -	if (reg_ra !=3D 0)
-> -		ra =3D reg_ra;
-> -	else
-> -		ra =3D buftail.ra;
-> -
-> -	fp =3D buftail.fp;
-> -	if (ra !=3D 0)
-> -		perf_callchain_store(entry, ra);
-> -	else
-> -		return 0;
-> -
-> -	return fp;
-> +	return perf_callchain_store(entry, pc) =3D=3D 0;
->  }
->=20=20
->  /*
-> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callch=
-ain_entry_ctx *entry,
->  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  			 struct pt_regs *regs)
->  {
-> -	unsigned long fp =3D 0;
-> -
-> -	fp =3D regs->s0;
-> -	perf_callchain_store(entry, regs->epc);
-> -
-> -	fp =3D user_backtrace(entry, fp, regs->ra);
-> -	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
-> -		fp =3D user_backtrace(entry, fp, 0);
-> -}
-> -
-> -static bool fill_callchain(void *entry, unsigned long pc)
-> -{
-> -	return perf_callchain_store(entry, pc) =3D=3D 0;
-> +	arch_stack_walk_user(fill_callchain, entry, regs);
->  }
->=20=20
->  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrac=
-e.c
-> index 528ec7cc9a62..9685a2baa5d9 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -161,3 +161,46 @@ noinline void arch_stack_walk(stack_trace_consume_fn=
- consume_entry, void *cookie
->  {
->  	walk_stackframe(task, regs, consume_entry, cookie);
->  }
-> +
-> +/*
-> + * Get the return address for a single stackframe and return a pointer t=
-o the
-> + * next frame tail.
-> + */
-> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_en=
-try,
-> +				       void *cookie, unsigned long fp,
-> +				       unsigned long reg_ra)
-> +{
-> +	struct stackframe buftail;
-> +	unsigned long ra =3D 0;
-> +	unsigned long __user *user_frame_tail =3D
-> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> +
-> +	/* Check accessibility of one struct frame_tail beyond */
-> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> +		return 0;
-> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> +				      sizeof(buftail)))
-> +		return 0;
-> +
-> +	ra =3D reg_ra ? : buftail.ra;
-> +
-> +	fp =3D buftail.fp;
-> +	if (!ra || !consume_entry(cookie, ra))
-> +		return 0;
-> +
-> +	return fp;
-> +}
-> +
-> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *co=
-okie,
-> +			  const struct pt_regs *regs)
-> +{
-> +	unsigned long fp =3D 0;
-> +
-> +	fp =3D regs->s0;
-> +	if (!consume_entry(cookie, regs->epc))
-> +		return;
-> +
-> +	fp =3D unwind_user_frame(consume_entry, cookie, fp, regs->ra);
-> +	while (fp && !(fp & 0x3))
-
-Just an observation that the "entry->nr < entry->max_stack" check was
-removed in this generalization, but that's OK since it's checked in
-perf_callchain_store().
-
-Not really part of your change, but shouldn't the check be 0x7 (checking
-for 16B sp/fp alignment), rather than 0x3?
-
-
-Bj=C3=B6rn
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
