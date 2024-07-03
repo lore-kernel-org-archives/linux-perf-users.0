@@ -1,115 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B81FD3D393;
-	Wed,  3 Jul 2024 22:04:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423ED747F;
+	Wed,  3 Jul 2024 22:30:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720044286; cv=none; b=M3m03yQotuAwBZMwK+YkK5mZ4vG8sNEeNbRDrEZJiibQMctuPYB15Dqi3yqLL1pvVN2cadcmJ6AMOteS7h37TqmNyR13O500n9C6miCp8FT7U3/9ojsT6jFCblR3Smlbp0cW/lbwNavOV/+EVvp7pBfyHFPTyVymwsjCKjTsrWo=
+	t=1720045837; cv=none; b=uEgQKZnK0LABJFgOPXGW6QfJ+qDT6tTjjlQo5ciwMfpvVnbTImmZigyQnAIwG08Hpgiq9VG1OE31Oh3+zp8eq0k5xSOnhBaH+MTOeFZYwBmHcnVBCXS6IxbsH3HTH5rb+8N5I7i+Bsp5pWcSARH4hrEuylY7gJc1d1mkkvIEcgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720044286; c=relaxed/simple;
-	bh=R+Iu1Y/sYsn5xNK43DVWQoj/JlpVQxwIZZ2KcLMzsLM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C4QLuFE4bDe+I5tX2+prGXVdmmxi80gtAqCr1GwEth7nZDAeFjqcucabUEPiAnNfzETcvxiYVUsA/HeA/T0bZ+oVcu2PYkylyLZkA+QhcC/M+Cw1XMaY8+T3yC5yayYQjTXYM7yqIVXrO0kCWBi2dePmM0gNcWqAVUHlShfs8Uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pVadbYSi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720045837; c=relaxed/simple;
+	bh=Dx6OyW5Hl4QcI/eWRPm1F3xDwECEG0/TAYkzbF3rzXY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=imvcqqPULCtlGQm9Zfh2nPdlTQ75vO2wenGPcEs/uRZyCnGfFOH2EaEYJiRDA1i1AkDNJ6PGLqJ3nKa3XXgo8UooWli4zYQ+SdM8nVv8DnW7PN0eSfc3EMASazyYv+EOPIk+hk1AKidzwJdSwXsK0IQdGTF4mv+QLEsk7Qzojzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNxacDm9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pVadbYSi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8893EC2BD10;
-	Wed,  3 Jul 2024 22:04:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNxacDm9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E452C2BD10;
+	Wed,  3 Jul 2024 22:30:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720044286;
-	bh=R+Iu1Y/sYsn5xNK43DVWQoj/JlpVQxwIZZ2KcLMzsLM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pVadbYSisYApWEQcCCxCfY03962VOXiIy7bn5oD7PGRX/xLXIhoyW1Q5jc0Dsw4Hz
-	 LzZMvrPCkT4y79YZBPoi21GOk+WT/cwkTNDltGbyrd2CbnZgJBC445Gkj04TEr3qMa
-	 ZPd8DEGMl3IIDHHV1CZ8YQAPanQe+nZCcLsENTolvQHI9liB9qheYdJysxvnk6niwN
-	 fk8nQn9M1d58oBW71NLw+g0YO+Z/nPgHZkWcQOhimrhxuIbq/UpkVYYlMSV3Mj0LgL
-	 NYdXIudljlXKGMdohUNtM9RLPM3n8pXEnXjo+MCe76iRpJywQeyygZw3+S/rBxXxwk
-	 rGMkhRZwhuKtA==
-Date: Wed, 3 Jul 2024 15:04:44 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
-	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	s=k20201202; t=1720045836;
+	bh=Dx6OyW5Hl4QcI/eWRPm1F3xDwECEG0/TAYkzbF3rzXY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=iNxacDm9NTNG6fJPdXTE9cCiYUEQ8imsgkZRa87MKF48OGj8GkpkCK3RlBSky2MVn
+	 vSX2W2vwPWXw3L1M2TMF6LBevAaD+dbJA3YkVWanTXT8sZjzpjcP6gotw0x9BFxLWW
+	 FwymwOaSyOceeKaqBzY1biVY+D3nPt5PXBFfKgl/KJJ1NYoexgpoDC3d749WSy5otQ
+	 dTVvryMUTL2SkdyOOT+XPfRqso2dE9k4wR4KTmqwzOWGM6Do9gwJAbJI/JnlwIPeZC
+	 D+EIjHohHmBCpgOqKOFIyRQwOc8cpmU/geGa4kNI9AcJyvGbG/zlv2Sktb71yruPjU
+	 wiCgZ3AxoczAw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	Brice Goglin <brice.goglin@gmail.com>,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Perry Yuan <Perry.Yuan@amd.com>,
-	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: Re: [PATCH PATCH v2 9/9] x86/rfds: Exclude P-only parts from the
- RFDS affected list
-Message-ID: <20240703220444.oufkvabpivillv3e@treble>
-References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
- <20240627-add-cpu-type-v2-9-f927bde83ad0@linux.intel.com>
- <20240703010433.2ymzh5g7osth5ch5@treble>
- <20240703182613.4vfaoxl344mdanxn@desk>
+	KP Singh <kpsingh@kernel.org>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: [PATCHSET v3 0/8] perf record: Use a pinned BPF program for filter
+Date: Wed,  3 Jul 2024 15:30:27 -0700
+Message-ID: <20240703223035.2024586-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240703182613.4vfaoxl344mdanxn@desk>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 03, 2024 at 11:26:13AM -0700, Pawan Gupta wrote:
-> On Tue, Jul 02, 2024 at 06:04:33PM -0700, Josh Poimboeuf wrote:
-> > Same comment here, these should be inline with the main list.  Maybe
-> > there's some way to structure the indentations so they align better
-> > vertically with the STEPPINGS/TYPE variants.
-> 
-> This is how it is turning out to be:
-> +	VULNBL_INTEL(		IVYBRIDGE,		SRBDS),
-> +	VULNBL_INTEL(		HASWELL,		SRBDS),
-> +	VULNBL_INTEL(		HASWELL_L,		SRBDS),
-> +	VULNBL_INTEL(		HASWELL_G,		SRBDS),
-> +	VULNBL_INTEL(		HASWELL_X,		MMIO),
-> +	VULNBL_INTEL(		BROADWELL_D,		MMIO),
-> +	VULNBL_INTEL(		BROADWELL_G,		SRBDS),
-> +	VULNBL_INTEL(		BROADWELL_X,		MMIO),
-> +	VULNBL_INTEL(		BROADWELL,		SRBDS),
-> +	VULNBL_INTEL(		SKYLAKE_X,		MMIO | RETBLEED | GDS),
-> +	VULNBL_INTEL(		SKYLAKE_L,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(		SKYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(		KABYLAKE_L,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(		KABYLAKE,		MMIO | RETBLEED | GDS | SRBDS),
-> +	VULNBL_INTEL(		CANNONLAKE_L,		RETBLEED),
-> +	VULNBL_INTEL(		ICELAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL(		ICELAKE_D,		MMIO | GDS),
-> +	VULNBL_INTEL(		ICELAKE_X,		MMIO | GDS),
-> +	VULNBL_INTEL(		COMETLAKE,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL_STEPPINGS(	COMETLAKE_L,	X86_STEPPINGS(0x0, 0x0),	MMIO | RETBLEED),
-> +	VULNBL_INTEL(		COMETLAKE_L,		MMIO | MMIO_SBDS | RETBLEED | GDS),
-> +	VULNBL_INTEL(		TIGERLAKE_L,		GDS),
-> +	VULNBL_INTEL(		TIGERLAKE,		GDS),
-> +	VULNBL_INTEL(		LAKEFIELD,		MMIO | MMIO_SBDS | RETBLEED),
-> +	VULNBL_INTEL(		ROCKETLAKE,		MMIO | RETBLEED | GDS),
-> +	VULNBL_INTEL_TYPE(	ALDERLAKE,	ATOM,	RFDS),
-> +	VULNBL_INTEL(		ALDERLAKE_L,		RFDS),
-> +	VULNBL_INTEL_TYPE(	RAPTORLAKE,	ATOM,	RFDS),
-> +	VULNBL_INTEL(		RAPTORLAKE_P,		RFDS),
-> +	VULNBL_INTEL(		RAPTORLAKE_S,		RFDS),
-> +	VULNBL_INTEL(		ATOM_GRACEMONT,		RFDS),
-> +	VULNBL_INTEL(		ATOM_TREMONT,		MMIO | MMIO_SBDS | RFDS),
-> +	VULNBL_INTEL(		ATOM_TREMONT_D,		MMIO | RFDS),
-> +	VULNBL_INTEL(		ATOM_TREMONT_L,		MMIO | MMIO_SBDS | RFDS),
-> +	VULNBL_INTEL(		ATOM_GOLDMONT,		RFDS),
-> +	VULNBL_INTEL(		ATOM_GOLDMONT_D,	RFDS),
-> +	VULNBL_INTEL(		ATOM_GOLDMONT_PLUS,	RFDS),
+Hello,
 
-Looks good to me.
+This is to support the unprivileged BPF filter for profiling per-task events.
+Until now only root (or any user with CAP_BPF) can use the filter and we
+cannot add a new unprivileged BPF program types.  After talking with the BPF
+folks at LSF/MM/BPF 2024, I was told that this is the way to go.  Finally I
+managed to make it working with pinned BPF objects. :)
 
-The bug bits could also be vertically aligned, but that might offend
-those with undersized terminals :-)
+v3 changes)
+ * rebased onto latest perf-tools-next
+
+v2 changes)
+ * rebased onto Ian's UID/GID (non-sample data based) filter term change
+ * support separate lost counts for each use case
+ * update the test case to allow normal users (if supported)
+
+
+This only supports the per-task mode for normal users and root still uses
+its own instance of the same BPF program - not shared with other users.
+But it requires the one-time setup (by root) before using it by normal users
+like below.
+
+  $ sudo perf record --setup-filter pin
+
+This will load the BPF program and maps and pin them in the BPF-fs.  Then
+normal users can use the filter.
+
+  $ perf record -o- -e cycles:u --filter 'period < 10000' perf test -w noploop | perf script -i-
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.011 MB - ]
+        perf  759982 448227.214189:          1 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214195:          1 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214196:          7 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214196:        223 cycles:u:      7f153719f4d0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+        perf  759982 448227.214198:       9475 cycles:u:  ffffffff8ee012a0 [unknown] ([unknown])
+        perf  759982 448227.548608:          1 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548611:          1 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548612:         12 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+        perf  759982 448227.548613:        466 cycles:u:      559a9f03c81c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+
+It's also possible to unload (and unpin, of course) using this command:
+
+  $ sudo perf record --setup-filter unpin
+
+The code is avaiable in 'perf/pinned-filter-v3' branch at
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (8):
+  perf bpf-filter: Make filters map a single entry hashmap
+  perf bpf-filter: Pass 'target' to perf_bpf_filter__prepare()
+  perf bpf-filter: Split per-task filter use case
+  perf bpf-filter: Support pin/unpin BPF object
+  perf bpf-filter: Support separate lost counts for each filter
+  perf record: Fix a potential error handling issue
+  perf record: Add --setup-filter option
+  perf test: Update sample filtering test
+
+ tools/perf/Documentation/perf-record.txt     |   5 +
+ tools/perf/builtin-record.c                  |  23 +-
+ tools/perf/builtin-stat.c                    |   2 +-
+ tools/perf/builtin-top.c                     |   2 +-
+ tools/perf/builtin-trace.c                   |   2 +-
+ tools/perf/tests/shell/record_bpf_filter.sh  |  13 +-
+ tools/perf/util/bpf-filter.c                 | 406 +++++++++++++++++--
+ tools/perf/util/bpf-filter.h                 |  19 +-
+ tools/perf/util/bpf_skel/sample-filter.h     |   2 +
+ tools/perf/util/bpf_skel/sample_filter.bpf.c |  75 +++-
+ tools/perf/util/evlist.c                     |   5 +-
+ tools/perf/util/evlist.h                     |   4 +-
+ 12 files changed, 483 insertions(+), 75 deletions(-)
 
 -- 
-Josh
+2.45.2.803.g4e1b14247a-goog
+
