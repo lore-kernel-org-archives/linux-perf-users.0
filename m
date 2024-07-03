@@ -1,49 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0B22BB13;
-	Wed,  3 Jul 2024 21:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C022BB13
+	for <linux-perf-users@vger.kernel.org>; Wed,  3 Jul 2024 21:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720041792; cv=none; b=UWT4sVsXmjdkvtIbtkgW1UhaJdJUrIz/7q7PMYuOTw3ct2pbUX1CsX1YmOV40A7Bfg9oTPgccUOYOS0tehuXgf6/lsAyKT7g9cLyIaBqPX6DVSBkGJibzNu9ELtFByg/6csENg8HSw0+mo8ASA8foKFd0FqgvHUY8P+z1dHmbsQ=
+	t=1720041966; cv=none; b=L/dKDZXtR57pd3ypMLceJaKQLW+g1J6/2WhFMFq9faZ3lnFPTDvvG7bkbRRaxduc4k500oTyC5IbVzBpXbjcd/qs17uhXRVT4CUbIhUfU6nMoJ8mvDlcYAN3HmngkI93QC3l7a+30xMH3kp6pfFaBUX2nlzHHWom+BuSeaOKUkY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720041792; c=relaxed/simple;
-	bh=2ieoZ2IlCs+IyedLZuRseH/oLdEXmhc7vi+zgmr5NVk=;
+	s=arc-20240116; t=1720041966; c=relaxed/simple;
+	bh=C1xsj8A4qGisEnI8Pz4EWnv51TJpbbbu3l0pbO6sEPo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Jd6roVsLa47BwlV4SD+CwLEnbcP0t8ck+oJ6zY88XoDih4uet17VOC0T2ARki8w+3j2enuSvAqE/nZNJTZNZBkVvRizbj5u9G6Ffra2A4lgeXe1h2jkyWwEtJR0PrTAqCGzkGo6YOED1AsUQDAudKMuBPHNXWOivl4H2Zy0KNrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGBKI8ib; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tK5z+1SNm2sJGonfX7BAw8OAsdvux/35KBqUh7wdhfLr8pepbVdxpvXBnSpr4LymbXhW7zmXwwbORF9VQKH3pKwGM6WvuFI1ARSwdvaH+5YQAVzi/zYcnZAZEAwEGO0hesSLhv/M2Sa6CI3e2eUmCciLH4lb+vdMWNrhPFSKdwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPG0heSI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGBKI8ib"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E08BC2BD10;
-	Wed,  3 Jul 2024 21:23:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPG0heSI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3A68C2BD10;
+	Wed,  3 Jul 2024 21:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720041792;
-	bh=2ieoZ2IlCs+IyedLZuRseH/oLdEXmhc7vi+zgmr5NVk=;
+	s=k20201202; t=1720041966;
+	bh=C1xsj8A4qGisEnI8Pz4EWnv51TJpbbbu3l0pbO6sEPo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GGBKI8ib5cnvhX/bvlSxYcgnO+YYsZKX7N7OSjy1XJ3glGy+5UzyI6OxXYLr4WRdl
-	 S+7L33X6rlYouoHHrV+AnR64KShEKFLh5ge6KdxUPxVDrLdineoj0NMzFCqZtW84xE
-	 fXhfxBsoKRis985us7/H+lN3MQwDst17PTe6j0DyyPI+gRceicUNdmy+EWy8kBQVLk
-	 MHsz07T4Vz4vUBQfNZObIN9FIMq94SAXGJQF9N52eEIPaKhU2NuNSp1n5KtKpK6j+9
-	 T2HsmSjLi065UDWmiNiUywdaTNYVyzhZrqpIVx2MBUibQYF+Dgl32n2Yli9Aea1Him
-	 S2HcnNGydyFGA==
-Date: Wed, 3 Jul 2024 14:23:10 -0700
+	b=CPG0heSIhcCxYC7+Cojis6233xFdolCd4u+lRcNIkI76C1s4XZigBGUft0hpRQPA+
+	 ezpmBQVKraXcHIgaTfTp3Qisv5aYeIpDrUd+7FAfXGQCnrvju5JmRwLs9ivY5cVl49
+	 OjxIjP+QV1FRnpV2U3jRKXiUp/qrOfzclIbqeEAiILQZsfr3IJ/GDeLkHsYAgB6V4V
+	 Ukk2VSIaVUFVZlaXN5orFrD2SAOrvtOntxN6W1OUBBbTIPjlwYX7XuDtkNwDEC7xmo
+	 osPgpAD2IfmAbgl8Mb9VVcqyRnBNh/A2PGdIi/85H2db/gVju7JakXlAuwSv10sbdX
+	 ZE6wqIZMZyG8w==
+Date: Wed, 3 Jul 2024 14:26:04 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf test: Display number of remaining tests
-Message-ID: <ZoXBPrw0kOtgLu98@google.com>
-References: <20240701044236.475098-1-irogers@google.com>
- <20240701044236.475098-3-irogers@google.com>
- <ZoTIDCXKZw0bnthC@google.com>
- <CAP-5=fUAeVL57Q14hL=girAeNev-xjgz0Wv5Vpc_OMwXoouoTQ@mail.gmail.com>
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
+Message-ID: <ZoXB7GLL2-OY4uSS@google.com>
+References: <20240628064236.1123851-1-adityag@linux.ibm.com>
+ <20240628064236.1123851-2-adityag@linux.ibm.com>
+ <Zn8C-XpC1beIRN8t@google.com>
+ <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
+ <ZoSRiW1aVsV-xrur@google.com>
+ <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,138 +49,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUAeVL57Q14hL=girAeNev-xjgz0Wv5Vpc_OMwXoouoTQ@mail.gmail.com>
+In-Reply-To: <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
 
-On Tue, Jul 02, 2024 at 09:30:44PM -0700, Ian Rogers wrote:
-> On Tue, Jul 2, 2024 at 8:40 PM Namhyung Kim <namhyung@kernel.org> wrote:
-> >
-> > On Sun, Jun 30, 2024 at 09:42:36PM -0700, Ian Rogers wrote:
-> > > Before polling or sleeping to wait for a test to complete, print out
-> > > ": Running (<num> remaining)" where the number of remaining tests is
-> > > determined by iterating over the remaining tests and seeing which
-> > > return true for check_if_command_finished. After the delay, erase the
-> > > line and either update it with the new number of remaining tests, or
-> > > print the test's result. This allows a user to know a test is running
-> > > and in parallel mode (default) how many of the tests are waiting to
-> >
-> > It's not default anymore. :)
-> >
-> >
-> > > complete. If color mode is disabled then avoid displaying the
-> > > "Running" message.
-> > >
-> > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > ---
-> > >  tools/perf/tests/builtin-test.c | 77 ++++++++++++++++++++++-----------
-> > >  tools/perf/util/color.h         |  1 +
-> > >  2 files changed, 53 insertions(+), 25 deletions(-)
-> > >
-> > > diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-> > > index c3d84b67ca8e..23be9139f229 100644
-> > > --- a/tools/perf/tests/builtin-test.c
-> > > +++ b/tools/perf/tests/builtin-test.c
-> > > @@ -241,7 +241,10 @@ static int run_test_child(struct child_process *process)
-> > >       return -err;
-> > >  }
-> > >
-> > > -static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width)
-> > > +#define TEST_RUNNING -3
-> > > +
-> > > +static int print_test_result(struct test_suite *t, int i, int subtest, int result, int width,
-> > > +                          int remaining)
-> > >  {
-> > >       if (has_subtests(t)) {
-> > >               int subw = width > 2 ? width - 2 : width;
-> > > @@ -251,6 +254,9 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
-> > >               pr_info("%3d: %-*s:", i + 1, width, test_description(t, subtest));
-> > >
-> > >       switch (result) {
-> > > +     case TEST_RUNNING:
-> > > +             color_fprintf(stderr, PERF_COLOR_YELLOW, " Running (%d remaining)\n", remaining);
-> > > +             break;
-> > >       case TEST_OK:
-> > >               pr_info(" Ok\n");
-> > >               break;
-> > > @@ -272,13 +278,15 @@ static int print_test_result(struct test_suite *t, int i, int subtest, int resul
-> > >       return 0;
-> > >  }
-> > >
-> > > -static int finish_test(struct child_test *child_test, int width)
-> > > +static int finish_test(struct child_test **child_tests, int running_test, int child_test_num,
-> > > +                    int width)
-> > >  {
-> > > +     struct child_test *child_test = child_tests[running_test];
-> > >       struct test_suite *t = child_test->test;
-> > >       int i = child_test->test_num;
-> > >       int subi = child_test->subtest;
-> > >       int err = child_test->process.err;
-> > > -     bool err_done = err <= 0;
-> > > +     bool err_done = false;
-> > >       struct strbuf err_output = STRBUF_INIT;
-> > >       int ret;
-> > >
-> > > @@ -293,7 +301,7 @@ static int finish_test(struct child_test *child_test, int width)
-> > >        * Busy loop reading from the child's stdout/stderr that are set to be
-> > >        * non-blocking until EOF.
-> > >        */
-> > > -     if (!err_done)
-> > > +     if (err > 0)
-> > >               fcntl(err, F_SETFL, O_NONBLOCK);
-> > >       if (verbose > 1) {
-> > >               if (has_subtests(t))
-> > > @@ -307,29 +315,48 @@ static int finish_test(struct child_test *child_test, int width)
-> > >                         .events = POLLIN | POLLERR | POLLHUP | POLLNVAL,
-> > >                       },
-> > >               };
-> > > -             char buf[512];
-> > > -             ssize_t len;
-> > > -
-> > > -             /* Poll to avoid excessive spinning, timeout set for 100ms. */
-> > > -             poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
-> > > -             if (!err_done && pfds[0].revents) {
-> > > -                     errno = 0;
-> > > -                     len = read(err, buf, sizeof(buf) - 1);
-> > > -
-> > > -                     if (len <= 0) {
-> > > -                             err_done = errno != EAGAIN;
-> > > -                     } else {
-> > > -                             buf[len] = '\0';
-> > > -                             if (verbose > 1)
-> > > -                                     fprintf(stdout, "%s", buf);
-> > > -                             else
-> > > +             if (perf_use_color_default) {
-> > > +                     int tests_in_progress = running_test;
-> > > +
-> > > +                     for (int y = running_test; y < child_test_num; y++) {
-> > > +                             if (check_if_command_finished(&child_tests[y]->process))
-> > > +                                     tests_in_progress++;
-> > > +                     }
-> > > +                     print_test_result(t, i, subi, TEST_RUNNING, width,
-> > > +                                       child_test_num - tests_in_progress);
-> > > +             }
-> > > +
-> > > +             err_done = true;
-> > > +             if (err <= 0) {
-> > > +                     /* No child stderr to poll, sleep for 10ms for child to complete. */
-> > > +                     usleep(10 * 1000);
-> > > +             } else {
-> > > +                     /* Poll to avoid excessive spinning, timeout set for 100ms. */
-> > > +                     poll(pfds, ARRAY_SIZE(pfds), /*timeout=*/100);
-> >
-> > When I tested this patch, I saw it refreshes too often in parallel mode.
-> > Maybe 100ms is too short?  I don't know if it's from usleep (10ms) or
-> > here.
+On Wed, Jul 03, 2024 at 04:17:09PM +0530, Aditya Gupta wrote:
+> Hi Namhyung,
 > 
-> It's usually the poll and I suspect it is the test writing a lot of
-> output. I agree it can look a little flickery but it is also
-> responsive in terms of not waiting too long before moving to the next
-> test. I think it is possible to improve on the code here, the main
-> thing I was after was making the output writing self contained and not
-> split between start test and finish test, as that won't work well in
-> the parallel case.
+> > > <...snip...>
+> > >
+> > > > > +static const char *check_usage[] = {
+> > > > > +	"perf check [<subcommand>] [<options>]",
+> > > > 
+> > > > You can leave this NULL and parse_options_subcommand() will fill the
+> > > > first element automatically using check_subcommands[].
+> > > > 
+> > > > Please see other commands like 'perf sched' how to handle this.
+> > > 
+> > > It doesn't seem to be working, hence added that check_usage in v12
+> > > itself.
+> > > 
+> > >     $ ./perf check
+> > > 	Usage: (null)
+> > > 
+> > >     -q, --quiet           do not show any warnings or messages
+> > > 
+> > >     $ ./perf sched
+> > > 	Usage: (null)
+> > > 
+> > >     -D, --dump-raw-trace  dump raw trace in ASCII
+> > >     -f, --force           don't complain, do it
+> > >     -i, --input <file>    input file name
+> > >     -v, --verbose         be more verbose (show symbol address, etc)
+> > > 
+> > > Debugging it further, this behaviour was changed in
+> > > 
+> > >     commit 230a7a71f9221: libsubcmd: Fix parse-options memory leak
+> > > 
+> > > Where the generated usage string is deallocated, and usage[0] string is
+> > > reassigned as NULL.
+> > 
+> > Ok, thanks for the investigation.  It's a bug then.
+> > 
+> > > 
+> > > If expected behaviour was allocation of the usage string, it should be
+> > > okay for the buffer to not get deallocated for the entirety of the perf
+> > > process's lifetime right ?
+> > 
+> > Right, it should not deallocate it in the parse_options_subcommand().
+> > I think we need to change the exit path of the commands to free the
+> > usage[0] manually.
+> 
+> Sure, I can implement that if you have things in hand, or I am fine with
+> you implementing it since you will already have an idea what to do.
+> 
+> Maybe `free(command_usage[0])` or something like
+> `parse_options_free_subcommand()` ?
 
-Is it possible to skip the rewriting if nothing is changed?
+Yeah, but this should be a separate fix and it's ok to keep the usage
+string like in your patch.
 
 Thanks,
 Namhyung
