@@ -1,118 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85648191F80;
-	Wed,  3 Jul 2024 21:46:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC83191F8E;
+	Wed,  3 Jul 2024 21:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720043185; cv=none; b=sBc5Jn0wumLsATQkhUnfbw5sy5a+skTYOIjsUZA1+lWPV9JxNL0Qx/r/x+x5F91xLHMYyYt2SxwCtLlLndiM9H8PRtzRGu27L1iRsTJ5uN/2hmr9SASwiy/lYM127eeWozZ/O68kyetczXuu/o2CQ9qBbKnLVw098t1t1CrSLiw=
+	t=1720043576; cv=none; b=TPnkCSXUaGez/OACoZ+dikQdyGU8KA9Kytni/k7lc0V3l1OHLvHESF5WbzV5w5naKpGvYDCCDwE6HSn1kPQYd8intteOBBHy48N31fZbIbyjmNRtmshXqFhDrv3Eq1KYDBrhbLCTl0O28VK3ybG7m3/m8zAoVHUcITLmEakoz10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720043185; c=relaxed/simple;
-	bh=rzyAx0if7a3pooGOlXnjoWuU+FC+0U5nSUt348PlNAs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M3Skrs8eDbKqEKqHeniGxKGTyhRi+r8l6Tzmkc/RTkcj8R3YaR5Td8OfLeJbtQPwluoW9FMgjoRaPqxmGEKeI2gI4Q/VmXg4x87aHRUgPLm3yYtDzCKE8EGS5QXPi0mhzN/Wn23QJ9CYEfbZVD9HmzLhtcHm3KyT1GjqQ6XgvMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rsqfLFoZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720043576; c=relaxed/simple;
+	bh=AcYxp1ZH049ohowuR6EtpszX6O6OFlqS+kmQUZPgFSw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lMZ5b0V5M5OGCb7J13oD09YmLj8xv3kvMIgMojmtIJh4wWBX+SwJ8zVy8MIz6intnr9tl7VFd1Y+35zOTBDgaX23YLemV7Mx/BLoNEKYGgb7SHFvHKSb5a1WGyc+t3yFgTLKbTvwFII3mdwJX//QazjR0BhaRdCVY/SVGSDu1qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ib1TlHrK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rsqfLFoZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93248C2BD10;
-	Wed,  3 Jul 2024 21:46:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ib1TlHrK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2AF7C4AF07;
+	Wed,  3 Jul 2024 21:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720043185;
-	bh=rzyAx0if7a3pooGOlXnjoWuU+FC+0U5nSUt348PlNAs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rsqfLFoZw8rAHMO83S5+aPRk86qaxyVJxqm6ZzAD9I29uqVRdWl/8l93Vqc1HJB8m
-	 ZoCNO4FTG4RE9XZaw3gTNb64lEuLP1WvWJB9gPH7jjRnaLzNIi/iEqH96VGUQNHAMZ
-	 EcAarZg1gS7wBJ6QqJLMsA7SGbtLS+rkY1+t65uRnV5iQLAjwUT4nxF+QfEvf5zlSA
-	 RmbC+Bk3iXlUU0kn0cq9cseB594kHYA6W6Bvvozgdg6ic6n3G9xbudTqNt3UxxJxt9
-	 h/oawc3s1IIyL+t65Ecivo7TlVm80JgtsAZ6IfVPBinhXAL7+SsdJ8M+jy7xZZmc++
-	 spzoY126CyoQQ==
-Date: Wed, 3 Jul 2024 14:46:23 -0700
+	s=k20201202; t=1720043576;
+	bh=AcYxp1ZH049ohowuR6EtpszX6O6OFlqS+kmQUZPgFSw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Ib1TlHrKlq1LnWzlBtSEOnad/63Zu5K0JQt4uK8ec/4Pl4ESRxBDDS2gEjAYd+tnc
+	 G0l8dI6wsc9UWIhe0imKA8XT2j/rOGJhptGf7HjATR+ByP7twZThr3kcb5nWOpRYIT
+	 wv4XeKc5uKO3avqGclMkQT3w1LD1CUVL499zkJ98R6G1VStASXxCmpoV4xznMEKfk/
+	 aHTof1n/sNXeI5UOokx760cWrF7V1TeNnvx9wZn3Rw1M3ODQ3barziskZY2n8uGJcJ
+	 D9GLLa69Bcz615VKTa0/aY6HLUqhtBszRaz54D3rECKffPiOJATK1rcRQnvPtzK1ze
+	 nAeoxfn74wOAQ==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Steinar Gunderson <sesse@google.com>,
-	Matt Fleming <matt@readmodwrite.com>
-Subject: Re: [PATCH v1 2/2] perf dsos: When adding a dso into sorted dsos
- maintain the sort order
-Message-ID: <ZoXGr2skcDZTUb5U@google.com>
-References: <20240703172117.810918-1-irogers@google.com>
- <20240703172117.810918-3-irogers@google.com>
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/2] perf intel-pt: Some small fixes
+Date: Wed,  3 Jul 2024 14:52:52 -0700
+Message-ID: <172004355383.3801562.4132153508514771871.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+In-Reply-To: <20240625104532.11990-1-adrian.hunter@intel.com>
+References: <20240625104532.11990-1-adrian.hunter@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240703172117.810918-3-irogers@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 03, 2024 at 10:21:17AM -0700, Ian Rogers wrote:
-> dsos__add would add at the end of the dso array possibly requiring a
-> later find to re-sort the array. Patterns of find then add were
-> becoming O(n*log n) due to the sorts. Change the add routine to be
-> O(n) rather than O(1) but to maintain the sorted-ness of the dsos
-> array so that later finds don't need the O(n*log n) sort.
+On Tue, 25 Jun 2024 13:45:30 +0300, Adrian Hunter wrote:
+
+> Here are a couple of small Intel PT fixes.
 > 
-> Reported-by: Namhyung Kim <namhyung@kernel.org>
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> 
+> Adrian Hunter (2):
+>       perf intel-pt: Fix aux_watermark calculation for 64-bit size
+>       perf intel-pt: Fix exclude_guest setting
+> 
+> [...]
 
-It works well for me too!
+Applied to perf-tools-next, thanks!
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
+Best regards,
 Namhyung
-
-> ---
->  tools/perf/util/dsos.c | 26 +++++++++++++++++++++-----
->  1 file changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/util/dsos.c b/tools/perf/util/dsos.c
-> index 5e5e05f86dd3..d4acdb37f046 100644
-> --- a/tools/perf/util/dsos.c
-> +++ b/tools/perf/util/dsos.c
-> @@ -206,11 +206,27 @@ int __dsos__add(struct dsos *dsos, struct dso *dso)
->  		dsos->dsos = temp;
->  		dsos->allocated = to_allocate;
->  	}
-> -	dsos->dsos[dsos->cnt++] = dso__get(dso);
-> -	if (dsos->cnt >= 2 && dsos->sorted) {
-> -		dsos->sorted = dsos__cmp_long_name_id_short_name(&dsos->dsos[dsos->cnt - 2],
-> -								 &dsos->dsos[dsos->cnt - 1])
-> -			<= 0;
-> +	if (!dsos->sorted) {
-> +		dsos->dsos[dsos->cnt++] = dso__get(dso);
-> +	} else {
-> +		int low = 0, high = dsos->cnt - 1;
-> +		int insert = dsos->cnt; /* Default to inserting at the end. */
-> +
-> +		while (low <= high) {
-> +			int mid = low + (high - low) / 2;
-> +			int cmp = dsos__cmp_long_name_id_short_name(&dsos->dsos[mid], &dso);
-> +
-> +			if (cmp < 0) {
-> +				low = mid + 1;
-> +			} else {
-> +				high = mid - 1;
-> +				insert = mid;
-> +			}
-> +		}
-> +		memmove(&dsos->dsos[insert + 1], &dsos->dsos[insert],
-> +			(dsos->cnt - insert) * sizeof(struct dso *));
-> +		dsos->cnt++;
-> +		dsos->dsos[insert] = dso__get(dso);
->  	}
->  	dso__set_dsos(dso, dsos);
->  	return 0;
-> -- 
-> 2.45.2.803.g4e1b14247a-goog
-> 
