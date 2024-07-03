@@ -1,148 +1,131 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69BF8522F;
-	Wed,  3 Jul 2024 02:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD9931799F;
+	Wed,  3 Jul 2024 03:24:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719975192; cv=none; b=WIAZ3o429NinLf9lpguZhCx+NSvNActRXrensNjuELjGvBAsMUDZYBdZmOeUPlGYQnU6JqmbGWHaPTQ8UsHIYVeNTm5zlg1CBnZf61GRksW5CFS3YlLk1mHX316qfiJQL5FO0lggXr3RYdxEoU76SqPrUX4vP5nEbARwgtDK1Dc=
+	t=1719977041; cv=none; b=JdgVFJzUoq+Z9MRHBMEj94NNDCkiMHwbevo0eL4XFaVcR1om2seaC0VbXRaBJCnFQ1uFH0USEYEHe0lc7RxZcb7YDAjlB2e68wFwWAoK1/eGOPVedk3k4ugEd1X+85oYQXRVz6U6RnBimhTqtNoUWKhEGkfnDR8dZJlaLVquxIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719975192; c=relaxed/simple;
-	bh=qVcDEdhJBIogUebzLEzHbeQwUQz9VYZzujoxCaVQvA8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WZLl9VsiVHReGve9rIij5UItQJKFkDjvqRkvabDJ5odfSzew2KA3wA9zY5hNysOlPedDd9+/LYCHg/gMEDz7H/FY4b6sRSdEud+TUpReTj+PHtMa4Lm/bcejPWcn/IwQaJ1xR+9Tg60Oy2k82cq73ctFi7fSNdBLUwIFWwJ25WQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LmJsxwtJ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1719977041; c=relaxed/simple;
+	bh=qzEG3oESDXRJMNTCffvSAEMa/1sN/tHpyXP/Rj1Sn+4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z3flJQmVQZBUbKV8i12jvOe/r3XE30NOX6q2sY88ngpTpra+HKRe+Xx3bQ03mdYlplS0bRL1bSi6Z06ntwHK7SBpa3shEbtjpOylqKMsXx6X0QRpFbzjlMXY8n9hnnR/R/tUcyW7eicXHAL3/I2vouoHjkhjG3m4TFe7qBbmz6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOr+k0fq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LmJsxwtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1719975191; x=1751511191;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qVcDEdhJBIogUebzLEzHbeQwUQz9VYZzujoxCaVQvA8=;
-  b=LmJsxwtJ/NMNGiTtkqQP13YEMtbmq1xS/zYF9qhmhxeQ1W8S/eOFWbEO
-   pCYt3AXJu1F1bhfUKrAhr7IFp0Iv+MbG7itfcwHNNzCu/XmnYeah2J9Zc
-   p26CugN+91aNaWmLgs08xxmM1k0chbVN+tV1t49ib3LZrPnV5IGev81Ln
-   lzKASVNCRguFlt4N5CvBnX7tH5/F5zW8DnzMQh7nOxcow81UAQdj1ARvq
-   UpIpAjiwCQzvMHvYRbTe7QyPxCvdRK9DPr2ALZ9bxMhy+87xVibjO3V+f
-   rKSkGi1fhUjlqjEGwngHG34atcebOrv7ZjhcNgFMXvUKtEp0RMYawacMd
-   A==;
-X-CSE-ConnectionGUID: R2YwavzWR+6GedQiUq95ng==
-X-CSE-MsgGUID: BZmRTSMLRC+JHX3418g43g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="17393071"
-X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="17393071"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:53:10 -0700
-X-CSE-ConnectionGUID: 74QCS69oR8C8uIS6dAh1Cg==
-X-CSE-MsgGUID: hXY17Y0bR/e/rZq27uRTPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
-   d="scan'208";a="69280334"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:53:06 -0700
-Message-ID: <8c737c22-3d64-4fdb-b199-7d6375475f45@linux.intel.com>
-Date: Wed, 3 Jul 2024 10:53:03 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOr+k0fq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB074C116B1;
+	Wed,  3 Jul 2024 03:24:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1719977041;
+	bh=qzEG3oESDXRJMNTCffvSAEMa/1sN/tHpyXP/Rj1Sn+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fOr+k0fqC1evUmg6/mUVKlLo6zR2tW4KkrPNeoLk/GSHeSOPVEoKjeG261K3q6jUY
+	 4NsIADTauazrNwuRNeEIfuY3KATdXiC3/1rqDVyavOhfYLL2zlPV+AsV5QbypMbE9K
+	 7NTq4pQdUlEAeogk+5qrjIYs0rqumcRMgNp9NpBHF9UwU4dc/4N4oenTQ/RRFjM4l9
+	 /iaTJvhV2SDQMj2wh5yy5gDvqLmaXmkKSOf6kOtV2nZRFpZAAzAuYG67d57Bjn5xVf
+	 Tyniog03qtH0xxdV9tC55hFAWHRvW8KRL3w4vWZB7ypYclN7+vZplGZcY7fyOu5FoB
+	 FD/ZcLD8PvhpQ==
+Date: Tue, 2 Jul 2024 20:23:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tools subcmd: Add non-waitpid
+ check_if_command_finished()
+Message-ID: <ZoTETvgcPdl9EUJV@google.com>
+References: <20240701044236.475098-1-irogers@google.com>
+ <20240701044236.475098-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] perf tests: Add leader sampling test in record tests
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yanfei Xu <yanfei.xu@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
- <20240702224037.343958-5-dapeng1.mi@linux.intel.com>
- <f56397c3-91ee-44c1-8695-11bece4c4231@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <f56397c3-91ee-44c1-8695-11bece4c4231@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240701044236.475098-2-irogers@google.com>
+
+Hi Ian,
+
+On Sun, Jun 30, 2024 at 09:42:35PM -0700, Ian Rogers wrote:
+> Using waitpid can cause stdout/stderr of the child process to be
+> lost. Use Linux's /prod/<pid>/status file to determine if the process
+> has reached the zombie state. Use the 'status' file rather than 'stat'
+> to avoid issues around skipping the process name.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/lib/subcmd/run-command.c | 33 +++++++++++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+> 
+> diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+> index 4e3a557a2f37..ec06683e77a0 100644
+> --- a/tools/lib/subcmd/run-command.c
+> +++ b/tools/lib/subcmd/run-command.c
+> @@ -2,6 +2,7 @@
+>  #include <unistd.h>
+>  #include <sys/types.h>
+>  #include <sys/stat.h>
+> +#include <ctype.h>
+>  #include <fcntl.h>
+>  #include <string.h>
+>  #include <linux/string.h>
+> @@ -217,8 +218,40 @@ static int wait_or_whine(struct child_process *cmd, bool block)
+>  
+>  int check_if_command_finished(struct child_process *cmd)
+>  {
+> +#ifdef __linux__
+
+Is this really necessary?  I don't think we plan to support other OS..
+
+Thanks,
+Namhyung
 
 
-On 7/3/2024 2:07 AM, Liang, Kan wrote:
->
-> On 2024-07-02 6:40 p.m., Dapeng Mi wrote:
->> Add leader sampling test to validate event counts are captured into
->> record and the count value is consistent.
->>
->> Suggested-by: Kan Liang <kan.liang@linux.intel.com>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/tests/shell/record.sh | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
->> index 3d1a7759a7b2..8e3e66780fed 100755
->> --- a/tools/perf/tests/shell/record.sh
->> +++ b/tools/perf/tests/shell/record.sh
->> @@ -17,6 +17,7 @@ skip_test_missing_symbol ${testsym}
->>  
->>  err=0
->>  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
->> +script_output=$(mktemp /tmp/__perf_test.perf.data.XXXXX.script)
->>  testprog="perf test -w thloop"
->>  cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
->>  br_cntr_file="/caps/branch_counter_nr"
->> @@ -190,11 +191,38 @@ test_branch_counter() {
->>    echo "Basic branch counter test [Success]"
->>  }
->>  
->> +test_leader_sampling() {
->> +  echo "Basic leader sampling test"
->> +  if ! perf record -o "${perfdata}" -e "{branches,branches}:Su" perf test -w brstack 2> /dev/null
-> I think we still need a case to verify the topdown fix you did in the
-> patch set.
-> Since the topdown is platform specific, you may want to skip it on the
-> platform which doesn't support perf metrics. For example, check if the
-> slots event exists in the event folder.
-
-Yeah, I would look how to design a test case to verify the topdown case.
-
-
->
-> Thanks,
-> Kan
->> +  then
->> +    echo "Leader sampling [Failed record]"
->> +    err=1
->> +    return
->> +  fi
->> +  index=0
->> +  perf script -i "${perfdata}" > $script_output
->> +  while IFS= read -r line
->> +  do
->> +    # Check if the two branches counts are equal in each record
->> +    branches=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="branches:") print $(i-1)}')
->> +    if [ $(($index%2)) -ne 0 ] && [ ${branches}x != ${prev_branches}x ]
->> +    then
->> +      echo "Leader sampling [Failed inconsistent branches count]"
->> +      err=1
->> +      return
->> +    fi
->> +    index=$(($index+1))
->> +    prev_branches=$branches
->> +  done < $script_output
->> +  echo "Basic leader sampling test [Success]"
->> +}
->> +
->>  test_per_thread
->>  test_register_capture
->>  test_system_wide
->>  test_workload
->>  test_branch_counter
->> +test_leader_sampling
->>  
->>  cleanup
->>  exit $err
+> +	char filename[FILENAME_MAX + 12];
+> +	char status_line[256];
+> +	FILE *status_file;
+> +
+> +	/*
+> +	 * Check by reading /proc/<pid>/status as calling waitpid causes
+> +	 * stdout/stderr to be closed and data lost.
+> +	 */
+> +	sprintf(filename, "/proc/%d/status", cmd->pid);
+> +	status_file = fopen(filename, "r");
+> +	if (status_file == NULL) {
+> +		/* Open failed assume finish_command was called. */
+> +		return true;
+> +	}
+> +	while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
+> +		char *p;
+> +
+> +		if (strncmp(status_line, "State:", 6))
+> +			continue;
+> +
+> +		fclose(status_file);
+> +		p = status_line + 6;
+> +		while (isspace(*p))
+> +			p++;
+> +		return *p == 'Z';
+> +	}
+> +	/* Read failed assume finish_command was called. */
+> +	fclose(status_file);
+> +	return true;
+> +#else
+>  	wait_or_whine(cmd, /*block=*/false);
+>  	return cmd->finished;
+> +#endif
+>  }
+>  
+>  int finish_command(struct child_process *cmd)
+> -- 
+> 2.45.2.803.g4e1b14247a-goog
+> 
