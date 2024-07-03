@@ -1,294 +1,177 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 888E44A2D;
-	Wed,  3 Jul 2024 02:00:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF2E522F;
+	Wed,  3 Jul 2024 02:46:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719972038; cv=none; b=rwunNUMdwrCS4+jtIUPg8ZY9CFxv3YE9MBGxRdnYT0FmIK+qT5SZi5wcEr5PZqyddkDNvQGPmnRo/GYw35+zU4Z/g32HJyBMs+Z0gbZlH3GRwNl2bWUvICLE5sfUvffzLak5QPHnAM4w5W94KmpCg9Mln99M4Jlzu4FLlv/5GHc=
+	t=1719974784; cv=none; b=MlbYQNSRAOK1Xow8hEJVhztzioCagcCyHymQX+AZxGWkSJ/iBJlX2As4f36smgdrUl6GW4NnF80F+cKtKiHHjpolZudxuqulf/MfPkpe+yR+4t7xDeefHv9p1RWhq68NNGAkWvTg2V7Ts2cemVdk8i4V8GtbP7X/QFJavBK8eec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719972038; c=relaxed/simple;
-	bh=PBS/IZZg00mOz6DJKccmHVP3hwHiuKcrdM2hpmKjJg0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ROWdHjY6ttfuV2Jm3fCZFN5dd2t3GscEwFRKxl+b59vsICn8P62GXxCYrbxtP5yCyhgANKWc/86OQYbJO4Zppn0ub0TE5jdPlYaNehcjVapZeIxPw1K2qmgCQyCTMILlAlwHDAfBwEXdNS7qm8dNBtGlrcHv5DGGtcW3lvb2MHs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tdceNgMQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719974784; c=relaxed/simple;
+	bh=HlBx1gRF97fkG+5OJH0WLfFyY+EZd8AUjrhOyXD9IHU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d0rdro+C+jRiX8m0ItI8rls7rIZceYfT/jJa9bTSDhd8lIgLPVel3gfgLaXcm7cIKnb/RqNP7nr6hTsWNnt+zpOL5O4KWthBsBbVSvNTOUTvwKM2WgEANR5Q+dsZhOBkoDgq3y1y/4gpecZU1Ypn2XvSmghBQdjfMDUJpgFSGvE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SeeO0IUu; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tdceNgMQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81802C116B1;
-	Wed,  3 Jul 2024 02:00:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719972038;
-	bh=PBS/IZZg00mOz6DJKccmHVP3hwHiuKcrdM2hpmKjJg0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tdceNgMQ7s3P+PXRA7B19VLQUFYno2o2f9pwJEyK+5MseaOUdj6QRPh7SsLnVg+IG
-	 +qMyXrxBrOIHZFMRFTt8M2661XpaiiMj1v1NDDY6frkXaP5d22GTPsOT3YJHl/HJO4
-	 nEJ+LXbZgPeTo6pnGWiXTw4ZmHQo6u6KKPcFrNwYcgV0vK+zgPMy70dJFAB5c1p5Ah
-	 ZWeW08IFowoXrsatwMIWhu+pccx+NXNxKZ8WQkUrXkN69iqaVJrfthTiNdd9hUOrFe
-	 490fgy6skY5nGAzrNkDoMcvwBjz6W7niZlHK+Nqs7rZ6s21ahUXHIFgIq/OQLaVb8x
-	 Jzva+UVHHPRzw==
-Date: Tue, 2 Jul 2024 19:00:36 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH V5 16/17] tools/perf: Add support for global_die to
- capture name of variable in case of register defined variable
-Message-ID: <ZoSwxHC3cpGa1UqM@google.com>
-References: <20240701043430.66666-1-atrajeev@linux.vnet.ibm.com>
- <20240701043430.66666-17-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SeeO0IUu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1719974782; x=1751510782;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=HlBx1gRF97fkG+5OJH0WLfFyY+EZd8AUjrhOyXD9IHU=;
+  b=SeeO0IUuF3q/Jr1n1pWX+5lZmUu8rw8ammJBhJNNxCHR5reF+UqOL7/3
+   7Pb0nfHPUkpNbrFj+A5K2tsLpypIyYcOdXdqQUPNHy8AsWwBBjcwMxmEd
+   IPU279k3YsSVwIQFHU4WC+W5SP8GnAAhkq+BgF1VzdfnOMA5y+GVGI6HI
+   8Uv7jOI1bt8TpPkrv1H10i3g9XlmzveIG4LFLNhm3DDc+rEA4bcT5yryN
+   Etm/E0kw83/epLU4p49uNDtDYA/laBszMSDluk4RvQjxEWUmx0RfkE6rY
+   0gTDtx5FlPAlMJn6QlSRcPT7795NQPmgSDqxGAHhABQ9ytfp8wC1KftCN
+   Q==;
+X-CSE-ConnectionGUID: /krxXrNdRE+m2djhTf8oBA==
+X-CSE-MsgGUID: h0mH8gJZQGyveLWSGThoNg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11121"; a="20085091"
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="20085091"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:46:21 -0700
+X-CSE-ConnectionGUID: ikPRfOyQQ3yLwz1UcfQKjQ==
+X-CSE-MsgGUID: fgek1npPSHuNlfeeOekFdw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,180,1716274800"; 
+   d="scan'208";a="45881129"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jul 2024 19:46:18 -0700
+Message-ID: <5223c6bb-a05b-4a8c-a625-2011db190631@linux.intel.com>
+Date: Wed, 3 Jul 2024 10:46:15 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240701043430.66666-17-atrajeev@linux.vnet.ibm.com>
-
-On Mon, Jul 01, 2024 at 10:04:29AM +0530, Athira Rajeev wrote:
-> In case of register defined variable (found using
-> find_data_type_global_reg), if the type of variable happens to be base
-> type (example, long unsigned int), perf report captures it as:
-> 
->     12.85%  long unsigned int  long unsigned int +0 (no field)
-> 
-> The above data type is actually referring to samples captured while
-> accessing "r1" which represents current stack pointer in powerpc.
-> register void *__stack_pointer asm("r1");
-> 
-> The dwarf debug contains this as:
-> 
-> <<>>
->  <1><18dd772>: Abbrev Number: 129 (DW_TAG_variable)
->     <18dd774>   DW_AT_name        : (indirect string, offset: 0x11ba): current_stack_pointer
->     <18dd778>   DW_AT_decl_file   : 51
->     <18dd779>   DW_AT_decl_line   : 1468
->     <18dd77b>   DW_AT_decl_column : 24
->     <18dd77c>   DW_AT_type        : <0x18da5cd>
->     <18dd780>   DW_AT_external    : 1
->     <18dd780>   DW_AT_location    : 1 byte block: 51    (DW_OP_reg1 (r1))
-> 
->  where 18da5cd is:
-> 
->  <1><18da5cd>: Abbrev Number: 47 (DW_TAG_base_type)
->     <18da5ce>   DW_AT_byte_size   : 8
->     <18da5cf>   DW_AT_encoding    : 7   (unsigned)
->     <18da5d0>   DW_AT_name        : (indirect string, offset: 0x55c7): long unsigned int
-> <<>>
-> 
-> To make it more clear to the user, capture the DW_AT_name of the
-> variable and save it as part of Dwarf_Global. Dwarf_Global is used so
-> that it can be used and retrieved while presenting the result.
-> 
-> Update "dso__findnew_data_type" function to set "var_name" if
-> variable name is set as part of Dwarf_Global. Updated
-> "hist_entry__typeoff_snprintf" to print var_name if it is set.
-> With the changes, along with "long unsigned int" report also says the
-> variable name as current_stack_pointer
-> 
-> Snippet of result:
-> 
->     12.85%  long unsigned int  long unsigned int +0 (current_stack_pointer)
-
-But I'm afraid it'd contain other (global) unsigned int type accesses
-also.  Currently data_type_cmp() only compares size and type name so it
-cannot distinguish two different int variables.
-
-I thought it's ok since we care about types, but we might want to see
-global variables (in the same type) - not only register variables -
-separately.  Then I think we should compare variable names after type
-name (if exists).
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/4] perf topdown: Correct leader selection with
+ sample_read enabled
+To: "Liang, Kan" <kan.liang@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yanfei Xu <yanfei.xu@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240702224037.343958-1-dapeng1.mi@linux.intel.com>
+ <20240702224037.343958-2-dapeng1.mi@linux.intel.com>
+ <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <d9c26690-5147-4a4a-815b-fb5d46d043c6@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
->      4.68%  struct paca_struct  struct paca_struct +2312 (__current)
->      4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  tools/perf/util/annotate-data.c | 30 ++++++++++++++++++++++++------
->  tools/perf/util/dwarf-aux.c     |  1 +
->  tools/perf/util/dwarf-aux.h     |  1 +
->  tools/perf/util/sort.c          |  7 +++++--
->  4 files changed, 31 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index c919b2259f54..a6d6cf69dbab 100644
-> --- a/tools/perf/util/annotate-data.c
-> +++ b/tools/perf/util/annotate-data.c
-> @@ -273,23 +273,32 @@ static void delete_members(struct annotated_member *member)
->  }
->  
->  static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
-> -							  Dwarf_Die *type_die)
-> +							  Dwarf_Die *type_die, Dwarf_Global *global_die)
->  {
->  	struct annotated_data_type *result = NULL;
->  	struct annotated_data_type key;
->  	struct rb_node *node;
->  	struct strbuf sb;
-> +	struct strbuf sb_var_name;
->  	char *type_name;
-> +	char *var_name = NULL;
->  	Dwarf_Word size;
->  
->  	strbuf_init(&sb, 32);
-> +	strbuf_init(&sb_var_name, 32);
->  	if (die_get_typename_from_type(type_die, &sb) < 0)
->  		strbuf_add(&sb, "(unknown type)", 14);
-> +	if (global_die->name) {
-> +		strbuf_addstr(&sb_var_name, global_die->name);
-> +		var_name = strbuf_detach(&sb_var_name, NULL);
-> +	}
->  	type_name = strbuf_detach(&sb, NULL);
->  	dwarf_aggregate_size(type_die, &size);
->  
->  	/* Check existing nodes in dso->data_types tree */
->  	key.self.type_name = type_name;
-> +	if (global_die->name)
-> +		key.self.var_name = var_name;
+On 7/3/2024 12:05 AM, Liang, Kan wrote:
+>
+> On 2024-07-02 6:40 p.m., Dapeng Mi wrote:
+>> Addresses an issue where, in the absence of a topdown metrics event
+>> within a sampling group, the slots event was incorrectly bypassed as
+>> the sampling leader when sample_read was enabled.
+>>
+>> perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
+>>
+>> In this case, the slots event should be sampled as leader but the
+>> branches event is sampled in fact like the verbose output shows.
+>>
+>> perf_event_attr:
+>>   type                             4 (cpu)
+>>   size                             168
+>>   config                           0x400 (slots)
+>>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+>>   read_format                      ID|GROUP|LOST
+>>   disabled                         1
+>>   sample_id_all                    1
+>>   exclude_guest                    1
+>> ------------------------------------------------------------
+>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>> ------------------------------------------------------------
+>> perf_event_attr:
+>>   type                             0 (PERF_TYPE_HARDWARE)
+>>   size                             168
+>>   config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
+>>   { sample_period, sample_freq }   10000
+>>   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+>>   read_format                      ID|GROUP|LOST
+>>   sample_id_all                    1
+>>   exclude_guest                    1
+>>
+>> The sample period of slots event instead of branches event is reset to
+>> 0.
+>>
+>> This fix ensures the slots event remains the leader under these
+>> conditions.
+>>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
+>>  1 file changed, 14 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+>> index 3f9a267d4501..5d7b78eb7516 100644
+>> --- a/tools/perf/arch/x86/util/topdown.c
+>> +++ b/tools/perf/arch/x86/util/topdown.c
+>> @@ -1,6 +1,7 @@
+>>  // SPDX-License-Identifier: GPL-2.0
+>>  #include "api/fs/fs.h"
+>>  #include "util/evsel.h"
+>> +#include "util/evlist.h"
+>>  #include "util/pmu.h"
+>>  #include "util/pmus.h"
+>>  #include "util/topdown.h"
+>> @@ -41,11 +42,22 @@ bool topdown_sys_has_perf_metrics(void)
+>>   */
+>>  bool arch_topdown_sample_read(struct evsel *leader)
+>>  {
+>> +	struct evsel *event;
+>> +
+>>  	if (!evsel__sys_has_perf_metrics(leader))
+>>  		return false;
+>>  
+>> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
+>> -		return true;
+>> +	if (leader->core.attr.config != TOPDOWN_SLOTS)
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * If slots event as leader event but no topdown metric events in group,
+>> +	 * slots event should still sample as leader.
+>> +	 */
+>> +	evlist__for_each_entry(leader->evlist, event) {
+>> +		if (event != leader && strcasestr(event->name, "topdown"))
+> User may uses the RAW format. It may not be good enough to just check
+> the event name.
+>
+> I recall you have a complete support for this in the previous patch. Why
+> drop it?
 
-Maybe you can set it unconditionally as it's NULL by default.
-But you need to free the var_name if rb_find() returns an existing
-node.  I think it should be done after you allocate the result.
 
+Oh, I ignored the RAW format case. Yes, there is a complete comparison in
+previous patch, but I originally thought it's over-complicated, so I just
+simplified it (refer other helpers to compare the name).  If we need to
+consider the RAW format, it may be not correct for the comparisons in the
+helpers arch_evsel__must_be_in_group() and arch_evlist__cmp() as well.
 
->  	key.self.size = size;
->  	node = rb_find(&key, dso__data_types(dso), data_type_cmp);
->  	if (node) {
-> @@ -306,6 +315,8 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
->  	}
->  
->  	result->self.type_name = type_name;
-> +	if (global_die->name)
-> +		result->self.var_name = var_name;
+If we want to fix the issue thoroughly, we may have to expose two helpers
+which check if an event is topdown slots or metrics event and use these two
+helpers to replace current name comparison.
 
-Here.
-
-Thanks,
-Namhyung
-
-
->  	result->self.size = size;
->  	INIT_LIST_HEAD(&result->self.children);
->  
-> @@ -1183,7 +1194,7 @@ static int find_data_type_block(struct data_loc_info *dloc,
->   * cu_die and match with reg to identify data type die.
->   */
->  static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_Die *cu_die,
-> -		Dwarf_Die *type_die)
-> +		Dwarf_Die *type_die, Dwarf_Global *global_die)
->  {
->  	Dwarf_Die vr_die;
->  	int ret = -1;
-> @@ -1195,8 +1206,11 @@ static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_
->  			if (dwarf_offdie(dloc->di->dbg, var_types->die_off, &vr_die)) {
->  				if (die_get_real_type(&vr_die, type_die) == NULL) {
->  					dloc->type_offset = 0;
-> +					global_die->name = var_types->name;
->  					dwarf_offdie(dloc->di->dbg, var_types->die_off, type_die);
->  				}
-> +				global_die->die_offset = (long)dwarf_dieoffset(type_die);
-> +				global_die->cu_offset = (long)dwarf_dieoffset(cu_die);
->  				pr_debug_type_name(type_die, TSR_KIND_TYPE);
->  				ret = 0;
->  				pr_debug_dtp("found by CU for %s (die:%#lx)\n",
-> @@ -1212,7 +1226,8 @@ static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_
->  }
->  
->  /* The result will be saved in @type_die */
-> -static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
-> +static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die,
-> +		Dwarf_Global *global_die)
->  {
->  	struct annotated_op_loc *loc = dloc->op;
->  	Dwarf_Die cu_die, var_die;
-> @@ -1226,6 +1241,8 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->  	u64 pc;
->  	char buf[64];
->  
-> +	memset(global_die, 0, sizeof(Dwarf_Global));
-> +
->  	if (dloc->op->multi_regs)
->  		snprintf(buf, sizeof(buf), "reg%d, reg%d", dloc->op->reg1, dloc->op->reg2);
->  	else if (dloc->op->reg1 == DWARF_REG_PC)
-> @@ -1259,7 +1276,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->  		     dwarf_diename(&cu_die), (long)dwarf_dieoffset(&cu_die));
->  
->  	if (loc->reg_type == DWARF_REG_GLOBAL) {
-> -		ret = find_data_type_global_reg(dloc, reg, &cu_die, type_die);
-> +		ret = find_data_type_global_reg(dloc, reg, &cu_die, type_die, global_die);
->  		if (!ret)
->  			goto out;
->  	}
-> @@ -1395,6 +1412,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
->  	struct annotated_data_type *result = NULL;
->  	struct dso *dso = map__dso(dloc->ms->map);
->  	Dwarf_Die type_die;
-> +	Dwarf_Global global_die;
->  
->  	dloc->di = debuginfo__new(dso__long_name(dso));
->  	if (dloc->di == NULL) {
-> @@ -1410,10 +1428,10 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
->  
->  	dloc->fbreg = -1;
->  
-> -	if (find_data_type_die(dloc, &type_die) < 0)
-> +	if (find_data_type_die(dloc, &type_die, &global_die) < 0)
->  		goto out;
->  
-> -	result = dso__findnew_data_type(dso, &type_die);
-> +	result = dso__findnew_data_type(dso, &type_die, &global_die);
->  
->  out:
->  	debuginfo__delete(dloc->di);
-> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-> index 44ef968a7ad3..9e61ff326651 100644
-> --- a/tools/perf/util/dwarf-aux.c
-> +++ b/tools/perf/util/dwarf-aux.c
-> @@ -1610,6 +1610,7 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
->  	vt->reg = reg_from_dwarf_op(ops);
->  	vt->offset = offset_from_dwarf_op(ops);
->  	vt->next = *var_types;
-> +	vt->name = dwarf_diename(die_mem);
->  	*var_types = vt;
->  
->  	return DIE_FIND_CB_SIBLING;
-> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-> index 24446412b869..406a5b1e269b 100644
-> --- a/tools/perf/util/dwarf-aux.h
-> +++ b/tools/perf/util/dwarf-aux.h
-> @@ -146,6 +146,7 @@ struct die_var_type {
->  	u64 addr;
->  	int reg;
->  	int offset;
-> +	const char *name;
->  };
->  
->  /* Return type info of a member at offset */
-> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> index cd39ea972193..535ca19a23fd 100644
-> --- a/tools/perf/util/sort.c
-> +++ b/tools/perf/util/sort.c
-> @@ -2305,9 +2305,12 @@ static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
->  	char buf[4096];
->  
->  	buf[0] = '\0';
-> -	if (list_empty(&he_type->self.children))
-> +	if (list_empty(&he_type->self.children)) {
->  		snprintf(buf, sizeof(buf), "no field");
-> -	else
-> +		if (he_type->self.var_name)
-> +			strcpy(buf, he_type->self.var_name);
-> +
-> +	} else
->  		fill_member_name(buf, sizeof(buf), &he_type->self,
->  				 he->mem_type_off, true);
->  	buf[4095] = '\0';
-> -- 
-> 2.43.0
-> 
+>
+> Thanks,
+> Kan
+>
+>> +			return true;
+>> +	}
+>>  
+>>  	return false;
+>>  }
