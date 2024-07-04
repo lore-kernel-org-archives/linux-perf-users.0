@@ -1,221 +1,109 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB1A17BA7;
-	Thu,  4 Jul 2024 01:58:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60A6014AA9
+	for <linux-perf-users@vger.kernel.org>; Thu,  4 Jul 2024 02:41:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720058294; cv=none; b=pXbEUzlv9jaOtHjsvlLTVFGyFsJyuycBPj2HJCukXB1/j+laH4ovls+/E8ggpvBH7hik+XQ+uhEesGtHuySaOSCL2UtKjtq8SBF068VKT+H5DNR0g1RsMTtGMZvL2M6rrfxla1nYildw+Qc1nSEe/b9Tul7TfTBD71Hc5gzi4NU=
+	t=1720060874; cv=none; b=PP4Kr8GXX18nc82QeplJLUi1xRKk734jW2uUvFcWVNr2Z9bFrtO6qVcWnHO/Z4KncgVmSRbAmIjz0hvHE/qoT7l2/tbIhZatmiNPMZtw8g/aAd+knz7MwTRo3sYnJ0i81cGeJLPy+CFlYiK2AJcCG8LiyaWcDJgVxp7ebpxkGOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720058294; c=relaxed/simple;
-	bh=9jF6F3MMNeVOPesJEW+yzmMWdqItusb8YjWwWgBcPss=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uz0Q2taoTb33ZN9wo93MifE7+kptVviqZipsAkqXprqIx+WysJyOSAbyvuKg7B/AuwbE4zVJL+U1Sc5SzLPLb9jBtYsuK3QHAFHMPS/wCg35zBw57NPmIe8xojh85bpS88MYwDNCGYojTraoV4rpk2JFFVQhlLG2ubNhYdktjVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBxb/Rvq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720060874; c=relaxed/simple;
+	bh=gl2mEMlJS2O89e+UGt6UhI56G+G9JoheAX7OSw6XTT4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ia1a9eKPBvJhxRwlGcHMBDv29Wo72mpUwflSEGkNXOUHJyw4AmdCztBTKtHWUoLQ2Q+JAzKctJvsnEMb7dkSjWKEl0Xd3tEeyxvZKdX3qnUaUoAvtUdNYny3v7tE4GyJexKb57FGKlsQb59O5Tx6p8gkYKt5Enf8yYnsp+53GuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZRpJexOi; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBxb/Rvq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB9AC2BD10;
-	Thu,  4 Jul 2024 01:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720058293;
-	bh=9jF6F3MMNeVOPesJEW+yzmMWdqItusb8YjWwWgBcPss=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jBxb/Rvq6sWLA18P1lrzAW64f6aslM/crrOfE4dFhYAawZctCYncugVzrujGoNJZs
-	 hAuk6Lvf9R7W3v5tR/gt/kGzVo/aUv8QPzu9c1ivFl4VZIPMkmjfwN9tLzk+eQkeCR
-	 B6pmeewBuQUNldXFC1jtL5ua0mKA9+RPJ3XkxtIsZE/36qZoXknOi8E34CkBIT6E6u
-	 ZIFZVDTaRlj99KY2Rw9o+GoLv6mYCJjM35Wi5sCq45CxaSDxBMi3KocttorFsTAvsV
-	 MnyionQGEb4gxn7g0Z/mG1H8/ngJYG3s3uPn5l0FxFkzYZwuOpBLOSx/AcdupdHu82
-	 oqNNGpm6Ei0cQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH] perf annotate: Cache debuginfo for data type profiling
-Date: Wed,  3 Jul 2024 18:58:12 -0700
-Message-ID: <20240704015812.2119457-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZRpJexOi"
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-e03b0e73f14so160090276.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 03 Jul 2024 19:41:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720060872; x=1720665672; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gl2mEMlJS2O89e+UGt6UhI56G+G9JoheAX7OSw6XTT4=;
+        b=ZRpJexOijXosUF1YQFxKZag6Yq/5BbG4m7BFGu1mjZDqgouGbTXDxU7DY0qpsak5MC
+         z3bsqV2nKtP8HqpyF7mqmgRd+ubpCg92JO4KRaeEoJDbswUByeCOvNzxddKLSA7kZ3dY
+         YUxg64DSJBzVDnHhYDMiiNdRWzWAm7TdhgGaQ+bmWRicbgjpIBAkmE+vLNSLCrf1d4CS
+         oKGAHlumzPt6k4N7yqYrQTx38vRw33H4WlPtJSMBDT/U+Tx5GnsBG7oY0WhTtg51rxMb
+         cWF6WAw88El3b3WD1T4I+8ETHgxlrvMXn0VDzMBGxh2OH4A0Hhsw7A8CCyJXMtyw6+YI
+         gz2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720060872; x=1720665672;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gl2mEMlJS2O89e+UGt6UhI56G+G9JoheAX7OSw6XTT4=;
+        b=Ge5UrKDxQbFEGdMB50vsV5ac3mjYsI9DHEVCYsxfl0NYTxjXmTgm3/S0P09Sddsv8w
+         8KfxvcbZCSueewTCZwXLVo9rsGZJlkR638IJYDmpIOsLrVHj6k0Qio9Xzcwe/K4gUAji
+         ua/MsfxB1phvtg2njrF1JapZtpbnL5J+dchrcwx5PWqBkx1K4FG5/JtAGvrKtdNIdAuK
+         RE37YaXdzgMNO1cW5eBl2xqt/7435OiEeQz9PS/z+2IhWUH3El31AP7F0MIc72XOGkaB
+         9jEyvcOraUpDHOG4ub9tk70h6D8kQH817C3BCys0hzptdxSgvsiHRfnH4GQ14KXAA0Yi
+         T9Jw==
+X-Forwarded-Encrypted: i=1; AJvYcCWyx0iVjx3FAPr40sMb2HNOOi/DjPCImTBwStxOpdaHwW32Q4IA3ncwLpCc8l+WWfMYLZ8qR3xrxTNurrxB0PBRYCB22/Nc7Z2XXfcdYR1j3A==
+X-Gm-Message-State: AOJu0YzINkyOf8NvxaMbkR8aNnSKd2+aVVY1flh6WThk8gloqtTUUaYo
+	TFI6QR5uh/j3fx3BHck7OgxK4vfid059L8c5jNRQHG5SSIiPveoRJQpFN4O8pwGTCEETgbD1VFB
+	X2PJjRtwd/W0JmXKKU3FD5mnPaWUELPoV
+X-Google-Smtp-Source: AGHT+IFsZXVAjqZyWHMkIYen2zElHG2qY4OXi1Bk9HZOFK3dqPa6i+VS8kZTinRIdroI+VkOM83D8FVZRI02OTBNycY=
+X-Received: by 2002:a25:d348:0:b0:dfe:5405:e8df with SMTP id
+ 3f1490d57ef6-e03c190d77fmr319604276.17.1720060872359; Wed, 03 Jul 2024
+ 19:41:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
+ <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
+ <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
+ <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
+ <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
+In-Reply-To: <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 4 Jul 2024 10:41:04 +0800
+Message-ID: <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-In find_data_type(), it creates and deletes a debug info whenver it
-tries to find data type for a sample.  This is inefficient and it most
-likely accesses the same binary again and again.
+Hello,
 
-Let's add a single entry cache the debug info structure for the last DSO.
-Depending on sample data, it usually gives me 2~3x (and sometimes more)
-speed ups.
+6th week of Google Summer-of-Code. Office hours this week are the same
+as last week:
 
-Note that this will introduce a little difference in the output due to
-the order of checking stack operations.  It used to check the stack ops
-before checking the availability of debug info but I moved it after the
-symbol check.  So it'll report stack operations in DSOs without debug
-info as unknown.  But I think it's ok and better to have the checking
-near the caching logic.
+Linux perf tool office hours
+Friday, July 5 =C2=B7 8:00 =E2=80=93 9:00am
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 15 ++-------------
- tools/perf/util/annotate-data.h |  2 +-
- tools/perf/util/annotate.c      | 29 +++++++++++++++++++++++++++++
- tools/perf/util/annotate.h      |  2 ++
- tools/perf/util/session.c       |  2 ++
- 5 files changed, 36 insertions(+), 14 deletions(-)
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/tif-efem-uiq
+Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 965da6c0b542..24c03475b3f2 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1764,16 +1764,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
-  */
- struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- {
--	struct annotated_data_type *result = NULL;
- 	struct dso *dso = map__dso(dloc->ms->map);
- 	Dwarf_Die type_die;
- 
--	dloc->di = debuginfo__new(dso__long_name(dso));
--	if (dloc->di == NULL) {
--		pr_debug_dtp("cannot get the debug info\n");
--		return NULL;
--	}
--
- 	/*
- 	 * The type offset is the same as instruction offset by default.
- 	 * But when finding a global variable, the offset won't be valid.
-@@ -1783,13 +1776,9 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- 	dloc->fbreg = -1;
- 
- 	if (find_data_type_die(dloc, &type_die) < 0)
--		goto out;
--
--	result = dso__findnew_data_type(dso, &type_die);
-+		return NULL;
- 
--out:
--	debuginfo__delete(dloc->di);
--	return result;
-+	return dso__findnew_data_type(dso, &type_die);
- }
- 
- static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_entries)
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 0a57d9f5ee78..40c9377fa1a5 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -100,9 +100,9 @@ struct data_loc_info {
- 	u64 var_addr;
- 	u8 cpumode;
- 	struct annotated_op_loc *op;
-+	struct debuginfo *di;
- 
- 	/* These are used internally */
--	struct debuginfo *di;
- 	int fbreg;
- 	bool fb_cfa;
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 1451caf25e77..821e4b2c3bcd 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -25,6 +25,7 @@
- #include "srcline.h"
- #include "units.h"
- #include "debug.h"
-+#include "debuginfo.h"
- #include "annotate.h"
- #include "annotate-data.h"
- #include "evsel.h"
-@@ -2313,6 +2314,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 	return map__rip_2objdump(ms->map, addr);
- }
- 
-+static struct debuginfo_cache {
-+	struct dso *dso;
-+	struct debuginfo *dbg;
-+} di_cache;
-+
-+void debuginfo_cache__delete(void)
-+{
-+	dso__put(di_cache.dso);
-+	di_cache.dso = NULL;
-+
-+	debuginfo__delete(di_cache.dbg);
-+	di_cache.dbg = NULL;
-+}
-+
- /**
-  * hist_entry__get_data_type - find data type for given hist entry
-  * @he: hist entry
-@@ -2347,6 +2362,19 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		return NULL;
- 	}
- 
-+	if (map__dso(ms->map) != di_cache.dso) {
-+		dso__put(di_cache.dso);
-+		di_cache.dso = dso__get(map__dso(ms->map));
-+
-+		debuginfo__delete(di_cache.dbg);
-+		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
-+	}
-+
-+	if (di_cache.dbg == NULL) {
-+		ann_data_stat.no_dbginfo++;
-+		return NULL;
-+	}
-+
- 	/* Make sure it has the disasm of the function */
- 	if (symbol__annotate(ms, evsel, &arch) < 0) {
- 		ann_data_stat.no_insn++;
-@@ -2391,6 +2419,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 			.ip = ms->sym->start + dl->al.offset,
- 			.cpumode = he->cpumode,
- 			.op = op_loc,
-+			.di = di_cache.dbg,
- 		};
- 
- 		if (!op_loc->mem_ref && op_loc->segment == INSN_SEG_NONE)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index d5c821c22f79..0686af637ed9 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -540,4 +540,6 @@ struct annotated_basic_block {
- int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
- 			      struct list_head *head);
- 
-+void debuginfo_cache__delete(void);
-+
- #endif	/* __PERF_ANNOTATE_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5596bed1b8c8..f9072e003367 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,6 +36,7 @@
- #include "util.h"
- #include "arch/common.h"
- #include "units.h"
-+#include "annotate.h"
- #include <internal/lib.h>
- 
- #ifdef HAVE_ZSTD_SUPPORT
-@@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *session)
- 		return;
- 	auxtrace__free(session);
- 	auxtrace_index__free(&session->auxtrace_index);
-+	debuginfo_cache__delete();
- 	perf_session__destroy_kernel_maps(session);
- 	perf_decomp__release_events(session->decomp_data.decomp);
- 	perf_env__exit(&session->header.env);
--- 
-2.45.2.803.g4e1b14247a-goog
+Thanks,
+Howard
 
+On Fri, Jun 28, 2024 at 1:49=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
+>
+> 5th week of Google Summer-of-Code. Office hours tomorrow at the normal ti=
+me:
+>
+> Linux perf tool office hours
+> Friday, June 28 =C2=B7 8:00 =E2=80=93 9:00am
+> Time zone: America/Los_Angeles
+> Google Meet joining info
+> Video call link: https://meet.google.com/tif-efem-uiq
+> Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+> More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+>
+> Thanks,
+> Ian
