@@ -1,94 +1,221 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD7BE5E;
-	Thu,  4 Jul 2024 01:45:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB1A17BA7;
+	Thu,  4 Jul 2024 01:58:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720057531; cv=none; b=uNkZCWeJx0RKUQLPjm0VgCVOJMHyWgTlw3d1qUkzHP0RpkkrYI+K2NU3t8Do+fPRfAkWbDaJGIq8rF5VO2cxtAylY43ExC8KkDk+/+qPMsJORZKa6Nwi43w8wTiBe0U97hep1qUMpN0kTvCFSRzfgUpkSzK/BRO9bj2vmitGd+s=
+	t=1720058294; cv=none; b=pXbEUzlv9jaOtHjsvlLTVFGyFsJyuycBPj2HJCukXB1/j+laH4ovls+/E8ggpvBH7hik+XQ+uhEesGtHuySaOSCL2UtKjtq8SBF068VKT+H5DNR0g1RsMTtGMZvL2M6rrfxla1nYildw+Qc1nSEe/b9Tul7TfTBD71Hc5gzi4NU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720057531; c=relaxed/simple;
-	bh=SPvd8VwZD/E153NMdegZE4h/pGxOsQ6Y4bfsLGCF5kk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nM5WojNe+IWFKu02qSk14gvADmbmpuaJjFNkn7pWCti47xmo7FdVdRSM2vQNOQs8ukaGBgeg2/dCeYMfMEVvEu8JRSz6lgorNrR/8P695eRBudNX6jnbvnqFvHKDE7uoV76PegFhRglC2aUrGMtt1hwCWCdoM0kgchwSmdyLDRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70af5c40f8aso125118b3a.1;
-        Wed, 03 Jul 2024 18:45:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720057529; x=1720662329;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+YikNPi3mD5FM+s7PD6odmr1mocmGFb6M7JPjoY2/qg=;
-        b=ovDolLwxPrS686Hhy4eCSeUjuUUArHLMgw374fFeYIkUxci5R7qrKHzack8FhKDQja
-         k0emV2C0IvdiMTrzeOUPBtqXvOIWw0vCqjYSDZV6u9GtRQ4y/jp1XFCFLMd7Wk9UmQCD
-         VfroX0RuHOayxZbVW9stgDPciyk6NoFpqO8RGJkHcN6X117k5QJiQzdCOhR0Q9BDRr0N
-         hqEoT3W55Cge0gU7in+wrh/LfdoPWyJBGCeKw5MYWAbMcMZwJrPRQL6VHzsnh1ZQB7fj
-         pJO86Ss57cpIppI9QY8m6EPlFHFSnc2VWTEO0+0t+WZVDsFkgncFFVaMB6PUeXDm04WC
-         /ISg==
-X-Forwarded-Encrypted: i=1; AJvYcCVm/h6Y+WuQk6ecWMRFAi+DMk4ooGGH9cG/LuENPXj9AoWA1WMouTEh/meTTyCMHRFmM4pCn8eNBWsO0NIKUX7jSO1vKFnUH/hdOecQ1vVvGuFYueYn7gISK4B+d0fEyvRlqK3XtOVNNk2SjZTUFx0TLHN2xAA2o79KhodN7ljxxneZ7ahrFDJn8W/KCDC4vwsHCQ==
-X-Gm-Message-State: AOJu0YyzIJjqxDUw0OXLWCj6AORgvr/03FRF0O834DV3P5pj/Qq77O0I
-	8rCgp3eDiEgX+PJWivrvYPkB4FQAw9yjIazCTck9IG3EYD+7vRSG82UTxxQ3b8M7x0rDttF0f81
-	TDlUn/FiIkQSCrwVJDSmzaOzYhKc=
-X-Google-Smtp-Source: AGHT+IGrIktkFkR+oCtQa6tf3fiVVVoeQYpsPJ8mYibF+5dXfWH9YYbLGVSBQFJHg8B/JlVl4sg1Fc3jslXvRF8wQjU=
-X-Received: by 2002:a05:6a00:2d0c:b0:70a:f0f1:480f with SMTP id
- d2e1a72fcca58-70b0092ada1mr300137b3a.3.1720057529184; Wed, 03 Jul 2024
- 18:45:29 -0700 (PDT)
+	s=arc-20240116; t=1720058294; c=relaxed/simple;
+	bh=9jF6F3MMNeVOPesJEW+yzmMWdqItusb8YjWwWgBcPss=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Uz0Q2taoTb33ZN9wo93MifE7+kptVviqZipsAkqXprqIx+WysJyOSAbyvuKg7B/AuwbE4zVJL+U1Sc5SzLPLb9jBtYsuK3QHAFHMPS/wCg35zBw57NPmIe8xojh85bpS88MYwDNCGYojTraoV4rpk2JFFVQhlLG2ubNhYdktjVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jBxb/Rvq; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jBxb/Rvq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EB9AC2BD10;
+	Thu,  4 Jul 2024 01:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720058293;
+	bh=9jF6F3MMNeVOPesJEW+yzmMWdqItusb8YjWwWgBcPss=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jBxb/Rvq6sWLA18P1lrzAW64f6aslM/crrOfE4dFhYAawZctCYncugVzrujGoNJZs
+	 hAuk6Lvf9R7W3v5tR/gt/kGzVo/aUv8QPzu9c1ivFl4VZIPMkmjfwN9tLzk+eQkeCR
+	 B6pmeewBuQUNldXFC1jtL5ua0mKA9+RPJ3XkxtIsZE/36qZoXknOi8E34CkBIT6E6u
+	 ZIFZVDTaRlj99KY2Rw9o+GoLv6mYCJjM35Wi5sCq45CxaSDxBMi3KocttorFsTAvsV
+	 MnyionQGEb4gxn7g0Z/mG1H8/ngJYG3s3uPn5l0FxFkzYZwuOpBLOSx/AcdupdHu82
+	 oqNNGpm6Ei0cQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH] perf annotate: Cache debuginfo for data type profiling
+Date: Wed,  3 Jul 2024 18:58:12 -0700
+Message-ID: <20240704015812.2119457-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240628202608.3273329-1-amadio@gentoo.org> <20240628203432.3273625-1-amadio@gentoo.org>
- <20240628203432.3273625-3-amadio@gentoo.org> <ZoSP_vFMVl83pxES@google.com>
- <20240703153617.650fcc1c@rorschach.local.home> <ZoXDoajJqDiIcgwg@google.com> <20240703190502.392be247@rorschach.local.home>
-In-Reply-To: <20240703190502.392be247@rorschach.local.home>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 3 Jul 2024 18:45:18 -0700
-Message-ID: <CAM9d7cgVFRO-NR+bFNxB6SgWuxyr54LeSvnwHD4r+ncFhaDutg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/6] tools: Make pkg-config dependency checks usable by
- other tools
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 3, 2024 at 4:05=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
- wrote:
->
-> On Wed, 3 Jul 2024 14:33:21 -0700
-> Namhyung Kim <namhyung@kernel.org> wrote:
->
-> > On Wed, Jul 03, 2024 at 03:36:17PM -0400, Steven Rostedt wrote:
-> > > On Tue, 2 Jul 2024 16:40:46 -0700
-> > > Namhyung Kim <namhyung@kernel.org> wrote:
-> > >
-> > > > +CC Steve and linux-trace-kernel list.
-> > >
-> > > There doesn't seem to be a cover page, and it doesn't apply on
-> > > v6.10-rc6 nor on tip.
-> >
-> > Oh, sorry.  You can find the whole series here.
-> >
-> > https://lore.kernel.org/linux-perf-users/20240628203432.3273625-1-amadi=
-o@gentoo.org/#r
-> >
-> > I think this is based on the perf-tools-next tree and depends on perf
-> > changes.  If you're ok with the change, I can carry it in the perf tree=
-.
-> >
->
-> Hmm, I checked out git://git.kernel.org/pub/scm/linux/kernel/git/perf/per=
-f-tools-next.git
-> master branch, and it looks to contain just Linus's changes. Is there a s=
-pecific branch?
+In find_data_type(), it creates and deletes a debug info whenver it
+tries to find data type for a sample.  This is inefficient and it most
+likely accesses the same binary again and again.
 
-Yep, it's the same as tree: 'perf-tools-next'
+Let's add a single entry cache the debug info structure for the last DSO.
+Depending on sample data, it usually gives me 2~3x (and sometimes more)
+speed ups.
 
-Thanks,
-Namhyung
+Note that this will introduce a little difference in the output due to
+the order of checking stack operations.  It used to check the stack ops
+before checking the availability of debug info but I moved it after the
+symbol check.  So it'll report stack operations in DSOs without debug
+info as unknown.  But I think it's ok and better to have the checking
+near the caching logic.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate-data.c | 15 ++-------------
+ tools/perf/util/annotate-data.h |  2 +-
+ tools/perf/util/annotate.c      | 29 +++++++++++++++++++++++++++++
+ tools/perf/util/annotate.h      |  2 ++
+ tools/perf/util/session.c       |  2 ++
+ 5 files changed, 36 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 965da6c0b542..24c03475b3f2 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1764,16 +1764,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+  */
+ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ {
+-	struct annotated_data_type *result = NULL;
+ 	struct dso *dso = map__dso(dloc->ms->map);
+ 	Dwarf_Die type_die;
+ 
+-	dloc->di = debuginfo__new(dso__long_name(dso));
+-	if (dloc->di == NULL) {
+-		pr_debug_dtp("cannot get the debug info\n");
+-		return NULL;
+-	}
+-
+ 	/*
+ 	 * The type offset is the same as instruction offset by default.
+ 	 * But when finding a global variable, the offset won't be valid.
+@@ -1783,13 +1776,9 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ 	dloc->fbreg = -1;
+ 
+ 	if (find_data_type_die(dloc, &type_die) < 0)
+-		goto out;
+-
+-	result = dso__findnew_data_type(dso, &type_die);
++		return NULL;
+ 
+-out:
+-	debuginfo__delete(dloc->di);
+-	return result;
++	return dso__findnew_data_type(dso, &type_die);
+ }
+ 
+ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_entries)
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 0a57d9f5ee78..40c9377fa1a5 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -100,9 +100,9 @@ struct data_loc_info {
+ 	u64 var_addr;
+ 	u8 cpumode;
+ 	struct annotated_op_loc *op;
++	struct debuginfo *di;
+ 
+ 	/* These are used internally */
+-	struct debuginfo *di;
+ 	int fbreg;
+ 	bool fb_cfa;
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index 1451caf25e77..821e4b2c3bcd 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -25,6 +25,7 @@
+ #include "srcline.h"
+ #include "units.h"
+ #include "debug.h"
++#include "debuginfo.h"
+ #include "annotate.h"
+ #include "annotate-data.h"
+ #include "evsel.h"
+@@ -2313,6 +2314,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
+ 	return map__rip_2objdump(ms->map, addr);
+ }
+ 
++static struct debuginfo_cache {
++	struct dso *dso;
++	struct debuginfo *dbg;
++} di_cache;
++
++void debuginfo_cache__delete(void)
++{
++	dso__put(di_cache.dso);
++	di_cache.dso = NULL;
++
++	debuginfo__delete(di_cache.dbg);
++	di_cache.dbg = NULL;
++}
++
+ /**
+  * hist_entry__get_data_type - find data type for given hist entry
+  * @he: hist entry
+@@ -2347,6 +2362,19 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
+ 		return NULL;
+ 	}
+ 
++	if (map__dso(ms->map) != di_cache.dso) {
++		dso__put(di_cache.dso);
++		di_cache.dso = dso__get(map__dso(ms->map));
++
++		debuginfo__delete(di_cache.dbg);
++		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
++	}
++
++	if (di_cache.dbg == NULL) {
++		ann_data_stat.no_dbginfo++;
++		return NULL;
++	}
++
+ 	/* Make sure it has the disasm of the function */
+ 	if (symbol__annotate(ms, evsel, &arch) < 0) {
+ 		ann_data_stat.no_insn++;
+@@ -2391,6 +2419,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
+ 			.ip = ms->sym->start + dl->al.offset,
+ 			.cpumode = he->cpumode,
+ 			.op = op_loc,
++			.di = di_cache.dbg,
+ 		};
+ 
+ 		if (!op_loc->mem_ref && op_loc->segment == INSN_SEG_NONE)
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index d5c821c22f79..0686af637ed9 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -540,4 +540,6 @@ struct annotated_basic_block {
+ int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
+ 			      struct list_head *head);
+ 
++void debuginfo_cache__delete(void);
++
+ #endif	/* __PERF_ANNOTATE_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 5596bed1b8c8..f9072e003367 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -36,6 +36,7 @@
+ #include "util.h"
+ #include "arch/common.h"
+ #include "units.h"
++#include "annotate.h"
+ #include <internal/lib.h>
+ 
+ #ifdef HAVE_ZSTD_SUPPORT
+@@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *session)
+ 		return;
+ 	auxtrace__free(session);
+ 	auxtrace_index__free(&session->auxtrace_index);
++	debuginfo_cache__delete();
+ 	perf_session__destroy_kernel_maps(session);
+ 	perf_decomp__release_events(session->decomp_data.decomp);
+ 	perf_env__exit(&session->header.env);
+-- 
+2.45.2.803.g4e1b14247a-goog
+
