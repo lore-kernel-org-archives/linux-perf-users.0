@@ -1,57 +1,57 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9DC1AD9D9;
-	Thu,  4 Jul 2024 12:43:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62491AE852;
+	Thu,  4 Jul 2024 12:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720097036; cv=none; b=QnLas262N+3iwez5gV1yrMr3qdd4BjrWmu2qQd2R/5XtbCjdKy65rpp5IwA9t2tj2jw5dH5pTqS2IRAXcR7+FL6GfxU9Rgh8AP3PlYIjXyfvq3B2UlNzHnpbWmg8Boi5Do4PITCKR+qHMuEEqIqyWvvtq4vuP7ixWbwDFB9rAGw=
+	t=1720097042; cv=none; b=qB1K9xgfKp2IdrBT1RF6CxGvFOnVyv9z+Px8eAX7NAeREZI0iId75+dThUEjfVEsnPMxGzq8oYZetSNUwOY3MHpj8jpmbhP8f8awsmh8WNNaxG5uY9GUVOGoRg0ZnNYto8bVCMvhRkCacs0oL7Z3UPGaY5dHODWXXb+VHWeURwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720097036; c=relaxed/simple;
-	bh=TcMIJ/JpDkilQ3Dd6EFQj4a/Zjx58vavsGUf62pcv2A=;
+	s=arc-20240116; t=1720097042; c=relaxed/simple;
+	bh=WCRQ+kbFo75jDsVNUBclxxnQ3Q3U422ghye2DTytOYw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=sTKvL2PuehBqdRxBdjil2neYZFc0jt2c/SzUxfMdcLgv3HZ4vFJtWtzrpmwK0Hsc4w8VJ9jSomuYTGhXHp8TXup2LUqSx0jXZgMKKix+nYYsTPu/Y91WNs9w9AtdfnN8LXtv/7/qGruGDpV4xIjy0mOIdIsyp5PsBDZkQttYHaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T3lytZZw; arc=none smtp.client-ip=209.85.215.182
+	 MIME-Version:Content-Type; b=rwW/9trqDvVpZnZEqUAbUParvU4jeDAbH8cLA7gzeOiEa4VzTjJYrkqxxyLPegtCSCXVzir5OCaSOTP2G37kqXqLPjPN1SY9/rXsKRd/6Qsbhs7MAkjJU5b6uvtiS7k/8HO4dhCCG81y1Gk1/v6HSV8Bt0EZdEVynj+PlKqOHEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DcAni+uH; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3lytZZw"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-656d8b346d2so342055a12.2;
-        Thu, 04 Jul 2024 05:43:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcAni+uH"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1f9ffd24262so3575625ad.0;
+        Thu, 04 Jul 2024 05:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720097034; x=1720701834; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720097040; x=1720701840; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fjZ5Tc84T8zrmuIv+QLMZoeIPrxCO7uOMh+7TR/hRAQ=;
-        b=T3lytZZw9TduzqZ2bmTFWIzB/fALlsrpDQe62tSbg/pkJUatP6pb4+tRA7HzdvuF0i
-         6x7miIPjbL+Hq37JGp4ZfPpJ7wU9GksRPMLl5lU6wBZRMgZNn4tnfaxi9ldWQOkztnG+
-         VJudrzAwRjtnxycsgo6jPyXWzwdID6rEpEhHI5H0GQ27Ewgzo9K/Xw/UVb7er4FvAIcq
-         0LH9aZ6r7+1ddvNM55aYpLpQW+6IkcG8fi6f83FWyiZ1I8UZt6phqHEh+g0EU3DaqVxX
-         YP851X6opELrsx86mxboQUvbSScArrygRcJLz5t5gZVtF9wm+HhZWmdywZaeUnetZ5kV
-         wIQg==
+        bh=vHqZd9kKJjuZwsVZWyop0eexJ6PnUtjpwAFHznRXJBI=;
+        b=DcAni+uHQLGXRv9+l+w3JLd5mfOLV78t+vf1JYvbNHmuRzdTMUqLrg2SgUD4ab/iIN
+         h+W80ICMO3Zcr/W1WhX1pGxukGv9ImSFlMrhzjFt/2Kd9xCXxehxz+n3mjNpTEPhnnML
+         PXzfIehtVv5KyC9f4tRpfqRPyYmCYcrrWto84hth3rKL8p5WSsCTxp6JxyCLsluqCwEi
+         Q/yKyyCiaxioNE+JLVYzTaw9GIVfGDVFihXqJ6AFMpuBZffjCoWOeVIoawmRYD8rFFxB
+         42BX/CbVlp4wufkecRRdgGYSLNRt0vvkh7Mz2cJghIP4VVUVTHi1l01NJxvknWVw93zd
+         m5fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720097034; x=1720701834;
+        d=1e100.net; s=20230601; t=1720097040; x=1720701840;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fjZ5Tc84T8zrmuIv+QLMZoeIPrxCO7uOMh+7TR/hRAQ=;
-        b=SFKejb+y2HdIEsSkTkEUr2FXgVssoOLFuku0bTMueDcRW6SOI95DoCt6sRgF5oKAhe
-         g/Gph3M/CSatwNAkZSKZn4HyfRCxSTpTqSi5/XiSNIhmpQouE1dERO9wAYMrrx/pF84s
-         1QeztY1SSMIEdpoQZ5yDA3tpgklF38C1w5edlommkqz2UJl22/gG7VlhGurW979Qiob+
-         UoYPh3CvUcmHhJkcl3QD3SZOgWdssTdnvCKeyUOxbIja5JuC8qql6hn2wjJX3ycofklv
-         DXbqEKkARaPRP0XLvin909s8onOZV6yFyEH7RlI3QIuNBf25MXPa/y/n/HsMyKy6NViY
-         j5Uw==
-X-Forwarded-Encrypted: i=1; AJvYcCWFhfrCK4mRr2sAihMaMONJPOD4B9yGlAVKnksGpbmMKW4xmo9fX4NQVqHs0AYCg42DCOIZvu2jw/tCcEWVeJuFvcmxveOf7QqmhSHqFqlHtwWUCCgSCoLLIUSnjpBLJoMacxGdodVEbl2zz6JoDQ==
-X-Gm-Message-State: AOJu0YzsrlvN4dbsf+7c0+zUgMBZJwgjTKOKivB2hatK5Lk69tuI++y1
-	F35ATSrT376Cpm7GEQAtjSthdRsuLhOWn6ujlbUkk+wA78GYXxp4
-X-Google-Smtp-Source: AGHT+IHLVo+ZErpdJM4ep4tZQ1/IIU7cGYXLkQ4xUFbdXcfJFJZSPAeeaLf9W7dSLtWEnkMnVDBb/g==
-X-Received: by 2002:a05:6a21:6d9d:b0:1bd:91aa:79a6 with SMTP id adf61e73a8af0-1c0cc727deemr1581273637.9.1720097033520;
-        Thu, 04 Jul 2024 05:43:53 -0700 (PDT)
+        bh=vHqZd9kKJjuZwsVZWyop0eexJ6PnUtjpwAFHznRXJBI=;
+        b=O7YDuJr0KE5Qi0SyRCrmT1MffyPzpDw37gJtnPaLmH+3cMe3lC7EEk8NwQrECsHtCi
+         uKnOmBj2E6PtM497eT2bjUPGBoyLKq1bD1pv2Wz85rxMzwR74qo7U3HyDf/7C19A98x5
+         VSHrBj+091KqBqMhBgU1zLV6np1zqs8J7F77qUveK8uh01GwJDyrcYipH0qVnw7ZtMLN
+         rGVlpfU3X1z9OlR5AJW6PPZDtas9kM4Ub7azkezEy1ghKVVzrgI77IDo+H1NmyYclMFm
+         8UhbbNT9q1b+ZpYuHIuI8RbzQ71oQ7QAquHuw91+ZXijMLJFnqyuR7bq2gYPLd1P715K
+         mi2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWJDPfm5dyC3k6/jcMuHBCyfrmT0UJ/RyO1cVadz2kNbwZRpxC1ogCDvXMDUGMCrKqUq6qEPLbgqJHudnZBkrq0rAm/Drx7sxbAbKt6rOqyJsT3eWMCSg41F90qR8k1e3wseg5gqed1niiF0ieOOw==
+X-Gm-Message-State: AOJu0Yz68sXgHDcjQK+hiYrsgo+XPiN3vJNTRjRpfqmPUYBuRJ8Zh8Mf
+	73UhJkEuLjXELnPwkrLd2pplgGYt7vh1PDQJFsGIwB+drO8oXmUx
+X-Google-Smtp-Source: AGHT+IFj7Au9dEFXmQ0VP8LKs1SDTksXBOBDOUR6tcTsDEDC4GlqWO2djKu6utYfqnjS0d47Gsu+Hg==
+X-Received: by 2002:a17:902:b182:b0:1fa:2ae7:cc5c with SMTP id d9443c01a7336-1fb33ef8fd5mr8458965ad.46.1720097039920;
+        Thu, 04 Jul 2024 05:43:59 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.43.49
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.43.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 05:43:53 -0700 (PDT)
+        Thu, 04 Jul 2024 05:43:59 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -61,10 +61,16 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 1/8] perf trace: Fix iteration of syscall ids in syscalltbl->entries
-Date: Thu,  4 Jul 2024 20:43:47 +0800
-Message-ID: <20240704124354.904540-2-howardchu95@gmail.com>
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	=?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v4 2/8] perf trace: BTF-based enum pretty printing for syscall args
+Date: Thu,  4 Jul 2024 20:43:48 +0800
+Message-ID: <20240704124354.904540-3-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240704124354.904540-1-howardchu95@gmail.com>
 References: <20240704124354.904540-1-howardchu95@gmail.com>
@@ -77,356 +83,274 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-This is a bug found when implementing pretty-printing for the
-landlock_add_rule system call, I decided to send this patch separately
-because this is a serious bug that should be fixed fast.
+In this patch, BTF is used to turn enum value to the corresponding
+name. There is only one system call that uses enum value as its
+argument, that is `landlock_add_rule()`.
 
-I wrote a test program to do landlock_add_rule syscall in a loop,
-yet perf trace -e landlock_add_rule freezes, giving no output.
+The vmlinux btf is loaded lazily, when user decided to trace the
+`landlock_add_rule` syscall. But if one decide to run `perf trace`
+without any arguments, the behaviour is to trace `landlock_add_rule`,
+so vmlinux btf will be loaded by default.
 
-This bug is introduced by the false understanding of the variable "key"
-below:
-```
-for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
-	struct syscall *sc = trace__syscall_info(trace, NULL, key);
-	...
-}
-```
-The code above seems right at the beginning, but when looking at
-syscalltbl.c, I found these lines:
-
-```
-for (i = 0; i <= syscalltbl_native_max_id; ++i)
-	if (syscalltbl_native[i])
-		++nr_entries;
-
-entries = tbl->syscalls.entries = malloc(sizeof(struct syscall) * nr_entries);
-...
-
-for (i = 0, j = 0; i <= syscalltbl_native_max_id; ++i) {
-	if (syscalltbl_native[i]) {
-		entries[j].name = syscalltbl_native[i];
-		entries[j].id = i;
-		++j;
-	}
-}
-```
-
-meaning the key is merely an index to traverse the syscall table,
-instead of the actual syscall id for this particular syscall.
-
-So if one uses key to do trace__syscall_info(trace, NULL, key), because
-key only goes up to trace->sctbl->syscalls.nr_entries, for example, on
-my X86_64 machine, this number is 373, it will end up neglecting all
-the rest of the syscall, in my case, everything after `rseq`, because
-the traversal will stop at 373, and `rseq` is the last syscall whose id
-is lower than 373
-
-in tools/perf/arch/x86/include/generated/asm/syscalls_64.c:
-```
-	...
-	[334] = "rseq",
-	[424] = "pidfd_send_signal",
-	...
-```
-
-The reason why the key is scrambled but perf trace works well is that
-key is used in trace__syscall_info(trace, NULL, key) to do
-trace->syscalls.table[id], this makes sure that the struct syscall returned
-actually has an id the same value as key, making the later bpf_prog
-matching all correct.
-
-After fixing this bug, I can do perf trace on 38 more syscalls, and
-because more syscalls are visible, we get 8 more syscalls that can be
-augmented.
+The laziest behaviour is to load vmlinux btf when a
+`landlock_add_rule` syscall hits. But I think you could lose some
+samples when loading vmlinux btf at run time, for it can delay the
+handling of other samples. I might need your precious opinions on
+this...
 
 before:
 
-perf $ perf trace -vv --max-events=1 |& grep Reusing
-Reusing "open" BPF sys_enter augmenter for "stat"
-Reusing "open" BPF sys_enter augmenter for "lstat"
-Reusing "open" BPF sys_enter augmenter for "access"
-Reusing "connect" BPF sys_enter augmenter for "accept"
-Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-Reusing "connect" BPF sys_enter augmenter for "bind"
-Reusing "connect" BPF sys_enter augmenter for "getsockname"
-Reusing "connect" BPF sys_enter augmenter for "getpeername"
-Reusing "open" BPF sys_enter augmenter for "execve"
-Reusing "open" BPF sys_enter augmenter for "truncate"
-Reusing "open" BPF sys_enter augmenter for "chdir"
-Reusing "open" BPF sys_enter augmenter for "mkdir"
-Reusing "open" BPF sys_enter augmenter for "rmdir"
-Reusing "open" BPF sys_enter augmenter for "creat"
-Reusing "open" BPF sys_enter augmenter for "link"
-Reusing "open" BPF sys_enter augmenter for "unlink"
-Reusing "open" BPF sys_enter augmenter for "symlink"
-Reusing "open" BPF sys_enter augmenter for "readlink"
-Reusing "open" BPF sys_enter augmenter for "chmod"
-Reusing "open" BPF sys_enter augmenter for "chown"
-Reusing "open" BPF sys_enter augmenter for "lchown"
-Reusing "open" BPF sys_enter augmenter for "mknod"
-Reusing "open" BPF sys_enter augmenter for "statfs"
-Reusing "open" BPF sys_enter augmenter for "pivot_root"
-Reusing "open" BPF sys_enter augmenter for "chroot"
-Reusing "open" BPF sys_enter augmenter for "acct"
-Reusing "open" BPF sys_enter augmenter for "swapon"
-Reusing "open" BPF sys_enter augmenter for "swapoff"
-Reusing "open" BPF sys_enter augmenter for "delete_module"
-Reusing "open" BPF sys_enter augmenter for "setxattr"
-Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-Reusing "open" BPF sys_enter augmenter for "getxattr"
-Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-Reusing "open" BPF sys_enter augmenter for "listxattr"
-Reusing "open" BPF sys_enter augmenter for "llistxattr"
-Reusing "open" BPF sys_enter augmenter for "removexattr"
-Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-Reusing "open" BPF sys_enter augmenter for "mq_open"
-Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-Reusing "open" BPF sys_enter augmenter for "symlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-Reusing "connect" BPF sys_enter augmenter for "accept4"
-Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-Reusing "open" BPF sys_enter augmenter for "memfd_create"
-Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
+```
+perf $ ./perf trace -e landlock_add_rule
+     0.000 ( 0.008 ms): ldlck-test/438194 landlock_add_rule(rule_type: 2) = -1 EBADFD (File descriptor in bad state)
+     0.010 ( 0.001 ms): ldlck-test/438194 landlock_add_rule(rule_type: 1) = -1 EBADFD (File descriptor in bad state)
+```
 
-after
+after:
 
-perf $ perf trace -vv --max-events=1 |& grep Reusing
-Reusing "open" BPF sys_enter augmenter for "stat"
-Reusing "open" BPF sys_enter augmenter for "lstat"
-Reusing "open" BPF sys_enter augmenter for "access"
-Reusing "connect" BPF sys_enter augmenter for "accept"
-Reusing "sendto" BPF sys_enter augmenter for "recvfrom"
-Reusing "connect" BPF sys_enter augmenter for "bind"
-Reusing "connect" BPF sys_enter augmenter for "getsockname"
-Reusing "connect" BPF sys_enter augmenter for "getpeername"
-Reusing "open" BPF sys_enter augmenter for "execve"
-Reusing "open" BPF sys_enter augmenter for "truncate"
-Reusing "open" BPF sys_enter augmenter for "chdir"
-Reusing "open" BPF sys_enter augmenter for "mkdir"
-Reusing "open" BPF sys_enter augmenter for "rmdir"
-Reusing "open" BPF sys_enter augmenter for "creat"
-Reusing "open" BPF sys_enter augmenter for "link"
-Reusing "open" BPF sys_enter augmenter for "unlink"
-Reusing "open" BPF sys_enter augmenter for "symlink"
-Reusing "open" BPF sys_enter augmenter for "readlink"
-Reusing "open" BPF sys_enter augmenter for "chmod"
-Reusing "open" BPF sys_enter augmenter for "chown"
-Reusing "open" BPF sys_enter augmenter for "lchown"
-Reusing "open" BPF sys_enter augmenter for "mknod"
-Reusing "open" BPF sys_enter augmenter for "statfs"
-Reusing "open" BPF sys_enter augmenter for "pivot_root"
-Reusing "open" BPF sys_enter augmenter for "chroot"
-Reusing "open" BPF sys_enter augmenter for "acct"
-Reusing "open" BPF sys_enter augmenter for "swapon"
-Reusing "open" BPF sys_enter augmenter for "swapoff"
-Reusing "open" BPF sys_enter augmenter for "delete_module"
-Reusing "open" BPF sys_enter augmenter for "setxattr"
-Reusing "open" BPF sys_enter augmenter for "lsetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fsetxattr"
-Reusing "open" BPF sys_enter augmenter for "getxattr"
-Reusing "open" BPF sys_enter augmenter for "lgetxattr"
-Reusing "openat" BPF sys_enter augmenter for "fgetxattr"
-Reusing "open" BPF sys_enter augmenter for "listxattr"
-Reusing "open" BPF sys_enter augmenter for "llistxattr"
-Reusing "open" BPF sys_enter augmenter for "removexattr"
-Reusing "open" BPF sys_enter augmenter for "lremovexattr"
-Reusing "fsetxattr" BPF sys_enter augmenter for "fremovexattr"
-Reusing "open" BPF sys_enter augmenter for "mq_open"
-Reusing "open" BPF sys_enter augmenter for "mq_unlink"
-Reusing "fsetxattr" BPF sys_enter augmenter for "add_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "request_key"
-Reusing "fremovexattr" BPF sys_enter augmenter for "inotify_add_watch"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mkdirat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "mknodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchownat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "futimesat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "newfstatat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "unlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "linkat"
-Reusing "open" BPF sys_enter augmenter for "symlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "readlinkat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "fchmodat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "faccessat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "utimensat"
-Reusing "connect" BPF sys_enter augmenter for "accept4"
-Reusing "fremovexattr" BPF sys_enter augmenter for "name_to_handle_at"
-Reusing "fremovexattr" BPF sys_enter augmenter for "renameat2"
-Reusing "open" BPF sys_enter augmenter for "memfd_create"
-Reusing "fremovexattr" BPF sys_enter augmenter for "execveat"
-Reusing "fremovexattr" BPF sys_enter augmenter for "statx"
+```
+perf $ ./perf trace -e landlock_add_rule
+     0.000 ( 0.029 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_NET_PORT)     = -1 EBADFD (File descriptor in bad state)
+     0.036 ( 0.004 ms): ldlck-test/438194 landlock_add_rule(rule_type: LANDLOCK_RULE_PATH_BENEATH) = -1 EBADFD (File descriptor in bad state)
+```
 
-TL;DR:
+Committer notes:
 
-These are the new syscalls that can be augmented
-Reusing "openat" BPF sys_enter augmenter for "open_tree"
-Reusing "openat" BPF sys_enter augmenter for "openat2"
-Reusing "openat" BPF sys_enter augmenter for "mount_setattr"
-Reusing "openat" BPF sys_enter augmenter for "move_mount"
-Reusing "open" BPF sys_enter augmenter for "fsopen"
-Reusing "openat" BPF sys_enter augmenter for "fspick"
-Reusing "openat" BPF sys_enter augmenter for "faccessat2"
-Reusing "openat" BPF sys_enter augmenter for "fchmodat2"
+Made it build with NO_LIBBPF=1, simplified btf_enum_fprintf(), see [1]
+for the discussion.
 
-as for the perf trace output:
-
-before
-
-perf $ perf trace -e faccessat2 --max-events=1
-[no output]
-
-after
-
-perf $ ./perf trace -e faccessat2 --max-events=1
-     0.000 ( 0.037 ms): waybar/958 faccessat2(dfd: 40, filename: "uevent")                               = 0
-
-P.S. The reason why this bug was not found in the past five years is
-probably because it only happens to the newer syscalls whose id is
-greater, for instance, faccessat2 of id 439, which not a lot of people
-care about when using perf trace.
-
-Commiter notes:
-
-That and the fact that the BPF code was hidden before having to use -e,
-that got changed kinda recently when we switched to using BPF skels for
-augmenting syscalls in 'perf trace':
-
-⬢[acme@toolbox perf-tools-next]$ git log --oneline tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-a9f4c6c999008c92 perf trace: Collect sys_nanosleep first argument
-29d16de26df17e94 perf augmented_raw_syscalls.bpf: Move 'struct timespec64' to vmlinux.h
-5069211e2f0b47e7 perf trace: Use the right bpf_probe_read(_str) variant for reading user data
-33b725ce7b988756 perf trace: Avoid compile error wrt redefining bool
-7d9642311b6d9d31 perf bpf augmented_raw_syscalls: Add an assert to make sure sizeof(augmented_arg->value) is a power of two.
-262b54b6c9396823 perf bpf augmented_raw_syscalls: Add an assert to make sure sizeof(saddr) is a power of two.
-1836480429d173c0 perf bpf_skel augmented_raw_syscalls: Cap the socklen parameter using &= sizeof(saddr)
-cd2cece61ac5f900 perf trace: Tidy comments related to BPF + syscall augmentation
-5e6da6be3082f77b perf trace: Migrate BPF augmentation to use a skeleton
-⬢[acme@toolbox perf-tools-next]$
-
-⬢[acme@toolbox perf-tools-next]$ git show --oneline --pretty=reference 5e6da6be3082f77b | head -1
-5e6da6be3082f77b (perf trace: Migrate BPF augmentation to use a skeleton, 2023-08-10)
-⬢[acme@toolbox perf-tools-next]$
-
-I.e. from August, 2023.
-
-One had as well to ask for BUILD_BPF_SKEL=1, which now is default if all
-it needs is available on the system.
-
-I simplified the code to not expose the 'struct syscall' outside of
-tools/perf/util/syscalltbl.c, instead providing a function to go from
-the index to the syscall id:
-
-  int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx);
-
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Günther Noack <gnoack@google.com>
 Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mickaël Salaün <mic@digikod.net>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/ZmhlAxbVcAKoPTg8@x1
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/lkml/20240613022757.3589783-1-howardchu95@gmail.com
+Link: https://lore.kernel.org/lkml/ZnXAhFflUl_LV1QY@x1 # [1]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c   | 14 +++++++-------
- tools/perf/util/syscalltbl.c |  7 +++++++
- tools/perf/util/syscalltbl.h |  1 +
- 3 files changed, 15 insertions(+), 7 deletions(-)
+ tools/perf/builtin-trace.c | 110 +++++++++++++++++++++++++++++++++++--
+ 1 file changed, 106 insertions(+), 4 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index a547ccfa92c9..8449f2beb54d 100644
+index 8449f2beb54d..1391564911d9 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3354,8 +3354,6 @@ static int trace__bpf_prog_sys_exit_fd(struct trace *trace, int id)
- static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace, struct syscall *sc)
- {
- 	struct tep_format_field *field, *candidate_field;
--	int id;
--
- 	/*
- 	 * We're only interested in syscalls that have a pointer:
- 	 */
-@@ -3367,7 +3365,8 @@ static struct bpf_program *trace__find_usable_bpf_prog_entry(struct trace *trace
- 	return NULL;
+@@ -19,6 +19,7 @@
+ #ifdef HAVE_LIBBPF_SUPPORT
+ #include <bpf/bpf.h>
+ #include <bpf/libbpf.h>
++#include <bpf/btf.h>
+ #ifdef HAVE_BPF_SKEL
+ #include "bpf_skel/augmented_raw_syscalls.skel.h"
+ #endif
+@@ -110,6 +111,10 @@ struct syscall_arg_fmt {
+ 	const char *name;
+ 	u16	   nr_entries; // for arrays
+ 	bool	   show_zero;
++	bool	   is_enum;
++#ifdef HAVE_LIBBPF_SUPPORT
++	const struct btf_type *type;
++#endif
+ };
  
- try_to_find_pair:
--	for (id = 0; id < trace->sctbl->syscalls.nr_entries; ++id) {
-+	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
-+		int id = syscalltbl__id_at_idx(trace->sctbl, i);
- 		struct syscall *pair = trace__syscall_info(trace, NULL, id);
- 		struct bpf_program *pair_prog;
- 		bool is_candidate = false;
-@@ -3456,10 +3455,10 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
- {
- 	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
- 	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
--	int err = 0, key;
-+	int err = 0;
+ struct syscall_fmt {
+@@ -139,6 +144,9 @@ struct trace {
+ 	} syscalls;
+ #ifdef HAVE_BPF_SKEL
+ 	struct augmented_raw_syscalls_bpf *skel;
++#endif
++#ifdef HAVE_LIBBPF_SUPPORT
++	struct btf		*btf;
+ #endif
+ 	struct record_opts	opts;
+ 	struct evlist	*evlist;
+@@ -204,6 +212,20 @@ struct trace {
+ 	} oe;
+ };
  
--	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
--		int prog_fd;
-+	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
-+		int prog_fd, key = syscalltbl__id_at_idx(trace->sctbl, i);
- 
- 		if (!trace__syscall_enabled(trace, key))
- 			continue;
-@@ -3505,7 +3504,8 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
- 	 * first and second arg (this one on the raw_syscalls:sys_exit prog
- 	 * array tail call, then that one will be used.
- 	 */
--	for (key = 0; key < trace->sctbl->syscalls.nr_entries; ++key) {
-+	for (int i = 0; i < trace->sctbl->syscalls.nr_entries; ++i) {
-+		int key = syscalltbl__id_at_idx(trace->sctbl, i);
- 		struct syscall *sc = trace__syscall_info(trace, NULL, key);
- 		struct bpf_program *pair_prog;
- 		int prog_fd;
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 63be7b58761d..0dd26b991b3f 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -123,6 +123,13 @@ int syscalltbl__id(struct syscalltbl *tbl, const char *name)
- 	return sc ? sc->id : -1;
- }
- 
-+int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx)
++static void trace__load_vmlinux_btf(struct trace *trace __maybe_unused)
 +{
-+	struct syscall *syscalls = tbl->syscalls.entries;
++#ifdef HAVE_LIBBPF_SUPPORT
++	if (trace->btf != NULL)
++		return;
 +
-+	return idx < tbl->syscalls.nr_entries ? syscalls[idx].id : -1;
++	trace->btf = btf__load_vmlinux_btf();
++	if (verbose > 0) {
++		fprintf(trace->output, trace->btf ? "vmlinux BTF loaded\n" :
++						    "Failed to load vmlinux BTF\n");
++	}
++#endif
 +}
 +
- int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx)
+ struct tp_field {
+ 	int offset;
+ 	union {
+@@ -887,6 +909,64 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
+ 
+ #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
+ 
++#ifdef HAVE_LIBBPF_SUPPORT
++static int syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
++{
++	int id;
++
++	// Already cached?
++	if (arg_fmt->type != NULL)
++		return 0;
++
++	type = strstr(type, "enum ");
++	if (type == NULL)
++		return -1;
++
++	type += 5; // skip "enum " to get the enumeration name
++
++	id = btf__find_by_name(btf, type);
++	if (id < 0)
++		return -1;
++
++	arg_fmt->type = btf__type_by_id(btf, id);
++	return arg_fmt->type == NULL ? -1 : 0;
++}
++
++static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, char *bf, size_t size, int val)
++{
++	struct btf_enum *be = btf_enum(type);
++	const int nr_entries = btf_vlen(type);
++
++	for (int i = 0; i < nr_entries; ++i, ++be) {
++		if (be->val == val) {
++			return scnprintf(bf, size, "%s",
++					 btf__name_by_offset(btf, be->name_off));
++		}
++	}
++
++	return 0;
++}
++
++static size_t trace__btf_enum_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
++					size_t size, int val, char *type)
++{
++	if (trace->btf == NULL)
++		return 0;
++
++	if (syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type) < 0)
++		return 0;
++
++	return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
++}
++#else // HAVE_LIBBPF_SUPPORT
++static size_t trace__btf_enum_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg_fmt *arg_fmt __maybe_unused,
++					char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
++					char *type __maybe_unused)
++{
++	return 0;
++}
++#endif // HAVE_LIBBPF_SUPPORT
++
+ #define STRARRAY(name, array) \
+ 	  { .scnprintf	= SCA_STRARRAY, \
+ 	    .strtoul	= STUL_STRARRAY, \
+@@ -1238,6 +1318,7 @@ struct syscall {
+ 	bool		    is_exit;
+ 	bool		    is_open;
+ 	bool		    nonexistent;
++	bool		    use_btf;
+ 	struct tep_format_field *args;
+ 	const char	    *name;
+ 	const struct syscall_fmt  *fmt;
+@@ -1744,7 +1825,8 @@ static const struct syscall_arg_fmt *syscall_arg_fmt__find_by_name(const char *n
+ }
+ 
+ static struct tep_format_field *
+-syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field)
++syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field *field,
++			    bool *use_btf)
  {
- 	int i;
-diff --git a/tools/perf/util/syscalltbl.h b/tools/perf/util/syscalltbl.h
-index a41d2ca9e4ae..2b53b7ed25a6 100644
---- a/tools/perf/util/syscalltbl.h
-+++ b/tools/perf/util/syscalltbl.h
-@@ -16,6 +16,7 @@ void syscalltbl__delete(struct syscalltbl *tbl);
+ 	struct tep_format_field *last_field = NULL;
+ 	int len;
+@@ -1756,6 +1838,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			continue;
  
- const char *syscalltbl__name(const struct syscalltbl *tbl, int id);
- int syscalltbl__id(struct syscalltbl *tbl, const char *name);
-+int syscalltbl__id_at_idx(struct syscalltbl *tbl, int idx);
+ 		len = strlen(field->name);
++		arg->is_enum = false;
  
- int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
- int syscalltbl__strglobmatch_next(struct syscalltbl *tbl, const char *syscall_glob, int *idx);
+ 		if (strcmp(field->type, "const char *") == 0 &&
+ 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+@@ -1782,6 +1865,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 			 * 7 unsigned long
+ 			 */
+ 			arg->scnprintf = SCA_FD;
++		} else if (strstr(field->type, "enum") && use_btf != NULL) {
++			*use_btf = arg->is_enum = true;
+ 		} else {
+ 			const struct syscall_arg_fmt *fmt =
+ 				syscall_arg_fmt__find_by_name(field->name);
+@@ -1798,7 +1883,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+ 
+ static int syscall__set_arg_fmts(struct syscall *sc)
+ {
+-	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args);
++	struct tep_format_field *last_field = syscall_arg_fmt__init_array(sc->arg_fmt, sc->args,
++									  &sc->use_btf);
+ 
+ 	if (last_field)
+ 		sc->args_size = last_field->offset + last_field->size;
+@@ -1811,6 +1897,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	char tp_name[128];
+ 	struct syscall *sc;
+ 	const char *name = syscalltbl__name(trace->sctbl, id);
++	int err;
+ 
+ #ifdef HAVE_SYSCALL_TABLE_SUPPORT
+ 	if (trace->syscalls.table == NULL) {
+@@ -1883,7 +1970,13 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+ 	sc->is_exit = !strcmp(name, "exit_group") || !strcmp(name, "exit");
+ 	sc->is_open = !strcmp(name, "open") || !strcmp(name, "openat");
+ 
+-	return syscall__set_arg_fmts(sc);
++	err = syscall__set_arg_fmts(sc);
++
++	/* after calling syscall__set_arg_fmts() we'll know whether use_btf is true */
++	if (sc->use_btf)
++		trace__load_vmlinux_btf(trace);
++
++	return err;
+ }
+ 
+ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+@@ -1891,7 +1984,7 @@ static int evsel__init_tp_arg_scnprintf(struct evsel *evsel)
+ 	struct syscall_arg_fmt *fmt = evsel__syscall_arg_fmt(evsel);
+ 
+ 	if (fmt != NULL) {
+-		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields);
++		syscall_arg_fmt__init_array(fmt, evsel->tp_format->format.fields, NULL);
+ 		return 0;
+ 	}
+ 
+@@ -2103,6 +2196,15 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			if (trace->show_arg_names)
+ 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+ 
++			if (sc->arg_fmt[arg.idx].is_enum) {
++				size_t p = trace__btf_enum_scnprintf(trace, &sc->arg_fmt[arg.idx], bf + printed,
++								     size - printed, val, field->type);
++				if (p) {
++					printed += p;
++					continue;
++				}
++			}
++
+ 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+ 								  bf + printed, size - printed, &arg, val);
+ 		}
 -- 
 2.45.2
 
