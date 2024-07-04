@@ -1,107 +1,121 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41D01B0119;
-	Thu,  4 Jul 2024 14:48:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03021B0139;
+	Thu,  4 Jul 2024 17:04:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720104486; cv=none; b=rFEoSM/T6Gx15Mh5YQMfq4jgl23ByoxLVmb7qCTN90KOCeKxrRdw72kG1VbBg4FBgmbfUBLlyXmpvmHkAjpUC70GM2pztkHJGN66eYSaflUOJThjyEDuiINGbrInyuRSLCPdWKW3rQWXONmSXzexmkaXZz18A9vAeQKUUu3EaGE=
+	t=1720112672; cv=none; b=qIR1BsfbU6jz44EkTlpGfq9SJ07vrwrzezJdZg+P5yuIpHk0oMrkzabShMolWt14juQG1utv1QVRQZaDqrpPZaFt03Hxh0bHKHzZ3sHz/X3LEDxNgLfvFeY7u7s1Z8pvC/v8SaJ1l/Nyr7S0PIICOIi3noRNBIDI0XafABw3aHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720104486; c=relaxed/simple;
-	bh=bZYIFkT1L0I1lV75J4LbB9X5PX2ui0qO0qhHQb9jdn4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jBfVuCr9dM5kr/ihk0BKFPEtNeXPUZ43Zu91xgsDxO09qrbJloG1UcoaDOZScE7EGVZvxAj4ye/XVWIozjl3cMfmJF8T1V0F9Rt8zlFCSxJxU7OfAeBSJama1uPhTN2OL9hKJ43TRXa9ki7Ks8GcjTUnupjKZX4wOhRaQ1f69Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [117.22.85.168])
-	by gateway (Coremail) with SMTP id _____8DxfeshtoZmMv0AAA--.3074S3;
-	Thu, 04 Jul 2024 22:48:01 +0800 (CST)
-Received: from [192.168.0.109] (unknown [117.22.85.168])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxRcUetoZmmi87AA--.60231S3;
-	Thu, 04 Jul 2024 22:48:00 +0800 (CST)
-Message-ID: <5ab53836-5a11-a47b-042e-96c5c9e70974@loongson.cn>
-Date: Thu, 4 Jul 2024 22:47:59 +0800
+	s=arc-20240116; t=1720112672; c=relaxed/simple;
+	bh=WXw3Qwht7czrmsx9ahtRrb+RTNTA9mu6D57a61bCLb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=B3vNxD0SJ90fRCmy2saHJGpRBgVJsPFN7FRq1vYGqPldTvcbr5ipyuN/wRyQrHn5tDNvqS/rnaxKP5aaMwEyRZr/F3rqf1oEconA5vnfZprmOrHpzpmm0YO5HGLJbniNkUyzCBooxX0NdxrmJuw+eRCCOlgoMBAYAFsm8ZMpq5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XvyoeU2N; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=I3RXEBTD; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XvyoeU2N";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="I3RXEBTD"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1720112669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtdLMQUS4gOabICyiywJKeAVbmQAXHIv0kkFMgjqTTg=;
+	b=XvyoeU2NSNXT3ntLU9B6SfomGMoTWODkAIn72dXP6Vm4wGUQEG3u6dhgj4SffYbPQu2Nkj
+	xZs0LaxjMLuUdGF4sZFcrMRRghBShQHbs/3CkSaIAaBDJ/O9JVUdeAVdEJZG9gE9a+6xt9
+	5PPa/2908qE+cGEd84I/Z/4+BG1WyG6SStFHM3EAJTniuIT+cVfUYClu6zHSpjNR4ZvuFl
+	GHDjqDRZXkcq7/3is93J399pKhaKEiaBJU+jyiHUSXxGR026ig5VgTGkgnOkGEfoJXzyKq
+	DpygTEOsGnHEkUWy4/VKf8Ra1SlUSdqSWjGdBOOj3vQgxwq5+vl7fS/ODZwwnA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1720112669;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NtdLMQUS4gOabICyiywJKeAVbmQAXHIv0kkFMgjqTTg=;
+	b=I3RXEBTDuMkqbwi0Fmuhc30oSdyx1JHC8rIa3q6kplhgGvoPWg9SPSrLDcj7zrUZKQnlds
+	UBWGqHoM7YX/UjCg==
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Frederic Weisbecker <frederic@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Kan Liang  <kan.liang@linux.intel.com>,
+	Marco Elver <elver@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v5 1/7] perf: Move irq_work_queue() where the event is prepared.
+Date: Thu,  4 Jul 2024 19:03:35 +0200
+Message-ID: <20240704170424.1466941-2-bigeasy@linutronix.de>
+In-Reply-To: <20240704170424.1466941-1-bigeasy@linutronix.de>
+References: <20240704170424.1466941-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.4.0
-Subject: Re: [PATCH v2 0/3] hw_breakpoint: Save privilege of access control
- via ptrace
-Content-Language: en-US
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Russell King <linux@armlinux.org.uk>,
- Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
-In-Reply-To: <20240621073910.8465-1-yangtiezhu@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxRcUetoZmmi87AA--.60231S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18JF43WF4xKw1xAFyxWFX_yoW8Xr47pr
-	W3u3ZxKw4DGayUu3ZIqw4Dua4S9w1kXrWjqa4DGw4Fyrn09Fy3WFZ2q3ZI9rZrZr1Iq34f
-	t3yqvrWqy3WUZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
-	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
-	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
-	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUU
-	UUU
+Content-Transfer-Encoding: quoted-printable
 
-On 6/21/24 15:39, Tiezhu Yang wrote:
-> Hi all,
-> 
-> Thank you very much for your feedbacks in the v1 patch.
-> This series is based on 6.10-rc4, cross compile tested only.
-> 
-> As far as I can tell, these changes are not relevant with tools/perf,
-> on some archs such as ARM, ARM64 and LoongArch which have privilege
-> level of breakpoint, the initial aim is to make use of the value of
-> ctrl->privilege saved in decode_ctrl_reg() and then remove the check
-> whether bp virtual address is in kernel space to assign value for
-> hw->ctrl.privilege in arch_build_bp_info().
-> 
-> v2:
->    -- Put the new member "bp_priv" at the end of the uapi
->       struct perf_event_attr and add PERF_ATTR_SIZE_VER9.
->    -- Update the commit message to make the goal clear.
-> 
-> Tiezhu Yang (3):
->    perf: Add perf_event_attr::bp_priv
->    arm: hw_breakpoint: Save privilege of access control via ptrace
->    arm64: hw_breakpoint: Save privilege of access control via ptrace
-> 
->   arch/arm/kernel/hw_breakpoint.c   |  4 +---
->   arch/arm/kernel/ptrace.c          |  2 ++
->   arch/arm64/kernel/hw_breakpoint.c | 11 ++---------
->   arch/arm64/kernel/ptrace.c        |  2 ++
->   include/uapi/linux/perf_event.h   |  3 +++
->   kernel/events/hw_breakpoint.c     |  1 +
->   6 files changed, 11 insertions(+), 12 deletions(-)
+Only if perf_event::pending_sigtrap is zero, the irq_work accounted by
+increminging perf_event::nr_pending. The member perf_event::pending_addr
+might be overwritten by a subsequent event if the signal was not yet
+delivered and is expected. The irq_work will not be enqeueued again
+because it has a check to be only enqueued once.
 
-Ping, any more comments? Is it possible to merge this series
-for the coming merge window?
+Move irq_work_queue() to where the counter is incremented and
+perf_event::pending_sigtrap is set to make it more obvious that the
+irq_work is scheduled once.
 
-If this patch series has no value and is not acceptable,
-or what should I do to update, please let me know.
+Tested-by: Marco Elver <elver@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ kernel/events/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Thanks,
-Tiezhu
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 586d4f3676240..647abeeaeeb02 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9738,6 +9738,11 @@ static int __perf_event_overflow(struct perf_event *=
+event,
+ 		if (!event->pending_sigtrap) {
+ 			event->pending_sigtrap =3D pending_id;
+ 			local_inc(&event->ctx->nr_pending);
++
++			event->pending_addr =3D 0;
++			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
++				event->pending_addr =3D data->addr;
++			irq_work_queue(&event->pending_irq);
+ 		} else if (event->attr.exclude_kernel && valid_sample) {
+ 			/*
+ 			 * Should not be able to return to user space without
+@@ -9753,11 +9758,6 @@ static int __perf_event_overflow(struct perf_event *=
+event,
+ 			 */
+ 			WARN_ON_ONCE(event->pending_sigtrap !=3D pending_id);
+ 		}
+-
+-		event->pending_addr =3D 0;
+-		if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
+-			event->pending_addr =3D data->addr;
+-		irq_work_queue(&event->pending_irq);
+ 	}
+=20
+ 	READ_ONCE(event->overflow_handler)(event, data, regs);
+--=20
+2.45.2
 
