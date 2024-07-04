@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D14531B1503;
-	Thu,  4 Jul 2024 17:04:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C3A1B3F23;
+	Thu,  4 Jul 2024 17:04:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720112674; cv=none; b=GpEcMu8lweD8h4x1DbWDBI4hDqUDlLeuMoV3CGqS0J2BPJnobc1l/4MO+ZMzcfXGPWh5LoFFWnMwxLFheCVJ1fGnQ28HwB/rQuuEl1EBpSeDod+Jh4XemB5A7OmDuWOw/XE6O2qgfkIjRbjoyQDF1n1LOZPFgX8w3Bhsrowsns4=
+	t=1720112675; cv=none; b=XRvQ8kPZwKj2vU+QR8/QaI7vYiBbc7JectsyjVR5jLjfG3uTnKwSvBpw/gfjtUHKKl+ky1GMW1xzuizIRqiCaTuPCczjsgpjRmMmS+h4Uqy24ukihTCjSOlSqmOXbvYfFNFRsmfZuGs7dIT0LEHMy9IqUnq3cCv46EsuNTXyhJs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720112674; c=relaxed/simple;
-	bh=OA6APz55wxezTyURWBrPGfOxP5hAQYOf9p8p58/aQ8w=;
+	s=arc-20240116; t=1720112675; c=relaxed/simple;
+	bh=S8OVgI+z3/1TkjlEzzhcY/BKekKcyxSOhl+MLCQeg/Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iVDEnlBA/zs9XjdKbe7Kfkorjnxyb5S4B1422ByHUFYWCTibM80Syo7PMcYPf/C2I2ba1M43waH7tZ2Mzw+kyIAysygPBiL/IU+de4CgtosmsUdc2EDfo+0oDetwRYKLPxZLC/Pv8fvULMlbrACDF8637WosfG1zHcCjX/PComI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=swxatZHP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RKcm5xQj; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=QqoRLBcBDRHBmOswiSOMjaR/kl5tF9NYs8UVIHIaqNFk8wcIQuYJEOq08vKDU3q1cQ77sNsvpR6foc1kAZCCBB6LJ2SMJb658TZKHGlGhBwlY3Y7wB9+v6on4yNtfVj3QvHsC8NZ55WfvVCOxNoBcPr48HB+6LgehgujD3simhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2Ff73+0i; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=IwnVUIFC; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="swxatZHP";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RKcm5xQj"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2Ff73+0i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IwnVUIFC"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720112669;
+	s=2020; t=1720112671;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q9glYCDIwd40nFYbMHkkHdjoLHTy0aSJSEXjHjzWcsA=;
-	b=swxatZHPBWAC+IG+qiXlFT1TWc/LWGNiZPC++0/wxCWGHerqVHyG2Keje3q59YVdK1Tqqd
-	+k0syISI5uQ0h45yOiLHUuaEcpzYQOGX2QzxolVfQchRWa40UxuPgiDSMHxNTdSE7wqXo6
-	sxjO73dIjiViKivNoixrlTzMd3uNz7apPU66zLXKilddTH/iN4UAstOns6qQ6GjZCeE2RE
-	tM7gs6JCddRIZ2z8daM88IqhldzgaQx+Ph/VBPtOGscNHeF7zftBRPsMcryUlYY6QGTNGC
-	xF8BKfh+EBvcOkNzh+eYl8SQTFZtejribcesMRUxIqMiW3G6nw4fydgSSOdHsg==
+	bh=QGqrJgSvPRRSLcKLNJWunSQ8rRcOGjf/kJDwlFzATiA=;
+	b=2Ff73+0iE5zoEOsuJ5v51gM5a/HAbvf/m1LM7H1Hydlqx3CMfN4FHiYXorP67T0LVNA3pz
+	rAzvLITwlhNBHvOc8e3uqEmIchgtihOF98HBGXHj80pc54GLSUG/ECv8lESIHgszNUntLZ
+	tFrnGMeElA+YO8CE2vAVHhDrD5jPY+6QokQJjlyDtaJvRiL3/sV25IAxcRHSJX3pldh6Kj
+	6PYPV1NUdhl6ArsobA8/RPJ3+YlqQ7TE3vE2/d0TZFULlEn4uH8iZg7aMcdBgx5d+27v83
+	HCS5WEMmr83XQ30XZ0tBz7djv5Y4ceMha0iGk3pW+IW+na9Vzi3YlbgAkNSnPg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720112669;
+	s=2020e; t=1720112671;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Q9glYCDIwd40nFYbMHkkHdjoLHTy0aSJSEXjHjzWcsA=;
-	b=RKcm5xQjFNPnSeS8C/Z+uy3aOZJrsa4NN8fvWe3rHmxN8V54uEwgijxJJZkKSCZsLiByUo
-	MrQoCspWbspl7fDA==
+	bh=QGqrJgSvPRRSLcKLNJWunSQ8rRcOGjf/kJDwlFzATiA=;
+	b=IwnVUIFCuSkY5wwfIZMyb7+D9CCI+cUZ0cpkJBStoGKFJls6kj63n7D7d89tJKCOM0Hujp
+	Xd16soKsvp6+jGCQ==
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
@@ -54,11 +54,10 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v5 3/7] perf: Enqueue SIGTRAP always via task_work.
-Date: Thu,  4 Jul 2024 19:03:37 +0200
-Message-ID: <20240704170424.1466941-4-bigeasy@linutronix.de>
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v5 6/7] perf: Don't disable preemption in perf_pending_task().
+Date: Thu,  4 Jul 2024 19:03:40 +0200
+Message-ID: <20240704170424.1466941-7-bigeasy@linutronix.de>
 In-Reply-To: <20240704170424.1466941-1-bigeasy@linutronix.de>
 References: <20240704170424.1466941-1-bigeasy@linutronix.de>
 Precedence: bulk
@@ -69,128 +68,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-A signal is delivered by raising irq_work() which works from any context
-including NMI. irq_work() can be delayed if the architecture does not
-provide an interrupt vector. In order not to lose a signal, the signal
-is injected via task_work during event_sched_out().
+perf_pending_task() is invoked in task context and disables preemption
+because perf_swevent_get_recursion_context() used to access per-CPU
+variables. The other reason is to create a RCU read section while
+accessing the perf_event.
 
-Instead going via irq_work, the signal could be added directly via
-task_work. The signal is sent to current and can be enqueued on its
-return path to userland.
+The recursion counter is no longer a per-CPU accounter so disabling
+preemption is no longer required. The RCU section is needed and must be
+created explicit.
 
-Queue signal via task_work and consider possible NMI context. Remove
-perf_event::pending_sigtrap and and use perf_event::pending_work
-instead.
+Replace the preemption-disable section with a explicit RCU-read section.
 
 Tested-by: Marco Elver <elver@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Link: https://lore.kernel.org/all/ZMAtZ2t43GXoF6tM@kernel.org/
 Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- include/linux/perf_event.h |  3 +--
- kernel/events/core.c       | 31 ++++++++++---------------------
- 2 files changed, 11 insertions(+), 23 deletions(-)
+ kernel/events/core.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 393fb13733b02..ea0d82418d854 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -781,7 +781,6 @@ struct perf_event {
- 	unsigned int			pending_wakeup;
- 	unsigned int			pending_kill;
- 	unsigned int			pending_disable;
--	unsigned int			pending_sigtrap;
- 	unsigned long			pending_addr;	/* SIGTRAP */
- 	struct irq_work			pending_irq;
- 	struct callback_head		pending_task;
-@@ -963,7 +962,7 @@ struct perf_event_context {
- 	struct rcu_head			rcu_head;
-=20
- 	/*
--	 * Sum (event->pending_sigtrap + event->pending_work)
-+	 * Sum (event->pending_work + event->pending_work)
- 	 *
- 	 * The SIGTRAP is targeted at ctx->task, as such it won't do changing
- 	 * that until the signal is delivered.
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 647abeeaeeb02..c278aefa94e76 100644
+index 1a26a9c33306a..67f5aab933c81 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -2283,17 +2283,6 @@ event_sched_out(struct perf_event *event, struct per=
-f_event_context *ctx)
- 		state =3D PERF_EVENT_STATE_OFF;
+@@ -5208,10 +5208,9 @@ static void perf_pending_task_sync(struct perf_event=
+ *event)
  	}
 =20
--	if (event->pending_sigtrap) {
--		event->pending_sigtrap =3D 0;
--		if (state !=3D PERF_EVENT_STATE_OFF &&
--		    !event->pending_work &&
--		    !task_work_add(current, &event->pending_task, TWA_RESUME)) {
--			event->pending_work =3D 1;
--		} else {
--			local_dec(&event->ctx->nr_pending);
--		}
--	}
--
- 	perf_event_set_state(event, state);
-=20
- 	if (!is_software_event(event))
-@@ -6787,11 +6776,6 @@ static void __perf_pending_irq(struct perf_event *ev=
-ent)
- 	 * Yay, we hit home and are in the context of the event.
+ 	/*
+-	 * All accesses related to the event are within the same
+-	 * non-preemptible section in perf_pending_task(). The RCU
+-	 * grace period before the event is freed will make sure all
+-	 * those accesses are complete by then.
++	 * All accesses related to the event are within the same RCU section in
++	 * perf_pending_task(). The RCU grace period before the event is freed
++	 * will make sure all those accesses are complete by then.
  	 */
- 	if (cpu =3D=3D smp_processor_id()) {
--		if (event->pending_sigtrap) {
--			event->pending_sigtrap =3D 0;
--			perf_sigtrap(event);
--			local_dec(&event->ctx->nr_pending);
--		}
- 		if (event->pending_disable) {
- 			event->pending_disable =3D 0;
- 			perf_event_disable_local(event);
-@@ -9732,21 +9716,26 @@ static int __perf_event_overflow(struct perf_event =
-*event,
- 		 */
- 		bool valid_sample =3D sample_is_allowed(event, regs);
- 		unsigned int pending_id =3D 1;
-+		enum task_work_notify_mode notify_mode;
-=20
- 		if (regs)
- 			pending_id =3D hash32_ptr((void *)instruction_pointer(regs)) ?: 1;
--		if (!event->pending_sigtrap) {
--			event->pending_sigtrap =3D pending_id;
-+
-+		notify_mode =3D in_nmi() ? TWA_NMI_CURRENT : TWA_RESUME;
-+
-+		if (!event->pending_work &&
-+		    !task_work_add(current, &event->pending_task, notify_mode)) {
-+			event->pending_work =3D pending_id;
- 			local_inc(&event->ctx->nr_pending);
-=20
- 			event->pending_addr =3D 0;
- 			if (valid_sample && (data->sample_flags & PERF_SAMPLE_ADDR))
- 				event->pending_addr =3D data->addr;
--			irq_work_queue(&event->pending_irq);
-+
- 		} else if (event->attr.exclude_kernel && valid_sample) {
- 			/*
- 			 * Should not be able to return to user space without
--			 * consuming pending_sigtrap; with exceptions:
-+			 * consuming pending_work; with exceptions:
- 			 *
- 			 *  1. Where !exclude_kernel, events can overflow again
- 			 *     in the kernel without returning to user space.
-@@ -9756,7 +9745,7 @@ static int __perf_event_overflow(struct perf_event *e=
-vent,
- 			 *     To approximate progress (with false negatives),
- 			 *     check 32-bit hash of the current IP.
- 			 */
--			WARN_ON_ONCE(event->pending_sigtrap !=3D pending_id);
-+			WARN_ON_ONCE(event->pending_work !=3D pending_id);
- 		}
+ 	rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_=
+UNINTERRUPTIBLE);
+ }
+@@ -6842,7 +6841,7 @@ static void perf_pending_task(struct callback_head *h=
+ead)
+ 	 * critical section as the ->pending_work reset. See comment in
+ 	 * perf_pending_task_sync().
+ 	 */
+-	preempt_disable_notrace();
++	rcu_read_lock();
+ 	/*
+ 	 * If we 'fail' here, that's OK, it means recursion is already disabled
+ 	 * and we won't recurse 'further'.
+@@ -6855,10 +6854,10 @@ static void perf_pending_task(struct callback_head =
+*head)
+ 		local_dec(&event->ctx->nr_pending);
+ 		rcuwait_wake_up(&event->pending_work_wait);
  	}
++	rcu_read_unlock();
 =20
+ 	if (rctx >=3D 0)
+ 		perf_swevent_put_recursion_context(rctx);
+-	preempt_enable_notrace();
+ }
+=20
+ #ifdef CONFIG_GUEST_PERF_EVENTS
 --=20
 2.45.2
 
