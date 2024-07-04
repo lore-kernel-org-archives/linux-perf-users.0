@@ -1,184 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608811AEFDD;
-	Thu,  4 Jul 2024 14:44:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B41D01B0119;
+	Thu,  4 Jul 2024 14:48:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720104269; cv=none; b=IyNBAFvSeKE4IRg3gM0WkuU2OrG6B1l4kdhrszN8f4IuN08msVw7PhGplS0nwiPhJfKbXlqxqd0s9raDsbpYiS0TuEJ5BHiEa+S+efNs40eG2zy8t1JzqT8EFU9528ATF/4dxr9G6nHobFPq581gxCg5vwFVyyCVgGsokXM/wHg=
+	t=1720104486; cv=none; b=rFEoSM/T6Gx15Mh5YQMfq4jgl23ByoxLVmb7qCTN90KOCeKxrRdw72kG1VbBg4FBgmbfUBLlyXmpvmHkAjpUC70GM2pztkHJGN66eYSaflUOJThjyEDuiINGbrInyuRSLCPdWKW3rQWXONmSXzexmkaXZz18A9vAeQKUUu3EaGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720104269; c=relaxed/simple;
-	bh=jFqIYxXq+6hlKrJxZ91m3PC8f8pW1y9uuJtUbuuX41E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KyTr/ebG0ROrIIP7beJMlp+d9ZwY/fozgCHQirgCROFsNo8OWU05ecIoBF5P75aRCjLuBT1HI00dkRD67ZYI9QB7dGWN/5q+J6ZKIIYMeULohoTQLwe9id/+CnOtyWzs/a22nru+pei/nlyty+HBlg/YjocUQkxj8JfCXoDGy10=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ww3rDDEf; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ww3rDDEf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720104268; x=1751640268;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=jFqIYxXq+6hlKrJxZ91m3PC8f8pW1y9uuJtUbuuX41E=;
-  b=Ww3rDDEfbAEbGXOnftTaZYjYQr7jrLS426hhRtmI7u6jsHZglHh4p1k1
-   mXNqCUOkvODQgwVBd3ABY+mxBlFz7iCzIhpZrrmtoLjHXS2cr3FsRwk0x
-   3DZ5FIBVgi3Q4brEX1+pjn/DNtYN1fOagcB4JiGIjNDwMmF/7dFx5SlYd
-   lMq6ojVohEfBmdRWRd1KQzO/l7uVK7IKC/fiN0AZiXX17M90l4rZvrenK
-   lJ4mGdd9S0pA3i3nxyzySCucXTKH/aoXKZHzr2uqkUGBpek1fO+iyjeOF
-   qJQEzeYDlqVnPGAegZwd/VvY5YT9mwgHfA6EeIQnSVqRqqqBDSz7K0fMh
-   A==;
-X-CSE-ConnectionGUID: hWHeUhoVTYO/A3pGugZ3QA==
-X-CSE-MsgGUID: xpy063gHS+CliJZ1R2IcEQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="39902096"
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="39902096"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:44:27 -0700
-X-CSE-ConnectionGUID: SLKlEolvShywUXzgv/ptYQ==
-X-CSE-MsgGUID: jos7xj73SBKFk6dHCTBvLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
-   d="scan'208";a="77355967"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:44:28 -0700
-Received: from [10.209.189.199] (kliang2-mobl1.ccr.corp.intel.com [10.209.189.199])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4764D204150D;
-	Thu,  4 Jul 2024 07:44:25 -0700 (PDT)
-Message-ID: <f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
-Date: Thu, 4 Jul 2024 10:44:23 -0400
+	s=arc-20240116; t=1720104486; c=relaxed/simple;
+	bh=bZYIFkT1L0I1lV75J4LbB9X5PX2ui0qO0qhHQb9jdn4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jBfVuCr9dM5kr/ihk0BKFPEtNeXPUZ43Zu91xgsDxO09qrbJloG1UcoaDOZScE7EGVZvxAj4ye/XVWIozjl3cMfmJF8T1V0F9Rt8zlFCSxJxU7OfAeBSJama1uPhTN2OL9hKJ43TRXa9ki7Ks8GcjTUnupjKZX4wOhRaQ1f69Wo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [117.22.85.168])
+	by gateway (Coremail) with SMTP id _____8DxfeshtoZmMv0AAA--.3074S3;
+	Thu, 04 Jul 2024 22:48:01 +0800 (CST)
+Received: from [192.168.0.109] (unknown [117.22.85.168])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxRcUetoZmmi87AA--.60231S3;
+	Thu, 04 Jul 2024 22:48:00 +0800 (CST)
+Message-ID: <5ab53836-5a11-a47b-042e-96c5c9e70974@loongson.cn>
+Date: Thu, 4 Jul 2024 22:47:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/11] perf/x86: Enable NMI source reporting for
- perfmon
-To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
- Sean Christopherson <seanjc@google.com>, LKML
- <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
- Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
- Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
- Peter Zijlstra <peterz@infradead.org>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
- Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- Andi Kleen <andi.kleen@intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
- Zeng Guang <guang.zeng@intel.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
- <20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.4.0
+Subject: Re: [PATCH v2 0/3] hw_breakpoint: Save privilege of access control
+ via ptrace
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+To: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
+In-Reply-To: <20240621073910.8465-1-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8AxRcUetoZmmi87AA--.60231S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw18JF43WF4xKw1xAFyxWFX_yoW8Xr47pr
+	W3u3ZxKw4DGayUu3ZIqw4Dua4S9w1kXrWjqa4DGw4Fyrn09Fy3WFZ2q3ZI9rZrZr1Iq34f
+	t3yqvrWqy3WUZ3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcbAwUU
+	UUU
 
-
-
-On 2024-06-28 4:18 p.m., Jacob Pan wrote:
-> Program the designated NMI source vector into the performance monitoring
-> interrupt (PMI) of the local vector table. PMI handler will be directly
-> invoked when its NMI is generated. This avoids the latency of calling all
-> NMI handlers blindly.
+On 6/21/24 15:39, Tiezhu Yang wrote:
+> Hi all,
 > 
-> Co-developed-by: Zeng Guang <guang.zeng@intel.com>
-> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Thank you very much for your feedbacks in the v1 patch.
+> This series is based on 6.10-rc4, cross compile tested only.
 > 
-> ---
-> v3: Program NMI source vector in PVTPC unconditionally (HPA)
-> v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
-> ---
->  arch/x86/events/core.c       | 6 ++++--
->  arch/x86/events/intel/core.c | 6 +++---
->  arch/x86/include/asm/apic.h  | 1 +
->  3 files changed, 8 insertions(+), 5 deletions(-)
+> As far as I can tell, these changes are not relevant with tools/perf,
+> on some archs such as ARM, ARM64 and LoongArch which have privilege
+> level of breakpoint, the initial aim is to make use of the value of
+> ctrl->privilege saved in decode_ctrl_reg() and then remove the check
+> whether bp virtual address is in kernel space to assign value for
+> hw->ctrl.privilege in arch_build_bp_info().
 > 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 1ef2201e48ac..be75bdcdd400 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -46,6 +46,7 @@
->  
->  struct x86_pmu x86_pmu __read_mostly;
->  static struct pmu pmu;
-> +u32 apic_perfmon_ctr = APIC_DM_NMI;>
->  DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
->  	.enabled = 1,
-> @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
->  	 * This generic handler doesn't seem to have any issues where the
->  	 * unmasking occurs so it was left at the top.
->  	 */
-> -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
->  
->  	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
->  		if (!test_bit(idx, cpuc->active_mask))
-> @@ -1723,7 +1724,8 @@ void perf_events_lapic_init(void)
->  	/*
->  	 * Always use NMI for PMU
->  	 */
-> -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +	apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
-> +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+> v2:
+>    -- Put the new member "bp_priv" at the end of the uapi
+>       struct perf_event_attr and add PERF_ATTR_SIZE_VER9.
+>    -- Update the commit message to make the goal clear.
+> 
+> Tiezhu Yang (3):
+>    perf: Add perf_event_attr::bp_priv
+>    arm: hw_breakpoint: Save privilege of access control via ptrace
+>    arm64: hw_breakpoint: Save privilege of access control via ptrace
+> 
+>   arch/arm/kernel/hw_breakpoint.c   |  4 +---
+>   arch/arm/kernel/ptrace.c          |  2 ++
+>   arch/arm64/kernel/hw_breakpoint.c | 11 ++---------
+>   arch/arm64/kernel/ptrace.c        |  2 ++
+>   include/uapi/linux/perf_event.h   |  3 +++
+>   kernel/events/hw_breakpoint.c     |  1 +
+>   6 files changed, 11 insertions(+), 12 deletions(-)
 
+Ping, any more comments? Is it possible to merge this series
+for the coming merge window?
 
-It looks like the same value is written unconditionally.
-
-Why not use a macro, e.g., APIC_DM_NMI_WITH_SOURCE, to replace the variable?
+If this patch series has no value and is not acceptable,
+or what should I do to update, please let me know.
 
 Thanks,
-Kan
+Tiezhu
 
->  }
->  
->  static int
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 38c1b1f1deaa..b4a70457c678 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -3093,7 +3093,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
->  	 * NMI handler.
->  	 */
->  	if (!late_ack && !mid_ack)
-> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
->  	intel_bts_disable_local();
->  	cpuc->enabled = 0;
->  	__intel_pmu_disable_all(true);
-> @@ -3130,7 +3130,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
->  
->  done:
->  	if (mid_ack)
-> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
->  	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
->  	cpuc->enabled = pmu_enabled;
->  	if (pmu_enabled)
-> @@ -3143,7 +3143,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
->  	 * Haswell CPUs.
->  	 */
->  	if (late_ack)
-> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
-> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
->  	return handled;
->  }
->  
-> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
-> index 9327eb00e96d..bcf8d17240c8 100644
-> --- a/arch/x86/include/asm/apic.h
-> +++ b/arch/x86/include/asm/apic.h
-> @@ -49,6 +49,7 @@ static inline void x86_32_probe_apic(void) { }
->  #endif
->  
->  extern u32 cpuid_to_apicid[];
-> +extern u32 apic_perfmon_ctr;
->  
->  #define CPU_ACPIID_INVALID	U32_MAX
->  
