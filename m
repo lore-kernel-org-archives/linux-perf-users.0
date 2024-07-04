@@ -1,57 +1,57 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1D8D1AED57;
-	Thu,  4 Jul 2024 12:44:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FA641AEFD5;
+	Thu,  4 Jul 2024 12:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720097058; cv=none; b=BpocZ7BQYmEkXtDvHos2cwVGyFqwGPWING8C3khXcKDMozoqXUV+IElokjO8ixYHd/PCLqMkgrnJOHU41gP/wab48BxyS+h9X1NRTqKH5bWjr9bJWCrAdoJiCyl8HXvM9fgpJysRp9vc4A5XEhte1PNkVXsUicn3b9iiDtL894g=
+	t=1720097062; cv=none; b=cxBDx14DwZE/ib6BcBnsIeTPmHGmy6MPHGThADB7NMchfGm9Rf2vMlRHBBhhGvSwet6xkzqRgyYON9F4kcFqfKlZz28U4rJ6GxxYNF+agby6gXwMyzYxmbspAdwWnDRKV/r4DFztU93RKdkeOlh0KJ/SrSuDIONOaXQEC7HFDyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720097058; c=relaxed/simple;
-	bh=GYaWPgJnVdGEdrYxINBzc2b+yUlQf/YFbIz/YORO0bI=;
+	s=arc-20240116; t=1720097062; c=relaxed/simple;
+	bh=BEB58jmhgFBt8hBVpkDwswlsxmcPeMe5P4dNnOzglMw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ret6jGdwjzmiylzzL2KTzNHvdgl6ZRIOsMIGZaCbgceZwbwuiWTOIDgiILWYSRFgBLn2GLqI1931emNJ/C+9YAnWT1dXJuhXTeZlqk+U+LAO2FLzaNiJ0ZVP1arZautr64a9fTQOvP46qQqWT/GqZ2fF15Nv5d1xY/1vvzEd3Uw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d122Y4kg; arc=none smtp.client-ip=209.85.210.182
+	 MIME-Version; b=SsKnAnorCf6KLAppRmdpDa1nXABA9q18VrsZS+tbYZBsoQKwE8mVa99mrfln9yA4DjGmvSlJJ653xNAuEHQp/VYsj+4gT+FBHSJvpX//8jn63N+IybVLPBbOTKCvN+pQwxEvv5UtcqQcEYlELOjBVF1o1bC/TJdynpYRfuhKrVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mUSTUsL2; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d122Y4kg"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-706627ff48dso397051b3a.1;
-        Thu, 04 Jul 2024 05:44:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUSTUsL2"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1f9de13d6baso3819645ad.2;
+        Thu, 04 Jul 2024 05:44:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720097056; x=1720701856; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720097060; x=1720701860; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=COoMomlM0SOTNQJK5GTR3BCGqXeYbavr39Ox6xrITDg=;
-        b=d122Y4kg8gGyr2GmRYO25sS714brc202+IdD6ZdgDAGgfHdc4BASo0jdfTB4rCOSJt
-         sASBiJvAbaVGeEOamH+EFi/yaJmxLKlX4BOf+w+hR4NTJljzRKmKXl2MLdUMqgvYQGJw
-         aohkUi48cRbo+gagbhlfXeyPuXe0YhPu4bxzR4/PYKkgoi2aT3lOKU1hnMf2Iz25laZI
-         ReHFRvqPhKS91kV4vIUOEiX2r/E5S0M5AP556hOKf2S9iL1bzq4S0Xvt2jYzXLuAh5Ac
-         w4G1RJEpxsR2HIIUx61Bu6XRwztSAtLqy3jGFqg6KAKuGFeto52O35FbuS5642pUYrjP
-         Q0MA==
+        bh=lkbwA9Ypz3p6Kbh2EzTzzipYEVc7UpegE9m4rYBdh/I=;
+        b=mUSTUsL2n+dkpkl9y9siNDqx8tNTh9avlz//NXmBPu37J/4A+WIPmYIkkBA/3LXn8G
+         uAuR/hrFCMhqSo7HEh5/gUxnC1VCzaGkvNhnLqqEIDbWmw3SxDP6roa7/1TrcYru2Ia9
+         Kew9cuoTPwoAuQOoW4vyCNPDGGxIxljcaxulH9v+7OdxuCzcdx75DtqnGVSWLVxNlsPO
+         hCxwthOqholaPZ+CxBKwvdjxZyynpHQxGLPYbSCyt0d972OwN9ypfUfIfNx8H4LMAJC0
+         oPSiEiTztGlNxFKxPEeRGLCbA3RXuM/XfPK5EJg1D/tQ5NH0bPepsCQkQ0ZpOk/dxxaS
+         eZKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720097056; x=1720701856;
+        d=1e100.net; s=20230601; t=1720097060; x=1720701860;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=COoMomlM0SOTNQJK5GTR3BCGqXeYbavr39Ox6xrITDg=;
-        b=mmaxJbtZmgbg627kzatfmVfE2pPv+hxmhIvA51Uu5XBBMAmFNC176yALa7m8FiW0k1
-         g7RdLdfirvx8U8yYXAFO29OI1n1RkMIpwZbUCjxjJqI+RCDn3frlDNXGGp2AqWRDh4gN
-         EE+w7voT+PqsRsVe7npWkoKnMyf+7bA90NO6BmueVamRGLC9gSR9wCqRMjfx/aM2fmnd
-         SmzNlIRvBsCLZGR4i+755Kt0rTagwpTzpfz61DFZnuRcwVaIOMxwjE8FiTRDRlP4Gvr4
-         3yGD3cVteXnStMhGiryf45i/ss8IxdixOnh/kfNeNZCoDyKMVGnY8/+jCkaOcQVLdSbT
-         0pkg==
-X-Forwarded-Encrypted: i=1; AJvYcCWlnb6XxgNcESpo7grm1bBMULeDL/uGDGrFtf1tGmDLOszyF1YrRUvoracccjQSUrzoASOlXtN0waeVCHOhuZrJ+2PJUS40pGOpEvlXwqUf95kE8it/VsRCDX/6CgXWlybbXCjwG1YmRILYMntfOA==
-X-Gm-Message-State: AOJu0YyrfsruQ6MzoiSftYts4wVPdlemtcYq0HSHLSu+NNBUvHg9xNgs
-	HrkNCoyp7FWRTiX+RahA3yACbzCFt+wJsYUkBbl47n6l8GsJ6RMfPGEATF7BP+Q=
-X-Google-Smtp-Source: AGHT+IFQKgu+wE8acHvTPhfDz1Xb562Yu0edit1U29RFHANHUK9OrNBXiWreTsVbs9cHTDSLSZW3UQ==
-X-Received: by 2002:a05:6a20:6a0d:b0:1bd:2215:923e with SMTP id adf61e73a8af0-1c0cc758353mr1673327637.4.1720097056057;
-        Thu, 04 Jul 2024 05:44:16 -0700 (PDT)
+        bh=lkbwA9Ypz3p6Kbh2EzTzzipYEVc7UpegE9m4rYBdh/I=;
+        b=PPI4ZrkjsjhN4GokWZ3j0jCJaODWfpxVi5uOMSaxrxoriCIJCKaz34oQ7GiEpZH7f1
+         TkB3VbSUJNjOIQAnQlqnZCt7kjk6BXfEHc6XNxlbYapuNLPhlR6sAVQAdbfDrJLKcPia
+         vsH59xRHz4riFJJGDNdJUwimWGCtn8ZuE7nHRrq4oRibBiNpS5tVQnz3F9GcknEZZIhj
+         HZOFj88EW5NbU2MielzDiLg0pofegHolp7gHTavhBPGgXk2GX24Vh2iXfLJJqPaC2NVv
+         HxM7RTzFC8r1R64a1ONc44Wo0Sl/M9xVhgbfJnVCjXZr91XySvJM1b21uLWssAb1s/cD
+         2HXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXTgKSKYL1zn9far2r1924+cLul/B1Ii6HmXuMNC7drC37ZFdDr1s3lvp4jHvoVAGFIs5gOI+qINaRoHGTsScBT0STnpd0TM74wXbregrS2lvV1qQyAjsGrR/EzfparnDqL5upCyiVZ8PurXu6lhw==
+X-Gm-Message-State: AOJu0Ywi7OZtNdx+UbdwABNg9xN8Mx/8uk3aABRj5wb8FA1/y7kQh2Xy
+	7FZpGKLNh2jx1kxHO+kSNLZNc1i7PJGTHSTV3rHK6MPFxi4gOb5O
+X-Google-Smtp-Source: AGHT+IH/CsRGzP6TacQehRyuxdkQycNMahPZJQy11YgaD0BoOj5GL/uSUKVi5Ji5WIZ7GtgRR7UDhA==
+X-Received: by 2002:a17:902:d2c8:b0:1f9:c1f0:7150 with SMTP id d9443c01a7336-1fb33df5a3dmr11130625ad.8.1720097060430;
+        Thu, 04 Jul 2024 05:44:20 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.44.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.44.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 05:44:15 -0700 (PDT)
+        Thu, 04 Jul 2024 05:44:20 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -61,11 +61,10 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	kernel test robot <lkp@intel.com>,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 5/8] perf test: Add landlock workload
-Date: Thu,  4 Jul 2024 20:43:51 +0800
-Message-ID: <20240704124354.904540-6-howardchu95@gmail.com>
+Subject: [PATCH v4 6/8] perf test trace_btf_enum: Add regression test for the BTF augmentation of enums in 'perf trace'
+Date: Thu,  4 Jul 2024 20:43:52 +0800
+Message-ID: <20240704124354.904540-7-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240704124354.904540-1-howardchu95@gmail.com>
 References: <20240704124354.904540-1-howardchu95@gmail.com>
@@ -77,76 +76,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-We'll use it to add a regression test for the BTF augmentation of enum
-arguments for tracepoints in 'perf trace':
+Trace landlock_add_rule syscall to see if the output is desirable.
 
-  root@x1:~# perf trace -e landlock_add_rule perf test -w landlock
-       0.000 ( 0.009 ms): perf/747160 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd8e258594, flags: 45) = -1 EINVAL (Invalid argument)
-       0.011 ( 0.002 ms): perf/747160 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd8e2585a0, flags: 45) = -1 EINVAL (Invalid argument)
+Trace the non-syscall tracepoint 'timer:hrtimer_init' and
+'timer:hrtimer_start', see if the 'mode' argument is augmented,
+the 'mode' enum argument has the prefix of 'HRTIMER_MODE_'
+in its name.
+
+Committer testing:
+
+  root@x1:~# perf test enum
+  124: perf trace enum augmentation tests                              : Ok
+  root@x1:~# perf test -v enum
+  124: perf trace enum augmentation tests                              : Ok
+  root@x1:~# perf trace -e landlock_add_rule perf test -v enum
+       0.000 ( 0.010 ms): perf/749827 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd324171d4, flags: 45) = -1 EINVAL (Invalid argument)
+       0.012 ( 0.002 ms): perf/749827 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd324171e0, flags: 45) = -1 EINVAL (Invalid argument)
+     457.821 ( 0.007 ms): perf/749830 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd4acd31e4, flags: 45) = -1 EINVAL (Invalid argument)
+     457.832 ( 0.003 ms): perf/749830 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd4acd31f0, flags: 45) = -1 EINVAL (Invalid argument)
+  124: perf trace enum augmentation tests                              : Ok
   root@x1:~#
 
-Committer notes:
-
-It was agreed on the discussion (see Link1 below) to shorten then name of
-the workload from 'landlock_add_rule' to 'landlock', and I moved it to a
-separate patch.
-
-Howard fixed the build error found by Namhyung (see Link2 below),
-changing the landlock.h header to the one in source tree, and including
-syscall.h for the '__NR_landlock_add_rule' syscall number.
-
-However, there is another problem. Because of this line in Makefile.config:
-INC_FLAGS += -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi ,
-we'll include 'tools/arch/x86/include/uapi/asm/unistd_64.h' in the source
-tree. But what we want is '/usr/include/asm/unistd_64.h'.
-This hardcoded unistd_64.h in the source tree is not cool for the landlock
-workload because it is a simplified list of syscall numbers for particular
-use cases, we need to discard this search path if we want the
-__NR_landlock_add_rule macro. To solve this problem, Howard added a
-CFLAGS_REMOVE_landlock.o to remove the flag of
--I$(srctree)/tools/arch/$(SRCARCH)/include/uapi.
-
-The problem above will not occur in some arch, say arm64
-and riscv because they include asm-generic/unistd.h instead. The arch
-that it really affects is the ones that include asm/unistd_32.h and
-asm/unistd_64.h.
-
-linux $ find . -regex './arch/.*/include/uapi/asm/unistd.h' | xargs grep -H --color=auto 'include <asm'
-./arch/x86/include/uapi/asm/unistd.h:#  include <asm/unistd_32.h>
-./arch/x86/include/uapi/asm/unistd.h:#  include <asm/unistd_x32.h>
-./arch/x86/include/uapi/asm/unistd.h:#  include <asm/unistd_64.h>
-./arch/parisc/include/uapi/asm/unistd.h:#include <asm/unistd_64.h>
-./arch/parisc/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/nios2/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/mips/include/uapi/asm/unistd.h:#include <asm/sgidefs.h>
-./arch/mips/include/uapi/asm/unistd.h:#include <asm/unistd_o32.h>
-./arch/mips/include/uapi/asm/unistd.h:#include <asm/unistd_n64.h>
-./arch/mips/include/uapi/asm/unistd.h:#include <asm/unistd_n32.h>
-./arch/s390/include/uapi/asm/unistd.h:#include <asm/unistd_64.h>
-./arch/s390/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/arm64/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/riscv/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/sparc/include/uapi/asm/unistd.h:#include <asm/unistd_64.h>
-./arch/sparc/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/xtensa/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/hexagon/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/openrisc/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/arm/include/uapi/asm/unistd.h:#include <asm/unistd-eabi.h>
-./arch/arm/include/uapi/asm/unistd.h:#include <asm/unistd-oabi.h>
-./arch/alpha/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/sh/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/m68k/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/microblaze/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/arc/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/powerpc/include/uapi/asm/unistd.h:#include <asm/unistd_32.h>
-./arch/powerpc/include/uapi/asm/unistd.h:#include <asm/unistd_64.h>
-./arch/csky/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-./arch/loongarch/include/uapi/asm/unistd.h:#include <asm-generic/unistd.h>
-
-Reported-by: Namhyung Kim <namhyung@kernel.org>
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/r/202406250302.E4WaX9Ud-lkp@intel.com/
-Closes: https://lore.kernel.org/linux-perf-users/Zn8TfuQi0iq7bMVD@google.com/
 Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -155,100 +105,80 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link1: https://lore.kernel.org/lkml/CAH0uvohaypdTV6Z7O5QSK+va_qnhZ6BP6oSJ89s1c1E0CjgxDA@mail.gmail.com
-Link2: https://lore.kernel.org/linux-perf-users/Zn8TfuQi0iq7bMVD@google.com/
+Link: https://lore.kernel.org/lkml/20240619082042.4173621-6-howardchu95@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/builtin-test.c       |  1 +
- tools/perf/tests/tests.h              |  1 +
- tools/perf/tests/workloads/Build      |  2 ++
- tools/perf/tests/workloads/landlock.c | 38 +++++++++++++++++++++++++++
- 4 files changed, 42 insertions(+)
- create mode 100644 tools/perf/tests/workloads/landlock.c
+ tools/perf/tests/shell/trace_btf_enum.sh | 61 ++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
 
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index c3d84b67ca8e..470a9709427d 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -152,6 +152,7 @@ static struct test_workload *workloads[] = {
- 	&workload__sqrtloop,
- 	&workload__brstack,
- 	&workload__datasym,
-+	&workload__landlock,
- };
- 
- static int num_subtests(const struct test_suite *t)
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index 3aa7701ee0e9..6ea2be86b7bf 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
- DECLARE_WORKLOAD(sqrtloop);
- DECLARE_WORKLOAD(brstack);
- DECLARE_WORKLOAD(datasym);
-+DECLARE_WORKLOAD(landlock);
- 
- extern const char *dso_to_test;
- extern const char *test_objdump_path;
-diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
-index 48bf0d3b0f3d..e132d5d95983 100644
---- a/tools/perf/tests/workloads/Build
-+++ b/tools/perf/tests/workloads/Build
-@@ -6,8 +6,10 @@ perf-test-y += leafloop.o
- perf-test-y += sqrtloop.o
- perf-test-y += brstack.o
- perf-test-y += datasym.o
-+perf-test-y += landlock.o
- 
- CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
- CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
- CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
-+CFLAGS_REMOVE_landlock.o  = -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi
-diff --git a/tools/perf/tests/workloads/landlock.c b/tools/perf/tests/workloads/landlock.c
-new file mode 100644
-index 000000000000..c4f29b17f2a7
+diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
+new file mode 100755
+index 000000000000..7d407b52bea5
 --- /dev/null
-+++ b/tools/perf/tests/workloads/landlock.c
-@@ -0,0 +1,38 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#include <sys/syscall.h> // for __NR_landlock_add_rule
-+#include <linux/compiler.h>
-+#include <unistd.h>
-+#include "../tests.h"
-+#ifdef __NR_landlock_add_rule
-+#include "../../../../include/uapi/linux/landlock.h"
-+#endif
++++ b/tools/perf/tests/shell/trace_btf_enum.sh
+@@ -0,0 +1,61 @@
++#!/bin/sh
++# perf trace enum augmentation tests
++# SPDX-License-Identifier: GPL-2.0
 +
-+/* This workload is used only to test enum augmentation with BTF in perf trace */
-+static int landlock(int argc __maybe_unused, const char **argv __maybe_unused)
-+{
-+#if defined(__NR_landlock_add_rule) && defined(HAVE_LIBBPF_SUPPORT)
-+	int fd = 11, flags = 45;
++err=0
++set -e
 +
-+	struct landlock_path_beneath_attr path_beneath_attr = {
-+		.allowed_access = LANDLOCK_ACCESS_FS_READ_FILE,
-+		.parent_fd = 14,
-+	};
++syscall="landlock_add_rule"
++non_syscall="timer:hrtimer_init,timer:hrtimer_start"
 +
-+	struct landlock_net_port_attr net_port_attr = {
-+		.port = 19,
-+		.allowed_access = LANDLOCK_ACCESS_NET_CONNECT_TCP,
-+	};
++TESTPROG="perf test -w landlock"
 +
-+	syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_PATH_BENEATH,
-+		&path_beneath_attr, flags);
++. "$(dirname $0)"/lib/probe.sh
++skip_if_no_perf_trace || exit 2
 +
-+	syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_NET_PORT,
-+		&net_port_attr, flags);
-+
-+	return 0;
-+#else
-+	return 2;
-+#endif
++check_vmlinux() {
++  echo "Checking if vmlinux exists"
++  if ! ls /sys/kernel/btf/vmlinux 1>/dev/null 2>&1
++  then
++    echo "trace+enum test [Skipped missing vmlinux BTF support]"
++    err=2
++  fi
 +}
 +
-+DEFINE_WORKLOAD(landlock);
++trace_landlock() {
++  echo "Tracing syscall ${syscall}"
++
++  # test flight just to see if landlock_add_rule and libbpf are available
++  $TESTPROG
++
++  if perf trace -e $syscall $TESTPROG 2>&1 | \
++     grep -q -E ".*landlock_add_rule\(ruleset_fd: 11, rule_type: (LANDLOCK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags: 45\) = -1.*"
++  then
++    err=0
++  else
++    err=1
++  fi
++}
++
++trace_non_syscall() {
++  echo "Tracing non-syscall tracepoint ${non-syscall}"
++  if perf trace -e $non_syscall --max-events=1 2>&1 | \
++     grep -q -E '.*timer:hrtimer_.*\(.*mode: HRTIMER_MODE_.*\)$'
++  then
++    err=0
++  else
++    err=1
++  fi
++}
++
++check_vmlinux
++
++if [ $err = 0 ]; then
++  trace_landlock
++fi
++
++if [ $err = 0 ]; then
++  trace_non_syscall
++fi
++
++exit $err
 -- 
 2.45.2
 
