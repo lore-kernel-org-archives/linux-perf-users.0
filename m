@@ -1,154 +1,94 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F307EC152;
-	Thu,  4 Jul 2024 01:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AD7BE5E;
+	Thu,  4 Jul 2024 01:45:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720057390; cv=none; b=qAIRtGyUxNZfVdYRnX6gQv6wXATWZ1LkXZZqJWjRGCbf9MS7Px4J3+NB04HrHD6N7cZgmvCryH07C7IzaWVz+ajAYBWJy8MY8x5+AVstreyYPX+IMz0aXQ1963quqtH2mm+1glJ6NzCkOz1eeEE+nr4fEPTXwWEAUB/dx1jOmjM=
+	t=1720057531; cv=none; b=uNkZCWeJx0RKUQLPjm0VgCVOJMHyWgTlw3d1qUkzHP0RpkkrYI+K2NU3t8Do+fPRfAkWbDaJGIq8rF5VO2cxtAylY43ExC8KkDk+/+qPMsJORZKa6Nwi43w8wTiBe0U97hep1qUMpN0kTvCFSRzfgUpkSzK/BRO9bj2vmitGd+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720057390; c=relaxed/simple;
-	bh=ovAEM6Rvcy4XprFzuvo3MgKCDzwxloIVv7pcklQifpc=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=VEkiAEKB5c+GMVIus1PcylDc74cxveRwfIY46JCcXueXX6kj4dyXDWNHhJSRQUgt8EBswMjXds3LrkDhYkaVv7L9fPyTKrLct9XfGjUr8VDt4mNHh4CiCrIQcNiSUoMzVPBsCs9W+Rf5usrxVW9++O5tNP0uDIpG4QSPth720SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WDzrl0F3NzdfpT;
-	Thu,  4 Jul 2024 09:41:27 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 72933180088;
-	Thu,  4 Jul 2024 09:43:04 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 4 Jul 2024 09:43:04 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Thu, 4 Jul 2024 09:43:04 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Namhyung Kim <namhyung@kernel.org>
-CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
-	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
- Melo" <acme@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Nick Desaulniers
-	<ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
-	<justinstitt@google.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "llvm@lists.linux.dev"
-	<llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab, Beijing)"
-	<hw.huiwang@huawei.com>
-Subject: Re: [PATCH v5 8/8] perf buildid-cache: recognize vdso when adding
- files
-Thread-Topic: [PATCH v5 8/8] perf buildid-cache: recognize vdso when adding
- files
-Thread-Index: AQHazDb6e2IQdcHaU0qwMDy1hVwfULHlIBIAgACubIA=
-Date: Thu, 4 Jul 2024 01:43:03 +0000
-Message-ID: <ec6b22fe1246427a80086e46fb34d765@huawei.com>
-References: <20240702041837.5306-1-changbin.du@huawei.com>
- <20240702041837.5306-9-changbin.du@huawei.com> <ZoXcQunHBf0Z1JIW@google.com>
-In-Reply-To: <ZoXcQunHBf0Z1JIW@google.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <53563D11EC803F4881F15B869C0FB87B@huawei.com>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1720057531; c=relaxed/simple;
+	bh=SPvd8VwZD/E153NMdegZE4h/pGxOsQ6Y4bfsLGCF5kk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nM5WojNe+IWFKu02qSk14gvADmbmpuaJjFNkn7pWCti47xmo7FdVdRSM2vQNOQs8ukaGBgeg2/dCeYMfMEVvEu8JRSz6lgorNrR/8P695eRBudNX6jnbvnqFvHKDE7uoV76PegFhRglC2aUrGMtt1hwCWCdoM0kgchwSmdyLDRE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70af5c40f8aso125118b3a.1;
+        Wed, 03 Jul 2024 18:45:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720057529; x=1720662329;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+YikNPi3mD5FM+s7PD6odmr1mocmGFb6M7JPjoY2/qg=;
+        b=ovDolLwxPrS686Hhy4eCSeUjuUUArHLMgw374fFeYIkUxci5R7qrKHzack8FhKDQja
+         k0emV2C0IvdiMTrzeOUPBtqXvOIWw0vCqjYSDZV6u9GtRQ4y/jp1XFCFLMd7Wk9UmQCD
+         VfroX0RuHOayxZbVW9stgDPciyk6NoFpqO8RGJkHcN6X117k5QJiQzdCOhR0Q9BDRr0N
+         hqEoT3W55Cge0gU7in+wrh/LfdoPWyJBGCeKw5MYWAbMcMZwJrPRQL6VHzsnh1ZQB7fj
+         pJO86Ss57cpIppI9QY8m6EPlFHFSnc2VWTEO0+0t+WZVDsFkgncFFVaMB6PUeXDm04WC
+         /ISg==
+X-Forwarded-Encrypted: i=1; AJvYcCVm/h6Y+WuQk6ecWMRFAi+DMk4ooGGH9cG/LuENPXj9AoWA1WMouTEh/meTTyCMHRFmM4pCn8eNBWsO0NIKUX7jSO1vKFnUH/hdOecQ1vVvGuFYueYn7gISK4B+d0fEyvRlqK3XtOVNNk2SjZTUFx0TLHN2xAA2o79KhodN7ljxxneZ7ahrFDJn8W/KCDC4vwsHCQ==
+X-Gm-Message-State: AOJu0YyzIJjqxDUw0OXLWCj6AORgvr/03FRF0O834DV3P5pj/Qq77O0I
+	8rCgp3eDiEgX+PJWivrvYPkB4FQAw9yjIazCTck9IG3EYD+7vRSG82UTxxQ3b8M7x0rDttF0f81
+	TDlUn/FiIkQSCrwVJDSmzaOzYhKc=
+X-Google-Smtp-Source: AGHT+IGrIktkFkR+oCtQa6tf3fiVVVoeQYpsPJ8mYibF+5dXfWH9YYbLGVSBQFJHg8B/JlVl4sg1Fc3jslXvRF8wQjU=
+X-Received: by 2002:a05:6a00:2d0c:b0:70a:f0f1:480f with SMTP id
+ d2e1a72fcca58-70b0092ada1mr300137b3a.3.1720057529184; Wed, 03 Jul 2024
+ 18:45:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240628202608.3273329-1-amadio@gentoo.org> <20240628203432.3273625-1-amadio@gentoo.org>
+ <20240628203432.3273625-3-amadio@gentoo.org> <ZoSP_vFMVl83pxES@google.com>
+ <20240703153617.650fcc1c@rorschach.local.home> <ZoXDoajJqDiIcgwg@google.com> <20240703190502.392be247@rorschach.local.home>
+In-Reply-To: <20240703190502.392be247@rorschach.local.home>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 3 Jul 2024 18:45:18 -0700
+Message-ID: <CAM9d7cgVFRO-NR+bFNxB6SgWuxyr54LeSvnwHD4r+ncFhaDutg@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] tools: Make pkg-config dependency checks usable by
+ other tools
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: Guilherme Amadio <amadio@gentoo.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>, linux-perf-users@vger.kernel.org, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi, Namhyung,
-On Wed, Jul 03, 2024 at 04:18:26PM -0700, Namhyung Kim wrote:
-> Hello,
->=20
-> On Tue, Jul 02, 2024 at 12:18:37PM +0800, Changbin Du wrote:
-> > Identify vdso by file name matching. The vdso objects have name
-> > as vdso[32,64].so[.dbg].
-> >=20
-> > $ perf buildid-cache -a /work/linux/arch/x86/entry/vdso/vdso64.so.dbg
-> >=20
-> > Without this change, adding vdso using above command actually will neve=
-r
-> > be used.
->=20
-> Can we handle /tmp/perf-vdso.so-XXXXXX too?
+On Wed, Jul 3, 2024 at 4:05=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
 >
-This temporary path is already handled by perf_session__cache_build_ids()->=
-...->dso__cache_build_id().
+> On Wed, 3 Jul 2024 14:33:21 -0700
+> Namhyung Kim <namhyung@kernel.org> wrote:
+>
+> > On Wed, Jul 03, 2024 at 03:36:17PM -0400, Steven Rostedt wrote:
+> > > On Tue, 2 Jul 2024 16:40:46 -0700
+> > > Namhyung Kim <namhyung@kernel.org> wrote:
+> > >
+> > > > +CC Steve and linux-trace-kernel list.
+> > >
+> > > There doesn't seem to be a cover page, and it doesn't apply on
+> > > v6.10-rc6 nor on tip.
+> >
+> > Oh, sorry.  You can find the whole series here.
+> >
+> > https://lore.kernel.org/linux-perf-users/20240628203432.3273625-1-amadi=
+o@gentoo.org/#r
+> >
+> > I think this is based on the perf-tools-next tree and depends on perf
+> > changes.  If you're ok with the change, I can carry it in the perf tree=
+.
+> >
+>
+> Hmm, I checked out git://git.kernel.org/pub/scm/linux/kernel/git/perf/per=
+f-tools-next.git
+> master branch, and it looks to contain just Linus's changes. Is there a s=
+pecific branch?
 
-> Thanks,
-> Namhyung
->=20
-> >=20
-> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
-> > ---
-> >  tools/perf/builtin-buildid-cache.c | 26 +++++++++++++++++++++++++-
-> >  1 file changed, 25 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/tools/perf/builtin-buildid-cache.c b/tools/perf/builtin-bu=
-ildid-cache.c
-> > index b0511d16aeb6..8edea9044a65 100644
-> > --- a/tools/perf/builtin-buildid-cache.c
-> > +++ b/tools/perf/builtin-buildid-cache.c
-> > @@ -172,6 +172,30 @@ static int build_id_cache__add_kcore(const char *f=
-ilename, bool force)
-> >  	return 0;
-> >  }
-> > =20
-> > +static bool filename_is_vdso(const char *filename)
-> > +{
-> > +	char *fname, *bname;
-> > +	static const char * const vdso_names[] =3D {
-> > +		"vdso.so", "vdso32.so", "vdso64.so", "vdsox32.so"
-> > +	};
-> > +
-> > +	fname =3D strdup(filename);
-> > +	if (!fname) {
-> > +		pr_err("no mememory\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	bname =3D basename(fname);
-> > +	if (!bname)
-> > +		return false;
-> > +
-> > +	for (unsigned int i =3D 0; i < ARRAY_SIZE(vdso_names); i++) {
-> > +		if (!strncmp(bname, vdso_names[i], strlen(vdso_names[i])))
-> > +			return true;
-> > +	}
-> > +	return false;
-> > +}
-> > +
-> >  static int build_id_cache__add_file(const char *filename, struct nsinf=
-o *nsi)
-> >  {
-> >  	char sbuild_id[SBUILD_ID_SIZE];
-> > @@ -189,7 +213,7 @@ static int build_id_cache__add_file(const char *fil=
-ename, struct nsinfo *nsi)
-> > =20
-> >  	build_id__sprintf(&bid, sbuild_id);
-> >  	err =3D build_id_cache__add_s(sbuild_id, filename, nsi,
-> > -				    false, false);
-> > +				    false, filename_is_vdso(filename));
-> >  	pr_debug("Adding %s %s: %s\n", sbuild_id, filename,
-> >  		 err ? "FAIL" : "Ok");
-> >  	return err;
-> > --=20
-> > 2.34.1
-> >=20
->=20
+Yep, it's the same as tree: 'perf-tools-next'
 
---=20
-Cheers,
-Changbin Du
+Thanks,
+Namhyung
