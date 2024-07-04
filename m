@@ -1,341 +1,184 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E111B0111;
-	Thu,  4 Jul 2024 12:44:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 608811AEFDD;
+	Thu,  4 Jul 2024 14:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720097071; cv=none; b=Qv1JkIcFL4D2GtHY4VJI7agq2puLykV48qaxajTlmJsEIEzYWnysAKHTx/y7yvoscFZE047I7vM+XxubqQKppxcjQjVeEyTCRSGNODtP4mak15QtkjgxxOStLdEsexq6AHG+MOT/UH1EO4hl1tqiCE6Sqq75uGo6/dMHni4gFaQ=
+	t=1720104269; cv=none; b=IyNBAFvSeKE4IRg3gM0WkuU2OrG6B1l4kdhrszN8f4IuN08msVw7PhGplS0nwiPhJfKbXlqxqd0s9raDsbpYiS0TuEJ5BHiEa+S+efNs40eG2zy8t1JzqT8EFU9528ATF/4dxr9G6nHobFPq581gxCg5vwFVyyCVgGsokXM/wHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720097071; c=relaxed/simple;
-	bh=nNpo0ZuXzYf3+WtjOjL0cQD9p4VX8Z4rtX7xIBWGZnA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c10dmNxXxHYh7rj7QITOFcC+ziJiL7s0XQZwjY2wHHKStZG6edEogYt5KbsKaUGEAwSm0SB1YgCJ3+67wSqE98/8jjc5n/Nt7HGvIMUJLd2TZFsQkphGmHA38bF8H4+SbPxFiYEzmYeybMCI1dKB3VrnTcie7u7QRw7lYPxUirE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htB/cbBj; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720104269; c=relaxed/simple;
+	bh=jFqIYxXq+6hlKrJxZ91m3PC8f8pW1y9uuJtUbuuX41E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KyTr/ebG0ROrIIP7beJMlp+d9ZwY/fozgCHQirgCROFsNo8OWU05ecIoBF5P75aRCjLuBT1HI00dkRD67ZYI9QB7dGWN/5q+J6ZKIIYMeULohoTQLwe9id/+CnOtyWzs/a22nru+pei/nlyty+HBlg/YjocUQkxj8JfCXoDGy10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ww3rDDEf; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htB/cbBj"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fa3bdd91c1so3788055ad.2;
-        Thu, 04 Jul 2024 05:44:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720097070; x=1720701870; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dOZZRsIMsFCEeUFHxyJsA3wcVIrREBOvAUEAQZ8gA8w=;
-        b=htB/cbBjgpOdESnDp9Fkqr/CaXdoX6Z7S4b7R/7a9j5jeQ8PAs1hn6mkrbSc6Ijr8M
-         0BxRNKWjdOajjKVyZ/THys7QDcn/wsjwJ0ZZh51JEA7hywPVswjFOSoYLwWZl40BQ/1t
-         4uNFQ3BN9AXgo56LCTKtf1QMP3mmrSV/ILP9nlXQeuDN7XmuX+bKZvqZfE4A+HrKt+4P
-         c8P/JFdkgQMAwgdUPlxGfHsD8HFxnXAtg8hpfG8Y2tuOUokvhgnOYFqf0dfpr3lVyklJ
-         TRItiBORI0ysaD3/+CYNs09PxbFHi2KJUrk0/cnrHKBp9s+kZoceaUjKF/Lqm4zL3wfT
-         c/Qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720097070; x=1720701870;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dOZZRsIMsFCEeUFHxyJsA3wcVIrREBOvAUEAQZ8gA8w=;
-        b=XzBIDuqzOHE8q0Y9uzD4iJ7r1fJT/OmL6ciCVxAS8GUpUu93eBcLAb266ngoWRNJkG
-         i/VjXxeZpojP1N6ar0Dz3URK3+7rr0mAVWE580fID46AfgLN9W/28AuR+vTT42+3TW/Y
-         7tziAoYVBn4Lv08KsxUpenY6f9FpQQX/u4zP+R8Jqf3076JbXJpXjUcferulpt0ClN6s
-         9oJFBXvgi26WURgE1/cUxgVbLbapZOZIQIeFW2VTHYK5hqF6BdTiOWmAGc7jF2w6Rd73
-         I7BpikpvnoebxYgTXkT4ExHBk2YrqIm/udYSgzS90RJhuNliKK6FSLWo5KC5YWt1sXSC
-         qQpA==
-X-Forwarded-Encrypted: i=1; AJvYcCWOENkYMCOD1NdZXSWWTYjhPkSQUS0o1hTBvVsp4F1qPeD763BlgDfUdHCunEZMZpefn9cJ71OUBaJq7P1U51IBVlKAzumg9WVSCfltls2Jh11gZdUvy9UPqFyM6T3vg7xZfpWxqWwB0yrYi40d1A==
-X-Gm-Message-State: AOJu0YxYiDcuK6dfn1GsALrIUnoArcZoIg9KDImHwL39RSGgM4/Zq6Hv
-	9w8vUzh290hB5jJMv219lG6IIOvBADaf40e+ZSI5lN3YDS4QIt0d
-X-Google-Smtp-Source: AGHT+IEREQa3V1TZYqMuGAY3TF8kKhDOTUkaY1pjSYNzaZUov6MNMKlJxwunKwFWZ7sRkP3iD/g/xA==
-X-Received: by 2002:a17:902:d2d1:b0:1f9:d6cc:e504 with SMTP id d9443c01a7336-1fb33e1890fmr16190015ad.24.1720097069478;
-        Thu, 04 Jul 2024 05:44:29 -0700 (PDT)
-Received: from localhost.localdomain ([120.229.49.158])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac1598d35sm121578245ad.285.2024.07.04.05.44.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Jul 2024 05:44:29 -0700 (PDT)
-From: Howard Chu <howardchu95@gmail.com>
-To: acme@kernel.org
-Cc: adrian.hunter@intel.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	kan.liang@linux.intel.com,
-	namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v4 8/8] perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
-Date: Thu,  4 Jul 2024 20:43:54 +0800
-Message-ID: <20240704124354.904540-9-howardchu95@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240704124354.904540-1-howardchu95@gmail.com>
-References: <20240704124354.904540-1-howardchu95@gmail.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ww3rDDEf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720104268; x=1751640268;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=jFqIYxXq+6hlKrJxZ91m3PC8f8pW1y9uuJtUbuuX41E=;
+  b=Ww3rDDEfbAEbGXOnftTaZYjYQr7jrLS426hhRtmI7u6jsHZglHh4p1k1
+   mXNqCUOkvODQgwVBd3ABY+mxBlFz7iCzIhpZrrmtoLjHXS2cr3FsRwk0x
+   3DZ5FIBVgi3Q4brEX1+pjn/DNtYN1fOagcB4JiGIjNDwMmF/7dFx5SlYd
+   lMq6ojVohEfBmdRWRd1KQzO/l7uVK7IKC/fiN0AZiXX17M90l4rZvrenK
+   lJ4mGdd9S0pA3i3nxyzySCucXTKH/aoXKZHzr2uqkUGBpek1fO+iyjeOF
+   qJQEzeYDlqVnPGAegZwd/VvY5YT9mwgHfA6EeIQnSVqRqqqBDSz7K0fMh
+   A==;
+X-CSE-ConnectionGUID: hWHeUhoVTYO/A3pGugZ3QA==
+X-CSE-MsgGUID: xpy063gHS+CliJZ1R2IcEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11123"; a="39902096"
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="39902096"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:44:27 -0700
+X-CSE-ConnectionGUID: SLKlEolvShywUXzgv/ptYQ==
+X-CSE-MsgGUID: jos7xj73SBKFk6dHCTBvLg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,183,1716274800"; 
+   d="scan'208";a="77355967"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Jul 2024 07:44:28 -0700
+Received: from [10.209.189.199] (kliang2-mobl1.ccr.corp.intel.com [10.209.189.199])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4764D204150D;
+	Thu,  4 Jul 2024 07:44:25 -0700 (PDT)
+Message-ID: <f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
+Date: Thu, 4 Jul 2024 10:44:23 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 08/11] perf/x86: Enable NMI source reporting for
+ perfmon
+To: Jacob Pan <jacob.jun.pan@linux.intel.com>, X86 Kernel <x86@kernel.org>,
+ Sean Christopherson <seanjc@google.com>, LKML
+ <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Xin Li <xin3.li@intel.com>, linux-perf-users@vger.kernel.org,
+ Peter Zijlstra <peterz@infradead.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>, Tony Luck <tony.luck@intel.com>,
+ Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ Andi Kleen <andi.kleen@intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
+ Zeng Guang <guang.zeng@intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+ <20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-This is to pave the way for other BTF types, i.e. we try to find BTF
-type then use things like btf_is_enum(btf_type) that we cached to find
-the right strtoul and scnprintf routines.
 
-For now only enum is supported, all the other types simple return zero
-for scnprintf which makes it have the same behaviour as when BTF isn't
-available, i.e. fallback to no pretty printing. Ditto for strtoul.
+On 2024-06-28 4:18 p.m., Jacob Pan wrote:
+> Program the designated NMI source vector into the performance monitoring
+> interrupt (PMI) of the local vector table. PMI handler will be directly
+> invoked when its NMI is generated. This avoids the latency of calling all
+> NMI handlers blindly.
+> 
+> Co-developed-by: Zeng Guang <guang.zeng@intel.com>
+> Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> 
+> ---
+> v3: Program NMI source vector in PVTPC unconditionally (HPA)
+> v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
+> ---
+>  arch/x86/events/core.c       | 6 ++++--
+>  arch/x86/events/intel/core.c | 6 +++---
+>  arch/x86/include/asm/apic.h  | 1 +
+>  3 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 1ef2201e48ac..be75bdcdd400 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -46,6 +46,7 @@
+>  
+>  struct x86_pmu x86_pmu __read_mostly;
+>  static struct pmu pmu;
+> +u32 apic_perfmon_ctr = APIC_DM_NMI;>
+>  DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+>  	.enabled = 1,
+> @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+>  	 * This generic handler doesn't seem to have any issues where the
+>  	 * unmasking occurs so it was left at the top.
+>  	 */
+> -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+>  
+>  	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+>  		if (!test_bit(idx, cpuc->active_mask))
+> @@ -1723,7 +1724,8 @@ void perf_events_lapic_init(void)
+>  	/*
+>  	 * Always use NMI for PMU
+>  	 */
+> -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +	apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
+> +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
 
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~#
 
-Tested-by: Howard Chu <howardchu95@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Howard Chu <howardchu95@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Howard Chu <howardchu95@gmail.com>
----
- tools/perf/builtin-trace.c       | 101 +++++++++++++++++--------------
- tools/perf/trace/beauty/beauty.h |   1 +
- 2 files changed, 56 insertions(+), 46 deletions(-)
+It looks like the same value is written unconditionally.
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index d9104fc4f61f..488c2cedc110 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -111,7 +111,6 @@ struct syscall_arg_fmt {
- 	const char *name;
- 	u16	   nr_entries; // for arrays
- 	bool	   show_zero;
--	bool	   is_enum;
- #ifdef HAVE_LIBBPF_SUPPORT
- 	const struct btf_type *type;
- #endif
-@@ -910,33 +909,46 @@ static size_t syscall_arg__scnprintf_getrandom_flags(char *bf, size_t size,
- #define SCA_GETRANDOM_FLAGS syscall_arg__scnprintf_getrandom_flags
- 
- #ifdef HAVE_LIBBPF_SUPPORT
--static int syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
-+static void syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
- {
- 	int id;
- 
--	// Already cached?
--	if (arg_fmt->type != NULL)
--		return 0;
--
- 	type = strstr(type, "enum ");
- 	if (type == NULL)
--		return -1;
-+		return;
- 
- 	type += 5; // skip "enum " to get the enumeration name
- 
- 	id = btf__find_by_name(btf, type);
- 	if (id < 0)
--		return -1;
-+		return;
- 
- 	arg_fmt->type = btf__type_by_id(btf, id);
--	return arg_fmt->type == NULL ? -1 : 0;
- }
- 
- static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struct syscall_arg *arg, u64 *val)
-+{
-+	const struct btf_type *bt = arg->fmt->type;
-+	struct btf *btf = arg->trace->btf;
-+	struct btf_enum *be = btf_enum(bt);
-+
-+	for (int i = 0; i < btf_vlen(bt); ++i, ++be) {
-+		const char *name = btf__name_by_offset(btf, be->name_off);
-+		int max_len = max(size, strlen(name));
-+
-+		if (strncmp(name, bf, max_len) == 0) {
-+			*val = be->val;
-+			return true;
-+		}
-+	}
-+
-+	return false;
-+}
-+
-+static bool syscall_arg__strtoul_btf_type(char *bf, size_t size, struct syscall_arg *arg, u64 *val)
- {
- 	const struct btf_type *bt;
--	char *type = arg->parm;
--	struct btf_enum *be;
-+	char *type = arg->type_name;
- 	struct btf *btf;
- 
- 	trace__load_vmlinux_btf(arg->trace);
-@@ -945,20 +957,19 @@ static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struct syscall_
- 	if (btf == NULL)
- 		return false;
- 
--	if (syscall_arg_fmt__cache_btf_enum(arg->fmt, btf, type) < 0)
--		return false;
-+	if (arg->fmt->type == NULL) {
-+		// See if this is an enum
-+		syscall_arg_fmt__cache_btf_enum(arg->fmt, btf, type);
-+	}
- 
-+	// Now let's see if we have a BTF type resolved
- 	bt = arg->fmt->type;
--	be = btf_enum(bt);
--	for (int i = 0; i < btf_vlen(bt); ++i, ++be) {
--		const char *name = btf__name_by_offset(btf, be->name_off);
--		int max_len = max(size, strlen(name));
-+	if (bt == NULL)
-+		return false;
- 
--		if (strncmp(name, bf, max_len) == 0) {
--			*val = be->val;
--			return true;
--		}
--	}
-+	// If it is an enum:
-+	if (btf_is_enum(arg->fmt->type))
-+		return syscall_arg__strtoul_btf_enum(bf, size, arg, val);
- 
- 	return false;
- }
-@@ -978,23 +989,23 @@ static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, c
- 	return 0;
- }
- 
--static size_t trace__btf_enum_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
--					size_t size, int val, char *type)
--{
--	if (syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type) < 0)
--		return 0;
--
--	return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
--}
--
- static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
- 				   size_t size, int val, char *type)
- {
- 	if (trace->btf == NULL)
- 		return 0;
- 
--	if (arg_fmt->is_enum)
--		return trace__btf_enum_scnprintf(trace, arg_fmt, bf, size, val, type);
-+	if (arg_fmt->type == NULL) {
-+		// Check if this is an enum and if we have the BTF type for it.
-+		syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type);
-+	}
-+
-+	// Did we manage to find a BTF type for the syscall/tracepoint argument?
-+	if (arg_fmt->type == NULL)
-+		return 0;
-+
-+	if (btf_is_enum(arg_fmt->type))
-+		return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
- 
- 	return 0;
- }
-@@ -1007,14 +1018,14 @@ static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, struct sy
- 	return 0;
- }
- 
--static bool syscall_arg__strtoul_btf_enum(char *bf __maybe_unused, size_t size __maybe_unused,
-+static bool syscall_arg__strtoul_btf_type(char *bf __maybe_unused, size_t size __maybe_unused,
- 					  struct syscall_arg *arg __maybe_unused, u64 *val __maybe_unused)
- {
- 	return false;
- }
- #endif // HAVE_LIBBPF_SUPPORT
- 
--#define STUL_BTF_ENUM syscall_arg__strtoul_btf_enum
-+#define STUL_BTF_TYPE syscall_arg__strtoul_btf_type
- 
- #define STRARRAY(name, array) \
- 	  { .scnprintf	= SCA_STRARRAY, \
-@@ -1887,7 +1898,6 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			continue;
- 
- 		len = strlen(field->name);
--		arg->is_enum = false;
- 
- 		if (strcmp(field->type, "const char *") == 0 &&
- 		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
-@@ -1915,8 +1925,8 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			 */
- 			arg->scnprintf = SCA_FD;
- 		} else if (strstr(field->type, "enum") && use_btf != NULL) {
--			*use_btf = arg->is_enum = true;
--			arg->strtoul = STUL_BTF_ENUM;
-+			*use_btf = true;
-+			arg->strtoul = STUL_BTF_TYPE;
- 		} else {
- 			const struct syscall_arg_fmt *fmt =
- 				syscall_arg_fmt__find_by_name(field->name);
-@@ -2236,10 +2246,13 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			/*
- 			 * Suppress this argument if its value is zero and show_zero
- 			 * property isn't set.
-+			 *
-+			 * If it has a BTF type, then override the zero suppression knob
-+			 * as the common case is for zero in an enum to have an associated entry.
- 			 */
- 			if (val == 0 && !trace->show_zeros &&
- 			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].show_zero) &&
--			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].is_enum))
-+			    !(sc->arg_fmt && sc->arg_fmt[arg.idx].strtoul == STUL_BTF_TYPE))
- 				continue;
- 
- 			printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-@@ -2942,7 +2955,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
- 		val = syscall_arg_fmt__mask_val(arg, &syscall_arg, val);
- 
- 		/* Suppress this argument if its value is zero and show_zero property isn't set. */
--		if (val == 0 && !trace->show_zeros && !arg->show_zero && !arg->is_enum)
-+		if (val == 0 && !trace->show_zeros && !arg->show_zero && arg->strtoul != STUL_BTF_TYPE)
- 			continue;
- 
- 		printed += scnprintf(bf + printed, size - printed, "%s", printed ? ", " : "");
-@@ -3910,14 +3923,10 @@ static int trace__expand_filter(struct trace *trace, struct evsel *evsel)
- 				struct syscall_arg syscall_arg = {
- 					.trace = trace,
- 					.fmt   = fmt,
-+					.type_name = type,
-+					.parm = fmt->parm,
- 				};
- 
--				if (fmt->is_enum) {
--					syscall_arg.parm = type;
--				} else {
--					syscall_arg.parm = fmt->parm;
--				}
--
- 				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
- 					char *n, expansion[19];
- 					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
-diff --git a/tools/perf/trace/beauty/beauty.h b/tools/perf/trace/beauty/beauty.h
-index 78d10d92d351..3ed11e18ee2d 100644
---- a/tools/perf/trace/beauty/beauty.h
-+++ b/tools/perf/trace/beauty/beauty.h
-@@ -113,6 +113,7 @@ struct syscall_arg {
- 	struct thread *thread;
- 	struct trace  *trace;
- 	void	      *parm;
-+	char	      *type_name;
- 	u16	      len;
- 	u8	      idx;
- 	u8	      mask;
--- 
-2.45.2
+Why not use a macro, e.g., APIC_DM_NMI_WITH_SOURCE, to replace the variable?
 
+Thanks,
+Kan
+
+>  }
+>  
+>  static int
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 38c1b1f1deaa..b4a70457c678 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -3093,7 +3093,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+>  	 * NMI handler.
+>  	 */
+>  	if (!late_ack && !mid_ack)
+> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+>  	intel_bts_disable_local();
+>  	cpuc->enabled = 0;
+>  	__intel_pmu_disable_all(true);
+> @@ -3130,7 +3130,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+>  
+>  done:
+>  	if (mid_ack)
+> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+>  	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
+>  	cpuc->enabled = pmu_enabled;
+>  	if (pmu_enabled)
+> @@ -3143,7 +3143,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+>  	 * Haswell CPUs.
+>  	 */
+>  	if (late_ack)
+> -		apic_write(APIC_LVTPC, APIC_DM_NMI);
+> +		apic_write(APIC_LVTPC, apic_perfmon_ctr);
+>  	return handled;
+>  }
+>  
+> diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+> index 9327eb00e96d..bcf8d17240c8 100644
+> --- a/arch/x86/include/asm/apic.h
+> +++ b/arch/x86/include/asm/apic.h
+> @@ -49,6 +49,7 @@ static inline void x86_32_probe_apic(void) { }
+>  #endif
+>  
+>  extern u32 cpuid_to_apicid[];
+> +extern u32 apic_perfmon_ctr;
+>  
+>  #define CPU_ACPIID_INVALID	U32_MAX
+>  
