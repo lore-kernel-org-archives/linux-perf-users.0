@@ -1,63 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A7514AA9;
-	Thu,  4 Jul 2024 20:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EA718AED;
+	Thu,  4 Jul 2024 20:00:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720123220; cv=none; b=Rn8a42BTJwAVueuQpeDeaX5VdFoGLP5QOsge/IQCeBJuX5XY3s0vGmxeIGgE9Z5e+R5JqeSw8RVJFXh2dT20hVXgAy0GigiFh4D4EgiU447m0MNw5E35qJYsE7JWRofpTLPWUwHols3NW9IHljAvWrnXtKRlG04iBiodLLgePkY=
+	t=1720123246; cv=none; b=iT+ZAEZFTyhG5NaszOjuw58cobbRMVmpxFvnvBSfB3nHum7h/Jg2+myNWDJ+vemqe9+WzEk64yvVDVHJLg1OKxBODlusI0Ip/30jERqsWK637iKbH96xabzSDl1i2KYm3JNzt64FL+jZFKzKLERPCOOA4JfAhN1wb9769xwv9I0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720123220; c=relaxed/simple;
-	bh=i+a5T4u17XGvIRqCem7WK9rOvl8Hp+2kjFnKPeJnCXY=;
+	s=arc-20240116; t=1720123246; c=relaxed/simple;
+	bh=xkKEx3pQtRGUtiF+vrh8STcy+yMQddVCrT+qL1b2P5o=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Hf2UydgCkaRfRGtb6Q1GEtbUlGiqpnrw9plXKvijgTZrGRrkXqCMod9EmvyNRs2w6UuqK3ypKanX0xkgjnAEq20egMCo7BPq4/nylz4Wo4CjVvu990LqaRPvd05Q5PEl/TjjU37vdJ3Uv7kh3UFi04ci3v+gx9ReR7HgH8e7pc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eRwgXIyT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=TnbrOTmUz+hlrulh5OSyBgD0z1GjIAVnsqPWRHcUtd8Iz/WKFxnO9VnVNauf3oqkSmjziFHwygEPglr5PGok9uss68X0m9lSVvdMkgy0NwqBJN9Y2U7ZeDXgELoju7h4pLqQwJoUgPe3Ewf/h8AAxrEokwD8Ef7f1YcEimolyKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BObVCqHC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eRwgXIyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40B2AC3277B;
-	Thu,  4 Jul 2024 20:00:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BObVCqHC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54034C3277B;
+	Thu,  4 Jul 2024 20:00:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720123220;
-	bh=i+a5T4u17XGvIRqCem7WK9rOvl8Hp+2kjFnKPeJnCXY=;
+	s=k20201202; t=1720123246;
+	bh=xkKEx3pQtRGUtiF+vrh8STcy+yMQddVCrT+qL1b2P5o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eRwgXIyTHKr92Rg5OTo13BpgqqAJTOOh0qQdfuFymj0Fk9x3qTn8LlG0efYp/R/pT
-	 v/bo7iRtuCRg7gU8yk1wdgUVeeRYxwrd3gjZ3qd+s8iZRj4tynPxTzZL7xnXbheGEq
-	 U3E33u3Km2ROB5hmg7DjDd7pkpIcA08tv3zht3vFvDpRQh83ZZxe2Aah1YnY4tQPl+
-	 jGh9CZ5w0WGxILSgLwdgnGJpppBMlFAk3RMiMiq/7Eh1Qk0JkzTRGxG5AfqZn4/0E1
-	 txIgisImoXRFbNs4eFYHQYMNPDnmYxzqVYhnYZSLIVzz6QXgRNKi4JgEob8Op9nLPG
-	 m8IOrySV1+xuw==
+	b=BObVCqHC232hzCHtxWsILnHE11T59N08Xthxy2d8r2rdd3NssXzaNEIqb4LkQRvy6
+	 qr5I2TXj6uB6FEv6X2PtOC3cmOkxwQjNV5JBwpBtCyQTyVRvbFSEmJkTcmR9fv6BUB
+	 L+4nOYFoLtMoWBvI3mIh3qPKHXWBux9ZRvhkjkPUhRqey8jars8tEp89baIQ82XVIa
+	 qix/wI6DHhb685Oyf4raCrS/MtmQ78AdsfkMLHBg8XJ6osrNR4O9Yf8DVs4+0eRZRD
+	 wXK37pQqMd+aGg5ejpt9uQob/8uzF6EBPfsTmSJaZ+RIAtZWK7KVgta+y0mT5YBWo8
+	 X9afIGBwgTnww==
 From: Namhyung Kim <namhyung@kernel.org>
-To: frank.li@nxp.com,
-	will@kernel.org,
-	mark.rutland@arm.com,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	shawnguo@kernel.org,
-	s.hauer@pengutronix.de,
-	kernel@pengutronix.de,
-	festevam@gmail.com,
-	john.g.garry@oracle.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	Xu Yang <xu.yang_2@nxp.com>
-Cc: mike.leach@linaro.org,
-	peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Nicolas Schier <n.schier@avm.de>
+Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH v12 1/8] dt-bindings: perf: fsl-imx-ddr: Add i.MX95 compatible
-Date: Thu,  4 Jul 2024 13:00:16 -0700
-Message-ID: <172012306277.184170.12018563505665201113.b4-ty@kernel.org>
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH] perf install: Don't propagate subdir to Documentation submake
+Date: Thu,  4 Jul 2024 13:00:44 -0700
+Message-ID: <172012322389.184679.7075228600607494733.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
-In-Reply-To: <20240529080358.703784-1-xu.yang_2@nxp.com>
-References: <20240529080358.703784-1-xu.yang_2@nxp.com>
+In-Reply-To: <20240523-make-tools-perf-install-v1-1-3903499e637f@avm.de>
+References: <20240523-make-tools-perf-install-v1-1-3903499e637f@avm.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -67,13 +54,18 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-On Wed, 29 May 2024 16:03:51 +0800, Xu Yang wrote:
+On Thu, 23 May 2024 10:06:40 +0200, Nicolas Schier wrote:
 
-> i.MX95 has a DDR pmu. This will add a compatible for it.
+> Explicitly reset 'subdir' variable when descending to
+> tools/perf/Documentation.  Similar to commit f89fb55714b62 ("perf build:
+> Don't propagate subdir to submakes for install_headers", 2023-01-02),
+> calling the 'tools/perf_install' target via top-levels Makefile results
+> in repeated subdir components when attempting to call the perf
+> documentation installation rules:
 > 
-> 
+> [...]
 
-Applied patch 7 and 8 to perf-tools-next, thanks!
+Applied to perf-tools-next, thanks!
 
 Best regards,
 Namhyung
