@@ -1,41 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B035D1B11EA;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C811B151F;
 	Thu,  4 Jul 2024 17:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720112672; cv=none; b=ntmG3VQZ1ga/cSMD3Jd41T3I2aC/NDzvTg/nyRuP/q9w16lTfKunjdhGnWjfDvI6UqPoXWm9jLbl6WJLrmQZL5D+xQgCmt08sArxxztgUcR89Uz+u8KV/HGPJSdp5nifNaj0jYhh0M0o1apiXIh04M9tlmLg3OjX9hJB8R8gerM=
+	t=1720112673; cv=none; b=IXClgXoB3zpC0fEkVcsoH6vD4HJngPsNCC0vKf0l2tZnUakYUH4oz1LHPTZit7UDF5NzymHM0LnkEll0K7iKx2DyJ+IY84+FMAzob0L5mQkjkPcbbW1zHKlQoCq7j3JHFyIerLeNyUTXf+yFDz20xHT26ooK2iZh57tr6ayVfn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720112672; c=relaxed/simple;
-	bh=3WfFCHTftvxsbGLRuQ3ylLf6HjzX+2CJHFzwOchYMuc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Jqwxwaq+9ZcpswPG6trHapEzylatDA/Kq/+UBNJvFxcHgeQLGLb9voofGkebvSpfY4reFdvDtHkbK5DknjbYg3AVobNHk/xC3flnJZP4lzW1756Vywfn8PJqSq1+94RK3Gui58T/gJOWzcMW0McOGbP0G71knSn5Qcx443UwyEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=df40TwYn; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=NhEwsS5d; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1720112673; c=relaxed/simple;
+	bh=6eqRPcMlbj+4GVbr5+U0VOyaTZIgPiL/0X2LQRUJRks=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZZI2bpFumGO+skjt2KKNazJ+gC2CFajoNCKilfraLGSUee5+AnURRHNhFqY2nGVLDbrApCtB1SgCFj0Qu5d8DuHm/EdJVr+Q5jgoW8t4DGMXs+ARNdWSHIFhXve0tAPWSA315aCXxIq0LxJwSBX1VhqeLqwlj7GqieZTll++pzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Bywyui1x; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=HKQ3CKiW; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="df40TwYn";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="NhEwsS5d"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Bywyui1x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="HKQ3CKiW"
 From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1720112668;
+	s=2020; t=1720112669;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YLTV7EHjaqTWVE9vs7iolrAMajWrkh9Agp0VGasT9OY=;
-	b=df40TwYn2eIDNUmKOoFiayMc8vb4TCl7az/vk8LGLPo44x5/XbSFjRjhodVIQscK+3K1+s
-	VDPxduP4C7R9mdBFfz9rS7CnpUHtNJAcAhcGu1dqIOVTevam/2aNyG7SHfGkNg3PtLavGI
-	nqBfH4k5G5m9+cuDBjedFaZI994/kZgSSXkGmfmli91s7MM82IzJAFKAIORA0Rn1VyG4ZJ
-	LwhiorOdokapZvok5e2gbJH+1BjMZg4Qj4o7oM2nVsUKjlJllxfgz2Cqiuw9eUMSd8O1iI
-	T1FJiO07WTmRAid4McbZmkRijvIt6KcrXIbCov+U5YkNu8A9kEfqfpJ4zRItBg==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=poySimGW+vu2aH2BbOceqnQrJPwa17Ey3AjyM7/+uMc=;
+	b=Bywyui1xnrK/jO9L52kEa/1jMRp69HkTNh3x5+ZW1b15PNiwFB3HJI/xWYV6M1wvbHwbOA
+	1vsO4Ko83PhAEsObJYdzeTs8b1VNX/pc2OQdcQD7xu35a7g7icrCimdZPM0+Vub7+Oon0m
+	8DqoLHY8n3lBpdYsuCVJLW4x4jmjTwt7E8ZQ+1XMHlJ0PZhpvfhySJ81xSL7SNP/OYno8q
+	JzmrLr+tM8d5V2rsmG/FsPlAULjZqf754QKrtZZYOSWq0CYzxDGoOrvwUAtQi9dmzcXodA
+	Vl3wtCESbAOx2gLIKrpjan3RdOcvs6W6jLqNqWs9gfVRv/IwuNKfdbt6LcWXDg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1720112668;
+	s=2020e; t=1720112669;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=YLTV7EHjaqTWVE9vs7iolrAMajWrkh9Agp0VGasT9OY=;
-	b=NhEwsS5dVddS2gbmg35koqcl+l2+8N0IMa++l5GK6x0bBFsaOywVun6RN7M+v1Qsj5x6nt
-	yR8T7m+1Q6vi+zAA==
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=poySimGW+vu2aH2BbOceqnQrJPwa17Ey3AjyM7/+uMc=;
+	b=HKQ3CKiWv88vO5FChtzpBmgGQ4x5UyxmAo2NufTRW6ZBJsVuoniA+JCupAOPY7jsPkfoGN
+	HV1iBy7Ak7fGKNBA==
 To: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Adrian Hunter <adrian.hunter@intel.com>,
@@ -50,76 +53,130 @@ Cc: Adrian Hunter <adrian.hunter@intel.com>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Namhyung Kim <namhyung@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v5 0/6] perf: Make SIGTRAP and __perf_pending_irq() work on RT.
-Date: Thu,  4 Jul 2024 19:03:34 +0200
-Message-ID: <20240704170424.1466941-1-bigeasy@linutronix.de>
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH v5 2/7] task_work: Add TWA_NMI_CURRENT as an additional notify mode.
+Date: Thu,  4 Jul 2024 19:03:36 +0200
+Message-ID: <20240704170424.1466941-3-bigeasy@linutronix.de>
+In-Reply-To: <20240704170424.1466941-1-bigeasy@linutronix.de>
+References: <20240704170424.1466941-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+Adding task_work from NMI context requires the following:
+- The kasan_record_aux_stack() is not NMU safe and must be avoided.
+- Using TWA_RESUME is NMI safe. If the NMI occurs while the CPU is in
+  userland then it will continue in userland and not invoke the `work'
+  callback.
 
-Arnaldo reported that "perf test sigtrap" fails on PREEMPT_RT. Sending
-the signal gets delayed until event_sched_out() which then uses
-task_work_add() for its delivery. This breaks on PREEMPT_RT because the
-signal is delivered with disabled preemption.
+Add TWA_NMI_CURRENT as an additional notify mode. In this mode skip
+kasan and use irq_work in hardirq-mode to for needed interrupt. Set
+TIF_NOTIFY_RESUME within the irq_work callback due to k[ac]san
+instrumentation in test_and_set_bit() which does not look NMI safe in
+case of a report.
 
-While looking at this, I also stumbled upon __perf_pending_irq() which
-requires disabled interrupts but this is not the case on PREEMPT_RT.
+Suggested-by: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ include/linux/task_work.h |  1 +
+ kernel/task_work.c        | 25 ++++++++++++++++++++++---
+ 2 files changed, 23 insertions(+), 3 deletions(-)
 
-This series aim to address both issues while not introducing a new issue
-at the same time ;)
-Any testing is appreciated.
-
-v4=E2=80=A6v5: https://lore.kernel.org/all/20240624152732.1231678-1-bigeasy=
-@linutronix.de/
-   - Add TWA_NMI_CURRENT as notify mode for task_work_add() and use it.
-     PeterZ pointed out that the current version is not NMI safe.
-
-v3=E2=80=A6v4: https://lore.kernel.org/all/20240322065208.60456-1-bigeasy@l=
-inutronix.de/
-   - Rebased on top of Frederic's series
-      (https://lore.kernel.org/all/20240621091601.18227-1-frederic@kernel.o=
-rg)
-   - Frederick pointed out that perf_pending_task() needs to
-     perf_swevent_get_recursion_context() in order not to recurse if
-     something within perf_swevent_.*_recursion_context() triggers a
-     software event. To address this, the counters have been moved to
-     the task_struct (#3 + #4) and preemt_disable() has been replaced
-     with a RCU-read lock (#5).
-   - The remaning logic same that means the event is pushed to task-work
-     instead of delivering from IRQ-work. The series was tested with
-     remove_on_exec as suggested by Marco Elver: On PREEMPT_RT a single
-     invocation passes, 100 parallel invocations report (for some)
-     unexpected SIGTRAPs and timeouts. This also observed on !RT
-     (without the series) with a higher task-count.
-
-v2=E2=80=A6v3: https://lore.kernel.org/all/20240312180814.3373778-1-bigeasy=
-@linutronix.de/
-    - Marco suggested to add a few comments
-      - Added a comment to __perf_event_overflow() to explain why irq_work
-        is raised in the in_nmi() case.
-      - Added a comment to perf_event_exit_event() to explain why the
-        pending event is deleted.
-
-v1=E2=80=A6v2: https://lore.kernel.org/all/20240308175810.2894694-1-bigeasy=
-@linutronix.de/
-    - Marco pointed me to the testsuite that showed two problems:
-      - Delayed task_work from NMI / missing events.
-        Fixed by triggering dummy irq_work to enforce an interrupt for
-	the exit-to-userland path which checks task_work
-      - Increased ref-count on clean up/ during exec.
-        Mostly addressed by the former change. There is still a window
-	if the NMI occurs during execve(). This is addressed by removing
-	the task_work before free_event().
-      The testsuite (remove_on_exec) fails sometimes if the event/
-      SIGTRAP is sent before the sighandler is installed.
-
-Sebastian
+diff --git a/include/linux/task_work.h b/include/linux/task_work.h
+index 26b8a47f41fca..cf5e7e891a776 100644
+--- a/include/linux/task_work.h
++++ b/include/linux/task_work.h
+@@ -18,6 +18,7 @@ enum task_work_notify_mode {
+ 	TWA_RESUME,
+ 	TWA_SIGNAL,
+ 	TWA_SIGNAL_NO_IPI,
++	TWA_NMI_CURRENT,
+ };
+=20
+ static inline bool task_work_pending(struct task_struct *task)
+diff --git a/kernel/task_work.c b/kernel/task_work.c
+index 2134ac8057a94..05fb41fe09f5d 100644
+--- a/kernel/task_work.c
++++ b/kernel/task_work.c
+@@ -1,10 +1,19 @@
+ // SPDX-License-Identifier: GPL-2.0
++#include <linux/irq_work.h>
+ #include <linux/spinlock.h>
+ #include <linux/task_work.h>
+ #include <linux/resume_user_mode.h>
++#include <trace/events/ipi.h>
+=20
+ static struct callback_head work_exited; /* all we need is ->next =3D=3D N=
+ULL */
+=20
++static void task_work_set_notify_irq(struct irq_work *entry)
++{
++	test_and_set_tsk_thread_flag(current, TIF_NOTIFY_RESUME);
++}
++static DEFINE_PER_CPU(struct irq_work, irq_work_NMI_resume) =3D
++	IRQ_WORK_INIT_HARD(task_work_set_notify_irq);
++
+ /**
+  * task_work_add - ask the @task to execute @work->func()
+  * @task: the task which should run the callback
+@@ -12,7 +21,7 @@ static struct callback_head work_exited; /* all we need i=
+s ->next =3D=3D NULL */
+  * @notify: how to notify the targeted task
+  *
+  * Queue @work for task_work_run() below and notify the @task if @notify
+- * is @TWA_RESUME, @TWA_SIGNAL, or @TWA_SIGNAL_NO_IPI.
++ * is @TWA_RESUME, @TWA_SIGNAL, @TWA_SIGNAL_NO_IPI or @TWA_NMI_CURRENT.
+  *
+  * @TWA_SIGNAL works like signals, in that the it will interrupt the targe=
+ted
+  * task and run the task_work, regardless of whether the task is currently
+@@ -24,6 +33,8 @@ static struct callback_head work_exited; /* all we need i=
+s ->next =3D=3D NULL */
+  * kernel anyway.
+  * @TWA_RESUME work is run only when the task exits the kernel and returns=
+ to
+  * user mode, or before entering guest mode.
++ * @TWA_NMI_CURRENT works like @TWA_RESUME, except it can only be used for=
+ the
++ * current @task and if the current context is NMI.
+  *
+  * Fails if the @task is exiting/exited and thus it can't process this @wo=
+rk.
+  * Otherwise @work->func() will be called when the @task goes through one =
+of
+@@ -44,8 +55,13 @@ int task_work_add(struct task_struct *task, struct callb=
+ack_head *work,
+ {
+ 	struct callback_head *head;
+=20
+-	/* record the work call stack in order to print it in KASAN reports */
+-	kasan_record_aux_stack(work);
++	if (notify =3D=3D TWA_NMI_CURRENT) {
++		if (WARN_ON_ONCE(task !=3D current))
++			return -EINVAL;
++	} else {
++		/* record the work call stack in order to print it in KASAN reports */
++		kasan_record_aux_stack(work);
++	}
+=20
+ 	head =3D READ_ONCE(task->task_works);
+ 	do {
+@@ -66,6 +82,9 @@ int task_work_add(struct task_struct *task, struct callba=
+ck_head *work,
+ 	case TWA_SIGNAL_NO_IPI:
+ 		__set_notify_signal(task);
+ 		break;
++	case TWA_NMI_CURRENT:
++		irq_work_queue(this_cpu_ptr(&irq_work_NMI_resume));
++		break;
+ 	default:
+ 		WARN_ON_ONCE(1);
+ 		break;
+--=20
+2.45.2
 
