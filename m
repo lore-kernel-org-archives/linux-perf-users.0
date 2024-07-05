@@ -1,57 +1,57 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979FD155353;
-	Fri,  5 Jul 2024 13:21:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E7DD14AD02;
+	Fri,  5 Jul 2024 13:21:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720185667; cv=none; b=p8eSatjE46EMA1XO4m+9FBUkUGxB/77gdJAs65mnigF3/LnUTSX1o2IDYAI4w0zlbBX37lDNTIpdU2j7k85ydPccwFv8sF4/MAmpAXTk258c+MgXo1noIYblOsgYvcSTfo17u88CGuuWehT6XFdgjzVaWZOq+yEUIDg95+Nx4CM=
+	t=1720185669; cv=none; b=PFpoRv1nNuzQBS3zNE0O5nXS0TnHglXYlpjkuzNbTfe2k+lwpN4WwpVYewFmJVbDLax5P6LSDacwhXE/Wsg94K2MPv97HdK5n0YLvsnM38Lbp8v1/LpeAJKIq15AqLqbe5TwfXlqoKNC6h2CYf6OHiZE8yIcB7I0OVf4lLwM/Pc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720185667; c=relaxed/simple;
-	bh=CpvgJue7O4MWaSyHmJCoq1ukXf1YzFWD1+T3USR8SlI=;
+	s=arc-20240116; t=1720185669; c=relaxed/simple;
+	bh=zpCwz5WJUp6bdiwz/dL0kF9VkHkjT2zu8ODJeCDRUY4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=c80lxDToew8Wl+E1oKmrH8YV28RWnT/VDpeHBfCfTBOezo0ZVBd8hL1Iq2x45BvEKdPkerMPhYOgXB+nBrPRGZ0kiMvtbwPQYoaCakAZocH9bPgFR7Vn9EZT1EXs+idsCeeiioWq+1TuKtVmCn3eHxqRjeVSCBe4IHRXeD9j3+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K1+OizNz; arc=none smtp.client-ip=209.85.216.51
+	 MIME-Version; b=aIvSFHS7Pakz+erpCyJNanwRxKoPqyVoanilT73LsQ/M1X6zKakHadoPNLH7s6VcWrxcDNl5wmF4aZ/ltHXrZzUcTC3a7Mg6ftHbpWaRgM6CLomPyiSFFv/M1tfnY5vGh4eX127/hgQ6Ev8UMv/NbrWui17ZB2C//OFCwAKbO3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dwWumbAH; arc=none smtp.client-ip=209.85.210.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1+OizNz"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2c97ff39453so1130011a91.0;
-        Fri, 05 Jul 2024 06:21:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dwWumbAH"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70af81e8439so1311380b3a.0;
+        Fri, 05 Jul 2024 06:21:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720185665; x=1720790465; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720185667; x=1720790467; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=pDEfGupzV1QZZP9bDVKEPg1EQ2BMXRdRN/4z4Ft9J/0=;
-        b=K1+OizNzOUqRXTYcVaY+B9bPeC9BtpWE11z+6Gn8uUU4XJentb49Egk4ICEKadslmB
-         HSwK9q0B0ETeMh41kvoFdNMsrMyti1m//E1hn7CWb7TRwKRCkG9mZ6pOo9u+AaQBUwAU
-         uBGOZI9QOoD8dKJmtR3rX706tQXHMhKro0qHsHtv3Ki17wFhOjF/F0Ctszj/wOP18Bm3
-         52D5v+nC5RWNfs29U4QxhyavegWW2JRHhSVOgr/iO04w/HfrrBCE+YenyNqMkruVkqQ5
-         rW3iiVEF0KSChRJxNukXj9zAFOemKS7BhLLh8muV1GbKHFyJANjYpDseU0vplG3u6YiN
-         F+sg==
+        bh=76lmvuOrrkN7Lw4Dwyrz4F1r/Om3MtfOcN897FaxN6s=;
+        b=dwWumbAHIyXCXnVSk33efi8Qd0vtaKfxLjkwu4BwZpe6b1QYd+rJDVcncmNiysDxcA
+         lkKscxGQWjpYjhgZfVwApamksG7POb+lP4qznV8nOISstKi1dbPpi+915FFJXqU4Rupv
+         ckoPLZvVhwAvYyOsSi6tK9HOOvhUYntTfl1POuIQlHIInDYJfq0S/wLv2MklWEdMGNWB
+         2pfEzk/kLtEPHheUohz23jYv1jgACOZUnWM0j5IxQBaCjRGUFBUngkTR9l0SM3GQwiRH
+         a2rCRbJwWof7lj/0xnWi6cP/iheK6sTbtmDplr+MAmwU/kaq7JUfyMkucyDBbfjjBEL7
+         /sww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720185665; x=1720790465;
+        d=1e100.net; s=20230601; t=1720185667; x=1720790467;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=pDEfGupzV1QZZP9bDVKEPg1EQ2BMXRdRN/4z4Ft9J/0=;
-        b=frt1C6xoGbLQBAHkhoMr/+q5wmsxG87bit6kdSwF3my+jFQ0+OcmmPS66uBGQItZ0c
-         0AKo0ij4ZXnHYviPv8ydgTG3IlmBbcR5DvLql1o2HjffCXkI/h9S4ts+bnDQfeWn/SYQ
-         9tFfeG92aLXLn3ZGX6CdduwtOt/O+pTRw77CJnhoXgSwtdjHm4bl6GrGcWsxnY5XmWkx
-         i7AIxqkUNSxF5zq75v0l+/pDLo+5uIiZFjZEqOsniYz1VJz+0d+Asru5nBOfcE50i+sM
-         4p+dzguz6hbWDtWTShzU/jmhiLVk42g9Im4OFgXdVQ6iwvaEHGLdTwxSQbgTVgi79QL0
-         wFfA==
-X-Forwarded-Encrypted: i=1; AJvYcCWpltIwcFtFL1FcxA+zg+qGoJGYgj24QlNn/ginJFlmr4hIF3uH4Nqn2iGadlSygoDGFgx/llpdPc4j4sZ26/cbVsZv+FoEMgBZdfXY0SWaEvPwjB/qGmOS1J+JGgSR6VrA2RkfGI59ST2Lzi0C5Q==
-X-Gm-Message-State: AOJu0YzLqom37Azvn2o0ykh/cFkS2FbOiABOZEW53GtjaNVxehSwU3Tt
-	nnRiZ4iKTU/yxQ7kp+Ji/sxV74S4r6kQwyPQS1B/fLZhJK7zyJCg
-X-Google-Smtp-Source: AGHT+IEPN/HG6eB9nCtBZ7y86WQQRj2QBqQqZw29SiAFMQAjveicX9k1pyHGfibhmRKVLLZznL+l0g==
-X-Received: by 2002:a17:90b:607:b0:2c9:6ae7:20e4 with SMTP id 98e67ed59e1d1-2c99c6d0d70mr3148009a91.45.1720185664803;
-        Fri, 05 Jul 2024 06:21:04 -0700 (PDT)
+        bh=76lmvuOrrkN7Lw4Dwyrz4F1r/Om3MtfOcN897FaxN6s=;
+        b=KEKk1tY0NHy3KRDkwnm+Ch+VVGrDOu+fsKR0EM9345CDJuPVpJQQAH7dPB8BsrHnlM
+         oomgalMnPcZnKnkbW139hUb4atWljgV0Pq2ofEdggcHPQ6+fXYqvmwnXx/br3KWbJaDW
+         0UMZVip2A1nNcp65kEmHg1JCCaUAzDn+oZmtuToMEhiiQQWJFimz3RqFKEWuiWH4LSiM
+         9Ld51sWnjsdDoF6o0DwbaBFaAsGJY0Cno7WxmMS/GPrkknzG5CGYWM17PGQsjBabIrlj
+         eBqtS/FY4AcJ6bL522PKokoSl9RirG5P4muKvpqm2RHJDRVLip7NG0EgGi3qEFIKST3D
+         nCxw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTBnYgnM9k2tNKL8bXhGOSyYtOND+OYjGBu8gDE20a8gLVPBDeXnMmPPcJLG0q9wHimWUHuwqo36ZWjDlDzYxpFHD4IMdZeR/N3gHBI0O35itrhwJJpukB62VOyYgaERY35S/KmUSM2wmAJjaZfg==
+X-Gm-Message-State: AOJu0YwdzPiRv9MJ3ccGSFasqQ6DQt60FEG8icJvSG8J+w1Kx7R51iHL
+	myO84zAsEGRQVzgOxxQ0VqCVf9RjN3iz40E9GFW1J32Ad9wRJWdP
+X-Google-Smtp-Source: AGHT+IEB6MiJIWg/3vtnd3mzfEGIIo3aQFfdb4zuRiYUlsPJi1TzicVIl2F06wIj+9Vtq+gqplsKXA==
+X-Received: by 2002:a05:6a20:2d10:b0:1be:c057:ea12 with SMTP id adf61e73a8af0-1c0cc73de03mr5236512637.14.1720185667372;
+        Fri, 05 Jul 2024 06:21:07 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a956260sm3328974a91.19.2024.07.05.06.21.02
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a956260sm3328974a91.19.2024.07.05.06.21.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 06:21:04 -0700 (PDT)
+        Fri, 05 Jul 2024 06:21:07 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -62,9 +62,9 @@ Cc: adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v5 6/8] perf test trace_btf_enum: Add regression test for the BTF augmentation of enums in 'perf trace'
-Date: Fri,  5 Jul 2024 21:20:56 +0800
-Message-ID: <20240705132059.853205-7-howardchu95@gmail.com>
+Subject: [PATCH v5 7/8] perf trace: Introduce trace__btf_scnprintf()
+Date: Fri,  5 Jul 2024 21:20:57 +0800
+Message-ID: <20240705132059.853205-8-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240705132059.853205-1-howardchu95@gmail.com>
 References: <20240705132059.853205-1-howardchu95@gmail.com>
@@ -76,110 +76,119 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Trace landlock_add_rule syscall to see if the output is desirable.
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Trace the non-syscall tracepoint 'timer:hrtimer_init' and
-'timer:hrtimer_start', see if the 'mode' argument is augmented,
-the 'mode' enum argument has the prefix of 'HRTIMER_MODE_'
-in its name.
+To have a central place that will look at the BTF type and call the
+right scnprintf routine or return zero, meaning BTF pretty printing
+isn't available or not implemented for a specific type.
 
-Committer testing:
-
-  root@x1:~# perf test enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf test -v enum
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~# perf trace -e landlock_add_rule perf test -v enum
-       0.000 ( 0.010 ms): perf/749827 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd324171d4, flags: 45) = -1 EINVAL (Invalid argument)
-       0.012 ( 0.002 ms): perf/749827 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd324171e0, flags: 45) = -1 EINVAL (Invalid argument)
-     457.821 ( 0.007 ms): perf/749830 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd4acd31e4, flags: 45) = -1 EINVAL (Invalid argument)
-     457.832 ( 0.003 ms): perf/749830 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd4acd31f0, flags: 45) = -1 EINVAL (Invalid argument)
-  124: perf trace enum augmentation tests                              : Ok
-  root@x1:~#
-
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Tested-by: Howard Chu <howardchu95@gmail.com>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/lkml/20240619082042.4173621-6-howardchu95@gmail.com
-Link: https://lore.kernel.org/r/20240624181345.124764-7-howardchu95@gmail.com
+Link: https://lore.kernel.org/r/20240624181345.124764-8-howardchu95@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/shell/trace_btf_enum.sh | 61 ++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+ tools/perf/builtin-trace.c | 49 +++++++++++++++++++++-----------------
+ 1 file changed, 27 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/tests/shell/trace_btf_enum.sh b/tools/perf/tests/shell/trace_btf_enum.sh
-new file mode 100755
-index 000000000000..7d407b52bea5
---- /dev/null
-+++ b/tools/perf/tests/shell/trace_btf_enum.sh
-@@ -0,0 +1,61 @@
-+#!/bin/sh
-+# perf trace enum augmentation tests
-+# SPDX-License-Identifier: GPL-2.0
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index e664001d5ed7..d9104fc4f61f 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -981,18 +981,28 @@ static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, c
+ static size_t trace__btf_enum_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
+ 					size_t size, int val, char *type)
+ {
+-	if (trace->btf == NULL)
+-		return 0;
+-
+ 	if (syscall_arg_fmt__cache_btf_enum(arg_fmt, trace->btf, type) < 0)
+ 		return 0;
+ 
+ 	return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
+ }
 +
-+err=0
-+set -e
++static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg_fmt *arg_fmt, char *bf,
++				   size_t size, int val, char *type)
++{
++	if (trace->btf == NULL)
++		return 0;
 +
-+syscall="landlock_add_rule"
-+non_syscall="timer:hrtimer_init,timer:hrtimer_start"
++	if (arg_fmt->is_enum)
++		return trace__btf_enum_scnprintf(trace, arg_fmt, bf, size, val, type);
 +
-+TESTPROG="perf test -w landlock"
-+
-+. "$(dirname $0)"/lib/probe.sh
-+skip_if_no_perf_trace || exit 2
-+
-+check_vmlinux() {
-+  echo "Checking if vmlinux exists"
-+  if ! ls /sys/kernel/btf/vmlinux 1>/dev/null 2>&1
-+  then
-+    echo "trace+enum test [Skipped missing vmlinux BTF support]"
-+    err=2
-+  fi
++	return 0;
 +}
 +
-+trace_landlock() {
-+  echo "Tracing syscall ${syscall}"
-+
-+  # test flight just to see if landlock_add_rule and libbpf are available
-+  $TESTPROG
-+
-+  if perf trace -e $syscall $TESTPROG 2>&1 | \
-+     grep -q -E ".*landlock_add_rule\(ruleset_fd: 11, rule_type: (LANDLOCK_RULE_PATH_BENEATH|LANDLOCK_RULE_NET_PORT), rule_attr: 0x[a-f0-9]+, flags: 45\) = -1.*"
-+  then
-+    err=0
-+  else
-+    err=1
-+  fi
-+}
-+
-+trace_non_syscall() {
-+  echo "Tracing non-syscall tracepoint ${non-syscall}"
-+  if perf trace -e $non_syscall --max-events=1 2>&1 | \
-+     grep -q -E '.*timer:hrtimer_.*\(.*mode: HRTIMER_MODE_.*\)$'
-+  then
-+    err=0
-+  else
-+    err=1
-+  fi
-+}
-+
-+check_vmlinux
-+
-+if [ $err = 0 ]; then
-+  trace_landlock
-+fi
-+
-+if [ $err = 0 ]; then
-+  trace_non_syscall
-+fi
-+
-+exit $err
+ #else // HAVE_LIBBPF_SUPPORT
+-static size_t trace__btf_enum_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg_fmt *arg_fmt __maybe_unused,
+-					char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
+-					char *type __maybe_unused)
++static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, struct syscall_arg_fmt *arg_fmt __maybe_unused,
++				   char *bf __maybe_unused, size_t size __maybe_unused, int val __maybe_unused,
++				   char *type __maybe_unused)
+ {
+ 	return 0;
+ }
+@@ -2183,7 +2193,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 				      unsigned char *args, void *augmented_args, int augmented_args_size,
+ 				      struct trace *trace, struct thread *thread)
+ {
+-	size_t printed = 0;
++	size_t printed = 0, btf_printed;
+ 	unsigned long val;
+ 	u8 bit = 1;
+ 	struct syscall_arg arg = {
+@@ -2237,13 +2247,11 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
+ 			if (trace->show_arg_names)
+ 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+ 
+-			if (sc->arg_fmt[arg.idx].is_enum) {
+-				size_t p = trace__btf_enum_scnprintf(trace, &sc->arg_fmt[arg.idx], bf + printed,
+-								     size - printed, val, field->type);
+-				if (p) {
+-					printed += p;
+-					continue;
+-				}
++			btf_printed = trace__btf_scnprintf(trace, &sc->arg_fmt[arg.idx], bf + printed,
++							   size - printed, val, field->type);
++			if (btf_printed) {
++				printed += btf_printed;
++				continue;
+ 			}
+ 
+ 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
+@@ -2892,7 +2900,7 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 	size_t size = sizeof(bf);
+ 	struct tep_format_field *field = evsel->tp_format->format.fields;
+ 	struct syscall_arg_fmt *arg = __evsel__syscall_arg_fmt(evsel);
+-	size_t printed = 0;
++	size_t printed = 0, btf_printed;
+ 	unsigned long val;
+ 	u8 bit = 1;
+ 	struct syscall_arg syscall_arg = {
+@@ -2942,13 +2950,10 @@ static size_t trace__fprintf_tp_fields(struct trace *trace, struct evsel *evsel,
+ 		if (trace->show_arg_names)
+ 			printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
+ 
+-		if (arg->is_enum) {
+-			size_t p = trace__btf_enum_scnprintf(trace, arg, bf + printed,
+-							     size - printed, val, field->type);
+-			if (p) {
+-				printed += p;
+-				continue;
+-			}
++		btf_printed = trace__btf_scnprintf(trace, arg, bf + printed, size - printed, val, field->type);
++		if (btf_printed) {
++			printed += btf_printed;
++			continue;
+ 		}
+ 
+ 		printed += syscall_arg_fmt__scnprintf_val(arg, bf + printed, size - printed, &syscall_arg, val);
 -- 
 2.45.2
 
