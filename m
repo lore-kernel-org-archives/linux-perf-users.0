@@ -1,433 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BA6613958F;
-	Fri,  5 Jul 2024 09:38:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691E4144D34;
+	Fri,  5 Jul 2024 09:42:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720172294; cv=none; b=uzlPTZriJFa16Viv3j9vIFRCgjx28Ufg8KI46i1O7vwXcHu1X2P4i6sP2AUlGb1Ny0iUHn7IXNkfnEW659oGMrvkqaF6QMlELiduCac7CghgMTLOdb6WNjQM+6BpzTniAFvd6CQK8iQp1S/FUxiH/mp02V9mO0LKNafeBmkkKEs=
+	t=1720172571; cv=none; b=IDZAl/6LHeBa/abmc+Wpz5ToLBLSf+wpiPFtoCq4YNMBflMo33Pw3pMENc7F5RaCvMy5cELsDq2/z9GqUszIpWY71pfS1Zd2AuIhPRZ1EATK45hv+M2WQzJymQ24u5ft4G0VcUkxcXE/DVCMH6jbHyf25qNQ8v5WH4lVGsBO94I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720172294; c=relaxed/simple;
-	bh=FMcEoxCi8WXEv4E49B88O6NuYPduZfIlmGxqcapk8f0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b1zlRexij2JNB/aVU/Om8ePp3iUUJGhJwqUwa58FwOVNw1uBrhxadBv84ZLUfk82dX2l6qVgVny+QR20GW2KNDf7R2QYfZ5RrmzwwChscyqYrCHcmo0YpKFTnkBSNBgQFMUxlrXcdwJi806oRrT0avkvr6WZsMz0lOdrzfcYfpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CP2VETSC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720172571; c=relaxed/simple;
+	bh=rTvNpJokC0lG2aO9D2Q7qgzGqbzrym7I10xGbDEqtQI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YP+4LPo34LGjv/FxQvmQnOL5KzeTnjdAhireQjYnuDaS+CXXoSde8EKbKRcyQsO7OvKT/GDIMEV8VImwKkZRvH2Ba12sJ217Bn6ykh25GTJ7tcw5d0JUW6cmySkj4VkHYI1v3CyFJztzQ11fKx0bKYTEp0ku1+kdrijWqu4klME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BqDOF8X0; arc=none smtp.client-ip=209.85.210.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CP2VETSC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A62EFC4AF0A;
-	Fri,  5 Jul 2024 09:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720172293;
-	bh=FMcEoxCi8WXEv4E49B88O6NuYPduZfIlmGxqcapk8f0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=CP2VETSCrQFpLUWVoLrHiVNBKQeWowyKSDapIA55BFd0iQBvrPjg74P5VB/t4dvlo
-	 r7N+4IT8vzohgD2hpkfzWDNGuQdSK6EUtU2AgXT2DBHzNEy7YwAxUcHHXlaoPuhNBn
-	 dMb7D908vzsQ3LKtQk8CWJgK4TeBYlr3arBkLAF2ER+8rTN5dYk8fotpfByLg6TeaP
-	 0HsmUizxDxGsgn5PU+4z78zIdo80IfukCoDs1ufm+awkvtg478pZoTS/yuUbReAKJv
-	 qW8/Lhfvj1P2Okg8CRDlbaVpUn7ptJMgo6vkiLfaymgWBJM3gx9ol3XR+IgxE3lMdW
-	 cx0lWUQPSVVqQ==
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a724a8097deso176333066b.1;
-        Fri, 05 Jul 2024 02:38:13 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWK9NQKkgqzKiOIbozidhrq1tkPLn2pLyD1JbHM3ezdkOk6afcbuWy8U/nGA1dUcZRC4cjZ6ijORXZg4R4LrsMob+iuOnj/z/3Ca7LQKzAYmFpwrFPWS+2hNv8GcMnXgqIzYanzZ1yvOECCE9y8Yg==
-X-Gm-Message-State: AOJu0YzSZPIWWycr2xPDvWgYDzFdRDzYtyTZrG043zoHeuhch5vPEBFh
-	TwQvYVgexpTdoCG+udk+zfLWhX9TZ/bAflmwBl3dyZmaWaiKPJs35DTW7hfVtUPbMbwcfY9psfN
-	pENpTtAAQ5u+TbN4Yhh/kTZxkjF0=
-X-Google-Smtp-Source: AGHT+IFPEz5Z64bP/NBrbn0I+EgtKz9X87B7IaPM5wpAjlZLf15LkqXjdqVzYcavH34qTIjVjg9PqtGAu086jBhROV4=
-X-Received: by 2002:a17:907:94d0:b0:a77:a403:f260 with SMTP id
- a640c23a62f3a-a77ba44c776mr321068066b.4.1720172292172; Fri, 05 Jul 2024
- 02:38:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqDOF8X0"
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-70b0e9ee7bcso305123b3a.1;
+        Fri, 05 Jul 2024 02:42:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1720172570; x=1720777370; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qW+kigcKFLfW1wvMQ24dxSV2zZqmDDqCX6hcBun385k=;
+        b=BqDOF8X0s0X6I1ox7XjvUiKTm8I8ukZmshRrlHYoHVQKGBmVsP57AZrTnYQqqooLwF
+         UyIN8zI8sfwTpRQBspd5SlBgHM/YiDlPlukz+lNcr3GLI4uIMa8ZbcZHHwdgx3o+QzAy
+         EQjduomtvAKynn/eQAdoPcKCpi7bIAQuBA2IBYzGm7SYVy75aAe9wZxlG2d3HBfQoH9b
+         jIqgZMI0v4I53ZY+QactDo4N+cCRcR7T7dTeYbXWzKt5GuXFH5PwVQAfE9pR0LseErxD
+         h2d405R687Y87d76K/nFfalx4rDJLUfcZB1j6Bs2Kic3n57ZVF51xnNcziP1TclqNyrJ
+         Mdeg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720172570; x=1720777370;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qW+kigcKFLfW1wvMQ24dxSV2zZqmDDqCX6hcBun385k=;
+        b=aaD4SlNvcMe8dSysIPopgUXUxrrBAArvqHNitIL3mKp/Q/SS3eMzHLmi5+O69Dya7U
+         Oe8Z9ue/2lA8tvJlcfPONQc3qGZ5w3xzi9FBQaE1mUdHXIcQZMZCUmjbayYjXIrsR4FD
+         O9o/I3QDMR9HNZdj0kmTfaGz2kJUNNKomFYvvGsDqojinO1cTVQ30sqA3KbkwiRvFdb3
+         +bQrTmOVbJFC//L9GQR3iT31H/oTJOUYX++Bk5b7KLvX9Ui+G4hvtWAn5r0DbOAX4lUg
+         D/TEW1J4Kuw+iAnEaIAzNOwTKU0xnqAQfmiguGpy39lK432779+tmLnfrdYsaRdEi+I5
+         8T3A==
+X-Forwarded-Encrypted: i=1; AJvYcCXW3WX9Q7qEzsQFyoTkoWUhBMyemG/i9gsFP3yfHqFxIdrt1Brht/n+K3wWp2HH9HxRrMKMKCafRC5laBvB4Qo1+zV/UDdfwkpDp4dgo34pY6yYiXIdSjFexzR/W4gWfyfcF241+u1DTnQCjYndpw==
+X-Gm-Message-State: AOJu0YwHeUF+Tc5S9iGz4kDRj8mROVnWZgAAuolEmULriHVxJ8KXm34i
+	rpgfE7zZJ6IlxhwhqK4+FRbkFDMqHUWi881d9xM5/gIezaVNqphN
+X-Google-Smtp-Source: AGHT+IGIIDmof9plM75cbzvPSgKJDOhze3lOAZjJF4Yz6URnqy+t30gr6BKtaQ8riYJFmraMVK8Cqw==
+X-Received: by 2002:a05:6a20:7344:b0:1be:d703:bc47 with SMTP id adf61e73a8af0-1c0cc8f66eamr5563951637.49.1720172569643;
+        Fri, 05 Jul 2024 02:42:49 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.88])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a9cd133sm2958138a91.38.2024.07.05.02.42.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Jul 2024 02:42:49 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: adrian.hunter@intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4 0/8] perf trace: Augment enum arguments with BTF
+Date: Fri,  5 Jul 2024 17:42:52 +0800
+Message-ID: <20240705094300.585156-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240411121047.2005033-1-maobibo@loongson.cn> <db839f86-6749-e15b-a084-d8a4a6735f1c@loongson.cn>
- <CAAhV-H4MucyKrQdxBtoh7PJZDiWo1kB-9TP2L-x0tw8vh=ypNQ@mail.gmail.com> <83ae11b8-69af-eaf8-8768-dc6d55cdcd90@loongson.cn>
-In-Reply-To: <83ae11b8-69af-eaf8-8768-dc6d55cdcd90@loongson.cn>
-From: Huacai Chen <chenhuacai@kernel.org>
-Date: Fri, 5 Jul 2024 17:38:00 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H7V9crTHnMdHgpZTW_h8vMCz3VJANLmveUsZu6zeoNmHA@mail.gmail.com>
-Message-ID: <CAAhV-H7V9crTHnMdHgpZTW_h8vMCz3VJANLmveUsZu6zeoNmHA@mail.gmail.com>
-Subject: Re: [PATCH v3] perf kvm: Add kvm-stat for loongarch64
-To: maobibo <maobibo@loongson.cn>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ian Rogers <irogers@google.com>, 
-	Ming Wang <wangming01@loongson.cn>, Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Applied, thanks.
+Changes in v5:
 
-Huacai
+- Use hardcoded landlock structs and macros for landlock.c workload to
+make this build in older systems.
 
-On Fri, May 10, 2024 at 9:47=E2=80=AFAM maobibo <maobibo@loongson.cn> wrote=
-:
->
->
->
-> On 2024/5/8 =E4=B8=8B=E5=8D=889:02, Huacai Chen wrote:
-> > On Tue, May 7, 2024 at 2:11=E2=80=AFPM maobibo <maobibo@loongson.cn> wr=
-ote:
-> >>
-> >> Hi Peter/Ian/Huacai,
-> >>
-> >> This patch stays one month without response, I know you are busy and
-> >> look through thousands of patch every day.
-> >>
-> >> Just one question, who has permission to merge perf kvm patch for
-> >> LoongArch. Is it LoongArch maintainer or perf kvm maintainer?
-> > It should probably go to perf tree, but if it is allowed, maybe I can
-> > try to merge into LoongArch tree.
->
->   tools/perf/arch/loongarch/Makefile        |   1 +
->   tools/perf/arch/loongarch/util/Build      |   2 +
->   tools/perf/arch/loongarch/util/header.c   |  88 ++++++++++++++
->   tools/perf/arch/loongarch/util/kvm-stat.c | 135 ++++++++++++++++++++++
->
-> All the modification is LoongArch specific, there will be much
-> appreciated if it can reviewed and merged.
->
-> Regards
-> Bibo Mao
->
-> >
-> >
-> > Huacai
-> >>
-> >> Regards
-> >> Bibo Mao
-> >>
-> >>
-> >> On 2024/4/11 =E4=B8=8B=E5=8D=888:10, Bibo Mao wrote:
-> >>> Add support for 'perf kvm stat' on loongarch64 platform, now only
-> >>> kvm exit event is supported.
-> >>>
-> >>> Here is example output about "perf kvm --host stat report" command
-> >>>
-> >>>      Event name   Samples   Sample%     Time (ns)   Time%   Mean Time=
- (ns)
-> >>>       Mem store     83969    51.00%     625697070   8.00%            =
- 7451
-> >>>        Mem read     37641    22.00%     112485730   1.00%            =
- 2988
-> >>>       Interrupt     15542     9.00%      20620190   0.00%            =
- 1326
-> >>>           Iocsr     15207     9.00%      94296190   1.00%            =
- 6200
-> >>>       Hypercall      4873     2.00%      12265280   0.00%            =
- 2516
-> >>>            Idle      3713     2.00%    6322055860  87.00%          17=
-02681
-> >>>             FPU      1819     1.00%       2750300   0.00%            =
- 1511
-> >>>          Ifecth       502     0.00%       1341740   0.00%            =
- 2672
-> >>>      Mem modify       324     0.00%        602240   0.00%            =
- 1858
-> >>>          Cpucfg        55     0.00%         77610   0.00%            =
- 1411
-> >>>             Csr        12     0.00%         19690   0.00%            =
- 1640
-> >>>            LASX         3     0.00%          4870   0.00%            =
- 1623
-> >>>             LSX         2     0.00%          2100   0.00%            =
- 1050
-> >>>
-> >>> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> >>> ---
-> >>> v2 --- v3:
-> >>>     1. Add NULL check with cpuid in function get_cpuid()
-> >>>     2. Add example output from /proc/cpuinfo before function get_cpui=
-d()
-> >>> v1 --- v2:
-> >>>     1. Add child_ops for kvm exit event, split kvm:kvm_exit_gspr even=
-ts
-> >>> into cpucfg/csr/iocsr/idle child events by decoding detailed gspr
-> >>> instruction.
-> >>>     2. Remove some exception code type which does not happen in curre=
-nt
-> >>> kvm implementation, such as meomry NR/NX/priviledge exception.
-> >>> ---
-> >>>    tools/perf/arch/loongarch/Makefile        |   1 +
-> >>>    tools/perf/arch/loongarch/util/Build      |   2 +
-> >>>    tools/perf/arch/loongarch/util/header.c   |  88 ++++++++++++++
-> >>>    tools/perf/arch/loongarch/util/kvm-stat.c | 135 ++++++++++++++++++=
-++++
-> >>>    4 files changed, 226 insertions(+)
-> >>>    create mode 100644 tools/perf/arch/loongarch/util/header.c
-> >>>    create mode 100644 tools/perf/arch/loongarch/util/kvm-stat.c
-> >>>
-> >>> diff --git a/tools/perf/arch/loongarch/Makefile b/tools/perf/arch/loo=
-ngarch/Makefile
-> >>> index 3992a67a87d9..c89d6bb6b184 100644
-> >>> --- a/tools/perf/arch/loongarch/Makefile
-> >>> +++ b/tools/perf/arch/loongarch/Makefile
-> >>> @@ -4,6 +4,7 @@ PERF_HAVE_DWARF_REGS :=3D 1
-> >>>    endif
-> >>>    PERF_HAVE_ARCH_REGS_QUERY_REGISTER_OFFSET :=3D 1
-> >>>    PERF_HAVE_JITDUMP :=3D 1
-> >>> +HAVE_KVM_STAT_SUPPORT :=3D 1
-> >>>
-> >>>    #
-> >>>    # Syscall table generation for perf
-> >>> diff --git a/tools/perf/arch/loongarch/util/Build b/tools/perf/arch/l=
-oongarch/util/Build
-> >>> index d776125a2d06..b12d374d7096 100644
-> >>> --- a/tools/perf/arch/loongarch/util/Build
-> >>> +++ b/tools/perf/arch/loongarch/util/Build
-> >>> @@ -1,5 +1,7 @@
-> >>> +perf-y +=3D header.o
-> >>>    perf-y +=3D perf_regs.o
-> >>>
-> >>>    perf-$(CONFIG_DWARF)     +=3D dwarf-regs.o
-> >>>    perf-$(CONFIG_LOCAL_LIBUNWIND) +=3D unwind-libunwind.o
-> >>>    perf-$(CONFIG_LIBDW_DWARF_UNWIND) +=3D unwind-libdw.o
-> >>> +perf-$(CONFIG_LIBTRACEEVENT) +=3D kvm-stat.o
-> >>> diff --git a/tools/perf/arch/loongarch/util/header.c b/tools/perf/arc=
-h/loongarch/util/header.c
-> >>> new file mode 100644
-> >>> index 000000000000..a4ed732b49c6
-> >>> --- /dev/null
-> >>> +++ b/tools/perf/arch/loongarch/util/header.c
-> >>> @@ -0,0 +1,88 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0-only
-> >>> +/*
-> >>> + * Implementation of get_cpuid().
-> >>> + *
-> >>> + * Author: Nikita Shubin <n.shubin@yadro.com>
-> >>> + */
-> >>> +
-> >>> +#include <stdio.h>
-> >>> +#include <stdlib.h>
-> >>> +#include <api/fs/fs.h>
-> >>> +#include <errno.h>
-> >>> +#include "util/debug.h"
-> >>> +#include "util/header.h"
-> >>> +
-> >>> +/*
-> >>> + * Output example from /proc/cpuinfo
-> >>> + *   CPU Family              : Loongson-64bit
-> >>> + *   Model Name              : Loongson-3C5000
-> >>> + *   CPU Revision            : 0x11
-> >>> + */
-> >>> +#define CPUINFO_MODEL        "Model Name"
-> >>> +#define CPUINFO              "/proc/cpuinfo"
-> >>> +static char *_get_field(const char *line)
-> >>> +{
-> >>> +     char *line2, *nl;
-> >>> +
-> >>> +     line2 =3D strrchr(line, ' ');
-> >>> +     if (!line2)
-> >>> +             return NULL;
-> >>> +
-> >>> +     line2++;
-> >>> +     nl =3D strrchr(line, '\n');
-> >>> +     if (!nl)
-> >>> +             return NULL;
-> >>> +
-> >>> +     return strndup(line2, nl - line2);
-> >>> +}
-> >>> +
-> >>> +static char *__get_cpuid(void)
-> >>> +{
-> >>> +     char *line, *model, *cpuid;
-> >>> +     unsigned long line_sz;
-> >>> +     FILE *file;
-> >>> +
-> >>> +     file =3D fopen(CPUINFO, "r");
-> >>> +     if (file =3D=3D NULL)
-> >>> +             return cpuid;
-> >>> +
-> >>> +     line =3D model =3D cpuid =3D NULL;
-> >>> +     while (getline(&line, &line_sz, file) !=3D -1) {
-> >>> +             if (strncmp(line, CPUINFO_MODEL, strlen(CPUINFO_MODEL))=
-)
-> >>> +                     continue;
-> >>> +
-> >>> +             model =3D _get_field(line);
-> >>> +             if (!model)
-> >>> +                     goto free;
-> >>> +             break;
-> >>> +     }
-> >>> +
-> >>> +     if (model && (asprintf(&cpuid, "%s", model) < 0))
-> >>> +             cpuid =3D NULL;
-> >>> +
-> >>> +free:
-> >>> +     fclose(file);
-> >>> +     free(model);
-> >>> +     return cpuid;
-> >>> +}
-> >>> +
-> >>> +int get_cpuid(char *buffer, size_t sz)
-> >>> +{
-> >>> +     char *cpuid =3D __get_cpuid();
-> >>> +     int ret =3D 0;
-> >>> +
-> >>> +     if (!cpuid)
-> >>> +             return EINVAL;
-> >>> +
-> >>> +     if (sz >=3D strlen(cpuid))
-> >>> +             scnprintf(buffer, sz, "%s", cpuid);
-> >>> +     else
-> >>> +             ret =3D ENOBUFS;
-> >>> +     free(cpuid);
-> >>> +     return ret;
-> >>> +}
-> >>> +
-> >>> +char *get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
-> >>> +{
-> >>> +     return __get_cpuid();
-> >>> +}
-> >>> diff --git a/tools/perf/arch/loongarch/util/kvm-stat.c b/tools/perf/a=
-rch/loongarch/util/kvm-stat.c
-> >>> new file mode 100644
-> >>> index 000000000000..cc50adb0835a
-> >>> --- /dev/null
-> >>> +++ b/tools/perf/arch/loongarch/util/kvm-stat.c
-> >>> @@ -0,0 +1,135 @@
-> >>> +// SPDX-License-Identifier: GPL-2.0
-> >>> +#include <errno.h>
-> >>> +#include <memory.h>
-> >>> +#include <errno.h>
-> >>> +#include "util/kvm-stat.h"
-> >>> +#include "util/parse-events.h"
-> >>> +#include "util/debug.h"
-> >>> +#include "util/evsel.h"
-> >>> +#include "util/evlist.h"
-> >>> +#include "util/pmus.h"
-> >>> +
-> >>> +#define LOONGARCH_EXCEPTION_INT              0
-> >>> +#define LOONGARCH_EXCEPTION_PIL              1
-> >>> +#define LOONGARCH_EXCEPTION_PIS              2
-> >>> +#define LOONGARCH_EXCEPTION_PIF              3
-> >>> +#define LOONGARCH_EXCEPTION_PME              4
-> >>> +#define LOONGARCH_EXCEPTION_FPD              15
-> >>> +#define LOONGARCH_EXCEPTION_SXD              16
-> >>> +#define LOONGARCH_EXCEPTION_ASXD     17
-> >>> +#define LOONGARCH_EXCEPTION_GSPR     22
-> >>> +#define  LOONGARCH_EXCEPTION_CPUCFG  100
-> >>> +#define  LOONGARCH_EXCEPTION_CSR     101
-> >>> +#define  LOONGARCH_EXCEPTION_IOCSR   102
-> >>> +#define  LOONGARCH_EXCEPTION_IDLE    103
-> >>> +#define  LOONGARCH_EXCEPTION_OTHERS  104
-> >>> +#define LOONGARCH_EXCEPTION_HVC              23
-> >>> +
-> >>> +#define loongarch_exception_type                             \
-> >>> +     {LOONGARCH_EXCEPTION_INT,  "Interrupt" },               \
-> >>> +     {LOONGARCH_EXCEPTION_PIL,  "Mem read" },                \
-> >>> +     {LOONGARCH_EXCEPTION_PIS,  "Mem store" },               \
-> >>> +     {LOONGARCH_EXCEPTION_PIF,  "Ifecth" },                  \
-> >>> +     {LOONGARCH_EXCEPTION_PME,  "Mem modify" },              \
-> >>> +     {LOONGARCH_EXCEPTION_FPD,  "FPU" },                     \
-> >>> +     {LOONGARCH_EXCEPTION_SXD,  "LSX" },                     \
-> >>> +     {LOONGARCH_EXCEPTION_ASXD, "LASX" },                    \
-> >>> +     {LOONGARCH_EXCEPTION_GSPR, "Privilege Error" },         \
-> >>> +     {LOONGARCH_EXCEPTION_HVC,  "Hypercall" },               \
-> >>> +     {LOONGARCH_EXCEPTION_CPUCFG, "Cpucfg" },                \
-> >>> +     {LOONGARCH_EXCEPTION_CSR,    "Csr" },                   \
-> >>> +     {LOONGARCH_EXCEPTION_IOCSR,  "Iocsr" },                 \
-> >>> +     {LOONGARCH_EXCEPTION_IDLE,   "Idle" },                  \
-> >>> +     {LOONGARCH_EXCEPTION_OTHERS, "Others" }
-> >>> +
-> >>> +define_exit_reasons_table(loongarch_exit_reasons, loongarch_exceptio=
-n_type);
-> >>> +
-> >>> +const char *vcpu_id_str =3D "vcpu_id";
-> >>> +const char *kvm_exit_reason =3D "reason";
-> >>> +const char *kvm_entry_trace =3D "kvm:kvm_enter";
-> >>> +const char *kvm_reenter_trace =3D "kvm:kvm_reenter";
-> >>> +const char *kvm_exit_trace =3D "kvm:kvm_exit";
-> >>> +const char *kvm_events_tp[] =3D {
-> >>> +     "kvm:kvm_enter",
-> >>> +     "kvm:kvm_reenter",
-> >>> +     "kvm:kvm_exit",
-> >>> +     "kvm:kvm_exit_gspr",
-> >>> +     NULL,
-> >>> +};
-> >>> +
-> >>> +static bool event_end(struct evsel *evsel,
-> >>> +             struct perf_sample *sample __maybe_unused,
-> >>> +             struct event_key *key __maybe_unused)
-> >>> +{
-> >>> +     /*
-> >>> +      * LoongArch kvm is different with other architectures
-> >>> +      *
-> >>> +      * There is kvm:kvm_reenter or kvm:kvm_enter event adjacent wit=
-h
-> >>> +      * kvm:kvm_exit event.
-> >>> +      *   kvm:kvm_reenter means returning to guest immediately
-> >>> +      *   kvm:kvm_enter   means returning to vmm and then to guest
-> >>> +      */
-> >>> +     return evsel__name_is(evsel, kvm_entry_trace) ||
-> >>> +             evsel__name_is(evsel, kvm_reenter_trace);
-> >>> +}
-> >>> +
-> >>> +static void event_gspr_get_key(struct evsel *evsel,
-> >>> +                     struct perf_sample *sample,
-> >>> +                     struct event_key *key)
-> >>> +{
-> >>> +     unsigned int insn;
-> >>> +
-> >>> +     key->key =3D LOONGARCH_EXCEPTION_OTHERS;
-> >>> +     insn =3D evsel__intval(evsel, sample, "inst_word");
-> >>> +     switch (insn >> 24) {
-> >>> +     case 0:
-> >>> +             /* cpucfg inst trap */
-> >>> +             if ((insn >> 10) =3D=3D 0x1b)
-> >>> +                     key->key =3D LOONGARCH_EXCEPTION_CPUCFG;
-> >>> +             break;
-> >>> +     case 4:
-> >>> +             /* csr inst trap */
-> >>> +             key->key =3D LOONGARCH_EXCEPTION_CSR;
-> >>> +             break;
-> >>> +     case 6:
-> >>> +             /* iocsr inst trap */
-> >>> +             if ((insn >> 15) =3D=3D 0xc90)
-> >>> +                     key->key =3D LOONGARCH_EXCEPTION_IOCSR;
-> >>> +             else if ((insn >> 15) =3D=3D 0xc91)
-> >>> +                     /* idle inst trap */
-> >>> +                     key->key =3D LOONGARCH_EXCEPTION_IDLE;
-> >>> +             break;
-> >>> +     default:
-> >>> +             key->key =3D LOONGARCH_EXCEPTION_OTHERS;
-> >>> +             break;
-> >>> +     }
-> >>> +}
-> >>> +
-> >>> +static struct child_event_ops child_events[] =3D {
-> >>> +     { .name =3D "kvm:kvm_exit_gspr", .get_key =3D event_gspr_get_ke=
-y },
-> >>> +     { NULL, NULL },
-> >>> +};
-> >>> +
-> >>> +static struct kvm_events_ops exit_events =3D {
-> >>> +     .is_begin_event =3D exit_event_begin,
-> >>> +     .is_end_event =3D event_end,
-> >>> +     .child_ops =3D child_events,
-> >>> +     .decode_key =3D exit_event_decode_key,
-> >>> +     .name =3D "VM-EXIT"
-> >>> +};
-> >>> +
-> >>> +struct kvm_reg_events_ops kvm_reg_events_ops[] =3D {
-> >>> +     { .name =3D "vmexit", .ops =3D &exit_events, },
-> >>> +     { NULL, NULL },
-> >>> +};
-> >>> +
-> >>> +const char * const kvm_skip_events[] =3D {
-> >>> +     NULL,
-> >>> +};
-> >>> +
-> >>> +int cpu_isa_init(struct perf_kvm_stat *kvm, const char *cpuid __mayb=
-e_unused)
-> >>> +{
-> >>> +     kvm->exit_reasons_isa =3D "loongarch64";
-> >>> +     kvm->exit_reasons =3D loongarch_exit_reasons;
-> >>> +     return 0;
-> >>> +}
-> >>>
-> >>> base-commit: 2c71fdf02a95b3dd425b42f28fd47fb2b1d22702
-> >>>
-> >>
->
+Changes in v4:
+
+- Fix landlock workload's build error.
+
+Changes in v3:
+
+- Add trace__btf_scnprintf() helper function
+- Remove is_enum memeber in struct syscall_arg_fmt, replace it with 
+btf_is_enum()
+- Add syscall_arg_fmt__cache_btf_enum() to cache btf_type only
+- Resolve NO_LIBBPF=1 build error
+- Skip BTF augmentation test if landlock_add_rule syscall and LIBBPF are not
+available
+- Rename landlock.c workload, add a comment to landlock.c workload
+- Change the way of skipping 'enum ' prefix
+- Add type_name member to struct syscall_arg
+
+Changes in v2:
+
+- Add trace_btf_enum regression test, and landlock workload
+
+v1:
+
+In this patch, BTF is used to turn enum value to the corresponding
+enum variable name. There is only one system call that uses enum value
+as its argument, that is `landlock_add_rule()`.
+
+Enum arguments of non-syscall tracepoints can also be augmented, for
+instance timer:hrtimer_start and timer:hrtimer_init's 'mode' argument.
+
+
+Arnaldo Carvalho de Melo (2):
+  perf trace: Introduce trace__btf_scnprintf()
+  perf trace: Remove arg_fmt->is_enum, we can get that from the BTF type
+
+Howard Chu (6):
+  perf trace: Fix iteration of syscall ids in syscalltbl->entries
+  perf trace: BTF-based enum pretty printing for syscall args
+  perf trace: Augment non-syscall tracepoints with enum arguments with
+    BTF
+  perf trace: Filter enum arguments with enum names
+  perf test: Add landlock workload
+  perf test trace_btf_enum: Add regression test for the BTF augmentation
+    of enums in 'perf trace'
+
+ tools/perf/builtin-trace.c               | 229 ++++++++++++++++++++---
+ tools/perf/tests/builtin-test.c          |   1 +
+ tools/perf/tests/shell/trace_btf_enum.sh |  61 ++++++
+ tools/perf/tests/tests.h                 |   1 +
+ tools/perf/tests/workloads/Build         |   2 +
+ tools/perf/tests/workloads/landlock.c    |  66 +++++++
+ tools/perf/trace/beauty/beauty.h         |   1 +
+ tools/perf/util/syscalltbl.c             |   7 +
+ tools/perf/util/syscalltbl.h             |   1 +
+ 9 files changed, 345 insertions(+), 24 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_btf_enum.sh
+ create mode 100644 tools/perf/tests/workloads/landlock.c
+
+-- 
+2.45.2
+
