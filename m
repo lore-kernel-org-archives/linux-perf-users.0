@@ -1,57 +1,57 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3120014882A;
-	Fri,  5 Jul 2024 09:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D9CA148858;
+	Fri,  5 Jul 2024 09:43:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720172592; cv=none; b=cIR3zLUqqTbepPWUJCsdIyixjIfyeOQVIakDP+MpL3YMarhwzypkHz+pWsPTQU23SDdRrNF6/9nGTg+sNKDIBGYoDhTkJ9CD6psvu/bKOO4WKGw2NexrUTdPo/pA1na5sIamEQ7XGrPzJMakZO6M5r0DrFBUwg0pojeDoChYuUk=
+	t=1720172597; cv=none; b=AZJ+n/2mdQ8tpaJKaWJbO0RAJqxuF4VOI8HAFg+wEiGGxIEqKDjYfI+egzo3B3lyxbGvFTeonqv95ZsbUQrZu1JhmSeh5oNPLhLQLcSn/yitfpXdFM5A+8nGYUYAWE0DYSxA6d238JlYUb0jyfTqT8RqfutCb+FaT0DUJRCiefA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720172592; c=relaxed/simple;
-	bh=wDgsftP4Z2gjtvPtuKIKy8aJh8WgfvjpQOBfMGDJbMQ=;
+	s=arc-20240116; t=1720172597; c=relaxed/simple;
+	bh=lEdgG0ZTYJexChkBRMuE04MIvYbrZH3QypaCc3wVyQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EfTx2oud5lhngE0qMcyRCh7od2sFgxZbwYWiO382kJdvkMCiZf73KdL/1tVf0kt3xfWUMML1BLK5A3Ya5IJCOlDW5/CYjvU2Q5h+hxH+4TQyXoGx2h4FHBhnQEX7fzZYQf/5poX1JQLaN7xyZPToivLjn3CiOZSBsP87IsYS/ME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O92ezHX2; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=b3ruyoROikiCQyuMOLaxolDanAXOYD6LK+aFTvmk5Km+9xLpDjyRfcy22BwSERbMsvAud1NgF943Ekt2Uvpi/kNwaMRvLNOWdd24cvwzbu3OTnO4bm1qumEal+/RT4pRGqIK5WFUO2HX4kmXOOXRd7tGMXVDHpqxFJv2h85Xs4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GCtHNtK/; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O92ezHX2"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fb3cf78fbdso7061285ad.1;
-        Fri, 05 Jul 2024 02:43:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCtHNtK/"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-761e0f371f5so782444a12.1;
+        Fri, 05 Jul 2024 02:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720172590; x=1720777390; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720172595; x=1720777395; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lYTot191GZo6DS32N1w+V73flNMPv1Itq1GPGesqtFc=;
-        b=O92ezHX2+9u8q6mK6snKferHLue8TfTnmbVNo+31bnewYojnJ6frFldKBdTbbIsYN5
-         4IjFHK7kjTxxAs+RerMLc8zL4aup5esITau7l+6i902zyi3Ir0WbzWt27zcwkavmWrL2
-         M7HmBkaze1Q0Mu5ySPhUf7rgE/9xB5yXX4c0eO+/w7sG16Y2Gf4xlBA+QE6FIqsq4Phm
-         ky7qSr5VHjPaCHWlmwnTQgmVm9jQnVOYjtpnAvLa6g5kpipob/Ms39/YUDi/Y9pb7e8g
-         y/Lzcv45I9Cj/8IltVrRnxMVbVNICnY9672Fba9pkQReyGcmdg4ZrC1L8om7Tt8w2lEK
-         vXaA==
+        bh=c8OqZCgqHPZ3fH019qRYJYUerKLq5729V+3ETr9F91k=;
+        b=GCtHNtK/kk0cqtQX/3oR9i1CayGjDLc7Oyz4twQbB4Rf7+WhWlw0XT+iuyEmv2fQht
+         ixgAvZmSZZku3yUy78v2x01uZrzBIGEls3HbIiW/KArbtkez5C9H/UVxnT0mFEJZrVUa
+         DstiAqXIToGXih8G4OjyhFbWeB6NMT00IDM19Z2Ztb9qmUI0kUExdT9VXD6z/balKWWu
+         C+QekSjInUrNIKmpYNCNx8MIQeAXaCMjyyVWoYEztarO3u0lmN6Jh88jYBYaUhjDnwqz
+         Q1X4mr9X5IGLWz+iMQdWmPncy908nTcXcJFHD+0Pqu4bbvpt2J35Jmg36dX16ekzLRUo
+         FpQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720172590; x=1720777390;
+        d=1e100.net; s=20230601; t=1720172595; x=1720777395;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lYTot191GZo6DS32N1w+V73flNMPv1Itq1GPGesqtFc=;
-        b=I9eG5+MTdP9Z6U567XcFSOI0zJZSfqbgohyH+fJ1G+ZMtx1ZThICaLDAqpk0Q6Z+Oc
-         l7+KkObS7aS1asZH5uFGIQ3OApEKL733SgAYT8CyZfspCzRBrljOLGhtE0yvCg1+Ym3W
-         tf3Pa/bLHoWtbzuDWEdoElPA6rMi2QhmtSIOcVIGA1jETEx1+zpvcBi+XwSAtRuXWmKQ
-         pKBKJKOhEs94oq7A48tPUn2yUdJYhUAxlVsajx6yzCIYjb+8HDFYbZKJF3hU4jI46aCu
-         0KrI2OXEwIUAKPqJTrD37eOsKsopabDjQzu3xIFp8E26W0jPAJN9krBbNAbNgln7rM2y
-         6uhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUT/r+StfdUmBSxc0zSClezTRK/sgSr++G77lIEW2rPX9wyJ98xUo8+Y6PAVc9LbCh6EnWza8rtMTy4DD+aT5SvvRY+ZGTROLkEwbF7AL7rrz9ZEpot7fDMl9fiClswgAlf1beCTUyhZjnbW7/olg==
-X-Gm-Message-State: AOJu0YwCKj0Kbkw9slw4HauoQQ/UijWzP/6DuBLL1o1fLbA8BPjicwq6
-	VZT9B5kedD9yWcIF8C2xxxThiaY/fy8zFwAWmWFmLTjXOd2+NLU6
-X-Google-Smtp-Source: AGHT+IE56K4FGWx3BpcbBb6ydEaFUrkFOCD9vpTcLh4vpUR0WSXiBD2DSIkeCEE54zmLQk5hoMi3mg==
-X-Received: by 2002:a17:90b:124f:b0:2c9:7e9e:70b3 with SMTP id 98e67ed59e1d1-2c99c6e49b2mr2543882a91.33.1720172590246;
-        Fri, 05 Jul 2024 02:43:10 -0700 (PDT)
+        bh=c8OqZCgqHPZ3fH019qRYJYUerKLq5729V+3ETr9F91k=;
+        b=LQVdzUKtNQs+jtlURfRMlrvLz3qT2kmAZYl9EepXpooTIe0IypXypAY+e19eRhV33T
+         fZt/9YZwtKwa43fABXLaeJqWJRn8UOXasAHc2AdpkMnU6ivvvDblnEV/1tEAewZ1w94x
+         Mj2iNQ+QIMhVEfEIWdpBbur3inyVvFTBWC01bLily8bEvQAxjwTkA+ONXF2HgasPGpCp
+         gj0qt4sAIvE//pKvL0jxD5qp5zdZRrNJV0Anf6lTi3tTmpqlSJsOrAPutBHIrMk2wp9m
+         olvbHI6NVH1R2zDlnR4/BABbRe2Nym+TPFT45S2TpLvFIW3doFYawo/vBlnnGPWVFo2q
+         2tMw==
+X-Forwarded-Encrypted: i=1; AJvYcCXDFWbbnhHLGRp++FttoXQyRc1O8zQa87GVisSSMk24/vAQoTtiAVHe8hW66sSSPNmF70/u2LVUR8gVRRSRcvElGXJnFU8KAyPpQUEK6aBAVBgWYuoxZzqksdUQoE7FCyD62v2dt2em5W/xBM6L3A==
+X-Gm-Message-State: AOJu0YxrHAuSR1VqjlFXVhxbUxBdRCH3gDk+sVL5RbdzrTjsbMHB3GG2
+	qSeEa1psMmgXaNcZx5h0tTqZMfG54vxtLL2+EXisahQpdRLL3zJN
+X-Google-Smtp-Source: AGHT+IFN6hxQR4EGBW2FAHG5WSp9JhH/71knYV6MuFQG8TmxJpzZ8yEA/L9xMYiubVP5DcAjV0HOxA==
+X-Received: by 2002:a17:90b:90f:b0:2c3:34f4:5154 with SMTP id 98e67ed59e1d1-2c99f2f43b1mr5646660a91.1.1720172594483;
+        Fri, 05 Jul 2024 02:43:14 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.88])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a9cd133sm2958138a91.38.2024.07.05.02.43.05
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c99a9cd133sm2958138a91.38.2024.07.05.02.43.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 02:43:10 -0700 (PDT)
+        Fri, 05 Jul 2024 02:43:14 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -61,14 +61,10 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH v5 4/8] perf trace: Filter enum arguments with enum names
-Date: Fri,  5 Jul 2024 17:42:56 +0800
-Message-ID: <20240705094300.585156-5-howardchu95@gmail.com>
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH v5 5/8] perf test: Add landlock workload
+Date: Fri,  5 Jul 2024 17:42:57 +0800
+Message-ID: <20240705094300.585156-6-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240705094300.585156-1-howardchu95@gmail.com>
 References: <20240705094300.585156-1-howardchu95@gmail.com>
@@ -80,219 +76,160 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Before:
+We'll use it to add a regression test for the BTF augmentation of enum
+arguments for tracepoints in 'perf trace':
 
-perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
-No resolver (strtoul) for "mode" in "timer:hrtimer_start", can't set filter "(mode!=HRTIMER_MODE_ABS_PINNED_HARD) && (common_pid != 281988)"
+  root@x1:~# perf trace -e landlock_add_rule perf test -w landlock
+       0.000 ( 0.009 ms): perf/747160 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_PATH_BENEATH, rule_attr: 0x7ffd8e258594, flags: 45) = -1 EINVAL (Invalid argument)
+       0.011 ( 0.002 ms): perf/747160 landlock_add_rule(ruleset_fd: 11, rule_type: LANDLOCK_RULE_NET_PORT, rule_attr: 0x7ffd8e2585a0, flags: 45) = -1 EINVAL (Invalid argument)
+  root@x1:~#
 
-After:
+Committer notes:
 
-perf $ ./perf trace -e timer:hrtimer_start --filter='mode!=HRTIMER_MODE_ABS_PINNED_HARD' --max-events=1
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12351248764875, softexpires: 12351248764875, mode: HRTIMER_MODE_ABS)
+It was agreed on the discussion (see Link below) to shorten then name of
+the workload from 'landlock_add_rule' to 'landlock', and I moved it to a
+separate patch.
 
-&& and ||:
+Also, to address a build failure from Namhyung, I stopped loading
+linux/landlock.h and instead added the used defines, enums and types to
+make this build in older systems. All we want is to emit the syscall and
+intercept it.
 
-perf $ ./perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS_PINNED_HARD && mode != HRTIMER_MODE_ABS' --max-events=1
-     0.000 Hyprland/534 timer:hrtimer_start(hrtimer: 0xffff9497801a84d0, function: 0xffffffffc04cdbe0, expires: 12639434638458, softexpires: 12639433638458, mode: HRTIMER_MODE_REL)
-
-perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_REL || mode == HRTIMER_MODE_PINNED' --max-events=1
-     0.000 ldlck-test/60639 timer:hrtimer_start(hrtimer: 0xffffb16404ee7bf8, function: 0xffffffffa7790420, expires: 12772614418016, softexpires: 12772614368016, mode: HRTIMER_MODE_REL)
-
-Switching it up, using both enum name and integer value(--filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0'):
-
-perf $ ./perf trace -e timer:hrtimer_start --filter='mode == HRTIMER_MODE_ABS_PINNED_HARD || mode == 0' --max-events=3
-     0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12601748739825, softexpires: 12601748739825, mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.036 :0/0 timer:hrtimer_start(hrtimer: 0xffff9498a6ca5f18, function: 0xffffffffa77a5be0, expires: 12518758748124, softexpires: 12518758748124, mode: HRTIMER_MODE_ABS_PINNED_HARD)
-     0.172 tmux: server/41881 timer:hrtimer_start(hrtimer: 0xffffb164081e7838, function: 0xffffffffa7790420, expires: 12518768255836, softexpires: 12518768205836, mode: HRTIMER_MODE_ABS)
-
-P.S.
-perf $ pahole hrtimer_mode
-enum hrtimer_mode {
-        HRTIMER_MODE_ABS             = 0,
-        HRTIMER_MODE_REL             = 1,
-        HRTIMER_MODE_PINNED          = 2,
-        HRTIMER_MODE_SOFT            = 4,
-        HRTIMER_MODE_HARD            = 8,
-        HRTIMER_MODE_ABS_PINNED      = 2,
-        HRTIMER_MODE_REL_PINNED      = 3,
-        HRTIMER_MODE_ABS_SOFT        = 4,
-        HRTIMER_MODE_REL_SOFT        = 5,
-        HRTIMER_MODE_ABS_PINNED_SOFT = 6,
-        HRTIMER_MODE_REL_PINNED_SOFT = 7,
-        HRTIMER_MODE_ABS_HARD        = 8,
-        HRTIMER_MODE_REL_HARD        = 9,
-        HRTIMER_MODE_ABS_PINNED_HARD = 10,
-        HRTIMER_MODE_REL_PINNED_HARD = 11,
-};
-
-Committer testing:
-
-  root@x1:~# perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS' --max-events=2
-       0.000 :0/0 timer:hrtimer_start(hrtimer: 0xffff8d4eff2a5050, function: 0xffffffff9e22ddd0, expires: 241502326000000, softexpires: 241502326000000, mode: HRTIMER_MODE_ABS_PINNED_HARD)
-  18446744073709.488 :0/0 timer:hrtimer_start(hrtimer: 0xffff8d4eff425050, function: 0xffffffff9e22ddd0, expires: 241501814000000, softexpires: 241501814000000, mode: HRTIMER_MODE_ABS_PINNED_HARD)
-  root@x1:~# perf trace -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS && mode != HRTIMER_MODE_ABS_PINNED_HARD' --max-events=2
-       0.000 podman/510644 timer:hrtimer_start(hrtimer: 0xffffa2024f5f7dd0, function: 0xffffffff9e2170c0, expires: 241530497418194, softexpires: 241530497368194, mode: HRTIMER_MODE_REL)
-      40.251 gnome-shell/2484 timer:hrtimer_start(hrtimer: 0xffff8d48bda17650, function: 0xffffffffc0661550, expires: 241550528619247, softexpires: 241550527619247, mode: HRTIMER_MODE_REL)
-  root@x1:~# perf trace -v -e timer:hrtimer_start --filter='mode != HRTIMER_MODE_ABS && mode != HRTIMER_MODE_ABS_PINNED_HARD && mode != HRTIMER_MODE_REL' --max-events=2
-  Using CPUID GenuineIntel-6-BA-3
-  vmlinux BTF loaded
-  <SNIP>
-  0
-  0xa
-  0x1
-  New filter for timer:hrtimer_start: (mode != 0 && mode != 0xa && mode != 0x1) && (common_pid != 524049 && common_pid != 4041)
-  mmap size 528384B
-  ^Croot@x1:~#
+We also need to add a "CFLAGS_landlock.o         = -Wno-attributes" line
+to cope with those landlock struct packed structs when building on
+32-bit architectures.
 
 Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/ZnCcliuecJABD5FN@x1
-Link: https://lore.kernel.org/r/20240624181345.124764-5-howardchu95@gmail.com
+Link: https://lore.kernel.org/lkml/CAH0uvohaypdTV6Z7O5QSK+va_qnhZ6BP6oSJ89s1c1E0CjgxDA@mail.gmail.com
+Link: https://lore.kernel.org/r/20240624181345.124764-1-howardchu95@gmail.com
+Link: https://lore.kernel.org/r/20240624181345.124764-6-howardchu95@gmail.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c | 62 ++++++++++++++++++++++++++++++++++----
- 1 file changed, 56 insertions(+), 6 deletions(-)
+ tools/perf/tests/builtin-test.c       |  1 +
+ tools/perf/tests/tests.h              |  1 +
+ tools/perf/tests/workloads/Build      |  2 +
+ tools/perf/tests/workloads/landlock.c | 66 +++++++++++++++++++++++++++
+ 4 files changed, 70 insertions(+)
+ create mode 100644 tools/perf/tests/workloads/landlock.c
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5618feb7d01a..e664001d5ed7 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -932,6 +932,37 @@ static int syscall_arg_fmt__cache_btf_enum(struct syscall_arg_fmt *arg_fmt, stru
- 	return arg_fmt->type == NULL ? -1 : 0;
- }
+diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
+index c3d84b67ca8e..470a9709427d 100644
+--- a/tools/perf/tests/builtin-test.c
++++ b/tools/perf/tests/builtin-test.c
+@@ -152,6 +152,7 @@ static struct test_workload *workloads[] = {
+ 	&workload__sqrtloop,
+ 	&workload__brstack,
+ 	&workload__datasym,
++	&workload__landlock,
+ };
  
-+static bool syscall_arg__strtoul_btf_enum(char *bf, size_t size, struct syscall_arg *arg, u64 *val)
+ static int num_subtests(const struct test_suite *t)
+diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+index 3aa7701ee0e9..6ea2be86b7bf 100644
+--- a/tools/perf/tests/tests.h
++++ b/tools/perf/tests/tests.h
+@@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
+ DECLARE_WORKLOAD(sqrtloop);
+ DECLARE_WORKLOAD(brstack);
+ DECLARE_WORKLOAD(datasym);
++DECLARE_WORKLOAD(landlock);
+ 
+ extern const char *dso_to_test;
+ extern const char *test_objdump_path;
+diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workloads/Build
+index 48bf0d3b0f3d..3fe97e68d105 100644
+--- a/tools/perf/tests/workloads/Build
++++ b/tools/perf/tests/workloads/Build
+@@ -6,8 +6,10 @@ perf-test-y += leafloop.o
+ perf-test-y += sqrtloop.o
+ perf-test-y += brstack.o
+ perf-test-y += datasym.o
++perf-test-y += landlock.o
+ 
+ CFLAGS_sqrtloop.o         = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_leafloop.o         = -g -O0 -fno-inline -fno-omit-frame-pointer -U_FORTIFY_SOURCE
+ CFLAGS_brstack.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
+ CFLAGS_datasym.o          = -g -O0 -fno-inline -U_FORTIFY_SOURCE
++CFLAGS_landlock.o         = -Wno-attributes
+diff --git a/tools/perf/tests/workloads/landlock.c b/tools/perf/tests/workloads/landlock.c
+new file mode 100644
+index 000000000000..0c2bcdaf2263
+--- /dev/null
++++ b/tools/perf/tests/workloads/landlock.c
+@@ -0,0 +1,66 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#include <linux/compiler.h>
++#include <linux/types.h>
++#include <unistd.h>
++#include "../tests.h"
++
++/* This workload was initially added to test enum augmentation with BTF in perf
++ * trace because its the only syscall that has an enum argument. Since it is
++ * a recent addition to the Linux kernel (at the time of the introduction of this
++ * 'perf test' workload) we just add the required types and defines here instead
++ * of including linux/landlock, that isn't available in older systems.
++ *
++ * We are not interested in the the result of the syscall, just in intercepting
++ * its arguments.
++ */
++
++#ifndef __NR_landlock_add_rule
++#define __NR_landlock_add_rule 445
++#endif
++
++#ifndef LANDLOCK_ACCESS_FS_READ_FILE
++#define LANDLOCK_ACCESS_FS_READ_FILE	(1ULL << 2)
++
++#define LANDLOCK_RULE_PATH_BENEATH	1
++
++struct landlock_path_beneath_attr {
++        __u64 allowed_access;
++        __s32 parent_fd;
++} __attribute__((packed));
++#endif
++
++#ifndef LANDLOCK_ACCESS_NET_CONNECT_TCP
++#define LANDLOCK_ACCESS_NET_CONNECT_TCP	(1ULL << 1)
++
++#define LANDLOCK_RULE_NET_PORT		2
++
++struct landlock_net_port_attr {
++	__u64 allowed_access;
++	__u64 port;
++};
++#endif
++
++static int landlock(int argc __maybe_unused, const char **argv __maybe_unused)
 +{
-+	const struct btf_type *bt;
-+	char *type = arg->parm;
-+	struct btf_enum *be;
-+	struct btf *btf;
++	int fd = 11, flags = 45;
 +
-+	trace__load_vmlinux_btf(arg->trace);
++	struct landlock_path_beneath_attr path_beneath_attr = {
++		.allowed_access = LANDLOCK_ACCESS_FS_READ_FILE,
++		.parent_fd = 14,
++	};
 +
-+	btf = arg->trace->btf;
-+	if (btf == NULL)
-+		return false;
++	struct landlock_net_port_attr net_port_attr = {
++		.port = 19,
++		.allowed_access = LANDLOCK_ACCESS_NET_CONNECT_TCP,
++	};
 +
-+	if (syscall_arg_fmt__cache_btf_enum(arg->fmt, btf, type) < 0)
-+		return false;
++	syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_PATH_BENEATH,
++		&path_beneath_attr, flags);
 +
-+	bt = arg->fmt->type;
-+	be = btf_enum(bt);
-+	for (int i = 0; i < btf_vlen(bt); ++i, ++be) {
-+		const char *name = btf__name_by_offset(btf, be->name_off);
-+		int max_len = max(size, strlen(name));
++	syscall(__NR_landlock_add_rule, fd, LANDLOCK_RULE_NET_PORT,
++		&net_port_attr, flags);
 +
-+		if (strncmp(name, bf, max_len) == 0) {
-+			*val = be->val;
-+			return true;
-+		}
-+	}
-+
-+	return false;
++	return 0;
 +}
 +
- static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, char *bf, size_t size, int val)
- {
- 	struct btf_enum *be = btf_enum(type);
-@@ -965,8 +996,16 @@ static size_t trace__btf_enum_scnprintf(struct trace *trace __maybe_unused, stru
- {
- 	return 0;
- }
-+
-+static bool syscall_arg__strtoul_btf_enum(char *bf __maybe_unused, size_t size __maybe_unused,
-+					  struct syscall_arg *arg __maybe_unused, u64 *val __maybe_unused)
-+{
-+	return false;
-+}
- #endif // HAVE_LIBBPF_SUPPORT
- 
-+#define STUL_BTF_ENUM syscall_arg__strtoul_btf_enum
-+
- #define STRARRAY(name, array) \
- 	  { .scnprintf	= SCA_STRARRAY, \
- 	    .strtoul	= STUL_STRARRAY, \
-@@ -1867,6 +1906,7 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
- 			arg->scnprintf = SCA_FD;
- 		} else if (strstr(field->type, "enum") && use_btf != NULL) {
- 			*use_btf = arg->is_enum = true;
-+			arg->strtoul = STUL_BTF_ENUM;
- 		} else {
- 			const struct syscall_arg_fmt *fmt =
- 				syscall_arg_fmt__find_by_name(field->name);
-@@ -3792,7 +3832,8 @@ static int ordered_events__deliver_event(struct ordered_events *oe,
- 	return __trace__deliver_event(trace, event->event);
- }
- 
--static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel *evsel, char *arg)
-+static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel *evsel, char *arg,
-+								   char **type)
- {
- 	struct tep_format_field *field;
- 	struct syscall_arg_fmt *fmt = __evsel__syscall_arg_fmt(evsel);
-@@ -3801,13 +3842,15 @@ static struct syscall_arg_fmt *evsel__find_syscall_arg_fmt_by_name(struct evsel
- 		return NULL;
- 
- 	for (field = evsel->tp_format->format.fields; field; field = field->next, ++fmt)
--		if (strcmp(field->name, arg) == 0)
-+		if (strcmp(field->name, arg) == 0) {
-+			*type = field->type;
- 			return fmt;
-+		}
- 
- 	return NULL;
- }
- 
--static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel *evsel)
-+static int trace__expand_filter(struct trace *trace, struct evsel *evsel)
- {
- 	char *tok, *left = evsel->filter, *new_filter = evsel->filter;
- 
-@@ -3840,14 +3883,14 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
- 			struct syscall_arg_fmt *fmt;
- 			int left_size = tok - left,
- 			    right_size = right_end - right;
--			char arg[128];
-+			char arg[128], *type;
- 
- 			while (isspace(left[left_size - 1]))
- 				--left_size;
- 
- 			scnprintf(arg, sizeof(arg), "%.*s", left_size, left);
- 
--			fmt = evsel__find_syscall_arg_fmt_by_name(evsel, arg);
-+			fmt = evsel__find_syscall_arg_fmt_by_name(evsel, arg, &type);
- 			if (fmt == NULL) {
- 				pr_err("\"%s\" not found in \"%s\", can't set filter \"%s\"\n",
- 				       arg, evsel->name, evsel->filter);
-@@ -3860,9 +3903,16 @@ static int trace__expand_filter(struct trace *trace __maybe_unused, struct evsel
- 			if (fmt->strtoul) {
- 				u64 val;
- 				struct syscall_arg syscall_arg = {
--					.parm = fmt->parm,
-+					.trace = trace,
-+					.fmt   = fmt,
- 				};
- 
-+				if (fmt->is_enum) {
-+					syscall_arg.parm = type;
-+				} else {
-+					syscall_arg.parm = fmt->parm;
-+				}
-+
- 				if (fmt->strtoul(right, right_size, &syscall_arg, &val)) {
- 					char *n, expansion[19];
- 					int expansion_lenght = scnprintf(expansion, sizeof(expansion), "%#" PRIx64, val);
++DEFINE_WORKLOAD(landlock);
 -- 
 2.45.2
 
