@@ -1,95 +1,147 @@
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB7A517753
-	for <linux-perf-users@vger.kernel.org>; Sat,  6 Jul 2024 20:03:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C066881E;
+	Sat,  6 Jul 2024 22:44:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720296198; cv=none; b=pNYyF21b0BpKVsTRCWXJWkef/PRZ0aEjdef79K33/cPYUEZg9ID6lBvBNQPmVeRzeQHrzDMt4zG2sHdNNwlQdR6NrkvdFh+axsI5Wpf+xQ1bAGzWil8ToLFVfcXnIDVK2cCDaYx5Bbxy9Yex6DI8Eafeel65C2cPYmy+bIMxF8Y=
+	t=1720305879; cv=none; b=daceC64R1r9JPl9Qar7xTFTBG01b9et1URjvkco+e70TNt7DQoW48m77qNPlyN22qMxR//XE6v0NTTxWUqQvSItTgSMeIhnI1gVF7zcgZ0FDTc4CLmjJmDv7kAWF0TczGNSnF5ak5vLQ0pr0njo/vlSzdbD8rgqzXv1HYoTgScs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720296198; c=relaxed/simple;
-	bh=Ra4SsSgNnkb6AcgXykU5ox+WMiMnyxDh8lGNql7Ad1A=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bt0XUVyY++lG6NKyGe7TgeaTVwj0rGUBtrahiH4MsNn10R2gCzIpL5EJXndeYYu5b+mKh4K+o+pietzOCD+o7Zr6mLk8N0fc6P5dy/87Er+DBO5JkeGen2fZGhwLaxehbRi6or5NCQUIbQ/xkqXzyCQZaeRRaorSsyVebiB/lcQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fDbZiHfA; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720305879; c=relaxed/simple;
+	bh=WQySAcpdbRQmQL4PCMwk5G7kS07P/ADMvxxt0WpGKRw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Jk9+/gbxbl+EmVapwTADyhFc4cp7R9yf75lW7xHdrtcdl+H04e5gEZfp8yeMbRdDhhIXxKszIS1IXL70rxPWBok8aBbsukqPjqygKLQfC2vCoxJVjdG975IvrSJBrzBvLbj15ufR4DZKv5wUyRStpBiVPDiLPhJYU/z+M6EkYng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHo6cmX/; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fDbZiHfA"
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-e035f4e3473so2388956276.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jul 2024 13:03:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720296195; x=1720900995; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=h77256I1GiE3p9I4YnWsSahI84rl8Zbos4yv9AgBkTc=;
-        b=fDbZiHfA3YNVh85sTLw3GMCgcDeWeQngbLooHcdJwS0v42bj/0MF1v/+UpUURYnV1Z
-         CgsDltHtXZKI1GpBrA+ylGPaNz+4zr8cCLiFBPoazqhgfaO4EP5KziPAcuy2Qr9NS7na
-         8EgT1JStbkuO/2+QnT7BValUAKaGnJ6UIjB2w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720296195; x=1720900995;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=h77256I1GiE3p9I4YnWsSahI84rl8Zbos4yv9AgBkTc=;
-        b=ijgdurE/JfX/yZQsqTpsAxlACBeg8gxFcrnQ4o1WzxwSwwFogLKLR+wSwe5BZ+L321
-         D8Iyyb/jRJxgLW+fph1d9UrKy452MBxj2IuvCErYsTo7hC5VNJIhRKD5hboh3PdP8RLy
-         QsR199vxVWzhDzUnTSAlZxgxOf85uNE3NggQNrSHCNkmgpHm+1bBSOUvZMc0F5dfHBQz
-         bdJtHWGLXrvkPbIXWEkEzYR4BvAdzcc3aQdoXXiuISlkI8L3qAv+XM2aOeBlHDxIUkAd
-         CbinAvblVebdae03baQbOkhs2OWo4yvRX980nDjf/1/t6HGYbn60pyZHQjMHDdYLrK64
-         5HGw==
-X-Gm-Message-State: AOJu0YwhWrojgbDCj0f1sPuTxrz7yH+Dgz76+Kvu1YJdKySFlHFn2cy0
-	GSjE/5CGPmvQtEEj2sem3Z9qFaT/0AUkEvHwFjwlwCuudufh1Nnj4cigrpFgQ4YbXdR+uVGmMVt
-	tbI852Q==
-X-Google-Smtp-Source: AGHT+IGhyBk6O/B3jt6vPok+PPCSL2wOqf+iNOXENtL88CIFkW2ZBRG1N5WQ5SHi5v1pyr9Vj05YeQ==
-X-Received: by 2002:a05:690c:6c82:b0:63b:b3b8:e834 with SMTP id 00721157ae682-652d7683a93mr110366177b3.32.1720296195517;
-        Sat, 06 Jul 2024 13:03:15 -0700 (PDT)
-Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-8100b5da65bsm1358974241.13.2024.07.06.13.03.15
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 Jul 2024 13:03:15 -0700 (PDT)
-Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-4f301629cfaso492124e0c.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 06 Jul 2024 13:03:15 -0700 (PDT)
-X-Received: by 2002:a05:6122:2408:b0:4ed:5c1:6794 with SMTP id
- 71dfb90a1353d-4f2f4016dcfmr6361826e0c.12.1720296194697; Sat, 06 Jul 2024
- 13:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHo6cmX/"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720305878; x=1751841878;
+  h=date:from:to:cc:subject:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=WQySAcpdbRQmQL4PCMwk5G7kS07P/ADMvxxt0WpGKRw=;
+  b=HHo6cmX/fjOYs1R5lNizQGg4VGtJHQC6h1LEKcvpdStUJLmApRNZSdYq
+   pyj42si9tDC+dt8acrE89KXm6hn40UmUiIbbchVcGcyHZs4motYfAV9oc
+   D4ufbuRYzQAeX1L1HSFtm47s4E50JA+ag2s/K/ZFk+pOLQjzskJVLrJKG
+   WqxtQDEr+pxmKkeDwGFOF6+qy0jpcPzPfTYmfZEXs1UIXBzujMqamZXDn
+   yxG8cHDmKn4/TnGMmbdH0os4DJAXDDInRGhlGSEQeR4H0m0iZM/vXlCPk
+   GP40U0zURAIXxblA8MCnEtY2Gc2QknFgRDU2P8EvlmbaPGPcOjv0jQGHZ
+   w==;
+X-CSE-ConnectionGUID: kqQAxcayThq+x6FfPBxHhg==
+X-CSE-MsgGUID: UI8gMLXUT5e4NAH4SBDoBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17756088"
+X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
+   d="scan'208";a="17756088"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 15:44:37 -0700
+X-CSE-ConnectionGUID: v4wp8Vc9TnyrP3ci4ZPCOA==
+X-CSE-MsgGUID: gWFq5QX3Rhe2NUcc64yoTw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
+   d="scan'208";a="84688673"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 15:44:37 -0700
+Date: Sat, 6 Jul 2024 15:49:51 -0700
+From: Jacob Pan <jacob.jun.pan@linux.intel.com>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
+ LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+ Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
+ Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
+ <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
+ <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
+ <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
+ Andi Kleen <andi.kleen@intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
+ Zeng Guang <guang.zeng@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v3 08/11] perf/x86: Enable NMI source reporting for
+ perfmon
+Message-ID: <20240706154951.4852b8c4@jacob-builder>
+In-Reply-To: <f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
+References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
+	<20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
+	<f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjT_zSfzFVMyhv=Y4c94o2GDed253dV=TLyBbSuPdGzLw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjT_zSfzFVMyhv=Y4c94o2GDed253dV=TLyBbSuPdGzLw@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 6 Jul 2024 13:02:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh4tpUpyT9VD2StVusGwqZ3-YbN2PkZYrPtYceiqZrXuA@mail.gmail.com>
-Message-ID: <CAHk-=wh4tpUpyT9VD2StVusGwqZ3-YbN2PkZYrPtYceiqZrXuA@mail.gmail.com>
-Subject: Re: Performance of 'perf'
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Sat, 6 Jul 2024 at 12:55, Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
->
->    [ perf record: Woken up 9675 times to write data ]
->
-> and then 'perf record' will just halt for something like half an hour.
 
-It finally finished:
+On Thu, 4 Jul 2024 10:44:23 -0400, "Liang, Kan" <kan.liang@linux.intel.com>
+wrote:
 
-  [ perf record: Captured and wrote 2537.391 MB perf.data (40467904 samples) ]
+> On 2024-06-28 4:18 p.m., Jacob Pan wrote:
+> > Program the designated NMI source vector into the performance monitoring
+> > interrupt (PMI) of the local vector table. PMI handler will be directly
+> > invoked when its NMI is generated. This avoids the latency of calling
+> > all NMI handlers blindly.
+> > 
+> > Co-developed-by: Zeng Guang <guang.zeng@intel.com>
+> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > 
+> > ---
+> > v3: Program NMI source vector in PVTPC unconditionally (HPA)
+> > v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
+> > ---
+> >  arch/x86/events/core.c       | 6 ++++--
+> >  arch/x86/events/intel/core.c | 6 +++---
+> >  arch/x86/include/asm/apic.h  | 1 +
+> >  3 files changed, 8 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > index 1ef2201e48ac..be75bdcdd400 100644
+> > --- a/arch/x86/events/core.c
+> > +++ b/arch/x86/events/core.c
+> > @@ -46,6 +46,7 @@
+> >  
+> >  struct x86_pmu x86_pmu __read_mostly;
+> >  static struct pmu pmu;
+> > +u32 apic_perfmon_ctr = APIC_DM_NMI;>
+> >  DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+> >  	.enabled = 1,
+> > @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+> >  	 * This generic handler doesn't seem to have any issues where
+> > the
+> >  	 * unmasking occurs so it was left at the top.
+> >  	 */
+> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
+> >  
+> >  	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+> >  		if (!test_bit(idx, cpuc->active_mask))
+> > @@ -1723,7 +1724,8 @@ void perf_events_lapic_init(void)
+> >  	/*
+> >  	 * Always use NMI for PMU
+> >  	 */
+> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
+> > +	apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
+> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);  
+> 
+> 
+> It looks like the same value is written unconditionally.
+> 
+> Why not use a macro, e.g., APIC_DM_NMI_WITH_SOURCE, to replace the
+> variable?
+> 
+yes, it is unconditional now. I will use the following:
 
-and yes, the perf record took about half an hour.
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -30,6 +30,8 @@
+ #define APIC_EXTNMI_ALL                1
+ #define APIC_EXTNMI_NONE       2
 
-The build started at 12:17 according to my timestamp. The vmlinux file
-was done at  12:23.
++#define APIC_PERF_NMI          (APIC_DM_NMI | NMI_SOURCE_VEC_PMI)
 
-And the "perf record" was finally finished at 12:55.
 
-Sure, it's 2.5GB of data, but it shouldn't take thirty minutes to process.
+Thanks,
 
-                Linus
+Jacob
