@@ -1,147 +1,277 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C066881E;
-	Sat,  6 Jul 2024 22:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8AA01C68C;
+	Sat,  6 Jul 2024 23:29:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720305879; cv=none; b=daceC64R1r9JPl9Qar7xTFTBG01b9et1URjvkco+e70TNt7DQoW48m77qNPlyN22qMxR//XE6v0NTTxWUqQvSItTgSMeIhnI1gVF7zcgZ0FDTc4CLmjJmDv7kAWF0TczGNSnF5ak5vLQ0pr0njo/vlSzdbD8rgqzXv1HYoTgScs=
+	t=1720308600; cv=none; b=GnvDBK1P3xD3r2AqryHQpvmtEWblMEy8NWGsp94IFhYQ+TUT/AkyiKhy7WY1NMdX960CqUSXU2t1zviRkglvh86huhHqF36Y9/9cCE9rKgogB32vHrDcJAtYzf94sgJQA0EFKDR6EtZgFwgabFdg1CAZdJN1S7qsurc/TZ466q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720305879; c=relaxed/simple;
-	bh=WQySAcpdbRQmQL4PCMwk5G7kS07P/ADMvxxt0WpGKRw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Jk9+/gbxbl+EmVapwTADyhFc4cp7R9yf75lW7xHdrtcdl+H04e5gEZfp8yeMbRdDhhIXxKszIS1IXL70rxPWBok8aBbsukqPjqygKLQfC2vCoxJVjdG975IvrSJBrzBvLbj15ufR4DZKv5wUyRStpBiVPDiLPhJYU/z+M6EkYng=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HHo6cmX/; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720308600; c=relaxed/simple;
+	bh=b1J3qOQUCblCQUe1IWFDwaBj0J1Z6jlI22jwB9oryXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TIVMpftSz4kP7AF8zgsAAfY+6qpq+jO/q1MUNGHffANArMR0Buoui/0qmDKrJlR/2CzA0STnC645yXiTdhnDRkWVwkVlzhwoqHU7ygdrAh6T1gqx8TU8QJyIk3tZQKNGEuvbAv6dn4pUou14xG7kAUx1/yW01BDUHUV0uzk9Wng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=E3v8TGv8; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HHo6cmX/"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E3v8TGv8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720305878; x=1751841878;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=WQySAcpdbRQmQL4PCMwk5G7kS07P/ADMvxxt0WpGKRw=;
-  b=HHo6cmX/fjOYs1R5lNizQGg4VGtJHQC6h1LEKcvpdStUJLmApRNZSdYq
-   pyj42si9tDC+dt8acrE89KXm6hn40UmUiIbbchVcGcyHZs4motYfAV9oc
-   D4ufbuRYzQAeX1L1HSFtm47s4E50JA+ag2s/K/ZFk+pOLQjzskJVLrJKG
-   WqxtQDEr+pxmKkeDwGFOF6+qy0jpcPzPfTYmfZEXs1UIXBzujMqamZXDn
-   yxG8cHDmKn4/TnGMmbdH0os4DJAXDDInRGhlGSEQeR4H0m0iZM/vXlCPk
-   GP40U0zURAIXxblA8MCnEtY2Gc2QknFgRDU2P8EvlmbaPGPcOjv0jQGHZ
-   w==;
-X-CSE-ConnectionGUID: kqQAxcayThq+x6FfPBxHhg==
-X-CSE-MsgGUID: UI8gMLXUT5e4NAH4SBDoBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17756088"
+  t=1720308599; x=1751844599;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=b1J3qOQUCblCQUe1IWFDwaBj0J1Z6jlI22jwB9oryXk=;
+  b=E3v8TGv8Vh02FBvdCGFYnQT7DzHr/0Ha060tIkrkgGDjohCK7M5RDIT2
+   t49xlXSz8LEnKiypRtSl64gdlx/M9C4fNqgirIZrI+49LaL7dUqJjhAiI
+   LJbBpILRqfv+mxp9PWNW9e8+QqrZDpyQFVdM1FEvCXHek4BD4OFAIDHBx
+   OUXFIDYXRaw/MH2v/Y/M7UQGbFQDGvEjHD6jXHYZTknDdqUOIg4itbNit
+   W4oBBbq6Be34QsIJ5MrRa4ARrp5rSMBX4CNfSnpNdU5Bf8m+MzjdPgYId
+   SxFaSWqgbxXLIA7a3Hq1zgJFPAh/7VyUWbJUMmxcxBi9046SAXWJzZM/R
+   g==;
+X-CSE-ConnectionGUID: Tfrh5TJEQburT8zyGAkNOg==
+X-CSE-MsgGUID: /y3i4FwyTF23VLEI/UJPrA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="42971632"
 X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
-   d="scan'208";a="17756088"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 15:44:37 -0700
-X-CSE-ConnectionGUID: v4wp8Vc9TnyrP3ci4ZPCOA==
-X-CSE-MsgGUID: gWFq5QX3Rhe2NUcc64yoTw==
+   d="scan'208";a="42971632"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 16:29:58 -0700
+X-CSE-ConnectionGUID: j/wsvDsFS8W/BrtgKHBAPg==
+X-CSE-MsgGUID: NR+8lhEIR3OdusMrzv7PKQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,188,1716274800"; 
-   d="scan'208";a="84688673"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 15:44:37 -0700
-Date: Sat, 6 Jul 2024 15:49:51 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- Andi Kleen <andi.kleen@intel.com>, "Mehta, Sohil" <sohil.mehta@intel.com>,
- Zeng Guang <guang.zeng@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 08/11] perf/x86: Enable NMI source reporting for
- perfmon
-Message-ID: <20240706154951.4852b8c4@jacob-builder>
-In-Reply-To: <f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-9-jacob.jun.pan@linux.intel.com>
-	<f5ec09c0-db5e-4c2f-b516-964e8d7eb2af@linux.intel.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+   d="scan'208";a="78294715"
+Received: from fl31ca102ks0602.deacluster.intel.com (HELO gnr-bkc.deacluster.intel.com) ([10.75.133.163])
+  by fmviesa001.fm.intel.com with ESMTP; 06 Jul 2024 16:29:57 -0700
+From: weilin.wang@intel.com
+To: weilin.wang@intel.com,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: [RFC PATCH v16 0/8] TPEBS counting mode support
+Date: Sat,  6 Jul 2024 19:29:47 -0400
+Message-ID: <20240706232956.304944-1-weilin.wang@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+From: Weilin Wang <weilin.wang@intel.com>
+
+Changes in v16:
+ - Update tpebs bash test code and variable name.
+ - Add a check to ensure only use "-C" option when cpumap is not "-1" when
+ forking "perf record".
+
+Changes in v15:
+ - Revert changes added for python import test failure in v14 because the code
+ works correctly with the new python build code.
+ - Update the command line option to --record-tpebs.
+
+Changes in v14:
+ - Fix the python import test failure. We cannot support PYTHON_PERF because it
+ will trigger a chain of dependency issues if we add intel-tpebs.c to it. So,
+ only enable tpebs functions in evsel and evlist when PYTHON_PERF is not
+ defined.
+ - Fix shellcheck warning for the tpebs test.
+
+Changes in v13:
+ - Add document for the command line option and fix build error in non-x86_64.
+ - Update example with non-zero retire_latency value when tpebs recording is
+ enabled.
+ - Add tpebs_stop() back to tpebs_set_evsel() because in hybrid platform, when
+ the forked perf record is not killed, the reader thread does not get any
+ sampled data from the PIPE. As a result, tpebs_set_evesel() will always return
+ zero on retire_latency values. This does not happen on my test GNR machine.
+ Since -I is not supported yet, I think we should add tpebs_stop() to ensure
+ correctness for now. More investigation is required here when we work on
+ supporting -I mode.
+ - Rebase code on top of perf-tools-next.
+
+Changes in v12:
+ - Update MTL metric JSON file to include E-Core TMA3.6 changes.
+ - Update comments and code for better code quality. Keep tpebs_start() and
+ tpebs_delete() at evsel level for now and add comments on these functions with
+ more details about potential future changes. Remove tpebs_stop() call from
+ tpebs_set_evsel(). Simplify the tpebs_start() and tpebs_stop()/tpebs_delete()
+ interfaces. Also fixed the bugs on not freed "new" pointer and the incorrect
+ variable value assignment to val instead of counter->val.
+
+Changes in v11:
+ - Make retire_latency evsels not opened for counting. This works correctly now
+ with the code Namhyung suggested that adjusting group read size when
+ retire_latency evsels included in the group.
+ - Update retire_latency value assignment using rint() to reduce precision loss
+ while keeping code generic.
+ - Fix the build error caused by not used variable in the test.
+
+Other changes in v10:
+ - Change perf record fork from perf stat to evsel. All the major operations
+ like tpebs start, stop, read_evsel should directly work through evsel.
+ - Make intel-tpebs x86_64 only. This change is cross-compiled to arm64.
+ - Put tpebs code to intel-tepbs and simplify intel-tpebs APIs to minimum number
+of functions and variables. Update funtion name and variable names to use
+consistent prefix. Also improve error handling.
+ - Integrate code patch from Ian for the :R parser.
+ - Update MTL metrics to TMA 4.8.
+
+V9: https://lore.kernel.org/all/20240521173952.3397644-1-weilin.wang@intel.com/
+
+Changes in v9:
+ - Update the retire_latency result print and metric calculation method. Plugin
+the value to evsel so that no special code is required.
+ - Update --control:fifo to use pipe instead of named pipe.
+ - Add test for TPEBS counting mode.
+ - Update Document with more details.
+
+Changes in v8:
+ - In this revision, the code is updated to base on Ian's patch on R modifier
+parser https://lore.kernel.org/lkml/20240428053616.1125891-3-irogers@google.com/
+After this change, there is no special code required for R modifier in
+metricgroup.c and metricgroup.h files.
+
+Caveat of this change:
+  Ideally, we will need to add special handling to skip counting events with R
+modifier in evsel. Currently, this is not implemented so the event with :R will
+be both counted and sampled. Usually, in a metric formula that uses retire_latency,
+it would already require to count the event. As a result, we will endup count the
+same event twice. This should be able to be handled properly when we finalize our
+design on evsel R modifier support.
+
+ - Move TPEBS specific code out from main perf stat code to separate files in
+util/intel-tpebs.c and util/intel-tpebs.h. [Namhyung]
+ - Use --control:fifo to ack perf stat from forked perf record instead of sleep(2) [Namhyung]
+ - Add introductions about TPEBS and R modifier in Documents. [Namhyung]
 
 
-On Thu, 4 Jul 2024 10:44:23 -0400, "Liang, Kan" <kan.liang@linux.intel.com>
-wrote:
+Changes in v7:
+ - Update code and comments for better code quality [Namhyung]
+ - Add a separate commit for perf data [Namhyung]
+ - Update retire latency print function to improve alignment [Namhyung]
 
-> On 2024-06-28 4:18 p.m., Jacob Pan wrote:
-> > Program the designated NMI source vector into the performance monitoring
-> > interrupt (PMI) of the local vector table. PMI handler will be directly
-> > invoked when its NMI is generated. This avoids the latency of calling
-> > all NMI handlers blindly.
-> > 
-> > Co-developed-by: Zeng Guang <guang.zeng@intel.com>
-> > Signed-off-by: Zeng Guang <guang.zeng@intel.com>
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > 
-> > ---
-> > v3: Program NMI source vector in PVTPC unconditionally (HPA)
-> > v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
-> > ---
-> >  arch/x86/events/core.c       | 6 ++++--
-> >  arch/x86/events/intel/core.c | 6 +++---
-> >  arch/x86/include/asm/apic.h  | 1 +
-> >  3 files changed, 8 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index 1ef2201e48ac..be75bdcdd400 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -46,6 +46,7 @@
-> >  
-> >  struct x86_pmu x86_pmu __read_mostly;
-> >  static struct pmu pmu;
-> > +u32 apic_perfmon_ctr = APIC_DM_NMI;>
-> >  DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
-> >  	.enabled = 1,
-> > @@ -1680,7 +1681,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
-> >  	 * This generic handler doesn't seem to have any issues where
-> > the
-> >  	 * unmasking occurs so it was left at the top.
-> >  	 */
-> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);
-> >  
-> >  	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
-> >  		if (!test_bit(idx, cpuc->active_mask))
-> > @@ -1723,7 +1724,8 @@ void perf_events_lapic_init(void)
-> >  	/*
-> >  	 * Always use NMI for PMU
-> >  	 */
-> > -	apic_write(APIC_LVTPC, APIC_DM_NMI);
-> > +	apic_perfmon_ctr |= NMI_SOURCE_VEC_PMI;
-> > +	apic_write(APIC_LVTPC, apic_perfmon_ctr);  
-> 
-> 
-> It looks like the same value is written unconditionally.
-> 
-> Why not use a macro, e.g., APIC_DM_NMI_WITH_SOURCE, to replace the
-> variable?
-> 
-yes, it is unconditional now. I will use the following:
+Changes in v6:
+ - Update code and add comments for better code quality [Namhyung]
+ - Remove the added fd var and directly pass the opened fd to data.file.fd [Namhyung]
+ - Add kill() to stop perf record when perf stat exists early [Namhyung]
+ - Add command opt check to ensure only start perf record when -a/-C given [Namhyung]
+ - Squash commits [Namhyung]
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -30,6 +30,8 @@
- #define APIC_EXTNMI_ALL                1
- #define APIC_EXTNMI_NONE       2
+Changes in v5:
+ - Update code and add comments for better code quality [Ian]
 
-+#define APIC_PERF_NMI          (APIC_DM_NMI | NMI_SOURCE_VEC_PMI)
+Changes in v4:
+ - Remove uncessary debug print and update code and comments for better
+readability and quality [Namhyung]
+ - Update mtl metric json file with consistent TmaL1 and TopdownL1 metricgroup
+
+Changes in v3:
+ - Remove ':' when event name has '@' [Ian]
+ - Use 'R' as the modifier instead of "retire_latency" [Ian]
+
+Changes in v2:
+ - Add MTL metric file
+ - Add more descriptions and example to the patch [Arnaldo]
+
+Here is an example of running perf stat to collect a metric that uses
+retire_latency value of event MEM_INST_RETIRED.STLB_HIT_STORES on a MTL system.
+
+In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES sample.
+Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p count and retire_latency value
+are all 0.
+
+./perf stat -M tma_dtlb_store -a -- sleep 1
+
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.000 MB - ]
+
+ Performance counter stats for 'system wide':
+
+       181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tma_dtlb_store
+         3,195,608      cpu_core/topdown-retiring/
+        40,156,649      cpu_core/topdown-mem-bound/
+         3,550,925      cpu_core/topdown-bad-spec/
+       117,571,818      cpu_core/topdown-fe-bound/
+        57,118,087      cpu_core/topdown-be-bound/
+            69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
+             4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
+        30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
+        30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
+           168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
+              0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
+
+       1.003105924 seconds time elapsed
+
+v1:
+TPEBS is one of the features provided by the next generation of Intel PMU.
+Please refer to Section 8.4.1 of "Intel® Architecture Instruction Set Extensions
+Programming Reference" [1] for more details about this feature.
+
+This set of patches supports TPEBS in counting mode. The code works in the
+following way: it forks a perf record process from perf stat when retire_latency
+of one or more events are used in a metric formula. Perf stat would send a
+SIGTERM signal to perf record before it needs the retire latency value for
+metric calculation. Perf stat will then process sample data to extract the
+retire latency data for metric calculations. Currently, the code uses the
+arithmetic average of retire latency values.
+
+[1] https://www.intel.com/content/www/us/en/content-details/812218/intel-architecture-instruction-set-extensions-programming-reference.html?wapkw=future%20features
 
 
-Thanks,
 
-Jacob
+
+Ian Rogers (1):
+  perf parse-events: Add a retirement latency modifier
+
+Weilin Wang (7):
+  perf data: Allow to use given fd in data->file.fd
+  perf stat: Fork and launch perf record when perf stat needs to get
+    retire latency value for a metric.
+  perf stat: Plugin retire_lat value from sampled data to evsel
+  perf vendor events intel: Add MTL metric json files
+  perf stat: Add command line option for enabling tpebs recording
+  perf Document: Add TPEBS to Documents
+  perf test: Add test for Intel TPEBS counting mode
+
+ tools/perf/Documentation/perf-list.txt        |    1 +
+ tools/perf/Documentation/perf-stat.txt        |    8 +
+ tools/perf/Documentation/topdown.txt          |   30 +
+ tools/perf/arch/x86/util/evlist.c             |    6 +
+ tools/perf/builtin-stat.c                     |    8 +
+ .../arch/x86/meteorlake/metricgroups.json     |  142 +
+ .../arch/x86/meteorlake/mtl-metrics.json      | 2535 +++++++++++++++++
+ .../perf/tests/shell/test_stat_intel_tpebs.sh |   18 +
+ tools/perf/util/Build                         |    1 +
+ tools/perf/util/data.c                        |    7 +-
+ tools/perf/util/evlist.c                      |    2 +
+ tools/perf/util/evsel.c                       |   81 +-
+ tools/perf/util/evsel.h                       |    6 +
+ tools/perf/util/intel-tpebs.c                 |  409 +++
+ tools/perf/util/intel-tpebs.h                 |   35 +
+ tools/perf/util/parse-events.c                |    2 +
+ tools/perf/util/parse-events.h                |    1 +
+ tools/perf/util/parse-events.l                |    3 +-
+ 18 files changed, 3291 insertions(+), 4 deletions(-)
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroups.json
+ create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics.json
+ create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
+ create mode 100644 tools/perf/util/intel-tpebs.c
+ create mode 100644 tools/perf/util/intel-tpebs.h
+
+--
+2.43.0
+
