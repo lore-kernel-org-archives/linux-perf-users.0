@@ -1,132 +1,139 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055116026A
-	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jul 2024 17:13:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22DA1B80F;
+	Sun,  7 Jul 2024 18:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720372399; cv=none; b=RT2208jG/sbdHw1qP4lP9c888Lwh1Arj3GUTsZSdVI1rv2sAccUL0JrKEFmgQSulKyvDLJt73wknTBuOy+iuOQDw90XqviIXJDfCC11Kn4Lit96xkdr8BFMGHufffCohokTp4W5WSD+9/D1Q3vH+0E5Dny8TIYMKKC5uz138e/4=
+	t=1720375283; cv=none; b=uwkTRenOG7d36k3+OU8l9YB1/RiNveTeXIbVfeVhGuEsDSU0lfhnRedebp2aFfewQ7fZoWbc2UDng6F726QRQS602kKvdGjSpvuxNVCS1dCmHP+NyL8KKFq2NaS2ERVc9Gd2KBQFrBKhCOdxNeOMhPKPrESY94IHTAA19qtN8Us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720372399; c=relaxed/simple;
-	bh=J0jrxKdDMr2AdjcCVmd2BpEvtYrwz3Y0g+i6h3TnlkE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TKOqCKk9HReIA/klmTsqcgElneWcniOLeESoWeyD8oIx0SOQ+QNcJ4kx0hhzt/WemfqLjMzlp+TBVXpMhU+qZ0zzyU38V7mdpWMwFbcZ4yRmEHegc0kWg3QACb6uYTXFBV9XPugoiO2cGTFAodYeJ6I0UbXMWmesxeeKj58NplU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=fN0lFyXD; arc=none smtp.client-ip=209.85.208.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1720375283; c=relaxed/simple;
+	bh=OpxCgfEXEorWNo4Da8hW1Cm7T3Z4snG9SnjNTGfLf4Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Bf/kgm7WEYpIquqH4TdbIwYawcmWZRTcxuaP6vmsSeXhYlftyiWhfPdBo/rXcYwi514Ue9QAvCc7X/csBVDdbUwPVzcUYEn9hirNmkpPp8mM0p0aiBiiJqQvQslR2cm8KXKTsdq9efC1dTjE44zVv4/gRgfsj+H5dHf3eh75/QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3xnUTPp; arc=none smtp.client-ip=209.85.215.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="fN0lFyXD"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-58ba3e38027so3646750a12.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Jul 2024 10:13:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3xnUTPp"
+Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-6c386a3ac43so439928a12.0;
+        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1720372395; x=1720977195; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mjTPh09wDczJZgWa15mFs+a1MJQ6GutluL7qqV8IXRY=;
-        b=fN0lFyXDF+ZChvByKU22DFhTcyz7KlcMQeBOdrzqW3Z0hHT3uvCXbEHo7kbcILPXqH
-         A4fteomYdxzTRq4tfqpbKbu5Jm+/TXo8bGitYCmHzZY28EjYprqgzsKNWHfLj1H6pfWw
-         384rLHUBK5jJMHYro6hXO+U/1tNEJlNV/+NG8=
+        d=gmail.com; s=20230601; t=1720375281; x=1720980081; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
+        b=P3xnUTPpZlUoFMPJv1txMnpqJ11FwcljRlcPZBzAtqj7d10LiIWEDDurNK98Cu8uwt
+         a6r87eAjPnYsrrQAc9p5JSMNmN6GLdGafeklYKZdS3SFbkhjZ32dhMaQ7GbQxXQVGTBT
+         BVc/xJRksQwP+aAJetyIe9SZYHGLD2UGgZsZouDSq6AYW9igBX0chVTw7qHRHRcKdQ6F
+         3VCxLbmoZ0z+aEz73mGpFzZzk0/029e9X/BtEga/mLPhKfDJu3Dw7Nrr+E/YRA+xPyF2
+         zlFYC3WQu5mxPFiq/iHs9i1/vqL9CUPJxwSslFjYQk+GFdHfVehWMVrijccjOj9SH/5C
+         e97Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720372395; x=1720977195;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mjTPh09wDczJZgWa15mFs+a1MJQ6GutluL7qqV8IXRY=;
-        b=gmyD3/dlqnTcFlk+6TJoj+NVYFfODghGTm0joqRni3JTfb7xbQ4S3hCwf8phrqGnw1
-         3nX8y/RcJUSPRtTXc9FDM6YeQYtDw96tABJATZ1P8dhC2yf3vyvUp+GLrj3Lio0MwXHi
-         /PtnegQoM20vVB+ELWkaCMlh6J0XZdheXGD7uDHmJO44KLTMe34BI6dIj9IxTIGm47o1
-         Bwa4TmdoU94gTiR/V5sPba8L4oLTttETVNQNQiMFaetOOHaUpX2b7hUj0CG6gJuEMKDJ
-         0xe6YxKSMpEBbaRXciBUgDmWfU8Axn9EJ5wyh+x22CZDxo+EmPrUQGyvJp6oS3BE2jRp
-         QFCQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+J+TDoy+9uyFmqfacsEp0bTXS/gReBwD5/TQEEEthlssXObp2Gmv66m0kwDnBNSefk4VLhrQ1NmauWqn+Srf4bD1IYIm7QSZV/K9IbrYIQw==
-X-Gm-Message-State: AOJu0YxZShlYeZ56mNr+4h3Nzjf7NrKOCSAhnOfVkWYgJ2U5o20WnbM+
-	wsnYOKGflky/Zw+5ebNtMRt0WrLfOCLcZJ0XAUuCCgY8RKo4RcbipizMT7ww44UmTO0OQAfDqts
-	iKOY=
-X-Google-Smtp-Source: AGHT+IHsPl+pOG3X6JiHBTBqsf/NPWe4WJjS0vCg/K7gSm0Nx3zncrSyxbmq3NbcIZid1NeXTQHMLw==
-X-Received: by 2002:a17:906:f296:b0:a77:cdaa:88aa with SMTP id a640c23a62f3a-a77cdaa8b23mr518630566b.4.1720372395008;
-        Sun, 07 Jul 2024 10:13:15 -0700 (PDT)
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a77b6c8b69csm315470766b.45.2024.07.07.10.13.14
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 Jul 2024 10:13:14 -0700 (PDT)
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a77b550128dso398131766b.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 07 Jul 2024 10:13:14 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWv2CgyOH6ostBmMBTpXA5uSS5r5K+mblh0KthAAn2TNCi1SrpLBiOZ1ODYrbUso+u3r0+rS3dJLhWcz0sWbObdA8N8i39MkQDzDwgCQp4DwQ==
-X-Received: by 2002:a17:906:22cb:b0:a77:eb34:3b42 with SMTP id
- a640c23a62f3a-a77eb343ca3mr222219166b.12.1720372394201; Sun, 07 Jul 2024
- 10:13:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720375281; x=1720980081;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
+        b=N0riXi2z3fb7PG87OjhniVheU0deg/UufBr6fz9VDMnfsGIaJTPFRM8vWDGyaNKuHV
+         jkB/aOhvp97GzxCoRflfRBs83Cu2KbobnyRoPKtfwGlVoKqIdKVD1QWR3CCMCyzAODtq
+         gPSp1ag9UWpSmPQT5Mlk1Ugomoa+4QfJ15SekGXzp7CB6e35dTm8MuHbJbUA923Lo+Ot
+         3vIE/9cReRrGTufMWaOCeqwAOhe4w0Hq9DgiUC3u2RoRGYhxhcP+Q/jWI2k01MsbqDKY
+         9y2qpqoxK6UZN3Ctmq/wT2ceRQSc9JTuH6I3/Fm5Y+pER8aPslP4DqooroH6KgIqp0/5
+         YFog==
+X-Forwarded-Encrypted: i=1; AJvYcCUQkvrpNyvcurFb3AHiJWTvhOXLM9SHZfYO5TVz5pFO5Qcj7IPjRm9Rz8c2h4vNfRiTQgWijp8W6So/N1M3Hqt/u+m01UgAhWCB+HuD/QzfHu2lyNj7qTn1dPNMhgxpFBODCEecSqcrXDIoKl6mKg==
+X-Gm-Message-State: AOJu0YzQcKC9BiNUc4Jic/pp3wgEkOtUbsdjVhGVN6TbiWdKxjwS5LWF
+	U4fxX3lAyzftR5dN8ptv1jZXdV19Gm3XPvmjMCpyREF7e1a6vt+u
+X-Google-Smtp-Source: AGHT+IHTE23/0P0T4ySobBhOOM5/UDk/WA3TIXDz2U6mmIginobvrohUUSfRowNxuwgUW6YWmiM1Sw==
+X-Received: by 2002:a17:902:d48b:b0:1f5:e635:21e9 with SMTP id d9443c01a7336-1fb33e88f87mr125721095ad.2.1720375281095;
+        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
+Received: from localhost.localdomain (n058152114213.netvigator.com. [58.152.114.213])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb8a279debsm10171115ad.19.2024.07.07.11.01.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 Jul 2024 11:01:20 -0700 (PDT)
+From: Haoze Xie <royenheart@gmail.com>
+To: irogers@google.com
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Haoze Xie <royenheart@gmail.com>,
+	Yuan Tan <tanyuan@tinylab.org>
+Subject: [PATCH 1/1] perf record: Fix memset out-of-range error
+Date: Mon,  8 Jul 2024 02:01:00 +0800
+Message-Id: <11e12f171b846577cac698cd3999db3d7f6c4d03.1720372317.git.royenheart@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1720372317.git.royenheart@gmail.com>
+References: <cover.1720372317.git.royenheart@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHk-=wjT_zSfzFVMyhv=Y4c94o2GDed253dV=TLyBbSuPdGzLw@mail.gmail.com>
- <6fb1197f-f2bd-4d80-a14c-526a1fad09a7@arm.com>
-In-Reply-To: <6fb1197f-f2bd-4d80-a14c-526a1fad09a7@arm.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sun, 7 Jul 2024 10:12:57 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjEg6FNqZgBQ+_sT_xRpm6bXnzBd81y-nn3_dr3ZDQ74w@mail.gmail.com>
-Message-ID: <CAHk-=wjEg6FNqZgBQ+_sT_xRpm6bXnzBd81y-nn3_dr3ZDQ74w@mail.gmail.com>
-Subject: Re: Performance of 'perf'
-To: Leo Yan <leo.yan@arm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Sun, 7 Jul 2024 at 07:25, Leo Yan <leo.yan@arm.com> wrote:
->
-> could you do a statistics for the perf events?
->
->   perf script -D | grep PERF_RECORD | awk '{print $5 " " $6}' \
->      | sort | uniq -c | sort -nr | head -50
+Modified the object of 'memset' from '&lost.lost' to '&lost' in
+record__read_lost_samples. This allows 'memset' to access memory properly
+without causing out-of-bounds problems.
 
-Well, I think that command is interesting. Mostly because it seems to
-have the exact same behavior as "perf record" did - it's taking
-forever.
+The problems got from builtin-record.c are:
 
-And it too has that
+In file included from /usr/include/string.h:495,
+                 from util/parse-events.h:13,
+                 from builtin-record.c:14:
+In function 'memset',
+    inlined from 'record__read_lost_samples' at
+    builtin-record.c:1958:6,
+    inlined from '__cmd_record.constprop' at builtin-record.c:2817:2:
+/usr/include/x86_64-linux-gnu/bits/string_fortified.h:71:10: error:
+'__builtin_memset' offset [17, 64] from the object at 'lost' is out
+of the bounds of referenced subobject 'lost' with type
+'struct perf_record_lost_samples' at offset 0 [-Werror=array-bounds]
+71|return __builtin___memset_chk (__dest,__ch,__len,__bos0 (__dest));
+  |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    newfstatat(AT_FDCWD, "/proc/self/ns/mnt", {st_mode=S_IFREG|0444,
-st_size=0, ...}, 0) = 0
-    newfstatat(AT_FDCWD, "/proc/246780/ns/mnt", 0xffffcd607988, 0) =
--1 ENOENT (No such file or directory)
-    fcntl(8, F_GETFD)                       = 0x1 (flags FD_CLOEXEC)
+The error arised when performing a memset operation on the 'lost' variable,
+the bytes of 'sizeof(lost)' exceeds that of '&lost.lost', which are 64
+and 16.
 
-constantly in the strace output while doing so.
+Fixes: 6c1785cd75ef ("perf record: Ensure space for lost samples")
+Signed-off-by: Haoze Xie <royenheart@gmail.com>
+Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
+---
+ tools/perf/builtin-record.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Except it also does
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 019305b94e5f..a94516e8c522 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -1955,7 +1955,7 @@ static void record__read_lost_samples(struct record *rec)
+ 				}
+ 
+ 				if (count.lost) {
+-					memset(&lost.lost, 0, sizeof(lost));
++					memset(&lost, 0, sizeof(lost));
+ 					lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
+ 					__record__save_lost_samples(rec, evsel, &lost.lost,
+ 								    x, y, count.lost, 0);
+@@ -1965,7 +1965,7 @@ static void record__read_lost_samples(struct record *rec)
+ 
+ 		lost_count = perf_bpf_filter__lost_count(evsel);
+ 		if (lost_count) {
+-			memset(&lost.lost, 0, sizeof(lost));
++			memset(&lost, 0, sizeof(lost));
+ 			lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
+ 			__record__save_lost_samples(rec, evsel, &lost.lost, 0, 0, lost_count,
+ 						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+-- 
+2.25.1
 
-    newfstatat(7, "", {st_mode=S_IFREG|0755, st_size=6550752, ...},
-AT_EMPTY_PATH) = 0
-    pread64(7, "\177ELF\2\1\1\0\0\0\0\0\0\0\0\0\2\0\267\0\1\0\0\0\0006A\0\0\0\0\0"...,
-64, 0) = 64
-
-over and over again. Sometimes the fd 7, sometimes it's 8, presumably
-there are others too, but the fd doesn't really seem to change (and
-it's not opened and closed all the time - it's doing the same thing
-over and over and over and over again and again and again...)
-
-And it's clearly trying to look up the executables at the time of the
-profile, we have
-
-   fd/7 -> /home/tux/.debug/home/tux/bin/perf/22d3e56ba06ec670dc94d4d2e5c8171754bfd952/elf
-   fd/8 -> /home/tux/.debug/usr/bin/gcc/21252acc9fddc6654518fdd490ab44f7fbb5ed25/elf
-
-Anyway, I guess this will take half an hour too.
-
-The sad part is that I'm absolutely completely uninterested in this
-all. I asked for a kernel-only profile, and the way I then tend to
-look at the result is with
-
-     perf record --sort=dso,symbol
-
-exactly because I don't even care about which process it was that did
-the system call, I just want to see what the kernel load was.
-
-So all this "look up file details for every single %^#$ perf record"
-is completely wasted effort.
-
-But it sure takes a long long time.
-
-           Linus
