@@ -1,159 +1,153 @@
-Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88C815381A;
-	Sun,  7 Jul 2024 18:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C6E6BB4B;
+	Sun,  7 Jul 2024 18:27:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720375481; cv=none; b=PcrZQ8TM9PCy8ExVoSgrj5o5b6VRmbjghXGOBr/f4DY2M5dii6N6Bj3VfrjaCNo0t3qZ75rSUlMB2UwscO398wzzvQfdgM/SGlfBEErL58/ddSj4rsQb1Ci42aD7wHK1yTVVpB8ZgyaDzx6sXinEfMjurkOurPmCsPCXXhEcQ6w=
+	t=1720376876; cv=none; b=feyvqyTC9ADoShAMhd/ZFU0ShqcGtxlNqRbLFbzF2NWrCv6o5V3QZ2xUwTWnE3nhNtI/B1hNsIVIN/LtltDGig6AL/aXIj7gZod5btCvc7X5b2+G8SjqkJCZmm+ToUxb6zs5/62uTPdkgV/GF8PhzXFelMtD4n0q9KPv3Dya/CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720375481; c=relaxed/simple;
-	bh=ORaqXEGJmsmQKYSJYCydG/l1/+Mkru7MKsPuN9IGoLs=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fLMYlahKorOfNOPgRj/aHCXNWEpkqk2YE3wkucHwyNmPIirIP6MHezfwXtA3q2E/krkOwXdGkyOe0oGgkykAgFEfe1CajuVpgvFzIzrT5sIHAnjNRydIG4hff7nUMZgnXSvJnFGrQPithq5a9ip3UsD8lBuSfvU4yxayYpzwPhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WYS3IFqP; arc=none smtp.client-ip=209.85.214.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720376876; c=relaxed/simple;
+	bh=L8bFw41LpywlaulH96WKaKwvZ5S/BthG4xTZM34NyfY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EosB7U0F279jR/j5ktDaarS/4MVmCT24a2h0Rjxw7n1wu3JOOaBfqNBcMZZ2wipuAkOWwt7ZwopyGP/pHvLEGfC0vxnQO50ug7idjlO+xuVJfcs+e728pj/+3kQMQ87vqSnyJ/7Xqd7OeQ2gOP2rzEP/talbZ9lpPTIad0Q2DQg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=SADxOXUR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WYS3IFqP"
-Received: by mail-pl1-f196.google.com with SMTP id d9443c01a7336-1fb761b1f8bso210075ad.1;
-        Sun, 07 Jul 2024 11:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720375479; x=1720980279; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OHcZJDRcnyF51TE72qmoMaYSiW0BLRwh4RkyTqS2LqM=;
-        b=WYS3IFqPqP1jWYppNcR9hpDplPkR15hcUiQIU++JPsgCDaVWUeCyV29bv06j+ayAzC
-         MlnTp3XPfPU4+K3cnk1KOPqXp38MaAExm080+2dO8EAzyPotPE9944kdcBaFNZUvTIWu
-         DU0EDKMavdvJyctKeJaWoqdhwB5Re7jEXpq5ayZ6+Ln4ARVHuFeThWVDKi+pRFh8K84h
-         /ZCY9k+6zDoo304uHLrEN356MX6Tv8ebzqU7VM/LDk0CkwjZ5QJv9+JHMz1D6rUJXrNV
-         BJor53SBmB56/PAEOqUnzANuJQZ41vZq9prq16USpW/SHonVBE3NNIm51JDKB17VHlVp
-         k/gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720375479; x=1720980279;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OHcZJDRcnyF51TE72qmoMaYSiW0BLRwh4RkyTqS2LqM=;
-        b=EGSvVNeik9CpH0VCMcODU4q0zORTX0lRdCY9N6C9yL6opf7jJHOmjm6WG1JLgRTS/G
-         EvcbzPLnfiYtGJ1iBD3B2PNlhzPA9LOC+8kGaiXeUOzhPovyN+hXO0UNe3AH1OyRK+fB
-         COLdIPgH2DIZz1uE/3/jYMiWTm5AugxchaoUocApgDaVeZzG8cFw0Ty3BY2eTiQMN+QQ
-         06C9ex9xfb1WsB/FmzTA/+UIMGFbEtSKrF8ZCoUuPHyM6xeEGrzHySDcgCGP7mG2e2Ce
-         p1TrSBozUtrhDmzgcODmEBYNNyQs5ovuvxZ3QdC9KSe4NeJjkExnLaAClw/AnCw/Cv4a
-         xf7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWz3JUAtHVrABEPFkDCWaZrynPTsRjNFGOZTsdqfLiYo+EKzBiWI9kcjaL88AvabP/BBPStDAi8cr/fqD5e49DSatM+CIJ//09T1PZAvdpDOD/2XLD6G2O0xFRqL0iNuclh5rz8RErwCzJZCPOrHQ==
-X-Gm-Message-State: AOJu0YxQBcNserXJ/RrgKEDD0cYBt7aBe7ER8olKQ9WdoLK7RmnEhw02
-	wm/gApGodt/H1agjrZg8DNAB8e7SwXOoFuhVEY8HDvZmvxLJU+Yl
-X-Google-Smtp-Source: AGHT+IE0ZdHZ3PIlehaSvkf9UswEFf10IE138dkgOFKFM+QKxkWg1hI5r5VL+HRxOhT7iO64QsvXIw==
-X-Received: by 2002:a17:902:d484:b0:1fa:a9f5:64b1 with SMTP id d9443c01a7336-1fb33f0e791mr125318405ad.3.1720375478554;
-        Sun, 07 Jul 2024 11:04:38 -0700 (PDT)
-Received: from localhost.localdomain (n058152114213.netvigator.com. [58.152.114.213])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb8ac94abasm9610735ad.125.2024.07.07.11.04.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 11:04:38 -0700 (PDT)
-From: Haoze Xie <royenheart@gmail.com>
-To: vmolnaro@redhat.com
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Haoze Xie <royenheart@gmail.com>,
-	Yuan Tan <tanyuan@tinylab.org>
-Subject: [PATCH 1/1] perf archive: unpack to correct dir given by perf
-Date: Mon,  8 Jul 2024 02:04:31 +0800
-Message-Id: <18fa10628f1e037753244b438b2a08b20d611135.1720372219.git.royenheart@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1720372219.git.royenheart@gmail.com>
-References: <cover.1720372219.git.royenheart@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SADxOXUR"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 467HxChL027372;
+	Sun, 7 Jul 2024 18:27:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=/lHBQeBbgCwZ3gj/Ek/o4Hwr7KKtFFgx93tBgH0
+	nUiI=; b=SADxOXURPr5PvM5HW6ttuK/K3xgSROhpcHf9V4B139TCB3VMzA1Iz4O
+	FQnrlOLUlFychrcPpf5p7w4WiPn9IfO+xUJutu3XSnXo8efNo774sfc00OaP+uSe
+	BkM56+r34QGQfE8nVrZskpqlebN8II4on3uPceezcs+T0beKJtAor1BwHI7Z6L4Y
+	goi5lBOXV02HusfZ7Fr2s5O+iKiX7ysxvR/DS4TmYiQMCFO3IcJTSy++gfLtrKmv
+	Ox7Uqzfaj6yCaDv32MfyYIN/P7zPam75ieAoN/VVoSMwY8gVD2x/xfMMgqUwC5FW
+	freZKt6lBtzaaX9yNt0poYZwOfB1zdg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407ux90dwa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 07 Jul 2024 18:27:37 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 467IRagf032004;
+	Sun, 7 Jul 2024 18:27:36 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 407ux90dw7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 07 Jul 2024 18:27:36 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 467H4Vu0013992;
+	Sun, 7 Jul 2024 18:27:35 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 407jy2tvrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sun, 07 Jul 2024 18:27:35 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 467IRWbT57606526
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Sun, 7 Jul 2024 18:27:34 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 055182004E;
+	Sun,  7 Jul 2024 18:27:32 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C7D320040;
+	Sun,  7 Jul 2024 18:27:24 +0000 (GMT)
+Received: from li-fdfde5cc-27d0-11b2-a85c-e224154bf6d4.ibm.com.com (unknown [9.43.85.13])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Sun,  7 Jul 2024 18:27:24 +0000 (GMT)
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Chen Yu <yu.c.chen@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, acme@redhat.com,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Subject: [PATCH v6 0/3] Introduce --task-name and --fuzzy-name options in perf sched map
+Date: Sun,  7 Jul 2024 23:57:13 +0530
+Message-ID: <20240707182716.22054-1-vineethr@linux.ibm.com>
+X-Mailer: git-send-email 2.43.2
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: hYrrIQmHR-w-WRvtOAKEa-JTGpKAP1NJ
+X-Proofpoint-GUID: nYAzJKeFqFLtOPnTK56Au8Dywklwjye8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-07_06,2024-07-05_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxscore=0
+ impostorscore=0 clxscore=1015 adultscore=0 mlxlogscore=999 suspectscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407070151
 
-In perf-archive.sh, the code segment that defines 'PERF_BUILDID_DIR' is
-advanced before 'unpack' operation for subsequent use, followed by a
-'mkdir' operation to ensure that the dir exists. Symbols in 'unpack' will
-be extracted to correct dir given by perf.
+This patch-set aims to reduce the amount of output printed on the terminal
+when using perf sched map, allowing users to focus only on the tasks of
+interest.
 
-When '--unpack' param is appointed, the symbols are extracted to '~/.debug'
-folder by default, without using 'PERF_BUILDID_DIR' given by perf. This
-will cause perf to be unable to find the correct buildid's path when users
-configured buildid.dir in 'perf config' or used '--buildid-dir' cli param,
-since perf will read these params and put them in 'PERF_BUILDID_DIR' env.
-'perf script' and 'perf report' will use the env as the basis for buildid
-indexing.
+This helps in visualizing how a benchmark or a task is spread over
+the available CPUs while also knowing which CPUs are idle(.) and which
+are not(-). This will be more useful as number of CPUs increase.
 
-Fixes: e43c64c971e4 ("perf archive: Add new option '--unpack' to expand tarballs")
-Signed-off-by: Haoze Xie <royenheart@gmail.com>
-Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
----
- tools/perf/perf-archive.sh | 28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
+Changelog:
+=========
+Changes in v6:
+- Utilize strlist for simplified task matching. (Namhyung Kim)
+- Include relevant symbols while printing row for sched-out. (Namhyung Kim)
+- Rebase against perf-tools-next commit 608c3b1e612a ("perf install:
+  Don't propagate subdir to Documentation submake")
+- Link to v5: https://lore.kernel.org/all/20240626091550.46707-1-vineethr@linux.ibm.com/
 
-diff --git a/tools/perf/perf-archive.sh b/tools/perf/perf-archive.sh
-index 6ed7e52ab881..f29bbc129056 100755
---- a/tools/perf/perf-archive.sh
-+++ b/tools/perf/perf-archive.sh
-@@ -23,6 +23,19 @@ while [ $# -gt 0 ] ; do
- 	fi
- done
- 
-+#
-+# PERF_BUILDID_DIR environment variable set by perf
-+# path to buildid directory, default to $HOME/.debug
-+#
-+if [ -z $PERF_BUILDID_DIR ]; then
-+	PERF_BUILDID_DIR=~/.debug/
-+else
-+	# append / to make substitutions work
-+	PERF_BUILDID_DIR=$PERF_BUILDID_DIR/
-+fi
-+
-+mkdir -p $PERF_BUILDID_DIR
-+
- if [ $UNPACK -eq 1 ]; then
- 	if [ ! -z "$UNPACK_TAR" ]; then					# tar given as an argument
- 		if [ ! -e "$UNPACK_TAR" ]; then
-@@ -65,25 +78,14 @@ if [ $UNPACK -eq 1 ]; then
- 		fi
- 
- 		# unzip the perf.data file in the current working directory	and debug symbols in ~/.debug directory
--		tar xvf $TARGET && tar xvf $PERF_SYMBOLS.tar.bz2 -C ~/.debug
-+		tar xvf $TARGET && tar xvf $PERF_SYMBOLS.tar.bz2 -C $PERF_BUILDID_DIR
- 
- 	else																# perf tar generated by perf archive (contains only debug symbols)
--		tar xvf $TARGET -C ~/.debug
-+		tar xvf $TARGET -C $PERF_BUILDID_DIR
- 	fi
- 	exit 0
- fi
- 
--#
--# PERF_BUILDID_DIR environment variable set by perf
--# path to buildid directory, default to $HOME/.debug
--#
--if [ -z $PERF_BUILDID_DIR ]; then
--	PERF_BUILDID_DIR=~/.debug/
--else
--        # append / to make substitutions work
--        PERF_BUILDID_DIR=$PERF_BUILDID_DIR/
--fi
--
- BUILDIDS=$(mktemp /tmp/perf-archive-buildids.XXXXXX)
- 
- perf buildid-list -i $PERF_DATA --with-hits | grep -v "^ " > $BUILDIDS
+Changes in v5:
+- Split the changes into different commits. (Namhyung Kim)
+- Rebase against perf-tools-next commit c7a5592e8e4d ("perf mem: Fix a
+  segfault with NULL event->name")
+- Link to v4: https://lore.kernel.org/all/20240618180708.14144-1-vineethr@linux.ibm.com/
+
+Changes in v4:
+- Handle possible memory allocation failures. (Chen Yu)
+- Link to v3: https://lore.kernel.org/all/20240617125006.31654-1-vineethr@linux.ibm.com/
+
+Changes in v3:
+- Print the sched-out timestamp as a row when using the --command-name
+  option. (Namhyung Kim)
+- Refactor the code.
+- Rebase against perf-tools-next commit eae7044b67a6 ("perf hist: Honor
+  symbol conf.skip_empty")
+- Link to v2: https://lore.kernel.org/all/20240608124915.33860-1-vineethr@linux.ibm.com/
+
+Changes in v2:
+- Add support for giving multiple command-names in CSV. (Namhyung Kim)
+- Add fuzzy name matching option. (Chen Yu)
+- Add Reviewed-and-tested-by tag from Athira Rajeev.
+- Rebase against perf-tools-next commit d2307fd4f989 ("perf maps: Add/use
+  a sorted insert for fixup overlap and insert")
+- Link to v1: https://lore.kernel.org/all/20240417152521.80340-1-vineethr@linux.ibm.com/
+
+Madadi Vineeth Reddy (3):
+  perf sched map: Add task-name option to filter the output map
+  perf sched map: Add support for multiple task names using CSV
+  perf sched map: Add --fuzzy-name option for fuzzy matching in task
+    names
+
+ tools/perf/Documentation/perf-sched.txt |  10 ++
+ tools/perf/builtin-sched.c              | 175 +++++++++++++++++++-----
+ 2 files changed, 149 insertions(+), 36 deletions(-)
+
 -- 
-2.25.1
+2.43.2
 
