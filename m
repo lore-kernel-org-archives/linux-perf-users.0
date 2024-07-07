@@ -1,78 +1,78 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F22DA1B80F;
-	Sun,  7 Jul 2024 18:01:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59EC15381A;
+	Sun,  7 Jul 2024 18:04:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720375283; cv=none; b=uwkTRenOG7d36k3+OU8l9YB1/RiNveTeXIbVfeVhGuEsDSU0lfhnRedebp2aFfewQ7fZoWbc2UDng6F726QRQS602kKvdGjSpvuxNVCS1dCmHP+NyL8KKFq2NaS2ERVc9Gd2KBQFrBKhCOdxNeOMhPKPrESY94IHTAA19qtN8Us=
+	t=1720375453; cv=none; b=L5OzU0Im4K667bpUc87AdVqnNSpUywZvJfoj19gAvBjaqGYWMVBC5P33uA6lXOxu+wXO1jUnCp6VMnjkZgD7yCn2M6bjw7RTyyfVq1+VPgpRHYCXrU0tJsX8vWX7De1OqsJl2Hou+S3SC+4kcIgyFXtqMYZeQ8ncO0ZO4W7Ltto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720375283; c=relaxed/simple;
-	bh=OpxCgfEXEorWNo4Da8hW1Cm7T3Z4snG9SnjNTGfLf4Q=;
+	s=arc-20240116; t=1720375453; c=relaxed/simple;
+	bh=K47fHQJ9LxfBh1bNZxGRumkL7Or0ODoH4AVvfxblhew=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Bf/kgm7WEYpIquqH4TdbIwYawcmWZRTcxuaP6vmsSeXhYlftyiWhfPdBo/rXcYwi514Ue9QAvCc7X/csBVDdbUwPVzcUYEn9hirNmkpPp8mM0p0aiBiiJqQvQslR2cm8KXKTsdq9efC1dTjE44zVv4/gRgfsj+H5dHf3eh75/QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3xnUTPp; arc=none smtp.client-ip=209.85.215.194
+	 MIME-Version; b=CCZJjgpbiFUDFcxXkznTGfDSNpclxVUpispa8XFF5RdgYabeGmsopEcnvtz/JbEyIGqwHKfTCYpk3VObWvhfn+KaZx+GtURf3JzFeUcfDIVSvqWVgXCDza1UPWnTAWlBB3wMYxJjc59Owz9ZkGuYK/kO31uuDnjcu1z2o/EikZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYnc6nMF; arc=none smtp.client-ip=209.85.210.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3xnUTPp"
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-6c386a3ac43so439928a12.0;
-        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYnc6nMF"
+Received: by mail-pf1-f195.google.com with SMTP id d2e1a72fcca58-70afa821435so157512b3a.1;
+        Sun, 07 Jul 2024 11:04:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720375281; x=1720980081; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1720375451; x=1720980251; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
-        b=P3xnUTPpZlUoFMPJv1txMnpqJ11FwcljRlcPZBzAtqj7d10LiIWEDDurNK98Cu8uwt
-         a6r87eAjPnYsrrQAc9p5JSMNmN6GLdGafeklYKZdS3SFbkhjZ32dhMaQ7GbQxXQVGTBT
-         BVc/xJRksQwP+aAJetyIe9SZYHGLD2UGgZsZouDSq6AYW9igBX0chVTw7qHRHRcKdQ6F
-         3VCxLbmoZ0z+aEz73mGpFzZzk0/029e9X/BtEga/mLPhKfDJu3Dw7Nrr+E/YRA+xPyF2
-         zlFYC3WQu5mxPFiq/iHs9i1/vqL9CUPJxwSslFjYQk+GFdHfVehWMVrijccjOj9SH/5C
-         e97Q==
+        bh=71PIMnaX2w9geLkGMT4scoxspKSo3IeLc4QsRMQ9jc0=;
+        b=OYnc6nMF8of/c+9QiqMdmpzp4A9vU5ZB3tfMElWRwPxCR2b+77mnYT/55Avu3xkkQM
+         KspDqUYNTFNiypU/EtUj3ezsfmE3ctaGjBHAlj3kM5KydWx0cXfEag8lyxSyWj8zPE+Z
+         0qXNK2jFqWvB23AtXgOtLdFeYbDizVSrKkYMK/YIbhH4BDJjRLM00kKL1jLQoW2jo/ME
+         yNlFbW4H2vcfvDTuISLWB0IaTXWj7d4Ql1YtbfLDeyGsjca4JCMWkNCQEOXWuU0Bw1Gr
+         76gk6FPUAP/4vwETJZ2Czl4l9fGOI83FVUAmlQQ0mmiVAHhmTIBBZXyccgObhSoAnkAY
+         aiOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720375281; x=1720980081;
+        d=1e100.net; s=20230601; t=1720375451; x=1720980251;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=93Ojm2olTWO/cVVcGJO1BWPZLGlAEblYLC3+GArrsIA=;
-        b=N0riXi2z3fb7PG87OjhniVheU0deg/UufBr6fz9VDMnfsGIaJTPFRM8vWDGyaNKuHV
-         jkB/aOhvp97GzxCoRflfRBs83Cu2KbobnyRoPKtfwGlVoKqIdKVD1QWR3CCMCyzAODtq
-         gPSp1ag9UWpSmPQT5Mlk1Ugomoa+4QfJ15SekGXzp7CB6e35dTm8MuHbJbUA923Lo+Ot
-         3vIE/9cReRrGTufMWaOCeqwAOhe4w0Hq9DgiUC3u2RoRGYhxhcP+Q/jWI2k01MsbqDKY
-         9y2qpqoxK6UZN3Ctmq/wT2ceRQSc9JTuH6I3/Fm5Y+pER8aPslP4DqooroH6KgIqp0/5
-         YFog==
-X-Forwarded-Encrypted: i=1; AJvYcCUQkvrpNyvcurFb3AHiJWTvhOXLM9SHZfYO5TVz5pFO5Qcj7IPjRm9Rz8c2h4vNfRiTQgWijp8W6So/N1M3Hqt/u+m01UgAhWCB+HuD/QzfHu2lyNj7qTn1dPNMhgxpFBODCEecSqcrXDIoKl6mKg==
-X-Gm-Message-State: AOJu0YzQcKC9BiNUc4Jic/pp3wgEkOtUbsdjVhGVN6TbiWdKxjwS5LWF
-	U4fxX3lAyzftR5dN8ptv1jZXdV19Gm3XPvmjMCpyREF7e1a6vt+u
-X-Google-Smtp-Source: AGHT+IHTE23/0P0T4ySobBhOOM5/UDk/WA3TIXDz2U6mmIginobvrohUUSfRowNxuwgUW6YWmiM1Sw==
-X-Received: by 2002:a17:902:d48b:b0:1f5:e635:21e9 with SMTP id d9443c01a7336-1fb33e88f87mr125721095ad.2.1720375281095;
-        Sun, 07 Jul 2024 11:01:21 -0700 (PDT)
+        bh=71PIMnaX2w9geLkGMT4scoxspKSo3IeLc4QsRMQ9jc0=;
+        b=Uk9sGXO26S4NVug+89C6iaMGWu0a9VnuUPGS1yJaZbAckoV9+I0OCwwYW3Yn94whPp
+         k7aDq65brRxW8Zt/6Y/AtjTP6a/kE7LcCan0ge+F7q0IvhSgDmCc+gwz40oaKCNFj9VQ
+         M14DpBMQFF+ixThFSCodWyID75X66ObIrLCUEFQ+TGCAOO7EMs0tkUJu0YA6EmaGbcF3
+         cH+TlTPlgSTdmYYMrz1xKFb01Hpdv19oBE+NPvVTnxFr/RqineA99pm9ZiSr/1ADIERo
+         a9ibjmC1PQXb7GylSqLZR8AbdUWNCa3Mb9H1d6Q3AsDgg5ditEhNm8OFYCXQWPgbXNCU
+         BDPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVTpjelDE7a+uI/x2nAhm2cvh47eus9VtYn8Z3M9WceYJRhuUBL3igJaKA/wbzjQAuaR5SP1FKEhVU9jXisssdrRWanF9IGPkhnXaM78SiWiQSrnds+T50wsVPXHF1M9NVwScQAt+4mvZpnxwdEdA==
+X-Gm-Message-State: AOJu0YxWeEKq6Vzhl43VZuY7iLDKFHNU/ydnyExs2dyyLXII3PQLffic
+	tCOv+QynG/2dPoiMqDIdqafaFBEQSoBT5EKY2arjC77ebrEHTgFP
+X-Google-Smtp-Source: AGHT+IERY1aGYCcVWHrvfYxYnjDMmrRTVnCrQGm/xsVqSY80rFLs3d59Wy331T/8Es0xfVxmUImx8Q==
+X-Received: by 2002:a05:6a00:178d:b0:706:a85d:bd60 with SMTP id d2e1a72fcca58-70b00b98859mr10214751b3a.3.1720375451573;
+        Sun, 07 Jul 2024 11:04:11 -0700 (PDT)
 Received: from localhost.localdomain (n058152114213.netvigator.com. [58.152.114.213])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fb8a279debsm10171115ad.19.2024.07.07.11.01.16
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70b1d9bbaedsm3031750b3a.172.2024.07.07.11.04.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Jul 2024 11:01:20 -0700 (PDT)
+        Sun, 07 Jul 2024 11:04:11 -0700 (PDT)
 From: Haoze Xie <royenheart@gmail.com>
-To: irogers@google.com
-Cc: peterz@infradead.org,
-	mingo@redhat.com,
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
 	acme@kernel.org,
 	namhyung@kernel.org,
 	mark.rutland@arm.com,
 	alexander.shishkin@linux.intel.com,
 	jolsa@kernel.org,
+	irogers@google.com,
 	adrian.hunter@intel.com,
 	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Haoze Xie <royenheart@gmail.com>,
 	Yuan Tan <tanyuan@tinylab.org>
-Subject: [PATCH 1/1] perf record: Fix memset out-of-range error
-Date: Mon,  8 Jul 2024 02:01:00 +0800
-Message-Id: <11e12f171b846577cac698cd3999db3d7f6c4d03.1720372317.git.royenheart@gmail.com>
+Subject: [PATCH 1/1] perf build x86: Fix SC2034 error in syscalltbl.sh
+Date: Mon,  8 Jul 2024 02:04:02 +0800
+Message-Id: <2143cab4cd8468c88860f4e5e382d0e6b4d89ac9.1720372178.git.royenheart@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1720372317.git.royenheart@gmail.com>
-References: <cover.1720372317.git.royenheart@gmail.com>
+In-Reply-To: <cover.1720372178.git.royenheart@gmail.com>
+References: <cover.1720372178.git.royenheart@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -81,59 +81,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Modified the object of 'memset' from '&lost.lost' to '&lost' in
-record__read_lost_samples. This allows 'memset' to access memory properly
-without causing out-of-bounds problems.
+Change the unused var in 'arch/x86/entry/syscalls/syscalltbl.sh' to '_'
+when reading from '$sorted_table'. This change allows the script to pass
+tests of ShellCheck before and after version 0.7.2 at the same time.
 
-The problems got from builtin-record.c are:
+When building in arch x86, syscalltbl.sh got a ShellCheck warning, which
+makes compilation error:
 
-In file included from /usr/include/string.h:495,
-                 from util/parse-events.h:13,
-                 from builtin-record.c:14:
-In function 'memset',
-    inlined from 'record__read_lost_samples' at
-    builtin-record.c:1958:6,
-    inlined from '__cmd_record.constprop' at builtin-record.c:2817:2:
-/usr/include/x86_64-linux-gnu/bits/string_fortified.h:71:10: error:
-'__builtin_memset' offset [17, 64] from the object at 'lost' is out
-of the bounds of referenced subobject 'lost' with type
-'struct perf_record_lost_samples' at offset 0 [-Werror=array-bounds]
-71|return __builtin___memset_chk (__dest,__ch,__len,__bos0 (__dest));
-  |       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    In arch/x86/entry/syscalls/syscalltbl.sh line 27:
+    while read nr _abi name entry _compat; do
+                  ^-^ SC2034: abi appears unused.
+                  Verify use (or export if used externally).
+                                  ^----^ SC2034: compat appears unused.
+                               Verify use (or export if used externally).
 
-The error arised when performing a memset operation on the 'lost' variable,
-the bytes of 'sizeof(lost)' exceeds that of '&lost.lost', which are 64
-and 16.
+The script reads unused param abi and compat. It uses format '_xxx' to
+indicate dummy vars, which won't work properly when ShellCheck <= 0.7.2.
 
-Fixes: 6c1785cd75ef ("perf record: Ensure space for lost samples")
+According to SC2034, the more general way of writing is to use directly
+'_' to indicate discarding vars. 'entry' is also replaced by '_' because
+it just happens to be defined in emit function, otherwise it will lead
+to some misunderstandings.
+
+Link: https://www.shellcheck.net/wiki/SC2034
 Signed-off-by: Haoze Xie <royenheart@gmail.com>
 Signed-off-by: Yuan Tan <tanyuan@tinylab.org>
 ---
- tools/perf/builtin-record.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/entry/syscalls/syscalltbl.sh | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 019305b94e5f..a94516e8c522 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -1955,7 +1955,7 @@ static void record__read_lost_samples(struct record *rec)
- 				}
+diff --git a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
+index 59d7914ed6bb..2b71f99933a5 100755
+--- a/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
++++ b/tools/perf/arch/x86/entry/syscalls/syscalltbl.sh
+@@ -24,7 +24,9 @@ sorted_table=$(mktemp /tmp/syscalltbl.XXXXXX)
+ grep '^[0-9]' "$in" | sort -n > $sorted_table
  
- 				if (count.lost) {
--					memset(&lost.lost, 0, sizeof(lost));
-+					memset(&lost, 0, sizeof(lost));
- 					lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
- 					__record__save_lost_samples(rec, evsel, &lost.lost,
- 								    x, y, count.lost, 0);
-@@ -1965,7 +1965,7 @@ static void record__read_lost_samples(struct record *rec)
- 
- 		lost_count = perf_bpf_filter__lost_count(evsel);
- 		if (lost_count) {
--			memset(&lost.lost, 0, sizeof(lost));
-+			memset(&lost, 0, sizeof(lost));
- 			lost.lost.header.type = PERF_RECORD_LOST_SAMPLES;
- 			__record__save_lost_samples(rec, evsel, &lost.lost, 0, 0, lost_count,
- 						    PERF_RECORD_MISC_LOST_SAMPLES_BPF);
+ max_nr=0
+-while read nr _abi name entry _compat; do
++# the params are: nr abi name entry compat
++# use _ for intentionally unused variables according to SC2034
++while read nr _ name _ _; do
+     if [ $nr -ge 512 ] ; then # discard compat sycalls
+         break
+     fi
 -- 
 2.25.1
 
