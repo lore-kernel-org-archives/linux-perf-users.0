@@ -1,299 +1,87 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF31163A9;
-	Sun,  7 Jul 2024 03:43:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FBC420DC4
+	for <linux-perf-users@vger.kernel.org>; Sun,  7 Jul 2024 14:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720323794; cv=none; b=t6KZtlBrGYMOEBKFdeCHs0O3jGiiTd3w6QF2K15JMYpfyjajeT/R9CTSRIziSR8V9U42w675k4bNhZ40JJLLkoCbveWthZ+KxQpvkHjsJwBXI/Tdpn0k+YWykL4Ia9KdIUmU9PihtEK4KpiKp/vlyASWHSmPMA8nwIaVwl15/P8=
+	t=1720362303; cv=none; b=OXMOAjId2wO31dPZcXqiJW5n06HfQOvk01nsBBubXQlT+GfY9eLLN/U4Spw7oHfYiaxBh46NLfj440ddqDhR+j8EdXqIFhiBCLjXJFbVG04+7o0425odbEnwht9JOSo7X47SNhfXTVH2bNnaXjIgfDI9/5GJEuqdyqVHl4yfx34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720323794; c=relaxed/simple;
-	bh=ghVROWVIc3c3/fThPWcJa4BMe5iC/W72kb0OfZCohb4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RLalEJGmEXklIO1mBrUr49c0YEEUporTVZ+a0RoWLacVnSvtbQdR68ZlGsAka3BrU00jRAFqM84PFsYUsdbs/dpARsT1Gg4rtSADWb8uZnRG92KJt/P16uZsq+/PQt8mVZXjED12jiD3ycXZzK6nnxedv0tGCuxCD23Am+f4fYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=C4OxZvRQ; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="C4OxZvRQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720323793; x=1751859793;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ghVROWVIc3c3/fThPWcJa4BMe5iC/W72kb0OfZCohb4=;
-  b=C4OxZvRQx+qPdpy1MM66XaMwJCbPtzzKgzbp4THZTnM45UnLl+jKEC68
-   2p2TKTpdi6x3dJAmU6VRN8MnkjHX+6T4khJGUJqDi0O+PJaGsxXXhRgxa
-   crn01O3pHh7VvRItZewQ+vfw6gdCkjcoVSq1cCfXoymfz8TjiJOwkZgIG
-   +4pG01sykmdo3Z/GeOYf+w3v/YaTq1YenLYRkfbSBa4QeyTLk0tR8ZSl/
-   dy8IeCNvWvvpwonG9YKnrUt17oIPQvVJhdvHa4mO9ghlBw9bqyDXLdmvC
-   FRrf3UCbwz16exO59rCQXqyxeMfSZn3m4AcJq99Po7XUOglDH67cu63Yz
-   g==;
-X-CSE-ConnectionGUID: 0x7JrpbQREarfkA+THOdAA==
-X-CSE-MsgGUID: erh0eyFLSfqy2CqpIpZ2Gw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11125"; a="17683427"
-X-IronPort-AV: E=Sophos;i="6.09,189,1716274800"; 
-   d="scan'208";a="17683427"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 20:43:12 -0700
-X-CSE-ConnectionGUID: IEsGSMbYT1qNjZBdXdu9Xg==
-X-CSE-MsgGUID: fwRK/Zk0RL+OJ+G/vY46TA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,189,1716274800"; 
-   d="scan'208";a="47169545"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.54.39.125])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jul 2024 20:43:12 -0700
-Date: Sat, 6 Jul 2024 20:48:26 -0700
-From: Jacob Pan <jacob.jun.pan@linux.intel.com>
-To: Xin Li <xin@zytor.com>
-Cc: X86 Kernel <x86@kernel.org>, Sean Christopherson <seanjc@google.com>,
- LKML <linux-kernel@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
- Dave Hansen <dave.hansen@intel.com>, "H. Peter Anvin" <hpa@zytor.com>, Ingo
- Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Xin Li
- <xin3.li@intel.com>, linux-perf-users@vger.kernel.org, Peter Zijlstra
- <peterz@infradead.org>, Paolo Bonzini <pbonzini@redhat.com>, Tony Luck
- <tony.luck@intel.com>, Andy Lutomirski <luto@kernel.org>, acme@kernel.org,
- kan.liang@linux.intel.com, Andi Kleen <andi.kleen@intel.com>, "Mehta,
- Sohil" <sohil.mehta@intel.com>, jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH v3 05/11] x86/irq: Process nmi sources in NMI handler
-Message-ID: <20240706204826.1eda1bcd@jacob-builder>
-In-Reply-To: <3177880c-6538-4a18-bb2b-2926c69ef434@zytor.com>
-References: <20240628201839.673086-1-jacob.jun.pan@linux.intel.com>
-	<20240628201839.673086-6-jacob.jun.pan@linux.intel.com>
-	<3177880c-6538-4a18-bb2b-2926c69ef434@zytor.com>
-Organization: OTC
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1720362303; c=relaxed/simple;
+	bh=9FDhsGaSZ1lFb7+5wIr5geiWiJcX6cCeWg0XIkWKwKs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=iQp2CCocZIVnilmFG3RpzKZ5Tl4YMxEPA+n6/WtAhtoqSzYeqEs4wbAYA+t0OrQvBfg+NFjrGVE/yFJxbZ7OfqRKe0lcZJkdQokqCgGtOM9tZT8ShqtJ3fnMU7so+aSCBQ88TPPngkxs7Ga41ygQnSY4YMp0CCNvk4MWcU3CsYc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ECF9DA7;
+	Sun,  7 Jul 2024 07:25:24 -0700 (PDT)
+Received: from [10.57.87.50] (unknown [10.57.87.50])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 753A23F641;
+	Sun,  7 Jul 2024 07:24:55 -0700 (PDT)
+Message-ID: <6fb1197f-f2bd-4d80-a14c-526a1fad09a7@arm.com>
+Date: Sun, 7 Jul 2024 15:24:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: Performance of 'perf'
+To: Linus Torvalds <torvalds@linux-foundation.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <CAHk-=wjT_zSfzFVMyhv=Y4c94o2GDed253dV=TLyBbSuPdGzLw@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAHk-=wjT_zSfzFVMyhv=Y4c94o2GDed253dV=TLyBbSuPdGzLw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Linus,
 
-On Fri, 28 Jun 2024 20:39:24 -0700, Xin Li <xin@zytor.com> wrote:
+On 7/6/2024 8:55 PM, Linus Torvalds wrote:
 
-> On 6/28/2024 1:18 PM, Jacob Pan wrote:
-> > With NMI source reporting enabled, NMI handler can prioritize the
-> > handling of sources reported explicitly. If the source is unknown, then
-> > resume the existing processing flow. i.e. invoke all NMI handlers.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>  
-> 
-> The code looks good to me, however please improve coding styles and
-> comments, see below.
-> 
-> > 
-> > ---
-> > v3:
-> >     - Use a static flag to disable NMIs in case of HW failure
-> >     - Optimize the case when unknown NMIs are mixed with known NMIs(HPA)
-> > v2:
-> >     - Disable NMI source reporting once garbage data is given in FRED
-> > return stack. (HPA)
-> > ---
-> >   arch/x86/kernel/nmi.c | 73 +++++++++++++++++++++++++++++++++++++++++--
-> >   1 file changed, 70 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> > index 639a34e78bc9..c3a10af7f26b 100644
-> > --- a/arch/x86/kernel/nmi.c
-> > +++ b/arch/x86/kernel/nmi.c
-> > @@ -149,23 +149,90 @@ static inline int do_handle_nmi(struct nmiaction
-> > *a, struct pt_regs *regs, unsig return thishandled;
-> >   }
-> >   
-> > +static int nmi_handle_src(unsigned int type, struct pt_regs *regs,
-> > unsigned long *handled_mask) +{
-> > +	static bool nmi_source_disabled;
-> > +	bool has_unknown_src = false;
-> > +	unsigned long source_bitmask;
-> > +	struct nmiaction *a;
-> > +	int handled = 0;
-> > +	int vec = 1;
-> > +
-> > +	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) ||
-> > +	    type != NMI_LOCAL || nmi_source_disabled)  
-> 
-> Harder to read, no need to break into 2 lines.
-ok.
- 
-> > +		return 0;
-> > +
-> > +	source_bitmask = fred_event_data(regs);
-> > +	if (!source_bitmask) {  
-> 
-> unlikely()?
-yes.
+[...]
 
+> I'm sure there's tons of other things going on in between the system
+> calls, but I have no idea what. Doing ltrace() shows it doing an
+> endless stream of "strcmp()", and attaching to it with gdb says that
+> it's in
 > 
-> > +		pr_warn("NMI received without source information!
-> > Disable source reporting.\n");  
-> 
-> It sounds you're disabling some hardware functionality. Better to say,
-> maybe:
-> 
-> Buggy hardware? Disable NMI source handling.
-> 
-yes, this is more clear.
+> #14 0x0000fffebf319d08 in qsort_r () from /lib64/libc.so.6
+> #15 0x0000000000534720 in comm_strs.findnew.part ()
+> #16 0x0000000000534844 in comm.new ()
+> #17 0x0000000000534e14 in thread.new ()
+> #18 0x0000000000536234 in threads.findnew ()
+> #19 0x000000000052092c in __machine__findnew_thread ()
+> #20 0x0000000000524404 in machine.process_fork_event ()
+> #21 0x000000000052da44 in perf_session.deliver_event ()
+> #22 0x0000000000532750 in __ordered_events__flush ()
+> #23 0x000000000052c98c in perf_session.process_user_event ()
+> #24 0x000000000052dff8 in reader.read_event ()
+> #25 0x000000000052f784 in perf_session.process_events ()
+> #26 0x0000000000422470 in record.finish_output.constprop ()
+> #27 0x00000000004256b8 in __cmd_record.constprop.0 ()
+> #28 0x0000000000427b54 in cmd_record ()
+> #29 0x00000000004c492c in run_builtin ()
+> #30 0x00000000004c4c10 in handle_internal_command ()
 
-> > +		nmi_source_disabled = true;
-> > +		return 0;
-> > +	}
-> > +
-> > +	/*
-> > +	 * Per NMI source specification, there is no guarantee that a
-> > valid
-> > +	 * NMI vector is always delivered, even when the source
-> > specified
-> > +	 * one. It is software's responsibility to check all available
-> > NMI
-> > +	 * sources when bit 0 is set in the NMI source bitmap. i.e. we
-> > have  
-> 
-> s/i.e./I.e.,/
-will fix
+I did a quick testing at my side on x86_64 machine (56 cores) with latest perf
+and did not see long duration for perf record - though I cannot ensure the
+perf tool has no issue.
 
-> 
-> > +	 * to call every handler as if we have no NMI source.  
-> 
-> This comment is misleading, because you do skip NMI handlers with source
-> bits set in polling.
-At a high level, it is still accurate to say that every handler is invoked,
-whether by the NMI-source handling code or subsequently in the polling code.
+Given the '-a' option (system wide tracing) is used in the perf command, it is
+good to firstly rule out if anything is wild in system. In your second email,
+the sample amount (40467904 samples) is huge. If you still keep the perf data
+file, could you do a statistics for the perf events?
 
-How about this:
-	 * in the NMI-source reporting bitmap. I.e. we have to call every
-	 * handler as if there is no NMI-source reporting feature enabled.
-	 *
-	 * In this case, handlers for the known NMI sources will be called
-	 * first, followed by the remaining handlers, which are called
-	 * during the subsequent polling code.
+  perf script -D | grep PERF_RECORD | awk '{print $5 " " $6}' \
+     | sort | uniq -c | sort -nr | head -50
 
-
-> 
-> And add an empty line to ease review.
-will do
-
-> 
-> > +	 * On the other hand, if we do get non-zero vectors, we know
-> > exactly
-> > +	 * what the sources are. So we only call the handlers with the
-> > bit set.
-> > +	 */
-> > +	if (source_bitmask & BIT(NMI_SOURCE_VEC_UNKNOWN)) {
-> > +		pr_warn_ratelimited("NMI received with unknown
-> > source\n");  
-> 
-> s/source/sources/
-> 
-> > +		has_unknown_src = true;
-> > +	}
-> > +
-> > +	rcu_read_lock();  
-> 
-> Add an empty line.
-> 
-> > +	/* Bit 0 is for unknown NMI sources, skip it. */  
-> 
-> Put "vec = 1 " close to this comment.
-yes
-
-> 
-> > +	for_each_set_bit_from(vec, &source_bitmask,
-> > NR_NMI_SOURCE_VECTORS) {
-> > +		a = rcu_dereference(nmiaction_src_table[vec]);
-> > +		if (!a) {
-> > +			pr_warn_ratelimited("NMI received %d no
-> > handler", vec);  
-> 
-> Use a better log message.
-pr_warn_ratelimited("NMI-source vector %d has no handler!", vec);
-
-> 
-> > +			continue;
-> > +		}  
-> 
-> Empty line again.
-will add
-
-> 
-> > +		handled += do_handle_nmi(a, regs, type);  
-> 
-> Ditto.
-yes
-
-> 
-> > +		/*
-> > +		 * Needs polling if unknown source bit is set,
-> > handled_mask is  
-> 
->                                     ^the
-got that.
-
-> 
-> > +		 * used to tell the polling code which NMIs can be
-> > skipped.
-> > +		 */
-> > +		if (has_unknown_src)
-> > +			*handled_mask |= BIT(vec);
-> > +	}  
-> 
-> empty line please.
-will add
-
-> 
-> > +	rcu_read_unlock();
-> > +
-> > +	return handled;
-> > +}
-> > +
-> >   static int nmi_handle(unsigned int type, struct pt_regs *regs)
-> >   {
-> >   	struct nmi_desc *desc = nmi_to_desc(type);
-> > +	unsigned long handled_mask = 0;
-> >   	struct nmiaction *a;
-> >   	int handled=0;
-> >   
-> > -	rcu_read_lock();
-> > +	/*
-> > +	 * Check if the NMI source handling is complete, otherwise
-> > polling is
-> > +	 * still required. handled_mask is non-zero if NMI source
-> > handling is
-> > +	 * partial due to unknown NMI sources.
-> > +	 */
-> > +	handled = nmi_handle_src(type, regs, &handled_mask);
-> > +	if (handled && !handled_mask)
-> > +		return handled;
-> >   
-> > +	rcu_read_lock();  
-> 
-> keep original empty lines around it.
-ok
-
-> 
-> >   	/*
-> >   	 * NMIs are edge-triggered, which means if you have enough
-> >   	 * of them concurrently, you can lose some because only one
-> >   	 * can be latched at any given time.  Walk the whole list
-> >   	 * to handle those situations.
-> >   	 */
-> > -	list_for_each_entry_rcu(a, &desc->head, list)
-> > +	list_for_each_entry_rcu(a, &desc->head, list) {
-> > +		/* Skip NMIs handled earlier with source info */
-> > +		if (BIT(a->source_vec) & handled_mask)
-> > +			continue;
-> >   		handled += do_handle_nmi(a, regs, type);
-> > -
-> > +	}
-> >   	rcu_read_unlock();  
-> 
-> keep original empty lines around it.
-ok
+I expect the statistics will give hints. If any event other than the
+PERF_RECORD_SAMPLE event happened for huge times, it will be something we
+should look into.
 
 Thanks,
-
-Jacob
+Leo
