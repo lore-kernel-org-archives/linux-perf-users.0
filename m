@@ -1,56 +1,56 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1025EB665;
-	Mon,  8 Jul 2024 13:28:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750F613342F;
+	Mon,  8 Jul 2024 13:40:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720445313; cv=none; b=beIwPPqW5+V8SIfI18Tgm+XXTeCkBT0q2mw0HxPt6T5Jqpz4V49P0nEapmay5csVos6Q/aRYEO1aUcDnz+VVbMrEFDs/ZONfhzFt3mc7O+QvxkMjCUQ3LMJcdyOUeIFelsztHv4ELXewVSkggpRSsuO00/nCUNy/v8fxnPM3I/I=
+	t=1720446035; cv=none; b=LoGyi3Cu8rbrMHLS/gI2b3jb5IeM916CIOQS6nfxDb4X+2JlNnxJHWmLROfBGtazaQy2FAmCFHxBiLcuwj4irziTljfeIlJwpcuZyv9XuR1T3XawMaFewKIXDTiV4jKywsfNvesN9VKfEb/ZxM36laA65qKVG5M64xuwBM+nnRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720445313; c=relaxed/simple;
-	bh=ZTDXg4OQinuqoAKxEKT5YEUVgjuRVHhh+W+7j5PtCBk=;
+	s=arc-20240116; t=1720446035; c=relaxed/simple;
+	bh=Q58WLqpwRip9snNyWhcnfaZp+rmhkdt088D+TwFUeeY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LOtMmfQK7uSDeqOY4Ej4OK6DfTK2tfr24GZ6Bjj+YfIy/HJ2rVtYp5VP1DLsTg8pITdTFDbF8jchp2YaDAn7kiwms1+kcX8j1mplLBfiXYKaV8Wbw1HzP391dl97EPdU/FtjqbNgy6iAmfvLNKg7rnOFvE9Yh/fJ6PymUmgYMQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O5zs9cIA; arc=none smtp.client-ip=192.198.163.15
+	 In-Reply-To:Content-Type; b=hhq5RY22siqe9i8CYgzYQOeo3eOCXbeTRbuWxVocPF2sHEhGCzGIxTeM/QjL1boKV+A4D1N7Y0T5YZXaKtrl2RBY6TZPJbKArdGunmtYOmxPd585oYpJCuTH6PtVZK/4bDpxP5FZs0iOhqa+DnDqpBox19KMqQqrBTO4fc1IUm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cNjbWbks; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O5zs9cIA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cNjbWbks"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720445312; x=1751981312;
+  t=1720446034; x=1751982034;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ZTDXg4OQinuqoAKxEKT5YEUVgjuRVHhh+W+7j5PtCBk=;
-  b=O5zs9cIAcV1TVs7/O9dKGzpJxOeCBEvh7GSAR3XGS2fGk1O7uti8y9Wj
-   vFMV3d1niGH/eE8hXPd/yafpsUSByvrmhS64Mbd71IW5xV4MAqp+xJs3j
-   YJy5iikHpBDe/GFjC2pLsJap4Z2O8a8uDbLiCo2bYqy44L+Zt+lngln1O
-   WpLrJRzKBswu596jrrJdNCISDfOphYPmSrP6Ec5D7LSkNnBDbs53gD3UG
-   Unc57XMatrd1BH50GigbwlBwInovrvYx2aUcoiNGtLPdmmXlpXVDY2yKL
-   WhVJE6HneUE36iA9dD9CYtMu257Dwwi3Kplhei32GnOXonZeEh5MbH/hu
-   w==;
-X-CSE-ConnectionGUID: +xOVz17bTViiuu1EQkgymw==
-X-CSE-MsgGUID: nhg+D+a4QQihiw/U7zmkow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="17774873"
+  bh=Q58WLqpwRip9snNyWhcnfaZp+rmhkdt088D+TwFUeeY=;
+  b=cNjbWbks857opQ1NLz2pOKTim77qjFYQ0SVv9j7IRgm7S4MeZNg0St8P
+   dHV9zZ/Dm69O0j+uSI8C9DwzxT9GziaGaUwnu8oOwZWIhvU8J2vDqPk0r
+   VO+DOXoxDxShSooDv6q4FRf2FOBGk0a2YvUIJirzA9ySC/4/HFTvbEmc8
+   bEKs0Y58hZLk4tsrNysKGdafnupOTUnhGMo2fY9Y0hEV/rRRO4jADGC0H
+   XRlcEz0CDa/wAt5aA7UhRIL7ljnSFijCenSX/dCUI5AWSlwH0/eoqBfgC
+   NxDt4WDop6i8nVW6MQh+huZBoe6nButI8aDLWRkMsX58s9YRv9oOewpy5
+   A==;
+X-CSE-ConnectionGUID: Azg1lzR7S7q1XA7tDUV+Ew==
+X-CSE-MsgGUID: LnMBNdWMTLS33wNpkzjQeA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="29045620"
 X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="17774873"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:28:31 -0700
-X-CSE-ConnectionGUID: RNEK6+qzRqe7kDck+n1zOQ==
-X-CSE-MsgGUID: h4D1KXmWQtqBCKxaT9OQ8Q==
+   d="scan'208";a="29045620"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:40:33 -0700
+X-CSE-ConnectionGUID: VyIRTVMfStKwTCct2dX/Kw==
+X-CSE-MsgGUID: R4ARqb5EQuStFjpVcemZvg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="47578161"
+   d="scan'208";a="52321202"
 Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:28:31 -0700
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:40:32 -0700
 Received: from [10.212.126.29] (kliang2-mobl1.ccr.corp.intel.com [10.212.126.29])
 	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 981BF20738D4;
-	Mon,  8 Jul 2024 06:28:29 -0700 (PDT)
-Message-ID: <821ea427-aeef-4269-9af8-4cdb8cf32ca8@linux.intel.com>
-Date: Mon, 8 Jul 2024 09:28:28 -0400
+	by linux.intel.com (Postfix) with ESMTPS id 4C01520738C7;
+	Mon,  8 Jul 2024 06:40:30 -0700 (PDT)
+Message-ID: <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
+Date: Mon, 8 Jul 2024 09:40:28 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,8 +58,8 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 1/5] perf x86/topdown: Complete topdown slots/metrics
- events check
+Subject: Re: [Patch v2 5/5] perf tests: Add topdown events counting and
+ sampling tests
 To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
  Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
@@ -69,179 +69,73 @@ To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
 Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
  Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
 References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
- <20240708144204.839486-2-dapeng1.mi@linux.intel.com>
+ <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
 Content-Language: en-US
 From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240708144204.839486-2-dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 
 
 On 2024-07-08 10:42 a.m., Dapeng Mi wrote:
-> It's not complete to check whether an event is a topdown slots or
-> topdown metrics event by only comparing the event name since user
-> may assign the event by RAW format, e.g.
-> 
-> perf stat -e '{instructions,cpu/r400/,cpu/r8300/}' sleep 1
-> 
->  Performance counter stats for 'sleep 1':
-> 
->      <not counted>      instructions
->      <not counted>      cpu/r400/
->    <not supported>      cpu/r8300/
-> 
->        1.002917796 seconds time elapsed
-> 
->        0.002955000 seconds user
->        0.000000000 seconds sys
-> 
-> The RAW format slots and topdown-be-bound events are not recognized and
-> not regroup the events, and eventually cause error.
-> 
-> Thus add two helpers arch_is_topdown_slots()/arch_is_topdown_metrics()
-> to detect whether an event is topdown slots/metrics event by comparing
-> the event config directly, and use these two helpers to replace the
-> original event name comparisons.
+> Add counting and leader sampling tests to verify topdown events including
+> raw format can be reordered correctly.
 > 
 > Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 > ---
->  tools/perf/arch/x86/util/evlist.c  |  8 +++---
->  tools/perf/arch/x86/util/evsel.c   |  3 ++-
->  tools/perf/arch/x86/util/topdown.c | 43 +++++++++++++++++++++++++++++-
->  tools/perf/arch/x86/util/topdown.h |  2 ++
->  4 files changed, 50 insertions(+), 6 deletions(-)
+>  tools/perf/tests/shell/record.sh | 6 ++++++
+>  tools/perf/tests/shell/stat.sh   | 6 ++++++
+>  2 files changed, 12 insertions(+)
 > 
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index b1ce0c52d88d..332e8907f43e 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -78,14 +78,14 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->  	if (topdown_sys_has_perf_metrics() &&
->  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
->  		/* Ensure the topdown slots comes first. */
-> -		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
-> +		if (arch_is_topdown_slots(lhs))
->  			return -1;
-> -		if (strcasestr(rhs->name, "slots") && !strcasestr(rhs->name, "uops_retired.slots"))
-> +		if (arch_is_topdown_slots(rhs))
->  			return 1;
->  		/* Followed by topdown events. */
-> -		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
-> +		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->  			return -1;
-> -		if (!strcasestr(lhs->name, "topdown") && strcasestr(rhs->name, "topdown"))
-> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
->  			return 1;
->  	}
->  
-> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-> index 090d0f371891..181f2ba0bb2a 100644
-> --- a/tools/perf/arch/x86/util/evsel.c
-> +++ b/tools/perf/arch/x86/util/evsel.c
-> @@ -6,6 +6,7 @@
->  #include "util/pmu.h"
->  #include "util/pmus.h"
->  #include "linux/string.h"
-> +#include "topdown.h"
->  #include "evsel.h"
->  #include "util/debug.h"
->  #include "env.h"
-> @@ -44,7 +45,7 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->  	    strcasestr(evsel->name, "uops_retired.slots"))
->  		return false;
->  
-> -	return strcasestr(evsel->name, "topdown") || strcasestr(evsel->name, "slots");
-> +	return arch_is_topdown_metrics(evsel) || arch_is_topdown_slots(evsel);
->  }
->  
->  int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
-> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-> index 3f9a267d4501..e805065bb7e1 100644
-> --- a/tools/perf/arch/x86/util/topdown.c
-> +++ b/tools/perf/arch/x86/util/topdown.c
-> @@ -32,6 +32,47 @@ bool topdown_sys_has_perf_metrics(void)
->  }
->  
->  #define TOPDOWN_SLOTS		0x0400
-> +bool arch_is_topdown_slots(const struct evsel *evsel)
-> +{
-> +	if (evsel->core.attr.config == TOPDOWN_SLOTS)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int compare_topdown_event(void *vstate, struct pmu_event_info *info)
-> +{
-> +	int *config = vstate;
-> +	int event = 0;
-> +	int umask = 0;
-> +	char *str;
-> +
+> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+> index 8e3e66780fed..164f0cf9648e 100755
+> --- a/tools/perf/tests/shell/record.sh
+> +++ b/tools/perf/tests/shell/record.sh
+> @@ -214,6 +214,12 @@ test_leader_sampling() {
+>      index=$(($index+1))
+>      prev_branches=$branches
+>    done < $script_output
 
-The compare is only needed for the "topdown" event.
-Check the name first before the sscanf and compare.
+The topdown is a model specific feature and only be available for the
+big core.
 
-	if (!strcasestr(info->name, "topdown"))
-		return 0;
+We need to check if topdown is supported before doing the test.
 
-> +	str = strcasestr(info->str, "event=");
-> +	if (str)
-> +		sscanf(str, "event=%x", &event);
-> +
-> +	str = strcasestr(info->str, "umask=");
-> +	if (str)
-> +		sscanf(str, "umask=%x", &umask);
-> +
-> +	if (strcasestr(info->name, "topdown") && event == 0 &&
-> +	    *config == (event | umask << 8))
-> +		return 1;
-> +
-> +	return 0;
-> +}
-> +
-> +bool arch_is_topdown_metrics(const struct evsel *evsel)
-> +{
-> +	struct perf_pmu *pmu = evsel__find_pmu(evsel);
-> +	int config = evsel->core.attr.config;
-> +
+The same check in the test_topdown_groups() may be used here as well.
 
-The topdown events are only available for the core PMU.
-You may want to return earlier for the !core PMUs.
-
-	if (!pmu || !pmu->is_core)
-		return false;
+  if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
+  then
+    echo "Topdown sampling read test [Skipped event parsing failed]"
+    return
+  fi
 
 Thanks,
 Kan
-> +	if (pmu && perf_pmu__for_each_event(pmu, false, &config,
-> +					    compare_topdown_event))
-> +		return true;
-> +
-> +	return false;
-> +}
+
+> +  if ! perf record -o "${perfdata}" -e "{instructions,slots,topdown-retiring}:S" true 2> /dev/null
+> +  then
+> +    echo "Leader sampling [Failed topdown events not reordered correctly]"
+> +    err=1
+> +    return
+> +  fi
+>    echo "Basic leader sampling test [Success]"
+>  }
 >  
->  /*
->   * Check whether a topdown group supports sample-read.
-> @@ -44,7 +85,7 @@ bool arch_topdown_sample_read(struct evsel *leader)
->  	if (!evsel__sys_has_perf_metrics(leader))
->  		return false;
+> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+> index 3f1e67795490..092a7a2abcf8 100755
+> --- a/tools/perf/tests/shell/stat.sh
+> +++ b/tools/perf/tests/shell/stat.sh
+> @@ -79,6 +79,12 @@ test_topdown_groups() {
+>      err=1
+>      return
+>    fi
+> +  if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<not supported>"
+> +  then
+> +    echo "Topdown event group test [Failed raw format slots not reordered first]"
+> +    err=1
+> +    return
+> +  fi
+>    echo "Topdown event group test [Success]"
+>  }
 >  
-> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
-> +	if (arch_is_topdown_slots(leader))
->  		return true;
->  
->  	return false;
-> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
-> index 46bf9273e572..1bae9b1822d7 100644
-> --- a/tools/perf/arch/x86/util/topdown.h
-> +++ b/tools/perf/arch/x86/util/topdown.h
-> @@ -3,5 +3,7 @@
->  #define _TOPDOWN_H 1
->  
->  bool topdown_sys_has_perf_metrics(void);
-> +bool arch_is_topdown_slots(const struct evsel *evsel);
-> +bool arch_is_topdown_metrics(const struct evsel *evsel);
->  
->  #endif
