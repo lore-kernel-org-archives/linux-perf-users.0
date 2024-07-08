@@ -1,141 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750F613342F;
-	Mon,  8 Jul 2024 13:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9405D78C9D;
+	Mon,  8 Jul 2024 15:08:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720446035; cv=none; b=LoGyi3Cu8rbrMHLS/gI2b3jb5IeM916CIOQS6nfxDb4X+2JlNnxJHWmLROfBGtazaQy2FAmCFHxBiLcuwj4irziTljfeIlJwpcuZyv9XuR1T3XawMaFewKIXDTiV4jKywsfNvesN9VKfEb/ZxM36laA65qKVG5M64xuwBM+nnRk=
+	t=1720451306; cv=none; b=Q9C+EJAvOjGnOCNPbL0gynVzuLQNiwPTTRkBEBPF0qCRHe2zRuF2E0EltkdGbL/SvwWyJV1T76H+v1F46OBH2i/tI29P3fzGx3o8T8VspD7gbkR0+Vk/p9oSsQFPFxlDKSvGBMPnzahzAB0q7321LL9PD6LfJXdtDsp2GslSxVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720446035; c=relaxed/simple;
-	bh=Q58WLqpwRip9snNyWhcnfaZp+rmhkdt088D+TwFUeeY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hhq5RY22siqe9i8CYgzYQOeo3eOCXbeTRbuWxVocPF2sHEhGCzGIxTeM/QjL1boKV+A4D1N7Y0T5YZXaKtrl2RBY6TZPJbKArdGunmtYOmxPd585oYpJCuTH6PtVZK/4bDpxP5FZs0iOhqa+DnDqpBox19KMqQqrBTO4fc1IUm4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cNjbWbks; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720451306; c=relaxed/simple;
+	bh=FR7jjvSXa/ZvMmA3hkEdqnmuyyo9SUfn1KCnFEf/n9s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HhyyKbGenk0ww7gTktl/KhWLiOLKLgQ69OjqYunglrYV62KbI3KGUF7sjxxN7miHSieZyzU0U+EuXu8M/koYikuxBbhinsG3UfH3an2gdsQSKC9Vx4Fw0cvFcJLP1WNqhzQ35jLBmSVExP+kvXlrCkAztGjf8uJvtp8wP6RWmV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWuKePE8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cNjbWbks"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720446034; x=1751982034;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Q58WLqpwRip9snNyWhcnfaZp+rmhkdt088D+TwFUeeY=;
-  b=cNjbWbks857opQ1NLz2pOKTim77qjFYQ0SVv9j7IRgm7S4MeZNg0St8P
-   dHV9zZ/Dm69O0j+uSI8C9DwzxT9GziaGaUwnu8oOwZWIhvU8J2vDqPk0r
-   VO+DOXoxDxShSooDv6q4FRf2FOBGk0a2YvUIJirzA9ySC/4/HFTvbEmc8
-   bEKs0Y58hZLk4tsrNysKGdafnupOTUnhGMo2fY9Y0hEV/rRRO4jADGC0H
-   XRlcEz0CDa/wAt5aA7UhRIL7ljnSFijCenSX/dCUI5AWSlwH0/eoqBfgC
-   NxDt4WDop6i8nVW6MQh+huZBoe6nButI8aDLWRkMsX58s9YRv9oOewpy5
-   A==;
-X-CSE-ConnectionGUID: Azg1lzR7S7q1XA7tDUV+Ew==
-X-CSE-MsgGUID: LnMBNdWMTLS33wNpkzjQeA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="29045620"
-X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="29045620"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:40:33 -0700
-X-CSE-ConnectionGUID: VyIRTVMfStKwTCct2dX/Kw==
-X-CSE-MsgGUID: R4ARqb5EQuStFjpVcemZvg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,192,1716274800"; 
-   d="scan'208";a="52321202"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 06:40:32 -0700
-Received: from [10.212.126.29] (kliang2-mobl1.ccr.corp.intel.com [10.212.126.29])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4C01520738C7;
-	Mon,  8 Jul 2024 06:40:30 -0700 (PDT)
-Message-ID: <c9e09449-f8ff-471f-adf3-1a5e8f97a102@linux.intel.com>
-Date: Mon, 8 Jul 2024 09:40:28 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWuKePE8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C43D3C116B1;
+	Mon,  8 Jul 2024 15:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720451304;
+	bh=FR7jjvSXa/ZvMmA3hkEdqnmuyyo9SUfn1KCnFEf/n9s=;
+	h=From:To:Cc:Subject:Date:From;
+	b=fWuKePE8b3zo10AiOZEeozCNx9hhka7TALHkzQzjoC8OudOum6Niy8p9QHX3Xx6mc
+	 7e1i99PNeEjJlgYKvrA1vyBcy4JIIKJGUFWkuKSt4JpLUzZUgrTAq+3p/jnteFo7iF
+	 0e73t4qEl+gr3lYnYCYnlRUraw9t+pgl+mozPstCP6IcuTOfkEobzZEFJJYNt+qkF/
+	 ZkhDps8Gl1dEOLaBD/oSr8j/OQgOuN9647BPg/3meUgqBETn5RFhn3pN/RPmEk706J
+	 Td7NEUbrKO9FAvS5AUip01b+IA061W5bfjXVU5rdYdYiKqxHlS0pZ9NL5G7NvRxf7M
+	 8xAvfCs+uOfeg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf-tools-fixes for v6.10
+Date: Mon,  8 Jul 2024 08:08:20 -0700
+Message-ID: <20240708150820.404000-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.45.2.803.g4e1b14247a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 5/5] perf tests: Add topdown events counting and
- sampling tests
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
- <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240708144204.839486-6-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Linus,
 
-
-On 2024-07-08 10:42 a.m., Dapeng Mi wrote:
-> Add counting and leader sampling tests to verify topdown events including
-> raw format can be reordered correctly.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  tools/perf/tests/shell/record.sh | 6 ++++++
->  tools/perf/tests/shell/stat.sh   | 6 ++++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-> index 8e3e66780fed..164f0cf9648e 100755
-> --- a/tools/perf/tests/shell/record.sh
-> +++ b/tools/perf/tests/shell/record.sh
-> @@ -214,6 +214,12 @@ test_leader_sampling() {
->      index=$(($index+1))
->      prev_branches=$branches
->    done < $script_output
-
-The topdown is a model specific feature and only be available for the
-big core.
-
-We need to check if topdown is supported before doing the test.
-
-The same check in the test_topdown_groups() may be used here as well.
-
-  if ! perf stat -e '{slots,topdown-retiring}' true > /dev/null 2>&1
-  then
-    echo "Topdown sampling read test [Skipped event parsing failed]"
-    return
-  fi
+Please consider pulling the following changes in perf tools for v6.10.
 
 Thanks,
-Kan
+Namhyung
 
-> +  if ! perf record -o "${perfdata}" -e "{instructions,slots,topdown-retiring}:S" true 2> /dev/null
-> +  then
-> +    echo "Leader sampling [Failed topdown events not reordered correctly]"
-> +    err=1
-> +    return
-> +  fi
->    echo "Basic leader sampling test [Success]"
->  }
->  
-> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-> index 3f1e67795490..092a7a2abcf8 100755
-> --- a/tools/perf/tests/shell/stat.sh
-> +++ b/tools/perf/tests/shell/stat.sh
-> @@ -79,6 +79,12 @@ test_topdown_groups() {
->      err=1
->      return
->    fi
-> +  if perf stat -e '{instructions,r400,r8000}' true 2>&1 | grep -E -q "<not supported>"
-> +  then
-> +    echo "Topdown event group test [Failed raw format slots not reordered first]"
-> +    err=1
-> +    return
-> +  fi
->    echo "Topdown event group test [Success]"
->  }
->  
+
+The following changes since commit 83a7eefedc9b56fe7bfeff13b6c7356688ffa670:
+
+  Linux 6.10-rc3 (2024-06-09 14:19:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.10-2024-07-08
+
+for you to fetch changes up to 7b2450bb40275802b73593331b0db2fc147ae2b7:
+
+  perf dsos: When adding a dso into sorted dsos maintain the sort order (2024-07-07 22:26:29 -0700)
+
+----------------------------------------------------------------
+perf tools: Fix the performance issue for v6.10
+
+These addresses the performance issues reported by Matt, Namhyung and
+Linus.  Recently it changed processing comm string and DSO with sorted
+arrays but it required to sort the array whenever it adds a new entry.
+This caused a performance issue and fix is to enhance the sorting by
+finding the insertion point in the sorted array and to shift righthand
+side using memmove().
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Ian Rogers (2):
+      perf comm str: Avoid sort during insert
+      perf dsos: When adding a dso into sorted dsos maintain the sort order
+
+ tools/perf/util/comm.c | 29 ++++++++++++++++++-----------
+ tools/perf/util/dsos.c | 26 +++++++++++++++++++++-----
+ 2 files changed, 39 insertions(+), 16 deletions(-)
