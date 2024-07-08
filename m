@@ -1,168 +1,172 @@
-Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B68CA36B11
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jul 2024 07:50:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA35A76025;
+	Mon,  8 Jul 2024 10:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720425053; cv=none; b=CwjHryotkuNl1ynL1HjmQceUBjhRBL+Vomhonx5sMAS1q444eZZzDnpJO//Ynbg41sbLvnyzIwMFL8reXuGDibLamATt+6vMV9fDS96un+Cp1JbZwZZfrX/sSzq2DSGiufXwdUZ+VMbyrRu/rM/t7wOX62qXc8NzjuN46OYpg9w=
+	t=1720433215; cv=none; b=CMkAFm6EhGOHFhIPoldnaamFMaJS/TLkzsmA4y4POPhP0X2V/G44lGc9WOjHuSNppfipIB5qnJrFL4I0lAIi81giQj3m/pgt8GcTMXse0bdgTrTyBAHI3ZJC/ac0roo2o+X+VdSG7HNCz/e9trG+NvDEz0nvhqaxKVyDKdYVTwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720425053; c=relaxed/simple;
-	bh=eZcP9A8BftfQs+2BS8Giav6F5eC+U8j1kQB8riDAGHk=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=Hy0weNAd1fKG2aaGCYVW1tdKpohqA5EowK3M+oQSxNOpFd4io++p6ZiSFOck5hLLprbHsWipWg/jYneeGoVoCfqYM+irka/NihJP8g+t293LbVqJP7TiMDzWBEPNBu+Dn44XBq+CNv0YgF+QxXLIzqSf7f3i8kC1KiBYW5gmcIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xjtu.edu.cn; spf=pass smtp.mailfrom=stu.xjtu.edu.cn; arc=none smtp.client-ip=162.243.161.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stu.xjtu.edu.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stu.xjtu.edu.cn
-Received: from xiaze2017$stu.xjtu.edu.cn ( [10.181.168.232] ) by
- ajax-webmail-app2 (Coremail) ; Mon, 8 Jul 2024 15:50:17 +0800 (GMT+08:00)
-Date: Mon, 8 Jul 2024 15:50:17 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Ze Xia" <xiaze2017@stu.xjtu.edu.cn>
-To: "Peter Zijlstra" <peterz@infradead.org>,
-	"Ingo Molnar" <mingo@red-hat.com>,
-	"Arnaldo Carvalho de Melo" <acme@kernel.org>,
-	"Namhyung Kim" <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Bug with 'perf script --symfs'?
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2023.1-cmXT5 build
- 20230419(ff23bf83) Copyright (c) 2002-2024 www.mailtech.cn xjtu.edu.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1720433215; c=relaxed/simple;
+	bh=VEZ06fzVYpy++9icFhiWFSzQWhDVs2na3vsap9PM6ug=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=EjgW9l2am/1m7vqCWAhVRYmbxdfWye3Lljge7dH4jfRq9MqIA7crWZQvfxOJY76BH14k75uB2eXNYS12bDHrEbZu0Js9+Pk2Fc5LkTm6Olq18PS0X0cLMbWRVbr9+ZUHLDRW7GAWwJ5plqpa80AjuhQRXypkbkpWQ88L0sy7PE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8Cx8PE7uotmVPYBAA--.6462S3;
+	Mon, 08 Jul 2024 18:06:51 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Dxvsc3uotmT30_AA--.16015S3;
+	Mon, 08 Jul 2024 18:06:48 +0800 (CST)
+Subject: Re: [PATCH v2 1/3] perf: Add perf_event_attr::bp_priv
+To: Peter Zijlstra <peterz@infradead.org>
+References: <20240621073910.8465-1-yangtiezhu@loongson.cn>
+ <20240621073910.8465-2-yangtiezhu@loongson.cn>
+ <20240705103413.GA8971@willie-the-truck>
+ <7522fc14-aacc-a8e3-3258-9064d7e2936f@loongson.cn>
+ <20240708073652.GE11386@noisy.programming.kicks-ass.net>
+Cc: Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Russell King <linux@armlinux.org.uk>,
+ Catalin Marinas <catalin.marinas@arm.com>, Oleg Nesterov <oleg@redhat.com>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <da0c95e7-c676-e0c0-8b90-b1ea5fc7b72f@loongson.cn>
+Date: Mon, 8 Jul 2024 18:06:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <1a8b2c39.69b.1909152714b.Coremail.xiaze2017@stu.xjtu.edu.cn>
-X-Coremail-Locale: en_US
-X-CM-TRANSID:NAGowACHmOA5motmIoUiAA--.3653W
-X-CM-SenderInfo: x0ld6visqrlqhvwxh5xmwxhvlgxou0/1tbiAQAMBGaKWQcbCgABsr
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+In-Reply-To: <20240708073652.GE11386@noisy.programming.kicks-ass.net>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8Dxvsc3uotmT30_AA--.16015S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoWxZF4UKF17ArW7Zr4DGrWrCrX_yoWrAry7pr
+	s8CFnIkrWkJryYvw13Kw12vw15twsrKr4UW343G34jyFsI93s5Wa1kKF1a9Fn5Ars7AFWF
+	qw4qqF9ru34UurXCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+	AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+	AVWUtwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+	JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU2-VyUU
+	UUU
 
-SGksCgpJIHRoaW5rIEkgZm91bmQgdGhhdCBgcGVyZiBzY3JpcHQgLS1zeW1mc2Agb3B0aW9uIGFu
-ZCBhdXRvbWF0aWMgbmFtZXNwYWNlIGF0dGFjaGluZyBzZWVtcyB0byBjb25mbGljdC4KCkVudmly
-b25tZW50OiBrZXJuZWwgdmVyc2lvbiBgNi41LjAtNDEtZ2VuZXJpY2AsIGRpc3RyaWJ1dGlvbiBg
-dWJ1bnR1MjIuMDRgLCBhcmNoIGB4ODZfNjRgCgpCZWhhdmlvcjogSW4gYHBlcmYgc2NyaXB0YCwg
-aWYgYSBwcm9jZXNzIGlzIGluc2lkZSBhbm90aGVyIG5hbWVzcGFjZSB0aGFuIHRoZSBkZWZhdWx0
-IChlLmcuIGluc2lkZSBhIGRvY2tlciBjb250YWluZXIpLCBwZXJmIHNjcmlwdCB3aWxsIHRyeSB0
-byBhdHRhY2ggdG8gdGhhdCBuYW1lc3BhY2UgdG8gcmVhZCBkZWJ1ZyBpbmZvLiBIb3dldmVyLCBp
-ZiBgLS1zeW1mc2Agb3B0aW9uIGlzIHByb3ZpZGVkLCB0aGVuIGl0IHdpbGwgc2VhcmNoIGZvciBk
-ZWJ1ZyBmaWxlcyB3aXRoIGBzeW1mc2AgcHJlZml4ICppbnNpZGUgdGhlIG5hbWVzcGFjZSouIFVz
-dWFsbHkgdGhlIHN5bWZzIGRpcmVjdG9yeSBpc24ndCBwcmVzZW50IGluIHRoZSBuYW1lc3BhY2Us
-IHRodXMgSSBzZWUgdGhpcyBiZWhhdmlvciBhcyBpbmFwcHJvcHJpYXRlLgoKVG8gcmVwcm9kdWNl
-OiBJIHJ1biBjb21tYW5kcyBiZWxvdyBvbiBhIHVidW50dSBtYWNoaW5lIHdpdGggZG9ja2VyIGlu
-c3RhbGxlZC4gQW55IGdsaWJjIGJhc2VkIGRpc3RybyB3aXRob3V0IG11c2wgaW5zdGFsbGVkIHNo
-b3VsZCBhbHNvIHJlcHJvZHVjZSB0aGUgaXNzdWUsIGFzIG11c2wgaXNuJ3QgcHJlc2VudCBhdCBo
-b3N0IGJ1dCBwcmVzZW50IGluIHRoZSBkb2NrZXIgY29udGFpbmVyLgoKSW4gb25lIHRlcm1pbmFs
-IChjcmVhdGUgdGhlIHByb2Nlc3MgdG8gYmUgcHJvZmlsZWQpOgoKICAgICQgZG9ja2VyIHJ1biAt
-aXQgLS1ybSAtLW5hbWUgdGVzdC1zeW1mcyAtLW5ldD1ob3N0IGFscGluZQogICAgIyBub3cgd2Un
-cmUgaW5zaWRlIHRoZSBjb250YWluZXIKICAgICQgYXBrIGFkZCBtdXNsLWRiZwogICAgJCBkZCBp
-Zj0vZGV2L3plcm8gb2Y9L2Rldi9udWxsCiAgICAjIGl0IHN0dWNrcyBoZXJlLCBkb24ndCBraWxs
-IGl0IHlldAoKSW4gYW5vdGhlciB0ZXJtaW5hbCAocHJvZmlsaW5nKToKCiAgICAkIHBlcmYgcmVj
-b3JkIC1hIC1nIHNsZWVwIDEKICAgICQgcGVyZiBzY3JpcHQgPiBzdWNjZXNzLnBlcmYKICAgICQg
-Z3JlcCBtdXNsIHN1Y2Nlc3MucGVyZiB8IGhlYWQgLW4gMTAKICAgICAgICAgICAgNzVmYmY1MTQz
-OTkyIF9fY3BfZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xKQogICAgICAgICAgICA3
-NWZiZjUxNDM5OTIgX19jcF9lbmQrMHgwICgvbGliL2xkLW11c2wteDg2XzY0LnNvLjEpCiAgICAg
-ICAgICAgIDc1ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAgKC9saWIvbGQtbXVzbC14ODZfNjQuc28u
-MSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIF9fY3BfZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4
-Nl82NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5OTIgX19jcF9lbmQrMHgwICgvbGliL2xk
-LW11c2wteDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAg
-KC9saWIvbGQtbXVzbC14ODZfNjQuc28uMSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIF9fY3Bf
-ZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5
-OTIgX19jcF9lbmQrMHgwICgvbGliL2xkLW11c2wteDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1
-ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAgKC9saWIvbGQtbXVzbC14ODZfNjQuc28uMSkKICAgICAg
-ICAgICAgNzVmYmY1MTQzOTkyIF9fY3BfZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4x
-KQoKVGhhbmtzIHRvIGF1dG9tYXRpYyBuYW1lc3BhY2UgYXR0YWNoaW5nLCB0aGlzIHdvcmtzLiBQ
-cm9ibGVtIGNvbWVzIHdpdGggYC0tc3ltZnNgIG9wdGlvbjoKCiAgICAkIGRvY2tlciBjcCB0ZXN0
-LXN5bWZzOi8gLi9zeW1mcwogICAgJCBwZXJmIHNjcmlwdCAtLXN5bWZzIC4vc3ltZnMgPiBmYWls
-LnBlcmYKICAgICQgZ3JlcCBtdXNsIGZhaWwucGVyZiB8IGhlYWQgLW4gMTAKICAgICAgICAgICAg
-NzVmYmY1MTQzOTkyIFt1bmtub3duXSAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xKQogICAgICAg
-ICAgICA3NWZiZjUxNDM5OTIgW3Vua25vd25dICgvbGliL2xkLW11c2wteDg2XzY0LnNvLjEpCiAg
-ICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBbdW5rbm93bl0gKC9saWIvbGQtbXVzbC14ODZfNjQuc28u
-MSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIFt1bmtub3duXSAoL2xpYi9sZC1tdXNsLXg4Nl82
-NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5OTIgW3Vua25vd25dICgvbGliL2xkLW11c2wt
-eDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBbdW5rbm93bl0gKC9saWIvbGQt
-bXVzbC14ODZfNjQuc28uMSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIFt1bmtub3duXSAoL2xp
-Yi9sZC1tdXNsLXg4Nl82NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5OTIgW3Vua25vd25d
-ICgvbGliL2xkLW11c2wteDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBbdW5r
-bm93bl0gKC9saWIvbGQtbXVzbC14ODZfNjQuc28uMSkKICAgICAgICAgICAgNzVmYmY1MTQzOTky
-IFt1bmtub3duXSAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xKQoKV2UgY2FuJ3QgZmluZCB0aGUg
-c3ltYm9sIGFueSBtb3JlLgoKUmVydW4gdGhlIGBwZXJmIHNjcmlwdGAgd2l0aCBgc3RyYWNlYDoK
-CiAgICAkIHN0cmFjZSAtbyBmYWlsLnN0cmFjZSBwZXJmIHNjcmlwdCAtLXN5bWZzIC4vc3ltZnMg
-PiBmYWlsLnBlcmYKICAgICQgZ3JlcCBtdXNsIGZhaWwuc3RyYWNlIHwgZ3JlcCBzdGF0CiAgICBu
-ZXdmc3RhdGF0KEFUX0ZEQ1dELCAiLi9zeW1mcy8vbGliL2xkLW11c2wteDg2XzY0LnNvLjEiLCAw
-eDdmZmNlNTNiNzAzMCwgMCkgPSAtMSBFTk9FTlQgKE5vIHN1Y2ggZmlsZSBvciBkaXJlY3Rvcnkp
-CiAgICBuZXdmc3RhdGF0KEFUX0ZEQ1dELCAiLi9zeW1mcy8vbGliL2xkLW11c2wteDg2XzY0LnNv
-LjEiLCAweDdmZmNlNTNiMjE0MCwgMCkgPSAtMSBFTk9FTlQgKE5vIHN1Y2ggZmlsZSBvciBkaXJl
-Y3RvcnkpCiAgICBuZXdmc3RhdGF0KEFUX0ZEQ1dELCAiLi9zeW1mcy8vdXNyL2xpYi9kZWJ1Zy9s
-aWIvbGQtbXVzbC14ODZfNjQuc28uMS5kZWJ1ZyIsIDB4N2ZmY2U1M2I0MWEwLCAwKSA9IC0xIEVO
-T0VOVCAoTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeSkKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0Qs
-ICIuL3N5bWZzLy91c3IvbGliL2RlYnVnL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xIiwgMHg3ZmZj
-ZTUzYjQxYTAsIDApID0gLTEgRU5PRU5UIChObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5KQogICAg
-bmV3ZnN0YXRhdChBVF9GRENXRCwgIi4vc3ltZnMvL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xIiwg
-MHg3ZmZjZTUzYjQxYTAsIDApID0gLTEgRU5PRU5UIChObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5
-KQogICAgbmV3ZnN0YXRhdChBVF9GRENXRCwgIi4vc3ltZnMvL2xpYi8uZGVidWcvbGQtbXVzbC14
-ODZfNjQuc28uMSIsIDB4N2ZmY2U1M2I0MWEwLCAwKSA9IC0xIEVOT0VOVCAoTm8gc3VjaCBmaWxl
-IG9yIGRpcmVjdG9yeSkKCk5vdGUgaG93IGAuL3N5bWZzL2AgaXMgaW5jbHVkZWQgaW4gYWxsIHRo
-b3NlIGNhbGxzLgoKUmVydW4gdGhlIHN1Y2Nlc3MgY2FzZSB3aXRoIHN0cmFjZToKCiAgICAkIHN0
-cmFjZSAtbyBzdWNjZXNzLnN0cmFjZSBwZXJmIHNjcmlwdCA+IHN1Y2Nlc3MucGVyZgogICAgJCBn
-cmVwIG11c2wgc3VjY2Vzcy5zdHJhY2UgfCBncmVwIHN0YXQKICAgIG5ld2ZzdGF0YXQoQVRfRkRD
-V0QsICIvbGliL2xkLW11c2wteDg2XzY0LnNvLjEiLCB7c3RfbW9kZT1TX0lGUkVHfDA3NTUsIHN0
-X3NpemU9NjQ5ODMyLCAuLi59LCAwKSA9IDAKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0QsICJsZC1t
-dXNsLXg4Nl82NC5zby4xLmRlYnVnIiwgMHg3ZmZlMDk0OWEzNTAsIDApID0gLTEgRU5PRU5UIChO
-byBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5KQogICAgbmV3ZnN0YXRhdChBVF9GRENXRCwgIi9saWIv
-bGQtbXVzbC14ODZfNjQuc28uMS5kZWJ1ZyIsIDB4N2ZmZTA5NDlhMzUwLCAwKSA9IC0xIEVOT0VO
-VCAoTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeSkKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0QsICIv
-bGliLy5kZWJ1Zy9sZC1tdXNsLXg4Nl82NC5zby4xLmRlYnVnIiwgMHg3ZmZlMDk0OWEzNTAsIDAp
-ID0gLTEgRU5PRU5UIChObyBzdWNoIGZpbGUgb3IgZGlyZWN0b3J5KQogICAgbmV3ZnN0YXRhdChB
-VF9GRENXRCwgIi91c3IvbGliL2RlYnVnL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xLmRlYnVnIiwg
-e3N0X21vZGU9U19JRlJFR3wwNzU1LCBzdF9zaXplPTI4OTI4NDgsIC4uLn0sIDApID0gMAogICAg
-bmV3ZnN0YXRhdChBVF9GRENXRCwgIi91c3IvbGliL2RlYnVnL2xpYi9sZC1tdXNsLXg4Nl82NC5z
-by4xLmRlYnVnIiwge3N0X21vZGU9U19JRlJFR3wwNzU1LCBzdF9zaXplPTI4OTI4NDgsIC4uLn0s
-IDApID0gMAoKTm90ZSB0aGF0IHRoZSBjYWxscyB3aXRob3V0IGAuL3N5bWZzL2Agd29ya2VkLCBi
-ZWNhdXNlIHBlcmYgaXMgaW5zaWRlIHRoZSBjb250YWluZXIncyBuYW1lc3BhY2UuCgpUbyBwcm92
-ZSB0aGF0IG91ciBzeW1mcyBpbmRlZWQgY29udGFpbnMgdGhlIGRlYnVnIGluZm8sIHdlIGNhbiBz
-dG9wIHRoZSBgZGRgIGNvbW1hbmQgaW5zaWRlIGRvY2tlciBhbmQgcmVydW4gYHBlcmYgc2NyaXB0
-YCB3aXRob3V0IGAtLXN5bWZzYCBvcHRpb24sIGl0IGFsc28gc3VjY2VlZHM6CgogICAgJCBzdHJh
-Y2UgLW8gc3VjY2VzczIuc3RyYWNlIHBlcmYgc2NyaXB0IC0tc3ltZnMgLi9zeW1mcyA+IHN1Y2Nl
-c3MyLnBlcmYKICAgICQgZ3JlcCBtdXNsIHN1Y2Nlc3MyLnBlcmYgfCBoZWFkIC1uIDEwCiAgICAg
-ICAgICAgIDc1ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAgKC9saWIvbGQtbXVzbC14ODZfNjQuc28u
-MSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIF9fY3BfZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4
-Nl82NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5OTIgX19jcF9lbmQrMHgwICgvbGliL2xk
-LW11c2wteDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAg
-KC9saWIvbGQtbXVzbC14ODZfNjQuc28uMSkKICAgICAgICAgICAgNzVmYmY1MTQzOTkyIF9fY3Bf
-ZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xKQogICAgICAgICAgICA3NWZiZjUxNDM5
-OTIgX19jcF9lbmQrMHgwICgvbGliL2xkLW11c2wteDg2XzY0LnNvLjEpCiAgICAgICAgICAgIDc1
-ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAgKC9saWIvbGQtbXVzbC14ODZfNjQuc28uMSkKICAgICAg
-ICAgICAgNzVmYmY1MTQzOTkyIF9fY3BfZW5kKzB4MCAoL2xpYi9sZC1tdXNsLXg4Nl82NC5zby4x
-KQogICAgICAgICAgICA3NWZiZjUxNDM5OTIgX19jcF9lbmQrMHgwICgvbGliL2xkLW11c2wteDg2
-XzY0LnNvLjEpCiAgICAgICAgICAgIDc1ZmJmNTE0Mzk5MiBfX2NwX2VuZCsweDAgKC9saWIvbGQt
-bXVzbC14ODZfNjQuc28uMSkKICAgICQgZ3JlcCBtdXNsIHN1Y2Nlc3MyLnN0cmFjZSB8IGdyZXAg
-c3RhdAogICAgbmV3ZnN0YXRhdChBVF9GRENXRCwgIi4vc3ltZnMvL2xpYi9sZC1tdXNsLXg4Nl82
-NC5zby4xIiwgMHg3ZmZlMTRkM2Q2YTAsIDApID0gLTEgRU5PRU5UIChObyBzdWNoIGZpbGUgb3Ig
-ZGlyZWN0b3J5KQogICAgbmV3ZnN0YXRhdChBVF9GRENXRCwgIi4vc3ltZnMvL2xpYi9sZC1tdXNs
-LXg4Nl82NC5zby4xIiwge3N0X21vZGU9U19JRlJFR3wwNzU1LCBzdF9zaXplPTY0OTgzMiwgLi4u
-fSwgMCkgPSAwCiAgICBuZXdmc3RhdGF0KEFUX0ZEQ1dELCAibGQtbXVzbC14ODZfNjQuc28uMS5k
-ZWJ1ZyIsIDB4N2ZmZTE0ZDM4N2EwLCAwKSA9IC0xIEVOT0VOVCAoTm8gc3VjaCBmaWxlIG9yIGRp
-cmVjdG9yeSkKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0QsICIuL3N5bWZzLy9saWIvbGQtbXVzbC14
-ODZfNjQuc28uMS5kZWJ1ZyIsIDB4N2ZmZTE0ZDM4N2EwLCAwKSA9IC0xIEVOT0VOVCAoTm8gc3Vj
-aCBmaWxlIG9yIGRpcmVjdG9yeSkKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0QsICIuL3N5bWZzLy9s
-aWIvLmRlYnVnL2xkLW11c2wteDg2XzY0LnNvLjEuZGVidWciLCAweDdmZmUxNGQzODdhMCwgMCkg
-PSAtMSBFTk9FTlQgKE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkpCiAgICBuZXdmc3RhdGF0KEFU
-X0ZEQ1dELCAiL3Vzci9saWIvZGVidWcuL3N5bWZzLy9saWIvbGQtbXVzbC14ODZfNjQuc28uMS5k
-ZWJ1ZyIsIDB4N2ZmZTE0ZDM4N2EwLCAwKSA9IC0xIEVOT0VOVCAoTm8gc3VjaCBmaWxlIG9yIGRp
-cmVjdG9yeSkKICAgIG5ld2ZzdGF0YXQoQVRfRkRDV0QsICIuL3N5bWZzLy91c3IvbGliL2RlYnVn
-L2xpYi9sZC1tdXNsLXg4Nl82NC5zby4xLmRlYnVnIiwge3N0X21vZGU9U19JRlJFR3wwNzU1LCBz
-dF9zaXplPTI4OTI4NDgsIC4uLn0sIDApID0gMAogICAgbmV3ZnN0YXRhdChBVF9GRENXRCwgIi4v
-c3ltZnMvL3Vzci9saWIvZGVidWcvbGliL2xkLW11c2wteDg2XzY0LnNvLjEiLCAweDdmZmUxNGQz
-YTgxMCwgMCkgPSAtMSBFTk9FTlQgKE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkpCiAgICBuZXdm
-c3RhdGF0KEFUX0ZEQ1dELCAiLi9zeW1mcy8vbGliL2xkLW11c2wteDg2XzY0LnNvLjEiLCB7c3Rf
-bW9kZT1TX0lGUkVHfDA3NTUsIHN0X3NpemU9NjQ5ODMyLCAuLi59LCAwKSA9IDAKCkFzIHRoZSBg
-ZGRgIHByb2Nlc3MgaXMgZGVhZCBub3csIGBwZXJmIHNjcmlwdGAgd2lsbCBub3QgYXR0YWNoIHRv
-IGl0cyBuYW1lc3BhY2UuIEl0IHJlYWRzIGRlYnVnIGluZm8gZnJvbSBvdXIgc3ltZnMsIGFuZCBp
-dCB3b3JrZWQuCgpFeHBlY3RlZCBCZWhhdmlvcjogYHN5bWZzYCBpcyBwcmVmaXhlZCBvbmx5IGlm
-IG5vIG5hbWVzcGFjZSBhdHRhY2hpbmcgaGFwcGVuZWQuIE9yLCB0byBiZSBjb252ZXJzYXRpdmUs
-IHRyeSB0d2ljZSwgd2l0aCBvciB3aXRob3V0IGAtLXN5bWZzYC4KCktpbmQgcmVnYXJkcwpaZSBY
-aWE=
+On 07/08/2024 03:36 PM, Peter Zijlstra wrote:
+> On Sat, Jul 06, 2024 at 01:31:03PM +0800, Tiezhu Yang wrote:
+>>
+>>
+>> On 07/05/2024 06:34 PM, Will Deacon wrote:
+>>> On Fri, Jun 21, 2024 at 03:39:08PM +0800, Tiezhu Yang wrote:
+>>>> Add a member "bp_priv" at the end of the uapi struct perf_event_attr
+>>>> to make a bridge between ptrace and hardware breakpoint.
+>>>>
+>>>> This is preparation for later patch on some archs such as ARM, ARM64
+>>>> and LoongArch which have privilege level of breakpoint.
+>>>>
+>>>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>>>> ---
+>>>>  include/uapi/linux/perf_event.h | 3 +++
+>>>>  kernel/events/hw_breakpoint.c   | 1 +
+>>>>  2 files changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>>>> index 3a64499b0f5d..f9f917e854e6 100644
+>>>> --- a/include/uapi/linux/perf_event.h
+>>>> +++ b/include/uapi/linux/perf_event.h
+>>>> @@ -379,6 +379,7 @@ enum perf_event_read_format {
+>>>>  #define PERF_ATTR_SIZE_VER6	120	/* add: aux_sample_size */
+>>>>  #define PERF_ATTR_SIZE_VER7	128	/* add: sig_data */
+>>>>  #define PERF_ATTR_SIZE_VER8	136	/* add: config3 */
+>>>> +#define PERF_ATTR_SIZE_VER9	144	/* add: bp_priv */
+>>>>
+>>>>  /*
+>>>>   * Hardware event_id to monitor via a performance monitoring event:
+>>>> @@ -522,6 +523,8 @@ struct perf_event_attr {
+>>>>  	__u64	sig_data;
+>>>>
+>>>>  	__u64	config3; /* extension of config2 */
+>>>> +
+>>>> +	__u8	bp_priv; /* privilege level of breakpoint */
+>>>>  };
+>>>
+>>> Why are we extending the user ABI for this? Perf events already have the
+>>> privilege encoded (indirectly) by the exclude_{user,kernel,hv} fields in
+>>> 'struct perf_event_attr'.
+>>
+>> IMO, add bp_priv is to keep consistent with the other fields
+>> bp_type, bp_addr and bp_len, the meaning of bp_priv field is
+>> explicit and different with exclude_{user,kernel,hv} fields.
+>
+> In case it wasn't obvious, this structure has __u64 granularity. You
+> don't just add a __u8 to the end. Also, since you mention consistency,
+> you might have noticed those other bp_ fields are in a union on
+> config[12], so why can't this live in a union on config3 ?
+
+Looks good, I will do it in v3, like this:
+(no need to define PERF_ATTR_SIZE_VER9	144)
+
+diff --git a/include/uapi/linux/perf_event.h 
+b/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..abe8da7a1f60 100644
+--- a/include/uapi/linux/perf_event.h
++++ b/include/uapi/linux/perf_event.h
+@@ -521,7 +521,10 @@ struct perf_event_attr {
+          */
+         __u64   sig_data;
+
+-       __u64   config3; /* extension of config2 */
++       union {
++               __u8    bp_priv; /* privilege level of breakpoint */
++               __u64   config3; /* extension of config2 */
++       };
+  };
+
+>> Additionally, there is only 1 bit for exclude_{user,kernel,hv},
+>> but bp_priv field has at least 2 bit according to the explanation
+>> of Arm Reference Manual. At last, the initial aim is to remove
+>> the check condition to assign the value of hw->ctrl.privilege.
+>>
+>> https://developer.arm.com/documentation/ddi0487/latest/
+>>
+>> 1. D23: AArch64 System Register Descriptions (Page 8562)
+>>    D23.3.11 DBGWCR<n>_EL1, Debug Watchpoint Control Registers, n = 0 - 63
+>>    PAC, bits [2:1]
+>>    Privilege of access control. Determines the Exception level or levels at
+>> which a Watchpoint debug
+>>    event for watchpoint n is generated.
+>>
+>> 2. G8: AArch32 System Register Descriptions (Page 12334)
+>>    G8.3.26 DBGWCR<n>, Debug Watchpoint Control Registers, n = 0 - 15
+>>    PAC, bits [2:1]
+>>    Privilege of access control. Determines the Exception level or levels at
+>> which a Watchpoint debug
+>>    event for watchpoint n is generated.
+>
+> That's all clear as mud for someone that don't speak arm. Can you please
+> provide a coherent reason for all this that does not rely on external
+> resources?
+
+In short, when developing hardware watchpoint on LoongArch, we want to
+set the same privilege passed by the ptrace user data, but there is no
+a middle bridge to save this value like bp_addr, bp_type and bp_len, I
+think this is a common issue for the archs which have privilege level
+of breakpoint.
+
+Thanks,
+Tiezhu
+
