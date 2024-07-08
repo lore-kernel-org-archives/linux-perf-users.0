@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6B336AEC;
-	Mon,  8 Jul 2024 07:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 283FB38FB9;
+	Mon,  8 Jul 2024 07:40:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720424445; cv=none; b=Q85PXcfijWNQYmcOploZu7r3HkOrG2/iP4LIVl+DLJfFXbKqBdNK9xMiaNwH44nqTbcTe4LdF7EK4xRgcX/rwZIkuvCwCK3Rto/JSJsX/MhlnAduw+v0/LgSb7PfyJt9fS8pUoPm+rutxZR0PjnkgYWo987LRRNyNHsAzRMIOLQ=
+	t=1720424448; cv=none; b=Sbi+DxcT/wSMcpD71M/epao/iILTCSrWM4KeR7XkE8Cg8302+21R4/E0l9kmF0L3LqSgJCzxyZA9h8Hvo6BHUmJFEAOB5iPrbHUH/vYsbgQ7HyjCJw7ZEwiTzEdgI2x+H3E9R5VwEU4Xyloa7opqPOMK0tYzSmY3OJaJUQpFDV0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720424445; c=relaxed/simple;
-	bh=7mAASb3q0AC2znNgA2IO5PLY0spJ6CZck3SPO0Z0fSA=;
+	s=arc-20240116; t=1720424448; c=relaxed/simple;
+	bh=1/nKuFBsRafZNDLvHVCKhdjLHZPBaKZQdBcN+bO4gTo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DFSQENWn5GGh8dDcnBCHj7N39Idk7TKuKAgD/L6G26NEz1X99en7pGO5wJ9VesDo4YtktUoLlUhv9iiy75B9gNhkzSRp5Rj3mMDJSJ76a1dQ0BWtYYk/0yr64JjSdr0h6bXnfJ+RPzLXR0AyrmiZSGsdVU1RAEZHHFsdlWpzU9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RnG2ihLT; arc=none smtp.client-ip=192.198.163.14
+	 MIME-Version; b=mfilMhj+drRzAiWe6FnK6D5BhItocIqL5y+0UMD3KOnvQ0CkLmijgyc9W08uiFVOTyv1jt2ltlUgDc5pvwP77Mn6P6lgcHttOrm6ZVFRhlzYqxqSHNTEEaqcaBaRNpivCo1xST18tpIjtwAACTn4jvQWqRbvjvHhD0CZCkQg4EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=erP7AawP; arc=none smtp.client-ip=192.198.163.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RnG2ihLT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="erP7AawP"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720424444; x=1751960444;
+  t=1720424447; x=1751960447;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=7mAASb3q0AC2znNgA2IO5PLY0spJ6CZck3SPO0Z0fSA=;
-  b=RnG2ihLTW6gfOwGGFrQRrNWQcKEGvbLfKywgHSxSXpBkLWQMv5hBYAhY
-   V4uu5p4RNzwyomFHf3uS9RxdLpABBpCUM8zs7JwTCSSrCIu3qAASycorT
-   YejXcbrYeqTg7ZCiSU/LhMwfzRrnafYL/HdIYZ9fJQf/urHRC0PNb+nZD
-   e3Vr3/t0U5U3y6voZEgWqsbTz7R7PjZYj8ztapRdr1TN+LF5QY7/D6wrX
-   ZzdOd7J4RXIunmAVrEoTSJ+9DtmO7pJbAsy++b6nvrkpNRMcQ75r8pf/q
-   7+b1vCNfhN77lc0dRgE2wD2MfBRiKbhG+pXKtmoLU6CXupeXNkonNetXC
-   Q==;
-X-CSE-ConnectionGUID: qhojni5MRpujBgU+7dFBnQ==
-X-CSE-MsgGUID: 1RXOK5/qRueSr8HJOuhnPA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17819224"
+  bh=1/nKuFBsRafZNDLvHVCKhdjLHZPBaKZQdBcN+bO4gTo=;
+  b=erP7AawP2R/jQpMgLv/jDwWK8nnLd5pNHi72//AscVboDl3mHn32cIah
+   UWeQrq/+DzAgveeAPF7Gt40yNGxqKVXsuKAAM24Vv7f/scZ7c6p9Ox/+X
+   4X89yLMbrpHPUV0H0aGy2uPztKAglLpG/PRjlUGwGIKjOOrcpywu+Q1rg
+   0N1/YpPUgGDH+AQOaXOwdjnQtn/RNyWdWNgj69XPU9dW3cT7AdlmVmk8g
+   oyC97PvMZJAKvT8W1DjBhYt5ztd1AZW/NXSTsCcGyQCZ5HqfR/u7nP+Z4
+   ADZJj2FWkufstcdReUJXOBpIFlmhxUf5cDTZjq8L+ItLrO6KER6EwYAN7
+   w==;
+X-CSE-ConnectionGUID: X+z4WbFoSCqzJXRAqXOAfA==
+X-CSE-MsgGUID: wV4mq54ZSIehNOJToqFy8w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11126"; a="17819235"
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="17819224"
+   d="scan'208";a="17819235"
 Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:40:44 -0700
-X-CSE-ConnectionGUID: c3AdZ3cLStWo5N7dyCGgyg==
-X-CSE-MsgGUID: i6kNOmSPQv6ja/3BjhPzGg==
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 00:40:47 -0700
+X-CSE-ConnectionGUID: VN7GshEBTwOVaGiG2Be6sg==
+X-CSE-MsgGUID: heyKpxtLTemxBWRk16Xw/Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,191,1716274800"; 
-   d="scan'208";a="51774095"
+   d="scan'208";a="51774134"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by fmviesa003.fm.intel.com with ESMTP; 08 Jul 2024 00:40:41 -0700
+  by fmviesa003.fm.intel.com with ESMTP; 08 Jul 2024 00:40:44 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Yongwei Ma <yongwei.ma@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v2 2/5] perf x86/topdown: Correct leader selection with sample_read enabled
-Date: Mon,  8 Jul 2024 14:42:01 +0000
-Message-Id: <20240708144204.839486-3-dapeng1.mi@linux.intel.com>
+Subject: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics events when sorting events
+Date: Mon,  8 Jul 2024 14:42:02 +0000
+Message-Id: <20240708144204.839486-4-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
 References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
@@ -71,20 +71,16 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Addresses an issue where, in the absence of a topdown metrics event
-within a sampling group, the slots event was incorrectly bypassed as
-the sampling leader when sample_read was enabled.
+when running below perf command, we say error is reported.
 
-perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
+perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
 
-In this case, the slots event should be sampled as leader but the
-branches event is sampled in fact like the verbose output shows.
-
+------------------------------------------------------------
 perf_event_attr:
   type                             4 (cpu)
   size                             168
   config                           0x400 (slots)
-  sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
   read_format                      ID|GROUP|LOST
   disabled                         1
   sample_id_all                    1
@@ -93,63 +89,57 @@ perf_event_attr:
 sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
 ------------------------------------------------------------
 perf_event_attr:
-  type                             0 (PERF_TYPE_HARDWARE)
+  type                             4 (cpu)
   size                             168
-  config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
-  { sample_period, sample_freq }   10000
-  sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
+  config                           0x8000 (topdown-retiring)
+  { sample_period, sample_freq }   4000
+  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
   read_format                      ID|GROUP|LOST
+  freq                             1
   sample_id_all                    1
   exclude_guest                    1
+------------------------------------------------------------
+sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+sys_perf_event_open failed, error -22
 
-The sample period of slots event instead of branches event is reset to
-0.
+Error:
+The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
 
-This fix ensures the slots event remains the leader under these
-conditions.
+The reason of error is that the events are regrouped and
+topdown-retiring event is moved to closely after the slots event and
+topdown-retiring event needs to do the sampling, but Intel PMU driver
+doesn't support to sample topdown metrics events.
+
+For topdown metrics events, it just requires to be in a group which has
+slots event as leader. It doesn't require topdown metrics event must be
+closely after slots event. Thus it's a overkill to move topdown metrics
+event closely after slots event in events regrouping and furtherly cause
+the above issue.
+
+Thus delete the code that moving topdown metrics events to fix the
+issue.
 
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ tools/perf/arch/x86/util/evlist.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-index e805065bb7e1..b9210f6486fd 100644
---- a/tools/perf/arch/x86/util/topdown.c
-+++ b/tools/perf/arch/x86/util/topdown.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include "api/fs/fs.h"
- #include "util/evsel.h"
-+#include "util/evlist.h"
- #include "util/pmu.h"
- #include "util/pmus.h"
- #include "util/topdown.h"
-@@ -82,11 +83,22 @@ bool arch_is_topdown_metrics(const struct evsel *evsel)
-  */
- bool arch_topdown_sample_read(struct evsel *leader)
- {
-+	struct evsel *evsel;
-+
- 	if (!evsel__sys_has_perf_metrics(leader))
- 		return false;
+diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+index 332e8907f43e..6046981d61cf 100644
+--- a/tools/perf/arch/x86/util/evlist.c
++++ b/tools/perf/arch/x86/util/evlist.c
+@@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+ 			return -1;
+ 		if (arch_is_topdown_slots(rhs))
+ 			return 1;
+-		/* Followed by topdown events. */
+-		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+-			return -1;
+-		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+-			return 1;
+ 	}
  
--	if (arch_is_topdown_slots(leader))
--		return true;
-+	if (!arch_is_topdown_slots(leader))
-+		return false;
-+
-+	/*
-+         * If slots event as leader event but no topdown metric events
-+         * in group, slots event should still sample as leader.
-+         */
-+	evlist__for_each_entry(leader->evlist, evsel) {
-+		if (evsel != leader && arch_is_topdown_metrics(evsel))
-+			return true;
-+	}
- 
- 	return false;
- }
+ 	/* Default ordering by insertion index. */
 -- 
 2.40.1
 
