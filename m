@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913E519D072;
-	Tue,  9 Jul 2024 14:33:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1120519D084;
+	Tue,  9 Jul 2024 14:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535640; cv=none; b=ZdkSCgmjC35AKAXy2TroOUqWD5yRe3L4Er0QUNXFcIXJ1v+Xd+HHaPBDraCAkkkDRdT7lJoW0PyeS6xGzcemG80adMj6RaU/0BNe2DOLY80Y54y5+jtvRaqfWyFzkXqrw8e8mvSY14WY7BtVOhNJ2Qfay/Jcg8sFo6ZnH/SuR9M=
+	t=1720535640; cv=none; b=uLSkt9Cs5oAQt60SjyTDa87XRCTotEbKU+MTvYvkGmitOGe52TPWFky3UDN0z7RH2k8HxY5dzv0U/g4kXX+oEp8dQiP08VhlhT+xzmpILGGm6wDPz7RUbP446fGpb1vo8nBsAFuJ3hZli0Db1wfRsBx+OHdJ7w0WIKNCD+jqJCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720535640; c=relaxed/simple;
-	bh=aTowzf5ehH/lfdlLYW5qIknCqAoR8e51pYI18fJUPF8=;
+	bh=vA7B3YKz0iafDXCOMUYAdqoOvW1WFIzYPt/YBAHyEEQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V+dw7LQUXV2VCdr1mlE48R2cLHmxQFnOByOWrZkxMwRYAwybDwR/EwugfhaONCnsgoArYhpENCrfcRX+ZcuNNnuPallHlL1GcAHbSobaD22GiVxMgWI9wH7V/1SOqata57sBO2dcGJQ6DlEkVdRJmsIRbEF9yh3fF+0E3IJUpi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZ/TPngI; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=rINpVI9Q+IniXC2daJ3di2ZQh0JBVjfwZ6RhJDj9jrhxuQO8wpdgdvI0RIiljAlfdks+2rTNUmR+1+eJc9GP0QidLVnXSd06rDunyeaQe5xfVrEK4gIs/iPNkralhPCwOz/K9aSXov1j2tk98O7V0Az6ERk6OMoWIUw3bcEz6Mg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMBkgf66; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZ/TPngI"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMBkgf66"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720535638; x=1752071638;
+  t=1720535639; x=1752071639;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=aTowzf5ehH/lfdlLYW5qIknCqAoR8e51pYI18fJUPF8=;
-  b=QZ/TPngIR5qcx8PG1D2OuOF+IjHaHQnp+DJ/LfCw8x9Wo9Q9BpHTunjX
-   DICpbmg61RTD6GqjldvzYucF8OS5wI7qUlOzjA4U0PLqG76HktwjNBQuH
-   wAeO2ahIcVrNPMBWgoRS35c/9gtAXR1q6iVQgemygL7RHcKakLXXYkY+e
-   oiPCKf89391LflXX6AAhseUEanX1/MmMXqNnHNwcc7Csjsx4St9ZNLh5S
-   g3Dtkux/rABWNAM2WDWahjSIrhQuvCCMK3DC2BqGyVW3t4PF7/u4J/mw8
-   B75JPQ3GDt+HLuArE8x7bV8VsINOaMHJ+Tby9K7KMlcCdysw+RLHIIvN7
-   g==;
-X-CSE-ConnectionGUID: eOsbuDsTRdqs4j9+RiD0TQ==
-X-CSE-MsgGUID: S8Rr+6G+S5iH7zTKJ+DNdw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331402"
+  bh=vA7B3YKz0iafDXCOMUYAdqoOvW1WFIzYPt/YBAHyEEQ=;
+  b=SMBkgf665kKqNbiSiZcrnjOG/bLuOm27tHQP5Mo2O1Pz1EyvZqWVKMER
+   bmT0ZEoBtuJsaF7ulKQjxKfCINKhU5j427GnZdV9o1tMpprzuv0g6mtk0
+   I5EvX2zblI1v7sym4TRsk3DUpYVGd8PLarDyZsT1HL4h1hqPnL3GEiQbx
+   np+hX57qU7+tsTA/xK/oCIMFZnradl0ZhkPMtufFV38tVelhsMtg61Wgz
+   qoA6xFV7ddTpG2JmNv1MQPBM06xnocQXknABuDs6kxGSyAxwR4UrVL6+N
+   OHDh8FOiyKRI/9KG/y20arSQ1xvR1Kn4vtoyOSQB7KsCN0Bei4I5sTf4P
+   Q==;
+X-CSE-ConnectionGUID: ICZSvdCqR7imlKcehRXR+Q==
+X-CSE-MsgGUID: VrCiNcF6SxmtqI1+dAH7SA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331415"
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="35331402"
+   d="scan'208";a="35331415"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
   by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:56 -0700
-X-CSE-ConnectionGUID: ojW9oLL1QO2vKM2ws2hRbw==
-X-CSE-MsgGUID: zLlgkRVZQ/yCxuLJnCw+DQ==
+X-CSE-ConnectionGUID: 7VDwHScPRu+MrpWzXWFb8A==
+X-CSE-MsgGUID: ojYjyeCpTwiWQ6jpgXg6kA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="52272108"
+   d="scan'208";a="52272118"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:55 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:56 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: X86 Kernel <x86@kernel.org>,
 	Sean Christopherson <seanjc@google.com>,
@@ -65,9 +65,9 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	"Mehta, Sohil" <sohil.mehta@intel.com>,
 	Zeng Guang <guang.zeng@intel.com>,
 	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 06/11] KVM: VMX: Expand FRED kvm entry with event data
-Date: Tue,  9 Jul 2024 07:39:01 -0700
-Message-Id: <20240709143906.1040477-7-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 07/11] KVM: VMX: Handle NMI Source report in VM exit
+Date: Tue,  9 Jul 2024 07:39:02 -0700
+Message-Id: <20240709143906.1040477-8-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
 References: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
@@ -81,100 +81,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Zeng Guang <guang.zeng@intel.com>
 
-According to FRED specification 10.6.2, VM exits triggered by events such as
-NMI, #DB, and #PF will have their event data stored in the exit-qualification
-field.
+If the "NMI exiting" VM-execution control is 1, the value of the 16-bit NMI
+source vector is saved in the exit-qualification field in the VMCS when VM
+exits occur on CPUs that support NMI source.
 
-However, #DB and #PF are owned by the running guest, which is managed by KVM.
-NMIs belong to the host, and the host NMI handler requires the event data
-stored in the VMCS for NMI-induced VM exits.
-
-This patch enhances the FRED KVM entry interface to include the event data
-derived from the exit qualification. Currently, it is used exclusively for
-NMI-source reporting
+KVM that is aware of NMI-source reporting will push the bitmask of NMI source
+vectors as the exceptoin event data field on the stack for then entry of FRED
+exception. Subsequently, the host NMI exception handler is invoked which
+will process NMI source information in the event data. This operation is
+independent of vCPU FRED enabling status.
 
 Signed-off-by: Zeng Guang <guang.zeng@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- arch/x86/entry/entry_64_fred.S | 2 +-
- arch/x86/include/asm/fred.h    | 8 ++++----
- arch/x86/kvm/vmx/vmx.c         | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kvm/vmx/vmx.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
-index a02bc6f3d2e6..0d934a3fcaf8 100644
---- a/arch/x86/entry/entry_64_fred.S
-+++ b/arch/x86/entry/entry_64_fred.S
-@@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
- 	 * +--------+-----------------+
- 	 */
- 	push $0				/* Reserved, must be 0 */
--	push $0				/* Event data, 0 for IRQ/NMI */
-+	push %rsi			/* Event data for IRQ/NMI */
- 	push %rdi			/* fred_ss handed in by the caller */
- 	push %rbp
- 	pushf
-diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
-index e86c7ba32435..15f5d2eabd1d 100644
---- a/arch/x86/include/asm/fred.h
-+++ b/arch/x86/include/asm/fred.h
-@@ -63,14 +63,14 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs)
- 
- void asm_fred_entrypoint_user(void);
- void asm_fred_entrypoint_kernel(void);
--void asm_fred_entry_from_kvm(struct fred_ss);
-+void asm_fred_entry_from_kvm(struct fred_ss, unsigned long edata);
- 
- __visible void fred_entry_from_user(struct pt_regs *regs);
- __visible void fred_entry_from_kernel(struct pt_regs *regs);
- __visible void __fred_entry_from_kvm(struct pt_regs *regs);
- 
- /* Can be called from noinstr code, thus __always_inline */
--static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
-+static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector, unsigned long edata)
- {
- 	struct fred_ss ss = {
- 		.ss     =__KERNEL_DS,
-@@ -80,7 +80,7 @@ static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int
- 		.lm     = 1,
- 	};
- 
--	asm_fred_entry_from_kvm(ss);
-+	asm_fred_entry_from_kvm(ss, edata);
- }
- 
- void cpu_init_fred_exceptions(void);
-@@ -90,7 +90,7 @@ void fred_complete_exception_setup(void);
- static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { return 0; }
- static inline void cpu_init_fred_exceptions(void) { }
- static inline void fred_complete_exception_setup(void) { }
--static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
-+static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector, unsigned long edata) { }
- #endif /* CONFIG_X86_FRED */
- #endif /* !__ASSEMBLY__ */
- 
 diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index b3c83c06f826..4e7b36081b76 100644
+index 4e7b36081b76..6719c598fa5f 100644
 --- a/arch/x86/kvm/vmx/vmx.c
 +++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7024,7 +7024,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
- 
- 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
- 	if (cpu_feature_enabled(X86_FEATURE_FRED))
--		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
-+		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector, 0);
- 	else
- 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
- 	kvm_after_interrupt(vcpu);
-@@ -7332,7 +7332,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+@@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
  	    is_nmi(vmx_get_intr_info(vcpu))) {
  		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
- 		if (cpu_feature_enabled(X86_FEATURE_FRED))
--			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
-+			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
- 		else
+-		if (cpu_feature_enabled(X86_FEATURE_FRED))
+-			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
+-		else
++		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
++			unsigned long edata = 0;
++
++			if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
++				edata = vmx_get_exit_qual(vcpu);
++			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, edata);
++		} else {
  			vmx_do_nmi_irqoff();
++		}
  		kvm_after_interrupt(vcpu);
+ 	}
+ 
 -- 
 2.25.1
 
