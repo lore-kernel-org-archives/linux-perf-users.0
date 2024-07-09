@@ -1,49 +1,49 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF6E512CDB6;
-	Tue,  9 Jul 2024 10:05:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FA4812CDB6;
+	Tue,  9 Jul 2024 10:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720519522; cv=none; b=j8rxPEeEuYC6Fwjde1mGqJB3mIZxUa5NAsnmvKpZzGnb0ZsicpMgqnIGHjiCnxAd203ge7mbBQMCGKjjc5mVWpdpgL+Nk0dnHTlu7zAKpj8d6Y+1Z19880QNl0CFMSrX6nb/e249A4jOx2CeIg/7KQjWN6Bgb5V8n5Ys4O4+sTY=
+	t=1720519904; cv=none; b=SoE9vfNoMMU8ND7Qs85myndHelEdwtoZgz4lpZRC33zIdxLxJ7weuI4P66llJLKEgjF6TmIcrtNeSYm90sPXqLiK4WasYd+8DPPQBg6P9P7NabNDoD2b1MmGiXsrOyPkfzt8C6XqakEelJDttU7rWm2CLB7ywLamMBgsX6MNPr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720519522; c=relaxed/simple;
-	bh=adwdFXqIUIzPu8uQo4yWNR59n+TVdE5/QzTHYlgT4Z8=;
+	s=arc-20240116; t=1720519904; c=relaxed/simple;
+	bh=e5M3p0E1OnXLX+OksumOytxTx8GR6YV6i9LlmZ9r+Yo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=deLKiopoQFLaVqTmFIzFofGYIqV97NE8ys/BKMJCE2mPDQg3VxYN84EieboHE0PZwYRWOfwSzfBAitlHQbwMaD8FFGNaA/jV+H4SwSRehFj8fEa/Uct6rSGzYXFCWxhJqRX0jP5EkIl0+Racb3fUyjcZgUlDqt8Pl0zvv8EF2Sw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=axsmg7yf; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=RQWC7pgd/XU2iS6iQgib41PUk0AeWQKMFBclRmhGaGEnVHoTy7X0MU+1kJLJWBBcapHL9Lvm81eGKuJEFqgVKdpKuoe2zybJX3Krj0DpW2bIfLWh9n0Cw/Xlpbco7pwDdZ2LqnU/HkweSqozpictNGXwcs7dbc+Wk6moDQ33vnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=Heburb7a; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="axsmg7yf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60963C3277B;
-	Tue,  9 Jul 2024 10:05:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720519521;
-	bh=adwdFXqIUIzPu8uQo4yWNR59n+TVdE5/QzTHYlgT4Z8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=axsmg7yf+1yjLnsJh8Jj6P1cLgosBDQI5K0LjNBSjXcZXDhgpoaBRBAFzByzXJjgU
-	 wPV75u4MMWyGxzd9MIHgjZQJcttfLicyP8qNwh8FTMFPhOJYpuRXwJh4Af0n4j71kX
-	 FhxBzEFxZYP2fWAJwkMEcOulo4aONV6c2O3nFzZgJoiQ9VnHxdKg5OW+tq9AH2JHOW
-	 jiY3f3jf3D0rYlsK+hvL/L4+dkOrS5EwsbxZAP9oDyC0J5bAZtltH7BafOEPV2CC8g
-	 uga47XTb1fB+U+N6IzpG6nR8VMDBIFWECs+URBBkurw/c6vLLpN47GOP/huLpRlBbP
-	 OPwoMK4ZqvyVw==
-Date: Tue, 9 Jul 2024 11:05:16 +0100
-From: Will Deacon <will@kernel.org>
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Mark Rutland <mark.rutland@arm.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] arm64: hw_breakpoint: Save privilege of access
- control via ptrace
-Message-ID: <20240709100515.GB12978@willie-the-truck>
-References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
- <20240709095506.9691-4-yangtiezhu@loongson.cn>
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Heburb7a"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=OP++PZjIdf0qPn4jB/USA0uLfYgm46JE6m2j6PR23Ks=; b=Heburb7aDknCv9CpbNOxE/4hhj
+	YmnWdkiGQInGRs51gTHtcNzz/2Rutv3iHu9X0p3awhekwpcKjxsEGqRqELnP/idw+KTczZXj3fzUA
+	XvJoWx3EptwErqlXLR3ggjw9bTClodrTb7bPdc+y3m110e0DjdBtsm/lg4Mv8S1qs4MTQkMJjWn4C
+	eVTnoyTKR+0JpWM69xcj9kgemavnfv/N11agPJSYq0Z9MpSbXeWWgBZw6SLJ63Q2VSpn7OAPpmuPl
+	HJzsykVGTT7ZlKy4FwH4FGH+UkuQBVGQ+ws2d/6v2QIluqrfG+nKq4Hk+FwajhGPhqTT2+BvQ4OgU
+	cAtUsR/A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sR7os-00000000iwt-3agU;
+	Tue, 09 Jul 2024 10:11:35 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id C438F3006B7; Tue,  9 Jul 2024 12:11:33 +0200 (CEST)
+Date: Tue, 9 Jul 2024 12:11:33 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+	mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com,
+	tglx@linutronix.de, jpoimboe@redhat.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack
+ traces captured in uprobe
+Message-ID: <20240709101133.GI27299@noisy.programming.kicks-ass.net>
+References: <20240708231127.1055083-1-andrii@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,71 +52,43 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240709095506.9691-4-yangtiezhu@loongson.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20240708231127.1055083-1-andrii@kernel.org>
 
-On Tue, Jul 09, 2024 at 05:55:06PM +0800, Tiezhu Yang wrote:
-> In the current code, decode_ctrl_reg() saves the privilege of access
-> control passed by the ptrace user data, but it is not used anymore,
-> arch_build_bp_info() checks whether bp virtual address is in kernel
-> space to construct hw->ctrl.privilege, it seems not reasonable.
-> 
-> The value of ctrl->privilege saved in decode_ctrl_reg() can be used
-> in arch_build_bp_info(), there is no need to check bp virtual address
-> to assign value for hw->ctrl.privilege, just make use of "bp_priv" in
-> the struct perf_event_attr to save the privilege of access control via
-> ptrace for hardware breakpoint.
-> 
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> ---
->  arch/arm64/kernel/hw_breakpoint.c | 11 ++---------
->  arch/arm64/kernel/ptrace.c        |  2 ++
->  2 files changed, 4 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
-> index 722ac45f9f7b..06e34bcdcf92 100644
-> --- a/arch/arm64/kernel/hw_breakpoint.c
-> +++ b/arch/arm64/kernel/hw_breakpoint.c
-> @@ -486,15 +486,8 @@ static int arch_build_bp_info(struct perf_event *bp,
->  	/* Address */
->  	hw->address = attr->bp_addr;
->  
-> -	/*
-> -	 * Privilege
-> -	 * Note that we disallow combined EL0/EL1 breakpoints because
-> -	 * that would complicate the stepping code.
-> -	 */
+On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
+> +#ifdef CONFIG_UPROBES
+> +/*
+> + * Heuristic-based check if uprobe is installed at the function entry.
+> + *
+> + * Under assumption of user code being compiled with frame pointers,
+> + * `push %rbp/%ebp` is a good indicator that we indeed are.
+> + *
+> + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
+> + * If we get this wrong, captured stack trace might have one extra bogus
+> + * entry, but the rest of stack trace will still be meaningful.
+> + */
+> +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
+> +{
+> +	struct arch_uprobe *auprobe;
+> +
+> +	if (!current->utask)
+> +		return false;
+> +
+> +	auprobe = current->utask->auprobe;
+> +	if (!auprobe)
+> +		return false;
+> +
+> +	/* push %rbp/%ebp */
+> +	if (auprobe->insn[0] == 0x55)
+> +		return true;
+> +
+> +	/* endbr64 (64-bit only) */
+> +	if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
+> +		return true;
 
-Just because you remove the comment doesn't mean that constraint no
-longer applies.
+I meant to reply to Josh suggesting this, but... how can this be? If you
+scribble the ENDBR with an INT3 things will #CP and we'll never get to
+the #BP.
 
-> -	if (arch_check_bp_in_kernelspace(hw))
-> -		hw->ctrl.privilege = AARCH64_BREAKPOINT_EL1;
-> -	else
-> -		hw->ctrl.privilege = AARCH64_BREAKPOINT_EL0;
-> +	/* Privilege */
-> +	hw->ctrl.privilege = attr->bp_priv;
->  
->  	/* Enabled? */
->  	hw->ctrl.enabled = !attr->disabled;
-> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-> index 0d022599eb61..3b37c4a2e0d4 100644
-> --- a/arch/arm64/kernel/ptrace.c
-> +++ b/arch/arm64/kernel/ptrace.c
-> @@ -309,6 +309,7 @@ static struct perf_event *ptrace_hbp_create(unsigned int note_type,
->  	attr.bp_addr	= 0;
->  	attr.bp_len	= HW_BREAKPOINT_LEN_4;
->  	attr.bp_type	= type;
-> +	attr.bp_priv	= AARCH64_BREAKPOINT_EL0;
->  	attr.disabled	= 1;
->  
->  	bp = register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
-> @@ -352,6 +353,7 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
->  	attr->bp_len	= len;
->  	attr->bp_type	= type;
->  	attr->bp_addr	+= offset;
-> +	attr->bp_priv	= ctrl.privilege;
-
-Wait, so ptrace can now set breakpoints with arbitrary privileges?
-
-Will
+Also, we tried very hard to not have a literal encode ENDBR (I really
+should teach objtool about this one :/). If it somehow makes sense to
+keep this clause, please use: gen_endbr()
