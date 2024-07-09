@@ -1,173 +1,288 @@
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB8F1B86ED;
-	Tue,  9 Jul 2024 17:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3E2187842
+	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jul 2024 22:37:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720547415; cv=none; b=BGqieM03HG7GxKK1CkuXR6l2J2t7EvROayEuyZ83CGjHRa8fBetIN1fSZFylMsDbcSDvE9KYaiXU0xLAzRvJw8gacHef14F54sXq29aiVL4hH+kaNz/5Y9wDVScR2Fc5k+hadoNjQDU0bAUMMQCnZWUSUuKU9FpPOf1JFE7Bi5M=
+	t=1720564652; cv=none; b=ASfyqWTGOKxqdPFWN2ZBmUX8X4z9AI9PyThNphCeCAxmtfQrezpgG+GrfwHYPqmcCB55cpyxoMNcCYW+9Dnhimf5wc8kCenLz9Jzxa1ojqwaFcQVbJFojh4nQfnwJ6oHRX+SVEcpBfXalu21eMnxneniJuKE8h+j69ovq7ANP6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720547415; c=relaxed/simple;
-	bh=GmrPSmo1303o876eSGXA2Ke1Ip3S05EwUbBsDv7mM6o=;
+	s=arc-20240116; t=1720564652; c=relaxed/simple;
+	bh=e2MDuj8Io1fhCiNsbjZNlwJl04CnqnwieSmEdvc12po=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rG5+5rHtCcoi/jXx0dweVkmZVteuuKId7d+3Pb7eFDjpCv/moMkKW19XQ+F9lUie4Jel1YS4HwLKlCs8NKybMtS5GqFzq1lC+Co2vp05KuPKlYLV7BvMQS3rGJz1tFYFt4B9AtLAE+ZPpBEqtACR5BkyZufPbT2QyzsMyYkBFfk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RuqYBi3t; arc=none smtp.client-ip=209.85.215.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=X0YacRknxXzyIn7dUeV9hcsDGWC6Rhy9Q1sMDITtGj9Q/mdzAO9D/P9VixDnSeFO5HlWEa7wVDdqxpeKJqtUbAKMZQkQF8HUoJ32LlMyxATchGxSvVmXiozNHT/fg7IkmPwRJqBHAlqva5nPXi7M8DU53S9j6kw4CP3jmeG6Gs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hyxPW5f2; arc=none smtp.client-ip=209.85.160.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuqYBi3t"
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-75a6c290528so2928987a12.1;
-        Tue, 09 Jul 2024 10:50:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hyxPW5f2"
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-44664ad946eso38081cf.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jul 2024 15:37:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720547413; x=1721152213; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720564648; x=1721169448; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wjuvgEc4GR8fmvTKFsW+ckPFS57613C03orBn4x8IXg=;
-        b=RuqYBi3tKCKPDfYorv/xLGPgHDYWAGccDJwbKquxp8DFnNdk4BthRZiEpuKrlC/oah
-         +Qi+Nqx/SkyVvjK2fLGg6XkUV/xa2cDfv3GgkJ3sR1bqKD6ZdGwqHNp1u0f3l9AiyMRD
-         6aWy1nZHOq65GGt+0lvc+/+/clwGiOu4Gt2n/CgmKrq4I1V8ntmqHmZJ43tpYwbWiO8O
-         0fESATE/PPL3ipRtGfL/VUW9hTizr7D3UZjQ+R5U6T0a6MPRFBY0LYpkgbDzTernP1qj
-         xibqmjlL1VRXsmhZAKgKJSF/L60DnvdQwSWMfuFN1tTblka8rNH3dd2J3IkPMxWSCzFm
-         YX6g==
+        bh=k+6NPnnkHb7G/Ix/vOLuyfaLASHfaochcI1KscloDAk=;
+        b=hyxPW5f2p40oZ08EP3Scv74tVdXoYxpeFgqR5hFis/hx7so/C84WsfrAFoEfzvhNtn
+         c71Kv4t6HGYdLNFwNKqT5dPhRJgafi/j25362gpdqzeTDi/xY4CQQTjfI9c6gkncuUbi
+         LAbte0GIpsBQz68jEHQU36mFoIpz3D8dQDI9h4fsp0rYiStc/urGraJOKm+IqXJfaybg
+         7o8MOckz1YJlh75jJGCQ9UIBWr8e1i0LRWNVomTuoZwswuujQOFCapge2OCHdZ0vKXoU
+         l5n3q1OzBSdeh3MyEpAKdr0VQXOinQcSnNH66o3Wpb8BePW0cfvkMA4SOofh25UgCFl1
+         tPWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720547413; x=1721152213;
+        d=1e100.net; s=20230601; t=1720564648; x=1721169448;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wjuvgEc4GR8fmvTKFsW+ckPFS57613C03orBn4x8IXg=;
-        b=WSr5u3T+AIDHW0OKglg3asKFFlirLPsxnIauIX6eTGid2P4oQj+GdHVHgzygzAVuLF
-         9DzjqBGETWgBFMWL2xjpjAd5QZVmvTkWt+OU6SbFwea3EHJMQpedtTC3SP1/x2hlp0He
-         My73dQNbc+RLX2ck9cQauH5gBG+w9R6x7bHOKlmkCnxtPZdv4sr5c8ga5XFp+2BSpQca
-         SWP0e9/YifOit/iEznie9nr8sabPUyLyBDKdsuHUOSkemtM24A2M6DoSdwWO6GNHxQsj
-         wXhbR49+18+9dMOjYYgnL7Km+Czen6tl/3OMrWONmd8fZ6dPJo7JqkRH6csFBAA1WxUi
-         l2AA==
-X-Forwarded-Encrypted: i=1; AJvYcCVu2XGGRAJ8NjPIg8KIkfe2pbBsakmBZZQ7y41DldosdMxrOOpmbJRDo/9Xy1o/m3Bw5nh/vI5/SXyyEQzto8ddl4coTiCozgPdt47Fk6xOMLSqRSTNMFDXf+nP+lp+tJwJP5co2DxQgTeIxdro9BzdhdusuMwCVn9EQGtWVJ7tz980hDL9y4t0Kal/+Y7z2uAEcjiochbkkcA1uAfqFpNJM1GFKeatDA==
-X-Gm-Message-State: AOJu0Yy2A+OaLU4FJSEO8JQyKRS2ItO19KdOcdpCqMHOSY3x6Ae6jDJG
-	SzXKrsQsJFnfcJEjIAP4/0C8ujRNJi+NlFuWNPxqycjOCJeV636oKoZIlTr22L2Iw7tk7wH/9lr
-	wZzWSQp2h72sj5ItCCdEo6FSJN2fnNU0N
-X-Google-Smtp-Source: AGHT+IF1rWrxBaNPBEPUEhZkYCauomT40ych1jwMmPjvzoPKJ8LJhUbM5lGyfSG2qr/ehIYkrYTp1IOAA1KhWfg8Svw=
-X-Received: by 2002:a05:6a20:7f96:b0:1c2:93a7:2556 with SMTP id
- adf61e73a8af0-1c2984cf106mr3651883637.41.1720547413066; Tue, 09 Jul 2024
- 10:50:13 -0700 (PDT)
+        bh=k+6NPnnkHb7G/Ix/vOLuyfaLASHfaochcI1KscloDAk=;
+        b=AOFxIBGnSPAj5wDISUUKBdGEKswxsbp2akiyzBIwP5n1ri5c/3/4QTxCIMh3fwAVd2
+         crdR6zj8Zyns6q7Cgwjaaj5cNL13DdU/rhNycBtKhm2ocf2GLApbMCQjxqcNLk+Inve8
+         1zc9QXKcbtfiH5g6OG686rBwaX17rN1omOHBjw8/R4f3Ldx6UxuAwF4JDPW/4cBuJuDM
+         IqAfvf2DEuFB91AW1JMI7ssxKyIwYE64ZX443H96r0fri1EJn5v+bQPVHCvgD0+GXfDS
+         WK++hLtvO8CjykeXApFgvQ3LuhM+JPQynUvhmL3a5ekRJ+N7x23AfPtVVZdzd2H/z2Nc
+         nxFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCX+CBsqaVbyZFOJgHMP07FRl7raSoHoOhfD5hpYbjlCynSPnYC+G8iUqjzRs/uK4y3fBpT6y1GuLeSFfjwYSAlKM1Q0O1K1gRTQGSoLiQ1BIg==
+X-Gm-Message-State: AOJu0YyWWJY5SOJlRELxTP2PwdQBFPeYCOMhNhi/WZRctIQWhnNAW+C6
+	AHZdF4rnLnPjl/sTG8SNbMYaeDWVWCeTf2nNcN975/9myi6XeU6ftFpcwxz93FjwMnKKJ76CmZ4
+	c9x9kJUmcwqxPsb3kQsrtcnIC5oBpwIJPUUDQ
+X-Google-Smtp-Source: AGHT+IFsOz3Vke0hM5F+VfZSR9dT0NQcQEl/36jxf24SqMD0AVDEerXty0dQjAat8ZtCjgixc/iIwNAkLNtXWhaS45Y=
+X-Received: by 2002:ac8:53cb:0:b0:43f:ff89:dfb9 with SMTP id
+ d75a77b69052e-44acb0faa76mr1257291cf.6.1720564647804; Tue, 09 Jul 2024
+ 15:37:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708231127.1055083-1-andrii@kernel.org> <20240709101133.GI27299@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240709101133.GI27299@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Tue, 9 Jul 2024 10:50:00 -0700
-Message-ID: <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com>
-Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
-	tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
+References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
+ <20240708144204.839486-4-dapeng1.mi@linux.intel.com> <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
+ <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
+In-Reply-To: <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 9 Jul 2024 15:37:15 -0700
+Message-ID: <CAP-5=fW65kxuABBJVAzKwoyBWW92_jkndWgY+4u9s3OGj_UkEg@mail.gmail.com>
+Subject: Re: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics
+ events when sorting events
+To: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 9, 2024 at 3:11=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
+On Mon, Jul 8, 2024 at 9:18=E2=80=AFPM Mi, Dapeng <dapeng1.mi@linux.intel.c=
+om> wrote:
 >
-> On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
-> > +#ifdef CONFIG_UPROBES
-> > +/*
-> > + * Heuristic-based check if uprobe is installed at the function entry.
-> > + *
-> > + * Under assumption of user code being compiled with frame pointers,
-> > + * `push %rbp/%ebp` is a good indicator that we indeed are.
-> > + *
-> > + * Similarly, `endbr64` (assuming 64-bit mode) is also a common patter=
-n.
-> > + * If we get this wrong, captured stack trace might have one extra bog=
-us
-> > + * entry, but the rest of stack trace will still be meaningful.
-> > + */
-> > +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-> > +{
-> > +     struct arch_uprobe *auprobe;
-> > +
-> > +     if (!current->utask)
-> > +             return false;
-> > +
-> > +     auprobe =3D current->utask->auprobe;
-> > +     if (!auprobe)
-> > +             return false;
-> > +
-> > +     /* push %rbp/%ebp */
-> > +     if (auprobe->insn[0] =3D=3D 0x55)
-> > +             return true;
-> > +
-> > +     /* endbr64 (64-bit only) */
-> > +     if (user_64bit_mode(regs) && *(u32 *)auprobe->insn =3D=3D 0xfa1e0=
-ff3)
-> > +             return true;
 >
-> I meant to reply to Josh suggesting this, but... how can this be? If you
-> scribble the ENDBR with an INT3 things will #CP and we'll never get to
-> the #BP.
+> On 7/8/2024 11:08 PM, Ian Rogers wrote:
+> > On Mon, Jul 8, 2024 at 12:40=E2=80=AFAM Dapeng Mi <dapeng1.mi@linux.int=
+el.com> wrote:
+> >> when running below perf command, we say error is reported.
+> >>
+> >> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep=
+ 1
+> >>
+> >> ------------------------------------------------------------
+> >> perf_event_attr:
+> >>   type                             4 (cpu)
+> >>   size                             168
+> >>   config                           0x400 (slots)
+> >>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIF=
+IER
+> >>   read_format                      ID|GROUP|LOST
+> >>   disabled                         1
+> >>   sample_id_all                    1
+> >>   exclude_guest                    1
+> >> ------------------------------------------------------------
+> >> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 =3D 5
+> >> ------------------------------------------------------------
+> >> perf_event_attr:
+> >>   type                             4 (cpu)
+> >>   size                             168
+> >>   config                           0x8000 (topdown-retiring)
+> >>   { sample_period, sample_freq }   4000
+> >>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIF=
+IER
+> >>   read_format                      ID|GROUP|LOST
+> >>   freq                             1
+> >>   sample_id_all                    1
+> >>   exclude_guest                    1
+> >> ------------------------------------------------------------
+> >> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+> >> sys_perf_event_open failed, error -22
+> >>
+> >> Error:
+> >> The sys_perf_event_open() syscall returned with 22 (Invalid argument) =
+for event (topdown-retiring).
+> >>
+> >> The reason of error is that the events are regrouped and
+> >> topdown-retiring event is moved to closely after the slots event and
+> >> topdown-retiring event needs to do the sampling, but Intel PMU driver
+> >> doesn't support to sample topdown metrics events.
+> >>
+> >> For topdown metrics events, it just requires to be in a group which ha=
+s
+> >> slots event as leader. It doesn't require topdown metrics event must b=
+e
+> >> closely after slots event. Thus it's a overkill to move topdown metric=
+s
+> >> event closely after slots event in events regrouping and furtherly cau=
+se
+> >> the above issue.
+> >>
+> >> Thus delete the code that moving topdown metrics events to fix the
+> >> issue.
+> > I think this is wrong. The topdown events may not be in a group, such
+> > cases can come from metrics due to grouping constraints, and so they
+> > must be sorted together so that they may be gathered into a group to
+> > avoid the perf event opens failing for ungrouped topdown events. I'm
+> > not understanding what these patches are trying to do, if you want to
+> > prioritize the event for leader sampling why not modify it to compare
+>
+> Per my understanding, this change doesn't break anything. The events
+> regrouping can be divided into below several cases.
+>
+> a. all events in a group
+>
+> perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
+> WARNING: events were regrouped to match PMUs
+>
+>  Performance counter stats for 'CPU(s) 0':
+>
+>         15,066,240      slots
+>          1,899,760      instructions
+>          2,126,998      topdown-retiring
+>
+>        1.045783464 seconds time elapsed
+>
+> In this case, slots event would be adjusted as the leader event and all
+> events are still in same group.
+>
+> b. all events not in a group
+>
+> perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
+> WARNING: events were regrouped to match PMUs
+>
+>  Performance counter stats for 'CPU(s) 0':
+>
+>          2,045,561      instructions
+>         17,108,370      slots
+>          2,281,116      topdown-retiring
+>
+>        1.045639284 seconds time elapsed
+>
+> In this case, slots and topdown-retiring are placed into a group and slot=
+s
+> is the group leader. instructions event is outside the group.
+>
+> c. slots event in group but topdown metric events outside the group
+>
+> perf stat -e "{instructions,slots},topdown-retiring"  -C0 sleep 1
+> WARNING: events were regrouped to match PMUs
+>
+>  Performance counter stats for 'CPU(s) 0':
+>
+>         20,323,878      slots
+>          2,634,884      instructions
+>          3,028,656      topdown-retiring
+>
+>        1.045076380 seconds time elapsed
+>
+> In this case, topdown-retiring event is placed into previous group and
+> slots is adjusted to leader event.
+>
+> d. multiple event groups
+>
+> perf stat -e "{instructions,slots},{topdown-retiring}"  -C0 sleep 1
+> WARNING: events were regrouped to match PMUs
+>
+>  Performance counter stats for 'CPU(s) 0':
+>
+>         26,319,024      slots
+>          2,427,791      instructions
+>          2,683,508      topdown-retiring
+>
+>        1.045495830 seconds time elapsed
+>
+> In this case, the two groups are merged to one group and slots event is
+> adjusted as leader.
+>
+> The key point of this patch is that it's unnecessary to move topdown
+> metrics events closely after slots event. It's a overkill since Intel cor=
+e
+> PMU driver doesn't require that. Intel PMU driver just requires topdown
+> metrics events are in a group where slots event is the group leader, and
+> worse the movement for topdown metrics events causes the issue in the
+> commit message mentioned.
+>
+> This patch doesn't block to regroup topdown metrics event. It just remove=
+s
+> the unnecessary movement for topdown metrics events.
 
-Well, it seems like it works in practice, I just tried. Here's the
-disassembly of the function:
+But you will get the same behavior because of the non-arch dependent
+force group index - I guess you don't care as the sample read only
+happens when you have a group.
 
-00000000000019d0 <urandlib_api_v1>:
-    19d0: f3 0f 1e fa                   endbr64
-    19d4: 55                            pushq   %rbp
-    19d5: 48 89 e5                      movq    %rsp, %rbp
-    19d8: 48 83 ec 10                   subq    $0x10, %rsp
-    19dc: 48 8d 3d fe ed ff ff          leaq    -0x1202(%rip), %rdi
- # 0x7e1 <__isoc99_scanf+0x7e1>
-    19e3: 48 8d 75 fc                   leaq    -0x4(%rbp), %rsi
-    19e7: b0 00                         movb    $0x0, %al
-    19e9: e8 f2 00 00 00                callq   0x1ae0 <__isoc99_scanf+0x1a=
-e0>
-    19ee: b8 01 00 00 00                movl    $0x1, %eax
-    19f3: 48 83 c4 10                   addq    $0x10, %rsp
-    19f7: 5d                            popq    %rbp
-    19f8: c3                            retq
-    19f9: 0f 1f 80 00 00 00 00          nopl    (%rax)
+I'm thinking of cases like (which admittedly is broken):
+```
+$ perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
+[sudo] password for irogers:
 
-And here's the state when uprobe is attached:
+Performance counter stats for 'system wide':
 
-(gdb) disass/r urandlib_api_v1
-Dump of assembler code for function urandlib_api_v1:
-   0x00007ffb734e39d0 <+0>:     cc                      int3
-   0x00007ffb734e39d1 <+1>:     0f 1e fa                nop    %edx
-   0x00007ffb734e39d4 <+4>:     55                      push   %rbp
-   0x00007ffb734e39d5 <+5>:     48 89 e5                mov    %rsp,%rbp
-   0x00007ffb734e39d8 <+8>:     48 83 ec 10             sub    $0x10,%rsp
-   0x00007ffb734e39dc <+12>:    48 8d 3d fe ed ff ff    lea
--0x1202(%rip),%rdi        # 0x7ffb734e27e1
-   0x00007ffb734e39e3 <+19>:    48 8d 75 fc             lea    -0x4(%rbp),%=
-rsi
-=3D> 0x00007ffb734e39e7 <+23>:    b0 00                   mov    $0x0,%al
-   0x00007ffb734e39e9 <+25>:    e8 f2 00 00 00          call
-0x7ffb734e3ae0 <__isoc99_scanf@plt>
-   0x00007ffb734e39ee <+30>:    b8 01 00 00 00          mov    $0x1,%eax
-   0x00007ffb734e39f3 <+35>:    48 83 c4 10             add    $0x10,%rsp
-   0x00007ffb734e39f7 <+39>:    5d                      pop    %rbp
-   0x00007ffb734e39f8 <+40>:    c3                      ret
+    2,589,345,900      slots
+      852,492,838      instructions
+      583,525,372      cycles
+  <not supported>      topdown-fe-bound
+
+      0.103930790 seconds time elapsed
+```
+As the slots event is grouped there's no force group index on it, we
+want to shuffle the topdown-fe-bound into the group so we want it to
+compare as less than cycles - ie we're comparing topdown events with
+non topdown events and trying to shuffle the topdown events first.
+
+Thanks,
+Ian
 
 
-You can see it replaced the first byte, the following 3 bytes are
-remnants of endb64 (gdb says it's a nop? :)), and then we proceeded,
-you can see I stepped through a few more instructions.
-
-Works by accident?
-
-But either way, if we prevent uprobe to be placed on end64 that will
-essentially break any code that does compile with endbr64
-(-fcf-protection=3Dbranch), which is very not great (I suspect most
-people that care would just disable that option in such a case).
 
 >
-> Also, we tried very hard to not have a literal encode ENDBR (I really
-> should teach objtool about this one :/). If it somehow makes sense to
-> keep this clause, please use: gen_endbr()
-
-I'll just use is_endbr(), no problem.
+> > first?
+> >
+> > Thanks,
+> > Ian
+> >
+> >> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> >> ---
+> >>  tools/perf/arch/x86/util/evlist.c | 5 -----
+> >>  1 file changed, 5 deletions(-)
+> >>
+> >> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/u=
+til/evlist.c
+> >> index 332e8907f43e..6046981d61cf 100644
+> >> --- a/tools/perf/arch/x86/util/evlist.c
+> >> +++ b/tools/perf/arch/x86/util/evlist.c
+> >> @@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const=
+ struct evsel *rhs)
+> >>                         return -1;
+> >>                 if (arch_is_topdown_slots(rhs))
+> >>                         return 1;
+> >> -               /* Followed by topdown events. */
+> >> -               if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_m=
+etrics(rhs))
+> >> -                       return -1;
+> >> -               if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_m=
+etrics(rhs))
+> >> -                       return 1;
+> >>         }
+> >>
+> >>         /* Default ordering by insertion index. */
+> >> --
+> >> 2.40.1
+> >>
