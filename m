@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B0513C6A6;
-	Tue,  9 Jul 2024 01:58:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4D5620;
+	Tue,  9 Jul 2024 04:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720490330; cv=none; b=Xu60iB3BAApmIbz+6ZYi/DhQjksl6eXsI/fVWJ3rs6FoNNSreFOocnJfnDdvRE7cXa+DQ/y+U6cYcni+jbz6He47eZFZMP03zPJe9dJiflGS2y5lUpt59GfJzOmOxYeNBpJCodl7saY7IHYYBgkndCCI4lnW2unGUl+J7Ab9HII=
+	t=1720498683; cv=none; b=uGdUeoRe8VV7umanlACq3JQ/uWLR1z/5c46Ci4MyJuuFqiaX+CZmtzjJ1NFlHyvTZBNEiCvcg8UD7LcBIsv7vupYZKzf1nPxP/IS0Ctafsua7lpXidSJng8vQd3J3OMA9hZ7loabAcvDIxV3l+ypsQrsnhwGlxVQr7lVJGdE87o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720490330; c=relaxed/simple;
-	bh=Zc+BFdezUEGq50mDu4EXD/nLArIEc+7EWIsIbNsSghw=;
+	s=arc-20240116; t=1720498683; c=relaxed/simple;
+	bh=0umrLKs/D2wKddOhXgjcIazLSq/Hbp2xYf2rHZ28AWE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fRHqgcgm6lhnJ6VNmaVpsu29SlFmbz5l9CZRaS4Zrab8SRA1co8T3WvTLvzECKR1RUM/mnctYs2RPDMuiFjYxvQe8/d8zaLes5B1POxKetPJs9qKx98plcIVi6HJ2G8J3HGXZ2Jefi0g6kx4kxDdsYE5Exo3nykm5tM3Faeg5gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j6k1Hk3l; arc=none smtp.client-ip=192.198.163.9
+	 In-Reply-To:Content-Type; b=fCOgviUnU8BuObHx3AoV6t/3VEwbhaTJbn+WMVWwzR00fNWko4RvzfEI0wMwWTYlWVNw1Esah8cUEkVvMxnrDKTk4t87i9oCUO6Igtfds97e0yeYlmP6ZrQIgYAYClzkPXjPc9VB7YCENwsxhFH1iCKerul8L+uH6kvzP51AnFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BsZtANPc; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j6k1Hk3l"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BsZtANPc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720490328; x=1752026328;
+  t=1720498682; x=1752034682;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Zc+BFdezUEGq50mDu4EXD/nLArIEc+7EWIsIbNsSghw=;
-  b=j6k1Hk3lf+zwhMXkDG1tYXptbf++BIXqWub0C1f7YbhtkbBu8IDUmflD
-   9GBtHCFPaaVEbgF640q0tUWzRwP5aTW0a5I4hJaI5zXeEJyDxfXL/GINQ
-   hozdS+3cO0B7eDZjwhKC+AQbJlI9q+If630ZotyTJenhY3H7PKc0HjkOg
-   MNhq8m76OTU1zdNt5wwIoM/QsdhjP+O38yx7MNhtoH9duc0nxh1M6sZHN
-   w0TCnsEjpIguqbLr4vx57CLrTSZBKo48LYHzuqThxtFRztu9tfKWhGlmv
-   fIkY3jJbO7ZMCnmNuHPSM77ZRi2c+dNFummqnkcfC+zU0dbb8pRgijs/1
+  bh=0umrLKs/D2wKddOhXgjcIazLSq/Hbp2xYf2rHZ28AWE=;
+  b=BsZtANPcFC/tb+opb3KCcGRJoJD+A/EkFJW0zvMQtPbQJT8FQc6Q3VdZ
+   1FrQJCkkLU4hi1gaeZ5jGke6LjbuPzkIdXo4qsNqgaF05MOVL5VjpRsO/
+   dOVHrz33tChk/07Wns7gO9wm39NurHS9FO+JDX6VQ68sqHfQSGdDWOvqI
+   GgjfaoWqz72DvlZWmaWQXB23tyBoyfOEve9Cdt3L7aaBlg8uioLmsZbWo
+   laDxOW2Wz2nQ8UXQJu74QQy5flkxcTyHhJCNxIQAzUAejz5/8PCT/hrfv
+   Q0KIZjrDbMZVFtPSalvGVJLCwJ4Hgj7AnAqLmjNkLCvFpY3BTyfXrXxio
    A==;
-X-CSE-ConnectionGUID: WpXPXL8fRROZaWleEiYRmQ==
-X-CSE-MsgGUID: oBpXhuNdTVmvris9ONIg6g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28388792"
+X-CSE-ConnectionGUID: C2C4NYU+QaWMP2aIUSMXNw==
+X-CSE-MsgGUID: AmzsL0vrQBqv38noG311hw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11127"; a="28329276"
 X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
-   d="scan'208";a="28388792"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 18:58:47 -0700
-X-CSE-ConnectionGUID: BI29zawvT+6x6vsfXqrhEA==
-X-CSE-MsgGUID: hsuL/474TBi6VJ013cxzXA==
+   d="scan'208";a="28329276"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 21:18:01 -0700
+X-CSE-ConnectionGUID: gRwl7b5SQJmWxa09PlzioA==
+X-CSE-MsgGUID: Oh/y5CggR2GOqiWy9JytEA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,193,1716274800"; 
-   d="scan'208";a="52873582"
+   d="scan'208";a="48381604"
 Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 18:58:44 -0700
-Message-ID: <751d5d08-c3b3-42eb-840b-259dbf83fc11@linux.intel.com>
-Date: Tue, 9 Jul 2024 09:58:42 +0800
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Jul 2024 21:17:57 -0700
+Message-ID: <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
+Date: Tue, 9 Jul 2024 12:17:54 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,197 +52,186 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 1/5] perf x86/topdown: Complete topdown slots/metrics
- events check
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics
+ events when sorting events
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
 References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
- <20240708144204.839486-2-dapeng1.mi@linux.intel.com>
- <821ea427-aeef-4269-9af8-4cdb8cf32ca8@linux.intel.com>
+ <20240708144204.839486-4-dapeng1.mi@linux.intel.com>
+ <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
 Content-Language: en-US
 From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <821ea427-aeef-4269-9af8-4cdb8cf32ca8@linux.intel.com>
+In-Reply-To: <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 
-On 7/8/2024 9:28 PM, Liang, Kan wrote:
->
-> On 2024-07-08 10:42 a.m., Dapeng Mi wrote:
->> It's not complete to check whether an event is a topdown slots or
->> topdown metrics event by only comparing the event name since user
->> may assign the event by RAW format, e.g.
+On 7/8/2024 11:08 PM, Ian Rogers wrote:
+> On Mon, Jul 8, 2024 at 12:40 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>> when running below perf command, we say error is reported.
 >>
->> perf stat -e '{instructions,cpu/r400/,cpu/r8300/}' sleep 1
+>> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
 >>
->>  Performance counter stats for 'sleep 1':
+>> ------------------------------------------------------------
+>> perf_event_attr:
+>>   type                             4 (cpu)
+>>   size                             168
+>>   config                           0x400 (slots)
+>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>   read_format                      ID|GROUP|LOST
+>>   disabled                         1
+>>   sample_id_all                    1
+>>   exclude_guest                    1
+>> ------------------------------------------------------------
+>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>> ------------------------------------------------------------
+>> perf_event_attr:
+>>   type                             4 (cpu)
+>>   size                             168
+>>   config                           0x8000 (topdown-retiring)
+>>   { sample_period, sample_freq }   4000
+>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>   read_format                      ID|GROUP|LOST
+>>   freq                             1
+>>   sample_id_all                    1
+>>   exclude_guest                    1
+>> ------------------------------------------------------------
+>> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+>> sys_perf_event_open failed, error -22
 >>
->>      <not counted>      instructions
->>      <not counted>      cpu/r400/
->>    <not supported>      cpu/r8300/
+>> Error:
+>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
 >>
->>        1.002917796 seconds time elapsed
+>> The reason of error is that the events are regrouped and
+>> topdown-retiring event is moved to closely after the slots event and
+>> topdown-retiring event needs to do the sampling, but Intel PMU driver
+>> doesn't support to sample topdown metrics events.
 >>
->>        0.002955000 seconds user
->>        0.000000000 seconds sys
+>> For topdown metrics events, it just requires to be in a group which has
+>> slots event as leader. It doesn't require topdown metrics event must be
+>> closely after slots event. Thus it's a overkill to move topdown metrics
+>> event closely after slots event in events regrouping and furtherly cause
+>> the above issue.
 >>
->> The RAW format slots and topdown-be-bound events are not recognized and
->> not regroup the events, and eventually cause error.
->>
->> Thus add two helpers arch_is_topdown_slots()/arch_is_topdown_metrics()
->> to detect whether an event is topdown slots/metrics event by comparing
->> the event config directly, and use these two helpers to replace the
->> original event name comparisons.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/arch/x86/util/evlist.c  |  8 +++---
->>  tools/perf/arch/x86/util/evsel.c   |  3 ++-
->>  tools/perf/arch/x86/util/topdown.c | 43 +++++++++++++++++++++++++++++-
->>  tools/perf/arch/x86/util/topdown.h |  2 ++
->>  4 files changed, 50 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
->> index b1ce0c52d88d..332e8907f43e 100644
->> --- a/tools/perf/arch/x86/util/evlist.c
->> +++ b/tools/perf/arch/x86/util/evlist.c
->> @@ -78,14 +78,14 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->>  	if (topdown_sys_has_perf_metrics() &&
->>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
->>  		/* Ensure the topdown slots comes first. */
->> -		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
->> +		if (arch_is_topdown_slots(lhs))
->>  			return -1;
->> -		if (strcasestr(rhs->name, "slots") && !strcasestr(rhs->name, "uops_retired.slots"))
->> +		if (arch_is_topdown_slots(rhs))
->>  			return 1;
->>  		/* Followed by topdown events. */
->> -		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
->> +		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->>  			return -1;
->> -		if (!strcasestr(lhs->name, "topdown") && strcasestr(rhs->name, "topdown"))
->> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
->>  			return 1;
->>  	}
->>  
->> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
->> index 090d0f371891..181f2ba0bb2a 100644
->> --- a/tools/perf/arch/x86/util/evsel.c
->> +++ b/tools/perf/arch/x86/util/evsel.c
->> @@ -6,6 +6,7 @@
->>  #include "util/pmu.h"
->>  #include "util/pmus.h"
->>  #include "linux/string.h"
->> +#include "topdown.h"
->>  #include "evsel.h"
->>  #include "util/debug.h"
->>  #include "env.h"
->> @@ -44,7 +45,7 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->>  	    strcasestr(evsel->name, "uops_retired.slots"))
->>  		return false;
->>  
->> -	return strcasestr(evsel->name, "topdown") || strcasestr(evsel->name, "slots");
->> +	return arch_is_topdown_metrics(evsel) || arch_is_topdown_slots(evsel);
->>  }
->>  
->>  int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
->> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
->> index 3f9a267d4501..e805065bb7e1 100644
->> --- a/tools/perf/arch/x86/util/topdown.c
->> +++ b/tools/perf/arch/x86/util/topdown.c
->> @@ -32,6 +32,47 @@ bool topdown_sys_has_perf_metrics(void)
->>  }
->>  
->>  #define TOPDOWN_SLOTS		0x0400
->> +bool arch_is_topdown_slots(const struct evsel *evsel)
->> +{
->> +	if (evsel->core.attr.config == TOPDOWN_SLOTS)
->> +		return true;
->> +
->> +	return false;
->> +}
->> +
->> +static int compare_topdown_event(void *vstate, struct pmu_event_info *info)
->> +{
->> +	int *config = vstate;
->> +	int event = 0;
->> +	int umask = 0;
->> +	char *str;
->> +
-> The compare is only needed for the "topdown" event.
-> Check the name first before the sscanf and compare.
->
-> 	if (!strcasestr(info->name, "topdown"))
-> 		return 0;
+>> Thus delete the code that moving topdown metrics events to fix the
+>> issue.
+> I think this is wrong. The topdown events may not be in a group, such
+> cases can come from metrics due to grouping constraints, and so they
+> must be sorted together so that they may be gathered into a group to
+> avoid the perf event opens failing for ungrouped topdown events. I'm
+> not understanding what these patches are trying to do, if you want to
+> prioritize the event for leader sampling why not modify it to compare
 
-Yes, thanks.
+Per my understanding, this change doesn't break anything. The events
+regrouping can be divided into below several cases.
 
+a. all events in a group
 
->> +	str = strcasestr(info->str, "event=");
->> +	if (str)
->> +		sscanf(str, "event=%x", &event);
->> +
->> +	str = strcasestr(info->str, "umask=");
->> +	if (str)
->> +		sscanf(str, "umask=%x", &umask);
->> +
->> +	if (strcasestr(info->name, "topdown") && event == 0 &&
->> +	    *config == (event | umask << 8))
->> +		return 1;
->> +
->> +	return 0;
->> +}
->> +
->> +bool arch_is_topdown_metrics(const struct evsel *evsel)
->> +{
->> +	struct perf_pmu *pmu = evsel__find_pmu(evsel);
->> +	int config = evsel->core.attr.config;
->> +
-> The topdown events are only available for the core PMU.
-> You may want to return earlier for the !core PMUs.
->
-> 	if (!pmu || !pmu->is_core)
-> 		return false;
+perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
+WARNING: events were regrouped to match PMUs
 
-Sure. Thanks.
+ Performance counter stats for 'CPU(s) 0':
+
+        15,066,240      slots
+         1,899,760      instructions
+         2,126,998      topdown-retiring
+
+       1.045783464 seconds time elapsed
+
+In this case, slots event would be adjusted as the leader event and all
+events are still in same group.
+
+b. all events not in a group
+
+perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
+WARNING: events were regrouped to match PMUs
+
+ Performance counter stats for 'CPU(s) 0':
+
+         2,045,561      instructions
+        17,108,370      slots
+         2,281,116      topdown-retiring
+
+       1.045639284 seconds time elapsed
+
+In this case, slots and topdown-retiring are placed into a group and slots
+is the group leader. instructions event is outside the group.
+
+c. slots event in group but topdown metric events outside the group
+
+perf stat -e "{instructions,slots},topdown-retiring"  -C0 sleep 1
+WARNING: events were regrouped to match PMUs
+
+ Performance counter stats for 'CPU(s) 0':
+
+        20,323,878      slots
+         2,634,884      instructions
+         3,028,656      topdown-retiring
+
+       1.045076380 seconds time elapsed
+
+In this case, topdown-retiring event is placed into previous group and
+slots is adjusted to leader event.
+
+d. multiple event groups
+
+perf stat -e "{instructions,slots},{topdown-retiring}"  -C0 sleep 1
+WARNING: events were regrouped to match PMUs
+
+ Performance counter stats for 'CPU(s) 0':
+
+        26,319,024      slots
+         2,427,791      instructions
+         2,683,508      topdown-retiring
+
+       1.045495830 seconds time elapsed
+
+In this case, the two groups are merged to one group and slots event is
+adjusted as leader.
+
+The key point of this patch is that it's unnecessary to move topdown
+metrics events closely after slots event. It's a overkill since Intel core
+PMU driver doesn't require that. Intel PMU driver just requires topdown
+metrics events are in a group where slots event is the group leader, and
+worse the movement for topdown metrics events causes the issue in the
+commit message mentioned.
+
+This patch doesn't block to regroup topdown metrics event. It just removes
+the unnecessary movement for topdown metrics events.
 
 
+> first?
 >
 > Thanks,
-> Kan
->> +	if (pmu && perf_pmu__for_each_event(pmu, false, &config,
->> +					    compare_topdown_event))
->> +		return true;
->> +
->> +	return false;
->> +}
->>  
->>  /*
->>   * Check whether a topdown group supports sample-read.
->> @@ -44,7 +85,7 @@ bool arch_topdown_sample_read(struct evsel *leader)
->>  	if (!evsel__sys_has_perf_metrics(leader))
->>  		return false;
->>  
->> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
->> +	if (arch_is_topdown_slots(leader))
->>  		return true;
->>  
->>  	return false;
->> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
->> index 46bf9273e572..1bae9b1822d7 100644
->> --- a/tools/perf/arch/x86/util/topdown.h
->> +++ b/tools/perf/arch/x86/util/topdown.h
->> @@ -3,5 +3,7 @@
->>  #define _TOPDOWN_H 1
->>  
->>  bool topdown_sys_has_perf_metrics(void);
->> +bool arch_is_topdown_slots(const struct evsel *evsel);
->> +bool arch_is_topdown_metrics(const struct evsel *evsel);
->>  
->>  #endif
+> Ian
+>
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/perf/arch/x86/util/evlist.c | 5 -----
+>>  1 file changed, 5 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>> index 332e8907f43e..6046981d61cf 100644
+>> --- a/tools/perf/arch/x86/util/evlist.c
+>> +++ b/tools/perf/arch/x86/util/evlist.c
+>> @@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>>                         return -1;
+>>                 if (arch_is_topdown_slots(rhs))
+>>                         return 1;
+>> -               /* Followed by topdown events. */
+>> -               if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+>> -                       return -1;
+>> -               if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+>> -                       return 1;
+>>         }
+>>
+>>         /* Default ordering by insertion index. */
+>> --
+>> 2.40.1
+>>
