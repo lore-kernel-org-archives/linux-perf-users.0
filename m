@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7E319CD1A;
-	Tue,  9 Jul 2024 14:33:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 913E519D072;
+	Tue,  9 Jul 2024 14:33:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535639; cv=none; b=rYy897h5iWqKSZfP4VAYG7sBILCtkClUmb+VIi7DFPiJZcOd1l4aRUP8FqyH//N3Xhh3BR7TC82BjFn/loms6VEB2D9HdLEg4pXjs04F0ZKE6RafWrhRrcR7nSUbsYUY1h/qzT//PqwJ2fSDjpoMt586Y4RK/WHN0scGzJ7o4Xk=
+	t=1720535640; cv=none; b=ZdkSCgmjC35AKAXy2TroOUqWD5yRe3L4Er0QUNXFcIXJ1v+Xd+HHaPBDraCAkkkDRdT7lJoW0PyeS6xGzcemG80adMj6RaU/0BNe2DOLY80Y54y5+jtvRaqfWyFzkXqrw8e8mvSY14WY7BtVOhNJ2Qfay/Jcg8sFo6ZnH/SuR9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535639; c=relaxed/simple;
-	bh=iaJOBgXkMYqcjVwDy7NXFZoZ4Ju5ZpTja3j/JLXPjU4=;
+	s=arc-20240116; t=1720535640; c=relaxed/simple;
+	bh=aTowzf5ehH/lfdlLYW5qIknCqAoR8e51pYI18fJUPF8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rUuNQz+uHkFrM2dV991Avl2/t4VxXmiYVN+YpxLyq/xq3+Kuzut5zGsYX4XMdklMb0tUMsiEQMrBITPvmRdXIHAgeo7a9HniAx81DZZ2tPdZGa+oGBPZ59wFCR52hMlZ9hHli7XxgGB8u046sL02s8JAQneXOW2QDZwALWNr5qU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FBFSK/bx; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=V+dw7LQUXV2VCdr1mlE48R2cLHmxQFnOByOWrZkxMwRYAwybDwR/EwugfhaONCnsgoArYhpENCrfcRX+ZcuNNnuPallHlL1GcAHbSobaD22GiVxMgWI9wH7V/1SOqata57sBO2dcGJQ6DlEkVdRJmsIRbEF9yh3fF+0E3IJUpi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QZ/TPngI; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FBFSK/bx"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QZ/TPngI"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1720535638; x=1752071638;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iaJOBgXkMYqcjVwDy7NXFZoZ4Ju5ZpTja3j/JLXPjU4=;
-  b=FBFSK/bxw6ZCaGOfldw4pxfOV2ajMZtQMyX7l0dORCOt9iOQvTxRhX0f
-   PQvmLSaVQlvdnKgg7iiDfBTFvUva+q9dgTuFTZ35WqUDAeCgQ6UlWz2PR
-   yQ+KYPxTyAVhAl0+qyD5HQI7XYK+gvxMr5+1xMTUtbvcX3Lah6FC8qbN/
-   rwBCUf8o7foMYNMR7NrxlLnlQ0clEvCA+p6fUxoFz3MELn1ZQm2sYLUUL
-   r/5Vnxcdslm9OBbE8/OIYwtnaH4ilRz+48Q08atHKzBdo75L1UYxwr0/i
-   pNaLjfb8/PbxSq61Hs3CPXsW8y2uM4MaSjxrm5el7Zx2lR4PnIh57+VRG
+  bh=aTowzf5ehH/lfdlLYW5qIknCqAoR8e51pYI18fJUPF8=;
+  b=QZ/TPngIR5qcx8PG1D2OuOF+IjHaHQnp+DJ/LfCw8x9Wo9Q9BpHTunjX
+   DICpbmg61RTD6GqjldvzYucF8OS5wI7qUlOzjA4U0PLqG76HktwjNBQuH
+   wAeO2ahIcVrNPMBWgoRS35c/9gtAXR1q6iVQgemygL7RHcKakLXXYkY+e
+   oiPCKf89391LflXX6AAhseUEanX1/MmMXqNnHNwcc7Csjsx4St9ZNLh5S
+   g3Dtkux/rABWNAM2WDWahjSIrhQuvCCMK3DC2BqGyVW3t4PF7/u4J/mw8
+   B75JPQ3GDt+HLuArE8x7bV8VsINOaMHJ+Tby9K7KMlcCdysw+RLHIIvN7
    g==;
-X-CSE-ConnectionGUID: Yqc/3mHXTx2La2hoLhPO5Q==
-X-CSE-MsgGUID: CeRM5W9LRBGtlD/n+zhD2A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331388"
+X-CSE-ConnectionGUID: eOsbuDsTRdqs4j9+RiD0TQ==
+X-CSE-MsgGUID: S8Rr+6G+S5iH7zTKJ+DNdw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331402"
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="35331388"
+   d="scan'208";a="35331402"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:55 -0700
-X-CSE-ConnectionGUID: V10aiNfrSaGuCPhre1xxew==
-X-CSE-MsgGUID: ZGSbm3xXTEi6F4ztQpQ2Ug==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:56 -0700
+X-CSE-ConnectionGUID: ojW9oLL1QO2vKM2ws2hRbw==
+X-CSE-MsgGUID: zLlgkRVZQ/yCxuLJnCw+DQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="52272100"
+   d="scan'208";a="52272108"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
   by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:55 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -63,10 +63,11 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Andi Kleen <andi.kleen@intel.com>,
 	Nikolay Borisov <nik.borisov@suse.com>,
 	"Mehta, Sohil" <sohil.mehta@intel.com>,
+	Zeng Guang <guang.zeng@intel.com>,
 	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 05/11] x86/irq: Process nmi sources in NMI handler
-Date: Tue,  9 Jul 2024 07:39:00 -0700
-Message-Id: <20240709143906.1040477-6-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v4 06/11] KVM: VMX: Expand FRED kvm entry with event data
+Date: Tue,  9 Jul 2024 07:39:01 -0700
+Message-Id: <20240709143906.1040477-7-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
 References: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
@@ -78,139 +79,102 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When NMI-source reporting is enabled, the vector 2 NMI handler can
-prioritize the handling of explicitly reported sources. If the source
-is unknown, it will continue with the existing processing flow, meaning
-all NMI handlers will be invoked.
+From: Zeng Guang <guang.zeng@intel.com>
 
-Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+According to FRED specification 10.6.2, VM exits triggered by events such as
+NMI, #DB, and #PF will have their event data stored in the exit-qualification
+field.
 
----
-v4:
-   - Coding style changes (Li Xin)
-   - Renamed handled_mask to partial_bitmap (Nikolay)
-v3:
-   - Use a static flag to disable NMIs in case of HW failure
-   - Optimize the case when unknown NMIs are mixed with known NMIs(HPA)
-v2:
-   - Disable NMI source reporting once garbage data is given in FRED
-return stack. (HPA)
+However, #DB and #PF are owned by the running guest, which is managed by KVM.
+NMIs belong to the host, and the host NMI handler requires the event data
+stored in the VMCS for NMI-induced VM exits.
 
-process nmi
+This patch enhances the FRED KVM entry interface to include the event data
+derived from the exit qualification. Currently, it is used exclusively for
+NMI-source reporting
 
+Signed-off-by: Zeng Guang <guang.zeng@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- arch/x86/kernel/nmi.c | 83 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 82 insertions(+), 1 deletion(-)
+ arch/x86/entry/entry_64_fred.S | 2 +-
+ arch/x86/include/asm/fred.h    | 8 ++++----
+ arch/x86/kvm/vmx/vmx.c         | 4 ++--
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-index b96667eed106..edb169289a1d 100644
---- a/arch/x86/kernel/nmi.c
-+++ b/arch/x86/kernel/nmi.c
-@@ -149,12 +149,89 @@ static inline int do_handle_nmi(struct nmiaction *a, struct pt_regs *regs, unsig
- 	return thishandled;
+diff --git a/arch/x86/entry/entry_64_fred.S b/arch/x86/entry/entry_64_fred.S
+index a02bc6f3d2e6..0d934a3fcaf8 100644
+--- a/arch/x86/entry/entry_64_fred.S
++++ b/arch/x86/entry/entry_64_fred.S
+@@ -92,7 +92,7 @@ SYM_FUNC_START(asm_fred_entry_from_kvm)
+ 	 * +--------+-----------------+
+ 	 */
+ 	push $0				/* Reserved, must be 0 */
+-	push $0				/* Event data, 0 for IRQ/NMI */
++	push %rsi			/* Event data for IRQ/NMI */
+ 	push %rdi			/* fred_ss handed in by the caller */
+ 	push %rbp
+ 	pushf
+diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
+index e86c7ba32435..15f5d2eabd1d 100644
+--- a/arch/x86/include/asm/fred.h
++++ b/arch/x86/include/asm/fred.h
+@@ -63,14 +63,14 @@ static __always_inline unsigned long fred_event_data(struct pt_regs *regs)
+ 
+ void asm_fred_entrypoint_user(void);
+ void asm_fred_entrypoint_kernel(void);
+-void asm_fred_entry_from_kvm(struct fred_ss);
++void asm_fred_entry_from_kvm(struct fred_ss, unsigned long edata);
+ 
+ __visible void fred_entry_from_user(struct pt_regs *regs);
+ __visible void fred_entry_from_kernel(struct pt_regs *regs);
+ __visible void __fred_entry_from_kvm(struct pt_regs *regs);
+ 
+ /* Can be called from noinstr code, thus __always_inline */
+-static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector)
++static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector, unsigned long edata)
+ {
+ 	struct fred_ss ss = {
+ 		.ss     =__KERNEL_DS,
+@@ -80,7 +80,7 @@ static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int
+ 		.lm     = 1,
+ 	};
+ 
+-	asm_fred_entry_from_kvm(ss);
++	asm_fred_entry_from_kvm(ss, edata);
  }
  
-+static int nmi_handle_src(unsigned int type, struct pt_regs *regs, unsigned long *partial_bitmap)
-+{
-+	static bool nmi_source_disabled;
-+	bool has_unknown_src = false;
-+	unsigned long source_bitmap;
-+	struct nmiaction *a;
-+	int handled = 0;
-+	int vec;
-+
-+	if (!cpu_feature_enabled(X86_FEATURE_NMI_SOURCE) || type != NMI_LOCAL || nmi_source_disabled)
-+		return 0;
-+
-+	source_bitmap = fred_event_data(regs);
-+	if (unlikely(!source_bitmap)) {
-+		pr_warn("Buggy hardware! Disable NMI-source handling.\n");
-+		nmi_source_disabled = true;
-+		return 0;
-+	}
-+
-+	/*
-+	 * There is no guarantee that a valid NMI-source vector is always
-+	 * delivered, even when the originator specified one. It is software's
-+	 * responsibility to check all available NMI sources when bit 0 is set
-+	 * in the NMI-source reporting bitmap. I.e. we have to call every
-+	 * handler as if there is no NMI-source reporting feature enabled.
-+	 *
-+	 * In this case, handlers for the known NMI sources will be called
-+	 * first, followed by the remaining handlers, which are called
-+	 * during the subsequent polling code.
-+	 *
-+	 * Conversely, if non-zero vectors appear in the source bitmap, we
-+	 * can precisely identify the sources. Therefore, we only invoke the
-+	 * handlers for which the corresponding bits are set.
-+	 */
-+	if (unlikely(source_bitmap & BIT(NMI_SOURCE_VEC_UNKNOWN))) {
-+		pr_warn_ratelimited("NMI received with unknown sources\n");
-+		has_unknown_src = true;
-+	}
-+
-+	rcu_read_lock();
-+
-+	/* Bit 0 is for unknown NMI sources, skip it. */
-+	vec = 1;
-+	for_each_set_bit_from(vec, &source_bitmap, NR_NMI_SOURCE_VECTORS) {
-+		a = rcu_dereference(nmiaction_src_table[vec]);
-+		if (!a) {
-+			pr_warn_ratelimited("NMI-source vector %d has no handler!", vec);
-+			continue;
-+		}
-+
-+		handled += do_handle_nmi(a, regs, type);
-+
-+		/*
-+		 * Needs polling if the unknown source bit is set.
-+		 * partial_bitmap is used to tell the polling code which
-+		 * NMIs have already been handled based on explicit source
-+		 * thus can be skipped.
-+		 */
-+		if (has_unknown_src)
-+			*partial_bitmap |= BIT(vec);
-+	}
-+
-+	rcu_read_unlock();
-+
-+	return handled;
-+}
-+
- static int nmi_handle(unsigned int type, struct pt_regs *regs)
- {
- 	struct nmi_desc *desc = nmi_to_desc(type);
-+	unsigned long partial_bitmap = 0;
- 	struct nmiaction *a;
- 	int handled=0;
+ void cpu_init_fred_exceptions(void);
+@@ -90,7 +90,7 @@ void fred_complete_exception_setup(void);
+ static __always_inline unsigned long fred_event_data(struct pt_regs *regs) { return 0; }
+ static inline void cpu_init_fred_exceptions(void) { }
+ static inline void fred_complete_exception_setup(void) { }
+-static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector) { }
++static __always_inline void fred_entry_from_kvm(unsigned int type, unsigned int vector, unsigned long edata) { }
+ #endif /* CONFIG_X86_FRED */
+ #endif /* !__ASSEMBLY__ */
  
-+	/*
-+	 * Check if the NMI source handling is complete, otherwise polling is
-+	 * still required. partial_bitmap is non-zero if NMI source handling is
-+	 * partial due to unknown NMI sources.
-+	 */
-+	handled = nmi_handle_src(type, regs, &partial_bitmap);
-+	if (handled && !partial_bitmap)
-+		return handled;
-+
- 	rcu_read_lock();
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index b3c83c06f826..4e7b36081b76 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7024,7 +7024,7 @@ static void handle_external_interrupt_irqoff(struct kvm_vcpu *vcpu,
  
- 	/*
-@@ -163,8 +240,12 @@ static int nmi_handle(unsigned int type, struct pt_regs *regs)
- 	 * can be latched at any given time.  Walk the whole list
- 	 * to handle those situations.
- 	 */
--	list_for_each_entry_rcu(a, &desc->head, list)
-+	list_for_each_entry_rcu(a, &desc->head, list) {
-+		/* Skip NMIs handled earlier with source info */
-+		if (BIT(a->source_vec) & partial_bitmap)
-+			continue;
- 		handled += do_handle_nmi(a, regs, type);
-+	}
- 
- 	rcu_read_unlock();
- 
+ 	kvm_before_interrupt(vcpu, KVM_HANDLING_IRQ);
+ 	if (cpu_feature_enabled(X86_FEATURE_FRED))
+-		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector);
++		fred_entry_from_kvm(EVENT_TYPE_EXTINT, vector, 0);
+ 	else
+ 		vmx_do_interrupt_irqoff(gate_offset((gate_desc *)host_idt_base + vector));
+ 	kvm_after_interrupt(vcpu);
+@@ -7332,7 +7332,7 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	    is_nmi(vmx_get_intr_info(vcpu))) {
+ 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
+ 		if (cpu_feature_enabled(X86_FEATURE_FRED))
+-			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR);
++			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
+ 		else
+ 			vmx_do_nmi_irqoff();
+ 		kvm_after_interrupt(vcpu);
 -- 
 2.25.1
 
