@@ -1,137 +1,123 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE933156250
-	for <linux-perf-users@vger.kernel.org>; Tue,  9 Jul 2024 10:25:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED8F712DDAE;
+	Tue,  9 Jul 2024 12:05:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720520734; cv=none; b=qryOF9eTHVbdGQnuCY5OuXcvUMY7LjtxWOR6vrTP+kZWDNuSw6s7rOHFL2oALwbh3fvycXulw8lZsOqX1B5lWntHi6SCsXHrVGmIYGT1EMhZOI+UUa5fh3RoJ/zYQUiXT14jYrz1TYBtpC+mEXGiinL2PsXZIBiFqykr7D7PHow=
+	t=1720526747; cv=none; b=pvbPGX27Q2aN/O58kBu8vgLQvZwJkn8TtSOsiprWnM+IU1egxxO3f0wafWsg91xLFXu9vyMq5SfBYjlswI1zyurSjmzgfODTbFUfnTdI0hLPlTpXL+KB6NyUjBeSg64xLTRZA4FUGxSIp6F9Xhwciq4f/phiJAQHb6mHImqJCsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720520734; c=relaxed/simple;
-	bh=0Gl/CDETNc7UaPLuBI6q9MDmLGCd9UmNsrU2KW56MHo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jaQgqkY8KIkRPSN4t0QXHd6Hc2PuPkVQzNboFEkp/2PjBsDhwbGEiQBGXPkOaGnzFgPFJghNdYwzE01O+sPXPG9T0+SXlntQW6Owxtfic0+oJFvxbJxarN5W4t7NofeFccJo4MLYKTOJu58uibMVaakrAKNVdrAmd89vub40ikE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=um3f/b+C; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="um3f/b+C"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-426636ef8c9so16292955e9.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 09 Jul 2024 03:25:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720520728; x=1721125528; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V1/IuzHgP2/F+IUWJG66cldcOcCbab2/uU2CM5fWu7Q=;
-        b=um3f/b+CeXbiAl9i5XVKC2iRF2+vNiMA4IXnF6mHsBu9WCwtt9ry0dTsc1m9Ssp9ZE
-         SQHj9kMrFefZ8pRFj6rmZo4ot9+4gd7PyctYRG527bUzhaaBVCSoXSDu5B4mieeDDKjJ
-         2zIzprGaAxkaVsWAs+lEvqN7YvUCPikgBTQ1UCwZnmjLIGPok8C2OSmoK8X9XHmu3+B4
-         gpZYZ90JeMWb8ONrnR0ZMswueNE083pb67vcFHAkeswy81EanITGd/Meq4PZCH8Ck5FS
-         nvIGNKO+d8cX7kWgdna6m4KcttoYpWAnD4IbpAmWDw9kWqtqgxIIrVBk+sSOa/ZFI38S
-         /IJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720520728; x=1721125528;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V1/IuzHgP2/F+IUWJG66cldcOcCbab2/uU2CM5fWu7Q=;
-        b=fKThbKyrVIdxxN4CiHt7VD9FU1ThSm1NMoCgIB4wQ4k/akbpdR8Quv87i/kXqolm+a
-         B8XzYpv0Acrm4rCH1e8sY6SwsRyXju36xDQke8gjC99BgU0otgGKVIwTf6Z4pyN7T3q+
-         WaqnJ/mmwNkza9W+EV338uYjriZURkoVg8uHdktjPpT8AJzlGPxhZfbzfF1qkWIhRvhb
-         hAfeq/ESaaN3mRn9Vm7s/Luz2XQaVHXMhlW0nLTV/GcG9MRq/B4Pj+ZbYix32VkRGtvZ
-         I/lt9gxTnHdOT7SxmBoVZaE2o8dCwl8MJSdl9ZPIeFUGwBN1c5B5HG+Jl5zux53PsuQj
-         /qVA==
-X-Gm-Message-State: AOJu0YwL2vas5mtfPyBlIHpeCtpV2Cqz31JJuVxf84AjASCY2zXtgTCu
-	DQsjOEv9EQH16lQn7dnKUGEZOeC+rNnCY492hOTLiSArfVrrnzf7AL1+cJ2x/unwzp9kTW19tOb
-	YBho=
-X-Google-Smtp-Source: AGHT+IEo1WH45KTt1j+jhdCnRL/LptTaGgeGNdbbLKjgs+2+kMwF9HAkLK1nJ32kCq4mOQpvTPEFZA==
-X-Received: by 2002:a05:600c:1587:b0:426:5e91:3920 with SMTP id 5b1f17b1804b1-426708f1df1mr16566385e9.29.1720520728032;
-        Tue, 09 Jul 2024 03:25:28 -0700 (PDT)
-Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4266f741553sm33954285e9.40.2024.07.09.03.25.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jul 2024 03:25:27 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: akpm@linux-foundation.org,
-	robh@kernel.org,
-	suzuki.poulose@arm.com
-Cc: linux-perf-users@vger.kernel.org,
-	James Clark <james.clark@linaro.org>,
-	Mike Leach <mike.leach@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Bjorn Andersson <quic_bjorande@quicinc.com>,
-	Kees Cook <kees@kernel.org>,
-	Matt Ranostay <matt@ranostay.sg>,
-	Oleksij Rempel <o.rempel@pengutronix.de>,
-	Mao Jinlong <quic_jinlmao@quicinc.com>,
-	Hao Zhang <quic_hazha@quicinc.com>,
-	linux-kernel@vger.kernel.org,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org
-Subject: [PATCH 1/2] MAINTAINERS: mailmap: Update James Clark's email address
-Date: Tue,  9 Jul 2024 11:25:10 +0100
-Message-Id: <20240709102512.31212-2-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240709102512.31212-1-james.clark@linaro.org>
-References: <20240709102512.31212-1-james.clark@linaro.org>
+	s=arc-20240116; t=1720526747; c=relaxed/simple;
+	bh=ASrMse71KGxR4W6YXPjOC0NqqUxqgYmeIkU14MvNDtc=;
+	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=gic+eAvNizFSBqR9cC+7YbsEy48RhCYnXDCUCcPep4Mu+N0H/JT+SOpOUc7HPVeEPfvkIBvc3n3wFDA+Q1c9cux6RX8lGU8t+Ku5tbKyTIi9cQPHXlL/0OIsPwAyNP7+BMx1P08ignUdvGrrQSZyI/F/jxnTxVqs+TW6TyaStG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [113.200.148.30])
+	by gateway (Coremail) with SMTP id _____8BxbPCVJ41mi2sCAA--.7156S3;
+	Tue, 09 Jul 2024 20:05:41 +0800 (CST)
+Received: from [10.130.0.149] (unknown [113.200.148.30])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8CxJMWUJ41m8QJBAA--.7892S3;
+	Tue, 09 Jul 2024 20:05:41 +0800 (CST)
+Subject: Re: [PATCH v3 1/3] perf: Add perf_event_attr::bp_priv
+To: Will Deacon <will@kernel.org>
+References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
+ <20240709095506.9691-2-yangtiezhu@loongson.cn>
+ <20240709100304.GA12978@willie-the-truck>
+Cc: Mark Rutland <mark.rutland@arm.com>, Russell King
+ <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
+ Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <6d18e6fc-1d3f-f866-e887-bf5e01fb9368@loongson.cn>
+Date: Tue, 9 Jul 2024 20:05:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240709100304.GA12978@willie-the-truck>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:AQAAf8CxJMWUJ41m8QJBAA--.7892S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Cw17Gw4rtrykAr1fuFyxCrX_yoW8uF1xpr
+	ZxCFn5K3yktry093ZrWwsrZryUXws29rWqg3W3Kw4Ykryav3s3G3ykWr909Fn5Zr1xAa4r
+	twnFgFn8ta4UXagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
+	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
+	6r1DMcIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr4
+	1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxG
+	rwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14
+	v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkG
+	c2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4U
+	MIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07joc_-UUU
+	UU=
 
-My new address is james.clark@linaro.org
+On 07/09/2024 06:03 PM, Will Deacon wrote:
+> On Tue, Jul 09, 2024 at 05:55:04PM +0800, Tiezhu Yang wrote:
+>> When developing hardware watchpoint on LoongArch, we want to set the
+>> same privilege passed by the ptrace user data, but there is no bridge
+>> to save this value like bp_addr, bp_type and bp_len. This is a common
+>> issue for the archs which have privilege level of breakpoint.
+>>
+>> Add a member "bp_priv" which lives in a union on config3 at the end
+>> of the uapi struct perf_event_attr to make a bridge between ptrace
+>> and hardware breakpoint.
+>>
+>> This is preparation for later patch on some archs such as ARM, ARM64
+>> and LoongArch which have privilege level of breakpoint.
+>>
+>> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+>> ---
+>>  include/uapi/linux/perf_event.h | 5 ++++-
+>>  kernel/events/hw_breakpoint.c   | 1 +
+>>  2 files changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
+>> index 3a64499b0f5d..abe8da7a1f60 100644
+>> --- a/include/uapi/linux/perf_event.h
+>> +++ b/include/uapi/linux/perf_event.h
+>> @@ -521,7 +521,10 @@ struct perf_event_attr {
+>>  	 */
+>>  	__u64	sig_data;
+>>
+>> -	__u64	config3; /* extension of config2 */
+>> +	union {
+>> +		__u8	bp_priv; /* privilege level of breakpoint */
+>> +		__u64	config3; /* extension of config2 */
+>> +	};
+>>  };
+>>
+>>  /*
+>> diff --git a/kernel/events/hw_breakpoint.c b/kernel/events/hw_breakpoint.c
+>> index 6c2cb4e4f48d..3ad16b226e4f 100644
+>> --- a/kernel/events/hw_breakpoint.c
+>> +++ b/kernel/events/hw_breakpoint.c
+>> @@ -754,6 +754,7 @@ static void hw_breakpoint_copy_attr(struct perf_event_attr *to,
+>>  	to->bp_addr = from->bp_addr;
+>>  	to->bp_type = from->bp_type;
+>>  	to->bp_len  = from->bp_len;
+>> +	to->bp_priv = from->bp_priv;
+>>  	to->disabled = from->disabled;
+>>  }
+>
+> Sorry, but I still don't see why we should change uapi for this. As I
+> have said multiple times, this is unnecessary.
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- .mailmap    | 1 +
- MAINTAINERS | 4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Thanks for your review, I see your point but let us wait
+for more comments from perf people.
 
-diff --git a/.mailmap b/.mailmap
-index a6c619e22efc..9313134efe32 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -260,6 +260,7 @@ Jaegeuk Kim <jaegeuk@kernel.org> <jaegeuk@motorola.com>
- Jakub Kicinski <kuba@kernel.org> <jakub.kicinski@netronome.com>
- James Bottomley <jejb@mulgrave.(none)>
- James Bottomley <jejb@titanic.il.steeleye.com>
-+James Clark <james.clark@linaro.org> <james.clark@arm.com>
- James E Wilson <wilson@specifix.com>
- James Hogan <jhogan@kernel.org> <james@albanarts.com>
- James Hogan <jhogan@kernel.org> <james.hogan@imgtec.com>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index da5352dbd4f3..87949d7546d5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -2157,7 +2157,7 @@ N:	digicolor
- ARM/CORESIGHT FRAMEWORK AND DRIVERS
- M:	Suzuki K Poulose <suzuki.poulose@arm.com>
- R:	Mike Leach <mike.leach@linaro.org>
--R:	James Clark <james.clark@arm.com>
-+R:	James Clark <james.clark@linaro.org>
- L:	coresight@lists.linaro.org (moderated for non-subscribers)
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-@@ -17587,7 +17587,7 @@ F:	tools/perf/
- PERFORMANCE EVENTS TOOLING ARM64
- R:	John Garry <john.g.garry@oracle.com>
- R:	Will Deacon <will@kernel.org>
--R:	James Clark <james.clark@arm.com>
-+R:	James Clark <james.clark@linaro.org>
- R:	Mike Leach <mike.leach@linaro.org>
- R:	Leo Yan <leo.yan@linux.dev>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.34.1
+Thanks,
+Tiezhu
 
