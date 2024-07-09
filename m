@@ -1,69 +1,47 @@
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B20F1527A3
-	for <linux-perf-users@vger.kernel.org>; Mon,  8 Jul 2024 23:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB84924B4A;
+	Tue,  9 Jul 2024 01:00:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720481005; cv=none; b=PS4Xm2iZFDL3M7aWdUSfrVEj2dX+5SAqbwwx0weMmWHO8Y41JAT+QbaZeTk5pg/oIhZHBgyFzQPvIMFe5hz4c1QveiMZoJJM0DLzY27bE1xZ59FGvxLuZpITHt9escqealTAv6m8x3zDUFErJUP56pBY0PIg2hhClab+OFxYCgc=
+	t=1720486814; cv=none; b=ZIYyVTlw2zxTxrXr6BXN5pjPcQUuW6MZL8N5rFyXLPWRtj6qaZUwz/UgZuIY3NqTFQOMcHBT+4GXuhWTCGRi6dUFcYPiOh7OjQuVP7V9F8XIdGxjBooBtweTj7evIZmqGVv+OoMn0N6xxeLRV2J9yqd7JI3eLv7BQIyMgT+P7C8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720481005; c=relaxed/simple;
-	bh=6psedXWiVhgGXMWXvYNxOstdCMvuxEuuwfA7iWcmcGU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l+oIUUHs9e9wfwyV8tlx9DaiqVQzrlTNkM+TB1zvJzZahUe/GIxMf+5+t0JhOWuREs0DqC00HjihquNISt577otTQBRcGcQqkIiwxZ8R8lvi65tNBe2KBZzwjH9UA6ek8VlpCJH6Rli/Mr4Ise3plpjr8N43DRjiXYynFzeIPVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=J7fz5MBP; arc=none smtp.client-ip=209.85.160.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="J7fz5MBP"
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-25e919bec9eso762408fac.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 08 Jul 2024 16:23:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1720481002; x=1721085802; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qPQjFOQJrmmumJb1CUQeupQXr/aSCBOnaBJ4NRUg9Dk=;
-        b=J7fz5MBPnO7ZcRAM1NEBK6HhCyqgLuxeeR7JFnPDgN0OT786Ey2UmZztDThJ8+7xac
-         G0hOt/ezroK3iASmFcIqkXLxKqWUlT+3zePAzfq+1AalgBgWQevISLNC6v5SixHWnaZj
-         q93g9mgVht9kZ8oKP3IUt9b3p0j7eAWxZblRsOysCEhG2F8NI+QezNw4FFf9jFT2N+Ak
-         rPyqs7UDXYwbKhTj3OiIwyr4qTC2E1yrh8mroiIyw202hk0J3FKfcuKIYVjDNnwLg4EG
-         aXmpcIhzZI04j2xQFsln2mjjEWZXC20kcXyFkNgmv/F7Q5XDkGk8rd+/20zKFu7l3CCi
-         H6dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720481002; x=1721085802;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qPQjFOQJrmmumJb1CUQeupQXr/aSCBOnaBJ4NRUg9Dk=;
-        b=kTriw5UwkXahpMiWnfhxJSwrMlFTP45FE9IT6N00xgmW2lPn7o2PrqH0u+2XRIfqNX
-         AyXj08MN12g01idvXH41t+OtAuKgK/1YMVqlFkUXJOzcV0yPB7Pdrr07TUZXuYXII1+5
-         /2VqV+wEdbSTSWV9i/TylJh+vlCxBSa7AvHyYKKrOg8TglpUaIoKOt82nTESwCJZaDog
-         Cl2i6Eqnt96PFn8OcET/kDJKue+EszUmzlQKsYfpZn0u0RkGPdGyA5Z4hQLz2wipLeuz
-         8jO0+VMk46A8X2c/k6N4BWEKGaD3bgzFGiO+xlS7h8fHCKjO45Fk1CwFRGkQ1mF0AkWK
-         Ikaw==
-X-Gm-Message-State: AOJu0YyxwftnZkvlO1GQdloAGCrdMQlbmdhF3gVINopgzJ1ovqaUsgSs
-	ugPkron+JIA1bArTI6H6R6gIQcnUdEsdQrMURbml/JlJNU4i9LE7U47H8K2vQFFtD48l+5CPk92
-	JEsR6dsbJwK3kt1ZH9gopUFBneziYLlBuTXLtWvwU3FG8wWlCaviAULGaO/gXAg/ZtyMLSa0r4D
-	wK/iN1mnCt+8CHg1SKWWdfTmytu8arOmBtvkPtQHAO+HKlExIjLrpg8W4=
-X-Google-Smtp-Source: AGHT+IHgvnicgkruRjYUzVyfO9REfGDXS1M/onpZY0ms8UA43OsIKnZ+wnQ7WF0Kfvrq6b8u0H6N7A==
-X-Received: by 2002:a05:6871:24e0:b0:25e:56a:9665 with SMTP id 586e51a60fabf-25eaebc6866mr612181fac.43.1720481001985;
-        Mon, 08 Jul 2024 16:23:21 -0700 (PDT)
-Received: from dev-cachen.dev.purestorage.com ([208.88.159.129])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-70b438bfa86sm437775b3a.47.2024.07.08.16.23.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jul 2024 16:23:21 -0700 (PDT)
-From: Casey Chen <cachen@purestorage.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: yzhong@purestorage.com,
-	Casey Chen <cachen@purestorage.com>
-Subject: [PATCH] debug patch for perf report segfault
-Date: Mon,  8 Jul 2024 17:23:02 -0600
-Message-ID: <20240708232302.15267-3-cachen@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240708232302.15267-1-cachen@purestorage.com>
-References: <20240708232302.15267-1-cachen@purestorage.com>
+	s=arc-20240116; t=1720486814; c=relaxed/simple;
+	bh=f8u+3jaw5EtE3CvyeAy6cdqI83Y22LA9WRWr9WpaZis=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CA2L/oodORMgUKlyd1rq6VrBn5ZxwVtWMIoHxvDOyNbjUqj9CrHu6HSJUyEZv3f0pleIKZgJ8iX4GEc6IUnSRr+8r8K/TOpH6z1riNr2X08xwahXjNOD3MPmgebpkQ9sAebKsyqeiKjBQKzJ1Zpw5K5Ct6Re4WJU8ujKYxxLqVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WJ2bM4G4yz1T5q7;
+	Tue,  9 Jul 2024 08:55:27 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4173F1402E1;
+	Tue,  9 Jul 2024 09:00:08 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Tue, 9 Jul
+ 2024 09:00:07 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
+	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
+	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
+	<sdf@fomichev.me>, <haoluo@google.com>, <mykolal@fb.com>, <shuah@kernel.org>,
+	<liaochang1@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+Subject: [PATCH 2/2] selftests/bpf: Add uretprobe test for return_instance management
+Date: Tue, 9 Jul 2024 00:51:42 +0000
+Message-ID: <20240709005142.4044530-3-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240709005142.4044530-1-liaochang1@huawei.com>
+References: <20240709005142.4044530-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,84 +49,214 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-Debug patch to apply on 0dd5041c9a0e ("perf addr_location: Add
-init/exit/copy functions")
+This patch add three testcases to verify the proper management of
+return_instance data by uretprobes:
 
+- uretprobe_longjmp() verifies that longjmp() bypasses the uretprobe BPF
+  program attached to the exit of instrumented function.
+
+- uretprobe_cleanup_return_instance() verifies that uretprobe reclaim
+  the return_instances data created before a longjmp(), which leads to
+  kernel recount the nested depth of instrumented function.
+
+- uretprobe_reach_nestedness_limit() confirms that the uretprobe doesn't
+  reclaim the return_instances data created before longjmp() and hijack
+  the return address of instrumented function upon the nestedness depth
+  reache the limits (64).
+
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
 ---
- tools/perf/util/callchain.c | 4 ++++
- tools/perf/util/callchain.h | 9 +++++++++
- tools/perf/util/machine.c   | 8 ++++++--
- 3 files changed, 19 insertions(+), 2 deletions(-)
+ .../bpf/prog_tests/uretprobe_depth.c          | 150 ++++++++++++++++++
+ .../selftests/bpf/progs/uretprobe_depth.c     |  19 +++
+ 2 files changed, 169 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/uretprobe_depth.c
+ create mode 100644 tools/testing/selftests/bpf/progs/uretprobe_depth.c
 
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index b0dafc758173..2c1d9b8ff8d9 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1067,6 +1067,10 @@ int callchain_cursor_append(struct callchain_cursor *cursor,
- 	node->ip = ip;
- 	map__zput(node->ms.map);
- 	node->ms = *ms;
-+    if (ms && !ms->maps) {
-+        pr_info("%s addr of node->ms %p ms %p has no maps map %p symbol %p\n",
-+                __func__, &node->ms, ms, ms->map, ms->sym);
-+    }
- 	node->ms.map = map__get(node->ms.map);
- 	node->branch = branch;
- 	node->nr_loop_iter = nr_loop_iter;
-diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-index d95615daed73..8bba51be33a9 100644
---- a/tools/perf/util/callchain.h
-+++ b/tools/perf/util/callchain.h
-@@ -6,6 +6,7 @@
- #include <linux/rbtree.h>
- #include "map_symbol.h"
- #include "branch.h"
-+#include "debug.h"
- 
- struct addr_location;
- struct evsel;
-@@ -213,6 +214,14 @@ static inline void callchain_cursor_commit(struct callchain_cursor *cursor)
- {
- 	cursor->curr = cursor->first;
- 	cursor->pos = 0;
-+    if (cursor->curr) {
-+       struct callchain_cursor_node *curr = cursor->curr;
-+       struct map_symbol *ms = &curr->ms;
-+          if (ms && !ms->maps) {
-+            pr_info("%s: cursor %p curr %p ms %p\n", __func__, cursor, curr, ms);
-+            dump_stack();
-+          }
-+    }
- }
- 
- /* Cursor reading iteration helpers */
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index 9fcf357a4d53..e6c90bb6b842 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -2357,6 +2357,10 @@ static int add_callchain_ip(struct thread *thread,
- 			goto out;
- 		}
- 		thread__find_symbol(thread, *cpumode, ip, &al);
-+        if (!al.maps) {
-+            pr_info("%s: i'm here! al.map %p al.sym %p ip >= PERF_CONTEXT_MAX: %d cpumode %d ip 0x%lx\n",
-+                    __func__, al.map, al.sym, ip >= PERF_CONTEXT_MAX, *cpumode, ip);
-+        }
- 	}
- 
- 	if (al.sym != NULL) {
-@@ -2384,8 +2388,8 @@ static int add_callchain_ip(struct thread *thread,
- 	ms.map = map__get(al.map);
- 	ms.sym = al.sym;
- 
--	if (!branch && append_inlines(cursor, &ms, ip) == 0)
--		goto out;
-+//	if (!branch && append_inlines(cursor, &ms, ip) == 0)
-+//		goto out;
- 
- 	srcline = callchain_srcline(&ms, al.addr);
- 	err = callchain_cursor_append(cursor, ip, &ms,
+diff --git a/tools/testing/selftests/bpf/prog_tests/uretprobe_depth.c b/tools/testing/selftests/bpf/prog_tests/uretprobe_depth.c
+new file mode 100644
+index 000000000000..ba03b1868e37
+--- /dev/null
++++ b/tools/testing/selftests/bpf/prog_tests/uretprobe_depth.c
+@@ -0,0 +1,150 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <test_progs.h>
++
++#include <unistd.h>
++#include <setjmp.h>
++#include <asm/ptrace.h>
++#include <linux/compiler.h>
++#include <linux/stringify.h>
++#include "uretprobe_depth.skel.h"
++
++#define RETVAL			0xFFFF
++#define JMPVAL			0x4B1D
++#define MAX_URETPROBE_DEPTH	64 // See include/linux/uprobes.h
++#define NR_OMITTED_URETPROBE	16
++static jmp_buf jmp;
++
++unsigned long __uretprobe_longjmp(int nest, int jmpval, int retval)
++{
++	if (nest) {
++		nest = ++retval < MAX_URETPROBE_DEPTH + NR_OMITTED_URETPROBE;
++		return __uretprobe_longjmp(nest, jmpval, retval);
++	}
++
++	if (jmpval == JMPVAL) {
++		longjmp(jmp, jmpval);
++		return 0;
++	} else
++		return retval;
++}
++
++static void uretprobe_longjmp(void)
++{
++	if (setjmp(jmp) == JMPVAL) {
++		__uretprobe_longjmp(0, 0, JMPVAL);
++		return;
++	}
++
++	__uretprobe_longjmp(0, JMPVAL, RETVAL);
++}
++
++static void uretprobe_cleanup_return_instances(void)
++{
++	if (setjmp(jmp) == JMPVAL) {
++		/*
++		 * Cleanup these return instance data created before longjmp
++		 * firstly. Then create 16 new return_instance data from here.
++		 */
++		__uretprobe_longjmp(1, 0, MAX_URETPROBE_DEPTH);
++		return;
++	}
++
++	/* Create 8 return_instance data from here. */
++	__uretprobe_longjmp(1, JMPVAL,
++			    MAX_URETPROBE_DEPTH + NR_OMITTED_URETPROBE / 2);
++}
++
++static void uretprobe_reach_nestedness_limit(void)
++{
++	if (setjmp(jmp) == JMPVAL) {
++		/*
++		 * Due to uretprobe reach to the nestedness limit, it doesn't
++		 * cleanup the return instance created before longjmp.
++		 */
++		__uretprobe_longjmp(1, 0, MAX_URETPROBE_DEPTH);
++		return;
++	}
++
++	/* Create 64 return_instance from here. */
++	__uretprobe_longjmp(1, JMPVAL, 0);
++}
++
++static void test_uretprobe_longjmp(void)
++{
++	struct uretprobe_depth *skel = NULL;
++	int err;
++
++	skel = uretprobe_depth__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "uretprobe_depth__open_and_load"))
++		goto cleanup;
++
++	err = uretprobe_depth__attach(skel);
++	if (!ASSERT_OK(err, "uretprobe_depth__attach"))
++		goto cleanup;
++
++	skel->bss->retval = -1;
++
++	uretprobe_longjmp();
++
++	ASSERT_EQ(skel->bss->retval, JMPVAL, "return value");
++
++cleanup:
++	uretprobe_depth__destroy(skel);
++}
++
++static void test_uretprobe_reach_nestedness_limit(void)
++{
++	struct uretprobe_depth *skel = NULL;
++	int err;
++
++	skel = uretprobe_depth__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "uretprobe_depth__open_and_load"))
++		goto cleanup;
++
++	err = uretprobe_depth__attach(skel);
++	if (!ASSERT_OK(err, "uretprobe_depth__attach"))
++		goto cleanup;
++
++	skel->bss->depth = 0;
++
++	uretprobe_reach_nestedness_limit();
++
++	ASSERT_EQ(skel->bss->depth, 0, "nest depth");
++
++cleanup:
++	uretprobe_depth__destroy(skel);
++}
++
++static void test_uretprobe_cleanup_return_instances(void)
++{
++	struct uretprobe_depth *skel = NULL;
++	int err;
++
++	skel = uretprobe_depth__open_and_load();
++	if (!ASSERT_OK_PTR(skel, "uretprobe_depth__open_and_load"))
++		goto cleanup;
++
++	err = uretprobe_depth__attach(skel);
++	if (!ASSERT_OK(err, "uretprobe_depth__attach"))
++		goto cleanup;
++
++	skel->bss->depth = 0;
++
++	uretprobe_cleanup_return_instances();
++
++	ASSERT_EQ(skel->bss->depth, NR_OMITTED_URETPROBE + 1, "nest depth");
++
++cleanup:
++	uretprobe_depth__destroy(skel);
++}
++
++void test_uretprobe_return_instance(void)
++{
++	if (test__start_subtest("uretprobe_longjmp"))
++		test_uretprobe_longjmp();
++	if (test__start_subtest("uretprobe_cleanup_return_instances"))
++		test_uretprobe_cleanup_return_instances();
++	if (test__start_subtest("uretprobe_reach_nestedness_limit"))
++		test_uretprobe_reach_nestedness_limit();
++}
+diff --git a/tools/testing/selftests/bpf/progs/uretprobe_depth.c b/tools/testing/selftests/bpf/progs/uretprobe_depth.c
+new file mode 100644
+index 000000000000..b71f2de52b5e
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/uretprobe_depth.c
+@@ -0,0 +1,19 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "vmlinux.h"
++#include <bpf/bpf_helpers.h>
++#include <string.h>
++
++int depth;
++unsigned long retval;
++
++char _license[] SEC("license") = "GPL";
++
++SEC("uretprobe//proc/self/exe:__uretprobe_longjmp")
++int uretprobe(struct pt_regs *ctx)
++{
++	depth++;
++#if defined(__TARGET_ARCH_arm64) || defined(__aarch64__)
++	retval = ctx->regs[0];
++#endif
++	return 0;
++}
 -- 
 2.34.1
 
