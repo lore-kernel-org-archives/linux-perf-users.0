@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1120519D084;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A6E19D884;
 	Tue,  9 Jul 2024 14:33:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720535640; cv=none; b=uLSkt9Cs5oAQt60SjyTDa87XRCTotEbKU+MTvYvkGmitOGe52TPWFky3UDN0z7RH2k8HxY5dzv0U/g4kXX+oEp8dQiP08VhlhT+xzmpILGGm6wDPz7RUbP446fGpb1vo8nBsAFuJ3hZli0Db1wfRsBx+OHdJ7w0WIKNCD+jqJCA=
+	t=1720535641; cv=none; b=FVeFGhXNpCuigAGkxIozgA9fneQyseutbjtFScSDjnB/fWkUo8AxAytsef/Cxfp1BEhuKo0fOwe2Aqpu0b4wgZ4eVmeOvcn5Vs0DAimlY2FPXSylpWisle0VbcrZbYEHhsuUb4GImf98wW/MigEs7X8ZLsO0BRkvamzrnOOUAtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720535640; c=relaxed/simple;
-	bh=vA7B3YKz0iafDXCOMUYAdqoOvW1WFIzYPt/YBAHyEEQ=;
+	s=arc-20240116; t=1720535641; c=relaxed/simple;
+	bh=fVwWPGOIyZnF65lF0GxG2vfceQ7LArmQ2GaF8OPDWsU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rINpVI9Q+IniXC2daJ3di2ZQh0JBVjfwZ6RhJDj9jrhxuQO8wpdgdvI0RIiljAlfdks+2rTNUmR+1+eJc9GP0QidLVnXSd06rDunyeaQe5xfVrEK4gIs/iPNkralhPCwOz/K9aSXov1j2tk98O7V0Az6ERk6OMoWIUw3bcEz6Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SMBkgf66; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=cuaojkQ/loYqUsaINyY9VinPGa0sWDoY0PVZIj/ypHZ/1yZstcvLx3j9hdyubUY+OOGcuon2q91f/9J2m0+4gvyM2YwlXKN9dwFuS9Fn8T0zI2GiR1OYIaZG0ZL7+nzRbK4/8HeTqbR1seiZpAglNScfhDCguj6kjho3rgg1USc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Vw3cHEOG; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SMBkgf66"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Vw3cHEOG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720535639; x=1752071639;
+  t=1720535640; x=1752071640;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=vA7B3YKz0iafDXCOMUYAdqoOvW1WFIzYPt/YBAHyEEQ=;
-  b=SMBkgf665kKqNbiSiZcrnjOG/bLuOm27tHQP5Mo2O1Pz1EyvZqWVKMER
-   bmT0ZEoBtuJsaF7ulKQjxKfCINKhU5j427GnZdV9o1tMpprzuv0g6mtk0
-   I5EvX2zblI1v7sym4TRsk3DUpYVGd8PLarDyZsT1HL4h1hqPnL3GEiQbx
-   np+hX57qU7+tsTA/xK/oCIMFZnradl0ZhkPMtufFV38tVelhsMtg61Wgz
-   qoA6xFV7ddTpG2JmNv1MQPBM06xnocQXknABuDs6kxGSyAxwR4UrVL6+N
-   OHDh8FOiyKRI/9KG/y20arSQ1xvR1Kn4vtoyOSQB7KsCN0Bei4I5sTf4P
-   Q==;
-X-CSE-ConnectionGUID: ICZSvdCqR7imlKcehRXR+Q==
-X-CSE-MsgGUID: VrCiNcF6SxmtqI1+dAH7SA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331415"
+  bh=fVwWPGOIyZnF65lF0GxG2vfceQ7LArmQ2GaF8OPDWsU=;
+  b=Vw3cHEOGZhwvy6xZ81nElYTCseUsRYRF7lHX6xW502YN1jrIqqIPdqFb
+   /FqoaUfslPMtAL4LXVRbDsSZzeVn/o0v2ihAiYtRRFJORCinkkQnQ4xVs
+   Zb1xG5cfHaXgZ7Q3QAOJ4uTJRLNZvosfz4I0+XnxBS9IewdLJSKjhLhca
+   5AXFBHYwXpmaSyq1WPDtMf1EhkvNeE7RaY9qoPr/5J9OFrqu3rBn/Yw3n
+   DT1Ihdl5Q8dsweB9U0sVDAaYDRkVynZNDG/ojkbsghEnKbhIFtmiAKsxL
+   EGk1IQaWb5vo3tvtM1ZAV24FH7znd5OaF1HDRSC1cBo0Ckbf6glymlX7i
+   A==;
+X-CSE-ConnectionGUID: BblrbjtNSGS4aCJukKj1xQ==
+X-CSE-MsgGUID: YEyjB88TSRSug88STuA5qw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="35331426"
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="35331415"
+   d="scan'208";a="35331426"
 Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:56 -0700
-X-CSE-ConnectionGUID: 7VDwHScPRu+MrpWzXWFb8A==
-X-CSE-MsgGUID: ojYjyeCpTwiWQ6jpgXg6kA==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jul 2024 07:33:57 -0700
+X-CSE-ConnectionGUID: eTkbNUk+SVWHCd8PCtA2BA==
+X-CSE-MsgGUID: OuI6WRNUQ3WSV94NRskYxw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,195,1716274800"; 
-   d="scan'208";a="52272118"
+   d="scan'208";a="52272134"
 Received: from jacob-builder.jf.intel.com ([10.54.39.125])
-  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:56 -0700
+  by fmviesa005.fm.intel.com with ESMTP; 09 Jul 2024 07:33:57 -0700
 From: Jacob Pan <jacob.jun.pan@linux.intel.com>
 To: X86 Kernel <x86@kernel.org>,
 	Sean Christopherson <seanjc@google.com>,
@@ -63,11 +63,11 @@ Cc: Paolo Bonzini <pbonzini@redhat.com>,
 	Andi Kleen <andi.kleen@intel.com>,
 	Nikolay Borisov <nik.borisov@suse.com>,
 	"Mehta, Sohil" <sohil.mehta@intel.com>,
-	Zeng Guang <guang.zeng@intel.com>,
-	Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v4 07/11] KVM: VMX: Handle NMI Source report in VM exit
-Date: Tue,  9 Jul 2024 07:39:02 -0700
-Message-Id: <20240709143906.1040477-8-jacob.jun.pan@linux.intel.com>
+	Jacob Pan <jacob.jun.pan@linux.intel.com>,
+	Zeng Guang <guang.zeng@intel.com>
+Subject: [PATCH v4 08/11] perf/x86: Enable NMI source reporting for perfmon
+Date: Tue,  9 Jul 2024 07:39:03 -0700
+Message-Id: <20240709143906.1040477-9-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
 References: <20240709143906.1040477-1-jacob.jun.pan@linux.intel.com>
@@ -79,47 +79,91 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Zeng Guang <guang.zeng@intel.com>
+Program the designated NMI source vector into the performance monitoring
+interrupt (PMI) of the local vector table. PMI handler will be directly
+invoked when its NMI is generated. This avoids the latency of calling all
+NMI handlers blindly.
 
-If the "NMI exiting" VM-execution control is 1, the value of the 16-bit NMI
-source vector is saved in the exit-qualification field in the VMCS when VM
-exits occur on CPUs that support NMI source.
-
-KVM that is aware of NMI-source reporting will push the bitmask of NMI source
-vectors as the exceptoin event data field on the stack for then entry of FRED
-exception. Subsequently, the host NMI exception handler is invoked which
-will process NMI source information in the event data. This operation is
-independent of vCPU FRED enabling status.
-
+Co-developed-by: Zeng Guang <guang.zeng@intel.com>
 Signed-off-by: Zeng Guang <guang.zeng@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
----
- arch/x86/kvm/vmx/vmx.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index 4e7b36081b76..6719c598fa5f 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7331,10 +7331,15 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
- 	if ((u16)vmx->exit_reason.basic == EXIT_REASON_EXCEPTION_NMI &&
- 	    is_nmi(vmx_get_intr_info(vcpu))) {
- 		kvm_before_interrupt(vcpu, KVM_HANDLING_NMI);
--		if (cpu_feature_enabled(X86_FEATURE_FRED))
--			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, 0);
--		else
-+		if (cpu_feature_enabled(X86_FEATURE_FRED)) {
-+			unsigned long edata = 0;
-+
-+			if (cpu_feature_enabled(X86_FEATURE_NMI_SOURCE))
-+				edata = vmx_get_exit_qual(vcpu);
-+			fred_entry_from_kvm(EVENT_TYPE_NMI, NMI_VECTOR, edata);
-+		} else {
- 			vmx_do_nmi_irqoff();
-+		}
- 		kvm_after_interrupt(vcpu);
- 	}
+---
+v4: Use a macro for programming PVTPC unconditionally (Kan)
+v3: Program NMI source vector in PVTPC unconditionally (HPA)
+v2: Fix a compile error apic_perfmon_ctr is undefined in i386 config
+---
+ arch/x86/events/core.c       | 4 ++--
+ arch/x86/events/intel/core.c | 6 +++---
+ arch/x86/include/asm/apic.h  | 2 ++
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 1ef2201e48ac..e69c52f9d662 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1680,7 +1680,7 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	 * This generic handler doesn't seem to have any issues where the
+ 	 * unmasking occurs so it was left at the top.
+ 	 */
+-	apic_write(APIC_LVTPC, APIC_DM_NMI);
++	apic_write(APIC_LVTPC, APIC_PERF_NMI);
  
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+ 		if (!test_bit(idx, cpuc->active_mask))
+@@ -1723,7 +1723,7 @@ void perf_events_lapic_init(void)
+ 	/*
+ 	 * Always use NMI for PMU
+ 	 */
+-	apic_write(APIC_LVTPC, APIC_DM_NMI);
++	apic_write(APIC_LVTPC, APIC_PERF_NMI);
+ }
+ 
+ static int
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 38c1b1f1deaa..e7e114616e24 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3093,7 +3093,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 	 * NMI handler.
+ 	 */
+ 	if (!late_ack && !mid_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, APIC_PERF_NMI);
+ 	intel_bts_disable_local();
+ 	cpuc->enabled = 0;
+ 	__intel_pmu_disable_all(true);
+@@ -3130,7 +3130,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 
+ done:
+ 	if (mid_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, APIC_PERF_NMI);
+ 	/* Only restore PMU state when it's active. See x86_pmu_disable(). */
+ 	cpuc->enabled = pmu_enabled;
+ 	if (pmu_enabled)
+@@ -3143,7 +3143,7 @@ static int intel_pmu_handle_irq(struct pt_regs *regs)
+ 	 * Haswell CPUs.
+ 	 */
+ 	if (late_ack)
+-		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		apic_write(APIC_LVTPC, APIC_PERF_NMI);
+ 	return handled;
+ }
+ 
+diff --git a/arch/x86/include/asm/apic.h b/arch/x86/include/asm/apic.h
+index 9327eb00e96d..d284eff7849c 100644
+--- a/arch/x86/include/asm/apic.h
++++ b/arch/x86/include/asm/apic.h
+@@ -30,6 +30,8 @@
+ #define APIC_EXTNMI_ALL		1
+ #define APIC_EXTNMI_NONE	2
+ 
++#define APIC_PERF_NMI		(APIC_DM_NMI | NMI_SOURCE_VEC_PMI)
++
+ /*
+  * Define the default level of output to be very little
+  * This can be turned up by using apic=verbose for more
 -- 
 2.25.1
 
