@@ -1,147 +1,114 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76401586C4;
-	Tue,  9 Jul 2024 12:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBA915A843;
+	Tue,  9 Jul 2024 12:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720526876; cv=none; b=BwPZjEnvaS934DqADXfCIU/HLYax3Ls/A4PNzayHAEM3ooKC3C42tzbPgBXmk2u97ViWJB6V4s2bjTtV1txM88Vei1L293+1Hb8NglvIDnCs4n9da8UCpQFhzEVwJtUNMvn7BSKSt13CHEglbjXvLYl2ImcIPRojYb2s7LhTpVM=
+	t=1720529162; cv=none; b=am3zEiuVRxIjGDhsGEtaPd2DLIBOEO99YkHZZ2kHDC5wCQF5KGwHopM1iXK+roOmluCCL/weyfi1dFxwtBAB+MreBW4MlgIFHDKfsbK0SJeDXO9zKPT7a+w/4e8SBsQHmv8qhdogvCpKR+TXFTYq7oygFvQR7Qt+ub1phrM8pXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720526876; c=relaxed/simple;
-	bh=HiqaSbumntvKz5Emuwn+N3bSrB5MzpJVcl7+vGk/JNw=;
-	h=Subject:To:References:Cc:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=uyj8Ss1IdGojRRh8yqLYK0QGTDeguWTBbQRNhaaRJ8tWTmBvdk59SpeVbEk+0Z4rvZU9wCBJDwwVQL8MxjK37tsawB98f5wQwJfxwmZG2gTdm+CApLrmb1ChX43LY/wUorvQXHeNnquXHYz5yJ/y7FuQwHip8yoqmqViYEQ1Kzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8BxL_EYKI1mrGsCAA--.7825S3;
-	Tue, 09 Jul 2024 20:07:52 +0800 (CST)
-Received: from [10.130.0.149] (unknown [113.200.148.30])
-	by localhost.localdomain (Coremail) with SMTP id AQAAf8AxhsUWKI1mcwNBAA--.7813S3;
-	Tue, 09 Jul 2024 20:07:51 +0800 (CST)
-Subject: Re: [PATCH v3 3/3] arm64: hw_breakpoint: Save privilege of access
- control via ptrace
-To: Will Deacon <will@kernel.org>
-References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
- <20240709095506.9691-4-yangtiezhu@loongson.cn>
- <20240709100515.GB12978@willie-the-truck>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King
- <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>,
- Oleg Nesterov <oleg@redhat.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, linux-arm-kernel@lists.infradead.org,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <d72a04f5-7894-af6c-dd4a-c6728e936f73@loongson.cn>
-Date: Tue, 9 Jul 2024 20:07:50 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+	s=arc-20240116; t=1720529162; c=relaxed/simple;
+	bh=KhGCpF9+4C9lhLpzovRkcOdOulVyY6j6TJFNBVO9Mgw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RujjSvnyKMJMELRHf/5pR6sPWxOw6FSdyyXukj5AZVQ3HBmvn/V1aQj9URxHWG9QMdMJC5WEMtpax0rnpiqag5kw4M5N5f6PIQEXw75ABBCCmlOlT8HzdIHiZI1FO4SyVxz352wrv2mLgiK51G74n+Crc2BVE3ygzGIoEGqWQOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=fail (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=QiHsdkKk reason="signature verification failed"; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="QiHsdkKk"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id A6E3240E0219;
+	Tue,  9 Jul 2024 12:45:57 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=fail (4096-bit key)
+	reason="fail (body has been altered)" header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id VD-pFPC05sQC; Tue,  9 Jul 2024 12:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1720529149; bh=JosnYsiQ8muEBwIj8n6+1SHLQMI42y2o+rvr74ZNtYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QiHsdkKkeNcF6pwOLTgSc1EoIuBcSImBBE22aZjEi/0q+d8KCAjohZkf3TwTLq92L
+	 ylwdAJMt/tTaKOo4YIWf+fQVIRFdgcPlAtBh8VwhNmz62dXB/tI4gKrX0u3xdgoKfz
+	 NDIgTtJOMV+LOm5ZruQpiZVgNhJmBAOfG5XnDqhePOAZOQzgAurjiUE8Kzc6P4cTsi
+	 7c3ELnuHtM6WHLVIPhGo+vJRXbozwF0oTxns2Qb0vo/nvPquvS+ATeJYooq4hPkT8F
+	 ZVjHxvsxvnnzwcAoIMjN51bUczQrmk2rN7A3ePj/tfPiQH3OC2ROeItmVg4KggZL2Y
+	 ZgC6PX8eB6L/UKnGSxuysyvPWtclmkLSSkQ33q7atlMKwHzpGrjJ8Qv8w0IGL7Ue4m
+	 3Hha935jgKcx7asKS4cS96uyO87pFfFgrI9gso5onQAPWI661Derebld1JI3tlXaoX
+	 QiTRiCjFAQxgRYt3lP67QeglCZTVKH6p17yoCVOPOCD26L0wMeE58ookakJJM2wems
+	 wkuUX5Bgpf4aNaPalYdfYJN7YRKiAy/F97cUVVmJJfppq3BVgEDC/epEroxfIHLyTH
+	 Jn5AdCQqMrFgsI9Getz9DK0w3laBQIN05JOHKqEo5f/Hz4eJGuSTgZE+L1PBbVcpOe
+	 vqtzbkO38YrFwL+e3MppSY6M=
+Received: from zn.tnic (p5de8ee85.dip0.t-ipconnect.de [93.232.238.133])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4409C40E0206;
+	Tue,  9 Jul 2024 12:45:29 +0000 (UTC)
+Date: Tue, 9 Jul 2024 14:45:24 +0200
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	daniel.sneddon@linux.intel.com, tony.luck@intel.com,
+	linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Brice Goglin <brice.goglin@gmail.com>,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Perry Yuan <Perry.Yuan@amd.com>,
+	Dapeng Mi <dapeng1.mi@linux.intel.com>
+Subject: Re: [PATCH v2 1/9] x86/cpu/topology: Add CPU type to struct
+ cpuinfo_topology
+Message-ID: <20240709124524.GGZo0w5G2XXya77Vbm@fat_crate.local>
+References: <20240627-add-cpu-type-v2-0-f927bde83ad0@linux.intel.com>
+ <20240627-add-cpu-type-v2-1-f927bde83ad0@linux.intel.com>
+ <20240628080305.GEZn5uOSnW40fVgaNA@fat_crate.local>
+ <20240628173209.wzpc6pwnw4p6u57h@desk>
+ <20240703230724.GEZoXZrIavchI2Kj-P@fat_crate.local>
+ <20240709012418.jyzkxvp3h4p2oda4@desk>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240709100515.GB12978@willie-the-truck>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:AQAAf8AxhsUWKI1mcwNBAA--.7813S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoWxuFy8Ww4rGry3CF4kXw48KrX_yoW5Aw4Dpr
-	W3C3WkKw4DJa1jkasIqws3Zan8WwsIg34UWryvk34Skr13Zrn3CrykGry5urZxAry0q3y0
-	krWqvr1rWa1UZ3XCm3ZEXasCq-sJn29KB7ZKAUJUUUU3529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUUPSb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-	xVWxJr0_GcWln4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
-	8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
-	AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
-	rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14
-	v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWxJVW8
-	Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU8nNVD
-	UUUUU==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240709012418.jyzkxvp3h4p2oda4@desk>
+Content-Transfer-Encoding: quoted-printable
 
-On 07/09/2024 06:05 PM, Will Deacon wrote:
-> On Tue, Jul 09, 2024 at 05:55:06PM +0800, Tiezhu Yang wrote:
->> In the current code, decode_ctrl_reg() saves the privilege of access
->> control passed by the ptrace user data, but it is not used anymore,
->> arch_build_bp_info() checks whether bp virtual address is in kernel
->> space to construct hw->ctrl.privilege, it seems not reasonable.
->>
->> The value of ctrl->privilege saved in decode_ctrl_reg() can be used
->> in arch_build_bp_info(), there is no need to check bp virtual address
->> to assign value for hw->ctrl.privilege, just make use of "bp_priv" in
->> the struct perf_event_attr to save the privilege of access control via
->> ptrace for hardware breakpoint.
->>
->> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
->> ---
->>  arch/arm64/kernel/hw_breakpoint.c | 11 ++---------
->>  arch/arm64/kernel/ptrace.c        |  2 ++
->>  2 files changed, 4 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/hw_breakpoint.c b/arch/arm64/kernel/hw_breakpoint.c
->> index 722ac45f9f7b..06e34bcdcf92 100644
->> --- a/arch/arm64/kernel/hw_breakpoint.c
->> +++ b/arch/arm64/kernel/hw_breakpoint.c
->> @@ -486,15 +486,8 @@ static int arch_build_bp_info(struct perf_event *bp,
->>  	/* Address */
->>  	hw->address = attr->bp_addr;
->>
->> -	/*
->> -	 * Privilege
->> -	 * Note that we disallow combined EL0/EL1 breakpoints because
->> -	 * that would complicate the stepping code.
->> -	 */
->
-> Just because you remove the comment doesn't mean that constraint no
-> longer applies.
+On Mon, Jul 08, 2024 at 06:24:18PM -0700, Pawan Gupta wrote:
+> The draft version had it in cpuinfo_x86, but it later got moved to
+> cpuinfo_topology as it appears to be topology related. Below is from AM=
+D
+> documentation:
+>=20
+>   E.4.24 Function 8000_0026=E2=80=94Extended CPU Topology
 
-Yes, please see the following answer.
+That's the name of the CPUID leaf.
 
->
->> -	if (arch_check_bp_in_kernelspace(hw))
->> -		hw->ctrl.privilege = AARCH64_BREAKPOINT_EL1;
->> -	else
->> -		hw->ctrl.privilege = AARCH64_BREAKPOINT_EL0;
->> +	/* Privilege */
->> +	hw->ctrl.privilege = attr->bp_priv;
->>
->>  	/* Enabled? */
->>  	hw->ctrl.enabled = !attr->disabled;
->> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
->> index 0d022599eb61..3b37c4a2e0d4 100644
->> --- a/arch/arm64/kernel/ptrace.c
->> +++ b/arch/arm64/kernel/ptrace.c
->> @@ -309,6 +309,7 @@ static struct perf_event *ptrace_hbp_create(unsigned int note_type,
->>  	attr.bp_addr	= 0;
->>  	attr.bp_len	= HW_BREAKPOINT_LEN_4;
->>  	attr.bp_type	= type;
->> +	attr.bp_priv	= AARCH64_BREAKPOINT_EL0;
->>  	attr.disabled	= 1;
->>
->>  	bp = register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
->> @@ -352,6 +353,7 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
->>  	attr->bp_len	= len;
->>  	attr->bp_type	= type;
->>  	attr->bp_addr	+= offset;
->> +	attr->bp_priv	= ctrl.privilege;
->
-> Wait, so ptrace can now set breakpoints with arbitrary privileges?
+>   CPUID Fn8000_0026 reports extended topology information for logical
+>   processors, including asymmetric and heterogenous topology descriptio=
+ns.
+>   Individual logical processors may report different values in systems =
+with
+>   asynchronous and heterogeneous topologies.
+>   https://www.amd.com/content/dam/amd/en/documents/processor-tech-docs/=
+programmer-references/24594.pdf
+>=20
+> I can move it back to cpuinfo_x86 if you feel strongly about it.
 
-The ptrace user should make sure the privilege is correct.
-For example, the privilege is set as el0
-in aarch64_point_encode_ctrl_reg() of GDB:
+Nah, it just felt weird. Not a biggie and we can always move it if we dee=
+m so.
 
-   /* enabled at el0 */
-   ctrl |= (2 << 1) | 1;
+--=20
+Regards/Gruss,
+    Boris.
 
-https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=gdb/nat/aarch64-hw-point.c#l135
-
-Thanks,
-Tiezhu
-
+https://people.kernel.org/tglx/notes-about-netiquette
