@@ -1,150 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC976192492;
-	Wed, 10 Jul 2024 13:15:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F232A192B8E
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 13:46:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720617310; cv=none; b=QmxZm28HqYY4FYWvo9gtRCxeRVe6LziJLx1zMpEWDQu10ztfK8s/NW9u4+nq9UjSF+v8zcAoarbM+v3SFxXTAfT99kHK+N+/RXHvOuzGACKOPXDtugmA5sePmwMCPLSXlISVr9MmczamULpqWIYfWGxRqPaAF2+L0D6EPV5QOz4=
+	t=1720619163; cv=none; b=Zo65sJ6jQAvEPLHV5n9qnh7163k7lRMXKnI6pYgN+7Boe+EX/6kZ/rzU4oKuXvZP1jOdJk4oz1uMl9nmjOaxezOO5N4G8WaHwQtlLFe9kIEF7KObkVw9VZdCNzosSeov14fR4/87SXUR6AVK7WStMEK83zihhAyUIN4LdghOSrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720617310; c=relaxed/simple;
-	bh=QqROtBlwIbTLLGVHQb9i+CqPbESJBaurcZ9oTX/Jk/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SutEatKfJn/AbK9ViRbMmtwNDoBp7G51VAy9P3zy+i9I3CV0TkYI82Jme7NkhYQEM1kiuO+TES2Z/C9mlyYZGYginsDSNYYQOAztLmSsuCbz+Pm82Lo0IQMbmpbYCieF54tKvZLY1Q3RxOQtxxEmx26oWheXFpeI6Vy8KdYdN6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mi0MmQFE; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720619163; c=relaxed/simple;
+	bh=yFybrs0fT77vAx6LB9Q+WEolILPmGGXFfxDgKNlkHBg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=c5y21mUhIU/V6kpdyk2Ne4ZZmAqbMzSeI7UVCcPVVSuoLUMK6p0aE63pLAqSIA1SK0OEQevSe4nM3OKdoqN/ZZilfIWHbvKIVSVkumkXzYcxdpmTuoJmPNPbgXi4ozZp1xrdVfX908+gVl03+hqPADmE1xLXABWbafLIrTwkJi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cHHj/1j/; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mi0MmQFE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720617309; x=1752153309;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=QqROtBlwIbTLLGVHQb9i+CqPbESJBaurcZ9oTX/Jk/g=;
-  b=mi0MmQFEhXE0BxsrYOAzEm49nF9XF94rR9mwtvJrYV3o+xkB/lp5ibUu
-   4QRbUd3Rb+lFpT6GgFeWeIKM59RXW9Wi7qNia+hVdJVx9UozUsuBfwCAN
-   jP88xAVTMurCzpvZ1PAXfv+0fiGowKkiTYO2Vs/KH+bwbXM2DUBN9M61r
-   s9Qe7s8K0Ctn2g/hdOKMAm3hmetw+ReX5UHbGAnRGXw6ErCJ7Bb5aRUsr
-   lbZLgsUfCVD42NjXUxPugUsQIzg9+X6baZBf6Duw1lrWULrVGozs5ovS9
-   F6INT/F6+1UanC/CTuhCDVwnI593EcrEB06Iser0SvnZSjA8f30q3CgMo
-   A==;
-X-CSE-ConnectionGUID: TNGWco4QTxq5+ubrKs3PCQ==
-X-CSE-MsgGUID: HvC3B+IUT7iKKcDd3Udp+A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="20840264"
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="20840264"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 06:15:08 -0700
-X-CSE-ConnectionGUID: bCHm0/F/Q4WgbKzFPP11sg==
-X-CSE-MsgGUID: 9lkXQ7MjRMmArgSvJof8OQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,198,1716274800"; 
-   d="scan'208";a="53012361"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 06:15:08 -0700
-Received: from [10.212.47.151] (kliang2-mobl1.ccr.corp.intel.com [10.212.47.151])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id B49EF20738FE;
-	Wed, 10 Jul 2024 06:15:06 -0700 (PDT)
-Message-ID: <a0ac56fc-eedc-492b-884c-d68e0460f178@linux.intel.com>
-Date: Wed, 10 Jul 2024 09:15:05 -0400
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cHHj/1j/"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-36796bbf687so3473339f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 06:46:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1720619160; x=1721223960; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SuFvfAozPQGM3so90zXgathbYTyHU4zPzhPqAECnNAc=;
+        b=cHHj/1j/r14lZVD+vL0/xe7s/s4gc3axSKf5aAak6zz7KVIBieVhR5AIp4yaUi8JI0
+         b0yv0TC16G0DbErO3zAcS4nFnUaUekQLnWINI/O1nGIpjSXNm4XXa4vbg+0Q5DQI50Lc
+         0VizIHEzceKrdQ8MRymvoEhJUrM5yL75vlwrgtOKYm37qhWcceaBWrzFqNwU84vTJ/ET
+         K5QvjVICOy2MovdD0O2TbvQE1l648wNLhPAlylhp4F60Y3xm8XD4SmTPRuw7Ju1O5LQG
+         Z+NJfYACGFuqzTMk9E2JAObkUaXa+uZW0i66NYkThLM3zrLrzysJ0Jc0a0KFsS+0//IV
+         Oy/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720619160; x=1721223960;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SuFvfAozPQGM3so90zXgathbYTyHU4zPzhPqAECnNAc=;
+        b=LODSEgfazxgS8hh6+APv5OYE7mJt73ivrCUWJWRw9IOf6dOs6F84AqhO1+zrNiQmLt
+         sWNUXOYi6YDxe0yQqf2xHv0KOWD+6qJaSGJ7+rLGA5rFhZxr8uwSj6ruvlNhw87buGcl
+         3R+OI7b+CkjmcMNaK4s6xkM8PvXEA4N/3/m8RUTSJXAd3H8/PHX2BKV8IjcrDl2xPQo4
+         SsmGdQqsJPfF/CujincsBe4AOT1a+H9W4ivmYd7WPwvxC2gb9DxOMt0tsENotYeM/K2M
+         Fsxs7Iz1wkNr22Twc/j84NWOyu8Ql/XmWRbejGsEHYQ0KaA6Js0xWFDeAUpW8NRtMqLH
+         GT7Q==
+X-Gm-Message-State: AOJu0YxlMDWVqtM6aK+72eohSOYD5jH2IdXH3PNjTNRQPcNWXrIoiQhl
+	FO5XZhrfg5p8C+3tE6Xms3thz/aE8ADEgTSxlj6MwSg0o5I30eeYwpZFD9ZERus=
+X-Google-Smtp-Source: AGHT+IHRw8wRagXNh5GbODGGloMCC/O4XEq2eqQ+Yy92BqIkE1lqH7QX5XV1rVk8XN7jhfkSY5wk/g==
+X-Received: by 2002:a5d:60c5:0:b0:367:4dbb:ed4e with SMTP id ffacd0b85a97d-367ce5de7c8mr3768300f8f.0.1720619160328;
+        Wed, 10 Jul 2024 06:46:00 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-367cdfa07dasm5336374f8f.87.2024.07.10.06.45.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 Jul 2024 06:46:00 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: irogers@google.com
+Cc: linux-perf-users@vger.kernel.org,
+	namhyung@kernel.org,
+	robin.murphy@arm.com,
+	peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] perf pmu: Event parsing and listing fixes
+Date: Wed, 10 Jul 2024 14:45:53 +0100
+Message-Id: <20240710134553.768993-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <CAP-5=fWVA9sEn5JbokUipRTzu24HZxxYyHGPrM5soKRb4D8_Kw@mail.gmail.com>
+References: <CAP-5=fWVA9sEn5JbokUipRTzu24HZxxYyHGPrM5soKRb4D8_Kw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
- perf-sanity-tests.perf_all_PMU_test.fail
-To: kernel test robot <oliver.sang@intel.com>, Ian Rogers <irogers@google.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com,
- Linux Memory Management List <linux-mm@kvack.org>,
- Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202407101021.2c8baddb-oliver.sang@intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <202407101021.2c8baddb-oliver.sang@intel.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+>On Wed, Jun 26, 2024 at 7:55 AM James Clark <james.clark@arm.com> wrote:
+>>
+>> The second fix is related to the discussion here [1].
+>>
+>> The first fix is unrelated but I just noticed it while fixing the
+>> listing issue.
+>>
+>> [1]: https://lore.kernel.org/all/ce31a50b-53db-4c6f-9cb1-242280b0951c@arm.com/
+>>
+>> Changes since v1:
+>>
+>>  * Add Ian's suggested-by tag on patch 2
+>>  * Fix mistake where info.pmu_name instead of pmu->name should have
+>>    been used in perf_pmu__for_each_event()
+>>
+>> James Clark (2):
+>>   perf pmu: Restore full PMU name wildcard support
+>>   perf pmu: Don't de-duplicate core PMUs
+>
+>Reviewed-by: Ian Rogers <irogers@google.com>
+>
+>Looking forward to an update on the bugs in:
+>https://lore.kernel.org/lkml/CAP-5=fWxdZ1ibv7Pi0L38+NF-vNWZCtcDS9JVf6k3z9nDsrQQw@mail.gmail.com/
+>
+>Thanks,
+>Ian
 
+Hi Ian,
 
-On 2024-07-10 12:59 a.m., kernel test robot wrote:
-> 
-> 
-> Hello,
-> 
-> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
-> 
-> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
-> 
-> in testcase: perf-sanity-tests
-> version: 
-> with following parameters:
-> 
-> 	perf_compiler: gcc
-> 
-> 
-> 
-> compiler: gcc-13
-> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
-> 
-> (please refer to attached dmesg/kmsg for entire log/backtrace)
-> 
-> 
-> we also observed two cases which also failed on parent can pass on this commit.
-> FYI.
-> 
-> 
-> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
-> ---------------- ---------------------------
->        fail:runs  %reproduction    fail:runs
->            |             |             |
->            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
->            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
->            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
-> 
-> 
-> 
-> 
-> 
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
-> 
-> 
-> 
-> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
-> 105: perf all metricgroups test                                      : Ok
-> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
-> 106: perf all metrics test                                           : Ok
-> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
-> 107: perf all libpfm4 events test                                    : Ok
-> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
-> 108: perf all PMU test                                               : FAILED!
+Thanks for the review. I'm just finishing off one Coresight thing and
+then I'll start the big.little default events one:
+https://lore.kernel.org/lkml/20240510053705.2462258-4-irogers@google.com/
 
-Can you please try the -vvv option, which should tell the failed event?
-perf test -vvv "perf all PMU test"
-
-Thanks,
-Kan
-> 
-> 
-> 
-> The kernel config and materials to reproduce are available at:
-> https://download.01.org/0day-ci/archive/20240710/202407101021.2c8baddb-oliver.sang@intel.com
-> 
-> 
-> 
+Thanks
+James
