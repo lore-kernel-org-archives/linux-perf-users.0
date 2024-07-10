@@ -1,145 +1,95 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB7518FDDD;
-	Wed, 10 Jul 2024 11:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1FF190044;
+	Wed, 10 Jul 2024 12:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720611547; cv=none; b=RVKxOJxllvAOplQ9vgIR+Zo7dkq7e1ep6/nBNyHlUVIVyUYJ0pOrUUmmxv5Ljb6zn6zI8HH4iNUU8xDh7+/A5xIpFh2BuH8Ke9ndtBFNK8hoYQ7IHXiaTN5M+pyEMhvWRw0Vj36PYfClN8v7oJVbXFA1CXVp8kiKMPnip6kQSWs=
+	t=1720613502; cv=none; b=fjKjtEWYDdJAwcjQlsn70ELXIVUMQK8Fq1TETXmt6DEBWLLcyibTwdxZqrb9ofxx4uvbZX4Oq2cpzcBZ9Wg83Xu2GWBHclbAwjAug5yx4+FH8TFOuRKFV4r0fdluWh/L25Sccnu916pQMA74g1gjWsrpJE8ABP4upkrsBwZeS/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720611547; c=relaxed/simple;
-	bh=CsfC70dE9C/jDtS4ftUnV84YF80YPgShyOTPX8of6Uo=;
+	s=arc-20240116; t=1720613502; c=relaxed/simple;
+	bh=UurvNuYtwMtcWIKDARRq2Bnik8U4B3mY3wKPG7xV4pw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RyVa4MeauQYPl9hqnZbVv0zZdzWPGU8AE45u6LnJesA2YZYm+1ZnmtrKcpgB7gFovVCqeog4ZRWWrzGSCmaxrf5JtVJHwHOoQv692rT3Iit1iXTuBXvSb6GYS2GZcr6iOZWw51L5gTqwYyb7LGzK9lfr76BTzbKn6u20Tf1RwKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BdBSdh66; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zd0U3KJLGukqAhvUXBq0x8kmwHKzVFRl3sQW4iQTmir3/s11SadaXIvYud9DA4vzfjzt7Yv3Ma2uG0Jj445QzBpSE0rWnPcdtfk/B/KvHkol1nUpZmGbyBJZmFOSRx4/+X4kfMBQPtqPQEryfXBFOrmP/DzmpnOI3XoF6yOfdvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F6NZWUFu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BdBSdh66"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-	Sender:Reply-To:Content-ID:Content-Description;
-	bh=NbizRAFDomWAX7KLbEak4d3LCCuk+dnnOq+zYA+vfEo=; b=BdBSdh66pEPXyclRDHMNTOCfgX
-	DYHDBzZybtIuleBqPjmzoGabNuNj5vk91w0A1SufT7XvHk0y9HE3ajvshVEf8VAhnweMU63JbzjYs
-	uFWlPc236kmkQC4l0S0/rlq0FjCFM3MixQveMziScIX+2SI2B2Q+b5/sMJ+UtO4Td9sOQ43QraHPI
-	mMttZaNOU1QOd7UHL2doy5H9womEXItYMy0XASs43JhL8X3fZK37j2E0U6zhG4/FpfeeLz80cMsnw
-	FcMa1jISsV1v5ZSiCu1iWFGYOVznOFzhz0e9zCKsvic9DK9qXHGOgqrTvtTc5EwmHEA10PBHnscto
-	VFfyCVdg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRVey-00000009Coj-2sIc;
-	Wed, 10 Jul 2024 11:38:56 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id B84EB300694; Wed, 10 Jul 2024 13:38:55 +0200 (CEST)
-Date: Wed, 10 Jul 2024 13:38:55 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org,
-	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org,
-	mingo@redhat.com, tglx@linutronix.de, jpoimboe@redhat.com,
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, rihams@fb.com,
-	linux-perf-users@vger.kernel.org, rick.p.edgecombe@intel.com
-Subject: Re: [PATCH v4] perf,x86: avoid missing caller address in stack
- traces captured in uprobe
-Message-ID: <20240710113855.GX27299@noisy.programming.kicks-ass.net>
-References: <20240708231127.1055083-1-andrii@kernel.org>
- <20240709101133.GI27299@noisy.programming.kicks-ass.net>
- <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F6NZWUFu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28241C32781;
+	Wed, 10 Jul 2024 12:11:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1720613502;
+	bh=UurvNuYtwMtcWIKDARRq2Bnik8U4B3mY3wKPG7xV4pw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F6NZWUFu/No8NTOvvKb9LYVm32TiEC6YfZzQ9rP66+C3t7gEebuNCb3g5czsNx0Ad
+	 d1O30QXUgaGuUYzLpkwAoDbQILVIBFAGKjEpFQpTXmnXd9cwkfqWO3ZNa/1dciMmaH
+	 8MbuG4EA+vrFHpnTouhbDTdYyzpk6si8juUcPqS/sVjIXdLVMz8ThDvevCcDlncBqR
+	 MuCTxJ9S0mZnJA9H7CPG/DYoy0Dh7FF0DPtJzf8mEHaRlMwA1B4oA8c1BnTXK6dwKD
+	 EjyDoFRhPdMLRczBYepjDVr0I2YSxxmNQmrZN+VcdXeaDcPCg8g5IUNOTm3PUi/ww7
+	 32Ku/8xQDr+lQ==
+Date: Wed, 10 Jul 2024 13:11:36 +0100
+From: Will Deacon <will@kernel.org>
+To: Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] arm64: hw_breakpoint: Save privilege of access
+ control via ptrace
+Message-ID: <20240710121136.GA14080@willie-the-truck>
+References: <20240709095506.9691-1-yangtiezhu@loongson.cn>
+ <20240709095506.9691-4-yangtiezhu@loongson.cn>
+ <20240709100515.GB12978@willie-the-truck>
+ <d72a04f5-7894-af6c-dd4a-c6728e936f73@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza22X+vmirG=Xf4zPV0DTn9jVXi1SRTn9ff=LG=z2srNQ@mail.gmail.com>
+In-Reply-To: <d72a04f5-7894-af6c-dd4a-c6728e936f73@loongson.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-On Tue, Jul 09, 2024 at 10:50:00AM -0700, Andrii Nakryiko wrote:
-> On Tue, Jul 9, 2024 at 3:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Mon, Jul 08, 2024 at 04:11:27PM -0700, Andrii Nakryiko wrote:
-> > > +#ifdef CONFIG_UPROBES
-> > > +/*
-> > > + * Heuristic-based check if uprobe is installed at the function entry.
-> > > + *
-> > > + * Under assumption of user code being compiled with frame pointers,
-> > > + * `push %rbp/%ebp` is a good indicator that we indeed are.
-> > > + *
-> > > + * Similarly, `endbr64` (assuming 64-bit mode) is also a common pattern.
-> > > + * If we get this wrong, captured stack trace might have one extra bogus
-> > > + * entry, but the rest of stack trace will still be meaningful.
-> > > + */
-> > > +static bool is_uprobe_at_func_entry(struct pt_regs *regs)
-> > > +{
-> > > +     struct arch_uprobe *auprobe;
-> > > +
-> > > +     if (!current->utask)
-> > > +             return false;
-> > > +
-> > > +     auprobe = current->utask->auprobe;
-> > > +     if (!auprobe)
-> > > +             return false;
-> > > +
-> > > +     /* push %rbp/%ebp */
-> > > +     if (auprobe->insn[0] == 0x55)
-> > > +             return true;
-> > > +
-> > > +     /* endbr64 (64-bit only) */
-> > > +     if (user_64bit_mode(regs) && *(u32 *)auprobe->insn == 0xfa1e0ff3)
-> > > +             return true;
-> >
-> > I meant to reply to Josh suggesting this, but... how can this be? If you
-> > scribble the ENDBR with an INT3 things will #CP and we'll never get to
-> > the #BP.
+On Tue, Jul 09, 2024 at 08:07:50PM +0800, Tiezhu Yang wrote:
+> On 07/09/2024 06:05 PM, Will Deacon wrote:
+> > On Tue, Jul 09, 2024 at 05:55:06PM +0800, Tiezhu Yang wrote:
+> > > diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> > > index 0d022599eb61..3b37c4a2e0d4 100644
+> > > --- a/arch/arm64/kernel/ptrace.c
+> > > +++ b/arch/arm64/kernel/ptrace.c
+> > > @@ -309,6 +309,7 @@ static struct perf_event *ptrace_hbp_create(unsigned int note_type,
+> > >  	attr.bp_addr	= 0;
+> > >  	attr.bp_len	= HW_BREAKPOINT_LEN_4;
+> > >  	attr.bp_type	= type;
+> > > +	attr.bp_priv	= AARCH64_BREAKPOINT_EL0;
+> > >  	attr.disabled	= 1;
+> > > 
+> > >  	bp = register_user_hw_breakpoint(&attr, ptrace_hbptriggered, NULL, tsk);
+> > > @@ -352,6 +353,7 @@ static int ptrace_hbp_fill_attr_ctrl(unsigned int note_type,
+> > >  	attr->bp_len	= len;
+> > >  	attr->bp_type	= type;
+> > >  	attr->bp_addr	+= offset;
+> > > +	attr->bp_priv	= ctrl.privilege;
+> > 
+> > Wait, so ptrace can now set breakpoints with arbitrary privileges?
 > 
-> Well, it seems like it works in practice, I just tried. Here's the
-> disassembly of the function:
+> The ptrace user should make sure the privilege is correct.
+> For example, the privilege is set as el0
+> in aarch64_point_encode_ctrl_reg() of GDB:
 > 
-> 00000000000019d0 <urandlib_api_v1>:
->     19d0: f3 0f 1e fa                   endbr64
->     19d4: 55                            pushq   %rbp
->     19d5: 48 89 e5                      movq    %rsp, %rbp
->     19d8: 48 83 ec 10                   subq    $0x10, %rsp
->     19dc: 48 8d 3d fe ed ff ff          leaq    -0x1202(%rip), %rdi
->  # 0x7e1 <__isoc99_scanf+0x7e1>
->     19e3: 48 8d 75 fc                   leaq    -0x4(%rbp), %rsi
->     19e7: b0 00                         movb    $0x0, %al
->     19e9: e8 f2 00 00 00                callq   0x1ae0 <__isoc99_scanf+0x1ae0>
->     19ee: b8 01 00 00 00                movl    $0x1, %eax
->     19f3: 48 83 c4 10                   addq    $0x10, %rsp
->     19f7: 5d                            popq    %rbp
->     19f8: c3                            retq
->     19f9: 0f 1f 80 00 00 00 00          nopl    (%rax)
+>   /* enabled at el0 */
+>   ctrl |= (2 << 1) | 1;
 > 
-> And here's the state when uprobe is attached:
-> 
-> (gdb) disass/r urandlib_api_v1
-> Dump of assembler code for function urandlib_api_v1:
->    0x00007ffb734e39d0 <+0>:     cc                      int3
->    0x00007ffb734e39d1 <+1>:     0f 1e fa                nop    %edx
->    0x00007ffb734e39d4 <+4>:     55                      push   %rbp
->    0x00007ffb734e39d5 <+5>:     48 89 e5                mov    %rsp,%rbp
->    0x00007ffb734e39d8 <+8>:     48 83 ec 10             sub    $0x10,%rsp
->    0x00007ffb734e39dc <+12>:    48 8d 3d fe ed ff ff    lea
-> -0x1202(%rip),%rdi        # 0x7ffb734e27e1
->    0x00007ffb734e39e3 <+19>:    48 8d 75 fc             lea    -0x4(%rbp),%rsi
-> => 0x00007ffb734e39e7 <+23>:    b0 00                   mov    $0x0,%al
->    0x00007ffb734e39e9 <+25>:    e8 f2 00 00 00          call
-> 0x7ffb734e3ae0 <__isoc99_scanf@plt>
->    0x00007ffb734e39ee <+30>:    b8 01 00 00 00          mov    $0x1,%eax
->    0x00007ffb734e39f3 <+35>:    48 83 c4 10             add    $0x10,%rsp
->    0x00007ffb734e39f7 <+39>:    5d                      pop    %rbp
->    0x00007ffb734e39f8 <+40>:    c3                      ret
-> 
-> 
-> You can see it replaced the first byte, the following 3 bytes are
-> remnants of endb64 (gdb says it's a nop? :)), and then we proceeded,
-> you can see I stepped through a few more instructions.
-> 
-> Works by accident?
+> https://sourceware.org/git/?p=binutils-gdb.git;a=blob;f=gdb/nat/aarch64-hw-point.c#l135
 
-Yeah, we don't actually have Userspace IBT enabled yet, even on hardware
-that supports it.
+We shouldn't rely on userspace behaving correctly when dealing with
+privilege levels.
+
+Will
