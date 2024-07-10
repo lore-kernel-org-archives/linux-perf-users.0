@@ -1,208 +1,302 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2074.outbound.protection.outlook.com [40.107.243.74])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B86C12BF23;
-	Wed, 10 Jul 2024 08:37:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.74
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720600656; cv=fail; b=DyOMF4MuhAMgZe0h1BmwqJmYOQzi69zmPTOgK4xvkQVVHNCzMmd5bB9He6NGyGC4NEyok3yRg9McFhFNlKyEOpLFKXBmw26Ys0lcmJf2+T/TIqtN5h3ogtROEEOjfN7BtCn0gIjbFmoLNQWir/glanygetn7NJPCwk0fZ3DmOdM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720600656; c=relaxed/simple;
-	bh=fCwuEVomkqd6fxFLvV2KXY4KFLQ3xTY0n4XIF+gX5j8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=TvX5Z3W/YGtqbKIXe77EFN1eqfm+YmEUe2emMU5F8cdwCjUwNWy4mlmAu+gCf7CH3DNexVrv99btoWgmu0HsscRwyS+zGY7ksBMsSPf7JN6TEUrNsvvCU3lcqyeOx1pnLDFBLnDZ1AAfnupQ2+pS+/raWhAHBTP1Y9QC8aRHPwk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=a5eKKS3h; arc=fail smtp.client-ip=40.107.243.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C1AC12C499;
+	Wed, 10 Jul 2024 09:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720604460; cv=none; b=X33plsX5NaAZc2qOvG0VUxrFx1UMT0x0tPtEz9afPwE6MAjdNXruE8VJrgPlNj4Zb7nioKLloYVrlv48JPVvtqMlPuZ8q5yJZapJl2Spwekf2+AHXi5PXxidLduykMk9riZgPXggOws4CWbZ0FFeAcy5MKXCTeTtI7IUL+JO9z0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720604460; c=relaxed/simple;
+	bh=wTNaCzQeAjoPakOOv8uIlK8luV4rUAiOTA3zbmhBNvA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A5tOm1hlHtzT2dYtFlB0eB4cbRHYVCORYr4UEvCbnv78RZrMCBqGujZgcorTJQ9wP2BupfxK1Kvc0N+DyFYRRfK8DheTuIunH2gi5sCPqLvgeajWauZZZVU57mP6smQmH2Yj79TRytZ6wOxlq6umpG6G/aduXpz/2XiPK2EbL5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a+Y2IPM2; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="a5eKKS3h"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f93zjiHjJrOLdhqXUKH/hrAziavxW+y/phCnnxiR4yxMV1PgEDq86jdaR9G0e2UfApUPvsvew8MiqjwMLK8AE+OKvOQZa4m2dXT77O++IhP2GDC8iRY7k6JEj9GoZQ3RPjRwndAomU3XEggqFBLlI9SeIqUM8m0Cs/AL4LyVouE0wWTDVxBKXuamHt8HYXV3o/IQLqR87SaexRS21v/9F6jb3FL1RCv69Spk0SR0/KW4jDIVt4eNm0j1/RWLCc01sfRCpLDVE0zn+ib+hWyl0XITtjsO+rismIjNdfWNFPOZlNBBggqx0F2dT+JbOw2iyaK0f1Ukj5zcmF+7SFg7QQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nDzqdggFgufh2aF23cKP3MlHuf+XSIxUEQdQGvyYAuo=;
- b=c9c5Ubkzthuwg4vwLih/9vvKDKfOMJUOIpF6d7/krQaMmDm1VB84HPkRO7yh22dFFfmogM9C4tRhMbu8kccWVeQL7n4ouYJdm0mhHHHwL0pBjh3js26o9cHd1PwJyw+mSGEx28gcw6sbFRY5Fd6Ukm9g0CK26r20lJJv20kPtKJpGM3Rho7S+fRrE4QpQ5sk4G9Q4fWIhnem0l6N/fcBjglLi7a8ffgmaF+a7z1azQiRKdT9BAla/QR9xu0ODB9G/o2+UkLSm4xye4IoMfMrGemiPi2sbPPvWTv26HSwqIspDFQrSvaJ9ZsdMulnCmfTVw+XvI876eAuo3/PDrHhHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nDzqdggFgufh2aF23cKP3MlHuf+XSIxUEQdQGvyYAuo=;
- b=a5eKKS3h5l5sIMDbux+7QSyTc/3l8d2TmxcWNJ+xfJKQ5hK8GmsPir90zAkI4MVxzGfEYdcKtbXNgIuGwMshAi6Oijn83OPrJ7vmuqZOhDrBgrQJRatiBbye+ahCif06K5+JS911hp+yOqWM20lAeLjPBTh1JrxFjlCNbYj301A=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB5713.namprd12.prod.outlook.com (2603:10b6:208:370::18)
- by CH2PR12MB4214.namprd12.prod.outlook.com (2603:10b6:610:aa::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7741.35; Wed, 10 Jul
- 2024 08:37:32 +0000
-Received: from MN0PR12MB5713.namprd12.prod.outlook.com
- ([fe80::bbe0:a58f:b02c:1427]) by MN0PR12MB5713.namprd12.prod.outlook.com
- ([fe80::bbe0:a58f:b02c:1427%5]) with mapi id 15.20.7741.030; Wed, 10 Jul 2024
- 08:37:32 +0000
-Message-ID: <18ff4f7d-3258-4fbb-8033-8edbf3fed236@amd.com>
-Date: Wed, 10 Jul 2024 14:07:17 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 36/54] KVM: x86/pmu: Switch PMI handler at KVM context
- switch boundary
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>
-Cc: Jim Mattson <jmattson@google.com>, Ian Rogers <irogers@google.com>,
- Stephane Eranian <eranian@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- maobibo <maobibo@loongson.cn>, Like Xu <like.xu.linux@gmail.com>,
- Peter Zijlstra <peterz@infradead.org>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org, Manali Shukla <manali.shukla@amd.com>
-References: <20240506053020.3911940-1-mizhang@google.com>
- <20240506053020.3911940-37-mizhang@google.com>
-Content-Language: en-US
-From: Sandipan Das <sandipan.das@amd.com>
-In-Reply-To: <20240506053020.3911940-37-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SGXP274CA0007.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:b8::19)
- To MN0PR12MB5713.namprd12.prod.outlook.com (2603:10b6:208:370::18)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a+Y2IPM2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720604459; x=1752140459;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=wTNaCzQeAjoPakOOv8uIlK8luV4rUAiOTA3zbmhBNvA=;
+  b=a+Y2IPM2XF8TvRLZBti77f/tdfjCywZWnc0oh5BWVpmLaF3q3XLCXoGu
+   HOXfvj6diLTv9R7MXZVFUFe4UO96aljXEm297tcKRM98rlibhk6Hs6ZtH
+   EhXaJnu3hR56BtgrUNwWkSmkEZRQLY9+VhRNT0QVsVvLPhybsdgsfFlEm
+   zZpsmkICCNA6pjt8VnAKog2EIn11AWI6lQmXb9S5YfT+6WOh9EbAlKGvK
+   36c2sC/kygbpBdInSu7iIJVbC6Ly5Z9Z2NFPSIVeewiKC3v6VUeGTleMQ
+   tkcZyi46K2E52PqmdfKYED5j2lO7Mb+HJiyc1vojJeBmRAKyUXo7Ylpia
+   w==;
+X-CSE-ConnectionGUID: +uH7ClSnT/y9b1OMql869g==
+X-CSE-MsgGUID: WP1YX+m9Qsa7Eh6kJ46RUg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11128"; a="29072493"
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="29072493"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 02:40:58 -0700
+X-CSE-ConnectionGUID: s497tvC7R8KQ5ARufG9K0g==
+X-CSE-MsgGUID: 29VnYLwkRGqbwnzWR9lDJg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,197,1716274800"; 
+   d="scan'208";a="79320936"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 02:40:54 -0700
+Message-ID: <afea2a93-0769-4ce5-ab59-2693d2d2f344@linux.intel.com>
+Date: Wed, 10 Jul 2024 17:40:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB5713:EE_|CH2PR12MB4214:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6b844498-d44a-43eb-603f-08dca0bb8a87
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|7416014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZDJ2V2NpM1BHRTNHYUVKM045SVZjNlFCN29UazRrOXFUeHBFcFlGQ3hDVkJW?=
- =?utf-8?B?V3ErbTBTSkhEeFNNMTJOd2tDMDdBZ2lVNTF1Y3o2d2UzRHpiWmpHQk9nVHA3?=
- =?utf-8?B?M21USStkYWxvc0RRcW9sRkFKVHcyL2h6Uy9ZVS9DckYrSU5LZndXZGs1dkx2?=
- =?utf-8?B?U3F3MVNTS3pvZTQwUFNxd3dmQlA2OUduc3RZc0dwNTNFd0hTNTdPTEd3NkZE?=
- =?utf-8?B?WUtLV3QwQWhkZFBMNWFpN1dwTXVYWGlrbGYyWnhOT1psMFJtQ3lBbytQSUdp?=
- =?utf-8?B?eVRFVFNPQ3B1L0h0cFZFeDc1ejJodEVDMmlvRzEya1dKd0JOM2NkYWdhMVM4?=
- =?utf-8?B?aVYzYkJKanpPdGVKOWE2SnZTVFhqZjJtOUtLaEFhK3N6VHc3NzM1ZlRacC9p?=
- =?utf-8?B?K0dUSlJJZGFYQjk0MmRCUGNueVVVUDgxRkRLWFlIUWQzbExNMFFEbW1yMzdx?=
- =?utf-8?B?RTVhT0s5OXRTdHUyQzArZ3dhcTV2V0ZWSzBJejZnQitBU3BVQVR5UHc1N25w?=
- =?utf-8?B?RVVtdHN5OUFrZ2JQL2tzVVBPUW9wYkJ0ZjVaYlFhRTdMNVhxdktyeEg5eEdN?=
- =?utf-8?B?WDluTE14dkV4bSs3ZGFFR3VOSFI0K3FIWVN6V3FSbmlTb0lKRVpFM1gyVHpV?=
- =?utf-8?B?VW4ydkEzb1g3cUx1ZkR6UWwvblhlYUR2QTF0Nk1lZlV0T1pySEdOVDhiTFN4?=
- =?utf-8?B?SGJSd3Jmdm9hZzY1VXVqYitmRUwyT1lzT1V3bDNYN3FSWmJwWDkyU05xN2ZO?=
- =?utf-8?B?ZWRpa3ZKSXJsMzJUVTFDRFBVUDVtS24xUzRZR2NEdnJkN1Eva0pFc0RsWHUr?=
- =?utf-8?B?K0h1Zkx4dGxWVlFYRkdQYnBNbEJUeXZXdlRCK21JaFlXSndHNU5yVWFNMVlT?=
- =?utf-8?B?UzNuT2xtbm1RczdpNEwzYUhTbEhSQWFzRDFiaDh0bDlhZVpIdlBOSHVPVGJ0?=
- =?utf-8?B?NlUyWU9Ia1lzY3RzUTZyL3ZMWW9oSXptTU9DOXk5SWFVdGhNSEg3T0hsZU9t?=
- =?utf-8?B?Z0FVU2Z5ZkEwdWUzWlBneFpNcmdYRmc3WS9nb3puQjlWdnoydm1xQ2pyVExQ?=
- =?utf-8?B?cWVyaUJHTkZSVlZvSzM4Mkl3S25hSzVOOVYrL0k5dW1VL3BBYkpNSUlsNThP?=
- =?utf-8?B?eG5jcTFYTXNuVkRYZFBpRGh6WHppaHUyQXBRdGExUnZoSWpidmpHS2U3d29M?=
- =?utf-8?B?YzJSMVJvbU1VL1RBclAyVTc1cytxeVlmT2hKeEVSeU5tZk11bnBDcXdBZ2Fv?=
- =?utf-8?B?NnJkY3NaWG4vejlIaHBDZE9qT0szNDg5YmVEUXR0SFE5YXNZZXhRSDhaUG5P?=
- =?utf-8?B?VmtBamZ4ZkdCQ0JPL0drT3FLMlFQUnh6ZnhrTXROYWNFUnN3QVNOSE12cFRN?=
- =?utf-8?B?UjFpSTQ3QU9iem84bTV3aGRVcFd6NnBSR05zUldTenZHMnpXL2hCbG1YYWlt?=
- =?utf-8?B?TXBoNStBcmVwbUcxR0lHUHgvMFppODJuaFRkUjlQa3RGYVgwRTdKdkJuKzVz?=
- =?utf-8?B?OXJGMzduN1VncTJEREVRVkg0YzJpc1RRS1l1bmRwL3JpUEU3ak90SzRNZ3ox?=
- =?utf-8?B?S1FnNmZRQjVTeFlxRnpaSkVqL1VESWdJa0t4VVU0d3pmOEJ3eGd6bWJxbWNs?=
- =?utf-8?B?b0UwSngwRnlZMWIzSTJxL3VpYm00T0NCSFdSM0tmVGw0VnRFbTJGbUdIck9y?=
- =?utf-8?B?cExSV25tYy9udWZEc2VZVFQwQVduMUZsWXB1YnlYTmVYdHRsMTMxbFFHOHRr?=
- =?utf-8?Q?IHFZ0Dfi6VYPcucJR8=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB5713.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bDA1SndBMktPNnVkOUxqdkFDd3laZXhsZ0VUR3NpOEw3cGl3SUNRN3NZRUdh?=
- =?utf-8?B?MGxWNFZxT2pXYWVSK0pkS29STnUxSGpDWVNRSmlYVlI1dnVtQ2dqRCtyVDZr?=
- =?utf-8?B?RDIzaFFSdUliNGRITjlySkEvK01HT1FNVXJUckI3ZnZybXViNlRDS2hDaXhz?=
- =?utf-8?B?WVQyMjZMYmNZZ0Z6K1FqRFo2SzlHRGFKSDd1TkRacWhmM2ZpRGtwTFRxSlVi?=
- =?utf-8?B?bUdWamQyeUdsNU5KM1NYc2tIT05QRmo3NDhYTjc0a0VxUGtFekg1Nk5VWi9W?=
- =?utf-8?B?dkJGcHRzZHg3SjhWd1M1V0Zaa2RCY3BQQmlCL20yVEt4V1hnTUovWXIyVVU0?=
- =?utf-8?B?ajcxeVRXNEFieGN4Nys1emdtTWQzdjRVRlBVRUMrRTNma3BtcFFCc09zWnh0?=
- =?utf-8?B?a1ZuRU04VjRSeVhXU0FyM1U3aEdZeWN1aDlhSjBMREp4cGlGMFBWeGxCZ05u?=
- =?utf-8?B?UVpSSEFkbS9ITE1kaElvdWJ4clR0NCtLTkZpTy9DeThJaUFVTi9yWGpERVhO?=
- =?utf-8?B?OENRRVJOSHp5YmVHa1pLSWpRNGUvRllnVWtMQ2x0bXlkUDlCZUt2UjhHWlNh?=
- =?utf-8?B?WmR5MWM1Tm9qUnh2eUdKT0IwYnVrVC9OZ3JrTXFDRVBJaUJFaEZuUWlLMjFp?=
- =?utf-8?B?NVZSTk9EaW1uZ3FKMGRqRmxudmFJNDBpUjR3RDdaM0tzSGM0bFNmUGs5M1k2?=
- =?utf-8?B?aC9GeENKem9PRTJ5Nms5ZWh1bjFwSGx6TTJhcTB6blJQek5WeERMNHNIUHA0?=
- =?utf-8?B?Z3lxVnI0eXc3Vjlkd1ZYdGtrYVFQRGV6b2VTUnRKUElJOXcwSnJ5NVRCZGJJ?=
- =?utf-8?B?MXJXV2NhSG44bEdobEw2dS9sanVEQnpEenRZQ2xTYnBlNVN1c0lNV1Z4V21n?=
- =?utf-8?B?YS9EVnViUmNvMFhqOVk3Z2ZIQllTdWZ6a0ZHcWNnOEtxenpMWXVkN1YvNmpR?=
- =?utf-8?B?RFF2enZaR3NjcFhpbGNyVDZMTGFrY2ZqVjhPYm4xRVJHb3RpbmcxYk5VVHJs?=
- =?utf-8?B?YjJhdURqRnBjVXZnOGpFdnZmWWF3bURoN2c4TkFuWnlpRGo4b1JMWGFEMzBy?=
- =?utf-8?B?SndteHduRTVWSFdBSlNpVjF6eDFwdEJVeXdGd0p4QmYzYjM4UDRjZC9vZFNp?=
- =?utf-8?B?blhycjZLZUV5NUE1Q3pkT3ZxcU5XVlo4WVZHSjhNeVFTajV4bnVIK2k1ZG96?=
- =?utf-8?B?QWllSG9wYmFyYnpMVW9vMUtGUGE2eWVIWTYyN2xUK0EwVjdLYllGTWpqN2lh?=
- =?utf-8?B?NGlObEVnTzNnd0Vmbjk5NFAwWmQ3eitQRmlPaGRzOThndUJHblhPQVBuQldM?=
- =?utf-8?B?OVd2VGJ1SmFhNHlmM3JhNmx2b1ZxWlVqMjRzV0RVcXB5SEhWSzBWV0NFaFlJ?=
- =?utf-8?B?d05JMHNuSElYWVlhcjlRcldFVndrRVFvNGxrK2dDZmRlenM1RlNiQmhSNlhq?=
- =?utf-8?B?TlRKV0Q0M0V4UkFNVlJEa0RMT0xjVG1PejVxTXp2dk4vZnJwWnJzTmtsWTBQ?=
- =?utf-8?B?YkdZcmsxMlo0c0JIdngwbzBVbFhTajlnejZCUWJJYm5pazJoeS9vV1Z3T3hY?=
- =?utf-8?B?UHowbm9CN0did0JnbXRDR29peHdWZFcxZWgwbjRHSGFMRThTcHNKbTdFK0gz?=
- =?utf-8?B?L3R3Q25OUTYrb3BQRis1ajhlb05GNXYxL3ZFL1UrZTJBS1duT3lLc1JUWmtx?=
- =?utf-8?B?UVk4Rk1pb3dvbE14c0FwSlJiYnJWMmtqNTlTeTM2enRqN1lIVnFSYmVwNVRP?=
- =?utf-8?B?OUNmeXB3eE8wT1ZmWHUvbTFsMVhSdU1LcEdpZGpaaERGQlhWa01XdlN3TVZi?=
- =?utf-8?B?RldyY0tINE9DTFgvMlczekRjeWVFRnNlT2VFNUdxc2JMZXl3SmtaZW54cTQ3?=
- =?utf-8?B?U0U2OENqdkc2VEdUejZyb0Rqcm9MUjdib1NOS0w4MWx6VStXRGN5cEw0VXZW?=
- =?utf-8?B?Y2F3MHN5cm15Q3FKNmtUMTJDZWdVZHZRc051eVNHbFkvUkQ3UzNyNjBxSnhj?=
- =?utf-8?B?bFRyQlVHWlFSWjJTQ1JEa1FwT3drdUQxdVdjQVUzR2hSRUJtZUhxQmt0OUUr?=
- =?utf-8?B?MUFNbXRaMkhkZVhJMGwvREN2bkVDRTkrOXFVVy9zZFRTWnRTWTBKNHFyTGJ2?=
- =?utf-8?Q?HNwMDBLDg1uIxRXD9RqtFjoie?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b844498-d44a-43eb-603f-08dca0bb8a87
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB5713.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Jul 2024 08:37:32.6666
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 51fFdsLDe5ZS/+zpcr81m9PhZE21Ko+rrX+S7/Qsqjj6WWY+y/o5WzYhF72HYUxtYXKu0dkocMnzXEKD0AhR5w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4214
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics
+ events when sorting events
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
+ <20240708144204.839486-4-dapeng1.mi@linux.intel.com>
+ <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
+ <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
+ <CAP-5=fW65kxuABBJVAzKwoyBWW92_jkndWgY+4u9s3OGj_UkEg@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fW65kxuABBJVAzKwoyBWW92_jkndWgY+4u9s3OGj_UkEg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 5/6/2024 11:00 AM, Mingwei Zhang wrote:
-> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> 
-> Switch PMI handler at KVM context switch boundary because KVM uses a
-> separate maskable interrupt vector other than the NMI handler for the host
-> PMU to process its own PMIs.  So invoke the perf API that allows
-> registration of the PMI handler.
-> 
-> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  arch/x86/kvm/pmu.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 2ad71020a2c0..a12012a00c11 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -1097,6 +1097,8 @@ void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
->  		if (pmc->counter)
->  			wrmsrl(pmc->msr_counter, 0);
->  	}
-> +
-> +	x86_perf_guest_exit();
->  }
->  
->  void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
-> @@ -1107,6 +1109,8 @@ void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
->  
->  	lockdep_assert_irqs_disabled();
->  
-> +	x86_perf_guest_enter(kvm_lapic_get_reg(vcpu->arch.apic, APIC_LVTPC));
-> +
 
-Reading the LVTPC for a vCPU that does not have a struct kvm_lapic allocated
-leads to a NULL pointer dereference. I noticed this while trying to run a
-minimalistic guest like https://github.com/dpw/kvm-hello-world
+On 7/10/2024 6:37 AM, Ian Rogers wrote:
+> On Mon, Jul 8, 2024 at 9:18 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 7/8/2024 11:08 PM, Ian Rogers wrote:
+>>> On Mon, Jul 8, 2024 at 12:40 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>>>> when running below perf command, we say error is reported.
+>>>>
+>>>> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
+>>>>
+>>>> ------------------------------------------------------------
+>>>> perf_event_attr:
+>>>>   type                             4 (cpu)
+>>>>   size                             168
+>>>>   config                           0x400 (slots)
+>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>>>   read_format                      ID|GROUP|LOST
+>>>>   disabled                         1
+>>>>   sample_id_all                    1
+>>>>   exclude_guest                    1
+>>>> ------------------------------------------------------------
+>>>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>>>> ------------------------------------------------------------
+>>>> perf_event_attr:
+>>>>   type                             4 (cpu)
+>>>>   size                             168
+>>>>   config                           0x8000 (topdown-retiring)
+>>>>   { sample_period, sample_freq }   4000
+>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>>>   read_format                      ID|GROUP|LOST
+>>>>   freq                             1
+>>>>   sample_id_all                    1
+>>>>   exclude_guest                    1
+>>>> ------------------------------------------------------------
+>>>> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+>>>> sys_perf_event_open failed, error -22
+>>>>
+>>>> Error:
+>>>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
+>>>>
+>>>> The reason of error is that the events are regrouped and
+>>>> topdown-retiring event is moved to closely after the slots event and
+>>>> topdown-retiring event needs to do the sampling, but Intel PMU driver
+>>>> doesn't support to sample topdown metrics events.
+>>>>
+>>>> For topdown metrics events, it just requires to be in a group which has
+>>>> slots event as leader. It doesn't require topdown metrics event must be
+>>>> closely after slots event. Thus it's a overkill to move topdown metrics
+>>>> event closely after slots event in events regrouping and furtherly cause
+>>>> the above issue.
+>>>>
+>>>> Thus delete the code that moving topdown metrics events to fix the
+>>>> issue.
+>>> I think this is wrong. The topdown events may not be in a group, such
+>>> cases can come from metrics due to grouping constraints, and so they
+>>> must be sorted together so that they may be gathered into a group to
+>>> avoid the perf event opens failing for ungrouped topdown events. I'm
+>>> not understanding what these patches are trying to do, if you want to
+>>> prioritize the event for leader sampling why not modify it to compare
+>> Per my understanding, this change doesn't break anything. The events
+>> regrouping can be divided into below several cases.
+>>
+>> a. all events in a group
+>>
+>> perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
+>> WARNING: events were regrouped to match PMUs
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>         15,066,240      slots
+>>          1,899,760      instructions
+>>          2,126,998      topdown-retiring
+>>
+>>        1.045783464 seconds time elapsed
+>>
+>> In this case, slots event would be adjusted as the leader event and all
+>> events are still in same group.
+>>
+>> b. all events not in a group
+>>
+>> perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
+>> WARNING: events were regrouped to match PMUs
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>          2,045,561      instructions
+>>         17,108,370      slots
+>>          2,281,116      topdown-retiring
+>>
+>>        1.045639284 seconds time elapsed
+>>
+>> In this case, slots and topdown-retiring are placed into a group and slots
+>> is the group leader. instructions event is outside the group.
+>>
+>> c. slots event in group but topdown metric events outside the group
+>>
+>> perf stat -e "{instructions,slots},topdown-retiring"  -C0 sleep 1
+>> WARNING: events were regrouped to match PMUs
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>         20,323,878      slots
+>>          2,634,884      instructions
+>>          3,028,656      topdown-retiring
+>>
+>>        1.045076380 seconds time elapsed
+>>
+>> In this case, topdown-retiring event is placed into previous group and
+>> slots is adjusted to leader event.
+>>
+>> d. multiple event groups
+>>
+>> perf stat -e "{instructions,slots},{topdown-retiring}"  -C0 sleep 1
+>> WARNING: events were regrouped to match PMUs
+>>
+>>  Performance counter stats for 'CPU(s) 0':
+>>
+>>         26,319,024      slots
+>>          2,427,791      instructions
+>>          2,683,508      topdown-retiring
+>>
+>>        1.045495830 seconds time elapsed
+>>
+>> In this case, the two groups are merged to one group and slots event is
+>> adjusted as leader.
+>>
+>> The key point of this patch is that it's unnecessary to move topdown
+>> metrics events closely after slots event. It's a overkill since Intel core
+>> PMU driver doesn't require that. Intel PMU driver just requires topdown
+>> metrics events are in a group where slots event is the group leader, and
+>> worse the movement for topdown metrics events causes the issue in the
+>> commit message mentioned.
+>>
+>> This patch doesn't block to regroup topdown metrics event. It just removes
+>> the unnecessary movement for topdown metrics events.
+> But you will get the same behavior because of the non-arch dependent
+> force group index - I guess you don't care as the sample read only
+> happens when you have a group.
+>
+> I'm thinking of cases like (which admittedly is broken):
+> ```
+> $ perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
+> [sudo] password for irogers:
+>
+> Performance counter stats for 'system wide':
+>
+>     2,589,345,900      slots
+>       852,492,838      instructions
+>       583,525,372      cycles
+>   <not supported>      topdown-fe-bound
+>
+>       0.103930790 seconds time elapsed
+> ```
 
-Does this require a kvm_lapic_enabled() or similar check?
+I run the upstream code (commit 73e931504f8e0d42978bfcda37b323dbbd1afc08)
+without this patchset, I see same issue.
 
->  	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
->  
->  	/*
+perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
 
+ Performance counter stats for 'system wide':
+
+       262,448,922      slots
+        29,630,373      instructions
+        43,891,902      cycles
+   <not supported>      topdown-fe-bound
+
+       0.150369560 seconds time elapsed
+
+#perf -v
+perf version 6.10.rc6.g73e931504f8e
+
+This issue is not caused by this patchset.
+
+> As the slots event is grouped there's no force group index on it, we
+> want to shuffle the topdown-fe-bound into the group so we want it to
+> compare as less than cycles - ie we're comparing topdown events with
+> non topdown events and trying to shuffle the topdown events first.
+
+Current evlist__cmp() won't really swap the order of cycles and
+topdown-fe-bound.
+
+if (lhs_sort_idx != rhs_sort_idx)
+        return lhs_sort_idx - rhs_sort_idx;
+
+When comparing cycles and topdown-fe-bound events, lhs_sort_idx is 2 and
+rhs_sort_idx is 3, so the swap won't happen.
+
+So the event sequence after sorting is still "slots, instructions ,cycles,
+topdown-fe-bound". Both cycles and topdown-fe-bound events won't be placed
+into the group.
+
+
+>
+> Thanks,
+> Ian
+>
+>
+>
+>>> first?
+>>>
+>>> Thanks,
+>>> Ian
+>>>
+>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>> ---
+>>>>  tools/perf/arch/x86/util/evlist.c | 5 -----
+>>>>  1 file changed, 5 deletions(-)
+>>>>
+>>>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>>>> index 332e8907f43e..6046981d61cf 100644
+>>>> --- a/tools/perf/arch/x86/util/evlist.c
+>>>> +++ b/tools/perf/arch/x86/util/evlist.c
+>>>> @@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>>>>                         return -1;
+>>>>                 if (arch_is_topdown_slots(rhs))
+>>>>                         return 1;
+>>>> -               /* Followed by topdown events. */
+>>>> -               if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+>>>> -                       return -1;
+>>>> -               if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+>>>> -                       return 1;
+>>>>         }
+>>>>
+>>>>         /* Default ordering by insertion index. */
+>>>> --
+>>>> 2.40.1
+>>>>
