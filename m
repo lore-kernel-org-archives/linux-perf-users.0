@@ -1,207 +1,187 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C638120F;
-	Wed, 10 Jul 2024 21:21:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8D14AD3B
+	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 22:29:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720646515; cv=none; b=K5kHlyJPQcCGt6LywUiFc9NwkhfMj5o0OCo22FimnyT3oFxlDDB0enKEJXNhb9AdnnGjBlhItFsoYrGhuQx5tuITLcXMgFp+Mk/oqyHmOLT5Hz/QnmJFSu5boImlvVfJiO31eH4WvimQqOd4EhFygv6AUpI67wPqNVJJk63yReM=
+	t=1720650581; cv=none; b=vAAhSx9LD+SDHoqMCTtiGXlSpaV0DcKSv7VAfUd3t9wY9o8p45gBjnRT9v2pN05bJMPF5P4T5qsxJhoRfknmtrHah6fd6JmxBv9/6lH2vf1rF/uOj5bEuO+2rNkpwi96gOKxfyIlctTeLO0QE6IsOb4GnanOcolLhrKcW9poaDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720646515; c=relaxed/simple;
-	bh=6Wnz5eF60ejRW26DHlhxGE1i9g2UxFb7NDrkpGayFEo=;
+	s=arc-20240116; t=1720650581; c=relaxed/simple;
+	bh=rsM6wOIIuPtiTXHYi0ZYdEkTXszm2PRQO/8IL35wGpA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RsobGU/iIntK9aYz4J743nG0aK2LdlE8GgAZYJj9vhkBYBdYKz7Yx5Bkm2PLRbb2GfYXgqWSi0ObbatHolY8sHQKi97nhFVpX+BvhtiqSII8rCAhdNMSx1H7MzwEozV1FROMkklxjXJx2gAJyJAzF0YvY72jcnDolP6CxsEtfrI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=djnjfIW1; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=p3RSkbwe+El7ii9jMZIH71I+uv1mvwAalCS8lRCJlL1I2YjRyCIHzyjTGRQu/pq+nW+mda3de2paYUNxtbPslxwnWyIVTllUISthsD7WPcdIDotfkIQEkuP+GvRk1ZzmOuELM+LNnikBvviE6Vvh0CyKADrtIxSztey3eNJia/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=T6z+AU0s; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="djnjfIW1"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a77e2f51496so39318166b.0;
-        Wed, 10 Jul 2024 14:21:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="T6z+AU0s"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb3cf78fbdso1528655ad.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 15:29:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720646512; x=1721251312; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1720650579; x=1721255379; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=a7dfLXmdXQpbgbVC6DUm3K+U3MfZya3nfYifoRkydI4=;
-        b=djnjfIW1MWXELvAvOIhmEHIDtT0ugKWIRHV6dDTwBPIaGE5FVBdfRH0dtc3esQ1y5u
-         krN5kgYI6Ry0UA87PfDmlN1wthitQl9tWOv5aYi8Yn5BLURG3yeeM1Takfeu4NhkDjgg
-         HtYGaC53kLFTSfiC5DtYsHHjGVuBDBSZUZxquOruDlXk3YA2y+1+mNn/25iLPvJHu+ZM
-         XBMb3wfEsGq9NCCOPRTcAlIW3Jd9lhoB7XfHOEa9QplgDdmWdgE+ul9yTEhnyVpGGhHK
-         aqeftaxJ63OarpsQmMUe36vkDo2zHjQgIbaJ9HfjSmDmAxIQMPh8004BRs7fl5vSEOl1
-         zcQw==
+        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
+        b=T6z+AU0s8w6gBLmADCXNMWbBsHGbY+tyinUxuEH/OO0q6Wg9FiImX3vui2ZkY52XYR
+         wWiDFDtWYaCfgTLpPuoTndyQ1H3OQ6FJq3XrLMTPwRdVoqhb3VUvEM+74iSgFLMA9J+1
+         SK9SJFvC22mefOQz4eKZTJxqesD3Ej5lDMMmwARPCJgeOne4FP7n8vXLcZ36XmwAAwNS
+         unRhQqWMH2LSDrhlNlVR5B/scKOSiQr5zz5h4zxMcZhkgK9WJ1vGhnfNmQZLd9/nTMZ6
+         dD1DZaZYuPij2sCklOStYQz5FRDCMZU5LS3zf1sqpycORsqKxsvt1s698FlcY5eTZoAx
+         /J2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720646512; x=1721251312;
+        d=1e100.net; s=20230601; t=1720650579; x=1721255379;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=a7dfLXmdXQpbgbVC6DUm3K+U3MfZya3nfYifoRkydI4=;
-        b=uK4JUiHg2gFeZerWy9T64BtFXHYuz+7j+JIzEPQwZEfI/ws2J70C7XAiT753yIqOcl
-         aPlpwGsoS9jEaGyLoTjaF/dN/c2npHjadvNZoN43Tmz6if6RkfE6jfEmPWdiJalJ6lFv
-         5/c12lhpad1P+HFQWZgPWRAyQPc/O/gmBzJ5ID0Z6+qH7bZWEfInI6JiQN5xP7gisWJ+
-         Qfp4tHAmi2gNtR4oqfplenisuKHCulE4WCgU6fMP+VzaopY37sYxf4P5hl+NFLERBwWw
-         dczdxmniQnKA4f4FSGp2gGEASKmBJoIVVm+F9Tv0JOj54Gl0JdtIEG8WQ4xgMJbNNQAv
-         4VbA==
-X-Forwarded-Encrypted: i=1; AJvYcCUqLxfPag4dRGkTRDFBO1QdRTW7KIjs/+PhLLHmuJ197fbymxZXACmTB1YfTrgK8MqPRsc02XMIYg7nDO25rxsrdrqwduOpYB13KoxNMKO0lKr7kj1HeMlEwmBvden+UJaw7jUbzuPV2wDT39oLi3XzM9eBJCwMl2RZRFAT20s52pY89Tm7RvPinmhzZjDEv8DXqdg56nuB5FCeuXBvZpZv5uiwPg==
-X-Gm-Message-State: AOJu0YwWrTxhIf7L2+Hmt6MoRNgsBk6WsgcPl1wu0IBCkWNP1FR1fKNI
-	XJ8T9wKdzYqESJ2hipdrvLqcxoAt4lRtlcBwP9oQsSwRQTOfTVHL1Eh/o6ZU6DCLlfPAZzW7e7Z
-	0F97YbyMNbpTy+5Jk4ItUTFtW72s=
-X-Google-Smtp-Source: AGHT+IFNlED4hD9ltutwLd15CEICSWnXQJdFn624pZNHo6QN6KygEMoGeZGSgSPGHD4DOEam2/T9znfKW3OUUCihAKA=
-X-Received: by 2002:a17:906:dc93:b0:a77:e1fb:7de9 with SMTP id
- a640c23a62f3a-a780b68aabfmr471046866b.5.1720646511764; Wed, 10 Jul 2024
- 14:21:51 -0700 (PDT)
+        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
+        b=l5Okoxo7EJqShBUqc/NI+c1IrNEf1C5gMXlzTjlCLaMWWd3mzYet5GH9CacQqqMRjV
+         rfOUP7sx4zFpqAmAKUhnnr1H61suZDejNNtE/oX/C5DXiD/wf9Vf+bwpAI8Ka2UdgurN
+         Q/eLFr95mmXjLdPYu4bil/WYAAcB8OMWwezfLlgiQlGNQEVVxO14Fd5h0TRyzbJvF92i
+         Bz59vYEvqtdaCkJu00zCYov/SyB/XSsLC+zDaS+b8WM4rn83lcHd1DitncEVm7DuqUzl
+         NLwgGGZu6HDyIF6uc0jP7aUFgtw2I4zh+hPcEDtQQFrivZSg7rROra5azUyyIPe+sYMv
+         /LNQ==
+X-Gm-Message-State: AOJu0YyTtB4wBtyKDms6hj9hc64grjGMT3/LG7D75a//L0HNdFEFrqay
+	hWp8OENjK1lIF0KPusR8wCThySgdKrtUwrAvAgpIlRQoL/SvBv18+WhdBqd344W3tpg/cifHX4D
+	XwS5ic2XdzeUnzvZFtSLMdxMhaE3g77CXc/o6mA==
+X-Google-Smtp-Source: AGHT+IEG0fJWzbKu94wc/lGrrWrq4ZTcQCHpdjfNmMcuIOCOrmIosFxlMKcxuEkUwIgTY3hOtUi5EqpS3gyOLgsysHw=
+X-Received: by 2002:a17:90a:9a81:b0:2c9:60ea:2f11 with SMTP id
+ 98e67ed59e1d1-2ca35bd24a5mr5291639a91.1.1720650579090; Wed, 10 Jul 2024
+ 15:29:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240709005142.4044530-1-liaochang1@huawei.com>
- <20240709005142.4044530-2-liaochang1@huawei.com> <CAEf4BzYDrVJXnAruko-h5-oXCGuZ92x4KnY-2cD=XXBp1U_kBg@mail.gmail.com>
- <2336576e-1ed4-cd5e-5535-2d9b88218dae@huawei.com>
-In-Reply-To: <2336576e-1ed4-cd5e-5535-2d9b88218dae@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Wed, 10 Jul 2024 14:21:36 -0700
-Message-ID: <CAEf4BzYDvh2Ynrttk4NLyCGB8AVM2d-2tKSzRZF_cXVA80qucw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] uprobes: Optimize the return_instance related routines
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, ast@kernel.org, daniel@iogearbox.net, 
-	andrii@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com, song@kernel.org, 
-	yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org, 
-	sdf@fomichev.me, haoluo@google.com, mykolal@fb.com, shuah@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20240708232302.15267-1-cachen@purestorage.com>
+ <20240708232302.15267-2-cachen@purestorage.com> <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
+In-Reply-To: <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
+From: Casey Chen <cachen@purestorage.com>
+Date: Wed, 10 Jul 2024 15:29:27 -0700
+Message-ID: <CALCePG0_PpwKK_=YrpCGr-j51dG8xtDP-yzBYGeLwphscFobRg@mail.gmail.com>
+Subject: Re: [PATCH 1/1] perf tool: fix handling NULL al->maps returned from thread__find_map
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	yzhong@purestorage.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 1:19=E2=80=AFAM Liao, Chang <liaochang1@huawei.com>=
- wrote:
+On Mon, Jul 8, 2024 at 10:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
 >
+> Hello,
 >
->
-> =E5=9C=A8 2024/7/10 7:55, Andrii Nakryiko =E5=86=99=E9=81=93:
-> > On Mon, Jul 8, 2024 at 6:00=E2=80=AFPM Liao Chang <liaochang1@huawei.co=
-m> wrote:
-> >>
-> >> Reduce the runtime overhead for struct return_instance data managed by
-> >> uretprobe. This patch replaces the dynamic allocation with statically
-> >> allocated array, leverage two facts that are limited nesting depth of
-> >> uretprobe (max 64) and the function call style of return_instance usag=
-e
-> >> (create at entry, free at exit).
-> >>
-> >> This patch has been tested on Kunpeng916 (Hi1616), 4 NUMA nodes, 64
-> >> cores @ 2.4GHz. Redis benchmarks show a throughput gain by 2% for Redi=
-s
-> >> GET and SET commands:
-> >>
-> >> ------------------------------------------------------------------
-> >> Test case       | No uretprobes | uretprobes     | uretprobes
-> >>                 |               | (current)      | (optimized)
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> Redis SET (RPS) | 47025         | 40619 (-13.6%) | 41529 (-11.6%)
-> >> ------------------------------------------------------------------
-> >> Redis GET (RPS) | 46715         | 41426 (-11.3%) | 42306 (-9.4%)
-> >> ------------------------------------------------------------------
-> >>
-> >> Signed-off-by: Liao Chang <liaochang1@huawei.com>
-> >> ---
-> >>  include/linux/uprobes.h |  10 ++-
-> >>  kernel/events/uprobes.c | 162 ++++++++++++++++++++++++---------------=
--
-> >>  2 files changed, 105 insertions(+), 67 deletions(-)
-> >>
+> On Mon, Jul 8, 2024 at 4:23=E2=80=AFPM Casey Chen <cachen@purestorage.com=
+> wrote:
 > >
-> > [...]
+> > With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
+> > thread__find_map() would return with al->maps or al->map being NULL
+> > when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
+> > later deferencing on it would crash.
 > >
-> >> +static void cleanup_return_instances(struct uprobe_task *utask, bool =
-chained,
-> >> +                                    struct pt_regs *regs)
-> >> +{
-> >> +       struct return_frame *frame =3D &utask->frame;
-> >> +       struct return_instance *ri =3D frame->return_instance;
-> >> +       enum rp_check ctx =3D chained ? RP_CHECK_CHAIN_CALL : RP_CHECK=
-_CALL;
-> >> +
-> >> +       while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
-> >> +               ri =3D next_ret_instance(frame, ri);
-> >> +               utask->depth--;
-> >> +       }
-> >> +       frame->return_instance =3D ri;
-> >> +}
-> >> +
-> >> +static struct return_instance *alloc_return_instance(struct uprobe_ta=
-sk *task)
-> >> +{
-> >> +       struct return_frame *frame =3D &task->frame;
-> >> +
-> >> +       if (!frame->vaddr) {
-> >> +               frame->vaddr =3D kcalloc(MAX_URETPROBE_DEPTH,
-> >> +                               sizeof(struct return_instance), GFP_KE=
-RNEL);
-> >
-> > Are you just pre-allocating MAX_URETPROBE_DEPTH instances always?
-> > I.e., even if we need just one (because there is no recursion), you'd
-> > still waste memory for all 64 ones?
+> > Fix callers of thread__find_map() or thread__find_symbol() to handle
+> > this.
 >
-> This is the truth. On my testing machines, each struct return_instance da=
-ta
-> is 28 bytes, resulting in a total pre-allocated 1792 bytes when the first
-> instrumented function is hit.
+> It looks like you drop the callchain if it doesn't find a map/symbol.
+> Can we keep the entries with raw hex numbers instead?
 >
-> >
-> > That seems rather wasteful.
-> >
-> > Have you considered using objpool for fast reuse across multiple CPUs?
-> > Check lib/objpool.c.
->
-> After studying how kretprobe uses objpool, I'm convinced it is a right so=
-lution for
-> managing return_instance in uretporbe. While I need some time to fully un=
-derstand
-> the objpool code itself and run some benchmark to verify its performance.
->
-> Thanks for the suggestion.
+In add_callchain_ip(), my change let it return if either al.maps is
+NULL or al.map is NULL after thread__find_symbol(), I'm not sure what
+else can add_callchain_ip() could do to keep raw hex numbers. If it
+proceeds, al.sym is NULL, the code inside 'if (al.sym !=3D NULL)' would
+skip. callchain_srcline() would return NULL. chain_cursor_append()
+would append a node whose ms.maps/ ms.map are NULL. Later
+dereferencing them would cause trouble. But we could add other
+information to the node, like ip, branch, nr_loop_iter, iter_cycles,
+branch_from, are these information good to have ? but how to avoid
+dereferencing NULL maps/map later.
 
-Keep in mind that there are two patch sets under development/review,
-both of which touch this code. [0] will make return_instance
-variable-sized, so think how to accommodate that. And [1] in general
-touches a bunch of this code. So I'd let those two settle and land
-before optimizing return_instance allocations further.
+Thanks
+Casey
 
-  [0] https://lore.kernel.org/linux-trace-kernel/20240701164115.723677-1-jo=
-lsa@kernel.org/
-  [1] https://lore.kernel.org/linux-kernel/20240708091241.544262971@infrade=
-ad.org/
-
+> Thanks,
+> Namhyung
 >
+> > ---
+> >  tools/perf/arch/powerpc/util/skip-callchain-idx.c | 10 ++++++----
+> >  tools/perf/util/machine.c                         |  5 +++++
+> >  tools/perf/util/unwind-libdw.c                    |  6 ++++--
+> >  3 files changed, 15 insertions(+), 6 deletions(-)
 > >
-> >> +               if (!frame->vaddr)
-> >> +                       return NULL;
-> >> +       }
-> >> +
-> >> +       if (!frame->return_instance) {
-> >> +               frame->return_instance =3D frame->vaddr;
-> >> +               return frame->return_instance;
-> >> +       }
-> >> +
-> >> +       return ++frame->return_instance;
-> >> +}
-> >> +
-> >> +static inline bool return_frame_empty(struct uprobe_task *task)
-> >> +{
-> >> +       return !task->frame.return_instance;
-> >>  }
-> >>
-> >>  /*
+> > diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/=
+perf/arch/powerpc/util/skip-callchain-idx.c
+> > index 5f3edb3004d8..25b0804df4c4 100644
+> > --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+> > +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
+> > @@ -255,13 +255,14 @@ int arch_skip_callchain_idx(struct thread *thread=
+, struct ip_callchain *chain)
 > >
-> > [...]
->
-> --
-> BR
-> Liao, Chang
+> >         thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
+> >
+> > -       if (al.map)
+> > -               dso =3D map__dso(al.map);
+> > +       if (!al.map)
+> > +               goto out;
+> > +
+> > +       dso =3D map__dso(al.map);
+> >
+> >         if (!dso) {
+> >                 pr_debug("%" PRIx64 " dso is NULL\n", ip);
+> > -               addr_location__exit(&al);
+> > -               return skip_slot;
+> > +               goto out;
+> >         }
+> >
+> >         rc =3D check_return_addr(dso, map__start(al.map), ip);
+> > @@ -282,6 +283,7 @@ int arch_skip_callchain_idx(struct thread *thread, =
+struct ip_callchain *chain)
+> >                 skip_slot =3D 3;
+> >         }
+> >
+> > +out:
+> >         addr_location__exit(&al);
+> >         return skip_slot;
+> >  }
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index 8477edefc299..fa4037d7f3d4 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -2098,7 +2098,12 @@ static int add_callchain_ip(struct thread *threa=
+d,
+> >                         }
+> >                         goto out;
+> >                 }
+> > +
+> >                 thread__find_symbol(thread, *cpumode, ip, &al);
+> > +               if (!al.maps || !al.map) {
+> > +                       err =3D 1;
+> > +                       goto out;
+> > +               }
+> >         }
+> >
+> >         if (al.sym !=3D NULL) {
+> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-li=
+bdw.c
+> > index b38d322734b4..fb038ef55be2 100644
+> > --- a/tools/perf/util/unwind-libdw.c
+> > +++ b/tools/perf/util/unwind-libdw.c
+> > @@ -53,8 +53,10 @@ static int __report_module(struct addr_location *al,=
+ u64 ip,
+> >          */
+> >         thread__find_symbol(ui->thread, PERF_RECORD_MISC_USER, ip, al);
+> >
+> > -       if (al->map)
+> > -               dso =3D map__dso(al->map);
+> > +       if (!al->map)
+> > +               return -1;
+> > +
+> > +       dso =3D map__dso(al->map);
+> >
+> >         if (!dso)
+> >                 return 0;
+> > --
+> > 2.45.2
+> >
+> >
