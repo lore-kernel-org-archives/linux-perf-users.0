@@ -1,50 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8685E15AE0;
-	Thu, 11 Jul 2024 04:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40F284DF1;
+	Thu, 11 Jul 2024 06:43:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720673294; cv=none; b=ieKdA24koh3C16Z7vECxbtmaWQ5T31zEt3vqjHQ3pqMhXvnmA9e6tgBU6nCd3mpVRFi41GGwvTSfWKN7weuVvq0J0yfC+qOHQ4yG5lFjsLIzFveJP3tFhU5LnAWtnzPOyifix5+vwlmSLW/6JZktHWbHFhd8bQ9D2TSCpu1uZjQ=
+	t=1720680207; cv=none; b=U8n0IWFGPbTCwx1SZGcjr50KxIPtnYSErmyMnnnSFB+r/L7/pCNCLhXQOMInTcu8lI2hw/iA9iKNA6MjTjicOZWOktUL4C9xEASzYd/An4wfWgVDEfoWw5dIUppj9YwK+cOc9Qf1903EpEztlOQFu1JBmUGlUHbgksGlAhnxKp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720673294; c=relaxed/simple;
-	bh=u2dTTjeoQNgtN4DfnFCRkWsTxvIwIy6d1aj8rzgjFqA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkLJrDNqeGVWzkxv8FcUladYnHDRMwFfYMsNcsVELzRy8jb/A2fov/YMGRX8l+ovQcq4z6guCFk2GNKVAmtGJKUBmhUW96gIvTvgsbupuo9/NpXjY0mJtrC6zFx2MIr0wzjvOElI9+X0TaIY05bjp8xsd8PMkYHTF4bj1FWNBUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kWbyB+B+; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1720680207; c=relaxed/simple;
+	bh=ukvBIwZ85jmi2nW55ZuutFFoxk+4v29YHKcED+9uWf4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lYlydg2xzzfbK/3cekEDpeTQB9Ne+sGydx5Xjfmb7mZBYfNYypRILoyCSv51XqZgqq9BEk1Mxr6HEqcnKU7rG69mE9FMDDb6ANKuDnpggVfSvV9Fdi6y+Zx7ZtSytEJ8oR23D2u4qBOBUSQ3WI93dnC5U4JTpBElhe3gHrWHZx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=F967TQTH; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kWbyB+B+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="F967TQTH"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720673292; x=1752209292;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=u2dTTjeoQNgtN4DfnFCRkWsTxvIwIy6d1aj8rzgjFqA=;
-  b=kWbyB+B+NyXlikvyp1HfxMTGNsKpPSP338aPyy9L5GbSbSiK/Z22O7rV
-   kfF/LM37nHvmAYABJrCvA5qdwb8naHsJJ8Iw6s/cZG85COn1z54RDubDh
-   rCb1nzgWgVfHahjdFh3ANAoYIS2R5Mz0diyyC8jHsSDkrvkUPoV61QuDr
-   RNvi6qvB7Z4OYzxB+dAHspiTuXvk2hkq1B9u4JACaqKfGajYadr8QrLpQ
-   FSp4Vjtnwa2lGMN/9zNcMyh/MZldiGFgLF0I8C1ToB63AcyU3s8hGxT+7
-   dMeDKM1iYPqy7aHW/NXAcGXHVMnV2P7LQZRqFf/D57lTYH8lLjtpmtelU
-   g==;
-X-CSE-ConnectionGUID: 1M3RMorkSi+h7M6kWZtw/Q==
-X-CSE-MsgGUID: gRWBfwReTcWJ8JGYUPy6xA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="28696907"
+  t=1720680205; x=1752216205;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=ukvBIwZ85jmi2nW55ZuutFFoxk+4v29YHKcED+9uWf4=;
+  b=F967TQTHGrYFonMdHpJtPJOk2GhqjHIfATuz5amgd6rTAfvKzkD5NeCE
+   pm2EM7Ml4MjT7IcupftM07VDY3DIwhg3/f1xsy5AgTFbFbDlKieDE9ZG6
+   QbBf5gb+lhjQdMX94U2pPqIrFldDuBHcgkbx96uzURWNpobVL6lbJ3EIF
+   1Y762g7evKuhTn4GCzgtd/m0vqK0Y1TYNullAnS2f1gV4SOrLbvwuS0Qn
+   1i17HvN2jRH4BYQ3nPvLOaYi1rAL5QhTYdqlizz6VC8JcgkwlsXonjRnW
+   yMxQlAXqL3Mtyf4g8o7ff710icp0qF0V1SDC95lB69SwYTcBtFe3UCdvi
+   w==;
+X-CSE-ConnectionGUID: p9W+Iq5IT0igvobfIhlU/w==
+X-CSE-MsgGUID: rLuV3UbqROy7Vb9BkqH2Aw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="17856793"
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="28696907"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 21:48:10 -0700
-X-CSE-ConnectionGUID: C2ue7uEWT8SEPqjFMH8zLw==
-X-CSE-MsgGUID: +AqMfFkeTI23ZWeW64V9Uw==
+   d="scan'208";a="17856793"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 23:43:24 -0700
+X-CSE-ConnectionGUID: 2xG/r5DpRWiCziBYtdaxkg==
+X-CSE-MsgGUID: MnOx9f/RT2Snb6th6BLfYg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
-   d="scan'208";a="48430937"
-Received: from unknown (HELO [10.238.4.150]) ([10.238.4.150])
-  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 21:48:08 -0700
-Message-ID: <deb45394-cf79-4a7b-b8bb-ed9540dc879c@linux.intel.com>
-Date: Thu, 11 Jul 2024 12:48:05 +0800
+   d="scan'208";a="49209203"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 23:43:16 -0700
+Message-ID: <d55916c7-a771-4fae-8bc8-595b7b1e9861@intel.com>
+Date: Thu, 11 Jul 2024 09:43:10 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,270 +52,403 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics
- events when sorting events
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+Subject: Re: [PATCH v3 01/28] perf auxtrace: Remove dummy tools
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
- <20240708144204.839486-4-dapeng1.mi@linux.intel.com>
- <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
- <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
- <CAP-5=fW65kxuABBJVAzKwoyBWW92_jkndWgY+4u9s3OGj_UkEg@mail.gmail.com>
- <afea2a93-0769-4ce5-ab59-2693d2d2f344@linux.intel.com>
- <CAP-5=fUP1O+VnH+7PaZtEgsFUFOpjo-tRtmAyVjG=Q4GFToR7g@mail.gmail.com>
+ Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
+ Oliver Upton <oliver.upton@linux.dev>,
+ Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
+ Ilkka Koskinen <ilkka@os.amperecomputing.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
+ Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240629045350.285243-1-irogers@google.com>
+ <20240629045350.285243-2-irogers@google.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAP-5=fUP1O+VnH+7PaZtEgsFUFOpjo-tRtmAyVjG=Q4GFToR7g@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240629045350.285243-2-irogers@google.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+
+On 29/06/24 07:53, Ian Rogers wrote:
+> Add perf_session__deliver_synth_attr_event that synthesizes a
+> perf_record_header_attr event with one id. Remove use of
+> perf_event__synthesize_attr that necessitates the use of the dummy
+> tool in order to pass the session.
+> 
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/arm-spe.c   | 49 ++++++++-----------------------------
+>  tools/perf/util/cs-etm.c    | 33 ++-----------------------
+>  tools/perf/util/intel-bts.c | 31 +----------------------
+>  tools/perf/util/intel-pt.c  | 24 +-----------------
+>  tools/perf/util/session.c   | 30 +++++++++++++++++++++++
+>  tools/perf/util/session.h   |  3 +++
+>  6 files changed, 47 insertions(+), 123 deletions(-)
+> 
+> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+> index afbd5869f6bf..fa40f3cb6266 100644
+> --- a/tools/perf/util/arm-spe.c
+> +++ b/tools/perf/util/arm-spe.c
+> @@ -1073,35 +1073,6 @@ static void arm_spe_print_info(__u64 *arr)
+>  	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
+>  }
+>  
+> -struct arm_spe_synth {
+> -	struct perf_tool dummy_tool;
+> -	struct perf_session *session;
+> -};
+> -
+> -static int arm_spe_event_synth(struct perf_tool *tool,
+> -			       union perf_event *event,
+> -			       struct perf_sample *sample __maybe_unused,
+> -			       struct machine *machine __maybe_unused)
+> -{
+> -	struct arm_spe_synth *arm_spe_synth =
+> -		      container_of(tool, struct arm_spe_synth, dummy_tool);
+> -
+> -	return perf_session__deliver_synth_event(arm_spe_synth->session,
+> -						 event, NULL);
+> -}
+> -
+> -static int arm_spe_synth_event(struct perf_session *session,
+> -			       struct perf_event_attr *attr, u64 id)
+> -{
+> -	struct arm_spe_synth arm_spe_synth;
+> -
+> -	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
+> -	arm_spe_synth.session = session;
+> -
+> -	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
+> -					   &id, arm_spe_event_synth);
+> -}
+> -
+>  static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
+>  				    const char *name)
+>  {
+> @@ -1172,7 +1143,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		spe->sample_flc = true;
+>  
+>  		/* Level 1 data cache miss */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->l1d_miss_id = id;
+> @@ -1180,7 +1151,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		id += 1;
+>  
+>  		/* Level 1 data cache access */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->l1d_access_id = id;
+> @@ -1192,7 +1163,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		spe->sample_llc = true;
+>  
+>  		/* Last level cache miss */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->llc_miss_id = id;
+> @@ -1200,7 +1171,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		id += 1;
+>  
+>  		/* Last level cache access */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->llc_access_id = id;
+> @@ -1212,7 +1183,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		spe->sample_tlb = true;
+>  
+>  		/* TLB miss */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->tlb_miss_id = id;
+> @@ -1220,7 +1191,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		id += 1;
+>  
+>  		/* TLB access */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->tlb_access_id = id;
+> @@ -1232,7 +1203,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		spe->sample_branch = true;
+>  
+>  		/* Branch miss */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->branch_miss_id = id;
+> @@ -1244,7 +1215,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		spe->sample_remote_access = true;
+>  
+>  		/* Remote access */
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->remote_access_id = id;
+> @@ -1255,7 +1226,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  	if (spe->synth_opts.mem) {
+>  		spe->sample_memory = true;
+>  
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->memory_id = id;
+> @@ -1276,7 +1247,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+>  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>  		attr.sample_period = spe->synth_opts.period;
+>  		spe->instructions_sample_period = attr.sample_period;
+> -		err = arm_spe_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		spe->instructions_id = id;
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 32818bd7cd17..c53812f343e9 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1595,35 +1595,6 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>  	return ret;
+>  }
+>  
+> -struct cs_etm_synth {
+> -	struct perf_tool dummy_tool;
+> -	struct perf_session *session;
+> -};
+> -
+> -static int cs_etm__event_synth(struct perf_tool *tool,
+> -			       union perf_event *event,
+> -			       struct perf_sample *sample __maybe_unused,
+> -			       struct machine *machine __maybe_unused)
+> -{
+> -	struct cs_etm_synth *cs_etm_synth =
+> -		      container_of(tool, struct cs_etm_synth, dummy_tool);
+> -
+> -	return perf_session__deliver_synth_event(cs_etm_synth->session,
+> -						 event, NULL);
+> -}
+> -
+> -static int cs_etm__synth_event(struct perf_session *session,
+> -			       struct perf_event_attr *attr, u64 id)
+> -{
+> -	struct cs_etm_synth cs_etm_synth;
+> -
+> -	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
+> -	cs_etm_synth.session = session;
+> -
+> -	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
+> -					   &id, cs_etm__event_synth);
+> -}
+> -
+>  static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+>  				struct perf_session *session)
+>  {
+> @@ -1675,7 +1646,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+>  		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
+>  		attr.sample_period = 1;
+>  		attr.sample_type |= PERF_SAMPLE_ADDR;
+> -		err = cs_etm__synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		etm->branches_sample_type = attr.sample_type;
+> @@ -1698,7 +1669,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+>  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+>  		attr.sample_period = etm->synth_opts.period;
+>  		etm->instructions_sample_period = attr.sample_period;
+> -		err = cs_etm__synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err)
+>  			return err;
+>  		etm->instructions_sample_type = attr.sample_type;
+> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+> index ec1b3bd9f530..160d346cb450 100644
+> --- a/tools/perf/util/intel-bts.c
+> +++ b/tools/perf/util/intel-bts.c
+> @@ -737,35 +737,6 @@ static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
+>  	return evsel->core.attr.type == bts->pmu_type;
+>  }
+>  
+> -struct intel_bts_synth {
+> -	struct perf_tool dummy_tool;
+> -	struct perf_session *session;
+> -};
+> -
+> -static int intel_bts_event_synth(struct perf_tool *tool,
+> -				 union perf_event *event,
+> -				 struct perf_sample *sample __maybe_unused,
+> -				 struct machine *machine __maybe_unused)
+> -{
+> -	struct intel_bts_synth *intel_bts_synth =
+> -			container_of(tool, struct intel_bts_synth, dummy_tool);
+> -
+> -	return perf_session__deliver_synth_event(intel_bts_synth->session,
+> -						 event, NULL);
+> -}
+> -
+> -static int intel_bts_synth_event(struct perf_session *session,
+> -				 struct perf_event_attr *attr, u64 id)
+> -{
+> -	struct intel_bts_synth intel_bts_synth;
+> -
+> -	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
+> -	intel_bts_synth.session = session;
+> -
+> -	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
+> -					   &id, intel_bts_event_synth);
+> -}
+> -
+>  static int intel_bts_synth_events(struct intel_bts *bts,
+>  				  struct perf_session *session)
+>  {
+> @@ -814,7 +785,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
+>  		attr.sample_type |= PERF_SAMPLE_ADDR;
+>  		pr_debug("Synthesizing 'branches' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
+>  			 id, (u64)attr.sample_type);
+> -		err = intel_bts_synth_event(session, &attr, id);
+> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+>  		if (err) {
+>  			pr_err("%s: failed to synthesize 'branches' event type\n",
+>  			       __func__);
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index d6d7b7512505..1fc03bfd14c3 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -3659,37 +3659,15 @@ static int intel_pt_queue_data(struct perf_session *session,
+>  					   data_offset, timestamp);
+>  }
+>  
+> -struct intel_pt_synth {
+> -	struct perf_tool dummy_tool;
+> -	struct perf_session *session;
+> -};
+> -
+> -static int intel_pt_event_synth(struct perf_tool *tool,
+> -				union perf_event *event,
+> -				struct perf_sample *sample __maybe_unused,
+> -				struct machine *machine __maybe_unused)
+> -{
+> -	struct intel_pt_synth *intel_pt_synth =
+> -			container_of(tool, struct intel_pt_synth, dummy_tool);
+> -
+> -	return perf_session__deliver_synth_event(intel_pt_synth->session, event,
+> -						 NULL);
+> -}
+> -
+>  static int intel_pt_synth_event(struct perf_session *session, const char *name,
+>  				struct perf_event_attr *attr, u64 id)
+>  {
+> -	struct intel_pt_synth intel_pt_synth;
+>  	int err;
+>  
+>  	pr_debug("Synthesizing '%s' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
+>  		 name, id, (u64)attr->sample_type);
+>  
+> -	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
+> -	intel_pt_synth.session = session;
+> -
+> -	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
+> -					  &id, intel_pt_event_synth);
+> +	err = perf_session__deliver_synth_attr_event(session, attr, id);
+>  	if (err)
+>  		pr_err("%s: failed to synthesize '%s' event type\n",
+>  		       __func__, name);
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 0ec92d47373c..44db5b49128f 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1764,6 +1764,36 @@ int perf_session__deliver_synth_event(struct perf_session *session,
+>  	return machines__deliver_event(&session->machines, evlist, event, sample, tool, 0, NULL);
+>  }
+>  
+> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
+> +					   const struct perf_event_attr *attr,
+> +					   u64 id)
+> +{
+> +	union {
+> +		struct {
+> +			struct perf_record_header_attr attr;
+> +			u64 ids[1];
+> +		} attr_id;
+> +		union perf_event ev;
+> +	} ev = {
+> +		.attr_id = {
+> +			.attr = {
+> +				.header = {
+> +					.type = PERF_RECORD_HEADER_ATTR,
+> +					.size = PERF_ALIGN(sizeof(struct perf_event_attr),
+> +							   sizeof(u64))
+> +					    + sizeof(struct perf_event_header)
+> +					    + sizeof(u64),
+> +				},
+> +			},
+> +			.ids = { id, }
+> +		},
+
+Nested definitions are not needed.  It can just be:
+
+		.attr_id.attr.header.type = PERF_RECORD_HEADER_ATTR,
+		.attr_id.attr.header.size = sizeof(ev.attr_id),
+		.attr_id.ids[0] = id,
+
+> +	};
+> +
+> +	memcpy(&ev.attr_id.attr.attr, attr, min((u32)sizeof(struct perf_event_attr), attr->size));
+
+It is not unreasonable to validate attr->size, but neither slicing
+nor padding will work.  Better to just return an error:
+
+	if (attr->size != sizeof(ev.attr_id.attr))
+		return -EINVAL;
+
+Then:
+
+	ev.attr_id.attr.attr = *attr;
 
 
-On 7/10/2024 11:07 PM, Ian Rogers wrote:
-> On Wed, Jul 10, 2024 at 2:40 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>
->> On 7/10/2024 6:37 AM, Ian Rogers wrote:
->>> On Mon, Jul 8, 2024 at 9:18 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>>> On 7/8/2024 11:08 PM, Ian Rogers wrote:
->>>>> On Mon, Jul 8, 2024 at 12:40 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
->>>>>> when running below perf command, we say error is reported.
->>>>>>
->>>>>> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
->>>>>>
->>>>>> ------------------------------------------------------------
->>>>>> perf_event_attr:
->>>>>>   type                             4 (cpu)
->>>>>>   size                             168
->>>>>>   config                           0x400 (slots)
->>>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->>>>>>   read_format                      ID|GROUP|LOST
->>>>>>   disabled                         1
->>>>>>   sample_id_all                    1
->>>>>>   exclude_guest                    1
->>>>>> ------------------------------------------------------------
->>>>>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->>>>>> ------------------------------------------------------------
->>>>>> perf_event_attr:
->>>>>>   type                             4 (cpu)
->>>>>>   size                             168
->>>>>>   config                           0x8000 (topdown-retiring)
->>>>>>   { sample_period, sample_freq }   4000
->>>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->>>>>>   read_format                      ID|GROUP|LOST
->>>>>>   freq                             1
->>>>>>   sample_id_all                    1
->>>>>>   exclude_guest                    1
->>>>>> ------------------------------------------------------------
->>>>>> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
->>>>>> sys_perf_event_open failed, error -22
->>>>>>
->>>>>> Error:
->>>>>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
->>>>>>
->>>>>> The reason of error is that the events are regrouped and
->>>>>> topdown-retiring event is moved to closely after the slots event and
->>>>>> topdown-retiring event needs to do the sampling, but Intel PMU driver
->>>>>> doesn't support to sample topdown metrics events.
->>>>>>
->>>>>> For topdown metrics events, it just requires to be in a group which has
->>>>>> slots event as leader. It doesn't require topdown metrics event must be
->>>>>> closely after slots event. Thus it's a overkill to move topdown metrics
->>>>>> event closely after slots event in events regrouping and furtherly cause
->>>>>> the above issue.
->>>>>>
->>>>>> Thus delete the code that moving topdown metrics events to fix the
->>>>>> issue.
->>>>> I think this is wrong. The topdown events may not be in a group, such
->>>>> cases can come from metrics due to grouping constraints, and so they
->>>>> must be sorted together so that they may be gathered into a group to
->>>>> avoid the perf event opens failing for ungrouped topdown events. I'm
->>>>> not understanding what these patches are trying to do, if you want to
->>>>> prioritize the event for leader sampling why not modify it to compare
->>>> Per my understanding, this change doesn't break anything. The events
->>>> regrouping can be divided into below several cases.
->>>>
->>>> a. all events in a group
->>>>
->>>> perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
->>>> WARNING: events were regrouped to match PMUs
->>>>
->>>>  Performance counter stats for 'CPU(s) 0':
->>>>
->>>>         15,066,240      slots
->>>>          1,899,760      instructions
->>>>          2,126,998      topdown-retiring
->>>>
->>>>        1.045783464 seconds time elapsed
->>>>
->>>> In this case, slots event would be adjusted as the leader event and all
->>>> events are still in same group.
->>>>
->>>> b. all events not in a group
->>>>
->>>> perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
->>>> WARNING: events were regrouped to match PMUs
->>>>
->>>>  Performance counter stats for 'CPU(s) 0':
->>>>
->>>>          2,045,561      instructions
->>>>         17,108,370      slots
->>>>          2,281,116      topdown-retiring
->>>>
->>>>        1.045639284 seconds time elapsed
->>>>
->>>> In this case, slots and topdown-retiring are placed into a group and slots
->>>> is the group leader. instructions event is outside the group.
->>>>
->>>> c. slots event in group but topdown metric events outside the group
->>>>
->>>> perf stat -e "{instructions,slots},topdown-retiring"  -C0 sleep 1
->>>> WARNING: events were regrouped to match PMUs
->>>>
->>>>  Performance counter stats for 'CPU(s) 0':
->>>>
->>>>         20,323,878      slots
->>>>          2,634,884      instructions
->>>>          3,028,656      topdown-retiring
->>>>
->>>>        1.045076380 seconds time elapsed
->>>>
->>>> In this case, topdown-retiring event is placed into previous group and
->>>> slots is adjusted to leader event.
->>>>
->>>> d. multiple event groups
->>>>
->>>> perf stat -e "{instructions,slots},{topdown-retiring}"  -C0 sleep 1
->>>> WARNING: events were regrouped to match PMUs
->>>>
->>>>  Performance counter stats for 'CPU(s) 0':
->>>>
->>>>         26,319,024      slots
->>>>          2,427,791      instructions
->>>>          2,683,508      topdown-retiring
->>>>
->>>>        1.045495830 seconds time elapsed
->>>>
->>>> In this case, the two groups are merged to one group and slots event is
->>>> adjusted as leader.
->>>>
->>>> The key point of this patch is that it's unnecessary to move topdown
->>>> metrics events closely after slots event. It's a overkill since Intel core
->>>> PMU driver doesn't require that. Intel PMU driver just requires topdown
->>>> metrics events are in a group where slots event is the group leader, and
->>>> worse the movement for topdown metrics events causes the issue in the
->>>> commit message mentioned.
->>>>
->>>> This patch doesn't block to regroup topdown metrics event. It just removes
->>>> the unnecessary movement for topdown metrics events.
->>> But you will get the same behavior because of the non-arch dependent
->>> force group index - I guess you don't care as the sample read only
->>> happens when you have a group.
->>>
->>> I'm thinking of cases like (which admittedly is broken):
->>> ```
->>> $ perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
->>> [sudo] password for irogers:
->>>
->>> Performance counter stats for 'system wide':
->>>
->>>     2,589,345,900      slots
->>>       852,492,838      instructions
->>>       583,525,372      cycles
->>>   <not supported>      topdown-fe-bound
->>>
->>>       0.103930790 seconds time elapsed
->>> ```
->> I run the upstream code (commit 73e931504f8e0d42978bfcda37b323dbbd1afc08)
->> without this patchset, I see same issue.
->>
->> perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
->>
->>  Performance counter stats for 'system wide':
->>
->>        262,448,922      slots
->>         29,630,373      instructions
->>         43,891,902      cycles
->>    <not supported>      topdown-fe-bound
->>
->>        0.150369560 seconds time elapsed
->>
->> #perf -v
->> perf version 6.10.rc6.g73e931504f8e
->>
->> This issue is not caused by this patchset.
-> I agree, but I think what is broken above was caused by the forced
-> grouping change that I did for Andi. The point of your change here is
-> to say that topdown events don't need to be moved while sorting, but
-> what should be happening here is just that. topdown-fe-bound should be
-> moved into the group with slots and instructions so it isn't "<not
-> supported>". So yes the current code has issues, but that's not the
-> same as saying we don't need to move topdown events, we do so that we
-> may group them better.
->
-> Thanks,
-> Ian
+> +	ev.attr_id.attr.attr.size = sizeof(struct perf_event_attr);
+> +	return perf_session__deliver_synth_event(session, &ev.ev, NULL);
+> +}
+> +
+>  static void event_swap(union perf_event *event, bool sample_id_all)
+>  {
+>  	perf_event__swap_op swap;
+> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+> index 4c29dc86956f..cc28976bb00e 100644
+> --- a/tools/perf/util/session.h
+> +++ b/tools/perf/util/session.h
+> @@ -154,6 +154,9 @@ extern volatile int session_done;
+>  int perf_session__deliver_synth_event(struct perf_session *session,
+>  				      union perf_event *event,
+>  				      struct perf_sample *sample);
+> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
+> +					   const struct perf_event_attr *attr,
+> +					   u64 id);
+>  
+>  int perf_session__dsos_hit_all(struct perf_session *session);
+>  
 
-I see your point. I think the key is to ensure the topdown metrics events
-in a group which has slots as the leader. As for where the topdown metrics
-event is in the group, it doesn't matter. I would see if there is a better
-method to fix this issue. Thanks.
-
-
->
->>> As the slots event is grouped there's no force group index on it, we
->>> want to shuffle the topdown-fe-bound into the group so we want it to
->>> compare as less than cycles - ie we're comparing topdown events with
->>> non topdown events and trying to shuffle the topdown events first.
->> Current evlist__cmp() won't really swap the order of cycles and
->> topdown-fe-bound.
->>
->> if (lhs_sort_idx != rhs_sort_idx)
->>         return lhs_sort_idx - rhs_sort_idx;
->>
->> When comparing cycles and topdown-fe-bound events, lhs_sort_idx is 2 and
->> rhs_sort_idx is 3, so the swap won't happen.
->>
->> So the event sequence after sorting is still "slots, instructions ,cycles,
->> topdown-fe-bound". Both cycles and topdown-fe-bound events won't be placed
->> into the group.
->>
->>
->>> Thanks,
->>> Ian
->>>
->>>
->>>
->>>>> first?
->>>>>
->>>>> Thanks,
->>>>> Ian
->>>>>
->>>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->>>>>> ---
->>>>>>  tools/perf/arch/x86/util/evlist.c | 5 -----
->>>>>>  1 file changed, 5 deletions(-)
->>>>>>
->>>>>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
->>>>>> index 332e8907f43e..6046981d61cf 100644
->>>>>> --- a/tools/perf/arch/x86/util/evlist.c
->>>>>> +++ b/tools/perf/arch/x86/util/evlist.c
->>>>>> @@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->>>>>>                         return -1;
->>>>>>                 if (arch_is_topdown_slots(rhs))
->>>>>>                         return 1;
->>>>>> -               /* Followed by topdown events. */
->>>>>> -               if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->>>>>> -                       return -1;
->>>>>> -               if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
->>>>>> -                       return 1;
->>>>>>         }
->>>>>>
->>>>>>         /* Default ordering by insertion index. */
->>>>>> --
->>>>>> 2.40.1
->>>>>>
