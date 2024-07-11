@@ -1,63 +1,66 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6220B200A9
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99E1F16D9D4
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720720817; cv=none; b=SM8T3K9yOkvhQSvinKw3483E2S3dgSmAJ/G+M0TC3A+Aj5rhHq4vesTI1Tq3bAfjZMBQUD/+PiQMR/DUuOGTYeMrRztiL5hsiXNtKizlag6f6+Z2s9OLJCuXWmqOY5f0vLHl8PcdiziLEf4wJVhXxUmKSAm1JMntAzDJkk2hEXM=
+	t=1720720818; cv=none; b=Nu9cZTzCbT3Vj4DC78+yzlcMXtlcD0hRJKZ4RPlJfIC4IafedCJCkm+a56JKTAcyOtU092+Kt/Mc7FgqYvm+BV7bzYSaXpJc+M6lP7IClETmzFZI45YNjSoYVzImgg9c4qOYixlxn3Pi0rt+CrgyM3A8eZ8WclxqXko0o7cAH08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720720817; c=relaxed/simple;
-	bh=nadOhPkYHmRD1KvsntloobODi1YRoy3zk7/+rRmhu9c=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=O+BxB2TJuqMMkDf10e/g4saoY/AQKFuGMhmNcEryG6FF1bSivNlzN195FCFZ6WwHOYdmgnO2gl1HM5EKcKDEtLMZ+RtojPaIegDXV6ylO8IRNbFOCtPljXdqtyvXNvkujZaxg7A0id4N5vEugJ/IrYl1xViN+V9TTm2tjdPZKh0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oSCkym8s; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1720720818; c=relaxed/simple;
+	bh=a6VbSrYVQRFfI8leebjVbvnR7hh3RWsV95BO6C3pM2A=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=nhPhN8lUTIztHT8bZfCViPKSE33yZQKhkgumzlurEadykq7hM1y1QjKqCNDUEKrTzXwJ/WWIdCUk7rBmLMj57y35V3R1Em1nufXe51xAua+Tz+KmJwHYYb7HKjAho/4hELZAYwDejwAAo0GVSwE7+4ICRtKo8hNpaiaIQUUq5Zk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=X2i9Q65E; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oSCkym8s"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0360f8d773so1909005276.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="X2i9Q65E"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02b7adfb95so2077248276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720720813; x=1721325613; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Vd8Kna0+0RAluWRoKv6o+QCtglnUtuOoGSBcyKDtFeg=;
-        b=oSCkym8s3weL6xaYls1vyjlYBD3767kYZhiPBhRFo9O6CYWI1GUGs6Mv51hZb7YDYK
-         O3UE5AOLARDNoFyqv2isFOifxOziHzDWeqqTvOn1Yvixr0YUm4roxC+CRPrzbI8yaUDw
-         Dq8x7teQpaCfbAVBcjG3NFoexfvGXBPe5R4DRLdwVT25PJRsO1Wy8SgqcvzWSWMQ5CvA
-         sjPNg3K5+/tBzKrlsgkh+znLGNqEagiiYFpnnGko0spx9vVYWhBftHd1OfltzCp4CYSb
-         YT/PpMvyBpg52WU2nEppOpKoYxkOY0aijkTR+qJADvxNXysaN0zLnsgMgGymPdk4U/ip
-         xgkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720720813; x=1721325613;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1720720815; x=1721325615; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Vd8Kna0+0RAluWRoKv6o+QCtglnUtuOoGSBcyKDtFeg=;
-        b=TsPkpPKVnQ+1ctyw8w2SKcPMdM3Ihe7uv8zAG+3Fx3wzPbnNiMmztHNvRFTFnn83nm
-         Y0WOzWX4E9W1Bw6DAISICEeyQCuOiGn4hAE9MKWJc6uGwRSP1d619/l1HSNvwZICBjdJ
-         twFRz1nHTsQqJfgfqBvlfmyxfs78c+PVcsmlQLi0zn1yWYHAg0USi5jsLfEcuzJfJLl4
-         MmDBgI3a2ke13Q6GEe0rAgLsW39hwiqxoqLEmMUMC9Af4cAPD4dh0tvEZX6PRLl9hyPa
-         /9FuZt7tuthCQP0QW9YwR1D/OMn1UF23SNEJzCYvPNL9uAe2rnta+g4uUdJhZd20s7tE
-         Y8dQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0DKihm6Qr4H/7KURv1moERlErA9crHcg3mQsSkgJXa7si08lOjEM1lp1Oy8Vw5W2DumiBCZQ2DwMrJam/XahisQEjFKYgs180UOcYmtYV2g==
-X-Gm-Message-State: AOJu0Yx0oRiRiXF8pgmmTlO34SwMqc7E67qlDL20hJ0ncVpOM7Oejvz+
-	mQsB9+0l6J3wtozU4gO7rJxKA571WIibEj0L2YGRv8LrNJ9JxgexRkde+8YPgm6RwD50zUGMtn+
-	ZLxbSfA==
-X-Google-Smtp-Source: AGHT+IFAKCKgweyOaJWl5MOnJPgmzdawWpR8UxfR4LBJcvZ/Pxrc/95vokU4ESpEhRtx4U/Yj7T2pPa8qTrX
+        bh=EMOmsjjbfRL4hNLPYFWbLSO5w8t6s+E/XHk9xV0Hop4=;
+        b=X2i9Q65ElDTp7VWn3pF3RmcXAdkWYiY1HAFLt7nqTTiJeqzav6MOBlbzLwwGqx1AfZ
+         rxYbeNlv06/rklocAqvoOGxf3VYDeevCh6vsPqCXw+/HOYo8wa+CxjdNTxpoIdwEpy3Y
+         2TZX1UiUZNE2mITugpwZDf/9vNM7VgjsLvTogvjX9GHEoRmwDtzeH/IodqAkY272AayU
+         0IU0Tw5XxVVBRIBrHzl2KmjsFrKnsCeN4mereqIUMzO0JGlBh9aiXsfIpbukHQ9ehYLv
+         KmodfAoE9bTNcbdEgkVo+TYMxQmjqQfXqqonrcT2rhRrYVPcBFIPuV6y6G5r0bmRakmR
+         x8uA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720720816; x=1721325616;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EMOmsjjbfRL4hNLPYFWbLSO5w8t6s+E/XHk9xV0Hop4=;
+        b=ORp6Dh3U8hZRgmkU7C/0bmt7zz1/TFX68dDJl0Y8IF7yym7wdrvohdENhBWpPZSUPS
+         /JIJYUWgI6V0tVaM6GpV2OMe1yVz3hO2zHA3eRe0XJeTGmE6ZmZXSlFMOzxI99u2R6mj
+         Ls8lo78um6FyPLy/t4/zunwFBJ8XD4ew7ArzeHDQEytr5Vdewy0iUsvs269n7SSCx+Nz
+         CBqLhfzrR8fjGNIsLIekH1DFLzCT0lsiN6kkQBb/+qGyTDhnAk5AUrIyv/qlRcI9+Zff
+         dDJ/sH6cUm966yj06cRRGBCve5eQyYVKzB3D94o31nRu0IEd/Lj0OXDAl69XpZYrvtHJ
+         E3+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWUnRGUJlYx5qtUuPPgYuZAhcovI3w3Tt3+m5VTGAtMelVNU7dH40TbeCbJNH0drOff3P5TkFT1HTUciPixNXkX9CrtOGuTgznFYakKF3Apjw==
+X-Gm-Message-State: AOJu0Ywp324vErBDvDbkIeUcWYDrkT/pSzc+dIXke6ctCM+z/Td7wG52
+	mf1ohjmzTY9w+P++svsupXXwb14PAJRgh2yZ+zwhJmR5PpOqzzWNpRMGOtak27QgvlJAy9fDh93
+	cie1WLw==
+X-Google-Smtp-Source: AGHT+IGOU/jkyqa8KF9IeY0lS+BXQshpKVVzBAK7j+pR5Ms6PbYBjWcy+MJQoCU8MzleeGZ+ePXJBV2b9ql1
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bd08:a1e0:c497:32db])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b0d:b0:dfb:1147:cbaa with SMTP
- id 3f1490d57ef6-e041b111731mr962320276.10.1720720813415; Thu, 11 Jul 2024
- 11:00:13 -0700 (PDT)
-Date: Thu, 11 Jul 2024 10:59:40 -0700
-Message-Id: <20240711180008.188906-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:1106:b0:e03:3c8c:e82c with SMTP
+ id 3f1490d57ef6-e041b17e019mr569632276.9.1720720815591; Thu, 11 Jul 2024
+ 11:00:15 -0700 (PDT)
+Date: Thu, 11 Jul 2024 10:59:41 -0700
+In-Reply-To: <20240711180008.188906-1-irogers@google.com>
+Message-Id: <20240711180008.188906-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240711180008.188906-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v4 00/28] Constify tool pointers
+Subject: [PATCH v4 01/28] perf auxtrace: Remove dummy tools
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,114 +80,350 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-struct perf_tool provides a set of function pointers that are called
-through when processing perf data. To make filling the pointers less
-cumbersome, if they are NULL perf_tools__fill_defaults will add
-default do nothing implementations.
+Add perf_session__deliver_synth_attr_event that synthesizes a
+perf_record_header_attr event with one id. Remove use of
+perf_event__synthesize_attr that necessitates the use of the dummy
+tool in order to pass the session.
 
-This change refactors struct perf_tool to have an init function that
-provides the default implementation. The special use of NULL and
-perf_tools__fill_defaults are removed. As a consequence the tool
-pointers can then all be made const, which better reflects the
-behavior a particular perf command would expect of the tool and to
-some extent can reduce the cognitive load on someone working on a
-command.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/arm-spe.c   | 49 ++++++++-----------------------------
+ tools/perf/util/cs-etm.c    | 33 ++-----------------------
+ tools/perf/util/intel-bts.c | 31 +----------------------
+ tools/perf/util/intel-pt.c  | 24 +-----------------
+ tools/perf/util/session.c   | 24 ++++++++++++++++++
+ tools/perf/util/session.h   |  3 +++
+ 6 files changed, 41 insertions(+), 123 deletions(-)
 
-v4: Simplify perf_session__deliver_synth_attr_event following Adrian's
-    suggestions.
-v3: Just remove auxtrace dummy tools [Adrian] and make s390-cpumsf
-    struct removal its own patch [Adrian].
-v2: Remove dummy tool initialization [Adrian] and make zero sized. Add
-    cs-etm fix for address sanitizer build, found necessary when
-    testing dummy tool change.
-
-Ian Rogers (28):
-  perf auxtrace: Remove dummy tools
-  perf s390-cpumsf: Remove unused struct
-  perf cs-etm: Fix address sanitizer dso build failure
-  perf tool: Constify tool pointers
-  perf tool: Move fill defaults into tool.c
-  perf tool: Add perf_tool__init
-  perf kmem: Use perf_tool__init
-  perf buildid-list: Use perf_tool__init
-  perf kvm: Use perf_tool__init
-  perf lock: Use perf_tool__init
-  perf evlist: Use perf_tool__init
-  perf record: Use perf_tool__init
-  perf c2c: Use perf_tool__init
-  perf script: Use perf_tool__init
-  perf inject: Use perf_tool__init
-  perf report: Use perf_tool__init
-  perf stat: Use perf_tool__init
-  perf annotate: Use perf_tool__init
-  perf sched: Use perf_tool__init
-  perf mem: Use perf_tool__init
-  perf timechart: Use perf_tool__init
-  perf diff: Use perf_tool__init
-  perf data convert json: Use perf_tool__init
-  perf data convert ctf: Use perf_tool__init
-  perf test event_update: Ensure tools is initialized
-  perf kwork: Use perf_tool__init
-  perf tool: Remove perf_tool__fill_defaults
-  perf session: Constify tool
-
- tools/perf/arch/x86/util/event.c    |   4 +-
- tools/perf/bench/synthesize.c       |   2 +-
- tools/perf/builtin-annotate.c       |  44 ++--
- tools/perf/builtin-buildid-list.c   |  10 +
- tools/perf/builtin-c2c.c            |  33 ++-
- tools/perf/builtin-diff.c           |  30 ++-
- tools/perf/builtin-evlist.c         |  10 +-
- tools/perf/builtin-inject.c         | 159 ++++++------
- tools/perf/builtin-kmem.c           |  20 +-
- tools/perf/builtin-kvm.c            |  19 +-
- tools/perf/builtin-kwork.c          |  33 ++-
- tools/perf/builtin-lock.c           |  41 ++--
- tools/perf/builtin-mem.c            |  37 +--
- tools/perf/builtin-record.c         |  47 ++--
- tools/perf/builtin-report.c         |  67 +++--
- tools/perf/builtin-sched.c          |  50 ++--
- tools/perf/builtin-script.c         | 106 ++++----
- tools/perf/builtin-stat.c           |  26 +-
- tools/perf/builtin-timechart.c      |  25 +-
- tools/perf/builtin-top.c            |   2 +-
- tools/perf/builtin-trace.c          |   4 +-
- tools/perf/tests/cpumap.c           |   6 +-
- tools/perf/tests/dlfilter-test.c    |   2 +-
- tools/perf/tests/dwarf-unwind.c     |   2 +-
- tools/perf/tests/event_update.c     |   9 +-
- tools/perf/tests/stat.c             |   6 +-
- tools/perf/tests/thread-map.c       |   2 +-
- tools/perf/util/Build               |   1 +
- tools/perf/util/arm-spe.c           |  55 +----
- tools/perf/util/auxtrace.c          |  12 +-
- tools/perf/util/auxtrace.h          |  20 +-
- tools/perf/util/bpf-event.c         |   4 +-
- tools/perf/util/build-id.c          |  34 +--
- tools/perf/util/build-id.h          |   8 +-
- tools/perf/util/cs-etm.c            |  49 +---
- tools/perf/util/data-convert-bt.c   |  34 ++-
- tools/perf/util/data-convert-json.c |  47 ++--
- tools/perf/util/dso.h               |  10 +
- tools/perf/util/event.c             |  54 ++--
- tools/perf/util/event.h             |  38 +--
- tools/perf/util/header.c            |   6 +-
- tools/perf/util/header.h            |   4 +-
- tools/perf/util/hisi-ptt.c          |   6 +-
- tools/perf/util/intel-bts.c         |  37 +--
- tools/perf/util/intel-pt.c          |  30 +--
- tools/perf/util/jitdump.c           |   4 +-
- tools/perf/util/s390-cpumsf.c       |  11 +-
- tools/perf/util/session.c           | 366 +++-------------------------
- tools/perf/util/session.h           |   9 +-
- tools/perf/util/synthetic-events.c  |  80 +++---
- tools/perf/util/synthetic-events.h  |  70 +++---
- tools/perf/util/tool.c              | 294 ++++++++++++++++++++++
- tools/perf/util/tool.h              |  18 +-
- tools/perf/util/tsc.c               |   2 +-
- 54 files changed, 992 insertions(+), 1107 deletions(-)
- create mode 100644 tools/perf/util/tool.c
-
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index afbd5869f6bf..fa40f3cb6266 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -1073,35 +1073,6 @@ static void arm_spe_print_info(__u64 *arr)
+ 	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
+ }
+ 
+-struct arm_spe_synth {
+-	struct perf_tool dummy_tool;
+-	struct perf_session *session;
+-};
+-
+-static int arm_spe_event_synth(struct perf_tool *tool,
+-			       union perf_event *event,
+-			       struct perf_sample *sample __maybe_unused,
+-			       struct machine *machine __maybe_unused)
+-{
+-	struct arm_spe_synth *arm_spe_synth =
+-		      container_of(tool, struct arm_spe_synth, dummy_tool);
+-
+-	return perf_session__deliver_synth_event(arm_spe_synth->session,
+-						 event, NULL);
+-}
+-
+-static int arm_spe_synth_event(struct perf_session *session,
+-			       struct perf_event_attr *attr, u64 id)
+-{
+-	struct arm_spe_synth arm_spe_synth;
+-
+-	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
+-	arm_spe_synth.session = session;
+-
+-	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
+-					   &id, arm_spe_event_synth);
+-}
+-
+ static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
+ 				    const char *name)
+ {
+@@ -1172,7 +1143,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		spe->sample_flc = true;
+ 
+ 		/* Level 1 data cache miss */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->l1d_miss_id = id;
+@@ -1180,7 +1151,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		id += 1;
+ 
+ 		/* Level 1 data cache access */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->l1d_access_id = id;
+@@ -1192,7 +1163,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		spe->sample_llc = true;
+ 
+ 		/* Last level cache miss */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->llc_miss_id = id;
+@@ -1200,7 +1171,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		id += 1;
+ 
+ 		/* Last level cache access */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->llc_access_id = id;
+@@ -1212,7 +1183,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		spe->sample_tlb = true;
+ 
+ 		/* TLB miss */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->tlb_miss_id = id;
+@@ -1220,7 +1191,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		id += 1;
+ 
+ 		/* TLB access */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->tlb_access_id = id;
+@@ -1232,7 +1203,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		spe->sample_branch = true;
+ 
+ 		/* Branch miss */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->branch_miss_id = id;
+@@ -1244,7 +1215,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		spe->sample_remote_access = true;
+ 
+ 		/* Remote access */
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->remote_access_id = id;
+@@ -1255,7 +1226,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	if (spe->synth_opts.mem) {
+ 		spe->sample_memory = true;
+ 
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->memory_id = id;
+@@ -1276,7 +1247,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+ 		attr.sample_period = spe->synth_opts.period;
+ 		spe->instructions_sample_period = attr.sample_period;
+-		err = arm_spe_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		spe->instructions_id = id;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 32818bd7cd17..c53812f343e9 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1595,35 +1595,6 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+ 	return ret;
+ }
+ 
+-struct cs_etm_synth {
+-	struct perf_tool dummy_tool;
+-	struct perf_session *session;
+-};
+-
+-static int cs_etm__event_synth(struct perf_tool *tool,
+-			       union perf_event *event,
+-			       struct perf_sample *sample __maybe_unused,
+-			       struct machine *machine __maybe_unused)
+-{
+-	struct cs_etm_synth *cs_etm_synth =
+-		      container_of(tool, struct cs_etm_synth, dummy_tool);
+-
+-	return perf_session__deliver_synth_event(cs_etm_synth->session,
+-						 event, NULL);
+-}
+-
+-static int cs_etm__synth_event(struct perf_session *session,
+-			       struct perf_event_attr *attr, u64 id)
+-{
+-	struct cs_etm_synth cs_etm_synth;
+-
+-	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
+-	cs_etm_synth.session = session;
+-
+-	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
+-					   &id, cs_etm__event_synth);
+-}
+-
+ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+ 				struct perf_session *session)
+ {
+@@ -1675,7 +1646,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+ 		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
+ 		attr.sample_period = 1;
+ 		attr.sample_type |= PERF_SAMPLE_ADDR;
+-		err = cs_etm__synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		etm->branches_sample_type = attr.sample_type;
+@@ -1698,7 +1669,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
+ 		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+ 		attr.sample_period = etm->synth_opts.period;
+ 		etm->instructions_sample_period = attr.sample_period;
+-		err = cs_etm__synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err)
+ 			return err;
+ 		etm->instructions_sample_type = attr.sample_type;
+diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
+index ec1b3bd9f530..160d346cb450 100644
+--- a/tools/perf/util/intel-bts.c
++++ b/tools/perf/util/intel-bts.c
+@@ -737,35 +737,6 @@ static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
+ 	return evsel->core.attr.type == bts->pmu_type;
+ }
+ 
+-struct intel_bts_synth {
+-	struct perf_tool dummy_tool;
+-	struct perf_session *session;
+-};
+-
+-static int intel_bts_event_synth(struct perf_tool *tool,
+-				 union perf_event *event,
+-				 struct perf_sample *sample __maybe_unused,
+-				 struct machine *machine __maybe_unused)
+-{
+-	struct intel_bts_synth *intel_bts_synth =
+-			container_of(tool, struct intel_bts_synth, dummy_tool);
+-
+-	return perf_session__deliver_synth_event(intel_bts_synth->session,
+-						 event, NULL);
+-}
+-
+-static int intel_bts_synth_event(struct perf_session *session,
+-				 struct perf_event_attr *attr, u64 id)
+-{
+-	struct intel_bts_synth intel_bts_synth;
+-
+-	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
+-	intel_bts_synth.session = session;
+-
+-	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
+-					   &id, intel_bts_event_synth);
+-}
+-
+ static int intel_bts_synth_events(struct intel_bts *bts,
+ 				  struct perf_session *session)
+ {
+@@ -814,7 +785,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
+ 		attr.sample_type |= PERF_SAMPLE_ADDR;
+ 		pr_debug("Synthesizing 'branches' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
+ 			 id, (u64)attr.sample_type);
+-		err = intel_bts_synth_event(session, &attr, id);
++		err = perf_session__deliver_synth_attr_event(session, &attr, id);
+ 		if (err) {
+ 			pr_err("%s: failed to synthesize 'branches' event type\n",
+ 			       __func__);
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index d6d7b7512505..1fc03bfd14c3 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -3659,37 +3659,15 @@ static int intel_pt_queue_data(struct perf_session *session,
+ 					   data_offset, timestamp);
+ }
+ 
+-struct intel_pt_synth {
+-	struct perf_tool dummy_tool;
+-	struct perf_session *session;
+-};
+-
+-static int intel_pt_event_synth(struct perf_tool *tool,
+-				union perf_event *event,
+-				struct perf_sample *sample __maybe_unused,
+-				struct machine *machine __maybe_unused)
+-{
+-	struct intel_pt_synth *intel_pt_synth =
+-			container_of(tool, struct intel_pt_synth, dummy_tool);
+-
+-	return perf_session__deliver_synth_event(intel_pt_synth->session, event,
+-						 NULL);
+-}
+-
+ static int intel_pt_synth_event(struct perf_session *session, const char *name,
+ 				struct perf_event_attr *attr, u64 id)
+ {
+-	struct intel_pt_synth intel_pt_synth;
+ 	int err;
+ 
+ 	pr_debug("Synthesizing '%s' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
+ 		 name, id, (u64)attr->sample_type);
+ 
+-	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
+-	intel_pt_synth.session = session;
+-
+-	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
+-					  &id, intel_pt_event_synth);
++	err = perf_session__deliver_synth_attr_event(session, attr, id);
+ 	if (err)
+ 		pr_err("%s: failed to synthesize '%s' event type\n",
+ 		       __func__, name);
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 5596bed1b8c8..18a8f4a84045 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -1764,6 +1764,30 @@ int perf_session__deliver_synth_event(struct perf_session *session,
+ 	return machines__deliver_event(&session->machines, evlist, event, sample, tool, 0, NULL);
+ }
+ 
++int perf_session__deliver_synth_attr_event(struct perf_session *session,
++					   const struct perf_event_attr *attr,
++					   u64 id)
++{
++	union {
++		struct {
++			struct perf_record_header_attr attr;
++			u64 ids[1];
++		} attr_id;
++		union perf_event ev;
++	} ev = {
++		.attr_id.attr.header.type = PERF_RECORD_HEADER_ATTR,
++		.attr_id.attr.header.size = sizeof(ev.attr_id),
++		.attr_id.ids[0] = id,
++	};
++
++	if (attr->size != sizeof(ev.attr_id.attr.attr)) {
++		pr_debug("Unexpected perf_event_attr size\n");
++		return -EINVAL;
++	}
++	ev.attr_id.attr.attr = *attr;
++	return perf_session__deliver_synth_event(session, &ev.ev, NULL);
++}
++
+ static void event_swap(union perf_event *event, bool sample_id_all)
+ {
+ 	perf_event__swap_op swap;
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 4c29dc86956f..cc28976bb00e 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -154,6 +154,9 @@ extern volatile int session_done;
+ int perf_session__deliver_synth_event(struct perf_session *session,
+ 				      union perf_event *event,
+ 				      struct perf_sample *sample);
++int perf_session__deliver_synth_attr_event(struct perf_session *session,
++					   const struct perf_event_attr *attr,
++					   u64 id);
+ 
+ int perf_session__dsos_hit_all(struct perf_session *session);
+ 
 -- 
 2.45.2.993.g49e7a77208-goog
 
