@@ -1,158 +1,190 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72DEB42AB5;
-	Thu, 11 Jul 2024 22:08:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C498D19FA62
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 22:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720735714; cv=none; b=bdyIj3gKNvLpSFMdyYK+Zm/EsQzyw4yJlEXiLSHGni2ijm6lj9RS8CEZ64HfyFLNQlzWswibWSWwol2PGEvQthwR82/hqF+Ai0bMtjllooPlZIpo0os8qdS0uj5tRRVs34daTVIx2mdoa8y3P8KGFpXX8Pg4oWsu4Gopm6l3roA=
+	t=1720736650; cv=none; b=QfiwMC8vNmxX/7fbVcyyEODqqYooJ26ufxgltrUtU+Qw3qpCRe4nKnw6QIxOQJDMbn43gd2aCwmst/FTYUcr4lHnaWrFX3gOGIH3b456RxeNZYlQ6EeKXMJWrpw71LHCT2QMmZX3iYyzXVekm09D5Mo6758vNcCS6nMIHkNPgSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720735714; c=relaxed/simple;
-	bh=djdztjiMohQIgYnDLRcYcPqXdFDkPuGeeTVUgFY6hbc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JEe6kvlxlvbrmkh9/xtKTGyY3jGAA/K2+dimhwN5LAqRQgqQBAc0VGOLm18hii3YhgxDDAGzwvTe5mTG0Gt7d5IxSOAMOX2lha9qJw7WJGzX88DAXm/ZM/blJljNGkVE6wtQbV68aftNMNngC1sx9OlCvJeQDFmpoQvho5ezRP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mRRCW1+Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720736650; c=relaxed/simple;
+	bh=umz65CgamqI9woTw9I8lAdO2908JYg7ok02eaBGsWkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FF8zUXz9rbQMGzn2fqojpIrAcj4lnLS9AHRfKDfpwconZSYylkJTxuDXbgFMmgsHr8QbW/7mzTy2b/knX09rLlN+Ai325ijx37qBC6BCgagJpy3IxsoMstGCMLOvRuFExD+aSlbIZmzM3F4Q/A25XRqab5mnDKidUU+0gn70ggg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0K8zKent; arc=none smtp.client-ip=209.85.160.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mRRCW1+Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A8DC116B1;
-	Thu, 11 Jul 2024 22:08:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720735714;
-	bh=djdztjiMohQIgYnDLRcYcPqXdFDkPuGeeTVUgFY6hbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mRRCW1+Y0fhMUNO7PJroj4O2Mk/VC4hRrsWgyqVax+6zKJmL9nLLTqJMbNKAGC9d8
-	 0z9KEL787lp6cXbk9sYFG+LT42CRgBG4slpXOhSfJkf//p+joYQec9byAY8zPL/PX3
-	 JPz7lNTXMRUQ5tWxx0TaLBCRu+qtt8A4AmGzKoID/wOAPRmxia3NepLKN11F9t5esP
-	 8hS2wq7dkF9FTQuUqN6JgJfvGVZjxTQjck0Q+1skG+fq/77Quv9e3qyH60+8JvmMm3
-	 sYYd/hiAsIxv6YudcHRQ+MRG/rQ7Ohaf4QHmo+eCBRBbNPiXAVQPLU65VF7yL3seQR
-	 D0vOG2PU+DB+Q==
-Date: Thu, 11 Jul 2024 15:08:30 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Guilherme Amadio <amadio@gentoo.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Thorsten Leemhuis <linux@leemhuis.info>, Leo Yan <leo.yan@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
- for libtrace{event,fs}
-Message-ID: <ZpBX3gE1wJ89gUlt@google.com>
-References: <20240628202608.3273329-1-amadio@gentoo.org>
- <20240628203432.3273625-1-amadio@gentoo.org>
- <ZoSOR0ULxXLxLZvA@google.com>
- <ZoVFqiZdTXy1glLc@gentoo.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0K8zKent"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44a8b140a1bso101061cf.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 15:24:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720736648; x=1721341448; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1ikbsIYih3ehLlIfT5YoG7a0BVQ8XeYIK6rrLHADErw=;
+        b=0K8zKent4k5GsWH1KQPj9oEjzCUYsfoNU7SHZQrlt2GtoD0LfCTi2MCIMmMjJ0aPaA
+         aojFhlLvvMclR1/zsOmdBeGC1mjD5puCGZN1VoKGaHv2q3uvXf/k4F4tszCRIkBZBuP0
+         SmB2f+b2SOR4PlRLElHZTSpQxFPNTGutQVbYLwgmGRe4Q5rP1SK0QbHqEYohRoI6zkAE
+         XB5k45KcwYfYTsARQsQd2derr7ZT4UByHkR5vUxV0bH6c2Y3Fv5Hk+scwq7GFqfQmQsM
+         IJhGEP7mx1POBgWnT1k9Wn8lZCU1GAzaWQlXnyHrnCZ76eYiiOR1bMNw3cvA9JiT8nj/
+         kFvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720736648; x=1721341448;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1ikbsIYih3ehLlIfT5YoG7a0BVQ8XeYIK6rrLHADErw=;
+        b=UvjvVKyNFuEn3YSrOwRdgjqOkE2JI1/31SC4De4h+Or7EFXRrojc8pT5dGkPBvyGOJ
+         3GIpnqKpdfz12TRfFy8HjUbazBhBlsTR6wcNbXC1JWBqMHyXLMXrrDbgar5bvmOUxsxz
+         t6ENZflpFaFyZlWpVnlA55hqHgFOfbf0QQg+Wb/b5F583fw8ueSpEQTecVbK/v/HK78R
+         NC+RpM+mkPRqoYf8VY4itAikw8EyjL13fj2JIxRQtfZLfMstF97J4laemy8ZUQmdEVWe
+         JvtghoJMRUXOzaCC/yPmfqmO1fRe8CTveKaV6iADlqa/oM8qxnz7twNK/PQ1uiGGMwsO
+         4iaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXoHBH5TfuCTsWFjVEtg/coNnfOiZRvNYkY11SPQ5Z1oQuOCmRv9FK/JATJr90f3mYnPCPpY3tcI6jypu/ELnjQCzZrQ4ZpjPINagapbRfF7Q==
+X-Gm-Message-State: AOJu0YwgW3spjv17x/rE7xJpFSmnz3V9vrZzjagMIZYTsSmHsHp5jkY4
+	f5+5j7t71PSysGbjsSNexsuHQay4+saTSi7lTX5fjZAfCw/WN1pY0nldIDrPmOYEIde/hY8DvIm
+	giVCf2yPrx+V0+UEbEfsUNzRkPyrfPjXlh+KS
+X-Google-Smtp-Source: AGHT+IGAc884CVEDTkvsd7h8jIYVN5c3I7pSJJVtiIZ6adS6zViqgnZWfojP5ub98vVg/kgQUmfRgXI+GvGBo0Nwylo=
+X-Received: by 2002:a05:622a:289a:b0:447:f3ae:383b with SMTP id
+ d75a77b69052e-44e9e556a99mr307391cf.19.1720736647474; Thu, 11 Jul 2024
+ 15:24:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZoVFqiZdTXy1glLc@gentoo.org>
+References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 11 Jul 2024 15:23:56 -0700
+Message-ID: <CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com>
+Subject: Re: [PATCH v4 00/11] Add per-core RAPL energy counter support for AMD CPUs
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
+	kees@kernel.org, gustavoars@kernel.org, rui.zhang@intel.com, 
+	oleksandr@natalenko.name, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
+	ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com, 
+	ravi.bangoria@amd.com, sandipan.das@amd.com, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Thu, Jul 11, 2024 at 3:25=E2=80=AFAM Dhananjay Ugwekar
+<Dhananjay.Ugwekar@amd.com> wrote:
+>
+> Currently the energy-cores event in the power PMU aggregates energy
+> consumption data at a package level. On the other hand the core energy
+> RAPL counter in AMD CPUs has a core scope (which means the energy
+> consumption is recorded separately for each core). Earlier efforts to add
+> the core event in the power PMU had failed [1], due to the difference in
+> the scope of these two events. Hence, there is a need for a new core scop=
+e
+> PMU.
+>
+> This patchset adds a new "power_per_core" PMU alongside the existing
+> "power" PMU, which will be responsible for collecting the new
+> "energy-per-core" event.
 
-On Wed, Jul 03, 2024 at 02:35:54PM +0200, Guilherme Amadio wrote:
-> Hello,
-> 
-> On Tue, Jul 02, 2024 at 04:33:27PM -0700, Namhyung Kim wrote:
-> > Hello,
-> > 
-> > On Fri, Jun 28, 2024 at 10:34:27PM +0200, Guilherme Amadio wrote:
-> > > This avoids reported warnings when the packages are not installed.
-> > > 
-> > > Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
-> > > Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
-> > 
-> > Thanks for working on this.
-> > 
-> > > ---
-> > >  tools/perf/Makefile.config | 28 +++++++++++++++-------------
-> > >  1 file changed, 15 insertions(+), 13 deletions(-)
-> > > 
-> > > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> > > index 5271a4c1d2b3..5387babb8f04 100644
-> > > --- a/tools/perf/Makefile.config
-> > > +++ b/tools/perf/Makefile.config
-> > > @@ -182,13 +182,21 @@ endif
-> > >  FEATURE_CHECK_CFLAGS-libzstd := $(LIBZSTD_CFLAGS)
-> > >  FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
-> > >  
-> > > -# for linking with debug library, run like:
-> > > -# make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
-> > > -FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
-> > > -FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
-> > > -
-> > > -FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
-> > > -FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
-> > > +ifneq ($(NO_LIBTRACEEVENT),1)
-> > > +  ifeq ($(call get-executable,$(PKG_CONFIG)),)
-> > > +  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-> > 
-> > I know you just copied the code, but IIRC we wanted to remove this dummy
-> > assignment before.
-> 
-> Sure, I will change this. I think we can also remove the "dummy :=" part and
-> just do $(error Error: ...), like it's done in other places.
-> 
-> > > +  endif
-> > > +endif
-> > > +ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
-> > > +  # for linking with debug library, run like:
-> > > +  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
-> > > +  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
-> > > +  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
-> > > +endif
-> > > +ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
-> > > +  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
-> > > +  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
-> > 
-> > I'm curious if we can redirect stderr to /dev/null to surpress the
-> > output when pkg-config is not installed.  Then we don't need to check
-> > the `ifeq`.
-> 
-> I was wondering that myself when I added the check, if you prefer to redirect
-> stderr to /dev/null, I will do it that way then when I submit v3.
-
-Due to the timing of the merge window, I'll apply this patch (1/6 only)
-with the following modification.  Please take a look and update v3.
+Sorry for being naive, is the only reason for adding the new PMU for
+the sake of the cpumask? Perhaps we can add per event cpumasks like
+say `/sys/devices/power/events/energy-per-core.cpumask` which contains
+the CPUs of the different cores in this case. There's supporting
+hotplugging CPUs as an issue. Adding the tool support for this
+wouldn't be hard and it may be less messy (although old perf tools on
+new kernels wouldn't know about these files).
 
 Thanks,
-Namhyung
+Ian
 
----
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 5387babb8f04..a4829b6532d8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -184,19 +184,17 @@ FEATURE_CHECK_LDFLAGS-libzstd := $(LIBZSTD_LDFLAGS)
- 
- ifneq ($(NO_LIBTRACEEVENT),1)
-   ifeq ($(call get-executable,$(PKG_CONFIG)),)
--  dummy := $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-+    $(error Error: $(PKG_CONFIG) needed by libtraceevent is missing on this system, please install it)
-   endif
- endif
--ifeq ($(shell $(PKG_CONFIG) --exists libtraceevent 2>&1 1>/dev/null; echo $$?),0)
--  # for linking with debug library, run like:
--  # make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
--  FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent)
--  FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent)
--endif
--ifeq ($(shell $(PKG_CONFIG) --exists libtracefs 2>&1 1>/dev/null; echo $$?),0)
--  FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs)
--  FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs)
--endif
-+
-+# for linking with debug library, run like:
-+# make DEBUG=1 PKG_CONFIG_PATH=/opt/libtraceevent/(lib|lib64)/pkgconfig
-+FEATURE_CHECK_CFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --cflags libtraceevent 2>/dev/null)
-+FEATURE_CHECK_LDFLAGS-libtraceevent := $(shell $(PKG_CONFIG) --libs libtraceevent 2>/dev/null)
-+
-+FEATURE_CHECK_CFLAGS-libtracefs := $(shell $(PKG_CONFIG) --cflags libtracefs 2>/dev/null)
-+FEATURE_CHECK_LDFLAGS-libtracefs := $(shell $(PKG_CONFIG) --libs libtracefs 2>/dev/null)
- 
- FEATURE_CHECK_CFLAGS-bpf = -I. -I$(srctree)/tools/include -I$(srctree)/tools/arch/$(SRCARCH)/include/uapi -I$(srctree)/tools/include/uapi
- # include ARCH specific config
 
+> Tested the package level and core level PMU counters with workloads
+> pinned to different CPUs.
+>
+> Results with workload pinned to CPU 1 in Core 1 on an AMD Zen4 Genoa
+> machine:
+>
+> $ perf stat -a --per-core -e power_per_core/energy-per-core/ -- sleep 1
+>
+>  Performance counter stats for 'system wide':
+>
+> S0-D0-C0         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C1         1          5.72 Joules power_per_core/energy-per-core/
+> S0-D0-C2         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C3         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C4         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C5         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C6         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C7         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C8         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C9         1          0.02 Joules power_per_core/energy-per-core/
+> S0-D0-C10        1          0.02 Joules power_per_core/energy-per-core/
+>
+> [1]: https://lore.kernel.org/lkml/3e766f0e-37d4-0f82-3868-31b14228868d@li=
+nux.intel.com/
+>
+> This patchset applies cleanly on top of v6.10-rc7 as well as latest
+> tip/master.
+>
+> v4 changes:
+> * Add patch 11 which removes the unused function cpu_to_rapl_pmu()
+> * Add Rui's rb tag for patch 1
+> * Invert the pmu scope check logic in patch 2 (Peter)
+> * Add comments explaining the scope check in patch 2 (Peter)
+> * Use cpumask_var_t instead of cpumask_t in patch 5 (Peter)
+> * Move renaming code to patch 8 (Rui)
+> * Reorder the cleanup order of per-core and per-pkg PMU in patch 10 (Rui)
+> * Add rapl_core_hw_unit variable to store the per-core PMU unit in patch
+>   10 (Rui)
+>
+> PS: Scope check logic is still kept the same (i.e., all Intel systems bei=
+ng
+> considered as die scope), Rui will be modifying it to limit the die-scope
+> only to Cascadelake-AP in a future patch on top of this patchset.
+>
+> v3 changes:
+> * Patch 1 added to introduce the logical_core_id which is unique across
+>   the system (Prateek)
+> * Use the unique topology_logical_core_id() instead of
+>   topology_core_id() (which is only unique within a package on tested
+>   AMD and Intel systems) in Patch 10
+>
+> v2 changes:
+> * Patches 6,7,8 added to split some changes out of the last patch
+> * Use container_of to get the rapl_pmus from event variable (Rui)
+> * Set PERF_EV_CAP_READ_ACTIVE_PKG flag only for pkg scope PMU (Rui)
+> * Use event id 0x1 for energy-per-core event (Rui)
+> * Use PERF_RAPL_PER_CORE bit instead of adding a new flag to check for
+>   per-core counter hw support (Rui)
+>
+> Dhananjay Ugwekar (10):
+>   perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+>   perf/x86/rapl: Rename rapl_pmu variables
+>   perf/x86/rapl: Make rapl_model struct global
+>   perf/x86/rapl: Move cpumask variable to rapl_pmus struct
+>   perf/x86/rapl: Add wrapper for online/offline functions
+>   perf/x86/rapl: Add an argument to the cleanup and init functions
+>   perf/x86/rapl: Modify the generic variable names to *_pkg*
+>   perf/x86/rapl: Remove the global variable rapl_msrs
+>   perf/x86/rapl: Add per-core energy counter support for AMD CPUs
+>   perf/x86/rapl: Remove the unused function cpu_to_rapl_pmu
+>
+> K Prateek Nayak (1):
+>   x86/topology: Introduce topology_logical_core_id()
+>
+>  Documentation/arch/x86/topology.rst   |   4 +
+>  arch/x86/events/rapl.c                | 454 ++++++++++++++++++--------
+>  arch/x86/include/asm/processor.h      |   1 +
+>  arch/x86/include/asm/topology.h       |   1 +
+>  arch/x86/kernel/cpu/debugfs.c         |   1 +
+>  arch/x86/kernel/cpu/topology_common.c |   1 +
+>  6 files changed, 328 insertions(+), 134 deletions(-)
+>
+> --
+> 2.34.1
+>
