@@ -1,187 +1,183 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECB8D14AD3B
-	for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 22:29:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946D5383;
+	Thu, 11 Jul 2024 02:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720650581; cv=none; b=vAAhSx9LD+SDHoqMCTtiGXlSpaV0DcKSv7VAfUd3t9wY9o8p45gBjnRT9v2pN05bJMPF5P4T5qsxJhoRfknmtrHah6fd6JmxBv9/6lH2vf1rF/uOj5bEuO+2rNkpwi96gOKxfyIlctTeLO0QE6IsOb4GnanOcolLhrKcW9poaDQ=
+	t=1720663557; cv=none; b=ldGcEpcqdcPiZ8MzU0af9BxfuEU6qc+/6EDN2yYBFH/F01vxF+pmmlJs1/YTyOwvi4joqb23mMmR9tuy4r8rFKDB/c0+I7inwfVR1ePuhdnI7ERjoDXRZiT9OasNgT/eRIuN8wPwgUepC0Y/Kq9/n3mKNoPI8AD1I06bgpmPcaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720650581; c=relaxed/simple;
-	bh=rsM6wOIIuPtiTXHYi0ZYdEkTXszm2PRQO/8IL35wGpA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p3RSkbwe+El7ii9jMZIH71I+uv1mvwAalCS8lRCJlL1I2YjRyCIHzyjTGRQu/pq+nW+mda3de2paYUNxtbPslxwnWyIVTllUISthsD7WPcdIDotfkIQEkuP+GvRk1ZzmOuELM+LNnikBvviE6Vvh0CyKADrtIxSztey3eNJia/0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=T6z+AU0s; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="T6z+AU0s"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb3cf78fbdso1528655ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 10 Jul 2024 15:29:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1720650579; x=1721255379; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
-        b=T6z+AU0s8w6gBLmADCXNMWbBsHGbY+tyinUxuEH/OO0q6Wg9FiImX3vui2ZkY52XYR
-         wWiDFDtWYaCfgTLpPuoTndyQ1H3OQ6FJq3XrLMTPwRdVoqhb3VUvEM+74iSgFLMA9J+1
-         SK9SJFvC22mefOQz4eKZTJxqesD3Ej5lDMMmwARPCJgeOne4FP7n8vXLcZ36XmwAAwNS
-         unRhQqWMH2LSDrhlNlVR5B/scKOSiQr5zz5h4zxMcZhkgK9WJ1vGhnfNmQZLd9/nTMZ6
-         dD1DZaZYuPij2sCklOStYQz5FRDCMZU5LS3zf1sqpycORsqKxsvt1s698FlcY5eTZoAx
-         /J2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720650579; x=1721255379;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4NTgih/I/qtspn9wPSsT5PQdbbKiYuSLrBWTOJWi/Yo=;
-        b=l5Okoxo7EJqShBUqc/NI+c1IrNEf1C5gMXlzTjlCLaMWWd3mzYet5GH9CacQqqMRjV
-         rfOUP7sx4zFpqAmAKUhnnr1H61suZDejNNtE/oX/C5DXiD/wf9Vf+bwpAI8Ka2UdgurN
-         Q/eLFr95mmXjLdPYu4bil/WYAAcB8OMWwezfLlgiQlGNQEVVxO14Fd5h0TRyzbJvF92i
-         Bz59vYEvqtdaCkJu00zCYov/SyB/XSsLC+zDaS+b8WM4rn83lcHd1DitncEVm7DuqUzl
-         NLwgGGZu6HDyIF6uc0jP7aUFgtw2I4zh+hPcEDtQQFrivZSg7rROra5azUyyIPe+sYMv
-         /LNQ==
-X-Gm-Message-State: AOJu0YyTtB4wBtyKDms6hj9hc64grjGMT3/LG7D75a//L0HNdFEFrqay
-	hWp8OENjK1lIF0KPusR8wCThySgdKrtUwrAvAgpIlRQoL/SvBv18+WhdBqd344W3tpg/cifHX4D
-	XwS5ic2XdzeUnzvZFtSLMdxMhaE3g77CXc/o6mA==
-X-Google-Smtp-Source: AGHT+IEG0fJWzbKu94wc/lGrrWrq4ZTcQCHpdjfNmMcuIOCOrmIosFxlMKcxuEkUwIgTY3hOtUi5EqpS3gyOLgsysHw=
-X-Received: by 2002:a17:90a:9a81:b0:2c9:60ea:2f11 with SMTP id
- 98e67ed59e1d1-2ca35bd24a5mr5291639a91.1.1720650579090; Wed, 10 Jul 2024
- 15:29:39 -0700 (PDT)
+	s=arc-20240116; t=1720663557; c=relaxed/simple;
+	bh=8xQZflV4+sVWWI8BAh5XMpMjW5885RiRrVGlv0CSCVs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=pTn4sJP9GPrHnLPG/Oa4lfTrT4B7m6iogkyWAP3kglf3P8RyKE9upbxsXyXTF1QbMb1gOnuRFr9mlqq8rS28wQ6wiOEFkwyftsqg6GoEPSphQwAQ6wbtoJ9fyQBjqToKiEP4rbTvYStbHq4nSFyKtWdPjWg7shV1Bt7aKVh7VoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WKHyY1QZsz1yvHt;
+	Thu, 11 Jul 2024 10:01:25 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4478F1A0188;
+	Thu, 11 Jul 2024 10:05:21 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 11 Jul 2024 10:05:20 +0800
+Message-ID: <993a2fa6-b40e-b85c-ea87-e7940db11d3d@huawei.com>
+Date: Thu, 11 Jul 2024 10:05:19 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708232302.15267-1-cachen@purestorage.com>
- <20240708232302.15267-2-cachen@purestorage.com> <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
-In-Reply-To: <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
-From: Casey Chen <cachen@purestorage.com>
-Date: Wed, 10 Jul 2024 15:29:27 -0700
-Message-ID: <CALCePG0_PpwKK_=YrpCGr-j51dG8xtDP-yzBYGeLwphscFobRg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf tool: fix handling NULL al->maps returned from thread__find_map
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yzhong@purestorage.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH 1/2] uprobes: Optimize the return_instance related
+ routines
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
+	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
+	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
+	<sdf@fomichev.me>, <haoluo@google.com>, <mykolal@fb.com>, <shuah@kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
+	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
+References: <20240709005142.4044530-1-liaochang1@huawei.com>
+ <20240709005142.4044530-2-liaochang1@huawei.com>
+ <CAEf4BzYDrVJXnAruko-h5-oXCGuZ92x4KnY-2cD=XXBp1U_kBg@mail.gmail.com>
+ <2336576e-1ed4-cd5e-5535-2d9b88218dae@huawei.com>
+ <CAEf4BzYDvh2Ynrttk4NLyCGB8AVM2d-2tKSzRZF_cXVA80qucw@mail.gmail.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <CAEf4BzYDvh2Ynrttk4NLyCGB8AVM2d-2tKSzRZF_cXVA80qucw@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Mon, Jul 8, 2024 at 10:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hello,
->
-> On Mon, Jul 8, 2024 at 4:23=E2=80=AFPM Casey Chen <cachen@purestorage.com=
-> wrote:
-> >
-> > With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
-> > thread__find_map() would return with al->maps or al->map being NULL
-> > when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
-> > later deferencing on it would crash.
-> >
-> > Fix callers of thread__find_map() or thread__find_symbol() to handle
-> > this.
->
-> It looks like you drop the callchain if it doesn't find a map/symbol.
-> Can we keep the entries with raw hex numbers instead?
->
-In add_callchain_ip(), my change let it return if either al.maps is
-NULL or al.map is NULL after thread__find_symbol(), I'm not sure what
-else can add_callchain_ip() could do to keep raw hex numbers. If it
-proceeds, al.sym is NULL, the code inside 'if (al.sym !=3D NULL)' would
-skip. callchain_srcline() would return NULL. chain_cursor_append()
-would append a node whose ms.maps/ ms.map are NULL. Later
-dereferencing them would cause trouble. But we could add other
-information to the node, like ip, branch, nr_loop_iter, iter_cycles,
-branch_from, are these information good to have ? but how to avoid
-dereferencing NULL maps/map later.
 
-Thanks
-Casey
 
-> Thanks,
-> Namhyung
->
-> > ---
-> >  tools/perf/arch/powerpc/util/skip-callchain-idx.c | 10 ++++++----
-> >  tools/perf/util/machine.c                         |  5 +++++
-> >  tools/perf/util/unwind-libdw.c                    |  6 ++++--
-> >  3 files changed, 15 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/tools/=
-perf/arch/powerpc/util/skip-callchain-idx.c
-> > index 5f3edb3004d8..25b0804df4c4 100644
-> > --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > @@ -255,13 +255,14 @@ int arch_skip_callchain_idx(struct thread *thread=
-, struct ip_callchain *chain)
-> >
-> >         thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al);
-> >
-> > -       if (al.map)
-> > -               dso =3D map__dso(al.map);
-> > +       if (!al.map)
-> > +               goto out;
-> > +
-> > +       dso =3D map__dso(al.map);
-> >
-> >         if (!dso) {
-> >                 pr_debug("%" PRIx64 " dso is NULL\n", ip);
-> > -               addr_location__exit(&al);
-> > -               return skip_slot;
-> > +               goto out;
-> >         }
-> >
-> >         rc =3D check_return_addr(dso, map__start(al.map), ip);
-> > @@ -282,6 +283,7 @@ int arch_skip_callchain_idx(struct thread *thread, =
-struct ip_callchain *chain)
-> >                 skip_slot =3D 3;
-> >         }
-> >
-> > +out:
-> >         addr_location__exit(&al);
-> >         return skip_slot;
-> >  }
-> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > index 8477edefc299..fa4037d7f3d4 100644
-> > --- a/tools/perf/util/machine.c
-> > +++ b/tools/perf/util/machine.c
-> > @@ -2098,7 +2098,12 @@ static int add_callchain_ip(struct thread *threa=
-d,
-> >                         }
-> >                         goto out;
-> >                 }
-> > +
-> >                 thread__find_symbol(thread, *cpumode, ip, &al);
-> > +               if (!al.maps || !al.map) {
-> > +                       err =3D 1;
-> > +                       goto out;
-> > +               }
-> >         }
-> >
-> >         if (al.sym !=3D NULL) {
-> > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwind-li=
-bdw.c
-> > index b38d322734b4..fb038ef55be2 100644
-> > --- a/tools/perf/util/unwind-libdw.c
-> > +++ b/tools/perf/util/unwind-libdw.c
-> > @@ -53,8 +53,10 @@ static int __report_module(struct addr_location *al,=
- u64 ip,
-> >          */
-> >         thread__find_symbol(ui->thread, PERF_RECORD_MISC_USER, ip, al);
-> >
-> > -       if (al->map)
-> > -               dso =3D map__dso(al->map);
-> > +       if (!al->map)
-> > +               return -1;
-> > +
-> > +       dso =3D map__dso(al->map);
-> >
-> >         if (!dso)
-> >                 return 0;
-> > --
-> > 2.45.2
-> >
-> >
+在 2024/7/11 5:21, Andrii Nakryiko 写道:
+> On Wed, Jul 10, 2024 at 1:19 AM Liao, Chang <liaochang1@huawei.com> wrote:
+>>
+>>
+>>
+>> 在 2024/7/10 7:55, Andrii Nakryiko 写道:
+>>> On Mon, Jul 8, 2024 at 6:00 PM Liao Chang <liaochang1@huawei.com> wrote:
+>>>>
+>>>> Reduce the runtime overhead for struct return_instance data managed by
+>>>> uretprobe. This patch replaces the dynamic allocation with statically
+>>>> allocated array, leverage two facts that are limited nesting depth of
+>>>> uretprobe (max 64) and the function call style of return_instance usage
+>>>> (create at entry, free at exit).
+>>>>
+>>>> This patch has been tested on Kunpeng916 (Hi1616), 4 NUMA nodes, 64
+>>>> cores @ 2.4GHz. Redis benchmarks show a throughput gain by 2% for Redis
+>>>> GET and SET commands:
+>>>>
+>>>> ------------------------------------------------------------------
+>>>> Test case       | No uretprobes | uretprobes     | uretprobes
+>>>>                 |               | (current)      | (optimized)
+>>>> ==================================================================
+>>>> Redis SET (RPS) | 47025         | 40619 (-13.6%) | 41529 (-11.6%)
+>>>> ------------------------------------------------------------------
+>>>> Redis GET (RPS) | 46715         | 41426 (-11.3%) | 42306 (-9.4%)
+>>>> ------------------------------------------------------------------
+>>>>
+>>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>>>> ---
+>>>>  include/linux/uprobes.h |  10 ++-
+>>>>  kernel/events/uprobes.c | 162 ++++++++++++++++++++++++----------------
+>>>>  2 files changed, 105 insertions(+), 67 deletions(-)
+>>>>
+>>>
+>>> [...]
+>>>
+>>>> +static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
+>>>> +                                    struct pt_regs *regs)
+>>>> +{
+>>>> +       struct return_frame *frame = &utask->frame;
+>>>> +       struct return_instance *ri = frame->return_instance;
+>>>> +       enum rp_check ctx = chained ? RP_CHECK_CHAIN_CALL : RP_CHECK_CALL;
+>>>> +
+>>>> +       while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
+>>>> +               ri = next_ret_instance(frame, ri);
+>>>> +               utask->depth--;
+>>>> +       }
+>>>> +       frame->return_instance = ri;
+>>>> +}
+>>>> +
+>>>> +static struct return_instance *alloc_return_instance(struct uprobe_task *task)
+>>>> +{
+>>>> +       struct return_frame *frame = &task->frame;
+>>>> +
+>>>> +       if (!frame->vaddr) {
+>>>> +               frame->vaddr = kcalloc(MAX_URETPROBE_DEPTH,
+>>>> +                               sizeof(struct return_instance), GFP_KERNEL);
+>>>
+>>> Are you just pre-allocating MAX_URETPROBE_DEPTH instances always?
+>>> I.e., even if we need just one (because there is no recursion), you'd
+>>> still waste memory for all 64 ones?
+>>
+>> This is the truth. On my testing machines, each struct return_instance data
+>> is 28 bytes, resulting in a total pre-allocated 1792 bytes when the first
+>> instrumented function is hit.
+>>
+>>>
+>>> That seems rather wasteful.
+>>>
+>>> Have you considered using objpool for fast reuse across multiple CPUs?
+>>> Check lib/objpool.c.
+>>
+>> After studying how kretprobe uses objpool, I'm convinced it is a right solution for
+>> managing return_instance in uretporbe. While I need some time to fully understand
+>> the objpool code itself and run some benchmark to verify its performance.
+>>
+>> Thanks for the suggestion.
+> 
+> Keep in mind that there are two patch sets under development/review,
+> both of which touch this code. [0] will make return_instance
+> variable-sized, so think how to accommodate that. And [1] in general
+> touches a bunch of this code. So I'd let those two settle and land
+> before optimizing return_instance allocations further.
+> 
+>   [0] https://lore.kernel.org/linux-trace-kernel/20240701164115.723677-1-jolsa@kernel.org/
+>   [1] https://lore.kernel.org/linux-kernel/20240708091241.544262971@infradead.org/
+
+Thanks for letting me know. I've made a note to track the progress of these patch sets.
+
+> 
+>>
+>>>
+>>>> +               if (!frame->vaddr)
+>>>> +                       return NULL;
+>>>> +       }
+>>>> +
+>>>> +       if (!frame->return_instance) {
+>>>> +               frame->return_instance = frame->vaddr;
+>>>> +               return frame->return_instance;
+>>>> +       }
+>>>> +
+>>>> +       return ++frame->return_instance;
+>>>> +}
+>>>> +
+>>>> +static inline bool return_frame_empty(struct uprobe_task *task)
+>>>> +{
+>>>> +       return !task->frame.return_instance;
+>>>>  }
+>>>>
+>>>>  /*
+>>>
+>>> [...]
+>>
+>> --
+>> BR
+>> Liao, Chang
+
+-- 
+BR
+Liao, Chang
