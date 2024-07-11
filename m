@@ -1,108 +1,113 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D3E15820E;
-	Thu, 11 Jul 2024 11:51:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B34615ADB6
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 12:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720698703; cv=none; b=Hp4oTEeziFlu+8pB4eXtVpBpM3GgmirX30Dpem44DNfiYQyNoplwYiHojHyBNUd8xRYtYt4ULIOqUWYqQ6DNVew2E2Xy6xY3gjcUrh1CMGnE57drUw2ALfiIBK/oXmw5FH1AUNstK8QVqgO/GcdUT0hfb9G0jmE76WY9kKmFCqM=
+	t=1720700211; cv=none; b=Ze+euMYBdHgafZPcdnci+dBgkD7kYfxPDYhSiSj+3WCNVigCrEomfBP5aw36xtT8+VNQ/SmDeJFXoUJOqJMZUZzTieEBmPGpXF6ccw7SxunAu64XbW2P+3pF3JTNIbDyjakExNrffKVMo9IXEdFXbihy6kvrBkCWqPGcJigJdnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720698703; c=relaxed/simple;
-	bh=ucFrtL2gfjqV/c9AnCqRKLXAq1ujHVF98cnp+SY1VWY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ubL64qS5JIN581UZFK17rThnKwHpOULWnuPcpTW3a2NSQaR0KWAANBjA9wltfJIL/k7OndrWi6KRDRzGhtXN8peatwKAlmQjElQMQl3Q8JlPQaD/G2A7lV10mU2aUf3otZc12z9d+wWIGGcX6kfQsB8ZXTgZZYxcndDX+Vzctfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CjuOTmGc; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1720700211; c=relaxed/simple;
+	bh=ZfAsVuNJJ62xC1bcTIbeqw1Vf7WWhi/N/16QxvOY3I4=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=nItSKvh2wItSps3vOj13ZqAw+lS++Wt3zBxEl4ZVla6RxFaYtrum8IaDoT88BH9oLr3RKq6e5tVo8CIdF0lH00ZkgQiMqsCmKw5Bcr1DqpfW7yPiCo7u/1XtngJAkZTxeQDKIuQgyvRH5XIXbmjnhw8VjPhcL5AGOAwlz09xExM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=Rxc7LXqc; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CjuOTmGc"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=cxjY6RuKkVBvnWP6/j3ZkXH4A7CjxPaXbnE4ia7U018=; b=CjuOTmGcSItVqRAm5Q500eJiDo
-	7I9fjGSWOsyEowDdifFzf+CO5UjT93aUWgVDTwOEQaSyC/9eaenJsncnKZafukUaSeaWD+jDqarxq
-	GAjq8UoW2sTnxYSqRTjgjmcU/yapxdJ37vjJeWytSZ2b1F+kTq+VL8G2KT7gwz57KJL9M8A/nmCJ3
-	Kj5qZTVoHIAITPl7Z8rypdEYOLA52VOig+NLekxf+Q0V9GBg3GcQy0uzsUHADc6ha2oK0RW1uq1eN
-	4sa/fItDw2nTD8wJKKLzSLPwOjlC7KEg8M+AxyWOqiw4MNDueUEA5sFExX3j5Obx1qwrurtwuBqUZ
-	cvrkhDTg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sRsKZ-000000015sZ-3OMo;
-	Thu, 11 Jul 2024 11:51:24 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 6BB7D30050D; Thu, 11 Jul 2024 13:51:23 +0200 (CEST)
-Date: Thu, 11 Jul 2024 13:51:23 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH V8 01/12] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-Message-ID: <20240711115123.GK4587@noisy.programming.kicks-ass.net>
-References: <20240628065111.59718-1-adrian.hunter@intel.com>
- <20240628065111.59718-2-adrian.hunter@intel.com>
- <20240701102644.GA20127@noisy.programming.kicks-ass.net>
- <68796741-f49f-447f-b707-fe4f8391fc17@intel.com>
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Rxc7LXqc"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fb472eacf4so4640445ad.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 05:16:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google; t=1720700209; x=1721305009; darn=vger.kernel.org;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=69MGJS0GUVdmuIBER5VAis30J1V0mIU5m8y/mihdUGU=;
+        b=Rxc7LXqcImPXtzlReoUWe2u3/h7I5ldHejElBDtJSWHjXr0tFTmLR2c71qFdEbRW2Y
+         ppLFQQI9DfUmYNAzDMLCbHXzwMJsSXEuqW7G5mB4pQmyIblVCq+hFrWsgbRuLjp5spHE
+         BMWMBPbwo7pk61Y1Jmh70uMdu4gI8e3/xFXiw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720700209; x=1721305009;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=69MGJS0GUVdmuIBER5VAis30J1V0mIU5m8y/mihdUGU=;
+        b=WjtC4c+FW1os/KxD3I2m02u2iWXgry2+MawBfOc2REk0enWFpOFo9DLX4NcrLv0qWn
+         A9svLXHyLk3iw2Op9d2pUQ13PxqG5nhBMxOXzyT+EiTK8+mjirhSSKplFHC09nj6VhCn
+         cp6Xfro/0oZG0Uhopf/437N9J5FzsU9SEXOFBgqQR4J4I3/+CHSLZdu1xt8RwikgTX+B
+         hLLkFi3xYyplpjHyf6wCiEL++Kn8yU9/ajl9W0VOMV/XeeCyNUcHtuvQ+xVOI4PaJdmJ
+         b2gnGNhiKNEmQZ7OEdOo6ddgmcyVYMmg7CeuIx0sQ8isMopnS0noE/0GzTTkr960V+LS
+         kyRQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW8YEbmrgeTHm6E0s3zbzmzXNw7cMLl/VPfHyzYTxzQUBNK0GH2M2hbpSZHdpI3vpOZTCjig3hgMi0Hpcq7h+3tOB2IlfQxI8EO24u+g1Xxtg==
+X-Gm-Message-State: AOJu0Yyn2rXFIhxSeyTNAN2t5Dh18l/sg4Tq95yghgyceSLgPdXG9XVs
+	uY02YQXQQUghgA+lrqJ78vGUKGCsw8xl8gVICu7P0a3Qvfzm20aFEkX7dz5wrw==
+X-Google-Smtp-Source: AGHT+IHG9vlr1+SQHRmtirHN1TlrG6AYVNhO0rfLZ1Mq7oWk5uGx3JJBpdgpM2ugZa414Zhlj2sbKg==
+X-Received: by 2002:a17:902:e852:b0:1fb:67e0:2e0a with SMTP id d9443c01a7336-1fbb6ec3f7emr74346465ad.48.1720700208757;
+        Thu, 11 Jul 2024 05:16:48 -0700 (PDT)
+Received: from akaher-virtual-machine.eng.vmware.com ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10111sm49211985ad.20.2024.07.11.05.16.46
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 11 Jul 2024 05:16:48 -0700 (PDT)
+From: Ajay Kaher <ajay.kaher@broadcom.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: mark.rutland@arm.com,
+	rostedt@goodmis.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	yangjihong1@huawei.com,
+	zegao2021@gmail.com,
+	leo.yan@linux.dev,
+	asmadeus@codewreck.org,
+	siyanteng@loongson.cn,
+	sunhaiyong@loongson.cn,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ajay.kaher@broadcom.com,
+	alexey.makhalov@broadcom.com,
+	vasavi.sirnapalli@broadcom.com
+Subject: [PATCH RFC 0/3] perf: add logic to collect off-cpu samples
+Date: Thu, 11 Jul 2024 17:46:16 +0530
+Message-Id: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68796741-f49f-447f-b707-fe4f8391fc17@intel.com>
 
-On Thu, Jul 11, 2024 at 01:42:33PM +0300, Adrian Hunter wrote:
-> On 1/07/24 13:26, Peter Zijlstra wrote:
-> > On Fri, Jun 28, 2024 at 09:51:00AM +0300, Adrian Hunter wrote:
-> > 
-> >> Add aux_paused to struct perf_event for AUX area events to keep track of
-> >> the "paused" state. aux_paused is initialized to aux_start_paused.
-> > 	
-> >> @@ -798,6 +810,9 @@ struct perf_event {
-> >>  	/* for aux_output events */
-> >>  	struct perf_event		*aux_event;
-> >>  
-> >> +	/* for AUX area events */
-> >> +	unsigned int			aux_paused;
-> >> +
-> >>  	void (*destroy)(struct perf_event *);
-> >>  	struct rcu_head			rcu_head;
-> >>  
-> > 
-> > Should this not be part of struct hw_perf_event for whatever hw event
-> > implements this AUX stuff?
-> > 
-> > In fact, I would expect PERF_HES_PAUSED or something to go in
-> > perf_event::hw::state.
-> 
-> Sorry for the slow reply due to vacation.
-> 
-> There doesn't seem to be anything preventing pause/resume from
-> "racing" (PMI vs task context) with changes in the aux event state,
-> so aux_paused must be separate from perf_event::hw::state.
+Add --off-cpu-kernel option to capture off-cpu sample alongwith on-cpu
+samples.
 
-So normally, context switching perf would be under pmu_disable(), which
-should ensure no PMI happens while we're reprogramming the PMU.
+off-cpu samples represent time spent by task when it was on wait queue
+(schedule out to waiting for events, blocked on I/O, locks, timers,
+paging/swapping, etc)
 
-That said, I think for the aux case we have perf_event_stop() that can
-race vs PMI, so yeah, bummer.
+Refer following links for more details:
+https://lpc.events/event/17/contributions/1556/
+https://www.youtube.com/watch?v=sF2faKGRnjs
 
-Sticking it in hw_perf_event would be good though. Also perhaps add a
-comment about exactly why this cannot be in ::state.
+Ajay Kaher (3):
+  perf/core: add logic to collect off-cpu sample
+  perf/record: add options --off-cpu-kernel
+  perf/report: add off-cpu samples
+
+ include/linux/perf_event.h            | 16 ++++++++++++++
+ include/uapi/linux/perf_event.h       |  3 ++-
+ kernel/events/core.c                  | 27 ++++++++++++++++++-----
+ tools/include/uapi/linux/perf_event.h |  3 ++-
+ tools/perf/builtin-record.c           |  2 ++
+ tools/perf/util/events_stats.h        |  2 ++
+ tools/perf/util/evsel.c               |  4 ++++
+ tools/perf/util/hist.c                | 31 ++++++++++++++++++++++++---
+ tools/perf/util/hist.h                |  1 +
+ tools/perf/util/record.h              |  1 +
+ tools/perf/util/sample.h              |  1 +
+ 11 files changed, 81 insertions(+), 10 deletions(-)
+
+-- 
+2.39.0
+
