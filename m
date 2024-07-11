@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF50916DC08
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C491A16EBE4
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720720829; cv=none; b=WDViAmi/RCg/oohq8nQGf8HtniKrVcezRExksntSZTd9e5KyjbvX4zocRVB4eGjPrVc8+LONeUUHluHDNlJozjc5nFPaXAoetkkcAgMSu3B7KJ4ZAHBb0HJt718V/HJpo4Gs3pFa3Ze8GILHZo9KbgEYsA/g2rI9v7sRGzBLnLA=
+	t=1720720829; cv=none; b=Qc1X9hmMdBn+aNuP12UBXB6kPQxFXeSIs/6OPcojT34sck5pEzaJClsPenPSDoOco8RAeYIb++7XTs31QXoU1fgidCwAV4ER32dkzNlb4larOdf1Xn6Eie0wI9G+lvm+9N+qYLq75X44NY1m9t4VOHMtq66YF5D0mDj0M11Qhk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1720720829; c=relaxed/simple;
-	bh=0sUGypKycMkQkspjkBVoBrgTbEB/yfeNI4tZZobPQAE=;
+	bh=PtBRXc0c+0allU3O64DiNYmraKLIDmcwEXLGEG6EUWQ=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=kvyWBazs1i3lnxWbK9VpG7ad8u0h8ANx2BbfcZI1qsR9f24Yp5dUE2+EXDTcUk6HnjBkYHxXjZl/MQA1UI9cJ3Z1JDbOJLf97jDvxbN2efL+Dh3OGWbdo58VnM3mOLb18g9DdYNcVVk0jKTXm7qUpEwDqFPa5JucrZHA6L1Y9SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ppyPFD+W; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=ogCmsG9xujB4lOoWYkwiIRpOmZ57swFtYu+kJeGIVPT7nIYYqkyUFZHGEQL9YWluvGqijb/2ell9M3V3Vu2UEFV7zhZBKGlC20DYBdN0kMzV58BwYRA1gR2Gjm+ukMuB1DXqCZXH8LKRAIWk+0WrV9VJMUxAaaOhdpSFuBzaKog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=F/JqVSW7; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ppyPFD+W"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-650ab31aabdso19208257b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F/JqVSW7"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e02a4de4f4eso1992235276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720720827; x=1721325627; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720720824; x=1721325624; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=PUbNGHbJusTOA2CgJOpkojrr3Ag9eG/HXr7a91E5F44=;
-        b=ppyPFD+WeU9PlFJ4c7YMoVnVNKecUKzucpvTVkXxIaBGK9kC58zxnEOn7Fr8fuDizw
-         zd62W/SyQdAOrpYiY6jN6zmTBKEtN2ly+FNddVBl5XHePryThqmET/09d2SbFf9KoZ/Y
-         ucQSF4VrsMwEFaxXb4NhcKX2DNuw8qyQD3+f0L3wLP/k9gYpTTDhIm5L3DkC/jamDzTZ
-         eq0Aar674zG1oRT4FYth4wDGP+1HDuAb8hzZ83Pj0NhEyUnMC3CChep1VLPGFx86tCZ0
-         yJrib7dJ4wKPlDIPPDapT9abSkly/cIejGGbAmGQWzjDmiw58wi3oS7W0xwk/ZudAdb1
-         N+kg==
+        bh=7irtahaUgZZ2kadtdQTAIVJwXhey7Hso05gQMGn03JQ=;
+        b=F/JqVSW76xnIJTR1rkSjo0io6S19BCOzQ/ZldYlVYr9i1/nYPLZmuxN5D1JfsfGCdp
+         imijRKWCfoeO1DBdksImG3Fv/Ma+/LNpyUFy8dJfHesOQrfmp/EmGJZXAwkhgpmsUDJE
+         hwl04/GNVTITjMhJhllvn9KJ2QBxTtzPst49IgBwmn094+C2km9bfsC1mGC7a8ZSQ3Z+
+         8aeSQKeGcYkHf+j9fQdM+lvmG4LWGtKdf6sy4Ey59LDK7JJuqPBNFVmfhvhaHTlt9DBE
+         ImtJuqvHHXmsry8T+nB+hRPAG0y8ambrNIymo+rE08ecy9ZFijF3ziUXHDNB5I2TUsPC
+         QwNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720720827; x=1721325627;
+        d=1e100.net; s=20230601; t=1720720824; x=1721325624;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PUbNGHbJusTOA2CgJOpkojrr3Ag9eG/HXr7a91E5F44=;
-        b=U9lo5hktThO6m8k+243V2Az4xb71lME1C3W1QHIZelAl+908ZA/XNxLWyLnkjYDgFW
-         PhxpYd/SWbqBUiPm+u8cAQh85Ri8uqNSWLbjamN3otk7rIMrDAuE0TICkUaFqQzdKPKY
-         VH2CVSTS2ZKT6mXvQchwjpdNMF5nnbEt2b0gtPLXHKxJXThT5AIK3MckoWRiTAs/FBTU
-         AM6LbSsApSOQc/a/jUinu4OwRBTKUaSBdxIByV/BJDpUg9unMT/xwnfBFamHtveEYppo
-         FIeqnQU145TYJ4Ou8ZQS+t2I4qOSlc3P2gxtYGTByAfwuaWwFe9cyN7E4xZBAb3xqkAu
-         tahw==
-X-Forwarded-Encrypted: i=1; AJvYcCWxEpMXy6RXk50q6ICgpn7evlojaldI/KNVd8OWrTFc7KxUzAZgbKlv2OZtiBsBVieOy//nfJFIaHxLhN92rocpvEJylp+M65Cdaf04shQJ6w==
-X-Gm-Message-State: AOJu0YyJGsnJB0bx+FsXbkjqLJWKTfJe2euKnjxL1QEcArAb0oFayPbs
-	JnSrZ3piX3frD6CzJMS0/64vqp3LX9bm3S0XySsZc3ddqXBQU4pEoJy40FYWJJxHIzcOWBATJVo
-	n7ZCnVw==
-X-Google-Smtp-Source: AGHT+IGpjmXnPZG6ET95BcM0LX++X4FSpZehPMsvXd/XHk3OIv4vX9bTses9QahK6eBa9XlUvUAYslXgj71k
+        bh=7irtahaUgZZ2kadtdQTAIVJwXhey7Hso05gQMGn03JQ=;
+        b=YNHOGONiGKlqzxO87lBWp9hEwawEmL3dTzm7jPUBx71N10bVJx/QoK/oOhUoe8LQeE
+         aFzvFZ5wxAH2M5pdvVgIkxD58MBnTcMyIR+pUISm1VC4nEH7Vh+ste2KmrdRlLRJOU25
+         QLdeoVwZ5H7Xu/1tLD2BXTNYkZyRRUvPqKx9hBgQ4jPjmqAhIm6ObAp/MZe9z+K2d+KY
+         EDGpDOsVN3x8K9JjvWE9ooChFZsYHfhhZfO6khFmNiWdt86v1nXPRZa0VyrJZw6SJeAF
+         flY6EUw7E1CL5HHNrJ3Eiwfwc8wuJojSQtl461TOMum60UZuHvhZKfpe/tqw01Gyj3IV
+         AMhA==
+X-Forwarded-Encrypted: i=1; AJvYcCVK3+TmedY1rla+xbm5UBLnmkAtqQUtftz+oFCGK0CSSf/6eiyUYpNed/t9xD98ohUr5jc5f7Q/La7VIkMsLA0RXMZuMVZwB8vB6W1h+Wu4OA==
+X-Gm-Message-State: AOJu0Yz79DnhxW6Vnk9xNxibI6Oh0hWXn+2DftYOeOkevhjLlBR8d0lg
+	eKP0RbEHkY1gMMch/4vxKsHedue6V1dk3l7lW0ZuoQKLMHzpZyjAzpYBG9IRBq4heSxh2qkJpTX
+	EwjCHBQ==
+X-Google-Smtp-Source: AGHT+IGMj2daCCdfqUIMVyxFiaBOl2uNvUMGL0sEZfXJ00x70OsfOTwTplPhBU9/aZ/vlnQv3brgWNx7JDSm
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bd08:a1e0:c497:32db])
- (user=irogers job=sendgmr) by 2002:a05:690c:360d:b0:631:d4ea:3749 with SMTP
- id 00721157ae682-658eeb6e079mr421397b3.4.1720720826737; Thu, 11 Jul 2024
- 11:00:26 -0700 (PDT)
-Date: Thu, 11 Jul 2024 10:59:46 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:248e:b0:e03:3cfa:1aa7 with SMTP
+ id 3f1490d57ef6-e041b03709dmr19480276.1.1720720824552; Thu, 11 Jul 2024
+ 11:00:24 -0700 (PDT)
+Date: Thu, 11 Jul 2024 10:59:45 -0700
 In-Reply-To: <20240711180008.188906-1-irogers@google.com>
-Message-Id: <20240711180008.188906-7-irogers@google.com>
+Message-Id: <20240711180008.188906-6-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240711180008.188906-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v4 06/28] perf tool: Add perf_tool__init
+Subject: [PATCH v4 05/28] perf tool: Move fill defaults into tool.c
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -80,96 +80,731 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 
-Add init function that behaves like perf_tool__fill_defaults but
-assumes all values haven't been initialized.
+The aim here is to eventually make perf_tool__fill_defaults an init
+function so that the tools struct is more const.
+
+Create a tool.c to go along with tool.h. Move perf_tool__fill_defaults
+out of session.c into tool.c along with the default stub values. Add
+perf_tool__compressed_is_stub for a test in
+perf_session__process_user_event.
+
+perf_session__process_compressed_event is only used from being default
+initialized so migrate into tool.c.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/tool.c | 58 ++++++++++++++++++++++++++++++++++++++++++
- tools/perf/util/tool.h |  1 +
- 2 files changed, 59 insertions(+)
+ tools/perf/util/Build     |   1 +
+ tools/perf/util/session.c | 310 +-----------------------------------
+ tools/perf/util/session.h |   2 -
+ tools/perf/util/tool.c    | 325 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/tool.h    |   4 +
+ 5 files changed, 331 insertions(+), 311 deletions(-)
+ create mode 100644 tools/perf/util/tool.c
 
-diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
-index 17219ecb8fa6..cbd9b888bd73 100644
---- a/tools/perf/util/tool.c
-+++ b/tools/perf/util/tool.c
-@@ -230,6 +230,64 @@ static int perf_session__process_compressed_event_stub(struct perf_session *sess
- 	return 0;
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 0f18fe81ef0b..f3633342374a 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -65,6 +65,7 @@ perf-util-y += map.o
+ perf-util-y += maps.o
+ perf-util-y += pstack.o
+ perf-util-y += session.o
++perf-util-y += tool.o
+ perf-util-y += sample-raw.o
+ perf-util-y += s390-sample-raw.o
+ perf-util-y += amd-sample-raw.o
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 7e9827e61d1b..5359ee055c85 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -38,68 +38,6 @@
+ #include "units.h"
+ #include <internal/lib.h>
+ 
+-#ifdef HAVE_ZSTD_SUPPORT
+-static int perf_session__process_compressed_event(struct perf_session *session,
+-						  union perf_event *event, u64 file_offset,
+-						  const char *file_path)
+-{
+-	void *src;
+-	size_t decomp_size, src_size;
+-	u64 decomp_last_rem = 0;
+-	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
+-	struct decomp *decomp, *decomp_last = session->active_decomp->decomp_last;
+-
+-	if (decomp_last) {
+-		decomp_last_rem = decomp_last->size - decomp_last->head;
+-		decomp_len += decomp_last_rem;
+-	}
+-
+-	mmap_len = sizeof(struct decomp) + decomp_len;
+-	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
+-		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
+-	if (decomp == MAP_FAILED) {
+-		pr_err("Couldn't allocate memory for decompression\n");
+-		return -1;
+-	}
+-
+-	decomp->file_pos = file_offset;
+-	decomp->file_path = file_path;
+-	decomp->mmap_len = mmap_len;
+-	decomp->head = 0;
+-
+-	if (decomp_last_rem) {
+-		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
+-		decomp->size = decomp_last_rem;
+-	}
+-
+-	src = (void *)event + sizeof(struct perf_record_compressed);
+-	src_size = event->pack.header.size - sizeof(struct perf_record_compressed);
+-
+-	decomp_size = zstd_decompress_stream(session->active_decomp->zstd_decomp, src, src_size,
+-				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
+-	if (!decomp_size) {
+-		munmap(decomp, mmap_len);
+-		pr_err("Couldn't decompress data\n");
+-		return -1;
+-	}
+-
+-	decomp->size += decomp_size;
+-
+-	if (session->active_decomp->decomp == NULL)
+-		session->active_decomp->decomp = decomp;
+-	else
+-		session->active_decomp->decomp_last->next = decomp;
+-
+-	session->active_decomp->decomp_last = decomp;
+-
+-	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
+-
+-	return 0;
+-}
+-#else /* !HAVE_ZSTD_SUPPORT */
+-#define perf_session__process_compressed_event perf_session__process_compressed_event_stub
+-#endif
+-
+ static int perf_session__deliver_event(struct perf_session *session,
+ 				       union perf_event *event,
+ 				       const struct perf_tool *tool,
+@@ -319,251 +257,6 @@ void perf_session__delete(struct perf_session *session)
+ 	free(session);
  }
  
-+void perf_tool__init(struct perf_tool *tool, bool ordered_events)
-+{
-+	tool->ordered_events = ordered_events;
-+	tool->ordering_requires_timestamps = false;
-+	tool->namespace_events = false;
-+	tool->cgroup_events = false;
-+	tool->no_warn = false;
-+	tool->show_feat_hdr = SHOW_FEAT_NO_HEADER;
+-static int process_event_synth_tracing_data_stub(struct perf_session *session
+-						 __maybe_unused,
+-						 union perf_event *event
+-						 __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_event_synth_attr_stub(const struct perf_tool *tool __maybe_unused,
+-					 union perf_event *event __maybe_unused,
+-					 struct evlist **pevlist
+-					 __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_event_synth_event_update_stub(const struct perf_tool *tool __maybe_unused,
+-						 union perf_event *event __maybe_unused,
+-						 struct evlist **pevlist
+-						 __maybe_unused)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_event_update(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_event_sample_stub(const struct perf_tool *tool __maybe_unused,
+-				     union perf_event *event __maybe_unused,
+-				     struct perf_sample *sample __maybe_unused,
+-				     struct evsel *evsel __maybe_unused,
+-				     struct machine *machine __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_event_stub(const struct perf_tool *tool __maybe_unused,
+-			      union perf_event *event __maybe_unused,
+-			      struct perf_sample *sample __maybe_unused,
+-			      struct machine *machine __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_finished_round_stub(const struct perf_tool *tool __maybe_unused,
+-				       union perf_event *event __maybe_unused,
+-				       struct ordered_events *oe __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int skipn(int fd, off_t n)
+-{
+-	char buf[4096];
+-	ssize_t ret;
+-
+-	while (n > 0) {
+-		ret = read(fd, buf, min(n, (off_t)sizeof(buf)));
+-		if (ret <= 0)
+-			return ret;
+-		n -= ret;
+-	}
+-
+-	return 0;
+-}
+-
+-static s64 process_event_auxtrace_stub(struct perf_session *session __maybe_unused,
+-				       union perf_event *event)
+-{
+-	dump_printf(": unhandled!\n");
+-	if (perf_data__is_pipe(session->data))
+-		skipn(perf_data__fd(session->data), event->auxtrace.size);
+-	return event->auxtrace.size;
+-}
+-
+-static int process_event_op2_stub(struct perf_session *session __maybe_unused,
+-				  union perf_event *event __maybe_unused)
+-{
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-
+-static
+-int process_event_thread_map_stub(struct perf_session *session __maybe_unused,
+-				  union perf_event *event __maybe_unused)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_thread_map(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static
+-int process_event_cpu_map_stub(struct perf_session *session __maybe_unused,
+-			       union perf_event *event __maybe_unused)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_cpu_map(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static
+-int process_event_stat_config_stub(struct perf_session *session __maybe_unused,
+-				   union perf_event *event __maybe_unused)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_stat_config(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_stat_stub(struct perf_session *perf_session __maybe_unused,
+-			     union perf_event *event)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_stat(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_stat_round_stub(struct perf_session *perf_session __maybe_unused,
+-				   union perf_event *event)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_stat_round(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int process_event_time_conv_stub(struct perf_session *perf_session __maybe_unused,
+-					union perf_event *event)
+-{
+-	if (dump_trace)
+-		perf_event__fprintf_time_conv(event, stdout);
+-
+-	dump_printf(": unhandled!\n");
+-	return 0;
+-}
+-
+-static int perf_session__process_compressed_event_stub(struct perf_session *session __maybe_unused,
+-						       union perf_event *event __maybe_unused,
+-						       u64 file_offset __maybe_unused,
+-						       const char *file_path __maybe_unused)
+-{
+-       dump_printf(": unhandled!\n");
+-       return 0;
+-}
+-
+-void perf_tool__fill_defaults(struct perf_tool *tool)
+-{
+-	if (tool->sample == NULL)
+-		tool->sample = process_event_sample_stub;
+-	if (tool->mmap == NULL)
+-		tool->mmap = process_event_stub;
+-	if (tool->mmap2 == NULL)
+-		tool->mmap2 = process_event_stub;
+-	if (tool->comm == NULL)
+-		tool->comm = process_event_stub;
+-	if (tool->namespaces == NULL)
+-		tool->namespaces = process_event_stub;
+-	if (tool->cgroup == NULL)
+-		tool->cgroup = process_event_stub;
+-	if (tool->fork == NULL)
+-		tool->fork = process_event_stub;
+-	if (tool->exit == NULL)
+-		tool->exit = process_event_stub;
+-	if (tool->lost == NULL)
+-		tool->lost = perf_event__process_lost;
+-	if (tool->lost_samples == NULL)
+-		tool->lost_samples = perf_event__process_lost_samples;
+-	if (tool->aux == NULL)
+-		tool->aux = perf_event__process_aux;
+-	if (tool->itrace_start == NULL)
+-		tool->itrace_start = perf_event__process_itrace_start;
+-	if (tool->context_switch == NULL)
+-		tool->context_switch = perf_event__process_switch;
+-	if (tool->ksymbol == NULL)
+-		tool->ksymbol = perf_event__process_ksymbol;
+-	if (tool->bpf == NULL)
+-		tool->bpf = perf_event__process_bpf;
+-	if (tool->text_poke == NULL)
+-		tool->text_poke = perf_event__process_text_poke;
+-	if (tool->aux_output_hw_id == NULL)
+-		tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
+-	if (tool->read == NULL)
+-		tool->read = process_event_sample_stub;
+-	if (tool->throttle == NULL)
+-		tool->throttle = process_event_stub;
+-	if (tool->unthrottle == NULL)
+-		tool->unthrottle = process_event_stub;
+-	if (tool->attr == NULL)
+-		tool->attr = process_event_synth_attr_stub;
+-	if (tool->event_update == NULL)
+-		tool->event_update = process_event_synth_event_update_stub;
+-	if (tool->tracing_data == NULL)
+-		tool->tracing_data = process_event_synth_tracing_data_stub;
+-	if (tool->build_id == NULL)
+-		tool->build_id = process_event_op2_stub;
+-	if (tool->finished_round == NULL) {
+-		if (tool->ordered_events)
+-			tool->finished_round = perf_event__process_finished_round;
+-		else
+-			tool->finished_round = process_finished_round_stub;
+-	}
+-	if (tool->id_index == NULL)
+-		tool->id_index = process_event_op2_stub;
+-	if (tool->auxtrace_info == NULL)
+-		tool->auxtrace_info = process_event_op2_stub;
+-	if (tool->auxtrace == NULL)
+-		tool->auxtrace = process_event_auxtrace_stub;
+-	if (tool->auxtrace_error == NULL)
+-		tool->auxtrace_error = process_event_op2_stub;
+-	if (tool->thread_map == NULL)
+-		tool->thread_map = process_event_thread_map_stub;
+-	if (tool->cpu_map == NULL)
+-		tool->cpu_map = process_event_cpu_map_stub;
+-	if (tool->stat_config == NULL)
+-		tool->stat_config = process_event_stat_config_stub;
+-	if (tool->stat == NULL)
+-		tool->stat = process_stat_stub;
+-	if (tool->stat_round == NULL)
+-		tool->stat_round = process_stat_round_stub;
+-	if (tool->time_conv == NULL)
+-		tool->time_conv = process_event_time_conv_stub;
+-	if (tool->feature == NULL)
+-		tool->feature = process_event_op2_stub;
+-	if (tool->compressed == NULL)
+-		tool->compressed = perf_session__process_compressed_event;
+-	if (tool->finished_init == NULL)
+-		tool->finished_init = process_event_op2_stub;
+-}
+-
+ static void swap_sample_id_all(union perf_event *event, void *data)
+ {
+ 	void *end = (void *) event + event->header.size;
+@@ -1672,8 +1365,7 @@ static s64 perf_session__process_user_event(struct perf_session *session,
+ 	int fd = perf_data__fd(session->data);
+ 	int err;
+ 
+-	if (event->header.type != PERF_RECORD_COMPRESSED ||
+-	    tool->compressed == perf_session__process_compressed_event_stub)
++	if (event->header.type != PERF_RECORD_COMPRESSED || perf_tool__compressed_is_stub(tool))
+ 		dump_event(session->evlist, event, file_offset, &sample, file_path);
+ 
+ 	/* These events are processed right away */
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 6886cc85600f..7f69baeae7fb 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -92,8 +92,6 @@ int perf_session__process_events(struct perf_session *session);
+ int perf_session__queue_event(struct perf_session *s, union perf_event *event,
+ 			      u64 timestamp, u64 file_offset, const char *file_path);
+ 
+-void perf_tool__fill_defaults(struct perf_tool *tool);
+-
+ int perf_session__resolve_callchain(struct perf_session *session,
+ 				    struct evsel *evsel,
+ 				    struct thread *thread,
+diff --git a/tools/perf/util/tool.c b/tools/perf/util/tool.c
+new file mode 100644
+index 000000000000..17219ecb8fa6
+--- /dev/null
++++ b/tools/perf/util/tool.c
+@@ -0,0 +1,325 @@
++// SPDX-License-Identifier: GPL-2.0
++#include "data.h"
++#include "debug.h"
++#include "header.h"
++#include "session.h"
++#include "stat.h"
++#include "tool.h"
++#include "tsc.h"
++#include <sys/mman.h>
++#include <unistd.h>
 +
-+	tool->sample = process_event_sample_stub;
-+	tool->mmap = process_event_stub;
-+	tool->mmap2 = process_event_stub;
-+	tool->comm = process_event_stub;
-+	tool->namespaces = process_event_stub;
-+	tool->cgroup = process_event_stub;
-+	tool->fork = process_event_stub;
-+	tool->exit = process_event_stub;
-+	tool->lost = perf_event__process_lost;
-+	tool->lost_samples = perf_event__process_lost_samples;
-+	tool->aux = perf_event__process_aux;
-+	tool->itrace_start = perf_event__process_itrace_start;
-+	tool->context_switch = perf_event__process_switch;
-+	tool->ksymbol = perf_event__process_ksymbol;
-+	tool->bpf = perf_event__process_bpf;
-+	tool->text_poke = perf_event__process_text_poke;
-+	tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
-+	tool->read = process_event_sample_stub;
-+	tool->throttle = process_event_stub;
-+	tool->unthrottle = process_event_stub;
-+	tool->attr = process_event_synth_attr_stub;
-+	tool->event_update = process_event_synth_event_update_stub;
-+	tool->tracing_data = process_event_synth_tracing_data_stub;
-+	tool->build_id = process_event_op2_stub;
-+
-+	if (ordered_events)
-+		tool->finished_round = perf_event__process_finished_round;
-+	else
-+		tool->finished_round = process_finished_round_stub;
-+
-+	tool->id_index = process_event_op2_stub;
-+	tool->auxtrace_info = process_event_op2_stub;
-+	tool->auxtrace = process_event_auxtrace_stub;
-+	tool->auxtrace_error = process_event_op2_stub;
-+	tool->thread_map = process_event_thread_map_stub;
-+	tool->cpu_map = process_event_cpu_map_stub;
-+	tool->stat_config = process_event_stat_config_stub;
-+	tool->stat = process_stat_stub;
-+	tool->stat_round = process_stat_round_stub;
-+	tool->time_conv = process_event_time_conv_stub;
-+	tool->feature = process_event_op2_stub;
 +#ifdef HAVE_ZSTD_SUPPORT
-+	tool->compressed = perf_session__process_compressed_event;
-+#else
-+	tool->compressed = perf_session__process_compressed_event_stub;
++static int perf_session__process_compressed_event(struct perf_session *session,
++						  union perf_event *event, u64 file_offset,
++						  const char *file_path)
++{
++	void *src;
++	size_t decomp_size, src_size;
++	u64 decomp_last_rem = 0;
++	size_t mmap_len, decomp_len = session->header.env.comp_mmap_len;
++	struct decomp *decomp, *decomp_last = session->active_decomp->decomp_last;
++
++	if (decomp_last) {
++		decomp_last_rem = decomp_last->size - decomp_last->head;
++		decomp_len += decomp_last_rem;
++	}
++
++	mmap_len = sizeof(struct decomp) + decomp_len;
++	decomp = mmap(NULL, mmap_len, PROT_READ|PROT_WRITE,
++		      MAP_ANONYMOUS|MAP_PRIVATE, -1, 0);
++	if (decomp == MAP_FAILED) {
++		pr_err("Couldn't allocate memory for decompression\n");
++		return -1;
++	}
++
++	decomp->file_pos = file_offset;
++	decomp->file_path = file_path;
++	decomp->mmap_len = mmap_len;
++	decomp->head = 0;
++
++	if (decomp_last_rem) {
++		memcpy(decomp->data, &(decomp_last->data[decomp_last->head]), decomp_last_rem);
++		decomp->size = decomp_last_rem;
++	}
++
++	src = (void *)event + sizeof(struct perf_record_compressed);
++	src_size = event->pack.header.size - sizeof(struct perf_record_compressed);
++
++	decomp_size = zstd_decompress_stream(session->active_decomp->zstd_decomp, src, src_size,
++				&(decomp->data[decomp_last_rem]), decomp_len - decomp_last_rem);
++	if (!decomp_size) {
++		munmap(decomp, mmap_len);
++		pr_err("Couldn't decompress data\n");
++		return -1;
++	}
++
++	decomp->size += decomp_size;
++
++	if (session->active_decomp->decomp == NULL)
++		session->active_decomp->decomp = decomp;
++	else
++		session->active_decomp->decomp_last->next = decomp;
++
++	session->active_decomp->decomp_last = decomp;
++
++	pr_debug("decomp (B): %zd to %zd\n", src_size, decomp_size);
++
++	return 0;
++}
 +#endif
-+	tool->finished_init = process_event_op2_stub;
++
++static int process_event_synth_tracing_data_stub(struct perf_session *session
++						 __maybe_unused,
++						 union perf_event *event
++						 __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
 +}
 +
- void perf_tool__fill_defaults(struct perf_tool *tool)
- {
- 	if (tool->sample == NULL)
++static int process_event_synth_attr_stub(const struct perf_tool *tool __maybe_unused,
++					 union perf_event *event __maybe_unused,
++					 struct evlist **pevlist
++					 __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_event_synth_event_update_stub(const struct perf_tool *tool __maybe_unused,
++						 union perf_event *event __maybe_unused,
++						 struct evlist **pevlist
++						 __maybe_unused)
++{
++	if (dump_trace)
++		perf_event__fprintf_event_update(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_event_sample_stub(const struct perf_tool *tool __maybe_unused,
++				     union perf_event *event __maybe_unused,
++				     struct perf_sample *sample __maybe_unused,
++				     struct evsel *evsel __maybe_unused,
++				     struct machine *machine __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_event_stub(const struct perf_tool *tool __maybe_unused,
++			      union perf_event *event __maybe_unused,
++			      struct perf_sample *sample __maybe_unused,
++			      struct machine *machine __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_finished_round_stub(const struct perf_tool *tool __maybe_unused,
++				       union perf_event *event __maybe_unused,
++				       struct ordered_events *oe __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int skipn(int fd, off_t n)
++{
++	char buf[4096];
++	ssize_t ret;
++
++	while (n > 0) {
++		ret = read(fd, buf, min(n, (off_t)sizeof(buf)));
++		if (ret <= 0)
++			return ret;
++		n -= ret;
++	}
++
++	return 0;
++}
++
++static s64 process_event_auxtrace_stub(struct perf_session *session __maybe_unused,
++				       union perf_event *event)
++{
++	dump_printf(": unhandled!\n");
++	if (perf_data__is_pipe(session->data))
++		skipn(perf_data__fd(session->data), event->auxtrace.size);
++	return event->auxtrace.size;
++}
++
++static int process_event_op2_stub(struct perf_session *session __maybe_unused,
++				  union perf_event *event __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++
++static
++int process_event_thread_map_stub(struct perf_session *session __maybe_unused,
++				  union perf_event *event __maybe_unused)
++{
++	if (dump_trace)
++		perf_event__fprintf_thread_map(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static
++int process_event_cpu_map_stub(struct perf_session *session __maybe_unused,
++			       union perf_event *event __maybe_unused)
++{
++	if (dump_trace)
++		perf_event__fprintf_cpu_map(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static
++int process_event_stat_config_stub(struct perf_session *session __maybe_unused,
++				   union perf_event *event __maybe_unused)
++{
++	if (dump_trace)
++		perf_event__fprintf_stat_config(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_stat_stub(struct perf_session *perf_session __maybe_unused,
++			     union perf_event *event)
++{
++	if (dump_trace)
++		perf_event__fprintf_stat(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_stat_round_stub(struct perf_session *perf_session __maybe_unused,
++				   union perf_event *event)
++{
++	if (dump_trace)
++		perf_event__fprintf_stat_round(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int process_event_time_conv_stub(struct perf_session *perf_session __maybe_unused,
++					union perf_event *event)
++{
++	if (dump_trace)
++		perf_event__fprintf_time_conv(event, stdout);
++
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++static int perf_session__process_compressed_event_stub(struct perf_session *session __maybe_unused,
++						       union perf_event *event __maybe_unused,
++						       u64 file_offset __maybe_unused,
++						       const char *file_path __maybe_unused)
++{
++	dump_printf(": unhandled!\n");
++	return 0;
++}
++
++void perf_tool__fill_defaults(struct perf_tool *tool)
++{
++	if (tool->sample == NULL)
++		tool->sample = process_event_sample_stub;
++	if (tool->mmap == NULL)
++		tool->mmap = process_event_stub;
++	if (tool->mmap2 == NULL)
++		tool->mmap2 = process_event_stub;
++	if (tool->comm == NULL)
++		tool->comm = process_event_stub;
++	if (tool->namespaces == NULL)
++		tool->namespaces = process_event_stub;
++	if (tool->cgroup == NULL)
++		tool->cgroup = process_event_stub;
++	if (tool->fork == NULL)
++		tool->fork = process_event_stub;
++	if (tool->exit == NULL)
++		tool->exit = process_event_stub;
++	if (tool->lost == NULL)
++		tool->lost = perf_event__process_lost;
++	if (tool->lost_samples == NULL)
++		tool->lost_samples = perf_event__process_lost_samples;
++	if (tool->aux == NULL)
++		tool->aux = perf_event__process_aux;
++	if (tool->itrace_start == NULL)
++		tool->itrace_start = perf_event__process_itrace_start;
++	if (tool->context_switch == NULL)
++		tool->context_switch = perf_event__process_switch;
++	if (tool->ksymbol == NULL)
++		tool->ksymbol = perf_event__process_ksymbol;
++	if (tool->bpf == NULL)
++		tool->bpf = perf_event__process_bpf;
++	if (tool->text_poke == NULL)
++		tool->text_poke = perf_event__process_text_poke;
++	if (tool->aux_output_hw_id == NULL)
++		tool->aux_output_hw_id = perf_event__process_aux_output_hw_id;
++	if (tool->read == NULL)
++		tool->read = process_event_sample_stub;
++	if (tool->throttle == NULL)
++		tool->throttle = process_event_stub;
++	if (tool->unthrottle == NULL)
++		tool->unthrottle = process_event_stub;
++	if (tool->attr == NULL)
++		tool->attr = process_event_synth_attr_stub;
++	if (tool->event_update == NULL)
++		tool->event_update = process_event_synth_event_update_stub;
++	if (tool->tracing_data == NULL)
++		tool->tracing_data = process_event_synth_tracing_data_stub;
++	if (tool->build_id == NULL)
++		tool->build_id = process_event_op2_stub;
++	if (tool->finished_round == NULL) {
++		if (tool->ordered_events)
++			tool->finished_round = perf_event__process_finished_round;
++		else
++			tool->finished_round = process_finished_round_stub;
++	}
++	if (tool->id_index == NULL)
++		tool->id_index = process_event_op2_stub;
++	if (tool->auxtrace_info == NULL)
++		tool->auxtrace_info = process_event_op2_stub;
++	if (tool->auxtrace == NULL)
++		tool->auxtrace = process_event_auxtrace_stub;
++	if (tool->auxtrace_error == NULL)
++		tool->auxtrace_error = process_event_op2_stub;
++	if (tool->thread_map == NULL)
++		tool->thread_map = process_event_thread_map_stub;
++	if (tool->cpu_map == NULL)
++		tool->cpu_map = process_event_cpu_map_stub;
++	if (tool->stat_config == NULL)
++		tool->stat_config = process_event_stat_config_stub;
++	if (tool->stat == NULL)
++		tool->stat = process_stat_stub;
++	if (tool->stat_round == NULL)
++		tool->stat_round = process_stat_round_stub;
++	if (tool->time_conv == NULL)
++		tool->time_conv = process_event_time_conv_stub;
++	if (tool->feature == NULL)
++		tool->feature = process_event_op2_stub;
++	if (tool->compressed == NULL) {
++#ifdef HAVE_ZSTD_SUPPORT
++		tool->compressed = perf_session__process_compressed_event;
++#else
++		tool->compressed = perf_session__process_compressed_event_stub;
++#endif
++	}
++	if (tool->finished_init == NULL)
++		tool->finished_init = process_event_op2_stub;
++}
++
++bool perf_tool__compressed_is_stub(const struct perf_tool *tool)
++{
++	return tool->compressed == perf_session__process_compressed_event_stub;
++}
 diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index 7913b698033a..897c6c44b6b2 100644
+index b192d44fe91f..7913b698033a 100644
 --- a/tools/perf/util/tool.h
 +++ b/tools/perf/util/tool.h
-@@ -88,6 +88,7 @@ struct perf_tool {
+@@ -88,4 +88,8 @@ struct perf_tool {
  	enum show_feature_header show_feat_hdr;
  };
  
-+void perf_tool__init(struct perf_tool *tool, bool ordered_events);
- void perf_tool__fill_defaults(struct perf_tool *tool);
- 
- bool perf_tool__compressed_is_stub(const struct perf_tool *tool);
++void perf_tool__fill_defaults(struct perf_tool *tool);
++
++bool perf_tool__compressed_is_stub(const struct perf_tool *tool);
++
+ #endif /* __PERF_TOOL_H */
 -- 
 2.45.2.993.g49e7a77208-goog
 
