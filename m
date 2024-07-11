@@ -1,166 +1,131 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7651D16C86C
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 16:08:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9598516CD1A
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 16:25:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720714126; cv=none; b=donDhgKUtq6Mr5WrQWtnMRVRQoN3767Ff7yR0et/dA6TyVTLbCp4oMIOf0EGno8Kikz1N1HemdGDOullipu7/jlC1G2Hi/Yd/D3ptToLBxIn2eKWrEA0acICgut+UM63hWMiA5CD7hFlYEnA9nJR6bD9WMmZh1+wjKfSS5bUUEo=
+	t=1720715160; cv=none; b=Rkj+olu4Yo0/vyc5J8tmQpqOmi9I8JRfZDifJTFCZdiq1PO+uTsIKf3lm0VWKXzlP9ESTYpqOXGbWbIcpjzXAMng+cKyQ3n/DXA0Av3G8YAQXEqBo48NuQYqUgWk2CN3HmXrg/4phlJP91C/4Pj8MQcHiFe5zu4YvQCE4wU0tZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720714126; c=relaxed/simple;
-	bh=kY5IJZ4cikqhqf40Y/iuj0LM+o1ikDZwH7ZJwpsRXmM=;
+	s=arc-20240116; t=1720715160; c=relaxed/simple;
+	bh=5nsfvlLmhEPvRyUz2fxoPUUNuIRC45SdUXSsV73mJFY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZjXBj5xlL3Y3tHFik6ETTTOYWqXfN5Rw5tayMifDFGYRvosNoYDvzXfN6/fEA/Y+mJjq0jn5b+FsTchDEjzD03oGjdFqW3QXuMRoxybhwGcH4S22sNWxQuM9LAPXX/dlOK35dYCpRQ3K6enaBAAVZm6YLwdW4TbvQ/nfX7b3aSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ykqYlNVg; arc=none smtp.client-ip=209.85.214.177
+	 To:Cc:Content-Type; b=PlDafL3P83pT8Fs6FT2IeJzLznVtJqfaQzuvff15jwqthkHGfWP/FERQNjHkIGsZTClAI5vw2+i2dNgVALyVST0r3SXR0da46lBEkt/P8GSFFoRcX1h14tas1qASaizX7Wb4vOtKdgqfSzAJkIy0VY2rb3AVLw0lfDKM5Leg+Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AkixohSf; arc=none smtp.client-ip=209.85.160.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ykqYlNVg"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fb67f59805so156965ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 09:08:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AkixohSf"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44e534a1fbeso26191cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 09:25:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720714123; x=1721318923; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720715157; x=1721319957; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fQSa5gKT+eKn4P0zkPKjQyLYQdgXXMN3YnW0vi5qP9U=;
-        b=ykqYlNVgh5hRiRvbxTMA9edPmc4NoPIFyKaani6+hBw2HiHxYmjmtxmi4hiIanV/MX
-         ZTIpqJrjbjCnv04zsCx2kXa8T8r0t1ywsoPO7Uowj8kuwfpNdjkwel3TAS0rWm+yRXRO
-         OdhgbAhIM7tj24RsJLq3PIPRCDoXmUUxD0AHj8BQEuMJ6l7f/epAsl9SmrAJGhTOqwdp
-         fkrW5ir4FYFgIgIbXUzBy3y32AHbY5NbYwfl2Clo+MiK9v0LTiPA6lx5rcTvgOO9jzYL
-         bXpUZtWPtzbrrQHbfM3AUr1b6CTjWlEpXnTKUUnVvdGTP799IiWHhJ9yVw0512cXlT+D
-         ZUmw==
+        bh=2SEpCiUOQvgPIzDLhrNd4BFzg6FCRjdLml6RucYrX6c=;
+        b=AkixohSf2wGn+th9OSaSUGSwGU3Roe12V+l/vKbPaQ2F4qQslvjQrIR8mijRC0EGG6
+         FGcsSKkZWh8+Sdf9MeKKR1/1pK//Rg1Jrm5XNKfwj/MVi/GP8VbSfWnxJUi6Hj7kHuZg
+         m9B3oIM+eAdNT1gHDhuwsmb32vz5TwtpeBMpVhkxBRkXGKnsqOG0GY5ExUnz8wvTpnbr
+         5ULrjn1PRxAwdC09wePUXyrSRb5tNm0sylNcZPTksxvCngXwKqNcQp9COwIk59692+Qa
+         WkO7OmsglvGkeQ6DHm+jrj8a1uyjNXFEjr8LVF0jdHVY7h0NYixrgHQr8+0vyd/wQufV
+         XiEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720714123; x=1721318923;
+        d=1e100.net; s=20230601; t=1720715157; x=1721319957;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fQSa5gKT+eKn4P0zkPKjQyLYQdgXXMN3YnW0vi5qP9U=;
-        b=TBCT+JgLY7qG2slNZr67IXS4j3MsrOMc1/u1WBPfspDkbMjYhYMsa9RFaRxdYsskTL
-         dqxVC5Mlyb6mdPsC1OEHB5mBYJImV3DySeHEzbqAaDm7mUfmocJbPse5SLI4HubV1B8Y
-         YFOfotsIFE5MIlBb/YJnm7m0maDsOVMwE4o34YkoSt+sfMgyuK0uDjxWSA9NvFtjylMc
-         6MsloTcfoI5WJSZxx3wRDrpcSt0Xvl0u7QsR1nfakqECPVGPbAoY5tE4tdHeWQJ8rSjQ
-         dX0eeZpKQ/NunliQAHWyIeK2eV3XDcvinuV1SkwBCla5dcB8KNlkKiM3H1csNAnUuXLZ
-         Fs8A==
-X-Forwarded-Encrypted: i=1; AJvYcCULUuFpbZQy/namNd46PL09SF6I+Aym/0tX29IYfrJWJ7dKtnHDecLeNkU8/j3FBUin/7RXrpFpY8p5XcRCrGyZb2jig3fHAmAe6S1kPcBq9w==
-X-Gm-Message-State: AOJu0YzFnwiryKCDR+tlts0smHI/M1Jh0qM6xp3iuWzxhcXThEnmt9i6
-	0iT9BrSGZvBUd1q6+G+FlzFNB5iqAT/raVetZF6PZJYoX1dkBcwEFCwQH7TYSh2953+MpseeCis
-	l9NgeXY4oH2hRMNjlmm8zSWAZ0vc+D+Q/lft5
-X-Google-Smtp-Source: AGHT+IElvTnqaWO9R7urpZJutwvE+MMjdeEGJVTWB+RvH5lxKcz23FQGzGtnmWxXLdNYPtGOuFpCS6RTfBslR59gJ8I=
-X-Received: by 2002:a17:902:f28c:b0:1fa:9627:d363 with SMTP id
- d9443c01a7336-1fbdec43278mr2668445ad.11.1720714123218; Thu, 11 Jul 2024
- 09:08:43 -0700 (PDT)
+        bh=2SEpCiUOQvgPIzDLhrNd4BFzg6FCRjdLml6RucYrX6c=;
+        b=KMs5nMkYpX738U0qIelZqRoEiGDLyQWJaMQxjDf+8nhBRFxuSLiaZdEwWcrolZu/yj
+         d+jginzTVO5mZ2mduaROMEV7i1+45C6RsXCpf+aeAAJSQK6yG0RkAt85TwoKTQGSWi2E
+         P7e9xX19JEyjse1CPrCcdx3tk3Rqr4i0DP3o6ZxWlvAaDH5OplVI3nesD16oUTwT+Wd6
+         /tTHdvSnxVEJrsW/MQcibw9hmTYoSRXYqfx9LOKHfuE+AOgF72GwfIFQYZ1ojIO6xZj2
+         ghONBzV2GKd06GGgYtS1TIr/cEQ8Bbpf7aW6ZpGF5yTmn213zGJz8p0rQtNL8iwMndAo
+         a/Wg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkKyleWZt5rAMTLWfntbg/pmZizd2ig4Q70vCTZ5be0uyx34Xh1YUGWPmLsr4EitvlBhlhyJ1eogFyHioGuQeybiEmo/37nSDXXMdZKSL7ng==
+X-Gm-Message-State: AOJu0YwpW/1oLaFs1gScvUqZjmjMpc4YUp5TRA4sCTJhNcDUETESupoI
+	D2AFq8mHSqvM8WNHgOoJWox9rjwmHzSi029Mb6rSD5Fn2bb3buOJo/vV6ouL0s1f+TNLN9ZAbu8
+	eNfkAZRvsjEToDXOqst5jjVqygbY0d7E609mB
+X-Google-Smtp-Source: AGHT+IFPOFlYJtl+9KpTPLHCZ8kBfntK/k6bdea6y4VDGrLMHW2XyoGDDVRfyezdEAeoi6MASDv/Wa37jmIQA3eNLAY=
+X-Received: by 2002:ac8:4c9d:0:b0:447:d78b:fdf6 with SMTP id
+ d75a77b69052e-44d0aa44ee5mr3767161cf.10.1720715157365; Thu, 11 Jul 2024
+ 09:25:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240629045350.285243-1-irogers@google.com> <20240629045350.285243-2-irogers@google.com>
- <d55916c7-a771-4fae-8bc8-595b7b1e9861@intel.com> <b4d28088-3de5-43a5-a4b6-12d3a29244b7@intel.com>
-In-Reply-To: <b4d28088-3de5-43a5-a4b6-12d3a29244b7@intel.com>
+References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
+ <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
+ <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
+ <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
+ <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
+ <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
+In-Reply-To: <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Jul 2024 09:08:31 -0700
-Message-ID: <CAP-5=fX+VG3HsAPb=3DzEp2bUyAUvHk7f1zAhq3r=FKYaJPW6Q@mail.gmail.com>
-Subject: Re: [PATCH v3 01/28] perf auxtrace: Remove dummy tools
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date: Thu, 11 Jul 2024 09:25:46 -0700
+Message-ID: <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 11:46=E2=80=AFPM Adrian Hunter <adrian.hunter@intel=
-.com> wrote:
->
-> On 11/07/24 09:43, Adrian Hunter wrote:
-> > On 29/06/24 07:53, Ian Rogers wrote:
-> >> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> >> index 0ec92d47373c..44db5b49128f 100644
-> >> --- a/tools/perf/util/session.c
-> >> +++ b/tools/perf/util/session.c
-> >> @@ -1764,6 +1764,36 @@ int perf_session__deliver_synth_event(struct pe=
-rf_session *session,
-> >>      return machines__deliver_event(&session->machines, evlist, event,=
- sample, tool, 0, NULL);
-> >>  }
-> >>
-> >> +int perf_session__deliver_synth_attr_event(struct perf_session *sessi=
-on,
-> >> +                                       const struct perf_event_attr *=
-attr,
-> >> +                                       u64 id)
-> >> +{
-> >> +    union {
-> >> +            struct {
-> >> +                    struct perf_record_header_attr attr;
-> >> +                    u64 ids[1];
-> >> +            } attr_id;
-> >> +            union perf_event ev;
-> >> +    } ev =3D {
-> >> +            .attr_id =3D {
-> >> +                    .attr =3D {
-> >> +                            .header =3D {
-> >> +                                    .type =3D PERF_RECORD_HEADER_ATTR=
-,
-> >> +                                    .size =3D PERF_ALIGN(sizeof(struc=
-t perf_event_attr),
-> >> +                                                       sizeof(u64))
-> >> +                                        + sizeof(struct perf_event_he=
-ader)
-> >> +                                        + sizeof(u64),
-> >> +                            },
-> >> +                    },
-> >> +                    .ids =3D { id, }
-> >> +            },
-> >
-> > Nested definitions are not needed.  It can just be:
-> >
-> >               .attr_id.attr.header.type =3D PERF_RECORD_HEADER_ATTR,
-> >               .attr_id.attr.header.size =3D sizeof(ev.attr_id),
-> >               .attr_id.ids[0] =3D id,
-> >
-> >> +    };
-> >> +
-> >> +    memcpy(&ev.attr_id.attr.attr, attr, min((u32)sizeof(struct perf_e=
-vent_attr), attr->size));
-> >
-> > It is not unreasonable to validate attr->size, but neither slicing
-> > nor padding will work.  Better to just return an error:
-> >
-> >       if (attr->size !=3D sizeof(ev.attr_id.attr))
->
-> Or rather
->
->         if (attr->size !=3D sizeof(ev.attr_id.attr.attr))
+Hi,
 
-Thanks, I'll change this in v4. The struct perf_event_attr are
-internal to the tool, so it shouldn't be possible for the size to
-deviate.
+Week 7 of Google Summer-of-Code and we're around the midpoint.  Anyone
+with a perf tool interest, please feel free to attend! We're happy to
+discuss perf tool issues, Howard's progress, issues of the day, etc.
 
+Linux perf tool office hours
+Friday, July 12 =C2=B7 8:00 =E2=80=93 9:00am
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/tif-efem-uiq
+Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+
+Thanks,
 Ian
 
-> >               return -EINVAL;
-> >
-> > Then:
-> >
-> >       ev.attr_id.attr.attr =3D *attr;
-> >
-> >
-> >> +    ev.attr_id.attr.attr.size =3D sizeof(struct perf_event_attr);
-> >> +    return perf_session__deliver_synth_event(session, &ev.ev, NULL);
-> >> +}
-> >> +
+On Wed, Jul 3, 2024 at 7:41=E2=80=AFPM Howard Chu <howardchu95@gmail.com> w=
+rote:
 >
+> Hello,
+>
+> 6th week of Google Summer-of-Code. Office hours this week are the same
+> as last week:
+>
+> Linux perf tool office hours
+> Friday, July 5 =C2=B7 8:00 =E2=80=93 9:00am
+>
+> Time zone: America/Los_Angeles
+> Google Meet joining info
+> Video call link: https://meet.google.com/tif-efem-uiq
+> Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+> More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+>
+> Thanks,
+> Howard
+>
+> On Fri, Jun 28, 2024 at 1:49=E2=80=AFAM Ian Rogers <irogers@google.com> w=
+rote:
+> >
+> > 5th week of Google Summer-of-Code. Office hours tomorrow at the normal =
+time:
+> >
+> > Linux perf tool office hours
+> > Friday, June 28 =C2=B7 8:00 =E2=80=93 9:00am
+> > Time zone: America/Los_Angeles
+> > Google Meet joining info
+> > Video call link: https://meet.google.com/tif-efem-uiq
+> > Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 9=
+68=E2=80=AC#
+> > More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+> >
+> > Thanks,
+> > Ian
