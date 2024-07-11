@@ -1,131 +1,105 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9598516CD1A
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 16:25:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54D1716D9AF
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 16:54:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720715160; cv=none; b=Rkj+olu4Yo0/vyc5J8tmQpqOmi9I8JRfZDifJTFCZdiq1PO+uTsIKf3lm0VWKXzlP9ESTYpqOXGbWbIcpjzXAMng+cKyQ3n/DXA0Av3G8YAQXEqBo48NuQYqUgWk2CN3HmXrg/4phlJP91C/4Pj8MQcHiFe5zu4YvQCE4wU0tZs=
+	t=1720716881; cv=none; b=kAYkoZn+WF6HXhjQaXQoC8AgZnVSNl72WplhqUfYft8pf75dFJrW4EdKDobaRl76K97JnhCzMLvYkFTuQwm3+Y679o+onI+NCeLGsmJFoH6YI6UNB7Ds/YfXcuJrQidSQWxHIpRIEnXuJN6bhYfWY8/3utA3QaoyVHT3XtFVIF4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720715160; c=relaxed/simple;
-	bh=5nsfvlLmhEPvRyUz2fxoPUUNuIRC45SdUXSsV73mJFY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PlDafL3P83pT8Fs6FT2IeJzLznVtJqfaQzuvff15jwqthkHGfWP/FERQNjHkIGsZTClAI5vw2+i2dNgVALyVST0r3SXR0da46lBEkt/P8GSFFoRcX1h14tas1qASaizX7Wb4vOtKdgqfSzAJkIy0VY2rb3AVLw0lfDKM5Leg+Fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=AkixohSf; arc=none smtp.client-ip=209.85.160.172
+	s=arc-20240116; t=1720716881; c=relaxed/simple;
+	bh=3yqNDdzLTGhFlyxunbrxQB7ZpJhsygMdfg4hB+E/qsY=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Cc:Content-Type; b=LJT9wf/BHYcY0BKw2qZQ+eLEvX2wXqajAU19L5fwZdhDlnPX7jTgNUbSld5vpjEHudOtY4at5yK8lStELLRwOrBb/tyyohv65lC4QJN6dbGbsJxnxior7tfACYZjIsge6HsD4hF1MwWN/2fR+DfW06/e8ccDVPEuCEY+cqBdKZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FqkACeDp; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AkixohSf"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-44e534a1fbeso26191cf.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 09:25:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FqkACeDp"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1f70ec6ff8bso1635ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 09:54:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720715157; x=1721319957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2SEpCiUOQvgPIzDLhrNd4BFzg6FCRjdLml6RucYrX6c=;
-        b=AkixohSf2wGn+th9OSaSUGSwGU3Roe12V+l/vKbPaQ2F4qQslvjQrIR8mijRC0EGG6
-         FGcsSKkZWh8+Sdf9MeKKR1/1pK//Rg1Jrm5XNKfwj/MVi/GP8VbSfWnxJUi6Hj7kHuZg
-         m9B3oIM+eAdNT1gHDhuwsmb32vz5TwtpeBMpVhkxBRkXGKnsqOG0GY5ExUnz8wvTpnbr
-         5ULrjn1PRxAwdC09wePUXyrSRb5tNm0sylNcZPTksxvCngXwKqNcQp9COwIk59692+Qa
-         WkO7OmsglvGkeQ6DHm+jrj8a1uyjNXFEjr8LVF0jdHVY7h0NYixrgHQr8+0vyd/wQufV
-         XiEw==
+        d=google.com; s=20230601; t=1720716879; x=1721321679; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3yqNDdzLTGhFlyxunbrxQB7ZpJhsygMdfg4hB+E/qsY=;
+        b=FqkACeDpgDGPzWyXhpNP8S9VZ6LVRfjvQP2fALKRzLtBFq2a+p+LpX/lf8VFg2GaV7
+         DVGDgJpSh5jh+6WtJxjKOHnlWra8Xwp2Mv63EZtCCbE+oIX9xoVcMnkbe+QZ4oX4Y8zK
+         aPIiNwV7RFTFvp01de7fsIHVAPVVK3YNJW1Qixee/HoBvz+zmcQq94LTYwB7u2r995LX
+         IpxpR8FXivDDLlUwknM2h44qEgVpUwVEaw0bo43brJjrkDPvvCUrE3bbFhS04M2pHIDQ
+         gAvYx140dfOClDHD1C740Ls1byULYBbQJ1SSkmdSO3GLXaHdejAhvN/C/UZ08B9hnits
+         W1/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720715157; x=1721319957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2SEpCiUOQvgPIzDLhrNd4BFzg6FCRjdLml6RucYrX6c=;
-        b=KMs5nMkYpX738U0qIelZqRoEiGDLyQWJaMQxjDf+8nhBRFxuSLiaZdEwWcrolZu/yj
-         d+jginzTVO5mZ2mduaROMEV7i1+45C6RsXCpf+aeAAJSQK6yG0RkAt85TwoKTQGSWi2E
-         P7e9xX19JEyjse1CPrCcdx3tk3Rqr4i0DP3o6ZxWlvAaDH5OplVI3nesD16oUTwT+Wd6
-         /tTHdvSnxVEJrsW/MQcibw9hmTYoSRXYqfx9LOKHfuE+AOgF72GwfIFQYZ1ojIO6xZj2
-         ghONBzV2GKd06GGgYtS1TIr/cEQ8Bbpf7aW6ZpGF5yTmn213zGJz8p0rQtNL8iwMndAo
-         a/Wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkKyleWZt5rAMTLWfntbg/pmZizd2ig4Q70vCTZ5be0uyx34Xh1YUGWPmLsr4EitvlBhlhyJ1eogFyHioGuQeybiEmo/37nSDXXMdZKSL7ng==
-X-Gm-Message-State: AOJu0YwpW/1oLaFs1gScvUqZjmjMpc4YUp5TRA4sCTJhNcDUETESupoI
-	D2AFq8mHSqvM8WNHgOoJWox9rjwmHzSi029Mb6rSD5Fn2bb3buOJo/vV6ouL0s1f+TNLN9ZAbu8
-	eNfkAZRvsjEToDXOqst5jjVqygbY0d7E609mB
-X-Google-Smtp-Source: AGHT+IFPOFlYJtl+9KpTPLHCZ8kBfntK/k6bdea6y4VDGrLMHW2XyoGDDVRfyezdEAeoi6MASDv/Wa37jmIQA3eNLAY=
-X-Received: by 2002:ac8:4c9d:0:b0:447:d78b:fdf6 with SMTP id
- d75a77b69052e-44d0aa44ee5mr3767161cf.10.1720715157365; Thu, 11 Jul 2024
- 09:25:57 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1720716879; x=1721321679;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3yqNDdzLTGhFlyxunbrxQB7ZpJhsygMdfg4hB+E/qsY=;
+        b=BUk5qckRYJ9MTvAfOtaVIvTnUT6tdTAQCUiwLnAgeVf5/sLryaz2NByywHP6y68XDO
+         /yHFUFE5VUfJ/lIBOQEFXKdlaA1S7fqnaaHgGf7Scue7wyA8R8mTKsfN7c+lciz4myuF
+         lcigtocq5n3DuxN4IVmBLKja1wBkECEpOeW0WlHVUYPw51Ku3+OG9nfL+7vRMZK6j4ji
+         Zq62jR5iNY0P7RzLuL8VEsoJUhbiFY+6vnHie956zZFMyx+TevrI4lbomxzRYxb7htxb
+         0oIsE6SBZznWaouWezrLs6oyM40OPW7tKoYMm5/Qc1rTTJfTKuQYG07vbWqGPjQPcbRB
+         1KdQ==
+X-Gm-Message-State: AOJu0YyoMC+twjrCK8uRogk6F+7R+Hq12U782lt5WNhuir2jnze5aKoL
+	JVJ2dth7Cl2NvYduw/G7cT7IHsbt1dPvyM4O+0SSouIObn7Q1z0gza/QxBHiOxrG7/gKANEajSC
+	HpPtMUq9HaOGG0YdMw8RdQfk9vu/4xE7K9Fnm9/QOuBUCIJSKy8MI+xg=
+X-Google-Smtp-Source: AGHT+IFUm54Av27ayS0tc6q143Eg64C/OYpgGZJmOlN9Oe9HvK2XAalroyyil4+0i7DLuWrHDPsJEUWcPXdgumf4pz8=
+X-Received: by 2002:a17:903:1301:b0:1fa:7dc:d324 with SMTP id
+ d9443c01a7336-1fbdcc89a3dmr3499895ad.2.1720716878784; Thu, 11 Jul 2024
+ 09:54:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
- <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
- <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
- <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
- <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
- <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
-In-Reply-To: <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Jul 2024 09:25:46 -0700
-Message-ID: <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 11 Jul 2024 09:54:27 -0700
+Message-ID: <CAP-5=fV+i3cuCWOrAw9sxYW7WSb47joWFpa3K3Eqw1MpLkqNfw@mail.gmail.com>
+Subject: Linux Plumbers Tracing/Perf events Microconference - abstract
+ deadline tomorrow
+To: linux-perf-users <linux-perf-users@vger.kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-Week 7 of Google Summer-of-Code and we're around the midpoint.  Anyone
-with a perf tool interest, please feel free to attend! We're happy to
-discuss perf tool issues, Howard's progress, issues of the day, etc.
+There will be microconference at LPC on tracing and perf events:
+https://lpc.events/event/18/abstracts/1778/
 
-Linux perf tool office hours
-Friday, July 12 =C2=B7 8:00 =E2=80=93 9:00am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/tif-efem-uiq
-Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+Potential topics include:
+ - Feedback about the tracing/perf subsystems overall (e.g. how can
+people help the maintainers).
+ - Reboot persistent in-memory tracing buffers, this would make ftrace
+a very powerful debugging and performance analysis tool for kexec and
+could also be used for post crash debugging.
+ - Dynamic change of ftrace events to improve symbolic printing.
+ - Userspace instrumentation (libside), including discussion of its
+impacts on the User events ABI.
+ - Collect state dump events from kernel drivers (e.g. dump wifi
+interfaces configuration at a given point in time through trace
+buffers).
+ - Current work implementing performance monitoring in the kernel,
+ - User land profiling and analysis tools using the perf event API,
+ - Improving the kernel perf event and PMU APIs,
+ - Interaction between perf events and subsystems like cgroups, kvm,
+drm, bpf, etc.,
+ - Improving the perf tool and its interfaces in particular w.r.t. to
+scalability of the tool,
+ - Implementation of new perf features and tools using eBPF, like the
+ones in tools/perf/util/bpf_skel/.
+ - Further use of type information to augment the perf tools,
+ - Novel uses of perf events for debugging and correctness,
+ - New challenges in performance monitoring for the Linux kernel,
+ - Regression testing/CI integration for the perf kernel
+infrastructure and tools,
+ - Improving documentation,
+ - Security aspects of using tracing/perf tools,
+
+Abstract submissions happen through the website (you don't need a full
+presentation):
+https://lpc.events/event/18/abstracts/#submit-abstract
+
+With the deadline being tomorrow July 12th.
 
 Thanks,
 Ian
-
-On Wed, Jul 3, 2024 at 7:41=E2=80=AFPM Howard Chu <howardchu95@gmail.com> w=
-rote:
->
-> Hello,
->
-> 6th week of Google Summer-of-Code. Office hours this week are the same
-> as last week:
->
-> Linux perf tool office hours
-> Friday, July 5 =C2=B7 8:00 =E2=80=93 9:00am
->
-> Time zone: America/Los_Angeles
-> Google Meet joining info
-> Video call link: https://meet.google.com/tif-efem-uiq
-> Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-> More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
->
-> Thanks,
-> Howard
->
-> On Fri, Jun 28, 2024 at 1:49=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > 5th week of Google Summer-of-Code. Office hours tomorrow at the normal =
-time:
-> >
-> > Linux perf tool office hours
-> > Friday, June 28 =C2=B7 8:00 =E2=80=93 9:00am
-> > Time zone: America/Los_Angeles
-> > Google Meet joining info
-> > Video call link: https://meet.google.com/tif-efem-uiq
-> > Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 9=
-68=E2=80=AC#
-> > More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
-> >
-> > Thanks,
-> > Ian
