@@ -1,183 +1,321 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946D5383;
-	Thu, 11 Jul 2024 02:05:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8685E15AE0;
+	Thu, 11 Jul 2024 04:48:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720663557; cv=none; b=ldGcEpcqdcPiZ8MzU0af9BxfuEU6qc+/6EDN2yYBFH/F01vxF+pmmlJs1/YTyOwvi4joqb23mMmR9tuy4r8rFKDB/c0+I7inwfVR1ePuhdnI7ERjoDXRZiT9OasNgT/eRIuN8wPwgUepC0Y/Kq9/n3mKNoPI8AD1I06bgpmPcaE=
+	t=1720673294; cv=none; b=ieKdA24koh3C16Z7vECxbtmaWQ5T31zEt3vqjHQ3pqMhXvnmA9e6tgBU6nCd3mpVRFi41GGwvTSfWKN7weuVvq0J0yfC+qOHQ4yG5lFjsLIzFveJP3tFhU5LnAWtnzPOyifix5+vwlmSLW/6JZktHWbHFhd8bQ9D2TSCpu1uZjQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720663557; c=relaxed/simple;
-	bh=8xQZflV4+sVWWI8BAh5XMpMjW5885RiRrVGlv0CSCVs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pTn4sJP9GPrHnLPG/Oa4lfTrT4B7m6iogkyWAP3kglf3P8RyKE9upbxsXyXTF1QbMb1gOnuRFr9mlqq8rS28wQ6wiOEFkwyftsqg6GoEPSphQwAQ6wbtoJ9fyQBjqToKiEP4rbTvYStbHq4nSFyKtWdPjWg7shV1Bt7aKVh7VoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.17])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WKHyY1QZsz1yvHt;
-	Thu, 11 Jul 2024 10:01:25 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4478F1A0188;
-	Thu, 11 Jul 2024 10:05:21 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 11 Jul 2024 10:05:20 +0800
-Message-ID: <993a2fa6-b40e-b85c-ea87-e7940db11d3d@huawei.com>
-Date: Thu, 11 Jul 2024 10:05:19 +0800
+	s=arc-20240116; t=1720673294; c=relaxed/simple;
+	bh=u2dTTjeoQNgtN4DfnFCRkWsTxvIwIy6d1aj8rzgjFqA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RkLJrDNqeGVWzkxv8FcUladYnHDRMwFfYMsNcsVELzRy8jb/A2fov/YMGRX8l+ovQcq4z6guCFk2GNKVAmtGJKUBmhUW96gIvTvgsbupuo9/NpXjY0mJtrC6zFx2MIr0wzjvOElI9+X0TaIY05bjp8xsd8PMkYHTF4bj1FWNBUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kWbyB+B+; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kWbyB+B+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720673292; x=1752209292;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=u2dTTjeoQNgtN4DfnFCRkWsTxvIwIy6d1aj8rzgjFqA=;
+  b=kWbyB+B+NyXlikvyp1HfxMTGNsKpPSP338aPyy9L5GbSbSiK/Z22O7rV
+   kfF/LM37nHvmAYABJrCvA5qdwb8naHsJJ8Iw6s/cZG85COn1z54RDubDh
+   rCb1nzgWgVfHahjdFh3ANAoYIS2R5Mz0diyyC8jHsSDkrvkUPoV61QuDr
+   RNvi6qvB7Z4OYzxB+dAHspiTuXvk2hkq1B9u4JACaqKfGajYadr8QrLpQ
+   FSp4Vjtnwa2lGMN/9zNcMyh/MZldiGFgLF0I8C1ToB63AcyU3s8hGxT+7
+   dMeDKM1iYPqy7aHW/NXAcGXHVMnV2P7LQZRqFf/D57lTYH8lLjtpmtelU
+   g==;
+X-CSE-ConnectionGUID: 1M3RMorkSi+h7M6kWZtw/Q==
+X-CSE-MsgGUID: gRWBfwReTcWJ8JGYUPy6xA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11129"; a="28696907"
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="28696907"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 21:48:10 -0700
+X-CSE-ConnectionGUID: C2ue7uEWT8SEPqjFMH8zLw==
+X-CSE-MsgGUID: +AqMfFkeTI23ZWeW64V9Uw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,199,1716274800"; 
+   d="scan'208";a="48430937"
+Received: from unknown (HELO [10.238.4.150]) ([10.238.4.150])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2024 21:48:08 -0700
+Message-ID: <deb45394-cf79-4a7b-b8bb-ed9540dc879c@linux.intel.com>
+Date: Thu, 11 Jul 2024 12:48:05 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH 1/2] uprobes: Optimize the return_instance related
- routines
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <eddyz87@gmail.com>, <song@kernel.org>,
-	<yonghong.song@linux.dev>, <john.fastabend@gmail.com>, <kpsingh@kernel.org>,
-	<sdf@fomichev.me>, <haoluo@google.com>, <mykolal@fb.com>, <shuah@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>,
-	<bpf@vger.kernel.org>, <linux-kselftest@vger.kernel.org>
-References: <20240709005142.4044530-1-liaochang1@huawei.com>
- <20240709005142.4044530-2-liaochang1@huawei.com>
- <CAEf4BzYDrVJXnAruko-h5-oXCGuZ92x4KnY-2cD=XXBp1U_kBg@mail.gmail.com>
- <2336576e-1ed4-cd5e-5535-2d9b88218dae@huawei.com>
- <CAEf4BzYDvh2Ynrttk4NLyCGB8AVM2d-2tKSzRZF_cXVA80qucw@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzYDvh2Ynrttk4NLyCGB8AVM2d-2tKSzRZF_cXVA80qucw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v2 3/5] perf x86/topdown: Don't move topdown metrics
+ events when sorting events
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240708144204.839486-1-dapeng1.mi@linux.intel.com>
+ <20240708144204.839486-4-dapeng1.mi@linux.intel.com>
+ <CAP-5=fVPb4JGR3RxfPBGrihrra8bFzdJfFt2iASSs2xHOy=U4g@mail.gmail.com>
+ <4d39856e-396d-4a48-9ca3-2e1a574f50d7@linux.intel.com>
+ <CAP-5=fW65kxuABBJVAzKwoyBWW92_jkndWgY+4u9s3OGj_UkEg@mail.gmail.com>
+ <afea2a93-0769-4ce5-ab59-2693d2d2f344@linux.intel.com>
+ <CAP-5=fUP1O+VnH+7PaZtEgsFUFOpjo-tRtmAyVjG=Q4GFToR7g@mail.gmail.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <CAP-5=fUP1O+VnH+7PaZtEgsFUFOpjo-tRtmAyVjG=Q4GFToR7g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
 
+On 7/10/2024 11:07 PM, Ian Rogers wrote:
+> On Wed, Jul 10, 2024 at 2:40 AM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>
+>> On 7/10/2024 6:37 AM, Ian Rogers wrote:
+>>> On Mon, Jul 8, 2024 at 9:18 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
+>>>> On 7/8/2024 11:08 PM, Ian Rogers wrote:
+>>>>> On Mon, Jul 8, 2024 at 12:40 AM Dapeng Mi <dapeng1.mi@linux.intel.com> wrote:
+>>>>>> when running below perf command, we say error is reported.
+>>>>>>
+>>>>>> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
+>>>>>>
+>>>>>> ------------------------------------------------------------
+>>>>>> perf_event_attr:
+>>>>>>   type                             4 (cpu)
+>>>>>>   size                             168
+>>>>>>   config                           0x400 (slots)
+>>>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>>>>>   read_format                      ID|GROUP|LOST
+>>>>>>   disabled                         1
+>>>>>>   sample_id_all                    1
+>>>>>>   exclude_guest                    1
+>>>>>> ------------------------------------------------------------
+>>>>>> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
+>>>>>> ------------------------------------------------------------
+>>>>>> perf_event_attr:
+>>>>>>   type                             4 (cpu)
+>>>>>>   size                             168
+>>>>>>   config                           0x8000 (topdown-retiring)
+>>>>>>   { sample_period, sample_freq }   4000
+>>>>>>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
+>>>>>>   read_format                      ID|GROUP|LOST
+>>>>>>   freq                             1
+>>>>>>   sample_id_all                    1
+>>>>>>   exclude_guest                    1
+>>>>>> ------------------------------------------------------------
+>>>>>> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
+>>>>>> sys_perf_event_open failed, error -22
+>>>>>>
+>>>>>> Error:
+>>>>>> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
+>>>>>>
+>>>>>> The reason of error is that the events are regrouped and
+>>>>>> topdown-retiring event is moved to closely after the slots event and
+>>>>>> topdown-retiring event needs to do the sampling, but Intel PMU driver
+>>>>>> doesn't support to sample topdown metrics events.
+>>>>>>
+>>>>>> For topdown metrics events, it just requires to be in a group which has
+>>>>>> slots event as leader. It doesn't require topdown metrics event must be
+>>>>>> closely after slots event. Thus it's a overkill to move topdown metrics
+>>>>>> event closely after slots event in events regrouping and furtherly cause
+>>>>>> the above issue.
+>>>>>>
+>>>>>> Thus delete the code that moving topdown metrics events to fix the
+>>>>>> issue.
+>>>>> I think this is wrong. The topdown events may not be in a group, such
+>>>>> cases can come from metrics due to grouping constraints, and so they
+>>>>> must be sorted together so that they may be gathered into a group to
+>>>>> avoid the perf event opens failing for ungrouped topdown events. I'm
+>>>>> not understanding what these patches are trying to do, if you want to
+>>>>> prioritize the event for leader sampling why not modify it to compare
+>>>> Per my understanding, this change doesn't break anything. The events
+>>>> regrouping can be divided into below several cases.
+>>>>
+>>>> a. all events in a group
+>>>>
+>>>> perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
+>>>> WARNING: events were regrouped to match PMUs
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>         15,066,240      slots
+>>>>          1,899,760      instructions
+>>>>          2,126,998      topdown-retiring
+>>>>
+>>>>        1.045783464 seconds time elapsed
+>>>>
+>>>> In this case, slots event would be adjusted as the leader event and all
+>>>> events are still in same group.
+>>>>
+>>>> b. all events not in a group
+>>>>
+>>>> perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
+>>>> WARNING: events were regrouped to match PMUs
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>          2,045,561      instructions
+>>>>         17,108,370      slots
+>>>>          2,281,116      topdown-retiring
+>>>>
+>>>>        1.045639284 seconds time elapsed
+>>>>
+>>>> In this case, slots and topdown-retiring are placed into a group and slots
+>>>> is the group leader. instructions event is outside the group.
+>>>>
+>>>> c. slots event in group but topdown metric events outside the group
+>>>>
+>>>> perf stat -e "{instructions,slots},topdown-retiring"  -C0 sleep 1
+>>>> WARNING: events were regrouped to match PMUs
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>         20,323,878      slots
+>>>>          2,634,884      instructions
+>>>>          3,028,656      topdown-retiring
+>>>>
+>>>>        1.045076380 seconds time elapsed
+>>>>
+>>>> In this case, topdown-retiring event is placed into previous group and
+>>>> slots is adjusted to leader event.
+>>>>
+>>>> d. multiple event groups
+>>>>
+>>>> perf stat -e "{instructions,slots},{topdown-retiring}"  -C0 sleep 1
+>>>> WARNING: events were regrouped to match PMUs
+>>>>
+>>>>  Performance counter stats for 'CPU(s) 0':
+>>>>
+>>>>         26,319,024      slots
+>>>>          2,427,791      instructions
+>>>>          2,683,508      topdown-retiring
+>>>>
+>>>>        1.045495830 seconds time elapsed
+>>>>
+>>>> In this case, the two groups are merged to one group and slots event is
+>>>> adjusted as leader.
+>>>>
+>>>> The key point of this patch is that it's unnecessary to move topdown
+>>>> metrics events closely after slots event. It's a overkill since Intel core
+>>>> PMU driver doesn't require that. Intel PMU driver just requires topdown
+>>>> metrics events are in a group where slots event is the group leader, and
+>>>> worse the movement for topdown metrics events causes the issue in the
+>>>> commit message mentioned.
+>>>>
+>>>> This patch doesn't block to regroup topdown metrics event. It just removes
+>>>> the unnecessary movement for topdown metrics events.
+>>> But you will get the same behavior because of the non-arch dependent
+>>> force group index - I guess you don't care as the sample read only
+>>> happens when you have a group.
+>>>
+>>> I'm thinking of cases like (which admittedly is broken):
+>>> ```
+>>> $ perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
+>>> [sudo] password for irogers:
+>>>
+>>> Performance counter stats for 'system wide':
+>>>
+>>>     2,589,345,900      slots
+>>>       852,492,838      instructions
+>>>       583,525,372      cycles
+>>>   <not supported>      topdown-fe-bound
+>>>
+>>>       0.103930790 seconds time elapsed
+>>> ```
+>> I run the upstream code (commit 73e931504f8e0d42978bfcda37b323dbbd1afc08)
+>> without this patchset, I see same issue.
+>>
+>> perf stat -e "{slots,instructions},cycles,topdown-fe-bound" -a sleep 0.1
+>>
+>>  Performance counter stats for 'system wide':
+>>
+>>        262,448,922      slots
+>>         29,630,373      instructions
+>>         43,891,902      cycles
+>>    <not supported>      topdown-fe-bound
+>>
+>>        0.150369560 seconds time elapsed
+>>
+>> #perf -v
+>> perf version 6.10.rc6.g73e931504f8e
+>>
+>> This issue is not caused by this patchset.
+> I agree, but I think what is broken above was caused by the forced
+> grouping change that I did for Andi. The point of your change here is
+> to say that topdown events don't need to be moved while sorting, but
+> what should be happening here is just that. topdown-fe-bound should be
+> moved into the group with slots and instructions so it isn't "<not
+> supported>". So yes the current code has issues, but that's not the
+> same as saying we don't need to move topdown events, we do so that we
+> may group them better.
+>
+> Thanks,
+> Ian
 
-在 2024/7/11 5:21, Andrii Nakryiko 写道:
-> On Wed, Jul 10, 2024 at 1:19 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/7/10 7:55, Andrii Nakryiko 写道:
->>> On Mon, Jul 8, 2024 at 6:00 PM Liao Chang <liaochang1@huawei.com> wrote:
->>>>
->>>> Reduce the runtime overhead for struct return_instance data managed by
->>>> uretprobe. This patch replaces the dynamic allocation with statically
->>>> allocated array, leverage two facts that are limited nesting depth of
->>>> uretprobe (max 64) and the function call style of return_instance usage
->>>> (create at entry, free at exit).
->>>>
->>>> This patch has been tested on Kunpeng916 (Hi1616), 4 NUMA nodes, 64
->>>> cores @ 2.4GHz. Redis benchmarks show a throughput gain by 2% for Redis
->>>> GET and SET commands:
->>>>
->>>> ------------------------------------------------------------------
->>>> Test case       | No uretprobes | uretprobes     | uretprobes
->>>>                 |               | (current)      | (optimized)
->>>> ==================================================================
->>>> Redis SET (RPS) | 47025         | 40619 (-13.6%) | 41529 (-11.6%)
->>>> ------------------------------------------------------------------
->>>> Redis GET (RPS) | 46715         | 41426 (-11.3%) | 42306 (-9.4%)
->>>> ------------------------------------------------------------------
->>>>
->>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->>>> ---
->>>>  include/linux/uprobes.h |  10 ++-
->>>>  kernel/events/uprobes.c | 162 ++++++++++++++++++++++++----------------
->>>>  2 files changed, 105 insertions(+), 67 deletions(-)
->>>>
->>>
->>> [...]
->>>
->>>> +static void cleanup_return_instances(struct uprobe_task *utask, bool chained,
->>>> +                                    struct pt_regs *regs)
->>>> +{
->>>> +       struct return_frame *frame = &utask->frame;
->>>> +       struct return_instance *ri = frame->return_instance;
->>>> +       enum rp_check ctx = chained ? RP_CHECK_CHAIN_CALL : RP_CHECK_CALL;
->>>> +
->>>> +       while (ri && !arch_uretprobe_is_alive(ri, ctx, regs)) {
->>>> +               ri = next_ret_instance(frame, ri);
->>>> +               utask->depth--;
->>>> +       }
->>>> +       frame->return_instance = ri;
->>>> +}
->>>> +
->>>> +static struct return_instance *alloc_return_instance(struct uprobe_task *task)
->>>> +{
->>>> +       struct return_frame *frame = &task->frame;
->>>> +
->>>> +       if (!frame->vaddr) {
->>>> +               frame->vaddr = kcalloc(MAX_URETPROBE_DEPTH,
->>>> +                               sizeof(struct return_instance), GFP_KERNEL);
->>>
->>> Are you just pre-allocating MAX_URETPROBE_DEPTH instances always?
->>> I.e., even if we need just one (because there is no recursion), you'd
->>> still waste memory for all 64 ones?
->>
->> This is the truth. On my testing machines, each struct return_instance data
->> is 28 bytes, resulting in a total pre-allocated 1792 bytes when the first
->> instrumented function is hit.
->>
->>>
->>> That seems rather wasteful.
->>>
->>> Have you considered using objpool for fast reuse across multiple CPUs?
->>> Check lib/objpool.c.
->>
->> After studying how kretprobe uses objpool, I'm convinced it is a right solution for
->> managing return_instance in uretporbe. While I need some time to fully understand
->> the objpool code itself and run some benchmark to verify its performance.
->>
->> Thanks for the suggestion.
-> 
-> Keep in mind that there are two patch sets under development/review,
-> both of which touch this code. [0] will make return_instance
-> variable-sized, so think how to accommodate that. And [1] in general
-> touches a bunch of this code. So I'd let those two settle and land
-> before optimizing return_instance allocations further.
-> 
->   [0] https://lore.kernel.org/linux-trace-kernel/20240701164115.723677-1-jolsa@kernel.org/
->   [1] https://lore.kernel.org/linux-kernel/20240708091241.544262971@infradead.org/
+I see your point. I think the key is to ensure the topdown metrics events
+in a group which has slots as the leader. As for where the topdown metrics
+event is in the group, it doesn't matter. I would see if there is a better
+method to fix this issue. Thanks.
 
-Thanks for letting me know. I've made a note to track the progress of these patch sets.
 
-> 
+>
+>>> As the slots event is grouped there's no force group index on it, we
+>>> want to shuffle the topdown-fe-bound into the group so we want it to
+>>> compare as less than cycles - ie we're comparing topdown events with
+>>> non topdown events and trying to shuffle the topdown events first.
+>> Current evlist__cmp() won't really swap the order of cycles and
+>> topdown-fe-bound.
 >>
->>>
->>>> +               if (!frame->vaddr)
->>>> +                       return NULL;
->>>> +       }
->>>> +
->>>> +       if (!frame->return_instance) {
->>>> +               frame->return_instance = frame->vaddr;
->>>> +               return frame->return_instance;
->>>> +       }
->>>> +
->>>> +       return ++frame->return_instance;
->>>> +}
->>>> +
->>>> +static inline bool return_frame_empty(struct uprobe_task *task)
->>>> +{
->>>> +       return !task->frame.return_instance;
->>>>  }
->>>>
->>>>  /*
->>>
->>> [...]
+>> if (lhs_sort_idx != rhs_sort_idx)
+>>         return lhs_sort_idx - rhs_sort_idx;
 >>
->> --
->> BR
->> Liao, Chang
-
--- 
-BR
-Liao, Chang
+>> When comparing cycles and topdown-fe-bound events, lhs_sort_idx is 2 and
+>> rhs_sort_idx is 3, so the swap won't happen.
+>>
+>> So the event sequence after sorting is still "slots, instructions ,cycles,
+>> topdown-fe-bound". Both cycles and topdown-fe-bound events won't be placed
+>> into the group.
+>>
+>>
+>>> Thanks,
+>>> Ian
+>>>
+>>>
+>>>
+>>>>> first?
+>>>>>
+>>>>> Thanks,
+>>>>> Ian
+>>>>>
+>>>>>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>>>>>> ---
+>>>>>>  tools/perf/arch/x86/util/evlist.c | 5 -----
+>>>>>>  1 file changed, 5 deletions(-)
+>>>>>>
+>>>>>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>>>>>> index 332e8907f43e..6046981d61cf 100644
+>>>>>> --- a/tools/perf/arch/x86/util/evlist.c
+>>>>>> +++ b/tools/perf/arch/x86/util/evlist.c
+>>>>>> @@ -82,11 +82,6 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>>>>>>                         return -1;
+>>>>>>                 if (arch_is_topdown_slots(rhs))
+>>>>>>                         return 1;
+>>>>>> -               /* Followed by topdown events. */
+>>>>>> -               if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+>>>>>> -                       return -1;
+>>>>>> -               if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+>>>>>> -                       return 1;
+>>>>>>         }
+>>>>>>
+>>>>>>         /* Default ordering by insertion index. */
+>>>>>> --
+>>>>>> 2.40.1
+>>>>>>
