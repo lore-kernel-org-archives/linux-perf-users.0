@@ -1,258 +1,183 @@
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 954BD15ECC0
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 12:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0159116B3BF;
+	Thu, 11 Jul 2024 13:07:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720700233; cv=none; b=TQkJih+69hBBPy/rJq8FvHUv5qZWHKRTkTZ2/4D+Zp3IM8YPpMgkPkD5fjmYiCsZOE75HNcSxrJrpCrpIakjdjlrBr6md8h8ynTtSzngge4gN3REEiqC6h2exaDte3XbjtkbQBBLHrgkBWIXyGFPXrYT8hRzxmo9w/NVf10woa4=
+	t=1720703240; cv=none; b=JbHiJAqvju6B9qMiAsILZlwzlMvnqQw0ZxWkZkBaCPISvBJbSFnF2E9yetNPoorzCryzAiRnNbwCL0QIq6yadtOo2IliAHnpVeoSHoWrT6WY7KKRnGsYM4hcPdwyeIJFd64g6hmx9OGw46ct2n35JHgbJiFOiZkxInl401ucwYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720700233; c=relaxed/simple;
-	bh=LylSGN00CZycrIeZtCZWrilto+Oh9Zgg0qJLpjORVCA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=t3QZW2x+P5sZlyJ6EmVGxBN6NBJkHDRjNj1ujgKr4cTiDP8m3rR7vSRW59xAjomj/VTKxHxeLK8eAjz5xEQs9CqpVm8Zoxk4D8dmRS1gWy5HiB2bOxR+bx4U4cfTncLtwSaughJXfWSOueZdawRt8HQ2Xj+eEtQlqZwVwRmZBQA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=KK7LuUy+; arc=none smtp.client-ip=209.85.210.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
+	s=arc-20240116; t=1720703240; c=relaxed/simple;
+	bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=E1JW4oBVXFqTBtPDiYA2t2c62++8V34VWK/E0/N0gUccuGsRf899tzNvvB1BD4zjjDrf+zZMx6WEPBCAIB1yEwDXtGdIz/ShzAPsrZZK8E7BMbKTHTvl5PgprXzW8yGB5bb+CcifC6XbSgQzSN9Q8TnYbzRI79xVSdygJfVvCJo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAJZDMTo; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="KK7LuUy+"
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-70af22a9c19so617603b3a.2
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 05:17:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720700231; x=1721305031; darn=vger.kernel.org;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zNUgfMo2gXZSNLPHfh654aj1KCXo46JCf2k9E+T7+E0=;
-        b=KK7LuUy+DBSzLjLX10CbOSk3k555My2TQvb9zodLgY7dCbEGe6XkgA/6vtkyZqmWXh
-         cljPNDwaETAJYPd8Hz4Bkqqry/FvvVN9fmzEtPOz9r92yOIgX+yMwvEAc0G80zAKUcD+
-         LzohAkmFSEWr5MenVgG3kzLakMUPFiNikVz5A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720700231; x=1721305031;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zNUgfMo2gXZSNLPHfh654aj1KCXo46JCf2k9E+T7+E0=;
-        b=tHXVJMEqAx5YrSYyA0DeVsYLkmZrNx+gmVIbmNPSoBSj/f5ph4bpJqLkSzcRTsHV8K
-         DwBq7R19aGYcvkIEm9ePujRQYFc79eZ7PT7nDiQSAulKIDvR+nkMqxZ62xQWkdFbVOkA
-         dA9y2NH20lsNmJQDuuH+g7c0/d2xgzjEWg5CfmjjoCKdmZ2ykwg6IzHXYke+2IfzSD81
-         lj1tjq5tQVC1RFU65xvdf30vs9zBOrGZW6KK7vtOnOESBoMJC52jy1CmK2hHAXgnNEra
-         eiQ/us59utin4P3xkunZmyMmZJ+KPVW2/DA1Hgig+Vxzc+C2dOm9hrVhzXM2GirbHa+D
-         cAOg==
-X-Forwarded-Encrypted: i=1; AJvYcCXmo2z5lJ8wxVF9fabM151HNdNH2fulSoolbq4Je2bW04gmu1Zg3MNPSLitInsStgAJX2Ie7+F5PvhQAFwLSU9H2R7TIV0d1j++VxWjpeS2Ag==
-X-Gm-Message-State: AOJu0Yz0/V4aYGJl5ZUzdeXmjPgOrvWjvFDRoURHdakd5iJS79OSItKH
-	Szw3M0veXG1FNarGQ8tcInaY3vtoiNlBDfRp5kKrNvj/CKU/gmQoNNVehU9FHw==
-X-Google-Smtp-Source: AGHT+IFNkZ5F02HmXU6UCANTg5DiTRJQwTFLrtdtbLiaqEloiR+jcdq1tO98nmpNd2EYHR1M29lc+Q==
-X-Received: by 2002:a05:6a20:734c:b0:1c0:f6b7:a897 with SMTP id adf61e73a8af0-1c2982285f2mr9806840637.32.1720700230784;
-        Thu, 11 Jul 2024 05:17:10 -0700 (PDT)
-Received: from akaher-virtual-machine.eng.vmware.com ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10111sm49211985ad.20.2024.07.11.05.17.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2024 05:17:10 -0700 (PDT)
-From: Ajay Kaher <ajay.kaher@broadcom.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org
-Cc: mark.rutland@arm.com,
-	rostedt@goodmis.org,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	yangjihong1@huawei.com,
-	zegao2021@gmail.com,
-	leo.yan@linux.dev,
-	asmadeus@codewreck.org,
-	siyanteng@loongson.cn,
-	sunhaiyong@loongson.cn,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	ajay.kaher@broadcom.com,
-	alexey.makhalov@broadcom.com,
-	vasavi.sirnapalli@broadcom.com
-Subject: [PATCH RFC 3/3] perf/report: add off-cpu samples
-Date: Thu, 11 Jul 2024 17:46:19 +0530
-Message-Id: <1720700179-22839-4-git-send-email-ajay.kaher@broadcom.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
-References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAJZDMTo"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1720703239; x=1752239239;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
+  b=lAJZDMTokRYcD5KbUIikutl8cONwllnF0K7jZ24RQAydSjWuAf0kqd74
+   qAzh69svcX5KMS4E0jgTT60rwxWQmPPdHiPi0mL2FB2iq/ZuUqgkU4tAk
+   5mjgAuDvwDLEPS8TuBd4g0ua9XulZ3M6iZ3bjXSD98y2Lif4H22PFm7qj
+   p4kI4TDpP3OUqKcBhfe5S1ZNX3XjA02tfmlAlGzverAYfO2pHilV2gLu6
+   4m/2ZKRAjTpNPx4gGCvwQP2dkeblJot9452CfWZ5VTH1GOpWwO/cjMT4H
+   xou9fK6xSIypZpQD45nY6WyGoc9IMKcFH+SKqGqj8A1dh17AIoFS8829T
+   A==;
+X-CSE-ConnectionGUID: NHTUzXLxSbi4MYtNx8WTDA==
+X-CSE-MsgGUID: EbMoiSYcTp2NuPmQ9AMTZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17695198"
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="17695198"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:06 -0700
+X-CSE-ConnectionGUID: CwCrJuGJTc2wbQHB7kUnAQ==
+X-CSE-MsgGUID: hbSYrspaSY2+5GgI4VzO1A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
+   d="scan'208";a="53727131"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:05 -0700
+Received: from [10.212.47.156] (kliang2-mobl1.ccr.corp.intel.com [10.212.47.156])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 7561820738F3;
+	Thu, 11 Jul 2024 06:07:03 -0700 (PDT)
+Message-ID: <98c73f1a-e5e3-4eba-ac52-ccf21e3a063c@linux.intel.com>
+Date: Thu, 11 Jul 2024 09:07:02 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
+ perf-sanity-tests.perf_all_PMU_test.fail
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, oe-lkp@lists.linux.dev, lkp@intel.com,
+ Linux Memory Management List <linux-mm@kvack.org>,
+ Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
+ Caleb Biggers <caleb.biggers@intel.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <202407101021.2c8baddb-oliver.sang@intel.com>
+ <a0ac56fc-eedc-492b-884c-d68e0460f178@linux.intel.com>
+ <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-off-cpu samples represent the time period for which the target
-process not occupying the cpu cycles.
 
-In following example, perf has collected 15 off-cpu samples and
-program was running on cpu for 27%:
 
-Samples: 24 of 'task-clock:ppp', 15 of 'offcpu', Event count: ~9150831908 (73% offcpu)
-+73.77%    73.77%  a.out    libc.so.6    [.] clock_nanosleep      <-- off-cpu sample
-+24.04%    24.04%  a.out    [vdso]       [.] __vdso_gettimeofday  <-- on-cpu sample
+On 2024-07-11 4:04 a.m., Oliver Sang wrote:
+> hi, Kan,
+> 
+> On Wed, Jul 10, 2024 at 09:15:05AM -0400, Liang, Kan wrote:
+>>
+>>
+>> On 2024-07-10 12:59 a.m., kernel test robot wrote:
+>>>
+>>>
+>>> Hello,
+>>>
+>>> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
+>>>
+>>> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
+>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>>
+>>> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
+>>>
+>>> in testcase: perf-sanity-tests
+>>> version: 
+>>> with following parameters:
+>>>
+>>> 	perf_compiler: gcc
+>>>
+>>>
+>>>
+>>> compiler: gcc-13
+>>> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
+>>>
+>>> (please refer to attached dmesg/kmsg for entire log/backtrace)
+>>>
+>>>
+>>> we also observed two cases which also failed on parent can pass on this commit.
+>>> FYI.
+>>>
+>>>
+>>> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
+>>> ---------------- ---------------------------
+>>>        fail:runs  %reproduction    fail:runs
+>>>            |             |             |
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
+>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
+>>>
+>>>
+>>>
+>>>
+>>>
+>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
+>>> the same patch/commit), kindly add following tags
+>>> | Reported-by: kernel test robot <oliver.sang@intel.com>
+>>> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
+>>> 105: perf all metricgroups test                                      : Ok
+>>> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
+>>> 106: perf all metrics test                                           : Ok
+>>> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
+>>> 107: perf all libpfm4 events test                                    : Ok
+>>> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
+>>> 108: perf all PMU test                                               : FAILED!
+>>
+>> Can you please try the -vvv option, which should tell the failed event?
+>> perf test -vvv "perf all PMU test"
+> 
+> after add -vvv:
+> 
+> 2024-07-11 07:45:20 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test -v 108
+> 108: perf all PMU test:
+> --- start ---
+> test child forked, pid 18989
+> Testing (null)
 
-Signed-off-by: Ajay Kaher <ajay.kaher@broadcom.com>
+The test cases use the "perf list --raw-dump pmu" to get a complete
+event list. It seems the perf list command got nothing. That's weird.
 
----
- tools/perf/util/events_stats.h |  2 ++
- tools/perf/util/evsel.c        |  2 ++
- tools/perf/util/hist.c         | 31 ++++++++++++++++++++++++++++---
- tools/perf/util/hist.h         |  1 +
- tools/perf/util/sample.h       |  1 +
- 5 files changed, 34 insertions(+), 3 deletions(-)
+The main change of e2641db83f18 is to add the "Counter" field and a few
+events. It should not impact the perf list command.
 
-diff --git a/tools/perf/util/events_stats.h b/tools/perf/util/events_stats.h
-index 8fecc9fbaecc..7bb3cf1ab835 100644
---- a/tools/perf/util/events_stats.h
-+++ b/tools/perf/util/events_stats.h
-@@ -44,8 +44,10 @@ struct events_stats {
- 
- struct hists_stats {
- 	u64 total_period;
-+	u64 total_period_off_cpu;
- 	u64 total_non_filtered_period;
- 	u32 nr_samples;
-+	u64 nr_samples_off_cpu;
- 	u32 nr_non_filtered_samples;
- 	u32 nr_lost_samples;
- };
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8ba890a5ac6e..ea41586474e3 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1146,6 +1146,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
- 	attr->write_backward = opts->overwrite ? 1 : 0;
- 	attr->read_format   = PERF_FORMAT_LOST;
- 
-+	evsel__set_sample_bit(evsel, CPU);
- 	evsel__set_sample_bit(evsel, IP);
- 	evsel__set_sample_bit(evsel, TID);
- 
-@@ -2438,6 +2439,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 			u.val32[0] = bswap_32(u.val32[0]);
- 		}
- 
-+		data->off_cpu = u.val32[1];
- 		data->cpu = u.val32[0];
- 		array++;
- 	}
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 2e9e193179dd..251333e0b021 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -23,6 +23,7 @@
- #include "thread.h"
- #include "block-info.h"
- #include "ui/progress.h"
-+#include "ui/util.h"
- #include <errno.h>
- #include <math.h>
- #include <inttypes.h>
-@@ -725,6 +726,7 @@ __hists__add_entry(struct hists *hists,
- 		.socket	 = al->socket,
- 		.cpu	 = al->cpu,
- 		.cpumode = al->cpumode,
-+		.off_cpu = sample->off_cpu,
- 		.ip	 = al->addr,
- 		.level	 = al->level,
- 		.code_page_size = sample->code_page_size,
-@@ -1076,6 +1078,8 @@ iter_add_single_cumulative_entry(struct hist_entry_iter *iter,
- 	callchain_cursor_commit(get_tls_callchain_cursor());
- 
- 	hists__inc_nr_samples(hists, he->filtered);
-+	if (sample->off_cpu)
-+		++hists->stats.nr_samples_off_cpu;
- 
- 	return err;
- }
-@@ -1740,6 +1744,7 @@ void hists__reset_stats(struct hists *hists)
- {
- 	hists->nr_entries = 0;
- 	hists->stats.total_period = 0;
-+	hists->stats.total_period_off_cpu = 0;
- 
- 	hists__reset_filter_stats(hists);
- }
-@@ -1757,6 +1762,9 @@ void hists__inc_stats(struct hists *hists, struct hist_entry *h)
- 
- 	hists->nr_entries++;
- 	hists->stats.total_period += h->stat.period;
-+
-+	if (h->off_cpu)
-+		hists->stats.total_period_off_cpu += h->stat.period;
- }
- 
- static void hierarchy_recalc_total_periods(struct hists *hists)
-@@ -2745,14 +2753,20 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
- 	struct thread *thread = hists->thread_filter;
- 	int socket_id = hists->socket_filter;
- 	unsigned long nr_samples = hists->stats.nr_samples;
-+	unsigned long nr_samples_off_cpu = hists->stats.nr_samples_off_cpu;
- 	u64 nr_events = hists->stats.total_period;
-+	int nr_events_off_cpu_percentage = (hists->stats.total_period_off_cpu * 100) / nr_events;
- 	struct evsel *evsel = hists_to_evsel(hists);
- 	const char *ev_name = evsel__name(evsel);
- 	char buf[512], sample_freq_str[64] = "";
-+	char oncpu_str[128] = "";
-+	char offcpu_str[128] = "";
-+	char offcpu_percentage_str[128] = "";
- 	size_t buflen = sizeof(buf);
- 	char ref[30] = " show reference callgraph, ";
- 	bool enable_ref = false;
- 
-+
- 	if (symbol_conf.filter_relative) {
- 		nr_samples = hists->stats.nr_non_filtered_samples;
- 		nr_events = hists->stats.total_non_filtered_period;
-@@ -2785,10 +2799,21 @@ int __hists__scnprintf_title(struct hists *hists, char *bf, size_t size, bool sh
- 		scnprintf(sample_freq_str, sizeof(sample_freq_str), " %d Hz,", evsel->core.attr.sample_freq);
- 
- 	nr_samples = convert_unit(nr_samples, &unit);
-+
-+	scnprintf(oncpu_str, sizeof(oncpu_str), "%lu%c of '%s',",
-+		  nr_samples - nr_samples_off_cpu, unit, ev_name);
-+
-+	if (evsel->core.attr.off_cpu) {
-+		scnprintf(offcpu_str, sizeof(offcpu_str), "%lu%c of '%s',",
-+			  nr_samples_off_cpu, unit, "offcpu");
-+		scnprintf(offcpu_percentage_str, sizeof(offcpu_percentage_str),
-+			  "(%d%% offcpu)", nr_events_off_cpu_percentage);
-+	}
-+
- 	printed = scnprintf(bf, size,
--			   "Samples: %lu%c of event%s '%s',%s%sEvent count (approx.): %" PRIu64,
--			   nr_samples, unit, evsel->core.nr_members > 1 ? "s" : "",
--			   ev_name, sample_freq_str, enable_ref ? ref : " ", nr_events);
-+			    "Samples: %s %s %s%sEvent count: ~%" PRIu64 " %s",
-+			    oncpu_str, offcpu_str, sample_freq_str, enable_ref ? ref : " ",
-+			    nr_events, offcpu_percentage_str);
- 
- 
- 	if (hists->uid_filter_str)
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 8fb3bdd29188..c64a07ce92fb 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -236,6 +236,7 @@ struct hist_entry {
- 	/* We are added by hists__add_dummy_entry. */
- 	bool			dummy;
- 	bool			leaf;
-+	bool			off_cpu;
- 
- 	char			level;
- 	u8			filtered;
-diff --git a/tools/perf/util/sample.h b/tools/perf/util/sample.h
-index 70b2c3135555..59b0951f4718 100644
---- a/tools/perf/util/sample.h
-+++ b/tools/perf/util/sample.h
-@@ -109,6 +109,7 @@ struct perf_sample {
- 		u16 retire_lat;
- 	};
- 	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
-+	bool off_cpu;
- 	char insn[MAX_INSN];
- 	void *raw_data;
- 	struct ip_callchain *callchain;
--- 
-2.39.0
+What's the output of "perf list --raw-dump pmu" on your machine?
 
+Thanks,
+Kan
+> ---- end(-1) ----
+> 108: perf all PMU test                                               : FAILED!
+> 
+> 
+>>
+>> Thanks,
+>> Kan
+>>>
+>>>
+>>>
+>>> The kernel config and materials to reproduce are available at:
+>>> https://download.01.org/0day-ci/archive/20240710/202407101021.2c8baddb-oliver.sang@intel.com
+>>>
+>>>
+>>>
+>>
+> 
