@@ -1,51 +1,51 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5977514532D
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 12:17:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E2515B14C
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 12:17:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720700227; cv=none; b=rGIQvd7ZtU0ZHWY7IAdx9n7I1vGCVILk4v46npemB92ou7BPyVWWZMPGukWVzK5HVkkFk6hVrAxhK/AhE8sC6AlkRYxU8D8VE+SbsHZrlVzt3r1JDMZytq3bTNdhUuXT0kij+cL+rIuRCm59tjqvh5K9CV+DWd56SSSNIE87yVk=
+	t=1720700230; cv=none; b=pkS6V5qumRDeaWbOVmQpj9Z8Ei37+KV/48ORs+5BUQ0jIMjYV24SeYsEL9vYIMy9+WJgbMpRomsWcP6rqxIzShpJRZEEkcPyyebdSP6DYhhcpr2La0e6HaDWXrnyVirXi6BfMKxmVim3LUWdTucJb1lYgRKLa5dIzNTRQmFwjR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720700227; c=relaxed/simple;
-	bh=Bpm6/V6MDQFK3+fB6ShwWGUjksTwvserU1Szp0+Gc14=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=oeeNu1CcCxilQjwq3lVGxBE6ZQjApXNy4QFLPBpHjXtOCn/JKuBYxgzf6ItNSa2uzibWbSZkdTWtOkVY1YWD16up4l9SLAvMVcsssRK+tSmIAMVP+bu2IZYS0cnSYfLX49dmT3Gw6IVrxcfK6R/xIx+WGFg0vlYN9xsdckpdo4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=RJCFoes+; arc=none smtp.client-ip=209.85.214.182
+	s=arc-20240116; t=1720700230; c=relaxed/simple;
+	bh=RcAtOY3BqIjsxZ/EkLx9cbSXMAG2HJ+eMA8VPs9/m08=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=aEaUlixJZcNfmm62tUxETqsHmmAZKjNK2bpwMfXpFt8jxUh2NdOmG9+1QKM68gpPK7j5IyqlJxkNFhHlY5k4JpZpdzE8tJOaKvCjgeXUm9/khB0ifAv/IbpALeMoNkDul9rfcWWDDOK2qZI/b3P7xfBciiiK8jeEDEG09V2NAqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=LVHadjte; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="RJCFoes+"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1fbda48631cso8132605ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 05:17:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LVHadjte"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fa2ea1c443so6331505ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 05:17:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1720700226; x=1721305026; darn=vger.kernel.org;
+        d=broadcom.com; s=google; t=1720700228; x=1721305028; darn=vger.kernel.org;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=2pG6NifEEeNfHkGMBqMcDY/jdLpNHGUhc4OZl9qCkHI=;
-        b=RJCFoes+QwAmRmLxSJqHOAibQJN1eR2QeCyexZ0jaVR0CdCRoq4Em4UiPs2nEx1jea
-         RILHhB+leQIF1lQHzKODY/bUm7JkqxYiCJbKKk/HfgbJD472c41cxD2vbITM83UlJYUr
-         44HLVuU3LBHk6E+YmYmOXzsXJNaSd4DCBCE1k=
+        bh=QMWLbotKK9Kcv+yDqQHrYwDupJwtZdSLIhFGpeisVqk=;
+        b=LVHadjte/h7XYlTcwcYI9U+/gzwWtnQc/9wrfJ5esFeOoj/GDcPtmIZSShn8qst4rq
+         MIdmt/L5PoQA6qXOfD6NQ0ay7vIr/Y3S0c8FPj1PTSBkEr71aARovXGvY8d/kpjyc28f
+         Sar2DaP7hMflHtT2m0TS+rqh48xsbHd5mfqKs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720700226; x=1721305026;
+        d=1e100.net; s=20230601; t=1720700228; x=1721305028;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2pG6NifEEeNfHkGMBqMcDY/jdLpNHGUhc4OZl9qCkHI=;
-        b=YBAf+QxT88y/TfL7V0om5k1Q25LN65EnUl8+n1IhwXyDSWq77l51TT8AdNJK+JMLnh
-         MtcP+PNvaRs6cZzduHxSI1mcPI8KV3l+0Lf+rWOHKq8Kt88ur7sdNV3xcBof5eEaJBYM
-         XCxAgXPFGaTLuDAhT+p3cNJaDEzUYni2GfxbWgKuZRxMVcA3bRpgg/TRQM9Ao+Pjen/X
-         EO5Q5uUKrTmcx/JR+kLPig5wa0ZdeciFytYSFdqcvrDByKfR6vIjS4i3deUmd1uT8B4t
-         2btIUVtcUGuj09rZBxGCzDckRy8+VBPyhLJbTRx5ry8u8eFC6s/kZZQ01VAbtQzJFUZn
-         Wibg==
-X-Forwarded-Encrypted: i=1; AJvYcCXHBE+Pk/tDqjK055iH0Qxb0r7wywdYRu7bols1GQQQdcw1ry82t+KfksZ2efKnSkrXqFwO693T/jahrPxoYkOhoV01OmZ8y8BCZFml2XYIRQ==
-X-Gm-Message-State: AOJu0YxcbFUVtS0b/rmxSXcldvCchNDHuyHJIA91EKLAAKF8ixbKNq6F
-	K6a/us6YSJnLgLpP1VxlQGFjZWxhnk2KyrDlgBcgwm854WLFYYS4VOkXU5hvjw==
-X-Google-Smtp-Source: AGHT+IHecHqT1oxxMCbOg1AOShzm2j71EEhKZQqKfq5DBpHatwzqR87qgWQdjHRuhZJRKeBdAtPcPw==
-X-Received: by 2002:a17:903:2449:b0:1f8:44f8:a357 with SMTP id d9443c01a7336-1fbdba235a6mr35954355ad.17.1720700225602;
-        Thu, 11 Jul 2024 05:17:05 -0700 (PDT)
+        bh=QMWLbotKK9Kcv+yDqQHrYwDupJwtZdSLIhFGpeisVqk=;
+        b=UZr7NeM0EQOD7P/DZPxlAfOTI2bJ1FHeT+zkJb0L2BquNcTX4jraQo0zG/RS7aiWWG
+         bssugAqYeKwa0srJ+ei8wTtj1HRHyIHp6TEXKTVQKoRSW3JkzUw/4cfTGP1K7mDZkRG2
+         GGe/sDuQidUwIczcVmn3q/psNmi2ogyg+oRukTSyb5LQz/30jq8KrRn0k6QoLP+YnlPE
+         n9luoHc/2+6ezhaI/jdieaeZNVsPTBLtqnI7JY+bSnV/nsmOxOvndp29KM2gsYNmvSsK
+         m/JExv/Hxs249rwd5lfgSbGxNK7paJFxv7GcsQG8NLi89RF0fc2iVTfW/ez7kiob6NnX
+         FC3A==
+X-Forwarded-Encrypted: i=1; AJvYcCVdK9DtTdsa9L7PUUENNKe9bh/ckKMIAt2wX9Iccb2PZqde6TrxyAqPKUjL/jCldYX/MIR2eVy4sKjaIrJilbLGGi23CPRLAYQ5RY/9ZI74lg==
+X-Gm-Message-State: AOJu0YwfwDZnRTISmDWzBQy6FNZ9E3JyiSu02OjCl5+Khfdu887hp15A
+	9+En9eZSQ5ndRbBgHiMvazWoukH8q4VMk+VfhZq1vJE0ErUmR/a43bmHydbTcg==
+X-Google-Smtp-Source: AGHT+IEay4VzDWGc7cNbJqKwvD6xCyKm+QF0n/B7mqHkBPs8hMJ1zCGnny6ZKJS0v/G/jgh4m0FgQw==
+X-Received: by 2002:a17:902:e54c:b0:1f7:1b08:dda9 with SMTP id d9443c01a7336-1fbb6cdac37mr68496965ad.8.1720700228186;
+        Thu, 11 Jul 2024 05:17:08 -0700 (PDT)
 Received: from akaher-virtual-machine.eng.vmware.com ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10111sm49211985ad.20.2024.07.11.05.17.03
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fbb6a10111sm49211985ad.20.2024.07.11.05.17.05
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 11 Jul 2024 05:17:05 -0700 (PDT)
+        Thu, 11 Jul 2024 05:17:07 -0700 (PDT)
 From: Ajay Kaher <ajay.kaher@broadcom.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -69,9 +69,9 @@ Cc: mark.rutland@arm.com,
 	ajay.kaher@broadcom.com,
 	alexey.makhalov@broadcom.com,
 	vasavi.sirnapalli@broadcom.com
-Subject: [PATCH RFC 1/3] perf/core: add logic to collect off-cpu sample
-Date: Thu, 11 Jul 2024 17:46:17 +0530
-Message-Id: <1720700179-22839-2-git-send-email-ajay.kaher@broadcom.com>
+Subject: [PATCH RFC 2/3] perf/record: add options --off-cpu-kernel
+Date: Thu, 11 Jul 2024 17:46:18 +0530
+Message-Id: <1720700179-22839-3-git-send-email-ajay.kaher@broadcom.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
 References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
@@ -81,168 +81,54 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 
-following logics has been added to collect the off-cpu sample:
-
-- 'task_pt_regs(current)' has been used to capture registers
-  status off-cpu sample.
-
-- off-cpu time represent the time period for which the target
-  process not occupying the cpu cycles. And calculate as:
-
-  off-cpu time = swap-in time - swap-out time
+--off-cpu-kernel to collect off cpu samples using on/off cpu time.
 
 Signed-off-by: Ajay Kaher <ajay.kaher@broadcom.com>
 
 ---
- include/linux/perf_event.h            | 16 ++++++++++++++++
- include/uapi/linux/perf_event.h       |  3 ++-
- kernel/events/core.c                  | 27 ++++++++++++++++++++++-----
- tools/include/uapi/linux/perf_event.h |  3 ++-
- 4 files changed, 42 insertions(+), 7 deletions(-)
+ tools/perf/builtin-record.c | 2 ++
+ tools/perf/util/evsel.c     | 2 ++
+ tools/perf/util/record.h    | 1 +
+ 3 files changed, 5 insertions(+)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index a5304ae8c654..09dc3f695974 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -599,6 +599,11 @@ enum perf_event_state {
- 	PERF_EVENT_STATE_ACTIVE		=  1,
+diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+index 0a8ba1323d64..5be172537330 100644
+--- a/tools/perf/builtin-record.c
++++ b/tools/perf/builtin-record.c
+@@ -3571,6 +3571,8 @@ static struct option __record_options[] = {
+ 			    "write collected trace data into several data files using parallel threads",
+ 			    record__parse_threads),
+ 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
++	OPT_BOOLEAN(0, "off-cpu-kernel", &record.opts.off_cpu_kernel,
++		    "Enable kernel based off-cpu analysis"),
+ 	OPT_END()
  };
  
-+enum perf_sample_cpu {
-+	PERF_SAMPLE_ON_CPU,
-+	PERF_SAMPLE_OFF_CPU,
-+};
-+
- struct file;
- struct perf_sample_data;
- 
-@@ -828,6 +833,7 @@ struct perf_event {
- 	void *security;
- #endif
- 	struct list_head		sb_list;
-+	u64				stop_time;
- 
- 	/*
- 	 * Certain events gets forwarded to another pmu internally by over-
-@@ -1301,6 +1307,16 @@ static inline u32 perf_sample_data_size(struct perf_sample_data *data,
- 	return size;
- }
- 
-+static inline void perf_sample_set_off_cpu(struct perf_sample_data *data)
-+{
-+	data->cpu_entry.reserved = PERF_SAMPLE_OFF_CPU;
-+}
-+
-+static inline void perf_sample_set_on_cpu(struct perf_sample_data *data)
-+{
-+	data->cpu_entry.reserved = PERF_SAMPLE_ON_CPU;
-+}
-+
- /*
-  * Clear all bitfields in the perf_branch_entry.
-  * The to and from fields are not cleared because they are
-diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
-index 3a64499b0f5d..9d0a23ab2549 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -460,7 +460,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				off_cpu        :  1, /* include off_cpu sample */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 8f908f077935..e71eb7936134 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -7168,10 +7168,8 @@ static void __perf_event_header__init_id(struct perf_sample_data *data,
- 	if (sample_type & PERF_SAMPLE_STREAM_ID)
- 		data->stream_id = event->id;
- 
--	if (sample_type & PERF_SAMPLE_CPU) {
--		data->cpu_entry.cpu	 = raw_smp_processor_id();
--		data->cpu_entry.reserved = 0;
--	}
-+	if (sample_type & PERF_SAMPLE_CPU)
-+		data->cpu_entry.cpu = raw_smp_processor_id();
- }
- 
- void perf_event_header__init_id(struct perf_event_header *header,
-@@ -11083,8 +11081,8 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
- 		return HRTIMER_NORESTART;
- 
- 	event->pmu->read(event);
--
- 	perf_sample_data_init(&data, 0, event->hw.last_period);
-+	perf_sample_set_on_cpu(&data);
- 	regs = get_irq_regs();
- 
- 	if (regs && !perf_exclude_event(event, regs)) {
-@@ -11099,6 +11097,18 @@ static enum hrtimer_restart perf_swevent_hrtimer(struct hrtimer *hrtimer)
- 	return ret;
- }
- 
-+static void perf_swevent_offCPUSample(struct perf_event *event, u64 period)
-+{
-+	struct perf_sample_data data;
-+	struct pt_regs *regs;
-+
-+	event->pmu->read(event);
-+	perf_sample_data_init(&data, 0, period);
-+	perf_sample_set_off_cpu(&data);
-+	regs = task_pt_regs(current);
-+	__perf_event_overflow(event, 1, &data, regs);
-+}
-+
- static void perf_swevent_start_hrtimer(struct perf_event *event)
- {
- 	struct hw_perf_event *hwc = &event->hw;
-@@ -11107,6 +11117,11 @@ static void perf_swevent_start_hrtimer(struct perf_event *event)
- 	if (!is_sampling_event(event))
- 		return;
- 
-+	if (event->attr.off_cpu && event->stop_time && hwc->sample_period) {
-+		perf_swevent_offCPUSample(event, perf_clock() - event->stop_time);
-+		event->stop_time = 0;
-+	}
-+
- 	period = local64_read(&hwc->period_left);
- 	if (period) {
- 		if (period < 0)
-@@ -11128,6 +11143,7 @@ static void perf_swevent_cancel_hrtimer(struct perf_event *event)
- 		ktime_t remaining = hrtimer_get_remaining(&hwc->hrtimer);
- 		local64_set(&hwc->period_left, ktime_to_ns(remaining));
- 
-+		event->stop_time = perf_clock();
- 		hrtimer_cancel(&hwc->hrtimer);
- 	}
- }
-@@ -11139,6 +11155,7 @@ static void perf_swevent_init_hrtimer(struct perf_event *event)
- 	if (!is_sampling_event(event))
- 		return;
- 
-+	event->stop_time = 0;
- 	hrtimer_init(&hwc->hrtimer, CLOCK_MONOTONIC, HRTIMER_MODE_REL_HARD);
- 	hwc->hrtimer.function = perf_swevent_hrtimer;
- 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 3a64499b0f5d..9d0a23ab2549 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -460,7 +460,8 @@ struct perf_event_attr {
- 				inherit_thread :  1, /* children only inherit if cloned with CLONE_THREAD */
- 				remove_on_exec :  1, /* event is removed from task on exec */
- 				sigtrap        :  1, /* send synchronous SIGTRAP on event */
--				__reserved_1   : 26;
-+				off_cpu        :  1, /* include off_cpu sample */
-+				__reserved_1   : 25;
- 
- 	union {
- 		__u32		wakeup_events;	  /* wakeup every n events */
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 4f818ab6b662..8ba890a5ac6e 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -862,6 +862,8 @@ static void __evsel__config_callchain(struct evsel *evsel, struct record_opts *o
+ 		attr->exclude_callchain_user = 1;
+ 	if (opts->user_callchains)
+ 		attr->exclude_callchain_kernel = 1;
++	if (opts->off_cpu_kernel)
++		attr->off_cpu = 1;
+ 	if (param->record_mode == CALLCHAIN_LBR) {
+ 		if (!opts->branch_stack) {
+ 			if (attr->exclude_user) {
+diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
+index a6566134e09e..cfa5e34b78ad 100644
+--- a/tools/perf/util/record.h
++++ b/tools/perf/util/record.h
+@@ -52,6 +52,7 @@ struct record_opts {
+ 	bool	      kcore;
+ 	bool	      text_poke;
+ 	bool	      build_id;
++	bool	      off_cpu_kernel;
+ 	unsigned int  freq;
+ 	unsigned int  mmap_pages;
+ 	unsigned int  auxtrace_mmap_pages;
 -- 
 2.39.0
 
