@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 991CA16DEC9
-	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7007172BB2
+	for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 18:00:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720720846; cv=none; b=kMMbQX1djsEJBCnjKudJxh/w9oPTu9Tmwzm52X+ksYKwe13JTeUjcrw4Ij5RrV0aiJTypUrDc5My6Hmk1xGYTcFpxUWn4LVmNgSBG5mkZfYg82nzR4ME96M4HV1KZIWDANwXew4HuBU2cvf0lSIOztrLuNSKFV/TYxMhOB6T+o4=
+	t=1720720850; cv=none; b=soCQ0k6zijvzFvti8qtrzxQxOQblMoZaaQOlynHqHF8mUqbHXdwU+dyEoVXRBae4fWi0xkz7CE7tWQcDuY6M7LbQLZLD4dj4tb4qceu+zL1b37vssvxneFjRL7Ttg9rGU7+cOZFQjUvs+d4cfFt9GteSViLChU/mROtMKkQxfDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720720846; c=relaxed/simple;
-	bh=gdWytOna78avdV8ta1mlF796MEMlXufN3RbPM1j+MUo=;
+	s=arc-20240116; t=1720720850; c=relaxed/simple;
+	bh=4jN3iUFdg2T8oVK3z25P8DkRtidUU7UFK1/cu+ERcs0=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=avNSqge3bsUKYQ1zNsSR4zu5K0bXU+FGBuJ0BUHqVgAayz4KfijlOpRD++2AIJU6sPOalyLaY6PEf8CoZzlXiGKllRiNt0SVmtko3BqtTxT8/fCUFvVSm6sCnObAeaLCCvGRqQmYRT+MbG4EPZaDRXkWEHyc6griLYqx5qrmw74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XcXE+d54; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=J2HnjP/PJ47zCKbc69aC3tz2dWSArRxwn0X7P6jyv6uoXoUhLmM+4qY5RaNPPax6L6KYo5WHwdM5HEaEKzgz7j0Hd811TLGFet1SCLs8f4BXvOICqJO16TYP/q9GPNd0GTcGxXuWUdKlie2wD3WDg0NXJMt14PRIya9yUjNb09Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YDF7UWpM; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XcXE+d54"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e03c68c7163so2024194276.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YDF7UWpM"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e039b77a040so1958412276.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 11:00:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720720843; x=1721325643; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1720720846; x=1721325646; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=BgJSCF9yLnG02WKUg8SfX7odmyVBKa2lGRMN+iopItY=;
-        b=XcXE+d54E/nI0W6uHdDcD7cyNaaCflJCceyJ/vJLLYDG9IDo/S3QYH5sMk8aUI6nHJ
-         AX4MiYmGLhvBsuUNHiBjEVPRnd7NoMHqdtYbMQjO3/yrow7VEeNCkJW70xDx3Ux5DA4w
-         Pw3RstYTx6rFs5p/7wSfp6TJiuT9JlCXYTFaUB8kqWMs6m8HitI3650rOreEdbNIHNKB
-         BxK6DHj+e4gBM+v0OEDiLu/cNB+9Pk5QQ3dfMooE7YXfjoREzVi+WHDf02pi8sMcAevu
-         xWuiPExgkVZ7LV15w2ANhH26e7UgmXK/gPiM4bXhl1DKpEgp0X1/B0mF/854pBNmxnM6
-         cLeg==
+        bh=+Ae5Vk3XcnDdaj5BKYKsQnIS/haF5dLJg944D3m7A54=;
+        b=YDF7UWpM+JnXk5dIMxmLuvQStF1JT103JTGiYA1niuMgNzmcWKciwHXKX6SUa1ZUMC
+         mqbhsgayhbl1Y+wQBx2okNwgWKQAv3UMYTBOyBW3fsNp7s51m5fNw8fW6l68ERZegoLk
+         27KaLwt4GjBYahR2v2lHbix44M47vEBkST2z7de6pIhO9cxtVnDdleg7bDKYB+7GLik6
+         7i0DoKIi3x6SYnALliX12NbWCJXUaZCUATh+xvQ1c0kPgtsbaxbEwJ58D0x4YxTAqM3/
+         U115yFgvtg+ZXN+9tg20OGq9OMxpM9DoPOyg9sNI2XgY9uqygxd5aL2gTZtJUYwUCmLV
+         6OtA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720720843; x=1721325643;
+        d=1e100.net; s=20230601; t=1720720846; x=1721325646;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BgJSCF9yLnG02WKUg8SfX7odmyVBKa2lGRMN+iopItY=;
-        b=pRSjSYZtlJq1Mn4y6C4+HH4E0BnK99FYbB5uECvYz7KS2RsrVqx32huZrZkeJw/b3t
-         D3EYLU471uCNMKkWjnurmqUCjoyvEH81EwHEq4XzMGzyZLCxa0AIgZDJty4ydeITGZOR
-         ny2HJh3xLpQk0aGb50j+Dw7MxCtnFsxzQ8rVgHhWaq7LvtOtUPXv1S2ou5aeVnMV5dUE
-         /fTWPQ6qPPkNb0JDM6UYKRRXcQbHXu0Ift2YxvpQbQOrn7H0EXXSEgImmuwlwjXL56Ps
-         oMTfwVsYPefwLySg/4GCK5NIoSl+2KNWlhIHjaCtYKY1iPjiuaOSdpL9/+QtOZgyrK74
-         p8hQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWl977o9SHl7O7BKHtopmYzKiIuLKzXIMWQbe4puCDrDhHxS8SStn1u+95vaJtvyQKA9NZLPIbGLZWbNF6PVMAoF9QMcp4qif+hQUlzU2TRMg==
-X-Gm-Message-State: AOJu0YwjuExxLFAw1ei8IPio/HLWoBiy6TKfCwpJpMTTGRu8LjmDWUV0
-	1rUgDclXVj3IsLFVse79Zesh9lLvNI1x2pdfCayr8IxdYXuC53r+iHYFpN3bsNDj0GIhPU39KSo
-	JBU1NRQ==
-X-Google-Smtp-Source: AGHT+IGUZPma1/UNbVlFLgQNB3aw1ju3QFq7+jgs3bRCoCKdY1pYTS0J6J1QQ1ukZSK8z62+IBuYguGU+ptP
+        bh=+Ae5Vk3XcnDdaj5BKYKsQnIS/haF5dLJg944D3m7A54=;
+        b=ZwNNMS8W3ukoAkUXRlFfKAUJiIlvMCkBgplWBpWOaFLy+UXMDTnfaQ/TY9cBPoFVI0
+         XabV3g9hSkEAkX7P++Vc40QhmQ4OFK/uzm7hpfvqhp1HPzhK2zDAZRornmXHL36qikxT
+         kFAHX25uo32sMPVqZI66R2TriEHppXTS7oHb9QC5PqEvfbCf8vsJ48MZVL5QVrb/TvOj
+         6MyDB/PXXTg+KvRK8JojzC9p/U7m5/0C/t13i34HCHagm21Hw35JzdU6b6c/SA8u53sw
+         8o+mpeZtK2iXBdksiwUXpllsGHMIAt74RrMMREeUlOyBP5N14/SjhBP/g2favAVU5Nc6
+         tVXg==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ7zGtmLL2GVnTz0lNah+f0X4N3HbvRkynWPITlgeS2AicJ5MJgPlpBqkwSS9If2/CkBu4sqiCIM5DBkRfl8wkOaGHDMEoZa+JdzgByjYLLg==
+X-Gm-Message-State: AOJu0YwN0w6KEv7w4FYQF8RYIq0inxlvSZ+lJxpa3TAXA4oAVNrP+ACy
+	8uMOpT1bAtRdiEEs/9WrVdQTAI191o/eC65wGsC2yTOjnntHE97YV0ElextRg+1zfBACIYovOuI
+	lMh8O6g==
+X-Google-Smtp-Source: AGHT+IHVhenVRnd5F5tnfG6kCLAubJrvmicfzrrx2Otspjm5CzZecpN6HNk6oOjRDCkpD1S2I42nDbp5QdCI
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:bd08:a1e0:c497:32db])
- (user=irogers job=sendgmr) by 2002:a05:6902:2386:b0:e03:9d57:57ee with SMTP
- id 3f1490d57ef6-e041b0545c2mr460225276.4.1720720843539; Thu, 11 Jul 2024
- 11:00:43 -0700 (PDT)
-Date: Thu, 11 Jul 2024 10:59:54 -0700
+ (user=irogers job=sendgmr) by 2002:a05:6902:1247:b0:e05:6840:178a with SMTP
+ id 3f1490d57ef6-e0568401c6amr349237276.2.1720720845858; Thu, 11 Jul 2024
+ 11:00:45 -0700 (PDT)
+Date: Thu, 11 Jul 2024 10:59:55 -0700
 In-Reply-To: <20240711180008.188906-1-irogers@google.com>
-Message-Id: <20240711180008.188906-15-irogers@google.com>
+Message-Id: <20240711180008.188906-16-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240711180008.188906-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
-Subject: [PATCH v4 14/28] perf script: Use perf_tool__init
+Subject: [PATCH v4 15/28] perf inject: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -85,100 +85,141 @@ and not relying on perf_tool__fill_defaults.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-script.c | 65 +++++++++++++++++--------------------
- 1 file changed, 30 insertions(+), 35 deletions(-)
+ tools/perf/builtin-inject.c | 89 +++++++++++++++++--------------------
+ 1 file changed, 42 insertions(+), 47 deletions(-)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 394bce9f5338..b4fc2971335b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3899,38 +3899,7 @@ int cmd_script(int argc, const char **argv)
- 	const char *dlfilter_file = NULL;
- 	const char **__argv;
- 	int i, j, err = 0;
--	struct perf_script script = {
+diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+index be74e2bf1f00..2866756d5060 100644
+--- a/tools/perf/builtin-inject.c
++++ b/tools/perf/builtin-inject.c
+@@ -2165,46 +2165,6 @@ static int __cmd_inject(struct perf_inject *inject)
+ int cmd_inject(int argc, const char **argv)
+ {
+ 	struct perf_inject inject = {
 -		.tool = {
--			.sample		 = process_sample_event,
--			.mmap		 = perf_event__process_mmap,
--			.mmap2		 = perf_event__process_mmap2,
--			.comm		 = perf_event__process_comm,
--			.namespaces	 = perf_event__process_namespaces,
--			.cgroup		 = perf_event__process_cgroup,
--			.exit		 = perf_event__process_exit,
--			.fork		 = perf_event__process_fork,
--			.attr		 = process_attr,
--			.event_update   = perf_event__process_event_update,
--#ifdef HAVE_LIBTRACEEVENT
--			.tracing_data	 = perf_event__process_tracing_data,
--#endif
--			.feature	 = process_feature_event,
--			.build_id	 = perf_event__process_build_id,
--			.id_index	 = perf_event__process_id_index,
--			.auxtrace_info	 = perf_script__process_auxtrace_info,
--			.auxtrace	 = perf_event__process_auxtrace,
--			.auxtrace_error	 = perf_event__process_auxtrace_error,
--			.stat		 = perf_event__process_stat_event,
--			.stat_round	 = process_stat_round_event,
--			.stat_config	 = process_stat_config_event,
--			.thread_map	 = process_thread_map_event,
--			.cpu_map	 = process_cpu_map_event,
--			.throttle	 = process_throttle_event,
--			.unthrottle	 = process_throttle_event,
--			.ordered_events	 = true,
--			.ordering_requires_timestamps = true,
+-			.sample		= perf_event__repipe_sample,
+-			.read		= perf_event__repipe_sample,
+-			.mmap		= perf_event__repipe,
+-			.mmap2		= perf_event__repipe,
+-			.comm		= perf_event__repipe,
+-			.namespaces	= perf_event__repipe,
+-			.cgroup		= perf_event__repipe,
+-			.fork		= perf_event__repipe,
+-			.exit		= perf_event__repipe,
+-			.lost		= perf_event__repipe,
+-			.lost_samples	= perf_event__repipe,
+-			.aux		= perf_event__repipe,
+-			.itrace_start	= perf_event__repipe,
+-			.aux_output_hw_id = perf_event__repipe,
+-			.context_switch	= perf_event__repipe,
+-			.throttle	= perf_event__repipe,
+-			.unthrottle	= perf_event__repipe,
+-			.ksymbol	= perf_event__repipe,
+-			.bpf		= perf_event__repipe,
+-			.text_poke	= perf_event__repipe,
+-			.attr		= perf_event__repipe_attr,
+-			.event_update	= perf_event__repipe_event_update,
+-			.tracing_data	= perf_event__repipe_op2_synth,
+-			.finished_round	= perf_event__repipe_oe_synth,
+-			.build_id	= perf_event__repipe_op2_synth,
+-			.id_index	= perf_event__repipe_op2_synth,
+-			.auxtrace_info	= perf_event__repipe_op2_synth,
+-			.auxtrace_error	= perf_event__repipe_op2_synth,
+-			.time_conv	= perf_event__repipe_op2_synth,
+-			.thread_map	= perf_event__repipe_op2_synth,
+-			.cpu_map	= perf_event__repipe_op2_synth,
+-			.stat_config	= perf_event__repipe_op2_synth,
+-			.stat		= perf_event__repipe_op2_synth,
+-			.stat_round	= perf_event__repipe_op2_synth,
+-			.feature	= perf_event__repipe_op2_synth,
+-			.finished_init	= perf_event__repipe_op2_synth,
+-			.compressed	= perf_event__repipe_op4_synth,
+-			.auxtrace	= perf_event__repipe_auxtrace,
 -		},
--	};
-+	struct perf_script script = {};
- 	struct perf_data data = {
- 		.mode = PERF_DATA_MODE_READ,
+ 		.input_name  = "-",
+ 		.samples = LIST_HEAD_INIT(inject.samples),
+ 		.output = {
+@@ -2269,6 +2229,7 @@ int cmd_inject(int argc, const char **argv)
+ 		"perf inject [<options>]",
+ 		NULL
  	};
-@@ -4102,10 +4071,8 @@ int cmd_script(int argc, const char **argv)
- 	data.path  = input_name;
- 	data.force = symbol_conf.force;
++	bool ordered_events;
  
--	if (unsorted_dump) {
-+	if (unsorted_dump)
- 		dump_trace = true;
--		script.tool.ordered_events = false;
--	}
- 
- 	if (symbol__validate_sym_arguments())
- 		return -1;
-@@ -4296,6 +4263,34 @@ int cmd_script(int argc, const char **argv)
- 		use_browser = 0;
+ 	if (!inject.itrace_synth_opts.set) {
+ 		/* Disable eager loading of kernel symbols that adds overhead to perf inject. */
+@@ -2333,7 +2294,47 @@ int cmd_inject(int argc, const char **argv)
+ 		if (strcmp(inject.input_name, "-"))
+ 			repipe = false;
+ 	}
+-
++	ordered_events = inject.jit_mode || inject.sched_stat ||
++		(inject.build_ids && !inject.build_id_all);
++	perf_tool__init(&inject.tool, ordered_events);
++	inject.tool.sample		= perf_event__repipe_sample;
++	inject.tool.read		= perf_event__repipe_sample;
++	inject.tool.mmap		= perf_event__repipe;
++	inject.tool.mmap2		= perf_event__repipe;
++	inject.tool.comm		= perf_event__repipe;
++	inject.tool.namespaces		= perf_event__repipe;
++	inject.tool.cgroup		= perf_event__repipe;
++	inject.tool.fork		= perf_event__repipe;
++	inject.tool.exit		= perf_event__repipe;
++	inject.tool.lost		= perf_event__repipe;
++	inject.tool.lost_samples	= perf_event__repipe;
++	inject.tool.aux			= perf_event__repipe;
++	inject.tool.itrace_start	= perf_event__repipe;
++	inject.tool.aux_output_hw_id	= perf_event__repipe;
++	inject.tool.context_switch	= perf_event__repipe;
++	inject.tool.throttle		= perf_event__repipe;
++	inject.tool.unthrottle		= perf_event__repipe;
++	inject.tool.ksymbol		= perf_event__repipe;
++	inject.tool.bpf			= perf_event__repipe;
++	inject.tool.text_poke		= perf_event__repipe;
++	inject.tool.attr		= perf_event__repipe_attr;
++	inject.tool.event_update	= perf_event__repipe_event_update;
++	inject.tool.tracing_data	= perf_event__repipe_op2_synth;
++	inject.tool.finished_round	= perf_event__repipe_oe_synth;
++	inject.tool.build_id		= perf_event__repipe_op2_synth;
++	inject.tool.id_index		= perf_event__repipe_op2_synth;
++	inject.tool.auxtrace_info	= perf_event__repipe_op2_synth;
++	inject.tool.auxtrace_error	= perf_event__repipe_op2_synth;
++	inject.tool.time_conv		= perf_event__repipe_op2_synth;
++	inject.tool.thread_map		= perf_event__repipe_op2_synth;
++	inject.tool.cpu_map		= perf_event__repipe_op2_synth;
++	inject.tool.stat_config		= perf_event__repipe_op2_synth;
++	inject.tool.stat		= perf_event__repipe_op2_synth;
++	inject.tool.stat_round		= perf_event__repipe_op2_synth;
++	inject.tool.feature		= perf_event__repipe_op2_synth;
++	inject.tool.finished_init	= perf_event__repipe_op2_synth;
++	inject.tool.compressed		= perf_event__repipe_op4_synth;
++	inject.tool.auxtrace		= perf_event__repipe_auxtrace;
+ 	inject.session = __perf_session__new(&data, repipe,
+ 					     output_fd(&inject),
+ 					     &inject.tool);
+@@ -2372,7 +2373,6 @@ int cmd_inject(int argc, const char **argv)
+ 		 * mmaps. We cannot generate the buildid hit list and
+ 		 * inject the jit mmaps at the same time for now.
+ 		 */
+-		inject.tool.ordered_events = true;
+ 		inject.tool.ordering_requires_timestamps = true;
+ 		if (known_build_ids != NULL) {
+ 			inject.known_build_ids =
+@@ -2385,15 +2385,10 @@ int cmd_inject(int argc, const char **argv)
+ 		}
  	}
  
-+	perf_tool__init(&script.tool, !unsorted_dump);
-+	script.tool.sample		 = process_sample_event;
-+	script.tool.mmap		 = perf_event__process_mmap;
-+	script.tool.mmap2		 = perf_event__process_mmap2;
-+	script.tool.comm		 = perf_event__process_comm;
-+	script.tool.namespaces		 = perf_event__process_namespaces;
-+	script.tool.cgroup		 = perf_event__process_cgroup;
-+	script.tool.exit		 = perf_event__process_exit;
-+	script.tool.fork		 = perf_event__process_fork;
-+	script.tool.attr		 = process_attr;
-+	script.tool.event_update	 = perf_event__process_event_update;
-+#ifdef HAVE_LIBTRACEEVENT
-+	script.tool.tracing_data	 = perf_event__process_tracing_data;
-+#endif
-+	script.tool.feature		 = process_feature_event;
-+	script.tool.build_id		 = perf_event__process_build_id;
-+	script.tool.id_index		 = perf_event__process_id_index;
-+	script.tool.auxtrace_info	 = perf_script__process_auxtrace_info;
-+	script.tool.auxtrace		 = perf_event__process_auxtrace;
-+	script.tool.auxtrace_error	 = perf_event__process_auxtrace_error;
-+	script.tool.stat		 = perf_event__process_stat_event;
-+	script.tool.stat_round		 = process_stat_round_event;
-+	script.tool.stat_config		 = process_stat_config_event;
-+	script.tool.thread_map		 = process_thread_map_event;
-+	script.tool.cpu_map		 = process_cpu_map_event;
-+	script.tool.throttle		 = process_throttle_event;
-+	script.tool.unthrottle		 = process_throttle_event;
-+	script.tool.ordering_requires_timestamps = true;
- 	session = perf_session__new(&data, &script.tool);
- 	if (IS_ERR(session))
- 		return PTR_ERR(session);
+-	if (inject.sched_stat) {
+-		inject.tool.ordered_events = true;
+-	}
+-
+ #ifdef HAVE_JITDUMP
+ 	if (inject.jit_mode) {
+ 		inject.tool.mmap2	   = perf_event__jit_repipe_mmap2;
+ 		inject.tool.mmap	   = perf_event__jit_repipe_mmap;
+-		inject.tool.ordered_events = true;
+ 		inject.tool.ordering_requires_timestamps = true;
+ 		/*
+ 		 * JIT MMAP injection injects all MMAP events in one go, so it
 -- 
 2.45.2.993.g49e7a77208-goog
 
