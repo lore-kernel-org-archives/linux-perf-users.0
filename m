@@ -1,56 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0159116B3BF;
-	Thu, 11 Jul 2024 13:07:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC2ED15ECF9;
+	Thu, 11 Jul 2024 13:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720703240; cv=none; b=JbHiJAqvju6B9qMiAsILZlwzlMvnqQw0ZxWkZkBaCPISvBJbSFnF2E9yetNPoorzCryzAiRnNbwCL0QIq6yadtOo2IliAHnpVeoSHoWrT6WY7KKRnGsYM4hcPdwyeIJFd64g6hmx9OGw46ct2n35JHgbJiFOiZkxInl401ucwYY=
+	t=1720704913; cv=none; b=TLKgxVVKl/0YhXzzgjzEDV87jHiiL4BONbJlQlja9fvj3vVIr7xuct4PAv13l6KYupkAK/vm32Q/s3iyj2wrHhUCrCwSHzOWi7BjzDHbwdo2FanX9ioQ4iiK2dCU+/e1v/hrxQI0SmFjH8W0LJLEr4bWb9S0mCrgoZWRT11kv3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720703240; c=relaxed/simple;
-	bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
+	s=arc-20240116; t=1720704913; c=relaxed/simple;
+	bh=OD2Bzez/EdF1VxOldLtWBo8U+HaxjGLihzIL1aGCZ08=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E1JW4oBVXFqTBtPDiYA2t2c62++8V34VWK/E0/N0gUccuGsRf899tzNvvB1BD4zjjDrf+zZMx6WEPBCAIB1yEwDXtGdIz/ShzAPsrZZK8E7BMbKTHTvl5PgprXzW8yGB5bb+CcifC6XbSgQzSN9Q8TnYbzRI79xVSdygJfVvCJo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lAJZDMTo; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=uSATOKx0T3IeUtCuGppNhErRS+CvgTpLxTCmpPW4cJwr1MReNytpDYPvkgr7fm+9vV1iuDRM0nHGEthlxcoiIB9s4dXFNZazyVNqkpL7VtoAxLpomEg5eiK21a4ZhggGoTOzyAqN+KvGmf+tNKRxkbZq3ubkvFbWDC8QrTQPbj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hfbvXzOq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lAJZDMTo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hfbvXzOq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720703239; x=1752239239;
+  t=1720704912; x=1752240912;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Bw1CDs/sg/K1NvNb66K5hwELjtRSAbZQj0qWX4uUW7M=;
-  b=lAJZDMTokRYcD5KbUIikutl8cONwllnF0K7jZ24RQAydSjWuAf0kqd74
-   qAzh69svcX5KMS4E0jgTT60rwxWQmPPdHiPi0mL2FB2iq/ZuUqgkU4tAk
-   5mjgAuDvwDLEPS8TuBd4g0ua9XulZ3M6iZ3bjXSD98y2Lif4H22PFm7qj
-   p4kI4TDpP3OUqKcBhfe5S1ZNX3XjA02tfmlAlGzverAYfO2pHilV2gLu6
-   4m/2ZKRAjTpNPx4gGCvwQP2dkeblJot9452CfWZ5VTH1GOpWwO/cjMT4H
-   xou9fK6xSIypZpQD45nY6WyGoc9IMKcFH+SKqGqj8A1dh17AIoFS8829T
-   A==;
-X-CSE-ConnectionGUID: NHTUzXLxSbi4MYtNx8WTDA==
-X-CSE-MsgGUID: EbMoiSYcTp2NuPmQ9AMTZw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="17695198"
+  bh=OD2Bzez/EdF1VxOldLtWBo8U+HaxjGLihzIL1aGCZ08=;
+  b=hfbvXzOqYAA1K/ZOzNXYx9dw+/umB5fFcL0wxCWOep+RNKOFbPoZdG1L
+   TlcmxRGM0TtSa6HH7NjEtvcCcqU7gfFdtZiRzlMh74Eeh5gO86VqS7UG6
+   fJo/M0oEE4JQN3phIPArybvFrfzQ1vGIhqsdFEE2KJUxZ9cxUo5ta4daa
+   OACpSjNz++jLV+LfIM4oThRgxECwjRCh0DErui4d3ZNM+GUlfZB3Xyk1f
+   bUsHij61X7M2K0y2hc0eh4e+vMV+kbWVTxiUAmh9iJa64erzGdtRuX3R7
+   VSfvYSSzEyuFol10snQKDb4DR6EoXgCG5B4Ud3oKt61IUtUeNxF7/J8rK
+   Q==;
+X-CSE-ConnectionGUID: sGXTH4RoST2gpVXD2iJrsw==
+X-CSE-MsgGUID: kQ+9MEPWQJW+082UXa3tCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="21954127"
 X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="17695198"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:06 -0700
-X-CSE-ConnectionGUID: CwCrJuGJTc2wbQHB7kUnAQ==
-X-CSE-MsgGUID: hbSYrspaSY2+5GgI4VzO1A==
+   d="scan'208";a="21954127"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:35:11 -0700
+X-CSE-ConnectionGUID: P8VmrkU6Tc2PskZJh5XJoQ==
+X-CSE-MsgGUID: 4SGWfoqqR3KNPsv0O7ruoQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,200,1716274800"; 
-   d="scan'208";a="53727131"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:07:05 -0700
-Received: from [10.212.47.156] (kliang2-mobl1.ccr.corp.intel.com [10.212.47.156])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7561820738F3;
-	Thu, 11 Jul 2024 06:07:03 -0700 (PDT)
-Message-ID: <98c73f1a-e5e3-4eba-ac52-ccf21e3a063c@linux.intel.com>
-Date: Thu, 11 Jul 2024 09:07:02 -0400
+   d="scan'208";a="48526837"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2024 06:35:05 -0700
+Message-ID: <0c59b36f-9b83-475f-b3b2-7fe3649412f4@intel.com>
+Date: Thu, 11 Jul 2024 16:35:00 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,126 +52,194 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
- perf-sanity-tests.perf_all_PMU_test.fail
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: Ian Rogers <irogers@google.com>, oe-lkp@lists.linux.dev, lkp@intel.com,
- Linux Memory Management List <linux-mm@kvack.org>,
- Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202407101021.2c8baddb-oliver.sang@intel.com>
- <a0ac56fc-eedc-492b-884c-d68e0460f178@linux.intel.com>
- <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+Subject: Re: [PATCH V8 02/12] perf/x86/intel/pt: Add support for pause /
+ resume
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+References: <20240628065111.59718-1-adrian.hunter@intel.com>
+ <20240628065111.59718-3-adrian.hunter@intel.com>
+ <20240701104659.GB20127@noisy.programming.kicks-ass.net>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Zo+SC/OORdGWXQ84@xsang-OptiPlex-9020>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240701104659.GB20127@noisy.programming.kicks-ass.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
-
-On 2024-07-11 4:04 a.m., Oliver Sang wrote:
-> hi, Kan,
+On 1/07/24 13:46, Peter Zijlstra wrote:
+> On Fri, Jun 28, 2024 at 09:51:01AM +0300, Adrian Hunter wrote:
 > 
-> On Wed, Jul 10, 2024 at 09:15:05AM -0400, Liang, Kan wrote:
->>
->>
->> On 2024-07-10 12:59 a.m., kernel test robot wrote:
->>>
->>>
->>> Hello,
->>>
->>> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
->>>
->>> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
->>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>>
->>> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
->>>
->>> in testcase: perf-sanity-tests
->>> version: 
->>> with following parameters:
->>>
->>> 	perf_compiler: gcc
->>>
->>>
->>>
->>> compiler: gcc-13
->>> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
->>>
->>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>
->>>
->>> we also observed two cases which also failed on parent can pass on this commit.
->>> FYI.
->>>
->>>
->>> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
->>> ---------------- ---------------------------
->>>        fail:runs  %reproduction    fail:runs
->>>            |             |             |
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
->>>
->>>
->>>
->>>
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
->>>
->>>
->>>
->>> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
->>> 105: perf all metricgroups test                                      : Ok
->>> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
->>> 106: perf all metrics test                                           : Ok
->>> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
->>> 107: perf all libpfm4 events test                                    : Ok
->>> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
->>> 108: perf all PMU test                                               : FAILED!
->>
->> Can you please try the -vvv option, which should tell the failed event?
->> perf test -vvv "perf all PMU test"
+>> @@ -534,7 +537,20 @@ static void pt_config(struct perf_event *event)
+>>  	reg |= (event->attr.config & PT_CONFIG_MASK);
+>>  
+>>  	event->hw.config = reg;
+>> +
+>> +	/*
+>> +	 * Allow resume before starting so as not to overwrite a value set by a
+>> +	 * PMI.
+>> +	 */
+>> +	WRITE_ONCE(pt->resume_allowed, 1);
+> 	barrier();
+>>  	pt_config_start(event);
+> 	barrier();
+>> +	/*
+>> +	 * Allow pause after starting so its pt_config_stop() doesn't race with
+>> +	 * pt_config_start().
+>> +	 */
+>> +	WRITE_ONCE(pt->pause_allowed, 1);
 > 
-> after add -vvv:
-> 
-> 2024-07-11 07:45:20 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test -v 108
-> 108: perf all PMU test:
-> --- start ---
-> test child forked, pid 18989
-> Testing (null)
+> IIRC you need those barrier()s, because if the compiler 'helpfully'
+> inlines the static pt_config_start(), you loose your sequence point and
+> things can get re-ordered. WRITE_ONCE() only ensures the store is whole
+> and ordered against other volatile ops, but not against much else.
 
-The test cases use the "perf list --raw-dump pmu" to get a complete
-event list. It seems the perf list command got nothing. That's weird.
+Yes barriers are needed.  gcc even says:
 
-The main change of e2641db83f18 is to add the "Counter" field and a few
-events. It should not impact the perf list command.
+	...an implementation is free to reorder and combine volatile
+	accesses that occur between sequence points...
 
-What's the output of "perf list --raw-dump pmu" on your machine?
+	Accesses to non-volatile objects are not ordered with respect
+	to volatile accesses.
 
-Thanks,
-Kan
-> ---- end(-1) ----
-> 108: perf all PMU test                                               : FAILED!
+	https://gcc.gnu.org/onlinedocs/gcc/Volatiles.html
+
 > 
+>>  }
+>>  
+>>  static void pt_config_stop(struct perf_event *event)
+>> @@ -1511,6 +1527,7 @@ void intel_pt_interrupt(void)
+>>  		buf = perf_aux_output_begin(&pt->handle, event);
+>>  		if (!buf) {
+>>  			event->hw.state = PERF_HES_STOPPED;
+>> +			pt->resume_allowed = 0;
+>>  			return;
+>>  		}
+>>  
+>> @@ -1519,6 +1536,7 @@ void intel_pt_interrupt(void)
+>>  		ret = pt_buffer_reset_markers(buf, &pt->handle);
+>>  		if (ret) {
+>>  			perf_aux_output_end(&pt->handle, 0);
+>> +			pt->resume_allowed = 0;
+>>  			return;
+>>  		}
+>>  
 > 
->>
->> Thanks,
->> Kan
->>>
->>>
->>>
->>> The kernel config and materials to reproduce are available at:
->>> https://download.01.org/0day-ci/archive/20240710/202407101021.2c8baddb-oliver.sang@intel.com
->>>
->>>
->>>
->>
+> Above you WRITE_ONCE() on ->resume_allowed, here you do not. Some *SAN
+> thing or other is bound to get upset about things like that.
 > 
+>> @@ -1573,6 +1591,26 @@ static void pt_event_start(struct perf_event *event, int mode)
+>>  	struct pt *pt = this_cpu_ptr(&pt_ctx);
+>>  	struct pt_buffer *buf;
+>>  
+>> +	if (mode & PERF_EF_RESUME) {
+>> +		if (READ_ONCE(pt->resume_allowed)) {
+> 
+> At this point I seem to have lost the plot, how do ->resume_allowed and
+> ->aux_paused interact?
+
+This is assuming there is no guaranteed order that events
+in the group are started / stopped, so there is a need to
+protect against pt being resumed when it is not yet configured,
+or when it is in the process of being stopped.
+
+Updates to event->hw.state don't happen at quite the right
+places to be used instead, and the needs of resume are slightly
+different to pause.
+
+resume_allowed means pt is configured and so ->start(PERF_EF_RESUME)
+can actually safely start pt. aux_paused is separate and takes
+effect when there is a regular start.
+
+> 
+>> +			u64 status;
+>> +
+>> +			/*
+>> +			 * Only if the trace is not active and the error and
+>> +			 * stopped bits are clear, is it safe to start, but a
+>> +			 * PMI might have just cleared these, so resume_allowed
+>> +			 * must be checked again also.
+>> +			 */
+>> +			rdmsrl(MSR_IA32_RTIT_STATUS, status);
+>> +			if (!(status & (RTIT_STATUS_TRIGGEREN |
+>> +					RTIT_STATUS_ERROR |
+>> +					RTIT_STATUS_STOPPED)) &&
+>> +			   READ_ONCE(pt->resume_allowed))
+>> +				pt_config_start(event);
+>> +		}
+>> +		return;
+>> +	}
+>> +
+>>  	buf = perf_aux_output_begin(&pt->handle, event);
+>>  	if (!buf)
+>>  		goto fail_stop;
+>> @@ -1601,6 +1639,16 @@ static void pt_event_stop(struct perf_event *event, int mode)
+>>  {
+>>  	struct pt *pt = this_cpu_ptr(&pt_ctx);
+>>  
+>> +	if (mode & PERF_EF_PAUSE) {
+>> +		if (READ_ONCE(pt->pause_allowed))
+>> +			pt_config_stop(event);
+>> +		return;
+>> +	}
+>> +
+>> +	/* Protect against racing */
+> 
+> No F1 cars allowed? Sure the comment can elucidate the reader as to what
+> actual race one is concerned about, no?
+
+Yeah this needs more comments.
+
+> 
+>> +	WRITE_ONCE(pt->pause_allowed, 0);
+>> +	WRITE_ONCE(pt->resume_allowed, 0);
+>> +
+>>  	/*
+>>  	 * Protect against the PMI racing with disabling wrmsr,
+>>  	 * see comment in intel_pt_interrupt().
+>> @@ -1659,8 +1707,12 @@ static long pt_event_snapshot_aux(struct perf_event *event,
+>>  	/*
+>>  	 * Here, handle_nmi tells us if the tracing is on
+>>  	 */
+>> -	if (READ_ONCE(pt->handle_nmi))
+>> +	if (READ_ONCE(pt->handle_nmi)) {
+>> +		/* Protect against racing */
+>> +		WRITE_ONCE(pt->pause_allowed, 0);
+>> +		WRITE_ONCE(pt->resume_allowed, 0);
+> 
+> barrier()?
+> 
+>>  		pt_config_stop(event);
+>> +	}
+>>  
+>>  	pt_read_offset(buf);
+>>  	pt_update_head(pt);
+>> @@ -1677,8 +1729,11 @@ static long pt_event_snapshot_aux(struct perf_event *event,
+>>  	 * Compiler barrier not needed as we couldn't have been
+>>  	 * preempted by anything that touches pt->handle_nmi.
+>>  	 */
+>> -	if (pt->handle_nmi)
+>> +	if (pt->handle_nmi) {
+>> +		WRITE_ONCE(pt->resume_allowed, 1);
+>>  		pt_config_start(event);
+>> +		WRITE_ONCE(pt->pause_allowed, 1);
+> 
+> barrier() went missing again?
+> 
+>> +	}
+>>  
+>>  	return ret;
+>>  }
+
