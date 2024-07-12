@@ -1,158 +1,415 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DF8171089
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 13:38:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E278174EF9;
+	Fri, 12 Jul 2024 16:34:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720791505; cv=none; b=ZZNbd9JaeqmEsd4Q/rlEVfMw6xLLrWaI5ZD/XGewHY/amKL+91S9JrWMXYfiyCRDOq9PpLaft40saMmjVjeD0C5hSA/s6/KwRbdxEM9/qWQm08K/Y5iLSd+iENSp63RoJmjCLSXZ05YoOH6p1mVFxF8Tpe37bHtYLqdXCR7q1O4=
+	t=1720802068; cv=none; b=G4GMuDr8jZjmOsJoToMkUSxtKBVg4QZByAJBljruPRYk/+0/hxX0EpG1u7CXQ6tLSIp22sljmgpm45SD30qqsCPkrfQvbllQkWwFneMZvo32vLdcCCH/5T9W1ufjrSOZBPovOAvr80NwbrSAJjihafBrlQQ8s2/ZWbbpJ+20huM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720791505; c=relaxed/simple;
-	bh=T4H+8IrrmrAPxWFvSUM2MhUOGIEV5vFXnhSXl/h/Rqk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sa8bz5M8bGPhaisOB+LiIqh1JkhREiJSup89lh4mI/VBXEkXmEPRgIS45sayz5FD9DoA8RIE9XvnHeOp2DEs32ewnHJ1R4Su+mSyuGIVbqQ9lDS7bgdUqOee6R0GzFGgVVAbdO5zpV640XcRcPhnXpEcBQPk0/MAqreH5Bl6uRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BMdt9gcJ; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1720802068; c=relaxed/simple;
+	bh=HZIs19Cg9GnCinEP/1ZwNOJHrtZbyS7O/kteFtkPNag=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=N5m19s/bhq4PyeXgLbqw4vMWzpQP3XHXY8nFyOKoD5yoY/2U+LEIyIi2Wk55BjqNfUyzWty0eOlEJDYPwgLMYqtsmE9AtePSmrs5ga2O3vji/Ufx5SH+C7aGUeLtMDpSkona5S0Y2sYuwHh3mttEnWzBpTDRY9pTW8H8lceoOGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=MCvNKusD; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BMdt9gcJ"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4267300145eso16048295e9.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 06:38:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1720791501; x=1721396301; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=cC1jAi1iv6WdqEK+EAzRU4oNQ4sXJVOHSwTyXKEqpio=;
-        b=BMdt9gcJBTT6iTeXHxpNtOVkFEZ1WlV2zyLJ68qA4m5uRvIyyhtrlgEa2LBBlt1Pxf
-         xWBu7XvXRsyIwhsVoFy5FUJeEoBArcfkgUBDEot5qmV87bAUvVgBc8qVplHa1qjQDzCd
-         5a1sGUt+T69pRBCyebeQxXK+MKtJY270oiDialzb6qNuJByTFmWea3sZqlWuOkcOaLGL
-         E7j54Q2QsA8sH2kMG9NGNb2ubSgekBarhCCZW3qoCpiKatqnO0jthmKnCasusv1liswY
-         zYaLK08R+Fugru56hLVuSCsP4f5Rw4/R/yzmqKXV2cCNEGPlRXlhRSOKxgIdN0z8MvPl
-         RTQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720791501; x=1721396301;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cC1jAi1iv6WdqEK+EAzRU4oNQ4sXJVOHSwTyXKEqpio=;
-        b=O/YZzv7YQ+iWEz+a19G8wRkJhxRLWxkaNgjRcS5oPd1R64hw7fvLAXx7qMPLgJE/51
-         5TxkDMoCzy1sNXwMLu6EKj6u/xZiuaCeK8SIzOOeUiqfvnGMDyl8r8DrsXJAVxB5CcEK
-         /wMLCbxUaVdOV98J5WHCKno6CQpHaLMsqv47WBEWtFD5M0pEfanVHch1QqJ6CArp0N7N
-         n0XDS7sPJirXwC3Dbd4TG0zB2SznbcnYE8BsMMlbr0QiM7t/pIjKYhBnRf6N2UrRpIr5
-         sg70aM1KWIaMlq1nvPx4i2oXR04B5nTW1tcbVdcfCpM5XPrZsb//vV33FLpGnynlk6MO
-         JVqg==
-X-Forwarded-Encrypted: i=1; AJvYcCXCLj5vw61LO7EeKTnOydUzOdkxUPxtMaudQi7L7deQfOGvNtZSR3sjpgiY5LvhUFgapyRBS1gyXjfcplRS99XfFDIt+fPrlnVkWnSQ60NZ9g==
-X-Gm-Message-State: AOJu0YxBQzeh1AGPTj2HwqXGaBB3blXs+nI3nMNQQw2yVoSBhEGVec9e
-	0MNcBz35XJ25dKUEGlq3ihs3IRy03LfbvB+yhEhAMzG1686HVsugt7IQYwDTp4o=
-X-Google-Smtp-Source: AGHT+IEhyKGkl/VF/a4vHFezgDI+nStbpoqP8KMLCsMj4wEfKGgRy7eiqctDREifaFXVEsurbSfJFg==
-X-Received: by 2002:a7b:c052:0:b0:426:5c81:2538 with SMTP id 5b1f17b1804b1-426707cf827mr88262375e9.14.1720791501208;
-        Fri, 12 Jul 2024 06:38:21 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f265ce6sm24098085e9.16.2024.07.12.06.38.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jul 2024 06:38:20 -0700 (PDT)
-Message-ID: <83301e3e-e049-4af4-9f0b-29bdfc201543@linaro.org>
-Date: Fri, 12 Jul 2024 14:38:19 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="MCvNKusD"
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46CGQthA001231;
+	Fri, 12 Jul 2024 16:34:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	12YbCikve2CAmDk87xfKtkq9w9t5lVoCOWkW1TB7EaE=; b=MCvNKusDCNsY93N9
+	pmPjwlF7ruDFK8YhyXZg2oWNX4Ww3eq7GSxBb7zORbLn2ipJaKHvL16+eyk/ixHD
+	eYUJUpSYi+49NPO0vBuZ4a2z/OEB+4gqoSaXE2g89kVfslin/hbfnROSZg63brN1
+	awF19HX66Zk5LE6KOr/YfiE0ronIFs3wMSeUHYUMVrc02URpH2cX84+crAO0H7v7
+	NW9R/O9Nz7+V4tGvWk4N0KjJ/a5Pd10IadDpkahgLZm8g7N1nnhY8iDswPBeiGBy
+	4lriIG2QY7cxhuek4M5EsNoI46ZVxtnUSV1eqXkUEubti84dFIqZHViKC+0ihbt7
+	kwuQUg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40b75kg4xp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 16:34:09 +0000 (GMT)
+Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46CGY8ii016892;
+	Fri, 12 Jul 2024 16:34:09 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40b75kg4xj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 16:34:08 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46CE2O5Z024575;
+	Fri, 12 Jul 2024 16:34:08 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 407hrn7ddh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 12 Jul 2024 16:34:08 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46CGY2uk18874636
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 12 Jul 2024 16:34:04 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 406732004F;
+	Fri, 12 Jul 2024 16:34:02 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id AFD8620040;
+	Fri, 12 Jul 2024 16:33:58 +0000 (GMT)
+Received: from [9.171.22.164] (unknown [9.171.22.164])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 12 Jul 2024 16:33:58 +0000 (GMT)
+Message-ID: <0e5be712-4b0a-47a2-8c89-ee7ffe4e29b8@linux.ibm.com>
+Date: Fri, 12 Jul 2024 22:03:57 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V6 00/18] Add data type profiling support for powerpc
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Disha Goel <disgoel@linux.vnet.ibm.com>
+References: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
+ <5CBFBE42-A15C-47A4-B980-62313FEF1EFA@linux.vnet.ibm.com>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <5CBFBE42-A15C-47A4-B980-62313FEF1EFA@linux.vnet.ibm.com>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 9lFZ8sHdl9fLGwoGRyJB1kDFjQ20hHnh
+X-Proofpoint-ORIG-GUID: RVJOODqGvaMZAnE90eicrx0KM3w8Hy0J
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 7/7] perf docs: Remove the Android cross building
- document
-To: Leo Yan <leo.yan@arm.com>, Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, Adrian Hunter
- <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>,
- Nick Terrell <terrelln@fb.com>, Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- Thomas Richter <tmricht@linux.ibm.com>, Changbin Du
- <changbin.du@huawei.com>, amadio@gentoo.org, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240706182912.222780-1-leo.yan@arm.com>
- <20240706182912.222780-8-leo.yan@arm.com> <ZpC3-p0kG7dGkp_5@google.com>
- <3b16778b-f825-42a2-b53d-17c9b8c22a52@arm.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <3b16778b-f825-42a2-b53d-17c9b8c22a52@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-12_12,2024-07-11_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 impostorscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ malwarescore=0 suspectscore=0 clxscore=1011 phishscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2406140001 definitions=main-2407120112
 
 
 
-On 12/07/2024 12:02 pm, Leo Yan wrote:
+On 7/12/24 09:14, Athira Rajeev wrote:
+> 
+> 
+>> On 7 Jul 2024, at 8:14 PM, Athira Rajeev <atrajeev@linux.vnet.ibm.com> wrote:
+>>
+>> The patchset from Namhyung added support for data type profiling
+>> in perf tool. This enabled support to associate PMU samples to data
+>> types they refer using DWARF debug information. With the upstream
+>> perf, currently it possible to run perf report or perf annotate to
+>> view the data type information on x86.
+>>
+>> Initial patchset posted here had changes need to enable data type
+>> profiling support for powerpc.
+>>
+> 
 > Hi Namhyung,
 > 
-> On 7/12/24 05:58, Namhyung Kim wrote:
->> On Sat, Jul 06, 2024 at 07:29:12PM +0100, Leo Yan wrote:
+> Requesting for review on this V6 patchset. I have addressed review comments from V5. 
+> If the patchset looks good, can you please pull this in.
 > 
-> [...]
-> 
->>> The Android NDK (as time being the latest LTS version is r26d) changes
->>> toolchain to LLVM / Clang, so GCC compilers is not included in the NDK
->>> anymore. Therefore, the Android document contains obsolete info for
->>> building perf binary with NDK.
->>
->> Do you know if the version prior to the change is still used?
-> 
-> Based on the Android NDK wiki claims [1], since NDK r15 (backed to 26th
-> July, 2017) "GCC is no longer supported. It will not be removed from the 
-> NDK
-> just yet, but is no longer receiving backports".
-> 
->>> Furthermore, the Clang included in the Android NDK is problematic for
->>> cross compilation Aarch64 target. The building reports multiple errors
->>> with the compiler aarch64-linux-android34-clang.
->>>
->>> Thus, delete Documentation/android.txt to avoid confusion.
->>
->> If so, maybe we can keep the document little more and add a note that
->> this works only for some old versions.
->>
->> I'm also curious if it's still broken after your fixes.
-> 
-> When I tried Android NDK for cross building perf, it is still broken after
-> applied this series.
-> 
->  From my testing, now using LLVM for native building works well:
-> 
->    make LLVM=-15 VF=1 DEBUG=1 -C tools/perf
-> 
-> But it failed for cross compilation. Since Android NDK system root does not
-> contain some dependency libs, we must use extra options to disable some
-> features (e.g. NO_LIBELF=1 NO_LIBTRACEEVENT=1). The commands I tried for
-> cross building but failed:
-> 
->    make ARCH=arm64 CC=$NDK_TOOLCHAIN/aarch64-linux-android-clang \
->      LD=$NDK_TOOLCHAIN/ld.lld AR=$NDK_TOOLCHAIN/llvm-ar \
->      NM=$NDK_TOOLCHAIN/llvm-nm STRIP=$NDK_TOOLCHAIN/llvm-strip \
->      OBJCOPY=$NDK_TOOLCHAIN/llvm-objcopy \
->      OBJDUMP=$NDK_TOOLCHAIN/llvm-objdump \
->      READELF=$NDK_TOOLCHAIN/llvm-readelf \
->      HOSTCC=$NDK_TOOLCHAIN/clang \
->      HOSTCXX=$NDK_TOOLCHAIN/clang++ HOSTAR=$NDK_TOOLCHAIN/llvm-ar \
->      HOSTLD=$NDK_TOOLCHAIN/ld.lld VF=1 DEBUG=1 NO_LIBELF=1 \
->      NO_LIBTRACEEVENT=1 EXTRA_CFLAGS=-fgnuc-version=0 \
->      -C tools/perf
-> 
-> Given the test result, my conclusion is the doc for Android cross building
-> is not useful for a long while. If we really want to support it, I would
-> like to suggest to take a separate task for fixing LLVM / Clang cross
-> compilation.
+> Thanks
+> Athira
 
-We could replace the entire contents of the file with something like 
-"Android NDK compilation deprecated -- no longer supported". It might 
-help someone in being able to recover the history of the file by leaving 
-in some keywords. If you delete it it becomes very unlikely that the 
-history will be found by someone trying to get it working again.
+Patches looks fine to me. Also tested in powerpc box.
 
+Reviewed-by : Kajol Jain <kjain@linux.ibm.com>
+Tested-by : Kajol Jain <kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+
+>> https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup.eu/T/
+>>
+>> Main change were:
+>> 1. powerpc instruction nmemonic table to associate load/store
+>> instructions with move_ops which is use to identify if instruction
+>> is a memory access one.
+>> 2. To get register number and access offset from the given
+>> instruction, code uses fields from "struct arch" -> objump.
+>> Added entry for powerpc here.
+>> 3. A get_arch_regnum to return register number from the
+>> register name string.
+>>
+>> But the apporach used in the initial patchset used parsing of
+>> disassembled code which the current perf tool implementation does.
+>>
+>> Example: lwz     r10,0(r9)
+>>
+>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+>> registers names and offset. Also to find whether there is a memory
+>> reference in the operands, "memory_ref_char" field of objdump is used.
+>> For x86, "(" is used as memory_ref_char to tackle instructions of the
+>> form "mov  (%rax), %rcx".
+>>
+>> In case of powerpc, not all instructions using "(" are the only memory
+>> instructions. Example, above instruction can also be of extended form (X
+>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+>> and extract the source/target registers, second patchset added support to use
+>> raw instruction. With raw instruction, macros are added to extract opcode
+>> and register fields.
+>> Link to second patchset:
+>> https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.ibm.com/
+>>
+>> Example representation using --show-raw-insn in objdump gives result:
+>>
+>> 38 01 81 e8     ld      r4,312(r1)
+>>
+>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+>> this translates to instruction form: "ld RT,DS(RA)" and binary code
+>> as:
+>>  _____________________________________
+>>  | 58 |  RT  |  RA |      DS       | |
+>>  -------------------------------------
+>> 0    6     11    16              30 31
+>>
+>> Second patchset used "objdump" again to read the raw instruction.
+>> But since there is no need to disassemble and binary code can be read
+>> directly from the DSO, third patchset (ie this patchset) uses below
+>> apporach. The apporach preferred in powerpc to parse sample for data
+>> type profiling in V3 patchset is:
+>> - Read directly from DSO using dso__data_read_offset
+>> - If that fails for any case, fallback to using libcapstone
+>> - If libcapstone is not supported, approach will use objdump
+>>
+>> Patchset adds support to pick the opcode and reg fields from this
+>> raw/binary instruction code. This approach came in from review comment
+>> by Segher Boessenkool and Christophe for the initial patchset.
+>>
+>> Apart from that, instruction tracking is enabled for powerpc and
+>> support function is added to find variables defined as registers
+>> Example, in powerpc, below two registers are
+>> defined to represent variable:
+>> 1. r13: represents local_paca
+>> register struct paca_struct *local_paca asm("r13");
+>>
+>> 2. r1: represents stack_pointer
+>> register void *__stack_pointer asm("r1");
+>>
+>> These are handled in this patchset.
+>>
+>> - Patch 1 is to rearrange register state type structures to header file
+>> so that it can referred from other arch specific files
+>> - Patch 2 is to make instruction tracking as a callback to"struct arch"
+>> so that it can be implemented by other archs easily and defined in arch
+>> specific files
+>> - Patch 3 is to handle state type regs array size for x86 and powerpc
+>> - Patch 4 adds support to capture and parse raw instruction in powerpc
+>> using dso__data_read_offset utility
+>> - Patch 4 also adds logic to support using objdump when doing default "perf
+>> report" or "perf annotate" since it that needs disassembled instruction.
+>> - Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
+>> - Patch 6 update parameters for reg extract functions to use raw
+>> instruction on powerpc
+>> - Patch 7 updates ins__find to carry raw_insn and also adds parse
+>> callback for memory instructions for powerpc
+>> - Patch 8 add support to identify memory instructions of opcode 31 in
+>> powerpc
+>> - Patch 9 adds more instructions to support instruction tracking in powerpc
+>> - Patch 10 and 11 handles instruction tracking for powerpc.
+>> - Patch 12, 13 and 14 add support to use libcapstone in powerpc
+>> - Patch 15 and patch 16 handles support to find global register variables
+>> - PAtch 17 updates data type compare functions data_type_cmp and
+>>  sort__typeoff_sort to include var_name along with type_name in
+>>  comparison.
+>> - Patch 18 handles insn-stat option for perf annotate
+>>
+>> Note:
+>> - There are remaining unknowns (25%) as seen in annotate Instruction stats
+>> below.
+>> - This patchset is not tested on powerpc32. In next step of enhancements
+>> along with handling remaining unknowns, plan to cover powerpc32 changes
+>> based on how testing goes.
+>>
+>> With the current patchset:
+>>
+>> ./perf record -a -e mem-loads sleep 1
+>> ./perf report -s type,typeoff --hierarchy --group --stdio
+>> ./perf annotate --data-type --insn-stat
+>>
+>> perf annotate logs:
+>> ==================
+>>
+>> Annotate Instruction stats
+>> total 609, ok 446 (73.2%), bad 163 (26.8%)
+>>
+>>  Name/opcode:  Good   Bad
+>>  -----------------------------------------------------------
+>>  58                  :   323    80
+>>  32                  :    49    43
+>>  34                  :    33    11
+>>  OP_31_XOP_LDX       :     8    20
+>>  40                  :    23     0
+>>  OP_31_XOP_LWARX     :     5     1
+>>  OP_31_XOP_LWZX      :     2     3
+>>  OP_31_XOP_LDARX     :     3     0
+>>  33                  :     0     2
+>>  OP_31_XOP_LBZX      :     0     1
+>>  OP_31_XOP_LWAX      :     0     1
+>>  OP_31_XOP_LHZX      :     0     1
+>>
+>> perf report logs:
+>> =================
+>>
+>>  Total Lost Samples: 0
+>>
+>>  Samples: 1K of event 'mem-loads'
+>>  Event count (approx.): 937238
+>>
+>>  Overhead  Data Type  Data Type Offset
+>> ........  .........  ................
+>>    48.60%  (unknown)  (unknown) +0 (no field)
+>>    11.42%  long unsigned int  long unsigned int +0 (current_stack_pointer)
+>>     4.68%  struct paca_struct  struct paca_struct +2312 (__current)
+>>     4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
+>>     2.69%  struct paca_struct  struct paca_struct +2808 (canary)
+>>     2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
+>>     2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
+>>     1.43%  long unsigned int  long unsigned int +0 (no field)
+>>     1.41%  struct vm_fault  struct vm_fault +0 (vma)
+>>     1.29%  struct task_struct  struct task_struct +276 (flags)
+>>     1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
+>>     0.90%  struct security_hook_list  struct security_hook_list +0 (list.next)
+>>     0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
+>>     0.76%  struct rq  struct rq +2856 (cpu)
+>>     0.72%  long long unsigned int  long long unsigned int +0 (no field)
+>>
+>> Thanks
+>> Athira Rajeev
+>>
+>> Changelog:
+>> From v5 -> v6:
+>> - Addressed review comments from Namhyung
+>>  Conditionally define TYPE_STATE_MAX_REGS based on arch.
+>>  Added macro for defining width of the raw codes and spaces
+>>  in disasm_line__parse_powerpc.
+>>  Call disasm_line__parse from disasm_line__parse_powerpc
+>>  for generic code.
+>>  Renamed symbol__disassemble_dso to symbol__disassemble_raw.
+>>  Fixed find_data_type_global_reg to correclty free var_types
+>>  and change indent level.
+>>  Fixed data_type_cmp and sort__typeoff_sort to include var_name
+>>  in comparing data type entries.
 > 
-> Thanks,
-> Leo
+>>
+>> From v4 -> v5:
+>> - Addressed review comments from Namhyung
+>>  Handle max number of type state regs as 16 for x86 and 32 for
+>>  powerpc.
+>>  Added generic support for objdump patch first and DSO read
+>>  optimisation next
+>>  combined patch 3 and patch 4 in patchseries V4 to one patch
+>>  Changed reference for "raw_insn" to use "u32"
+>>  Splitted "parse" callback patch changes and "ins__find" patch
+>>  changes into two
+>>  Instead of making weak function, added get_powerpc_regs to
+>>  extract register and offset fields for powerpc
+>> - Addressed complation fail when "dwarf.h" is not present ie
+>>  elfutils devel is not present. Used includes for #ifdef HAVE_DWARF_SUPPORT
+>>  when including functions that use Dwarf references. Also
+>>  conditionally include some of the header files.
+>>
+>> From v3->v4:
+>> - Addressed review comments from Ian by using capston_init from
+>>  "util/print_insn.c" instead of "open_capston_handle".
+>> - Addressed review comment from Namhyung by moving "opcode"
+>>  field from "struct ins" to "struct disasm_line"
+>>
+>> From v2->v3:
+>> - Addressed review comments from Christophe and Namhyung for V2
+>> - Changed the apporach in powerpc to parse sample for data
+>>  type profiling as:
+>>  Read directly from DSO using dso__data_read_offset
+>>  If that fails for any case, fallback to using libcapstone
+>>  If libcapstone is not supported, approach will use objdump
+>> - Include instructions with opcode as 31 and correctly categorize
+>>  them as memory or arithmetic instructions.
+>> - Include more instructions for instruction tracking in powerpc
+>>
+>> From v1->v2:
+>> - Addressed suggestion from Christophe Leroy and Segher Boessenkool
+>>  to use the binary code (raw insn) to fetch opcode, register and
+>>  offset fields.
+>> - Added support for instruction tracking in powerpc
+>> - Find the register defined variables (r13 and r1 which points to
+>>  local_paca and current_stack_pointer in powerpc)
+>>
+>> Athira Rajeev (18):
+>>  tools/perf: Move the data structures related to register type to
+>>    header file
+>>  tools/perf: Add "update_insn_state" callback function to handle arch
+>>    specific instruction tracking
+>>  tools/perf: Update TYPE_STATE_MAX_REGS to include max of regs in
+>>    powerpc
+>>  tools/perf: Add disasm_line__parse to parse raw instruction for
+>>    powerpc
+>>  tools/perf: Add support to capture and parse raw instruction in
+>>    powerpc using dso__data_read_offset utility
+>>  tools/perf: Update parameters for reg extract functions to use raw
+>>    instruction on powerpc
+>>  tools/perf: Add parse function for memory instructions in powerpc
+>>  tools/perf: Add support to identify memory instructions of opcode 31
+>>    in powerpc
+>>  tools/perf: Add some of the arithmetic instructions to support
+>>    instruction tracking in powerpc
+>>  tools/perf: Add more instructions for instruction tracking
+>>  tools/perf: Update instruction tracking for powerpc
+>>  tools/perf: Make capstone_init non-static so that it can be used
+>>    during symbol disassemble
+>>  tools/perf: Use capstone_init and remove open_capstone_handle from
+>>    disasm.c
+>>  tools/perf: Add support to use libcapstone in powerpc
+>>  tools/perf: Add support to find global register variables using
+>>    find_data_type_global_reg
+>>  tools/perf: Add support for global_die to capture name of variable in
+>>    case of register defined variable
+>>  tools/perf: Update data_type_cmp and sort__typeoff_sort function to
+>>    include var_name in comparison
+>>  tools/perf: Set instruction name to be used with insn-stat when using
+>>    raw instruction
+>>
+>> tools/include/linux/string.h                  |   2 +
+>> tools/lib/string.c                            |  13 +
+>> tools/perf/arch/arm64/annotate/instructions.c |   3 +-
+>> .../arch/loongarch/annotate/instructions.c    |   6 +-
+>> .../perf/arch/powerpc/annotate/instructions.c | 254 ++++++++
+>> tools/perf/arch/powerpc/util/dwarf-regs.c     |  53 ++
+>> tools/perf/arch/s390/annotate/instructions.c  |   5 +-
+>> tools/perf/arch/x86/annotate/instructions.c   | 377 ++++++++++++
+>> tools/perf/builtin-annotate.c                 |   4 +-
+>> tools/perf/util/annotate-data.c               | 545 ++++--------------
+>> tools/perf/util/annotate-data.h               |  83 +++
+>> tools/perf/util/annotate.c                    |  29 +-
+>> tools/perf/util/annotate.h                    |   6 +-
+>> tools/perf/util/disasm.c                      | 468 +++++++++++++--
+>> tools/perf/util/disasm.h                      |  19 +-
+>> tools/perf/util/dwarf-aux.c                   |   1 +
+>> tools/perf/util/dwarf-aux.h                   |   1 +
+>> tools/perf/util/include/dwarf-regs.h          |  12 +
+>> tools/perf/util/print_insn.c                  |  15 +-
+>> tools/perf/util/print_insn.h                  |   5 +
+>> tools/perf/util/sort.c                        |  23 +-
+>> 21 files changed, 1420 insertions(+), 504 deletions(-)
+>>
+>> -- 
+>> 2.43.0
+>>
+>>
 > 
-> [1] https://github.com/android/ndk/wiki/Changelog-r15
+> 
