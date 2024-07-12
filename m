@@ -1,46 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF88322097
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 20:22:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4CE245007;
+	Fri, 12 Jul 2024 20:33:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720815733; cv=none; b=ZNmwSS5LkWqI8RMwCLqqXos+1ksKBnxPZ++H/Qy+s4MunGTI3/PTsX6OCerdKH/RDYopsoqkNrAFyblxNMPRb41hXQjr7BUIYBm9NjzZIl8/n62k6iKlmThKZPjP3HSho/sxFi27ElkByKDtGriRFs5xS2xBw5HjmgOfnicjxCc=
+	t=1720816420; cv=none; b=o6vFFh9fz2JdYo7kdBkqzRP3bUxFSS7Iqm6U95rNw5b5gDyo8dlIKHcNlfpBUFKTG6MB5tLwxMlb/Rze+bqwAsPcXziGc2T86lkKbQefhX1naaQTOeTJSoQznHWjkHhTak2pdfMHaUkDfwiHdhZKqgX5N2RO3uq9P0iOGBfCn3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720815733; c=relaxed/simple;
-	bh=N36GrIOLvMKFiq5drfSZ8wTiAWxLY+SMFrk1A+mnozk=;
+	s=arc-20240116; t=1720816420; c=relaxed/simple;
+	bh=IZrFY7jhRqA3akF0qdHbJ7oItv4LQGRvS4/YFZ/3I70=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VcLvgTHgzoExvEcDFyysktb2ExsWIyIgk76sZMxQTo0aauPC8odmOLXKZUF1AhpLcCUcFjqJRBtbsukrCnsuyKkX9s8kPU9A8gxZF8O5K2h9l1pKZisAWFUoIpfUUH/SuWPdQA+p4UD7hhPkEy4g17Are4B/0YfbDZLg+w+oLLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PbAtxn5S; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=uVomGZtUCo4q8f+8Bv04KNoSLLNpffkN5y4RnA/FNzA8jwYUvzdaabjU0AaJMCobpqBylJcexn3aTw2YpVfKQ7bJD04sagJY003+sPygGpEuO9rfnOoa9nvnxNL2Fx+XjHoPD4bPtqoBiy8GvpbHj466yrHNe59pWhW8fVjDzbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d73hPJsL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PbAtxn5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B90C4C32782;
-	Fri, 12 Jul 2024 20:22:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d73hPJsL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9019C32782;
+	Fri, 12 Jul 2024 20:33:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720815732;
-	bh=N36GrIOLvMKFiq5drfSZ8wTiAWxLY+SMFrk1A+mnozk=;
+	s=k20201202; t=1720816420;
+	bh=IZrFY7jhRqA3akF0qdHbJ7oItv4LQGRvS4/YFZ/3I70=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PbAtxn5SWPKJD/E6RzFiGUfoJ7hliqmz2Q3rSovuLLldjOU4JnmU5xVfEo2Aj8zML
-	 bRR84UGVY4JYTjK9juMc8JI5n3aZMihE4HIsonE52OJofMWUCPG1UEGM6nuu4Fxeou
-	 y64uGHvDVWbSgVo7cWlBDv9E2/+ivVmzEJhfTQWek+ztxIvz2RY2v/Qk2Z+KYbgB7x
-	 ximX8jv9blYufEnGdYTCwSMhXhLc9Fw+7DzpD8GyIY9jQOP4CVZwS4TmUhup15+kJU
-	 zy85l5nH/nehwN9PJvMvpGkWRCQ8/Hg7Nf7ooAuXdfKXolLReGMbsV8sFFWKkjIu67
-	 JWCbFNOeniv2g==
-Date: Fri, 12 Jul 2024 15:22:08 -0500
+	b=d73hPJsLKNEeECtBzy3M+/XKX2g6xymNy79MJUmnLJ9+C44v0LB48RPy/+/PnRjqn
+	 6u5bU1s0bgJK5lKZ+YzGiO/F4DRMx9qzq0MPaXsP0i1XPGEKJPiFgUAfPTn1AJP6rI
+	 xHf+sqOM0vFYM4s3mqEz/L2IoP1QnTMleIcEw7ItzG7ao3UhP2galLiFf29aJ0MmkJ
+	 S6MJdLSANvyDcGuSpQV9w+6VX92R6TVfxBHPr+CwgJyH4THXL4Eqdhkefk22pgolfx
+	 DIYIOlMaoJ2THXFsovr2bjQ6oDNqxIqTO237W6bXMZ+IOjmX1+MEj0b2fZG0bJmTsc
+	 MfFyEA10n51kQ==
+Date: Fri, 12 Jul 2024 15:33:35 -0500
 From: Namhyung Kim <namhyung@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
-Message-ID: <ZpGQcN8RBHs6peFL@google.com>
-References: <20240628064236.1123851-1-adityag@linux.ibm.com>
- <20240628064236.1123851-2-adityag@linux.ibm.com>
- <Zn8C-XpC1beIRN8t@google.com>
- <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
- <ZoSRiW1aVsV-xrur@google.com>
- <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tools subcmd: Add non-waitpid
+ check_if_command_finished()
+Message-ID: <ZpGTHzfIeREt5VUO@google.com>
+References: <20240701044236.475098-1-irogers@google.com>
+ <20240701044236.475098-2-irogers@google.com>
+ <ZoTETvgcPdl9EUJV@google.com>
+ <CAP-5=fV4oPEjX2fh3aeBbmBGgYJGCdBnVjTZ2XnCCgnTSa0LTw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,66 +53,95 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fV4oPEjX2fh3aeBbmBGgYJGCdBnVjTZ2XnCCgnTSa0LTw@mail.gmail.com>
 
-Hello,
+Hi Ian,
 
-On Wed, Jul 03, 2024 at 04:17:09PM +0530, Aditya Gupta wrote:
-> Hi Namhyung,
-> 
-> > > <...snip...>
+On Tue, Jul 02, 2024 at 09:24:50PM -0700, Ian Rogers wrote:
+> On Tue, Jul 2, 2024 at 8:24 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Sun, Jun 30, 2024 at 09:42:35PM -0700, Ian Rogers wrote:
+> > > Using waitpid can cause stdout/stderr of the child process to be
+> > > lost. Use Linux's /prod/<pid>/status file to determine if the process
+> > > has reached the zombie state. Use the 'status' file rather than 'stat'
+> > > to avoid issues around skipping the process name.
 > > >
-> > > > > +static const char *check_usage[] = {
-> > > > > +	"perf check [<subcommand>] [<options>]",
-> > > > 
-> > > > You can leave this NULL and parse_options_subcommand() will fill the
-> > > > first element automatically using check_subcommands[].
-> > > > 
-> > > > Please see other commands like 'perf sched' how to handle this.
-> > > 
-> > > It doesn't seem to be working, hence added that check_usage in v12
-> > > itself.
-> > > 
-> > >     $ ./perf check
-> > > 	Usage: (null)
-> > > 
-> > >     -q, --quiet           do not show any warnings or messages
-> > > 
-> > >     $ ./perf sched
-> > > 	Usage: (null)
-> > > 
-> > >     -D, --dump-raw-trace  dump raw trace in ASCII
-> > >     -f, --force           don't complain, do it
-> > >     -i, --input <file>    input file name
-> > >     -v, --verbose         be more verbose (show symbol address, etc)
-> > > 
-> > > Debugging it further, this behaviour was changed in
-> > > 
-> > >     commit 230a7a71f9221: libsubcmd: Fix parse-options memory leak
-> > > 
-> > > Where the generated usage string is deallocated, and usage[0] string is
-> > > reassigned as NULL.
-> > 
-> > Ok, thanks for the investigation.  It's a bug then.
-> > 
-> > > 
-> > > If expected behaviour was allocation of the usage string, it should be
-> > > okay for the buffer to not get deallocated for the entirety of the perf
-> > > process's lifetime right ?
-> > 
-> > Right, it should not deallocate it in the parse_options_subcommand().
-> > I think we need to change the exit path of the commands to free the
-> > usage[0] manually.
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > ---
+> > >  tools/lib/subcmd/run-command.c | 33 +++++++++++++++++++++++++++++++++
+> > >  1 file changed, 33 insertions(+)
+> > >
+> > > diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+> > > index 4e3a557a2f37..ec06683e77a0 100644
+> > > --- a/tools/lib/subcmd/run-command.c
+> > > +++ b/tools/lib/subcmd/run-command.c
+> > > @@ -2,6 +2,7 @@
+> > >  #include <unistd.h>
+> > >  #include <sys/types.h>
+> > >  #include <sys/stat.h>
+> > > +#include <ctype.h>
+> > >  #include <fcntl.h>
+> > >  #include <string.h>
+> > >  #include <linux/string.h>
+> > > @@ -217,8 +218,40 @@ static int wait_or_whine(struct child_process *cmd, bool block)
+> > >
+> > >  int check_if_command_finished(struct child_process *cmd)
+> > >  {
+> > > +#ifdef __linux__
+> >
+> > Is this really necessary?  I don't think we plan to support other OS..
 > 
-> Sure, I can implement that if you have things in hand, or I am fine with
-> you implementing it since you will already have an idea what to do.
-> 
-> Maybe `free(command_usage[0])` or something like
-> `parse_options_free_subcommand()` ?
+> I don't think it'd be unreasonable to say run "perf report" on
+> Windows, or using wasm inside a web browser. Part of the reason for
+> doing things this way was to keep the WNOHANG logic although this
+> change no longer uses it for __linux__.
 
-It seems we don't have a place to mark whether it needs to free or not.
-Let's go with free(command_usage[0]) for now.
+I'm not sure we are ready to run it on other platforms.  So I think
+it's better simply remove it for now.
 
 Thanks,
 Namhyung
 
+
+> > > +     char filename[FILENAME_MAX + 12];
+> > > +     char status_line[256];
+> > > +     FILE *status_file;
+> > > +
+> > > +     /*
+> > > +      * Check by reading /proc/<pid>/status as calling waitpid causes
+> > > +      * stdout/stderr to be closed and data lost.
+> > > +      */
+> > > +     sprintf(filename, "/proc/%d/status", cmd->pid);
+> > > +     status_file = fopen(filename, "r");
+> > > +     if (status_file == NULL) {
+> > > +             /* Open failed assume finish_command was called. */
+> > > +             return true;
+> > > +     }
+> > > +     while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
+> > > +             char *p;
+> > > +
+> > > +             if (strncmp(status_line, "State:", 6))
+> > > +                     continue;
+> > > +
+> > > +             fclose(status_file);
+> > > +             p = status_line + 6;
+> > > +             while (isspace(*p))
+> > > +                     p++;
+> > > +             return *p == 'Z';
+> > > +     }
+> > > +     /* Read failed assume finish_command was called. */
+> > > +     fclose(status_file);
+> > > +     return true;
+> > > +#else
+> > >       wait_or_whine(cmd, /*block=*/false);
+> > >       return cmd->finished;
+> > > +#endif
+> > >  }
+> > >
+> > >  int finish_command(struct child_process *cmd)
+> > > --
+> > > 2.45.2.803.g4e1b14247a-goog
+> > >
