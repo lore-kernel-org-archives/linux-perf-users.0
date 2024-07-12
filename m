@@ -1,220 +1,264 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EEE4FC12
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 05:37:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222B78F49;
+	Fri, 12 Jul 2024 06:04:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720762651; cv=none; b=n36+/PlCupG7Yr4P9KtvCOn5xDDPevc5364TVuj8qt1wOK8KaJrkjDi3pqacdIsKSzZ//f8wAG2ZE+hwNeq2a1mI8Q99ni6FLZiD3b/RnbxsGrIYI5JdsRByuiOELFPW7xRq+ntsQUGg/EsNNcqlGTdIK0IdDaDEgG+099uJq5g=
+	t=1720764255; cv=none; b=H9/E3541nxPoa9y7HLt5JdawAwTZWgbrgZsAZScE96dL+qieClUP2biGTvn6Df9aRBSpERIUvwMryo0tGY8bZc9LRiaO/5T61d5h6/3r9MqUP19p+UpF7stg/+wQoeXcv4yytxZ+Nh4M1CZ0jbYYdhJZHb8CjhY8EsF3fGEkoTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720762651; c=relaxed/simple;
-	bh=ycW3MshNjKteaBVobCSDIboGwAMJeZ4dK2sEPd7PzzA=;
+	s=arc-20240116; t=1720764255; c=relaxed/simple;
+	bh=+M6LyJnBUDJGtP37RGbyzw6U8uqJEZsHpwKco/BWpMQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mKsn3Kra0c7lR8/OP/liXFR/W0j0yTriZt/740ehGEw3SaIeUCm+JKI4jaoQ4hifQRL7k3n+A9f1d0srMOdjMuJ3fbfpULa1Qnea/c/8kKBEQLiWz037jckJIxG2fZRjvvpgMqflZWTVzL55zcQo6FvEQm7l0ia7QBl/5DUoWkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XQ4TJIY/; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XQ4TJIY/"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fb10519ae3so72435ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 11 Jul 2024 22:37:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720762649; x=1721367449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dH3qZ/7Le7SMeUq7EqrX+ajUtlSjo++wTXKwFvqTS3I=;
-        b=XQ4TJIY/QxcPryFluAfpBwbyegjoGifkQUMtqOz1/yccMoSQa3DpETUvIflvc42qJd
-         5kPfMOAxZ9HAbrnKNNQuWFgHzF3M/8ANim3CedF067XoHTZgMbn/Oa+Is9e1t+6q1FfI
-         O1ozNcVSKzh5lkv+3VXzHmF9S6HIUsjyTKy/+pYZJYYAYXmpJR8ZmpnoUW/WIBCePOOp
-         SXdjv6Ua2swifB5vKlYMG/9QTauZ7s9tJ7XePUS8AVDARDGyT2+0WNOTDvt0Dc9g7L3a
-         Vp06pF/g8TIKCSpE6IIw3maL0siYGHbe+cA8idQGV3km0VKzpp2L/Vr/6PvWNDGJc4/M
-         Klow==
+	 To:Cc:Content-Type; b=afazMRKVHFxzrM+DhqBCyDGaRoaUk4JtIvMwEp97aEFbMKU4StJOPvZ4z/kwPTFKKGb+/V1HJ2PnaXe//8WTzZaHX9BbS8EbDBpLM51yT4CipbOyLWcX9/PYlBlntF5lFf1OJ19nCdemJu53yAOLFIU0IqDupJjdZwmKvAuqIv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-75c3afd7a50so1187307a12.2;
+        Thu, 11 Jul 2024 23:04:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720762649; x=1721367449;
+        d=1e100.net; s=20230601; t=1720764253; x=1721369053;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dH3qZ/7Le7SMeUq7EqrX+ajUtlSjo++wTXKwFvqTS3I=;
-        b=JvDr1sIBdLE1DpsZuyw4wcfqXXbimhAvOYRHOqBWPs+JkZNXfu9YJLE3Ru18H5EuvA
-         YM0ZZ49DFmKk89ykKFAwZ5rObpA4eKmnjcPanegWimLYU3/xVVdYkpflhpl/sViL81f2
-         KGU7NCiI31wCvgFVSx3pexXnUqEa5qIEqTcXA8lF6l0m1LL9YUsFVQbyS7O5z9kLSXMm
-         Upq5kSQnaUSOc3SqZtHE3rW8355qGxaSUk2iv6XE2Lw7cXfqYSUP7qM/HueOBA251dKT
-         imeytWy10DZ98HMerXud4qu72DBu7mqXjOv7JteeFmxT6zLpBLu45ujfpHc1fhcsVI5s
-         I/HA==
-X-Forwarded-Encrypted: i=1; AJvYcCUlfH3XhZiw6bup+YX75S5QAOmwHvJ+9W9OSPbsE2I62G9x0mI+eipmjGysUQbzcZre8GkwIsvFgegIESJNuzs+6e0Bl18LbJNc+XUa5BWR+w==
-X-Gm-Message-State: AOJu0Yy7qPR9nIfJ0UImNmYlw4kBIdSLrANesWs5LDvXXDuhSEbUW9BW
-	/A48VG+Sv7reSYh8muLWx2CXR9N2QAcOFN8meE7RrViwu1qm3WqtLPkOoSJ2CiS/OMimLBaK+sI
-	0EBysFSUCovyzFW5kR5o4hChm6ZhUmqhSN1SE
-X-Google-Smtp-Source: AGHT+IElXIRXWUBJFFoKWg9ej8d296ASuBabnWfhRhCAdVw/f3nWgnCz9mk1c7X3KAIhxGPRWD4EL/SE8GxpGrquGCg=
-X-Received: by 2002:a17:902:e850:b0:1fb:1a7:a64f with SMTP id
- d9443c01a7336-1fbf24bb3edmr1876795ad.20.1720762649164; Thu, 11 Jul 2024
- 22:37:29 -0700 (PDT)
+        bh=IH5WEfgeqhqifFDky1dpLHDI2P0AwAdU3wwOlpmCYds=;
+        b=oyyZ6J5IJKeI732ShsrlLykF3TJOt+nWACGhAmA0lKU7qwXfobNG+CaBtYo11lLWSl
+         7n6lIisK2CXKvC9qwVhER0vQixyoeZPcm8WeIkdz3NfXrqpbghMzryzai6iyIjmZGRSy
+         /Tnplfo/0q8vw6ln3vnWi9T3peP/qW9LKpXXc26XDVKonolDjuOU6+Geif38mterlBiC
+         9a5gr2EOEUjNU6uNa+x+3K+bhMmq4BDxwqW+LpWTVXj8OuVgIxt2xuSUExFjPCWMFDhx
+         uRzkLts0Hk8M04JE2eo4sg3J6YMR6LUbTb4JLBzMXU9VPQ2fOV6ggM/t94eq/hHC5E1X
+         noWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVH5YN844lJhffaPZHoRttTccqcQK5bPR+GaGiSKE+sbepH4QsfxEdAeI+iYRA5KYL01/uP67Obx56aYRC28jfOIxkWLCBQ00d3est84wnxxm1HFkCgUlRx+Gy+t1NlKkj3cWj3ulAdH0aXWtr2NQ==
+X-Gm-Message-State: AOJu0YxgZxHVq/8JQkjleRe2okHD7kKpFZOlRRvhD4kHPHhCcek8IRdT
+	sHq7xHB4T7krDVPO2l9Ktcw3yOby1tnm1yLaexZdvyMVG6HwWRYI8Ol05SV7uRVNrkSpo2cRi4S
+	hIFQfckZ7otcmW5S6nQT0K9rgNB0=
+X-Google-Smtp-Source: AGHT+IGFfmmKtf8bh7oWwCjNt/AtScH67tze86vhKakkEtxxqJXGSegwdMWMPcCkWpra09QBeegUWSu0idEsYgeCD4c=
+X-Received: by 2002:a05:6a20:734c:b0:1c0:f328:8e5a with SMTP id
+ adf61e73a8af0-1c2984cdf96mr11022912637.47.1720764252842; Thu, 11 Jul 2024
+ 23:04:12 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240706182912.222780-1-leo.yan@arm.com> <20240706182912.222780-8-leo.yan@arm.com>
- <ZpC3-p0kG7dGkp_5@google.com>
-In-Reply-To: <ZpC3-p0kG7dGkp_5@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 11 Jul 2024 22:37:17 -0700
-Message-ID: <CAP-5=fXsN2Z+0T-7kS-pub2i_X8RgRQeTPh4QcxAkWeSL+PuPw@mail.gmail.com>
-Subject: Re: [PATCH v3 7/7] perf docs: Remove the Android cross building document
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, Nick Terrell <terrelln@fb.com>, 
-	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
-	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Changbin Du <changbin.du@huawei.com>, 
-	James Clark <james.clark@linaro.org>, amadio@gentoo.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
+References: <20240704015812.2119457-1-namhyung@kernel.org> <CAP-5=fWLhbgUxW4jyKtMy0QuQfBTXUpZHrqRCHgSHgcXQTV3Fg@mail.gmail.com>
+In-Reply-To: <CAP-5=fWLhbgUxW4jyKtMy0QuQfBTXUpZHrqRCHgSHgcXQTV3Fg@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 11 Jul 2024 23:04:01 -0700
+Message-ID: <CAM9d7ciZXsMSwmLViDVJLsP60k4zynr7XGxvLS3TrupdTm1aPg@mail.gmail.com>
+Subject: Re: [PATCH] perf annotate: Cache debuginfo for data type profiling
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jul 11, 2024 at 9:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Sat, Jul 06, 2024 at 07:29:12PM +0100, Leo Yan wrote:
-> > The Android NDK (as time being the latest LTS version is r26d) changes
-> > toolchain to LLVM / Clang, so GCC compilers is not included in the NDK
-> > anymore. Therefore, the Android document contains obsolete info for
-> > building perf binary with NDK.
->
-> Do you know if the version prior to the change is still used?
+Hi Ian,
 
-The git log last mentions NDK 12 from 2016 working. I suspect these
-instructions haven't worked for a good long while.
-
-Thanks,
-Ian
-
+On Thu, Jul 11, 2024 at 10:29=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Wed, Jul 3, 2024 at 6:58=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
+ wrote:
 > >
-> > Furthermore, the Clang included in the Android NDK is problematic for
-> > cross compilation Aarch64 target. The building reports multiple errors
-> > with the compiler aarch64-linux-android34-clang.
+> > In find_data_type(), it creates and deletes a debug info whenver it
+> > tries to find data type for a sample.  This is inefficient and it most
+> > likely accesses the same binary again and again.
 > >
-> > Thus, delete Documentation/android.txt to avoid confusion.
->
-> If so, maybe we can keep the document little more and add a note that
-> this works only for some old versions.
->
-> I'm also curious if it's still broken after your fixes.
->
-> Thanks,
-> Namhyung
->
+> > Let's add a single entry cache the debug info structure for the last DS=
+O.
+> > Depending on sample data, it usually gives me 2~3x (and sometimes more)
+> > speed ups.
 > >
-> > Signed-off-by: Leo Yan <leo.yan@arm.com>
+> > Note that this will introduce a little difference in the output due to
+> > the order of checking stack operations.  It used to check the stack ops
+> > before checking the availability of debug info but I moved it after the
+> > symbol check.  So it'll report stack operations in DSOs without debug
+> > info as unknown.  But I think it's ok and better to have the checking
+> > near the caching logic.
+> >
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > > ---
-> >  tools/perf/Documentation/android.txt | 78 ----------------------------
-> >  1 file changed, 78 deletions(-)
-> >  delete mode 100644 tools/perf/Documentation/android.txt
+> >  tools/perf/util/annotate-data.c | 15 ++-------------
+> >  tools/perf/util/annotate-data.h |  2 +-
+> >  tools/perf/util/annotate.c      | 29 +++++++++++++++++++++++++++++
+> >  tools/perf/util/annotate.h      |  2 ++
+> >  tools/perf/util/session.c       |  2 ++
+> >  5 files changed, 36 insertions(+), 14 deletions(-)
 > >
-> > diff --git a/tools/perf/Documentation/android.txt b/tools/perf/Document=
-ation/android.txt
-> > deleted file mode 100644
-> > index 24a59998fc91..000000000000
-> > --- a/tools/perf/Documentation/android.txt
-> > +++ /dev/null
-> > @@ -1,78 +0,0 @@
-> > -How to compile perf for Android
-> > -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate=
+-data.c
+> > index 965da6c0b542..24c03475b3f2 100644
+> > --- a/tools/perf/util/annotate-data.c
+> > +++ b/tools/perf/util/annotate-data.c
+> > @@ -1764,16 +1764,9 @@ static int find_data_type_die(struct data_loc_in=
+fo *dloc, Dwarf_Die *type_die)
+> >   */
+> >  struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+> >  {
+> > -       struct annotated_data_type *result =3D NULL;
+> >         struct dso *dso =3D map__dso(dloc->ms->map);
+> >         Dwarf_Die type_die;
+> >
+> > -       dloc->di =3D debuginfo__new(dso__long_name(dso));
+> > -       if (dloc->di =3D=3D NULL) {
+> > -               pr_debug_dtp("cannot get the debug info\n");
+> > -               return NULL;
+> > -       }
 > > -
-> > -I. Set the Android NDK environment
-> > -------------------------------------------------
-> > -
-> > -(a). Use the Android NDK
-> > -------------------------------------------------
-> > -1. You need to download and install the Android Native Development Kit=
- (NDK).
-> > -Set the NDK variable to point to the path where you installed the NDK:
-> > -  export NDK=3D/path/to/android-ndk
-> > -
-> > -2. Set cross-compiling environment variables for NDK toolchain and sys=
-root.
-> > -For arm:
-> > -  export NDK_TOOLCHAIN=3D${NDK}/toolchains/arm-linux-androideabi-4.9/p=
-rebuilt/linux-x86_64/bin/arm-linux-androideabi-
-> > -  export NDK_SYSROOT=3D${NDK}/platforms/android-24/arch-arm
-> > -For x86:
-> > -  export NDK_TOOLCHAIN=3D${NDK}/toolchains/x86-4.9/prebuilt/linux-x86_=
-64/bin/i686-linux-android-
-> > -  export NDK_SYSROOT=3D${NDK}/platforms/android-24/arch-x86
-> > -
-> > -This method is only tested for Android NDK versions Revision 11b and l=
-ater.
-> > -perf uses some bionic enhancements that are not included in prior NDK =
-versions.
-> > -You can use method (b) described below instead.
-> > -
-> > -(b). Use the Android source tree
-> > ------------------------------------------------
-> > -1. Download the master branch of the Android source tree.
-> > -Set the environment for the target you want using:
-> > -  source build/envsetup.sh
-> > -  lunch
-> > -
-> > -2. Build your own NDK sysroot to contain latest bionic changes and set=
- the
-> > -NDK sysroot environment variable.
-> > -  cd ${ANDROID_BUILD_TOP}/ndk
-> > -For arm:
-> > -  ./build/tools/build-ndk-sysroot.sh --abi=3Darm
-> > -  export NDK_SYSROOT=3D${ANDROID_BUILD_TOP}/ndk/build/platforms/androi=
-d-3/arch-arm
-> > -For x86:
-> > -  ./build/tools/build-ndk-sysroot.sh --abi=3Dx86
-> > -  export NDK_SYSROOT=3D${ANDROID_BUILD_TOP}/ndk/build/platforms/androi=
-d-3/arch-x86
-> > -
-> > -3. Set the NDK toolchain environment variable.
-> > -For arm:
-> > -  export NDK_TOOLCHAIN=3D${ANDROID_TOOLCHAIN}/arm-linux-androideabi-
-> > -For x86:
-> > -  export NDK_TOOLCHAIN=3D${ANDROID_TOOLCHAIN}/i686-linux-android-
-> > -
-> > -II. Compile perf for Android
-> > -------------------------------------------------
-> > -You need to run make with the NDK toolchain and sysroot defined above:
-> > -For arm:
-> > -  make WERROR=3D0 ARCH=3Darm CROSS_COMPILE=3D${NDK_TOOLCHAIN} EXTRA_CF=
-LAGS=3D"-pie --sysroot=3D${NDK_SYSROOT}"
-> > -For x86:
-> > -  make WERROR=3D0 ARCH=3Dx86 CROSS_COMPILE=3D${NDK_TOOLCHAIN} EXTRA_CF=
-LAGS=3D"-pie --sysroot=3D${NDK_SYSROOT}"
-> > -
-> > -III. Install perf
-> > ------------------------------------------------
-> > -You need to connect to your Android device/emulator using adb.
-> > -Install perf using:
-> > -  adb push perf /data/perf
-> > -
-> > -If you also want to use perf-archive you need busybox tools for Androi=
+> >         /*
+> >          * The type offset is the same as instruction offset by default=
+.
+> >          * But when finding a global variable, the offset won't be vali=
 d.
-> > -For installing perf-archive, you first need to replace #!/bin/bash wit=
-h #!/system/bin/sh:
-> > -  sed 's/#!\/bin\/bash/#!\/system\/bin\/sh/g' perf-archive >> /tmp/per=
-f-archive
-> > -  chmod +x /tmp/perf-archive
-> > -  adb push /tmp/perf-archive /data/perf-archive
+> > @@ -1783,13 +1776,9 @@ struct annotated_data_type *find_data_type(struc=
+t data_loc_info *dloc)
+> >         dloc->fbreg =3D -1;
+> >
+> >         if (find_data_type_die(dloc, &type_die) < 0)
+> > -               goto out;
 > > -
-> > -IV. Environment settings for running perf
-> > -------------------------------------------------
-> > -Some perf features need environment variables to run properly.
-> > -You need to set these before running perf on the target:
-> > -  adb shell
-> > -  # PERF_PAGER=3Dcat
-> > -
-> > -IV. Run perf
-> > -------------------------------------------------
-> > -Run perf on your device/emulator to which you previously connected usi=
-ng adb:
-> > -  # ./data/perf
+> > -       result =3D dso__findnew_data_type(dso, &type_die);
+> > +               return NULL;
+> >
+> > -out:
+> > -       debuginfo__delete(dloc->di);
+> > -       return result;
+> > +       return dso__findnew_data_type(dso, &type_die);
+> >  }
+> >
+> >  static int alloc_data_type_histograms(struct annotated_data_type *adt,=
+ int nr_entries)
+> > diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate=
+-data.h
+> > index 0a57d9f5ee78..40c9377fa1a5 100644
+> > --- a/tools/perf/util/annotate-data.h
+> > +++ b/tools/perf/util/annotate-data.h
+> > @@ -100,9 +100,9 @@ struct data_loc_info {
+> >         u64 var_addr;
+> >         u8 cpumode;
+> >         struct annotated_op_loc *op;
+> > +       struct debuginfo *di;
+> >
+> >         /* These are used internally */
+> > -       struct debuginfo *di;
+> >         int fbreg;
+> >         bool fb_cfa;
+> >
+> > diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+> > index 1451caf25e77..821e4b2c3bcd 100644
+> > --- a/tools/perf/util/annotate.c
+> > +++ b/tools/perf/util/annotate.c
+> > @@ -25,6 +25,7 @@
+> >  #include "srcline.h"
+> >  #include "units.h"
+> >  #include "debug.h"
+> > +#include "debuginfo.h"
+> >  #include "annotate.h"
+> >  #include "annotate-data.h"
+> >  #include "evsel.h"
+> > @@ -2313,6 +2314,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u=
+64 ip, int offset,
+> >         return map__rip_2objdump(ms->map, addr);
+> >  }
+> >
+> > +static struct debuginfo_cache {
+> > +       struct dso *dso;
+> > +       struct debuginfo *dbg;
+> > +} di_cache;
+> > +
+> > +void debuginfo_cache__delete(void)
+> > +{
+> > +       dso__put(di_cache.dso);
+> > +       di_cache.dso =3D NULL;
+> > +
+> > +       debuginfo__delete(di_cache.dbg);
+> > +       di_cache.dbg =3D NULL;
+> > +}
+> > +
+> >  /**
+> >   * hist_entry__get_data_type - find data type for given hist entry
+> >   * @he: hist entry
+> > @@ -2347,6 +2362,19 @@ struct annotated_data_type *hist_entry__get_data=
+_type(struct hist_entry *he)
+> >                 return NULL;
+> >         }
+> >
+> > +       if (map__dso(ms->map) !=3D di_cache.dso) {
+>
+> Does the di_cache need a mutex? Otherwise another thread may be in
+> this same code racing with it.
+
+The whole data type profiling code assumes single threaded
+so I don't think we need a mutex just for this di_cache.
+But I can add an assertion in the code to make it explicit.
+
+Thanks for your review!
+Namhyung
+
+>
+> > +               dso__put(di_cache.dso);
+> > +               di_cache.dso =3D dso__get(map__dso(ms->map));
+> > +
+> > +               debuginfo__delete(di_cache.dbg);
+> > +               di_cache.dbg =3D debuginfo__new(dso__long_name(di_cache=
+.dso));
+> > +       }
+> > +
+> > +       if (di_cache.dbg =3D=3D NULL) {
+> > +               ann_data_stat.no_dbginfo++;
+> > +               return NULL;
+> > +       }
+> > +
+> >         /* Make sure it has the disasm of the function */
+> >         if (symbol__annotate(ms, evsel, &arch) < 0) {
+> >                 ann_data_stat.no_insn++;
+> > @@ -2391,6 +2419,7 @@ struct annotated_data_type *hist_entry__get_data_=
+type(struct hist_entry *he)
+> >                         .ip =3D ms->sym->start + dl->al.offset,
+> >                         .cpumode =3D he->cpumode,
+> >                         .op =3D op_loc,
+> > +                       .di =3D di_cache.dbg,
+> >                 };
+> >
+> >                 if (!op_loc->mem_ref && op_loc->segment =3D=3D INSN_SEG=
+_NONE)
+> > diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+> > index d5c821c22f79..0686af637ed9 100644
+> > --- a/tools/perf/util/annotate.h
+> > +++ b/tools/perf/util/annotate.h
+> > @@ -540,4 +540,6 @@ struct annotated_basic_block {
+> >  int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
+> >                               struct list_head *head);
+> >
+> > +void debuginfo_cache__delete(void);
+> > +
+> >  #endif /* __PERF_ANNOTATE_H */
+> > diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> > index 5596bed1b8c8..f9072e003367 100644
+> > --- a/tools/perf/util/session.c
+> > +++ b/tools/perf/util/session.c
+> > @@ -36,6 +36,7 @@
+> >  #include "util.h"
+> >  #include "arch/common.h"
+> >  #include "units.h"
+> > +#include "annotate.h"
+> >  #include <internal/lib.h>
+> >
+> >  #ifdef HAVE_ZSTD_SUPPORT
+> > @@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *sess=
+ion)
+> >                 return;
+> >         auxtrace__free(session);
+> >         auxtrace_index__free(&session->auxtrace_index);
+> > +       debuginfo_cache__delete();
+> >         perf_session__destroy_kernel_maps(session);
+> >         perf_decomp__release_events(session->decomp_data.decomp);
+> >         perf_env__exit(&session->header.env);
 > > --
-> > 2.34.1
+> > 2.45.2.803.g4e1b14247a-goog
 > >
