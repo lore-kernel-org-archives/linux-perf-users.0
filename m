@@ -1,156 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04FB81DFD2
-	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 16:42:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180C5C2C8;
+	Fri, 12 Jul 2024 16:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720802536; cv=none; b=EiFG/Rw9dEalCTISe35S9FGa+rMdgU3+Xg9nfXr7iE0pJEHcqFf3W6/mjtMwJzWL8uLnAFEdNVCbXeWeAOAnPc/HjN4NiwasZnHocwUOukCHDPQqCmxgLrlUo32UC5u3V8+OLSmkq1YPP4ewUhRWKHk+nEddKbfrDqhWkDjX2wI=
+	t=1720802725; cv=none; b=Lt5A5J71PWl/1sHzeT1EkZyRHN+iKMQd07fawOd5w0wpZs5lG/QZkraE+UjXpJ/Ma7ZHdZuh/umW/ohgmDM34vXgqjHk1Xu4Aanuu5LdHazXogLFrtnfzMmQURKxk3v6aR723c3vXgdHM0oVscUrFhsu/RTIdc1bfJGaUV8bcjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720802536; c=relaxed/simple;
-	bh=ImtupmMyF6x+j7EQ5xw/Ds0DEKnBTYpHY6cVLqbwHxQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hGvxPI84SGVqqF+QqeTFDUGUw0me/VvI3kCPiPcaV96i2ojHRQqrYt+zqq+GzJyy5DfdrEnWxl58pIWx8YEAyaQHRaJGLTzE6J8p76wPE+mO65ew/wd0hpAvIKssqKj0PHTc45Yu6r4vOkeFU7WjXeqZqNsjQbxNkCayj9oug2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R3usBvGO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720802725; c=relaxed/simple;
+	bh=fz1FkdOHxXkL0jA9cpZro/NUbB3UZWCruXEUFtwB72U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PI335MHhLQSMipr5zQl9thkbvrMlbl4J/4hrJdmq05Q4BLlcsBfo1jDHS06dyIf9xyadn+ZrJA6/N2Dce7LG70hfdSeSiZJifE/WPWXDkzP6zi6OqkEvVfUyK2WYhbfQ/DluyxIrCwjUC1Qo/+0PuFEkkd4lFKG9OdavvHRUwsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T2NtIycx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R3usBvGO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEBBBC32782;
-	Fri, 12 Jul 2024 16:42:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T2NtIycx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2434BC32782;
+	Fri, 12 Jul 2024 16:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720802535;
-	bh=ImtupmMyF6x+j7EQ5xw/Ds0DEKnBTYpHY6cVLqbwHxQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=R3usBvGOXWEzjSZdK087mcTrLOVzsRv1opiPQwotdwx2kwrnw2UwnkxWRppuhpxlc
-	 hPKuLI7836emddSM+8zE8esFv8Py0zqNUMAMY14R850Xo+mTRuGh0OYczGnrjmTITJ
-	 TGzli/s+svYWu6XtRnCvCmvhaAA7oITT0+6Vkgfj7nh0flRTZHF+NOl6hpB+1R72ja
-	 bqCMvpcHyK5h39erpkbxhVHFllICuWaZOUJOT2Ei7gkXnyLcv/ylLj/uIvu3F5iuGJ
-	 oEy0SFwIGNgaF+cNpFwieGtJmp7T8h4pTHK3tYDSwu+1DJnXtKNWhA2PYL78K/b3rF
-	 MORU4IkjeMaOw==
-Date: Fri, 12 Jul 2024 09:42:12 -0700
+	s=k20201202; t=1720802724;
+	bh=fz1FkdOHxXkL0jA9cpZro/NUbB3UZWCruXEUFtwB72U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=T2NtIycx7YnG4LtxEwNouZg/UJ6Ec44PZ3iSjlW36b6oLDSqhOHo9UZF7gQqLV1fc
+	 DYQIGsY2SAPhLYs5NPrMNnG9BTqquuhDvModypusA1iME8QdatG302WYvjHOZb4m8M
+	 SmjSpseZGlLqrqxb9cx95wKI8qy/gTbiDStqz9w9W38joRf9yxJj6WGWo7XkgbK4i/
+	 hn4GKXh8LjhFwGLQkJGrGeD3YVB6YUy5oAgpCzr79GkXqn4takjEXFXpliSQ6Nd7f3
+	 hC6ZlPvcoU1TngKtTheuebTcf512N+IAB28kM8Sd2JsehFf6bqv1YyKzMBIchtis0O
+	 6fVz2d4yQyBgw==
 From: Namhyung Kim <namhyung@kernel.org>
-To: Andi Kleen <ak@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] perf script: Fix perf script -F +metric
-Message-ID: <ZpFc5Lt70CThoSaa@google.com>
-References: <20240706191857.302450-1-ak@linux.intel.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Chen Yu <yu.c.chen@intel.com>,
+	Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	acme@redhat.com,
+	linux-perf-users <linux-perf-users@vger.kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 0/3] Introduce --task-name and --fuzzy-name options in perf sched map
+Date: Fri, 12 Jul 2024 09:45:20 -0700
+Message-ID: <172080268548.2773429.10546736534878393260.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.45.2.993.g49e7a77208-goog
+In-Reply-To: <20240707182716.22054-1-vineethr@linux.ibm.com>
+References: <20240707182716.22054-1-vineethr@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240706191857.302450-1-ak@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Andi,
+On Sun, 07 Jul 2024 23:57:13 +0530, Madadi Vineeth Reddy wrote:
 
-On Sat, Jul 06, 2024 at 12:18:56PM -0700, Andi Kleen wrote:
-> This fixes a regression with perf script -F +metric originally caused by :
+> This patch-set aims to reduce the amount of output printed on the terminal
+> when using perf sched map, allowing users to focus only on the tasks of
+> interest.
 > 
-> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Sun Feb 19 01:28:46 2023 -0800
+> This helps in visualizing how a benchmark or a task is spread over
+> the available CPUs while also knowing which CPUs are idle(.) and which
+> are not(-). This will be more useful as number of CPUs increase.
 > 
->     perf metric: Directly use counts rather than saved_value
-> 
-> In the perf script environment the evsel wouldn't allocate an aggr
-> values array, which led to a -1 reference because the metric
-> evaluation would try to reference NULL - 1 (for aggr_idx)
-> 
-> Give the perf script evsels a single CPU aggr setup. That's
-> enough because the groups are always contiguous, so no need
-> to store more than one CPU's worth of values.
-> 
-> Before
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> % perf script -F +metric
-> Segmentation fault (core dumped)
-> 
-> After:
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> ...
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
-> % perf script -F +metric
->        perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
-> ...
-> 
-> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> [...]
 
-This makes perf stat test fail.
+Applied to perf-tools-next, thanks!
 
-  $ sudo ./perf test -v 104
-  104: perf stat tests:
-  --- start ---
-  test child forked, pid 2762796
-  Basic stat command test
-  Basic stat command test [Success]
-  stat record and report test
-  stat record and report test [Success]
-  stat record and script test
-  stat record and script test [Failed]
-  stat repeat weak groups test
-  stat repeat weak groups test [Success]
-  Topdown event group test
-  Topdown event group test [Skipped event parsing failed]
-  Topdown weak groups test
-  Topdown weak groups test [Skipped event parsing failed]
-  cputype test
-  cputype test [Success]
-  ---- end(-1) ----
-  104: perf stat tests                                                 : FAILED!
-
-And it gets a segfault to run manually.
-
-  $ ./perf stat record -o- true | ./perf script -i-
-  Segmentation fault
-
-Thanks,
+Best regards,
 Namhyung
-
-> 
-> ----
-> 
-> v2: Reformat code
-> v3: Avoid warning on some compilers
-> ---
->  tools/perf/builtin-script.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c16224b1fef3..95ba3f3cff60 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -2133,12 +2133,14 @@ static void perf_sample__fprint_metric(struct perf_script *script,
->  	if (evsel_script(leader)->gnum++ == 0)
->  		perf_stat__reset_shadow_stats();
->  	val = sample->period * evsel->scale;
-> +	/* Always use CPU 0 storage because the groups are contiguous. */
-> +	evsel->stats->aggr[0].counts.val = val;
->  	evsel_script(evsel)->val = val;
->  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
->  		for_each_group_member (ev2, leader) {
->  			perf_stat__print_shadow_stats(&stat_config, ev2,
->  						      evsel_script(ev2)->val,
-> -						      sample->cpu,
-> +						      0,
->  						      &ctx,
->  						      NULL);
->  		}
-> @@ -4084,6 +4086,7 @@ int cmd_script(int argc, const char **argv)
->  
->  	perf_set_singlethreaded();
->  
-> +	stat_config.aggr_map = &(struct cpu_aggr_map){ .nr = 1 };
->  	setup_scripting();
->  
->  	argc = parse_options_subcommand(argc, argv, options, script_subcommands, script_usage,
-> -- 
-> 2.45.2
-> 
