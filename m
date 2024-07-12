@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8585115DBAE;
-	Fri, 12 Jul 2024 10:21:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAA015EFAE;
+	Fri, 12 Jul 2024 10:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720779701; cv=none; b=D/rYNJs4+8z+Z9Ks5+10+4blARHTLTqKUDBP4UJGe5uNNugn+aut0I60PRjYkrAQhkBj8T/cxTuZf1icSb2MwKSfjN/XqUS6HvtMt986UCzZ++i272yY/u6Y5dC/W/J8LZSHsxdGaLfkk8wDNNELPPyN5D8EoqT1oD3Xciomayw=
+	t=1720779704; cv=none; b=i5A1QdXtHr2ZV3eaaPgcKxL/OwZBKGk1PHkj+KCZx/qYK5750CrwZGWjLFaADTul3gDDlE5rF3xWEVYDFmnEyGxXMhD7kse6VafpbqeQhiyvp0hjdRU32TBvgH79t3T+Clizl3Oa+OH/BNgbHZTzIJ9SpFFI46rihuNm69561Bs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720779701; c=relaxed/simple;
-	bh=Uz0dc8OHpJq+3744NgpGZ8C1cdwbf4ISl3iutvlILY4=;
+	s=arc-20240116; t=1720779704; c=relaxed/simple;
+	bh=7NPeKnDoJ/P82slpVaSMciOgj75XI6ViCTDAXn0KGrA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=fXkpSiOJFwRf1zJqIO+g2Cnvda2xapdvM5KKIPUxnxQO3Asrsba1c7DCkacjyatBVmeA5tyGdZTBMrdlphs83km62hHFJDY7tU/Urs78E4W74uWRt4skjBkNlXaXooQxXXBSQcJONwdIe7W/XFW2saG8MyKORcyZGcq3hdzMXN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YslZeF50; arc=none smtp.client-ip=192.198.163.8
+	 MIME-Version; b=CnKVglxDu6RNyC6eZDD7qXRJ5tPca24xNhA1GaQ2bGyvlZBYu0UuefKhB1lWPg+0c4l5fQcd/wVsLTmvVdI9F9WNj4EUJyI/9rSG6GNE55fGY4wMn+h14cjB9d/qKUnhDubC3uyymxaNzK1M7e+SRT669zDQH/NsLOe4hLr6At4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jLtCa7bi; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YslZeF50"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jLtCa7bi"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1720779700; x=1752315700;
+  t=1720779703; x=1752315703;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Uz0dc8OHpJq+3744NgpGZ8C1cdwbf4ISl3iutvlILY4=;
-  b=YslZeF50QR3mH1iK3CEbmvM2R2WYOAlQ/T7UPB8LZ/h/vhxCnG1W+tRw
-   4h4Q7HNZMBx1CZLLqAP2kP4F01AdUAsgkyxH/k7TNOEf2IQP95pNf6mCo
-   4HzfWsZD0WXMROTrNptwuCM4LKvwUcIPXjNP7wfh0TUEpD9POJV8VK2CN
-   yUyshboLHQv968t4EtQxrzstLEHKNuRsyf2pSccG1dqy0hyvMr7BP0uPE
-   4pCrGtNzj5gHh6ZME8Vzu4SM1+vkyNMbltPe+u6PgYOXEgNpwsrEw3t6H
-   SiCuOd3mug/STliSyjSHA2blgt9M7LF1uOKGw+Vfk1M72AV0U4NzR0IUr
+  bh=7NPeKnDoJ/P82slpVaSMciOgj75XI6ViCTDAXn0KGrA=;
+  b=jLtCa7bifudI+CB0oo34xYpHAZKH0ZidLvUDQHirG5qI1dU0rbaS51Gs
+   x23fFFoCQSJSteyunAj1S9nXgny8qSyRXbFTQOX7lZ6uhd66EQSuWNwAI
+   n+tlF+8vYYa2l53rZRZyF0Zpd35EZpAVUNBSwvZbZD9MGr97++60M7Cji
+   KaXhmLagW033vDkguqJcYd0aGaNnhb1p3zc9nkZxTQ03QVHjLlbaKTQoc
+   GRYiI1A22jvddcSSkvEf18Ool5hlZu79W86jsz2sUrYCc2DgUOOn4zUFI
+   0GYVxisn3aQ2VLRB70tRgKETJTlQJTjh1dXu3+8jWWfJ1yHha4WSgsz/j
    A==;
-X-CSE-ConnectionGUID: gIXWwszzS6WGC+lmpTknvA==
-X-CSE-MsgGUID: a4dNiiWXSSy8UqEZDg5T/g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="35756774"
+X-CSE-ConnectionGUID: ywjUGzueQg+AhrKY7aNJRw==
+X-CSE-MsgGUID: S/X2ITp/Ssy5dj1Cgc8+RQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11130"; a="35756786"
 X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="35756774"
+   d="scan'208";a="35756786"
 Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 03:21:39 -0700
-X-CSE-ConnectionGUID: BHy734BdRu2iVS2DbdgEkQ==
-X-CSE-MsgGUID: v1kXtj0ATsOlX8ms3FXOPw==
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2024 03:21:43 -0700
+X-CSE-ConnectionGUID: hDF+Il1bThaZ4B4g7PJcLA==
+X-CSE-MsgGUID: A2uYjbHrRaiiPLfSzNPF1Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,202,1716274800"; 
-   d="scan'208";a="79576235"
+   d="scan'208";a="79576254"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa002.jf.intel.com with ESMTP; 12 Jul 2024 03:21:36 -0700
+  by orviesa002.jf.intel.com with ESMTP; 12 Jul 2024 03:21:39 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Yongwei Ma <yongwei.ma@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v3 3/5] perf x86/topdown: Don't move topdown metric events in group
-Date: Fri, 12 Jul 2024 17:03:37 +0000
-Message-Id: <20240712170339.185824-4-dapeng1.mi@linux.intel.com>
+Subject: [Patch v3 4/5] perf tests: Add leader sampling test in record tests
+Date: Fri, 12 Jul 2024 17:03:38 +0000
+Message-Id: <20240712170339.185824-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
 References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
@@ -71,77 +71,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-when running below perf command, we say error is reported.
+Add leader sampling test to validate event counts are captured into
+record and the count value is consistent.
 
-perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
-
-------------------------------------------------------------
-perf_event_attr:
-  type                             4 (cpu)
-  size                             168
-  config                           0x400 (slots)
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  disabled                         1
-  sample_id_all                    1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-------------------------------------------------------------
-perf_event_attr:
-  type                             4 (cpu)
-  size                             168
-  config                           0x8000 (topdown-retiring)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  freq                             1
-  sample_id_all                    1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
-sys_perf_event_open failed, error -22
-
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
-
-The reason of error is that the events are regrouped and
-topdown-retiring event is moved to closely after the slots event and
-topdown-retiring event needs to do the sampling, but Intel PMU driver
-doesn't support to sample topdown metrics events.
-
-For topdown metrics events, it just requires to be in a group which has
-slots event as leader. It doesn't require topdown metrics event must be
-closely after slots event. Thus it's a overkill to move topdown metrics
-event closely after slots event in events regrouping and furtherly cause
-the above issue.
-
-Thus don't move topdown metrics events forward if they are already in a
-group.
-
+Suggested-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/arch/x86/util/evlist.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/record.sh | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 332e8907f43e..6ae044f21843 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -85,7 +85,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 		/* Followed by topdown events. */
- 		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
- 			return -1;
--		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
-+		/*
-+		 * Move topdown events forward only when topdown events
-+		 * are not in same group with previous event.
-+		 */
-+		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
-+		    lhs->core.leader != rhs->core.leader)
- 			return 1;
- 	}
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 3d1a7759a7b2..8e3e66780fed 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -17,6 +17,7 @@ skip_test_missing_symbol ${testsym}
  
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++script_output=$(mktemp /tmp/__perf_test.perf.data.XXXXX.script)
+ testprog="perf test -w thloop"
+ cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
+ br_cntr_file="/caps/branch_counter_nr"
+@@ -190,11 +191,38 @@ test_branch_counter() {
+   echo "Basic branch counter test [Success]"
+ }
+ 
++test_leader_sampling() {
++  echo "Basic leader sampling test"
++  if ! perf record -o "${perfdata}" -e "{branches,branches}:Su" perf test -w brstack 2> /dev/null
++  then
++    echo "Leader sampling [Failed record]"
++    err=1
++    return
++  fi
++  index=0
++  perf script -i "${perfdata}" > $script_output
++  while IFS= read -r line
++  do
++    # Check if the two branches counts are equal in each record
++    branches=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="branches:") print $(i-1)}')
++    if [ $(($index%2)) -ne 0 ] && [ ${branches}x != ${prev_branches}x ]
++    then
++      echo "Leader sampling [Failed inconsistent branches count]"
++      err=1
++      return
++    fi
++    index=$(($index+1))
++    prev_branches=$branches
++  done < $script_output
++  echo "Basic leader sampling test [Success]"
++}
++
+ test_per_thread
+ test_register_capture
+ test_system_wide
+ test_workload
+ test_branch_counter
++test_leader_sampling
+ 
+ cleanup
+ exit $err
 -- 
 2.40.1
 
