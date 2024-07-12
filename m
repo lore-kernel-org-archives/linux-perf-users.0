@@ -1,243 +1,150 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445D42F855;
-	Fri, 12 Jul 2024 21:27:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572DD4965D
+	for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 21:54:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720819653; cv=none; b=J12XdhxBpP6am5hRnoXqeXk+pqeQFYgh/SEk/FzLhIbXSytZSci+V1xDA8Ui6RtQ5wzwIHrMUGHfwsvFtqM3pNa/8QiTDh3CXPjW40KW7ksDpQF95rBNkRMWG6jZNJZM0br9Rq5AeVQ8gfcod6973vDowuyycB/jmx+HYfs0/j4=
+	t=1720821259; cv=none; b=YRuLlsfWm5vnDFYRZ6HE7Ddu1Vuh319kaEADzUpmGoPIxuN9M9jlUW5ya3KD+S0rA09G8SR4g2rU6n1x9oRf2RYCBAIkclOJAQMMmMnoYADDVxXBB/vzOMvKO3NlHXEAU9CACqOKtABGSO1coYDk2SoR7lAgwQ1D0rC9XQQhaJA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720819653; c=relaxed/simple;
-	bh=JMjKh9IPFgPjRTXjkgCQOr6ucOhjdNrIfRB27FfhLOc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MRGpltytQVbWHcWrNRIrUK7bEkA7mjCxrP3CxYzDAMWp4Qp1yym69J/g8K1/kmiQgr/5a7+0E/IjL06abzEgeODaazVffNWttEhCEzsyM/l97OaEej1zGpsC7mt+dD13tqfmB0R/W+uAve3UgbEIm0Y+1bHmO2HCHW6+Lxilti0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MBE23TqJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720821259; c=relaxed/simple;
+	bh=tsQDgZkmsplkNgwMoqa2heFr1bgikIskwvqiDYTOghA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sydEErRhokTIvAOF+M5YzVBMzTdfgiR6cRxRv8bpwW/b43Awi1CXw5wM8wQzBUO7Ypz/4KFFnF0CV81aoklFSN4V7xw69j0ALcX4FbtbUdqfSP5rpPLu+KIxdaSr5GuDkkQT6ipCm56wd4BB2ausR2KtNHEdx/fBt9phSfjGl+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RYjiurWy; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MBE23TqJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 208A1C32782;
-	Fri, 12 Jul 2024 21:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720819651;
-	bh=JMjKh9IPFgPjRTXjkgCQOr6ucOhjdNrIfRB27FfhLOc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MBE23TqJHdIe6hnT4w3SA5zamcgKWjhsOvSEaiUzq9NhGtIJYQ7s3EOiKflyOef/C
-	 xflKcWCJEPXs+yDWg55ID5Csuajlw0eGMEJL+nYDMtFhyirDz1+962N2SxCrGxWmRJ
-	 dMuKfBl3Z0vkq84vXSFC5dXuviP/HP3hFN0o4jfuNBLlgUYVBl2UfIswzAgy8nP0dc
-	 dryOpeTq895Z1Iumzg10J6/7gyy08ridRSViwJBUvov1mWdYRGmNy6lplZ5eqxT1m4
-	 ChE0qsTNPj+fZWVP9cTOW+OYGJys6xKU6COLl/Y5QseDcR42NOgcn84WbTt0fl+frj
-	 kLBGjlKt3VlFw==
-Date: Fri, 12 Jul 2024 16:27:27 -0500
-From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-	irogers@google.com, segher@kernel.crashing.org,
-	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH V6 18/18] tools/perf: Set instruction name to be used
- with insn-stat when using raw instruction
-Message-ID: <ZpGfvwxGh1ud6SeP@google.com>
-References: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
- <20240707144419.92510-19-atrajeev@linux.vnet.ibm.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RYjiurWy"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fb67f59805so21675ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 12 Jul 2024 14:54:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1720821258; x=1721426058; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9YlmUbz8j1/lbJax8GeWhLbj2yGs75ISpC4OOkpQ7cY=;
+        b=RYjiurWyxrN/3kZ47P8D+3fsnwc5oRUz19ZxqHN/45jxA5nc4V+6zZxpyRhoIyFI3R
+         68JkH39sddd9irM1qCcGlz1taKxvOt/w6fOzlRCSL+14BsgBSerhOu64IQonc43Z7OMm
+         qrI/h08iWN9OIcY/LFa3jT71T2c+Zf1U0LEN02Exf072j8jqx7MvWF4WwzmAb8VTiuug
+         QMM25X5Kw887L04Dv2xdyi7aqWaavaNDgGm5VVcVA0oFrDwPA77dzoiKS6Q1dmhjZvIA
+         ZBM9uRONAWOjSw8z4BOAVmVRayyd+PbKd1UiIR85whpTZsTpHbz/eOUQEILhWkl0RpoD
+         PVIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720821258; x=1721426058;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9YlmUbz8j1/lbJax8GeWhLbj2yGs75ISpC4OOkpQ7cY=;
+        b=wgdbFfmRUtvrh0oX1FhwJj0dK8PTVQ//Rjydbcao1NlTCXRnrSowzsDxGsevUuN9XD
+         qQUU+UrHe5x5H9vZCIsketk0KbMF3EvV0yxziMCwIeyOnJpT5n7ga2cRXvryf/ZzBfV0
+         8Yzl7NOySFMhGUlGIaBpb+pxuBkZG/uEvnI2kmG7RSo2G9AoYuy2mchFqcJhGhsIRwfm
+         WbtsOGubXEKXJlUb8k9P/XFwnIXN1v9MmRAafqI8+0NH0UJGBionoyX8C18lGNCGMvaQ
+         6cO3mr8MugLHdJsd5KlIoFj2obT6eKBej1uXzCXihE4UXotKiDUens4pxuctKnUseIdv
+         esLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVgp9/+gvrAcg0HxN3fepJlHTOPPt0YHspOLQJVJKOudkPVNoDmpdCLyhjbKVvcLEnNkwIpOJekXPZALBy5m43Hw3JFSE5mhuSLYh67Ab6Q/g==
+X-Gm-Message-State: AOJu0Yw5V8Vw86hgFhy3J1b1PYqGC6dA8bPf9Q0h2TJ4a1zSV2/0mRji
+	L50MDo2PlwhFOKs9GYHLa5pkL3y24M1JxCVJG1kA7Hg/dtdZH9m6eLmwecNFBQjSvGKnzw3dNaw
+	UZszQA5560e6lNC0la7t8zTdM69vv7Cjp9ami
+X-Google-Smtp-Source: AGHT+IHRPpWrjj2VHcLDX0ZFmAdcPcTmoCmhUHbzOxMGi3ywkPYFJ/M6ecUH4CBQQrp0wjaZ14KFG8zFIF/AO9vFRsY=
+X-Received: by 2002:a17:902:e749:b0:1fb:d79:fe1f with SMTP id
+ d9443c01a7336-1fc05a6f6b9mr830715ad.24.1720821257244; Fri, 12 Jul 2024
+ 14:54:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240707144419.92510-19-atrajeev@linux.vnet.ibm.com>
+References: <20240531194414.1849270-1-l.stach@pengutronix.de>
+ <8b31bc0823df42e1ef4c22eac159fa58694887c7.camel@pengutronix.de> <ZoXRr9wcE98ijyFA@google.com>
+In-Reply-To: <ZoXRr9wcE98ijyFA@google.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 12 Jul 2024 14:54:05 -0700
+Message-ID: <CAP-5=fWxuPW1WGSOV-wqYXJ-4kiwefujprnGn3YfVzO+62-i-Q@mail.gmail.com>
+Subject: Re: [PATCH] perf jevents: return potentially empty metrics table
+To: Namhyung Kim <namhyung@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, 
+	Leo Yan <leo.yan@linux.dev>, James Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, patchwork-lst@pengutronix.de, 
+	linux-perf-users@vger.kernel.org, kernel@pengutronix.de, 
+	Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Jul 07, 2024 at 08:14:19PM +0530, Athira Rajeev wrote:
-> Since the "ins.name" is not set while using raw instruction,
-> perf annotate with insn-stat gives wrong data:
-> 
-> Result from "./perf annotate --data-type --insn-stat":
-> 
-> Annotate Instruction stats
-> total 615, ok 419 (68.1%), bad 196 (31.9%)
-> 
->   Name      :  Good   Bad
-> -----------------------------------------------------------
->             :   419   196
-> 
-> Patch sets "dl->ins.name" in arch specific function "check_ppc_insn"
-> while initialising "struct disasm_line". Also update "ins_find" function
-> to pass "struct disasm_line" as a parameter so as to set its name field
-> in arch specific call.
-> 
-> With the patch changes:
-> 
-> Annotate Instruction stats
-> total 609, ok 446 (73.2%), bad 163 (26.8%)
-> 
->   Name/opcode:  Good   Bad
-> -----------------------------------------------------------
->   58                  :   323    80
->   32                  :    49    43
->   34                  :    33    11
->   OP_31_XOP_LDX       :     8    20
->   40                  :    23     0
->   OP_31_XOP_LWARX     :     5     1
->   OP_31_XOP_LWZX      :     2     3
->   OP_31_XOP_LDARX     :     3     0
->   33                  :     0     2
->   OP_31_XOP_LBZX      :     0     1
->   OP_31_XOP_LWAX      :     0     1
->   OP_31_XOP_LHZX      :     0     1
-> 
-> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> ---
->  .../perf/arch/powerpc/annotate/instructions.c  | 18 +++++++++++++++---
->  tools/perf/builtin-annotate.c                  |  4 ++--
->  tools/perf/util/annotate.c                     |  2 +-
->  tools/perf/util/disasm.c                       | 10 +++++-----
->  tools/perf/util/disasm.h                       |  2 +-
->  5 files changed, 24 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-> index af1032572bf3..ede9eeade0ab 100644
-> --- a/tools/perf/arch/powerpc/annotate/instructions.c
-> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
-> @@ -189,8 +189,9 @@ static int cmp_offset(const void *a, const void *b)
->  	return (val1->value - val2->value);
->  }
->  
-> -static struct ins_ops *check_ppc_insn(u32 raw_insn)
-> +static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
->  {
-> +	int raw_insn = dl->raw.raw_insn;
->  	int opcode = PPC_OP(raw_insn);
->  	int mem_insn_31 = PPC_21_30(raw_insn);
->  	struct insn_offset *ret;
-> @@ -198,19 +199,30 @@ static struct ins_ops *check_ppc_insn(u32 raw_insn)
->  		"OP_31_INSN",
->  		mem_insn_31
->  	};
-> +	char name_insn[32];
->  
->  	/*
->  	 * Instructions with opcode 32 to 63 are memory
->  	 * instructions in powerpc
->  	 */
->  	if ((opcode & 0x20)) {
-> +		/*
-> +		 * Set name in case of raw instruction to
-> +		 * opcode to be used in insn-stat
-> +		 */
-> +		if (!strlen(dl->ins.name)) {
-> +			sprintf(name_insn, "%d", opcode);
-> +			dl->ins.name = strdup(name_insn);
-> +		}
->  		return &load_store_ops;
->  	} else if (opcode == 31) {
->  		/* Check for memory instructions with opcode 31 */
->  		ret = bsearch(&mem_insns_31_opcode, ins_array, ARRAY_SIZE(ins_array), sizeof(ins_array[0]), cmp_offset);
-> -		if (ret != NULL)
-> +		if (ret) {
-> +			if (!strlen(dl->ins.name))
-> +				dl->ins.name = strdup(ret->name);
->  			return &load_store_ops;
-> -		else {
-> +		} else {
->  			mem_insns_31_opcode.value = PPC_22_30(raw_insn);
->  			ret = bsearch(&mem_insns_31_opcode, arithmetic_ins_op_31, ARRAY_SIZE(arithmetic_ins_op_31),
->  					sizeof(arithmetic_ins_op_31[0]), cmp_offset);
-> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-> index b10b7f005658..68e929d4746e 100644
-> --- a/tools/perf/builtin-annotate.c
-> +++ b/tools/perf/builtin-annotate.c
-> @@ -396,10 +396,10 @@ static void print_annotate_item_stat(struct list_head *head, const char *title)
->  	printf("total %d, ok %d (%.1f%%), bad %d (%.1f%%)\n\n", total,
->  	       total_good, 100.0 * total_good / (total ?: 1),
->  	       total_bad, 100.0 * total_bad / (total ?: 1));
-> -	printf("  %-10s: %5s %5s\n", "Name", "Good", "Bad");
-> +	printf("  %-10s: %5s %5s\n", "Name/opcode", "Good", "Bad");
+On Wed, Jul 3, 2024 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> On Mon, Jul 01, 2024 at 07:19:55PM +0200, Lucas Stach wrote:
+> > Hi,
+> >
+> > has this patch fallen through the cracks? It fixes a functional
+> > regression where the DDR controller metrics are completely unavailable
+> > on all i.MX8M* systems and thus would be nice if someone could have a
+> > look.
+> >
+> > Regards,
+> > Lucas
+> >
+> > Am Freitag, dem 31.05.2024 um 21:44 +0200 schrieb Lucas Stach:
+> > > Don't return NULL when a empty (num_pmus =3D 0) metrics table is enco=
+untered,
+> > > as this causes many of the users to bail out, which will skip matchin=
+g any
+> > > potentially existing sys metrics later on. Instead return the empty t=
+able
+> > > which will be handled properly by the iterators and allows matching t=
+o
+> > > continue.
+> > >
+> > > This fixes metrics reporting on systems where only the sys, but not t=
+he
+> > > core PMUs have metrics defined.
+> > >
+> > > Fixes: f20c15d13f01 ("perf pmu-events: Remember the perf_events_map f=
+or a PMU")
+> > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+>
+> Looks ok to me.  Ian?
 
-It should be "%-20s".
+Sorry I missed this, I expect to see patches on LKML and so my email
+filters placed this elsewhere.
+
+The change doesn't make sense. A search is requested with a PMU and
+you return success (the table) when there is no PMU match. If this
+behavior were expected then NULL should be passed as a PMU - this is
+the behavior in util/pmu.c and ARM is the only architecture to pass a
+PMU. The ARM pmu_metrics_table__find also specifically breaks
+heterogeneous (BIG.little) systems and this change won't impact/fix
+that. Perhaps there is some context I lack.
 
 Thanks,
-Namhyung
+Ian
 
-
->  	printf("-----------------------------------------------------------\n");
->  	list_for_each_entry(istat, head, list)
-> -		printf("  %-10s: %5d %5d\n", istat->name, istat->good, istat->bad);
-> +		printf("  %-20s: %5d %5d\n", istat->name, istat->good, istat->bad);
->  	printf("\n");
->  }
->  
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 8db2f32700aa..e1f24dff8042 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -2229,7 +2229,7 @@ static struct annotated_item_stat *annotate_data_stat(struct list_head *head,
->  		return NULL;
->  
->  	istat->name = strdup(name);
-> -	if (istat->name == NULL) {
-> +	if ((istat->name == NULL) || (!strlen(istat->name))) {
->  		free(istat);
->  		return NULL;
->  	}
-> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> index 63681df6482b..cd283c42195c 100644
-> --- a/tools/perf/util/disasm.c
-> +++ b/tools/perf/util/disasm.c
-> @@ -859,7 +859,7 @@ static void ins__sort(struct arch *arch)
->  	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
->  }
->  
-> -static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_insn)
-> +static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
->  {
->  	struct ins *ins;
->  	const int nmemb = arch->nr_instructions;
-> @@ -871,7 +871,7 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
->  		 */
->  		struct ins_ops *ops;
->  
-> -		ops = check_ppc_insn(raw_insn);
-> +		ops = check_ppc_insn(dl);
->  		if (ops)
->  			return ops;
->  	}
-> @@ -905,9 +905,9 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
->  	return ins ? ins->ops : NULL;
->  }
->  
-> -struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
-> +struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
->  {
-> -	struct ins_ops *ops = __ins__find(arch, name, raw_insn);
-> +	struct ins_ops *ops = __ins__find(arch, name, dl);
->  
->  	if (!ops && arch->associate_instruction_ops)
->  		ops = arch->associate_instruction_ops(arch, name);
-> @@ -917,7 +917,7 @@ struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
->  
->  static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
->  {
-> -	dl->ins.ops = ins__find(arch, dl->ins.name, dl->raw.raw_insn);
-> +	dl->ins.ops = ins__find(arch, dl->ins.name, dl);
->  
->  	if (!dl->ins.ops)
->  		return;
-> diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-> index c1bb1e484bfb..f56beedeb9da 100644
-> --- a/tools/perf/util/disasm.h
-> +++ b/tools/perf/util/disasm.h
-> @@ -105,7 +105,7 @@ struct annotate_args {
->  struct arch *arch__find(const char *name);
->  bool arch__is(struct arch *arch, const char *name);
->  
-> -struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn);
-> +struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
->  int ins__scnprintf(struct ins *ins, char *bf, size_t size,
->  		   struct ins_operands *ops, int max_ins_name);
->  
-> -- 
-> 2.43.0
-> 
+> Thanks,
+> Namhyung
+>
+>
+> > > ---
+> > >  tools/perf/pmu-events/jevents.py | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events=
+/jevents.py
+> > > index e42efc16723e..0a1ed9ee1429 100755
+> > > --- a/tools/perf/pmu-events/jevents.py
+> > > +++ b/tools/perf/pmu-events/jevents.py
+> > > @@ -1081,7 +1081,7 @@ const struct pmu_metrics_table *perf_pmu__find_=
+metrics_table(struct perf_pmu *pm
+> > >          if (!map)
+> > >                  return NULL;
+> > >
+> > > -        if (!pmu)
+> > > +        if (!pmu || !map->metric_table.num_pmus)
+> > >                  return &map->metric_table;
+> > >
+> > >          for (size_t i =3D 0; i < map->metric_table.num_pmus; i++) {
+> >
