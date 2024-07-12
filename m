@@ -1,209 +1,341 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2083.outbound.protection.outlook.com [40.107.92.83])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2953A8BE5;
-	Fri, 12 Jul 2024 03:31:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.83
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720755064; cv=fail; b=LxuIPnwUyKHtZVzYfWthw0eAcdHVC4g4E7y+/nkgKcmOgSnenp+OqugqlG75p7btj3OJfURBhpmp8JgjUFmruFJOQEaIxdUWb6/8y+MZRVsUJEPYlvxXrYz+ncB2X4RgHvwXdJiK0cudAst4E9C+JqHbVARjFNUNf7iJ4qWf/HI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720755064; c=relaxed/simple;
-	bh=RHt63JxDVqN1nUt+pYSHIjJjtayywuRVg+RcwUNk7QU=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=pjCLplAosXH54nUFEy1GZNWyWzO55H1Vo0H+yVr0Dmjdj0cOBRSuWfEtDhAO3oeI4txu69yu3Jq/VMwa9kMAgEBI6y6e1MnUDs0NxfDCKYPqHzQBrCp3NEUo1t25xhVBYWjehGebYtH0IqHWlVx06nqh/7UMfYx28CccDn+KZmc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=fe+SO6KS; arc=fail smtp.client-ip=40.107.92.83
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="fe+SO6KS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=uLfT7Zrsuebj01JyyrXcl+ovOUWSqhX7o0XxwN2Z9Hs1OTysZFYV6lWC7v+M2ll+e7W2UhZjIUduq+p7f3J+rUTV3QJxeJxyiaOeG3BoBZ+CMYf7IopYF4L8krhUDDi3p1e6CONu04R9hAiHf3I919ApUEjnrzmoVpRhYyVvEPJj/pHbzB2m4hjV/4/MP8C/HE4I1wJy2wgIU+56TKteMpeTtkLyREibcms0kLC86/pfyGauaB2QODHTLDQe5h1jOOvaJgA2PPV5z3F0wVcKVss1XGfRYeDi/9M1XgLXu9hYS7lw94s+KksfKtR1mX/0RcI0BidYUyNy1dx2YOF+vQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WSgFffbLBj43OyCA6q3/TYYwz5vCG3huL+M8gVeTOHM=;
- b=lc3csemNGH5UwCz+Qjq6o3WBS8coSXPZBa4TKANoBPvqnKAKj7nMMxazx/K4fTAmwDcclg+foNHNTjsUJtNO5Ba/ooSksnuzSn+qIjrrTl2MdrIEY8uAvEC45d93D1dBwiM/vNnnflOSTmf8FcLMKwPIo+L/rx7hl/rd3DDB7Ok3gUu7BnKcPInjLWFbeHPltS/2oMKMl8vrSuLZxdWp7m+u8R32KMGQJjbRq+JBicSWr++DdbW49boJJig4CUchse586LoM3QPe0j9aGh20kjz1QGPB/d/gOOXKeANPOfl5mBnse1ODZoaGo5iwdEiZ8qNMiEEIg+PmXvTNwr3Aag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WSgFffbLBj43OyCA6q3/TYYwz5vCG3huL+M8gVeTOHM=;
- b=fe+SO6KS2T26Hoo3I0keMwB+4xI9izdZ4s3vSjK8jQ/aBRNZAgdctIDXrdXpPeNzhQgqdOTW9iiHwJLqkFVMbuTfBCsSxrsphjxlaMdnvrVJ2eqsGq0/bL4+BqdyvzK/tBrO7otv9q4LMP14KsTy3FFrGk/EhQjICZ3xjh6q8lQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by IA0PR12MB8088.namprd12.prod.outlook.com (2603:10b6:208:409::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.23; Fri, 12 Jul
- 2024 03:31:00 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.7762.020; Fri, 12 Jul 2024
- 03:31:00 +0000
-Message-ID: <96c20328-6227-4076-b6f3-98e05319c729@amd.com>
-Date: Fri, 12 Jul 2024 09:00:49 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 05/11] perf/x86/rapl: Move cpumask variable to
- rapl_pmus struct
-To: "Zhang, Rui" <rui.zhang@intel.com>,
- "alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "Hunter, Adrian" <adrian.hunter@intel.com>,
- "mingo@redhat.com" <mingo@redhat.com>,
- "irogers@google.com" <irogers@google.com>,
- "tglx@linutronix.de" <tglx@linutronix.de>,
- "gustavoars@kernel.org" <gustavoars@kernel.org>,
- "kan.liang@linux.intel.com" <kan.liang@linux.intel.com>,
- "kees@kernel.org" <kees@kernel.org>,
- "mark.rutland@arm.com" <mark.rutland@arm.com>,
- "peterz@infradead.org" <peterz@infradead.org>, "bp@alien8.de"
- <bp@alien8.de>, "acme@kernel.org" <acme@kernel.org>,
- "oleksandr@natalenko.name" <oleksandr@natalenko.name>,
- "jolsa@kernel.org" <jolsa@kernel.org>, "x86@kernel.org" <x86@kernel.org>,
- "namhyung@kernel.org" <namhyung@kernel.org>
-Cc: "ravi.bangoria@amd.com" <ravi.bangoria@amd.com>,
- "kprateek.nayak@amd.com" <kprateek.nayak@amd.com>,
- "gautham.shenoy@amd.com" <gautham.shenoy@amd.com>,
- "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-hardening@vger.kernel.org" <linux-hardening@vger.kernel.org>,
- "sandipan.das@amd.com" <sandipan.das@amd.com>,
- "ananth.narayan@amd.com" <ananth.narayan@amd.com>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
- <20240711102436.4432-6-Dhananjay.Ugwekar@amd.com>
- <3cd5daf2424205564be29d9d23644b693eb9f355.camel@intel.com>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <3cd5daf2424205564be29d9d23644b693eb9f355.camel@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN2PR01CA0074.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:23::19) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16431094E;
+	Fri, 12 Jul 2024 03:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1720755382; cv=none; b=dorrfQhdOu36ZCxmktQVCybeG2a+PmJ3TT06NO5rsiTW2GLlLjxcL6/K2ixH7ClZ5UbOPcqFta6hpIgU51JyWjVLBV6n4/u1KN0hVbXBgG/H801olcimhF2GyK7jeGYGKhnxAYPomsjWwgjXiB5YMMC1Tnvq8qxqy6EjoPgIZmM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1720755382; c=relaxed/simple;
+	bh=BTJ2cZncawS4tqR8I2MTnQpwo+tkcqaRSSX+MM2U64w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HC7w2exHhFkfO0jEibKn4TeaXZ8nlsB147U0u+t91k0dM3uLZi09bIwZ+BOwnfKXaxwTWJmj/9zXbJ0QhWw5rK0TpmwK+C9IeqpRWiPH7XXhanXXMVV7kxTKs9R4HohG0BfUqdUY+5TIFhQbgkjaTyOBVaO8orOg1/7hstnpL5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-75fe9e62048so1020406a12.0;
+        Thu, 11 Jul 2024 20:36:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1720755380; x=1721360180;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TLgTqSjRR6bZolbavREdZi3jC/l5jD46pdlsf/aPCyw=;
+        b=jT7f3e6ewrwzuwZWBLqNU4LZSBAnHUcfFx5luKrOpjDcbBffiNG8vXWQZlLWBid2V+
+         yW8sRIX/f/B9J1FgndfQRxqwgaBngHAeZAA2pp0SLV8zZloC4el5EjgUQDog/e7VlrfS
+         MCCKZ1v3tUpVLB4536DIb221gK/HLSNuxnS6C4nC3QRCSfHZNkV94e7GDwqE/wYnAyil
+         vLziIvsuz7JaScdPMNxnI7nWbuFSdeI6wlt2vSDIXWaFoXnzpZrwQQid392F2aHh89Aj
+         YKdg/CbmYi9pFLR0s1G1siBvwNoyNj9+qH4Sv4lofa+y6EncLoDybWCxMm366h8bF0Q+
+         Xz0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUg9njNTq/0V/Llo9d4SHXWKSW68zcb6FscCR7c+a4oxy52sCZBOJhoHi7i7GixG7FD3lFa1t5XnpTeEX/bDrZFgSxWytgeQzRLCB1/IzdIfO19OULSm87DFmAdpMH6MpPhnl60ds759x71qkrGzw==
+X-Gm-Message-State: AOJu0YyjmAmFNLdHoYmUuKABojsfbz/6TLnO/XNEKJG8UBzQxbtFovtU
+	HeqkdPHpSyUSeGk2ZGXoA5Npkf5IaRlPR8nnvMUyKwaLGR8t9eHsu3LLGMWBY3eiTKqhWcMXEYz
+	OmpfjgBQRpaJLOb7BRIgRswn3Efo=
+X-Google-Smtp-Source: AGHT+IHGRMUwgH3mYziYbxIXHOosb/n6iJ/naP+S7UMSV5A5ozAIQE9lrrGbXIB3/vBFxRuapdX+jLcuBGQdDgggXZY=
+X-Received: by 2002:a05:6a20:7484:b0:1c2:8d0a:8e9d with SMTP id
+ adf61e73a8af0-1c29820b872mr12042363637.7.1720755380020; Thu, 11 Jul 2024
+ 20:36:20 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|IA0PR12MB8088:EE_
-X-MS-Office365-Filtering-Correlation-Id: dab2d5f3-c550-45c9-2be6-08dca2230cc9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eVlJck1nUUhnSVp6TUtvVGE2Q1FQWTFNMjY2bjlYNXIraXNBOWZqb2hpbHdD?=
- =?utf-8?B?M1dxMUNkTlBXNmdqVU5BT2pjMnFzaXJFOERuQmhyR2FXTXNtanpSNVdlMXM0?=
- =?utf-8?B?MEFaYVp6UFdvbDZ2QlZncXRiRTVyQWRmY1NnTVl1V2hZWm5rUTgrMklYVm5r?=
- =?utf-8?B?N2VScEJxbkNYa1BpSERxMkI3NFhMVVZNZ0xTcHVlUDR4Q0RuUGZuOEJTWmdX?=
- =?utf-8?B?RzJ2ZzdXRkhGbjk2NXhpRkVyeGUwR0V6VkNSRHFRRnRRbXFyRU1nM3hrTldN?=
- =?utf-8?B?SEpUbXV0eDdVMDVMbW1xdEpwUGtDNVI4d0FZWkJjYVh3T2JJWjNBSkdQUHhI?=
- =?utf-8?B?REZZemEvU0JNcWtmQlQwTjlDdDQ5enRMS3J2aS81bS9QclhWVFVKSFliWUJk?=
- =?utf-8?B?NjYzQi81WkswSW1uOHkwbm95Wm9NQXF2YnNucjlUOThTclFXTHhsd3FsR2Iz?=
- =?utf-8?B?SDRNZk54dU84RG14RU5Pc0lpVXUyUGxLV1pYWmpvZk1LcS9hS1NPNW8zU1Qv?=
- =?utf-8?B?YUh2ODZoZkhxZ1FqYTBxOGFid2JsUHpubnpwSkx0K3hCNXhmYVZXQjdiRjUy?=
- =?utf-8?B?cmYybWxZZjJtTlNub252TnpkbjdFN3JDZmgyUjdISURlMFg2MElUd0F1cVla?=
- =?utf-8?B?UEpVRGhjZWNUZmpGYmVyWEZBaG9iTXBRK3kra0JtaFU5R0kyUUs5YzRySFFn?=
- =?utf-8?B?b0tQWFdvS3NKbWZIbVUrVnJmZytEcEx5T0dlV3g0ZFFlZkdCZCtmK2NKSmVQ?=
- =?utf-8?B?b2duaUtvV25WdmtlRDRSdXlzOS92anBMLzgrZG5IelVHRERkV0s3Sk4vd001?=
- =?utf-8?B?Z1krWFBSTFRWcDNRVm9CdllnaWZEU21tdUtPckZDTEFkRnNxbW1vRE1jcHdO?=
- =?utf-8?B?UzRGdnBZVFp4QmQ4dVE3VjVFdWZHYk8xZE1aQU0yc1lITXhva1Qyb0RmOER5?=
- =?utf-8?B?THcvUm9CRkN0Nm8weEhSaG1OMThIcHF4bC9jaTFhU25qWGlnRXlhRXBoamNW?=
- =?utf-8?B?dWpyZ3d6WU00TndKNVUxNm1nQmlMZFhpOXZDeGhWdFA0QU4yK0h3dlVvOURy?=
- =?utf-8?B?M2xGZjRpUWZWNXVFUTJBclhpWGt1QkFpdFh5NmZFWXFVeHZYcGQvU0diK3lQ?=
- =?utf-8?B?RGdrWjN5WllGeG9MWHhUanVwajEvRFRIT1hwbE03RzdSZHhsanRmeG1wWW00?=
- =?utf-8?B?dVY2M2dEYlNmelVlTlB3UW9rcVZCYndOd2FGMzVQUTdxa0ZvOGxuSGwzQmt2?=
- =?utf-8?B?OEhhZXlRZUo4S1p5VThyKzRLdlNNRmlaWlNKTzNlaXJidVZRV1dubkVCbFdP?=
- =?utf-8?B?azNXNzRMNldFaW1Bd0JIMTBMYnJhTmU2MTB2MjhyM1ByTnVLdldtbVdMQ1Jl?=
- =?utf-8?B?SXhHVXJzUUdqdklBenA3dEdGQ2VtRFNWbzQySzhzdC93ZjVmOFQ5VFJiamc2?=
- =?utf-8?B?R20yeVFJeWRIb1M1cHAyR1haODFCWHBleUlKMWVjbzJQUEJ2dTJDN1BiWnND?=
- =?utf-8?B?SVNJUDRLaUxmVUU0akg4TnhFem45cEpWOWZQMDhUR1RaNDhtVktvd3c4azR1?=
- =?utf-8?B?Wk0zb2dSeVAzVzVSSXBSRnNrMEUxTlk4S21xWEU3bmdwc0dDZW1SbXgvNkxV?=
- =?utf-8?B?ZFVPK0xoNTV5MTNiNk5IUXFmbkZtWUVyOHFYUE1FRHNGeW5TZDduamZZcytl?=
- =?utf-8?B?TXVsaXlzejlIN056OXZCSFgrdmlpK2YvME52b2MzZVNtZEZnRFJHSXY4ZFhn?=
- =?utf-8?B?ZC81NFpnb2M0eTVOZHo1NVhGaU1LRU1ybFVod0Ewc0IxdUdiUW1DLy8xb2w0?=
- =?utf-8?B?bW5mT0pWdVpMcHRndUU3UkRFYm9INXh4cmxTNU14Y3QzNjFCZWdicGY0SmNl?=
- =?utf-8?Q?FFupKyn3dQQRH?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?TVRvckZPTkx0VUxrZTFMck5icDY1UUswWWtDeTU3M2daOG1HU3hkNHgrTnpj?=
- =?utf-8?B?YXFnL2lYbWtZMlBlV2k4Vm9zNGxxemJLcGJkei9HUGNiZ1B2NzY4OTZoYVA4?=
- =?utf-8?B?YVZXakFnOTFuZFhDQjNWTmxjWWJraXZmVEJaMW1xZWFXZmdsVWlxMW1EeDIz?=
- =?utf-8?B?eHUzeVoyaWRqcjFSZUo5QlFmeWlQbUR2RFFHOStPZnEzUGpzL0cvRE5tYW9a?=
- =?utf-8?B?N21HMTBrbGU0UDJCTkoreEFBTktmMHhMVzNMRWhsckM3anhkc25VUzMwc1NW?=
- =?utf-8?B?VHB2YkNZQlA3dGtMSDQvTGRuVFRPUUFwTEpqdXN3RUFPWHQwYXRJZzNGcm5N?=
- =?utf-8?B?dHUvbERIczlUNDhNR0ZWR2d6VWl0TytHais1Q3J5aU5OTGNxSTRDUnZSdFR3?=
- =?utf-8?B?anR5WVd6bnlVakUvWHc3eFVZd0l6QVh6eHYrTCsvWkNDVlo3VklMTklLU1Fr?=
- =?utf-8?B?Ly91T2VoTmNiTHBxbFAzaTVaZVFtWFI4YVhCNHZmMUV4UUZVVWRndE9NenR4?=
- =?utf-8?B?aVVDQnZxZTloL3lJYkdiMWFSNWJnWWluRkF3VW5lZldhdStrQ1ZhY0dtcmxl?=
- =?utf-8?B?U3luSnFTWWlnZ0VHcmlsT3plS1d5cHR6SDBJSm9qUWtac2QxRHNDS3lUM3JL?=
- =?utf-8?B?ZGYyTzRSaG9mRU9yL3ZpaThRZWVEbFgrYWNuMjdUZ3d6bnYxMXgrcmkwWHpW?=
- =?utf-8?B?ODRzaE9mTS96NWxxMGtaVGtxTFlQMHQwdVV1Y1Jzd2xOc2xzUmMzNlVVRGZp?=
- =?utf-8?B?SEZQM2pyWndGc2RaSW9SaXlmc2RtVER3RnVWb2VTaU5rZFZQcm9EVlJUYWh2?=
- =?utf-8?B?bzhWNzBVY0lBNzlOelFodDZxYlpyL0U1TlR3Z01MTlBpNkl5bURvZ28xZ25X?=
- =?utf-8?B?RFBIdisrdEpTbkRHSlUyUDVzZWhHWHdBQm8yaGEyR1BYWENvYTVLZndpTCs0?=
- =?utf-8?B?ZldORUJEOGdvT3JZb29adUhYYlZCSEMzbHNqUGwwUEo0S2Z0WWxORU9WTm81?=
- =?utf-8?B?Um1TT0lZTkx4ZC80YW9IcHVaZVFFMDg3cXhVWUwwNE8waFkxdXlZN1JEeXhM?=
- =?utf-8?B?Z3VvSzZSSEl4TklhdFV3MlNObWF1eEpNQkVSVGhOTWxGdm90TzVoMHBXSm1K?=
- =?utf-8?B?Vy9rNE5nVjFqVWRxRVdhRy9oYW1iMEFjTjJocHltM0dLb1dVanVyVmJ4a0lX?=
- =?utf-8?B?bHMxZjVBclZKUjl2TjJuK2ZEU09wdWZXVjNPNlRWZUhZWHFneHFSOEFyZXlv?=
- =?utf-8?B?clkySCtlU2hndzZ0Wmk1T2lrck1RL3F4M1o0c3plN0tGRGFHaXFCR2J3eURJ?=
- =?utf-8?B?UU9PSzdQL0hrUnQ2RkFUS29MdlhSWlk5Qmo3b2EvTjN0WXhHeUgya2NNL0kw?=
- =?utf-8?B?aEVOTWpvMmFVUHFDZUF0YXVBWnpTbnFGRGdJMEVnQVlDaHc3UVhWZHdJUmZF?=
- =?utf-8?B?QkZOQXdGK2NaMktGTitwWnRvallqVEswelRkejFLemtaa0dJNkdkaFA5SVFQ?=
- =?utf-8?B?MzUzS09OakJpUk9ibWFONWFTWVY1VnBya0hzWmpmK3JBeWRvSzgxQnB1Qkh4?=
- =?utf-8?B?YUFRUDVFS0NWZTJIZW53S1FlSTlRVWVtdHpPYzNhdFdGOUxWeHhoUnkwUXkz?=
- =?utf-8?B?enZJdWYrdVhUYWJwWWNzQUgvV2NUL3FXR1hXMGtsL0VvbkxrYVRHUGVVSk5T?=
- =?utf-8?B?Z0JXZE5TSHk5WmZzaGpVVWFZZnc3TnZTQVRyNUNHY3kwKy9MVjFmckdKVXhS?=
- =?utf-8?B?K1hDQ3pHc3JUZGJFajd4Z04xZ3dCYmdBRk9DNWlxajJBbkRlMndnYmZEYUsx?=
- =?utf-8?B?dUlWYmFaS1Fzc2R4eS96NTN6VDRQallFUDlHTnh0SWFodjlnQkVEbnNkV0xB?=
- =?utf-8?B?ZkROcGYzRlFFZ3FOOVVHY0lsOHJlc0wwQ25PbnYrYmtGcDVKRlVTVkF5b0pB?=
- =?utf-8?B?QVpwS2JteTN0RVUxek16MmlSandxbXcrN1d0Q2JtMGRrWjNuYW1NSlhpT2oy?=
- =?utf-8?B?NzBDUjcyYWZWQTkzZE5NS1MwOExvZUhzaHZ5TjRnWko3VTdWS2tWUHVKN3lL?=
- =?utf-8?B?OFh2eVp5RTNTSTRETytIeTFGVkFTLzZTWTltK01Xdy9PZVZzOUQ4MC9McTZZ?=
- =?utf-8?Q?gT7UKaPu9VR4a4kIXASW26opx?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dab2d5f3-c550-45c9-2be6-08dca2230cc9
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jul 2024 03:31:00.4720
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4EyJcLZ0OBNLLKqkxB43Ioy/rjWEc2bZo4KcWzypg4eNDWD4G2iB2cKF62ZkXkvdfjU5NP/ys5eZhqP3GVsuiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB8088
+References: <20240706232956.304944-1-weilin.wang@intel.com>
+ <20240706232956.304944-9-weilin.wang@intel.com> <CAM9d7chhVAG9wpWdQM4DRriM_kp9vjFj=_ak1+0qyO-sRdXs4w@mail.gmail.com>
+ <CO6PR11MB563567A7804F50AD5AA1F708EEDB2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAM9d7cgrX=hL_Y16ZrPr6NOsd2ApOWdDP2bWDSNcK2yp4Skn3A@mail.gmail.com>
+ <CO6PR11MB5635F6A59A405ED9CB63B8B0EEDB2@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <ZpBSbjF3QP81_637@google.com> <CO6PR11MB563585C578FD91FD762946A7EEA52@CO6PR11MB5635.namprd11.prod.outlook.com>
+In-Reply-To: <CO6PR11MB563585C578FD91FD762946A7EEA52@CO6PR11MB5635.namprd11.prod.outlook.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 11 Jul 2024 20:36:08 -0700
+Message-ID: <CAM9d7cgU4XNTo0-jvOTyHkZ+st1xtozCXkAvoFKC3ifKHZq=vQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v16 8/8] perf test: Add test for Intel TPEBS counting mode
+To: "Wang, Weilin" <weilin.wang@intel.com>
+Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	"Hunter, Adrian" <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Taylor, Perry" <perry.taylor@intel.com>, 
+	"Alt, Samantha" <samantha.alt@intel.com>, "Biggers, Caleb" <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Jul 11, 2024 at 3:05=E2=80=AFPM Wang, Weilin <weilin.wang@intel.com=
+> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Namhyung Kim <namhyung@kernel.org>
+> > Sent: Thursday, July 11, 2024 2:45 PM
+> > To: Wang, Weilin <weilin.wang@intel.com>
+> > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo Molnar
+> > <mingo@redhat.com>; Alexander Shishkin
+> > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.org>; Hun=
+ter,
+> > Adrian <adrian.hunter@intel.com>; Kan Liang <kan.liang@linux.intel.com>=
+;
+> > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org; Taylor,=
+ Perry
+> > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com>; Bigge=
+rs,
+> > Caleb <caleb.biggers@intel.com>
+> > Subject: Re: [RFC PATCH v16 8/8] perf test: Add test for Intel TPEBS co=
+unting
+> > mode
+> >
+> > Hello,
+> >
+> > On Tue, Jul 09, 2024 at 06:23:51AM +0000, Wang, Weilin wrote:
+> > > > On Mon, Jul 8, 2024 at 9:58=E2=80=AFPM Wang, Weilin <weilin.wang@in=
+tel.com>
+> > > > wrote:
+> > > > >
+> > > > >
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Namhyung Kim <namhyung@kernel.org>
+> > > > > > Sent: Monday, July 8, 2024 9:44 PM
+> > > > > > To: Wang, Weilin <weilin.wang@intel.com>
+> > > > > > Cc: Ian Rogers <irogers@google.com>; Arnaldo Carvalho de Melo
+> > > > > > <acme@kernel.org>; Peter Zijlstra <peterz@infradead.org>; Ingo
+> > Molnar
+> > > > > > <mingo@redhat.com>; Alexander Shishkin
+> > > > > > <alexander.shishkin@linux.intel.com>; Jiri Olsa <jolsa@kernel.o=
+rg>;
+> > Hunter,
+> > > > > > Adrian <adrian.hunter@intel.com>; Kan Liang
+> > <kan.liang@linux.intel.com>;
+> > > > > > linux-perf-users@vger.kernel.org; linux-kernel@vger.kernel.org;=
+ Taylor,
+> > > > Perry
+> > > > > > <perry.taylor@intel.com>; Alt, Samantha <samantha.alt@intel.com=
+>;
+> > > > Biggers,
+> > > > > > Caleb <caleb.biggers@intel.com>
+> > > > > > Subject: Re: [RFC PATCH v16 8/8] perf test: Add test for Intel =
+TPEBS
+> > > > counting
+> > > > > > mode
+> > > > > >
+> > > > > > Hello Weilin,
+> > > > > >
+> > > > > > On Sat, Jul 6, 2024 at 4:30=E2=80=AFPM <weilin.wang@intel.com> =
+wrote:
+> > > > > > >
+> > > > > > > From: Weilin Wang <weilin.wang@intel.com>
+> > > > > > >
+> > > > > > > Intel TPEBS sampling mode is supported through perf record. T=
+he
+> > > > counting
+> > > > > > mode
+> > > > > > > code uses perf record to capture retire_latency value and use=
+ it in
+> > metric
+> > > > > > > calculation. This test checks the counting mode code.
+> > > > > > >
+> > > > > > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
+> > > > > > > ---
+> > > > > > >  .../perf/tests/shell/test_stat_intel_tpebs.sh  | 18
+> > > > ++++++++++++++++++
+> > > > > > >  1 file changed, 18 insertions(+)
+> > > > > > >  create mode 100755 tools/perf/tests/shell/test_stat_intel_tp=
+ebs.sh
+> > > > > > >
+> > > > > > > diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > > > > > b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > > > > > > new file mode 100755
+> > > > > > > index 000000000000..fea8cb1b8367
+> > > > > > > --- /dev/null
+> > > > > > > +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
+> > > > > > > @@ -0,0 +1,18 @@
+> > > > > > > +#!/bin/bash
+> > > > > > > +# test Intel TPEBS counting mode
+> > > > > > > +# SPDX-License-Identifier: GPL-2.0
+> > > > > > > +
+> > > > > > > +set -e
+> > > > > > > +
+> > > > > > > +# Use this event for testing because it should exist in all =
+platforms
+> > > > > > > +event=3Dcache-misses:R
+> > > > > > > +
+> > > > > > > +# Without this cmd option, default value or zero is returned
+> > > > > > > +echo "Testing without --record-tpebs"
+> > > > > > > +result=3D$(perf stat -e "$event" true 2>&1)
+> > > > > > > +[[ "$result" =3D~ $event ]] || exit 1
+> > > > > > > +
+> > > > > > > +# In platforms that do not support TPEBS, it should execute =
+without
+> > > > error.
+> > > > > > > +echo "Testing with --record-tpebs"
+> > > > > > > +result=3D$(perf stat -e "$event" --record-tpebs -a sleep 0.0=
+1 2>&1)
+> > > > > >
+> > > > > > It never finishes on my AMD machine.
+> > > > > >
+> > > > > Hi Namhyung,
+> > > > >
+> > > > > Do you see any message while it executes? Is the perf record fork=
+ed
+> > > > successfully
+> > > > > but failed to return?
+> > > >
+> > > > I don't know.. all I can get is like below:
+> > > >
+> > > > $ sudo ./perf test tpebs -vv
+> > > > 121: test Intel TPEBS counting mode:
+> > > > --- start ---
+> > > > test child forked, pid 583475
+> > > > Testing without --record-tpebs
+> > > > Testing with --record-tpebs
+> > > > ^C
+> > >
+> > > I think the problem is that the forked "perf record" encountered erro=
+r, which
+> > > caused the control fifo failed to send a "ACK" back and the PIPE hang=
+ed.
+> > >
+> > > Could you please try out the diff below and see if the test would fin=
+ish?
+> > >
+> > > As for the "perf record" error, I think it might because of the fake
+> > > event(cache-misses:R) cannot be supported in AMD. Could you please te=
+st
+> > run
+> > > a "perf stat -e cache-misses:R --record-tpebs true" and see if it com=
+plains
+> > about
+> > > the event?
+> >
+> > So I tried the below patch and it worked.
+> >
+> >   $ ./perf test -v tpebs
+> >   121: test Intel TPEBS counting mode:
+> >   --- start ---
+> >   test child forked, pid 2190174
+> >   Testing without --record-tpebs
+> >   Testing with --record-tpebs
+> >   ---- end(-1) ----
+> >   121: test Intel TPEBS counting mode                                  =
+: FAILED!
+> >
+> > It would be better if it can skip rather than fail on
+> > non-supported machines.
+> >
+>
+> Yes, I could add a check to only run the test on Intel platform.
 
+Please do so.
 
-On 7/12/2024 8:37 AM, Zhang, Rui wrote:
->> @@ -710,6 +710,9 @@ static int __init init_rapl_pmus(void)
->>         rapl_pmus = kzalloc(struct_size(rapl_pmus, rapl_pmu,
->> nr_rapl_pmu), GFP_KERNEL);
->>         if (!rapl_pmus)
->>                 return -ENOMEM;
->> +
->> +       if (!alloc_cpumask_var(&rapl_pmus->cpumask, GFP_KERNEL))
->> +               return -ENOMEM;
-> 
-> missing free_cpumask_var() in cleanup_rapl_pmus()?
+>
+> > Also I saw this message when I run the command manually.
+> >
+> >   $ ./perf stat -e cache-misses:R --record-tpebs -v true
+> >   Control descriptor is not initialized
+> >   Retire_latency of event cache-misses:R is required
+> >   Prepare perf record for retire_latency
+> >   Error:
+> >   The cache-misses:pu event is not supported.
+> >   incompatible file format
+> >   incompatible file format (rerun with -v to learn more)
+> >   failed: did not received an ack
+> >   cache-misses:R: 0 1 1
+> >
+> >    Performance counter stats for 'true':
+> >
+> >                    0      cache-misses:R
+> >
+> >          0.000004939 seconds time elapsed
+> >
+> >          0.000000000 seconds user
+> >          0.000000000 seconds sys
+> >
+> > I'm not sure why it showed the incompatible file format message.
+> >
+>
+> The output matches with my expectation. I think the incompatible file for=
+mat
+> message is from the session open step of the sample reader thread.
+>
+> Because AMD CPU does not support cache-misses:p in "perf record", the con=
+trol
+> fifo does not receive a "ACK" message back from "perf record". Therefore,=
+ the
+> ack_fd PIPE hanged and the test never ends.
+>
+> However, the sample reader thread opens the session in parallel. Because =
+the
+> "perf record" is not successfully started, the sample data PIPE is not re=
+ady and we
+> get this incompatible file format error.
 
-Good catch, I had it in one draft of the patch, but then it got 
-missed in the final one.
+It'd be great if we can suppress the message.
 
-Will fix this
+>
+> > >
+> > > diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tp=
+ebs.c
+> > > index a0585a6571b5..5b8e104f36f1 100644
+> > > --- a/tools/perf/util/intel-tpebs.c
+> > > +++ b/tools/perf/util/intel-tpebs.c
+> > > @@ -263,6 +263,7 @@ int tpebs_start(struct evlist *evsel_list)
+> > >         }
+> > >
+> > >         if (tpebs_event_size > 0) {
+> > > +               struct pollfd pollfd =3D { .events =3D POLLIN, };
+> > >                 int control_fd[2], ack_fd[2], len;
+> > >                 char ack_buf[8];
+> > >
+> > > @@ -297,6 +298,19 @@ int tpebs_start(struct evlist *evsel_list)
+> > >                         goto out;
+> > >                 }
+> > >
+> > > +               /* wait for an ack */
+> > > +               pollfd.fd =3D ack_fd[0];
+> > > +
+> > > +               if (!poll(&pollfd, 1, 2000)) {
+> >
+> > Is it 2 seconds?  Any specific reason for the value?
+> > At least we need a comment to explain the value (or just saying it's a
+> > random one).
+>
+> It's important to have this poll. But the time is random. Please let me k=
+now if you have
+> any suggestions on the value. Otherwise, I could add a comment  saying th=
+is is a random
+> value.
+
+I don't have a better idea, a comment would be ok.
+
+> >
+> >
+> > > +                       pr_err("failed: perf record ack timeout\n");
+
+Can you please prefix the message with "tpebs:"?
+
+> > > +                       goto out;
+> > > +               }
+> > > +
+> > > +               if (!(pollfd.revents & POLLIN)) {
+> > > +                       pr_err("failed: did not received an ack\n");
+
+Ditto.
 
 Thanks,
-Dhananjay
+Namhyung
 
-> 
-> thanks,
-> rui
-> 
-> 
+
+> > > +                       goto out;
+> > > +               }
+> > > +
+> > >                 ret =3D read(ack_fd[0], ack_buf, sizeof(ack_buf));
+> > >                 if (ret > 0)
+> > >                         ret =3D strcmp(ack_buf, "ack\n");
+> > >
+> > > Thanks,
+> > > Weilin
