@@ -1,53 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CFBF5FDA5;
-	Sat, 13 Jul 2024 14:55:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9C713B294;
+	Sat, 13 Jul 2024 15:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720882507; cv=none; b=L4cQYlNGDwj95cgRs5YPn2gfDI2cBv7lNOS5Gvh4rmqRTCWo2tkgwNqs9R8n09CpqhsOuMyrev79BMDCdzSD1lAPO3obW0u0eUsHgV/ff6Zf16p7EKDSf4pU071gUz6UO0uA/JPEs02BNco/rk1T06VQ+dYpD0qlHDMOTBPFZn8=
+	t=1720882805; cv=none; b=hk5EQ5ra6L/5V5rOUlyUOyH7SSLTKLpg0L2bwRLZsFZ7GH3jYgvRpfX/VUOKdlfHcEEAcJBazh0PI9/F3ANz+cgey/QQBxtjS2JZMfOTaFJa3sSpGoNjgVo2T1uSuyYAgpx+6mTo00i6NpvDql7kR6Mnjo4bW+/69ptS2ororD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720882507; c=relaxed/simple;
-	bh=CpgTW3j9jumrXDBVx8Tvng0JghMcCdZ/gYyDEBGUfKk=;
+	s=arc-20240116; t=1720882805; c=relaxed/simple;
+	bh=RgrfZQiJrqZ3DMTm/V2UZOLx5m7zNJX2OyqTUjd2ogk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=P6WTfv9RhSt2vidOrDvQiYeSauCNJOljcmj/jvugRMgC1du9QJ05vEjUZ0n68ZB2/BVtE3Mlmsx10Kbrmi+ZcdETWd2cW9rXDhhr6K2Pe/QfRi837QCyd7b7Z1dapAEBNqDgHMcVT918wYnVBfKsi6f+PwuY1yKtR8jOn7rPwxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFQk2s0X; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VuQKG/iPyo5T3oSNUD4sQNvg/o8nmSTHNMVfktYK7TcF4dm6TrPAsh9DNqkwIzSj6NEPQwFmwYVCAtYqw9QAyXHN7PlnNK9fsgBqkNVa+WQKNVyajAXlnoco65xKWe8WF5JVZKN9UMzN+R9CCVIOlSH788NCs/iUtZfHe3+gAiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3634NiQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFQk2s0X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 652D3C32781;
-	Sat, 13 Jul 2024 14:55:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3634NiQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 404D5C4AF0B;
+	Sat, 13 Jul 2024 15:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720882507;
-	bh=CpgTW3j9jumrXDBVx8Tvng0JghMcCdZ/gYyDEBGUfKk=;
+	s=k20201202; t=1720882805;
+	bh=RgrfZQiJrqZ3DMTm/V2UZOLx5m7zNJX2OyqTUjd2ogk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pFQk2s0XgQqEL1rElXvHl4GJw53AI/v+V6n2Xim+riQ27E/L4jBp8dFo7e7gA9Y7L
-	 IcLrJ5CsleeHoBL7Ph00gJPowgXpcgc05t9KeeaMM0ThfajRC5NeET6ZxLM5xlrscB
-	 GFUQYTHw0aCaAKP7L9OTOi3k631np+RM7ShkRhoH9n5k3rtDG1h89Ii14zoJAjItFe
-	 cr2jgZuWorOQUMcPZAb35e9dEz4ugLBVRZEopPM+jTFp/LHtH7yoQl9dyztuycmO0k
-	 4EvfCSnGXiEkJUwIg51T+jjpB+cGbDO+56Pt8xi/A6eexZpRyTa3HfzUoyuhAsXo/J
-	 kQd/h2MZS+xig==
-Date: Sat, 13 Jul 2024 09:55:00 -0500
+	b=m3634NiQFTCS04Dng/3I5pHzi0UHaPWT/e45p0Yi7uyo/1RUTAEC+kpDozoJan3ka
+	 xhKTLShvfAPknxF1UHcP9YMyyoOSH+ritnDq8pUBTL9Pl/5QiRIHBxRKnIJXY4NWVe
+	 FSIPpm8DPhZmwDN5mVQqjOPfeNhnxt9XGXsIwcZsfnNLwZBJ1W0DjB0NE82WF7Z+3S
+	 QGqfn6hAon0uKoqa0jEHycblqvT9++kCGgpKTUEDL8uODLpCHTuLRMFpE1j/E8DwGA
+	 IHjV3Q3btGTXbsWvGtvKPEAmslcggknTOpJA/sqKwy3nElti++w3MM19aw5S8FI45s
+	 E7epEy9Mmaf3w==
+Date: Sat, 13 Jul 2024 09:59:58 -0500
 From: Namhyung Kim <namhyung@kernel.org>
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Segher Boessenkool <segher@kernel.crashing.org>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users <linux-perf-users@vger.kernel.org>,
-	linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-	akanksha@linux.ibm.com, Madhavan Srinivasan <maddy@linux.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Disha Goel <disgoel@linux.vnet.ibm.com>
-Subject: Re: [PATCH V6 17/18] tools/perf: Update data_type_cmp and
- sort__typeoff_sort function to include var_name in comparison
-Message-ID: <ZpKVROoPC5KBTPAj@google.com>
-References: <20240707144419.92510-1-atrajeev@linux.vnet.ibm.com>
- <20240707144419.92510-18-atrajeev@linux.vnet.ibm.com>
- <ZpGfYVc_ewcsQxWL@google.com>
- <6733E9A7-1118-46A5-8C17-DC22A9C47207@linux.vnet.ibm.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	James Clark <james.clark@arm.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] tools subcmd: Add non-waitpid
+ check_if_command_finished()
+Message-ID: <ZpKWbtXQTXwzGLw-@google.com>
+References: <20240701044236.475098-1-irogers@google.com>
+ <20240701044236.475098-2-irogers@google.com>
+ <ZoTETvgcPdl9EUJV@google.com>
+ <CAP-5=fV4oPEjX2fh3aeBbmBGgYJGCdBnVjTZ2XnCCgnTSa0LTw@mail.gmail.com>
+ <ZpGTHzfIeREt5VUO@google.com>
+ <CAP-5=fXZGTbXZkyW7QLTYU6vZkiiTSvJrBigcN=QYiaP3C9n5A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,263 +56,107 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <6733E9A7-1118-46A5-8C17-DC22A9C47207@linux.vnet.ibm.com>
+In-Reply-To: <CAP-5=fXZGTbXZkyW7QLTYU6vZkiiTSvJrBigcN=QYiaP3C9n5A@mail.gmail.com>
 
-On Sat, Jul 13, 2024 at 11:52:30AM +0530, Athira Rajeev wrote:
+On Fri, Jul 12, 2024 at 02:19:58PM -0700, Ian Rogers wrote:
+> On Fri, Jul 12, 2024 at 1:33 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> >
+> > Hi Ian,
+> >
+> > On Tue, Jul 02, 2024 at 09:24:50PM -0700, Ian Rogers wrote:
+> > > On Tue, Jul 2, 2024 at 8:24 PM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hi Ian,
+> > > >
+> > > > On Sun, Jun 30, 2024 at 09:42:35PM -0700, Ian Rogers wrote:
+> > > > > Using waitpid can cause stdout/stderr of the child process to be
+> > > > > lost. Use Linux's /prod/<pid>/status file to determine if the process
+> > > > > has reached the zombie state. Use the 'status' file rather than 'stat'
+> > > > > to avoid issues around skipping the process name.
+> > > > >
+> > > > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > > > ---
+> > > > >  tools/lib/subcmd/run-command.c | 33 +++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 33 insertions(+)
+> > > > >
+> > > > > diff --git a/tools/lib/subcmd/run-command.c b/tools/lib/subcmd/run-command.c
+> > > > > index 4e3a557a2f37..ec06683e77a0 100644
+> > > > > --- a/tools/lib/subcmd/run-command.c
+> > > > > +++ b/tools/lib/subcmd/run-command.c
+> > > > > @@ -2,6 +2,7 @@
+> > > > >  #include <unistd.h>
+> > > > >  #include <sys/types.h>
+> > > > >  #include <sys/stat.h>
+> > > > > +#include <ctype.h>
+> > > > >  #include <fcntl.h>
+> > > > >  #include <string.h>
+> > > > >  #include <linux/string.h>
+> > > > > @@ -217,8 +218,40 @@ static int wait_or_whine(struct child_process *cmd, bool block)
+> > > > >
+> > > > >  int check_if_command_finished(struct child_process *cmd)
+> > > > >  {
+> > > > > +#ifdef __linux__
+> > > >
+> > > > Is this really necessary?  I don't think we plan to support other OS..
+> > >
+> > > I don't think it'd be unreasonable to say run "perf report" on
+> > > Windows, or using wasm inside a web browser. Part of the reason for
+> > > doing things this way was to keep the WNOHANG logic although this
+> > > change no longer uses it for __linux__.
+> >
+> > I'm not sure we are ready to run it on other platforms.  So I think
+> > it's better simply remove it for now.
 > 
-> 
-> > On 13 Jul 2024, at 2:55 AM, Namhyung Kim <namhyung@kernel.org> wrote:
-> > 
-> > On Sun, Jul 07, 2024 at 08:14:18PM +0530, Athira Rajeev wrote:
-> >> Currently data_type_cmp() only compares size and type name.
-> >> But in cases where the type name of two data type entries
-> >> is same, but var_name is different, the comparison can't distinguish
-> >> two different types.
-> >> 
-> >> Consider there is a "long unsigned int" with var_name as "X" and there
-> >> is global variable "long unsigned int". Currently since
-> >> data_type_cmp uses only type_name for comparison ( "long unsigned int"),
-> >> it won't distinguish these as separate entries. Update the
-> > 
-> > I'm still not sure if it's ok.  It intentionally merges different
-> > instances of the same type together as it's a data 'type' profile.
-> > 
-> > 
-> >> functions "data_type_cmp" as well as "sort__typeoff_sort" to
-> >> compare variable names after type name if it exists.
-> >> 
-> >> Also updated "hist_entry__typeoff_snprintf" to print var_name if
-> >> it is set. With the changes,
-> >> 
-> >>     11.42%  long unsigned int  long unsigned int +0 (current_stack_pointer)
-> >>     4.68%  struct paca_struct  struct paca_struct +2312 (__current)
-> >>     4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
-> >>     2.69%  struct paca_struct  struct paca_struct +2808 (canary)
-> >>     2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
-> >>     2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
-> >>     1.43%  long unsigned int  long unsigned int +0 (no field)
-> > 
-> > It seems like an output of `perf report -s type,typeoff`.  But I'm
-> > curious how it'd work with -s type only?  I guess it'd have two separate
-> > entries for 'long unsigned int'.  Ideally we can have a single entry
-> > with two different fields.
-> > 
-> > For example, `perf report -s type,typeoff -H`:
-> > 
-> >  12.85%     long unsigned int
-> >     11.42%     long unsigned int +0 (current_stack_pointer)
-> >      1.43%     long unsigned int +0 (no field)
-> >  ...
-> > 
-> 
-> Hi Namhyung,
-> 
-> Thanks for the comments.
-> 
-> While printing, the check for field is done only in “sort__typeoff_sort”.
-> To summarise,
-> 1. While adding the data type in rb node, if the entry has different field, new entry will be added. So we will have different entries in rb node if field differs.
-> 2. While using sort key to display, for “typeoff”, we use sort__typeoff_sort . For “type”, we use “sort__type_sort”
-> 3. In “sort__type_sort” type_name is used. Hence result will have only single entry
-> 4. In “sort__typeoff_sort” we added check for “var_name” too in this patch. So result will have two entries if field differs
+> So in the office hours there was some discussion with a potential new
+> contributor whose development platform is OS/X. It's fairly obvious
+> this code can't work on anything but Linux and using #error feels
+> annoying. The waitpid code is tested and has a known issue, but I
+> think it is better than just breaking anyone not on Linux.
 
-I see.
-
-> 
-> Example:
-> 
-> Using -H option,
-> 
-> ./perf report -s type,typeoff -H
-> 
->     17.65%     struct paca_struct
->         4.68%     struct paca_struct +2312 (__current)
->         4.57%     struct paca_struct +2354 (irq_soft_mask)
->         2.69%     struct paca_struct +2808 (canary)
->         2.68%     struct paca_struct +8 (paca_index)
->         2.24%     struct paca_struct +48 (data_offset)
->         0.55%     struct paca_struct +2816 (mmiowb_state.nesting_count)
->         0.18%     struct paca_struct +2818 (mmiowb_state.mmiowb_pending)
->         0.03%     struct paca_struct +2352 (hsrr_valid)
->         0.02%     struct paca_struct +2356 (irq_work_pending)
->         0.00%     struct paca_struct +0 (lppaca_ptr)
->     12.85%     long unsigned int
->        11.42%     long unsigned int +0 (current_stack_pointer)
->         1.43%     long unsigned int +0 (no field)
-> 
-> As you mentioned, we have single entry with two different fields:
-> 
-> 12.85%     long unsigned int
->        11.42%     long unsigned int +0 (current_stack_pointer)
->         1.43%     long unsigned int +0 (no field)
-> 
-> With perf report -s type:
-> 
->     17.65%  struct paca_struct
->     12.85%  long unsigned int
->      1.69%  struct task_struct
->      1.51%  struct rq
->      1.49%  struct pt_regs
->      1.41%  struct vm_fault
->      1.20%  struct inode
->      1.15%  struct file
->      1.08%  struct sd_lb_stats
->      0.90%  struct security_hook_list
->      0.86%  struct seq_file
->      0.79%  struct cfs_rq
->      0.78%  struct irq_desc
->      0.72%  long long unsigned int
-> 
-> 
-> Where as with perf report -s typeoff:
-> 
->     11.42%  long unsigned int +0 (current_stack_pointer)
->      4.68%  struct paca_struct +2312 (__current)
->      4.57%  struct paca_struct +2354 (irq_soft_mask)
->      2.69%  struct paca_struct +2808 (canary)
->      2.68%  struct paca_struct +8 (paca_index)
->      2.24%  struct paca_struct +48 (data_offset)
->      1.43%  long unsigned int +0 (no field)
-> 
-> 
-> Namhyung,
-> 
-> If the above shared result for “type” and “typeoff” looks good and other changes are fine, I will post V7 with change for sort cmp to use cmp_null.
-> Please share your response.
-
-Great, it looks all good.  Please send v7.
-
-But I think it's a bit late to add this to the upcoming window.
+I feel like it's a potential issue and should be handled by the
+potentiall contributor.  Until that happens, we can assume Linux
+and keep the code minimal.
 
 Thanks,
 Namhyung
 
-> 
-> Thanks
-> Athira
-> 
-> >> 
-> >> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> >> ---
-> >> tools/perf/util/annotate-data.c | 24 ++++++++++++++++++++++--
-> >> tools/perf/util/sort.c          | 23 +++++++++++++++++++++--
-> >> 2 files changed, 43 insertions(+), 4 deletions(-)
-> >> 
-> >> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> >> index 8d05f3dbddf6..759c6a22e719 100644
-> >> --- a/tools/perf/util/annotate-data.c
-> >> +++ b/tools/perf/util/annotate-data.c
-> >> @@ -167,7 +167,7 @@ static void exit_type_state(struct type_state *state)
-> >> }
-> >> 
-> >> /*
-> >> - * Compare type name and size to maintain them in a tree.
-> >> + * Compare type name, var_name  and size to maintain them in a tree.
-> >>  * I'm not sure if DWARF would have information of a single type in many
-> >>  * different places (compilation units).  If not, it could compare the
-> >>  * offset of the type entry in the .debug_info section.
-> >> @@ -176,12 +176,32 @@ static int data_type_cmp(const void *_key, const struct rb_node *node)
-> >> {
-> >> const struct annotated_data_type *key = _key;
-> >> struct annotated_data_type *type;
-> >> + int64_t ret = 0;
-> >> 
-> >> type = rb_entry(node, struct annotated_data_type, node);
-> >> 
-> >> if (key->self.size != type->self.size)
-> >> return key->self.size - type->self.size;
-> >> - return strcmp(key->self.type_name, type->self.type_name);
-> >> +
-> >> + ret = strcmp(key->self.type_name, type->self.type_name);
-> >> + if (ret) {
-> >> + return ret;
-> >> + }
-> > 
-> > No need for the parentheses.
-> Sure, will fix it
-> 
-> > 
-> >> +
-> >> + /*
-> >> +  * Compare var_name if it exists for key and type.
-> >> +  * If both nodes doesn't have var_name, but one of
-> >> +  * them has, return non-zero. This is to indicate nodes
-> >> +  * are not the same if one has var_name, but other doesn't.
-> >> +  */
-> >> + if (key->self.var_name && type->self.var_name) {
-> >> + ret = strcmp(key->self.var_name, type->self.var_name);
-> >> + if (ret)
-> >> + return ret;
-> >> + } else if (key->self.var_name || type->self.var_name)
-> >> + return 1;
-> > 
-> > I think you need to compare the order properly like in cmp_null() in
-> > util/sort.c.  Please see below.
-> > 
-> >> +
-> >> + return ret;
-> >> }
-> >> 
-> >> static bool data_type_less(struct rb_node *node_a, const struct rb_node *node_b)
-> >> diff --git a/tools/perf/util/sort.c b/tools/perf/util/sort.c
-> >> index cd39ea972193..c6d885060ee7 100644
-> >> --- a/tools/perf/util/sort.c
-> >> +++ b/tools/perf/util/sort.c
-> >> @@ -2267,9 +2267,25 @@ sort__typeoff_sort(struct hist_entry *left, struct hist_entry *right)
-> >> right_type = right->mem_type;
-> >> }
-> >> 
-> >> + /*
-> >> +  * Compare type_name first. Next, ompare var_name if it exists
-> >> +  * for left and right hist_entry. If both entries doesn't have
-> >> +  * var_name, but one of them has, return non-zero. This is to
-> >> +  * indicate entries are not the same if one has var_name, but the
-> >> +  * other doesn't.
-> >> +  * If type_name and var_name is same, use mem_type_off field.
-> >> +  */
-> >> ret = strcmp(left_type->self.type_name, right_type->self.type_name);
-> >> if (ret)
-> >> return ret;
-> >> +
-> >> + if (left_type->self.var_name && right_type->self.var_name) {
-> >> + ret = strcmp(left_type->self.var_name, right_type->self.var_name);
-> >> + if (ret)
-> >> + return ret;
-> >> + } else if (right_type->self.var_name || left_type->self.var_name)
-> >> + return 1;
-> > 
-> > } else if (!left_type->self.var_name != !right_type->self.var_name)
-> > return cmp_null(left_type->self.var_name, right_type->self.var_name);
-> > 
-> > Thanks,
-> > Namhyung
-> > 
-> Sure, will fix this
-> 
-> Thanks
-> Athira
-> 
-> 
-> >> +
-> >> return left->mem_type_off - right->mem_type_off;
-> >> }
-> >> 
-> >> @@ -2305,9 +2321,12 @@ static int hist_entry__typeoff_snprintf(struct hist_entry *he, char *bf,
-> >> char buf[4096];
-> >> 
-> >> buf[0] = '\0';
-> >> - if (list_empty(&he_type->self.children))
-> >> + if (list_empty(&he_type->self.children)) {
-> >> snprintf(buf, sizeof(buf), "no field");
-> >> - else
-> >> + if (he_type->self.var_name)
-> >> + strcpy(buf, he_type->self.var_name);
-> >> +
-> >> + } else
-> >> fill_member_name(buf, sizeof(buf), &he_type->self,
-> >>  he->mem_type_off, true);
-> >> buf[4095] = '\0';
-> >> -- 
-> >> 2.43.0
-> 
-> 
+> >
+> > > > > +     char filename[FILENAME_MAX + 12];
+> > > > > +     char status_line[256];
+> > > > > +     FILE *status_file;
+> > > > > +
+> > > > > +     /*
+> > > > > +      * Check by reading /proc/<pid>/status as calling waitpid causes
+> > > > > +      * stdout/stderr to be closed and data lost.
+> > > > > +      */
+> > > > > +     sprintf(filename, "/proc/%d/status", cmd->pid);
+> > > > > +     status_file = fopen(filename, "r");
+> > > > > +     if (status_file == NULL) {
+> > > > > +             /* Open failed assume finish_command was called. */
+> > > > > +             return true;
+> > > > > +     }
+> > > > > +     while (fgets(status_line, sizeof(status_line), status_file) != NULL) {
+> > > > > +             char *p;
+> > > > > +
+> > > > > +             if (strncmp(status_line, "State:", 6))
+> > > > > +                     continue;
+> > > > > +
+> > > > > +             fclose(status_file);
+> > > > > +             p = status_line + 6;
+> > > > > +             while (isspace(*p))
+> > > > > +                     p++;
+> > > > > +             return *p == 'Z';
+> > > > > +     }
+> > > > > +     /* Read failed assume finish_command was called. */
+> > > > > +     fclose(status_file);
+> > > > > +     return true;
+> > > > > +#else
+> > > > >       wait_or_whine(cmd, /*block=*/false);
+> > > > >       return cmd->finished;
+> > > > > +#endif
+> > > > >  }
+> > > > >
+> > > > >  int finish_command(struct child_process *cmd)
+> > > > > --
+> > > > > 2.45.2.803.g4e1b14247a-goog
+> > > > >
