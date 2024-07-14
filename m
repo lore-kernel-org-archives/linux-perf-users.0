@@ -1,40 +1,61 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from msa.smtpout.orange.fr (msa-215.smtpout.orange.fr [193.252.23.215])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3948514A81;
-	Sun, 14 Jul 2024 06:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EED1FB656;
+	Sun, 14 Jul 2024 13:14:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.215
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720940121; cv=none; b=Uy20ArG6K+7e21UY0lJkz6+cJ6JdfHCuokit+1J1Yqr75Lmn1q6YJrkHeO22LfTNI2H/Hkfbk3oKdG8bGofATyR25vgWT5lHRsTLBd/pdNcEC2RgXUv2rLoTpYNwuDHLMjT+Vo+nzZZai9FR48YZ+4Whsz9q9fawh1S1F3TiPdk=
+	t=1720962901; cv=none; b=TKnM8mPrV5tlOlv3whAmtPErKbqHZkSYjMxpLWvaaNgtgM2ZWXMjU3eaWDixCLxiFhJ084aeat8hS4YdJ3Eg1tRIq1U2PE6MjAooyZ24vZ1ME00FlVkiUBytVImmCELjtifzkNKZZYFEIhKAyT/vm+rXebnAS01/TyE2L+DaWeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720940121; c=relaxed/simple;
-	bh=G2UYAZbIACJBeDr9ndHd8ff6w2mMSgA0YsCtCyUYTkQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TC0w5EKFHn2p+Hjq2dSG7yLEFnvZIix+3KTp7BnNA4HDM78r3r3l8ljrVQ/ZL/IhBZdmynk2gp2IbPKWXLHhH5oBBCMy07AWaEMd75yYedHc6Bwod0G4czE5Lw0khBUie+cZchf7i4za8upy6LGYlHdqhx9yERlSxbjwVrXgTWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WMGKy2p4jz4f3jdb;
-	Sun, 14 Jul 2024 14:55:02 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 401CE1A0170;
-	Sun, 14 Jul 2024 14:55:14 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.124.27])
-	by APP4 (Coremail) with SMTP id gCh0CgDXuzlQdpNmimNZAA--.49126S4;
-	Sun, 14 Jul 2024 14:55:14 +0800 (CST)
-From: Hou Tao <houtao@huaweicloud.com>
-To: bpf@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
+	s=arc-20240116; t=1720962901; c=relaxed/simple;
+	bh=W4H2df2R/MdY3nerVtqR2oDHRHIYH4SFPc28EtGqjDE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=az23Xp0f6vLHOEkR1uVHlWaplBTWabJtUGDgLzgjF/Ndw0oyP4QNY+Y/Gk5kpQs/+t6Qg4WkOOG6QCLf4+IpXLfqD0CXPH4FaE5zE82FLB8IRbtkWYP7QnqV7Jlj9dr3PNuBtPAWd1z6ANh5u2MDh2KTepzU11iObjEOUt3D3Uk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=UtDcZzJ2; arc=none smtp.client-ip=193.252.23.215
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="UtDcZzJ2"
+Received: from fedora.home ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id SyWpstpWvBzr3SyWqsrCvk; Sun, 14 Jul 2024 14:40:41 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1720960841;
+	bh=jXEol/M69CDfWHWTuc98TPM6NHwESq7AdpoHFdBAkUw=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=UtDcZzJ2FilDY0fQzyn23s4ytCUtInKbCYmydlkzBvhN2/NDQ3Lm8LKor9/BcJ+Gl
+	 0cRaxWl/4loYszrBqsoLpz08q+VNKu9GE5fYAmODovgCzZklt12JWjEpgqiZhe35fm
+	 be8oiMQdgZC+UREYuf6e9S19Pttg0K70TjynGdduop3xZbjiEGNx2JQUtR2RUHlR0H
+	 rnlUAknUj4Ic+i/Q5w0kpbx1kthcwSDmLJGAH82Exz1EVRXZ15GeDqdhRlZExhOPaU
+	 D8EHaifpsos+kTH0Q2cRVUSVa7w6sJgEAuzKYcZNyzvVt/F45bDhmeujJ4Oe7LCHo5
+	 QC4u212ytJYVg==
+X-ME-Helo: fedora.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 14 Jul 2024 14:40:41 +0200
+X-ME-IP: 90.11.132.44
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Yonghong Song <yhs@fb.com>,
-	Krister Johansen <kjlx@templeofstupid.com>,
-	houtao1@huawei.com
-Subject: [PATCH bpf-next] perf/bpf: Use prog to emit ksymbol event for main program
-Date: Sun, 14 Jul 2024 14:55:33 +0800
-Message-Id: <20240714065533.1112616-1-houtao@huaweicloud.com>
-X-Mailer: git-send-email 2.29.2
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf/x86/intel/uncore: Constify struct
+Date: Sun, 14 Jul 2024 14:40:28 +0200
+Message-ID: <9dc5e67d1b19e56c952e740371be9d42a5011c2c.1720960818.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,99 +63,161 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgDXuzlQdpNmimNZAA--.49126S4
-X-Coremail-Antispam: 1UD129KBjvJXoWxZr4xuF4rWFyfCrWfGw1UGFg_yoW5WFyDpF
-	W3Gw1Sy34rX3y2qw45Jr4rJa4UGr4kXanIgr93J3yFvr43Cr93WayUGayfu3s0yryjkFyf
-	u3s2v3y3Kr98JF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUyCb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
-	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij
-	64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-	8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE
-	2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42
-	xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF
-	7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UK2NtUUUUU=
-X-CM-SenderInfo: xkrx3t3r6k3tpzhluzxrxghudrp/
 
-From: Hou Tao <houtao1@huawei.com>
+'struct freerunning_counters' are not modified in these drivers.
 
-Since commit 0108a4e9f358 ("bpf: ensure main program has an extable"),
-prog->aux->func[0]->kallsyms is left as uninitialized. For bpf program
-with subprogs, the symbol for the main program is missed just as shown
-in the output of perf script below:
+Constifying this structure moves some data to a read-only section, so
+increase overall security.
 
- ffffffff81284b69 qp_trie_lookup_elem+0xb9 ([kernel.kallsyms])
- ffffffffc0011125 bpf_prog_a4a0eb0651e6af8b_lookup_qp_trie+0x5d (bpf...)
- ffffffff8127bc2b bpf_for_each_array_elem+0x7b ([kernel.kallsyms])
- ffffffffc00110a1 +0x25 ()
- ffffffff8121a89a trace_call_bpf+0xca ([kernel.kallsyms])
+On a x86_64, with allmodconfig:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  79637	  71836	     16	 151489	  24fc1	arch/x86/events/intel/uncore_snbep.o
+  24000	  13628	      0	  37628	   92fc	arch/x86/events/intel/uncore_snb.o
 
-Fix it by always using prog instead prog->aux->func[0] to emit ksymbol
-event for the main program. After the fix, the output of perf script
-will be correct:
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  80309	  71196	     16	 151521	  24fe1	arch/x86/events/intel/uncore_snbep.o
+  24448	  13180	      0	  37628	   92fc	arch/x86/events/intel/uncore_snb.o
 
- ffffffff81284b96 qp_trie_lookup_elem+0xe6 ([kernel.kallsyms])
- ffffffffc001382d bpf_prog_a4a0eb0651e6af8b_lookup_qp_trie+0x5d (bpf...)
- ffffffff8127bc2b bpf_for_each_array_elem+0x7b ([kernel.kallsyms])
- ffffffffc0013779 bpf_prog_245c55ab25cfcf40_qp_trie_lookup+0x25 (bpf...)
- ffffffff8121a89a trace_call_bpf+0xca ([kernel.kallsyms])
-
-Fixes: 0108a4e9f358 ("bpf: ensure main program has an extable")
-Signed-off-by: Hou Tao <houtao1@huawei.com>
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
-Hi,
+Compile tested-only.
+---
+ arch/x86/events/intel/uncore.h       |  2 +-
+ arch/x86/events/intel/uncore_snb.c   |  8 ++++----
+ arch/x86/events/intel/uncore_snbep.c | 16 ++++++++--------
+ 3 files changed, 13 insertions(+), 13 deletions(-)
 
-ksymbol for bpf program had been broken twice, and I think it is better
-to add a bpf selftest for it, but I'm not so familiar with the
-perf_event_open(), for now I just post the fix patch and will post the
-selftest later.
-
- kernel/events/core.c | 28 +++++++++++++---------------
- 1 file changed, 13 insertions(+), 15 deletions(-)
-
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index f0128c5ff278..e1b7d9e61fa0 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9289,21 +9289,19 @@ static void perf_event_bpf_emit_ksymbols(struct bpf_prog *prog,
- 	bool unregister = type == PERF_BPF_EVENT_PROG_UNLOAD;
- 	int i;
+diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
+index 027ef292c602..b7cdf9b8e88a 100644
+--- a/arch/x86/events/intel/uncore.h
++++ b/arch/x86/events/intel/uncore.h
+@@ -80,7 +80,7 @@ struct intel_uncore_type {
+ 	struct intel_uncore_pmu *pmus;
+ 	struct intel_uncore_ops *ops;
+ 	struct uncore_event_desc *event_descs;
+-	struct freerunning_counters *freerunning;
++	const struct freerunning_counters *freerunning;
+ 	const struct attribute_group *attr_groups[4];
+ 	const struct attribute_group **attr_update;
+ 	struct pmu *pmu; /* for custom pmu ops */
+diff --git a/arch/x86/events/intel/uncore_snb.c b/arch/x86/events/intel/uncore_snb.c
+index 9462fd9f3b7a..001ba9230722 100644
+--- a/arch/x86/events/intel/uncore_snb.c
++++ b/arch/x86/events/intel/uncore_snb.c
+@@ -804,7 +804,7 @@ enum perf_snb_uncore_imc_freerunning_types {
+ 	SNB_PCI_UNCORE_IMC_FREERUNNING_TYPE_MAX,
+ };
  
--	if (prog->aux->func_cnt == 0) {
--		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_BPF,
--				   (u64)(unsigned long)prog->bpf_func,
--				   prog->jited_len, unregister,
--				   prog->aux->ksym.name);
--	} else {
--		for (i = 0; i < prog->aux->func_cnt; i++) {
--			struct bpf_prog *subprog = prog->aux->func[i];
--
--			perf_event_ksymbol(
--				PERF_RECORD_KSYMBOL_TYPE_BPF,
--				(u64)(unsigned long)subprog->bpf_func,
--				subprog->jited_len, unregister,
--				subprog->aux->ksym.name);
--		}
-+	perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_BPF,
-+			   (u64)(unsigned long)prog->bpf_func,
-+			   prog->jited_len, unregister,
-+			   prog->aux->ksym.name);
-+
-+	for (i = 1; i < prog->aux->func_cnt; i++) {
-+		struct bpf_prog *subprog = prog->aux->func[i];
-+
-+		perf_event_ksymbol(
-+			PERF_RECORD_KSYMBOL_TYPE_BPF,
-+			(u64)(unsigned long)subprog->bpf_func,
-+			subprog->jited_len, unregister,
-+			subprog->aux->ksym.name);
- 	}
- }
+-static struct freerunning_counters snb_uncore_imc_freerunning[] = {
++static const struct freerunning_counters snb_uncore_imc_freerunning[] = {
+ 	[SNB_PCI_UNCORE_IMC_DATA_READS]		= { SNB_UNCORE_PCI_IMC_DATA_READS_BASE,
+ 							0x0, 0x0, 1, 32 },
+ 	[SNB_PCI_UNCORE_IMC_DATA_WRITES]	= { SNB_UNCORE_PCI_IMC_DATA_WRITES_BASE,
+@@ -1435,13 +1435,13 @@ enum perf_tgl_uncore_imc_freerunning_types {
+ 	TGL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
+ };
  
+-static struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
++static const struct freerunning_counters tgl_l_uncore_imc_freerunning[] = {
+ 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x5040, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x5058, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0x50A0, 0x0, 0x0, 1, 64 },
+ };
+ 
+-static struct freerunning_counters tgl_uncore_imc_freerunning[] = {
++static const struct freerunning_counters tgl_uncore_imc_freerunning[] = {
+ 	[TGL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0xd840, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_READ]		= { 0xd858, 0x0, 0x0, 1, 64 },
+ 	[TGL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xd8A0, 0x0, 0x0, 1, 64 },
+@@ -1661,7 +1661,7 @@ enum perf_adl_uncore_imc_freerunning_types {
+ 	ADL_MMIO_UNCORE_IMC_FREERUNNING_TYPE_MAX
+ };
+ 
+-static struct freerunning_counters adl_uncore_imc_freerunning[] = {
++static const struct freerunning_counters adl_uncore_imc_freerunning[] = {
+ 	[ADL_MMIO_UNCORE_IMC_DATA_TOTAL]	= { 0x40, 0x0, 0x0, 1, 64 },
+ 	[ADL_MMIO_UNCORE_IMC_DATA_READ]		= { 0x58, 0x0, 0x0, 1, 64 },
+ 	[ADL_MMIO_UNCORE_IMC_DATA_WRITE]	= { 0xA0, 0x0, 0x0, 1, 64 },
+diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
+index ca98744343b8..a88343bbd6a6 100644
+--- a/arch/x86/events/intel/uncore_snbep.c
++++ b/arch/x86/events/intel/uncore_snbep.c
+@@ -4042,7 +4042,7 @@ enum perf_uncore_iio_freerunning_type_id {
+ };
+ 
+ 
+-static struct freerunning_counters skx_iio_freerunning[] = {
++static const struct freerunning_counters skx_iio_freerunning[] = {
+ 	[SKX_IIO_MSR_IOCLK]	= { 0xa45, 0x1, 0x20, 1, 36 },
+ 	[SKX_IIO_MSR_BW]	= { 0xb00, 0x1, 0x10, 8, 36 },
+ 	[SKX_IIO_MSR_UTIL]	= { 0xb08, 0x1, 0x10, 8, 36 },
+@@ -4881,7 +4881,7 @@ enum perf_uncore_snr_iio_freerunning_type_id {
+ 	SNR_IIO_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters snr_iio_freerunning[] = {
++static const struct freerunning_counters snr_iio_freerunning[] = {
+ 	[SNR_IIO_MSR_IOCLK]	= { 0x1eac, 0x1, 0x10, 1, 48 },
+ 	[SNR_IIO_MSR_BW_IN]	= { 0x1f00, 0x1, 0x10, 8, 48 },
+ };
+@@ -5238,7 +5238,7 @@ enum perf_uncore_snr_imc_freerunning_type_id {
+ 	SNR_IMC_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters snr_imc_freerunning[] = {
++static const struct freerunning_counters snr_imc_freerunning[] = {
+ 	[SNR_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
+ 	[SNR_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
+ };
+@@ -5480,7 +5480,7 @@ static unsigned icx_iio_bw_freerunning_box_offsets[] = {
+ 	0x0, 0x10, 0x20, 0x90, 0xa0, 0xb0,
+ };
+ 
+-static struct freerunning_counters icx_iio_freerunning[] = {
++static const struct freerunning_counters icx_iio_freerunning[] = {
+ 	[ICX_IIO_MSR_IOCLK]	= { 0xa55, 0x1, 0x20, 1, 48, icx_iio_clk_freerunning_box_offsets },
+ 	[ICX_IIO_MSR_BW_IN]	= { 0xaa0, 0x1, 0x10, 8, 48, icx_iio_bw_freerunning_box_offsets },
+ };
+@@ -5838,7 +5838,7 @@ enum perf_uncore_icx_imc_freerunning_type_id {
+ 	ICX_IMC_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters icx_imc_freerunning[] = {
++static const struct freerunning_counters icx_imc_freerunning[] = {
+ 	[ICX_IMC_DCLK]	= { 0x22b0, 0x0, 0, 1, 48 },
+ 	[ICX_IMC_DDR]	= { 0x2290, 0x8, 0, 2, 48 },
+ 	[ICX_IMC_DDRT]	= { 0x22a0, 0x8, 0, 2, 48 },
+@@ -6314,7 +6314,7 @@ enum perf_uncore_spr_iio_freerunning_type_id {
+ 	SPR_IIO_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters spr_iio_freerunning[] = {
++static const struct freerunning_counters spr_iio_freerunning[] = {
+ 	[SPR_IIO_MSR_IOCLK]	= { 0x340e, 0x1, 0x10, 1, 48 },
+ 	[SPR_IIO_MSR_BW_IN]	= { 0x3800, 0x1, 0x10, 8, 48 },
+ 	[SPR_IIO_MSR_BW_OUT]	= { 0x3808, 0x1, 0x10, 8, 48 },
+@@ -6393,7 +6393,7 @@ enum perf_uncore_spr_imc_freerunning_type_id {
+ 	SPR_IMC_FREERUNNING_TYPE_MAX,
+ };
+ 
+-static struct freerunning_counters spr_imc_freerunning[] = {
++static const struct freerunning_counters spr_imc_freerunning[] = {
+ 	[SPR_IMC_DCLK]		= { 0x22b0, 0x0, 0, 1, 48 },
+ 	[SPR_IMC_PQ_CYCLES]	= { 0x2318, 0x8, 0, 2, 48 },
+ };
+@@ -6744,7 +6744,7 @@ static struct intel_uncore_type *gnr_uncores[UNCORE_GNR_NUM_UNCORE_TYPES] = {
+ 	NULL,
+ };
+ 
+-static struct freerunning_counters gnr_iio_freerunning[] = {
++static const struct freerunning_counters gnr_iio_freerunning[] = {
+ 	[SPR_IIO_MSR_IOCLK]	= { 0x290e, 0x01, 0x10, 1, 48 },
+ 	[SPR_IIO_MSR_BW_IN]	= { 0x360e, 0x10, 0x80, 8, 48 },
+ 	[SPR_IIO_MSR_BW_OUT]	= { 0x2e0e, 0x10, 0x80, 8, 48 },
 -- 
-2.29.2
+2.45.2
 
