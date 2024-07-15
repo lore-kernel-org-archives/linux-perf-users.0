@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0DF81757E;
-	Mon, 15 Jul 2024 16:07:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 173CB4D8D1;
+	Mon, 15 Jul 2024 16:08:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721059679; cv=none; b=tpwmDigtMuCWQWlBJObtvSxXErd2tCodtoZzcuEEd7OtW1XwZbo2GZIIvAYrMaJchEY2AQbc/Bru81H4bzfUVnHKAMrjpPtv5luBzDz6ZUQH0jaInf2ryNgETWhMEMKDbMah7IEUVJiUPAl/LGB7+GhMynqoskkme8YdLLTQERA=
+	t=1721059682; cv=none; b=ptdH+5HyscZ3WxBsWgGUA5YdaoryL5Ts4WJPKzW4sNv3SfDyrsLTPggeva9JRmb6hqWnQkidfa3YCuFEZVvp9EsYWeECXzy8Br6tyV40TIvSS7jtOqLT7i0OZYg7J2hdVBJHipmaPL68/uXL9W/GXfAWzIqF8kRjpRZt2X9lcDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721059679; c=relaxed/simple;
-	bh=xl/0bEpk3BRRcoORH2dbm/1s8wpRj/jEJl01LF/oJYM=;
+	s=arc-20240116; t=1721059682; c=relaxed/simple;
+	bh=THudwkVwuPwa7x07vorLWh22uq9Bq8o+/y8n/tytTj8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bwbZzGQNnK5JURZgdcmhL/yi+m+H4SY+ugt0/oiGT08iTDGC4mOFHaI3e+wqUm1gUOlF+aficxA7qSS8mcubbYQ27UxPwqaZ8VCf2nGqjrGpdhZtGtXK+Dyt4B93b7sR5FY4Rl7M6NzrMReV/KyHoKFdX2hOxD33TdmbbZdTzfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZG75Vz+X; arc=none smtp.client-ip=192.198.163.13
+	 MIME-Version; b=Jjv8wtA0Pvk31NCdEiIEDdwRlyQhpJsavje9qcnwa1JALQFwWx2WenRdFbIfKOFxIulLWlRDD+kKtPbfRA6mlJFIUzI9ro3HFcs5wCFUNrnBGDM/gUj9pYPtVY6HPNTl+VA0DF92e1dOTixtV8fBViw/spK6tWOheKVfjSR+xcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=lNsjAkJf; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZG75Vz+X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lNsjAkJf"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721059678; x=1752595678;
+  t=1721059681; x=1752595681;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=xl/0bEpk3BRRcoORH2dbm/1s8wpRj/jEJl01LF/oJYM=;
-  b=ZG75Vz+XUyEi3y2as8uDTtQoixyH2lVWhC0DDQB7LGaGUjfpfUPt+a3u
-   mEXjFVnNbFtNBX4MlIhDWWHz20rDTdzlMkx+fA2oMQDys/QSQkJMi9H3E
-   DMq5D5dbmAQ7q1TNAl66fu5lNwHckn94cOuPf0KN9apNtM8v2VzS0ur8r
-   ItMYAB5UtJ/5x01cbjwC2ATkg/J44XT7cFQwdUKRlF2W4DCCSLJbHS5jA
-   XgUC51puE+gmJr0SDEtjBXQcPOWNecJtH/JgP/0EJNHLIS7eYMC9FDZqC
-   F1eiIFyYOedQ57uCIPprZY0AKr9ayETFx8nGN7YW5C7AkYycPQQ4xcWe9
-   Q==;
-X-CSE-ConnectionGUID: nK9DWUsESvSw2JKfMxsnLQ==
-X-CSE-MsgGUID: 4AYsv79kRUGvBmpBavcoaQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="21361230"
+  bh=THudwkVwuPwa7x07vorLWh22uq9Bq8o+/y8n/tytTj8=;
+  b=lNsjAkJfzziVNAZlf/BrmQ/vzCCjEgV5t4hjxohFplaLM00P0aVw6FFk
+   XqBKZOKNpg9GlY8MWGrCew7eym3G/8euoSSKN4qqOvpExslPoVEZqV1Ds
+   HKgDePONuW1fFQrLtt0gvfkQILrCf69GxaETtB0hCJDmZ8V5E7MvVX+i6
+   QIJqVaks1VtAmBHAxIxNwc4ED5MWjnJ19aT0C6erapO3HedTus2aKdTTS
+   fh7vnZRoJQ1q88O+q8oQ9pKT3Qd3Z0vQZtp+cM4RwOi5Y5BXJqCiA5meV
+   PpL3YG626XqUQm9zqKXkDH3/ibuIIhu6AKfaONuc5286p2EcLr10SJaYz
+   A==;
+X-CSE-ConnectionGUID: /AprmalZTseXnT8E4euWLw==
+X-CSE-MsgGUID: THnRBJkZREWQ6Uz7XJjOzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="21361247"
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="21361230"
+   d="scan'208";a="21361247"
 Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:07:55 -0700
-X-CSE-ConnectionGUID: ONpEVzWrTpauaJImW+/7XA==
-X-CSE-MsgGUID: L+3ArP1uS26NkQmSUB+iwA==
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:08:00 -0700
+X-CSE-ConnectionGUID: AdDkuYaGSKyrgmo3i5sSLg==
+X-CSE-MsgGUID: wHGiEGZSSgC47ZqGGYJl8Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
-   d="scan'208";a="49413550"
+   d="scan'208";a="49413563"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.49.253])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:07:50 -0700
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:07:55 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V9 05/13] perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
-Date: Mon, 15 Jul 2024 19:07:04 +0300
-Message-Id: <20240715160712.127117-6-adrian.hunter@intel.com>
+Subject: [PATCH V9 06/13] perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+Date: Mon, 15 Jul 2024 19:07:05 +0300
+Message-Id: <20240715160712.127117-7-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240715160712.127117-1-adrian.hunter@intel.com>
 References: <20240715160712.127117-1-adrian.hunter@intel.com>
@@ -81,8 +81,12 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Set pmu->auxtrace on ARM/ARM64 AUX area PMUs. evsel__is_aux_event() needs
-the setting to identify AUX area tracing selected events.
+evsel__is_aux_event() identifies AUX area tracing selected events.
+
+S390_CPUMSF uses a raw event type (PERF_TYPE_RAW - refer
+s390_cpumsf_evsel_is_auxtrace()) not a PMU type value that could be checked
+in evsel__is_aux_event(). However it sets needs_auxtrace_mmap (refer
+auxtrace_record__init()), so check that first.
 
 Currently, the features that use evsel__is_aux_event() are used only by
 Intel PT, but that may change in the future.
@@ -91,33 +95,27 @@ Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Acked-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/arch/arm/util/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/pmu.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-index 1c9541d01722..57dc94a6e38c 100644
---- a/tools/perf/arch/arm/util/pmu.c
-+++ b/tools/perf/arch/arm/util/pmu.c
-@@ -23,16 +23,19 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
- #ifdef HAVE_AUXTRACE_SUPPORT
- 	if (!strcmp(pmu->name, CORESIGHT_ETM_PMU_NAME)) {
- 		/* add ETM default config here */
-+		pmu->auxtrace = true;
- 		pmu->selectable = true;
- 		pmu->perf_event_attr_init_default = cs_etm_get_default_config;
- #if defined(__aarch64__)
- 	} else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
-+		pmu->auxtrace = true;
- 		pmu->selectable = true;
- 		pmu->is_uncore = false;
- 		pmu->perf_event_attr_init_default = arm_spe_pmu_default_config;
- 		if (strstarts(pmu->name, "arm_spe_"))
- 			pmu->mem_events = perf_mem_events_arm;
- 	} else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
-+		pmu->auxtrace = true;
- 		pmu->selectable = true;
- #endif
- 	}
+diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+index 986166bc7c78..0b38c51bd6eb 100644
+--- a/tools/perf/util/pmu.c
++++ b/tools/perf/util/pmu.c
+@@ -1199,8 +1199,12 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
+ 
+ bool evsel__is_aux_event(const struct evsel *evsel)
+ {
+-	struct perf_pmu *pmu = evsel__find_pmu(evsel);
++	struct perf_pmu *pmu;
+ 
++	if (evsel->needs_auxtrace_mmap)
++		return true;
++
++	pmu = evsel__find_pmu(evsel);
+ 	return pmu && pmu->auxtrace;
+ }
+ 
 -- 
 2.34.1
 
