@@ -1,99 +1,151 @@
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7EF1208BA
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 16:49:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEE3B208A9
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 16:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721062155; cv=none; b=JwF8e9bVXutivnRdZaDBEu4Yr8i81Y3h5W/zlMzkummWRBWjnbJJSrIopgPpdjbyjUNOVCl7dzKlezIwmZUNJDL23WJuyWDgdRB0FCpLPfVxBEP5ZgTp26XKN1idVNDaGR2wI3wKMvtMqQ5/z9wo7qrdSO4nvY6Us1nO8cuMMI8=
+	t=1721062579; cv=none; b=TBuxFpd7yTEOEyUeNqYAUlv0bQcqWx1aQHxu66n+j/J0J2V5HurTBRvOYBL2bzpnmZPWsyCyQ06UaJazSzseJSE90MQv+CRwXFXjEH3sR+4Rvu+PcEBrM8ExSV9ReWez7qIK3CNK/1hPxfV+aQfkxH2AwZ+z/7YqV4B9Hw1p6hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721062155; c=relaxed/simple;
-	bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
+	s=arc-20240116; t=1721062579; c=relaxed/simple;
+	bh=b8bjZwB6QeTPAtY832jHAfoqjJVRh8eguL+Cmdzqh6w=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LPBWXcK6IC0N4WTM2PPnHdkr+O7+PtoqZOfSXHnxcIUH7WWvIKVmalUCPBIDBDW/GFu7w8s+0aJ9yAux9J6JKXmeUvubs0TLOY8zRRgkMZZGwPYXT/5AoHfjZ0ihYn05w65lXzE+7ZfPYht2++evl+SbYKlQRJeNWnetUSnQUXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=O0IATCKe; arc=none smtp.client-ip=209.85.208.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	 To:Cc:Content-Type; b=jTmc7IDfciR6z1sDWoSsQf91BaVHQqOwjJ7Lp36d/BvspKtrsEvpds4CQGwHUrr2hGBBDL4XkO8cjrGyfheu86MWPkx7IGAZyEYW0gEuAjY9uxX56IWFfamyiG4lY3zdt3UJf1KxJmda0WnPtNFIvDO3tmImZ1M5HsK/lP1a/D4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vZYkCHbX; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="O0IATCKe"
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2eede876fcbso24916341fa.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 09:49:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZYkCHbX"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-44e534a1fbeso7001cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 09:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1721062152; x=1721666952; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721062576; x=1721667376; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
-        b=O0IATCKey6MKjFNC30HNhcqiXRYtr6jzdhzKD67767VsixBnf+t9b6z+OZwb0+uWAF
-         Sy4M1LqsS46kUGORmxMKEf/FpJ4MwKN4T/GPArbRZosgHqr2ZtbxrdbYUhEVH0RmYl4i
-         ttZkwjsCGfpRLBRgxNpTDen5ISr54ydL7arrtK21e61xNzK5YYiQoB2m06FXzcSeeXu4
-         am/FF5oWO898QmeLiIhD1Th8XESx3WUZ6LvkbvmFg5I9Ol6StYUyekO2xnbfnFTGi9Oj
-         1J20staOnGBMYu6Zvgn9fwbhRZJiq10YZDFS+pTy8YF3UCDjExj+HqksoLedH+MWR1DP
-         Y7bQ==
+        bh=02jBTyIYbhiBgb/Yu2ftb/npqvSP6Ka1Kr7RVDqcuYI=;
+        b=vZYkCHbXVguwl/U+Tbh98FyJaESZx5ABa0Eq60htOKSZk4QoeAp+7p+JOlY141xfbd
+         N5UtaPtHdIYNTZFxCqT8WEYjK8gHyGt6D8g5EfaJwbM0+1h0sLWPZ3TBuVnhkbROVNEi
+         ebbZLnqPZc1jLX/mKKEP5/8erTShg8jpgkRtmTmDm7Yk1B+FU5w+LweVyJiQQ7JCe8dy
+         xmuwT6I0ElNtWUIXBR+vD48tET2VqibHEwBxGo72OjZD4z3FwySP4yFZ0U/Uc9EpqHmJ
+         pdgUbvNYrA7vVDdld/Z6K9jUtucbQGue1b8hXraRAptbwhsr6sAQRz//85BOqVChZfrK
+         /arQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721062152; x=1721666952;
+        d=1e100.net; s=20230601; t=1721062576; x=1721667376;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BVNgqz+4odXWv/QdUrTS3ZJYLwOEmal7WpHwLv2mPPA=;
-        b=X9afD3/RTJpWch8IzUZAY3ClTTpa87lQ2TA8hXIT2P7xeVdvFKPrpDgrLJEq75AWtg
-         lXiA6ndf544J31mspQPH7Q3P8J32pZdHJA1yQ3ui/5B/7TlfB1dauVNVjutt4g/4OXf2
-         K+ZA7ScvFS8ymx3mtkN9OFjmSKzhXvgNp3dEvDd8xTKrh9TjAvMFQj7Ou5ySNSUS2Myz
-         QWpzeT1P16RaE/QTZIBBQx4hi3zzI0Rv0A97dZBS8Fq196px97ePmXwDJRR2eZh5Tvhf
-         U7Y0O1mhT7GpGfvUlu50+eRAC2rWdfSD2aPNZGshuh9Yu0sQt8x+rVTIbt3occWtUfcf
-         GHvw==
-X-Forwarded-Encrypted: i=1; AJvYcCVzzntL3BV/wrNTJAtVyWYVgRPp/Amw2eRXqaXSANYoDw5t7r38BuhVHrSdbEz+e5vZ0pP4CbGi66AmtVeyqeV/oGNnEqQ6YJK6m4hAWpfmzA==
-X-Gm-Message-State: AOJu0Yw98zpefk6kUxrx0EWN+LrrxPxZNtJFHkCfb/6R065IDNNDWERc
-	rlwTweCAvRt+Hvv2Z8ZDRhR/prIZKXf0OImzaChrCsHRdepyAC67IM1hbm/TLIKsfrI7SVM4RDC
-	BzuUcnEVQ2yTrMM/ViSkV+AS7yyml0EFniVtC
-X-Google-Smtp-Source: AGHT+IFRSOgkzkjLnzFYhjtojv9zXtEfhnmrpuhjhF1QSAGhPIuoCZ6kU3nMDyjzf5kVyjnwwKCKcmfbXnyCQ/kBnoQ=
-X-Received: by 2002:a2e:beaa:0:b0:2ee:5b64:b471 with SMTP id
- 38308e7fff4ca-2eef2da5dacmr4220141fa.30.1721062151922; Mon, 15 Jul 2024
- 09:49:11 -0700 (PDT)
+        bh=02jBTyIYbhiBgb/Yu2ftb/npqvSP6Ka1Kr7RVDqcuYI=;
+        b=J+NHAiSdJ4cRGO312Ln/lC/4x0gAVmjdl99Qf1+vZ4yfVSut6biEbUdseYmVUzJZ2m
+         reSEb18djG4rCRIqS+MFVfD0HJj6OEB3DIGxtVrLGIJYPVcppvv6oBirDPyIgPP4njT9
+         G5F3zUsNtLTvfN1YwypLykfbmjau+uAlXoaebwE8CVMj/Crxw95p9sRktrqpU1aLT3B9
+         3bhuSWn0bgg1g8ufkyBmzjBaO65XBBzO5ktRPLCh9Ov0NseRX98jkHkjYunkGxBHSQL5
+         JUacFUM03c6fmK+LxwLdgr+CxMyM0Ak56aP2u0e0rxiZbqjKC0XXXAX9nJdt/NWq3MKN
+         16qA==
+X-Gm-Message-State: AOJu0Yxk+9rtgdVwitlwC1yiVvIKYeq22eFAWxQV33AlMZqWOdADPP66
+	9GG7zcUTyabBsGbijtwjbl9VkF9B0RVBtcCxkKMtFu6tRFEyqfejSbZ546ig6AfoOOgi6n6+ApY
+	K33ltJ45TFluOuXICN0bewnMoeruYuCrIuUMC
+X-Google-Smtp-Source: AGHT+IGga64Ehsgh34xHpgbxZ4XkIMmBA3oeSeXSOSPWRrkTmDK1WjXya3JOHlljMiiiEhUtI9zjO9VfED8ibiHkp3s=
+X-Received: by 2002:a05:622a:548f:b0:444:97b7:e3b1 with SMTP id
+ d75a77b69052e-44f5ac8ec0amr5581261cf.13.1721062575590; Mon, 15 Jul 2024
+ 09:56:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240713044645.10840-1-khuey@kylehuey.com> <ZpLkR2qOo0wTyfqB@krava>
- <20240715111208.GB14400@noisy.programming.kicks-ass.net> <CAP045ArBNZ559RFrvDTsHj42S4W+BuReHe+XV2tBPSeoHOMMpA@mail.gmail.com>
- <20240715150410.GJ14400@noisy.programming.kicks-ass.net> <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
- <20240715163003.GK14400@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240715163003.GK14400@noisy.programming.kicks-ass.net>
-From: Kyle Huey <me@kylehuey.com>
-Date: Mon, 15 Jul 2024 09:48:58 -0700
-Message-ID: <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing events
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Olsa <olsajiri@gmail.com>, khuey@kylehuey.com, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	robert@ocallahan.org, Joe Damato <jdamato@fastly.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+References: <20240715094715.3914813-1-james.clark@linaro.org>
+In-Reply-To: <20240715094715.3914813-1-james.clark@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 15 Jul 2024 09:56:04 -0700
+Message-ID: <CAP-5=fXug1ht3dVDpuG6hvzEYdexT9eH80E3B2NUraONXcCS=w@mail.gmail.com>
+Subject: Re: [PATCH] perf dso: Fix build when libunwind is enabled
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>, 
+	Yunseong Kim <yskelg@gmail.com>, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jul 15, 2024 at 9:30=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+On Mon, Jul 15, 2024 at 2:48=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
 >
-> On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
+> Now that symsrc_filename is always accessed through an accessor, we also
+> need a free() function for it to avoid the following compilation error:
 >
-> > I think this would probably work but stealing the bit seems far more
-> > complicated than just gating on perf_event_is_tracing().
+>   util/unwind-libunwind-local.c:416:12: error: lvalue required as unary
+>     =E2=80=98&=E2=80=99 operand
+>   416 |      zfree(&dso__symsrc_filename(dso));
 >
-> perf_event_is_tracing() is something like 3 branches. It is not a simple
-> conditional. Combined with that re-load and the wrong return value, this
-> all wants a cleanup.
->
-> Using that LSB works, it's just that the code aint pretty.
+> Fixes: 1553419c3c10 ("perf dso: Fix address sanitizer build")
+> Signed-off-by: James Clark <james.clark@linaro.org>
 
-Maybe we could gate on !event->tp_event instead. Somebody who is more
-familiar with this code than me should probably confirm that tp_event
-being non-null and perf_event_is_tracing() being true are equivalent
-though.
+And I wonder how this ever built..
 
-- Kyle
+Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks!
+Ian
+
+> ---
+>  tools/perf/util/dso.c                    | 2 +-
+>  tools/perf/util/dso.h                    | 5 +++++
+>  tools/perf/util/unwind-libunwind-local.c | 2 +-
+>  3 files changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> index 2340c4f6d0c2..67414944f245 100644
+> --- a/tools/perf/util/dso.c
+> +++ b/tools/perf/util/dso.c
+> @@ -1501,7 +1501,7 @@ void dso__delete(struct dso *dso)
+>         auxtrace_cache__free(RC_CHK_ACCESS(dso)->auxtrace_cache);
+>         dso_cache__free(dso);
+>         dso__free_a2l(dso);
+> -       zfree(&RC_CHK_ACCESS(dso)->symsrc_filename);
+> +       dso__free_symsrc_filename(dso);
+>         nsinfo__zput(RC_CHK_ACCESS(dso)->nsinfo);
+>         mutex_destroy(dso__lock(dso));
+>         RC_CHK_FREE(dso);
+> diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
+> index 878c1f441868..ed0068251c65 100644
+> --- a/tools/perf/util/dso.h
+> +++ b/tools/perf/util/dso.h
+> @@ -602,6 +602,11 @@ static inline void dso__set_symsrc_filename(struct d=
+so *dso, char *val)
+>         RC_CHK_ACCESS(dso)->symsrc_filename =3D val;
+>  }
+>
+> +static inline void dso__free_symsrc_filename(struct dso *dso)
+> +{
+> +       zfree(&RC_CHK_ACCESS(dso)->symsrc_filename);
+> +}
+> +
+>  static inline enum dso_binary_type dso__symtab_type(const struct dso *ds=
+o)
+>  {
+>         return RC_CHK_ACCESS(dso)->symtab_type;
+> diff --git a/tools/perf/util/unwind-libunwind-local.c b/tools/perf/util/u=
+nwind-libunwind-local.c
+> index f6a6f6a91030..16c2b03831f3 100644
+> --- a/tools/perf/util/unwind-libunwind-local.c
+> +++ b/tools/perf/util/unwind-libunwind-local.c
+> @@ -413,7 +413,7 @@ static int read_unwind_spec_debug_frame(struct dso *d=
+so,
+>                                                         __func__,
+>                                                         dso__symsrc_filen=
+ame(dso),
+>                                                         debuglink);
+> -                                       zfree(&dso__symsrc_filename(dso))=
+;
+> +                                       dso__free_symsrc_filename(dso);
+>                                 }
+>                                 dso__set_symsrc_filename(dso, debuglink);
+>                         } else {
+> --
+> 2.34.1
+>
