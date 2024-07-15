@@ -1,238 +1,262 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86FCE3BBC2;
-	Mon, 15 Jul 2024 21:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CB53BBC2
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 21:44:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721079666; cv=none; b=YWzzBi0zKbI+hbST9Qs6Oyp3zYRtiHhnLoufmfKdBViB1pjDeUisQ01LadgmV4IpazNlzcw+PtviaZjQ530gMhgacvXMbjcExRoWH3RUnnhn1zKTYckjThHZMW3heyYiPmOr72dPRF3klpekTQEqmzMAtXrFf8W6NgtNX+QXrlU=
+	t=1721079850; cv=none; b=jw4SQ7tFe5HzjqSKco4DXWmZONnIddH8Bjx8pGbCDMxHwPKQis8JWQ4P+k+EgUW+8JMFT18i1hqz2KIdQ30vDDEh+ySWGOd4tAJ1Iutue4sUzvDfxbl14PZty7sHmUbkSizU3xasaJ6pSZUvDSlyecg9onTcoqUw6Y5mwcE48vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721079666; c=relaxed/simple;
-	bh=PwA2652JlJnz5K9p0q2tEwhs5eV6Sq/FtsBPNbPwZsg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ktra/K/82M5SNQI+LMRmutgLyycIbfZEIg2zgQwk9UzVO50Okq+XwGHWOn1zXOuHsroWyIoiOP0QAj1ePQ2/IfQdM9tHp35YH6xHSswg6D+ObCiIXpF67ILdllzEb6Q5O4dePgrn8qNYCXlGcDVg7eO5OHJKixV/4dbyEsqSYNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fF4JVtLW; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721079850; c=relaxed/simple;
+	bh=iOART0ipK+1hi4xZSLp3kV4LBrHcAgdFJZ3ePxsMgnM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Tj6hVWCOZ/xID83ys7IqtIsp0pbAVD3zIcy11N1yBKTz4Ju9AmgPz4IR3Ws/FIJ0I9gYMAQar8sSBYlm/b5LH4jQjffV1gFY1S6AVoT8yM4Rmu1MWmY+mcsxvTFkwSU1NecpQLNV9pW5vpljdO6Z0uWuQEFjPoUUG26phVC4mso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4Zm4sPor; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fF4JVtLW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721079664; x=1752615664;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=PwA2652JlJnz5K9p0q2tEwhs5eV6Sq/FtsBPNbPwZsg=;
-  b=fF4JVtLW+nJvSxrBhs4mP/EhP2xBxx1/pL6c5gP7v5gM/vF6GiN9rRZK
-   V+3koFRS91edwUStJOhCpHYG/henqVMYy/rHq1gZiLQkNcZoBU8a2UStu
-   NtBvPzjH7MvefnUCYj35bSPy5fZ9ypzGQZbUFwUNmg4VJV5dFnErabHKe
-   rh7CeIJmhurvmxrBg0PSFK5LpwogEf8M9cJmPCMaInVeFlvve/DwFFeUH
-   2rSbEl7rIK6oT/9gnLipz8sI1cl+obH2LWkCrWmvXskQVP6RVt+jTopCZ
-   +Fy2ftRBFxEOIpCk9stlUMn6A2xwR/atcxiH1Yfoc9Auv6WdJL689/TI2
-   Q==;
-X-CSE-ConnectionGUID: rAUt6OylQximujQbqXMXGQ==
-X-CSE-MsgGUID: sfiyiyHMT4e7JgEzonkVYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="41013559"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="41013559"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 14:41:04 -0700
-X-CSE-ConnectionGUID: J5GnYYHxT9eDvwEtB5ny5w==
-X-CSE-MsgGUID: cca2o6NZTNWyZG47SSGLiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="54683053"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 14:41:04 -0700
-Received: from [10.212.96.36] (kliang2-mobl1.ccr.corp.intel.com [10.212.96.36])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 6F39420B8CD6;
-	Mon, 15 Jul 2024 14:41:02 -0700 (PDT)
-Message-ID: <48b4bfb0-d0c7-4d1f-9e52-06e873646366@linux.intel.com>
-Date: Mon, 15 Jul 2024 17:41:01 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4Zm4sPor"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3815ad8adc9so42375ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 14:44:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721079848; x=1721684648; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q3amkL1H4ZKyi6XfzXBNLueafBWppUuU6SEPwkJIi2Y=;
+        b=4Zm4sPorV/8Kct/ucOLDJyDVOuuhk+r15c47RfOvrI01nxGzSKhYk8IUPLQt9q/pg7
+         /eJ6K/rxbIzBJ4yNSUcqh6+Isd2VjN45Bpse6fyUhq/LChDdc2unnOAtnWwGo1q+6Ra9
+         YutP0f8QjMCVZX3WPSkiuAHSk2JCI1aZFhc84oyaCY0pGHwE5vdzztWb2FQ0euYbMyP0
+         2v8siIkQepHvXe9S/SuUyyK1x98GsG0oHr/Gl3Uiwpq70XtuAN9khuY7RKXBp7JpnD2z
+         XbULNEKACG9BPeB6mQjhZhHBIYj5jf5FUpUMlLMQRbfC5kbzQ5nlfQmDad/ww7CCHS7U
+         PRag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721079848; x=1721684648;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q3amkL1H4ZKyi6XfzXBNLueafBWppUuU6SEPwkJIi2Y=;
+        b=QSzI4V+12wdmFaNWW8hyIUKSyabkJY5BnBCjNGd9vuA5QvyKldt3WdUJq1zXKBJ1+S
+         xaO1QIMY9VqmKn+OF7JGa/xt84CLYR2XKiM29Jvu6jHmYePdVzroynGYA33ILIkSHoBS
+         Wv8XsF8DqbuJqhIwohYaRmIhqZ70cWSf/oLbJFj+wEPUPBpm416hxopq73sBcM54xob8
+         1dMo/2zINNTFTUBAbOtY+lYQXDZRR+aeYXuyT/QMn1om6iBwoA3Rx8dSOj10WHF8j7Q+
+         QtOzbCyvkJ/iM+3brz2khqH4BGboqocYDGde7EclczEcEKZ4R0ZSHQ9Xp1LxdQzBROXO
+         CEzQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmI+2ViBC8YxqDX3Q7btzSCdXdE4aBwMFobaMG+v+nyfEqIHANMJi5QLce++2/aSkX7ccAfazctwX3k9T4bfILQKtEWWZYk4R/LSk14h5rtA==
+X-Gm-Message-State: AOJu0YxXXc3syjVscelmyI1Yxq2R5PtoPdAENrh0HQ+8aLHRwLgt4whG
+	h13FTyb0TPIu/65Gf6GxluzepfHwOINba+fqB8UkEQzh/T3Cr2QLFM6CX8ZVDx3BWLUZZPilbMi
+	FoIC+WPpr0SgrzKAZUfQmfIQ9Ix2989Dvi3jr
+X-Google-Smtp-Source: AGHT+IEFgTxOp8oe9itMdaaRuGV9iiTBREIpojoh2SSfmAHSYzoxmt5lyKaNR7JMpmVQE6Qex+Suuw9OoTAe8/R1MBs=
+X-Received: by 2002:a05:6e02:12e2:b0:376:30ec:3f04 with SMTP id
+ e9e14a558f8ab-393e911a8c1mr302555ab.11.1721079847830; Mon, 15 Jul 2024
+ 14:44:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
- perf-sanity-tests.perf_all_PMU_test.fail
-To: Ian Rogers <irogers@google.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
- Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202407101021.2c8baddb-oliver.sang@intel.com>
- <ec744c86-b73e-417a-8e3a-c07142bf37d1@linux.intel.com>
- <CAP-5=fUqGcnGvB71jHHTecLqcky6+TrFo+hWb=eBxZjxfe_m-g@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fUqGcnGvB71jHHTecLqcky6+TrFo+hWb=eBxZjxfe_m-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240531194414.1849270-1-l.stach@pengutronix.de>
+ <8b31bc0823df42e1ef4c22eac159fa58694887c7.camel@pengutronix.de>
+ <ZoXRr9wcE98ijyFA@google.com> <CAP-5=fWxuPW1WGSOV-wqYXJ-4kiwefujprnGn3YfVzO+62-i-Q@mail.gmail.com>
+ <b3a4282a-91b6-49a0-83d1-470cc4873dc1@linaro.org> <ac1d9124e497a1667e7cbc340f923cb4449764bb.camel@pengutronix.de>
+In-Reply-To: <ac1d9124e497a1667e7cbc340f923cb4449764bb.camel@pengutronix.de>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 15 Jul 2024 14:43:56 -0700
+Message-ID: <CAP-5=fUuK8TJF-djerEZs05u227kteeZoshAdiay=3HuUpnkvg@mail.gmail.com>
+Subject: Re: [PATCH] perf jevents: return potentially empty metrics table
+To: Lucas Stach <l.stach@pengutronix.de>, John Garry <john.g.garry@oracle.com>
+Cc: James Clark <james.clark@linaro.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Leo Yan <leo.yan@linux.dev>, James Clark <james.clark@arm.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, patchwork-lst@pengutronix.de, 
+	linux-perf-users@vger.kernel.org, kernel@pengutronix.de, 
+	Kan Liang <kan.liang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
++John Garry
 
+On Mon, Jul 15, 2024 at 8:54=E2=80=AFAM Lucas Stach <l.stach@pengutronix.de=
+> wrote:
+>
+> Am Montag, dem 15.07.2024 um 16:12 +0100 schrieb James Clark:
+> >
+> > On 12/07/2024 10:54 pm, Ian Rogers wrote:
+> > > On Wed, Jul 3, 2024 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.=
+org> wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > On Mon, Jul 01, 2024 at 07:19:55PM +0200, Lucas Stach wrote:
+> > > > > Hi,
+> > > > >
+> > > > > has this patch fallen through the cracks? It fixes a functional
+> > > > > regression where the DDR controller metrics are completely unavai=
+lable
+> > > > > on all i.MX8M* systems and thus would be nice if someone could ha=
+ve a
+> > > > > look.
+> > > > >
+> > > > > Regards,
+> > > > > Lucas
+> > > > >
+> > > > > Am Freitag, dem 31.05.2024 um 21:44 +0200 schrieb Lucas Stach:
+> > > > > > Don't return NULL when a empty (num_pmus =3D 0) metrics table i=
+s encountered,
+> > > > > > as this causes many of the users to bail out, which will skip m=
+atching any
+> > > > > > potentially existing sys metrics later on. Instead return the e=
+mpty table
+> > > > > > which will be handled properly by the iterators and allows matc=
+hing to
+> > > > > > continue.
+> > > > > >
+> > > > > > This fixes metrics reporting on systems where only the sys, but=
+ not the
+> > > > > > core PMUs have metrics defined.
+> > > > > >
+> > > > > > Fixes: f20c15d13f01 ("perf pmu-events: Remember the perf_events=
+_map for a PMU")
+> > > > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > > >
+> > > > Looks ok to me.  Ian?
+> > >
+> > > Sorry I missed this, I expect to see patches on LKML and so my email
+> > > filters placed this elsewhere.
+> > >
+> > > The change doesn't make sense. A search is requested with a PMU and
+> > > you return success (the table) when there is no PMU match. If this
+> > > behavior were expected then NULL should be passed as a PMU - this is
+> > > the behavior in util/pmu.c and ARM is the only architecture to pass a
+> > > PMU. The ARM pmu_metrics_table__find also specifically breaks
+> > > heterogeneous (BIG.little) systems and this change won't impact/fix
+> > > that. Perhaps there is some context I lack.
+> > >
+>
+> The missing context is probably the call chain that I somehow omitted
+> and needed to piece together again right now. The issue I'm try to fix
+> here is perf stat not being able to measure metrics from a system-wide
+> PMU (the i.MX8M* ddrc) only.
+>
+> The underlying issue is that when there is no non-systemwide PMU,
+> perf_pmu__find_metrics_table will return NULL after f20c15d13f01. This
+> causes metricgroup__parse_groups to drop out early. However, we need
+> this function to call the chain parse_groups() ->
+> metricgroup__add_metric_list -> metricgroup__add_metric, as only at
+> this point system wide metrics, like the ddrc, will be added to the
+> list.
+>
+> It is correct to drop out early, as those functions can not be called
+> with a NULL parameter. Before f20c15d13f01 and after the patch
+> discussed here perf_pmu__find_metrics_table() will simply return a
+> table with 0 entries. The called functions are fine with this, as they
+> iterate the entries and the execution flow is able to reach the point
+> where the system wide events are added.
 
-On 2024-07-15 4:11 p.m., Ian Rogers wrote:
-> On Mon, Jul 15, 2024 at 1:05 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->> Hi Ian,
->>
->> On 2024-07-10 12:59 a.m., kernel test robot wrote:
->>>
->>>
->>> Hello,
->>>
->>> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
->>>
->>> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
->>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>>
->>> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
->>>
->>> in testcase: perf-sanity-tests
->>> version:
->>> with following parameters:
->>>
->>>       perf_compiler: gcc
->>>
->>>
->>>
->>> compiler: gcc-13
->>> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
->>>
->>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>
->>>
->>> we also observed two cases which also failed on parent can pass on this commit.
->>> FYI.
->>>
->>>
->>> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
->>> ---------------- ---------------------------
->>>        fail:runs  %reproduction    fail:runs
->>>            |             |             |
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
->>>            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
->>>
->>>
->>>
->>>
->>>
->>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>> the same patch/commit), kindly add following tags
->>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
->>>
->>>
->>>
->>> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
->>> 105: perf all metricgroups test                                      : Ok
->>> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
->>> 106: perf all metrics test                                           : Ok
->>> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
->>> 107: perf all libpfm4 events test                                    : Ok
->>> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
->>> 108: perf all PMU test                                               : FAILED!
->>>
->>
->> The failure is caused by the below change in the e2641db83f18.
->>
->> +    {
->> +        "BriefDescription": "This 48-bit fixed counter counts the UCLK
->> cycles",
->> +        "Counter": "FIXED",
->> +        "EventCode": "0xff",
->> +        "EventName": "UNC_CLOCK.SOCKET",
->> +        "PerPkg": "1",
->> +        "PublicDescription": "This 48-bit fixed counter counts the UCLK
->> cycles.",
->> +        "Unit": "cbox_0"
->>      }
->>
->> The other cbox events have the unit name "CBOX", while the fixed counter
->> has a unit name "cbox_0". So the events_table will maintain separate
->> entries for cbox and cbox_0.
->>
->> The perf_pmus__print_pmu_events() calculate the total number of events,
->> allocate an aliases buffer, store all the events into the buffer, sort,
->> and print all the aliases one by one.
->>
->> The problem is that the calculated total number of events doesn't match
->> the stored events on the SKL machine.
->>
->> The perf_pmu__num_events() is used to calculate the number of events. It
->> invokes the pmu_events_table__num_events() to go through the entire
->> events_table to find all events. Because of the
->> pmu_uncore_alias_match(), the suffix of uncore PMU will be ignored. So
->> the events for cbox and cbox_0 are all counted.
->>
->> When storing events into the aliases buffer, the
->> perf_pmu__for_each_event() only process the events for cbox.
->>
->> Since a bigger buffer was allocated, the last entry are all 0.
->> When printing all the aliases, null will be outputed.
->>
->> $ perf list pmu
->>
->> List of pre-defined events (to be used in -e or -M):
->>
->>   (null)                                             [Kernel PMU event]
->>   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
->>   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
->>
->>
->> I'm thinking of two ways to address it.
->> One is to only print all the stored events. The below patch can fix it.
->>
->> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
->> index 3fcabfd8fca1..2b2f5117ff84 100644
->> --- a/tools/perf/util/pmus.c
->> +++ b/tools/perf/util/pmus.c
->> @@ -485,6 +485,7 @@ void perf_pmus__print_pmu_events(const struct
->> print_callbacks *print_cb, void *p
->>                 perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
->>                                         perf_pmus__print_pmu_events__callback);
->>         }
->> +       len = state.index;
->>         qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
->>         for (int j = 0; j < len; j++) {
->>                 /* Skip duplicates */
->>
->> The only drawback is that perf list will not show the new cbox_0 event.
->> (But the event name still works. Users can still apply perf stat -e
->> unc_clock.socket.)
->>
->> Since the cbox_0 event is only available on old machines (SKL and
->> earlier), people should already use the equivalent kernel event. It
->> doesn't sounds a big issue for me. I prefer this simple fix.
->>
->> I think the other way would be to modify the perf_pmu__for_each_event()
->> to go through all the possible PMUs.
->> It seems complicated and may impact others ARCHs (e.g., S390). I haven't
->> tried it yet.
->>
->> What do you think?
->> Do you see any other ways to address the issue?
-> 
-> Ugh. It seems the sizing and then iterating approach is just prone to
-> keep breaking. Perhaps we can switch to realloc-ed arrays to avoid the
-> need for perf_pmu__num_events, which seems to be the source of the
-> problems.
-> 
+I don't see that in the commit:
+```
+ const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct
+perf_pmu *pmu)
+ {
+-        const struct pmu_metrics_table *table =3D NULL;
+-        char *cpuid =3D perf_pmu__getcpuid(pmu);
+-        int i;
++        const struct pmu_events_map *map =3D map_for_pmu(pmu);
 
-I think a realloc-ed array should have the same drawback as the first
-way, but bad performance.
-Because the pmu_add_cpu_aliases() in the perf_pmu__for_each_event() only
-add the events from the first matched PMU. If we don't fix it, the
-UNC_CLOCK.SOCKET of cbox_0 will never be displayed.
+-        /* on some platforms which uses cpus map, cpuid can be NULL for
+-         * PMUs other than CORE PMUs.
+-         */
+-        if (!cpuid)
++        if (!map)
+                 return NULL;
+
+-        i =3D 0;
+-        for (;;) {
+-                const struct pmu_events_map *map =3D &pmu_events_map[i++];
+-                if (!map->arch)
+-                        break;
+```
+Here the loop is terminated, "table =3D=3D NULL" and so the empty case
+will return NULL.
+```
++        if (!pmu)
++                return &map->metric_table;
+
+-                if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+-                        table =3D &map->metric_table;
+-                        break;
+-                }
++        for (size_t i =3D 0; i < map->metric_table.num_pmus; i++) {
++                const struct pmu_table_entry *table_pmu =3D
+&map->metric_table.pmus[i];
++                const char *pmu_name =3D
+&big_c_string[table_pmu->pmu_name.offset];
++
++                if (pmu__name_match(pmu, pmu_name))
++                           return &map->metric_table;
+         }
+-        free(cpuid);
+-        return table;
++        return NULL;
+ }
+```
+In any case this fix won't work on BIG.little where NULL is always
+returned, and so a fix higher up the stack is necessary.
 
 Thanks,
-Kan
+Ian
+
+> > > Thanks,
+> > > Ian
+> > >
+> >
+> > Yes it looks like the fix should possibly be higher up in the arm64
+> > pmu_metrics_table__find().
+> >
+> Maybe someone can figure out how to fix this in a better way higher up
+> the call chain with the description above. However, my fix looked quite
+> straight forward to me, as it simply restores the behavior before
+> f20c15d13f01.
+>
+> > Which set of JSON files are you seeing the issue with exactly Lucas? I
+> > see that there are multiple versions of i.MX8M metrics.
+> >
+> It was first observed on a i.MX8MP, but the issue is also reproducible
+> on i.MX8MM. I guess it doesn't matter which SoC is used specifically,
+> the key point is that the sampling isn't able to match any specific
+> PMU, but there are still system wide metrics.
+>
+> Regards,
+> Lucas
+>
+> > James
+> >
+> > > > Thanks,
+> > > > Namhyung
+> > > >
+> > > >
+> > > > > > ---
+> > > > > >   tools/perf/pmu-events/jevents.py | 2 +-
+> > > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-=
+events/jevents.py
+> > > > > > index e42efc16723e..0a1ed9ee1429 100755
+> > > > > > --- a/tools/perf/pmu-events/jevents.py
+> > > > > > +++ b/tools/perf/pmu-events/jevents.py
+> > > > > > @@ -1081,7 +1081,7 @@ const struct pmu_metrics_table *perf_pmu_=
+_find_metrics_table(struct perf_pmu *pm
+> > > > > >           if (!map)
+> > > > > >                   return NULL;
+> > > > > >
+> > > > > > -        if (!pmu)
+> > > > > > +        if (!pmu || !map->metric_table.num_pmus)
+> > > > > >                   return &map->metric_table;
+> > > > > >
+> > > > > >           for (size_t i =3D 0; i < map->metric_table.num_pmus; =
+i++) {
+> > > > >
+> > >
+>
