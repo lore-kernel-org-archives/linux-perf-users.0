@@ -1,204 +1,97 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBF161FFA
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 22:19:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F30013B791
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 22:25:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721081953; cv=none; b=QHN/C6SCv4H4q+wop2L+LNjOCVtFKsdVh5h6y+mX62gPb4nkxzUluwJzrDhoxnKPtyZKxhAkN2j0TE/9V9blXDWraqxmnhEaPWSgnSMdzLLTM0n/J4ecSWX7M1wKxHWA+8RPAHGZ66Kh1I9WccrlgBSXO3jPlrvgb7oWLUN+2VU=
+	t=1721082321; cv=none; b=Hnma2ERmIpWPl2hRvZPt2A6ZgqzcSEQq/EyLdaP5fcBH4Fc11J29ckuDJRSm++UcSF6LhjOICbeAHOfxx9DcIxvPIKUI64AxPoD5Gr8lct42hPWOstGf9essIAZUkkgezjLlmd479sidZ9znkuItup4XV+6nZsnsadn+TbznDec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721081953; c=relaxed/simple;
-	bh=q2iM3R4psEOOWq3s6QwTiuhDxUvFuopjDSuhDbdSLbQ=;
+	s=arc-20240116; t=1721082321; c=relaxed/simple;
+	bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qzGm+JT8xlWtpfNq0cPKXqju8IUIt1dH57hZr00t6ZGfUEzDuCTJcNUhynQS8/ETqXy14SAechrwPiUMB8Xx/5xsKzMHdUUnOyYYy8YjkHgl2x/LFo7YOoIO3JnAtdNuS++uc5A3rFRkuvSq5FG3djOiaHpRfd1abQjLS4pHkXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=HQjOLlGd; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	 To:Cc:Content-Type; b=r5A5HLR4g9x9G7TaLh7wKFFhdeDUeQxIZ8u+Bjee7Tt1wxL0cHWeMvedc0CP7lmi51BzY5J80BLEdznl2WbJ5+xflCXXHA6yiOJXG6CwxHfMmLLhP1ZVU32JMNesLFGw0xxsrGBXzWnQb9okUkXmJVSBOjPrUHBJuWjUJulwcdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pn3j2b9z; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="HQjOLlGd"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70af0684c2bso3165907b3a.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:19:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pn3j2b9z"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-447df43324fso62211cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1721081951; x=1721686751; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721082317; x=1721687117; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QTJuf0+j+ZAnr0Sm8e2FuiZ6M12xhnOZYRBdg8ooAms=;
-        b=HQjOLlGdXDpmaZfS7lhJbmVXcVc/Noaiawi2ipQ7JFxOjapROl/4zbVWpCoouSLq+Z
-         iIRUsMbaencXeMXQhxwc9Qh9YZDMsLJvCXZHDOkYPIzGP8XibIKDyP24osNe70+7ZUkR
-         uKlGkY0FLQH51jQox+BUaGsBRcygggAxFZ2I78TsdUxPlP3MCHBtbZMmLx8vQNLlYqFB
-         31cZkX0Yr3GmhG7saozY5UwVyfgay81UTGzYXMRvO8LfnjiiqelDdRmR9X1+ud03eSoT
-         h6IfFSAs9XQLxGAMI7yVkL0zS9dMgYzHQ/OuYGCvtgNM5fZZp5PKr1OC9pmGKzcZh4Dk
-         vNow==
+        bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
+        b=pn3j2b9zi3XTrM02C7ReXE7sV/qPEgq4U+xAa8SxqmK+SATpL398jkwaBUUR1N00cR
+         6A2rJAmqPZEpYkhtu+2rVG+uMtU2KuQdaA4xas+GJ9P2pe1iYOdooG+G/n3abRbEzXLM
+         0LX4op730olIqcD+8Uy43xXTI9Iqq8bWc05tbPEA6R0O7Cl2mp/bmnXfFBVVBv0am7vG
+         +CSHXgtxcos3mlf7udAeE4/dBj5GlcUsDoVSKAxKLD/J9v4IpEJZMCzkSniiM5puElCB
+         Yy5iDJOSfZUF5JMYh3GjxiO5bOinUY0y65u2BL4ITYysQLLoA0j1RqrqSfD5QYB3s/xU
+         NS9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721081951; x=1721686751;
+        d=1e100.net; s=20230601; t=1721082317; x=1721687117;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QTJuf0+j+ZAnr0Sm8e2FuiZ6M12xhnOZYRBdg8ooAms=;
-        b=Qyfydef1PUONudgmh1C9C05KQ2UueS12zJvQRhQBH5e8zp5oBhEUMFFw1uj6geW+wQ
-         9gqLwP9xzxSpcqqDPNwKA+uj8/06cbxfsrsnfcJZ+pbHIAoZlLL4uw9VXyqiCEaD3UG9
-         iIOvmOCWeIhWiqc2SNhrs2VKQwLNOnhWfIIgN3MStXLuGIt1+/xwqXhTRZR5N5lemQgZ
-         tRmBC+n0Y1wCnWBYS3TpU2RJJUcvdFyZLz46rJ2FGVG3scYa+ZMB/K1IlFWZHOx6a90T
-         cscgiiNOOt6UooK7/3e6w+2+HkissxD12iEZcj9OZP06/N69qu4WrlqzcA6LWCMmHzPt
-         0YVg==
-X-Gm-Message-State: AOJu0YyXctz4vDuiEAZP/n5/FyLKmkhPUsC7gon9MyRDhJeWYGl51BaE
-	hOJnZOLoKxnz9j2jaTYs702Bq/bkPMMASHRuBOqs/s37OkGT9oR7vqvATXf91zgb9rMzO+bKoG0
-	PDEmvNyQqnaQPucOX2Vd8+UStFKjliVEy2779+w==
-X-Google-Smtp-Source: AGHT+IFp411zL3L036RPXUYXv37ipSy4egRSTUEbZXD6Ln3L0YzPOmfg9CoNlmIG7GGw7S7FokbRCAmW5/cmvvr8hs4=
-X-Received: by 2002:a05:6a20:12c4:b0:1bd:233f:e60e with SMTP id
- adf61e73a8af0-1c3f1210945mr388234637.19.1721081951085; Mon, 15 Jul 2024
- 15:19:11 -0700 (PDT)
+        bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
+        b=M1Ipo0zVJ/oG4xHuZvjh95LD8Mer/oC2rGsGAPVMe0XK62M/EOHu4lwXU+sqvO4P2K
+         1f4VKK678eRHdpUbVwftMpsW7GTCUlU76jLltrwcAKwaSW0G78KzocJkKHtzRtOgFQ1l
+         VRQE5blbImpws78CmsN+0bCah4AM7xjf8pqPZwuyMs/1mVO0CQFYkPnHkq/2khcW/biH
+         j4spe1cG255Yo5s9j8El1CSIupYO3L2XOXSkQJOY9PdBDqB5g1I8eI9XWErFJVJJruff
+         DASHMn8R+1c17lJNXi+R3QhKQATH7j5c5viKqRKF1o6/MjPQEvtIJzE+IQlMMmcQn/IL
+         tn+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWIJzh6g+ovNPPWAJUpBtkVADUhzWClWxi08twzyYuAZaUA3jMqjQqrXWO8+CZgFZqEsBajxJIof+P/ACk1PwBxM1vpOaBftV4AVILOJM7Wnw==
+X-Gm-Message-State: AOJu0Yzc3MW68Kn/p+2cUvSUK06ucdlVhioHx6bPNXY6ufltEs1uTdPv
+	00G9EE4jrFBhxoTzN4VGMWATZ4FHO+iqwI11SMR2PtIgqhCk/9GHFemnbs2S2tQ4JFG8uOrIV+s
+	G8qjv5rLKmkZFrn9hrMH1dqUDkMQuBAb5wNKc
+X-Google-Smtp-Source: AGHT+IHYyLx5NZMwuMuZh1Z+E4Fk+g7KzT9Wi9MbqWX8yuGKTcGdIruyD9WKu8v1r6Koq/eGYelxM2+D839RrwOyfs4=
+X-Received: by 2002:a05:622a:5907:b0:446:64ad:ee91 with SMTP id
+ d75a77b69052e-44f7a7425c9mr1258371cf.20.1721082317051; Mon, 15 Jul 2024
+ 15:25:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240708232302.15267-1-cachen@purestorage.com>
- <20240708232302.15267-2-cachen@purestorage.com> <CAM9d7cisBvfLTzNp8=0SG6g3CA9zJFNayjopSEDX0fxRyG05UA@mail.gmail.com>
- <CALCePG0_PpwKK_=YrpCGr-j51dG8xtDP-yzBYGeLwphscFobRg@mail.gmail.com> <ZpGFfjebaW9LGNBo@google.com>
-In-Reply-To: <ZpGFfjebaW9LGNBo@google.com>
-From: Casey Chen <cachen@purestorage.com>
-Date: Mon, 15 Jul 2024 15:19:00 -0700
-Message-ID: <CALCePG0gUqXqz3nsK4JU3CdunzbXRKN0QnL1jinkKjKffKyCQw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf tool: fix handling NULL al->maps returned from thread__find_map
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	yzhong@purestorage.com
+References: <20240522204254.1841420-1-weilin.wang@intel.com> <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
+In-Reply-To: <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 15 Jul 2024 15:25:05 -0700
+Message-ID: <CAP-5=fXOTmMyPx_tQPoCfCP35E1o6YSyZde58ojyU1PLJBt96A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] perf test: make metric validation test return
+ early when there is no metric supported on the test system
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, weilin.wang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jul 12, 2024 at 12:35=E2=80=AFPM Namhyung Kim <namhyung@kernel.org>=
- wrote:
+On Fri, May 24, 2024 at 6:26=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> Hello,
+> On Wed, May 22, 2024 at 1:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> >
+> > From: Weilin Wang <weilin.wang@intel.com>
+> >
+> > Add a check to return the metric validation test early when perf list m=
+etric
+> > does not output any metric. This would happen when NO_JEVENTS=3D1 is se=
+t or in a
+> > system that there is no metric supported.
+> >
+> >
+> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 >
-> On Wed, Jul 10, 2024 at 03:29:27PM -0700, Casey Chen wrote:
-> > On Mon, Jul 8, 2024 at 10:01=E2=80=AFPM Namhyung Kim <namhyung@kernel.o=
-rg> wrote:
-> > >
-> > > Hello,
-> > >
-> > > On Mon, Jul 8, 2024 at 4:23=E2=80=AFPM Casey Chen <cachen@purestorage=
-.com> wrote:
-> > > >
-> > > > With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy function=
-s"),
-> > > > thread__find_map() would return with al->maps or al->map being NULL
-> > > > when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
-> > > > later deferencing on it would crash.
-> > > >
-> > > > Fix callers of thread__find_map() or thread__find_symbol() to handl=
-e
-> > > > this.
-> > >
-> > > It looks like you drop the callchain if it doesn't find a map/symbol.
-> > > Can we keep the entries with raw hex numbers instead?
-> > >
-> > In add_callchain_ip(), my change let it return if either al.maps is
-> > NULL or al.map is NULL after thread__find_symbol(), I'm not sure what
-> > else can add_callchain_ip() could do to keep raw hex numbers. If it
-> > proceeds, al.sym is NULL, the code inside 'if (al.sym !=3D NULL)' would
-> > skip. callchain_srcline() would return NULL. chain_cursor_append()
-> > would append a node whose ms.maps/ ms.map are NULL. Later
-> > dereferencing them would cause trouble. But we could add other
-> > information to the node, like ip, branch, nr_loop_iter, iter_cycles,
-> > branch_from, are these information good to have ? but how to avoid
-> > dereferencing NULL maps/map later.
->
-> By checking if it's NULL?  I think it's normal to have NULL map or sym
-> due to missing events, stripped binaries and so on.  The callchain code
-> used to print raw ip address when it doesn't have symbols.  And srcline
-> can/should do the same.
->
+> Tested-by: Ian Rogers <irogers@google.com>
 
-Could you help make a fix ? Actually I don't quite understand how it works.
+Ping.
 
-> Thanks,
-> Namhyung
->
-> > >
-> > > > ---
-> > > >  tools/perf/arch/powerpc/util/skip-callchain-idx.c | 10 ++++++----
-> > > >  tools/perf/util/machine.c                         |  5 +++++
-> > > >  tools/perf/util/unwind-libdw.c                    |  6 ++++--
-> > > >  3 files changed, 15 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/tools/perf/arch/powerpc/util/skip-callchain-idx.c b/to=
-ols/perf/arch/powerpc/util/skip-callchain-idx.c
-> > > > index 5f3edb3004d8..25b0804df4c4 100644
-> > > > --- a/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > > > +++ b/tools/perf/arch/powerpc/util/skip-callchain-idx.c
-> > > > @@ -255,13 +255,14 @@ int arch_skip_callchain_idx(struct thread *th=
-read, struct ip_callchain *chain)
-> > > >
-> > > >         thread__find_symbol(thread, PERF_RECORD_MISC_USER, ip, &al)=
-;
-> > > >
-> > > > -       if (al.map)
-> > > > -               dso =3D map__dso(al.map);
-> > > > +       if (!al.map)
-> > > > +               goto out;
-> > > > +
-> > > > +       dso =3D map__dso(al.map);
-> > > >
-> > > >         if (!dso) {
-> > > >                 pr_debug("%" PRIx64 " dso is NULL\n", ip);
-> > > > -               addr_location__exit(&al);
-> > > > -               return skip_slot;
-> > > > +               goto out;
-> > > >         }
-> > > >
-> > > >         rc =3D check_return_addr(dso, map__start(al.map), ip);
-> > > > @@ -282,6 +283,7 @@ int arch_skip_callchain_idx(struct thread *thre=
-ad, struct ip_callchain *chain)
-> > > >                 skip_slot =3D 3;
-> > > >         }
-> > > >
-> > > > +out:
-> > > >         addr_location__exit(&al);
-> > > >         return skip_slot;
-> > > >  }
-> > > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-> > > > index 8477edefc299..fa4037d7f3d4 100644
-> > > > --- a/tools/perf/util/machine.c
-> > > > +++ b/tools/perf/util/machine.c
-> > > > @@ -2098,7 +2098,12 @@ static int add_callchain_ip(struct thread *t=
-hread,
-> > > >                         }
-> > > >                         goto out;
-> > > >                 }
-> > > > +
-> > > >                 thread__find_symbol(thread, *cpumode, ip, &al);
-> > > > +               if (!al.maps || !al.map) {
-> > > > +                       err =3D 1;
-> > > > +                       goto out;
-> > > > +               }
-> > > >         }
-> > > >
-> > > >         if (al.sym !=3D NULL) {
-> > > > diff --git a/tools/perf/util/unwind-libdw.c b/tools/perf/util/unwin=
-d-libdw.c
-> > > > index b38d322734b4..fb038ef55be2 100644
-> > > > --- a/tools/perf/util/unwind-libdw.c
-> > > > +++ b/tools/perf/util/unwind-libdw.c
-> > > > @@ -53,8 +53,10 @@ static int __report_module(struct addr_location =
-*al, u64 ip,
-> > > >          */
-> > > >         thread__find_symbol(ui->thread, PERF_RECORD_MISC_USER, ip, =
-al);
-> > > >
-> > > > -       if (al->map)
-> > > > -               dso =3D map__dso(al->map);
-> > > > +       if (!al->map)
-> > > > +               return -1;
-> > > > +
-> > > > +       dso =3D map__dso(al->map);
-> > > >
-> > > >         if (!dso)
-> > > >                 return 0;
-> > > > --
-> > > > 2.45.2
-> > > >
-> > > >
+Thanks,
+Ian
