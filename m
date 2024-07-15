@@ -1,212 +1,240 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17B493BB2E
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 17:32:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C234EB37
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 18:52:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721064759; cv=none; b=rJkiFGmC/L7cc2CwpbPRAKcLcwEatS+kleKlpuvV2dI67BatJecMk79L9+uzLx8mOb1z0RxuRmkNDNTlLJ73qbXpLCJXHXSlDLiVG41F5QoiF7piXjqgTTlIcUQGv4SRByAfWIPJ/1wNMnda0my79A5TsfBF3zGjD+RE0EYpiSE=
+	t=1721069542; cv=none; b=P5T7GjJjJ4RwUg2/3qDS/izQ/9cHOQxUaWRyZoicBj3pQL0qEbmdp71UDq14oO8xgh2WWDWjW+RieBLOHQwNBS637+KeUKILszhJPmIThK1up/E0paKFQk3C786g5PnXT/XEw0M7flfoIkAC7Me25/6tz9gXiDXlKjOruKHO6zg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721064759; c=relaxed/simple;
-	bh=w7W2tJc/NWnVGIDxXD7UfEvws2Zuu/Z88JLpy5RdQYQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QRCZPJR1JpuE9l4ZeX61RtCSspA9AfTvPZKW8FPxqjLz/LSYj1twAdKDbF2MRMV1mg9WmODIsX0HPk6UqOpNHT42IVrcuKq5XGQP/PWh4t6BlzSQBstN4GDOVd0M8aUh4baqnFD3I1FjjBHqNUS9cI/op3akmwI0HFq7U+7Fkxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com; spf=fail smtp.mailfrom=broadcom.com; dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b=T8W/Fkak; arc=none smtp.client-ip=209.85.222.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=broadcom.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="T8W/Fkak"
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-79f02fe11aeso357449685a.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 10:32:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google; t=1721064757; x=1721669557; darn=vger.kernel.org;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Jbb7poOUlSC5bRN8yvATP5MUsy2zVr5mAwVoFd/AMbY=;
-        b=T8W/FkakJw71jhxgKtKoHmWOPa8ehfctIhI+mpCQH92B3nKEou3ZWute0cLJm1zbwL
-         2JYSD6RplcQ3sdKIAxC5+MAyJ7WgfIzT2rEevjV9nWB09vh31w+Iy+IgrYAT1Z6/kk9V
-         ckOPti6QIRFIuL9sfePqfFCCbzb76ZwYhQeFQ=
+	s=arc-20240116; t=1721069542; c=relaxed/simple;
+	bh=KKAz7xvGJiJSriLkw5TQ+aGgZfPuzbIY0bgSuWXB7gg=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=bQxLeq+X1Qq/ApoX12afGkdH3u6b7aLyO1boHB2LqKxw2/bjxvzWdCq7yXJUv1yGu2RV+bcdHxCx2ib1mV/2FjGclgD55EqH8PCKztakwEr9qlAQIQgZHRLusTSZ6MMX1D80a+V/uCIXRaVJbwBg3di1UN+LcxwcwdZt3AF7cRo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-381f1b3050bso49843855ab.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 11:52:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721064757; x=1721669557;
-        h=in-reply-to:autocrypt:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Jbb7poOUlSC5bRN8yvATP5MUsy2zVr5mAwVoFd/AMbY=;
-        b=nIAIWsDC80ZZPyGzdN1XJvHsmDA8S7vOwQIi0M7OOClSyNPwcwL53K1895Fb3sMzZo
-         CBeGKAtG1gOsCGa009Bz72yVSG8qEKzX4DuXEvWwxlGhmTyjbl8Dw/KYd3DI6Y6cFjST
-         n0qPuCNqphPMM3JAJTXSwFG2Qsuouxb7o7qL/issFuCz2ALXqhMSD4dfZtK7Iwh6Sw2l
-         24Xca7+9NySlVgXA8ZzqyLwcN97fy64J42RQmaXT32NFbJzjj38318wD/drqfGBgve0r
-         cDOUnf3XZG30dF54QCWvG49B6/deupT6WlAa90xLYMnAZsFgdQECWuEZQg0u6r/fxMaD
-         wslQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU8+0/MWYyIs1z8pTNwVnD+dJect/EQWDkUIMrQgej0V1qT3glNREUmiZch9ery8tcrtLWfcS8wBgTroduEtdLoaNQfXq3Neg0ZhVYtX5WFWw==
-X-Gm-Message-State: AOJu0Yxe7iw98IvdeffE6P2ZxW0KdvPO2aEZcyjfLDapTPI2AKfZcrou
-	aWUPsmTdxCN/dOOKemyLsUe/GXsoFoGz91sDbwfWOM5wgifo/gJMU5kQvQ9DOQ==
-X-Google-Smtp-Source: AGHT+IEJIVRsrFQ9uWgdmcepwf82lNzhjSO9TKa9YfnX7QiErSK7vDjK4T1Mfo+c5VvBmtKco5eKow==
-X-Received: by 2002:a05:620a:4081:b0:79f:186e:40c0 with SMTP id af79cd13be357-7a179fb2c33mr50483785a.53.1721064757016;
-        Mon, 15 Jul 2024 10:32:37 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a160c6dc8dsm218058685a.110.2024.07.15.10.32.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 10:32:36 -0700 (PDT)
-Message-ID: <9a1ec9c5-34a3-4a7e-833b-7a709781cd8c@broadcom.com>
-Date: Mon, 15 Jul 2024 10:32:18 -0700
+        d=1e100.net; s=20230601; t=1721069539; x=1721674339;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iWZmJfT2WTy+hyUXWk37v4aQr+mW/uWqlTbexPaz0EU=;
+        b=C9OKs0Tgl4zzK+VIN9/5JqUW4BHsWsogr6cQQU+Cmneo66idqcgVVv4S16fwtdMi3B
+         dEGKN9G1KLogf87rh9+LQUzFHoTPzdHxqRiWlUMQ0Vjh6GswGFRRqFvcZGrWEzCFVpBD
+         1sMZjp0NkWlBhtd/QR9GCTNVtucQgXZYmqZdwqZh1FQHYBYmMYtYJz1VX1VtfzfMvcpv
+         0vDkuJNNWjdQZ+ilYa5PXrZIEY3g1MRTd6fhEOsWFsjloiNcihEMzJI/Cuis4u8yjFHo
+         EAlAZpgjtcu0veCycrsZBSIg7ysE2omXMNUfLHr0hqrYOSpQdIvHEk/BKIB0w1GhpmiR
+         JUpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXcCBOMe1Tf+ueDoXPQO9R/N7IiXyOqFjHAOsO9i+F3Aj4ctuigWDEvwtm5+g5MCM2OyEZhl8wLaF2wmmStiomRLwv2/dOv1/wUpr5w/MZC9Q==
+X-Gm-Message-State: AOJu0YwdnGAHKm0+6Dubjo689ZlINeboxVayGAyas7mQolsyuzSTFarA
+	7RGQD/r5HWnb2uEHmZ6AhELbMFj7dQNFJuZ5XBZ1dWq6YjNrDgfPjdwGod8MOgpbZRAm6lerS/H
+	qVQKuflEYpk60XAUr6x1UGXKD/cl44BvdfLY5rp05T9pFoVhmEW6z8sQ=
+X-Google-Smtp-Source: AGHT+IFSLjXB99d684rNqu5EKxOXmDgBztQJCMBOI9Edg8TghskBm+qojiPldcJX6BQ/yva+uYHj+ASITIp7gmd/oiCP4HlsGgyx
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf dso: Fix build when libunwind is enabled
-To: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Leo Yan <leo.yan@linux.dev>,
- Yunseong Kim <yskelg@gmail.com>, linux-kernel@vger.kernel.org
-References: <20240715094715.3914813-1-james.clark@linaro.org>
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Autocrypt: addr=florian.fainelli@broadcom.com; keydata=
- xsBNBFPAG8ABCAC3EO02urEwipgbUNJ1r6oI2Vr/+uE389lSEShN2PmL3MVnzhViSAtrYxeT
- M0Txqn1tOWoIc4QUl6Ggqf5KP6FoRkCrgMMTnUAINsINYXK+3OLe7HjP10h2jDRX4Ajs4Ghs
- JrZOBru6rH0YrgAhr6O5gG7NE1jhly+EsOa2MpwOiXO4DE/YKZGuVe6Bh87WqmILs9KvnNrQ
- PcycQnYKTVpqE95d4M824M5cuRB6D1GrYovCsjA9uxo22kPdOoQRAu5gBBn3AdtALFyQj9DQ
- KQuc39/i/Kt6XLZ/RsBc6qLs+p+JnEuPJngTSfWvzGjpx0nkwCMi4yBb+xk7Hki4kEslABEB
- AAHNMEZsb3JpYW4gRmFpbmVsbGkgPGZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tPsLB
- IQQQAQgAywUCZWl41AUJI+Jo+hcKAAG/SMv+fS3xUQWa0NryPuoRGjsA3SAUAAAAAAAWAAFr
- ZXktdXNhZ2UtbWFza0BwZ3AuY29tjDAUgAAAAAAgAAdwcmVmZXJyZWQtZW1haWwtZW5jb2Rp
- bmdAcGdwLmNvbXBncG1pbWUICwkIBwMCAQoFF4AAAAAZGGxkYXA6Ly9rZXlzLmJyb2FkY29t
- Lm5ldAUbAwAAAAMWAgEFHgEAAAAEFQgJChYhBNXZKpfnkVze1+R8aIExtcQpvGagAAoJEIEx
- tcQpvGagWPEH/2l0DNr9QkTwJUxOoP9wgHfmVhqc0ZlDsBFv91I3BbhGKI5UATbipKNqG13Z
- TsBrJHcrnCqnTRS+8n9/myOF0ng2A4YT0EJnayzHugXm+hrkO5O9UEPJ8a+0553VqyoFhHqA
- zjxj8fUu1px5cbb4R9G4UAySqyeLLeqnYLCKb4+GklGSBGsLMYvLmIDNYlkhMdnnzsSUAS61
- WJYW6jjnzMwuKJ0ZHv7xZvSHyhIsFRiYiEs44kiYjbUUMcXor/uLEuTIazGrE3MahuGdjpT2
- IOjoMiTsbMc0yfhHp6G/2E769oDXMVxCCbMVpA+LUtVIQEA+8Zr6mX0Yk4nDS7OiBlvOwE0E
- U8AbwQEIAKxr71oqe+0+MYCc7WafWEcpQHFUwvYLcdBoOnmJPxDwDRpvU5LhqSPvk/yJdh9k
- 4xUDQu3rm1qIW2I9Puk5n/Jz/lZsqGw8T13DKyu8eMcvaA/irm9lX9El27DPHy/0qsxmxVmU
- pu9y9S+BmaMb2CM9IuyxMWEl9ruWFS2jAWh/R8CrdnL6+zLk60R7XGzmSJqF09vYNlJ6Bdbs
- MWDXkYWWP5Ub1ZJGNJQ4qT7g8IN0qXxzLQsmz6tbgLMEHYBGx80bBF8AkdThd6SLhreCN7Uh
- IR/5NXGqotAZao2xlDpJLuOMQtoH9WVNuuxQQZHVd8if+yp6yRJ5DAmIUt5CCPcAEQEAAcLB
- gQQYAQIBKwUCU8AbwgUbDAAAAMBdIAQZAQgABgUCU8AbwQAKCRCTYAaomC8PVQ0VCACWk3n+
- obFABEp5Rg6Qvspi9kWXcwCcfZV41OIYWhXMoc57ssjCand5noZi8bKg0bxw4qsg+9cNgZ3P
- N/DFWcNKcAT3Z2/4fTnJqdJS//YcEhlr8uGs+ZWFcqAPbteFCM4dGDRruo69IrHfyyQGx16s
- CcFlrN8vD066RKevFepb/ml7eYEdN5SRALyEdQMKeCSf3mectdoECEqdF/MWpfWIYQ1hEfdm
- C2Kztm+h3Nkt9ZQLqc3wsPJZmbD9T0c9Rphfypgw/SfTf2/CHoYVkKqwUIzI59itl5Lze+R5
- wDByhWHx2Ud2R7SudmT9XK1e0x7W7a5z11Q6vrzuED5nQvkhAAoJEIExtcQpvGagugcIAJd5
- EYe6KM6Y6RvI6TvHp+QgbU5dxvjqSiSvam0Ms3QrLidCtantcGT2Wz/2PlbZqkoJxMQc40rb
- fXa4xQSvJYj0GWpadrDJUvUu3LEsunDCxdWrmbmwGRKqZraV2oG7YEddmDqOe0Xm/NxeSobc
- MIlnaE6V0U8f5zNHB7Y46yJjjYT/Ds1TJo3pvwevDWPvv6rdBeV07D9s43frUS6xYd1uFxHC
- 7dZYWJjZmyUf5evr1W1gCgwLXG0PEi9n3qmz1lelQ8lSocmvxBKtMbX/OKhAfuP/iIwnTsww
- 95A2SaPiQZA51NywV8OFgsN0ITl2PlZ4Tp9hHERDe6nQCsNI/Us=
-In-Reply-To: <20240715094715.3914813-1-james.clark@linaro.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-	boundary="0000000000007f0dc8061d4c9d53"
+X-Received: by 2002:a05:6e02:12ef:b0:375:9f67:6e7d with SMTP id
+ e9e14a558f8ab-393d3373449mr18065ab.4.1721069539520; Mon, 15 Jul 2024 11:52:19
+ -0700 (PDT)
+Date: Mon, 15 Jul 2024 11:52:19 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000898167061d4dbac9@google.com>
+Subject: [syzbot] [perf?] KASAN: slab-use-after-free Read in filter_chain
+From: syzbot <syzbot+772df6edd4e13e9e9bc5@syzkaller.appspotmail.com>
+To: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
---0000000000007f0dc8061d4c9d53
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Hello,
 
-On 7/15/24 02:47, James Clark wrote:
-> Now that symsrc_filename is always accessed through an accessor, we also
-> need a free() function for it to avoid the following compilation error:
-> 
->    util/unwind-libunwind-local.c:416:12: error: lvalue required as unary
->      ‘&’ operand
->    416 |      zfree(&dso__symsrc_filename(dso));
-> 
-> Fixes: 1553419c3c10 ("perf dso: Fix address sanitizer build")
-> Signed-off-by: James Clark <james.clark@linaro.org>
+syzbot found the following issue on:
 
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
--- 
-Florian
+HEAD commit:    528dd46d0fc3 Merge tag 'net-6.10-rc8-2' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1168bc2d980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3456bae478301dc8
+dashboard link: https://syzkaller.appspot.com/bug?extid=772df6edd4e13e9e9bc5
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-528dd46d.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e282f55fdf5f/vmlinux-528dd46d.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/824cfb5d5809/bzImage-528dd46d.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+772df6edd4e13e9e9bc5@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in consumer_filter kernel/events/uprobes.c:869 [inline]
+BUG: KASAN: slab-use-after-free in filter_chain+0xf6/0x110 kernel/events/uprobes.c:880
+Read of size 8 at addr ffff88801a2b85b0 by task syz.1.1633/10836
+
+CPU: 0 PID: 10836 Comm: syz.1.1633 Not tainted 6.10.0-rc7-syzkaller-00254-g528dd46d0fc3 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:88 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:114
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:488
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ consumer_filter kernel/events/uprobes.c:869 [inline]
+ filter_chain+0xf6/0x110 kernel/events/uprobes.c:880
+ uprobe_mmap+0x46b/0x1240 kernel/events/uprobes.c:1387
+ mmap_region+0x1228/0x2760 mm/mmap.c:2987
+ do_mmap+0xbc7/0xf60 mm/mmap.c:1397
+ vm_mmap_pgoff+0x1ba/0x360 mm/util.c:573
+ ksys_mmap_pgoff+0x332/0x5d0 mm/mmap.c:1443
+ __do_sys_mmap arch/x86/kernel/sys_x86_64.c:86 [inline]
+ __se_sys_mmap arch/x86/kernel/sys_x86_64.c:79 [inline]
+ __x64_sys_mmap+0x125/0x190 arch/x86/kernel/sys_x86_64.c:79
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb371d75bd9
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb3717ff048 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
+RAX: ffffffffffffffda RBX: 00007fb371f03f60 RCX: 00007fb371d75bd9
+RDX: 0000000000000000 RSI: 0000000000003000 RDI: 0000000020000000
+RBP: 00007fb371de4e60 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000012 R11: 0000000000000246 R12: 0000000000000000
+R13: 000000000000000b R14: 00007fb371f03f60 R15: 00007ffc20b151a8
+ </TASK>
+
+Allocated by task 5195:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:370 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:387
+ kmalloc_node_noprof include/linux/slab.h:677 [inline]
+ __get_vm_area_node+0xe1/0x2d0 mm/vmalloc.c:3108
+ __vmalloc_node_range_noprof+0x276/0x1520 mm/vmalloc.c:3800
+ __vmalloc_node_noprof mm/vmalloc.c:3905 [inline]
+ vzalloc_noprof+0x6b/0x90 mm/vmalloc.c:3978
+ alloc_counters net/ipv6/netfilter/ip6_tables.c:815 [inline]
+ copy_entries_to_user net/ipv6/netfilter/ip6_tables.c:837 [inline]
+ get_entries net/ipv6/netfilter/ip6_tables.c:1039 [inline]
+ do_ip6t_get_ctl+0x6ba/0xaf0 net/ipv6/netfilter/ip6_tables.c:1677
+ nf_getsockopt+0x79/0xe0 net/netfilter/nf_sockopt.c:116
+ ipv6_getsockopt+0x1fd/0x2c0 net/ipv6/ipv6_sockglue.c:1494
+ tcp_getsockopt+0x9e/0x100 net/ipv4/tcp.c:4406
+ do_sock_getsockopt+0x2e5/0x760 net/socket.c:2374
+ __sys_getsockopt+0x1a1/0x270 net/socket.c:2403
+ __do_sys_getsockopt net/socket.c:2413 [inline]
+ __se_sys_getsockopt net/socket.c:2410 [inline]
+ __x64_sys_getsockopt+0xbd/0x160 net/socket.c:2410
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+Freed by task 5195:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+ poison_slab_object+0xf7/0x160 mm/kasan/common.c:240
+ __kasan_slab_free+0x32/0x50 mm/kasan/common.c:256
+ kasan_slab_free include/linux/kasan.h:184 [inline]
+ slab_free_hook mm/slub.c:2196 [inline]
+ slab_free mm/slub.c:4438 [inline]
+ kfree+0x12a/0x3b0 mm/slub.c:4559
+ vfree+0x25a/0x7a0 mm/vmalloc.c:3368
+ copy_entries_to_user net/ipv6/netfilter/ip6_tables.c:882 [inline]
+ get_entries net/ipv6/netfilter/ip6_tables.c:1039 [inline]
+ do_ip6t_get_ctl+0x8ec/0xaf0 net/ipv6/netfilter/ip6_tables.c:1677
+ nf_getsockopt+0x79/0xe0 net/netfilter/nf_sockopt.c:116
+ ipv6_getsockopt+0x1fd/0x2c0 net/ipv6/ipv6_sockglue.c:1494
+ tcp_getsockopt+0x9e/0x100 net/ipv4/tcp.c:4406
+ do_sock_getsockopt+0x2e5/0x760 net/socket.c:2374
+ __sys_getsockopt+0x1a1/0x270 net/socket.c:2403
+ __do_sys_getsockopt net/socket.c:2413 [inline]
+ __se_sys_getsockopt net/socket.c:2410 [inline]
+ __x64_sys_getsockopt+0xbd/0x160 net/socket.c:2410
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+
+The buggy address belongs to the object at ffff88801a2b8580
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 48 bytes inside of
+ freed 64-byte region [ffff88801a2b8580, ffff88801a2b85c0)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff88801a2b8100 pfn:0x1a2b8
+flags: 0xfff00000000200(workingset|node=0|zone=1|lastcpupid=0x7ff)
+page_type: 0xffffefff(slab)
+raw: 00fff00000000200 ffff8880154428c0 ffffea000082fd90 ffffea0000b53010
+raw: ffff88801a2b8100 000000000020001e 00000001ffffefff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52cc0(GFP_KERNEL|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 1, tgid 1 (swapper/0), ts 5044052246, free_ts 0
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1473
+ prep_new_page mm/page_alloc.c:1481 [inline]
+ get_page_from_freelist+0x1353/0x2e50 mm/page_alloc.c:3425
+ __alloc_pages_noprof+0x22b/0x2460 mm/page_alloc.c:4683
+ __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+ alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+ alloc_slab_page+0x56/0x110 mm/slub.c:2265
+ allocate_slab mm/slub.c:2428 [inline]
+ new_slab+0x84/0x260 mm/slub.c:2481
+ ___slab_alloc+0xdac/0x1870 mm/slub.c:3667
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3757
+ __slab_alloc_node mm/slub.c:3810 [inline]
+ slab_alloc_node mm/slub.c:3990 [inline]
+ kmalloc_trace_noprof+0x2b4/0x300 mm/slub.c:4149
+ kmalloc_noprof include/linux/slab.h:660 [inline]
+ get_sparsemem_vmemmap_info fs/proc/kcore.c:164 [inline]
+ kclist_add_private+0x7bb/0xd40 fs/proc/kcore.c:222
+ walk_system_ram_range+0x132/0x1e0 kernel/resource.c:524
+ kcore_ram_list fs/proc/kcore.c:248 [inline]
+ kcore_update_ram.isra.0+0x310/0x980 fs/proc/kcore.c:268
+ proc_kcore_init+0x212/0x270 fs/proc/kcore.c:703
+ do_one_initcall+0x128/0x700 init/main.c:1267
+ do_initcall_level init/main.c:1329 [inline]
+ do_initcalls init/main.c:1345 [inline]
+ do_basic_setup init/main.c:1364 [inline]
+ kernel_init_freeable+0x69d/0xca0 init/main.c:1578
+ kernel_init+0x1c/0x2b0 init/main.c:1467
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+page_owner free stack trace missing
+
+Memory state around the buggy address:
+ ffff88801a2b8480: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff88801a2b8500: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff88801a2b8580: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                                     ^
+ ffff88801a2b8600: 00 00 00 00 00 00 07 fc fc fc fc fc fc fc fc fc
+ ffff88801a2b8680: 00 00 00 00 00 00 07 fc fc fc fc fc fc fc fc fc
+==================================================================
 
 
---0000000000007f0dc8061d4c9d53
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-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
-riBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGj
-QjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5N
-UPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEAS0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigH
-M8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9ubG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmU
-Y/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaMld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V
-14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcy
-a5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/fhO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/
-XzCCBVgwggRAoAMCAQICDBP8P9hKRVySg3Qv5DANBgkqhkiG9w0BAQsFADBbMQswCQYDVQQGEwJC
-RTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTExMC8GA1UEAxMoR2xvYmFsU2lnbiBHQ0MgUjMg
-UGVyc29uYWxTaWduIDIgQ0EgMjAyMDAeFw0yMjA5MTAxMjE4MTFaFw0yNTA5MTAxMjE4MTFaMIGW
-MQswCQYDVQQGEwJJTjESMBAGA1UECBMJS2FybmF0YWthMRIwEAYDVQQHEwlCYW5nYWxvcmUxFjAU
-BgNVBAoTDUJyb2FkY29tIEluYy4xGTAXBgNVBAMTEEZsb3JpYW4gRmFpbmVsbGkxLDAqBgkqhkiG
-9w0BCQEWHWZsb3JpYW4uZmFpbmVsbGlAYnJvYWRjb20uY29tMIIBIjANBgkqhkiG9w0BAQEFAAOC
-AQ8AMIIBCgKCAQEA+oi3jMmHltY4LMUy8Up5+1zjd1iSgUBXhwCJLj1GJQF+GwP8InemBbk5rjlC
-UwbQDeIlOfb8xGqHoQFGSW8p9V1XUw+cthISLkycex0AJ09ufePshLZygRLREU0H4ecNPMejxCte
-KdtB4COST4uhBkUCo9BSy1gkl8DJ8j/BQ1KNUx6oYe0CntRag+EnHv9TM9BeXBBLfmMRnWNhvOSk
-nSmRX0J3d9/G2A3FIC6WY2XnLW7eAZCQPa1Tz3n2B5BGOxwqhwKLGLNu2SRCPHwOdD6e0drURF7/
-Vax85/EqkVnFNlfxtZhS0ugx5gn2pta7bTdBm1IG4TX+A3B1G57rVwIDAQABo4IB3jCCAdowDgYD
-VR0PAQH/BAQDAgWgMIGjBggrBgEFBQcBAQSBljCBkzBOBggrBgEFBQcwAoZCaHR0cDovL3NlY3Vy
-ZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvZ3NnY2NyM3BlcnNvbmFsc2lnbjJjYTIwMjAuY3J0MEEG
-CCsGAQUFBzABhjVodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9nc2djY3IzcGVyc29uYWxzaWdu
-MmNhMjAyMDBNBgNVHSAERjBEMEIGCisGAQQBoDIBKAowNDAyBggrBgEFBQcCARYmaHR0cHM6Ly93
-d3cuZ2xvYmFsc2lnbi5jb20vcmVwb3NpdG9yeS8wCQYDVR0TBAIwADBJBgNVHR8EQjBAMD6gPKA6
-hjhodHRwOi8vY3JsLmdsb2JhbHNpZ24uY29tL2dzZ2NjcjNwZXJzb25hbHNpZ24yY2EyMDIwLmNy
-bDAoBgNVHREEITAfgR1mbG9yaWFuLmZhaW5lbGxpQGJyb2FkY29tLmNvbTATBgNVHSUEDDAKBggr
-BgEFBQcDBDAfBgNVHSMEGDAWgBSWM9HmWBdbNHWKgVZk1b5I3qGPzzAdBgNVHQ4EFgQUUwwfJ6/F
-KL0fRdVROal/Lp4lAF0wDQYJKoZIhvcNAQELBQADggEBAKBgfteDc1mChZjKBY4xAplC6uXGyBrZ
-kNGap1mHJ+JngGzZCz+dDiHRQKGpXLxkHX0BvEDZLW6LGOJ83ImrW38YMOo3ZYnCYNHA9qDOakiw
-2s1RH00JOkO5SkYdwCHj4DB9B7KEnLatJtD8MBorvt+QxTuSh4ze96Jz3kEIoHMvwGFkgObWblsc
-3/YcLBmCgaWpZ3Ksev1vJPr5n8riG3/N4on8gO5qinmmr9Y7vGeuf5dmZrYMbnb+yCBalkUmZQwY
-NxADYvcRBA0ySL6sZpj8BIIhWiXiuusuBmt2Mak2eEv0xDbovE6Z6hYyl/ZnRadbgK/ClgbY3w+O
-AfUXEZ0xggJtMIICaQIBATBrMFsxCzAJBgNVBAYTAkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52
-LXNhMTEwLwYDVQQDEyhHbG9iYWxTaWduIEdDQyBSMyBQZXJzb25hbFNpZ24gMiBDQSAyMDIwAgwT
-/D/YSkVckoN0L+QwDQYJYIZIAWUDBAIBBQCggdQwLwYJKoZIhvcNAQkEMSIEIA0vW+oMRBMmD14h
-YOBLP8huhaKtu2Ob/UUUUcxsjv7VMBgGCSqGSIb3DQEJAzELBgkqhkiG9w0BBwEwHAYJKoZIhvcN
-AQkFMQ8XDTI0MDcxNTE3MzIzN1owaQYJKoZIhvcNAQkPMVwwWjALBglghkgBZQMEASowCwYJYIZI
-AWUDBAEWMAsGCWCGSAFlAwQBAjAKBggqhkiG9w0DBzALBgkqhkiG9w0BAQowCwYJKoZIhvcNAQEH
-MAsGCWCGSAFlAwQCATANBgkqhkiG9w0BAQEFAASCAQArCcLwd81cRtwqS6VtW3EirbVg0jwDN9EU
-ed9cbzPlVIn/NfutYyYygEUEcBlQUk7dDGjbSZ+s80zequcNgizVvLEKr72Khcdap+98AZbYe4Wr
-zx9XuwW5cSJpS4YNeOpXPSzUg9h6XOzWAJfgR1eGucFil1UIsPVrSt436Lib76XTkTtK0hThTrug
-UDphfPnTWWDo9IEh/oqPRCygDv4wxCTJFDp2GeiAJaTZl74Jgs8B/1CiwW+O41Ev+XCTgXwT+HZg
-CKmji2aXq9UogaWNH5QfkMWMtnG1I7P6UHPzRCOJO65ZEz8QnhjAPG8peJgFAoqMRqpqGr5KUnzw
-CjPp
---0000000000007f0dc8061d4c9d53--
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
