@@ -1,145 +1,102 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B070B189F58;
-	Mon, 15 Jul 2024 11:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C204E189F5E;
+	Mon, 15 Jul 2024 11:48:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721043545; cv=none; b=qgScwSYus3enzNmzYnrToBMBng+v0AgWy/+CF3GRG2sdtWm6ysdBLXELwCfw1fxtMmQiqyCH96c9c2bZZkswaplV962EPI+rt4gaWluG8/p/C30u9ZxUPJeiELHRgn9vWrhKETQgBz36mcB5/tm9J+MUqC2n6nkBWajpPlvn/vg=
+	t=1721044108; cv=none; b=IqKsFSkEKHsiMNP+rneqDD9Z5bMsoS+AIHo5mw1K2wUeI0cE4s1s+AfCxY47OClQsHVwDlScf7kw70tRc5/VNMAk5aglj00mCykJEkAb0KTy/zB98ldJPXrbnjLtGe60bYO9WbZm0JhA9Q6+YZFTa/s/ff+DdSJLHxvAhO62YdA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721043545; c=relaxed/simple;
-	bh=lCeC4gmfTQRuoltTtc3HF5WSdisu5ByxU/qRss5sHQI=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=Axf+OLEYDTenioz6Z6F+8Fffg2XAdoBavXe0EL9d8bLDGoY8fnwWAheoY75gtMIdK9tzjLlboyN5dqp+8Rgvw9gATHp68dipuvGE/lqBs56WZoiirCwvRgg9Ktc17HBtKR6OxmDBMfRPE9P/Vb7KzthMwRUi2cG/+cERbpbQSAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WN0Y76Sd8zdhQg;
-	Mon, 15 Jul 2024 19:37:15 +0800 (CST)
-Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
-	by mail.maildlp.com (Postfix) with ESMTPS id AF525180064;
-	Mon, 15 Jul 2024 19:38:58 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 15 Jul 2024 19:38:58 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Mon, 15 Jul 2024 19:38:58 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: duchangbin <changbin.du@huawei.com>
-CC: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim
-	<namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Alexander Shishkin
-	<alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, "Ian
- Rogers" <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>, Nick Desaulniers
-	<ndesaulniers@google.com>, Bill Wendling <morbo@google.com>, Justin Stitt
-	<justinstitt@google.com>, "linux-perf-users@vger.kernel.org"
-	<linux-perf-users@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "llvm@lists.linux.dev"
-	<llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab, Beijing)"
-	<hw.huiwang@huawei.com>
-Subject: Re: [PATCH v5 0/8] perf: support specify vdso path in cmdline
-Thread-Topic: [PATCH v5 0/8] perf: support specify vdso path in cmdline
-Thread-Index: AQHazDbzI6rzmwQCM0CRTliZqIB/KrH3vp4A
-Date: Mon, 15 Jul 2024 11:38:58 +0000
-Message-ID: <5b4a83c1a1614e23985a10e669d78eda@huawei.com>
-References: <20240702041837.5306-1-changbin.du@huawei.com>
-In-Reply-To: <20240702041837.5306-1-changbin.du@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9F3DD7C628C5C24AA96E5083F621F819@huawei.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1721044108; c=relaxed/simple;
+	bh=FLWtFfdvvrNFy/+e+9BC4sdPIHWNO5XdMDInFcTzoDs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jc9KEi7w1dloY9a3ul0tFc0bR5G1+j4KxcMrQIjbrHOhhCn4I1MknRVNh48VRrakS0G63F/u+QUQEw8T3C1Ev5YouYC7K8EQI9TpBC38DNUDOGDnajDX3GGlGZIvdC4ogNI0lvyunDboXXtiew001Oo9SePBpK+vifQWhZAt1Ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=CpuyZT7n; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CpuyZT7n"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+	Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+	Sender:Reply-To:Content-ID:Content-Description;
+	bh=GdN1/Drp1xef2wC63rTQRFwwYJdTm9BYYeLA8lGrLY4=; b=CpuyZT7nFh6H8fzJI25Mdrppq+
+	ABSmYmXMrfzENzYSdEVE7x44QDIZu5EsOq5UdE93SX3FjKaafcToa6w3gX72syp1TUh0O3sLF2W+X
+	lm9XgFktS3N7Z3AtlXNFT0WLaVq1OLipYS8Kv9hxQApr4nJn2Tg1ynjHgQ+LafL8197dG+pBYUZk4
+	Ak3dzxBwQlvYe/i+Q4JnuKvMnNaW5KTuaHqijXxA/74AK6b+gd8yND90aH+HqaQcvJnZqPw/XxU/z
+	2uGmdAAbiZCbnkfvAZGbZemSWm0oasFblpu9DCpk2qJ47nu4mJjxytnew9STbelI8/mZqVMD7758L
+	s+CqXXWw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sTKBZ-00000001maL-2aKQ;
+	Mon, 15 Jul 2024 11:48:05 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 3FD723003FF; Mon, 15 Jul 2024 13:48:05 +0200 (CEST)
+Date: Mon, 15 Jul 2024 13:48:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Ajay Kaher <ajay.kaher@broadcom.com>
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, rostedt@goodmis.org,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, yangjihong1@huawei.com,
+	zegao2021@gmail.com, leo.yan@linux.dev, asmadeus@codewreck.org,
+	siyanteng@loongson.cn, sunhaiyong@loongson.cn,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com,
+	Vamsi Krishna Brahmajosyula <vamsi-krishna.brahmajosyula@broadcom.com>,
+	nadav.amit@gmail.com
+Subject: Re: [PATCH RFC 1/3] perf/core: add logic to collect off-cpu sample
+Message-ID: <20240715114805.GF14400@noisy.programming.kicks-ass.net>
+References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
+ <1720700179-22839-2-git-send-email-ajay.kaher@broadcom.com>
+ <20240711214936.GH27299@noisy.programming.kicks-ass.net>
+ <CAD2QZ9YQ6n_6J+bq+wNxS5bGuAOsLkSiicigan84qaD+xrjS3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAD2QZ9YQ6n_6J+bq+wNxS5bGuAOsLkSiicigan84qaD+xrjS3Q@mail.gmail.com>
 
-SGVsbG8sIGFyZSB0aGVyZSBhbnkgbW9yZSBjb21tZW50cyBhYm91dCB0aGlzIHJldmlzaW9uPw0K
-DQpPbiBUdWUsIEp1bCAwMiwgMjAyNCBhdCAxMjoxODoyOVBNICswODAwLCBDaGFuZ2JpbiBEdSB3
-cm90ZToNCj4gVGhlIHZkc28gZHVtcGVkIGZyb20gcHJvY2VzcyBtZW1vcnkgKGluIGJ1aWxkaWQt
-Y2FjaGUpIGxhY2tzIGRlYnVnZ2luZw0KPiBpbmZvLiBUbyBhbm5vdGF0ZSB2ZHNvIHN5bWJvbHMg
-d2l0aCBzb3VyY2UgbGluZXMgd2UgbmVlZCBhIGRlYnVnZ2luZw0KPiB2ZXJzaW9uLg0KPiANCj4g
-Rm9yIHg4Niwgd2UgY2FuIGZpbmQgdGhlbSBmcm9tIHlvdXIgbG9jYWwgYnVpbGQgYXMNCj4gJ2Fy
-Y2gveDg2L2VudHJ5L3Zkc28vdmRzb3szMiw2NH0uc28uZGJnJy4gT3IgdGhleSBtYXkgcmVzaWRl
-cyBpbg0KPiAnL2xpYi9tb2R1bGVzLzx2ZXJzaW9uPi92ZHNvL3Zkc297MzIsNjR9LnNvJyBvbiBV
-YnVudHUuIEJ1dCBub3RpY2UgdGhhdCB0aGUNCj4gYnVpbGlkIGhhcyB0byBtYXRjaC4gDQo+IA0K
-PiBJZiB1c2VyIGRvZXNuJ3Qgc3BlY2lmeSB0aGUgcGF0aCwgcGVyZiB3aWxsIHNlYXJjaCB0aGVt
-IGludGVybmFsbHkgYXMgbG9uZw0KPiBhcyB2bWxpbnV4IHdoZW4gcmVjb3JkaW5nIHNhbXBsZXMu
-IFRoZSBzZWFyY2hlZCBkZWJ1Z2dpbmcgdmRzbyB3aWxsIGFkZCB0bw0KPiBidWlsZGlkIGNhY2hl
-Lg0KPiANCj4gQmVsb3cgc2FtcGxlcyBhcmUgY2FwdHVyZWQgb24gbXkgbG9jYWwgYnVpbGQga2Vy
-bmVsLiBwZXJmIHN1Y2Nlc2Z1bGx5DQo+IGZpbmQgZGVidWdnaW5nIHZlcnNpb24gdmRzbyBhbmQg
-d2UgY2FuIGFubm90YXRlIHdpdGggc291cmNlIHdpdGhvdXQNCj4gc3BlY2lmeWluZyB2ZHNvIHBh
-dGguDQo+IA0KPiAkIHN1ZG8gcGVyZiByZWNvcmQgLWENCj4gJCBzdWRvIHBlcmYgcmVwb3J0IC0t
-b2JqZHVtcD1sbHZtLW9iamR1bXANCj4gDQo+IFNhbXBsZXM6IDE3SyBvZiBldmVudCAnY3ljbGVz
-OlAnLCA0MDAwIEh6LCBFdmVudCBjb3VudCAoYXBwcm94Lik6IDE3NjANCj4gX192ZHNvX2Nsb2Nr
-X2dldHRpbWUgIC93b3JrL2xpbnV4LWhvc3QvYXJjaC94ODYvZW50cnkvdmRzby92ZHNvNjQuc28u
-ZA0KPiBQZXJjZW504pSCICAgICAgIG1vdnEgICAgLTQ4KCVyYnApLCVyc2kNCj4gICAgICAgIOKU
-giAgICAgICB0ZXN0cSAgICVyYXgsJXJheA0KPiAgICAgICAg4pSCICAgICA7ICAgICAgICAgICAg
-ICAgcmV0dXJuIHZyZWFkX2h2Y2xvY2soKTsNCj4gICAgICAgIOKUgiAgICAgICBtb3ZxICAgICVy
-YXgsJXJkeA0KPiAgICAgICAg4pSCICAgICA7ICAgICAgICAgICAgICAgaWYgKHVubGlrZWx5KCF2
-ZHNvX2N5Y2xlc19vayhjeWNsZXMpKSkNCj4gICAgICAgIOKUgiAgICAg4oaRIGpzICAgICAgZWIN
-Cj4gICAgICAgIOKUgiAgICAg4oaRIGptcCAgICAgNzQNCj4gICAgICAgIOKUgiAgICAgOyAgICAg
-ICAgICAgICAgIHRzLT50dl9zZWMgPSB2ZHNvX3RzLT5zZWM7DQo+ICAgMC4wMiDilIIxNDc6ICAg
-bGVhcSAgICAyKCVyYngpLCVyYXgNCj4gICAgICAgIOKUgiAgICAgICBzaGxxICAgICQ0LCAlcmF4
-DQo+ICAgICAgICDilIIgICAgICAgYWRkcSAgICAlcjEwLCVyYXgNCj4gICAgICAgIOKUgiAgICAg
-OyAgICAgICAgICAgICAgIHdoaWxlICgoc2VxID0gUkVBRF9PTkNFKHZkLT5zZXEpKSAmIDEpIHsN
-Cj4gICA5LjM4IOKUgjE1MjogICBtb3ZsICAgICglcjEwKSwlZWN4DQo+IA0KPiBXaGVuIGRvaW5n
-IGNyb3NzIHBsYXRmb3JtIGFuYWx5c2lzLCB3ZSBuZWVkIHRvIHNwZWNpZnkgdGhlIHZkc28gcGF0
-aCBpZg0KPiB3ZSBhcmUgaW50ZXJlc3RlZCBpbiBpdHMgc3ltYm9scy4gQXQgbW9zdCB0d28gdmRz
-byBjYW4gYmUgZ2l2ZW4uIEFsc28geW91DQo+IGNhbiBwYWNrIHlvdXIgYnVpbGRpZCBjYWNoZSB3
-aXRoIHBlcmYtYXJjaGl2ZSBpZiB0aGUgZGVidWdnaW5nIHZkc28gY2FuIGJlDQo+IGZvdW5kIG9u
-IHRoZSBzYW1wbGVkIG1hY2hpbmUuDQo+IA0KPiAkIHN1ZG8gcGVyZiByZXBvcnQgLS1vYmpkdW1w
-PWxsdm0tb2JqZHVtcCBcDQo+ICAgICAgIC0tdmRzbyBhcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc282
-NC5zby5kYmcsYXJjaC94ODYvZW50cnkvdmRzby92ZHNvMzIuc28uZGJnDQo+IA0KPiBJIGFsc28g
-aW1wcm92ZWQgcGVyZi1idWlsZGlkLWNhY2hlIGNvbW1hbmQgcmVjb2duaXplIHZkc28gd2hlbiBh
-ZGRpbmcgZmlsZXMsIHRoZW4NCj4gcGxhY2UgaXQgYXQgY29ycmVjdCBwbGFjZS4NCj4gDQo+IHY1
-Og0KPiAgIC0gU2VhcmNoaW5nIHRoZSB2ZHNvIGluIHJlY29yZCBzdGFnZSBpbnN0ZWFkIG9mIHJl
-cG9ydC4gU28gdGhlIGRlYnVnZ2luZw0KPiAgICAgdmRzbyB3aWxsIGJlIGluIGJ1aWxkLWlkIGNh
-Y2hlLiBUaGlzIGlzIGZyaWVuZGx5IGZvciBjcm9zcy1tYWNoaW5lIGFuYWx5c2lzLg0KPiAgIC0g
-SW1wcm92ZSBwZXJmLWJ1aWxkaWQtY2FjaGUgY29tbWFuZCByZWNvZ25pemUgdmRzbyB3aGVuIGFk
-ZGluZyBmaWxlcw0KPiB2NDoNCj4gICAtIHNwbGl0IHRoZSByZWZhY3RvcmluZyBmcm9tIHRoZSBh
-Y3R1YWwgY2hhbmdlLg0KPiB2MzoNCj4gICAtIHVwZGF0ZSBkb2N1bWVudGF0aW9uLg0KPiB2MjoN
-Cj4gICAtIG5vdyBzZWFyY2ggdmRzbyBhdXRvbWF0aWNhbGx5IGFzIGxvbmcgYXMgdm1saW51eCwg
-YXMgc3VnZ2VzdGVkIGJ5IEFkcmlhbi4NCj4gICAtIHJlbW92ZSBjaGFuZ2UgJ3ByZWZlciBzeW1z
-cmNfZmlsZW5hbWUgZm9yIGZpbGVuYW1lJy4NCj4gDQo+IA0KPiBDaGFuZ2JpbiBEdSAoOCk6DQo+
-ICAgcGVyZjogc3VwcG9ydCBzcGVjaWZ5IHZkc28gcGF0aCBpbiBjbWRsaW5lDQo+ICAgcGVyZjog
-ZGlzYXNtOiByZWZhY3RvciBmdW5jdGlvbiBkc29fX2Rpc2Fzc2VtYmxlX2ZpbGVuYW1lDQo+ICAg
-cGVyZjogZGlzYXNtOiB1c2UgYnVpbGRfaWRfcGF0aCBpZiBmYWxsYmFjayBmYWlsZWQNCj4gICBw
-ZXJmOiBidWlsZC1pZDogbmFtZSBkZWJ1Z2dpbmcgdmRzbyBhcyAiZGVidWciDQo+ICAgcGVyZjog
-c3ltYm9sOiBnZW5lcmFsaXplIHZtbGludXggcGF0aCBzZWFyY2hpbmcNCj4gICBwZXJmOiBidWls
-ZC1pZDogdHJ5IHRvIHNlYXJjaCBkZWJ1Z2dpbmcgdmRzbyBhbmQgYWRkIHRvIGNhY2hlDQo+ICAg
-cGVyZjogZGlzYXNtOiBwcmVmZXIgZGVidWdnaW5nIGZpbGVzIGluIGJ1aWxkLWlkIGNhY2hlDQo+
-ICAgcGVyZiBidWlsZGlkLWNhY2hlOiByZWNvZ25pemUgdmRzbyB3aGVuIGFkZGluZyBmaWxlcw0K
-PiANCj4gIHRvb2xzL3BlcmYvRG9jdW1lbnRhdGlvbi9wZXJmLWFubm90YXRlLnR4dCB8ICAgMyAr
-DQo+ICB0b29scy9wZXJmL0RvY3VtZW50YXRpb24vcGVyZi1jMmMudHh0ICAgICAgfCAgIDMgKw0K
-PiAgdG9vbHMvcGVyZi9Eb2N1bWVudGF0aW9uL3BlcmYtaW5qZWN0LnR4dCAgIHwgICAzICsNCj4g
-IHRvb2xzL3BlcmYvRG9jdW1lbnRhdGlvbi9wZXJmLXJlcG9ydC50eHQgICB8ICAgMyArDQo+ICB0
-b29scy9wZXJmL0RvY3VtZW50YXRpb24vcGVyZi1zY3JpcHQudHh0ICAgfCAgIDMgKw0KPiAgdG9v
-bHMvcGVyZi9Eb2N1bWVudGF0aW9uL3BlcmYtdG9wLnR4dCAgICAgIHwgICAzICsNCj4gIHRvb2xz
-L3BlcmYvYnVpbHRpbi1hbm5vdGF0ZS5jICAgICAgICAgICAgICB8ICAgMiArDQo+ICB0b29scy9w
-ZXJmL2J1aWx0aW4tYnVpbGRpZC1jYWNoZS5jICAgICAgICAgfCAgMjYgKystDQo+ICB0b29scy9w
-ZXJmL2J1aWx0aW4tYzJjLmMgICAgICAgICAgICAgICAgICAgfCAgIDIgKw0KPiAgdG9vbHMvcGVy
-Zi9idWlsdGluLWluamVjdC5jICAgICAgICAgICAgICAgIHwgICAyICsNCj4gIHRvb2xzL3BlcmYv
-YnVpbHRpbi1yZXBvcnQuYyAgICAgICAgICAgICAgICB8ICAgMiArDQo+ICB0b29scy9wZXJmL2J1
-aWx0aW4tc2NyaXB0LmMgICAgICAgICAgICAgICAgfCAgIDIgKw0KPiAgdG9vbHMvcGVyZi9idWls
-dGluLXRvcC5jICAgICAgICAgICAgICAgICAgIHwgICAyICsNCj4gIHRvb2xzL3BlcmYvdXRpbC9i
-dWlsZC1pZC5jICAgICAgICAgICAgICAgICB8ICA1NyArKysrKy0NCj4gIHRvb2xzL3BlcmYvdXRp
-bC9kaXNhc20uYyAgICAgICAgICAgICAgICAgICB8IDEzMSArKysrKysrKy0tLS0tDQo+ICB0b29s
-cy9wZXJmL3V0aWwvbWFjaGluZS5jICAgICAgICAgICAgICAgICAgfCAgIDQgKy0NCj4gIHRvb2xz
-L3BlcmYvdXRpbC9zeW1ib2wuYyAgICAgICAgICAgICAgICAgICB8IDIwOSArKysrKysrKysrKysr
-KysrLS0tLS0NCj4gIHRvb2xzL3BlcmYvdXRpbC9zeW1ib2wuaCAgICAgICAgICAgICAgICAgICB8
-ICAgOSArLQ0KPiAgdG9vbHMvcGVyZi91dGlsL3N5bWJvbF9jb25mLmggICAgICAgICAgICAgIHwg
-ICA1ICsNCj4gIDE5IGZpbGVzIGNoYW5nZWQsIDM1OSBpbnNlcnRpb25zKCspLCAxMTIgZGVsZXRp
-b25zKC0pDQo+IA0KPiAtLSANCj4gMi4zNC4xDQo+IA0KDQotLSANCkNoZWVycywNCkNoYW5nYmlu
-IER1DQo=
+On Sun, Jul 14, 2024 at 09:53:10PM +0530, Ajay Kaher wrote:
+> On Fri, Jul 12, 2024 at 3:19 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Thu, Jul 11, 2024 at 05:46:17PM +0530, Ajay Kaher wrote:
+> > > following logics has been added to collect the off-cpu sample:
+> > >
+> > > - 'task_pt_regs(current)' has been used to capture registers
+> > >   status off-cpu sample.
+> > >
+> > > - off-cpu time represent the time period for which the target
+> > >   process not occupying the cpu cycles. And calculate as:
+> > >
+> > >   off-cpu time = swap-in time - swap-out time
+> > >
+> >
+> > I have absolutely no idea what you're trying to do :/ The above does not
+> > constitute a comprehensible Changelog.
+> 
+> Sorry Peter, it’s sched-in/out (not swap-in/out).
+> 
+> 'Perf record' captures on-cpu samples at frequency which is specified by
+> the user ( i.e. time period to collect sample is NSEC_PER_SEC / freq).
+> 
+> This patch is to collect the off_cpu sample and time period of off_cpu
+> sample is calculated based upon the time when target task was sched_out
+> to sched_in, as:
+> 
+>  off-cpu time period = sched_in time - sched-out time
+
+But but but... you don't need anything new for that. The sched_wakeup
+tracepoint should generate an event in both the task/cpu that does the
+wakeup *AND* the task being woken.
+
+So sched_switch + sched_wakeup should get you all this already. What am
+I missing?
+
+https://lore.kernel.org/all/1342016098-213063-1-git-send-email-avagin@openvz.org/T/#u
