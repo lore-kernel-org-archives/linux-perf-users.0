@@ -1,181 +1,287 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B2D53C
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:54:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2039B17547;
+	Mon, 15 Jul 2024 16:07:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721058891; cv=none; b=ED+lgO9vGkL0IaHmeq/L9AhCHKeXimUaA1m8QzopJrBd6EJ74csiRuCugNW4mSTwmTvAhaoXSvqFLY3hFv0JO0phknDT3L59pYOSlc6RDlwrBlLhyoZDLvIvrH/xjtnjpr5jFND153e2o8KV9tDqnocSZqfvoX/xuhKI8xyp5KM=
+	t=1721059649; cv=none; b=bSw+lBpIWEgOE2pcZZa2CbPExwHUdZZ2Ag1U7sgBh7gLOcVJxkY8voJZrKrlbvtPpslJx/1qiPp4iIL05jVnEvtq2mFJUyimTIbKhpnJY0m8g5WI8B42Se1I3UaaFqDD4LugRqgb6rkX5rJmnKXP2QKdcPxLkLiVnNoynEkoZLo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721058891; c=relaxed/simple;
-	bh=yEMo9owmZMqLi6P3+x4e0kjjz6iCdshJkjvR7JTJ5z4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HVWRlqykoWqURIt3CVt7y2iXQraKwWM5LW5cDC6M0xJjXmzMOcs2ufrh9JyckD8NoPaQ0sYGfx1PsEg3TMZS8A9PilKA4YVaP3yOzEjFDNh2/GST3q2MzCA3GsX8d5Oqsq7xQCBlplveFLs01fFGZP3bo7/Tzgs8rFmLX63AiE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <l.stach@pengutronix.de>)
-	id 1sTO1n-0001QL-9s; Mon, 15 Jul 2024 17:54:15 +0200
-Message-ID: <ac1d9124e497a1667e7cbc340f923cb4449764bb.camel@pengutronix.de>
-Subject: Re: [PATCH] perf jevents: return potentially empty metrics table
-From: Lucas Stach <l.stach@pengutronix.de>
-To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>, 
- Namhyung Kim <namhyung@kernel.org>, Leo Yan <leo.yan@linux.dev>, James
- Clark <james.clark@arm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
- <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin
- <alexander.shishkin@linux.intel.com>,  patchwork-lst@pengutronix.de,
- linux-perf-users@vger.kernel.org,  kernel@pengutronix.de, Kan Liang
- <kan.liang@linux.intel.com>
-Date: Mon, 15 Jul 2024 17:54:13 +0200
-In-Reply-To: <b3a4282a-91b6-49a0-83d1-470cc4873dc1@linaro.org>
-References: <20240531194414.1849270-1-l.stach@pengutronix.de>
-	 <8b31bc0823df42e1ef4c22eac159fa58694887c7.camel@pengutronix.de>
-	 <ZoXRr9wcE98ijyFA@google.com>
-	 <CAP-5=fWxuPW1WGSOV-wqYXJ-4kiwefujprnGn3YfVzO+62-i-Q@mail.gmail.com>
-	 <b3a4282a-91b6-49a0-83d1-470cc4873dc1@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
+	s=arc-20240116; t=1721059649; c=relaxed/simple;
+	bh=vuodAQMZIicFjLwLieXXD/IxPHA66X2UjT1Bs0ONaak=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=bffTUTiGGjfnaO+UsIsFhZ/ryPCJtJRfFlkhPjHqaJikOgXZPanio4E1FttNYyBntGY4PkP32o9QtB63Irw45lOImisUYfciScANicDOggjKVN5nMNF7acaB1tSxBoadU9uwsqZYN0JY9FFg2Afed48d/0PPeMsg7TsQEztvCB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Hrioozvu; arc=none smtp.client-ip=192.198.163.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Hrioozvu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721059648; x=1752595648;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=vuodAQMZIicFjLwLieXXD/IxPHA66X2UjT1Bs0ONaak=;
+  b=Hrioozvu6f0/x5PYoM6cN33eOyar0ksg8tnfDGQpZQggHkXWRnAiGy6j
+   buCcusLGwAQ+XgmrBauOmkZjKEpHfQp7/fWEgJuvphFEcH7agPfjOWprX
+   pdnogxNqqrOg84RKlcWKz+J2PPPKMGPg2DhNPb7PoEGfvVbw7416u9ZtP
+   9K6bEu/ifjy4Kj1n/nwNok+9FL5u1a+7AwqMxpEqB9ou9lNf+qH6j3YAC
+   5XT3G8hjttR3+UfAZaiMIRI++sneJ54ArXgjt+AjtvXDOEgNRH3ttWmEY
+   ydS61fEO03AVdkY1H2sUbgolKRkFz0ezukc7BVOddjY11bjIMZ8DfJNko
+   Q==;
+X-CSE-ConnectionGUID: n785yImXQ7KV7Qdq8RFj8w==
+X-CSE-MsgGUID: 53hNjcTpRoqbxl3oHYLt0Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="21361081"
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="21361081"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:07:27 -0700
+X-CSE-ConnectionGUID: HwXiQdCURoKDGhhL+3BXhw==
+X-CSE-MsgGUID: Bce7koWlStS/rfKzDSd6gQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,210,1716274800"; 
+   d="scan'208";a="49413470"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.246.49.253])
+  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 09:07:21 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH V9 00/13] perf/core: Add ability for an event to "pause" or "resume" AUX area tracing
+Date: Mon, 15 Jul 2024 19:06:59 +0300
+Message-Id: <20240715160712.127117-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Am Montag, dem 15.07.2024 um 16:12 +0100 schrieb James Clark:
->=20
-> On 12/07/2024 10:54 pm, Ian Rogers wrote:
-> > On Wed, Jul 3, 2024 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> > >=20
-> > > Hello,
-> > >=20
-> > > On Mon, Jul 01, 2024 at 07:19:55PM +0200, Lucas Stach wrote:
-> > > > Hi,
-> > > >=20
-> > > > has this patch fallen through the cracks? It fixes a functional
-> > > > regression where the DDR controller metrics are completely unavaila=
-ble
-> > > > on all i.MX8M* systems and thus would be nice if someone could have=
- a
-> > > > look.
-> > > >=20
-> > > > Regards,
-> > > > Lucas
-> > > >=20
-> > > > Am Freitag, dem 31.05.2024 um 21:44 +0200 schrieb Lucas Stach:
-> > > > > Don't return NULL when a empty (num_pmus =3D 0) metrics table is =
-encountered,
-> > > > > as this causes many of the users to bail out, which will skip mat=
-ching any
-> > > > > potentially existing sys metrics later on. Instead return the emp=
-ty table
-> > > > > which will be handled properly by the iterators and allows matchi=
-ng to
-> > > > > continue.
-> > > > >=20
-> > > > > This fixes metrics reporting on systems where only the sys, but n=
-ot the
-> > > > > core PMUs have metrics defined.
-> > > > >=20
-> > > > > Fixes: f20c15d13f01 ("perf pmu-events: Remember the perf_events_m=
-ap for a PMU")
-> > > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > >=20
-> > > Looks ok to me.  Ian?
-> >=20
-> > Sorry I missed this, I expect to see patches on LKML and so my email
-> > filters placed this elsewhere.
-> >=20
-> > The change doesn't make sense. A search is requested with a PMU and
-> > you return success (the table) when there is no PMU match. If this
-> > behavior were expected then NULL should be passed as a PMU - this is
-> > the behavior in util/pmu.c and ARM is the only architecture to pass a
-> > PMU. The ARM pmu_metrics_table__find also specifically breaks
-> > heterogeneous (BIG.little) systems and this change won't impact/fix
-> > that. Perhaps there is some context I lack.
-> >=20
+Hi
 
-The missing context is probably the call chain that I somehow omitted
-and needed to piece together again right now. The issue I'm try to fix
-here is perf stat not being able to measure metrics from a system-wide
-PMU (the i.MX8M* ddrc) only.
+Hardware traces, such as instruction traces, can produce a vast amount of
+trace data, so being able to reduce tracing to more specific circumstances
+can be useful.
 
-The underlying issue is that when there is no non-systemwide PMU,
-perf_pmu__find_metrics_table will return NULL after f20c15d13f01. This
-causes metricgroup__parse_groups to drop out early. However, we need
-this function to call the chain parse_groups() ->
-metricgroup__add_metric_list -> metricgroup__add_metric, as only at
-this point system wide metrics, like the ddrc, will be added to the
-list.
+The ability to pause or resume tracing when another event happens, can do
+that.
 
-It is correct to drop out early, as those functions can not be called
-with a NULL parameter. Before f20c15d13f01 and after the patch
-discussed here perf_pmu__find_metrics_table() will simply return a
-table with 0 entries. The called functions are fine with this, as they
-iterate the entries and the execution flow is able to reach the point
-where the system wide events are added.
+These patches add such a facilty and show how it would work for Intel
+Processor Trace.
 
-> > Thanks,
-> > Ian
-> >=20
->=20
-> Yes it looks like the fix should possibly be higher up in the arm64=20
-> pmu_metrics_table__find().
->=20
-Maybe someone can figure out how to fix this in a better way higher up
-the call chain with the description above. However, my fix looked quite
-straight forward to me, as it simply restores the behavior before
-f20c15d13f01.
+Maintainers of other AUX area tracing implementations are requested to
+consider if this is something they might employ and then whether or not
+the ABI would work for them.  Note, thank you to James Clark (ARM) for
+evaluating the API for Coresight.  Suzuki K Poulose (ARM) also responded
+positively to the RFC.
 
-> Which set of JSON files are you seeing the issue with exactly Lucas? I=
-=20
-> see that there are multiple versions of i.MX8M metrics.
->=20
-It was first observed on a i.MX8MP, but the issue is also reproducible
-on i.MX8MM. I guess it doesn't matter which SoC is used specifically,
-the key point is that the sampling isn't able to match any specific
-PMU, but there are still system wide metrics.
+Changes to perf tools are now (since V4) fleshed out.
 
-Regards,
-Lucas
+Please note, Intel® Architecture Instruction Set Extensions and Future
+Features Programming Reference March 2024 319433-052, currently:
 
-> James
->=20
-> > > Thanks,
-> > > Namhyung
-> > >=20
-> > >=20
-> > > > > ---
-> > > > >   tools/perf/pmu-events/jevents.py | 2 +-
-> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >=20
-> > > > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-ev=
-ents/jevents.py
-> > > > > index e42efc16723e..0a1ed9ee1429 100755
-> > > > > --- a/tools/perf/pmu-events/jevents.py
-> > > > > +++ b/tools/perf/pmu-events/jevents.py
-> > > > > @@ -1081,7 +1081,7 @@ const struct pmu_metrics_table *perf_pmu__f=
-ind_metrics_table(struct perf_pmu *pm
-> > > > >           if (!map)
-> > > > >                   return NULL;
-> > > > >=20
-> > > > > -        if (!pmu)
-> > > > > +        if (!pmu || !map->metric_table.num_pmus)
-> > > > >                   return &map->metric_table;
-> > > > >=20
-> > > > >           for (size_t i =3D 0; i < map->metric_table.num_pmus; i+=
-+) {
-> > > >=20
-> >=20
+	https://cdrdv2.intel.com/v1/dl/getContent/671368
 
+introduces hardware pause / resume for Intel PT in a feature named
+Intel PT Trigger Tracing.
+
+For that more fields in perf_event_attr will be necessary.  The main
+differences are:
+	- it can be applied not just to overflows, but optionally to
+	every event
+	- a packet is emitted into the trace, optionally with IP
+	information
+	- no PMI
+	- works with PMC and DR (breakpoint) events only
+
+Here are the proposed additions to perf_event_attr, please comment:
+
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 0c557f0a17b3..05dcc43f11bb 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -369,6 +369,22 @@ enum perf_event_read_format {
+ 	PERF_FORMAT_MAX = 1U << 5,		/* non-ABI */
+ };
+ 
++enum {
++	PERF_AUX_ACTION_START_PAUSED		=   1U << 0,
++	PERF_AUX_ACTION_PAUSE			=   1U << 1,
++	PERF_AUX_ACTION_RESUME			=   1U << 2,
++	PERF_AUX_ACTION_EMIT			=   1U << 3,
++	PERF_AUX_ACTION_NR			= 0x1f << 4,
++	PERF_AUX_ACTION_NO_IP			=   1U << 9,
++	PERF_AUX_ACTION_PAUSE_ON_EVT		=   1U << 10,
++	PERF_AUX_ACTION_RESUME_ON_EVT		=   1U << 11,
++	PERF_AUX_ACTION_EMIT_ON_EVT		=   1U << 12,
++	PERF_AUX_ACTION_NR_ON_EVT		= 0x1f << 13,
++	PERF_AUX_ACTION_NO_IP_ON_EVT		=   1U << 18,
++	PERF_AUX_ACTION_MASK			= ~PERF_AUX_ACTION_START_PAUSED,
++	PERF_AUX_PAUSE_RESUME_MASK		= PERF_AUX_ACTION_PAUSE | PERF_AUX_ACTION_RESUME,
++};
++
+ #define PERF_ATTR_SIZE_VER0	64	/* sizeof first published struct */
+ #define PERF_ATTR_SIZE_VER1	72	/* add: config2 */
+ #define PERF_ATTR_SIZE_VER2	80	/* add: branch_sample_type */
+@@ -515,10 +531,19 @@ struct perf_event_attr {
+ 	union {
+ 		__u32	aux_action;
+ 		struct {
+-			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
+-				aux_pause        :  1, /* on overflow, pause AUX area tracing */
+-				aux_resume       :  1, /* on overflow, resume AUX area tracing */
+-				__reserved_3     : 29;
++			__u32	aux_start_paused  :  1, /* start AUX area tracing paused */
++				aux_pause         :  1, /* on overflow, pause AUX area tracing */
++				aux_resume        :  1, /* on overflow, resume AUX area tracing */
++				aux_emit          :  1, /* generate AUX records instead of events */
++				aux_nr            :  5, /* AUX area tracing reference number */
++				aux_no_ip         :  1, /* suppress IP in AUX records */
++				/* Following apply to event occurrence not overflows */
++				aux_pause_on_evt  :  1, /* on event, pause AUX area tracing */
++				aux_resume_on_evt :  1, /* on event, resume AUX area tracing */
++				aux_emit_on_evt   :  1, /* generate AUX records instead of events */
++				aux_nr_on_evt     :  5, /* AUX area tracing reference number */
++				aux_no_ip_on_evt  :  1, /* suppress IP in AUX records */
++				__reserved_3      : 13;
+ 		};
+ 	};
+
+
+Changes in V9:
+      perf/x86/intel/pt: Fix sampling synchronization
+	New patch
+
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Move aux_paused to struct hw_perf_event
+
+      perf/x86/intel/pt: Add support for pause / resume
+	Add more comments and barriers for resume_allowed and
+	pause_allowed
+	Always use WRITE_ONCE with resume_allowed
+
+
+Changes in V8:
+
+      perf tools: Parse aux-action
+	Fix clang warning:
+	     util/auxtrace.c:821:7: error: missing field 'aux_action' initializer [-Werror,-Wmissing-field-initializers]
+	     821 |         {NULL},
+	         |              ^
+
+Changes in V7:
+
+	Add Andi's Reviewed-by for patches 2-12
+	Re-base
+
+Changes in V6:
+
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Removed READ/WRITE_ONCE from __perf_event_aux_pause()
+	Expanded comment about guarding against NMI
+
+Changes in V5:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Added James' Ack
+
+    perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+	New patch
+
+    perf tools
+	Added Ian's Ack
+
+Changes in V4:
+
+    perf/core: Add aux_pause, aux_resume, aux_start_paused
+	Rename aux_output_cfg -> aux_action
+	Reorder aux_action bits from:
+		aux_pause, aux_resume, aux_start_paused
+	to:
+		aux_start_paused, aux_pause, aux_resume
+	Fix aux_action bits __u64 -> __u32
+
+    coresight: Have a stab at support for pause / resume
+	Dropped
+
+    perf tools
+	All new patches
+
+Changes in RFC V3:
+
+    coresight: Have a stab at support for pause / resume
+	'mode' -> 'flags' so it at least compiles
+
+Changes in RFC V2:
+
+	Use ->stop() / ->start() instead of ->pause_resume()
+	Move aux_start_paused bit into aux_output_cfg
+	Tighten up when Intel PT pause / resume is allowed
+	Add an example of how it might work for CoreSight
+
+
+Adrian Hunter (13):
+      perf/x86/intel/pt: Fix sampling synchronization
+      perf/core: Add aux_pause, aux_resume, aux_start_paused
+      perf/x86/intel/pt: Add support for pause / resume
+      perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
+      perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+      perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+      perf tools: Add aux_start_paused, aux_pause and aux_resume
+      perf tools: Add aux-action config term
+      perf tools: Parse aux-action
+      perf tools: Add missing_features for aux_start_paused, aux_pause, aux_resume
+      perf intel-pt: Improve man page format
+      perf intel-pt: Add documentation for pause / resume
+      perf intel-pt: Add a test for pause / resume
+
+ arch/x86/events/intel/core.c               |  10 +-
+ arch/x86/events/intel/pt.c                 |  82 +++-
+ arch/x86/events/intel/pt.h                 |   4 +
+ include/linux/perf_event.h                 |  18 +
+ include/uapi/linux/perf_event.h            |  11 +-
+ kernel/events/core.c                       |  76 +++-
+ kernel/events/internal.h                   |   1 +
+ tools/include/uapi/linux/perf_event.h      |  11 +-
+ tools/perf/Documentation/perf-intel-pt.txt | 596 ++++++++++++++++++-----------
+ tools/perf/Documentation/perf-record.txt   |   4 +
+ tools/perf/arch/arm/util/pmu.c             |   3 +
+ tools/perf/builtin-record.c                |   4 +-
+ tools/perf/tests/shell/test_intel_pt.sh    |  28 ++
+ tools/perf/util/auxtrace.c                 |  67 +++-
+ tools/perf/util/auxtrace.h                 |   6 +-
+ tools/perf/util/evsel.c                    |  13 +-
+ tools/perf/util/evsel.h                    |   1 +
+ tools/perf/util/evsel_config.h             |   1 +
+ tools/perf/util/parse-events.c             |  10 +
+ tools/perf/util/parse-events.h             |   1 +
+ tools/perf/util/parse-events.l             |   1 +
+ tools/perf/util/perf_event_attr_fprintf.c  |   3 +
+ tools/perf/util/pmu.c                      |   7 +-
+ 23 files changed, 712 insertions(+), 246 deletions(-)
+
+
+Regards
+Adrian
