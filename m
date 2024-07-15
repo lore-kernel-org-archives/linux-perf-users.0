@@ -1,191 +1,89 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE2A026AE6
-	for <linux-perf-users@vger.kernel.org>; Sun, 14 Jul 2024 18:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0885B13B5B2;
+	Mon, 15 Jul 2024 08:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720981970; cv=none; b=ai9zsEvOKxGQ3b/Q7LhGo8r+gkfcnUQkvj9kL2kowyuaM6gxjv5K5wKCshbv6sOiGcNeZJ/2ULpaT0lHGcHxRRLnxtxLqIf1DJyLzHCOeTHUTavZdhlsWuFP8y4QujZbHw5lj50mVeWGrxWz/tDki5LyXl3XWlSgsf2qFb9nnTA=
+	t=1721032222; cv=none; b=e778FgmTBbTgECtImZHaNShGFwov46yDT3I9v75fMxn/Ge0iycTEaYT7ZC1lltK8l8Kw3dpl6rPtiXJy6yFctmvoXFs7WQlocbJMtUYgSfVJdY+KSxvXzpKele1eJp6CVIAbHbycv1JwzmOJtIz8KCH9ERbQ/1WnrBrKI5cYBU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720981970; c=relaxed/simple;
-	bh=axVnNVZElN9K+WJ1NqWQrosc7ff7qmHlzItu0G3c2x0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=d0TgdhtupLY4zNvr32MMuUmdENqiMj1LRhQ80wwiJK3WHXSyV3WI6jyJlBek9WUNOMh0foctKAzDpTwAZ1j9XwKhceEoT2UqUmE6WvRL1PZaVDsrZvHyDm77ehrLOOxFjdG59kCJAhlMj10Rn/ncmYMoABRMYE6FpDZAdJky5YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ckO4SYwu; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ckO4SYwu"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-38206c2f5e3so189275ab.1
-        for <linux-perf-users@vger.kernel.org>; Sun, 14 Jul 2024 11:32:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1720981968; x=1721586768; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TRmNueVfRwx6hSp+wpP2BIcRa8EHHqYFYcUKib3o7+c=;
-        b=ckO4SYwuVP9immJV/zRp0RCIlnERuUd8sjPvD3VCbuXH+n5CbDy3rRoZGVgHx0IDgH
-         Cq24Kj/JUR9YQnQCl9ajf/v3nWd5J1bbMwhhwLg6nKDRwyq2gb5IamHbK+l/jf1YeTfo
-         6EBnWReyjALKqqTqj3yIRvRsFGsG1ahjHuRtHqqzlhVtimLM3cxou3mLZOUU644dIo8B
-         5A8yQPWfnoun7EYzIotX4Ghyp4/TPGrnIkz9ch9wHwOhYKdBMD6xuMCVcCNdD55LYqq9
-         tRb6zbm7zJ3EN6YMCFCiT+eX+bH6QMa2OIqeVvQ8qRCrXsL5sqf1JHpFk69mXybEki8x
-         5pKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720981968; x=1721586768;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TRmNueVfRwx6hSp+wpP2BIcRa8EHHqYFYcUKib3o7+c=;
-        b=qLJC2bWS7HDzEHqm9eFeVbIubswJV1xD9mdxosNYeYuK1LLw74HXngXcumbqJqQvJF
-         2PvqEDmNQDCAixevDyOvVgcT+o65PniaTjiX4es6TpBiMfAAnR/nLjBntU/lS+zE/rR5
-         xtqjsRUsRbfxLjxQCRWLzo2TmiK7TtsHkzhgTMCBUMTZhfC4xv6r4GQPPjHMqoa0ZtXh
-         0Ts9QRFXH8xIakiDvCcTHnfgvIw78o4mMBwD2d9Kc4KCRlIZJE02mqVULFvz9FbwRBB1
-         iIqkcZ+TiRNvGHJrNuTIIUmVdAYOuvEtansbWy0XO/H1C59uru3D676VuT0xrvNuVHMb
-         dYfA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzREHYcdtuMcHybdyGQsG2sF9bbVZJbJhONVhIycrH1JlxhSk97QMNQHk0qfvRh0lsQsewZreo4/sdZLPh/wKy/miNoN93vhcL4uBtzc2cyQ==
-X-Gm-Message-State: AOJu0YzVHOxuppStz6fZmB0L24HQmxcupbnott+Pq+Gxuy7nI2Fg0bya
-	sFiaMFWvGQ0Gdw5Q6bu5Po71FUuhLx5XlQB9aKfiRpdsb0WhCC2hXzkD8SoTdpnfovnPN8EDZ7s
-	5g3Ws8LO2Kb1dpsx9z/vF3Zf/KB7xLzUL3vR/
-X-Google-Smtp-Source: AGHT+IGcwuwCBkzc1snuxIm9+uDjFVY7qJrNbGsQIoZ14ZJ/BtCljwkcO6OVbWnqyL8PGLkEwim1g9ErlM7UTCDw++I=
-X-Received: by 2002:a05:6e02:1c87:b0:377:872:cf6b with SMTP id
- e9e14a558f8ab-38fc91b87a8mr3678635ab.2.1720981967718; Sun, 14 Jul 2024
- 11:32:47 -0700 (PDT)
+	s=arc-20240116; t=1721032222; c=relaxed/simple;
+	bh=yZaQq/D2bCJ+DM8zZU8yJy2tUjQK1Aq3UcLelhcb/Wc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=pJNb81dtY4TICKrpELAhR6G981Deq0ZnacBlNzLqKjZ9ttw+aZKA4Z6ct0nuUdw1LpHL6/6VPjyuoBpPHdOgU4Zv5tFrytfMSVjrrGyM2VUUgdgpzVRnKJ0I9Sh+QW0EQYDHV/fiP+r95zsUcZw5T6M8lU6r6D/K2IL31xhA268=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [124.16.138.129])
+	by APP-05 (Coremail) with SMTP id zQCowACXneX83ZRmr3ZpAw--.39156S2;
+	Mon, 15 Jul 2024 16:29:48 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	tglx@linutronix.de,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com
+Cc: x86@kernel.org,
+	hpa@zytor.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Chen Ni <nichen@iscas.ac.cn>
+Subject: [PATCH] perf/x86/amd/uncore: Remove unnecessary semicolon
+Date: Mon, 15 Jul 2024 16:28:38 +0800
+Message-Id: <20240715082838.115254-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1720700179-22839-1-git-send-email-ajay.kaher@broadcom.com>
- <CAP-5=fVwZfV+gNWcmEtRnkOtrvozMdXPVrZ37COHkf4BX1VPgw@mail.gmail.com> <CAD2QZ9ZLHQ62d5CDpf14DkrWFs_FggRMdqzGFz3qsmF_vmS00Q@mail.gmail.com>
-In-Reply-To: <CAD2QZ9ZLHQ62d5CDpf14DkrWFs_FggRMdqzGFz3qsmF_vmS00Q@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Sun, 14 Jul 2024 11:32:36 -0700
-Message-ID: <CAP-5=fX++xsupSisMejFDbs3dFBegbK9VwykbsLMpadX6brATw@mail.gmail.com>
-Subject: Re: [PATCH RFC 0/3] perf: add logic to collect off-cpu samples
-To: Ajay Kaher <ajay.kaher@broadcom.com>
-Cc: chu howard <howardchu95@gmail.com>, peterz@infradead.org, mingo@redhat.com, 
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
-	rostedt@goodmis.org, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, yangjihong1@huawei.com, 
-	zegao2021@gmail.com, leo.yan@linux.dev, asmadeus@codewreck.org, 
-	siyanteng@loongson.cn, sunhaiyong@loongson.cn, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	alexey.makhalov@broadcom.com, vasavi.sirnapalli@broadcom.com, 
-	Vamsi Krishna Brahmajosyula <vamsi-krishna.brahmajosyula@broadcom.com>, nadav.amit@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowACXneX83ZRmr3ZpAw--.39156S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYD7AC8VAFwI0_Xr0_Wr1l1xkIjI8I6I8E
+	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
+	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
+	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z2
+	80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+	zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Gr1j6F4UJw
+	Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAG
+	YxC7M4IIrI8v6xkF7I0E8cxan2IY04v7MxkIecxEwVAFwVW8ZwCF04k20xvY0x0EwIxGrw
+	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+	14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxK
+	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
+	0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUDR6wUUUUU=
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-On Sat, Jul 13, 2024 at 12:43=E2=80=AFAM Ajay Kaher <ajay.kaher@broadcom.co=
-m> wrote:
->
-> On Fri, Jul 12, 2024 at 3:28=E2=80=AFAM Ian Rogers <irogers@google.com> w=
-rote:
-> >
-> > On Thu, Jul 11, 2024 at 5:16=E2=80=AFAM Ajay Kaher <ajay.kaher@broadcom=
-.com> wrote:
-> > >
-> > > Add --off-cpu-kernel option to capture off-cpu sample alongwith on-cp=
-u
-> > > samples.
-> > >
-> > > off-cpu samples represent time spent by task when it was on wait queu=
-e
-> > > (schedule out to waiting for events, blocked on I/O, locks, timers,
-> > > paging/swapping, etc)
-> > >
-> > > Refer following links for more details:
-> > > https://lpc.events/event/17/contributions/1556/
-> > > https://www.youtube.com/watch?v=3DsF2faKGRnjs
-> >
-> > Hi Ajay,
-> >
-> > I wonder if Howard's improvements (not landed) for `perf record
-> > --off-cpu` would solve this problem for you?
-> > https://lore.kernel.org/lkml/20240424024805.144759-1-howardchu95@gmail.=
-com/
-> > Or is that approach problematic due to the use of BPF?
-> >
->
-> Thanks Ian for your response and sharing Howard's improvements.
->
-> Yes, perf --off-cpu is based upon BPF and having following restrictions:
->
-> - target binary should be compiled with frame pointer, same mentioned
->   in tools/perf/Documentation/perf-record.txt:
->   =EF=BB=BFNote that BPF can collect stack traces using frame pointer ("f=
-p") only,
->   as of now. So the applications built without the frame pointer might se=
-e
->   bogus addresses.
+Remove unnecessary semicolon.
+This is detected by coccinelle.
 
-Agreed, if you want more than the leaf function. There's some evidence
-that frame pointers may become the default:
-https://www.brendangregg.com/blog/2024-03-17/the-return-of-the-frame-pointe=
-rs.html
+Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+---
+ arch/x86/events/amd/uncore.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> - perf should be complied with BUILD_BPF_SKEL=3D1:
->   Warning: option `off-cpu' is being ignored because no BUILD_BPF_SKEL=3D=
-1
+diff --git a/arch/x86/events/amd/uncore.c b/arch/x86/events/amd/uncore.c
+index 0bfde2ea5cb8..f34ee4b2ebf9 100644
+--- a/arch/x86/events/amd/uncore.c
++++ b/arch/x86/events/amd/uncore.c
+@@ -1045,7 +1045,7 @@ static int __init amd_uncore_init(void)
+ 			ret = -ENOMEM;
+ 			goto fail;
+ 		}
+-	};
++	}
+ 
+ 	/*
+ 	 * Install callbacks. Core will call them for each online cpu.
+-- 
+2.25.1
 
-We've made this the default build behavior but probably a bigger issue
-is that generally to have permissions you need to run as root.
-
-> - off-cpu, on-cpu samples are not on the same result page.
->   (I guess Howard has improve this, not tried his patches)
->
-> I have tried to collect the off-cpu sample same as on-cpu sample with the=
- help
-> of  kernel/events/core.c. We will get one off-cpu sample from the target =
-task
-> sched-out to sched-in. Or we can say off-cpu samples are not dependent on
-> frequency provided by the user to perf record.
->
-> I am also worried about having so many samples if sched-in/out
-> frequency is high.
-> Thinking to merge samples if attributes are the same (i.e. stacktrace)
-> and add the
-> off-cpu period to previous samples with the same attribute.
-
-Right, this would be useful to look at in the context of Howard's
-patches. The proposal in his changes are that short off-cpu times are
-aggregated in a BPF map and dumped at the end of perf record - this
-matches the existing perf record off-CPU behavior. Longer off-CPU
-times, where long is open for debate and will be a parameter (perhaps
-100 microseconds) and cause a sample to be created. BPF programs
-create BPF output events, Howard's last patch series would rewrite the
-events in perf record to be off-CPU samples. At the last office hours
-it was discussed that we should dump the BPF output events directly,
-to keep perf record overhead minimal, and add the ability to rewrite
-into samples in tools like perf report, etc.
-
-Thanks,
-Ian
-
-> -Ajay
->
-> > Thanks,
-> > Ian
-> >
-> > > Ajay Kaher (3):
-> > >   perf/core: add logic to collect off-cpu sample
-> > >   perf/record: add options --off-cpu-kernel
-> > >   perf/report: add off-cpu samples
-> > >
-> > >  include/linux/perf_event.h            | 16 ++++++++++++++
-> > >  include/uapi/linux/perf_event.h       |  3 ++-
-> > >  kernel/events/core.c                  | 27 ++++++++++++++++++-----
-> > >  tools/include/uapi/linux/perf_event.h |  3 ++-
-> > >  tools/perf/builtin-record.c           |  2 ++
-> > >  tools/perf/util/events_stats.h        |  2 ++
-> > >  tools/perf/util/evsel.c               |  4 ++++
-> > >  tools/perf/util/hist.c                | 31 ++++++++++++++++++++++++-=
---
-> > >  tools/perf/util/hist.h                |  1 +
-> > >  tools/perf/util/record.h              |  1 +
-> > >  tools/perf/util/sample.h              |  1 +
-> > >  11 files changed, 81 insertions(+), 10 deletions(-)
-> > >
-> > > --
-> > > 2.39.0
-> > >
