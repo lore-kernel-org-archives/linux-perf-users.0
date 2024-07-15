@@ -1,187 +1,181 @@
-Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9771E528
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:29:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D7B2D53C
+	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:54:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721057388; cv=none; b=Tctqpde9LPuTbTEymkP3dWGBoMNsDFlZVRW3jr0G0GZE0vC0aV4R7IGgtyqYcNogg4sIHOlmCuYQ30bstI0Bxe4VJJsmQkYmYCvl0lvF+/WkI+6W/5ugyMgcJ6AR6nEZp/cMrmgetqCaJuyH1DKtNTesmp3gbsYJ0HlTxu5wf7c=
+	t=1721058891; cv=none; b=ED+lgO9vGkL0IaHmeq/L9AhCHKeXimUaA1m8QzopJrBd6EJ74csiRuCugNW4mSTwmTvAhaoXSvqFLY3hFv0JO0phknDT3L59pYOSlc6RDlwrBlLhyoZDLvIvrH/xjtnjpr5jFND153e2o8KV9tDqnocSZqfvoX/xuhKI8xyp5KM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721057388; c=relaxed/simple;
-	bh=7LCLu24vsh4F8ZMDRDe01iOkZFnhRhMBdnuepy5zrQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=YQsV/EK0uvOrcuqJfnCgSLBkBqhdr9P+jARMZMOB2MXZWm0b+MaK7Wyw7EidjvLC1+vpd1RCkkmMHBSMfQPj9tMXRPZK4ek/wOCXzX78aTy2uf5JlGGpzwplG6VDeWyXDyytw+FBKDJPpaxq5YmBvpwqbJxtGQDQHwN7RBIICyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qc+FyUQf; arc=none smtp.client-ip=209.85.167.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qc+FyUQf"
-Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-52e9f788e7bso5247581e87.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 08:29:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721057385; x=1721662185; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hd+c9UetWmNL8CVLgdOQG2FnlUULON1f9TFGgZFyt9M=;
-        b=qc+FyUQfqe1sXbW/HAoipjo9ZK0qEDD68xD+DPzQ0+lADWeHM0onpCc0YL/QOPjQlm
-         8WEuklHmZyreVREsdSaKi6vf3EWMFCQ2U8Bt/RyefQb7FjkhMtiTj4BmD0TQiDSTlCuf
-         xTpPk0gPs1pFtVgoo2mdt2UdzCtqI+P75yRsXc+bH0Ib3KGqi0zHngvXbcpFZXg53fUy
-         Y+OyuXk4YU1IjQNKjHU7EevFbZcqEhvMzZxMdAew+v41c536r8baZQtlkYujtTxpbJnB
-         qo61ElXFjJijLGWASpx6ffHGCJBJdSTj9u9HfcAECgWrTRwtHKNbBFEyGJxU/9Islew2
-         ektQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721057385; x=1721662185;
-        h=content-transfer-encoding:in-reply-to:from:cc:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hd+c9UetWmNL8CVLgdOQG2FnlUULON1f9TFGgZFyt9M=;
-        b=UjUQF3f5qdrppVizRubjltCgHeOGmcyI82FQ21yqF3/IHHC4lyigMfuBBe00D2qMZW
-         D4z2GrXK4NyMVk8xml1bAXOsF+FYjFjyG8weGoDaVklCokP0UBNoUrp7tLFMnBKp5KH0
-         YChwQVXLXu1mEgrrHGufYlKzQ6eRBSSkgW3It+h6QyHmQc2f++uMa5yX4ceNRknHz7IQ
-         NnsEzc3eVnGAG6Nhvpr2MOOpeVu2/xIiFebXEExV2iOM7Ynt/o8A7nfwfeUi6fKqf0or
-         3gjnrl52yPeE2Rw70g/qfTpDk/80JFCIl6R+awI8eOJeXaGBMIlObGu1ceF65XLJXoiI
-         MM7w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDMGMF5wnYJfKt2iYiMy6ClGPpm0uxYcahDAh8RYVsHye/EazvaMPkelA7tueZusjZkkXsqodlyZy3c+a5bu08bxLL5xx5aN459x0FA9jOig==
-X-Gm-Message-State: AOJu0YxLM+kWWIKUTwbyw9QmV6w5SqXtbFha1xf5dgVe9HTWL0kTnfVX
-	vfP/3gNqvM9qlLCfYfU+Y45hrmFjbFp4abMIFKkbXKYJrAQD2SAHn1d05PPuuik=
-X-Google-Smtp-Source: AGHT+IEtjjKmRV8MWWvN8XkiOxl3UwZ+Z8YDJH6Vwt8MWUj2QumHlA5aEVNe/Ipt2PgQ8TtPIFf2+g==
-X-Received: by 2002:a05:6512:690:b0:52c:8aa6:4e9c with SMTP id 2adb3069b0e04-52eb99d28bamr14001257e87.65.1721057384990;
-        Mon, 15 Jul 2024 08:29:44 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4279f25babbsm123734165e9.20.2024.07.15.08.29.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 15 Jul 2024 08:29:44 -0700 (PDT)
-Message-ID: <02456237-98b3-443e-948f-69f3c7ff8420@linaro.org>
-Date: Mon, 15 Jul 2024 16:29:43 +0100
+	s=arc-20240116; t=1721058891; c=relaxed/simple;
+	bh=yEMo9owmZMqLi6P3+x4e0kjjz6iCdshJkjvR7JTJ5z4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=HVWRlqykoWqURIt3CVt7y2iXQraKwWM5LW5cDC6M0xJjXmzMOcs2ufrh9JyckD8NoPaQ0sYGfx1PsEg3TMZS8A9PilKA4YVaP3yOzEjFDNh2/GST3q2MzCA3GsX8d5Oqsq7xQCBlplveFLs01fFGZP3bo7/Tzgs8rFmLX63AiE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from ptz.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::77] helo=[IPv6:::1])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <l.stach@pengutronix.de>)
+	id 1sTO1n-0001QL-9s; Mon, 15 Jul 2024 17:54:15 +0200
+Message-ID: <ac1d9124e497a1667e7cbc340f923cb4449764bb.camel@pengutronix.de>
+Subject: Re: [PATCH] perf jevents: return potentially empty metrics table
+From: Lucas Stach <l.stach@pengutronix.de>
+To: James Clark <james.clark@linaro.org>, Ian Rogers <irogers@google.com>, 
+ Namhyung Kim <namhyung@kernel.org>, Leo Yan <leo.yan@linux.dev>, James
+ Clark <james.clark@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland
+ <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>,  patchwork-lst@pengutronix.de,
+ linux-perf-users@vger.kernel.org,  kernel@pengutronix.de, Kan Liang
+ <kan.liang@linux.intel.com>
+Date: Mon, 15 Jul 2024 17:54:13 +0200
+In-Reply-To: <b3a4282a-91b6-49a0-83d1-470cc4873dc1@linaro.org>
+References: <20240531194414.1849270-1-l.stach@pengutronix.de>
+	 <8b31bc0823df42e1ef4c22eac159fa58694887c7.camel@pengutronix.de>
+	 <ZoXRr9wcE98ijyFA@google.com>
+	 <CAP-5=fWxuPW1WGSOV-wqYXJ-4kiwefujprnGn3YfVzO+62-i-Q@mail.gmail.com>
+	 <b3a4282a-91b6-49a0-83d1-470cc4873dc1@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 (3.48.4-1.fc38) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
-To: Leo Yan <leo.yan@arm.com>
-References: <20240715143342.52236-1-leo.yan@arm.com>
-Content-Language: en-US
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240715143342.52236-1-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:900:1d::77
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-perf-users@vger.kernel.org
 
+Am Montag, dem 15.07.2024 um 16:12 +0100 schrieb James Clark:
+>=20
+> On 12/07/2024 10:54 pm, Ian Rogers wrote:
+> > On Wed, Jul 3, 2024 at 3:33=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> > >=20
+> > > Hello,
+> > >=20
+> > > On Mon, Jul 01, 2024 at 07:19:55PM +0200, Lucas Stach wrote:
+> > > > Hi,
+> > > >=20
+> > > > has this patch fallen through the cracks? It fixes a functional
+> > > > regression where the DDR controller metrics are completely unavaila=
+ble
+> > > > on all i.MX8M* systems and thus would be nice if someone could have=
+ a
+> > > > look.
+> > > >=20
+> > > > Regards,
+> > > > Lucas
+> > > >=20
+> > > > Am Freitag, dem 31.05.2024 um 21:44 +0200 schrieb Lucas Stach:
+> > > > > Don't return NULL when a empty (num_pmus =3D 0) metrics table is =
+encountered,
+> > > > > as this causes many of the users to bail out, which will skip mat=
+ching any
+> > > > > potentially existing sys metrics later on. Instead return the emp=
+ty table
+> > > > > which will be handled properly by the iterators and allows matchi=
+ng to
+> > > > > continue.
+> > > > >=20
+> > > > > This fixes metrics reporting on systems where only the sys, but n=
+ot the
+> > > > > core PMUs have metrics defined.
+> > > > >=20
+> > > > > Fixes: f20c15d13f01 ("perf pmu-events: Remember the perf_events_m=
+ap for a PMU")
+> > > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > >=20
+> > > Looks ok to me.  Ian?
+> >=20
+> > Sorry I missed this, I expect to see patches on LKML and so my email
+> > filters placed this elsewhere.
+> >=20
+> > The change doesn't make sense. A search is requested with a PMU and
+> > you return success (the table) when there is no PMU match. If this
+> > behavior were expected then NULL should be passed as a PMU - this is
+> > the behavior in util/pmu.c and ARM is the only architecture to pass a
+> > PMU. The ARM pmu_metrics_table__find also specifically breaks
+> > heterogeneous (BIG.little) systems and this change won't impact/fix
+> > that. Perhaps there is some context I lack.
+> >=20
 
+The missing context is probably the call chain that I somehow omitted
+and needed to piece together again right now. The issue I'm try to fix
+here is perf stat not being able to measure metrics from a system-wide
+PMU (the i.MX8M* ddrc) only.
 
-On 15/07/2024 3:33 pm, Leo Yan wrote:
-> As of Android NDK r15, GCC is no longer supported. Since then, the GCC
-> compiler has been phased out in the NDK, and LLVM/Clang became the
-> official toolchain.
-> 
-> However, the document android.txt contains steps for cross building Perf
-> with GCC with using an older NDK. On the other hand, It is problematic
-> for Perf cross building with Clang - multiple compilation errors and
-> missing dependency libraries are observed.
-> 
-> Thus, mark the Documentation/android.txt as obsolete. This file is kept
-> for the historical reference.
-> 
+The underlying issue is that when there is no non-systemwide PMU,
+perf_pmu__find_metrics_table will return NULL after f20c15d13f01. This
+causes metricgroup__parse_groups to drop out early. However, we need
+this function to call the chain parse_groups() ->
+metricgroup__add_metric_list -> metricgroup__add_metric, as only at
+this point system wide metrics, like the ddrc, will be added to the
+list.
 
-Reviewed-by: James Clark <james.clark@linaro.org>
+It is correct to drop out early, as those functions can not be called
+with a NULL parameter. Before f20c15d13f01 and after the patch
+discussed here perf_pmu__find_metrics_table() will simply return a
+table with 0 entries. The called functions are fine with this, as they
+iterate the entries and the execution flow is able to reach the point
+where the system wide events are added.
 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->   tools/perf/Documentation/android.txt | 79 +---------------------------
->   1 file changed, 1 insertion(+), 78 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/android.txt b/tools/perf/Documentation/android.txt
-> index 24a59998fc91..2254d0483bf4 100644
-> --- a/tools/perf/Documentation/android.txt
-> +++ b/tools/perf/Documentation/android.txt
-> @@ -1,78 +1 @@
-> -How to compile perf for Android
-> -=========================================
-> -
-> -I. Set the Android NDK environment
-> -------------------------------------------------
-> -
-> -(a). Use the Android NDK
-> -------------------------------------------------
-> -1. You need to download and install the Android Native Development Kit (NDK).
-> -Set the NDK variable to point to the path where you installed the NDK:
-> -  export NDK=/path/to/android-ndk
-> -
-> -2. Set cross-compiling environment variables for NDK toolchain and sysroot.
-> -For arm:
-> -  export NDK_TOOLCHAIN=${NDK}/toolchains/arm-linux-androideabi-4.9/prebuilt/linux-x86_64/bin/arm-linux-androideabi-
-> -  export NDK_SYSROOT=${NDK}/platforms/android-24/arch-arm
-> -For x86:
-> -  export NDK_TOOLCHAIN=${NDK}/toolchains/x86-4.9/prebuilt/linux-x86_64/bin/i686-linux-android-
-> -  export NDK_SYSROOT=${NDK}/platforms/android-24/arch-x86
-> -
-> -This method is only tested for Android NDK versions Revision 11b and later.
-> -perf uses some bionic enhancements that are not included in prior NDK versions.
-> -You can use method (b) described below instead.
-> -
-> -(b). Use the Android source tree
-> ------------------------------------------------
-> -1. Download the master branch of the Android source tree.
-> -Set the environment for the target you want using:
-> -  source build/envsetup.sh
-> -  lunch
-> -
-> -2. Build your own NDK sysroot to contain latest bionic changes and set the
-> -NDK sysroot environment variable.
-> -  cd ${ANDROID_BUILD_TOP}/ndk
-> -For arm:
-> -  ./build/tools/build-ndk-sysroot.sh --abi=arm
-> -  export NDK_SYSROOT=${ANDROID_BUILD_TOP}/ndk/build/platforms/android-3/arch-arm
-> -For x86:
-> -  ./build/tools/build-ndk-sysroot.sh --abi=x86
-> -  export NDK_SYSROOT=${ANDROID_BUILD_TOP}/ndk/build/platforms/android-3/arch-x86
-> -
-> -3. Set the NDK toolchain environment variable.
-> -For arm:
-> -  export NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN}/arm-linux-androideabi-
-> -For x86:
-> -  export NDK_TOOLCHAIN=${ANDROID_TOOLCHAIN}/i686-linux-android-
-> -
-> -II. Compile perf for Android
-> -------------------------------------------------
-> -You need to run make with the NDK toolchain and sysroot defined above:
-> -For arm:
-> -  make WERROR=0 ARCH=arm CROSS_COMPILE=${NDK_TOOLCHAIN} EXTRA_CFLAGS="-pie --sysroot=${NDK_SYSROOT}"
-> -For x86:
-> -  make WERROR=0 ARCH=x86 CROSS_COMPILE=${NDK_TOOLCHAIN} EXTRA_CFLAGS="-pie --sysroot=${NDK_SYSROOT}"
-> -
-> -III. Install perf
-> ------------------------------------------------
-> -You need to connect to your Android device/emulator using adb.
-> -Install perf using:
-> -  adb push perf /data/perf
-> -
-> -If you also want to use perf-archive you need busybox tools for Android.
-> -For installing perf-archive, you first need to replace #!/bin/bash with #!/system/bin/sh:
-> -  sed 's/#!\/bin\/bash/#!\/system\/bin\/sh/g' perf-archive >> /tmp/perf-archive
-> -  chmod +x /tmp/perf-archive
-> -  adb push /tmp/perf-archive /data/perf-archive
-> -
-> -IV. Environment settings for running perf
-> -------------------------------------------------
-> -Some perf features need environment variables to run properly.
-> -You need to set these before running perf on the target:
-> -  adb shell
-> -  # PERF_PAGER=cat
-> -
-> -IV. Run perf
-> -------------------------------------------------
-> -Run perf on your device/emulator to which you previously connected using adb:
-> -  # ./data/perf
-> +Android NDK compilation is deprecated and no longer supported.
+> > Thanks,
+> > Ian
+> >=20
+>=20
+> Yes it looks like the fix should possibly be higher up in the arm64=20
+> pmu_metrics_table__find().
+>=20
+Maybe someone can figure out how to fix this in a better way higher up
+the call chain with the description above. However, my fix looked quite
+straight forward to me, as it simply restores the behavior before
+f20c15d13f01.
+
+> Which set of JSON files are you seeing the issue with exactly Lucas? I=
+=20
+> see that there are multiple versions of i.MX8M metrics.
+>=20
+It was first observed on a i.MX8MP, but the issue is also reproducible
+on i.MX8MM. I guess it doesn't matter which SoC is used specifically,
+the key point is that the sampling isn't able to match any specific
+PMU, but there are still system wide metrics.
+
+Regards,
+Lucas
+
+> James
+>=20
+> > > Thanks,
+> > > Namhyung
+> > >=20
+> > >=20
+> > > > > ---
+> > > > >   tools/perf/pmu-events/jevents.py | 2 +-
+> > > > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >=20
+> > > > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-ev=
+ents/jevents.py
+> > > > > index e42efc16723e..0a1ed9ee1429 100755
+> > > > > --- a/tools/perf/pmu-events/jevents.py
+> > > > > +++ b/tools/perf/pmu-events/jevents.py
+> > > > > @@ -1081,7 +1081,7 @@ const struct pmu_metrics_table *perf_pmu__f=
+ind_metrics_table(struct perf_pmu *pm
+> > > > >           if (!map)
+> > > > >                   return NULL;
+> > > > >=20
+> > > > > -        if (!pmu)
+> > > > > +        if (!pmu || !map->metric_table.num_pmus)
+> > > > >                   return &map->metric_table;
+> > > > >=20
+> > > > >           for (size_t i =3D 0; i < map->metric_table.num_pmus; i+=
++) {
+> > > >=20
+> >=20
+
