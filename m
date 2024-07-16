@@ -1,97 +1,136 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F30013B791
-	for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 22:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 229E9193
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jul 2024 00:23:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721082321; cv=none; b=Hnma2ERmIpWPl2hRvZPt2A6ZgqzcSEQq/EyLdaP5fcBH4Fc11J29ckuDJRSm++UcSF6LhjOICbeAHOfxx9DcIxvPIKUI64AxPoD5Gr8lct42hPWOstGf9essIAZUkkgezjLlmd479sidZ9znkuItup4XV+6nZsnsadn+TbznDec=
+	t=1721089428; cv=none; b=KVE4lEvImaKJbCcBEGymLi6VXWPoZPi8Skp+zjsH0G6gw9kfi/lMRxb90eFaAHHIeWNZs+l2ujzsB8ZHvaojyjyNKN1pC593utro9D8PpMVdU9iLoLagb74Gubrky5mdvIYYuuAWmrrj773qIQFM+PD7h1gMMzEzL9CRQ+pKdBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721082321; c=relaxed/simple;
-	bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
+	s=arc-20240116; t=1721089428; c=relaxed/simple;
+	bh=w+9uP3NYMGiGGm8C01qAIjXCvPwsduD/KyZg9fbAvdc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r5A5HLR4g9x9G7TaLh7wKFFhdeDUeQxIZ8u+Bjee7Tt1wxL0cHWeMvedc0CP7lmi51BzY5J80BLEdznl2WbJ5+xflCXXHA6yiOJXG6CwxHfMmLLhP1ZVU32JMNesLFGw0xxsrGBXzWnQb9okUkXmJVSBOjPrUHBJuWjUJulwcdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=pn3j2b9z; arc=none smtp.client-ip=209.85.160.174
+	 To:Cc:Content-Type; b=b8owHbBUNM239G7weY57G4VmJ7JbnMysBZ81W6NRDIIlxH/F0LpQ7a+RwDoaqxxuvc4b4PJkZ1KqXZLcVd9yCOvi+UqU86iQ7fRA5UBRonioimzJSslxqhJoyTF/LZZyjMqQvX8jvXZDwV1cHLffMGE33IDLlbazyDGMEuBp+sI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SK7S/O+h; arc=none smtp.client-ip=209.85.160.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pn3j2b9z"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-447df43324fso62211cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 15:25:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SK7S/O+h"
+Received: by mail-qt1-f177.google.com with SMTP id d75a77b69052e-447df43324fso88411cf.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 15 Jul 2024 17:23:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721082317; x=1721687117; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721089425; x=1721694225; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
-        b=pn3j2b9zi3XTrM02C7ReXE7sV/qPEgq4U+xAa8SxqmK+SATpL398jkwaBUUR1N00cR
-         6A2rJAmqPZEpYkhtu+2rVG+uMtU2KuQdaA4xas+GJ9P2pe1iYOdooG+G/n3abRbEzXLM
-         0LX4op730olIqcD+8Uy43xXTI9Iqq8bWc05tbPEA6R0O7Cl2mp/bmnXfFBVVBv0am7vG
-         +CSHXgtxcos3mlf7udAeE4/dBj5GlcUsDoVSKAxKLD/J9v4IpEJZMCzkSniiM5puElCB
-         Yy5iDJOSfZUF5JMYh3GjxiO5bOinUY0y65u2BL4ITYysQLLoA0j1RqrqSfD5QYB3s/xU
-         NS9w==
+        bh=atOyFauWlMezUFieUVAk0q6tNEF19uog8150eFOHK5o=;
+        b=SK7S/O+h0WVibjzp45o+hAVxNfaafgMdhTkGHp65ZtTX8IDjHFBFZoPnTPjsz9TSKU
+         ucaIYXqraXLFQ1ECdr2RQmiaqXxiSmShTApi4XQFtqMls89/7v5wWXao2haOx97LBNpW
+         iyaFuiGlxPnTn6bWN3u4TYnEO1hTbCw4PExaFpPYiWQCsXrepkdtLGXB35OYS+Ii1/OC
+         rJSLLW9D565xy5o3Ff3j8ERdFKkTlTHQU5ZG3QYdT2THvOlxp6CGG2V8Luutz6bftRt6
+         gc24WNIb1MfrbcaAzlGdf1l+trPvyKuiIuIP0/3vw/hpiW+93mlfeNVxz623fMlwW9fS
+         LhlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721082317; x=1721687117;
+        d=1e100.net; s=20230601; t=1721089425; x=1721694225;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VDosR8c7HVdHMUbSmYVlLvcmNQzOGgdXeW3Tav7KBzk=;
-        b=M1Ipo0zVJ/oG4xHuZvjh95LD8Mer/oC2rGsGAPVMe0XK62M/EOHu4lwXU+sqvO4P2K
-         1f4VKK678eRHdpUbVwftMpsW7GTCUlU76jLltrwcAKwaSW0G78KzocJkKHtzRtOgFQ1l
-         VRQE5blbImpws78CmsN+0bCah4AM7xjf8pqPZwuyMs/1mVO0CQFYkPnHkq/2khcW/biH
-         j4spe1cG255Yo5s9j8El1CSIupYO3L2XOXSkQJOY9PdBDqB5g1I8eI9XWErFJVJJruff
-         DASHMn8R+1c17lJNXi+R3QhKQATH7j5c5viKqRKF1o6/MjPQEvtIJzE+IQlMMmcQn/IL
-         tn+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWIJzh6g+ovNPPWAJUpBtkVADUhzWClWxi08twzyYuAZaUA3jMqjQqrXWO8+CZgFZqEsBajxJIof+P/ACk1PwBxM1vpOaBftV4AVILOJM7Wnw==
-X-Gm-Message-State: AOJu0Yzc3MW68Kn/p+2cUvSUK06ucdlVhioHx6bPNXY6ufltEs1uTdPv
-	00G9EE4jrFBhxoTzN4VGMWATZ4FHO+iqwI11SMR2PtIgqhCk/9GHFemnbs2S2tQ4JFG8uOrIV+s
-	G8qjv5rLKmkZFrn9hrMH1dqUDkMQuBAb5wNKc
-X-Google-Smtp-Source: AGHT+IHYyLx5NZMwuMuZh1Z+E4Fk+g7KzT9Wi9MbqWX8yuGKTcGdIruyD9WKu8v1r6Koq/eGYelxM2+D839RrwOyfs4=
-X-Received: by 2002:a05:622a:5907:b0:446:64ad:ee91 with SMTP id
- d75a77b69052e-44f7a7425c9mr1258371cf.20.1721082317051; Mon, 15 Jul 2024
- 15:25:17 -0700 (PDT)
+        bh=atOyFauWlMezUFieUVAk0q6tNEF19uog8150eFOHK5o=;
+        b=bt9Hfod5NKWtMqFbfZCxbYfqFvp+DBecMLSzwvhiTnwdxfVJpSqyd+1gr4F4dpvhJ8
+         n5i0uCmOfv8NKKre7Ux8YXrfncb39jc4CSJohJwwo8yCsUbL8fhWULKgF6PYPIZBSkmT
+         EU1drXAjbfhgdJSEs/h/tU6u0Ip1Hv9isx3vZU7ecAUlfVTsa17V1oV9JXT6t5xy3yH3
+         YEpLmekehZka/4Tf68eOxApvGS2F+3RWmmcWAVAPV72neAmtmYs4P3vV+FTXO3uV0zDk
+         KvqzuaYI4sB1FpVUB9NEHzUlRgRyub7eJu7rYWQ2SzQI+TBw2ILIpGq4aZ61mNuDyiEh
+         kLbQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUZeWgthglJ7uea9gGN5hdyG8LFdzqQtScYDay8IPNwJtSauP8G6yoUDzN8f/UYhQ1lBtdWidNxEYzWs2laWTpve5QDUo5cUvnE5vxy8sAU/Q==
+X-Gm-Message-State: AOJu0YwnEk5Zgg0Jm4YV3oEuMkTj+oRiQrFfa/0W2FXRXBacSU6wc/f6
+	mzLj6vCjqAbQ9l7474r7kWwSkUz167DYw9aVwotzxVmbu+oTEhRptYDMtPzQ12MEvIvbi1B/4yP
+	CeSwyeBIyV92Naivh2aVsYXCoXH8tGpHDJeN1
+X-Google-Smtp-Source: AGHT+IE/kw/J8yKZw6NIetUbx7QF0zylSsoXWZkbL5jj7VHdECRTorHmo1jZJ3C3EkNfgS8fl+Q/Qni/Y4/oltYoqD8=
+X-Received: by 2002:a05:622a:40cc:b0:447:e6c6:bd3 with SMTP id
+ d75a77b69052e-44f7b93f886mr738431cf.21.1721089424804; Mon, 15 Jul 2024
+ 17:23:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240522204254.1841420-1-weilin.wang@intel.com> <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
-In-Reply-To: <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com>
+References: <20240525013021.436430-2-irogers@google.com> <202405311548.1e881dea-oliver.sang@intel.com>
+ <CAP-5=fX7ZyT82=W8uSZbT7c76E5+1JaoR5-y_gcj7A_=Js1YfA@mail.gmail.com>
+ <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020> <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
+ <CAP-5=fV5Qdu5iH_DKeAXQfEmQN9SmxCViSgbOCvAmN529WoeOw@mail.gmail.com> <ZmphzTKiDDYkPPP+@xsang-OptiPlex-9020>
+In-Reply-To: <ZmphzTKiDDYkPPP+@xsang-OptiPlex-9020>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 15 Jul 2024 15:25:05 -0700
-Message-ID: <CAP-5=fXOTmMyPx_tQPoCfCP35E1o6YSyZde58ojyU1PLJBt96A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] perf test: make metric validation test return
- early when there is no metric supported on the test system
-To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>, weilin.wang@intel.com
+Date: Mon, 15 Jul 2024 17:23:32 -0700
+Message-ID: <CAP-5=fUUnnL18x_mdQdaCePOSbk5VWP3jfAS44n7qahD7pja5Q@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
+To: Oliver Sang <oliver.sang@intel.com>
+Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Weilin Wang <weilin.wang@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jing Zhang <renyu.zj@linux.alibaba.com>, John Garry <john.g.garry@oracle.com>, 
+	Sandipan Das <sandipan.das@amd.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, May 24, 2024 at 6:26=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
-te:
->
-> On Wed, May 22, 2024 at 1:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
-> >
-> > From: Weilin Wang <weilin.wang@intel.com>
-> >
-> > Add a check to return the metric validation test early when perf list m=
-etric
-> > does not output any metric. This would happen when NO_JEVENTS=3D1 is se=
-t or in a
-> > system that there is no metric supported.
-> >
-> >
-> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
->
-> Tested-by: Ian Rogers <irogers@google.com>
+On Wed, Jun 12, 2024 at 8:07=E2=80=AFPM Oliver Sang <oliver.sang@intel.com>=
+ wrote:
+> > > > but make still failed. I still saw below in our build log
+> > > >
+> > > > --- pmu-events/empty-pmu-events.c       2024-06-03 08:41:16.0000000=
+00 +0000
+> > > > +++ pmu-events/test-empty-pmu-events.c  2024-06-03 13:47:19.5224634=
+82 +0000
+> > > > @@ -136,7 +136,7 @@
+> > > >  { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
+> > > >  { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icac=
+he_miss_cycles\000\000\000\000\000\000\000\00000 */
+> > > >  { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_re=
+tired.any\000\000\000\000\000\000\000\00000 */
+> > > > -{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst=
+_retiredany\000\000\000\000\000\000\000\00000 */
+> > > > +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst=
+_retired.any\000\000\000\000\000\000\000\00000 */
 
-Ping.
+Hi Oliver,
+
+I tried to reproduce the problem by installing more locales on my
+machine, setting the environment variables, checking my environment
+variables, etc. I couldn't reproduce it. Looking more closely at the
+diff above and the other diffs in your email something strange appears
+to be happening around dots.
+
+From:
+ --- pmu-events/empty-pmu-events.c
+we know the minus lines are those from the files in this patch series.
+From:
++++ pmu-events/test-empty-pmu-events.c
+we know the plus lines are those generated by jevents.py.
+
+In the diff output above the "inst_retired.any" doesn't match
+"inst_retiredany" (no dot before the word "any"). The repository file
+pmu-events/empty-pmu-events.c is missing the dot in the event name but
+jevents.py is generating it, hence the diff. But looking at
+pmu-events/empty-pmu-events.c in:
+https://lore.kernel.org/lkml/20240525013021.436430-2-irogers@google.com/
+The dot is present.
+
+I think what is happening is that when you apply the patches for some
+reason the dots are being consumed in
+tools/perf/pmu-events/empty-pmu-events.c, the build then informs you
+of this by failing. The locales idea was a red herring and this has
+something to do with how you apply patches.
+
+Does this make sense? Perhaps you can try testing the patches in an
+ordinary client applying the patches using something like "b4 am
+20240525013021.436430-1-irogers@google.com". At the moment I think the
+patch series is good and I don't have a way to fix what I think the
+problem is, with how you applied the patches.
 
 Thanks,
 Ian
