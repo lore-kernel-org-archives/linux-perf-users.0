@@ -1,25 +1,37 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0186B44369;
-	Tue, 16 Jul 2024 10:06:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B23331991C8;
+	Tue, 16 Jul 2024 10:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721124392; cv=none; b=Apwu5BHoxA7dvY7qs2Li6J9BGXvfkOh3LG7xgWdHRMMZ1ZD+KxqzLExKm3IF1AJqOBN93cfcuEDQ99hpUlCMz3ysoZF1criATd6MX43yZLi691EQ29wuHinXkGcEv6MlKXXQ27IlqxAZLI6xFXOX7t3NAObRSy/XaGvOKjXXkio=
+	t=1721125191; cv=none; b=lbw41F0kZm/O1Wqdm0mzbft6gbyA5Pgl4/NlUGb7H3LdydXATSlsSiPMexb2MTQ2j7NrTdN/6Y56J/n6EU2S4OvLFPn+oLMXz3xh40ieMiTEMprv0sWV+r7tIWxWdHFKd02Oh2FbVumjp4b2/nB6s6IRF4IUwUr4NteU61HL7MA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721124392; c=relaxed/simple;
-	bh=15GE7Kublid/r/h32zPnzD+qmdotNJ/HsZeI1Dk8tSo=;
+	s=arc-20240116; t=1721125191; c=relaxed/simple;
+	bh=XtLY/2W01ozoke3wI7FyIVzf6xXxghVArIakSkiiAYM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BY/EJr+tL1S7fIURsnDEElzjHObajxKMf9gcuVzuwgV4qCuT/bY2n2yFaBuvIlOzNwetMP+n7e5kAeBwuKZ6Dw+5Aij+Bu1TMOToTFu4LOeNbJM1xEN/y3lTZdk8XBGvn3DRFBCK7g/v/dY0tCpv38Ke5dyFmXN2n0Kog1aWZWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 971421063;
-	Tue, 16 Jul 2024 03:06:54 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7195F3F762;
-	Tue, 16 Jul 2024 03:06:27 -0700 (PDT)
-Message-ID: <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
-Date: Tue, 16 Jul 2024 11:06:25 +0100
+	 In-Reply-To:Content-Type; b=TfgrG0m/m63k4qwwrVO42K3F4k3dlQNIH6lvbqzCI/hTuw/aX6OgzOyetl/jvbaSfrVXtsweYQL5MSrr/sELqg6C75UbjaFK/4YLklBZJKhkjgOR1cbm8aDxJYTiUf2abl68EL/Tv5nbD64b79I2PMUBotLvlxAX5ZAm3D8YFt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=vwa1mchl; arc=none smtp.client-ip=80.237.130.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="vwa1mchl"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
+	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
+	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
+	References; bh=uXDtNkzCx0nO2BmtzEf3KafT9C+s6Og5FjNJ31sYD3c=; t=1721125189;
+	x=1721557189; b=vwa1mchltNUTHk/VDE8wiUnO/PH5SUX3r9wdBGuemuB+GOnU/0Js0wFherUHv
+	piSEG/3yBmAHNEqdDsNASLaTIZ49t1mLsa7DMfEULCr6b+qemsKRWrzQUnHsBSxfXk+rNA6Bze8SB
+	JThJlYdhRs9m9lxnVL5BgWiRpaQ8maF5+ZaPb7XrURI/DlxYFSKwU2X1y0dFD/VCuVIYACUHZlkRB
+	dhgosz3Hvv/Wv29OB2K0iHqI/4LMVJeNmhZQdscJdpt9Xfr2O/98TWGy5bLuSViSPB3MN5qjkH9kj
+	SfSSgDmVXzEUkh0cga34IPNk+p7Efv/p5wAp8kgXc8Vav/JsOw==;
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+	id 1sTfHX-0000Il-27; Tue, 16 Jul 2024 12:19:39 +0200
+Message-ID: <569626ee-4aca-418b-9cfc-10cf5e2747a9@leemhuis.info>
+Date: Tue, 16 Jul 2024 12:19:38 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,100 +39,85 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Nathan Chancellor <nathan@kernel.org>,
- Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
- <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
- James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240715143342.52236-1-leo.yan@arm.com>
- <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
- <1487da55-24dc-40ef-a6e8-4bf4b153fdc3@arm.com>
- <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
- <CAP-5=fWY4AeMxfNGh_jB4gss_qtGSgfX4pvv-D-fpCWuqamVfA@mail.gmail.com>
- <f316e3ce-e1e3-45f0-ac78-9af590b58706@arm.com>
- <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Subject: Re: [PATCH v2 1/6] perf build: Conditionally add feature check flags
+ for libtrace{event,fs}
+To: Guilherme Amadio <amadio@gentoo.org>, Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>,
+ linux-perf-users@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>
+References: <20240628202608.3273329-1-amadio@gentoo.org>
+ <20240628203432.3273625-1-amadio@gentoo.org>
+From: Thorsten Leemhuis <linux@leemhuis.info>
+Content-Language: en-US, de-DE
+Autocrypt: addr=linux@leemhuis.info; keydata=
+ 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 n7RI
+In-Reply-To: <20240628203432.3273625-1-amadio@gentoo.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1721125189;80dc3f8b;
+X-HE-SMSGID: 1sTfHX-0000Il-27
 
-
-
-On 7/15/24 22:21, Ian Rogers wrote:
-
-[...]
-
-> Hmm.. I can repro but I don't see where the string comes from and my
-> build is definitely using clang:
-> ```
-> $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- -C tools/perf
-> O=/tmp/perf NO_LIBELF=1 NO_LIBTRACEEVENT=1 NO_LIBPYTHON=1 CC=clang
-> CXX=clang++ V=1
-> ...
-> clang --target=aarch64-linux-gnu -fintegrated-as  -Wbad-function-cast
-> -Wdeclaration-after-statement -Wformat-security -Wformat-y2k
-> -Winit-self -Wmissing-declarations -Wmissing-prototypes
-> -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
-> -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef
-> -Wwrite-strings -Wformat -Wno-type-limits -Wshadow -Wthread-safety
-> -DHAVE_SYSCALL_TABLE_SUPPORT -I/tmp/perf/arch/arm64/include/generated
-> -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -DNDEBUG=1 -O3
-> -fno-omit-frame-pointer -Wall -Wextra -std=gnu11 -fstack-protector-all
-> -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -D_LARGEFILE64_SOURCE
-> -D_FILE_OFFSET_BITS=64 -D_GNU_SOURCE -I~/src/tools/perf/util/include
-> -I~/src/tools/perf/arch/arm64/include -I~/src/tools/include/
-> -I~/src/tools/arch/arm64/include/uapi -I~/src/tools/include/uapi
-> -I~/src/tools/arch/arm64/include/ -I~/src/tools/arch/arm64/
-> -I/tmp/perf//util -I/tmp/perf/ -I~/src/tools/perf/util
-> -I~/src/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
-> -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
-> -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
-> -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT
-> -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DNO_LIBPERL
-> -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON -DHAVE_BACKTRACE_SUPPORT
-> -DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
-> -I/tmp/perf/libapi/include -I/tmp/perf/libsubcmd/include
-> -I/tmp/perf/libsymbol/include -I/tmp/perf/libperf/include -I/tmp/perf/
-> -Wl,-z,noexecstack \
->          /tmp/perf/perf-in.o -Wl,--whole-archive
-> /tmp/perf/libapi/libapi.a /tmp/perf/libperf/libperf.a
-> /tmp/perf/libsubcmd/libsubcmd.a /tmp/perf/libsymbol/libsymbol.a
-> /tmp/perf/libperf-bench.a /tmp/perf/libperf-test.a
-> /tmp/perf/libperf-ui.a /tmp/perf/libperf-util.a
-> /tmp/perf/libpmu-events.a  -Wl,--no-whole-archive -Wl,--start-group
-> -lpthread -lrt -lm -ldl -Wl,--end-group -o /tmp/perf/perf
-> $ strings /tmp/perf/perf|grep GCC
-> GCC: (Debian 13.2.0-13) 13.2.0
-> $ find /tmp/perf -name '*.[oa]' -exec sh -c "strings {} | grep GCC" \; -print
-> GCC: (Debian 13.2.0-13) 13.2.0
-> /tmp/perf/fixdep.o
-> GCC: (Debian 13.2.0-13) 13.2.0
-> /tmp/perf/fixdep-in.o
-> ```
-> fixdep is being compiled with HOSTCC which isn't clang. Some more digging:
-> ```
-> $ aarch64-linux-gnu-readelf -p .comment /tmp/perf/perf
+On 28.06.24 22:34, Guilherme Amadio wrote:
+> This avoids reported warnings when the packages are not installed.
 > 
-> String dump of section '.comment':
->   [     0]  GCC: (Debian 13.2.0-13) 13.2.0
->   [    1f]  Debian clang version 16.0.6 (20+build1)
-> ```
-> So I suspect that the GCC is coming from crt0.o and that the binary
-> was built with clang.
+> Fixes: 0f0e1f44569061e3dc590cd0b8cb74d8fd53706b
+> Signed-off-by: Guilherme Amadio <amadio@gentoo.org>
+> ---
+>  tools/perf/Makefile.config | 28 +++++++++++++++-------------
+>  1 file changed, 15 insertions(+), 13 deletions(-)
+> [...]
 
-Thanks for correcting. Now I even can build successfully with the Clang
-from Android NDK with an additional flag 'NO_DEMANGLE=1'. Though we still
-need to disable several modules for passing the building, but we are on the 
-right way.
+So, Namhyung applied this. But TWIMC: by -next vanilla builds based on
+the Fedora rawhide srpm still fails because libtracefs is not found,
+when it fact it is installed. That afaics was what triggered this series
+in the first place.
 
-Would you like to continue a formal fixing or you want me to follow up?
+Here is the report:
+https://lore.kernel.org/all/072d3965-7140-4f0b-bf9a-9d7edabbfde9@leemhuis.info/
 
-Thanks,
-Leo
+Here is a failed build log from yesterday's -next:
+https://download.copr.fedorainfracloud.org/results/@kernel-vanilla/next/fedora-rawhide-x86_64/07732721-next-next-all/builder-live.log.gz
+
+Ciao, Thorsten
