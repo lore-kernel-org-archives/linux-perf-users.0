@@ -1,292 +1,172 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 877431E498;
-	Tue, 16 Jul 2024 12:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D264C7C
+	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jul 2024 13:30:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721134381; cv=none; b=WFgn1O7Q3jDUyEmFwy6bLeQ5y9YdnJ231OVu/RMj2WtGbKrso+orCyecILp5617WiOL8R16UygI0MM546nsdhNp8X1uCcOnrVuiDsv6KCtn9Od86g7IJXup8jUe70Ko/CU9/XgKN6ckIF1SKUoY3jq+M7VnxAh6jCF5dXZRA/5Y=
+	t=1721136648; cv=none; b=BtTvNOt6cS9xasUKI8FjF22iWxoENg/rJbrrx/GhQTb1s8kFkpeThJgqWftjpTDeyh65KFaV9o001QX9tSL2zJBLwncIPdH9hSvGC1BRFemC0luL5iNMLzgtbVoMSM91fRV6QYjLPih4IS/2qzpox7fBe3keFYQ7hid+YrcXi/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721134381; c=relaxed/simple;
-	bh=SSgUscryii1clarjrDEuWe0oAR9tIv+UZaWDyL8CiQM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uQt78nawFzrl1/c2nLVjy26npLPElNY+gGkXoINw/TLer51ck+XQGc0fbhjgWD2atpDzlMuCZnpM1n2wpIkmDDKWXNlKqo9T3+c5P5aYPbfBdWmco7C4r3pyfFQZ7Mpk+ztbg0UHJ66jkx76E5uuHbO3xhi8fDZJQw63qv2wXSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m0fDHM7m; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721136648; c=relaxed/simple;
+	bh=77c/I/O9ypPcVoUiTPxlcXfWBWvCeOg6jo/pvVdkiHk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AsKu9Dm13z7eit8OZfVD2c7caCVoNVV4c6vE3lDK5tG8dOD2wVaXYhpEBq571nJ7s84tC7Y17sOkoRySlQxFQ9kUfY4q+z0UJacKSz4usEFLXfhy8gY0dlK6qZtIvcB0zGbp6ezASrf79PJA0vvMxVkTOdbO/ST+7xOHIawZh1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Y/ZV4KC4; arc=none smtp.client-ip=209.85.166.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m0fDHM7m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721134380; x=1752670380;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=SSgUscryii1clarjrDEuWe0oAR9tIv+UZaWDyL8CiQM=;
-  b=m0fDHM7meuyiqw5PIdfQXzrC0QrPVscaW7Vpvl7zHoeodfi/cnZrAvoB
-   cENFF0I9CI/jw1p372cV0zVJ0ojLe+qTGjROGd3Z/CB0DqltE/Gr0tE0z
-   GH7NvVKe4QJnDk+dkeIWd4XoyQCGhrwBBLl0IWK9cjRvw7b9LrCv/5vqW
-   K3AjDuil8/QWYy9kslgk2V1TO1is6zOEvdRG4y0+hUE6DtJ/Ll4Cu2vZ3
-   KtMfjkQmYcPO/sPjXwLBiUFhYKDWLxORuFueYV65fuKSOTOmjWy0/q3ME
-   guCvIAtZloG3Rgk8DSqaNpmMVvg6S7ryKhuSya65Kko2KXqI6sXVpuPxM
-   A==;
-X-CSE-ConnectionGUID: s91ENogjSdSlErRHlfCFCA==
-X-CSE-MsgGUID: aF9ib/P1QC+3QPPwW5+osw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18700718"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18700718"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 05:52:59 -0700
-X-CSE-ConnectionGUID: CyQTy01RQ4S4qOmeiA/5sA==
-X-CSE-MsgGUID: 9koCZ61vTuW6piZp7MQsJg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="50062034"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 05:52:59 -0700
-Received: from [10.213.174.231] (kliang2-mobl1.ccr.corp.intel.com [10.213.174.231])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 4883E20B8CD6;
-	Tue, 16 Jul 2024 05:52:57 -0700 (PDT)
-Message-ID: <7491af6f-7be8-4a7a-8f48-249d26440bbc@linux.intel.com>
-Date: Tue, 16 Jul 2024 08:52:55 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Y/ZV4KC4"
+Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-3815ad8adc9so166025ab.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 16 Jul 2024 06:30:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721136646; x=1721741446; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fUFB2OkpxowXE7d1mjPyXdQnAb7sHtoIxKD0VjG4/Zk=;
+        b=Y/ZV4KC4pPGGYM8EARkDwf9gt1uw6Iw1v/F+KxsQ7i3DqLrrFGtZHGN5eI4xqOKbSW
+         8/SMyW2bPVzoVnmkSG+HwGsRDW1C1rPpGg40HZAQOneZDp9VTs4ZTre6TogBRqNW05UU
+         OUsOIJm6MQGsOwBUwKCvUwVHSD6XRnJ23vanBhH31jUDrYs3QrEkcODK9whYhhzGeTCM
+         yDOWljj7UrhIjk79JLMGrdatpktO85sWAs/yLaCvH0XlG9UW2uj/nAIudz5RjU2g3noj
+         C7heGKHdGlmPRDOTHa2qS/boTY2E/FzWWxtAwgGLnESghztPzTWGpgrhDgQBALKnBgL5
+         gy1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721136646; x=1721741446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fUFB2OkpxowXE7d1mjPyXdQnAb7sHtoIxKD0VjG4/Zk=;
+        b=vgSKIOk4zCy1PmKivAR3IUg+ruH6MaV3lOn4JqOATnXLu6jeBHToVDQcMzCvOgEX2d
+         +l3hPUikbddAqZUBC1FPTDp5EL/bDls9XdwnDLkBz4ldiJVsGMxSxhXjZQj6hELWOEJD
+         BMN8W0H2qT6XRR9NQAATW1r8Joc98i6e43tO9TOGjtOINd5B9ntPEpvHb13S0rvbYAKT
+         gubhoHapnX8YZQh8ydBm0NN6x2rCdtyfuD0jwgAzYAws9MdZ8drzPr/B+iDZSea6WPFp
+         Qpou/B5on3gTmp6ge9/uDhCQlR2tnUNrt8+bJVhZMjknrxLqLSUkfIYGFaomxapYbTzI
+         QvfA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBCUg1mkiejRhQHzCVW0R3ldY1+Y903I7rdhHqWQeZclITzUB8J3CSsRn/rPQdJI8aaalP/0fnNfJHSYKsVX5h4Nb0BRU537n3X45fW7+TVA==
+X-Gm-Message-State: AOJu0YymVoOwK6lCKVWkXz+OHgJ/0+XkQdBH5hqtgYI/9B3dHybDkuaG
+	PuKpDJ1PWTfKimLpsSl3srnrGRUgwp8HdHVHEtG3rCYTBkzqJ41yjIC7MFzQJdRwlYb614wo5zO
+	r6+D4cOewTl39bal2u7z98b/OLeNMwbwQUAzL
+X-Google-Smtp-Source: AGHT+IH+7PFoZHCpF0Hnak0mBX4nEsVu7wcSexmapZjJE7r70AVdcoJORgk6ypafcqH/vaYNfDgZjfs5Ph4nOk61umM=
+X-Received: by 2002:a05:6e02:1b08:b0:375:cd76:1602 with SMTP id
+ e9e14a558f8ab-393c1e1f3a7mr2935705ab.28.1721136645373; Tue, 16 Jul 2024
+ 06:30:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [linux-next:master] [perf vendor events] e2641db83f:
- perf-sanity-tests.perf_all_PMU_test.fail
-To: Ian Rogers <irogers@google.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, Linux Memory Management List <linux-mm@kvack.org>,
- Namhyung Kim <namhyung@kernel.org>, Weilin Wang <weilin.wang@intel.com>,
- Caleb Biggers <caleb.biggers@intel.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202407101021.2c8baddb-oliver.sang@intel.com>
- <ec744c86-b73e-417a-8e3a-c07142bf37d1@linux.intel.com>
- <CAP-5=fUqGcnGvB71jHHTecLqcky6+TrFo+hWb=eBxZjxfe_m-g@mail.gmail.com>
- <48b4bfb0-d0c7-4d1f-9e52-06e873646366@linux.intel.com>
- <CAP-5=fV2YTD5ZWcZgYN+cX7atdoiM2G2=xN=c_q5UmXyQzEkRQ@mail.gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAP-5=fV2YTD5ZWcZgYN+cX7atdoiM2G2=xN=c_q5UmXyQzEkRQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240715143342.52236-1-leo.yan@arm.com> <CAP-5=fVd9pO7kKvZX7PZ6sJ+GHOV7aF=Ry98a=vknimuSTp9Lg@mail.gmail.com>
+ <1487da55-24dc-40ef-a6e8-4bf4b153fdc3@arm.com> <CAP-5=fUGJmOr9XcsVWWCREjr1A7rUFaMk0VPkQAKDAEjTLKJVQ@mail.gmail.com>
+ <CAP-5=fWY4AeMxfNGh_jB4gss_qtGSgfX4pvv-D-fpCWuqamVfA@mail.gmail.com>
+ <f316e3ce-e1e3-45f0-ac78-9af590b58706@arm.com> <CAP-5=fU=LguHNi861L4gmgZWXrrgZtG1w5cdw7hXDxnfWyJyMQ@mail.gmail.com>
+ <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
+In-Reply-To: <a17e6701-4195-4132-8518-fe4b10403f7e@arm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 16 Jul 2024 06:30:31 -0700
+Message-ID: <CAP-5=fVi8RJVokVBQtin8xSAq7uxN=GB7zcC4OiT=SzqWB+V0w@mail.gmail.com>
+Subject: Re: [PATCH v2] perf docs: Mark the Android document as obsolete
+To: Leo Yan <leo.yan@arm.com>, clang-built-linux <clang-built-linux@googlegroups.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, 
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>, 
+	James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jul 16, 2024 at 3:06=E2=80=AFAM Leo Yan <leo.yan@arm.com> wrote:
+>
+>
+>
+> On 7/15/24 22:21, Ian Rogers wrote:
+>
+> [...]
+>
+> > Hmm.. I can repro but I don't see where the string comes from and my
+> > build is definitely using clang:
+> > ```
+> > $ make ARCH=3Darm64 CROSS_COMPILE=3Daarch64-linux-gnu- -C tools/perf
+> > O=3D/tmp/perf NO_LIBELF=3D1 NO_LIBTRACEEVENT=3D1 NO_LIBPYTHON=3D1 CC=3D=
+clang
+> > CXX=3Dclang++ V=3D1
+> > ...
+> > clang --target=3Daarch64-linux-gnu -fintegrated-as  -Wbad-function-cast
+> > -Wdeclaration-after-statement -Wformat-security -Wformat-y2k
+> > -Winit-self -Wmissing-declarations -Wmissing-prototypes
+> > -Wno-system-headers -Wold-style-definition -Wpacked -Wredundant-decls
+> > -Wstrict-prototypes -Wswitch-default -Wswitch-enum -Wundef
+> > -Wwrite-strings -Wformat -Wno-type-limits -Wshadow -Wthread-safety
+> > -DHAVE_SYSCALL_TABLE_SUPPORT -I/tmp/perf/arch/arm64/include/generated
+> > -DHAVE_ARCH_REGS_QUERY_REGISTER_OFFSET -Werror -DNDEBUG=3D1 -O3
+> > -fno-omit-frame-pointer -Wall -Wextra -std=3Dgnu11 -fstack-protector-al=
+l
+> > -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3D2 -D_LARGEFILE64_SOURCE
+> > -D_FILE_OFFSET_BITS=3D64 -D_GNU_SOURCE -I~/src/tools/perf/util/include
+> > -I~/src/tools/perf/arch/arm64/include -I~/src/tools/include/
+> > -I~/src/tools/arch/arm64/include/uapi -I~/src/tools/include/uapi
+> > -I~/src/tools/arch/arm64/include/ -I~/src/tools/arch/arm64/
+> > -I/tmp/perf//util -I/tmp/perf/ -I~/src/tools/perf/util
+> > -I~/src/tools/perf -DHAVE_PTHREAD_ATTR_SETAFFINITY_NP
+> > -DHAVE_PTHREAD_BARRIER -DHAVE_EVENTFD_SUPPORT
+> > -DHAVE_GET_CURRENT_DIR_NAME -DHAVE_GETTID -DHAVE_FILE_HANDLE
+> > -DHAVE_AIO_SUPPORT -DHAVE_SCANDIRAT_SUPPORT
+> > -DHAVE_SCHED_GETCPU_SUPPORT -DHAVE_SETNS_SUPPORT -DNO_LIBPERL
+> > -DHAVE_TIMERFD_SUPPORT -DNO_LIBPYTHON -DHAVE_BACKTRACE_SUPPORT
+> > -DHAVE_KVM_STAT_SUPPORT -DHAVE_AUXTRACE_SUPPORT
+> > -I/tmp/perf/libapi/include -I/tmp/perf/libsubcmd/include
+> > -I/tmp/perf/libsymbol/include -I/tmp/perf/libperf/include -I/tmp/perf/
+> > -Wl,-z,noexecstack \
+> >          /tmp/perf/perf-in.o -Wl,--whole-archive
+> > /tmp/perf/libapi/libapi.a /tmp/perf/libperf/libperf.a
+> > /tmp/perf/libsubcmd/libsubcmd.a /tmp/perf/libsymbol/libsymbol.a
+> > /tmp/perf/libperf-bench.a /tmp/perf/libperf-test.a
+> > /tmp/perf/libperf-ui.a /tmp/perf/libperf-util.a
+> > /tmp/perf/libpmu-events.a  -Wl,--no-whole-archive -Wl,--start-group
+> > -lpthread -lrt -lm -ldl -Wl,--end-group -o /tmp/perf/perf
+> > $ strings /tmp/perf/perf|grep GCC
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > $ find /tmp/perf -name '*.[oa]' -exec sh -c "strings {} | grep GCC" \; =
+-print
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > /tmp/perf/fixdep.o
+> > GCC: (Debian 13.2.0-13) 13.2.0
+> > /tmp/perf/fixdep-in.o
+> > ```
+> > fixdep is being compiled with HOSTCC which isn't clang. Some more diggi=
+ng:
+> > ```
+> > $ aarch64-linux-gnu-readelf -p .comment /tmp/perf/perf
+> >
+> > String dump of section '.comment':
+> >   [     0]  GCC: (Debian 13.2.0-13) 13.2.0
+> >   [    1f]  Debian clang version 16.0.6 (20+build1)
+> > ```
+> > So I suspect that the GCC is coming from crt0.o and that the binary
+> > was built with clang.
+>
+> Thanks for correcting. Now I even can build successfully with the Clang
+> from Android NDK with an additional flag 'NO_DEMANGLE=3D1'. Though we sti=
+ll
+> need to disable several modules for passing the building, but we are on t=
+he
+> right way.
+>
+> Would you like to continue a formal fixing or you want me to follow up?
 
++clang-built-linux
 
-On 2024-07-15 5:48 p.m., Ian Rogers wrote:
-> On Mon, Jul 15, 2024 at 2:41 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>
->>
->>
->> On 2024-07-15 4:11 p.m., Ian Rogers wrote:
->>> On Mon, Jul 15, 2024 at 1:05 PM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>
->>>> Hi Ian,
->>>>
->>>> On 2024-07-10 12:59 a.m., kernel test robot wrote:
->>>>>
->>>>>
->>>>> Hello,
->>>>>
->>>>> kernel test robot noticed "perf-sanity-tests.perf_all_PMU_test.fail" on:
->>>>>
->>>>> commit: e2641db83f18782f57a0e107c50d2d1731960fb8 ("perf vendor events: Add/update skylake events/metrics")
->>>>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>>>>
->>>>> [test failed on linux-next/master 82d01fe6ee52086035b201cfa1410a3b04384257]
->>>>>
->>>>> in testcase: perf-sanity-tests
->>>>> version:
->>>>> with following parameters:
->>>>>
->>>>>       perf_compiler: gcc
->>>>>
->>>>>
->>>>>
->>>>> compiler: gcc-13
->>>>> test machine: 16 threads 1 sockets Intel(R) Xeon(R) E-2278G CPU @ 3.40GHz (Coffee Lake) with 32G memory
->>>>>
->>>>> (please refer to attached dmesg/kmsg for entire log/backtrace)
->>>>>
->>>>>
->>>>> we also observed two cases which also failed on parent can pass on this commit.
->>>>> FYI.
->>>>>
->>>>>
->>>>> caccae3ce7b988b6 e2641db83f18782f57a0e107c50
->>>>> ---------------- ---------------------------
->>>>>        fail:runs  %reproduction    fail:runs
->>>>>            |             |             |
->>>>>            :6          100%           6:6     perf-sanity-tests.perf_all_PMU_test.fail
->>>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metricgroups_test.pass
->>>>>            :6          100%           6:6     perf-sanity-tests.perf_all_metrics_test.pass
->>>>>
->>>>>
->>>>>
->>>>>
->>>>>
->>>>> If you fix the issue in a separate patch/commit (i.e. not just a new version of
->>>>> the same patch/commit), kindly add following tags
->>>>> | Reported-by: kernel test robot <oliver.sang@intel.com>
->>>>> | Closes: https://lore.kernel.org/oe-lkp/202407101021.2c8baddb-oliver.sang@intel.com
->>>>>
->>>>>
->>>>>
->>>>> 2024-07-09 07:09:53 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 105
->>>>> 105: perf all metricgroups test                                      : Ok
->>>>> 2024-07-09 07:10:11 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 106
->>>>> 106: perf all metrics test                                           : Ok
->>>>> 2024-07-09 07:10:23 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 107
->>>>> 107: perf all libpfm4 events test                                    : Ok
->>>>> 2024-07-09 07:10:47 sudo /usr/src/linux-perf-x86_64-rhel-8.3-bpf-e2641db83f18782f57a0e107c50d2d1731960fb8/tools/perf/perf test 108
->>>>> 108: perf all PMU test                                               : FAILED!
->>>>>
->>>>
->>>> The failure is caused by the below change in the e2641db83f18.
->>>>
->>>> +    {
->>>> +        "BriefDescription": "This 48-bit fixed counter counts the UCLK
->>>> cycles",
->>>> +        "Counter": "FIXED",
->>>> +        "EventCode": "0xff",
->>>> +        "EventName": "UNC_CLOCK.SOCKET",
->>>> +        "PerPkg": "1",
->>>> +        "PublicDescription": "This 48-bit fixed counter counts the UCLK
->>>> cycles.",
->>>> +        "Unit": "cbox_0"
->>>>      }
->>>>
->>>> The other cbox events have the unit name "CBOX", while the fixed counter
->>>> has a unit name "cbox_0". So the events_table will maintain separate
->>>> entries for cbox and cbox_0.
->>>>
->>>> The perf_pmus__print_pmu_events() calculate the total number of events,
->>>> allocate an aliases buffer, store all the events into the buffer, sort,
->>>> and print all the aliases one by one.
->>>>
->>>> The problem is that the calculated total number of events doesn't match
->>>> the stored events on the SKL machine.
->>>>
->>>> The perf_pmu__num_events() is used to calculate the number of events. It
->>>> invokes the pmu_events_table__num_events() to go through the entire
->>>> events_table to find all events. Because of the
->>>> pmu_uncore_alias_match(), the suffix of uncore PMU will be ignored. So
->>>> the events for cbox and cbox_0 are all counted.
->>>>
->>>> When storing events into the aliases buffer, the
->>>> perf_pmu__for_each_event() only process the events for cbox.
->>>>
->>>> Since a bigger buffer was allocated, the last entry are all 0.
->>>> When printing all the aliases, null will be outputed.
->>>>
->>>> $ perf list pmu
->>>>
->>>> List of pre-defined events (to be used in -e or -M):
->>>>
->>>>   (null)                                             [Kernel PMU event]
->>>>   branch-instructions OR cpu/branch-instructions/    [Kernel PMU event]
->>>>   branch-misses OR cpu/branch-misses/                [Kernel PMU event]
->>>>
->>>>
->>>> I'm thinking of two ways to address it.
->>>> One is to only print all the stored events. The below patch can fix it.
->>>>
->>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
->>>> index 3fcabfd8fca1..2b2f5117ff84 100644
->>>> --- a/tools/perf/util/pmus.c
->>>> +++ b/tools/perf/util/pmus.c
->>>> @@ -485,6 +485,7 @@ void perf_pmus__print_pmu_events(const struct
->>>> print_callbacks *print_cb, void *p
->>>>                 perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
->>>>                                         perf_pmus__print_pmu_events__callback);
->>>>         }
->>>> +       len = state.index;
->>>>         qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
->>>>         for (int j = 0; j < len; j++) {
->>>>                 /* Skip duplicates */
->>>>
->>>> The only drawback is that perf list will not show the new cbox_0 event.
->>>> (But the event name still works. Users can still apply perf stat -e
->>>> unc_clock.socket.)
->>>>
->>>> Since the cbox_0 event is only available on old machines (SKL and
->>>> earlier), people should already use the equivalent kernel event. It
->>>> doesn't sounds a big issue for me. I prefer this simple fix.
->>>>
->>>> I think the other way would be to modify the perf_pmu__for_each_event()
->>>> to go through all the possible PMUs.
->>>> It seems complicated and may impact others ARCHs (e.g., S390). I haven't
->>>> tried it yet.
->>>>
->>>> What do you think?
->>>> Do you see any other ways to address the issue?
->>>
->>> Ugh. It seems the sizing and then iterating approach is just prone to
->>> keep breaking. Perhaps we can switch to realloc-ed arrays to avoid the
->>> need for perf_pmu__num_events, which seems to be the source of the
->>> problems.
->>>
->>
->> I think a realloc-ed array should have the same drawback as the first
->> way, but bad performance.
->> Because the pmu_add_cpu_aliases() in the perf_pmu__for_each_event() only
->> add the events from the first matched PMU. If we don't fix it, the
->> UNC_CLOCK.SOCKET of cbox_0 will never be displayed.
-> 
-> Ok, but I don't think we need to optimize `perf list` for speed. Fwiw,
-> I think this was the fix for the last bug in this code:
-> https://lore.kernel.org/r/20240511003601.2666907-1-irogers@google.com
-
-That seems a different issue.
-The root cause of this issue should be that different methods are used
-between calculating the total number of events and adding the events.
-A realloc-ed array should just hide the problem. There will still be an
-issue if anyone use the pair of perf_pmu__num_events() and
-pmu_add_cpu_aliases() somewhere else later.
-
-It looks like the difference is introduced from the commit 	e3edd6cf6399
-("perf pmu-events: Reduce processed events by passing PMU").
-
-The pmu_events_table__for_each_event() stops immediately once a pmu is
-set. But for uncore, especially this case, the method is wrong and
-mismatch what perf does in the perf_pmu__num_events().
-
-The below patch can fix it.
-
-diff --git a/tools/perf/pmu-events/jevents.py
-b/tools/perf/pmu-events/jevents.py
-index ac9b7ca41856..97a3b018f865 100755
---- a/tools/perf/pmu-events/jevents.py
-+++ b/tools/perf/pmu-events/jevents.py
-@@ -923,7 +923,7 @@ int pmu_events_table__for_each_event(const struct
-pmu_events_table *table,
- 			continue;
-
- 		ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
--		if (pmu || ret)
-+		if (ret)
- 			return ret;
- 	}
- 	return 0;
-
-The event can be displayed by the perf list pmu with the patch.
-
-$ perf list pmu | grep -A 1 clock.socket
-   unc_clock.socket
-        [This 48-bit fixed counter counts the UCLK cycles. Unit:
-uncore_cbox_0
-& perf test "perf all PMU test"
-  107: perf all PMU test                                               : Ok
-
-I will send the patch shortly.
+If you could follow up it would be great! I'm not sure how we detect
+in the build that we're using clang, I suspect there is an approach in
+a different kernel Makefile/Build that already tackles this but my
+quick searching didn't yield anything - perhaps the change would be
+better suited to the location the CROSS_COMPILE prefix is added to
+gcc. The only thing the change to Makefile.config is doing is
+injecting the --target option. I'm not sure anything more is not
+working for me on my laptop with this approach compared to cross
+compiling with gcc, but as you say going in the right direction is
+worth it anyway.
 
 Thanks,
-Kan
+Ian
