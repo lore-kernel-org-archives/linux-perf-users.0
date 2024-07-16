@@ -1,67 +1,110 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2079.outbound.protection.outlook.com [40.107.244.79])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E06F63C7
-	for <linux-perf-users@vger.kernel.org>; Tue, 16 Jul 2024 02:06:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.79
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47303224;
+	Tue, 16 Jul 2024 02:39:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.19
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721095611; cv=fail; b=RaawVbV1EBRaYctpjrjZp0lzVx/qOVMCtYN+9kT2XjJwxUx0LnRfU61xUufIL9HiFIv0ahcQVdYY+6kyaTuTd/RphMcLOW2yyq0UGIrEJR3jQqCLtOkOH9G5LBg/+FkTmVYNnw5hlsvLQKFNdxMYOoc11UZKFb79pCVJuvrqxTI=
+	t=1721097578; cv=fail; b=B6ph4/mr+58L7JdawwTIRJoMy5HqECgdHTQZq14iyBlGZSAb7gtqUWxcwJdWacOk9QSqo9EejelEFBInHZe2XGpvh3t3w6LRH76duU0sCyew3Twq5e0yitI/sm7eubstZcUmooP6r56ezsMOpR7ZpDAquIX9FpzrgLGL1sRzqtM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721095611; c=relaxed/simple;
-	bh=4UXtTb8Svpmh+JF2hHGfgzmYSWk5WVe9TTvrJ3k186s=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=ZHrWnHxIiJAYDQ7xp4Pw9n+reh5/vd1kqHi3jWmZc/qYYDe8qES1rCIshjnYNhbsOXU33jmTtp3mIzsnquOzpXTw0ZYpxKRrPZgM5SiccBUssOGfpy9ap+TROwxHG7IKGxeJAIuWnUUoO5yENqennHjyefy/GHtIbWcvxRvHvtE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OMEKgYjg; arc=fail smtp.client-ip=40.107.244.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	s=arc-20240116; t=1721097578; c=relaxed/simple;
+	bh=hQV4ATChFM6xjWGN8VSWnw/TC2TifAx997yKsNYbHD0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=FxZROT+XgEHc6YZknJHOtHF7Hko8hn/GFhhuehFRHxTIqhopna42mDZh8kpzG8ZUixX4Bo4hEHgfKzuKH1Xw2VriclqnrwriKVz2ByxlCXHZeUrv3f0haam5sDryE3JyLJeK/RNjbNzi5aUJk2k/qaGrm8Xl8DPRjDw01DL1JQ4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DU0Vnbox; arc=fail smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OMEKgYjg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DU0Vnbox"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721097576; x=1752633576;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=hQV4ATChFM6xjWGN8VSWnw/TC2TifAx997yKsNYbHD0=;
+  b=DU0Vnbox+Cvc6EM9D+6PztFIdENFvEZVsrPOXqBjooc1mYQUxbJoiKjT
+   f3IOL5xdOy469wsfq3pA+47764SxyI84Z7etVSJw9sTAn4uTmxd3NyJlv
+   6oEHVJ1JmgQqdgnFhrCKXCX3T+Xw8CAfuYLuKaAR16O4PcfWp9VvFD9M/
+   g/6JD/XbkS94we4TrsUmrFv86NfR/kAYctNSi0urFe/rRTmm8Lc4FEHRw
+   wh482onyQqhDKvXRkTS/you+MujThBsql3FNY0zi5AWu5+zmzmHna+Qk/
+   hRPVGitQlArEQ6w5dLmhpJ/odZa89BO+WYESJ27jRyDLcCIB9GUJGBNfc
+   Q==;
+X-CSE-ConnectionGUID: mn4zS3KaTyGDD3czSgnMAA==
+X-CSE-MsgGUID: JZtDRi2CTwuGaeT0w0Oa/Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18357298"
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="18357298"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jul 2024 19:39:35 -0700
+X-CSE-ConnectionGUID: gR+2OWHWQCWBWydizOSjTQ==
+X-CSE-MsgGUID: FsdkRIMZR7WJC8xNIpWdvA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
+   d="scan'208";a="87342359"
+Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
+  by orviesa001.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 15 Jul 2024 19:39:35 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Mon, 15 Jul 2024 19:39:34 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39 via Frontend Transport; Mon, 15 Jul 2024 19:39:34 -0700
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.44) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Mon, 15 Jul 2024 19:39:33 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=tj+HzRYZaqWOeq1+z7pKrfUsW7iIosZYt3TCP51ipTrOs6gnhSZjiKyrbLOo8wShAla50gSnF94bcyK+6aJKkUOy3BWb7RztO39wMn3JbAyTHr1bCDgfXywFfMXwrF08x9UmTIpCv6Fq1nr1xpxSctTQumQUMTtJABeS1UQVCB2hYhgI/GgPxAzoIuRzMBDb/dqR/F4rW54a5t8CXkQvh2r9rBWEdAVvlym5yJQQAf7j/ccvMNc5AXbp2wkwsd1cAzdeC6i/Ov+tp4CnjEh51zs3VgqDWk9CaX76LEun5eveDUm5oJecDZ2LlRwqzPd2MXxmAPkseBHVD1M5K36XqA==
+ b=RquCLxwEHTcF/sQ8/xE+fZBsN6jZX18x0kQ+GdqVs5AOuYuCbMeH4NJzbMsR42Gqa5o0nL6k5rWCMB78cOGZpoaICqH5XdgHCXG4nqyHs1yMJpzSUCKEqKegwIFB/Yq5kdInlejTsQSJBbPWb09tzFbmjvk+IwkfAjSJYUxwWvnySbLtuqeY/upVjviRYjGY9hH3Il2K698CuwkB/5uE2pORWkg4E3Uj4ns3F8EA0V2iKGIFJXpaXv0VuUC+1B3KxzKTKVqOIotI1fPkgzxBUIQv6sj5+/g/MgotU3EbI+LGbyfB+wYIbfIz7YlGXaieSTcH1vuJt0boE3xWDWbALQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=duPTRzzjN9P/+5yCkZEta5cFddTSZ0hxNKl+PvEWbgs=;
- b=aTvbnqX/sVk2Imj4ZIeQoCq1tnS2gZlV6gsacihb72InZzUSmapcBXq3/e4S3WH+i5KcT4n5KCtZoNH0+wJmRGjDe4ynZczD8tbiT/3PffoezL9HkxIwgZGYWfN8q1PHOL/uBGM9w0Xi3ZgkD+y8XqdBxf9rFGbj18v9wLwO60hzHXMk3A+HoR7StIwtAwBpIUpAptCYFhap2N5Y/ATmJW1SXe8Fz39Sbm+L8NDM7nHmAOKgD8+m4EUZUwqBv1us3gc/4Tx/zZ+Vif71IdYQD4BwY6s6zQ+6Bh/+70jKO7iuj12bcvRwTKSNJNpPxqUE6bZhvVzdgyd0dhkiwg7NKQ==
+ bh=arp6q3fUu3EZiNcX+Zm42JCHaIzqW5dOLwfht4/ET9Y=;
+ b=mOY1P78UHMuoLYeIgYakJggKLcHXTpPjj67SWiApXlFzvA4wnOsEvbV0VbxnLQe4f02OJ5YTz8uDavQeAU0Jz+sZThutYyvMbf17VgXRngX3SW0K4lDJOpURdAwnLvBzDc3e0pZKmeShXxGfi7hTy2h3NmBAmv3xvoOoAY1LIUj73WH1sJAIFAjOHzALtdwgCdKH2j7dqTDoSFLfNengCLSkHLUCYUvTF6RJnJZWHMLgEWWugMlNCObM8ImPfsJCvbj6VZwBjgsK7LnCTHRjK4Itf/Kd5eFPOgcQSIrGfh2X2YLQ2LiPACEGwUtIGi5u7cl0op7ido8uXQhX/9/Z6Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=duPTRzzjN9P/+5yCkZEta5cFddTSZ0hxNKl+PvEWbgs=;
- b=OMEKgYjgO757x6GYh6fnJ384gWm1ewdek5Hf+Vi0OAdeI0AFzYzLYSPtsXPvC2YO9xyJ9lHv+9V6iRLokB5yzMtxsS8+oXO4hHRPsuzkeEJCvVDZhnQCXr6JD5jTPEB/mrhqgN/s0LyUjDu+67GI9YuuXM6HniU13r0C5QTe4LPdw6m4lrH0xnT6xP4UeF4WaYjJrCXjyriUzOMpOuDANZuHBkMkjHFSK0IZrm47ejc/1H4n9iPVpFq2ock9zR2mP/PTzGIxef2Bs/AwYR0Pm79GVNgPYU7yTBSGh5ylp/oNqB5ecQrrkfH10Ohy2WwnFwUboXvunY9kAOMRTnnBkQ==
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH0PR12MB7840.namprd12.prod.outlook.com (2603:10b6:510:28a::16)
- by CH3PR12MB8459.namprd12.prod.outlook.com (2603:10b6:610:139::14) with
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from SJ2PR11MB8587.namprd11.prod.outlook.com (2603:10b6:a03:568::21)
+ by IA1PR11MB6537.namprd11.prod.outlook.com (2603:10b6:208:3a3::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Tue, 16 Jul
- 2024 02:06:46 +0000
-Received: from PH0PR12MB7840.namprd12.prod.outlook.com
- ([fe80::dbe7:2850:c5de:b17f]) by PH0PR12MB7840.namprd12.prod.outlook.com
- ([fe80::dbe7:2850:c5de:b17f%5]) with mapi id 15.20.7741.033; Tue, 16 Jul 2024
- 02:06:46 +0000
-Message-ID: <34327425-80c6-4346-95c9-fa15f9381e1e@nvidia.com>
-Date: Tue, 16 Jul 2024 10:06:38 +0800
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kselftest/arm64: Add coresight test
-To: James Clark <james.clark@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>
-Cc: will@kernel.org, linux-arm-kernel@lists.infradead.org,
- james.clark@arm.com, bwicaksono@nvidia.com,
- Suzuki K Poulose <Suzuki.Poulose@arm.com>, linux-perf-users@vger.kernel.org,
- coresight@lists.linaro.org
-References: <20240710062732.18999-1-jszu@nvidia.com>
- <ZpAeZjNJLesSJqm1@arm.com> <12a84dc1-ad94-4546-ad3d-72f3e0b0bfab@linaro.org>
-Content-Language: en-US
-From: Jeremy Szu <jszu@nvidia.com>
-In-Reply-To: <12a84dc1-ad94-4546-ad3d-72f3e0b0bfab@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ 2024 02:39:26 +0000
+Received: from SJ2PR11MB8587.namprd11.prod.outlook.com
+ ([fe80::4050:8bc7:b7c9:c125]) by SJ2PR11MB8587.namprd11.prod.outlook.com
+ ([fe80::4050:8bc7:b7c9:c125%6]) with mapi id 15.20.7762.027; Tue, 16 Jul 2024
+ 02:39:25 +0000
+Date: Tue, 16 Jul 2024 10:39:14 +0800
+From: Oliver Sang <oliver.sang@intel.com>
+To: Ian Rogers <irogers@google.com>
+CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Weilin
+ Wang" <weilin.wang@intel.com>, Peter Zijlstra <peterz@infradead.org>, "Ingo
+ Molnar" <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Kan Liang
+	<kan.liang@linux.intel.com>, Jing Zhang <renyu.zj@linux.alibaba.com>, "John
+ Garry" <john.g.garry@oracle.com>, Sandipan Das <sandipan.das@amd.com>,
+	<oliver.sang@intel.com>
+Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
+Message-ID: <ZpXdUiNhFbqJvkZK@xsang-OptiPlex-9020>
+References: <20240525013021.436430-2-irogers@google.com>
+ <202405311548.1e881dea-oliver.sang@intel.com>
+ <CAP-5=fX7ZyT82=W8uSZbT7c76E5+1JaoR5-y_gcj7A_=Js1YfA@mail.gmail.com>
+ <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020>
+ <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
+ <CAP-5=fV5Qdu5iH_DKeAXQfEmQN9SmxCViSgbOCvAmN529WoeOw@mail.gmail.com>
+ <ZmphzTKiDDYkPPP+@xsang-OptiPlex-9020>
+ <CAP-5=fUUnnL18x_mdQdaCePOSbk5VWP3jfAS44n7qahD7pja5Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: KL1PR0401CA0002.apcprd04.prod.outlook.com
- (2603:1096:820:f::7) To PH0PR12MB7840.namprd12.prod.outlook.com
- (2603:10b6:510:28a::16)
+In-Reply-To: <CAP-5=fUUnnL18x_mdQdaCePOSbk5VWP3jfAS44n7qahD7pja5Q@mail.gmail.com>
+X-ClientProxiedBy: SG2P153CA0003.APCP153.PROD.OUTLOOK.COM (2603:1096::13) To
+ SJ2PR11MB8587.namprd11.prod.outlook.com (2603:10b6:a03:568::21)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,279 +112,144 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7840:EE_|CH3PR12MB8459:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebaaa35d-0bcf-4d50-2ef8-08dca53bf1e9
+X-MS-TrafficTypeDiagnostic: SJ2PR11MB8587:EE_|IA1PR11MB6537:EE_
+X-MS-Office365-Filtering-Correlation-Id: 323ceca8-dd57-405e-d69f-08dca54081b4
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TnR6TU42OFF6VXhIS0MzQXpiRWFxVDRRRGVFUWN2QlhaL21RR1o5ZmQ5WS9S?=
- =?utf-8?B?S0V3VDZBRm9oeXhYUFBkaHBIUHFlL01RUXpUcTl4eTBNektYbWxuR0hmTUsy?=
- =?utf-8?B?Y0JQY1FrcTRhL0VHVENKY1pQVjNZSC9HWTFFWlJXUnI0enJIb1JHOEprRzZQ?=
- =?utf-8?B?TC9aL1NuaEpSUTBNaWIwbjd1R3NnNE9iMkxtVWlScm0vMVlRcXJIOTJ4dzd1?=
- =?utf-8?B?RlNrY0NERzVRbjlET0pxUXpTZG5zSjNmckdSdE1aSk9tcGZEYTdENGpGR2VD?=
- =?utf-8?B?ZDBFMlJ6anJQOXJ3UjBhdXk1YXZRNG1pRmp2QkYzam1FV1JIcityQnBUNEJz?=
- =?utf-8?B?QTlPdnUzczk3VUsvZDc5V0d6WFEwV2VyZFJ4UWFCdys0c1k4VEp4aWcyaExM?=
- =?utf-8?B?Y1lDTzhJSGVRdnVxSzlvbmVWaXpqOFVyYjJSSmV0NFQzSERWcXgxTFk4aXRa?=
- =?utf-8?B?OWtsYVRMVW0xVEFDc0ZYSzZvUTZvUmxUZ3IycXBZYUhmZktEWFhadjVQcFhl?=
- =?utf-8?B?SXA5YnpGVWJmdEJ6L2RZUzBZRmEzYWRRVUxQZXdRRDNOWDE1Q3hGY2dubUNC?=
- =?utf-8?B?NU9QR3paNzYxWjZ3TC9FTFZxUXZXcjVIYUU2UGVaY3FFVDloOVBCQXFyamVm?=
- =?utf-8?B?S1h3eTJ3NVFHVEV0QUxkb2p2T3lHNHlkKzEvcnRsU1JET2tnSlJoMzlzSkhI?=
- =?utf-8?B?QkIrR1FqbzRyTVR5NzRIdEFCYkMwN2NhMzcxV1pDMUVoMzJmcEdobDBRcll3?=
- =?utf-8?B?MUxIUlpSaENHY3l1M2FkYlc4dXNFM0ZDdnppa240WHRtQUZ5SHpEUWIvNkJM?=
- =?utf-8?B?WFF3WkQrTEFiYXVVSGxVRVFNWWFwYUhEUmhLcE5Ndk5SWW1PVURHQU5KZEFR?=
- =?utf-8?B?ZSszck1DbU9kNGtGSERVcHN1Y3lMODJUNjVjZkVYbnVuZnZqQ0UvYnE1MStO?=
- =?utf-8?B?dnNhZ0VZWGlJQXZvZVQzWmllb1FJR1hHRjRsMkVYRERQSTFqcTZZN011OEFL?=
- =?utf-8?B?bzJHOHFhcUl4ZlRmTmJQbTJsemFPcXhHcmp2a3lGSHhmT3oySG9rL0o1LzZX?=
- =?utf-8?B?OHBXcERsemJEcGthclh0T1g5azNWUDNYZmJPRzg2UW93TlRNakk5WTlONFNY?=
- =?utf-8?B?N1lhRW4zMUJjVm1zZW5vVkRQSC8zYk5nazVDbVZZTVdTdlpzTFY5dFJ4cVFG?=
- =?utf-8?B?bzNiN2xxMEk1VUpEMVlBUjM5Q0QvU3JUN1hJYy8zRFBzS0hXWFNOUVMwbE9p?=
- =?utf-8?B?dnllWmJGbXlHa09OUElyanp5ME9rL3dMa2VmazZQTW5ybk5sNHBCcWdJYkZx?=
- =?utf-8?B?ZHUzZkRncStoYmc2WXZWMXhSWWVaM25kTTM2Z0x1NlJXb2IzQ0JnbDA4Y1JM?=
- =?utf-8?B?Q2djRVR2bU84V0o2T0Zja2YzYWx5TWJuNnRZUVM3dzI5VHM5YmVWck5lK2pU?=
- =?utf-8?B?MmFjSEdWcWZ2Z1hZaHU1NFIzcVNqUStRdlFZclJCSlRTaW1DaDFpTnozc2w3?=
- =?utf-8?B?YjhCblhDUndoeVVndUVqK2x1VFA0Yk5HTVd3TkpUelpZNFQrVVFweUk0czdU?=
- =?utf-8?B?Rk9TcktDMWxNajdrWXB4OFhtTkJzakw1NUhzS2JHQkZLZGp3OHNIemFJSXA1?=
- =?utf-8?B?cXJxdFcxVDd0a3MwV1ZzdSs2Zk1YOU1ycklpMzV5akVmWnE1RmVPMng0YmZF?=
- =?utf-8?B?OE1wMzFCOWZ3MEp3YW1oL1dUUG1XbzFuY1M3aEZVM3NBL2R4M0NoamVsVmpr?=
- =?utf-8?B?T3YrVVkrd216RXkyTHk0SGYxWWVObk40bFR1cGducVlTQkI1SXl5Y0poYWFB?=
- =?utf-8?B?ZC9EZklLOTdjTHA1WlNOQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7840.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?aFRTS1RPYVBDRy9nb2YyVFBHdmFFT0s2dXlPVWptSHBBVWRNOTkvN1NhanhU?=
+ =?utf-8?B?cFBLTUFBaXRwL0l2VzAzM0x3UlliQXBEQ1dteGExN1EzWlh4RFZXT2Z0MXdK?=
+ =?utf-8?B?djk2ajdGTDc0czFwV3NMOXp2Y01FUy9vUWhTZFUwd1hCMmE4Z3FUNC94WE9I?=
+ =?utf-8?B?Y3B2ekNOYkx0VU80YzFDWHJzeDl6Q2JtRHBwSEdNNEE5R1lOa2dGMEdyZE9o?=
+ =?utf-8?B?VlU1VWEzcjJWd3QyU21VQ1ZUL0ZvSmc0SjFWL2xCNGorOFAyL3gyRVdaZ2VY?=
+ =?utf-8?B?YTJEYzdkd1dFUlVKdm9nMnlUT0VIZC90WGhiUmljZXVUMDZmaUpWRGtKUTlR?=
+ =?utf-8?B?S2g3ZEFZNHJNMnhVUUxOTFNyaDhmRG1ORml3ZzZ2MVpLa1JaSk9sa0NWbzFP?=
+ =?utf-8?B?czFDZEJEZzhHbFJCMkRTbTA2Uk05NXNSbjBwOERUelR4cWJZS2lRemFVckMx?=
+ =?utf-8?B?YzRMc3Y2aEJQb3FKTTVKU09GaDMzd1hLeVZHcDIxQzZ6bzlLU3d1ZjBZcnRI?=
+ =?utf-8?B?Z0prV2RqLzIzNXp5dVoxSVFpQlhBMHZhRFJaNHJuTWlVdlMvbFJ6RkNCWml3?=
+ =?utf-8?B?UkJZZ0lRSlNFN3VLb3gwNnBaNmdVbWVEdmM1WTNqc0pSMVUxckJKQjdEdUky?=
+ =?utf-8?B?V0pON1hyakxvTW5qV2k4ZWNib1VQTE5zUERqeUxUdzNLZlJwUm10Z0MrNTdP?=
+ =?utf-8?B?TUdmR0xjNVRmRU5tZXIvUytlc0dxb1ZacW5mTThsV21rYVFhckRTWm53eGF1?=
+ =?utf-8?B?aml2U0RKRzdwWHhQeXg4anNNNUtRWDR1QU9VcFdHOVN4YjFOYmZIVzdlcDQ5?=
+ =?utf-8?B?VXU2UnJjSUJqdFhyK2J0aVpuU3BjSDQ5ODQ4VnZHUEQzc2NGVHpIUllmTTBq?=
+ =?utf-8?B?ZmdyMXhnZWMwS0ZVczNwRWFlTFd2eER5ZStvN2tMd3JXWk5YM3J6ZkNGdWdz?=
+ =?utf-8?B?WklsUGIvLzljVmczUHdObmFKUGs5bzk3bEJkakM0eCtsd1RRdk0wWGpPeHND?=
+ =?utf-8?B?VWVmdGhBTG44Yk5JbjFrbWFMYkQ1dUU3QVJLNkdMZHBGZXF6dERxRmxIVDIr?=
+ =?utf-8?B?VWR5Umdjb2VWWk5mN0ZScFo3UGlmMHIzSStNTHVlSWMzYVo2OHpLYy81Zlpk?=
+ =?utf-8?B?WGVFakJKajVtYzNPMDdzTWNhd0VRSVFhRHNGaXZEY3pLSVV6NGJMbFR6STNt?=
+ =?utf-8?B?dDVEUWUrRExBSEh1bS81N0VrNkdKRFpQZXIrYkxIb0k4ZCtSVXVtNTdSTndE?=
+ =?utf-8?B?aTFrdWlOUFlSZE95bUtXWFF5MnJoMStCWGZhNTZnRWMrZW5jT3RVbGdSV3lh?=
+ =?utf-8?B?cXJqT3JHTUN5aEVIQVltT2FOTFJPTjV1czQzbmpnak1QRUpQbWNUcXZmMDVz?=
+ =?utf-8?B?Sk1EQ2c5ZmxMeU0ybGxWOU9MS05kV2tzZUlycjNMYVJRQTE0ajd2YUZEOGRp?=
+ =?utf-8?B?b0tQR0lvRGovMHlheWYwWmR2cmJ5enFEMkpWQ3lOQTdTd2JzT2ZRZ1doMGFH?=
+ =?utf-8?B?UDJ2ckZ5Ymd6WUNUQlc0eVhzMXBlbGgwVUxPYmg4dUw5VU9IZU9sN2ZYNDd5?=
+ =?utf-8?B?YWtmT0N3L0pNeURXeExTaVBncDFhTngyeXpBYi95OUp4NFgzaHA0TENEZFcx?=
+ =?utf-8?B?MWlYL0lPdDJNZ3JGZjZDdkEwdkcwdXBTNWViZXBLcmF4TEVvRjUrVjFQN0NV?=
+ =?utf-8?B?MlJKbFZqY0FJOXU0a3grM0pzNGZEUjRZL0F5bERsaStvK2VUdUJxWWhENG9m?=
+ =?utf-8?Q?V6dFc/CAsra48FgQas=3D?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR11MB8587.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?akVBUXhlTXVPNzM3TE12QzNxa3pWMmdkWFEzdUN4b1N6aWpEdmFoMkFTMUZk?=
- =?utf-8?B?YUJaWmpHMHJNRDVRM3d0VENqREl2UW8rZkhoa2prWDRCZUQ3bHNyci9QT212?=
- =?utf-8?B?N3M2UjZwaGZPSjd6VjJlYmY5cGtTSlo1eXJTVmduNnpSaXk4cDJkRmxXZ0d3?=
- =?utf-8?B?M0RicHl3MVdvRU9ZSmQvby9UNnBYc3B5VHkwNUJiZDhIZHo1amNaeDhuaCtw?=
- =?utf-8?B?RWw2STZwNVNpaXBMc3FYWEJQVXEyL2o0R1F3M3E5bC8vL04yTzFhYU9HNitk?=
- =?utf-8?B?dDhMRUpRdUpaZVk4SVVjM2M3ckNSNEJqVUlxSFozK3Q1LzdmTDBzb1NVcS9U?=
- =?utf-8?B?bUZUOXJEK3VVL2M5UlozT1NnOTdoMndPMm5aT1M3ZEo3cFRDaUl2OFVZekoy?=
- =?utf-8?B?UTZsT2FxY25PTkNEczQrUDV3TGVOZVIwR05rbkFQYjA1MlVDQkhNYnU3NGFF?=
- =?utf-8?B?TjQzdUdCZWpHbE1tSWNQSUlTZG9NSjNoQ0o2NkYzSVFKSTZQb0taUEZ4K1Y2?=
- =?utf-8?B?WUJBTlhSVjh0cjVjMXRkQ09zeWdsVGxHS3FMSnFJWGlHbklsN0xjbDhXRHdt?=
- =?utf-8?B?UElsaUR0WEJNaVJZR3BhZXQ2Y3RiZjFtTjc0M3FxLy9tU3hrdXRQOHhLVm5G?=
- =?utf-8?B?R2FaTUhkN2R4MVlNK0NiYkNqbXVZUEZoQTdwVG9BYnFGR3o5cVlEdndxS1N6?=
- =?utf-8?B?NkJSM0R6N0lzSVdDYUJseW9ad3JaYVpIOXJUU3E0b1psWTVKNy9VSjJBMmtt?=
- =?utf-8?B?NDBsOTBNNGpVMFdyQ0d1eDVMWkczRjE3R2luOTZMMXVISnpDejRiV1FlOHVp?=
- =?utf-8?B?T3lyNHNzWStNVmZvOWltL1d3Uzl5RlJUT01iTyt1MFdjcGdiWFg5Qk5Vdzd5?=
- =?utf-8?B?SHZnU254NEJTckZSUTczb1FCWEQ0Zk9QMjFGZ1d3eHZ5OEV5bUtjbFhOYkxq?=
- =?utf-8?B?RTR1allPTUVCanlnSmxrb3dzb2Q4Q2ZteTlDY3dVTHBadWp4VDRFMWhSczcz?=
- =?utf-8?B?anEvcWRoNUJVYkl0S2xjM3Mxbi81cDNiaFYwT0ZUeVUxc0dyaVZLaStOT3B0?=
- =?utf-8?B?eWI1cXlRSnZ3Wm9ncmhXQSt0OFlqT3RseE1IcnArTHkrYzVNWjA5cExYQkNT?=
- =?utf-8?B?c1lqejBNRitnNVBReHliUHVBOWxJakNLbFB6Ti95dVNycU9ESGRtb0tiWXBT?=
- =?utf-8?B?MlR4c0twNk84eUEvcjNjSktsUUlySWErcXhlaFBXY1lXWnBzZlF6MkZhcUlS?=
- =?utf-8?B?YUZqOUtoYXl1VXB1VE5BM3pBUXlIRFNzTmw1Z05MaWc3elRWMTUxWUJ0UTE4?=
- =?utf-8?B?U0ZEVS8wRDJPZEhmclA2NDJIMTdUTGRnZWw5MTYvTklMMk9kWFAvdU1DVzVq?=
- =?utf-8?B?dGdlM2tscWtZSHB4cFRqVUJwMHBwQWR4Q1d1aFhyQk1tQmoybDF3eW1Hd05S?=
- =?utf-8?B?ZmRPK2NmQ29SaERlWTl5b2JCaUE5Szl3K0l6THdES0YwRnEyTVRZaVl5RFhi?=
- =?utf-8?B?YVpPT1Y0SVpLdk5UL0lSTjE2cDZ4UjFIODNRakpaeEZja0xSYlNVdksrUDU0?=
- =?utf-8?B?UjREUjh2SGtDbUpuQlBmOGordEI3Z1BQR0I5amZlMnc3c3RFd1ROMWJjbmRu?=
- =?utf-8?B?UmV5bzg4Zk50YkhTeHhrcU9QNkVKY0EzK0hNc0kvd3VMZFVnNGpHaTJwOFJV?=
- =?utf-8?B?VnQ3ZnJ5NEZKMVNnT21xWEtjRFp4Z2Z5MGs5bXpMaGFoTFZEUkZ0Zm5zUVdG?=
- =?utf-8?B?OGZrMk1CRTNjUS81U1FuSW9YeGNBTkRCNEZNeXcvcmZoclR6ZkswWUFOZXdp?=
- =?utf-8?B?c2NmZ0hUZjlwQVo4bmpVQ3c0VkZZYnRjRVRrUFVkcGp0U0pzcmxzeGxlTzdQ?=
- =?utf-8?B?UCtpcDU5bTd5Y3pyK0pGZGpZWjBxMVdEYktieGlaWHJrOEhtenk1eWVoT2lH?=
- =?utf-8?B?bC9rU0dGL09wb2kvVDNkQzJzbTM5ejNzSktKc3F2ZjViOE9uc2I2dlNWWnh1?=
- =?utf-8?B?cER5WWcxWTEwNndhQjlORFc0Q09PdVE5cHA2a3NwMlRDWWJPbHk1T3pyV3dG?=
- =?utf-8?B?eHBUNHozVmY2ZWNmRXVwUVVEVk5UUVk3SlF5RmFPdTkvUnpXekZpWUI4eWFn?=
- =?utf-8?Q?TO54=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebaaa35d-0bcf-4d50-2ef8-08dca53bf1e9
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7840.namprd12.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?di9ObU9SQS9WRU1CcWhNLzN5dkNvYnV3dGlaSlFoTjZRNHRDdTVsc3dCM28z?=
+ =?utf-8?B?VzZ5dWR2cnRxa0dmbk5qTGI2WjFBS3psRE1hQUI3dzlzWDVsbEticU5TZnVS?=
+ =?utf-8?B?NHNXanQ5NVZhY05WY1A4RjJuVjhVZVRTcU9rTGFwVUJDbUpHZzhCcUdXb0NY?=
+ =?utf-8?B?bTlPWVJKcWpKUjI5TlNINUM0UzhCYTFqalZ2ZndWbjBucHFZZFlGWTd1NDRy?=
+ =?utf-8?B?emowZ2RIZXR3K0hRaWh0cGpLNStGanpUcEZ1b3N2bnJIcUNxRXcyNERrL2ZH?=
+ =?utf-8?B?QS9VaDM3QkxLNzI3T3g3eDFVTXBlRTA2dlBMYUZLQjB6MktySFFkd3BtY1J4?=
+ =?utf-8?B?R0h2VVNLMEljQzE0alVnYkRSNlZIaDU4U1BPaysyWHJlVUZmYXphQkRKb1Ax?=
+ =?utf-8?B?d0RPN0dPSXZEWTBKd2liSTFVYlFVYmV2SVZjanpiNnpPUUJUbVdWbUdENU1O?=
+ =?utf-8?B?MTBTNWJFc3ZSYU5tVlp1WFNCaDYwY2NEK1JFTTNsVW55RW52UWxrdEZmV1p1?=
+ =?utf-8?B?Yy9UWWxrbUVTZk5hK3UwOEdqRitneFlhS0VwM3FLZmR5RFFlNVc4eFZpTUxs?=
+ =?utf-8?B?SGo4VjFGZW1NZmZ2bnlMSTdkdDVzd201NXlRRCthbkR1eE9oaEhETmhWekVM?=
+ =?utf-8?B?QTBrS2h3V2laS1JwajhMS3Z4RmZac0dQYllxM1BJbno2L3ROMUtDUHpUODBJ?=
+ =?utf-8?B?TWdpcEprV0tiOEM1RTFDNkZraW1vWWtUSmZ0QjFieFBqVkZjZ0ZSSUtVY3Ir?=
+ =?utf-8?B?bzA4ZlhMNUtkdytiRHU1N0dFbXlJc0svRXBZZzd0RjlJeFhEa3c1aXVtT0I0?=
+ =?utf-8?B?Z0doa091em1oTy9xYlp5aGNjQURrYURMSVBNTmZVSWY3VUplMmNJYnhEWlN3?=
+ =?utf-8?B?bjkyZ05sd2FGcXN0WHUyRCtxaGMwb2tsUUNhVWFscGZFTTh2dGhLYkhWVC84?=
+ =?utf-8?B?Nk1YcGo1VjdFZWJJU0prL1VtTkNEbCs2cTlxWjI5Ukt5Zk40YzJUNkJ1ekpV?=
+ =?utf-8?B?aC9reVhpZmF1OURmUGdKaGV1ZmZkbnBnZXE4eEpGcE5UaGUwa29qcEpRTks4?=
+ =?utf-8?B?WDljdUtuT2tpcnhkT05jMGduSHFJUFdGUTA1cGF3NDUyNklGSlAzb3p0MFdx?=
+ =?utf-8?B?UHZkMHVvbUMrYVBsMnJYUHhoUFRWM05DRnh1MCszS1V6SXJDdmxIaWt3UzJW?=
+ =?utf-8?B?Nktnb205UHgvNTVUZkp0b1dLYUVhWEFKNVdEaHZySGdVd0dGUzRUZWtnZnNL?=
+ =?utf-8?B?WDVCNEhlT0JVMDcyUHlkZy9NblU0MUloUVlWcCtUOGNEcFdUZk9rbGlaT1p0?=
+ =?utf-8?B?L1d6VUNrcjFzNTlrOGUwT3Bsdy9aV0U5YU42ZG82aUVWL3NtbnZldXB3M2gz?=
+ =?utf-8?B?OUloOFZoaHh2RGkvZEFyWXZJcFgvaW5VeVdtRzJPNkoyaUFYZW90SWZWRkRK?=
+ =?utf-8?B?ZXBYYXQvOWF6a3MxdmJZTXhKRmJNcHpEU2wyUTBTZ0tnWG1pY3JVaWxabFVh?=
+ =?utf-8?B?MGdKdnRWa3ZBRUlkNVk0NmdQdS9idHZUR1c2RnBENG54bXpYSWxZQitrSHF1?=
+ =?utf-8?B?LzVvL0paK1pzTGxKM2QzTUg5Qm1wUktHUlJPMk50b21YanpxK2hub2FVMk81?=
+ =?utf-8?B?Rzd4OUxYWFYxSlFhWGdIbjhYTUZicTZuRklWZ1NVNU9NYzB1d3EzL0Z4YWht?=
+ =?utf-8?B?Y1N1dDVsRTBPL3pLSlVzYkVtMGl0UmVjaEFrdGozRzRmbmlsRHpKR1VDdVVF?=
+ =?utf-8?B?ZEtjdjdvVVB4M1VJSENYOXRoelRoL1VEL3VTcGRDd0pDbjA3Zml3cTg5L3c2?=
+ =?utf-8?B?TGpJUWUza1Y3QTVaTGh4NE54UUNqczVVQ1BrQnVvbU4rUldLTExXYXlrblRF?=
+ =?utf-8?B?WDZOaTVmYlg5ZUJsYlVRYkV1cmNOL3poRGFEU08wZkZWLzNBbVJ5TjZGR3BU?=
+ =?utf-8?B?Uy9VS1ZjYmhLcVFJZGNhSjhvb0RmTHNTT0UxNDhQTldKOXhrT2J3TUJPNDFI?=
+ =?utf-8?B?SUJ6SHhkQUhsUXY4UDhOaHhGeWlWSDFxRkNuWXN4SkNDWStnYmtXS3lmN3Az?=
+ =?utf-8?B?OUoyaHI0YzRMT1FScmY4RTFWUWZkdjAwZ1dPUHNWRUFIaTg1Tm82ZkpNeEN0?=
+ =?utf-8?B?c0wyeDdZYlRqM3NtenNYSzcyNlQyNXBnZ3prSTVxTEhaY3pWbDdhajYrNm5a?=
+ =?utf-8?B?Qnc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 323ceca8-dd57-405e-d69f-08dca54081b4
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR11MB8587.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 02:06:46.1974
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 02:39:25.5153
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: mT+NHIH274kZ7s59FDb6qi1Hnvyzmh6ArhGtGVuZ9QrXo2RFuVCUErbr6VGgCwIW
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8459
+X-MS-Exchange-CrossTenant-UserPrincipalName: 56osbBLXxAgMkDCb2RKjBvDH6NajyLN3SbSC5n9OWwiJPlaYsIOh5TRjeLTtbpUhht4wojH0thcxq0uGq/fyFg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR11MB6537
+X-OriginatorOrg: intel.com
 
-Hi James,
+hi, Ian,
 
-Thank you for your reply.
+thanks a lot for detail analysis! we will check further.
 
-James Clark 於 7/12/24 5:01 PM 寫道:
+On Mon, Jul 15, 2024 at 05:23:32PM -0700, Ian Rogers wrote:
+> On Wed, Jun 12, 2024 at 8:07 PM Oliver Sang <oliver.sang@intel.com> wrote:
+> > > > > but make still failed. I still saw below in our build log
+> > > > >
+> > > > > --- pmu-events/empty-pmu-events.c       2024-06-03 08:41:16.000000000 +0000
+> > > > > +++ pmu-events/test-empty-pmu-events.c  2024-06-03 13:47:19.522463482 +0000
+> > > > > @@ -136,7 +136,7 @@
+> > > > >  { 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
+> > > > >  { 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
+> > > > >  { 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
+> > > > > -{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retiredany\000\000\000\000\000\000\000\00000 */
+> > > > > +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
 > 
+> Hi Oliver,
 > 
-> On 11/07/2024 7:03 pm, Catalin Marinas wrote:
->> On Wed, Jul 10, 2024 at 02:27:32PM +0800, Jeremy Szu wrote:
->>> Add a script to test the coresight functionalities by performing the
->>> perf test 'coresight'.
->>>
->>> The script checks the prerequisites and launches a bundle of
->>> Coresight-related tests with a 180-second timeout.
->>>
+> I tried to reproduce the problem by installing more locales on my
+> machine, setting the environment variables, checking my environment
+> variables, etc. I couldn't reproduce it. Looking more closely at the
+> diff above and the other diffs in your email something strange appears
+> to be happening around dots.
 > 
-> Hi Jeremy,
+> From:
+>  --- pmu-events/empty-pmu-events.c
+> we know the minus lines are those from the files in this patch series.
+> From:
+> +++ pmu-events/test-empty-pmu-events.c
+> we know the plus lines are those generated by jevents.py.
 > 
-> On the whole I'm not sure running the Perf tests under kself tests is a 
-> good fit. We're already running all the Perf tests in various CIs, so 
-> this is going to duplicate effort. Especially with setup and parsing of 
-> the results output.
+> In the diff output above the "inst_retired.any" doesn't match
+> "inst_retiredany" (no dot before the word "any"). The repository file
+> pmu-events/empty-pmu-events.c is missing the dot in the event name but
+> jevents.py is generating it, hence the diff. But looking at
+> pmu-events/empty-pmu-events.c in:
+> https://lore.kernel.org/lkml/20240525013021.436430-2-irogers@google.com/
+> The dot is present.
 > 
-> There is also no clean line between what's a kernel issue and whats a 
-> Perf issue when these fail.
+> I think what is happening is that when you apply the patches for some
+> reason the dots are being consumed in
+> tools/perf/pmu-events/empty-pmu-events.c, the build then informs you
+> of this by failing. The locales idea was a red herring and this has
+> something to do with how you apply patches.
 > 
-> And thirdly why only run the Coresight tests? Most of the Perf tests 
-> test some part of the kernel, so if we were going to do this I think it 
-> would make sense to make some kind of proper harness and run them all. I 
-> have some recollection that someone said it might be something we could 
-> do, but I can't remember the discussion.
-
-The idea I'm trying to pursue is to use arm64 kselftest to run as many 
-test cases as possible for ARM SoCs across different designs and 
-distros. I believe it could provide an alert if there is an issue, 
-whether it originates from userspace or kernel, similar to how perf is 
-used in other categories.
-
-I'm not sure if all perf tests could be counted in soc (selftests/arm64) 
-category such as some tests may target to storage, memory or devices. I 
-could replace 'arm64/coresight' with 'arm64/perf' if it makes more 
-sense. I believe it could help users verify functionality more conveniently.
-
+> Does this make sense? Perhaps you can try testing the patches in an
+> ordinary client applying the patches using something like "b4 am
+> 20240525013021.436430-1-irogers@google.com". At the moment I think the
+> patch series is good and I don't have a way to fix what I think the
+> problem is, with how you applied the patches.
 > 
-> Ignoring the main issue above I've left some comments about this patch 
-> inline below:
-> 
->>> Signed-off-by: Jeremy Szu <jszu@nvidia.com>
->>
->> I have not idea how to test coresight, so adding Suzuki as well.
->>
->>> ---
->>>   tools/testing/selftests/arm64/Makefile        |  2 +-
->>>   .../selftests/arm64/coresight/Makefile        |  5 +++
->>>   .../selftests/arm64/coresight/coresight.sh    | 40 +++++++++++++++++++
->>>   .../selftests/arm64/coresight/settings        |  1 +
->>>   4 files changed, 47 insertions(+), 1 deletion(-)
->>>   create mode 100644 tools/testing/selftests/arm64/coresight/Makefile
->>>   create mode 100755 
->>> tools/testing/selftests/arm64/coresight/coresight.sh
->>>   create mode 100644 tools/testing/selftests/arm64/coresight/settings
->>>
->>> diff --git a/tools/testing/selftests/arm64/Makefile 
->>> b/tools/testing/selftests/arm64/Makefile
->>> index 28b93cab8c0dd..2b788d7bab22d 100644
->>> --- a/tools/testing/selftests/arm64/Makefile
->>> +++ b/tools/testing/selftests/arm64/Makefile
->>> @@ -4,7 +4,7 @@
->>>   ARCH ?= $(shell uname -m 2>/dev/null || echo not)
->>>   ifneq (,$(filter $(ARCH),aarch64 arm64))
->>> -ARM64_SUBTARGETS ?= tags signal pauth fp mte bti abi
->>> +ARM64_SUBTARGETS ?= tags signal pauth fp mte bti abi coresight
->>>   else
->>>   ARM64_SUBTARGETS :=
->>>   endif
->>> diff --git a/tools/testing/selftests/arm64/coresight/Makefile 
->>> b/tools/testing/selftests/arm64/coresight/Makefile
->>> new file mode 100644
->>> index 0000000000000..1cc8c1f2a997e
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/arm64/coresight/Makefile
->>> @@ -0,0 +1,5 @@
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +
->>> +TEST_PROGS := coresight.sh
->>> +
->>> +include ../../lib.mk
->>> diff --git a/tools/testing/selftests/arm64/coresight/coresight.sh 
->>> b/tools/testing/selftests/arm64/coresight/coresight.sh
->>> new file mode 100755
->>> index 0000000000000..e550957cf593b
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/arm64/coresight/coresight.sh
->>> @@ -0,0 +1,40 @@
->>> +#!/bin/bash
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +
->>> +skip() {
->>> +    echo "SKIP: $1"
->>> +    exit 4
->>> +}
->>> +
->>> +fail() {
->>> +    echo "FAIL: $1"
->>> +    exit 255
->>> +}
->>> +
->>> +is_coresight_supported() {
->>> +    if [ -d "/sys/bus/coresight/devices" ]; then
->>> +        return 0
->>> +    fi
->>> +    return 255
->>> +}
-> 
-> The Perf coresight tests already have a skip mechanism built in so can 
-> we rely on that instead of duplicating it here? There are also other 
-> scenarios for skipping like Perf not linked with OpenCSD which aren't 
-> covered here.
-> 
-
-Will it return the different error code to indicate if it's failed to be 
-executed or the coresight is not supported?
-
->>> +
->>> +if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
->>> +    [ "$(id -u)" -ne 0 ] && \
->>> +        skip "this test must be run as root."
->>> +    which perf >/dev/null 2>&1 || \
->>> +        skip "perf is not installed."
->>> +    perf test list 2>&1 | grep -qi 'coresight' || \
->>> +        skip "perf doesn't support testing coresight."
-> 
-> Can this be an error instead? The coresight tests were added in 5.10 and 
-> I don't think new kselftest needs to support such old kernels. This skip 
-> risks turning an error with installing the tests into a silent failure.
-> 
-> Also as far as I know a lot of distros will refuse to open Perf unless 
-> it matches the kernel version if it was installed from the package 
-> manager, so we don't need to worry about old versions.
-> 
-
-The idea to skip it here is because I thought either a distro (custom) 
-kernel doesn't enable the kconfig or the distro built the perf with 
-CORESIGHT=0.
-
-I could make it as an error and put it after "is_coresight_support" if 
-it makes more sense.
-
->>> +    is_coresight_supported || \
->>> +        skip "coresight is not supported."
->>> +
->>> +    cmd_output=$(perf test -vv 'coresight' 2>&1)
->>> +    perf_ret=$?
->>> +
->>> +    if [ $perf_ret -ne 0 ]; then
->>> +        fail "perf command returns non-zero."
->>> +    elif [[ $cmd_output == *"FAILED!"* ]]; then
->>> +        echo $cmd_output
-> 
-> It's probably helpful to print cmd_output in both failure cases.
-> 
-
-ok, will do.
-
->>> +        fail "perf test 'arm coresight' test failed!"
->>> +    fi
->>> +fi
->>> diff --git a/tools/testing/selftests/arm64/coresight/settings 
->>> b/tools/testing/selftests/arm64/coresight/settings
->>> new file mode 100644
->>> index 0000000000000..a953c96aa16e1
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/arm64/coresight/settings
->>> @@ -0,0 +1 @@
->>> +timeout=180
-> 
-> I timed 331 seconds on n1sdp, and probably even longer on Juno.
-> 
-> It doesn't need to run for this long and it's an issue with the tests, 
-> but currently that's how long it takes so the timeout needs to be longer.
-> 
-
-ok, will extend it to 600.
-
->>> -- 
->>> 2.34.1
->>
+> Thanks,
+> Ian
