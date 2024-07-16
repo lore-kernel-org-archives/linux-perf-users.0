@@ -1,436 +1,321 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2057.outbound.protection.outlook.com [40.107.244.57])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 501A84C74;
-	Tue, 16 Jul 2024 08:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721119398; cv=none; b=UKHRRYyXTZ/o0tCZybkPdrUUhSx/yj9fSgPxumsBo+joYaZTZo1TSrQ1Q4IXiNtgOC6ferotLInr2JZ1pb8aHYIoziS6pVOCwRROz1q5idJh/lG6WEroY3SEkhkRblGJl/gZPHYutwDIHKMzRqfa9yCtRVyh9QtfkL2B/KJt4OA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721119398; c=relaxed/simple;
-	bh=iBXoCqwFkGgySmuHC58w9svw1PCoDap0W9pyADiFk1c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=FdvLZ4S8lja97aDKrLDcaCy7qC/eZ6ZVUz533g+qyo5sAM7NF+xU7v/5k/AFhHQ/d9dlzAAdoH2sxzSxmJnw8/yoZuYVGuiSIBv4lwLzIyNmB1OixErZ5XXgRWwJwJk8lkoKSYV+KJNga/a1jBRP1IsfqjIXoGOIIo8fJPFeu/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cxd4wFQ2; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D28496FBE;
+	Tue, 16 Jul 2024 08:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721120195; cv=fail; b=HH9UljWBRRX2EXar+eh9BrrZec51dTmXjVuyKZOELS3RkA9hY+QDqGfFsfzA2U+Z7RzfEN6j1OXzwMjP44jjZqUWlOeNwJlEc/hJwO610yAk8dWFb4+E+7nhHZHaI5FneEffxIJM8YUAdRFhR6PS2zWXn5QiuwpZDeRjaxaVs9Q=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721120195; c=relaxed/simple;
+	bh=y04kveCeHIm8eerfmzaBn0c7rIZX3FGcFB7QdmEyXCA=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=R0I5sI3Aolc8PjYa2VDpMfkz0n+oGaynsjP8bl6caZpzZdkh9oAg/JD95P1BaQM2AqEAXaSmwflX/4lNmnZMIAZAQv4jgd4duNXcz4ivrSpvMnBAhVJ7RjqdphQQMppSIVDKSIBil/30+ZtSPZjEtWVI39UCSLmsbR4gS5o7HDI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=WcIRssme; arc=fail smtp.client-ip=40.107.244.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cxd4wFQ2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721119395; x=1752655395;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=iBXoCqwFkGgySmuHC58w9svw1PCoDap0W9pyADiFk1c=;
-  b=Cxd4wFQ2JaOrjqK/V23ADMVDE0tYgaMXtPn6cLMz+FHnDd3IXGQxL5aZ
-   aQuI/R+h/7azmFPdnIkAjmA8QLVXtCeg+x+6j1lTng8GD9OiitHTs5Rep
-   HocSktc76qzBdh0cqOWcvozux7hCXVBg9yG9cfv0phi3m+WLJxs8OdIkO
-   gviCN64bYHwQU2IjSt/kAeCDRVJxc9D/3P85qyT1oCwCa3lT5Jl5yFQxr
-   uNvhTWRLn2CsXXA732n7YIMJyI9vUm6UO8hrIt8vVAD6LO1l2h2BdMnkR
-   XafyZJBMJgOjDfpfOooZlUqPE6EgGkkObD9KTovOqEQA8NEmL+YMsvf90
-   w==;
-X-CSE-ConnectionGUID: rZzaU5aIR0mfDcQiag2bKQ==
-X-CSE-MsgGUID: 17rLp6tPTGKJpRuJ1eCGUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11134"; a="18352292"
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="18352292"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 01:43:14 -0700
-X-CSE-ConnectionGUID: IEquMXupSjyImCvug95ixg==
-X-CSE-MsgGUID: WNP1IIJxQ/a8q6VqTvfD6A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,211,1716274800"; 
-   d="scan'208";a="80610085"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.49.253])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 01:43:06 -0700
-Message-ID: <bf43b04b-badd-44dc-97de-3e6f11cded4f@intel.com>
-Date: Tue, 16 Jul 2024 11:43:01 +0300
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="WcIRssme"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=gu2HtEzAPKMMCU/yRkgZfuZav1KO905qcS1wgyx2udLr220+ADi4Oq0B59c1NDOwy/pQv/5cEjB37MG1scviX3ikMgD7FFYm3gsfmwUeuZXrFlqVLTLtTSn99t8wzgY/rPDAg7GQoUsE3Uq6Aqi1SU4gFDqm98bEbcUVrYRbCEh9qqtM5lTFFKsKMlm6DxxmOtwK2N+fQqPzVrgHQjVJb0QDbAQPSvKNZ9FmTUnktWKy3TcQ6d6LhEob9m6QF917lGjhWj5thErWsfqwzB/FljscNmXz0HW3DaxiJYZ/uONjmyfZ9Uz5+bu4QfezFt4TKgcHtKzXKCL0GdFI7AZjvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=822nQnOOieJvhTbRtxMpXgpMhMC5ErbYefKoSV7pYWI=;
+ b=cJOmF4wFKokeag+zQrvWpO+wdcqiylns5OKzEX4DcS5q7dwxcYb5bW4Uw6eo4nT7ZsyPABchkZWCgi2eJNqeLOkG3wfsUb4sspKUe2AasbriUGMUAyUexBsjApTOLeGHYDdzARQYu9xbgg99KWToOaZncVZyqSyIobHVIqod1qkxJv9fGXmaLIwsCJDmOkg+3Vso36qkrhOPVKn42KtqP5IauvdMTAq/iqpTJbrG2fxkbS3RI7MZv3THB1B3QxNtt/0RxMqRe1mKgE/X/zV9OHyaXKcOhI9IUZg+kYlGt2j8GYFkjsM4NJahVyG6m8iyAQI/N6ugGdBEsg2YSsSk4w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=822nQnOOieJvhTbRtxMpXgpMhMC5ErbYefKoSV7pYWI=;
+ b=WcIRssmeqOWJqMrT4VRvqMIDodocDvYCRgqcMAMHdVlxajAr/OGiHGlHLRT0f79xbDde28OXU2AsqzyKC1BxGBEtvRvdUIDGFPf2xhgEADtTsGG+4XWJaz39Oy0A7gqCag9El6DxciT2PYqZANQAG96Vtp+RZG1POFpC2EG+doA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by PH7PR12MB6857.namprd12.prod.outlook.com (2603:10b6:510:1af::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7762.29; Tue, 16 Jul
+ 2024 08:56:31 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%5]) with mapi id 15.20.7784.013; Tue, 16 Jul 2024
+ 08:56:31 +0000
+Message-ID: <cd0bc6bf-a86f-4a10-87dd-56535650424b@amd.com>
+Date: Tue, 16 Jul 2024 14:26:08 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 02/11] perf/x86/rapl: Fix the energy-pkg event for AMD
+ CPUs
+To: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+ namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, kees@kernel.org,
+ gustavoars@kernel.org, rui.zhang@intel.com, oleksandr@natalenko.name
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hardening@vger.kernel.org, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, kprateek.nayak@amd.com, ravi.bangoria@amd.com,
+ sandipan.das@amd.com, linux-pm@vger.kernel.org
+References: <20240711102436.4432-1-Dhananjay.Ugwekar@amd.com>
+ <20240711102436.4432-3-Dhananjay.Ugwekar@amd.com>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20240711102436.4432-3-Dhananjay.Ugwekar@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN0PR01CA0049.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:49::6) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 01/27] perf auxtrace: Remove dummy tools
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- James Clark <james.clark@arm.com>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Suzuki K Poulose <suzuki.poulose@arm.com>,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- Nick Terrell <terrelln@fb.com>, Nick Desaulniers <ndesaulniers@google.com>,
- Oliver Upton <oliver.upton@linux.dev>,
- Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>,
- Ilkka Koskinen <ilkka@os.amperecomputing.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>,
- Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240712181108.475336-1-irogers@google.com>
- <20240712181108.475336-2-irogers@google.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240712181108.475336-2-irogers@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|PH7PR12MB6857:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1c51840b-6aba-4fff-85d0-08dca5752fda
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|1800799024|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?ZDR4MytybEp4aDhyekJIeHRBaGUvRERDSStxZWFwZmovM2Ywclc5aU13a0g4?=
+ =?utf-8?B?bS9TV3FsUXArbHhUeVd6aWwzTnJVQ2F4bUlyV2lUZEpQVkdIMzNGeUNvaGVm?=
+ =?utf-8?B?QmZTWWlhSm96Zzl4RXdzTmFQMWhXVFM5RG1jNERzV0grV2J5eUV5azZxa0VF?=
+ =?utf-8?B?R3dYYllhazNWekpOZ08vbDhZTW9SUVJ5eWZXdUJlc0E5WjVqbjRBMWhpa0tO?=
+ =?utf-8?B?U2FIZ1BkeTlXd2FaTXd1K0ZiazBuaDdGK1VsSGVLY094dWNvS2hYQitVeFV4?=
+ =?utf-8?B?bTh0OWdFWWdycG52V0wzbjd3VndvdVpLRHIxbEhqeHM1VXFEZkVac0tkQWVX?=
+ =?utf-8?B?SGIzSWQ5OE9WVm5vK2JrRjIwRWlvd05reVhGWnFXZ0VQcDl0MXZpbU41ZXFQ?=
+ =?utf-8?B?U2hKMU9mb3FPQUk2R200V1p4NklzK2g5bjFDL1Z4MDF1bGNWUHpjOTNTdG43?=
+ =?utf-8?B?VlE1eEM4WEg3YlBYOGRJVUdYZnhjVnV1ZFRCeksvUlpTQ01yaW9BRzkyUElu?=
+ =?utf-8?B?TE9NMW9ydmQrTk1VU2NpTUFMZzdYZldjNU9iVXJaK3FKVUpmTFVvanJiaER4?=
+ =?utf-8?B?VHZCc1gzcklLYkt4NmQ3MlcvU0RZWjMyTDAwaWRhY0QxTXBPcmg5UEpYU1Za?=
+ =?utf-8?B?enNKN1hTdEU2WFpxQ0lmWmNpQUhYaDN4ZEdOb3BoN2FuRUxjakpCc1VYV1Bt?=
+ =?utf-8?B?cFJVdlNrU25Pak5HYksvVmFhWDBYekgxNlJCTlVleS9JQmY5akpVeGI1K2U5?=
+ =?utf-8?B?MHptUmtsdjFOcGFzZ3lHVjRKZXl1VDJoSHZPQ1U3clE0UGN6SXlSWWRaYWV6?=
+ =?utf-8?B?ZUxqbWd5N3kvemp3WUw3M0hxenVidW5ONTUyYW43Y0Z2VkRMK2NEeWFmeFlo?=
+ =?utf-8?B?SU9CVjFqTXkvTFVPQ2FNSWh4RGlSbktabE9ZbG5qNVQ5bnFTb3NOS3VvNlMz?=
+ =?utf-8?B?d2l6eCt3dE5vSTdoQS90SHJOTXpPMmVKUi9xSmJ3M2NMNzR1RzhrbmQwRGxi?=
+ =?utf-8?B?blExa0FCQ2RpcGJFRkt3VmFGNVVlTXNoYUdlb2s5d2dhR3paa3grWjJIU1BC?=
+ =?utf-8?B?ZUdKdzduTTBqNVplcmRHUjZ0Mm8xUzNiSGpOa2xLSEdldTl4SGVvYlhNaHVX?=
+ =?utf-8?B?Wm9uZmREbEc1OUVUZXhEMk55NS9NN0xBWHRJRDV2ZWpSeXZxY21ia2xLWFFj?=
+ =?utf-8?B?azRNQVIwcTc2R0RjWGdTVW1OQ3NseDdVVHlHZ3JMaHVXQWZJcStwclVuMUl1?=
+ =?utf-8?B?cHVObW0xaDN2M3J6OHExaUU5MmlkWGRYRHgyYVBLdlVrZVNPczA3RkhweFhP?=
+ =?utf-8?B?WTZ4ektHZ2V4MnlQNUpKT1dsN0dLdVcxek5yaGVpc1M2ZTdWMXJSMFhQeUtS?=
+ =?utf-8?B?NVJnRkVTd3lJM3BFeXhCSk5pckdlang0MWNkUytMYWo0NVhnTEZzbDhsM3I0?=
+ =?utf-8?B?emNRdnRFc1lZZEQ4cDZSL0xlYzh4Q05nSHM4MytpaDZPdmh1cXZabDBrZllr?=
+ =?utf-8?B?Ry9XalFPNVB5YTNOS2ZkeVNoTVdrT0tPNU1rRHg2SzJDbkQ4SXFDbmVYZURw?=
+ =?utf-8?B?VzVtaHNhaE14aVlRclFiM3A2cWhKZ3cxZ2VkcTgwZFptUnhmYVJ2Y051bFhC?=
+ =?utf-8?B?UHNTNjBXZ0x3VFBlTHJEa3pvUkl4SHVsMFErVUcrZnBBbm5QS3E2djhYcklz?=
+ =?utf-8?B?K2x0bU1FY3VPaFppZmtWN1dyTUY0dFlkK0ErNFRPZlk5WHptOVhuaVY3bmhH?=
+ =?utf-8?B?a3ZITW45NkhsY09xY2FHK1FQbTJmdlcvSVZESkVHT2dnWnFESXZGOU93cy9x?=
+ =?utf-8?B?UlFKdnNGWkJxNW43T1RUSlNackM5TURKQWdoN0FtbWFncm83NDhLUXBrK1ZK?=
+ =?utf-8?Q?gc+VXbkiZC8B0?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?RmJ4MEF4cExGS1hBeWxQSnYzV1M0QTd1N3B6c0pQMFF5VHpPRVVJOE00aTVN?=
+ =?utf-8?B?YWNORnY5REVlS1l1VjNnYVRxMlJLR21BbkJMMzR3emZJNHFoS2JmTHQ3bS84?=
+ =?utf-8?B?QmpicStkWHdjd3lLN3lTSVhrTjVzdVlxMjlSVUJHU1F5Q01wbGIzV2pKY2Y1?=
+ =?utf-8?B?Z3krdkpld256dlVwTlVKcFJ2SmIrdDBUNW9pVmpROFV3SUJMUHYvZlVMOGZK?=
+ =?utf-8?B?dTFvMm5hbldTRGY1QVU4VHFsWUwyQzFuNGNSc3Q4aVBwSFlaWmlQSWdNM0pn?=
+ =?utf-8?B?Q3VYR1hMckw1OXBvVkFhOUpOS0czYUdRaDdNSjI2RjdDYTdad09GQnEwMlhs?=
+ =?utf-8?B?OGNWUFFxeFhaZ05xWDY5dldKMG01eDlyYmtPSUpEQk5wTlg1ZzUyZ0lKZnNk?=
+ =?utf-8?B?MUUrV3l4c2N5amJtbWkyWERBRVJONUh6ZjhhVHRQczF5T2R5dGFsbGdVWVlI?=
+ =?utf-8?B?aXR6RHltV2tqajVjSGV1cUhVYTFWQkZ2K3FycjJzdHZ3cGFQZVFmcDFhRVpU?=
+ =?utf-8?B?RXBNSU50b0cyQzNrd1pUMjBqVHo5amthcTZTTm9jaFdDaWtxL1JlL1lXSjBM?=
+ =?utf-8?B?V1ZmMDIwOWdnOTRwZnFPbXJLNG9jUGNROVE4ZGdISDZUT2pqK0xLVHArNDJM?=
+ =?utf-8?B?SUlzei9zT2RBTUdxOHpCaHREbHM3K25USytla2lGY3FqSWViYmNMUlZDR3Y2?=
+ =?utf-8?B?cE9hRmtSYWVTRHFKRGFINVdiYnA2V0RUSEFqTDlNMmlORnFNVUVCRTFiK2Jq?=
+ =?utf-8?B?dDE3eTBPWkpTQ1J0ZUNLSkswUlNoVHFQclc0QU1EMGlNSHM5QzByYXRwbXBo?=
+ =?utf-8?B?amtDc29WdWhjMjA5Z3krc2oyaHJCMjd0eWhtWDg1WVozVnBkakozTVJJQXdI?=
+ =?utf-8?B?WFVGeWZFYkZNU3FseGlsWU8zeDBsaS9vclIrcmlXT29YbGZ5aGphL0ZWYVhY?=
+ =?utf-8?B?STBHcTdDTTQxNzdONGFsUUpRWlB2U0tyNTNmWXBsdHVBZndPWDIvZTVBRWxy?=
+ =?utf-8?B?NVdvOGRqRzdSYWRQVVU0RHN0bkM4aFFiT1NKWVNPSkVWelI2b1hxYXNoNGlH?=
+ =?utf-8?B?T3NJQjNQdUViRDN0UWlldkRTWUMyZjh6Ull5RTNGa0JqK01iRFMxSlBYc2Uy?=
+ =?utf-8?B?Rk9VZ1JWaWZ6cmk5bHJGUm1uMVo4bzJKVE1MK3pkd3cwbDBJbzAxU1VEMnh1?=
+ =?utf-8?B?UWxBSHN3OWRTN3UwVmt6KzRIa1M4bTFkeGJVV0tJNkJVcHRyWmE2OHBPV1c0?=
+ =?utf-8?B?aXNlTjg3S2NPWTdsS1JxbldQemlKYkFlMlUzY1A4Z01SUEV2ekJIbkMyRlc0?=
+ =?utf-8?B?bkpqOW11M2NBRDdoNXh6S010bHVid29TWUVPZ0xubkpHMmZRRFc2NWhibW81?=
+ =?utf-8?B?VHAyU3pTQVg3WEtHYjBab05ub2RBR0pzSHViSU1nYlJJazBVMUh5OHRaWHVN?=
+ =?utf-8?B?SVpJcndyYldXNTRTNzFLVVNMQU9uSFV3dGZsOVc1TEpRcG1TR2JDRlJyb0FM?=
+ =?utf-8?B?cjRzdmtKMGk1UEJYR2NsUXpQc2xQLzNIR3cvZHVJM3JyWVA4eFFjK05sQVpR?=
+ =?utf-8?B?V3hmU3Iyd3pSS0VFbnphUE5ZSlRldnBCME1tRmxtSEN1aGJwL3V0ZVhJK3hn?=
+ =?utf-8?B?ekUwR3dBZmRKMC9VSWVKcHlKZnc5cWl5SXI4ZHBrVGFaV05JNnZpcisrTHhx?=
+ =?utf-8?B?UkFDbUgzME1lNEFhVnVDK20vazllckFRejh0NnQ5QVZtbUNVamtjYjdVdE1i?=
+ =?utf-8?B?SjhLYjRnKzZhWUJTMDNNMXRvd1NtYkJ0QklUOHBOTE5oVmNMTDh0MEdNOWRr?=
+ =?utf-8?B?YTdPWEhYa2xxWEE0Ty9ZVU9JMFlia3BLbTZOWXkwTVljbkJZNG8veHRZOGJU?=
+ =?utf-8?B?b0gvOW5Qb25wdUpCc0w4TUttblYrVG5RYTJLMjV1RitDMHFlNTVIdjRDUHY3?=
+ =?utf-8?B?YURMdmsvWVpnaW5tQ3F1YXdLVXU2czE5aWNQRGtjbDVJV1dqT29OMU5NVWFM?=
+ =?utf-8?B?RU55SmN1dlIwZVJZeTRzZW9lVGdDd3FjalZxMWE0dEYyYzFDUk1ISDRaakY0?=
+ =?utf-8?B?YXBJeEVEcjNKRUlTa0lQMWh6N2grVkZHelVwUjY1UGVrT000M3V6aVhMVjgz?=
+ =?utf-8?Q?qE8GG1eNqSmSBqtRfkRBhW0DM?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c51840b-6aba-4fff-85d0-08dca5752fda
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jul 2024 08:56:31.5403
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: PhY25kJrkxrngMbnx2LR6zescsDy5uQh0Jux3RBZu0wm9nDq6E3JgNCvMT4SbK6qWbx3GLMS3fAIbTxSIaXhpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6857
 
-On 12/07/24 21:10, Ian Rogers wrote:
-> Add perf_session__deliver_synth_attr_event that synthesizes a
-> perf_record_header_attr event with one id. Remove use of
-> perf_event__synthesize_attr that necessitates the use of the dummy
-> tool in order to pass the session.
+Hello Peter, Rui,
+
+After Ian's comments on the series, I have decided to rethink the approach of
+adding a new PMU for the per-core RAPL counters.
+
+However this patch is still needed as a fix for the 
+commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"), I will be
+sending this separately along with a similar fix for powercap/intel_rapl_common.
+
+Thanks,
+Dhananjay
+
+On 7/11/2024 3:54 PM, Dhananjay Ugwekar wrote:
+> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
+> on AMD processors that support extended CPUID leaf 0x80000026, the
+> topology_die_cpumask() and topology_logical_die_id() macros, no longer
+> return the package cpumask and package id, instead they return the CCD
+> (Core Complex Die) mask and id respectively. This leads to the energy-pkg
+> event scope to be modified to CCD instead of package.
 > 
-> Signed-off-by: Ian Rogers <irogers@google.com>
-
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-
-For pt/bts:
-
-Tested-by: Adrian Hunter <adrian.hunter@intel.com>
-
+> Replacing these macros with their package counterparts fixes the
+> energy-pkg event for AMD CPUs.
+> 
+> However due to the difference between the scope of energy-pkg event for
+> Intel and AMD CPUs, we have to replace these macros conditionally only for
+> AMD CPUs.
+> 
+> On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+> 
+> Before:
+> $ cat /sys/devices/power/cpumask
+> 0,8,16,24,32,40,48,56,64,72,80,88.
+> 
+> The expected cpumask here is supposed to be just "0", as it is a package
+> scope event, only one CPU will be collecting the event for all the CPUs in
+> the package.
+> 
+> After:
+> $ cat /sys/devices/power/cpumask
+> 0
+> 
+> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
 > ---
->  tools/perf/util/arm-spe.c   | 49 ++++++++-----------------------------
->  tools/perf/util/cs-etm.c    | 33 ++-----------------------
->  tools/perf/util/intel-bts.c | 31 +----------------------
->  tools/perf/util/intel-pt.c  | 24 +-----------------
->  tools/perf/util/session.c   | 24 ++++++++++++++++++
->  tools/perf/util/session.h   |  3 +++
->  6 files changed, 41 insertions(+), 123 deletions(-)
+> Changes in v4:
+> * Invert the pkg scope check in init_rapl_pmus() (Peter)
+> * Add comments to explain the pkg scope check (Peter)
 > 
-> diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-> index afbd5869f6bf..fa40f3cb6266 100644
-> --- a/tools/perf/util/arm-spe.c
-> +++ b/tools/perf/util/arm-spe.c
-> @@ -1073,35 +1073,6 @@ static void arm_spe_print_info(__u64 *arr)
->  	fprintf(stdout, arm_spe_info_fmts[ARM_SPE_PMU_TYPE], arr[ARM_SPE_PMU_TYPE]);
->  }
+> PS: Scope check logic is still kept the same (i.e., all Intel systems being 
+> considered as die scope), Rui will be modifying it to limit the die-scope 
+> only to Cascadelake-AP in a future patch on top of this patchset.
+> ---
+>  arch/x86/events/rapl.c | 39 ++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 34 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index 0c5e7a7c43ac..df71f38ad98d 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -103,6 +103,13 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+>  	.event_str	= str,							\
+>  };
 >  
-> -struct arm_spe_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int arm_spe_event_synth(struct perf_tool *tool,
-> -			       union perf_event *event,
-> -			       struct perf_sample *sample __maybe_unused,
-> -			       struct machine *machine __maybe_unused)
-> -{
-> -	struct arm_spe_synth *arm_spe_synth =
-> -		      container_of(tool, struct arm_spe_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(arm_spe_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int arm_spe_synth_event(struct perf_session *session,
-> -			       struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct arm_spe_synth arm_spe_synth;
-> -
-> -	memset(&arm_spe_synth, 0, sizeof(struct arm_spe_synth));
-> -	arm_spe_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&arm_spe_synth.dummy_tool, attr, 1,
-> -					   &id, arm_spe_event_synth);
-> -}
-> -
->  static void arm_spe_set_event_name(struct evlist *evlist, u64 id,
->  				    const char *name)
->  {
-> @@ -1172,7 +1143,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_flc = true;
->  
->  		/* Level 1 data cache miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->l1d_miss_id = id;
-> @@ -1180,7 +1151,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* Level 1 data cache access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->l1d_access_id = id;
-> @@ -1192,7 +1163,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_llc = true;
->  
->  		/* Last level cache miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->llc_miss_id = id;
-> @@ -1200,7 +1171,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* Last level cache access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->llc_access_id = id;
-> @@ -1212,7 +1183,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_tlb = true;
->  
->  		/* TLB miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->tlb_miss_id = id;
-> @@ -1220,7 +1191,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		id += 1;
->  
->  		/* TLB access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->tlb_access_id = id;
-> @@ -1232,7 +1203,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_branch = true;
->  
->  		/* Branch miss */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->branch_miss_id = id;
-> @@ -1244,7 +1215,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		spe->sample_remote_access = true;
->  
->  		/* Remote access */
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->remote_access_id = id;
-> @@ -1255,7 +1226,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  	if (spe->synth_opts.mem) {
->  		spe->sample_memory = true;
->  
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->memory_id = id;
-> @@ -1276,7 +1247,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
->  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->  		attr.sample_period = spe->synth_opts.period;
->  		spe->instructions_sample_period = attr.sample_period;
-> -		err = arm_spe_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		spe->instructions_id = id;
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 5e9fbcfad7d4..7fd976ea954b 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1595,35 +1595,6 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
->  	return ret;
->  }
->  
-> -struct cs_etm_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int cs_etm__event_synth(struct perf_tool *tool,
-> -			       union perf_event *event,
-> -			       struct perf_sample *sample __maybe_unused,
-> -			       struct machine *machine __maybe_unused)
-> -{
-> -	struct cs_etm_synth *cs_etm_synth =
-> -		      container_of(tool, struct cs_etm_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(cs_etm_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int cs_etm__synth_event(struct perf_session *session,
-> -			       struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct cs_etm_synth cs_etm_synth;
-> -
-> -	memset(&cs_etm_synth, 0, sizeof(struct cs_etm_synth));
-> -	cs_etm_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&cs_etm_synth.dummy_tool, attr, 1,
-> -					   &id, cs_etm__event_synth);
-> -}
-> -
->  static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  				struct perf_session *session)
->  {
-> @@ -1675,7 +1646,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  		attr.config = PERF_COUNT_HW_BRANCH_INSTRUCTIONS;
->  		attr.sample_period = 1;
->  		attr.sample_type |= PERF_SAMPLE_ADDR;
-> -		err = cs_etm__synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		etm->branches_sample_type = attr.sample_type;
-> @@ -1698,7 +1669,7 @@ static int cs_etm__synth_events(struct cs_etm_auxtrace *etm,
->  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
->  		attr.sample_period = etm->synth_opts.period;
->  		etm->instructions_sample_period = attr.sample_period;
-> -		err = cs_etm__synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err)
->  			return err;
->  		etm->instructions_sample_type = attr.sample_type;
-> diff --git a/tools/perf/util/intel-bts.c b/tools/perf/util/intel-bts.c
-> index ec1b3bd9f530..160d346cb450 100644
-> --- a/tools/perf/util/intel-bts.c
-> +++ b/tools/perf/util/intel-bts.c
-> @@ -737,35 +737,6 @@ static bool intel_bts_evsel_is_auxtrace(struct perf_session *session,
->  	return evsel->core.attr.type == bts->pmu_type;
->  }
->  
-> -struct intel_bts_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int intel_bts_event_synth(struct perf_tool *tool,
-> -				 union perf_event *event,
-> -				 struct perf_sample *sample __maybe_unused,
-> -				 struct machine *machine __maybe_unused)
-> -{
-> -	struct intel_bts_synth *intel_bts_synth =
-> -			container_of(tool, struct intel_bts_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(intel_bts_synth->session,
-> -						 event, NULL);
-> -}
-> -
-> -static int intel_bts_synth_event(struct perf_session *session,
-> -				 struct perf_event_attr *attr, u64 id)
-> -{
-> -	struct intel_bts_synth intel_bts_synth;
-> -
-> -	memset(&intel_bts_synth, 0, sizeof(struct intel_bts_synth));
-> -	intel_bts_synth.session = session;
-> -
-> -	return perf_event__synthesize_attr(&intel_bts_synth.dummy_tool, attr, 1,
-> -					   &id, intel_bts_event_synth);
-> -}
-> -
->  static int intel_bts_synth_events(struct intel_bts *bts,
->  				  struct perf_session *session)
->  {
-> @@ -814,7 +785,7 @@ static int intel_bts_synth_events(struct intel_bts *bts,
->  		attr.sample_type |= PERF_SAMPLE_ADDR;
->  		pr_debug("Synthesizing 'branches' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
->  			 id, (u64)attr.sample_type);
-> -		err = intel_bts_synth_event(session, &attr, id);
-> +		err = perf_session__deliver_synth_attr_event(session, &attr, id);
->  		if (err) {
->  			pr_err("%s: failed to synthesize 'branches' event type\n",
->  			       __func__);
-> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> index d6d7b7512505..1fc03bfd14c3 100644
-> --- a/tools/perf/util/intel-pt.c
-> +++ b/tools/perf/util/intel-pt.c
-> @@ -3659,37 +3659,15 @@ static int intel_pt_queue_data(struct perf_session *session,
->  					   data_offset, timestamp);
->  }
->  
-> -struct intel_pt_synth {
-> -	struct perf_tool dummy_tool;
-> -	struct perf_session *session;
-> -};
-> -
-> -static int intel_pt_event_synth(struct perf_tool *tool,
-> -				union perf_event *event,
-> -				struct perf_sample *sample __maybe_unused,
-> -				struct machine *machine __maybe_unused)
-> -{
-> -	struct intel_pt_synth *intel_pt_synth =
-> -			container_of(tool, struct intel_pt_synth, dummy_tool);
-> -
-> -	return perf_session__deliver_synth_event(intel_pt_synth->session, event,
-> -						 NULL);
-> -}
-> -
->  static int intel_pt_synth_event(struct perf_session *session, const char *name,
->  				struct perf_event_attr *attr, u64 id)
->  {
-> -	struct intel_pt_synth intel_pt_synth;
->  	int err;
->  
->  	pr_debug("Synthesizing '%s' event with id %" PRIu64 " sample type %#" PRIx64 "\n",
->  		 name, id, (u64)attr->sample_type);
->  
-> -	memset(&intel_pt_synth, 0, sizeof(struct intel_pt_synth));
-> -	intel_pt_synth.session = session;
-> -
-> -	err = perf_event__synthesize_attr(&intel_pt_synth.dummy_tool, attr, 1,
-> -					  &id, intel_pt_event_synth);
-> +	err = perf_session__deliver_synth_attr_event(session, attr, id);
->  	if (err)
->  		pr_err("%s: failed to synthesize '%s' event type\n",
->  		       __func__, name);
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 5596bed1b8c8..18a8f4a84045 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -1764,6 +1764,30 @@ int perf_session__deliver_synth_event(struct perf_session *session,
->  	return machines__deliver_event(&session->machines, evlist, event, sample, tool, 0, NULL);
->  }
->  
-> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
-> +					   const struct perf_event_attr *attr,
-> +					   u64 id)
-> +{
-> +	union {
-> +		struct {
-> +			struct perf_record_header_attr attr;
-> +			u64 ids[1];
-> +		} attr_id;
-> +		union perf_event ev;
-> +	} ev = {
-> +		.attr_id.attr.header.type = PERF_RECORD_HEADER_ATTR,
-> +		.attr_id.attr.header.size = sizeof(ev.attr_id),
-> +		.attr_id.ids[0] = id,
-> +	};
+> +/*
+> + * RAPL PMU scope for AMD is package whereas for Intel it is die.
+> + */
+> +#define rapl_pmu_is_pkg_scope()				\
+> +	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
+> +	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
 > +
-> +	if (attr->size != sizeof(ev.attr_id.attr.attr)) {
-> +		pr_debug("Unexpected perf_event_attr size\n");
-> +		return -EINVAL;
-> +	}
-> +	ev.attr_id.attr.attr = *attr;
-> +	return perf_session__deliver_synth_event(session, &ev.ev, NULL);
+>  struct rapl_pmu {
+>  	raw_spinlock_t		lock;
+>  	int			n_active;
+> @@ -140,9 +147,25 @@ static unsigned int rapl_cntr_mask;
+>  static u64 rapl_timer_ms;
+>  static struct perf_msr *rapl_msrs;
+>  
+> +/*
+> + * Helper functions to get the correct topology macros according to the
+> + * RAPL PMU scope.
+> + */
+> +static inline unsigned int get_rapl_pmu_idx(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+> +					 topology_logical_die_id(cpu);
 > +}
 > +
->  static void event_swap(union perf_event *event, bool sample_id_all)
+> +static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
+> +					 topology_die_cpumask(cpu);
+> +}
+> +
+>  static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
 >  {
->  	perf_event__swap_op swap;
-> diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-> index 4c29dc86956f..cc28976bb00e 100644
-> --- a/tools/perf/util/session.h
-> +++ b/tools/perf/util/session.h
-> @@ -154,6 +154,9 @@ extern volatile int session_done;
->  int perf_session__deliver_synth_event(struct perf_session *session,
->  				      union perf_event *event,
->  				      struct perf_sample *sample);
-> +int perf_session__deliver_synth_attr_event(struct perf_session *session,
-> +					   const struct perf_event_attr *attr,
-> +					   u64 id);
+> -	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
+> +	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
 >  
->  int perf_session__dsos_hit_all(struct perf_session *session);
+>  	/*
+>  	 * The unsigned check also catches the '-1' return value for non
+> @@ -543,6 +566,7 @@ static struct perf_msr amd_rapl_msrs[] = {
 >  
-
+>  static int rapl_cpu_offline(unsigned int cpu)
+>  {
+> +	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
+>  	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+>  	int target;
+>  
+> @@ -552,7 +576,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+>  
+>  	pmu->cpu = -1;
+>  	/* Find a new cpu to collect rapl events */
+> -	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+> +	target = cpumask_any_but(rapl_pmu_cpumask, cpu);
+>  
+>  	/* Migrate rapl events to the new target */
+>  	if (target < nr_cpu_ids) {
+> @@ -565,6 +589,8 @@ static int rapl_cpu_offline(unsigned int cpu)
+>  
+>  static int rapl_cpu_online(unsigned int cpu)
+>  {
+> +	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+> +	const struct cpumask *rapl_pmu_cpumask = get_rapl_pmu_cpumask(cpu);
+>  	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+>  	int target;
+>  
+> @@ -579,14 +605,14 @@ static int rapl_cpu_online(unsigned int cpu)
+>  		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+>  		rapl_hrtimer_init(pmu);
+>  
+> -		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
+> +		rapl_pmus->pmus[rapl_pmu_idx] = pmu;
+>  	}
+>  
+>  	/*
+>  	 * Check if there is an online cpu in the package which collects rapl
+>  	 * events already.
+>  	 */
+> -	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
+> +	target = cpumask_any_and(&rapl_cpu_mask, rapl_pmu_cpumask);
+>  	if (target < nr_cpu_ids)
+>  		return 0;
+>  
+> @@ -675,7 +701,10 @@ static const struct attribute_group *rapl_attr_update[] = {
+>  
+>  static int __init init_rapl_pmus(void)
+>  {
+> -	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+> +	int nr_rapl_pmu = topology_max_packages();
+> +
+> +	if (!rapl_pmu_is_pkg_scope())
+> +		nr_rapl_pmu *= topology_max_dies_per_package();
+>  
+>  	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
+>  	if (!rapl_pmus)
