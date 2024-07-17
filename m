@@ -1,117 +1,252 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D397314B07E;
-	Wed, 17 Jul 2024 10:13:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 651DB44C6C
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 10:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721211207; cv=none; b=ucgDK4ZS6E8BVxJFlMUBGDa6qgHzwYN9bgWLXsjUNVCiul/ZJ2D5M4qHaNATJsBGAV1oE9AuwLvgIVGTzNHPuuGcEV93A8Ks3t2LEGCEsWV+MIS+81khUuWVWlJ2XN0P7ftjVsAVxChDRpA8TNcXvRp5H3ScqoRaKHI/UqXt1ug=
+	t=1721212447; cv=none; b=XKFVeXbTKd9R49NYQ9r3mfAutgAHZyzi0rqDTtelP5gzh7oVDhrjcdtj9cG9HBbV2AgfAo/f0bpsmlIY6dhzlQ8TaE27WW+P7qrlMVU2fnHm/qqv3wbJjLE55u1xHcmkt1llZJKD4x7HXpb/9Jk9NMtYElBAXupS8A8haQL0CvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721211207; c=relaxed/simple;
-	bh=3j9GXlVujKX4aLkp4JG1ZNkdJuyrtqTyjY08lHnaVaU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QG1tmJfeslthFwc0nXU/qEJ/qG3+bpL06nn97DHPljIL6vcyh6qFOVPPYBpkPwsXBpXpzbbJsjKycxgcy6z0OZuLQJpYk+GPMNGDIi3brWcimQa7bcLwHLW3Jf/ytltgCGAwhAyncHjwp2zTHNkNbsoaRT4SXOA3RWiwnrFQ25k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=iny3y7pa; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1721212447; c=relaxed/simple;
+	bh=Q6KM6lR+izkbvtAcurmoXUFLvkzyr3NZnjnwJBW8BEU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gJ9heIug/dZpeWwZW+BrZndtYWkYk0hQtYxiEnrYo46XGR7jN+gCo7iFrElMS6tsGe/6dbuiF22L6oATeerRKS1PLhXKWCr7h9YfxMsDM5LS8ZycLUqBnqTlgyKnZ2Z31rdwgrXFTChtHtwFDsvIMsf547a4yeCCLyQ8uOJADNs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=TJfwoGh2; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="iny3y7pa"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=6sVlgv8Wc8tK6kpb2xBD0U5ztubfajaUuhHy9zLWVrg=; t=1721211204;
-	x=1721643204; b=iny3y7paecJRV6s3xusBQCHr5EMXa4USHYQiRerTXh0u/i1/w4OGQP/FhN7Df
-	d/CbOz4VXGGc5U7KtQvMaa/fU/zwsEIka3YwgFhyQ/YETNUIqrFz7NEv9ZXte+/s7HrU6DfWG1NpK
-	7neaj19Q4Hw2snfli9yqjoBGWECaTyjMsyKlQ9kMQ2icxPTJomcXTnDk2q21JWdtc8F0Cm0hj+i5D
-	hvx8g7jtXm0t1fDuc2dP/jgxLtngTPT8YzdgavnSLuYFE4g1LRSFjU1GTneOO1y22gL0tVO5mohds
-	wsMQbCmJE9Ts7ElasxwyKWDxtg2LCusauzxJxGluXzzu+9wYDQ==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sU1ex-00035S-5A; Wed, 17 Jul 2024 12:13:19 +0200
-Message-ID: <8218aa5f-c1f1-4e85-bbbc-dde19850e732@leemhuis.info>
-Date: Wed, 17 Jul 2024 12:13:18 +0200
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="TJfwoGh2"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46HAQbVG000975;
+	Wed, 17 Jul 2024 10:34:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=z8M2vpHhw/98n7pT8NO5uJ7udEirhhcFPRbylac
+	Iveg=; b=TJfwoGh2gYZzre97WWITUDfMJ+Drvb0a8S7M0DiIvKw7eOaBh2KiMcq
+	Csbc5m9iz6KTlk/4lebevjvS16U65/KSZ1kZFikZET/ZSV0vtHVPABulxzfeLmHb
+	3f9WrE47iBQD+owaGcWuFVkxmaxDlmXIAmic5KRHd750EXNdcdhVF+FsxkDvIeSE
+	yptcYhIjl+OTPm7IghHDRfjMvL6LACbh/6FVusJ82wH6+kSyuLBLfZG0owMfpkKq
+	N90BtxeaZWmq2ryDUY2qrpwWK2KqXzZc93goN7elZqmKTrmtU72/Yt3o24zrRpyQ
+	tV0XMolZATCg4P9ui4ckKrZyTJInJJg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40e9kp0c5u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 10:33:59 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46HAXwPf012175;
+	Wed, 17 Jul 2024 10:33:58 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40e9kp0c5t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 10:33:58 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46H9dv2l005921;
+	Wed, 17 Jul 2024 10:33:57 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkn3pwn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 10:33:57 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46HAXr0T53150202
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jul 2024 10:33:56 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D97252004E;
+	Wed, 17 Jul 2024 10:33:53 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 498732004D;
+	Wed, 17 Jul 2024 10:33:52 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.72])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Jul 2024 10:33:52 +0000 (GMT)
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>
+Subject: [RFC PATCH] tools/lib/subcmd: Don't free the usage string
+Date: Wed, 17 Jul 2024 16:03:51 +0530
+Message-ID: <20240717103351.268344-1-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: GcIuUKWnmd9K77GzMzjjM6X68PJhNlLI
+X-Proofpoint-GUID: G5AzF9QQJ5bJxKEcfJtU_3aU79peJYDE
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 0/5] perf build: libtraceevent, libtracefs feature
- check with pkg-config
-To: Guilherme Amadio <amadio@gentoo.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>, Leo Yan <leo.yan@arm.com>,
- linux-perf-users@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAM9d7ciLGP_w9YYOb-2U2ESg8kQx_knQXuB6_2JZVZ2ktL+bzg@mail.gmail.com>
- <20240712194511.3973899-1-amadio@gentoo.org>
-From: Thorsten Leemhuis <linux@leemhuis.info>
-Content-Language: en-US, de-DE
-Autocrypt: addr=linux@leemhuis.info; keydata=
- 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 n7RI
-In-Reply-To: <20240712194511.3973899-1-amadio@gentoo.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;linux@leemhuis.info;1721211204;b15d2751;
-X-HE-SMSGID: 1sU1ex-00035S-5A
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_06,2024-07-16_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 phishscore=0 mlxscore=0 bulkscore=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 malwarescore=0
+ mlxlogscore=999 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407170080
 
-On 12.07.24 21:40, Guilherme Amadio wrote:
-> 
-> Here is version 3 of the patchset. I see the change to send output to devnull
-> has already been applied, so I am submitting the remaining work only.
-> [...]
+Currently, commands which depend on 'parse_options_subcommand()' don't
+show the usage string, and instead show '(null)'
 
-Applied the series and it fixed my build problems with Fedora's RPM spec
-file adjusted for -next[1], hence:
+    $ ./perf sched
+	Usage: (null)
 
-Tested-by: Thorsten Leemhuis <linux@leemhuis.info>
+    -D, --dump-raw-trace  dump raw trace in ASCII
+    -f, --force           don't complain, do it
+    -i, --input <file>    input file name
+    -v, --verbose         be more verbose (show symbol address, etc)
 
-[1]
-https://lore.kernel.org/all/569626ee-4aca-418b-9cfc-10cf5e2747a9@leemhuis.info/
+'parse_options_subcommand()' is generally expected to initialise the usage
+string, with information in the passed 'subcommands[]' array
 
-Ciao, THorsten
+This behaviour was changed in:
+
+    commit 230a7a71f9221 ("libsubcmd: Fix parse-options memory leak")
+
+Where the generated usage string is deallocated, and usage[0] string is
+reassigned as NULL.
+
+As discussed in [1], free the allocated usage string in the main function
+itself, and don't reset usage string to NULL in parse_options_subcommand
+
+With this change, the behaviour is restored.
+
+    $ ./perf sched
+        Usage: perf sched [<options>] {record|latency|map|replay|script|timehist}
+
+           -D, --dump-raw-trace  dump raw trace in ASCII
+           -f, --force           don't complain, do it
+           -i, --input <file>    input file name
+           -v, --verbose         be more verbose (show symbol address, etc)
+
+[1]: https://lore.kernel.org/linux-perf-users/htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e/
+
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 230a7a71f922 ("libsubcmd: Fix parse-options memory leak")
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
+---
+ tools/lib/subcmd/parse-options.c | 8 +++-----
+ tools/perf/builtin-kmem.c        | 2 ++
+ tools/perf/builtin-kvm.c         | 3 +++
+ tools/perf/builtin-kwork.c       | 3 +++
+ tools/perf/builtin-lock.c        | 3 +++
+ tools/perf/builtin-mem.c         | 3 +++
+ tools/perf/builtin-sched.c       | 3 +++
+ 7 files changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 4b60ec03b0bb..eb896d30545b 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -633,10 +633,11 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+ 			const char *const subcommands[], const char *usagestr[], int flags)
+ {
+ 	struct parse_opt_ctx_t ctx;
+-	char *buf = NULL;
+ 
+ 	/* build usage string if it's not provided */
+ 	if (subcommands && !usagestr[0]) {
++		char *buf = NULL;
++
+ 		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
+ 
+ 		for (int i = 0; subcommands[i]; i++) {
+@@ -678,10 +679,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+ 			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
+ 		usage_with_options(usagestr, options);
+ 	}
+-	if (buf) {
+-		usagestr[0] = NULL;
+-		free(buf);
+-	}
++
+ 	return parse_options_end(&ctx);
+ }
+ 
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index 6fd95be5032b..6b88b8b40784 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -2058,6 +2058,8 @@ int cmd_kmem(int argc, const char **argv)
+ 
+ out_delete:
+ 	perf_session__delete(session);
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kmem_usage[0]);
+ 
+ 	return ret;
+ }
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 71165036e4ca..988bef73bd09 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -2187,5 +2187,8 @@ int cmd_kvm(int argc, const char **argv)
+ 	else
+ 		usage_with_options(kvm_usage, kvm_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kvm_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 56e3f3a5e03a..fd53838b5a78 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -2520,5 +2520,8 @@ int cmd_kwork(int argc, const char **argv)
+ 	} else
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kwork_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 0253184b3b58..b25d50716e63 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2713,6 +2713,9 @@ int cmd_lock(int argc, const char **argv)
+ 		usage_with_options(lock_usage, lock_options);
+ 	}
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)lock_usage[0]);
++
+ 	zfree(&lockhash_table);
+ 	return rc;
+ }
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 863fcd735dae..b7c1cf6d0e5a 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -517,5 +517,8 @@ int cmd_mem(int argc, const char **argv)
+ 	else
+ 		usage_with_options(mem_usage, mem_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)mem_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 8750b5f2d49b..d6acc53ae89e 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3805,5 +3805,8 @@ int cmd_sched(int argc, const char **argv)
+ 		usage_with_options(sched_usage, sched_options);
+ 	}
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)sched_usage[0]);
++
+ 	return 0;
+ }
+-- 
+2.45.2
 
