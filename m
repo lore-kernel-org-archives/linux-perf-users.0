@@ -1,50 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC913171D2;
-	Wed, 17 Jul 2024 03:41:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F109818EAB
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 06:42:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721187710; cv=none; b=XmlT72IEcw15sd+yZZH/oNrE7UoUK5Mz4fn5dBJWNljkPAWqBhnQ1hHlAKMGkdoAXF8XZiNpNTH8aRKITFaQCGtMH3ocKKEJHY5bl+jf6a9PFC7yI+CNJc10QYNUCr3M04SUmy8XRIyTYRNKNT2oW4aLpNd43qick1B/x32sUj0=
+	t=1721198563; cv=none; b=bMWAecBLpJqrfzcE4N2OPCDigKldBCgaN4AEGyAfAN8NgKCRk6lE0c3OxBKW4nHRA1pfRxfqUIDaxeEyFnEcYksAqpjXOifjmvWZKXpJQwQqxzl8q2r1HN8XWexpj1SHeXzn0K/0g6p8qEADkogVwruP9OPDsO8HWOxewz8J8Os=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721187710; c=relaxed/simple;
-	bh=3uyrqz1alUlw4poJ0OBNKJJ4qzSemtXp4wiR3+zC594=;
+	s=arc-20240116; t=1721198563; c=relaxed/simple;
+	bh=EMWTHkPUWl6+LpbIBVgZRT6qmObHOm/ohrnT97ezO8M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SwRVJvLgf95xS2KZYhMoNAYz4r1+1y6A2b1pEK+swPiIUB7x9C7XhrqOfGeQBK8ysqHDK6rv13RfKR11532ROkgY44EwaXC8GNA2Vm4uRYchnzu8KjBOcmw3KpouoUh26E/wRYkCAjnJ0FXac6k29aLQLYelwskrhisyY8/TSdI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D64EzZVc; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=khQsGyVcKGF/D36gi7XTf3h5UJyWnX4ORuKl0DDcCmDjVoIZ3cCqBzhYFjvEmJVySM38U+33JJoBI7TY+J5S6eBg6ClZUvLrffLuC8ur6uoROMwFbMhnwJ+UI3QYSy7Et8gxVLA+MvsFppLu+n5M0o3g5fB8ojjnVSojzBsByiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=KX6LEY3G; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D64EzZVc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721187709; x=1752723709;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=3uyrqz1alUlw4poJ0OBNKJJ4qzSemtXp4wiR3+zC594=;
-  b=D64EzZVc4892/3G1hXvW/XeK9amDw7u7qa11U9o+h+YHBr2pqMOH5W23
-   U2WzTG1yiPA0c8q1qqiZTgG68D/8DbdBdwwC9e0g/tHKUs/hikE36NMxm
-   G3ujg2P9MEr9BwzLTT9PbbuSrJehfmcAnnMwVk374ocXrxVWgV0nIs6fV
-   vSuWVeSEuKAV8UazVd/r9JI/foHe26exLmGRLEM7XOyzujdup4MjcbzpK
-   z7vNAha+ciHwYT+M7dOh/6Y9XGN43/RD/R2z+b0s8sSz2EbYlxfq0ghw+
-   FChIX6xRZIKJ/+lFsY8yGFaXvAuPZxOKuJO9F9pukNSFf1Pl9/GFP+PS8
-   A==;
-X-CSE-ConnectionGUID: qDrFWewLQqOmHkcXuN9rHw==
-X-CSE-MsgGUID: BTct0Ot1SLiyt7C8EheKEA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11135"; a="18802231"
-X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="18802231"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:48 -0700
-X-CSE-ConnectionGUID: pmYYkXZHTu28mUHSAcIjfg==
-X-CSE-MsgGUID: G0MhwxbaTfeH+jG0+kU1rQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,213,1716274800"; 
-   d="scan'208";a="81286038"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Jul 2024 20:41:44 -0700
-Message-ID: <cc68401c-4551-4395-943e-0e4a69565dcb@linux.intel.com>
-Date: Wed, 17 Jul 2024 11:41:41 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="KX6LEY3G"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46H5vB21029826;
+	Wed, 17 Jul 2024 06:42:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=E
+	MWTHkPUWl6+LpbIBVgZRT6qmObHOm/ohrnT97ezO8M=; b=KX6LEY3Grnump34c1
+	9Nh3dUlu4/G550GoLlVZeSs8jEAMuEXCnZtK/yUX8iuUp0VC21YQIrB4gBPO4xSu
+	UxpFU8PxbK5RXR/GX+6XrelZzhD/Esgnc7/yg22Y8EfTIG8e3iXzb6lA8qKbJqxB
+	EXRf/bU36WkgFnDztKpNWscm2XLUHOSJoWTcvt1JTOYc8/ho/afCT5l5lGOU9g1e
+	0fgoJgRG2tw0CI1OpYFhhSiMz2gHvza/PRz00VPkEgA22Oz4sb5cgRuGand6g2DS
+	W4kY2wd2L+TZ1LkcmNuCr9uFc45rwZGwLjihgCgUaMKMJo2/C4guu1FqfE8Rr9h5
+	T3+lw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40e6h3g8vu-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 06:42:30 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46H6gUAR032108;
+	Wed, 17 Jul 2024 06:42:30 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40e6h3g8vs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 06:42:30 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46H5g86U028853;
+	Wed, 17 Jul 2024 06:42:29 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkmtvht-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 17 Jul 2024 06:42:29 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46H6gNvu46137848
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 17 Jul 2024 06:42:25 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9301B2005A;
+	Wed, 17 Jul 2024 06:42:23 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D4DF320063;
+	Wed, 17 Jul 2024 06:42:21 +0000 (GMT)
+Received: from [9.109.199.72] (unknown [9.109.199.72])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 17 Jul 2024 06:42:21 +0000 (GMT)
+Message-ID: <2bd363dd-8467-4caa-ab87-bf488b73752b@linux.ibm.com>
+Date: Wed, 17 Jul 2024 12:12:21 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,195 +69,55 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 23/41] KVM: x86/pmu: Implement the save/restore of PMU
- state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>
-Cc: Sean Christopherson <seanjc@google.com>,
- Kan Liang <kan.liang@linux.intel.com>, maobibo <maobibo@loongson.cn>,
- Xiong Zhang <xiong.y.zhang@linux.intel.com>, pbonzini@redhat.com,
- peterz@infradead.org, kan.liang@intel.com, zhenyuw@linux.intel.com,
- jmattson@google.com, kvm@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, zhiyuan.lv@intel.com, eranian@google.com,
- irogers@google.com, samantha.alt@intel.com, like.xu.linux@gmail.com,
- chao.gao@intel.com
-References: <CAL715WJK893gQd1m9CCAjz5OkxsRc5C4ZR7yJWJXbaGvCeZxQA@mail.gmail.com>
- <b3868bf5-4e16-3435-c807-f484821fccc6@loongson.cn>
- <CAL715W++maAt2Ujfvmu1pZKS4R5EmAPebTU_h9AB8aFbdLFrTQ@mail.gmail.com>
- <f843298c-db08-4fde-9887-13de18d960ac@linux.intel.com>
- <Zikeh2eGjwzDbytu@google.com>
- <7834a811-4764-42aa-8198-55c4556d947b@linux.intel.com>
- <CAL715WKh8VBJ-O50oqSnCqKPQo4Bor_aMnRZeS_TzJP3ja8-YQ@mail.gmail.com>
- <6af2da05-cb47-46f7-b129-08463bc9469b@linux.intel.com>
- <CAL715W+zeqKenPLP2Fm9u_BkGRKAk-mncsOxrg=EKs74qK5f1Q@mail.gmail.com>
- <42acf1fc-1603-4ac5-8a09-edae2d85963d@linux.intel.com>
- <ZirPGnSDUzD-iWwc@google.com>
- <77913327-2115-42b5-850a-04ef0581faa7@linux.intel.com>
- <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
+Subject: Re: [PATCH v12 1/4] perf check: introduce check subcommand
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: acme@kernel.org, jolsa@kernel.org, irogers@google.com,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+References: <20240628064236.1123851-1-adityag@linux.ibm.com>
+ <20240628064236.1123851-2-adityag@linux.ibm.com>
+ <Zn8C-XpC1beIRN8t@google.com>
+ <tylbo22m2koyrcypdykidcuzcwrtfqrzehcwwwmqkcqnbnhz2y@rnsy3gyfmzj4>
+ <ZoSRiW1aVsV-xrur@google.com>
+ <htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e>
+ <ZpGQcN8RBHs6peFL@google.com>
 Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <CAL715WJCHJD_wcJ+r4TyWfvmk9uNT_kPy7Pt=CHkB-Sf0D4Rqw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Aditya Gupta <adityag@linux.ibm.com>
+In-Reply-To: <ZpGQcN8RBHs6peFL@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: JCjYXGTvLqRHXrGrP4vkYfNxLsBwmGvo
+X-Proofpoint-ORIG-GUID: 8Or1gu-CzzGwOuBTgzBFxe-niIrSZEu5
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-17_03,2024-07-16_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=669 bulkscore=0
+ suspectscore=0 mlxscore=0 impostorscore=0 spamscore=0 phishscore=0
+ adultscore=0 clxscore=1015 lowpriorityscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407170047
 
+Hi Namhyung,
 
-On 4/26/2024 11:12 AM, Mingwei Zhang wrote:
-> On Thu, Apr 25, 2024 at 6:46 PM Mi, Dapeng <dapeng1.mi@linux.intel.com> wrote:
->>
->> On 4/26/2024 5:46 AM, Sean Christopherson wrote:
->>> On Thu, Apr 25, 2024, Kan Liang wrote:
->>>> On 2024-04-25 4:16 p.m., Mingwei Zhang wrote:
->>>>> On Thu, Apr 25, 2024 at 9:13 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>>> It should not happen. For the current implementation, perf rejects all
->>>>>> the !exclude_guest system-wide event creation if a guest with the vPMU
->>>>>> is running.
->>>>>> However, it's possible to create an exclude_guest system-wide event at
->>>>>> any time. KVM cannot use the information from the VM-entry to decide if
->>>>>> there will be active perf events in the VM-exit.
->>>>> Hmm, why not? If there is any exclude_guest system-wide event,
->>>>> perf_guest_enter() can return something to tell KVM "hey, some active
->>>>> host events are swapped out. they are originally in counter #2 and
->>>>> #3". If so, at the time when perf_guest_enter() returns, KVM will ack
->>>>> that and keep it in its pmu data structure.
->>>> I think it's possible that someone creates !exclude_guest event after
->>> I assume you mean an exclude_guest=1 event?  Because perf should be in a state
->>> where it rejects exclude_guest=0 events.
->> Suppose should be exclude_guest=1 event, the perf event without
->> exclude_guest attribute would be blocked to create in the v2 patches
->> which we are working on.
->>
->>
->>>> the perf_guest_enter(). The stale information is saved in the KVM. Perf
->>>> will schedule the event in the next perf_guest_exit(). KVM will not know it.
->>> Ya, the creation of an event on a CPU that currently has guest PMU state loaded
->>> is what I had in mind when I suggested a callback in my sketch:
->>>
->>>   :  D. Add a perf callback that is invoked from IRQ context when perf wants to
->>>   :     configure a new PMU-based events, *before* actually programming the MSRs,
->>>   :     and have KVM's callback put the guest PMU state
->>
->> when host creates a perf event with exclude_guest attribute which is
->> used to profile KVM/VMM user space, the vCPU process could work at three
->> places.
->>
->> 1. in guest state (non-root mode)
->>
->> 2. inside vcpu-loop
->>
->> 3. outside vcpu-loop
->>
->> Since the PMU state has already been switched to host state, we don't
->> need to consider the case 3 and only care about cases 1 and 2.
->>
->> when host creates a perf event with exclude_guest attribute to profile
->> KVM/VMM user space,  an IPI is triggered to enable the perf event
->> eventually like the following code shows.
->>
->> event_function_call(event, __perf_event_enable, NULL);
->>
->> For case 1,  a vm-exit is triggered and KVM starts to process the
->> vm-exit and then run IPI irq handler, exactly speaking
->> __perf_event_enable() to enable the perf event.
->>
->> For case 2, the IPI irq handler would preempt the vcpu-loop and call
->> __perf_event_enable() to enable the perf event.
->>
->> So IMO KVM just needs to provide a callback to switch guest/host PMU
->> state, and __perf_event_enable() calls this callback before really
->> touching PMU MSRs.
-> ok, in this case, do we still need KVM to query perf if there are
-> active exclude_guest events? yes? Because there is an ordering issue.
-> The above suggests that the host-level perf profiling comes when a VM
-> is already running, there is an IPI that can invoke the callback and
-> trigger preemption. In this case, KVM should switch the context from
-> guest to host. What if it is the other way around, ie., host-level
-> profiling runs first and then VM runs?
+On 13/07/24 01:52, Namhyung Kim wrote:
 >
-> In this case, just before entering the vcpu loop, kvm should check
-> whether there is an active host event and save that into a pmu data
-> structure. If none, do the context switch early (so that KVM saves a
-> huge amount of unnecessary PMU context switches in the future).
-> Otherwise, keep the host PMU context until vm-enter. At the time of
-> vm-exit, do the check again using the data stored in pmu structure. If
-> there is an active event do the context switch to the host PMU,
-> otherwise defer that until exiting the vcpu loop. Of course, in the
-> meantime, if there is any perf profiling started causing the IPI, the
-> irq handler calls the callback, preempting the guest PMU context. If
-> that happens, at the time of exiting the vcpu boundary, PMU context
-> switch is skipped since it is already done. Of course, note that the
-> irq could come at any time, so the PMU context switch in all 4
-> locations need to check the state flag (and skip the context switch if
-> needed).
->
-> So this requires vcpu->pmu has two pieces of state information: 1) the
-> flag similar to TIF_NEED_FPU_LOAD; 2) host perf context info (phase #1
-> just a boolean; phase #2, bitmap of occupied counters).
->
-> This is a non-trivial optimization on the PMU context switch. I am
-> thinking about splitting them into the following phases:
->
-> 1) lazy PMU context switch, i.e., wait until the guest touches PMU MSR
-> for the 1st time.
-> 2) fast PMU context switch on KVM side, i.e., KVM checking event
-> selector value (enable/disable) and selectively switch PMU state
-> (reducing rd/wr msrs)
-> 3) dynamic PMU context boundary, ie., KVM can dynamically choose PMU
-> context switch boundary depending on existing active host-level
-> events.
-> 3.1) more accurate dynamic PMU context switch, ie., KVM checking
-> host-level counter position and further reduces the number of msr
-> accesses.
-> 4) guest PMU context preemption, i.e., any new host-level perf
-> profiling can immediately preempt the guest PMU in the vcpu loop
-> (instead of waiting for the next PMU context switch in KVM).
+> <...snip...>
+>> Maybe `free(command_usage[0])` or something like
+>> `parse_options_free_subcommand()` ?
+> It seems we don't have a place to mark whether it needs to free or not.
+> Let's go with free(command_usage[0]) for now.
 
-Sorry to recall this discussion again. I want to update some latest
-progress on it.
 
-I have implemented a draft code for the optimization step 1 & 2 and done
-some basic tests, but found there could be some security risks on the
-optimization.
+Sure, I will post a separate fix patch for this.
 
-The initial proposal is sample, a counter bitmap 'pmc_bitmap64' is
-introduced to dynamically record the guest using PMU counters. Only guest
-using counters would be saved/cleared and restored at VM-Exit and VM-Entry.
-This would reduce the overhead from MSR reading/writing.
 
-But this introduces potential security risks. Since only partial MSRs are
-save/restored to guest values. Malicious guest could get some host
-sensitive information or attack host by reading or writing these counters
-which guest doesn't use but host uses.
+Thanks,
 
-To mitigate these security risks, our initial thought is to change the
-static interception configuration of PMU at vCPU creation to dynamic
-interception configuration for per PMU counter before VM-entry. This can
-mitigate the security risks from rdmsr/wrmsr instructions. But it still
-can't address the security issue from rdpmc instruction as long as rdpmc is
-set to passthrough mode. Malicious guest still can read the host sensitive
-information by rdpmc instruction.
-
-Possible solution could be
-
-a. disable rdpmc passthrough
-
-    This can solve the security hole, but rdpmc interception would bring
-heavy performance overhead.
-
-b. partially save/clear PMU MSRs at VM-Exit, but fully restore PMU MSRs at
-VM-Entry
-
-    This can fix the security issue as well, but suppose the performance
-overhead won't be reduced too much since wrmsr brings more overhead.
-
-c. Fall back to only optimization 1, no any PMU MSR save/restore and rdpmc
-is set to interception by default if guest doesn't use any PMU counters.
-
-    Suspect if it's a real scenario, at least for Linux, nmi_watchdog is
-enabled by default and it would manipulated PMU counters.
-
+Aditya Gupta
 
 >
-> Thanks.
-> -Mingwei
->>> It's a similar idea to TIF_NEED_FPU_LOAD, just that instead of a common chunk of
->>> kernel code swapping out the guest state (kernel_fpu_begin()), it's a callback
->>> into KVM.
+> Thanks,
+> Namhyung
+>
