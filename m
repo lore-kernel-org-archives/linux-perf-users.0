@@ -1,63 +1,66 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62A733CC4
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 22:47:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3264447F4D
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 22:47:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721256462; cv=none; b=G1bvIlStUiq+Jgxntx+VNbWS5T/N4tCJpZU/lG1y7kmX8w2QQtNKD1HOtOGg8PpshVOklcoSn9f/GAfbJ4e/ePggqct6aBd5BCJbqyU/71wDnuko+xx1SrptuLCtJF5jtNl8IzWmYsabbfdXgtiUEmK8V0XM3hCvEWqtfr9RreA=
+	t=1721256466; cv=none; b=RGcWOS2gBdt7vpkETuGrX2VKOafsqsjJhR52gLWXgGtn5pUY36xvagdM1P8MlFhZqLLFRav4e0b5BzEkj0roA4iAuM4WYMJf/puBWWJSWHML2odWE0iqT1SaKeVHeUMtLi0x0oLkw2uq4TFzO0SJFX101z0Tf26t2hHxjOkghk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721256462; c=relaxed/simple;
-	bh=JrW8D/ojxXf0j/SIRVu/keJZ05s+oq/LzWd9Sm9U59I=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=i1jW9PubOie2Sp2cFy9QZFBzwePinE9eSEZr2BLybcHUHwx9H9f5kiPWdJOrCl9+zmAAO7O8BS1bUu3jcR9qUraxjdwkzZrdmfy+cRck8/kQCWlJWPkKWyC5pUsyZfrpoPfh/+KaRf9zM1rp5N3FFbIPTdQ9N1277iC6gKBY36c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qlu7UvmG; arc=none smtp.client-ip=209.85.128.201
+	s=arc-20240116; t=1721256466; c=relaxed/simple;
+	bh=vuwys3K/PQPhgggx+tj8r4FNVlkm6yntFgCi4rPb+vk=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=crIwwf4/2fDZSiZZROx1Yr/T1TUhiL8w1rwqA99ctEQgOtTIXB5hZEb4OE+GjFVU7ehzM15Z1IXBq79CYjA8kI7maDJfh4VLQhDAOxHMiQzoZL2JZQVHSYbGkcVA4pIJcioGzgT1crkKWoUpLEOAeXA3TNYY/qiI9hDSr0zE1cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=g0UJet6E; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlu7UvmG"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-650b621f4cdso3523317b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:47:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g0UJet6E"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e037c3d20a6so535415276.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:47:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721256456; x=1721861256; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=pR5ziDZUrbtvXuAxnnNXi/ECVNOOFYw5IhaL3PqW3bc=;
-        b=qlu7UvmG+I2JuCEESbZEI8zikdsD1J2fuy+tATTOfkQWEK9styyxhHGc80mhd28hGF
-         qaaAifhozibOkGhNKXQrDUpqZTLgK5pWfDDI/HivJ6aRrzfoycKkfx2YYqaN5BEi7WUT
-         dkoeyp7ZGiFZSRJmrTHfry7Vi6TFR0azEjHWOLlPHI5pc4xllVNP9Bz6jEbNeoC563lM
-         m1rHp7MgdoEAqcUxTTihUG9HcXtXrp7nYrFmSHvKHz6nEGXOfpJ9P17iSh1U2p2V5qOy
-         0umSSDRfmQz6gR90jmQhxQPe2OgV3Fl7eVmzMUChwDIeiQio11DVUorKhNdojO6H4v7y
-         L7hA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721256456; x=1721861256;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1721256460; x=1721861260; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pR5ziDZUrbtvXuAxnnNXi/ECVNOOFYw5IhaL3PqW3bc=;
-        b=EfP+VeFVTjhjm6Lh5ozLWigeHGbyJb7or9O+4cpdkttmGm3oYg3cgpW07/0fGBfAsW
-         Clt36PUNedP1EkyfTgQc0fj5XlJ3wPQQ2iTquxLGlfRVy7lwm7HGJadxXuI0uEA4s3UP
-         e4p5le6oqGcfgJpncRnh1hmUFUoVgM+Ix/+D04012kC3bt2sXmFalMTRfxnTGl6eAzzc
-         rXgzQT8wMQ0KyJfXxik9VUd92w8SOo28KmyiUNgjeKSAr07/7ooDtgdHKC5oAa42rrOM
-         E1toWmXQ+KwH+5bxoDba2smcrGwnB/F2vzBny6La5jr/TXOLbZoE4VKis8BPtHKSbVKy
-         fSLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW2DbD7QYcuRRQMQj+pdqy9SSUvz6hkZQ0mAdXiIgUotp4vT3kF675fl3wA9Fg7jJgq/Ur9zMLfabJt/5ctjgOGYnfTOFXcmFMMg8Z78QqcMw==
-X-Gm-Message-State: AOJu0YyY/tXEvkVS/W62YDYJzRy5yI3EY8TC9C/K0/h7/4Z1HQ6IOkyt
-	T+S7Gsp3SqNM/0QdThRR1n5t6BcYQBV8rDftv/5ljW+6TSf8coVB2uIsumFS3wG7mF/BNPAOOPe
-	0066WPA==
-X-Google-Smtp-Source: AGHT+IFLybgLrLOsOM0ierUBa3tUykoM2MDdu9F5Fmoe0eKzh6IXK2QnVCT/xdZ4Oztpr3BmZVt4vE6ZnMQK
+        bh=N65oyWVRY7b5fCUl5B9UBHpg82AXZoHzAgm4Amx1vhc=;
+        b=g0UJet6EXiUanAGVhXL6Qzhu/5nJ0foWBDyBjEfycXzC0+NB2uYLG43uFVngQiQM0G
+         LP2Nw9MWTRH3YwchG+731TGu3Mlk/7wYWazOfrScL5QaT2aVmZ6c1b0IxoZ+CF0842qa
+         ScV+ohueBSaGANjONDCYnzi9dCegpG5T/s3TzrLgjOf9sXwCzxpLkRRfvUgjqpKJ4GMN
+         nJJuDTgyTZ2NkOh03D/LTx0H3vDJLRbXc98TnUDQBKR7j1W8fSdYFShXVLgKeynTuZ6B
+         wrgwQQ31Cylc4ZtPWaUxR+ZSDPj7rJWR8h5TtDUy2w+jsJls+zVOe0l94JOSkWBHmvJz
+         TPOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721256460; x=1721861260;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=N65oyWVRY7b5fCUl5B9UBHpg82AXZoHzAgm4Amx1vhc=;
+        b=ChBbb5JpS+0t0zN+PCPXDwYKtMSjgG/z3HXhEOzt2ES1EM55o6aqZtFJDGujB7brG7
+         1duSGDh2vakJWfA6K4wJ0n4cpJy4D07KZZUWjYHOy1Ghat3cxABS9/cfl6ii4aJelwvC
+         Hj1+njYPiUdGy+eIFKhOxOXgzATNrjr44Aq5JVwV5dA8unDYYq2OnvGjyKsVlD3waXKb
+         o9sSP/IlrRjLO+Gv0dHlJv0wokx/zd8rctnLPAZocKcXJwifhOCtVysHFQq7tEXcKPlE
+         tHSL2JB1eYfZfSdnNaNIKyfzFcaZ1hoIWL7LSowO5rP1xXnGYfHT0RMAChnhtoAj5yR3
+         rT4w==
+X-Forwarded-Encrypted: i=1; AJvYcCXEw1jOn5D3zkRTy0ZzcSjTdLbHx1u30wrCJms6jaADD49EECIyrApPYS6Kfb2Q6rR0c+evhk7188DJ13ehKj/eEG3lIkyST88b7Im3XljSMA==
+X-Gm-Message-State: AOJu0YxEDBuFKtp4xlDbgOeYCwKDtl2mEzKfO60XNx76DNY9cWHsM0Hy
+	NouISpAgyq8VsnxhTgckxGjbvMzFiE/LYJLNepXe9iu9SwDIF7cIkujmgeg4BgLBQ0zf7wdfcjF
+	UKVB3hw==
+X-Google-Smtp-Source: AGHT+IH9IZ2oWD57Fb/Y14t3IyFK8/OeCj7X6XeVHQP0ivJbYeNiSH3bPsPnwXLrXgMVdYiwKNmfMxPGD8al
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:940b:9044:fa83:4060])
- (user=irogers job=sendgmr) by 2002:a05:690c:39b:b0:62d:a29:537e with SMTP id
- 00721157ae682-666037ff9bcmr772777b3.4.1721256455917; Wed, 17 Jul 2024
- 15:47:35 -0700 (PDT)
-Date: Wed, 17 Jul 2024 15:47:26 -0700
-Message-Id: <20240717224732.1465438-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:1024:b0:e02:c84e:61a3 with SMTP
+ id 3f1490d57ef6-e05feb31053mr1385276.6.1721256460154; Wed, 17 Jul 2024
+ 15:47:40 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:47:28 -0700
+In-Reply-To: <20240717224732.1465438-1-irogers@google.com>
+Message-Id: <20240717224732.1465438-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240717224732.1465438-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
-Subject: [PATCH v1 0/6] Add support for sysfs event.cpus and cpu event term
+Subject: [PATCH v1 2/6] perf parse-events: Pass cpu_list as a perf_cpu_map in __add_event
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -72,34 +75,58 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	kprateek.nayak@amd.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 
-The need for a sysfs event.cpus file is discussed here:
-https://lore.kernel.org/lkml/CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com/
-following Dhananjay Ugwekar's work on the RAPL /sys/devices/power PMU.
-These changes add support for the event.cpus file in sysfs and also a
-cpu event term allowing events to have differing CPUs. This was adding
-in order to test the parsing and map propagation for the sysfs case.
+Previously the cpu_list is a string and typically no cpu_list is
+passed to __add_event. Wanting to make events have their cpus distinct
+from the PMU means that in more occassions we want to pass a
+cpu_list. If we're reading this from sysfs it is easier to read a
+perf_cpu_map than allocate and pass around strings that will later be
+parsed.
 
-Ian Rogers (6):
-  perf pmu: Merge boolean sysfs event option parsing
-  perf parse-events: Pass cpu_list as a perf_cpu_map in __add_event
-  perf pmu: Add support for event.cpus files in sysfs
-  libperf cpumap: Add ability to create CPU from a single CPU number
-  perf parse-events: Set is_pmu_core for legacy hardware events
-  perf parse-events: Add "cpu" term to set the CPU an event is recorded
-    on
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/parse-events.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
- .../sysfs-bus-event_source-devices-events     |  14 ++
- tools/lib/perf/cpumap.c                       |  10 ++
- tools/lib/perf/include/perf/cpumap.h          |   2 +
- tools/perf/Documentation/perf-list.txt        |   7 +
- tools/perf/util/evsel_config.h                |   1 +
- tools/perf/util/parse-events.c                | 156 ++++++++++++------
- tools/perf/util/parse-events.h                |   3 +-
- tools/perf/util/parse-events.l                |   1 +
- tools/perf/util/pmu.c                         |  92 ++++++++---
- tools/perf/util/pmu.h                         |   1 +
- 10 files changed, 213 insertions(+), 74 deletions(-)
-
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index 321586fb5556..43501eb56336 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -227,12 +227,12 @@ __add_event(struct list_head *list, int *idx,
+ 	    bool init_attr,
+ 	    const char *name, const char *metric_id, struct perf_pmu *pmu,
+ 	    struct list_head *config_terms, bool auto_merge_stats,
+-	    const char *cpu_list)
++	    struct perf_cpu_map *cpu_list)
+ {
+ 	struct evsel *evsel;
+-	struct perf_cpu_map *cpus = pmu ? perf_cpu_map__get(pmu->cpus) :
+-			       cpu_list ? perf_cpu_map__new(cpu_list) : NULL;
++	struct perf_cpu_map *cpus = perf_cpu_map__is_empty(cpu_list) && pmu ? pmu->cpus : cpu_list;
+ 
++	cpus = perf_cpu_map__get(cpus);
+ 	if (pmu)
+ 		perf_pmu__warn_invalid_formats(pmu);
+ 
+@@ -305,16 +305,17 @@ static int add_event_tool(struct list_head *list, int *idx,
+ 		.type = PERF_TYPE_SOFTWARE,
+ 		.config = PERF_COUNT_SW_DUMMY,
+ 	};
+-	const char *cpu_list = NULL;
++	struct perf_cpu_map *cpu_list = NULL;
+ 
+ 	if (tool_event == PERF_TOOL_DURATION_TIME) {
+ 		/* Duration time is gathered globally, pretend it is only on CPU0. */
+-		cpu_list = "0";
++		cpu_list = perf_cpu_map__new("0");
+ 	}
+ 	evsel = __add_event(list, idx, &attr, /*init_attr=*/true, /*name=*/NULL,
+ 			    /*metric_id=*/NULL, /*pmu=*/NULL,
+ 			    /*config_terms=*/NULL, /*auto_merge_stats=*/false,
+ 			    cpu_list);
++	perf_cpu_map__put(cpu_list);
+ 	if (!evsel)
+ 		return -ENOMEM;
+ 	evsel->tool_event = tool_event;
 -- 
 2.45.2.1089.g2a221341d9-goog
 
