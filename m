@@ -1,66 +1,63 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2E147F4D
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 22:47:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E62A733CC4
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 22:47:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721256460; cv=none; b=aUmHG4vR6aEh+xElCHmhwZ6KOOT6K/ohq2nRCAUbFexn33HYt1mF6BMZgPvLBOfxnjxxHjCTDBf9wBE8UW3oPvj321P+Zgc6Ah0K7sQ235H5Ih1UQ/FroO0uYPBKVJKOZLzEcnrkzJ7iXX/Y35mV0Xug6qBQION6iaECEIfpLzI=
+	t=1721256462; cv=none; b=G1bvIlStUiq+Jgxntx+VNbWS5T/N4tCJpZU/lG1y7kmX8w2QQtNKD1HOtOGg8PpshVOklcoSn9f/GAfbJ4e/ePggqct6aBd5BCJbqyU/71wDnuko+xx1SrptuLCtJF5jtNl8IzWmYsabbfdXgtiUEmK8V0XM3hCvEWqtfr9RreA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721256460; c=relaxed/simple;
-	bh=wsjyhZb/PdOtvGe00zDU9jMHxWauNU8sJZPK/PLxFSE=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=atxC0eqwTbYQ7ddBpFzszuAKy5cXKyKsQHBUXgOEBp8z8wirXX7dA6dhDQ/IiejwE3ZCLqFYMW/bF36Zjvfeobjp8p9NCoedninBwx7oHhkhGKFWLFg3eD2Q+mnqUpy4ZoTcgbFT3KGFtjRA8Ii51jfki/8vYLVODnyQjGumuqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mkZC3Wm/; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1721256462; c=relaxed/simple;
+	bh=JrW8D/ojxXf0j/SIRVu/keJZ05s+oq/LzWd9Sm9U59I=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=i1jW9PubOie2Sp2cFy9QZFBzwePinE9eSEZr2BLybcHUHwx9H9f5kiPWdJOrCl9+zmAAO7O8BS1bUu3jcR9qUraxjdwkzZrdmfy+cRck8/kQCWlJWPkKWyC5pUsyZfrpoPfh/+KaRf9zM1rp5N3FFbIPTdQ9N1277iC6gKBY36c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=qlu7UvmG; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mkZC3Wm/"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e02b7adfb95so469484276.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:47:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qlu7UvmG"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-650b621f4cdso3523317b3.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721256458; x=1721861258; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VIiZO/q4iRQZ7Xs1eg6KNaj9S7BXW+wk4oVE8PU2qN4=;
-        b=mkZC3Wm/ZEGrsFjtlijyHyGoj+jtUPcLrUOG8cTpDWViOO0+/F5nvYlP/kwg305B3d
-         fZgWU14bYRbfy1PWNUgVa99mpEWjx8bs1TGBEJajt8w0ukeabq5crPWPVEqjFnBxZ+Jr
-         duSPj7udoBCSi1dn9K/2vHFRO1H4t4ppRJMf4giU7fPb42Df+S7fUxLsjEOEdT58lkty
-         vLi/EmOKswF3zWOBk41NNmfd3LloS6yHNSneEN3B02mPcaq389/0yfq9RQcl0XBhVOHF
-         INv5WEUgWRS3TW+OVsCJirqSuMXjOi3N70rJH/JrpFQPFBTLuE32heIbPrPetQMfIORj
-         Ponw==
+        d=google.com; s=20230601; t=1721256456; x=1721861256; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=pR5ziDZUrbtvXuAxnnNXi/ECVNOOFYw5IhaL3PqW3bc=;
+        b=qlu7UvmG+I2JuCEESbZEI8zikdsD1J2fuy+tATTOfkQWEK9styyxhHGc80mhd28hGF
+         qaaAifhozibOkGhNKXQrDUpqZTLgK5pWfDDI/HivJ6aRrzfoycKkfx2YYqaN5BEi7WUT
+         dkoeyp7ZGiFZSRJmrTHfry7Vi6TFR0azEjHWOLlPHI5pc4xllVNP9Bz6jEbNeoC563lM
+         m1rHp7MgdoEAqcUxTTihUG9HcXtXrp7nYrFmSHvKHz6nEGXOfpJ9P17iSh1U2p2V5qOy
+         0umSSDRfmQz6gR90jmQhxQPe2OgV3Fl7eVmzMUChwDIeiQio11DVUorKhNdojO6H4v7y
+         L7hA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721256458; x=1721861258;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VIiZO/q4iRQZ7Xs1eg6KNaj9S7BXW+wk4oVE8PU2qN4=;
-        b=w3oOpyTlYXIHpGOwCT4mUTDPxYTt+m9cwUueR8vQ8g2BA+t4X0NUuOhQnFuIWlISfp
-         EUhpwOQGmlK8F2yUbIXxG+SuJ8I2Pq2toWO5ObD2xB4kHFgTZflunHgO+JIIMvhKVKD3
-         5YhN3Z/SRW1vLtH6GfcMsHGQ3CZxngerXms1VZFeU/U5DTuftHyhXXFOI7j/j5hckRvP
-         DQBkG4gx0bOWm6d8t76/bMH6t24b/EVkjeAXc4/hMCx0gKmozljqsMukR8zFrXLtXV0Q
-         HyRZeejGeouk0ffKXiCCXJfs8LvCf56aWuuilVtthRSyIkTA6MrLl2wTstFGJ8QvqMSc
-         Gs8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVEXfzoom4lDgkKgFGPX10OCmMmYX6Vm9gKL7IN8XZwnxJSO88/cnilcY4zc+tPZet1G+I1nllf/oeulZF/j2J79BvxXinPniRpoB+Rcdwk1w==
-X-Gm-Message-State: AOJu0Yyy3FgAkVPoLZJNPh99TPBScxz0BQ3DIru5DoxYRwRbZrtXd+JO
-	txWuXUuIGR9QRNnvp8hZ30ABSWdeqKqcjDfk+fsnsqlIjU3lweSecXXf3SCbf6ZTSIJH4JHTr1e
-	+7YbfgQ==
-X-Google-Smtp-Source: AGHT+IFnGIUQ2lhFZ36vDL4qvcmKR2SRBmLdlfHXveMflrvn4LzP54FxAZZnQ/WKEs62+RfsoHjLnbI9BV34
+        d=1e100.net; s=20230601; t=1721256456; x=1721861256;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=pR5ziDZUrbtvXuAxnnNXi/ECVNOOFYw5IhaL3PqW3bc=;
+        b=EfP+VeFVTjhjm6Lh5ozLWigeHGbyJb7or9O+4cpdkttmGm3oYg3cgpW07/0fGBfAsW
+         Clt36PUNedP1EkyfTgQc0fj5XlJ3wPQQ2iTquxLGlfRVy7lwm7HGJadxXuI0uEA4s3UP
+         e4p5le6oqGcfgJpncRnh1hmUFUoVgM+Ix/+D04012kC3bt2sXmFalMTRfxnTGl6eAzzc
+         rXgzQT8wMQ0KyJfXxik9VUd92w8SOo28KmyiUNgjeKSAr07/7ooDtgdHKC5oAa42rrOM
+         E1toWmXQ+KwH+5bxoDba2smcrGwnB/F2vzBny6La5jr/TXOLbZoE4VKis8BPtHKSbVKy
+         fSLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW2DbD7QYcuRRQMQj+pdqy9SSUvz6hkZQ0mAdXiIgUotp4vT3kF675fl3wA9Fg7jJgq/Ur9zMLfabJt/5ctjgOGYnfTOFXcmFMMg8Z78QqcMw==
+X-Gm-Message-State: AOJu0YyY/tXEvkVS/W62YDYJzRy5yI3EY8TC9C/K0/h7/4Z1HQ6IOkyt
+	T+S7Gsp3SqNM/0QdThRR1n5t6BcYQBV8rDftv/5ljW+6TSf8coVB2uIsumFS3wG7mF/BNPAOOPe
+	0066WPA==
+X-Google-Smtp-Source: AGHT+IFLybgLrLOsOM0ierUBa3tUykoM2MDdu9F5Fmoe0eKzh6IXK2QnVCT/xdZ4Oztpr3BmZVt4vE6ZnMQK
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:940b:9044:fa83:4060])
- (user=irogers job=sendgmr) by 2002:a05:6902:2d86:b0:e03:6405:7428 with SMTP
- id 3f1490d57ef6-e05febedf75mr2558276.12.1721256458202; Wed, 17 Jul 2024
- 15:47:38 -0700 (PDT)
-Date: Wed, 17 Jul 2024 15:47:27 -0700
-In-Reply-To: <20240717224732.1465438-1-irogers@google.com>
-Message-Id: <20240717224732.1465438-2-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:690c:39b:b0:62d:a29:537e with SMTP id
+ 00721157ae682-666037ff9bcmr772777b3.4.1721256455917; Wed, 17 Jul 2024
+ 15:47:35 -0700 (PDT)
+Date: Wed, 17 Jul 2024 15:47:26 -0700
+Message-Id: <20240717224732.1465438-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-References: <20240717224732.1465438-1-irogers@google.com>
 X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
-Subject: [PATCH v1 1/6] perf pmu: Merge boolean sysfs event option parsing
+Subject: [PATCH v1 0/6] Add support for sysfs event.cpus and cpu event term
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -75,88 +72,34 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	kprateek.nayak@amd.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 
-Merge perf_pmu__parse_per_pkg and perf_pmu__parse_snapshot that do the
-same parsing except for the file suffix used.
+The need for a sysfs event.cpus file is discussed here:
+https://lore.kernel.org/lkml/CAP-5=fXXuWchzUK0n5KTH8kamr=DQoEni+bUoo8f-4j8Y+eMBg@mail.gmail.com/
+following Dhananjay Ugwekar's work on the RAPL /sys/devices/power PMU.
+These changes add support for the event.cpus file in sysfs and also a
+cpu event term allowing events to have differing CPUs. This was adding
+in order to test the parsing and map propagation for the sysfs case.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/pmu.c | 47 +++++++++++++++++++++----------------------
- 1 file changed, 23 insertions(+), 24 deletions(-)
+Ian Rogers (6):
+  perf pmu: Merge boolean sysfs event option parsing
+  perf parse-events: Pass cpu_list as a perf_cpu_map in __add_event
+  perf pmu: Add support for event.cpus files in sysfs
+  libperf cpumap: Add ability to create CPU from a single CPU number
+  perf parse-events: Set is_pmu_core for legacy hardware events
+  perf parse-events: Add "cpu" term to set the CPU an event is recorded
+    on
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 986166bc7c78..5148b6639dd3 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -367,8 +367,8 @@ static int perf_pmu__parse_unit(struct perf_pmu *pmu, struct perf_pmu_alias *ali
- 	return -1;
- }
- 
--static int
--perf_pmu__parse_per_pkg(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+static bool perf_pmu__parse_event_source_bool(const char *pmu_name, const char *event_name,
-+					      const char *suffix)
- {
- 	char path[PATH_MAX];
- 	size_t len;
-@@ -376,37 +376,36 @@ perf_pmu__parse_per_pkg(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- 
- 	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
- 	if (!len)
--		return 0;
--	scnprintf(path + len, sizeof(path) - len, "%s/events/%s.per-pkg", pmu->name, alias->name);
-+		return false;
-+
-+	scnprintf(path + len, sizeof(path) - len, "%s/events/%s.%s", pmu_name, event_name, suffix);
- 
- 	fd = open(path, O_RDONLY);
- 	if (fd == -1)
--		return -1;
-+		return false;
- 
--	close(fd);
-+#ifndef NDEBUG
-+	{
-+		char buf[8];
- 
--	alias->per_pkg = true;
--	return 0;
-+		len = read(fd, buf, sizeof(buf));
-+		assert(len == 1 || len == 2);
-+		assert(buf[0] == '1');
-+	}
-+#endif
-+
-+	close(fd);
-+	return true;
- }
- 
--static int perf_pmu__parse_snapshot(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+static void perf_pmu__parse_per_pkg(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
- {
--	char path[PATH_MAX];
--	size_t len;
--	int fd;
--
--	len = perf_pmu__event_source_devices_scnprintf(path, sizeof(path));
--	if (!len)
--		return 0;
--	scnprintf(path + len, sizeof(path) - len, "%s/events/%s.snapshot", pmu->name, alias->name);
--
--	fd = open(path, O_RDONLY);
--	if (fd == -1)
--		return -1;
-+	alias->per_pkg = perf_pmu__parse_event_source_bool(pmu->name, alias->name, "per-pkg");
-+}
- 
--	alias->snapshot = true;
--	close(fd);
--	return 0;
-+static void perf_pmu__parse_snapshot(struct perf_pmu *pmu, struct perf_pmu_alias *alias)
-+{
-+	alias->snapshot = perf_pmu__parse_event_source_bool(pmu->name, alias->name, "snapshot");
- }
- 
- /* Delete an alias entry. */
+ .../sysfs-bus-event_source-devices-events     |  14 ++
+ tools/lib/perf/cpumap.c                       |  10 ++
+ tools/lib/perf/include/perf/cpumap.h          |   2 +
+ tools/perf/Documentation/perf-list.txt        |   7 +
+ tools/perf/util/evsel_config.h                |   1 +
+ tools/perf/util/parse-events.c                | 156 ++++++++++++------
+ tools/perf/util/parse-events.h                |   3 +-
+ tools/perf/util/parse-events.l                |   1 +
+ tools/perf/util/pmu.c                         |  92 ++++++++---
+ tools/perf/util/pmu.h                         |   1 +
+ 10 files changed, 213 insertions(+), 74 deletions(-)
+
 -- 
 2.45.2.1089.g2a221341d9-goog
 
