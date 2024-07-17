@@ -1,56 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mout.web.de (mout.web.de [217.72.192.78])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20699180058;
-	Wed, 17 Jul 2024 13:06:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957E6180A71;
+	Wed, 17 Jul 2024 13:56:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721221607; cv=none; b=vGW57EjwDtVrgNK4vqRZ6V3iCw4ySF+PUq0QcFv+YzmfuKyMhCgt5n9y8fadLlf6OXhY1bWomTFAT6tcNHZFsIP9cr3dOqVoqsOxX1Ysq+aMQHtnxn5yCwPOej2M1Kga4wrY0G2zx/s/yo19LoFMs1WbyzfBzePybhZuAZrzaxI=
+	t=1721224595; cv=none; b=bvWP6U0pBOBbw5YST8dzZRI5yD8pntPj0lfKV7QRsk0x6HO1MCgEmLZFP4S4ECJSxAtKy7HlwcuJGgY58BIMf8nkq+jJAqiIDzA3pVJBo6qW/yAKs22yl6geH3L0nljmzsvZvya1F64tZSkdr+NzpC9jzXWn90Z1cV4Uu70oWP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721221607; c=relaxed/simple;
-	bh=nqzwU62TUTIQqfqi5YPISkss2GL6yfthtYun8w6rQfY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZaoqAHWZcBVsyRNbbqVnAZAraSPqjugGfxPMlDA4n/l4pJrm6XpXlWYs0bHG79EupevH996g6qWJ09lXtP4luHaHUStMj/XjdeJp4AK43oIMe7GPf2EAFls+8CYVeqMCCcVwgwh6rUezXO8tvy16dwgeudT/OS8QznkjESvfTwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Bzk5fC39; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721224595; c=relaxed/simple;
+	bh=ueo6YeuqYBrwR97RPNPcL3NG27I21SlFoh0T9ywCRcA=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=G6tAl8bR+cpFlFpjzrDP0Cd3+tEtJs/DEqn/9YcfLB1/Y1EhR+JHBxJaPJAvv/27tFvKW8B4PA8kHjmtDBC4XuM9BfQz6KkoPAEBHAgq6VxO8yE6atNEQpzi1A8/T2ym1DvpeGLi/RjMwKRrbQYOS6WlxuQvp8KIPGLUJnoYP/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=j+6EoMgT; arc=none smtp.client-ip=217.72.192.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Bzk5fC39"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721221606; x=1752757606;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=nqzwU62TUTIQqfqi5YPISkss2GL6yfthtYun8w6rQfY=;
-  b=Bzk5fC39do5qLUOZIXu3panEsSZmGD0pnaPby+/8IUHKE68IhFLlikoj
-   ruXlnVHTPFzFWuGq9wy6lBgHY7ZEzU7GdbxqeZSb8KUKuyvOyrlxu8+uH
-   0ylJW2CLbY3tYvFFa0I77AxB3knrljYT4+el9ng2LShFZLTGGspZtakfm
-   Tf+WZAyWXku/07In2uCWJoWnMqpAWN77WwtRAYlWyUGNJUMPaAjdHc+zB
-   K62AS1qZ0E+g8DeTY3F/WmKgB9qSKFp3PS5I3ugYAFMZFiRRW7RrnjV9R
-   ZX1P6cSH4jtZ0yMsa1juYXhBhnHxiflCtc+nGigR6zek8zllaowirgWgj
-   w==;
-X-CSE-ConnectionGUID: IimnZ8pjR8G1bbrozXybgA==
-X-CSE-MsgGUID: qjgMh+tITvuVhP3ZkztkAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="22536283"
-X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
-   d="scan'208";a="22536283"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 06:06:45 -0700
-X-CSE-ConnectionGUID: AOETldJaSaO1pv4Aq0sK1A==
-X-CSE-MsgGUID: eH1SDIy/S6iWVnsiWTY7tA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,214,1716274800"; 
-   d="scan'208";a="55243990"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jul 2024 06:06:46 -0700
-Received: from [10.212.127.135] (kliang2-mobl1.ccr.corp.intel.com [10.212.127.135])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 7818220B8CD6;
-	Wed, 17 Jul 2024 06:06:44 -0700 (PDT)
-Message-ID: <5bd0d2dd-27cd-4054-b152-c5acf7ef3084@linux.intel.com>
-Date: Wed, 17 Jul 2024 09:06:43 -0400
+	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="j+6EoMgT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1721224553; x=1721829353; i=markus.elfring@web.de;
+	bh=ueo6YeuqYBrwR97RPNPcL3NG27I21SlFoh0T9ywCRcA=;
+	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
+	 Cc:Content-Type:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=j+6EoMgT6uRZenobEAy1gGzxA4Ox1J2cZ7uZWZNHBka0BYCfQEff0bozJZlkiXNv
+	 gt7yWjn4/VTAvOt6x6TH0KUZej5OSlYo1oubEwtnhSUUJrjhTnyk20MdzOFinEzQG
+	 pLaa5swR06qcFecn0BWlxUZr92DAjWjMHYqYd1zq2+7ld+TvZetZgJG7RGL2WAvii
+	 ifNLZ2yoL3jlOfJQEu9XP4+z18gDiVKVAEgByoQobB/gDhabFfVPF1ozMV5AI2+QR
+	 Pj4CQmgxintEg56JGcD2LIsJG+Qkdv/ti/fhmXJJW94vr4hXH7uHaj2RNseqxpUIO
+	 N3e1ITwW1WUebD0zpw==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.178.21] ([94.31.83.95]) by smtp.web.de (mrweb106
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MpCmT-1rzSfm21iZ-00muYw; Wed, 17
+ Jul 2024 15:55:53 +0200
+Message-ID: <6ede4925-8461-466e-ae09-7016ed92d314@web.de>
+Date: Wed, 17 Jul 2024 15:55:50 +0200
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,72 +41,54 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH tip rebase] perf/x86/intel/cstate: Add pkg C2 residency
- counter for Sierra Forest
-To: Zhenyu Wang <zhenyuw@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- x86@kernel.org, Rui Zhang <rui.zhang@intel.com>,
- Artem Bityutskiy <artem.bityutskiy@intel.com>,
- Wendy Wang <wendy.wang@intel.com>
-References: <20240612080835.306254-1-zhenyuw@linux.intel.com>
- <20240717031609.74513-1-zhenyuw@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240717031609.74513-1-zhenyuw@linux.intel.com>
+Content-Language: en-GB
+From: Markus Elfring <Markus.Elfring@web.de>
+Subject: [RFC] perf script: Completing error handling?
+To: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
+ Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
+ Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:fDXUSdWFcLIkBEJAhXka5DyKKV6W0WvCAVbX/pry/GZc3hUwHW9
+ 62sZLZSh2zMd1f7p26+iEhlXHFtJQXVHsoq/yEgNcUX6K1aDIDyPrHM+zWeNXYaRphc8HVM
+ ftr0/hlTAl3N5rf8x9gdqadjVojAQYH+t9NTDBzkBz2TuOPR7oujxM6vs33NxBwFFTqtunO
+ 8u88CzFwyueWij87mhiLg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:zRhuL6EUs7Q=;VrKJbBFUm5qLyKmfqjh4dEDm4WV
+ NJfk+sLn9QZMN+pYG50XYa77Lq3HGTM7j9I7aPTt76IrKs/qVVCfQSg0y6vJjsCYDn+a+jpXj
+ mhH22GynIahsqu2bdlNSA3k1R1QUoERB97nbRxlCHO7HbksNLI//TcI8GzFJlnfU6kBRnmVo4
+ DOU3wOt56Qn28PSdQuqAv9Zq/KSWDvkuK3HQyognT7eC8Gg4WYTijaizsYNnUxZSmazW+mrVT
+ QvTDYxKtWY29sAoIbfBmQVwj6/bIEpNC1unXWhsKpjKOACbuGpqgEtuJ5BWsJGTuj8xOgEDqD
+ oH0pRbpKaXgyct8ncdwFsH1jAy4tvav9+C7o5H5Z1MmhmgeMyvxrfDfvDq7iQBKg5Smxns7DF
+ nf/+gXasdg0J+w62vebSLtSso1JCKp7jnI3oSFWSllmA/CyKXJY40Iyxs5n4cLtoDR9HTA4Nl
+ 2ROgT0vrUVjbTAXXgAzwr85ScoTlMgn6WLxEQ5YUw3iYx2OSIRcfvMIqF8UbzWEDsj+gstwk6
+ 6AV3h9j8e27ZG2TYFV67QopQwxso7Vxlm7uDzNZT6xB5Xim5nFNlbcDNITzETs+qCwdWlphmh
+ Vu6xV6hXI1LHoL8cGLwuChXmhuReq2Ablnok5HOt5XjSCjALZ6NdY6riZXp6UyVHFRMwSbC0q
+ gDngxrbVyTeeY7SzKWBnOFLH23CKKUKqMHH16edKiwEHN2iJGqfdJgLMxmxR9pyKOLOpBsqfg
+ QlBShsGPkPhFVgyPsiNEBJCyOO1IATR0HyogdLiDGFUfOY3aeT0Hk2eW7La6QgBW2n8JMULq8
+ B1BTdhyNCNdPmnjWtLvowRkg==
+
+Hello,
+
+I noticed that source code like =E2=80=9Cprinted +=3D fprintf(fp, =E2=80=
+=A6)=E2=80=9D is used
+in some function implementations.
+https://elixir.bootlin.com/linux/v6.10/source/tools/perf/builtin-script.c#=
+L697
+
+I find that return values should be checked somehow at 63 places.
+
+See also:
+* https://cwe.mitre.org/data/definitions/252.html
+
+* https://wiki.sei.cmu.edu/confluence/display/c/POS54-C.+Detect+and+handle=
++POSIX+library+errors
 
 
-
-On 2024-07-16 11:16 p.m., Zhenyu Wang wrote:
-> Package C2 residency counter is also available on Sierra Forest.
-> So add it support in srf_cstates.
-> 
-> Cc: Rui Zhang <rui.zhang@intel.com>
-> Cc: Artem Bityutskiy <artem.bityutskiy@intel.com>
-> Cc: Wendy Wang <wendy.wang@intel.com>
-> Tested-by: Wendy Wang <wendy.wang@intel.com>
-> Fixes: 3877d55a0db2 ("perf/x86/intel/cstate: Add Sierra Forest support")
-> Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Thanks,
-Kan
-
-> ---
-> 
-> Hi, Peter
-> 
-> This refresh resolved conflicts in comment against current tip tree.
-> Please help to apply.
-> 
-> Thanks!
-> 
->  arch/x86/events/intel/cstate.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-> index be58cfb012dd..9f116dfc4728 100644
-> --- a/arch/x86/events/intel/cstate.c
-> +++ b/arch/x86/events/intel/cstate.c
-> @@ -64,7 +64,7 @@
->   *			       perf code: 0x00
->   *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
->   *						KBL,CML,ICL,ICX,TGL,TNT,RKL,ADL,
-> - *						RPL,SPR,MTL,ARL,LNL
-> + *						RPL,SPR,MTL,ARL,LNL,SRF
->   *			       Scope: Package (physical package)
->   *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
->   *			       perf code: 0x01
-> @@ -693,7 +693,8 @@ static const struct cstate_model srf_cstates __initconst = {
->  	.core_events		= BIT(PERF_CSTATE_CORE_C1_RES) |
->  				  BIT(PERF_CSTATE_CORE_C6_RES),
->  
-> -	.pkg_events		= BIT(PERF_CSTATE_PKG_C6_RES),
-> +	.pkg_events		= BIT(PERF_CSTATE_PKG_C2_RES) |
-> +				  BIT(PERF_CSTATE_PKG_C6_RES),
->  
->  	.module_events		= BIT(PERF_CSTATE_MODULE_C6_RES),
->  };
+Regards,
+Markus
