@@ -1,66 +1,66 @@
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBAF4181BBE
-	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA03C181CE8
+	for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 15:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721228628; cv=none; b=fOcyHrT0AIPtwvTJajmRqPnlopdzFN2D1YdUZm2y2Gr3NH52R0N5ZmsypLU7dxDAeA7HRNRszfU708jGnThpths+B/K5mcMF4Z5YRetAibnS1W9XJdyysDP537y6jPMxGXB6sGUEdJOVn2whKAsELkEFIVS7XULtSplbs/J4cNQ=
+	t=1721228638; cv=none; b=o2w3Eya5WQFw+t9P83wdnnve4s0TvXNiAqMcPfciF5nVSvoiGgoqB3QbWvjVq43Jp7jbzEodjeVNrJ9UFqse7lDXq5yek0oTvM6CSIrJ1YjgBEKlJMVVdzCv1UzGzszwGW1qPLK6eugqUxHJTjCfn1nVhIWzvxL+UIzNoCoBApU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721228628; c=relaxed/simple;
-	bh=6zYQpgW1sYuZtFh5svQg298ttMbR37qGS6cajMeCQNs=;
+	s=arc-20240116; t=1721228638; c=relaxed/simple;
+	bh=3OLt9CaI68LxWwWX9xjN442w8ZNIC2ZLThIHQvtHcDE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mGNyc7a3T1y8eDc4+AP3qPexJ4/mT3yn+lVjPke3fwU395MuaUPS7H5Z8abKjWkruOIYUNj6Ki8exhesCHPku9hXD7i4IynyvOBCfyJn32GSFQPBHxTJWCOdnwSaK+wMe1CiUh4Ffl/gxB50eyIWk1X9wAulE7aHE3SZJHV+Kl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n9zjbnhv; arc=none smtp.client-ip=209.85.210.178
+	 To:Cc:Content-Type; b=GwpOe4mz6tRmTRltaq6eGrY/Wpg00dVq5GKvNNkOHKODQetytiiRzvUlmWmjwg9PxW092qGTCMg3hWGdsPJDk9Qg2bnSl7xlDjOPcEW7RkvzaKbl93l+Qi/IQhB/awJpWDjeVjDSLkgz7kzoDjtm+8sNdQEiao+SKaGolJZOGok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IGa/IhXj; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n9zjbnhv"
-Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-70b703eda27so3284390b3a.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 08:03:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IGa/IhXj"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70afe18837cso4460528b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 08:03:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721228626; x=1721833426; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721228636; x=1721833436; darn=vger.kernel.org;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=QxQzHnPQfliEOOGePuMQwmHPsAiogIoQ0i3ZwbhDwSo=;
-        b=n9zjbnhvUeeHSuAsOGAowjj6Skp9Rk2c0KrS94XY5me0iwft5kiZ3NL2wzYOhgqiGU
-         DAFQ5ypcNvA8uNfxBgHMbOvfnumqA+hnKGpvNmsq/rLKfP30HgjV+J7ciJHPc1TvFZJH
-         /0r6IrQ4nWaFjqiTxIR2JTP/lW+I0iVNL9mvWhw4VRVhcXHwNyE0x8O5Nsxbu1i34fh2
-         Ho8tfpbqEaHjhgsfrHzPkaghJE+AVOZwpozTjqeKKFcdG/yt7R4VhO/qFVJo+abFgYR0
-         /Lt+EQbvXhTWUSnqgpueOHegmVDkyEjw8ly6T5vQs5VY/ZD7zmlTo8e7ow2uF3VPw9Vm
-         vy8Q==
+        bh=47ivNPINYDdIALCmBMGJVr8a0JPn5a19pn0RWfCpesU=;
+        b=IGa/IhXjYj6wdCBiPGYkqncXhEg039UDGujr+ulQ9nKNaPmoSyX2Vu/uLDDrCU2upQ
+         tk//DH3MGHXZvcvuzrBtq0ilxcdRrR2Pn4EaOgRizJUW1/zxAiXiZTUNOp7XX9UeDCng
+         ASx1ffFDlMAd/Y5Ne/TsLOXRlgS+q62+xw/xF1X5ggvb3dORMagtW0hPIuf5fnquR4En
+         H8eqZqrRRI0h/wiBbsQ95WamYgvwyW1uV1+NiWaFTUvd7Vb/jtvzFIInHtLY5POZlr8e
+         mAdw24gHMYiLVZh6oatgroanabzreltRpwLSVXagnOvYCgMpBdQBgqtVsnamcLBKNtX7
+         K+uA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721228626; x=1721833426;
+        d=1e100.net; s=20230601; t=1721228636; x=1721833436;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=QxQzHnPQfliEOOGePuMQwmHPsAiogIoQ0i3ZwbhDwSo=;
-        b=hZxPc4GRZBTwO59Ln0aCKoLoLtYQ/Ms0nYbgs7REd199xX7UOFVmSBDS4IdB0sI/EL
-         wcrBfnuZG7tNGZmhT75+671jl1GCdvXbnRE1nCag9sJUdl0WpYsrSOfmqVBP8JLqmI9A
-         0VWK4zGKkNXPlX0Us+0BzD79zoUl4fn9L5QBXzpDmO+uQhqLiq+tTV9MoBqYK/+QBfCv
-         kvQVVL+sEPzJ3GGCOYRLF7EAuio0y4RLDqP501JqbO3cipnltM/obNfh51z2WPo0rpgq
-         y8SC5UjEzRLikDtrCCdoD7I1M8aBLt7lOH6QphAuP4f5Gk2EhkHCcXN+GBDTQEtLu/PW
-         BR2g==
-X-Forwarded-Encrypted: i=1; AJvYcCV3VKYpuq0PphvZ1u44BDW8RHKb4482gwZswoni2DNzJnAjoCSdjX5W0ujQv3lfEIT9s3qVPjiZaM78itUAj5opSR0tSWF7TVX1EMe6+vm22g==
-X-Gm-Message-State: AOJu0YydPF9Laf34J7RzBUBo8C9wXwTXlMVdXGcOS6+MsVHun37NaCJp
-	Q84QJSHZwULwBL4ESnI2Q2aNWFsul7qG400v+DIKtbtV/syOJmyHvpQC/3LqiSEPjdjMzHp/i4M
-	W/C/jSOTwh70P57VeoQZqTGcmQCzm8SnhhE4Hqg==
-X-Google-Smtp-Source: AGHT+IEdN81PHZbEjwHoFKcZRslkAwEq7L47cx3z+yuQtVzDJv7rMqF9DnkIwf9F2c9GwJ58Vx9pv8Y+3QG6Vl8cDA8=
-X-Received: by 2002:a05:6a00:198a:b0:702:6dc7:2368 with SMTP id
- d2e1a72fcca58-70ce4dc5c7amr2004506b3a.12.1721228625664; Wed, 17 Jul 2024
- 08:03:45 -0700 (PDT)
+        bh=47ivNPINYDdIALCmBMGJVr8a0JPn5a19pn0RWfCpesU=;
+        b=ZiTB9YL9Zn9PDE91tlMRmScpUnLWceDqC/AisXUxaO1yHw8BoPViOpd3QYlpFqEute
+         3NmEC03QHXJLouMHY3u4RSUz6nahpCd3lpiH9CkeSJKWLgH6wBc/1y2NJzhnmYOYemLh
+         OIDt0VQcz8zrFeByIDfFnv2qG41QE8tiR6KViv3ln7vPH+4kFL1262IV8X4Zt2Hj7k5R
+         t7H2vBp/KCfIDCQaDwDnCNlm/KFHV4Pz2SPYvn2UXxn9zbhJpOQodaTofnn8DA3ni0Tc
+         +f2BOJUorbUXwnhu/a8nYWtFFBvgqljc+hNiei0X/CdIdgEJuMBBMLMubGr4HnPgAIFT
+         QBQQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW1RGEov5PwxH14aSEXcOCq61EcgiIB/F5pkTopA3Z97P11TSDXg1pVgeGtw1JanZtHRbzo7WUoo4LrBumavj0sLkku6TytFjp3TYLG8MxI6w==
+X-Gm-Message-State: AOJu0YyV9vmOurjTps3VF1n//CORxY7AuNe+WFNATSDYy16lePFypq2N
+	j5D5s5jOaDlzD1TmivM42biJ+/QcySc3IwbgaF1iTL2lpM1I+L4Wqhnr6qqMltiroUNxy8AZNxB
+	xE3B2o16Zw6VCcMiEqEV962vaSS5574DePlc0tg==
+X-Google-Smtp-Source: AGHT+IF4Qf3S4WEbr4QPFSk2b+cX4hoD3rsc31RVhoAaJlpxpIAawZ0K1WdDi/3cWthWlp3qnOxYZxgJfBldjPTXYqQ=
+X-Received: by 2002:a05:6a00:2288:b0:708:2602:f62c with SMTP id
+ d2e1a72fcca58-70ce4f7476cmr2052661b3a.4.1721228635840; Wed, 17 Jul 2024
+ 08:03:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240712102029.3697965-1-james.clark@linaro.org> <20240712102029.3697965-16-james.clark@linaro.org>
-In-Reply-To: <20240712102029.3697965-16-james.clark@linaro.org>
+References: <20240712102029.3697965-1-james.clark@linaro.org> <20240712102029.3697965-17-james.clark@linaro.org>
+In-Reply-To: <20240712102029.3697965-17-james.clark@linaro.org>
 From: Mike Leach <mike.leach@linaro.org>
-Date: Wed, 17 Jul 2024 16:03:34 +0100
-Message-ID: <CAJ9a7VhCxh9myMVYBt6BiYODdX_skyyoov2s9p4NFyV+Yj++xA@mail.gmail.com>
-Subject: Re: [PATCH v5 15/17] coresight: Remove pending trace ID release mechanism
+Date: Wed, 17 Jul 2024 16:03:43 +0100
+Message-ID: <CAJ9a7ViwpDSpEv0niuF=wWpp4497Yp5AcnMSeh_SamWnK1QQtw@mail.gmail.com>
+Subject: Re: [PATCH v5 16/17] coresight: Emit sink ID in the HW_ID packets
 To: James Clark <james.clark@linaro.org>
 Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com, 
 	gankulkarni@os.amperecomputing.com, leo.yan@linux.dev, 
@@ -80,293 +80,145 @@ On Fri, 12 Jul 2024 at 11:23, James Clark <james.clark@linaro.org> wrote:
 >
 > From: James Clark <james.clark@arm.com>
 >
-> Pending the release of IDs was a way of managing concurrent sysfs and
-> Perf sessions in a single global ID map. Perf may have finished while
-> sysfs hadn't, and Perf shouldn't release the IDs in use by sysfs and
-> vice versa.
+> For Perf to be able to decode when per-sink trace IDs are used, emit the
+> sink that's being written to for each ETM.
 >
-> Now that Perf uses its own exclusive ID maps, pending release doesn't
-> result in any different behavior than just releasing all IDs when the
-> last Perf session finishes. As part of the per-sink trace ID change, we
-> would have still had to make the pending mechanism work on a per-sink
-> basis, due to the overlapping ID allocations, so instead of making that
-> more complicated, just remove it.
+> Perf currently errors out if it sees a newer packet version so instead
+> of bumping it, add a new minor version field. This can be used to
+> signify new versions that have backwards compatible fields. Considering
+> this change is only for high core count machines, it doesn't make sense
+> to make a breaking change for everyone.
 >
 > Signed-off-by: James Clark <james.clark@arm.com>
 > Signed-off-by: James Clark <james.clark@linaro.org>
 > ---
->  .../hwtracing/coresight/coresight-etm-perf.c  | 18 +++--
->  .../hwtracing/coresight/coresight-trace-id.c  | 67 +++++--------------
->  .../hwtracing/coresight/coresight-trace-id.h  | 31 ++++-----
->  include/linux/coresight.h                     |  6 +-
->  4 files changed, 43 insertions(+), 79 deletions(-)
+>  drivers/hwtracing/coresight/coresight-core.c  | 26 ++++++++++---------
+>  .../hwtracing/coresight/coresight-etm-perf.c  | 16 ++++++++----
+>  drivers/hwtracing/coresight/coresight-priv.h  |  1 +
+>  include/linux/coresight-pmu.h                 | 17 +++++++++---
+>  4 files changed, 39 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+> index faf560ba8d64..c427e9344a84 100644
+> --- a/drivers/hwtracing/coresight/coresight-core.c
+> +++ b/drivers/hwtracing/coresight/coresight-core.c
+> @@ -487,23 +487,25 @@ struct coresight_device *coresight_get_sink(struct list_head *path)
+>         return csdev;
+>  }
+>
+> +u32 coresight_get_sink_id(struct coresight_device *csdev)
+> +{
+> +       if (!csdev->ea)
+> +               return 0;
+> +
+> +       /*
+> +        * See function etm_perf_add_symlink_sink() to know where
+> +        * this comes from.
+> +        */
+> +       return (u32) (unsigned long) csdev->ea->var;
+> +}
+> +
+>  static int coresight_sink_by_id(struct device *dev, const void *data)
+>  {
+>         struct coresight_device *csdev = to_coresight_device(dev);
+> -       unsigned long hash;
+>
+>         if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+> -            csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+> -
+> -               if (!csdev->ea)
+> -                       return 0;
+> -               /*
+> -                * See function etm_perf_add_symlink_sink() to know where
+> -                * this comes from.
+> -                */
+> -               hash = (unsigned long)csdev->ea->var;
+> -
+> -               if ((u32)hash == *(u32 *)data)
+> +           csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+> +               if (coresight_get_sink_id(csdev) == *(u32 *)data)
+>                         return 1;
+>         }
 >
 > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> index 7fb55dafb639..70c99f0409b2 100644
+> index 70c99f0409b2..ad6a8f4b70b6 100644
 > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
 > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> @@ -232,15 +232,21 @@ static void free_event_data(struct work_struct *work)
->                 if (!(IS_ERR_OR_NULL(*ppath))) {
->                         struct coresight_device *sink = coresight_get_sink(*ppath);
+> @@ -460,6 +460,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>         struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+>         struct list_head *path;
+>         u64 hw_id;
+> +       u8 trace_id;
 >
-> -                       coresight_trace_id_put_cpu_id_map(cpu, &sink->perf_sink_id_map);
-> +                       /*
-> +                        * Mark perf event as done for trace id allocator, but don't call
-> +                        * coresight_trace_id_put_cpu_id_map() on individual IDs. Perf sessions
-> +                        * never free trace IDs to ensure that the ID associated with a CPU
-> +                        * cannot change during their and other's concurrent sessions. Instead,
-> +                        * a refcount is used so that the last event to call
-> +                        * coresight_trace_id_perf_stop() frees all IDs.
-> +                        */
-> +                       coresight_trace_id_perf_stop(&sink->perf_sink_id_map);
+>         if (!csdev)
+>                 goto fail;
+> @@ -512,11 +513,16 @@ static void etm_event_start(struct perf_event *event, int flags)
+>          */
+>         if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
+>                 cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
+> -               hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+> -                                  CS_AUX_HW_ID_CURR_VERSION);
+> -               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+> -                                   coresight_trace_id_read_cpu_id_map(cpu,
+> -                                                                      &sink->perf_sink_id_map));
 > +
->                         coresight_release_path(*ppath);
->                 }
->                 *ppath = NULL;
+> +               trace_id = coresight_trace_id_read_cpu_id_map(cpu, &sink->perf_sink_id_map);
+> +
+> +               hw_id = FIELD_PREP(CS_AUX_HW_ID_MAJOR_VERSION_MASK,
+> +                               CS_AUX_HW_ID_MAJOR_VERSION);
+> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_MINOR_VERSION_MASK,
+> +                               CS_AUX_HW_ID_MINOR_VERSION);
+> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, trace_id);
+> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_SINK_ID_MASK, coresight_get_sink_id(sink));
+> +
+>                 perf_report_aux_output_id(event, hw_id);
 >         }
 >
-> -       /* mark perf event as done for trace id allocator */
-> -       coresight_trace_id_perf_stop();
-> -
->         free_percpu(event_data->path);
->         kfree(event_data);
->  }
-> @@ -328,9 +334,6 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->                 sink = user_sink = coresight_get_sink_by_id(id);
->         }
+> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+> index 61a46d3bdcc8..05f891ca6b5c 100644
+> --- a/drivers/hwtracing/coresight/coresight-priv.h
+> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+> @@ -148,6 +148,7 @@ int coresight_make_links(struct coresight_device *orig,
+>                          struct coresight_device *target);
+>  void coresight_remove_links(struct coresight_device *orig,
+>                             struct coresight_connection *conn);
+> +u32 coresight_get_sink_id(struct coresight_device *csdev);
 >
-> -       /* tell the trace ID allocator that a perf event is starting up */
-> -       coresight_trace_id_perf_start();
-> -
->         /* check if user wants a coresight configuration selected */
->         cfg_hash = (u32)((event->attr.config2 & GENMASK_ULL(63, 32)) >> 32);
->         if (cfg_hash) {
-> @@ -411,6 +414,7 @@ static void *etm_setup_aux(struct perf_event *event, void **pages,
->                         continue;
->                 }
->
-> +               coresight_trace_id_perf_start(&sink->perf_sink_id_map);
->                 *etm_event_cpu_path_ptr(event_data, cpu) = path;
->         }
->
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-> index 8a777c0af6ea..bddaed3e5cf8 100644
-> --- a/drivers/hwtracing/coresight/coresight-trace-id.c
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-> @@ -18,12 +18,6 @@ static struct coresight_trace_id_map id_map_default = {
->         .cpu_map = &id_map_default_cpu_ids
->  };
->
-> -/* maintain a record of the pending releases per cpu */
-> -static cpumask_t cpu_id_release_pending;
-> -
-> -/* perf session active counter */
-> -static atomic_t perf_cs_etm_session_active = ATOMIC_INIT(0);
-> -
->  /* lock to protect id_map and cpu data  */
->  static DEFINE_SPINLOCK(id_map_lock);
->
-> @@ -35,7 +29,6 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
->  {
->         pr_debug("%s id_map::\n", func_name);
->         pr_debug("Used = %*pb\n", CORESIGHT_TRACE_IDS_MAX, id_map->used_ids);
-> -       pr_debug("Pend = %*pb\n", CORESIGHT_TRACE_IDS_MAX, id_map->pend_rel_ids);
->  }
->  #define DUMP_ID_MAP(map)   coresight_trace_id_dump_table(map, __func__)
->  #define DUMP_ID_CPU(cpu, id) pr_debug("%s called;  cpu=%d, id=%d\n", __func__, cpu, id)
-> @@ -122,34 +115,18 @@ static void coresight_trace_id_free(int id, struct coresight_trace_id_map *id_ma
->         clear_bit(id, id_map->used_ids);
->  }
->
-> -static void coresight_trace_id_set_pend_rel(int id, struct coresight_trace_id_map *id_map)
-> -{
-> -       if (WARN(!IS_VALID_CS_TRACE_ID(id), "Invalid Trace ID %d\n", id))
-> -               return;
-> -       set_bit(id, id_map->pend_rel_ids);
-> -}
-> -
->  /*
-> - * release all pending IDs for all current maps & clear CPU associations
-> - *
-> - * This currently operates on the default id map, but may be extended to
-> - * operate on all registered id maps if per sink id maps are used.
-> + * Release all IDs and clear CPU associations.
+>  #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM3X)
+>  extern int etm_readl_cp14(u32 off, unsigned int *val);
+> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+> index 51ac441a37c3..89b0ac0014b0 100644
+> --- a/include/linux/coresight-pmu.h
+> +++ b/include/linux/coresight-pmu.h
+> @@ -49,12 +49,21 @@
+>   * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+>   * Used to associate a CPU with the CoreSight Trace ID.
+>   * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
+> - * [59:08] - Unused (SBZ)
+> - * [63:60] - Version
+> + * [39:08] - Sink ID - as reported in /sys/bus/event_source/devices/cs_etm/sinks/
+> + *           Added in minor version 1.
+> + * [55:40] - Unused (SBZ)
+> + * [59:56] - Minor Version - previously existing fields are compatible with
+> + *           all minor versions.
+> + * [63:60] - Major Version - previously existing fields mean different things
+> + *           in new major versions.
 >   */
-> -static void coresight_trace_id_release_all_pending(void)
-> +static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map)
->  {
-> -       struct coresight_trace_id_map *id_map = &id_map_default;
->         unsigned long flags;
-> -       int cpu, bit;
-> +       int cpu;
+>  #define CS_AUX_HW_ID_TRACE_ID_MASK     GENMASK_ULL(7, 0)
+> -#define CS_AUX_HW_ID_VERSION_MASK      GENMASK_ULL(63, 60)
+> +#define CS_AUX_HW_ID_SINK_ID_MASK      GENMASK_ULL(39, 8)
 >
->         spin_lock_irqsave(&id_map_lock, flags);
-> -       for_each_set_bit(bit, id_map->pend_rel_ids, CORESIGHT_TRACE_ID_RES_TOP) {
-> -               clear_bit(bit, id_map->used_ids);
-> -               clear_bit(bit, id_map->pend_rel_ids);
-> -       }
-> -       for_each_cpu(cpu, &cpu_id_release_pending) {
-> -               atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
-> -               cpumask_clear_cpu(cpu, &cpu_id_release_pending);
-> -       }
-> +       bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
-> +       for_each_possible_cpu(cpu)
-> +               atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
->         spin_unlock_irqrestore(&id_map_lock, flags);
->         DUMP_ID_MAP(id_map);
->  }
-> @@ -164,7 +141,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
->         /* check for existing allocation for this CPU */
->         id = _coresight_trace_id_read_cpu_id(cpu, id_map);
->         if (id)
-> -               goto get_cpu_id_clr_pend;
-> +               goto get_cpu_id_out_unlock;
+> -#define CS_AUX_HW_ID_CURR_VERSION 0
+> +#define CS_AUX_HW_ID_MINOR_VERSION_MASK        GENMASK_ULL(59, 56)
+> +#define CS_AUX_HW_ID_MAJOR_VERSION_MASK        GENMASK_ULL(63, 60)
+> +
+> +#define CS_AUX_HW_ID_MAJOR_VERSION 0
+> +#define CS_AUX_HW_ID_MINOR_VERSION 1
 >
->         /*
->          * Find a new ID.
-> @@ -185,11 +162,6 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
->         /* allocate the new id to the cpu */
->         atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
->
-> -get_cpu_id_clr_pend:
-> -       /* we are (re)using this ID - so ensure it is not marked for release */
-> -       cpumask_clear_cpu(cpu, &cpu_id_release_pending);
-> -       clear_bit(id, id_map->pend_rel_ids);
-> -
->  get_cpu_id_out_unlock:
->         spin_unlock_irqrestore(&id_map_lock, flags);
->
-> @@ -210,15 +182,8 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
->
->         spin_lock_irqsave(&id_map_lock, flags);
->
-> -       if (atomic_read(&perf_cs_etm_session_active)) {
-> -               /* set release at pending if perf still active */
-> -               coresight_trace_id_set_pend_rel(id, id_map);
-> -               cpumask_set_cpu(cpu, &cpu_id_release_pending);
-> -       } else {
-> -               /* otherwise clear id */
-> -               coresight_trace_id_free(id, id_map);
-> -               atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
-> -       }
-> +       coresight_trace_id_free(id, id_map);
-> +       atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
->
->         spin_unlock_irqrestore(&id_map_lock, flags);
->         DUMP_ID_CPU(cpu, id);
-> @@ -302,17 +267,17 @@ void coresight_trace_id_put_system_id(int id)
->  }
->  EXPORT_SYMBOL_GPL(coresight_trace_id_put_system_id);
->
-> -void coresight_trace_id_perf_start(void)
-> +void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map)
->  {
-> -       atomic_inc(&perf_cs_etm_session_active);
-> -       PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
-> +       atomic_inc(&id_map->perf_cs_etm_session_active);
-> +       PERF_SESSION(atomic_read(&id_map->perf_cs_etm_session_active));
->  }
->  EXPORT_SYMBOL_GPL(coresight_trace_id_perf_start);
->
-> -void coresight_trace_id_perf_stop(void)
-> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map)
->  {
-> -       if (!atomic_dec_return(&perf_cs_etm_session_active))
-> -               coresight_trace_id_release_all_pending();
-> -       PERF_SESSION(atomic_read(&perf_cs_etm_session_active));
-> +       if (!atomic_dec_return(&id_map->perf_cs_etm_session_active))
-> +               coresight_trace_id_release_all(id_map);
-> +       PERF_SESSION(atomic_read(&id_map->perf_cs_etm_session_active));
->  }
->  EXPORT_SYMBOL_GPL(coresight_trace_id_perf_stop);
-> diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-> index 840babdd0794..9aae50a553ca 100644
-> --- a/drivers/hwtracing/coresight/coresight-trace-id.h
-> +++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-> @@ -17,9 +17,10 @@
->   * released when done.
->   *
->   * In order to ensure that a consistent cpu / ID matching is maintained
-> - * throughout a perf cs_etm event session - a session in progress flag will
-> - * be maintained, and released IDs not cleared until the perf session is
-> - * complete. This allows the same CPU to be re-allocated its prior ID.
-> + * throughout a perf cs_etm event session - a session in progress flag will be
-> + * maintained for each sink, and IDs are cleared when all the perf sessions
-> + * complete. This allows the same CPU to be re-allocated its prior ID when
-> + * events are scheduled in and out.
->   *
->   *
->   * Trace ID maps will be created and initialised to prevent architecturally
-> @@ -66,11 +67,7 @@ int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id
->  /**
->   * Release an allocated trace ID associated with the CPU.
->   *
-> - * This will release the CoreSight trace ID associated with the CPU,
-> - * unless a perf session is in operation.
-> - *
-> - * If a perf session is in operation then the ID will be marked as pending
-> - * release.
-> + * This will release the CoreSight trace ID associated with the CPU.
->   *
->   * @cpu: The CPU index to release the associated trace ID.
->   */
-> @@ -133,21 +130,21 @@ void coresight_trace_id_put_system_id(int id);
->  /**
->   * Notify the Trace ID allocator that a perf session is starting.
->   *
-> - * Increase the perf session reference count - called by perf when setting up
-> - * a trace event.
-> + * Increase the perf session reference count - called by perf when setting up a
-> + * trace event.
->   *
-> - * This reference count is used by the ID allocator to ensure that trace IDs
-> - * associated with a CPU cannot change or be released during a perf session.
-> + * Perf sessions never free trace IDs to ensure that the ID associated with a
-> + * CPU cannot change during their and other's concurrent sessions. Instead,
-> + * this refcount is used so that the last event to finish always frees all IDs.
->   */
-> -void coresight_trace_id_perf_start(void);
-> +void coresight_trace_id_perf_start(struct coresight_trace_id_map *id_map);
->
->  /**
->   * Notify the ID allocator that a perf session is stopping.
->   *
-> - * Decrease the perf session reference count.
-> - * if this causes the count to go to zero, then all Trace IDs marked as pending
-> - * release, will be released.
-> + * Decrease the perf session reference count. If this causes the count to go to
-> + * zero, then all Trace IDs will be released.
->   */
-> -void coresight_trace_id_perf_stop(void);
-> +void coresight_trace_id_perf_stop(struct coresight_trace_id_map *id_map);
->
->  #endif /* _CORESIGHT_TRACE_ID_H */
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index 9c3067e2e38b..197949fd2c35 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -227,14 +227,12 @@ struct coresight_sysfs_link {
->   * @used_ids:  Bitmap to register available (bit = 0) and in use (bit = 1) IDs.
->   *             Initialised so that the reserved IDs are permanently marked as
->   *             in use.
-> - * @pend_rel_ids: CPU IDs that have been released by the trace source but not
-> - *               yet marked as available, to allow re-allocation to the same
-> - *               CPU during a perf session.
-> + * @perf_cs_etm_session_active: Number of Perf sessions using this ID map.
->   */
->  struct coresight_trace_id_map {
->         DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
-> -       DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
->         atomic_t __percpu *cpu_map;
-> +       atomic_t perf_cs_etm_session_active;
->  };
->
->  /**
+>  #endif
 > --
 > 2.34.1
 >
-
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
 
 
 --
