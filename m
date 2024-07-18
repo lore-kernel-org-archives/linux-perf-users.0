@@ -1,279 +1,227 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A5513E8B6;
-	Thu, 18 Jul 2024 08:46:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 060FE78C7F;
+	Thu, 18 Jul 2024 08:48:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721292362; cv=none; b=FmUlnebkLe5UjOzhsVSfEnGf6NGsCWnynTBbZFzehwKdeg1yNpEHwxGH+9HS+pqJZ40m6Z+rb0UnCmYu+B5yz4z205CdFRZJLIMN7/X8Lv+HIDESPm4bfUXuFlSu5yJjeq1GzRrsRx4gpPBmcTILoSfUdD4/WafBYP18MYQ7V7A=
+	t=1721292506; cv=none; b=J57gR5o8OkQIxrZd2MvbmSLksUoLrW1uQ/HcP6e2bFarEq3DfPRUY1u2dBsC9rRFqO48dDLRDvKsDqg/FtKaVp3imTfKxMgICBIuCTPmsam9yj0IFJ0a3ERuvUkZjW9dMHNP6uZ4hEb66CnsHJP2CrOlFrb+3qv3WPwoJz/p3eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721292362; c=relaxed/simple;
-	bh=467jEQaTif/bfInIQnmWvLVNZqvDQyQmqwxGgx8EW9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lMtpwyY/OfmeX5Pp1sqqagGO1Ak/HCck3bHI4skF/zQqhv74Fn8Un1JwfVXQsV8+KzAhAfFupbYvJpjZmAXBwSF5ykT2oynx8gd335QslfoLHINF8rRw+USCv2zIHt3izoldDVf6JTh0NuH3Q4R9TkipVR+kj0DyE6njjvdTVdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=pW9SXWMK; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1721292506; c=relaxed/simple;
+	bh=M8B7nK5QS1XayxeoEXQ34C+iSS2fuBashk39HHL2JsU=;
+	h=Message-ID:Date:Subject:To:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=UXar+jwa8/ayTcuN36w4CIm0PSMY/JBo5xxYdoyhIfhxBjNKus9VS+0MUHedQy4wG4tgeZTyEUOjBmoaPNdHzsOLRTfVSV5rdUIcD5iSybGNvteXZ0hT4070G9aRYuo4SOxg317tfrNmfwL/OOPowoVyjnBgNvK6PTKLfT1UZZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ph9l9f2B; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="pW9SXWMK"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I8QbVD001322;
-	Thu, 18 Jul 2024 08:45:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=vr7W5Xzm/s9Qa
-	GIYhCDx0WOA+B+aZE32cz0L1rM6Vwg=; b=pW9SXWMKSYs6hWtNCo6iTt+eJ3uii
-	pcd9YN1HUOaIYiDNGV7+OJ+Wji0vf3Cc6WrjWj35+FvggbQFFF408hgsTYZgkBAH
-	BRi47v72HOlmWY7DeEUAEkw6qfqjuBMK5hynl3XZfKIluDJwa861atsJADHV2AsE
-	nyM5eijqpYbc9O4/C8Z3xyA3OeMKgmdve/T/gnvKQ7ez1RPNVXYvEtmdOdYE4l2o
-	JXZk2uAr12TXZk+5pI0yhGzTWujiqlBtOpNXTCYe5VwA4bUpR6ZxK/9FYK+9oXa5
-	sNWiKTqp1jASGo7owLmqJ7Y+KW2q2FI60CbCRygltmpPiMt55bEckBSBQ==
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ph9l9f2B"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I7vD9s010017;
+	Thu, 18 Jul 2024 08:48:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	t6qHBKoOTZCAntpCci5zD8gB9Up74avaeJCF1kFQXcg=; b=ph9l9f2BTYspNd8G
+	OcHqzOayb5mqd3RC/o9iAIGqgUbTRTP4TKE3Fi5ztEQpxaT6MI1GvHmqmUfGgCIk
+	ECfKNhRbVphR7VvSuls2vAgDEcUyVZhUm5jfUj54vML8Bq30/gbHvb14rytAf8g3
+	XOI1LNTlMD0G9xh42fs1DQ7i371SLepQNQa5ZYQvFEEbN1woDB3bDAoHL7yuw+2s
+	D/bLvI3lS4mRlRc2LcC9uVhuGYPTLOiF9+E1/AgUYMjXQ9YdUosxEpKK+63MCTmu
+	i7VPkVuhS0pMlVqEg3nMlLr4CHTeW+DfO6I36IbJjVgqvsvVtpLSm2BWQqTbdeT7
+	q0fuGQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ewtpg91k-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eev9aghc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:50 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I8hZ2i024954;
-	Thu, 18 Jul 2024 08:45:50 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40ewtpg91f-1
+	Thu, 18 Jul 2024 08:48:10 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I8m9pV023545;
+	Thu, 18 Jul 2024 08:48:09 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eev9agh8-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:50 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I59J0Z006020;
-	Thu, 18 Jul 2024 08:45:49 GMT
+	Thu, 18 Jul 2024 08:48:09 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I50lmp006337;
+	Thu, 18 Jul 2024 08:48:08 GMT
 Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkn8rks-1
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 40dwkmgs69-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 08:45:49 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I8jhrR44106172
+	Thu, 18 Jul 2024 08:48:08 +0000
+Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I8m2dE55575014
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jul 2024 08:45:46 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D013C2004E;
-	Thu, 18 Jul 2024 08:45:43 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 85A1320040;
-	Thu, 18 Jul 2024 08:45:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.43.69.1])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Jul 2024 08:45:40 +0000 (GMT)
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-To: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
-        irogers@google.com, namhyung@kernel.org, segher@kernel.crashing.org,
-        christophe.leroy@csgroup.eu
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH V8 15/15] tools/perf: Set instruction name to be used with insn-stat when using raw instruction
-Date: Thu, 18 Jul 2024 14:13:58 +0530
-Message-Id: <20240718084358.72242-16-atrajeev@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
-References: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
+	Thu, 18 Jul 2024 08:48:04 GMT
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B0E952004B;
+	Thu, 18 Jul 2024 08:48:02 +0000 (GMT)
+Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B4EF320040;
+	Thu, 18 Jul 2024 08:47:59 +0000 (GMT)
+Received: from [9.109.199.72] (unknown [9.109.199.72])
+	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu, 18 Jul 2024 08:47:59 +0000 (GMT)
+Message-ID: <6645190c-e66f-49db-a23d-e08f6308a422@linux.ibm.com>
+Date: Thu, 18 Jul 2024 14:17:58 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1] perf test: Avoid python leak sanitizer test failures
+To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>, Andi Kleen <ak@linux.intel.com>,
+        Thomas Richter <tmricht@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+References: <20240717165717.1315003-1-irogers@google.com>
+Content-Language: en-US
+From: Aditya Gupta <adityag@linux.ibm.com>
+In-Reply-To: <20240717165717.1315003-1-irogers@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 6cSHL7E-ksIuD889sKrLbRPMT5vLkiDW
+X-Proofpoint-GUID: MssmmmpBkH6WQ8HBJ79YHge55LoAFZxA
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: hIEO2A8xu-DdcJHOjttqB19CRvjQewcP
-X-Proofpoint-ORIG-GUID: 55Ht9lDrkXJK5fCm_P8VLmxO3lzK_6hb
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
  definitions=2024-07-18_04,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- clxscore=1015 adultscore=0 priorityscore=1501 impostorscore=0
- lowpriorityscore=0 mlxscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180054
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 suspectscore=0 spamscore=0 mlxscore=0 phishscore=0
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1011
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180054
 
-Since the "ins.name" is not set while using raw instruction,
-perf annotate with insn-stat gives wrong data:
+Hi,
 
-Result from "./perf annotate --data-type --insn-stat":
 
-Annotate Instruction stats
-total 615, ok 419 (68.1%), bad 196 (31.9%)
+On 17/07/24 22:27, Ian Rogers wrote:
 
-  Name      :  Good   Bad
-  -----------------------------------------------------------
-            :   419   196
+> Leak sanitizer will report memory leaks from python and the leak
+> sanitizer output causes tests to fail. For example:
+>
+> ```
+> $ perf test 98 -v
+>   98: perf script tests:
+> --- start ---
+> test child forked, pid 1272962
+> DB test
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.046 MB /tmp/perf-test-script.x0EktdCel8/perf.data (8 samples) ]
+> call_path_table((1, 0, 0, 0)
+> call_path_table((2, 1, 0, 140339508617447)
+> call_path_table((3, 2, 2, 0)
+> call_path_table((4, 3, 3, 0)
+> call_path_table((5, 4, 4, 0)
+> call_path_table((6, 5, 5, 0)
+> call_path_table((7, 6, 6, 0)
+> call_path_table((8, 7, 7, 0)
+> call_path_table((9, 8, 8, 0)
+> call_path_table((10, 9, 9, 0)
+> call_path_table((11, 10, 10, 0)
+> call_path_table((12, 11, 11, 0)
+> call_path_table((13, 12, 1, 0)
+> sample_table((1, 1, 1, 1, 1, 1, 1, 8, -2058824120, 588306954119000, -1, 0, 0, 0, 0, 1, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> sample_table((2, 1, 1, 1, 1, 1, 1, 8, -2058824120, 588306954137053, -1, 0, 0, 0, 0, 1, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> sample_table((3, 1, 1, 1, 1, 1, 1, 8, -2058824120, 588306954140089, -1, 0, 0, 0, 0, 9, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> sample_table((4, 1, 1, 1, 1, 1, 1, 8, -2058824120, 588306954142376, -1, 0, 0, 0, 0, 155, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> sample_table((5, 1, 1, 1, 1, 1, 1, 8, -2058824120, 588306954144045, -1, 0, 0, 0, 0, 2493, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> sample_table((6, 1, 1, 1, 1, 1, 12, 77, -2046828595, 588306954145722, -1, 0, 0, 0, 0, 47555, 0, 0, 128933429281, 0, 0, 13, 0, 0, 0, -1, -1))
+> call_path_table((14, 9, 14, 0)
+> call_path_table((15, 14, 15, 0)
+> call_path_table((16, 15, 0, -1040969624)
+> call_path_table((17, 16, 16, 0)
+> call_path_table((18, 17, 17, 0)
+> call_path_table((19, 18, 18, 0)
+> call_path_table((20, 19, 19, 0)
+> call_path_table((21, 20, 13, 0)
+> sample_table((7, 1, 1, 1, 2, 1, 13, 46, -2053700898, 588306954157436, -1, 0, 0, 0, 0, 964078, 0, 0, 128933429281, 0, 0, 21, 0, 0, 0, -1, -1))
+> call_path_table((22, 1, 21, 0)
+> call_path_table((23, 22, 22, 0)
+> call_path_table((24, 23, 23, 0)
+> call_path_table((25, 24, 24, 0)
+> call_path_table((26, 25, 25, 0)
+> call_path_table((27, 26, 26, 0)
+> call_path_table((28, 27, 27, 0)
+> call_path_table((29, 28, 28, 0)
+> call_path_table((30, 29, 29, 0)
+> call_path_table((31, 30, 30, 0)
+> call_path_table((32, 31, 31, 0)
+> call_path_table((33, 32, 32, 0)
+> call_path_table((34, 33, 33, 0)
+> call_path_table((35, 34, 20, 0)
+> sample_table((8, 1, 1, 1, 2, 1, 20, 49, -2046878127, 588306954378624, -1, 0, 0, 0, 0, 2534317, 0, 0, 128933429281, 0, 0, 35, 0, 0, 0, -1, -1))
+>
+> =================================================================
+> ==1272975==ERROR: LeakSanitizer: detected memory leaks
+>
+> Direct leak of 13628 byte(s) in 6 object(s) allocated from:
+>      #0 0x56354f60c092 in malloc (/tmp/perf/perf+0x29c092)
+>      #1 0x7ff25c7d02e7 in _PyObject_Malloc /build/python3.11/../Objects/obmalloc.c:2003:11
+>      #2 0x7ff25c7d02e7 in _PyObject_Malloc /build/python3.11/../Objects/obmalloc.c:1996:1
+>
+> SUMMARY: AddressSanitizer: 13628 byte(s) leaked in 6 allocation(s).
+> --- Cleaning up ---
+> ---- end(-1) ----
+>   98: perf script tests                                               : FAILED!
+> ```
+>
+> Disable leak sanitizer when running specific perf+python tests to
+> avoid this. This causes the tests to pass when run with leak
+> sanitizer.
+>
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>   tools/perf/tests/shell/script.sh             | 3 +++
+>   tools/perf/tests/shell/test_task_analyzer.sh | 3 +++
+>   2 files changed, 6 insertions(+)
+>
+> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+> index c1a603653662..d3e2958d2242 100755
+> --- a/tools/perf/tests/shell/script.sh
+> +++ b/tools/perf/tests/shell/script.sh
+> @@ -61,7 +61,10 @@ _end_of_file_
+>   	esac
+>   
+>   	perf record $cmd_flags -o "${perfdatafile}" true
+> +	# Disable lsan to avoid warnings about python memory leaks.
+> +	export ASAN_OPTIONS=detect_leaks=0
+>   	perf script -i "${perfdatafile}" -s "${db_test}"
+> +	export ASAN_OPTIONS=
+>   	echo "DB test [Success]"
+>   }
+>   
+> diff --git a/tools/perf/tests/shell/test_task_analyzer.sh b/tools/perf/tests/shell/test_task_analyzer.sh
+> index 92d15154ba79..cb02bf23e6a5 100755
+> --- a/tools/perf/tests/shell/test_task_analyzer.sh
+> +++ b/tools/perf/tests/shell/test_task_analyzer.sh
+> @@ -11,6 +11,9 @@ if [ -e "$perfdir/scripts/python/Perf-Trace-Util" ]; then
+>     export PERF_EXEC_PATH=$perfdir
+>   fi
+>   
+> +# Disable lsan to avoid warnings about python memory leaks.
+> +export ASAN_OPTIONS=detect_leaks=0
+> +
+>   cleanup() {
+>     rm -f perf.data
+>     rm -f perf.data.old
 
-Patch sets "dl->ins.name" in arch specific function "check_ppc_insn"
-while initialising "struct disasm_line". Also update "ins_find" function
-to pass "struct disasm_line" as a parameter so as to set its name field
-in arch specific call.
+Looks good, and test passes with this patch:
 
-With the patch changes:
+Reviewed-by: Aditya Gupta <adityag@linux.ibm.com>
 
-  Annotate Instruction stats
-  total 609, ok 446 (73.2%), bad 163 (26.8%)
 
-  Name/opcode         :  Good   Bad
-  -----------------------------------------------------------
-  58                  :   323    80
-  32                  :    49    43
-  34                  :    33    11
-  OP_31_XOP_LDX       :     8    20
-  40                  :    23     0
-  OP_31_XOP_LWARX     :     5     1
-  OP_31_XOP_LWZX      :     2     3
-  OP_31_XOP_LDARX     :     3     0
-  33                  :     0     2
-  OP_31_XOP_LBZX      :     0     1
-  OP_31_XOP_LWAX      :     0     1
-  OP_31_XOP_LHZX      :     0     1
+Linux-ci build test results: 
+https://github.com/adi-g15-ibm/linux-ci/actions?query=branch%3Atmp-test-branch-25073
 
-Reviewed-and-tested-by: Kajol Jain<kjain@linux.ibm.com>
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
----
- .../perf/arch/powerpc/annotate/instructions.c  | 18 +++++++++++++++---
- tools/perf/builtin-annotate.c                  |  4 ++--
- tools/perf/util/annotate.c                     |  2 +-
- tools/perf/util/disasm.c                       | 10 +++++-----
- tools/perf/util/disasm.h                       |  2 +-
- 5 files changed, 24 insertions(+), 12 deletions(-)
 
-diff --git a/tools/perf/arch/powerpc/annotate/instructions.c b/tools/perf/arch/powerpc/annotate/instructions.c
-index af1032572bf3..ede9eeade0ab 100644
---- a/tools/perf/arch/powerpc/annotate/instructions.c
-+++ b/tools/perf/arch/powerpc/annotate/instructions.c
-@@ -189,8 +189,9 @@ static int cmp_offset(const void *a, const void *b)
- 	return (val1->value - val2->value);
- }
- 
--static struct ins_ops *check_ppc_insn(u32 raw_insn)
-+static struct ins_ops *check_ppc_insn(struct disasm_line *dl)
- {
-+	int raw_insn = dl->raw.raw_insn;
- 	int opcode = PPC_OP(raw_insn);
- 	int mem_insn_31 = PPC_21_30(raw_insn);
- 	struct insn_offset *ret;
-@@ -198,19 +199,30 @@ static struct ins_ops *check_ppc_insn(u32 raw_insn)
- 		"OP_31_INSN",
- 		mem_insn_31
- 	};
-+	char name_insn[32];
- 
- 	/*
- 	 * Instructions with opcode 32 to 63 are memory
- 	 * instructions in powerpc
- 	 */
- 	if ((opcode & 0x20)) {
-+		/*
-+		 * Set name in case of raw instruction to
-+		 * opcode to be used in insn-stat
-+		 */
-+		if (!strlen(dl->ins.name)) {
-+			sprintf(name_insn, "%d", opcode);
-+			dl->ins.name = strdup(name_insn);
-+		}
- 		return &load_store_ops;
- 	} else if (opcode == 31) {
- 		/* Check for memory instructions with opcode 31 */
- 		ret = bsearch(&mem_insns_31_opcode, ins_array, ARRAY_SIZE(ins_array), sizeof(ins_array[0]), cmp_offset);
--		if (ret != NULL)
-+		if (ret) {
-+			if (!strlen(dl->ins.name))
-+				dl->ins.name = strdup(ret->name);
- 			return &load_store_ops;
--		else {
-+		} else {
- 			mem_insns_31_opcode.value = PPC_22_30(raw_insn);
- 			ret = bsearch(&mem_insns_31_opcode, arithmetic_ins_op_31, ARRAY_SIZE(arithmetic_ins_op_31),
- 					sizeof(arithmetic_ins_op_31[0]), cmp_offset);
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index b10b7f005658..cf60392b1c19 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -396,10 +396,10 @@ static void print_annotate_item_stat(struct list_head *head, const char *title)
- 	printf("total %d, ok %d (%.1f%%), bad %d (%.1f%%)\n\n", total,
- 	       total_good, 100.0 * total_good / (total ?: 1),
- 	       total_bad, 100.0 * total_bad / (total ?: 1));
--	printf("  %-10s: %5s %5s\n", "Name", "Good", "Bad");
-+	printf("  %-20s: %5s %5s\n", "Name/opcode", "Good", "Bad");
- 	printf("-----------------------------------------------------------\n");
- 	list_for_each_entry(istat, head, list)
--		printf("  %-10s: %5d %5d\n", istat->name, istat->good, istat->bad);
-+		printf("  %-20s: %5d %5d\n", istat->name, istat->good, istat->bad);
- 	printf("\n");
- }
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index ce99db291c5e..a2ee4074f768 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2229,7 +2229,7 @@ static struct annotated_item_stat *annotate_data_stat(struct list_head *head,
- 		return NULL;
- 
- 	istat->name = strdup(name);
--	if (istat->name == NULL) {
-+	if ((istat->name == NULL) || (!strlen(istat->name))) {
- 		free(istat);
- 		return NULL;
- 	}
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 63681df6482b..cd283c42195c 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -859,7 +859,7 @@ static void ins__sort(struct arch *arch)
- 	qsort(arch->instructions, nmemb, sizeof(struct ins), ins__cmp);
- }
- 
--static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+static struct ins_ops *__ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
- 	struct ins *ins;
- 	const int nmemb = arch->nr_instructions;
-@@ -871,7 +871,7 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 		 */
- 		struct ins_ops *ops;
- 
--		ops = check_ppc_insn(raw_insn);
-+		ops = check_ppc_insn(dl);
- 		if (ops)
- 			return ops;
- 	}
-@@ -905,9 +905,9 @@ static struct ins_ops *__ins__find(struct arch *arch, const char *name, u32 raw_
- 	return ins ? ins->ops : NULL;
- }
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl)
- {
--	struct ins_ops *ops = __ins__find(arch, name, raw_insn);
-+	struct ins_ops *ops = __ins__find(arch, name, dl);
- 
- 	if (!ops && arch->associate_instruction_ops)
- 		ops = arch->associate_instruction_ops(arch, name);
-@@ -917,7 +917,7 @@ struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn)
- 
- static void disasm_line__init_ins(struct disasm_line *dl, struct arch *arch, struct map_symbol *ms)
- {
--	dl->ins.ops = ins__find(arch, dl->ins.name, dl->raw.raw_insn);
-+	dl->ins.ops = ins__find(arch, dl->ins.name, dl);
- 
- 	if (!dl->ins.ops)
- 		return;
-diff --git a/tools/perf/util/disasm.h b/tools/perf/util/disasm.h
-index c1bb1e484bfb..f56beedeb9da 100644
---- a/tools/perf/util/disasm.h
-+++ b/tools/perf/util/disasm.h
-@@ -105,7 +105,7 @@ struct annotate_args {
- struct arch *arch__find(const char *name);
- bool arch__is(struct arch *arch, const char *name);
- 
--struct ins_ops *ins__find(struct arch *arch, const char *name, u32 raw_insn);
-+struct ins_ops *ins__find(struct arch *arch, const char *name, struct disasm_line *dl);
- int ins__scnprintf(struct ins *ins, char *bf, size_t size,
- 		   struct ins_operands *ops, int max_ins_name);
- 
--- 
-2.43.0
+Thanks,
+Aditya Gupta
 
