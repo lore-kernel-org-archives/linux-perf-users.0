@@ -1,170 +1,111 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CEAD12F375;
-	Thu, 18 Jul 2024 11:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0E31B86FB;
+	Thu, 18 Jul 2024 11:51:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721301846; cv=none; b=LOB8vpzRyZr9i3ZDGyCer0vtNpeQ9YBVob+iH2PYqBATLwTSqTmTP2NYkpMAQZjMwKPxfGHkdZgDzgc89ucg8h31aTr1vGQIoo4zcRvsy+Cx2MHFrTrFPv7TOGr6iCUOeBWuGdMuo7Czf18iAIocnmDqGdG716KP4y+AjkxlRmQ=
+	t=1721303509; cv=none; b=QD+W3s1c3YZrnofq05gFXLj4PPWSpY86oBvQlblF97sR3CGUWOpkdU6+rMJtQECman7XxkGvaEscM6teDd8O8imZ0h6+K5cHWx0jvIQLUsZqFDBDhYFsAZC6Ey9TpQhNltBhUR0Mm0TcPxkENoeTJJYx/yyP8EpYjDIu5nRQHt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721301846; c=relaxed/simple;
-	bh=/ClrtcApTT+u7rx7VSoZSjMHi84WIlTxfCsVsDJa37E=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rlRvE1/RxCn+3tQlmmjLKGPijA/TsjJ+bOJtRpmr99wqP4MHfTCILYHUK0vTrvTbGVrghabosWl2NCVZqNUQZZcewdmvbKbP4XmA9Qp5gRJV3vLtJ06zdnMy2vK0n7s6EJDFV47B3nlY7eFBV3bBG1w4y3Z35MFe9BiVeIgMmgI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from ThinkPad-T480s.. (unknown [180.110.112.93])
-	by APP-03 (Coremail) with SMTP id rQCowADHzppH+5hmqKdgFg--.35992S2;
-	Thu, 18 Jul 2024 19:23:52 +0800 (CST)
-From: zhouquan@iscas.ac.cn
-To: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-perf-users@vger.kernel.org
-Cc: anup@brainfault.org,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	Quan Zhou <zhouquan@iscas.ac.cn>
-Subject: [PATCH 2/2] riscv: KVM: add basic support for host vs guest profiling
-Date: Thu, 18 Jul 2024 19:23:51 +0800
-Message-Id: <fbf8a9fcca05a1b554ac0d01b0c46fbb6263c435.1721271251.git.zhouquan@iscas.ac.cn>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1721271251.git.zhouquan@iscas.ac.cn>
-References: <cover.1721271251.git.zhouquan@iscas.ac.cn>
+	s=arc-20240116; t=1721303509; c=relaxed/simple;
+	bh=iTKD9vLO0vuTlvZTMWOfzEYbAPyf4A5qsCQ1FQNjE48=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q20WLZAvw+Fey08lVWAbFkLUsPPozM2HcmbMuroC22gSnpHejDtlj7ER7HsIxVXCI6gznq1BRmUiE/lzjTMzXLYkWUCBorC+1N3U05NK7xZgRnEX2GBXdqtRFzsubwCXoNzrmBKqSH3tnn3ce/t4v4A/Fol8neE7bWvTdAvxSZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=BZ+vlkxB; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BZ+vlkxB"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=+aThDcNvYH+xTn1UAd/vTyjcw0pFDf2+xHmJSo8H8Hs=; b=BZ+vlkxBfSmzU2MwFIPnfAUitm
+	S417eFMyco97UvGgMwAuQ4qG0c8C42IboCcDQ4/BLFtTYEBszTz3myny6V8Vq6WlDk/h7N5GiHEo+
+	viWHEDBFgw1k3u1euozXCu0J5A/DklTOKVcok1+KNsy0S4zGsoKLa8Qu9kYzSUuBvXbuJ3S2BwPlp
+	MEw9RxBcKVzw+FFB86a6IVTxJqYUJR5IytWPgnlMIruKGXq7JvS+cpAtpPTX4HOzPYdcMQIXzWvGl
+	c4hxv3fhO+QMF9ZB9xC/QkRvjq+EdF5AaHIcKPG6CRe4kYebxxB1S4KMNUeXZC65nqIv8Y0a7oqjM
+	1Xr4ZMYA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sUPfU-00000001xAi-1LRH;
+	Thu, 18 Jul 2024 11:51:28 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id DF68B3006B7; Thu, 18 Jul 2024 13:51:26 +0200 (CEST)
+Date: Thu, 18 Jul 2024 13:51:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V9 02/13] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Message-ID: <20240718115126.GK26750@noisy.programming.kicks-ass.net>
+References: <20240715160712.127117-1-adrian.hunter@intel.com>
+ <20240715160712.127117-3-adrian.hunter@intel.com>
+ <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
+ <14cd68b2-eeee-42e3-87a6-c12d3814bd51@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowADHzppH+5hmqKdgFg--.35992S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFW5KF4Utw45Zw43KrykXwb_yoW5CF4fpF
-	s8urn5u3ya9ryxGa4ayr1v9r45WFsYgw13Xry7Cay5Gr45try8Jr4vg34DAry5JFW0qa4f
-	CF95KFyruwn8Jw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
-	n2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
-	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
-	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
-	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
-	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
-	73UjIFyTuYvjfU5rWFUUUUU
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAYCBmaY7wwhMwAAsB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14cd68b2-eeee-42e3-87a6-c12d3814bd51@intel.com>
 
-From: Quan Zhou <zhouquan@iscas.ac.cn>
+On Thu, Jul 18, 2024 at 02:19:03PM +0300, Adrian Hunter wrote:
+> On 18/07/24 12:38, Peter Zijlstra wrote:
+> > On Mon, Jul 15, 2024 at 07:07:01PM +0300, Adrian Hunter wrote:
+> >> Hardware traces, such as instruction traces, can produce a vast amount of
+> >> trace data, so being able to reduce tracing to more specific circumstances
+> >> can be useful.
+> >>
+> >> The ability to pause or resume tracing when another event happens, can do
+> >> that.
+> >>
+> >> Add ability for an event to "pause" or "resume" AUX area tracing.
+> >>
+> >> Add aux_pause bit to perf_event_attr to indicate that, if the event
+> >> happens, the associated AUX area tracing should be paused. Ditto
+> >> aux_resume. Do not allow aux_pause and aux_resume to be set together.
+> >>
+> >> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
+> >> event that it should start in a "paused" state.
+> >>
+> >> Add aux_paused to struct hw_perf_event for AUX area events to keep track of
+> >> the "paused" state. aux_paused is initialized to aux_start_paused.
+> >>
+> >> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
+> >> callbacks. Call as needed, during __perf_event_output(). Add
+> > 
+> > Why in __perf_event_output() rather than in __perf_event_overflow().
+> > Specifically, before bpf_overflow_handler().
+> > 
+> > That is, what do we want BPF to be able to do here? To me it seems
+> > strange that BPF would be able to affect this functionality. You want
+> > this pause/resume to happen irrespective of how the rest of the event is
+> > processed, no?
+> 
+> The thought was to have the output match up with pause/resume, but it
+> doesn't really make much difference.
+> 
+> Putting it before the BPF handler is reasonable.
 
-For the information collected on the host side, we need to
-identify which data originates from the guest and record
-these events separately. This can be achieved by having
-KVM register perf callbacks.
-
-Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
----
- arch/riscv/include/asm/kvm_host.h |  6 ++++++
- arch/riscv/kvm/Kconfig            |  1 +
- arch/riscv/kvm/main.c             | 12 ++++++++++--
- arch/riscv/kvm/vcpu.c             |  7 +++++++
- 4 files changed, 24 insertions(+), 2 deletions(-)
-
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index d96281278586..b7bbe1c0c5dd 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -285,6 +285,12 @@ struct kvm_vcpu_arch {
- 	} sta;
- };
- 
-+/* TODO: A more explicit approach might be needed here than this simple one */
-+static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
-+{
-+	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
-+}
-+
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- static inline void kvm_arch_sched_in(struct kvm_vcpu *vcpu, int cpu) {}
- 
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 26d1727f0550..0c3cbb0915ff 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -32,6 +32,7 @@ config KVM
- 	select KVM_XFER_TO_GUEST_WORK
- 	select KVM_GENERIC_MMU_NOTIFIER
- 	select SCHED_INFO
-+	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-index bab2ec34cd87..734b48d8f6dd 100644
---- a/arch/riscv/kvm/main.c
-+++ b/arch/riscv/kvm/main.c
-@@ -51,6 +51,12 @@ void kvm_arch_hardware_disable(void)
- 	csr_write(CSR_HIDELEG, 0);
- }
- 
-+static void kvm_riscv_teardown(void)
-+{
-+	kvm_riscv_aia_exit();
-+	kvm_unregister_perf_callbacks();
-+}
-+
- static int __init riscv_kvm_init(void)
- {
- 	int rc;
-@@ -105,9 +111,11 @@ static int __init riscv_kvm_init(void)
- 		kvm_info("AIA available with %d guest external interrupts\n",
- 			 kvm_riscv_aia_nr_hgei);
- 
-+	kvm_register_perf_callbacks(NULL);
-+
- 	rc = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
- 	if (rc) {
--		kvm_riscv_aia_exit();
-+		kvm_riscv_teardown();
- 		return rc;
- 	}
- 
-@@ -117,7 +125,7 @@ module_init(riscv_kvm_init);
- 
- static void __exit riscv_kvm_exit(void)
- {
--	kvm_riscv_aia_exit();
-+	kvm_riscv_teardown();
- 
- 	kvm_exit();
- }
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 17e21df36cc1..c9d291865141 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -222,6 +222,13 @@ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
- 	return (vcpu->arch.guest_context.sstatus & SR_SPP) ? true : false;
- }
- 
-+#ifdef CONFIG_GUEST_PERF_EVENTS
-+unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.guest_context.sepc;
-+}
-+#endif
-+
- vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
- {
- 	return VM_FAULT_SIGBUS;
--- 
-2.34.1
+OK, let me do that and make a few more edits and see if I can stare at
+that next patch some.
 
