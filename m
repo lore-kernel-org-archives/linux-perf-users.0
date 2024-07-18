@@ -1,92 +1,181 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 527F92F877;
-	Thu, 18 Jul 2024 16:46:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CEE2F877
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 16:53:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721321173; cv=none; b=t/jhiQHjUcywUKw42kIuIJRC4ZJblLQJdqUsu8N+zGjpDefDp/dsokwVgXGzYsT0/jaSFQ0xy2k1gW4TLYOy0zxZH1rud+OsAmto79zyvWfkPCxXNiX7VJWBFMnZKBOrE+cnP8QcMvZEMimSbQhrCX6/eG4UsrSkdfrSx1OXs0s=
+	t=1721321634; cv=none; b=XKFCaAWosWo6bRCYBojos6t/pGr0Uq6sG+43TDSaTf1R37V5mCWoQEazoG8K63APcJFAuZQ6UXh1KfeQuUpyeU2r7q8tQRSs5I7AAOvgamUgKAO5y9Myiqoai7DnsH2Icd05d+47hJGvpMafbiScPmb/Xi73Mr0/CsvydeStn0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721321173; c=relaxed/simple;
-	bh=arhQFPA35GKI/93FWGqsJVzt2AdCMpET0AJ4iJUPkU0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=D2hfnlRSvM64BeNP+9mUSZSokXxUX2DgJ+xLlPsgWZQmrT3Lt8LIuTxp5b3p3veCLcY+r9lsN/jOTfSHLtZ43gpIXtLn91EWAcEo8+TGKVaixXseGgzI+uDCWnrIo8+be3hP0kMoCk03IX/WwlS/7K2w9xJNZw1uQxTssa12fxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ScrKvlXX; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721321634; c=relaxed/simple;
+	bh=vInHxOUpkqrGYsaG/py3NaAKtWS74DcT2BcOxRpawGs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YRB+oqOlINUziAgDh2YmBDqfoxcX7pmlswMbacQmDIQ0W+nQ8HEBrYlvsvUG5b9IluZ8eZho5y/H4rf4ZwQZ1brGsX6bwekDkbA7qKjhr9VlS2JV2K/YJEM9RS+5CfVj4ZsYaXE4MlPj8fGbFtSu98QoPWcpIfIdjziRDMJ0rro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fH9Q7jub; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScrKvlXX"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-70b4267ccfcso31578b3a.3;
-        Thu, 18 Jul 2024 09:46:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fH9Q7jub"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8076ebb7ba1so38911239f.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 09:53:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721321171; x=1721925971; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=arhQFPA35GKI/93FWGqsJVzt2AdCMpET0AJ4iJUPkU0=;
-        b=ScrKvlXXiDuzpYxPkXWinR1r0D5CtZyqra4CDo8MImTGEUARScCs9g+A9Do5a4YQGJ
-         KH4t0NieO/xzQfwk70Fr5i64eowAoXzaD+CEGzSyyEa3JtOrA2XZ2YWCSt5s3wzQpTfP
-         OW9eBE3BfcVlmJFSucE2oASE1303WAG4//oABDsXwpxSjQP27O9hfScGykKG5sTLQBsR
-         Y5mPcHgQtKnbANwsbv9M1usXTerwuqM7ngROWVRL9nxdrI1GUgtnyGNvmx5VBOxR54iY
-         Y7Koz57On6F7T6fTbakogdOQ779tHkU9o5WfruGsMhjXIZel7bXNkr9Rua447kZcYR14
-         wIwQ==
+        d=ventanamicro.com; s=google; t=1721321631; x=1721926431; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=9zJZZ9bWEPMAlkC/QkLHGli62aQv2OdpuoT4H3F0l2Y=;
+        b=fH9Q7jubu9pttrJr3gDgLWdMqd6B4/r0CfLDqSy2C++4NAYUnaWi94IyNeWwJ41S/l
+         /ZQX7iTAHlm0DvA3b2P4WKQ5Po6A7QdLJyoaxOSeLnfPgS/+bP6nIFGqb9Jguh+atylp
+         ZBF8RG8N4LUx0+et8Hrsl+jtI3Ddo6b7YHq7CNti9Evq+8PfCTOeFaI0doLq5DvI7gkL
+         62EdfKH+L3sVP0NNJRKPMKx19smiu//FpQzjHdlpb5Y82ZqqC4xf8J5WvG97/XP/Vcfh
+         jiWAqnIMasX9veo7y6uA7mU86M/Bw8OOfFQWLjkIeg2DLDfjM0W6gqpzdhyuW0XQIkuX
+         FQUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721321171; x=1721925971;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=arhQFPA35GKI/93FWGqsJVzt2AdCMpET0AJ4iJUPkU0=;
-        b=aZXTAJwRSk5W6Yg46JMdA4TbWEWGC2J44DSoqqOcbj54XjCm564wji21gENXro4epR
-         ip0pwnAkng3FswD9TFIDvjZ2U1qJGS+AO+JYfW8HjLNULAqb+wcAYbdWtd4Huc92nH8a
-         FYj0nSJD8XUEljXDyZG5B1McCYUFr0r0sR9QzO8hF7hf/5AmH55asxRRNzAOPtuPXxvj
-         ZqU+jtnExFjxm1H/ZsZuNZiZIm+Ttgt5lyanXBg+0sFy1FKzNvKmKjU5ISgULZg27rZv
-         5/+LmSJpuIxIyUm0ttiIMniZAvGqpyxsrrtXI/N3bYAn3pTBq0fQLQVs350fj0wIJAaw
-         dTnQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXvLNjlttN43EvXMcB31JMyA1Wt2AlCizggwT05NHsF6UWQPz/1R7xf0HZj+Ta2aVPesMckKyFQNXdQ5oUECbE+Hjns1ejbbEmPqXm6jrNyrPzKQPOiliEITgRsPU4VJuQivnLjoUglm59sLkdjJKip/yJvZ6X/RoN8z3X5Q/jUrQ8yM6wCt424Jci1uoQo+JQbG6zNnwkh2gw8EisaiG0k22smtZlXFQ==
-X-Gm-Message-State: AOJu0YyGdLhnqW5Mf3aYHRZGH/6tEIACPZLP3D61gMew8XWwhRpi8Udy
-	SnHsZnbTresnSXDOv25iZxGcfhiWD+xAGe00W3SwKULqx/gdFp80t0NrBCcZJl8/e5Hi3x7Tc2M
-	PajWiaIm8cLXIdaZzNb1NAPkDIzw=
-X-Google-Smtp-Source: AGHT+IFHq/HyFGjzo5nT29rrLEfgvMPTpXRQf82XzBKasZvQqN+a6kU4Jb41QlgaO1cXmg4e697XxADWX/sczTUn/ek=
-X-Received: by 2002:a05:6a21:3985:b0:1bd:288f:e8b4 with SMTP id
- adf61e73a8af0-1c3fdc661b0mr6776285637.7.1721321171572; Thu, 18 Jul 2024
- 09:46:11 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721321631; x=1721926431;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9zJZZ9bWEPMAlkC/QkLHGli62aQv2OdpuoT4H3F0l2Y=;
+        b=f4tWPfuNnNzx5mGrs/AkuDPwOWF20VrrWgTM6wXdkW6Yrf4LZKKDAkxd/5OQySVcb1
+         BvYEGj13p3ZJddke91+y0X/2Sr2kkhqP+31PYM/QrlkoTfFYqMjRqpXxt12H+lBrUmis
+         K3Rd11BTD2tYDeuHWYSacJ91eiQiEuNyYcD8OYQb2V2mX+x1RbZWJKspdKS96sC3NQn/
+         4gwXoOWFI0UxfjTx6d+gbzJ1QSgKrcQSuhcMefvqHYDCQ8Zp8OnjA7c6a/THI4VsnZBz
+         K5LbnRzVvUaRQ2ghwnsZUHLGERXSB7hfSkNIiP/OPGZw3rx7izYtus0eLYWO2b9y3pYM
+         jSdw==
+X-Forwarded-Encrypted: i=1; AJvYcCXK2vFNDizAWyUvZ9QlyGTFqIH6zXzubVkFljKjbwnrY8SPAgYHoyc1wa5nGlcpcOA6Md8QYnYnCR0RDipM/uEau+B7il68wkram7bAkybkZA==
+X-Gm-Message-State: AOJu0YwmNja4o0/SGHBbXqLb1l0igKF+hWLSM3IgmIG9ob8vCIUSIMDj
+	i+HxRQbIOGFyEOVT8BJwVSUkoplnvf/2UQtwO9ll0Qos56uLWgUoQpfoWBz9gNs=
+X-Google-Smtp-Source: AGHT+IFngzTW8EHtTFvx7omE0v/qG3WhmjLl/7uA05MsoNd2N82RVXCmEyfoWoRu19pmQ31JPxhJiA==
+X-Received: by 2002:a05:6602:1605:b0:7f9:beb8:7952 with SMTP id ca18e2360f4ac-81711e19b10mr820491439f.13.1721321630783;
+        Thu, 18 Jul 2024 09:53:50 -0700 (PDT)
+Received: from localhost ([140.82.166.162])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c210f24b6fsm1606088173.94.2024.07.18.09.53.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jul 2024 09:53:50 -0700 (PDT)
+Date: Thu, 18 Jul 2024 11:53:49 -0500
+From: Andrew Jones <ajones@ventanamicro.com>
+To: zhouquan@iscas.ac.cn
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org, 
+	anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org
+Subject: Re: [PATCH 1/2] riscv: perf: add guest vs host distinction
+Message-ID: <20240718-e689be134be5b958b1eec65a@orel>
+References: <cover.1721271251.git.zhouquan@iscas.ac.cn>
+ <8e2d2f60fc30d64b6c69b38184a1b640c7b30003.1721271251.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710193653.1175435-1-andrii@kernel.org> <CAEf4BzaTEUkRU37fsuGy+-otWk9K0-c9=hs0APRz7pJy7rq-5w@mail.gmail.com>
- <20240718114521.4b0220b7@rorschach.local.home>
-In-Reply-To: <20240718114521.4b0220b7@rorschach.local.home>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 18 Jul 2024 09:45:59 -0700
-Message-ID: <CAEf4BzYGWLYBOYxK6YteDNu3tEkF00MBm4d1Z7twXF-SfSZXJw@mail.gmail.com>
-Subject: Re: [PATCH v5] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-trace-kernel@vger.kernel.org, 
-	peterz@infradead.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
-	tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e2d2f60fc30d64b6c69b38184a1b640c7b30003.1721271251.git.zhouquan@iscas.ac.cn>
 
-On Thu, Jul 18, 2024 at 8:45=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Thu, 18 Jul 2024 08:29:23 -0700
-> Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
->
-> > Ping. What's the status of this patch? Is it just waiting until after
-> > the merge window, or it got lost?
->
-> It's probably best to re-ping after rc1 is out. With recent events, a
-> lot of us are way behind in our work.
+On Thu, Jul 18, 2024 at 07:23:41PM GMT, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
+> 
+> Introduce basic guest support in perf, enabling it to distinguish
+> between PMU interrupts in the host or guest, and collect
+> fundamental information.
+> 
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
+> ---
+>  arch/riscv/include/asm/perf_event.h |  7 ++++++
+>  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
+> 
+> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+> index 665bbc9b2f84..5866d028aee5 100644
+> --- a/arch/riscv/include/asm/perf_event.h
+> +++ b/arch/riscv/include/asm/perf_event.h
+> @@ -8,13 +8,20 @@
+>  #ifndef _ASM_RISCV_PERF_EVENT_H
+>  #define _ASM_RISCV_PERF_EVENT_H
+>  
+> +#ifdef CONFIG_PERF_EVENTS
+>  #include <linux/perf_event.h>
+>  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+>  
+> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> +#define perf_misc_flags(regs) perf_misc_flags(regs)
+> +
+>  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+
+Arm has this outside the #ifdef CONFIG_PERF_EVENTS, but it doesn't
+look like it should be.
+
+>  	(regs)->epc = (__ip); \
+>  	(regs)->s0 = (unsigned long) __builtin_frame_address(0); \
+>  	(regs)->sp = current_stack_pointer; \
+>  	(regs)->status = SR_PP; \
+>  }
+> +#endif
+> +
+>  #endif /* _ASM_RISCV_PERF_EVENT_H */
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+> index 3348a61de7d9..c673dc6d9bd2 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
+> @@ -58,6 +58,11 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  {
+>  	unsigned long fp = 0;
+>  
+> +	if (perf_guest_state()) {
+> +		/* TODO: We don't support guest os callchain now */
+> +		return;
+> +	}
+> +
+>  	fp = regs->s0;
+>  	perf_callchain_store(entry, regs->epc);
+>  
+> @@ -74,5 +79,38 @@ static bool fill_callchain(void *entry, unsigned long pc)
+>  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+>  			   struct pt_regs *regs)
+>  {
+> +	if (perf_guest_state()) {
+> +		/* TODO: We don't support guest os callchain now */
+> +		return;
+> +	}
+> +
+>  	walk_stackframe(NULL, regs, fill_callchain, entry);
+>  }
+> +
+> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +{
+> +	if (perf_guest_state())
+> +		return perf_guest_get_ip();
+> +
+> +	return instruction_pointer(regs);
+> +}
+> +
+> +unsigned long perf_misc_flags(struct pt_regs *regs)
+> +{
+> +	unsigned int guest_state = perf_guest_state();
+> +	int misc = 0;
+
+Should use unsigned long for misc.
+
+> +
+> +	if (guest_state) {
+> +		if (guest_state & PERF_GUEST_USER)
+> +			misc |= PERF_RECORD_MISC_GUEST_USER;
+> +		else
+> +			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
+> +	} else {
+> +		if (user_mode(regs))
+> +			misc |= PERF_RECORD_MISC_USER;
+> +		else
+> +			misc |= PERF_RECORD_MISC_KERNEL;
+> +	}
+> +
+> +	return misc;
+> +}
+> -- 
+> 2.34.1
 >
 
-I understand, will resend later, thanks for quickly getting back to me!
-
-> Thanks,
->
-> -- Steve
+Thanks,
+drew
