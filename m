@@ -1,181 +1,221 @@
-Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CEE2F877
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 16:53:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59E1012FB13;
+	Thu, 18 Jul 2024 17:02:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721321634; cv=none; b=XKFCaAWosWo6bRCYBojos6t/pGr0Uq6sG+43TDSaTf1R37V5mCWoQEazoG8K63APcJFAuZQ6UXh1KfeQuUpyeU2r7q8tQRSs5I7AAOvgamUgKAO5y9Myiqoai7DnsH2Icd05d+47hJGvpMafbiScPmb/Xi73Mr0/CsvydeStn0c=
+	t=1721322149; cv=none; b=IvMDGhYOow09BXyek9bv6tAd5sh1BC+E+Gqci7cqXzYAhDulDetZJGBGzniklzoeQz4VHINi0yIiC+ZcSfLIq202LaF6n4RDTakBVxDPAf+Oym9+vNX8Zte5oOLRJhmRhVLapgW6KndjUkFd2V6u+ixFi4tbQ9RxQZjpClNLDaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721321634; c=relaxed/simple;
-	bh=vInHxOUpkqrGYsaG/py3NaAKtWS74DcT2BcOxRpawGs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YRB+oqOlINUziAgDh2YmBDqfoxcX7pmlswMbacQmDIQ0W+nQ8HEBrYlvsvUG5b9IluZ8eZho5y/H4rf4ZwQZ1brGsX6bwekDkbA7qKjhr9VlS2JV2K/YJEM9RS+5CfVj4ZsYaXE4MlPj8fGbFtSu98QoPWcpIfIdjziRDMJ0rro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fH9Q7jub; arc=none smtp.client-ip=209.85.166.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1721322149; c=relaxed/simple;
+	bh=MYK8Iqf70n3GxpdTVH1IK5e5KAoR7Wbbpr8B36x5udk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LR7L/lLj4pO1bLM64sHnnzcU0SWPuX7F8As3uCcFbgmaipXeJcSPY4YBWAjoNOkMT8YYZ6R11OBclBX362w5HD9DUD9cGfoynLC7pKoBPO94OyxMabVZFbPfb1bIO4wDR2v/PQoQ5qa1LX3/OtnFWsc//JVMyh9Gzj2iEGmXc2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BvUhQcGu; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fH9Q7jub"
-Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-8076ebb7ba1so38911239f.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 09:53:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1721321631; x=1721926431; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9zJZZ9bWEPMAlkC/QkLHGli62aQv2OdpuoT4H3F0l2Y=;
-        b=fH9Q7jubu9pttrJr3gDgLWdMqd6B4/r0CfLDqSy2C++4NAYUnaWi94IyNeWwJ41S/l
-         /ZQX7iTAHlm0DvA3b2P4WKQ5Po6A7QdLJyoaxOSeLnfPgS/+bP6nIFGqb9Jguh+atylp
-         ZBF8RG8N4LUx0+et8Hrsl+jtI3Ddo6b7YHq7CNti9Evq+8PfCTOeFaI0doLq5DvI7gkL
-         62EdfKH+L3sVP0NNJRKPMKx19smiu//FpQzjHdlpb5Y82ZqqC4xf8J5WvG97/XP/Vcfh
-         jiWAqnIMasX9veo7y6uA7mU86M/Bw8OOfFQWLjkIeg2DLDfjM0W6gqpzdhyuW0XQIkuX
-         FQUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721321631; x=1721926431;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9zJZZ9bWEPMAlkC/QkLHGli62aQv2OdpuoT4H3F0l2Y=;
-        b=f4tWPfuNnNzx5mGrs/AkuDPwOWF20VrrWgTM6wXdkW6Yrf4LZKKDAkxd/5OQySVcb1
-         BvYEGj13p3ZJddke91+y0X/2Sr2kkhqP+31PYM/QrlkoTfFYqMjRqpXxt12H+lBrUmis
-         K3Rd11BTD2tYDeuHWYSacJ91eiQiEuNyYcD8OYQb2V2mX+x1RbZWJKspdKS96sC3NQn/
-         4gwXoOWFI0UxfjTx6d+gbzJ1QSgKrcQSuhcMefvqHYDCQ8Zp8OnjA7c6a/THI4VsnZBz
-         K5LbnRzVvUaRQ2ghwnsZUHLGERXSB7hfSkNIiP/OPGZw3rx7izYtus0eLYWO2b9y3pYM
-         jSdw==
-X-Forwarded-Encrypted: i=1; AJvYcCXK2vFNDizAWyUvZ9QlyGTFqIH6zXzubVkFljKjbwnrY8SPAgYHoyc1wa5nGlcpcOA6Md8QYnYnCR0RDipM/uEau+B7il68wkram7bAkybkZA==
-X-Gm-Message-State: AOJu0YwmNja4o0/SGHBbXqLb1l0igKF+hWLSM3IgmIG9ob8vCIUSIMDj
-	i+HxRQbIOGFyEOVT8BJwVSUkoplnvf/2UQtwO9ll0Qos56uLWgUoQpfoWBz9gNs=
-X-Google-Smtp-Source: AGHT+IFngzTW8EHtTFvx7omE0v/qG3WhmjLl/7uA05MsoNd2N82RVXCmEyfoWoRu19pmQ31JPxhJiA==
-X-Received: by 2002:a05:6602:1605:b0:7f9:beb8:7952 with SMTP id ca18e2360f4ac-81711e19b10mr820491439f.13.1721321630783;
-        Thu, 18 Jul 2024 09:53:50 -0700 (PDT)
-Received: from localhost ([140.82.166.162])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4c210f24b6fsm1606088173.94.2024.07.18.09.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 09:53:50 -0700 (PDT)
-Date: Thu, 18 Jul 2024 11:53:49 -0500
-From: Andrew Jones <ajones@ventanamicro.com>
-To: zhouquan@iscas.ac.cn
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, linux-perf-users@vger.kernel.org, 
-	anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
-	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org
-Subject: Re: [PATCH 1/2] riscv: perf: add guest vs host distinction
-Message-ID: <20240718-e689be134be5b958b1eec65a@orel>
-References: <cover.1721271251.git.zhouquan@iscas.ac.cn>
- <8e2d2f60fc30d64b6c69b38184a1b640c7b30003.1721271251.git.zhouquan@iscas.ac.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BvUhQcGu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721322148; x=1752858148;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=MYK8Iqf70n3GxpdTVH1IK5e5KAoR7Wbbpr8B36x5udk=;
+  b=BvUhQcGud+W3QTh7i4lTzDUNUd+cNaS/Qx3O5yj3Rjtc/HsOLJGbx3Dh
+   StW81Cz1ZMMAWrw2nHjMGoO5Tb5jadBmQpljArC8UMi8YbeILwE04P7ic
+   9BhWO3p/2MZs7ywNpCxcvAsEnR4rh3zVYb3Pf+VQag/OS2w1oNC+IRP4q
+   sksX4y1/OYyvK8wnW4RMuHqe7zfywrdknO/egOsGuMZOdO41WERN7yhdE
+   3Rl+AHL9/fQgRBNX00Rr6UDEFE+ZEzRfO9O8P89E3h3xIN8HqYvZ8EHOk
+   sQK5pbL498y9IGLCN/OgPbaNHFozkXtCKs0Tpg1EpkHKNgTbIpkr5sdu6
+   A==;
+X-CSE-ConnectionGUID: Ydt4Y2nKTGaqUUHOnGM2Kg==
+X-CSE-MsgGUID: IS4v3H4HRXKMnTmnepwjRg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="12611788"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="12611788"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:02:27 -0700
+X-CSE-ConnectionGUID: kQZGkZijTee4MhtT4mDzSw==
+X-CSE-MsgGUID: QmhNHGV0QTy8TxEi0wscUQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="88320990"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:02:22 -0700
+Message-ID: <4ddbcd4a-bbf1-4773-94da-0a2ad63469dc@intel.com>
+Date: Thu, 18 Jul 2024 20:02:16 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e2d2f60fc30d64b6c69b38184a1b640c7b30003.1721271251.git.zhouquan@iscas.ac.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/8] perf: support specify vdso path in cmdline
+To: Changbin Du <changbin.du@huawei.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Nathan Chancellor <nathan@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Nick Desaulniers <ndesaulniers@google.com>, Bill Wendling
+ <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ llvm@lists.linux.dev, Hui Wang <hw.huiwang@huawei.com>
+References: <20240702041837.5306-1-changbin.du@huawei.com>
+ <20240702041837.5306-2-changbin.du@huawei.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240702041837.5306-2-changbin.du@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 18, 2024 at 07:23:41PM GMT, zhouquan@iscas.ac.cn wrote:
-> From: Quan Zhou <zhouquan@iscas.ac.cn>
+On 2/07/24 07:18, Changbin Du wrote:
+> The vdso dumped from process memory (in buildid-cache) lacks debugging
+> info. To annotate vdso symbols with source lines we need specify a
+> debugging version.
 > 
-> Introduce basic guest support in perf, enabling it to distinguish
-> between PMU interrupts in the host or guest, and collect
-> fundamental information.
+> For x86, we can find them from your local build as
+> arch/x86/entry/vdso/vdso{32,64}.so.dbg. Or they may reside in
+> /lib/modules/<version>/vdso/vdso{32,64}.so on Ubuntu. But notice that
+> the buildid has to match.
 > 
-> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
-> ---
->  arch/riscv/include/asm/perf_event.h |  7 ++++++
->  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
+> $ sudo perf record -a
+> $ sudo perf report --objdump=llvm-objdump \
+>   --vdso arch/x86/entry/vdso/vdso64.so.dbg,arch/x86/entry/vdso/vdso32.so.dbg
 > 
-> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-> index 665bbc9b2f84..5866d028aee5 100644
-> --- a/arch/riscv/include/asm/perf_event.h
-> +++ b/arch/riscv/include/asm/perf_event.h
-> @@ -8,13 +8,20 @@
->  #ifndef _ASM_RISCV_PERF_EVENT_H
->  #define _ASM_RISCV_PERF_EVENT_H
->  
-> +#ifdef CONFIG_PERF_EVENTS
->  #include <linux/perf_event.h>
->  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
->  
-> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
-> +extern unsigned long perf_misc_flags(struct pt_regs *regs);
-> +#define perf_misc_flags(regs) perf_misc_flags(regs)
-> +
->  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+> Samples: 17K of event 'cycles:P', 4000 Hz, Event count (approx.): 1760
+> __vdso_clock_gettime  /work/linux-host/arch/x86/entry/vdso/vdso64.so.d
+> Percent│       movq    -48(%rbp),%rsi
+>        │       testq   %rax,%rax
+>        │     ;               return vread_hvclock();
+>        │       movq    %rax,%rdx
+>        │     ;               if (unlikely(!vdso_cycles_ok(cycles)))
+>        │     ↑ js      eb
+>        │     ↑ jmp     74
+>        │     ;               ts->tv_sec = vdso_ts->sec;
+>   0.02 │147:   leaq    2(%rbx),%rax
+>        │       shlq    $4, %rax
+>        │       addq    %r10,%rax
+>        │     ;               while ((seq = READ_ONCE(vd->seq)) & 1) {
+>   9.38 │152:   movl    (%r10),%ecx
+> 
+> When doing cross platform analysis, we also need specify the vdso path if
+> we are interested in its symbols.
+> 
 
-Arm has this outside the #ifdef CONFIG_PERF_EVENTS, but it doesn't
-look like it should be.
+Just realized this is about objdump.  Sorry for not getting that
+earlier.
 
->  	(regs)->epc = (__ip); \
->  	(regs)->s0 = (unsigned long) __builtin_frame_address(0); \
->  	(regs)->sp = current_stack_pointer; \
->  	(regs)->status = SR_PP; \
->  }
-> +#endif
-> +
->  #endif /* _ASM_RISCV_PERF_EVENT_H */
-> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-> index 3348a61de7d9..c673dc6d9bd2 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -58,6 +58,11 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  {
->  	unsigned long fp = 0;
->  
-> +	if (perf_guest_state()) {
-> +		/* TODO: We don't support guest os callchain now */
-> +		return;
-> +	}
-> +
->  	fp = regs->s0;
->  	perf_callchain_store(entry, regs->epc);
->  
-> @@ -74,5 +79,38 @@ static bool fill_callchain(void *entry, unsigned long pc)
->  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
->  			   struct pt_regs *regs)
->  {
-> +	if (perf_guest_state()) {
-> +		/* TODO: We don't support guest os callchain now */
-> +		return;
-> +	}
-> +
->  	walk_stackframe(NULL, regs, fill_callchain, entry);
->  }
-> +
-> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
-> +{
-> +	if (perf_guest_state())
-> +		return perf_guest_get_ip();
-> +
-> +	return instruction_pointer(regs);
-> +}
-> +
-> +unsigned long perf_misc_flags(struct pt_regs *regs)
-> +{
-> +	unsigned int guest_state = perf_guest_state();
-> +	int misc = 0;
+Like perf tools, objdump follows the paradigm of attempting to
+locate and use debug info transparently.  However, objdump looks
+at the installed debug info in /usr/lib/debug/.build-id/
 
-Should use unsigned long for misc.
+For example, if the debug file is copied (or linked) there, then
+objdump or llvm-objdump will find it:
 
-> +
-> +	if (guest_state) {
-> +		if (guest_state & PERF_GUEST_USER)
-> +			misc |= PERF_RECORD_MISC_GUEST_USER;
-> +		else
-> +			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
-> +	} else {
-> +		if (user_mode(regs))
-> +			misc |= PERF_RECORD_MISC_USER;
-> +		else
-> +			misc |= PERF_RECORD_MISC_KERNEL;
-> +	}
-> +
-> +	return misc;
-> +}
-> -- 
-> 2.34.1
->
+$ llvm-objdump-18 -dS ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso | head -20
 
-Thanks,
-drew
+~/.debug/[vdso]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso:      file format elf64-x86-64
+
+Disassembly of section .text:
+
+00000000000006d0 <.text>:
+    6d0: 48 8d 3d 29 d9 ff ff          leaq    -0x26d7(%rip), %rdi     # 0xffffffffffffe000
+    6d7: eb 19                         jmp     0x6f2 <.text+0x22>
+    6d9: 4c 8b 0d 28 d9 ff ff          movq    -0x26d8(%rip), %r9      # 0xffffffffffffe008
+    6e0: 4c 8b 05 29 d9 ff ff          movq    -0x26d7(%rip), %r8      # 0xffffffffffffe010
+    6e7: 0f 01 f9                      rdtscp
+    6ea: 66 90                         nop
+    6ec: 8b 0f                         movl    (%rdi), %ecx
+    6ee: 39 ce                         cmpl    %ecx, %esi
+    6f0: 74 0e                         je      0x700 <.text+0x30>
+    6f2: 8b 37                         movl    (%rdi), %esi
+    6f4: 85 f6                         testl   %esi, %esi
+    6f6: 75 e1                         jne     0x6d9 <.text+0x9>
+    6f8: 48 c7 c0 ff ff ff ff          movq    $-0x1, %rax
+    6ff: c3                            retq
+$ sudo ln -s /lib/modules/6.9.2-local/build/arch/x86/entry/vdso/vdso64.so.dbg /usr/lib/debug/.build-id/cf/702469f4637840fd6ba1a8d8a628ff83253d04.debug
+$ llvm-objdump-18 -dS ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso | head -20                                                       
+
+~/.debug/[vdso]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso:      file format elf64-x86-64
+
+Disassembly of section .text:
+
+00000000000006d0 <vread_hvclock>:
+; hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
+    6d0: 48 8d 3d 29 d9 ff ff          leaq    -0x26d7(%rip), %rdi     # 0xffffffffffffe000 <hvclock_page>
+    6d7: eb 19                         jmp     0x6f2 <vread_hvclock+0x22>
+;               scale = READ_ONCE(tsc_pg->tsc_scale);
+    6d9: 4c 8b 0d 28 d9 ff ff          movq    -0x26d8(%rip), %r9      # 0xffffffffffffe008 <hvclock_page+0x8>
+;               offset = READ_ONCE(tsc_pg->tsc_offset);
+    6e0: 4c 8b 05 29 d9 ff ff          movq    -0x26d7(%rip), %r8      # 0xffffffffffffe010 <hvclock_page+0x10>
+;       asm volatile(ALTERNATIVE_2("rdtsc",
+    6e7: 0f 31                         rdtsc
+    6e9: 90                            nop
+    6ea: 90                            nop
+    6eb: 90                            nop
+;       } while (READ_ONCE(tsc_pg->tsc_sequence) != sequence);
+    6ec: 8b 0f                         movl    (%rdi), %ecx
+$
+
+Would that solve your problem?
+
+Notably, later versions of llvm-objdump have an option
+--debug-file-directory which makes it possible to
+have the debug info in a directory owned by the user,
+for example:
+
+$ sudo rm /usr/lib/debug/.build-id/cf/702469f4637840fd6ba1a8d8a628ff83253d04.debug
+$ llvm-objdump-18 -dS ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso | head -20
+
+~/.debug/[vdso]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso:      file format elf64-x86-64
+
+Disassembly of section .text:
+
+00000000000006d0 <.text>:
+    6d0: 48 8d 3d 29 d9 ff ff          leaq    -0x26d7(%rip), %rdi     # 0xffffffffffffe000
+    6d7: eb 19                         jmp     0x6f2 <.text+0x22>
+    6d9: 4c 8b 0d 28 d9 ff ff          movq    -0x26d8(%rip), %r9      # 0xffffffffffffe008
+    6e0: 4c 8b 05 29 d9 ff ff          movq    -0x26d7(%rip), %r8      # 0xffffffffffffe010
+    6e7: 0f 01 f9                      rdtscp
+    6ea: 66 90                         nop
+    6ec: 8b 0f                         movl    (%rdi), %ecx
+    6ee: 39 ce                         cmpl    %ecx, %esi
+    6f0: 74 0e                         je      0x700 <.text+0x30>
+    6f2: 8b 37                         movl    (%rdi), %esi
+    6f4: 85 f6                         testl   %esi, %esi
+    6f6: 75 e1                         jne     0x6d9 <.text+0x9>
+    6f8: 48 c7 c0 ff ff ff ff          movq    $-0x1, %rax
+    6ff: c3                            retq
+$ mkdir -p /tmp/debug/.build-id/cf/
+$ ln -s /lib/modules/6.9.2-local/build/arch/x86/entry/vdso/vdso64.so.dbg /tmp/debug/.build-id/cf/702469f4637840fd6ba1a8d8a628ff83253d04.debug        
+$ llvm-objdump-18 --debug-file-directory /tmp/debug -dS ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso | head -20
+
+~/.debug/[vdso]/cf702469f4637840fd6ba1a8d8a628ff83253d04/vdso:      file format elf64-x86-64
+
+Disassembly of section .text:
+
+00000000000006d0 <vread_hvclock>:
+; hv_read_tsc_page_tsc(const struct ms_hyperv_tsc_page *tsc_pg,
+    6d0: 48 8d 3d 29 d9 ff ff          leaq    -0x26d7(%rip), %rdi     # 0xffffffffffffe000 <hvclock_page>
+    6d7: eb 19                         jmp     0x6f2 <vread_hvclock+0x22>
+;               scale = READ_ONCE(tsc_pg->tsc_scale);
+    6d9: 4c 8b 0d 28 d9 ff ff          movq    -0x26d8(%rip), %r9      # 0xffffffffffffe008 <hvclock_page+0x8>
+;               offset = READ_ONCE(tsc_pg->tsc_offset);
+    6e0: 4c 8b 05 29 d9 ff ff          movq    -0x26d7(%rip), %r8      # 0xffffffffffffe010 <hvclock_page+0x10>
+;       asm volatile(ALTERNATIVE_2("rdtsc",
+    6e7: 0f 31                         rdtsc
+    6e9: 90                            nop
+    6ea: 90                            nop
+    6eb: 90                            nop
+;       } while (READ_ONCE(tsc_pg->tsc_sequence) != sequence);
+    6ec: 8b 0f                         movl    (%rdi), %ecx
+$
+
+
