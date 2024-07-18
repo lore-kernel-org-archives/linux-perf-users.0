@@ -1,206 +1,136 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F6512C474
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 15:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F637A724;
+	Thu, 18 Jul 2024 15:29:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721316196; cv=none; b=SKHJHFvtGAgvdLMUNnvs4Q6H8zWpniYsgMKSa4Q78pA9DEg10ROLivkr5R/5HfdTox401wTOkpDpv+uzeXy+tWte5yx7RIEyTDa5ZCU2xGo8INwtvK4By0LZ4FMX58NLfL6/riyCjR6A2MpTDPMhzEFSpq3c8PVrTzxmqvQE7wg=
+	t=1721316577; cv=none; b=Nnvcdv4UNCsU5yonaTTM/4AXwCvflEBH+9AQpSHv0jjkxitNT255kdn3452irLqqAfE+GOLk7Ax7nEzgDGS+Fz75PZdN9aN2sUGi8ZSrgpAk2tjrDq/A/I4lfYOQm9blpOvOe/9NN/FaOEovU/G3XomQt9TE+sxH9l3TZlXlpME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721316196; c=relaxed/simple;
-	bh=oQnAg/XHgmHTaoNbQThZNL+nThyW0lkh2E2uvTmBiGM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=urHWxzmAL5Zot61OO7vIblaeZ4+Uo7KsqCbYJhFcjcx95hDdQBhFQkAfarEBLMEmKB6a9H5zALtNWaOHgzHczNoJaw6PDf02PiWEQ3bt5692rCoEpGbqNFch/ELse9czZrF/8YZZAqVuVvwv86HFXmO6rdSlyGxGJVEWhPSCeB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=CEx86e5W; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
+	s=arc-20240116; t=1721316577; c=relaxed/simple;
+	bh=UgMiXpOeAx1GvjfndlczEo6peKjvAwRTgIP2UtrCinw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EXAqhFXBrcZIDClvgCYxPBPKcf9JDoEYYHZKNpnuRde1SR7jSi31xyFfKWy18nLBxCvpBm4mZQPYEjJZa3cgdKMgXY3ZeGv/SXcOf8wPgRbV32spAwYmINBdp3vSJ9FnrZ8t1g+kaIBwS7Qs3pBzMN2FKac6E0aqyohzbWP9tWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7CSK46n; arc=none smtp.client-ip=209.85.215.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CEx86e5W"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cb510cd097so324672a91.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 08:23:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7CSK46n"
+Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-75a6c290528so629540a12.1;
+        Thu, 18 Jul 2024 08:29:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1721316194; x=1721920994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hlSS9tFK0jyY2/f4QS94AO70MXLW8ulRLZCmaIHwXQA=;
-        b=CEx86e5WibVjYiMHWXvj/5ZhcngmJvfCXfdb4Rz7Tu1MeQo+aa2zEvGmZ0S7iUox/9
-         VaNrZxcX2rGCu8Y59KnZ6jhHdtSklHLqrKdquVvPag/FatSUFmvxVDTXanlkLvp9fS0O
-         U4ze9qQx8IJi2usrQYnQQDpEsg78j3tDuHTokYpeB6LmftxsxWJ9z3Pu3EHKxmlPV5oK
-         fRZP5qNYMQv7MiOAxXEy/nIpHSdCfwyfrdcm0Ps4+dW09bfpbr7guJwuPLDlEQummYIW
-         2cXHG8hj+XV+sKU978wjB2YIJIejrKgKICQqtTqTlwEYQp+/TEmBdelsaQOJEil57x3O
-         FfSQ==
+        d=gmail.com; s=20230601; t=1721316576; x=1721921376; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RkIMG8Ff5B1D43lrbNrRALe+o/BMBNiqDHduHrCM/HY=;
+        b=b7CSK46n91QXK/tf368I+xwDFdXGvQ5lfXzxq0KiGLQ3j0DFLf6IhF5LMNZHBtEtKx
+         TAUbKPzB6Na4jtxj3KmO8C1zH01zXtEicb9IOgt2+tgWsnBP46VoAPUI4iF/hQRI9Nld
+         LGwVJivHLNGysEX23hqkhI3tGrJrmDQpcfUucp3p+kZ2NnKNt57YJ31wkjmoCajGSjtx
+         xHjYeTsoIVF1JxOfW/5QMOXh9FOyk/A7KfkdaiIOngdrmwlJ6cudB8E9Uo/FDtc5+npU
+         MpE1oIpTNV1AbBJWlbSQCGPNTNFEUlX9ZI8j6NcsEZCGsFsbwagK9l22KlPvMGbEQU2g
+         DseQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721316194; x=1721920994;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hlSS9tFK0jyY2/f4QS94AO70MXLW8ulRLZCmaIHwXQA=;
-        b=v7aTowGY/LKllhJaRfhTraF/t0VfwDeHiJfF4IniEiB5D6IGix+X0Js0eSXvDpPR6t
-         1Hc5VJW4TrUgcXrRo7Xdmre8hDqA1+dLuOB41TL2RZv+xM2qR1PTe0hsZtef1UySBBor
-         50qbpNroHZ7qTXAmZlkhks4oVnPtwBAUnUrrtsTVRyRMSIudVyK3JNk3DqOfxY87s5mE
-         pbcLcZpCbDl7WpgBX9P7F0e6qPDORxLFO3msM2bP5l59rDRZpY7w237TzY2ytPd+tXpj
-         J2DvwW2zdUnrCpaAJpPdrQuYuxvzJOmKBioiXu/cSSImw0lalNvfeIwfsUA3Jkj0ukM/
-         RVLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVMqdiz57NTFSJ2stVdQZqmedCxUGsk6er7MyJYSvYUFNDwUE4OEYpQDFi4Lu/sTXkefLSSZFvTC7OqAgIqZJAxCkHDtAp8cEiTpGdQUP7n4A==
-X-Gm-Message-State: AOJu0YxfXfs6L+HT2c4qKCjuGVofktv6uJaPJALQ1gv2oAQsp5ZC7sn+
-	3G/Fdl7HiFGjSnDYJX+weFpa4FTu8A7+Nxu4LEZWR/vvo0lfpJkOojKaNd41+Yg=
-X-Google-Smtp-Source: AGHT+IGYiT8Y8eVtORah7pg5+CDI8AQnZirmt9fO5DQfBE3quaBqJnjCZLTnRCt2ZV4FKuosjPfDtQ==
-X-Received: by 2002:a17:90b:144:b0:2c9:66d3:4663 with SMTP id 98e67ed59e1d1-2cb7755e41emr856950a91.43.1721316194279;
-        Thu, 18 Jul 2024 08:23:14 -0700 (PDT)
-Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb77a01046sm810525a91.14.2024.07.18.08.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jul 2024 08:23:13 -0700 (PDT)
-From: Eric Lin <eric.lin@sifive.com>
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	peterlin@andestech.com,
-	dminus@andestech.com,
-	locus84@andestech.com,
-	jisheng.teoh@starfivetech.com,
-	inochiama@outlook.com,
-	n.shubin@yadro.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Cc: Eric Lin <eric.lin@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>
-Subject: [PATCH] perf arch events: Fix duplicate RISC-V SBI firmware event name
-Date: Thu, 18 Jul 2024 23:22:54 +0800
-Message-ID: <20240718152254.16007-1-eric.lin@sifive.com>
-X-Mailer: git-send-email 2.43.2
+        d=1e100.net; s=20230601; t=1721316576; x=1721921376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RkIMG8Ff5B1D43lrbNrRALe+o/BMBNiqDHduHrCM/HY=;
+        b=riwxI5u9oYbHh+2eQb1+lroNjrfFV64Kw1g+UpXIZLbwonThU+wCNUnQ3WtfJXlrmM
+         yh151+BI/iy/7Oh3z7uu3EvNvwavaRETHOUG8MQ4VGIv+nGVhGHil0abyiBTHD/rTw/5
+         273ywkEtHSfw280SSZFss1cCGFne7rncJEdam4ocjFoAik+QXzwR/5wu39j9y62G6Z0R
+         j02Y9cFjFg//S5k85DlAWca/rlAfkSzuI5djDyhHCGBZ3yaPeSqiW/LWpLoesgI1w7NT
+         zOjDpMYMMH0w4JLDBa5Lca/b9Xe6/HIK3AQpD3lKk8Eeyqp3G5ft6WRkPzaDIDzv9MhW
+         RldA==
+X-Forwarded-Encrypted: i=1; AJvYcCWX7l7+9Y233KZ157hVbOU/64YoUHvyd9FDNYqLDf7GGgx0PwimRThb6Dkb9g+9RCwyWQKkYHruCHRcsuvQ5/fzPT6RiX8UfimuAeigjk3TCDlxTdb1M120ULvR3LeWaOYmmJswDnfHaHyd91Ejvfiw+8TCniUSboTGnhVSQZqLefnUIA==
+X-Gm-Message-State: AOJu0YyOTXWGZap57t08ZgrWNiuK9Fcc7MrcskrAO+2wsNUuHvNoVfpW
+	8MyRrbJBh89J71z3f9yk279k8IsKEyo1svPKjOlzuUA6t/xvOWtuFFaWb0yfj+40Dnl+2hHgHJI
+	HtvCy4RMpCMNNnFvUTBa7bdXYPhI=
+X-Google-Smtp-Source: AGHT+IEkeaBR4zHqL2VFNKAB2q09CJ+qNphhqcwQ3sxWK2fxn+rjuWfCLb2/M3yQI68xt22na6UbtV0GCi7LpS3DYOY=
+X-Received: by 2002:a05:6a20:3943:b0:1c2:a722:92b2 with SMTP id
+ adf61e73a8af0-1c3fdd30824mr5827661637.45.1721316575873; Thu, 18 Jul 2024
+ 08:29:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240710193653.1175435-1-andrii@kernel.org>
+In-Reply-To: <20240710193653.1175435-1-andrii@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 18 Jul 2024 08:29:23 -0700
+Message-ID: <CAEf4BzaTEUkRU37fsuGy+-otWk9K0-c9=hs0APRz7pJy7rq-5w@mail.gmail.com>
+Subject: Re: [PATCH v5] perf,x86: avoid missing caller address in stack traces
+ captured in uprobe
+To: Andrii Nakryiko <andrii@kernel.org>
+Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
+	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
+	tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Currently, the RISC-V firmware JSON file has duplicate event name
-"FW_SFENCE_VMA_RECEIVED". According to the RISC-V SBI PMU extension[1],
-the event name should be "FW_SFENCE_VMA_ASID_SENT".
+On Wed, Jul 10, 2024 at 12:36=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org=
+> wrote:
+>
+> When tracing user functions with uprobe functionality, it's common to
+> install the probe (e.g., a BPF program) at the first instruction of the
+> function. This is often going to be `push %rbp` instruction in function
+> preamble, which means that within that function frame pointer hasn't
+> been established yet. This leads to consistently missing an actual
+> caller of the traced function, because perf_callchain_user() only
+> records current IP (capturing traced function) and then following frame
+> pointer chain (which would be caller's frame, containing the address of
+> caller's caller).
+>
+> So when we have target_1 -> target_2 -> target_3 call chain and we are
+> tracing an entry to target_3, captured stack trace will report
+> target_1 -> target_3 call chain, which is wrong and confusing.
+>
+> This patch proposes a x86-64-specific heuristic to detect `push %rbp`
+> (`push %ebp` on 32-bit architecture) instruction being traced. Given
+> entire kernel implementation of user space stack trace capturing works
+> under assumption that user space code was compiled with frame pointer
+> register (%rbp/%ebp) preservation, it seems pretty reasonable to use
+> this instruction as a strong indicator that this is the entry to the
+> function. In that case, return address is still pointed to by %rsp/%esp,
+> so we fetch it and add to stack trace before proceeding to unwind the
+> rest using frame pointer-based logic.
+>
+> We also check for `endbr64` (for 64-bit modes) as another common pattern
+> for function entry, as suggested by Josh Poimboeuf. Even if we get this
+> wrong sometimes for uprobes attached not at the function entry, it's OK
+> because stack trace will still be overall meaningful, just with one
+> extra bogus entry. If we don't detect this, we end up with guaranteed to
+> be missing caller function entry in the stack trace, which is worse
+> overall.
+>
+> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
+> ---
+>  arch/x86/events/core.c  | 63 +++++++++++++++++++++++++++++++++++++++++
+>  include/linux/uprobes.h |  2 ++
+>  kernel/events/uprobes.c |  2 ++
+>  3 files changed, 67 insertions(+)
+>
 
-Before this patch:
-$ perf list
+Ping. What's the status of this patch? Is it just waiting until after
+the merge window, or it got lost?
 
-firmware:
-  fw_access_load
-       [Load access trap event. Unit: cpu]
-  fw_access_store
-       [Store access trap event. Unit: cpu]
-....
- fw_set_timer
-       [Set timer event. Unit: cpu]
-  fw_sfence_vma_asid_received
-       [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
-  fw_sfence_vma_received
-       [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 5b0dd07b1ef1..780b8dc36f05 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -41,6 +41,8 @@
+>  #include <asm/desc.h>
+>  #include <asm/ldt.h>
+>  #include <asm/unwind.h>
+> +#include <asm/uprobes.h>
+> +#include <asm/ibt.h>
+>
+>  #include "perf_event.h"
+>
+> @@ -2813,6 +2815,46 @@ static unsigned long get_segment_base(unsigned int=
+ segment)
 
-After this patch:
-$ perf list
-
-firmware:
-  fw_access_load
-       [Load access trap event. Unit: cpu]
-  fw_access_store
-       [Store access trap event. Unit: cpu]
-.....
-  fw_set_timer
-       [Set timer event. Unit: cpu]
-  fw_sfence_vma_asid_received
-       [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
-  fw_sfence_vma_asid_sent
-       [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
-  fw_sfence_vma_received
-       [Received SFENCE.VMA request from other HART event. Unit: cpu]
-
-Link: https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc#event-firmware-events-type-15 [1]
-Fixes: 8f0dcb4e7364 ("perf arch events: riscv sbi firmware std event files")
-Signed-off-by: Eric Lin <eric.lin@sifive.com>
-Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
----
- tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json       | 2 +-
- tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json        | 2 +-
- tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json       | 2 +-
- .../perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json  | 2 +-
- .../perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json  | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-index 9b4a032186a7..7149caec4f80 100644
---- a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-+++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
-@@ -36,7 +36,7 @@
-     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-   },
-   {
--    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
-   },
-   {
-     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-index a9939823b14b..0c9b9a2d2958 100644
---- a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-+++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
-@@ -74,7 +74,7 @@
-   {
-     "PublicDescription": "Sent SFENCE.VMA with ASID request to other HART event",
-     "ConfigCode": "0x800000000000000c",
--    "EventName": "FW_SFENCE_VMA_RECEIVED",
-+    "EventName": "FW_SFENCE_VMA_ASID_SENT",
-     "BriefDescription": "Sent SFENCE.VMA with ASID request to other HART event"
-   },
-   {
-diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-index 9b4a032186a7..7149caec4f80 100644
---- a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-+++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
-@@ -36,7 +36,7 @@
-     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-   },
-   {
--    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
-   },
-   {
-     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
-index 9b4a032186a7..7149caec4f80 100644
---- a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
-+++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
-@@ -36,7 +36,7 @@
-     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-   },
-   {
--    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
-   },
-   {
-     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
-diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
-index 9b4a032186a7..7149caec4f80 100644
---- a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
-+++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
-@@ -36,7 +36,7 @@
-     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-   },
-   {
--    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
-+    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
-   },
-   {
-     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
--- 
-2.43.2
-
+[...]
