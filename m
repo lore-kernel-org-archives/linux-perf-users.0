@@ -1,752 +1,429 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B614D3FB87;
-	Thu, 18 Jul 2024 05:56:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0AA23399B;
+	Thu, 18 Jul 2024 06:12:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721282161; cv=none; b=PDoOqwGHn/LxNmBLcobCVbe3MUKfjqU7zbc+K6S+iW8y3jP6MMzdpcdgPfVo0RwW6iSG3YnTqrWvFM9+uqzk89KOARP5sz2/zyU01lkyDrCgIZckSUul3FqUSwLjPqLZEahD6/RousIKtSP9eLUuTwuWVc/whdIfj19amk2qDrg=
+	t=1721283128; cv=none; b=hmXQsc0Un+sIL8XAaKbYvRv44dQ/CZW0zpbc0kdJxofts4SS+7+4wRzq/X198UqttvHDzqSGEDEEuwL2jM3qqYepR36EuCimp4PreTvuVdL9qDwpnVVad/LrM7YMiSq9uy9x9aQUtpr5HPCssUzUVcPAPMZlZtd17ShdVAwzw8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721282161; c=relaxed/simple;
-	bh=l6ceIqJaHdVvIY6fU8VtJDs5pNdnG+H0LsYLyNS10WU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yi44KhvXF4U1FS0cBpQZnVZcmtMZ8NSArfECixq+2rYgP72aUCNVQ4ALz26LhrgKRwHKcv25bxZt6YQvWFyPuXearlpLGMMsvQeShAbg3Excc4nGqby9E5ZmWbeOGG3FVMrafXE0AvDu2MvB7yH3qTeYkP91myredHqIPcb+Oko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzJ+Ntre; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721283128; c=relaxed/simple;
+	bh=QoXwCmQwRVn/kltPx0plhhU/kfoQEqJluMD+gWyh6vA=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=AsuQFAtKtI+Vw0hi4XYP1Gk13XbcMUkOXLc86iAFetlVzU+7d269eDG1gQ8lAba62ftWjGmx/GrQuSzyKLn/Dx6NuPp9pqGRD3xOEf1C8CAia5D2jRZ4IusDtOszRZcDg6LXMb/DbtDLwkr7tHBay4E9IdvviKM5VKhcJ8YPKXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=ghSmACe7; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzJ+Ntre"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAADC116B1;
-	Thu, 18 Jul 2024 05:56:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721282161;
-	bh=l6ceIqJaHdVvIY6fU8VtJDs5pNdnG+H0LsYLyNS10WU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NzJ+Ntreifkz7Xgnnnyfzg4uWup/dtZDWZ4zg9o7oBNYWF2O4oM0MKAIzk2iLbeHW
-	 O76iERStOTN37TtWdUBTARxmcNdlu9jPEy+c+kF3vXB799vN1TuvqYwLA9UEN9iA8g
-	 tBqvoe2VzSd6N4SFiHZjlfdaLV1hLACQb81tETh3MTi0MjLzPHe0d3HQsynpR1v9Dz
-	 cukFInt4JFRayTJFa8SRl7g3UoDHKc0ywpu+Lw9DrKe/PcaK1CUIdFMkrBj5feiL/e
-	 Emxsfj0VDcb0gSMMtSZ+Hi94pl9Q1NQEnO/VdLbzadvxTx0bzdEvcRJgxV1UHTOm9y
-	 WeEnEZ9us+eAw==
-Date: Wed, 17 Jul 2024 22:55:59 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v17 3/8] perf stat: Fork and launch perf record when
- perf stat needs to get retire latency value for a metric.
-Message-ID: <Zpiub22McUCTUuXj@google.com>
-References: <20240712190932.417531-1-weilin.wang@intel.com>
- <20240712190932.417531-4-weilin.wang@intel.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="ghSmACe7"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I5pj9B029158;
+	Thu, 18 Jul 2024 06:11:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=WVte/WiJs6RuZ8SLhZfkLYMMrReIbA0pWgfmo4iuMcI=; b=ghSmACe7VztL
+	b/Vmdl0rHait8nQwvI2vMuxSOWVzF4KyLWJu72rkCErWtdAnyU6YCA+VvYaBPO45
+	9fed+dvh8S/IAE+SqLiEEfeFh6H7GxxVcoWwn9Vi+4U5594FXBq8icVDV1QoBxYC
+	w/6Y3RXdEgIEDrCJz3+6IdELYkMbofDOe16wV5ND7p/zYblBgyV04lYGUPb/7ENh
+	JQUTv6b4aeVBl1GQpsl6d2qSRv8ZWFvy2gAZIFbUixDXMzs3ApUhuqjKNFjS0Xhg
+	MIQSceVhHbuhvQmk5FjjLgNb+2KUXGpd3gnR4Bwl6hTi2atM2PBlBKmBPuvVK0SJ
+	JHUhM9SqZA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eum58832-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 06:11:44 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I6BhfG023695;
+	Thu, 18 Jul 2024 06:11:43 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40eum5882w-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 06:11:43 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I5ajov000487;
+	Thu, 18 Jul 2024 06:11:42 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkk855u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 18 Jul 2024 06:11:42 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I6BaHn34669206
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 18 Jul 2024 06:11:39 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D49972004F;
+	Thu, 18 Jul 2024 06:11:36 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 24A2120040;
+	Thu, 18 Jul 2024 06:11:34 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.69.1])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 18 Jul 2024 06:11:33 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V7 00/18] Add data type profiling support for powerpc
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZpipZcu8KixXxzbw@google.com>
+Date: Thu, 18 Jul 2024 11:41:22 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>, irogers@google.com,
+        segher@kernel.crashing.org, christophe.leroy@csgroup.eu,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+        maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Message-Id: <B807AB51-B49D-436D-98B3-E6344A53ABCA@linux.vnet.ibm.com>
+References: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
+ <ZpipZcu8KixXxzbw@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WzUzK77OzYfQ215eeh5rkNYnSLGmGt9z
+X-Proofpoint-GUID: G3we9sasYt9vv3h6VwHVbGFXKH_SPrv7
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240712190932.417531-4-weilin.wang@intel.com>
-
-On Fri, Jul 12, 2024 at 03:09:25PM -0400, weilin.wang@intel.com wrote:
-> From: Weilin Wang <weilin.wang@intel.com>
-> 
-> When retire_latency value is used in a metric formula, evsel would fork a perf
-> record process with "-e" and "-W" options. Perf record will collect required
-> retire_latency values in parallel while perf stat is collecting counting values.
-> 
-> At the point of time that perf stat stops counting, evsel would stop perf record
-> by sending sigterm signal to perf record process. Sampled data will be process
-> to get retire latency value. Another thread is required to synchronize between
-> perf stat and perf record when we pass data through pipe.
-> 
-> Retire_latency evsel is not opened for perf stat so that there is no counter
-> wasted on it. This commit includes code suggested by Namhyung to adjust reading
-> size for groups that include retire_latency evsels.
-> 
-> Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> ---
->  tools/perf/builtin-stat.c     |   4 +
->  tools/perf/util/Build         |   1 +
->  tools/perf/util/evlist.c      |   2 +
->  tools/perf/util/evsel.c       |  66 +++++-
->  tools/perf/util/intel-tpebs.c | 430 ++++++++++++++++++++++++++++++++++
->  tools/perf/util/intel-tpebs.h |  35 +++
->  6 files changed, 536 insertions(+), 2 deletions(-)
->  create mode 100644 tools/perf/util/intel-tpebs.c
->  create mode 100644 tools/perf/util/intel-tpebs.h
-> 
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 661832756a24..68125bd75b37 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -70,6 +70,7 @@
->  #include "util/bpf_counter.h"
->  #include "util/iostat.h"
->  #include "util/util.h"
-> +#include "util/intel-tpebs.h"
->  #include "asm/bug.h"
->  
->  #include <linux/time64.h>
-> @@ -683,6 +684,9 @@ static enum counter_recovery stat_handle_error(struct evsel *counter)
->  
->  	if (child_pid != -1)
->  		kill(child_pid, SIGTERM);
-> +
-> +	tpebs_delete();
-> +
->  	return COUNTER_FATAL;
->  }
->  
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index 0f18fe81ef0b..25cae5c613ad 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -154,6 +154,7 @@ perf-util-y += clockid.o
->  perf-util-y += list_sort.o
->  perf-util-y += mutex.o
->  perf-util-y += sharded_mutex.o
-> +perf-util-$(CONFIG_X86_64) += intel-tpebs.o
->  
->  perf-util-$(CONFIG_LIBBPF) += bpf_map.o
->  perf-util-$(CONFIG_PERF_BPF_SKEL) += bpf_counter.o
-> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> index 3a719edafc7a..78ce80f227aa 100644
-> --- a/tools/perf/util/evlist.c
-> +++ b/tools/perf/util/evlist.c
-> @@ -33,6 +33,7 @@
->  #include "util/bpf-filter.h"
->  #include "util/stat.h"
->  #include "util/util.h"
-> +#include "util/intel-tpebs.h"
->  #include <signal.h>
->  #include <unistd.h>
->  #include <sched.h>
-> @@ -179,6 +180,7 @@ void evlist__delete(struct evlist *evlist)
->  	if (evlist == NULL)
->  		return;
->  
-> +	tpebs_delete();
->  	evlist__free_stats(evlist);
->  	evlist__munmap(evlist);
->  	evlist__close(evlist);
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index bc603193c477..1d000fa2c6cf 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1554,6 +1554,60 @@ static void evsel__set_count(struct evsel *counter, int cpu_map_idx, int thread,
->  	perf_counts__set_loaded(counter->counts, cpu_map_idx, thread, true);
->  }
->  
-> +static bool evsel__group_has_tpebs(struct evsel *leader)
-> +{
-> +	struct evsel *evsel;
-> +
-> +	for_each_group_evsel(evsel, leader) {
-> +		if (evsel__is_retire_lat(evsel))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +
-> +static u64 evsel__group_read_nr_members(struct evsel *leader)
-> +{
-> +	u64 nr = leader->core.nr_members;
-> +	struct evsel *evsel;
-> +
-> +	for_each_group_evsel(evsel, leader) {
-> +		if (evsel__is_retire_lat(evsel))
-> +			nr--;
-> +	}
-> +	return nr;
-> +}
-> +
-> +static u64 evsel__group_read_size(struct evsel *leader)
-> +{
-> +	u64 read_format = leader->core.attr.read_format;
-> +	int entry = sizeof(u64); /* value */
-> +	int size = 0;
-> +	int nr = 1;
-> +
-> +	if (!evsel__group_has_tpebs(leader))
-> +		return perf_evsel__read_size(&leader->core);
-> +
-> +	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-> +		size += sizeof(u64);
-> +
-> +	if (read_format & PERF_FORMAT_TOTAL_TIME_RUNNING)
-> +		size += sizeof(u64);
-> +
-> +	if (read_format & PERF_FORMAT_ID)
-> +		entry += sizeof(u64);
-> +
-> +	if (read_format & PERF_FORMAT_LOST)
-> +		entry += sizeof(u64);
-> +
-> +	if (read_format & PERF_FORMAT_GROUP) {
-> +		nr = evsel__group_read_nr_members(leader);
-> +		size += sizeof(u64);
-> +	}
-> +
-> +	size += entry * nr;
-> +	return size;
-> +}
-> +
->  static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int thread, u64 *data)
->  {
->  	u64 read_format = leader->core.attr.read_format;
-> @@ -1562,7 +1616,7 @@ static int evsel__process_group_data(struct evsel *leader, int cpu_map_idx, int
->  
->  	nr = *data++;
->  
-> -	if (nr != (u64) leader->core.nr_members)
-> +	if (nr != evsel__group_read_nr_members(leader))
->  		return -EINVAL;
->  
->  	if (read_format & PERF_FORMAT_TOTAL_TIME_ENABLED)
-> @@ -1592,7 +1646,7 @@ static int evsel__read_group(struct evsel *leader, int cpu_map_idx, int thread)
->  {
->  	struct perf_stat_evsel *ps = leader->stats;
->  	u64 read_format = leader->core.attr.read_format;
-> -	int size = perf_evsel__read_size(&leader->core);
-> +	int size = evsel__group_read_size(leader);
->  	u64 *data = ps->group_data;
->  
->  	if (!(read_format & PERF_FORMAT_ID))
-> @@ -2200,6 +2254,9 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->  		return 0;
->  	}
->  
-> +	if (evsel__is_retire_lat(evsel))
-> +		return tpebs_start(evsel->evlist);
-> +
->  	err = __evsel__prepare_open(evsel, cpus, threads);
->  	if (err)
->  		return err;
-> @@ -2392,6 +2449,8 @@ int evsel__open(struct evsel *evsel, struct perf_cpu_map *cpus,
->  
->  void evsel__close(struct evsel *evsel)
->  {
-> +	if (evsel__is_retire_lat(evsel))
-> +		tpebs_delete();
->  	perf_evsel__close(&evsel->core);
->  	perf_evsel__free_id(&evsel->core);
->  }
-> @@ -3357,6 +3416,9 @@ static int store_evsel_ids(struct evsel *evsel, struct evlist *evlist)
->  {
->  	int cpu_map_idx, thread;
->  
-> +	if (evsel__is_retire_lat(evsel))
-> +		return 0;
-> +
->  	for (cpu_map_idx = 0; cpu_map_idx < xyarray__max_x(evsel->core.fd); cpu_map_idx++) {
->  		for (thread = 0; thread < xyarray__max_y(evsel->core.fd);
->  		     thread++) {
-> diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
-> new file mode 100644
-> index 000000000000..6680ef887961
-> --- /dev/null
-> +++ b/tools/perf/util/intel-tpebs.c
-> @@ -0,0 +1,430 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * intel_tpebs.c: Intel TPEBS support
-> + */
-> +
-> +
-> +#include <sys/param.h>
-> +#include <subcmd/run-command.h>
-> +#include <thread.h>
-> +#include "intel-tpebs.h"
-> +#include <linux/list.h>
-> +#include <linux/zalloc.h>
-> +#include <linux/err.h>
-> +#include "sample.h"
-> +#include "debug.h"
-> +#include "evlist.h"
-> +#include "evsel.h"
-> +#include "session.h"
-> +#include "tool.h"
-> +#include "cpumap.h"
-> +#include "metricgroup.h"
-> +#include <sys/stat.h>
-> +#include <sys/file.h>
-> +#include <poll.h>
-> +#include <math.h>
-> +
-> +#define PERF_DATA		"-"
-> +
-> +bool tpebs_recording;
-> +static pid_t tpebs_pid = -1;
-> +static size_t tpebs_event_size;
-> +static LIST_HEAD(tpebs_results);
-> +static pthread_t tpebs_reader_thread;
-> +static struct child_process *tpebs_cmd;
-> +
-> +struct tpebs_retire_lat {
-> +	struct list_head nd;
-> +	/* Event name */
-> +	const char *name;
-> +	/* Event name with the TPEBS modifier R */
-> +	const char *tpebs_name;
-> +	/* Count of retire_latency values found in sample data */
-> +	size_t count;
-> +	/* Sum of all the retire_latency values in sample data */
-> +	int sum;
-> +	/* Average of retire_latency, val = sum / count */
-> +	double val;
-> +};
-> +
-> +static int get_perf_record_args(const char **record_argv, char buf[],
-> +				const char *cpumap_buf)
-> +{
-> +	struct tpebs_retire_lat *e;
-> +	int i = 0;
-> +
-> +	pr_debug("tpebs: Prepare perf record for retire_latency\n");
-> +
-> +	record_argv[i++] = "perf";
-> +	record_argv[i++] = "record";
-> +	record_argv[i++] = "-W";
-> +	record_argv[i++] = "--synth=no";
-> +	record_argv[i++] = buf;
-> +
-> +	if (!cpumap_buf) {
-> +		pr_err("tpebs: Require cpumap list to run sampling\n");
-> +		return -ECANCELED;
-> +	}
-> +	/* Use -C when cpumap_buf is not "-1" */
-> +	if (strcmp(cpumap_buf, "-1")) {
-> +		record_argv[i++] = "-C";
-> +		record_argv[i++] = cpumap_buf;
-> +	}
-> +
-> +	list_for_each_entry(e, &tpebs_results, nd) {
-> +		record_argv[i++] = "-e";
-> +		record_argv[i++] = e->name;
-> +	}
-> +
-> +	record_argv[i++] = "-o";
-> +	record_argv[i++] = PERF_DATA;
-> +
-> +	return 0;
-> +}
-> +
-> +static int prepare_run_command(const char **argv)
-> +{
-> +	tpebs_cmd = zalloc(sizeof(struct child_process));
-> +	if (!tpebs_cmd)
-> +		return -ENOMEM;
-> +	tpebs_cmd->argv = argv;
-> +	tpebs_cmd->out = -1;
-> +	return 0;
-> +}
-> +
-> +static int start_perf_record(int control_fd[], int ack_fd[],
-> +				const char *cpumap_buf)
-> +{
-> +	const char **record_argv;
-> +	int ret;
-> +	char buf[32];
-> +
-> +	scnprintf(buf, sizeof(buf), "--control=fd:%d,%d", control_fd[0], ack_fd[1]);
-> +
-> +	record_argv = calloc(12 + 2 * tpebs_event_size, sizeof(char *));
-> +	if (!record_argv)
-> +		return -ENOMEM;
-> +
-> +	ret = get_perf_record_args(record_argv, buf, cpumap_buf);
-> +	if (ret)
-> +		goto out;
-> +
-> +	ret = prepare_run_command(record_argv);
-> +	if (ret)
-> +		goto out;
-> +	ret = start_command(tpebs_cmd);
-> +out:
-> +	free(record_argv);
-> +	return ret;
-> +}
-> +
-> +static int process_sample_event(struct perf_tool *tool __maybe_unused,
-> +				union perf_event *event __maybe_unused,
-> +				struct perf_sample *sample,
-> +				struct evsel *evsel,
-> +				struct machine *machine __maybe_unused)
-> +{
-> +	int ret = 0;
-> +	const char *evname;
-> +	struct tpebs_retire_lat *t;
-> +
-> +	evname = evsel__name(evsel);
-> +
-> +	/*
-> +	 * Need to handle per core results? We are assuming average retire
-> +	 * latency value will be used. Save the number of samples and the sum of
-> +	 * retire latency value for each event.
-> +	 */
-> +	list_for_each_entry(t, &tpebs_results, nd) {
-> +		if (!strcmp(evname, t->name)) {
-> +			t->count += 1;
-> +			t->sum += sample->retire_lat;
-> +			t->val = (double) t->sum / t->count;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int process_feature_event(struct perf_session *session,
-> +				 union perf_event *event)
-> +{
-> +	if (event->feat.feat_id < HEADER_LAST_FEATURE)
-> +		return perf_event__process_feature(session, event);
-> +	return 0;
-> +}
-> +
-> +static void *__sample_reader(void *arg)
-> +{
-> +	struct child_process *child = arg;
-> +	struct perf_session *session;
-> +	struct perf_data data = {
-> +		.mode = PERF_DATA_MODE_READ,
-> +		.path = PERF_DATA,
-> +		.file.fd = child->out,
-> +	};
-> +	struct perf_tool tool = {
-> +		.sample = process_sample_event,
-> +		.feature = process_feature_event,
-> +		.attr = perf_event__process_attr,
-> +	};
-> +
-> +	session = perf_session__new(&data, &tool);
-> +	if (IS_ERR(session))
-> +		return NULL;
-> +	perf_session__process_events(session);
-> +	perf_session__delete(session);
-> +
-> +	return NULL;
-> +}
-> +
-> +/*
-> + * tpebs_stop - stop the sample data read thread and the perf record process.
-> + */
-> +static int tpebs_stop(void)
-> +{
-> +	int ret = 0;
-> +
-> +	/* Like tpebs_start, we should only run tpebs_end once. */
-> +	if (tpebs_pid != -1) {
-> +		kill(tpebs_cmd->pid, SIGTERM);
-> +		tpebs_pid = -1;
-> +		pthread_join(tpebs_reader_thread, NULL);
-> +		close(tpebs_cmd->out);
-> +		ret = finish_command(tpebs_cmd);
-> +		if (ret == -ERR_RUN_COMMAND_WAITPID_SIGNAL)
-> +			ret = 0;
-> +	}
-> +	return ret;
-> +}
-> +
-> +/*
-> + * tpebs_start - start tpebs execution.
-> + * @evsel_list: retire_latency evsels in this list will be selected and sampled
-> + * to get the average retire_latency value.
-> + *
-> + * This function will be called from evlist level later when evlist__open() is
-> + * called consistently.
-> + */
-> +int tpebs_start(struct evlist *evsel_list)
-> +{
-> +	int ret = 0;
-> +	struct evsel *evsel;
-> +	char cpumap_buf[50];
-> +
-> +	/*
-> +	 * We should only run tpebs_start when tpebs_recording is enabled.
-> +	 * And we should only run it once with all the required events.
-> +	 */
-> +	if (tpebs_pid != -1 || !tpebs_recording)
-> +		return 0;
-> +
-> +	cpu_map__snprint(evsel_list->core.user_requested_cpus, cpumap_buf, sizeof(cpumap_buf));
-> +	/*
-> +	 * Prepare perf record for sampling event retire_latency before fork and
-> +	 * prepare workload
-> +	 */
-> +	evlist__for_each_entry(evsel_list, evsel) {
-> +		int i;
-> +		char *name;
-> +		struct tpebs_retire_lat *new;
-> +
-> +		if (!evsel->retire_lat)
-> +			continue;
-> +
-> +		pr_debug("tpebs: Retire_latency of event %s is required\n", evsel->name);
-> +		for (i = strlen(evsel->name) - 1; i > 0; i--) {
-> +			if (evsel->name[i] == 'R')
-> +				break;
-> +		}
-> +		if (i <= 0 || evsel->name[i] != 'R') {
-> +			ret = -1;
-> +			goto err;
-> +		}
-> +
-> +		name = strdup(evsel->name);
-> +		if (!name) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +		name[i] = 'p';
-> +
-> +		new = zalloc(sizeof(*new));
-> +		if (!new) {
-> +			ret = -1;
-> +			zfree(name);
-> +			goto err;
-> +		}
-> +		new->name = name;
-> +		new->tpebs_name = evsel->name;
-> +		list_add_tail(&new->nd, &tpebs_results);
-> +		tpebs_event_size += 1;
-> +	}
-> +
-> +	if (tpebs_event_size > 0) {
-> +		struct pollfd pollfd = { .events = POLLIN, };
-> +		int control_fd[2], ack_fd[2], len;
-> +		char ack_buf[8];
-> +
-> +		/*Create control and ack fd for --control*/
-> +		if (pipe(control_fd) < 0) {
-> +			pr_err("tpebs: Failed to create control fifo");
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +		if (pipe(ack_fd) < 0) {
-> +			pr_err("tpebs: Failed to create control fifo");
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +
-> +		ret = start_perf_record(control_fd, ack_fd, cpumap_buf);
-> +		if (ret)
-> +			goto out;
-> +		tpebs_pid = tpebs_cmd->pid;
-> +		if (pthread_create(&tpebs_reader_thread, NULL, __sample_reader, tpebs_cmd)) {
-> +			kill(tpebs_cmd->pid, SIGTERM);
-> +			close(tpebs_cmd->out);
-> +			pr_err("Could not create thread to process sample data.\n");
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +		/* Wait for perf record initialization.*/
-> +		len = strlen("enable");
-> +		ret = write(control_fd[1], "enable", len);
-
-Can we use EVLIST_CTL_CMD_ENABLE_TAG instead?
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-18_02,2024-07-17_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ phishscore=0 suspectscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ adultscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2407180038
 
 
-> +		if (ret != len) {
-> +			pr_err("perf record control write control message failed\n");
-> +			goto out;
-> +		}
-> +
-> +		/* wait for an ack */
-> +		pollfd.fd = ack_fd[0];
-> +
-> +		/*
-> +		 * We need this poll to ensure the ack_fd PIPE will not hang
-> +		 * when perf record failed for any reason. The timeout value
-> +		 * 3000ms is an empirical selection.
-> +		 */
 
-Oh, you changed it to 3 sec.  But I think it's ok as we don't wait for
-that long for the normal cases.
+> On 18 Jul 2024, at 11:04=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>=20
+> Hello,
+>=20
+> On Sat, Jul 13, 2024 at 10:25:11PM +0530, Athira Rajeev wrote:
+>> The patchset from Namhyung added support for data type profiling
+>> in perf tool. This enabled support to associate PMU samples to data
+>> types they refer using DWARF debug information. With the upstream
+>> perf, currently it possible to run perf report or perf annotate to
+>> view the data type information on x86.
+>>=20
+>> Initial patchset posted here had changes need to enable data type
+>> profiling support for powerpc.
+>>=20
+>> https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup=
+.eu/T/
+>>=20
+>> Main change were:
+>> 1. powerpc instruction nmemonic table to associate load/store
+>> instructions with move_ops which is use to identify if instruction
+>> is a memory access one.
+>> 2. To get register number and access offset from the given
+>> instruction, code uses fields from "struct arch" -> objump.
+>> Added entry for powerpc here.
+>> 3. A get_arch_regnum to return register number from the
+>> register name string.
+>>=20
+>> But the apporach used in the initial patchset used parsing of
+>> disassembled code which the current perf tool implementation does.
+>>=20
+>> Example: lwz     r10,0(r9)
+>>=20
+>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+>> registers names and offset. Also to find whether there is a memory
+>> reference in the operands, "memory_ref_char" field of objdump is used.
+>> For x86, "(" is used as memory_ref_char to tackle instructions of the
+>> form "mov  (%rax), %rcx".
+>>=20
+>> In case of powerpc, not all instructions using "(" are the only memory
+>> instructions. Example, above instruction can also be of extended form (X
+>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+>> and extract the source/target registers, second patchset added support t=
+o use
+>> raw instruction. With raw instruction, macros are added to extract opcode
+>> and register fields.
+>> Link to second patchset:
+>> https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.i=
+bm.com/
+>>=20
+>> Example representation using --show-raw-insn in objdump gives result:
+>>=20
+>> 38 01 81 e8     ld      r4,312(r1)
+>>=20
+>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+>> this translates to instruction form: "ld RT,DS(RA)" and binary code
+>> as:
+>>  _____________________________________
+>>  | 58 |  RT  |  RA |      DS       | |
+>>  -------------------------------------
+>> 0    6     11    16              30 31
+>>=20
+>> Second patchset used "objdump" again to read the raw instruction.
+>> But since there is no need to disassemble and binary code can be read
+>> directly from the DSO, third patchset (ie this patchset) uses below
+>> apporach. The apporach preferred in powerpc to parse sample for data
+>> type profiling in V3 patchset is:
+>> - Read directly from DSO using dso__data_read_offset
+>> - If that fails for any case, fallback to using libcapstone
+>> - If libcapstone is not supported, approach will use objdump
+>>=20
+>> Patchset adds support to pick the opcode and reg fields from this
+>> raw/binary instruction code. This approach came in from review comment
+>> by Segher Boessenkool and Christophe for the initial patchset.
+>>=20
+>> Apart from that, instruction tracking is enabled for powerpc and
+>> support function is added to find variables defined as registers
+>> Example, in powerpc, below two registers are
+>> defined to represent variable:
+>> 1. r13: represents local_paca
+>> register struct paca_struct *local_paca asm("r13");
+>>=20
+>> 2. r1: represents stack_pointer
+>> register void *__stack_pointer asm("r1");
+>>=20
+>> These are handled in this patchset.
+>>=20
+>> - Patch 1 is to rearrange register state type structures to header file
+>> so that it can referred from other arch specific files
+>> - Patch 2 is to make instruction tracking as a callback to"struct arch"
+>> so that it can be implemented by other archs easily and defined in arch
+>> specific files
+>> - Patch 3 is to handle state type regs array size for x86 and powerpc
+>> - Patch 4 adds support to capture and parse raw instruction in powerpc
+>> using dso__data_read_offset utility
+>> - Patch 4 also adds logic to support using objdump when doing default "p=
+erf
+>> report" or "perf annotate" since it that needs disassembled instruction.
+>> - Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
+>> - Patch 6 update parameters for reg extract functions to use raw
+>> instruction on powerpc
+>> - Patch 7 updates ins__find to carry raw_insn and also adds parse
+>> callback for memory instructions for powerpc
+>> - Patch 8 add support to identify memory instructions of opcode 31 in
+>> powerpc
+>> - Patch 9 adds more instructions to support instruction tracking in powe=
+rpc
+>> - Patch 10 and 11 handles instruction tracking for powerpc.
+>> - Patch 12, 13 and 14 add support to use libcapstone in powerpc
+>> - Patch 15 and patch 16 handles support to find global register variables
+>> - PAtch 17 updates data type compare functions data_type_cmp and
+>>  sort__typeoff_sort to include var_name along with type_name in
+>>  comparison.
+>> - Patch 18 handles insn-stat option for perf annotate
+>>=20
+>> Note:
+>> - There are remaining unknowns (25%) as seen in annotate Instruction sta=
+ts
+>> below.
+>> - This patchset is not tested on powerpc32. In next step of enhancements
+>> along with handling remaining unknowns, plan to cover powerpc32 changes
+>> based on how testing goes.
+>>=20
+>> With the current patchset:
+>>=20
+>> ./perf record -a -e mem-loads sleep 1
+>> ./perf report -s type,typeoff --hierarchy --group --stdio
+>> ./perf annotate --data-type --insn-stat
+>>=20
+>> perf annotate logs:
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>>=20
+>> Annotate Instruction stats
+>> total 609, ok 446 (73.2%), bad 163 (26.8%)
+>>=20
+>>  Name/opcode         :  Good   Bad
+>>  -----------------------------------------------------------
+>>  58                  :   323    80
+>>  32                  :    49    43
+>>  34                  :    33    11
+>>  OP_31_XOP_LDX       :     8    20
+>>  40                  :    23     0
+>>  OP_31_XOP_LWARX     :     5     1
+>>  OP_31_XOP_LWZX      :     2     3
+>>  OP_31_XOP_LDARX     :     3     0
+>>  33                  :     0     2
+>>  OP_31_XOP_LBZX      :     0     1
+>>  OP_31_XOP_LWAX      :     0     1
+>>  OP_31_XOP_LHZX      :     0     1
+>>=20
+>> perf report logs:
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>>  Total Lost Samples: 0
+>>=20
+>>  Samples: 1K of event 'mem-loads'
+>>  Event count (approx.): 937238
+>>=20
+>>  Overhead  Data Type  Data Type Offset
+>> ........  .........  ................
+>>    48.60%  (unknown)  (unknown) +0 (no field)
+>>    11.42%  long unsigned int  long unsigned int +0 (current_stack_pointe=
+r)
+>>     4.68%  struct paca_struct  struct paca_struct +2312 (__current)
+>>     4.57%  struct paca_struct  struct paca_struct +2354 (irq_soft_mask)
+>>     2.69%  struct paca_struct  struct paca_struct +2808 (canary)
+>>     2.68%  struct paca_struct  struct paca_struct +8 (paca_index)
+>>     2.24%  struct paca_struct  struct paca_struct +48 (data_offset)
+>>     1.43%  long unsigned int  long unsigned int +0 (no field)
+>>     1.41%  struct vm_fault  struct vm_fault +0 (vma)
+>>     1.29%  struct task_struct  struct task_struct +276 (flags)
+>>     1.03%  struct pt_regs  struct pt_regs +264 (user_regs.msr)
+>>     0.90%  struct security_hook_list  struct security_hook_list +0 (list=
+.next)
+>>     0.76%  struct irq_desc  struct irq_desc +304 (irq_data.chip)
+>>     0.76%  struct rq  struct rq +2856 (cpu)
+>>     0.72%  long long unsigned int  long long unsigned int +0 (no field)
+>=20
+> Thanks for your work!  But I think you need to split the basic part and
+> global register support part which needs more review.
+>=20
+> For the patch 1 to 14:
+> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+
+Hi Namhyung
+
+Thanks for all suggestions and reviews. I will check latest comments for pa=
+tches 15 and 16 (also patch 17 is dependent the global register support par=
+t). But patch 18 is not dependent on global register support patches. Along=
+ with patches 1 to 14, can you please add patch 18 also ?
+
+Thanks
+Athira
+>=20
+> Thanks,
+> Namhyung
+>=20
+>>=20
+>> Thanks
+>> Athira Rajeev
+>>=20
+>> Changelog:
+>> From v6 -> v7:
+>> - Addressed review comments from Namhyung
+>>  Changed format string space to %-20s while printing
+>>  instruction stats in patch 18.
+>>  Use cmp_null in patch 17 while comparing var_name to
+>>  properly sort with correct order.
+>>=20
+>> From v5 -> v6:
+>> - Addressed review comments from Namhyung
+>>  Conditionally define TYPE_STATE_MAX_REGS based on arch.
+>>  Added macro for defining width of the raw codes and spaces
+>>  in disasm_line__parse_powerpc.
+>>  Call disasm_line__parse from disasm_line__parse_powerpc
+>>  for generic code.
+>>  Renamed symbol__disassemble_dso to symbol__disassemble_raw.
+>>  Fixed find_data_type_global_reg to correclty free var_types
+>>  and change indent level.
+>>  Fixed data_type_cmp and sort__typeoff_sort to include var_name
+>>  in comparing data type entries.
+>>=20
+>> From v4 -> v5:
+>> - Addressed review comments from Namhyung
+>>  Handle max number of type state regs as 16 for x86 and 32 for
+>>  powerpc.
+>>  Added generic support for objdump patch first and DSO read
+>>  optimisation next
+>>  combined patch 3 and patch 4 in patchseries V4 to one patch
+>>  Changed reference for "raw_insn" to use "u32"
+>>  Splitted "parse" callback patch changes and "ins__find" patch
+>>  changes into two
+>>  Instead of making weak function, added get_powerpc_regs to
+>>  extract register and offset fields for powerpc
+>> - Addressed complation fail when "dwarf.h" is not present ie
+>>  elfutils devel is not present. Used includes for #ifdef HAVE_DWARF_SUPP=
+ORT
+>>  when including functions that use Dwarf references. Also
+>>  conditionally include some of the header files.
+>>=20
+>> From v3->v4:
+>> - Addressed review comments from Ian by using capston_init from
+>>  "util/print_insn.c" instead of "open_capston_handle".
+>> - Addressed review comment from Namhyung by moving "opcode"
+>>  field from "struct ins" to "struct disasm_line"
+>>=20
+>> From v2->v3:
+>> - Addressed review comments from Christophe and Namhyung for V2
+>> - Changed the apporach in powerpc to parse sample for data
+>>  type profiling as:
+>>  Read directly from DSO using dso__data_read_offset
+>>  If that fails for any case, fallback to using libcapstone
+>>  If libcapstone is not supported, approach will use objdump
+>> - Include instructions with opcode as 31 and correctly categorize
+>>  them as memory or arithmetic instructions.
+>> - Include more instructions for instruction tracking in powerpc
+>>=20
+>> From v1->v2:
+>> - Addressed suggestion from Christophe Leroy and Segher Boessenkool
+>>  to use the binary code (raw insn) to fetch opcode, register and
+>>  offset fields.
+>> - Added support for instruction tracking in powerpc
+>> - Find the register defined variables (r13 and r1 which points to
+>>  local_paca and current_stack_pointer in powerpc)
+>>=20
+>> Athira Rajeev (18):
+>>  tools/perf: Move the data structures related to register type to
+>>    header file
+>>  tools/perf: Add "update_insn_state" callback function to handle arch
+>>    specific instruction tracking
+>>  tools/perf: Update TYPE_STATE_MAX_REGS to include max of regs in
+>>    powerpc
+>>  tools/perf: Add disasm_line__parse to parse raw instruction for
+>>    powerpc
+>>  tools/perf: Add support to capture and parse raw instruction in
+>>    powerpc using dso__data_read_offset utility
+>>  tools/perf: Update parameters for reg extract functions to use raw
+>>    instruction on powerpc
+>>  tools/perf: Add parse function for memory instructions in powerpc
+>>  tools/perf: Add support to identify memory instructions of opcode 31
+>>    in powerpc
+>>  tools/perf: Add some of the arithmetic instructions to support
+>>    instruction tracking in powerpc
+>>  tools/perf: Add more instructions for instruction tracking
+>>  tools/perf: Update instruction tracking for powerpc
+>>  tools/perf: Make capstone_init non-static so that it can be used
+>>    during symbol disassemble
+>>  tools/perf: Use capstone_init and remove open_capstone_handle from
+>>    disasm.c
+>>  tools/perf: Add support to use libcapstone in powerpc
+>>  tools/perf: Add support to find global register variables using
+>>    find_data_type_global_reg
+>>  tools/perf: Add support for global_die to capture name of variable in
+>>    case of register defined variable
+>>  tools/perf: Update data_type_cmp and sort__typeoff_sort function to
+>>    include var_name in comparison
+>>  tools/perf: Set instruction name to be used with insn-stat when using
+>>    raw instruction
+>>=20
+>> tools/include/linux/string.h                  |   2 +
+>> tools/lib/string.c                            |  13 +
+>> tools/perf/arch/arm64/annotate/instructions.c |   3 +-
+>> .../arch/loongarch/annotate/instructions.c    |   6 +-
+>> .../perf/arch/powerpc/annotate/instructions.c | 254 ++++++++
+>> tools/perf/arch/powerpc/util/dwarf-regs.c     |  53 ++
+>> tools/perf/arch/s390/annotate/instructions.c  |   5 +-
+>> tools/perf/arch/x86/annotate/instructions.c   | 377 ++++++++++++
+>> tools/perf/builtin-annotate.c                 |   4 +-
+>> tools/perf/util/annotate-data.c               | 544 ++++--------------
+>> tools/perf/util/annotate-data.h               |  83 +++
+>> tools/perf/util/annotate.c                    |  29 +-
+>> tools/perf/util/annotate.h                    |   6 +-
+>> tools/perf/util/disasm.c                      | 468 +++++++++++++--
+>> tools/perf/util/disasm.h                      |  19 +-
+>> tools/perf/util/dwarf-aux.c                   |   1 +
+>> tools/perf/util/dwarf-aux.h                   |   1 +
+>> tools/perf/util/include/dwarf-regs.h          |  12 +
+>> tools/perf/util/print_insn.c                  |  15 +-
+>> tools/perf/util/print_insn.h                  |   5 +
+>> tools/perf/util/sort.c                        |  25 +-
+>> tools/perf/util/sort.h                        |   1 +
+>> 22 files changed, 1421 insertions(+), 505 deletions(-)
+>>=20
+>> --=20
+>> 2.43.0
 
 
-> +		if (!poll(&pollfd, 1, 3000)) {
-> +			pr_err("tpebs failed: perf record ack timeout\n");
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +
-> +		if (!(pollfd.revents & POLLIN)) {
-> +			pr_err("tpebs failed: did not received an ack\n");
-> +			ret = -1;
-> +			goto out;
-> +		}
-> +
-> +		ret = read(ack_fd[0], ack_buf, sizeof(ack_buf));
-> +		if (ret > 0)
-> +			ret = strcmp(ack_buf, "ack\n");
-
-Same for EVLIST_CTL_CMD_ACK_TAG.
-
-
-> +		else {
-> +			pr_err("tpebs: perf record control ack failed\n");
-> +			goto out;
-> +		}
-> +out:
-> +		close(control_fd[0]);
-> +		close(control_fd[1]);
-> +		close(ack_fd[0]);
-> +		close(ack_fd[1]);
-> +	}
-> +err:
-> +	if (ret)
-> +		tpebs_delete();
-> +	return ret;
-> +}
-> +
-> +
-> +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread)
-> +{
-> +	__u64 val;
-> +	bool found = false;
-> +	struct tpebs_retire_lat *t;
-> +	struct perf_counts_values *count;
-> +
-> +	/* Non reitre_latency evsel should never enter this function. */
-> +	if (!evsel__is_retire_lat(evsel))
-> +		return -1;
-> +
-> +	/*
-> +	 * Need to stop the forked record to ensure get sampled data from the
-> +	 * PIPE to process and get non-zero retire_lat value for hybrid.
-> +	 */
-> +	tpebs_stop();
-> +	count = perf_counts(evsel->counts, cpu_map_idx, thread);
-> +
-> +	list_for_each_entry(t, &tpebs_results, nd) {
-> +		if (t->tpebs_name == evsel->name || (evsel->metric_id && !strcmp(t->tpebs_name, evsel->metric_id))) {
-
-This line is too long, please break.
-
-Thanks,
-Namhyung
-
-
-> +			found = true;
-> +			break;
-> +		}
-> +	}
-> +
-> +	/* Set ena and run to non-zero */
-> +	count->ena = count->run = 1;
-> +	count->lost = 0;
-> +
-> +	if (!found) {
-> +		/*
-> +		 * Set default value or 0 when retire_latency for this event is
-> +		 * not found from sampling data (record_tpebs not set or 0
-> +		 * sample recorded).
-> +		 */
-> +		count->val = 0;
-> +		return 0;
-> +	}
-> +
-> +	/*
-> +	 * Only set retire_latency value to the first CPU and thread.
-> +	 */
-> +	if (cpu_map_idx == 0 && thread == 0)
-> +		val = rint(t->val);
-> +	else
-> +		val = 0;
-> +
-> +	count->val = val;
-> +	return 0;
-> +}
-> +
-> +static void tpebs_retire_lat__delete(struct tpebs_retire_lat *r)
-> +{
-> +	zfree(&r->name);
-> +	free(r);
-> +}
-> +
-> +
-> +/*
-> + * tpebs_delete - delete tpebs related data and stop the created thread and
-> + * process by calling tpebs_stop().
-> + *
-> + * This function is called from evlist_delete() and also from builtin-stat
-> + * stat_handle_error(). If tpebs_start() is called from places other then perf
-> + * stat, need to ensure tpebs_delete() is also called to safely free mem and
-> + * close the data read thread and the forked perf record process.
-> + *
-> + * This function is also called in evsel__close() to be symmetric with
-> + * tpebs_start() being called in evsel__open(). We will update this call site
-> + * when move tpebs_start() to evlist level.
-> + */
-> +void tpebs_delete(void)
-> +{
-> +	struct tpebs_retire_lat *r, *rtmp;
-> +
-> +	if (tpebs_pid == -1)
-> +		return;
-> +
-> +	tpebs_stop();
-> +
-> +	list_for_each_entry_safe(r, rtmp, &tpebs_results, nd) {
-> +		list_del_init(&r->nd);
-> +		tpebs_retire_lat__delete(r);
-> +	}
-> +
-> +	if (tpebs_cmd) {
-> +		free(tpebs_cmd);
-> +		tpebs_cmd = NULL;
-> +	}
-> +}
-> diff --git a/tools/perf/util/intel-tpebs.h b/tools/perf/util/intel-tpebs.h
-> new file mode 100644
-> index 000000000000..766b3fbd79f1
-> --- /dev/null
-> +++ b/tools/perf/util/intel-tpebs.h
-> @@ -0,0 +1,35 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * intel_tpebs.h: Intel TEPBS support
-> + */
-> +#ifndef INCLUDE__PERF_INTEL_TPEBS_H__
-> +#define INCLUDE__PERF_INTEL_TPEBS_H__
-> +
-> +#include "stat.h"
-> +#include "evsel.h"
-> +
-> +#ifdef HAVE_ARCH_X86_64_SUPPORT
-> +
-> +extern bool tpebs_recording;
-> +int tpebs_start(struct evlist *evsel_list);
-> +void tpebs_delete(void);
-> +int tpebs_set_evsel(struct evsel *evsel, int cpu_map_idx, int thread);
-> +
-> +#else
-> +
-> +static inline int tpebs_start(struct evlist *evsel_list __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +
-> +static inline void tpebs_delete(void) {};
-> +
-> +static inline int tpebs_set_evsel(struct evsel *evsel  __maybe_unused,
-> +				int cpu_map_idx  __maybe_unused,
-> +				int thread  __maybe_unused)
-> +{
-> +	return 0;
-> +}
-> +
-> +#endif
-> +#endif
-> -- 
-> 2.43.0
-> 
