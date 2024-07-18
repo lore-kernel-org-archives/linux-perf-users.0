@@ -1,140 +1,218 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9490823A9
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 01:01:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A955B18EBF
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 03:12:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721264501; cv=none; b=daCYfjukIccyewtkHR2bhacH/+ZYAe7Dbt/FkE1S7u0RqKuTXqWVLAkowcnJRYy9xwSeWeLK30wGWvbUrvyAS9uFnuQzW/pUk/1wEtGNB67VNlmP9dkQOnxjiz57zDjC0Ezqp6l1g9/4vICjlT99Ts6MlMq98MZTxggT4zaGnvE=
+	t=1721272330; cv=none; b=QTjqjBCphNLPJbVJFcSJ31eEcUI112VgnYiLHFaK77FuKb84kUs8pSheMogyadKX3oF9BLmm+4Z6KxSX1oNwLbxFIkpQT5P3kvHduSpXxkAe6si5cKwPEYgX2dzTow+GjGeU0yr4Ye+1MaUdvwjJqoMu/B2wmHMkD4tcXvSOjg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721264501; c=relaxed/simple;
-	bh=Nt/c1EHasj2QZc8mVbjZQ0vxsj7VTWwQPPvRYVn2ii8=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=p398BjbB+ZRIms+Ltx6TzL0mHxHVE3xE2uI3Uw9ow901WgiJD5gB1bhrCvfoySnjPUEy6MyFzfFS2kNQYJJ58QkCxc17BYamCEeqgQMK+tQ9Z7RRVtN1VzRDbplZDFBsj77Kuu15f9g0SzBDRKpDhFigYo6xspKi5g7sxwNzgjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=iC3rjNlq; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1721272330; c=relaxed/simple;
+	bh=w5/85RdFl+8Vx0ZQWvP37cBxciSRDyJRRx6d6zPWtVY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gfy9F5VHOOaoG87XspEcpNNBA6Wpyt3dphfuRfwUDIUCdHnoiFyR3KcYp98WY6GzPOuA35RRaBARK0yUVJR6EbujDnBCgwcWQ3MVlhRoti5I78hj5whbuN09HX80Saedq8h5HblFt1uvsWmiWKUwWQMdej84ijDVlWmWRG+uYrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pw9UDoQa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iC3rjNlq"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-64b70c4a269so6457917b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 17 Jul 2024 18:01:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721264499; x=1721869299; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=VI+1UrmSH+U4tsTCU1WpnUiPEx/6DVcJnUZK6PtxySs=;
-        b=iC3rjNlqtXu2d2djsF0UBPeTT5+7b++di0WS/SZsizZ74v6G8vHppOLITCVRyJMXlu
-         kn2WotlbgrBox/E/KSrVHkMzoqs+8X8uhYgA9wO3QgJsiM1gtEXuvtZVXpMvBUsReu17
-         kWtKhCuAMuD5Veqxan8G7f6yTqnTNTGcyRP9syna61e406YXghn2ZfZj6Y7aE78YhIQR
-         XUG/1I0YRcGs3+wOyui0/aVfUt5jOFZ85yZLZsQuYNU/YIfi61slZGAHIqZQEtNSL2DP
-         n8UPpt/nCpu4lHoep+bF9ncH8Axs/xfc8NGL35FauW79WOqCvX9z47KRq5nB4wn22Ftm
-         aAKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721264499; x=1721869299;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VI+1UrmSH+U4tsTCU1WpnUiPEx/6DVcJnUZK6PtxySs=;
-        b=HXp6fL3pAULvtw6kfU4AbE3kpsqlclU8/zPuVOqR7W7GcqcjSznDVqAGN0EjcUdBkU
-         WPkyWR105UITyDtiy/LRDxymY2FS+KhYbpLPFJh7FTfdjbdl2neiUIrNZd0EVbpKvM+4
-         XR4ztupMTGiTAMOhmezwlfllwCACXL822cWw8wyWTbU9tYBRS7lc2TUpO4HVDt+cZBWI
-         B4sN5ubKu8BGXLtW/AqoFAk39HDJ0YwUQKr2I6GiBLCw+Lr5s/c3gk88xb40+8SvKGTn
-         SSYH/9uy1WdvF9Yfbc+B2/lifpPbwPd+/0WXY1m6RJJayGRcnuQVPZPxhqe+JGzONz3Y
-         rJuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXWdpqNdGnxB+ogBcCkLVS8IddWlQW0pWsVSi1I4jKIH5Yp/fi3h+g5vcIyFeovII7ufFX4QFJvid3asPt5J92Z/U7zc0vf6fJQd9faSgEmag==
-X-Gm-Message-State: AOJu0YzYQleTR/NxWVMXOmoSnq1iRI2kmiCNpWhAqQC8KFEknmc3VdH1
-	N0JZT9U9GnEV8oNYj/4pcYYOy+7IGPOdbEjQK2UOw0FrsIxgohm40kVaevzzi321Kfhg+TdQ/fX
-	U/nhaMQ==
-X-Google-Smtp-Source: AGHT+IGQt5ri8LAL7TX8J0R4Z6KxrCn64uDLn1sYG1dmmUfG8en4e1ioo3g5nWqMwIk/M1O4Qs9bCX+5dLdq
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:940b:9044:fa83:4060])
- (user=irogers job=sendgmr) by 2002:a05:690c:110:b0:65c:1db1:9235 with SMTP id
- 00721157ae682-666005395bbmr263907b3.0.1721264498698; Wed, 17 Jul 2024
- 18:01:38 -0700 (PDT)
-Date: Wed, 17 Jul 2024 18:00:23 -0700
-In-Reply-To: <20240718010023.1495687-1-irogers@google.com>
-Message-Id: <20240718010023.1495687-28-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pw9UDoQa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2BC2C2BD10;
+	Thu, 18 Jul 2024 03:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721272330;
+	bh=w5/85RdFl+8Vx0ZQWvP37cBxciSRDyJRRx6d6zPWtVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pw9UDoQaCsFwxkJf/XAg+UeOc7qkWRqIs8a1ALcstA65iOAyZMoc+lEgarig9Irh5
+	 AQJt/hrg1kcRUumfwjhfA3kN4UnsgKouTCsIsqgyCA5k9D6LduIZCNq85zuykucl3j
+	 NFbgsxuqVNMcmder7Zfw9ak1sBwN3Xc2/cDXd3luLscv6xuQB/zYnTAjev7l0tmN6Y
+	 atLkVC8ceFhRsfOSlodF6NnnExjcgAGjRMUv1sn0G73T/SGX7XBbSMIXBU5MxVvDFC
+	 z83IWnYT7I3I3PDuVNmGZFVOlvxuWVS9YOHarP74WyZV/JOkIsF3yHYh/EfVEkLPiV
+	 pCLcrjxOqjsFA==
+Date: Wed, 17 Jul 2024 20:12:07 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Aditya Gupta <adityag@linux.ibm.com>
+Cc: linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
+Subject: Re: [RFC PATCH] tools/lib/subcmd: Don't free the usage string
+Message-ID: <ZpiIB_1jSNvj95PL@google.com>
+References: <20240717103351.268344-1-adityag@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240718010023.1495687-1-irogers@google.com>
-X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
-Subject: [PATCH v6 27/27] perf session: Constify tool
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
-	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
-	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
-	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240717103351.268344-1-adityag@linux.ibm.com>
 
-Make tool const now that all uses are const and
-perf_tool__fill_defaults won't be used. The aim is to better capture
-that sessions don't mutate tools.
+On Wed, Jul 17, 2024 at 04:03:51PM +0530, Aditya Gupta wrote:
+> Currently, commands which depend on 'parse_options_subcommand()' don't
+> show the usage string, and instead show '(null)'
+> 
+>     $ ./perf sched
+> 	Usage: (null)
+> 
+>     -D, --dump-raw-trace  dump raw trace in ASCII
+>     -f, --force           don't complain, do it
+>     -i, --input <file>    input file name
+>     -v, --verbose         be more verbose (show symbol address, etc)
+> 
+> 'parse_options_subcommand()' is generally expected to initialise the usage
+> string, with information in the passed 'subcommands[]' array
+> 
+> This behaviour was changed in:
+> 
+>     commit 230a7a71f9221 ("libsubcmd: Fix parse-options memory leak")
+> 
+> Where the generated usage string is deallocated, and usage[0] string is
+> reassigned as NULL.
+> 
+> As discussed in [1], free the allocated usage string in the main function
+> itself, and don't reset usage string to NULL in parse_options_subcommand
+> 
+> With this change, the behaviour is restored.
+> 
+>     $ ./perf sched
+>         Usage: perf sched [<options>] {record|latency|map|replay|script|timehist}
+> 
+>            -D, --dump-raw-trace  dump raw trace in ASCII
+>            -f, --force           don't complain, do it
+>            -i, --input <file>    input file name
+>            -v, --verbose         be more verbose (show symbol address, etc)
+> 
+> [1]: https://lore.kernel.org/linux-perf-users/htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e/
+> 
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Fixes: 230a7a71f922 ("libsubcmd: Fix parse-options memory leak")
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 
-Signed-off-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/util/session.c | 6 +++---
- tools/perf/util/session.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index ad5da61d2330..0c7cc092887d 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1765,7 +1765,7 @@ static int __perf_session__process_decomp_events(struct perf_session *session);
- static int __perf_session__process_pipe_events(struct perf_session *session)
- {
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	union perf_event *event;
- 	uint32_t size, cur_size = 0;
-@@ -2195,7 +2195,7 @@ static int __perf_session__process_events(struct perf_session *session)
- 		.in_place_update = session->data->in_place_update,
- 	};
- 	struct ordered_events *oe = &session->ordered_events;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	struct ui_progress prog;
- 	int err;
- 
-@@ -2245,7 +2245,7 @@ static int __perf_session__process_events(struct perf_session *session)
- static int __perf_session__process_dir_events(struct perf_session *session)
- {
- 	struct perf_data *data = session->data;
--	struct perf_tool *tool = session->tool;
-+	const struct perf_tool *tool = session->tool;
- 	int i, ret, readers, nr_readers;
- 	struct ui_progress prog;
- 	u64 total_size = perf_data__size(session->data);
-diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
-index 7f69baeae7fb..7c8dd6956330 100644
---- a/tools/perf/util/session.h
-+++ b/tools/perf/util/session.h
-@@ -43,7 +43,7 @@ struct perf_session {
- 	u64			one_mmap_offset;
- 	struct ordered_events	ordered_events;
- 	struct perf_data	*data;
--	struct perf_tool	*tool;
-+	const struct perf_tool	*tool;
- 	u64			bytes_transferred;
- 	u64			bytes_compressed;
- 	struct zstd_data	zstd_data;
--- 
-2.45.2.1089.g2a221341d9-goog
+Thanks,
+Namhyung
 
+> ---
+>  tools/lib/subcmd/parse-options.c | 8 +++-----
+>  tools/perf/builtin-kmem.c        | 2 ++
+>  tools/perf/builtin-kvm.c         | 3 +++
+>  tools/perf/builtin-kwork.c       | 3 +++
+>  tools/perf/builtin-lock.c        | 3 +++
+>  tools/perf/builtin-mem.c         | 3 +++
+>  tools/perf/builtin-sched.c       | 3 +++
+>  7 files changed, 20 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+> index 4b60ec03b0bb..eb896d30545b 100644
+> --- a/tools/lib/subcmd/parse-options.c
+> +++ b/tools/lib/subcmd/parse-options.c
+> @@ -633,10 +633,11 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+>  			const char *const subcommands[], const char *usagestr[], int flags)
+>  {
+>  	struct parse_opt_ctx_t ctx;
+> -	char *buf = NULL;
+>  
+>  	/* build usage string if it's not provided */
+>  	if (subcommands && !usagestr[0]) {
+> +		char *buf = NULL;
+> +
+>  		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
+>  
+>  		for (int i = 0; subcommands[i]; i++) {
+> @@ -678,10 +679,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+>  			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
+>  		usage_with_options(usagestr, options);
+>  	}
+> -	if (buf) {
+> -		usagestr[0] = NULL;
+> -		free(buf);
+> -	}
+> +
+>  	return parse_options_end(&ctx);
+>  }
+>  
+> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+> index 6fd95be5032b..6b88b8b40784 100644
+> --- a/tools/perf/builtin-kmem.c
+> +++ b/tools/perf/builtin-kmem.c
+> @@ -2058,6 +2058,8 @@ int cmd_kmem(int argc, const char **argv)
+>  
+>  out_delete:
+>  	perf_session__delete(session);
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)kmem_usage[0]);
+>  
+>  	return ret;
+>  }
+> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+> index 71165036e4ca..988bef73bd09 100644
+> --- a/tools/perf/builtin-kvm.c
+> +++ b/tools/perf/builtin-kvm.c
+> @@ -2187,5 +2187,8 @@ int cmd_kvm(int argc, const char **argv)
+>  	else
+>  		usage_with_options(kvm_usage, kvm_options);
+>  
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)kvm_usage[0]);
+> +
+>  	return 0;
+>  }
+> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+> index 56e3f3a5e03a..fd53838b5a78 100644
+> --- a/tools/perf/builtin-kwork.c
+> +++ b/tools/perf/builtin-kwork.c
+> @@ -2520,5 +2520,8 @@ int cmd_kwork(int argc, const char **argv)
+>  	} else
+>  		usage_with_options(kwork_usage, kwork_options);
+>  
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)kwork_usage[0]);
+> +
+>  	return 0;
+>  }
+> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+> index 0253184b3b58..b25d50716e63 100644
+> --- a/tools/perf/builtin-lock.c
+> +++ b/tools/perf/builtin-lock.c
+> @@ -2713,6 +2713,9 @@ int cmd_lock(int argc, const char **argv)
+>  		usage_with_options(lock_usage, lock_options);
+>  	}
+>  
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)lock_usage[0]);
+> +
+>  	zfree(&lockhash_table);
+>  	return rc;
+>  }
+> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+> index 863fcd735dae..b7c1cf6d0e5a 100644
+> --- a/tools/perf/builtin-mem.c
+> +++ b/tools/perf/builtin-mem.c
+> @@ -517,5 +517,8 @@ int cmd_mem(int argc, const char **argv)
+>  	else
+>  		usage_with_options(mem_usage, mem_options);
+>  
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)mem_usage[0]);
+> +
+>  	return 0;
+>  }
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 8750b5f2d49b..d6acc53ae89e 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -3805,5 +3805,8 @@ int cmd_sched(int argc, const char **argv)
+>  		usage_with_options(sched_usage, sched_options);
+>  	}
+>  
+> +	/* free usage string allocated by parse_options_subcommand */
+> +	free((void *)sched_usage[0]);
+> +
+>  	return 0;
+>  }
+> -- 
+> 2.45.2
+> 
