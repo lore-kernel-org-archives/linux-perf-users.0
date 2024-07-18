@@ -1,136 +1,174 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F637A724;
-	Thu, 18 Jul 2024 15:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7DE0143C55
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 15:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721316577; cv=none; b=Nnvcdv4UNCsU5yonaTTM/4AXwCvflEBH+9AQpSHv0jjkxitNT255kdn3452irLqqAfE+GOLk7Ax7nEzgDGS+Fz75PZdN9aN2sUGi8ZSrgpAk2tjrDq/A/I4lfYOQm9blpOvOe/9NN/FaOEovU/G3XomQt9TE+sxH9l3TZlXlpME=
+	t=1721317175; cv=none; b=gYBRl2cNrribOcbdb/OflRXzm+EE0+x0mWpeIkml8dX25cG/KpEyRqzQEyVb1xXeMVOl2GSG5/jIJPD4R+BSW6YJIwzH3skcbkRckNsmSjWQghP6vNYAR28yYfcX92n7QfsgYYMRRbt+t7g/v7qRCKk/KTEuc2LPNJWM4Lm8iLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721316577; c=relaxed/simple;
-	bh=UgMiXpOeAx1GvjfndlczEo6peKjvAwRTgIP2UtrCinw=;
+	s=arc-20240116; t=1721317175; c=relaxed/simple;
+	bh=QwDQsw1Igqb7IEeMk767If/DS1y9TVTy0Y2qoJoxu5Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EXAqhFXBrcZIDClvgCYxPBPKcf9JDoEYYHZKNpnuRde1SR7jSi31xyFfKWy18nLBxCvpBm4mZQPYEjJZa3cgdKMgXY3ZeGv/SXcOf8wPgRbV32spAwYmINBdp3vSJ9FnrZ8t1g+kaIBwS7Qs3pBzMN2FKac6E0aqyohzbWP9tWs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=b7CSK46n; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=quM3SRplRKEpVvQ6eUhrlbQkceAivrFYKXVmCSm+bgJTRQE0RIRMHNqH3s6axFpa5p9tbXqVjGwegQ0s4iprZphfUiMAoF0ZepiB9OKhnVQMMiodMk4NyrSraCxleuo1AFtlQBPwNoP30RTP8NABARYJjuKWhjGgMbyMtLfeI38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TzcpdwC0; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b7CSK46n"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-75a6c290528so629540a12.1;
-        Thu, 18 Jul 2024 08:29:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TzcpdwC0"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1fc4aff530dso235425ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 08:39:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721316576; x=1721921376; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1721317173; x=1721921973; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RkIMG8Ff5B1D43lrbNrRALe+o/BMBNiqDHduHrCM/HY=;
-        b=b7CSK46n91QXK/tf368I+xwDFdXGvQ5lfXzxq0KiGLQ3j0DFLf6IhF5LMNZHBtEtKx
-         TAUbKPzB6Na4jtxj3KmO8C1zH01zXtEicb9IOgt2+tgWsnBP46VoAPUI4iF/hQRI9Nld
-         LGwVJivHLNGysEX23hqkhI3tGrJrmDQpcfUucp3p+kZ2NnKNt57YJ31wkjmoCajGSjtx
-         xHjYeTsoIVF1JxOfW/5QMOXh9FOyk/A7KfkdaiIOngdrmwlJ6cudB8E9Uo/FDtc5+npU
-         MpE1oIpTNV1AbBJWlbSQCGPNTNFEUlX9ZI8j6NcsEZCGsFsbwagK9l22KlPvMGbEQU2g
-         DseQ==
+        bh=Tt0I2KGkrKSNHkYee7uJVlW3OUILFcgKcyGzTxibNPU=;
+        b=TzcpdwC0LFXeE7WTIXK+rcGiixonhkFbEBoM4EuinmNHmXnNhyD/U0YjDj31rrWluv
+         VVyGK3c/KhSGBRhgTw4/mx5CnLuAWcNZp9y8Y9hxYBe7kIKEFaHJGg19ZNSEd81OmtIG
+         bvFefkIgykLR/mrnvlvACqrye43vjy8mHteYdRHupK5It80K4ED9NTAMUdbzmNs3UIng
+         1rzauoLO3pw1sv409dQ1tOatgblLIKx6cy8th7xc32o0fELbdVujGKRMBt0R5pzYZeJy
+         8icwD6SLxYootYjMfMC02ZUg8RGnAeZS7c5KGZ0EonaTYpmwYxuu6rbP+iUd3B7JzMXY
+         47bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721316576; x=1721921376;
+        d=1e100.net; s=20230601; t=1721317173; x=1721921973;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RkIMG8Ff5B1D43lrbNrRALe+o/BMBNiqDHduHrCM/HY=;
-        b=riwxI5u9oYbHh+2eQb1+lroNjrfFV64Kw1g+UpXIZLbwonThU+wCNUnQ3WtfJXlrmM
-         yh151+BI/iy/7Oh3z7uu3EvNvwavaRETHOUG8MQ4VGIv+nGVhGHil0abyiBTHD/rTw/5
-         273ywkEtHSfw280SSZFss1cCGFne7rncJEdam4ocjFoAik+QXzwR/5wu39j9y62G6Z0R
-         j02Y9cFjFg//S5k85DlAWca/rlAfkSzuI5djDyhHCGBZ3yaPeSqiW/LWpLoesgI1w7NT
-         zOjDpMYMMH0w4JLDBa5Lca/b9Xe6/HIK3AQpD3lKk8Eeyqp3G5ft6WRkPzaDIDzv9MhW
-         RldA==
-X-Forwarded-Encrypted: i=1; AJvYcCWX7l7+9Y233KZ157hVbOU/64YoUHvyd9FDNYqLDf7GGgx0PwimRThb6Dkb9g+9RCwyWQKkYHruCHRcsuvQ5/fzPT6RiX8UfimuAeigjk3TCDlxTdb1M120ULvR3LeWaOYmmJswDnfHaHyd91Ejvfiw+8TCniUSboTGnhVSQZqLefnUIA==
-X-Gm-Message-State: AOJu0YyOTXWGZap57t08ZgrWNiuK9Fcc7MrcskrAO+2wsNUuHvNoVfpW
-	8MyRrbJBh89J71z3f9yk279k8IsKEyo1svPKjOlzuUA6t/xvOWtuFFaWb0yfj+40Dnl+2hHgHJI
-	HtvCy4RMpCMNNnFvUTBa7bdXYPhI=
-X-Google-Smtp-Source: AGHT+IEkeaBR4zHqL2VFNKAB2q09CJ+qNphhqcwQ3sxWK2fxn+rjuWfCLb2/M3yQI68xt22na6UbtV0GCi7LpS3DYOY=
-X-Received: by 2002:a05:6a20:3943:b0:1c2:a722:92b2 with SMTP id
- adf61e73a8af0-1c3fdd30824mr5827661637.45.1721316575873; Thu, 18 Jul 2024
- 08:29:35 -0700 (PDT)
+        bh=Tt0I2KGkrKSNHkYee7uJVlW3OUILFcgKcyGzTxibNPU=;
+        b=maIK69tYRDnS/5hjHiKjeHtbcozRCL8p5HZXa9M0YzY/8D5KSg809EVm77rXJNf6zX
+         TmxDEt5KPDxA0MupV3I+rDs7s10jSNLtLndfSU4BUaMlwRYSBG8qXqsh+k19FNzSDjLY
+         Shec/W8ZZHBZSYzHnLQ7SYCVJnwbzmcH3Wku/l4OHwSZe98OQo1VzMZeOBOr6YAlMMst
+         HZg16jbvn0HK2PBka+oQ4fz0yGcTZIzcEIHYyFsxL7+kgDi2wLztBFOARUVDIIaGw+XS
+         NWlNFHeTRhEL2S2nl0Ia1hJoWPmZtMCc3a1CUsPjj7jmsLs/ZDqw6QVvmvr2tramIoRg
+         HHCw==
+X-Forwarded-Encrypted: i=1; AJvYcCX2ElvuSiCfWkVWdngr4G2JDOaUbCSV0YWi1V/kfEujCFinBi0uIvyknAfqRqESEXYFF61E+mOKV+kPPFyu9weEzvnebXbdJponLbsAo5qjLw==
+X-Gm-Message-State: AOJu0YyCTQdzL7UchtTMbzHPYjcR2GqQt/d2sFEPN8bBsannmuenoTNh
+	oGnq2ywPZ9fqlngj5wuaWH9sZBUMpT5oijTZVVktQO/yKmx6Js2T8ddHArUwgmiNtfvr8Za1Cpv
+	hkRw5A1WVTr3Jc/O5BWdGd595VTQQvy6NkVHn
+X-Google-Smtp-Source: AGHT+IEqkM3JV0rVMiSXMzPvq8eeXAkUx1YpQZU7ZziqlnFKKdiNs0GUPa/x2ix7RLH/fMAJwFw1M6Q8WmmE3oMqLaQ=
+X-Received: by 2002:a17:902:ea07:b0:1fb:c2c:63c8 with SMTP id
+ d9443c01a7336-1fc5f91f58emr2890715ad.12.1721317172520; Thu, 18 Jul 2024
+ 08:39:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240710193653.1175435-1-andrii@kernel.org>
-In-Reply-To: <20240710193653.1175435-1-andrii@kernel.org>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 18 Jul 2024 08:29:23 -0700
-Message-ID: <CAEf4BzaTEUkRU37fsuGy+-otWk9K0-c9=hs0APRz7pJy7rq-5w@mail.gmail.com>
-Subject: Re: [PATCH v5] perf,x86: avoid missing caller address in stack traces
- captured in uprobe
-To: Andrii Nakryiko <andrii@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org, peterz@infradead.org, 
-	rostedt@goodmis.org, mhiramat@kernel.org, x86@kernel.org, mingo@redhat.com, 
-	tglx@linutronix.de, jpoimboe@redhat.com, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, rihams@fb.com, linux-perf-users@vger.kernel.org
+References: <20240718003025.1486232-1-irogers@google.com> <20240718003025.1486232-4-irogers@google.com>
+ <92ceb8b5-240a-4715-98db-c73e8e9d3e50@linux.intel.com>
+In-Reply-To: <92ceb8b5-240a-4715-98db-c73e8e9d3e50@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 18 Jul 2024 08:39:21 -0700
+Message-ID: <CAP-5=fUfoMZ0HjCNoJe6hgEMi5ciY+LqFjBbLzfiZgO6dioshA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/6] perf pmu: Add support for event.cpus files in sysfs
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, ananth.narayan@amd.com, gautham.shenoy@amd.com, 
+	kprateek.nayak@amd.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 10, 2024 at 12:36=E2=80=AFPM Andrii Nakryiko <andrii@kernel.org=
-> wrote:
+On Thu, Jul 18, 2024 at 7:33=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
 >
-> When tracing user functions with uprobe functionality, it's common to
-> install the probe (e.g., a BPF program) at the first instruction of the
-> function. This is often going to be `push %rbp` instruction in function
-> preamble, which means that within that function frame pointer hasn't
-> been established yet. This leads to consistently missing an actual
-> caller of the traced function, because perf_callchain_user() only
-> records current IP (capturing traced function) and then following frame
-> pointer chain (which would be caller's frame, containing the address of
-> caller's caller).
 >
-> So when we have target_1 -> target_2 -> target_3 call chain and we are
-> tracing an entry to target_3, captured stack trace will report
-> target_1 -> target_3 call chain, which is wrong and confusing.
 >
-> This patch proposes a x86-64-specific heuristic to detect `push %rbp`
-> (`push %ebp` on 32-bit architecture) instruction being traced. Given
-> entire kernel implementation of user space stack trace capturing works
-> under assumption that user space code was compiled with frame pointer
-> register (%rbp/%ebp) preservation, it seems pretty reasonable to use
-> this instruction as a strong indicator that this is the entry to the
-> function. In that case, return address is still pointed to by %rsp/%esp,
-> so we fetch it and add to stack trace before proceeding to unwind the
-> rest using frame pointer-based logic.
+> On 2024-07-17 8:30 p.m., Ian Rogers wrote:
+> > If an event file exists in sysfs, check if a event.cpus file exists
+> > and read a perf_cpu_map from it if it does. This allows particular
+> > events to have a different set of CPUs compared to the PMU.
+> >
+> > One scenario where this could be useful is when a PMU is set up with a
+> > cpumask/events per SMT thread but some events record for all SMT
+> > threads. Programming an event on each SMT thread will cause
+> > unnecessary counters to be programmed and the aggregate value to be
+> > too large.
 >
-> We also check for `endbr64` (for 64-bit modes) as another common pattern
-> for function entry, as suggested by Josh Poimboeuf. Even if we get this
-> wrong sometimes for uprobes attached not at the function entry, it's OK
-> because stack trace will still be overall meaningful, just with one
-> extra bogus entry. If we don't detect this, we end up with guaranteed to
-> be missing caller function entry in the stack trace, which is worse
-> overall.
->
-> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> ---
->  arch/x86/events/core.c  | 63 +++++++++++++++++++++++++++++++++++++++++
->  include/linux/uprobes.h |  2 ++
->  kernel/events/uprobes.c |  2 ++
->  3 files changed, 67 insertions(+)
->
+> If I understand the scenario correctly, I think the issue should have
+> been addressed since ICX, with the introduction of  the "SMT-aware
+> events". Is there a specific event which still has the issue on newer
+> platforms?
 
-Ping. What's the status of this patch? Is it just waiting until after
-the merge window, or it got lost?
+Nothing comes to mind, but it is there on popular machines like Skylake.
 
-> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> index 5b0dd07b1ef1..780b8dc36f05 100644
-> --- a/arch/x86/events/core.c
-> +++ b/arch/x86/events/core.c
-> @@ -41,6 +41,8 @@
->  #include <asm/desc.h>
->  #include <asm/ldt.h>
->  #include <asm/unwind.h>
-> +#include <asm/uprobes.h>
-> +#include <asm/ibt.h>
+> >
+> > Another scenario where this could be useful if when a PMU has
+> > historically had a cpumask at the package level, but now newer per
+> > die, core or CPU information is available.
 >
->  #include "perf_event.h"
+> The traditional way to support new counters with a different scope is to
+> add a new PMU.
 >
-> @@ -2813,6 +2815,46 @@ static unsigned long get_segment_base(unsigned int=
- segment)
+> >
+> > Additional context for the motivation is in these patches and
+> > conversation:
+> > https://lore.kernel.org/lkml/20240711102436.4432-1-Dhananjay.Ugwekar@am=
+d.com/
+>
+> I don't see the advantages of the new event.cpus way.
+> The aggregation should be the same.
 
-[...]
+Agreed. My concern is that we may end up with a pattern of
+<pmu>_per_pkg, <pmu>_per_core, <pmu>_per_cpu, <pmu>_per_l3, etc. just
+for the sake of the cpumask.
+
+> The RAPL counters are free-running counters. So there is no difference
+> whether grouping or not grouping.
+
+Should the RAPL counters return true for perf_pmu__is_software? In the
+tool we currently return false and won't allow grouping, these events
+with other hardware events. The intent in perf_pmu__is_software was to
+emulate the way the kernel allows/disallows groups - software context
+events can be in a hardware context but otherwise I don't believe the
+grouping is allowed.
+
+> But it makes the kernel driver complex, since it has to maintain at
+> least two different cpumasks.
+
+Two drivers each maintaining a cpumask or 1 driver maintaining 2
+cpumasks, it seems like there is chance for code reuse in both cases.
+I'm not seeing how it adds to complexity particularly.
+
+> The tool becomes complex either, since it has to take care of the
+> per-event CPU override case.
+
+I'm not sure I agree with this. What we need for perf_event_open is a
+perf_event_attr, we dress these up as evsels which also have the
+ability to be for >1 CPU or thread. Longer term I think evsels can
+also have >1 PMU, for the wildcard cases like uncore memory
+controllers - this would remove the need for resorting evsels except
+for topdown events which have thrown us a giant bundle of challenges.
+Anyway, so an evsel is perf_event_attr information paired with CPU
+information, it makes sense to me that the parser should do this
+pairing. What's harder in the evsel/evlist setup is trying to fix CPU
+maps up not in parsing, like with __perf_evlist__propagate_maps where
+the parsing is trying to leave crumbs around (like system_wide,
+has_user_cpus, is_pmu_core) so the map propagation works properly.
+
+> The json file must also be updated to add a
+> new field cpumask.
+
+Yeah, I don't like this as it means we end up putting CPU information
+into the json that isn't the same for every CPU variant of the same
+architecture model. Maybe we can have some kind of "scope" enum value
+in the json and then when the scope differs from the PMU's, core scope
+vs the PMU's hyperthread scope, then in the tool we can figure out the
+cpumask from the topology in sysfs. Maybe we should just always use
+the topology and get rid of cpumask files in sysfs, replacing them
+with "scope" files. Will Deacon pushed back on having ARM PMUs
+supporting hot plugging
+(https://lore.kernel.org/lkml/20240701142222.GA2691@willie-the-truck/)
+where the main thing hot plugging handler needs to maintain is set the
+cpumask.
+
+Thanks,
+Ian
