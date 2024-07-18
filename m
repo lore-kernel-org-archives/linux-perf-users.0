@@ -1,107 +1,214 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10AC63A;
-	Thu, 18 Jul 2024 17:41:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE966144D37;
+	Thu, 18 Jul 2024 17:48:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721324495; cv=none; b=ifvUlDbwQGMw902nOSGD6U427kNEzzIxqN91it2K9BkOEWSzBJ9kdyADENIH4/NJyFy6KfrXhRDXehKu1YvEk4TlEmbhxepNyTrn7QUORrXiTp2WpIt8l1pKBnqWsmP5RvbWgT59sHs3NjpHuu9ej5zBz2pIop6NVfM25KWPFxU=
+	t=1721324883; cv=none; b=P5lyWVSYKQISj4ms60H2YklbJxHgPpJPSMa6cxhVqRVFu57s2u5kXSsBiI3MJ8BpkXcsPy3lYQUm6YGhbtTLwWodFEk2bCPJK3CDoLEG7B+AXDpheA1HTR8s+dN7Kh/nWBhD7lxOjlWmeGEW/GjbuXeioiZsTbcRqAmmxmbM/FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721324495; c=relaxed/simple;
-	bh=b9UYGyJ3/vQpMXCA/Sfwxz6MCAKrrxB8FyY3lMOhKCs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VA0nfFT3ifdW/7cfDywJVVj3u8iJ5LKASAW0mFgWjDYoi9EehcEI9ev0bbW4hD6hJswV0pVx9k4T4akI6Df2a5WuZuRzC936nPXREfTLkko5kvOpGoJEkMbw2CysbHC5zHKOwP5Zn+ppmTTpPCmIMxXZQbZIQ5dKfgrBlmC3PDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GcHisq0Q; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721324883; c=relaxed/simple;
+	bh=3/kqY1TSxTnbSmHQNPbYNycSBGkkf5or3v0kGKJPk/A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y3t/DtM+L+MIFzzp7TIXBUtLCfhAys5nOtmwUIVfaPiVZZcJwsNj1SDeTpWPVQHaG/YGwG1J+UQ5dTm//TpD/DqG9QoUOg/TZoQGXY8BAZCUc0mdbbGxR5fykFMh9nXeloZ17ubFMsYUjA3nRZW3JDnmEyEZDkOLTEQDlsPsB60=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k7YLiS3W; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GcHisq0Q"
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-78512d44a17so727011a12.3;
-        Thu, 18 Jul 2024 10:41:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721324493; x=1721929293; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jXGWWfWKwu4C0Pwh4ekXo4Fyxb931LLzXNEPPDV5NVo=;
-        b=GcHisq0QRkj/bwwgxldvsQ+zttw7dEh/Vs+bm8+QuBv8QSkk1duJlW2R0DiZkUKzLp
-         X4tu7gG8BBebmmx4im+ISjfx6rXuyMspXB1x6NucvBGQaFxBbmyrcEHmMHK0nvN5EliA
-         0w6x50GTbceG8s9n4Ye5gioEfJbo4eioD9gJG0IwJ4xoTrgLUXCJsPhqChPSKUKNAt1p
-         RPmibI0D1duK62fG0ZRsxP9naHnXqS77baS55pTvIBL5gpFeENzGHa7X3TtPhNbtEHj/
-         NUX8Mwr6ofmPX4pvw8uVNl79qIxJB/QgH8d7vtvGdUJ09xZk85Ju49FowUeH2DIbDsC4
-         cgSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721324493; x=1721929293;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jXGWWfWKwu4C0Pwh4ekXo4Fyxb931LLzXNEPPDV5NVo=;
-        b=SumtV9DQNCHZsf6Jua7vhLUI5eUdX5nK7IVbHCTM/PBWCFN1sj6qidkfv0/zM6iFtP
-         P+ljrnTQaA+C4VXyQaabuL8qVeLFS6DN8olyJvnRka/mYP18pFXjd3F8MV4TS9IRm+Ak
-         wgg1sDbozO5PkUOGEq/eiZ4EzZ16CcrFM4CAQRhWlL+5uED2VPOZfx7NY5KpU40SLQcX
-         DVZjdOtXxbP0m5OdZRh/Yb4Q6D+QRwZwkFNAtHt26/qgw/AHy0SsiuogHcSOyX3W4zH6
-         0uYvVQiCBoZ+SsjK8ZUxyHvl4A4dzVUNU4Qm1lqtUxKuaBSYkMisBAQuN2Ob7jYw/Phr
-         1Ktg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUsV+Wx6v7RDea4HjSFDJbkybNidnovnb24/SpW+EacLFiG090uer83thSsZwxYunvEXYXVHPsJ0uVXm95/1EAoVs0dr8zIVWuL3PObMPXyLcybo1ZYWg/W6wOvDsPTf8GIvJNpSF9I3rUHnd8tAGpnscjOG31Ya3H/w5Mq9ppjvpKRQ==
-X-Gm-Message-State: AOJu0Ywkp+ld5Az2FVez5aP+Y2h6Dl84iITJJENqQ15N/0RrBQxRz1WT
-	V15z02G6WlZ/V5kTRUvubR5qFAhgDmzSflxOe5bfysybLRHF4qWBIy9lCup8+woPan7b8TJuTrm
-	o7H50yACy5kIFuOKW2oyTUv29NO0=
-X-Google-Smtp-Source: AGHT+IFlqXix0J0Vl60VZOa8dpQ6b1kD0/PDt7P1pKnLxKndutbwr7jYSWW2mE3X9PpeGlT0/ouME0Zq10kwP4RWq6M=
-X-Received: by 2002:a17:90a:df11:b0:2c5:32c3:a777 with SMTP id
- 98e67ed59e1d1-2cb5293597dmr4256261a91.28.1721324492939; Thu, 18 Jul 2024
- 10:41:32 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k7YLiS3W"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721324882; x=1752860882;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=3/kqY1TSxTnbSmHQNPbYNycSBGkkf5or3v0kGKJPk/A=;
+  b=k7YLiS3Wtef1Iz3/5xydq9gRCljMR4RGAgWjopZk5CY8Mve4QiP9CaX6
+   a6o9GSEF+zqZi80Z2IDdk6yCBaP/qOWnQQQhE54AMYv5mL7SbcFP0/ogM
+   2OZunFR60oUGSqvWo271zUfLHg0yxDl/mBGHebisq9S+bC3dGsKtMVdSJ
+   lohTYC4p/1T6jHqCuHllp8tWBzayICfnZeEL+WrBjYelaPjhtssXibKlP
+   f8Z/0Hzo7UswlK85Lk0FWz2VfbCggRld86Uyk1JCCfFJ8VXJfIeaVcsp9
+   pcQe19UiP7UknqRdOzd89C/aepCmTnagBdQX1evQm91cSfGuHXkSbomun
+   Q==;
+X-CSE-ConnectionGUID: t182dYJ/RUukW739fStsaQ==
+X-CSE-MsgGUID: TAKusAsAQ4uc+hN/0x6DaQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11137"; a="19049623"
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="19049623"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:47:53 -0700
+X-CSE-ConnectionGUID: MwKLsyUNSEuv7AEhvlG7Dw==
+X-CSE-MsgGUID: YT+A57voRxyZJ/kxR8H1tQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,218,1716274800"; 
+   d="scan'208";a="55704720"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 10:47:52 -0700
+Received: from [10.212.127.244] (kliang2-mobl1.ccr.corp.intel.com [10.212.127.244])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 4798920CFED5;
+	Thu, 18 Jul 2024 10:47:49 -0700 (PDT)
+Message-ID: <64030eab-6e95-494a-ab72-bc33792ef723@linux.intel.com>
+Date: Thu, 18 Jul 2024 13:47:47 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715102326.1910790-2-radoslaw.zielonek@gmail.com> <20240715104719.GA14400@noisy.programming.kicks-ass.net>
-In-Reply-To: <20240715104719.GA14400@noisy.programming.kicks-ass.net>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 18 Jul 2024 10:41:20 -0700
-Message-ID: <CAEf4BzaYL9zZN8TZyRHW3_O3vbHc7On+NSunrkDvDQx2=wwyRw@mail.gmail.com>
-Subject: Re: [PATCH] perf callchain: Fix suspicious RCU usage in get_callchain_entry()
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Radoslaw Zielonek <radoslaw.zielonek@gmail.com>, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	bpf@vger.kernel.org, syzbot+72a43cdb78469f7fbad1@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] perf pmu: Add support for event.cpus files in
+ sysfs
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, kprateek.nayak@amd.com, sandipan.das@amd.com
+References: <20240718003025.1486232-1-irogers@google.com>
+ <20240718003025.1486232-4-irogers@google.com>
+ <92ceb8b5-240a-4715-98db-c73e8e9d3e50@linux.intel.com>
+ <CAP-5=fUfoMZ0HjCNoJe6hgEMi5ciY+LqFjBbLzfiZgO6dioshA@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fUfoMZ0HjCNoJe6hgEMi5ciY+LqFjBbLzfiZgO6dioshA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jul 15, 2024 at 3:47=E2=80=AFAM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Mon, Jul 15, 2024 at 12:23:27PM +0200, Radoslaw Zielonek wrote:
-> > The rcu_dereference() is using rcu_read_lock_held() as a checker, but
-> > BPF in bpf_prog_test_run_syscall() is using rcu_read_lock_trace() locke=
-r.
-> > To fix this issue the proper checker has been used
-> > (rcu_read_lock_trace_held() || rcu_read_lock_held())
->
-> How does that fix it? release_callchain_buffers() does call_rcu(), not
-> call_rcu_tracing().
->
-> Does a normal RCU grace period fully imply an RCU-tracing grace period?
 
-I don't think so, they are completely independent. So this change
-doesn't seem correct. I think we should just ensure
-rcu_read_lock()/rcu_read_unlock() before calling into perf_callchain
-functionality.
 
-Which is what I'm doing in [0]. Radoslaw, can you please help
-validating if those changes are enough to fix this issue or we need to
-do some more?
+On 2024-07-18 11:39 a.m., Ian Rogers wrote:
+> On Thu, Jul 18, 2024 at 7:33 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-07-17 8:30 p.m., Ian Rogers wrote:
+>>> If an event file exists in sysfs, check if a event.cpus file exists
+>>> and read a perf_cpu_map from it if it does. This allows particular
+>>> events to have a different set of CPUs compared to the PMU.
+>>>
+>>> One scenario where this could be useful is when a PMU is set up with a
+>>> cpumask/events per SMT thread but some events record for all SMT
+>>> threads. Programming an event on each SMT thread will cause
+>>> unnecessary counters to be programmed and the aggregate value to be
+>>> too large.
+>>
+>> If I understand the scenario correctly, I think the issue should have
+>> been addressed since ICX, with the introduction of  the "SMT-aware
+>> events". Is there a specific event which still has the issue on newer
+>> platforms?
+> 
+> Nothing comes to mind, but it is there on popular machines like Skylake.
+> 
+>>>
+>>> Another scenario where this could be useful if when a PMU has
+>>> historically had a cpumask at the package level, but now newer per
+>>> die, core or CPU information is available.
+>>
+>> The traditional way to support new counters with a different scope is to
+>> add a new PMU.
+>>
+>>>
+>>> Additional context for the motivation is in these patches and
+>>> conversation:
+>>> https://lore.kernel.org/lkml/20240711102436.4432-1-Dhananjay.Ugwekar@amd.com/
+>>
+>> I don't see the advantages of the new event.cpus way.
+>> The aggregation should be the same.
+> 
+> Agreed. My concern is that we may end up with a pattern of
+> <pmu>_per_pkg, <pmu>_per_core, <pmu>_per_cpu, <pmu>_per_l3, etc. just
+> for the sake of the cpumask.
 
-  [0] https://patchwork.kernel.org/project/netdevbpf/patch/20240709204245.3=
-847811-10-andrii@kernel.org/
+The cstate PMUs already do so, e.g., cstate_core, cstate_pkg.
 
->
-> > ---
-> >  kernel/events/callchain.c | 11 +++++++++--
-> >  1 file changed, 9 insertions(+), 2 deletions(-)
-> >
+From another perspective, it discloses the scope information in a PMU
+name. If a user only cares about the information of a package, they just
+need to focus on everything under <pmu>_pkg. Otherwise, they have to go
+through all the events.
 
-[...]
+> 
+>> The RAPL counters are free-running counters. So there is no difference
+>> whether grouping or not grouping.
+> 
+> Should the RAPL counters return true for perf_pmu__is_software? In the
+> tool we currently return false and won't allow grouping, these events
+> with other hardware events. The intent in perf_pmu__is_software was to
+> emulate the way the kernel allows/disallows groups - software context
+> events can be in a hardware context but otherwise I don't believe the
+> grouping is allowed.
+
+No, it's not allowed for the RAPL counters.
+
+If the motivation is to find another way to group counters with
+different scope, it may not work.
+
+We once tried to mix the perf_invalid_context PMUs in a group. But it's
+denied.
+https://yhbt.net/lore/all/20150415172856.GA5029@twins.programming.kicks-ass.net/
+
+The event.cpus still faces the same issues.
+
+> 
+>> But it makes the kernel driver complex, since it has to maintain at
+>> least two different cpumasks.
+> 
+> Two drivers each maintaining a cpumask or 1 driver maintaining 2
+> cpumasks, it seems like there is chance for code reuse in both cases.
+> I'm not seeing how it adds to complexity particularly.
+
+Yes, there are some cleanup opportunities for the cpumask/hotplug codes.
+
+We may even abstracts some generic interfaces for pkg or core level PMUs.
+
+Eventually, the complexity/duplication should be able to be reduced.
+
+> 
+>> The tool becomes complex either, since it has to take care of the
+>> per-event CPU override case.
+> 
+> I'm not sure I agree with this. What we need for perf_event_open is a
+> perf_event_attr, we dress these up as evsels which also have the
+> ability to be for >1 CPU or thread. Longer term I think evsels can
+> also have >1 PMU, for the wildcard cases like uncore memory
+> controllers - this would remove the need for resorting evsels except
+> for topdown events which have thrown us a giant bundle of challenges.
+> Anyway, so an evsel is perf_event_attr information paired with CPU
+> information, it makes sense to me that the parser should do this
+> pairing. What's harder in the evsel/evlist setup is trying to fix CPU
+> maps up not in parsing, like with __perf_evlist__propagate_maps where
+> the parsing is trying to leave crumbs around (like system_wide,
+> has_user_cpus, is_pmu_core) so the map propagation works properly.
+> 
+>> The json file must also be updated to add a
+>> new field cpumask.
+> 
+> Yeah, I don't like this as it means we end up putting CPU information
+> into the json that isn't the same for every CPU variant of the same
+> architecture model. Maybe we can have some kind of "scope" enum value
+> in the json and then when the scope differs from the PMU's, core scope
+> vs the PMU's hyperthread scope, then in the tool we can figure out the
+> cpumask from the topology in sysfs. Maybe we should just always use
+> the topology and get rid of cpumask files in sysfs, replacing them
+> with "scope" files. Will Deacon pushed back on having ARM PMUs
+> supporting hot plugging
+> (https://lore.kernel.org/lkml/20240701142222.GA2691@willie-the-truck/)
+> where the main thing hot plugging handler needs to maintain is set the
+> cpumask.
+
+Not just the cpumask but also migrate the context for some PMUs, see
+perf_pmu_migrate_context().
+
+It seems we really need a shared cpumask in the generic code, so the
+drivers don't need to handle the hotplug everywhere. I will think about it.
+
+Thanks,
+Kan
+
