@@ -1,228 +1,281 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5232A4D8BA
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 05:19:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE42144376;
+	Thu, 18 Jul 2024 05:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721279995; cv=none; b=PrGS1ZvLJO/bl8j6VU1MhZoay2vSh3YhnFiFNjlHcW8tguw1V84fePN9xBvYVmInNfbt+aZmf8dQVGKIEnTwvWyVrq7b1npP4pwZ2NhkXHd5W21xAzlAfo58Uz1LKUhwbQicGlTAbtpS5ZXdvIJYdfcVAMT7dNy9od3kPqig6iY=
+	t=1721280337; cv=none; b=gjZyyX+187ks8ekV37qfmEXlmalC4fC9S4MQf7JdmR/ffLSRhG4TnhyHWA7Ctr6vsxamvg05TJz4r/CWI+Azlw8DwcZewC4Ph8rMrPoQ28ZEB8SsiaEO5vpHoZKMWjn6VppZmJAFG6VQtwGeslih5dl3hTTX2Xsh5eCRntZJuR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721279995; c=relaxed/simple;
-	bh=7/Rd+V/Rdzw858A6+AsFz3rC2EoHJKt2pw0ceE9trbA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nwzz0R1Rx8SMbfZfhubwIbQHhJ8y2tASL8AW+AEB0q/JpCn49OpKCA2w78rb8uA332++UCMF3P4NDBGYzwlyep6bjx8l2yBFkYnY3UbJp3bIzcIVJUvCXqOKVWRMFppTQeEiaQWSDeNPJoTrzq5kxlLuXzn21j7nElw43t4U+/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=np33QuTN; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1721280337; c=relaxed/simple;
+	bh=gz5HRW3k7w7Z2GdY8gP9qNQg9huLlUvJzLWO7hht1jw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SzKjbCA8U3rxsiXZ7RoS/jTbW1j8I05raMfKPLrQuS3khnX5O0czEjedY8to4Y8FbPRbo5wFoN7XFAW9P0pP8NHZWVNPk/4pdvy1667lYvEjq3GTNZ7msuUVXcrGPAfdJTNo+3l77zLEq5tAmrjY85y95n+9j8onnev7u/3lb0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jC88iIba; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="np33QuTN"
-Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46I5I8tJ016083;
-	Thu, 18 Jul 2024 05:19:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=i
-	kEp9A7ANd1z/h5TGsrgALhJXSbaoHfEFuU2jmOGnvQ=; b=np33QuTNMz7lOaMXW
-	z8seNjY3QT5hCRZLJl7Ljdwm4vSpeBEfx8kLixL7lRr6ZRgLYYaap4mj3wagCGl/
-	GzInjSKi1BcNDFj3mecg/nCjpGur4iH7PUk0RPBFetLsfeH3qr1pV368HYN+n8ib
-	nxVnGYmeWQPuxrxrr7Tb8drOb1Izf2dFnttRJuI30HV0WYx8FbLLG8a5sZ4xLT7J
-	uHCnm756Oz3A2DATHSfeDR9aTYiOze1uf7EPMHzPqVpHTmiko39m7SMI61lBjRJZ
-	aSDqU3fIM9qoeQ2DNm29Bfbtk1pM0QZZlZE1OLLkRWZgy0lYh1GxRatOvEqkK4wh
-	sLewQ==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40evg701cx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 05:19:42 +0000 (GMT)
-Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46I5Jgfc017410;
-	Thu, 18 Jul 2024 05:19:42 GMT
-Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40evg701cu-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 05:19:42 +0000 (GMT)
-Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46I5Gfvu029210;
-	Thu, 18 Jul 2024 05:19:41 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40dwkj7y8v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 18 Jul 2024 05:19:41 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46I5Jbm154722884
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 18 Jul 2024 05:19:39 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 07D8A2004E;
-	Thu, 18 Jul 2024 05:19:37 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3DDB620040;
-	Thu, 18 Jul 2024 05:19:35 +0000 (GMT)
-Received: from [9.109.199.72] (unknown [9.109.199.72])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Thu, 18 Jul 2024 05:19:35 +0000 (GMT)
-Message-ID: <496820bb-5c85-4593-8daf-b8c41394c81b@linux.ibm.com>
-Date: Thu, 18 Jul 2024 10:49:33 +0530
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jC88iIba"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA19BC116B1;
+	Thu, 18 Jul 2024 05:25:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721280337;
+	bh=gz5HRW3k7w7Z2GdY8gP9qNQg9huLlUvJzLWO7hht1jw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=jC88iIbaZSQenHpqOe8q3elITyR6utuwi6KAZ7xqmHmIgvhJh8mt2xfNO/vRuOWiQ
+	 7Q65GyPjsghAlq71YmDa5eyTIrmEf9/9eYUG0uHSHRBktvz9azMzPGAOZKQE+32p26
+	 rXpkC3VaW85Rk7FEn3hj8u85zXDAP8LVqJ7y9oHQt3DAa7S/vg92mrHZJOdJJVWY8q
+	 TJtiMTYfh+ZeCGFowcs1ei4RO93kgvsLdqPN12ojFc3skz6N8Eg430qPE27zdVh1In
+	 bx0W44smIS2HYOUeW93VTKt+osrGb+0rzjVzx1OYpphNXeqmR+pk9fkqF6rEfVkl2v
+	 JOqpYMLGd2Qlg==
+Date: Wed, 17 Jul 2024 22:25:35 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: acme@kernel.org, jolsa@kernel.org, adrian.hunter@intel.com,
+	irogers@google.com, segher@kernel.crashing.org,
+	christophe.leroy@csgroup.eu, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+	akanksha@linux.ibm.com, maddy@linux.ibm.com, kjain@linux.ibm.com,
+	disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH V7 16/18] tools/perf: Add support for global_die to
+ capture name of variable in case of register defined variable
+Message-ID: <ZpinT_O_13pl-Lab@google.com>
+References: <20240713165529.59298-1-atrajeev@linux.vnet.ibm.com>
+ <20240713165529.59298-17-atrajeev@linux.vnet.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] tools/lib/subcmd: Don't free the usage string
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>
-References: <20240717103351.268344-1-adityag@linux.ibm.com>
- <ZpiIB_1jSNvj95PL@google.com>
-Content-Language: en-US
-From: Aditya Gupta <adityag@linux.ibm.com>
-In-Reply-To: <ZpiIB_1jSNvj95PL@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 9JOSx-ssG2rB_CR9v7siLAKOugtA-vMr
-X-Proofpoint-ORIG-GUID: yNSO1-xP0Lz4ukuaY4Kk5vtmhkU72EZk
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-18_01,2024-07-17_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- spamscore=0 priorityscore=1501 lowpriorityscore=0 adultscore=0
- malwarescore=0 mlxlogscore=937 mlxscore=0 impostorscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407180031
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240713165529.59298-17-atrajeev@linux.vnet.ibm.com>
 
-> <...snip...>
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Sat, Jul 13, 2024 at 10:25:27PM +0530, Athira Rajeev wrote:
+> In case of register defined variable (found using
+> find_data_type_global_reg), if the type of variable happens to be base
+> type (example, long unsigned int), perf report captures it as:
+> 
+>     12.85%  long unsigned int  long unsigned int +0 (no field)
+> 
+> The above data type is actually referring to samples captured while
+> accessing "r1" which represents current stack pointer in powerpc.
+> register void *__stack_pointer asm("r1");
+> 
+> The dwarf debug contains this as:
+> 
+> <<>>
+>  <1><18dd772>: Abbrev Number: 129 (DW_TAG_variable)
+>     <18dd774>   DW_AT_name        : (indirect string, offset: 0x11ba): current_stack_pointer
+>     <18dd778>   DW_AT_decl_file   : 51
+>     <18dd779>   DW_AT_decl_line   : 1468
+>     <18dd77b>   DW_AT_decl_column : 24
+>     <18dd77c>   DW_AT_type        : <0x18da5cd>
+>     <18dd780>   DW_AT_external    : 1
+>     <18dd780>   DW_AT_location    : 1 byte block: 51    (DW_OP_reg1 (r1))
+> 
+>  where 18da5cd is:
+> 
+>  <1><18da5cd>: Abbrev Number: 47 (DW_TAG_base_type)
+>     <18da5ce>   DW_AT_byte_size   : 8
+>     <18da5cf>   DW_AT_encoding    : 7   (unsigned)
+>     <18da5d0>   DW_AT_name        : (indirect string, offset: 0x55c7): long unsigned int
+> <<>>
 
-Thanks for the Ack, Namhyung !
+Actually this is different from your description.  I expect
+
+  DW_TAG_variable
+    DW_AT_name: __stack_pointer
+    DW_AT_type: <pointer_type> (void *)
+
+But it seems your DWARF has
+
+  DW_TAG_variable
+    DW_AT_name: current_stack_pointer
+    DW_AT_type: <base_type> (long unsigned int)
+
+> 
+> To make it more clear to the user, capture the DW_AT_name of the
+> variable and save it as part of Dwarf_Global. Dwarf_Global is used so
+> that it can be used and retrieved while presenting the result.
+> 
+> Update "dso__findnew_data_type" function to set "var_name" if
+> variable name is set as part of Dwarf_Global.
+> 
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> ---
+>  tools/perf/util/annotate-data.c | 30 ++++++++++++++++++++++++------
+>  tools/perf/util/dwarf-aux.c     |  1 +
+>  tools/perf/util/dwarf-aux.h     |  1 +
+>  3 files changed, 26 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+> index a5b4429ede57..8d05f3dbddf6 100644
+> --- a/tools/perf/util/annotate-data.c
+> +++ b/tools/perf/util/annotate-data.c
+> @@ -268,28 +268,37 @@ static void delete_members(struct annotated_member *member)
+>  }
+>  
+>  static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+> -							  Dwarf_Die *type_die)
+> +							  Dwarf_Die *type_die, Dwarf_Global *global_die)
+>  {
+>  	struct annotated_data_type *result = NULL;
+>  	struct annotated_data_type key;
+>  	struct rb_node *node;
+>  	struct strbuf sb;
+> +	struct strbuf sb_var_name;
+>  	char *type_name;
+> +	char *var_name = NULL;
+>  	Dwarf_Word size;
+>  
+>  	strbuf_init(&sb, 32);
+> +	strbuf_init(&sb_var_name, 32);
+>  	if (die_get_typename_from_type(type_die, &sb) < 0)
+>  		strbuf_add(&sb, "(unknown type)", 14);
+> +	if (global_die->name) {
+> +		strbuf_addstr(&sb_var_name, global_die->name);
+> +		var_name = strbuf_detach(&sb_var_name, NULL);
+
+I think you can just use strdup(global_die->name).
 
 
-- Aditya Gupta
+> +	}
+>  	type_name = strbuf_detach(&sb, NULL);
+>  	dwarf_aggregate_size(type_die, &size);
+>  
+>  	/* Check existing nodes in dso->data_types tree */
+>  	key.self.type_name = type_name;
+> +	key.self.var_name = var_name;
+>  	key.self.size = size;
+>  	node = rb_find(&key, dso__data_types(dso), data_type_cmp);
+>  	if (node) {
+>  		result = rb_entry(node, struct annotated_data_type, node);
+>  		free(type_name);
+> +		free(var_name);
+>  		return result;
+>  	}
+>  
+> @@ -297,10 +306,12 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+>  	result = zalloc(sizeof(*result));
+>  	if (result == NULL) {
+>  		free(type_name);
+> +		free(var_name);
+>  		return NULL;
+>  	}
+>  
+>  	result->self.type_name = type_name;
+> +	result->self.var_name = var_name;
+>  	result->self.size = size;
+>  	INIT_LIST_HEAD(&result->self.children);
+>  
+> @@ -1178,7 +1189,7 @@ static int find_data_type_block(struct data_loc_info *dloc,
+>   * cu_die and match with reg to identify data type die.
+>   */
+>  static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_Die *cu_die,
+> -		Dwarf_Die *type_die)
+> +		Dwarf_Die *type_die, Dwarf_Global *global_die)
+>  {
+>  	Dwarf_Die vr_die;
+>  	int ret = -1;
+> @@ -1191,8 +1202,11 @@ static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_
+>  		if (dwarf_offdie(dloc->di->dbg, var_types->die_off, &vr_die)) {
+>  			if (die_get_real_type(&vr_die, type_die) == NULL) {
+>  				dloc->type_offset = 0;
+> +				global_die->name = var_types->name;
+>  				dwarf_offdie(dloc->di->dbg, var_types->die_off, type_die);
+>  			}
+> +			global_die->die_offset = (long)dwarf_dieoffset(type_die);
+> +			global_die->cu_offset = (long)dwarf_dieoffset(cu_die);
+
+It seems all you need is the name of the variable.  Can we simply pass
+the name instead of Dwarf_Global?
 
 
-> Thanks,
-> Namhyung
->
->> ---
->>   tools/lib/subcmd/parse-options.c | 8 +++-----
->>   tools/perf/builtin-kmem.c        | 2 ++
->>   tools/perf/builtin-kvm.c         | 3 +++
->>   tools/perf/builtin-kwork.c       | 3 +++
->>   tools/perf/builtin-lock.c        | 3 +++
->>   tools/perf/builtin-mem.c         | 3 +++
->>   tools/perf/builtin-sched.c       | 3 +++
->>   7 files changed, 20 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
->> index 4b60ec03b0bb..eb896d30545b 100644
->> --- a/tools/lib/subcmd/parse-options.c
->> +++ b/tools/lib/subcmd/parse-options.c
->> @@ -633,10 +633,11 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
->>   			const char *const subcommands[], const char *usagestr[], int flags)
->>   {
->>   	struct parse_opt_ctx_t ctx;
->> -	char *buf = NULL;
->>   
->>   	/* build usage string if it's not provided */
->>   	if (subcommands && !usagestr[0]) {
->> +		char *buf = NULL;
->> +
->>   		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
->>   
->>   		for (int i = 0; subcommands[i]; i++) {
->> @@ -678,10 +679,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
->>   			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
->>   		usage_with_options(usagestr, options);
->>   	}
->> -	if (buf) {
->> -		usagestr[0] = NULL;
->> -		free(buf);
->> -	}
->> +
->>   	return parse_options_end(&ctx);
->>   }
->>   
->> diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
->> index 6fd95be5032b..6b88b8b40784 100644
->> --- a/tools/perf/builtin-kmem.c
->> +++ b/tools/perf/builtin-kmem.c
->> @@ -2058,6 +2058,8 @@ int cmd_kmem(int argc, const char **argv)
->>   
->>   out_delete:
->>   	perf_session__delete(session);
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)kmem_usage[0]);
->>   
->>   	return ret;
->>   }
->> diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
->> index 71165036e4ca..988bef73bd09 100644
->> --- a/tools/perf/builtin-kvm.c
->> +++ b/tools/perf/builtin-kvm.c
->> @@ -2187,5 +2187,8 @@ int cmd_kvm(int argc, const char **argv)
->>   	else
->>   		usage_with_options(kvm_usage, kvm_options);
->>   
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)kvm_usage[0]);
->> +
->>   	return 0;
->>   }
->> diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
->> index 56e3f3a5e03a..fd53838b5a78 100644
->> --- a/tools/perf/builtin-kwork.c
->> +++ b/tools/perf/builtin-kwork.c
->> @@ -2520,5 +2520,8 @@ int cmd_kwork(int argc, const char **argv)
->>   	} else
->>   		usage_with_options(kwork_usage, kwork_options);
->>   
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)kwork_usage[0]);
->> +
->>   	return 0;
->>   }
->> diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
->> index 0253184b3b58..b25d50716e63 100644
->> --- a/tools/perf/builtin-lock.c
->> +++ b/tools/perf/builtin-lock.c
->> @@ -2713,6 +2713,9 @@ int cmd_lock(int argc, const char **argv)
->>   		usage_with_options(lock_usage, lock_options);
->>   	}
->>   
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)lock_usage[0]);
->> +
->>   	zfree(&lockhash_table);
->>   	return rc;
->>   }
->> diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
->> index 863fcd735dae..b7c1cf6d0e5a 100644
->> --- a/tools/perf/builtin-mem.c
->> +++ b/tools/perf/builtin-mem.c
->> @@ -517,5 +517,8 @@ int cmd_mem(int argc, const char **argv)
->>   	else
->>   		usage_with_options(mem_usage, mem_options);
->>   
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)mem_usage[0]);
->> +
->>   	return 0;
->>   }
->> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
->> index 8750b5f2d49b..d6acc53ae89e 100644
->> --- a/tools/perf/builtin-sched.c
->> +++ b/tools/perf/builtin-sched.c
->> @@ -3805,5 +3805,8 @@ int cmd_sched(int argc, const char **argv)
->>   		usage_with_options(sched_usage, sched_options);
->>   	}
->>   
->> +	/* free usage string allocated by parse_options_subcommand */
->> +	free((void *)sched_usage[0]);
->> +
->>   	return 0;
->>   }
->> -- 
->> 2.45.2
->>
+>  			pr_debug_type_name(type_die, TSR_KIND_TYPE);
+>  			ret = 0;
+>  			pr_debug_dtp("found by CU for %s (die:%#lx)\n",
+> @@ -1207,7 +1221,8 @@ static int find_data_type_global_reg(struct data_loc_info *dloc, int reg, Dwarf_
+>  }
+>  
+>  /* The result will be saved in @type_die */
+> -static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+> +static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die,
+> +		Dwarf_Global *global_die)
+>  {
+>  	struct annotated_op_loc *loc = dloc->op;
+>  	Dwarf_Die cu_die, var_die;
+> @@ -1221,6 +1236,8 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+>  	u64 pc;
+>  	char buf[64];
+>  
+> +	memset(global_die, 0, sizeof(Dwarf_Global));
+> +
+>  	if (dloc->op->multi_regs)
+>  		snprintf(buf, sizeof(buf), "reg%d, reg%d", dloc->op->reg1, dloc->op->reg2);
+>  	else if (dloc->op->reg1 == DWARF_REG_PC)
+> @@ -1254,7 +1271,7 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+>  		     dwarf_diename(&cu_die), (long)dwarf_dieoffset(&cu_die));
+>  
+>  	if (loc->reg_type == DWARF_REG_GLOBAL) {
+> -		ret = find_data_type_global_reg(dloc, reg, &cu_die, type_die);
+> +		ret = find_data_type_global_reg(dloc, reg, &cu_die, type_die, global_die);
+>  		if (!ret)
+>  			goto out;
+>  	}
+> @@ -1390,6 +1407,7 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+>  	struct annotated_data_type *result = NULL;
+>  	struct dso *dso = map__dso(dloc->ms->map);
+>  	Dwarf_Die type_die;
+> +	Dwarf_Global global_die;
+>  
+>  	dloc->di = debuginfo__new(dso__long_name(dso));
+>  	if (dloc->di == NULL) {
+> @@ -1405,10 +1423,10 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+>  
+>  	dloc->fbreg = -1;
+>  
+> -	if (find_data_type_die(dloc, &type_die) < 0)
+> +	if (find_data_type_die(dloc, &type_die, &global_die) < 0)
+>  		goto out;
+>  
+> -	result = dso__findnew_data_type(dso, &type_die);
+> +	result = dso__findnew_data_type(dso, &type_die, &global_die);
+>  
+>  out:
+>  	debuginfo__delete(dloc->di);
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 44ef968a7ad3..9e61ff326651 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1610,6 +1610,7 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+>  	vt->reg = reg_from_dwarf_op(ops);
+>  	vt->offset = offset_from_dwarf_op(ops);
+>  	vt->next = *var_types;
+> +	vt->name = dwarf_diename(die_mem);
+
+Hmm.. maybe we can just collect variables (not their types) directly,
+then we can get the name from the variable DIE without saving it in
+the struct die_var_type.
+
+Thanks,
+Namhyung
+
+
+>  	*var_types = vt;
+>  
+>  	return DIE_FIND_CB_SIBLING;
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 24446412b869..406a5b1e269b 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -146,6 +146,7 @@ struct die_var_type {
+>  	u64 addr;
+>  	int reg;
+>  	int offset;
+> +	const char *name;
+>  };
+>  
+>  /* Return type info of a member at offset */
+> -- 
+> 2.43.0
+> 
