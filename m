@@ -1,173 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CD2D7D3EF;
-	Thu, 18 Jul 2024 11:19:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240FC84DF5;
+	Thu, 18 Jul 2024 11:23:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721301557; cv=none; b=K/7Be9wGpwm59iW/r+J9Iw/hX/dOlf/fN17D+Ie0ArHl28IzmjbKS5ICnWbxGUmJ9u1mdsouRgoNRPOfnOvg2v0hBYYGPQDg/QS0eEdKeVxrtIo1U3xUoSH6NV0q5hwNZ4J96wUTAKTXf4hrzyTIkJePOdRizKvGB780SWwikYI=
+	t=1721301843; cv=none; b=qTfZ4o5+UvQ0P3uFAQPSMc8G0urBrS62oV+gVkuolk1UfMPjIglZTbwGGIQmqGJeqP39XSpHH8ZuJrtHsawOxR9p7IOCuuUqU6SO7mMxqCYQQmsmv5mC9SCfFus88wYlqrVOy+4UismJzPMdW4GDPJcazoZG+JyeCjMii/to5/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721301557; c=relaxed/simple;
-	bh=0AhJ90EdbnHIUUwth+DAtYzqSMzjIxsaALpFpmPbiqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nJ05TELobTYlDdmVuK6hkSla0tEjHo4o3niEN+psNwq/UD1FOkEeZKk645+SlcCM3/ulkGqgYuLt0leqnjg9cFoC8nTKzHFOE0JgLMm5KyHX122UwTSPVN38TEKQmZGJ0oPvnRcKMlhVNSJc2DXyEOv6aetLsio7HEH4KaRShxY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jCskHelQ; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jCskHelQ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721301555; x=1752837555;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0AhJ90EdbnHIUUwth+DAtYzqSMzjIxsaALpFpmPbiqM=;
-  b=jCskHelQB4AjDzA99hpp25Hb9v4wYfpE85Qi6AZpxlrQ2tlTay4Venk4
-   v/b6k8XhJkS3qwxdD58zwkx4K33DRTOZIeu2tdP5N5+hbNtOmtBiM8WwV
-   AhKuiTQqbQ50AO4WoVVNkSy+aEjjjYm2redUiSECGhc6RAS2eY+qadzjn
-   hm9Lh2xiHqSybdhNGK7GRiXjz+RzZ8mxuT6cbPT/AcMJQsAGFRK8NtLUr
-   Qsj+GFwwPS7jXKbSfWD1hS7wQWiAf8tnkf6hNqktKou58WwW5u9ZQMpGY
-   v8kVZUq4TtOZwITUFuIqv9lB1PTse+cq3ndtL22ncT0bkJH906kUfSRYA
-   w==;
-X-CSE-ConnectionGUID: zlP5ul13SOuwVz3MSOeJXA==
-X-CSE-MsgGUID: BlaPC0beQw6JilTF9KZMIg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11136"; a="30243872"
-X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
-   d="scan'208";a="30243872"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 04:19:15 -0700
-X-CSE-ConnectionGUID: sYHOG/iRSZO0WsTnDjF1Bw==
-X-CSE-MsgGUID: QwXKpOj7RLeR8oUvmJ6iyQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,217,1716274800"; 
-   d="scan'208";a="88216115"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
-  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2024 04:19:08 -0700
-Message-ID: <14cd68b2-eeee-42e3-87a6-c12d3814bd51@intel.com>
-Date: Thu, 18 Jul 2024 14:19:03 +0300
+	s=arc-20240116; t=1721301843; c=relaxed/simple;
+	bh=Von70e325NTMhrdRJlBmZTpEzJqO3hoYObIgLIfWjLU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=oSd5mWooiqpUiTQNEl3SRJpDUxFsCJrIfEVVnEtUaFPE0Uren+vtA3WwMkPrYd7m2u3QTD/z62L5f4Kk2hDQ22a/cY5HXfQwYJLAtFVh4dqF3mLr0KeHJCENaT59TU0sYZ56qMFzqPLgymzsKnymTEPvn2/xK7bzRcpSiDLaiXk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from ThinkPad-T480s.. (unknown [180.110.112.93])
+	by APP-03 (Coremail) with SMTP id rQCowABXXNQ1+5hmHaZgFg--.36655S2;
+	Thu, 18 Jul 2024 19:23:35 +0800 (CST)
+From: zhouquan@iscas.ac.cn
+To: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Cc: anup@brainfault.org,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	Quan Zhou <zhouquan@iscas.ac.cn>
+Subject: [PATCH 0/2] Add perf support to collect KVM guest statistics from host side
+Date: Thu, 18 Jul 2024 19:23:33 +0800
+Message-Id: <cover.1721271251.git.zhouquan@iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V9 02/13] perf/core: Add aux_pause, aux_resume,
- aux_start_paused
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
- Hendrik Brueckner <brueckner@linux.ibm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
- coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
- <will@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
- Ian Rogers <irogers@google.com>, Andi Kleen <ak@linux.intel.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-References: <20240715160712.127117-1-adrian.hunter@intel.com>
- <20240715160712.127117-3-adrian.hunter@intel.com>
- <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowABXXNQ1+5hmHaZgFg--.36655S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw17AFy7Gr4UGF1rCr1xKrg_yoWrtr17pr
+	43CrsxtF4rAryIqw1Svr1YkryUJ397XrnxGrnxJr4rAr4jvaykXwn2gr1xZ3y0qrykKryr
+	Xw1ktFy2kas0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUvG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr
+	0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY
+	17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcV
+	C0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY
+	6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa
+	73UjIFyTuYvjfUe6pBDUUUU
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAUCBmaY7wwhDAAAs9
 
-On 18/07/24 12:38, Peter Zijlstra wrote:
-> On Mon, Jul 15, 2024 at 07:07:01PM +0300, Adrian Hunter wrote:
->> Hardware traces, such as instruction traces, can produce a vast amount of
->> trace data, so being able to reduce tracing to more specific circumstances
->> can be useful.
->>
->> The ability to pause or resume tracing when another event happens, can do
->> that.
->>
->> Add ability for an event to "pause" or "resume" AUX area tracing.
->>
->> Add aux_pause bit to perf_event_attr to indicate that, if the event
->> happens, the associated AUX area tracing should be paused. Ditto
->> aux_resume. Do not allow aux_pause and aux_resume to be set together.
->>
->> Add aux_start_paused bit to perf_event_attr to indicate to an AUX area
->> event that it should start in a "paused" state.
->>
->> Add aux_paused to struct hw_perf_event for AUX area events to keep track of
->> the "paused" state. aux_paused is initialized to aux_start_paused.
->>
->> Add PERF_EF_PAUSE and PERF_EF_RESUME modes for ->stop() and ->start()
->> callbacks. Call as needed, during __perf_event_output(). Add
-> 
-> Why in __perf_event_output() rather than in __perf_event_overflow().
-> Specifically, before bpf_overflow_handler().
-> 
-> That is, what do we want BPF to be able to do here? To me it seems
-> strange that BPF would be able to affect this functionality. You want
-> this pause/resume to happen irrespective of how the rest of the event is
-> processed, no?
+From: Quan Zhou <zhouquan@iscas.ac.cn>
 
-The thought was to have the output match up with pause/resume, but it
-doesn't really make much difference.
+Add basic guest support to RISC-V perf, enabling it to distinguish
+whether PMU interrupts occur in the host or the guest, and then
+collect some basic guest information from the host side
+(guest os callchain is not supported for now).
 
-Putting it before the BPF handler is reasonable.
+Based on the x86/arm implementation, tested with kvm-riscv.
+test env:
+- host: qemu-9.0.0
+- guest: qemu-9.0.0 --enable-kvm (only start one guest and run top)
 
-> 
->> aux_in_pause_resume to struct perf_buffer to prevent races with the NMI
->> handler. Pause/resume in NMI context will miss out if it coincides with
->> another pause/resume.
-> 
-> I'm struggling here. That variable is only ever used inside that one
-> function. So it must be self-recursion. Are you thinking something like:
-> 
->   swevent_overflow()
->     ...
->       event_aux_pause()
->         <NMI>
-> 	  event_overflow()
-> 	    ...
-> 	      event_aux_pause()
-> 
-> ?
-> 
-> Where two events in the group, one software and one hardware, are both
-> trying to control the AUX thing?
+-----------------------------------------
+1) perf kvm top
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules top
 
-Exactly that yes.
+PerfTop:      41 irqs/sec  kernel:97.6% us: 0.0% guest kernel: 0.0% guest us: 0.0% exact:  0.0% [250Hz cycles:P],  (all, 4 CPUs)
+-------------------------------------------------------------------------------
 
->                                  Because I don't think the PT-PMI ever
-> gets here.
+    64.57%  [kernel]        [k] default_idle_call
+     3.12%  [kernel]        [k] _raw_spin_unlock_irqrestore
+     3.03%  [guest.kernel]  [g] mem_serial_out
+     2.61%  [kernel]        [k] handle_softirqs
+     2.32%  [kernel]        [k] do_trap_ecall_u
+     1.71%  [kernel]        [k] _raw_spin_unlock_irq
+     1.26%  [guest.kernel]  [g] do_raw_spin_lock
+     1.25%  [kernel]        [k] finish_task_switch.isra.0
+     1.16%  [kernel]        [k] do_idle
+     0.77%  libc.so.6       [.] ioctl
+     0.76%  [kernel]        [k] queue_work_on
+     0.69%  [kernel]        [k] __local_bh_enable_ip
+     0.67%  [guest.kernel]  [g] __noinstr_text_start
+     0.64%  [guest.kernel]  [g] mem_serial_in
+     0.41%  libc.so.6       [.] pthread_sigmask
+     0.39%  [kernel]        [k] mem_cgroup_uncharge_skmem
+     0.39%  [kernel]        [k] __might_resched
+     0.39%  [guest.kernel]  [g] _nohz_idle_balance.isra.0
+     0.37%  [kernel]        [k] sched_balance_update_blocked_averages
+     0.34%  [kernel]        [k] sched_balance_rq
 
-No it doesn't.  AUX pause/resume is something a non-AUX event in the
-group does to the AUX event which is the group leader.
+2) perf kvm record
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules record -a sleep 60
 
-> 
->> To use aux_pause or aux_resume, an event must be in a group with the AUX
->> area event as the group leader.
-> 
-> 
->> @@ -402,6 +411,15 @@ struct pmu {
->>  	 *
->>  	 * ->start() with PERF_EF_RELOAD will reprogram the counter
->>  	 *  value, must be preceded by a ->stop() with PERF_EF_UPDATE.
->> +	 *
->> +	 * ->stop() with PERF_EF_PAUSE will stop as simply as possible. Will not
->> +	 * overlap another ->stop() with PERF_EF_PAUSE nor ->start() with
->> +	 * PERF_EF_RESUME.
->> +	 *
->> +	 * ->start() with PERF_EF_RESUME will start as simply as possible but
->> +	 * only if the counter is not otherwise stopped. Will not overlap
->> +	 * another ->start() with PERF_EF_RESUME nor ->stop() with
->> +	 * PERF_EF_PAUSE.
->>  	 */
->>  	void (*start)			(struct perf_event *event, int flags);
->>  	void (*stop)			(struct perf_event *event, int flags);
-> 
-> Notably, they *can* race with ->stop/start without EF_PAUSE/RESUME.
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 1.292 MB perf.data.kvm (17990 samples) ]
 
-Yes that would be worth adding to the comments.
+3) perf kvm report (the data shown here is not complete)
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules report -i perf.data.kvm
+
+# Total Lost Samples: 0
+#
+# Samples: 17K of event 'cycles:P'
+# Event count (approx.): 269968947184
+#
+# Overhead  Command          Shared Object            Symbol                                        
+# ........  ...............  .......................  ..............................................
+#
+    61.86%  swapper          [kernel.kallsyms]        [k] default_idle_call
+     2.93%  :6463            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     2.82%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_out
+     2.11%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     1.78%  :6462            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     1.37%  swapper          [kernel.kallsyms]        [k] handle_softirqs
+     1.36%  swapper          [kernel.kallsyms]        [k] do_idle
+     1.21%  sshd             [kernel.kallsyms]        [k] do_trap_ecall_u
+     1.21%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irq
+     1.11%  qemu-system-ris  [kernel.kallsyms]        [k] do_trap_ecall_u
+     0.93%  qemu-system-ris  libc.so.6                [.] ioctl
+     0.89%  sshd             [kernel.kallsyms]        [k] __local_bh_enable_ip
+     0.77%  qemu-system-ris  [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     0.68%  qemu-system-ris  [kernel.kallsyms]        [k] queue_work_on
+     0.65%  sshd             [kernel.kallsyms]        [k] handle_softirqs
+     0.44%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_in
+     0.42%  sshd             libc.so.6                [.] pthread_sigmask
+     0.34%  :6462            [guest.kernel.kallsyms]  [g] serial8250_tx_chars
+     0.30%  swapper          [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.29%  swapper          [kernel.kallsyms]        [k] sched_balance_rq
+     0.29%  sshd             [kernel.kallsyms]        [k] __might_resched
+     0.26%  swapper          [kernel.kallsyms]        [k] tick_nohz_idle_exit
+     0.26%  swapper          [kernel.kallsyms]        [k] sched_balance_update_blocked_averages
+     0.26%  swapper          [kernel.kallsyms]        [k] _nohz_idle_balance.isra.0
+     0.24%  qemu-system-ris  [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.23%  :6462            [guest.kernel.kallsyms]  [g] __noinstr_text_start
+
+
+Quan Zhou (2):
+  riscv: perf: add guest vs host distinction
+  riscv: KVM: add basic support for host vs guest profiling
+
+ arch/riscv/include/asm/kvm_host.h   |  6 +++++
+ arch/riscv/include/asm/perf_event.h |  7 ++++++
+ arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+ arch/riscv/kvm/Kconfig              |  1 +
+ arch/riscv/kvm/main.c               | 12 +++++++--
+ arch/riscv/kvm/vcpu.c               |  7 ++++++
+ 6 files changed, 69 insertions(+), 2 deletions(-)
+
+
+base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
+-- 
+2.34.1
 
