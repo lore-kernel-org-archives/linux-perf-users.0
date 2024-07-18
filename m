@@ -1,174 +1,206 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
+Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992543BB30
-	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 15:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2F6512C474
+	for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 15:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721315562; cv=none; b=N1CnUZn7mYXYg/aHrDt6RlZPMwiuEF1n8a7B9fDLOqjTZeE787Wue3NgCwR4evH1/TxZAKPjCQONJzXszclUk/rgC5GTxf/KJgMZrSKW3yAvOZBmM5K3QqOCL8IQX1WvjQNr4ckS4CKq7hg79wOhf2tKQnHQmhnBj7BMB0walGQ=
+	t=1721316196; cv=none; b=SKHJHFvtGAgvdLMUNnvs4Q6H8zWpniYsgMKSa4Q78pA9DEg10ROLivkr5R/5HfdTox401wTOkpDpv+uzeXy+tWte5yx7RIEyTDa5ZCU2xGo8INwtvK4By0LZ4FMX58NLfL6/riyCjR6A2MpTDPMhzEFSpq3c8PVrTzxmqvQE7wg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721315562; c=relaxed/simple;
-	bh=vpnk/Ml68wNsV3YCDkRmeDyUgYOqV5PsMUdDY82bZZA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WjuprWKyXYLGt1oWFs4IH3OE29IoiCHqukcjtb4YpM/Ngcxlb3e0BZ9AxkbuBthWYchUGtUMQXVtD7hf0L9f9UWbYFPyQL8wIbFmE/n1zuoF3FntExsLi4oqMwYNCdzuGDU8iFXbUlgVVfO8EE3YIpEMOoIHqHKCyZTOrEUVbC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=JqPirRKf; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721316196; c=relaxed/simple;
+	bh=oQnAg/XHgmHTaoNbQThZNL+nThyW0lkh2E2uvTmBiGM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=urHWxzmAL5Zot61OO7vIblaeZ4+Uo7KsqCbYJhFcjcx95hDdQBhFQkAfarEBLMEmKB6a9H5zALtNWaOHgzHczNoJaw6PDf02PiWEQ3bt5692rCoEpGbqNFch/ELse9czZrF/8YZZAqVuVvwv86HFXmO6rdSlyGxGJVEWhPSCeB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=CEx86e5W; arc=none smtp.client-ip=209.85.216.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JqPirRKf"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3815ad8adc9so162525ab.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 08:12:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CEx86e5W"
+Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cb510cd097so324672a91.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 18 Jul 2024 08:23:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721315560; x=1721920360; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A1uVC0gEc7ytXHhe/ddZaTs4m7NnErpAclBKBE12jhQ=;
-        b=JqPirRKfxIyHiP5Y7Cp2udHnM8o+4hK7sBqKr0bsweaJbOc446yaeUXird/1Zki2Ua
-         CcqTQ3/d0YS92WQRfghRe1rwxLDyykxTtlBw+mvezx3lRu1/LM/ak4o5vkNszNR/27JN
-         bL+lZlIs1+YVFoOqSkzc2U65IDdylboFMZR2N0XcbQZE+LsIqh+qZnPsVmkKBHprj0d0
-         AIIC1U1OgYLv4SS3mfPiHyLnv7BkatPLZ84uhtri6+BYuKtVMqMXkuRI68KQTWOPnJYs
-         54fJxpUcz62PiVLOdCz0kMAuIAYfrifOw4OMepn6tpo/FGQh8B4DjH5rTfnmRT4zppOd
-         otDQ==
+        d=sifive.com; s=google; t=1721316194; x=1721920994; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hlSS9tFK0jyY2/f4QS94AO70MXLW8ulRLZCmaIHwXQA=;
+        b=CEx86e5WibVjYiMHWXvj/5ZhcngmJvfCXfdb4Rz7Tu1MeQo+aa2zEvGmZ0S7iUox/9
+         VaNrZxcX2rGCu8Y59KnZ6jhHdtSklHLqrKdquVvPag/FatSUFmvxVDTXanlkLvp9fS0O
+         U4ze9qQx8IJi2usrQYnQQDpEsg78j3tDuHTokYpeB6LmftxsxWJ9z3Pu3EHKxmlPV5oK
+         fRZP5qNYMQv7MiOAxXEy/nIpHSdCfwyfrdcm0Ps4+dW09bfpbr7guJwuPLDlEQummYIW
+         2cXHG8hj+XV+sKU978wjB2YIJIejrKgKICQqtTqTlwEYQp+/TEmBdelsaQOJEil57x3O
+         FfSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721315560; x=1721920360;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A1uVC0gEc7ytXHhe/ddZaTs4m7NnErpAclBKBE12jhQ=;
-        b=rmiGPUGZmcja9IDyaQADjR6NuBhw93THAcofObIheA22jzcLucp+jNPBuREd2LuIAj
-         26UGzYFT0C+lscXm0GVy0SjssTflt8+jeTnWIsXD8NZ94gKYZZncIHTEtiOjwNyhnvPx
-         PaceVp7RFzbLYOIdEDFTc3TcMhy6fWkN1uRetIn5D+J6UWf5pXOkTHXKT+CRA5iSYpTw
-         Unp3lgpcuxCAKt6S2STgXmG5/lCb7wQ6vGLNDE0TgPz5/wfzLElNL1+4r6aDAYQ4ISde
-         cLw6btHQFQqzDweEiwNuV/UxZm8/fzl/XwtYwK8FjsZW+2HQTRj1HxFeB6tktTtCnkkp
-         gWRw==
-X-Forwarded-Encrypted: i=1; AJvYcCWvhjOvpYHfWwzzZnhuIzobMj1El010Hcmp7YIT5mw64zkAc7Ull1QvZw8aYdpdf8VxhnBY3fatERUfyINa2Sr8PK7dUkutVEqET6oToCUGAA==
-X-Gm-Message-State: AOJu0YxmSvp7WK0uC4tO/gWRsAmS/iu+Xp8tYjEgMAmPo+LLBKnKxl/w
-	ieEmCCWUPyw4jp5KGhTxni07cI7d/GrXaT/TcW8epvUzB1yV6GDgDATqjX+CaI3wSz/jUXQwqsf
-	xKVYiu8SkdhzMHmkkDy+lFC+J9pt0y2s/iEGM
-X-Google-Smtp-Source: AGHT+IFa5I5DOiVGOvwoKlGw6AmBXgPdW/uZdu3AmcpjU7mnxwdSOU1I+Rv4p0v9bZ9wfaiQWkMwNeGJYQ5IhfVGIHI=
-X-Received: by 2002:a05:6e02:154c:b0:383:de0e:88e5 with SMTP id
- e9e14a558f8ab-39699ad7d16mr2195805ab.26.1721315559524; Thu, 18 Jul 2024
- 08:12:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721316194; x=1721920994;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hlSS9tFK0jyY2/f4QS94AO70MXLW8ulRLZCmaIHwXQA=;
+        b=v7aTowGY/LKllhJaRfhTraF/t0VfwDeHiJfF4IniEiB5D6IGix+X0Js0eSXvDpPR6t
+         1Hc5VJW4TrUgcXrRo7Xdmre8hDqA1+dLuOB41TL2RZv+xM2qR1PTe0hsZtef1UySBBor
+         50qbpNroHZ7qTXAmZlkhks4oVnPtwBAUnUrrtsTVRyRMSIudVyK3JNk3DqOfxY87s5mE
+         pbcLcZpCbDl7WpgBX9P7F0e6qPDORxLFO3msM2bP5l59rDRZpY7w237TzY2ytPd+tXpj
+         J2DvwW2zdUnrCpaAJpPdrQuYuxvzJOmKBioiXu/cSSImw0lalNvfeIwfsUA3Jkj0ukM/
+         RVLQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVMqdiz57NTFSJ2stVdQZqmedCxUGsk6er7MyJYSvYUFNDwUE4OEYpQDFi4Lu/sTXkefLSSZFvTC7OqAgIqZJAxCkHDtAp8cEiTpGdQUP7n4A==
+X-Gm-Message-State: AOJu0YxfXfs6L+HT2c4qKCjuGVofktv6uJaPJALQ1gv2oAQsp5ZC7sn+
+	3G/Fdl7HiFGjSnDYJX+weFpa4FTu8A7+Nxu4LEZWR/vvo0lfpJkOojKaNd41+Yg=
+X-Google-Smtp-Source: AGHT+IGYiT8Y8eVtORah7pg5+CDI8AQnZirmt9fO5DQfBE3quaBqJnjCZLTnRCt2ZV4FKuosjPfDtQ==
+X-Received: by 2002:a17:90b:144:b0:2c9:66d3:4663 with SMTP id 98e67ed59e1d1-2cb7755e41emr856950a91.43.1721316194279;
+        Thu, 18 Jul 2024 08:23:14 -0700 (PDT)
+Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2cb77a01046sm810525a91.14.2024.07.18.08.23.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jul 2024 08:23:13 -0700 (PDT)
+From: Eric Lin <eric.lin@sifive.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	peterlin@andestech.com,
+	dminus@andestech.com,
+	locus84@andestech.com,
+	jisheng.teoh@starfivetech.com,
+	inochiama@outlook.com,
+	n.shubin@yadro.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Eric Lin <eric.lin@sifive.com>,
+	Samuel Holland <samuel.holland@sifive.com>
+Subject: [PATCH] perf arch events: Fix duplicate RISC-V SBI firmware event name
+Date: Thu, 18 Jul 2024 23:22:54 +0800
+Message-ID: <20240718152254.16007-1-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240718003025.1486232-1-irogers@google.com> <20240718003025.1486232-7-irogers@google.com>
- <febefab7-7351-4bd5-a6cc-a0116248484f@linux.intel.com>
-In-Reply-To: <febefab7-7351-4bd5-a6cc-a0116248484f@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 18 Jul 2024 08:12:27 -0700
-Message-ID: <CAP-5=fUUcehu-C=ytHVVixOpeCYoW4oJkkj6p6W=M0HtQ2wrRA@mail.gmail.com>
-Subject: Re: [PATCH v2 6/6] perf parse-events: Add "cpu" term to set the CPU
- an event is recorded on
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
-	Jonathan Corbet <corbet@lwn.net>, James Clark <james.clark@arm.com>, 
-	Ravi Bangoria <ravi.bangoria@amd.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, ananth.narayan@amd.com, gautham.shenoy@amd.com, 
-	kprateek.nayak@amd.com, sandipan.das@amd.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 18, 2024 at 7:41=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
-om> wrote:
->
->
->
-> On 2024-07-17 8:30 p.m., Ian Rogers wrote:
-> > The -C option allows the CPUs for a list of events to be specified but
-> > its not possible to set the CPU for a single event. Add a term to
-> > allow this. The term isn't a general CPU list due to ',' already being
-> > a special character in event parsing instead multiple cpu=3D terms may
-> > be provided and they will be merged/unioned together.
-> >
-> > An example of mixing different types of events counted on different CPU=
-s:
-> > ```
-> > $ perf stat -A -C 0,4-5,8 -e "instructions/cpu=3D0/,l1d-misses/cpu=3D4,=
-cpu=3D5/,inst_retired.any/cpu=3D8/,cycles" -a sleep 0.1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0              368,647      instructions/cpu=3D0/              #    =
-0.26  insn per cycle
-> > CPU4        <not counted>      instructions/cpu=3D0/
-> > CPU5        <not counted>      instructions/cpu=3D0/
-> > CPU8        <not counted>      instructions/cpu=3D0/
-> > CPU0        <not counted>      l1d-misses [cpu]
-> > CPU4              203,377      l1d-misses [cpu]
-> > CPU5              138,231      l1d-misses [cpu]
-> > CPU8        <not counted>      l1d-misses [cpu]
-> > CPU0        <not counted>      cpu/cpu=3D8/
-> > CPU4        <not counted>      cpu/cpu=3D8/
-> > CPU5        <not counted>      cpu/cpu=3D8/
-> > CPU8              943,861      cpu/cpu=3D8/
-> > CPU0            1,412,071      cycles
-> > CPU4           20,362,900      cycles
-> > CPU5           10,172,725      cycles
-> > CPU8            2,406,081      cycles
-> >
-> >        0.102925309 seconds time elapsed
-> > ```
-> >
-> > Note, the event name of inst_retired.any is missing, reported as
-> > cpu/cpu=3D8/, as there are unmerged uniquify fixes:
-> > https://lore.kernel.org/lkml/20240510053705.2462258-3-irogers@google.co=
-m/
-> >
-> > An example of spreading uncore overhead across two CPUs:
-> > ```
-> > $ perf stat -A -e "data_read/cpu=3D0/,data_write/cpu=3D1/" -a sleep 0.1
-> >
-> >  Performance counter stats for 'system wide':
-> >
-> > CPU0               223.65 MiB  uncore_imc_free_running_0/cpu=3D0/
-> > CPU0               223.66 MiB  uncore_imc_free_running_1/cpu=3D0/
-> > CPU0        <not counted> MiB  uncore_imc_free_running_0/cpu=3D1/
-> > CPU1                 5.78 MiB  uncore_imc_free_running_0/cpu=3D1/
-> > CPU0        <not counted> MiB  uncore_imc_free_running_1/cpu=3D1/
-> > CPU1                 5.74 MiB  uncore_imc_free_running_1/cpu=3D1/
-> > ```
-> >
-> > Manually fixing the output it should be:
-> > ```
-> > CPU0               223.65 MiB  uncore_imc_free_running_0/data_read,cpu=
-=3D0/
-> > CPU0               223.66 MiB  uncore_imc_free_running_1/data_read,cpu=
-=3D0/
-> > CPU1                 5.78 MiB  uncore_imc_free_running_0/data_write,cpu=
-=3D1/
-> > CPU1                 5.74 MiB  uncore_imc_free_running_1/data_write,cpu=
-=3D1/
-> > ```
-> >
-> > That is data_read from 2 PMUs was counted on CPU0 and data_write was
-> > counted on CPU1.
->
-> There was an effort to make the counter access from any CPU of the packag=
-e.
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
-/?id=3Dd6a2f9035bfc27d0e9d78b13635dda9fb017ac01
->
-> But now it limits the access from specific CPUs. It sounds like a
-> regression.
+Currently, the RISC-V firmware JSON file has duplicate event name
+"FW_SFENCE_VMA_RECEIVED". According to the RISC-V SBI PMU extension[1],
+the event name should be "FW_SFENCE_VMA_ASID_SENT".
 
-Thanks Kan, I'm not sure I understand the comment. The overhead I was
-thinking of here is more along the lines of cgroup context switches
-(although that isn't in my example). There may be a large number of
-say memory controller events just by having 2 events for each PMU and
-then there are 10s of PMUs. By putting half of the events on 1 CPU and
-half on another, the context switch overhead is shared. That said, the
-counters don't care what cgroup is accessing memory, and users doing
-this are likely making some kind of error.
+Before this patch:
+$ perf list
 
-Thanks,
-Ian
+firmware:
+  fw_access_load
+       [Load access trap event. Unit: cpu]
+  fw_access_store
+       [Store access trap event. Unit: cpu]
+....
+ fw_set_timer
+       [Set timer event. Unit: cpu]
+  fw_sfence_vma_asid_received
+       [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
+  fw_sfence_vma_received
+       [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
+
+After this patch:
+$ perf list
+
+firmware:
+  fw_access_load
+       [Load access trap event. Unit: cpu]
+  fw_access_store
+       [Store access trap event. Unit: cpu]
+.....
+  fw_set_timer
+       [Set timer event. Unit: cpu]
+  fw_sfence_vma_asid_received
+       [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
+  fw_sfence_vma_asid_sent
+       [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
+  fw_sfence_vma_received
+       [Received SFENCE.VMA request from other HART event. Unit: cpu]
+
+Link: https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc#event-firmware-events-type-15 [1]
+Fixes: 8f0dcb4e7364 ("perf arch events: riscv sbi firmware std event files")
+Signed-off-by: Eric Lin <eric.lin@sifive.com>
+Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+---
+ tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json       | 2 +-
+ tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json        | 2 +-
+ tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json       | 2 +-
+ .../perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json  | 2 +-
+ .../perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json  | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+index 9b4a032186a7..7149caec4f80 100644
+--- a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
++++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+@@ -36,7 +36,7 @@
+     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+   },
+   {
+-    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+   },
+   {
+     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+index a9939823b14b..0c9b9a2d2958 100644
+--- a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
++++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+@@ -74,7 +74,7 @@
+   {
+     "PublicDescription": "Sent SFENCE.VMA with ASID request to other HART event",
+     "ConfigCode": "0x800000000000000c",
+-    "EventName": "FW_SFENCE_VMA_RECEIVED",
++    "EventName": "FW_SFENCE_VMA_ASID_SENT",
+     "BriefDescription": "Sent SFENCE.VMA with ASID request to other HART event"
+   },
+   {
+diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
+index 9b4a032186a7..7149caec4f80 100644
+--- a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
++++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
+@@ -36,7 +36,7 @@
+     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+   },
+   {
+-    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+   },
+   {
+     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+index 9b4a032186a7..7149caec4f80 100644
+--- a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
++++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+@@ -36,7 +36,7 @@
+     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+   },
+   {
+-    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+   },
+   {
+     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+index 9b4a032186a7..7149caec4f80 100644
+--- a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
++++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+@@ -36,7 +36,7 @@
+     "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+   },
+   {
+-    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
++    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+   },
+   {
+     "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+-- 
+2.43.2
+
