@@ -1,146 +1,134 @@
-Received: from out-172.mta1.migadu.com (out-172.mta1.migadu.com [95.215.58.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280A779C0
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 02:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62B89208BA
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 08:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721355954; cv=none; b=TWLPulC3mSzGrhJzPajZTcaE6+N/Cc9I1P0rF+b8GcF45p6MyDB0PLrwmozUWbn93SuS/pTvDC4OTl6ZIfCdTGkdEQKQG8/c5wtO7AUyBdlnYgwSFPy2P9QT+F4a8ev3ojVacn+eFaCPInEdNuU/txOWXbEz/GwPURlc1C2YmrM=
+	t=1721377071; cv=none; b=LFBT2hxz87zgkfnDcORXawlFLINkpLVdJATo63NwaN/VgbDgA5MSnwDe6rgYAY963emgg+iLi9LznSqOxxF2KUd/LYTr8bzBDZdRoDl6gS2LXf5ELqjeKMpUqMGLZtKLSa7TKE5ckyNm4A9todBbVr4grAKetBA11PciEytPJy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721355954; c=relaxed/simple;
-	bh=T77R5RyzX0nHq/IJc20Ki5FR8bebYPGI1ztUNJ1sEv8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tu11gHRDjz4t89GzldB23nB7rt0uUi7AC6J6TaHkemHoymH/Mn0YYDmOA0WLjewIypOvGaUJbLOX+w/6QD3BbXkPV0Sen1DFRsG03rr5uMquUiRJGwAN5q5/2F7sNx9DhqYEgeLt5gUAS859qs18+fWMDtQZ0cEB2RO5B3zUh7c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nxIb3rBI; arc=none smtp.client-ip=95.215.58.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721377071; c=relaxed/simple;
+	bh=QyvfbL1Dt9Lf/qRb/Tq/QxZnlpQmlGqWdt0glv+CBdw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VwhJYIv8tlSqmaFgh2QSd5E2+1fy1OkSSQn7qgFin7WwwwTkXXcxWGgKYreBPWd27qro0kxs5PWfBPNWbWaO3HdQhwMtoL9C7EZQB/t5UtqYIqiTFRi9uCNfxlA0EOomImSvylETvDMvVoVmGZSTntvx8DQbQC8bvdBqA6gQa4s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=d93U3cLX; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nxIb3rBI"
-X-Envelope-To: houtao@huaweicloud.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721355951;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=LarI9buMmMtEMjPDmndw6Pk2fDlCMDlc6lIj2iOEviQ=;
-	b=nxIb3rBIVGCyjPhWiGryJFPqF55mCIP6bb0EBWwsvi1aB1X9IQsuPtKu1AhcnBQ3QqZkv2
-	wJ22TTVe5UbmXaOJ5Bq4ss4ZNx6xV7r04XTSnk9Xu6b5zPkQLSyw78CkwNnBypXZBKq/+N
-	KJyEWv/LVArmpRrOYQ1dFF/f1oQuzXQ=
-X-Envelope-To: bpf@vger.kernel.org
-X-Envelope-To: linux-perf-users@vger.kernel.org
-X-Envelope-To: acme@kernel.org
-X-Envelope-To: jolsa@kernel.org
-X-Envelope-To: ast@kernel.org
-X-Envelope-To: yhs@fb.com
-X-Envelope-To: kjlx@templeofstupid.com
-X-Envelope-To: houtao1@huawei.com
-Message-ID: <9e3d8130-f5a7-459d-b1f4-033c367cd838@linux.dev>
-Date: Thu, 18 Jul 2024 19:25:45 -0700
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="d93U3cLX"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fc569440e1so15878435ad.3
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 01:17:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google; t=1721377070; x=1721981870; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3pKe/8ymbuAK5Ax3GUIQcNZESBu/C5Eo8hDWQvxiYB0=;
+        b=d93U3cLX14y0iH2BvfAI4C12yoFPYVjUpTDZpEY9aYEADlT1hwx6fmdoR8m74Wi+ai
+         dLnwJ0PHem8jBa5RnjXTR6abuU3ypyDlEFPfpwSzK7hjb0owVZooE9xrWbXa1TgkWHyt
+         xLbHyOKHIznMbtUbHJrz8J4C/RAFwCVsayJ87VGv0Kd4DHdlZSluwf4QUxjfh38B8QHc
+         wjDdq8O8iFfSDOhcP1GwYuIz+RM448QuWY0GkugSPlGgUoa7G/wSBIQR2YI/sXRIViOh
+         8eCxNKhGLmh3cKtQz8Ct5AswevT+uxcNIB6NQA9sN/Kre53AK/7amZRSEDAY4dghC/UI
+         t9iQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721377070; x=1721981870;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3pKe/8ymbuAK5Ax3GUIQcNZESBu/C5Eo8hDWQvxiYB0=;
+        b=PLIMbdKzQ4Is61uBHOdDFP7bDt4N7ldg6cPIuQDJRZZMDx9VYTajHplcQl8rlkY9Zo
+         3oI0sDzJB2JJTJYTpSHUQv5xZlGbiHJRkoExJR6mwGo3AqHeOQT/VK++668NHSwIFT8b
+         T4NbqBvgcReTDnIj99j20E8p/MrJWcoGPHCg0sZLB0Setqs+IIJQvD0MLBsJYJfC9L/S
+         s8BSOl0hrYOe1ZbtfWesTWM/mJVmttBRyDmlmnQO3amloSQK8kgwxCLoxHrsX8wFv5KU
+         8R45njBxdQlTE0ZHU+OLwWW7m6ezdrUUcjHtTL7adtN22V5EGMhyW9ethx2r/IBnwL0l
+         c2mA==
+X-Forwarded-Encrypted: i=1; AJvYcCX1wAZArDdh9UghzbBPvcRH7eptsrUftSB74BhXjDUxzPIH3Cj5TDxuu1hFLMHPjHFPkseAZyiV7cq1dngKKQvPdeHyzHuAsMK5fE710UDDYA==
+X-Gm-Message-State: AOJu0YxVCw8MpFqdUnseE86o3d9TRVCUy4xbqro/LakAloiK5Ad/qbmn
+	mML6Q/yhijYcAQG9qmCiQWYf/dHIQ2t179jL+IV6fQfvyTajVrz+Q2izl1j3rZo=
+X-Google-Smtp-Source: AGHT+IEikfqPPIxLyXm7DyKRFHJ3A1M1Ps2TrqjIqzYPMuiDYFdEkDVoM5sL+AWzL4BN7joBqln2Eg==
+X-Received: by 2002:a17:902:db07:b0:1f7:2293:1886 with SMTP id d9443c01a7336-1fc4e165dffmr72867495ad.12.1721377069552;
+        Fri, 19 Jul 2024 01:17:49 -0700 (PDT)
+Received: from hsinchu16.internal.sifive.com (59-124-168-89.hinet-ip.hinet.net. [59.124.168.89])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fd64d5db43sm8442355ad.280.2024.07.19.01.17.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Jul 2024 01:17:49 -0700 (PDT)
+From: Eric Lin <eric.lin@sifive.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	james.clark@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: vincent.chen@sifive.com,
+	greentime.hu@sifive.com,
+	Eric Lin <eric.lin@sifive.com>
+Subject: [PATCH] perf pmus: Fix duplicate events caused segfault
+Date: Fri, 19 Jul 2024 16:16:51 +0800
+Message-ID: <20240719081651.24853-1-eric.lin@sifive.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] perf/bpf: Use prog to emit ksymbol event for
- main program
-Content-Language: en-GB
-To: Hou Tao <houtao@huaweicloud.com>, bpf@vger.kernel.org
-Cc: linux-perf-users@vger.kernel.org,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Yonghong Song <yhs@fb.com>,
- Krister Johansen <kjlx@templeofstupid.com>, houtao1@huawei.com
-References: <20240714065533.1112616-1-houtao@huaweicloud.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <20240714065533.1112616-1-houtao@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+Currently, if vendor JSON files have two duplicate event names,
+the "perf list" command will trigger a segfault.
 
-On 7/13/24 11:55 PM, Hou Tao wrote:
-> From: Hou Tao <houtao1@huawei.com>
->
-> Since commit 0108a4e9f358 ("bpf: ensure main program has an extable"),
-> prog->aux->func[0]->kallsyms is left as uninitialized. For bpf program
-> with subprogs, the symbol for the main program is missed just as shown
-> in the output of perf script below:
->
->   ffffffff81284b69 qp_trie_lookup_elem+0xb9 ([kernel.kallsyms])
->   ffffffffc0011125 bpf_prog_a4a0eb0651e6af8b_lookup_qp_trie+0x5d (bpf...)
->   ffffffff8127bc2b bpf_for_each_array_elem+0x7b ([kernel.kallsyms])
->   ffffffffc00110a1 +0x25 ()
->   ffffffff8121a89a trace_call_bpf+0xca ([kernel.kallsyms])
->
-> Fix it by always using prog instead prog->aux->func[0] to emit ksymbol
-> event for the main program. After the fix, the output of perf script
-> will be correct:
->
->   ffffffff81284b96 qp_trie_lookup_elem+0xe6 ([kernel.kallsyms])
->   ffffffffc001382d bpf_prog_a4a0eb0651e6af8b_lookup_qp_trie+0x5d (bpf...)
->   ffffffff8127bc2b bpf_for_each_array_elem+0x7b ([kernel.kallsyms])
->   ffffffffc0013779 bpf_prog_245c55ab25cfcf40_qp_trie_lookup+0x25 (bpf...)
->   ffffffff8121a89a trace_call_bpf+0xca ([kernel.kallsyms])
->
-> Fixes: 0108a4e9f358 ("bpf: ensure main program has an extable")
-> Signed-off-by: Hou Tao <houtao1@huawei.com>
-> ---
-> Hi,
->
-> ksymbol for bpf program had been broken twice, and I think it is better
-> to add a bpf selftest for it, but I'm not so familiar with the
-> perf_event_open(), for now I just post the fix patch and will post the
-> selftest later.
->
->   kernel/events/core.c | 28 +++++++++++++---------------
->   1 file changed, 13 insertions(+), 15 deletions(-)
+In commit e6ff1eed3584 ("perf pmu: Lazily add JSON events"),
+pmu_events_table__num_events() gets the number of JSON events
+from table_pmu->num_entries, which includes duplicate events
+if there are duplicate event names in the JSON files.
 
-I actually just hit this issue with patch in
-    https://lore.kernel.org/bpf/20240718205158.3651529-1-yonghong.song@linux.dev/T/#m92fd74865d93306757a10eb27d1e4f84cfffd5a8
+perf_pmu__for_each_event() adds JSON events to the pmu->alias
+list and copies sevent data to the aliases array. However, the
+pmu->alias list does not contain duplicate events, as
+perf_pmu__new_alias() checks if the name was already created.
 
-This patch fixed the issue. So
+When sorting the alias data, if there are two duplicate events,
+it causes a segfault in cmp_sevent() due to invalid aliases in
+the aliases array.
 
-Tested-by: Yonghong Song <yonghong.song@linux.dev>
+To avoid such segfault caused by duplicate event names in the
+JSON files, the len should be updated before sorting the aliases.
 
->
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index f0128c5ff278..e1b7d9e61fa0 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -9289,21 +9289,19 @@ static void perf_event_bpf_emit_ksymbols(struct bpf_prog *prog,
->   	bool unregister = type == PERF_BPF_EVENT_PROG_UNLOAD;
->   	int i;
->   
-> -	if (prog->aux->func_cnt == 0) {
-> -		perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_BPF,
-> -				   (u64)(unsigned long)prog->bpf_func,
-> -				   prog->jited_len, unregister,
-> -				   prog->aux->ksym.name);
-> -	} else {
-> -		for (i = 0; i < prog->aux->func_cnt; i++) {
-> -			struct bpf_prog *subprog = prog->aux->func[i];
-> -
-> -			perf_event_ksymbol(
-> -				PERF_RECORD_KSYMBOL_TYPE_BPF,
-> -				(u64)(unsigned long)subprog->bpf_func,
-> -				subprog->jited_len, unregister,
-> -				subprog->aux->ksym.name);
-> -		}
-> +	perf_event_ksymbol(PERF_RECORD_KSYMBOL_TYPE_BPF,
-> +			   (u64)(unsigned long)prog->bpf_func,
-> +			   prog->jited_len, unregister,
-> +			   prog->aux->ksym.name);
-> +
-> +	for (i = 1; i < prog->aux->func_cnt; i++) {
-> +		struct bpf_prog *subprog = prog->aux->func[i];
-> +
-> +		perf_event_ksymbol(
-> +			PERF_RECORD_KSYMBOL_TYPE_BPF,
-> +			(u64)(unsigned long)subprog->bpf_func,
-> +			subprog->jited_len, unregister,
-> +			subprog->aux->ksym.name);
->   	}
->   }
->   
+Fixes: e6ff1eed3584 ("perf pmu: Lazily add JSON events")
+Signed-off-by: Eric Lin <eric.lin@sifive.com>
+---
+ tools/perf/util/pmus.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index b9b4c5eb5002..e38c3fd4d1ff 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -443,7 +443,7 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ {
+ 	struct perf_pmu *pmu;
+ 	int printed = 0;
+-	int len;
++	size_t len, j;
+ 	struct sevent *aliases;
+ 	struct events_callback_state state;
+ 	bool skip_duplicate_pmus = print_cb->skip_duplicate_pmus(print_state);
+@@ -474,8 +474,9 @@ void perf_pmus__print_pmu_events(const struct print_callbacks *print_cb, void *p
+ 		perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
+ 					 perf_pmus__print_pmu_events__callback);
+ 	}
++	len = state.index;
+ 	qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+-	for (int j = 0; j < len; j++) {
++	for (j = 0; j < len; j++) {
+ 		/* Skip duplicates */
+ 		if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
+ 			continue;
+-- 
+2.43.2
+
