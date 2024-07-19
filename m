@@ -1,175 +1,341 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5F2E13F458;
-	Fri, 19 Jul 2024 13:38:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6E983CD5
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 13:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721396331; cv=none; b=FAojtHEgMZvRBxVF1MT8zKU3c8fy9HPYXEwtjO33wi2jPgbLsRZWVL2tpiTqCv6fjsOA8m37PodpHdHLBD0qfSKPDu8aE6qnVTyvZ4iwv5kBnrFJTmlU3oMFwl/hebLTmFCOWKHwTfW1I8NWhiMrX2xzmPA8DUsFizLsX1R/a+o=
+	t=1721396751; cv=none; b=ax+IQKS+gZKp7g2vavpmC0A9gjy7jvP/4Hwpu9fhER3k42VUOGTRUT1yzvS8/hzS0a9NItZehb+EpO0tGbJ72oWvkVMs+MqVdkhfEJoX68zP1bjY+zsfDBUzVDVxnq7XTvwBLP1y+qoctMBJhki7Uh4WirKnXpRZyXS+P/6yuEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721396331; c=relaxed/simple;
-	bh=hYm0+Gc/4820hUi3b/qjBW/E/nlsvhfdp460SR6KPfs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=mtFj9gUB94c2RM1crXVg0VSe83iXyV+YIOCLIYe82MrdIClyHJDYm3HELuHQ9A3r04Jr+s+6TlVRVdOD61WQDXsXAHMTRLvkXpoaO4BoUcdUH6aB9O4HK3e3e4SAnhiJd83LtftOVP3O4FrJ9Wg9P6kMP1+FX6br/tNEm1cUDzs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=iK1P8Lv0; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1721396751; c=relaxed/simple;
+	bh=GjySNPFrKifZ10GOJGBKmNbh/w6vmd7/dNemFTybewA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EAuoWz3RkJZ/KtlmqmY+xKZHP8lE9hh8rHHBkobUBOui1nFnfCR7blAMNiTSH0EzFPM/CALd4DC0V+TRDnUWAc+1lWuThMqqZtd9ddDvYGVQH0aRmOftFaAb+dPjnJr1llI3aLU8rCiD3FtyqhigfTo9TUUpx4QGNuk2TVEK+3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z6mRSLNz; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="iK1P8Lv0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1721396297; x=1722001097; i=markus.elfring@web.de;
-	bh=Nvp33d300YqX0N1vR8LPcXTZPzXdHadX2ynJNuJ4AJM=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:From:
-	 Subject:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=iK1P8Lv0vRGyQhWaZp4lqZN01zBuTF+XKFjc1dH1fufRyCfWCUE2hUXQng5poy8T
-	 fvQohhNtYL3ZxscNonGHDW67pIaydWuZ7EA0zuBr+Ejsur39c2BJ/ErdSd4+GWH0j
-	 mkWK9q6uUzgZMtKmWRiWOBlOtm0kRs2mPpkKesAGLM/5I8c5IjiJBB4GgnUgf9q5m
-	 BakvAxS3rOnCHVKRZUBnC+AyIy0morloPiyrCursnwMg8SQO8t/4cS67P9uF7pnJC
-	 rbUkt9GgTdGK6oORV0o/mpacHZ61wCwrdGt2w9h2383X9+aogR1C8AklPtqUa176p
-	 KUzZnj8JNfuG9aa6cA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.21] ([94.31.86.95]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1N2BI2-1sKNRX21ra-00yI1m; Fri, 19
- Jul 2024 15:38:17 +0200
-Message-ID: <fcc9ebe9-e4a0-4395-b3f0-8c6d5fba56f2@web.de>
-Date: Fri, 19 Jul 2024 15:38:14 +0200
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z6mRSLNz"
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7928d2abe0aso2153327a12.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 06:45:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721396748; x=1722001548; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=q6DEEhmg3Ja8v8Rv8CzrLy7ke/9Hd5uw1xozBhzNHkw=;
+        b=Z6mRSLNzZMvFeJBJK10q9jwCzjKzJe/dCx45eEqFtFLNLQwnPAtZkNJ1PXwV20k8zG
+         PZANsfGcU3VM9N2uVc8sNWPn8brYMs8ouuSXSFwl0jPhLPyW8BIgOcZCmI+ZXh8evd7l
+         jbLlJDzdrVmGysD5lfJheR7HqRmwWyE2sklXlOgleVoBP0si9GQzHRTYgfjv4xPqkR2N
+         CW6scUmVNE0wbQFBvomNcT9q2+hmeWb1p8fwwOKiEkxxke3h2s2nNxvohPvuIHZSkDJ/
+         ikJMgKX4tIqoxmmzPNXt1idU2XPveIUzXQwji398w2z97SzCi3apAyAURKrRx1q5D+8m
+         lB6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721396748; x=1722001548;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q6DEEhmg3Ja8v8Rv8CzrLy7ke/9Hd5uw1xozBhzNHkw=;
+        b=ptQlV6WLASxqz4JrrDD0MxBqJOPGYeIWzFMblfxex+3RLSbg+1WeyF/qhGwE6VTf7+
+         lf0FhQgQt9kYh+W7v9p3Pf2dtCA9kYHafOcGMuiyl7bdQ6c0dnL5LZX6gwc1CdV0R/UY
+         Abuv9qbSwauiKBv389aat5bTPVp5cKZGZDz93eHmvMygpdmz5wQh9fp2mBcFsH3gcq/y
+         wp1pOKV86HjRLVa026qcyU5YF45I8+rGFEw8HbNreO2to2lre+0NQPbbi/c88cdFjhyQ
+         AawExKRAwWV+FriQDdmIz1RW7xPcZk7MG5+0ptfmGULPmcUE2dWMFgNg2yRh6qtfcBYo
+         Kc2A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1wzResPmmflhdrA/l4E73IBIfMhl1TJ7wmFLGdYL1yXEq6pZ+bXd05xsQsbKUhDqFHnccrEIdeYRtaCx7GBh9bpiAKbv02eWruq73p5+uMg==
+X-Gm-Message-State: AOJu0Yxw6johHCusSO1ZYTyA04A/jW1hzpXj8NnT2vfkpMnehbCcsEcv
+	EEqpN2x4mpKoa51U0Rf11xZj7YPHmFsxEcSK3Mss4IctrmQMjcs9v23obIXJ6VFhXsrmDGUo5TH
+	ChQFJVxmHFdKyeKFYLnnoNeBIGyJJkZTdN+iZug==
+X-Google-Smtp-Source: AGHT+IHj7uX+1Re/rIAYxBvigyoyeQGRk9F0raS6FKUXjFDmNWxKntMHg6PQf2i+kUZS8oSEapT4/bKdOJe8lE0sWx0=
+X-Received: by 2002:a17:90b:4d84:b0:2c8:f3b5:7dd1 with SMTP id
+ 98e67ed59e1d1-2cb779d0b7dmr6684082a91.16.1721396747944; Fri, 19 Jul 2024
+ 06:45:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>,
- Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Namhyung Kim <namhyung@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Content-Language: en-GB
-Cc: LKML <linux-kernel@vger.kernel.org>, Julia Lawall <julia.lawall@inria.fr>
-From: Markus Elfring <Markus.Elfring@web.de>
-Subject: [PATCH] perf: Optimise format string selections in three functions
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JRd9oP5K2pJo4gOj2zTHo1CxRuaY9GB517rk431Il04gVRO6ctk
- JFNLg7HSapN8h1kSqwqwzZWN1uV1yPL4e/KlJeSa90qQMSpj7Ft8lc/d2YUQsto0Uv98Oab
- ikTINY1n/GvYhkO278y/478UrM6JiYkVQsvLURNKrEjtXrszNHEXdbggtoSEZ88W8c7aC5+
- peZnt+x8D9vj0eVrvXosg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0vVQUbzDQ0Q=;9EiJVL6xEZcbkBJj0Vg2qvbTk5v
- qjqZ/aUD6OQl3W27o94QWV+wvnm9WrI1nANnUM+hZV+VNn83FVzDjCBYZLzZM0lQFTHjypiws
- bco7BrhbNd7e11lT28A8hLyVWhenaCIv2SkC1cAovxxSHIDdeRZU92DjBzWnybbOeLMgexiIn
- KXM+SIVEdJR/1Ln+A6//JLeaIEw4BQvsjQnGMgNZsgvXfb8SpAx7HTlA+eKlNEXPiRL6UJJmT
- Y30vzcxpQKOblwLCVkIlm47OoJhvCR1kfu9Q3OaC/sco5ttkd2bDuLEA6b6/MLfo4zHJaTRoD
- Aowi5nTfqw5KNVoefwmps2qpp+NGNR3kn/V94x5cSbtRn61odsgU9yr3v2KUa8aZDOF3O/awg
- ejSmBvuLapHFaNFgsgVqEDhYrEVMNVJQfuwqwsNkt+ABT94xt8uFyAHb8WqbBdL4yL3EEBhkT
- zYSLhVIPXSgqockYzbXf17hZafLTzTAHDE8VagOWQyx/U6F8nUumHgeGzhMGbKBDOeESCaWPD
- NqZr0PpeSN/iys9TGAliQ0ySnF9g+kVUxBRtzPL8wsGPztcczvmprMX/8loUDaajkLpnebTRK
- dphwANuoVMCtlX15uF8hYU+QG1dYoZhDuoojL3g+KxitU3xo8+hDpMg9JiCdGUU/bppLzlUDR
- 51VOffalgEpsVHe7vnq3K0HaV9sjprvXXi/9/birzPzBG9j2BRA/cD3aHovXxyjdpAkzq24yk
- sPi07WE+O/INs20GX/YrT9022XvgGgWFBgtpe7f4ubb1uX3EgTVzkElvRwOuX8tkXP2NoGM7p
- mwj19Elh7rkcIa3arq+4+a5g==
+References: <20240712102029.3697965-1-james.clark@linaro.org>
+ <20240712102029.3697965-7-james.clark@linaro.org> <CAJ9a7Vgz-rP6kGLLo2RR_qSZ3dhBT+=E8S=z1Hj6pfwOYu06Nw@mail.gmail.com>
+ <ef5e7351-5f62-444a-b930-4dc2feb9f10d@linaro.org> <26262a1f-de49-41de-85bf-0640c6cc6bd2@linaro.org>
+In-Reply-To: <26262a1f-de49-41de-85bf-0640c6cc6bd2@linaro.org>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Fri, 19 Jul 2024 14:45:36 +0100
+Message-ID: <CAJ9a7VhL18eWFw6T6HdrhbY_v8oeyuzM62D1w1CO1Psumb-EBQ@mail.gmail.com>
+Subject: Re: [PATCH v5 06/17] perf: cs-etm: Support version 0.1 of HW_ID packets
+To: James Clark <james.clark@linaro.org>
+Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com, 
+	gankulkarni@os.amperecomputing.com, leo.yan@linux.dev, 
+	anshuman.khandual@arm.com, James Clark <james.clark@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 19 Jul 2024 15:30:26 +0200
+Fair enough - less worried about the ordering as the final :
 
-Adjust source code in three function implementations so that duplicate cod=
-e
-can be avoided for a few format string selections.
+else
+     return fn()
+}
 
-This issue was transformed by using the Coccinelle software.
+where there's no unconditional return at the end of the function. The
+last else looks redundant to me. More a stylistic thing, not sure if
+there is a hard and fast rule either way
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- tools/perf/builtin-script.c | 29 +++++++++++++----------------
- tools/perf/ui/stdio/hist.c  | 11 +++--------
- 2 files changed, 16 insertions(+), 24 deletions(-)
+Mike
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c16224b1fef3..ec6807f00c54 100644
-=2D-- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -796,16 +796,16 @@ static int perf_sample__fprintf_start(struct perf_sc=
-ript *script,
- 	if (PRINT_FIELD(VCPU) && sample->machine_pid)
- 		printed +=3D fprintf(fp, "VCPU:%03d ", sample->vcpu);
 
--	if (PRINT_FIELD(COMM)) {
--		const char *comm =3D thread ? thread__comm_str(thread) : ":-1";
--
--		if (latency_format)
--			printed +=3D fprintf(fp, "%8.8s ", comm);
--		else if (PRINT_FIELD(IP) && evsel__has_callchain(evsel) && symbol_conf.=
-use_callchain)
--			printed +=3D fprintf(fp, "%s ", comm);
--		else
--			printed +=3D fprintf(fp, "%16s ", comm);
--	}
-+	if (PRINT_FIELD(COMM))
-+		printed +=3D fprintf(fp,
-+				   (latency_format
-+				   ? "%8.8s "
-+				   : ((PRINT_FIELD(IP) &&
-+				     evsel__has_callchain(evsel) &&
-+				     symbol_conf.use_callchain)
-+				     ? "%s "
-+				     : "%16s ")),
-+				   (thread ? thread__comm_str(thread) : ":-1"));
 
- 	if (PRINT_FIELD(PID) && PRINT_FIELD(TID))
- 		printed +=3D fprintf(fp, "%7d/%-7d ", sample->pid, sample->tid);
-@@ -814,12 +814,9 @@ static int perf_sample__fprintf_start(struct perf_scr=
-ipt *script,
- 	else if (PRINT_FIELD(TID))
- 		printed +=3D fprintf(fp, "%7d ", sample->tid);
+On Fri, 19 Jul 2024 at 11:49, James Clark <james.clark@linaro.org> wrote:
+>
+>
+>
+> On 19/07/2024 11:48 am, James Clark wrote:
+> >
+> >
+> > On 18/07/2024 2:24 pm, Mike Leach wrote:
+> >> On Fri, 12 Jul 2024 at 11:22, James Clark <james.clark@linaro.org> wrote:
+> >>>
+> >>> From: James Clark <james.clark@arm.com>
+> >>>
+> >>> v0.1 HW_ID packets have a new field that describes which sink each CPU
+> >>> writes to. Use the sink ID to link trace ID maps to each other so that
+> >>> mappings are shared wherever the sink is shared.
+> >>>
+> >>> Also update the error message to show that overlapping IDs aren't an
+> >>> error in per-thread mode, just not supported. In the future we can
+> >>> use the CPU ID from the AUX records, or watch for changing sink IDs on
+> >>> HW_ID packets to use the correct decoders.
+> >>>
+> >>> Signed-off-by: James Clark <james.clark@arm.com>
+> >>> Signed-off-by: James Clark <james.clark@linaro.org>
+> >>> ---
+> >>>   tools/include/linux/coresight-pmu.h |  17 +++--
+> >>>   tools/perf/util/cs-etm.c            | 100 +++++++++++++++++++++++++---
+> >>>   2 files changed, 103 insertions(+), 14 deletions(-)
+> >>>
+> >>> diff --git a/tools/include/linux/coresight-pmu.h
+> >>> b/tools/include/linux/coresight-pmu.h
+> >>> index 51ac441a37c3..89b0ac0014b0 100644
+> >>> --- a/tools/include/linux/coresight-pmu.h
+> >>> +++ b/tools/include/linux/coresight-pmu.h
+> >>> @@ -49,12 +49,21 @@
+> >>>    * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+> >>>    * Used to associate a CPU with the CoreSight Trace ID.
+> >>>    * [07:00] - Trace ID - uses 8 bits to make value easy to read in
+> >>> file.
+> >>> - * [59:08] - Unused (SBZ)
+> >>> - * [63:60] - Version
+> >>> + * [39:08] - Sink ID - as reported in
+> >>> /sys/bus/event_source/devices/cs_etm/sinks/
+> >>> + *           Added in minor version 1.
+> >>> + * [55:40] - Unused (SBZ)
+> >>> + * [59:56] - Minor Version - previously existing fields are
+> >>> compatible with
+> >>> + *           all minor versions.
+> >>> + * [63:60] - Major Version - previously existing fields mean
+> >>> different things
+> >>> + *           in new major versions.
+> >>>    */
+> >>>   #define CS_AUX_HW_ID_TRACE_ID_MASK     GENMASK_ULL(7, 0)
+> >>> -#define CS_AUX_HW_ID_VERSION_MASK      GENMASK_ULL(63, 60)
+> >>> +#define CS_AUX_HW_ID_SINK_ID_MASK      GENMASK_ULL(39, 8)
+> >>>
+> >>> -#define CS_AUX_HW_ID_CURR_VERSION 0
+> >>> +#define CS_AUX_HW_ID_MINOR_VERSION_MASK        GENMASK_ULL(59, 56)
+> >>> +#define CS_AUX_HW_ID_MAJOR_VERSION_MASK        GENMASK_ULL(63, 60)
+> >>> +
+> >>> +#define CS_AUX_HW_ID_MAJOR_VERSION 0
+> >>> +#define CS_AUX_HW_ID_MINOR_VERSION 1
+> >>>
+> >>>   #endif
+> >>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> >>> index 954a6f7bedf3..87e983da19be 100644
+> >>> --- a/tools/perf/util/cs-etm.c
+> >>> +++ b/tools/perf/util/cs-etm.c
+> >>> @@ -118,6 +118,12 @@ struct cs_etm_queue {
+> >>>          struct cs_etm_traceid_queue **traceid_queues;
+> >>>          /* Conversion between traceID and metadata pointers */
+> >>>          struct intlist *traceid_list;
+> >>> +       /*
+> >>> +        * Same as traceid_list, but traceid_list may be a reference
+> >>> to another
+> >>> +        * queue's which has a matching sink ID.
+> >>> +        */
+> >>> +       struct intlist *own_traceid_list;
+> >>> +       u32 sink_id;
+> >>>   };
+> >>>
+> >>>   static int cs_etm__process_timestamped_queues(struct
+> >>> cs_etm_auxtrace *etm);
+> >>> @@ -142,6 +148,7 @@ static int cs_etm__metadata_set_trace_id(u8
+> >>> trace_chan_id, u64 *cpu_metadata);
+> >>>                        (queue_nr << 16 | trace_chan_id)
+> >>>   #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
+> >>>   #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
+> >>> +#define SINK_UNSET ((u32) -1)
+> >>>
+> >>>   static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
+> >>>   {
+> >>> @@ -241,7 +248,16 @@ static int cs_etm__insert_trace_id_node(struct
+> >>> cs_etm_queue *etmq,
+> >>>                  int err;
+> >>>
+> >>>                  if (curr_cpu_data[CS_ETM_CPU] !=
+> >>> cpu_metadata[CS_ETM_CPU]) {
+> >>> -                       pr_err("CS_ETM: map mismatch between HW_ID
+> >>> packet CPU and Trace ID\n");
+> >>> +                       /*
+> >>> +                        * With > CORESIGHT_TRACE_IDS_MAX ETMs,
+> >>> overlapping IDs
+> >>> +                        * are expected (but not supported) in
+> >>> per-thread mode,
+> >>> +                        * rather than signifying an error.
+> >>> +                        */
+> >>> +                       if (etmq->etm->per_thread_decoding)
+> >>> +                               pr_err("CS_ETM: overlapping Trace IDs
+> >>> aren't currently supported in per-thread mode\n");
+> >>> +                       else
+> >>> +                               pr_err("CS_ETM: map mismatch between
+> >>> HW_ID packet CPU and Trace ID\n");
+> >>> +
+> >>>                          return -EINVAL;
+> >>>                  }
+> >>>
+> >>> @@ -326,6 +342,64 @@ static int cs_etm__process_trace_id_v0(struct
+> >>> cs_etm_auxtrace *etm, int cpu,
+> >>>          return cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
+> >>>   }
+> >>>
+> >>> +static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace
+> >>> *etm, int cpu,
+> >>> +                                        u64 hw_id)
+> >>> +{
+> >>> +       struct cs_etm_queue *etmq = cs_etm__get_queue(etm, cpu);
+> >>> +       int ret;
+> >>> +       u64 *cpu_data;
+> >>> +       u32 sink_id = FIELD_GET(CS_AUX_HW_ID_SINK_ID_MASK, hw_id);
+> >>> +       u8 trace_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
+> >>> +
+> >>> +       /*
+> >>> +        * Check sink id hasn't changed in per-cpu mode. In
+> >>> per-thread mode,
+> >>> +        * let it pass for now until an actual overlapping trace ID
+> >>> is hit. In
+> >>> +        * most cases IDs won't overlap even if the sink changes.
+> >>> +        */
+> >>> +       if (!etmq->etm->per_thread_decoding && etmq->sink_id !=
+> >>> SINK_UNSET &&
+> >>> +           etmq->sink_id != sink_id) {
+> >>> +               pr_err("CS_ETM: mismatch between sink IDs\n");
+> >>> +               return -EINVAL;
+> >>> +       }
+> >>> +
+> >>> +       etmq->sink_id = sink_id;
+> >>> +
+> >>> +       /* Find which other queues use this sink and link their ID
+> >>> maps */
+> >>> +       for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
+> >>> +               struct cs_etm_queue *other_etmq =
+> >>> etm->queues.queue_array[i].priv;
+> >>> +
+> >>> +               /* Different sinks, skip */
+> >>> +               if (other_etmq->sink_id != etmq->sink_id)
+> >>> +                       continue;
+> >>> +
+> >>> +               /* Already linked, skip */
+> >>> +               if (other_etmq->traceid_list == etmq->traceid_list)
+> >>> +                       continue;
+> >>> +
+> >>> +               /* At the point of first linking, this one should be
+> >>> empty */
+> >>> +               if (!intlist__empty(etmq->traceid_list)) {
+> >>> +                       pr_err("CS_ETM: Can't link populated trace ID
+> >>> lists\n");
+> >>> +                       return -EINVAL;
+> >>> +               }
+> >>> +
+> >>> +               etmq->own_traceid_list = NULL;
+> >>> +               intlist__delete(etmq->traceid_list);
+> >>> +               etmq->traceid_list = other_etmq->traceid_list;
+> >>> +               break;
+> >>> +       }
+> >>> +
+> >>> +       cpu_data = get_cpu_data(etm, cpu);
+> >>> +       ret = cs_etm__insert_trace_id_node(etmq, trace_id, cpu_data);
+> >>> +       if (ret)
+> >>> +               return ret;
+> >>> +
+> >>> +       ret = cs_etm__metadata_set_trace_id(trace_id, cpu_data);
+> >>> +       if (ret)
+> >>> +               return ret;
+> >>> +
+> >>> +       return 0;
+> >>> +}
+> >>> +
+> >>>   static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64
+> >>> *cpu_metadata)
+> >>>   {
+> >>>          u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
+> >>> @@ -414,10 +488,10 @@ static int
+> >>> cs_etm__process_aux_output_hw_id(struct perf_session *session,
+> >>>
+> >>>          /* extract and parse the HW ID */
+> >>>          hw_id = event->aux_output_hw_id.hw_id;
+> >>> -       version = FIELD_GET(CS_AUX_HW_ID_VERSION_MASK, hw_id);
+> >>> +       version = FIELD_GET(CS_AUX_HW_ID_MAJOR_VERSION_MASK, hw_id);
+> >>>
+> >>>          /* check that we can handle this version */
+> >>> -       if (version > CS_AUX_HW_ID_CURR_VERSION) {
+> >>> +       if (version > CS_AUX_HW_ID_MAJOR_VERSION) {
+> >>>                  pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID
+> >>> version %d not supported. Please update Perf.\n",
+> >>>                         version);
+> >>>                  return -EINVAL;
+> >>> @@ -442,7 +516,10 @@ static int
+> >>> cs_etm__process_aux_output_hw_id(struct perf_session *session,
+> >>>                  return -EINVAL;
+> >>>          }
+> >>>
+> >>> -       return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
+> >>
+> >> Perhaps leave this as the final statement of the function
+> >>
+> >>> +       if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 0)
+> >>
+> >> this could be moved before and be
+> >>
+> >> if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 1)
+> >>                 return cs_etm__process_trace_id_v0_1(etm, cpu, hw_id);
+> >>
+> >>
+> >
+> > Because I was intending minor version changes to be backwards compatible
+> > I have it so that any value other than 0 is treated as v0.1. Otherwise
+> > version updates will break old versions of Perf. And then if we added a
+> > v0.3 it would look like this:
+>
+> That should have said v0.2 ^
+>
+> >
+> >   if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 0)
+> >     return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
+> >   else if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 1)
+> >     return cs_etm__process_trace_id_v0_1(etm, cpu, hw_id);
+> >   else
+> >     return cs_etm__process_trace_id_v0_2(etm, cpu, hw_id);
+> >
+> > Based on that I'm not sure if you still think it should be changed?
 
--	if (PRINT_FIELD(CPU)) {
--		if (latency_format)
--			printed +=3D fprintf(fp, "%3d ", sample->cpu);
--		else
--			printed +=3D fprintf(fp, "[%03d] ", sample->cpu);
--	}
-+	if (PRINT_FIELD(CPU))
-+		printed +=3D fprintf(fp, (latency_format ? "%3d " : "[%03d] "),
-+				   sample->cpu);
 
- 	if (PRINT_FIELD(MISC)) {
- 		int ret =3D 0;
-diff --git a/tools/perf/ui/stdio/hist.c b/tools/perf/ui/stdio/hist.c
-index 9372e8904d22..899019e8aab8 100644
-=2D-- a/tools/perf/ui/stdio/hist.c
-+++ b/tools/perf/ui/stdio/hist.c
-@@ -37,10 +37,7 @@ static size_t ipchain__fprintf_graph_line(FILE *fp, int=
- depth, int depth_mask,
- 	size_t ret =3D callchain__fprintf_left_margin(fp, left_margin);
 
- 	for (i =3D 0; i < depth; i++)
--		if (depth_mask & (1 << i))
--			ret +=3D fprintf(fp, "|          ");
--		else
--			ret +=3D fprintf(fp, "           ");
-+		ret +=3D fprintf(fp, ((depth_mask & (1 << i)) ? "|          " : "      =
-     "));
-
- 	ret +=3D fprintf(fp, "\n");
-
-@@ -60,10 +57,8 @@ static size_t ipchain__fprintf_graph(FILE *fp, struct c=
-allchain_node *node,
-
- 	ret +=3D callchain__fprintf_left_margin(fp, left_margin);
- 	for (i =3D 0; i < depth; i++) {
--		if (depth_mask & (1 << i))
--			ret +=3D fprintf(fp, "|");
--		else
--			ret +=3D fprintf(fp, " ");
-+		ret +=3D fprintf(fp, ((depth_mask & (1 << i)) ? "|" : " "));
-+
- 		if (!period && i =3D=3D depth - 1) {
- 			ret +=3D fprintf(fp, "--");
- 			ret +=3D callchain_node__fprintf_value(node, fp, total_samples);
-=2D-
-2.45.2
-
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
