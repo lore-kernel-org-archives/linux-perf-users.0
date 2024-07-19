@@ -1,228 +1,246 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2058.outbound.protection.outlook.com [40.107.236.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1039555769;
-	Fri, 19 Jul 2024 09:27:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721381277; cv=fail; b=nMqk5iRmIt6ElXwbZ5j32u/p5F1p8dlZIwem+5VCTywe4rqaURBEgbhni3MkVGOJ4JQoC5e5a4u2LoTUxi/BWRt0s/Aqk8AnL7bLLIRqq6fkgL4hj0L+Tl4ofaeJqTmsgA/KTJdDEgnzqnqPrMlWrP9Pnxnj6T5TEGyR5uPhoXE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721381277; c=relaxed/simple;
-	bh=De2+nqgQnlomAEL78IlpI06+cIGsmRvwpK6sQpZas8c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k8F9dZfrktocokbdf+FHCE1hJY7jFhoyFA2krLpeTK1vSBFs1dDkebzw2j9wLm3rWfwA0PEGJ2PEdfB9DYxaOU8Zsso+BXmkFGnTZEf6oD4NapywBy5WOwZ0bHb4eVkkD7iw/lWh3F4H34q366vGSYc2h9K5FLf+G6Pm+z7t+wk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RSh5Jrav; arc=fail smtp.client-ip=40.107.236.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A5680046
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 09:29:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721381384; cv=none; b=I+AnJRU0eHWtehQOYHa7GHt0wnW9vBAx8X+sdd/XNB/eaLb0ePODJAZXEtoQbsynQGE2D33FjWWl36AdTKtovfTUWrf3pszkcWeoThsXZ6+P/AMvIzd6LYyfFDNn3vCeDHyAgS6ROPJh8hlY6/jotCLce4p01WCx1rPyuZq2Gs8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721381384; c=relaxed/simple;
+	bh=NAueijy5O1aNzZDnhVGZIyKB0Cyg+gH6V2H70ZoJcJY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LEUmXZSJvpGIp0S3wt2NFZzJRH+I1QDl3xqW7mX9rKpnkQVj3e88nKKsaxwabuIg+3kpUYQePxp/Itt38VjYPxAGLyQrNy1xFbYA+0rTsYYMqNWqNGmAluY7oA0wyrZWEJuEGE+lD68D1utTG4grvT2q6tZWTDY+JzHMTNspu7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=a/oP2YcR; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RSh5Jrav"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b6KgUkb8TnnzXkd2NNaXFiTj9Wvj6FgZbdVcOywvqIdpj2790NGyP/1qki36AJ9WirvpJDZhIFb45qiEfjoiukaZpCCct4efLisUqjWOsvuNQD4sfe5viwr+wrTuzPZBu1mzlXjivepHQjmKKu6TmmGatXrJiHAfjPv3e0gZ9BiOxquR0Aj+pN4+msjJP27Z2+nQBBIypolYF/Szp/h9xWN3xLxEFiiuG85rP4tCw5pWBzyHyZONb1T7eZJkACtiIq4Xy/RZ/g88fqJwTo4bL4Zl1iG21PMwp/Y3CRRMB6ff+3s8hXyI+f7kD62AvHQkfpxpo1qy8SH49AIn+j5n+Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=CSJ7tNvUspHjJs8Xn06jhcj7534DAqAuRIal2aoVMKw=;
- b=OgZgmqkjLI6iwEfSHJw/RF22kIJ1XyNMasXUlLVuYtldUgl0c4FtEtJm086ac6dE1BzREiY6c/l1VTF+HlCSmbn7g2BdgtZXW4DKpdFkF+jFfjqsE9k8YoQl9RsHph8q3dj/2LyllBLskPa5NxFvoSvuibaWyET0oMvlleFUsF2EsNso6xZTshG6iUdwMi3/Puvy3USvFhHGgP9dQZDEa0SVJf4wN1JgwlcUiBOBO3Ph7SAplBawDBdkFEQdRr9lUzRiTdURYaz8SRta3Yz7GMzT/wo6cvvPMRJBf3svH4bsrXKiZhpZ0pKV/IP6TVFaWzgJzh8KXz7ODmqW3oHTdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CSJ7tNvUspHjJs8Xn06jhcj7534DAqAuRIal2aoVMKw=;
- b=RSh5Jrav69f+bFeq1+mAhZhtpQ2NuB3cPRegk8m83B08LvyuABAR+TAwLlcknF6TJfcz2o20ultG4TL3bEuOvvMcy4VWjUDopvgeoguyvy8f4mf155l+YJGKOPNVl4Y46KYFhZRMmctEAOsOEQGP1+gKXy4I3PaEY5nmdujPC6Q=
-Received: from SN7P220CA0013.NAMP220.PROD.OUTLOOK.COM (2603:10b6:806:123::18)
- by PH7PR12MB7842.namprd12.prod.outlook.com (2603:10b6:510:27a::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.18; Fri, 19 Jul
- 2024 09:27:53 +0000
-Received: from SA2PEPF00003AE4.namprd02.prod.outlook.com
- (2603:10b6:806:123:cafe::6) by SN7P220CA0013.outlook.office365.com
- (2603:10b6:806:123::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7784.18 via Frontend
- Transport; Fri, 19 Jul 2024 09:27:53 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- SA2PEPF00003AE4.mail.protection.outlook.com (10.167.248.4) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7784.11 via Frontend Transport; Fri, 19 Jul 2024 09:27:52 +0000
-Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 19 Jul
- 2024 04:27:46 -0500
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
-	<x86@kernel.org>, <rui.zhang@intel.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-pm@vger.kernel.org>, <ananth.narayan@amd.com>,
-	<gautham.shenoy@amd.com>, <kprateek.nayak@amd.com>, <ravi.bangoria@amd.com>,
-	<sandipan.das@amd.com>, <Dhananjay.Ugwekar@amd.com>, Michael Larabel
-	<michael@michaellarabel.com>
-Subject: [PATCH 2/2] powercap/intel_rapl: Fix the energy-pkg event for AMD CPUs
-Date: Fri, 19 Jul 2024 09:25:46 +0000
-Message-ID: <20240719092545.50441-3-Dhananjay.Ugwekar@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240719092545.50441-1-Dhananjay.Ugwekar@amd.com>
-References: <20240719092545.50441-1-Dhananjay.Ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a/oP2YcR"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-368584f9e36so489885f8f.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 02:29:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721381379; x=1721986179; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XeUxxx4F06ytA/JpMebP2usYOntjakHjEB1FCSY1FhA=;
+        b=a/oP2YcR+Ahe0ogA1lI8+2IbinS7qIp6s3xM3BwVx7toWfMXCq+8N6oMx99ioYfgWr
+         2OSUi7UGBvF0VotTwCFRogT7yhQ2Z9Vh5f9yHisqhk6DbOhsf7FsjMoypic34H7WhRKt
+         9u61mc+A1sIUQme+3Eb8cvdF5yzvZQNyMQ/XQD2mSK4uxocpipndOtvpEHH6BNXumblI
+         8vfDZpcS9RWBqWOzX3+T+AgcAVK8YbgW4tlyEbDjjbT6oQxpTk3wr9ReICOZpFjwQIgW
+         c9sey5Q610cPOCzdgN1vn7WJtBrOVygT9cNhW0ajcwMO3fmxQRekWuN6avFqLFVsHEAV
+         D3fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721381379; x=1721986179;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XeUxxx4F06ytA/JpMebP2usYOntjakHjEB1FCSY1FhA=;
+        b=E2J9aiVDo5XvXgrBvfDl3+Pt4/nPNoATNFcHjWF5EDexXC8LO9ays6FGcqEtrDorja
+         cUBNFCl/vC7J4G3jNg8i5o4PHwRYfAYqoRW4GalrvF6xqaS9F626LeByyo5zmjCqjSnG
+         aF3CpOFVPN0N36fuaT17FkPZaFrz2APDJ4mJzfaSCSXP5wVkNdC6hOBIkl+FznYlQsFc
+         xu+GBVMyAqoYswPEdM8BaMh6WTadOYxBpoLulj2NM1+Q1Fo7HZM5uVyc9hbao2V4iUTJ
+         Tg1YerkxZC6XFj963c2iwzr1/cHWM42cx8LKvQctAgBG+guu7WGwzGA5BcDMe08DVNao
+         gM2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3q8blqpx9zKkfiRlkh4qY7aZdXdvwClhwr/ZqTQCwV+BUJk8C2nuRSY/X7eCe+rmzF2z4oUm4gUQ4qJCXWmRV/gQoiGrgyx45IdK+bFxMZg==
+X-Gm-Message-State: AOJu0YxpV4zvObaZCmbMvRbwcuqOdtrkAtWM8JiYRrdMoXFYc0IVOJdw
+	aihJsM6RslkH9qnPN0Tdt2tXGbOQuxDr+P8yeH8RZyXaCVJooU/cLf5Bl80U3sE=
+X-Google-Smtp-Source: AGHT+IF2ccBsKb4YBezxTdfv3XQrmsfj5+RMN8Bx+uHeZXY6Lc5X+rfSG8nLNZeu/FWDf5tAfDywLw==
+X-Received: by 2002:a5d:6488:0:b0:366:ebd1:3bc1 with SMTP id ffacd0b85a97d-368316002e9mr6055066f8f.3.1721381379395;
+        Fri, 19 Jul 2024 02:29:39 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36878684773sm1093350f8f.7.2024.07.19.02.29.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 Jul 2024 02:29:39 -0700 (PDT)
+Message-ID: <3b2285e0-3ac2-448a-8a53-c1bb6ead78b8@linaro.org>
+Date: Fri, 19 Jul 2024 10:29:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB03.amd.com
- (10.181.40.144)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF00003AE4:EE_|PH7PR12MB7842:EE_
-X-MS-Office365-Filtering-Correlation-Id: 36bc9582-ce49-4d1f-73a6-08dca7d510a4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|7416014|376014|82310400026|36860700013|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?3rAOs6mTRebPTJ/YiwA7cwH1ZtFWakwOum9EEeU4UfVIGFt7gvhmnhRhpWsJ?=
- =?us-ascii?Q?w9gyU78z1144qemtUmsFTHdNCyGIVQ0xYfjnOZohsfy8kyYAWepGFNi0cbeD?=
- =?us-ascii?Q?E1kl64SlP07++TwKO3+CS9ccrVrOMT765kdXPRGIQPq+XWnMNA/2Tf3q/NFr?=
- =?us-ascii?Q?BNAptXIgPecrs9aOZUPSy/9Jqp9RrzOofCTkLUU2UvLRiBVOHhIxgWcwN3fu?=
- =?us-ascii?Q?jXfrFuDt4GQ4bskHMduYuJqHH5zKfpt7BSOSA7bUUjAzTwomkpYkdknZMNMQ?=
- =?us-ascii?Q?Sma42TsmoyJK05cVWOWqEg2hL2SWY+Qqs/7ftm1Ge+at/+FiNHd1zgr3iFfx?=
- =?us-ascii?Q?uCgh9cEkyXnQllQx6k7chLo8QdFBd+K0g0TpeHJicw2gd9UhBSMoQ8lvE1vZ?=
- =?us-ascii?Q?ghEhSkLH6OaRZhnviUNHNDpEUBCxSLfIvsVHPic0IKyT38/rVTfJHp2r0tpS?=
- =?us-ascii?Q?8S52ft/76tgulZXgvC4nj09RlyTCffEcYxQAjDxuJ//U6WwiO5ZfBgq/2Rbe?=
- =?us-ascii?Q?dzX5cwO4tBy8kyYD/zfA83qr3cAWWTF8kzwZ9ExudE8I98PEBwRUaaxm6KDZ?=
- =?us-ascii?Q?XBYdVxp3Q2ECA/bbAcgw4SHUWahN9nuOO84nFWkWDDTRZUSc2z1j073f7qUW?=
- =?us-ascii?Q?3b8shI+mmNZPi0qKc4dsQs4IyttZR3zxRvsf2DkK1xt8ZIHQj4yusQsr3oMg?=
- =?us-ascii?Q?9iJqcaS3amgbVZxrc+iRG+6TgmU8qKPnS+rpgryq7/vxpSeYWCXPaL9SYuBV?=
- =?us-ascii?Q?C1Lu510FEQxVGzHz+CAJYMZ2dVozqA2OrmZK6vcCgdSXOY5LgShW/4/oflis?=
- =?us-ascii?Q?Sb5qVeLEh01kBYMwRSk4S1t8MED6nxHDpn2JJPxr+6sS+QZylP72Nr7t0VkC?=
- =?us-ascii?Q?rRnWaPGA/bKZ2sM0vE/y6Pvk9A0IF6gQSeGa3hIAdNIXIphYePN+qEHHLlPo?=
- =?us-ascii?Q?rP5HbedpZmzl7OiHeozN9zIRcUi9MhgFp4J/H9qR0gZUEwnHwTZ46HV/0XWz?=
- =?us-ascii?Q?yJiCws0gz8fepJnPkgX/bch8ZujeOelVtXaX8hecmGacS/rm6xuQxf752Rlf?=
- =?us-ascii?Q?LYxy98c1h+56lIb4Iv7i895fxcmovrzUWggPkXMATUQvf2isfPFhlU4ZcF2A?=
- =?us-ascii?Q?5AaJ4PBIkH47WuTfsNs/IFnHNUxZqW0IymXmSTV7UfnmmJ8XBi9OEr96Zudz?=
- =?us-ascii?Q?0mzUOhZZQn+JbOZp49o3uKLziIBNptzZulWLKtAdxrg4XnNS3bluP18tra4d?=
- =?us-ascii?Q?LDQZGebnH9W620rWFPQtsMPhaKHuSEbzVKGoOeDSsOcJsArhiVuPGFmADaYL?=
- =?us-ascii?Q?Pv5M64m/KCw3XjWC1ekd5rFItt/pdHyTwkSzZ254gQk0AjqMYEA/3ZINxY4w?=
- =?us-ascii?Q?aGwobH46T7+liJXNvdqpD4SOmX0lW0PD1SGtXg85uMAWVy51GW2OckFDG/sY?=
- =?us-ascii?Q?q8DUo/ueHHajHnTi3WQWxg8NeqCeGqACP0Yl9hLxUEFCD2uShsf5YQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(82310400026)(36860700013)(921020);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2024 09:27:52.8072
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 36bc9582-ce49-4d1f-73a6-08dca7d510a4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF00003AE4.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7842
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 16/17] coresight: Emit sink ID in the HW_ID packets
+To: Mike Leach <mike.leach@linaro.org>
+Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com,
+ gankulkarni@os.amperecomputing.com, leo.yan@linux.dev,
+ anshuman.khandual@arm.com, James Clark <james.clark@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
+References: <20240712102029.3697965-1-james.clark@linaro.org>
+ <20240712102029.3697965-17-james.clark@linaro.org>
+ <CAJ9a7ViwpDSpEv0niuF=wWpp4497Yp5AcnMSeh_SamWnK1QQtw@mail.gmail.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <CAJ9a7ViwpDSpEv0niuF=wWpp4497Yp5AcnMSeh_SamWnK1QQtw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
-on AMD processors that support extended CPUID leaf 0x80000026, the
-topology_logical_die_id() macros, no longer returns package id, instead it
-returns the CCD (Core Complex Die) id. This leads to the energy-pkg
-event scope to be modified to CCD instead of package.
 
-For more historical context, please refer to commit 32fb480e0a2c
-("powercap/intel_rapl: Support multi-die/package"), which initially changed
-the RAPL scope from package to die for all systems, as Intel systems
-with Die enumeration have RAPL scope as die, and those without die
-enumeration are not affected. So, all systems(Intel, AMD, Hygon), worked
-correctly with topology_logical_die_id() until recently, but this changed
-after the "0x80000026 leaf" commit mentioned above.
 
-Replacing topology_logical_die_id() with topology_physical_package_id()
-conditionally only for AMD and Hygon fixes the energy-pkg event.
+On 17/07/2024 4:03 pm, Mike Leach wrote:
+> On Fri, 12 Jul 2024 at 11:23, James Clark <james.clark@linaro.org> wrote:
+>>
+>> From: James Clark <james.clark@arm.com>
+>>
+>> For Perf to be able to decode when per-sink trace IDs are used, emit the
+>> sink that's being written to for each ETM.
+>>
+>> Perf currently errors out if it sees a newer packet version so instead
+>> of bumping it, add a new minor version field. This can be used to
+>> signify new versions that have backwards compatible fields. Considering
+>> this change is only for high core count machines, it doesn't make sense
+>> to make a breaking change for everyone.
+>>
+>> Signed-off-by: James Clark <james.clark@arm.com>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-core.c  | 26 ++++++++++---------
+>>   .../hwtracing/coresight/coresight-etm-perf.c  | 16 ++++++++----
+>>   drivers/hwtracing/coresight/coresight-priv.h  |  1 +
+>>   include/linux/coresight-pmu.h                 | 17 +++++++++---
+>>   4 files changed, 39 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
+>> index faf560ba8d64..c427e9344a84 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -487,23 +487,25 @@ struct coresight_device *coresight_get_sink(struct list_head *path)
+>>          return csdev;
+>>   }
+>>
+>> +u32 coresight_get_sink_id(struct coresight_device *csdev)
+>> +{
+>> +       if (!csdev->ea)
+>> +               return 0;
+>> +
+>> +       /*
+>> +        * See function etm_perf_add_symlink_sink() to know where
+>> +        * this comes from.
+>> +        */
+>> +       return (u32) (unsigned long) csdev->ea->var;
+>> +}
+>> +
+>>   static int coresight_sink_by_id(struct device *dev, const void *data)
+>>   {
+>>          struct coresight_device *csdev = to_coresight_device(dev);
+>> -       unsigned long hash;
+>>
+>>          if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
+>> -            csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+>> -
+>> -               if (!csdev->ea)
+>> -                       return 0;
+>> -               /*
+>> -                * See function etm_perf_add_symlink_sink() to know where
+>> -                * this comes from.
+>> -                */
+>> -               hash = (unsigned long)csdev->ea->var;
+>> -
+>> -               if ((u32)hash == *(u32 *)data)
+>> +           csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
+>> +               if (coresight_get_sink_id(csdev) == *(u32 *)data)
+>>                          return 1;
+>>          }
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> index 70c99f0409b2..ad6a8f4b70b6 100644
+>> --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
+>> @@ -460,6 +460,7 @@ static void etm_event_start(struct perf_event *event, int flags)
+>>          struct coresight_device *sink, *csdev = per_cpu(csdev_src, cpu);
+>>          struct list_head *path;
+>>          u64 hw_id;
+>> +       u8 trace_id;
+>>
+>>          if (!csdev)
+>>                  goto fail;
+>> @@ -512,11 +513,16 @@ static void etm_event_start(struct perf_event *event, int flags)
+>>           */
+>>          if (!cpumask_test_cpu(cpu, &event_data->aux_hwid_done)) {
+>>                  cpumask_set_cpu(cpu, &event_data->aux_hwid_done);
+>> -               hw_id = FIELD_PREP(CS_AUX_HW_ID_VERSION_MASK,
+>> -                                  CS_AUX_HW_ID_CURR_VERSION);
+>> -               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK,
+>> -                                   coresight_trace_id_read_cpu_id_map(cpu,
+>> -                                                                      &sink->perf_sink_id_map));
+>> +
+>> +               trace_id = coresight_trace_id_read_cpu_id_map(cpu, &sink->perf_sink_id_map);
+>> +
+>> +               hw_id = FIELD_PREP(CS_AUX_HW_ID_MAJOR_VERSION_MASK,
+>> +                               CS_AUX_HW_ID_MAJOR_VERSION);
+>> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_MINOR_VERSION_MASK,
+>> +                               CS_AUX_HW_ID_MINOR_VERSION);
+>> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_TRACE_ID_MASK, trace_id);
+>> +               hw_id |= FIELD_PREP(CS_AUX_HW_ID_SINK_ID_MASK, coresight_get_sink_id(sink));
+>> +
+>>                  perf_report_aux_output_id(event, hw_id);
+>>          }
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-priv.h b/drivers/hwtracing/coresight/coresight-priv.h
+>> index 61a46d3bdcc8..05f891ca6b5c 100644
+>> --- a/drivers/hwtracing/coresight/coresight-priv.h
+>> +++ b/drivers/hwtracing/coresight/coresight-priv.h
+>> @@ -148,6 +148,7 @@ int coresight_make_links(struct coresight_device *orig,
+>>                           struct coresight_device *target);
+>>   void coresight_remove_links(struct coresight_device *orig,
+>>                              struct coresight_connection *conn);
+>> +u32 coresight_get_sink_id(struct coresight_device *csdev);
+>>
+>>   #if IS_ENABLED(CONFIG_CORESIGHT_SOURCE_ETM3X)
+>>   extern int etm_readl_cp14(u32 off, unsigned int *val);
+>> diff --git a/include/linux/coresight-pmu.h b/include/linux/coresight-pmu.h
+>> index 51ac441a37c3..89b0ac0014b0 100644
+>> --- a/include/linux/coresight-pmu.h
+>> +++ b/include/linux/coresight-pmu.h
+>> @@ -49,12 +49,21 @@
+>>    * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
+>>    * Used to associate a CPU with the CoreSight Trace ID.
+>>    * [07:00] - Trace ID - uses 8 bits to make value easy to read in file.
+>> - * [59:08] - Unused (SBZ)
+>> - * [63:60] - Version
+>> + * [39:08] - Sink ID - as reported in /sys/bus/event_source/devices/cs_etm/sinks/
+>> + *           Added in minor version 1.
+>> + * [55:40] - Unused (SBZ)
+>> + * [59:56] - Minor Version - previously existing fields are compatible with
+>> + *           all minor versions.
+>> + * [63:60] - Major Version - previously existing fields mean different things
+>> + *           in new major versions.
+>>    */
+>>   #define CS_AUX_HW_ID_TRACE_ID_MASK     GENMASK_ULL(7, 0)
+>> -#define CS_AUX_HW_ID_VERSION_MASK      GENMASK_ULL(63, 60)
+>> +#define CS_AUX_HW_ID_SINK_ID_MASK      GENMASK_ULL(39, 8)
+>>
+>> -#define CS_AUX_HW_ID_CURR_VERSION 0
+>> +#define CS_AUX_HW_ID_MINOR_VERSION_MASK        GENMASK_ULL(59, 56)
+>> +#define CS_AUX_HW_ID_MAJOR_VERSION_MASK        GENMASK_ULL(63, 60)
+>> +
+>> +#define CS_AUX_HW_ID_MAJOR_VERSION 0
+>> +#define CS_AUX_HW_ID_MINOR_VERSION 1
+>>
+>>   #endif
+>> --
+>> 2.34.1
+>>
+> 
+> 
+> --
+> Mike Leach
+> Principal Engineer, ARM Ltd.
+> Manchester Design Centre. UK
 
-On an AMD 2 socket 8 CCD Zen5 server:
+Hi Mike,
 
-Before:
-
-linux$ ls /sys/class/powercap/
-intel-rapl      intel-rapl:1:0  intel-rapl:3:0  intel-rapl:5:0
-intel-rapl:7:0  intel-rapl:9:0  intel-rapl:b:0  intel-rapl:d:0
-intel-rapl:f:0  intel-rapl:0    intel-rapl:2    intel-rapl:4
-intel-rapl:6    intel-rapl:8    intel-rapl:a    intel-rapl:c
-intel-rapl:e    intel-rapl:0:0  intel-rapl:2:0  intel-rapl:4:0
-intel-rapl:6:0  intel-rapl:8:0  intel-rapl:a:0  intel-rapl:c:0
-intel-rapl:e:0  intel-rapl:1    intel-rapl:3    intel-rapl:5
-intel-rapl:7    intel-rapl:9    intel-rapl:b    intel-rapl:d
-intel-rapl:f
-
-After:
-
-linux$ ls /sys/class/powercap/
-intel-rapl  intel-rapl:0  intel-rapl:0:0  intel-rapl:1  intel-rapl:1:0
-
-Only one sysfs entry per-event per-package is created after this change.
-
-Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
-Reported-by: Michael Larabel <michael@michaellarabel.com>
-Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
----
- drivers/powercap/intel_rapl_common.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
-index 3cffa6c79538..2f24ca764408 100644
---- a/drivers/powercap/intel_rapl_common.c
-+++ b/drivers/powercap/intel_rapl_common.c
-@@ -2128,6 +2128,18 @@ void rapl_remove_package(struct rapl_package *rp)
- }
- EXPORT_SYMBOL_GPL(rapl_remove_package);
- 
-+/*
-+ * Intel systems that enumerate DIE domain have RAPL domains implemented
-+ * per-die, however, the same is not true for AMD and Hygon processors
-+ * where RAPL domains for PKG energy are in-fact per-PKG. Since
-+ * logical_die_id is same as logical_package_id in absence of DIE
-+ * enumeration, use topology_logical_die_id() on Intel systems and
-+ * topology_logical_package_id() on AMD and Hygon systems.
-+ */
-+#define rapl_pmu_is_pkg_scope()				\
-+	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
-+	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
-+
- /* caller to ensure CPU hotplug lock is held */
- struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct rapl_if_priv *priv,
- 							 bool id_is_cpu)
-@@ -2136,7 +2148,8 @@ struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct rapl_if_
- 	int uid;
- 
- 	if (id_is_cpu)
--		uid = topology_logical_die_id(id);
-+		uid = rapl_pmu_is_pkg_scope() ?
-+		      topology_physical_package_id(id) : topology_logical_die_id(id);
- 	else
- 		uid = id;
- 
-@@ -2168,9 +2181,10 @@ struct rapl_package *rapl_add_package_cpuslocked(int id, struct rapl_if_priv *pr
- 		return ERR_PTR(-ENOMEM);
- 
- 	if (id_is_cpu) {
--		rp->id = topology_logical_die_id(id);
-+		rp->id = rapl_pmu_is_pkg_scope() ?
-+			 topology_physical_package_id(id) : topology_logical_die_id(id);
- 		rp->lead_cpu = id;
--		if (topology_max_dies_per_package() > 1)
-+		if (!rapl_pmu_is_pkg_scope() && topology_max_dies_per_package() > 1)
- 			snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH, "package-%d-die-%d",
- 				 topology_physical_package_id(id), topology_die_id(id));
- 		else
--- 
-2.34.1
+I think you miss-sent this one
 
