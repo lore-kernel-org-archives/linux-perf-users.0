@@ -1,341 +1,280 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6E983CD5
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 13:45:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D2013C679;
+	Fri, 19 Jul 2024 13:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721396751; cv=none; b=ax+IQKS+gZKp7g2vavpmC0A9gjy7jvP/4Hwpu9fhER3k42VUOGTRUT1yzvS8/hzS0a9NItZehb+EpO0tGbJ72oWvkVMs+MqVdkhfEJoX68zP1bjY+zsfDBUzVDVxnq7XTvwBLP1y+qoctMBJhki7Uh4WirKnXpRZyXS+P/6yuEc=
+	t=1721397367; cv=none; b=jK/Jh1/LkzfaFiR3oMHmxmQQS4/R1h4BRKo1ksQAkB6AkH2iCOq/oq5SeWMO0ytY8Inu4GW1pTdFQJIXjPUqopwNIwEDqS+Q4Ctc7sGVxgP4nFZ0seUXXvYQOgNhbGBLCReowAr+1Grj7RWKFh8eZ+e5LwJ4FJWNg/8fdfyUhIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721396751; c=relaxed/simple;
-	bh=GjySNPFrKifZ10GOJGBKmNbh/w6vmd7/dNemFTybewA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EAuoWz3RkJZ/KtlmqmY+xKZHP8lE9hh8rHHBkobUBOui1nFnfCR7blAMNiTSH0EzFPM/CALd4DC0V+TRDnUWAc+1lWuThMqqZtd9ddDvYGVQH0aRmOftFaAb+dPjnJr1llI3aLU8rCiD3FtyqhigfTo9TUUpx4QGNuk2TVEK+3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z6mRSLNz; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721397367; c=relaxed/simple;
+	bh=uGRqzljmM2/LI4ME3k5gWDt5e+freuDNSITQGCJ/Smo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DCeyTUHBOz2CmNqmb/Y/N9HLg6x8+8n+qw8l9bcYSrJimv3zsfvhAX4e/AiGyfyovjb3P/+I01yF8VIWcttkm1NpVby82G2dXqyyT2yDUXkZ/fkSn81NNOv/zpc2zYlbAJuI320XwH2+XcagDtbRyW5MLl93R8aLJBS9fMTAjL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NPam6hh7; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z6mRSLNz"
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7928d2abe0aso2153327a12.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 06:45:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721396748; x=1722001548; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=q6DEEhmg3Ja8v8Rv8CzrLy7ke/9Hd5uw1xozBhzNHkw=;
-        b=Z6mRSLNzZMvFeJBJK10q9jwCzjKzJe/dCx45eEqFtFLNLQwnPAtZkNJ1PXwV20k8zG
-         PZANsfGcU3VM9N2uVc8sNWPn8brYMs8ouuSXSFwl0jPhLPyW8BIgOcZCmI+ZXh8evd7l
-         jbLlJDzdrVmGysD5lfJheR7HqRmwWyE2sklXlOgleVoBP0si9GQzHRTYgfjv4xPqkR2N
-         CW6scUmVNE0wbQFBvomNcT9q2+hmeWb1p8fwwOKiEkxxke3h2s2nNxvohPvuIHZSkDJ/
-         ikJMgKX4tIqoxmmzPNXt1idU2XPveIUzXQwji398w2z97SzCi3apAyAURKrRx1q5D+8m
-         lB6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721396748; x=1722001548;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q6DEEhmg3Ja8v8Rv8CzrLy7ke/9Hd5uw1xozBhzNHkw=;
-        b=ptQlV6WLASxqz4JrrDD0MxBqJOPGYeIWzFMblfxex+3RLSbg+1WeyF/qhGwE6VTf7+
-         lf0FhQgQt9kYh+W7v9p3Pf2dtCA9kYHafOcGMuiyl7bdQ6c0dnL5LZX6gwc1CdV0R/UY
-         Abuv9qbSwauiKBv389aat5bTPVp5cKZGZDz93eHmvMygpdmz5wQh9fp2mBcFsH3gcq/y
-         wp1pOKV86HjRLVa026qcyU5YF45I8+rGFEw8HbNreO2to2lre+0NQPbbi/c88cdFjhyQ
-         AawExKRAwWV+FriQDdmIz1RW7xPcZk7MG5+0ptfmGULPmcUE2dWMFgNg2yRh6qtfcBYo
-         Kc2A==
-X-Forwarded-Encrypted: i=1; AJvYcCX1wzResPmmflhdrA/l4E73IBIfMhl1TJ7wmFLGdYL1yXEq6pZ+bXd05xsQsbKUhDqFHnccrEIdeYRtaCx7GBh9bpiAKbv02eWruq73p5+uMg==
-X-Gm-Message-State: AOJu0Yxw6johHCusSO1ZYTyA04A/jW1hzpXj8NnT2vfkpMnehbCcsEcv
-	EEqpN2x4mpKoa51U0Rf11xZj7YPHmFsxEcSK3Mss4IctrmQMjcs9v23obIXJ6VFhXsrmDGUo5TH
-	ChQFJVxmHFdKyeKFYLnnoNeBIGyJJkZTdN+iZug==
-X-Google-Smtp-Source: AGHT+IHj7uX+1Re/rIAYxBvigyoyeQGRk9F0raS6FKUXjFDmNWxKntMHg6PQf2i+kUZS8oSEapT4/bKdOJe8lE0sWx0=
-X-Received: by 2002:a17:90b:4d84:b0:2c8:f3b5:7dd1 with SMTP id
- 98e67ed59e1d1-2cb779d0b7dmr6684082a91.16.1721396747944; Fri, 19 Jul 2024
- 06:45:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NPam6hh7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721397367; x=1752933367;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=uGRqzljmM2/LI4ME3k5gWDt5e+freuDNSITQGCJ/Smo=;
+  b=NPam6hh7Aau6yitJZa775JG2Xf596voAGI4qiF/IFfnPRpXsGHxtRIVX
+   7XEc9gHuXN2CKNdbeAf09lsWTWJwByfukJxsEdPtJQaeKptlusBp7HDIa
+   G3ho58G5OoU6HqLr9TCZ8cr9fOVI21LoRAPRQPw4TEAmNYvRhhjDzlzhf
+   gfuvhiN83vVzoh12SVWaXYRpOViH7q1bXWXsI1Gh8G3AcGEcx3tCrOLHj
+   DiM0oy4fnCz6fvl2lzTslF8hWv6D5XWAjJUQX+rx6oCjuzJR3QSN+8LIn
+   mrmW+akS3aYeb/UUl7CBSZGEiz6DRChs4gKDJ1x4ezPzFlLPnw1/uQOFS
+   A==;
+X-CSE-ConnectionGUID: UOyIgyQNRuWWFCjNWOMfJA==
+X-CSE-MsgGUID: Y9MrmNfUQnevGITlBjMaqw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11138"; a="30161491"
+X-IronPort-AV: E=Sophos;i="6.09,220,1716274800"; 
+   d="scan'208";a="30161491"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 06:56:06 -0700
+X-CSE-ConnectionGUID: wWB3lJEWSiaJ4a73X2rrVQ==
+X-CSE-MsgGUID: xaw0AZ2RT8e5DDzVAbNLqA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,220,1716274800"; 
+   d="scan'208";a="50860659"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jul 2024 06:56:04 -0700
+Received: from [10.209.176.79] (kliang2-mobl1.ccr.corp.intel.com [10.209.176.79])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 2D57920CFED5;
+	Fri, 19 Jul 2024 06:56:01 -0700 (PDT)
+Message-ID: <e8872317-8e18-48aa-9f23-b98af9345bed@linux.intel.com>
+Date: Fri, 19 Jul 2024 09:55:59 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240712102029.3697965-1-james.clark@linaro.org>
- <20240712102029.3697965-7-james.clark@linaro.org> <CAJ9a7Vgz-rP6kGLLo2RR_qSZ3dhBT+=E8S=z1Hj6pfwOYu06Nw@mail.gmail.com>
- <ef5e7351-5f62-444a-b930-4dc2feb9f10d@linaro.org> <26262a1f-de49-41de-85bf-0640c6cc6bd2@linaro.org>
-In-Reply-To: <26262a1f-de49-41de-85bf-0640c6cc6bd2@linaro.org>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Fri, 19 Jul 2024 14:45:36 +0100
-Message-ID: <CAJ9a7VhL18eWFw6T6HdrhbY_v8oeyuzM62D1w1CO1Psumb-EBQ@mail.gmail.com>
-Subject: Re: [PATCH v5 06/17] perf: cs-etm: Support version 0.1 of HW_ID packets
-To: James Clark <james.clark@linaro.org>
-Cc: coresight@lists.linaro.org, suzuki.poulose@arm.com, 
-	gankulkarni@os.amperecomputing.com, leo.yan@linux.dev, 
-	anshuman.khandual@arm.com, James Clark <james.clark@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-
-Fair enough - less worried about the ordering as the final :
-
-else
-     return fn()
-}
-
-where there's no unconditional return at the end of the function. The
-last else looks redundant to me. More a stylistic thing, not sure if
-there is a hard and fast rule either way
-
-Mike
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/6] perf pmu: Add support for event.cpus files in
+ sysfs
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
+ James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
+ Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org,
+ Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, ananth.narayan@amd.com,
+ gautham.shenoy@amd.com, kprateek.nayak@amd.com, sandipan.das@amd.com
+References: <20240718003025.1486232-1-irogers@google.com>
+ <20240718003025.1486232-4-irogers@google.com>
+ <92ceb8b5-240a-4715-98db-c73e8e9d3e50@linux.intel.com>
+ <CAP-5=fUfoMZ0HjCNoJe6hgEMi5ciY+LqFjBbLzfiZgO6dioshA@mail.gmail.com>
+ <64030eab-6e95-494a-ab72-bc33792ef723@linux.intel.com>
+ <CAP-5=fVMV4ZmGk4-XguqV=LAuif-MgAL+BK=mMAE1tC3f3tbhQ@mail.gmail.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAP-5=fVMV4ZmGk4-XguqV=LAuif-MgAL+BK=mMAE1tC3f3tbhQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 
 
-On Fri, 19 Jul 2024 at 11:49, James Clark <james.clark@linaro.org> wrote:
->
->
->
-> On 19/07/2024 11:48 am, James Clark wrote:
-> >
-> >
-> > On 18/07/2024 2:24 pm, Mike Leach wrote:
-> >> On Fri, 12 Jul 2024 at 11:22, James Clark <james.clark@linaro.org> wrote:
-> >>>
-> >>> From: James Clark <james.clark@arm.com>
-> >>>
-> >>> v0.1 HW_ID packets have a new field that describes which sink each CPU
-> >>> writes to. Use the sink ID to link trace ID maps to each other so that
-> >>> mappings are shared wherever the sink is shared.
-> >>>
-> >>> Also update the error message to show that overlapping IDs aren't an
-> >>> error in per-thread mode, just not supported. In the future we can
-> >>> use the CPU ID from the AUX records, or watch for changing sink IDs on
-> >>> HW_ID packets to use the correct decoders.
-> >>>
-> >>> Signed-off-by: James Clark <james.clark@arm.com>
-> >>> Signed-off-by: James Clark <james.clark@linaro.org>
-> >>> ---
-> >>>   tools/include/linux/coresight-pmu.h |  17 +++--
-> >>>   tools/perf/util/cs-etm.c            | 100 +++++++++++++++++++++++++---
-> >>>   2 files changed, 103 insertions(+), 14 deletions(-)
-> >>>
-> >>> diff --git a/tools/include/linux/coresight-pmu.h
-> >>> b/tools/include/linux/coresight-pmu.h
-> >>> index 51ac441a37c3..89b0ac0014b0 100644
-> >>> --- a/tools/include/linux/coresight-pmu.h
-> >>> +++ b/tools/include/linux/coresight-pmu.h
-> >>> @@ -49,12 +49,21 @@
-> >>>    * Interpretation of the PERF_RECORD_AUX_OUTPUT_HW_ID payload.
-> >>>    * Used to associate a CPU with the CoreSight Trace ID.
-> >>>    * [07:00] - Trace ID - uses 8 bits to make value easy to read in
-> >>> file.
-> >>> - * [59:08] - Unused (SBZ)
-> >>> - * [63:60] - Version
-> >>> + * [39:08] - Sink ID - as reported in
-> >>> /sys/bus/event_source/devices/cs_etm/sinks/
-> >>> + *           Added in minor version 1.
-> >>> + * [55:40] - Unused (SBZ)
-> >>> + * [59:56] - Minor Version - previously existing fields are
-> >>> compatible with
-> >>> + *           all minor versions.
-> >>> + * [63:60] - Major Version - previously existing fields mean
-> >>> different things
-> >>> + *           in new major versions.
-> >>>    */
-> >>>   #define CS_AUX_HW_ID_TRACE_ID_MASK     GENMASK_ULL(7, 0)
-> >>> -#define CS_AUX_HW_ID_VERSION_MASK      GENMASK_ULL(63, 60)
-> >>> +#define CS_AUX_HW_ID_SINK_ID_MASK      GENMASK_ULL(39, 8)
-> >>>
-> >>> -#define CS_AUX_HW_ID_CURR_VERSION 0
-> >>> +#define CS_AUX_HW_ID_MINOR_VERSION_MASK        GENMASK_ULL(59, 56)
-> >>> +#define CS_AUX_HW_ID_MAJOR_VERSION_MASK        GENMASK_ULL(63, 60)
-> >>> +
-> >>> +#define CS_AUX_HW_ID_MAJOR_VERSION 0
-> >>> +#define CS_AUX_HW_ID_MINOR_VERSION 1
-> >>>
-> >>>   #endif
-> >>> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> >>> index 954a6f7bedf3..87e983da19be 100644
-> >>> --- a/tools/perf/util/cs-etm.c
-> >>> +++ b/tools/perf/util/cs-etm.c
-> >>> @@ -118,6 +118,12 @@ struct cs_etm_queue {
-> >>>          struct cs_etm_traceid_queue **traceid_queues;
-> >>>          /* Conversion between traceID and metadata pointers */
-> >>>          struct intlist *traceid_list;
-> >>> +       /*
-> >>> +        * Same as traceid_list, but traceid_list may be a reference
-> >>> to another
-> >>> +        * queue's which has a matching sink ID.
-> >>> +        */
-> >>> +       struct intlist *own_traceid_list;
-> >>> +       u32 sink_id;
-> >>>   };
-> >>>
-> >>>   static int cs_etm__process_timestamped_queues(struct
-> >>> cs_etm_auxtrace *etm);
-> >>> @@ -142,6 +148,7 @@ static int cs_etm__metadata_set_trace_id(u8
-> >>> trace_chan_id, u64 *cpu_metadata);
-> >>>                        (queue_nr << 16 | trace_chan_id)
-> >>>   #define TO_QUEUE_NR(cs_queue_nr) (cs_queue_nr >> 16)
-> >>>   #define TO_TRACE_CHAN_ID(cs_queue_nr) (cs_queue_nr & 0x0000ffff)
-> >>> +#define SINK_UNSET ((u32) -1)
-> >>>
-> >>>   static u32 cs_etm__get_v7_protocol_version(u32 etmidr)
-> >>>   {
-> >>> @@ -241,7 +248,16 @@ static int cs_etm__insert_trace_id_node(struct
-> >>> cs_etm_queue *etmq,
-> >>>                  int err;
-> >>>
-> >>>                  if (curr_cpu_data[CS_ETM_CPU] !=
-> >>> cpu_metadata[CS_ETM_CPU]) {
-> >>> -                       pr_err("CS_ETM: map mismatch between HW_ID
-> >>> packet CPU and Trace ID\n");
-> >>> +                       /*
-> >>> +                        * With > CORESIGHT_TRACE_IDS_MAX ETMs,
-> >>> overlapping IDs
-> >>> +                        * are expected (but not supported) in
-> >>> per-thread mode,
-> >>> +                        * rather than signifying an error.
-> >>> +                        */
-> >>> +                       if (etmq->etm->per_thread_decoding)
-> >>> +                               pr_err("CS_ETM: overlapping Trace IDs
-> >>> aren't currently supported in per-thread mode\n");
-> >>> +                       else
-> >>> +                               pr_err("CS_ETM: map mismatch between
-> >>> HW_ID packet CPU and Trace ID\n");
-> >>> +
-> >>>                          return -EINVAL;
-> >>>                  }
-> >>>
-> >>> @@ -326,6 +342,64 @@ static int cs_etm__process_trace_id_v0(struct
-> >>> cs_etm_auxtrace *etm, int cpu,
-> >>>          return cs_etm__metadata_set_trace_id(trace_chan_id, cpu_data);
-> >>>   }
-> >>>
-> >>> +static int cs_etm__process_trace_id_v0_1(struct cs_etm_auxtrace
-> >>> *etm, int cpu,
-> >>> +                                        u64 hw_id)
-> >>> +{
-> >>> +       struct cs_etm_queue *etmq = cs_etm__get_queue(etm, cpu);
-> >>> +       int ret;
-> >>> +       u64 *cpu_data;
-> >>> +       u32 sink_id = FIELD_GET(CS_AUX_HW_ID_SINK_ID_MASK, hw_id);
-> >>> +       u8 trace_id = FIELD_GET(CS_AUX_HW_ID_TRACE_ID_MASK, hw_id);
-> >>> +
-> >>> +       /*
-> >>> +        * Check sink id hasn't changed in per-cpu mode. In
-> >>> per-thread mode,
-> >>> +        * let it pass for now until an actual overlapping trace ID
-> >>> is hit. In
-> >>> +        * most cases IDs won't overlap even if the sink changes.
-> >>> +        */
-> >>> +       if (!etmq->etm->per_thread_decoding && etmq->sink_id !=
-> >>> SINK_UNSET &&
-> >>> +           etmq->sink_id != sink_id) {
-> >>> +               pr_err("CS_ETM: mismatch between sink IDs\n");
-> >>> +               return -EINVAL;
-> >>> +       }
-> >>> +
-> >>> +       etmq->sink_id = sink_id;
-> >>> +
-> >>> +       /* Find which other queues use this sink and link their ID
-> >>> maps */
-> >>> +       for (unsigned int i = 0; i < etm->queues.nr_queues; ++i) {
-> >>> +               struct cs_etm_queue *other_etmq =
-> >>> etm->queues.queue_array[i].priv;
-> >>> +
-> >>> +               /* Different sinks, skip */
-> >>> +               if (other_etmq->sink_id != etmq->sink_id)
-> >>> +                       continue;
-> >>> +
-> >>> +               /* Already linked, skip */
-> >>> +               if (other_etmq->traceid_list == etmq->traceid_list)
-> >>> +                       continue;
-> >>> +
-> >>> +               /* At the point of first linking, this one should be
-> >>> empty */
-> >>> +               if (!intlist__empty(etmq->traceid_list)) {
-> >>> +                       pr_err("CS_ETM: Can't link populated trace ID
-> >>> lists\n");
-> >>> +                       return -EINVAL;
-> >>> +               }
-> >>> +
-> >>> +               etmq->own_traceid_list = NULL;
-> >>> +               intlist__delete(etmq->traceid_list);
-> >>> +               etmq->traceid_list = other_etmq->traceid_list;
-> >>> +               break;
-> >>> +       }
-> >>> +
-> >>> +       cpu_data = get_cpu_data(etm, cpu);
-> >>> +       ret = cs_etm__insert_trace_id_node(etmq, trace_id, cpu_data);
-> >>> +       if (ret)
-> >>> +               return ret;
-> >>> +
-> >>> +       ret = cs_etm__metadata_set_trace_id(trace_id, cpu_data);
-> >>> +       if (ret)
-> >>> +               return ret;
-> >>> +
-> >>> +       return 0;
-> >>> +}
-> >>> +
-> >>>   static int cs_etm__metadata_get_trace_id(u8 *trace_chan_id, u64
-> >>> *cpu_metadata)
-> >>>   {
-> >>>          u64 cs_etm_magic = cpu_metadata[CS_ETM_MAGIC];
-> >>> @@ -414,10 +488,10 @@ static int
-> >>> cs_etm__process_aux_output_hw_id(struct perf_session *session,
-> >>>
-> >>>          /* extract and parse the HW ID */
-> >>>          hw_id = event->aux_output_hw_id.hw_id;
-> >>> -       version = FIELD_GET(CS_AUX_HW_ID_VERSION_MASK, hw_id);
-> >>> +       version = FIELD_GET(CS_AUX_HW_ID_MAJOR_VERSION_MASK, hw_id);
-> >>>
-> >>>          /* check that we can handle this version */
-> >>> -       if (version > CS_AUX_HW_ID_CURR_VERSION) {
-> >>> +       if (version > CS_AUX_HW_ID_MAJOR_VERSION) {
-> >>>                  pr_err("CS ETM Trace: PERF_RECORD_AUX_OUTPUT_HW_ID
-> >>> version %d not supported. Please update Perf.\n",
-> >>>                         version);
-> >>>                  return -EINVAL;
-> >>> @@ -442,7 +516,10 @@ static int
-> >>> cs_etm__process_aux_output_hw_id(struct perf_session *session,
-> >>>                  return -EINVAL;
-> >>>          }
-> >>>
-> >>> -       return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
-> >>
-> >> Perhaps leave this as the final statement of the function
-> >>
-> >>> +       if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 0)
-> >>
-> >> this could be moved before and be
-> >>
-> >> if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 1)
-> >>                 return cs_etm__process_trace_id_v0_1(etm, cpu, hw_id);
-> >>
-> >>
-> >
-> > Because I was intending minor version changes to be backwards compatible
-> > I have it so that any value other than 0 is treated as v0.1. Otherwise
-> > version updates will break old versions of Perf. And then if we added a
-> > v0.3 it would look like this:
->
-> That should have said v0.2 ^
->
-> >
-> >   if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 0)
-> >     return cs_etm__process_trace_id_v0(etm, cpu, hw_id);
-> >   else if (FIELD_GET(CS_AUX_HW_ID_MINOR_VERSION_MASK, hw_id) == 1)
-> >     return cs_etm__process_trace_id_v0_1(etm, cpu, hw_id);
-> >   else
-> >     return cs_etm__process_trace_id_v0_2(etm, cpu, hw_id);
-> >
-> > Based on that I'm not sure if you still think it should be changed?
+On 2024-07-18 4:50 p.m., Ian Rogers wrote:
+> On Thu, Jul 18, 2024 at 10:48 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>
+>>
+>>
+>> On 2024-07-18 11:39 a.m., Ian Rogers wrote:
+>>> On Thu, Jul 18, 2024 at 7:33 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> On 2024-07-17 8:30 p.m., Ian Rogers wrote:
+>>>>> If an event file exists in sysfs, check if a event.cpus file exists
+>>>>> and read a perf_cpu_map from it if it does. This allows particular
+>>>>> events to have a different set of CPUs compared to the PMU.
+>>>>>
+>>>>> One scenario where this could be useful is when a PMU is set up with a
+>>>>> cpumask/events per SMT thread but some events record for all SMT
+>>>>> threads. Programming an event on each SMT thread will cause
+>>>>> unnecessary counters to be programmed and the aggregate value to be
+>>>>> too large.
+>>>>
+>>>> If I understand the scenario correctly, I think the issue should have
+>>>> been addressed since ICX, with the introduction of  the "SMT-aware
+>>>> events". Is there a specific event which still has the issue on newer
+>>>> platforms?
+>>>
+>>> Nothing comes to mind, but it is there on popular machines like Skylake.
+>>>
+>>>>>
+>>>>> Another scenario where this could be useful if when a PMU has
+>>>>> historically had a cpumask at the package level, but now newer per
+>>>>> die, core or CPU information is available.
+>>>>
+>>>> The traditional way to support new counters with a different scope is to
+>>>> add a new PMU.
+>>>>
+>>>>>
+>>>>> Additional context for the motivation is in these patches and
+>>>>> conversation:
+>>>>> https://lore.kernel.org/lkml/20240711102436.4432-1-Dhananjay.Ugwekar@amd.com/
+>>>>
+>>>> I don't see the advantages of the new event.cpus way.
+>>>> The aggregation should be the same.
+>>>
+>>> Agreed. My concern is that we may end up with a pattern of
+>>> <pmu>_per_pkg, <pmu>_per_core, <pmu>_per_cpu, <pmu>_per_l3, etc. just
+>>> for the sake of the cpumask.
+>>
+>> The cstate PMUs already do so, e.g., cstate_core, cstate_pkg.
+>>
+>> From another perspective, it discloses the scope information in a PMU
+>> name. If a user only cares about the information of a package, they just
+>> need to focus on everything under <pmu>_pkg. Otherwise, they have to go
+>> through all the events.
+>>
+>>>
+>>>> The RAPL counters are free-running counters. So there is no difference
+>>>> whether grouping or not grouping.
+>>>
+>>> Should the RAPL counters return true for perf_pmu__is_software? In the
+>>> tool we currently return false and won't allow grouping, these events
+>>> with other hardware events. The intent in perf_pmu__is_software was to
+>>> emulate the way the kernel allows/disallows groups - software context
+>>> events can be in a hardware context but otherwise I don't believe the
+>>> grouping is allowed.
+>>
+>> No, it's not allowed for the RAPL counters.
+>>
+>> If the motivation is to find another way to group counters with
+>> different scope, it may not work.
+>>
+>> We once tried to mix the perf_invalid_context PMUs in a group. But it's
+>> denied.
+>> https://yhbt.net/lore/all/20150415172856.GA5029@twins.programming.kicks-ass.net/
+>>
+>> The event.cpus still faces the same issues.
+> 
+> Why so? The events would share the same perf_event_context, I thought
+> the perf_event_open would succeed.
 
+I think it breaks what groups are as well. At least, you cannot
+guarantee that two events can be co-scheduled on the same CPU. Even
+worse, there could be no events on some CPU.
+The first thing that pops up is the sample read feature. On CPU_A, the
+event_A is the leader event, but on CPU_B, the event_B could be the
+leader event if event_A's cpumask doesn't include the CPU_B.
+There could be more similar features we have to special handle.
 
+> 
+>>>
+>>>> But it makes the kernel driver complex, since it has to maintain at
+>>>> least two different cpumasks.
+>>>
+>>> Two drivers each maintaining a cpumask or 1 driver maintaining 2
+>>> cpumasks, it seems like there is chance for code reuse in both cases.
+>>> I'm not seeing how it adds to complexity particularly.
+>>
+>> Yes, there are some cleanup opportunities for the cpumask/hotplug codes.
+>>
+>> We may even abstracts some generic interfaces for pkg or core level PMUs.
+>>
+>> Eventually, the complexity/duplication should be able to be reduced.
+>>
+>>>
+>>>> The tool becomes complex either, since it has to take care of the
+>>>> per-event CPU override case.
+>>>
+>>> I'm not sure I agree with this. What we need for perf_event_open is a
+>>> perf_event_attr, we dress these up as evsels which also have the
+>>> ability to be for >1 CPU or thread. Longer term I think evsels can
+>>> also have >1 PMU, for the wildcard cases like uncore memory
+>>> controllers - this would remove the need for resorting evsels except
+>>> for topdown events which have thrown us a giant bundle of challenges.
+>>> Anyway, so an evsel is perf_event_attr information paired with CPU
+>>> information, it makes sense to me that the parser should do this
+>>> pairing. What's harder in the evsel/evlist setup is trying to fix CPU
+>>> maps up not in parsing, like with __perf_evlist__propagate_maps where
+>>> the parsing is trying to leave crumbs around (like system_wide,
+>>> has_user_cpus, is_pmu_core) so the map propagation works properly.
+>>>
+>>>> The json file must also be updated to add a
+>>>> new field cpumask.
+>>>
+>>> Yeah, I don't like this as it means we end up putting CPU information
+>>> into the json that isn't the same for every CPU variant of the same
+>>> architecture model. Maybe we can have some kind of "scope" enum value
+>>> in the json and then when the scope differs from the PMU's, core scope
+>>> vs the PMU's hyperthread scope, then in the tool we can figure out the
+>>> cpumask from the topology in sysfs. Maybe we should just always use
+>>> the topology and get rid of cpumask files in sysfs, replacing them
+>>> with "scope" files. Will Deacon pushed back on having ARM PMUs
+>>> supporting hot plugging
+>>> (https://lore.kernel.org/lkml/20240701142222.GA2691@willie-the-truck/)
+>>> where the main thing hot plugging handler needs to maintain is set the
+>>> cpumask.
+>>
+>> Not just the cpumask but also migrate the context for some PMUs, see
+>> perf_pmu_migrate_context().
+> 
+> Will do, thanks.
+> 
+>> It seems we really need a shared cpumask in the generic code, so the
+>> drivers don't need to handle the hotplug everywhere. I will think about it.
+> 
+> Thanks. There are other problems on ARM PMUs like having no or empty
+> cpumasks, which the tool take to mean open the event on every online
+> CPU (there is no cpus or cpumask file on core PMUs historically, so we
+> adopt this behavior when the cpumask is empty or not present). 
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+The no cpus/cpumasks and empty cpumasks should be different.
+No cpus/cpumasks file means that the counters/events are available for
+all the CPUs.
+But if it's an empty cpus/cpumasks file, it means that there are no
+proper CPUs. It may happen on a hybrid machine when all e-core CPUs are
+hot-removed. Since it's possible that the CPUs can be hot-added later,
+the kernel driver doesn't unregister the cpu_atom PMU.
+
+> I've
+> been thinking to expand `tools/perf/tests/pmu.c` with basic PMU sanity
+> tests. Some ideas:
+> 
+
+Thanks.
+
+> 1) some kind of cpumask sanity check - we could open an event with the
+> cpumask and see if it yields multiplexing.. which would highlight the
+> ARM no cpumask bug
+
+The multiplexing is triggered when there are not enough counters. It
+should not related to the cpumask.
+
+For the PMU without cpumask, I think the test case should try to open an
+event on all CPUs and check if the open succeeds.
+For the PMU with cpumask, the test case should try to open an event on
+the masked CPUs and check if the open succeeds.
+
+The behavior of opening an event on unmasked CPUs seems not defined.
+For uncore, it's OK. The kernel treats the CPUs from the same socket
+exactly the same. But I'm not sure about the other PMUs.
+
+> 2) do the /sys/devices/<pmu>/events/event.(unit|scale|per-pkg|snapshot)
+> files parse correctly and have a corresponding event.
+> 3) keep adding opening events on the PMU to a group to make sure that
+> when counters are exhausted the perf_event_open fails (I've seen this
+> bug on AMD)
+> 4) are the values in the type file unique
+> 
+
+The rest sounds good to me.
+
+Thanks,
+Kan
