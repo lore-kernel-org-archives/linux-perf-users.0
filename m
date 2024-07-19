@@ -1,440 +1,244 @@
-Received: from mail-lf1-f74.google.com (mail-lf1-f74.google.com [209.85.167.74])
+Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA2BB1459E0
-	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 15:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA81117BA1
+	for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 15:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721401272; cv=none; b=RJVf8xLdKCBHOHp5T8wG0nDFewHZJB2tgibUf1ysjoViZaMw/iEUchNow7kS9G5hrIDtFHxsvHka67C74l9H/KHmBKt9txY0YB0834rmchcYdGjq91Vn8A1jBnT8ozjz2p8khpf55sRR0qStTUUdQmAevyzF23qZKXd/fge/qdQ=
+	t=1721401328; cv=none; b=k+WV6y0B5qiZUDPA/CsbftPb4aXXAWF9hjiJHnDUgi22VHQkgBrePR8SzznuV9aPVqdvUWNekV7OanJ8N9g/m+/PdmavU3g4HBEzSxR6wHxHXPRjDGuKzMJb53vdqh+rIL7px9sLh4XwcdZ1SaCk6K+hRDhksPGO9Wt4y1lafGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721401272; c=relaxed/simple;
-	bh=pO1JQJcHmOMrSwsXJhVhqkbXXGK1yK7O3wJ0ZGgB4YA=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=Xe9wECKj/Q4xZWuHfTixxgM39CDhI0RH78LUF1XLLNYH2RIuayFH4OW2l1J1fqJoeO2UrezIYdwAwXcOldkw0H6qgkivQGr8KtLIQd28cjR+ikRcZwRlv7tLWJ3JPssSlrPrgViIa1jr/Zqh4Uh/uLCoYaRj4tkP2VuS9NqC92E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o8eJSdS1; arc=none smtp.client-ip=209.85.167.74
+	s=arc-20240116; t=1721401328; c=relaxed/simple;
+	bh=6feKD/Max3jl/b/lRMm6cPIGSpZCi4RoSPMkciJfpIE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BC/2AV6v3IytilVjN8vw7YFb3QGrENJJnvEvKshsisDIU835EiR5IzU3zXytJKU0vqRmo387JM6dijZduXrgJPBj3MnyNEafJIXjUhcT3MXuvD46ymjxiSb7CnKIw0uz3wXqdFEzXc8m45tWB/QZN5Yd8Zzuw/U3buV+n+opD18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vioc6Xvm; arc=none smtp.client-ip=209.85.166.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--sesse.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o8eJSdS1"
-Received: by mail-lf1-f74.google.com with SMTP id 2adb3069b0e04-52ea88005bfso1740765e87.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 08:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vioc6Xvm"
+Received: by mail-il1-f181.google.com with SMTP id e9e14a558f8ab-38206c2f5e3so129825ab.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 19 Jul 2024 08:02:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721401269; x=1722006069; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=obT8RcBYxohhu31EJ/sb43kWCe33Wb+5FXfnxCw20NA=;
-        b=o8eJSdS10e7WxspS6SmzPAb/PJIeTdAAE+hyRi2ZuhhniklPXyOnvnY+k8YQS144Cx
-         R6JrbOof6Y96PYyYLCY3aBri8BceCJuIg9HKW4hLBEN2WAle44BFwDrTc9KhmLPpcK+Y
-         rzbQdIIeBDmH3QzBcuS8es5IHE5gQpvR9tnZpBbGTo/xNElIwm4s8+5Dq8ztZp0IAV08
-         pHWxSu1yHVos8yZgEJrtfe+Hv8wPCWA/3e+e+0w50aByi7VP1KMow85Fy03esRp2DnJ4
-         e/2T0HSZoIXuEbAJy6VVQ8yWoeDK2zD+9IB2nZj/fglPc/lnbdPpyy38Em399oEvt3YN
-         A+nA==
+        d=google.com; s=20230601; t=1721401326; x=1722006126; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LcgTL/z1Zm3KDKhdMJuoH9ZuHCmTJEIzViKk2HTzpDw=;
+        b=vioc6XvmyHcp3mw7/SuPDWtTNcNYIFZuDB6PNIFheoyTi2hsLMMKuFsil/p/e2krWp
+         TnZhaE3auAY1omDs4lw7i+/DgCkNSVo2FLeaUG7FYdiUZ+z6RsXkqewYhVR2cyZ6iSud
+         PVccVSerQPoaFt3ppJw8xcvoeNsYdBsJYHWbWMxFEbC4glZIzc6VOXg6RZVufKsaIhPd
+         65Qqi8bajj+mV0LcAp2zAIZ2U1OaO1J1poUBRqD8RGV+xKSFoP0EYNdVQHbyEf3QBSAI
+         FBPX510nzp7lQB94bBm4q/S2z5v8bIDN8EP/eel7vnz/i86+GwOdtPP4tf5PzkO9MDbR
+         kCqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721401269; x=1722006069;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=obT8RcBYxohhu31EJ/sb43kWCe33Wb+5FXfnxCw20NA=;
-        b=paWU171ndbJw58cniioJPgrRBhMMG4SnZysJG9PiUaspcYzcaPLLZZs3+sAAa5YwuZ
-         q4U0XzoGMsJ6lt19KSTtdV73NCkr9QcdZSVpqQBRlxckJaQtLBbLcGhtJsjGByqkDQGu
-         iKE6W7iT4TAAv+xO4HzQ31SAevkX2rkdZpvr/LQF4iQsgfx8JvMYXw/oBkZul+BKN8D9
-         +je2kHlQivnmNfSIZcCa6xINQQhyQY5vRoV3LEsfSTyaoTAmX6pu3WPxoylEN7AQ6mM0
-         wqBwSgpscQEtAgT2zZnoXAfLd4iyvz5qCjU6pFetxiUrc81PG/3OxlQfkGcGBekZn3mL
-         qNeA==
-X-Gm-Message-State: AOJu0YzSH9sE4Ld7LGvzIuafOciOnZoa0qwS6y0EaJWz8J+emZngCdNC
-	Dxug9sR5cL9Uwl0CvcFiMgZjBxwVBvUP4UQsykSxwjLZZwzbeqAtbWBBvm9imeXohU/Z7QPm3Q=
-	=
-X-Google-Smtp-Source: AGHT+IHoD5cLdJRcqWAsmfyNHHaqhtjQWGqOfRWv6v2bjNRMFlV8CcYUOvnznPCczD8NopGkPd00H1RKjQ==
-X-Received: from sesse.osl.corp.google.com ([2a00:79e0:18:10:5684:1eca:607a:2a0c])
- (user=sesse job=sendgmr) by 2002:ac2:42d8:0:b0:52e:f476:c139 with SMTP id
- 2adb3069b0e04-52ef476c18cmr3267e87.3.1721401269139; Fri, 19 Jul 2024 08:01:09
- -0700 (PDT)
-Date: Fri, 19 Jul 2024 17:00:51 +0200
-In-Reply-To: <20240719150051.520317-1-sesse@google.com>
+        d=1e100.net; s=20230601; t=1721401326; x=1722006126;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LcgTL/z1Zm3KDKhdMJuoH9ZuHCmTJEIzViKk2HTzpDw=;
+        b=XqWJW0634FZrPf9e+IkvZhgTkTjDOdrK+fW34Cf1qb3D6SuQ7pJiL+EH05mXVBGhCT
+         UUzmflLg5TnoYNZxR2w132Qyi9GklkbJMO9cMvl72Kqhf9DlBLv+5+cif46lxcbqpUbd
+         O9on+A49eXOPzB9692oIlrjyjzsVMf57yhBSdqfiU30yibqupuLWwYeqB9OKOVNFDaD8
+         QqTFHNxX/+92sbP1ntRwMXgs3JPMsTtHZhfBl4mfG4qXfgazO5i9C4el5ysEkCfE+rQo
+         z5Qsue6jjvVh5i1DZ1vC4evkIptvWS6Rv2o+iNEJYXTnVFY+etf5QJHttukNe3fjwD1J
+         CZfA==
+X-Forwarded-Encrypted: i=1; AJvYcCWwOQmy0wwsAwE1I9YcMco60XobgdlsvLZNXRO5iptMIAFj/2/I1bOdBCC9gFroECddOlRY5YcHsjwpRr9LX4eHfkIHd0QXJMIaxBSOFKcd9w==
+X-Gm-Message-State: AOJu0YwVA/DS1anrr1pZlnsYhOoJ5CscFp2hUSf/Qvr48/Ac6ev3Dd1L
+	opRuTXtKt+QOas8tLCkT8Qhoj9Zf65+wyWcwxcX40KFu1yQUyWzZXiihEnAgcqBZVtBbxl+Bm8M
+	jQeOCfsahXSS2QZ5V7MFHbP1PCVtuSU0E+jWk
+X-Google-Smtp-Source: AGHT+IHO08aQiRYer1ryQE1O7NX++thQZRWjktai/inshS6zlL+P83/FSDZvAAjfAQgXuc3LzJk93N4Gu+0qV8dWC4A=
+X-Received: by 2002:a05:6e02:156d:b0:375:9e2b:a832 with SMTP id
+ e9e14a558f8ab-397e007e7ebmr2302035ab.21.1721401325255; Fri, 19 Jul 2024
+ 08:02:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240719150051.520317-1-sesse@google.com>
-X-Mailer: git-send-email 2.45.2.1089.g2a221341d9-goog
-Message-ID: <20240719150051.520317-3-sesse@google.com>
-Subject: [PATCH v9 3/3] perf annotate: LLVM-based disassembler
-From: "Steinar H. Gunderson" <sesse@google.com>
-To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	irogers@google.com, "Steinar H. Gunderson" <sesse@google.com>
+MIME-Version: 1.0
+References: <20240718003025.1486232-1-irogers@google.com> <20240718003025.1486232-7-irogers@google.com>
+ <febefab7-7351-4bd5-a6cc-a0116248484f@linux.intel.com> <CAP-5=fUUcehu-C=ytHVVixOpeCYoW4oJkkj6p6W=M0HtQ2wrRA@mail.gmail.com>
+ <2e76dd74-b702-4401-ade1-fc1fd1ff40ce@linux.intel.com> <CAP-5=fUEo=EC2iS17_2=1i76ACnHV5PCsA36c3q4TAw3QTvwTQ@mail.gmail.com>
+ <803b0b0b-6250-4f63-9b80-8982f74b5ef2@linux.intel.com>
+In-Reply-To: <803b0b0b-6250-4f63-9b80-8982f74b5ef2@linux.intel.com>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 19 Jul 2024 08:01:52 -0700
+Message-ID: <CAP-5=fUvA5Lmk16Zs1B6bj1OLHf9NaHhAzx7yZL9S7JGwmO0uw@mail.gmail.com>
+Subject: Re: [PATCH v2 6/6] perf parse-events: Add "cpu" term to set the CPU
+ an event is recorded on
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Bjorn Helgaas <bhelgaas@google.com>, 
+	Jonathan Corbet <corbet@lwn.net>, James Clark <james.clark@arm.com>, 
+	Ravi Bangoria <ravi.bangoria@amd.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, ananth.narayan@amd.com, gautham.shenoy@amd.com, 
+	kprateek.nayak@amd.com, sandipan.das@amd.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Support using LLVM as a disassembler method, allowing helperless
-annotation in non-distro builds. (It is also much faster than
-using libbfd or bfd objdump on binaries with a lot of debug
-information.)
+On Fri, Jul 19, 2024 at 7:14=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2024-07-18 5:06 p.m., Ian Rogers wrote:
+> > On Thu, Jul 18, 2024 at 11:03=E2=80=AFAM Liang, Kan <kan.liang@linux.in=
+tel.com> wrote:
+> >>
+> >>
+> >>
+> >> On 2024-07-18 11:12 a.m., Ian Rogers wrote:
+> >>> On Thu, Jul 18, 2024 at 7:41=E2=80=AFAM Liang, Kan <kan.liang@linux.i=
+ntel.com> wrote:
+> >>>>
+> >>>>
+> >>>>
+> >>>> On 2024-07-17 8:30 p.m., Ian Rogers wrote:
+> >>>>> The -C option allows the CPUs for a list of events to be specified =
+but
+> >>>>> its not possible to set the CPU for a single event. Add a term to
+> >>>>> allow this. The term isn't a general CPU list due to ',' already be=
+ing
+> >>>>> a special character in event parsing instead multiple cpu=3D terms =
+may
+> >>>>> be provided and they will be merged/unioned together.
+> >>>>>
+> >>>>> An example of mixing different types of events counted on different=
+ CPUs:
+> >>>>> ```
+> >>>>> $ perf stat -A -C 0,4-5,8 -e "instructions/cpu=3D0/,l1d-misses/cpu=
+=3D4,cpu=3D5/,inst_retired.any/cpu=3D8/,cycles" -a sleep 0.1
+> >>>>>
+> >>>>>  Performance counter stats for 'system wide':
+> >>>>>
+> >>>>> CPU0              368,647      instructions/cpu=3D0/              #=
+    0.26  insn per cycle
+> >>>>> CPU4        <not counted>      instructions/cpu=3D0/
+> >>>>> CPU5        <not counted>      instructions/cpu=3D0/
+> >>>>> CPU8        <not counted>      instructions/cpu=3D0/
+> >>>>> CPU0        <not counted>      l1d-misses [cpu]
+> >>>>> CPU4              203,377      l1d-misses [cpu]
+> >>>>> CPU5              138,231      l1d-misses [cpu]
+> >>>>> CPU8        <not counted>      l1d-misses [cpu]
+> >>>>> CPU0        <not counted>      cpu/cpu=3D8/
+> >>>>> CPU4        <not counted>      cpu/cpu=3D8/
+> >>>>> CPU5        <not counted>      cpu/cpu=3D8/
+> >>>>> CPU8              943,861      cpu/cpu=3D8/
+> >>>>> CPU0            1,412,071      cycles
+> >>>>> CPU4           20,362,900      cycles
+> >>>>> CPU5           10,172,725      cycles
+> >>>>> CPU8            2,406,081      cycles
+> >>>>>
+> >>>>>        0.102925309 seconds time elapsed
+> >>>>> ```
+> >>>>>
+> >>>>> Note, the event name of inst_retired.any is missing, reported as
+> >>>>> cpu/cpu=3D8/, as there are unmerged uniquify fixes:
+> >>>>> https://lore.kernel.org/lkml/20240510053705.2462258-3-irogers@googl=
+e.com/
+> >>>>>
+> >>>>> An example of spreading uncore overhead across two CPUs:
+> >>>>> ```
+> >>>>> $ perf stat -A -e "data_read/cpu=3D0/,data_write/cpu=3D1/" -a sleep=
+ 0.1
+> >>>>>
+> >>>>>  Performance counter stats for 'system wide':
+> >>>>>
+> >>>>> CPU0               223.65 MiB  uncore_imc_free_running_0/cpu=3D0/
+> >>>>> CPU0               223.66 MiB  uncore_imc_free_running_1/cpu=3D0/
+> >>>>> CPU0        <not counted> MiB  uncore_imc_free_running_0/cpu=3D1/
+> >>>>> CPU1                 5.78 MiB  uncore_imc_free_running_0/cpu=3D1/
+> >>>>> CPU0        <not counted> MiB  uncore_imc_free_running_1/cpu=3D1/
+> >>>>> CPU1                 5.74 MiB  uncore_imc_free_running_1/cpu=3D1/
+> >>>>> ```
+> >>>>>
+> >>>>> Manually fixing the output it should be:
+> >>>>> ```
+> >>>>> CPU0               223.65 MiB  uncore_imc_free_running_0/data_read,=
+cpu=3D0/
+> >>>>> CPU0               223.66 MiB  uncore_imc_free_running_1/data_read,=
+cpu=3D0/
+> >>>>> CPU1                 5.78 MiB  uncore_imc_free_running_0/data_write=
+,cpu=3D1/
+> >>>>> CPU1                 5.74 MiB  uncore_imc_free_running_1/data_write=
+,cpu=3D1/
+> >>>>> ```
+> >>>>>
+> >>>>> That is data_read from 2 PMUs was counted on CPU0 and data_write wa=
+s
+> >>>>> counted on CPU1.
+> >>>>
+> >>>> There was an effort to make the counter access from any CPU of the p=
+ackage.
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/c=
+ommit/?id=3Dd6a2f9035bfc27d0e9d78b13635dda9fb017ac01
+> >>>>
+> >>>> But now it limits the access from specific CPUs. It sounds like a
+> >>>> regression.
+> >>>
+> >>> Thanks Kan, I'm not sure I understand the comment.
+> >>
+> >> The flag is also applied for the uncore and RAPL.
+> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/com=
+mit/arch/x86/events/intel/uncore.c?&id=3De64cd6f73ff5a7eb4f8f759049ee24a3fe=
+55e731
+> >>
+> >> So specifying a CPU to an uncore event doesn't make sense. If the
+> >> current CPU is in the same package as the asked CPU. The kernel will
+> >> always choose the current CPU.
+> >
+> > Ugh, that sounds sub-optimal. If I'm monitoring uncore events with
+> > cgroups CPU0 (or the first CPU in a package) is going to be loaded up
+> > with all the events and have all of the rdmsr/wrmsrs in its context
+> > switch. Perhaps we should warn and say to use BPF events.
+> >
+> > Is there a way through say ioctls to get the CPU an event is on? That
+> > way we could update the `perf stat -A` to accurately report cpus.
+> > There's also the issue that the affinity stuff is going to be off.
+> >
+>
+> I don't think there is such ioctl.
+>
+> Emphasizing the CPU ID for an uncore event seems misleading. The uncore
+> only supports per-socket counter, not per-core counter.
+> Opening/reading an counter from any CPUs on a package should be identical=
+.
+> An accurate report of the `perf stat -A` for an uncore should use "S0".
 
-This is nearly identical to the output of llvm-objdump; there are
-some very rare whitespace differences, some minor changes to demangling
-(since we use perf's regular demangling and not LLVM's own) and
-the occasional case where llvm-objdump makes a different choice
-when multiple symbols share the same address. It should work across
-all of LLVM's supported architectures, although I've only tested 64-bit
-x86, and finding the right triple from perf's idea of machine
-architecture can sometimes be a bit tricky. Ideally, we should have
-some way of finding the triplet just from the file itself.
+I think it is an "elite" level trick to try to do things like balance
+context switch overhead. Putting everything on the first CPU feels
+like a scalability issue for cgroup events. BPF events work around it
+to some degree, but they are still going to put all the work on CPU0
+which could cause performance issues, latency spikes, etc. on it.
 
-Signed-off-by: Steinar H. Gunderson <sesse@google.com>
----
- tools/perf/util/disasm.c           | 193 +++++++++++++++++++++++++++++
- tools/perf/util/llvm-c-helpers.cpp |  62 +++++++++
- tools/perf/util/llvm-c-helpers.h   |  11 ++
- 3 files changed, 266 insertions(+)
+Thanks,
+Ian
 
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 9be2becfe6e8..f0232ce3d751 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -43,6 +43,7 @@ static int call__scnprintf(struct ins *ins, char *bf, size_t size,
- 
- static void ins__sort(struct arch *arch);
- static int disasm_line__parse(char *line, const char **namep, char **rawp);
-+static char *expand_tabs(char *line, char **storage, size_t *storage_len);
- 
- static __attribute__((constructor)) void symbol__init_regexpr(void)
- {
-@@ -1378,7 +1379,9 @@ static int open_capstone_handle(struct annotate_args *args, bool is_64bit,
- 
- 	return 0;
- }
-+#endif
- 
-+#if defined(HAVE_LIBCAPSTONE_SUPPORT) || defined(HAVE_LIBLLVM_SUPPORT)
- struct find_file_offset_data {
- 	u64 ip;
- 	u64 offset;
-@@ -1442,7 +1445,9 @@ read_symbol(const char *filename, struct map *map, struct symbol *sym,
- 	free(buf);
- 	return NULL;
- }
-+#endif
- 
-+#ifdef HAVE_LIBCAPSTONE_SUPPORT
- static void print_capstone_detail(cs_insn *insn, char *buf, size_t len,
- 				  struct annotate_args *args, u64 addr)
- {
-@@ -1606,6 +1611,189 @@ static int symbol__disassemble_capstone(char *filename, struct symbol *sym,
- }
- #endif
- 
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+#include <llvm-c/Disassembler.h>
-+#include <llvm-c/Target.h>
-+#include "util/llvm-c-helpers.h"
-+
-+struct symbol_lookup_storage {
-+	u64 branch_addr;
-+	u64 pcrel_load_addr;
-+};
-+
-+/*
-+ * Whenever LLVM wants to resolve an address into a symbol, it calls this
-+ * callback. We don't ever actually _return_ anything (in particular, because
-+ * it puts quotation marks around what we return), but we use this as a hint
-+ * that there is a branch or PC-relative address in the expression that we
-+ * should add some textual annotation for after the instruction. The caller
-+ * will use this information to add the actual annotation.
-+ */
-+static const char *
-+symbol_lookup_callback(void *disinfo, uint64_t value,
-+		       uint64_t *ref_type,
-+		       uint64_t address __maybe_unused,
-+		       const char **ref __maybe_unused)
-+{
-+	struct symbol_lookup_storage *storage = disinfo;
-+
-+	if (*ref_type == LLVMDisassembler_ReferenceType_In_Branch)
-+		storage->branch_addr = value;
-+	else if (*ref_type == LLVMDisassembler_ReferenceType_In_PCrel_Load)
-+		storage->pcrel_load_addr = value;
-+	*ref_type = LLVMDisassembler_ReferenceType_InOut_None;
-+	return NULL;
-+}
-+
-+static int symbol__disassemble_llvm(char *filename, struct symbol *sym,
-+				    struct annotate_args *args)
-+{
-+	struct annotation *notes = symbol__annotation(sym);
-+	struct map *map = args->ms.map;
-+	struct dso *dso = map__dso(map);
-+	u64 start = map__rip_2objdump(map, sym->start);
-+	u8 *buf;
-+	u64 len;
-+	u64 pc;
-+	bool is_64bit;
-+	char triplet[64];
-+	char disasm_buf[2048];
-+	size_t disasm_len;
-+	struct disasm_line *dl;
-+	LLVMDisasmContextRef disasm = NULL;
-+	struct symbol_lookup_storage storage;
-+	char *line_storage = NULL;
-+	size_t line_storage_len = 0;
-+	int ret = -1;
-+
-+	if (args->options->objdump_path)
-+		return -1;
-+
-+	LLVMInitializeAllTargetInfos();
-+	LLVMInitializeAllTargetMCs();
-+	LLVMInitializeAllDisassemblers();
-+
-+	buf = read_symbol(filename, map, sym, &len, &is_64bit);
-+	if (buf == NULL)
-+		return -1;
-+
-+	if (arch__is(args->arch, "x86")) {
-+		if (is_64bit)
-+			scnprintf(triplet, sizeof(triplet), "x86_64-pc-linux");
-+		else
-+			scnprintf(triplet, sizeof(triplet), "i686-pc-linux");
-+	} else {
-+		scnprintf(triplet, sizeof(triplet), "%s-linux-gnu",
-+			  args->arch->name);
-+	}
-+
-+	disasm = LLVMCreateDisasm(triplet, &storage, 0, NULL,
-+				  symbol_lookup_callback);
-+	if (disasm == NULL)
-+		goto err;
-+
-+	if (args->options->disassembler_style &&
-+	    !strcmp(args->options->disassembler_style, "intel"))
-+		LLVMSetDisasmOptions(disasm,
-+				     LLVMDisassembler_Option_AsmPrinterVariant);
-+
-+	/*
-+	 * This needs to be set after AsmPrinterVariant, due to a bug in LLVM;
-+	 * setting AsmPrinterVariant makes a new instruction printer, making it
-+	 * forget about the PrintImmHex flag (which is applied before if both
-+	 * are given to the same call).
-+	 */
-+	LLVMSetDisasmOptions(disasm, LLVMDisassembler_Option_PrintImmHex);
-+
-+	/* add the function address and name */
-+	scnprintf(disasm_buf, sizeof(disasm_buf), "%#"PRIx64" <%s>:",
-+		  start, sym->name);
-+
-+	args->offset = -1;
-+	args->line = disasm_buf;
-+	args->line_nr = 0;
-+	args->fileloc = NULL;
-+	args->ms.sym = sym;
-+
-+	dl = disasm_line__new(args);
-+	if (dl == NULL)
-+		goto err;
-+
-+	annotation_line__add(&dl->al, &notes->src->source);
-+
-+	pc = start;
-+	for (u64 offset = 0; offset < len; ) {
-+		unsigned int ins_len;
-+
-+		storage.branch_addr = 0;
-+		storage.pcrel_load_addr = 0;
-+
-+		ins_len = LLVMDisasmInstruction(disasm, buf + offset,
-+						len - offset, pc,
-+						disasm_buf, sizeof(disasm_buf));
-+		if (ins_len == 0)
-+			goto err;
-+		disasm_len = strlen(disasm_buf);
-+
-+		if (storage.branch_addr != 0) {
-+			char *name = llvm_name_for_code(dso, filename,
-+							storage.branch_addr);
-+			if (name != NULL) {
-+				disasm_len += scnprintf(disasm_buf + disasm_len,
-+							sizeof(disasm_buf) -
-+								disasm_len,
-+							" <%s>", name);
-+				free(name);
-+			}
-+		}
-+		if (storage.pcrel_load_addr != 0) {
-+			char *name = llvm_name_for_data(dso, filename,
-+							storage.pcrel_load_addr);
-+			disasm_len += scnprintf(disasm_buf + disasm_len,
-+						sizeof(disasm_buf) - disasm_len,
-+						"  # %#"PRIx64,
-+						storage.pcrel_load_addr);
-+			if (name) {
-+				disasm_len += scnprintf(disasm_buf + disasm_len,
-+							sizeof(disasm_buf) -
-+							disasm_len,
-+							" <%s>", name);
-+				free(name);
-+			}
-+		}
-+
-+		args->offset = offset;
-+		args->line = expand_tabs(disasm_buf, &line_storage,
-+					 &line_storage_len);
-+		args->line_nr = 0;
-+		args->fileloc = NULL;
-+		args->ms.sym = sym;
-+
-+		llvm_addr2line(filename, pc, &args->fileloc,
-+			       (unsigned int *)&args->line_nr, false, NULL);
-+
-+		dl = disasm_line__new(args);
-+		if (dl == NULL)
-+			goto err;
-+
-+		annotation_line__add(&dl->al, &notes->src->source);
-+
-+		free(args->fileloc);
-+		pc += ins_len;
-+		offset += ins_len;
-+	}
-+
-+	ret = 0;
-+
-+err:
-+	LLVMDisasmDispose(disasm);
-+	free(buf);
-+	free(line_storage);
-+	return ret;
-+}
-+#endif
-+
-+
- /*
-  * Possibly create a new version of line with tabs expanded. Returns the
-  * existing or new line, storage is updated if a new line is allocated. If
-@@ -1730,6 +1918,11 @@ int symbol__disassemble(struct symbol *sym, struct annotate_args *args)
- 		strcpy(symfs_filename, tmp);
- 	}
- 
-+#ifdef HAVE_LIBLLVM_SUPPORT
-+	err = symbol__disassemble_llvm(symfs_filename, sym, args);
-+	if (err == 0)
-+		goto out_remove_tmp;
-+#endif
- #ifdef HAVE_LIBCAPSTONE_SUPPORT
- 	err = symbol__disassemble_capstone(symfs_filename, sym, args);
- 	if (err == 0)
-diff --git a/tools/perf/util/llvm-c-helpers.cpp b/tools/perf/util/llvm-c-helpers.cpp
-index 3cc967ec6f28..4070e2d5682f 100644
---- a/tools/perf/util/llvm-c-helpers.cpp
-+++ b/tools/perf/util/llvm-c-helpers.cpp
-@@ -8,6 +8,7 @@
- #pragma GCC diagnostic push
- #pragma GCC diagnostic ignored "-Wunused-parameter"  /* Needed for LLVM <= 15 */
- #include <llvm/DebugInfo/Symbolize/Symbolize.h>
-+#include <llvm/Support/TargetSelect.h>
- #pragma GCC diagnostic pop
- 
- #include <stdio.h>
-@@ -19,6 +20,9 @@ extern "C" {
- #include "symbol_conf.h"
- #include "llvm-c-helpers.h"
- 
-+extern "C"
-+char *dso__demangle_sym(struct dso *dso, int kmodule, const char *elf_name);
-+
- using namespace llvm;
- using llvm::symbolize::LLVMSymbolizer;
- 
-@@ -132,3 +136,61 @@ int llvm_addr2line(const char *dso_name, u64 addr,
- 		return extract_file_and_line(*res_or_err, file, line);
- 	}
- }
-+
-+static char *
-+make_symbol_relative_string(struct dso *dso, const char *sym_name,
-+			    u64 addr, u64 base_addr)
-+{
-+	if (!strcmp(sym_name, "<invalid>"))
-+		return NULL;
-+
-+	char *demangled = dso__demangle_sym(dso, 0, sym_name);
-+	if (base_addr && base_addr != addr) {
-+		char buf[256];
-+		snprintf(buf, sizeof(buf), "%s+0x%lx",
-+			 demangled ? demangled : sym_name, addr - base_addr);
-+		free(demangled);
-+		return strdup(buf);
-+	} else {
-+		if (demangled)
-+			return demangled;
-+		else
-+			return strdup(sym_name);
-+	}
-+}
-+
-+extern "C"
-+char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr)
-+{
-+	LLVMSymbolizer *symbolizer = get_symbolizer();
-+	object::SectionedAddress sectioned_addr = {
-+		addr,
-+		object::SectionedAddress::UndefSection
-+	};
-+	Expected<DILineInfo> res_or_err =
-+		symbolizer->symbolizeCode(dso_name, sectioned_addr);
-+	if (!res_or_err) {
-+		return NULL;
-+	}
-+	return make_symbol_relative_string(
-+		dso, res_or_err->FunctionName.c_str(),
-+		addr, res_or_err->StartAddress ? *res_or_err->StartAddress : 0);
-+}
-+
-+extern "C"
-+char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr)
-+{
-+	LLVMSymbolizer *symbolizer = get_symbolizer();
-+	object::SectionedAddress sectioned_addr = {
-+		addr,
-+		object::SectionedAddress::UndefSection
-+	};
-+	Expected<DIGlobal> res_or_err =
-+		symbolizer->symbolizeData(dso_name, sectioned_addr);
-+	if (!res_or_err) {
-+		return NULL;
-+	}
-+	return make_symbol_relative_string(
-+		dso, res_or_err->Name.c_str(),
-+		addr, res_or_err->Start);
-+}
-diff --git a/tools/perf/util/llvm-c-helpers.h b/tools/perf/util/llvm-c-helpers.h
-index 19332dd98e14..d2b99637a28a 100644
---- a/tools/perf/util/llvm-c-helpers.h
-+++ b/tools/perf/util/llvm-c-helpers.h
-@@ -13,6 +13,8 @@
- extern "C" {
- #endif
- 
-+struct dso;
-+
- struct llvm_a2l_frame {
-   char* filename;
-   char* funcname;
-@@ -42,6 +44,15 @@ int llvm_addr2line(const char* dso_name,
-                    bool unwind_inlines,
-                    struct llvm_a2l_frame** inline_frames);
- 
-+/*
-+ * Simple symbolizers for addresses; will convert something like
-+ * 0x12345 to "func+0x123". Will return NULL if no symbol was found.
-+ *
-+ * The returned value must be freed by the caller, with free().
-+ */
-+char *llvm_name_for_code(struct dso *dso, const char *dso_name, u64 addr);
-+char *llvm_name_for_data(struct dso *dso, const char *dso_name, u64 addr);
-+
- #ifdef __cplusplus
- }
- #endif
--- 
-2.45.2
-
+> Thanks,
+> Kan
+>
+> > Thanks,
+> > Ian
+> >
+> >
+> >> Thanks,
+> >> Kan
+> >>> The overhead I was
+> >>> thinking of here is more along the lines of cgroup context switches
+> >>> (although that isn't in my example). There may be a large number of
+> >>> say memory controller events just by having 2 events for each PMU and
+> >>> then there are 10s of PMUs. By putting half of the events on 1 CPU an=
+d
+> >>> half on another, the context switch overhead is shared. That said, th=
+e
+> >>> counters don't care what cgroup is accessing memory, and users doing
+> >>> this are likely making some kind of error.
+> >>>
+> >>> Thanks,
+> >>> Ian
+> >>>
+> >
