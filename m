@@ -1,101 +1,147 @@
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 718012913;
-	Sat, 20 Jul 2024 10:42:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D5712C470;
+	Sat, 20 Jul 2024 11:44:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721472139; cv=none; b=Ks3++8rOaKclsb9w6McJW8l1EqrGOyhbirwE6tZYRFnP7zI80sGFY2t3bBEnZxFcJ77rjYrlATBZ+EWvYThHx+HT4XF8vPsUo1lT/mBjidcl4ttsvurJDc1DTX73NAP9HBJy3QV7pUgVHPSdPWilnNQBJRio9k7I+GkeaGqF8mo=
+	t=1721475871; cv=none; b=KewrYiFjzjU1piuVgK+WlArcnM8A96cpmV2R1/J//dmHnOzjz+iwR0ejkZq9hLGDjffpGV89vuKFYjbykOvKqFWMIpurotLlzFIIjkqQpmjtXg3du6jDLj8B5cw2mkVmJcQQK39Xn/wC0mpY/6G/og2B28b44j919QPT6y57W3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721472139; c=relaxed/simple;
-	bh=/4f141tJHvAWF8tQzzk0NAIKIQKehhhpmiX34/KAy0M=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YqxuvQFAGx2D967qpcC93FGI8X5Q1CvTCcOIQplJBT+2t/vTUFp/yZ1YgKJ6gVUcyzVKyfOJjT4U8tofGERRcLI3VOcE73D6D0qXH3SIIwD0Ti8dpJuFGX0ARmNMpDoZ0iLfGHAI3SbJsAFjNu+/s9w18YFbdm7RXBFRu07oWOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=eWna8qRI; arc=none smtp.client-ip=80.12.242.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1721475871; c=relaxed/simple;
+	bh=TJO8h/eFfU7IPMWqUCGwvZlX+9Wbol7guLZr0oBAums=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TZkwe9AEVYVu2KAO6OLycBiARDmhuA6mdp01Flz8LR/C0KDU7RerAF5RLUu9uYQXvfkivry8N1SzZuWyoiQq7YMh2pHETSF2IC7ja0Pp1FQG5Iishb9TwhhF9wCLklLHQUl5efVLicGQAsmCZBgn33nPCiXXL+gA+57v8ukr7Do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=xX4fl+xh; arc=none smtp.client-ip=212.227.126.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="eWna8qRI"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id V7XRsonOi95X4V7XRsgB3j; Sat, 20 Jul 2024 12:42:08 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1721472128;
-	bh=PtZVKDIVPm219rX235hzdcjRMLlI/guwNur3d/5rJXg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=eWna8qRIGRu2hhZOvWtZqgZKzliKcEd6NTg797VGHgizLWszQVvPqrXND33R7H+Ai
-	 zKB9R4EkDjW/wkS7P2wbXqYT5TUsaf2miPcNyg3aVXfyklY1bLMgltK2MFIVpp8u20
-	 yQMK53YAIJab8b76AdpxqEdqYKzyg1Rs8KvWXEjEdZqagGIynvUPCGN5r0qlCrmH3z
-	 owb5RkbzxjaSwO7SDE+4d98lkIBqaN3TYVnw8uNn+qdipyfNvYFk9ZUTFyMKB5ik2m
-	 z+FCpadpTZfBLGG0hBVODGgI+7C20PfzWawAfxZ+kE7bnqbSvyGZBGORiVolHnQEv6
-	 nNqcGjGUl0LFw==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 20 Jul 2024 12:42:08 +0200
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf: Constify struct bus_type
-Date: Sat, 20 Jul 2024 12:42:02 +0200
-Message-ID: <1f6472a4e9f2ee9e74152c3a3491d015e44137ab.1721472093.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="xX4fl+xh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1721475862; x=1722080662; i=christian@heusel.eu;
+	bh=d6sQncxksEBStHSB94RGXNBWqd4oufwfD0Ln6gOdxYk=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=xX4fl+xhK/p4rtE0bYxaZErstpNjjAX4+kaMdmMVm7HtRrq70KAuS+x/lSEx00NT
+	 0SjG0XvmPlWDZwn0b/WS92wAar9nQwh+OGWikN9WCVyHEzo1TCwsD+dloYAPAcaCj
+	 leP/z9A2339PXugiPVRK1lkTqS9B9dLHHcNHOzQEDBDCI2UhuM692V5gOI0bj6Oku
+	 LLb9hnlzDx0Y+NbGtzbNU8cZRn3fCDW1b9n8756+fF0VExtQ0I/3XEd0jGGwtZGzg
+	 GZNcqDWHE9xnB/qWoVJ0+cJU8m76yJjSIPn8qORoNBvcB150utya7XCf6aLsoSK9p
+	 85VhQP+9iKg5JJvZcg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([80.187.67.70]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MVMqF-1svty33lup-00UMKX; Sat, 20 Jul 2024 13:30:01 +0200
+Date: Sat, 20 Jul 2024 13:29:56 +0200
+From: Christian Heusel <christian@heusel.eu>
+To: Markus Elfring <Markus.Elfring@web.de>
+Cc: linux-perf-users@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	Adrian Hunter <adrian.hunter@intel.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Mark Rutland <mark.rutland@arm.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Peter Zijlstra <peterz@infradead.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] perf trace: Avoid duplicate code in fprintf_duration()
+Message-ID: <b48460e2-c54d-4390-89e3-6835c379eb01@heusel.eu>
+References: <c564da16-062f-4da6-9021-c68f9c6eab63@web.de>
+ <c105871a-6462-4678-9f0c-b2ed5a254bb1@heusel.eu>
+ <b3943cc3-234f-4789-a894-314a3890ac8e@web.de>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fahnxmnp3vyuvxuq"
+Content-Disposition: inline
+In-Reply-To: <b3943cc3-234f-4789-a894-314a3890ac8e@web.de>
+X-Provags-ID: V03:K1:wgXLWGQmfeKwtyqZq/xoXFDygvYYIkaZZFcwRqZakzg3BwHTh+9
+ 6Kr77YMAbCYKpmX1NjVHCtbABfoa3IkNKMXoh0EKpH3LdbD/x+mOGUPYG/ce2eznAiVY6Zv
+ MigJCf5QvYBJlLc+fcOwKDzmuJnG9PRm2j0pnhBZEUFD90Omji/aoIjK5swqdFa/Za6Jc6T
+ vHHE6HT8UBiYEunbXvzfw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:3xGSpVSwDLE=;54vOWFeM4vBW6Hh7HR3svbaroM0
+ qQSsCFLJVMgTVnFSZlJCBBvB6joRr+12abWuvAna1DnnlN+MMr1MgWzBRz9SFJq2vGGk4Pbtm
+ ojfFPUJJfGIWRu0QC6OnZbydPNLJ1x3b1bAi8rO6tROjT47VkfW7LWsDLvKyFs3TEPc4bwK0B
+ 73fAXm18YfPAOOlmksRCigZGIYQt3AXDQVIGNoywUEdLiTQ/ht1x9OTO/RmZ90rA4jPmDDPl5
+ GbX5fcbgd7nEoCzGY+lpJv5mro4ghJ9rU8HWbRG3LgT41DmuMVZx0v77txtUBlntEU88lilN7
+ pVb6exW5VeCvhezUvU1xu9nKQDPLrDnBivO7u8us2VAH51QwxxvuYsZz925FWmn9RkFATa6N5
+ p9y4NHDMyemuY3wtLElg662OINnGIlEiEbVK1Y5WyVYz3bqCI8bxUk/jn6zrjXiZvTjUoTwWQ
+ qUR+q4AQhIXcsCIgFkzRUQ7CQz4f7rtehRcDmWfeR1T4Pq24SsUvGNsCubZGjmQ5X3sUI40cd
+ FNmd+ExcT3YmiG2s0QpTrVCAduS6iC9A9Glv7WPHU+Y6EN3hdPedNs1Me8PWwq16tmOyQCS7l
+ STZT1mBWvjvr39/zTDS285ZRKoa6ISgsawO1WxrDTwVVh6i5/Mn+WC9Rnv50nx+Jpyi0FyHVK
+ EkhZY/qimDntvKE1lKxDp81c38Tqh+r+9XzuMXlI+6iJSBbJgO5KvhWQ43VDDbzvI0iq3GIiq
+ ApFeqHUFronffF9xRn0E8y28lpr6ay1Hg==
 
-'struct bus_type' is not modified in this driver.
 
-Constifying this structure moves some data to a read-only section, so
-increase overall security, especially when the structure holds some
-function pointers.
+--fahnxmnp3vyuvxuq
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On a x86_64, with allmodconfig:
-Before:
-======
-   text	   data	    bss	    dec	    hex	filename
- 273314	  16956	    716	 290986	  470aa	kernel/events/core.o
+On 24/07/19 06:32PM, Markus Elfring wrote:
+> =E2=80=A6
+> >> +++ b/tools/perf/builtin-trace.c
+> >> @@ -1258,12 +1258,16 @@ static size_t fprintf_duration(unsigned long t=
+, bool calculated, FILE *fp)
+> >>
+> >>  	if (!calculated)
+> >>  		printed +=3D fprintf(fp, "         ");
+> >> -	else if (duration >=3D 1.0)
+> >> -		printed +=3D color_fprintf(fp, PERF_COLOR_RED, "%6.3f ms", duration=
+);
+> >> -	else if (duration >=3D 0.01)
+> >> -		printed +=3D color_fprintf(fp, PERF_COLOR_YELLOW, "%6.3f ms", durat=
+ion);
+> >>  	else
+> >> -		printed +=3D color_fprintf(fp, PERF_COLOR_NORMAL, "%6.3f ms", durat=
+ion);
+> >> +		printed +=3D color_fprintf(fp,
+> >> +					 (duration >=3D 1.0
+> >> +					 ? PERF_COLOR_RED
+> >> +					 : (duration >=3D 0.01
+> >> +					   ? PERF_COLOR_YELLOW
+> >> +					   : PERF_COLOR_NORMAL)),
+> >> +					 "%6.3f ms",
+> >> +					 duration);
+> >
+> > Why is this a desirable change?
+>=20
+> I find it helpful to specify the affected function call only once
+> in such an if branch.
+>=20
+>=20
+> >                                 Folding the if-statements into the
+> > ternary operator makes the code quite unreadable compared to what it was
+> > like before and doesn't give any obvious improvement.
+>=20
+> Do you prefer to store the result of the colour determination into another
+> local variable so that it can be passed as a separate parameter?
 
-After:
-=====
-   text	   data	    bss	    dec	    hex	filename
- 273474	  16764	    716	 290954	  4708a	kernel/events/core.o
+No I think I prefer the current version of the code. But my judgement
+does not matter much here, lets wait what the maintainers have to say
+about this.
 
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested-only.
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--fahnxmnp3vyuvxuq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index af2e3a06b239..ee011a967a33 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -11508,7 +11508,7 @@ static const struct attribute_group *pmu_dev_groups[] = {
- };
- 
- static int pmu_bus_running;
--static struct bus_type pmu_bus = {
-+static const struct bus_type pmu_bus = {
- 	.name		= "event_source",
- 	.dev_groups	= pmu_dev_groups,
- };
--- 
-2.45.2
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmabn7QACgkQwEfU8yi1
+JYUbZA/8Cv2ZIOneMZnE+Gz/sxHy4yZDWl9ga0f5GR2uLonev/8uoAUBiFl68xIT
+pUw4zH0OpbHIYGTnvLReuBp1oMjrkyi0Fng1OGuRPgsnAA3zx5xMi7KBtjMYN1Of
+tjXtF9G8wA6+EgIJ/E1MVxXlBaaB9kjAhHmTl24nGVwUCaoji+naXXNIua5/2nj8
+ADl1s5h+wrYsMJrHTaMTB0/j6erIyhyJzgcqS0+0AgKyihEUrUpgFIeelBIFO6rT
+xm2BYazw7OeXhyqNjSmljO2aDWhcdRMRvg7i/jxzigf33UVEC8o6i5Ac/UUeU81Q
+swK1pZGrUF37wap9W5WM//G7e28mDd4x8HSZnBBiPI1Ysup737Nd76zP9lsfKdq5
+UAfjN8gCkSDeLZ4n+5OjwnygjgCTmyHPrrRMk1MC83IZAI3Me22UEMcdARmrSQr6
+xaY8ArwnmX8swCURlW4+YdrcjicHrZ1wDfUxhjNdhqPYs1TD8iVpeJcOQxd0H+/O
++7UQvgD1DegPJZe1d55akALEFpKmRSTud+/109SZ6zQFRMQCdd0vFIzz/MAW3rfj
+Zb6OAJO1kTPnFsuV54zy7EyjkSPWma8BKDq6OYXivFPZ4v990eS7VvlcyZE9Xv4z
+xjmwxVdjDEJKDtlhmMiqL4PYiGv02AEgrksIYMuXQ7EpU08C0tk=
+=AJQV
+-----END PGP SIGNATURE-----
+
+--fahnxmnp3vyuvxuq--
