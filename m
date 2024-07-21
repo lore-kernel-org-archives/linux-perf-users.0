@@ -1,190 +1,107 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 413DF1E4BE
-	for <linux-perf-users@vger.kernel.org>; Sun, 21 Jul 2024 15:45:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E311A291;
+	Sun, 21 Jul 2024 20:21:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721576714; cv=none; b=aVqvr4FoCvgTcCMpLlhUgixIWN5Mnv6pUrwUSPqOY2yiQuh0es6OlCiuPgpS7BcsrZOmtVQtXcvvKh045Q36j5m0geaYRf6VP7PUarhIZwtFQdSVABHI71hJh3Y6bgotcPbd6F5rhIBPfDAEOl1yH43PlUFnRvqF07y88rTVQLg=
+	t=1721593299; cv=none; b=bs1P6EAA+jTaIaUrtR1rjDrpXhVS6qFdjNbtF2MGRuYYqUQWWttyXWAsm6oD/8nv7ZRnHT4x/gs1OX+gLy3oaz9NQdVJJhUN+OVkRXoAaUCRC3xwA6ONd1pzf1oHxZfQS+OoFwe/Q+tL+exzXme/RG+TG823Arx2Sf2LI/jyXLE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721576714; c=relaxed/simple;
-	bh=D3p2QaYgcA3SxkvFQ0hiQVrQarKn3r3ZEkug9rLRc9M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XahXeM3rPN2nbCnyCNIPp4VkR12Vh4pImXi1kl/SLQUiMPWYC9qo8mOnjz0hseJtNg//kjaXs+Ycs4LhcGQDP4Ogj4neM37hmsLkzPxZFzHuJzcv5w/o3Ys2qt9+adSG8EU+yNE1/N/0pqI6q711PJMdxibJQsCbLP2f1o6E1PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com; spf=pass smtp.mailfrom=sifive.com; dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b=APxJwNFb; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=sifive.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sifive.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="APxJwNFb"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2ebe3fb5d4dso31772501fa.0
-        for <linux-perf-users@vger.kernel.org>; Sun, 21 Jul 2024 08:45:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google; t=1721576710; x=1722181510; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6V+rPPxTJkY1lpgNajZBDBI+gSNOjf1tlrmrZu0K21g=;
-        b=APxJwNFb9jOYIW79zxF1+gJrNV2B2GlHFkvUyfSa8WzfiGsG7dsw/BDxW1sLPDTvi4
-         A4hWOv2lBhtCBYxC7dJL8KFx6dKJiGQda6WTvVOl5N4YDxhuSzywpS1GNKfQnAY/sj3t
-         noQjZtqkF/I6O9t3n68yepObtiopdQFtD4oQpURlRtMvP1ZPnQ8sMYwSXoplD3fSK2Pw
-         d20sCTpeRAtRWnKiuUncJ6vbU/0UZzTtfukNPOhRtb0h/VUa3KOqhgj8Ccv/N4Wmtv54
-         eZnl7eExSvHsRIu8pqKB0P/w2HBpNoa3HwOFJiIcED1Ed5a5X4qYXo1WNjs++K0DubCA
-         scmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721576710; x=1722181510;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6V+rPPxTJkY1lpgNajZBDBI+gSNOjf1tlrmrZu0K21g=;
-        b=tMl6P2PnOiGq8zkaLsbyYVo0wJkDQS8NGozjzlTQPgJlPyo2W1l07IkPCeQY9o+BNg
-         YTiem5IiSqwtPyBfJnbGrKAmNXNRlQcEZSsX8V6Qw/wRe9XdTjey4sBOktNlYKUr9pLt
-         3j+jteaYAA27xPknK4Cy02wUHk543iN5Ht630C5anlNnEdRKWOBp3JkJC8Ah/Ki1iSMk
-         VNm6f5nsy1fe+UD66RAZ2+NSqXRVCTaqxgegXFYWIpkHz3S+5enYXqCZDXDkIEM/Qv2y
-         JOijonBUQ+1E+3x/iMcMcTotItMw7ruRYkACYvp0RHX9SBjXX+HZLDoUax4UQSZfNk5L
-         viIg==
-X-Forwarded-Encrypted: i=1; AJvYcCWz+SZDnpcdy8y7HK6OOK4oYPcrqmsp2POMxPivSOVYGeg08OwxVmPDz5a1+T8C63SJQCxOQyiOgArdoU0Z3cYxaVKvWoVYdq9A0gAo2CX2DQ==
-X-Gm-Message-State: AOJu0YxF5vNvkNXERdC8MESEI06sLLgcjvK8cwcX50L9msGkkJoNRXqY
-	UAfTV2a0MdqycWZqUKQAYKWTSe7YMlNdEzmj2XHEQqNgFIjclsawQkoX6/ZJV6YZoIu5xruU8f5
-	He2sGuVyknidyAWgxnmvNyPdlJhP36G+EQqj/DQ==
-X-Google-Smtp-Source: AGHT+IHJJ78YGiZuqAl+fzdHUOms5HRzmKL23l2X9Zy/P5DZNo7tMea3N8NMNixSrmz96ThXLs/lsMgaRB6wE8WDgMU=
-X-Received: by 2002:a2e:95cd:0:b0:2ef:22a1:7d8b with SMTP id
- 38308e7fff4ca-2ef22a18602mr9909821fa.4.1721576710231; Sun, 21 Jul 2024
- 08:45:10 -0700 (PDT)
+	s=arc-20240116; t=1721593299; c=relaxed/simple;
+	bh=YlpVqxBoKtMvshHpmfdBTA6GaVIdCC1wPU9eAji78BI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ADMn2jQLnpePisSWDgutePAo3eB8vQRxXrHg/eJsnF9zDqpqY2qOa2OT0x97U7t7inyrPm8hAVsJSfPyn0DcQmwWptTQ6/Xa/01e8w6Q+s7GobjbefQtd06Ru6CuPVssuUcNPnvoeh5lVP/7TsKL7fEcCiizjSZ+Gx9lsDaUkqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 556EAFEC;
+	Sun, 21 Jul 2024 13:21:55 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 575443F73F;
+	Sun, 21 Jul 2024 13:21:27 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v1 0/6] perf auxtrace: Support multiple AUX events
+Date: Sun, 21 Jul 2024 21:21:07 +0100
+Message-Id: <20240721202113.380750-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240719081651.24853-1-eric.lin@sifive.com> <2C7FF61F-2165-47D4-83A4-B0230D50844D@linux.vnet.ibm.com>
-In-Reply-To: <2C7FF61F-2165-47D4-83A4-B0230D50844D@linux.vnet.ibm.com>
-From: Eric Lin <eric.lin@sifive.com>
-Date: Sun, 21 Jul 2024 23:44:59 +0800
-Message-ID: <CAPqJEFrkurD9B9smy908Y-z-f6ckv+ZFJzo6ptwXmxD0ru5=CA@mail.gmail.com>
-Subject: Re: [PATCH] perf pmus: Fix duplicate events caused segfault
-To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	vincent.chen@sifive.com, greentime.hu@sifive.com, 
-	Samuel Holland <samuel.holland@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Athira,
+This series is to support multiple events with the *same* type in Perf
+AUX trace. As the first enabled instance, the patch series enables
+multiple Arm SPE events (e.g. arm_spe_0, arm_spe_1, etc) in AUX trace.
 
-On Sat, Jul 20, 2024 at 4:35=E2=80=AFPM Athira Rajeev
-<atrajeev@linux.vnet.ibm.com> wrote:
->
->
->
-> > On 19 Jul 2024, at 1:46=E2=80=AFPM, Eric Lin <eric.lin@sifive.com> wrot=
-e:
-> >
-> > Currently, if vendor JSON files have two duplicate event names,
-> > the "perf list" command will trigger a segfault.
-> >
-> > In commit e6ff1eed3584 ("perf pmu: Lazily add JSON events"),
-> > pmu_events_table__num_events() gets the number of JSON events
-> > from table_pmu->num_entries, which includes duplicate events
-> > if there are duplicate event names in the JSON files.
->
-> Hi Eric,
->
-> Let us consider there are duplicate event names in the JSON files, say :
->
-> metric.json with: EventName as pmu_cache_miss, EventCode as 0x1
-> cache.json with:  EventName as pmu_cache_miss, EventCode as 0x2
->
-> If we fix the segfault and proceed, still =E2=80=9Cperf list=E2=80=9D wil=
-l list only one entry for pmu_cache_miss with may be 0x1/0x2 as event code =
-?
-> Can you check the result to confirm what =E2=80=9Cperf list=E2=80=9D will=
- list in this case ? If it=E2=80=99s going to have only one entry in perf l=
-ist, does it mean there are two event codes for pmu_cache_miss and it can w=
-ork with either of the event code ?
->
+The solution for support multiple AUX events with same type is not
+difficult. As the events are same type, the trace data shares the same
+format and can be decoded by the same decoder. Essentially, this patch
+series is to extend the AUX trace flow from support single PMU event to
+multiple events.
 
-Sorry for the late reply.
-Yes, I've checked if there are duplicate pmu_cache_miss events in the
-JSON files, the perf list will have only one entry in perf list.
+Note, this series does not support a more complex case - different types
+of AUX events, (e.g. Arm CoreSight event and Arm SPE events are enabled
+simultaneously).
 
-> If it happens to be a mistake in json file to have duplicate entry with d=
-ifferent event code (ex: with some broken commit), I am thinking if the bet=
-ter fix is to keep only the valid entry in json file ?
->
+Patch 01 is a minor refactoring for dereference PMU pointer from evsel
+structure.
 
-Yes, I agree we should fix the duplicate events in vendor JSON files.
+Patches 02, 03 and 04 are to use the 'auxtrace' flag for support multiple
+AUX events. Firstly, we need to set the 'auxtrace' flag for Arm and s390
+AUX events (Intel PT and bts have set already it). Afterwards, by using
+the evsel__is_aux_event() function, the core layer iterates the whole
+evlist - which allows the buffer index can be matched to corresponding
+AUX event.
 
-According to this code snippet [1], it seems the perf tool originally
-allowed duplicate events to exist and it will skip the duplicate
-events not shown on the perf list.
-However, after this commit e6ff1eed3584 ("perf pmu: Lazily add JSON
-events"),  if there are two duplicate events, it causes a segfault.
+Patches 05 and 06 are to configure multiple SPE event in architecture
+dependent code. The old code is only initialize the first AUX event.
+with this series, it initializes all SPE PMU events.
 
-Can I ask, do you have any suggestions? Thanks.
+This patch series has been tested with the normal 'perf record' command
+and 'perf mem record' command.  And verified for the decoding commands
+'perf script' and 'perf mem report'.
 
-[1] https://github.com/torvalds/linux/blob/master/tools/perf/util/pmus.c#L4=
-91
+I observed one prominent issue is for per-CPU profiling. For example,
+when specifying option '-C 2' for profiling on CPU2, in this case the
+'arm_spe_0' event supports CPU2 but the 'arm_spe_1' event does not
+support the CPU. As a result, 'arm_spe_1' event reports failure. This
+is likely a common issue for support Per-CPU profiling with multiple
+PMU events and every PMU event only support partial CPUs. This issue
+will be addressed later.
 
-Regards,
-Eric Lin
 
-> Thanks
-> Athira
->
-> >
-> > perf_pmu__for_each_event() adds JSON events to the pmu->alias
-> > list and copies sevent data to the aliases array. However, the
-> > pmu->alias list does not contain duplicate events, as
-> > perf_pmu__new_alias() checks if the name was already created.
-> >
-> > When sorting the alias data, if there are two duplicate events,
-> > it causes a segfault in cmp_sevent() due to invalid aliases in
-> > the aliases array.
-> >
-> > To avoid such segfault caused by duplicate event names in the
-> > JSON files, the len should be updated before sorting the aliases.
-> >
-> > Fixes: e6ff1eed3584 ("perf pmu: Lazily add JSON events")
-> > Signed-off-by: Eric Lin <eric.lin@sifive.com>
-> > ---
-> > tools/perf/util/pmus.c | 5 +++--
-> > 1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
-> > index b9b4c5eb5002..e38c3fd4d1ff 100644
-> > --- a/tools/perf/util/pmus.c
-> > +++ b/tools/perf/util/pmus.c
-> > @@ -443,7 +443,7 @@ void perf_pmus__print_pmu_events(const struct print=
-_callbacks *print_cb, void *p
-> > {
-> > struct perf_pmu *pmu;
-> > int printed =3D 0;
-> > - int len;
-> > + size_t len, j;
-> > struct sevent *aliases;
-> > struct events_callback_state state;
-> > bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(print_state)=
-;
-> > @@ -474,8 +474,9 @@ void perf_pmus__print_pmu_events(const struct print=
-_callbacks *print_cb, void *p
-> > perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
-> > perf_pmus__print_pmu_events__callback);
-> > }
-> > + len =3D state.index;
-> > qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
-> > - for (int j =3D 0; j < len; j++) {
-> > + for (j =3D 0; j < len; j++) {
-> > /* Skip duplicates */
-> > if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
-> > continue;
-> > --
-> > 2.43.2
-> >
-> >
->
+Leo Yan (6):
+  perf pmu: Directly use evsel's PMU pointer
+  perf auxtrace arm: Set the 'auxtrace' flag for AUX events
+  perf auxtrace s390: Set the 'auxtrace' flag for AUX events
+  perf auxtrace: Iterate all AUX events when finish reading
+  perf arm-spe: Extract evsel setting up
+  perf arm-spe: Support multiple Arm SPE events
+
+ tools/perf/arch/arm/util/pmu.c       |   3 +
+ tools/perf/arch/arm64/util/arm-spe.c | 107 ++++++++++++++++-----------
+ tools/perf/arch/s390/util/auxtrace.c |   1 +
+ tools/perf/util/auxtrace.c           |  15 +++-
+ tools/perf/util/pmu.c                |   2 +-
+ 5 files changed, 78 insertions(+), 50 deletions(-)
+
+-- 
+2.34.1
+
