@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E02B16B748;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB14C16C453;
 	Sun, 21 Jul 2024 20:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721593302; cv=none; b=YU0py06KUM3seWU4MaMPMiI4G813jo/wa5boMzjJjtoDmvzjAvuIsYrYNvuKrFgpQxPsO+zakoKU2/GebUXf95LiS2a3mPO4XXP6KRQOcuvjmG5bXsfHA5LFW2VRU+Iqq5vxC+UXB00lsao/Z24c1gSFUaFGiuAkrqaqpF7Mwx4=
+	t=1721593303; cv=none; b=X3ewyd+FfpDuQut4SFhwBH/d1rVYsXMXQt0Fknffq5SBOmWyGpoTKH9Ahzl2Jx+JVSJZ5WCGHzt0AkOuj1kMMAq5jc8HhVsRQij+NDA33OiMaenCkHjgaBL8lyujiKNsWee2lfa2t3NI8qTAinBPr/swU33n1SsnDf/ThyxMzDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721593302; c=relaxed/simple;
-	bh=QCskOjoelAR8tSAW21Y50GMX3Wwb3ImxoRkugiEIraU=;
+	s=arc-20240116; t=1721593303; c=relaxed/simple;
+	bh=QHcyERAEk4KSVs8CSJ8iH2Ygn7dc/Vx86OXOlKz5+zs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QhEc+rPgKcoTW0Fcw6SEcQSWhOnQ1YRcjg8/TFIQHJG7+tnUSjlQj4vQbJPZBIFge2LdW4l066zipYwVdI6F8ifN/4jBBjgEqZeXMgf8/YC7mt2P0B7T4I8wkwETWdUw2HMnOhtFSqThRV7FJrafURIvwSeNjyYJ4VRAIRE0958=
+	 MIME-Version; b=C57vczKltDIeftjgG8GaIUEhnsZ/1j7hZEzb4PQY2AA3Tt9YAwQ54SOsa7PtQLetxUr9fcI8mcLN8/CehT4GcxsGtM8HiPzhSe6pdqIkCivQ8sd4rDoGd3/Cc5RTHSr8PRl0ShnNQ7BP4Cw/4yEmZWH9NiVvoU+X8yLsxlK83w0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08A2511FB;
-	Sun, 21 Jul 2024 13:22:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A51D6FEC;
+	Sun, 21 Jul 2024 13:22:06 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0CF023F73F;
-	Sun, 21 Jul 2024 13:21:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B51033F73F;
+	Sun, 21 Jul 2024 13:21:38 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -35,9 +35,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 2/6] perf auxtrace arm: Set the 'auxtrace' flag for AUX events
-Date: Sun, 21 Jul 2024 21:21:09 +0100
-Message-Id: <20240721202113.380750-3-leo.yan@arm.com>
+Subject: [PATCH v1 4/6] perf auxtrace: Iterate all AUX events when finish reading
+Date: Sun, 21 Jul 2024 21:21:11 +0100
+Message-Id: <20240721202113.380750-5-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240721202113.380750-1-leo.yan@arm.com>
 References: <20240721202113.380750-1-leo.yan@arm.com>
@@ -49,39 +49,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Originally, the 'auxtrace' flag in the PMU event is used for AUX area
-sampling. It indicates a PMU event is for AUX tracing.
+When finished to read AUX trace data from mmaped buffer, based on the
+AUX buffer index the core layer needs to search the corresponding PMU
+event and re-enable it to continue tracing.
 
-Set this flag for AUX trace events on Arm.
+However, current code only searches the first AUX event. It misses to
+search other enabled AUX events, thus, it returns failure if the buffer
+index does not belong to the first AUX event.
+
+This patch extends the auxtrace_record__read_finish() function to
+search for every enabled AUX events, so all the mmaped buffer indexes
+can be covered.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/arch/arm/util/pmu.c | 3 +++
- 1 file changed, 3 insertions(+)
+ tools/perf/util/auxtrace.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/pmu.c b/tools/perf/arch/arm/util/pmu.c
-index 1c9541d01722..b7fa1245e242 100644
---- a/tools/perf/arch/arm/util/pmu.c
-+++ b/tools/perf/arch/arm/util/pmu.c
-@@ -25,6 +25,7 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
- 		/* add ETM default config here */
- 		pmu->selectable = true;
- 		pmu->perf_event_attr_init_default = cs_etm_get_default_config;
-+		pmu->auxtrace = true;
- #if defined(__aarch64__)
- 	} else if (strstarts(pmu->name, ARM_SPE_PMU_NAME)) {
- 		pmu->selectable = true;
-@@ -32,8 +33,10 @@ void perf_pmu__arch_init(struct perf_pmu *pmu)
- 		pmu->perf_event_attr_init_default = arm_spe_pmu_default_config;
- 		if (strstarts(pmu->name, "arm_spe_"))
- 			pmu->mem_events = perf_mem_events_arm;
-+		pmu->auxtrace = true;
- 	} else if (strstarts(pmu->name, HISI_PTT_PMU_NAME)) {
- 		pmu->selectable = true;
-+		pmu->auxtrace = true;
- #endif
+diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+index e2f317063eec..95be330d7e10 100644
+--- a/tools/perf/util/auxtrace.c
++++ b/tools/perf/util/auxtrace.c
+@@ -670,18 +670,25 @@ static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel,
+ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
+ {
+ 	struct evsel *evsel;
++	int ret = -EINVAL;
+ 
+ 	if (!itr->evlist || !itr->pmu)
+ 		return -EINVAL;
+ 
+ 	evlist__for_each_entry(itr->evlist, evsel) {
+-		if (evsel->core.attr.type == itr->pmu->type) {
++		if (evsel__is_aux_event(evsel)) {
+ 			if (evsel->disabled)
+-				return 0;
+-			return evlist__enable_event_idx(itr->evlist, evsel, idx);
++				continue;
++			ret = evlist__enable_event_idx(itr->evlist, evsel, idx);
++			if (ret >= 0)
++				return ret;
+ 		}
  	}
- #endif
+-	return -EINVAL;
++
++	if (ret < 0)
++		pr_err("Failed to event enable event (idx=%d): %d\n", idx, ret);
++
++	return ret;
+ }
+ 
+ /*
 -- 
 2.34.1
 
