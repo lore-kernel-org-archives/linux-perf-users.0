@@ -1,45 +1,66 @@
-Received: from out30-97.freemail.mail.aliyun.com (out30-97.freemail.mail.aliyun.com [115.124.30.97])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB6B13775E
-	for <linux-perf-users@vger.kernel.org>; Sat, 20 Jul 2024 17:16:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.97
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1022C1854
+	for <linux-perf-users@vger.kernel.org>; Sun, 21 Jul 2024 03:20:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721495815; cv=none; b=kAzgljgU0TuXMiOex5GArXRLAzM7IOKRpjS+DrkMLtuZit8CpVjfoQZ1XE2YWkw6R5ko/kVEANXeRIWYScfkSM4md/vo/EurDJHG0JCZQOoYY3ip9zgsaX+h14ERzkBrc5V33gbSv5Oi5n5gXhEovQOvA4P2meALaflFOxVJGOg=
+	t=1721532003; cv=none; b=Y1UwBu3TiVLuWCMzcNMMME2AlTCMIdpp9B9JXuqgEAVQ0eTP1tDFCoeeYUGvS1CLxtmOdIkuPrQbRYflnfwHhSybKj+tmXhNTPRilNZeP3FTxwvCuBal5UZRS+HyXgxFRv70Ue7DEnT+8jmZH1Rg9HEcF5f6wWnvf1T7ERNZ0ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721495815; c=relaxed/simple;
-	bh=MSkj1FU95Vj8NE4p6a1G3EOVDESOU7DWFPD9xcsyy5A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eSLx0/RGSsZUUVtfhJmi2cSczqaEAisiFeFuKjHZ20rrcclnP3S9VY63vSNywVS0hvjp0ujPbsuqcyT6emnE98io+izH8SBS849lpq5lQxwCqRYTCHu5aecDz082E5aPQfVQ/c2mSfBEHdUBMQGmyplBk9KZlhD++QMcE1NKfEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=ktpaRkaD; arc=none smtp.client-ip=115.124.30.97
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+	s=arc-20240116; t=1721532003; c=relaxed/simple;
+	bh=fmiWUtLoLSg0oXD5COw+p1HKt/OkeyiZZryCTS1y0Nk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Xsrx65IS2NFuhwXP2D6tKWRxHjVy/5jv9eOkEABPgA4O6SvljZo/wK97qJ2rwAB21w1eoLBmaBwhwTV04RFFF5BdWQcNzTwIigNV/E6KQT7ufwy6zlA1QbEcg4OuKjAjcChku139OYFdze3zWFIg47JSLg1u0z+2/tdCti/jDXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=aeEZ4zCG; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="ktpaRkaD"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=linux.alibaba.com; s=default;
-	t=1721495804; h=From:To:Subject:Date:Message-ID:MIME-Version;
-	bh=ijaBbm+sLjyFLd06Is/ZAeSnXD6WcOWo8+Qqu1Q2gkM=;
-	b=ktpaRkaDAIKXjj3OGGQ/yZ1ZnbsmUC2a6dTe4Sd3oQsXA5ej/nDU2XHnZm0am6wBXrdWhpG6A3dFlgHWUmzB1cVhEFLHgde0HSZC9hzBpN3QnJoVLqnS38yiqRdrO5J+pCqdyLyJ82+ryksBv60hXAXdLnhyvDZnFbGCO6mU0JM=
-X-Alimail-AntiSpam:AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=maildocker-contentspam033045220184;MF=cp0613@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0WAuswhj_1721495795;
-Received: from localhost.localdomain(mailfrom:cp0613@linux.alibaba.com fp:SMTPD_---0WAuswhj_1721495795)
-          by smtp.aliyun-inc.com;
-          Sun, 21 Jul 2024 01:16:43 +0800
-From: cp0613@linux.alibaba.com
-To: peterz@infradead.org,
-	mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com
-Cc: linux-perf-users@vger.kernel.org,
-	"Chen Pei" <cp0613@linux.alibaba.com>
-Subject: [PATCH] perf test: Fix perf-record on Yocto
-Date: Sun, 21 Jul 2024 01:16:29 +0800
-Message-ID: <20240720171629.716-1-cp0613@linux.alibaba.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="aeEZ4zCG"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2eecd2c6432so47631181fa.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 20 Jul 2024 20:20:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1721531998; x=1722136798; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=H8IKB8sxXNF6g036oVsRu5aXttvdlBEUNATyMc+zuAo=;
+        b=aeEZ4zCGiCQRNEW4CjpvouznLlbEFeCbnqpIuDuHPjSDG8E5V3UYOvJzScYXVzW9Rz
+         Pk16t/KpPBHnGh7Tfn1Krx5ywPFCNqkAMKiiTtBuZa11vQ/LDLGoD2VcVABC4B2MmNwb
+         ir+Cqx6ykHtStIFyToQYoFBV9kdqrmnv18wPJA4uWcCfZh5XzN9XIUmVHnB3nP3doKuU
+         JoKqLzl2Tuc22F1t+Tf3DA257sJLGRa6X+5sPTb/RbpOjGJqBuLtIfm/Ax8yHz/yZHzc
+         VIbCtjYHY8QCu7LGMZozWnf9xPYGGTZFv7RAb46BqTTAjFDYAkrKBYS316vl+ZiTiN5J
+         y98Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721531998; x=1722136798;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=H8IKB8sxXNF6g036oVsRu5aXttvdlBEUNATyMc+zuAo=;
+        b=Cr7ZHxg6OeogIG/YHzTTS1aho6JJV88mgkC7Bj1nWoaQMb7W88ONylDsG4m1RPJT3u
+         E0kZVZTts/vED9Japa+BQXYJ3cLwV1jomUrGOQgv+jMvdc76ggSD1nw7k+ZKAZ5T5+vw
+         L++d634ScXdOUFFTulV8z3E77SL6rzEVs6fTCG73vWQf92kUbhl1h+dUKrDbTfZJ7vgj
+         GGDFJJtMqKYnHiykUfNbQthqiVBK2xu3KHGtp2451o8l8BdHLLpY8A9LBf0W6WPml2Qq
+         DEqpvosM4S/lUhVwzb8tEzalDXXWmPlkeKVVZs0H54gXCCbCcoPCPVQGpUTCoXbGl64w
+         eNjw==
+X-Gm-Message-State: AOJu0Yx0S/u4GY47/Yn21OfMVn7hJDiLL1tqtufgE05dys+1Kxb2guvE
+	gqNNWGlnrADzJm/Oyz5ksQrUa5hFUKI8iM3K7OK0+zFRfUvyvr+z66nZ++lT2z5LjDZI+pkkOhZ
+	2UY4w0a0X3PzzMxTk0okFQjYzeX9XT7bpxKAKMQ/Ea9fsxmomD+nk6jJIGh/sGVwpDvPLkjfa1+
+	/k4de1cPmhpj/CyR3Ry8CQqPq6cfWU9d8saC4foK3AMgQAphyqKQn0MXQ=
+X-Google-Smtp-Source: AGHT+IHc3wmiD+skdiqMr6Cm3540sI2oYmkEJicmVSbBLP9S8TwTr0ZZN+fR3kg9LhTJsHSXug7lGA==
+X-Received: by 2002:a2e:97da:0:b0:2ee:8817:422d with SMTP id 38308e7fff4ca-2ef16789b22mr31000521fa.5.1721531998401;
+        Sat, 20 Jul 2024 20:19:58 -0700 (PDT)
+Received: from dev-cachen.dev.purestorage.com ([208.88.159.129])
+        by smtp.googlemail.com with ESMTPSA id a640c23a62f3a-a7a3c7bdac0sm235270666b.60.2024.07.20.20.19.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 Jul 2024 20:19:57 -0700 (PDT)
+From: Casey Chen <cachen@purestorage.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	namhyung@kernel.org
+Cc: yzhong@purestorage.com,
+	Casey Chen <cachen@purestorage.com>
+Subject: [PATCHv3] perf tool: fix dereferencing NULL al->maps
+Date: Sat, 20 Jul 2024 21:19:44 -0600
+Message-ID: <20240721031944.62913-1-cachen@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,57 +69,42 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Chen Pei" <cp0613@linux.alibaba.com>
+With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
+when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
+thread__find_map() could return with al->maps being NULL.
 
-There is a perf test case: PERF_RECORD_* events & perf_sample fields,
-which will fail on the system built by Yocto, and the log is as follows:
+The path below could add a callchain_cursor_node with NULL ms.maps.
 
-  # perf test -v 5
-    5: PERF_RECORD_* events & perf_sample fields                       :
-  --- start ---
-  test child forked, pid 2341
-  Using CPUID 0x5b7-0x0-0x0
-  mmap size 1052672B
-  2095118675900 0 PERF_RECORD_COMM exec: sleep:2342/2342
-  2095119056100 0 PERF_RECORD_MMAP2 ...: r-xp /bin/sleep.coreutils
-  2095119387900 0 PERF_RECORD_MMAP2 ...: r-xp /lib/ld-2.33.so
-  2095119814200 0 PERF_RECORD_MMAP2 ...: r-xp [vdso]
-  2095122676300 0 PERF_RECORD_MMAP2 ...: r-xp /lib/libc-2.33.so
-  2096139253600 0 PERF_RECORD_EXIT(2342:2342):(2341:2341)
-  PERF_RECORD_MMAP for sleep missing!
-  test child finished with -1
-  ---- end ----
-  PERF_RECORD_* events & perf_sample fields: FAILED!
+add_callchain_ip()
+  thread__find_symbol(.., &al)
+    thread__find_map(.., &al)   // al->maps becomes NULL
+  ms.maps = maps__get(al.maps)
+  callchain_cursor_append(..., &ms, ...)
+    node->ms.maps = maps__get(ms->maps)
 
-This is because the sleep command provided by coreutils in the Yocto
-environment is actually sleep.coreutils, that is:
+Then the path below would dereference NULL maps and get segfault.
 
-  # which sleep
-  /bin/sleep
-  # ls -l /bin/sleep
-  lrwxrwxrwx 1 root root 20 Mar  9  2018 /bin/sleep -> /bin/sleep.coreutils
+fill_callchain_info()
+  maps__machine(node->ms.maps);
 
-So, just add the condition of sleep.coreutils to found_coreutils_mmap.
-
-Signed-off-by: Chen Pei <cp0613@linux.alibaba.com>
+Fix it by checking if maps is NULL in maps__machine().
 ---
- tools/perf/tests/perf-record.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/maps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/tests/perf-record.c b/tools/perf/tests/perf-record.c
-index 1c4feec1adff..7b189723d3cf 100644
---- a/tools/perf/tests/perf-record.c
-+++ b/tools/perf/tests/perf-record.c
-@@ -259,7 +259,8 @@ static int test__PERF_RECORD(struct test_suite *test __maybe_unused, int subtest
- 						if (!found_cmd_mmap)
- 							found_cmd_mmap = !strcmp(bname + 1, cmd);
- 						if (!found_coreutils_mmap)
--							found_coreutils_mmap = !strcmp(bname + 1, "coreutils");
-+							found_coreutils_mmap = !strcmp(bname + 1, "coreutils") ||
-+												   !strcmp(bname + 1, "sleep.coreutils");
- 						if (!found_libc_mmap)
- 							found_libc_mmap = !strncmp(bname + 1, "libc", 4);
- 						if (!found_ld_mmap)
+diff --git a/tools/perf/util/maps.c b/tools/perf/util/maps.c
+index 432399cbe5dd..d243cb794a99 100644
+--- a/tools/perf/util/maps.c
++++ b/tools/perf/util/maps.c
+@@ -169,7 +169,7 @@ static void maps__set_maps_by_name_sorted(struct maps *maps, bool value)
+ 
+ struct machine *maps__machine(const struct maps *maps)
+ {
+-	return RC_CHK_ACCESS(maps)->machine;
++	return maps ? RC_CHK_ACCESS(maps)->machine : NULL;
+ }
+ 
+ unsigned int maps__nr_maps(const struct maps *maps)
 -- 
-2.17.1
+2.45.2
 
