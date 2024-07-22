@@ -1,57 +1,58 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C26416D4F5
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B58316D9C1
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721643195; cv=none; b=m6NcymJ7IRWIZVIuEDqBOGpiI2R8L8yQcKgonAif98lreT91y5R2cxgUdR2ZFge4hOMHvRMP7FqRAmCwWeu4sdfz9Df7TCj33MLRgJ+euL2Q5cL5abh/UYtOcrCi4jEXcvDWonX2k5vkBnV4PHHYkNeOGE+HxB1TCG1LgIVj4QE=
+	t=1721643200; cv=none; b=g4lvn7J38yBU6lrm8zJ5t0UJ2krQ2Gm8KuKRjTPfCeOhWchJU/W4TlNAgk9TCg5ZzaAZpgFEuGGLXA6WOVAV326kFLqQGA4vynBBYVWA0kDAKRxCArEdS5TPrNeZM7Ksz6HnXQ8qV1UC+ix/yCDnTdVRlDxop5K/oQxvIfasP0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721643195; c=relaxed/simple;
-	bh=wVHh6zOEtD5JgYpRaWP8ByjQrHdnbNe5JxysK+W/6X8=;
+	s=arc-20240116; t=1721643200; c=relaxed/simple;
+	bh=NJv4Ip/0MGeUDqPRCBtTePKyAhBC1HwlgSVGeLozqqE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S56ObjiUXNVZw+jra9rXAkvVLWl8s4It9KHMcgWGXSVxVL5jvw3XUmSQEh2ewelkvaE5DTjYuBVJeA5l5j4s1pNBBIyDw+YBhB9h4fkgESM/MmaC+6xuvyQb/Zjh7g6tUHGsirlK6Af0/l56AY5fpBDGZzlU0XebrSyKMd5uUmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wFdzV8iL; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=GHqUMKjmywGtgUcTmZcrQkhC+n5d7Nkr7nS9fXoQoWxxrQ/rvMjbhyFGlZzJsWVZy5W+Hrxo/OtsOP1rkFuUoEnDGQIv1Iz1U5S8ylyZztpk0pMawzQp4Tp4P20ANTsnGJYaOTi/IbsMedYLSYyP8L/s80F0bKpy8SBJ7ocGpyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=crRQF7Ct; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wFdzV8iL"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4266fcb311cso30873365e9.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:13:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="crRQF7Ct"
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-426636ef8c9so28663435e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:13:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721643193; x=1722247993; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721643197; x=1722247997; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CtaJjK7rrgJVkNfrm1RPI3wUUBorSunZ8bK+jPbC78c=;
-        b=wFdzV8iLaDLWXZvF0L2CFYTvhfkZ6kbUNXf7GltKzu+n3n55gHaz+rNpTfEH0PE+ZD
-         K5gzH5olc1CTPHoHakwFZ0cmH8HlpLGQAROfHIeHHxpovh9V6dBa8kSalxofDPaIZWPF
-         B9m00vZD3scaZlTDi+dTZawWSGks7de6TtrDas8PcKu3VcO+77zpCUuF/0X0hrDD7aHj
-         FywkTJf4qfNRESbmfg9ehjli6PxAEwdws2Re6+ijtW4ISxg2Kl3s1WNQgmQWDW+JK1QI
-         q/J4I3jQVpvffZJdpTGSrFcatdeAMC9P4dIt4RAXRVBcKUh1y+hf05wC65JGxJynePio
-         kWgQ==
+        bh=9CvKA9Oo8oUAGLDUMUBH2byBqwwnuDLfYbLv1IHZER0=;
+        b=crRQF7CtbV82vfsxE3bSUfs20cH3fmGVf295mQ1iNhPA426ELPz18fSpu1HgUNpMTx
+         4hZGUjHf+UAaGpMJDnmtGxSRuCDDkygyn8EeuTuPC8N94qkS2I6fHbp0HQ3IgclpOoEQ
+         RotcYcaYTvqcwsnPZCrWLWk1gxSa+OGSo/lKreDqZmRS64kKaaxIPvN5a+Jb2MCVPRyW
+         LtKPfTBlWI9UZk1ALE8FXKMpooT9y+qSQJSclB7MH+KH3LPO8pPKKwoCVxb8mlu+Bj+S
+         idmqzf3D5Me4l1MNzwwruTZPSgzVN1QGNXpgH4deNeWoIm+fZN3RCyGmiUd+rqO6/y1V
+         Dhww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721643193; x=1722247993;
+        d=1e100.net; s=20230601; t=1721643197; x=1722247997;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CtaJjK7rrgJVkNfrm1RPI3wUUBorSunZ8bK+jPbC78c=;
-        b=HdEgnny6aDAlwLqur8CbZmTr/HBR0EYNrPPJivb6EakdjLw3djpRATqLNZJz56ps6C
-         /A+nWzMMJAGevQ7rFnoPuoVO5rYhU1dA2LF8y80uIK/04vpVHgmQPHjKiG7CIbUGSnpP
-         XRR+8YnUw4s6EFUttmHw2cYK5QA/dqjE6Phg/AsWtcmzV3Uzj+qkCh3UzKQea4i/cjmf
-         iwV6VvQbIG59z+x8JSBgCsHJjlHlbmT3zO5CO5/S3RqaGDKsnNUylVy8+f+I9IvVcScw
-         0JLv3f076b3ev69FXUiZc2kVnPsoEkJ4Ou9RYn5XmEt3CcKCvGS3Y4iJXrKO+0nyZF5U
-         qF+A==
-X-Forwarded-Encrypted: i=1; AJvYcCU5P5MMhQg35mTNsZHakBhpFYf7KI/dcuLN4xLFxJ7AmqpZxQE7q0GSrqUveZuEfAaK4V90WrnmNCH0udvNUSy5Qz6e1hyfBiqkOl8GIccFVg==
-X-Gm-Message-State: AOJu0YwLSOaEZfXh1oCXzgduXXrGCgo7zSj93rfxHy8cFKVyfVvjuGfM
-	QIeUMcXWErmy1KlsnI0XQLawd2H7vz7fjBFQbq+aH4vNUabcVaiPYqLQL17ihJk=
-X-Google-Smtp-Source: AGHT+IGdhd7RpxJePLbZIYhR6xs+qj7oZ8Lfr0TNgtXBBhZbnw2zVwMKW7uEaoI3NiSjTwpc8kM/Ag==
-X-Received: by 2002:a05:600c:5493:b0:426:6ea2:31af with SMTP id 5b1f17b1804b1-427dc5753a9mr33453755e9.37.1721643192769;
-        Mon, 22 Jul 2024 03:13:12 -0700 (PDT)
+        bh=9CvKA9Oo8oUAGLDUMUBH2byBqwwnuDLfYbLv1IHZER0=;
+        b=o14b/24rA/k6ihHjy/iOcyck6lQm3UtU9mfQMeIBGtGyj+ASAi+nCdr0YqXdSbapRV
+         csoiJx4MuR0+FkJUPgT3VHPWVVfSJlnnFKxJWhBLI0gkB6B47KAFu8mrEXuSfjEYZaUl
+         bvidNju98HCDbGbBtlAKhA1lUldJP2n0PA55uHnSzMr1ZRouTh9J6kEY2n4K8ir+Lg8q
+         2L/TrtUPyteHSNk/+cLq2VzNBF2SQYIcVZN1P5fTZrcuNRSDJa4vzEhMSBQ1Rauo1ZvG
+         vJKVxgA0rB3xtjMow5oRDLmuEz28lh/CKYyYquB7fm8W18VrZ/jmQffvPOysTZEXLy/B
+         IXqA==
+X-Forwarded-Encrypted: i=1; AJvYcCV+3N4M5XEJvrg2rMo/R81F6e6Q/rdFgsG33ReTpgyFvIVcRtr7mlY5y+Ljv5LloQx7YKYHC38yuUBDnprPbobkjLu9rmhMdCgsdpgcaY8mnA==
+X-Gm-Message-State: AOJu0YzuqjamXBrKLWGaprpzNemt0R5K10+kBUNITkDOYcW0kF1uvxcJ
+	iEEis/q3MagRkHteEnC0MTAznfoS+X7uaB6wpXBihyoo9bLZm4m4B7HyI8IjgHaAx7airwTQrNo
+	/PW4=
+X-Google-Smtp-Source: AGHT+IF7qS/l5dBLpir4Vw8LPazyz0x8s3+xWgLLeI6+jb9MqA3mHfayIPDgC0IjLcyLxDckxJt5aw==
+X-Received: by 2002:a05:600c:35d4:b0:426:593c:9361 with SMTP id 5b1f17b1804b1-427dc569cb0mr43200815e9.26.1721643197578;
+        Mon, 22 Jul 2024 03:13:17 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.13.11
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.13.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 03:13:12 -0700 (PDT)
+        Mon, 22 Jul 2024 03:13:17 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: coresight@lists.linaro.org,
 	suzuki.poulose@arm.com,
@@ -80,9 +81,9 @@ Cc: James Clark <james.clark@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 09/17] coresight: Remove unused ETM Perf stubs
-Date: Mon, 22 Jul 2024 11:11:51 +0100
-Message-Id: <20240722101202.26915-10-james.clark@linaro.org>
+Subject: [PATCH v6 10/17] coresight: Clarify comments around the PID of the sink owner
+Date: Mon, 22 Jul 2024 11:11:52 +0100
+Message-Id: <20240722101202.26915-11-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240722101202.26915-1-james.clark@linaro.org>
 References: <20240722101202.26915-1-james.clark@linaro.org>
@@ -96,9 +97,11 @@ Content-Transfer-Encoding: 8bit
 
 From: James Clark <james.clark@arm.com>
 
-This file is never included anywhere if CONFIG_CORESIGHT is not set so
-they are unused and aren't currently compile tested with any config so
-remove them.
+"Process being monitored" and "pid of the process to monitor" imply that
+this would be the same PID if there were two sessions targeting the same
+process. But this is actually the PID of the process that did the Perf
+event open call, rather than the target of the session. So update the
+comments to make this clearer.
 
 Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
@@ -107,45 +110,49 @@ Tested-by: Leo Yan <leo.yan@arm.com>
 Tested-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../hwtracing/coresight/coresight-etm-perf.h   | 18 ------------------
- 1 file changed, 18 deletions(-)
+ drivers/hwtracing/coresight/coresight-tmc-etr.c | 5 +++--
+ drivers/hwtracing/coresight/coresight-tmc.h     | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.h b/drivers/hwtracing/coresight/coresight-etm-perf.h
-index bebbadee2ceb..744531158d6b 100644
---- a/drivers/hwtracing/coresight/coresight-etm-perf.h
-+++ b/drivers/hwtracing/coresight/coresight-etm-perf.h
-@@ -62,7 +62,6 @@ struct etm_event_data {
- 	struct list_head * __percpu *path;
- };
+diff --git a/drivers/hwtracing/coresight/coresight-tmc-etr.c b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+index e75428fa1592..8962fc27d04f 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc-etr.c
++++ b/drivers/hwtracing/coresight/coresight-tmc-etr.c
+@@ -36,7 +36,8 @@ struct etr_buf_hw {
+  * etr_perf_buffer - Perf buffer used for ETR
+  * @drvdata		- The ETR drvdaga this buffer has been allocated for.
+  * @etr_buf		- Actual buffer used by the ETR
+- * @pid			- The PID this etr_perf_buffer belongs to.
++ * @pid			- The PID of the session owner that etr_perf_buffer
++ *			  belongs to.
+  * @snaphost		- Perf session mode
+  * @nr_pages		- Number of pages in the ring buffer.
+  * @pages		- Array of Pages in the ring buffer.
+@@ -1662,7 +1663,7 @@ static int tmc_enable_etr_sink_perf(struct coresight_device *csdev, void *data)
+ 		goto unlock_out;
+ 	}
  
--#if IS_ENABLED(CONFIG_CORESIGHT)
- int etm_perf_symlink(struct coresight_device *csdev, bool link);
- int etm_perf_add_symlink_sink(struct coresight_device *csdev);
- void etm_perf_del_symlink_sink(struct coresight_device *csdev);
-@@ -77,23 +76,6 @@ static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
- int etm_perf_add_symlink_cscfg(struct device *dev,
- 			       struct cscfg_config_desc *config_desc);
- void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc);
--#else
--static inline int etm_perf_symlink(struct coresight_device *csdev, bool link)
--{ return -EINVAL; }
--int etm_perf_add_symlink_sink(struct coresight_device *csdev)
--{ return -EINVAL; }
--void etm_perf_del_symlink_sink(struct coresight_device *csdev) {}
--static inline void *etm_perf_sink_config(struct perf_output_handle *handle)
--{
--	return NULL;
--}
--int etm_perf_add_symlink_cscfg(struct device *dev,
--			       struct cscfg_config_desc *config_desc)
--{ return -EINVAL; }
--void etm_perf_del_symlink_cscfg(struct cscfg_config_desc *config_desc) {}
--
--#endif /* CONFIG_CORESIGHT */
--
- int __init etm_perf_init(void);
- void etm_perf_exit(void);
+-	/* Get a handle on the pid of the process to monitor */
++	/* Get a handle on the pid of the session owner */
+ 	pid = etr_perf->pid;
  
+ 	/* Do not proceed if this device is associated with another session */
+diff --git a/drivers/hwtracing/coresight/coresight-tmc.h b/drivers/hwtracing/coresight/coresight-tmc.h
+index c77763b49de0..2671926be62a 100644
+--- a/drivers/hwtracing/coresight/coresight-tmc.h
++++ b/drivers/hwtracing/coresight/coresight-tmc.h
+@@ -171,8 +171,9 @@ struct etr_buf {
+  * @csdev:	component vitals needed by the framework.
+  * @miscdev:	specifics to handle "/dev/xyz.tmc" entry.
+  * @spinlock:	only one at a time pls.
+- * @pid:	Process ID of the process being monitored by the session
+- *		that is using this component.
++ * @pid:	Process ID of the process that owns the session that is using
++ *		this component. For example this would be the pid of the Perf
++ *		process.
+  * @buf:	Snapshot of the trace data for ETF/ETB.
+  * @etr_buf:	details of buffer used in TMC-ETR
+  * @len:	size of the available trace for ETF/ETB.
 -- 
 2.34.1
 
