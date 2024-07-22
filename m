@@ -1,125 +1,85 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB7DE482CA;
-	Mon, 22 Jul 2024 21:07:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19F29288B1;
+	Mon, 22 Jul 2024 21:11:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721682428; cv=none; b=tJr19YSioKAoswE7uBLoR//NUlgPcOKxikILWGLeZso9dJ4cefjdQkrY65ekGDDbOnE/RLeNYYJRAN6dMFbHjunA8O9HnvoH2pSoAgCkk6TQyDGdMzsIWdI6PO7m0JOOvicy4YcSbUpz6MYkZp1g3s5uMC04CroCj7UhT5D3QXc=
+	t=1721682700; cv=none; b=sRVIk75i1shH4dQsHREBEt5mgooqEo0u8i3MItHkWSAaLuyey7VNwG3LETDe8fJXjf/iX/52pCubqaGXYvTA+YXHFuKY9FwW0befG9LWZfgz/J6EkdVByWkGjay3TbEmmdwzH2Ox686NrekG8IqjRj0mR58r6KapkEwqgfRh85Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721682428; c=relaxed/simple;
-	bh=o4lTucE/YybaswT34FevEnarms9wVB2T0SXwubW+jOY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lDgvHYsALYclaKQQ2dsJpO6eNhuJ4y+z6y8VwdAb23BYDtCiDGIMMf+uinm3hDnHnhDTOMXyHa6b8Iqj0mEQY8g2D2T3WyM9npCSmrpwObwHriNWCSSuo5qYUbfjEMmRT5S4CtJ8I2YnHxrTB2G4u4+XTvxHAlYBNm0x6MIJ9VE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mrT12hic; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mrT12hic"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721682427; x=1753218427;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o4lTucE/YybaswT34FevEnarms9wVB2T0SXwubW+jOY=;
-  b=mrT12hicbc4LJ4CkEArGq7+RjcSjSEQpGyOUlyCn/qQYGPcvGG+xV4qz
-   YTakBmtQy8X5KcfiKukWCBBo0Zc7S6+9xJk46R0fiC/SGT+bqDYPaLvOm
-   MCmhHiH4U3YNViufSlTPQe+EIOPI0DSZtTbQhN+JtUv8Y4JoFRDjeHpVj
-   U1XQ0oPANs92cW9oqx1AFxkRMDWEyiI9hcAEqcRyHR+ZSroOszQjBj3Vl
-   4HFsJObGRwsaValbiODHsyMOe5MCBic59ytfU3dB0dN4yeUNtqdYHFi+B
-   sU5ujvJJdh+wNGMdVhaFyBAE9G2RTS2Q7AF67yv9KPbq8soaMSIY4pY2K
-   Q==;
-X-CSE-ConnectionGUID: eJscQsTRSNGvd4FJa0s7Yg==
-X-CSE-MsgGUID: nixPIWkUR3yqVZlHsmJ2PA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="30428327"
-X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
-   d="scan'208";a="30428327"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 14:07:03 -0700
-X-CSE-ConnectionGUID: 2LXmSF7dQTaMagER66M4bw==
-X-CSE-MsgGUID: WLvDDELxSzq0X9+MrTcTRw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
-   d="scan'208";a="51653313"
-Received: from lucas-s2600cw.jf.intel.com ([10.165.21.196])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 14:07:03 -0700
-From: Lucas De Marchi <lucas.demarchi@intel.com>
-To: intel-gfx@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org
-Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Lucas De Marchi <lucas.demarchi@intel.com>
-Subject: [PATCH 7/7] drm/i915/pmu: Do not set event_init to NULL
-Date: Mon, 22 Jul 2024 14:06:48 -0700
-Message-ID: <20240722210648.80892-8-lucas.demarchi@intel.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240722210648.80892-1-lucas.demarchi@intel.com>
-References: <20240722210648.80892-1-lucas.demarchi@intel.com>
+	s=arc-20240116; t=1721682700; c=relaxed/simple;
+	bh=UvzwkYHbRWbHo1c0eZoByK8ZAK2m1fVjXSpij9ogaOk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=IMEQLnRsa8BlghWU1Gqo8J+pDixyvHWWaBbYEt+ICHA6LW62Qwh8y1s4dHAKqVdS//j7PfLY2yRajerrv7Jjevyy3jDtv1GyiUamsmmT350MUNrM8aJjaroVHKDbLrcr0YKNhd/EiTLYXV/1KWewQwM0y4DHEe3WPsA7YHMbm+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD81E139F;
+	Mon, 22 Jul 2024 14:12:03 -0700 (PDT)
+Received: from [10.57.12.31] (unknown [10.57.12.31])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0BFC3F5A1;
+	Mon, 22 Jul 2024 14:11:35 -0700 (PDT)
+Message-ID: <e6973788-625c-4be3-8bbe-3d8fcb1256c9@arm.com>
+Date: Mon, 22 Jul 2024 22:11:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] perf pmu: Directly use evsel's PMU pointer
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ James Clark <james.clark@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240721202113.380750-1-leo.yan@arm.com>
+ <20240721202113.380750-2-leo.yan@arm.com>
+ <CAP-5=fXr62AWU_g=Lymf=8wO-9FF-eEEsoBEYHdqxxdD0qgbnQ@mail.gmail.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <CAP-5=fXr62AWU_g=Lymf=8wO-9FF-eEEsoBEYHdqxxdD0qgbnQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-event_init is not an optional function pointer from perf events. Now
-that pmu unregister happens only when freeing i915, setting it to NULL
-only protects other functions in i915. Replace that by checking
-pmu->closed.
+On 7/22/2024 5:16 PM, Ian Rogers wrote:
+> On Sun, Jul 21, 2024 at 1:21 PM Leo Yan <leo.yan@arm.com> wrote:
+>>
+>> Rather than iterating the whole PMU list for finding the associated PMU
+>> device for an evsel, this commit optimizes to directly use evsel's 'pmu'
+>> pointer for accessing PMU device.
+> 
+> The code doesn't do that:
+> ```
+> struct perf_pmu *evsel__find_pmu(const struct evsel *evsel)
+> {
+>        struct perf_pmu *pmu = evsel->pmu;
+> 
+>        if (!pmu) {
+>                pmu = perf_pmus__find_by_type(evsel->core.attr.type);
+>                ((struct evsel *)evsel)->pmu = pmu;
+>        }
+>        return pmu;
+> }
+> ```
+> That is, if the evsel->pmu is not NULL then just return it, otherwise
+> find the pmu using the type from the attribute. Any linear such should
+> happen at most once unless the pmu is NULL from event parsing or
+> perf_pmus__find_by_type.
 
-Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
----
- drivers/gpu/drm/i915/i915_pmu.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+So evsel__find_pmu() is good enough.
 
-diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
-index df53a8fe53ec..c5738035bc2f 100644
---- a/drivers/gpu/drm/i915/i915_pmu.c
-+++ b/drivers/gpu/drm/i915/i915_pmu.c
-@@ -303,7 +303,7 @@ void i915_pmu_gt_parked(struct intel_gt *gt)
- {
- 	struct i915_pmu *pmu = &gt->i915->pmu;
- 
--	if (!pmu->base.event_init)
-+	if (pmu->closed)
- 		return;
- 
- 	spin_lock_irq(&pmu->lock);
-@@ -325,7 +325,7 @@ void i915_pmu_gt_unparked(struct intel_gt *gt)
- {
- 	struct i915_pmu *pmu = &gt->i915->pmu;
- 
--	if (!pmu->base.event_init)
-+	if (pmu->closed)
- 		return;
- 
- 	spin_lock_irq(&pmu->lock);
-@@ -1325,12 +1325,12 @@ void i915_pmu_register(struct drm_i915_private *i915)
- err_groups:
- 	kfree(pmu->base.attr_groups);
- err_attr:
--	pmu->base.event_init = NULL;
- 	free_event_attributes(pmu);
- err_name:
- 	if (IS_DGFX(i915))
- 		kfree(pmu->name);
- err:
-+	pmu->closed = true;
- 	drm_notice(&i915->drm, "Failed to register PMU!\n");
- }
- 
-@@ -1346,6 +1346,4 @@ void i915_pmu_unregister(struct drm_i915_private *i915)
- 
- 	hrtimer_cancel(&pmu->timer);
- 	i915_pmu_unregister_cpuhp_state(pmu);
--
--	pmu->base.event_init = NULL;
- }
--- 
-2.43.0
+> The PMU may be NULL for legacy events and if
+> sysfs isn't mounted. If you are encountering that then maybe we need a
+> flag to say don't find the PMU for this evsel as it is known NULL.
 
+I don't see a case of the PMU pointer is NULL. So don't need this flag.
+
+My bad for misreading the code :\  Thanks a lot for pointing out.
+
+Leo
