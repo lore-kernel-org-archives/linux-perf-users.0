@@ -1,227 +1,102 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FB6A16E877
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F57946C;
+	Mon, 22 Jul 2024 10:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721643235; cv=none; b=ea748humt4mz49J8xSxfSgPNadSh+5cL8eu6rEs0HK8VNgLqIj+PGfifG0AludrupM/l9KuSyjaZYWLglCo9VlrdjUUwKh+OIbCY3jhDzlIH6QoqCawQVmwEqFepXp8KcJlnES1fGHNKRvtfu/wdFTq4nVm3Bzx3gMiyfYSAiq8=
+	t=1721644866; cv=none; b=QCWJyHC6Z7VoRpPYz5BpYVBU9kFq3o9sGt/LdgIZ2mLmVTuTv0y3gxhsxBVGwqr1n4HMFgp34X064IaXBG6m2mkNe5jxbU9aO25kIgNq9rI1RhK9M4MxWa/pI/un5F2fKU1WyxK4R+3Lzw3OIwHYBue4DaMYnA7611oEZdUor5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721643235; c=relaxed/simple;
-	bh=jrx2xOG+BGl3DXknE6CcRbBSOPc6efmotOncGu9ZjVg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lB8axKT8OZlHL3GZc8MAgmD9mB0IBKEqyN4bXf+L2HzNj+99dX8wehg6eBMAdA6Ui+wOFKnKUeWEDYWy3UXOts+6/D1SNoYZN9eQ4x8yo7SElaTRQ7TcxebnkLy5Hcp6faqkpKAz11sk0/PxrqQ01CGdHnhHLnRsFvwRgr16D1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KzUpwofy; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721644866; c=relaxed/simple;
+	bh=EFV2wzzwODmtn/7Y0xB5l/izBemdfK2HYblHgY6ccaE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=S5GU1iXPoIA/p199vS7oMHpiD6V+ANzQ3lvCNa/UcQwAX3SQfxxfBeYRfLgYwB+X1TneQORXEE1ndxf9FS2eFI6Tkc925KLl5fDMyRGGbS+55q+RigwvDqmb4e+D4AEZv7QCL/7ZcpgD42cvH6vhtMW5N9LeBYgDswtl4AeIcpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFgsP0Hg; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KzUpwofy"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-426636ef8c9so28667765e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:13:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721643231; x=1722248031; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j+BH4X7qQ4KNzfIEiAndweOYoOD6xkKc0EkDm+LBpWo=;
-        b=KzUpwofyDg6q7WgXqy1Ry12hYuU656Ibr45vZmjk1yKbOgq3RbA5RT67If+R76Acaj
-         uLbuakJDvVnDPltMu0PsKc8mGidNncnPffKMslaSYvqnhhC5LhwzTxlQ7xGZ67D0wWXe
-         NOs3Z+uC9gnVpeQI6yqG8umD4tEi4v93Q9WbKVxpeJUmRuU7N6A/8NBIj/nLQAnML/2K
-         KPR4lbaaAUgpuvy8uxpC8R2i4Zgch/fyaRmsbqZmyDFStCZRdEionp5nZMkDQPNoFP54
-         oN70drZ916xLDeK/OzHFXFdiAwJoYfBFWYsFKWlAIESuem3rjdunprJaulWqmEGegkwI
-         tQrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721643231; x=1722248031;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=j+BH4X7qQ4KNzfIEiAndweOYoOD6xkKc0EkDm+LBpWo=;
-        b=VZob87xzB0lpvmA3RQMcNr0dHncLxX7XK9ylBc3lL93oMF6EXHfkaBT9XmrGXkpWGb
-         n9+aOVTYjJIBHe/JpnD/EyCNDXBZ9KEcR/IgWYpDuWQG4k8gFLdI8jAxCAJS8MytOjxM
-         JF0mdXDrI3f5PrvJ6IZ66pS1UtVq/O88j8hL3hWMa5431XUhbmZQfiRd7dq1iHsYVTx7
-         q6gtJGEclYBW/RtphazWLGSSopjqYXV307SGMrhvgyhflr2eNExIIMIHpY666cIwaCDY
-         g8qSp4FX+xXyR3SOKmPI8jJjuzr5p6v7t6I56xqFQJFVExiwoNg9RwQIjO1rXXPFrHPt
-         cHiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWK9Scx90jDnMit/mpWXDFuTjd5kZffxA0r5XF2HmP0oTIJ43IaNgrvTYnLz3Pfn2T7pYQsMhaTvo9WwGsuotjWOIkEyu9Uf+x8nrdR90UzXg==
-X-Gm-Message-State: AOJu0Yx1P6f84LXNFgJlwnmH/zisdo2fWCQGGRw88IGSCtI7KJ/p3KeX
-	STRiTGPp9A5HqidevXAwygBfNVyfN61Si65QAh2P7wIw6/j5yWaTfwUeNAQH4gs=
-X-Google-Smtp-Source: AGHT+IGEih7x54xnRim+kyshwE4WvvKfQZnB7WzqI+VTII9cpDdOreaV8/bNOtGb2AVj31TH/u3YHA==
-X-Received: by 2002:a05:600c:45ce:b0:426:549c:294c with SMTP id 5b1f17b1804b1-427dc57aaacmr39518275e9.35.1721643231649;
-        Mon, 22 Jul 2024 03:13:51 -0700 (PDT)
-Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.13.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 03:13:51 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: coresight@lists.linaro.org,
-	suzuki.poulose@arm.com,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	John Garry <john.g.garry@oracle.com>,
-	Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 17/17] coresight: Make trace ID map spinlock local to the map
-Date: Mon, 22 Jul 2024 11:11:59 +0100
-Message-Id: <20240722101202.26915-18-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240722101202.26915-1-james.clark@linaro.org>
-References: <20240722101202.26915-1-james.clark@linaro.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFgsP0Hg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721644865; x=1753180865;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=EFV2wzzwODmtn/7Y0xB5l/izBemdfK2HYblHgY6ccaE=;
+  b=kFgsP0Hg7G/fpFJjIrz4mB0mroEypW5SwacdYJAsj1oWeUVIhVo/1IpJ
+   hhzC6pZ3gtAFCVbtZ8jEajtiBxvoAg7WQdHKQzapvlf+EosZWtDfby1ni
+   IKT+X3kBe1odOqFji9AkdBqst5O0Ieoyo+BYPO4CpRsemSxZhxb4xsd67
+   NEy/wSVkUmLKvf7RUSj/PvXJcAm7KguxzZbiB6McRa6b0UKByh5Igixc3
+   1TxRHguEP2zlpf26R/rMwFA1bG0ZPqXnPm1hCpwmPPq4ABmBZYKOonYJM
+   W6oLNFfR3eIHZ4EdEqJA687Itu2aq+ZGDAbzfx0fbxKOsqqE12+DY4dZz
+   Q==;
+X-CSE-ConnectionGUID: yQmo61SwTc65OEjlgfLTww==
+X-CSE-MsgGUID: P+7077VoQD63ejMdXXYE3Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11140"; a="19354517"
+X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
+   d="scan'208";a="19354517"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 03:41:05 -0700
+X-CSE-ConnectionGUID: 7BLo0Y8NTTuX5AE51ygT5g==
+X-CSE-MsgGUID: c1KscY52SLGWR2kBiOV+OQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,227,1716274800"; 
+   d="scan'208";a="82857199"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 03:41:01 -0700
+Message-ID: <3c25ed2b-9538-4d10-9152-ed1e6106b41a@intel.com>
+Date: Mon, 22 Jul 2024 13:40:56 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 1/6] perf pmu: Directly use evsel's PMU pointer
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ James Clark <james.clark@linaro.org>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, coresight@lists.linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240721202113.380750-1-leo.yan@arm.com>
+ <20240721202113.380750-2-leo.yan@arm.com>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240721202113.380750-2-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: James Clark <james.clark@arm.com>
+On 21/07/24 23:21, Leo Yan wrote:
+> Rather than iterating the whole PMU list for finding the associated PMU
+> device for an evsel, this commit optimizes to directly use evsel's 'pmu'
+> pointer for accessing PMU device.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/util/pmu.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 986166bc7c78..798cd5a2ebc4 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -1199,7 +1199,7 @@ void perf_pmu__warn_invalid_formats(struct perf_pmu *pmu)
+>  
+>  bool evsel__is_aux_event(const struct evsel *evsel)
+>  {
+> -	struct perf_pmu *pmu = evsel__find_pmu(evsel);
+> +	struct perf_pmu *pmu = evsel->pmu;
 
-Reduce contention on the lock by replacing the global lock with one for
-each map.
+Assumes event parser has populated evsel->pmu for auxtrace events.
+Could use a comment to that effect.
 
-Signed-off-by: James Clark <james.clark@arm.com>
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- drivers/hwtracing/coresight/coresight-core.c  |  1 +
- .../hwtracing/coresight/coresight-trace-id.c  | 26 +++++++++----------
- include/linux/coresight.h                     |  1 +
- 3 files changed, 14 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-index c427e9344a84..ea38ecf26fcb 100644
---- a/drivers/hwtracing/coresight/coresight-core.c
-+++ b/drivers/hwtracing/coresight/coresight-core.c
-@@ -1164,6 +1164,7 @@ struct coresight_device *coresight_register(struct coresight_desc *desc)
- 
- 	if (csdev->type == CORESIGHT_DEV_TYPE_SINK ||
- 	    csdev->type == CORESIGHT_DEV_TYPE_LINKSINK) {
-+		spin_lock_init(&csdev->perf_sink_id_map.lock);
- 		csdev->perf_sink_id_map.cpu_map = alloc_percpu(atomic_t);
- 		if (!csdev->perf_sink_id_map.cpu_map) {
- 			kfree(csdev);
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index bddaed3e5cf8..d98e12cb30ec 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.c
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -15,12 +15,10 @@
- /* Default trace ID map. Used in sysfs mode and for system sources */
- static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
- static struct coresight_trace_id_map id_map_default = {
--	.cpu_map = &id_map_default_cpu_ids
-+	.cpu_map = &id_map_default_cpu_ids,
-+	.lock = __SPIN_LOCK_UNLOCKED(id_map_default.lock)
- };
- 
--/* lock to protect id_map and cpu data  */
--static DEFINE_SPINLOCK(id_map_lock);
--
- /* #define TRACE_ID_DEBUG 1 */
- #if defined(TRACE_ID_DEBUG) || defined(CONFIG_COMPILE_TEST)
- 
-@@ -123,11 +121,11 @@ static void coresight_trace_id_release_all(struct coresight_trace_id_map *id_map
- 	unsigned long flags;
- 	int cpu;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	bitmap_zero(id_map->used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	for_each_possible_cpu(cpu)
- 		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_MAP(id_map);
- }
- 
-@@ -136,7 +134,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	unsigned long flags;
- 	int id;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 
- 	/* check for existing allocation for this CPU */
- 	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
-@@ -163,7 +161,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
- 
- get_cpu_id_out_unlock:
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
-@@ -180,12 +178,12 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
- 	if (!id)
- 		return;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 
- 	coresight_trace_id_free(id, id_map);
- 	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
- 
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 	DUMP_ID_CPU(cpu, id);
- 	DUMP_ID_MAP(id_map);
- }
-@@ -195,10 +193,10 @@ static int coresight_trace_id_map_get_system_id(struct coresight_trace_id_map *i
- 	unsigned long flags;
- 	int id;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	/* prefer odd IDs for system components to avoid legacy CPU IDS */
- 	id = coresight_trace_id_alloc_new_id(id_map, 0, true);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-@@ -209,9 +207,9 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
- {
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&id_map_lock, flags);
-+	spin_lock_irqsave(&id_map->lock, flags);
- 	coresight_trace_id_free(id, id_map);
--	spin_unlock_irqrestore(&id_map_lock, flags);
-+	spin_unlock_irqrestore(&id_map->lock, flags);
- 
- 	DUMP_ID(id);
- 	DUMP_ID_MAP(id_map);
-diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-index 197949fd2c35..c13342594278 100644
---- a/include/linux/coresight.h
-+++ b/include/linux/coresight.h
-@@ -233,6 +233,7 @@ struct coresight_trace_id_map {
- 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
- 	atomic_t __percpu *cpu_map;
- 	atomic_t perf_cs_etm_session_active;
-+	spinlock_t lock;
- };
- 
- /**
--- 
-2.34.1
+>  
+>  	return pmu && pmu->auxtrace;
+>  }
 
