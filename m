@@ -1,114 +1,137 @@
-Received: from mail-pg1-f169.google.com (mail-pg1-f169.google.com [209.85.215.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF8E1C6A8
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 21:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810C58F5E;
+	Mon, 22 Jul 2024 23:35:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721682959; cv=none; b=pPeSCRhwTdXIrNQVQeK1HtgFr3EEW1eErguvBAAE5x80A6kRldoQlUsdEOwfWIZ61bixTDILKA4jLU8na0NaVpJwjQE63rcAHa3mm9dKSmnZ4f5Eg4eSkytgUlrmCsjsG/xKsNt8iItn6emOQKuTkHvjvkEEHASF974P6yzrr9k=
+	t=1721691353; cv=none; b=rwuhpPn4lx11vfmE9LUXzreCGOhLhpy26d36tlgsM92vVYjYAdyNYpgsivfFiWx7i8+XkeL1lHm2efFm9y62+33//dUgr/4ypc4Onc4t9RG1JhJJafK0H3+eBsGzD4WOBkvA6s+I5tQiuD/fTGDd4PIjV1ZAyvAfaFmBmY9WUk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721682959; c=relaxed/simple;
-	bh=7KFOC5wLs3EJl4NsTnqfnwdjiRRNzD7PATmyJ6TduFA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ftixw8WIRoA2GDgWqeeIrnhh/j+ciib2uar+T4R1wc/wM0M+Yx7z7XAyE3SYtsIbAy9TZQ6M/RdalpXmmgE3eJO9dexV1QNSmFp+hGt/GXelQOEdTwkiJSc4JA4OKSi0EuQ38RQU8O8nXmFwsd35QWp2dks7cPFn/XlwIa4N6a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SJoLjlJf; arc=none smtp.client-ip=209.85.215.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1721691353; c=relaxed/simple;
+	bh=uHBs++XUB5PWKoO0mZ43r19mbkrWMGRIfh+BSU4Ubuc=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ARzelVoyFMlM/82VxEGrbTb6kXfcEy0uSpbne4SjX1PSGvRcYEA+TaEPQKv3YFIgEtQVNotL7ZdIs9bsuCL0VcK9lTnFnahVP9jcgpwNjj1KgIIaJpz2HQ8LFFlaWuN52JpneP8LiH9NzSc58YFeZfLHT8eFtbO5DKPzQ50p8FU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTTw4jEh; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SJoLjlJf"
-Received: by mail-pg1-f169.google.com with SMTP id 41be03b00d2f7-7a263f6439eso794757a12.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 14:15:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1721682956; x=1722287756; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=qOO2jji9U8j5jqgweOYexBqjPNMVig6bzmPu41c6FV4=;
-        b=SJoLjlJfpb4+VTjGMVo1c4ygxlKdEGxG3lxOo4V8o7oMmOJEQQlggrxeXu1/NMtDMu
-         zu1d7R4g4ULnq2AiDnMAR29SSY3jIJbzxTHKqUubHYyy1vLrUFdoK+c+2hRd0cvnFF0q
-         unq7zBPb5lIalmuEsTyBz63obs4sWlbNXUPzs6o6w5EH+BTTYHCvRMZC0TwBVhQrgGfC
-         MY0yIoUdXVr23LLvRZfjgLm7UUcWZi8KYybfoFMAM3Kv+hqVe+mj6TshZwvv2qeYWPU1
-         4eHIEN9ixkkngsnb+xwSHSDZT1ITkD+1yMAf1p9/0Q84tbLzKBY29gOSOuaeXX1IGFiK
-         BwEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721682956; x=1722287756;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qOO2jji9U8j5jqgweOYexBqjPNMVig6bzmPu41c6FV4=;
-        b=xH0Lmr6ijCYJBrlvSj3+Ck0aSlwwB73qWJUo/M6wsE/XEFxgLVF4Aoi6+M3ZUn9m7V
-         ZXeq9CupVUHcrkO6PNKYEaL2/acjQEfrDl1tqUQvgMxR5IaYRvVxGGR9uiS1nu9JkUUI
-         DafwV/jFyBlaKZ6D/3T07jGvg3NtJX03emtr2ZuPN8JoJavnhHFpXNcotXFk9/HSGwS1
-         LpckhhO3sl8RGpiUEC9E2c4A0Ql+zBFlJWtvjWNEWu4GAl2N4fwEct5q9qrwZvQgC0S0
-         LoHO+VlAekpTESfDS6EO9P6819AZnjhjya7iyjKbOp74XRyx2OCXZAkqEPHoU8G+oBjY
-         IOOQ==
-X-Gm-Message-State: AOJu0Yz8Ma7jKuljJWLy7qHKAORjlhaa04ZGGNcPTCbNQe/AoHT57Qxp
-	+enIVJWUNE9sWMW5Io5PMk4hjocDkXH/dh3kNxuTUoFuyz//AZuRkZ0G1vKtOR9D17uMyRdUu7y
-	9FixDAHH8KC5yT9SC39Cht2XjJTfGN1rNXFtsSqcCSMOpa5e0EcHSG6BTQhAKH96uinj1vXTgN4
-	l2qbsbYnGF2cAJ/Gsx5QCXuMpOHpK37stT4wN1rj8SVHea7/jDWE7LlSw=
-X-Google-Smtp-Source: AGHT+IE2SCRbidasSEcvUS+FBkZiidEQHa2TVu6rFttRlOgPYgJmcCb4tj758FeHkNi2yyoJQ5XZ+g==
-X-Received: by 2002:a05:6a20:4327:b0:1c0:e5d1:619f with SMTP id adf61e73a8af0-1c42285ee9dmr8697515637.4.1721682956411;
-        Mon, 22 Jul 2024 14:15:56 -0700 (PDT)
-Received: from dev-cachen.dev.purestorage.com ([208.88.159.129])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-1fd6f452c67sm59463035ad.225.2024.07.22.14.15.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 14:15:55 -0700 (PDT)
-From: Casey Chen <cachen@purestorage.com>
-To: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com
-Cc: yzhong@purestorage.com,
-	Casey Chen <cachen@purestorage.com>
-Subject: [PATCHv5] perf tool: fix dereferencing NULL al->maps
-Date: Mon, 22 Jul 2024 15:15:48 -0600
-Message-ID: <20240722211548.61455-1-cachen@purestorage.com>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTTw4jEh"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721691352; x=1753227352;
+  h=date:message-id:from:to:cc:subject:in-reply-to:
+   references:mime-version;
+  bh=uHBs++XUB5PWKoO0mZ43r19mbkrWMGRIfh+BSU4Ubuc=;
+  b=MTTw4jEhrU9kSjVhHbTiniX8jbwQJ8DeQg9WVdBvJVX4uR7e3tCoAqAW
+   Enwww5QZy/7Q2aQLiicf5CIUXMLdQOj5sKr1uI6SO2vdOBG8n5HGPMhND
+   DnyQmN5px/M1lFYBCSL46J12tDCoKrD+hyly6kNjePfjuK9S1BWau8ynE
+   f+voZOgijwkn0272Vbyq2nsGQPuG74hiK4MQ49l8qW+JiDQoKRn9up0NE
+   Rq57/G6mYYHvhjSiTAUWKnl6RnVpJY1fJIgFpyn8guSZSNj7jnO/FUWMv
+   50xyLhD9wqv2Oxx5/DhojmVv11M3ILrLdIiOgZgvBGaqWAZ1X9Y+JnBIc
+   Q==;
+X-CSE-ConnectionGUID: tIDtT98EQKeXMNDzkndJkg==
+X-CSE-MsgGUID: 5QZlejUzSDmXFCDbYhu2ow==
+X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="44713379"
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="44713379"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 16:35:51 -0700
+X-CSE-ConnectionGUID: Djh7fBLgQL+Ljm5+Kp4vUA==
+X-CSE-MsgGUID: cF1aP7AUTiyovMn8k1nhrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="51929193"
+Received: from dmprieto-mobl1.amr.corp.intel.com (HELO adixit-arch.intel.com) ([10.125.48.92])
+  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 16:35:50 -0700
+Date: Mon, 22 Jul 2024 16:25:27 -0700
+Message-ID: <87a5i9c8m0.wl-ashutosh.dixit@intel.com>
+From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org,
+	linux-perf-users@vger.kernel.org,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	dri-devel@lists.freedesktop.org,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] drm/i915/pmu: Drop is_igp()
+In-Reply-To: <20240722210648.80892-5-lucas.demarchi@intel.com>
+References: <20240722210648.80892-1-lucas.demarchi@intel.com>
+	<20240722210648.80892-5-lucas.demarchi@intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
+ Emacs/29.4 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 
-With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
-when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
-thread__find_map() could return with al->maps being NULL.
+On Mon, 22 Jul 2024 14:06:45 -0700, Lucas De Marchi wrote:
+>
+> There's no reason to hardcode checking for integrated graphics on a
+> specific pci slot. That information is already available per platform an
+> can be checked with IS_DGFX().
 
-The path below could add a callchain_cursor_node with NULL ms.maps.
+Reviewed-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
 
-add_callchain_ip()
-  thread__find_symbol(.., &al)
-    thread__find_map(.., &al)   // al->maps becomes NULL
-  ms.maps = maps__get(al.maps)
-  callchain_cursor_append(..., &ms, ...)
-    node->ms.maps = maps__get(ms->maps)
-
-Then the path below would dereference NULL maps and get segfault.
-
-fill_callchain_info()
-  maps__machine(node->ms.maps);
-
-Fix it by checking if maps is NULL in fill_callchain_info().
-
-Signed-off-by: Casey Chen <cachen@purestorage.com>
-Reviewed-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/callchain.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-index 1730b852a947..6d075648d2cc 100644
---- a/tools/perf/util/callchain.c
-+++ b/tools/perf/util/callchain.c
-@@ -1141,7 +1141,7 @@ int hist_entry__append_callchain(struct hist_entry *he, struct perf_sample *samp
- int fill_callchain_info(struct addr_location *al, struct callchain_cursor_node *node,
- 			bool hide_unresolved)
- {
--	struct machine *machine = maps__machine(node->ms.maps);
-+	struct machine *machine = node->ms.maps ? maps__machine(node->ms.maps) : NULL;
- 
- 	maps__put(al->maps);
- 	al->maps = maps__get(node->ms.maps);
--- 
-2.45.2
-
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> ---
+>  drivers/gpu/drm/i915/i915_pmu.c | 17 +++--------------
+>  1 file changed, 3 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
+> index 3a8bd11b87e7..b5d14dd318e4 100644
+> --- a/drivers/gpu/drm/i915/i915_pmu.c
+> +++ b/drivers/gpu/drm/i915/i915_pmu.c
+> @@ -1235,17 +1235,6 @@ static void i915_pmu_unregister_cpuhp_state(struct i915_pmu *pmu)
+>	cpuhp_state_remove_instance(cpuhp_slot, &pmu->cpuhp.node);
+>  }
+>
+> -static bool is_igp(struct drm_i915_private *i915)
+> -{
+> -	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
+> -
+> -	/* IGP is 0000:00:02.0 */
+> -	return pci_domain_nr(pdev->bus) == 0 &&
+> -	       pdev->bus->number == 0 &&
+> -	       PCI_SLOT(pdev->devfn) == 2 &&
+> -	       PCI_FUNC(pdev->devfn) == 0;
+> -}
+> -
+>  void i915_pmu_register(struct drm_i915_private *i915)
+>  {
+>	struct i915_pmu *pmu = &i915->pmu;
+> @@ -1269,7 +1258,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>	pmu->cpuhp.cpu = -1;
+>	init_rc6(pmu);
+>
+> -	if (!is_igp(i915)) {
+> +	if (IS_DGFX(i915)) {
+>		pmu->name = kasprintf(GFP_KERNEL,
+>				      "i915_%s",
+>				      dev_name(i915->drm.dev));
+> @@ -1323,7 +1312,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>	pmu->base.event_init = NULL;
+>	free_event_attributes(pmu);
+>  err_name:
+> -	if (!is_igp(i915))
+> +	if (IS_DGFX(i915))
+>		kfree(pmu->name);
+>  err:
+>	drm_notice(&i915->drm, "Failed to register PMU!\n");
+> @@ -1351,7 +1340,7 @@ void i915_pmu_unregister(struct drm_i915_private *i915)
+>	perf_pmu_unregister(&pmu->base);
+>	pmu->base.event_init = NULL;
+>	kfree(pmu->base.attr_groups);
+> -	if (!is_igp(i915))
+> +	if (IS_DGFX(i915))
+>		kfree(pmu->name);
+>	free_event_attributes(pmu);
+>  }
+> --
+> 2.43.0
+>
