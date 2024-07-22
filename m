@@ -1,337 +1,259 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C755916E89E;
-	Mon, 22 Jul 2024 17:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1962716CD1E;
+	Mon, 22 Jul 2024 17:45:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721669890; cv=none; b=lhVzWps2zFRAYvKFcMH/j7mp6/ZGtFbxu3NHwsxgz+3YqyxI2Laqf0mQYypzePFwb+aKM8ibYccCoDCYvF+mtQdd/qC7wXDTz1IloWBvyuQXrX5XYJP/C5B+GAt0e/8OMCqb3m6z8psdxhyeSCvbpUirE1i64RCmyV0N0emfWIs=
+	t=1721670330; cv=none; b=IIimEIVbQ6FolNLX+x3solJu9nALSBmryZABozA8EpNCSimfmWoI2fPAkj7F9Exw9VyhGanWozwt18y5Fv2YlyXPUmLJe8mGbxLnXtiYRTt5FassarYY4X0uxRafbQPEkP8d7fruapGN2R0kKusJRfjw1jtu56OL+eiV+QrXJkE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721669890; c=relaxed/simple;
-	bh=hn6LDNdD6TFi0eO2iuWNgAUOFX+eSAfI4VrQlmxn/RE=;
+	s=arc-20240116; t=1721670330; c=relaxed/simple;
+	bh=CIBpkJsJvMIut/H/Mqv3n2ilagGDVLoPkrke7HVeLdA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FabNlAEi4lnJblxqDNWuYcxbSZgU7e4MhckmVoJKGFx+mIC3F0sbaZFryF/R+6I5zpli6IRpDSrzL0JMhB9945Ebbn5ve49mulqLgSjHqjEFYGeVm0/KHsoQ3JHizwU9JeDthP+FtdAW6qgtDCgRMNoY0IwE/j+pcFYCGshxFhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.48
+	 To:Cc:Content-Type; b=nBVYXyscfnqrY821zGhiw4x4NDZD1Eh/het3NKySV3tKR9XDyvYW2JVGq1Jwio5EFp/rTDC4/IGMcpcDI+dWDNFUWJcq3j4BCzrDQwnMIKmKOM6GWZQdq0bfKpRetaLWS4xClVxHl4tISK+b4QWByhVp5xnaXyHMzGwuNy+grTw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2cd1661174cso1395614a91.0;
-        Mon, 22 Jul 2024 10:38:08 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fd640a6454so22375155ad.3;
+        Mon, 22 Jul 2024 10:45:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721669888; x=1722274688;
+        d=1e100.net; s=20230601; t=1721670328; x=1722275128;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6wKoNtQ4SQPJd7Ia32SRDxIuuiefLWdxy7tDAUoZVzA=;
-        b=Uzh7GDYagFTPXTc4fLMAlz+4dY9SGzBjByzxfKo1iQrA/Co7qXjDtleQGlZ+N7ikz0
-         d6qMGi+5Wv7JYJfmrBbOsIlfK+nS3aSolDZVtYMSSSXHyfY0fZ/Gry9tHZY3/qCz+ZsI
-         FBikVi051h85ciZe8P9ooQPPIM6aLNy1ihe9uG98L7uOOesAUcRRvD2bwcrTECvLVMDK
-         /dFxMMAM7xJOxXI6GY7FpoReNW4t3wKIgE+PnrMUMOpImDuBc6MQfY1ODQ7YTMRmsLSB
-         9aL8kbG2eqfd4v8zxmyxBX5IqAMlQ9pDSlQdAEQtpp6I4DMFYt+B10aNrD+7ZUVu56Ve
-         4xqw==
-X-Forwarded-Encrypted: i=1; AJvYcCX+NrpY4Ct+8zdAtaHrdA1QZVsm9cpgaUvQsdMQb9kjz4GnXpAICcLEqAYPP6eELfHAB6AHOlxjjro2S0qNycoyBv8yk1DadNZbYh0hWQwahEX4rvMiEJR8M+QntcNBZQDxXy9r2Oppwr5TCeD5OA==
-X-Gm-Message-State: AOJu0Yxe+Mli35FyP9+G0IbBRCSvAA2eZLe6bNUUoS9JzulWXliqmm/W
-	xuL8Mwe1CYK9pK6MDpjmqwi3Fv+mS662VDnYZXrqOvTA18gtedicROTkswj1IhxTYEBqGxRDjmS
-	lMjips+hBm7wDt/HHogEqhXc2/Hk=
-X-Google-Smtp-Source: AGHT+IFdx8kV8E2EOeHEFp2FjvFxqhCrQShnTq2yuKklYeJ5xdUvw4bU3PVYk+yYYJMLAWDU+h5SBWIIT820CQQjT/g=
-X-Received: by 2002:a17:90a:c70b:b0:2c8:7330:68b3 with SMTP id
- 98e67ed59e1d1-2cd274d5c5amr4195964a91.39.1721669887461; Mon, 22 Jul 2024
- 10:38:07 -0700 (PDT)
+        bh=i9NWGmlwOAkhOw72g0i8CpniZ7SsqAy6RdMTRvFCF/4=;
+        b=GyDmv1wti8f9EnS6b+vKPzQxClrO2Ocb2cuQUge1ZHHa4oA0ygk+BS3FfYrOohVpFw
+         YmVkDT77FmwTkgUfEa3PAd81Pw36mdR0GlzIA0xz705gXIBJt22zqrWM2KyqMfzxcg8L
+         pFLa3Bygrp1kae9oAPKAjwJDPbZzvf48PLlO+ugBEutRGZyvgT3LQtIUmBup+4zIwmF/
+         Rc8sJVWWA7Aqbm6adsia31Pu4ve+Nc+Spxw8rFOAYorXEVI13Yd2yKsX0HYtz2/qrUBa
+         NXbJgIOSKKEZRpKUxDPTpeK5/Xs2QHSI9AWI2mEn6fKLx6WzSnMm+xiEM9wdHlx8DBIJ
+         Ks/A==
+X-Forwarded-Encrypted: i=1; AJvYcCVfqEi8A8WI3m8jbl9YsdVwFQr8Zy+PGB0Duyti39Jp3NNqudQfS7gGsJCXzd66lCkvcGcS49F4YNnOhqp0IhJ7Fgk9Yp00yjfQGlq5ZAuO6UiAITgVN0cjv2baoXaAIdZ7w2lp0SDu/0LLrfHtKA==
+X-Gm-Message-State: AOJu0Ywg9WW5UWux1o2X2lCu6pLMHHiW74g5pZmYBf4X9CCWNU1e/BZ5
+	JjabFf++sYZYAab4X9YFBUYqlMC3fetO0Nvon4YZPmzfGkiVxBqgd5Rm+QXxSBslMuqzrjN28sa
+	rYkYuEmVR3n/MT2u/kKz4MBet4uo=
+X-Google-Smtp-Source: AGHT+IE6ZHhsLriUqVudC7AnqFElq34Vxe3ooHvrEotr8dV3dnZYPjxESzu2nqTBWxYVXnkVqY5vA/INFTc/KwLZQqA=
+X-Received: by 2002:a17:90a:7843:b0:2c9:7cf1:83a4 with SMTP id
+ 98e67ed59e1d1-2cd27434dcfmr3356286a91.20.1721670328064; Mon, 22 Jul 2024
+ 10:45:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240720062102.444578-1-weilin.wang@intel.com>
-In-Reply-To: <20240720062102.444578-1-weilin.wang@intel.com>
+References: <20240718010023.1495687-1-irogers@google.com> <738b5c89-acb2-46a5-92a1-c36bd90abc30@intel.com>
+ <CAP-5=fU=5LxF0SKuAqVP+xtmdERCCgxh_mdpw5okMi1fmvpE+Q@mail.gmail.com>
+ <05fa0449-4fd4-41ed-93e8-db825e48268f@intel.com> <CAP-5=fU9riOR7onxCE3a2xOs_bVdQdTSkAHD5QLb=SO6SCzkzQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fU9riOR7onxCE3a2xOs_bVdQdTSkAHD5QLb=SO6SCzkzQ@mail.gmail.com>
 From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 22 Jul 2024 10:37:56 -0700
-Message-ID: <CAM9d7cgoTyf3Zjt=+2yZi5Pat4UrxKxN=rkLHmyUWZqwZk8_Kw@mail.gmail.com>
-Subject: Re: [RFC PATCH v18 0/8] TPEBS counting mode support
-To: weilin.wang@intel.com
-Cc: Ian Rogers <irogers@google.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+Date: Mon, 22 Jul 2024 10:45:16 -0700
+Message-ID: <CAM9d7cjbi_P+V=QkLFg6OuEJqmCOsOoDBddQbyhMYD3aF8do4g@mail.gmail.com>
+Subject: Re: [PATCH v6 00/27] Constify tool pointers
+To: Ian Rogers <irogers@google.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Weilin,
+Hi,
 
-On Fri, Jul 19, 2024 at 11:21=E2=80=AFPM <weilin.wang@intel.com> wrote:
+On Mon, Jul 22, 2024 at 9:06=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> From: Weilin Wang <weilin.wang@intel.com>
->
-> Change in v18:
->  - Update to exit 2 in TPEBS shell test when not on Intel platform.
->  - Several updates to use EVLIST_CTL_CMD_ENABLE_TAG, EVLIST_CTL_CMD_ACK_T=
-AG, and
->  etc.
->
-> Changes in v17:
->  - Add a poll on control fifo ack_fd to ensure program returns successful=
-ly when
->  perf record failed for any reason.
->  - Add a check in the tpebs test to only run on Intel platforms.
->
-> Changes in v16:
->  - Update tpebs bash test code and variable name.
->  - Add a check to ensure only use "-C" option when cpumap is not "-1" whe=
-n
->  forking "perf record".
->
-> Changes in v15:
->  - Revert changes added for python import test failure in v14 because the=
- code
->  works correctly with the new python build code.
->  - Update the command line option to --record-tpebs.
->
-> Changes in v14:
->  - Fix the python import test failure. We cannot support PYTHON_PERF beca=
-use it
->  will trigger a chain of dependency issues if we add intel-tpebs.c to it.=
- So,
->  only enable tpebs functions in evsel and evlist when PYTHON_PERF is not
->  defined.
->  - Fix shellcheck warning for the tpebs test.
->
-> Changes in v13:
->  - Add document for the command line option and fix build error in non-x8=
-6_64.
->  - Update example with non-zero retire_latency value when tpebs recording=
- is
->  enabled.
->  - Add tpebs_stop() back to tpebs_set_evsel() because in hybrid platform,=
- when
->  the forked perf record is not killed, the reader thread does not get any
->  sampled data from the PIPE. As a result, tpebs_set_evesel() will always =
-return
->  zero on retire_latency values. This does not happen on my test GNR machi=
-ne.
->  Since -I is not supported yet, I think we should add tpebs_stop() to ens=
-ure
->  correctness for now. More investigation is required here when we work on
->  supporting -I mode.
->  - Rebase code on top of perf-tools-next.
->
-> Changes in v12:
->  - Update MTL metric JSON file to include E-Core TMA3.6 changes.
->  - Update comments and code for better code quality. Keep tpebs_start() a=
-nd
->  tpebs_delete() at evsel level for now and add comments on these function=
-s with
->  more details about potential future changes. Remove tpebs_stop() call fr=
-om
->  tpebs_set_evsel(). Simplify the tpebs_start() and tpebs_stop()/tpebs_del=
-ete()
->  interfaces. Also fixed the bugs on not freed "new" pointer and the incor=
-rect
->  variable value assignment to val instead of counter->val.
->
-> Changes in v11:
->  - Make retire_latency evsels not opened for counting. This works correct=
-ly now
->  with the code Namhyung suggested that adjusting group read size when
->  retire_latency evsels included in the group.
->  - Update retire_latency value assignment using rint() to reduce precisio=
-n loss
->  while keeping code generic.
->  - Fix the build error caused by not used variable in the test.
->
-> Other changes in v10:
->  - Change perf record fork from perf stat to evsel. All the major operati=
-ons
->  like tpebs start, stop, read_evsel should directly work through evsel.
->  - Make intel-tpebs x86_64 only. This change is cross-compiled to arm64.
->  - Put tpebs code to intel-tepbs and simplify intel-tpebs APIs to minimum=
- number
-> of functions and variables. Update funtion name and variable names to use
-> consistent prefix. Also improve error handling.
->  - Integrate code patch from Ian for the :R parser.
->  - Update MTL metrics to TMA 4.8.
->
-> V9: https://lore.kernel.org/all/20240521173952.3397644-1-weilin.wang@inte=
-l.com/
->
-> Changes in v9:
->  - Update the retire_latency result print and metric calculation method. =
-Plugin
-> the value to evsel so that no special code is required.
->  - Update --control:fifo to use pipe instead of named pipe.
->  - Add test for TPEBS counting mode.
->  - Update Document with more details.
->
-> Changes in v8:
->  - In this revision, the code is updated to base on Ian's patch on R modi=
-fier
-> parser https://lore.kernel.org/lkml/20240428053616.1125891-3-irogers@goog=
-le.com/
-> After this change, there is no special code required for R modifier in
-> metricgroup.c and metricgroup.h files.
->
-> Caveat of this change:
->   Ideally, we will need to add special handling to skip counting events w=
-ith R
-> modifier in evsel. Currently, this is not implemented so the event with :=
-R will
-> be both counted and sampled. Usually, in a metric formula that uses retir=
-e_latency,
-> it would already require to count the event. As a result, we will endup c=
-ount the
-> same event twice. This should be able to be handled properly when we fina=
-lize our
-> design on evsel R modifier support.
->
->  - Move TPEBS specific code out from main perf stat code to separate file=
-s in
-> util/intel-tpebs.c and util/intel-tpebs.h. [Namhyung]
->  - Use --control:fifo to ack perf stat from forked perf record instead of=
- sleep(2) [Namhyung]
->  - Add introductions about TPEBS and R modifier in Documents. [Namhyung]
->
->
-> Changes in v7:
->  - Update code and comments for better code quality [Namhyung]
->  - Add a separate commit for perf data [Namhyung]
->  - Update retire latency print function to improve alignment [Namhyung]
->
-> Changes in v6:
->  - Update code and add comments for better code quality [Namhyung]
->  - Remove the added fd var and directly pass the opened fd to data.file.f=
-d [Namhyung]
->  - Add kill() to stop perf record when perf stat exists early [Namhyung]
->  - Add command opt check to ensure only start perf record when -a/-C give=
-n [Namhyung]
->  - Squash commits [Namhyung]
->
-> Changes in v5:
->  - Update code and add comments for better code quality [Ian]
->
-> Changes in v4:
->  - Remove uncessary debug print and update code and comments for better
-> readability and quality [Namhyung]
->  - Update mtl metric json file with consistent TmaL1 and TopdownL1 metric=
-group
->
-> Changes in v3:
->  - Remove ':' when event name has '@' [Ian]
->  - Use 'R' as the modifier instead of "retire_latency" [Ian]
->
-> Changes in v2:
->  - Add MTL metric file
->  - Add more descriptions and example to the patch [Arnaldo]
->
-> Here is an example of running perf stat to collect a metric that uses
-> retire_latency value of event MEM_INST_RETIRED.STLB_HIT_STORES on a MTL s=
-ystem.
->
-> In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES samp=
-le.
-> Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p count and retire_latenc=
-y value
-> are all 0.
->
-> ./perf stat -M tma_dtlb_store -a -- sleep 1
->
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.000 MB - ]
->
->  Performance counter stats for 'system wide':
->
->        181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tm=
-a_dtlb_store
->          3,195,608      cpu_core/topdown-retiring/
->         40,156,649      cpu_core/topdown-mem-bound/
->          3,550,925      cpu_core/topdown-bad-spec/
->        117,571,818      cpu_core/topdown-fe-bound/
->         57,118,087      cpu_core/topdown-be-bound/
->             69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
->              4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
->         30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
->         30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
->            168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
->               0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
->
->        1.003105924 seconds time elapsed
->
-> v1:
-> TPEBS is one of the features provided by the next generation of Intel PMU=
+> On Mon, Jul 22, 2024 at 1:29=E2=80=AFAM Adrian Hunter <adrian.hunter@inte=
+l.com> wrote:
+> >
+> > On 19/07/24 19:26, Ian Rogers wrote:
+> > > On Fri, Jul 19, 2024 at 1:51=E2=80=AFAM Adrian Hunter <adrian.hunter@=
+intel.com> wrote:
+> > >>
+> > >> On 18/07/24 03:59, Ian Rogers wrote:
+> > >>> struct perf_tool provides a set of function pointers that are calle=
+d
+> > >>> through when processing perf data. To make filling the pointers les=
+s
+> > >>> cumbersome, if they are NULL perf_tools__fill_defaults will add
+> > >>> default do nothing implementations.
+> > >>>
+> > >>> This change refactors struct perf_tool to have an init function tha=
+t
+> > >>> provides the default implementation. The special use of NULL and
+> > >>> perf_tools__fill_defaults are removed. As a consequence the tool
+> > >>> pointers can then all be made const, which better reflects the
+> > >>> behavior a particular perf command would expect of the tool and to
+> > >>> some extent can reduce the cognitive load on someone working on a
+> > >>> command.
+> > >>>
+> > >>> v6: Rebase adding Adrian's reviewed-by/tested-by and Leo's tested-b=
+y.
+> > >>
+> > >> The tags were really meant only for patch 1, the email that was repl=
+ied to.
+> > >>
+> > >> But now for patches 2 and 3:
+> > >>
+> > >> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+> > >
+> > > Sorry for that, you'd mentioned that pt and bts testing which is
+> > > impacted by more than just patch 1.
+> > >
+> > >> Looking at patches 4 to 25, they do not seem to offer any benefit.
+> > >>
+> > >> Instead of patch 26, presumably perf_tool__fill_defaults() could
+> > >> be moved to __perf_session__new(), which perhaps would allow
+> > >> patch 27 as it is.
+> > >
+> > > What I'm trying to do in the series is make it so that the tool isn't
+> > > mutated during its use by session. Ideally we'd be passing a const
+> > > tool to session_new, that's not possible because there's a hack to fi=
+x
+> > > ordered events and pipe mode in session__new:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.=
+git/tree/tools/perf/util/session.c?h=3Dperf-tools-next#n275
+> > > Imo, it isn't great to pass a tool to session__new where you say you
+> > > want ordered events and then session just goes to change that for you=
 .
-> Please refer to Section 8.4.1 of "Intel=C2=AE Architecture Instruction Se=
-t Extensions
-> Programming Reference" [1] for more details about this feature.
+> > > Altering that behavior was beyond the scope of this clean up, so tool
+> > > is only const after session__new.
+> >
+> > Seems like a separate issue.  Since the session is created
+> > by __perf_session__new(), session->tool will always be a pointer
+> > to a const tool once there is:
+> >
+> > diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+> > index 7f69baeae7fb..7c8dd6956330 100644
+> > --- a/tools/perf/util/session.h
+> > +++ b/tools/perf/util/session.h
+> > @@ -43,7 +43,7 @@ struct perf_session {
+> >         u64                     one_mmap_offset;
+> >         struct ordered_events   ordered_events;
+> >         struct perf_data        *data;
+> > -       struct perf_tool        *tool;
+> > +       const struct perf_tool  *tool;
+> >         u64                     bytes_transferred;
+> >         u64                     bytes_compressed;
+> >         struct zstd_data        zstd_data;
 >
-> This set of patches supports TPEBS in counting mode. The code works in th=
-e
-> following way: it forks a perf record process from perf stat when retire_=
-latency
-> of one or more events are used in a metric formula. Perf stat would send =
-a
-> SIGTERM signal to perf record before it needs the retire latency value fo=
-r
-> metric calculation. Perf stat will then process sample data to extract th=
-e
-> retire latency data for metric calculations. Currently, the code uses the
-> arithmetic average of retire latency values.
+> That's the case after these changes, but not before.
 >
-> [1] https://www.intel.com/content/www/us/en/content-details/812218/intel-=
-architecture-instruction-set-extensions-programming-reference.html?wapkw=3D=
-future%20features
+> > >
+> > > The reason for doing this is to make it so that when I have a tool I
+> > > can reason that nobody is doing things to change it under my feet.
+> >
+> > It still can be changed by the caller of __perf_session__new(), since
+> > the tool itself is not const.
+> >
+> > Anything using container_of() like:
+> >
+> > static int process_sample_event(const struct perf_tool *tool,
+> >                                 union perf_event *event,
+> >                                 struct perf_sample *sample,
+> >                                 struct evsel *evsel,
+> >                                 struct machine *machine)
+> > {
+> >         struct perf_script *scr =3D container_of(tool, struct perf_scri=
+pt, tool);
+> >
+> > can then change scr->tool without even having to cast away const.
 >
+> Agreed, but such things happen in builtin_cmd where the tool is
+> defined and presumably they know what they are doing. My objection is
+> to code in util mutating the tool as I want the tool to have
+> predictable behavior. As callers that take a tool can call fill in
+> defaults (not all) then the tool has to be mutable and I don't want
+> this to be the case.
 >
+> > Really, 'tool' needs to be defined as const in the first place.
 >
+> I'd like this. The problem is initializing all the function pointers
+> and making such initialization robust to extra functions being added
+> to the tool API. It can be done in a long winded way but I couldn't
+> devise macro magic to do it. The other problem is around variables
+> like ordered_events that can't currently be const. The patches move us
+> closer to this being a possibility.
 >
-> Ian Rogers (1):
->   perf parse-events: Add a retirement latency modifier
+> > > My
+> > > builtin_cmd is in charge of what the tool is rather than some code
+> > > buried in util that thought it was going to do me a favor. The code i=
+s
+> > > a refactor and so the benefit is intended to be for the developer and
+> > > how they reason about the use of tool.
+> >
+> > It creates another question though: since there is a lot of code
+> > before perf_tool__init() is called, does the caller mistakenly
+> > change tool before calling perf_tool__init()
 >
-> Weilin Wang (7):
->   perf data: Allow to use given fd in data->file.fd
->   perf stat: Fork and launch perf record when perf stat needs to get
->     retire latency value for a metric.
->   perf stat: Plugin retire_lat value from sampled data to evsel
->   perf vendor events intel: Add MTL metric json files
->   perf stat: Add command line option for enabling tpebs recording
->   perf Document: Add TPEBS to Documents
->   perf test: Add test for Intel TPEBS counting mode
+> If they do this their function pointers will be clobbered and their
+> code won't behave as expected, which I'd expect to be easy to observe.
+> In C++ if you were to initialize memory and then use the memory for a
+> placement new to create an object which would call the constructor,
+> the expected behavior would be that the initialized memory's values
+> would get overridden. I see the use of _init and _exit in the code as
+> being our poor man replacements of constructors and destructors.
+>
+> > > how they reason about the use of tool. We generally use _init
+> > > functions rather than having _fill_defaults, so there is a consistenc=
+y
+> > > argument.
+> >
+> > The caller does not need the "defaults", so why would it set them up.
+> > The session could just as easily do:
+> >
+> >         if (tool->cb)
+> >                 tool->cb(...);
+> >         else
+> >                 cb_stub(...);
+>
+> Multiplied by every stub, we'd probably need a helper function, how to
+> handle argument passing. There's nothing wrong with this as an idea
+> but I think of this code as trying to create a visitor pattern and
+> this is a visitor pattern with a hard time for the caller.
+>
+> > > I don't expect any impact in terms of performance... Moving
+> > > perf_tool__fill_defaults to __perf_session__new had issues with the
+> > > existing code where NULL would be written over a function pointer
+> > > expecting the later fill_defaults to fix it up, doesn't address codin=
+g
+> > > consistency where _init is the norm, and adds another reason the tool
+> > > passed to session__new can't be const.
+> >
+> > perf_tool__init() is not a steeping stone to making 'tool' a
+> > const in the first place.
+>
+> It is because the patch series gets rid of fill in defaults which is
+> why we have a mutable tool passed around. I don't think this is up for
+> debate as the patch series clearly goes from a non-const
+> tool to a const tool at the end. Changing perf_tool__init to make all
+> the function pointers NULL and then making every caller have to do a:
+>
+>          if (tool->cb)
+>                  tool->cb(...);
+>          else
+>                  cb_stub(...);
+>
+> I think it is a less elegant solution at the end, it is also a large
+> and more invasive change. The various refactorings to make tool const,
+> changing the aux use of tool, etc. wouldn't be impacted by such a
+> change but I think it is out of scope for this patch series.
 
-Thanks for your persistence!
-
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+I don't think it's a large and invasive change.  The tools are mostly
+zero-initialized so we don't need to reset to NULL.  And tool->cb is
+called mostly from two functions: machines__deliver_event() and
+perf_session__process_user_event().  Can we change them to check
+NULL and get rid of perf_tool__fill_defaults() to keep it const?
 
 Thanks,
 Namhyung
-
->
->  tools/perf/Documentation/perf-list.txt        |    1 +
->  tools/perf/Documentation/perf-stat.txt        |    8 +
->  tools/perf/Documentation/topdown.txt          |   30 +
->  tools/perf/arch/x86/util/evlist.c             |    6 +
->  tools/perf/builtin-stat.c                     |    8 +
->  .../arch/x86/meteorlake/metricgroups.json     |  142 +
->  .../arch/x86/meteorlake/mtl-metrics.json      | 2535 +++++++++++++++++
->  .../perf/tests/shell/test_stat_intel_tpebs.sh |   19 +
->  tools/perf/util/Build                         |    1 +
->  tools/perf/util/data.c                        |    7 +-
->  tools/perf/util/evlist.c                      |    2 +
->  tools/perf/util/evsel.c                       |   81 +-
->  tools/perf/util/evsel.h                       |    6 +
->  tools/perf/util/intel-tpebs.c                 |  431 +++
->  tools/perf/util/intel-tpebs.h                 |   35 +
->  tools/perf/util/parse-events.c                |    2 +
->  tools/perf/util/parse-events.h                |    1 +
->  tools/perf/util/parse-events.l                |    3 +-
->  18 files changed, 3314 insertions(+), 4 deletions(-)
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/metricgroup=
-s.json
->  create mode 100644 tools/perf/pmu-events/arch/x86/meteorlake/mtl-metrics=
-.json
->  create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
->  create mode 100644 tools/perf/util/intel-tpebs.c
->  create mode 100644 tools/perf/util/intel-tpebs.h
->
-> --
-> 2.43.0
->
