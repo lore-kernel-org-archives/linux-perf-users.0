@@ -1,57 +1,57 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CE4516DC0D
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B5F516DC2B
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:13:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721643210; cv=none; b=rmD77ZZY1C/gWjGjxb+ar/yofXEMv8VoO+SEQcwRjViGWjtGOS3uaDM4bfFp49DvL5c5eo7p7L+QGB0penqEnr/dUOfmNKKPiUWU0axRtw4nhRPr6T8q4CgmsNyOk56VLFHvtsl5zNzO+l5MCPQ+5rWjWpRkaP57J8thac8/xmE=
+	t=1721643215; cv=none; b=IrM5ZrptKMmEQ4I+Twob9QR+HVJfkz8XuW//QgPvN1GEAGd0ApM6fLLXSjisjsVamIrs0Onm/yu5dNLl76Ki7cbYSl2vbNEPbtyoV10ZIdtmhJzk7ts8tpyTPtQgTjWYRd5YM+Y04o5m6FnY1kQmxYMhu9wXEYezPx/80gfDcOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721643210; c=relaxed/simple;
-	bh=8R5OmeoGLlv5vqwVm9o4il46zprkK1aLP1TxCFBpp4w=;
+	s=arc-20240116; t=1721643215; c=relaxed/simple;
+	bh=ItH9f426qXV+5rIZSG9tiSgqcCYNUSF0NPfya/+tqmc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UGWQ660BEesbhdPeHRArq/+mxFDQwaij1l0ad1rweQ2KP/aDySYAvFXtZo9IfAxa0M2VzcfVfYK7toU5L8hG0PDkn30nuO0tDz6i/rXGgHlt9J8+HFi56ZarsOXG//SzDwo30DKprqx8gwlRIHF4/oMesbprQfSUt49myhJHVkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TJISrhqz; arc=none smtp.client-ip=209.85.167.52
+	 MIME-Version; b=nBAtuzW2cCRIFzYsBCRn0sdmrX32l2ISsPu+SSM+XFkCwRKXYxZt1EoAYwnBytkz8hjcFhfw/y7UCSJ+Vzpf0AV2PL48GwB/9tOvYT4SDvXyWafHb7PUoftE9IDxw3gT3lk+MpjXC+QQVBZ1ldmokbGHXRiW2YZcyPshzsQWB+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aLZ54Yaf; arc=none smtp.client-ip=209.85.167.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TJISrhqz"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52ef95ec938so1847603e87.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:13:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aLZ54Yaf"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-52efc60a6e6so2267893e87.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:13:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721643207; x=1722248007; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1721643212; x=1722248012; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=d6Zkl3RZ0YZqXGz3k9BNGR/j5j9H7UAlIZzg0Q8iJLg=;
-        b=TJISrhqzA+6QJcgHbb2fdtCWIlgcEh1HKDjJlvqM9P4X6kdVHi9KarReB8KMesXMyn
-         4JKet8HpmjC8Hwh0DYaljF7aQQa/MmJmaJ7yMk1C58adwwypNs1zqe+Nm4ll9+asTw6s
-         ZNNtFvlVeZAWQcxzpLAGPoMMfuXmMeRna81NI5npH7bPac/wEyTH35vMI1pNt23DEQnU
-         lohEYG8wrAZuh33lyaDaDYOfRNpILzhQ+pHgw0etsF6dYWjGg6hylk6yefuQ78NfDMax
-         t1BgDoxDJpABdt0AGAbet5pfdDI9bZM8RnbBzVjtIfWyqIJ89oDrsEfyDUlx3o6B3SXa
-         8k5Q==
+        bh=gac0SAR3KAIOUnKehRmkrRiaYS0y2TNr3epiBL0LQk8=;
+        b=aLZ54YafX1paBdvvDhiozd5QD4RCMDtEZxQuSfC1iieNR178jtOhM28ohmLBABpPIf
+         HmDBM67kJqCZxEbie4tEAGeZBK1jcJzV63eA2k/ECg5SXzs5YWym9fBbbrcFDlKs08bC
+         tVcN08SNbTpZnhHUDlFq1mQSHJvGBYTlgVXwG9Z3TPDM2rUXO2YqWcDwpe5kDDIcxReq
+         mTKsRzR7FMRaDqWMvWx8xZTgV2kLrZ9wCOfU9nYY6ftalwZHKfRbe25V8zfuOEZqGb9F
+         vO0u8Vm2ERY71qQEoGT2Zr10PoE3HcagCn/Is9fZY5+9j33H8sFx/Fm7vEUmA6mHNECG
+         KCIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721643207; x=1722248007;
+        d=1e100.net; s=20230601; t=1721643212; x=1722248012;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=d6Zkl3RZ0YZqXGz3k9BNGR/j5j9H7UAlIZzg0Q8iJLg=;
-        b=arPN2ZqHnhMM6caPztfh2WUvcFleV6trTHL7aBCZRWPCAUyZqwjIq4SAOdQ8NYpqfK
-         VGnjPBb/AqR6ozyiR8ip3wVOE1V19N+o/luSbWqvE9CZh6/BKI1kuOI+PqmQjl5VjSJA
-         RQ9vWp3Q35vPE+l6kpVL5G6A4hSS33bMt39WTA99stDBMi6DUrYPt6ZJWl+LGsPuvIHm
-         Hq1E1zbUZ7cugiqcZO9O8yeGuDnhjmWSMNOExg5xdgSXGgpWGIG371QSv46A78Lobw4w
-         Wz3GEJbnInV045FGm54IGr91bqbm4ARS9fCN7iX0l3P43o3/yJHfAXe4HzgDIvdcPqCA
-         lH+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXTsXFgH4r6Uw2kElTlP+zNc8/kn1ftVrlMPrmXJIqmw7OIZ6OjSmlYizT+DeOS9t5cTHZXLqowK4Hvm9kfobi2WBmKwX2PZqE5vH+fPOg5cQ==
-X-Gm-Message-State: AOJu0YxGNPqeqcqKlSYwU/PNxSAQPMvUVhP77uoyx4Ieth2ZnRDSyU4A
-	WJ/5jsq2ymTrgHEc9DPg5+BijnACA5l0foFytPHWM5EPQFrdy/V5rZGe8AstgHM=
-X-Google-Smtp-Source: AGHT+IHtzUnS25hXmocvsE039YvTk03X0Hq/y0ReZ7EbenrUSY/BqUT58J9l2FysaxuwFgPpAsPnJw==
-X-Received: by 2002:a05:6512:3409:b0:52c:dac3:392b with SMTP id 2adb3069b0e04-52efb7c592emr3426436e87.33.1721643207351;
-        Mon, 22 Jul 2024 03:13:27 -0700 (PDT)
+        bh=gac0SAR3KAIOUnKehRmkrRiaYS0y2TNr3epiBL0LQk8=;
+        b=bkWQh/CvRJI3/SVpvKOduqiCHD6Zhmuv9QoP7HmqTMkySVvusDkf9l/T2F3kFg7mJH
+         6Pu/KVQ96fQo5Iv7R4Ly3bMm/rvvv+HeeZDCXmzN3nr6NzkPph4LWRWjpV1B6rQzp54M
+         EBA8u2fHbNeGrMnb1mPClF5kElH3h49LepNDKXx/H7IrJbLecUuqReKBM4zt8mXswfDI
+         Et6DnZ/Wl1ObcGCKylZufWZbso7v3bSLgG556s5kmvmWwiqHNC2yrrRGZnU1cvaAoBvK
+         kHF1zzyhN/Y328z9RjMt7xQox+csK8+KXPRbFcgALXpre/O0FL3lReeCcm5lKvXGpIqQ
+         3jiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWU+LwG5ADzijKxDbR8pDPEbyPflXrKU24NlW/HRLaU4mTwI6sRYcgmJvCJYXMpN1Qtx9cgX0SzVfMqxFXxNZDD+PrEzbRV/DSwp14IuISzNA==
+X-Gm-Message-State: AOJu0YykrUWnax5K9CpO7efLICG10Nu8y2ZVhsHRvTwr+0NthC/ou1wv
+	81u6AdVwbapf5VOcJVKMm8SkGhQ1orPF3NzNjAwLrPXQ8xKNR89sOU48NHWis2U=
+X-Google-Smtp-Source: AGHT+IGTZQIhy3gNPKPI7DGy65qUrKCQGhBq5C4l1bUGJPNsWt1iC1rZkJ6h0IJVzpzgCf+Q3zsCVw==
+X-Received: by 2002:a2e:92d5:0:b0:2ef:2cbc:9074 with SMTP id 38308e7fff4ca-2ef2cbc91c3mr21432381fa.21.1721643212217;
+        Mon, 22 Jul 2024 03:13:32 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.13.25
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.13.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 03:13:27 -0700 (PDT)
+        Mon, 22 Jul 2024 03:13:31 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: coresight@lists.linaro.org,
 	suzuki.poulose@arm.com,
@@ -80,9 +80,9 @@ Cc: James Clark <james.clark@arm.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 12/17] coresight: Expose map arguments in trace ID API
-Date: Mon, 22 Jul 2024 11:11:54 +0100
-Message-Id: <20240722101202.26915-13-james.clark@linaro.org>
+Subject: [PATCH v6 13/17] coresight: Make CPU id map a property of a trace ID map
+Date: Mon, 22 Jul 2024 11:11:55 +0100
+Message-Id: <20240722101202.26915-14-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240722101202.26915-1-james.clark@linaro.org>
 References: <20240722101202.26915-1-james.clark@linaro.org>
@@ -96,175 +96,89 @@ Content-Transfer-Encoding: 8bit
 
 From: James Clark <james.clark@arm.com>
 
-The trace ID API is currently hard coded to always use the global map.
-Add public versions that allow the map to be passed in so that Perf
-mode can use per-sink maps. Keep the non-map versions so that sysfs
-mode can continue to use the default global map.
-
-System ID functions are unchanged because they will always use the
-default map.
+The global CPU ID mappings won't work for per-sink ID maps so move it to
+the ID map struct. coresight_trace_id_release_all_pending() is hard
+coded to operate on the default map, but once Perf sessions use their
+own maps the pending release mechanism will be deleted. So it doesn't
+need to be extended to accept a trace ID map argument at this point.
 
 Signed-off-by: James Clark <james.clark@arm.com>
 Reviewed-by: Mike Leach <mike.leach@linaro.org>
 Tested-by: Leo Yan <leo.yan@arm.com>
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- .../hwtracing/coresight/coresight-trace-id.c  | 36 ++++++++++++++-----
- .../hwtracing/coresight/coresight-trace-id.h  | 20 +++++++++--
- 2 files changed, 45 insertions(+), 11 deletions(-)
+ drivers/hwtracing/coresight/coresight-trace-id.c | 16 +++++++++-------
+ include/linux/coresight.h                        |  1 +
+ 2 files changed, 10 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/hwtracing/coresight/coresight-trace-id.c b/drivers/hwtracing/coresight/coresight-trace-id.c
-index 19005b5b4dc4..5561989a03fa 100644
+index 5561989a03fa..8a777c0af6ea 100644
 --- a/drivers/hwtracing/coresight/coresight-trace-id.c
 +++ b/drivers/hwtracing/coresight/coresight-trace-id.c
-@@ -12,7 +12,7 @@
- 
+@@ -13,10 +13,12 @@
  #include "coresight-trace-id.h"
  
--/* Default trace ID map. Used on systems that don't require per sink mappings */
-+/* Default trace ID map. Used in sysfs mode and for system sources */
- static struct coresight_trace_id_map id_map_default;
+ /* Default trace ID map. Used in sysfs mode and for system sources */
+-static struct coresight_trace_id_map id_map_default;
++static DEFINE_PER_CPU(atomic_t, id_map_default_cpu_ids) = ATOMIC_INIT(0);
++static struct coresight_trace_id_map id_map_default = {
++	.cpu_map = &id_map_default_cpu_ids
++};
  
- /* maintain a record of the mapping of IDs and pending releases per cpu */
-@@ -47,7 +47,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
- #endif
+-/* maintain a record of the mapping of IDs and pending releases per cpu */
+-static DEFINE_PER_CPU(atomic_t, cpu_id) = ATOMIC_INIT(0);
++/* maintain a record of the pending releases per cpu */
+ static cpumask_t cpu_id_release_pending;
  
+ /* perf session active counter */
+@@ -49,7 +51,7 @@ static void coresight_trace_id_dump_table(struct coresight_trace_id_map *id_map,
  /* unlocked read of current trace ID value for given CPU */
--static int _coresight_trace_id_read_cpu_id(int cpu)
-+static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
+ static int _coresight_trace_id_read_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
  {
- 	return atomic_read(&per_cpu(cpu_id, cpu));
- }
-@@ -152,7 +152,7 @@ static void coresight_trace_id_release_all_pending(void)
- 	DUMP_ID_MAP(id_map);
+-	return atomic_read(&per_cpu(cpu_id, cpu));
++	return atomic_read(per_cpu_ptr(id_map->cpu_map, cpu));
  }
  
--static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-+static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
- 	unsigned long flags;
- 	int id;
-@@ -160,7 +160,7 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
- 	spin_lock_irqsave(&id_map_lock, flags);
+ /* look for next available odd ID, return 0 if none found */
+@@ -145,7 +147,7 @@ static void coresight_trace_id_release_all_pending(void)
+ 		clear_bit(bit, id_map->pend_rel_ids);
+ 	}
+ 	for_each_cpu(cpu, &cpu_id_release_pending) {
+-		atomic_set(&per_cpu(cpu_id, cpu), 0);
++		atomic_set(per_cpu_ptr(id_map_default.cpu_map, cpu), 0);
+ 		cpumask_clear_cpu(cpu, &cpu_id_release_pending);
+ 	}
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+@@ -181,7 +183,7 @@ static int _coresight_trace_id_get_cpu_id(int cpu, struct coresight_trace_id_map
+ 		goto get_cpu_id_out_unlock;
  
- 	/* check for existing allocation for this CPU */
--	id = _coresight_trace_id_read_cpu_id(cpu);
-+	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
- 	if (id)
- 		goto get_cpu_id_clr_pend;
+ 	/* allocate the new id to the cpu */
+-	atomic_set(&per_cpu(cpu_id, cpu), id);
++	atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), id);
  
-@@ -196,13 +196,13 @@ static int coresight_trace_id_map_get_cpu_id(int cpu, struct coresight_trace_id_
- 	return id;
- }
+ get_cpu_id_clr_pend:
+ 	/* we are (re)using this ID - so ensure it is not marked for release */
+@@ -215,7 +217,7 @@ static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_ma
+ 	} else {
+ 		/* otherwise clear id */
+ 		coresight_trace_id_free(id, id_map);
+-		atomic_set(&per_cpu(cpu_id, cpu), 0);
++		atomic_set(per_cpu_ptr(id_map->cpu_map, cpu), 0);
+ 	}
  
--static void coresight_trace_id_map_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
-+static void _coresight_trace_id_put_cpu_id(int cpu, struct coresight_trace_id_map *id_map)
- {
- 	unsigned long flags;
- 	int id;
+ 	spin_unlock_irqrestore(&id_map_lock, flags);
+diff --git a/include/linux/coresight.h b/include/linux/coresight.h
+index c16c61a8411d..7d62b88bfb5c 100644
+--- a/include/linux/coresight.h
++++ b/include/linux/coresight.h
+@@ -234,6 +234,7 @@ struct coresight_sysfs_link {
+ struct coresight_trace_id_map {
+ 	DECLARE_BITMAP(used_ids, CORESIGHT_TRACE_IDS_MAX);
+ 	DECLARE_BITMAP(pend_rel_ids, CORESIGHT_TRACE_IDS_MAX);
++	atomic_t __percpu *cpu_map;
+ };
  
- 	/* check for existing allocation for this CPU */
--	id = _coresight_trace_id_read_cpu_id(cpu);
-+	id = _coresight_trace_id_read_cpu_id(cpu, id_map);
- 	if (!id)
- 		return;
- 
-@@ -254,22 +254,40 @@ static void coresight_trace_id_map_put_system_id(struct coresight_trace_id_map *
- 
- int coresight_trace_id_get_cpu_id(int cpu)
- {
--	return coresight_trace_id_map_get_cpu_id(cpu, &id_map_default);
-+	return _coresight_trace_id_get_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id);
- 
-+int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	return _coresight_trace_id_get_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_get_cpu_id_map);
-+
- void coresight_trace_id_put_cpu_id(int cpu)
- {
--	coresight_trace_id_map_put_cpu_id(cpu, &id_map_default);
-+	_coresight_trace_id_put_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id);
- 
-+void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	_coresight_trace_id_put_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_put_cpu_id_map);
-+
- int coresight_trace_id_read_cpu_id(int cpu)
- {
--	return _coresight_trace_id_read_cpu_id(cpu);
-+	return _coresight_trace_id_read_cpu_id(cpu, &id_map_default);
- }
- EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id);
- 
-+int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map)
-+{
-+	return _coresight_trace_id_read_cpu_id(cpu, id_map);
-+}
-+EXPORT_SYMBOL_GPL(coresight_trace_id_read_cpu_id_map);
-+
- int coresight_trace_id_get_system_id(void)
- {
- 	return coresight_trace_id_map_get_system_id(&id_map_default);
-diff --git a/drivers/hwtracing/coresight/coresight-trace-id.h b/drivers/hwtracing/coresight/coresight-trace-id.h
-index 49438a96fcc6..840babdd0794 100644
---- a/drivers/hwtracing/coresight/coresight-trace-id.h
-+++ b/drivers/hwtracing/coresight/coresight-trace-id.h
-@@ -42,8 +42,6 @@
- #define IS_VALID_CS_TRACE_ID(id)	\
- 	((id > CORESIGHT_TRACE_ID_RES_0) && (id < CORESIGHT_TRACE_ID_RES_TOP))
- 
--/* Allocate and release IDs for a single default trace ID map */
--
  /**
-  * Read and optionally allocate a CoreSight trace ID and associate with a CPU.
-  *
-@@ -59,6 +57,12 @@
-  */
- int coresight_trace_id_get_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_get_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+int coresight_trace_id_get_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Release an allocated trace ID associated with the CPU.
-  *
-@@ -72,6 +76,12 @@ int coresight_trace_id_get_cpu_id(int cpu);
-  */
- void coresight_trace_id_put_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_put_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+void coresight_trace_id_put_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Read the current allocated CoreSight Trace ID value for the CPU.
-  *
-@@ -92,6 +102,12 @@ void coresight_trace_id_put_cpu_id(int cpu);
-  */
- int coresight_trace_id_read_cpu_id(int cpu);
- 
-+/**
-+ * Version of coresight_trace_id_read_cpu_id() that allows the ID map to operate
-+ * on to be provided.
-+ */
-+int coresight_trace_id_read_cpu_id_map(int cpu, struct coresight_trace_id_map *id_map);
-+
- /**
-  * Allocate a CoreSight trace ID for a system component.
-  *
 -- 
 2.34.1
 
