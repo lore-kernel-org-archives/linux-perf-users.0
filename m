@@ -1,55 +1,57 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA2D4414
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:12:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B96316C6A8
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 10:12:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721643152; cv=none; b=oBF92qcFtP7vRxyPglVvjyZ6D5ix/MecScX1Fjbm6fkI4n3kzYcZEzQQsh8nsINWcD6oP36OsVMjftDzPgbvtNcMnbQ6CnYL2Ceh8kKf1r0IkGkM78EDVtrW8zN0J/UZywSdEBbQghvae9fD4L9rLwAaMiOkknB8Vkq80balEuo=
+	t=1721643157; cv=none; b=m3lczn8sdjf1ephxUk/AiRJaHEubSiqA8WLwYyJMKSg1kIbnlJ/3L78mzQt31G/1jprXARLbI1p5jGWAdlAYWL/lFfIBCUPim4bNv/hPxjrE2YVf9Rz3LGSixb2Gvp3T2KYuaan+92tr/QLWBUKpY5xmRc+FnFDlcFmaBR50qkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721643152; c=relaxed/simple;
-	bh=vMvZXZT1M5wLPCdrPFvsVuR1bsem/aXlwZguHGKZAgg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SvBfyV3SLkdbn6ddTjYKrd6OJ7lwTZf/YtOimM14s/IvVYG04twQiq/Z77y3Q1B8n/3YL/zuVbsrkJwaSFbEHxCw+O+OHhCfKp9s39lL2cCyjE4N9Hw3AdysgPl5jPEyxdG4szcJUKdAV7ifZUCzOoz8LUjUJzGte0pb8bC76us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UGqexBZY; arc=none smtp.client-ip=209.85.128.50
+	s=arc-20240116; t=1721643157; c=relaxed/simple;
+	bh=XeU7uc51VL1zsILLK6kLUUVloKBlqoaBEaJ7Wx1vd9E=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=bf/GmzOt3In+1Aa0aGfpqG7gdmBrfkhw0bcgWIpRtKgH1r6qNREq9hva94tHPscW1WFq3fSuPKG3hyYJcJO/1Qc9UqYaTYft4e2fwAapao3WCrG91J1g8n1irEOGauJXP0Ad7KqMUmz2PnbA3IGPUnpihyA2RKGLlGgi/mrJPCM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Db5/22YI; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UGqexBZY"
-Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-42795086628so29122425e9.3
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:12:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Db5/22YI"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-368440b073bso1851740f8f.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 03:12:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721643149; x=1722247949; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tvIqnYuZYV2/+xYtsXtoYvUIcyIYgJiQLbfJZw43cls=;
-        b=UGqexBZYwtAJdIytLHRgWKC/3UoEbewd4uV99x2Zr8qXBHlTFZloohnbw5TEX4ly60
-         Te62XjZAgDNa6Bn0DCR+VlGf+tZKo54Ga0IxcEY0/HLQG1pCHAQWY6wg/DEuMpeCQzly
-         WEjb05Ob5fW5JqLou8AAf2L/GaiszbCvuJbvb9BKOxcAJmDYliaQYm/yj/5kQyxhnj4R
-         2i6eq0LfYFuOmoD0/gyCxuofh0xl3gktUVMvtKVfe/ClQu3WLc5qcXXeSs5KpdDl8dlr
-         C4xRAAwHltAh9PqkVSsO1J6rna4oSdkp1iusXLH+C5/0QplouCnCZg6TFAhL0GRmwdnJ
-         FgCA==
+        d=linaro.org; s=google; t=1721643154; x=1722247954; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XkQSmEJS+t8PI7d2qYJdf6z1Fx7Gi/uVI/oujEUZvqI=;
+        b=Db5/22YIDmyyFll5JMZSA2Tp+AGh6m/RbPGdFe3OQ+4pq1BjDLTOftpOMDrWz3bxE2
+         HLova01yXoXs6kP+t/1ZQLbU5Sfb0ZenfgLzCun33dkJwQHmh3fHhpytdpuUEcshfGwG
+         JDfhOE1temLwM2/dTQtMT9ZLZHQ1jPcFbzmwW3O26UZxvCw9wqtVGxwbp6nJiRME7Iea
+         1ZbpLy6JzRlzdmodOK0ukZ43MF2QWZhV0okOOc2UrEQ3JvzF50K6pnyg1N3uWKO9u02r
+         aQrdZdi2zKGPObi9QYYcmDQXk7fo7CBZGL0Eo76BCsOoM+Hfq8vMxzRupkyJryaRlseV
+         t86A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721643149; x=1722247949;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tvIqnYuZYV2/+xYtsXtoYvUIcyIYgJiQLbfJZw43cls=;
-        b=Dr6OFNdCKRClkTV4ekdoY4Nkf7Q5pfijwv29DcuGhE+nuzTtd+SUnWM+ahJ+gkyS6j
-         G84HY/ToEoHVWhVUwQLuJFY2Fv29eF6/hY/TOoCvaQdUvUvc3L6FTxqDn0csibcntEBe
-         GzdW0gZCrlB2zFOdSt7Ld1sR0bVxZDUsktlHTv+jDkpokOYo0reVP8fvRgQpFBrcE2lK
-         gpIGQ8WTyZQYB6FBSW98X8xDvnzk0cTAjyBPFNmlU84c9OmrQ3z5LZ/A2UFDlHUav9bQ
-         E8ah7X8iXJhL4h457ohpFBVZWNRXIi2qi/qsToyQnsQthjzLCmBoRjlBSdjWgjnqCPHS
-         5eDw==
-X-Forwarded-Encrypted: i=1; AJvYcCWieSNwlvtk2Jb/++Hk/y7N0vQJSQaTrqSFM9GjDWScG628bmjtQhfMPF0mL1fxdddWmO29JL/x8mqb8xYlUYu//FmLUE3ItMSOG5UkzAITVQ==
-X-Gm-Message-State: AOJu0Yy4dfDQtD6/0XPnHpCmJ95tOXFQL9ye3g07vMtkXUZ6mPk1cAPg
-	FUoOnXivlokwy6UXv49jt6MWxnSIaBdK4q6MPA8rD8UxeJt/K9vlsg6V/MraLds=
-X-Google-Smtp-Source: AGHT+IEuuQIrmzIO0zM11jr+yM94YwQ2ufkKLq0ZEfsaM9EANBUdXgXQ01+M4sPvdg9zpdfL46GD+g==
-X-Received: by 2002:a05:600c:5103:b0:426:63b8:2cce with SMTP id 5b1f17b1804b1-427dc52063amr39592745e9.7.1721643148703;
-        Mon, 22 Jul 2024 03:12:28 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721643154; x=1722247954;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XkQSmEJS+t8PI7d2qYJdf6z1Fx7Gi/uVI/oujEUZvqI=;
+        b=FeOTlnu9+aZ09e3UN89Sf/HnpxexJDzU4OhBSnPtCtnlenPSQwo/uiVyEKhM8LsMjw
+         XYdgAfMkkTn56F68TNwQzWF9rWrWc8cJ1r/SjnW0z+nHjNwlnTRlXTVll7vDBRU9B0PL
+         0X3tt/Dipm3tsJxJU0gkK/blfVWgJ1OCazTG7vZbtbQ5HZBIedHygx8sJKMXPMM85Ab6
+         P7OtHZFPepS0SwJUm0vnUIhg1CJ8e+wp+MtoKUMdQEY48znbt8jg3lTQDsk6EFxbM2bC
+         1uRR+e/0X86PhRjYKu830eaNKh57JS329BEiR07fmBpjn6hPmBu+L/WKhu0LWuGbID5/
+         yw7A==
+X-Forwarded-Encrypted: i=1; AJvYcCW/awPsQFPeHCCEne3C9WhskQ0Zad1/9SaD4IhR/FMCpw9NPXD87hKDbKXkJrOB1ixrd9vQ64I9mLHjEFsJsTgx0bXw5TIlESE1ldg2NO1m8Q==
+X-Gm-Message-State: AOJu0YzWCDZKfafLfWB9gxxZsX9+yl0/GcXzeojSR03+FsXsgSlaLuIt
+	cX9Vp0pdEhRf+ZJtcX8uPyU8H9zaDtryakGIQTkAvh9C9Z1FejGq4UK+orlHGBs=
+X-Google-Smtp-Source: AGHT+IHaH2YPtNhqmGIdGUn2Rz8Y3/TRQlQzrPvH5PCPU/tFrburbnXfon+bZ/y+MdEK0Yaa82czPQ==
+X-Received: by 2002:adf:f34c:0:b0:363:337a:3e0 with SMTP id ffacd0b85a97d-36873dc1f2dmr6268468f8f.1.1721643153600;
+        Mon, 22 Jul 2024 03:12:33 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.12.27
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a8e436sm147993865e9.33.2024.07.22.03.12.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 03:12:28 -0700 (PDT)
+        Mon, 22 Jul 2024 03:12:33 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: coresight@lists.linaro.org,
 	suzuki.poulose@arm.com,
@@ -57,8 +59,9 @@ To: coresight@lists.linaro.org,
 	mike.leach@linaro.org,
 	leo.yan@linux.dev,
 	anshuman.khandual@arm.com
-Cc: James Clark <james.clark@linaro.org>,
-	James Clark <james.clark@arm.com>,
+Cc: James Clark <james.clark@arm.com>,
+	Leo Yan <leo.yan@arm.com>,
+	James Clark <james.clark@linaro.org>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
@@ -77,10 +80,12 @@ Cc: James Clark <james.clark@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-stm32@st-md-mailman.stormreply.com,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH v6 00/17] coresight: Use per-sink trace ID maps for Perf sessions
-Date: Mon, 22 Jul 2024 11:11:42 +0100
-Message-Id: <20240722101202.26915-1-james.clark@linaro.org>
+Subject: [PATCH v6 01/17] perf: cs-etm: Create decoders after both AUX and HW_ID search passes
+Date: Mon, 22 Jul 2024 11:11:43 +0100
+Message-Id: <20240722101202.26915-2-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240722101202.26915-1-james.clark@linaro.org>
+References: <20240722101202.26915-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -89,133 +94,343 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
-as long as there are fewer than that many ETMs connected to each sink.
+From: James Clark <james.clark@arm.com>
 
-Each sink owns its own trace ID map, and any Perf session connecting to
-that sink will allocate from it, even if the sink is currently in use by
-other users. This is similar to the existing behavior where the dynamic
-trace IDs are constant as long as there is any concurrent Perf session
-active. It's not completely optimal because slightly more IDs will be
-used than necessary, but the optimal solution involves tracking the PIDs
-of each session and allocating ID maps based on the session owner. This
-is difficult to do with the combination of per-thread and per-cpu modes
-and some scheduling issues. The complexity of this isn't likely to worth
-it because even with multiple users they'd just see a difference in the
-ordering of ID allocations rather than hitting any limits (unless the
-hardware does have too many ETMs connected to one sink).
+Both of these passes gather information about how to create the
+decoders. AUX records determine formatted/unformatted, and the HW_IDs
+determine the traceID/metadata mappings. Therefore it makes sense to
+cache the information and wait until both passes are over until creating
+the decoders, rather than creating them at the first HW_ID found. This
+will allow a simplification of the creation process where
+cs_etm_queue->traceid_list will exclusively used to create the decoders,
+rather than the current two methods depending on whether the trace is
+formatted or not.
 
-Per-thread mode works but only until there are any overlapping IDs, at
-which point Perf will error out. Both per-thread mode and sysfs mode are
-left to future changes, but both can be added on top of this initial
-implementation and only sysfs mode requires further driver changes.
+Previously the sample CPU from the AUX record was used to initialize
+the decoder CPU, but actually sample CPU == AUX queue index in per-CPU
+mode, so saving the sample CPU isn't required. Similarly
+formatted/unformatted was used upfront to create the decoders, but now
+it's cached until later.
 
-The HW_ID version field hasn't been bumped in order to not break Perf
-which already has an error condition for other values of that field.
-Instead a new minor version has been added which signifies that there
-are new fields but the old fields are backwards compatible.
+Signed-off-by: James Clark <james.clark@arm.com>
+Reviewed-by: Mike Leach <mike.leach@linaro.org>
+Tested-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Tested-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/util/cs-etm.c | 182 ++++++++++++++++++++++++---------------
+ 1 file changed, 113 insertions(+), 69 deletions(-)
 
-Changes since v5:
-  
-  * Hide queue number printout behind -v option
-  * Style change in cs_etm__process_aux_output_hw_id()
-  * Move new format enum to an earlier commit to reduce churn
-
-Changes since v4:
-
-  * Fix compilation failure when TRACE_ID_DEBUG is set
-  * Expand comment about not freeing individual trace IDs in
-    free_event_data()
-
-Changes since v3:
-
-  * Fix issue where trace IDs were overwritten by possibly invalid ones
-    by Perf in unformatted mode. Now the HW_IDs are also used for
-    unformatted mode unless the kernel didn't emit any.
-  * Add a commit to check the OpenCSD version.
-  * Add a commit to not save invalid IDs in the Perf header.
-  * Replace cs_etm_queue's formatted and formatted_set members with a
-    single enum which is easier to use.
-  * Drop CORESIGHT_TRACE_ID_UNUSED_FLAG as it's no longer needed.
-  * Add a commit to print the queue number in the raw dump.
-  * Don't assert on the number of unformatted decoders if decoders == 0.
-
-
-Changes since v2:
-
-  * Rebase on coresight-next 6.10-rc2 (b9b25c8496).
-  * Fix double free of csdev if device registration fails.
-  * Fix leak of coresight_trace_id_perf_start() if trace ID allocation
-    fails.
-  * Don't resend HW_ID for sink changes in per-thread mode. The existing
-    CPU field on AUX records can be used to track this instead.
-  * Tidy function doc for coresight_trace_id_release_all()
-  * Drop first two commits now that they are in coresight-next
-  * Add a commit to make the trace ID spinlock local to the map
-
-Changes since V1:
-
- * Rename coresight_device.perf_id_map to perf_sink_id_map.
- * Instead of outputting a HW_ID for each reachable ETM, output
-   the sink ID and continue to output only the HW_ID once for
-   each mapping.
- * Keep the first two Perf patches so that it applies cleanly
-   on coresight-next, although they have been applied on perf-tools-next
- * Add new *_map() functions to the trace ID public API instead of
-   modifying existing ones.
- * Collapse "coresight: Pass trace ID map into source enable" into
-   "coresight: Use per-sink trace ID maps for Perf sessions" because the
-   first commit relied on the default map being accessible which is no
-   longer necessary due to the previous bullet point.
-
-
-James Clark (17):
-  perf: cs-etm: Create decoders after both AUX and HW_ID search passes
-  perf: cs-etm: Allocate queues for all CPUs
-  perf: cs-etm: Move traceid_list to each queue
-  perf: cs-etm: Create decoders based on the trace ID mappings
-  perf: cs-etm: Only save valid trace IDs into files
-  perf: cs-etm: Support version 0.1 of HW_ID packets
-  perf: cs-etm: Print queue number in raw trace dump
-  perf: cs-etm: Add runtime version check for OpenCSD
-  coresight: Remove unused ETM Perf stubs
-  coresight: Clarify comments around the PID of the sink owner
-  coresight: Move struct coresight_trace_id_map to common header
-  coresight: Expose map arguments in trace ID API
-  coresight: Make CPU id map a property of a trace ID map
-  coresight: Use per-sink trace ID maps for Perf sessions
-  coresight: Remove pending trace ID release mechanism
-  coresight: Emit sink ID in the HW_ID packets
-  coresight: Make trace ID map spinlock local to the map
-
- drivers/hwtracing/coresight/coresight-core.c  |  37 +-
- drivers/hwtracing/coresight/coresight-dummy.c |   3 +-
- .../hwtracing/coresight/coresight-etm-perf.c  |  43 +-
- .../hwtracing/coresight/coresight-etm-perf.h  |  18 -
- .../coresight/coresight-etm3x-core.c          |   9 +-
- .../coresight/coresight-etm4x-core.c          |   9 +-
- drivers/hwtracing/coresight/coresight-priv.h  |   1 +
- drivers/hwtracing/coresight/coresight-stm.c   |   3 +-
- drivers/hwtracing/coresight/coresight-sysfs.c |   3 +-
- .../hwtracing/coresight/coresight-tmc-etr.c   |   5 +-
- drivers/hwtracing/coresight/coresight-tmc.h   |   5 +-
- drivers/hwtracing/coresight/coresight-tpdm.c  |   3 +-
- .../hwtracing/coresight/coresight-trace-id.c  | 138 ++--
- .../hwtracing/coresight/coresight-trace-id.h  |  70 +-
- include/linux/coresight-pmu.h                 |  17 +-
- include/linux/coresight.h                     |  21 +-
- tools/build/feature/test-libopencsd.c         |   4 +-
- tools/include/linux/coresight-pmu.h           |  17 +-
- tools/perf/Makefile.config                    |   2 +-
- tools/perf/arch/arm/util/cs-etm.c             |  11 +-
- .../perf/util/cs-etm-decoder/cs-etm-decoder.c |  49 +-
- .../perf/util/cs-etm-decoder/cs-etm-decoder.h |   3 +-
- .../util/cs-etm-decoder/cs-etm-min-version.h  |  13 +
- tools/perf/util/cs-etm.c                      | 629 +++++++++++-------
- tools/perf/util/cs-etm.h                      |  12 +-
- 25 files changed, 650 insertions(+), 475 deletions(-)
- create mode 100644 tools/perf/util/cs-etm-decoder/cs-etm-min-version.h
-
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 32818bd7cd17..f4a378cb66f6 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -97,12 +97,19 @@ struct cs_etm_traceid_queue {
+ 	struct cs_etm_packet_queue packet_queue;
+ };
+ 
++enum cs_etm_format {
++	UNSET,
++	FORMATTED,
++	UNFORMATTED
++};
++
+ struct cs_etm_queue {
+ 	struct cs_etm_auxtrace *etm;
+ 	struct cs_etm_decoder *decoder;
+ 	struct auxtrace_buffer *buffer;
+ 	unsigned int queue_nr;
+ 	u8 pending_timestamp_chan_id;
++	enum cs_etm_format format;
+ 	u64 offset;
+ 	const unsigned char *buf;
+ 	size_t buf_len, buf_used;
+@@ -696,7 +703,7 @@ static void cs_etm__set_trace_param_ete(struct cs_etm_trace_params *t_params,
+ 
+ static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
+ 				     struct cs_etm_auxtrace *etm,
+-				     bool formatted,
++				     enum cs_etm_format format,
+ 				     int sample_cpu,
+ 				     int decoders)
+ {
+@@ -705,7 +712,7 @@ static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
+ 	u64 architecture;
+ 
+ 	for (t_idx = 0; t_idx < decoders; t_idx++) {
+-		if (formatted)
++		if (format == FORMATTED)
+ 			m_idx = t_idx;
+ 		else {
+ 			m_idx = get_cpu_data_idx(etm, sample_cpu);
+@@ -738,8 +745,7 @@ static int cs_etm__init_trace_params(struct cs_etm_trace_params *t_params,
+ 
+ static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
+ 				       struct cs_etm_queue *etmq,
+-				       enum cs_etm_decoder_operation mode,
+-				       bool formatted)
++				       enum cs_etm_decoder_operation mode)
+ {
+ 	int ret = -EINVAL;
+ 
+@@ -749,7 +755,7 @@ static int cs_etm__init_decoder_params(struct cs_etm_decoder_params *d_params,
+ 	d_params->packet_printer = cs_etm__packet_dump;
+ 	d_params->operation = mode;
+ 	d_params->data = etmq;
+-	d_params->formatted = formatted;
++	d_params->formatted = etmq->format == FORMATTED;
+ 	d_params->fsyncs = false;
+ 	d_params->hsyncs = false;
+ 	d_params->frame_aligned = true;
+@@ -1041,81 +1047,34 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 	return ret;
+ }
+ 
+-static struct cs_etm_queue *cs_etm__alloc_queue(struct cs_etm_auxtrace *etm,
+-						bool formatted, int sample_cpu)
++static struct cs_etm_queue *cs_etm__alloc_queue(void)
+ {
+-	struct cs_etm_decoder_params d_params;
+-	struct cs_etm_trace_params  *t_params = NULL;
+-	struct cs_etm_queue *etmq;
+-	/*
+-	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
+-	 * needed.
+-	 */
+-	int decoders = formatted ? etm->num_cpu : 1;
+-
+-	etmq = zalloc(sizeof(*etmq));
++	struct cs_etm_queue *etmq = zalloc(sizeof(*etmq));
+ 	if (!etmq)
+ 		return NULL;
+ 
+ 	etmq->traceid_queues_list = intlist__new(NULL);
+ 	if (!etmq->traceid_queues_list)
+-		goto out_free;
+-
+-	/* Use metadata to fill in trace parameters for trace decoder */
+-	t_params = zalloc(sizeof(*t_params) * decoders);
+-
+-	if (!t_params)
+-		goto out_free;
+-
+-	if (cs_etm__init_trace_params(t_params, etm, formatted, sample_cpu, decoders))
+-		goto out_free;
+-
+-	/* Set decoder parameters to decode trace packets */
+-	if (cs_etm__init_decoder_params(&d_params, etmq,
+-					dump_trace ? CS_ETM_OPERATION_PRINT :
+-						     CS_ETM_OPERATION_DECODE,
+-					formatted))
+-		goto out_free;
+-
+-	etmq->decoder = cs_etm_decoder__new(decoders, &d_params,
+-					    t_params);
+-
+-	if (!etmq->decoder)
+-		goto out_free;
+-
+-	/*
+-	 * Register a function to handle all memory accesses required by
+-	 * the trace decoder library.
+-	 */
+-	if (cs_etm_decoder__add_mem_access_cb(etmq->decoder,
+-					      0x0L, ((u64) -1L),
+-					      cs_etm__mem_access))
+-		goto out_free_decoder;
++		free(etmq);
+ 
+-	zfree(&t_params);
+ 	return etmq;
+-
+-out_free_decoder:
+-	cs_etm_decoder__free(etmq->decoder);
+-out_free:
+-	intlist__delete(etmq->traceid_queues_list);
+-	free(etmq);
+-
+-	return NULL;
+ }
+ 
+ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+ 			       struct auxtrace_queue *queue,
+-			       unsigned int queue_nr,
+-			       bool formatted,
+-			       int sample_cpu)
++			       unsigned int queue_nr, enum cs_etm_format format)
+ {
+ 	struct cs_etm_queue *etmq = queue->priv;
+ 
++	if (etmq && format != etmq->format) {
++		pr_err("CS_ETM: mixed formatted and unformatted trace not supported\n");
++		return -EINVAL;
++	}
++
+ 	if (list_empty(&queue->head) || etmq)
+ 		return 0;
+ 
+-	etmq = cs_etm__alloc_queue(etm, formatted, sample_cpu);
++	etmq = cs_etm__alloc_queue();
+ 
+ 	if (!etmq)
+ 		return -ENOMEM;
+@@ -1123,7 +1082,9 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
+ 	queue->priv = etmq;
+ 	etmq->etm = etm;
+ 	etmq->queue_nr = queue_nr;
++	queue->cpu = queue_nr; /* Placeholder, may be reset to -1 in per-thread mode */
+ 	etmq->offset = 0;
++	etmq->format = format;
+ 
+ 	return 0;
+ }
+@@ -2843,7 +2804,7 @@ static int cs_etm__process_auxtrace_event(struct perf_session *session,
+ 		 * formatted in piped mode (true).
+ 		 */
+ 		err = cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
+-					  idx, true, -1);
++					  idx, FORMATTED);
+ 		if (err)
+ 			return err;
+ 
+@@ -2964,7 +2925,7 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 	union perf_event auxtrace_fragment;
+ 	__u64 aux_offset, aux_size;
+ 	__u32 idx;
+-	bool formatted;
++	enum cs_etm_format format;
+ 
+ 	struct cs_etm_auxtrace *etm = container_of(session->auxtrace,
+ 						   struct cs_etm_auxtrace,
+@@ -3047,9 +3008,10 @@ static int cs_etm__queue_aux_fragment(struct perf_session *session, off_t file_o
+ 			return err;
+ 
+ 		idx = auxtrace_event->idx;
+-		formatted = !(aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW);
+-		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx],
+-					   idx, formatted, sample->cpu);
++		format = (aux_event->flags & PERF_AUX_FLAG_CORESIGHT_FORMAT_RAW) ?
++				UNFORMATTED : FORMATTED;
++
++		return cs_etm__setup_queue(etm, &etm->queues.queue_array[idx], idx, format);
+ 	}
+ 
+ 	/* Wasn't inside this buffer, but there were no parse errors. 1 == 'not found' */
+@@ -3233,6 +3195,84 @@ static int cs_etm__clear_unused_trace_ids_metadata(int num_cpu, u64 **metadata)
+ 	return 0;
+ }
+ 
++/*
++ * Use the data gathered by the peeks for HW_ID (trace ID mappings) and AUX
++ * (formatted or not) packets to create the decoders.
++ */
++static int cs_etm__create_queue_decoders(struct cs_etm_queue *etmq)
++{
++	struct cs_etm_decoder_params d_params;
++
++	/*
++	 * Each queue can only contain data from one CPU when unformatted, so only one decoder is
++	 * needed.
++	 */
++	int decoders = etmq->format == FORMATTED ? etmq->etm->num_cpu : 1;
++
++	/* Use metadata to fill in trace parameters for trace decoder */
++	struct cs_etm_trace_params  *t_params = zalloc(sizeof(*t_params) * decoders);
++
++	if (!t_params)
++		goto out_free;
++
++	if (cs_etm__init_trace_params(t_params, etmq->etm, etmq->format,
++				      etmq->queue_nr, decoders))
++		goto out_free;
++
++	/* Set decoder parameters to decode trace packets */
++	if (cs_etm__init_decoder_params(&d_params, etmq,
++					dump_trace ? CS_ETM_OPERATION_PRINT :
++						     CS_ETM_OPERATION_DECODE))
++		goto out_free;
++
++	etmq->decoder = cs_etm_decoder__new(decoders, &d_params,
++					    t_params);
++
++	if (!etmq->decoder)
++		goto out_free;
++
++	/*
++	 * Register a function to handle all memory accesses required by
++	 * the trace decoder library.
++	 */
++	if (cs_etm_decoder__add_mem_access_cb(etmq->decoder,
++					      0x0L, ((u64) -1L),
++					      cs_etm__mem_access))
++		goto out_free_decoder;
++
++	zfree(&t_params);
++	return 0;
++
++out_free_decoder:
++	cs_etm_decoder__free(etmq->decoder);
++out_free:
++	zfree(&t_params);
++	return -EINVAL;
++}
++
++static int cs_etm__create_decoders(struct cs_etm_auxtrace *etm)
++{
++	struct auxtrace_queues *queues = &etm->queues;
++
++	for (unsigned int i = 0; i < queues->nr_queues; i++) {
++		bool empty = list_empty(&queues->queue_array[i].head);
++		struct cs_etm_queue *etmq = queues->queue_array[i].priv;
++		int ret;
++
++		/*
++		 * Don't create decoders for empty queues, mainly because
++		 * etmq->format is unknown for empty queues.
++		 */
++		if (empty)
++			continue;
++
++		ret = cs_etm__create_queue_decoders(etmq);
++		if (ret)
++			return ret;
++	}
++	return 0;
++}
++
+ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 				       struct perf_session *session)
+ {
+@@ -3396,6 +3436,10 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	if (err)
+ 		goto err_free_queues;
+ 
++	err = cs_etm__queue_aux_records(session);
++	if (err)
++		goto err_free_queues;
++
+ 	/*
+ 	 * Map Trace ID values to CPU metadata.
+ 	 *
+@@ -3418,7 +3462,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	 * flags if present.
+ 	 */
+ 
+-	/* first scan for AUX_OUTPUT_HW_ID records to map trace ID values to CPU metadata */
++	/* Scan for AUX_OUTPUT_HW_ID records to map trace ID values to CPU metadata */
+ 	aux_hw_id_found = 0;
+ 	err = perf_session__peek_events(session, session->header.data_offset,
+ 					session->header.data_size,
+@@ -3436,7 +3480,7 @@ int cs_etm__process_auxtrace_info_full(union perf_event *event,
+ 	if (err)
+ 		goto err_free_queues;
+ 
+-	err = cs_etm__queue_aux_records(session);
++	err = cs_etm__create_decoders(etm);
+ 	if (err)
+ 		goto err_free_queues;
+ 
 -- 
 2.34.1
 
