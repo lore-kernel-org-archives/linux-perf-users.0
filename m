@@ -1,55 +1,57 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB6716E863
-	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 15:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05D116E86B
+	for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 15:28:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721662139; cv=none; b=qmun4QkfqRsexi3W5d7BuIw0xdE45Z7qghg6X7ZXJAvgY1T8KMpqHG50mfOdJaIBzE6+DYQGN7H0RNHbTtB5TuN5okgAnyw6/IW4TgRdL0Y1A3xIgDi2p8CSR/K66vlI2+Wc4626TrLAKexeL8W7v3Ta6HvTA9B80CSElzm3N0s=
+	t=1721662140; cv=none; b=pcWMPjwLUNMBEVsGGDL1DHUhrJ58r1MBKoa6cVEGTeM1KKMa/UBqAEThEvWGsp8GChm+bb3tp9YShsPyHnZEovHOmJmAClmnNe5faSFrSYspp3Y9XhZCjLpVF3kzuo+sRPkA6GmbA4tYB8hnSaHq+PkmqgLv8TkUhUjgXp4fdNI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721662139; c=relaxed/simple;
-	bh=KUt3x8NLnp7l6rMq90BpQGACUXWMEdwkYc0gJ83SdHQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A7qaJKfJ3gA7QyGlINN7jpEyMYFpLg9PWnAz0XFLL3EJn8nXn24ar0b7CLhy3Qzp+fusr3epZOHwgdHp3E0j0+Dwp0RTm6GD9NMuQGBeJA6kq1fABiajpwMBX7HhjgAgOls02REJ/9NCL0r7Mtm26IwpW3StQkvg5fhO/W7R2CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PkSGdZko; arc=none smtp.client-ip=209.85.221.47
+	s=arc-20240116; t=1721662140; c=relaxed/simple;
+	bh=+5pv0qtz/ijrY++7RLRA+HZnVxXMRvl1jcfm/oqvyAQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=dyJxTsi5IZmsQE7RhePFK5HsQUUUweDn4ug0UfdzZDl1O0dta4jQJngiLied+zGOORsVSv/7DAfGeJTdhfaV0kGybm5ByN8cjfaQCcadzEdhN76gFCHtjPkPL7VkKZOO7QsN+ENg3UF0p1CXK25ny++ZEN+NMEjkMIev8tH9n+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKKMwMv2; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PkSGdZko"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3683178b226so2183278f8f.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 08:28:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKKMwMv2"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-426636ef8c9so31391775e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 22 Jul 2024 08:28:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721662134; x=1722266934; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=sGaIE2BW7BgAaIE7phZSFxnm75sxmFFkaJHJRi/UoXw=;
-        b=PkSGdZkoxZfOUYfyacYLc7HSslu7tbK32XwzgShsD11le0YZWHAaDNNRdMbJBf2ESL
-         /XXCj0aMK9OuddT4fRjGylsrPZImhQhUCNflbiKOM4SoA6vdZRXeg4hQRMlE4ndWRstc
-         sfivehn+Bvl2Xhik0M98P1hICJzVdTy5iGeQFhbzVUi8oTLye0WPUgpMB1tkZsgtOORn
-         sp279vu3w0km8Ll0w3GQ+TtAFo5inT+IC2830jGhGk7oIARYVfJQnpzhKFdOnO6eJqDu
-         7s5jTEjw0V2nk9igjunoG6bV1Si5IIz6MvBlsxNZDUFykb7usufmPmYZfhIsk6dLlcHp
-         alfg==
+        d=linaro.org; s=google; t=1721662136; x=1722266936; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KRn2GZZ7rqyxxxS3W1yWD0PtlBv3YIhE78qAMXkvguI=;
+        b=GKKMwMv2fzbCmq98eXX4pUo4tXLGhOx+ZAPUK+K+YM7R76Z8waCoF84uEYDiUw6Nj/
+         lAm9y05HZObMLx19GDkl9ODMTavOQPI1FQesCNjULIUjJPxj3ya6mBI72C0WZxS5MPLW
+         MurWB8jK6oLUcaQDh3TULcvn5pqYvzTiQjYM5/ef0aIv63J+1UZfp3ZnwBv1BrFESEq0
+         3d1oMXbHnQM4MBQYo1xxLOl29UE/GErMEI8yOrqwtNN8Ex5cDcpJMpRfn25En2FHkM99
+         WmDBqvwgmHf3uUbOqFgUNn0LnJmmuRjpSCO+FE+bNiEOSV1+N96ksmDF3nFJArVxpJq/
+         rMSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721662134; x=1722266934;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sGaIE2BW7BgAaIE7phZSFxnm75sxmFFkaJHJRi/UoXw=;
-        b=qQcnlrb4wcyl6VktKjmzFefKYyVx0Oy05IqJeZJPjgqJPuL9F0p1xwOw8lORa9YqtY
-         WZugX6LMA+FQ2AcxHg/3p3GjPnovY/LQu8TI2AgRTEUZQMtYZiaVQCdQmJY1ooeD3A/N
-         VJuO+ri7YqOh1YUBnB2FTudlOP3oqH9vpFGbTDX16x8korv07zbMMxGYXNQAl8aUUPTk
-         XaA5+RnwiQNG2EB/SRfVPGTUtnrFAlvhPDyEZwP5vngHHOmp51lfHqpSKIB9sawLX29S
-         ZeUCD0SiTYj9Hn9i9eESd7EE10nZW3iVENelH2e6Gi5CmqF0MOUUzsp3wt7dPYKg8SIA
-         /Umg==
-X-Forwarded-Encrypted: i=1; AJvYcCXjko+IeTIWyVWYRC0UZa+HcS49KJ+jJa6fWY1zXdEN9kDCddraV16R28gsHj7Caq9HWRD+QrNnRtas6rOo78kd97TwQQjQP8h3vIb19n8tuA==
-X-Gm-Message-State: AOJu0YxTraH43Bx9FN+cB4tIUe3gzKggHzwCk09XrNJLk9TxxNHgRxnf
-	jfSIRRlYKTTwrMMpu97qzFpOAdwBEA5YrBJI4V4fvlFLVKZylrJ7Vgf6b/O6fVE=
-X-Google-Smtp-Source: AGHT+IFf2Ks8gYykNvvkym6GDERLbQvRpWLVHjp9QVc/oQjWbWHuohfqpzS9jIPwqCj6q/nHPU9N4w==
-X-Received: by 2002:a05:6000:186f:b0:367:940c:6a3c with SMTP id ffacd0b85a97d-369bb2ba0famr4873470f8f.41.1721662134479;
-        Mon, 22 Jul 2024 08:28:54 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1721662136; x=1722266936;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KRn2GZZ7rqyxxxS3W1yWD0PtlBv3YIhE78qAMXkvguI=;
+        b=j3xfr++HIblmo88f8HBWG4EQskyZ/y2hPl0dj4l0766sVSJbPbz3A6avGTDe2hkzYt
+         gmpWKVididKF3djl1A5ldAOR7UR3jlXn3ElGcM2r0X5LyynIJsOBp8d8pZ2/gggG6yj8
+         BA0FHX+9FzU22lXWC1zGc7ywC5jePigJwiPKA3rHY+afRcLTfWEVe8aZ0/tCtbqsdhQQ
+         jZrzLvWc3vefCGpQ2qsjLD+X7gLZrPDA9MwuuyqLsMa+qOuDdWyC1DCjRmZ7vdoKcHFb
+         8NyEqqeO7f5PyBKTeqpygdnVGx+v+7oMNNqx3z0VncQrDW3C7NHpiVxh7QtvTNI6anKK
+         vGxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUcu+I6bWRBaQGI6vML68+8RQ4lultbWIQSVPRXz+Nr+okyiCIDsxrw9QD7cqzf9LfVt0jEaDq3h8HryBhFdE2J34TFIR3CJUNWEXf5TFf8eQ==
+X-Gm-Message-State: AOJu0Yw0DidYcGzCrl5M4jA3mMb0SiVH2/dMI9LLbTDuNIvkIIsFNAHa
+	hyv77qat/NtPsb3MIasA74FeBgQMRmnGmULGzJKI6BvZDIo1JrCMkaxGlYBizGI=
+X-Google-Smtp-Source: AGHT+IF7tKYq40uDVXznXPqhK+EAGVR7+QJEgApq+9Cj2Yd9pJFFjFsijIYOFzkudhGr0yO3VT9Q2g==
+X-Received: by 2002:adf:fa0f:0:b0:366:ebd1:3bc1 with SMTP id ffacd0b85a97d-369bae23a8cmr4451255f8f.3.1721662136027;
+        Mon, 22 Jul 2024 08:28:56 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a43598sm160654535e9.1.2024.07.22.08.28.53
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a43598sm160654535e9.1.2024.07.22.08.28.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 08:28:54 -0700 (PDT)
+        Mon, 22 Jul 2024 08:28:55 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: coresight@lists.linaro.org,
 	gankulkarni@os.amperecomputing.com,
@@ -74,10 +76,12 @@ Cc: James Clark <james.clark@linaro.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/1] perf cs-etm: Output 0 instead of 0xdeadbeef when exception packets are flushed
-Date: Mon, 22 Jul 2024 16:27:55 +0100
-Message-Id: <20240722152756.59453-1-james.clark@linaro.org>
+Subject: [PATCH 1/1] perf cs-etm: Output 0 instead of 0xdeadbeef when exception packets are flushed
+Date: Mon, 22 Jul 2024 16:27:56 +0100
+Message-Id: <20240722152756.59453-2-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240722152756.59453-1-james.clark@linaro.org>
+References: <20240722152756.59453-1-james.clark@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -86,24 +90,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I noticed this when looking into Ganapat's fix to arm-cs-trace-disasm.py.
-I assumed that seeing this in the output was a bug and went to
-investigate why it happened in some cases and not others.
+Normally exception packets don't directly output a branch sample, but
+if they're the last record in a buffer then they will. Because they
+don't have addresses set we'll see the placeholder value
+CS_ETM_INVAL_ADDR (0xdeadbeef) in the output.
 
-It turned out to not actually be a bug, but I think it doesn't look right.
-In the end this change doesn't really accomplish anything and I'm not
-sure if it's worth putting it in or not?
+Since commit 6035b6804bdf ("perf cs-etm: Support dummy address value for
+CS_ETM_TRACE_ON packet") we've used 0 as an externally visible "not set"
+address value. For consistency reasons and to not make exceptions look
+like an error, change them to use 0 too.
 
-Maybe it will save someone doing the same thing as me, or maybe it will
-actually break something if someones script is looking for 0xdeadbeef?
+This is particularly visible when doing userspace only tracing because
+trace is disabled when jumping to the kernel, causing the flush and then
+forcing the last exception packet to be emitted as a branch. With kernel
+trace included, there is no flush so exception packets don't generate
+samples until the next range packet and they'll pick up the correct
+address.
 
-James Clark (1):
-  perf cs-etm: Output 0 instead of 0xdeadbeef when exception packets are
-    flushed
+Before:
 
+  $ perf record -e cs_etm//u -- stress -i 1 -t 1
+  $ perf script -F comm,ip,addr,flags
+
+  stress   syscall                    ffffb7eedbc0 => deadbeefdeadbeef
+  stress   syscall                    ffffb7f14a14 => deadbeefdeadbeef
+  stress   syscall                    ffffb7eedbc0 => deadbeefdeadbeef
+
+After:
+
+  stress   syscall                    ffffb7eedbc0 =>                0
+  stress   syscall                    ffffb7f14a14 =>                0
+  stress   syscall                    ffffb7eedbc0 =>                0
+
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
  tools/perf/util/cs-etm.c | 8 ++++++--
  1 file changed, 6 insertions(+), 2 deletions(-)
 
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 5e9fbcfad7d4..d3e9c64d17d4 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -1267,8 +1267,12 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
+ 
+ static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
+ {
+-	/* Returns 0 for the CS_ETM_DISCONTINUITY packet */
+-	if (packet->sample_type == CS_ETM_DISCONTINUITY)
++	/*
++	 * Return 0 for packets that have no addresses so that CS_ETM_INVAL_ADDR doesn't
++	 * appear in samples.
++	 */
++	if (packet->sample_type == CS_ETM_DISCONTINUITY ||
++	    packet->sample_type == CS_ETM_EXCEPTION)
+ 		return 0;
+ 
+ 	return packet->start_addr;
 -- 
 2.34.1
 
