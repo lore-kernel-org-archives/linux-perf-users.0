@@ -1,142 +1,154 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B003A8F7;
-	Mon, 22 Jul 2024 11:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D827816D336;
+	Mon, 22 Jul 2024 12:09:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721646836; cv=none; b=uJM+nFx7flvjTfo2+o5ml5r6QDgcmoA3zBwdWCjgSa/SATU8YoFcneTQDx1ueLi8hhFmFveNO75XaT5hQy+G3eTySyQIEse5b3ykoXJ+LUSp6A8yfj/990CudulNmRpqPo8lvacGv5f7iJLWuexiNeDL7ezuJCkkuTGMpuN5IVU=
+	t=1721650147; cv=none; b=pnt3GVmBVUnezQZusk6AdYTf3set79/m5TyPGUeqVPDu9wZJ0s0M+a/+wgq9m0xxaE+wYIDhY62aoMYjbOHfkOerDe+RbZ0PGlYUtUzbakTxcWGwZGTHwxYPtNXB2ZesUyJ20Oc+GSt5TSFzlbb7hK/el5hu/CVW4r1GEbHrbyE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721646836; c=relaxed/simple;
-	bh=epq/oVOAbsZItv4EApiSC0nImHFpX+Gb33tvWPeHBYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DJd4PmRCN0ZBZ5S9dedA6igYpUbOVISwr2elY51FhkNMe8rpbqLBmoogWEt+QuNhodsG4ZPpzhZeQQrl6f73QJPBbHSItSo55LA5jnmbPj7x62NjzlBd4NqqtLfiTfqE+iqu9IfX7WVysh1IFmauKKAEx8hf2iJquGzEgKp3PBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CC7f0/bP; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CC7f0/bP"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721646834; x=1753182834;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=epq/oVOAbsZItv4EApiSC0nImHFpX+Gb33tvWPeHBYo=;
-  b=CC7f0/bPt0HBroTSxdzyTD9oIgjnN8BNtulQh/DZ0H/gSR62crY2sBUX
-   saNXuPU+TDsuaY7AbhMXWUn3TU7hc0vobBGciX6qxiUBYb+wx/qDjFTW7
-   mL6J8lVB4S18IUnmer6tXCuTd94BVwfOF2y8l32kwITAUfhSYTb/4m5OJ
-   iUDKDHRrl3rA66sS7lQOYvSGdeFCUP8Bneb7uykO+rNT4rzm2dmX6w2PT
-   /y7dJ2Wwxd3/rQkTuAySg87fHCMP8X4l9tDM6EMe5qb0PxebZmp7fDoin
-   5N3WY8c1kZ+f948nypvV3/IlwQzlo7fLmFemN88RG1s3SG+0mq3KQLzeO
-   g==;
-X-CSE-ConnectionGUID: N3Sj0/QMTLadgkXmGNV8Yw==
-X-CSE-MsgGUID: FS+69JT0TOuA9siPVte1gQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11140"; a="19080175"
-X-IronPort-AV: E=Sophos;i="6.09,228,1716274800"; 
-   d="scan'208";a="19080175"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 04:13:52 -0700
-X-CSE-ConnectionGUID: g0rJ/vUPRvSo0+TcOy12CQ==
-X-CSE-MsgGUID: 9jb6BcuBSeit7re7VGHE5w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,228,1716274800"; 
-   d="scan'208";a="56702178"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.41.28])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 04:13:48 -0700
-Message-ID: <9f08c5cb-fb4b-4994-9128-0484aa6c06d7@intel.com>
-Date: Mon, 22 Jul 2024 14:13:43 +0300
+	s=arc-20240116; t=1721650147; c=relaxed/simple;
+	bh=LXnCzmOjYMB37HZSlUUm9tzqDt9wBbA2/7OB+RddjMc=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=YQNhQTYNnjKL2PEFlXZbMFhdEsZRQ46x/NEdLOEjhz/OdS+CDbz1I55K9/U/QxFMHR2LvrLs8L0FuM9mKc311AOK/ES+1VLpNbvdGSQP6oPCFy5HKAR03dRgthGmSUhr7v4bMM9DgnUH0zc8aNG7TyMnjcomVQJ1tawE9dqP7dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.174])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WSJvZ6GPyznbxL;
+	Mon, 22 Jul 2024 20:08:10 +0800 (CST)
+Received: from kwepemd500010.china.huawei.com (unknown [7.221.188.84])
+	by mail.maildlp.com (Postfix) with ESMTPS id B09E2140414;
+	Mon, 22 Jul 2024 20:08:56 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd500010.china.huawei.com (7.221.188.84) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 22 Jul 2024 20:08:56 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Mon, 22 Jul 2024 20:08:56 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
+	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab,
+ Beijing)" <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v5 4/8] perf: build-id: name debugging vdso as "debug"
+Thread-Topic: [PATCH v5 4/8] perf: build-id: name debugging vdso as "debug"
+Thread-Index: AQHazDb2iq3pHVuvbEa2f6W9l9N6m7H8Si6AgAZ9IIA=
+Date: Mon, 22 Jul 2024 12:08:56 +0000
+Message-ID: <8a7156281b45450ebf0511373f65afa7@huawei.com>
+References: <20240702041837.5306-1-changbin.du@huawei.com>
+ <20240702041837.5306-5-changbin.du@huawei.com>
+ <14afba8e-cb85-4d7d-96e4-d65fd8ebc2d5@intel.com>
+In-Reply-To: <14afba8e-cb85-4d7d-96e4-d65fd8ebc2d5@intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DB9B27207C06D249AD9D380A36DF03CD@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/6] perf auxtrace: Iterate all AUX events when finish
- reading
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- James Clark <james.clark@linaro.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240721202113.380750-1-leo.yan@arm.com>
- <20240721202113.380750-5-leo.yan@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240721202113.380750-5-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 21/07/24 23:21, Leo Yan wrote:
-> When finished to read AUX trace data from mmaped buffer, based on the
-> AUX buffer index the core layer needs to search the corresponding PMU
-> event and re-enable it to continue tracing.
-> 
-> However, current code only searches the first AUX event. It misses to
-> search other enabled AUX events, thus, it returns failure if the buffer
-> index does not belong to the first AUX event.
-> 
-> This patch extends the auxtrace_record__read_finish() function to
-> search for every enabled AUX events, so all the mmaped buffer indexes
-> can be covered.
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/util/auxtrace.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-> index e2f317063eec..95be330d7e10 100644
-> --- a/tools/perf/util/auxtrace.c
-> +++ b/tools/perf/util/auxtrace.c
-> @@ -670,18 +670,25 @@ static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel,
->  int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
->  {
->  	struct evsel *evsel;
-> +	int ret = -EINVAL;
->  
->  	if (!itr->evlist || !itr->pmu)
->  		return -EINVAL;
->  
->  	evlist__for_each_entry(itr->evlist, evsel) {
-> -		if (evsel->core.attr.type == itr->pmu->type) {
-> +		if (evsel__is_aux_event(evsel)) {
+On Thu, Jul 18, 2024 at 08:03:07PM +0300, Adrian Hunter wrote:
+> On 2/07/24 07:18, Changbin Du wrote:
+> > As normal objects, we will add debugging vdso elf to build-id cache lat=
+er.
+> > Here we name the debugging one as "debug".
+> >=20
+> > Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> > ---
+> >  tools/perf/util/build-id.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> > index 83a1581e8cf1..15530af2bad9 100644
+> > --- a/tools/perf/util/build-id.c
+> > +++ b/tools/perf/util/build-id.c
+> > @@ -259,8 +259,8 @@ static bool build_id_cache__valid_id(char *sbuild_i=
+d)
+> >  static const char *build_id_cache__basename(bool is_kallsyms, bool is_=
+vdso,
+> >  					    bool is_debug)
+> >  {
+> > -	return is_kallsyms ? "kallsyms" : (is_vdso ? "vdso" : (is_debug ?
+> > -	    "debug" : "elf"));
+> > +	return is_kallsyms ? "kallsyms" : (is_debug ? "debug" : (is_vdso ?
+> > +		"vdso" : "elf"));
+> >  }
+> > =20
+> >  char *__dso__build_id_filename(const struct dso *dso, char *bf, size_t=
+ size,
+>=20
+> To actually add "debug", this also needs:
+>=20
+> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> index 15530af2bad9..b5bd02a1ad0f 100644
+> --- a/tools/perf/util/build-id.c
+> +++ b/tools/perf/util/build-id.c
+> @@ -701,7 +701,7 @@ build_id_cache__add(const char *sbuild_id, const char=
+ *name, const char *realnam
+>  	 * file itself may not be very useful to users of our tools without a
+>  	 * symtab.
+>  	 */
+> -	if (!is_kallsyms && !is_vdso &&
+> +	if (!is_kallsyms &&
+>  	    strncmp(".ko", name + strlen(name) - 3, 3)) {
+>  		debugfile =3D build_id_cache__find_debug(sbuild_id, nsi, root_dir);
+>  		if (debugfile) {
+>=20
+>=20
+>=20
+This is done by later patch named "perf: build-id: try to search debugging =
+vdso
+and add to cache". I split the changes into two patches.
 
-If the type is the same, then there is no need to
-change the logic here?
+> With that perf will populated the "debug" entry in the build-id cache.
+> Currently, when adding to the build-id cache, perf only looks in
+> /usr/lib/debug/.build-id (refer build_id_cache__find_debug()), for
+> example:
+>=20
+>=20
+> $ sudo ln -s /lib/modules/6.9.2-local/build/arch/x86/entry/vdso/vdso64.so=
+.dbg /usr/lib/debug/.build-id/cf/702469f4637840fd6ba1a8d8a628ff83253d04.deb=
+ug
+> $ ls -l ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/
+> total 8
+> -rw-r--r-- 1 ahunter ahunter    0 Jul 18 13:33 probes
+> -rw------- 1 ahunter ahunter 8192 Jul 18 13:33 vdso
+> $ perf record uname
+> Linux
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.010 MB perf.data (2 samples) ]
+> $ ls -l ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/
+> total 40
+> -rwxrwxr-x 2 ahunter ahunter 32760 May 27 17:42 debug
+> -rw-r--r-- 1 ahunter ahunter     0 Jul 18 13:33 probes
+> -rw------- 1 ahunter ahunter  8192 Jul 18 13:33 vdso
+>=20
+>=20
+> Note, perf will anyway find the debug object in /usr/lib/debug/.build-id
+> so the benefit is if perf-archive is used to copy from the buildid-cache
+> to take to another machine.
+>=20
+>=20
 
-Otherwise, maybe that should be a separate patch
-
->  			if (evsel->disabled)
-> -				return 0;
-> -			return evlist__enable_event_idx(itr->evlist, evsel, idx);
-> +				continue;
-> +			ret = evlist__enable_event_idx(itr->evlist, evsel, idx);
-> +			if (ret >= 0)
-
-Should this be:
-
-			if (ret < 0)
-
-> +				return ret;
-
-And will need a common error path for the pr_err() below.
-
->  		}
->  	}
-> -	return -EINVAL;
-> +
-> +	if (ret < 0)
-> +		pr_err("Failed to event enable event (idx=%d): %d\n", idx, ret);
-> +
-> +	return ret;
->  }
->  
->  /*
-
+--=20
+Cheers,
+Changbin Du
