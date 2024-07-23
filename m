@@ -1,243 +1,234 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EDF130499;
-	Tue, 23 Jul 2024 01:40:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484DA139CEE;
+	Tue, 23 Jul 2024 01:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721698828; cv=none; b=ltNGnAa/3dOSqps7pwl50g4wiz3hNnVz1lOwcnaeyg8vLN2GKXduCUZV5JnwU2hSOuZkZ5F+7gNy0AaDCbaeydp63J5qX8Q6WPEcKPsmPC60SqpLqYLz7l6tye6ukqbcQR4ra0QnEBW5KNFQGqQcseTJc5gm/cSqDu/3/fmm8O0=
+	t=1721699431; cv=none; b=YqVjQVLwCaL2dJQs6emp+1m+o4LNjIz48GA3Xv/viHrvwaltNJbEMNCRM1z9sRfEfzN8dG95yNr386lgVNXWAdhbJzRfiaHhJqyMrOIGGsGIDz4kqMypK0y2UkcHDm6WLyeRGHFPEbh4a4OcT/OjOHYwGeszdtkMalvQwA1fqS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721698828; c=relaxed/simple;
-	bh=sVjvHNuUXm641spj6PIypEZZtH0+lkWxhOlwvo3ea5o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dHlGaQ9Cui0a7EpawvUTOki9AdF5Uq9tNNl7KoLPWiTu63On7IWufa+MyZ9XX9qrFTPUE0I6lH/XlJEf6BFFHF3qnO9PDw3j20dJH5UueGtWBTk6gKnCJUYn/3AGyRr64ajrDchw6GOF0zIK3j3nB8M4jvUcRWriXqxG6Ong1i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1721699431; c=relaxed/simple;
+	bh=JepNrDx4K8sZTRxSC+l9f4Kkf/prn4l816EUQfmDFhs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=eT1+Q1wLmEeFdExJ++GBico5It4YAUlx4sqc2uwJV6ajbFd1n760J20LGzyeUXrsrKkok7w8DiQSXJfMjPWPmBb/0IWOK3w1ZXmhgmGaXBHfbPLqOhcNlQYIrqKaR51kafXW/zeKiaR3ujaF3FbHwIiflP9UzMwZJY0RjjW27Ds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WSfth5z5rzdjqy;
-	Tue, 23 Jul 2024 09:38:36 +0800 (CST)
-Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 46DA818005F;
-	Tue, 23 Jul 2024 09:40:23 +0800 (CST)
-Received: from [10.67.109.254] (10.67.109.254) by
- kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WSg3W5F5rzQmXl;
+	Tue, 23 Jul 2024 09:46:15 +0800 (CST)
+Received: from kwepemd200010.china.huawei.com (unknown [7.221.188.124])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6995C18009D;
+	Tue, 23 Jul 2024 09:50:25 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd200010.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Tue, 23 Jul 2024 09:40:22 +0800
-Message-ID: <cff7274d-e423-9ac9-7d15-cedad7d85701@huawei.com>
-Date: Tue, 23 Jul 2024 09:40:21 +0800
+ 15.2.1258.34; Tue, 23 Jul 2024 09:50:25 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Tue, 23 Jul 2024 09:50:25 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
+	<peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, "Arnaldo Carvalho de
+ Melo" <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, Nathan
+ Chancellor <nathan@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa
+	<jolsa@kernel.org>, "Ian Rogers" <irogers@google.com>, "Liang, Kan"
+	<kan.liang@linux.intel.com>, "Nick Desaulniers" <ndesaulniers@google.com>,
+	Bill Wendling <morbo@google.com>, Justin Stitt <justinstitt@google.com>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab,
+ Beijing)" <hw.huiwang@huawei.com>
+Subject: Re: [PATCH v5 1/8] perf: support specify vdso path in cmdline
+Thread-Topic: [PATCH v5 1/8] perf: support specify vdso path in cmdline
+Thread-Index: AQHazDb0ZhAUVWMBRUqSRKo3S0nR4rH8SfEAgAaAVoD//4nBAIABWM0A
+Date: Tue, 23 Jul 2024 01:50:24 +0000
+Message-ID: <04f65d430ccc4f88bd8c65e0adb463ad@huawei.com>
+References: <20240702041837.5306-1-changbin.du@huawei.com>
+ <20240702041837.5306-2-changbin.du@huawei.com>
+ <4ddbcd4a-bbf1-4773-94da-0a2ad63469dc@intel.com>
+ <c8fef007dd694d0993cd007c44f458ff@huawei.com>
+ <02930c55-6423-4db4-b6f3-b783c572c121@intel.com>
+In-Reply-To: <02930c55-6423-4db4-b6f3-b783c572c121@intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <3F352BFE81BCF4458457EB0BDEBDD84D@huawei.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.0
-Subject: Re: [PATCH v3 2/2] riscv: stacktrace: Add USER_STACKTRACE support
-Content-Language: en-US
-To: <bjorn@kernel.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
-	<aou@eecs.berkeley.edu>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<dev.mbstr@gmail.com>, <samuel.holland@sifive.com>,
-	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240708032847.2998158-1-ruanjinjie@huawei.com>
- <20240708032847.2998158-3-ruanjinjie@huawei.com>
-From: Jinjie Ruan <ruanjinjie@huawei.com>
-In-Reply-To: <20240708032847.2998158-3-ruanjinjie@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi100008.china.huawei.com (7.221.188.57)
 
-
-
-On 2024/7/8 11:28, Jinjie Ruan wrote:
-> Currently, userstacktrace is unsupported for riscv. So use the
-> perf_callchain_user() code as blueprint to implement the
-> arch_stack_walk_user() which add userstacktrace support on riscv.
-> Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
-> of perf_callchain_user().
-> 
-> A ftrace test case is shown as below:
-> 
-> 	# cd /sys/kernel/debug/tracing
-> 	# echo 1 > options/userstacktrace
-> 	# echo 1 > options/sym-userobj
-> 	# echo 1 > events/sched/sched_process_fork/enable
-> 	# cat trace
-> 	......
-> 	            bash-178     [000] ...1.    97.968395: sched_process_fork: comm=bash pid=178 child_comm=bash child_pid=231
-> 	            bash-178     [000] ...1.    97.970075: <user stack trace>
-> 	 => /lib/libc.so.6[+0xb5090]
-> 
-> Also a simple perf test is ok as below:
-> 
-> 	# perf record -e cpu-clock --call-graph fp top
-> 	# perf report --call-graph
-> 
-> 	.....
-> 	[[31m  66.54%[[m     0.00%  top      [kernel.kallsyms]            [k] ret_from_exception
->             |
->             ---ret_from_exception
->                |
->                |--[[31m58.97%[[m--do_trap_ecall_u
->                |          |
->                |          |--[[31m17.34%[[m--__riscv_sys_read
->                |          |          ksys_read
->                |          |          |
->                |          |           --[[31m16.88%[[m--vfs_read
->                |          |                     |
->                |          |                     |--[[31m10.90%[[m--seq_read
-
-Gentle ping.
-
-> 
-> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Tested-by: Jinjie Ruan <ruanjinjie@huawei.com>
-> Cc: Björn Töpel <bjorn@kernel.org>
-> ---
-> v3:
-> - Remove the LTP message as Björn suggested.
-> - Keep fp 16-bytes aligned in arch_stack_walk_user().
-> - Add the test info.
-> v2:
-> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
-> ---
-> ---
->  arch/riscv/Kconfig                 |  1 +
->  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
->  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
->  3 files changed, 47 insertions(+), 43 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index 3b44e7b51436..46121dbcf750 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -194,6 +194,7 @@ config RISCV
->  	select THREAD_INFO_IN_TASK
->  	select TRACE_IRQFLAGS_SUPPORT
->  	select UACCESS_MEMCPY if !MMU
-> +	select USER_STACKTRACE_SUPPORT
->  	select ZONE_DMA32 if 64BIT
->  
->  config CLANG_SUPPORTS_DYNAMIC_FTRACE
-> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
-> index 2932791e9388..c7468af77c66 100644
-> --- a/arch/riscv/kernel/perf_callchain.c
-> +++ b/arch/riscv/kernel/perf_callchain.c
-> @@ -6,37 +6,9 @@
->  
->  #include <asm/stacktrace.h>
->  
-> -/*
-> - * Get the return address for a single stackframe and return a pointer to the
-> - * next frame tail.
-> - */
-> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
-> -				    unsigned long fp, unsigned long reg_ra)
-> +static bool fill_callchain(void *entry, unsigned long pc)
->  {
-> -	struct stackframe buftail;
-> -	unsigned long ra = 0;
-> -	unsigned long __user *user_frame_tail =
-> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> -
-> -	/* Check accessibility of one struct frame_tail beyond */
-> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> -		return 0;
-> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> -				      sizeof(buftail)))
-> -		return 0;
-> -
-> -	if (reg_ra != 0)
-> -		ra = reg_ra;
-> -	else
-> -		ra = buftail.ra;
-> -
-> -	fp = buftail.fp;
-> -	if (ra != 0)
-> -		perf_callchain_store(entry, ra);
-> -	else
-> -		return 0;
-> -
-> -	return fp;
-> +	return perf_callchain_store(entry, pc) == 0;
->  }
->  
->  /*
-> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
->  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
->  			 struct pt_regs *regs)
->  {
-> -	unsigned long fp = 0;
-> -
-> -	fp = regs->s0;
-> -	perf_callchain_store(entry, regs->epc);
-> -
-> -	fp = user_backtrace(entry, fp, regs->ra);
-> -	while (fp && !(fp & 0x7) && entry->nr < entry->max_stack)
-> -		fp = user_backtrace(entry, fp, 0);
-> -}
-> -
-> -static bool fill_callchain(void *entry, unsigned long pc)
-> -{
-> -	return perf_callchain_store(entry, pc) == 0;
-> +	arch_stack_walk_user(fill_callchain, entry, regs);
->  }
->  
->  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
-> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
-> index 0d3f00eb0bae..5480cc11b523 100644
-> --- a/arch/riscv/kernel/stacktrace.c
-> +++ b/arch/riscv/kernel/stacktrace.c
-> @@ -161,3 +161,46 @@ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void
->  {
->  	walk_stackframe(task, regs, consume_entry, cookie);
->  }
-> +
-> +/*
-> + * Get the return address for a single stackframe and return a pointer to the
-> + * next frame tail.
-> + */
-> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_entry,
-> +				       void *cookie, unsigned long fp,
-> +				       unsigned long reg_ra)
-> +{
-> +	struct stackframe buftail;
-> +	unsigned long ra = 0;
-> +	unsigned long __user *user_frame_tail =
-> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
-> +
-> +	/* Check accessibility of one struct frame_tail beyond */
-> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
-> +		return 0;
-> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
-> +				      sizeof(buftail)))
-> +		return 0;
-> +
-> +	ra = reg_ra ? : buftail.ra;
-> +
-> +	fp = buftail.fp;
-> +	if (!ra || !consume_entry(cookie, ra))
-> +		return 0;
-> +
-> +	return fp;
-> +}
-> +
-> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
-> +			  const struct pt_regs *regs)
-> +{
-> +	unsigned long fp = 0;
-> +
-> +	fp = regs->s0;
-> +	if (!consume_entry(cookie, regs->epc))
-> +		return;
-> +
-> +	fp = unwind_user_frame(consume_entry, cookie, fp, regs->ra);
-> +	while (fp && !(fp & 0x7))
-> +		fp = unwind_user_frame(consume_entry, cookie, fp, 0);
-> +}
+T24gTW9uLCBKdWwgMjIsIDIwMjQgYXQgMDQ6MTU6NTZQTSArMDMwMCwgQWRyaWFuIEh1bnRlciB3
+cm90ZToNCj4gT24gMjIvMDcvMjQgMTU6MTksIGR1Y2hhbmdiaW4gd3JvdGU6DQo+ID4gT24gVGh1
+LCBKdWwgMTgsIDIwMjQgYXQgMDg6MDI6MTZQTSArMDMwMCwgQWRyaWFuIEh1bnRlciB3cm90ZToN
+Cj4gPj4gT24gMi8wNy8yNCAwNzoxOCwgQ2hhbmdiaW4gRHUgd3JvdGU6DQo+ID4+PiBUaGUgdmRz
+byBkdW1wZWQgZnJvbSBwcm9jZXNzIG1lbW9yeSAoaW4gYnVpbGRpZC1jYWNoZSkgbGFja3MgZGVi
+dWdnaW5nDQo+ID4+PiBpbmZvLiBUbyBhbm5vdGF0ZSB2ZHNvIHN5bWJvbHMgd2l0aCBzb3VyY2Ug
+bGluZXMgd2UgbmVlZCBzcGVjaWZ5IGENCj4gPj4+IGRlYnVnZ2luZyB2ZXJzaW9uLg0KPiA+Pj4N
+Cj4gPj4+IEZvciB4ODYsIHdlIGNhbiBmaW5kIHRoZW0gZnJvbSB5b3VyIGxvY2FsIGJ1aWxkIGFz
+DQo+ID4+PiBhcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc297MzIsNjR9LnNvLmRiZy4gT3IgdGhleSBt
+YXkgcmVzaWRlIGluDQo+ID4+PiAvbGliL21vZHVsZXMvPHZlcnNpb24+L3Zkc28vdmRzb3szMiw2
+NH0uc28gb24gVWJ1bnR1LiBCdXQgbm90aWNlIHRoYXQNCj4gPj4+IHRoZSBidWlsZGlkIGhhcyB0
+byBtYXRjaC4NCj4gPj4+DQo+ID4+PiAkIHN1ZG8gcGVyZiByZWNvcmQgLWENCj4gPj4+ICQgc3Vk
+byBwZXJmIHJlcG9ydCAtLW9iamR1bXA9bGx2bS1vYmpkdW1wIFwNCj4gPj4+ICAgLS12ZHNvIGFy
+Y2gveDg2L2VudHJ5L3Zkc28vdmRzbzY0LnNvLmRiZyxhcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc28z
+Mi5zby5kYmcNCj4gPj4+DQo+ID4+PiBTYW1wbGVzOiAxN0sgb2YgZXZlbnQgJ2N5Y2xlczpQJywg
+NDAwMCBIeiwgRXZlbnQgY291bnQgKGFwcHJveC4pOiAxNzYwDQo+ID4+PiBfX3Zkc29fY2xvY2tf
+Z2V0dGltZSAgL3dvcmsvbGludXgtaG9zdC9hcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc282NC5zby5k
+DQo+ID4+PiBQZXJjZW504pSCICAgICAgIG1vdnEgICAgLTQ4KCVyYnApLCVyc2kNCj4gPj4+ICAg
+ICAgICDilIIgICAgICAgdGVzdHEgICAlcmF4LCVyYXgNCj4gPj4+ICAgICAgICDilIIgICAgIDsg
+ICAgICAgICAgICAgICByZXR1cm4gdnJlYWRfaHZjbG9jaygpOw0KPiA+Pj4gICAgICAgIOKUgiAg
+ICAgICBtb3ZxICAgICVyYXgsJXJkeA0KPiA+Pj4gICAgICAgIOKUgiAgICAgOyAgICAgICAgICAg
+ICAgIGlmICh1bmxpa2VseSghdmRzb19jeWNsZXNfb2soY3ljbGVzKSkpDQo+ID4+PiAgICAgICAg
+4pSCICAgICDihpEganMgICAgICBlYg0KPiA+Pj4gICAgICAgIOKUgiAgICAg4oaRIGptcCAgICAg
+NzQNCj4gPj4+ICAgICAgICDilIIgICAgIDsgICAgICAgICAgICAgICB0cy0+dHZfc2VjID0gdmRz
+b190cy0+c2VjOw0KPiA+Pj4gICAwLjAyIOKUgjE0NzogICBsZWFxICAgIDIoJXJieCksJXJheA0K
+PiA+Pj4gICAgICAgIOKUgiAgICAgICBzaGxxICAgICQ0LCAlcmF4DQo+ID4+PiAgICAgICAg4pSC
+ICAgICAgIGFkZHEgICAgJXIxMCwlcmF4DQo+ID4+PiAgICAgICAg4pSCICAgICA7ICAgICAgICAg
+ICAgICAgd2hpbGUgKChzZXEgPSBSRUFEX09OQ0UodmQtPnNlcSkpICYgMSkgew0KPiA+Pj4gICA5
+LjM4IOKUgjE1MjogICBtb3ZsICAgICglcjEwKSwlZWN4DQo+ID4+Pg0KPiA+Pj4gV2hlbiBkb2lu
+ZyBjcm9zcyBwbGF0Zm9ybSBhbmFseXNpcywgd2UgYWxzbyBuZWVkIHNwZWNpZnkgdGhlIHZkc28g
+cGF0aCBpZg0KPiA+Pj4gd2UgYXJlIGludGVyZXN0ZWQgaW4gaXRzIHN5bWJvbHMuDQo+ID4+Pg0K
+PiA+Pg0KPiA+PiBKdXN0IHJlYWxpemVkIHRoaXMgaXMgYWJvdXQgb2JqZHVtcC4gIFNvcnJ5IGZv
+ciBub3QgZ2V0dGluZyB0aGF0DQo+ID4+IGVhcmxpZXIuDQo+ID4+DQo+ID4+IExpa2UgcGVyZiB0
+b29scywgb2JqZHVtcCBmb2xsb3dzIHRoZSBwYXJhZGlnbSBvZiBhdHRlbXB0aW5nIHRvDQo+ID4+
+IGxvY2F0ZSBhbmQgdXNlIGRlYnVnIGluZm8gdHJhbnNwYXJlbnRseS4gIEhvd2V2ZXIsIG9iamR1
+bXAgbG9va3MNCj4gPj4gYXQgdGhlIGluc3RhbGxlZCBkZWJ1ZyBpbmZvIGluIC91c3IvbGliL2Rl
+YnVnLy5idWlsZC1pZC8NCj4gPj4NCj4gPj4gRm9yIGV4YW1wbGUsIGlmIHRoZSBkZWJ1ZyBmaWxl
+IGlzIGNvcGllZCAob3IgbGlua2VkKSB0aGVyZSwgdGhlbg0KPiA+PiBvYmpkdW1wIG9yIGxsdm0t
+b2JqZHVtcCB3aWxsIGZpbmQgaXQ6DQo+ID4+DQo+ID4+ICQgbGx2bS1vYmpkdW1wLTE4IC1kUyB+
+Ly5kZWJ1Zy9cW3Zkc29cXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0
+L3Zkc28gfCBoZWFkIC0yMA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0NjlmNDYz
+Nzg0MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVsZjY0
+LXg4Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+Pg0K
+PiA+PiAwMDAwMDAwMDAwMDAwNmQwIDwudGV4dD46DQo+ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5
+IGQ5IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZkNyglcmlwKSwgJXJkaSAgICAgIyAweGZm
+ZmZmZmZmZmZmZmUwMDANCj4gPj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAg
+ICAgam1wICAgICAweDZmMiA8LnRleHQrMHgyMj4NCj4gPj4gICAgIDZkOTogNGMgOGIgMGQgMjgg
+ZDkgZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ4KCVyaXApLCAlcjkgICAgICAjIDB4ZmZm
+ZmZmZmZmZmZmZTAwOA0KPiA+PiAgICAgNmUwOiA0YyA4YiAwNSAyOSBkOSBmZiBmZiAgICAgICAg
+ICBtb3ZxICAgIC0weDI2ZDcoJXJpcCksICVyOCAgICAgICMgMHhmZmZmZmZmZmZmZmZlMDEwDQo+
+ID4+ICAgICA2ZTc6IDBmIDAxIGY5ICAgICAgICAgICAgICAgICAgICAgIHJkdHNjcA0KPiA+PiAg
+ICAgNmVhOiA2NiA5MCAgICAgICAgICAgICAgICAgICAgICAgICBub3ANCj4gPj4gICAgIDZlYzog
+OGIgMGYgICAgICAgICAgICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4g
+ICAgIDZlZTogMzkgY2UgICAgICAgICAgICAgICAgICAgICAgICAgY21wbCAgICAlZWN4LCAlZXNp
+DQo+ID4+ICAgICA2ZjA6IDc0IDBlICAgICAgICAgICAgICAgICAgICAgICAgIGplICAgICAgMHg3
+MDAgPC50ZXh0KzB4MzA+DQo+ID4+ICAgICA2ZjI6IDhiIDM3ICAgICAgICAgICAgICAgICAgICAg
+ICAgIG1vdmwgICAgKCVyZGkpLCAlZXNpDQo+ID4+ICAgICA2ZjQ6IDg1IGY2ICAgICAgICAgICAg
+ICAgICAgICAgICAgIHRlc3RsICAgJWVzaSwgJWVzaQ0KPiA+PiAgICAgNmY2OiA3NSBlMSAgICAg
+ICAgICAgICAgICAgICAgICAgICBqbmUgICAgIDB4NmQ5IDwudGV4dCsweDk+DQo+ID4+ICAgICA2
+Zjg6IDQ4IGM3IGMwIGZmIGZmIGZmIGZmICAgICAgICAgIG1vdnEgICAgJC0weDEsICVyYXgNCj4g
+Pj4gICAgIDZmZjogYzMgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0cQ0KPiA+PiAkIHN1
+ZG8gbG4gLXMgL2xpYi9tb2R1bGVzLzYuOS4yLWxvY2FsL2J1aWxkL2FyY2gveDg2L2VudHJ5L3Zk
+c28vdmRzbzY0LnNvLmRiZyAvdXNyL2xpYi9kZWJ1Zy8uYnVpbGQtaWQvY2YvNzAyNDY5ZjQ2Mzc4
+NDBmZDZiYTFhOGQ4YTYyOGZmODMyNTNkMDQuZGVidWcNCj4gPj4gJCBsbHZtLW9iamR1bXAtMTgg
+LWRTIH4vLmRlYnVnL1xbdmRzb1xdL2NmNzAyNDY5ZjQ2Mzc4NDBmZDZiYTFhOGQ4YTYyOGZmODMy
+NTNkMDQvdmRzbyB8IGhlYWQgLTIwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0Njlm
+NDYzNzg0MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVs
+ZjY0LXg4Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+
+Pg0KPiA+PiAwMDAwMDAwMDAwMDAwNmQwIDx2cmVhZF9odmNsb2NrPjoNCj4gPj4gOyBodl9yZWFk
+X3RzY19wYWdlX3RzYyhjb25zdCBzdHJ1Y3QgbXNfaHlwZXJ2X3RzY19wYWdlICp0c2NfcGcsDQo+
+ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5IGQ5IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZk
+NyglcmlwKSwgJXJkaSAgICAgIyAweGZmZmZmZmZmZmZmZmUwMDAgPGh2Y2xvY2tfcGFnZT4NCj4g
+Pj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAgICAgam1wICAgICAweDZmMiA8
+dnJlYWRfaHZjbG9jaysweDIyPg0KPiA+PiA7ICAgICAgICAgICAgICAgc2NhbGUgPSBSRUFEX09O
+Q0UodHNjX3BnLT50c2Nfc2NhbGUpOw0KPiA+PiAgICAgNmQ5OiA0YyA4YiAwZCAyOCBkOSBmZiBm
+ZiAgICAgICAgICBtb3ZxICAgIC0weDI2ZDgoJXJpcCksICVyOSAgICAgICMgMHhmZmZmZmZmZmZm
+ZmZlMDA4IDxodmNsb2NrX3BhZ2UrMHg4Pg0KPiA+PiA7ICAgICAgICAgICAgICAgb2Zmc2V0ID0g
+UkVBRF9PTkNFKHRzY19wZy0+dHNjX29mZnNldCk7DQo+ID4+ICAgICA2ZTA6IDRjIDhiIDA1IDI5
+IGQ5IGZmIGZmICAgICAgICAgIG1vdnEgICAgLTB4MjZkNyglcmlwKSwgJXI4ICAgICAgIyAweGZm
+ZmZmZmZmZmZmZmUwMTAgPGh2Y2xvY2tfcGFnZSsweDEwPg0KPiA+PiA7ICAgICAgIGFzbSB2b2xh
+dGlsZShBTFRFUk5BVElWRV8yKCJyZHRzYyIsDQo+ID4+ICAgICA2ZTc6IDBmIDMxICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJkdHNjDQo+ID4+ICAgICA2ZTk6IDkwICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIG5vcA0KPiA+PiAgICAgNmVhOiA5MCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBub3ANCj4gPj4gICAgIDZlYjogOTAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbm9wDQo+
+ID4+IDsgICAgICAgfSB3aGlsZSAoUkVBRF9PTkNFKHRzY19wZy0+dHNjX3NlcXVlbmNlKSAhPSBz
+ZXF1ZW5jZSk7DQo+ID4+ICAgICA2ZWM6IDhiIDBmICAgICAgICAgICAgICAgICAgICAgICAgIG1v
+dmwgICAgKCVyZGkpLCAlZWN4DQo+ID4+ICQNCj4gPj4NCj4gPj4gV291bGQgdGhhdCBzb2x2ZSB5
+b3VyIHByb2JsZW0/DQo+ID4+DQo+ID4+IE5vdGFibHksIGxhdGVyIHZlcnNpb25zIG9mIGxsdm0t
+b2JqZHVtcCBoYXZlIGFuIG9wdGlvbg0KPiA+PiAtLWRlYnVnLWZpbGUtZGlyZWN0b3J5IHdoaWNo
+IG1ha2VzIGl0IHBvc3NpYmxlIHRvDQo+ID4+IGhhdmUgdGhlIGRlYnVnIGluZm8gaW4gYSBkaXJl
+Y3Rvcnkgb3duZWQgYnkgdGhlIHVzZXIsDQo+ID4+IGZvciBleGFtcGxlOg0KPiA+Pg0KPiA+PiAk
+IHN1ZG8gcm0gL3Vzci9saWIvZGVidWcvLmJ1aWxkLWlkL2NmLzcwMjQ2OWY0NjM3ODQwZmQ2YmEx
+YThkOGE2MjhmZjgzMjUzZDA0LmRlYnVnDQo+ID4+ICQgbGx2bS1vYmpkdW1wLTE4IC1kUyB+Ly5k
+ZWJ1Zy9cW3Zkc29cXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0L3Zk
+c28gfCBoZWFkIC0yMA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0NjlmNDYzNzg0
+MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVsZjY0LXg4
+Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+Pg0KPiA+
+PiAwMDAwMDAwMDAwMDAwNmQwIDwudGV4dD46DQo+ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5IGQ5
+IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZkNyglcmlwKSwgJXJkaSAgICAgIyAweGZmZmZm
+ZmZmZmZmZmUwMDANCj4gPj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAgICAg
+am1wICAgICAweDZmMiA8LnRleHQrMHgyMj4NCj4gPj4gICAgIDZkOTogNGMgOGIgMGQgMjggZDkg
+ZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ4KCVyaXApLCAlcjkgICAgICAjIDB4ZmZmZmZm
+ZmZmZmZmZTAwOA0KPiA+PiAgICAgNmUwOiA0YyA4YiAwNSAyOSBkOSBmZiBmZiAgICAgICAgICBt
+b3ZxICAgIC0weDI2ZDcoJXJpcCksICVyOCAgICAgICMgMHhmZmZmZmZmZmZmZmZlMDEwDQo+ID4+
+ICAgICA2ZTc6IDBmIDAxIGY5ICAgICAgICAgICAgICAgICAgICAgIHJkdHNjcA0KPiA+PiAgICAg
+NmVhOiA2NiA5MCAgICAgICAgICAgICAgICAgICAgICAgICBub3ANCj4gPj4gICAgIDZlYzogOGIg
+MGYgICAgICAgICAgICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4gICAg
+IDZlZTogMzkgY2UgICAgICAgICAgICAgICAgICAgICAgICAgY21wbCAgICAlZWN4LCAlZXNpDQo+
+ID4+ICAgICA2ZjA6IDc0IDBlICAgICAgICAgICAgICAgICAgICAgICAgIGplICAgICAgMHg3MDAg
+PC50ZXh0KzB4MzA+DQo+ID4+ICAgICA2ZjI6IDhiIDM3ICAgICAgICAgICAgICAgICAgICAgICAg
+IG1vdmwgICAgKCVyZGkpLCAlZXNpDQo+ID4+ICAgICA2ZjQ6IDg1IGY2ICAgICAgICAgICAgICAg
+ICAgICAgICAgIHRlc3RsICAgJWVzaSwgJWVzaQ0KPiA+PiAgICAgNmY2OiA3NSBlMSAgICAgICAg
+ICAgICAgICAgICAgICAgICBqbmUgICAgIDB4NmQ5IDwudGV4dCsweDk+DQo+ID4+ICAgICA2Zjg6
+IDQ4IGM3IGMwIGZmIGZmIGZmIGZmICAgICAgICAgIG1vdnEgICAgJC0weDEsICVyYXgNCj4gPj4g
+ICAgIDZmZjogYzMgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0cQ0KPiA+PiAkIG1rZGly
+IC1wIC90bXAvZGVidWcvLmJ1aWxkLWlkL2NmLw0KPiA+PiAkIGxuIC1zIC9saWIvbW9kdWxlcy82
+LjkuMi1sb2NhbC9idWlsZC9hcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc282NC5zby5kYmcgL3RtcC9k
+ZWJ1Zy8uYnVpbGQtaWQvY2YvNzAyNDY5ZjQ2Mzc4NDBmZDZiYTFhOGQ4YTYyOGZmODMyNTNkMDQu
+ZGVidWcgICAgICAgIA0KPiA+PiAkIGxsdm0tb2JqZHVtcC0xOCAtLWRlYnVnLWZpbGUtZGlyZWN0
+b3J5IC90bXAvZGVidWcgLWRTIH4vLmRlYnVnL1xbdmRzb1xdL2NmNzAyNDY5ZjQ2Mzc4NDBmZDZi
+YTFhOGQ4YTYyOGZmODMyNTNkMDQvdmRzbyB8IGhlYWQgLTIwDQo+ID4+DQo+ID4+IH4vLmRlYnVn
+L1t2ZHNvXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0L3Zkc286ICAg
+ICAgZmlsZSBmb3JtYXQgZWxmNjQteDg2LTY0DQo+ID4+DQo+ID4+IERpc2Fzc2VtYmx5IG9mIHNl
+Y3Rpb24gLnRleHQ6DQo+ID4+DQo+ID4+IDAwMDAwMDAwMDAwMDA2ZDAgPHZyZWFkX2h2Y2xvY2s+
+Og0KPiA+PiA7IGh2X3JlYWRfdHNjX3BhZ2VfdHNjKGNvbnN0IHN0cnVjdCBtc19oeXBlcnZfdHNj
+X3BhZ2UgKnRzY19wZywNCj4gPj4gICAgIDZkMDogNDggOGQgM2QgMjkgZDkgZmYgZmYgICAgICAg
+ICAgbGVhcSAgICAtMHgyNmQ3KCVyaXApLCAlcmRpICAgICAjIDB4ZmZmZmZmZmZmZmZmZTAwMCA8
+aHZjbG9ja19wYWdlPg0KPiA+PiAgICAgNmQ3OiBlYiAxOSAgICAgICAgICAgICAgICAgICAgICAg
+ICBqbXAgICAgIDB4NmYyIDx2cmVhZF9odmNsb2NrKzB4MjI+DQo+ID4+IDsgICAgICAgICAgICAg
+ICBzY2FsZSA9IFJFQURfT05DRSh0c2NfcGctPnRzY19zY2FsZSk7DQo+ID4+ICAgICA2ZDk6IDRj
+IDhiIDBkIDI4IGQ5IGZmIGZmICAgICAgICAgIG1vdnEgICAgLTB4MjZkOCglcmlwKSwgJXI5ICAg
+ICAgIyAweGZmZmZmZmZmZmZmZmUwMDggPGh2Y2xvY2tfcGFnZSsweDg+DQo+ID4+IDsgICAgICAg
+ICAgICAgICBvZmZzZXQgPSBSRUFEX09OQ0UodHNjX3BnLT50c2Nfb2Zmc2V0KTsNCj4gPj4gICAg
+IDZlMDogNGMgOGIgMDUgMjkgZDkgZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ3KCVyaXAp
+LCAlcjggICAgICAjIDB4ZmZmZmZmZmZmZmZmZTAxMCA8aHZjbG9ja19wYWdlKzB4MTA+DQo+ID4+
+IDsgICAgICAgYXNtIHZvbGF0aWxlKEFMVEVSTkFUSVZFXzIoInJkdHNjIiwNCj4gPj4gICAgIDZl
+NzogMGYgMzEgICAgICAgICAgICAgICAgICAgICAgICAgcmR0c2MNCj4gPj4gICAgIDZlOTogOTAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgbm9wDQo+ID4+ICAgICA2ZWE6IDkwICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIG5vcA0KPiA+PiAgICAgNmViOiA5MCAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBub3ANCj4gPj4gOyAgICAgICB9IHdoaWxlIChSRUFEX09OQ0UodHNjX3BnLT50
+c2Nfc2VxdWVuY2UpICE9IHNlcXVlbmNlKTsNCj4gPj4gICAgIDZlYzogOGIgMGYgICAgICAgICAg
+ICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4gJA0KPiA+Pg0KPiA+IFll
+cywgbm90IG9ubHkgbGx2bS1vYmpkdW1wLiBJIGNhbiBzZWUgb3RoZXIgdG9vbHMgYWxzbyBjYW4g
+aGFuZGxlIHRoaXMgYW5kIGV2ZW4NCj4gPiBjYW4gZG93bmxvYWQgZnJvbSBvbmxpbmUgYnkgRGVi
+dWdpbmZvZC4NCj4gPiAgIC0gcGVyZiBjYW4gc2VhcmNoIGRlYnVnZ2luZyBpbmZvIHRoZXJlIGlm
+IEhBVkVfREVCVUdJTkZPRF9TVVBQT1JULg0KPiA+ICAgLSBnZGIgY2FuIHNlYXJjaCBkZWJ1Z2dp
+bmcgaW5mbyB0aGVyZSBhbmQgZG93bmxvYWQgdmlhIERlYnVnaW5mb2QgaWYgbm90IGV4aXN0Lg0K
+PiA+IA0KPiA+IFdoaWxlIGFib3ZlIHJlcXVpcmVzIGRlYnVnZ2luZyBmaWxlcyBhcmUgcGxhY2Vk
+IGNvcnJlY3RseSBpbg0KPiA+IC91c3IvbGliL2RlYnVnLy5idWlsZC1pZC8uIEZvciB2ZHNvIG1v
+c3RseSB5b3UgbmVlZCB0byBjb3B5IGl0IG1hbnVsbHkuDQo+ID4gDQo+ID4gVGhlIHRhcmdldCBv
+ZiB0aGlzIHNlcmllcyBpcyB0byBoYW5kbGUgaXQgdHJhbnNwYXJlbnRseSwgZXNwYWNpYWxseSBm
+b3IgbG9jYWxseQ0KPiA+IGJ1aWx0IGtlcm5lbHMuDQo+IA0KPiBQYXNzaW5nIHRoZSBmaWxlIG5h
+bWUgdG8gcGVyZiB0b29sIGRvZXNuJ3Qgc2VlbSB0cmFuc3BhcmVudC4NCj4NClRoaXMgaXMgYW4g
+YWx0ZXJuYXRpdmUgd2F5IHRvIGZpbmQgZGVidWdnaW5nIGZpbGUgaWYgdGhlIGZpbGUgaXMgbm90
+IGluDQpwcmUtZGVmaW5lZCBwYXRocy4gVGhpcyBpcyBob3cgd2UgaGFuZGxlIHZtbGludXggd2l0
+aCAnLS12bWxpbnV4JyBvcHRpb24uDQoNCj4gRm9yIGxvY2FsbHkgYnVpbHQga2VybmVscywgbWF5
+YmUgdGhlcmUgc2hvdWxkIGJlIGEgbWFrZSB0YXJnZXQgZm9yIGl0Lg0KPiBUaGVyZSBzZWVtcyB0
+byBiZSAidmRzb19pbnN0YWxsIiBmb3IgdGhlIHN0cmlwcGVkIGJpbmFyeS4NCj4NCkkgZG9uJ3Qg
+a25vdyB3aGV0aGVyIGluc3RhbGxpbmcgZGVidWdnaW5nIGZpbGVzIHRvIC91c3IvbGliL2RlYnVn
+Ly5idWlsZC1pZC8gaXMNCmEgZ29vZCBzY2hlbWUuIEZvciBtZSwgSSByZWFsbHkgZG8gbm90IHdh
+bnQgdG9vIG1hbnkgZGVidWdnaW5nIGZpbGVzIG9jY3VweSBteQ0KZGlzayBzcGFjZS4gKElmIHNv
+LCB3aHkgb25seSBpbnN0YWxsIHZkc28gdGhlcmUsIHJpZ2h0PykNCg0KPiANCj4gDQoNCi0tIA0K
+Q2hlZXJzLA0KQ2hhbmdiaW4gRHUNCg==
