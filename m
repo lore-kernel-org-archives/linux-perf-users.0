@@ -1,67 +1,59 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2052613A865;
-	Tue, 23 Jul 2024 07:05:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40F436130
+	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 07:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721718345; cv=none; b=FiEhnfw3ZUjNVh0SPGv4VcOAdhCL9g1mqklgiV5W7xOuIuPelzctJXH2HAh9Es5+zDWbbkdj9zZx9n3b7efioNc+lPOkBw6AkQLAPpppx0tK1zqopC1cknPzbpdaRaVHLjIJTegF27ENU2AKGHx+BgywiuEDp6kt+RHbjFEAa6Q=
+	t=1721721182; cv=none; b=qdO9rP9fOFV/pfhjOoy+59MEInOZHT7ZhkcpyNrcxz6zTb4wVKp7gjdHxt7Z5/zjIM7//gLp/RMa9/VtqAmWUdYXxvpAUUJakqurkVOht6OpS2QGWVrTuSTIKa3pK0FFKqKOPKVE1Cw3f8U2ksM7+3/oqlR2OiVLQ6OIr0cpm/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721718345; c=relaxed/simple;
-	bh=OdChwglmTm4XZDH0iJfniYjnXsXZlyB0Lyqc6Mqh4pw=;
+	s=arc-20240116; t=1721721182; c=relaxed/simple;
+	bh=NqwN1ivfdf//amCWTxGUXKkycY0A2iJVKDOTkVP/SIg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lTsrtNfJBcKSoRjAm2yVwyiyPzCiy+4Z+Y0n2mgumV3D824zYi9+UKojmMpTxXf+ITvTQ3IvFZo4/v0C95CaSVScb2iX080virKbRP5HP/LOsozGMR0o6KZnv9i4TYA0tn0R7+OC/Jf9OF3ntqhSqFq3l+rC0VKlMmPamW+rl3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=mqbj6bbq; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	 In-Reply-To:Content-Type; b=Gx058FvJazWJP2GsGN55ExYaYj/K+SFdaARq33fz4mzXkXOIHGHVGaJK/kO1W0/1yKDrxnB5k7X6nrB74zMhpJwvJQx3s1luAIZsJ/Z8D9wvTFFwI7KSU5TwhnYJZhusBfa5/48U473Y1eexg8NCEM0om7VbP02SgDfUSOcS6pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=QNRzbf+W; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="mqbj6bbq"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46N3uWBi021882;
-	Tue, 23 Jul 2024 07:05:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=/
-	L0bLC9Wxty8S0S0fHI+nEfJVqoONx3J0d/1CnrCRCA=; b=mqbj6bbqrXSq6NDFf
-	F9Ob8DRy1vGz5ioseh+9qNsWMmbt5M42TkZiOFxFmIjIt+aZgMX/eQhtrfxK46qL
-	oa6exJZ/bHzh0CHO2Vp7lOdb4tgQ4RltHkEcC//BgJYurCB27I97hsn6AChOCTm3
-	SNSfPaavn7WUTn7J0M/w0a2ZO75sgmv++bT2mmnOMMTnN4Aq+JUfWBtQDKr7PLTX
-	8Ko19SPAuzUHHx2UHabpdedL1K2y1McyWkidu3aqZF5WLqJ5y1Qvs1itQ2bBaiIQ
-	feZVQ/o32noGNHt2vLQFLxvhCjovDiNQ5wVAthaSvOZTQ1houU1QaJIYn9LrWPzQ
-	ACOng==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40j3rvresa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 07:05:26 +0000 (GMT)
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46N75Q4t024830;
-	Tue, 23 Jul 2024 07:05:26 GMT
-Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40j3rvres9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 07:05:26 +0000 (GMT)
-Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma11.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46N51xcg009131;
-	Tue, 23 Jul 2024 07:05:25 GMT
-Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
-	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 40gt93a4p3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 23 Jul 2024 07:05:25 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46N75KmZ15925748
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 23 Jul 2024 07:05:22 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 204A92006A;
-	Tue, 23 Jul 2024 07:05:20 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 262E52006E;
-	Tue, 23 Jul 2024 07:05:18 +0000 (GMT)
-Received: from [9.109.252.211] (unknown [9.109.252.211])
-	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 23 Jul 2024 07:05:17 +0000 (GMT)
-Message-ID: <7ccf31b5-7eaf-4b42-bf9c-b48d1fa5c2cf@linux.ibm.com>
-Date: Tue, 23 Jul 2024 12:35:17 +0530
+	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="QNRzbf+W"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-427db004e36so23817345e9.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 00:53:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1721721179; x=1722325979; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NSxFHfDFN+MiVLSyULOWbYjXLDYVoJ0fH1mNtWGCU7I=;
+        b=QNRzbf+Wvhb2Ejqc/k0VIJvDzGJ5e87p18UpsSU7bS/sRE3He2VpXY+1cBOhoN8yKy
+         cqNuxVgACP+e6hF+UgRev6c3ZkhPgaZmNXySZGK86Tg++2vtvHLzu6gxNaLLFXcNpx71
+         IzKCPvEzzJt1KT8rxfS6PlnDJESGh2MIbwv29fYmhPlMtzxvvr9nEdTWzF6bqKw8fmYo
+         GjJJ6g41z18WQM88G2DsZPavFFWuwU3RFxdRZeLpot1enRJldJUtWfKKoSRYoJpn5UoC
+         Mp9cfzOpmPzZG71UGP5PlGLsqhSl6KaGOEMUiXzRs5SIjq7hIEkm3zePGJnaaaS8x7IS
+         s0Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721721179; x=1722325979;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=NSxFHfDFN+MiVLSyULOWbYjXLDYVoJ0fH1mNtWGCU7I=;
+        b=H8VpahW3igg0lLNDWNJLO4HWPjE1iz3pkWxFkBR9oV7w8w8DWRdDRTJktcC4v6woUX
+         HBiFVGR9fJhJsRUjRYQTfwGech4MRmLj62R/JbIJmNIEhzfjBLDJH09pvtgBvPklBYVm
+         +f1UwQrtN1nn+ffq8d2QcEnKZEzfQQZIllnpZ/3wb5ZBDUHD6wMldKUweb3WOf37d2xN
+         kvhEumFwsm3SqdA2YVQclap18QJ2+kmg7WWE2+BwaCGYk0VCv8M/gxHx3T6fAgOEBPPg
+         1hJhcf9YaApRmeIo0WP1JUNGNzKKTNZD6HhcRhj4fc14qKxB2/b8CfOIJFgapZ2fxUzD
+         qMqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXuEBExcRcq11CXZqoJGX5m3EKbZPZ6vn1xI/+MYI0iAruL6wBvDMZVwj97H87MkXSia6F5MM2Cln2autqwLPBg3XgAW80Eus+bnOrE/fYlPw==
+X-Gm-Message-State: AOJu0YzcX+86vfPIF/xdEK5p4cc23/ME64yw+j3OU9fFNw63Ubl8v0hh
+	+3BI0zMlxPrd3gXL/mkAVF3g+diZ7jrEJuCMjJNCIDdGUP4QFtHdoAOfGx0Vcng=
+X-Google-Smtp-Source: AGHT+IE9Cvh25hfaQz/Gp/ZdOfzixVQt2BVNg/bV++7oWQiR7JI21E3NokuVP3ZF00d3/6mUezvKcQ==
+X-Received: by 2002:a05:600c:3c94:b0:426:629f:1556 with SMTP id 5b1f17b1804b1-427dc56476amr60061065e9.31.1721721179228;
+        Tue, 23 Jul 2024 00:52:59 -0700 (PDT)
+Received: from [192.168.0.101] ([84.69.19.168])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427d2a7218esm181620735e9.25.2024.07.23.00.52.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jul 2024 00:52:58 -0700 (PDT)
+Message-ID: <4cd8c6c7-bd15-4663-bb0b-815904560c90@ursulin.net>
+Date: Tue, 23 Jul 2024 08:52:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -69,178 +61,104 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf vendor events power10: Update JSON/events
-To: Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org, irogers@google.com,
-        namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20240723052154.96202-1-kjain@linux.ibm.com>
+Subject: Re: [PATCH 4/7] drm/i915/pmu: Drop is_igp()
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+ intel-gfx@lists.freedesktop.org, linux-perf-users@vger.kernel.org
+Cc: Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20240722210648.80892-1-lucas.demarchi@intel.com>
+ <20240722210648.80892-5-lucas.demarchi@intel.com>
 Content-Language: en-GB
-From: Disha Goel <disgoel@linux.ibm.com>
-In-Reply-To: <20240723052154.96202-1-kjain@linux.ibm.com>
+From: Tvrtko Ursulin <tursulin@ursulin.net>
+In-Reply-To: <20240722210648.80892-5-lucas.demarchi@intel.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: iSrEeDzTdA2ZObxTFiQtYRxNmjL9GBbV
-X-Proofpoint-GUID: Uj-47-lCE80N20ztH-Jdh4xyQQcR2WG4
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-22_18,2024-07-23_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 priorityscore=1501 malwarescore=0
- bulkscore=0 clxscore=1011 spamscore=0 phishscore=0 mlxscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407230050
 
-On 23/07/24 10:51 am, Kajol Jain wrote:
 
-> Update JSON/events for power10 platform with additional events.
-> Also move PM_VECTOR_LD_CMPL event from others.json to
-> frontend.json file.
->
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+On 22/07/2024 22:06, Lucas De Marchi wrote:
+> There's no reason to hardcode checking for integrated graphics on a
+> specific pci slot. That information is already available per platform an
+> can be checked with IS_DGFX().
 
-I have tested the patch on power10 machine. Looks good to me.
+Hmm probably reason was this, added is_igp:
 
-Tested-by: Disha Goel <disgoel@linux.ibm.com>
+commit 05488673a4d41383f9dd537f298e525e6b00fb93
+Author:     Tvrtko Ursulin <tursulin@ursulin.net>
+AuthorDate: Wed Oct 16 10:38:02 2019 +0100
+Commit:     Tvrtko Ursulin <tursulin@ursulin.net>
+CommitDate: Thu Oct 17 10:50:47 2019 +0100
 
+     drm/i915/pmu: Support multiple GPUs
+
+Added IS_DGFX:
+
+commit dc90fe3fd219c7693617ba09a9467e4aadc2e039
+Author:     José Roberto de Souza <jose.souza@intel.com>
+AuthorDate: Thu Oct 24 12:51:19 2019 -0700
+Commit:     Lucas De Marchi <lucas.demarchi@intel.com>
+CommitDate: Fri Oct 25 13:53:51 2019 -0700
+
+     drm/i915: Add is_dgfx to device info
+
+So innocently arrived just a bit before.
+
+Regards,
+
+Tvrtko
+
+> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
 > ---
->   .../arch/powerpc/power10/frontend.json        |   5 +
->   .../arch/powerpc/power10/others.json          | 100 +++++++++++++++++-
->   2 files changed, 100 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> index 5977f5e64212..53660c279286 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> @@ -74,6 +74,11 @@
->       "EventName": "PM_ISSUE_KILL",
->       "BriefDescription": "Cycles in which an instruction or group of instructions were cancelled after being issued. This event increments once per occurrence, regardless of how many instructions are included in the issue group."
->     },
-> +  {
-> +    "EventCode": "0x44054",
-> +    "EventName": "PM_VECTOR_LD_CMPL",
-> +    "BriefDescription": "Vector load instruction completed."
-> +  },
->     {
->       "EventCode": "0x44056",
->       "EventName": "PM_VECTOR_ST_CMPL",
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> index fcf8a8ebe7bd..53ca610152fa 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
-> @@ -94,11 +94,6 @@
->       "EventName": "PM_L1_ICACHE_RELOADED_ALL",
->       "BriefDescription": "Counts all instruction cache reloads includes demand, prefetch, prefetch turned into demand and demand turned into prefetch."
->     },
-> -  {
-> -    "EventCode": "0x44054",
-> -    "EventName": "PM_VECTOR_LD_CMPL",
-> -    "BriefDescription": "Vector load instruction completed."
-> -  },
->     {
->       "EventCode": "0x4D05E",
->       "EventName": "PM_BR_CMPL",
-> @@ -108,5 +103,100 @@
->       "EventCode": "0x400F0",
->       "EventName": "PM_LD_DEMAND_MISS_L1_FIN",
->       "BriefDescription": "Load missed L1, counted at finish time."
-> +  },
-> +  {
-> +    "EventCode": "0x00000038BC",
-> +    "EventName": "PM_ISYNC_CMPL",
-> +    "BriefDescription": "Isync completion count per thread."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C088",
-> +    "EventName": "PM_LD0_32B_FIN",
-> +    "BriefDescription": "256-bit load finished in the LD0 load execution unit."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C888",
-> +    "EventName": "PM_LD1_32B_FIN",
-> +    "BriefDescription": "256-bit load finished in the LD1 load execution unit."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C090",
-> +    "EventName": "PM_LD0_UNALIGNED_FIN",
-> +    "BriefDescription": "Load instructions in LD0 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline using the load gather buffer. This typically adds about 10 cycles to the latency of the instruction. This includes loads that cross the 128 byte boundary, octword loads that are not aligned, and a special forward progress case of a load that does not hit in the L1 and crosses the 32 byte boundary and is launched NTC. Counted at finish time."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C890",
-> +    "EventName": "PM_LD1_UNALIGNED_FIN",
-> +    "BriefDescription": "Load instructions in LD1 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline using the load gather buffer. This typically adds about 10 cycles to the latency of the instruction. This includes loads that cross the 128 byte boundary, octword loads that are not aligned, and a special forward progress case of a load that does not hit in the L1 and crosses the 32 byte boundary and is launched NTC. Counted at finish time."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C0A4",
-> +    "EventName": "PM_ST0_UNALIGNED_FIN",
-> +    "BriefDescription": "Store instructions in ST0 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline. This typically adds about 10 cycles to the latency of the instruction. This only includes stores that cross the 128 byte boundary. Counted at finish time."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C8A4",
-> +    "EventName": "PM_ST1_UNALIGNED_FIN",
-> +    "BriefDescription": "Store instructions in ST1 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline. This typically adds about 10 cycles to the latency of the instruction. This only includes stores that cross the 128 byte boundary. Counted at finish time."
-> +  },
-> +  {
-> +    "EventCode": "0x000000C8B8",
-> +    "EventName": "PM_STCX_SUCCESS_CMPL",
-> +    "BriefDescription": "STCX instructions that completed successfully. Specifically, counts only when a pass status is returned from the nest."
-> +  },
-> +  {
-> +    "EventCode": "0x000000D0B4",
-> +    "EventName": "PM_DC_PREF_STRIDED_CONF",
-> +    "BriefDescription": "A demand load referenced a line in an active strided prefetch stream. The stream could have been allocated through the hardware prefetch mechanism or through software."
-> +  },
-> +  {
-> +    "EventCode": "0x000000F880",
-> +    "EventName": "PM_SNOOP_TLBIE_CYC",
-> +    "BriefDescription": "Cycles in which TLBIE snoops are executed in the LSU."
-> +  },
-> +  {
-> +    "EventCode": "0x000000F084",
-> +    "EventName": "PM_SNOOP_TLBIE_CACHE_WALK_CYC",
-> +    "BriefDescription": "TLBIE snoop cycles in which the data cache is being walked."
-> +  },
-> +  {
-> +    "EventCode": "0x000000F884",
-> +    "EventName": "PM_SNOOP_TLBIE_WAIT_ST_CYC",
-> +    "BriefDescription": "TLBIE snoop cycles in which older stores are still draining."
-> +  },
-> +  {
-> +    "EventCode": "0x000000F088",
-> +    "EventName": "PM_SNOOP_TLBIE_WAIT_LD_CYC",
-> +    "BriefDescription": "TLBIE snoop cycles in which older loads are still draining."
-> +  },
-> +  {
-> +    "EventCode": "0x000000F08C",
-> +    "EventName": "PM_SNOOP_TLBIE_WAIT_MMU_CYC",
-> +    "BriefDescription": "TLBIE snoop cycles in which the Load-Store unit is waiting for the MMU to finish invalidation."
-> +  },
-> +  {
-> +    "EventCode": "0x0000004884",
-> +    "EventName": "PM_NO_FETCH_IBUF_FULL_CYC",
-> +    "BriefDescription": "Cycles in which no instructions are fetched because there is no room in the instruction buffers."
-> +  },
-> +  {
-> +    "EventCode": "0x00000048B4",
-> +    "EventName": "PM_BR_TKN_UNCOND_FIN",
-> +    "BriefDescription": "An unconditional branch finished. All unconditional branches are taken."
-> +  },
-> +  {
-> +    "EventCode": "0x0B0000016080",
-> +    "EventName": "PM_L2_TLBIE_SLBIE_START",
-> +    "BriefDescription": "NCU Master received a TLBIE/SLBIEG/SLBIAG operation from the core. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
-> +  },
-> +  {
-> +    "EventCode": "0x0B0000016880",
-> +    "EventName": "PM_L2_TLBIE_SLBIE_DELAY",
-> +    "BriefDescription": "Cycles when a TLBIE/SLBIEG/SLBIAG command was held in a hottemp condition by the NCU Master. Multiply this count by 1000 to obtain the total number of cycles. This can be divided by PM_L2_TLBIE_SLBIE_SENT to obtain the average time a TLBIE/SLBIEG/SLBIAG command was held. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
-> +  },
-> +  {
-> +    "EventCode": "0x0B0000026880",
-> +    "EventName": "PM_L2_SNP_TLBIE_SLBIE_DELAY",
-> +    "BriefDescription": "Cycles when a TLBIE/SLBIEG/SLBIAG that targets this thread's LPAR was in flight while in a hottemp condition. Multiply this count by 1000 to obtain the total number of cycles. This can be divided by PM_L2_SNP_TLBIE_SLBIE_START to obtain the overall efficiency. Note: ’inflight’ means SnpTLB has been sent to core(ie doesn’t include when SnpTLB is in NCU waiting to be launched serially behind different SnpTLB). The NCU Snooper gets in a ’hottemp’ delay window when it detects it is above its TLBIE/SLBIE threshold for process SnpTLBIE/SLBIE with this core. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
->     }
->   ]
+>   drivers/gpu/drm/i915/i915_pmu.c | 17 +++--------------
+>   1 file changed, 3 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
+> index 3a8bd11b87e7..b5d14dd318e4 100644
+> --- a/drivers/gpu/drm/i915/i915_pmu.c
+> +++ b/drivers/gpu/drm/i915/i915_pmu.c
+> @@ -1235,17 +1235,6 @@ static void i915_pmu_unregister_cpuhp_state(struct i915_pmu *pmu)
+>   	cpuhp_state_remove_instance(cpuhp_slot, &pmu->cpuhp.node);
+>   }
+>   
+> -static bool is_igp(struct drm_i915_private *i915)
+> -{
+> -	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
+> -
+> -	/* IGP is 0000:00:02.0 */
+> -	return pci_domain_nr(pdev->bus) == 0 &&
+> -	       pdev->bus->number == 0 &&
+> -	       PCI_SLOT(pdev->devfn) == 2 &&
+> -	       PCI_FUNC(pdev->devfn) == 0;
+> -}
+> -
+>   void i915_pmu_register(struct drm_i915_private *i915)
+>   {
+>   	struct i915_pmu *pmu = &i915->pmu;
+> @@ -1269,7 +1258,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>   	pmu->cpuhp.cpu = -1;
+>   	init_rc6(pmu);
+>   
+> -	if (!is_igp(i915)) {
+> +	if (IS_DGFX(i915)) {
+>   		pmu->name = kasprintf(GFP_KERNEL,
+>   				      "i915_%s",
+>   				      dev_name(i915->drm.dev));
+> @@ -1323,7 +1312,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
+>   	pmu->base.event_init = NULL;
+>   	free_event_attributes(pmu);
+>   err_name:
+> -	if (!is_igp(i915))
+> +	if (IS_DGFX(i915))
+>   		kfree(pmu->name);
+>   err:
+>   	drm_notice(&i915->drm, "Failed to register PMU!\n");
+> @@ -1351,7 +1340,7 @@ void i915_pmu_unregister(struct drm_i915_private *i915)
+>   	perf_pmu_unregister(&pmu->base);
+>   	pmu->base.event_init = NULL;
+>   	kfree(pmu->base.attr_groups);
+> -	if (!is_igp(i915))
+> +	if (IS_DGFX(i915))
+>   		kfree(pmu->name);
+>   	free_event_attributes(pmu);
+>   }
