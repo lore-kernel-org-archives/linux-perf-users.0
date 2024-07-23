@@ -1,145 +1,105 @@
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AF4313B599
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 15:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2913D55D;
+	Tue, 23 Jul 2024 15:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721747383; cv=none; b=khJIRV5TndJ6J+opOny6pE6VRt8jwk8IHrD22FpJ8BjibnHraIvw0qO1BddE/cUH3IgFG/CbUZS/JgzGMcvh+kgIJTNrbwdPyaNiLnCQCZr/X8Y6BIoNz/sq7Tobs9741zUypK9tBk5ROaqW1YTRPmeNAPqbX8f5h0pab/sokqY=
+	t=1721748402; cv=none; b=Xd25/TgRsmzLTpz/qKuH0huCtFf80+NwtHzSY7UoVlXZc1k1itXSt20e6Q4+E0BtlQHGJ5kjB4tPWknqihol0S+ujfxSSiw2GQ1uqai6VcrbbvXRxYxPeOOiaiFE+DijB7SX+BxTq4tZoBZBPo64FuK3Vt6QbWN6aIfx35qso10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721747383; c=relaxed/simple;
-	bh=5G031YT9XT7YFHSEVlrz3bOBO8dw7jLrIIxZwVn0yig=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ar8ZrZPdRmZGF7uMIqaHT+F/ANXitd+o56zvsbJ4WaDDMBaxn3hyz3aljf7IAXnUgcz1u4fW+FgZoYUihiteSipkc7MZSEqmHeZwkdoXBFi/1m/m+kDITOJGO/NqfmAVKLIHkuVveYYVeStX/k2mgHyo7JelrQ/BX56d8a849Yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=rg9uC+d9; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1721748402; c=relaxed/simple;
+	bh=xryDImbUX1dlt+hgOfpuRXIdJMiHobsAfX+ipkb2WVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PAwBb6is1ueORy218yGZBJO1iaIPTr8W9aoH83O/MdPbMKV4RCS2gYywvBy1lCdOP4m2KZQtnLcy1KabxdKUgnyXFG+kniFZ1L1BJKbuhrzjTMqDSayIUxXZXmJjLXEqGXBmJEd6Nerp8RgSAiiOZfRBvxDO3kDaiJGVhjE5O7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CjxG6FnG; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rg9uC+d9"
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-7a03ada9660so10099a12.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 08:09:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1721747381; x=1722352181; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OHtmeHUkZa9VAmNWyZWAYgFfFLiZeJu3qEKndF9+/HI=;
-        b=rg9uC+d9MWr8Liv++wCPYW+rM9wyI8Nx/7/3Bt7FpCa1jGvmR3Ldsa5j6iAOKzStZL
-         AUdirQWbVcoGV5RPOIijsFzoSDHeAGZBwh/fVqR0qAczxeURKgOzl1O+0pKnPuxLLRj4
-         +ueVN3QlIuo80PLoEvYtUMmDhmb4vVBGBydIojhkIZucdDNbCPWDFpi3Eb8cLt4cr0hu
-         cSJNCg2MVs/9yi+BOJ2hF0J23MvQkwCbLt4oCV9y76v6J8E/eUYJrJ3mPB86QCWYMFR6
-         pGnzf3ep/Abqw5+Eh/O5CuQfh8haiQJmUENANoSM3UJ/j6cxXnmOztaNL6xuSw5PSQ5W
-         5peA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721747381; x=1722352181;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OHtmeHUkZa9VAmNWyZWAYgFfFLiZeJu3qEKndF9+/HI=;
-        b=IHs10Mm+6ZJjixJPgJim2ulE7fK6tU7SREasxhcXo9HamIJTb02lwVZsLvuuafPqMn
-         2ljUtHQZ9czIHQhMRjW40Ya7Wq8leCwqS32h2/WUmX3WTzptCq6rYjQle+boyPJGJEYs
-         LC9cAJ4WmeUn7xIOvAwDy3bWHnN1edeDUBYLdcRl+bjojf3kDPDSq/6/mpX8XhKF0JLQ
-         BGq+e88dZ4M/s7gfvSMN0YudCDhC8lT8jjl3jfa9K2iXEPvs6yOEErQzIvKnDZpLn3MG
-         V25ILOoW66AHra6UN2UIjAhV8MeBeoBwL2t+S1SksDU+8QjQJD3ZPHk0IDLn5hqrxvg4
-         xHVg==
-X-Forwarded-Encrypted: i=1; AJvYcCWuTVJ18sPTP0nZ5l6hplvj+arazluSnu6GRXxbrSSD3lOJQR4TKqnLjtqh/DCiw5R/AcJ2nWz0182oAhX0kQ8aEIM85jtLiq4kkYIp3v7bcQ==
-X-Gm-Message-State: AOJu0YxdOshBxeXoFxYug7E9aQiLfkTxT0lJSZWf54lydV9Es54LCbi5
-	jxhSvK0fEv2hmUgTflqcpkb5po71oPhzbQMSqUBF8WT95bBE5VWCGSRGDFnyPCm5sUg7IyVYFF0
-	DfQlLBHVrdfMNxJntkpPIi/7i/RiKHAIq3RXIbg==
-X-Google-Smtp-Source: AGHT+IHh4f5ljYPfeqEzD+jOmwYWcdYXnMSSP6kzzoIGBrszeKVncWzDok/la26tdtDvUhOhPZhyGhGQ33wdS+mt58k=
-X-Received: by 2002:a17:90b:812:b0:2c9:7e9d:8424 with SMTP id
- 98e67ed59e1d1-2cd274f029cmr6446161a91.30.1721747380680; Tue, 23 Jul 2024
- 08:09:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CjxG6FnG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721748401; x=1753284401;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=xryDImbUX1dlt+hgOfpuRXIdJMiHobsAfX+ipkb2WVU=;
+  b=CjxG6FnGPmpik9BY5tbwIkmDZIpFaDiUYcbe1mhHAU2ORSj0COn/g/UO
+   moIGeFhovRYCFAq14G4NYV9ZBCAn7AVcCBxWq1fIP4ngnkugqsshciSIa
+   yvAwimwnM3FTnpDjkCPizjkh5ArHdd378p147+S1hQn4WjkFLuPut9u7p
+   akmT++ZdtHvqBkj5d4k6AK2j6k7txDZFEBHB2u32mT8wtCGGYh0x0rbBW
+   SQ8crPRzBMRg9JHMiUHmcLok8M92ZzPMXfgkoSM674LKQAu4yO2/CAei+
+   diJ5TxMvrxdogXxqtxWg7PPT4Po1hErqf9lDj1dlr4NMpazG0T33RLBUy
+   g==;
+X-CSE-ConnectionGUID: U9+H3gzfTTyGIC8obSEPKA==
+X-CSE-MsgGUID: YGpj1bL8RBiCDNI2R94NQQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="19565359"
+X-IronPort-AV: E=Sophos;i="6.09,230,1716274800"; 
+   d="scan'208";a="19565359"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 08:26:40 -0700
+X-CSE-ConnectionGUID: 4483HzCGTgy0cbrnFGvjNA==
+X-CSE-MsgGUID: WxdP7TkHSsKqGc157zuTdA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,230,1716274800"; 
+   d="scan'208";a="57382588"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 08:26:40 -0700
+Date: Tue, 23 Jul 2024 08:26:38 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: Re: [PATCH v1 2/2] perf script: Fix for `perf script +F metric` with
+ leader sampling
+Message-ID: <Zp_Lrlz1S5uVlovH@tassilo>
+References: <20240720074552.1915993-1-irogers@google.com>
+ <20240720074552.1915993-2-irogers@google.com>
+ <8c8da262-a398-41cc-9721-4e72e6b7e5fd@linaro.org>
+ <CAP-5=fWwjJuHpTJDMtxKYGDa9Sjo-kHk099vBTW8N-6_GtMfMw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240722152756.59453-1-james.clark@linaro.org> <20240722152756.59453-2-james.clark@linaro.org>
-In-Reply-To: <20240722152756.59453-2-james.clark@linaro.org>
-From: Mike Leach <mike.leach@linaro.org>
-Date: Tue, 23 Jul 2024 16:09:29 +0100
-Message-ID: <CAJ9a7VhLx0Zi0e-1qzcGCUWArkeD7vDkv0ewueDE_pYbmm5PVw@mail.gmail.com>
-Subject: Re: [PATCH 1/1] perf cs-etm: Output 0 instead of 0xdeadbeef when
- exception packets are flushed
-To: James Clark <james.clark@linaro.org>
-Cc: coresight@lists.linaro.org, gankulkarni@os.amperecomputing.com, 
-	leo.yan@arm.com, suzuki.poulose@arm.com, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	"Liang, Kan" <kan.liang@linux.intel.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fWwjJuHpTJDMtxKYGDa9Sjo-kHk099vBTW8N-6_GtMfMw@mail.gmail.com>
 
-On Mon, 22 Jul 2024 at 16:28, James Clark <james.clark@linaro.org> wrote:
->
-> Normally exception packets don't directly output a branch sample, but
-> if they're the last record in a buffer then they will. Because they
-> don't have addresses set we'll see the placeholder value
-> CS_ETM_INVAL_ADDR (0xdeadbeef) in the output.
->
-> Since commit 6035b6804bdf ("perf cs-etm: Support dummy address value for
-> CS_ETM_TRACE_ON packet") we've used 0 as an externally visible "not set"
-> address value. For consistency reasons and to not make exceptions look
-> like an error, change them to use 0 too.
->
-> This is particularly visible when doing userspace only tracing because
-> trace is disabled when jumping to the kernel, causing the flush and then
-> forcing the last exception packet to be emitted as a branch. With kernel
-> trace included, there is no flush so exception packets don't generate
-> samples until the next range packet and they'll pick up the correct
-> address.
->
-> Before:
->
->   $ perf record -e cs_etm//u -- stress -i 1 -t 1
->   $ perf script -F comm,ip,addr,flags
->
->   stress   syscall                    ffffb7eedbc0 => deadbeefdeadbeef
->   stress   syscall                    ffffb7f14a14 => deadbeefdeadbeef
->   stress   syscall                    ffffb7eedbc0 => deadbeefdeadbeef
->
-> After:
->
->   stress   syscall                    ffffb7eedbc0 =>                0
->   stress   syscall                    ffffb7f14a14 =>                0
->   stress   syscall                    ffffb7eedbc0 =>                0
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/util/cs-etm.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-> index 5e9fbcfad7d4..d3e9c64d17d4 100644
-> --- a/tools/perf/util/cs-etm.c
-> +++ b/tools/perf/util/cs-etm.c
-> @@ -1267,8 +1267,12 @@ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
->
->  static inline u64 cs_etm__first_executed_instr(struct cs_etm_packet *packet)
->  {
-> -       /* Returns 0 for the CS_ETM_DISCONTINUITY packet */
-> -       if (packet->sample_type == CS_ETM_DISCONTINUITY)
-> +       /*
-> +        * Return 0 for packets that have no addresses so that CS_ETM_INVAL_ADDR doesn't
-> +        * appear in samples.
-> +        */
-> +       if (packet->sample_type == CS_ETM_DISCONTINUITY ||
-> +           packet->sample_type == CS_ETM_EXCEPTION)
->                 return 0;
->
->         return packet->start_addr;
-> --
-> 2.34.1
->
+> > For some reason I only get the metric: lines when I record with -a. I
+> > noticed this because Andi's test doesn't use -a so it fails.
+> >
+> > I'm not sure if that's expected or it's related to your disclaimer below?
+> 
+> It is. When you don't do -a the cpu map just contains -1 and for some
 
-Reviewed-by: Mike Leach <mike.leach@linaro.org>
+The intention was to make it work without -a
 
--- 
-Mike Leach
-Principal Engineer, ARM Ltd.
-Manchester Design Centre. UK
+> reason it is busted. The whole indirections to arrays of arrays,
+
+That's what I tried to fix earlier with my patch that remapped to index 0,
+but it ran into the problem that it conflicted with the perf stat report setup.
+
+The metrics code doesn't really need a map, all it wants to do is to
+process the last contiguous group. 
+
+That is at some point perhaps it would be nice to extend it to multiple
+groups, but I wasn't trying to support that here.
+
+> counts, stats, aggregations, with indices into various other arrays
+> and a lack of helpers. The code works for perf stat, but there is a
+> lot of complexity that I don't fully grok in that. Here I've tried to
+
+I don't really know how we ended up with such convoluted code, but that's
+a different issue.
+
+-Andi
