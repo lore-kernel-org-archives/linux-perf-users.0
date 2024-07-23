@@ -1,137 +1,243 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810C58F5E;
-	Mon, 22 Jul 2024 23:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07EDF130499;
+	Tue, 23 Jul 2024 01:40:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721691353; cv=none; b=rwuhpPn4lx11vfmE9LUXzreCGOhLhpy26d36tlgsM92vVYjYAdyNYpgsivfFiWx7i8+XkeL1lHm2efFm9y62+33//dUgr/4ypc4Onc4t9RG1JhJJafK0H3+eBsGzD4WOBkvA6s+I5tQiuD/fTGDd4PIjV1ZAyvAfaFmBmY9WUk4=
+	t=1721698828; cv=none; b=ltNGnAa/3dOSqps7pwl50g4wiz3hNnVz1lOwcnaeyg8vLN2GKXduCUZV5JnwU2hSOuZkZ5F+7gNy0AaDCbaeydp63J5qX8Q6WPEcKPsmPC60SqpLqYLz7l6tye6ukqbcQR4ra0QnEBW5KNFQGqQcseTJc5gm/cSqDu/3/fmm8O0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721691353; c=relaxed/simple;
-	bh=uHBs++XUB5PWKoO0mZ43r19mbkrWMGRIfh+BSU4Ubuc=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ARzelVoyFMlM/82VxEGrbTb6kXfcEy0uSpbne4SjX1PSGvRcYEA+TaEPQKv3YFIgEtQVNotL7ZdIs9bsuCL0VcK9lTnFnahVP9jcgpwNjj1KgIIaJpz2HQ8LFFlaWuN52JpneP8LiH9NzSc58YFeZfLHT8eFtbO5DKPzQ50p8FU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MTTw4jEh; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MTTw4jEh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721691352; x=1753227352;
-  h=date:message-id:from:to:cc:subject:in-reply-to:
-   references:mime-version;
-  bh=uHBs++XUB5PWKoO0mZ43r19mbkrWMGRIfh+BSU4Ubuc=;
-  b=MTTw4jEhrU9kSjVhHbTiniX8jbwQJ8DeQg9WVdBvJVX4uR7e3tCoAqAW
-   Enwww5QZy/7Q2aQLiicf5CIUXMLdQOj5sKr1uI6SO2vdOBG8n5HGPMhND
-   DnyQmN5px/M1lFYBCSL46J12tDCoKrD+hyly6kNjePfjuK9S1BWau8ynE
-   f+voZOgijwkn0272Vbyq2nsGQPuG74hiK4MQ49l8qW+JiDQoKRn9up0NE
-   Rq57/G6mYYHvhjSiTAUWKnl6RnVpJY1fJIgFpyn8guSZSNj7jnO/FUWMv
-   50xyLhD9wqv2Oxx5/DhojmVv11M3ILrLdIiOgZgvBGaqWAZ1X9Y+JnBIc
-   Q==;
-X-CSE-ConnectionGUID: tIDtT98EQKeXMNDzkndJkg==
-X-CSE-MsgGUID: 5QZlejUzSDmXFCDbYhu2ow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="44713379"
-X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
-   d="scan'208";a="44713379"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 16:35:51 -0700
-X-CSE-ConnectionGUID: Djh7fBLgQL+Ljm5+Kp4vUA==
-X-CSE-MsgGUID: cF1aP7AUTiyovMn8k1nhrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
-   d="scan'208";a="51929193"
-Received: from dmprieto-mobl1.amr.corp.intel.com (HELO adixit-arch.intel.com) ([10.125.48.92])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 16:35:50 -0700
-Date: Mon, 22 Jul 2024 16:25:27 -0700
-Message-ID: <87a5i9c8m0.wl-ashutosh.dixit@intel.com>
-From: "Dixit, Ashutosh" <ashutosh.dixit@intel.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: intel-gfx@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	dri-devel@lists.freedesktop.org,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/7] drm/i915/pmu: Drop is_igp()
-In-Reply-To: <20240722210648.80892-5-lucas.demarchi@intel.com>
-References: <20240722210648.80892-1-lucas.demarchi@intel.com>
-	<20240722210648.80892-5-lucas.demarchi@intel.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?ISO-8859-4?Q?Goj=F2?=) APEL-LB/10.8 EasyPG/1.0.0
- Emacs/29.4 (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	s=arc-20240116; t=1721698828; c=relaxed/simple;
+	bh=sVjvHNuUXm641spj6PIypEZZtH0+lkWxhOlwvo3ea5o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dHlGaQ9Cui0a7EpawvUTOki9AdF5Uq9tNNl7KoLPWiTu63On7IWufa+MyZ9XX9qrFTPUE0I6lH/XlJEf6BFFHF3qnO9PDw3j20dJH5UueGtWBTk6gKnCJUYn/3AGyRr64ajrDchw6GOF0zIK3j3nB8M4jvUcRWriXqxG6Ong1i8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WSfth5z5rzdjqy;
+	Tue, 23 Jul 2024 09:38:36 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 46DA818005F;
+	Tue, 23 Jul 2024 09:40:23 +0800 (CST)
+Received: from [10.67.109.254] (10.67.109.254) by
+ kwepemi100008.china.huawei.com (7.221.188.57) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Tue, 23 Jul 2024 09:40:22 +0800
+Message-ID: <cff7274d-e423-9ac9-7d15-cedad7d85701@huawei.com>
+Date: Tue, 23 Jul 2024 09:40:21 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.2.0
+Subject: Re: [PATCH v3 2/2] riscv: stacktrace: Add USER_STACKTRACE support
+Content-Language: en-US
+To: <bjorn@kernel.org>, <paul.walmsley@sifive.com>, <palmer@dabbelt.com>,
+	<aou@eecs.berkeley.edu>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<dev.mbstr@gmail.com>, <samuel.holland@sifive.com>,
+	<linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>
+References: <20240708032847.2998158-1-ruanjinjie@huawei.com>
+ <20240708032847.2998158-3-ruanjinjie@huawei.com>
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+In-Reply-To: <20240708032847.2998158-3-ruanjinjie@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-On Mon, 22 Jul 2024 14:06:45 -0700, Lucas De Marchi wrote:
->
-> There's no reason to hardcode checking for integrated graphics on a
-> specific pci slot. That information is already available per platform an
-> can be checked with IS_DGFX().
 
-Reviewed-by: Ashutosh Dixit <ashutosh.dixit@intel.com>
 
-> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+On 2024/7/8 11:28, Jinjie Ruan wrote:
+> Currently, userstacktrace is unsupported for riscv. So use the
+> perf_callchain_user() code as blueprint to implement the
+> arch_stack_walk_user() which add userstacktrace support on riscv.
+> Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
+> of perf_callchain_user().
+> 
+> A ftrace test case is shown as below:
+> 
+> 	# cd /sys/kernel/debug/tracing
+> 	# echo 1 > options/userstacktrace
+> 	# echo 1 > options/sym-userobj
+> 	# echo 1 > events/sched/sched_process_fork/enable
+> 	# cat trace
+> 	......
+> 	            bash-178     [000] ...1.    97.968395: sched_process_fork: comm=bash pid=178 child_comm=bash child_pid=231
+> 	            bash-178     [000] ...1.    97.970075: <user stack trace>
+> 	 => /lib/libc.so.6[+0xb5090]
+> 
+> Also a simple perf test is ok as below:
+> 
+> 	# perf record -e cpu-clock --call-graph fp top
+> 	# perf report --call-graph
+> 
+> 	.....
+> 	[[31m  66.54%[[m     0.00%  top      [kernel.kallsyms]            [k] ret_from_exception
+>             |
+>             ---ret_from_exception
+>                |
+>                |--[[31m58.97%[[m--do_trap_ecall_u
+>                |          |
+>                |          |--[[31m17.34%[[m--__riscv_sys_read
+>                |          |          ksys_read
+>                |          |          |
+>                |          |           --[[31m16.88%[[m--vfs_read
+>                |          |                     |
+>                |          |                     |--[[31m10.90%[[m--seq_read
+
+Gentle ping.
+
+> 
+> Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Tested-by: Jinjie Ruan <ruanjinjie@huawei.com>
+> Cc: Björn Töpel <bjorn@kernel.org>
 > ---
->  drivers/gpu/drm/i915/i915_pmu.c | 17 +++--------------
->  1 file changed, 3 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/i915_pmu.c b/drivers/gpu/drm/i915/i915_pmu.c
-> index 3a8bd11b87e7..b5d14dd318e4 100644
-> --- a/drivers/gpu/drm/i915/i915_pmu.c
-> +++ b/drivers/gpu/drm/i915/i915_pmu.c
-> @@ -1235,17 +1235,6 @@ static void i915_pmu_unregister_cpuhp_state(struct i915_pmu *pmu)
->	cpuhp_state_remove_instance(cpuhp_slot, &pmu->cpuhp.node);
->  }
->
-> -static bool is_igp(struct drm_i915_private *i915)
-> -{
-> -	struct pci_dev *pdev = to_pci_dev(i915->drm.dev);
+> v3:
+> - Remove the LTP message as Björn suggested.
+> - Keep fp 16-bytes aligned in arch_stack_walk_user().
+> - Add the test info.
+> v2:
+> - Fix the cocci warning, !A || A && B is equivalent to !A || B.
+> ---
+> ---
+>  arch/riscv/Kconfig                 |  1 +
+>  arch/riscv/kernel/perf_callchain.c | 46 ++----------------------------
+>  arch/riscv/kernel/stacktrace.c     | 43 ++++++++++++++++++++++++++++
+>  3 files changed, 47 insertions(+), 43 deletions(-)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 3b44e7b51436..46121dbcf750 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -194,6 +194,7 @@ config RISCV
+>  	select THREAD_INFO_IN_TASK
+>  	select TRACE_IRQFLAGS_SUPPORT
+>  	select UACCESS_MEMCPY if !MMU
+> +	select USER_STACKTRACE_SUPPORT
+>  	select ZONE_DMA32 if 64BIT
+>  
+>  config CLANG_SUPPORTS_DYNAMIC_FTRACE
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+> index 2932791e9388..c7468af77c66 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
+> @@ -6,37 +6,9 @@
+>  
+>  #include <asm/stacktrace.h>
+>  
+> -/*
+> - * Get the return address for a single stackframe and return a pointer to the
+> - * next frame tail.
+> - */
+> -static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
+> -				    unsigned long fp, unsigned long reg_ra)
+> +static bool fill_callchain(void *entry, unsigned long pc)
+>  {
+> -	struct stackframe buftail;
+> -	unsigned long ra = 0;
+> -	unsigned long __user *user_frame_tail =
+> -		(unsigned long __user *)(fp - sizeof(struct stackframe));
 > -
-> -	/* IGP is 0000:00:02.0 */
-> -	return pci_domain_nr(pdev->bus) == 0 &&
-> -	       pdev->bus->number == 0 &&
-> -	       PCI_SLOT(pdev->devfn) == 2 &&
-> -	       PCI_FUNC(pdev->devfn) == 0;
+> -	/* Check accessibility of one struct frame_tail beyond */
+> -	if (!access_ok(user_frame_tail, sizeof(buftail)))
+> -		return 0;
+> -	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
+> -				      sizeof(buftail)))
+> -		return 0;
+> -
+> -	if (reg_ra != 0)
+> -		ra = reg_ra;
+> -	else
+> -		ra = buftail.ra;
+> -
+> -	fp = buftail.fp;
+> -	if (ra != 0)
+> -		perf_callchain_store(entry, ra);
+> -	else
+> -		return 0;
+> -
+> -	return fp;
+> +	return perf_callchain_store(entry, pc) == 0;
+>  }
+>  
+>  /*
+> @@ -56,19 +28,7 @@ static unsigned long user_backtrace(struct perf_callchain_entry_ctx *entry,
+>  void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  			 struct pt_regs *regs)
+>  {
+> -	unsigned long fp = 0;
+> -
+> -	fp = regs->s0;
+> -	perf_callchain_store(entry, regs->epc);
+> -
+> -	fp = user_backtrace(entry, fp, regs->ra);
+> -	while (fp && !(fp & 0x7) && entry->nr < entry->max_stack)
+> -		fp = user_backtrace(entry, fp, 0);
 > -}
 > -
->  void i915_pmu_register(struct drm_i915_private *i915)
->  {
->	struct i915_pmu *pmu = &i915->pmu;
-> @@ -1269,7 +1258,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
->	pmu->cpuhp.cpu = -1;
->	init_rc6(pmu);
->
-> -	if (!is_igp(i915)) {
-> +	if (IS_DGFX(i915)) {
->		pmu->name = kasprintf(GFP_KERNEL,
->				      "i915_%s",
->				      dev_name(i915->drm.dev));
-> @@ -1323,7 +1312,7 @@ void i915_pmu_register(struct drm_i915_private *i915)
->	pmu->base.event_init = NULL;
->	free_event_attributes(pmu);
->  err_name:
-> -	if (!is_igp(i915))
-> +	if (IS_DGFX(i915))
->		kfree(pmu->name);
->  err:
->	drm_notice(&i915->drm, "Failed to register PMU!\n");
-> @@ -1351,7 +1340,7 @@ void i915_pmu_unregister(struct drm_i915_private *i915)
->	perf_pmu_unregister(&pmu->base);
->	pmu->base.event_init = NULL;
->	kfree(pmu->base.attr_groups);
-> -	if (!is_igp(i915))
-> +	if (IS_DGFX(i915))
->		kfree(pmu->name);
->	free_event_attributes(pmu);
+> -static bool fill_callchain(void *entry, unsigned long pc)
+> -{
+> -	return perf_callchain_store(entry, pc) == 0;
+> +	arch_stack_walk_user(fill_callchain, entry, regs);
 >  }
-> --
-> 2.43.0
->
+>  
+>  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+> diff --git a/arch/riscv/kernel/stacktrace.c b/arch/riscv/kernel/stacktrace.c
+> index 0d3f00eb0bae..5480cc11b523 100644
+> --- a/arch/riscv/kernel/stacktrace.c
+> +++ b/arch/riscv/kernel/stacktrace.c
+> @@ -161,3 +161,46 @@ noinline noinstr void arch_stack_walk(stack_trace_consume_fn consume_entry, void
+>  {
+>  	walk_stackframe(task, regs, consume_entry, cookie);
+>  }
+> +
+> +/*
+> + * Get the return address for a single stackframe and return a pointer to the
+> + * next frame tail.
+> + */
+> +static unsigned long unwind_user_frame(stack_trace_consume_fn consume_entry,
+> +				       void *cookie, unsigned long fp,
+> +				       unsigned long reg_ra)
+> +{
+> +	struct stackframe buftail;
+> +	unsigned long ra = 0;
+> +	unsigned long __user *user_frame_tail =
+> +		(unsigned long __user *)(fp - sizeof(struct stackframe));
+> +
+> +	/* Check accessibility of one struct frame_tail beyond */
+> +	if (!access_ok(user_frame_tail, sizeof(buftail)))
+> +		return 0;
+> +	if (__copy_from_user_inatomic(&buftail, user_frame_tail,
+> +				      sizeof(buftail)))
+> +		return 0;
+> +
+> +	ra = reg_ra ? : buftail.ra;
+> +
+> +	fp = buftail.fp;
+> +	if (!ra || !consume_entry(cookie, ra))
+> +		return 0;
+> +
+> +	return fp;
+> +}
+> +
+> +void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
+> +			  const struct pt_regs *regs)
+> +{
+> +	unsigned long fp = 0;
+> +
+> +	fp = regs->s0;
+> +	if (!consume_entry(cookie, regs->epc))
+> +		return;
+> +
+> +	fp = unwind_user_frame(consume_entry, cookie, fp, regs->ra);
+> +	while (fp && !(fp & 0x7))
+> +		fp = unwind_user_frame(consume_entry, cookie, fp, 0);
+> +}
