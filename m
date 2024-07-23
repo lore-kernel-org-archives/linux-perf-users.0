@@ -1,164 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A23CE1494C1
-	for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 23:29:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B551428E5;
+	Tue, 23 Jul 2024 23:49:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721777396; cv=none; b=q+b59wqAcz141m4voyngcqs1EoRSacJQKjNvSNgEE4SN7jTkHtHl1EcEfcSyDCweVkcb9SEOmgw9WI9wsFr0+tqfRnIX9tmdxyQw0f7nOOmJPKoPidCIuSaQMZjNkHcD96tKK+n2ytcDvOSOqxeD9brod1RxbKWJ2gemHuWqpyg=
+	t=1721778545; cv=none; b=pUvJ3cI+7vgC+vHeFIiq6KerP9VGFBmTsDrlkrHZ5ZsbIQpR3V5yQg4DAQrpJ6Pl1u1v0UtiJBVOnqaCOIY+whoLcxzwVibHUO/YFSjcIKCZSGy3D9ijV2gIOAeNWc93hGXRXI62jPONViQmvpRxqSbAUnsUg6XUwis3gKZH/a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721777396; c=relaxed/simple;
-	bh=b0x5mj9KP1x+QJx+Frnnr7/pOxpSCu28Z/yHzVUr+dE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZIkkunZDGtay2w41YRi8jeLtxzNoNGwOaA/URV54a9V/FmraGgbowAPKdcLZuKIFkkC6Pgs1ulwFt05I9/8kReYX6byCJ8G3n9gwr1bfpyeOVkMZRIVSjrJ7n3n5HGnEReVG1lzwXQw2yYTfHfewAdWt2ooEqyNAyEDKbA32NKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dx6AiVAG; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dx6AiVAG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721777395; x=1753313395;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=b0x5mj9KP1x+QJx+Frnnr7/pOxpSCu28Z/yHzVUr+dE=;
-  b=Dx6AiVAGn0UYybRWnRhTmcvERm/8J1FLOZAmfag7s5C9t3R7BxLUzFDv
-   9grbS0XLngPlQseiz0Tbn6/4G+YBI25ocgmZ273/FMuOflLAvYwpW1dsc
-   kKILlouakIfBoip8xkTZaBl2h+025Rn7899crqSLIfOjek4G9fN/yApWn
-   Irgpi5i+uglzozSw/+RFl7HD5I1KCltFJqXQGSI1wOtrb4difEah8+HRX
-   ztBx21+UKZb7rxzzB9MkflR+GkglktYtwoTMaTZXWSdw0LCFIrwy1K0/F
-   ZcEHsMuDYsIs6FAxlcet1265KdbQlOXetQE1mHNu37Nc1EUENtUx6q7Ui
-   g==;
-X-CSE-ConnectionGUID: cVDAIkN0RiiOueCv/IK6qQ==
-X-CSE-MsgGUID: DuVJK9z7QYK+g1yEIrrZKg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="19576468"
-X-IronPort-AV: E=Sophos;i="6.09,231,1716274800"; 
-   d="scan'208";a="19576468"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 16:29:54 -0700
-X-CSE-ConnectionGUID: D/qcAyHaTXmYuncp35JDsA==
-X-CSE-MsgGUID: yq++oxMERZmwiMj+pydyPg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,231,1716274800"; 
-   d="scan'208";a="57218145"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 16:29:54 -0700
-Date: Tue, 23 Jul 2024 16:29:52 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] perf script: Fix perf script -F +metric
-Message-ID: <ZqA88FMUcDFwrobi@tassilo>
-References: <20240723204834.3617647-1-ak@linux.intel.com>
- <20240723204834.3617647-3-ak@linux.intel.com>
- <CAP-5=fU8=gTatcHkvN8jv72_dJvaAb3FE+pnWB2LSN=SM0dRxw@mail.gmail.com>
+	s=arc-20240116; t=1721778545; c=relaxed/simple;
+	bh=eiKPaDJVI8thbirsTj9moPAtpHQhk5vhl9tlBHetZg8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZS6dddSTySJf1gaXpckpj3fF1GqrzyGzPfFwVedZkevHbpVcAg0vtzDs7Kfk/ZSssOErPVfiyciD6eX0Nejva/k1UiiSZb9gYBjbVk85vwzc0l4zSgAfkBO3TVbpznCZJKuUN/HVs0Jzy+kwZRrzhamM9DlrAIDBuHYB2blxkXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2cb56c2c30eso247127a91.1;
+        Tue, 23 Jul 2024 16:49:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721778543; x=1722383343;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=780s1sloRo3IdLarrsTsBd2s1gD1Kv22T8WvzKSt8os=;
+        b=ii/O/u/42ndqO2GwydtIX3gRnENFxaCIz1aeC0j4BAoJPL7a/0CVz49ceaiYkJaspu
+         Tz8wCNA/3FDCLXAL41YlPb4hHHQg3iZpIVEuax/LwbR6vzRyM64SOR2u3SheIOxLKe6G
+         ArbjGcofiYmSgufDXC7I8vbB+1sXRSNY6UwZrWtSQpKYW06BfAwKcgz4RtEwbXPpH36K
+         NgaUFrLl8DtAbzo1r1sWFeR/CEZ06e96wz8SBkNQ/4DhKDL2RPhZO0DIMn+K1tR2LXSV
+         w/ik+s4KLKPVDw9yQlbsvyf7RERv7d6UkNv6mIfZ6eDawnq1FnkE2ownDx4ePt+Bsh2z
+         B9cA==
+X-Forwarded-Encrypted: i=1; AJvYcCVWFosvdj1TaJNEmCBdX2/iCHw4nEiRqhp6WyAsMO5GxDJN+6O54Ek4eqpB01TYP2HaFCO3M2LIlBkQjznSh5s/kRpbAaXNDIpUbMKs4rjBxcUEVA+PEmI/3jVow7w98L6srl/wLhYDqDOhui2quFseHulO7+Uefj/yYkMZnM9LeFd20g==
+X-Gm-Message-State: AOJu0Ywa6iDifwjSvDVIKoUtZdN9Wv1BGuxnA+wOo2lcPJW5p2FQBh1D
+	LdGE82d+obZItvszsrVUJ/fUWhwVYos3DCYLKCS/o7BMsvm/dG3ieHGrzlTIdmHcah1Fr3nCxCF
+	2sKMo1Js49gGGMx47MEKJrF+zv1k=
+X-Google-Smtp-Source: AGHT+IGdtAur4DGnenUkt7vmFCXHfRn8bdNsNj+zwg5QMRyVb6UQ1FmJcE0kIkHeUurc1jYSAUhgS42w/Unm2kSvCqE=
+X-Received: by 2002:a17:90b:3841:b0:2c8:8bf8:4e24 with SMTP id
+ 98e67ed59e1d1-2cdb93bcc00mr343439a91.8.1721778543299; Tue, 23 Jul 2024
+ 16:49:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU8=gTatcHkvN8jv72_dJvaAb3FE+pnWB2LSN=SM0dRxw@mail.gmail.com>
+References: <20240703223035.2024586-1-namhyung@kernel.org>
+In-Reply-To: <20240703223035.2024586-1-namhyung@kernel.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 23 Jul 2024 16:48:51 -0700
+Message-ID: <CAM9d7cidaC5ZCjpaF=HuDza_W4HtzRp--LA48iEy8jSznS0EmA@mail.gmail.com>
+Subject: Re: [PATCHSET v3 0/8] perf record: Use a pinned BPF program for filter
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 23, 2024 at 02:32:33PM -0700, Ian Rogers wrote:
-> On Tue, Jul 23, 2024 at 1:48 PM Andi Kleen <ak@linux.intel.com> wrote:
-> >
-> > This fixes a regression with perf script -F +metric originally caused by :
-> >
-> > commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
-> > Author: Ian Rogers <irogers@google.com>
-> > Date:   Sun Feb 19 01:28:46 2023 -0800
-> >
-> >     perf metric: Directly use counts rather than saved_value
-> >
-> > In the perf script environment the evsel wouldn't allocate an aggr
-> > values array, which led to a -1 reference because the metric
-> > evaluation would try to reference NULL - 1 (for aggr_idx)
-> >
-> > Give the perf script evsels a single CPU aggr setup. That's
-> > enough because the groups are always contiguous, so no need
-> > to store more than one CPU's worth of values.
-> 
-> I don't follow this. Samples have CPUs but you're associating all
-> values with CPU0. Why not just use counts and aggregation properly?
+Ping!
 
-Why use something that is not needed?
-
-It's not needed because the CPUs are not interleaved because the code
-is just processing a single group which only has counts from 
-a single CPU. And there is no need to output an extra index for the
-count because the sample already has all the context.
-
-If it was extended to multiple groups it would be needed, but it's not 
-clear how useful it is. The benefit of the feature is that you 
-can get the metric at a very fine grained level -- only for the time interval
-since the last sample.
-
-Doing it for multiple groups means you would do some level of
-aggregation over longer time periods.. You could handle more complex metrics,
-but would lose this very fine grain benefit. If you want that it's probably
-better use perf report's time slicing feature instead of perf script.
-That one currently doesn't support metrics though, but probably it
-should.
-
-> > @@ -2325,6 +2330,20 @@ static void process_event(struct perf_script *script,
-> >                 fflush(fp);
-> >  }
-> >
-> > +static void check_metric_conflict(void)
-> > +{
-> > +       int i;
-> > +       /*
-> > +        * Avoid conflict with the aggregation mode used for the metric printing.
-> > +        */
-> > +       for (i = 0; i < OUTPUT_TYPE_MAX; i++) {
-> > +               if (output[i].fields & PERF_OUTPUT_METRIC) {
-> > +                       fprintf(stderr, "perf stat record files are not supported with -F metric\n");
-> > +                       exit(1);
-> > +               }
-> > +       }
-> > +}
-> > +
-> 
-> No idea what this is doing. What's conflicting with what?
-
-The conflict is between the -F +metric setup and processing STAT*
-records in the perf.data (as generated by perf stat record) 
-The later uses AGGR_NONE which is a conflict.
-
-> >
-> > @@ -3785,6 +3810,8 @@ int process_cpu_map_event(struct perf_session *session,
-> >         if (dump_trace)
-> >                 perf_event__fprintf_cpu_map(event, stdout);
-> >
-> > +       check_metric_conflict();
-> > +
-> >         if (script->cpus) {
-> >                 pr_warning("Extra cpu map event, ignoring.\n");
-> >                 return 0;
-> > @@ -4088,6 +4115,10 @@ int cmd_script(int argc, const char **argv)
-> >
-> >         argc = parse_options_subcommand(argc, argv, options, script_subcommands, script_usage,
-> >                              PARSE_OPT_STOP_AT_NON_OPTION);
-> > +       for (i = 0; i < OUTPUT_TYPE_MAX; i++) {
-> > +               if (output[i].fields & PERF_OUTPUT_METRIC)
-> > +                       stat_config.aggr_map = &(struct cpu_aggr_map){ .nr = 1 };
-> 
-> Assigning the address a temporary rval to a global variable seems
-> wrong to the point I'm surprised it compiles. Accessing
-
-AFAIK gcc keeps the local around for the function, but you're right 
-it's not good code, especially with the buffer overrun.
-
-
-> stat_config.aggr_map->map[0] will lead to reading beyond the end of
-> the value and presumably read uninitialized memory.  Compiling with
-> EXTRA_CFLAGS="-fsanitize=address" should complain about all of this.
-
-Good point, but I doubt the address sanitizer would have caught 
-it because it doesn't really track the stack.
-
--Andi
+On Wed, Jul 3, 2024 at 3:30=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> Hello,
+>
+> This is to support the unprivileged BPF filter for profiling per-task eve=
+nts.
+> Until now only root (or any user with CAP_BPF) can use the filter and we
+> cannot add a new unprivileged BPF program types.  After talking with the =
+BPF
+> folks at LSF/MM/BPF 2024, I was told that this is the way to go.  Finally=
+ I
+> managed to make it working with pinned BPF objects. :)
+>
+> v3 changes)
+>  * rebased onto latest perf-tools-next
+>
+> v2 changes)
+>  * rebased onto Ian's UID/GID (non-sample data based) filter term change
+>  * support separate lost counts for each use case
+>  * update the test case to allow normal users (if supported)
+>
+>
+> This only supports the per-task mode for normal users and root still uses
+> its own instance of the same BPF program - not shared with other users.
+> But it requires the one-time setup (by root) before using it by normal us=
+ers
+> like below.
+>
+>   $ sudo perf record --setup-filter pin
+>
+> This will load the BPF program and maps and pin them in the BPF-fs.  Then
+> normal users can use the filter.
+>
+>   $ perf record -o- -e cycles:u --filter 'period < 10000' perf test -w no=
+ploop | perf script -i-
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.011 MB - ]
+>         perf  759982 448227.214189:          1 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214195:          1 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214196:          7 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214196:        223 cycles:u:      7f153719f4d=
+0 _start+0x0 (/usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2)
+>         perf  759982 448227.214198:       9475 cycles:u:  ffffffff8ee012a=
+0 [unknown] ([unknown])
+>         perf  759982 448227.548608:          1 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548611:          1 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548612:         12 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>         perf  759982 448227.548613:        466 cycles:u:      559a9f03c81=
+c noploop+0x5c (/home/namhyung/linux/tools/perf/perf)
+>
+> It's also possible to unload (and unpin, of course) using this command:
+>
+>   $ sudo perf record --setup-filter unpin
+>
+> The code is avaiable in 'perf/pinned-filter-v3' branch at
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
+>
+>
+> Namhyung Kim (8):
+>   perf bpf-filter: Make filters map a single entry hashmap
+>   perf bpf-filter: Pass 'target' to perf_bpf_filter__prepare()
+>   perf bpf-filter: Split per-task filter use case
+>   perf bpf-filter: Support pin/unpin BPF object
+>   perf bpf-filter: Support separate lost counts for each filter
+>   perf record: Fix a potential error handling issue
+>   perf record: Add --setup-filter option
+>   perf test: Update sample filtering test
+>
+>  tools/perf/Documentation/perf-record.txt     |   5 +
+>  tools/perf/builtin-record.c                  |  23 +-
+>  tools/perf/builtin-stat.c                    |   2 +-
+>  tools/perf/builtin-top.c                     |   2 +-
+>  tools/perf/builtin-trace.c                   |   2 +-
+>  tools/perf/tests/shell/record_bpf_filter.sh  |  13 +-
+>  tools/perf/util/bpf-filter.c                 | 406 +++++++++++++++++--
+>  tools/perf/util/bpf-filter.h                 |  19 +-
+>  tools/perf/util/bpf_skel/sample-filter.h     |   2 +
+>  tools/perf/util/bpf_skel/sample_filter.bpf.c |  75 +++-
+>  tools/perf/util/evlist.c                     |   5 +-
+>  tools/perf/util/evlist.h                     |   4 +-
+>  12 files changed, 483 insertions(+), 75 deletions(-)
+>
+> --
+> 2.45.2.803.g4e1b14247a-goog
+>
+>
