@@ -1,32 +1,32 @@
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484DA139CEE;
-	Tue, 23 Jul 2024 01:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C68139CEE;
+	Tue, 23 Jul 2024 01:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721699431; cv=none; b=YqVjQVLwCaL2dJQs6emp+1m+o4LNjIz48GA3Xv/viHrvwaltNJbEMNCRM1z9sRfEfzN8dG95yNr386lgVNXWAdhbJzRfiaHhJqyMrOIGGsGIDz4kqMypK0y2UkcHDm6WLyeRGHFPEbh4a4OcT/OjOHYwGeszdtkMalvQwA1fqS8=
+	t=1721699480; cv=none; b=KeM233Q1IWfnKHk3XYYOIE35ANF1oNRn8p958YZo9A+Q7D6OS3iHzRqAyl/WMTQN5n7JiC5nr1a7KTTWsYHxiKKkuJ6wIueFusB5q5ThC+NfIq6EqptOJC6i4Pe3HurvMkZE+3PLldPITbgft442pKw0q/+aILEsPUgqgJq8IKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721699431; c=relaxed/simple;
-	bh=JepNrDx4K8sZTRxSC+l9f4Kkf/prn4l816EUQfmDFhs=;
+	s=arc-20240116; t=1721699480; c=relaxed/simple;
+	bh=5LiQPHIwYBb1eBYWiM2k4mKF98UwqsjReBTe6Fg2DKE=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=eT1+Q1wLmEeFdExJ++GBico5It4YAUlx4sqc2uwJV6ajbFd1n760J20LGzyeUXrsrKkok7w8DiQSXJfMjPWPmBb/0IWOK3w1ZXmhgmGaXBHfbPLqOhcNlQYIrqKaR51kafXW/zeKiaR3ujaF3FbHwIiflP9UzMwZJY0RjjW27Ds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+	 Content-Type:MIME-Version; b=lL4aJOromcxuGa1NjTtzemynpTd8v1tBnRusNZhy0AU2Az2t0andXra/C1PF1tFOLZRE7XgizT3926dS1d07xBjEwoiAtDyIutVMY6vuh/+al6IarORF50Af5iIZL0LcVDyZFsnYlJXGcwVJxhvq8xvtRqily83EXzAL46i0RSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4WSg3W5F5rzQmXl;
-	Tue, 23 Jul 2024 09:46:15 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WSg8P5V8Sznc5l;
+	Tue, 23 Jul 2024 09:50:29 +0800 (CST)
 Received: from kwepemd200010.china.huawei.com (unknown [7.221.188.124])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6995C18009D;
-	Tue, 23 Jul 2024 09:50:25 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 73FBE18005F;
+	Tue, 23 Jul 2024 09:51:16 +0800 (CST)
 Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
  kwepemd200010.china.huawei.com (7.221.188.124) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 23 Jul 2024 09:50:25 +0800
+ 15.2.1258.34; Tue, 23 Jul 2024 09:51:16 +0800
 Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
  kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Tue, 23 Jul 2024 09:50:25 +0800
+ Tue, 23 Jul 2024 09:51:16 +0800
 From: duchangbin <changbin.du@huawei.com>
 To: Adrian Hunter <adrian.hunter@intel.com>
 CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
@@ -41,26 +41,26 @@ CC: duchangbin <changbin.du@huawei.com>, Peter Zijlstra
 	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	"llvm@lists.linux.dev" <llvm@lists.linux.dev>, "Wanghui (OS Kernel Lab,
  Beijing)" <hw.huiwang@huawei.com>
-Subject: Re: [PATCH v5 1/8] perf: support specify vdso path in cmdline
-Thread-Topic: [PATCH v5 1/8] perf: support specify vdso path in cmdline
-Thread-Index: AQHazDb0ZhAUVWMBRUqSRKo3S0nR4rH8SfEAgAaAVoD//4nBAIABWM0A
-Date: Tue, 23 Jul 2024 01:50:24 +0000
-Message-ID: <04f65d430ccc4f88bd8c65e0adb463ad@huawei.com>
+Subject: Re: [PATCH v5 4/8] perf: build-id: name debugging vdso as "debug"
+Thread-Topic: [PATCH v5 4/8] perf: build-id: name debugging vdso as "debug"
+Thread-Index: AQHazDb2iq3pHVuvbEa2f6W9l9N6m7H8Si6AgAZ9IID//45bAIABV2YA
+Date: Tue, 23 Jul 2024 01:51:15 +0000
+Message-ID: <0d7e5c9b27044e6eac89708d407c08fe@huawei.com>
 References: <20240702041837.5306-1-changbin.du@huawei.com>
- <20240702041837.5306-2-changbin.du@huawei.com>
- <4ddbcd4a-bbf1-4773-94da-0a2ad63469dc@intel.com>
- <c8fef007dd694d0993cd007c44f458ff@huawei.com>
- <02930c55-6423-4db4-b6f3-b783c572c121@intel.com>
-In-Reply-To: <02930c55-6423-4db4-b6f3-b783c572c121@intel.com>
+ <20240702041837.5306-5-changbin.du@huawei.com>
+ <14afba8e-cb85-4d7d-96e4-d65fd8ebc2d5@intel.com>
+ <8a7156281b45450ebf0511373f65afa7@huawei.com>
+ <22bee274-23e1-4298-a936-50bebd802482@intel.com>
+In-Reply-To: <22bee274-23e1-4298-a936-50bebd802482@intel.com>
 Accept-Language: en-US
 Content-Language: zh-CN
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
 x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
 x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3F352BFE81BCF4458457EB0BDEBDD84D@huawei.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <002BCEC86177134BB94BC88C6D86F367@huawei.com>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,167 +68,105 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 
-T24gTW9uLCBKdWwgMjIsIDIwMjQgYXQgMDQ6MTU6NTZQTSArMDMwMCwgQWRyaWFuIEh1bnRlciB3
-cm90ZToNCj4gT24gMjIvMDcvMjQgMTU6MTksIGR1Y2hhbmdiaW4gd3JvdGU6DQo+ID4gT24gVGh1
-LCBKdWwgMTgsIDIwMjQgYXQgMDg6MDI6MTZQTSArMDMwMCwgQWRyaWFuIEh1bnRlciB3cm90ZToN
-Cj4gPj4gT24gMi8wNy8yNCAwNzoxOCwgQ2hhbmdiaW4gRHUgd3JvdGU6DQo+ID4+PiBUaGUgdmRz
-byBkdW1wZWQgZnJvbSBwcm9jZXNzIG1lbW9yeSAoaW4gYnVpbGRpZC1jYWNoZSkgbGFja3MgZGVi
-dWdnaW5nDQo+ID4+PiBpbmZvLiBUbyBhbm5vdGF0ZSB2ZHNvIHN5bWJvbHMgd2l0aCBzb3VyY2Ug
-bGluZXMgd2UgbmVlZCBzcGVjaWZ5IGENCj4gPj4+IGRlYnVnZ2luZyB2ZXJzaW9uLg0KPiA+Pj4N
-Cj4gPj4+IEZvciB4ODYsIHdlIGNhbiBmaW5kIHRoZW0gZnJvbSB5b3VyIGxvY2FsIGJ1aWxkIGFz
-DQo+ID4+PiBhcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc297MzIsNjR9LnNvLmRiZy4gT3IgdGhleSBt
-YXkgcmVzaWRlIGluDQo+ID4+PiAvbGliL21vZHVsZXMvPHZlcnNpb24+L3Zkc28vdmRzb3szMiw2
-NH0uc28gb24gVWJ1bnR1LiBCdXQgbm90aWNlIHRoYXQNCj4gPj4+IHRoZSBidWlsZGlkIGhhcyB0
-byBtYXRjaC4NCj4gPj4+DQo+ID4+PiAkIHN1ZG8gcGVyZiByZWNvcmQgLWENCj4gPj4+ICQgc3Vk
-byBwZXJmIHJlcG9ydCAtLW9iamR1bXA9bGx2bS1vYmpkdW1wIFwNCj4gPj4+ICAgLS12ZHNvIGFy
-Y2gveDg2L2VudHJ5L3Zkc28vdmRzbzY0LnNvLmRiZyxhcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc28z
-Mi5zby5kYmcNCj4gPj4+DQo+ID4+PiBTYW1wbGVzOiAxN0sgb2YgZXZlbnQgJ2N5Y2xlczpQJywg
-NDAwMCBIeiwgRXZlbnQgY291bnQgKGFwcHJveC4pOiAxNzYwDQo+ID4+PiBfX3Zkc29fY2xvY2tf
-Z2V0dGltZSAgL3dvcmsvbGludXgtaG9zdC9hcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc282NC5zby5k
-DQo+ID4+PiBQZXJjZW504pSCICAgICAgIG1vdnEgICAgLTQ4KCVyYnApLCVyc2kNCj4gPj4+ICAg
-ICAgICDilIIgICAgICAgdGVzdHEgICAlcmF4LCVyYXgNCj4gPj4+ICAgICAgICDilIIgICAgIDsg
-ICAgICAgICAgICAgICByZXR1cm4gdnJlYWRfaHZjbG9jaygpOw0KPiA+Pj4gICAgICAgIOKUgiAg
-ICAgICBtb3ZxICAgICVyYXgsJXJkeA0KPiA+Pj4gICAgICAgIOKUgiAgICAgOyAgICAgICAgICAg
-ICAgIGlmICh1bmxpa2VseSghdmRzb19jeWNsZXNfb2soY3ljbGVzKSkpDQo+ID4+PiAgICAgICAg
-4pSCICAgICDihpEganMgICAgICBlYg0KPiA+Pj4gICAgICAgIOKUgiAgICAg4oaRIGptcCAgICAg
-NzQNCj4gPj4+ICAgICAgICDilIIgICAgIDsgICAgICAgICAgICAgICB0cy0+dHZfc2VjID0gdmRz
-b190cy0+c2VjOw0KPiA+Pj4gICAwLjAyIOKUgjE0NzogICBsZWFxICAgIDIoJXJieCksJXJheA0K
-PiA+Pj4gICAgICAgIOKUgiAgICAgICBzaGxxICAgICQ0LCAlcmF4DQo+ID4+PiAgICAgICAg4pSC
-ICAgICAgIGFkZHEgICAgJXIxMCwlcmF4DQo+ID4+PiAgICAgICAg4pSCICAgICA7ICAgICAgICAg
-ICAgICAgd2hpbGUgKChzZXEgPSBSRUFEX09OQ0UodmQtPnNlcSkpICYgMSkgew0KPiA+Pj4gICA5
-LjM4IOKUgjE1MjogICBtb3ZsICAgICglcjEwKSwlZWN4DQo+ID4+Pg0KPiA+Pj4gV2hlbiBkb2lu
-ZyBjcm9zcyBwbGF0Zm9ybSBhbmFseXNpcywgd2UgYWxzbyBuZWVkIHNwZWNpZnkgdGhlIHZkc28g
-cGF0aCBpZg0KPiA+Pj4gd2UgYXJlIGludGVyZXN0ZWQgaW4gaXRzIHN5bWJvbHMuDQo+ID4+Pg0K
-PiA+Pg0KPiA+PiBKdXN0IHJlYWxpemVkIHRoaXMgaXMgYWJvdXQgb2JqZHVtcC4gIFNvcnJ5IGZv
-ciBub3QgZ2V0dGluZyB0aGF0DQo+ID4+IGVhcmxpZXIuDQo+ID4+DQo+ID4+IExpa2UgcGVyZiB0
-b29scywgb2JqZHVtcCBmb2xsb3dzIHRoZSBwYXJhZGlnbSBvZiBhdHRlbXB0aW5nIHRvDQo+ID4+
-IGxvY2F0ZSBhbmQgdXNlIGRlYnVnIGluZm8gdHJhbnNwYXJlbnRseS4gIEhvd2V2ZXIsIG9iamR1
-bXAgbG9va3MNCj4gPj4gYXQgdGhlIGluc3RhbGxlZCBkZWJ1ZyBpbmZvIGluIC91c3IvbGliL2Rl
-YnVnLy5idWlsZC1pZC8NCj4gPj4NCj4gPj4gRm9yIGV4YW1wbGUsIGlmIHRoZSBkZWJ1ZyBmaWxl
-IGlzIGNvcGllZCAob3IgbGlua2VkKSB0aGVyZSwgdGhlbg0KPiA+PiBvYmpkdW1wIG9yIGxsdm0t
-b2JqZHVtcCB3aWxsIGZpbmQgaXQ6DQo+ID4+DQo+ID4+ICQgbGx2bS1vYmpkdW1wLTE4IC1kUyB+
-Ly5kZWJ1Zy9cW3Zkc29cXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0
-L3Zkc28gfCBoZWFkIC0yMA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0NjlmNDYz
-Nzg0MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVsZjY0
-LXg4Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+Pg0K
-PiA+PiAwMDAwMDAwMDAwMDAwNmQwIDwudGV4dD46DQo+ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5
-IGQ5IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZkNyglcmlwKSwgJXJkaSAgICAgIyAweGZm
-ZmZmZmZmZmZmZmUwMDANCj4gPj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAg
-ICAgam1wICAgICAweDZmMiA8LnRleHQrMHgyMj4NCj4gPj4gICAgIDZkOTogNGMgOGIgMGQgMjgg
-ZDkgZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ4KCVyaXApLCAlcjkgICAgICAjIDB4ZmZm
-ZmZmZmZmZmZmZTAwOA0KPiA+PiAgICAgNmUwOiA0YyA4YiAwNSAyOSBkOSBmZiBmZiAgICAgICAg
-ICBtb3ZxICAgIC0weDI2ZDcoJXJpcCksICVyOCAgICAgICMgMHhmZmZmZmZmZmZmZmZlMDEwDQo+
-ID4+ICAgICA2ZTc6IDBmIDAxIGY5ICAgICAgICAgICAgICAgICAgICAgIHJkdHNjcA0KPiA+PiAg
-ICAgNmVhOiA2NiA5MCAgICAgICAgICAgICAgICAgICAgICAgICBub3ANCj4gPj4gICAgIDZlYzog
-OGIgMGYgICAgICAgICAgICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4g
-ICAgIDZlZTogMzkgY2UgICAgICAgICAgICAgICAgICAgICAgICAgY21wbCAgICAlZWN4LCAlZXNp
-DQo+ID4+ICAgICA2ZjA6IDc0IDBlICAgICAgICAgICAgICAgICAgICAgICAgIGplICAgICAgMHg3
-MDAgPC50ZXh0KzB4MzA+DQo+ID4+ICAgICA2ZjI6IDhiIDM3ICAgICAgICAgICAgICAgICAgICAg
-ICAgIG1vdmwgICAgKCVyZGkpLCAlZXNpDQo+ID4+ICAgICA2ZjQ6IDg1IGY2ICAgICAgICAgICAg
-ICAgICAgICAgICAgIHRlc3RsICAgJWVzaSwgJWVzaQ0KPiA+PiAgICAgNmY2OiA3NSBlMSAgICAg
-ICAgICAgICAgICAgICAgICAgICBqbmUgICAgIDB4NmQ5IDwudGV4dCsweDk+DQo+ID4+ICAgICA2
-Zjg6IDQ4IGM3IGMwIGZmIGZmIGZmIGZmICAgICAgICAgIG1vdnEgICAgJC0weDEsICVyYXgNCj4g
-Pj4gICAgIDZmZjogYzMgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0cQ0KPiA+PiAkIHN1
-ZG8gbG4gLXMgL2xpYi9tb2R1bGVzLzYuOS4yLWxvY2FsL2J1aWxkL2FyY2gveDg2L2VudHJ5L3Zk
-c28vdmRzbzY0LnNvLmRiZyAvdXNyL2xpYi9kZWJ1Zy8uYnVpbGQtaWQvY2YvNzAyNDY5ZjQ2Mzc4
-NDBmZDZiYTFhOGQ4YTYyOGZmODMyNTNkMDQuZGVidWcNCj4gPj4gJCBsbHZtLW9iamR1bXAtMTgg
-LWRTIH4vLmRlYnVnL1xbdmRzb1xdL2NmNzAyNDY5ZjQ2Mzc4NDBmZDZiYTFhOGQ4YTYyOGZmODMy
-NTNkMDQvdmRzbyB8IGhlYWQgLTIwICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0Njlm
-NDYzNzg0MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVs
-ZjY0LXg4Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+
-Pg0KPiA+PiAwMDAwMDAwMDAwMDAwNmQwIDx2cmVhZF9odmNsb2NrPjoNCj4gPj4gOyBodl9yZWFk
-X3RzY19wYWdlX3RzYyhjb25zdCBzdHJ1Y3QgbXNfaHlwZXJ2X3RzY19wYWdlICp0c2NfcGcsDQo+
-ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5IGQ5IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZk
-NyglcmlwKSwgJXJkaSAgICAgIyAweGZmZmZmZmZmZmZmZmUwMDAgPGh2Y2xvY2tfcGFnZT4NCj4g
-Pj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAgICAgam1wICAgICAweDZmMiA8
-dnJlYWRfaHZjbG9jaysweDIyPg0KPiA+PiA7ICAgICAgICAgICAgICAgc2NhbGUgPSBSRUFEX09O
-Q0UodHNjX3BnLT50c2Nfc2NhbGUpOw0KPiA+PiAgICAgNmQ5OiA0YyA4YiAwZCAyOCBkOSBmZiBm
-ZiAgICAgICAgICBtb3ZxICAgIC0weDI2ZDgoJXJpcCksICVyOSAgICAgICMgMHhmZmZmZmZmZmZm
-ZmZlMDA4IDxodmNsb2NrX3BhZ2UrMHg4Pg0KPiA+PiA7ICAgICAgICAgICAgICAgb2Zmc2V0ID0g
-UkVBRF9PTkNFKHRzY19wZy0+dHNjX29mZnNldCk7DQo+ID4+ICAgICA2ZTA6IDRjIDhiIDA1IDI5
-IGQ5IGZmIGZmICAgICAgICAgIG1vdnEgICAgLTB4MjZkNyglcmlwKSwgJXI4ICAgICAgIyAweGZm
-ZmZmZmZmZmZmZmUwMTAgPGh2Y2xvY2tfcGFnZSsweDEwPg0KPiA+PiA7ICAgICAgIGFzbSB2b2xh
-dGlsZShBTFRFUk5BVElWRV8yKCJyZHRzYyIsDQo+ID4+ICAgICA2ZTc6IDBmIDMxICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJkdHNjDQo+ID4+ICAgICA2ZTk6IDkwICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIG5vcA0KPiA+PiAgICAgNmVhOiA5MCAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICBub3ANCj4gPj4gICAgIDZlYjogOTAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbm9wDQo+
-ID4+IDsgICAgICAgfSB3aGlsZSAoUkVBRF9PTkNFKHRzY19wZy0+dHNjX3NlcXVlbmNlKSAhPSBz
-ZXF1ZW5jZSk7DQo+ID4+ICAgICA2ZWM6IDhiIDBmICAgICAgICAgICAgICAgICAgICAgICAgIG1v
-dmwgICAgKCVyZGkpLCAlZWN4DQo+ID4+ICQNCj4gPj4NCj4gPj4gV291bGQgdGhhdCBzb2x2ZSB5
-b3VyIHByb2JsZW0/DQo+ID4+DQo+ID4+IE5vdGFibHksIGxhdGVyIHZlcnNpb25zIG9mIGxsdm0t
-b2JqZHVtcCBoYXZlIGFuIG9wdGlvbg0KPiA+PiAtLWRlYnVnLWZpbGUtZGlyZWN0b3J5IHdoaWNo
-IG1ha2VzIGl0IHBvc3NpYmxlIHRvDQo+ID4+IGhhdmUgdGhlIGRlYnVnIGluZm8gaW4gYSBkaXJl
-Y3Rvcnkgb3duZWQgYnkgdGhlIHVzZXIsDQo+ID4+IGZvciBleGFtcGxlOg0KPiA+Pg0KPiA+PiAk
-IHN1ZG8gcm0gL3Vzci9saWIvZGVidWcvLmJ1aWxkLWlkL2NmLzcwMjQ2OWY0NjM3ODQwZmQ2YmEx
-YThkOGE2MjhmZjgzMjUzZDA0LmRlYnVnDQo+ID4+ICQgbGx2bS1vYmpkdW1wLTE4IC1kUyB+Ly5k
-ZWJ1Zy9cW3Zkc29cXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0L3Zk
-c28gfCBoZWFkIC0yMA0KPiA+Pg0KPiA+PiB+Ly5kZWJ1Zy9bdmRzb10vY2Y3MDI0NjlmNDYzNzg0
-MGZkNmJhMWE4ZDhhNjI4ZmY4MzI1M2QwNC92ZHNvOiAgICAgIGZpbGUgZm9ybWF0IGVsZjY0LXg4
-Ni02NA0KPiA+Pg0KPiA+PiBEaXNhc3NlbWJseSBvZiBzZWN0aW9uIC50ZXh0Og0KPiA+Pg0KPiA+
-PiAwMDAwMDAwMDAwMDAwNmQwIDwudGV4dD46DQo+ID4+ICAgICA2ZDA6IDQ4IDhkIDNkIDI5IGQ5
-IGZmIGZmICAgICAgICAgIGxlYXEgICAgLTB4MjZkNyglcmlwKSwgJXJkaSAgICAgIyAweGZmZmZm
-ZmZmZmZmZmUwMDANCj4gPj4gICAgIDZkNzogZWIgMTkgICAgICAgICAgICAgICAgICAgICAgICAg
-am1wICAgICAweDZmMiA8LnRleHQrMHgyMj4NCj4gPj4gICAgIDZkOTogNGMgOGIgMGQgMjggZDkg
-ZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ4KCVyaXApLCAlcjkgICAgICAjIDB4ZmZmZmZm
-ZmZmZmZmZTAwOA0KPiA+PiAgICAgNmUwOiA0YyA4YiAwNSAyOSBkOSBmZiBmZiAgICAgICAgICBt
-b3ZxICAgIC0weDI2ZDcoJXJpcCksICVyOCAgICAgICMgMHhmZmZmZmZmZmZmZmZlMDEwDQo+ID4+
-ICAgICA2ZTc6IDBmIDAxIGY5ICAgICAgICAgICAgICAgICAgICAgIHJkdHNjcA0KPiA+PiAgICAg
-NmVhOiA2NiA5MCAgICAgICAgICAgICAgICAgICAgICAgICBub3ANCj4gPj4gICAgIDZlYzogOGIg
-MGYgICAgICAgICAgICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4gICAg
-IDZlZTogMzkgY2UgICAgICAgICAgICAgICAgICAgICAgICAgY21wbCAgICAlZWN4LCAlZXNpDQo+
-ID4+ICAgICA2ZjA6IDc0IDBlICAgICAgICAgICAgICAgICAgICAgICAgIGplICAgICAgMHg3MDAg
-PC50ZXh0KzB4MzA+DQo+ID4+ICAgICA2ZjI6IDhiIDM3ICAgICAgICAgICAgICAgICAgICAgICAg
-IG1vdmwgICAgKCVyZGkpLCAlZXNpDQo+ID4+ICAgICA2ZjQ6IDg1IGY2ICAgICAgICAgICAgICAg
-ICAgICAgICAgIHRlc3RsICAgJWVzaSwgJWVzaQ0KPiA+PiAgICAgNmY2OiA3NSBlMSAgICAgICAg
-ICAgICAgICAgICAgICAgICBqbmUgICAgIDB4NmQ5IDwudGV4dCsweDk+DQo+ID4+ICAgICA2Zjg6
-IDQ4IGM3IGMwIGZmIGZmIGZmIGZmICAgICAgICAgIG1vdnEgICAgJC0weDEsICVyYXgNCj4gPj4g
-ICAgIDZmZjogYzMgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0cQ0KPiA+PiAkIG1rZGly
-IC1wIC90bXAvZGVidWcvLmJ1aWxkLWlkL2NmLw0KPiA+PiAkIGxuIC1zIC9saWIvbW9kdWxlcy82
-LjkuMi1sb2NhbC9idWlsZC9hcmNoL3g4Ni9lbnRyeS92ZHNvL3Zkc282NC5zby5kYmcgL3RtcC9k
-ZWJ1Zy8uYnVpbGQtaWQvY2YvNzAyNDY5ZjQ2Mzc4NDBmZDZiYTFhOGQ4YTYyOGZmODMyNTNkMDQu
-ZGVidWcgICAgICAgIA0KPiA+PiAkIGxsdm0tb2JqZHVtcC0xOCAtLWRlYnVnLWZpbGUtZGlyZWN0
-b3J5IC90bXAvZGVidWcgLWRTIH4vLmRlYnVnL1xbdmRzb1xdL2NmNzAyNDY5ZjQ2Mzc4NDBmZDZi
-YTFhOGQ4YTYyOGZmODMyNTNkMDQvdmRzbyB8IGhlYWQgLTIwDQo+ID4+DQo+ID4+IH4vLmRlYnVn
-L1t2ZHNvXS9jZjcwMjQ2OWY0NjM3ODQwZmQ2YmExYThkOGE2MjhmZjgzMjUzZDA0L3Zkc286ICAg
-ICAgZmlsZSBmb3JtYXQgZWxmNjQteDg2LTY0DQo+ID4+DQo+ID4+IERpc2Fzc2VtYmx5IG9mIHNl
-Y3Rpb24gLnRleHQ6DQo+ID4+DQo+ID4+IDAwMDAwMDAwMDAwMDA2ZDAgPHZyZWFkX2h2Y2xvY2s+
-Og0KPiA+PiA7IGh2X3JlYWRfdHNjX3BhZ2VfdHNjKGNvbnN0IHN0cnVjdCBtc19oeXBlcnZfdHNj
-X3BhZ2UgKnRzY19wZywNCj4gPj4gICAgIDZkMDogNDggOGQgM2QgMjkgZDkgZmYgZmYgICAgICAg
-ICAgbGVhcSAgICAtMHgyNmQ3KCVyaXApLCAlcmRpICAgICAjIDB4ZmZmZmZmZmZmZmZmZTAwMCA8
-aHZjbG9ja19wYWdlPg0KPiA+PiAgICAgNmQ3OiBlYiAxOSAgICAgICAgICAgICAgICAgICAgICAg
-ICBqbXAgICAgIDB4NmYyIDx2cmVhZF9odmNsb2NrKzB4MjI+DQo+ID4+IDsgICAgICAgICAgICAg
-ICBzY2FsZSA9IFJFQURfT05DRSh0c2NfcGctPnRzY19zY2FsZSk7DQo+ID4+ICAgICA2ZDk6IDRj
-IDhiIDBkIDI4IGQ5IGZmIGZmICAgICAgICAgIG1vdnEgICAgLTB4MjZkOCglcmlwKSwgJXI5ICAg
-ICAgIyAweGZmZmZmZmZmZmZmZmUwMDggPGh2Y2xvY2tfcGFnZSsweDg+DQo+ID4+IDsgICAgICAg
-ICAgICAgICBvZmZzZXQgPSBSRUFEX09OQ0UodHNjX3BnLT50c2Nfb2Zmc2V0KTsNCj4gPj4gICAg
-IDZlMDogNGMgOGIgMDUgMjkgZDkgZmYgZmYgICAgICAgICAgbW92cSAgICAtMHgyNmQ3KCVyaXAp
-LCAlcjggICAgICAjIDB4ZmZmZmZmZmZmZmZmZTAxMCA8aHZjbG9ja19wYWdlKzB4MTA+DQo+ID4+
-IDsgICAgICAgYXNtIHZvbGF0aWxlKEFMVEVSTkFUSVZFXzIoInJkdHNjIiwNCj4gPj4gICAgIDZl
-NzogMGYgMzEgICAgICAgICAgICAgICAgICAgICAgICAgcmR0c2MNCj4gPj4gICAgIDZlOTogOTAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgbm9wDQo+ID4+ICAgICA2ZWE6IDkwICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIG5vcA0KPiA+PiAgICAgNmViOiA5MCAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICBub3ANCj4gPj4gOyAgICAgICB9IHdoaWxlIChSRUFEX09OQ0UodHNjX3BnLT50
-c2Nfc2VxdWVuY2UpICE9IHNlcXVlbmNlKTsNCj4gPj4gICAgIDZlYzogOGIgMGYgICAgICAgICAg
-ICAgICAgICAgICAgICAgbW92bCAgICAoJXJkaSksICVlY3gNCj4gPj4gJA0KPiA+Pg0KPiA+IFll
-cywgbm90IG9ubHkgbGx2bS1vYmpkdW1wLiBJIGNhbiBzZWUgb3RoZXIgdG9vbHMgYWxzbyBjYW4g
-aGFuZGxlIHRoaXMgYW5kIGV2ZW4NCj4gPiBjYW4gZG93bmxvYWQgZnJvbSBvbmxpbmUgYnkgRGVi
-dWdpbmZvZC4NCj4gPiAgIC0gcGVyZiBjYW4gc2VhcmNoIGRlYnVnZ2luZyBpbmZvIHRoZXJlIGlm
-IEhBVkVfREVCVUdJTkZPRF9TVVBQT1JULg0KPiA+ICAgLSBnZGIgY2FuIHNlYXJjaCBkZWJ1Z2dp
-bmcgaW5mbyB0aGVyZSBhbmQgZG93bmxvYWQgdmlhIERlYnVnaW5mb2QgaWYgbm90IGV4aXN0Lg0K
-PiA+IA0KPiA+IFdoaWxlIGFib3ZlIHJlcXVpcmVzIGRlYnVnZ2luZyBmaWxlcyBhcmUgcGxhY2Vk
-IGNvcnJlY3RseSBpbg0KPiA+IC91c3IvbGliL2RlYnVnLy5idWlsZC1pZC8uIEZvciB2ZHNvIG1v
-c3RseSB5b3UgbmVlZCB0byBjb3B5IGl0IG1hbnVsbHkuDQo+ID4gDQo+ID4gVGhlIHRhcmdldCBv
-ZiB0aGlzIHNlcmllcyBpcyB0byBoYW5kbGUgaXQgdHJhbnNwYXJlbnRseSwgZXNwYWNpYWxseSBm
-b3IgbG9jYWxseQ0KPiA+IGJ1aWx0IGtlcm5lbHMuDQo+IA0KPiBQYXNzaW5nIHRoZSBmaWxlIG5h
-bWUgdG8gcGVyZiB0b29sIGRvZXNuJ3Qgc2VlbSB0cmFuc3BhcmVudC4NCj4NClRoaXMgaXMgYW4g
-YWx0ZXJuYXRpdmUgd2F5IHRvIGZpbmQgZGVidWdnaW5nIGZpbGUgaWYgdGhlIGZpbGUgaXMgbm90
-IGluDQpwcmUtZGVmaW5lZCBwYXRocy4gVGhpcyBpcyBob3cgd2UgaGFuZGxlIHZtbGludXggd2l0
-aCAnLS12bWxpbnV4JyBvcHRpb24uDQoNCj4gRm9yIGxvY2FsbHkgYnVpbHQga2VybmVscywgbWF5
-YmUgdGhlcmUgc2hvdWxkIGJlIGEgbWFrZSB0YXJnZXQgZm9yIGl0Lg0KPiBUaGVyZSBzZWVtcyB0
-byBiZSAidmRzb19pbnN0YWxsIiBmb3IgdGhlIHN0cmlwcGVkIGJpbmFyeS4NCj4NCkkgZG9uJ3Qg
-a25vdyB3aGV0aGVyIGluc3RhbGxpbmcgZGVidWdnaW5nIGZpbGVzIHRvIC91c3IvbGliL2RlYnVn
-Ly5idWlsZC1pZC8gaXMNCmEgZ29vZCBzY2hlbWUuIEZvciBtZSwgSSByZWFsbHkgZG8gbm90IHdh
-bnQgdG9vIG1hbnkgZGVidWdnaW5nIGZpbGVzIG9jY3VweSBteQ0KZGlzayBzcGFjZS4gKElmIHNv
-LCB3aHkgb25seSBpbnN0YWxsIHZkc28gdGhlcmUsIHJpZ2h0PykNCg0KPiANCj4gDQoNCi0tIA0K
-Q2hlZXJzLA0KQ2hhbmdiaW4gRHUNCg==
+On Mon, Jul 22, 2024 at 04:21:46PM +0300, Adrian Hunter wrote:
+> On 22/07/24 15:08, duchangbin wrote:
+> > On Thu, Jul 18, 2024 at 08:03:07PM +0300, Adrian Hunter wrote:
+> >> On 2/07/24 07:18, Changbin Du wrote:
+> >>> As normal objects, we will add debugging vdso elf to build-id cache l=
+ater.
+> >>> Here we name the debugging one as "debug".
+> >>>
+> >>> Signed-off-by: Changbin Du <changbin.du@huawei.com>
+> >>> ---
+> >>>  tools/perf/util/build-id.c | 4 ++--
+> >>>  1 file changed, 2 insertions(+), 2 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> >>> index 83a1581e8cf1..15530af2bad9 100644
+> >>> --- a/tools/perf/util/build-id.c
+> >>> +++ b/tools/perf/util/build-id.c
+> >>> @@ -259,8 +259,8 @@ static bool build_id_cache__valid_id(char *sbuild=
+_id)
+> >>>  static const char *build_id_cache__basename(bool is_kallsyms, bool i=
+s_vdso,
+> >>>  					    bool is_debug)
+> >>>  {
+> >>> -	return is_kallsyms ? "kallsyms" : (is_vdso ? "vdso" : (is_debug ?
+> >>> -	    "debug" : "elf"));
+> >>> +	return is_kallsyms ? "kallsyms" : (is_debug ? "debug" : (is_vdso ?
+> >>> +		"vdso" : "elf"));
+> >>>  }
+> >>> =20
+> >>>  char *__dso__build_id_filename(const struct dso *dso, char *bf, size=
+_t size,
+> >>
+> >> To actually add "debug", this also needs:
+> >>
+> >> diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
+> >> index 15530af2bad9..b5bd02a1ad0f 100644
+> >> --- a/tools/perf/util/build-id.c
+> >> +++ b/tools/perf/util/build-id.c
+> >> @@ -701,7 +701,7 @@ build_id_cache__add(const char *sbuild_id, const c=
+har *name, const char *realnam
+> >>  	 * file itself may not be very useful to users of our tools without =
+a
+> >>  	 * symtab.
+> >>  	 */
+> >> -	if (!is_kallsyms && !is_vdso &&
+> >> +	if (!is_kallsyms &&
+> >>  	    strncmp(".ko", name + strlen(name) - 3, 3)) {
+> >>  		debugfile =3D build_id_cache__find_debug(sbuild_id, nsi, root_dir);
+> >>  		if (debugfile) {
+> >>
+> >>
+> >>
+> > This is done by later patch named "perf: build-id: try to search debugg=
+ing vdso
+> > and add to cache". I split the changes into two patches.
+>=20
+> With the above, the split is more functionally logical:
+> 	1. Add support for build-id cache vdso debug
+> 	2. For vdso, extend build_id_cache__find_debug() to find
+> 	local kernel build files
+>
+Sounds good for me.
+
+> >=20
+> >> With that perf will populated the "debug" entry in the build-id cache.
+> >> Currently, when adding to the build-id cache, perf only looks in
+> >> /usr/lib/debug/.build-id (refer build_id_cache__find_debug()), for
+> >> example:
+> >>
+> >>
+> >> $ sudo ln -s /lib/modules/6.9.2-local/build/arch/x86/entry/vdso/vdso64=
+.so.dbg /usr/lib/debug/.build-id/cf/702469f4637840fd6ba1a8d8a628ff83253d04.=
+debug
+> >> $ ls -l ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/
+> >> total 8
+> >> -rw-r--r-- 1 ahunter ahunter    0 Jul 18 13:33 probes
+> >> -rw------- 1 ahunter ahunter 8192 Jul 18 13:33 vdso
+> >> $ perf record uname
+> >> Linux
+> >> [ perf record: Woken up 1 times to write data ]
+> >> [ perf record: Captured and wrote 0.010 MB perf.data (2 samples) ]
+> >> $ ls -l ~/.debug/\[vdso\]/cf702469f4637840fd6ba1a8d8a628ff83253d04/
+> >> total 40
+> >> -rwxrwxr-x 2 ahunter ahunter 32760 May 27 17:42 debug
+> >> -rw-r--r-- 1 ahunter ahunter     0 Jul 18 13:33 probes
+> >> -rw------- 1 ahunter ahunter  8192 Jul 18 13:33 vdso
+> >>
+> >>
+> >> Note, perf will anyway find the debug object in /usr/lib/debug/.build-=
+id
+> >> so the benefit is if perf-archive is used to copy from the buildid-cac=
+he
+> >> to take to another machine.
+> >>
+> >>
+> >=20
+>=20
+>=20
+
+--=20
+Cheers,
+Changbin Du
