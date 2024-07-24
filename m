@@ -1,124 +1,119 @@
-Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE6148FFA;
-	Wed, 24 Jul 2024 12:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B8D22D030
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 14:34:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721824877; cv=none; b=cs0mW3NLmdCURfRBKLT7nAWgvBJv2LwUkkyta7X9e+R0QTlTQHSV+gPrEtAPasAL59T9H44zfH2E8h3N0Drz7KYLt4FF4v6XR+4SlpJ2gdmtzhx3CvkaxXdMV+AgB8t/EbwVuqHRzyHoQvxLm5HC6nY1A7NJeoiX+j/8DBGTHnc=
+	t=1721831697; cv=none; b=jLava88/BmMmtHoyG9b9NU6xyvvdEhUuFn7m5x2jPeZU2u/w8214e5MGmWZ1O+gX/P8O/tRtpPdGPIgnVgGm8d3cKY8gg9FniDJd6bAAwhkgsF+z06ArbDRJT+AyFNTEnjegdGmI3ilptMJNnaT3rt7EemgzN2CJkuNT7BgyuDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721824877; c=relaxed/simple;
-	bh=cmp1m11YrpsGcqUKzGuag7Huw9vz0AgogJWIrQ6MnpE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dIQ/chUv5PhUJ1Mx04Dyxi/TecMBbTrSdNwn9DmDGqXG1Vgkx8+cb/zzNa5mD9NGIkx4FeI66yRxW3/XDcaAVi1PbC3B8PVgVL7hJ9r0GpXxfmyu2szQfYZco8iZRnfaN/OvLoo4W0/MBLMpoKWiulWsW51F8f8fNrN6FEbC9go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fhVhrl9/; arc=none smtp.client-ip=90.155.50.34
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1721831697; c=relaxed/simple;
+	bh=t5EUGcnche4/CSvOdCl3xbAPqqCIWm8X2sMW8nv5oIM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=S08v7+BNZ2lfxmMQz+xidYDXe5dTL+SVzKPWlpGiXAAyA84EqNoHWsfT2467ia+q1kkz1HQ0A7YWKtPBwqn2pmHXBp9ioQzHjRJ13d9wwl1dU31B/lXrw+ROvHX2s1kaDapbkIDtRLJ3U0H/m+QMqUgClVZGOfS6IoPQLgXui+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=B+4ZvqnN; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fhVhrl9/"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=6J6/mCNap2U38NHjqHLrKE4y+Xj/p/3fvwoIUdiyQks=; b=fhVhrl9/nejY93MygJ055QBCdi
-	ZIF736PfMqnvAuyabZN57XAf5Fqvlg8FjHxqkWjva739sISm6WP26aPl5jt/8Fwnu8B+bNS5Lim0Q
-	RW8dni0aAHR33LU+zIaPhYrDz6HTOnFmqMo7quJV4+PWX1wDMkkmDuzNph1X8CB8MWTrJnF7FJsWv
-	g5qWfIP+38/h4biPzaZjbQYa08Iz6ByEI4MjE436qg2kOFazACkY+c54oTCoOLVp7l2IEyONppfpc
-	EGFG9MtYCsGnBv/0QAilWyTbziJpctvWxeNiYATTgx6rqGwgHl7yhRWKeLrfgsHnS6bYZxRNPGfNT
-	8MlXJr6A==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sWbIo-00000007pAr-2cMJ;
-	Wed, 24 Jul 2024 12:41:06 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 36AAD3003EA; Wed, 24 Jul 2024 14:41:05 +0200 (CEST)
-Date: Wed, 24 Jul 2024 14:41:05 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: Tvrtko Ursulin <tursulin@ursulin.net>, intel-gfx@lists.freedesktop.org,
-	linux-perf-users@vger.kernel.org,
-	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-	dri-devel@lists.freedesktop.org, Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B+4ZvqnN"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-36858357bb7so3833294f8f.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 07:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1721831694; x=1722436494; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4VhERnVjZMf0Sg6OFzVS2dnAmWgxdNCZ5orzDkCtCZ0=;
+        b=B+4ZvqnN87B6UI1BppKescHNl/KPjC19QGGLa3JYIgPG8LXooBDfkpEd5adNEOnfRL
+         wE90NqFV2ZwLFYfmAmDwWoQ0rKkFhT4g8ZZ2ehq1nY87Pjjy4nd3hqxSa00b3qZZ82J5
+         /m6+eHu7/CXx8bSw6agwHBMpXROQzgW5VCeQZarBp5FOStCBImwmaO00aornV+pOJypO
+         S4A0p4B7j1veSDH3XvvX6FyYLMCWSKgOzyq7zEvqidf7SKC0F9dHXkjy3fYc0Aht7Knm
+         x5cOt+USK8fSvPpcJbiBtZhOygTCMXm2S6qoo1pMSx09vLrKHjLYdMMbs9L+hg77uuQ5
+         ExwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721831694; x=1722436494;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4VhERnVjZMf0Sg6OFzVS2dnAmWgxdNCZ5orzDkCtCZ0=;
+        b=kU5Fc5YYn007oLoCq3zdeGt/LUIWdqiSYS17ypr7E84MCnGkNEycXxn/6+MjRpzJhl
+         MOTrtj8t3DdRl51fSymsZq3sfekZRioStgz8KqBQ/2oD/MgA7c8Mfw7MTEw1iTgomGz7
+         KQzJyjjqVrdg3883uB4wW+pDGoDXhO3JVFELoYgJelBfKBwQd5AnwfuRc5FAH56NInKW
+         wPxX/tNELvHs1VnbUPUXgT489KAUG5zDk4C2MytFYDXsLRpL8tuRfJHZtK12oLKGrjMl
+         V8Vl13XA64fAxE5CBMtv/2bUffp+ljIqs6I25kbmchEMa1LMF1ItI9TJJ4oW1aV5DFMY
+         ytMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWZwlAoViZHxfPJPKYF/azUJj0IwqIXREeM0n7a80z7jqTezFbqepYuE9GzfBzdT0lc06laOpOvUwzQFXj6rEKa2hUM6SEx9N34FUBsSN7g6A==
+X-Gm-Message-State: AOJu0YxlmW5lmo+hjBRwohYoCc1L07/bpJdnq8Tp/Pm2MAcgH9MVsPM1
+	HE/woww/MSSrDOwSEXiTjNHQ37smcsvR67tMoUJm8dcXP4Q5WLBJMGipdkgnsxk=
+X-Google-Smtp-Source: AGHT+IHlr0nOuurrzX3Z4gyyCK7iSTvctyAT+dqqlEdpLLITtmGkF24655oMdP6cxoltl8ni+fS6TQ==
+X-Received: by 2002:a05:6000:1884:b0:368:5e34:4b4b with SMTP id ffacd0b85a97d-369f5b162b1mr1808467f8f.6.1721831694301;
+        Wed, 24 Jul 2024 07:34:54 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-368787ebab0sm14657816f8f.92.2024.07.24.07.34.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 Jul 2024 07:34:53 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: coresight@lists.linaro.org,
+	gankulkarni@os.amperecomputing.com,
+	mike.leach@linaro.org,
+	leo.yan@arm.com,
+	suzuki.poulose@arm.com
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Ruidong Tian <tianruidong@linux.alibaba.com>,
+	Benjamin Gray <bgray@linux.ibm.com>,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] drm/i915/pmu: Lazy unregister
-Message-ID: <20240724124105.GB13387@noisy.programming.kicks-ass.net>
-References: <20240722210648.80892-1-lucas.demarchi@intel.com>
- <20240722210648.80892-7-lucas.demarchi@intel.com>
- <be3871bd-fc25-482e-b4d4-91afc4d5b5a5@ursulin.net>
- <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
+Subject: [PATCH] perf scripts python: cs-etm: Update example to provide vmlinux path to Perf
+Date: Wed, 24 Jul 2024 15:33:18 +0100
+Message-Id: <20240724143319.169745-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jul 23, 2024 at 10:30:08AM -0500, Lucas De Marchi wrote:
-> On Tue, Jul 23, 2024 at 09:03:25AM GMT, Tvrtko Ursulin wrote:
-> > 
-> > On 22/07/2024 22:06, Lucas De Marchi wrote:
-> > > Instead of calling perf_pmu_unregister() when unbinding, defer that to
-> > > the destruction of i915 object. Since perf itself holds a reference in
-> > > the event, this only happens when all events are gone, which guarantees
-> > > i915 is not unregistering the pmu with live events.
-> > > 
-> > > Previously, running the following sequence would crash the system after
-> > > ~2 tries:
-> > > 
-> > > 	1) bind device to i915
-> > > 	2) wait events to show up on sysfs
-> > > 	3) start perf  stat -I 1000 -e i915/rcs0-busy/
-> > > 	4) unbind driver
-> > > 	5) kill perf
-> > > 
-> > > Most of the time this crashes in perf_pmu_disable() while accessing the
-> > > percpu pmu_disable_count. This happens because perf_pmu_unregister()
-> > > destroys it with free_percpu(pmu->pmu_disable_count).
-> > > 
-> > > With a lazy unbind, the pmu is only unregistered after (5) as opposed to
-> > > after (4). The downside is that if a new bind operation is attempted for
-> > > the same device/driver without killing the perf process, i915 will fail
-> > > to register the pmu (but still load successfully). This seems better
-> > > than completely crashing the system.
-> > 
-> > So effectively allows unbind to succeed without fully unbinding the
-> > driver from the device? That sounds like a significant drawback and if
-> > so, I wonder if a more complicated solution wouldn't be better after
-> > all. Or is there precedence for allowing userspace keeping their paws on
-> > unbound devices in this way?
-> 
-> keeping the resources alive but "unplunged" while the hardware
-> disappeared is a common thing to do... it's the whole point of the
-> drmm-managed resource for example. If you bind the driver and then
-> unbind it while userspace is holding a ref, next time you try to bind it
-> will come up with a different card number. A similar thing that could be
-> done is to adjust the name of the event - currently we add the mangled
-> pci slot.
-> 
-> That said, I agree a better approach would be to allow
-> perf_pmu_unregister() to do its job even when there are open events. On
-> top of that (or as a way to help achieve that), make perf core replace
-> the callbacks with stubs when pmu is unregistered - that would even kill
-> the need for i915's checks on pmu->closed (and fix the lack thereof in
-> other drivers).
-> 
-> It can be a can of worms though and may be pushed back by perf core
-> maintainers, so it'd be good have their feedback.
+The example shows the vmlinux path being given to the script, but this
+only works when running on the target. If the script is run off the
+target, then confusingly the vmlinux argument also needs to be given to
+Perf as well.
 
-I don't think I understand the problem. I also don't understand drivers
-much -- so that might be the problem.
+Without going into too much detail in the example about when it is or
+isn't required, just include it. It doesn't do any harm even when
+running on the target. Now the example command works in both places.
 
-So the problem appears to be that the device just disappears without
-warning? How can a GPU go away like that?
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/perf/scripts/python/arm-cs-trace-disasm.py | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Since you have a notion of this device, can't you do this stubbing you
-talk about? That is, if your internal device reference becomes NULL, let
-the PMU methods preserve the state like no-ops.
+diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+index 7aff02d84ffb..4aeb9b497f7a 100755
+--- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
++++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+@@ -19,10 +19,10 @@ from perf_trace_context import perf_set_itrace_options, \
+ # Below are some example commands for using this script.
+ #
+ # Output disassembly with objdump:
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py \
++#  perf script -k path/to/vmlinux -s scripts/python/arm-cs-trace-disasm.py \
+ #		-- -d objdump -k path/to/vmlinux
+ # Output disassembly with llvm-objdump:
+-#  perf script -s scripts/python/arm-cs-trace-disasm.py \
++#  perf script -k path/to/vmlinux -s scripts/python/arm-cs-trace-disasm.py \
+ #		-- -d llvm-objdump-11 -k path/to/vmlinux
+ # Output only source line and symbols:
+ #  perf script -s scripts/python/arm-cs-trace-disasm.py
+-- 
+2.34.1
 
-And then when the last event goes away, tear down the whole thing.
-
-Again, I'm not sure I'm following.
