@@ -1,86 +1,124 @@
-Received: from cstnet.cn (smtp37.cstnet.cn [159.226.251.37])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D9A2595
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 11:11:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.37
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCE6148FFA;
+	Wed, 24 Jul 2024 12:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721819493; cv=none; b=u3HikTf4MHIhaBuC/mxAEdSKo0Ri3PeegB5s4iL7bXyFFQhEKX8JN+rWXTUAv6sAExOZzexqhsOVeQvTVDTJZYTcVdx4gdLIRKDKsSGwpvYGhJer5bvcdruLnKbZXPkTjcQTDK1VjjLuh5pJALRT8UnjfTzE1te2zAx8R20g6wc=
+	t=1721824877; cv=none; b=cs0mW3NLmdCURfRBKLT7nAWgvBJv2LwUkkyta7X9e+R0QTlTQHSV+gPrEtAPasAL59T9H44zfH2E8h3N0Drz7KYLt4FF4v6XR+4SlpJ2gdmtzhx3CvkaxXdMV+AgB8t/EbwVuqHRzyHoQvxLm5HC6nY1A7NJeoiX+j/8DBGTHnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721819493; c=relaxed/simple;
-	bh=2zw2qreEFW4ZBOCiGr4O5rTLfEgmm3v/b1BoFsBuOeA=;
-	h=Date:From:To:Cc:Subject:Content-Type:MIME-Version:Message-ID; b=jR/sHZ2nvlYgQLyWuIEQqAF2pEkAwnDSNPZ9+IZnOM5iXwupWEIcCPBtjZa26UrjagwlHcuqYX59868znsna83n1aB2fr3Ku8r7Jl7Bd7eRy7b0mFid3QIcYkCMryXuCsff5XJ4NB2Ng+QMKC3XS/I3x1FS0goJ7NHOiikHdIqg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mails.ucas.ac.cn; spf=pass smtp.mailfrom=mails.ucas.ac.cn; arc=none smtp.client-ip=159.226.251.37
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mails.ucas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mails.ucas.ac.cn
-Received: from wuyuwei221$mails.ucas.ac.cn ( [121.237.44.107] ) by
- ajax-webmail-APP-12 (Coremail) ; Wed, 24 Jul 2024 19:11:27 +0800
- (GMT+08:00)
-Date: Wed, 24 Jul 2024 19:11:27 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: =?UTF-8?B?5ZC06Zuo6JaH?= <wuyuwei221@mails.ucas.ac.cn>
-To: linux-perf-users@vger.kernel.org
-Cc: =?UTF-8?B?5LqO5L2z6ICV6ICB5biI?= <jiageng08@iscas.ac.cn>, 
-	shenzhengdong23@mails.ucas.ac.cn
-Subject: Kernel functions showing only addresses in `perf` output
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.1-cmXT5 build
- 20240627(e6c6db66) Copyright (c) 2002-2024 www.mailtech.cn cnic.cn
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1721824877; c=relaxed/simple;
+	bh=cmp1m11YrpsGcqUKzGuag7Huw9vz0AgogJWIrQ6MnpE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dIQ/chUv5PhUJ1Mx04Dyxi/TecMBbTrSdNwn9DmDGqXG1Vgkx8+cb/zzNa5mD9NGIkx4FeI66yRxW3/XDcaAVi1PbC3B8PVgVL7hJ9r0GpXxfmyu2szQfYZco8iZRnfaN/OvLoo4W0/MBLMpoKWiulWsW51F8f8fNrN6FEbC9go=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=fhVhrl9/; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fhVhrl9/"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=6J6/mCNap2U38NHjqHLrKE4y+Xj/p/3fvwoIUdiyQks=; b=fhVhrl9/nejY93MygJ055QBCdi
+	ZIF736PfMqnvAuyabZN57XAf5Fqvlg8FjHxqkWjva739sISm6WP26aPl5jt/8Fwnu8B+bNS5Lim0Q
+	RW8dni0aAHR33LU+zIaPhYrDz6HTOnFmqMo7quJV4+PWX1wDMkkmDuzNph1X8CB8MWTrJnF7FJsWv
+	g5qWfIP+38/h4biPzaZjbQYa08Iz6ByEI4MjE436qg2kOFazACkY+c54oTCoOLVp7l2IEyONppfpc
+	EGFG9MtYCsGnBv/0QAilWyTbziJpctvWxeNiYATTgx6rqGwgHl7yhRWKeLrfgsHnS6bYZxRNPGfNT
+	8MlXJr6A==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sWbIo-00000007pAr-2cMJ;
+	Wed, 24 Jul 2024 12:41:06 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 36AAD3003EA; Wed, 24 Jul 2024 14:41:05 +0200 (CEST)
+Date: Wed, 24 Jul 2024 14:41:05 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: Tvrtko Ursulin <tursulin@ursulin.net>, intel-gfx@lists.freedesktop.org,
+	linux-perf-users@vger.kernel.org,
+	Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+	dri-devel@lists.freedesktop.org, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 6/7] drm/i915/pmu: Lazy unregister
+Message-ID: <20240724124105.GB13387@noisy.programming.kicks-ass.net>
+References: <20240722210648.80892-1-lucas.demarchi@intel.com>
+ <20240722210648.80892-7-lucas.demarchi@intel.com>
+ <be3871bd-fc25-482e-b4d4-91afc4d5b5a5@ursulin.net>
+ <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <4928374a.92fe.190e4705e87.Coremail.wuyuwei221@mails.ucas.ac.cn>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:tgCowAD3JAVf4aBmPeIAAA--.7462W
-X-CM-SenderInfo: 5zx134thlsjio6pdxz3voxutnvoduhdfq/1tbiBgoICmagyzg4kgA
-	BsQ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
 
-S2VybmVsIGZ1bmN0aW9ucyBhcmUgb25seSBzaG93aW5nIGFkZHJlc3NlcyBhbmQgbm90IHN5bWJv
-bHMgaW4gdGhlIHNhbXBsaW5nIG91dHB1dCBmcm9tIHRoZSBgcGVyZmAgdG9vbC4KCkVudmlyb25t
-ZW50IEluZm9ybWF0aW9uCi0gSGFyZHdhcmU6IFNHMjA0MgotIE9TIFZlcnNpb246IG9wZW5FdWxl
-ciAyMy4wOQotIEtlcm5lbCBWZXJzaW9uOiBMaW51eCBvcGVuZXVsZXItcmlzY3Y2NCA2LjYuMCsg
-IzEgU01QIFdlZCBBcHIgMyAxNTo1MzowNiBDU1QgMjAyNCByaXNjdjY0IHJpc2N2NjQgcmlzY3Y2
-NCBHTlUvTGludXgKLSBQZXJmIFZlcnNpb246IDYuNi5nMDRmMGE2NDkxOTY3Ci0gS2VybmVsIENv
-bXBpbGF0aW9uIE9wdGlvbnM6ClRoZSBmb2xsb3dpbmcga2VybmVsIGNvbmZpZ3VyYXRpb24gb3B0
-aW9ucyBoYXZlIGJlZW4gZW5hYmxlZDoKQ09ORklHX1BFUkZfRVZFTlRTCkNPTkZJR19LQUxMU1lN
-UwpDT05GSUdfS0FMTFNZTVNfQUxMCkNPTkZJR19GUkFNRV9QT0lOVEVSCkNPTkZJR19TVEFDS1RS
-QUNFCkNPTkZJR19ERUJVR19JTkZPCgpDT05GSUdfREVCVUdfS0VSTkVMCgoKClN0ZXBzIHRvIFJl
-cHJvZHVjZQoKMS4gRG93bmxvYWQgS2VybmVsIFNvdXJjZSBDb2RlOgogICBDbG9uZSB0aGUga2Vy
-bmVsIHNvdXJjZSBjb2RlIHJlcG9zaXRvcnkgb24gdGhlIExpY2hlZSBQaSA0QSBib2FyZAoKMi4g
-SW5zdGFsbCBEZXBlbmRlbmNpZXM6CiAgIEluc3RhbGwgYWxsIG5lY2Vzc2FyeSBkZXZlbG9wbWVu
-dCBsaWJyYXJpZXMgYW5kIHRvb2xzIHJlcXVpcmVkIGJ5IGBwZXJmYDoKICAgc3VkbyB5dW0gaW5z
-dGFsbCBlbGZ1dGlscy1saWJlbGYtZGV2ZWwgLXkKICAgc3VkbyB5dW0gaW5zdGFsbCBwZXJsLWRl
-dmVsIC15CiAgIHN1ZG8geXVtIGluc3RhbGwgbnVtYWN0bC1kZXZlbCAteQogICBzdWRvIHl1bSBp
-bnN0YWxsIGxpYmJhYmVsdHJhY2UtZGV2ZWwgLXkKICAgc3VkbyB5dW0gaW5zdGFsbCBiaW51dGls
-cy1kZXZlbCAteQogICBzdWRvIHl1bSBpbnN0YWxsIGdlbndxZS16bGliLXN0YXRpYyAteQogICBz
-dWRvIHl1bSBpbnN0YWxsIGVsZnV0aWxzLWRldmVsIC15CiAgIHN1ZG8geXVtIGluc3RhbGwgc2xh
-bmctZGV2ZWwgLXkKICAgc3VkbyB5dW0gaW5zdGFsbCB6c3RkLWRldmVsIC15CiAgIHN1ZG8geXVt
-IGluc3RhbGwgeHotZGV2ZWwgLXkKICAgc3VkbyB5dW0gaW5zdGFsbCBsaWJjYXAtZGV2ZWwgLXkK
-ICAgc3VkbyB5dW0gaW5zdGFsbCBhdWRpdC1kZXZlbCBhdWRpdC1saWJzIC15CiAgIHN1ZG8geXVt
-IGluc3RhbGwgb3BlbnNzbC1kZXZlbCAteQogICBzdWRvIHl1bSBpbnN0YWxsIGd0azItZGV2ZWwg
-LXkKICAgc3VkbyB5dW0gaW5zdGFsbCBzeXN0ZW10YXAtc2R0LWRldmVsIC15CiAgIHN1ZG8geXVt
-IGluc3RhbGwgbGlidHJhY2VldmVudC1kZXZlbCAteQogICBzdWRvIHl1bSBpbnN0YWxsIGxpYnBm
-bSAteQogICBzdWRvIHl1bSBpbnN0YWxsIG5jdXJzZXMtZGV2ZWwgLXkKICAgc3VkbyB5dW0gaW5z
-dGFsbCBqYXZhLTEuOC4wLW9wZW5qZGstZGV2ZWwgLXkKCjMuIENvbXBpbGUgYHBlcmZgOgogICBj
-ZCByaXNjdi1rZXJuZWwvdG9vbHMvcGVyZgogICBtYWtlIEFSQ0g9cmlzY3YgV0VSUk9SPTAgLWo0
-Cgo0LiBJbnN0YWxsIGBwZXJmYDoKICAgc3VkbyBjcCAuL3BlcmYgL3Vzci9iaW4vCgo1LiBEb3du
-bG9hZCBgaGFja2JlbmNoYAoKNi4gQ29tcGlsZSBgaGFja2JlbmNoYDoKICAgZ2NjIC1zdGF0aWMg
-LU8wIC1nIC1mbm8tb21pdC1mcmFtZS1wb2ludGVyIGhhY2tiZW5jaC5jIC1vIGhhY2tiZW5jaCAt
-bHB0aHJlYWQKCjcuIFJ1biBUZXN0cyB3aXRoIGBwZXJmYDoKICAgUmVjb3JkIHBlcmZvcm1hbmNl
-IGRhdGEgd2l0aCBgcGVyZmAgYW5kIGdlbmVyYXRlIHRoZSByZXBvcnQ6CiAgIHN1ZG8gcGVyZiBy
-ZWNvcmQgLWUgY3B1LWN5Y2xlcyAtZyAuL2hhY2tiZW5jaAogICBzdWRvIHBlcmYgcmVwb3J0IC0t
-bm8tY2hpbGRyZW4gLUcgJmd0OyBwZXJmX2hhY2tiZW5jaC50eHQKCgpJc3N1ZQpJbiB0aGUgYHBl
-cmZfaGFja2JlbmNoLnR4dGAgb3V0cHV0LCB5b3UgY2FuIHNlZSB0aGF0IGtlcm5lbCBmdW5jdGlv
-bnMgc2hvdyBhZGRyZXNzZXMsIHdoaWxlIHVzZXIgbW9kZSBmdW5jdGlvbnMgc2hvdyBmdW5jdGlv
-biBzeW1ib2wgbmFtZXMKOTYuMjIlICBoYWNrYmVuY2ggIFt1bmtub3duXSAgICAgICAgICBba10g
-MHhmZmZmZmZmZjgwY2ZiMmFjCgpQb3RlbnRpYWwgQ2F1c2XvvJoKSXQgc2VlbXMgdGhhdCBgcGVy
-ZmAgbWlnaHQgYmUgZmFpbGluZyB0byByZXNvbHZlIGFkZHJlc3NlcyB0byBzeW1ib2xzIGJlY2F1
-c2UgaXQgY2Fubm90IGZpbmQgdGhlIGFkZHJlc3NlcyBpbiBgL3Byb2Mva2FsbHN5bXNgLgo=
+On Tue, Jul 23, 2024 at 10:30:08AM -0500, Lucas De Marchi wrote:
+> On Tue, Jul 23, 2024 at 09:03:25AM GMT, Tvrtko Ursulin wrote:
+> > 
+> > On 22/07/2024 22:06, Lucas De Marchi wrote:
+> > > Instead of calling perf_pmu_unregister() when unbinding, defer that to
+> > > the destruction of i915 object. Since perf itself holds a reference in
+> > > the event, this only happens when all events are gone, which guarantees
+> > > i915 is not unregistering the pmu with live events.
+> > > 
+> > > Previously, running the following sequence would crash the system after
+> > > ~2 tries:
+> > > 
+> > > 	1) bind device to i915
+> > > 	2) wait events to show up on sysfs
+> > > 	3) start perf  stat -I 1000 -e i915/rcs0-busy/
+> > > 	4) unbind driver
+> > > 	5) kill perf
+> > > 
+> > > Most of the time this crashes in perf_pmu_disable() while accessing the
+> > > percpu pmu_disable_count. This happens because perf_pmu_unregister()
+> > > destroys it with free_percpu(pmu->pmu_disable_count).
+> > > 
+> > > With a lazy unbind, the pmu is only unregistered after (5) as opposed to
+> > > after (4). The downside is that if a new bind operation is attempted for
+> > > the same device/driver without killing the perf process, i915 will fail
+> > > to register the pmu (but still load successfully). This seems better
+> > > than completely crashing the system.
+> > 
+> > So effectively allows unbind to succeed without fully unbinding the
+> > driver from the device? That sounds like a significant drawback and if
+> > so, I wonder if a more complicated solution wouldn't be better after
+> > all. Or is there precedence for allowing userspace keeping their paws on
+> > unbound devices in this way?
+> 
+> keeping the resources alive but "unplunged" while the hardware
+> disappeared is a common thing to do... it's the whole point of the
+> drmm-managed resource for example. If you bind the driver and then
+> unbind it while userspace is holding a ref, next time you try to bind it
+> will come up with a different card number. A similar thing that could be
+> done is to adjust the name of the event - currently we add the mangled
+> pci slot.
+> 
+> That said, I agree a better approach would be to allow
+> perf_pmu_unregister() to do its job even when there are open events. On
+> top of that (or as a way to help achieve that), make perf core replace
+> the callbacks with stubs when pmu is unregistered - that would even kill
+> the need for i915's checks on pmu->closed (and fix the lack thereof in
+> other drivers).
+> 
+> It can be a can of worms though and may be pushed back by perf core
+> maintainers, so it'd be good have their feedback.
+
+I don't think I understand the problem. I also don't understand drivers
+much -- so that might be the problem.
+
+So the problem appears to be that the device just disappears without
+warning? How can a GPU go away like that?
+
+Since you have a notion of this device, can't you do this stubbing you
+talk about? That is, if your internal device reference becomes NULL, let
+the PMU methods preserve the state like no-ops.
+
+And then when the last event goes away, tear down the whole thing.
+
+Again, I'm not sure I'm following.
