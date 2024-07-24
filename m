@@ -1,95 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B6F15FD16;
-	Wed, 24 Jul 2024 18:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65DC34655F
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 19:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721847319; cv=none; b=opaDbeyh/ytBVLHQ1+r1/glZGRpB/7htfTnJ4xVTUbAumPnysOY+ueMqBHj+I97qa2Sdw4zMQEekYx0eoMVMyyB/tBruEyJC2bAnxxzAVZZFFacVvW72xSsBfNVzo+EJmlSRx5IGilWLfJC4RzZhLHYPC8eMBd2ZMmW1h2cXR8w=
+	t=1721847707; cv=none; b=nslV73+ZKFRoduyGZHzhL69r0Vl54AhkZsDZpBpt85O4tGxYM/IS33VCi4ffIatfEE9quRl4ZMup3X3bMtWgTQ9FpR66z/PSC4ERZileix+57XWruQnM752KlG3Qi1BR3bcgCI31hBBhDs5qIyjyMHKjRel14fyDGdzqQm4iLB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721847319; c=relaxed/simple;
-	bh=rlG/8dnf1KAraBD+FOFlmAA8ApSszk1iCqtrP23infY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=faDJrQKhJlM9L4oUPi7z29GVo2Hv5919NcUqo1hSC5FetabgqhWPK9wF/4e5x75N4RsfGae3eVyyb5uLrH0WPwN5S4qswwHQu9vmZLC36M8uSS4ZJsX6ByWVjmIvCtDcx8lISR2aVaiWNCyS9AtQLDrTR8MoYNEVjvPG6Hjhvd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CsIHHzZX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721847707; c=relaxed/simple;
+	bh=8ASWtkbfDM6Rdt9+A+iOWrGsodZwZdvTVwXWmJzCRZQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oImckMW71UyjCEDols1zKe59Kvgo+I/kiu5kY7pBdDaPNyyBEqE1YFFcm5q+ziUEZAwUdrnT+qlHctQQGZWzv5L0KkGQJmiON2Djc/hfRbVhi4BuOc6FCFHZEW4GzIjmkDKHLVR1s5i14cXpiA0JaNAnBhBlU2blIjO36oyTSj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VAoHYbpi; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CsIHHzZX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA82C32781;
-	Wed, 24 Jul 2024 18:55:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721847319;
-	bh=rlG/8dnf1KAraBD+FOFlmAA8ApSszk1iCqtrP23infY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CsIHHzZXIDovJ1vxROZYDVKuM+hKYlQsH4eO0OvXsWjGrXneOvkaQr6uIESe8mlRi
-	 N8+V7CAtB1uxyLP3aAdNY45pGkiXBAGWaqv8mMxFk0tNg77LfgbbAaqakNrWKQJZaB
-	 U5MG92K8dC4jO4/iM9yGC13vG1TlF95M/QjoH1QRFDdm8M8RZe+nsu7Mtwf6mOkTtJ
-	 MR8ovqSfilCurlzUImnP1lJc1nBEhUP2g7Zc/OxaNaZG1+AtnpAq3hgz5g04rhUkqT
-	 qwy2hWhpdofSPZ7pXS+vyIN7TbmnLWbScWJydDDneec+xkMjL7eKc1CzHDJoY6LYue
-	 Deq9jYOgc41dA==
-Date: Wed, 24 Jul 2024 15:55:15 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 1/8] perf bpf-filter: Make filters map a single entry
- hashmap
-Message-ID: <ZqFOE9PkW39h2mHs@x1>
-References: <20240703223035.2024586-1-namhyung@kernel.org>
- <20240703223035.2024586-2-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VAoHYbpi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721847706; x=1753383706;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=8ASWtkbfDM6Rdt9+A+iOWrGsodZwZdvTVwXWmJzCRZQ=;
+  b=VAoHYbpi0fpVs4WFpHJA//ahvojckY0PLcqF/vu1BBMwaSsyBz3B1fYc
+   zbnBs2whiA2LQkW1HQ/e7iJR3Nv6ejPFs2oeLeOZTsiYcQSw0qnCQFAzV
+   M/FnUdWQxkclTORaTgrzFw2nKQaNfBEbiIoRB6W8/FhdHiDndZF78iwAf
+   WjxHK6LTFFfof6TwrQxDyjHCdw3O/kH+tqhjRkPk1d4i+r8yyIVoa5MTW
+   B3KyYlJ0Pvug0nInQgOrbt/XAN6/QEmwCp8wDIdnOKHGt8eARFWbf4PNk
+   ZADre77XrjWBZm6VeGZPrMIk6xoB3axixDotLsqseJTztpvCEtXzZnj2N
+   w==;
+X-CSE-ConnectionGUID: Bmm0Oh0UR4eqbajE6E7ePw==
+X-CSE-MsgGUID: UXhQv+1tRdGSzEJA4/qjzQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11143"; a="19685236"
+X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
+   d="scan'208";a="19685236"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 12:01:45 -0700
+X-CSE-ConnectionGUID: MCLjAL2yR3y5KT4SNgjXoQ==
+X-CSE-MsgGUID: It3hVo9YQnuBdQCamIXO+g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,233,1716274800"; 
+   d="scan'208";a="52907011"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2024 12:01:44 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v7 2/4] perf test: Support external tests for separate objdir
+Date: Wed, 24 Jul 2024 12:01:35 -0700
+Message-ID: <20240724190137.3810429-2-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240724190137.3810429-1-ak@linux.intel.com>
+References: <20240724190137.3810429-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240703223035.2024586-2-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jul 03, 2024 at 03:30:28PM -0700, Namhyung Kim wrote:
-> And the value is now an array.  This is to support multiple filter
-> entries in the map later.
+Extend the searching for the test files so that it works
+when running perf from a separate objdir, and also when
+the perf executable is symlinked.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/tests/tests-scripts.c | 31 ++++++++++++++++++++++++++++---
+ 1 file changed, 28 insertions(+), 3 deletions(-)
+
+diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
+index e2042b368269..63be17289ac3 100644
+--- a/tools/perf/tests/tests-scripts.c
++++ b/tools/perf/tests/tests-scripts.c
+@@ -29,16 +29,41 @@
  
-> No functional changes intended.
-
-> +++ b/tools/perf/util/bpf-filter.c
-> @@ -93,71 +93,102 @@ static int check_sample_flags(struct evsel *evsel, struct perf_bpf_filter_expr *
->  
->  int perf_bpf_filter__prepare(struct evsel *evsel)
->  {
-> -	int i, x, y, fd;
-> +	int i, x, y, fd, ret;
->  	struct sample_filter_bpf *skel;
->  	struct bpf_program *prog;
->  	struct bpf_link *link;
->  	struct perf_bpf_filter_expr *expr;
-> +	struct perf_bpf_filter_entry *entry;
-> +
-> +	entry = calloc(MAX_FILTERS, sizeof(*entry));
-> +	if (entry == NULL)
-> +		return -1;
-
-I'm changing this to -ENOMEM since you use errno values in the other
-failure cases, ok?
-
-This:
-
-diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-index 2510832d83f95e03..e98bacf41a248ced 100644
---- a/tools/perf/util/bpf-filter.c
-+++ b/tools/perf/util/bpf-filter.c
-@@ -102,7 +102,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel)
+ static int shell_tests__dir_fd(void)
+ {
+-	char path[PATH_MAX], *exec_path;
+-	static const char * const devel_dirs[] = { "./tools/perf/tests/shell", "./tests/shell", };
++	struct stat st;
++	char path[PATH_MAX], path2[PATH_MAX], *exec_path;
++	static const char * const devel_dirs[] = {
++		"./tools/perf/tests/shell",
++		"./tests/shell",
++		"./source/tests/shell"
++	};
++	int fd;
++	char *p;
  
- 	entry = calloc(MAX_FILTERS, sizeof(*entry));
- 	if (entry == NULL)
--		return -1;
-+		return -ENOMEM;
+ 	for (size_t i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
+-		int fd = open(devel_dirs[i], O_PATH);
++		fd = open(devel_dirs[i], O_PATH);
  
- 	skel = sample_filter_bpf__open_and_load();
- 	if (!skel) {
+ 		if (fd >= 0)
+ 			return fd;
+ 	}
+ 
++	/* Use directory of executable */
++	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
++		return -1;
++	/* Follow another level of symlink if there */
++	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
++		scnprintf(path, sizeof(path), path2);
++		if (readlink(path, path2, sizeof path2) < 0)
++			return -1;
++	}
++	/* Get directory */
++	p = strrchr(path2, '/');
++	if (*p)
++		p[1] = 0;
++	scnprintf(path, sizeof(path), "%s/tests/shell", path2);
++	fd = open(path, O_PATH);
++	if (fd >= 0)
++		return fd;
++
+ 	/* Then installed path. */
+ 	exec_path = get_argv_exec_path();
+ 	scnprintf(path, sizeof(path), "%s/tests/shell", exec_path);
+-- 
+2.45.2
+
