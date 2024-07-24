@@ -1,229 +1,428 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996D34E1C8
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 07:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274E61B285;
+	Wed, 24 Jul 2024 07:59:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721807303; cv=none; b=DLl0RA+ooYfXk38LLpfTo+vuQOJ6krmwIBNStKCS9W8HnAHHGmWCeo0FNAr6LYMhOqHNgGuDEEENHU1ohvOsB4gSYfnw+4kSbUEx+PAEYAe6ucixJYYAfSMQAOyn9+XC2rhZ75uUjLup3/lKIhP4bxYfhqrGbB9DvDfD7Ovce3k=
+	t=1721807987; cv=none; b=dytqxX6HSdHoXIt7iGeiIT6i5hWobQ+vINp/I5hyhT0MpRIZHKe6W9GlevOlc1q7YNvMHHcbv521rVWnvTIE/w0Ki6lQTX0dbZs/XNwjc2EUhV8USYoSkwW8XrPcC1TkviP5fSU3yIc8LvgHr551cN4Niu2ElLSghQlyrurkZb0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721807303; c=relaxed/simple;
-	bh=sR7Efk6tuD552OGUyQfPxlvDhFiS1PZYECSnCY+hjNo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k0x64SQ+rJqTSRZQ4NyKaNQzbbtST3PBy+ZqK1LoVk1zWVTF3k7C1cMybOH8kddn3RzpJgHI4gfM6UAzHa70y04jQfpaf7dE4D00hg0u5NfS9fwG4jCCeYiS5A/vEmTH8sIOSJRk3D2+IGu1Yq/zsvdhrLianqjw86pTEFB/3A8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=oy92+FnZ; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
+	s=arc-20240116; t=1721807987; c=relaxed/simple;
+	bh=FINYIYdhVZ7fq8K7J36kiUBIUZtnjlGeY7nECIXFQms=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=PGnMMGtvL0A+i8Q+JsDo743xxScjp/nQFyu6RSWp8trNooy78rd+Z/dhPYx00uljul+mqEQ2q7fk1gQXeocD63w7yD5ZcmQ3NB1BBzejKHcQAdFkmNiPHBkwy6KNVU6mS/LawryyLwG2DbySJ0TSxsVeYD1iVpRrJWP2DQeRjEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=PJ0OqUfD; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="oy92+FnZ"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3687ea0521cso4710932f8f.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 00:48:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1721807300; x=1722412100; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=krtFy5Mi1BGgzBjcFadwjlZluEt4OAciNF2RWrAZwwg=;
-        b=oy92+FnZsLdihTIJaZBkAV9xQQNfa0Q2FrVjWUeGUGhfeGCjA8vl0525H3jQ0WKahh
-         JLG/Zax+OO1Zm2jo4/eQZjDAyAdpHatpOIEXgMk+9cYtKVNDhg6ozyq3ZDdoFhU7uY0Y
-         kUrto2iaxvxCvYbbsXMfTjHsGMv/xZ67Wov26yg2QCLp96QR/jnpUNx/PKPTp6wmpfxv
-         iAJknGt7TVD7oigcBdFAHmFcetvvp1IKdv8TaiTmH+Z2CT+6l4L4xzR0I9ZZdYubsxj5
-         OBk/5yJmFX/KyI0wlLG9rUM2lSoTdsdrKROv4fevAq9WV22eJh5qhiX/TC/S3IPNLkrx
-         MSDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721807300; x=1722412100;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=krtFy5Mi1BGgzBjcFadwjlZluEt4OAciNF2RWrAZwwg=;
-        b=a1hDvX1KL6RBWev1LPCS5vWyjs9NEf0GnjuXY03N51GR9PPDXHOf3DmwBLrLz+WIFx
-         OHRAqTNBd0Pqg5JTYoHK07KHyRZ3qW1DEylNls+3vt4Mbui993j3O8mpZ/YEPQUE/j+K
-         13iUH/a1MGurNJZNrEcWuiFG3h5bWSoAy2q7mhoWfrOysNyqhlZwRnNIPrenyQ7AUS8G
-         JStz9/j19PCqDU+ACel3aIwepIdO1z9NXEKDFJ//GrAqZ2DpAS1co4wavesaOThdOXTk
-         VWJISrQIIeP/TEOCiSzSzVATwuSDXFGmJkexeN9VDi5q64IgaHDhNsF/5mtvjYClVZpn
-         VQpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWu7QSibEv5LaQjn52XsCzzWItLCh+DdOZFhOlI61fISk80lYv8oDm4mOOHNYQcDxv14dDZ78TiK/23VKIXvUjBXw16mWTwXQJRaD/hMPynDA==
-X-Gm-Message-State: AOJu0YwWUiDFTN4UqTpOHzUG8S0T8Q0kN1SJR+lJ9IXwuGfP7waWmYB/
-	djCdqjhOL0B6QVE0416J+PfyBcNV2y6cn6wMIEUkpmVcy1ykKi59yGQzDj8B8Mg=
-X-Google-Smtp-Source: AGHT+IHJYQKmvGS93G2a3BT112cIQewhqjoeTVHdu6Fi/DuqndkssZhc6yIX5rxIS/1BJpp+wY8/Zg==
-X-Received: by 2002:a5d:6684:0:b0:368:3ef7:3929 with SMTP id ffacd0b85a97d-369f09bcef7mr1642716f8f.22.1721807299800;
-        Wed, 24 Jul 2024 00:48:19 -0700 (PDT)
-Received: from [192.168.0.101] ([84.69.19.168])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427f935dd55sm16759555e9.8.2024.07.24.00.48.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 24 Jul 2024 00:48:19 -0700 (PDT)
-Message-ID: <4dac0c08-8bd7-44d2-967e-3491d9dd953c@ursulin.net>
-Date: Wed, 24 Jul 2024 08:48:18 +0100
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="PJ0OqUfD"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46O7RmVI005604;
+	Wed, 24 Jul 2024 07:59:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=rr++4bbq3402kB30h4DffREgitw4dHM2hsFV2wABmAk=; b=PJ0OqUfD+1hW
+	ADZBEgw7MKI5KL3cbJ3Pw4zpHYxPL5RSboVkq5i9/nvZRgkDk9U+vLYF48/U+DYa
+	U63IUQOyQzEy1oEHf2RULW8H73lRqUGC4U60teplZnKgJZiePsmDN6rN0gAnHUgO
+	TWvVbMR1vnaeF7jzIkXepb6Q7TVu6AwTKthGX62BTYLbKaN3rvHgoyM72zDvMpbj
+	pQx63cXg8YMrWLJfKRJzPgQOrRxMMb89iVJHByRFta/0O9p7l7AoGuUXfs4OiCmv
+	AAbsne1xljLlq7vq7azT0nT0YSvvpyCtUsic76VugVyyGQyXcz9azbkS6NJm9Qq3
+	2RCRv+8sZA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40hva3m1y0-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jul 2024 07:59:27 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46O7xRNM025687;
+	Wed, 24 Jul 2024 07:59:27 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40hva3m1xx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jul 2024 07:59:27 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46O654bl007979;
+	Wed, 24 Jul 2024 07:59:26 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40gxn9xhj6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jul 2024 07:59:26 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46O7xKJZ18415890
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 24 Jul 2024 07:59:22 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3765020043;
+	Wed, 24 Jul 2024 07:59:20 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BF36720040;
+	Wed, 24 Jul 2024 07:59:16 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.99.114])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Wed, 24 Jul 2024 07:59:16 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH V8 00/15] Add data type profiling support for powerpc
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZqANd2cGSM3bSDr6@x1>
+Date: Wed, 24 Jul 2024 13:29:04 +0530
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, akanksha@linux.ibm.com,
+        Madhavan Srinivasan <maddy@linux.ibm.com>, kjain@linux.ibm.com,
+        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Message-Id: <1125D4F8-74AF-4EE1-89B6-10C5B4C3AA88@linux.vnet.ibm.com>
+References: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
+ <ZqANd2cGSM3bSDr6@x1>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: _55BGFJaBKu4HJtHvnLJi-RiauOGw-sH
+X-Proofpoint-ORIG-GUID: b5tj5iTIbigv7DZ7APc7O_Nqgro8zAD0
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/7] drm/i915/pmu: Lazy unregister
-To: Lucas De Marchi <lucas.demarchi@intel.com>
-Cc: intel-gfx@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
- Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
- dri-devel@lists.freedesktop.org, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-kernel@vger.kernel.org
-References: <20240722210648.80892-1-lucas.demarchi@intel.com>
- <20240722210648.80892-7-lucas.demarchi@intel.com>
- <be3871bd-fc25-482e-b4d4-91afc4d5b5a5@ursulin.net>
- <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
-Content-Language: en-GB
-From: Tvrtko Ursulin <tursulin@ursulin.net>
-In-Reply-To: <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-07-24_05,2024-07-23_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ priorityscore=1501 suspectscore=0 bulkscore=0 mlxscore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2407240057
 
 
-On 23/07/2024 16:30, Lucas De Marchi wrote:
-> On Tue, Jul 23, 2024 at 09:03:25AM GMT, Tvrtko Ursulin wrote:
->>
->> On 22/07/2024 22:06, Lucas De Marchi wrote:
->>> Instead of calling perf_pmu_unregister() when unbinding, defer that to
->>> the destruction of i915 object. Since perf itself holds a reference in
->>> the event, this only happens when all events are gone, which guarantees
->>> i915 is not unregistering the pmu with live events.
->>>
->>> Previously, running the following sequence would crash the system after
->>> ~2 tries:
->>>
->>>     1) bind device to i915
->>>     2) wait events to show up on sysfs
->>>     3) start perf  stat -I 1000 -e i915/rcs0-busy/
->>>     4) unbind driver
->>>     5) kill perf
->>>
->>> Most of the time this crashes in perf_pmu_disable() while accessing the
->>> percpu pmu_disable_count. This happens because perf_pmu_unregister()
->>> destroys it with free_percpu(pmu->pmu_disable_count).
->>>
->>> With a lazy unbind, the pmu is only unregistered after (5) as opposed to
->>> after (4). The downside is that if a new bind operation is attempted for
->>> the same device/driver without killing the perf process, i915 will fail
->>> to register the pmu (but still load successfully). This seems better
->>> than completely crashing the system.
->>
->> So effectively allows unbind to succeed without fully unbinding the 
->> driver from the device? That sounds like a significant drawback and if 
->> so, I wonder if a more complicated solution wouldn't be better after 
->> all. Or is there precedence for allowing userspace keeping their paws 
->> on unbound devices in this way?
-> 
-> keeping the resources alive but "unplunged" while the hardware
-> disappeared is a common thing to do... it's the whole point of the
-> drmm-managed resource for example. If you bind the driver and then
-> unbind it while userspace is holding a ref, next time you try to bind it
-> will come up with a different card number. A similar thing that could be
-> done is to adjust the name of the event - currently we add the mangled
-> pci slot.
 
-Yes.. but what my point was this from your commit message:
+> On 24 Jul 2024, at 1:37=E2=80=AFAM, Arnaldo Carvalho de Melo <acme@kernel=
+.org> wrote:
+>=20
+> On Thu, Jul 18, 2024 at 02:13:43PM +0530, Athira Rajeev wrote:
+>> The patchset from Namhyung added support for data type profiling
+>> in perf tool. This enabled support to associate PMU samples to data
+>> types they refer using DWARF debug information. With the upstream
+>> perf, currently it possible to run perf report or perf annotate to
+>> view the data type information on x86.
+>>=20
+>> Initial patchset posted here had changes need to enable data type
+>> profiling support for powerpc.
+>=20
+> I have this in tmp.perf-tools-next now, will do more tests before moving
+> to perf-tools-next.
+>=20
+> I see that Namhyung reviewed the patch series, and that it was tested,
+> in general I thought we need to go on improving things go avoid having
+> arch specific code in the non-arch code, I guess right now its important
+> to land these to try and encourage people to try data-type profiling
+> more widely, hopefully finding and improving data structures in the
+> kernel.
+>=20
+> We need to write about such cases so as to provide success stories on
+> using perf for data-type profiling.
+>=20
+> Thanks for working on this!
+Sure, Thanks Arnaldo for taking look at the patchset and pulling to tmp.per=
+f-tools-next
 
-"""
-The downside is that if a new bind operation is attempted for
-the same device/driver without killing the perf process, i915 will fail
-to register the pmu (but still load successfully).
-"""
+- Athira
+>=20
+> - Arnaldo
+>=20
+>> https://lore.kernel.org/all/6e09dc28-4a2e-49d8-a2b5-ffb3396a9952@csgroup=
+.eu/T/
+>>=20
+>> Main change were:
+>> 1. powerpc instruction nmemonic table to associate load/store
+>> instructions with move_ops which is use to identify if instruction
+>> is a memory access one.
+>> 2. To get register number and access offset from the given
+>> instruction, code uses fields from "struct arch" -> objump.
+>> Added entry for powerpc here.
+>> 3. A get_arch_regnum to return register number from the
+>> register name string.
+>>=20
+>> But the apporach used in the initial patchset used parsing of
+>> disassembled code which the current perf tool implementation does.
+>>=20
+>> Example: lwz     r10,0(r9)
+>>=20
+>> This line "lwz r10,0(r9)" is parsed to extract instruction name,
+>> registers names and offset. Also to find whether there is a memory
+>> reference in the operands, "memory_ref_char" field of objdump is used.
+>> For x86, "(" is used as memory_ref_char to tackle instructions of the
+>> form "mov  (%rax), %rcx".
+>>=20
+>> In case of powerpc, not all instructions using "(" are the only memory
+>> instructions. Example, above instruction can also be of extended form (X
+>> form) "lwzx r10,0,r19". Inorder to easy identify the instruction category
+>> and extract the source/target registers, second patchset added support t=
+o use
+>> raw instruction. With raw instruction, macros are added to extract opcode
+>> and register fields.
+>> Link to second patchset:
+>> https://lore.kernel.org/all/20240506121906.76639-1-atrajeev@linux.vnet.i=
+bm.com/
+>>=20
+>> Example representation using --show-raw-insn in objdump gives result:
+>>=20
+>> 38 01 81 e8     ld      r4,312(r1)
+>>=20
+>> Here "38 01 81 e8" is the raw instruction representation. In powerpc,
+>> this translates to instruction form: "ld RT,DS(RA)" and binary code
+>> as:
+>>  _____________________________________
+>>  | 58 |  RT  |  RA |      DS       | |
+>>  -------------------------------------
+>> 0    6     11    16              30 31
+>>=20
+>> Second patchset used "objdump" again to read the raw instruction.
+>> But since there is no need to disassemble and binary code can be read
+>> directly from the DSO, third patchset (ie this patchset) uses below
+>> apporach. The apporach preferred in powerpc to parse sample for data
+>> type profiling in V3 patchset is:
+>> - Read directly from DSO using dso__data_read_offset
+>> - If that fails for any case, fallback to using libcapstone
+>> - If libcapstone is not supported, approach will use objdump
+>>=20
+>> Patchset adds support to pick the opcode and reg fields from this
+>> raw/binary instruction code. This approach came in from review comment
+>> by Segher Boessenkool and Christophe for the initial patchset.
+>>=20
+>> Apart from that, instruction tracking is enabled for powerpc.
+>>=20
+>> These are handled in this patchset.
+>>=20
+>> - Patch 1 is to rearrange register state type structures to header file
+>> so that it can referred from other arch specific files
+>> - Patch 2 is to make instruction tracking as a callback to"struct arch"
+>> so that it can be implemented by other archs easily and defined in arch
+>> specific files
+>> - Patch 3 is to handle state type regs array size for x86 and powerpc
+>> - Patch 4 adds support to capture and parse raw instruction in powerpc
+>> using dso__data_read_offset utility
+>> - Patch 4 also adds logic to support using objdump when doing default "p=
+erf
+>> report" or "perf annotate" since it that needs disassembled instruction.
+>> - Patch 5 adds disasm_line__parse to parse raw instruction for powerpc
+>> - Patch 6 update parameters for reg extract functions to use raw
+>> instruction on powerpc
+>> - Patch 7 updates ins__find to carry raw_insn and also adds parse
+>> callback for memory instructions for powerpc
+>> - Patch 8 add support to identify memory instructions of opcode 31 in
+>> powerpc
+>> - Patch 9 adds more instructions to support instruction tracking in powe=
+rpc
+>> - Patch 10 and 11 handles instruction tracking for powerpc.
+>> - Patch 12, 13 and 14 add support to use libcapstone in powerpc
+>> - Patch 15 handles insn-stat option for perf annotate
+>>=20
+>> Note:
+>> - There are remaining unknowns (25%) as seen in annotate Instruction sta=
+ts
+>> below.
+>> - This patchset is not tested on powerpc32. In next step of enhancements
+>> along with handling remaining unknowns, plan to cover powerpc32 changes
+>> based on how testing goes.
+>> - Patch changes to handle global register support will be posted in
+>> follow up after addressing review comment from Namhung here:
+>> https://lore.kernel.org/linux-perf-users/CAM9d7cg5MYvLeOoBuKqp1pw7uvRfqC=
+w1fXpLtgct0npL96JaYg@mail.gmail.com/T/#mb309184ebf5d2c9b539cd86d61ffe2a3696=
+eac71
+>>=20
+>> With the current patchset:
+>>=20
+>> ./perf record -a -e mem-loads sleep 1
+>> ./perf report -s type,typeoff --hierarchy --group --stdio
+>> ./perf annotate --data-type --insn-stat
+>>=20
+>> perf annotate logs:
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>> Annotate Instruction stats
+>> total 609, ok 266 (43.7%), bad 343 (56.3%)
+>>=20
+>>  Name/opcode         :  Good   Bad
+>> -----------------------------------------------------------
+>>  58                  :   172   231
+>>  32                  :    48    44
+>>  34                  :    19    25
+>>  OP_31_XOP_LDX       :     8    20
+>>  40                  :     9    14
+>>  OP_31_XOP_LWARX     :     5     1
+>>  OP_31_XOP_LWZX      :     2     3
+>>  OP_31_XOP_LDARX     :     3     0
+>>  33                  :     0     2
+>>  OP_31_XOP_LBZX      :     0     1
+>>  OP_31_XOP_LWAX      :     0     1
+>>  OP_31_XOP_LHZX      :     0     1
+>>=20
+>> perf report logs:
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>=20
+>>  Total Lost Samples: 0
+>>=20
+>>  Samples: 1K of event 'mem-loads'
+>>  Event count (approx.): 937238
+>>=20
+>>    Overhead  Data Type / Data Type Offset
+>>    ........  .........  ................
+>>     1.73%     struct task_struct
+>>        1.29%     struct task_struct +276 (flags)
+>>        0.10%     struct task_struct +1872 (mm)
+>>        0.08%     struct task_struct +3632 (thread.regs)
+>>        0.08%     struct task_struct +1072 (sched_class)
+>>        0.05%     struct task_struct +1928 ()
+>>        0.03%     struct task_struct +1064 (dl_server)
+>>        0.02%     struct task_struct +0 (thread_info.preempt_count)
+>>        0.02%     struct task_struct +120 (thread_info)
+>>        0.02%     struct task_struct +2216 (worker_private)
+>>        0.02%     struct task_struct +24 (thread_info.slb_preload_nr)
+>>        0.02%     struct task_struct +8 (thread_info.local_flags)
+>>        0.01%     struct task_struct +1416 (nr_cpus_allowed)
+>>     1.68%     struct file
+>>        0.58%     struct file +176 (f_op)
+>>        0.53%     struct file +24 (f_count.counter)
+>>        0.46%     struct file +20 (f_mode)
+>>        0.11%     struct file +200 (private_data)
+>>     1.63%     struct rq
+>>        0.76%     struct rq +2856 (cpu)
+>>        0.21%     struct rq +2592 (curr)
+>>        0.11%     struct rq +2632 (clock_update_flags)
+>>        0.08%     struct rq +2600 (idle)
+>>        0.06%     struct rq +2688 (clock_task)
+>>        0.05%     struct rq +16 (numa_migrate_on)
+>>        0.04%     struct rq +2864 (cfs_tasks.next)
+>>=20
+>> Thanks
+>> Athira Rajeev
+>>=20
+>> Changelog:
+>>> From v7 -> v8:
+>>  Split patches 1 to 14 and patch 18 as basic patches.
+>>  Patch 15, 16 and 17 is related to global register handling
+>>  and will be handled separately.
+>>  Added Reviewed-and-tested-by from Kajol Jain
+>>  Added Reviewed-by from Namhyung for patches 1 to 14, patch 18
+>>=20
+>>> From v6 -> v7:
+>> - Addressed review comments from Namhyung
+>>  Changed format string space to %-20s while printing
+>>  instruction stats in patch 18.
+>>  Use cmp_null in patch 17 while comparing var_name to
+>>  properly sort with correct order.
+>>=20
+>>> From v5 -> v6:
+>> - Addressed review comments from Namhyung
+>>  Conditionally define TYPE_STATE_MAX_REGS based on arch.
+>>  Added macro for defining width of the raw codes and spaces
+>>  in disasm_line__parse_powerpc.
+>>  Call disasm_line__parse from disasm_line__parse_powerpc
+>>  for generic code.
+>>  Renamed symbol__disassemble_dso to symbol__disassemble_raw.
+>>  Fixed find_data_type_global_reg to correclty free var_types
+>>  and change indent level.
+>>  Fixed data_type_cmp and sort__typeoff_sort to include var_name
+>>  in comparing data type entries.
+>>=20
+>>> From v4 -> v5:
+>> - Addressed review comments from Namhyung
+>>  Handle max number of type state regs as 16 for x86 and 32 for
+>>  powerpc.
+>>  Added generic support for objdump patch first and DSO read
+>>  optimisation next
+>>  combined patch 3 and patch 4 in patchseries V4 to one patch
+>>  Changed reference for "raw_insn" to use "u32"
+>>  Splitted "parse" callback patch changes and "ins__find" patch
+>>  changes into two
+>>  Instead of making weak function, added get_powerpc_regs to
+>>  extract register and offset fields for powerpc
+>> - Addressed complation fail when "dwarf.h" is not present ie
+>>  elfutils devel is not present. Used includes for #ifdef HAVE_DWARF_SUPP=
+ORT
+>>  when including functions that use Dwarf references. Also
+>>  conditionally include some of the header files.
+>>=20
+>>> From v3->v4:
+>> - Addressed review comments from Ian by using capston_init from
+>>  "util/print_insn.c" instead of "open_capston_handle".
+>> - Addressed review comment from Namhyung by moving "opcode"
+>>  field from "struct ins" to "struct disasm_line"
+>>=20
+>>> From v2->v3:
+>> - Addressed review comments from Christophe and Namhyung for V2
+>> - Changed the apporach in powerpc to parse sample for data
+>>  type profiling as:
+>>  Read directly from DSO using dso__data_read_offset
+>>  If that fails for any case, fallback to using libcapstone
+>>  If libcapstone is not supported, approach will use objdump
+>> - Include instructions with opcode as 31 and correctly categorize
+>>  them as memory or arithmetic instructions.
+>> - Include more instructions for instruction tracking in powerpc
+>>=20
+>>> From v1->v2:
+>> - Addressed suggestion from Christophe Leroy and Segher Boessenkool
+>>  to use the binary code (raw insn) to fetch opcode, register and
+>>  offset fields.
+>> - Added support for instruction tracking in powerpc
+>> - Find the register defined variables (r13 and r1 which points to
+>>  local_paca and current_stack_pointer in powerpc)
+>>=20
+>> Athira Rajeev (15):
+>>  tools/perf: Move the data structures related to register type to
+>>    header file
+>>  tools/perf: Add "update_insn_state" callback function to handle arch
+>>    specific instruction tracking
+>>  tools/perf: Update TYPE_STATE_MAX_REGS to include max of regs in
+>>    powerpc
+>>  tools/perf: Add disasm_line__parse to parse raw instruction for
+>>    powerpc
+>>  tools/perf: Add support to capture and parse raw instruction in
+>>    powerpc using dso__data_read_offset utility
+>>  tools/perf: Update parameters for reg extract functions to use raw
+>>    instruction on powerpc
+>>  tools/perf: Add parse function for memory instructions in powerpc
+>>  tools/perf: Add support to identify memory instructions of opcode 31
+>>    in powerpc
+>>  tools/perf: Add some of the arithmetic instructions to support
+>>    instruction tracking in powerpc
+>>  tools/perf: Add more instructions for instruction tracking
+>>  tools/perf: Update instruction tracking for powerpc
+>>  tools/perf: Make capstone_init non-static so that it can be used
+>>    during symbol disassemble
+>>  tools/perf: Use capstone_init and remove open_capstone_handle from
+>>    disasm.c
+>>  tools/perf: Add support to use libcapstone in powerpc
+>>  tools/perf: Set instruction name to be used with insn-stat when using
+>>    raw instruction
+>>=20
+>> tools/include/linux/string.h                  |   2 +
+>> tools/lib/string.c                            |  13 +
+>> tools/perf/arch/arm64/annotate/instructions.c |   3 +-
+>> .../arch/loongarch/annotate/instructions.c    |   6 +-
+>> .../perf/arch/powerpc/annotate/instructions.c | 254 ++++++++++
+>> tools/perf/arch/powerpc/util/dwarf-regs.c     |  53 ++
+>> tools/perf/arch/s390/annotate/instructions.c  |   5 +-
+>> tools/perf/arch/x86/annotate/instructions.c   | 377 ++++++++++++++
+>> tools/perf/builtin-annotate.c                 |   4 +-
+>> tools/perf/util/annotate-data.c               | 453 +----------------
+>> tools/perf/util/annotate-data.h               |  83 ++++
+>> tools/perf/util/annotate.c                    |  21 +-
+>> tools/perf/util/annotate.h                    |   5 +-
+>> tools/perf/util/disasm.c                      | 468 ++++++++++++++++--
+>> tools/perf/util/disasm.h                      |  19 +-
+>> tools/perf/util/include/dwarf-regs.h          |  11 +
+>> tools/perf/util/print_insn.c                  |  15 +-
+>> tools/perf/util/print_insn.h                  |   5 +
+>> 18 files changed, 1301 insertions(+), 496 deletions(-)
+>>=20
+>> --=20
+>> 2.43.0
 
-So the subsequent bind does not "come up with a different card number". 
-Statement is it will come up with an error if we look at the PMU subset 
-of functionality. I was wondering if there was precedent for that kind 
-of situation.
-
-Mangling the PMU driver name probably also wouldn't be great.
-
-> That said, I agree a better approach would be to allow
-> perf_pmu_unregister() to do its job even when there are open events. On
-> top of that (or as a way to help achieve that), make perf core replace
-> the callbacks with stubs when pmu is unregistered - that would even kill
-> the need for i915's checks on pmu->closed (and fix the lack thereof in
-> other drivers).
-> 
-> It can be a can of worms though and may be pushed back by perf core
-> maintainers, so it'd be good have their feedback.
-
-Yeah definitely would be essential.
-
-Regards,
-
-Tvrtko
-
->>> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
->>> ---
->>>  drivers/gpu/drm/i915/i915_pmu.c | 24 +++++++++---------------
->>>  1 file changed, 9 insertions(+), 15 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/i915/i915_pmu.c 
->>> b/drivers/gpu/drm/i915/i915_pmu.c
->>> index 8708f905f4f4..df53a8fe53ec 100644
->>> --- a/drivers/gpu/drm/i915/i915_pmu.c
->>> +++ b/drivers/gpu/drm/i915/i915_pmu.c
->>> @@ -1158,18 +1158,21 @@ static void free_pmu(struct drm_device *dev, 
->>> void *res)
->>>      struct i915_pmu *pmu = res;
->>>      struct drm_i915_private *i915 = pmu_to_i915(pmu);
->>> +    perf_pmu_unregister(&pmu->base);
->>>      free_event_attributes(pmu);
->>>      kfree(pmu->base.attr_groups);
->>>      if (IS_DGFX(i915))
->>>          kfree(pmu->name);
->>> +
->>> +    /*
->>> +     * Make sure all currently running (but shortcut on pmu->closed) 
->>> are
->>> +     * gone before proceeding with free'ing the pmu object embedded 
->>> in i915.
->>> +     */
->>> +    synchronize_rcu();
->>>  }
->>>  static int i915_pmu_cpu_online(unsigned int cpu, struct hlist_node 
->>> *node)
->>>  {
->>> -    struct i915_pmu *pmu = hlist_entry_safe(node, typeof(*pmu), 
->>> cpuhp.node);
->>> -
->>> -    GEM_BUG_ON(!pmu->base.event_init);
->>> -
->>>      /* Select the first online CPU as a designated reader. */
->>>      if (cpumask_empty(&i915_pmu_cpumask))
->>>          cpumask_set_cpu(cpu, &i915_pmu_cpumask);
->>> @@ -1182,8 +1185,6 @@ static int i915_pmu_cpu_offline(unsigned int 
->>> cpu, struct hlist_node *node)
->>>      struct i915_pmu *pmu = hlist_entry_safe(node, typeof(*pmu), 
->>> cpuhp.node);
->>>      unsigned int target = i915_pmu_target_cpu;
->>> -    GEM_BUG_ON(!pmu->base.event_init);
->>> -
->>>      /*
->>>       * Unregistering an instance generates a CPU offline event which 
->>> we must
->>>       * ignore to avoid incorrectly modifying the shared 
->>> i915_pmu_cpumask.
->>> @@ -1337,21 +1338,14 @@ void i915_pmu_unregister(struct 
->>> drm_i915_private *i915)
->>>  {
->>>      struct i915_pmu *pmu = &i915->pmu;
->>> -    if (!pmu->base.event_init)
->>> -        return;
->>> -
->>>      /*
->>> -     * "Disconnect" the PMU callbacks - since all are atomic 
->>> synchronize_rcu
->>> -     * ensures all currently executing ones will have exited before we
->>> -     * proceed with unregistration.
->>> +     * "Disconnect" the PMU callbacks - unregistering the pmu will 
->>> be done
->>> +     * later when all currently open events are gone
->>>       */
->>>      pmu->closed = true;
->>> -    synchronize_rcu();
->>>      hrtimer_cancel(&pmu->timer);
->>> -
->>>      i915_pmu_unregister_cpuhp_state(pmu);
->>> -    perf_pmu_unregister(&pmu->base);
->>>      pmu->base.event_init = NULL;
->>>  }
