@@ -1,362 +1,229 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254C32572;
-	Wed, 24 Jul 2024 05:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 996D34E1C8
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 07:48:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721799569; cv=none; b=Km3/+pMyLxrquFn16624kqByByQr0r5L5S7fuBgeKRw9wwV3XS52p7KaPjdAI2R/222ywSUnn6qy3dVcIMf6dNPW48+csRrwdFPV/nw7MJaaFpZ1UP8SbSq0sD+u79qdJBP1nVQa73lYLurOaJp1cgo4/ja4WM4ifk+smY+aRxs=
+	t=1721807303; cv=none; b=DLl0RA+ooYfXk38LLpfTo+vuQOJ6krmwIBNStKCS9W8HnAHHGmWCeo0FNAr6LYMhOqHNgGuDEEENHU1ohvOsB4gSYfnw+4kSbUEx+PAEYAe6ucixJYYAfSMQAOyn9+XC2rhZ75uUjLup3/lKIhP4bxYfhqrGbB9DvDfD7Ovce3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721799569; c=relaxed/simple;
-	bh=fGVuUS5DVnWY+Kxm+qNrNBg+FWkmHp19WFJ2rd6og0Q=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=rB4h0utTAl6yYJnEYHUpQ1QkflAKbJiCkUvk3M72PHp4tAY6Q2A7kd4HKoK8GDcHX33kAG9ZOs142M+vWNheuUrTlXNDN7OyNCsqEQTtNCyxfH4UjpWoG7ONh52p6aDP7VxPFY95SL8pWjcd4siDj4OEzKUm9nSSMyUfgfse/ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aULStq2R; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
+	s=arc-20240116; t=1721807303; c=relaxed/simple;
+	bh=sR7Efk6tuD552OGUyQfPxlvDhFiS1PZYECSnCY+hjNo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=k0x64SQ+rJqTSRZQ4NyKaNQzbbtST3PBy+ZqK1LoVk1zWVTF3k7C1cMybOH8kddn3RzpJgHI4gfM6UAzHa70y04jQfpaf7dE4D00hg0u5NfS9fwG4jCCeYiS5A/vEmTH8sIOSJRk3D2+IGu1Yq/zsvdhrLianqjw86pTEFB/3A8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net; spf=none smtp.mailfrom=ursulin.net; dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b=oy92+FnZ; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ursulin.net
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ursulin.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aULStq2R"
-Received: from pps.filterd (m0353727.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 46O4tZw4014605;
-	Wed, 24 Jul 2024 05:39:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	content-type:mime-version:subject:from:in-reply-to:date:cc
-	:content-transfer-encoding:message-id:references:to; s=pp1; bh=o
-	Dz1FGzcFR0z6Qme3zUQ0/IrpuZuRoch6qmbjqTmcJ0=; b=aULStq2RQw7OI7NR1
-	A8ktCGqoCrU1B+yq1nblFhD+f+f3YezHPWHZMLp8uWOY7Gbh6uuBWwiCGp2fw73y
-	uBwbd2YRhPoC3iaulcqrYGK1y2DDI4KKeq8Aj5cK+ujsZcIpkm1zVRKleU4TvTE+
-	3vaZhXRK481cfBxzEmgXwXW8H6e/uMNHUebhaxkOtkl3JQtBcRHpm5iagO/kyVnn
-	ccZgVRRixcZksdgxnyIALduBaX/T9XnQT+T4V2/j1cazqakOXy1HJ9hnsB2TZEE0
-	opSrhd9GgqnnsaL1II1gHKNtV+3quQalLn57WAqA2tr46tjHor+woackifqVU7bC
-	0V37w==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40jnsp0kkx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jul 2024 05:39:15 +0000 (GMT)
-Received: from m0353727.ppops.net (m0353727.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 46O5dFLE007727;
-	Wed, 24 Jul 2024 05:39:15 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40jnsp0kku-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jul 2024 05:39:15 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 46O1Jib3006718;
-	Wed, 24 Jul 2024 05:39:13 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40gxn7e27d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 24 Jul 2024 05:39:13 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 46O5d83F55443878
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 24 Jul 2024 05:39:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 216982004F;
-	Wed, 24 Jul 2024 05:39:08 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id F38242004D;
-	Wed, 24 Jul 2024 05:39:04 +0000 (GMT)
-Received: from smtpclient.apple (unknown [9.43.99.114])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTPS;
-	Wed, 24 Jul 2024 05:39:04 +0000 (GMT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (2048-bit key) header.d=ursulin-net.20230601.gappssmtp.com header.i=@ursulin-net.20230601.gappssmtp.com header.b="oy92+FnZ"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3687ea0521cso4710932f8f.1
+        for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 00:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ursulin-net.20230601.gappssmtp.com; s=20230601; t=1721807300; x=1722412100; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=krtFy5Mi1BGgzBjcFadwjlZluEt4OAciNF2RWrAZwwg=;
+        b=oy92+FnZsLdihTIJaZBkAV9xQQNfa0Q2FrVjWUeGUGhfeGCjA8vl0525H3jQ0WKahh
+         JLG/Zax+OO1Zm2jo4/eQZjDAyAdpHatpOIEXgMk+9cYtKVNDhg6ozyq3ZDdoFhU7uY0Y
+         kUrto2iaxvxCvYbbsXMfTjHsGMv/xZ67Wov26yg2QCLp96QR/jnpUNx/PKPTp6wmpfxv
+         iAJknGt7TVD7oigcBdFAHmFcetvvp1IKdv8TaiTmH+Z2CT+6l4L4xzR0I9ZZdYubsxj5
+         OBk/5yJmFX/KyI0wlLG9rUM2lSoTdsdrKROv4fevAq9WV22eJh5qhiX/TC/S3IPNLkrx
+         MSDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721807300; x=1722412100;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=krtFy5Mi1BGgzBjcFadwjlZluEt4OAciNF2RWrAZwwg=;
+        b=a1hDvX1KL6RBWev1LPCS5vWyjs9NEf0GnjuXY03N51GR9PPDXHOf3DmwBLrLz+WIFx
+         OHRAqTNBd0Pqg5JTYoHK07KHyRZ3qW1DEylNls+3vt4Mbui993j3O8mpZ/YEPQUE/j+K
+         13iUH/a1MGurNJZNrEcWuiFG3h5bWSoAy2q7mhoWfrOysNyqhlZwRnNIPrenyQ7AUS8G
+         JStz9/j19PCqDU+ACel3aIwepIdO1z9NXEKDFJ//GrAqZ2DpAS1co4wavesaOThdOXTk
+         VWJISrQIIeP/TEOCiSzSzVATwuSDXFGmJkexeN9VDi5q64IgaHDhNsF/5mtvjYClVZpn
+         VQpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWu7QSibEv5LaQjn52XsCzzWItLCh+DdOZFhOlI61fISk80lYv8oDm4mOOHNYQcDxv14dDZ78TiK/23VKIXvUjBXw16mWTwXQJRaD/hMPynDA==
+X-Gm-Message-State: AOJu0YwWUiDFTN4UqTpOHzUG8S0T8Q0kN1SJR+lJ9IXwuGfP7waWmYB/
+	djCdqjhOL0B6QVE0416J+PfyBcNV2y6cn6wMIEUkpmVcy1ykKi59yGQzDj8B8Mg=
+X-Google-Smtp-Source: AGHT+IHJYQKmvGS93G2a3BT112cIQewhqjoeTVHdu6Fi/DuqndkssZhc6yIX5rxIS/1BJpp+wY8/Zg==
+X-Received: by 2002:a5d:6684:0:b0:368:3ef7:3929 with SMTP id ffacd0b85a97d-369f09bcef7mr1642716f8f.22.1721807299800;
+        Wed, 24 Jul 2024 00:48:19 -0700 (PDT)
+Received: from [192.168.0.101] ([84.69.19.168])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-427f935dd55sm16759555e9.8.2024.07.24.00.48.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 24 Jul 2024 00:48:19 -0700 (PDT)
+Message-ID: <4dac0c08-8bd7-44d2-967e-3491d9dd953c@ursulin.net>
+Date: Wed, 24 Jul 2024 08:48:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.600.62\))
-Subject: Re: [PATCH V8 04/15] tools/perf: Add disasm_line__parse to parse raw
- instruction for powerpc
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-In-Reply-To: <ZqABFhGYfcu60V7S@x1>
-Date: Wed, 24 Jul 2024 11:08:54 +0530
-Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
-        segher@kernel.crashing.org, christophe.leroy@csgroup.eu,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
-        maddy@linux.ibm.com, kjain@linux.ibm.com, hbathini@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8473D9B8-5FE7-4AAB-9EF2-7D207410A986@linux.vnet.ibm.com>
-References: <20240718084358.72242-1-atrajeev@linux.vnet.ibm.com>
- <20240718084358.72242-5-atrajeev@linux.vnet.ibm.com> <ZqABFhGYfcu60V7S@x1>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-X-Mailer: Apple Mail (2.3774.600.62)
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: cXfbyjibe1TxU9nAxo-7KthDx5qsqk7N
-X-Proofpoint-ORIG-GUID: LvhT7mDrS7A7JbaOpf-mt4Z0j2279TO_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-07-24_03,2024-07-23_02,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0
- impostorscore=0 suspectscore=0 bulkscore=0 mlxlogscore=999 adultscore=0
- clxscore=1015 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2407240038
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7] drm/i915/pmu: Lazy unregister
+To: Lucas De Marchi <lucas.demarchi@intel.com>
+Cc: intel-gfx@lists.freedesktop.org, linux-perf-users@vger.kernel.org,
+ Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+ dri-devel@lists.freedesktop.org, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-kernel@vger.kernel.org
+References: <20240722210648.80892-1-lucas.demarchi@intel.com>
+ <20240722210648.80892-7-lucas.demarchi@intel.com>
+ <be3871bd-fc25-482e-b4d4-91afc4d5b5a5@ursulin.net>
+ <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
+Content-Language: en-GB
+From: Tvrtko Ursulin <tursulin@ursulin.net>
+In-Reply-To: <xsuzfv4rzb4c25sibt5gjskn7xyfwf33wgwaw4nkz5jlnvl2ke@ekur5xvhec3z>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
+On 23/07/2024 16:30, Lucas De Marchi wrote:
+> On Tue, Jul 23, 2024 at 09:03:25AM GMT, Tvrtko Ursulin wrote:
+>>
+>> On 22/07/2024 22:06, Lucas De Marchi wrote:
+>>> Instead of calling perf_pmu_unregister() when unbinding, defer that to
+>>> the destruction of i915 object. Since perf itself holds a reference in
+>>> the event, this only happens when all events are gone, which guarantees
+>>> i915 is not unregistering the pmu with live events.
+>>>
+>>> Previously, running the following sequence would crash the system after
+>>> ~2 tries:
+>>>
+>>>     1) bind device to i915
+>>>     2) wait events to show up on sysfs
+>>>     3) start perf  stat -I 1000 -e i915/rcs0-busy/
+>>>     4) unbind driver
+>>>     5) kill perf
+>>>
+>>> Most of the time this crashes in perf_pmu_disable() while accessing the
+>>> percpu pmu_disable_count. This happens because perf_pmu_unregister()
+>>> destroys it with free_percpu(pmu->pmu_disable_count).
+>>>
+>>> With a lazy unbind, the pmu is only unregistered after (5) as opposed to
+>>> after (4). The downside is that if a new bind operation is attempted for
+>>> the same device/driver without killing the perf process, i915 will fail
+>>> to register the pmu (but still load successfully). This seems better
+>>> than completely crashing the system.
+>>
+>> So effectively allows unbind to succeed without fully unbinding the 
+>> driver from the device? That sounds like a significant drawback and if 
+>> so, I wonder if a more complicated solution wouldn't be better after 
+>> all. Or is there precedence for allowing userspace keeping their paws 
+>> on unbound devices in this way?
+> 
+> keeping the resources alive but "unplunged" while the hardware
+> disappeared is a common thing to do... it's the whole point of the
+> drmm-managed resource for example. If you bind the driver and then
+> unbind it while userspace is holding a ref, next time you try to bind it
+> will come up with a different card number. A similar thing that could be
+> done is to adjust the name of the event - currently we add the mangled
+> pci slot.
 
-> On 24 Jul 2024, at 12:44=E2=80=AFAM, Arnaldo Carvalho de Melo =
-<acme@kernel.org> wrote:
->=20
-> On Thu, Jul 18, 2024 at 02:13:47PM +0530, Athira Rajeev wrote:
->> Currently, the perf tool infrastructure disasm_line__parse function =
-to
->> parse disassembled line.
->>=20
->> Example snippet from objdump:
->> objdump  --start-address=3D<address> --stop-address=3D<address>  -d =
---no-show-raw-insn -C <vmlinux>
->>=20
->> c0000000010224b4: lwz     r10,0(r9)
->>=20
->> This line "lwz r10,0(r9)" is parsed to extract instruction name,
->> registers names and offset. In powerpc, the approach for data type
->> profiling uses raw instruction instead of result from objdump to =
-identify
->> the instruction category and extract the source/target registers.
->>=20
->> Example: 38 01 81 e8     ld      r4,312(r1)
->>=20
->> Here "38 01 81 e8" is the raw instruction representation. Add =
-function
->> "disasm_line__parse_powerpc" to handle parsing of raw instruction.
->> Also update "struct disasm_line" to save the binary code/
->> With the change, function captures:
->>=20
->> line -> "38 01 81 e8     ld      r4,312(r1)"
->> raw instruction "38 01 81 e8"
->>=20
->> Raw instruction is used later to extract the reg/offset fields. =
-Macros
->> are added to extract opcode and register fields. "struct disasm_line"
->> is updated to carry union of "bytes" and "raw_insn" of 32 bit to =
-carry raw
->> code (raw). Function "disasm_line__parse_powerpc fills the raw
->> instruction hex value and can use macros to get opcode. There is no
->> changes in existing code paths, which parses the disassembled code.
->> The size of raw instruction depends on architecture. In case of =
-powerpc,
->> the parsing the disasm line needs to handle cases for reading binary =
-code
->> directly from DSO as well as parsing the objdump result. Hence adding
->> the logic into separate function instead of updating =
-"disasm_line__parse".
->> The architecture using the instruction name and present approach is
->> not altered. Since this approach targets powerpc, the macro
->> implementation is added for powerpc as of now.
->>=20
->> Since the disasm_line__parse is used in other cases (perf annotate) =
-and
->> not only data tye profiling, the powerpc callback includes changes to
->> work with binary code as well as mneumonic representation. Also in =
-case
->> if the DSO read fails and libcapstone is not supported, the approach
->> fallback to use objdump as option. Hence as option, patch has changes =
-to
->> ensure objdump option also works well.
->>=20
->> Reviewed-and-tested-by: Kajol Jain <kjain@linux.ibm.com>
->> Reviewed-by: Namhyung Kim <namhyung@kernel.org>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
->> ---
->> tools/include/linux/string.h                  |  2 +
->> tools/lib/string.c                            | 13 +++++
->> .../perf/arch/powerpc/annotate/instructions.c |  1 +
->> tools/perf/arch/powerpc/util/dwarf-regs.c     |  9 ++++
->> tools/perf/util/annotate.h                    |  5 +-
->> tools/perf/util/disasm.c                      | 48 =
-++++++++++++++++++-
->> 6 files changed, 76 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/tools/include/linux/string.h =
-b/tools/include/linux/string.h
->> index db5c99318c79..0acb1fc14e19 100644
->> --- a/tools/include/linux/string.h
->> +++ b/tools/include/linux/string.h
->> @@ -46,5 +46,7 @@ extern char * __must_check skip_spaces(const char =
-*);
->>=20
->> extern char *strim(char *);
->>=20
->> +extern void remove_spaces(char *s);
->> +
->> extern void *memchr_inv(const void *start, int c, size_t bytes);
->> #endif /* _TOOLS_LINUX_STRING_H_ */
->> diff --git a/tools/lib/string.c b/tools/lib/string.c
->> index 8b6892f959ab..3126d2cff716 100644
->> --- a/tools/lib/string.c
->> +++ b/tools/lib/string.c
->> @@ -153,6 +153,19 @@ char *strim(char *s)
->> return skip_spaces(s);
->> }
->>=20
->> +/*
->> + * remove_spaces - Removes whitespaces from @s
->> + */
->> +void remove_spaces(char *s)
->> +{
->> + char *d =3D s;
->> +
->> + do {
->> + while (*d =3D=3D ' ')
->> + ++d;
->> + } while ((*s++ =3D *d++));
->> +}
->> +
->> /**
->>  * strreplace - Replace all occurrences of character in string.
->>  * @s: The string to operate on.
->> diff --git a/tools/perf/arch/powerpc/annotate/instructions.c =
-b/tools/perf/arch/powerpc/annotate/instructions.c
->> index a3f423c27cae..d57fd023ef9c 100644
->> --- a/tools/perf/arch/powerpc/annotate/instructions.c
->> +++ b/tools/perf/arch/powerpc/annotate/instructions.c
->> @@ -55,6 +55,7 @@ static int powerpc__annotate_init(struct arch =
-*arch, char *cpuid __maybe_unused)
->> arch->initialized =3D true;
->> arch->associate_instruction_ops =3D =
-powerpc__associate_instruction_ops;
->> arch->objdump.comment_char      =3D '#';
->> + annotate_opts.show_asm_raw =3D true;
->> }
->>=20
->> return 0;
->> diff --git a/tools/perf/arch/powerpc/util/dwarf-regs.c =
-b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> index 0c4f4caf53ac..430623ca5612 100644
->> --- a/tools/perf/arch/powerpc/util/dwarf-regs.c
->> +++ b/tools/perf/arch/powerpc/util/dwarf-regs.c
->> @@ -98,3 +98,12 @@ int regs_query_register_offset(const char *name)
->> return roff->ptregs_offset;
->> return -EINVAL;
->> }
->> +
->> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
->> +#define PPC_RA(a) (((a) >> 16) & 0x1f)
->> +#define PPC_RT(t) (((t) >> 21) & 0x1f)
->> +#define PPC_RB(b) (((b) >> 11) & 0x1f)
->> +#define PPC_D(D) ((D) & 0xfffe)
->> +#define PPC_DS(DS) ((DS) & 0xfffc)
->> +#define OP_LD 58
->> +#define OP_STD 62
->> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
->> index d5c821c22f79..9ba772f46270 100644
->> --- a/tools/perf/util/annotate.h
->> +++ b/tools/perf/util/annotate.h
->> @@ -113,7 +113,10 @@ struct annotation_line {
->> struct disasm_line {
->> struct ins ins;
->> struct ins_operands ops;
->> -
->> + union {
->> + u8 bytes[4];
->> + u32 raw_insn;
->> + } raw;
->> /* This needs to be at the end. */
->> struct annotation_line al;
->> };
->> diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
->> index d2723ba024bf..a53591a6111e 100644
->> --- a/tools/perf/util/disasm.c
->> +++ b/tools/perf/util/disasm.c
->> @@ -44,6 +44,7 @@ static int call__scnprintf(struct ins *ins, char =
-*bf, size_t size,
->>=20
->> static void ins__sort(struct arch *arch);
->> static int disasm_line__parse(char *line, const char **namep, char =
-**rawp);
->> +static int disasm_line__parse_powerpc(struct disasm_line *dl);
->>=20
->> static __attribute__((constructor)) void symbol__init_regexpr(void)
->> {
->> @@ -845,6 +846,48 @@ static int disasm_line__parse(char *line, const =
-char **namep, char **rawp)
->> return -1;
->> }
->>=20
->> +/*
->> + * Parses the result captured from symbol__disassemble_*
->> + * Example, line read from DSO file in powerpc:
->> + * line:    38 01 81 e8
->> + * opcode: fetched from arch specific get_opcode_insn
->> + * rawp_insn: e8810138
->> + *
->> + * rawp_insn is used later to extract the reg/offset fields
->> + */
->> +#define PPC_OP(op) (((op) >> 26) & 0x3F)
->> +#define RAW_BYTES 11
->> +
->> +static int disasm_line__parse_powerpc(struct disasm_line *dl)
->> +{
->> + char *line =3D dl->al.line;
->> + const char **namep =3D &dl->ins.name;
->> + char **rawp =3D &dl->ops.raw;
->> + char *tmp_raw_insn, *name_raw_insn =3D skip_spaces(line);
->> + char *name =3D skip_spaces(name_raw_insn + RAW_BYTES);
->> + int objdump =3D 0;
->> +
->> + if (strlen(line) > RAW_BYTES)
->> + objdump =3D 1;
->> +
->> + if (name_raw_insn[0] =3D=3D '\0')
->> + return -1;
->> +
->> + if (objdump) {
->> + disasm_line__parse(name, namep, rawp);
->> + } else
->> + *namep =3D "";
->> +
->> + tmp_raw_insn =3D strndup(name_raw_insn, 11);
->=20
-> Not  checking the result of strndup(), I'll try to add the check on an
-> extra pass after I read the patches.
->=20
-> - Arnaldo
->=20
->> + remove_spaces(tmp_raw_insn);
->> +
->> + sscanf(tmp_raw_insn, "%x", &dl->raw.raw_insn);
->> + if (objdump)
->> + dl->raw.raw_insn =3D be32_to_cpu(dl->raw.raw_insn);
->> +
->> + return 0;
->> +}
->> +
->> static void annotation_line__init(struct annotation_line *al,
->>  struct annotate_args *args,
->>  int nr)
->> @@ -898,7 +941,10 @@ struct disasm_line *disasm_line__new(struct =
-annotate_args *args)
->> goto out_delete;
->>=20
->> if (args->offset !=3D -1) {
->> - if (disasm_line__parse(dl->al.line, &dl->ins.name, &dl->ops.raw) < =
-0)
->> + if (arch__is(args->arch, "powerpc")) {
->> + if (disasm_line__parse_powerpc(dl) < 0)
->> + goto out_free_line;
->> + } else if (disasm_line__parse(dl->al.line, &dl->ins.name, =
-&dl->ops.raw) < 0)
->> goto out_free_line;
->=20
-> When the if has {}, the else should as well.
-> Documentation/process/coding-style.rst has this documented.
->=20
-> This is minor, I'm pointing out so that you take into account for the
-> future.
->=20
-> - Arnaldo
-Thanks for pointing out. I will take care of it in the future
+Yes.. but what my point was this from your commit message:
 
-Athira
->=20
->>=20
->> disasm_line__init_ins(dl, args->arch, &args->ms);
->> --=20
->> 2.43.0
+"""
+The downside is that if a new bind operation is attempted for
+the same device/driver without killing the perf process, i915 will fail
+to register the pmu (but still load successfully).
+"""
 
+So the subsequent bind does not "come up with a different card number". 
+Statement is it will come up with an error if we look at the PMU subset 
+of functionality. I was wondering if there was precedent for that kind 
+of situation.
+
+Mangling the PMU driver name probably also wouldn't be great.
+
+> That said, I agree a better approach would be to allow
+> perf_pmu_unregister() to do its job even when there are open events. On
+> top of that (or as a way to help achieve that), make perf core replace
+> the callbacks with stubs when pmu is unregistered - that would even kill
+> the need for i915's checks on pmu->closed (and fix the lack thereof in
+> other drivers).
+> 
+> It can be a can of worms though and may be pushed back by perf core
+> maintainers, so it'd be good have their feedback.
+
+Yeah definitely would be essential.
+
+Regards,
+
+Tvrtko
+
+>>> Signed-off-by: Lucas De Marchi <lucas.demarchi@intel.com>
+>>> ---
+>>>  drivers/gpu/drm/i915/i915_pmu.c | 24 +++++++++---------------
+>>>  1 file changed, 9 insertions(+), 15 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/i915/i915_pmu.c 
+>>> b/drivers/gpu/drm/i915/i915_pmu.c
+>>> index 8708f905f4f4..df53a8fe53ec 100644
+>>> --- a/drivers/gpu/drm/i915/i915_pmu.c
+>>> +++ b/drivers/gpu/drm/i915/i915_pmu.c
+>>> @@ -1158,18 +1158,21 @@ static void free_pmu(struct drm_device *dev, 
+>>> void *res)
+>>>      struct i915_pmu *pmu = res;
+>>>      struct drm_i915_private *i915 = pmu_to_i915(pmu);
+>>> +    perf_pmu_unregister(&pmu->base);
+>>>      free_event_attributes(pmu);
+>>>      kfree(pmu->base.attr_groups);
+>>>      if (IS_DGFX(i915))
+>>>          kfree(pmu->name);
+>>> +
+>>> +    /*
+>>> +     * Make sure all currently running (but shortcut on pmu->closed) 
+>>> are
+>>> +     * gone before proceeding with free'ing the pmu object embedded 
+>>> in i915.
+>>> +     */
+>>> +    synchronize_rcu();
+>>>  }
+>>>  static int i915_pmu_cpu_online(unsigned int cpu, struct hlist_node 
+>>> *node)
+>>>  {
+>>> -    struct i915_pmu *pmu = hlist_entry_safe(node, typeof(*pmu), 
+>>> cpuhp.node);
+>>> -
+>>> -    GEM_BUG_ON(!pmu->base.event_init);
+>>> -
+>>>      /* Select the first online CPU as a designated reader. */
+>>>      if (cpumask_empty(&i915_pmu_cpumask))
+>>>          cpumask_set_cpu(cpu, &i915_pmu_cpumask);
+>>> @@ -1182,8 +1185,6 @@ static int i915_pmu_cpu_offline(unsigned int 
+>>> cpu, struct hlist_node *node)
+>>>      struct i915_pmu *pmu = hlist_entry_safe(node, typeof(*pmu), 
+>>> cpuhp.node);
+>>>      unsigned int target = i915_pmu_target_cpu;
+>>> -    GEM_BUG_ON(!pmu->base.event_init);
+>>> -
+>>>      /*
+>>>       * Unregistering an instance generates a CPU offline event which 
+>>> we must
+>>>       * ignore to avoid incorrectly modifying the shared 
+>>> i915_pmu_cpumask.
+>>> @@ -1337,21 +1338,14 @@ void i915_pmu_unregister(struct 
+>>> drm_i915_private *i915)
+>>>  {
+>>>      struct i915_pmu *pmu = &i915->pmu;
+>>> -    if (!pmu->base.event_init)
+>>> -        return;
+>>> -
+>>>      /*
+>>> -     * "Disconnect" the PMU callbacks - since all are atomic 
+>>> synchronize_rcu
+>>> -     * ensures all currently executing ones will have exited before we
+>>> -     * proceed with unregistration.
+>>> +     * "Disconnect" the PMU callbacks - unregistering the pmu will 
+>>> be done
+>>> +     * later when all currently open events are gone
+>>>       */
+>>>      pmu->closed = true;
+>>> -    synchronize_rcu();
+>>>      hrtimer_cancel(&pmu->timer);
+>>> -
+>>>      i915_pmu_unregister_cpuhp_state(pmu);
+>>> -    perf_pmu_unregister(&pmu->base);
+>>>      pmu->base.event_init = NULL;
+>>>  }
