@@ -1,89 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6C6B23B1
-	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 00:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B304C62
+	for <linux-perf-users@vger.kernel.org>; Wed, 24 Jul 2024 01:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721781416; cv=none; b=ipCptol0YKv3cy/LyaeK9ZSaNHSc165e3edr7RHcB0i6KkNA4yqx+APdZj6fNW3TgAyb5VeTwPHL3gcO97xgAzWoOOPl8puU/LDSSbhuHLW+ExlsLZ+uj7RpdvRoONrp7A2lp5O/SVh+lHBKKnAQSvxv5T593ULXMUVsygFa6sc=
+	t=1721782912; cv=none; b=YwG9iIrimjmFpIPPkfOKrqEjvLndOHBqPkgmHdV19TVgAtgG7odTozM+mRCnqhtEj0djtu+o+1unVZQZa82wM3nmCfxw09wTv1YnE1YJNirSx3Sb43c41mSlgjinv9Egb2+dbLYY6Z8t4JUjLzdQt7Ozvtc1nBywaqrs5sMOwVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721781416; c=relaxed/simple;
-	bh=gtfHQ2OuCWRE0Ft2tAM8Kv9/vbKVJ6lObTRhiDwnb50=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EWzlQqBlg5HfLsfSzSIyE4SOGOZpocdvISKMie61BBRjE/FUpNCbStnNkh02YBnZbYho29YB+HtBepTF3RzOWK/n8AZhl56mWYY8sn/tL4hDKN4yH4J6+V+yqs6kF68K/UfEpU3rn9A0CFz2rf77vUsGA7q9uxuU2IOWo1dJeUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=a/N8csE0; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1721782912; c=relaxed/simple;
+	bh=Zu25c00JsWlhrOfufasBRRsETcF9KBwlx9kR4Qh+au8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=lCBawU9FdW7KRFfuosSKQ7Rtq/gHZMUB98A3vmcjLQAzUHIPDkQO3dy99dkuKlDK4mtrfS89Yx3WT5B0x+yYbv7yobd+XAnp5G7SL429HAEtWJGZwDVxa0Dcj72r3F9dHgMJw7wNqh/MtdOHk+vU2Nb6DPb7xk1zwNpmLFsgUyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=DZavSEjT; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a/N8csE0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721781415; x=1753317415;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gtfHQ2OuCWRE0Ft2tAM8Kv9/vbKVJ6lObTRhiDwnb50=;
-  b=a/N8csE0+5pgYZaGxfXA3+OEhYqHeVu82APmV8Hqs5uKiXDa+zxUPkYd
-   10Am5nqM8XOZxYw+fyGZnYOXzU/2qhkKvd/YtqGTyjBH9hJKZE4bl1u7L
-   2sl/b9t/ssWXvVz156DdGnPRPFzAlMBVZ5s3eXw5FHP8duCNOp2/Zuzds
-   vn1VotZgF7F5ZDK4klkgG/WZZcbzXgZm5ibf4qRya1bC/CtI8UKoBOQeR
-   zu31DUHQDKFIKAWCQru3YrC1HguVKnuVR3Z7F5UH3woA0a7BFC1n92152
-   VDnDEbF+iie4BMqyF+M+Rxx08A4SK4bhWr+kj+anfHTHdGcQGZMzLkYoA
-   A==;
-X-CSE-ConnectionGUID: sXJybJ5oQKKW64H/p1t21Q==
-X-CSE-MsgGUID: xfipzPI8Rr6jsFZeCuXYbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11142"; a="19241687"
-X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="19241687"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 17:36:54 -0700
-X-CSE-ConnectionGUID: uLfXo/WMRwyV4FEuPY2iCg==
-X-CSE-MsgGUID: n+iqyEGETzanq1OXmjNDXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,232,1716274800"; 
-   d="scan'208";a="75627094"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jul 2024 17:36:54 -0700
-Date: Tue, 23 Jul 2024 17:36:52 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 3/4] perf script: Fix perf script -F +metric
-Message-ID: <ZqBMpElyYfjyf8xq@tassilo>
-References: <20240723204834.3617647-1-ak@linux.intel.com>
- <20240723204834.3617647-3-ak@linux.intel.com>
- <CAP-5=fU8=gTatcHkvN8jv72_dJvaAb3FE+pnWB2LSN=SM0dRxw@mail.gmail.com>
- <ZqA88FMUcDFwrobi@tassilo>
- <CAP-5=fUrw3W-v53zi4xo9NVh=-fjXrNr3FC=KQFWj1E+ckZN9A@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="DZavSEjT"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1fa9ecfb321so9927945ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 23 Jul 2024 18:01:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1721782909; x=1722387709; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Sz9IPzon27B+vtOKB1z6ZWSG6J+jwhqfPYpySzTzLO4=;
+        b=DZavSEjThwa+kRv/EF+qeWvqInu7SPI5ZoRn5aGB5ev28dzgVSkXMl+w82FBgDNpxf
+         6UXm4qpbX9155RYyPEdlImMseve3CX1nykP/AK6grmV3qn69hRG6csN2BoKsKqj4SaU1
+         ENHlkp6zjtuQhtUWJ2oXcviR/JJwa5p1hodzBazUFqkLZKYYCX8xv1Cjx5gJhhiiPAlU
+         5TRZChCvNHuxno4Qmu562meq3x2shJojY/SXQHHlxVkOD2rpZi1v0SThcpjH1Yac08HJ
+         39DnqRhszAb949irILicS39wGeEnmIGWtDyVPKzA+mlZPhBJbBAfEYxO3SclDfjk/sX/
+         EhjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721782909; x=1722387709;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Sz9IPzon27B+vtOKB1z6ZWSG6J+jwhqfPYpySzTzLO4=;
+        b=Jxd5fae9Q6nLzDa2LQ8TIDKdLuzvCOf0L1DjXT7LXXqYSxdJHCmBKSex5V5mpVLgoS
+         H2Uvehh7Vo2xNMqhuqXbXn04Hkh7eOMPwJqncdUZbdevqdQr3XGza8uTj6TN+gkrifKd
+         M+Obgs7gUqzdcR0sTbG709/S+5ZqCd0NFsBvJehKclLfKiqMnMp2s5IBnYu4LTTFQ/38
+         sw9uoRCdRZ1uJGtesXNCHnIGP3qXgmAq08IJF/tJe8v1l2qBu572QfrOMcYOrdhlw+MY
+         NefEEGciey7OPe1JB/ZKUOw0AvmUsut9hFL5nDsoxc1dPq+tLjBh2lKGVQuGylpGYZ3G
+         C5tA==
+X-Gm-Message-State: AOJu0Yw37oVLYzxNOHhR/kpAEMb1NIH6OYrvXDp63d3GN6oMjWhEXc+P
+	3zYWKSZJ8i3m2DI7FpvKZ5KcS7ffKKP796LFCHfFqB4ZFm3c0/hwFk62KgclZXC/LrjA5H7W9nW
+	bU/hzEDRNrbXr9cASitexSVg2/Q2yJFr0aO75lvVFY2MJiLd3D+M=
+X-Google-Smtp-Source: AGHT+IHMEm+FUBb+XmMeTLjEC9Gy4Tq8ayvSdZ2+NfD40y4A9YYx8rD8L/zxzkFcwWjC4lTJ6vFeYucdMH/L2gcxRZ0=
+X-Received: by 2002:a17:90a:c17:b0:2cd:2c4d:9345 with SMTP id
+ 98e67ed59e1d1-2cdb5120b02mr798742a91.6.1721782909233; Tue, 23 Jul 2024
+ 18:01:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAP-5=fUrw3W-v53zi4xo9NVh=-fjXrNr3FC=KQFWj1E+ckZN9A@mail.gmail.com>
+References: <20240722211548.61455-1-cachen@purestorage.com>
+In-Reply-To: <20240722211548.61455-1-cachen@purestorage.com>
+From: Casey Chen <cachen@purestorage.com>
+Date: Tue, 23 Jul 2024 18:01:38 -0700
+Message-ID: <CALCePG0GtG4DQwzJ-QCJRScfxVg3Up6Xeemxh48qSf2VjxjebA@mail.gmail.com>
+Subject: Re: [PATCHv5] perf tool: fix dereferencing NULL al->maps
+To: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	namhyung@kernel.org, irogers@google.com
+Cc: yzhong@purestorage.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> The main reason would be so that perf_stat_process_counter could work
-> and update the aggregation accordingly. Then you can dump out the
-> aggregation, be it per CPU, per core, per socket, per cache-level,
-> etc. as appropriate. 
+Ian / Namhyung,
 
-But there's is none. It's only for a short time on a single CPU.
+Could you take a look at the latest diff PATCHv5 ?
 
-> If you follow the perf stat convention you are
-> also much less likely to be broken in the future, as perf stat would
-> also get broken. It is complicated spaghetti to work out how this
-> stuff works, but that's why I fixed in the patch I sent out.
+Thanks,
+Casey
 
-Hopefully the regression tests will prevent future breakage.
-
-> Or let it set the aggregation mode and just let the aggregation code
-> handle it when computing metrics? I think getting the STAT events
-> isn't typical, so this is an academic argument.
-
-I don't see why users shouldn't use perf stat record. It makes
-sense for any large scale count collections. And it's tested by
-the test suite at least.
-
--Andi
+On Mon, Jul 22, 2024 at 2:15=E2=80=AFPM Casey Chen <cachen@purestorage.com>=
+ wrote:
+>
+> With 0dd5041c9a0e ("perf addr_location: Add init/exit/copy functions"),
+> when cpumode is 3 (macro PERF_RECORD_MISC_HYPERVISOR),
+> thread__find_map() could return with al->maps being NULL.
+>
+> The path below could add a callchain_cursor_node with NULL ms.maps.
+>
+> add_callchain_ip()
+>   thread__find_symbol(.., &al)
+>     thread__find_map(.., &al)   // al->maps becomes NULL
+>   ms.maps =3D maps__get(al.maps)
+>   callchain_cursor_append(..., &ms, ...)
+>     node->ms.maps =3D maps__get(ms->maps)
+>
+> Then the path below would dereference NULL maps and get segfault.
+>
+> fill_callchain_info()
+>   maps__machine(node->ms.maps);
+>
+> Fix it by checking if maps is NULL in fill_callchain_info().
+>
+> Signed-off-by: Casey Chen <cachen@purestorage.com>
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/util/callchain.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 1730b852a947..6d075648d2cc 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1141,7 +1141,7 @@ int hist_entry__append_callchain(struct hist_entry =
+*he, struct perf_sample *samp
+>  int fill_callchain_info(struct addr_location *al, struct callchain_curso=
+r_node *node,
+>                         bool hide_unresolved)
+>  {
+> -       struct machine *machine =3D maps__machine(node->ms.maps);
+> +       struct machine *machine =3D node->ms.maps ? maps__machine(node->m=
+s.maps) : NULL;
+>
+>         maps__put(al->maps);
+>         al->maps =3D maps__get(node->ms.maps);
+> --
+> 2.45.2
+>
