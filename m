@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EF4116D32C
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 06:46:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E2C16D9B7
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 06:46:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721890005; cv=none; b=bFKb7iG1tQdLLMj0lbjh119DbIvb/trL/LT3whZXOM5OnU+LC/xJe2HJ+mseS8dY/qBn0NeXlJWdmjO/wNKdqGW0LbNY42PGZNF8E/Qb9Qb4svowlc2gb9a2UQTwui56U91Fd9Q+wLIP5AizuuWArckg1Z8LW1n4MWaLIlwfGpo=
+	t=1721890006; cv=none; b=Bezy1cfoIIcdWxSq4As5hiUA1oGvVUqIPrtKy2vgM8bWscf1rjsS13xcZ7KT2v7UqehyyfOakmXFvTYKlytE46pM59eTL4u2O4deceZyut8yr7DpbEaDQGvlWiTDGedsfXCNrsWGi65ssE+ENQNrnsC/BYXmA0qfcnxLE0VEbUo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721890005; c=relaxed/simple;
-	bh=u7ImsxMbaOkI3frHCewjA+EJibt/31IaDaUwb7n9s7o=;
+	s=arc-20240116; t=1721890006; c=relaxed/simple;
+	bh=diO3D00tHydZ8HYA04QzV3SRR0zuKtqPfcVPXzDA+qU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JG9WrjjoxjrKHcf14JldiK/T9K3/g0eXvqEczztWtiBmeEL1UfO0xVQi+daCiq5AOdFvAra8GjzD964JNCaFtpEyBUCKxfqDZOELHnmnMa4twyCtd8/l4UON+Qu61SeSa8GBiGMApSRFGPqC6NGVyyp2DqTk6suNYvA3ah7Co2s=
+	 MIME-Version; b=oKyVlp2JmP0sl1Txg/QPvOhjenXb/+jShdzmbvcCr3uFAnEd14fryG150Mxf3ft2UHrdtwmyeZVudGVClfU6JCPTt5M/AYwCRZgevqUJD7CE+5u/9jL8xegZNKcEhvL0bP5eAQSYSgI0snMbkbPNPVu+I7Gr3KmvkDCwSrCXVuM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 516E11476;
-	Wed, 24 Jul 2024 23:47:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 297381007;
+	Wed, 24 Jul 2024 23:47:10 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 37EC23F73F;
-	Wed, 24 Jul 2024 23:46:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1174A3F73F;
+	Wed, 24 Jul 2024 23:46:42 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Namhyung Kim <namhyung@kernel.org>,
@@ -32,9 +32,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v2 3/4] perf arm-spe: Extract evsel setting up
-Date: Thu, 25 Jul 2024 07:46:19 +0100
-Message-Id: <20240725064620.1651819-4-leo.yan@arm.com>
+Subject: [PATCH v2 4/4] perf arm-spe: Support multiple Arm SPE events
+Date: Thu, 25 Jul 2024 07:46:20 +0100
+Message-Id: <20240725064620.1651819-5-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240725064620.1651819-1-leo.yan@arm.com>
 References: <20240725064620.1651819-1-leo.yan@arm.com>
@@ -46,120 +46,107 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The evsel for Arm SPE PMU needs to be set up. Extract the setting up
-into a function arm_spe_setup_evsel().
+As the flag 'auxtrace' has been set for Arm SPE events, now it is ready
+to use evsel__is_aux_event() to check if an event is AUX trace event or
+not. Use this function to replace the old checking for only the first
+Arm SPE event.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/arch/arm64/util/arm-spe.c | 74 +++++++++++++++-------------
- 1 file changed, 40 insertions(+), 34 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c | 37 ++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 13 deletions(-)
 
 diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 622fd47573ec..c228b96aa78b 100644
+index c228b96aa78b..2be99fdf997d 100644
 --- a/tools/perf/arch/arm64/util/arm-spe.c
 +++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -132,6 +132,45 @@ static __u64 arm_spe_pmu__sample_period(const struct perf_pmu *arm_spe_pmu)
- 	return sample_period;
- }
+@@ -8,6 +8,7 @@
+ #include <linux/types.h>
+ #include <linux/bitops.h>
+ #include <linux/log2.h>
++#include <linux/string.h>
+ #include <linux/zalloc.h>
+ #include <time.h>
  
-+static void arm_spe_setup_evsel(struct evsel *evsel, struct perf_cpu_map *cpus)
-+{
-+	u64 bit;
-+
-+	evsel->core.attr.freq = 0;
-+	evsel->core.attr.sample_period = arm_spe_pmu__sample_period(evsel->pmu);
-+	evsel->needs_auxtrace_mmap = true;
-+
-+	/*
-+	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
-+	 * must come first.
-+	 */
-+	evlist__to_front(evsel->evlist, evsel);
-+
-+	/*
-+	 * In the case of per-cpu mmaps, sample CPU for AUX event;
-+	 * also enable the timestamp tracing for samples correlation.
-+	 */
-+	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
-+		evsel__set_sample_bit(evsel, CPU);
-+		evsel__set_config_if_unset(evsel->pmu, evsel, "ts_enable", 1);
-+	}
-+
-+	/*
-+	 * Set this only so that perf report knows that SPE generates memory info. It has no effect
-+	 * on the opening of the event or the SPE data produced.
-+	 */
-+	evsel__set_sample_bit(evsel, DATA_SRC);
-+
-+	/*
-+	 * The PHYS_ADDR flag does not affect the driver behaviour, it is used to
-+	 * inform that the resulting output's SPE samples contain physical addresses
-+	 * where applicable.
-+	 */
-+	bit = perf_pmu__format_bits(evsel->pmu, "pa_enable");
-+	if (evsel->core.attr.config & bit)
-+		evsel__set_sample_bit(evsel, PHYS_ADDR);
-+}
-+
- static int arm_spe_recording_options(struct auxtrace_record *itr,
- 				     struct evlist *evlist,
- 				     struct record_opts *opts)
-@@ -144,7 +183,6 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+@@ -177,8 +178,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ {
+ 	struct arm_spe_recording *sper =
+ 			container_of(itr, struct arm_spe_recording, itr);
+-	struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
+-	struct evsel *evsel, *arm_spe_evsel = NULL;
++	struct evsel *evsel, *tmp;
+ 	struct perf_cpu_map *cpus = evlist->core.user_requested_cpus;
  	bool privileged = perf_event_paranoid_check(-1);
  	struct evsel *tracking_evsel;
- 	int err;
--	u64 bit;
- 
+@@ -187,12 +187,12 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
  	sper->evlist = evlist;
  
-@@ -154,9 +192,6 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
- 				pr_err("There may be only one " ARM_SPE_PMU_NAME "x event\n");
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel->core.attr.type == arm_spe_pmu->type) {
+-			if (arm_spe_evsel) {
+-				pr_err("There may be only one " ARM_SPE_PMU_NAME "x event\n");
++		if (evsel__is_aux_event(evsel)) {
++			if (!strstarts(evsel->pmu_name, ARM_SPE_PMU_NAME)) {
++				pr_err("Found unexpected auxtrace event: %s\n",
++				       evsel->pmu_name);
  				return -EINVAL;
  			}
--			evsel->core.attr.freq = 0;
--			evsel->core.attr.sample_period = arm_spe_pmu__sample_period(arm_spe_pmu);
--			evsel->needs_auxtrace_mmap = true;
- 			arm_spe_evsel = evsel;
+-			arm_spe_evsel = evsel;
  			opts->full_auxtrace = true;
  		}
-@@ -222,36 +257,7 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+ 	}
+@@ -257,7 +257,10 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
  		pr_debug2("%sx snapshot size: %zu\n", ARM_SPE_PMU_NAME,
  			  opts->auxtrace_snapshot_size);
  
--	/*
--	 * To obtain the auxtrace buffer file descriptor, the auxtrace event
--	 * must come first.
--	 */
--	evlist__to_front(evlist, arm_spe_evsel);
--
--	/*
--	 * In the case of per-cpu mmaps, sample CPU for AUX event;
--	 * also enable the timestamp tracing for samples correlation.
--	 */
--	if (!perf_cpu_map__is_any_cpu_or_is_empty(cpus)) {
--		evsel__set_sample_bit(arm_spe_evsel, CPU);
--		evsel__set_config_if_unset(arm_spe_pmu, arm_spe_evsel,
--					   "ts_enable", 1);
--	}
--
--	/*
--	 * Set this only so that perf report knows that SPE generates memory info. It has no effect
--	 * on the opening of the event or the SPE data produced.
--	 */
--	evsel__set_sample_bit(arm_spe_evsel, DATA_SRC);
--
--	/*
--	 * The PHYS_ADDR flag does not affect the driver behaviour, it is used to
--	 * inform that the resulting output's SPE samples contain physical addresses
--	 * where applicable.
--	 */
--	bit = perf_pmu__format_bits(arm_spe_pmu, "pa_enable");
--	if (arm_spe_evsel->core.attr.config & bit)
--		evsel__set_sample_bit(arm_spe_evsel, PHYS_ADDR);
-+	arm_spe_setup_evsel(arm_spe_evsel, cpus);
+-	arm_spe_setup_evsel(arm_spe_evsel, cpus);
++	evlist__for_each_entry_safe(evlist, tmp, evsel) {
++		if (evsel__is_aux_event(evsel))
++			arm_spe_setup_evsel(evsel, cpus);
++	}
  
  	/* Add dummy event to keep tracking */
  	err = parse_event(evlist, "dummy:u");
+@@ -307,12 +310,16 @@ static int arm_spe_snapshot_start(struct auxtrace_record *itr)
+ 	struct arm_spe_recording *ptr =
+ 			container_of(itr, struct arm_spe_recording, itr);
+ 	struct evsel *evsel;
++	int ret = -EINVAL;
+ 
+ 	evlist__for_each_entry(ptr->evlist, evsel) {
+-		if (evsel->core.attr.type == ptr->arm_spe_pmu->type)
+-			return evsel__disable(evsel);
++		if (evsel__is_aux_event(evsel)) {
++			ret = evsel__disable(evsel);
++			if (ret < 0)
++				return ret;
++		}
+ 	}
+-	return -EINVAL;
++	return ret;
+ }
+ 
+ static int arm_spe_snapshot_finish(struct auxtrace_record *itr)
+@@ -320,12 +327,16 @@ static int arm_spe_snapshot_finish(struct auxtrace_record *itr)
+ 	struct arm_spe_recording *ptr =
+ 			container_of(itr, struct arm_spe_recording, itr);
+ 	struct evsel *evsel;
++	int ret = -EINVAL;
+ 
+ 	evlist__for_each_entry(ptr->evlist, evsel) {
+-		if (evsel->core.attr.type == ptr->arm_spe_pmu->type)
+-			return evsel__enable(evsel);
++		if (evsel__is_aux_event(evsel)) {
++			ret = evsel__enable(evsel);
++			if (ret < 0)
++				return ret;
++		}
+ 	}
+-	return -EINVAL;
++	return ret;
+ }
+ 
+ static int arm_spe_alloc_wrapped_array(struct arm_spe_recording *ptr, int idx)
 -- 
 2.34.1
 
