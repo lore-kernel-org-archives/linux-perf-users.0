@@ -1,163 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B009B18028
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 15:52:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF5A17588;
+	Thu, 25 Jul 2024 16:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721922729; cv=none; b=GlzoHVwvq/6jI0g1K7hHG6GpfQ1TGMUww9an9WfQhLkimsjKcjEDgm4ygI5w9Mijvr6lzn3PT4r50yNao4Vb8GDyDB5T4/IqGmBt17mI3lJO1RUGTwYgNChe6FYppfKztKA3FWO5WBomlLS50sY8HTac0Z3hPPUMbxoCacOC4IE=
+	t=1721925538; cv=none; b=tPIxwHyiGy+ECI2rydZ/C3PLIc2B2cvHe2QlMAAUj0WSrvNc9bms0s1ULRJi1RiooAanx74TA3upzCJuniwG1MqyIMLpFVHb6hdLhfRyu/mizMVOBKqMH0lrOO2qc1jfm3LwIEDjWq2sX8w3ok5+dYIfTZoZa1hwlOi1xKmk5Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721922729; c=relaxed/simple;
-	bh=ht4OxHzXG5XgLcZlowtMN4BV0rKVu0Y+e9bJbXIpOvY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=rrbN7I90tmEbR5WDxTGuDNv5CDFiZ/R1ylg8oTHm8oa9YuIFUx0Tm64zbQVg36uW7duwiZW8IJ5PYD3utV3LpJQrMdxo0TZBqJFe4L4LrN9mKcRhsE2fbFYX3gVSoPiak+BpyJB020Pn8TZDL6vkT/3HoX0CyHvvucIfER0ujyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KebQe9Tm; arc=none smtp.client-ip=198.175.65.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1721925538; c=relaxed/simple;
+	bh=1R93NxJhFkpwpTA0n6/mhREWx2ZosY7WH0zly8AsrdQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=n0KFjrEqI+kfJy1wPEphGJRYGrJYBAuUbFvo2+k2P4+wQPrCX/8BB7pwnbaFJNxvLIchkp2mRITUohl/NsYAqBnL4x/AZw6GJ4EFd8FlyEraZym4K4qVtyqCasFpm/7oTWC50QoW+y5ymWfHAAlLS1Eyf5FFWVQS3oNQwauyIy8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LOprRkt/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KebQe9Tm"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721922728; x=1753458728;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=ht4OxHzXG5XgLcZlowtMN4BV0rKVu0Y+e9bJbXIpOvY=;
-  b=KebQe9TmEe1b+r/dE96RvTNt9ayw+r3Pngi9jaD1o8UoI+mnjvlVPYqW
-   MDBOJ6nBumA1LiS1RlTMC+n4H5wdHzH16qPTC+EQzQ+0GECSfV59kYNtb
-   WM5E8eQTV4lC3YQ9g1NqvYftA18NczZmjHdqhJ5dguuM+oLFXTPIXh217
-   duGi1LKabKhFHuZsvmG3VpxLvWo/mF1kxWxeVMj0Mb/0Y8ynEF5D3CNxh
-   Ya8rRTq8ENfB6h85u0dacthxRujHvq+zmp4J74j/V9DCXo+X8vOnlp+aX
-   J51wCPKxaUz9CnSnyggGm1zDvUBlrs/1ZuHX0GdrFDBbxp8pQlhPvNJnx
-   A==;
-X-CSE-ConnectionGUID: nxnqtv+0Qh+CZZeBdjV9zA==
-X-CSE-MsgGUID: LI6zNtlGTAeQDaLWr2Lz2g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="19799496"
-X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="19799496"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 08:52:06 -0700
-X-CSE-ConnectionGUID: XoDzfOXjS56RszxicWQwJg==
-X-CSE-MsgGUID: YbHq2uRGSKuuaG9qqJDTzw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="57773004"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 08:52:02 -0700
-Message-ID: <dfc486a3-fc69-4ae5-a1c2-768bae92f70b@intel.com>
-Date: Thu, 25 Jul 2024 18:51:56 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LOprRkt/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B775C4AF0C;
+	Thu, 25 Jul 2024 16:38:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721925537;
+	bh=1R93NxJhFkpwpTA0n6/mhREWx2ZosY7WH0zly8AsrdQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=LOprRkt/FW7G0qurHjLGMwvyAyRcwOZcpYx+KUv3200IdXSEB2NuwBcCIn+zVc6Gv
+	 cDo6uN7h7qqtzuXXu2bSZivhDWFlmr8GOrLn8okPBRmUvee8HSDZ2S5IqrHLOylBN5
+	 9VqDBRCS5AEFcNclhsJ3qhRUGUtg3e8gqe79nNaQVaxxD771MEbXvaz6Hu9Sg6n6p+
+	 gJxcfjBveb7hMZMq8MUUjIw4tkZrvTL8ZHHzubN+QdYLEPEwEjdLNTwSwHmH6uhr2Q
+	 zSnCWeY2L4aJ65sGS2Rd2n/1WifKGMdAsi76AoqTi746pX6+WvGlYlTRx6m1fL4IXE
+	 ELX7cN4F+ZZGA==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-52f01993090so549072e87.2;
+        Thu, 25 Jul 2024 09:38:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCU5aaknCFqPHoK+Dv9kUO+vNrxOKDuJcQDgaN1lIIecjXdiZqdgd6OcbcgwCxUc0NrlRh2bAqD8hvJPx/trMrOgqzEGNf3BKxiEYL6iygAMQLair/F56ouTIC4LQiDQo3LMeG2m+x3wIlm3sQPkEA==
+X-Gm-Message-State: AOJu0YzgS4a2ELZ5VunXv8VWB+2Jo2ye/HRs2zWcwdgj8D5mHXA9BwIw
+	x4TrofpyY2G3ymhqnIofSPOar/N+E+Hiy7y/79aPxdOVE7hiYRmoTmZbltoc06K9v07KNpFqLyy
+	9krAwLouipbh+QDPXsup7k68Wu6Q=
+X-Google-Smtp-Source: AGHT+IG9tcPGYe/OimxP77WlU0vqCo8JnmY2sPztGjJCuiaA0W/xXaSTQJ66a8de6hsq5F9bESTNvnhGEMoPxicI6Zk=
+X-Received: by 2002:a05:6512:2393:b0:52e:bdfc:1d09 with SMTP id
+ 2adb3069b0e04-52fd602b484mr1916962e87.18.1721925535863; Thu, 25 Jul 2024
+ 09:38:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] perf auxtrace: Remove unused 'pmu' pointer from
- struct auxtrace_record
-To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- John Garry <john.g.garry@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org
-References: <20240725064620.1651819-1-leo.yan@arm.com>
- <20240725064620.1651819-3-leo.yan@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240725064620.1651819-3-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <CAPhsuW4nem9XZP+b=sJJ7kqXG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com>
+ <26fb7054-f877-496f-b23a-9b6a3d752595@linux.intel.com>
+In-Reply-To: <26fb7054-f877-496f-b23a-9b6a3d752595@linux.intel.com>
+From: Song Liu <song@kernel.org>
+Date: Thu, 25 Jul 2024 09:38:42 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW6+7ULMQFLbmOsBzYAdd8LMV54h_ynfkGDxd_oH6O8cww@mail.gmail.com>
+Message-ID: <CAPhsuW6+7ULMQFLbmOsBzYAdd8LMV54h_ynfkGDxd_oH6O8cww@mail.gmail.com>
+Subject: Re: Some unc_cha_tor_* events appear to be "not supported"?
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, open list <linux-kernel@vger.kernel.org>, 
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>, 
+	jonesz@meta.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 25/07/24 09:46, Leo Yan wrote:
-> The 'pmu' pointer in the auxtrace_record structure is not used after
-> support multiple AUX events, remove it.
+Hi Kan,
 
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+Thanks for your quick response!
 
-> 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  tools/perf/arch/arm/util/cs-etm.c     | 1 -
->  tools/perf/arch/arm64/util/arm-spe.c  | 1 -
->  tools/perf/arch/arm64/util/hisi-ptt.c | 1 -
->  tools/perf/arch/x86/util/intel-bts.c  | 1 -
->  tools/perf/arch/x86/util/intel-pt.c   | 1 -
->  tools/perf/util/auxtrace.h            | 1 -
->  6 files changed, 6 deletions(-)
-> 
-> diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-> index da6231367993..96aeb7cdbee1 100644
-> --- a/tools/perf/arch/arm/util/cs-etm.c
-> +++ b/tools/perf/arch/arm/util/cs-etm.c
-> @@ -888,7 +888,6 @@ struct auxtrace_record *cs_etm_record_init(int *err)
->  	}
->  
->  	ptr->cs_etm_pmu			= cs_etm_pmu;
-> -	ptr->itr.pmu			= cs_etm_pmu;
->  	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
->  	ptr->itr.recording_options	= cs_etm_recording_options;
->  	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
-> diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-> index 0b52e67edb3b..622fd47573ec 100644
-> --- a/tools/perf/arch/arm64/util/arm-spe.c
-> +++ b/tools/perf/arch/arm64/util/arm-spe.c
-> @@ -497,7 +497,6 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
->  	}
->  
->  	sper->arm_spe_pmu = arm_spe_pmu;
-> -	sper->itr.pmu = arm_spe_pmu;
->  	sper->itr.snapshot_start = arm_spe_snapshot_start;
->  	sper->itr.snapshot_finish = arm_spe_snapshot_finish;
->  	sper->itr.find_snapshot = arm_spe_find_snapshot;
-> diff --git a/tools/perf/arch/arm64/util/hisi-ptt.c b/tools/perf/arch/arm64/util/hisi-ptt.c
-> index ba97c8a562a0..eac9739c87e6 100644
-> --- a/tools/perf/arch/arm64/util/hisi-ptt.c
-> +++ b/tools/perf/arch/arm64/util/hisi-ptt.c
-> @@ -174,7 +174,6 @@ struct auxtrace_record *hisi_ptt_recording_init(int *err,
->  	}
->  
->  	pttr->hisi_ptt_pmu = hisi_ptt_pmu;
-> -	pttr->itr.pmu = hisi_ptt_pmu;
->  	pttr->itr.recording_options = hisi_ptt_recording_options;
->  	pttr->itr.info_priv_size = hisi_ptt_info_priv_size;
->  	pttr->itr.info_fill = hisi_ptt_info_fill;
-> diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
-> index 34696f3d3d5d..85c8186300c8 100644
-> --- a/tools/perf/arch/x86/util/intel-bts.c
-> +++ b/tools/perf/arch/x86/util/intel-bts.c
-> @@ -434,7 +434,6 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
->  	}
->  
->  	btsr->intel_bts_pmu = intel_bts_pmu;
-> -	btsr->itr.pmu = intel_bts_pmu;
->  	btsr->itr.recording_options = intel_bts_recording_options;
->  	btsr->itr.info_priv_size = intel_bts_info_priv_size;
->  	btsr->itr.info_fill = intel_bts_info_fill;
-> diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
-> index 4b710e875953..ea510a7486b1 100644
-> --- a/tools/perf/arch/x86/util/intel-pt.c
-> +++ b/tools/perf/arch/x86/util/intel-pt.c
-> @@ -1197,7 +1197,6 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
->  	}
->  
->  	ptr->intel_pt_pmu = intel_pt_pmu;
-> -	ptr->itr.pmu = intel_pt_pmu;
->  	ptr->itr.recording_options = intel_pt_recording_options;
->  	ptr->itr.info_priv_size = intel_pt_info_priv_size;
->  	ptr->itr.info_fill = intel_pt_info_fill;
-> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-> index f99e53426528..a54f7b99ba5a 100644
-> --- a/tools/perf/util/auxtrace.h
-> +++ b/tools/perf/util/auxtrace.h
-> @@ -411,7 +411,6 @@ struct auxtrace_record {
->  	int (*read_finish)(struct auxtrace_record *itr, int idx);
->  	unsigned int alignment;
->  	unsigned int default_aux_sample_size;
-> -	struct perf_pmu *pmu;
->  	struct evlist *evlist;
->  };
->  
+On Thu, Jul 25, 2024 at 6:37=E2=80=AFAM Liang, Kan <kan.liang@linux.intel.c=
+om> wrote:
+>
+>
+>
+> On 2024-07-24 6:39 p.m., Song Liu wrote:
+> > Hi folks,
+> >
+> > We noticed that some unc_cha_tor_occupancy and unc_cha_tor_inserts even=
+ts
+> > appear to be "not supported" and always counting zero (see an example b=
+elow).
+> > Is this a known issue? We are testing with 6.10 kernel and perf.
+> >
+> > Thanks,
+> > Song
+> >
+> >
+> > [root@kerneltest008.05.atn6 ~]# ./perf list | grep
+> > unc_cha_tor_occupancy.ia_hit_llcprefdrd
+> >   unc_cha_tor_occupancy.ia_hit_llcprefdrd
+> > [root@kerneltest008.05.atn6 ~]# ./perf stat -e
+> > unc_cha_tor_occupancy.ia_hit_llcprefdrd -a -- sleep 1
+> > WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+>
+>
+> The value '4b433' is for the 'Filter1', according to the original event
+> list.
+>
+> https://github.com/intel/perfmon/blob/main/SKX/events/skylakex_uncore.jso=
+n#L4634
+>
+>       "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+>       "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+>       "PublicDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+>       "Counter": "0",
+>       "MSRValue": "0x00",
+>       "ELLC": "0",
+>       "Filter": "Filter1",
+>       "ExtSel": "0",
+>       "Deprecated": "0",
+>       "FILTER_VALUE": "0x4b433"
+>
+> There are two filters for CHA on SKX. Each filter is 32 bits wide.
+> So the Linux kernel driver uses config1 (64 bits wide) to represent both
+> of them. The low 32 bits are for filter0 and high 32 bits are for filter1=
+.
+>
+> It should be an issue of the convert script, which set the filter1 value
+> to the low 32 bits.
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/t=
+ools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json#n4489
+>
+> Can you please try the below event?
+> uncore_cha/event=3D0x35,umask=3D0x11,config1=3D0x4b43300000000/
 
+This appears to work. I also tried events like:
+
+uncore_cha/UNC_CHA_TOR_OCCUPANCY.IA_MISS,config1=3D0x4043200000000/
+uncore_cha/UNC_CHA_TOR_INSERTS.IA_MISS,config1=3D0x4043200000000/
+
+Do you have an idea on how to fix the convert script? I haven't looked
+into these codes.
+
+Thanks,
+Song
+
+[...]
