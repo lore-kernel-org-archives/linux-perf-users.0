@@ -1,56 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC6D1990BD;
-	Thu, 25 Jul 2024 13:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20A5719D087
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 15:40:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721914672; cv=none; b=R40jaz7yFVI4wz8sOqqxDxndVJiqWCk4B/2iVa/FX37QZVxS1qbEg39xzoskPSr9pTkevtsIJ/8hxfSD7MSOqE4d0qLMUqSxyexi0n9lK4Gf8NJzVphs0jp/EIxPjx9Kv3jbCf+yIJPsP9yKOy3sPDpaUmde0oPfGT0q6rAO+B4=
+	t=1721922052; cv=none; b=GNOUhe7h0eJUjHzLsFKC4ZpsDo6bnrbN71mwfrSUG4Sy5VAfm/bd3+gs4F2LxGG1c9VHjOrFMA84w40dWoA0MQgkYfHHCJuggsKoIhufOZUuaru6NeZP49NEwp1MaMNDkTzlPGzveBPFmtKk+AoUP4Qq9vUe+iUeoOzHTDFmnk8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721914672; c=relaxed/simple;
-	bh=AQDx2WxeMwX7hj1IiTrpYJEr1zM3iBN7u57aWHySSpw=;
+	s=arc-20240116; t=1721922052; c=relaxed/simple;
+	bh=6FA/Hz2IOxyxB+YAJ+TvHhJprzTOSm8EJrNzBWhE/wk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fTRMeyZR172hW2vzX7uqDuR7JwHNKb+rr5ux+64hU+IARSrrsewCPlReRyALD/Nejsq5rKZactxEQ+OcMr7SMQS0zd3nu3ZtYBaQ7M27tNFcQBJCKc72HtCb4jWdIAo6bWnFORIcCjD73YxK+nga9oUOmUYq/+Y8XF381D/j8KM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3XvqavC; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 In-Reply-To:Content-Type; b=NZ6Cok0Tba9K8soiSnnA9PYWq2yV37SLLd6dd+dDvDe8VeKnaVBrzN9bXXoBVSxVJl+9Wi6n031Jh18VwbtVEqyskDegK8++I+b9nxRDWoCcyT9fEg8EIW0Y8TXfLrF0AxwvSqeq4X7K8+b8P0E3yGd96edB37cXcKouev3v+tE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=iPzY0auQ; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3XvqavC"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="iPzY0auQ"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1721914671; x=1753450671;
+  t=1721922051; x=1753458051;
   h=message-id:date:mime-version:subject:to:references:from:
    in-reply-to:content-transfer-encoding;
-  bh=AQDx2WxeMwX7hj1IiTrpYJEr1zM3iBN7u57aWHySSpw=;
-  b=c3XvqavCCBhgZNf69pWO6RXljG+x2oLmO4XOqnExrCwfh3Cm1+MwTb/S
-   8ZTTZQm/EKKga/9Xf9Xf+v0XKthZjqVcbIM2a80HsafeBp9ETmndqm5EL
-   6eYXmhSwgEQQ+6itGLYO0lMRMQDlRn5Jji8Y/2l3pKznKQiDMFOleYiCY
-   g4xvx4f/lo5HegPxf7Wcgp8Wm9TixFWOGyw1k1DCqci45zYC8m0J7Hjl5
-   bFsnnXgTxBq9iDZTeLXOBz/MugX794RRa20aVStQL9fIVrbh/o6PDjJyn
-   R0pxIVSefQA66deW1l99DO0enIgFc7Xmp8L8Y6A2EEhNfRafRE2KbbKRY
-   Q==;
-X-CSE-ConnectionGUID: kJxIGWvRTbCIEIeYxFSskQ==
-X-CSE-MsgGUID: mOe3CvwmTx+6KxhhSLRfBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="31039001"
+  bh=6FA/Hz2IOxyxB+YAJ+TvHhJprzTOSm8EJrNzBWhE/wk=;
+  b=iPzY0auQ8fbXRPaqAUa5cwSztpm77M+8+AOip3ohrDbiDcHE0f7EgJBs
+   JwHBB0KwphUlbQRMzHPaj7boln1X1zoU4spAf4aqxYvY3eh0pcxLMbBmz
+   /+qrct24ScTw/fBCavO6YE6b9mqiqKbANUpxuHgKwrELmfyqZGzmhxCtj
+   5EqklpYmsMzM2tsT2+7yWU4fmzSSp0hliFv0rt4HjvpyWCqKjm7UOH3SN
+   5OCgrrahG4tw+DlKkJvX1Vj3dG28z/sTGGs9Os48E1d3VVqnbGzHzexat
+   D8Gm1u8ZpEl96cJFZo1DeCzBRIOyrcESVjC+MfTQHNYV4ATkgburA+1PI
+   g==;
+X-CSE-ConnectionGUID: Q+CdhlMIR7OgBkBfqqSlkg==
+X-CSE-MsgGUID: V9vNdksxRQeeJjBY9PNVWQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="19365686"
 X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="31039001"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 06:37:51 -0700
-X-CSE-ConnectionGUID: 8ojz+UyJSgiR2x/NcnzXAQ==
-X-CSE-MsgGUID: G6ttf1CTRiOjCsyJS9F5Dg==
+   d="scan'208";a="19365686"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 08:40:50 -0700
+X-CSE-ConnectionGUID: /9+/813LQxWeBTfT78Hnvg==
+X-CSE-MsgGUID: tKYekonTTfG6dW71gLSa1A==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
-   d="scan'208";a="57726812"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 06:37:51 -0700
-Received: from [10.212.31.239] (kliang2-mobl1.ccr.corp.intel.com [10.212.31.239])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 172A720CFEE1;
-	Thu, 25 Jul 2024 06:37:48 -0700 (PDT)
-Message-ID: <26fb7054-f877-496f-b23a-9b6a3d752595@linux.intel.com>
-Date: Thu, 25 Jul 2024 09:37:47 -0400
+   d="scan'208";a="52893088"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.94.249.84])
+  by fmviesa009-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 08:40:46 -0700
+Message-ID: <bb8e5202-bffa-4cd6-b49c-6372d51b405b@intel.com>
+Date: Thu, 25 Jul 2024 18:40:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,145 +52,104 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: Some unc_cha_tor_* events appear to be "not supported"?
-To: Song Liu <song@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
- open list <linux-kernel@vger.kernel.org>, Ian Rogers <irogers@google.com>,
- Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- jonesz@meta.com
-References: <CAPhsuW4nem9XZP+b=sJJ7kqXG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] perf auxtrace: Iterate all AUX events when finish
+ reading
+To: Leo Yan <leo.yan@arm.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org
+References: <20240725064620.1651819-1-leo.yan@arm.com>
+ <20240725064620.1651819-2-leo.yan@arm.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <CAPhsuW4nem9XZP+b=sJJ7kqXG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <20240725064620.1651819-2-leo.yan@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 25/07/24 09:46, Leo Yan wrote:
+> When finished to read AUX trace data from mmaped buffer, based on the
 
+Here and elsewhere 'mmapped' is more common than 'mmaped' so maybe:
 
-On 2024-07-24 6:39 p.m., Song Liu wrote:
-> Hi folks,
+	mmaped -> mmapped
+
+> AUX buffer index the core layer needs to search the corresponding PMU
+> event and re-enable it to continue tracing.
 > 
-> We noticed that some unc_cha_tor_occupancy and unc_cha_tor_inserts events
-> appear to be "not supported" and always counting zero (see an example below).
-> Is this a known issue? We are testing with 6.10 kernel and perf.
+> However, current code only searches the first AUX event. It misses to
+> search other enabled AUX events, thus, it returns failure if the buffer
+> index does not belong to the first AUX event.
 > 
-> Thanks,
-> Song
+> This patch extends the auxtrace_record__read_finish() function to
+> search for every enabled AUX events, so all the mmaped buffer indexes
+> can be covered.
+
+Looking at this again, a couple more things came to mind - see below.
+
 > 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+>  tools/perf/util/auxtrace.c | 25 ++++++++++++++++++++-----
+>  1 file changed, 20 insertions(+), 5 deletions(-)
 > 
-> [root@kerneltest008.05.atn6 ~]# ./perf list | grep
-> unc_cha_tor_occupancy.ia_hit_llcprefdrd
->   unc_cha_tor_occupancy.ia_hit_llcprefdrd
-> [root@kerneltest008.05.atn6 ~]# ./perf stat -e
-> unc_cha_tor_occupancy.ia_hit_llcprefdrd -a -- sleep 1
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+> index b99e72f7da88..61835a6a9ea3 100644
+> --- a/tools/perf/util/auxtrace.c
+> +++ b/tools/perf/util/auxtrace.c
+> @@ -670,18 +670,33 @@ static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel,
+>  int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
+>  {
+>  	struct evsel *evsel;
+> +	int ret = -EINVAL;
+>  
+> -	if (!itr->evlist || !itr->pmu)
+> +	if (!itr->evlist)
+>  		return -EINVAL;
+>  
+>  	evlist__for_each_entry(itr->evlist, evsel) {
+> -		if (evsel->core.attr.type == itr->pmu->type) {
+> +		if (evsel__is_aux_event(evsel)) {
+>  			if (evsel->disabled)
+> -				return 0;
+> -			return evlist__enable_event_idx(itr->evlist, evsel, idx);
+> +				continue;
 
+That will make the evsel->disabled case an error, which
+might be a problem. Possibly the event can be disabled
+(e.g. via control fifo) but still have data to read out.
 
-The value '4b433' is for the 'Filter1', according to the original event
-list.
+> +			/*
+> +			 * Multiple AUX events might be opened in a session.
+> +			 * Bail out for success case as the AUX event has been
+> +			 * found and enabled, otherwise, continue to check if
+> +			 * the next AUX event can cover the mmaped buffer with
+> +			 * 'idx'.
+> +			 */
 
-https://github.com/intel/perfmon/blob/main/SKX/events/skylakex_uncore.json#L4634
+Thinking about this some more, raised some questions:
 
-      "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
-      "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
-      "PublicDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
-      "Counter": "0",
-      "MSRValue": "0x00",
-      "ELLC": "0",
-      "Filter": "Filter1",
-      "ExtSel": "0",
-      "Deprecated": "0",
-      "FILTER_VALUE": "0x4b433"
+How do we know there is only one AUX event per mmap?  They
+would have to be on different CPUs for that to be true?
+And wouldn't --per-thread have all AUX events in every mmap?
 
-There are two filters for CHA on SKX. Each filter is 32 bits wide.
-So the Linux kernel driver uses config1 (64 bits wide) to represent both
-of them. The low 32 bits are for filter0 and high 32 bits are for filter1.
+> +			ret = evlist__enable_event_idx(itr->evlist, evsel, idx);
+> +			if (ret >= 0)
+> +				return ret;
+>  		}
+>  	}
+> -	return -EINVAL;
+> +
+> +	/* Failed to find an event for the buffer 'idx' */
+> +	if (ret < 0)
+> +		pr_err("Failed to enable event (idx=%d): %d\n", idx, ret);
+> +
+> +	return ret;
+>  }
+>  
+>  /*
 
-It should be an issue of the convert script, which set the filter1 value
-to the low 32 bits.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json#n4489
-
-Can you please try the below event?
-uncore_cha/event=0x35,umask=0x11,config1=0x4b43300000000/
-
-Thanks,
-Kan
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
-> not supported by kernel)!
-> 
->  Performance counter stats for 'system wide':
-> 
->                  0      unc_cha_tor_occupancy.ia_hit_llcprefdrd
-> 
->        1.001680312 seconds time elapsed
-> 
-> [root@kerneltest008.05.atn6 ~]# grep "model name" -m 1 /proc/cpuinfo
-> model name      : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz
-> [root@kerneltest008.05.atn6 ~]# uname -r
-> 6.10.0
-> [root@kerneltest008.05.atn6 ~]# ./perf -vv
-> perf version 6.10.g0c3836482481
->                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
->     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
->          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
->                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
->             debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
->                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
->                libnuma: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
-> numa_num_possible_cpus: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
->                libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
->              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
->               libslang: [ OFF ]  # HAVE_SLANG_SUPPORT
->              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
->              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
->     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
->            libcapstone: [ OFF ]  # HAVE_LIBCAPSTONE_SUPPORT
->                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
->                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
->              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
->                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
->                    aio: [ on  ]  # HAVE_AIO_SUPPORT
->                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
->                libpfm4: [ OFF ]  # HAVE_LIBPFM
->          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
->          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
->   dwarf-unwind-support: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
->             libopencsd: [ OFF ]  # HAVE_CSTRACE_SUPPORT
-> 
