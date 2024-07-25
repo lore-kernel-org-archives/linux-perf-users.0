@@ -1,163 +1,202 @@
-Received: from mail-pl1-f193.google.com (mail-pl1-f193.google.com [209.85.214.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3933DC8DF
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 13:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC6D1990BD;
+	Thu, 25 Jul 2024 13:37:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721914634; cv=none; b=oheCVtzF5aKXhJ1aMvzCBV4uRsRwZLd/XoZt6BnEYpf2Dy0c0L2NRy/v2iCynm15aE9e4cQEww5eYPARzM0dK4pS8AQn5hu7Hl0a8rkQVeLg6D28dmTsXxODNHLaIsmfrrNNi84BxV+VSwXujy7MWS0ZUVneb3kVM6wsSxcD/2I=
+	t=1721914672; cv=none; b=R40jaz7yFVI4wz8sOqqxDxndVJiqWCk4B/2iVa/FX37QZVxS1qbEg39xzoskPSr9pTkevtsIJ/8hxfSD7MSOqE4d0qLMUqSxyexi0n9lK4Gf8NJzVphs0jp/EIxPjx9Kv3jbCf+yIJPsP9yKOy3sPDpaUmde0oPfGT0q6rAO+B4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721914634; c=relaxed/simple;
-	bh=o0uQJvVuRQKtdPILxw5p5qFJkqyt1RvqnNIoq//MgM4=;
-	h=From:Message-ID:Date:MIME-Version:To:Subject:Content-Type; b=bxcfiR1tL4DWgtyrIunOnXlEstjVqCbDdUuhAY41U6JIREMqcUMMm+s8h6AYyKTjXdZVBigr/eqNbcEQhzzzYqNaGnvNqWNp20CyblB50eBwdln7xMv2GuoYiPunrFwHTT73gFnl2tgHbTXDVMpzHuo1dICisTeT9BEaBOidoWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DwNaYzRc; arc=none smtp.client-ip=209.85.214.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721914672; c=relaxed/simple;
+	bh=AQDx2WxeMwX7hj1IiTrpYJEr1zM3iBN7u57aWHySSpw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fTRMeyZR172hW2vzX7uqDuR7JwHNKb+rr5ux+64hU+IARSrrsewCPlReRyALD/Nejsq5rKZactxEQ+OcMr7SMQS0zd3nu3ZtYBaQ7M27tNFcQBJCKc72HtCb4jWdIAo6bWnFORIcCjD73YxK+nga9oUOmUYq/+Y8XF381D/j8KM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c3XvqavC; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DwNaYzRc"
-Received: by mail-pl1-f193.google.com with SMTP id d9443c01a7336-1fc66fc35f2so14589935ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 06:37:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721914632; x=1722519432; darn=vger.kernel.org;
-        h=content-transfer-encoding:autocrypt:subject:to:content-language
-         :reply-to:user-agent:mime-version:date:message-id:from:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UbEyqxt3pbwRLyaSYBtgl2ErzpCrkUKF/ERBBrfvCk0=;
-        b=DwNaYzRcrSPCPAOKB46kYWXmsdLsEYOuZn7U7Avn/FBulazbxCNUF+OV/uINABISg0
-         0TOUt97hvzH50srEZcnyUTc7JJlFXkf3uBGUC1MPOjWCSSZ5EswZUmI4oiXHEtJ+80PI
-         nSYhQqyZ2KNK8TspIRIoJmw0vSCvjj7iMtiUIDaZD/MuZxSvRO12pLpzDwIYONrnVH32
-         uh75x75ed4VNO1bno51XtEHtogZzIVHdFNnqxg8p1hHwi0dl7z0OZy5VxxHmP4lkSx96
-         dm9KZRE16FCRzrIiWj5OO/MTHTgH8+tAzjURVYdVvUauXNiSY3TXphSxilQPa/FEvDJt
-         A2IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721914632; x=1722519432;
-        h=content-transfer-encoding:autocrypt:subject:to:content-language
-         :reply-to:user-agent:mime-version:date:message-id:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UbEyqxt3pbwRLyaSYBtgl2ErzpCrkUKF/ERBBrfvCk0=;
-        b=IUHvPcbbeMzIlgrYfKNWgkS29KO0tKNPMjY8+smYc+DKJQPGX2EWxNy33X9rG+U0c2
-         VA9KNPx4f0WApf51VBmRG+XBZp6cHoODyZ6HfdD0pnnjCib+IdTlzoVT4R2pfbMvWb4r
-         i5YdFxgo2NexZvPD3S/Z7QaRLNlCkPC9un4uesQg2DLxlzM5LHwpC4yOemdZqzOy7lJl
-         0qnoXpjvmQdVzu4vWaTBpS1ThYl77RXRveyxjptQXOQqvvXPooSx7DDLFTJu3h4Mz6Xt
-         cFcE6fdy+FovTpQjf1Nt82Slj7NNQor1vvUhVgiQgsvY77CZudU48vQb9H2Ni4h+NbnH
-         7ZHg==
-X-Gm-Message-State: AOJu0Yw14xW9M6uyWhw4DGn8qI520epdFEO7P8CcB5yPSovpa8R5+sKP
-	Ym8MT35MF8tacd5QB27pD02FEhqNU+NOWM0WubECwA6BA6Q8DSADFQlZc37r
-X-Google-Smtp-Source: AGHT+IFEwYspsD9OI+XUGIgC+IifoxtQPypXFmgzm9/Ua9otpQRnKoMNdRyYTqvwbYHdr/GdSaEkXQ==
-X-Received: by 2002:a17:903:32cf:b0:1fb:7e12:ee41 with SMTP id d9443c01a7336-1fdd6e26869mr90113725ad.22.1721914632278;
-        Thu, 25 Jul 2024 06:37:12 -0700 (PDT)
-Received: from [192.168.0.154] ([116.206.223.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7d0023fsm14171555ad.93.2024.07.25.06.37.11
-        for <linux-perf-users@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 25 Jul 2024 06:37:11 -0700 (PDT)
-From: bbhtt <bbhtt.zn0i8@gmail.com>
-X-Google-Original-From: bbhtt <bbhtt.zn0i8@slmail.me>
-Message-ID: <a69b8aca-9b37-4a72-a657-f708696c192b@slmail.me>
-Date: Thu, 25 Jul 2024 19:07:09 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c3XvqavC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721914671; x=1753450671;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=AQDx2WxeMwX7hj1IiTrpYJEr1zM3iBN7u57aWHySSpw=;
+  b=c3XvqavCCBhgZNf69pWO6RXljG+x2oLmO4XOqnExrCwfh3Cm1+MwTb/S
+   8ZTTZQm/EKKga/9Xf9Xf+v0XKthZjqVcbIM2a80HsafeBp9ETmndqm5EL
+   6eYXmhSwgEQQ+6itGLYO0lMRMQDlRn5Jji8Y/2l3pKznKQiDMFOleYiCY
+   g4xvx4f/lo5HegPxf7Wcgp8Wm9TixFWOGyw1k1DCqci45zYC8m0J7Hjl5
+   bFsnnXgTxBq9iDZTeLXOBz/MugX794RRa20aVStQL9fIVrbh/o6PDjJyn
+   R0pxIVSefQA66deW1l99DO0enIgFc7Xmp8L8Y6A2EEhNfRafRE2KbbKRY
+   Q==;
+X-CSE-ConnectionGUID: kJxIGWvRTbCIEIeYxFSskQ==
+X-CSE-MsgGUID: mOe3CvwmTx+6KxhhSLRfBg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="31039001"
+X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
+   d="scan'208";a="31039001"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 06:37:51 -0700
+X-CSE-ConnectionGUID: 8ojz+UyJSgiR2x/NcnzXAQ==
+X-CSE-MsgGUID: G6ttf1CTRiOjCsyJS9F5Dg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,236,1716274800"; 
+   d="scan'208";a="57726812"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 06:37:51 -0700
+Received: from [10.212.31.239] (kliang2-mobl1.ccr.corp.intel.com [10.212.31.239])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 172A720CFEE1;
+	Thu, 25 Jul 2024 06:37:48 -0700 (PDT)
+Message-ID: <26fb7054-f877-496f-b23a-9b6a3d752595@linux.intel.com>
+Date: Thu, 25 Jul 2024 09:37:47 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Thunderbird Daily
-Reply-To: bbhtt.zn0i8@slmail.me
+User-Agent: Mozilla Thunderbird
+Subject: Re: Some unc_cha_tor_* events appear to be "not supported"?
+To: Song Liu <song@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Adrian Hunter <adrian.hunter@intel.com>, linux-perf-users@vger.kernel.org,
+ open list <linux-kernel@vger.kernel.org>, Ian Rogers <irogers@google.com>,
+ Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ jonesz@meta.com
+References: <CAPhsuW4nem9XZP+b=sJJ7kqXG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com>
 Content-Language: en-US
-To: linux-perf-users@vger.kernel.org
-Subject: Perf is crashing inside Flatpak runtime
-Autocrypt: addr=bbhtt.zn0i8@slmail.me; keydata=
- xjMEY56QvBYJKwYBBAHaRw8BAQdANKy2M8mCEDPIat/ExPT0UYcuPEe5+ZNdDOIm/5+xqI3N
- NkJvdWRoYXlhbiBCaGF0dGFjaGFyeWEgKEFsaWFzKSA8YmJodHQuem4waThAc2xtYWlsLm1l
- PsKTBBMWCAA7AhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAFiEE0m11M5UAnbKzsmCUDDJR
- okdF5IQFAmOekjACGQEACgkQDDJRokdF5IT9SQEA596vQJxu0ahysZSVQKxo0BDtzBbcUkdj
- A499fdO5soEA/jQEaE/bmf6jWIB5pw69SwMBOp0bdDyAH+ANfBmfl4AMzjgEY56QvBIKKwYB
- BAGXVQEFAQEHQOo+dkmpNGtRiNUfeEjf+5W6GRbeNioc8WWSjy2BkctaAwEIB8J4BBgWCAAg
- FiEE0m11M5UAnbKzsmCUDDJRokdF5IQFAmOekLwCGwwACgkQDDJRokdF5ISilAEAzB1ST9C6
- h095JnQ3UFZsQQVSq3by9NXMg+sk+9bHkDsA/3yuK5GmtqlvrtaivFVyekZCHfL7NnbzUoeU
- Ag37QMUA
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <CAPhsuW4nem9XZP+b=sJJ7kqXG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
 
-We were reported by a user that perf is crashing inside the
-`org.freedesktop.Sdk` Flatpak runtime.
 
-To reproduce, please install Flatpak for your distribution [1] and
-then install the `org.freedesktop.Sdk` runtime using the command
-`flatpak install org.freedesktop.Sdk//23.08`. Then get a working shell
-inside the sandbox using
-`flatpak run --command=sh --devel org.freedesktop.Sdk//23.08`.
+On 2024-07-24 6:39 p.m., Song Liu wrote:
+> Hi folks,
+> 
+> We noticed that some unc_cha_tor_occupancy and unc_cha_tor_inserts events
+> appear to be "not supported" and always counting zero (see an example below).
+> Is this a known issue? We are testing with 6.10 kernel and perf.
+> 
+> Thanks,
+> Song
+> 
+> 
+> [root@kerneltest008.05.atn6 ~]# ./perf list | grep
+> unc_cha_tor_occupancy.ia_hit_llcprefdrd
+>   unc_cha_tor_occupancy.ia_hit_llcprefdrd
+> [root@kerneltest008.05.atn6 ~]# ./perf stat -e
+> unc_cha_tor_occupancy.ia_hit_llcprefdrd -a -- sleep 1
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
 
-Once inside the sandbox, run `perf record -v -- ls` and see that it
-crashes.
 
-The output and a backtrace is below. Any help is appreciated. The
-downstream issue can be found at [2].
+The value '4b433' is for the 'Filter1', according to the original event
+list.
 
-```
-perf --version
-perf version 6.9.9
+https://github.com/intel/perfmon/blob/main/SKX/events/skylakex_uncore.json#L4634
 
-perf record -v -- ls
-DEBUGINFOD_URLS=
-No PMU found for 'cycles:Pu'
-Failed to read max cpus, using default of 4096
-nr_cblocks: 0
-affinity: SYS
-mmap flush: 1
-comp level: 0
-Problems creating module maps, continuing anyway...
-No PMU found for 'cycles:u'
-No PMU found for 'instructions:u'
-No PMU found for 'cpu-clock:u'
-mmap size 528384B
-libperf: Miscounted nr_mmaps 0 vs 1
-Control descriptor is not initialized
-WARNING: No sample_id_all support, falling back to unordered processing
-Couldn't start the BPF side band thread:
-BPF programs starting from now on won't be annotatable
-perf: Segmentation fault
-Obtained 13 stack frames.
-perf(sighandler_dump_stack+0x48) [0x55fab63072a8]
-/usr/lib/x86_64-linux-gnu/libc.so.6(+0x3ee80) [0x7f2f4ac51e80]
-perf(perf_cpu_map__max+0x4) [0x55fab63f3104]
-perf(+0x1de854) [0x55fab635d854]
-perf(perf_event__synthesize_cpu_map+0x56) [0x55fab6360c76]
-perf(+0x854cf) [0x55fab62044cf]
-perf(+0x88e2c) [0x55fab6207e2c]
-perf(cmd_record+0xf95) [0x55fab620b155]
-perf(+0x12e8b1) [0x55fab62ad8b1]
-perf(main+0x687) [0x55fab61f30e7]
-/usr/lib/x86_64-linux-gnu/libc.so.6(+0x2808a) [0x7f2f4ac3b08a]
-/usr/lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7f2f4ac3b14b]
-perf(_start+0x25) [0x55fab61f3425]
-Segmentation fault (core dumped)
-```
+      "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+      "BriefDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+      "PublicDescription": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+      "Counter": "0",
+      "MSRValue": "0x00",
+      "ELLC": "0",
+      "Filter": "Filter1",
+      "ExtSel": "0",
+      "Deprecated": "0",
+      "FILTER_VALUE": "0x4b433"
 
-```
-perf_cpu_map__max (map=0x0) at cpumap.c:382
-382		return __perf_cpu_map__nr(map) > 0
-(gdb) bt
-#0  perf_cpu_map__max (map=0x0) at cpumap.c:382
-#1  0x0000555555732854 in cpu_map_data__alloc (syn_data=syn_data@entry=0x7fffffff7c80, header_size=header_size@entry=8) at util/synthetic-events.c:1289
-#2  0x0000555555735c76 in cpu_map_event__new (map=<optimized out>) at util/synthetic-events.c:1337
-#3  perf_event__synthesize_cpu_map (tool=tool@entry=0x555555eb4b80 <record>, map=<optimized out>, 
-    process=process@entry=0x5555555db480 <process_synthesized_event>, machine=machine@entry=0x0) at util/synthetic-events.c:1357
-#4  0x00005555555d94cf in record__synthesize (tail=tail@entry=false, rec=0x555555eb4b80 <record>) at builtin-record.c:2103
-#5  0x00005555555dce2c in __cmd_record (argc=argc@entry=1, argv=argv@entry=0x7fffffffd880, rec=0x555555eb4b80 <record>) at builtin-record.c:2536
-#6  0x00005555555e0155 in cmd_record (argc=<optimized out>, argv=<optimized out>) at builtin-record.c:4257
-#7  0x00005555556828b1 in run_builtin (p=p@entry=0x555555eb7728 <commands+264>, argc=argc@entry=4, argv=argv@entry=0x7fffffffd880) at perf.c:349
-#8  0x00005555555c80e7 in handle_internal_command (argv=<optimized out>, argc=4) at perf.c:402
-#9  run_argv (argv=<synthetic pointer>, argcp=<synthetic pointer>) at perf.c:446
-#10 main (argc=<optimized out>, argv=0x7fffffffd880) at perf.c:562
-```
+There are two filters for CHA on SKX. Each filter is 32 bits wide.
+So the Linux kernel driver uses config1 (64 bits wide) to represent both
+of them. The low 32 bits are for filter0 and high 32 bits are for filter1.
 
-[1]: https://flatpak.org/setup/
-[2]: https://gitlab.com/freedesktop-sdk/freedesktop-sdk/-/issues/1739
+It should be an issue of the convert script, which set the filter1 value
+to the low 32 bits.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json#n4489
 
-- bbhtt
+Can you please try the below event?
+uncore_cha/event=0x35,umask=0x11,config1=0x4b43300000000/
 
-https://bbhtt.github.io/
-
+Thanks,
+Kan
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> WARNING: event 'N/A' not valid (bits 10,12-13,15 of config1 '4b433'
+> not supported by kernel)!
+> 
+>  Performance counter stats for 'system wide':
+> 
+>                  0      unc_cha_tor_occupancy.ia_hit_llcprefdrd
+> 
+>        1.001680312 seconds time elapsed
+> 
+> [root@kerneltest008.05.atn6 ~]# grep "model name" -m 1 /proc/cpuinfo
+> model name      : Intel(R) Xeon(R) Gold 6138 CPU @ 2.00GHz
+> [root@kerneltest008.05.atn6 ~]# uname -r
+> 6.10.0
+> [root@kerneltest008.05.atn6 ~]# ./perf -vv
+> perf version 6.10.g0c3836482481
+>                  dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+>     dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+>          syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+>                 libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+>             debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+>                 libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+>                libnuma: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
+> numa_num_possible_cpus: [ OFF ]  # HAVE_LIBNUMA_SUPPORT
+>                libperl: [ OFF ]  # HAVE_LIBPERL_SUPPORT
+>              libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+>               libslang: [ OFF ]  # HAVE_SLANG_SUPPORT
+>              libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+>              libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+>     libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+>            libcapstone: [ OFF ]  # HAVE_LIBCAPSTONE_SUPPORT
+>                   zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+>                   lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+>              get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+>                    bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+>                    aio: [ on  ]  # HAVE_AIO_SUPPORT
+>                   zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+>                libpfm4: [ OFF ]  # HAVE_LIBPFM
+>          libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+>          bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+>   dwarf-unwind-support: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+>             libopencsd: [ OFF ]  # HAVE_CSTRACE_SUPPORT
+> 
