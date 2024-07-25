@@ -1,97 +1,99 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B659658222
-	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 20:56:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACC9913A40F
+	for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 22:50:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721941002; cv=none; b=RLSKi1gAxSJ2rdSvXQdS7NB8c/T2O6WVeWtHBpA9fzTtDPUQ96tvsT4S/6W5sQcTTuclximzDC5IYf5hPu+5WaeUu9mdimhuBuJdzBYD0E91CHDocs6vZDl9M+EZ68ni4p8gR6jhw78rBTvWWlWM4ZBQUyhXObbA36VUXclTwIc=
+	t=1721947808; cv=none; b=FtA5jR41BDC+uFgC4RCkjPZmwUZygF5LBO1xpQr7lhm64T1TAUSEOGBozzNqbyD+0rmoqGhONgwmadFCxekdJzzW1SnFPGa/WYlJWf640g3LwVRU0KmkbjV3n98qI+VzdL2pfcTqzoO+GrH516MXFvO6298GU4zIagowZcDWtzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721941002; c=relaxed/simple;
-	bh=wPZoaynhl5c69TE6ENIA3vBAXkfVzfAwSAPEdJ3mUA0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YE/AbK7ppnEEKP6bjCEAR0BBzffD1KfbAW4lC2zS4PFil0AZtJz0db/CLNqUdojpP9khCjyapD0CHPyDCFR+Yk34n06eEolnsCQ/3efr5UImkgsWmk9w72UjEBHGg6OJj/9LZ/cFAPWiHc7daPvXJtZwmEm0NX2KuwMIYXEoWaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XdczGLm4; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721947808; c=relaxed/simple;
+	bh=HzeaarMUh2qZhxt5+X6gzUM3VKmveKlU3eOm/U5mA3w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sXfaSYzrI56kz5+1dUCuZoZ6fTO42jqpwvLRZoPDQEZtLIayqewwD5i2RuqODUKvMMDg9GX8YNJN4V+48Afsp/OmcZIeD3l39EtRfNnEocy4abD2SP39j0qicYbjVGAq5VgzmQvF2PI1KZdW+Q+alfF3UisRyrcrAUXbYCP5tyI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FETRb7Gg; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XdczGLm4"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1fc4aff530dso595ad.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 25 Jul 2024 13:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721941000; x=1722545800; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wPZoaynhl5c69TE6ENIA3vBAXkfVzfAwSAPEdJ3mUA0=;
-        b=XdczGLm4zUU84sDMXxDvcaz2NjGkbP+CRs8WhZ38+ZrMemouD0VHJtVKe4DXl2EQlh
-         wFaRsUENo9TTKMiqSzSWcwAnPEPitk7Fxve3A4hxZIX50NaPXt5BboaPgyH/h5w+6Tl0
-         jNDoofr1B3gSZsc+t1Nn8isJtP6gtv3Ci2L5z/yhwuvnLRZ2ZwtacGZZ6U1ldMD+l0rP
-         QNOKKzyog4Pu+xx8UzD2re8mKIHqbnPev4ipin1Wv5sRNWlDWN2SgXUJ1oPJ8efIr4Wx
-         xB5FQHvb++agMyZGWjtTzDJegvRsOT5A9F4tgW9Kt1rlOBD89m/ljC28Sd8M933ffZ2t
-         A1RQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721941000; x=1722545800;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wPZoaynhl5c69TE6ENIA3vBAXkfVzfAwSAPEdJ3mUA0=;
-        b=QNmFxAT8dhmeYoFW9OGWmDqq9UdMpmMS4MHpvD30QBDvE8SbsHlkZ0Ea1CV/5i5Ll5
-         oGixyAWmIufiTsinca6wQQ2OztUjLSCRQzsAMuKZPrE2PgP90yl0xv74hSV1ptoNqRWV
-         FArU7o/75s/4S9y1VCuyE0YXlWxqavkyGj54Opcv8ONDmSXUzfEHKkZZv8HKjrvg3Elp
-         n+eU8+E1UiMbRaxpE+fZTVuSNnlLAkRoi2SyMM8fVdU4QybSVaOLkyYmQ6QiuaG5nPvd
-         ZmP9cHrT2ATV7l8TRl6tpqAfCyJpUTmLkjh3R3d7HcqhvEXvhWHifeiKd8Tbb1VRcYgx
-         s1Hw==
-X-Forwarded-Encrypted: i=1; AJvYcCWWQ1Rdpf2TEfxDRdXe7ARKcU9JdT1ehubD79JJbSauXeQA+MF1JuEGUzeSd63XWBzUXlCoH/GELKv/b4Tv2eJx2oqE7kfYyi4soJObMAOhag==
-X-Gm-Message-State: AOJu0YyeRfGQBhSpScV7SYMiGI18bNLDvRdD+QRWfTBPv5+qbPKbEx2z
-	chdbF00QvRTcrkB6C/C+gOQ0/FqwXKmsxTIjNrSIoX352FQn8mdvt7+LwS1rmLwY/sVvXAIHGvs
-	/29RDuKGICgb6HPzf7YfvNZtX0ICz93LoNgTU
-X-Google-Smtp-Source: AGHT+IFG80LFivM/nskrLupfrShOMIXCh7OLFCeuRjpcLkQnabK6tCodUPKbnc8iXb3KMPiVFPttqyyUx9JgTuH2iDY=
-X-Received: by 2002:a17:903:22d1:b0:1f7:34e4:ebc1 with SMTP id
- d9443c01a7336-1feeeafffa2mr672115ad.5.1721940999590; Thu, 25 Jul 2024
- 13:56:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FETRb7Gg"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721947806; x=1753483806;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=HzeaarMUh2qZhxt5+X6gzUM3VKmveKlU3eOm/U5mA3w=;
+  b=FETRb7GgdYMEnBh/hrZbfle3O/u2Xfh+iy4ZxCQc6Ah3lzDknYNN2ohi
+   kxa0b5SiU27tVsFBgir7bQKUtK0tHP4udLNxhaHlNIhBjPFm56LeNG+pz
+   NZn7M2HvRrm/u/BTv8KECxRsNlRdr3uOZInwZ2N4lNekTh5+KzEO4YkFm
+   0QFkjU1IGUVA0xzjINwAlOowaZsQiGL0g7bBT6G8GBiZAWIymIoR24L0l
+   9dUQj1WsLeJgWOJ+GZJ4ve9VNgInjvYPvFSvW549gRULqLDnpzQbkuRVm
+   k0pWDqPT22EtjgSUaBi+/8SqGrINGzYhmcsdNK+rofvyIYj2scGUxTqNN
+   A==;
+X-CSE-ConnectionGUID: yRbsU1e1TlyRMTD+DGEH/g==
+X-CSE-MsgGUID: UKOdUrJQTd+MvrK/f9jwvQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="30340758"
+X-IronPort-AV: E=Sophos;i="6.09,237,1716274800"; 
+   d="scan'208";a="30340758"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 15:50:06 -0700
+X-CSE-ConnectionGUID: lEEySGVSQ+edCD2QAL0qQQ==
+X-CSE-MsgGUID: h7FtzpyGSf23FkYEMoGaPQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,237,1716274800"; 
+   d="scan'208";a="57649236"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Jul 2024 15:50:06 -0700
+Date: Thu, 25 Jul 2024 15:50:04 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 1/4] Create source symlink in perf object dir
+Message-ID: <ZqLWnO8bj2SVGv3f@tassilo>
+References: <20240724190137.3810429-1-ak@linux.intel.com>
+ <CAP-5=fU+ADbxVwPzEof2FmZ6NKgyVB2cfTvQWqx3jrTpO9P7nA@mail.gmail.com>
+ <ZqF2xhZuchmnq3Bc@tassilo>
+ <CAP-5=fXh4P64Un9CMnoA-RrYGg9LNUw+zwkY9qAYyJdKa9WTEw@mail.gmail.com>
+ <ZqH-lAF_ztetHZIH@tassilo>
+ <CAP-5=fW7n3Zn_-FZBcorvAg1cgk+rPb700uV=0r+QUyoeH4sSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
- <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
- <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
- <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
- <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
- <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
- <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com> <CAP-5=fUSMDhooNetywiLfcYEHMPeyPaGHuBhJHUb34zM8DqtQA@mail.gmail.com>
-In-Reply-To: <CAP-5=fUSMDhooNetywiLfcYEHMPeyPaGHuBhJHUb34zM8DqtQA@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 25 Jul 2024 13:56:22 -0700
-Message-ID: <CAP-5=fUbJcxO=h65bqZ2nx8UTPHsapOVsfcCaY=+q4yO9YBY-A@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To: Howard Chu <howardchu95@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, linux-perf-users <linux-perf-users@vger.kernel.org>, 
-	Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fW7n3Zn_-FZBcorvAg1cgk+rPb700uV=0r+QUyoeH4sSg@mail.gmail.com>
 
-Hi,
+On Thu, Jul 25, 2024 at 02:18:15AM -0700, Ian Rogers wrote:
+> On Thu, Jul 25, 2024 at 12:28 AM Andi Kleen <ak@linux.intel.com> wrote:
+> >
+> > > > On some reflection your changes went into the wrong direction
+> > > > because it ignored the (useful) single group property. Aggregation
+> > > > on time really needs to be in perf report not here.
+> > >
+> > > Still don't understand this. You are sampling, that's why you use the
+> > > period, how can both samples happen at the same time? Why can't
+> >
+> > It's leader sampling ({}:S) , so only one event samples and the others
+> > in the group get collected/reset at the time the sample happens.
+> > So all the events in the group measure the same time interval.
+> 
+> No, here is your test:
+> 
+> +       perf record -e '{cycles,instructions}' -o "${perfdatafile}"
+> perf test -w noploop
+> +       perf script -i "${perfdatafile}" -F +metric  > $scriptoutput
 
-Office hours tomorrow. We're 1 month away from the end of Google
-Summer-of-Code 2024 [1] and Howard has been working on `perf trace`
-annotating using BTF as well as improved off-CPU profiling. If you'd
-like to discuss this or other perf tool topics the details are below,
-all are welcome.
+True. I don't think it affects the test functionality in this case, but it should
+be using :S.
 
-Linux perf tool office hours
-Friday, July 26 =C2=B7 8:00 =E2=80=93 9:00am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/tif-efem-uiq
-Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+> 
+> notice that you aren't using :S. You are grouping the events which has
+> no meaning other than for multiplexing, which for 2 events you won't
 
-Thanks,
-Ian
+Any use of {} means they are in the same group, so always contiguous in the
+perf.data as the script metric code expects.
 
-[1] https://developers.google.com/open-source/gsoc/timeline
+-Andi
