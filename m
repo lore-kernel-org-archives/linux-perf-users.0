@@ -1,57 +1,57 @@
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+Received: from mail-oi1-f180.google.com (mail-oi1-f180.google.com [209.85.167.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6359417A585;
-	Fri, 26 Jul 2024 10:28:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25E517A59B;
+	Fri, 26 Jul 2024 10:28:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721989725; cv=none; b=GgyGoYqegNx916gczFVkfhofVD1tCgCEZFSvUDpjI0u517A4JobDTa3rF625AFo+1oAlgXNWhVL/KP1MJ1Nq3Bu87rtmXtm4d4Ba+/dC6b3hzWIEtjjvXyVeoiiefsjDtlnQVH4TkwL/lo2leG8ylVfz7o59X0slIaUeR/uamJE=
+	t=1721989727; cv=none; b=QyrYA7MPN0dwBvHH2LGzTEBs3aHVxjVh0PXiZ3YpqPn///IdAl0RpHXD55gm49JFAAFQVxSOkdvnZ80p1kepBf15AZPfCPtb1fAr/wtHmQZmUERJz/hrHgevqcFfhHIgBxRlZQr+s0SzHEQUdpHYwxzYJMN4tLXea8PmTT1gEmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721989725; c=relaxed/simple;
-	bh=V16kSHPoUbY1EjjYptU8X0Q5N5N92bR1n6mtRXw/9Uc=;
+	s=arc-20240116; t=1721989727; c=relaxed/simple;
+	bh=Ia3MRLUWTQlrHm0z5p4CuK/VDQhtQu6Xk/f4G1FPiAg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=srlVpFso8TV/hTtb0zObemZ+SelOG4nePwPcuLG84zFuVgPqhkq6FQlplBlgr5v7h1cbfjt8YLUyMLtbfvn0yBuqs9ZlpjqUDwI/GY59RN/0pZDrwjj0OxiZkAMnvvBSTvqRLRzJL+KFDW3cltZPgrWrQTKffTZRnE+AWFFHV6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TaNuEknm; arc=none smtp.client-ip=209.85.210.48
+	 MIME-Version; b=lK4qtV0chGCozVcIfoKwdVeypbk3SedI+Bo0+ETgLUDTp5/MoRZ/C+VjfNcnGs2b8fjwYNrRgVVhMonZ1QyOWYKtvD1feAkLZJzHq5QZ5pjdxok6aRW9LNS6cFUoUQ4Us0idArhF5uIujRiYpsXzjOaFPE15YpaojkVFtAnHm0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ItL07xh+; arc=none smtp.client-ip=209.85.167.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TaNuEknm"
-Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-703775e4d5dso455142a34.0;
-        Fri, 26 Jul 2024 03:28:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ItL07xh+"
+Received: by mail-oi1-f180.google.com with SMTP id 5614622812f47-3db157cb959so515570b6e.0;
+        Fri, 26 Jul 2024 03:28:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721989722; x=1722594522; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1721989725; x=1722594525; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lk7eq/ExJtfJWXdlo7dQbuLEe/sXbvpJ766py9Gb44o=;
-        b=TaNuEknmuAxWXi35VX3rp36Px8b6N43+/vSSK1YrwjFSfXYo8SrigluWVs13qnAo7e
-         c+6JGcATppsXvCiy+33w5OJNmpupH1htJoa7Q+1OjRxLC+A5296FnNV0EOYaFpMp5j0U
-         RM2ogxbWa84q0m0218hQq6VukaI35nCPYzwDTDlYLwJDnAHkAvaEZATnMjRWwICYiKvN
-         9LvO8Fyn7o2X2KmVcJdGOJW1XWh2GZT6Pf37TxAvqzAKrD/7fYUJzdcu9oixarFN0d7e
-         nDkFWv3RsHr8nR4AAdVzviwNV8esZcodtN2ailyWeSNqs/TRl4TeVXMm0Z/AqU1tRIKU
-         3UDg==
+        bh=73+g1pIsHWTk4o1x0pXyZyWF5R08Ka6OMNY6SL6d0EE=;
+        b=ItL07xh+br1uDaxQ/3Ws9ZfCs3mjUCSvMA38rQr3sne/eeBw9Ay4lQ2dyDE9OkHkPb
+         AU9wqCDm07cz0MOqT9eNsNhkWFCwFN+OIEW5oIcjudcImhMcSxKLjxp7oSQO7fnQIv2m
+         T3bwMhV91rATZLjot4TRzQRElXoDRrI6j9mxa0q2DQ0sgoyv9q0/MIcg1eQiKmH42O6r
+         +D4oKXMoZNlPtwUdEKZ9rsTFJyj6mf9LS/bInXa/MqQpwOG8TIQgi0/KEsJq2S0sS/0k
+         /Wk6OvnczMDd8y8mlXcxHMLdR1UOFQoihahs0gga9HrNFkwPGRRu6OLOP6M8AOmIodw6
+         +6kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721989722; x=1722594522;
+        d=1e100.net; s=20230601; t=1721989725; x=1722594525;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Lk7eq/ExJtfJWXdlo7dQbuLEe/sXbvpJ766py9Gb44o=;
-        b=ADonSoAkjV80hQ9Uvteh6uAcOrRsfRQpg70+CweinBxIW2kJaZyTqsDd/i81YwuwgH
-         cHmUGeHD3hj8Q6uuC8xOm9RfkmRpCrTSG9+UY0by2uca5pt9NKnO1NXiKZgfjCoT0ldO
-         fDjI2CAFRhsfti+jsnycIL7qIzTV1jlBq7oXXT61Yfrl8HNLKWsL31/zEQXfGx2Yf//W
-         jmJAy5xKq8F6YOC1iwbSJpldffdoJspuF6TQkHp8N/fsUfBuES6KwkTScj0675POLsnJ
-         NmtOLyKNawFApStrLVyjKAaPj8cn28pHVORIzcRGyZzLr7/Hj2zZxaHgA0A9oZ2uS2cw
-         HQ7w==
-X-Forwarded-Encrypted: i=1; AJvYcCXDBSY8Sl612GzyM7VXGCmYjqgu4FPuJjAxKw9DrEgREYRBQVcFZVcSV7XHMsRi0C0ETbV1V1VnK2C3zC1alABaz/ttIv9vTQll0xdkbhozCxrJANsA5b2u2pWS5ZvnTYYx5cH3mn0l2fIHtE659A==
-X-Gm-Message-State: AOJu0YxfOnY1+qNMg9shl2XMrgRJ1AM8AhWTfNIXjNh3SaBQTEnwXl+f
-	Ob/fDs7kBWN7xnR2sVbsxt0oAPKrkde2CKFs6aIOBfYO5qB0K9Mu
-X-Google-Smtp-Source: AGHT+IGgnyl97oeF2mpwkdujl8dUOvXmpcrgGtiP6kM8W2xqMfDuy6/w2TqmrW2XUYO95oGWmpjfww==
-X-Received: by 2002:a05:6830:6502:b0:704:47db:cd68 with SMTP id 46e09a7af769-7093210c4eamr5589125a34.4.1721989722230;
-        Fri, 26 Jul 2024 03:28:42 -0700 (PDT)
+        bh=73+g1pIsHWTk4o1x0pXyZyWF5R08Ka6OMNY6SL6d0EE=;
+        b=YyjHvWxnf7sOBf4VE09oiBkZdoChlwQuvgGBgpSneNG2Cu12WoE8amk/Gxfzc6S7cB
+         rIwXo2q92+gbkihttxQHwEdl17x5cc1EMuWERAZ+JQtkVf9HwmBSCifWaxAGXcoXX3b1
+         b8i1w39lksgvbOnZpIp5Rd6ccZWf0ctCP17Alqrb7+t2AVlh92J4B1OSV1ELRWcRlQ+0
+         6hO22Z4bJHO39K28hq/+d1avoFFJaJhmkDMqTIGBe3zryc30yDU587dNw+m9Vbgnnc1P
+         Mly3WFGbvmdNni5q74ptBdol6NbGgP+TPEsYoE3AGGDJmAQGEWt6XUyVlC/8jQQXPi8+
+         PmGw==
+X-Forwarded-Encrypted: i=1; AJvYcCW3zQ8KKw+pVz6h6E727yEvIvgh7TAdNuKHrW6EGkY3e4yFwXuvd15AEW0l7TCkD1eQ3wiR5AKx88a2C8K1T2k5qKH4dBlh3oX1K6k74lr4EOt7zioPEFg1cofPntWtiKG4PTg2n4dSbols76akrQ==
+X-Gm-Message-State: AOJu0YyIyXRkgxcBFgQkDZn8KaKW3DIbrjdxwOvt/exzajEUd858XL2J
+	XlXZvUbW//MDOgr36sqC+cYQAxeA1cud5fziDpmd2ZqFAK3sD+NT
+X-Google-Smtp-Source: AGHT+IGTwemDc2YGSkFCfBD/QacogrTzioFStiaPEmk2dbdM36TZrs8Ud73bvEhsJIqEssfjit7aag==
+X-Received: by 2002:a05:6808:1414:b0:3d9:38c4:e9be with SMTP id 5614622812f47-3db1419db0fmr5467060b6e.44.1721989724761;
+        Fri, 26 Jul 2024 03:28:44 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.244])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7a9f816da89sm2179964a12.20.2024.07.26.03.28.39
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7a9f816da89sm2179964a12.20.2024.07.26.03.28.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jul 2024 03:28:41 -0700 (PDT)
+        Fri, 26 Jul 2024 03:28:44 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com,
@@ -61,9 +61,9 @@ Cc: irogers@google.com,
 	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] perf record off-cpu: processing of embedded sample
-Date: Fri, 26 Jul 2024 18:28:24 +0800
-Message-ID: <20240726102826.787004-4-howardchu95@gmail.com>
+Subject: [PATCH v3 4/5] perf record off-cpu: save embedded sample type
+Date: Fri, 26 Jul 2024 18:28:25 +0800
+Message-ID: <20240726102826.787004-5-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240726102826.787004-1-howardchu95@gmail.com>
 References: <20240726102826.787004-1-howardchu95@gmail.com>
@@ -75,172 +75,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In the first evsel__parse_sample, we parse bpf output as raw samples.
-After getting the raw_data, parse it the second time to get the embedded
-samples.
+We have to save the embedded sample type for it to be consumed correctly
+by perf script or perf report.
 
-Also, because we rely on evlist to dump direct off-cpu samples, if we
-evsel__open() a bpf output event on a specific pid, it will fail. So pid = -1 for
-every bpf output event.
+This is a bad approach because it most definitely will break some
+perf.data convertor. Another approach is to add this sample_type_embed
+to perf_event_attr, but changing perf api is above my pay grade, so
+please give me your suggestions!
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Suggested-by: Ian Rogers <irogers@google.com>
-Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
 ---
- tools/perf/builtin-script.c |  2 +-
- tools/perf/util/evsel.c     | 16 ++++++++++++++--
- tools/perf/util/evsel.h     | 13 +++++++++++++
- tools/perf/util/session.c   | 23 ++++++++++++++++++++++-
- 4 files changed, 50 insertions(+), 4 deletions(-)
+ tools/perf/util/header.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index c16224b1fef3..c142fb44817f 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -653,7 +653,7 @@ static int perf_session__check_output_opt(struct perf_session *session)
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 55e9553861d0..ccb5493dc515 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -80,6 +80,7 @@ const char perf_version_string[] = PERF_VERSION;
  
- 		evlist__for_each_entry(session->evlist, evsel) {
- 			not_pipe = true;
--			if (evsel__has_callchain(evsel)) {
-+			if (evsel__has_callchain(evsel) || evsel__embed_has_callchain(evsel)) {
- 				use_callchain = true;
- 				break;
- 			}
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index bc603193c477..6c64ec475b80 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -298,6 +298,7 @@ void evsel__init(struct evsel *evsel,
- 	evsel->pmu_name      = NULL;
- 	evsel->group_pmu_name = NULL;
- 	evsel->skippable     = false;
-+	evsel->sample_type_embed = 0;
- }
- 
- struct evsel *evsel__new_idx(struct perf_event_attr *attr, int idx)
-@@ -440,6 +441,7 @@ struct evsel *evsel__clone(struct evsel *orig)
- 	evsel->weak_group = orig->weak_group;
- 	evsel->use_config_name = orig->use_config_name;
- 	evsel->pmu = orig->pmu;
-+	evsel->sample_type_embed = orig->sample_type_embed;
- 
- 	if (evsel__copy_config_terms(evsel, orig) < 0)
- 		goto out_err;
-@@ -2282,6 +2284,10 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 
- 			test_attr__ready();
- 
-+			/* BPF output event can only be system-wide, off-cpu filters tasks in BPF */
-+			if (evsel__is_bpf_output(evsel))
-+				pid = -1;
-+
- 			/* Debug message used by test scripts */
- 			pr_debug2_peo("sys_perf_event_open: pid %d  cpu %d  group_fd %d  flags %#lx",
- 				pid, perf_cpu_map__cpu(cpus, idx).cpu, group_fd, evsel->open_flags);
-@@ -2592,6 +2598,14 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 	 */
- 	union u64_swap u;
- 
-+	array = event->sample.array;
-+
-+	/* use raw_data passed in to read embedded data */
-+	if (evsel__has_embed(evsel) && evsel__is_bpf_output(evsel) && data->raw_data) {
-+		array = data->raw_data;
-+		type = evsel->sample_type_embed;
-+	}
-+
- 	memset(data, 0, sizeof(*data));
- 	data->cpu = data->pid = data->tid = -1;
- 	data->stream_id = data->id = data->time = -1ULL;
-@@ -2607,8 +2621,6 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- 		return perf_evsel__parse_id_sample(evsel, event, data);
- 	}
- 
--	array = event->sample.array;
--
- 	if (perf_event__check_size(event, evsel->sample_size))
- 		return -EFAULT;
- 
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 80b5f6dd868e..0d25e82c6154 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -184,6 +184,9 @@ struct evsel {
- 	};
- 	/* Is the tool's fd for /proc/pid/stat or /proc/stat. */
- 	bool pid_stat;
-+
-+	/* for samples embedded in BPF output */
-+	__u64 sample_type_embed;
+ struct perf_file_attr {
+ 	struct perf_event_attr	attr;
++	__u64 embed;
+ 	struct perf_file_section	ids;
  };
  
- struct perf_missing_features {
-@@ -469,6 +472,11 @@ static inline bool evsel__is_bpf_output(struct evsel *evsel)
- 	return evsel__match(evsel, SOFTWARE, SW_BPF_OUTPUT);
- }
+@@ -3713,6 +3714,7 @@ static int perf_session__do_write_header(struct perf_session *session,
+ 		}
+ 		f_attr = (struct perf_file_attr){
+ 			.attr = evsel->core.attr,
++			.embed = evsel->sample_type_embed,
+ 			.ids  = {
+ 				.offset = evsel->id_offset,
+ 				.size   = evsel->core.ids * sizeof(u64),
+@@ -4147,6 +4149,14 @@ static int read_attr(int fd, struct perf_header *ph,
  
-+static inline bool evsel__has_embed(struct evsel *evsel)
-+{
-+	return evsel->sample_type_embed != 0;
-+}
+ 		ret = readn(fd, ptr, left);
+ 	}
 +
- static inline bool evsel__is_clock(const struct evsel *evsel)
- {
- 	return evsel__match(evsel, SOFTWARE, SW_CPU_CLOCK) ||
-@@ -525,6 +533,11 @@ static inline bool evsel__has_callchain(const struct evsel *evsel)
- 	       evsel->synth_sample_type & PERF_SAMPLE_CALLCHAIN;
- }
- 
-+static inline bool evsel__embed_has_callchain(const struct evsel *evsel)
-+{
-+	return evsel->sample_type_embed & PERF_SAMPLE_CALLCHAIN;
-+}
-+
- static inline bool evsel__has_br_stack(const struct evsel *evsel)
- {
- 	/*
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5596bed1b8c8..d87d85a3e21e 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1528,6 +1528,23 @@ static int evlist__deliver_sample(struct evlist *evlist, struct perf_tool *tool,
- 	/* We know evsel != NULL. */
- 	u64 sample_type = evsel->core.attr.sample_type;
- 	u64 read_format = evsel->core.attr.read_format;
-+	struct perf_sample sample_embed;
-+
-+	if (evsel__is_bpf_output(evsel) && evsel__has_embed(evsel) &&
-+	    sample->raw_data && sample->raw_size - sizeof(__u32) > sizeof(struct perf_event_header)) {
-+		int err;
-+
-+		sample_embed.raw_data = sample->raw_data;
-+
-+		err = evsel__parse_sample(evsel, event, &sample_embed);
-+		if (err) {
-+			pr_err("Can't parse BPF-embedded sample, err = %d\n", err);
-+			return err;
-+		}
-+
-+		sample_type = evsel->sample_type_embed;
-+		sample = &sample_embed;
++	ret = readn(fd, &f_attr->embed, sizeof(f_attr->embed));
++	if (ret <= 0) {
++		pr_debug("cannot read %d bytes of embedded sample type\n",
++			 PERF_ATTR_SIZE_VER0);
++		return -1;
 +	}
- 
- 	/* Standard sample delivery. */
- 	if (!(sample_type & PERF_SAMPLE_READ))
-@@ -1639,8 +1656,12 @@ static int perf_session__deliver_event(struct perf_session *session,
- 				       const char *file_path)
- {
- 	struct perf_sample sample;
--	int ret = evlist__parse_sample(session->evlist, event, &sample);
-+	int ret;
 +
-+	/* set to NULL so we don't accidentally parse BPF-embedded sample */
-+	sample.raw_data = NULL;
+ 	/* read perf_file_section, ids are read in caller */
+ 	ret = readn(fd, &f_attr->ids, sizeof(f_attr->ids));
  
-+	ret = evlist__parse_sample(session->evlist, event, &sample);
- 	if (ret) {
- 		pr_err("Can't parse sample, err = %d\n", ret);
- 		return ret;
+@@ -4272,6 +4282,8 @@ int perf_session__read_header(struct perf_session *session, int repipe_fd)
+ 		tmp = lseek(fd, 0, SEEK_CUR);
+ 		evsel = evsel__new(&f_attr.attr);
+ 
++		evsel->sample_type_embed = f_attr.embed;
++
+ 		if (evsel == NULL)
+ 			goto out_delete_evlist;
+ 
 -- 
 2.45.2
 
