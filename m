@@ -1,162 +1,103 @@
-Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C1D517BB27
-	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 16:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51D0D433BC;
+	Fri, 26 Jul 2024 18:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722011761; cv=none; b=BOOLG2C4lra2vF2GpMfPIKwa4E8fxC52zNAR+uoT/0WNVeWxbsTirvVft9LtNcpGcF/gM+y1vUBL4a4+ocE2mw7Q5oEFHFN1VJHcztNtjmiqZPVgcN2juzj5kD2u58/xOWS5z2vvWPuYGY1UCN6WaEf92HRHGLO452vQ5e0HBfA=
+	t=1722018291; cv=none; b=Tna23ePrgWj7kqI1Xh6iVF5GQgG14zIerGsNoKe9Ur2D0uMAdSPGEl1XAl+31Hd8RF/cwsSTsklQXxe3DBzlkfat4w9uoef+QYks6q60NjrHtzQFCud5TBZhXOsr0vb10GkG7CD+SxaXjQ0cTRmn8NkHubyIHRhwdpxNjFQ0gek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722011761; c=relaxed/simple;
-	bh=BUdENbSZvNfphqnfRsqLz5HIB/kvhlcAtKnqfnFm/0Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jOh56w8gSeVlo/FMRXdLySq0K2oDnmz5KDDVjKfJqpe6gGDFF+WdvfKdIt9V3fHEHhj1W1g4UX7asPkorS0J/enKKcL2yVgsf9jQdDstJriySmKATssosRZjQJOA5fLzkDtka4qB5BNOSmTX0k40/cnHCq+BmcSLTbGYSu4DZpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=b/E26HGD; arc=none smtp.client-ip=209.85.167.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	s=arc-20240116; t=1722018291; c=relaxed/simple;
+	bh=k5tMgQfi5S8plCaAhprxt7aj5C3lBFAlnVawZx/cpNU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D6/aQ4ITFeqxeJo3XCY9fiAOg7mtNRVV5wzZTv0viMC6aQ/ujpud9dIV6FepiZ4tdDLZSqdsNwMKGg1yjOdTI632auln2dKyDxdhTbZ0S1Qk4wejU5+oA3Z3Hk20tz+yUQof63jQf+ZGgTUPZPLNHLi2tcXkANSZa1U/ud/JCB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9QHcBMq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="b/E26HGD"
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-52ef95ec938so1932679e87.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 09:35:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1722011758; x=1722616558; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=47UoFBedUGrddRztnJZpYQBii5NU6LPNq061vWvaiIk=;
-        b=b/E26HGDUCe1LuaORugtodflVOPU6hlxy5zcXeEGnmOE/QdpdBCarPWCVKRMnmQV9Q
-         tf0kbSdzJvoVuoHjEPTGWh5zxiJ+RNqud5jafFDSlMaLom+JVYbcsLAlzh/ozDkBz8w3
-         RfmA4AneWWtC4kLsAHMWH3ILDrgAorQpZR/E2ag0R1nkpHbD7vp1BatNIyiyou0YFzg+
-         BMSdD8BOhyj9Ap/9+dApNr2w7zmeRCW4CDAC8im9MO1L8Pdzo/PymdhZIaiQ1ICLYmX4
-         jSIl+GZraEp0JegITJznzftunU8vhsTcc03SeW8d3GfrS/S0TJB6t6fust1tauvw74+t
-         p0hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722011758; x=1722616558;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=47UoFBedUGrddRztnJZpYQBii5NU6LPNq061vWvaiIk=;
-        b=tm8uDIZrq+oOnRVDPgJGcvBzL91qJMbL+pBSp+yrpHDoARLD1sfCg6kggZ6xwZBDYB
-         UFGeSurSu+4LBVgzKPCJVbR83QpNsQCvJBry0geJLk90wAyivdvF46ZpuT0oCGCjKLce
-         5I+m4q0FSsDiqSLt0php+xnXd/RKV9kgN3de05m4l5P1b4xHmzFCBluEMy4GechNN1Uh
-         +rcax34FIi7Z0A6kxrjfmHiTFKPNxTkH0TZV8e7CGP8Yz3Dg525Axh3SbtlKk93rEP+o
-         he+X9CUGU6Ol9zmoRjZQw/Ys0lYPSdJZa2LPVod+zer3pXTvmEy4mv/+awIVVC4GG893
-         3UHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWKQ6x331wDORMS5RxUrigo7hyUZ2TerSTyJOWjUDMhFDOZUkDJAiKoHaCt+J/m3kMj9f80b3/ravfAIV1QUQ0n3WNsXGTyahPhCE+LEXCX2Q==
-X-Gm-Message-State: AOJu0Yxja0U6aQOW2VZCHc/YtZIaxwD8iAWQTSJp/IpNPuqInOtUTY9a
-	GmJIIzNIJfT+IB6xHdjSpkD3nrtb86zOB/sPFAuFvIu9Gk3vAcBU/b8cIuUer7HjJYfxE2BJny6
-	23oXdHfyWEH4b+/br+JEJnnEUoYOpTc3M/Uut
-X-Google-Smtp-Source: AGHT+IFvqtpRRyLvec0NkzJMgZQnsqA/Jq1F9gE7Oy0fL+CqbT0j7cJKBTQrXyLvg57PrVmau43R+BVGdnKtQ5XE57c=
-X-Received: by 2002:a05:6512:2513:b0:52c:b479:902d with SMTP id
- 2adb3069b0e04-5309b259c26mr250971e87.4.1722011757881; Fri, 26 Jul 2024
- 09:35:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A9QHcBMq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 434A0C32782;
+	Fri, 26 Jul 2024 18:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722018290;
+	bh=k5tMgQfi5S8plCaAhprxt7aj5C3lBFAlnVawZx/cpNU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=A9QHcBMqu5PorqprRI10mvFJ40S8XNya7SNqDCyVoMJVPTunz/NmNAXC5qeveFaMP
+	 C7wugfcbVSjCewQmOcVVRZ2FLxx9UbsQWVb4MUbjIEuMisnTsTBuipRS8ny6EVmh8+
+	 r0ti9AG97yqCWihfTFLPu9fgTfnMv8sYdcrPgnRSwLMyyinOoBKhvyEbQvskiDbi0b
+	 e0smyRGu4w3lVD4Cjohgpu9Q8jc33vxq0raHc3uIolt2UwvTrOibLgnTz/N0yrnPOi
+	 U47FEKNxAKRq3oi8kr2gL8538ktI+oeqWDBPgJZy7JsVx+7r7dXGX7nAsKuM5NRZsn
+	 ND4UVQYksQznw==
+Date: Fri, 26 Jul 2024 15:24:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Hendrik Brueckner <brueckner@linux.ibm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@arm.com>, coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Will Deacon <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH V9 02/13] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+Message-ID: <ZqPp72SgDJaAb5x0@x1>
+References: <20240715160712.127117-1-adrian.hunter@intel.com>
+ <20240715160712.127117-3-adrian.hunter@intel.com>
+ <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
+ <14cd68b2-eeee-42e3-87a6-c12d3814bd51@intel.com>
+ <20240718115126.GK26750@noisy.programming.kicks-ass.net>
+ <20240718125849.GI28838@noisy.programming.kicks-ass.net>
+ <ef63885b-f762-4398-beff-c695b24304e6@intel.com>
+ <ZqO1gBIYnLiDpQWv@x1>
+ <137068c0-442b-4aba-8950-67828a15cda2@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240713044645.10840-1-khuey@kylehuey.com> <ZpLkR2qOo0wTyfqB@krava>
- <20240715111208.GB14400@noisy.programming.kicks-ass.net> <CAP045ArBNZ559RFrvDTsHj42S4W+BuReHe+XV2tBPSeoHOMMpA@mail.gmail.com>
- <20240715150410.GJ14400@noisy.programming.kicks-ass.net> <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
- <20240715163003.GK14400@noisy.programming.kicks-ass.net> <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
- <ZpYgYaKKbw3FPUpv@krava> <CAEf4BzZWWzio9oPe2_jS=_7CnKuJnugr2h4yd3QY1TqSF0aMXQ@mail.gmail.com>
- <CAP045ArhO4K2vcrhG_GnJNhx=+7v6WLYKsDj4CvqO7HKzBshXg@mail.gmail.com> <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
-In-Reply-To: <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
-From: Kyle Huey <me@kylehuey.com>
-Date: Fri, 26 Jul 2024 09:35:43 -0700
-Message-ID: <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing events
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: Jiri Olsa <olsajiri@gmail.com>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, khuey@kylehuey.com, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Linus Torvalds <torvalds@linux-foundation.org>, 
-	robert@ocallahan.org, Joe Damato <jdamato@fastly.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <137068c0-442b-4aba-8950-67828a15cda2@intel.com>
 
-Will do.
+On Fri, Jul 26, 2024 at 07:00:55PM +0300, Adrian Hunter wrote:
+> On 26/07/24 17:41, Arnaldo Carvalho de Melo wrote:
+> > On Thu, Jul 18, 2024 at 06:06:16PM +0300, Adrian Hunter wrote:
+> >> On 18/07/24 15:58, Peter Zijlstra wrote:
+> >>> On Thu, Jul 18, 2024 at 01:51:26PM +0200, Peter Zijlstra wrote:
+> >>>
+> >>>> OK, let me do that and make a few more edits and see if I can stare at
+> >>>> that next patch some.
+> >>>
+> >>> I pushed out a stack of patches into queue.git perf/core
+> >>> Could you please double check I didn't wreck anything?
+> >>
+> >> Looks fine, and seems to work OK in a brief test.
+> >>
+> >> Thank you! :-)
+> > 
+> > So should I go ahead and pick the tooling patches since the kernel bits
+> > are merged?
+> 
+> Not exactly merged.  Probably should wait until it is in tip at least.
+ 
+Ok, so I get just these, as you asked on another message:
 
-- Kyle
+acme@x1:~/git/perf-tools-next$ git log --oneline -5 perf-tools-next/tmp.perf-tools-next 
+9140fec01b2de8d3 (HEAD -> perf-tools-next, perf-tools-next/tmp.perf-tools-next, perf-tools-next.korg/tmp.perf-tools-next, number/perf-tools-next, acme.korg/tmp.perf-tools-next) perf tools: Enable evsel__is_aux_event() to work for S390_CPUMSF
+c3b7dba6ea81a5b1 perf tools: Enable evsel__is_aux_event() to work for ARM/ARM64
+866400c0b08ef9d9 perf scripts python cs-etm: Restore first sample log in verbose mode
+08ee74eb03e37191 perf cs-etm: Output 0 instead of 0xdeadbeef when exception packets are flushed
+c22dd7ec2b2808b2 perf inject: Convert comma to semicolon
+acme@x1:~/git/perf-tools-next$
 
-On Fri, Jul 26, 2024 at 9:34=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Jul 26, 2024 at 5:37=E2=80=AFAM Kyle Huey <me@kylehuey.com> wrote=
-:
-> >
-> > On Fri, Jul 19, 2024 at 11:26=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> > >
-> > > On Tue, Jul 16, 2024 at 12:25=E2=80=AFAM Jiri Olsa <olsajiri@gmail.co=
-m> wrote:
-> > > >
-> > > > On Mon, Jul 15, 2024 at 09:48:58AM -0700, Kyle Huey wrote:
-> > > > > On Mon, Jul 15, 2024 at 9:30=E2=80=AFAM Peter Zijlstra <peterz@in=
-fradead.org> wrote:
-> > > > > >
-> > > > > > On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
-> > > > > >
-> > > > > > > I think this would probably work but stealing the bit seems f=
-ar more
-> > > > > > > complicated than just gating on perf_event_is_tracing().
-> > > > > >
-> > > > > > perf_event_is_tracing() is something like 3 branches. It is not=
- a simple
-> > > > > > conditional. Combined with that re-load and the wrong return va=
-lue, this
-> > > > > > all wants a cleanup.
-> > > > > >
-> > > > > > Using that LSB works, it's just that the code aint pretty.
-> > > > >
-> > > > > Maybe we could gate on !event->tp_event instead. Somebody who is =
-more
-> > > > > familiar with this code than me should probably confirm that tp_e=
-vent
-> > > > > being non-null and perf_event_is_tracing() being true are equival=
-ent
-> > > > > though.
-> > > > >
-> > > >
-> > > > it looks like that's the case, AFAICS tracepoint/kprobe/uprobe even=
-ts
-> > > > are the only ones having the tp_event pointer set, Masami?
-> > > >
-> > > > fwiw I tried to run bpf selftests with that and it's fine
-> > >
-> > > Why can't we do the most straightforward thing in this case?
-> > >
-> > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > index ab6c4c942f79..cf4645b26c90 100644
-> > > --- a/kernel/events/core.c
-> > > +++ b/kernel/events/core.c
-> > > @@ -9707,7 +9707,8 @@ static int __perf_event_overflow(struct perf_ev=
-ent *event,
-> > >
-> > >         ret =3D __perf_event_account_interrupt(event, throttle);
-> > >
-> > > -       if (event->prog && !bpf_overflow_handler(event, data, regs))
-> > > +       if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PER=
-F_EVENT &&
-> > > +           !bpf_overflow_handler(event, data, regs))
-> > >                 return ret;
-> > >
-> > >
-> > > >
-> > > > jirka
-> > > >
-> >
-> > Yes, that's effectively equivalent to calling perf_event_is_tracing()
-> > and would work too. Do you want to land that patch? It needs to go to
-> > 6.10 stable too.
->
-> I'd appreciate it if you can just incorporate that into your patch and
-> resend it, thank you!
->
-> >
-> > - Kyle
+It'll go to perf-tools-next once 6.11-rc1 is out.
+
+- Arnaldo
