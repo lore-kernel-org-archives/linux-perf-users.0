@@ -1,231 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4CD28EA;
-	Fri, 26 Jul 2024 14:07:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE46D17E9;
+	Fri, 26 Jul 2024 14:08:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722002856; cv=none; b=GKl0/1q4Sd8pMaslSQXPKfATDvHQRGLHnF+KIeIgSthUcAevpc4S7s06T2nfYSN9KUvjbm6b/xExiskZDIoJtc1WpVLcObOq0cx5kk0zFqs5APyyNak4h20oSHReCsq3OTPgzIfbF6tofZ/Dk+kZMKndDGDuYtTJHGatWpugOJ0=
+	t=1722002936; cv=none; b=hD0wD7b6UMKjt1gh9yV/0AoZFAGQX20RfHgc708z8W4noGKOgdCmIbIKVRW851lqVnZzwVx9IgnyXeEZGkqpKaS76ZAsZQ93svG2cb5yPcYgH6u8QPQPvVqHWsvKawepQqd3fv7u/6iz66zareDxMkPM3T/N52LkdbGbyspTFNE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722002856; c=relaxed/simple;
-	bh=DrtcZusawSUwPtIU89V5vY/QZ9NjVUCq17IWHL4U/TI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WfHW+TnzP0oy7yoMJvxwgYfDNKSFlIklc9SghT0im2r3zdawovYYaV6JaKM4WajqgasUEPnGAei1kvGoEeSTm/yJR7rXzYZmpdxv0+QfNiVW4yI0fJSY81MiRb6cHO3UavCzl1kH2/FvfFc2BIvsTzT7EHeEv0wgKoti/0CMU8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cJvXnzRh; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722002936; c=relaxed/simple;
+	bh=DniVSvs2EQarAaQhXsat423CggEHBH8c/V0HDSY9H2s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JzjqTgIFE2wXJ5ITqNTiQXwUlLDHy3UiJM5AXAICRVGPndGQfjmJBPCfmjJ6mfoWiphZVoJJzNquLXFwwJdGwnsPfXah79Wc+1PaOYGhJ88IfUwf4XM6/LuLvt4hvV3uwo/RarOgGkRnxQYAhaAGVeqHoF1zofYy8GSu8FbAC2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UVAjqh3P; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cJvXnzRh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722002855; x=1753538855;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DrtcZusawSUwPtIU89V5vY/QZ9NjVUCq17IWHL4U/TI=;
-  b=cJvXnzRhynOgEh+tHqD1q9fL5T34AONk7/Uj0S2jnx3fC7GHuTDHElkG
-   lallTKpwd4WNI/z/CiOnc3zOgJjlmhUzw+ndME4KnNlfBzCrWvxMJICIm
-   idOiwGlKp/g3k0eSQNDh0fYOXmk45V6CaillftgudXIbA7gmddguZ9DJP
-   QEPgM8b3DZkywcZv20KK/7oz0px5Tg/SFpRy7FO578sbc5V5wlKMLTxET
-   qIu5KGSn6cPvfNyJtC1peEzJsRxvSgmLB9ybd5Y0pqJmzrIy/nemAiinu
-   Q7lRi2NSSCkD6iY3s+tkRsWATc4NH0CtIbUdqR+BcC1MQQSyhZFcGQCV+
-   g==;
-X-CSE-ConnectionGUID: 5fgLVnLFRMuw+zNWbaAI2Q==
-X-CSE-MsgGUID: vC9eoq3vRF6KQvi7m9HO/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11144"; a="19644154"
-X-IronPort-AV: E=Sophos;i="6.09,238,1716274800"; 
-   d="scan'208";a="19644154"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 07:07:34 -0700
-X-CSE-ConnectionGUID: 8hDMQqcXSWOgcepIC8dFEg==
-X-CSE-MsgGUID: eurExc5QSTSQyYqD9aj1GA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,238,1716274800"; 
-   d="scan'208";a="58103002"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 07:07:34 -0700
-Received: from [10.212.61.242] (kliang2-mobl1.ccr.corp.intel.com [10.212.61.242])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 227FD20BA6EC;
-	Fri, 26 Jul 2024 07:07:31 -0700 (PDT)
-Message-ID: <17f2e99e-2d52-4174-b40f-df87d3b73fa5@linux.intel.com>
-Date: Fri, 26 Jul 2024 10:07:29 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UVAjqh3P"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7E1FC32782;
+	Fri, 26 Jul 2024 14:08:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722002935;
+	bh=DniVSvs2EQarAaQhXsat423CggEHBH8c/V0HDSY9H2s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=UVAjqh3PNdscJcN0OvKtzOOXeZw9OgwPemDolAj3VVS2L06SDAfHPJs4CB2Lvlhge
+	 oefyqVEJDRScC8DWQE+4Y6LpG32GZwAIfkRS5edR5MhJ1EX0V4k4Zvo2Gu8TVOFNpW
+	 RwM8QJKlzE5Lgba8cv5juKUVEHcRzKyDYCLPIYlREDV5dzR2WmL0my65dFWt+9jUI7
+	 NMrThY5xLKhvu7uXWxy9W99n/9Y7E3wicEktr4xIupHAi6UQjJGWXevfCXT1Y1Sp3a
+	 mOrU0M8RDdrk1vC4sjpszksXPx25xrfWQx6PUVccBV2k1aOvhLkutaSvV2WxJnumkj
+	 3qeilc8YniCKg==
+Date: Fri, 26 Jul 2024 11:08:52 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>, namhyung@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+	hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf vendor events power10: Update JSON/events
+Message-ID: <ZqOt9G9e-AIN6hY-@x1>
+References: <20240723052154.96202-1-kjain@linux.ibm.com>
+ <CAP-5=fWsQbA-h=_Y_q7z1E7GjCkHE3w-9h-OXu4jLBM3Fag6ag@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/6] perf pmu: Add support for event.cpus files in
- sysfs
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
- Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Bjorn Helgaas <bhelgaas@google.com>, Jonathan Corbet <corbet@lwn.net>,
- James Clark <james.clark@arm.com>, Ravi Bangoria <ravi.bangoria@amd.com>,
- Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org,
- linux-perf-users@vger.kernel.org, ananth.narayan@amd.com,
- gautham.shenoy@amd.com, kprateek.nayak@amd.com, sandipan.das@amd.com
-References: <20240718003025.1486232-1-irogers@google.com>
- <20240718003025.1486232-4-irogers@google.com>
- <92ceb8b5-240a-4715-98db-c73e8e9d3e50@linux.intel.com>
- <CAP-5=fUfoMZ0HjCNoJe6hgEMi5ciY+LqFjBbLzfiZgO6dioshA@mail.gmail.com>
- <64030eab-6e95-494a-ab72-bc33792ef723@linux.intel.com>
- <CAP-5=fVMV4ZmGk4-XguqV=LAuif-MgAL+BK=mMAE1tC3f3tbhQ@mail.gmail.com>
- <e8872317-8e18-48aa-9f23-b98af9345bed@linux.intel.com>
- <CAP-5=fUjEYwdOdmfa5N7b8OOLWDitJKBdeOr8-+UOYWA5+ehkA@mail.gmail.com>
- <775d8f1d-437d-47a3-b4b2-da476e914cf5@linux.intel.com>
- <CAP-5=fUH+n+f_q1Tc-a3oV3vDV60VGOLANRFWUemDen197rYog@mail.gmail.com>
- <c4b499a5-7d2a-44db-bd0c-c123417337a5@amd.com>
- <3c3d1cd9-ccb1-495d-a670-9ee504fb0bbe@amd.com>
- <CAP-5=fXpacz331M71WR1HZHS0p7t9zqNUqBvMf2EjOxaB9Ayyw@mail.gmail.com>
- <a0bdb947-63cb-40b4-b410-92b4dc9e6801@amd.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <a0bdb947-63cb-40b4-b410-92b4dc9e6801@amd.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWsQbA-h=_Y_q7z1E7GjCkHE3w-9h-OXu4jLBM3Fag6ag@mail.gmail.com>
 
-
-
-On 2024-07-26 4:17 a.m., Dhananjay Ugwekar wrote:
+On Tue, Jul 23, 2024 at 09:02:23AM -0700, Ian Rogers wrote:
+> On Mon, Jul 22, 2024 at 10:27 PM Kajol Jain <kjain@linux.ibm.com> wrote:
+> >
+> > Update JSON/events for power10 platform with additional events.
+> > Also move PM_VECTOR_LD_CMPL event from others.json to
+> > frontend.json file.
+> >
+> > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 > 
+> Reviewed-by: Ian Rogers <irogers@google.com>
+
+Thanks, applied to tmp.perf-tools-next,
+
+- Arnaldo
+ 
+> > ---
+> >  .../arch/powerpc/power10/frontend.json        |   5 +
+> >  .../arch/powerpc/power10/others.json          | 100 +++++++++++++++++-
+> >  2 files changed, 100 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
+> > index 5977f5e64212..53660c279286 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
+> > @@ -74,6 +74,11 @@
+> >      "EventName": "PM_ISSUE_KILL",
+> >      "BriefDescription": "Cycles in which an instruction or group of instructions were cancelled after being issued. This event increments once per occurrence, regardless of how many instructions are included in the issue group."
+> >    },
+> > +  {
+> > +    "EventCode": "0x44054",
+> > +    "EventName": "PM_VECTOR_LD_CMPL",
+> > +    "BriefDescription": "Vector load instruction completed."
+> > +  },
+> >    {
+> >      "EventCode": "0x44056",
+> >      "EventName": "PM_VECTOR_ST_CMPL",
+> > diff --git a/tools/perf/pmu-events/arch/powerpc/power10/others.json b/tools/perf/pmu-events/arch/powerpc/power10/others.json
+> > index fcf8a8ebe7bd..53ca610152fa 100644
+> > --- a/tools/perf/pmu-events/arch/powerpc/power10/others.json
+> > +++ b/tools/perf/pmu-events/arch/powerpc/power10/others.json
 > 
-> On 7/26/2024 1:22 PM, Ian Rogers wrote:
->> On Fri, Jul 26, 2024 at 12:10 AM Dhananjay Ugwekar
->> <Dhananjay.Ugwekar@amd.com> wrote:
->>>
->>>
->>>
->>> On 7/26/2024 12:36 PM, Dhananjay Ugwekar wrote:
->>>> Hello, Ian, Kan,
->>>>
->>>> On 7/20/2024 3:32 AM, Ian Rogers wrote:
->>>>> On Fri, Jul 19, 2024 at 9:35 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>>>> On 2024-07-19 10:59 a.m., Ian Rogers wrote:
->>>>>>> Thanks Kan. I'm not wondering about a case of 2 CPUs, say on CPU0 and
->>>>>>> solely its perf event context, I want to know its core power and
->>>>>>> package power as a group so I never record one without the other. That
->>>>>>> grouping wouldn't be possible with 2 PMUs.
->>>>>>
->>>>>> For power, to be honest, I don't think it improves anything. It gives
->>>>>> users a false image that perf can group these counters.
->>>>>> But the truth is that perf cannot. The power counters are all
->>>>>> free-running counters. It's impossible to co-schedule them (which
->>>>>> requires a global mechanism to disable/enable all counters, e.g.,
->>>>>> GLOBAL_CTRL for core PMU). The kernel still has to read the counters one
->>>>>> by one while the counters keep running. There are no differences with or
->>>>>> without a group for the power events.
->>>>>
->>>>> Ok, so power should copy cstate with _core, _pkg, etc. I agree the
->>>>> difference is small and I like the idea of being consistent.
->>>>
->>>> So, it seems we want to follow the new PMU addition approach for RAPL
->>>> being consistent with Intel cstate driver, should I revive my "power_per_core"
->>>> PMU thread now?
->>>
->>> The power_per_core PMU thread link for reference,
->>>
->>> https://lore.kernel.org/all/20240711102436.4432-1-Dhananjay.Ugwekar@amd.com/
->>
->> I think so. Would it be possible to follow the same naming convention
->> as cstate, where there is cstate_pkg and cstate_core? (ie no "_per" in
->> the name)
+> The "topic" of an event is taken from the filename, here the topic
+> will be "others".
 > 
-> Makes sense, we should probably rename the original "power" PMU to "power_pkg" 
-> as well.
-
-It may brings some compatible issue for the old platforms. There may be
-two ways to address it.
-- Add a symlink or something to link the "power" and "power_pkg".
-- Only when there are two or more different scopes of counters in a
-system, the "power_<scope>" are used. If there is only one scope of
-power counter, "power" is still used.
-The latter method is used for the Intel uncore and hybrid core drivers now.
-
-Thanks,
-Kan
-
+> > @@ -94,11 +94,6 @@
+> >      "EventName": "PM_L1_ICACHE_RELOADED_ALL",
+> >      "BriefDescription": "Counts all instruction cache reloads includes demand, prefetch, prefetch turned into demand and demand turned into prefetch."
+> >    },
+> > -  {
+> > -    "EventCode": "0x44054",
+> > -    "EventName": "PM_VECTOR_LD_CMPL",
+> > -    "BriefDescription": "Vector load instruction completed."
+> > -  },
+> >    {
+> >      "EventCode": "0x4D05E",
+> >      "EventName": "PM_BR_CMPL",
+> > @@ -108,5 +103,100 @@
+> >      "EventCode": "0x400F0",
+> >      "EventName": "PM_LD_DEMAND_MISS_L1_FIN",
+> >      "BriefDescription": "Load missed L1, counted at finish time."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x00000038BC",
+> > +    "EventName": "PM_ISYNC_CMPL",
+> > +    "BriefDescription": "Isync completion count per thread."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C088",
+> > +    "EventName": "PM_LD0_32B_FIN",
+> > +    "BriefDescription": "256-bit load finished in the LD0 load execution unit."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C888",
+> > +    "EventName": "PM_LD1_32B_FIN",
+> > +    "BriefDescription": "256-bit load finished in the LD1 load execution unit."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C090",
+> > +    "EventName": "PM_LD0_UNALIGNED_FIN",
+> > +    "BriefDescription": "Load instructions in LD0 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline using the load gather buffer. This typically adds about 10 cycles to the latency of the instruction. This includes loads that cross the 128 byte boundary, octword loads that are not aligned, and a special forward progress case of a load that does not hit in the L1 and crosses the 32 byte boundary and is launched NTC. Counted at finish time."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C890",
+> > +    "EventName": "PM_LD1_UNALIGNED_FIN",
+> > +    "BriefDescription": "Load instructions in LD1 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline using the load gather buffer. This typically adds about 10 cycles to the latency of the instruction. This includes loads that cross the 128 byte boundary, octword loads that are not aligned, and a special forward progress case of a load that does not hit in the L1 and crosses the 32 byte boundary and is launched NTC. Counted at finish time."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C0A4",
+> > +    "EventName": "PM_ST0_UNALIGNED_FIN",
+> > +    "BriefDescription": "Store instructions in ST0 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline. This typically adds about 10 cycles to the latency of the instruction. This only includes stores that cross the 128 byte boundary. Counted at finish time."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C8A4",
+> > +    "EventName": "PM_ST1_UNALIGNED_FIN",
+> > +    "BriefDescription": "Store instructions in ST1 port that are either unaligned, or treated as unaligned and require an additional recycle through the pipeline. This typically adds about 10 cycles to the latency of the instruction. This only includes stores that cross the 128 byte boundary. Counted at finish time."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000C8B8",
+> > +    "EventName": "PM_STCX_SUCCESS_CMPL",
+> > +    "BriefDescription": "STCX instructions that completed successfully. Specifically, counts only when a pass status is returned from the nest."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000D0B4",
+> > +    "EventName": "PM_DC_PREF_STRIDED_CONF",
+> > +    "BriefDescription": "A demand load referenced a line in an active strided prefetch stream. The stream could have been allocated through the hardware prefetch mechanism or through software."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000F880",
+> > +    "EventName": "PM_SNOOP_TLBIE_CYC",
+> > +    "BriefDescription": "Cycles in which TLBIE snoops are executed in the LSU."
+> > +  },
+> 
+> Perhaps the topics here should be memory or translation?
+> 
+> > +  {
+> > +    "EventCode": "0x000000F084",
+> > +    "EventName": "PM_SNOOP_TLBIE_CACHE_WALK_CYC",
+> > +    "BriefDescription": "TLBIE snoop cycles in which the data cache is being walked."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000F884",
+> > +    "EventName": "PM_SNOOP_TLBIE_WAIT_ST_CYC",
+> > +    "BriefDescription": "TLBIE snoop cycles in which older stores are still draining."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000F088",
+> > +    "EventName": "PM_SNOOP_TLBIE_WAIT_LD_CYC",
+> > +    "BriefDescription": "TLBIE snoop cycles in which older loads are still draining."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x000000F08C",
+> > +    "EventName": "PM_SNOOP_TLBIE_WAIT_MMU_CYC",
+> > +    "BriefDescription": "TLBIE snoop cycles in which the Load-Store unit is waiting for the MMU to finish invalidation."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x0000004884",
+> > +    "EventName": "PM_NO_FETCH_IBUF_FULL_CYC",
+> > +    "BriefDescription": "Cycles in which no instructions are fetched because there is no room in the instruction buffers."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x00000048B4",
+> > +    "EventName": "PM_BR_TKN_UNCOND_FIN",
+> > +    "BriefDescription": "An unconditional branch finished. All unconditional branches are taken."
+> 
+> I see PM_BR_TAKEN_CMPL in
+> tools/perf/pmu-events/arch/powerpc/power10/frontend.json, so maybe it
+> makes sense to put this event in that topic?
 > 
 > Thanks,
-> Dhananjay
+> Ian
 > 
->>
->> Thanks,
->> Ian
->>
->>>>
->>>> Thanks,
->>>> Dhananjay
->>>>
->>>>  Do we
->>>>> want to add "event.cpus" support to the tool anyway for potential
->>>>> future uses? This would at least avoid problems with newer kernels and
->>>>> older perf tools were we to find a good use for it.
->>>>>
->>>>>>> My understanding had been that for core PMUs a "perf stat -C" option
->>>>>>> would choose the particular CPU to count the event on, for an uncore
->>>>>>> PMU the -C option would override the cpumask's "default" value. We
->>>>>>> have code to validate this:
->>>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/util/evlist.c?h=perf-tools-next#n2522
->>>>>>> But it seems now that overriding an uncore PMU's default CPU is
->>>>>>> ignored.
->>>>>>
->>>>>> For the uncore driver, no matter what -C set, it writes the default CPU
->>>>>> back.
->>>>>> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/arch/x86/events/intel/uncore.c#n760
->>>>>>
->>>>>>> If you did:
->>>>>>> $ perf stat -C 1 -e data_read -a sleep 0.1
->>>>>>> Then the tool thinks data_read is on CPU1 and will set its thread
->>>>>>> affinity to CPU1 to avoid IPIs. It seems to fix this we need to just
->>>>>>> throw away the -C option.
->>>>>> The perf tool can still read the the counter from CPU1 and no IPIs
->>>>>> because of the PMU_EV_CAP_READ_ACTIVE_PKG().
->>>>>>
->>>>>> Not quite sure, but it seems only the open and close may be impacted and
->>>>>> silently changed to CPU0.
->>>>>
->>>>> There's also enable/disable. Andi did the work and there were some
->>>>> notable gains but likely more on core events. Ultimately it'd be nice
->>>>> to be opening, closing.. everything in parallel given the calls are
->>>>> slow and the work is embarrassingly parallel.
->>>>> It feels like the cpumasks for uncore could still do with some cleanup
->>>>> wrt -C I'm just unsure at the moment what this should be. Tbh, I'm
->>>>> tempted to rewrite evlist propagate maps as someone may look at it and
->>>>> think I believe in what it is doing. The parallel stuff we should grab
->>>>> Riccardo's past work.
->>>>>
->>>>> Thanks,
->>>>> Ian
->>>>>
->>>>>
->>>>>> Thanks,
->>>>>> Kan
->>>>>>>
->>>>>>>>> 2) do the /sys/devices/<pmu>/events/event.(unit|scale|per-pkg|snapshot)
->>>>>>>>> files parse correctly and have a corresponding event.
->>>>>>>>> 3) keep adding opening events on the PMU to a group to make sure that
->>>>>>>>> when counters are exhausted the perf_event_open fails (I've seen this
->>>>>>>>> bug on AMD)
->>>>>>>>> 4) are the values in the type file unique
->>>>>>>>>
->>>>>>>>
->>>>>>>> The rest sounds good to me.
->>>>>>>
->>>>>>> Cool. Let me know if you can think of more.
->>>>>>>
->>>>>>> Thanks,
->>>>>>> Ian
->>>>>>>
->>>>>>>> Thanks,
->>>>>>>> Kan
->>>>>>>
->>>
-> 
+> > +  },
+> > +  {
+> > +    "EventCode": "0x0B0000016080",
+> > +    "EventName": "PM_L2_TLBIE_SLBIE_START",
+> > +    "BriefDescription": "NCU Master received a TLBIE/SLBIEG/SLBIAG operation from the core. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x0B0000016880",
+> > +    "EventName": "PM_L2_TLBIE_SLBIE_DELAY",
+> > +    "BriefDescription": "Cycles when a TLBIE/SLBIEG/SLBIAG command was held in a hottemp condition by the NCU Master. Multiply this count by 1000 to obtain the total number of cycles. This can be divided by PM_L2_TLBIE_SLBIE_SENT to obtain the average time a TLBIE/SLBIEG/SLBIAG command was held. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
+> > +  },
+> > +  {
+> > +    "EventCode": "0x0B0000026880",
+> > +    "EventName": "PM_L2_SNP_TLBIE_SLBIE_DELAY",
+> > +    "BriefDescription": "Cycles when a TLBIE/SLBIEG/SLBIAG that targets this thread's LPAR was in flight while in a hottemp condition. Multiply this count by 1000 to obtain the total number of cycles. This can be divided by PM_L2_SNP_TLBIE_SLBIE_START to obtain the overall efficiency. Note: ’inflight’ means SnpTLB has been sent to core(ie doesn’t include when SnpTLB is in NCU waiting to be launched serially behind different SnpTLB). The NCU Snooper gets in a ’hottemp’ delay window when it detects it is above its TLBIE/SLBIE threshold for process SnpTLBIE/SLBIE with this core. Event count should be multiplied by 2 since the data is coming from a 2:1 clock domain and the data is time sliced across all 4 threads."
+> >    }
+> >  ]
+> > --
+> > 2.43.0
+> >
