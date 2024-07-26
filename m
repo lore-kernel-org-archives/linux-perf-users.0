@@ -1,88 +1,106 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50DEB12E78;
-	Fri, 26 Jul 2024 14:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81F7217C21C;
+	Fri, 26 Jul 2024 16:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722005379; cv=none; b=uEW4rhNwLChla7VKNHsYq5OeQPnnWg3fXrt98HNIzsLV18Le48EPrBYlWKGJVNfEAR0eAD0nG2D/BujS9txaAJtHgnWzKLGuq5G3kDEeYrFGXT25dcqLXqlg5ZqtjIfPiIGTAKk4RifAu9wuM6hXhxy8+ijfszyVUQWS+UgjRtc=
+	t=1722009669; cv=none; b=sHD0nSwFsCElHY0VLZc3U4ltH2nrwQm463A4bpldnNhwvbq9houI6Hk4eAUXZ5cWQQBxnVkkbpTX/lujAFMa8fE0qO+W9MtRyWbTm1o5dM/rZvTf8rugGciVcP/rPY7BVlTybHPh39A4sbIC7AWVKjVOfgJgnuF3q90sjN09WtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722005379; c=relaxed/simple;
-	bh=Z4Unxh9riY/mmX1bd2RGjAQIZdTsnqCI5uhuBf/P4P0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eb9nSzpbAnXuAn389b+hThvH2c28CcadHU2JW1SI/LuR/itPrW30wOU/up4w1EUFWtchTtlMDddkRXVVaOb64E9Vy2rpBf3A1CTL9D6l4zCk4vEBdZkr9ibdhxR2nLZmWHVE2nKi67ZP0EmurVHoiED5yjRY3bCGz39hzt9h9H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bchnRRVb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722009669; c=relaxed/simple;
+	bh=gLb23Bh8XMl/n/xLXzM+SFvWGrvJJ0r90hJ2q9/OMAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pTr04Gqe2pbi+yK0gLHUhWNDA0VDRj8bogcjP9pXAhdgP/5mVri9JZTebX9+9QFwYdkh5tvLV0yZDTcnjgxHTLIzLzoORTW3qeosuTnHUkbVrCf8beEGFv1NzaISlShD/l6TFSBbelWYvRkng7P/9BRP1nOLMOjxs2i3u41jtqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SztYG//F; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bchnRRVb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4802EC32786;
-	Fri, 26 Jul 2024 14:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722005378;
-	bh=Z4Unxh9riY/mmX1bd2RGjAQIZdTsnqCI5uhuBf/P4P0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=bchnRRVbFfL8YH5kYPOkkcygJF1sKD2938nLGWR8H/ylXlIiwl5IzgWeNRo75Pm5p
-	 xFTvalx10ML0C0+ewkhOdevwfnyHOgSau8XUD+1mpe3ZdAYVmzZRd17Wb/aVba62LF
-	 UbSuSNBOR6usrIcfDC2PZwHts8Mheh/WTx0O11Vi6wA4t36Is97KZAO4q/ZLYcNya8
-	 a1xQQh5y9NSJInzlfAuw9X5pyYjdUJB2/bNTdBNX0xslb4zIVvz9bJEjcTYFFD8WtV
-	 2tGS5ex9ATccqf7P5u48DzVvqA+5zIiYc87DnePNPb2RHrmngDEr9OTgfYuGR4/ryc
-	 P16f2h1rxbX8Q==
-Date: Fri, 26 Jul 2024 11:49:36 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: James Clark <james.clark@linaro.org>, coresight@lists.linaro.org,
-	gankulkarni@os.amperecomputing.com, mike.leach@linaro.org,
-	leo.yan@linux.dev, anshuman.khandual@arm.com,
-	James Clark <james.clark@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>, Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v6 00/17] coresight: Use per-sink trace ID maps for Perf
- sessions
-Message-ID: <ZqO3gPcCCVh1r5WM@x1>
-References: <20240722101202.26915-1-james.clark@linaro.org>
- <ZqOwGWcYosGe9ru4@x1>
- <6476a228-847b-4804-9229-c11a881663c7@arm.com>
- <ZqOzio8Oco9ZFsDm@x1>
- <8068c8ff-a8ce-4bcd-bb19-2c25b45cf6f3@arm.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SztYG//F"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722009668; x=1753545668;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=gLb23Bh8XMl/n/xLXzM+SFvWGrvJJ0r90hJ2q9/OMAk=;
+  b=SztYG//FzlwdPqZeciYhTDThWXJuz1KxJ0wW6c97qnzgpaaN0uqn9TW4
+   GAK2gDgR7/1JRKXRb2OUOEz7uVx5im0jAHc+6IVXUyLpr8NBV/x77mbUz
+   vqOm5gEDbyaojfinA9HiiGyzCbBPgTo4ZVkfbHWFQZw1JgU+qBsODz6Us
+   NAtKpmkA5F+d8EIKtUtcqi+odSm6lmLE3YI1OvysMwYPXZ4PvSMWja8t6
+   FAtn7yr9WW+vMdMjY7Uw/9xrPVse6nrh+qE/q/2+xpgjRO18K7y/F/pzX
+   3ZkgZy0MyYtHkARCqY0Wd14ppD8JC2WT00vaLOLcXqaU+4maJMDLhG7rW
+   Q==;
+X-CSE-ConnectionGUID: Kxw6l7XFTwuMvXVTxROM9Q==
+X-CSE-MsgGUID: kR3s3ZpaTFGFA9bf2RZAfA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11145"; a="12731744"
+X-IronPort-AV: E=Sophos;i="6.09,239,1716274800"; 
+   d="scan'208";a="12731744"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 09:01:07 -0700
+X-CSE-ConnectionGUID: 3v34ztMQS5e9V/+usAAA4w==
+X-CSE-MsgGUID: Q4D1SZ7vTcewG/5kTgQ6cA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,239,1716274800"; 
+   d="scan'208";a="53917760"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.49.253])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jul 2024 09:01:01 -0700
+Message-ID: <137068c0-442b-4aba-8950-67828a15cda2@intel.com>
+Date: Fri, 26 Jul 2024 19:00:55 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8068c8ff-a8ce-4bcd-bb19-2c25b45cf6f3@arm.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V9 02/13] perf/core: Add aux_pause, aux_resume,
+ aux_start_paused
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Heiko Carstens <hca@linux.ibm.com>, Thomas Richter <tmricht@linux.ibm.com>,
+ Hendrik Brueckner <brueckner@linux.ibm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@arm.com>,
+ coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>, Will Deacon
+ <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240715160712.127117-1-adrian.hunter@intel.com>
+ <20240715160712.127117-3-adrian.hunter@intel.com>
+ <20240718093846.GJ26750@noisy.programming.kicks-ass.net>
+ <14cd68b2-eeee-42e3-87a6-c12d3814bd51@intel.com>
+ <20240718115126.GK26750@noisy.programming.kicks-ass.net>
+ <20240718125849.GI28838@noisy.programming.kicks-ass.net>
+ <ef63885b-f762-4398-beff-c695b24304e6@intel.com> <ZqO1gBIYnLiDpQWv@x1>
+Content-Language: en-US
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <ZqO1gBIYnLiDpQWv@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Jul 26, 2024 at 03:38:13PM +0100, Suzuki K Poulose wrote:
-> On 26/07/2024 15:32, Arnaldo Carvalho de Melo wrote:
-> > On Fri, Jul 26, 2024 at 03:26:04PM +0100, Suzuki K Poulose wrote:
-> > > On 26/07/2024 15:18, Arnaldo Carvalho de Melo wrote:
-> > > > On Mon, Jul 22, 2024 at 11:11:42AM +0100, James Clark wrote:
-> > > > > This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
-> > > > > as long as there are fewer than that many ETMs connected to each sink.
-> > > > 
-> > > > Hey, may I take the tools part, i.e. patches 0-7 and someone on the ARM
-> > > > kernel team pick the driver bits?
+On 26/07/24 17:41, Arnaldo Carvalho de Melo wrote:
+> On Thu, Jul 18, 2024 at 06:06:16PM +0300, Adrian Hunter wrote:
+>> On 18/07/24 15:58, Peter Zijlstra wrote:
+>>> On Thu, Jul 18, 2024 at 01:51:26PM +0200, Peter Zijlstra wrote:
+>>>
+>>>> OK, let me do that and make a few more edits and see if I can stare at
+>>>> that next patch some.
+>>>
+>>> I pushed out a stack of patches into queue.git perf/core
+>>> Could you please double check I didn't wreck anything?
+>>
+>> Looks fine, and seems to work OK in a brief test.
+>>
+>> Thank you! :-)
+> 
+> So should I go ahead and pick the tooling patches since the kernel bits
+> are merged?
 
-> > > I plan to pick the kernel driver bits for v6.12
+Not exactly merged.  Probably should wait until it is in tip at least.
 
-> > Perhaps it is better for me to wait for that?
-
-> Yes, please.
-
-Please let me know when you do so so that I can merge the tooling bits.
-
-Thanks,
-
-- Arnaldo
