@@ -1,228 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail-200165.simplelogin.co (mail-200165.simplelogin.co [176.119.200.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691B717578;
-	Fri, 26 Jul 2024 01:57:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721959045; cv=none; b=UHu8ghADBpPLydxm2rqKWkitvydBX5t0aywngfc/Lu8lwYaMf1eYFNc4CqngeooORMLhZux6GPVD6Ty9awWO7pnxy/Arl5M2Fk1s7JqbVDTpRI113yiwec8tOQuG8b3mwr2aycsyXr2f9fG17zsw9P14ZqtZpkyVDIgRyn2DraA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721959045; c=relaxed/simple;
-	bh=oChcQZZT8W/cZSh69mW2NQ3t5gRenM6b+5iA03yhxDE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gpiySCu0izA1PCxAKbfYRc0Nh2y6sktIuESPZpEB/nZTm2wLmnzia80qUYEnaMRgV2fBElej6u+AQj9ZavCiml0fXxrTHWnTIibzER8tClNoJgBVUj2B5uIc3F/mruoNgRtwQdNvbdZTCJZPHyxnrAebZQbCHewAKwyvYrG0pyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtASLlCn; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39A9EC7
+	for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 02:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=176.119.200.165
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1721960385; cv=pass; b=ooJBsF0Spn6Tk+y3LEfqKamweXtcofvV7fx/JkCC5HZRv+CsqIMzCWBqW/acnYvgRZZcGFI25UugIhcf1AktC4S7t7mh3hYsCRjOONvPc1MfcN3HJoL3z9JS2ZRlFwDX5eS4ejPeZuErQz4Etc4ANGKpsDOjCnMuY5eYRcmdu5c=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1721960385; c=relaxed/simple;
+	bh=nIMTesr1v1tBa43WyNJy00tk9dfQLaZ18mnT1dDvA6M=;
+	h=Date:MIME-Version:Subject:In-Reply-To:Content-Type:From:To:
+	 Message-ID:References; b=Km3PRzSwbAsbGPd6ChCapj/Ci3MkgsEDknnRIsIZ6FBJqylY0c5YcstOEchf8Vu1hQ8q4BnFhtKKNhdnoIzL4qGeJunk4XdYvirFD1tPPEWgsHUtL7kNB7IpL81sEQaA7ORdpWeDPtLjSOic0tSlvDUZbkxoroO+fnkGF3DtECU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=slmail.me; spf=pass smtp.mailfrom=slmail.me; dkim=pass (1024-bit key) header.d=slmail.me header.i=@slmail.me header.b=LoQbVd8u; arc=pass smtp.client-ip=176.119.200.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=slmail.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=slmail.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtASLlCn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96BFCC116B1;
-	Fri, 26 Jul 2024 01:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721959044;
-	bh=oChcQZZT8W/cZSh69mW2NQ3t5gRenM6b+5iA03yhxDE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VtASLlCnBxZEp8cFwUh4F+2tIAuPeXnfSglNX6ZhD7mYcXHAwjf4jMYWp3659iJkk
-	 6+HHupkxOo24Gd/T+urrlnBaHun0KsySGtLLqOFDQ+pk68I5VShQfLenU9ATlf15tk
-	 cSallnfPZ7fJKR+uDPKcz5j0fhK8GBOWL83R3hN0WbSLyYcVX/MtBy2meKbjKsJhNA
-	 /xxZT1DRN40sEEnBdDWXdGnnh6LtM+NUQg4FACNwtRul/G22d7iezDtOJSeJdh+bJ0
-	 XzZGojFPaPS9carqDmLkRk8k2+0uorFzLhYWFiee12dV/QZ0dPyMQXd/jM0yyuWayX
-	 V5ShcA56+3a6A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH v2] perf annotate: Cache debuginfo for data type profiling
-Date: Thu, 25 Jul 2024 18:57:23 -0700
-Message-ID: <20240726015723.1329937-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
+	dkim=pass (1024-bit key) header.d=slmail.me header.i=@slmail.me header.b="LoQbVd8u"
+ARC-Seal: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626; t=1721960017;
+	cv=none; b=I7SKzDbGnsZNC7k2Ar60CCsyZvevQ5jcMHHJS0elw23PW68ClulPy5wjRAOp0xTfgvwHi7Zfmkt8l8u8hN1gpRcHF0ot2y/QRLbpw9dGhQavoCSG1APVGI4TCooBq5B8+j4/r6iSaCtxiadQwqZmmh7DWR9C9yuVSq5rZ8ZIDhc5oGGqPLBJSZX7O0YYMbsq1MJDji4YiE0JCSooZmPv+HwP58XmCR5EPqqB1Tmfth0VGnUwE/XwncMlB2Hi8xrsYpoxERHJy5FWaFwQCkiE3F33VXMCl2ZBEpWkkmTRJTpoDL1v9ggCiqwW70C0XTSb59DvwPA9wPiTUE56AnnS4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; d=simplelogin.co; s=arc-20230626;
+	t=1721960017; c=relaxed/simple;
+	bh=nIMTesr1v1tBa43WyNJy00tk9dfQLaZ18mnT1dDvA6M=;
+	h=Date:Subject:In-Reply-To:From:To:References; b=fHedmkVW0J9TTQqBCP2hRuqL3CXmU9QhAgHVFOAPLathb+AehhjU+ANxmiScDPM3wV+X5De4VjEaQqpi0I7dji5qmp3lOot+yPAjVlN/hMxsajU/fiMTlp9KO/0rwaibNB93koeRtkToE743nR2PmwlUPo6n/zwaHgMv8kro/ksSJNApIiZlLcYcZexil/lZ7Fz+ZoHbXyCY0ydAfkJzqFigm0N+B+FpuhMq7L3Ew/uKsxOxSTUo5DtNvmzd1fIPWGwXssi7nxzacppq791lcdLFr3gnQ8YY7yq7kRrdzN+4HOLlTdoeItQJOo7SAYwhvSz+ezRnEtp0qnWioilEEA==
+ARC-Authentication-Results: i=1; mail.protonmail.ch
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=slmail.me; s=dkim;
+	t=1721960017;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LvL2ykebGtqTpa72vw+KDv2ba1jYNWo9iaaDhGZLPmQ=;
+	b=LoQbVd8uVeg5oyTK7BUGiWrg5QVYCXkW/+HzC+VE4ZRkhudvdsRxZTokWASpxuOw4+5cuc
+	9Wx8tutODFi97DN4dj4q6xMtYHuO3xaWD5q2mh6aVIh4OBv6VHoPD0GzOddabwM0Z0LdLx
+	mvmv0CHhTsnSIRaejshj5fgxUO3aDDU=
+Date: Fri, 26 Jul 2024 07:43:30 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: Perf is crashing inside Flatpak runtime
+In-Reply-To: <ZqL6z5WwJKeFf9FW@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+From: bbhtt.zn0i8@slmail.me
+To: Namhyung Kim <namhyung@kernel.org>,linux-perf-users@vger.kernel.org
+Message-ID: <172196001664.6.11995879867204963322.389309805@slmail.me>
+References: <a69b8aca-9b37-4a72-a657-f708696c192b@slmail.me>
+ <ZqL6z5WwJKeFf9FW@google.com>
+X-SimpleLogin-Type: Reply
+X-SimpleLogin-EmailLog-ID: 389309804
+X-SimpleLogin-Want-Signing: yes
 
-In find_data_type(), it creates and deletes a debug info whenver it
-tries to find data type for a sample.  This is inefficient and it most
-likely accesses the same binary again and again.
+On 26/07/24 06:54, Namhyung Kim - namhyung at kernel.org wrote:
+> Hello,
+> 
+> On Thu, Jul 25, 2024 at 07:07:09PM +0530, bbhtt wrote:
+>> Hello,
+>>
+>> We were reported by a user that perf is crashing inside the
+>> `org.freedesktop.Sdk` Flatpak runtime.
+>>
+>> To reproduce, please install Flatpak for your distribution [1] and
+>> then install the `org.freedesktop.Sdk` runtime using the command
+>> `flatpak install org.freedesktop.Sdk//23.08`. Then get a working shell
+>> inside the sandbox using
+>> `flatpak run --command=sh --devel org.freedesktop.Sdk//23.08`.
+>>
+>> Once inside the sandbox, run `perf record -v -- ls` and see that it
+>> crashes.
+>>
+>> The output and a backtrace is below. Any help is appreciated. The
+>> downstream issue can be found at [2].
+> 
+> Thanks for the report.  I tried to reproduce it with v6.9.9 but my
+> system worked fine.  Is there anything special on your system?
+> I guess you're running on x86..
+> 
+> Btw I'm not familiar with Flatpak, does it run on the host kernel?
+> 
+>>
+>> ```
+>> perf --version
+>> perf version 6.9.9
+>>
+>> perf record -v -- ls
+>> DEBUGINFOD_URLS=
+>> No PMU found for 'cycles:Pu'
+>> Failed to read max cpus, using default of 4096
+> 
+> Maybe this is the problem.
+> 
+>> nr_cblocks: 0
+>> affinity: SYS
+>> mmap flush: 1
+>> comp level: 0
+>> Problems creating module maps, continuing anyway...
+>> No PMU found for 'cycles:u'
+>> No PMU found for 'instructions:u'
+>> No PMU found for 'cpu-clock:u'
+> 
+> Hmm.. no PMUs?  Is it running a guest kernel or is sysfs mounted
+> correctly?
+> 
+> Thanks,
+> Namhyung
+> 
 
-Let's add a single entry cache the debug info structure for the last DSO.
-Depending on sample data, it usually gives me 2~3x (and sometimes more)
-speed ups.
+I think that was the issue here. Flatpak mounts its own subset of
+sysfs inside the sandbox and doesn't have access to the host's
+sysfs by default. Giving it access to that with
+`flatpak run --filesystem=/sys ...` seems to at least not cause it to
+crash.
 
-Note that this will introduce a little difference in the output due to
-the order of checking stack operations.  It used to check the stack ops
-before checking the availability of debug info but I moved it after the
-symbol check.  So it'll report stack operations in DSOs without debug
-info as unknown.  But I think it's ok and better to have the checking
-near the caching logic.
+Thanks!
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
-v2) add an assertion for the single-threaded case.
+- bbhtt
 
- tools/perf/util/annotate-data.c | 15 ++------------
- tools/perf/util/annotate-data.h |  2 +-
- tools/perf/util/annotate.c      | 35 +++++++++++++++++++++++++++++++++
- tools/perf/util/annotate.h      |  2 ++
- tools/perf/util/session.c       |  2 ++
- 5 files changed, 42 insertions(+), 14 deletions(-)
-
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 734acdd8c4b7..f125ac5f0bda 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1345,16 +1345,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
-  */
- struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- {
--	struct annotated_data_type *result = NULL;
- 	struct dso *dso = map__dso(dloc->ms->map);
- 	Dwarf_Die type_die;
- 
--	dloc->di = debuginfo__new(dso__long_name(dso));
--	if (dloc->di == NULL) {
--		pr_debug_dtp("cannot get the debug info\n");
--		return NULL;
--	}
--
- 	/*
- 	 * The type offset is the same as instruction offset by default.
- 	 * But when finding a global variable, the offset won't be valid.
-@@ -1364,13 +1357,9 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
- 	dloc->fbreg = -1;
- 
- 	if (find_data_type_die(dloc, &type_die) < 0)
--		goto out;
--
--	result = dso__findnew_data_type(dso, &type_die);
-+		return NULL;
- 
--out:
--	debuginfo__delete(dloc->di);
--	return result;
-+	return dso__findnew_data_type(dso, &type_die);
- }
- 
- static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_entries)
-diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-index 992b7ce4bd11..37a1a3b68e0b 100644
---- a/tools/perf/util/annotate-data.h
-+++ b/tools/perf/util/annotate-data.h
-@@ -123,9 +123,9 @@ struct data_loc_info {
- 	u64 var_addr;
- 	u8 cpumode;
- 	struct annotated_op_loc *op;
-+	struct debuginfo *di;
- 
- 	/* These are used internally */
--	struct debuginfo *di;
- 	int fbreg;
- 	bool fb_cfa;
- 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index a2ee4074f768..2ef119539336 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -25,6 +25,7 @@
- #include "srcline.h"
- #include "units.h"
- #include "debug.h"
-+#include "debuginfo.h"
- #include "annotate.h"
- #include "annotate-data.h"
- #include "evsel.h"
-@@ -2326,6 +2327,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
- 	return map__rip_2objdump(ms->map, addr);
- }
- 
-+static struct debuginfo_cache {
-+	struct dso *dso;
-+	struct debuginfo *dbg;
-+} di_cache;
-+
-+void debuginfo_cache__delete(void)
-+{
-+	dso__put(di_cache.dso);
-+	di_cache.dso = NULL;
-+
-+	debuginfo__delete(di_cache.dbg);
-+	di_cache.dbg = NULL;
-+}
-+
- /**
-  * hist_entry__get_data_type - find data type for given hist entry
-  * @he: hist entry
-@@ -2360,6 +2375,25 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 		return NULL;
- 	}
- 
-+	/*
-+	 * It needs to protect di_cache as well as data_types and global_vars in
-+	 * DSO when enabling multi-threading.
-+	 */
-+	assert(perf_singlethreaded);
-+
-+	if (map__dso(ms->map) != di_cache.dso) {
-+		dso__put(di_cache.dso);
-+		di_cache.dso = dso__get(map__dso(ms->map));
-+
-+		debuginfo__delete(di_cache.dbg);
-+		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
-+	}
-+
-+	if (di_cache.dbg == NULL) {
-+		ann_data_stat.no_dbginfo++;
-+		return NULL;
-+	}
-+
- 	/* Make sure it has the disasm of the function */
- 	if (symbol__annotate(ms, evsel, &arch) < 0) {
- 		ann_data_stat.no_insn++;
-@@ -2404,6 +2438,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
- 			.ip = ms->sym->start + dl->al.offset,
- 			.cpumode = he->cpumode,
- 			.op = op_loc,
-+			.di = di_cache.dbg,
- 		};
- 
- 		if (!op_loc->mem_ref && op_loc->segment == INSN_SEG_NONE)
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 9ba772f46270..27d9540604ef 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -543,4 +543,6 @@ struct annotated_basic_block {
- int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
- 			      struct list_head *head);
- 
-+void debuginfo_cache__delete(void);
-+
- #endif	/* __PERF_ANNOTATE_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5596bed1b8c8..f9072e003367 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -36,6 +36,7 @@
- #include "util.h"
- #include "arch/common.h"
- #include "units.h"
-+#include "annotate.h"
- #include <internal/lib.h>
- 
- #ifdef HAVE_ZSTD_SUPPORT
-@@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *session)
- 		return;
- 	auxtrace__free(session);
- 	auxtrace_index__free(&session->auxtrace_index);
-+	debuginfo_cache__delete();
- 	perf_session__destroy_kernel_maps(session);
- 	perf_decomp__release_events(session->decomp_data.decomp);
- 	perf_env__exit(&session->header.env);
--- 
-2.46.0.rc1.232.g9752f9e123-goog
+https://bbhtt.github.io/
 
