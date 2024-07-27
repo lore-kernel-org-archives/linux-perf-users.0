@@ -1,90 +1,192 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC0180C0C;
-	Mon, 29 Jul 2024 16:42:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C722115B14C
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 16:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722271357; cv=none; b=mM8Or9hXNTt1Rh3KJt3GaGc5mz1w8PCGwljGHI0MXNMDcNX4QnMuPbvV4l2zUsCmP9ysEtvOCxFxekm5qrbbPr0CbaqKKmwTR9J0Cec/GOIo1tjRUHaZY8hxNifdRF61o6/kHqbuWlAeaiGkv2eufrKbWuMewWR+I9nlKz5aPAY=
+	t=1722271568; cv=none; b=DiZyuN9yk5ZsyvhrHEq/G+726mWHCrAv4zEsS4Af+J7OfBUjSxAifodg5sf8SuxrADmoqK1+cUvjb37/ePngBwgjrTealmu67X7eFb7bE7iWwb+/Lm3ZEnv1tqI9soVYJDLKgxnu0Z6IwDc85y3kA3WbGVKjbm43HXviZ7uvCbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722271357; c=relaxed/simple;
-	bh=mA3Plo9rccbKR8tQpMvqb5/37K14bOyxIOzFzkCyo2w=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=n2zBVYRb9rJXungcv0a5DZWpPzN7Gas+AuKrPp28DZYTupwNCShTaNkpqBJSVDo4aZsyw66Zi2vC9HqFCKBim2WwlEtncfwSdJsVLGkex9h18khp7Pd3DwjMIUObyh7tDEvEeAO1j00okG5v7Uq3Kceh5i6gRWDh3MxeZJx0Fgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FQESavfQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722271568; c=relaxed/simple;
+	bh=wNvqt1xvuMD0pHy+ZTcuN/4GhZ2p2a/Hb6rfsGPujGQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=cljJiG5wJd285vozpIc0CTuE24oMWHXA3SAzjFt2sKjM2OtVGeoJWh2r8VD1GjbqeYtqnmoUhlatFnnGWVWbDaVdxOxW7YwL0CeT/3UrRqBQyrXmVIqWId1RoW4U98Sx7UOlJLYPnE+AGTcEIwkNHuOR6Zlj20jFpNzd4nKalH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=nNxJxq15; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FQESavfQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 219B9C4AF09;
-	Mon, 29 Jul 2024 16:42:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722271357;
-	bh=mA3Plo9rccbKR8tQpMvqb5/37K14bOyxIOzFzkCyo2w=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=FQESavfQWIyHKftqPvTmy4wVhUA6HIJqwcdczB7gzKs7W9HP4VgXBcAvnS2OY1QPQ
-	 6v8azN0AnBdvEUaiuvvYn24UYpSAPhOt9Kc8PnA5pAQgRzOyjZDqBpRpAggC47L+YO
-	 3pDtCbTERg/BZjIP98WKxyLB+Jl8i0jRFbFjiovwHjjJOglSPdvIoPPigoU6llsN7p
-	 NnUKMTJeRMcEWdczEcxBDiNNs1O1d1p7FYZtvzItkwiDmtNqDhaPHf3wXrrW8U4yYI
-	 kgmuh8yjEhzjRpHcoAw7LVo1omVPzA9Do3we2wqTVe6+zyxFoijU6kc6a1Jy9HiSUh
-	 MFjtM1ssSTzFQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0CA11C43445;
-	Mon, 29 Jul 2024 16:42:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="nNxJxq15"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fd9e6189d5so23478595ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 09:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1722271566; x=1722876366; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0kviHpjNAUi5B7kpuc65zsq7f4mxJO5hSE3q4QPsnoQ=;
+        b=nNxJxq15f56yDrWt5P7BDhUq89DNeeM3SFOFR80LGM1OgrMjWFJL8n+4tp57dbTRv9
+         jq3CrvdZUsVPEFDh8ZB1iD1N1OAaUxs7MQZrdD4xwXdw8oxw7HDAB/bXwPDmVgfa0RKW
+         RlAOqb7gn8QFTCGSp0Qcpujp/3eoL2lwDPhZG+xzaC7FbYsR2f1I4qmuFuggxgN3Gsdp
+         4nI/C6bqoODr3zq6cHURe7RUYuVoB776JoNf5j337jk+0oeSs9o1Mnd0zc6cnU31lN5d
+         t5LLPPurvjq7A93/lyT3zd0q2fx0Odnf8u/X3vyPwZGndtfleCNVkzFx+sxJnPK/Lp6F
+         TCIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722271566; x=1722876366;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0kviHpjNAUi5B7kpuc65zsq7f4mxJO5hSE3q4QPsnoQ=;
+        b=aok4rq0QxcZZI+b/AJnT92pZNA7dvm9fT2VkBlpF6Gas0aw5tEjLgiOJ01Fw2mnIfQ
+         KGbHuN/oc8+s1MW4s1iyHpFgy16llBgNPgmT0qeqHHwYdZ+CcUBO2lbD7pWes1ggRjBB
+         cQ4myVbOXNpwjukUFliKBmwVAbFjd6InObBKCs+kFYE390KZJ6zAwMaIxA+Bpnbczm1Z
+         94bvEI5GlbccTgDxLx+qsc8ceoaId1ZVAdkuF/3ndMOSPclSrlVAAAZD6VFzQ62fqH5p
+         WOSnYO9Bf0OdIXKNniB8w9Oxdng+Dmu68okV7pgD512MZKHnE+vnj+/WZxfq0WKRLqcf
+         zq2w==
+X-Gm-Message-State: AOJu0YwNSlMMjly80MF6tuDVgEtZyod+sWSCq3p37pFXENV+vMcuM2Vf
+	J81mXdEsW3Xu1PaRUa9l0FTz7d3uC7Fn1nHqqZSvsxFvGnq87VW9PVgB0oDbn5k=
+X-Google-Smtp-Source: AGHT+IEqfgg9K3tkn+AB81uDLY3sOHsM9ebG79PIdI/mdENlVn5qemW73G2meb4IA0mrZqN8jjItFQ==
+X-Received: by 2002:a17:902:d3c9:b0:1fb:6616:9cd4 with SMTP id d9443c01a7336-1ff04854376mr56208365ad.38.1722271566097;
+        Mon, 29 Jul 2024 09:46:06 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fed7d401c6sm85480545ad.117.2024.07.29.09.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 09:46:05 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Subject: [PATCH v2 0/8] libperf: Add interface for overflow check of
+ sampling events
+Date: Fri, 26 Jul 2024 22:29:30 -0700
+Message-Id: <20240726-overflow_check_libperf-v2-0-7d154dcf6bea@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [GIT PULL] sysctl constification changes for v6.11-rc1
-From: patchwork-bot+linux-riscv@kernel.org
-Message-Id: 
- <172227135704.3603.7348565051958076479.git-patchwork-notify@kernel.org>
-Date: Mon, 29 Jul 2024 16:42:37 +0000
-References: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-In-Reply-To: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-To: Joel Granados <j.granados@samsung.com>
-Cc: linux-riscv@lists.infradead.org, torvalds@linux-foundation.org,
- linux@weissschuh.net, mcgrof@kernel.org, kees@kernel.org, kuba@kernel.org,
- david@fromorbit.com, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-xfs@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-security-module@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bpf@vger.kernel.org, kexec@lists.infradead.org,
- linux-hardening@vger.kernel.org, bridge@lists.linux.dev,
- mptcp@lists.linux.dev, lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org,
- linux-nfs@vger.kernel.org, apparmor@lists.ubuntu.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALqFpGYC/x2MQQqAIBAAvxJ7TiiRkr4SEaZrLoWKQgXh35OOM
+ zDzQsZEmGFqXkh4UabgK/C2Ae2U35GRqQy846Ib+cDChcme4V61Q32sJ22xCialMr0QRhitoMY
+ xoaXnH89LKR9e5qTbaAAAAA==
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+ Yonghong Song <yonghong.song@linux.dev>, 
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ bpf@vger.kernel.org, Charlie Jenkins <charlie@rivosinc.com>, 
+ Shunsuke Nakamura <nakamura.shun@fujitsu.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1722271564; l=4073;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=wNvqt1xvuMD0pHy+ZTcuN/4GhZ2p2a/Hb6rfsGPujGQ=;
+ b=FdQ9KN3+e83hrpLxZcZ6n3PLWI6MPr9FY9nv9pCOlvEiq3JGXcclYvvBxB0PCTclrKFqn9JJy
+ qHmNcAOOxouAO82eOp8fzg99RZhqq7nB/D9HczDgVx2e9Uc9JzYf/fY
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-Hello:
+I was going to send a similar series but after looking through the
+mailing list found this approach which fits my use-case exactly. I have
+rebased the series and applied the suggestions from Namhyung. The
+original cover letter with minor changes follows.
 
-This pull request was applied to riscv/linux.git (for-next)
-by Linus Torvalds <torvalds@linux-foundation.org>:
+This patch series adds interface for overflow check of sampling events
+to libperf.
 
-On Wed, 24 Jul 2024 23:00:14 +0200 you wrote:
-> Linus
-> 
-> Constifying ctl_table structs will prevent the modification of
-> proc_handler function pointers as they would reside in .rodata. To get
-> there, the proc_handler arguments must first be const qualified which
-> requires this (fairly large) treewide PR. Sending it in the tail end of
-> of the merge window after a suggestion from Kees to avoid unneeded merge
-> conflicts. It has been rebased on top of 7a3fad30fd8b4b5e370906b3c554f64026f56c2f.
-> I can send it later if it makes more sense on your side; please tell me
-> what you prefer.
-> 
-> [...]
+First patch move 'open_flags' from tools/perf to evsel::open_flags.
 
-Here is the summary with links:
-  - [GIT,PULL] sysctl constification changes for v6.11-rc1
-    https://git.kernel.org/riscv/c/b485625078ca
+Second patch extracts out the opts used by BPF into a common header to
+be used by perf.
 
-You are awesome, thank you!
+Third patch introduce perf_{evsel, evlist}__open_opt() with extensible
+structure opts.
+
+Fourth patch adds support for overflow handling of sampling events.
+
+Fifth patch adds a interface to check overflowed events.
+
+Sixth patch adds a interface to perform IOC_REFRESH and IOC_PERIOD.
+
+Seventh and eighth patch adds tests.
+
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+Previous version at:
+https://lore.kernel.org/lkml/20220422093833.340873-1-nakamura.shun@fujitsu.com/
+
+Changes in v2:
+- Rebase onto v6.10
+- Add a patch to move BPF opts helpers into a global include
+- Renamed flags to fcntl_flags
+- Changed signal type to int
+- Add comment to owner_type member
+- Add _cpu to perf_evsel__run_fcntl
+- Rename sig to sigact
+- Remove "!" from owner.type check
+- Removed _GNU_SOURCE addition
+- Removed null check for perf_evsel__attr()
+- Make timeouts consistent between test-evlist.c and test-evsel.c
+
+Changes in v1:
+ - Move initialization/reference of evsel->open_flags from the first
+   patch to the second patch
+ - Move signal-related handling and related fields of the opts
+   structure from the second patch to the third patch
+ - Move _GNU_SOURCE from test-evlist.c to Makefile
+ - Delete *_cpu() function
+ - Refactor the fourth patch
+ - Fix test to use real-time signals instead of standard signals
+
+Changes in RFC v2:
+ - Delete perf_evsel__set_close_on_exec() function
+ - Introduce perf_{evsel, evlist}__open_opt() with extensible structure
+   opts
+ - Fix perf_evsel__set_signal() to a internal function
+ - Add bool type argument to perf_evsel__check_{fd, fd_cpu}() to indicate
+   overflow results
+
+---
+Charlie Jenkins (1):
+      libbpf: Move opts code into dedicated header
+
+Shunsuke Nakamura (7):
+      libperf: Move 'open_flags' from tools/perf to evsel::open_flags
+      libperf: Introduce perf_{evsel, evlist}__open_opt with extensible struct opts
+      libperf: Add support for overflow handling of sampling events
+      libperf: Add perf_evsel__has_fd() functions
+      libperf: Add perf_evsel__{refresh, period}() functions
+      libperf test: Add test_stat_overflow()
+      libperf test: Add test_stat_overflow_event()
+
+ tools/include/tools/opts.h               |  68 +++++++++++++
+ tools/lib/bpf/bpf.c                      |   1 +
+ tools/lib/bpf/btf.c                      |   1 +
+ tools/lib/bpf/btf_dump.c                 |   1 +
+ tools/lib/bpf/libbpf.c                   |   3 +-
+ tools/lib/bpf/libbpf_internal.h          |  48 ---------
+ tools/lib/bpf/linker.c                   |   1 +
+ tools/lib/bpf/netlink.c                  |   1 +
+ tools/lib/bpf/ringbuf.c                  |   1 +
+ tools/lib/perf/Documentation/libperf.txt |  17 ++++
+ tools/lib/perf/Makefile                  |   1 +
+ tools/lib/perf/evlist.c                  |  20 ++++
+ tools/lib/perf/evsel.c                   | 169 +++++++++++++++++++++++++++++--
+ tools/lib/perf/include/internal/evsel.h  |   2 +
+ tools/lib/perf/include/perf/evlist.h     |   3 +
+ tools/lib/perf/include/perf/evsel.h      |  30 ++++++
+ tools/lib/perf/libperf.map               |   5 +
+ tools/lib/perf/tests/test-evlist.c       | 112 +++++++++++++++++++-
+ tools/lib/perf/tests/test-evsel.c        | 107 +++++++++++++++++++
+ tools/perf/util/evsel.c                  |  16 +--
+ tools/perf/util/evsel.h                  |   1 -
+ 21 files changed, 541 insertions(+), 67 deletions(-)
+---
+base-commit: 0c3836482481200ead7b416ca80c68a29cfdaabd
+change-id: 20240726-overflow_check_libperf-88ad144d4dca
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+- Charlie
 
