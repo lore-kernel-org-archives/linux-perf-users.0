@@ -1,187 +1,489 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AC51FC4
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jul 2024 01:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9C3383B2;
+	Sat, 27 Jul 2024 09:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722042377; cv=none; b=sa3m0IrB86IJ6adnwOINav+ujXQSi5J3Amm1OLrlqd33HovMLrc6T3EBx1ywsByLzT7yB75NUM0c67mJGLc1oYvlBUA5WYVxdud7z1+mvWS6CBYWrHdbVwqh9Go80rP/bql3J28bZ/cl4EhDiHtT0SvCTm7hEYFY9pPLiju9I7M=
+	t=1722073988; cv=none; b=TeHbVKRHhTWwXc9cX+Kn7UJA/XyYKrol7N1FQYgAJT6SRS2fkb3QxC4b/IKIyGFJVIMJdyrjZzQ1i+5Y1loLDnHWOfHnA0/lYFefeWh7C1vCe8MLEN8Q3Bawlz8QjDV7/wFEe0lpokWrYviYRdO88QalFqTl9xOwaFZFt0lrYEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722042377; c=relaxed/simple;
-	bh=gcgp+0VUxL/N6w07L12j6ZfPLZjAO0Qbsll7QHmuZWM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QzFgS/KoR7WKr5EiAKZBAu0lP7SS/kJ+vLRlXrt1h+joCEjRJ0VAOgmz6/hSqrcA/XR+n//PG4Vs6Kdsg68+HpVVCOg+bgYPq7ztZdEz/YF3ZZ+Pz/3kZ4G4frZ5Mz7kyOQ2/lup26GSlvGjXTAMZ5yp9d3SQHPM/EE9p9gFtEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MgeNMJar; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MgeNMJar"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44e534a1fbeso7381cf.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 18:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722042374; x=1722647174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dPINqv4n39FCWR15bg2XF7DRlxlEHS9DD9AsVvk5lFQ=;
-        b=MgeNMJarLdW6t8me3HsHl39U5cYyoC1ne3wfSrKQreIhnW2CZLU75mqNG1ewkj6ypU
-         YtO727IbCjF4/PdMsNbQuj9ormBb3AEmt69FX5gvcZ55XLvkJahDVYlrmDdyC3SEVWDf
-         jX4wDH7by4EkjNQTKVbKA7LOYV5H+q7fo7lQew227HKGjHIlY8ic9870VzsJ2jDrLKLR
-         UWalZphD8USYFPaccO5l2aohv9PrwT1Ar6fm0y4xKjZf7RZqQkPRqlgdKkMwgGY54jCa
-         fOX/Q7BqgL7jRMYjuFQ+I21Z/nEmmtuGadKk3XC0ImhMoseWJX3tg3qYgOqRTU9DkjxS
-         vXqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722042374; x=1722647174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dPINqv4n39FCWR15bg2XF7DRlxlEHS9DD9AsVvk5lFQ=;
-        b=WWOkvqzwvM8BOjJufLDQCu2IIhRvNkuMa4FWkTICEYGXGsoa6d+JSPeu7ZaZfgYI+O
-         6TJjMwuIr7+6nMHtEjaOoxiA3zAJ/9/d1ZFy1b82f/Oah7J3VYq6J6oy/jLfdqYOx/zt
-         AFyx3ijfUj1voFr5eiBGWsUpkUUnxmhEgvJzAeyNdzQV5dJ2dW1/kBaelHGN9R3fmj+s
-         skaeX4wQOfTbOsKhiVNa3e1ID5UQ3joOVm+8XNm3w9T8FXnTE/nD8/XudIjMhr4yHINo
-         nLPCEcXGXb4iVIZGKihGkP2VVqFCYEXi+L1fBxJ4FaGZd+2TQQqwFbtwKEcpch0qfAw2
-         jCSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVsXf14pthXmCiIogo4SS5Fqz9tkOhrHXkNVsV/ofVp/rbK4sPuRN774cng4dMi0icTpZwoDKvGlNqVa72priuxi1xdIeigs2qp+Q6R+Vb01A==
-X-Gm-Message-State: AOJu0YxNmc9gyBsK8s/reVupEA+ivBWLIJOeyuO/+ofsIAIvQbBJvukK
-	wL1lqKfcngYnuGG1dlPJzRj7B5/irejEsJdiTynURucqa8UTyquM3YcyDFBdVn1PZFNeLwJQOzx
-	juzKBf0s3oTlCfVKbhLsxeWBvDhenkawXGAUh
-X-Google-Smtp-Source: AGHT+IHZ7xTPjHGWGA1qV8CfGoE4ZEEM9GNsVQ/qYffXSw8ac1Ksfocr2B5Z4jTDnEBMK+X/ZN01DoaJFgn/oJTMvgA=
-X-Received: by 2002:a05:622a:1827:b0:447:d225:6e3a with SMTP id
- d75a77b69052e-44ff3a710c8mr5943171cf.4.1722042374372; Fri, 26 Jul 2024
- 18:06:14 -0700 (PDT)
+	s=arc-20240116; t=1722073988; c=relaxed/simple;
+	bh=kW3zb6SBCoPJO7jqQ4z+6lwe/Gl12NKwCK2xChriDgk=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=L4WlQs6TVfMXBCTjQPud++f5XjWSVflfwbnc2lPFHljzm5UKTYBCEMtNsGt23uIqYJfkIEIujX+f+SDOdltZcL5XHhG87G8p30lLxtfnSZmcr98eoiKu8l7B9ui1dkSShQghJQRIxZRnME/4bAZrmDKtTT6dYbFrEyQjtdWwaCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WWKfB2xL4znccM;
+	Sat, 27 Jul 2024 17:52:02 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id AE4CD1800FF;
+	Sat, 27 Jul 2024 17:52:55 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Sat, 27 Jul
+ 2024 17:52:55 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<liaochang1@huawei.com>
+CC: <linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+Subject: [PATCH] uprobes: Optimize the allocation of insn_slot for performance
+Date: Sat, 27 Jul 2024 09:44:05 +0000
+Message-ID: <20240727094405.1362496-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240726102826.787004-1-howardchu95@gmail.com>
-In-Reply-To: <20240726102826.787004-1-howardchu95@gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 26 Jul 2024 18:06:03 -0700
-Message-ID: <CAP-5=fWyN7SBfNPHgCqDdPta7XN5jyBm4JuNyS5QkAS9Xz0iCA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Dump off-cpu samples directly
-To: Howard Chu <howardchu95@gmail.com>
-Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com, 
-	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On Fri, Jul 26, 2024 at 3:28=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
-wrote:
->
-> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
->
-> Currently, off-cpu samples are dumped when perf record is exiting. This
-> results in off-cpu samples being after the regular samples. This patch
-> series makes possible dumping off-cpu samples on-the-fly, directly into
-> perf ring buffer. And it dispatches those samples to the correct format
-> for perf.data consumers.
->
-> Changes in v3:
->  - Add off-cpu-thresh argument
->  - Process direct off-cpu samples in post
->
-> Changes in v2:
->  - Remove unnecessary comments.
->  - Rename function off_cpu_change_type to off_cpu_prepare_parse
->
-> Before:
-> ```
->      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  fff=
-fffff90d2e8aa record_times+0xa ([kernel.kallsyms])
->             perf  770116 [001] 27981.041375:          1    cycles:P:  fff=
-fffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041377:          1    cycles:P:  fff=
-fffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
->             perf  770116 [001] 27981.041379:      51611    cycles:P:  fff=
-fffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
->      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  fff=
-fffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
->      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  fff=
-fffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
->
-> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
->             79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
->             585690935cca [unknown] (/usr/bin/sshd)
-> ```
->
-> After:
-> ```
->             perf  774767 [003] 28178.033444:        497           cycles:=
-P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
->             perf  774767 [003] 28178.033445:     399440           cycles:=
-P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
->          swapper       0 [001] 28178.036639:  376650973           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->          swapper       0 [003] 28178.182921:  348779378           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time-direc=
-t:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time-direc=
-t:
->             7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
->             7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
->             7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
->             7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
->             7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
->             7fff24e862d8 [unknown] ([unknown])
->
->
->          swapper       0 [000] 28178.463253:  195945410           cycles:=
-P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
->      dbus-broker     412 [002] 28178.464855:  376737008           cycles:=
-P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
-> ```
->
-> Howard Chu (5):
->   perf record off-cpu: Add direct off-cpu event
->   perf record off-cpu: Dumping samples in BPF
->   perf record off-cpu: processing of embedded sample
->   perf record off-cpu: save embedded sample type
->   perf record off-cpu: Add direct off-cpu test
+The profiling result of single-thread model of selftests bench reveals
+performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
+ARM64. On my local testing machine, 5% of CPU time is consumed by
+find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
+about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
 
-This worked nicely on some tests with me. I'm not sure about
-separating offcpu-time and offcpu-time-direct rather than the just 1
-event. I also immediately set --off-cpu-thresh=3D1 so maybe milliseconds
-should be microseconds, and the default shouldn't be to not use the
-direct samples.
+This patch introduce struct uprobe_breakpoint to track previously
+allocated insn_slot for frequently hit uprobe. it effectively reduce the
+need for redundant insn_slot writes and subsequent expensive cache
+flush, especially on architecture like ARM64. This patch has been tested
+on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
+bench and Redis GET/SET benchmark result below reveal obivious
+performance gain.
 
-Thanks,
-Ian
+before-opt
+----------
+trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
+trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
+trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
+trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
+trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
+trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
+Redis SET (RPS) uprobe: 42728.52
+Redis GET (RPS) uprobe: 43640.18
+Redis SET (RPS) uretprobe: 40624.54
+Redis GET (RPS) uretprobe: 41180.56
 
->  tools/perf/builtin-record.c             |   2 +
->  tools/perf/builtin-script.c             |   2 +-
->  tools/perf/tests/builtin-test.c         |   1 +
->  tools/perf/tests/shell/record_offcpu.sh |  29 +++++
->  tools/perf/tests/tests.h                |   1 +
->  tools/perf/tests/workloads/Build        |   1 +
->  tools/perf/tests/workloads/offcpu.c     |  16 +++
->  tools/perf/util/bpf_off_cpu.c           |  53 ++++++++-
->  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 143 ++++++++++++++++++++++++
->  tools/perf/util/evsel.c                 |  16 ++-
->  tools/perf/util/evsel.h                 |  13 +++
->  tools/perf/util/header.c                |  12 ++
->  tools/perf/util/off_cpu.h               |   1 +
->  tools/perf/util/record.h                |   1 +
->  tools/perf/util/session.c               |  23 +++-
->  15 files changed, 309 insertions(+), 5 deletions(-)
->  create mode 100644 tools/perf/tests/workloads/offcpu.c
->
-> --
-> 2.45.2
->
+after-opt
+---------
+trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+Redis SET (RPS) uprobe: 43939.69
+Redis GET (RPS) uprobe: 45200.80
+Redis SET (RPS) uretprobe: 41658.58
+Redis GET (RPS) uretprobe: 42805.80
+
+While some uprobes might still need to share the same insn_slot, this
+patch compare the instructions in the resued insn_slot with the
+instructions execute out-of-line firstly to decides allocate a new one
+or not.
+
+Additionally, this patch use a rbtree associated with each thread that
+hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
+rbtree of uprobe_breakpoints has smaller node, better locality and less
+contention, it result in faster lookup times compared to find_uprobe().
+
+The other part of this patch are some necessary memory management for
+uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
+hit uprobe that doesn't already have a corresponding node in rbtree. All
+uprobe_breakpoints will be freed when thread exit.
+
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
+---
+ include/linux/uprobes.h |   3 +
+ kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
+ 2 files changed, 211 insertions(+), 38 deletions(-)
+
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index f46e0ca0169c..04ee465980af 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -78,6 +78,9 @@ struct uprobe_task {
+ 
+ 	struct return_instance		*return_instances;
+ 	unsigned int			depth;
++
++	struct rb_root			breakpoints_tree;
++	rwlock_t			breakpoints_treelock;
+ };
+ 
+ struct return_instance {
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 2c83ba776fc7..3f1a6dc2a327 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -33,6 +33,7 @@
+ #define MAX_UPROBE_XOL_SLOTS		UINSNS_PER_PAGE
+ 
+ static struct rb_root uprobes_tree = RB_ROOT;
++
+ /*
+  * allows us to skip the uprobe_mmap if there are no uprobe events active
+  * at this time.  Probably a fine grained per inode count is better?
+@@ -886,6 +887,174 @@ static bool filter_chain(struct uprobe *uprobe,
+ 	return ret;
+ }
+ 
++static struct uprobe_task *get_utask(void);
++static int is_trap_at_addr(struct mm_struct *mm, unsigned long vaddr);
++static struct uprobe *find_active_uprobe(unsigned long bp_vaddr, int *is_swbp);
++
++struct uprobe_breakpoint {
++	struct rb_node		rb_node;
++	refcount_t		ref;
++	unsigned long		slot;
++	unsigned long		vaddr;
++	struct uprobe		*uprobe;
++};
++
++static void put_ubp(struct uprobe_breakpoint *ubp)
++{
++	if (refcount_dec_and_test(&ubp->ref)) {
++		put_uprobe(ubp->uprobe);
++		kfree(ubp);
++	}
++}
++
++static struct uprobe_breakpoint *get_ubp(struct uprobe_breakpoint *ubp)
++{
++	refcount_inc(&ubp->ref);
++	return ubp;
++}
++
++#define __node_2_ubp(node) rb_entry((node), struct uprobe_breakpoint, rb_node)
++
++struct __ubp_key {
++	unsigned long bp_vaddr;
++};
++
++static int ubp_cmp(const unsigned long bp_vaddr,
++		   const struct uprobe_breakpoint *ubp)
++{
++	if (bp_vaddr < ubp->vaddr)
++		return -1;
++
++	if (bp_vaddr > ubp->vaddr)
++		return 1;
++
++	return 0;
++}
++
++static int __ubp_cmp_key(const void *k, const struct rb_node *b)
++{
++	const struct __ubp_key *key = k;
++
++	return ubp_cmp(key->bp_vaddr, __node_2_ubp(b));
++}
++
++static int __ubp_cmp(struct rb_node *a, const struct rb_node *b)
++{
++	const struct uprobe_breakpoint *ubp = __node_2_ubp(a);
++
++	return ubp_cmp(ubp->vaddr, __node_2_ubp(b));
++}
++
++static void delete_breakpoint(struct uprobe_task *utask)
++{
++	struct rb_node *node;
++
++	write_lock(&utask->breakpoints_treelock);
++	node = rb_first(&utask->breakpoints_tree);
++	while (node) {
++		rb_erase(node, &utask->breakpoints_tree);
++		write_unlock(&utask->breakpoints_treelock);
++
++		put_ubp(__node_2_ubp(node));
++
++		write_lock(&utask->breakpoints_treelock);
++		node = rb_next(node);
++	}
++	write_unlock(&utask->breakpoints_treelock);
++}
++
++static struct uprobe_breakpoint *alloc_breakpoint(struct uprobe_task *utask,
++						  struct uprobe *uprobe,
++						  unsigned long bp_vaddr)
++{
++	struct uprobe_breakpoint *ubp;
++	struct rb_node *node;
++
++	ubp = kzalloc(sizeof(struct uprobe_breakpoint), GFP_KERNEL);
++	if (!ubp)
++		return NULL;
++
++	ubp->vaddr = bp_vaddr;
++	ubp->uprobe = uprobe;
++	/* get access + creation ref */
++	refcount_set(&ubp->ref, 2);
++	ubp->slot = UINSNS_PER_PAGE;
++
++	write_lock(&utask->breakpoints_treelock);
++	node = rb_find_add(&ubp->rb_node, &utask->breakpoints_tree, __ubp_cmp);
++	write_unlock(&utask->breakpoints_treelock);
++
++	/* Two or more threads hit the same breakpoint */
++	if (node) {
++		WARN_ON(uprobe != __node_2_ubp(node)->upobre);
++		kfree(ubp);
++		return get_ubp(__node_2_ubp(node));
++	}
++
++	return ubp;
++}
++
++static struct uprobe_breakpoint *find_breakpoint(struct uprobe_task *utask,
++						 unsigned long bp_vaddr)
++{
++	struct rb_node *node;
++	struct __ubp_key key = {
++		.bp_vaddr = bp_vaddr,
++	};
++
++	read_lock(&utask->breakpoints_treelock);
++	node = rb_find(&key, &utask->breakpoints_tree, __ubp_cmp_key);
++	read_unlock(&utask->breakpoints_treelock);
++
++	if (node)
++		return get_ubp(__node_2_ubp(node));
++
++	return NULL;
++}
++
++static struct uprobe_breakpoint *find_active_breakpoint(struct pt_regs *regs,
++							unsigned long bp_vaddr)
++{
++	struct uprobe_task *utask = get_utask();
++	struct uprobe_breakpoint *ubp;
++	struct uprobe *uprobe;
++	int is_swbp;
++
++	if (unlikely(!utask))
++		return NULL;
++
++	ubp = find_breakpoint(utask, bp_vaddr);
++	if (ubp)
++		return ubp;
++
++	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
++	if (!uprobe) {
++		if (is_swbp > 0) {
++			/* No matching uprobe; signal SIGTRAP. */
++			force_sig(SIGTRAP);
++		} else {
++			/*
++			 * Either we raced with uprobe_unregister() or we can't
++			 * access this memory. The latter is only possible if
++			 * another thread plays with our ->mm. In both cases
++			 * we can simply restart. If this vma was unmapped we
++			 * can pretend this insn was not executed yet and get
++			 * the (correct) SIGSEGV after restart.
++			 */
++			instruction_pointer_set(regs, bp_vaddr);
++		}
++		return NULL;
++	}
++
++	ubp = alloc_breakpoint(utask, uprobe, bp_vaddr);
++	if (!ubp) {
++		put_uprobe(uprobe);
++		return NULL;
++	}
++
++	return ubp;
++}
++
+ static int
+ install_breakpoint(struct uprobe *uprobe, struct mm_struct *mm,
+ 			struct vm_area_struct *vma, unsigned long vaddr)
+@@ -1576,9 +1745,8 @@ void uprobe_dup_mmap(struct mm_struct *oldmm, struct mm_struct *newmm)
+ /*
+  *  - search for a free slot.
+  */
+-static unsigned long xol_take_insn_slot(struct xol_area *area)
++static __always_inline int xol_take_insn_slot(struct xol_area *area)
+ {
+-	unsigned long slot_addr;
+ 	int slot_nr;
+ 
+ 	do {
+@@ -1590,34 +1758,48 @@ static unsigned long xol_take_insn_slot(struct xol_area *area)
+ 			slot_nr = UINSNS_PER_PAGE;
+ 			continue;
+ 		}
+-		wait_event(area->wq, (atomic_read(&area->slot_count) < UINSNS_PER_PAGE));
++		wait_event(area->wq,
++			   (atomic_read(&area->slot_count) < UINSNS_PER_PAGE));
+ 	} while (slot_nr >= UINSNS_PER_PAGE);
+ 
+-	slot_addr = area->vaddr + (slot_nr * UPROBE_XOL_SLOT_BYTES);
+-	atomic_inc(&area->slot_count);
++	return slot_nr;
++}
++
++static __always_inline unsigned long
++choose_insn_slot(struct xol_area *area, struct uprobe_breakpoint *ubp)
++{
++	if ((ubp->slot == UINSNS_PER_PAGE) ||
++	    test_and_set_bit(ubp->slot, area->bitmap)) {
++		ubp->slot = xol_take_insn_slot(area);
++	}
+ 
+-	return slot_addr;
++	atomic_inc(&area->slot_count);
++	return area->vaddr + ubp->slot * UPROBE_XOL_SLOT_BYTES;
+ }
+ 
+ /*
+  * xol_get_insn_slot - allocate a slot for xol.
+  * Returns the allocated slot address or 0.
+  */
+-static unsigned long xol_get_insn_slot(struct uprobe *uprobe)
++static unsigned long xol_get_insn_slot(struct uprobe_breakpoint *ubp)
+ {
+ 	struct xol_area *area;
+ 	unsigned long xol_vaddr;
++	struct uprobe *uprobe = ubp->uprobe;
+ 
+ 	area = get_xol_area();
+ 	if (!area)
+ 		return 0;
+ 
+-	xol_vaddr = xol_take_insn_slot(area);
++	xol_vaddr = choose_insn_slot(area, ubp);
+ 	if (unlikely(!xol_vaddr))
+ 		return 0;
+ 
+-	arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
+-			      &uprobe->arch.ixol, sizeof(uprobe->arch.ixol));
++	if (memcmp((void *)xol_vaddr, &uprobe->arch.ixol,
++		   sizeof(uprobe->arch.ixol)))
++		arch_uprobe_copy_ixol(area->pages[0], xol_vaddr,
++				      &uprobe->arch.ixol,
++				      sizeof(uprobe->arch.ixol));
+ 
+ 	return xol_vaddr;
+ }
+@@ -1717,8 +1899,7 @@ void uprobe_free_utask(struct task_struct *t)
+ 	if (!utask)
+ 		return;
+ 
+-	if (utask->active_uprobe)
+-		put_uprobe(utask->active_uprobe);
++	delete_breakpoint(utask);
+ 
+ 	ri = utask->return_instances;
+ 	while (ri)
+@@ -1739,8 +1920,11 @@ void uprobe_free_utask(struct task_struct *t)
+  */
+ static struct uprobe_task *get_utask(void)
+ {
+-	if (!current->utask)
++	if (!current->utask) {
+ 		current->utask = kzalloc(sizeof(struct uprobe_task), GFP_KERNEL);
++		current->utask->breakpoints_tree = RB_ROOT;
++		rwlock_init(&current->utask->breakpoints_treelock);
++	}
+ 	return current->utask;
+ }
+ 
+@@ -1921,7 +2105,8 @@ static void prepare_uretprobe(struct uprobe *uprobe, struct pt_regs *regs)
+ 
+ /* Prepare to single-step probed instruction out of line. */
+ static int
+-pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
++pre_ssout(struct uprobe *uprobe, struct pt_regs *regs,
++	  struct uprobe_breakpoint *ubp)
+ {
+ 	struct uprobe_task *utask;
+ 	unsigned long xol_vaddr;
+@@ -1931,12 +2116,12 @@ pre_ssout(struct uprobe *uprobe, struct pt_regs *regs, unsigned long bp_vaddr)
+ 	if (!utask)
+ 		return -ENOMEM;
+ 
+-	xol_vaddr = xol_get_insn_slot(uprobe);
++	xol_vaddr = xol_get_insn_slot(ubp);
+ 	if (!xol_vaddr)
+ 		return -ENOMEM;
+ 
+ 	utask->xol_vaddr = xol_vaddr;
+-	utask->vaddr = bp_vaddr;
++	utask->vaddr = ubp->vaddr;
+ 
+ 	err = arch_uprobe_pre_xol(&uprobe->arch, regs);
+ 	if (unlikely(err)) {
+@@ -2182,32 +2367,19 @@ bool __weak arch_uretprobe_is_alive(struct return_instance *ret, enum rp_check c
+  */
+ static void handle_swbp(struct pt_regs *regs)
+ {
++	struct uprobe_breakpoint *ubp;
+ 	struct uprobe *uprobe;
+ 	unsigned long bp_vaddr;
+-	int is_swbp;
+ 
+ 	bp_vaddr = uprobe_get_swbp_addr(regs);
+ 	if (bp_vaddr == get_trampoline_vaddr())
+ 		return handle_trampoline(regs);
+ 
+-	uprobe = find_active_uprobe(bp_vaddr, &is_swbp);
+-	if (!uprobe) {
+-		if (is_swbp > 0) {
+-			/* No matching uprobe; signal SIGTRAP. */
+-			force_sig(SIGTRAP);
+-		} else {
+-			/*
+-			 * Either we raced with uprobe_unregister() or we can't
+-			 * access this memory. The latter is only possible if
+-			 * another thread plays with our ->mm. In both cases
+-			 * we can simply restart. If this vma was unmapped we
+-			 * can pretend this insn was not executed yet and get
+-			 * the (correct) SIGSEGV after restart.
+-			 */
+-			instruction_pointer_set(regs, bp_vaddr);
+-		}
++	ubp = find_active_breakpoint(regs, bp_vaddr);
++	if (!ubp)
+ 		return;
+-	}
++
++	uprobe = ubp->uprobe;
+ 
+ 	/* change it in advance for ->handler() and restart */
+ 	instruction_pointer_set(regs, bp_vaddr);
+@@ -2241,12 +2413,11 @@ static void handle_swbp(struct pt_regs *regs)
+ 	if (arch_uprobe_skip_sstep(&uprobe->arch, regs))
+ 		goto out;
+ 
+-	if (!pre_ssout(uprobe, regs, bp_vaddr))
+-		return;
++	pre_ssout(uprobe, regs, ubp);
+ 
+ 	/* arch_uprobe_skip_sstep() succeeded, or restart if can't singlestep */
+ out:
+-	put_uprobe(uprobe);
++	put_ubp(ubp);
+ }
+ 
+ /*
+@@ -2266,7 +2437,6 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+ 	else
+ 		WARN_ON_ONCE(1);
+ 
+-	put_uprobe(uprobe);
+ 	utask->active_uprobe = NULL;
+ 	utask->state = UTASK_RUNNING;
+ 	xol_free_insn_slot(current);
+-- 
+2.34.1
+
