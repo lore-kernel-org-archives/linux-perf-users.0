@@ -1,67 +1,67 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A4812E75
-	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jul 2024 00:50:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F381015C3
+	for <linux-perf-users@vger.kernel.org>; Sat, 27 Jul 2024 00:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722041405; cv=none; b=etwEAC23O6J8tfEdfH+uNJ66O+pdc/Fu9UVvJ6abhxNwbzNoDwkeiCFnBG6KeRcLZAo7VSJNjS5cEQyE9UtvsO0nlsk/ZSvOM6ub9oC86/0PBc2qVWPf1D9epzz5Gf656FRmVvdyhwNcXhaQT5vq+3BK4UoUDl1UOLwJHU5gHTU=
+	t=1722041694; cv=none; b=lnHJE9Nnq5nWaytKv+4dhoz6Re3ESRz/k/s8A5ZK5+Qc8jHOAPO/1OSkIIosojyuf27vcw/jR38yT1k8k80y5HvUd5ggF3ijs218TW9qoFxbb9JtaxcM3GevCF2yr55Gj/airlwHQfNmEGnkt0o3YlkznxMIXC/4FMghLqArr5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722041405; c=relaxed/simple;
-	bh=h1NRkAAYfILwo5tqX38iItQplHY3FtRZ5SeLPHiOZqo=;
+	s=arc-20240116; t=1722041694; c=relaxed/simple;
+	bh=43/e7OL5mDAX+nxlbTd3MQKh6bPhy36nNsvSvH0Ggb4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gpKn9NvYpt9M1ubHnkui9RjQ7WTFc3RlAsaN+08Ad8uHCKjKUB6hlZlNw1R/++EjeqZSAPcBPa/wJ1sP+6pk3U9ncliBRK+eyeUL7ZA3Ztlp1yxdYq4eztqMp2PJerTzh8qyStM4VsJDcXN6nNSoEI+3OJXrfSRZrJRSeVgBJvc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IIie/lfR; arc=none smtp.client-ip=209.85.166.170
+	 To:Cc:Content-Type; b=g515/50954E8XYq0hRMuvPmWIZL0T7OuZvcwFZCSofdeFu/LAkgOvAugfH/KVXOrr1IRbJVb7YZLauix0sRgsu9ZRItuv0rgOc1LKJHMQ9IQz4gvstvO3LNkCid0QVsYP6sgfPCKVAF/hQy/0mQuCxTKqoNl9Lbg3c2VMC/KLPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ujmkvrwL; arc=none smtp.client-ip=209.85.160.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IIie/lfR"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-39a16fab332so3205ab.0
-        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 17:50:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ujmkvrwL"
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-44fdc70e695so7641cf.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 26 Jul 2024 17:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722041403; x=1722646203; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722041692; x=1722646492; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6mCs8ZCIo4TugB0JMvlvTNn16u+EsAhu40JJJyChvTs=;
-        b=IIie/lfRdbXudtGjwy44gu90QA4urpQ/k8Fvx9sQF6BWHBuxEejN3kH9sHw7Q90EAp
-         Rob7W9cgOyW/lK2G50qmk6HNZ1FRht3i4CquttjGRBSB5VrxwU00ilZQENlRxQlPrHOj
-         40dy2dg73QxNT7PywK5EQ4catn8ii3/pBWb3tZbHQWXHrTUdn1+Nvki079NnW/JR7ZlX
-         7Be+Vaw9PS7JWLppoJsqy+uB+gfd6lv9Uiz2McaUyHpdf812oYA8IOyFXY5bsQrrz/Hw
-         DX6I+UnnBFQhEbEo6coetpS/hvOIBaSnNBDyEL+4LC05AIFCI4DNTcwHiltfBZYWzi3A
-         sS/w==
+        bh=3DNL/itS01ACipudqtOXhEIJgpANaHep/1GbrKh0bQQ=;
+        b=ujmkvrwLSC4GmoT60X+SdxsNu2JSSOcvuzM7afEMtl5SLTQFHaHiml62O069RE495o
+         tiXtbSBeqnYKIkF1w/lfyTv3P0m8xEvUkiq/7fRjOUuV0ipQVLuq2gKBTKzXti8GC8i3
+         gK7JuNadIPIRUxfa62126rTmuvJnvu0F2e91rSKnGdIvRW2VbvOyNGBbaVJw8h06fySZ
+         Fb+Enm4BR2XDqgJxWEs3SfFyBpMOpGzU7OsSw6W9Cg5zGA+GbFQCg/chqXW84jyHrpd3
+         EEpXm4IV7kirpzCI6MqswpdS05k506yLDtfNUqsqTUumX5jZWnr4WkCrhcp2ktxHsQ0W
+         5WFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722041403; x=1722646203;
+        d=1e100.net; s=20230601; t=1722041692; x=1722646492;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6mCs8ZCIo4TugB0JMvlvTNn16u+EsAhu40JJJyChvTs=;
-        b=lMHRxDoANhkKMOY4d1u9KmAITcs/2JGConnMy4KfxwZOtc17VSsLydAg8o3/bcvrU9
-         A0E2KzJv82uNPxi8CrG6XOCQyUUgvzTiS2lCHGyuTLT0mF3oPGzvhn8caciUJuDC+o28
-         7SncX7f0q6FwlW5o1W1WQHDBoFy6HPuLbhZ2xdBXVozmPWbx5M60Bu6/4lIh88TR/8Qg
-         HNJ1A0izaHyp2Gbqq/qRM8O3BZ33Ifb3oXvibYHkn0K0xqyrxAWhH7FpB8yZjn6zfU4m
-         niN31G57Mrd6r8c3/yVCu9Xg09CCqvAVudklUl+AfKWrgiwwrJ/cUpvMcOhydLfuNFwZ
-         Gj7w==
-X-Forwarded-Encrypted: i=1; AJvYcCX63cwGBoYKkXiFPDmuVEBePD98W46f7TRiiK9drdomQe+30QhFvmafaM0yTvZeLPw8RNzA2s7fAdnnH2lRi0OEanMkjWk7wO47bhnTsgHRdQ==
-X-Gm-Message-State: AOJu0YxuJYoR5aj2RR7/eGydUHYjcAZhtc5+3gdyn8c5gJoGZ0PrPzmC
-	HxfB1TO3CzaQe0A9Fgj4aQWH3N7HgnNgl1Ef16n5chKcOSetVrWVPKhI3rnVSzoYMH4DifpmEfy
-	Zj91QJkn0yeXDBe/zL1NX7rBFRSc8KvyAmKcM
-X-Google-Smtp-Source: AGHT+IErx0Vpwx8B+OMjl56rDDcYnu0gjoEWpyLOUI3ZKhjtdqTeHIcKd27oHM+SYahNI8K6Yl8R2oi6ymDT4Qoe9Po=
-X-Received: by 2002:a05:6e02:1569:b0:376:3998:9629 with SMTP id
- e9e14a558f8ab-39aecae5685mr1120855ab.13.1722041402709; Fri, 26 Jul 2024
- 17:50:02 -0700 (PDT)
+        bh=3DNL/itS01ACipudqtOXhEIJgpANaHep/1GbrKh0bQQ=;
+        b=LtyOt2B4W5GwLzOXg22sxXOpmEBZhbze5HRFBJvsRFxx5STQ+wf1QfWAvgmXJU/xDA
+         bovrDD41CB6OKdff3dBZLbqmL3dBlngsY493QScsaC1dkxLC2xaJCTE7UZ8Fozoq0c2A
+         4VNq4W2Zb/bqSlM7iSDHJM4TdjNqous5rNk5E1P5ldVcArky8fU1owH/rFMeeelrwFc2
+         qwn/FPKQXMn0ekCq5uWc555oMexSBrSSrtIxfiiWZ6nwl9NtP1Kftbb/TpD8FZmtivO4
+         6UdmzOc/p2rK2eEtFQKcePQXgXancnAOF439KAWva+l1TSFWqkPsnKcE6+LrteIssWmk
+         9aDw==
+X-Forwarded-Encrypted: i=1; AJvYcCV77jxa/qCgmRD6G69muEL/gp+RInWteGbuaGt39lcle7lCjjksYF+rtRJ0aJswcq/eZfQTh82GSgeLcee46nRcal4iXHx45wtoUu/jDuanuw==
+X-Gm-Message-State: AOJu0YwVpTg1A1uQ8dmV2v90UoSQldQmIxgF8bwoY6INGZQlLO2N2iGN
+	PFj6BzmvaIlY9Zff+BDz6WFBOVMyeI1t0UecuyXg/HBE3MhIXjFBErlNuIH7+8//rRWaUubeJIY
+	Gc3sWfLSiaz1uEF5V8pjfXOLnzb+9S5HOGvkP
+X-Google-Smtp-Source: AGHT+IE3JtqBwHojGMjdeDgn3Wlmq60256m9PWSY8cvh/uSekhvw6xMEHK2SQjFR+8baFtW0FtKOBGSN9qMhqgVlp5Y=
+X-Received: by 2002:ac8:5ac9:0:b0:44f:9db1:7fca with SMTP id
+ d75a77b69052e-44ff3b37a18mr5683761cf.28.1722041691571; Fri, 26 Jul 2024
+ 17:54:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240726102826.787004-1-howardchu95@gmail.com> <20240726102826.787004-5-howardchu95@gmail.com>
-In-Reply-To: <20240726102826.787004-5-howardchu95@gmail.com>
+References: <20240726102826.787004-1-howardchu95@gmail.com> <20240726102826.787004-6-howardchu95@gmail.com>
+In-Reply-To: <20240726102826.787004-6-howardchu95@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Fri, 26 Jul 2024 17:49:49 -0700
-Message-ID: <CAP-5=fW0AATSiUxm4wckT3Y3BvAUczNrzRHd13uvEtmgSw90fw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] perf record off-cpu: save embedded sample type
+Date: Fri, 26 Jul 2024 17:54:40 -0700
+Message-ID: <CAP-5=fUztDHbZcwpT4VrXaGahH3k=B=uU-otv4tniJr=fazkFg@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] perf record off-cpu: Add direct off-cpu test
 To: Howard Chu <howardchu95@gmail.com>
 Cc: namhyung@kernel.org, acme@kernel.org, adrian.hunter@intel.com, 
 	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
@@ -72,75 +72,146 @@ Content-Transfer-Encoding: quoted-printable
 On Fri, Jul 26, 2024 at 3:28=E2=80=AFAM Howard Chu <howardchu95@gmail.com> =
 wrote:
 >
-> We have to save the embedded sample type for it to be consumed correctly
-> by perf script or perf report.
->
-> This is a bad approach because it most definitely will break some
-> perf.data convertor. Another approach is to add this sample_type_embed
-> to perf_event_attr, but changing perf api is above my pay grade, so
-> please give me your suggestions!
+> Add a simple workload(offcpu.c) to create the scenario for direct
+> off-cpu dumping.
 >
 > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/util/header.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 55e9553861d0..ccb5493dc515 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -80,6 +80,7 @@ const char perf_version_string[] =3D PERF_VERSION;
->
->  struct perf_file_attr {
->         struct perf_event_attr  attr;
-> +       __u64 embed;
->         struct perf_file_section        ids;
->  };
->
-> @@ -3713,6 +3714,7 @@ static int perf_session__do_write_header(struct per=
-f_session *session,
->                 }
->                 f_attr =3D (struct perf_file_attr){
->                         .attr =3D evsel->core.attr,
-> +                       .embed =3D evsel->sample_type_embed,
->                         .ids  =3D {
->                                 .offset =3D evsel->id_offset,
->                                 .size   =3D evsel->core.ids * sizeof(u64)=
-,
-> @@ -4147,6 +4149,14 @@ static int read_attr(int fd, struct perf_header *p=
-h,
->
->                 ret =3D readn(fd, ptr, left);
->         }
-> +
-> +       ret =3D readn(fd, &f_attr->embed, sizeof(f_attr->embed));
-> +       if (ret <=3D 0) {
-> +               pr_debug("cannot read %d bytes of embedded sample type\n"=
-,
-> +                        PERF_ATTR_SIZE_VER0);
+> Suggested-by: Ian Rogers <irogers@google.com>
 
-nit: sizeof will likely be larger than this, so prefer to this
-constant? Maybe errno will be more useful.
+I tried with and without --off-cpu-thresh=3D1 but I only see 1
+offcpu-time sample and no offcpu-time-direct.
 
 Thanks,
 Ian
 
-> +               return -1;
-> +       }
+> ---
+>  tools/perf/tests/builtin-test.c         |  1 +
+>  tools/perf/tests/shell/record_offcpu.sh | 29 +++++++++++++++++++++++++
+>  tools/perf/tests/tests.h                |  1 +
+>  tools/perf/tests/workloads/Build        |  1 +
+>  tools/perf/tests/workloads/offcpu.c     | 16 ++++++++++++++
+>  5 files changed, 48 insertions(+)
+>  create mode 100644 tools/perf/tests/workloads/offcpu.c
+>
+> diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-t=
+est.c
+> index c3d84b67ca8e..5062058ad17d 100644
+> --- a/tools/perf/tests/builtin-test.c
+> +++ b/tools/perf/tests/builtin-test.c
+> @@ -152,6 +152,7 @@ static struct test_workload *workloads[] =3D {
+>         &workload__sqrtloop,
+>         &workload__brstack,
+>         &workload__datasym,
+> +       &workload__offcpu,
+>  };
+>
+>  static int num_subtests(const struct test_suite *t)
+> diff --git a/tools/perf/tests/shell/record_offcpu.sh b/tools/perf/tests/s=
+hell/record_offcpu.sh
+> index 67c925f3a15a..1ea0a44336e2 100755
+> --- a/tools/perf/tests/shell/record_offcpu.sh
+> +++ b/tools/perf/tests/shell/record_offcpu.sh
+> @@ -6,6 +6,7 @@ set -e
+>
+>  err=3D0
+>  perfdata=3D$(mktemp /tmp/__perf_test.perf.data.XXXXX)
+> +TEST_PROGRAM=3D"perf test -w offcpu"
+>
+>  cleanup() {
+>    rm -f ${perfdata}
+> @@ -88,6 +89,30 @@ test_offcpu_child() {
+>    echo "Child task off-cpu test [Success]"
+>  }
+>
+> +test_offcpu_direct() {
+> +  echo "Direct off-cpu test"
+> +  # dump off-cpu samples for tasks blocked for more than 1999ms (1.9s)
+> +  # -D for initial delay, which is necessary if we want to enable evlist
+> +  if ! perf record -F 1 -D 999 --off-cpu --off-cpu-thresh 1999 -o ${perf=
+data} ${TEST_PROGRAM} 2> /dev/null
+> +  then
+> +    echo "Direct off-cpu test [Failed record]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  if ! perf evlist -i ${perfdata} | grep -q "offcpu-time-direct"
+> +  then
+> +    echo "Direct off-cpu test [Failed no event]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  if ! perf script -i ${perfdata} | grep -q -E ".*2[0-9]{9}[ ]*offcpu-ti=
+me-direct" # 2 seconds (2,000,000,000)
+> +  then
+> +    echo "Direct off-cpu test [Failed missing output]"
+> +    err=3D1
+> +    return
+> +  fi
+> +  echo "Direct off-cpu test [Success]"
+> +}
+>
+>  test_offcpu_priv
+>
+> @@ -99,5 +124,9 @@ if [ $err =3D 0 ]; then
+>    test_offcpu_child
+>  fi
+>
+> +if [ $err =3D 0 ]; then
+> +  test_offcpu_direct
+> +fi
 > +
->         /* read perf_file_section, ids are read in caller */
->         ret =3D readn(fd, &f_attr->ids, sizeof(f_attr->ids));
+>  cleanup
+>  exit $err
+> diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
+> index 3aa7701ee0e9..84ab15683269 100644
+> --- a/tools/perf/tests/tests.h
+> +++ b/tools/perf/tests/tests.h
+> @@ -205,6 +205,7 @@ DECLARE_WORKLOAD(leafloop);
+>  DECLARE_WORKLOAD(sqrtloop);
+>  DECLARE_WORKLOAD(brstack);
+>  DECLARE_WORKLOAD(datasym);
+> +DECLARE_WORKLOAD(offcpu);
 >
-> @@ -4272,6 +4282,8 @@ int perf_session__read_header(struct perf_session *=
-session, int repipe_fd)
->                 tmp =3D lseek(fd, 0, SEEK_CUR);
->                 evsel =3D evsel__new(&f_attr.attr);
+>  extern const char *dso_to_test;
+>  extern const char *test_objdump_path;
+> diff --git a/tools/perf/tests/workloads/Build b/tools/perf/tests/workload=
+s/Build
+> index 48bf0d3b0f3d..f37e9be8b142 100644
+> --- a/tools/perf/tests/workloads/Build
+> +++ b/tools/perf/tests/workloads/Build
+> @@ -6,6 +6,7 @@ perf-test-y +=3D leafloop.o
+>  perf-test-y +=3D sqrtloop.o
+>  perf-test-y +=3D brstack.o
+>  perf-test-y +=3D datasym.o
+> +perf-test-y +=3D offcpu.o
 >
-> +               evsel->sample_type_embed =3D f_attr.embed;
+>  CFLAGS_sqrtloop.o         =3D -g -O0 -fno-inline -U_FORTIFY_SOURCE
+>  CFLAGS_leafloop.o         =3D -g -O0 -fno-inline -fno-omit-frame-pointer=
+ -U_FORTIFY_SOURCE
+> diff --git a/tools/perf/tests/workloads/offcpu.c b/tools/perf/tests/workl=
+oads/offcpu.c
+> new file mode 100644
+> index 000000000000..02be3d05b06d
+> --- /dev/null
+> +++ b/tools/perf/tests/workloads/offcpu.c
+> @@ -0,0 +1,16 @@
+> +#include <linux/compiler.h>
+> +#include <unistd.h>
+> +#include "../tests.h"
 > +
->                 if (evsel =3D=3D NULL)
->                         goto out_delete_evlist;
->
+> +static int offcpu(int argc __maybe_unused, const char **argv __maybe_unu=
+sed)
+> +{
+> +       /* get pass initial delay */
+> +       sleep(1);
+> +
+> +       /* what we want to collect as a direct sample */
+> +       sleep(2);
+> +
+> +       return 0;
+> +}
+> +
+> +DEFINE_WORKLOAD(offcpu);
 > --
 > 2.45.2
 >
