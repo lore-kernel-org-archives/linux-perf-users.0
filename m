@@ -1,225 +1,150 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE76B154C0C;
-	Mon, 29 Jul 2024 15:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C83C15A87C
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 15:54:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722266700; cv=none; b=N1rN2LiCj6s3vJJjfiK9BOFGJ2B9eGBJlqUJlU2tPucGAEyZA0jUGMoUD4n39FjFjUTu810Mg7tWCgj4rFmnGqXN6YNuXZpETwsbvIj4sZgAb46jOeR0Gb5FH48lGd6UqCzWPOr5Iaj38KphFo6XMADCnOtbK3R11Seo5qjfErU=
+	t=1722268443; cv=none; b=Fe1ZFZcIjOpD5NH+cKg2dbfOWlYfRhu+MewMqLZ42rBA5N/9a6AXjofOu7Er0pAPlV3+m+EG6uUpK+YN8Z4CEJ13IBGyxJrjUxZsJLiNVQwDl5Q+VFadMvnmv/I/WdeZK0mo17niO6wI/73J/VmZbDCB/iQX79Wk19CRGzT8qt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722266700; c=relaxed/simple;
-	bh=QP++Bsl3vngh40fhy1FftozspKdpktl2FxdG68Z69tU=;
+	s=arc-20240116; t=1722268443; c=relaxed/simple;
+	bh=vit//5frB+Bxo4uCQ9TaphFpIjNsNOImUZUDRYyDM/I=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FIUhSJPaOG9agQ40YguUKCOlRlTjd9CNqGTp9zGYGcX8WGiE6Z8O9uGSP/KvQgB8tjwpYtKpqxhlwNe4z6ylMKiZmaUp746uYcK6zxO524uQw/fIbg8Y6dL5/AR4UtMYfpe1zOlUkIHtaiyLoISMFyG4AMzUPB3cyRHEMRujPrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NrMCwAKa; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=X2czSC44Gh3wckhUTElAcp5S01oVYVCaOGAocwnTANjDP4rM7yHSTSA9VufpLDcCmgHHS3fCOw9W4KI2ZQXIdw+1yMQSja9Dfd31unuNcF0L63m6JK39CwQQYJxRVuP2tqrKRKlq5/MEKTLdy/hgtjWM1RvB3sawR6fU+31mMEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oxv/F4LL; arc=none smtp.client-ip=209.85.160.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NrMCwAKa"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-66a048806e6so21459057b3.3;
-        Mon, 29 Jul 2024 08:24:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oxv/F4LL"
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-44fe76fa0b8so402861cf.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 08:54:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722266698; x=1722871498; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722268440; x=1722873240; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hrWzyoHDY0V4iGBJS/oMZhZ3e1fyseejnIzoqwILk7k=;
-        b=NrMCwAKaSJvLzvYVIcpQ0CrZivE7TwSIUnCDeN1QgqcaVUQPRDTZS+5js5DQ0oM9/p
-         Ni6ikgIeKL3NED0i5eZDcQlvnnPECw2jjmTsYCnvcZ/uIXpFte9HVIfBBQYdK+HGVRXk
-         niOucjyMSr9xMiLHC9sc4BaEqsDbjimhS3N1LDBNpTCaDO9zlC8+a7v/fz3iBkZpIJe9
-         ct1d8Sog+DTy1j2usrmQawRxYLOT3NuehbQo0wV+PWLzw4TNymK4+WylnMgC5zCSqogX
-         k2DSGW6uhwyYHfpJCHYtjFMVi21xJZWBZr95rxJuda0zfgjCkJw9mKYn7i8VG/g9xCiu
-         Umiw==
+        bh=G7NVQIGmQXJU9zMY7yOvP9B85E2qvUl+m8Pl4MaC7co=;
+        b=oxv/F4LLxy+vbJLTZDaX/oqMNYAmd9nPH/gfq/uEWK4IW/BDclXna8qBS8gsmmkWAD
+         9DXQH7/J8cS2NLjAAcg6NyyPPVd45ucO/z1f425miSfV7CLxCsA1h+zXvRLDBoV0TaG0
+         tZ2JpbvrbFV57Z0xIV5lAOCV2BQKxhdbmMTSegslJ8XLMS52hgtMwChQkc7pd8GojCoD
+         EZ6C1lgtWh2V7IHhpJ+oqpn3/Xtl015AmqHtAypmrgJ6yAg2Re3CnIVBkQ/ySvN+ts3b
+         9/F9N9STfw1lP0k3HGfNITP7Nc4WKMubSuIBNPSG+/Wo5z/hOhTmeXQK9tuevDESEUK+
+         kE3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722266698; x=1722871498;
+        d=1e100.net; s=20230601; t=1722268440; x=1722873240;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hrWzyoHDY0V4iGBJS/oMZhZ3e1fyseejnIzoqwILk7k=;
-        b=MYIm9COrWODsvJXItFMtAsDQW0VrfsV7FkMN8qt1K+qm2ZwshPwTqYt1QT/7bzAX41
-         dmaHYw1c7dX2xTqTigw0cHemPSkOr+Qw++uqH5huJmUJ+p859aas/gs+3E1xYjVef3oy
-         e5mJOk0N0m1ww2K3eBkwDiCs8jWRsY6m47T0dNgT7NP/IR0kVW97hgdGoyTOtFjvQxYc
-         NjnAITbLEQ6Q7tWRKRIfdFieZuzISv4CePZWkCCEJIFel2ATwWG6ojBkk773JfXyK21h
-         Tinfe7RYb437PeziDVt6aIMz1Oy5yDZH63H396H37X01HdEL3uaFoAjzeYI2Cku2uqu0
-         1icw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIgSCnEKwnDKTk7zXw63el2VUQdNJzvt2n4hWS2JUeecW/YkqcZRg2CbGDJ2UlYeA8qsSFxPqN5KtIJQnxn7vJGO4wUogv4eAfLFp99GL78l/R59JCVbrZi9Gex5TV7Bo+TnMTc+6DSGXkipW4xw==
-X-Gm-Message-State: AOJu0YzVZxJlpnJM1s8lgtCai9PXC5DhJH3+Go9q3S3g4SQQd2+mQ7zG
-	3N3UjiXTSbBlkCUev0FqMw1IUf8SKwzhHAiZT3gFvrYXX7RdHNzVGQcOA4YKgAess1qs15V2Ab2
-	Le4qzWaaKV57Zp9Z5iDihmrsYc9iTEU04Kv8=
-X-Google-Smtp-Source: AGHT+IFi1mUw7+OXZM88XpZHe1uOHrLiQ08btL6rXZKEZ1bU7UM8Cxy8sQUiNrvhbyqWtZ9G/byeLF9mxfNurz5sv+0=
-X-Received: by 2002:a81:b410:0:b0:645:8fb:71c8 with SMTP id
- 00721157ae682-67a0a13665amr94555087b3.37.1722266697647; Mon, 29 Jul 2024
- 08:24:57 -0700 (PDT)
+        bh=G7NVQIGmQXJU9zMY7yOvP9B85E2qvUl+m8Pl4MaC7co=;
+        b=ElA4FwXZQrdu1jgLFQJqVGiY+ZgECrBN8Ds+AW0+6/Ee0h50+NPBznGMKnUtFMXrDc
+         aEpHhMAnoA7GZCQqWsM2pxwEyLFjial+IQ+qo1FyqDgD+S5mTpEwAKiQh3UQvPlgFSTW
+         gX28O4xIlWileEBYzdI6UdNiL6xXN+M6mq83YNbVtmRg8wSbA/96O0C+aB9FdoeZgYJh
+         syU8ixxrB51E9hxYNf16QIYJl+5pOXLREVoBB+yuMA6JMElrMT1Prs6HOFCXF4wVB5PD
+         ZXcNflaQRkzAdWpwBn80rioquikJgcEo0RaJs1uIl6bTY+iyoELaNtOVKIAVEvXA77Cm
+         utcA==
+X-Forwarded-Encrypted: i=1; AJvYcCW5PTUZEvtBQo49Luz15k7qttWtgRzF3HyKaYKR6SrFmYReD3H1gBdHQK/kqEu8+zH8enLnm+eiKe/5QaPK/hbvaSKquC1Jt1SnloSx3CNRFQ==
+X-Gm-Message-State: AOJu0YzGWbYtYznAqAbSgdJxARyW1Kuq2nU6btX2aYvGdjDkZGRChZZf
+	qfrgARSld79LKEzmlSITMvFp18w92GgY35PWNVfvvMkjNFby+kniIeXrWgFwFscsIxSfU1om+u+
+	MsprOVjZAc1cv1HkXsVLhGt+Y5hAOy+i7xa/0
+X-Google-Smtp-Source: AGHT+IGtbd0iBqee7SwSoc94TJ7CIzVF+bo02bFcdiIhIU5AVsKcZ+YG/U7J2gyGGtrfLKplipYfybTILWWzXf+wdc0=
+X-Received: by 2002:a05:622a:303:b0:44f:e12e:3015 with SMTP id
+ d75a77b69052e-450329acd26mr220951cf.25.1722268439856; Mon, 29 Jul 2024
+ 08:53:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240726102826.787004-1-howardchu95@gmail.com> <ZqbutBvHOJ0SPd64@google.com>
-In-Reply-To: <ZqbutBvHOJ0SPd64@google.com>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Mon, 29 Jul 2024 23:24:47 +0800
-Message-ID: <CAH0uvogRFE_gXhSQTbXJiu-Yj2b+H1U4K40bDOgwTFyTOtHFDA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/5] Dump off-cpu samples directly
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
-	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240727175919.1041468-1-linux@treblig.org> <CAP-5=fW+VbDaFV+YQCMMKYzrraMLLuVqb=BChL0o=-D5Y=4N_w@mail.gmail.com>
+ <ZqewJ6oIprdRY8C5@gallifrey>
+In-Reply-To: <ZqewJ6oIprdRY8C5@gallifrey>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 29 Jul 2024 08:53:48 -0700
+Message-ID: <CAP-5=fUHVZDS9y4Bm=OesD5qpHHv7qqo2ALU70EPdS5WiQs1-w@mail.gmail.com>
+Subject: Re: [PATCH] perf test pmu: Remove unused test_pmus
+To: "Dr. David Alan Gilbert" <linux@treblig.org>, Nick Desaulniers <ndesaulniers@google.com>, llvm@lists.linux.dev
+Cc: kan.liang@linux.intel.com, acme@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Namhyung,
-
-Thanks for reviewing this patch.
-
-On Mon, Jul 29, 2024 at 9:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Mon, Jul 29, 2024 at 8:07=E2=80=AFAM Dr. David Alan Gilbert
+<linux@treblig.org> wrote:
 >
-> Hello Howard,
->
-> On Fri, Jul 26, 2024 at 06:28:21PM +0800, Howard Chu wrote:
-> > As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=3D207323
+> * Ian Rogers (irogers@google.com) wrote:
+> > On Sat, Jul 27, 2024 at 10:59=E2=80=AFAM <linux@treblig.org> wrote:
+> > >
+> > > From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> > >
+> > > Commit aa1551f299ba ("perf test pmu: Refactor format test and exposed
+> > > test APIs") added the 'test_pmus' list, but didn't use it.
+> > > (It seems to put them on the other_pmus list?)
+> > >
+> > > Remove it.
+> > >
+> > > Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 > >
-> > Currently, off-cpu samples are dumped when perf record is exiting. This
-> > results in off-cpu samples being after the regular samples. This patch
-> > series makes possible dumping off-cpu samples on-the-fly, directly into
-> > perf ring buffer. And it dispatches those samples to the correct format
-> > for perf.data consumers.
+> > Strange that the compiler doesn't warn about unused stuff like this,
+> > we get unused variables within a function and unused static
+> > functions...
 >
-> Thanks for your work!
->
-> But I'm not sure we need a separate event for offcpu-time-direct.  If we
-> fix the format for the direct event, we can adjust the format of offcpu-
-> time when it dumps at the end.
+> The problem is that LIST_HEAD initialises the list to point to itself;
+> so it *is* used - but only in it's own initialiser.
+> I did file:
+>    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D115027
 
-Thank you and Ian for this advice, I'll do that.
+Nice, the bug already has a fix - good work! Hopefully clang can follow sui=
+t.
 
->
-> Anyway, as far as I can see you don't need to fill the sample info in
-> the offcpu-time-direct manually in your BPF program.  Because the
-> bpf_perf_event_output() will call perf_event_output() which fills all
-> the sample information according to the sample_type flags.
->
-> Well.. it'll set IP to the schedule function, but it should be ok.
-> (updating IP using CALLCHAIN like in off_cpu_write() is a kinda hack and
-> not absoluately necessary, probably I can get rid of it..  Let's go with
-> simple for now.)
->
-> So I think what you need is to ensure it has the uncessary flags.  And
-> the only info it needs to fill is the time between the previous schedule
-> and this can be added to the raw data.
-
-Sure thing, thank you. Other than the off-cpu duration, do you think
-we should collect the callchain as well?
-
-This idea is great because it minimizes the data we need to transfer
-from kernel space to user space. But with this, the whole
-"full-fledged sample in BPF output" is not the case anymore, because
-we only take a couple of things(such as the time between the
-schedules) from the raw data. This idea is more like an extension of
-the sample data, I think it's interesting, will try to implement it.
-
-Thanks,
-Howard
+> > Reviewed-by: Ian Rogers <irogers@google.com>
 >
 > Thanks,
-> Namhyung
 >
+> > Possibly:
+> > Fixes: aa1551f299ba ("perf test pmu: Refactor format test and exposed
+> > test APIs")
+>
+> Given it's got no actual effect other than a few bytes
+> saved, I'm not sure it's worth the Fixes.
+
+Ack. I mention it so the maintainers can make a decision about fixing
+in 6.11 (still in rc stage) or whether to hold for 6.12. It seems
+pretty safe either way, but for 6.11 probably better to have a fixes
+tag. If the GCC warning becomes a thing there's a chance the code
+won't build without the fix :-)
+
+Thanks,
+Ian
+
+> Dave
+>
+> > Thanks,
+> > Ian
 > >
-> > Changes in v3:
-> >  - Add off-cpu-thresh argument
-> >  - Process direct off-cpu samples in post
-> >
-> > Changes in v2:
-> >  - Remove unnecessary comments.
-> >  - Rename function off_cpu_change_type to off_cpu_prepare_parse
-> >
-> > Before:
-> > ```
-> >      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  f=
-fffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
-> >             perf  770116 [001] 27981.041375:          1    cycles:P:  f=
-fffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
-> >             perf  770116 [001] 27981.041377:          1    cycles:P:  f=
-fffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
-> >             perf  770116 [001] 27981.041379:      51611    cycles:P:  f=
-fffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
-> >      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  f=
-fffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
-> >      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  f=
-fffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
-> >
-> > sshd  708098 [000] 18446744069.414584:     286392 offcpu-time:
-> >           79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
-> >           585690935cca [unknown] (/usr/bin/sshd)
-> > ```
-> >
-> > After:
-> > ```
-> >             perf  774767 [003] 28178.033444:        497           cycle=
-s:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
-> >             perf  774767 [003] 28178.033445:     399440           cycle=
-s:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
-> >          swapper       0 [001] 28178.036639:  376650973           cycle=
-s:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
-> >          swapper       0 [003] 28178.182921:  348779378           cycle=
-s:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
-> >     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time-dir=
-ect:
-> >           7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
-> >           7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
-> >           7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
-> >           7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
-> >           7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
-> >           7fff24e862d8 [unknown] ([unknown])
-> >
-> >
-> >     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time-dir=
-ect:
-> >           7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
-> >           7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
-> >           7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-=
-2.0.so.0.8000.2)
-> >           7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.=
-0.8000.2)
-> >           7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
-> >           7fff24e862d8 [unknown] ([unknown])
-> >
-> >
-> >          swapper       0 [000] 28178.463253:  195945410           cycle=
-s:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
-> >      dbus-broker     412 [002] 28178.464855:  376737008           cycle=
-s:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
-> > ```
-> >
-> > Howard Chu (5):
-> >   perf record off-cpu: Add direct off-cpu event
-> >   perf record off-cpu: Dumping samples in BPF
-> >   perf record off-cpu: processing of embedded sample
-> >   perf record off-cpu: save embedded sample type
-> >   perf record off-cpu: Add direct off-cpu test
-> >
-> >  tools/perf/builtin-record.c             |   2 +
-> >  tools/perf/builtin-script.c             |   2 +-
-> >  tools/perf/tests/builtin-test.c         |   1 +
-> >  tools/perf/tests/shell/record_offcpu.sh |  29 +++++
-> >  tools/perf/tests/tests.h                |   1 +
-> >  tools/perf/tests/workloads/Build        |   1 +
-> >  tools/perf/tests/workloads/offcpu.c     |  16 +++
-> >  tools/perf/util/bpf_off_cpu.c           |  53 ++++++++-
-> >  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 143 ++++++++++++++++++++++++
-> >  tools/perf/util/evsel.c                 |  16 ++-
-> >  tools/perf/util/evsel.h                 |  13 +++
-> >  tools/perf/util/header.c                |  12 ++
-> >  tools/perf/util/off_cpu.h               |   1 +
-> >  tools/perf/util/record.h                |   1 +
-> >  tools/perf/util/session.c               |  23 +++-
-> >  15 files changed, 309 insertions(+), 5 deletions(-)
-> >  create mode 100644 tools/perf/tests/workloads/offcpu.c
-> >
-> > --
-> > 2.45.2
-> >
+> > > ---
+> > >  tools/perf/tests/pmu.c | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+> > > index 40132655ccd1..0b2f04a55d7b 100644
+> > > --- a/tools/perf/tests/pmu.c
+> > > +++ b/tools/perf/tests/pmu.c
+> > > @@ -18,9 +18,6 @@
+> > >  #include <sys/stat.h>
+> > >  #include <sys/types.h>
+> > >
+> > > -/* Fake PMUs created in temp directory. */
+> > > -static LIST_HEAD(test_pmus);
+> > > -
+> > >  /* Cleanup test PMU directory. */
+> > >  static int test_pmu_put(const char *dir, struct perf_pmu *pmu)
+> > >  {
+> > > --
+> > > 2.45.2
+> > >
+> --
+>  -----Open up your eyes, open up your mind, open up your code -------
+> / Dr. David Alan Gilbert    |       Running GNU/Linux       | Happy  \
+> \        dave @ treblig.org |                               | In Hex /
+>  \ _________________________|_____ http://www.treblig.org   |_______/
