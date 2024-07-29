@@ -1,188 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE5AB661;
-	Mon, 29 Jul 2024 00:41:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9534A4F20E;
+	Mon, 29 Jul 2024 01:21:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722213691; cv=none; b=DiH/lJg3BUTNMrNGpDPR+Da0dJ8Uh9pro+4towUauIAsBlXHCULtMvrxsXsCs6UKyNKgoPnUsUOUnndDAgID8RuyKSy+Gr8pyhZWwZ7qLowISqx5sUNrmY21t49x4bIWikVCCzG6NJFXPk43oTsW5l8brrOlVAxfMJVcpYHhxnY=
+	t=1722216118; cv=none; b=e7FeUz1E3H4WWz+y4iuUvkOcyuIXLBZIqhHmn5B77iMGm0QbKa4zdo1EW6mgyatXLTuWJ2PFRO24F+plhQLZdX+q6jcUtHIey84DtKO7kEFHI7tSU+NqkofZZBNiMd36LSMLmz48pnHIv4p9Jvan8X5tIkShEewP33h9NoT13kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722213691; c=relaxed/simple;
-	bh=fsiX2Lm79R2xAO3++1r1+9dNsJhIjv83GPnsKTWgmlE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YO50CbBweDBFwr6Zpcj8j0Txx9L8AOJoaJnVG4OFzaQHltdDwCL5f2D2L8lZdK9J2bUA+ZXfqJiORqvS+CpJQSs8okq1Mk5cRHMP2ZKTW9VY9ODUC/0be5A7YVmTt4CmtPqp3xke++FeL7h8EwLzZl9M/Wm+vrsBh+2eVlEcch4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hq8Ie3lf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722216118; c=relaxed/simple;
+	bh=fcJW5gJLnuodeIWxC2Kn1Lk9LfB+ENVDoYCigF2EHbc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AHgMhkZe9ZKMbf9OIeF5u4vcF4kkqeO+/OMo9ss/ZRJ9AAe904UDe/MHvPq4ZXjczC8ICtWK/TI0AriX1IxqOGwGMnJ/PFqOxJtDihlK2pE1k7TVuRSawvHJtbS4BgKvOyxh2rO4+bb/8ljYBSlAom1b5AOt1Ws177WyjSwNsEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVq9ZAzc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hq8Ie3lf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF21C4AF4D;
-	Mon, 29 Jul 2024 00:41:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVq9ZAzc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 918A7C116B1;
+	Mon, 29 Jul 2024 01:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722213690;
-	bh=fsiX2Lm79R2xAO3++1r1+9dNsJhIjv83GPnsKTWgmlE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hq8Ie3lfiCv2SW6TdlBjMomqQNY90gLUyN0iZ0vpg86gbxe+43vm2OLQS16QYA2xQ
-	 aFz1XOm/XeN7Ok4FkTwVzS+P6AdIoHejqAFoHusIZpiMWF7bQotMZuVm5yChSyDz1X
-	 51gPIW1jlhTIRUeGWw8PPwBbNAfdd0c9m2DRabk424QFP50ZYroN5dXyY5y7LUuB+L
-	 0drImTD6WPikSSSGlaWlSa4DIiUBNQhRrJVOyDWKsKRSRfMJSq5Xyvsmwd/W8dSasA
-	 31u/CPEAmz/7TC8YEjaD4QeZlcTFgHcL1xWiXLHEbwo2XTkiUnkg7lvvaLd11B52Il
-	 82qB1KT/QDGxA==
+	s=k20201202; t=1722216118;
+	bh=fcJW5gJLnuodeIWxC2Kn1Lk9LfB+ENVDoYCigF2EHbc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=iVq9ZAzclkJiCHb7miMCuGS8neNsccB40NVmVYAEgQCaDAuFKdFG4d6HVvPF2EX1O
+	 tqfyhE4QV2rMAfODaEaGA71oiY6IfJak8bFyYT/4PH63IrYxV0TE9rLplcodkEGSbe
+	 jxzv/ka+EW7D/0qrESyGE0ajyWI1boRsxocoPmnR+w2XjK3eCUjO7vYF56lmrx4n2U
+	 4V+K66dwqITY7fNtfH2gfB6b/FiV6h8L5XFrLDeezDy19Una14jnJ7CgwA991iYRNX
+	 BdnGGZnQ05vVqmUiGveXtXZWnkmY98rzFBslYR1Pirwqnbxl9tG6eJUeJbmwfME/TQ
+	 QaIPs2yk7X5iA==
+Date: Sun, 28 Jul 2024 18:21:56 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 4/4] perf ftrace: Add -s/--sort option to profile sub-command
-Date: Sun, 28 Jul 2024 17:41:27 -0700
-Message-ID: <20240729004127.238611-5-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-In-Reply-To: <20240729004127.238611-1-namhyung@kernel.org>
-References: <20240729004127.238611-1-namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/5] Dump off-cpu samples directly
+Message-ID: <ZqbutBvHOJ0SPd64@google.com>
+References: <20240726102826.787004-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240726102826.787004-1-howardchu95@gmail.com>
 
-The -s/--sort option is to sort the output by given column.
+Hello Howard,
 
-  $ sudo perf ftrace profile -s max sync | head
-  # Total (us)   Avg (us)   Max (us)      Count   Function
-      6301.811   6301.811   6301.811          1   __do_sys_sync
-      6301.328   6301.328   6301.328          1   ksys_sync
-      5320.300   1773.433   2858.819          3   iterate_supers
-      2755.875     17.012   2610.633        162   sync_fs_one_sb
-      2728.351    682.088   2610.413          4   ext4_sync_fs [ext4]
-      2603.654   2603.654   2603.654          1   jbd2_log_wait_commit [jbd2]
-      4750.615    593.827   2597.427          8   schedule
-      2164.986     26.728   2115.673         81   sync_inodes_one_sb
-      2143.842     26.467   2115.438         81   sync_inodes_sb
+On Fri, Jul 26, 2024 at 06:28:21PM +0800, Howard Chu wrote:
+> As mentioned in: https://bugzilla.kernel.org/show_bug.cgi?id=207323
+> 
+> Currently, off-cpu samples are dumped when perf record is exiting. This
+> results in off-cpu samples being after the regular samples. This patch
+> series makes possible dumping off-cpu samples on-the-fly, directly into
+> perf ring buffer. And it dispatches those samples to the correct format
+> for perf.data consumers.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/Documentation/perf-ftrace.txt |  5 ++
- tools/perf/builtin-ftrace.c              | 63 +++++++++++++++++++++++-
- 2 files changed, 66 insertions(+), 2 deletions(-)
+Thanks for your work!
 
-diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
-index 33f32467f287..eaec8253be68 100644
---- a/tools/perf/Documentation/perf-ftrace.txt
-+++ b/tools/perf/Documentation/perf-ftrace.txt
-@@ -185,6 +185,11 @@ OPTIONS for 'perf ftrace profile'
- 	Set the size of per-cpu tracing buffer, <size> is expected to
- 	be a number with appended unit character - B/K/M/G.
- 
-+-s::
-+--sort=::
-+	Sort the result by the given field.  Available values are:
-+	total, avg, max, count, name.  Default is 'total'.
-+
- 
- SEE ALSO
- --------
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index ae9389435d1b..a615c405d98f 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -1090,15 +1090,47 @@ static int parse_func_duration(struct perf_ftrace *ftrace, char *line, size_t le
- 	return add_func_duration(ftrace, func, duration);
- }
- 
-+enum perf_ftrace_profile_sort_key {
-+	PFP_SORT_TOTAL = 0,
-+	PFP_SORT_AVG,
-+	PFP_SORT_MAX,
-+	PFP_SORT_COUNT,
-+	PFP_SORT_NAME,
-+};
-+
-+static enum perf_ftrace_profile_sort_key profile_sort = PFP_SORT_TOTAL;
-+
- static int cmp_profile_data(const void *a, const void *b)
- {
- 	const struct hashmap_entry *e1 = *(const struct hashmap_entry **)a;
- 	const struct hashmap_entry *e2 = *(const struct hashmap_entry **)b;
- 	struct ftrace_profile_data *p1 = e1->pvalue;
- 	struct ftrace_profile_data *p2 = e2->pvalue;
-+	double v1, v2;
-+
-+	switch (profile_sort) {
-+	case PFP_SORT_NAME:
-+		return strcmp(e1->pkey, e2->pkey);
-+	case PFP_SORT_AVG:
-+		v1 = p1->st.mean;
-+		v2 = p2->st.mean;
-+		break;
-+	case PFP_SORT_MAX:
-+		v1 = p1->st.max;
-+		v2 = p2->st.max;
-+		break;
-+	case PFP_SORT_COUNT:
-+		v1 = p1->st.n;
-+		v2 = p2->st.n;
-+		break;
-+	case PFP_SORT_TOTAL:
-+	default:
-+		v1 = p1->st.n * p1->st.mean;
-+		v2 = p2->st.n * p2->st.mean;
-+		break;
-+	}
- 
--	/* compare by total time */
--	if ((p1->st.n * p1->st.mean) > (p2->st.n * p2->st.mean))
-+	if (v1 > v2)
- 		return -1;
- 	else
- 		return 1;
-@@ -1414,6 +1446,30 @@ static int parse_graph_tracer_opts(const struct option *opt,
- 	return 0;
- }
- 
-+static int parse_sort_key(const struct option *opt, const char *str, int unset)
-+{
-+	enum perf_ftrace_profile_sort_key *key = (void *)opt->value;
-+
-+	if (unset)
-+		return 0;
-+
-+	if (!strcmp(str, "total"))
-+		*key = PFP_SORT_TOTAL;
-+	else if (!strcmp(str, "avg"))
-+		*key = PFP_SORT_AVG;
-+	else if (!strcmp(str, "max"))
-+		*key = PFP_SORT_MAX;
-+	else if (!strcmp(str, "count"))
-+		*key = PFP_SORT_COUNT;
-+	else if (!strcmp(str, "name"))
-+		*key = PFP_SORT_NAME;
-+	else {
-+		pr_err("Unknown sort key: %s\n", str);
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- enum perf_ftrace_subcommand {
- 	PERF_FTRACE_NONE,
- 	PERF_FTRACE_TRACE,
-@@ -1497,6 +1553,9 @@ int cmd_ftrace(int argc, const char **argv)
- 		     "Set nograph filter on given functions", parse_filter_func),
- 	OPT_CALLBACK('m', "buffer-size", &ftrace.percpu_buffer_size, "size",
- 		     "Size of per cpu buffer, needs to use a B, K, M or G suffix.", parse_buffer_size),
-+	OPT_CALLBACK('s', "sort", &profile_sort, "key",
-+		     "Sort result by key: total (default), avg, max, count, name.",
-+		     parse_sort_key),
- 	OPT_PARENT(common_options),
- 	};
- 	const struct option *options = ftrace_options;
--- 
-2.46.0.rc1.232.g9752f9e123-goog
+But I'm not sure we need a separate event for offcpu-time-direct.  If we
+fix the format for the direct event, we can adjust the format of offcpu-
+time when it dumps at the end.
 
+Anyway, as far as I can see you don't need to fill the sample info in
+the offcpu-time-direct manually in your BPF program.  Because the
+bpf_perf_event_output() will call perf_event_output() which fills all
+the sample information according to the sample_type flags.
+
+Well.. it'll set IP to the schedule function, but it should be ok.
+(updating IP using CALLCHAIN like in off_cpu_write() is a kinda hack and
+not absoluately necessary, probably I can get rid of it..  Let's go with
+simple for now.)
+
+So I think what you need is to ensure it has the uncessary flags.  And
+the only info it needs to fill is the time between the previous schedule
+and this can be added to the raw data.
+
+Thanks,
+Namhyung
+
+> 
+> Changes in v3:
+>  - Add off-cpu-thresh argument
+>  - Process direct off-cpu samples in post
+> 
+> Changes in v2:
+>  - Remove unnecessary comments.
+>  - Rename function off_cpu_change_type to off_cpu_prepare_parse
+> 
+> Before:
+> ```
+>      migration/0      21 [000] 27981.041319: 2944637851    cycles:P:  ffffffff90d2e8aa record_times+0xa ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041375:          1    cycles:P:  ffffffff90ee4960 event_function+0xf0 ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041377:          1    cycles:P:  ffffffff90c184b1 intel_bts_enable_local+0x31 ([kernel.kallsyms])
+>             perf  770116 [001] 27981.041379:      51611    cycles:P:  ffffffff91a160b0 native_sched_clock+0x30 ([kernel.kallsyms])
+>      migration/1      26 [001] 27981.041400: 4227682775    cycles:P:  ffffffff90d06a74 wakeup_preempt+0x44 ([kernel.kallsyms])
+>      migration/2      32 [002] 27981.041477: 4159401534    cycles:P:  ffffffff90d11993 update_load_avg+0x63 ([kernel.kallsyms])
+> 
+> sshd  708098 [000] 18446744069.414584:     286392 offcpu-time: 
+> 	    79a864f1c8bb ppoll+0x4b (/usr/lib/libc.so.6)
+> 	    585690935cca [unknown] (/usr/bin/sshd)
+> ```
+> 
+> After:
+> ```
+>             perf  774767 [003] 28178.033444:        497           cycles:P:  ffffffff91a160c3 native_sched_clock+0x43 ([kernel.kallsyms])
+>             perf  774767 [003] 28178.033445:     399440           cycles:P:  ffffffff91c01f8d nmi_restore+0x25 ([kernel.kallsyms])
+>          swapper       0 [001] 28178.036639:  376650973           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>          swapper       0 [003] 28178.182921:  348779378           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>     blueman-tray    1355 [000] 28178.627906:  100184571 offcpu-time-direct: 
+> 	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+> 	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+> 	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+> 	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+> 	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+> 	    7fff24e862d8 [unknown] ([unknown])
+> 
+> 
+>     blueman-tray    1355 [000] 28178.728137:  100187539 offcpu-time-direct: 
+> 	    7528eef1c39d __poll+0x4d (/usr/lib/libc.so.6)
+> 	    7528edf7d8fd [unknown] (/usr/lib/libglib-2.0.so.0.8000.2)
+> 	    7528edf1af95 g_main_context_iteration+0x35 (/usr/lib/libglib-2.0.so.0.8000.2)
+> 	    7528eda4ab86 g_application_run+0x1f6 (/usr/lib/libgio-2.0.so.0.8000.2)
+> 	    7528ee6aa596 [unknown] (/usr/lib/libffi.so.8.1.4)
+> 	    7fff24e862d8 [unknown] ([unknown])
+> 
+> 
+>          swapper       0 [000] 28178.463253:  195945410           cycles:P:  ffffffff91a1ae99 intel_idle+0x59 ([kernel.kallsyms])
+>      dbus-broker     412 [002] 28178.464855:  376737008           cycles:P:  ffffffff91c000a0 entry_SYSCALL_64+0x20 ([kernel.kallsyms])
+> ```
+> 
+> Howard Chu (5):
+>   perf record off-cpu: Add direct off-cpu event
+>   perf record off-cpu: Dumping samples in BPF
+>   perf record off-cpu: processing of embedded sample
+>   perf record off-cpu: save embedded sample type
+>   perf record off-cpu: Add direct off-cpu test
+> 
+>  tools/perf/builtin-record.c             |   2 +
+>  tools/perf/builtin-script.c             |   2 +-
+>  tools/perf/tests/builtin-test.c         |   1 +
+>  tools/perf/tests/shell/record_offcpu.sh |  29 +++++
+>  tools/perf/tests/tests.h                |   1 +
+>  tools/perf/tests/workloads/Build        |   1 +
+>  tools/perf/tests/workloads/offcpu.c     |  16 +++
+>  tools/perf/util/bpf_off_cpu.c           |  53 ++++++++-
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c  | 143 ++++++++++++++++++++++++
+>  tools/perf/util/evsel.c                 |  16 ++-
+>  tools/perf/util/evsel.h                 |  13 +++
+>  tools/perf/util/header.c                |  12 ++
+>  tools/perf/util/off_cpu.h               |   1 +
+>  tools/perf/util/record.h                |   1 +
+>  tools/perf/util/session.c               |  23 +++-
+>  15 files changed, 309 insertions(+), 5 deletions(-)
+>  create mode 100644 tools/perf/tests/workloads/offcpu.c
+> 
+> -- 
+> 2.45.2
+> 
