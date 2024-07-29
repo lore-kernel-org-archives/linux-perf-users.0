@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1969B801;
-	Mon, 29 Jul 2024 00:41:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A37C03207;
+	Mon, 29 Jul 2024 00:41:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722213689; cv=none; b=UC/FPziWiFJIxZByBgLPKn+CzMCTokCJOY7vs1BiTBYq3dkq4zHB+Z5K3BCP4iJRA7OTKtJbkN5kdR4gaZEvq+lDYkUgaeus14HG8JsD7GQhe4tXF7bnTrN4oYE4LIkvDes3DtfZAQFMhhAODAs0tZ03IAKUp/s4blY9A28VhFM=
+	t=1722213689; cv=none; b=dwtxo0uKqXx4ZFa8ptrtwzfGW3WpLQPvweLq2yqF6YvahLXeVncMzUdrM7hPd7Y1xvf+dp7W6gCrmbngQKMjcG/3QXDSQDfD0Lf+HdFx4LYUWp3aw8XYdyGF1fut0tVYNFdRrvIPfOKYchP5IPZ3dnHa4o4/3FwNn6Fxt2Adbzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722213689; c=relaxed/simple;
-	bh=sAsPq2kSVX16B4RkNsWZBq68YMl3ERbCE29JZAvQGgc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sKcL74lwJdpVbWGkPwmCOPyKRxgoS8jIdajyKouu7QkANcWgEM6Dm/e0Kw17xrQ8pH3PT5559KACovakzVy8Tnjfl6rqBGymrL2bI7mPgTj1Yk5TOtwx8vhbWEuy2SRCLGkfrqiONfQTH5ZLocWtGZfmsDIzSf0NfiW/19qjHsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ly8cUIxU; arc=none smtp.client-ip=10.30.226.201
+	bh=+4xhnYSijGDgv46dB8kyW6bhDjEdx5UE3zvs3CKI3sI=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O1gfVHeoSILZ7unVgoOycnmGX/842O0pMJ80ZVlj9zutcrEGo5jL1DX/b/ia3QTo/P54UVKLBfweV/DGfC8QvKmoSpBanP4wWlI+lYOxD73pXWg4JDKmwq6LcwElttJj7T41qmaj5yz22Nm1Ai95nbcjqmgaVUsEiu0l5Rb3StE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFT7VcIZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ly8cUIxU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B846C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nFT7VcIZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C42F5C4AF10;
 	Mon, 29 Jul 2024 00:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722213688;
-	bh=sAsPq2kSVX16B4RkNsWZBq68YMl3ERbCE29JZAvQGgc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Ly8cUIxU40XpUCig/C5lPqJ0OWmsDPFjgZG2uekfMa1ccIL0HqkuxrpO7Q2i5Afyy
-	 kK+WmCdKCLeV7enZvR0S30Leil7FyNodpyFrpo47vfGrAYLEIU6GzALfhrKfoZ+m2K
-	 Nk5QpLjhVm64GzDLfGU0AZ0we1Z6F+8cXKOAGO3w3gbkmpNMrMcldoZRY+b8wKtYcd
-	 f7AUxuLroE03mstyViOOoAK6QibxKgl5BIKoPsBlhZrQmE28hIKA7dOGStwGIJvi55
-	 L6TD0BdNTx/oeJF4aleUMX9jsHGtHpqNlJmO/DuvAisRud15eBQ4T/Md7qtmU/YfwQ
-	 bSjW73WjjYIQg==
+	s=k20201202; t=1722213689;
+	bh=+4xhnYSijGDgv46dB8kyW6bhDjEdx5UE3zvs3CKI3sI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=nFT7VcIZW5fXveVxXbVw9r43AK3qh6yI6aqrqnlu6dEh4HiTFQvZQCN37ogUdcihD
+	 7BbUKtauzMp84hQ5C1KLapwFcjwBXYDLWzQa0el9asE3e8l2iay4Dv+l0D5s2o715u
+	 k4/kmgj/M+8run/3iIWFqWXHlz5t4x6LhOlZJTjZVGAQL49rT2yWeA8Id+vkjYRYQ9
+	 H06WiPy0EMHJGXIyr9YNB5Ew4UqWwyKH7PQCvCIG5RM6SEDkJSNhuUiI18ih+gqKqe
+	 TWkAoSUvO79j3dCRbqXXSoSWhTMS8EUujCBjS8zcPjhMQOzp9B8IHXP62L1HTR+EbI
+	 52MjZUaxNIUZA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,10 +38,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Steven Rostedt <rostedt@goodmis.org>,
 	Changbin Du <changbin.du@gmail.com>
-Subject: [PATCH 0/4] perf ftrace: Add 'profile' subcommand (v1)
-Date: Sun, 28 Jul 2024 17:41:23 -0700
-Message-ID: <20240729004127.238611-1-namhyung@kernel.org>
+Subject: [PATCH 1/4] perf ftrace: Add 'tail' option to --graph-opts
+Date: Sun, 28 Jul 2024 17:41:24 -0700
+Message-ID: <20240729004127.238611-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
+In-Reply-To: <20240729004127.238611-1-namhyung@kernel.org>
+References: <20240729004127.238611-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,75 +52,113 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The 'graph-tail' option is to print function name as a comment at the end.
+This is useful when a large function is mixed with other functions
+(possibly from different CPUs).
 
-This is an attempt to extend perf ftrace command to show a kernel function
-profile using the function_graph tracer.  This is useful to see detailed
-info like total, average, max time (in usec) and number of calls for each
-function.
+For example,
 
-  $ sudo perf ftrace profile -- sync | head
-  # Total (us)   Avg (us)   Max (us)      Count   Function
-      7638.372   7638.372   7638.372          1   __do_sys_sync
-      7638.059   7638.059   7638.059          1   ksys_sync
-      5893.959   1964.653   3747.963          3   iterate_supers
-      5214.181    579.353   1688.752          9   schedule
-      3585.773     44.269   3537.329         81   sync_inodes_one_sb
-      3566.179     44.027   3537.078         81   sync_inodes_sb
-      1976.901    247.113   1968.070          8   filemap_fdatawait_keep_errors
-      1974.367    246.796   1967.895          8   __filemap_fdatawait_range
-      1935.407     37.219   1157.627         52   folio_wait_writeback
+  $ sudo perf ftrace -- perf stat true
+  ...
+   1)               |    get_unused_fd_flags() {
+   1)               |      alloc_fd() {
+   1)   0.178 us    |        _raw_spin_lock();
+   1)   0.187 us    |        expand_files();
+   1)   0.169 us    |        _raw_spin_unlock();
+   1)   1.211 us    |      }
+   1)   1.503 us    |    }
 
-While the kernel also provides the similar functionality IIRC under
-CONFIG_FUNCTION_PROFILER, it's often not enabled on disto kernels so I
-implemented it in user space.
+  $ sudo perf ftrace --graph-opts tail -- perf stat true
+  ...
+   1)               |    get_unused_fd_flags() {
+   1)               |      alloc_fd() {
+   1)   0.099 us    |        _raw_spin_lock();
+   1)   0.083 us    |        expand_files();
+   1)   0.081 us    |        _raw_spin_unlock();
+   1)   0.601 us    |      } /* alloc_fd */
+   1)   0.751 us    |    } /* get_unused_fd_flags */
 
-Also it can support function filters like 'perf ftrace trace' so users
-can focus on some target functions and change the buffer size if needed.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-ftrace.txt |  1 +
+ tools/perf/builtin-ftrace.c              | 18 ++++++++++++++++++
+ tools/perf/util/ftrace.h                 |  1 +
+ 3 files changed, 20 insertions(+)
 
-  $ sudo perf ftrace profile -h
-  
-   Usage: perf ftrace [<options>] [<command>]
-      or: perf ftrace [<options>] -- [<command>] [<options>]
-      or: perf ftrace {trace|latency|profile} [<options>] [<command>]
-      or: perf ftrace {trace|latency|profile} [<options>] -- [<command>] [<options>]
-  
-      -a, --all-cpus        System-wide collection from all CPUs
-      -C, --cpu <cpu>       List of cpus to monitor
-      -G, --graph-funcs <func>
-                            Trace given functions using function_graph tracer
-      -g, --nograph-funcs <func>
-                            Set nograph filter on given functions
-      -m, --buffer-size <size>
-                            Size of per cpu buffer, needs to use a B, K, M or G suffix.
-      -N, --notrace-funcs <func>
-                            Do not trace given functions
-      -p, --pid <pid>       Trace on existing process id
-      -s, --sort <key>      Sort result by key: total (default), avg, max, count, name.
-      -T, --trace-funcs <func>
-                            Trace given functions using function tracer
-      -v, --verbose         Be more verbose
-          --tid <tid>       Trace on existing thread id (exclusive to --pid)
-
-
-The code is also available in 'perf/ftrace-profile-v1' branch at
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (4):
-  perf ftrace: Add 'tail' option to --graph-opts
-  perf ftrace: Factor out check_ftrace_capable()
-  perf ftrace: Add 'profile' command
-  perf ftrace: Add -s/--sort option to profile sub-command
-
- tools/perf/Documentation/perf-ftrace.txt |  48 ++-
- tools/perf/builtin-ftrace.c              | 439 +++++++++++++++++++++--
- tools/perf/util/ftrace.h                 |   3 +
- 3 files changed, 463 insertions(+), 27 deletions(-)
-
+diff --git a/tools/perf/Documentation/perf-ftrace.txt b/tools/perf/Documentation/perf-ftrace.txt
+index d780b93fcf87..7ea1645a13cf 100644
+--- a/tools/perf/Documentation/perf-ftrace.txt
++++ b/tools/perf/Documentation/perf-ftrace.txt
+@@ -125,6 +125,7 @@ OPTIONS for 'perf ftrace trace'
+ 	  - verbose      - Show process names, PIDs, timestamps, etc.
+ 	  - thresh=<n>   - Setup trace duration threshold in microseconds.
+ 	  - depth=<n>    - Set max depth for function graph tracer to follow.
++	  - tail         - Print function name at the end.
+ 
+ 
+ OPTIONS for 'perf ftrace latency'
+diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
+index eb30c8eca488..33c52ebda2fd 100644
+--- a/tools/perf/builtin-ftrace.c
++++ b/tools/perf/builtin-ftrace.c
+@@ -228,6 +228,7 @@ static void reset_tracing_options(struct perf_ftrace *ftrace __maybe_unused)
+ 	write_tracing_option_file("funcgraph-irqs", "1");
+ 	write_tracing_option_file("funcgraph-proc", "0");
+ 	write_tracing_option_file("funcgraph-abstime", "0");
++	write_tracing_option_file("funcgraph-tail", "0");
+ 	write_tracing_option_file("latency-format", "0");
+ 	write_tracing_option_file("irq-info", "0");
+ }
+@@ -464,6 +465,17 @@ static int set_tracing_funcgraph_verbose(struct perf_ftrace *ftrace)
+ 	return 0;
+ }
+ 
++static int set_tracing_funcgraph_tail(struct perf_ftrace *ftrace)
++{
++	if (!ftrace->graph_tail)
++		return 0;
++
++	if (write_tracing_option_file("funcgraph-tail", "1") < 0)
++		return -1;
++
++	return 0;
++}
++
+ static int set_tracing_thresh(struct perf_ftrace *ftrace)
+ {
+ 	int ret;
+@@ -540,6 +552,11 @@ static int set_tracing_options(struct perf_ftrace *ftrace)
+ 		return -1;
+ 	}
+ 
++	if (set_tracing_funcgraph_tail(ftrace) < 0) {
++		pr_err("failed to set tracing option funcgraph-tail\n");
++		return -1;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -1099,6 +1116,7 @@ static int parse_graph_tracer_opts(const struct option *opt,
+ 		{ .name = "verbose",		.value_ptr = &ftrace->graph_verbose },
+ 		{ .name = "thresh",		.value_ptr = &ftrace->graph_thresh },
+ 		{ .name = "depth",		.value_ptr = &ftrace->graph_depth },
++		{ .name = "tail",		.value_ptr = &ftrace->graph_tail },
+ 		{ .name = NULL, }
+ 	};
+ 
+diff --git a/tools/perf/util/ftrace.h b/tools/perf/util/ftrace.h
+index 558efcb98d25..2515e841c64c 100644
+--- a/tools/perf/util/ftrace.h
++++ b/tools/perf/util/ftrace.h
+@@ -25,6 +25,7 @@ struct perf_ftrace {
+ 	int			graph_noirqs;
+ 	int			graph_verbose;
+ 	int			graph_thresh;
++	int			graph_tail;
+ };
+ 
+ struct filter_entry {
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
