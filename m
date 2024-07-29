@@ -1,97 +1,144 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AF484D34
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 19:18:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB4B38479
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 19:46:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722280728; cv=none; b=jlA09un2h1cSGFgwjetierZqpJcVTHGt0lz7pESXV9+Y/G7k69eXIEfTs5YOxFIoIishiQJDDScORmhLp9MCObvj557AkbXHV0sbTDqe063T7JWpzly9lag8FTCq9dOjtSXObLY1VibhfbHOLNocB3Ka25UJduTwuuR/lDQ1yO0=
+	t=1722282398; cv=none; b=lnKXlTRPIXQWnc6sJkWZrjwlLJ7IvmRWKolN114CbkRU7zkJQlAWEuXUmmPM5JHFZGrs06nmJiVKDKG2RSjIKnB1GJEdO2gAOdEON43XC7D+MUgHNRzE1Gzz0EfRGcEeZ+5rmmMXbCJXemK+g67QP5Walya0NIHc4dcHmASwlH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722280728; c=relaxed/simple;
-	bh=Ik8LN/99yvtz1AhNlUHcDqdWXMAbsA47mSR4vSlSuiw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OM7lYx1Wez/2rCrIy3hNUpQqVstpHkQV17diNsgHWADLciEBQ0QwHUMUM6fZPBb2btbld+fKtSu5z1mVrCmL1W/2kJSriMUYc1EBjLaTH9O7QZ0X66fbIm6y04tx7aJQjyqPsxCSVaNeRhCnu2jIbNd6WL0got7w/7WATyETZj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fRUeDcLR; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722282398; c=relaxed/simple;
+	bh=FR/x2IiQiKwgWe94ryrQfqytEtpInOGLjD8sTqSrMEo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MBwP6ntuVkbOUNaxSOIyhSH8KsVHJCMrfkSRQuY0m+sfdojJzwcYPYhPtojIjbKhwxMX1zCzsoTZZ2EFgGXaDyf4E8JydQjuesPfu3B6oH6taHD6ba/1YRMPexSqB6zNkiVihhJIkvtZzoxbBDzcoHR8ToocngzOXVUuxJz//CE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=s2l733R6; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fRUeDcLR"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-44fee2bfd28so3321cf.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 12:18:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="s2l733R6"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70d357040dbso2801327b3a.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 12:46:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722280726; x=1722885526; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ik8LN/99yvtz1AhNlUHcDqdWXMAbsA47mSR4vSlSuiw=;
-        b=fRUeDcLRXHvuBF+uDVta4zM8eEsSEFlN31TAMXn0U6z3TukW9h5ZhQ97iz60JPcNLc
-         IEhbV/6SEz1Fv77JiFUXEEPhqSOBWMSTK5gJIIEADxSa4vk87LiD2CWwUCRS2g5YtafV
-         +nT5XPNBi6t7YL8ys2py6aL3LztoEfZMkiumaWTbLUlyjqcmKDUc3U540ni3xmS/UNRT
-         ECmpjueunfF+NmUredDVnx77+TUQBcJY6aPHe7KoAOyRrpCQC7kND/4JzdXklzeaTtJy
-         4XOgvL3odfm1b/DWhjVa4eRWbWi5FuwH2eW0tNYY9D3lUMv9vJIaRyU/iic9AoaKsLDI
-         vyyQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1722282395; x=1722887195; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Eb6u1v+rp+L34/fq+ePdWX4sBR+FCrH0jIJkH5yVcjY=;
+        b=s2l733R6qWbw3INNvzlgjBMnhj5F6w1vFVhl0MZJu1sq0XlL7bi+PXUanH1DbuKNKo
+         3wYfXBw7DDJBBwn1/LDIv9YdmAmqgUa842XXeuTlZ0Glfb9Xr+j5t4sIMGkaML+0tpjE
+         ZsWf3RFOI4GUgtswmX2FbBPz46rhA10pfNr84SdSfj/2YxcIn69/MigfjmHbBvWy92fq
+         sADQ9s9JLspqttPl6UQggWDLLw8LZjhTIiKMdMHhghQNjyGPXzuR/ELwZ7gWBQFMsAdV
+         DnAGOHcyJSeBI+reVuBpGO6Y6QUYUtHoDcbwoLyNk/QbXH/mTlMNwv3UsKSzE1c49y2J
+         AS0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722280726; x=1722885526;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ik8LN/99yvtz1AhNlUHcDqdWXMAbsA47mSR4vSlSuiw=;
-        b=Wab9bZ2DuX/2N5Wloo1JD/hmfvfTiZsW3ZzQlnQBjR+4QWo11iuKCr/hZKmQo7ZMpx
-         5zrcNEqPQbdSUjGbshZEEXGRD1tC2crlwwYqYiKgxP9I7W/igwyKDaauFjO5+rq70OXQ
-         anPtPtseANV70iw8Trx87m770347xsluSp+BZLlnawdzdVaJFsGIc/M0r2FR5bsFcKcC
-         9GinP0S669KbTy7MgpGewea/t1Qw0ER86Gx8Jlkjs49rZ03LODv4Y4/9vmnD0UGIhegv
-         hAGU3MRmw+2DUJxWHjhJbmoBBRe4HCRYwdqcmilh3o/gRVn3lNDroUbQbbmGFTiwxhC8
-         I5nw==
-X-Forwarded-Encrypted: i=1; AJvYcCXST6fz+3qCzsJOIWysFsQrLql+avhMGXSwurPYl3yamIvNgEQxubXRc8QoejxFFmEe+4+W+PVSySRbEq+ryk0l579+GBfdJ1OSr6EhfxIdpQ==
-X-Gm-Message-State: AOJu0YyG/rDptuJkrHgmqz+tbOGs+gQ07zeOnn1XNNi8DNY7rvC0pXQo
-	aBkdEbxOWQX0heviCbVppISjs6b9p3K8mbVBOlzyZMMteyF1yl0PC0Zmkyds4UK9n/DUFY1mNVG
-	5Q3tod98/cr9zXb83JKJAZP1NaFQn1MVMj3OK
-X-Google-Smtp-Source: AGHT+IEcBazdiRrv8i8kLmhIG3D0dTm9OOIYhyEXUC0hGTlSBxhx8ppT8HrmovTQ5uc5vkkAGW/ZxlkflVCULH9288s=
-X-Received: by 2002:a05:622a:44e:b0:447:dbac:facd with SMTP id
- d75a77b69052e-450329ac71fmr1233981cf.24.1722280726157; Mon, 29 Jul 2024
- 12:18:46 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1722282395; x=1722887195;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Eb6u1v+rp+L34/fq+ePdWX4sBR+FCrH0jIJkH5yVcjY=;
+        b=LTSJpiZ5OB2GFO0fKJpQAbrkH9+THt8rlWM+1ol1aJ+e7r8QwgmVP1WOt4SmDytjWp
+         Cd5Lqs9VhLJxZFClmkkpgkXL34eDQ6OHv1ez4Lrn7Ngk0B7ldCLX3iTX5LzcE6GL0Kr8
+         k0V/WIo95v3OPdcO5SGpTMbuSP/dfHX6TAdskVWYYAh4zNPxjiUs88wQw5CG49+N3pXU
+         8isIhf5p9cSJuNZYIx7TJ2eYiyDjtlJjO+9wEMv+f+Kl38uD5g9MscXBIxqle2lnEKwJ
+         vsTryis06WZWlDyX0KXxGA/NbhHtNP/wOV8ThUII6ay/E2H6H7EFNKBi45XvM43ylJPi
+         HYfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSQqwp5UPryunseU18Suh9PJdiy5TlRFqTzMQGDMcxxXJPfGkNQIpOqhU14xQ2oYk9zsZUtSzvH4eOdEcZXtCJbd7ydthURFmpVivZZMcgKw==
+X-Gm-Message-State: AOJu0YzzZ3L+ZiYib2f8W83OEXE+Z3b2TnSwAe9nd2uLohfD4MKyCh5U
+	+gakpCgukRj9ZGJVhFmmNUvlqLFGJwBywZ1AToe4kqmky/f0Cd6AMLMSvEf0vXo=
+X-Google-Smtp-Source: AGHT+IF2xMDcCMLViVzTPYLxX6qawEepMk2EQYJGWmKToargwVSNSokPyBL0gjsTSIrYtJNenIhKYw==
+X-Received: by 2002:a05:6a20:430f:b0:1c0:f675:ed08 with SMTP id adf61e73a8af0-1c4a129a73bmr8141673637.6.1722282395112;
+        Mon, 29 Jul 2024 12:46:35 -0700 (PDT)
+Received: from ghost ([50.145.13.30])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead712f25sm7141309b3a.81.2024.07.29.12.46.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 12:46:34 -0700 (PDT)
+Date: Mon, 29 Jul 2024 12:46:31 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] libbpf: Move opts code into dedicated header
+Message-ID: <Zqfxl82VCxUUi3R+@ghost>
+References: <20240726-overflow_check_libperf-v2-0-7d154dcf6bea@rivosinc.com>
+ <20240726-overflow_check_libperf-v2-2-7d154dcf6bea@rivosinc.com>
+ <CAEf4BzZ8MGa8Ywp_9ztJh6naywqtfrbeGWs4=izw-e-p4GGxcA@mail.gmail.com>
+ <ZqfXd0FKtXCJ5dwH@ghost>
+ <CAEf4BzZ9B=CPuti9smOqDKD1dRvs3Ug7h9pHupr6jFeKEppJ4g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240525013021.436430-2-irogers@google.com> <202405311548.1e881dea-oliver.sang@intel.com>
- <CAP-5=fX7ZyT82=W8uSZbT7c76E5+1JaoR5-y_gcj7A_=Js1YfA@mail.gmail.com>
- <Zl3Q7AtOWY8ZCcg8@xsang-OptiPlex-9020> <CAP-5=fU=UPpZTULuyZm=Ep0Ri6SdTciL5kqpciUfnWyDvz6HZg@mail.gmail.com>
- <CAP-5=fV5Qdu5iH_DKeAXQfEmQN9SmxCViSgbOCvAmN529WoeOw@mail.gmail.com>
- <ZmphzTKiDDYkPPP+@xsang-OptiPlex-9020> <CAP-5=fUUnnL18x_mdQdaCePOSbk5VWP3jfAS44n7qahD7pja5Q@mail.gmail.com>
- <ZpXdUiNhFbqJvkZK@xsang-OptiPlex-9020>
-In-Reply-To: <ZpXdUiNhFbqJvkZK@xsang-OptiPlex-9020>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 Jul 2024 12:18:34 -0700
-Message-ID: <CAP-5=fWS6F09aNgz9FVRrAK5ZRvSJ=8o4UAkTfsHdZVaoMi_-Q@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] perf jevents: Autogenerate empty-pmu-events.c
-To: Oliver Sang <oliver.sang@intel.com>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Weilin Wang <weilin.wang@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, John Garry <john.g.garry@oracle.com>, 
-	Sandipan Das <sandipan.das@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZ9B=CPuti9smOqDKD1dRvs3Ug7h9pHupr6jFeKEppJ4g@mail.gmail.com>
 
-On Mon, Jul 15, 2024 at 7:39=E2=80=AFPM Oliver Sang <oliver.sang@intel.com>=
- wrote:
->
-> hi, Ian,
->
-> thanks a lot for detail analysis! we will check further.
+On Mon, Jul 29, 2024 at 11:59:47AM -0700, Andrii Nakryiko wrote:
+> On Mon, Jul 29, 2024 at 10:55 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> >
+> > On Mon, Jul 29, 2024 at 10:01:05AM -0700, Andrii Nakryiko wrote:
+> > > On Mon, Jul 29, 2024 at 9:46 AM Charlie Jenkins <charlie@rivosinc.com> wrote:
+> > > >
+> > > > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > > > ---
+> > > >  tools/include/tools/opts.h      | 68 +++++++++++++++++++++++++++++++++++++++++
+> > > >  tools/lib/bpf/bpf.c             |  1 +
+> > > >  tools/lib/bpf/btf.c             |  1 +
+> > > >  tools/lib/bpf/btf_dump.c        |  1 +
+> > > >  tools/lib/bpf/libbpf.c          |  3 +-
+> > > >  tools/lib/bpf/libbpf_internal.h | 48 -----------------------------
+> > > >  tools/lib/bpf/linker.c          |  1 +
+> > > >  tools/lib/bpf/netlink.c         |  1 +
+> > > >  tools/lib/bpf/ringbuf.c         |  1 +
+> > > >  9 files changed, 76 insertions(+), 49 deletions(-)
+> > > >
+> > >
+> > > Nope, sorry, I don't think I want to do this for libbpf. This will
+> > > just make Github synchronization trickier, and I don't really see a
+> > > point.
+> > >
+> > > I'm totally fine with libperf making a copy of these helpers, though
+> > > (this is not complicated or tricky code). I also don't think it will
+> > > change much, so there is little risk of any sort of divergence.
+> >
+> > I did this because there were two comments on the previous version of
+> > this patch that asked to change the functions that were copied over.  I
+> > had a couple of choices, have the implementations diverge, not change
+> > the implementation in perf to keep it the same as bpf, update both perf
+> > and bpf, or share the implementations. I figured the last option was the
+> > best to avoid immediate divergence. However, both of the comments can be
+> > safely ignored, and also perhaps divergence doesn't matter.
+> >
+> 
+> I mean, feel free to diverge. First and foremost the code has to make
+> sense to specific library and specific use case. If libperf has some
+> extra things that it needs to enforce or check, by all means. I just
+> want to avoid unnecessary code sharing, given the code isn't tricky or
+> complicated, but will complicate libbpf's sync story to Github (libbpf
+> kind of lives in two places, kernel repo and Github repo).
 
-Hi Oliver,
+Alright, I like to avoid copy-pasting code but if that's what is
+required I will do that.
 
-I'd like to see these patches land, is there any follow up? I think
-the build breakage was patches applied incorrectly so I don't think
-there is any reason not to take the series.
-
-Thanks,
-Ian
+> 
+> > - Charlie
+> >
+> > >
+> > > [...]
