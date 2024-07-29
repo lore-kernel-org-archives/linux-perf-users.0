@@ -1,136 +1,214 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA7AD548F7;
-	Mon, 29 Jul 2024 14:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AA002D05D;
+	Mon, 29 Jul 2024 14:18:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722262104; cv=none; b=MqVQFxZqqedpvDwTvsd328S71gnjbWldVo4OKq35VqsCNMBtBZpve27vGonl9uLGhxGUKJJ6a1SCUVVMLDW7tJX4U+EHkjDMdK+Y2h+IKHP9+s3qmnVZvKTi2WLRUnbirKDHbmSzndkLmeIBwxAHeaBqH0hlXG35S5rvQOrYQRg=
+	t=1722262726; cv=none; b=tbfBg0tv9KBQESUdTK2/GSV75wzuanZLNUf7P2cKUcAL7Qqy8dKRCQrjUYViISIDxKrUZHI5teJ/VfEMv8p3sNT0JiPPsVvBCkrLiWKGDlsx8wuO6rgYQUWphEAuLO53K3/1siA0bcMRMUh5LiIhGCm9FYDAVPclJw8OLHPvQtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722262104; c=relaxed/simple;
-	bh=0GOu/YbkMnIvifKpKHaITdjDgfDP9/b3yuL++b1FOsE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=hg03rARuYX46YIuoW+xdovl/r+bsVwDeUcyNHSNEO/5weMpRDQruUJZ4mS0w/Xef5TVvsFH99tdlbtmUJ984Yg+pK7E8KxGJM3PDKChMmH2EaoPIEA/37X/jglhQWdE70lZH0HWchuRwbs40nXnE+5YmZkyjm3eEgicc7OrH/yw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.174])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WXgDj1lzdzxVgs;
-	Mon, 29 Jul 2024 22:08:05 +0800 (CST)
-Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 613791402CA;
-	Mon, 29 Jul 2024 22:08:14 +0800 (CST)
-Received: from lihuafei.huawei.com (10.90.53.74) by
- kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Mon, 29 Jul 2024 22:08:13 +0800
-From: Li Huafei <lihuafei1@huawei.com>
-To: <peterz@infradead.org>, <mingo@redhat.com>, <kan.liang@linux.intel.com>
-CC: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <tglx@linutronix.de>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <ak@linux.intel.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <lihuafei1@huawei.com>
-Subject: [PATCH v2] perf/x86: Fix smp_processor_id()-in-preemptible warnings
-Date: Tue, 30 Jul 2024 06:09:28 +0800
-Message-ID: <20240729220928.325449-1-lihuafei1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1722262726; c=relaxed/simple;
+	bh=Vd+TP+ne+tPizGSFxdDfsVocyn+YVjdvSfDgIqU6mLw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F8ZxqKR/x1/wmzfX0eY8Q7l63nKycmuD0qxTBYf4BfOJF74uRsvyWcDQFg3gAIDeUByd3rYjjkqADMCrP1dmnKGbPiAqiKwXkXyrUmZk9cgNL+0QnSx/Yxf6AhIT72XSmtym+ST24bf4eCFdiS6wrdpgWFd/4KckZrz9Hi9mCPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4WXgSf4dFcz4f3kkB;
+	Mon, 29 Jul 2024 22:18:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 3A26B1A0568;
+	Mon, 29 Jul 2024 22:18:35 +0800 (CST)
+Received: from [10.67.108.244] (unknown [10.67.108.244])
+	by APP4 (Coremail) with SMTP id gCh0CgAXPoS5pKdmD37KAA--.41544S3;
+	Mon, 29 Jul 2024 22:18:35 +0800 (CST)
+Message-ID: <4633334d-7b23-40a1-8b9d-183b0261a092@huaweicloud.com>
+Date: Mon, 29 Jul 2024 22:18:33 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2 2/2] perf/core: Fix incorrected time diff in
+ tick adjust period
+Content-Language: en-US
+To: Adrian Hunter <adrian.hunter@intel.com>, peterz@infradead.org
+Cc: mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
+ irogers@google.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240417115446.2908769-1-luogengkun@huaweicloud.com>
+ <20240417115446.2908769-3-luogengkun@huaweicloud.com>
+ <7c667516-b5a2-48e1-afd8-e45906e69053@intel.com>
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+In-Reply-To: <7c667516-b5a2-48e1-afd8-e45906e69053@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemf500004.china.huawei.com (7.202.181.242)
+X-CM-TRANSID:gCh0CgAXPoS5pKdmD37KAA--.41544S3
+X-Coremail-Antispam: 1UD129KBjvJXoW3AF4kXF4xWw43Jr4rGF1UAwb_yoWxAw47pr
+	W0yr1fKrWkJr18uwnY93WF9F98Ww48A3WDWw18Ka40yw1DGr1YqF1qgFyYgFyDCFs3Za4I
+	v34qgrWayr4YkaUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7Cj
+	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
+	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
+	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
+	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
+	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
+	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
+	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
+	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
+	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
+	7KsUUUUUU==
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-The following bug was triggered on a system built with
-CONFIG_DEBUG_PREEMPT=y:
 
- # echo p > /proc/sysrq-trigger
+On 2024/6/17 21:42, Adrian Hunter wrote:
+> On 17/04/24 14:54, Luo Gengkun wrote:
+>> Adrian found that there is a probability that the number of samples
+>> is small, which is caused by the unreasonable large sampling period.
+>>
+>>   # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
+>>   [ perf record: Woken up 1 times to write data ]
+>>   [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
+>>   # perf script
+>>   ...
+>>   test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
+>>   ...
+>>
+>> It seems that the Timer Interrupts is not coming every TICK_NSEC when
+> No, the period is not adjusted unless the event is active i.e. scheduled in.
+> So an event in a task context where the task sleeps a lot will
+> likely not be adjusted every tick.
+Yes, your explanation makes sense.
+>> system is idle. For example, counter increase n during 2 * TICK_NSEC,
+>> and it call perf_adjust_period using n and TICK_NSEC, so the final period
+>> we calculated will be bigger than expected one. What's more, if the
+>> the overflow time is larger than 2 * TICK_NSEC we cannot tune the period
+>> using __perf_event_account_interrupt. To fix this problem, perf can
+>> calculate the tick interval by itself.
+> Yes, the period can get stuck being too big:
+>
+> 	perf_adjust_freq_unthr_events() calculates a value that is
+> 	too big because it incorrectly assumes the count has
+> 	accumulated only since the last tick, whereas it can have
+> 	been much longer.
+>
+> 	__perf_event_account_interrupt() has an unexplained limit
+> 	(2*TICK_NSEC) on the count delta, and won't adjust the
+> 	period if that is exceeded.
+>
+>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+>> ---
+>>   include/linux/perf_event.h |  1 +
+>>   kernel/events/core.c       | 15 ++++++++++++---
+>>   2 files changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+>> index afb028c54f33..2708f1d0692c 100644
+>> --- a/include/linux/perf_event.h
+>> +++ b/include/linux/perf_event.h
+>> @@ -265,6 +265,7 @@ struct hw_perf_event {
+>>   	 * State for freq target events, see __perf_event_overflow() and
+>>   	 * perf_adjust_freq_unthr_context().
+>>   	 */
+>> +	u64				freq_tick_stamp;
+>>   	u64				freq_time_stamp;
+>>   	u64				freq_count_stamp;
+>>   #endif
+>> diff --git a/kernel/events/core.c b/kernel/events/core.c
+>> index cad50d3439f1..0f2025d631aa 100644
+>> --- a/kernel/events/core.c
+>> +++ b/kernel/events/core.c
+>> @@ -4112,7 +4112,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+>>   {
+>>   	struct perf_event *event;
+>>   	struct hw_perf_event *hwc;
+>> -	u64 now, period = TICK_NSEC;
+>> +	u64 now, period, tick_stamp;
+>>   	s64 delta;
+>>   
+>>   	/*
+>> @@ -4151,6 +4151,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+>>   		 */
+>>   		event->pmu->stop(event, PERF_EF_UPDATE);
+>>   
+>> +		tick_stamp = perf_clock();
+> Perhaps jiffies would work just as well, but be
+> more efficient.
 
- BUG: using smp_processor_id() in preemptible [00000000] code: sh/117
- caller is perf_event_print_debug+0x1a/0x4c0
- CPU: 3 UID: 0 PID: 117 Comm: sh Not tainted 6.11.0-rc1 #109
- Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
- Call Trace:
-  <TASK>
-  dump_stack_lvl+0x4f/0x60
-  check_preemption_disabled+0xc8/0xd0
-  perf_event_print_debug+0x1a/0x4c0
-  __handle_sysrq+0x140/0x180
-  write_sysrq_trigger+0x61/0x70
-  proc_reg_write+0x4e/0x70
-  vfs_write+0xd0/0x430
-  ? handle_mm_fault+0xc8/0x240
-  ksys_write+0x9c/0xd0
-  do_syscall_64+0x96/0x190
-  entry_SYSCALL_64_after_hwframe+0x4b/0x53
+I tried to use jiffies as shown below.
 
-This is because the commit d4b294bf84db ("perf/x86: Hybrid PMU support
-for counters") took smp_processor_id() outside the irq critical section.
-If a preemption occurs in perf_event_print_debug() and the task is
-migrated to another cpu, we may get incorrect pmu debug information.
-Move smp_processor_id() back inside the irq critical section to fix this
-issue.
+                 tick_stamp = perf_clock();
++               printk("debug jiffies64:%llu, clock:%llu\n", 
+jiffies64_to_nsecs(get_jiffies_64()), perf_clock());
+                 period = tick_stamp - hwc->freq_tick_stamp;
 
-Fixes: d4b294bf84db ("perf/x86: Hybrid PMU support for counters")
-Signed-off-by: Li Huafei <lihuafei1@huawei.com>
----
-v2:
- - "cpu" and "idx" are defined together.
- - Use guard(irqsave)() instead of local_irq_save{restore}() to avoid
-   forgetting to restore irq when returning early.
----
- arch/x86/events/core.c | 22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+But the result is odd and I don't know why, the result is pasted below.
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index 12f2a0c14d33..2cadfdd8dd99 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1521,19 +1521,22 @@ void perf_event_print_debug(void)
- {
- 	u64 ctrl, status, overflow, pmc_ctrl, pmc_count, prev_left, fixed;
- 	u64 pebs, debugctl;
--	int cpu = smp_processor_id();
--	struct cpu_hw_events *cpuc = &per_cpu(cpu_hw_events, cpu);
--	unsigned long *cntr_mask = hybrid(cpuc->pmu, cntr_mask);
--	unsigned long *fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
--	struct event_constraint *pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
--	unsigned long flags;
--	int idx;
-+	int cpu, idx;
-+	struct cpu_hw_events *cpuc;
-+	unsigned long *cntr_mask, *fixed_cntr_mask;
-+	struct event_constraint *pebs_constraints;
-+
-+	guard(irqsave)();
-+
-+	cpu = smp_processor_id();
-+	cpuc = &per_cpu(cpu_hw_events, cpu);
-+	cntr_mask = hybrid(cpuc->pmu, cntr_mask);
-+	fixed_cntr_mask = hybrid(cpuc->pmu, fixed_cntr_mask);
-+	pebs_constraints = hybrid(cpuc->pmu, pebs_constraints);
- 
- 	if (!*(u64 *)cntr_mask)
- 		return;
- 
--	local_irq_save(flags);
--
- 	if (x86_pmu.version >= 2) {
- 		rdmsrl(MSR_CORE_PERF_GLOBAL_CTRL, ctrl);
- 		rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, status);
-@@ -1577,7 +1580,6 @@ void perf_event_print_debug(void)
- 		pr_info("CPU#%d: fixed-PMC%d count: %016llx\n",
- 			cpu, idx, pmc_count);
- 	}
--	local_irq_restore(flags);
- }
- 
- void x86_pmu_stop(struct perf_event *event, int flags)
--- 
-2.25.1
+[  423.646990] debug jiffies64:4295090788000000, clock:423646990256
+[  423.685989] debug jiffies64:4295090827000000, clock:423685989583
+[  423.719989] debug jiffies64:4295090861000000, clock:423719989830
+[  423.755990] debug jiffies64:4295090897000000, clock:423755990128
+[  423.766990] debug jiffies64:4295090908000000, clock:423766989901
+[  423.777990] debug jiffies64:4295090918000000, clock:423777989972
+[  423.787989] debug jiffies64:4295090929000000, clock:423787989835
+[  423.798989] debug jiffies64:4295090940000000, clock:423798989359
+[  423.833990] debug jiffies64:4295090975000000, clock:423833990057
+[  423.878989] debug jiffies64:4295091020000000, clock:423878989503
+[  423.898990] debug jiffies64:4295091040000000, clock:423898990201
+[  423.921989] debug jiffies64:4295091063000000, clock:423921989762
+[  423.967989] debug jiffies64:4295091109000000, clock:423967989325
+[  424.011989] debug jiffies64:4295091153000000, clock:424011989387
+[  424.099989] debug jiffies64:4295091241000000, clock:424099989730
+[  424.169989] debug jiffies64:4295091311000000, clock:424169989577
+
+perf_clock gets the right answer and jiffies make me confuse.
+
+Looking forward to your reply, sincerely.
+
+>> +		period = tick_stamp - hwc->freq_tick_stamp;
+>> +		hwc->freq_tick_stamp = tick_stamp;
+>> +
+>>   		now = local64_read(&event->count);
+>>   		delta = now - hwc->freq_count_stamp;
+>>   		hwc->freq_count_stamp = now;
+>> @@ -4162,8 +4166,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+>>   		 * to perf_adjust_period() to avoid stopping it
+>>   		 * twice.
+>>   		 */
+>> -		if (delta > 0)
+>> -			perf_adjust_period(event, period, delta, false);
+>> +		if (delta > 0) {
+>> +			/*
+>> +			 * we skip first tick adjust period
+>> +			 */
+>> +			if (likely(period != tick_stamp))
+>> +				perf_adjust_period(event, period, delta, false);
+>> +		}
+>>   
+>>   		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
+>>   	next:
 
