@@ -1,179 +1,109 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CD591B86D6
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 22:06:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA68D18F2DF
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 23:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722290786; cv=none; b=aSs8DENAfLAcV4jfFtk9C/najbbfFGadzdSVKb/UHuSdp/lYIXSEE3TOTFv4j+NHwjn06G7md3l6Ik8XqlOsfBz1leVly89toPNHaSLxQ6zuU/juAHf6cs31rr5gd00rZbO4poe6xWcPORTH7WYMFOnB5aflyteTnNmsQxcY+W8=
+	t=1722294667; cv=none; b=NOMZCHVbwvisdn5o6hDF9a0QswcVvQyd4lvxkeiL/L0GBFvFZBtafLLs3I2UijuEctczsvZCHGMl5cKrp1xlZT1B1V9QXJhBap1OssCnoOjlYO9U8WTYqa4e/uM0RtYk7NJSSVh8+QJwNFr8XKEfcoUA35nVdJDIXR3vD7eOoGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722290786; c=relaxed/simple;
-	bh=EeQeYK+x64OXkhmMGTFuYNlDUaC+XK0yykrV4HcmysA=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=iVg/5bDfcZY1EFR+wGYJ3m0xj5g6rZCK7H0DbCBgKQtVr9woJR1rFJGQlMee8FZ+MdxWW4usOMQ0Fh8WA87DjGK9RFeXrg8kW04AGJy0LABtm/hyHMmLY1jYmVIj8MkQgpOUtp6eqIb66csLN4osbkSg3YOpekF5AF5xbR0eTuo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Z8hz7dZA; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1722294667; c=relaxed/simple;
+	bh=5HHOtQIso9qtWjfwf6FJh2CMKju6bDNni/rw1/SKRoc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Q9iebRP/0CGZ217nbfdQnUlEB8tJyhOVCLqPrVq2ueSnF+NsdA40gaTfsKj4IelGeLUx+TK/i5dq2RU85m8dYPmqaEQuzEKEAOriQAcSyRCz9f7FLnixLV9UFPj+8vfQqYrhlUmvvmfBXftRWQV3H0uK2F5OPxSD/wX1jjuG6QM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=cIQmsoZk; arc=none smtp.client-ip=209.85.160.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z8hz7dZA"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6506bfeaf64so67287937b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 15:06:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="cIQmsoZk"
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-260e12aac26so2858144fac.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 16:11:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722290783; x=1722895583; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=j4C+fPzygUAiWhfLZfE/xPC2ysJ0EaSf4F96gDN4Sp0=;
-        b=Z8hz7dZADzNey7mEqI/Fpxsv2XV0QjVNJ6SUzx8hEnh70lmeJKZ7MZ9SpZ/s4WhQqS
-         UJe4+sp0mNbBS4mXL20YIgJBtDXJOMUOKM+ZLEkkm9rIDcSZ+1gNasGVWbbI31m2rb/H
-         2z8LE6EDjlkPnSQW/lpl9TEpr/5Ogdp1MmepPlOHsIQEYvWY6L3geBSYo+B46YROGtNq
-         JIUbApuG4+iJTzCF/0D1wKgluAa9pgdM6KlcGxY8qG9Qm7RB71nQnOB1gHdJclDUP+mD
-         F5hLZSmzErFvFJ870C4r5IV3k7DcJl53o+3/QeD7bWDhlyVWxo/epswWH4QAyCKhCHRJ
-         JPNg==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1722294665; x=1722899465; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+Kq2aqigLfOIOLKw3DvfLTvrf9ebVnlwFLXvqIP00zA=;
+        b=cIQmsoZkwJazUnmph2u99p27cOkIrrIiOY658NaLjfAhZ/xIsN4Fg6I8wLPk9gwC0F
+         Rs7ohIuWujRHPZM8vUSJWbRJtBK7ixaHNeTLjh8A+IHbrN5aE6+QbOdyEmzUKZKeNPeT
+         xPBIDXQGaDaPpHc1mzkDo4lCzJpj1Uj6Fyx5Zdlo7Li4D1swGO75JJW0MGVm2CoQGXNl
+         si90HDUgjCy4uSzqE4TwOSqe6JqxAVuMDi7L2wd4DsJ+PMPb5fgPTf7bjJu+88+G17mG
+         1o1zf9oCEF7YjcYRY4tfuT47eaJIzTDCiZVKoBUfwtnn30DdlYkGmYN5yQBKmLte+LTP
+         UaFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722290783; x=1722895583;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=j4C+fPzygUAiWhfLZfE/xPC2ysJ0EaSf4F96gDN4Sp0=;
-        b=CjU1XYxPxnfjA3mckbm1frsI+lVoRz1x/VbpJmGNw/eChD99vp1nYyYvfCxFIV8oLu
-         NYVqDoWVo1pFtAwZBj5Il3Z2LrIn2a9LUoxmPgZSLsoslbmWSkMeyClEMhBGRC6wYFzg
-         agHI6zEWIPAqiCt9FzpaJUqx1COfiYSoYm0tXkVi+GiDKcVAvAgQKLZocXsYv73E4Q0w
-         zhv5MVxDyov76NuDqRsIC8sFqpWdJD17TNDGd7OTMi1dNCDaB2PSjw+aG2Fiao2ReLsa
-         hwnHg+LAbfX3Tm1g2ommgvI3OjkKjOqNew5hAROqssg+qQkAEd2mkdpdr3IPXEqAY+TT
-         +J7g==
-X-Forwarded-Encrypted: i=1; AJvYcCUpeudmtOmwcyQ87xHXlGypb0cAMRxV2zthScDooVyuUfJLJvrFSe4d0lmXgW3YbRrxb70ipzqzYUKnQkZxIdZOr4VKt15mwrCRqq5ZNWGW0Q==
-X-Gm-Message-State: AOJu0YwUeNzA4ogFJoirDmtBQF/njaYoVFIJE6soYs2/Jmj6xR8Edfei
-	J1PzfcykYSLwwPuFUU0bU8qvPa9OaGYOPXWSDGOKKK97hnq/6V+ULH/NsWfniaeGoO9AQSIMbGH
-	qqqkWRg==
-X-Google-Smtp-Source: AGHT+IHUfVZDhR9sNayBuvkNVMU2Wg5cyT0rDNgLTynhCATmluyf/2EVBs4/9fcA1k5lBhJ2AVLIx6Yqij0Q
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3776:680e:8cce:4b93])
- (user=irogers job=sendgmr) by 2002:a05:6902:729:b0:e03:c033:1ce3 with SMTP id
- 3f1490d57ef6-e0b5443f94fmr585990276.4.1722290783537; Mon, 29 Jul 2024
- 15:06:23 -0700 (PDT)
-Date: Mon, 29 Jul 2024 15:06:20 -0700
-Message-Id: <20240729220620.2957754-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1722294665; x=1722899465;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+Kq2aqigLfOIOLKw3DvfLTvrf9ebVnlwFLXvqIP00zA=;
+        b=MDwTijcda7A8x5uHMxSDX8Sj6aG73Es9C30scHLAIv5R2RG59ouoxmoPqZITbH45HJ
+         DsVthbIkMncpdUAUaEi4MlAHU8Uc4jxrth7guUWiOG0JBhBhnToGZEMrqtN2v+ui/Mz/
+         BAwlutOcm5mwdEVmK2p4BM6CbsL388tCDt7K10iD9lOKJEhmJZvGb/wSxbUpa5liyg5w
+         umdrqNYKm56fEwmw6i5YxCTHS8SJT+yBj+XXIOtrlBpr968a8/s4y/r8xV0gPuMek8by
+         h+4P08iBLgLcssGqxKhW5CIpDM+k2a1uYnrmbNby6FrxjGnvFD+CTuldSX1GfEVfEljc
+         R/dg==
+X-Forwarded-Encrypted: i=1; AJvYcCVPmwzzRgNm1KOq1XQUuCLyZuqXiOu5ICkZC3T+yuUw1TnaHivz/gdKn4daILWNv0le9FPus6CMcrKBrHbFuPfFc6j9JChyXsSVRVYzce/9kQ==
+X-Gm-Message-State: AOJu0YzNZH7AWBha6Cu6AQDgvKjvMJcAXubrim8s0S9KzNQzI3h5xUdg
+	gB1z9ulw3sLtrCeJtQDzyYKAgnVb+7e20Gyt2LP6yENP7sRONxQreH/XmYAZPwM=
+X-Google-Smtp-Source: AGHT+IGVjl/yM957QxIvLIkxsZNfZeWQKhKMrBsGgDcXMwFFnSfipbM0NLq25wywYQ45nmmiDSP+JQ==
+X-Received: by 2002:a05:6871:3384:b0:261:1eb4:dd7e with SMTP id 586e51a60fabf-267d4d16846mr10827646fac.2.1722294664783;
+        Mon, 29 Jul 2024 16:11:04 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-70ead72ba2csm7558919b3a.93.2024.07.29.16.11.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 16:11:04 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Mon, 29 Jul 2024 16:11:02 -0700
+Subject: [PATCH] libperf: Add gitignore
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Subject: [PATCH v1] perf inject: Fix leader sampling inserting additional samples
-From: Ian Rogers <irogers@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240729-libperf_gitignore-v1-1-1c70dd98edf9@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAIUhqGYC/x3MTQqAIBBA4avIrBNKin6uEhGZow2EyRgRiHdPW
+ n6L9xJEZMIIk0jA+FCkyxc0lYD92LxDSaYYVK3aulejPEkHZLs6usn5i1FiN5hR91Z3jYHSBUZ
+ L7/+cl5w/u5juM2MAAAA=
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1722294663; l=618;
+ i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
+ bh=5HHOtQIso9qtWjfwf6FJh2CMKju6bDNni/rw1/SKRoc=;
+ b=DwvByIRDgyAFj0qhuwRS8O42MNVSIXMojZdsJN8l/DW3DXVf2LxIaBK449Pbd22gHagOoMFT9
+ h3/IZuCdnw3DXsFXDcaBmeuJIgZgHsqj+hyzie3TUpc8kms/HWzQlk7
+X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
+ pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
 
-The processing of leader samples would turn an individual sample with
-a group of read values into multiple samples. Perf inject would pass
-through the additional samples increasing the output data file size:
+Ignore files that are generated by libperf and libperf tests.
 
-```
-$ perf record -g -e "{instructions,cycles}:S" -o perf.orig.data true
-$ perf script -D -i perf.orig.data | sed -e 's/perf.orig.data/perf.data/g' > orig.txt
-$ perf inject -i perf.orig.data -o perf.new.data
-$ perf script -D -i perf.new.data | sed -e 's/perf.new.data/perf.data/g' > new.txt
-$ diff -u orig.txt new.txt
---- orig.txt    2024-07-29 14:29:40.606576769 -0700
-+++ new.txt     2024-07-29 14:30:04.142737434 -0700
-...
--0xc550@perf.data [0x30]: event: 3
-+0xc550@perf.data [0xd0]: event: 9
-+.
-+. ... raw event: size 208 bytes
-+.  0000:  09 00 00 00 01 00 d0 00 fc 72 01 86 ff ff ff ff  .........r......
-+.  0010:  74 7d 2c 00 74 7d 2c 00 fb c3 79 f9 ba d5 05 00  t},.t},...y.....
-+.  0020:  e6 cb 1a 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
-+.  0030:  02 00 00 00 00 00 00 00 76 01 00 00 00 00 00 00  ........v.......
-+.  0040:  e6 cb 1a 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-+.  0050:  62 18 00 00 00 00 00 00 f6 cb 1a 00 00 00 00 00  b...............
-+.  0060:  00 00 00 00 00 00 00 00 0c 00 00 00 00 00 00 00  ................
-+.  0070:  80 ff ff ff ff ff ff ff fc 72 01 86 ff ff ff ff  .........r......
-+.  0080:  f3 0e 6e 85 ff ff ff ff 0c cb 7f 85 ff ff ff ff  ..n.............
-+.  0090:  bc f2 87 85 ff ff ff ff 44 af 7f 85 ff ff ff ff  ........D.......
-+.  00a0:  bd be 7f 85 ff ff ff ff 26 d0 7f 85 ff ff ff ff  ........&.......
-+.  00b0:  6d a4 ff 85 ff ff ff ff ea 00 20 86 ff ff ff ff  m......... .....
-+.  00c0:  00 fe ff ff ff ff ff ff 57 14 4f 43 fc 7e 00 00  ........W.OC.~..
-+
-+1642373909693435 0xc550 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 2915700/2915700: 0xffffffff860172fc period: 1 addr: 0
-+... FP chain: nr:12
-+.....  0: ffffffffffffff80
-+.....  1: ffffffff860172fc
-+.....  2: ffffffff856e0ef3
-+.....  3: ffffffff857fcb0c
-+.....  4: ffffffff8587f2bc
-+.....  5: ffffffff857faf44
-+.....  6: ffffffff857fbebd
-+.....  7: ffffffff857fd026
-+.....  8: ffffffff85ffa46d
-+.....  9: ffffffff862000ea
-+..... 10: fffffffffffffe00
-+..... 11: 00007efc434f1457
-+... sample_read:
-+.... group nr 2
-+..... id 00000000001acbe6, value 0000000000000176, lost 0
-+..... id 00000000001acbf6, value 0000000000001862, lost 0
-+
-+0xc620@perf.data [0x30]: event: 3
-...
-```
-
-This behavior is incorrect as in the case above perf inject should
-have done nothing. Fix this behavior by disabling separating samples
-for a tool that requests it. Only request this for `perf inject` so as
-to not affect other perf tools. With the patch and the test above
-there are no differences between the orig.txt and new.txt.
-
-Fixes: e4caec0d1af3 ("perf evsel: Add PERF_SAMPLE_READ sample related processing")
-Signed-off-by: Ian Rogers <irogers@google.com>
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
 ---
- tools/perf/builtin-inject.c | 1 +
- tools/perf/util/session.c   | 3 +++
- tools/perf/util/tool.h      | 1 +
- 3 files changed, 5 insertions(+)
+ tools/lib/perf/.gitignore | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index a212678d47be..c80fb0f60e61 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -2204,6 +2204,7 @@ int cmd_inject(int argc, const char **argv)
- 			.finished_init	= perf_event__repipe_op2_synth,
- 			.compressed	= perf_event__repipe_op4_synth,
- 			.auxtrace	= perf_event__repipe_auxtrace,
-+			.dont_split_sample_group = true,
- 		},
- 		.input_name  = "-",
- 		.samples = LIST_HEAD_INIT(inject.samples),
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5596bed1b8c8..080242c69196 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1511,6 +1511,9 @@ static int deliver_sample_group(struct evlist *evlist,
- 	int ret = -EINVAL;
- 	struct sample_read_value *v = sample->read.group.values;
- 
-+	if (tool->dont_split_sample_group)
-+		return deliver_sample_value(evlist, tool, event, sample, v, machine);
-+
- 	sample_read_group__for_each(v, sample->read.group.nr, read_format) {
- 		ret = deliver_sample_value(evlist, tool, event, sample, v,
- 					   machine);
-diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
-index c957fb849ac6..62bbc9cec151 100644
---- a/tools/perf/util/tool.h
-+++ b/tools/perf/util/tool.h
-@@ -85,6 +85,7 @@ struct perf_tool {
- 	bool		namespace_events;
- 	bool		cgroup_events;
- 	bool		no_warn;
-+	bool		dont_split_sample_group;
- 	enum show_feature_header show_feat_hdr;
- };
- 
+diff --git a/tools/lib/perf/.gitignore b/tools/lib/perf/.gitignore
+new file mode 100644
+index 000000000000..0f5b4af63f62
+--- /dev/null
++++ b/tools/lib/perf/.gitignore
+@@ -0,0 +1,5 @@
++# SPDX-License-Identifier: GPL-2.0-only
++libperf.pc
++libperf.so.*
++tests-shared
++tests-static
+
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240729-libperf_gitignore-e58d9b7fb51d
 -- 
-2.46.0.rc1.232.g9752f9e123-goog
+- Charlie
 
