@@ -1,384 +1,215 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBC6178274
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 18:19:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD85F1662EF
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 18:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722277177; cv=none; b=jmpKlHNlcJfAW/t2sO+CHscSIizzzYZtNaoHJdJgjQNDoeMRManP6jMidxA6A+dtq6xJN+xLDOr+e3+AJAD5sIWgVGJyjxEE2JXraz6Q1oR/5tcnYlOjBnTQrhcbKmVPJpJRPPLvrqLkcLaUoqEl6/8UC/4yUaXcloSDwwajPu4=
+	t=1722277191; cv=none; b=omB1khhzXNw1d6p5AoiB/xteDf2GbIq0y3lSXriBejfzM79UHZslUUEmAn9BYqZ7sPo3dLflQHVaT5hh0sDUxlQVh6mV09YTcdPJBIQSSgPy2XgE4AhdKqwaSirxxRzqvfDR555seM8yxsXci0Li7/G1bNbo2YMWXbLdmaEhLvM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722277177; c=relaxed/simple;
-	bh=48Go5WZEqhZGkBLcDojOQI4gD4oXH21Xgao7HzO4ksQ=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=GNXDWrSKaNbPqAOnRGqsNu/mdnncH/DAajztsPQSKA3/kXktI7ByMiR2jKZjIIv+BehwssfPkSMULTaDjMxvkOQqQ4zjFVJxpgHy/f1zPi7mGDKsKPGkWaZiXXxe24LJ24g10ESujTGNL4iidBcTc7tfbWBwP0nfstpvKJX3LE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sFQfrVyT; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1722277191; c=relaxed/simple;
+	bh=mCX7ZespUD3P/oxNqGTSO8756McUqLba+pIo/Bcv0iY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Hi1HcpWhjkiEJCS1cgoMd6u5if7GMS40XMLzkOaroim3fcc2tpzElB+ZobjxHsRqjkjq5o34jhfwIDovUmMPzIzeOWIPTgPm8/vvJWZMizyGkpdjFU66S0ncEWDd8LlIqhvXflhrwSJfvCI9roVDMN1SlkPL0i2SN4+Zpg/05po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=d895n1VQ; arc=none smtp.client-ip=209.85.166.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sFQfrVyT"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-650b621f4cdso62161677b3.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 11:19:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="d895n1VQ"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-39641271f2aso14832675ab.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 11:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722277175; x=1722881975; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=UBx8QBhVTUb4n5W83/d6yuCCHVNeWTRoWsFaxdXjeGE=;
-        b=sFQfrVyTaTs6rWpDcuzKKdK7BoFk7o8RDhbKrDw51X6sDpjym8H1Kkq2gA3Z+PPWKk
-         arDNByoUhIuHXdkFKvY7TAXbGedJnPs4jU2fTJTAeH0SqWteuqMxlVhCvFlFhPcfuIr2
-         wzaunUokboQlMWXthJq25Oa9ZwBtY3lWbfo+iapPILG9OK+JyWsTpf2HQSQ/qlSJk41J
-         lHb6JTZxqeJa/fb3Vd/DEKELJB0o9wqZ6Ufim5nO6kXsS1S+M+3zac0+00OXoyGPFToe
-         C28wy1cLIlyjXwt5U+QAEvc+xvJBOF9BOCXy0vyH84kLJ79F25bZEi+xUFyaJKkWAbh+
-         MYGQ==
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1722277188; x=1722881988; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NLZornX8WAGKa8yt077Nm/8QnebdQj4sROMMiTvI2j4=;
+        b=d895n1VQs0tTW0Aum/je/et4tYtaB7fH21Nx7p+8TRmOJKxiPUWC1doVtQMfEoLXY2
+         3ydJghHTyEzKNz4TITuvQrilJAD6uNbPbob/qlbuaxL2Rg8fXwRmusPzxn1kIYo+Lxe/
+         beR/87B/NcGkmjiWJunzGRlv+WuSyd82w94wdAhHrBM0pqveY3FkJd+k8ZqiAIc7nv6A
+         k693bG1SdX1XSAV9DBimLMt358vSPO4Zl5lVxQbqA0B9oui/+XAAi/zUIK4Fw4husyPQ
+         ldBtGYyfhbV3Vkm/D6H2gm+6HtUUN1QITFOVh9Lp3GVK7cZXfxMJEmNQLF8HbP24UfEM
+         y40g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722277175; x=1722881975;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UBx8QBhVTUb4n5W83/d6yuCCHVNeWTRoWsFaxdXjeGE=;
-        b=BQVoKXDrIZ/55rfZjDcRAMu+sKJe3kmPACNBofkyQAwUnBijHBycVBmqcKWU9vvYqV
-         IgkhdUy1JXwIRRDh2/G4TqojkNiRxAM/R5UGTpEpclLxxbEq4Cd2NbicGhLDW0PLgWXm
-         K1Zb1mVisTrpSN2pMDqhRxBZ08KcoRRrM3qRq9huVddKLTHNQ46NMBSJau5z0IpCE+zz
-         2YXCAcj1w6iFYBsb00uOImxr84oPMPdKj/yWKixAAlYI0bVyY00yrtyWCpyqBrk5WP9Z
-         4N6arwxNGXvyyC2JoMGN2EQENPYajWYTB0ggZd0ikNYvVI5FVP6psn4mdmjFnOh1Jf7V
-         8nOA==
-X-Forwarded-Encrypted: i=1; AJvYcCUe+Gl/gTsh55XtO++g/0Cv2zUE4eILdbR8IZqWiARkkZcv6lunS1YK/8wbeQMPk6vZUD3bF/dynjq+K98AjImDwXyY2KbgmylIuomLEG7Qfg==
-X-Gm-Message-State: AOJu0YwkNa4RM0ugvB7TKdTDVuwZqv76zrujYuSlm7emjqeWCoyKhkfj
-	9Z0A2R4Ps7+QekRqSH23J8IyQUZI0n62S4euMzYmxYvGp6cl+7B3h3uPWzvTMRfN8BgHNhSzE5I
-	Vx06qkg==
-X-Google-Smtp-Source: AGHT+IG1WSdS1+smV1Up5m2EVXP2AUrg+zRaNpYStAxrEFYlNxPnjIdOdwoGyFYxYPHniZO20dT94TnYI9+W
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:3776:680e:8cce:4b93])
- (user=irogers job=sendgmr) by 2002:a05:690c:f0f:b0:673:b39a:92ea with SMTP id
- 00721157ae682-67a09d5e1damr1221107b3.7.1722277174921; Mon, 29 Jul 2024
- 11:19:34 -0700 (PDT)
-Date: Mon, 29 Jul 2024 11:19:31 -0700
-Message-Id: <20240729181931.2870851-1-irogers@google.com>
+        d=1e100.net; s=20230601; t=1722277188; x=1722881988;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NLZornX8WAGKa8yt077Nm/8QnebdQj4sROMMiTvI2j4=;
+        b=HukksTsUOIvjKcAyOhvl68S7+xvhjFw/YqbLpbXfq4M3ozWDEqqvE2Gx8WTjknKqDO
+         bSVRxLvhy/nfEvcjRSbo5e5zRNGtwhded9JuReOQnpVEMwA0Uq168xMPu3IgXN2ET6aM
+         ehmWcJRfTUuXPY5K1JJz1ROqnBXhs0vOg6127ve3tYWPXEmJoRzOgc30N9LNWFkLLR4a
+         LJ5WieBukHmxbddatPDXjtG5CUAYafVfStFbpdVfn022OlkXiMfCXP4MZ1g/fOsMOHwz
+         E7kpud12hejt1VIQ9gG07QAhyiXNEu2I8iwI5GSZZm6vwQLuTd2slnDh1omyMWs8ndXe
+         N/9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVZGnkgQq3erP4f3luZvGKl18COa0Szaa7YjUOuuGM511K90zqj8gdW0zDEbWW9gBlvpeZc3m3ndTp/5PoultR2uOZxQPUqqt/dnvLKENXmfw==
+X-Gm-Message-State: AOJu0YzW9QPlTVGzPGVB9K5oX1VsBMyOn4x/+EiyxSpp2WLOgAfq/d/m
+	4PW7e58N7dMH4ShSzNiO37Nw4IQdveq6Ca1afoGOceL0oZD89+uRBXq6ZxBq2/U=
+X-Google-Smtp-Source: AGHT+IF4BTnbGjnQsdqxs/SVCkJGOF3dKX/SjJGZrcZt0TOaKi/Hz3g0YG9awyZqFcTslL1Na/jssQ==
+X-Received: by 2002:a05:6e02:1546:b0:374:983b:6ff2 with SMTP id e9e14a558f8ab-39aec410470mr103773605ab.20.1722277187784;
+        Mon, 29 Jul 2024 11:19:47 -0700 (PDT)
+Received: from atishp.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7a9fa5a3760sm7377373a12.94.2024.07.29.11.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jul 2024 11:19:47 -0700 (PDT)
+From: Atish Patra <atishp@rivosinc.com>
+To: eric.lin@sifive.com
+Cc: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	peterlin@andestech.com,
+	dminus@andestech.com,
+	locus84@andestech.com,
+	jisheng.teoh@starfivetech.com,
+	inochiama@outlook.com,
+	n.shubin@yadro.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Atish Patra <atishp@rivosinc.com>
+Subject: Re: [v2] perf arch events: Fix duplicate RISC-V SBI firmware event name
+Date: Mon, 29 Jul 2024 11:19:27 -0700
+Message-Id: <20240729181927.1712841-1-atishp@rivosinc.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240719115018.27356-1-eric.lin@sifive.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Subject: [PATCH v2] perf cap: Tidy up and improve capability testing
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Leo Yan <leo.yan@linux.dev>, 
-	Changbin Du <changbin.du@huawei.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Remove dependence on libcap. libcap is only used to query whether a
-capability is supported, which is just 1 capget system call.
+> Currently, the RISC-V firmware JSON file has duplicate event name
+> "FW_SFENCE_VMA_RECEIVED". According to the RISC-V SBI PMU extension[1],
+> the event name should be "FW_SFENCE_VMA_ASID_SENT".
+> 
+> Before this patch:
+> $ perf list
+> 
+> firmware:
+>   fw_access_load
+>        [Load access trap event. Unit: cpu]
+>   fw_access_store
+>        [Store access trap event. Unit: cpu]
+> ....
+>  fw_set_timer
+>        [Set timer event. Unit: cpu]
+>   fw_sfence_vma_asid_received
+>        [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
+>   fw_sfence_vma_received
+>        [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
+> 
+> After this patch:
+> $ perf list
+> 
+> firmware:
+>   fw_access_load
+>        [Load access trap event. Unit: cpu]
+>   fw_access_store
+>        [Store access trap event. Unit: cpu]
+> .....
+>   fw_set_timer
+>        [Set timer event. Unit: cpu]
+>   fw_sfence_vma_asid_received
+>        [Received SFENCE.VMA with ASID request from other HART event. Unit: cpu]
+>   fw_sfence_vma_asid_sent
+>        [Sent SFENCE.VMA with ASID request to other HART event. Unit: cpu]
+>   fw_sfence_vma_received
+>        [Received SFENCE.VMA request from other HART event. Unit: cpu]
+> 
+> Link: https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ext-pmu.adoc#event-firmware-events-type-15 [1]
+> Fixes: 8f0dcb4e7364 ("perf arch events: riscv sbi firmware std event files")
+> Fixes: c4f769d4093d ("perf vendor events riscv: add Sifive U74 JSON file")
+> Fixes: acbf6de674ef ("perf vendor events riscv: Add StarFive Dubhe-80 JSON file")
+> Fixes: 7340c6df49df ("perf vendor events riscv: add T-HEAD C9xx JSON file")
+> Fixes: f5102e31c209 ("riscv: andes: Support specifying symbolic firmware and hardware raw event")
+> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+> Reviewed-by: Nikita Shubin <n.shubin@yadro.com>
+> ---
+> Changes since V1:
+>  - Add "Fixes:" tag for every patch that copied firmware.json
+> ---
+>  tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json       | 2 +-
+>  tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json        | 2 +-
+>  tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json       | 2 +-
+>  .../perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json  | 2 +-
+>  .../perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json  | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+> diff --git a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> index 9b4a032186a7..7149caec4f80 100644
+> --- a/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/andes/ax45/firmware.json
+> @@ -36,7 +36,7 @@
+>      "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+>    },
+>    {
+> -    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+>    },
+>    {
+>      "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> diff --git a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> index a9939823b14b..0c9b9a2d2958 100644
+> --- a/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/riscv-sbi-firmware.json
+> @@ -74,7 +74,7 @@
+>    {
+>      "PublicDescription": "Sent SFENCE.VMA with ASID request to other HART event",
+>      "ConfigCode": "0x800000000000000c",
+> -    "EventName": "FW_SFENCE_VMA_RECEIVED",
+> +    "EventName": "FW_SFENCE_VMA_ASID_SENT",
+>      "BriefDescription": "Sent SFENCE.VMA with ASID request to other HART event"
+>    },
+>    {
+> diff --git a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
+> index 9b4a032186a7..7149caec4f80 100644
+> --- a/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/sifive/u74/firmware.json
+> @@ -36,7 +36,7 @@
+>      "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+>    },
+>    {
+> -    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+>    },
+>    {
+>      "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> diff --git a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+> index 9b4a032186a7..7149caec4f80 100644
+> --- a/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/starfive/dubhe-80/firmware.json
+> @@ -36,7 +36,7 @@
+>      "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+>    },
+>    {
+> -    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+>    },
+>    {
+>      "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> diff --git a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+> index 9b4a032186a7..7149caec4f80 100644
+> --- a/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+> +++ b/tools/perf/pmu-events/arch/riscv/thead/c900-legacy/firmware.json
+> @@ -36,7 +36,7 @@
+>      "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+>    },
+>    {
+> -    "ArchStdEvent": "FW_SFENCE_VMA_RECEIVED"
+> +    "ArchStdEvent": "FW_SFENCE_VMA_ASID_SENT"
+>    },
+>    {
+>      "ArchStdEvent": "FW_SFENCE_VMA_ASID_RECEIVED"
+> 
 
-If the capget system call fails, fall back on root permission
-checking. Previously if libcap fails then the permission is assumed
-not present which may be pessimistic/wrong.
-
-Add a used_root out argument to perf_cap__capable to say whether the
-fall back root check was used. This allows the correct error message,
-"root" vs "users with the CAP_PERFMON or CAP_SYS_ADMIN capability", to
-be selected.
-
-Tidy uses of perf_cap__capable so that tests aren't repeated if capget
-isn't supported, to reduce calls or refactor similar to:
-https://lore.kernel.org/lkml/20240729004127.238611-3-namhyung@kernel.org/
----
-v2: fix syscall number and '>' should have been '>='
-
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/Makefile.config  | 11 -------
- tools/perf/builtin-ftrace.c | 44 ++++++++++++--------------
- tools/perf/util/Build       |  2 +-
- tools/perf/util/cap.c       | 63 ++++++++++++++++++++++++++-----------
- tools/perf/util/cap.h       | 23 ++------------
- tools/perf/util/symbol.c    |  8 ++---
- tools/perf/util/util.c      | 12 +++++--
- 7 files changed, 81 insertions(+), 82 deletions(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a4829b6532d8..a9517272f80c 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -1018,17 +1018,6 @@ ifndef NO_LIBZSTD
-   endif
- endif
- 
--ifndef NO_LIBCAP
--  ifeq ($(feature-libcap), 1)
--    CFLAGS += -DHAVE_LIBCAP_SUPPORT
--    EXTLIBS += -lcap
--    $(call detected,CONFIG_LIBCAP)
--  else
--    $(warning No libcap found, disables capability support, please install libcap-devel/libcap-dev)
--    NO_LIBCAP := 1
--  endif
--endif
--
- ifndef NO_BACKTRACE
-   ifeq ($(feature-backtrace), 1)
-     CFLAGS += -DHAVE_BACKTRACE_SUPPORT
-diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-index eb30c8eca488..435208288d24 100644
---- a/tools/perf/builtin-ftrace.c
-+++ b/tools/perf/builtin-ftrace.c
-@@ -560,6 +560,23 @@ static void select_tracer(struct perf_ftrace *ftrace)
- 	pr_debug("%s tracer is used\n", ftrace->tracer);
- }
- 
-+static bool check_ftrace_capable(void)
-+{
-+	bool used_root;
-+
-+	if (perf_cap__capable(CAP_PERFMON, &used_root))
-+		return true;
-+
-+	if (!used_root && perf_cap__capable(CAP_SYS_ADMIN, &used_root))
-+		return true;
-+
-+	pr_err("ftrace only works for %s!\n",
-+		used_root ? "root"
-+			  : "users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-+		);
-+	return -1;
-+}
-+
- static int __cmd_ftrace(struct perf_ftrace *ftrace)
- {
- 	char *trace_file;
-@@ -569,18 +586,6 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
- 		.events = POLLIN,
- 	};
- 
--	if (!(perf_cap__capable(CAP_PERFMON) ||
--	      perf_cap__capable(CAP_SYS_ADMIN))) {
--		pr_err("ftrace only works for %s!\n",
--#ifdef HAVE_LIBCAP_SUPPORT
--		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
--#else
--		"root"
--#endif
--		);
--		return -1;
--	}
--
- 	select_tracer(ftrace);
- 
- 	if (reset_tracing_files(ftrace) < 0) {
-@@ -885,18 +890,6 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
- 	};
- 	int buckets[NUM_BUCKET] = { };
- 
--	if (!(perf_cap__capable(CAP_PERFMON) ||
--	      perf_cap__capable(CAP_SYS_ADMIN))) {
--		pr_err("ftrace only works for %s!\n",
--#ifdef HAVE_LIBCAP_SUPPORT
--		"users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
--#else
--		"root"
--#endif
--		);
--		return -1;
--	}
--
- 	trace_fd = prepare_func_latency(ftrace);
- 	if (trace_fd < 0)
- 		goto out;
-@@ -1197,6 +1190,9 @@ int cmd_ftrace(int argc, const char **argv)
- 	INIT_LIST_HEAD(&ftrace.graph_funcs);
- 	INIT_LIST_HEAD(&ftrace.nograph_funcs);
- 
-+	if (!check_ftrace_capable())
-+		return -1;
-+
- 	signal(SIGINT, sig_handler);
- 	signal(SIGUSR1, sig_handler);
- 	signal(SIGCHLD, sig_handler);
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 0f18fe81ef0b..91ce0ab4defc 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -220,7 +220,7 @@ perf-util-$(CONFIG_ZLIB) += zlib.o
- perf-util-$(CONFIG_LZMA) += lzma.o
- perf-util-$(CONFIG_ZSTD) += zstd.o
- 
--perf-util-$(CONFIG_LIBCAP) += cap.o
-+perf-util-y += cap.o
- 
- perf-util-$(CONFIG_CXX_DEMANGLE) += demangle-cxx.o
- perf-util-y += demangle-ocaml.o
-diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-index c3ba841bbf37..7574a67651bc 100644
---- a/tools/perf/util/cap.c
-+++ b/tools/perf/util/cap.c
-@@ -3,27 +3,52 @@
-  * Capability utilities
-  */
- 
--#ifdef HAVE_LIBCAP_SUPPORT
--
- #include "cap.h"
--#include <stdbool.h>
--#include <sys/capability.h>
--
--bool perf_cap__capable(cap_value_t cap)
--{
--	cap_flag_value_t val;
--	cap_t caps = cap_get_proc();
-+#include "debug.h"
-+#include <errno.h>
-+#include <string.h>
-+#include <unistd.h>
-+#include <linux/capability.h>
-+#include <sys/syscall.h>
- 
--	if (!caps)
--		return false;
-+#ifndef SYS_capget
-+#define SYS_capget 90
-+#endif
- 
--	if (cap_get_flag(caps, cap, CAP_EFFECTIVE, &val) != 0)
--		val = CAP_CLEAR;
-+#define MAX_LINUX_CAPABILITY_U32S _LINUX_CAPABILITY_U32S_3
- 
--	if (cap_free(caps) != 0)
--		return false;
--
--	return val == CAP_SET;
-+bool perf_cap__capable(int cap, bool *used_root)
-+{
-+	struct __user_cap_header_struct header = {
-+		.version = _LINUX_CAPABILITY_VERSION_3,
-+		.pid = getpid(),
-+	};
-+	struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S];
-+	__u32 cap_val;
-+
-+	*used_root = false;
-+	while (syscall(SYS_capget, &header, &data[0]) == -1) {
-+		/* Retry, first attempt has set the header.version correctly. */
-+		if (errno == EINVAL && header.version != _LINUX_CAPABILITY_VERSION_3 &&
-+		    header.version == _LINUX_CAPABILITY_VERSION_1)
-+			continue;
-+
-+		pr_debug2("capget syscall failed (%s - %d) fall back on root check\n",
-+			  strerror(errno), errno);
-+		*used_root = true;
-+		return geteuid() == 0;
-+	}
-+
-+	/* Extract the relevant capability bit. */
-+	if (cap >= 32) {
-+		if (header.version == _LINUX_CAPABILITY_VERSION_3) {
-+			cap_val = data[1].effective;
-+		} else {
-+			/* Capability beyond 32 is requested but only 32 are supported. */
-+			return false;
-+		}
-+	} else {
-+		cap_val = data[0].effective;
-+	}
-+	return (cap_val & (1 << (cap & 0x1f))) != 0;
- }
--
--#endif  /* HAVE_LIBCAP_SUPPORT */
-diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-index ae52878c0b2e..0c6a1ff55f07 100644
---- a/tools/perf/util/cap.h
-+++ b/tools/perf/util/cap.h
-@@ -3,26 +3,6 @@
- #define __PERF_CAP_H
- 
- #include <stdbool.h>
--#include <linux/capability.h>
--#include <linux/compiler.h>
--
--#ifdef HAVE_LIBCAP_SUPPORT
--
--#include <sys/capability.h>
--
--bool perf_cap__capable(cap_value_t cap);
--
--#else
--
--#include <unistd.h>
--#include <sys/types.h>
--
--static inline bool perf_cap__capable(int cap __maybe_unused)
--{
--	return geteuid() == 0;
--}
--
--#endif /* HAVE_LIBCAP_SUPPORT */
- 
- /* For older systems */
- #ifndef CAP_SYSLOG
-@@ -33,4 +13,7 @@ static inline bool perf_cap__capable(int cap __maybe_unused)
- #define CAP_PERFMON	38
- #endif
- 
-+/* Query if a capability is supported, used_root is set if the fallback root check was used. */
-+bool perf_cap__capable(int cap, bool *used_root);
-+
- #endif /* __PERF_CAP_H */
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 19eb623e0826..a18927d792af 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -2425,14 +2425,14 @@ static bool symbol__read_kptr_restrict(void)
- {
- 	bool value = false;
- 	FILE *fp = fopen("/proc/sys/kernel/kptr_restrict", "r");
-+	bool used_root;
-+	bool cap_syslog = perf_cap__capable(CAP_SYSLOG, &used_root);
- 
- 	if (fp != NULL) {
- 		char line[8];
- 
- 		if (fgets(line, sizeof(line), fp) != NULL)
--			value = perf_cap__capable(CAP_SYSLOG) ?
--					(atoi(line) >= 2) :
--					(atoi(line) != 0);
-+			value = cap_syslog ? (atoi(line) >= 2) : (atoi(line) != 0);
- 
- 		fclose(fp);
- 	}
-@@ -2440,7 +2440,7 @@ static bool symbol__read_kptr_restrict(void)
- 	/* Per kernel/kallsyms.c:
- 	 * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
- 	 */
--	if (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))
-+	if (perf_event_paranoid() > 1 && !cap_syslog)
- 		value = true;
- 
- 	return value;
-diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-index 4f561e5e4162..9d55a13787ce 100644
---- a/tools/perf/util/util.c
-+++ b/tools/perf/util/util.c
-@@ -325,9 +325,15 @@ int perf_event_paranoid(void)
- 
- bool perf_event_paranoid_check(int max_level)
- {
--	return perf_cap__capable(CAP_SYS_ADMIN) ||
--			perf_cap__capable(CAP_PERFMON) ||
--			perf_event_paranoid() <= max_level;
-+	bool used_root;
-+
-+	if (perf_cap__capable(CAP_SYS_ADMIN, &used_root))
-+		return true;
-+
-+	if (!used_root && perf_cap__capable(CAP_PERFMON, &used_root))
-+		return true;
-+
-+	return perf_event_paranoid() <= max_level;
- }
- 
- static int
--- 
-2.46.0.rc1.232.g9752f9e123-goog
-
+Reviewed-by: Atish Patra <atishp@rivosinc.com>
