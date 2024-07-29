@@ -1,67 +1,67 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9FD878274
-	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 18:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53F774420
+	for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 18:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722277393; cv=none; b=JFCDFERrSCHdkNt+He0B187oDO9FxpRRzui79KETfqraOsSRWVVoHQzhqwGiJ/ENpa8jKbsG7qOfQ7A7aR2OPM5mXs08lGyQTBstCElmnJLXlCcKlwX2VCjDcpxGR2Yhd0ETnzmQTWlXDPl1hziFDy7mE4I5/OP2i4tejr3lWHY=
+	t=1722278746; cv=none; b=l5sIIrrxXnN1GEsCCfLkQkkUf+L376VbSLDAq8S2CiEv5+ms3JPwHbKYRYvOyE5mgnQMmBotK1nFC+z2fB782wg8CXdvOYb1AmcdN0uV9Y1nWrLiWoncdVvroFQUcaonDYcARPSwvrRu32jFkt+baZ3Fe8V9euHEVAxpVmeUHr0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722277393; c=relaxed/simple;
-	bh=WnNhB5hl4PWalG5K4s/yj7xgk2QRfccIU4uPfCmhzKI=;
+	s=arc-20240116; t=1722278746; c=relaxed/simple;
+	bh=yhMZoKMpgSkhDcS0CFUJlLnkR/cq+2BQz16AEvGllsE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l/od5ihDGYbAmVp+8F6882UrK4SDCKL11RoaUlMe3Ifp+CzUhMkiUTYnssyMuXzytuSBlLqWfeKh2ZfWecO4Sa3afioN+e4rEW6ows8IDVE2pIR4bBQHEvQt1KLwMp+1FZCeDN0RF8oYr+uDSEkhVAXJ11THOcr6bOwCx9ZghSs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vpDMu9Xu; arc=none smtp.client-ip=209.85.214.181
+	 To:Cc:Content-Type; b=oWR5b1p/LH0ANzbHBfauEZFhXPJLlJoY6bL7cY1Rsfcab9UoNwusqmp2ECiUJ9jPXvSmTixpjRDyMZ0ZuL4J9WKFEZYhply3HSku/hEdxtxoMwb5AFFX4+tag23SmyeLShh0hDNZKJxAOOWjC50nuAXRESXOKruopm/qR3CTc7Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DRzbzYYV; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vpDMu9Xu"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fd657c9199so19405ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 11:23:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DRzbzYYV"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fed726aefcso22125ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 29 Jul 2024 11:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722277391; x=1722882191; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722278744; x=1722883544; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9wW9dLEagiP7trbFcpTZEYkzfN8YZbrgKrWxiBHYcWs=;
-        b=vpDMu9XuBtviaWiy5WmCu8+qL8VNvItA/DLZ3eMTHG+aEcC/MgmRYyavTYRWSXLgLR
-         PKhldQ/37h2N4rwqRNgkAo9Lt7RsCYJT+M89DWPmHCX323mGjeZ92xpBqUfMlIBfTvZ2
-         WodxIVMoP8Wj2Ig0jdXMfA1pC6xO2U3DtodUo/Mi3I7qz3fZlp8dyRUAu2H0IKq5ci4g
-         YSHWl6r74xn0bDU3yKKmJt2V/BU6CtMG5i+ASYy2Q61VgMJ77BNlVRbt3drkPUOV0wHt
-         Urxs9tfhFK83NX42esQIEqclwe4tPszC9tljyZE0q9iSsPlnEqhNuaPzr67TYZVuLtYz
-         j7Ew==
+        bh=KkKTflLVLlbpVg5QG3fQq0R+V1cEF+vDcwgomBzv0M4=;
+        b=DRzbzYYVIr9D91t9nldEIKj2v0XOQDQ11Y8BY4rPAZAuw0Lo8v8jhkHCZaolkk1jRw
+         WasBK2+NbP6LHLudYgRUm9spVDW9X/b1o5lWb24XCz1VarcIx6ghrd1BDqqgU3sWeZ35
+         xNDDAiLYIUM5ElugDDzLi5vD8spinhHichA7uZgGpfSeBzN9LMMOgQ7jNjnZ44uc9ut3
+         Wr+s77reD6CFVTgCHOuNJK5JokN3URrNki5deLT6Tlc+Rsbe0vAeU6Umc2l8hLlrw/Eo
+         OpXQ18xaYHjfolplRqRrC0QZ9i0fMlnEpFX9oxcdmVwZVDHIoEHFG9hyGAwwMQbesmgB
+         0AXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722277391; x=1722882191;
+        d=1e100.net; s=20230601; t=1722278744; x=1722883544;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9wW9dLEagiP7trbFcpTZEYkzfN8YZbrgKrWxiBHYcWs=;
-        b=sa6KCCz34Iw3k2RiZoy28VxBru7xWUnMgQQVESVYTUKz1m2Tac4tsMeq+3LWGahfon
-         TWje29sJNW5QJYgwyNOEzgiTEukcE+2EVS7EUllp0T5Y3DSsCH8sfWtI+vd+BMAJv0Wo
-         Bc6ehbqwCraX2N/SrCppzDfRWJAJrdyUDAcO739of3Yj71I14gYVu+7r7e5phZyU8rsz
-         Lt7sijcNN1DtZxKfSUQqsrg9hg2dG3AQ7APD/DqbMqGki24HSR7lWtSPR10CfylFvexU
-         z6Av9vfWFqELG3ZIoKqDteSYnHLwA7XelrRHjL52jg0CNLtNL0CcRwM9/YbENWm1P1xY
-         N/XA==
-X-Forwarded-Encrypted: i=1; AJvYcCXX4YsGyCz0RPxKFQhk9CIxfB/2ku9NqvUVWkkdm7wM11AmqyJWZ8IWrCnGdt9RMmEIW7H0iRrlZcemFsme0TusqCCA16nCg2YjPV6ask/B/Q==
-X-Gm-Message-State: AOJu0YytiUd7KpFZLl1Es+qdg+5bZEvZYcJ95UHwKleT15nOy7qFZGi+
-	vA/uF9B4Bmg5Zng5HRtVKTTB4UTcXmazUftivOasZdfntzHV975jHqiEQr7010dZ6Sm3oszJZuo
-	QnY/YwK3NDp+y6c3AwVGjj5DptRIfZc68HLc3
-X-Google-Smtp-Source: AGHT+IF8Ks4NgZw4ox8mnmoB3loe9bJH8mqZoWZi2P+XuTkyw/POJMltrLC1jn9h4LnhjD0VwKxRWmD/51tyw4ujO6I=
-X-Received: by 2002:a17:903:2a84:b0:1f7:34e4:ebc1 with SMTP id
- d9443c01a7336-1ff34d6465fmr835425ad.5.1722277390733; Mon, 29 Jul 2024
- 11:23:10 -0700 (PDT)
+        bh=KkKTflLVLlbpVg5QG3fQq0R+V1cEF+vDcwgomBzv0M4=;
+        b=xEwHY77IRpcq05yP0Rpu6AXmwA4/pAcqrMVud9U4m8OMEmrdGc9N1lVWe6bZh8jess
+         +TD0hua+5k9dKUN5WJA1ZJszEvhMUB3cKMbEkimB9fSV/ZKZLuM4vTRVT214DnkUkvTA
+         ZM3gNQis4DSwI/iMav+0H/kEctSkUuK1xM477pVzfZgWWUGVcBp9aVsJzqM9BO7KngQj
+         R5me5YVHCiSOewapBmJaf1PPw43N0gtJigWYBtlVURuDDTNBQj9gk0rnPQUq9orrX/MD
+         cq+UVElPyy8E6KrzSKkg2JirR/C/0FS6crELlMkOLhQ/95YN3SL8tvQ8XMWVHUEEy73m
+         8KDQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWIT+iMyze7nP6cAvrsBx7KUYZaq7gx2qwD+ceqx0lZ3qkABywSlHwWDgfK9mVfEuKCJQ7WSlLSSuuG50mmr2lsPbWzxrPG7+LpO5zKeeuXhQ==
+X-Gm-Message-State: AOJu0Yxpjsud9HZVNVo8IvyTdZyyBaF/2nnEXy7CCSoxZcUVYbhsZV89
+	EH/PwQQjjuEmsSLLGXrU05eXTjsTO4jxXoYuAAm4P0o6IIW6TpwA7qYBTyQLVBF62ZPKgtTs+U2
+	SZ9RliNuzJrcJGDl1ZamyisOLqdpmIkR9wqP4
+X-Google-Smtp-Source: AGHT+IHZEorhI2JheufYETqwCJCum+FQju6o8ub0bKteE/XOlJbrIxbdu7ZbQUbCI0NR5mjvwgK5UgS6B16hFju30qg=
+X-Received: by 2002:a17:902:f644:b0:1fb:1006:980f with SMTP id
+ d9443c01a7336-1ff34cea480mr980955ad.16.1722278744056; Mon, 29 Jul 2024
+ 11:45:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240729004127.238611-1-namhyung@kernel.org> <20240729004127.238611-3-namhyung@kernel.org>
-In-Reply-To: <20240729004127.238611-3-namhyung@kernel.org>
+References: <20240729004127.238611-1-namhyung@kernel.org>
+In-Reply-To: <20240729004127.238611-1-namhyung@kernel.org>
 From: Ian Rogers <irogers@google.com>
-Date: Mon, 29 Jul 2024 11:22:59 -0700
-Message-ID: <CAP-5=fVt_k=MzGUhMQzS7YRXQ7xzKEFa9+E4kV0D4BPHCNabGw@mail.gmail.com>
-Subject: Re: [PATCH 2/4] perf ftrace: Factor out check_ftrace_capable()
+Date: Mon, 29 Jul 2024 11:45:32 -0700
+Message-ID: <CAP-5=fUj4FWUvV1xD0aCA=jycBj76RABdWRbH9=5DCZPFHOMwA@mail.gmail.com>
+Subject: Re: [PATCH 0/4] perf ftrace: Add 'profile' subcommand (v1)
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
 	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
@@ -74,101 +74,89 @@ Content-Transfer-Encoding: quoted-printable
 On Sun, Jul 28, 2024 at 5:41=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
 wrote:
 >
-> The check is a common part of the ftrace commands, let's move it out.
+> Hello,
 >
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> This is an attempt to extend perf ftrace command to show a kernel functio=
+n
+> profile using the function_graph tracer.  This is useful to see detailed
+> info like total, average, max time (in usec) and number of calls for each
+> function.
+>
+>   $ sudo perf ftrace profile -- sync | head
+>   # Total (us)   Avg (us)   Max (us)      Count   Function
+>       7638.372   7638.372   7638.372          1   __do_sys_sync
+>       7638.059   7638.059   7638.059          1   ksys_sync
+>       5893.959   1964.653   3747.963          3   iterate_supers
+>       5214.181    579.353   1688.752          9   schedule
+>       3585.773     44.269   3537.329         81   sync_inodes_one_sb
+>       3566.179     44.027   3537.078         81   sync_inodes_sb
+>       1976.901    247.113   1968.070          8   filemap_fdatawait_keep_=
+errors
+>       1974.367    246.796   1967.895          8   __filemap_fdatawait_ran=
+ge
+>       1935.407     37.219   1157.627         52   folio_wait_writeback
+>
+> While the kernel also provides the similar functionality IIRC under
+> CONFIG_FUNCTION_PROFILER, it's often not enabled on disto kernels so I
+> implemented it in user space.
+>
+> Also it can support function filters like 'perf ftrace trace' so users
+> can focus on some target functions and change the buffer size if needed.
+>
+>   $ sudo perf ftrace profile -h
+>
+>    Usage: perf ftrace [<options>] [<command>]
+>       or: perf ftrace [<options>] -- [<command>] [<options>]
+>       or: perf ftrace {trace|latency|profile} [<options>] [<command>]
+>       or: perf ftrace {trace|latency|profile} [<options>] -- [<command>] =
+[<options>]
+>
+>       -a, --all-cpus        System-wide collection from all CPUs
+>       -C, --cpu <cpu>       List of cpus to monitor
+>       -G, --graph-funcs <func>
+>                             Trace given functions using function_graph tr=
+acer
+>       -g, --nograph-funcs <func>
+>                             Set nograph filter on given functions
+>       -m, --buffer-size <size>
+>                             Size of per cpu buffer, needs to use a B, K, =
+M or G suffix.
+>       -N, --notrace-funcs <func>
+>                             Do not trace given functions
+>       -p, --pid <pid>       Trace on existing process id
+>       -s, --sort <key>      Sort result by key: total (default), avg, max=
+, count, name.
+>       -T, --trace-funcs <func>
+>                             Trace given functions using function tracer
+>       -v, --verbose         Be more verbose
+>           --tid <tid>       Trace on existing thread id (exclusive to --p=
+id)
+>
+>
+> The code is also available in 'perf/ftrace-profile-v1' branch at
+> git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+>
+> Thanks,
+> Namhyung
 
-The whole ifdefs and perf_cap__capable seemed wrong, not least as we'd
-like the error message to be accurate not just when libcap is present,
-so I sent out;
-https://lore.kernel.org/lkml/20240729181931.2870851-1-irogers@google.com/
-which I think can supersede this.
+Lgtm, need to think about (rebase, etc) wrt the libcap change I sent
+but otherwise:
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
 
-> ---
->  tools/perf/builtin-ftrace.c | 44 +++++++++++++++++--------------------
->  1 file changed, 20 insertions(+), 24 deletions(-)
+> Namhyung Kim (4):
+>   perf ftrace: Add 'tail' option to --graph-opts
+>   perf ftrace: Factor out check_ftrace_capable()
+>   perf ftrace: Add 'profile' command
+>   perf ftrace: Add -s/--sort option to profile sub-command
 >
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index 33c52ebda2fd..978608ecd89c 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -59,6 +59,22 @@ static void ftrace__workload_exec_failed_signal(int si=
-gno __maybe_unused,
->         done =3D true;
->  }
+>  tools/perf/Documentation/perf-ftrace.txt |  48 ++-
+>  tools/perf/builtin-ftrace.c              | 439 +++++++++++++++++++++--
+>  tools/perf/util/ftrace.h                 |   3 +
+>  3 files changed, 463 insertions(+), 27 deletions(-)
 >
-> +static int check_ftrace_capable(void)
-> +{
-> +       if (!(perf_cap__capable(CAP_PERFMON) ||
-> +             perf_cap__capable(CAP_SYS_ADMIN))) {
-> +               pr_err("ftrace only works for %s!\n",
-> +#ifdef HAVE_LIBCAP_SUPPORT
-> +               "users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-> +#else
-> +               "root"
-> +#endif
-> +               );
-> +               return -1;
-> +       }
-> +       return 0;
-> +}
-> +
->  static int __write_tracing_file(const char *name, const char *val, bool =
-append)
->  {
->         char *file;
-> @@ -586,18 +602,6 @@ static int __cmd_ftrace(struct perf_ftrace *ftrace)
->                 .events =3D POLLIN,
->         };
->
-> -       if (!(perf_cap__capable(CAP_PERFMON) ||
-> -             perf_cap__capable(CAP_SYS_ADMIN))) {
-> -               pr_err("ftrace only works for %s!\n",
-> -#ifdef HAVE_LIBCAP_SUPPORT
-> -               "users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-> -#else
-> -               "root"
-> -#endif
-> -               );
-> -               return -1;
-> -       }
-> -
->         select_tracer(ftrace);
->
->         if (reset_tracing_files(ftrace) < 0) {
-> @@ -902,18 +906,6 @@ static int __cmd_latency(struct perf_ftrace *ftrace)
->         };
->         int buckets[NUM_BUCKET] =3D { };
->
-> -       if (!(perf_cap__capable(CAP_PERFMON) ||
-> -             perf_cap__capable(CAP_SYS_ADMIN))) {
-> -               pr_err("ftrace only works for %s!\n",
-> -#ifdef HAVE_LIBCAP_SUPPORT
-> -               "users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-> -#else
-> -               "root"
-> -#endif
-> -               );
-> -               return -1;
-> -       }
-> -
->         trace_fd =3D prepare_func_latency(ftrace);
->         if (trace_fd < 0)
->                 goto out;
-> @@ -1220,6 +1212,10 @@ int cmd_ftrace(int argc, const char **argv)
->         signal(SIGCHLD, sig_handler);
->         signal(SIGPIPE, sig_handler);
->
-> +       ret =3D check_ftrace_capable();
-> +       if (ret < 0)
-> +               return -1;
-> +
->         ret =3D perf_config(perf_ftrace_config, &ftrace);
->         if (ret < 0)
->                 return -1;
 > --
 > 2.46.0.rc1.232.g9752f9e123-goog
 >
