@@ -1,63 +1,66 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF6F51AA3F1
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 19:17:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2533A18C90A
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 19:17:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722367070; cv=none; b=EMl5zsKw3BsmgvSaae5W0PTbMVBLUnw83woIgHsKbdYb1HFa2ie2t3x8/+Bzf9wASCstZxuhzwRYWam+gZKxl2hqRHHDB6xtuOif78Gto9o9xKKP9uAdox5ln1OAoRSqdwH9boF7R5exUE85R1wA1sV4VOh6RNHHS40zHIIrQfM=
+	t=1722367072; cv=none; b=MSk0yOnu9sRywsfIsnIVu4y3A14LT/2F1wo0rCbieHeWeitcBXMC0y0+zsNZMhzLd6XnQIi3Fb+DxQ/lWahsPzxo4+H3fZUKLldshOoZIHbK/tvnsLI+PBYgg9pyHOZOraZziDGtceEdKtX3ka734VdiOP2vsvWJNwIQ3D32Fqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722367070; c=relaxed/simple;
-	bh=XFEeUN0IV3OvseSsWCX2dxHl2R27oAX3kgzjRpdZ5jo=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=GRl/v/NNoNBkwvBR6OvGnIBzraYzlpk6x1gHIcA9KmykX97BVI8dXDPXSNh887puXAtD8Pz/tq6two01lR8BWL9s39jei0sNJyNbYXITOXkoiYIvc+A34aqzuqMaNoJwL+hmxswTgd3rMLslhX7qYutsT7JhWIzIV8jpUAdDlJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2q41Bfgi; arc=none smtp.client-ip=209.85.219.201
+	s=arc-20240116; t=1722367072; c=relaxed/simple;
+	bh=QZOrbrVSFvz40nx9vDHmvHb3Af1cw8vhwpVnG+d/kxE=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=AOYnr9W9NMRrW3ePLRIdxks+XO6AF9AFAAvLusLurSwmpluAbmbR6MPZd9pjOr+UXayF1URcRfzQQuEL6/YEPY2ZIKObqaNi+J14MfqUrch06QLg3z1ylLrcTgknRfwkqY+Gu2LHCmcQiB9miqaJS69O2nG5n29taqDFtEurKy0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YzWqJxxg; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2q41Bfgi"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0b3742b309so6811384276.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 12:17:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YzWqJxxg"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e0babce6718so1179063276.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 12:17:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722367068; x=1722971868; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jnRKI2DZaKF19Vc7gkMAAWBTLm1lonuKlg3WaQu1cmY=;
-        b=2q41BfgiZHxl4A+Q3trZDAShwM8MwBNGiHrARa02EdDYYsKHqlKAO8usTu96WSukKG
-         0cATWuqCKSoqYXCPaUzag40nWatv6Zq6fYYSWA18JINYNLda0CxuvCvXEEEUZyj8iH1k
-         IybrUVXUCcoVxerLEEc7XejhCBEu7411t7YXeGpht0g2UOeJ6n+Wz4f95x3qQESi/VZn
-         cMdn11rEi/c+pxtwLOFzU7FHXwheHfBxVyq9BBmXOhh/FqaqWCoiMhbmSf1aKibk5wCj
-         YPiWSvJVCQw3eRYmYgWzNpueZ7/DfpOKf5mg3k1y9awvmA8m+9gpiBoNIv4/quSdoDvl
-         ljmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722367068; x=1722971868;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1722367070; x=1722971870; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=jnRKI2DZaKF19Vc7gkMAAWBTLm1lonuKlg3WaQu1cmY=;
-        b=P0KMHi+41R4BFrkaNU8bweQOloWzhlxtrtZOn3UsrX7Nw64FJHIRI6hb1/+82WVbY6
-         2c1PqodiA3ffBbHDhdqJn+8MncBrmb3Nr35VkMdxHqheZ+QxXhX4BKtvwShNnE85UhFk
-         be8vpWikcG+rTqohHmMd12R2qTc6c37KQZ5oY33qEDUclXSjFfUy4Q/oj3CNWOXDybMi
-         AILMKVwSCpyHQ+INCgKcbRIRdvuz5N4eZZ5L+g+mc9Q3P5u0ayYvBpxscuvXZUIYlq6t
-         +L+BiNrq1Rwarv+8Q5bJBUab/GwZYktKS+IgpIuOOMt1t0EB5TSY6ohcvLhxN7Ag+sOW
-         6urg==
-X-Forwarded-Encrypted: i=1; AJvYcCU79ri1HTZcttwr+hYoSzot4+BBbjWichJ1W+t+oR/FmJmyTOmmMAQJzIB3wfc/mUT1JviYlpCj4Xb1YuZMw+YvnkZDoQSXDtrknt0p5Xt9fg==
-X-Gm-Message-State: AOJu0YydFGUtVYzK92L9RNOgaNg/w7Ego50SW2Df6U4BjRI1FhgwygpC
-	o7nqGdkMPtDz654peFYajzi2wKxFl4zTyP9mK+Hz/jhzysBrQL2gVqpjNhkoy5aGlDc/wtWRZW4
-	BCWQ7/g==
-X-Google-Smtp-Source: AGHT+IGHCOIfYE+jU3yP8n/6z+ayYRfbV7TpOWQuKGEYqkamORc80np3zqTC3an9irTD7xo5qfFitXAYjsOS
+        bh=BPOVxn1MOz4Po+ahQmLNc9pZpMQMX4IsBrGFVJB/LRE=;
+        b=YzWqJxxgRFxdxXg3Lmmj3IxwAPoQ7Mi64HcRupHOb99I+XND+2tAsuOCabiEEqn2QE
+         Trp5wOfFo/hfjr01//30VXLy1bXFv058lwZy0cPPUWSOLJZRCufEONBkHcU23scOgV9k
+         DwDBohP2WWCP//lS6z6BaM0ozeRbx59SSmkaiIZLOb+aqeEKLY10aR8m2YFw9Xehfkv3
+         WPZAWMNgGkwkraL7V7ZOrpHtjj8HoIjMbgNm39O9wvpbxQE13uXVCNwtDF1AT40It86x
+         y4wYiP1AkjgNHEgl1EkdJBZ4KBG9JhjeFgZeUUI73FmSp3DGXrQKYe9rGhmA28HWukxH
+         nF+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722367070; x=1722971870;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BPOVxn1MOz4Po+ahQmLNc9pZpMQMX4IsBrGFVJB/LRE=;
+        b=uMUm1j/9CDoko/skP2VbOTqDOi0bKn98ongcvWqRHGaAKivzOnYlPQBdqZSTSazoJb
+         1buKlLHfL7PqYMIQ/tAWBLnT523l30X0aGkbqvSCoI6wjlwJSmuYP3niESbIhDzXUZ1K
+         waAcJYOSIKHdfKZFy7225fZcsiHCmOzZL+1xk6CbgaipkRDCH53Spl2eXeSOBpB74jpO
+         FcXET+JckRLEbj4n77eMNBA++BnFYxWdcjZ6BBeWMlKi2L/dyY7uT79I51ZM+fZXgFzE
+         3hHXdNnbRqMlitZpuW/sgpuuwRwiqPo2paW4BZZzvB1xPokNXqu3rr4guE3sAzxPtWda
+         M/zw==
+X-Forwarded-Encrypted: i=1; AJvYcCUV3zLBCfbnmBQwdn+pxHz+zErSvm8G5dbNgh6ZKTEazGv0pw1H6DCVukNpYIWkdRhmVtnUnlTr7fzHpFsI7BWyThb/8BHckMJr9uGziUlZqQ==
+X-Gm-Message-State: AOJu0YyaQBcRG0OOt3WGsrHcxC6Zbu1PY8MZM1E9TLC9KVaGIQ5X1wUw
+	s59L4FQr2ZTKBcpexLK/7z3Rf4Q5g6qEba0aWDojjm6Irqjr06aPN8udjriEWUO+hdIoAcKQVKq
+	wPl06jQ==
+X-Google-Smtp-Source: AGHT+IE5r3aHVdMBwAXY58Lu8fOyOfcpigXAVj2XKFlPB3GWt+T338Emu07Q9s4GHku0J9t9skoC6tDz/JFV
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b07a:93d0:1b64:3771])
- (user=irogers job=sendgmr) by 2002:a05:6902:2b8c:b0:e03:31ec:8a24 with SMTP
- id 3f1490d57ef6-e0b5450c532mr513973276.8.1722367067754; Tue, 30 Jul 2024
- 12:17:47 -0700 (PDT)
-Date: Tue, 30 Jul 2024 12:17:42 -0700
-Message-Id: <20240730191744.3097329-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a05:6902:18c1:b0:e05:6026:f741 with SMTP
+ id 3f1490d57ef6-e0b5442a26bmr802456276.2.1722367070046; Tue, 30 Jul 2024
+ 12:17:50 -0700 (PDT)
+Date: Tue, 30 Jul 2024 12:17:43 -0700
+In-Reply-To: <20240730191744.3097329-1-irogers@google.com>
+Message-Id: <20240730191744.3097329-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240730191744.3097329-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
-Subject: [PATCH v3 0/2] perf jevents: Autogenerate empty-pmu-events.c
+Subject: [PATCH v3 1/2] perf jevents: Use name for special find value
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -71,27 +74,72 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	Weilin Wang <weilin.wang@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Rebase of v2 patch set on tmp.perf-tools-next.
-https://lore.kernel.org/lkml/20240525013021.436430-1-irogers@google.com/
+-1000 was used as a special value added in Commit 3d5045492ab2 ("perf
+pmu-events: Add pmu_events_table__find_event()") to show that 1 table
+lacked a PMU/event but that didn't terminate the search in other
+tables. Add a new constant PMU_EVENTS__NOT_FOUND for this value and
+use it.
 
-Review was delayed because of an Intel automatic testing issue,
-confirmed not an issue here:
-https://lore.kernel.org/lkml/ZqhGNm+WDcsNx05e@xsang-OptiPlex-9020/
+Signed-off-by: Ian Rogers <irogers@google.com>
+Reviewed-by: John Garry <john.g.garry@oracle.com>
+---
+ tools/perf/pmu-events/jevents.py   | 6 +++---
+ tools/perf/pmu-events/pmu-events.h | 9 +++++++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-v3: Rebase and add John Garry's reviewed-by tag.
-v2: Add not found constant.
-
-Ian Rogers (2):
-  perf jevents: Use name for special find value
-  perf jevents: Autogenerate empty-pmu-events.c
-
- tools/perf/Makefile.perf                 |   2 +
- tools/perf/pmu-events/Build              |  12 +-
- tools/perf/pmu-events/empty-pmu-events.c | 894 ++++++++++++++---------
- tools/perf/pmu-events/jevents.py         |  12 +-
- tools/perf/pmu-events/pmu-events.h       |   9 +
- 5 files changed, 574 insertions(+), 355 deletions(-)
-
+diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+index ac9b7ca41856..731776e29f47 100755
+--- a/tools/perf/pmu-events/jevents.py
++++ b/tools/perf/pmu-events/jevents.py
+@@ -906,7 +906,7 @@ static int pmu_events_table__find_event_pmu(const struct pmu_events_table *table
+   do_call:
+                 return fn ? fn(&pe, table, data) : 0;
+         }
+-        return -1000;
++        return PMU_EVENTS__NOT_FOUND;
+ }
+ 
+ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+@@ -944,10 +944,10 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                         continue;
+ 
+                 ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
+-                if (ret != -1000)
++                if (ret != PMU_EVENTS__NOT_FOUND)
+                         return ret;
+         }
+-        return -1000;
++        return PMU_EVENTS__NOT_FOUND;
+ }
+ 
+ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index f5aa96f1685c..5435ad92180c 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -70,6 +70,8 @@ struct pmu_metric {
+ struct pmu_events_table;
+ struct pmu_metrics_table;
+ 
++#define PMU_EVENTS__NOT_FOUND -1000
++
+ typedef int (*pmu_event_iter_fn)(const struct pmu_event *pe,
+ 				 const struct pmu_events_table *table,
+ 				 void *data);
+@@ -82,6 +84,13 @@ int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+ 				    struct perf_pmu *pmu,
+ 				    pmu_event_iter_fn fn,
+ 				    void *data);
++/*
++ * Search for table and entry matching with pmu__name_match. Each matching event
++ * has fn called on it. 0 implies to success/continue the search while non-zero
++ * means to terminate. The special value PMU_EVENTS__NOT_FOUND is used to
++ * indicate no event was found in one of the tables which doesn't terminate the
++ * search of all tables.
++ */
+ int pmu_events_table__find_event(const struct pmu_events_table *table,
+                                  struct perf_pmu *pmu,
+                                  const char *name,
 -- 
 2.46.0.rc2.264.g509ed76dc8-goog
 
