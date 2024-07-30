@@ -1,36 +1,40 @@
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C29F16A921;
-	Tue, 30 Jul 2024 06:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05A6D13B780;
+	Tue, 30 Jul 2024 08:44:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722320589; cv=none; b=KPjxIP8WAvIgrPFzdIFu5I4HBdQ4rFQ2A4N3jzLAKp8NacOZY4lVZJz9qAXaH1QtWAsEzrm+qVLvKGoJ2yxfvQWQUhlIhuke7G0GCd6c+9mGjbVfcH/TLHfAOzd9Mx/mqiTeWA3U0a50n8vPyIxEiWhwf+nhpzYgYy3/2jZes18=
+	t=1722329070; cv=none; b=EfZXFVKrIcdwfTWx9q6yD1OsfqjGBuaUNm9GZH4gRj95cd1jbUihQaPvBbVi4ErDBrh+Len1HcpBv5UUu/GMpMZmuTnu+jFbJHLGjWl1y7yqJ31CXRECeg5PgtsLMGDnnejqknF2LvBslkTBu4vQez5g6+i+VJCtpisUR8MeP34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722320589; c=relaxed/simple;
-	bh=68Z0ev5O8qNeVBCiiLxDXkPE6X/fm/ltYuf2azXCuJk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S42Diu4FUs+UWYwphV1tYy4VxY61YBi8h871UCEPtBRyOmRcQc07YDYYkqPaFy0gVJGRDVmYlpdpr19bpVfuXPbDPKMtxPejs2uUVQUTLidx6FpMzZztae8ge547USPUhNUxvhNvmKVDCxD0dbqoDlUzNSmCstt69EcUpNHjeD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
-Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8Cx+enJhqhmG0UEAA--.14739S3;
-	Tue, 30 Jul 2024 14:23:05 +0800 (CST)
-Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxRuTGhqhmAhgGAA--.30579S4;
-	Tue, 30 Jul 2024 14:23:03 +0800 (CST)
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] perf list: Give clues if failed to open tracing events directory
-Date: Tue, 30 Jul 2024 14:23:01 +0800
-Message-ID: <20240730062301.23244-3-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.42.0
-In-Reply-To: <20240730062301.23244-1-yangtiezhu@loongson.cn>
-References: <20240730062301.23244-1-yangtiezhu@loongson.cn>
+	s=arc-20240116; t=1722329070; c=relaxed/simple;
+	bh=H0jLOJZj6byNqopyOz7Fpm9waZ1Cra5Kqi3Sh+xL+iA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VuGIMRUZUFwIuGXoomJCj20r2T5LuqmCKOatihjU4hrW+eBBlqWEiCgqDJNn6GfEDtjHXqrBzWvYXwWqJJ6Oe6AQaWYj3iKy9c5x7DGI5Eyf49+3FU8UFuSLgzn/Rbr0c1HVnXtV2YYWcgQ7B3ZBpb2yoDsKFATW1bv0TYSE9hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E538A1007;
+	Tue, 30 Jul 2024 01:44:52 -0700 (PDT)
+Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.8])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9CE543F766;
+	Tue, 30 Jul 2024 01:44:25 -0700 (PDT)
+From: Ben Gainey <ben.gainey@arm.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org
+Cc: james.clark@arm.com,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Ben Gainey <ben.gainey@arm.com>
+Subject: [PATCH v9 0/4] perf: Support PERF_SAMPLE_READ with inherit
+Date: Tue, 30 Jul 2024 09:44:13 +0100
+Message-ID: <20240730084417.7693-1-ben.gainey@arm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -38,96 +42,119 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxRuTGhqhmAhgGAA--.30579S4
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7ur1DGF1DJr1rJF4UAr15WrX_yoW5Jr1Upr
-	s5CrnIkrn5Jw4UG34xJF1rury3CrZ7ur1a9rykCw4ayFZ3XFs0vF4Ikr1YvF13Jr1UJ34S
-	qa1q9r4kCrW8XFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
-	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
-	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
-	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
-	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
-	0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
-	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
-	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI
-	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
-	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
-	xhVjvjDU0xZFpf9x07jz2NtUUUUU=
 
-When executing the command "perf list", I met "Error: failed to open
-tracing events directory" twice, the first reason is that there is no
-"/sys/kernel/tracing/events" directory due to it does not enable the
-kernel tracing infrastructure with CONFIG_FTRACE, the second reason
-is that there is no root privileges.
+This change allows events to use PERF_SAMPLE READ with inherit so long
+as PERF_SAMPLE_TID is also set.
 
-Add the error string to tell the users what happened and what should
-to do, and also call put_tracing_file() to free events_path a little
-later to avoid messy code in the error message.
+Currently it is not possible to use PERF_SAMPLE_READ with inherit. This
+restriction assumes the user is interested in collecting aggregate
+statistics as per `perf stat`. It prevents a user from collecting
+per-thread samples using counter groups from a multi-threaded or
+multi-process application, as with `perf record -e '{....}:S'`. Instead
+users must use system-wide mode, or forgo the ability to sample counter
+groups, or profile a single thread. System-wide mode is often
+problematic as it requires specific permissions (no CAP_PERFMON / root
+access), or may lead to capture of significant amounts of extra data
+from other processes running on the system.
 
-At the same time, just remove the redundant "/" of the file path in
-the function get_tracing_file(), otherwise it shows something like
-"/sys/kernel/tracing//events".
+This patch changes `perf_event_alloc` relaxing the restriction against
+combining `inherit` with `PERF_SAMPLE_READ` so that the combination
+will be allowed so long as `PERF_SAMPLE_TID` is enabled. It modifies
+sampling so that only the count associated with the active thread is
+recorded into the buffer. It modifies the context switch handling so
+that perf contexts are always switched out if they have this kind of
+event so that the correct per-thread state is maintained. Finally, the
+tools are updated to allow perf record to specify this combination and
+to correctly decode the sample data.
 
-Before:
+In this configuration sample values, as may appear in the read_format
+field of a PERF_RECORD_SAMPLE, are no longer global counters. Instead
+the value reports the per-thread value for the active thread.
+Tools that expect the global total, for example when calculate a delta
+between samples, would need updating to take this into account when
+opting into this new behaviour. Previously valid event configurations
+(system-wide, no-inherit and so on) are unaffected.
 
-  $ ./perf list
-  Error: failed to open tracing events directory
 
-After:
+Changes since v8:
+ - Rebase on v6.11-rc1
 
-(1) Without CONFIG_FTRACE
+Changes since v7:
+ - Rebase on v6.10-rc3
+ - Respond to Peter Zijlstra's feedback:
+ - Renamed nr_pending to nr_no_switch_fast and merged in nr_inherit_read
+   which otherwise had overlapping use
+ - Updated some of the commit messages to provide better justifications
+   of usecase, behavioural changes and so on
+ - Cleanup perf_event_count/_cumulative
+ - Make it explicit that the sampling event decides whether or not the
+   per-thread value is given in read_format for PERF_RECORD_SAMPLE and
+   PERF_RECORD_READ; updated tools to account for this.
 
-  $ ./perf list
-  Error: failed to open tracing events directory
-  /sys/kernel/tracing/events: No such file or directory
+Changes since v6:
+ - Rebase on v6.10-rc2
+ - Make additional "perf test" tests succeed / skip based on kernel
+   version as per feedback from Namhyung.
 
-(2) With CONFIG_FTRACE but no root privileges
+Changes since v5:
+ - Rebase on v6.9
+ - Cleanup feedback from Namhyung Kim
 
-  $ ./perf list
-  Error: failed to open tracing events directory
-  /sys/kernel/tracing/events: Permission denied
+Changes since v4:
+ - Rebase on v6.9-rc1
+ - Removed the dependency on inherit_stat that was previously assumed
+   necessary as per feedback from Namhyung Kim.
+ - Fixed an incorrect use of zfree instead of free in the tools leading
+   to an abort on tool shutdown.
+ - Additional test coverage improvements added to perf test.
+ - Cleaned up the remaining bit of irrelevant change missed between v3
+   and v4.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- tools/lib/api/fs/tracing_path.c | 2 +-
- tools/perf/util/print-events.c  | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Changes since v3:
+ - Cleaned up perf test data changes incorrectly included into this
+   series from elsewhere.
 
-diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
-index 30745f35d0d2..834fd64c7130 100644
---- a/tools/lib/api/fs/tracing_path.c
-+++ b/tools/lib/api/fs/tracing_path.c
-@@ -69,7 +69,7 @@ char *get_tracing_file(const char *name)
- {
- 	char *file;
- 
--	if (asprintf(&file, "%s/%s", tracing_path_mount(), name) < 0)
-+	if (asprintf(&file, "%s%s", tracing_path_mount(), name) < 0)
- 		return NULL;
- 
- 	return file;
-diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
-index 3f38c27f0157..81e0135cddf0 100644
---- a/tools/perf/util/print-events.c
-+++ b/tools/perf/util/print-events.c
-@@ -68,11 +68,12 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
- 	struct dirent **sys_namelist = NULL;
- 	int sys_items;
- 
--	put_tracing_file(events_path);
- 	if (events_fd < 0) {
- 		pr_err("Error: failed to open tracing events directory\n");
-+		pr_err("%s: %s\n", events_path, strerror(errno));
- 		return;
- 	}
-+	put_tracing_file(events_path);
- 
- 	sys_items = tracing_events__scandir_alphasort(&sys_namelist);
- 
+Changes since v2:
+ - Rebase on v6.8
+ - Respond to James Clarke's feedback; fixup some typos and move some
+   repeated checks into a helper macro.
+ - Cleaned up checkpatch lints.
+ - Updated perf test; fixed evsel handling so that existing tests pass
+   and added new tests to cover the new behaviour.
+
+Changes since v1:
+ - Rebase on v6.8-rc1
+ - Fixed value written into sample after child exists.
+ - Modified handling of switch-out so that context with these events
+   take the slow path, so that the per-event/per-thread PMU state is
+   correctly switched.
+ - Modified perf tools to support this mode of operation.
+
+Ben Gainey (4):
+  perf: Rename perf_event_context.nr_pending to nr_no_switch_fast.
+  perf: Support PERF_SAMPLE_READ with inherit
+  tools/perf: Correctly calculate sample period for inherited
+    SAMPLE_READ values
+  tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
+
+ include/linux/perf_event.h                    |  8 ++-
+ kernel/events/core.c                          | 67 +++++++++++++------
+ tools/lib/perf/evsel.c                        | 48 +++++++++++++
+ tools/lib/perf/include/internal/evsel.h       | 63 ++++++++++++++++-
+ tools/perf/tests/attr/README                  |  2 +
+ .../tests/attr/test-record-group-sampling     |  3 +-
+ .../tests/attr/test-record-group-sampling1    | 51 ++++++++++++++
+ .../tests/attr/test-record-group-sampling2    | 61 +++++++++++++++++
+ tools/perf/tests/attr/test-record-group2      |  1 +
+ ...{test-record-group2 => test-record-group3} | 10 +--
+ tools/perf/util/evsel.c                       | 19 +++++-
+ tools/perf/util/evsel.h                       |  1 +
+ tools/perf/util/session.c                     | 25 ++++---
+ 13 files changed, 320 insertions(+), 39 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
+ copy tools/perf/tests/attr/{test-record-group2 => test-record-group3} (81%)
+
 -- 
-2.42.0
+2.45.2
 
