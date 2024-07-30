@@ -1,172 +1,103 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 668D417D8BB
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 16:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49EC21AA3D3
+	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 18:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722358731; cv=none; b=t616o6XchBmefs3V8oaehIDP2ug05xfs2IGbngywENiCJwpllZ+azzVdRIBsPhHHdQTlunGAyWFJn5DGf8hR4oyMD+fPNWfoXRTsRNrjrOnvQm0KnHxM1mMZfPAyTcirTzV4Zk/oBE9WGHhMDI16fC0ue/LK4U99MWQ3YAX9oVg=
+	t=1722365085; cv=none; b=h/IORnChsXbHnrLIGw94BLYFpAn5UvG848zzfCQPelgn3Wr4L9YdGPwBK6NfElRTvVwMREaSwIw5p9MYpqQoZZ82XLLr4b2yW8PG1JxbfOsgdL8QK3UoxRd9jE9uA33VlQSYYIEq/OMSMxTC+GcIsex03F3jQNYCHUVGkRXlZsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722358731; c=relaxed/simple;
-	bh=MakCGp2MWoAV0Xc0eI7OesuYOc4aL/IhFc+YGoVClfU=;
+	s=arc-20240116; t=1722365085; c=relaxed/simple;
+	bh=VMo6dJ3VB1Wck/pVQoQP4ZQEKTvKYZgqJTl1Y9nCodQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aVzwRWQIPDXugR+HG6SndAV3p9sjSUdl5uEkF4WRFtJIb2wxdHNLSi91S3CdTmrfDsSSgEHpg4Bag9dnSIab5FL30azcHW0gZ7D+GLoufV3ZIa8a6zlWR+qdWKw4kLVYYPVaCUEOUe+BVHumm4ynEKp32utlI61su48j3Lym1/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jl9l2M87; arc=none smtp.client-ip=209.85.214.179
+	 To:Cc:Content-Type; b=Fg5RAo/RDyEqnHSwwjsaybJEoQhpZxr9K02FVOLuR2V0XIp4oBxtz6UFX6SUSJJvlQnw95rg9fR3RnfS9GbRPQUVXg2Z7Cyk14tIbuLyVjkKyD32UYZr2nulJ/4xH0mn704GsQ2b5TFkH88qYxgZLYAidU6an4JP8qV0/aCqii4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vJv2LP6j; arc=none smtp.client-ip=209.85.166.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jl9l2M87"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fc4aff530dso6015ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 09:58:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vJv2LP6j"
+Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3993fddea13so15625ab.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 11:44:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722358729; x=1722963529; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722365083; x=1722969883; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RVx5Mo1cNi2O2SneJHVsg+dKHPp4XLpaPWsYQ7yBQn4=;
-        b=jl9l2M87d/q5Ua7i0XjNUaTg+HCoNtS9kGbINJ/rlkQIPlQO5/Gf3Qv16MEc4tzJIf
-         5CW3b6r5nMFjt0B8WOI27SC5MluCZM+Zk5jkzn3yYq1k6wuvdVY+Lvem3jJA32HmADkS
-         ldmc2dIyjo/zZ2jZ6MrnzaBfURsaIEIMPG1F/FQbQUoenWhmVWjxf2LO9zoo8SNjK9qU
-         YS79aAGlIFeQoIxHyN/T90066JTGM1g9rwUtTDmBEqB16/nhguDvkJ5s8iWmiaRIG3Ok
-         2TLrt8CUQxc5I5K97rDQMJYod5IjRnzwjxten3T0lrX7fex3XaxtsidpPAulKiMz/fPw
-         y1BQ==
+        bh=VMo6dJ3VB1Wck/pVQoQP4ZQEKTvKYZgqJTl1Y9nCodQ=;
+        b=vJv2LP6jzu3seQNjb+u6AqUE1PxDQ2cWZ2sd+P+hfSXmNxLCQntB4yCe67/jwMPu4g
+         CB7VcHyw+3+mf7bFEbB9tG2sKTtqe3ZgH38u0VD5vBP6PUM4xwYsWs33LVVRaWm211eK
+         NRLLEaM/rY/kQ7qkUr3DKc1thrUr4dUruAezC3JM/fsXTDiStC4AsnLqo+932jhierqg
+         tk39X9n538B0vKjq+OPhat1x2oBUr2QcKvTqyCVpbQnOakVcBD60wKzWZQcQx5vHz2Ma
+         lG+zlvwEfbL0iSs0EBBoAngaDksCVJDvEwHbUPpQEc7h6bYypxF7YgDxuvC7UodtgIZQ
+         PsvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722358729; x=1722963529;
+        d=1e100.net; s=20230601; t=1722365083; x=1722969883;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RVx5Mo1cNi2O2SneJHVsg+dKHPp4XLpaPWsYQ7yBQn4=;
-        b=UE3+aEDhAPEFOrPIVOyHuPSpfMEeB7OWAjumxSQQYFO4piBrJyp9fE4cuY+JhZMtue
-         xUjkIwFyp+4ZlHv/4hB9RfPxwfXZrZ05hCoOWC/tJe4D/oRg49k/uSW8ysAtmZvdKcUP
-         JbZGh2KW7fenI+ja7hxtm7rOTPSLkap+UQ+LlVb457MBcLdCeYqTfr3uDgvrw/3dVctI
-         CksIifEzhOWxY2Jc8kguT7MifDRgVTQtA7R3Al0b5/ZUeCG16qT/3tD//yuCoBrFb78a
-         KBH3Dno3dzVpxYATkLLyGzZggDXr5W37g0nR/+EvWvinEVG3Ho7auRPQWTtAkImeIJa1
-         WCPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVHkOGvWLIPUoRaHUi4v2QcFMWHAl1lkevd46iH5SSSSURLJV15uSUdXH+wcSvuGxbmXPawPQl0xuzWdSQf6tjOXeSkQltyMnSBrmXh6jSkWA==
-X-Gm-Message-State: AOJu0YxIzgpAxGDWm/32ghPbNJGY/FgfCtXK9yqpxocrE1l8wxcNOz+5
-	rlUXd4hsTlKTvvkptd5xUsB/Wlb0E1rJE6sJ5K2nERJRr7mvQnJFcmnw2utBpT83lZFxwqOOhmi
-	NtzJTOWGlEYCPTJZyiKuku4BR54qBM4vgQkO4
-X-Google-Smtp-Source: AGHT+IHWa3ie9Q2PNThh8ofQ9H8dtp0S/XjFcJgO/021VlJ48CH8lxwBbO7gPRgQ4MD6TOY1mSNEoi6JZ+e8wyYUvxs=
-X-Received: by 2002:a17:902:e546:b0:1fb:172a:f3d4 with SMTP id
- d9443c01a7336-1ff3784b8abmr3152005ad.8.1722358728382; Tue, 30 Jul 2024
- 09:58:48 -0700 (PDT)
+        bh=VMo6dJ3VB1Wck/pVQoQP4ZQEKTvKYZgqJTl1Y9nCodQ=;
+        b=mxgJgHZTl27hbRPmYkuQ+WLcE0PYHYj7y/vDjgdW9yckSAO5AHAT1iyPHcMyA7JcRX
+         XedPNA01clZGbQ7hN3L4TTVABifFyc+vE//FY0ZuVw9wvWSJ0is68gilVljEfLSCtErO
+         T41xiOZ97apENl9nDt+sG49OKXmcBUt38Kzf54Rzts8eeIqquByyNtCd0KgakRL8FVlc
+         cR4n7QbwZhW1d9TeqBIUxFRb9LoWmC+d1t7VCRZfHA/LVeGfaX8Tn5WkAzJiWxNxiGQa
+         zM2PxSfVl2k+l9l8a1v4JJbcES+TYYs+IagNaIQUCQZSsdvu94Hu2ePfZx7arv9m/Zvk
+         JlvA==
+X-Forwarded-Encrypted: i=1; AJvYcCV8qwKVlZKzvl89ldAHW0csR2AYTzDd7T0Nt/xC6JEYO0QGGDBRAyDFL8LwBLVr23kfaM/WJgAALAZJgqXKIgVinfi38Q4ixhEfs+bcX9/Cyg==
+X-Gm-Message-State: AOJu0YwZMhF0XLRaZsMtVdppm5d1k8OHQ3hDIDq2b3OvrSighsaS84ZX
+	ol1pvhPUcxXUbwhC6s0EX2OKywLeIkfNxokoNeIC+5VlHuQCzWhaVogT0N8d8nmyCi/iSgRBxT+
+	Xmp5S0PKwGYOuz2A0hP2vDduKRyGSnaSfn/ac
+X-Google-Smtp-Source: AGHT+IE2wTVpq6cTfrCc/sBL3n6RSYHPW4pheFE23rgwAanUdG4Sec3KPIhfIFDfexy9QxLlmajHM8oKJmxn3lUgjTo=
+X-Received: by 2002:a05:6e02:178e:b0:396:de95:2c6f with SMTP id
+ e9e14a558f8ab-39b0ee2f3a3mr391325ab.14.1722365083218; Tue, 30 Jul 2024
+ 11:44:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240729181931.2870851-1-irogers@google.com> <ZqkWoQEyJcU5xBZG@google.com>
-In-Reply-To: <ZqkWoQEyJcU5xBZG@google.com>
+References: <20240522204254.1841420-1-weilin.wang@intel.com>
+ <CAP-5=fUtp_vd=EeeesXPR=nsm0VOZoyXico=EVWobOEYsxq27g@mail.gmail.com> <CAP-5=fXOTmMyPx_tQPoCfCP35E1o6YSyZde58ojyU1PLJBt96A@mail.gmail.com>
+In-Reply-To: <CAP-5=fXOTmMyPx_tQPoCfCP35E1o6YSyZde58ojyU1PLJBt96A@mail.gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Tue, 30 Jul 2024 09:58:27 -0700
-Message-ID: <CAP-5=fUcuG7M6R80uwviwP2j62KDceDRRQM=Qf721bPBK1KYWg@mail.gmail.com>
-Subject: Re: [PATCH v2] perf cap: Tidy up and improve capability testing
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	James Clark <james.clark@arm.com>, Oliver Upton <oliver.upton@linux.dev>, 
-	Leo Yan <leo.yan@linux.dev>, Changbin Du <changbin.du@huawei.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Tue, 30 Jul 2024 11:44:32 -0700
+Message-ID: <CAP-5=fWu09Oy0bYjqW921NXgh33GOeCZ-J_tQ9PqPHT7XpY4DA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] perf test: make metric validation test return
+ early when there is no metric supported on the test system
+To: Namhyung Kim <namhyung@kernel.org>, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>, weilin.wang@intel.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jul 30, 2024 at 9:36=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
+On Mon, Jul 15, 2024 at 3:25=E2=80=AFPM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> On Mon, Jul 29, 2024 at 11:19:31AM -0700, Ian Rogers wrote:
-> > Remove dependence on libcap. libcap is only used to query whether a
-> > capability is supported, which is just 1 capget system call.
+> On Fri, May 24, 2024 at 6:26=E2=80=AFPM Ian Rogers <irogers@google.com> w=
+rote:
 > >
-> > If the capget system call fails, fall back on root permission
-> > checking. Previously if libcap fails then the permission is assumed
-> > not present which may be pessimistic/wrong.
+> > On Wed, May 22, 2024 at 1:43=E2=80=AFPM <weilin.wang@intel.com> wrote:
+> > >
+> > > From: Weilin Wang <weilin.wang@intel.com>
+> > >
+> > > Add a check to return the metric validation test early when perf list=
+ metric
+> > > does not output any metric. This would happen when NO_JEVENTS=3D1 is =
+set or in a
+> > > system that there is no metric supported.
+> > >
+> > >
+> > > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
 > >
-> > Add a used_root out argument to perf_cap__capable to say whether the
-> > fall back root check was used. This allows the correct error message,
-> > "root" vs "users with the CAP_PERFMON or CAP_SYS_ADMIN capability", to
-> > be selected.
-> >
-> > Tidy uses of perf_cap__capable so that tests aren't repeated if capget
-> > isn't supported, to reduce calls or refactor similar to:
-> > https://lore.kernel.org/lkml/20240729004127.238611-3-namhyung@kernel.or=
-g/
+> > Tested-by: Ian Rogers <irogers@google.com>
 >
-> I'm not familiar with the capability so it's hard to review the code but
-> it'd be better to split the code for perf_cap__capable() and its usage.
+> Ping.
 
-There's an API change, passing the out arg if root checking was used,
-so this would turn into a mess.
-
-> > ---
-> > v2: fix syscall number and '>' should have been '>=3D'
-> >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/Makefile.config  | 11 -------
-> >  tools/perf/builtin-ftrace.c | 44 ++++++++++++--------------
-> >  tools/perf/util/Build       |  2 +-
-> >  tools/perf/util/cap.c       | 63 ++++++++++++++++++++++++++-----------
-> >  tools/perf/util/cap.h       | 23 ++------------
-> >  tools/perf/util/symbol.c    |  8 ++---
-> >  tools/perf/util/util.c      | 12 +++++--
-> >  7 files changed, 81 insertions(+), 82 deletions(-)
-[snip]
-> > --- a/tools/perf/util/cap.c
-> > +++ b/tools/perf/util/cap.c
-[snip]
-> > +bool perf_cap__capable(int cap, bool *used_root)
-> > +{
-> > +     struct __user_cap_header_struct header =3D {
-> > +             .version =3D _LINUX_CAPABILITY_VERSION_3,
-> > +             .pid =3D getpid(),
-> > +     };
-> > +     struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S];
-> > +     __u32 cap_val;
-> > +
-> > +     *used_root =3D false;
-> > +     while (syscall(SYS_capget, &header, &data[0]) =3D=3D -1) {
-> > +             /* Retry, first attempt has set the header.version correc=
-tly. */
-> > +             if (errno =3D=3D EINVAL && header.version !=3D _LINUX_CAP=
-ABILITY_VERSION_3 &&
-> > +                 header.version =3D=3D _LINUX_CAPABILITY_VERSION_1)
->
-> It seems you can just check it with _VERSION1.
-
-Similarly not familiar. Basically there used to be a data struct of 3
-u32s in v1, v2 shouldn't exist, v3 turned the data from an array of
-structs of size [1] to [2]. v3 has been present for 16 years as shown
-by its magic number 0x20080522 (v2.6.26 iirc - can't find the comment
-again). It seems a pretty safe bet that v3 is the version being used.
-In old kernels if the versions don't match they just return EINVAL and
-you have to try again like this loop:
-https://fossd.anu.edu.au/linux/v2.6.14/source/kernel/capability.c#L43
-```
-if (get_user(version, &header->version))
-  return -EFAULT;
-
-if (version !=3D _LINUX_CAPABILITY_VERSION) {
-  if (put_user(_LINUX_CAPABILITY_VERSION, &header->version))
-    return -EFAULT;
-   return -EINVAL;
-}
-```
-So testing v3 is almost certainly what we want, what's going to work
-and avoids a loop. In newer kernels the EINVAL isn't returned for a
-mismatch and the code just does the right thing for whatever version
-is requested.
-
-> But I'm not sure about what this code does.  Who set the version
-> correctly?  Is there any chance for an infinite loop?
-
-The system call could return EINVAL with _LINUX_CAPABILITY_VERSION_1
-and set the header.version to _LINUX_CAPABILITY_VERSION_1 again and
-return EINVAL again, the kernel would be broken but it would lead to
-an infinite loop.
+Ping.
 
 Thanks,
 Ian
