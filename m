@@ -1,40 +1,43 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F48F4A2D
-	for <linux-perf-users@vger.kernel.org>; Tue, 30 Jul 2024 02:07:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 132A11773D;
+	Tue, 30 Jul 2024 02:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722305276; cv=none; b=QpSZvr17Ek8h6/sMUbK6dUuVnCBGgaaJz/r67ErVp7DmhwnzGXLnfuZO+oC/uDIOmlu0D/G0W3Kw3E5qjeqDFo8pYEarU6f0rUzTC2KOIRaQTOwck7wcii2MvLInjJTSjNhQ8tWKBRsAr/ELpeG/VTBqR4wTT1u7KxNGB2yR6mc=
+	t=1722305394; cv=none; b=PLW5EP01mAwC9cdZSOutY+NBDEO37a2+wdNxnPMnXqI4VuEVBN6ei9MGjvt6V2K9m0bdrBfUo8ridUU5iuKIZ2pJLRWVp18mhN6pYAyJbmL612X3D9HR5vz9lfOFbMYjHWiZzlb/XIIjnD5vU59kdRoa9uwfvOdqwfthg0uA4g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722305276; c=relaxed/simple;
-	bh=XmqVffnX9BzOaEmMTWWvqwv+eJ/NiRp6k4rnDQ8FpcE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jZHL12GzLFL0p5HY1+vJy7ABtZYmE+fVnWH10dIRWYZ01d5zh4ghjUZWbvFPY16qwvaNcsrO7lCL4ExFPHFUgD1I9FfTBjlhr5oA5V2415PFN5PJ+2Fw82zOq+gmJ47rv2mm47vAur7wjm1LiA9mVP2speR6fNr/Zaznjrug3vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1722305394; c=relaxed/simple;
+	bh=M1AzgA+O8CKFtzCP2VkdIQ3xs3VxBhk5kXKmJJNDWyg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZRpmQWDP7u5M3+OtMxP5w4BM5x3QoIho0+0P2Ofwi44ospw+f8CAgd/aYoLZn19NOflQUzFB5Ai2kW1Npv1eCNeo096YV33D11nSl0nv4OjcJsWfby4F38EFFB2oAV1MTczSkq3y0btzR844BBUfMEnRcQTqwPFumv4h0J2wPBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WXzB52lKczncrg;
-	Tue, 30 Jul 2024 10:06:53 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id BBBE91401E9;
-	Tue, 30 Jul 2024 10:07:50 +0800 (CST)
-Received: from localhost.localdomain (10.50.165.33) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Tue, 30 Jul 2024 10:07:49 +0800
-From: Yicong Yang <yangyicong@huawei.com>
-To: <acme@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
-	<john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@linaro.org>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
-	<linux-perf-users@vger.kernel.org>
-CC: <linuxarm@huawei.com>, <jonathan.cameron@huawei.com>,
-	<prime.zeng@hisilicon.com>, <hejunhao3@huawei.com>,
-	<yangyicong@hisilicon.com>
-Subject: [PATCH] perf vender events arm64: Use "Topdown" as topdown metric group name
-Date: Tue, 30 Jul 2024 10:01:45 +0800
-Message-ID: <20240730020145.30227-1-yangyicong@huawei.com>
-X-Mailer: git-send-email 2.31.0
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WXz8F3dxkz28fvb;
+	Tue, 30 Jul 2024 10:05:17 +0800 (CST)
+Received: from kwepemi100008.china.huawei.com (unknown [7.221.188.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 82149180043;
+	Tue, 30 Jul 2024 10:09:49 +0800 (CST)
+Received: from huawei.com (10.90.53.73) by kwepemi100008.china.huawei.com
+ (7.221.188.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 30 Jul
+ 2024 10:09:48 +0800
+From: Jinjie Ruan <ruanjinjie@huawei.com>
+To: <linux@armlinux.org.uk>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<will@kernel.org>, <arnd@arndb.de>, <afd@ti.com>,
+	<rmk+kernel@armlinux.org.uk>, <linus.walleij@linaro.org>,
+	<akpm@linux-foundation.org>, <masahiroy@kernel.org>,
+	<eric.devolder@oracle.com>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
+CC: <ruanjinjie@huawei.com>
+Subject: [PATCH v2] ARM: stacktrace: Add USER_STACKTRACE support
+Date: Tue, 30 Jul 2024 10:15:32 +0800
+Message-ID: <20240730021532.1752582-1-ruanjinjie@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -43,303 +46,229 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ kwepemi100008.china.huawei.com (7.221.188.57)
 
-From: Yicong Yang <yangyicong@hisilicon.com>
+Currently, userstacktrace is unsupported for ARM. So use the
+perf_callchain_user() code as blueprint to implement the
+arch_stack_walk_user() which add userstacktrace support on ARM.
+Meanwhile, we can use arch_stack_walk_user() to simplify the implementation
+of perf_callchain_user().
 
-HiSilicon HIP08 does support Topdown metrics but perf tool complains
-when trying to count Topdown metrics:
-[root@localhost tracing]# perf stat --topdown
-Topdown requested but the topdown metric groups aren't present.
-(See perf list the metric groups have names like TopdownL1)
+A ftrace test case is shown as below:
+	# cd /sys/kernel/debug/tracing
+	# echo 1 > options/userstacktrace
+	# echo 1 > options/sym-userobj
+	# echo 1 > events/sched/sched_process_fork/enable
+	# cat trace
 
-It's because tool's using "Topdown" as the metric group name[1] rather
-than "TopDown", so follow the convention.
+	......
+	              sh-100     [000] .....    51.779261: sched_process_fork: comm=sh pid=100 child_comm=sh child_pid=108
+	              sh-100     [000] .....    51.779285: <user stack trace>
+	 => /lib/libc.so.6[+0xb3c8c]
+	 => /bin/busybox[+0xffb901f1]
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c?h=v6.11-rc1#n1994
-Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Also a simple perf test is ok as below:
+	# perf record -e cpu-clock --call-graph fp top
+	# perf report --call-graph
+
+	.....
+	  [[31m  65.00%[[m     0.00%  top      [kernel.kallsyms]  [k] __ret_fast_syscall
+
+	            |
+	            ---__ret_fast_syscall
+	               |
+	               |--[[31m30.00%[[m--__se_sys_getdents64
+	               |          iterate_dir
+	               |          |
+	               |          |--[[31m25.00%[[m--proc_pid_readdir
+
+Signed-off-by: Jinjie Ruan <ruanjinjie@huawei.com>
 ---
- .../arch/arm64/hisilicon/hip08/metrics.json   | 74 +++++++++----------
- 1 file changed, 37 insertions(+), 37 deletions(-)
+v2:
+- Update the wrong patch title.
+- Take off the merged bugfix patch.
+- Remove the Tested-by.
+---
+ arch/arm/Kconfig                 |  1 +
+ arch/arm/kernel/perf_callchain.c | 70 +++-----------------------------
+ arch/arm/kernel/stacktrace.c     | 65 +++++++++++++++++++++++++++++
+ 3 files changed, 72 insertions(+), 64 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-index 6463531b9941..b6a0d2de8534 100644
---- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
-@@ -3,235 +3,235 @@
-         "MetricExpr": "FETCH_BUBBLE / (4 * CPU_CYCLES)",
-         "PublicDescription": "Frontend bound L1 topdown metric",
-         "BriefDescription": "Frontend bound L1 topdown metric",
--        "DefaultMetricgroupName": "TopDownL1",
--        "MetricGroup": "Default;TopDownL1",
-+        "DefaultMetricgroupName": "TopdownL1",
-+        "MetricGroup": "Default;TopdownL1",
-         "MetricName": "frontend_bound"
-     },
-     {
-         "MetricExpr": "(INST_SPEC - INST_RETIRED) / (4 * CPU_CYCLES)",
-         "PublicDescription": "Bad Speculation L1 topdown metric",
-         "BriefDescription": "Bad Speculation L1 topdown metric",
--        "DefaultMetricgroupName": "TopDownL1",
--        "MetricGroup": "Default;TopDownL1",
-+        "DefaultMetricgroupName": "TopdownL1",
-+        "MetricGroup": "Default;TopdownL1",
-         "MetricName": "bad_speculation"
-     },
-     {
-         "MetricExpr": "INST_RETIRED / (CPU_CYCLES * 4)",
-         "PublicDescription": "Retiring L1 topdown metric",
-         "BriefDescription": "Retiring L1 topdown metric",
--        "DefaultMetricgroupName": "TopDownL1",
--        "MetricGroup": "Default;TopDownL1",
-+        "DefaultMetricgroupName": "TopdownL1",
-+        "MetricGroup": "Default;TopdownL1",
-         "MetricName": "retiring"
-     },
-     {
-         "MetricExpr": "1 - (frontend_bound + bad_speculation + retiring)",
-         "PublicDescription": "Backend Bound L1 topdown metric",
-         "BriefDescription": "Backend Bound L1 topdown metric",
--        "DefaultMetricgroupName": "TopDownL1",
--        "MetricGroup": "Default;TopDownL1",
-+        "DefaultMetricgroupName": "TopdownL1",
-+        "MetricGroup": "Default;TopdownL1",
-         "MetricName": "backend_bound"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x201d@ / CPU_CYCLES",
-         "PublicDescription": "Fetch latency bound L2 topdown metric",
-         "BriefDescription": "Fetch latency bound L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "fetch_latency_bound"
-     },
-     {
-         "MetricExpr": "frontend_bound - fetch_latency_bound",
-         "PublicDescription": "Fetch bandwidth bound L2 topdown metric",
-         "BriefDescription": "Fetch bandwidth bound L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "fetch_bandwidth_bound"
-     },
-     {
-         "MetricExpr": "(bad_speculation * BR_MIS_PRED) / (BR_MIS_PRED + armv8_pmuv3_0@event\\=0x2013@)",
-         "PublicDescription": "Branch mispredicts L2 topdown metric",
-         "BriefDescription": "Branch mispredicts L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "branch_mispredicts"
-     },
-     {
-         "MetricExpr": "bad_speculation - branch_mispredicts",
-         "PublicDescription": "Machine clears L2 topdown metric",
-         "BriefDescription": "Machine clears L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "machine_clears"
-     },
-     {
-         "MetricExpr": "(EXE_STALL_CYCLE - (MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@)) / CPU_CYCLES",
-         "PublicDescription": "Core bound L2 topdown metric",
-         "BriefDescription": "Core bound L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "core_bound"
-     },
-     {
-         "MetricExpr": "(MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@) / CPU_CYCLES",
-         "PublicDescription": "Memory bound L2 topdown metric",
-         "BriefDescription": "Memory bound L2 topdown metric",
--        "MetricGroup": "TopDownL2",
-+        "MetricGroup": "TopdownL2",
-         "MetricName": "memory_bound"
-     },
-     {
-         "MetricExpr": "(((L2I_TLB - L2I_TLB_REFILL) * 15) + (L2I_TLB_REFILL * 100)) / CPU_CYCLES",
-         "PublicDescription": "Idle by itlb miss L3 topdown metric",
-         "BriefDescription": "Idle by itlb miss L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "idle_by_itlb_miss"
-     },
-     {
-         "MetricExpr": "(((L2I_CACHE - L2I_CACHE_REFILL) * 15) + (L2I_CACHE_REFILL * 100)) / CPU_CYCLES",
-         "PublicDescription": "Idle by icache miss L3 topdown metric",
-         "BriefDescription": "Idle by icache miss L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "idle_by_icache_miss"
-     },
-     {
-         "MetricExpr": "(BR_MIS_PRED * 5) / CPU_CYCLES",
-         "PublicDescription": "BP misp flush L3 topdown metric",
-         "BriefDescription": "BP misp flush L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "bp_misp_flush"
-     },
-     {
-         "MetricExpr": "(armv8_pmuv3_0@event\\=0x2013@ * 5) / CPU_CYCLES",
-         "PublicDescription": "OOO flush L3 topdown metric",
-         "BriefDescription": "OOO flush L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "ooo_flush"
-     },
-     {
-         "MetricExpr": "(armv8_pmuv3_0@event\\=0x1001@ * 5) / CPU_CYCLES",
-         "PublicDescription": "Static predictor flush L3 topdown metric",
-         "BriefDescription": "Static predictor flush L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "sp_flush"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x1010@ / BR_MIS_PRED",
-         "PublicDescription": "Indirect branch L3 topdown metric",
-         "BriefDescription": "Indirect branch L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "indirect_branch"
-     },
-     {
-         "MetricExpr": "(armv8_pmuv3_0@event\\=0x1013@ + armv8_pmuv3_0@event\\=0x1016@) / BR_MIS_PRED",
-         "PublicDescription": "Push branch L3 topdown metric",
-         "BriefDescription": "Push branch L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "push_branch"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x100d@ / BR_MIS_PRED",
-         "PublicDescription": "Pop branch L3 topdown metric",
-         "BriefDescription": "Pop branch L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "pop_branch"
-     },
-     {
-         "MetricExpr": "(BR_MIS_PRED - armv8_pmuv3_0@event\\=0x1010@ - armv8_pmuv3_0@event\\=0x1013@ - armv8_pmuv3_0@event\\=0x1016@ - armv8_pmuv3_0@event\\=0x100d@) / BR_MIS_PRED",
-         "PublicDescription": "Other branch L3 topdown metric",
-         "BriefDescription": "Other branch L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "other_branch"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x2012@ / armv8_pmuv3_0@event\\=0x2013@",
-         "PublicDescription": "Nuke flush L3 topdown metric",
-         "BriefDescription": "Nuke flush L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "nuke_flush"
-     },
-     {
-         "MetricExpr": "1 - nuke_flush",
-         "PublicDescription": "Other flush L3 topdown metric",
-         "BriefDescription": "Other flush L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "other_flush"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x2010@ / CPU_CYCLES",
-         "PublicDescription": "Sync stall L3 topdown metric",
-         "BriefDescription": "Sync stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "sync_stall"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x2004@ / CPU_CYCLES",
-         "PublicDescription": "Rob stall L3 topdown metric",
-         "BriefDescription": "Rob stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "rob_stall"
-     },
-     {
-         "MetricExpr": "(armv8_pmuv3_0@event\\=0x2006@ + armv8_pmuv3_0@event\\=0x2007@ + armv8_pmuv3_0@event\\=0x2008@) / CPU_CYCLES",
-         "PublicDescription": "Ptag stall L3 topdown metric",
-         "BriefDescription": "Ptag stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "ptag_stall"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x201e@ / CPU_CYCLES",
-         "PublicDescription": "SaveOpQ stall L3 topdown metric",
-         "BriefDescription": "SaveOpQ stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "saveopq_stall"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x2005@ / CPU_CYCLES",
-         "PublicDescription": "PC buffer stall L3 topdown metric",
-         "BriefDescription": "PC buffer stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "pc_buffer_stall"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x7002@ / CPU_CYCLES",
-         "PublicDescription": "Divider L3 topdown metric",
-         "BriefDescription": "Divider L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "divider"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x7003@ / CPU_CYCLES",
-         "PublicDescription": "FSU stall L3 topdown metric",
-         "BriefDescription": "FSU stall L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "fsu_stall"
-     },
-     {
-         "MetricExpr": "core_bound - divider - fsu_stall",
-         "PublicDescription": "EXE ports util L3 topdown metric",
-         "BriefDescription": "EXE ports util L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "exe_ports_util"
-     },
-     {
-         "MetricExpr": "(MEM_STALL_ANYLOAD - MEM_STALL_L1MISS) / CPU_CYCLES",
-         "PublicDescription": "L1 bound L3 topdown metric",
-         "BriefDescription": "L1 bound L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "l1_bound"
-     },
-     {
-         "MetricExpr": "(MEM_STALL_L1MISS - MEM_STALL_L2MISS) / CPU_CYCLES",
-         "PublicDescription": "L2 bound L3 topdown metric",
-         "BriefDescription": "L2 bound L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "l2_bound"
-     },
-     {
-         "MetricExpr": "MEM_STALL_L2MISS / CPU_CYCLES",
-         "PublicDescription": "Mem bound L3 topdown metric",
-         "BriefDescription": "Mem bound L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "mem_bound"
-     },
-     {
-         "MetricExpr": "armv8_pmuv3_0@event\\=0x7005@ / CPU_CYCLES",
-         "PublicDescription": "Store bound L3 topdown metric",
-         "BriefDescription": "Store bound L3 topdown metric",
--        "MetricGroup": "TopDownL3",
-+        "MetricGroup": "TopdownL3",
-         "MetricName": "store_bound"
-     }
- ]
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 54b2bb817a7f..eb9a587935ef 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -152,6 +152,7 @@ config ARM
+ 	select HAVE_ARCH_VMAP_STACK if MMU && ARM_HAS_GROUP_RELOCS
+ 	select TRACE_IRQFLAGS_SUPPORT if !CPU_V7M
+ 	select USE_OF if !(ARCH_FOOTBRIDGE || ARCH_RPC || ARCH_SA1100)
++	select USER_STACKTRACE_SUPPORT
+ 	# Above selects are sorted alphabetically; please add new ones
+ 	# according to that.  Thanks.
+ 	help
+diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
+index 1d230ac9d0eb..cdb7aa31c6ec 100644
+--- a/arch/arm/kernel/perf_callchain.c
++++ b/arch/arm/kernel/perf_callchain.c
+@@ -12,70 +12,6 @@
+ 
+ #include <asm/stacktrace.h>
+ 
+-/*
+- * The registers we're interested in are at the end of the variable
+- * length saved register structure. The fp points at the end of this
+- * structure so the address of this struct is:
+- * (struct frame_tail *)(xxx->fp)-1
+- *
+- * This code has been adapted from the ARM OProfile support.
+- */
+-struct frame_tail {
+-	struct frame_tail __user *fp;
+-	unsigned long sp;
+-	unsigned long lr;
+-} __attribute__((packed));
+-
+-/*
+- * Get the return address for a single stackframe and return a pointer to the
+- * next frame tail.
+- */
+-static struct frame_tail __user *
+-user_backtrace(struct frame_tail __user *tail,
+-	       struct perf_callchain_entry_ctx *entry)
+-{
+-	struct frame_tail buftail;
+-	unsigned long err;
+-
+-	if (!access_ok(tail, sizeof(buftail)))
+-		return NULL;
+-
+-	pagefault_disable();
+-	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
+-	pagefault_enable();
+-
+-	if (err)
+-		return NULL;
+-
+-	perf_callchain_store(entry, buftail.lr);
+-
+-	/*
+-	 * Frame pointers should strictly progress back up the stack
+-	 * (towards higher addresses).
+-	 */
+-	if (tail + 1 >= buftail.fp)
+-		return NULL;
+-
+-	return buftail.fp - 1;
+-}
+-
+-void
+-perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+-{
+-	struct frame_tail __user *tail;
+-
+-	perf_callchain_store(entry, regs->ARM_pc);
+-
+-	if (!current->mm)
+-		return;
+-
+-	tail = (struct frame_tail __user *)regs->ARM_fp - 1;
+-
+-	while ((entry->nr < entry->max_stack) &&
+-	       tail && !((unsigned long)tail & 0x3))
+-		tail = user_backtrace(tail, entry);
+-}
+-
+ /*
+  * Gets called by walk_stackframe() for every stackframe. This will be called
+  * whist unwinding the stackframe and is like a subroutine return so we use
+@@ -88,6 +24,12 @@ callchain_trace(void *data, unsigned long pc)
+ 	return perf_callchain_store(entry, pc) == 0;
+ }
+ 
++void
++perf_callchain_user(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
++{
++	arch_stack_walk_user(callchain_trace, entry, regs);
++}
++
+ void
+ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+ {
+diff --git a/arch/arm/kernel/stacktrace.c b/arch/arm/kernel/stacktrace.c
+index 620aa82e3bdd..b744792755b5 100644
+--- a/arch/arm/kernel/stacktrace.c
++++ b/arch/arm/kernel/stacktrace.c
+@@ -194,4 +194,69 @@ void arch_stack_walk(stack_trace_consume_fn consume_entry, void *cookie,
+ 
+ 	walk_stackframe(&frame, consume_entry, cookie);
+ }
++
++/*
++ * The registers we're interested in are at the end of the variable
++ * length saved register structure. The fp points at the end of this
++ * structure so the address of this struct is:
++ * (struct frame_tail *)(xxx->fp)-1
++ *
++ * This code has been adapted from the ARM OProfile support.
++ */
++struct frame_tail {
++	struct frame_tail __user *fp;
++	unsigned long sp;
++	unsigned long lr;
++} __packed;
++
++/*
++ * Get the return address for a single stackframe and return a pointer to the
++ * next frame tail.
++ */
++static struct frame_tail __user *
++unwind_user_frame(struct frame_tail __user *tail, void *cookie,
++		  stack_trace_consume_fn consume_entry)
++{
++	struct frame_tail buftail;
++	unsigned long err;
++
++	if (!access_ok(tail, sizeof(buftail)))
++		return NULL;
++
++	pagefault_disable();
++	err = __copy_from_user_inatomic(&buftail, tail, sizeof(buftail));
++	pagefault_enable();
++
++	if (err)
++		return NULL;
++
++	if (!consume_entry(cookie, buftail.lr))
++		return NULL;
++
++	/*
++	 * Frame pointers should strictly progress back up the stack
++	 * (towards higher addresses).
++	 */
++	if (tail + 1 >= buftail.fp)
++		return NULL;
++
++	return buftail.fp - 1;
++}
++
++void arch_stack_walk_user(stack_trace_consume_fn consume_entry, void *cookie,
++			  const struct pt_regs *regs)
++{
++	struct frame_tail __user *tail;
++
++	if (!consume_entry(cookie, regs->ARM_pc))
++		return;
++
++	if (!current->mm)
++		return;
++
++	tail = (struct frame_tail __user *)regs->ARM_fp - 1;
++
++	while (tail && !((unsigned long)tail & 0x3))
++		tail = unwind_user_frame(tail, cookie, consume_entry);
++}
+ #endif
 -- 
-2.24.0
+2.34.1
 
