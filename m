@@ -1,22 +1,22 @@
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CC1215746E;
-	Tue, 30 Jul 2024 06:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C29F16A921;
+	Tue, 30 Jul 2024 06:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722320588; cv=none; b=Zd7Ziv6qsWUdYiGy4Qse4osoKvdJg6srsZv0l/tdgyuWQSSk5qgtlUx4AVpFkcDemjuR/qCTSIuYUWeOFfBpQv3vcOWYskOsA8ZiDzZpMxc6W9mQmMt5V6+AJrfYgCZLAbZ1+UfD5yVUOlK7elxxEhQEUq0LPKWqAHnTmmz1+Vo=
+	t=1722320589; cv=none; b=KPjxIP8WAvIgrPFzdIFu5I4HBdQ4rFQ2A4N3jzLAKp8NacOZY4lVZJz9qAXaH1QtWAsEzrm+qVLvKGoJ2yxfvQWQUhlIhuke7G0GCd6c+9mGjbVfcH/TLHfAOzd9Mx/mqiTeWA3U0a50n8vPyIxEiWhwf+nhpzYgYy3/2jZes18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722320588; c=relaxed/simple;
-	bh=5PwJ4fWAgb3Upnlv4Cxpup2BaJDWtHpU08Y6tlWHG2E=;
+	s=arc-20240116; t=1722320589; c=relaxed/simple;
+	bh=68Z0ev5O8qNeVBCiiLxDXkPE6X/fm/ltYuf2azXCuJk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JgZSFmsotaSKfveoL3sv7pNyqo4ZlTuS3tolapxTTpSstTJOtcVRFpckeNyhnAIxo5MJWtr5VPG0lotRoEI+kerskKlCsLj6yHLdiXlj5FcTCnBcc+LxdxxFMP+mfTDNAHl/pvNze32CgntMBfC/i4PSREFPPt5gfAe4l9GE8Wo=
+	 MIME-Version; b=S42Diu4FUs+UWYwphV1tYy4VxY61YBi8h871UCEPtBRyOmRcQc07YDYYkqPaFy0gVJGRDVmYlpdpr19bpVfuXPbDPKMtxPejs2uUVQUTLidx6FpMzZztae8ge547USPUhNUxvhNvmKVDCxD0dbqoDlUzNSmCstt69EcUpNHjeD8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
 Received: from loongson.cn (unknown [113.200.148.30])
-	by gateway (Coremail) with SMTP id _____8DxyOnHhqhmFkUEAA--.14762S3;
-	Tue, 30 Jul 2024 14:23:03 +0800 (CST)
+	by gateway (Coremail) with SMTP id _____8Cx+enJhqhmG0UEAA--.14739S3;
+	Tue, 30 Jul 2024 14:23:05 +0800 (CST)
 Received: from linux.localdomain (unknown [113.200.148.30])
-	by front1 (Coremail) with SMTP id qMiowMAxRuTGhqhmAhgGAA--.30579S3;
+	by front1 (Coremail) with SMTP id qMiowMAxRuTGhqhmAhgGAA--.30579S4;
 	Tue, 30 Jul 2024 14:23:03 +0800 (CST)
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
 To: Peter Zijlstra <peterz@infradead.org>,
@@ -25,9 +25,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	Namhyung Kim <namhyung@kernel.org>
 Cc: linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] perf tools: Fix wrong message when running "make JOBS=1"
-Date: Tue, 30 Jul 2024 14:23:00 +0800
-Message-ID: <20240730062301.23244-2-yangtiezhu@loongson.cn>
+Subject: [PATCH 2/2] perf list: Give clues if failed to open tracing events directory
+Date: Tue, 30 Jul 2024 14:23:01 +0800
+Message-ID: <20240730062301.23244-3-yangtiezhu@loongson.cn>
 X-Mailer: git-send-email 2.42.0
 In-Reply-To: <20240730062301.23244-1-yangtiezhu@loongson.cn>
 References: <20240730062301.23244-1-yangtiezhu@loongson.cn>
@@ -38,64 +38,96 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:qMiowMAxRuTGhqhmAhgGAA--.30579S3
+X-CM-TRANSID:qMiowMAxRuTGhqhmAhgGAA--.30579S4
 X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBj9xXoW7GFy8Zr4DKF47Kw47Zw47GFX_yoWfKrXEga
-	4xGFn2g345Xrsav3y7WrZ8AryFvFs3ua1kCws8Jr9rXFZYyan5tF1Dur4kZF45ursrtFW7
-	Jr40gr15Jr47KosvyTuYvTs0mTUanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvT
-	s0mT0YCTnIWjqI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUI
-	cSsGvfJTRUUUb3AYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20x
-	vaj40_Wr0E3s1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxS
-	w2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxV
-	W8JVWxJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-	6r4UJVWxJr1ln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-	xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q
-	6rW5McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
-	vIr41l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_
-	Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1V
-	AY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Gr0_Xr1lIxAI
-	cVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42
-	IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIev
-	Ja73UjIFyTuYvjxU4OzVUUUUU
+X-Coremail-Antispam: 1Uk129KBj93XoW7ur1DGF1DJr1rJF4UAr15WrX_yoW5Jr1Upr
+	s5CrnIkrn5Jw4UG34xJF1rury3CrZ7ur1a9rykCw4ayFZ3XFs0vF4Ikr1YvF13Jr1UJ34S
+	qa1q9r4kCrW8XFXCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU92b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAF
+	wI0_Gr1j6F4UJwAaw2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2
+	xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_
+	Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x
+	0EwIxGrwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwCFI7km07C267AK
+	xVWUXVWUAwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67
+	AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVW5JVW7JwCI
+	42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMI
+	IF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVF
+	xhVjvjDU0xZFpf9x07jz2NtUUUUU=
 
-There is only one job when running "make JOBS=1", it should
-print "sequential build" rather than "parallel build".
+When executing the command "perf list", I met "Error: failed to open
+tracing events directory" twice, the first reason is that there is no
+"/sys/kernel/tracing/events" directory due to it does not enable the
+kernel tracing infrastructure with CONFIG_FTRACE, the second reason
+is that there is no root privileges.
+
+Add the error string to tell the users what happened and what should
+to do, and also call put_tracing_file() to free events_path a little
+later to avoid messy code in the error message.
+
+At the same time, just remove the redundant "/" of the file path in
+the function get_tracing_file(), otherwise it shows something like
+"/sys/kernel/tracing//events".
 
 Before:
 
-$ cd tools/perf && make JOBS=1
-  BUILD:   Doing 'make -j1' parallel build
+  $ ./perf list
+  Error: failed to open tracing events directory
 
 After:
 
-$ cd tools/perf && make JOBS=1
-  BUILD:   Doing 'make -j1' sequential build
+(1) Without CONFIG_FTRACE
+
+  $ ./perf list
+  Error: failed to open tracing events directory
+  /sys/kernel/tracing/events: No such file or directory
+
+(2) With CONFIG_FTRACE but no root privileges
+
+  $ ./perf list
+  Error: failed to open tracing events directory
+  /sys/kernel/tracing/events: Permission denied
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- tools/perf/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/lib/api/fs/tracing_path.c | 2 +-
+ tools/perf/util/print-events.c  | 3 ++-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/Makefile b/tools/perf/Makefile
-index 75f3f6e0a231..816d5d84816b 100644
---- a/tools/perf/Makefile
-+++ b/tools/perf/Makefile
-@@ -51,8 +51,14 @@ else
-   override DEBUG = 0
- endif
+diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
+index 30745f35d0d2..834fd64c7130 100644
+--- a/tools/lib/api/fs/tracing_path.c
++++ b/tools/lib/api/fs/tracing_path.c
+@@ -69,7 +69,7 @@ char *get_tracing_file(const char *name)
+ {
+ 	char *file;
  
-+ifeq ($(JOBS),1)
-+  BUILD_TYPE := sequential
-+else
-+  BUILD_TYPE := parallel
-+endif
-+
- define print_msg
--  @printf '  BUILD:   Doing '\''make \033[33m-j'$(JOBS)'\033[m'\'' parallel build\n'
-+  @printf '  BUILD:   Doing '\''make \033[33m-j'$(JOBS)'\033[m'\'' $(BUILD_TYPE) build\n'
- endef
+-	if (asprintf(&file, "%s/%s", tracing_path_mount(), name) < 0)
++	if (asprintf(&file, "%s%s", tracing_path_mount(), name) < 0)
+ 		return NULL;
  
- define make
+ 	return file;
+diff --git a/tools/perf/util/print-events.c b/tools/perf/util/print-events.c
+index 3f38c27f0157..81e0135cddf0 100644
+--- a/tools/perf/util/print-events.c
++++ b/tools/perf/util/print-events.c
+@@ -68,11 +68,12 @@ void print_tracepoint_events(const struct print_callbacks *print_cb __maybe_unus
+ 	struct dirent **sys_namelist = NULL;
+ 	int sys_items;
+ 
+-	put_tracing_file(events_path);
+ 	if (events_fd < 0) {
+ 		pr_err("Error: failed to open tracing events directory\n");
++		pr_err("%s: %s\n", events_path, strerror(errno));
+ 		return;
+ 	}
++	put_tracing_file(events_path);
+ 
+ 	sys_items = tracing_events__scandir_alphasort(&sys_namelist);
+ 
 -- 
 2.42.0
 
