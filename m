@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DFA16DC07;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3752416DEA5;
 	Wed, 31 Jul 2024 23:55:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722470106; cv=none; b=k0/lpCAGx8qqtZgC1OJP17cy+LM5jra6NvutPDofRetT2mjBx7AagDXrdnhlTy8AAbZgGvyb0uooogkQz9nLR8okeO/nUAnFUjZaflgCCnOHYtsGTRA94tyBmqTVb7DAgiLy9AENB/soZPFx+KoW2U8KE6CMRc1+Jn7edksB1/g=
+	t=1722470107; cv=none; b=NoT4yxU1/A9Kj7VA7CyOLUEaE4mi5zNpdw5csKAuZHDF8EJtfADes6PPw6QWAPpkTeOzfPNa8/ZZTq66j6Yl1DNIAT3Kb8Tu8U60n5DqPQ0qT19wvUQO3hdZgnA9sFHWv0AYZa/kqIPMHJTiyevLtE6NJ/qiTTpDrv9Vr31OH9U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722470106; c=relaxed/simple;
-	bh=35QfRKQoUhGdr9YthZIDsh1LPwHY2NuVSvspUJp1CAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KqQVzPcWmmeqSae9tiuip3tbs8HgjZCvfEzntHVgJ4XC43wraw7SAdLWYtVLeAy2VCadhWA2E5FXez5or03zFSqLvU1aoPSGVMvTOv4QrJdFSRshgzSSAVFqx6M3DmGl746ZMAGv6JAsxCC+j18LySDKL/3H7f8gCvVKQYYFco4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l9HjWwAN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722470107; c=relaxed/simple;
+	bh=Sin1KNDLL+kUSrzMmoBpl5p9aHQKG1CFltG2rFn+nsc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QbNuBzJNYS+XEastqrc6NIMswGZVeTPwvORtE99KxQaCWNLbwKE+DdJi9PIZcTNyjhuiEnbPpEsTa9T5iLSisHW//0oJDVe+25KFHuOvCkIEMpc6CLmhyIQOvVgw2tEB9JV76CMSg6KxahuHs/d1e1G2lltdmlIXZOZG4WeSo2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SrzxBHU+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l9HjWwAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F12ACC116B1;
-	Wed, 31 Jul 2024 23:55:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SrzxBHU+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B93AC4AF0C;
+	Wed, 31 Jul 2024 23:55:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1722470106;
-	bh=35QfRKQoUhGdr9YthZIDsh1LPwHY2NuVSvspUJp1CAU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l9HjWwANTHbJqX7CKiOMzVB2Qmv5w5tn7x9ibme+W9Ej45C6QWG5Rp8XPCGId7/QC
-	 OH7OyCe+Ndcu9bMtV1/Mw+8yNW4SngaiPI1VS1FH/OdOMBQr3Od+7p0Lfg4WO7Q93/
-	 hRZATbhRPFo+c8inosoPvqSFgNuN5MmuiweVCx5odEF+VacNV3rG9hRHI+SwpVqCMb
-	 7/X4hyarxiZo8NVYNA0zoI3PKP+giUiQpplR3mB3WoiJaa10LF7Iq4Y6Kbzu+BE+3d
-	 YgxGZYI6iEYuBdq35R3jRquSDqHX0bl/osD6MfAXbx2RMuJpA3AYk1+1g3Ra78s1FQ
-	 zioZ91xW+3nCg==
+	bh=Sin1KNDLL+kUSrzMmoBpl5p9aHQKG1CFltG2rFn+nsc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SrzxBHU+Jv3WTtqExp1XI+gLhkwWerP4/QF2t6PTsaCDJHXXooLxRJ2QyoaTqUe+j
+	 5YF54Rbw8OyumNX6A97mTyIoOXy8FlNrmFF7WYh11TRLf6uT31gzDiCYUOxOPjJuDM
+	 qrhMqUrZfQfc6PCsAbd7hrFdxeB2YyaEXlEUz/5b8x1CkMK8BVUJkaWy8kJxkRNdBI
+	 Xcg5MNg0Dd+izSM8GkxFR65vj3FNqHFoDtVMYTiCs1qFG38Rw/ezu3ZlSf/XjELUqO
+	 +dRq2amV+TagcJsis1LctHBtHVjKqz6w5ZOFUXdnaaqWh4IVi5HKmo+czEG5FY3mCV
+	 aepsvKv27S09A==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,10 +38,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Stephane Eranian <eranian@google.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCHSET 0/6] perf mem: Basic support for data type profiling (v1)
-Date: Wed, 31 Jul 2024 16:54:59 -0700
-Message-ID: <20240731235505.710436-1-namhyung@kernel.org>
+Subject: [PATCH 1/6] perf hist: Correct hist_entry->mem_info refcounts
+Date: Wed, 31 Jul 2024 16:55:00 -0700
+Message-ID: <20240731235505.710436-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
+In-Reply-To: <20240731235505.710436-1-namhyung@kernel.org>
+References: <20240731235505.710436-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,70 +52,131 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The mem_info is created by iter_prepare_mem_entry() at the beginning and
+destroyed by iter_finish_mem_entry() at the end.  So if it's used in a
+new hist_entry, it should be cloned.  Simplify (hopefully) the logic
+by adding some helper functions and not holding the refcount in the
+temporary entry.
 
-As we added data type profiling, 'perf mem report' should support that
-as well.  This patches just added a couple of convenient options.
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.c       | 14 +++++++-------
+ tools/perf/util/map_symbol.c | 18 ++++++++++++++++++
+ tools/perf/util/map_symbol.h |  3 +++
+ tools/perf/util/mem-info.c   | 13 +++++++++++++
+ tools/perf/util/mem-info.h   |  1 +
+ 5 files changed, 42 insertions(+), 7 deletions(-)
 
-  $ perf mem report -T -s mem
-  # To display the perf.data header info, please use --header/--header-only options.
-  #
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 131  of event 'cpu/mem-loads,ldlat=30/P'
-  # Total weight : 18561
-  # Sort order   : mem,type
-  #
-  # Overhead       Samples  Memory access                            Data Type
-  # ........  ............  .......................................  .........
-  #
-      14.84%            22  L1 hit                                   (unknown)
-      12.02%             8  RAM hit                                  (unknown)
-       7.68%             8  LFB/MAB hit                              (unknown)
-       6.29%            12  L1 hit                                   (stack operation)
-       3.97%             5  LFB/MAB hit                              struct psi_group_cpu
-       3.69%             3  L1 hit                                   struct   
-       3.18%             3  LFB/MAB hit                              (stack operation)
-       2.89%             5  L3 hit                                   (unknown)
-       2.58%             3  L1 hit                                   unsigned int
-       2.31%             2  L1 hit                                   struct psi_group_cpu
-       2.21%             2  LFB/MAB hit                              struct cfs_rq
-       2.19%             2  RAM hit                                  struct sched_entity
-       2.16%             1  L1 hit                                   struct task_struct
-       1.85%             3  L1 hit                                   struct pcpu_hot
-       1.78%             1  RAM hit                                  struct tss_struct
-       1.72%             1  LFB/MAB hit                              struct mm_struct
-       1.62%             2  L1 hit                                   struct psi_group
-       ...
-
-
-The code is also available at 'perf/mem-type-v1' branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (6):
-  perf hist: Correct hist_entry->mem_info refcounts
-  perf mem: Free the allocated sort string
-  perf mem: Rework command option handling
-  perf tools: Add mode argument to sort_help()
-  perf mem: Add -s/--sort option
-  perf mem: Add -T/--data-type option to report subcommand
-
- tools/perf/builtin-mem.c     | 100 ++++++++++++++++++++++-------------
- tools/perf/builtin-report.c  |   4 +-
- tools/perf/util/hist.c       |  14 ++---
- tools/perf/util/map_symbol.c |  18 +++++++
- tools/perf/util/map_symbol.h |   3 ++
- tools/perf/util/mem-info.c   |  13 +++++
- tools/perf/util/mem-info.h   |   1 +
- tools/perf/util/sort.c       |  12 +++--
- tools/perf/util/sort.h       |   2 +-
- 9 files changed, 116 insertions(+), 51 deletions(-)
-
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index f028f113c4fd..f8ee1cd6929d 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -476,6 +476,12 @@ static int hist_entry__init(struct hist_entry *he,
+ 		he->branch_info->to.ms.map = map__get(he->branch_info->to.ms.map);
+ 	}
+ 
++	if (he->mem_info) {
++		he->mem_info = mem_info__clone(template->mem_info);
++		if (he->mem_info == NULL)
++			goto err_infos;
++	}
++
+ 	if (hist_entry__has_callchains(he) && symbol_conf.use_callchain)
+ 		callchain_init(he->callchain);
+ 
+@@ -620,12 +626,6 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 			if (symbol_conf.cumulate_callchain)
+ 				he_stat__add_period(he->stat_acc, period);
+ 
+-			/*
+-			 * This mem info was allocated from sample__resolve_mem
+-			 * and will not be used anymore.
+-			 */
+-			mem_info__zput(entry->mem_info);
+-
+ 			block_info__delete(entry->block_info);
+ 
+ 			kvm_info__zput(entry->kvm_info);
+@@ -739,7 +739,7 @@ __hists__add_entry(struct hists *hists,
+ 		.filtered = symbol__parent_filter(sym_parent) | al->filtered,
+ 		.hists	= hists,
+ 		.branch_info = bi,
+-		.mem_info = mem_info__get(mi),
++		.mem_info = mi,
+ 		.kvm_info = ki,
+ 		.block_info = block_info,
+ 		.transaction = sample->transaction,
+diff --git a/tools/perf/util/map_symbol.c b/tools/perf/util/map_symbol.c
+index bef5079f2403..6ad2960bc289 100644
+--- a/tools/perf/util/map_symbol.c
++++ b/tools/perf/util/map_symbol.c
+@@ -13,3 +13,21 @@ void addr_map_symbol__exit(struct addr_map_symbol *ams)
+ {
+ 	map_symbol__exit(&ams->ms);
+ }
++
++void map_symbol__copy(struct map_symbol *dst, struct map_symbol *src)
++{
++	dst->maps = maps__get(src->maps);
++	dst->map = map__get(src->map);
++	dst->sym = src->sym;
++}
++
++void addr_map_symbol__copy(struct addr_map_symbol *dst, struct addr_map_symbol *src)
++{
++	map_symbol__copy(&dst->ms, &src->ms);
++
++	dst->addr = src->addr;
++	dst->al_addr = src->al_addr;
++	dst->al_level = src->al_level;
++	dst->phys_addr = src->phys_addr;
++	dst->data_page_size = src->data_page_size;
++}
+diff --git a/tools/perf/util/map_symbol.h b/tools/perf/util/map_symbol.h
+index 72d5ed938ed6..e370bb32ed47 100644
+--- a/tools/perf/util/map_symbol.h
++++ b/tools/perf/util/map_symbol.h
+@@ -26,4 +26,7 @@ struct addr_map_symbol {
+ void map_symbol__exit(struct map_symbol *ms);
+ void addr_map_symbol__exit(struct addr_map_symbol *ams);
+ 
++void map_symbol__copy(struct map_symbol *dst, struct map_symbol *src);
++void addr_map_symbol__copy(struct addr_map_symbol *dst, struct addr_map_symbol *src);
++
+ #endif // __PERF_MAP_SYMBOL
+diff --git a/tools/perf/util/mem-info.c b/tools/perf/util/mem-info.c
+index 27d67721a695..d3efa9c139f2 100644
+--- a/tools/perf/util/mem-info.c
++++ b/tools/perf/util/mem-info.c
+@@ -33,3 +33,16 @@ struct mem_info *mem_info__new(void)
+ 
+ 	return result;
+ }
++
++struct mem_info *mem_info__clone(struct mem_info *mi)
++{
++	struct mem_info *result = mem_info__new();
++
++	if (result) {
++		addr_map_symbol__copy(mem_info__iaddr(result), mem_info__iaddr(mi));
++		addr_map_symbol__copy(mem_info__daddr(result), mem_info__daddr(mi));
++		mem_info__data_src(result)->val = mem_info__data_src(mi)->val;
++	}
++
++	return result;
++}
+diff --git a/tools/perf/util/mem-info.h b/tools/perf/util/mem-info.h
+index 0f68e29f311b..df75e94ed3d0 100644
+--- a/tools/perf/util/mem-info.h
++++ b/tools/perf/util/mem-info.h
+@@ -15,6 +15,7 @@ DECLARE_RC_STRUCT(mem_info) {
+ };
+ 
+ struct mem_info *mem_info__new(void);
++struct mem_info *mem_info__clone(struct mem_info *mi);
+ struct mem_info *mem_info__get(struct mem_info *mi);
+ void   mem_info__put(struct mem_info *mi);
+ 
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
