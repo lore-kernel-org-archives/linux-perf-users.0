@@ -1,150 +1,144 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3454084E;
-	Wed, 31 Jul 2024 18:53:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B371E4AEF2;
+	Wed, 31 Jul 2024 19:20:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722451988; cv=none; b=rS+LXw9p4OCDV35QMYw39cJBlV37qRe1rTyguhxFk+xLr9KGDGesA+TmT3tF2ZoqFxzDKE4TY2blhVFhbSM6T54x08gf1T/eC/pClbDoT2stracTC25H1X0ewxxr50OlhCauKjeM7onjIyOCExgqfmSpD1Wwc6sqaduXRfJPGlk=
+	t=1722453652; cv=none; b=mW+k7lBothHAWPSLFeukNWHdY2NnjGWTV6qyDN+qTP72Loe6u76+Gyrp/EeubyCQf3TfDA2LbbM5bYHwDUYCouWoiPQaw+0vEYkl7uPzbB7mdi4TA92JwtcdgCh5yRxbGi64O0KL5SiHIVNB6/cX6Wm0Hg9SPiLOVe7RRgwl94k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722451988; c=relaxed/simple;
-	bh=/JSVcS6VVmFsrriJSGRG8BZoUd070lPD2Oa5aSzbwdM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CxKEg2U17rQn+YXaW/0ppuifkTQwzfU2KZ4F8wWuaY27O1VqxBvHY7Q9kTVmfGk+udZ+grAttPkGNS4wCNV2aHKY0EPCtuPz84lLIauBfn/36J9L5IIrWfn+cO6y7S9Ne49bRt9J4pidLKddJSv4HFya6d4SALBt+tOFmxi43dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=St/1xIZQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722453652; c=relaxed/simple;
+	bh=3vlZh7oIEQknitawqvcIdP4Ha/MTmQlIDb2iz8qWHAU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=r161cuwEplTmWtDsk+JRPi2yO4EgoBLflOQa5xrA0eu7/iRx+1kDj1uLw4WX5MjczSpDN6BZdjy3V1fgSscC7082+3eeFCWzj6zTxJaXeBzK+bK47gtuLE0MUfGEWqi4PnY+BPduz61UTNpBjZxvezliTX414YYFn4HGVv6DflE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OhtFmPsQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vFQWGtr3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="St/1xIZQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BDADC116B1;
-	Wed, 31 Jul 2024 18:53:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722451988;
-	bh=/JSVcS6VVmFsrriJSGRG8BZoUd070lPD2Oa5aSzbwdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=St/1xIZQ++s81ewttk/TPXmmrPUKW2vWF7XgjLyq1QK6oY0OAZ59J03V0Zwt3wbIW
-	 LFQrV0rPhKDT+yNGoh/xtBTr4dldE8CKaY1PS8vv1t0OodboAA9PU4JNSBaiHLz33l
-	 sv7zaXc4z/AeiubhVdbaTlw+Eq361scHp4LcnFUc0i4I6em4EdTrGdTQxWmxtid+r5
-	 SEWtuI2LhA5jK8d/7PTivvGzpqz42kcteFOmlasy0SBB2esnIcW4N6wlK6jzBoyAVQ
-	 7tPmt4Z4c0dZkgiV5vUC6H7VrKni+eAjhXXv7S0zBmPrkgyuGO4oH4U4cxDqq9lB1q
-	 3SxOHloQGNSDA==
-Date: Wed, 31 Jul 2024 15:53:05 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: John Garry <john.g.garry@oracle.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Xu Yang <xu.yang_2@nxp.com>, Sandipan Das <sandipan.das@amd.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	philip.li@intel.com, oliver.sang@intel.com,
-	Weilin Wang <weilin.wang@intel.com>
-Subject: Re: [PATCH v3 2/2] perf jevents: Autogenerate empty-pmu-events.c
-Message-ID: <ZqqIEckIXQEAd9xr@x1>
-References: <20240730191744.3097329-1-irogers@google.com>
- <20240730191744.3097329-3-irogers@google.com>
- <Zqo5vVdrkhL5NHJK@x1>
- <CAP-5=fXyOfPya+TrKVaFhCK3rNY=AuLZLG67ith5YHf_XXVdNg@mail.gmail.com>
- <ZqpZWywTe2j3U9Pl@x1>
- <ZqpcRIzzBb5KC6Zb@x1>
- <CAP-5=fVm5FkLDOLk4cbD9K6VPZ088f3Yk3bG8LT79E_OLLN4Lw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OhtFmPsQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vFQWGtr3"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1722453648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zBWp6z1FDSPauVV3TyzMDnpYP6fyDl5cR9HjFp5gCAs=;
+	b=OhtFmPsQNktXTwVYmbBT9ux2YeS5nW2Tmi4JiRotAIRzkU/4KbTsEWfpCSCssXQxU6bQxE
+	sgCbu3oz//LEOWUz+TZ99iWlfe5S6NIFEfvgaFpWGXXB7XFA6qjiiBz+a9x7rIfTdDXgc2
+	YXWrwQ9WT5fatXqiS9wgzDitPToUilpDagWFV22zGcGzuCRkQndgf35zDnsdpSqteqRxl0
+	jX3L+zNkKjqgT8bd6YqlQV/rH98Vnk646ucFuAoyKDbJ0MnGTFhwh06hClj5vJN0NVMjq7
+	9RBrnM9rsVVaL8ecxH3c62EMcML/xqDYzQQ3r6STlqFklpiOBFOElYAVD923gw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1722453648;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zBWp6z1FDSPauVV3TyzMDnpYP6fyDl5cR9HjFp5gCAs=;
+	b=vFQWGtr3ZY7DGMXxdVvzdpi/awXKj4weTGpq61AzG4wvXVzFM1eYfuf64VLCUNSEanoAb6
+	xnxacPjei41zP3Cw==
+To: Li Huafei <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, kan.liang@linux.intel.com, bp@alien8.de,
+ dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ lihuafei1@huawei.com
+Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
+In-Reply-To: <20240729223328.327835-1-lihuafei1@huawei.com>
+References: <20240729223328.327835-1-lihuafei1@huawei.com>
+Date: Wed, 31 Jul 2024 21:20:48 +0200
+Message-ID: <875xsl5pwv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fVm5FkLDOLk4cbD9K6VPZ088f3Yk3bG8LT79E_OLLN4Lw@mail.gmail.com>
+Content-Type: text/plain
 
-On Wed, Jul 31, 2024 at 08:58:43AM -0700, Ian Rogers wrote:
-> On Wed, Jul 31, 2024 at 8:46 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Wed, Jul 31, 2024 at 12:33:50PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Jul 31, 2024 at 07:08:18AM -0700, Ian Rogers wrote:
-> > > > On Wed, Jul 31, 2024 at 6:18 AM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Tue, Jul 30, 2024 at 12:17:44PM -0700, Ian Rogers wrote:
-> > > > > > empty-pmu-events.c exists so that builds may occur without python
-> > > > > > being installed on a system. Manually updating empty-pmu-events.c to
-> > > > > > be in sync with jevents.py is a pain, let's use jevents.py to generate
-> > > > > > empty-pmu-events.c.
-> > > > >
-> > > > > What am I missing here?
-> > > > >
-> > > > > If it exists so that we can build on a system without python how can we
-> > > > > use python to generate it?
-> > > > >
-> > > > > Now having python in the system is a requirement and thus we don't need
-> > > > > empty-pmu-events.c anymore?
-> > > > >
-> > > > > Can you guys please clarify that?
-> > > >
-> > > > The requirement for python hasn't changed.
-> > > >
-> > > > Case 1: no python or NO_JEVENTS=1
-> > > > Build happens using empty-pmu-events.c that is checked in, no python
-> > > > is required.
-> > > >
-> > > > Case 2: python
-> > > > pmu-events.c is created by jevents.py (requiring python) and then built.
-> > > > This change adds a step where the empty-pmu-events.c is created using
-> > > > jevents.py and that file is diffed against the checked in version.
-> > > > This stops the checked in empty-pmu-events.c diverging if changes are
-> > > > made to jevents.py. If the diff causes the build to fail then you just
-> > > > copy the diff empty-pmu-events.c over the checked in one.
-> > >
-> > > I'll try and add your explanation to the log message, thanks for
-> > > clarifying it!
-> >
-> > So, with it in place I'm now noticing:
-> >
-> > ⬢[acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PWD)/ ; mkdir -p /tmp/build/$(basename $PWD)/
-> > ⬢[acme@toolbox perf-tools-next]$ alias m='rm -rf ~/libexec/perf-core/ ; make -k CORESIGHT=1 O=/tmp/build/$(basename $PWD)/ -C tools/perf install-bin && perf test python'
-> > ⬢[acme@toolbox perf-tools-next]$ m
-> > <SNIP>
-> >   GEN     /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c
-> >   MKDIR   /tmp/build/perf-tools-next/arch/x86/util/
-> >   CC      /tmp/build/perf-tools-next/util/annotate.o
-> >   CC      /tmp/build/perf-tools-next/arch/x86/util/tsc.o
-> >   CC      /tmp/build/perf-tools-next/arch/x86/tests/hybrid.o
-> >   CC      /tmp/build/perf-tools-next/util/block-info.o
-> >   CC      /tmp/build/perf-tools-next/arch/x86/tests/intel-pt-test.o
-> >   CC      /tmp/build/perf-tools-next/arch/x86/util/pmu.o
-> >   MKDIR   /tmp/build/perf-tools-next/ui/browsers/
-> >   CC      /tmp/build/perf-tools-next/ui/browsers/annotate.o
-> >   CC      /tmp/build/perf-tools-next/builtin-kallsyms.o
-> >   CC      /tmp/build/perf-tools-next/util/block-range.o
-> >   TEST    /tmp/build/perf-tools-next/pmu-events/empty-pmu-events.log
-> > --- pmu-events/empty-pmu-events.c       2024-07-31 12:44:14.355042296 -0300
-> > +++ /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c       2024-07-31 12:45:35.048682785 -0300
-> > @@ -380,7 +380,7 @@
-> >                          continue;
-> >
-> >                  ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
-> > -                if (pmu || ret)
-> > +                if (ret)
-> 
-> Right, you need to copy:
->  /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c
-> to
-> tools/perf/pmu-events/empty-pmu-events.c
-> to fix this.
-> 
-> This change has happened as you are testing with:
-> https://lore.kernel.org/lkml/20240716132951.1748662-1-kan.liang@linux.intel.com/
-> which isn't in the git repo yet (therefore, I can't make a patch set
-> on it). The change is WAI as it is telling you empty-pmu-events.c has
-> become stale and needs Kan's fix applying to it.
+On Tue, Jul 30 2024 at 06:33, Li Huafei wrote:
+> On my Haswell machine, running the ltp test cve-2015-3290 concurrently
+> reports the following warnings:
+>
+>   perfevents: irq loop stuck!
+>   WARNING: CPU: 31 PID: 32438 at arch/x86/events/intel/core.c:3174 intel_pmu_handle_irq+0x285/0x370
+>   CPU: 31 UID: 0 PID: 32438 Comm: cve-2015-3290 Kdump: loaded Tainted: G S      W          6.11.0-rc1+ #3
+>   ...
+>   Call Trace:
+>    <NMI>
+>    ? __warn+0xa4/0x220
+>    ? intel_pmu_handle_irq+0x285/0x370
+>    ? __report_bug+0x123/0x130
+>    ? intel_pmu_handle_irq+0x285/0x370
+>    ? __report_bug+0x123/0x130
+>    ? intel_pmu_handle_irq+0x285/0x370
+>    ? report_bug+0x3e/0xa0
+>    ? handle_bug+0x3c/0x70
+>    ? exc_invalid_op+0x18/0x50
+>    ? asm_exc_invalid_op+0x1a/0x20
+>    ? irq_work_claim+0x1e/0x40
+>    ? intel_pmu_handle_irq+0x285/0x370
+>    perf_event_nmi_handler+0x3d/0x60
+>    nmi_handle+0x104/0x330
+>    ? ___ratelimit+0xe4/0x1b0
+>    default_do_nmi+0x40/0x100
+>    exc_nmi+0x104/0x180
+>    end_repeat_nmi+0xf/0x53
+>    ...
+>    ? intel_pmu_lbr_enable_all+0x2a/0x90
+>    ? __intel_pmu_enable_all.constprop.0+0x16d/0x1b0
+>    ? __intel_pmu_enable_all.constprop.0+0x16d/0x1b0
+>    perf_ctx_enable+0x8e/0xc0
+>    __perf_install_in_context+0x146/0x3e0
+>    ? __pfx___perf_install_in_context+0x10/0x10
+>    remote_function+0x7c/0xa0
+>    ? __pfx_remote_function+0x10/0x10
+>    generic_exec_single+0xf8/0x150
+>    smp_call_function_single+0x1dc/0x230
+>    ? __pfx_remote_function+0x10/0x10
+>    ? __pfx_smp_call_function_single+0x10/0x10
+>    ? __pfx_remote_function+0x10/0x10
+>    ? lock_is_held_type+0x9e/0x120
+>    ? exclusive_event_installable+0x4f/0x140
+>    perf_install_in_context+0x197/0x330
+>    ? __pfx_perf_install_in_context+0x10/0x10
+>    ? __pfx___perf_install_in_context+0x10/0x10
+>    __do_sys_perf_event_open+0xb80/0x1100
+>    ? __pfx___do_sys_perf_event_open+0x10/0x10
+>    ? __pfx___lock_release+0x10/0x10
+>    ? lockdep_hardirqs_on_prepare+0x135/0x200
+>    ? ktime_get_coarse_real_ts64+0xee/0x100
+>    ? ktime_get_coarse_real_ts64+0x92/0x100
+>    do_syscall_64+0x70/0x180
+>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>    ...
 
-ok, I'll remove Kan's patch, publish perf-tools-next and wait for the
-now normal flow of patches.
+Please trim the backtrace to something useful:
 
-- Arnaldo
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces
+
+> My machine has 32 physical cores, each with two logical cores. During
+> testing, it executes the CVE-2015-3290 test case 100 times concurrently.
+>
+> This warning was already present in [1] and a patch was given there to
+> limit period to 128 on Haswell, but that patch was not merged into the
+> mainline.  In [2] the period on Nehalem was limited to 32. I tested 16
+> and 32 period on my machine and found that the problem could be
+> reproduced with a limit of 16, but the problem did not reproduce when
+> set to 32. It looks like we can limit the cycles to 32 on Haswell as
+> well.
+
+It looks like? Either it works or not.
+
+>  
+> +static void hsw_limit_period(struct perf_event *event, s64 *left)
+> +{
+> +	*left = max(*left, 32LL);
+> +}
+
+And why do we need a copy of nhm_limit_period() ?
+
+Thanks,
+
+        tglx
