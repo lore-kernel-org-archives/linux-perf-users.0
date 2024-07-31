@@ -1,112 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E19A17BD6
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 19:32:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 408BC3BBE3;
+	Wed, 31 Jul 2024 19:44:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722454352; cv=none; b=VhZUEBo/V2kDfpbTXOfZ0kkGnz+Gj6UTDZOaUD5Ou6N/RuZSRZ/CfpCGSEhH4qmqRAHoMqBj52NiYBb/9AuwAMQ9OLKzGvw8dTqFVJb3YWXPYdVSR4a/Imo/xFJtxNASNKv7sLgha49ifJybuAqy7sZ+0thUsFak0sJCYorO7Yc=
+	t=1722455089; cv=none; b=ZKIXfTTVz8HCVGSAkUntnqx/iHiSn7J6PSR3SUxqfrR4XwhRvBrP/T8KGCA550svsFc2jdddOjH+JYNcQxj2fWn/a/EI4F8TzqRkT7OSETs+s1K5wyqs221Hg30ZiQH20c6ZV9OZonSJKfLbs9ThaC+KfvHkbyx5xUBlkS6bJyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722454352; c=relaxed/simple;
-	bh=Z16JQ9uNiZlViC9jcWcHKpuEFghd50mWKIqFG3OMff8=;
+	s=arc-20240116; t=1722455089; c=relaxed/simple;
+	bh=n6OG3JGP8rbsblq6dHGstLE8UuPnfTGxS/ia+xm6fOs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p6dyM6RnF1ZUHhQcyQLjbASGXcNCNgO6fc/EJ5cXbdWL3yZZSzFv9u6qvMHftiHE2X7TIfa8trwtmNfXGPDCeC7CpV2F6xHm0FWmnoy9c1rPUzopK1x83I7mtB+ipKjuN3Lr5M4hH+0zBESQ3s2FNBK7jcFS6dTGEQhGzWSL2vc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RK+KYWOa; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ic1lNZBGEQ2qyEUnMonHDXlpPU13AhGVDaThHOS1ahbQW/f1vd/u8XhHiIgIJKKwJ8HRLKE/ig76WsqbswNp+Xx4opfMIR9T1mt/Xk/Q3WgmwLgeLlS0IhugczKv7mj4bFq+xVGlG1yoq90e/1pdzMT/G0aEjcMbisgyPRVVQ3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gZBV4glP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RK+KYWOa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722454351; x=1753990351;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Z16JQ9uNiZlViC9jcWcHKpuEFghd50mWKIqFG3OMff8=;
-  b=RK+KYWOamOsIJFfNbJxNQqYuUc0/sr2SiQy8422GOeHTYaw31bufKGB+
-   8kZ43f4yolsK7a5G3Ywlv/06849uDPnAPdEb7NH8+kYmsUW7h8SViTCbf
-   YevfBS+HLsN/jZd3MDSlBw93DSyxWtrXXzoE5R7IRBcGxiSoXln1A82IR
-   Bizhxw+AssHnT41TV8AL7tY3rac5RRkN4llnrSRN4aNj0mRZxmeSF0JV6
-   vpvGh4cSTwH4tw1zWE6osbWM0zY6CA3cOcY9+TsMB0yq95Ntq+yPmYQF6
-   tr6/sVyBQzid268iRojonG2jYgG1ESv5GVScJ58v3T7F0EN9eKtsfi5LG
-   g==;
-X-CSE-ConnectionGUID: FHw7JmgeS/i3DUmZsMADfg==
-X-CSE-MsgGUID: nq0TgiAqRwCU+HEayA/A6Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11150"; a="31510613"
-X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="31510613"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 12:32:30 -0700
-X-CSE-ConnectionGUID: mxm2jiZjSPWe4jOHIvJB8Q==
-X-CSE-MsgGUID: hSK8di8oSQqaEBFdVXJLiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,251,1716274800"; 
-   d="scan'208";a="54706136"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jul 2024 12:32:30 -0700
-Date: Wed, 31 Jul 2024 12:32:28 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 3/4] perf script: Fix perf script -F +metric
-Message-ID: <ZqqRTKW80JJpNpRj@tassilo>
-References: <20240724190137.3810429-1-ak@linux.intel.com>
- <20240724190137.3810429-3-ak@linux.intel.com>
- <ZqLuWGKZjdUrkd0L@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gZBV4glP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50466C4AF0B;
+	Wed, 31 Jul 2024 19:44:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722455088;
+	bh=n6OG3JGP8rbsblq6dHGstLE8UuPnfTGxS/ia+xm6fOs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gZBV4glP0RQl+VzMgxITBM4Z2+GWhzHJtekg9XdWla4Rnoq6ikLt30nZ24m4BpvvR
+	 npl8jt3iKDxwHJP/mHKWAZJOJeyuyztLydv1bpultBPLSXo13Hri8+5o7cDOr3E/Aw
+	 o2qw3PPdkXI4oC1U/7NCDrzdwjYlgowJ2ZRS+hjetFMIbtxuw6r9+LlZrI1Vy5+PV9
+	 093ZqPh8Kydjx4bEXCgvrGuVFaQatp8VwXXbq5WwejpIAY94lKU9FVohZXNO07iz8j
+	 58MAimThD0JoqqCZfPNcjrzao9a7i4lzlOutQDWaTvveBNPAtVg7UNHoKtoXScjVq5
+	 qQMSltnHtlyTw==
+Date: Wed, 31 Jul 2024 16:44:45 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>, namhyung@kernel.org,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, akanksha@linux.ibm.com,
+	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
+	hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
+Subject: Re: [PATCH] perf vendor events power10: Update JSON/events
+Message-ID: <ZqqULZ5pSojnixUh@x1>
+References: <20240723052154.96202-1-kjain@linux.ibm.com>
+ <CAP-5=fWsQbA-h=_Y_q7z1E7GjCkHE3w-9h-OXu4jLBM3Fag6ag@mail.gmail.com>
+ <ZqOt9G9e-AIN6hY-@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ZqLuWGKZjdUrkd0L@google.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZqOt9G9e-AIN6hY-@x1>
 
-> > @@ -2132,13 +2131,17 @@ static void perf_sample__fprint_metric(struct perf_script *script,
-> >  		evlist__alloc_stats(&stat_config, script->session->evlist, /*alloc_raw=*/false);
-> >  	if (evsel_script(leader)->gnum++ == 0)
-> >  		perf_stat__reset_shadow_stats();
-> > -	val = sample->period * evsel->scale;
-> > -	evsel_script(evsel)->val = val;
-> > +	val = sample->period;
-> > +	/*
-> > +	 * Always use the first storage because the groups are contiguous
+On Fri, Jul 26, 2024 at 11:08:55AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Tue, Jul 23, 2024 at 09:02:23AM -0700, Ian Rogers wrote:
+> > On Mon, Jul 22, 2024 at 10:27 PM Kajol Jain <kjain@linux.ibm.com> wrote:
+> > >
+> > > Update JSON/events for power10 platform with additional events.
+> > > Also move PM_VECTOR_LD_CMPL event from others.json to
+> > > frontend.json file.
+> > >
+> > > Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> > 
+> > Reviewed-by: Ian Rogers <irogers@google.com>
 > 
-> Without leader sampling we cannot guarantee groups events fire
-> together, right?
+> Thanks, applied to tmp.perf-tools-next,
 
-Yes. I'm adding an explicit check for this.
+This seems to be causing this:
 
-> 
-> 
-> > +	 * and there's no need to handle multiple indexes for anything
-> 
-> Actually I think this is a behavior change that you changed the
-> aggregation mode from NONE to GLOBAL.
+Exception processing pmu-events/arch/powerpc/power10/others.json
+Traceback (most recent call last):
+  File "pmu-events/jevents.py", line 1309, in <module>
+    main()
+  File "pmu-events/jevents.py", line 1291, in main
+    ftw(arch_path, [], preprocess_one_file)
+  File "pmu-events/jevents.py", line 1241, in ftw
+    ftw(item.path, parents + [item.name], action)
+  File "pmu-events/jevents.py", line 1239, in ftw
+    action(parents, item)
+  File "pmu-events/jevents.py", line 623, in preprocess_one_file
+    for event in read_json_events(item.path, topic):
+  File "pmu-events/jevents.py", line 440, in read_json_events
+    events = json.load(open(path), object_hook=JsonEvent)
+  File "/usr/lib/python3.6/json/__init__.py", line 296, in load
+  CC      /tmp/build/perf/bench/evlist-open-close.o
+    return loads(fp.read(),
+  File "/usr/lib/python3.6/encodings/ascii.py", line 26, in decode
+    return codecs.ascii_decode(input, self.errors)[0]
+UnicodeDecodeError: 'ascii' codec can't decode byte 0xe2 in position 9231: ordinal not in range(128)
+pmu-events/Build:35: recipe for target '/tmp/build/perf/pmu-events/pmu-events.c' failed
+make[3]: *** [/tmp/build/perf/pmu-events/pmu-events.c] Error 1
+make[3]: *** Deleting file '/tmp/build/perf/pmu-events/pmu-events.c'
+Makefile.perf:763: recipe for target '/tmp/build/perf/pmu-events/pmu-events-in.o' failed
+make[2]: *** [/tmp/build/perf/pmu-events/pmu-events-in.o] Error 2
+make[2]: *** Waiting for unfinished jobs....
+  CC      /tmp/build/perf/tests/hists_cumulate.o
+  CC      /tmp/build/perf/arch/powerpc/util/event.o
+  CC      /tmp/build/perf/bench/breakpoint.o
+  CC      /tmp/build/perf/builtin-data.o
 
-Not with leader sampling because the group is contiguous and output
-after its end, with all the previous values forgotten then.
-The other cases don't really work anyways as multiple people pointed
-out.
 
-> > +	 */
-> > +	evsel->stats->aggr[0].counts.val = val;
-> >  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
-> >  		for_each_group_member (ev2, leader) {
-> >  			perf_stat__print_shadow_stats(&stat_config, ev2,
-> > -						      evsel_script(ev2)->val,
-> > -						      sample->cpu,
-> > +						      evsel->stats->aggr[0].counts.val,
-> > +						      0,
-> 
-> Like I said to Ian, we should pass a proper aggr_idx here not just 0 to
-> support correct aggregation.  For now I think only possible choice is
-> AGGR_NONE (for cpu-wide record) or AGGR_THREAD (for per-task record).
-> Then it should be an index to cpu or thread map.
+This happened in the past, I'm now trying to figure this out :-\
 
-Given the above I think that is not needed.
+This was in:
 
-Full aggregation for metrics over longer period would belong into perf report,
-not here.  perf script is only to get non aggregated metrics.
+toolsbuilder@five:~$ cat dm.log/ubuntu:18.04-x-powerpc
 
--Andi
+
+So 32-bit powerpc, ubuntu 18.04
+
+- Arnaldo
