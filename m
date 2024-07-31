@@ -1,44 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EA02286A3;
-	Wed, 31 Jul 2024 18:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63EAE2868B;
+	Wed, 31 Jul 2024 18:21:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722449857; cv=none; b=AcIhS6ds7ZAKzpDd6uKd/g4BJBt9estxpe6k3atL7AvYI7Dv572XmNat5z0wCuo+6oFjRE8rQUCticFmDXxXlkf5Q6DoDRm7OJ6/vCTr+Z8zD4A5jw7JlOcp4U8UvzhF+9oScHd87VbJmlr0+eQOlBlWlse0zkZdfRNstq2gh3o=
+	t=1722450068; cv=none; b=gDNKDl5cbSuH51+MkUkXuW9iXAkMz+7H3bW1MKxet+FLX+gMhJpCcgmxP5eJSawem/kUUYje+YDtAf84J0XPMGEL2x86z8MNZwlhNU4JNksV1qKU94/vlS4DDwvBUZaP1oRQHVcagMvnqzIC4Xi9mZRqN+RALNCCM436D09IcqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722449857; c=relaxed/simple;
-	bh=SaDb+qT+BItO/9cjino2V6AD/Jq1OmOQe6ERuyU5noI=;
+	s=arc-20240116; t=1722450068; c=relaxed/simple;
+	bh=VdEye2jTkmKFtiaXEoH9vld+unsPx+YqDgjQAU++yBc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lb62iWcTjodw9ihQDEO2oWR22j9rLjVn8q5aipPkzbkwS5ViqcVNwBV+sRRynk4qE78WDGR0D2yG3kymi3bKc/XrMc/Ff0llYXXAejEHQJWVxtEjSxy14kOed3iONH9a3bIFw0Hzk9bax+V9zQ9/sPXHxIMuWUEMUDUld8XmKGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9n7mEEa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=s+JRHz2t6WTdDG2+DHRs7AE9NixDCnaH2h4JeisJX1hafK9BSfxu9LOlYLuat/ehfYjw+koQIEIyrcUyIIeji8/7mlOUVbgD2Lq5UfR07P+X8DTqrTBADb0RUoycu6EqrGcQ07nE0Qgenl7QHv6REGCvJp0dhAKNbFZgazQ3L4g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JLIfzR2l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9n7mEEa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41244C116B1;
-	Wed, 31 Jul 2024 18:17:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JLIfzR2l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D040C116B1;
+	Wed, 31 Jul 2024 18:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722449856;
-	bh=SaDb+qT+BItO/9cjino2V6AD/Jq1OmOQe6ERuyU5noI=;
+	s=k20201202; t=1722450067;
+	bh=VdEye2jTkmKFtiaXEoH9vld+unsPx+YqDgjQAU++yBc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=o9n7mEEaDj/5Z978Wsmr3sMQLSHps5Qs0ovcLjjdhPkB6U9fPJmHmj837bLSx1YLb
-	 gz2e7oldEXv+foJdfbKzKtm6WwdcdeyAEOl4rd6DzOctV4q5NAUpJclcDoDuWWPEdJ
-	 +gYu+ZBNqFR8L/zue4YFzmUhHAaOi9SFYqH/nQUHBKCgzAP+Yj5MbehekckebDA+2u
-	 Hp7b4QglSfOP86m0kCPUlQgFTex13hyDnTo5dJxiwRF1P9Ttljr8WGVjLSj7UPWC8M
-	 RAN2IlnubUmC7qMPAhAAaVQmsIoDDjSg/t6G0cXDYRbmL46DjiOSZAp0SmXts5xSyU
-	 wI+le+wc1XEbQ==
-Date: Wed, 31 Jul 2024 11:17:34 -0700
+	b=JLIfzR2lX3pOOR5VS7dk3awIliw7ZS3o3Du2+kGjdHvgeoxYunnt0y6xtqT1yRHjH
+	 oHAu3oMyReXikLss54p/Sp+XuC/IK7io90x/kpuL0ATIj1bi8KnDoBgE08ehy9C60O
+	 1Eo4au1ndzYJy6Q6jwcxSD9J5nfw3jTAASqtZjUqSab5SCgzd5daP/teP8BhGN1VHL
+	 slqhdByNXYQmbodxqH1HBlWZB0Wfyfyl+NWPBWNwkDYOK1YY9Dkj9HroyEiL7bDcRD
+	 THJS7rOhg1Q9JY8fYF2iwUxaV2F6ukMiVKA+CcucrxNpyKM1xkw7rnfHtjD0yy6G/E
+	 wZUHctmbQxeiQ==
+Date: Wed, 31 Jul 2024 11:21:05 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ben Gainey <ben.gainey@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	james.clark@arm.com, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 4/4] tools/perf: Allow inherit + PERF_SAMPLE_READ when
- opening events
-Message-ID: <Zqp_vqCn0FEfGFwX@google.com>
-References: <20240730084417.7693-1-ben.gainey@arm.com>
- <20240730084417.7693-5-ben.gainey@arm.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v1] perf inject: Fix leader sampling inserting additional
+ samples
+Message-ID: <ZqqAkcz4xOto_sK5@google.com>
+References: <20240729220620.2957754-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,335 +49,123 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240730084417.7693-5-ben.gainey@arm.com>
+In-Reply-To: <20240729220620.2957754-1-irogers@google.com>
 
-Hello,
+Hi Ian,
 
-On Tue, Jul 30, 2024 at 09:44:17AM +0100, Ben Gainey wrote:
-> The "perf record" tool will now default to this new mode if the user
-> specifies a sampling group when not in system-wide mode, and when
-> "--no-inherit" is not specified.
+On Mon, Jul 29, 2024 at 03:06:20PM -0700, Ian Rogers wrote:
+> The processing of leader samples would turn an individual sample with
+> a group of read values into multiple samples. Perf inject would pass
+> through the additional samples increasing the output data file size:
 > 
-> This change updates evsel to allow the combination of inherit
-> and PERF_SAMPLE_READ.
+> ```
+> $ perf record -g -e "{instructions,cycles}:S" -o perf.orig.data true
+> $ perf script -D -i perf.orig.data | sed -e 's/perf.orig.data/perf.data/g' > orig.txt
+> $ perf inject -i perf.orig.data -o perf.new.data
+> $ perf script -D -i perf.new.data | sed -e 's/perf.new.data/perf.data/g' > new.txt
+> $ diff -u orig.txt new.txt
+> --- orig.txt    2024-07-29 14:29:40.606576769 -0700
+> +++ new.txt     2024-07-29 14:30:04.142737434 -0700
+> ...
+> -0xc550@perf.data [0x30]: event: 3
+> +0xc550@perf.data [0xd0]: event: 9
+> +.
+> +. ... raw event: size 208 bytes
+> +.  0000:  09 00 00 00 01 00 d0 00 fc 72 01 86 ff ff ff ff  .........r......
+> +.  0010:  74 7d 2c 00 74 7d 2c 00 fb c3 79 f9 ba d5 05 00  t},.t},...y.....
+> +.  0020:  e6 cb 1a 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+> +.  0030:  02 00 00 00 00 00 00 00 76 01 00 00 00 00 00 00  ........v.......
+> +.  0040:  e6 cb 1a 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+> +.  0050:  62 18 00 00 00 00 00 00 f6 cb 1a 00 00 00 00 00  b...............
+> +.  0060:  00 00 00 00 00 00 00 00 0c 00 00 00 00 00 00 00  ................
+> +.  0070:  80 ff ff ff ff ff ff ff fc 72 01 86 ff ff ff ff  .........r......
+> +.  0080:  f3 0e 6e 85 ff ff ff ff 0c cb 7f 85 ff ff ff ff  ..n.............
+> +.  0090:  bc f2 87 85 ff ff ff ff 44 af 7f 85 ff ff ff ff  ........D.......
+> +.  00a0:  bd be 7f 85 ff ff ff ff 26 d0 7f 85 ff ff ff ff  ........&.......
+> +.  00b0:  6d a4 ff 85 ff ff ff ff ea 00 20 86 ff ff ff ff  m......... .....
+> +.  00c0:  00 fe ff ff ff ff ff ff 57 14 4f 43 fc 7e 00 00  ........W.OC.~..
+> +
+> +1642373909693435 0xc550 [0xd0]: PERF_RECORD_SAMPLE(IP, 0x1): 2915700/2915700: 0xffffffff860172fc period: 1 addr: 0
+> +... FP chain: nr:12
+> +.....  0: ffffffffffffff80
+> +.....  1: ffffffff860172fc
+> +.....  2: ffffffff856e0ef3
+> +.....  3: ffffffff857fcb0c
+> +.....  4: ffffffff8587f2bc
+> +.....  5: ffffffff857faf44
+> +.....  6: ffffffff857fbebd
+> +.....  7: ffffffff857fd026
+> +.....  8: ffffffff85ffa46d
+> +.....  9: ffffffff862000ea
+> +..... 10: fffffffffffffe00
+> +..... 11: 00007efc434f1457
+> +... sample_read:
+> +.... group nr 2
+> +..... id 00000000001acbe6, value 0000000000000176, lost 0
+> +..... id 00000000001acbf6, value 0000000000001862, lost 0
+> +
+> +0xc620@perf.data [0x30]: event: 3
+> ...
+> ```
 > 
-> A fallback is implemented for kernel versions where this feature is not
-> supported.
+> This behavior is incorrect as in the case above perf inject should
+> have done nothing. Fix this behavior by disabling separating samples
+> for a tool that requests it. Only request this for `perf inject` so as
+> to not affect other perf tools. With the patch and the test above
+> there are no differences between the orig.txt and new.txt.
 > 
-> Signed-off-by: Ben Gainey <ben.gainey@arm.com>
-> ---
->  tools/perf/tests/attr/README                  |  2 +
->  .../tests/attr/test-record-group-sampling     |  3 +-
->  .../tests/attr/test-record-group-sampling1    | 51 ++++++++++++++++
->  .../tests/attr/test-record-group-sampling2    | 61 +++++++++++++++++++
->  tools/perf/tests/attr/test-record-group2      |  1 +
->  ...{test-record-group2 => test-record-group3} | 10 +--
->  tools/perf/util/evsel.c                       | 19 +++++-
->  tools/perf/util/evsel.h                       |  1 +
->  8 files changed, 141 insertions(+), 7 deletions(-)
->  create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
->  create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
->  copy tools/perf/tests/attr/{test-record-group2 => test-record-group3} (81%)
-> 
-> diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
-> index 4066fec7180a..67c4ca76b85d 100644
-> --- a/tools/perf/tests/attr/README
-> +++ b/tools/perf/tests/attr/README
-> @@ -51,6 +51,8 @@ Following tests are defined (with perf commands):
->    perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
->    perf record -e '{cycles,instructions}' kill   (test-record-group1)
->    perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
-> +  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
-> +  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
->    perf record -D kill                           (test-record-no-delay)
->    perf record -i kill                           (test-record-no-inherit)
->    perf record -n kill                           (test-record-no-samples)
-> diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
-> index 97e7e64a38f0..da7a5d10785f 100644
-> --- a/tools/perf/tests/attr/test-record-group-sampling
-> +++ b/tools/perf/tests/attr/test-record-group-sampling
-> @@ -2,6 +2,7 @@
->  command = record
->  args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
->  ret     = 1
-> +kernel_until = 6.11
+> Fixes: e4caec0d1af3 ("perf evsel: Add PERF_SAMPLE_READ sample related processing")
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-I guess it's v6.12. :)
-
->  
->  [event-1:base-record]
->  fd=1
-> @@ -18,7 +19,7 @@ group_fd=1
->  type=0
->  config=3
->  
-> -# default | PERF_SAMPLE_READ
-> +# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
->  sample_type=343
->  
->  # PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
-> diff --git a/tools/perf/tests/attr/test-record-group-sampling1 b/tools/perf/tests/attr/test-record-group-sampling1
-> new file mode 100644
-> index 000000000000..b02de391718d
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-group-sampling1
-> @@ -0,0 +1,51 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-> +ret     = 1
-> +kernel_since = 6.11
-> +
-> +[event-1:base-record]
-> +fd=1
-> +group_fd=-1
-> +
-> +# cycles
-> +type=0
-> +config=0
-> +
-> +# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
-> +sample_type=343
-> +
-> +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-> +read_format=28|31
-> +task=1
-> +mmap=1
-> +comm=1
-> +enable_on_exec=1
-> +disabled=1
-> +
-> +# inherit is enabled for group sampling
-> +inherit=1
-> +
-> +[event-2:base-record]
-> +fd=2
-> +group_fd=1
-> +
-> +# cache-misses
-> +type=0
-> +config=3
-> +
-> +# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
-> +sample_type=343
-> +
-> +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-> +read_format=28|31
-> +task=0
-> +mmap=0
-> +comm=0
-> +enable_on_exec=0
-> +disabled=0
-> +freq=0
-> +
-> +# inherit is enabled for group sampling
-> +inherit=1
-> +
-> diff --git a/tools/perf/tests/attr/test-record-group-sampling2 b/tools/perf/tests/attr/test-record-group-sampling2
-> new file mode 100644
-> index 000000000000..060fd1d24f63
-> --- /dev/null
-> +++ b/tools/perf/tests/attr/test-record-group-sampling2
-> @@ -0,0 +1,61 @@
-> +[config]
-> +command = record
-> +args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
-> +ret     = 1
-> +kernel_since = 6.11
-> +
-> +[event-1:base-record]
-> +fd=1
-> +group_fd=-1
-> +
-> +# cycles
-> +type=0
-> +config=0
-> +
-> +# default | PERF_SAMPLE_READ
-> +sample_type=87
-> +
-> +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-> +read_format=28|31
-> +task=1
-> +mmap=1
-> +comm=1
-> +enable_on_exec=1
-> +disabled=1
-> +
-> +# inherit is enabled for group sampling
-> +inherit=1
-> +
-> +# sampling disabled
-> +sample_freq=0
-> +sample_period=10000
-> +freq=0
-> +write_backward=0
-> +
-> +[event-2:base-record]
-> +fd=2
-> +group_fd=1
-> +
-> +# cache-misses
-> +type=0
-> +config=3
-> +
-> +# default | PERF_SAMPLE_READ
-> +sample_type=87
-> +
-> +# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
-> +read_format=28|31
-> +task=0
-> +mmap=0
-> +comm=0
-> +enable_on_exec=0
-> +disabled=0
-> +
-> +# inherit is enabled for group sampling
-> +inherit=1
-> +
-> +# sampling disabled
-> +sample_freq=0
-> +sample_period=0
-> +freq=0
-> +write_backward=0
-> diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
-> index cebdaa8e64e4..ad97df77a506 100644
-> --- a/tools/perf/tests/attr/test-record-group2
-> +++ b/tools/perf/tests/attr/test-record-group2
-> @@ -2,6 +2,7 @@
->  command = record
->  args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
->  ret     = 1
-> +kernel_until = 6.11
->  
->  [event-1:base-record]
->  fd=1
-> diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group3
-> similarity index 81%
-> copy from tools/perf/tests/attr/test-record-group2
-> copy to tools/perf/tests/attr/test-record-group3
-> index cebdaa8e64e4..311afb478b85 100644
-> --- a/tools/perf/tests/attr/test-record-group2
-> +++ b/tools/perf/tests/attr/test-record-group3
-> @@ -2,6 +2,7 @@
->  command = record
->  args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
->  ret     = 1
-> +kernel_since = 6.11
->  
->  [event-1:base-record]
->  fd=1
-> @@ -9,8 +10,9 @@ group_fd=-1
->  config=0|1
->  sample_period=1234000
->  sample_type=87
-> -read_format=12|28
-> -inherit=0
-> +read_format=28|31
-> +disabled=1
-> +inherit=1
->  freq=0
->  
->  [event-2:base-record]
-> @@ -19,9 +21,9 @@ group_fd=1
->  config=0|1
->  sample_period=6789000
->  sample_type=87
-> -read_format=12|28
-> +read_format=28|31
->  disabled=0
-> -inherit=0
-> +inherit=1
->  mmap=0
->  comm=0
->  freq=0
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index bc603193c477..ceb09b6a8c2f 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1171,7 +1171,15 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->  		 */
->  		if (leader->core.nr_members > 1) {
->  			attr->read_format |= PERF_FORMAT_GROUP;
-> -			attr->inherit = 0;
-> +		}
-> +
-> +		/*
-> +		 * Inherit + SAMPLE_READ requires SAMPLE_TID in the read_format
-> +		 */
-> +		if (attr->inherit) {
-> +			evsel__set_sample_bit(evsel, TID);
-> +			evsel->core.attr.read_format |=
-> +				PERF_FORMAT_ID;
->  		}
-
-Also I think we should reset the inherit bit for system-wide events.
-
-  $ perf record -a --synth=no true
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.042 MB perf.data (51 samples) ]
-  
-  $ perf evlist -v | tr ',' '\n' | grep inherit
-   inherit: 1
-   inherit: 1
-
-Maybe something like this:
-
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index bc603193c477..9423cd65c3c4 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -1149,7 +1149,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
-        bool per_cpu = opts->target.default_per_cpu && !opts->target.per_thread;
- 
-        attr->sample_id_all = perf_missing_features.sample_id_all ? 0 : 1;
--       attr->inherit       = !opts->no_inherit;
-+       attr->inherit       = target__has_cpu(&opts->target) ? 0 : !opts->no_inherit;
-        attr->write_backward = opts->overwrite ? 1 : 0;
-        attr->read_format   = PERF_FORMAT_LOST;
- 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-
->  	}
+> ---
+>  tools/perf/builtin-inject.c | 1 +
+>  tools/perf/util/session.c   | 3 +++
+>  tools/perf/util/tool.h      | 1 +
+>  3 files changed, 5 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index a212678d47be..c80fb0f60e61 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -2204,6 +2204,7 @@ int cmd_inject(int argc, const char **argv)
+>  			.finished_init	= perf_event__repipe_op2_synth,
+>  			.compressed	= perf_event__repipe_op4_synth,
+>  			.auxtrace	= perf_event__repipe_auxtrace,
+> +			.dont_split_sample_group = true,
+>  		},
+>  		.input_name  = "-",
+>  		.samples = LIST_HEAD_INIT(inject.samples),
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index 5596bed1b8c8..080242c69196 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1511,6 +1511,9 @@ static int deliver_sample_group(struct evlist *evlist,
+>  	int ret = -EINVAL;
+>  	struct sample_read_value *v = sample->read.group.values;
 >  
-> @@ -2020,6 +2028,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
->  
->  static void evsel__disable_missing_features(struct evsel *evsel)
->  {
-> +	if (perf_missing_features.inherit_sample_read)
-> +		evsel->core.attr.inherit = 0;
->  	if (perf_missing_features.branch_counters)
->  		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_COUNTERS;
->  	if (perf_missing_features.read_lost)
-> @@ -2075,7 +2085,12 @@ bool evsel__detect_missing_features(struct evsel *evsel)
->  	 * Must probe features in the order they were added to the
->  	 * perf_event_attr interface.
->  	 */
-> -	if (!perf_missing_features.branch_counters &&
-> +	if (!perf_missing_features.inherit_sample_read &&
-> +	    evsel->core.attr.inherit && (evsel->core.attr.sample_type & PERF_SAMPLE_READ)) {
-> +		perf_missing_features.inherit_sample_read = true;
-> +		pr_debug2("Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.\n");
-> +		return true;
-> +	} else if (!perf_missing_features.branch_counters &&
->  	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
->  		perf_missing_features.branch_counters = true;
->  		pr_debug2("switching off branch counters support\n");
-> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-> index 80b5f6dd868e..bb0c91c23679 100644
-> --- a/tools/perf/util/evsel.h
-> +++ b/tools/perf/util/evsel.h
-> @@ -206,6 +206,7 @@ struct perf_missing_features {
->  	bool weight_struct;
->  	bool read_lost;
->  	bool branch_counters;
-> +	bool inherit_sample_read;
+> +	if (tool->dont_split_sample_group)
+> +		return deliver_sample_value(evlist, tool, event, sample, v, machine);
+> +
+>  	sample_read_group__for_each(v, sample->read.group.nr, read_format) {
+>  		ret = deliver_sample_value(evlist, tool, event, sample, v,
+>  					   machine);
+> diff --git a/tools/perf/util/tool.h b/tools/perf/util/tool.h
+> index c957fb849ac6..62bbc9cec151 100644
+> --- a/tools/perf/util/tool.h
+> +++ b/tools/perf/util/tool.h
+> @@ -85,6 +85,7 @@ struct perf_tool {
+>  	bool		namespace_events;
+>  	bool		cgroup_events;
+>  	bool		no_warn;
+> +	bool		dont_split_sample_group;
+>  	enum show_feature_header show_feat_hdr;
 >  };
 >  
->  extern struct perf_missing_features perf_missing_features;
 > -- 
-> 2.45.2
+> 2.46.0.rc1.232.g9752f9e123-goog
 > 
