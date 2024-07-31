@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C47E16EB6F;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A593016EC06;
 	Wed, 31 Jul 2024 23:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722470109; cv=none; b=qXHGN2LYbYnzLSLsbnqmXR0p1eJzDXu1DHwxpFxE19IxvVDU8bNTEmc6TXI6WzOSfvJGsL5XegOzCndcTNC2RkmgrwbbyC37YZscu6McDUafMp1ra5OoXH0sYQPiykHC/EhrQ+z2Gl/aWSD5pgJ2E7PAwhoJ6kWWvv4ON8aGfko=
+	t=1722470109; cv=none; b=as7Tbft8dnawUVowcWN0+O1sSamurO9cWIo+D/0jnoVefW1IkZWBMURW1FYlvWEiQleB66Nm8xlNCbbMMh9QqUs0X6FsSaJcrDrIWliJbpIGxa3NqdUlZTjtv3cKWaS0lCb5vsnGoxoBmI4TG/HTCoahbYaP9r0q6/vP3KXYRGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722470109; c=relaxed/simple;
-	bh=Nt8bzaBEKnKY7ibLeGPc+4KHENLftiNUZpsx2dBIThk=;
+	bh=hLDVUUQ8aoLWqfdvlHVB0OV5dix+CmkyyetPRs7HfM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a4oG7JxZlwFxninNW/anwDJHaC+eYX3Sz2PKCUMiO0Bw4Sth+X7pcZC+FeHejmh0eE5uRGo5wMZ4EM3tnnJPAcuK32Wx4mDyXz8Or5uYkDSVyS61Q4DV/mdJsscnUIVBxIGzkLgTv7kwUguagjqv2BA5/SwsQWpDs/Nxg7s4Q0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcKLKHAe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=rzBDImni1BNoD1HRnVB16Ala4hUUUe8CTKek3z+JZ0OTCfzQCIc6UowdvAZLRbfHAIS5dipDuTOOEzKGaqb4HprVpXyN74NinAP2k2jWMnukALQzzglYCq9cbilKjEBfxvjOzRnZ7KKXQ0VQ7oH3Mrx4l7L+7zyK3QyM88WUmMU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PGcOLNyh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcKLKHAe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A85DC4AF0F;
-	Wed, 31 Jul 2024 23:55:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PGcOLNyh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C76C4AF11;
+	Wed, 31 Jul 2024 23:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1722470109;
-	bh=Nt8bzaBEKnKY7ibLeGPc+4KHENLftiNUZpsx2dBIThk=;
+	bh=hLDVUUQ8aoLWqfdvlHVB0OV5dix+CmkyyetPRs7HfM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=IcKLKHAetY4RuxidTZEmhKt0NAD8Ax8THcRA7FEhCo7eoku5Ku5UOG9bUzvhYlF2B
-	 Vag236IHEKgu71lY7VAzk0p9ynfYzqGfoyOTauQgnxuZdN6UGe8/2GS2t4dVP1KZfi
-	 +ucCPH9eMC7g2VQWbsyh/3eLUIJgPtNrrPdpJPiqqeyXRh0aeRw5sxVC1cad+k2HE+
-	 kLUhKvDDKS9JyVI1zHEfILwhiKxTIUX3nRXvulp8z6x4iXuiUR7kGdArvDroLvLwiy
-	 4ua0aEKDzR7BHATIKFiwDRMOD795KfIjmEy9xVN8MqMjnDaD7vZRQ+plsasHkC0VdU
-	 CnxNcKQSwVgEQ==
+	b=PGcOLNyhv6EQ3gMqDkSecsS//k5rPTs9AO1wjaDnJ5ken/WEjm8uXU0Q8EvKb3kGg
+	 WCDRr/xAxLfDUhYFlZpju5fTFNAfC6Vx1K4Y+rUhLax6X0mZmIgzL9u3TD279X+hfc
+	 N0tRDrKmccyBhqXRk4C8pLy+aXVI35nIiRfMpzCdAt8ONszKbKPVutdtEreSdDpq5H
+	 MWxEaDwcaxFZ5N1INciFr2DDBI1Qb4kO8/VSDY/j9RXMxfnBpjuTdWT4rf+wYb190k
+	 vkOJqcjaNty3wtaM/11y12av22xnAbDh/+/lrqnraWspOlhy1I0v+NUsSuLPm7b52O
+	 A9RrIVcdDn1ZA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -38,9 +38,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Stephane Eranian <eranian@google.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 5/6] perf mem: Add -s/--sort option
-Date: Wed, 31 Jul 2024 16:55:04 -0700
-Message-ID: <20240731235505.710436-6-namhyung@kernel.org>
+Subject: [PATCH 6/6] perf mem: Add -T/--data-type option to report subcommand
+Date: Wed, 31 Jul 2024 16:55:05 -0700
+Message-ID: <20240731235505.710436-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
 In-Reply-To: <20240731235505.710436-1-namhyung@kernel.org>
 References: <20240731235505.710436-1-namhyung@kernel.org>
@@ -52,81 +52,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-So that users can set the sort key manually as they want.
+This is just a shortcut to have 'type' in the sort key and use more
+compact output format like below.
 
-  $ perf mem report -s
-   Error: switch `s' requires a value
-   Usage: perf mem report [<options>]
+  $ perf mem report -T
+  ...
+  #
+  # Overhead       Samples  Memory access                            Snoop         TLB access              Data Type
+  # ........  ............  .......................................  ............  ......................  .........
+  #
+      14.84%            22  L1 hit                                   None          L1 or L2 hit            (unknown)
+       7.68%             8  LFB/MAB hit                              None          L1 or L2 hit            (unknown)
+       7.17%             3  RAM hit                                  Hit           L2 miss                 (unknown)
+       6.29%            12  L1 hit                                   None          L1 or L2 hit            (stack operation)
+       4.85%             5  RAM hit                                  Hit           L1 or L2 hit            (unknown)
+       3.97%             5  LFB/MAB hit                              None          L1 or L2 hit            struct psi_group_cpu
+       3.18%             3  LFB/MAB hit                              None          L1 or L2 hit            (stack operation)
+       2.58%             3  L1 hit                                   None          L1 or L2 hit            unsigned int
+       2.36%             2  L1 hit                                   None          L1 or L2 hit            struct
+       2.31%             2  L1 hit                                   None          L1 or L2 hit            struct psi_group_cpu
+  ...
 
-      -s, --sort <key[,key2...]>
-                          sort by key(s): overhead overhead_sys overhead_us overhead_guest_sys
-  			  overhead_guest_us overhead_children sample period
-  			  weight1 weight2 weight3 ins_lat retire_lat p_stage_cyc
-  			  pid comm dso symbol parent cpu socket srcline srcfile
-  			  local_weight weight transaction trace symbol_size
-  			  dso_size cgroup cgroup_id ipc_null time code_page_size
-  			  local_ins_lat ins_lat local_p_stage_cyc p_stage_cyc
-  			  addr local_retire_lat retire_lat simd type typeoff
-  			  symoff symbol_daddr dso_daddr locked tlb mem snoop
-  			  dcacheline symbol_iaddr phys_daddr data_page_size
-  			  blocked
+Users also can use their own sort keys and -T option makes sure it has
+the 'type' sort key at the end.
+
+  $ perf mem report -T -s mem
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-mem.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/perf/builtin-mem.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
-index 819edaf6b1df..24a4f0084f49 100644
+index 24a4f0084f49..efa700d14c98 100644
 --- a/tools/perf/builtin-mem.c
 +++ b/tools/perf/builtin-mem.c
-@@ -19,6 +19,7 @@
- #include "util/symbol.h"
- #include "util/pmus.h"
- #include "util/sample.h"
-+#include "util/sort.h"
- #include "util/string2.h"
- #include "util/util.h"
- #include <linux/err.h>
-@@ -28,7 +29,8 @@
+@@ -38,6 +38,7 @@ struct perf_mem {
+ 	bool			data_page_size;
+ 	bool			all_kernel;
+ 	bool			all_user;
++	bool			data_type;
+ 	int			operation;
+ 	const char		*cpu_list;
+ 	DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -317,6 +318,8 @@ static char *get_sort_order(struct perf_mem *mem)
  
- struct perf_mem {
- 	struct perf_tool	tool;
--	char const		*input_name;
-+	const char		*input_name;
-+	const char		*sort_key;
- 	bool			hide_unresolved;
- 	bool			dump_raw;
- 	bool			force;
-@@ -313,11 +315,13 @@ static char *get_sort_order(struct perf_mem *mem)
- 	bool has_extra_options = (mem->phys_addr | mem->data_page_size) ? true : false;
- 	char sort[128];
- 
-+	if (mem->sort_key)
-+		scnprintf(sort, sizeof(sort), "--sort=%s", mem->sort_key);
+ 	if (mem->sort_key)
+ 		scnprintf(sort, sizeof(sort), "--sort=%s", mem->sort_key);
++	else if (mem->data_type)
++		strcpy(sort, "--sort=mem,snoop,tlb,type");
  	/*
  	 * there is no weight (cost) associated with stores, so don't print
  	 * the column
- 	 */
--	if (!(mem->operation & MEM_OPERATION_LOAD)) {
-+	else if (!(mem->operation & MEM_OPERATION_LOAD)) {
- 		strcpy(sort, "--sort=mem,sym,dso,symbol_daddr,"
- 			     "dso_daddr,tlb,locked");
- 	} else if (has_extra_options) {
-@@ -468,6 +472,7 @@ int cmd_mem(int argc, const char **argv)
- 		 */
- 		.operation		 = MEM_OPERATION_LOAD | MEM_OPERATION_STORE,
- 	};
-+	char *sort_order_help = sort_help("sort by key(s):", SORT_MODE__MEMORY);
- 	const struct option mem_options[] = {
- 	OPT_CALLBACK('t', "type", &mem.operation,
- 		   "type", "memory operations(load,store) Default load,store",
-@@ -501,6 +506,8 @@ int cmd_mem(int argc, const char **argv)
- 		   "separator",
- 		   "separator for columns, no spaces will be added"
+@@ -336,6 +339,10 @@ static char *get_sort_order(struct perf_mem *mem)
+ 	if (mem->data_page_size)
+ 		strcat(sort, ",data_page_size");
+ 
++	/* make sure it has 'type' sort key even -s option is used */
++	if (mem->data_type && !strstr(sort, "type"))
++		strcat(sort, ",type");
++
+ 	return strdup(sort);
+ }
+ 
+@@ -508,6 +515,8 @@ int cmd_mem(int argc, const char **argv)
  		   " between columns '.' is reserved."),
-+	OPT_STRING('s', "sort", &mem.sort_key, "key[,key2...]",
-+		   sort_order_help),
+ 	OPT_STRING('s', "sort", &mem.sort_key, "key[,key2...]",
+ 		   sort_order_help),
++	OPT_BOOLEAN('T', "type-profile", &mem.data_type,
++		    "Show data-type profile result"),
  	OPT_PARENT(mem_options)
  	};
  	const char *const mem_subcommands[] = { "record", "report", NULL };
