@@ -1,177 +1,1209 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BF45A10B
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 15:33:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED7CD171AA;
+	Wed, 31 Jul 2024 15:33:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722439999; cv=none; b=YUUeLVA5ru+8Z3k61n5tUDCy9aIk7lzk9Aztfnj4iiCB5ney3zwkdaiCkkKM3YkYbgNlZ1U9CsMr0dOdqFHwxOP5uVCR4VrJqznlQnzT2r8yrW/fHN6DkUTsFNtyvTd5pERT9HmwhuT7RhNm65TfezPfqmnOLeIGqMTWZIzSX+0=
+	t=1722440031; cv=none; b=SZTAZKsSh5W55Ei/f64QGxk/zjtU8Emf33mOoECkyJa2LJRO95+V2BhfM6wXbA3jeMJicEZswwgZUE1QhkSNblMwMuZOS8myDtQ+QrokF1EQiH14JTbBMJIj4n4e/PuzoAcCkqj3TgM+OmPrvz/RwhglESx7z8a8AFXqFByMkAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722439999; c=relaxed/simple;
-	bh=vyEcUkkUMqSdSqGxulTicad8L3jfmlZgZTONV3Fc14U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rXSOo4IqvRmZOgEDr2Zk8ogrTXw8ZOrdaqI/hRRJvYs+z6cHGkDJD64ZbKvBUu1dMNR+lUsgwsONJlzTHhq97f2YnDWRAxUV0riYQ5+KiciT/V3U75goKolhBCV1dX0R+0aZXB8PjTemakdtZEXrnop+GIe56wkPXmOGQP39Zao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MP0MS5K8; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722440031; c=relaxed/simple;
+	bh=/Nrsve+fIEBkvS4+bfpFr4nsqhWgs3twUGs5q+9wcxA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QvxOEVo6XaD+ju2uvTP2pRDjVKMtW4xz6WIybRq7H4C0t36Cjr5Om6BNsvzbVyfv3rirhUo0Z/Ex7WqQX6uqqGkajNxKVdovQqRVPsJ4XgVlZo45ZuC+AigmUws+V+qoj+x8zRxXbQbPNmVaOVbN25CTtvfrkjNtV9aUYKXZ8qQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bdfUK3+7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MP0MS5K8"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fd7509397bso197055ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 08:33:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722439997; x=1723044797; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lkqElbAKwSbRLK95nttGEsxXQmUG7+IX8s48D5hRr1o=;
-        b=MP0MS5K8epE+N4Y//qpib3DIXhLqH4CjOhtDZL8eBDelmSVM4sVkTgMIjYS6NxfAbM
-         DsUnmsozbyQBL13+hsfZsnVNkQLrbmtZ+NF5nrVMBAbEkHK9t1JTtBoMN4GAPgl2kvj/
-         v/YcGworXWDmXA0Vz2JcKxJrozSHOp+Q1pQJmcEkg/ukycclrSQL5rB23/S8+a2Geliv
-         SG26LG9syk3mhzgX03PcoP4AcacSk28Te/LCgRJFrHLjZdEZYvJWYWPgMYixcc89B8ez
-         UZFTUt8/MBA+ssjNb6ELuhL4CrEiuCpRtPzn8xsCGzIt9BD8UO3UhIIRuHB1+fP9Kf4T
-         9MLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722439997; x=1723044797;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lkqElbAKwSbRLK95nttGEsxXQmUG7+IX8s48D5hRr1o=;
-        b=n05uRS7VfwcBSS6jDvcM0Rzi/Xs0RDr15zs9/cgDcgPOHxn2BWAlJW7Obyy8BklNF1
-         D/NMujnzNG63AAsCIebLUyPXWX9xBwJIUX+HvP0bEa6JOPHVgeGBNzKg8toDuZEycD2g
-         +uAPFNX7aqMv4EsAWmEeEB3VaD7FBgOkr4U7kq19qp2jFf08jHqfsbwPyZBB6mnp/HF+
-         cp0YSOWhg1yLyU42HTBkaVBetcXIUPzQ2fEn1GVOfxmjDPwhMGLTxwSY2N8BE98Nug1F
-         4Fy9ad3l2p7qM6VP4O4JVycAsLVfJZb1pWBxtDT/c7pFC5vRXRaBBYf6lqznnYSBnnZg
-         PopA==
-X-Forwarded-Encrypted: i=1; AJvYcCWdJ7fx6Ola7t0r0Iq/4AaCagwtb05sS+dFSirSBeqxBxA9EPU3oQ8Dr4sAaa0KLlDhifUn4NwVDuUil+fw6vcM+BCE+NG+vrJqSR4bmnD8bw==
-X-Gm-Message-State: AOJu0Yx4Amli8XwZ4mjfKhe11ySeiL0P0ebS63U+ZwEPAdnDbeKIm5n1
-	UZ9pbQkkw2YKuiFogNo43IiJxZ0pDBuIxuEpijG4yZgm8745j5Nv/it79GbuAC+HaEpHZ93Mbf8
-	ODPub8CzNQjYlPlDB1LKGKd+v7w6kOQByjPlO
-X-Google-Smtp-Source: AGHT+IE0bumBXqxIdUD9WWl0o3SNTSeQJNTPd+WHHEL1zuCpxQCa0EofdOVza2A+5TT4Ygm7vHMzZU3dAM/Amua9Q+o=
-X-Received: by 2002:a17:903:2a84:b0:1f4:95dc:bc61 with SMTP id
- d9443c01a7336-1ff426314c0mr2581115ad.15.1722439996851; Wed, 31 Jul 2024
- 08:33:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bdfUK3+7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F127CC116B1;
+	Wed, 31 Jul 2024 15:33:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722440030;
+	bh=/Nrsve+fIEBkvS4+bfpFr4nsqhWgs3twUGs5q+9wcxA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=bdfUK3+756ldUGBjKirf1xpxWBTjOb6mZtwnG3ri0Hbix4lBXhNVuuhPZiBZ4EWw2
+	 +XytAwAkkvKw4kNE/Rh7B6eFEFglQn0lqBsKN3Joa3YI5Z1S13cBIsO94Miup1BaBy
+	 MzREuUcV2vNw89bEf+njCDzjP+bpSlkK2ZPeIfPRXiByXcJX1a71jldgStRvqKYEGu
+	 ankbn4MQmO9gYS2LQG5yafD3RTTW4e7uap64B8C8psed0vODgziTnVAthuOAaIRzd8
+	 SYqZspQudyaMfFPHLsbIuCGnlygzKaqKumq+JD8PNrXSkIoHP0x50ND2RkDdmXF0oQ
+	 cSPmlODK6WpTA==
+Date: Wed, 31 Jul 2024 12:33:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: John Garry <john.g.garry@oracle.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Sandipan Das <sandipan.das@amd.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	philip.li@intel.com, oliver.sang@intel.com,
+	Weilin Wang <weilin.wang@intel.com>
+Subject: Re: [PATCH v3 2/2] perf jevents: Autogenerate empty-pmu-events.c
+Message-ID: <ZqpZWywTe2j3U9Pl@x1>
+References: <20240730191744.3097329-1-irogers@google.com>
+ <20240730191744.3097329-3-irogers@google.com>
+ <Zqo5vVdrkhL5NHJK@x1>
+ <CAP-5=fXyOfPya+TrKVaFhCK3rNY=AuLZLG67ith5YHf_XXVdNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240729004127.238611-1-namhyung@kernel.org> <Zqk8p-IxbMQBKjtE@x1>
-In-Reply-To: <Zqk8p-IxbMQBKjtE@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 31 Jul 2024 08:33:03 -0700
-Message-ID: <CAP-5=fU2RH-vcFvbc-Y3w+hDBCXH+pzawVa_N2mVF9+PVe2rAw@mail.gmail.com>
-Subject: Re: [PATCH 0/4] perf ftrace: Add 'profile' subcommand (v1)
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Steven Rostedt <rostedt@goodmis.org>, Changbin Du <changbin.du@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fXyOfPya+TrKVaFhCK3rNY=AuLZLG67ith5YHf_XXVdNg@mail.gmail.com>
 
-On Tue, Jul 30, 2024 at 12:19=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Sun, Jul 28, 2024 at 05:41:23PM -0700, Namhyung Kim wrote:
-> > Hello,
+On Wed, Jul 31, 2024 at 07:08:18AM -0700, Ian Rogers wrote:
+> On Wed, Jul 31, 2024 at 6:18 AM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
 > >
-> > This is an attempt to extend perf ftrace command to show a kernel funct=
-ion
-> > profile using the function_graph tracer.  This is useful to see detaile=
-d
-> > info like total, average, max time (in usec) and number of calls for ea=
-ch
-> > function.
+> > On Tue, Jul 30, 2024 at 12:17:44PM -0700, Ian Rogers wrote:
+> > > empty-pmu-events.c exists so that builds may occur without python
+> > > being installed on a system. Manually updating empty-pmu-events.c to
+> > > be in sync with jevents.py is a pain, let's use jevents.py to generate
+> > > empty-pmu-events.c.
 > >
-> >   $ sudo perf ftrace profile -- sync | head
-> >   # Total (us)   Avg (us)   Max (us)      Count   Function
-> >       7638.372   7638.372   7638.372          1   __do_sys_sync
-> >       7638.059   7638.059   7638.059          1   ksys_sync
-> >       5893.959   1964.653   3747.963          3   iterate_supers
-> >       5214.181    579.353   1688.752          9   schedule
-> >       3585.773     44.269   3537.329         81   sync_inodes_one_sb
-> >       3566.179     44.027   3537.078         81   sync_inodes_sb
-> >       1976.901    247.113   1968.070          8   filemap_fdatawait_kee=
-p_errors
-> >       1974.367    246.796   1967.895          8   __filemap_fdatawait_r=
-ange
-> >       1935.407     37.219   1157.627         52   folio_wait_writeback
+> > What am I missing here?
 > >
-> > While the kernel also provides the similar functionality IIRC under
-> > CONFIG_FUNCTION_PROFILER, it's often not enabled on disto kernels so I
-> > implemented it in user space.
->
-> Great functionality, tested it all and applied to tmp.perf-tools-next,
-> will be in perf-tools-next after one last round of container builds.
->
-> The discussion about libcap seems to still be open, so I'm applying what
-> is in this series as it is small and simple, we can go on from there.
+> > If it exists so that we can build on a system without python how can we
+> > use python to generate it?
+> >
+> > Now having python in the system is a requirement and thus we don't need
+> > empty-pmu-events.c anymore?
+> >
+> > Can you guys please clarify that?
+> 
+> The requirement for python hasn't changed.
+> 
+> Case 1: no python or NO_JEVENTS=1
+> Build happens using empty-pmu-events.c that is checked in, no python
+> is required.
+> 
+> Case 2: python
+> pmu-events.c is created by jevents.py (requiring python) and then built.
+> This change adds a step where the empty-pmu-events.c is created using
+> jevents.py and that file is diffed against the checked in version.
+> This stops the checked in empty-pmu-events.c diverging if changes are
+> made to jevents.py. If the diff causes the build to fail then you just
+> copy the diff empty-pmu-events.c over the checked in one.
 
-Sgtm. I did the libcap cleanup on perf-tools-next, but
-tmp.perf-tools-next hasn't been merged there for 3 weeks. It'd be nice
-to rebase the patch on perf-tools-next, but should I just shift to
-working on tmp.perf-tools-next?
+I'll try and add your explanation to the log message, thanks for
+clarifying it!
 
-Thanks,
-Ian
-
-> Thanks!
->
-> - Arnaldo
->
-> > Also it can support function filters like 'perf ftrace trace' so users
-> > can focus on some target functions and change the buffer size if needed=
-.
+- Arnaldo
+ 
+> Thanks,
+> Ian
+> 
+> > - Arnaldo
 > >
-> >   $ sudo perf ftrace profile -h
-> >
-> >    Usage: perf ftrace [<options>] [<command>]
-> >       or: perf ftrace [<options>] -- [<command>] [<options>]
-> >       or: perf ftrace {trace|latency|profile} [<options>] [<command>]
-> >       or: perf ftrace {trace|latency|profile} [<options>] -- [<command>=
-] [<options>]
-> >
-> >       -a, --all-cpus        System-wide collection from all CPUs
-> >       -C, --cpu <cpu>       List of cpus to monitor
-> >       -G, --graph-funcs <func>
-> >                             Trace given functions using function_graph =
-tracer
-> >       -g, --nograph-funcs <func>
-> >                             Set nograph filter on given functions
-> >       -m, --buffer-size <size>
-> >                             Size of per cpu buffer, needs to use a B, K=
-, M or G suffix.
-> >       -N, --notrace-funcs <func>
-> >                             Do not trace given functions
-> >       -p, --pid <pid>       Trace on existing process id
-> >       -s, --sort <key>      Sort result by key: total (default), avg, m=
-ax, count, name.
-> >       -T, --trace-funcs <func>
-> >                             Trace given functions using function tracer
-> >       -v, --verbose         Be more verbose
-> >           --tid <tid>       Trace on existing thread id (exclusive to -=
--pid)
-> >
-> >
-> > The code is also available in 'perf/ftrace-profile-v1' branch at
-> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > Namhyung Kim (4):
-> >   perf ftrace: Add 'tail' option to --graph-opts
-> >   perf ftrace: Factor out check_ftrace_capable()
-> >   perf ftrace: Add 'profile' command
-> >   perf ftrace: Add -s/--sort option to profile sub-command
-> >
-> >  tools/perf/Documentation/perf-ftrace.txt |  48 ++-
-> >  tools/perf/builtin-ftrace.c              | 439 +++++++++++++++++++++--
-> >  tools/perf/util/ftrace.h                 |   3 +
-> >  3 files changed, 463 insertions(+), 27 deletions(-)
-> >
-> > --
-> > 2.46.0.rc1.232.g9752f9e123-goog
+> > > 1) change jevents.py so that an arch and model of none cause
+> > >    generation of a pmu-events.c without any json. Add a SPDX and
+> > >    autogenerated warning to the start of the file.
+> > > > 2) change Build so that if a generated pmu-events.c for arch none and
+> > >    model none doesn't match empty-pmu-events.c the build fails with a
+> > >    cat of the differences. Update Makefile.perf to clean up the files
+> > >    used for this.
+> > >
+> > > 3) update empty-pmu-events.c to match the output of jevents.py with
+> > >    arch and mode of none.
+> > >
+> > > Signed-off-by: Ian Rogers <irogers@google.com>
+> > > Reviewed-by: John Garry <john.g.garry@oracle.com>
+> > > ---
+> > >  tools/perf/Makefile.perf                 |   2 +
+> > >  tools/perf/pmu-events/Build              |  12 +-
+> > >  tools/perf/pmu-events/empty-pmu-events.c | 894 ++++++++++++++---------
+> > >  tools/perf/pmu-events/jevents.py         |   6 +-
+> > >  4 files changed, 562 insertions(+), 352 deletions(-)
+> > >
+> > > diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+> > > index 175e4c7898f0..76bb0925849a 100644
+> > > --- a/tools/perf/Makefile.perf
+> > > +++ b/tools/perf/Makefile.perf
+> > > @@ -1252,6 +1252,8 @@ clean:: $(LIBAPI)-clean $(LIBBPF)-clean $(LIBSUBCMD)-clean $(LIBSYMBOL)-clean $(
+> > >               $(OUTPUT)util/intel-pt-decoder/inat-tables.c \
+> > >               $(OUTPUT)tests/llvm-src-{base,kbuild,prologue,relocation}.c \
+> > >               $(OUTPUT)pmu-events/pmu-events.c \
+> > > +             $(OUTPUT)pmu-events/test-empty-pmu-events.c \
+> > > +             $(OUTPUT)pmu-events/empty-pmu-events.log \
+> > >               $(OUTPUT)pmu-events/metric_test.log \
+> > >               $(OUTPUT)$(fadvise_advice_array) \
+> > >               $(OUTPUT)$(fsconfig_arrays) \
+> > > diff --git a/tools/perf/pmu-events/Build b/tools/perf/pmu-events/Build
+> > > index 1d18bb89402e..c3fa43c49706 100644
+> > > --- a/tools/perf/pmu-events/Build
+> > > +++ b/tools/perf/pmu-events/Build
+> > > @@ -11,6 +11,8 @@ METRIC_TEST_PY      =  pmu-events/metric_test.py
+> > >  EMPTY_PMU_EVENTS_C = pmu-events/empty-pmu-events.c
+> > >  PMU_EVENTS_C =  $(OUTPUT)pmu-events/pmu-events.c
+> > >  METRIC_TEST_LOG      =  $(OUTPUT)pmu-events/metric_test.log
+> > > +TEST_EMPTY_PMU_EVENTS_C = $(OUTPUT)pmu-events/test-empty-pmu-events.c
+> > > +EMPTY_PMU_EVENTS_TEST_LOG = $(OUTPUT)pmu-events/empty-pmu-events.log
+> > >
+> > >  ifeq ($(JEVENTS_ARCH),)
+> > >  JEVENTS_ARCH=$(SRCARCH)
+> > > @@ -31,7 +33,15 @@ $(METRIC_TEST_LOG): $(METRIC_TEST_PY) $(METRIC_PY)
+> > >       $(call rule_mkdir)
+> > >       $(Q)$(call echo-cmd,test)$(PYTHON) $< 2> $@ || (cat $@ && false)
+> > >
+> > > -$(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
+> > > +$(TEST_EMPTY_PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG)
+> > > +     $(call rule_mkdir)
+> > > +     $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) none none pmu-events/arch $@
+> > > +
+> > > +$(EMPTY_PMU_EVENTS_TEST_LOG): $(EMPTY_PMU_EVENTS_C) $(TEST_EMPTY_PMU_EVENTS_C)
+> > > +     $(call rule_mkdir)
+> > > +     $(Q)$(call echo-cmd,test)diff -u $? 2> $@ || (cat $@ && false)
+> > > +
+> > > +$(PMU_EVENTS_C): $(JSON) $(JSON_TEST) $(JEVENTS_PY) $(METRIC_PY) $(METRIC_TEST_LOG) $(EMPTY_PMU_EVENTS_TEST_LOG)
+> > >       $(call rule_mkdir)
+> > >       $(Q)$(call echo-cmd,gen)$(PYTHON) $(JEVENTS_PY) $(JEVENTS_ARCH) $(JEVENTS_MODEL) pmu-events/arch $@
+> > >  endif
+> > > diff --git a/tools/perf/pmu-events/empty-pmu-events.c b/tools/perf/pmu-events/empty-pmu-events.c
+> > > index 13727421d424..c592079982fb 100644
+> > > --- a/tools/perf/pmu-events/empty-pmu-events.c
+> > > +++ b/tools/perf/pmu-events/empty-pmu-events.c
+> > > @@ -1,196 +1,193 @@
+> > > -// SPDX-License-Identifier: GPL-2.0
+> > > -/*
+> > > - * An empty pmu-events.c file used when there is no architecture json files in
+> > > - * arch or when the jevents.py script cannot be run.
+> > > - *
+> > > - * The test cpu/soc is provided for testing.
+> > > - */
+> > > -#include "pmu-events/pmu-events.h"
+> > > +
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/* THIS FILE WAS AUTOGENERATED BY jevents.py arch=none model=none ! */
+> > > +
+> > > +#include <pmu-events/pmu-events.h>
+> > >  #include "util/header.h"
+> > >  #include "util/pmu.h"
+> > >  #include <string.h>
+> > >  #include <stddef.h>
+> > >
+> > > -static const struct pmu_event pmu_events__test_soc_cpu[] = {
+> > > -     {
+> > > -             .name = "l3_cache_rd",
+> > > -             .event = "event=0x40",
+> > > -             .desc = "L3 cache access, read",
+> > > -             .topic = "cache",
+> > > -             .long_desc = "Attributable Level 3 cache access, read",
+> > > -     },
+> > > -     {
+> > > -             .name = "segment_reg_loads.any",
+> > > -             .event = "event=0x6,period=200000,umask=0x80",
+> > > -             .desc = "Number of segment register loads",
+> > > -             .topic = "other",
+> > > -     },
+> > > -     {
+> > > -             .name = "dispatch_blocked.any",
+> > > -             .event = "event=0x9,period=200000,umask=0x20",
+> > > -             .desc = "Memory cluster signals to block micro-op dispatch for any reason",
+> > > -             .topic = "other",
+> > > -     },
+> > > -     {
+> > > -             .name = "eist_trans",
+> > > -             .event = "event=0x3a,period=200000,umask=0x0",
+> > > -             .desc = "Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions",
+> > > -             .topic = "other",
+> > > -     },
+> > > -     {
+> > > -             .name = "uncore_hisi_ddrc.flux_wcmd",
+> > > -             .event = "event=0x2",
+> > > -             .desc = "DDRC write commands. Unit: hisi_sccl,ddrc ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "DDRC write commands",
+> > > -             .pmu = "hisi_sccl,ddrc",
+> > > -     },
+> > > -     {
+> > > -             .name = "unc_cbo_xsnp_response.miss_eviction",
+> > > -             .event = "event=0x22,umask=0x81",
+> > > -             .desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core. Unit: uncore_cbox ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "A cross-core snoop resulted from L3 Eviction which misses in some processor core",
+> > > -             .pmu = "uncore_cbox",
+> > > -     },
+> > > -     {
+> > > -             .name = "event-hyphen",
+> > > -             .event = "event=0xe0,umask=0x00",
+> > > -             .desc = "UNC_CBO_HYPHEN. Unit: uncore_cbox ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "UNC_CBO_HYPHEN",
+> > > -             .pmu = "uncore_cbox",
+> > > -     },
+> > > -     {
+> > > -             .name = "event-two-hyph",
+> > > -             .event = "event=0xc0,umask=0x00",
+> > > -             .desc = "UNC_CBO_TWO_HYPH. Unit: uncore_cbox ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "UNC_CBO_TWO_HYPH",
+> > > -             .pmu = "uncore_cbox",
+> > > -     },
+> > > -     {
+> > > -             .name = "uncore_hisi_l3c.rd_hit_cpipe",
+> > > -             .event = "event=0x7",
+> > > -             .desc = "Total read hits. Unit: hisi_sccl,l3c ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "Total read hits",
+> > > -             .pmu = "hisi_sccl,l3c",
+> > > -     },
+> > > -     {
+> > > -             .name = "uncore_imc_free_running.cache_miss",
+> > > -             .event = "event=0x12",
+> > > -             .desc = "Total cache misses. Unit: uncore_imc_free_running ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "Total cache misses",
+> > > -             .pmu = "uncore_imc_free_running",
+> > > -     },
+> > > -     {
+> > > -             .name = "uncore_imc.cache_hits",
+> > > -             .event = "event=0x34",
+> > > -             .desc = "Total cache hits. Unit: uncore_imc ",
+> > > -             .topic = "uncore",
+> > > -             .long_desc = "Total cache hits",
+> > > -             .pmu = "uncore_imc",
+> > > -     },
+> > > -     {
+> > > -             .name = "bp_l1_btb_correct",
+> > > -             .event = "event=0x8a",
+> > > -             .desc = "L1 BTB Correction",
+> > > -             .topic = "branch",
+> > > -     },
+> > > -     {
+> > > -             .name = "bp_l2_btb_correct",
+> > > -             .event = "event=0x8b",
+> > > -             .desc = "L2 BTB Correction",
+> > > -             .topic = "branch",
+> > > -     },
+> > > -     {
+> > > -             .name = 0,
+> > > -             .event = 0,
+> > > -             .desc = 0,
+> > > -     },
+> > > +struct compact_pmu_event {
+> > > +        int offset;
+> > >  };
+> > >
+> > > -static const struct pmu_metric pmu_metrics__test_soc_cpu[] = {
+> > > -     {
+> > > -             .metric_expr    = "1 / IPC",
+> > > -             .metric_name    = "CPI",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "inst_retired.any / cpu_clk_unhalted.thread",
+> > > -             .metric_name    = "IPC",
+> > > -             .metric_group   = "group1",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "idq_uops_not_delivered.core / (4 * (( ( cpu_clk_unhalted.thread / 2 ) * "
+> > > -             "( 1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk ) )))",
+> > > -             .metric_name    = "Frontend_Bound_SMT",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "l1d\\-loads\\-misses / inst_retired.any",
+> > > -             .metric_name    = "dcache_miss_cpi",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "l1i\\-loads\\-misses / inst_retired.any",
+> > > -             .metric_name    = "icache_miss_cycles",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "(dcache_miss_cpi + icache_miss_cycles)",
+> > > -             .metric_name    = "cache_miss_cycles",
+> > > -             .metric_group   = "group1",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit",
+> > > -             .metric_name    = "DCache_L2_All_Hits",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + "
+> > > -             "l2_rqsts.pf_miss + l2_rqsts.rfo_miss",
+> > > -             .metric_name    = "DCache_L2_All_Miss",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "DCache_L2_All_Hits + DCache_L2_All_Miss",
+> > > -             .metric_name    = "DCache_L2_All",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "d_ratio(DCache_L2_All_Hits, DCache_L2_All)",
+> > > -             .metric_name    = "DCache_L2_Hits",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "d_ratio(DCache_L2_All_Miss, DCache_L2_All)",
+> > > -             .metric_name    = "DCache_L2_Misses",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "ipc + M2",
+> > > -             .metric_name    = "M1",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "ipc + M1",
+> > > -             .metric_name    = "M2",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "1/M3",
+> > > -             .metric_name    = "M3",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr    = "64 * l1d.replacement / 1000000000 / duration_time",
+> > > -             .metric_name    = "L1D_Cache_Fill_BW",
+> > > -     },
+> > > -     {
+> > > -             .metric_expr = 0,
+> > > -             .metric_name = 0,
+> > > -     },
+> > > +struct pmu_table_entry {
+> > > +        const struct compact_pmu_event *entries;
+> > > +        uint32_t num_entries;
+> > > +        struct compact_pmu_event pmu_name;
+> > > +};
+> > > +
+> > > +static const char *const big_c_string =
+> > > +/* offset=0 */ "default_core\000"
+> > > +/* offset=13 */ "bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000"
+> > > +/* offset=72 */ "bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000"
+> > > +/* offset=131 */ "l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000Attributable Level 3 cache access, read\000"
+> > > +/* offset=226 */ "segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000"
+> > > +/* offset=325 */ "dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000"
+> > > +/* offset=455 */ "eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000"
+> > > +/* offset=570 */ "hisi_sccl,ddrc\000"
+> > > +/* offset=585 */ "uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000"
+> > > +/* offset=671 */ "uncore_cbox\000"
+> > > +/* offset=683 */ "unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000"
+> > > +/* offset=914 */ "event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000"
+> > > +/* offset=979 */ "event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000"
+> > > +/* offset=1050 */ "hisi_sccl,l3c\000"
+> > > +/* offset=1064 */ "uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000"
+> > > +/* offset=1144 */ "uncore_imc_free_running\000"
+> > > +/* offset=1168 */ "uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000"
+> > > +/* offset=1263 */ "uncore_imc\000"
+> > > +/* offset=1274 */ "uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000"
+> > > +/* offset=1352 */ "uncore_sys_ddr_pmu\000"
+> > > +/* offset=1371 */ "sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000"
+> > > +/* offset=1444 */ "uncore_sys_ccn_pmu\000"
+> > > +/* offset=1463 */ "sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000"
+> > > +/* offset=1537 */ "uncore_sys_cmn_pmu\000"
+> > > +/* offset=1556 */ "sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000"
+> > > +/* offset=1696 */ "CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000"
+> > > +/* offset=1718 */ "IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000"
+> > > +/* offset=1781 */ "Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000"
+> > > +/* offset=1947 */ "dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2011 */ "icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2078 */ "cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2149 */ "DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2243 */ "DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2377 */ "DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2441 */ "DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2509 */ "DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2579 */ "M1\000\000ipc + M2\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2601 */ "M2\000\000ipc + M1\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2623 */ "M3\000\0001 / M3\000\000\000\000\000\000\000\00000"
+> > > +/* offset=2643 */ "L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000"
+> > > +;
+> > > +
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_default_core[] = {
+> > > +{ 13 }, /* bp_l1_btb_correct\000branch\000L1 BTB Correction\000event=0x8a\000\00000\000\000 */
+> > > +{ 72 }, /* bp_l2_btb_correct\000branch\000L2 BTB Correction\000event=0x8b\000\00000\000\000 */
+> > > +{ 325 }, /* dispatch_blocked.any\000other\000Memory cluster signals to block micro-op dispatch for any reason\000event=9,period=200000,umask=0x20\000\00000\000\000 */
+> > > +{ 455 }, /* eist_trans\000other\000Number of Enhanced Intel SpeedStep(R) Technology (EIST) transitions\000event=0x3a,period=200000\000\00000\000\000 */
+> > > +{ 131 }, /* l3_cache_rd\000cache\000L3 cache access, read\000event=0x40\000\00000\000Attributable Level 3 cache access, read\000 */
+> > > +{ 226 }, /* segment_reg_loads.any\000other\000Number of segment register loads\000event=6,period=200000,umask=0x80\000\00000\000\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_ddrc[] = {
+> > > +{ 585 }, /* uncore_hisi_ddrc.flux_wcmd\000uncore\000DDRC write commands\000event=2\000\00000\000DDRC write commands\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_hisi_sccl_l3c[] = {
+> > > +{ 1064 }, /* uncore_hisi_l3c.rd_hit_cpipe\000uncore\000Total read hits\000event=7\000\00000\000Total read hits\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_cbox[] = {
+> > > +{ 914 }, /* event-hyphen\000uncore\000UNC_CBO_HYPHEN\000event=0xe0\000\00000\000UNC_CBO_HYPHEN\000 */
+> > > +{ 979 }, /* event-two-hyph\000uncore\000UNC_CBO_TWO_HYPH\000event=0xc0\000\00000\000UNC_CBO_TWO_HYPH\000 */
+> > > +{ 683 }, /* unc_cbo_xsnp_response.miss_eviction\000uncore\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000event=0x22,umask=0x81\000\00000\000A cross-core snoop resulted from L3 Eviction which misses in some processor core\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc[] = {
+> > > +{ 1274 }, /* uncore_imc.cache_hits\000uncore\000Total cache hits\000event=0x34\000\00000\000Total cache hits\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_cpu_uncore_imc_free_running[] = {
+> > > +{ 1168 }, /* uncore_imc_free_running.cache_miss\000uncore\000Total cache misses\000event=0x12\000\00000\000Total cache misses\000 */
+> > > +
+> > > +};
+> > > +
+> > > +const struct pmu_table_entry pmu_events__test_soc_cpu[] = {
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_default_core,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_default_core),
+> > > +     .pmu_name = { 0 /* default_core\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_hisi_sccl_ddrc,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_ddrc),
+> > > +     .pmu_name = { 570 /* hisi_sccl,ddrc\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_hisi_sccl_l3c,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_hisi_sccl_l3c),
+> > > +     .pmu_name = { 1050 /* hisi_sccl,l3c\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_uncore_cbox,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_cbox),
+> > > +     .pmu_name = { 671 /* uncore_cbox\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_uncore_imc,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc),
+> > > +     .pmu_name = { 1263 /* uncore_imc\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_cpu_uncore_imc_free_running,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_cpu_uncore_imc_free_running),
+> > > +     .pmu_name = { 1144 /* uncore_imc_free_running\000 */ },
+> > > +},
+> > >  };
+> > >
+> > > +static const struct compact_pmu_event pmu_metrics__test_soc_cpu_default_core[] = {
+> > > +{ 1696 }, /* CPI\000\0001 / IPC\000\000\000\000\000\000\000\00000 */
+> > > +{ 2377 }, /* DCache_L2_All\000\000DCache_L2_All_Hits + DCache_L2_All_Miss\000\000\000\000\000\000\000\00000 */
+> > > +{ 2149 }, /* DCache_L2_All_Hits\000\000l2_rqsts.demand_data_rd_hit + l2_rqsts.pf_hit + l2_rqsts.rfo_hit\000\000\000\000\000\000\000\00000 */
+> > > +{ 2243 }, /* DCache_L2_All_Miss\000\000max(l2_rqsts.all_demand_data_rd - l2_rqsts.demand_data_rd_hit, 0) + l2_rqsts.pf_miss + l2_rqsts.rfo_miss\000\000\000\000\000\000\000\00000 */
+> > > +{ 2441 }, /* DCache_L2_Hits\000\000d_ratio(DCache_L2_All_Hits, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
+> > > +{ 2509 }, /* DCache_L2_Misses\000\000d_ratio(DCache_L2_All_Miss, DCache_L2_All)\000\000\000\000\000\000\000\00000 */
+> > > +{ 1781 }, /* Frontend_Bound_SMT\000\000idq_uops_not_delivered.core / (4 * (cpu_clk_unhalted.thread / 2 * (1 + cpu_clk_unhalted.one_thread_active / cpu_clk_unhalted.ref_xclk)))\000\000\000\000\000\000\000\00000 */
+> > > +{ 1718 }, /* IPC\000group1\000inst_retired.any / cpu_clk_unhalted.thread\000\000\000\000\000\000\000\00000 */
+> > > +{ 2643 }, /* L1D_Cache_Fill_BW\000\00064 * l1d.replacement / 1e9 / duration_time\000\000\000\000\000\000\000\00000 */
+> > > +{ 2579 }, /* M1\000\000ipc + M2\000\000\000\000\000\000\000\00000 */
+> > > +{ 2601 }, /* M2\000\000ipc + M1\000\000\000\000\000\000\000\00000 */
+> > > +{ 2623 }, /* M3\000\0001 / M3\000\000\000\000\000\000\000\00000 */
+> > > +{ 2078 }, /* cache_miss_cycles\000group1\000dcache_miss_cpi + icache_miss_cycles\000\000\000\000\000\000\000\00000 */
+> > > +{ 1947 }, /* dcache_miss_cpi\000\000l1d\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
+> > > +{ 2011 }, /* icache_miss_cycles\000\000l1i\\-loads\\-misses / inst_retired.any\000\000\000\000\000\000\000\00000 */
+> > > +
+> > > +};
+> > > +
+> > > +const struct pmu_table_entry pmu_metrics__test_soc_cpu[] = {
+> > > +{
+> > > +     .entries = pmu_metrics__test_soc_cpu_default_core,
+> > > +     .num_entries = ARRAY_SIZE(pmu_metrics__test_soc_cpu_default_core),
+> > > +     .pmu_name = { 0 /* default_core\000 */ },
+> > > +},
+> > > +};
+> > > +
+> > > +static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ccn_pmu[] = {
+> > > +{ 1463 }, /* sys_ccn_pmu.read_cycles\000uncore\000ccn read-cycles event\000config=0x2c\0000x01\00000\000\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_cmn_pmu[] = {
+> > > +{ 1556 }, /* sys_cmn_pmu.hnf_cache_miss\000uncore\000Counts total cache misses in first lookup result (high priority)\000eventid=1,type=5\000(434|436|43c|43a).*\00000\000\000 */
+> > > +};
+> > > +static const struct compact_pmu_event pmu_events__test_soc_sys_uncore_sys_ddr_pmu[] = {
+> > > +{ 1371 }, /* sys_ddr_pmu.write_cycles\000uncore\000ddr write-cycles event\000event=0x2b\000v8\00000\000\000 */
+> > > +
+> > > +};
+> > > +
+> > > +const struct pmu_table_entry pmu_events__test_soc_sys[] = {
+> > > +{
+> > > +     .entries = pmu_events__test_soc_sys_uncore_sys_ccn_pmu,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ccn_pmu),
+> > > +     .pmu_name = { 1444 /* uncore_sys_ccn_pmu\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_sys_uncore_sys_cmn_pmu,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_cmn_pmu),
+> > > +     .pmu_name = { 1537 /* uncore_sys_cmn_pmu\000 */ },
+> > > +},
+> > > +{
+> > > +     .entries = pmu_events__test_soc_sys_uncore_sys_ddr_pmu,
+> > > +     .num_entries = ARRAY_SIZE(pmu_events__test_soc_sys_uncore_sys_ddr_pmu),
+> > > +     .pmu_name = { 1352 /* uncore_sys_ddr_pmu\000 */ },
+> > > +},
+> > > +};
+> > > +
+> > > +
+> > >  /* Struct used to make the PMU event table implementation opaque to callers. */
+> > >  struct pmu_events_table {
+> > > -     const struct pmu_event *entries;
+> > > +        const struct pmu_table_entry *pmus;
+> > > +        uint32_t num_pmus;
+> > >  };
+> > >
+> > >  /* Struct used to make the PMU metric table implementation opaque to callers. */
+> > >  struct pmu_metrics_table {
+> > > -     const struct pmu_metric *entries;
+> > > +        const struct pmu_table_entry *pmus;
+> > > +        uint32_t num_pmus;
+> > >  };
+> > >
+> > >  /*
+> > > @@ -202,92 +199,191 @@ struct pmu_metrics_table {
+> > >   * The  cpuid can contain any character other than the comma.
+> > >   */
+> > >  struct pmu_events_map {
+> > > -     const char *arch;
+> > > -     const char *cpuid;
+> > > -     const struct pmu_events_table event_table;
+> > > -     const struct pmu_metrics_table metric_table;
+> > > +        const char *arch;
+> > > +        const char *cpuid;
+> > > +        struct pmu_events_table event_table;
+> > > +        struct pmu_metrics_table metric_table;
+> > >  };
+> > >
+> > >  /*
+> > >   * Global table mapping each known CPU for the architecture to its
+> > >   * table of PMU events.
+> > >   */
+> > > -static const struct pmu_events_map pmu_events_map[] = {
+> > > -     {
+> > > -             .arch = "testarch",
+> > > -             .cpuid = "testcpu",
+> > > -             .event_table = { pmu_events__test_soc_cpu },
+> > > -             .metric_table = { pmu_metrics__test_soc_cpu },
+> > > -     },
+> > > -     {
+> > > -             .arch = 0,
+> > > -             .cpuid = 0,
+> > > -             .event_table = { 0 },
+> > > -             .metric_table = { 0 },
+> > > -     },
+> > > -};
+> > > -
+> > > -static const struct pmu_event pmu_events__test_soc_sys[] = {
+> > > -     {
+> > > -             .name = "sys_ddr_pmu.write_cycles",
+> > > -             .event = "event=0x2b",
+> > > -             .desc = "ddr write-cycles event. Unit: uncore_sys_ddr_pmu ",
+> > > -             .compat = "v8",
+> > > -             .topic = "uncore",
+> > > -             .pmu = "uncore_sys_ddr_pmu",
+> > > -     },
+> > > -     {
+> > > -             .name = "sys_ccn_pmu.read_cycles",
+> > > -             .event = "config=0x2c",
+> > > -             .desc = "ccn read-cycles event. Unit: uncore_sys_ccn_pmu ",
+> > > -             .compat = "0x01",
+> > > -             .topic = "uncore",
+> > > -             .pmu = "uncore_sys_ccn_pmu",
+> > > -     },
+> > > -     {
+> > > -             .name = "sys_cmn_pmu.hnf_cache_miss",
+> > > -             .event = "eventid=0x1,type=0x5",
+> > > -             .desc = "Counts total cache misses in first lookup result (high priority). Unit: uncore_sys_cmn_pmu ",
+> > > -             .compat = "(434|436|43c|43a).*",
+> > > -             .topic = "uncore",
+> > > -             .pmu = "uncore_sys_cmn_pmu",
+> > > -     },
+> > > -     {
+> > > -             .name = 0,
+> > > -             .event = 0,
+> > > -             .desc = 0,
+> > > -     },
+> > > +const struct pmu_events_map pmu_events_map[] = {
+> > > +{
+> > > +     .arch = "testarch",
+> > > +     .cpuid = "testcpu",
+> > > +     .event_table = {
+> > > +             .pmus = pmu_events__test_soc_cpu,
+> > > +             .num_pmus = ARRAY_SIZE(pmu_events__test_soc_cpu),
+> > > +     },
+> > > +     .metric_table = {
+> > > +             .pmus = pmu_metrics__test_soc_cpu,
+> > > +             .num_pmus = ARRAY_SIZE(pmu_metrics__test_soc_cpu),
+> > > +     }
+> > > +},
+> > > +{
+> > > +     .arch = 0,
+> > > +     .cpuid = 0,
+> > > +     .event_table = { 0, 0 },
+> > > +     .metric_table = { 0, 0 },
+> > > +}
+> > >  };
+> > >
+> > >  struct pmu_sys_events {
+> > >       const char *name;
+> > > -     const struct pmu_events_table table;
+> > > +     struct pmu_events_table event_table;
+> > > +     struct pmu_metrics_table metric_table;
+> > >  };
+> > >
+> > >  static const struct pmu_sys_events pmu_sys_event_tables[] = {
+> > >       {
+> > > -             .table = { pmu_events__test_soc_sys },
+> > > +             .event_table = {
+> > > +                     .pmus = pmu_events__test_soc_sys,
+> > > +                     .num_pmus = ARRAY_SIZE(pmu_events__test_soc_sys)
+> > > +             },
+> > >               .name = "pmu_events__test_soc_sys",
+> > >       },
+> > >       {
+> > > -             .table = { 0 }
+> > > +             .event_table = { 0, 0 },
+> > > +             .metric_table = { 0, 0 },
+> > >       },
+> > >  };
+> > >
+> > > -int pmu_events_table__for_each_event(const struct pmu_events_table *table, struct perf_pmu *pmu,
+> > > -                                  pmu_event_iter_fn fn, void *data)
+> > > +static void decompress_event(int offset, struct pmu_event *pe)
+> > > +{
+> > > +     const char *p = &big_c_string[offset];
+> > > +
+> > > +     pe->name = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->topic = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->desc = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->event = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->compat = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->deprecated = *p - '0';
+> > > +     p++;
+> > > +     pe->perpkg = *p - '0';
+> > > +     p++;
+> > > +     pe->unit = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pe->long_desc = (*p == '\0' ? NULL : p);
+> > > +}
+> > > +
+> > > +static void decompress_metric(int offset, struct pmu_metric *pm)
+> > >  {
+> > > -     for (const struct pmu_event *pe = &table->entries[0]; pe->name; pe++) {
+> > > -             int ret;
+> > > +     const char *p = &big_c_string[offset];
+> > > +
+> > > +     pm->metric_name = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->metric_group = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->metric_expr = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->metric_threshold = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->desc = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->long_desc = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->unit = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->compat = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->metricgroup_no_group = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->default_metricgroup_name = (*p == '\0' ? NULL : p);
+> > > +     while (*p++);
+> > > +     pm->aggr_mode = *p - '0';
+> > > +     p++;
+> > > +     pm->event_grouping = *p - '0';
+> > > +}
+> > >
+> > > -                if (pmu && !pmu__name_match(pmu, pe->pmu))
+> > > +static int pmu_events_table__for_each_event_pmu(const struct pmu_events_table *table,
+> > > +                                                const struct pmu_table_entry *pmu,
+> > > +                                                pmu_event_iter_fn fn,
+> > > +                                                void *data)
+> > > +{
+> > > +        int ret;
+> > > +        struct pmu_event pe = {
+> > > +                .pmu = &big_c_string[pmu->pmu_name.offset],
+> > > +        };
+> > > +
+> > > +        for (uint32_t i = 0; i < pmu->num_entries; i++) {
+> > > +                decompress_event(pmu->entries[i].offset, &pe);
+> > > +                if (!pe.name)
+> > >                          continue;
+> > > +                ret = fn(&pe, table, data);
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > > + }
+> > > +
+> > > +static int pmu_events_table__find_event_pmu(const struct pmu_events_table *table,
+> > > +                                            const struct pmu_table_entry *pmu,
+> > > +                                            const char *name,
+> > > +                                            pmu_event_iter_fn fn,
+> > > +                                            void *data)
+> > > +{
+> > > +        struct pmu_event pe = {
+> > > +                .pmu = &big_c_string[pmu->pmu_name.offset],
+> > > +        };
+> > > +        int low = 0, high = pmu->num_entries - 1;
+> > >
+> > > -             ret = fn(pe, table, data);
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -     return 0;
+> > > +        while (low <= high) {
+> > > +                int cmp, mid = (low + high) / 2;
+> > > +
+> > > +                decompress_event(pmu->entries[mid].offset, &pe);
+> > > +
+> > > +                if (!pe.name && !name)
+> > > +                        goto do_call;
+> > > +
+> > > +                if (!pe.name && name) {
+> > > +                        low = mid + 1;
+> > > +                        continue;
+> > > +                }
+> > > +                if (pe.name && !name) {
+> > > +                        high = mid - 1;
+> > > +                        continue;
+> > > +                }
+> > > +
+> > > +                cmp = strcasecmp(pe.name, name);
+> > > +                if (cmp < 0) {
+> > > +                        low = mid + 1;
+> > > +                        continue;
+> > > +                }
+> > > +                if (cmp > 0) {
+> > > +                        high = mid - 1;
+> > > +                        continue;
+> > > +                }
+> > > +  do_call:
+> > > +                return fn ? fn(&pe, table, data) : 0;
+> > > +        }
+> > > +        return PMU_EVENTS__NOT_FOUND;
+> > > +}
+> > > +
+> > > +int pmu_events_table__for_each_event(const struct pmu_events_table *table,
+> > > +                                    struct perf_pmu *pmu,
+> > > +                                    pmu_event_iter_fn fn,
+> > > +                                    void *data)
+> > > +{
+> > > +        for (size_t i = 0; i < table->num_pmus; i++) {
+> > > +                const struct pmu_table_entry *table_pmu = &table->pmus[i];
+> > > +                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+> > > +                int ret;
+> > > +
+> > > +                if (pmu && !pmu__name_match(pmu, pmu_name))
+> > > +                        continue;
+> > > +
+> > > +                ret = pmu_events_table__for_each_event_pmu(table, table_pmu, fn, data);
+> > > +                if (pmu || ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > >  }
+> > >
+> > >  int pmu_events_table__find_event(const struct pmu_events_table *table,
+> > > @@ -296,14 +392,19 @@ int pmu_events_table__find_event(const struct pmu_events_table *table,
+> > >                                   pmu_event_iter_fn fn,
+> > >                                   void *data)
+> > >  {
+> > > -     for (const struct pmu_event *pe = &table->entries[0]; pe->name; pe++) {
+> > > -                if (pmu && !pmu__name_match(pmu, pe->pmu))
+> > > +        for (size_t i = 0; i < table->num_pmus; i++) {
+> > > +                const struct pmu_table_entry *table_pmu = &table->pmus[i];
+> > > +                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+> > > +                int ret;
+> > > +
+> > > +                if (!pmu__name_match(pmu, pmu_name))
+> > >                          continue;
+> > >
+> > > -             if (!strcasecmp(pe->name, name))
+> > > -                     return fn(pe, table, data);
+> > > -     }
+> > > -        return -1000;
+> > > +                ret = pmu_events_table__find_event_pmu(table, table_pmu, name, fn, data);
+> > > +                if (ret != PMU_EVENTS__NOT_FOUND)
+> > > +                        return ret;
+> > > +        }
+> > > +        return PMU_EVENTS__NOT_FOUND;
+> > >  }
+> > >
+> > >  size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+> > > @@ -311,160 +412,253 @@ size_t pmu_events_table__num_events(const struct pmu_events_table *table,
+> > >  {
+> > >          size_t count = 0;
+> > >
+> > > -     for (const struct pmu_event *pe = &table->entries[0]; pe->name; pe++) {
+> > > -                if (pmu && !pmu__name_match(pmu, pe->pmu))
+> > > -                        continue;
+> > > +        for (size_t i = 0; i < table->num_pmus; i++) {
+> > > +                const struct pmu_table_entry *table_pmu = &table->pmus[i];
+> > > +                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+> > >
+> > > -             count++;
+> > > -     }
+> > > +                if (pmu__name_match(pmu, pmu_name))
+> > > +                        count += table_pmu->num_entries;
+> > > +        }
+> > >          return count;
+> > >  }
+> > >
+> > > -int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table, pmu_metric_iter_fn fn,
+> > > -                                   void *data)
+> > > +static int pmu_metrics_table__for_each_metric_pmu(const struct pmu_metrics_table *table,
+> > > +                                                const struct pmu_table_entry *pmu,
+> > > +                                                pmu_metric_iter_fn fn,
+> > > +                                                void *data)
+> > > +{
+> > > +        int ret;
+> > > +        struct pmu_metric pm = {
+> > > +                .pmu = &big_c_string[pmu->pmu_name.offset],
+> > > +        };
+> > > +
+> > > +        for (uint32_t i = 0; i < pmu->num_entries; i++) {
+> > > +                decompress_metric(pmu->entries[i].offset, &pm);
+> > > +                if (!pm.metric_expr)
+> > > +                        continue;
+> > > +                ret = fn(&pm, table, data);
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > > +}
+> > > +
+> > > +int pmu_metrics_table__for_each_metric(const struct pmu_metrics_table *table,
+> > > +                                     pmu_metric_iter_fn fn,
+> > > +                                     void *data)
+> > >  {
+> > > -     for (const struct pmu_metric *pm = &table->entries[0]; pm->metric_expr; pm++) {
+> > > -             int ret = fn(pm, table, data);
+> > > +        for (size_t i = 0; i < table->num_pmus; i++) {
+> > > +                int ret = pmu_metrics_table__for_each_metric_pmu(table, &table->pmus[i],
+> > > +                                                                 fn, data);
+> > > +
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > > +}
+> > >
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -     return 0;
+> > > +static const struct pmu_events_map *map_for_pmu(struct perf_pmu *pmu)
+> > > +{
+> > > +        static struct {
+> > > +                const struct pmu_events_map *map;
+> > > +                struct perf_pmu *pmu;
+> > > +        } last_result;
+> > > +        static struct {
+> > > +                const struct pmu_events_map *map;
+> > > +                char *cpuid;
+> > > +        } last_map_search;
+> > > +        static bool has_last_result, has_last_map_search;
+> > > +        const struct pmu_events_map *map = NULL;
+> > > +        char *cpuid = NULL;
+> > > +        size_t i;
+> > > +
+> > > +        if (has_last_result && last_result.pmu == pmu)
+> > > +                return last_result.map;
+> > > +
+> > > +        cpuid = perf_pmu__getcpuid(pmu);
+> > > +
+> > > +        /*
+> > > +         * On some platforms which uses cpus map, cpuid can be NULL for
+> > > +         * PMUs other than CORE PMUs.
+> > > +         */
+> > > +        if (!cpuid)
+> > > +                goto out_update_last_result;
+> > > +
+> > > +        if (has_last_map_search && !strcmp(last_map_search.cpuid, cpuid)) {
+> > > +                map = last_map_search.map;
+> > > +                free(cpuid);
+> > > +        } else {
+> > > +                i = 0;
+> > > +                for (;;) {
+> > > +                        map = &pmu_events_map[i++];
+> > > +
+> > > +                        if (!map->arch) {
+> > > +                                map = NULL;
+> > > +                                break;
+> > > +                        }
+> > > +
+> > > +                        if (!strcmp_cpuid_str(map->cpuid, cpuid))
+> > > +                                break;
+> > > +               }
+> > > +               free(last_map_search.cpuid);
+> > > +               last_map_search.cpuid = cpuid;
+> > > +               last_map_search.map = map;
+> > > +               has_last_map_search = true;
+> > > +        }
+> > > +out_update_last_result:
+> > > +        last_result.pmu = pmu;
+> > > +        last_result.map = map;
+> > > +        has_last_result = true;
+> > > +        return map;
+> > >  }
+> > >
+> > >  const struct pmu_events_table *perf_pmu__find_events_table(struct perf_pmu *pmu)
+> > >  {
+> > > -     const struct pmu_events_table *table = NULL;
+> > > -     char *cpuid = perf_pmu__getcpuid(pmu);
+> > > -     int i;
+> > > +        const struct pmu_events_map *map = map_for_pmu(pmu);
+> > >
+> > > -     /* on some platforms which uses cpus map, cpuid can be NULL for
+> > > -      * PMUs other than CORE PMUs.
+> > > -      */
+> > > -     if (!cpuid)
+> > > -             return NULL;
+> > > +        if (!map)
+> > > +                return NULL;
+> > >
+> > > -     i = 0;
+> > > -     for (;;) {
+> > > -             const struct pmu_events_map *map = &pmu_events_map[i++];
+> > > +        if (!pmu)
+> > > +                return &map->event_table;
+> > >
+> > > -             if (!map->cpuid)
+> > > -                     break;
+> > > +        for (size_t i = 0; i < map->event_table.num_pmus; i++) {
+> > > +                const struct pmu_table_entry *table_pmu = &map->event_table.pmus[i];
+> > > +                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+> > >
+> > > -             if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+> > > -                     table = &map->event_table;
+> > > -                     break;
+> > > -             }
+> > > -     }
+> > > -     free(cpuid);
+> > > -     return table;
+> > > +                if (pmu__name_match(pmu, pmu_name))
+> > > +                         return &map->event_table;
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > >
+> > >  const struct pmu_metrics_table *perf_pmu__find_metrics_table(struct perf_pmu *pmu)
+> > >  {
+> > > -     const struct pmu_metrics_table *table = NULL;
+> > > -     char *cpuid = perf_pmu__getcpuid(pmu);
+> > > -     int i;
+> > > +        const struct pmu_events_map *map = map_for_pmu(pmu);
+> > >
+> > > -     /* on some platforms which uses cpus map, cpuid can be NULL for
+> > > -      * PMUs other than CORE PMUs.
+> > > -      */
+> > > -     if (!cpuid)
+> > > -             return NULL;
+> > > +        if (!map)
+> > > +                return NULL;
+> > >
+> > > -     i = 0;
+> > > -     for (;;) {
+> > > -             const struct pmu_events_map *map = &pmu_events_map[i++];
+> > > +        if (!pmu)
+> > > +                return &map->metric_table;
+> > >
+> > > -             if (!map->cpuid)
+> > > -                     break;
+> > > +        for (size_t i = 0; i < map->metric_table.num_pmus; i++) {
+> > > +                const struct pmu_table_entry *table_pmu = &map->metric_table.pmus[i];
+> > > +                const char *pmu_name = &big_c_string[table_pmu->pmu_name.offset];
+> > >
+> > > -             if (!strcmp_cpuid_str(map->cpuid, cpuid)) {
+> > > -                     table = &map->metric_table;
+> > > -                     break;
+> > > -             }
+> > > -     }
+> > > -     free(cpuid);
+> > > -     return table;
+> > > +                if (pmu__name_match(pmu, pmu_name))
+> > > +                           return &map->metric_table;
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > >
+> > >  const struct pmu_events_table *find_core_events_table(const char *arch, const char *cpuid)
+> > >  {
+> > > -     for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > -          tables->arch;
+> > > -          tables++) {
+> > > -             if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
+> > > -                     return &tables->event_table;
+> > > -     }
+> > > -     return NULL;
+> > > +        for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > +             tables->arch;
+> > > +             tables++) {
+> > > +                if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
+> > > +                        return &tables->event_table;
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > >
+> > >  const struct pmu_metrics_table *find_core_metrics_table(const char *arch, const char *cpuid)
+> > >  {
+> > > -     for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > -          tables->arch;
+> > > -          tables++) {
+> > > -             if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
+> > > -                     return &tables->metric_table;
+> > > -     }
+> > > -     return NULL;
+> > > +        for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > +             tables->arch;
+> > > +             tables++) {
+> > > +                if (!strcmp(tables->arch, arch) && !strcmp_cpuid_str(tables->cpuid, cpuid))
+> > > +                        return &tables->metric_table;
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > >
+> > >  int pmu_for_each_core_event(pmu_event_iter_fn fn, void *data)
+> > >  {
+> > > -     for (const struct pmu_events_map *tables = &pmu_events_map[0]; tables->arch; tables++) {
+> > > -             int ret = pmu_events_table__for_each_event(&tables->event_table,
+> > > -                                                        /*pmu=*/ NULL, fn, data);
+> > > -
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -     return 0;
+> > > +        for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > +             tables->arch;
+> > > +             tables++) {
+> > > +                int ret = pmu_events_table__for_each_event(&tables->event_table,
+> > > +                                                           /*pmu=*/ NULL, fn, data);
+> > > +
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > >  }
+> > >
+> > >  int pmu_for_each_core_metric(pmu_metric_iter_fn fn, void *data)
+> > >  {
+> > > -     for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > -          tables->arch;
+> > > -          tables++) {
+> > > -             int ret = pmu_metrics_table__for_each_metric(&tables->metric_table, fn, data);
+> > > -
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -     return 0;
+> > > +        for (const struct pmu_events_map *tables = &pmu_events_map[0];
+> > > +             tables->arch;
+> > > +             tables++) {
+> > > +                int ret = pmu_metrics_table__for_each_metric(&tables->metric_table, fn, data);
+> > > +
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > >  }
+> > >
+> > >  const struct pmu_events_table *find_sys_events_table(const char *name)
+> > >  {
+> > > -     for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
+> > > -          tables->name;
+> > > -          tables++) {
+> > > -             if (!strcmp(tables->name, name))
+> > > -                     return &tables->table;
+> > > -     }
+> > > -     return NULL;
+> > > +        for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
+> > > +             tables->name;
+> > > +             tables++) {
+> > > +                if (!strcmp(tables->name, name))
+> > > +                        return &tables->event_table;
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > >
+> > >  int pmu_for_each_sys_event(pmu_event_iter_fn fn, void *data)
+> > >  {
+> > > -     for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
+> > > -          tables->name;
+> > > -          tables++) {
+> > > -             int ret = pmu_events_table__for_each_event(&tables->table, /*pmu=*/ NULL, fn, data);
+> > > -
+> > > -             if (ret)
+> > > -                     return ret;
+> > > -     }
+> > > -     return 0;
+> > > +        for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
+> > > +             tables->name;
+> > > +             tables++) {
+> > > +                int ret = pmu_events_table__for_each_event(&tables->event_table,
+> > > +                                                           /*pmu=*/ NULL, fn, data);
+> > > +
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > >  }
+> > >
+> > > -int pmu_for_each_sys_metric(pmu_metric_iter_fn fn __maybe_unused, void *data __maybe_unused)
+> > > +int pmu_for_each_sys_metric(pmu_metric_iter_fn fn, void *data)
+> > >  {
+> > > -     return 0;
+> > > +        for (const struct pmu_sys_events *tables = &pmu_sys_event_tables[0];
+> > > +             tables->name;
+> > > +             tables++) {
+> > > +                int ret = pmu_metrics_table__for_each_metric(&tables->metric_table, fn, data);
+> > > +
+> > > +                if (ret)
+> > > +                        return ret;
+> > > +        }
+> > > +        return 0;
+> > >  }
+> > >
+> > > -const char *describe_metricgroup(const char *group __maybe_unused)
+> > > +static const int metricgroups[][2] = {
+> > > +
+> > > +};
+> > > +
+> > > +const char *describe_metricgroup(const char *group)
+> > >  {
+> > > -     return NULL;
+> > > +        int low = 0, high = (int)ARRAY_SIZE(metricgroups) - 1;
+> > > +
+> > > +        while (low <= high) {
+> > > +                int mid = (low + high) / 2;
+> > > +                const char *mgroup = &big_c_string[metricgroups[mid][0]];
+> > > +                int cmp = strcmp(mgroup, group);
+> > > +
+> > > +                if (cmp == 0) {
+> > > +                        return &big_c_string[metricgroups[mid][1]];
+> > > +                } else if (cmp < 0) {
+> > > +                        low = mid + 1;
+> > > +                } else {
+> > > +                        high = mid - 1;
+> > > +                }
+> > > +        }
+> > > +        return NULL;
+> > >  }
+> > > diff --git a/tools/perf/pmu-events/jevents.py b/tools/perf/pmu-events/jevents.py
+> > > index 731776e29f47..fcf0158438b5 100755
+> > > --- a/tools/perf/pmu-events/jevents.py
+> > > +++ b/tools/perf/pmu-events/jevents.py
+> > > @@ -1256,6 +1256,10 @@ such as "arm/cortex-a34".''',
+> > >        'output_file', type=argparse.FileType('w', encoding='utf-8'), nargs='?', default=sys.stdout)
+> > >    _args = ap.parse_args()
+> > >
+> > > +  _args.output_file.write(f"""
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/* THIS FILE WAS AUTOGENERATED BY jevents.py arch={_args.arch} model={_args.model} ! */
+> > > +""")
+> > >    _args.output_file.write("""
+> > >  #include <pmu-events/pmu-events.h>
+> > >  #include "util/header.h"
+> > > @@ -1281,7 +1285,7 @@ struct pmu_table_entry {
+> > >      if item.name == _args.arch or _args.arch == 'all' or item.name == 'test':
+> > >        archs.append(item.name)
+> > >
+> > > -  if len(archs) < 2:
+> > > +  if len(archs) < 2 and _args.arch != 'none':
+> > >      raise IOError(f'Missing architecture directory \'{_args.arch}\'')
+> > >
+> > >    archs.sort()
+> > > --
+> > > 2.46.0.rc2.264.g509ed76dc8-goog
+> > >
