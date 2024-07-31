@@ -1,63 +1,74 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A23917552;
-	Wed, 31 Jul 2024 02:43:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16F71A7F7B;
+	Wed, 31 Jul 2024 09:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722393811; cv=none; b=ooFGszGynAng2l4fykl1S06jz7jJcdZAMPTWBPSYDw6uVD2vO9thp/qePP3wTOvQYkKJz61rxOHo+e1wDzSSxgEUMUuHEtYYkDdHGrtpwZKYyKS1lYIa+JYmIGaeXzerCIPqFZqSep0guoZ508Tn2XOY3FeTMFeMYkLimYcTE2c=
+	t=1722419959; cv=none; b=XJPR6gg64/N9RBezleeF+fxIHzhqFyIBtYjS7+4jbvjCRW2WvgEevMq9paeszeN0qvslSbqcQpVuh3VxUnJ5ngs/2usSFRfhn0Xz5PI/rcKFQ+hfDu7cQWFBbU2IEVJjUgfoo1H/4/CRzeF4cBWVeq4MocRPelk+WfhV2OziX5E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722393811; c=relaxed/simple;
-	bh=eUxGqWcFaQBtQJ/6BEGxdzX0w/XiGw/LzFQyc81q0fQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kXd82aJBSKQJ99mHkQFr8OMYCUv7HJQ2X99jp5ls1KBNLctjTosN0BHTVjKSOEn5XDvUq8Hc4tQS4TWP9T8hnHPfVvwoVC+kBIbiJrjM1vzbsSFx8DDPusx+HFNm96ANdu3CWwsdWRp1AuMs4YuxzH1VMNjYge7FoDC5tmFeocI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YyAnbI2M; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YyAnbI2M"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 57518C32782;
-	Wed, 31 Jul 2024 02:43:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722393811;
-	bh=eUxGqWcFaQBtQJ/6BEGxdzX0w/XiGw/LzFQyc81q0fQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=YyAnbI2MDlIxzqcwOMz5e5czlbat1FoBkH57bgMXiqJ/qRXK0T/yON869uil7CuPV
-	 4Qte9joiMycUv+PBOSzlHsAptgc4QqjERxL2sWdRtyEPU4jK1HNMaH5VxYVNskwV/9
-	 /MgKFXdfWSJKTESIbFmsRAYJVvolu+iQwhu4JI0eSMgMxu4OjYPTXSlUDHDsrFiNtJ
-	 m62Z/V3wZCv84Qjf8X1mhSwVmFzVVBWH5KY1Nunrywj1WUg3FPncoquMMF6S3/yY0b
-	 xIsUf8s1yoF2fUVOEH2D3dyzqLbbSHXl8HNOpFT0UK79M5WKsS0Z5Io2fLtKMsowL6
-	 oTFZmP2dDVm2Q==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4D58BC4332C;
-	Wed, 31 Jul 2024 02:43:30 +0000 (UTC)
-Subject: Re: [GIT PULL] perf-tools fixes for v6.11-rc2
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240730225124.4057811-1-namhyung@kernel.org>
-References: <20240730225124.4057811-1-namhyung@kernel.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240730225124.4057811-1-namhyung@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.11-2024-07-30
-X-PR-Tracked-Commit-Id: d27087c76e3c859ea05b7581ef7ce8aa5a088dd8
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: e254e0c5baeae28717d1b312821e6ded29e7d969
-Message-Id: <172239381030.6103.14656541905594288606.pr-tracker-bot@kernel.org>
-Date: Wed, 31 Jul 2024 02:43:30 +0000
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Leo Yan <leo.yan@linux.dev>, Casey Chen <cachen@purestorage.com>
+	s=arc-20240116; t=1722419959; c=relaxed/simple;
+	bh=0zDPImMfP8uELHlerqU/ZcC4S1MlQRyeKlXnKm1s8bY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=mKHNhdZ6xbNLlIFJ+ZOwvlJZgmtzZYIqclIA0EHEK5TdXQ2N92WbX0/I6DSHxeC6ckIfgYWp8DagNmAsXSQAolNZgc1hSp16GjAU4gPztBKRLPUluyFJ+n6i5LuWCU9SlsQ+FtjcfviicqL1n13Y/B/ieqov/iPEkuOESCawVJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.112])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WYnYP0xv9z1HFkd;
+	Wed, 31 Jul 2024 17:56:25 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 0942014037C;
+	Wed, 31 Jul 2024 17:59:14 +0800 (CST)
+Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
+ (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Wed, 31 Jul
+ 2024 17:59:13 +0800
+From: Liao Chang <liaochang1@huawei.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<mhiramat@kernel.org>, <oleg@redhat.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH] uprobes: Remove redundant spinlock in uprobe_deny_signal
+Date: Wed, 31 Jul 2024 09:50:17 +0000
+Message-ID: <20240731095017.1560516-1-liaochang1@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-The pull request you sent on Tue, 30 Jul 2024 15:51:24 -0700:
+Since clearing a bit in thread_info is an atomic operation, the spinlock
+is redundant and can be removed, reducing lock contention is good for
+performance.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.11-2024-07-30
+Signed-off-by: Liao Chang <liaochang1@huawei.com>
+---
+ kernel/events/uprobes.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/e254e0c5baeae28717d1b312821e6ded29e7d969
-
-Thank you!
-
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 73cc47708679..76a51a1f51e2 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1979,9 +1979,7 @@ bool uprobe_deny_signal(void)
+ 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+ 
+ 	if (task_sigpending(t)) {
+-		spin_lock_irq(&t->sighand->siglock);
+ 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+-		spin_unlock_irq(&t->sighand->siglock);
+ 
+ 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
+ 			utask->state = UTASK_SSTEP_TRAPPED;
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.34.1
+
