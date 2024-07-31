@@ -1,376 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D361A1BE87C;
-	Wed, 31 Jul 2024 16:51:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F88812B93;
+	Wed, 31 Jul 2024 16:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722444711; cv=none; b=Ok4OVVzhXddPGlzQD92qsPg1hTnzeEs8p2FOlpBEesPXpbMPO+WLj2whWvZf4TQFqzdj33g7yx3E+4g+0V5k0Y4zHvNaj73J60DhYFetvzO3sHS1StAXQrUNDu8Ytmmw9KJOKJwux5vDLQjWWAAChyUhg6dONBLrDFlGyytcFTA=
+	t=1722445175; cv=none; b=GRroKANLPSg9MMzWAiZQK3c+e4uU1utvpll/vs/5OWKbewlphGVPXcbg5CXAmTnl0bSL1Y/GAlzpc7gqTgCXJf7rLPNR3SMHMIyep/AluocGqmHSMycluBEV75VejqHu4Ytxsop3voQsKxQRK47o6VtOgMx6DXO/4+G2JhrBNTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722444711; c=relaxed/simple;
-	bh=T/cDVZHE01/dmqxLU2tveLU993flOqmjwubPhWZxcY8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=pHnkNt7CHKZ34BvRtD1AZHywtlE/m27Ak2xAv9M0NOxFOxlUY/CGXwTwl3UL17eTDSFN3/ArFpvYR4KopgKYW6ATUiOiur+GUkAggunKj1/Ko/eDu9p8N+KJ9A+kj0HmIb90FJnUZyvcL0NeUxlWjRvISOezb0HJiwiqe8VBVzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CfiO0Klw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722445175; c=relaxed/simple;
+	bh=T5X6f1K32kns6RA907bQ7f9UBfa+XyFbsVazMXgTJjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y59iK/Jyc7yqe/NA2kQyrJZ8YISf60Z0bCtzWV0vY5ub8J1/oNe6t51T/uCTXIjthnCQqUuxfTNK29CK8b0AzD8AnRfWI7fujxzvrEpCw9JdYIQna6UB0BJTPcCfnk/+BdxqESfgF+Kuii2Ixa1iN+O8ajZ2V1eY5yroxZichbs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ranQsrYo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CfiO0Klw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C2C4C4AF09;
-	Wed, 31 Jul 2024 16:51:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ranQsrYo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2E1C116B1;
+	Wed, 31 Jul 2024 16:59:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722444711;
-	bh=T/cDVZHE01/dmqxLU2tveLU993flOqmjwubPhWZxcY8=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=CfiO0KlwNGE6ACzvg4zGRssBcRQfS3wxj7o6Mf9CiG+8mD3YbbjLGelUGVE/uQ09W
-	 dxV8Slkf1vqoPunNsDSN7gOIdZiEp2iUsKr+BbLa8oJfoecPDQs3Vm/F3aKJ7Jv6VD
-	 n/A7s3H6gVZ1h/1rzczKxX+CpYNAM1wqXTh4ggJ6T7eYph3ICIlxF1iUMMNNBKVwrq
-	 Kwq2O7ctL4m113KPyJ72Sb6BeBgxbhbw2I2NvbfFV86VybrMWcP1Sw17nzll3JQTmk
-	 QBgWxrCbIRq++Z6F9owp3ZBah5PQ6ybTW03vxrIinCF6+zZIS0ZswqEH1yDr8MlK0r
-	 cRontEPbMn4Yg==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Wed, 31 Jul 2024 10:51:24 -0600
-Subject: [PATCH v3 7/7] perf: arm_pmuv3: Add support for Armv9.4 PMU
- instruction counter
+	s=k20201202; t=1722445174;
+	bh=T5X6f1K32kns6RA907bQ7f9UBfa+XyFbsVazMXgTJjs=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=ranQsrYoiFptE6K5ltsv9xIHf3Fzj2Xdwn2IeZte4tyMx2M7NmlykzZgN404c24Pf
+	 guLctRh8JL2GzfRjKmn+Au1ksbHvljOHJ1dC4JlSo0IZCiadoIc+yRL8CGNmtHFbTK
+	 vmz8bt2ByO2hh0UcBhH5C0lhB2wqF8BK0zSzJ+PuOGikynxBEKYa29nCNiNTTSakWx
+	 8tjBNkYDqzYL8O+N/0Hi+XZFP8qD7+ICHQpcshWGqsJhi3RYKVOBMrz0pfvnAVK1Z+
+	 xbQfani5f42Ma1imuCC6MehiZzOIjfs3+1Vhii5wanWA4aX9WWkO1FVELDNccZRfru
+	 jHeIEIN8AhPhQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 60170CE0A01; Wed, 31 Jul 2024 09:59:34 -0700 (PDT)
+Date: Wed, 31 Jul 2024 09:59:34 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
+	Sandipan Das <sandipan.das@amd.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] perf/x86/amd: Warn only on new bits set
+Message-ID: <de55c0e0-0a1b-449a-94f5-56d4ef3fc3b5@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240731154651.1555511-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240731-arm-pmu-3-9-icntr-v3-7-280a8d7ff465@kernel.org>
-References: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
-In-Reply-To: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
-To: Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, James Clark <james.clark@linaro.org>, 
- James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
-X-Mailer: b4 0.15-dev
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240731154651.1555511-1-leitao@debian.org>
 
-Armv9.4/8.9 PMU adds optional support for a fixed instruction counter
-similar to the fixed cycle counter. Support for the feature is indicated
-in the ID_AA64DFR1_EL1 register PMICNTR field. The counter is not
-accessible in AArch32.
+On Wed, Jul 31, 2024 at 08:46:51AM -0700, Breno Leitao wrote:
+> Warning at every leaking bits can cause a flood of message, triggering
+> vairous stall-warning mechanisms to fire, including CSD locks, which
+> makes the machine to be unusable.
+> 
+> Track the bits that are being leaked, and only warn when a new bit is
+> set.
+> 
+> That said, this patch will help with the following issues:
+> 
+> 1) It will tell us which bits are being set, so, it is easy to
+>    communicate it back to vendor, and to do a root-cause analyzes.
+> 
+> 2) It avoid the machine to be unusable, because, worst case
+>    scenario, the user gets less than 60 WARNs (one per unhandled bit).
+> 
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Existing userspace using direct counter access won't know how to handle
-the fixed instruction counter, so we have to avoid using the counter
-when user access is requested.
+Nice!!!
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
+A question about an admittedly unlikely race below.
 
-v2:
- - Use set_bit() instead of bitmap_set()
- - Check for ARMV8_PMUV3_PERFCTR_INST_RETIRED first in counter assignment
- - Check for threshold disabled in counter assignment
----
- arch/arm/include/asm/arm_pmuv3.h   | 20 ++++++++++++++++++++
- arch/arm64/include/asm/arm_pmuv3.h | 28 ++++++++++++++++++++++++++++
- arch/arm64/kvm/pmu.c               |  8 ++++++--
- arch/arm64/tools/sysreg            | 25 +++++++++++++++++++++++++
- drivers/perf/arm_pmuv3.c           | 25 +++++++++++++++++++++++++
- include/linux/perf/arm_pmu.h       |  8 ++++++--
- include/linux/perf/arm_pmuv3.h     |  6 ++++--
- 7 files changed, 114 insertions(+), 6 deletions(-)
+> ---
+> Changelog:
+> v2:
+>   * Improved the patch description, getting the benefits in words.
+> 
+> v1:
+>   * https://lore.kernel.org/all/20240524141021.3889002-1-leitao@debian.org/
+> 
+> 
+>  arch/x86/events/amd/core.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 920e3a640cad..577158d0c324 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	static atomic64_t status_warned = ATOMIC64_INIT(0);
+> +	u64 reserved, status, mask, new_bits;
+>  	struct perf_sample_data data;
+>  	struct hw_perf_event *hwc;
+>  	struct perf_event *event;
+>  	int handled = 0, idx;
+> -	u64 reserved, status, mask;
+>  	bool pmu_enabled;
+>  
+>  	/*
+> @@ -1012,7 +1013,11 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  	 * the corresponding PMCs are expected to be inactive according to the
+>  	 * active_mask
+>  	 */
+> -	WARN_ON(status > 0);
+> +	if (status > 0) {
+> +		new_bits = atomic64_fetch_or(status, &status_warned) ^ atomic64_read(&status_warned);
 
-diff --git a/arch/arm/include/asm/arm_pmuv3.h b/arch/arm/include/asm/arm_pmuv3.h
-index a41b503b7dcd..f63ba8986b24 100644
---- a/arch/arm/include/asm/arm_pmuv3.h
-+++ b/arch/arm/include/asm/arm_pmuv3.h
-@@ -127,6 +127,12 @@ static inline u32 read_pmuver(void)
- 	return (dfr0 >> 24) & 0xf;
- }
- 
-+static inline bool pmuv3_has_icntr(void)
-+{
-+	/* FEAT_PMUv3_ICNTR not accessible for 32-bit */
-+	return false;
-+}
-+
- static inline void write_pmcr(u32 val)
- {
- 	write_sysreg(val, PMCR);
-@@ -152,6 +158,13 @@ static inline u64 read_pmccntr(void)
- 	return read_sysreg(PMCCNTR);
- }
- 
-+static inline void write_pmicntr(u64 val) {}
-+
-+static inline u64 read_pmicntr(void)
-+{
-+	return 0;
-+}
-+
- static inline void write_pmcntenset(u32 val)
- {
- 	write_sysreg(val, PMCNTENSET);
-@@ -177,6 +190,13 @@ static inline void write_pmccfiltr(u32 val)
- 	write_sysreg(val, PMCCFILTR);
- }
- 
-+static inline void write_pmicfiltr(u64 val) {}
-+
-+static inline u64 read_pmicfiltr(void)
-+{
-+	return 0;
-+}
-+
- static inline void write_pmovsclr(u32 val)
- {
- 	write_sysreg(val, PMOVSR);
-diff --git a/arch/arm64/include/asm/arm_pmuv3.h b/arch/arm64/include/asm/arm_pmuv3.h
-index 36c3e82b4eec..468a049bc63b 100644
---- a/arch/arm64/include/asm/arm_pmuv3.h
-+++ b/arch/arm64/include/asm/arm_pmuv3.h
-@@ -54,6 +54,14 @@ static inline u32 read_pmuver(void)
- 			ID_AA64DFR0_EL1_PMUVer_SHIFT);
- }
- 
-+static inline bool pmuv3_has_icntr(void)
-+{
-+	u64 dfr1 = read_sysreg(id_aa64dfr1_el1);
-+
-+	return !!cpuid_feature_extract_unsigned_field(dfr1,
-+			ID_AA64DFR1_EL1_PMICNTR_SHIFT);
-+}
-+
- static inline void write_pmcr(u64 val)
- {
- 	write_sysreg(val, pmcr_el0);
-@@ -79,6 +87,16 @@ static inline u64 read_pmccntr(void)
- 	return read_sysreg(pmccntr_el0);
- }
- 
-+static inline void write_pmicntr(u64 val)
-+{
-+	write_sysreg_s(val, SYS_PMICNTR_EL0);
-+}
-+
-+static inline u64 read_pmicntr(void)
-+{
-+	return read_sysreg_s(SYS_PMICNTR_EL0);
-+}
-+
- static inline void write_pmcntenset(u64 val)
- {
- 	write_sysreg(val, pmcntenset_el0);
-@@ -109,6 +127,16 @@ static inline u64 read_pmccfiltr(void)
- 	return read_sysreg(pmccfiltr_el0);
- }
- 
-+static inline void write_pmicfiltr(u64 val)
-+{
-+	write_sysreg_s(val, SYS_PMICFILTR_EL0);
-+}
-+
-+static inline u64 read_pmicfiltr(void)
-+{
-+	return read_sysreg_s(SYS_PMICFILTR_EL0);
-+}
-+
- static inline void write_pmovsclr(u64 val)
- {
- 	write_sysreg(val, pmovsclr_el0);
-diff --git a/arch/arm64/kvm/pmu.c b/arch/arm64/kvm/pmu.c
-index 215b74875815..0b3adf3e17b4 100644
---- a/arch/arm64/kvm/pmu.c
-+++ b/arch/arm64/kvm/pmu.c
-@@ -66,24 +66,28 @@ void kvm_clr_pmu_events(u64 clr)
- 
- /*
-  * Read a value direct from PMEVTYPER<idx> where idx is 0-30
-- * or PMCCFILTR_EL0 where idx is ARMV8_PMU_CYCLE_IDX (31).
-+ * or PMxCFILTR_EL0 where idx is 31-32.
-  */
- static u64 kvm_vcpu_pmu_read_evtype_direct(int idx)
- {
- 	if (idx == ARMV8_PMU_CYCLE_IDX)
- 		return read_pmccfiltr();
-+	else if (idx == ARMV8_PMU_INSTR_IDX)
-+		return read_pmicfiltr();
- 
- 	return read_pmevtypern(idx);
- }
- 
- /*
-  * Write a value direct to PMEVTYPER<idx> where idx is 0-30
-- * or PMCCFILTR_EL0 where idx is ARMV8_PMU_CYCLE_IDX (31).
-+ * or PMxCFILTR_EL0 where idx is 31-32.
-  */
- static void kvm_vcpu_pmu_write_evtype_direct(int idx, u32 val)
- {
- 	if (idx == ARMV8_PMU_CYCLE_IDX)
- 		write_pmccfiltr(val);
-+	else if (idx == ARMV8_PMU_INSTR_IDX)
-+		write_pmicfiltr(val);
- 	else
- 		write_pmevtypern(idx, val);
- }
-diff --git a/arch/arm64/tools/sysreg b/arch/arm64/tools/sysreg
-index 37aa7eaad07b..8d637ac4b7c6 100644
---- a/arch/arm64/tools/sysreg
-+++ b/arch/arm64/tools/sysreg
-@@ -2029,6 +2029,31 @@ Sysreg	FAR_EL1	3	0	6	0	0
- Field	63:0	ADDR
- EndSysreg
- 
-+Sysreg	PMICNTR_EL0	3	3	9	4	0
-+Field	63:0	ICNT
-+EndSysreg
-+
-+Sysreg	PMICFILTR_EL0	3	3	9	6	0
-+Res0	63:59
-+Field	58	SYNC
-+Field	57:56	VS
-+Res0	55:32
-+Field	31	P
-+Field	30	U
-+Field	29	NSK
-+Field	28	NSU
-+Field	27	NSH
-+Field	26	M
-+Res0	25
-+Field	24	SH
-+Field	23	T
-+Field	22	RLK
-+Field	21	RLU
-+Field	20	RLH
-+Res0	19:16
-+Field	15:0	evtCount
-+EndSysreg
-+
- Sysreg	PMSCR_EL1	3	0	9	9	0
- Res0	63:8
- Field	7:6	PCT
-diff --git a/drivers/perf/arm_pmuv3.c b/drivers/perf/arm_pmuv3.c
-index 18046cf4b3a3..4d000532a07f 100644
---- a/drivers/perf/arm_pmuv3.c
-+++ b/drivers/perf/arm_pmuv3.c
-@@ -571,6 +571,8 @@ static u64 armv8pmu_read_counter(struct perf_event *event)
- 
- 	if (idx == ARMV8_PMU_CYCLE_IDX)
- 		value = read_pmccntr();
-+	else if (idx == ARMV8_PMU_INSTR_IDX)
-+		value = read_pmicntr();
- 	else
- 		value = armv8pmu_read_hw_counter(event);
- 
-@@ -604,6 +606,8 @@ static void armv8pmu_write_counter(struct perf_event *event, u64 value)
- 
- 	if (idx == ARMV8_PMU_CYCLE_IDX)
- 		write_pmccntr(value);
-+	else if (idx == ARMV8_PMU_INSTR_IDX)
-+		write_pmicntr(value);
- 	else
- 		armv8pmu_write_hw_counter(event, value);
- }
-@@ -641,6 +645,8 @@ static void armv8pmu_write_event_type(struct perf_event *event)
- 	} else {
- 		if (idx == ARMV8_PMU_CYCLE_IDX)
- 			write_pmccfiltr(hwc->config_base);
-+		else if (idx == ARMV8_PMU_INSTR_IDX)
-+			write_pmicfiltr(hwc->config_base);
- 		else
- 			armv8pmu_write_evtype(idx, hwc->config_base);
- 	}
-@@ -769,6 +775,8 @@ static void armv8pmu_enable_user_access(struct arm_pmu *cpu_pmu)
- 			    ARMPMU_MAX_HWEVENTS) {
- 		if (i == ARMV8_PMU_CYCLE_IDX)
- 			write_pmccntr(0);
-+		else if (i == ARMV8_PMU_INSTR_IDX)
-+			write_pmicntr(0);
- 		else
- 			armv8pmu_write_evcntr(i, 0);
- 	}
-@@ -936,6 +944,19 @@ static int armv8pmu_get_event_idx(struct pmu_hw_events *cpuc,
- 				return -EAGAIN;
- 	}
- 
-+	/*
-+	 * Always prefer to place a instruction counter into the instruction counter,
-+	 * but don't expose the instruction counter to userspace access as userspace
-+	 * may not know how to handle it.
-+	 */
-+	if ((evtype == ARMV8_PMUV3_PERFCTR_INST_RETIRED) &&
-+	    !armv8pmu_event_get_threshold(&event->attr) &&
-+	    test_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask) &&
-+	    !armv8pmu_event_want_user_access(event)) {
-+		if (!test_and_set_bit(ARMV8_PMU_INSTR_IDX, cpuc->used_mask))
-+			return ARMV8_PMU_INSTR_IDX;
-+	}
-+
- 	/*
- 	 * Otherwise use events counters
- 	 */
-@@ -1193,6 +1214,10 @@ static void __armv8pmu_probe_pmu(void *info)
- 	/* Add the CPU cycles counter */
- 	set_bit(ARMV8_PMU_CYCLE_IDX, cpu_pmu->cntr_mask);
- 
-+	/* Add the CPU instructions counter */
-+	if (pmuv3_has_icntr())
-+		set_bit(ARMV8_PMU_INSTR_IDX, cpu_pmu->cntr_mask);
-+
- 	pmceid[0] = pmceid_raw[0] = read_pmceid0();
- 	pmceid[1] = pmceid_raw[1] = read_pmceid1();
- 
-diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
-index e5d6d204beab..4b5b83677e3f 100644
---- a/include/linux/perf/arm_pmu.h
-+++ b/include/linux/perf/arm_pmu.h
-@@ -17,10 +17,14 @@
- #ifdef CONFIG_ARM_PMU
- 
- /*
-- * The ARMv7 CPU PMU supports up to 32 event counters.
-+ * The Armv7 and Armv8.8 or less CPU PMU supports up to 32 event counters.
-+ * The Armv8.9/9.4 CPU PMU supports up to 33 event counters.
-  */
-+#ifdef CONFIG_ARM
- #define ARMPMU_MAX_HWEVENTS		32
--
-+#else
-+#define ARMPMU_MAX_HWEVENTS		33
-+#endif
- /*
-  * ARM PMU hw_event flags
-  */
-diff --git a/include/linux/perf/arm_pmuv3.h b/include/linux/perf/arm_pmuv3.h
-index 4f7a7f2222e5..3372c1b56486 100644
---- a/include/linux/perf/arm_pmuv3.h
-+++ b/include/linux/perf/arm_pmuv3.h
-@@ -8,7 +8,7 @@
- 
- #define ARMV8_PMU_MAX_GENERAL_COUNTERS	31
- #define ARMV8_PMU_CYCLE_IDX		31
--
-+#define ARMV8_PMU_INSTR_IDX		32 /* Not accessible from AArch32 */
- 
- /*
-  * Common architectural and microarchitectural event numbers.
-@@ -228,8 +228,10 @@
-  */
- #define ARMV8_PMU_OVSR_P		GENMASK(30, 0)
- #define ARMV8_PMU_OVSR_C		BIT(31)
-+#define ARMV8_PMU_OVSR_F		BIT_ULL(32) /* arm64 only */
- /* Mask for writable bits is both P and C fields */
--#define ARMV8_PMU_OVERFLOWED_MASK	(ARMV8_PMU_OVSR_P | ARMV8_PMU_OVSR_C)
-+#define ARMV8_PMU_OVERFLOWED_MASK	(ARMV8_PMU_OVSR_P | ARMV8_PMU_OVSR_C | \
-+					ARMV8_PMU_OVSR_F)
- 
- /*
-  * PMXEVTYPER: Event selection reg
+It is possible that two CPUs could execute the above line concurrently,
+correct?  In that case, the reports might be a bit confused.
 
--- 
-2.43.0
+Why not be exact, perhaps as follows, introducing a "u64 prev_bits"?
 
+		prev_bits = atomic64_fetch_or(status, &status_warned);
+		new_bits = status & ~prev_bits;
+
+Or, if you would like to avoid the added variable and to keep this to
+a single line:
+
+		new_bits = status & ~atomic64_fetch_or(status, &status_warned);
+
+Or is my boolean arithmetic off this morning?  (Wouldn't be the first
+time...)
+
+							Thanx, Paul
+
+> +		// A new bit was set for the very first time.
+> +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
+> +	}
+>  
+>  	/* Clear overflow and freeze bits */
+>  	amd_pmu_ack_global_status(~status);
+> -- 
+> 2.43.0
+> 
