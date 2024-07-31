@@ -1,190 +1,139 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23581799F
-	for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 15:58:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D04F41AD9ED;
+	Wed, 31 Jul 2024 16:51:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722441538; cv=none; b=oejLN9JfKRkhAddPVtGsI20Ayx8EH71YT82mWhxoeZMGjsSiH0Myyyfv8m5n3xIZg0iW/9FDhIh0egwTEO7IW0KLUaR3vyLDpFn1iNykIh7IZRdfGHSAwI0CYDHB+SjEXpqHciAWzMPWLi+gw6fb+plSqvhj5ce3WR7XMzzYqKI=
+	t=1722444698; cv=none; b=mJT2H2Uz+qcP8rirK2JqkMCXOv0AvajFalWL3iYQeJmfwFT8XtyKfkXdcebnYRV2EMVTmUCz1C+c1OS0z0hA1Vk0AxJY0yBCqfuhDOHYwEph3mjJvbE62nIHpCPcRHtYa09YLHxZlfVHq6/74M46zO1lpa+PqIDniE8BwgayGUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722441538; c=relaxed/simple;
-	bh=HMYEQltRZ8Tw+WKokvRCPrxZb0HKX0yrf0ddXvi96Lg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ujsNQoFozSym2ApWTguwxKVjuV3HPDoVk9cufs64b+NFM8FoCt/7N41iwt+4bjuQL7LBJ4pmtwMKMSbSmh9P3uQ2m3JU31cz0HpJj9SSFG7+pT6vsr8PyJg73YFafCuWDbQO1ZQK+eV7D7X+6VAZJSJ0rdtSIeiXWVltLDu+T1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fahv2gaa; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722444698; c=relaxed/simple;
+	bh=a3N1jdJkjGQcJ3ZzY05M9xZbajIj8LwGdUK1HF2vmvM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=SPPpyZIWc0D7PiKE7LDHoRvgHvEe4D7B3njNT/lLCHlHbRoKuu/6flgO8DFP43Q+VEAuZXRr7IEhyPEG8H2U/L7Ari8HC4lc+eOp4/oWnqnB0uAdG0zno01Y+zQKDmNrxjwljGqNa7AK99aPyzWWchN/72hCNmmZU6vWJ77Oa7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iAeVyuNo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fahv2gaa"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fd7509397bso203405ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 08:58:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722441535; x=1723046335; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZAhdp5zpySe0+FB5jDx9UjZEWAHh/7EBv/tXoOqBR90=;
-        b=Fahv2gaaNSqNOzJfF0+Fl8SJQFS0sWpNlYUU+euX8+BlPidPVPRcRxUb0VuN2Tll9K
-         3g0N7Pm9Scqd6O25E9dDXNWw+z7SR61+sBCkua43S0XYu1odwcnMpc+5oUB3QGfUj1Li
-         CB6dYAE5Ji4c/7Fegv5BnZV1IOZ6xu496vS/6IZ7KiFaNlVCxvcT2K1C5RjlGenbpF1H
-         hGdWTKvY53h3m1JERktMNc4TxRubF9H8Qklx1hrKK5c2KN3lTbFijzvytZ6vm5zjuIad
-         78vUTd5LiS25FF9QS3YAKckQDQr1tyL/PHdE7rfpsr6QTeVGALE0BLE7yVUhaMjrblBK
-         txoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722441535; x=1723046335;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZAhdp5zpySe0+FB5jDx9UjZEWAHh/7EBv/tXoOqBR90=;
-        b=gZCp3JruJMe3tUGixTEGFX3ANb06mNMTeK8KTTLQGyOAEIvCzgJkJl3xqnhfSB1v/5
-         zTu9FX1OAFO7RWgV4ldgLUSC8vDPsQOtZjRrVu+CxnG3wZ1mvA+v6j2rTu9pVx6GXtb4
-         DSgvhZWniM9uERw62Lzz1GdB15DifV8jakGYJqJY8mehxqoD8rLw/g/vlbK1teICwyzU
-         hDYdXq1b8nuAf1Hr0Qqfu8YHdFbkdu6fy35vqtg29Ph3QTFXzu7BwkHTY6YKh8xtdJ3y
-         AvLtx4zK+iQspS960y6xzHEo6EHk+NVmzz5g7KogIvv0i4yN8HhPivBewb1XOImj7ZGN
-         i6Bg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHeYdgWFG6KrRVeGrAtIAY7hM7zah8HTeuafuTDv4H+RpahiOU6a9RSyQD49w9S+7b76RAPU0i6+8r8vXgqm7urHXmuyhqZgC6JcYqVK226A==
-X-Gm-Message-State: AOJu0Yz4OhWHo795zr6qwNzSvxNRA93jqN+0KWanShjIeLQ4BfrOzvOs
-	gCRvdkEqzSWmQ1Yk9sTNXOeeSxhuj8SxS3+izbU9HFjs6x/V4qbuUfMveAh3Xim+GkYxsftH8r6
-	HX8wgqn2jXCFzIEoM06rticbKFK2vLYhXC+nw
-X-Google-Smtp-Source: AGHT+IGMppatA2gCc9t440JBtXjRkJbktHUaH/U7LYdlrJiclQaIDtvsOz+rN1EUSUYMsorHuenPRwk2uXi43KbY4ts=
-X-Received: by 2002:a17:903:120d:b0:1f7:1c96:d2e8 with SMTP id
- d9443c01a7336-1ff417d4905mr3381625ad.10.1722441534719; Wed, 31 Jul 2024
- 08:58:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iAeVyuNo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84E4C116B1;
+	Wed, 31 Jul 2024 16:51:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722444698;
+	bh=a3N1jdJkjGQcJ3ZzY05M9xZbajIj8LwGdUK1HF2vmvM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=iAeVyuNoztqPUGoDanPeAcyu7Ve54IKxX4KN/dntZHo3z5MbsuDnY8Ju3bdLl2tQz
+	 JpvpSsPEZn4MadFMaSGCS7lNbZz54aIrH0bpoMDI98ADKC6RCSnvemigwpRxj15Pbq
+	 R7fPltHSBJvjig4qvhwRyma6fys1jAJGzRbW9wC5R1VVSeFG5qcwhT1Y+dexn5K8It
+	 kGIE2fuvcsi/IuQSQt3yxUPpGVy/N+QFAnODhdCIIzlswW/wRR2FtNlEnBdervg07u
+	 fovGFErtcmLgC1cRHwmcXILoqEUw7mgLP3mNfTlOAZO9tf/x7pUuQXn/bL7MazzYkD
+	 oTbP6nQRfCMHA==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH v3 0/7] arm64: Add support for Armv9.4 PMU fixed
+ instruction counter
+Date: Wed, 31 Jul 2024 10:51:17 -0600
+Message-Id: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730191744.3097329-1-irogers@google.com> <20240730191744.3097329-3-irogers@google.com>
- <Zqo5vVdrkhL5NHJK@x1> <CAP-5=fXyOfPya+TrKVaFhCK3rNY=AuLZLG67ith5YHf_XXVdNg@mail.gmail.com>
- <ZqpZWywTe2j3U9Pl@x1> <ZqpcRIzzBb5KC6Zb@x1>
-In-Reply-To: <ZqpcRIzzBb5KC6Zb@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 31 Jul 2024 08:58:43 -0700
-Message-ID: <CAP-5=fVm5FkLDOLk4cbD9K6VPZ088f3Yk3bG8LT79E_OLLN4Lw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] perf jevents: Autogenerate empty-pmu-events.c
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: John Garry <john.g.garry@oracle.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jing Zhang <renyu.zj@linux.alibaba.com>, Xu Yang <xu.yang_2@nxp.com>, 
-	Sandipan Das <sandipan.das@amd.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, philip.li@intel.com, oliver.sang@intel.com, 
-	Weilin Wang <weilin.wang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIVrqmYC/33NSw6CMBCA4auQrh1T2kLBlfcwLqAPaJRCpthoC
+ He3sNLEuPwnM98sJBh0JpBTthA00QU3+hT8kBHVN74z4HRqwigTtKQSGhxgGh7AoQan/IxABZe
+ F1prSipF0N6Gx7rmbl2vq3oV5xNf+Iubb9J8Wc6CgZKuZVsZa3p5vBr25H0fsyMZF9kGw8hfBN
+ qKWlWiFTUvFF7Gu6xvBKQEc9gAAAA==
+To: Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Mark Rutland <mark.rutland@arm.com>, James Clark <james.clark@linaro.org>, 
+ James Morse <james.morse@arm.com>, 
+ Suzuki K Poulose <suzuki.poulose@arm.com>, 
+ Catalin Marinas <catalin.marinas@arm.com>, 
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev
+X-Mailer: b4 0.15-dev
 
-On Wed, Jul 31, 2024 at 8:46=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Wed, Jul 31, 2024 at 12:33:50PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Jul 31, 2024 at 07:08:18AM -0700, Ian Rogers wrote:
-> > > On Wed, Jul 31, 2024 at 6:18=E2=80=AFAM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Tue, Jul 30, 2024 at 12:17:44PM -0700, Ian Rogers wrote:
-> > > > > empty-pmu-events.c exists so that builds may occur without python
-> > > > > being installed on a system. Manually updating empty-pmu-events.c=
- to
-> > > > > be in sync with jevents.py is a pain, let's use jevents.py to gen=
-erate
-> > > > > empty-pmu-events.c.
-> > > >
-> > > > What am I missing here?
-> > > >
-> > > > If it exists so that we can build on a system without python how ca=
-n we
-> > > > use python to generate it?
-> > > >
-> > > > Now having python in the system is a requirement and thus we don't =
-need
-> > > > empty-pmu-events.c anymore?
-> > > >
-> > > > Can you guys please clarify that?
-> > >
-> > > The requirement for python hasn't changed.
-> > >
-> > > Case 1: no python or NO_JEVENTS=3D1
-> > > Build happens using empty-pmu-events.c that is checked in, no python
-> > > is required.
-> > >
-> > > Case 2: python
-> > > pmu-events.c is created by jevents.py (requiring python) and then bui=
-lt.
-> > > This change adds a step where the empty-pmu-events.c is created using
-> > > jevents.py and that file is diffed against the checked in version.
-> > > This stops the checked in empty-pmu-events.c diverging if changes are
-> > > made to jevents.py. If the diff causes the build to fail then you jus=
-t
-> > > copy the diff empty-pmu-events.c over the checked in one.
-> >
-> > I'll try and add your explanation to the log message, thanks for
-> > clarifying it!
->
-> So, with it in place I'm now noticing:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ rm -rf /tmp/build/$(basename $PW=
-D)/ ; mkdir -p /tmp/build/$(basename $PWD)/
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ alias m=3D'rm -rf ~/libexec/perf=
--core/ ; make -k CORESIGHT=3D1 O=3D/tmp/build/$(basename $PWD)/ -C tools/pe=
-rf install-bin && perf test python'
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ m
-> <SNIP>
->   GEN     /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c
->   MKDIR   /tmp/build/perf-tools-next/arch/x86/util/
->   CC      /tmp/build/perf-tools-next/util/annotate.o
->   CC      /tmp/build/perf-tools-next/arch/x86/util/tsc.o
->   CC      /tmp/build/perf-tools-next/arch/x86/tests/hybrid.o
->   CC      /tmp/build/perf-tools-next/util/block-info.o
->   CC      /tmp/build/perf-tools-next/arch/x86/tests/intel-pt-test.o
->   CC      /tmp/build/perf-tools-next/arch/x86/util/pmu.o
->   MKDIR   /tmp/build/perf-tools-next/ui/browsers/
->   CC      /tmp/build/perf-tools-next/ui/browsers/annotate.o
->   CC      /tmp/build/perf-tools-next/builtin-kallsyms.o
->   CC      /tmp/build/perf-tools-next/util/block-range.o
->   TEST    /tmp/build/perf-tools-next/pmu-events/empty-pmu-events.log
-> --- pmu-events/empty-pmu-events.c       2024-07-31 12:44:14.355042296 -03=
-00
-> +++ /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c       2=
-024-07-31 12:45:35.048682785 -0300
-> @@ -380,7 +380,7 @@
->                          continue;
->
->                  ret =3D pmu_events_table__for_each_event_pmu(table, tabl=
-e_pmu, fn, data);
-> -                if (pmu || ret)
-> +                if (ret)
+This series adds support for the optional fixed instruction counter 
+added in Armv9.4 PMU. Most of the series is a refactoring to remove the 
+index to counter number conversion which dates back to the Armv7 PMU 
+driver. Removing it is necessary in order to support more than 32 
+counters without a bunch of conditional code further complicating the 
+conversion.
 
-Right, you need to copy:
- /tmp/build/perf-tools-next/pmu-events/test-empty-pmu-events.c
-to
-tools/perf/pmu-events/empty-pmu-events.c
-to fix this.
+Patch 1 changes struct arm_pmu.num_events to a bitmap of events, and 
+updates all the users. This removes the index to counter conversion 
+on the PMUv3 and Armv7 drivers.
 
-This change has happened as you are testing with:
-https://lore.kernel.org/lkml/20240716132951.1748662-1-kan.liang@linux.intel=
-.com/
-which isn't in the git repo yet (therefore, I can't make a patch set
-on it). The change is WAI as it is telling you empty-pmu-events.c has
-become stale and needs Kan's fix applying to it.
+Patch 2 updates various register accessors to use 64-bit values matching 
+the register size.
 
-Thanks,
-Ian
+Patches 3-4 update KVM PMU register accesses to use shared accessors 
+from asm/arm_pmuv3.h.
 
+Patches 5-6 rework KVM and perf PMU defines for counter indexes and 
+number of counters.
 
->                          return ret;
->          }
->          return 0;
->   CC      /tmp/build/perf-tools-next/tests/openat-syscall.o
-> make[3]: *** [pmu-events/Build:42: /tmp/build/perf-tools-next/pmu-events/=
-empty-pmu-events.log] Error 1
-> make[3]: *** Deleting file '/tmp/build/perf-tools-next/pmu-events/empty-p=
-mu-events.log'
-> make[2]: *** [Makefile.perf:763: /tmp/build/perf-tools-next/pmu-events/pm=
-u-events-in.o] Error 2
-> make[2]: *** Waiting for unfinished jobs....
->   CC      /tmp/build/perf-tools-next/arch/x86/util/kvm-stat.o
-> <SNIP>
+Patch 7 finally adds support for the fixed instruction counter.
+
+I tested this on FVP with VHE host and a guest. Also ran kvm-unittests 
+in Arm's kernelCI.
+
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+Changes in v3:
+- Fix using 64-bit counters in pre-Armv8.5. The chained event check 
+  for cycle counter in armv8pmu_event_is_chained() was returning the 
+  cycle counter needed chaining which is never true. Separate fix is 
+  here: https://lore.kernel.org/all/20240710182357.3701635-1-robh@kernel.org/
+- Rebase to v6.11-rc1 and dropped already applied patches
+- Link to v2: https://lore.kernel.org/r/20240626-arm-pmu-3-9-icntr-v2-0-c9784b4f4065@kernel.org
+
+Changes in v2:
+- Include threshold fix patches and account for threshold support in 
+  counter assignment.
+- Add patch including asm/arm_pmuv3.h from linux/perf/arm_pmuv3.h
+- Fix compile error for Apple PMU
+- Minor review comments detailed in individual patches
+- Link to v1: https://lore.kernel.org/r/20240607-arm-pmu-3-9-icntr-v1-0-c7bd2dceff3b@kernel.org
+
+---
+Rob Herring (Arm) (7):
+      perf: arm_pmu: Remove event index to counter remapping
+      perf: arm_pmuv3: Prepare for more than 32 counters
+      KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+      KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+      arm64: perf/kvm: Use a common PMU cycle counter define
+      KVM: arm64: Refine PMU defines for number of counters
+      perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
+
+ arch/arm/include/asm/arm_pmuv3.h   |  20 ++++++
+ arch/arm64/include/asm/arm_pmuv3.h |  53 ++++++++++++--
+ arch/arm64/include/asm/kvm_host.h  |   8 +--
+ arch/arm64/include/asm/sysreg.h    |   1 -
+ arch/arm64/kvm/pmu-emul.c          |  14 ++--
+ arch/arm64/kvm/pmu.c               |  87 ++++++-----------------
+ arch/arm64/kvm/sys_regs.c          |  11 +--
+ arch/arm64/tools/sysreg            |  30 ++++++++
+ drivers/perf/apple_m1_cpu_pmu.c    |   4 +-
+ drivers/perf/arm_pmu.c             |  11 +--
+ drivers/perf/arm_pmuv3.c           | 140 +++++++++++++++++++------------------
+ drivers/perf/arm_v6_pmu.c          |   6 +-
+ drivers/perf/arm_v7_pmu.c          |  77 ++++++++------------
+ drivers/perf/arm_xscale_pmu.c      |  12 ++--
+ include/kvm/arm_pmu.h              |   8 +--
+ include/linux/perf/arm_pmu.h       |  10 ++-
+ include/linux/perf/arm_pmuv3.h     |   9 ++-
+ 17 files changed, 272 insertions(+), 229 deletions(-)
+---
+base-commit: 8400291e289ee6b2bf9779ff1c83a291501f017b
+change-id: 20240607-arm-pmu-3-9-icntr-04375ddd0082
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
+
