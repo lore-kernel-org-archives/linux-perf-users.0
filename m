@@ -1,164 +1,144 @@
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F0C1AD9C6
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 15:23:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4751A99C4
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 15:26:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722525805; cv=none; b=S70LXcmqrCsN6uH/l2kG7ZRuuYl373tKnLWtR/sE3zQSlh3u5xMBHEJHDrekSmo6KkeEDQNKg4/51W83ApUKV14mw+0D4ZLnbQwVnneKvXj6+Qx3YkuhEjZXzjImimJX+2aFm4HQ+WQHDbe+1E7r8v9XUcSw5uzcv2paC+TtGDA=
+	t=1722525999; cv=none; b=eDWsWJ+/SVBvXe5q4CCloZ8IdyJWUUwmM4ITg16bq8g8LhSquX424KKnrtunaUDt88HTmz10Y3InmAhSsjdBHY89ZOxc9RBEDNqWK/yGrvt7tZ44SAD+3eLVdbDuiyMPDyWIqemeppkHOH2I3FjOJpLKNBDDuh8Ve6eg7KlgSl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722525805; c=relaxed/simple;
-	bh=GFGK0UHdzjbGe6UmTb4ohG2TZHo7UbKi49qo76wYcUE=;
+	s=arc-20240116; t=1722525999; c=relaxed/simple;
+	bh=/Jl6PB4Wp3ANrgC68CItsuYKxii3v6mf1G+8fRnnZTU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FsjTtu2NHMsD9lv5WOy9Dhcd9gKRr5UWd7x1R1zRfKJIEukwFL59ZcA7trjpciUIGfpVfWPkqe2a6qfWhlZL378DqGn3p16AVkWSAT+G2Vuxm/LVgQl/X98z4GMPO6g6jkzHJ6OtIktQpxZBYEfgdazeCSmMK1wf5Hi7y0+8kz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XHWc7h73; arc=none smtp.client-ip=209.85.160.175
+	 To:Cc:Content-Type; b=Iiam2zFneI69zolg2fLTmhndzatsasB8o+vLUaNhGNf9VmOozxvExwXfhREWytZLm2LuO0DkME2ve7abKfhKg8aHcXoZjraxZ3nXtvJTUHgRyCDEodoTyE7zIyEzct8aKoHKi9H5QTqsAztvgjOhotfIGByVj4+F+V4WU7yKqEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HlNKZDGy; arc=none smtp.client-ip=209.85.160.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XHWc7h73"
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-44fe76fa0b8so720201cf.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Aug 2024 08:23:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HlNKZDGy"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-44fee2bfd28so777691cf.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Aug 2024 08:26:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722525803; x=1723130603; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722525996; x=1723130796; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LSUo638LAO2tBPwPh6ylMLQD6YOik4Knc6isLVc9yiU=;
-        b=XHWc7h73HsX9+PItxhJ9NXhyOF051wkf4/MQ2IdoZri77SXxxv4JWFMrhREn3TdqzH
-         nyYZgRM22cVGgdOh5R6j8t2ywFvZhwOvQXyLfndO7vUW6qY0C7ht8QPgpfKmBSah3CEx
-         NImXuzFaRByLLNoKIieDPnzgwwEdp2GGKXzmyudXh5OfvhCvP9QAMBn7ncRsOye8UzcU
-         J6Z+TBePYKDuEWHBrtFGgUTMbDmiXF8nNrdWfIiMSaGg9446Ryfx7uj0FQ5a9A5rZtsa
-         cOcSO4LhpkIUAd8FRSNQvPG7sf7UKCAGOyuaTtfcpiqZLs3weJ88Qfl6woWWnq0242sU
-         0waw==
+        bh=kJsisVlXsYheO37snVaNoupjzpA6f699hMvkHk44PW0=;
+        b=HlNKZDGy2NMA6cFCJQIHJln4JOUhRG7G1krUj5XRXiGYi/tLztPlhD+Y0upMSmtr2D
+         G2pGSx3F4y4s4eemlhBjSA0HRzK7uw0a70ih1z1Ll0pplUnTOsqdfeh7FrAPj64tYxfN
+         Cc4TPvGhcxuLVOTja6hxbAavfvmB5cTUu7Zp+grkbT0BaPzJzwpIWSvBUDk2uAwFK6+2
+         zRqhjzg/HCZWLrT5aDQ+nO+/Aq4TTJhpKoGEDy+koOT6uAPtxRfwJXYjaJVxYdg4FHmZ
+         35GB5JrAPiDXWh4K8c2vTwOy913g5Ad1jG57r1cKZYPHYrDHfjqZDLfVWpPbPzb9z6N8
+         Hz+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722525803; x=1723130603;
+        d=1e100.net; s=20230601; t=1722525996; x=1723130796;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LSUo638LAO2tBPwPh6ylMLQD6YOik4Knc6isLVc9yiU=;
-        b=N68gKe77y22sDa65QWlUqJaNcJCzJ28ATep3sKy+TWfiCncw8c1NOMVoeikIb7uo6M
-         YYR5EuoK5PgXFASpVsXMYkCvxtmoEodKtd1+sfQR4zuWNcNKZH1SGrH5BqDVmn4OjYOv
-         h4ORR8ACi+OFmwrrFTVm+lpuPXq9abwqeCo7g6kFEnLsSQ/JS5LDkg5AMQylxcRUJfuH
-         tPbvqWv5juxAk96hSfW1Xa+PXvAWpssf8iT5LRskO3h1Zxhfsy29wNw5fTifCoP/UWk+
-         AzkJo+IYa0tkmi3G0JH6nptKMvU6zeUnnCDuFzs8LQ4wsKhp9dDxPPBqPi6J7G5ReKd8
-         nsCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVWgAnkjYQG2WrpWQjxEEEl5cVIEWtg/pCDvNBdh7iWr38mgywlr7QCT/pTyrw4I4Gmx5pUctD1VVcM9aXhzCTYK7xHRMNseQiB2kcvuUT8qw==
-X-Gm-Message-State: AOJu0Yx4lKcRZ6QUt1zoGe3bBbg8W42sTzKub/16wvIPdyIaen/013zJ
-	EfOQYE+pKP3lnGHLQfojZnCJxs8Qeb/veSwWYRN6M8Q8NF2ijAN34v8TBDI6kTnMwPMOyTkol9s
-	biRlvJ9k+BvxcKH2u8X3D50NzMrJBw8AN5Lgv
-X-Google-Smtp-Source: AGHT+IHZefKrdZylJzqxV6El4ioyRwIYAtkW247cXmfNBWs/GaSwE5K93Yduh6KNbV4UzIhNQK/yFQLnLwFlzCnN3Hw=
+        bh=kJsisVlXsYheO37snVaNoupjzpA6f699hMvkHk44PW0=;
+        b=BxSQZ3aonmofsuImIq8k72Sn8MSdtC1otGiwAx58pp2hDpwc1HD8cvDQ9bsr8K+UCa
+         aO0emv68/tjJXrhx6lWV0mwZhu8EymbXuuDSC8neFtg/U5YddGP7a89jPbXoRI8LjVm/
+         5bPkaI5EOtkfmcHNBqOnwoaq+u5xfZx83X2rWVE3yIXjz7XlWkXrE1zpwAg2dzOlVZM3
+         fKsHzkATYz4A9ZlxGyqsLN5Xkl8g3ItDck0xsI76GzKvI4C/qjsjKDp6VIHYDgntGsFF
+         jNic9v5l0htMras+yfbTTqj1AYOVaX/jjLP88jKLrc7e03Yk1HK5R/u4N0V+PFxE2ukj
+         pV/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXwS1Hne0JnKkdDU8V2+WulyR5nO1sBOTFb+QiDfdMzDfJ7q2qFD/LH0RwtgDhC2c8Hy7+fkL3Y97X7YoJso1AYDqc70BiQS/D8FlZ7LsJwjg==
+X-Gm-Message-State: AOJu0Ywv7r1vBu4tCPDuY7ZzVEwHcMJ8oBjrfBn0pvAkYXJ/KIscTi4Z
+	IQUpxpj4ApuU3IdvbS8F6cmEG1/Dx7V5I53eoANslNj1LUm3HX07xDW3tspOTVm3sJkWleQIglO
+	BbtJY+DbYLxbwZLcAZ5UqMrER6p/GtCcc8NzZ
+X-Google-Smtp-Source: AGHT+IFMASjGXKSuF0FnLFzbAgMwMf9+e1XvKKegyCNSTZDeHUACfQPHE9S5FaA15pCyPsL9NbtKplB7rSftZhJoQzg=
 X-Received: by 2002:ac8:7d8c:0:b0:447:d7ff:961d with SMTP id
- d75a77b69052e-45181e6e4f1mr2037141cf.9.1722525802741; Thu, 01 Aug 2024
- 08:23:22 -0700 (PDT)
+ d75a77b69052e-45181e6e4f1mr2046151cf.9.1722525996159; Thu, 01 Aug 2024
+ 08:26:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240731235505.710436-1-namhyung@kernel.org>
-In-Reply-To: <20240731235505.710436-1-namhyung@kernel.org>
+References: <20240719115018.27356-1-eric.lin@sifive.com> <20240729181927.1712841-1-atishp@rivosinc.com>
+In-Reply-To: <20240729181927.1712841-1-atishp@rivosinc.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 Aug 2024 08:23:11 -0700
-Message-ID: <CAP-5=fX8Fg4jJDN=d2pHU1Xy3-A119c5gZYXtQu0b0Rwb0-ymQ@mail.gmail.com>
-Subject: Re: [PATCHSET 0/6] perf mem: Basic support for data type profiling (v1)
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Stephane Eranian <eranian@google.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Date: Thu, 1 Aug 2024 08:26:24 -0700
+Message-ID: <CAP-5=fUJh6zzpiFcYwxMjxk7O3eOZWTVvzOB_zt+twcbnZMYXA@mail.gmail.com>
+Subject: Re: [v2] perf arch events: Fix duplicate RISC-V SBI firmware event name
+To: Atish Patra <atishp@rivosinc.com>
+Cc: eric.lin@sifive.com, peterz@infradead.org, mingo@redhat.com, 
+	acme@kernel.org, namhyung@kernel.org, alexander.shishkin@linux.intel.com, 
+	jolsa@kernel.org, palmer@dabbelt.com, aou@eecs.berkeley.edu, 
+	peterlin@andestech.com, dminus@andestech.com, locus84@andestech.com, 
+	jisheng.teoh@starfivetech.com, inochiama@outlook.com, n.shubin@yadro.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Samuel Holland <samuel.holland@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 31, 2024 at 4:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+On Mon, Jul 29, 2024 at 11:19=E2=80=AFAM Atish Patra <atishp@rivosinc.com> =
 wrote:
 >
-> Hello,
->
-> As we added data type profiling, 'perf mem report' should support that
-> as well.  This patches just added a couple of convenient options.
->
->   $ perf mem report -T -s mem
->   # To display the perf.data header info, please use --header/--header-on=
-ly options.
->   #
->   #
->   # Total Lost Samples: 0
->   #
->   # Samples: 131  of event 'cpu/mem-loads,ldlat=3D30/P'
->   # Total weight : 18561
->   # Sort order   : mem,type
->   #
->   # Overhead       Samples  Memory access                            Data=
- Type
->   # ........  ............  .......................................  ....=
-.....
->   #
->       14.84%            22  L1 hit                                   (unk=
-nown)
->       12.02%             8  RAM hit                                  (unk=
-nown)
->        7.68%             8  LFB/MAB hit                              (unk=
-nown)
->        6.29%            12  L1 hit                                   (sta=
-ck operation)
->        3.97%             5  LFB/MAB hit                              stru=
-ct psi_group_cpu
->        3.69%             3  L1 hit                                   stru=
-ct
->        3.18%             3  LFB/MAB hit                              (sta=
-ck operation)
->        2.89%             5  L3 hit                                   (unk=
-nown)
->        2.58%             3  L1 hit                                   unsi=
-gned int
->        2.31%             2  L1 hit                                   stru=
-ct psi_group_cpu
->        2.21%             2  LFB/MAB hit                              stru=
-ct cfs_rq
->        2.19%             2  RAM hit                                  stru=
-ct sched_entity
->        2.16%             1  L1 hit                                   stru=
-ct task_struct
->        1.85%             3  L1 hit                                   stru=
-ct pcpu_hot
->        1.78%             1  RAM hit                                  stru=
-ct tss_struct
->        1.72%             1  LFB/MAB hit                              stru=
-ct mm_struct
->        1.62%             2  L1 hit                                   stru=
-ct psi_group
->        ...
->
->
-> The code is also available at 'perf/mem-type-v1' branch in
-> git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
->
-> Thanks,
-> Namhyung
->
->
-> Namhyung Kim (6):
->   perf hist: Correct hist_entry->mem_info refcounts
->   perf mem: Free the allocated sort string
->   perf mem: Rework command option handling
->   perf tools: Add mode argument to sort_help()
->   perf mem: Add -s/--sort option
->   perf mem: Add -T/--data-type option to report subcommand
->
->  tools/perf/builtin-mem.c     | 100 ++++++++++++++++++++++-------------
->  tools/perf/builtin-report.c  |   4 +-
->  tools/perf/util/hist.c       |  14 ++---
->  tools/perf/util/map_symbol.c |  18 +++++++
->  tools/perf/util/map_symbol.h |   3 ++
->  tools/perf/util/mem-info.c   |  13 +++++
->  tools/perf/util/mem-info.h   |   1 +
->  tools/perf/util/sort.c       |  12 +++--
->  tools/perf/util/sort.h       |   2 +-
->  9 files changed, 116 insertions(+), 51 deletions(-)
+> > Currently, the RISC-V firmware JSON file has duplicate event name
+> > "FW_SFENCE_VMA_RECEIVED". According to the RISC-V SBI PMU extension[1],
+> > the event name should be "FW_SFENCE_VMA_ASID_SENT".
+> >
+> > Before this patch:
+> > $ perf list
+> >
+> > firmware:
+> >   fw_access_load
+> >        [Load access trap event. Unit: cpu]
+> >   fw_access_store
+> >        [Store access trap event. Unit: cpu]
+> > ....
+> >  fw_set_timer
+> >        [Set timer event. Unit: cpu]
+> >   fw_sfence_vma_asid_received
+> >        [Received SFENCE.VMA with ASID request from other HART event. Un=
+it: cpu]
+> >   fw_sfence_vma_received
+> >        [Sent SFENCE.VMA with ASID request to other HART event. Unit: cp=
+u]
+> >
+> > After this patch:
+> > $ perf list
+> >
+> > firmware:
+> >   fw_access_load
+> >        [Load access trap event. Unit: cpu]
+> >   fw_access_store
+> >        [Store access trap event. Unit: cpu]
+> > .....
+> >   fw_set_timer
+> >        [Set timer event. Unit: cpu]
+> >   fw_sfence_vma_asid_received
+> >        [Received SFENCE.VMA with ASID request from other HART event. Un=
+it: cpu]
+> >   fw_sfence_vma_asid_sent
+> >        [Sent SFENCE.VMA with ASID request to other HART event. Unit: cp=
+u]
+> >   fw_sfence_vma_received
+> >        [Received SFENCE.VMA request from other HART event. Unit: cpu]
+> >
+> > Link: https://github.com/riscv-non-isa/riscv-sbi-doc/blob/master/src/ex=
+t-pmu.adoc#event-firmware-events-type-15 [1]
+> > Fixes: 8f0dcb4e7364 ("perf arch events: riscv sbi firmware std event fi=
+les")
+> > Fixes: c4f769d4093d ("perf vendor events riscv: add Sifive U74 JSON fil=
+e")
+> > Fixes: acbf6de674ef ("perf vendor events riscv: Add StarFive Dubhe-80 J=
+SON file")
+> > Fixes: 7340c6df49df ("perf vendor events riscv: add T-HEAD C9xx JSON fi=
+le")
+> > Fixes: f5102e31c209 ("riscv: andes: Support specifying symbolic firmwar=
+e and hardware raw event")
+> > Signed-off-by: Eric Lin <eric.lin@sifive.com>
+> > Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
+> > Reviewed-by: Nikita Shubin <n.shubin@yadro.com>
+> > ---
+> > Changes since V1:
+> >  - Add "Fixes:" tag for every patch that copied firmware.json
+> Reviewed-by: Atish Patra <atishp@rivosinc.com>
 
-Lgtm, man page updates?
+Reviewed-by: Ian Rogers <irogers@google.com>
 
 Thanks,
 Ian
