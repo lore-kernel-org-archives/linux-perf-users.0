@@ -1,173 +1,460 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2DFA13A86D
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 19:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D69A14A60A;
+	Thu,  1 Aug 2024 19:21:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722539141; cv=none; b=TOKMBCvm2AFyA0WA6m5zZwfmY96iIWRDdMAewgeN+G4vQWmwLZI99Toz4PYQCm2T5Wzjx0aQD/mskg9ag3TT9VnVXx8QUA692BTPbFvbxet9edBPhWW3DTmfo6EdI2rxzlxIB35gZWG7AxDW3ldoU2MvgiWIFOy4CmpDbvkvyXY=
+	t=1722540112; cv=none; b=gaEVnvXaLeqyho3cmflskelr2K2yjdHrya8DnTudcbcuCsE+UuPhYHg1qNUkRKSCQPqe7PUDTnYKNzmBbrpGb7w6J9yQWO2z6oGbUh/HBHPrhuFkPgPfjwrygMPyu53B0TGRwjOMA9HksZ25ouDGNQnHbbPeWII30H/1H/9QR1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722539141; c=relaxed/simple;
-	bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FLMeeAkZ91sxCk5vmHH26rnfA4YgtcqKIEdf2o9wfIY4k5qK1FnjJ3Z+2ikWFCMdyi8/B/g1I9RvWu0Fft2Hze9dEH4Da1Y7vtCjX4R5zCWBkQbi3TciRP7GvN8OQFPGyaG3NOlZomFxg2cXd+//PprWLe/GaIxDGLw3sMmW/x8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=rCRZso16; arc=none smtp.client-ip=209.85.214.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722540112; c=relaxed/simple;
+	bh=xE3L8EJ1jm124rMNDrOjuoguyqV05szqmZN2nxQ/V8c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=GU0lyZp4rY569j9FnbOhwjx6RBw7oi5QmB7OWEYAC48qnx6bd+ls9Lf4xNVBj/hGZDGVyLXVrdpzo+vDnYgHFmxvcnJDm98jjbxFaBaXhIpflqcsi6bj4SZNL+TWAVd8iarzGKunS2YCAOf+hTL4Tg61elHg/2w0fzRSxyIplkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bj6Uegrh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rCRZso16"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-1fed726aefcso423845ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Aug 2024 12:05:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722539139; x=1723143939; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-        b=rCRZso16NzZLCKVJJV5F+V6G1POPC444hiBgHt+aUuphRlFvnA2dEGGvv28Odq/YfN
-         RzDr/ip7T0DBoMJUXZsmX/DgO2XPm3XKB7CZQWQ1OByfpL8kAXCV2hl7PLDMKspIKl6m
-         RXOTlWx4XwekzBdIARaoFh27VG1vvK4dj7yDKE946j8XPqnE7u7CuYCLJyUz5cgeI89r
-         lf449FyoF3PyfaQgcG11V/WSEyUmQKq2pwlZRr2cC8celukB+I/EzkneuCC3UFiJra4G
-         fAJCgrmZXU8LI2LSoTOIuYgEy+XK8VcOWI6MtiwWEpT45MrdKCk55OtDInCEZiQOuPoZ
-         4yRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722539139; x=1723143939;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qLJ5L34m/hDFaymbxoidcHVuYlzirRvv5RrpOcfSt8k=;
-        b=C06mSjJjvIUhmdJKDVIe2MwDfV+K605QUShZB8bPkqDYQe8trtZRizM3TgzaVQe5ry
-         k2lVDLNnKsmTFKtd3YowTc1TiAJ3toKSy9vdrzgOVIxP63DIBeX7NvwN9p3rbyarnTaW
-         m7I6qKUPyP7Q8pDUiTc9T1QMvkC5bAYnYUm0ytt2uoA6QW+XDJzbel31nVy/hbcKSWLj
-         qIbKsOJPiDQQj2J8GCOvFJWLSuV8k1omKgWfJT8hpqRgybLb33pPyIKpKMB+rskJ2eqs
-         +iusxnbERjK04Lw3CqVKoog8b2Jzm/0cQDsEJUKRALEjZQ53mYx6StHg/XCCm6V+5ZWF
-         NtDA==
-X-Gm-Message-State: AOJu0YxfNE+z3zoMl6CTXaiGcKnooUJAFhVRhVysMZx0OCDFlcw2eHVU
-	WpkOvFNSD1FnoMBZJaeNPshUk39ObzDhyHoMoFYYtDzYRcOF1hHaSwt7omAanPO6HcP/GlDJveC
-	Yg5TmsbSyikIp6IpEeVy3+7apP+65RZ3IPSGA
-X-Google-Smtp-Source: AGHT+IH5gl/Q1rzqHjQTr5aMEvKhR4tZEBFmlt3ipoX2Gur/J079ohFRNbLWktgdCJ8jGqV1lw0RjS5xWfmRyNlmBsQ=
-X-Received: by 2002:a17:902:ce8f:b0:1ff:3b0f:d61d with SMTP id
- d9443c01a7336-1ff5a47d480mr363295ad.24.1722539138858; Thu, 01 Aug 2024
- 12:05:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bj6Uegrh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4BF31C32786;
+	Thu,  1 Aug 2024 19:21:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722540112;
+	bh=xE3L8EJ1jm124rMNDrOjuoguyqV05szqmZN2nxQ/V8c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Bj6Uegrh6O92QLRHGj+OpF8rXGFsb9ZtVLgHXj+pnySZcBkcyH4CRiTSZG9ai3r7b
+	 xGH+4WTap+fWLwril7MCKRWeVEiBRtUSakIF3zdk007S+ERPMP7SDAuKRa/7LuknFO
+	 IPhUpYVfke8Kc69BvVLYB1GqMl6WvIh0ul/QXWlgdBJw0dWP9KNb8XRKg+tyw4nmr/
+	 FTjS1O/vYnfOLf+TtgF7PUAdgrJiEVWgi5NfOBSzHZnJlLJG/zfpXOrzUOtWbKTBOJ
+	 Fnq3NloVeg7WHnDanydiOBx+t9aZn4i1KMCwVu4hTa8lFDe6b9WyNTQwuBcSyaa2gX
+	 UF2MBcFr4tHNw==
+Message-ID: <37ca45753755fcb57702b5f61c7f18aeb02a7d96.camel@kernel.org>
+Subject: Re: [PATCH RFC v3 1/2] uapi: explain how per-syscall AT_* flags
+ should be allocated
+From: Jeff Layton <jlayton@kernel.org>
+To: Aleksa Sarai <cyphar@cyphar.com>, Alexander Viro
+ <viro@zeniv.linux.org.uk>,  Christian Brauner <brauner@kernel.org>, Jan
+ Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, Amir Goldstein
+ <amir73il@gmail.com>, Alexander Aring <alex.aring@gmail.com>, Peter
+ Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnaldo
+ Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin
+ <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian
+ Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Date: Thu, 01 Aug 2024 15:21:49 -0400
+In-Reply-To: <20240801-exportfs-u64-mount-id-v3-1-be5d6283144a@cyphar.com>
+References: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
+	 <20240801-exportfs-u64-mount-id-v3-1-be5d6283144a@cyphar.com>
+Autocrypt: addr=jlayton@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me> <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
-In-Reply-To: <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 Aug 2024 12:05:27 -0700
-Message-ID: <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since v6.5
-To: Linux regressions mailing list <regressions@lists.linux.dev>, "to: Mark Rutland" <mark.rutland@arm.com>
-Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Clark <james.clark@arm.com>, 
-	"cc: Marc Zyngier" <maz@kernel.org>, Hector Martin <marcan@marcan.st>, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>, Asahi Linux <asahi@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 6, 2023 at 4:09=E2=80=AFAM Linux regression tracking #update
-(Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->
-> [TLDR: This mail in primarily relevant for Linux kernel regression
-> tracking. See link in footer if these mails annoy you.]
->
-> On 22.11.23 00:43, Bagas Sanjaya wrote:
-> > On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
-> >> Perf broke on all Apple ARM64 systems (tested almost everything), and
-> >> according to maz also on Juno (so, probably all big.LITTLE) since v6.5=
-.
->
-> #regzbot fix: perf parse-events: Make legacy events lower priority than
-> sysfs/JSON
-> #regzbot ignore-activity
+On Thu, 2024-08-01 at 13:52 +1000, Aleksa Sarai wrote:
+> Unfortunately, the way we have gone about adding new AT_* flags has
+> been a little messy. In the beginning, all of the AT_* flags had generic
+> meanings and so it made sense to share the flag bits indiscriminately.
+> However, we inevitably ran into syscalls that needed their own
+> syscall-specific flags. Due to the lack of a planned out policy, we
+> ended up with the following situations:
+>=20
+> =C2=A0* Existing syscalls adding new features tended to use new AT_* bits=
+,
+> =C2=A0=C2=A0 with some effort taken to try to re-use bits for flags that =
+were so
+> =C2=A0=C2=A0 obviously syscall specific that they only make sense for a s=
+ingle
+> =C2=A0=C2=A0 syscall (such as the AT_EACCESS/AT_REMOVEDIR/AT_HANDLE_FID t=
+riplet).
+>=20
+> =C2=A0=C2=A0 Given the constraints of bitflags, this works well in practi=
+ce, but
+> =C2=A0=C2=A0 ideally (to avoid future confusion) we would plan ahead and =
+define a
+> =C2=A0=C2=A0 set of "per-syscall bits" ahead of time so that when allocat=
+ing new
+> =C2=A0=C2=A0 bits we don't end up with a complete mish-mash of which bits=
+ are
+> =C2=A0=C2=A0 supposed to be per-syscall and which aren't.
+>=20
+> =C2=A0* New syscalls dealt with this in several ways:
+>=20
+> =C2=A0=C2=A0 - Some syscalls (like renameat2(2), move_mount(2), fsopen(2)=
+, and
+> =C2=A0=C2=A0=C2=A0=C2=A0 fspick(2)) created their separate own flag space=
+s that have no
+> =C2=A0=C2=A0=C2=A0=C2=A0 overlap with the AT_* flags. Most of these ended=
+ up allocating
+> =C2=A0=C2=A0=C2=A0=C2=A0 their bits sequentually.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 In the case of move_mount(2) and fspick(2), seve=
+ral flags have
+> =C2=A0=C2=A0=C2=A0=C2=A0 identical meanings to AT_* flags but were alloca=
+ted in their own
+> =C2=A0=C2=A0=C2=A0=C2=A0 flag space.
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 This makes sense for syscalls that will never sh=
+are AT_* flags, but
+> =C2=A0=C2=A0=C2=A0=C2=A0 for some syscalls this leads to duplication with=
+ AT_* flags in a
+> =C2=A0=C2=A0=C2=A0=C2=A0 way that could cause confusion (if renameat2(2) =
+grew a
+> =C2=A0=C2=A0=C2=A0=C2=A0 RENAME_EMPTY_PATH it seems likely that users cou=
+ld mistake it for
+> =C2=A0=C2=A0=C2=A0=C2=A0 AT_EMPTY_PATH since it is an *at(2) syscall).
+>=20
+> =C2=A0=C2=A0 - Some syscalls unfortunately ended up both creating their o=
+wn flag
+> =C2=A0=C2=A0=C2=A0=C2=A0 space while also using bits from other flag spac=
+es. The most
+> =C2=A0=C2=A0=C2=A0=C2=A0 obvious example is open_tree(2), where the stand=
+ard usage ends up
+> =C2=A0=C2=A0=C2=A0=C2=A0 using flags from *THREE* separate flag spaces:
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 open_tree(AT_FDCWD, "/foo", OPEN_TRE=
+E_CLONE|O_CLOEXEC|AT_RECURSIVE);
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0 (Note that O_CLOEXEC is also platform-specific, =
+so several future
+> =C2=A0=C2=A0=C2=A0=C2=A0 OPEN_TREE_* bits are also made unusable in one f=
+ell swoop.)
+>=20
+> It's not entirely clear to me what the "right" choice is for new
+> syscalls. Just saying that all future VFS syscalls should use AT_* flags
+> doesn't seem practical. openat2(2) has RESOLVE_* flags (many of which
+> don't make much sense to burn generic AT_* flags for) and move_mount(2)
+> has separate AT_*-like flags for both the source and target so separate
+> flags are needed anyway (though it seems possible that renameat2(2)
+> could grow *_EMPTY_PATH flags at some point, and it's a bit of a shame
+> they can't be reused).
+>=20
+> But at least for syscalls that _do_ choose to use AT_* flags, we should
+> explicitly state the policy that 0x2ff is currently intended for
+> per-syscall flags and that new flags should err on the side of
+> overlapping with existing flag bits (so we can extend the scope of
+> generic flags in the future if necessary).
+>=20
+> And add AT_* aliases for the RENAME_* flags to further cement that
+> renameat2(2) is an *at(2) flag, just with its own per-syscall flags.
+>=20
+> Suggested-by: Amir Goldstein <amir73il@gmail.com>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+> =C2=A0include/uapi/linux/fcntl.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 80 ++++++++++++++-------
+> =C2=A0tools/perf/trace/beauty/include/uapi/linux/fcntl.h | 83 +++++++++++=
+++++-------
+> =C2=A02 files changed, 115 insertions(+), 48 deletions(-)
+>=20
 
-Note, this is still broken. The patch changed the priority in the case
-that you do something like:
+This seems like a reasonable proposal. We haven't been as careful about
+how these flags get allocated as we probably should have in the past.
+Nothing we can do about the existing ones, but some guidelines going
+forward are welcome.
 
-$ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index e55a3314bcb0..38a6d66d9e88 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -90,37 +90,69 @@
+> =C2=A0#define DN_ATTRIB	0x00000020	/* File changed attibutes */
+> =C2=A0#define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
+> =C2=A0
+> +#define AT_FDCWD		-100=C2=A0=C2=A0=C2=A0 /* Special value for dirfd used=
+ to
+> +					=C2=A0=C2=A0 indicate openat should use the
+> +					=C2=A0=C2=A0 current working directory. */
+> +
+> +
+> +/* Generic flags for the *at(2) family of syscalls. */
+> +
+> +/* Reserved for per-syscall flags	0xff. */
+> +#define AT_SYMLINK_NOFOLLOW		0x100=C2=A0=C2=A0 /* Do not follow symbolic
+> +						=C2=A0=C2=A0 links. */
+> +/* Reserved for per-syscall flags	0x200 */
+> +#define AT_SYMLINK_FOLLOW		0x400=C2=A0=C2=A0 /* Follow symbolic links. *=
+/
+> +#define AT_NO_AUTOMOUNT			0x800	/* Suppress terminal automount
+> +						=C2=A0=C2=A0 traversal. */
+> +#define AT_EMPTY_PATH			0x1000	/* Allow empty relative
+> +						=C2=A0=C2=A0 pathname to operate on dirfd
+> +						=C2=A0=C2=A0 directly. */
+> =C2=A0/*
+> - * The constants AT_REMOVEDIR and AT_EACCESS have the same value.=C2=A0 =
+AT_EACCESS is
+> - * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
+o
+> - * unlinkat.=C2=A0 The two functions do completely different things and =
+therefore,
+> - * the flags can be allowed to overlap.=C2=A0 For example, passing AT_RE=
+MOVEDIR to
+> - * faccessat would be undefined behavior and thus treating it equivalent=
+ to
+> - * AT_EACCESS is valid undefined behavior.
+> + * These flags are currently statx(2)-specific, but they could be made g=
+eneric
+> + * in the future and so they should not be used for other per-syscall fl=
+ags.
+> =C2=A0 */
+> -#define AT_FDCWD		-100=C2=A0=C2=A0=C2=A0 /* Special value used to indica=
+te
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 openat should use the current
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 working directory. */
+> -#define AT_SYMLINK_NOFOLLOW	0x100=C2=A0=C2=A0 /* Do not follow symbolic =
+links.=C2=A0 */
+> +#define AT_STATX_SYNC_TYPE		0x6000	/* Type of synchronisation required f=
+rom statx() */
+> +#define AT_STATX_SYNC_AS_STAT		0x0000	/* - Do whatever stat() does */
+> +#define AT_STATX_FORCE_SYNC		0x2000	/* - Force the attributes to be sync=
+'d with the server */
+> +#define AT_STATX_DONT_SYNC		0x4000	/* - Don't sync attributes with the s=
+erver */
+> +
+> +#define AT_RECURSIVE			0x8000	/* Apply to the entire subtree */
+> +
+> +/*
+> + * Per-syscall flags for the *at(2) family of syscalls.
+> + *
+> + * These are flags that are so syscall-specific that a user passing thes=
+e flags
+> + * to the wrong syscall is so "clearly wrong" that we can safely call su=
+ch
+> + * usage "undefined behaviour".
+> + *
+> + * For example, the constants AT_REMOVEDIR and AT_EACCESS have the same =
+value.
+> + * AT_EACCESS is meaningful only to faccessat, while AT_REMOVEDIR is mea=
+ningful
+> + * only to unlinkat. The two functions do completely different things an=
+d
+> + * therefore, the flags can be allowed to overlap. For example, passing
+> + * AT_REMOVEDIR to faccessat would be undefined behavior and thus treati=
+ng it
+> + * equivalent to AT_EACCESS is valid undefined behavior.
+> + *
+> + * Note for implementers: When picking a new per-syscall AT_* flag, try =
+to
+> + * reuse already existing flags first. This leaves us with as many unuse=
+d bits
+> + * as possible, so we can use them for generic bits in the future if nec=
+essary.
+> + */
+> +
+> +/* Flags for renameat2(2) (must match legacy RENAME_* flags). */
+> +#define AT_RENAME_NOREPLACE	0x0001
+> +#define AT_RENAME_EXCHANGE	0x0002
+> +#define AT_RENAME_WHITEOUT	0x0004
+> +
+> +/* Flag for faccessat(2). */
+> =C2=A0#define AT_EACCESS		0x200	/* Test access permitted for
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 effective IDs, not real IDs.=C2=A0 */
+> +/* Flag for unlinkat(2). */
+> =C2=A0#define AT_REMOVEDIR		0x200=C2=A0=C2=A0 /* Remove directory instead=
+ of
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unlinking file.=C2=A0 */
+> -#define AT_SYMLINK_FOLLOW	0x400=C2=A0=C2=A0 /* Follow symbolic links.=C2=
+=A0 */
+> -#define AT_NO_AUTOMOUNT		0x800	/* Suppress terminal automount traversal =
+*/
+> -#define AT_EMPTY_PATH		0x1000	/* Allow empty relative pathname */
+> -
+> -#define AT_STATX_SYNC_TYPE	0x6000	/* Type of synchronisation required fr=
+om statx() */
+> -#define AT_STATX_SYNC_AS_STAT	0x0000	/* - Do whatever stat() does */
+> -#define AT_STATX_FORCE_SYNC	0x2000	/* - Force the attributes to be sync'=
+d with the server */
+> -#define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the se=
+rver */
+> -
+> -#define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+> +/* Flags for name_to_handle_at(2). */
+> +#define AT_HANDLE_FID		0x200	/* File handle is needed to compare
+> +					=C2=A0=C2=A0 object identity and may not be
+> +					=C2=A0=C2=A0 usable with open_by_handle_at(2). */
+> =C2=A0
+> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
+.. */
+> -#define AT_HANDLE_FID		AT_REMOVEDIR	/* file handle is needed to
+> -					compare object identity and may not
+> -					be usable to open_by_handle_at(2) */
+> =C2=A0#if defined(__KERNEL__)
+> =C2=A0#define AT_GETATTR_NOSEC	0x80000000
+> =C2=A0#endif
+> diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/p=
+erf/trace/beauty/include/uapi/linux/fcntl.h
+> index c0bcc185fa48..38a6d66d9e88 100644
+> --- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+> +++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
+> @@ -16,6 +16,9 @@
+> =C2=A0
+> =C2=A0#define F_DUPFD_QUERY	(F_LINUX_SPECIFIC_BASE + 3)
+> =C2=A0
+> +/* Was the file just created? */
+> +#define F_CREATED_QUERY	(F_LINUX_SPECIFIC_BASE + 4)
+> +
+> =C2=A0/*
+> =C2=A0 * Cancel a blocking posix lock; internal use only until we expose =
+an
+> =C2=A0 * asynchronous lock api to userspace:
+> @@ -87,37 +90,69 @@
+> =C2=A0#define DN_ATTRIB	0x00000020	/* File changed attibutes */
+> =C2=A0#define DN_MULTISHOT	0x80000000	/* Don't remove notifier */
+> =C2=A0
+> +#define AT_FDCWD		-100=C2=A0=C2=A0=C2=A0 /* Special value for dirfd used=
+ to
+> +					=C2=A0=C2=A0 indicate openat should use the
+> +					=C2=A0=C2=A0 current working directory. */
+> +
+> +
+> +/* Generic flags for the *at(2) family of syscalls. */
+> +
+> +/* Reserved for per-syscall flags	0xff. */
+> +#define AT_SYMLINK_NOFOLLOW		0x100=C2=A0=C2=A0 /* Do not follow symbolic
+> +						=C2=A0=C2=A0 links. */
+> +/* Reserved for per-syscall flags	0x200 */
+> +#define AT_SYMLINK_FOLLOW		0x400=C2=A0=C2=A0 /* Follow symbolic links. *=
+/
+> +#define AT_NO_AUTOMOUNT			0x800	/* Suppress terminal automount
+> +						=C2=A0=C2=A0 traversal. */
+> +#define AT_EMPTY_PATH			0x1000	/* Allow empty relative
+> +						=C2=A0=C2=A0 pathname to operate on dirfd
+> +						=C2=A0=C2=A0 directly. */
+> +/*
+> + * These flags are currently statx(2)-specific, but they could be made g=
+eneric
+> + * in the future and so they should not be used for other per-syscall fl=
+ags.
+> + */
+> +#define AT_STATX_SYNC_TYPE		0x6000	/* Type of synchronisation required f=
+rom statx() */
+> +#define AT_STATX_SYNC_AS_STAT		0x0000	/* - Do whatever stat() does */
+> +#define AT_STATX_FORCE_SYNC		0x2000	/* - Force the attributes to be sync=
+'d with the server */
+> +#define AT_STATX_DONT_SYNC		0x4000	/* - Don't sync attributes with the s=
+erver */
+> +
+> +#define AT_RECURSIVE			0x8000	/* Apply to the entire subtree */
+> +
+> =C2=A0/*
+> - * The constants AT_REMOVEDIR and AT_EACCESS have the same value.=C2=A0 =
+AT_EACCESS is
+> - * meaningful only to faccessat, while AT_REMOVEDIR is meaningful only t=
+o
+> - * unlinkat.=C2=A0 The two functions do completely different things and =
+therefore,
+> - * the flags can be allowed to overlap.=C2=A0 For example, passing AT_RE=
+MOVEDIR to
+> - * faccessat would be undefined behavior and thus treating it equivalent=
+ to
+> - * AT_EACCESS is valid undefined behavior.
+> + * Per-syscall flags for the *at(2) family of syscalls.
+> + *
+> + * These are flags that are so syscall-specific that a user passing thes=
+e flags
+> + * to the wrong syscall is so "clearly wrong" that we can safely call su=
+ch
+> + * usage "undefined behaviour".
+> + *
+> + * For example, the constants AT_REMOVEDIR and AT_EACCESS have the same =
+value.
+> + * AT_EACCESS is meaningful only to faccessat, while AT_REMOVEDIR is mea=
+ningful
+> + * only to unlinkat. The two functions do completely different things an=
+d
+> + * therefore, the flags can be allowed to overlap. For example, passing
+> + * AT_REMOVEDIR to faccessat would be undefined behavior and thus treati=
+ng it
+> + * equivalent to AT_EACCESS is valid undefined behavior.
+> + *
+> + * Note for implementers: When picking a new per-syscall AT_* flag, try =
+to
+> + * reuse already existing flags first. This leaves us with as many unuse=
+d bits
+> + * as possible, so we can use them for generic bits in the future if nec=
+essary.
+> =C2=A0 */
+> -#define AT_FDCWD		-100=C2=A0=C2=A0=C2=A0 /* Special value used to indica=
+te
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 openat should use the current
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 working directory. */
+> -#define AT_SYMLINK_NOFOLLOW	0x100=C2=A0=C2=A0 /* Do not follow symbolic =
+links.=C2=A0 */
+> +
+> +/* Flags for renameat2(2) (must match legacy RENAME_* flags). */
+> +#define AT_RENAME_NOREPLACE	0x0001
+> +#define AT_RENAME_EXCHANGE	0x0002
+> +#define AT_RENAME_WHITEOUT	0x0004
+> +
+> +/* Flag for faccessat(2). */
+> =C2=A0#define AT_EACCESS		0x200	/* Test access permitted for
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 effective IDs, not real IDs.=C2=A0 */
+> +/* Flag for unlinkat(2). */
+> =C2=A0#define AT_REMOVEDIR		0x200=C2=A0=C2=A0 /* Remove directory instead=
+ of
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 unlinking file.=C2=A0 */
+> -#define AT_SYMLINK_FOLLOW	0x400=C2=A0=C2=A0 /* Follow symbolic links.=C2=
+=A0 */
+> -#define AT_NO_AUTOMOUNT		0x800	/* Suppress terminal automount traversal =
+*/
+> -#define AT_EMPTY_PATH		0x1000	/* Allow empty relative pathname */
+> -
+> -#define AT_STATX_SYNC_TYPE	0x6000	/* Type of synchronisation required fr=
+om statx() */
+> -#define AT_STATX_SYNC_AS_STAT	0x0000	/* - Do whatever stat() does */
+> -#define AT_STATX_FORCE_SYNC	0x2000	/* - Force the attributes to be sync'=
+d with the server */
+> -#define AT_STATX_DONT_SYNC	0x4000	/* - Don't sync attributes with the se=
+rver */
+> -
+> -#define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+> +/* Flags for name_to_handle_at(2). */
+> +#define AT_HANDLE_FID		0x200	/* File handle is needed to compare
+> +					=C2=A0=C2=A0 object identity and may not be
+> +					=C2=A0=C2=A0 usable with open_by_handle_at(2). */
+> =C2=A0
+> -/* Flags for name_to_handle_at(2). We reuse AT_ flag space to save bits.=
+.. */
+> -#define AT_HANDLE_FID		AT_REMOVEDIR	/* file handle is needed to
+> -					compare object identity and may not
+> -					be usable to open_by_handle_at(2) */
+> =C2=A0#if defined(__KERNEL__)
+> =C2=A0#define AT_GETATTR_NOSEC	0x80000000
+> =C2=A0#endif
+>=20
 
-but if you do:
-
-$ perf stat -e 'cycles' benchmark
-
-then the broken behavior will happen as legacy events have priority
-over sysfs/json events in that case. To fix this you need to revert:
-4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
-events over legacy"
-
-This causes some testing issues resolved in this unmerged patch series:
-https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
-
-There is a bug as the arm_dsu PMU advertises an event called "cycles"
-and this PMU is present on Ampere systems. Reverting the commit above
-will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
-__evlist__add_default") to fix ARM's BIG.little systems (opening a
-cycles event on all PMUs not just 1) will cause the arm_dsu event to
-be opened by perf record and fail as the event won't support sampling.
-
-The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@goog=
-le.com/
-fixes this by only opening the cycles event on core PMUs when choosing
-default events.
-
-Rather than take this patch the revert happened as Linus runs the
-command "perf record -e cycles:pp" (ie using a specified event and not
-defaults) and considers it a regression in the perf tool that on an
-Ampere system to need to do "perf record -e
-'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
-will choose the cycles event correctly and with better precision the
-pp for systems that support it, but it was still considered a
-regression in the perf tool so the revert was made to happen. There is
-a lack of perf testing coverage for ARM, in particular as they choose
-to do everything in a different way to x86. The patch in question was
-in the linux-next tree for weeks without issues.
-
-ARM/Ampere could fix this by renaming the event from cycles to
-cpu_cycles, or by following Intel's convention that anything uncore
-uses the name clockticks rather than cycles. This could break people
-who rely on an event called arm_dsu/cycles/ but I imagine such people
-are rare. There has been no progress I'm aware of on renaming the
-event.
-
-Making perf not terminate on opening an event for perf record seems
-like the most likely workaround as that is at least something under
-the tool maintainers control. ARM have discussed doing this on the
-lists:
-https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
-but since the revert in v6.10 no patches have appeared for the v6.11
-merge window. Feature work like coresight improvements and ARMv9 are
-being actively pursued by ARM, but feature work won't resolve this
-regression.
-
-I'm keen to see such patches as there are perf stat fixes reliant on
-the stacked parse event fixes that are consequently not merged
-affecting more than just ARM.
-
-There is a related discussion that events specified without PMUs
-should inherently only mean core PMUs. Unfortunately such a change
-would break uncore events specified without a PMU, for example `perf
-stat -e data_read -a sleep 1` gathers read memory bandwidth on uncore
-memory controllers on recent Intel devices. Not specifying a PMU for
-uncore events is also assumed by perf metrics, so a large number of
-metrics would need updating to make such a change work. Many existing
-JSON uncore events specify a PMU in their name like
-UNC_M2HBM_CMS_CLOCKTICKS and it feels somewhat redundant to have to
-make that h2hbm/UNC_M2HBM_CMS_CLOCKTICKS/. It is unclear who would
-pursue fixing all of this, and so it seems not specifying a PMU with
-an event for perf will keep meaning trying to open the event on all
-PMUs that advertise such an event.
-
-Thanks,
-Ian
-
-> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
-> --
-> Everything you wanna know about Linux kernel regression tracking:
-> https://linux-regtracking.leemhuis.info/about/#tldr
-> That page also explains what to do if mails like this annoy you.
->
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
