@@ -1,57 +1,57 @@
-Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9D513E024
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 04:59:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C825B142634
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 04:59:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722488357; cv=none; b=DILb8WMzfv3Ef9fAIK3nkN4iKBtRfAMyxbB11mv0S8BCOl0v1L5Nn12+4miuGBKfG9Rhk2sH0EjNUtnFmKXNewJaQ2ujP4I4ImcqknjP39NqaqR8HA+VUDIf2tEdZcoa+3iM328z7c7ZEx5K6Njz0D7PXhvjujzv5Q1Jo5PlhSQ=
+	t=1722488359; cv=none; b=oxMHVVQJqvbKBdFg5chOJG7qYSzHAib4fxwfW35BMOzyFPsc4ei7WhmW2WXpTQse8P37SG58mFIhDLPhJ64J/rRqzu+enKNok7n7dGF6oK7TnlwDkRO1RpAGVU1sTJqP0FEFLPftMUjOinGacH+sIQHlm4L93wKh0J893BhKn3k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722488357; c=relaxed/simple;
-	bh=EwrTeTKxjkriGU2aCK6fduTgKiXaA6b+BnkXf+Qj9ZU=;
+	s=arc-20240116; t=1722488359; c=relaxed/simple;
+	bh=ZvGS+oj4XuLPg8nuEXUEAPuSbcPZ0/B3ZPBcvTQ6b6I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=OuRtVLZ+mK49Jqb7aHWu7xFInkNCepoigCAxY1iQFWB04EFz1j8yzi4u0idyPcX8qgH7rpVdnK+PB0gcF8E6rV68llwWYdJ7GGlia+JJB3y8eZiGrX5+Do0bHp/pD0cjiHG27G6c7jfzQHKg7JEwdhY/juGF/a0+W1rWqoyCKic=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ex0DYgu7; arc=none smtp.client-ip=209.85.219.202
+	 To:Cc:Content-Type; b=BF1tFqZa+D5SHIeFP+irotBQ0R0n7fVZC/kChDPE5ikUq0H7c65tDGnrswc6fdTibfYIXfghQr8lcQlsXY8vA5BbN9OSawbklhlsA0B5jCyqt5D6noUOLG10d5w8HtwXlMdDumk0uLxc49l5vEcf0rsMfOv9jDAghYXAoCsrwVA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ViFeccXC; arc=none smtp.client-ip=209.85.215.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ex0DYgu7"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0bb206570aso3557740276.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 21:59:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ViFeccXC"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-7a23a0fb195so6696114a12.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 21:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722488355; x=1723093155; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722488357; x=1723093157; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=30BVAe+lKKTv8P9DRYR4aCbEP24dhJmDTry4BD28JV4=;
-        b=Ex0DYgu7uMf12V/WcnHY1PvTkF33ZiIfV4lRCvFoOF+HaL6pgdk8HOIyE5aKcFVRDA
-         nVQh7WrkxVgtJeyzFf2Ua87Sq06XeQ46rXUOYAyPCZuz1vTPeU3GL0ver1UtzRg9bOnT
-         lax9U+eNBX1ZYVRqMEn0nyQ+1aAhUgjIqSA+KJz7t4hpT2TeOKMi2d3hiUobhUcDuYVi
-         ubdhkv5u4zeSMvUq9YMU1bw/Ufb7ImXv9Khg6+rYFQD7OBIpHGAt3nLn9HFp3v7YSgbj
-         9GLUva0sQwg+buJdUwLp4ggahSEylks589JetjEjTD61aEPsteoD0tOoqkR+fafTES/4
-         xdKA==
+        bh=1xyyU30celNRJ8DLWsDy56YEJTFb2rNjwWtIE7jVfbg=;
+        b=ViFeccXCE5NIewqn5sltPfgVd+IGJztbPUuypoxLXvTQbzxaEw6MSCZnWOSQb8XqGK
+         TCOaFVwZ5oOpNjmrZd+NFl/MkxcMyJpTOtUjNx1TR57g1oNT7YiBhmyV+ff6Wz+ZTdUO
+         1lVDuhooMKvJCtfLI2E4CFimYmMURQ3SWMM5OvlsDkXVsesswmi89frsQEog4yKhqZ2J
+         z3Y6zmXFxTLG3Ro6QHYVhWoin7osM7RgJ3BgZSuZAbI2UKOQqglKAQLX6Sz2UqNHiZPQ
+         3flo4b6SiGDmWMT5uF3IQFFt1lRoQmy66uKma7OuYhl5ZAMsWpoNQcrptabB/tIV8Is9
+         8hcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722488355; x=1723093155;
+        d=1e100.net; s=20230601; t=1722488357; x=1723093157;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=30BVAe+lKKTv8P9DRYR4aCbEP24dhJmDTry4BD28JV4=;
-        b=wP78DixJ7tHxZKZ9QuBfDnCiVZ63IjMZkwtsUNE2Jes8SSo+CVI+WGyTCeeP4Sh9Nj
-         O5NYjok4SKD1SJ48zBX4dPC+uc6Lj6gnDY12aNE9mc7Xgfi2Iz7LRKyEm/CWfpxDsVcS
-         AK1PYP64EI0fdQAMF6vJlVChOAvNe9QYCgCUatIZhSCsBA/GEisy0XUJk6n9ttO+Quvi
-         tlgzJohs6AuOYVFWNi8lMCWqO+aUaBjuieqjiHmCGtQ+To77OVXulbMN5mF8Qr3YtFxk
-         SXMXKuInqLu7MtELiqHZF3eLqLeXYqfmYXnwUvJ5hSOguqwVDWf2jO3PNXVa+V86dUci
-         2v5w==
-X-Forwarded-Encrypted: i=1; AJvYcCU4GN1x2cJa6f12LwUCy69Z20wnVD6mAu3LxEB/9gJOYeX55a8krkyUkL5aCMxFyicQDm9r0Dhh0wKhyk8VAsVJafG5nXYG92nDpN9/kjYx2Q==
-X-Gm-Message-State: AOJu0YzQtfWuqNfIU1FRtWm2jf++r2RGF0/oK7o1Ue0f7FBKyiQacD7n
-	EeVwGZ/TXkDkOOfZdmahXUxS/LXNMypDRYi/SWid+tFStB+xGNHmznuILDGa5RzBKnDJ8WD875R
-	NdAh6NA==
-X-Google-Smtp-Source: AGHT+IGvhovXiEJA501fg8AsGQ0Ln/NIeUOKimM+zmuKhSDeJfSO8OIJ055qsyeZqjkBJTB18xRTjwVfaXKZ
-X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
- job=sendgmr) by 2002:a05:6902:2203:b0:e0b:c99d:b6d4 with SMTP id
- 3f1490d57ef6-e0bcd23d3c0mr2531276.5.1722488354932; Wed, 31 Jul 2024 21:59:14
+        bh=1xyyU30celNRJ8DLWsDy56YEJTFb2rNjwWtIE7jVfbg=;
+        b=mdNtvuYZ4kcT+CpqvfKs/+pnoZho9AgJK+heexo29a5bAParfHqnV+QYPsqdvcn8Aw
+         t+5SzZubcx4VDoJfoWaK955tSSCrPFE6F2ClEvA8c4t4oqR0faXH0FAojZJiJvs4PIE5
+         oWiq6TiwuO5qZdLR8eWOX1udp01U0WSSzWhG2aEPxeqSSF5qN0FwONvLa+kBxtQDlVK+
+         jwcDNRCnsqK1bMlV2KU2E0hqiJglp2bQUEVyzU8UYzMNbm2wtl1xtGAr0xJu6gnr2Oy1
+         YdtONYHn39BdBhn59UzVPAV5QYPhubAlMSvmzt+j4jh8F/j35q2L/dp0KSH2jcmFYPGG
+         Yheg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjpghGIH9qmqP0zIeauFkoD2f1upl+wqbEcHJpqvkAygoCCX5I2/rvkkpO1uf+wdBAOTrBpdusPt2e1D6sUefyJzOsuou3ujdmtccOKL+/UQ==
+X-Gm-Message-State: AOJu0Yyhf9RKkyA7clg6I3iLpbLUJCjC4+vSQOzz7GYYQtwkKWPVq5Xe
+	p27rPzj6qKTOEe+2TsmJWTt9cKDr9mUq9SBnCltmFsVxByeBTE/zkvPpUWUO+Hfl7YU6BewLrUx
+	xzYruVw==
+X-Google-Smtp-Source: AGHT+IFCfoz9h6lJmm/P5SbMt/spaprFBzE+plqdpnUgcDlwekzgDeUVyAcFT3/5A6VAv+kI/DyBylARHwev
+X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
+ job=sendgmr) by 2002:a05:6a02:50d:b0:694:4311:6eb4 with SMTP id
+ 41be03b00d2f7-7b6362f4786mr2600a12.8.1722488356855; Wed, 31 Jul 2024 21:59:16
  -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Thu,  1 Aug 2024 04:58:11 +0000
+Date: Thu,  1 Aug 2024 04:58:12 +0000
 In-Reply-To: <20240801045907.4010984-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240801045907.4010984-1-mizhang@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240801045907.4010984-3-mizhang@google.com>
-Subject: [RFC PATCH v3 02/58] sched/core: Drop spinlocks on contention iff
- kernel is preemptible
+Message-ID: <20240801045907.4010984-4-mizhang@google.com>
+Subject: [RFC PATCH v3 03/58] perf/x86: Do not set bit width for unavailable counters
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,104 +77,40 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Sean Christopherson <seanjc@google.com>
+From: Sandipan Das <sandipan.das@amd.com>
 
-Use preempt_model_preemptible() to detect a preemptible kernel when
-deciding whether or not to reschedule in order to drop a contended
-spinlock or rwlock.  Because PREEMPT_DYNAMIC selects PREEMPTION, kernels
-built with PREEMPT_DYNAMIC=y will yield contended locks even if the live
-preemption model is "none" or "voluntary".  In short, make kernels with
-dynamically selected models behave the same as kernels with statically
-selected models.
+Not all x86 processors have fixed counters. It may also be the case that
+a processor has only fixed counters and no general-purpose counters. Set
+the bit widths corresponding to each counter type only if such counters
+are available.
 
-Somewhat counter-intuitively, NOT yielding a lock can provide better
-latency for the relevant tasks/processes.  E.g. KVM x86's mmu_lock, a
-rwlock, is often contended between an invalidation event (takes mmu_lock
-for write) and a vCPU servicing a guest page fault (takes mmu_lock for
-read).  For _some_ setups, letting the invalidation task complete even
-if there is mmu_lock contention provides lower latency for *all* tasks,
-i.e. the invalidation completes sooner *and* the vCPU services the guest
-page fault sooner.
-
-But even KVM's mmu_lock behavior isn't uniform, e.g. the "best" behavior
-can vary depending on the host VMM, the guest workload, the number of
-vCPUs, the number of pCPUs in the host, why there is lock contention, etc.
-
-In other words, simply deleting the CONFIG_PREEMPTION guard (or doing the
-opposite and removing contention yielding entirely) needs to come with a
-big pile of data proving that changing the status quo is a net positive.
-
-Opportunistically document this side effect of preempt=full, as yielding
-contended spinlocks can have significant, user-visible impact.
-
-Fixes: c597bfddc9e9 ("sched: Provide Kconfig support for default dynamic preempt mode")
-Link: https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Marco Elver <elver@google.com>
-Cc: Frederic Weisbecker <frederic@kernel.org>
-Cc: David Matlack <dmatlack@google.com>
-Cc: Friedrich Weber <f.weber@proxmox.com>
-Cc: Ankur Arora <ankur.a.arora@oracle.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sean Christopherson <seanjc@google.com>
-Reviewed-by: Ankur Arora <ankur.a.arora@oracle.com>
-Reviewed-by: Chen Yu <yu.c.chen@intel.com>
+Fixes: b3d9468a8bd2 ("perf, x86: Expose perf capability to other modules")
+Signed-off-by: Sandipan Das <sandipan.das@amd.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt |  4 +++-
- include/linux/spinlock.h                        | 14 ++++++--------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ arch/x86/events/core.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b600df82669d..ebb971a57d04 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4774,7 +4774,9 @@
- 			none - Limited to cond_resched() calls
- 			voluntary - Limited to cond_resched() and might_sleep() calls
- 			full - Any section that isn't explicitly preempt disabled
--			       can be preempted anytime.
-+			       can be preempted anytime.  Tasks will also yield
-+			       contended spinlocks (if the critical section isn't
-+			       explicitly preempt disabled beyond the lock itself).
- 
- 	print-fatal-signals=
- 			[KNL] debug: print fatal signals
-diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
-index 3fcd20de6ca8..63dd8cf3c3c2 100644
---- a/include/linux/spinlock.h
-+++ b/include/linux/spinlock.h
-@@ -462,11 +462,10 @@ static __always_inline int spin_is_contended(spinlock_t *lock)
-  */
- static inline int spin_needbreak(spinlock_t *lock)
- {
--#ifdef CONFIG_PREEMPTION
-+	if (!preempt_model_preemptible())
-+		return 0;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 5b0dd07b1ef1..5bf78cd619bf 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2985,8 +2985,13 @@ void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+ 	cap->version		= x86_pmu.version;
+ 	cap->num_counters_gp	= x86_pmu.num_counters;
+ 	cap->num_counters_fixed	= x86_pmu.num_counters_fixed;
+-	cap->bit_width_gp	= x86_pmu.cntval_bits;
+-	cap->bit_width_fixed	= x86_pmu.cntval_bits;
 +
- 	return spin_is_contended(lock);
--#else
--	return 0;
--#endif
- }
- 
- /*
-@@ -479,11 +478,10 @@ static inline int spin_needbreak(spinlock_t *lock)
-  */
- static inline int rwlock_needbreak(rwlock_t *lock)
- {
--#ifdef CONFIG_PREEMPTION
-+	if (!preempt_model_preemptible())
-+		return 0;
++	if (cap->num_counters_gp)
++		cap->bit_width_gp = x86_pmu.cntval_bits;
 +
- 	return rwlock_is_contended(lock);
--#else
--	return 0;
--#endif
- }
- 
- /*
++	if (cap->num_counters_fixed)
++		cap->bit_width_fixed = x86_pmu.cntval_bits;
++
+ 	cap->events_mask	= (unsigned int)x86_pmu.events_maskl;
+ 	cap->events_mask_len	= x86_pmu.events_mask_len;
+ 	cap->pebs_ept		= x86_pmu.pebs_ept;
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
