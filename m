@@ -1,57 +1,57 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A8C153561
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 05:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C919153581
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 05:00:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722488456; cv=none; b=h9E6oqCXJ0a+SVIP+2HdNYqDNwMIq0sKuhUmzT1mWbAafqNJl75yPgqrVG4sovTtbtexoKO2yZ6cwQxg35vN+AbEx0Di2IKGdnnJxj+C9VrqOy1TKAXt2mRTKgx2OABiMs/VAjQ0foarSyEUKr0dNjpcQTTmfBd4cTDEpDr48Dc=
+	t=1722488457; cv=none; b=nN6K9Su7hg3BPoHiTgAuTeNxN1ILgvsM6+pFsIMwOmX3nk5CocCAtYkITJMEwd94yPTUg7hTq0H4Du9EtiODs8M8mqcNXloe3yqbTVYaT+3/0dpYPpLDa4noZxqPeHxGdMfpHS1tuxcRe1t8wn4A6mauQzYgJVKYR4MG/dW50Y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722488456; c=relaxed/simple;
-	bh=hfCifMWLKFUz3KUyJZoboIqKJGi++P8HvrtPYrBpy5A=;
+	s=arc-20240116; t=1722488457; c=relaxed/simple;
+	bh=eV0VTFji/+sFryEiNGZW9hnaYuwL+4y7PlybVqifHtQ=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=JidDkvys9eTIyVfqNusjCKxA4oh1P0OCnyoewCMsd+sIPLzNpz2DOQc3eiv1IiHDYcNGVjHF4qAWDzwXYM6kGqyDXBJ8WpM12wk/vyRPgWCb7wgjLeiXxfp32fjmRMBieamDFnBkV4KzLaZSEyMxbiM/97SftPh7MyD6v/OSUMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vwzbls5A; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=XKTOHzBQw3c407X7Ft/BvL11thGs2BPVt2eOC9taZUkOUA9244R/9QpopkUTMVej4A+MRRVs7cHcmGoIJydR/xNMOa7sPdPb48DBXWDjPOW/QUfTA49WVDBbiDkMmDl5a5BQ3ygPruxx/RrTMjojCFxar6OXJ2X0JlPc+wgC5zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=S9s7hcqc; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vwzbls5A"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2cb5d93c529so6671064a91.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 22:00:54 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S9s7hcqc"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70eab26e146so5244071b3a.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 22:00:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722488454; x=1723093254; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722488456; x=1723093256; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=311Z3AoQ2JtdjycDfcinivqhlqwksY6b2H5cCC/LJ0Q=;
-        b=vwzbls5AbGUfjzePy0Q7rtL7b6bpyASCc0ducG71yUoeAxU3M706JJhL5WiHkLYJgb
-         4d1VMXav6/PSg2+WCYzEl3G2ia8Aei0VojagXkBBVM8yhzAg5WWiD+RDH944oEhwD8HN
-         /pj0o2X9zsRWaHrZpBT9vtGJXzwwWIhmmMRDa6w/FYlCpbiQoh4io/BMP2ICr6vvbgSY
-         ChJTbuBCmrsTgyEbOa8QQrFWyv0G+NbvCrxED53NzXuTXZd2WgZ/rTNKlxrAk+mUxZHk
-         uzlbjPISIrg6ZvEfC+7lC9SDPffTMK8oDAgObbU4bFEXNUlSJZx/fMP84iUKlaUWPKNV
-         vQGA==
+        bh=3VOoyg1IkmJ6RRZa642jfLxRQmJVLrh6eRxX47OZP1k=;
+        b=S9s7hcqclcz4rryG509l0g5hQImNLttXR/QrbsG0YyqRNIYf26igpoIhGpdyh8BRu1
+         7BlEBhQ5ZUV7FHrzhTpPqR6/BfEzx3bUCtw13SvOnTPsrYGawfEzft47dzJ9bH44FUUE
+         1CW8ckjoXF2Gkie4FSu+KGEXO+pNK04xLpIblBsbhu0BAk6l7EMqqsKdwFHYUzWJBIUD
+         8JNZuVbpZOu8qFViT3XFALtPY+SOHOzFPeagC8Zje5pgJbolJGlEdTQoHdMSuuKdd7dT
+         KH+veaWaJ/lmT+zLOBZTFldUBmtNVCEUIzb4GdJTqIUTrOq3RHS/N6elnXevOy013xWH
+         coNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722488454; x=1723093254;
+        d=1e100.net; s=20230601; t=1722488456; x=1723093256;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=311Z3AoQ2JtdjycDfcinivqhlqwksY6b2H5cCC/LJ0Q=;
-        b=USe3oUp8df7U4jB3tMwmsnD4uTpXNznqVPQ3wE3GizRWfFZTy/0IoDeYswA4bEIsVT
-         LyZBHfx6PGzRToWY/Md68Rkd+VFdlSX1GaNbiL8MNnVKbmtOQrEx5KA/lo0cCB0gNPdx
-         B9YDEhGf7bcsE+g22MY+fgWwhR4amjvE+GEuhFOU0qFFwiw7E2GB2sSk6eGtzWzjncoN
-         OcvLowjYWvZtm9cHnpOijmsyzvC+S0jNif1X+aKc1xFITccY9L+2yIKk3F+E1xYqHcAc
-         9ZFHsNbEnN0jnbzkLNFp9gpku6vLtCj6pNmJxUlGtm7D9L3x7QKhylJt7mrohw8Dchyp
-         0FGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUajubmFPHyt9B71Af1QD+46jtIGohXFxF2drCdQ7MgOc0xgxr7PPR9qse9OpphWUWGQ/kwrVkBBWZ4cjst+R6kO1XvrQbhM+51N2ZZAr9CEg==
-X-Gm-Message-State: AOJu0Ywd9jmNv2l8c8DUtn77DhdISFGybrsf9iXTNYu/vJ8tltAutE0t
-	JPzjh29lyly1WCxE/A+CZJOZ6Ymv05daeagB+yj/R1iqoEEHjVh4WcTOnpdOA8Omuer9fuNKYU9
-	bxCCUow==
-X-Google-Smtp-Source: AGHT+IE7b9MrGSg1LLwijHD9u/x7qeWAFstIK8S2MxnZDPs1/+5zP/QQ8/lDj5iAaacVgnjFrbQ1sMQRpQDn
+        bh=3VOoyg1IkmJ6RRZa642jfLxRQmJVLrh6eRxX47OZP1k=;
+        b=Tfair67xtB7feqMkX6wfalWfh469OZir1ZJMnLjNwgVeG2qQ5HFufBkKA+7gfdv2sg
+         6Cd2YKHTVP8JEdIcEhJ4fcMtL0WepqXfufsC+8C/eQGRC2bGt6TA6MmiEzD0xColZ+HO
+         3T1t7VI+8ZuWxfj/dAER0KtknMGa1GTkbQ/FG//78hxj9QSqaUx910jZOVLMapnSpFqf
+         MoavEQuEe6dwVS7xNPUrjy5h84KaPYPwwNzSH1n2Vncu5D5CboFD3w2e8SVjq92xGWCN
+         +vsZpSR0blzuqvsZJV3E5tsWCmr6AwI4Z5ZvstlekOvdx2YsXjoQhU/72+CRnNpxbf+4
+         GQHw==
+X-Forwarded-Encrypted: i=1; AJvYcCX5gRqFRclAigFjFE6MjzqNT4nsD6QB2rlddRADdYhIL26Z3sqXvoAagVGiBJk5WfURa5dsi9x4upZO21t7djGVHtp/l7AQ6lg8JvGgasmWFg==
+X-Gm-Message-State: AOJu0YwYFS9lx5z8Wuq6qatJgcz3seLqLi1YeCcARvQE/VISiwlADtkC
+	zBlWS1bil2cbSmp+hJIsCCn/75uetOZ6Tfl/qnQUk3k/3rvt7DNtUH2e3apDGeNZkx72c7mZ9pw
+	S7EXBTQ==
+X-Google-Smtp-Source: AGHT+IEclZ07ukoLzf1pYkJmmMQ+HHGVZo5A5QV38BQbp8xRkfjknzqxOFAU5OGM6vN1ghMRe70pBmZRHJTv
 X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
- job=sendgmr) by 2002:a17:90a:582:b0:2c9:ba2b:42ac with SMTP id
- 98e67ed59e1d1-2cfe7925363mr31965a91.4.1722488453820; Wed, 31 Jul 2024
- 22:00:53 -0700 (PDT)
+ job=sendgmr) by 2002:a05:6a00:6f46:b0:70d:1e28:1c33 with SMTP id
+ d2e1a72fcca58-7105d68fecfmr34795b3a.1.1722488455721; Wed, 31 Jul 2024
+ 22:00:55 -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Thu,  1 Aug 2024 04:59:04 +0000
+Date: Thu,  1 Aug 2024 04:59:05 +0000
 In-Reply-To: <20240801045907.4010984-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240801045907.4010984-1-mizhang@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240801045907.4010984-56-mizhang@google.com>
-Subject: [RFC PATCH v3 55/58] KVM: x86/pmu/svm: Implement handlers to save and
- restore context
+Message-ID: <20240801045907.4010984-57-mizhang@google.com>
+Subject: [RFC PATCH v3 56/58] KVM: x86/pmu/svm: Wire up PMU filtering
+ functionality for passthrough PMU
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,67 +78,41 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-From: Sandipan Das <sandipan.das@amd.com>
+From: Manali Shukla <manali.shukla@amd.com>
 
-Implement the AMD-specific handlers to save and restore the state of
-PMU-related MSRs when using passthrough PMU.
+With the Passthrough PMU enabled, the PERF_CTLx MSRs (event selectors) are
+always intercepted and the event filter checking can be directly done
+inside amd_pmu_set_msr().
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
+Add a check to allow writing to event selector for GP counters if and only
+if the event is allowed in filter.
+
+Signed-off-by: Manali Shukla <manali.shukla@amd.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
 ---
- arch/x86/kvm/svm/pmu.c | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/x86/kvm/svm/pmu.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index 2b7cc7616162..86818da66bbe 100644
+index 86818da66bbe..9f3e910ee453 100644
 --- a/arch/x86/kvm/svm/pmu.c
 +++ b/arch/x86/kvm/svm/pmu.c
-@@ -307,6 +307,36 @@ static void amd_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
- 	set_msr_interception(vcpu, svm->msrpm, MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, msr_clear, msr_clear);
- }
- 
-+static void amd_save_pmu_context(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+
-+	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
-+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
-+	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, pmu->global_status);
-+
-+	/* Clear global status bits if non-zero */
-+	if (pmu->global_status)
-+		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, pmu->global_status);
-+}
-+
-+static void amd_restore_pmu_context(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-+	u64 global_status;
-+
-+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, 0);
-+	rdmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS, global_status);
-+
-+	/* Clear host global_status MSR if non-zero. */
-+	if (global_status)
-+		wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_CLR, global_status);
-+
-+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_STATUS_SET, pmu->global_status);
-+
-+	wrmsrl(MSR_AMD64_PERF_CNTR_GLOBAL_CTL, pmu->global_ctrl);
-+}
-+
- struct kvm_pmu_ops amd_pmu_ops __initdata = {
- 	.rdpmc_ecx_to_pmc = amd_rdpmc_ecx_to_pmc,
- 	.msr_idx_to_pmc = amd_msr_idx_to_pmc,
-@@ -318,6 +348,8 @@ struct kvm_pmu_ops amd_pmu_ops __initdata = {
- 	.init = amd_pmu_init,
- 	.is_rdpmc_passthru_allowed = amd_is_rdpmc_passthru_allowed,
- 	.passthrough_pmu_msrs = amd_passthrough_pmu_msrs,
-+	.save_pmu_context = amd_save_pmu_context,
-+	.restore_pmu_context = amd_restore_pmu_context,
- 	.EVENTSEL_EVENT = AMD64_EVENTSEL_EVENT,
- 	.MAX_NR_GP_COUNTERS = KVM_AMD_PMC_MAX_GENERIC,
- 	.MIN_NR_GP_COUNTERS = AMD64_NUM_COUNTERS,
+@@ -166,6 +166,15 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		if (data != pmc->eventsel) {
+ 			pmc->eventsel = data;
+ 			if (is_passthrough_pmu_enabled(vcpu)) {
++				if (!check_pmu_event_filter(pmc)) {
++					/*
++					 * When guest request an invalid event,
++					 * stop the counter by clearing the
++					 * event selector MSR.
++					 */
++					pmc->eventsel_hw = 0;
++					return 0;
++				}
+ 				data &= ~AMD64_EVENTSEL_HOSTONLY;
+ 				pmc->eventsel_hw = data | AMD64_EVENTSEL_GUESTONLY;
+ 			} else {
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
