@@ -1,222 +1,251 @@
-Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f202.google.com (mail-pg1-f202.google.com [209.85.215.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA2672BB10;
-	Thu,  1 Aug 2024 03:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BAF213D899
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 04:59:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722484401; cv=none; b=Tj9mdq5X9nMlIveYICVbKnlI0F/a4/nAUYPutgyCz/02OJyxvY85XRE2kwd1ALWnmgT2Y27H07DcB/NLXcxFmDkO5bBc7vA22pcATTPPz/9HVi2hTELbUAiMXK0xRbWKyLlLNDsO+7yubXR9tUdvH+XgbXowXjq1sArWmaTlOUc=
+	t=1722488353; cv=none; b=myP1O2hT/MHSHX4h5UbvAzoHpckNWZ2YWU0EedPyer6EAvi9we7K2lA+h7JExH7Y1K/H4Xo4lt9ndE1sUkcvZNRMwCzYtwHjv9MvdQp7OHWmoOLFaWTovwvAk4111BIoy/F9PZ2hJkt9TotdJ+HPPULYq9IZCnbEg6eA/D+3lPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722484401; c=relaxed/simple;
-	bh=1syH90mxQyN1JZLq+KtkoRx8aP8URN8qtch96dhqqfM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f1x++q+zP6NPLwMo8FQgCcQWIxBibjdQDhqBIzcIuNnSalF4ML6NfaPBTY/vdwq1gllRcMk9GizPNP9poQx+4k8jBXO1ceZgwATT+rxOnQR7CwuRtMp5vFV+1lkGIZbcwO4ryiEv9wg1Ukyu9NJh8ppSRpHHtJPnJphqbYGnK+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=xrSGFsIv; arc=none smtp.client-ip=80.241.56.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	s=arc-20240116; t=1722488353; c=relaxed/simple;
+	bh=cnYUtcLkKDwrx8q7PB7R3AI9ZMKMgOksdzfeM4b8Ekk=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=BQ5WgoTbIpSBHaUhmWmhGqKwdkkTpkv2DSFR7uJGATzmsKu9AsKI2O2XPwDgI8ZunyCOzlGo38MUGfBnUGaF9LUtwoNfrAfcCWGyBF4lBzZoSsm1mS675jlsomCrZwr4GxC51a/Br/9BBb5nmkumZSBg93at/to9yfwkqvZC3fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=dRJqbEqI; arc=none smtp.client-ip=209.85.215.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="xrSGFsIv"
-Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4WZFRw1nmtz9sWc;
-	Thu,  1 Aug 2024 05:53:16 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1722484396;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NK1pAn3htk8ZyKf4LH6QeGiUOjLLEiElgYnQnuIac4A=;
-	b=xrSGFsIvnww92LoytSn52At6V/qex8FDO9QKRJsq38Ym26LBvJ8erON3LKxA6Kha5yLfBr
-	wAwW6AX/J+1KqiBOxhXmZkPeMqQv37E1rmVyLj/8GttOgGKJuP0OM8sYLoaNqJdAtxHV/y
-	ERHeO8tYklTdm3bQX3bWC8EsyaSVWEjQbOVC8RfxwNpDRSX4lIy5gaW9Pq8ovcmAakF2MF
-	CX3zdddPePKhq0q/UD9p0aHG2Z3AqX5bYGbkOhvPFurH1G+9wkZkgyP4UdNyOfPkt/F9ku
-	lDYgPa5Kb7KtVKtKBrvKJyFV1hmlRw1IPVmbA0uBYXa8BF4nRCKo2PHngzp3Pw==
-From: Aleksa Sarai <cyphar@cyphar.com>
-Date: Thu, 01 Aug 2024 13:52:41 +1000
-Subject: [PATCH RFC v3 2/2] fhandle: expose u64 mount id to
- name_to_handle_at(2)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dRJqbEqI"
+Received: by mail-pg1-f202.google.com with SMTP id 41be03b00d2f7-7163489149fso6499820a12.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 21:59:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1722488351; x=1723093151; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b+sYPfnW1nm04zGQigeTvGjQYkaeXqC8//s6SNVDAX4=;
+        b=dRJqbEqIBSqLi+V+A6EdFZVrT0fTOlzw5Mn6GzhfERSVJc2GWFDZ/Mxp7TCUzTABP7
+         PPyScKDr2Ih61OGY/Vz0dnEndPP+yY1ryeH1cTxR7RjcEI8JNijgY5o0sEVia18dkWwd
+         oPS8Cetmz1pdM/Khp52FxKVvFlr1bkQ6u+VJJH52ct5257qTIxBTou9No5gpFbNeANol
+         w742e7rVIGlYt5BP7A6PbUDiJJrf/NYV0oN8YBCjXsA9x+2AC0U2mZ8e9n+ITzuD9Syd
+         kI0PGbd7k1ViIcQYke+thPzfFuU18cjxPu1xUnkogieYYoJ8dDEkr47E04xF3esewm6w
+         oVWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722488351; x=1723093151;
+        h=cc:to:from:subject:message-id:mime-version:date:reply-to
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=b+sYPfnW1nm04zGQigeTvGjQYkaeXqC8//s6SNVDAX4=;
+        b=P9/87V4H5deSMzxf5dtBL8QGZyz4YOIYvSFVA0Fu8QyvWLPaCFkpEzIy+j9i4F/EAh
+         r276sHGEkjGecIEO/0u6Ewi2wgMwEf7tu0NAVu1Ivjh4ciz+7alTx9u7Pguq5idyxjS7
+         aw4q/A/S070IQ8dh9LLV3XlAmlvdtB2DyvE2lzr6cA0hh8GPjUU26A91VqZ+BBxZ4ClN
+         MOOSfuSJ7AyRKQWw/1UHo7Oa3RGYEL2w69h8b8qtWju8zcX5otxXYJnaq6e8fDwswOZI
+         bsUinJlAylEDPLLy3ygZzeAqW2ruupdwY2B4gzyP7AjGbsttWVfafgyCawXsGdNleFbo
+         +OMQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWh0jTQf/B7oVMnWCKtauChf0IEq+4xbU92jcHzwc2nKwBRDmMWgUkfw4q8MqNPC23Ku+xUevDbWYvTaAjluWUMYBAZuIne/8PoNP3F5YM1WQ==
+X-Gm-Message-State: AOJu0YwLUmtcVmfU7ZG3gocJdMuPsi46W9tn6x/1gGXV6/3CDI08jEHQ
+	p+Z3GtcP8StxtW988nRnL1otKgHqZNhRtMnD4w81y6Y1WlJfcFDiz5Y51ygCcBgSF9brhnq/7ud
+	L8jmHKw==
+X-Google-Smtp-Source: AGHT+IGVWbHkaqkaGvNx4Ju9z8ssUCUpVOfTNWaVaFPiw0fsn9sS/4jHRoOmf4NWLIHMKKI4JZmc78h/ppkZ
+X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
+ job=sendgmr) by 2002:a63:2f86:0:b0:75d:16f9:c075 with SMTP id
+ 41be03b00d2f7-7b6363edff2mr2503a12.9.1722488351081; Wed, 31 Jul 2024 21:59:11
+ -0700 (PDT)
+Reply-To: Mingwei Zhang <mizhang@google.com>
+Date: Thu,  1 Aug 2024 04:58:09 +0000
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240801-exportfs-u64-mount-id-v3-2-be5d6283144a@cyphar.com>
-References: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
-In-Reply-To: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
-To: Alexander Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
- Chuck Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, 
- Amir Goldstein <amir73il@gmail.com>, Alexander Aring <alex.aring@gmail.com>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, 
- linux-perf-users@vger.kernel.org, Aleksa Sarai <cyphar@cyphar.com>
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5914; i=cyphar@cyphar.com;
- h=from:subject:message-id; bh=1syH90mxQyN1JZLq+KtkoRx8aP8URN8qtch96dhqqfM=;
- b=owGbwMvMwCWmMf3Xpe0vXfIZT6slMaStZutJC/hgcjQ452WRU3P2vj97trmsl+E8/TKA67nA4
- VNXwrh4O0pZGMS4GGTFFFm2+XmGbpq/+Eryp5VsMHNYmUCGMHBxCsBEerIZGc7lNl9TT/CKfPr5
- hL9A9KQJJ05XSJdYehyYuTM+VEtbz46R4eFTv02VPQ3Xp1n3zmwIsjzH9+AO30FHexm2IIUvdjc
- V2QA=
-X-Developer-Key: i=cyphar@cyphar.com; a=openpgp;
- fpr=C9C370B246B09F6DBCFC744C34401015D1D2D386
-X-Rspamd-Queue-Id: 4WZFRw1nmtz9sWc
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
+Message-ID: <20240801045907.4010984-1-mizhang@google.com>
+Subject: [RFC PATCH v3 00/58] Mediated Passthrough vPMU 3.0 for x86
+From: Mingwei Zhang <mizhang@google.com>
+To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>, 
+	Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>, 
+	Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mingwei Zhang <mizhang@google.com>, gce-passthrou-pmu-dev@google.com, 
+	Samantha Alt <samantha.alt@intel.com>, Zhiyuan Lv <zhiyuan.lv@intel.com>, 
+	Yanfei Xu <yanfei.xu@intel.com>, Like Xu <like.xu.linux@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Now that we provide a unique 64-bit mount ID interface in statx(2), we
-can now provide a race-free way for name_to_handle_at(2) to provide a
-file handle and corresponding mount without needing to worry about
-racing with /proc/mountinfo parsing or having to open a file just to do
-statx(2).
+This series contains perf interface improvements to address Peter's
+comments. In addition, fix several bugs for v2. This version is based on
+6.10-rc4. The main changes are:
 
-While this is not necessary if you are using AT_EMPTY_PATH and don't
-care about an extra statx(2) call, users that pass full paths into
-name_to_handle_at(2) need to know which mount the file handle comes from
-(to make sure they don't try to open_by_handle_at a file handle from a
-different filesystem) and switching to AT_EMPTY_PATH would require
-allocating a file for every name_to_handle_at(2) call, turning
+ - Use atomics to replace refcounts to track the nr_mediated_pmu_vms.
+ - Use the generic ctx_sched_{in,out}() to switch PMU resources when a
+   guest is entering and exiting.
+ - Add a new EVENT_GUEST flag to indicate the context switch case of
+   entering and exiting a guest. Updates the generic ctx_sched_{in,out}
+   to specifically handle this case, especially for time management.
+ - Switch PMI vector in perf_guest_{enter,exit}() as well. Add a new
+   driver-specific interface to facilitate the switch.
+ - Remove the PMU_FL_PASSTHROUGH flag and uses the PASSTHROUGH pmu
+   capability instead.
+ - Adjust commit sequence in PERF and KVM PMI interrupt functions.
+ - Use pmc_is_globally_enabled() check in emulated counter increment [1]
+ - Fix PMU context switch [2] by using rdpmc() instead of rdmsr().
 
-  err = name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
-                          AT_HANDLE_MNT_ID_UNIQUE);
+AMD fixes:
+ - Add support for legacy PMU MSRs in MSR interception.
+ - Make MSR usage consistent if PerfMonV2 is available.
+ - Avoid enabling passthrough vPMU when local APIC is not in kernel.
+ - increment counters in emulation mode.
 
-into
+This series is organized in the following order:
 
-  int fd = openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
-  err1 = name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_PATH);
-  err2 = statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
-  mntid = statxbuf.stx_mnt_id;
-  close(fd);
+Patches 1-3:
+ - Immediate bug fixes that can be applied to Linux tip.
+ - Note: will put immediate fixes ahead in the future. These patches
+   might be duplicated with existing posts.
+ - Note: patches 1-2 are needed for AMD when host kernel enables
+   preemption. Otherwise, guest will suffer from softlockup.
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- fs/fhandle.c                                       | 29 ++++++++++++++++------
- include/linux/syscalls.h                           |  2 +-
- include/uapi/linux/fcntl.h                         |  1 +
- tools/perf/trace/beauty/include/uapi/linux/fcntl.h |  1 +
- 4 files changed, 25 insertions(+), 8 deletions(-)
+Patches 4-17:
+ - Perf side changes, infra changes in core pmu with API for KVM.
 
-diff --git a/fs/fhandle.c b/fs/fhandle.c
-index 6e8cea16790e..8cb665629f4a 100644
---- a/fs/fhandle.c
-+++ b/fs/fhandle.c
-@@ -16,7 +16,8 @@
- 
- static long do_sys_name_to_handle(const struct path *path,
- 				  struct file_handle __user *ufh,
--				  int __user *mnt_id, int fh_flags)
-+				  void __user *mnt_id, bool unique_mntid,
-+				  int fh_flags)
- {
- 	long retval;
- 	struct file_handle f_handle;
-@@ -69,9 +70,19 @@ static long do_sys_name_to_handle(const struct path *path,
- 	} else
- 		retval = 0;
- 	/* copy the mount id */
--	if (put_user(real_mount(path->mnt)->mnt_id, mnt_id) ||
--	    copy_to_user(ufh, handle,
--			 struct_size(handle, f_handle, handle_bytes)))
-+	if (unique_mntid) {
-+		if (put_user(real_mount(path->mnt)->mnt_id_unique,
-+			     (u64 __user *) mnt_id))
-+			retval = -EFAULT;
-+	} else {
-+		if (put_user(real_mount(path->mnt)->mnt_id,
-+			     (int __user *) mnt_id))
-+			retval = -EFAULT;
-+	}
-+	/* copy the handle */
-+	if (retval != -EFAULT &&
-+		copy_to_user(ufh, handle,
-+			     struct_size(handle, f_handle, handle_bytes)))
- 		retval = -EFAULT;
- 	kfree(handle);
- 	return retval;
-@@ -83,6 +94,7 @@ static long do_sys_name_to_handle(const struct path *path,
-  * @name: name that should be converted to handle.
-  * @handle: resulting file handle
-  * @mnt_id: mount id of the file system containing the file
-+ *          (u64 if AT_HANDLE_MNT_ID_UNIQUE, otherwise int)
-  * @flag: flag value to indicate whether to follow symlink or not
-  *        and whether a decodable file handle is required.
-  *
-@@ -92,7 +104,7 @@ static long do_sys_name_to_handle(const struct path *path,
-  * value required.
-  */
- SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
--		struct file_handle __user *, handle, int __user *, mnt_id,
-+		struct file_handle __user *, handle, void __user *, mnt_id,
- 		int, flag)
- {
- 	struct path path;
-@@ -100,7 +112,8 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
- 	int fh_flags;
- 	int err;
- 
--	if (flag & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH | AT_HANDLE_FID))
-+	if (flag & ~(AT_SYMLINK_FOLLOW | AT_EMPTY_PATH | AT_HANDLE_FID |
-+		     AT_HANDLE_MNT_ID_UNIQUE))
- 		return -EINVAL;
- 
- 	lookup_flags = (flag & AT_SYMLINK_FOLLOW) ? LOOKUP_FOLLOW : 0;
-@@ -109,7 +122,9 @@ SYSCALL_DEFINE5(name_to_handle_at, int, dfd, const char __user *, name,
- 		lookup_flags |= LOOKUP_EMPTY;
- 	err = user_path_at(dfd, name, lookup_flags, &path);
- 	if (!err) {
--		err = do_sys_name_to_handle(&path, handle, mnt_id, fh_flags);
-+		err = do_sys_name_to_handle(&path, handle, mnt_id,
-+					    flag & AT_HANDLE_MNT_ID_UNIQUE,
-+					    fh_flags);
- 		path_put(&path);
- 	}
- 	return err;
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index 4bcf6754738d..5758104921e6 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -870,7 +870,7 @@ asmlinkage long sys_fanotify_mark(int fanotify_fd, unsigned int flags,
- #endif
- asmlinkage long sys_name_to_handle_at(int dfd, const char __user *name,
- 				      struct file_handle __user *handle,
--				      int __user *mnt_id, int flag);
-+				      void __user *mnt_id, int flag);
- asmlinkage long sys_open_by_handle_at(int mountdirfd,
- 				      struct file_handle __user *handle,
- 				      int flags);
-diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
-index 38a6d66d9e88..87e2dec79fea 100644
---- a/include/uapi/linux/fcntl.h
-+++ b/include/uapi/linux/fcntl.h
-@@ -152,6 +152,7 @@
- #define AT_HANDLE_FID		0x200	/* File handle is needed to compare
- 					   object identity and may not be
- 					   usable with open_by_handle_at(2). */
-+#define AT_HANDLE_MNT_ID_UNIQUE	0x001	/* Return the u64 unique mount ID. */
- 
- #if defined(__KERNEL__)
- #define AT_GETATTR_NOSEC	0x80000000
-diff --git a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-index 38a6d66d9e88..87e2dec79fea 100644
---- a/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-+++ b/tools/perf/trace/beauty/include/uapi/linux/fcntl.h
-@@ -152,6 +152,7 @@
- #define AT_HANDLE_FID		0x200	/* File handle is needed to compare
- 					   object identity and may not be
- 					   usable with open_by_handle_at(2). */
-+#define AT_HANDLE_MNT_ID_UNIQUE	0x001	/* Return the u64 unique mount ID. */
- 
- #if defined(__KERNEL__)
- #define AT_GETATTR_NOSEC	0x80000000
+Patches 18-48:
+ - KVM mediated passthrough vPMU framework + Intel CPU implementation.
 
+Patches 49-58:
+ - AMD CPU implementation for vPMU.
+
+Reference (patches in v2):
+[1] [PATCH v2 42/54] KVM: x86/pmu: Implement emulated counter increment for passthrough PMU
+ - https://lore.kernel.org/all/20240506053020.3911940-43-mizhang@google.com/
+[2] [PATCH v2 30/54] KVM: x86/pmu: Implement the save/restore of PMU state for Intel CPU
+ - https://lore.kernel.org/all/20240506053020.3911940-31-mizhang@google.com/
+
+V2: https://lore.kernel.org/all/20240506053020.3911940-1-mizhang@google.com/
+
+Dapeng Mi (3):
+  x86/msr: Introduce MSR_CORE_PERF_GLOBAL_STATUS_SET
+  KVM: x86/pmu: Introduce macro PMU_CAP_PERF_METRICS
+  KVM: x86/pmu: Add intel_passthrough_pmu_msrs() to pass-through PMU
+    MSRs
+
+Kan Liang (8):
+  perf: Support get/put passthrough PMU interfaces
+  perf: Skip pmu_ctx based on event_type
+  perf: Clean up perf ctx time
+  perf: Add a EVENT_GUEST flag
+  perf: Add generic exclude_guest support
+  perf: Add switch_interrupt() interface
+  perf/x86: Support switch_interrupt interface
+  perf/x86/intel: Support PERF_PMU_CAP_PASSTHROUGH_VPMU
+
+Manali Shukla (1):
+  KVM: x86/pmu/svm: Wire up PMU filtering functionality for passthrough
+    PMU
+
+Mingwei Zhang (24):
+  perf/x86: Forbid PMI handler when guest own PMU
+  perf: core/x86: Plumb passthrough PMU capability from x86_pmu to
+    x86_pmu_cap
+  KVM: x86/pmu: Introduce enable_passthrough_pmu module parameter
+  KVM: x86/pmu: Plumb through pass-through PMU to vcpu for Intel CPUs
+  KVM: x86/pmu: Add a helper to check if passthrough PMU is enabled
+  KVM: x86/pmu: Add host_perf_cap and initialize it in
+    kvm_x86_vendor_init()
+  KVM: x86/pmu: Allow RDPMC pass through when all counters exposed to
+    guest
+  KVM: x86/pmu: Introduce PMU operator to check if rdpmc passthrough
+    allowed
+  KVM: x86/pmu: Create a function prototype to disable MSR interception
+  KVM: x86/pmu: Avoid legacy vPMU code when accessing global_ctrl in
+    passthrough vPMU
+  KVM: x86/pmu: Exclude PMU MSRs in vmx_get_passthrough_msr_slot()
+  KVM: x86/pmu: Add counter MSR and selector MSR index into struct
+    kvm_pmc
+  KVM: x86/pmu: Introduce PMU operation prototypes for save/restore PMU
+    context
+  KVM: x86/pmu: Implement the save/restore of PMU state for Intel CPU
+  KVM: x86/pmu: Make check_pmu_event_filter() an exported function
+  KVM: x86/pmu: Allow writing to event selector for GP counters if event
+    is allowed
+  KVM: x86/pmu: Allow writing to fixed counter selector if counter is
+    exposed
+  KVM: x86/pmu: Exclude existing vLBR logic from the passthrough PMU
+  KVM: x86/pmu: Introduce PMU operator to increment counter
+  KVM: x86/pmu: Introduce PMU operator for setting counter overflow
+  KVM: x86/pmu: Implement emulated counter increment for passthrough PMU
+  KVM: x86/pmu: Update pmc_{read,write}_counter() to disconnect perf API
+  KVM: x86/pmu: Disconnect counter reprogram logic from passthrough PMU
+  KVM: nVMX: Add nested virtualization support for passthrough PMU
+
+Sandipan Das (12):
+  perf/x86: Do not set bit width for unavailable counters
+  x86/msr: Define PerfCntrGlobalStatusSet register
+  KVM: x86/pmu: Always set global enable bits in passthrough mode
+  KVM: x86/pmu/svm: Set passthrough capability for vcpus
+  KVM: x86/pmu/svm: Set enable_passthrough_pmu module parameter
+  KVM: x86/pmu/svm: Allow RDPMC pass through when all counters exposed
+    to guest
+  KVM: x86/pmu/svm: Implement callback to disable MSR interception
+  KVM: x86/pmu/svm: Set GuestOnly bit and clear HostOnly bit when guest
+    write to event selectors
+  KVM: x86/pmu/svm: Add registers to direct access list
+  KVM: x86/pmu/svm: Implement handlers to save and restore context
+  KVM: x86/pmu/svm: Implement callback to increment counters
+  perf/x86/amd: Support PERF_PMU_CAP_PASSTHROUGH_VPMU for AMD host
+
+Sean Christopherson (2):
+  sched/core: Move preempt_model_*() helpers from sched.h to preempt.h
+  sched/core: Drop spinlocks on contention iff kernel is preemptible
+
+Xiong Zhang (8):
+  x86/irq: Factor out common code for installing kvm irq handler
+  perf: core/x86: Register a new vector for KVM GUEST PMI
+  KVM: x86/pmu: Register KVM_GUEST_PMI_VECTOR handler
+  KVM: x86/pmu: Manage MSR interception for IA32_PERF_GLOBAL_CTRL
+  KVM: x86/pmu: Switch IA32_PERF_GLOBAL_CTRL at VM boundary
+  KVM: x86/pmu: Notify perf core at KVM context switch boundary
+  KVM: x86/pmu: Grab x86 core PMU for passthrough PMU VM
+  KVM: x86/pmu: Add support for PMU context switch at VM-exit/enter
+
+ .../admin-guide/kernel-parameters.txt         |   4 +-
+ arch/x86/events/amd/core.c                    |   2 +
+ arch/x86/events/core.c                        |  44 +-
+ arch/x86/events/intel/core.c                  |   5 +
+ arch/x86/include/asm/hardirq.h                |   1 +
+ arch/x86/include/asm/idtentry.h               |   1 +
+ arch/x86/include/asm/irq.h                    |   2 +-
+ arch/x86/include/asm/irq_vectors.h            |   5 +-
+ arch/x86/include/asm/kvm-x86-pmu-ops.h        |   6 +
+ arch/x86/include/asm/kvm_host.h               |   9 +
+ arch/x86/include/asm/msr-index.h              |   2 +
+ arch/x86/include/asm/perf_event.h             |   1 +
+ arch/x86/include/asm/vmx.h                    |   1 +
+ arch/x86/kernel/idt.c                         |   1 +
+ arch/x86/kernel/irq.c                         |  39 +-
+ arch/x86/kvm/cpuid.c                          |   3 +
+ arch/x86/kvm/pmu.c                            | 154 +++++-
+ arch/x86/kvm/pmu.h                            |  49 ++
+ arch/x86/kvm/svm/pmu.c                        | 136 +++++-
+ arch/x86/kvm/svm/svm.c                        |  31 ++
+ arch/x86/kvm/svm/svm.h                        |   2 +-
+ arch/x86/kvm/vmx/capabilities.h               |   1 +
+ arch/x86/kvm/vmx/nested.c                     |  52 +++
+ arch/x86/kvm/vmx/pmu_intel.c                  | 192 +++++++-
+ arch/x86/kvm/vmx/vmx.c                        | 197 ++++++--
+ arch/x86/kvm/vmx/vmx.h                        |   3 +-
+ arch/x86/kvm/x86.c                            |  45 ++
+ arch/x86/kvm/x86.h                            |   1 +
+ include/linux/perf_event.h                    |  38 +-
+ include/linux/preempt.h                       |  41 ++
+ include/linux/sched.h                         |  41 --
+ include/linux/spinlock.h                      |  14 +-
+ kernel/events/core.c                          | 441 ++++++++++++++----
+ .../beauty/arch/x86/include/asm/irq_vectors.h |   5 +-
+ 34 files changed, 1373 insertions(+), 196 deletions(-)
+
+
+base-commit: 6ba59ff4227927d3a8530fc2973b80e94b54d58f
 -- 
-2.45.2
+2.46.0.rc1.232.g9752f9e123-goog
 
