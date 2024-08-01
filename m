@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7989194AFE;
-	Thu,  1 Aug 2024 12:30:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48A161A0719;
+	Thu,  1 Aug 2024 12:30:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722515445; cv=none; b=g+aAYZt8S4J6kw9+eVn2SyamVeTESUx768k3ifnRyJyZB4vn4XVY/Lw48Z3cn/HNLRGGIEG8mjO1rRFzu/+Cfp5zwtJS7PMKNVqM1L2lg50kfGhWjVb25PvyryIpgXTKS4AEPka6sVEkG/ZyugMdijDbK6/iyzZBOv1Ik/83FTs=
+	t=1722515447; cv=none; b=esrHjqoeEQwWbiPM8TugOD+nNIaAKzkt/l56uUtoSuNKdl5TaE9SIUEahff+uta6CsnD7M52PnD76g4b0l9ywSb/Qryn8I1DqKowJYItTjlLROmvi7OYXURdLiRclHSV+13VsrGMvj/BiYGG4ZtZs36VSzV7Qc6ixG9poEanYKg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722515445; c=relaxed/simple;
-	bh=dddagchXUe8texT49SKIcRmWx4Y+Lk2YGVYOMeJ/N6c=;
+	s=arc-20240116; t=1722515447; c=relaxed/simple;
+	bh=iE0WgrZXiCseCeAWYQWO1j+Lqy7AAD14NI4QNIiOuzw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uhCfIXje4LwI0DSqvGKeSLRjw0W+ghkxOLBzJLuj/OFRN+imglAPpq/h8dlqf0r/bOmFSRJQufaVAwy3Eq54neebeVBUcJ0WS2MOriXILV8hXGy+K+BSRJAkZ88iEVZpAQdCzsNTYqNvxZQvWF2Dwe5Z/hTP6GgvDfDsstvarpY=
+	 MIME-Version; b=By/VE7vI/2gyCOwGl4HzCfhXEBNkEnM/D6tVLvfZd+jB2fMsrM0C37y8H1DwaK+mKh+jGvxvhK12DVKghlgEDTS2+Nzf0W/mf7wpA1GeJlIzLRAiQ3ahBbmJnlPk6um3JV9EUyFALOElDFi4BambIG+k35RQTlMwfO0JuMu+AtM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1BEF15DB;
-	Thu,  1 Aug 2024 05:31:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2172A1650;
+	Thu,  1 Aug 2024 05:31:11 -0700 (PDT)
 Received: from e126817.cambridge.arm.com (e126817.cambridge.arm.com [10.2.3.8])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 313ED3F766;
-	Thu,  1 Aug 2024 05:30:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 757CF3F766;
+	Thu,  1 Aug 2024 05:30:43 -0700 (PDT)
 From: Ben Gainey <ben.gainey@arm.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -32,9 +32,9 @@ Cc: james.clark@arm.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Ben Gainey <ben.gainey@arm.com>
-Subject: [PATCH v10 1/2] tools/perf: Correctly calculate sample period for inherited SAMPLE_READ values
-Date: Thu,  1 Aug 2024 13:30:29 +0100
-Message-ID: <20240801123030.3075928-2-ben.gainey@arm.com>
+Subject: [PATCH v10 2/2] tools/perf: Allow inherit + PERF_SAMPLE_READ when opening events
+Date: Thu,  1 Aug 2024 13:30:30 +0100
+Message-ID: <20240801123030.3075928-3-ben.gainey@arm.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240801123030.3075928-1-ben.gainey@arm.com>
 References: <20240801123030.3075928-1-ben.gainey@arm.com>
@@ -46,271 +46,332 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Sample period calculation in deliver_sample_value is updated to
-calculate the per-thread period delta for events that are inherit +
-PERF_SAMPLE_READ. When the sampling event has this configuration, the
-read_format.id is used with the tid from the sample to lookup the
-storage of the previously accumulated counter total before calculating
-the delta. All existing valid configurations where read_format.value
-represents some global value continue to use just the read_format.id to
-locate the storage of the previously accumulated total.
+The "perf record" tool will now default to this new mode if the user
+specifies a sampling group when not in system-wide mode, and when
+"--no-inherit" is not specified.
 
-perf_sample_id is modified to support tracking per-thread
-values, along with the existing global per-id values. In the
-per-thread case, values are stored in a hash by tid within the
-perf_sample_id, and are dynamically allocated as the number is not known
-ahead of time.
+This change updates evsel to allow the combination of inherit
+and PERF_SAMPLE_READ.
+
+A fallback is implemented for kernel versions where this feature is not
+supported.
 
 Signed-off-by: Ben Gainey <ben.gainey@arm.com>
 ---
- tools/lib/perf/evsel.c                  | 48 +++++++++++++++++++
- tools/lib/perf/include/internal/evsel.h | 63 ++++++++++++++++++++++++-
- tools/perf/util/session.c               | 25 ++++++----
- 3 files changed, 126 insertions(+), 10 deletions(-)
+ tools/perf/tests/attr/README                  |  2 +
+ tools/perf/tests/attr/test-record-C0          |  2 +
+ tools/perf/tests/attr/test-record-dummy-C0    |  2 +-
+ .../tests/attr/test-record-group-sampling     |  3 +-
+ .../tests/attr/test-record-group-sampling1    | 51 ++++++++++++++++
+ .../tests/attr/test-record-group-sampling2    | 61 +++++++++++++++++++
+ tools/perf/tests/attr/test-record-group2      |  1 +
+ ...{test-record-group2 => test-record-group3} | 10 +--
+ tools/perf/util/evsel.c                       | 21 ++++++-
+ tools/perf/util/evsel.h                       |  1 +
+ 10 files changed, 145 insertions(+), 9 deletions(-)
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling1
+ create mode 100644 tools/perf/tests/attr/test-record-group-sampling2
+ copy tools/perf/tests/attr/{test-record-group2 => test-record-group3} (81%)
 
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c07160953224..abdae2f9498b 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -5,6 +5,7 @@
- #include <perf/evsel.h>
- #include <perf/cpumap.h>
- #include <perf/threadmap.h>
-+#include <linux/hash.h>
- #include <linux/list.h>
- #include <internal/evsel.h>
- #include <linux/zalloc.h>
-@@ -23,6 +24,7 @@ void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
- 		      int idx)
- {
- 	INIT_LIST_HEAD(&evsel->node);
-+	INIT_LIST_HEAD(&evsel->per_stream_periods);
- 	evsel->attr = *attr;
- 	evsel->idx  = idx;
- 	evsel->leader = evsel;
-@@ -531,10 +533,56 @@ int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads)
+diff --git a/tools/perf/tests/attr/README b/tools/perf/tests/attr/README
+index 4066fec7180a..67c4ca76b85d 100644
+--- a/tools/perf/tests/attr/README
++++ b/tools/perf/tests/attr/README
+@@ -51,6 +51,8 @@ Following tests are defined (with perf commands):
+   perf record --call-graph fp kill              (test-record-graph-fp-aarch64)
+   perf record -e '{cycles,instructions}' kill   (test-record-group1)
+   perf record -e '{cycles/period=1/,instructions/period=2/}:S' kill (test-record-group2)
++  perf record -e '{cycles,cache-misses}:S' kill (test-record-group-sampling1)
++  perf record -c 10000 -e '{cycles,cache-misses}:S' kill (test-record-group-sampling2)
+   perf record -D kill                           (test-record-no-delay)
+   perf record -i kill                           (test-record-no-inherit)
+   perf record -n kill                           (test-record-no-samples)
+diff --git a/tools/perf/tests/attr/test-record-C0 b/tools/perf/tests/attr/test-record-C0
+index 198e8429a1bf..1049ac8b52f2 100644
+--- a/tools/perf/tests/attr/test-record-C0
++++ b/tools/perf/tests/attr/test-record-C0
+@@ -18,5 +18,7 @@ sample_type=65927
+ mmap=0
+ comm=0
+ task=0
++inherit=0
  
- void perf_evsel__free_id(struct perf_evsel *evsel)
- {
-+	struct perf_sample_id_period *pos, *n;
-+
- 	xyarray__delete(evsel->sample_id);
- 	evsel->sample_id = NULL;
- 	zfree(&evsel->id);
- 	evsel->ids = 0;
-+
-+	perf_evsel_for_each_per_thread_period_safe(evsel, n, pos) {
-+		list_del_init(&pos->node);
-+		free(pos);
-+	}
-+}
-+
-+bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel)
-+{
-+	return (evsel->attr.sample_type & PERF_SAMPLE_READ)
-+		&& (evsel->attr.sample_type & PERF_SAMPLE_TID)
-+		&& evsel->attr.inherit;
-+}
-+
-+u64 *perf_sample_id__get_period_storage(struct perf_sample_id *sid, u32 tid, bool per_thread)
-+{
-+	struct hlist_head *head;
-+	struct perf_sample_id_period *res;
-+	int hash;
-+
-+	if (!per_thread)
-+		return &sid->period;
-+
-+	hash = hash_32(tid, PERF_SAMPLE_ID__HLIST_BITS);
-+	head = &sid->periods[hash];
-+
-+	hlist_for_each_entry(res, head, hnode)
-+		if (res->tid == tid)
-+			return &res->period;
-+
-+	if (sid->evsel == NULL)
-+		return NULL;
-+
-+	res = zalloc(sizeof(struct perf_sample_id_period));
-+	if (res == NULL)
-+		return NULL;
-+
-+	INIT_LIST_HEAD(&res->node);
-+	res->tid = tid;
-+
-+	list_add_tail(&res->node, &sid->evsel->per_stream_periods);
-+	hlist_add_head(&res->hnode, &sid->periods[hash]);
-+
-+	return &res->period;
- }
+ [event:system-wide-dummy]
++inherit=0
+diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/attr/test-record-dummy-C0
+index 576ec48b3aaf..3050298bd614 100644
+--- a/tools/perf/tests/attr/test-record-dummy-C0
++++ b/tools/perf/tests/attr/test-record-dummy-C0
+@@ -19,7 +19,7 @@ sample_period=4000
+ sample_type=391
+ read_format=4|20
+ disabled=0
+-inherit=1
++inherit=0
+ pinned=0
+ exclusive=0
+ exclude_user=0
+diff --git a/tools/perf/tests/attr/test-record-group-sampling b/tools/perf/tests/attr/test-record-group-sampling
+index 97e7e64a38f0..86a940d7895d 100644
+--- a/tools/perf/tests/attr/test-record-group-sampling
++++ b/tools/perf/tests/attr/test-record-group-sampling
+@@ -2,6 +2,7 @@
+ command = record
+ args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
+ ret     = 1
++kernel_until = 6.12
  
- void perf_counts_values__scale(struct perf_counts_values *count,
-diff --git a/tools/lib/perf/include/internal/evsel.h b/tools/lib/perf/include/internal/evsel.h
-index 5cd220a61962..ea78defa77d0 100644
---- a/tools/lib/perf/include/internal/evsel.h
-+++ b/tools/lib/perf/include/internal/evsel.h
-@@ -11,6 +11,32 @@
- struct perf_thread_map;
- struct xyarray;
+ [event-1:base-record]
+ fd=1
+@@ -18,7 +19,7 @@ group_fd=1
+ type=0
+ config=3
  
-+/**
-+ * The per-thread accumulated period storage node.
-+ */
-+struct perf_sample_id_period {
-+	struct list_head	node;
-+	struct hlist_node	hnode;
-+	/* Holds total ID period value for PERF_SAMPLE_READ processing. */
-+	u64			period;
-+	/* The TID that the values belongs to */
-+	u32			tid;
-+};
-+
-+/**
-+ * perf_evsel_for_each_per_thread_period_safe - safely iterate thru all the
-+ * per_stream_periods
-+ * @evlist:perf_evsel instance to iterate
-+ * @item: struct perf_sample_id_period iterator
-+ * @tmp: struct perf_sample_id_period temp iterator
-+ */
-+#define perf_evsel_for_each_per_thread_period_safe(evsel, tmp, item) \
-+	list_for_each_entry_safe(item, tmp, &(evsel)->per_stream_periods, node)
-+
-+
-+#define PERF_SAMPLE_ID__HLIST_BITS 4
-+#define PERF_SAMPLE_ID__HLIST_SIZE (1 << PERF_SAMPLE_ID__HLIST_BITS)
-+
- /*
-  * Per fd, to map back from PERF_SAMPLE_ID to evsel, only used when there are
-  * more than one entry in the evlist.
-@@ -34,8 +60,32 @@ struct perf_sample_id {
- 	pid_t			 machine_pid;
- 	struct perf_cpu		 vcpu;
+-# default | PERF_SAMPLE_READ
++# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
+ sample_type=343
  
--	/* Holds total ID period value for PERF_SAMPLE_READ processing. */
--	u64			 period;
-+	/*
-+	 * Per-thread, and global event counts are mutually exclusive:
-+	 * Whilst it is possible to combine events into a group with differing
-+	 * values of PERF_SAMPLE_READ, it is not valid to have inconsistent
-+	 * values for `inherit`. Therefore it is not possible to have a
-+	 * situation where a per-thread event is sampled as a global event;
-+	 * all !inherit groups are global, and all groups where the sampling
-+	 * event is inherit + PERF_SAMPLE_READ will be per-thread. Any event
-+	 * that is part of such a group that is inherit but not PERF_SAMPLE_READ
-+	 * will be read as per-thread. If such an event can also trigger a
-+	 * sample (such as with sample_period > 0) then it will not cause
-+	 * `read_format` to be included in its PERF_RECORD_SAMPLE, and
-+	 * therefore will not expose the per-thread group members as global.
-+	 */
-+	union {
+ # PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST
+diff --git a/tools/perf/tests/attr/test-record-group-sampling1 b/tools/perf/tests/attr/test-record-group-sampling1
+new file mode 100644
+index 000000000000..e96a10627a46
+--- /dev/null
++++ b/tools/perf/tests/attr/test-record-group-sampling1
+@@ -0,0 +1,51 @@
++[config]
++command = record
++args    = --no-bpf-event -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
++ret     = 1
++kernel_since = 6.12
++
++[event-1:base-record]
++fd=1
++group_fd=-1
++
++# cycles
++type=0
++config=0
++
++# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
++sample_type=343
++
++# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
++read_format=28|31
++task=1
++mmap=1
++comm=1
++enable_on_exec=1
++disabled=1
++
++# inherit is enabled for group sampling
++inherit=1
++
++[event-2:base-record]
++fd=2
++group_fd=1
++
++# cache-misses
++type=0
++config=3
++
++# default | PERF_SAMPLE_READ | PERF_SAMPLE_PERIOD
++sample_type=343
++
++# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
++read_format=28|31
++task=0
++mmap=0
++comm=0
++enable_on_exec=0
++disabled=0
++freq=0
++
++# inherit is enabled for group sampling
++inherit=1
++
+diff --git a/tools/perf/tests/attr/test-record-group-sampling2 b/tools/perf/tests/attr/test-record-group-sampling2
+new file mode 100644
+index 000000000000..e0432244a0eb
+--- /dev/null
++++ b/tools/perf/tests/attr/test-record-group-sampling2
+@@ -0,0 +1,61 @@
++[config]
++command = record
++args    = --no-bpf-event -c 10000 -e '{cycles,cache-misses}:S' kill >/dev/null 2>&1
++ret     = 1
++kernel_since = 6.12
++
++[event-1:base-record]
++fd=1
++group_fd=-1
++
++# cycles
++type=0
++config=0
++
++# default | PERF_SAMPLE_READ
++sample_type=87
++
++# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
++read_format=28|31
++task=1
++mmap=1
++comm=1
++enable_on_exec=1
++disabled=1
++
++# inherit is enabled for group sampling
++inherit=1
++
++# sampling disabled
++sample_freq=0
++sample_period=10000
++freq=0
++write_backward=0
++
++[event-2:base-record]
++fd=2
++group_fd=1
++
++# cache-misses
++type=0
++config=3
++
++# default | PERF_SAMPLE_READ
++sample_type=87
++
++# PERF_FORMAT_ID | PERF_FORMAT_GROUP  | PERF_FORMAT_LOST | PERF_FORMAT_TOTAL_TIME_ENABLED | PERF_FORMAT_TOTAL_TIME_RUNNING
++read_format=28|31
++task=0
++mmap=0
++comm=0
++enable_on_exec=0
++disabled=0
++
++# inherit is enabled for group sampling
++inherit=1
++
++# sampling disabled
++sample_freq=0
++sample_period=0
++freq=0
++write_backward=0
+diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group2
+index cebdaa8e64e4..891d41a7bddf 100644
+--- a/tools/perf/tests/attr/test-record-group2
++++ b/tools/perf/tests/attr/test-record-group2
+@@ -2,6 +2,7 @@
+ command = record
+ args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
+ ret     = 1
++kernel_until = 6.12
+ 
+ [event-1:base-record]
+ fd=1
+diff --git a/tools/perf/tests/attr/test-record-group2 b/tools/perf/tests/attr/test-record-group3
+similarity index 81%
+copy from tools/perf/tests/attr/test-record-group2
+copy to tools/perf/tests/attr/test-record-group3
+index cebdaa8e64e4..249be884959e 100644
+--- a/tools/perf/tests/attr/test-record-group2
++++ b/tools/perf/tests/attr/test-record-group3
+@@ -2,6 +2,7 @@
+ command = record
+ args    = --no-bpf-event -e '{cycles/period=1234000/,instructions/period=6789000/}:S' kill >/dev/null 2>&1
+ ret     = 1
++kernel_since = 6.12
+ 
+ [event-1:base-record]
+ fd=1
+@@ -9,8 +10,9 @@ group_fd=-1
+ config=0|1
+ sample_period=1234000
+ sample_type=87
+-read_format=12|28
+-inherit=0
++read_format=28|31
++disabled=1
++inherit=1
+ freq=0
+ 
+ [event-2:base-record]
+@@ -19,9 +21,9 @@ group_fd=1
+ config=0|1
+ sample_period=6789000
+ sample_type=87
+-read_format=12|28
++read_format=28|31
+ disabled=0
+-inherit=0
++inherit=1
+ mmap=0
+ comm=0
+ freq=0
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index bc603193c477..d12e1b16313d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1149,7 +1149,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 	bool per_cpu = opts->target.default_per_cpu && !opts->target.per_thread;
+ 
+ 	attr->sample_id_all = perf_missing_features.sample_id_all ? 0 : 1;
+-	attr->inherit	    = !opts->no_inherit;
++	attr->inherit	    = target__has_cpu(&opts->target) ? 0 : !opts->no_inherit;
+ 	attr->write_backward = opts->overwrite ? 1 : 0;
+ 	attr->read_format   = PERF_FORMAT_LOST;
+ 
+@@ -1171,7 +1171,15 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		 */
+ 		if (leader->core.nr_members > 1) {
+ 			attr->read_format |= PERF_FORMAT_GROUP;
+-			attr->inherit = 0;
++		}
++
 +		/*
-+		 * Holds total ID period value for PERF_SAMPLE_READ processing
-+		 * (when period is not per-thread).
++		 * Inherit + SAMPLE_READ requires SAMPLE_TID in the read_format
 +		 */
-+		u64			period;
-+		/*
-+		 * Holds total ID period value for PERF_SAMPLE_READ processing
-+		 * (when period is per-thread).
-+		 */
-+		struct hlist_head	periods[PERF_SAMPLE_ID__HLIST_SIZE];
-+	};
++		if (attr->inherit) {
++			evsel__set_sample_bit(evsel, TID);
++			evsel->core.attr.read_format |=
++				PERF_FORMAT_ID;
+ 		}
+ 	}
+ 
+@@ -2020,6 +2028,8 @@ static int __evsel__prepare_open(struct evsel *evsel, struct perf_cpu_map *cpus,
+ 
+ static void evsel__disable_missing_features(struct evsel *evsel)
+ {
++	if (perf_missing_features.inherit_sample_read)
++		evsel->core.attr.inherit = 0;
+ 	if (perf_missing_features.branch_counters)
+ 		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_COUNTERS;
+ 	if (perf_missing_features.read_lost)
+@@ -2075,7 +2085,12 @@ bool evsel__detect_missing_features(struct evsel *evsel)
+ 	 * Must probe features in the order they were added to the
+ 	 * perf_event_attr interface.
+ 	 */
+-	if (!perf_missing_features.branch_counters &&
++	if (!perf_missing_features.inherit_sample_read &&
++	    evsel->core.attr.inherit && (evsel->core.attr.sample_type & PERF_SAMPLE_READ)) {
++		perf_missing_features.inherit_sample_read = true;
++		pr_debug2("Using PERF_SAMPLE_READ / :S modifier is not compatible with inherit, falling back to no-inherit.\n");
++		return true;
++	} else if (!perf_missing_features.branch_counters &&
+ 	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS)) {
+ 		perf_missing_features.branch_counters = true;
+ 		pr_debug2("switching off branch counters support\n");
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index 80b5f6dd868e..bb0c91c23679 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -206,6 +206,7 @@ struct perf_missing_features {
+ 	bool weight_struct;
+ 	bool read_lost;
+ 	bool branch_counters;
++	bool inherit_sample_read;
  };
  
- struct perf_evsel {
-@@ -58,6 +108,10 @@ struct perf_evsel {
- 	u32			 ids;
- 	struct perf_evsel	*leader;
- 
-+	/* For events where the read_format value is per-thread rather than
-+	 * global, stores the per-thread cumulative period */
-+	struct list_head	per_stream_periods;
-+
- 	/* parse modifier helper */
- 	int			 nr_members;
- 	/*
-@@ -88,4 +142,9 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter);
- int perf_evsel__alloc_id(struct perf_evsel *evsel, int ncpus, int nthreads);
- void perf_evsel__free_id(struct perf_evsel *evsel);
- 
-+bool perf_evsel__attr_has_per_thread_sample_period(struct perf_evsel *evsel);
-+
-+u64 *perf_sample_id__get_period_storage(struct perf_sample_id *sid, u32 tid,
-+					bool per_thread);
-+
- #endif /* __LIBPERF_INTERNAL_EVSEL_H */
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 5596bed1b8c8..fac0557ff6ea 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1474,18 +1474,24 @@ static int deliver_sample_value(struct evlist *evlist,
- 				union perf_event *event,
- 				struct perf_sample *sample,
- 				struct sample_read_value *v,
--				struct machine *machine)
-+				struct machine *machine,
-+				bool per_thread)
- {
- 	struct perf_sample_id *sid = evlist__id2sid(evlist, v->id);
- 	struct evsel *evsel;
-+	u64 *storage = NULL;
- 
- 	if (sid) {
-+		storage = perf_sample_id__get_period_storage(sid, sample->tid, per_thread);
-+	}
-+
-+	if (storage) {
- 		sample->id     = v->id;
--		sample->period = v->value - sid->period;
--		sid->period    = v->value;
-+		sample->period = v->value - *storage;
-+		*storage       = v->value;
- 	}
- 
--	if (!sid || sid->evsel == NULL) {
-+	if (!storage || sid->evsel == NULL) {
- 		++evlist->stats.nr_unknown_id;
- 		return 0;
- 	}
-@@ -1506,14 +1512,15 @@ static int deliver_sample_group(struct evlist *evlist,
- 				union  perf_event *event,
- 				struct perf_sample *sample,
- 				struct machine *machine,
--				u64 read_format)
-+				u64 read_format,
-+				bool per_thread)
- {
- 	int ret = -EINVAL;
- 	struct sample_read_value *v = sample->read.group.values;
- 
- 	sample_read_group__for_each(v, sample->read.group.nr, read_format) {
- 		ret = deliver_sample_value(evlist, tool, event, sample, v,
--					   machine);
-+					   machine, per_thread);
- 		if (ret)
- 			break;
- 	}
-@@ -1528,6 +1535,7 @@ static int evlist__deliver_sample(struct evlist *evlist, struct perf_tool *tool,
- 	/* We know evsel != NULL. */
- 	u64 sample_type = evsel->core.attr.sample_type;
- 	u64 read_format = evsel->core.attr.read_format;
-+	bool per_thread = perf_evsel__attr_has_per_thread_sample_period(&evsel->core);
- 
- 	/* Standard sample delivery. */
- 	if (!(sample_type & PERF_SAMPLE_READ))
-@@ -1536,10 +1544,11 @@ static int evlist__deliver_sample(struct evlist *evlist, struct perf_tool *tool,
- 	/* For PERF_SAMPLE_READ we have either single or group mode. */
- 	if (read_format & PERF_FORMAT_GROUP)
- 		return deliver_sample_group(evlist, tool, event, sample,
--					    machine, read_format);
-+					    machine, read_format, per_thread);
- 	else
- 		return deliver_sample_value(evlist, tool, event, sample,
--					    &sample->read.one, machine);
-+					    &sample->read.one, machine,
-+					    per_thread);
- }
- 
- static int machines__deliver_event(struct machines *machines,
+ extern struct perf_missing_features perf_missing_features;
 -- 
 2.45.2
 
