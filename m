@@ -1,95 +1,113 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB201482E2
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 20:15:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E822C4087C
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 21:30:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722543320; cv=none; b=Pzo/C1yNOe4+Noy+xr6qY9qV+nQNTvtVNwYmx7r87YDrJs7Ud77rgRrsNXsTRvHcbAVfCvgJfRMrwWrUtBN7gH2+r5gkZEAHOsmGSTJPqB2zSWQnspi5AYK+k6kOO/T3ljrtcf53yiJMZ0N4WRXoiZlt89D1QqHkJvUhb+8tEfs=
+	t=1722547820; cv=none; b=kHSERMj6LL+ZD9WIdaNopEwBUboeL6ukQxBwx1/rhY1A6ffhLVTMwP0PJqnL2gwpR51qQELlsi4yb3v7B805rhDtkXc55iSWg5CPUnqwetVdi61OuccVQZEkbTE+F1QhP5bYR0NroAAzHo4+30vUaU9aN0nkZb2p8BXiLmRdaBI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722543320; c=relaxed/simple;
-	bh=tt8T8jvzx7JsMy8e7Z2plBd+e3RVrfH2al/W1GhtYj8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=osLcJIJu3x2SU4eBIiwL5tS0K+RO8g1GLbwBWXAh5AYrMBAW9J5joz/qbMqCvHtf0rTZMuWLEotQdj1o3IdHY620kxGcy3Mlr5d31k5mZdzRlGCHYPHOUaHRUswRNdos+5t6XCuSOUTSPiITMZPS07bLixLmAlg/llMP9GfFv3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ejrtas3A; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722547820; c=relaxed/simple;
+	bh=aK0yMbvbykXt+JGJ0V5KA4czpj0OHDQ/fBm5ZxfDANY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eQD4OdU/kxfzHogDj4Ymvz9lMifmb01XTThjY9npixtFhAq0vrSJN2CCEfsfcXNv9AM8fX1odKtFTNAQz0//g+ze/aYSSQoPprD+BzbEWd2GFz1YSp7mAE+FrWqwZ40MADyZ/JqY0jXjHNus0T0rVCs3DD5W1MMlhfeGaZGyaIo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WwP/7nWe; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ejrtas3A"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1fed726aefcso436085ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 01 Aug 2024 13:15:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722543318; x=1723148118; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tt8T8jvzx7JsMy8e7Z2plBd+e3RVrfH2al/W1GhtYj8=;
-        b=Ejrtas3Ap0flInfEhNmhpcqy8aFSTbNZm3+yU0IOyZj7g9aljmLHFEEv4Aj92waD5x
-         oUg0mPdwHJv2RuaUL7plwjwEOQGmjCWGH1OwGp9pKUHbSpseLWNoLlRI5a41qHTfHvnQ
-         Sk58D/z9iz5YxBAZiL0ZIx+SupOxSIZMLJFxC6aJGwekT5jl5fjNqOQuBvWMMmFFk6pM
-         E+NgNW4LXCCFRqmkOor1qPtPlXDsvd5TQt7219rPO6tOOKZtOlXeCzXH6PUVudnR3hwp
-         IVFqEE39CNKmIo6vbUWxMPfYeqhOavURvxVxV9C55agiYUodRLCDa6CsTmaloHJ82c7v
-         ntFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722543318; x=1723148118;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=tt8T8jvzx7JsMy8e7Z2plBd+e3RVrfH2al/W1GhtYj8=;
-        b=QPcAvEBjLgnfzMlCEOkHok3jKlETfDZ/52GOF3sdQOuQYIFlWoY/Ua+AzShWOiiq5S
-         Ou/KJ0bPqI9Rk1OynO22b+H/vk6JrWXFIbuAaOCuGEKr640s/UlcR93J7szMvTKSlI7N
-         VDkRE1wLmiQKpw3ArZuaGcu5yHGn+OgSoOnhGACs8P9qNgRmqqpAmeU/D/z2qmGsJIju
-         lx8uJ7A9XdZyHPohikznPUqb0Mk9ymD5d4ZtMR4xi90QC9x0vm6RZAaxFLhvtkxs5fDa
-         blvlK0iMV1AMdc6SSw0UJ8+FWASIyDqZTbuP0KBcFV2M6cggzlr4kOcgcQG4TIE3Q/m1
-         vX8g==
-X-Forwarded-Encrypted: i=1; AJvYcCURgGzr7sFPUal/rOayC37+zpiygpK5cD425nf9fGuMXK4JJwjnqwBLxxBgdFK8lZoJbY9iskSeGf5YtfGNlYA45iIhpe6Xxb/a5AzPHVuQxw==
-X-Gm-Message-State: AOJu0YywvX9HXjlGWePtH0Y4R9fi6K7NfI0RkC94Qr0fpeft9/3jqyKV
-	s2HK/wCK+KZnBoyXwHmT6TSa+jCrXTITSD/wDIoN1arVQO06hubGuo++6uLOEHdatnXouD9XCDs
-	R+Uyd8chWJOM8CDWWKUQcFV3zVTZBNvoyGbsU
-X-Google-Smtp-Source: AGHT+IHfUfiGBei+Pr1I57cwslQD53Rpm9v9nk6p3bpiMQcsAgIOfDp/4I5CicXlDIG9dsbeg3WI8uGrdTZiWMKfpQ4=
-X-Received: by 2002:a17:903:18a:b0:1f3:61f1:e340 with SMTP id
- d9443c01a7336-1ff5c27ce4cmr21405ad.13.1722543317939; Thu, 01 Aug 2024
- 13:15:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WwP/7nWe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722547818; x=1754083818;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=aK0yMbvbykXt+JGJ0V5KA4czpj0OHDQ/fBm5ZxfDANY=;
+  b=WwP/7nWe2FHnbrC10Y3bOsPkxKjlsApl+y4msyG7aQYV7XE5QfnfoJrj
+   Dbz6c07mn4s4QV3xLTAXys80Msa83FVdpZu0MZ1bYKXkSRdpfTdLpY2DS
+   eyZGApGukZo9NvB1gHf1jrWou/IV/HGpaIAZaQBvfsyWvByeDDUb5eNaa
+   o2oGS2GkhtjTdYWDs063tEwTPIU2McCQVJA1IhFAFyUAXLpcYlU183/Ec
+   mAY7lCPd08e8YLAEDgfDnn3U0q/Sn4Mmdts8F7cOhW/1Mnv1/TelVKzfO
+   gVKdZfKKJBeNUG1xRIfGszZ2kijOJPdU8FZBbVYCdI4TOlhyhoYjTVEk/
+   A==;
+X-CSE-ConnectionGUID: xk3ZbtnqS3Gn74+tEAc3Tg==
+X-CSE-MsgGUID: EartlgPATuOHa9qD0Sm/Ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11151"; a="24309528"
+X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
+   d="scan'208";a="24309528"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 14:28:55 -0700
+X-CSE-ConnectionGUID: 7UkS14MqQdSyluqXY5qtAA==
+X-CSE-MsgGUID: Xqm2KgxCSBiyy2xLyPekXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,255,1716274800"; 
+   d="scan'208";a="55414350"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Aug 2024 14:28:55 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: namhyung@kernel.org,
+	Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v8 4/4] Add a test case for perf script -F +metric
+Date: Thu,  1 Aug 2024 14:28:44 -0700
+Message-ID: <20240801212844.677895-4-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240801212844.677895-1-ak@linux.intel.com>
+References: <20240801212844.677895-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
- <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
- <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
- <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
- <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
- <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
- <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com>
- <CAP-5=fUSMDhooNetywiLfcYEHMPeyPaGHuBhJHUb34zM8DqtQA@mail.gmail.com> <CAP-5=fUbJcxO=h65bqZ2nx8UTPHsapOVsfcCaY=+q4yO9YBY-A@mail.gmail.com>
-In-Reply-To: <CAP-5=fUbJcxO=h65bqZ2nx8UTPHsapOVsfcCaY=+q4yO9YBY-A@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 1 Aug 2024 13:15:06 -0700
-Message-ID: <CAP-5=fVazh93ZRqyubCC1MEE-thDKoamO-L_d0-LZjNyYmD0vw@mail.gmail.com>
-Subject: Re: Linux Perf Tool Office Hours
-To: Howard Chu <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
-	linux-perf-users <linux-perf-users@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Just a simple test
 
-A reminder that there are office hours tomorrow and we're a few weeks
-away from the end of Google Summer-of-Code [1].
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-Linux perf tool office hours
-Friday, August 2 =C2=B7 8:00 =E2=80=93 9:00am
-Time zone: America/Los_Angeles
-Google Meet joining info
-Video call link: https://meet.google.com/tif-efem-uiq
-Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
-=E2=80=AC#
-More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
+----
 
-Looking forward to seeing you.
-Thanks,
-Ian
+v2: Avoid bashisms. Use noploop
+v3: Avoid false positive in shellcheck
+v4: Use :S in the test (Ian, Namhyung)
+---
+ tools/perf/tests/shell/script.sh | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-[1] https://developers.google.com/open-source/gsoc/timeline
+diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+index c1a603653662..e69c3548583a 100755
+--- a/tools/perf/tests/shell/script.sh
++++ b/tools/perf/tests/shell/script.sh
+@@ -7,6 +7,7 @@ set -e
+ temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
+ 
+ perfdatafile="${temp_dir}/perf.data"
++scriptoutput="${temp_dir}/script"
+ db_test="${temp_dir}/db_test.py"
+ 
+ err=0
+@@ -88,8 +89,21 @@ test_parallel_perf()
+ 	echo "parallel-perf test [Success]"
+ }
+ 
++test_metric()
++{
++	echo "script metric test"
++	if ! perf list | grep -q cycles ; then return ; fi
++	if ! perf list | grep -q instructions ; then return ; fi
++	perf record -e '{cycles,instructions}:S' -o "${perfdatafile}" perf test -w noploop
++	perf script -i "${perfdatafile}" -F +metric  > $scriptoutput
++	test "`grep -c metric $scriptoutput`" -gt 5
++	grep metric $scriptoutput | head
++	echo "script metric test [Success]"
++}
++
+ test_db
+ test_parallel_perf
++test_metric
+ 
+ cleanup
+ 
+-- 
+2.45.2
+
