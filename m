@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-pf1-f202.google.com (mail-pf1-f202.google.com [209.85.210.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D3B14D2A0
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 05:00:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6425914E2DE
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 05:00:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722488420; cv=none; b=QcJxZZ9Q1W+kTimY49ER3Od3ZfIeVraMphQVcBwE626DlCpViFXmFE1O5hSHas9LdV1VYX23Ie7LdJOYRBJrRCUhB/1VKaQmWKW3ltzKa3wB3OmILGqyot55BYBmLzk8X+7kaTpz4Aks/qLBTB43tz+qd7DbO+kKjTwrTpvkCNc=
+	t=1722488422; cv=none; b=gMIlYipEaEYPKuR+wTbcpEwslfy1sASRGqh6Q7mxTyY/1GRzWnA1bTgagWSZnbGrGoYefSUnx2tOMWxgoymdGIMCUlE3BmcLR9tYEezScaleXJU4iMkdIgIGTf5Y4fiYOWAOCpkZfQHhWQvkz9z6VJK4iCyquYJhYc64Kaqn/qE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722488420; c=relaxed/simple;
-	bh=DVGGSBE4W6Dj56Ja/cNg4RJ9IrCtN6hDhrMfpoaPwqc=;
+	s=arc-20240116; t=1722488422; c=relaxed/simple;
+	bh=sb75vcFDzulmDk5HWuW7Gc/aQrD0/kwRNadd+yKPw4o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=t3uIFxVc26qxRb7/CnxcUtMIu9CzoDESKcziywv8s2kr+f8WsCNmQcFF5AJVfQHSQdz1tycHNP93rzS+U8ePy7kIgMBeiO3X1o6BYDqapDtHRQselW0MZ0tfqdKM1NwZZO8N2aLJVj9orMM1+9s1Ee6qkIygY9gRS0r74qsUXb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HLoOAw2W; arc=none smtp.client-ip=209.85.128.201
+	 To:Cc:Content-Type; b=tkZt7f9yewi/5mGbkDz+8wXGiduJC9HQYjnQeoM/SLM3dk2/HQB1lc7Jxs9OJknVaYLs1tymG3F+0O+eVvI/Se9LhqAqsmAt2tESmXq4jfKllawRzIKv+I7mplXe7m5J6sGZShmIRd91P+J1+H6lcn5L7NKtLzIEm5TAHxYAhtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yrR89s0U; arc=none smtp.client-ip=209.85.210.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HLoOAw2W"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-64b70c4a269so121808937b3.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 22:00:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yrR89s0U"
+Received: by mail-pf1-f202.google.com with SMTP id d2e1a72fcca58-70d188c9cabso5469002b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 22:00:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722488418; x=1723093218; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722488420; x=1723093220; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=EAjDDshI/vxpb+COr8g3koCBShOFriBt/RZDXZjNeQw=;
-        b=HLoOAw2WKwN6ZvWzlZa0SydEvaNrgfkEE47+RnXFsnI9nN/IeFh+ab38HBTRc6cdBH
-         2IjL3KsDK0SqESgzh9S4fcL2j7T247yFTB+fm0gmKWUNaBhNLZzrUl/ct7psygm3CEQL
-         9SvMpUEIt80T4QzjYleMtdu09aAt4KaVoN4Uv1IUFf9AoXwsZumuhPa9nGlxknpKKji7
-         134N7RtcghidWkPGvd8x3eNxyX/yFSbs6jbSqOXwkDjqFva+6RfSPAGcNPHl+1Z6jRjh
-         7C1pjSp5z89+OBihPq2AlhWM4kWjHrNlyj9rtH7kwHrfudxJGh99C0F48DlTnlZPxw0q
-         RHRA==
+        bh=4LXh7OlsGwBv50TmKUUaww/CB75T5vSYKtw0XszKyZY=;
+        b=yrR89s0Uv23V7DMZvRpv36a0YlkWB+7PYzX5AGGBxfZlY1UOAly6LQRNIZdtVVLERS
+         1n0h5c9mxr+w0TL/24GzmKcyl7nRGTG44HkW/hV0cVjXEXcQX43nUy/iJFGID+5vxd+r
+         BjRX/+J+RC4GCElg+R+hCzmSVQsMrjEhdgN35tjsjtlokVZ9l/LitrImx7Z8z4K72DyN
+         0+k4fIZBWkDt31k8r5v99LWjb14VbYaECziCNhSDW2xxRPrmse5kVgfzSHJgqiiwIIOZ
+         jDTXvXcylfvfy620jJyM5P03BRtmMa5e5STI+ZI3TJdvKkXZCQqd9t9z0eowU2L9dvMO
+         tvWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722488418; x=1723093218;
+        d=1e100.net; s=20230601; t=1722488420; x=1723093220;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=EAjDDshI/vxpb+COr8g3koCBShOFriBt/RZDXZjNeQw=;
-        b=d5H7QtalUFAi47WwPSb2pxAPQFS/simAXSscnM8mvEY1ep3IPi2UYscma49MY9Y6+0
-         W/eEJzeVU79xjQXvK9BHARdz4cqfqweigKw/N+Akv2FxjKpVC88KpcedznxUc+/Kw9MH
-         62uNhWluLhbpxgTx3hCgucqh75/AF1WUcZheDxj2RSYEqYOnpLuui+u+8LGdVoIDMHcl
-         B73AkrbK021dYF9gUuN+ZaSiF1sQSs2rYnXF+j2/gHpzLfPUJDAbjyhdLI6A7s86ZHWZ
-         pdZSUTNkCvh7pY26ixwvmVwXCgb/89bVFlqxptWHzeQHr8if+cvghrrbucMCDnpnJIAN
-         z4QA==
-X-Forwarded-Encrypted: i=1; AJvYcCVtU8n1GCYnxH87izBHn5wzBIP1OT+8VpxkEM4CV1EVPs/m/yMk/cHm0PG2iWzAvDq9wNeu7m3X3p2P1ANNLgvh0b+QJnCiZvE/9xNrsysdBQ==
-X-Gm-Message-State: AOJu0YzHTquac8NHw/5Ha+IJkq2n+YjdcxxwY9IRN87tMSh7gOhba8ml
-	KzBYfzks+F/Fxduy4nq4GB4ApusQugpMsCjnlIWU261C+pA7Ob6ghlu/IjNAN7eVN7m6BvJQUVp
-	x52tZmg==
-X-Google-Smtp-Source: AGHT+IEkVZ+i3g09rESJdS/AT8fQo3wvNx/XY/njVc3ARcUO1sIJlc9FqWoLOF7Q3kcvAsK0WKMpyjnDTiTK
-X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a05:690c:289:b0:62c:f6fd:5401 with SMTP id
- 00721157ae682-6874f036bdamr164567b3.6.1722488417696; Wed, 31 Jul 2024
- 22:00:17 -0700 (PDT)
+        bh=4LXh7OlsGwBv50TmKUUaww/CB75T5vSYKtw0XszKyZY=;
+        b=OmFzxMgsD6aY06IQYw70c2KuZrInFBTwjbnBrf/lD+rlzBYJTkXPlUkaaGNr/aNZGr
+         plJ5/7x02yJTjTxN2YEa7DEEQgg5NN56L5LhbePqGUWhB9+BjNSiKxmS+uLkrA46PP2Y
+         S1EHBJNg00d6RCUX5c5/ETVCpo6EuxzwmKI9BiY8c0+oWHCok5KCBRpwJ/9GlOJ7+ugS
+         2Q+pL1bZSDh6pXPsRBhfjSWvtFqyx2DG4IdzCy8gDy+djbsWyFbGlD5lJrdLx9w+i+Ec
+         4DxWc4TIB0BUvzUeGYUYaEDWAW63o3xmIATl0/kfCgS5jdWfH32DSa8CMS1SAVBEu4HO
+         ozRA==
+X-Forwarded-Encrypted: i=1; AJvYcCVJSKzr1hu75Xwqwe5km6SywbRQezCZIkHGYaQVFv3ZFdd4zQkNQ+h2zD46QATkqbhIDFoWc2Zf8eeg+KmzZCqrTdf2ZJTm6oxY3JJCLPsgQQ==
+X-Gm-Message-State: AOJu0Yxy6P4twUCAOQo8vTfugExQgJZJp4uyvAPbSEXc9CL74g5ic855
+	mPr+Zx5JfTja1g3t6u2MDHcBHz2vpL2yg33btHOwNucNAXa3jsbr2jUBmkGRFQEQ/Ju1wjXKcB/
+	8vFfPfQ==
+X-Google-Smtp-Source: AGHT+IES1CCMjPABx118HgeIt67Wypa61/tdVQ+2nUZ0kx+7i1ZzblE7ArThsw7cytD3amKIUuGUyKIxXBq2
+X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
+ job=sendgmr) by 2002:a05:6a00:8583:b0:70e:9e1e:e6ed with SMTP id
+ d2e1a72fcca58-7105d6acf2bmr5625b3a.2.1722488419524; Wed, 31 Jul 2024 22:00:19
+ -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Thu,  1 Aug 2024 04:58:45 +0000
+Date: Thu,  1 Aug 2024 04:58:46 +0000
 In-Reply-To: <20240801045907.4010984-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240801045907.4010984-1-mizhang@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240801045907.4010984-37-mizhang@google.com>
-Subject: [RFC PATCH v3 36/58] KVM: x86/pmu: Allow writing to fixed counter
- selector if counter is exposed
+Message-ID: <20240801045907.4010984-38-mizhang@google.com>
+Subject: [RFC PATCH v3 37/58] KVM: x86/pmu: Switch IA32_PERF_GLOBAL_CTRL at VM boundary
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -78,103 +77,153 @@ Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
 	linux-perf-users@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allow writing to fixed counter selector if counter is exposed. If this
-fixed counter is filtered out, this counter won't be enabled on HW.
+From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 
-Passthrough PMU implements the context switch at VM Enter/Exit boundary the
-guest value cannot be directly written to HW since the HW PMU is owned by
-the host. Introduce a new field fixed_ctr_ctrl_hw in kvm_pmu to cache the
-guest value.  which will be assigne to HW at PMU context restore.
+In PMU passthrough mode, use global_ctrl field in struct kvm_pmu as the
+cached value. This is convenient for KVM to set and get the value from the
+host side. In addition, load and save the value across VM enter/exit
+boundary in the following way:
 
-Since passthrough PMU intercept writes to fixed counter selector, there is
-no need to read the value at pmu context save, but still clear the fix
-counter ctrl MSR and counters when switching out to host PMU.
+ - At VM exit, if processor supports
+   GUEST_VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL, read guest
+   IA32_PERF_GLOBAL_CTRL GUEST_IA32_PERF_GLOBAL_CTRL VMCS field, else read
+   it from VM-exit MSR-stroe array in VMCS. The value is then assigned to
+   global_ctrl.
 
+ - At VM Entry, if processor supports
+   GUEST_VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL, read guest
+   IA32_PERF_GLOBAL_CTRL from GUEST_IA32_PERF_GLOBAL_CTRL VMCS field, else
+   read it from VM-entry MSR-load array in VMCS. The value is then
+   assigned to global ctrl.
+
+Implement the above logic into two helper functions and invoke them around
+VM Enter/exit boundary.
+
+Co-developed-by: Mingwei Zhang <mizhang@google.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 Tested-by: Yongwei Ma <yongwei.ma@intel.com>
 ---
- arch/x86/include/asm/kvm_host.h |  1 +
- arch/x86/kvm/vmx/pmu_intel.c    | 28 ++++++++++++++++++++++++----
- 2 files changed, 25 insertions(+), 4 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/vmx/vmx.c          | 49 ++++++++++++++++++++++++++++++++-
+ 2 files changed, 50 insertions(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index e5c288d4264f..93c17da8271d 100644
+index 93c17da8271d..7bf901a53543 100644
 --- a/arch/x86/include/asm/kvm_host.h
 +++ b/arch/x86/include/asm/kvm_host.h
-@@ -549,6 +549,7 @@ struct kvm_pmu {
- 	unsigned nr_arch_fixed_counters;
- 	unsigned available_event_types;
- 	u64 fixed_ctr_ctrl;
-+	u64 fixed_ctr_ctrl_hw;
- 	u64 fixed_ctr_ctrl_mask;
- 	u64 global_ctrl;
- 	u64 global_status;
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 0cd38c5632ee..c61936266cbd 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -34,6 +34,25 @@
+@@ -601,6 +601,8 @@ struct kvm_pmu {
+ 	u8 event_count;
  
- #define MSR_PMC_FULL_WIDTH_BIT      (MSR_IA32_PMC0 - MSR_IA32_PERFCTR0)
+ 	bool passthrough;
++	int global_ctrl_slot_in_autoload;
++	int global_ctrl_slot_in_autostore;
+ };
  
-+static void reprogram_fixed_counters_in_passthrough_pmu(struct kvm_pmu *pmu, u64 data)
+ struct kvm_pmu_ops;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 41102658ed21..b126de6569c8 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -4430,6 +4430,7 @@ static void vmx_set_perf_global_ctrl(struct vcpu_vmx *vmx)
+ 			}
+ 			m->val[i].index = MSR_CORE_PERF_GLOBAL_CTRL;
+ 			m->val[i].value = 0;
++			vcpu_to_pmu(&vmx->vcpu)->global_ctrl_slot_in_autoload = i;
+ 		}
+ 		/*
+ 		 * Setup auto clear host PERF_GLOBAL_CTRL msr at vm exit.
+@@ -4457,6 +4458,7 @@ static void vmx_set_perf_global_ctrl(struct vcpu_vmx *vmx)
+ 				vmcs_write32(VM_EXIT_MSR_STORE_COUNT, m->nr);
+ 			}
+ 			m->val[i].index = MSR_CORE_PERF_GLOBAL_CTRL;
++			vcpu_to_pmu(&vmx->vcpu)->global_ctrl_slot_in_autostore = i;
+ 		}
+ 	} else {
+ 		if (!(vmentry_ctrl & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL)) {
+@@ -4467,6 +4469,7 @@ static void vmx_set_perf_global_ctrl(struct vcpu_vmx *vmx)
+ 				m->val[i] = m->val[m->nr];
+ 				vmcs_write32(VM_ENTRY_MSR_LOAD_COUNT, m->nr);
+ 			}
++			vcpu_to_pmu(&vmx->vcpu)->global_ctrl_slot_in_autoload = -ENOENT;
+ 		}
+ 		if (!(vmexit_ctrl & VM_EXIT_LOAD_IA32_PERF_GLOBAL_CTRL)) {
+ 			m = &vmx->msr_autoload.host;
+@@ -4485,6 +4488,7 @@ static void vmx_set_perf_global_ctrl(struct vcpu_vmx *vmx)
+ 				m->val[i] = m->val[m->nr];
+ 				vmcs_write32(VM_EXIT_MSR_STORE_COUNT, m->nr);
+ 			}
++			vcpu_to_pmu(&vmx->vcpu)->global_ctrl_slot_in_autostore = -ENOENT;
+ 		}
+ 	}
+ 
+@@ -7272,7 +7276,7 @@ void vmx_cancel_injection(struct kvm_vcpu *vcpu)
+ 	vmcs_write32(VM_ENTRY_INTR_INFO_FIELD, 0);
+ }
+ 
+-static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
++static void __atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ {
+ 	int i, nr_msrs;
+ 	struct perf_guest_switch_msr *msrs;
+@@ -7295,6 +7299,46 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
+ 					msrs[i].host, false);
+ }
+ 
++static void save_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vmx *vmx)
 +{
-+	struct kvm_pmc *pmc;
-+	u64 new_data = 0;
++	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
 +	int i;
 +
-+	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-+		pmc = get_fixed_pmc(pmu, MSR_CORE_PERF_FIXED_CTR0 + i);
-+		if (check_pmu_event_filter(pmc)) {
-+			pmc->current_config = fixed_ctrl_field(data, i);
-+			new_data |= (pmc->current_config << (i * 4));
-+		} else {
-+			pmc->counter = 0;
-+		}
++	if (vm_exit_controls_get(vmx) & VM_EXIT_SAVE_IA32_PERF_GLOBAL_CTRL) {
++		pmu->global_ctrl = vmcs_read64(GUEST_IA32_PERF_GLOBAL_CTRL);
++	} else {
++		i = pmu->global_ctrl_slot_in_autostore;
++		pmu->global_ctrl = vmx->msr_autostore.guest.val[i].value;
 +	}
-+	pmu->fixed_ctr_ctrl_hw = new_data;
-+	pmu->fixed_ctr_ctrl = data;
 +}
 +
- static void reprogram_fixed_counters(struct kvm_pmu *pmu, u64 data)
++static void load_perf_global_ctrl_in_passthrough_pmu(struct vcpu_vmx *vmx)
++{
++	struct kvm_pmu *pmu = vcpu_to_pmu(&vmx->vcpu);
++	u64 global_ctrl = pmu->global_ctrl;
++	int i;
++
++	if (vm_entry_controls_get(vmx) & VM_ENTRY_LOAD_IA32_PERF_GLOBAL_CTRL) {
++		vmcs_write64(GUEST_IA32_PERF_GLOBAL_CTRL, global_ctrl);
++	} else {
++		i = pmu->global_ctrl_slot_in_autoload;
++		vmx->msr_autoload.guest.val[i].value = global_ctrl;
++	}
++}
++
++static void __atomic_switch_perf_msrs_in_passthrough_pmu(struct vcpu_vmx *vmx)
++{
++	load_perf_global_ctrl_in_passthrough_pmu(vmx);
++}
++
++static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
++{
++	if (is_passthrough_pmu_enabled(&vmx->vcpu))
++		__atomic_switch_perf_msrs_in_passthrough_pmu(vmx);
++	else
++		__atomic_switch_perf_msrs(vmx);
++}
++
+ static void vmx_update_hv_timer(struct kvm_vcpu *vcpu, bool force_immediate_exit)
  {
- 	struct kvm_pmc *pmc;
-@@ -351,7 +370,9 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		if (data & pmu->fixed_ctr_ctrl_mask)
- 			return 1;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+@@ -7405,6 +7449,9 @@ static noinstr void vmx_vcpu_enter_exit(struct kvm_vcpu *vcpu,
+ 	vcpu->arch.cr2 = native_read_cr2();
+ 	vcpu->arch.regs_avail &= ~VMX_REGS_LAZY_LOAD_SET;
  
--		if (pmu->fixed_ctr_ctrl != data)
-+		if (is_passthrough_pmu_enabled(vcpu))
-+			reprogram_fixed_counters_in_passthrough_pmu(pmu, data);
-+		else if (pmu->fixed_ctr_ctrl != data)
- 			reprogram_fixed_counters(pmu, data);
- 		break;
- 	case MSR_IA32_PEBS_ENABLE:
-@@ -820,13 +841,12 @@ static void intel_save_guest_pmu_context(struct kvm_vcpu *vcpu)
- 	if (pmu->global_status)
- 		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
++	if (is_passthrough_pmu_enabled(vcpu))
++		save_perf_global_ctrl_in_passthrough_pmu(vmx);
++
+ 	vmx->idt_vectoring_info = 0;
  
--	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
- 	/*
- 	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
- 	 * also avoid these guest fixed counters get accidentially enabled
- 	 * during host running when host enable global ctrl.
- 	 */
--	if (pmu->fixed_ctr_ctrl)
-+	if (pmu->fixed_ctr_ctrl_hw)
- 		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
- }
- 
-@@ -844,7 +864,7 @@ static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
- 	if (pmu->global_status & toggle)
- 		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
- 
--	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-+	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl_hw);
- }
- 
- struct kvm_pmu_ops intel_pmu_ops __initdata = {
+ 	vmx_enable_fb_clear(vmx);
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
