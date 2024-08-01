@@ -1,57 +1,57 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DD3D13E024
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 04:59:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9D513E024
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 04:59:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722488355; cv=none; b=QdaNgDVveO9OnE6kgYW5JJwLvY07n8e+O4U7b3/ZMrLWpxiEGl4c9SF7UNzO5bEgMVw7qwRh7Y9pYRxAFx8cO3TR04bTp/JuEcHpL2+I4zuiolJKMrswzPjKaQhLuS9a9pnPElwC2aDl4LdX8EIHK5SRZiRkq30GFo7f5nEwupQ=
+	t=1722488357; cv=none; b=DILb8WMzfv3Ef9fAIK3nkN4iKBtRfAMyxbB11mv0S8BCOl0v1L5Nn12+4miuGBKfG9Rhk2sH0EjNUtnFmKXNewJaQ2ujP4I4ImcqknjP39NqaqR8HA+VUDIf2tEdZcoa+3iM328z7c7ZEx5K6Njz0D7PXhvjujzv5Q1Jo5PlhSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722488355; c=relaxed/simple;
-	bh=EJkw76iAldXs8IDGX6eZpFuF0CjLD+JdIskJg3lIASc=;
+	s=arc-20240116; t=1722488357; c=relaxed/simple;
+	bh=EwrTeTKxjkriGU2aCK6fduTgKiXaA6b+BnkXf+Qj9ZU=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DED/RaDWYeK0Y/JQ7eqyMlRhe8jPAIWWR93GGZV+jFyrN5pNQk6I++7u10GO1DIjt6ciWOwyrtbLC6dFBn6jlTpIXnPxFmdRwSu/s2k5QuTZpqp5Ko0d9KL+rAAt2xu8zWM/UUNn7aKv4FnxHuGY0N3L6A1JarazMVf0A7knttI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=DxQLDvUF; arc=none smtp.client-ip=209.85.216.73
+	 To:Cc:Content-Type; b=OuRtVLZ+mK49Jqb7aHWu7xFInkNCepoigCAxY1iQFWB04EFz1j8yzi4u0idyPcX8qgH7rpVdnK+PB0gcF8E6rV68llwWYdJ7GGlia+JJB3y8eZiGrX5+Do0bHp/pD0cjiHG27G6c7jfzQHKg7JEwdhY/juGF/a0+W1rWqoyCKic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Ex0DYgu7; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DxQLDvUF"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2cfe41af75eso1032039a91.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 21:59:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ex0DYgu7"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0bb206570aso3557740276.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 31 Jul 2024 21:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722488353; x=1723093153; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1722488355; x=1723093155; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=tm5RaV+/pBsHkRX5KjcoF4je7qI2HY3dp2o/9i3k7x4=;
-        b=DxQLDvUFaa+X0cD66TrFfX9wk95GXJjhNeL53k3yUzdO45UvSTkGTgTa20ICi7PyK5
-         jfCIgcWlEE01pCDMCrdAqJttdb7VylGbSt170SzeabQFixCfU83Iq6J65jUZprUOw1Xo
-         ZeJOamsmUU0sqHF0rFjKtmwgPJwxrLdccprfVPtUURm4OThoQ36dU5zAQKDcestg2RdM
-         aoG1kW4Q0CLDxebjZD69cTxEO34xrvjOGaqESeDHx2BvdwSXkzS1DFF4fZgNEN+UCEsI
-         u0LoaKu7gVq/cgMlEajKVa/SynGIhKI9prqj6sX1Ektpmre4vYOVFiO4y0pXsIeFcfvv
-         o8AA==
+        bh=30BVAe+lKKTv8P9DRYR4aCbEP24dhJmDTry4BD28JV4=;
+        b=Ex0DYgu7uMf12V/WcnHY1PvTkF33ZiIfV4lRCvFoOF+HaL6pgdk8HOIyE5aKcFVRDA
+         nVQh7WrkxVgtJeyzFf2Ua87Sq06XeQ46rXUOYAyPCZuz1vTPeU3GL0ver1UtzRg9bOnT
+         lax9U+eNBX1ZYVRqMEn0nyQ+1aAhUgjIqSA+KJz7t4hpT2TeOKMi2d3hiUobhUcDuYVi
+         ubdhkv5u4zeSMvUq9YMU1bw/Ufb7ImXv9Khg6+rYFQD7OBIpHGAt3nLn9HFp3v7YSgbj
+         9GLUva0sQwg+buJdUwLp4ggahSEylks589JetjEjTD61aEPsteoD0tOoqkR+fafTES/4
+         xdKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722488353; x=1723093153;
+        d=1e100.net; s=20230601; t=1722488355; x=1723093155;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=tm5RaV+/pBsHkRX5KjcoF4je7qI2HY3dp2o/9i3k7x4=;
-        b=aQdAhCWdUO2uhKtnEkzTgsBrKeJL6MJM7w3XcwCvSs8vcrc0Qvgod6C0XKVkuGaoux
-         i4OgnWBmnzXFa9zpAmYLD1JTPaexTQDF5blHeLBzVu0GGZAwf5JYrf83FDVHnaR4N8u3
-         f6eGpBN3wnoq2MIgl5arBzeXUFG+KD9E+P47FGR8HAUsySZiGQloizBOatTuPuxBTguX
-         OOoH/1Vq6CyfdYBnrc9OvUL7Aw50HONSiwNV1yT1mQn+k/dCjJxRW06bb4OWs3qCca8O
-         EoKc8JWky7Vs//tZdyceDLPvUsW8CO8r8gsxt7bCUxL6PtfVbvNrc8bsAzr8q2VjBa4z
-         jSdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX1H9ZJw3/5V8JScfHPgbRNovbmHEXvrVF/8+7aBZpOMVonC71kK9c741UU1wPWrRTDUV1NiI9Af1+TFVEeaDvc5g+HCw1lPXK2ya5OkZnh1A==
-X-Gm-Message-State: AOJu0YzpMW6KWHtJIjUWWMZlX0Mf1RWtU3P66vrOhvnyMT5ytB6PqY00
-	eXlAp3N6DoolzQggiZhn0KcS/UbcpuEHIS0H8IPht9iUIpfiDlIxR6ITPjU6NoboFujaRD8z6Kz
-	iSxbNvg==
-X-Google-Smtp-Source: AGHT+IE/W6WkgcA+8Zbv/MP0qycRKD57qXfVH139pmKdChk/+QPD8tNaOz1bgp6b1YFc086V3snnnjvAtMiq
-X-Received: from mizhang-super.c.googlers.com ([34.105.13.176]) (user=mizhang
- job=sendgmr) by 2002:a17:90a:9c3:b0:2c8:b576:2822 with SMTP id
- 98e67ed59e1d1-2cfe7ba7df8mr25621a91.8.1722488352924; Wed, 31 Jul 2024
- 21:59:12 -0700 (PDT)
+        bh=30BVAe+lKKTv8P9DRYR4aCbEP24dhJmDTry4BD28JV4=;
+        b=wP78DixJ7tHxZKZ9QuBfDnCiVZ63IjMZkwtsUNE2Jes8SSo+CVI+WGyTCeeP4Sh9Nj
+         O5NYjok4SKD1SJ48zBX4dPC+uc6Lj6gnDY12aNE9mc7Xgfi2Iz7LRKyEm/CWfpxDsVcS
+         AK1PYP64EI0fdQAMF6vJlVChOAvNe9QYCgCUatIZhSCsBA/GEisy0XUJk6n9ttO+Quvi
+         tlgzJohs6AuOYVFWNi8lMCWqO+aUaBjuieqjiHmCGtQ+To77OVXulbMN5mF8Qr3YtFxk
+         SXMXKuInqLu7MtELiqHZF3eLqLeXYqfmYXnwUvJ5hSOguqwVDWf2jO3PNXVa+V86dUci
+         2v5w==
+X-Forwarded-Encrypted: i=1; AJvYcCU4GN1x2cJa6f12LwUCy69Z20wnVD6mAu3LxEB/9gJOYeX55a8krkyUkL5aCMxFyicQDm9r0Dhh0wKhyk8VAsVJafG5nXYG92nDpN9/kjYx2Q==
+X-Gm-Message-State: AOJu0YzQtfWuqNfIU1FRtWm2jf++r2RGF0/oK7o1Ue0f7FBKyiQacD7n
+	EeVwGZ/TXkDkOOfZdmahXUxS/LXNMypDRYi/SWid+tFStB+xGNHmznuILDGa5RzBKnDJ8WD875R
+	NdAh6NA==
+X-Google-Smtp-Source: AGHT+IGvhovXiEJA501fg8AsGQ0Ln/NIeUOKimM+zmuKhSDeJfSO8OIJ055qsyeZqjkBJTB18xRTjwVfaXKZ
+X-Received: from mizhang-super.c.googlers.com ([35.247.89.60]) (user=mizhang
+ job=sendgmr) by 2002:a05:6902:2203:b0:e0b:c99d:b6d4 with SMTP id
+ 3f1490d57ef6-e0bcd23d3c0mr2531276.5.1722488354932; Wed, 31 Jul 2024 21:59:14
+ -0700 (PDT)
 Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Thu,  1 Aug 2024 04:58:10 +0000
+Date: Thu,  1 Aug 2024 04:58:11 +0000
 In-Reply-To: <20240801045907.4010984-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
@@ -61,9 +61,9 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240801045907.4010984-1-mizhang@google.com>
 X-Mailer: git-send-email 2.46.0.rc1.232.g9752f9e123-goog
-Message-ID: <20240801045907.4010984-2-mizhang@google.com>
-Subject: [RFC PATCH v3 01/58] sched/core: Move preempt_model_*() helpers from
- sched.h to preempt.h
+Message-ID: <20240801045907.4010984-3-mizhang@google.com>
+Subject: [RFC PATCH v3 02/58] sched/core: Drop spinlocks on contention iff
+ kernel is preemptible
 From: Mingwei Zhang <mizhang@google.com>
 To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>, 
 	Xiong Zhang <xiong.y.zhang@intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
@@ -80,122 +80,102 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Sean Christopherson <seanjc@google.com>
 
-Move the declarations and inlined implementations of the preempt_model_*()
-helpers to preempt.h so that they can be referenced in spinlock.h without
-creating a potential circular dependency between spinlock.h and sched.h.
+Use preempt_model_preemptible() to detect a preemptible kernel when
+deciding whether or not to reschedule in order to drop a contended
+spinlock or rwlock.  Because PREEMPT_DYNAMIC selects PREEMPTION, kernels
+built with PREEMPT_DYNAMIC=y will yield contended locks even if the live
+preemption model is "none" or "voluntary".  In short, make kernels with
+dynamically selected models behave the same as kernels with statically
+selected models.
 
-No functional change intended.
+Somewhat counter-intuitively, NOT yielding a lock can provide better
+latency for the relevant tasks/processes.  E.g. KVM x86's mmu_lock, a
+rwlock, is often contended between an invalidation event (takes mmu_lock
+for write) and a vCPU servicing a guest page fault (takes mmu_lock for
+read).  For _some_ setups, letting the invalidation task complete even
+if there is mmu_lock contention provides lower latency for *all* tasks,
+i.e. the invalidation completes sooner *and* the vCPU services the guest
+page fault sooner.
 
+But even KVM's mmu_lock behavior isn't uniform, e.g. the "best" behavior
+can vary depending on the host VMM, the guest workload, the number of
+vCPUs, the number of pCPUs in the host, why there is lock contention, etc.
+
+In other words, simply deleting the CONFIG_PREEMPTION guard (or doing the
+opposite and removing contention yielding entirely) needs to come with a
+big pile of data proving that changing the status quo is a net positive.
+
+Opportunistically document this side effect of preempt=full, as yielding
+contended spinlocks can have significant, user-visible impact.
+
+Fixes: c597bfddc9e9 ("sched: Provide Kconfig support for default dynamic preempt mode")
+Link: https://lore.kernel.org/kvm/ef81ff36-64bb-4cfe-ae9b-e3acf47bff24@proxmox.com
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Marco Elver <elver@google.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: David Matlack <dmatlack@google.com>
+Cc: Friedrich Weber <f.weber@proxmox.com>
+Cc: Ankur Arora <ankur.a.arora@oracle.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sean Christopherson <seanjc@google.com>
 Reviewed-by: Ankur Arora <ankur.a.arora@oracle.com>
+Reviewed-by: Chen Yu <yu.c.chen@intel.com>
 Signed-off-by: Mingwei Zhang <mizhang@google.com>
 ---
- include/linux/preempt.h | 41 +++++++++++++++++++++++++++++++++++++++++
- include/linux/sched.h   | 41 -----------------------------------------
- 2 files changed, 41 insertions(+), 41 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt |  4 +++-
+ include/linux/spinlock.h                        | 14 ++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index 7233e9cf1bab..ce76f1a45722 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -481,4 +481,45 @@ DEFINE_LOCK_GUARD_0(preempt, preempt_disable(), preempt_enable())
- DEFINE_LOCK_GUARD_0(preempt_notrace, preempt_disable_notrace(), preempt_enable_notrace())
- DEFINE_LOCK_GUARD_0(migrate, migrate_disable(), migrate_enable())
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index b600df82669d..ebb971a57d04 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4774,7 +4774,9 @@
+ 			none - Limited to cond_resched() calls
+ 			voluntary - Limited to cond_resched() and might_sleep() calls
+ 			full - Any section that isn't explicitly preempt disabled
+-			       can be preempted anytime.
++			       can be preempted anytime.  Tasks will also yield
++			       contended spinlocks (if the critical section isn't
++			       explicitly preempt disabled beyond the lock itself).
  
-+#ifdef CONFIG_PREEMPT_DYNAMIC
-+
-+extern bool preempt_model_none(void);
-+extern bool preempt_model_voluntary(void);
-+extern bool preempt_model_full(void);
-+
-+#else
-+
-+static inline bool preempt_model_none(void)
-+{
-+	return IS_ENABLED(CONFIG_PREEMPT_NONE);
-+}
-+static inline bool preempt_model_voluntary(void)
-+{
-+	return IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY);
-+}
-+static inline bool preempt_model_full(void)
-+{
-+	return IS_ENABLED(CONFIG_PREEMPT);
-+}
-+
-+#endif
-+
-+static inline bool preempt_model_rt(void)
-+{
-+	return IS_ENABLED(CONFIG_PREEMPT_RT);
-+}
-+
-+/*
-+ * Does the preemption model allow non-cooperative preemption?
-+ *
-+ * For !CONFIG_PREEMPT_DYNAMIC kernels this is an exact match with
-+ * CONFIG_PREEMPTION; for CONFIG_PREEMPT_DYNAMIC this doesn't work as the
-+ * kernel is *built* with CONFIG_PREEMPTION=y but may run with e.g. the
-+ * PREEMPT_NONE model.
-+ */
-+static inline bool preempt_model_preemptible(void)
-+{
-+	return preempt_model_full() || preempt_model_rt();
-+}
-+
- #endif /* __LINUX_PREEMPT_H */
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 61591ac6eab6..90691d99027e 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -2064,47 +2064,6 @@ extern int __cond_resched_rwlock_write(rwlock_t *lock);
- 	__cond_resched_rwlock_write(lock);					\
- })
- 
--#ifdef CONFIG_PREEMPT_DYNAMIC
--
--extern bool preempt_model_none(void);
--extern bool preempt_model_voluntary(void);
--extern bool preempt_model_full(void);
--
--#else
--
--static inline bool preempt_model_none(void)
--{
--	return IS_ENABLED(CONFIG_PREEMPT_NONE);
--}
--static inline bool preempt_model_voluntary(void)
--{
--	return IS_ENABLED(CONFIG_PREEMPT_VOLUNTARY);
--}
--static inline bool preempt_model_full(void)
--{
--	return IS_ENABLED(CONFIG_PREEMPT);
--}
--
--#endif
--
--static inline bool preempt_model_rt(void)
--{
--	return IS_ENABLED(CONFIG_PREEMPT_RT);
--}
--
--/*
-- * Does the preemption model allow non-cooperative preemption?
-- *
-- * For !CONFIG_PREEMPT_DYNAMIC kernels this is an exact match with
-- * CONFIG_PREEMPTION; for CONFIG_PREEMPT_DYNAMIC this doesn't work as the
-- * kernel is *built* with CONFIG_PREEMPTION=y but may run with e.g. the
-- * PREEMPT_NONE model.
-- */
--static inline bool preempt_model_preemptible(void)
--{
--	return preempt_model_full() || preempt_model_rt();
--}
--
- static __always_inline bool need_resched(void)
+ 	print-fatal-signals=
+ 			[KNL] debug: print fatal signals
+diff --git a/include/linux/spinlock.h b/include/linux/spinlock.h
+index 3fcd20de6ca8..63dd8cf3c3c2 100644
+--- a/include/linux/spinlock.h
++++ b/include/linux/spinlock.h
+@@ -462,11 +462,10 @@ static __always_inline int spin_is_contended(spinlock_t *lock)
+  */
+ static inline int spin_needbreak(spinlock_t *lock)
  {
- 	return unlikely(tif_need_resched());
+-#ifdef CONFIG_PREEMPTION
++	if (!preempt_model_preemptible())
++		return 0;
++
+ 	return spin_is_contended(lock);
+-#else
+-	return 0;
+-#endif
+ }
+ 
+ /*
+@@ -479,11 +478,10 @@ static inline int spin_needbreak(spinlock_t *lock)
+  */
+ static inline int rwlock_needbreak(rwlock_t *lock)
+ {
+-#ifdef CONFIG_PREEMPTION
++	if (!preempt_model_preemptible())
++		return 0;
++
+ 	return rwlock_is_contended(lock);
+-#else
+-	return 0;
+-#endif
+ }
+ 
+ /*
 -- 
 2.46.0.rc1.232.g9752f9e123-goog
 
