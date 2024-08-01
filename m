@@ -1,61 +1,80 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0151361FF2
-	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 14:06:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B111A57D1
+	for <linux-perf-users@vger.kernel.org>; Thu,  1 Aug 2024 14:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722521216; cv=none; b=paAoXR+t+8pjTqrulJtZ6y9hO/sP78mG8wDpdFEZ4gAvbT6p+DqgDihZR+e95IrT3JTZSNFYSmzgLW8RHukQLjXslBLPAQiWQGgEo8ZO7NZ2ACNnumUV2myofSIoeUOlZ/Si3II3DV/gPA2U3FylKfPwu8vSthFNSWPeS5sTZnI=
+	t=1722522496; cv=none; b=RCOagiGhlJG5vmYdib4Xsx9U/0vk5hV5R5zG4ks0WxzJikOwcJ+nvtiDygbEypZHp1HDxsReX86DU8vYI943n7P7nWqmcaYe50AQFj9jx6EXRLjVPLPPcczLAImxa49ozG3X/qKGpvTAtX0rX4qc22lu+rwkOdh9wTHpKEGtZsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722521216; c=relaxed/simple;
-	bh=bz3wKeF8rsjmjXrGrtC9eTN/ZKuBFkTMUakuVj5aqKg=;
+	s=arc-20240116; t=1722522496; c=relaxed/simple;
+	bh=/Pw3QSE2gQ3HGNcd8AdQrmQmNEZQXSpsYvrgZ7iaxws=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Af3xSM+T0i5Pcq9EgpBypB5Y/1XfBzxXxb1jxMvX3+8C1y2n3a8yui2bV9prB5mn5xmrRu2SDWy9s0OFBTwJkX3mmmLzSwKrr3uwcIlM2k01WzQnc69SDi7r/QD2Q3eGzdSiCrhcJzhhZ2V99NUBSplt8unejP3u5Bi5Udh5fGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UOcdO5YU; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=pGM/6sSVVoo+lIKNLq9J2uo5I4V9g378qWDCwTPCcvfQTMluHk+b3dFk/nM3eYyM8YDEzygiJb6yDiAc9lTjllsPxXexES9CPlF0oAPx/MaJvapSzxJhwz2+H3ozPyrjxdTpt8ssflf5bJCEgaU/eMqHDfq+/gCtYpwVFwcMumU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com; spf=none smtp.mailfrom=toxicpanda.com; dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b=tUmaI21Y; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=toxicpanda.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=toxicpanda.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UOcdO5YU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722521214;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=NtpgAPFp+k8BUIgugrTLAvk4bvPd8UTPqZtLDxDKKxg=;
-	b=UOcdO5YUZCQ3amhuUhPrZ9MMeHetTPUMQDwgwEoQd75KeHldK/DQvhzFV3eZX1qqFCDRZB
-	l92KanwRplr+KIOXxCSu/L5bpyq2f+rBEnRVerVKr/ZHLsTVvu8Tu/LpYPQdQGSFlrOS4Y
-	QVYAS8NaOwgNAtIPs9396al20++x+aE=
-Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-390-PwqJlKqZN-yuHHxW4zmYrA-1; Thu,
- 01 Aug 2024 10:06:50 -0400
-X-MC-Unique: PwqJlKqZN-yuHHxW4zmYrA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4EB7D1955D4B;
-	Thu,  1 Aug 2024 14:06:46 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.183])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE9561955D48;
-	Thu,  1 Aug 2024 14:06:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Thu,  1 Aug 2024 16:06:46 +0200 (CEST)
-Date: Thu, 1 Aug 2024 16:06:39 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Liao Chang <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20230601.gappssmtp.com header.i=@toxicpanda-com.20230601.gappssmtp.com header.b="tUmaI21Y"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6512866fa87so50178517b3.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 01 Aug 2024 07:28:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20230601.gappssmtp.com; s=20230601; t=1722522494; x=1723127294; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EuychuuM4yFooarrHI4W2akU/wSqmgofCLcJrrZseNc=;
+        b=tUmaI21YRAsuQBdGHYDQwncuOrTrAiwaiErANTD4ZLvZ7YPbvIzS5eMniLmAzxqcaQ
+         1NoxjXUzZZntloz87+jZUNKyhxFk0/5J3rjHf/n1dRVQ/AECTSQ3KyYlp/l5AkIn8mc8
+         w1H7/6a1QeFC2umFrXFzUWx5iw1MWb0Z0Ajw1AMw4Tk3d3b6eGbX/2NiW4PKB0accPe0
+         OZtidiPZgx2Sdd9rTBVXsE6FYo9jkZDDwTFW7xeXB5bY7vYj4HSXNR62vSEYLMB2xSCS
+         Tk22HbO3GojhMUUjujCpucxtARnypMq/dT0sb+tfmcyvU8SwMf+hasf9Fn5vw934RcJj
+         6ZgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722522494; x=1723127294;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EuychuuM4yFooarrHI4W2akU/wSqmgofCLcJrrZseNc=;
+        b=u/I4NLWNNwb4Acp8dpleoMbdgExCz3HRwyygZGPoTSD5NpKPwT999nWWbGi6Dz3wjH
+         dBy5/hMAxxgUzYn+x+BsCgXY8J+oaOzYzAuTg61dTjgEsPaMuOqzv0Ps/8CnzJ6X06hn
+         Nu1RMa2l+ra6N1tdE0/+D3rbUJ3nqFH4C2GCjclbD5UJQMkSxqnY7sllMjlU0PrTbUZn
+         PfLsvztlyh52x7l3uImvqUbBfJmu1kfAs0DvaNQAtebYBOcljyc3cbld0taDQdr0kmv/
+         1T0vB3zU93MswF1PAukAfoAAcHd5VTS42N8u/hDBJ+MQzDnkNmscHvhGgh631Vdn5kpi
+         Jqdw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkAefm2wfIFuvo/TrxNsdLy5iiGYKedTFqqDRw3ZzBGlgNlyFsx2yz94ete6p1JULYNhKoh7AWlL4OTElDF27cB84VKTyE5H+PAj0ODImJxQ==
+X-Gm-Message-State: AOJu0YzO4FkmaTkuM9jcGfgT4+gfbeKQQQV7JRAc4rLqSaiCe9TufIpe
+	QNXC/rzGp39IaLXtce1a/5H5OGBi9qbhBQn9yo7381TU21HBJDiPh8QIq3NbqY0=
+X-Google-Smtp-Source: AGHT+IEWtdWvFS2c69Uec6FJ0Uu06+DfOjiepBA1ctw9pK/wJ9IdsjdEszDUF6QIPWxR6kd4lkyKQg==
+X-Received: by 2002:a81:b406:0:b0:632:6615:3d67 with SMTP id 00721157ae682-6895f9e5e38mr1972857b3.6.1722522493999;
+        Thu, 01 Aug 2024 07:28:13 -0700 (PDT)
+Received: from localhost (syn-076-182-020-124.res.spectrum.com. [76.182.20.124])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-67568209b96sm32991887b3.68.2024.08.01.07.28.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Aug 2024 07:28:13 -0700 (PDT)
+Date: Thu, 1 Aug 2024 10:28:12 -0400
+From: Josef Bacik <josef@toxicpanda.com>
+To: Aleksa Sarai <cyphar@cyphar.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>,
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Jeff Layton <jlayton@kernel.org>,
+	Amir Goldstein <amir73il@gmail.com>,
+	Alexander Aring <alex.aring@gmail.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-Message-ID: <20240801140639.GE4038@redhat.com>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
+Subject: Re: [PATCH RFC v3 0/2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <20240801142812.GA4187848@perftesting>
+References: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -64,39 +83,69 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240801082407.1618451-1-liaochang1@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+In-Reply-To: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
 
-On 08/01, Liao Chang wrote:
->
-> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
->  	int err = 0;
->  
->  	uprobe = utask->active_uprobe;
-> -	if (utask->state == UTASK_SSTEP_ACK)
-> +	switch (utask->state) {
-> +	case UTASK_SSTEP_ACK:
->  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
-> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
-> +		break;
-> +	case UTASK_SSTEP_TRAPPED:
->  		arch_uprobe_abort_xol(&uprobe->arch, regs);
-> -	else
-> +		fallthrough;
-> +	case UTASK_SSTEP_DENY_SIGNAL:
-> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
-> +		break;
-> +	default:
->  		WARN_ON_ONCE(1);
-> +	}
+On Thu, Aug 01, 2024 at 01:52:39PM +1000, Aleksa Sarai wrote:
+> Now that we provide a unique 64-bit mount ID interface in statx(2), we
+> can now provide a race-free way for name_to_handle_at(2) to provide a
+> file handle and corresponding mount without needing to worry about
+> racing with /proc/mountinfo parsing or having to open a file just to do
+> statx(2).
+> 
+> While this is not necessary if you are using AT_EMPTY_PATH and don't
+> care about an extra statx(2) call, users that pass full paths into
+> name_to_handle_at(2) need to know which mount the file handle comes from
+> (to make sure they don't try to open_by_handle_at a file handle from a
+> different filesystem) and switching to AT_EMPTY_PATH would require
+> allocating a file for every name_to_handle_at(2) call, turning
+> 
+>   err = name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
+>                           AT_HANDLE_MNT_ID_UNIQUE);
+> 
+> into
+> 
+>   int fd = openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
+>   err1 = name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_PATH);
+>   err2 = statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
+>   mntid = statxbuf.stx_mnt_id;
+>   close(fd);
+> 
+> Also, this series adds a patch to clarify how AT_* flag allocation
+> should work going forwards.
+> 
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+> Changes in v3:
+> - Added a patch describing how AT_* flags should be allocated in the
+>   future, based on Amir's suggestions.
+> - Included AT_* aliases for RENAME_* flags to further indicate that
+>   renameat2(2) is an *at(2) syscall and to indicate that those flags
+>   have been allocated already in the per-syscall range.
+> - Switched AT_HANDLE_MNT_ID_UNIQUE to use 0x01 (to reuse
+>   (AT_)RENAME_NOREPLACE).
+> - v2: <https://lore.kernel.org/r/20240523-exportfs-u64-mount-id-v2-1-f9f959f17eb1@cyphar.com>
+> Changes in v2:
+> - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
+> - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match statx.
+> - Switched to using an AT_* bit from 0xFF and defining that range as
+>   being "per-syscall" for future usage.
+> - Sync tools/ copy of <linux/fcntl.h> to include changes.
+> - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f55fd9215b8e@cyphar.com>
+> 
+> ---
+> Aleksa Sarai (2):
+>       uapi: explain how per-syscall AT_* flags should be allocated
+>       fhandle: expose u64 mount id to name_to_handle_at(2)
+> 
 
-Liao, at first glance this change looks "obviously wrong" to me.
+Wasn't the conclusion from this discussion last time that we needed to revisit
+this API completely?  Christoph had some pretty adamant objections.
 
-But let me read this patch more carefully and reply on weekend,
-I am a bit busy right now.
+That being said the uapi comments patch looks good to me, you can add
 
-Thanks,
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-Oleg.
+to that one.  The other one I'm going to let others who have stronger opinions
+than me argue about.  Thanks, 
 
+Josef
