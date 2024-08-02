@@ -1,79 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA8DF4C61B
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 20:58:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D94A1ABEB8
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 21:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722632305; cv=none; b=f7+U7NNprtMs/KHTdYuMSSjcBzvDr8glxercxIsnLCnoU18+Zz6piCgMKmk2qB47bUaWJJmsGY9mcmAhaLI/bJyJ73wc6I+1kSJTkfgzrW3JEPkNduZm4Mi8ry0ovmvqGvtD2UpQDv6pf/FDg3Cz3PJiPI12zNcKvq0ipp6TOl0=
+	t=1722633338; cv=none; b=kMSdHY1SRVJdjTGVX/zlueposc4GYNv5VAtAvMPKXSOauPiI3rO1yiz77ZdHf3u5OOvzrapqJO9pa8JPG8X0CST9gsGbRk2E+8ItcgPm9Ca+t0CkqnSQqqaF+tiNRRoqgvWeJgI5FgFYRztPKPFoLmrvFfp1Wn9cyo3nsNW3Zhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722632305; c=relaxed/simple;
-	bh=z9nvhuouETIH65JXPX3MjDpO0lm6OqHMzFfA0ilf68s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aKx67QJfnUqat3qofW+ZciCWEUJQ8ZbksXCHfy7B6ZmAPhN31BCsYaMipwXjx1YDuLGcJO59ouIcpdidGIUQymFr4mQil+r7U7Oc8B9nH+sISZ7ESqahId/FmyhVeR9obEuFOD1SP2jO8iK6YHDza9FpbMGt4OxyfBZLPo1uWnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DEu/IISO; arc=none smtp.client-ip=198.175.65.18
+	s=arc-20240116; t=1722633338; c=relaxed/simple;
+	bh=74NBRkkZ9jNOsLpY43Wn2HmJNg7nLu7J87kDdo7aYGY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=lWBpPOWcocCJwMTz5AmmuuAV84RZd9FixVpy6Nmb4dGNo9rDkvIm6q4gVOFelHFg2xrLIudwQIp0jYDS7qF5nhE3s5NRdZDdAiFDTUPP1PKC+qpr8Lf3IP5hp2Oy5GFt+WZuY/wyqQnl8krRKalN/50eoV6ltaYjFfsHZfbevr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LvtrGFp8; arc=none smtp.client-ip=198.175.65.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DEu/IISO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LvtrGFp8"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722632304; x=1754168304;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z9nvhuouETIH65JXPX3MjDpO0lm6OqHMzFfA0ilf68s=;
-  b=DEu/IISORWtcOfLA9usVokEe5dTnXiClXZTc5dyEBrC0lZjy24vEa+8L
-   mA7909T8iXNbRpUT4MGLFzwH2m+RCLfxW5RzY2Lld++ctAv2yBq7eAgXD
-   s8eFgMbh15rt3mnn0ZuBuHGEi3bglQvQURTmA/5Dbaae2oQYULh/nSNzU
-   9rzkEjj7r3usBLyCd+uDHW+IQWUGiYo5PlVxiU4PsHNRW/dzz6TVRaxLF
-   kRYna1XESSvUFs98KsiPgEKN+pisf0V1FGb11e+c8XO8zii0vKZblYZ2y
-   K+uTcDYJ0kXJW2pHySuXg4bOgw5GcPXfcHrFOwZqFsQPn4nh7kOOKdF/7
-   g==;
-X-CSE-ConnectionGUID: OYfrIdxZQAikHGVkqH+cXg==
-X-CSE-MsgGUID: 3HQp0DbkRWahqZLNz0OqyQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="20803176"
+  t=1722633337; x=1754169337;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=74NBRkkZ9jNOsLpY43Wn2HmJNg7nLu7J87kDdo7aYGY=;
+  b=LvtrGFp8lB7uYFn/G39VL96qczWZ1XHQaKsUIxDYV3L/tYiJJmg10lhi
+   2SUoUN4O9nGiPZpDzdyaQludSxDjT25hq/+eBKjPXbBeYNvI2vwVwLizQ
+   585uQFvBK5XZ7rekwKUcFeWxc2imsnjB7AEV9ygM9YZv03ShL1jbxST3k
+   qCEZq5PPbz6D4nVcPJF27MtrtLVDx7FkXni0qwfWxsWN4MgHQXieX189M
+   15snhv+zQ8r6kjNRK9yKIxOF9Gd78d85DEG51ifCM++AuJcsRTzsizlbD
+   kx2VIw8n57R8M0eJ6y6DwVHFxoRr83sq3kLEB2ZceSdk5Zw7iPYXkqrxB
+   A==;
+X-CSE-ConnectionGUID: Kn35zdV3TQmWDjXmvbOHOA==
+X-CSE-MsgGUID: SXJ2ByMNQFWXIC6lIiSXag==
+X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="31246282"
 X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
-   d="scan'208";a="20803176"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 13:58:23 -0700
-X-CSE-ConnectionGUID: loK9uErqThiTqULTzbUA5g==
-X-CSE-MsgGUID: KAqR289TRgCww85V6yMDVQ==
+   d="scan'208";a="31246282"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 14:15:36 -0700
+X-CSE-ConnectionGUID: Omnf3aKDQry5ADE39cwjNA==
+X-CSE-MsgGUID: B7J4PgYvRDuBoljednRvVA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
-   d="scan'208";a="60364249"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 13:58:22 -0700
-Date: Fri, 2 Aug 2024 13:58:21 -0700
+   d="scan'208";a="56282265"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 14:15:35 -0700
 From: Andi Kleen <ak@linux.intel.com>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v7 3/4] perf script: Fix perf script -F +metric
-Message-ID: <Zq1IbXj7oxBd7S82@tassilo>
-References: <20240724190137.3810429-1-ak@linux.intel.com>
- <20240724190137.3810429-3-ak@linux.intel.com>
- <ZqLuWGKZjdUrkd0L@google.com>
- <ZqqRTKW80JJpNpRj@tassilo>
- <Zq0k1pRHZWB4N94a@google.com>
+To: linux-perf-users@vger.kernel.org
+Cc: Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH 2/2] perf report: Handle non capstone case for calling perf script
+Date: Fri,  2 Aug 2024 14:14:18 -0700
+Message-ID: <20240802211530.776055-3-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240802211530.776055-1-ak@linux.intel.com>
+References: <20240802211530.776055-1-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zq0k1pRHZWB4N94a@google.com>
+Content-Transfer-Encoding: 8bit
 
-> > Not with leader sampling because the group is contiguous and output
-> > after its end, with all the previous values forgotten then.
-> > The other cases don't really work anyways as multiple people pointed
-> > out.
-> 
-> Right, but we cannot prevent people to do that..  Maybe we can disable
-> metric with a warning if leader sampling is not used?  Or at least add
-> a comment in the code that it's only intended for the use case.
+When perf is built without capstone trying to displaying assembler
+sample context would error out. Use the older --xed variant in this
+case.
 
-Yes I did that in the version I posted yesterday. It prints a one
-time warning and disables metric output.
+Fixes: 659663f0bccc ("perf: script: prefer capstone to XED")
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+---
+ tools/perf/ui/browsers/scripts.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
--Andi
+diff --git a/tools/perf/ui/browsers/scripts.c b/tools/perf/ui/browsers/scripts.c
+index e437d7889de6..b130a92053db 100644
+--- a/tools/perf/ui/browsers/scripts.c
++++ b/tools/perf/ui/browsers/scripts.c
+@@ -107,8 +107,13 @@ static int list_scripts(char *script_name, bool *custom,
+ 	if (evsel)
+ 		attr_to_script(scriptc.extra_format, &evsel->core.attr);
+ 	add_script_option("Show individual samples", "", &scriptc);
++#ifdef NO_CAPSTONE
++	add_script_option("Show individual samples with assembler", "-F +insn --xed",
++			  &scriptc);
++#else
+ 	add_script_option("Show individual samples with assembler", "-F +disasm",
+ 			  &scriptc);
++#endif
+ 	add_script_option("Show individual samples with source", "-F +srcline,+srccode",
+ 			  &scriptc);
+ 	perf_config(scripts_config, &scriptc);
+-- 
+2.45.2
+
