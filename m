@@ -1,225 +1,153 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61726145352;
-	Thu,  1 Aug 2024 22:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86B0E541;
+	Fri,  2 Aug 2024 00:25:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722550949; cv=none; b=Q0CprLZT2kkj3R2jj0IxXxlkfdvqqcbQt1gXe+WNx33LcK5H3SqeDpHy5u4za1PqXVTR6eg683CCwj/+UqufooQ++OKNWVdjGvilt3iw/0CAyXU8PIoy6OOc03+GJjPVmvo5nasgbXYHCArh88h8LcD282o9VvAvY8uh8kgTigg=
+	t=1722558311; cv=none; b=HAQ0NoNyDayPw8xwRcFCByZN6dbnrkmZ2aL9B6QQWk8cTLj1vh3bQZaqt2Dkuu4ZI1JuazIrN/GMiMFz/KVMIDdJ1wQJt/VLF/V4JvwWzp5rqh36ZKCDTUfzx5igtzt4fv/O9ioqxRZb6rfY0qD9r4sUInxxWMADnQcp32v4ab0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722550949; c=relaxed/simple;
-	bh=l5u3lUTgXMYP2PHhcTr2ciMaIUga+HNMya4jSM+s2A4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WUAvS59LawvYIucZfhYnRtT2q/7pBvHOoHJZBe1MXR+eSgf+YVS6AqCw9u9Yx4scrbL1a07iLYBqbwYokMRM/KeZJuK171HNqp/n4oM8X4j58EcJNwmHdbSFU015NkpUz/bLYDiPzzljF12b1qXCM7BNRPbiBjVYC9B2dvL/JQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KLRbpe5V; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KLRbpe5V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 861CEC32786;
-	Thu,  1 Aug 2024 22:22:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722550949;
-	bh=l5u3lUTgXMYP2PHhcTr2ciMaIUga+HNMya4jSM+s2A4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KLRbpe5V+mhOuQa+wrzDnfe34cu+ZxOI98tLYyzXKTHPHIaLeW6T4+xl4a5ORTjGH
-	 /4YNqcEuP32VOXy4W3PR64gfME/LJ/lB+VrD1GCM8E0sDpJSh+nXX/fb08hp8Z77jU
-	 BxNxplR39aE47/mOWuRiugtIlUbihx2RfJ3/QK2kx25n+w8rlkn1s5bdazkKzzQtzf
-	 2lRKT4GxVhSqbi0iGDjkL/I5Y7GjLxNqziP/3i1luvT+HodfZeCOMcjx6w9yVUst60
-	 dRnLpzeR/0CzbfCUz3BVT2OqernvWIBtjVlVczZpzFD985P4T8B/ktJY87R9r2HLFn
-	 0QmaUSqy75vUQ==
-Date: Thu, 1 Aug 2024 15:22:25 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v3 8/8] perf test: Update sample filtering test
-Message-ID: <ZqwKoWpBN9G3u-K0@google.com>
-References: <20240703223035.2024586-1-namhyung@kernel.org>
- <20240703223035.2024586-9-namhyung@kernel.org>
- <ZqpFvxFcZMHeAdqp@x1>
- <ZqrS_80S91EvnQE0@google.com>
- <ZqukTsjWqbx-xZ7L@x1>
+	s=arc-20240116; t=1722558311; c=relaxed/simple;
+	bh=9biq2UadBfZ7zwF9uTZiJMx7UKuxa5hBvmzABIdXWRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=r9DzE2RIrTLX+qxVWnMiZndU9gLIMPdIExpG2c7X/C4waUvXul9gaJ/qy9914CZzhQJOzlG+BvZ9SJk9ALg0tpc+cSH/ct3ehToIBhNP8lllx5atogqpp40l9RaWmg9Vm2Lz28ZZuXQlpCiUpaHU5aYra7MILHcfh5hdRyMTTRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-70d399da0b5so6532000b3a.3;
+        Thu, 01 Aug 2024 17:25:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722558309; x=1723163109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hV6RwPwdwLS97FXT5295OSHRXpAZlOhWy3lAKS8mG1I=;
+        b=HZWxzAzynitiWVYoF7NXYvRs8506OhunVnrT5+nWrE1FJR2b/MDOaRj1zMvpbIaRGr
+         LCsuCLbkM6/lRqKVsr8/FNlK/7Ne9f/0n2j75o4wQWcxnAbbHngTj0RoLAxCJ1+ZmlVs
+         Wz+UfbkQZHIiZO2vXtiLQ23B0XPEPOlRudxM9j636WhGALYgqcJuUJtJtX233OYmDHmR
+         D1k4XuhwFHRDrFIYtD72H3b07E+ptNeyRc+zY0PRQHchKjKg8ZSmCGqEgHC/+xa5ZVoV
+         fjEUpbNeyrwZPF23096BLq6MWc0MnRvvBt7yxz//PoXk0iPTrBOVhApuU1KJYHJ/0dkT
+         S0Ig==
+X-Forwarded-Encrypted: i=1; AJvYcCUY8Vl/LJnbMF7KCX/xMS7cQFg8X5w/XexUDi7rbT0x7hNouNSDy/DXjjXPgL7W9bvFtxJ4an8knmviXNTndBcLSOoU6N3Rk6Ro26f02+ITSpO+MCVFd3eAQgIHf0dT4xnCJue4qTmF6qs4kq1/mg==
+X-Gm-Message-State: AOJu0Yxu4PALOfgIBX99aQOZYNXs3fz9q/zQAGhSlVFWyCVL3xYvx4Vt
+	FuwBJAF2AVkJru6rHy7hcUgLm2bmRKfqqbQeXi4Vp9m9tQsVujYgmR3RgRzPa6k/m9l27D9tQIP
+	AYopqCnoM4FgAPHkJnHw72TtJzg4=
+X-Google-Smtp-Source: AGHT+IEay6FGztYfE2qCHZyN+KVpz05C0vlPt5Ih3zDmHjBor++ktoeRMFCWXbrke/P6T1Q489xN0AuHPqRW5iMO6YU=
+X-Received: by 2002:a05:6a21:6d8a:b0:1c4:8291:e94e with SMTP id
+ adf61e73a8af0-1c69966b36dmr2828884637.45.1722558308588; Thu, 01 Aug 2024
+ 17:25:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZqukTsjWqbx-xZ7L@x1>
+References: <20240731235505.710436-1-namhyung@kernel.org> <CAP-5=fX8Fg4jJDN=d2pHU1Xy3-A119c5gZYXtQu0b0Rwb0-ymQ@mail.gmail.com>
+In-Reply-To: <CAP-5=fX8Fg4jJDN=d2pHU1Xy3-A119c5gZYXtQu0b0Rwb0-ymQ@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 1 Aug 2024 17:24:57 -0700
+Message-ID: <CAM9d7cg=xZAqp5RMfAVc6Oy15zFmn3GO6GGmja7pz22SSjuZnw@mail.gmail.com>
+Subject: Re: [PATCHSET 0/6] perf mem: Basic support for data type profiling (v1)
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 01, 2024 at 12:05:50PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jul 31, 2024 at 05:12:47PM -0700, Namhyung Kim wrote:
-> > On Wed, Jul 31, 2024 at 11:10:07AM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Wed, Jul 03, 2024 at 03:30:35PM -0700, Namhyung Kim wrote:
-> > > > Now it can run the BPF filtering test with normal user if the BPF
-> > > > objects are pinned by 'sudo perf record --setup-filter pin'.  Let's
-> > > > update the test case to verify the behavior.  It'll skip the test if the
-> > > > filter check is failed from a normal user, but it shows a message how to
-> > > > set up the filters.
-> > > > 
-> > > > First, run the test as a normal user and it fails.
-> > > > 
-> > > >   $ perf test -vv filtering
-> > > >    95: perf record sample filtering (by BPF) tests:
-> > > >   --- start ---
-> > > >   test child forked, pid 425677
-> > > >   Checking BPF-filter privilege
-> > > >   try 'sudo perf record --setup-filter pin' first.       <<<--- here
-> > > >   bpf-filter test [Skipped permission]
-> > > >   ---- end(-2) ----
-> > > >    95: perf record sample filtering (by BPF) tests                     : Skip
-> > > > 
-> > > > According to the message, run the perf record command to pin the BPF
-> > > > objects.
-> > > > 
-> > > >   $ sudo perf record --setup-filter pin
-> > > > 
-> > > > And re-run the test as a normal user.
-> > > > 
-> > > >   $ perf test -vv filtering
-> > > >    95: perf record sample filtering (by BPF) tests:
-> > > >   --- start ---
-> > > >   test child forked, pid 424486
-> > > >   Checking BPF-filter privilege
-> > > >   Basic bpf-filter test
-> > > >   Basic bpf-filter test [Success]
-> > > >   Failing bpf-filter test
-> > > >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> > > >   Failing bpf-filter test [Success]
-> > > >   Group bpf-filter test
-> > > >   Error: task-clock event does not have PERF_SAMPLE_CPU
-> > > >   Error: task-clock event does not have PERF_SAMPLE_CODE_PAGE_SIZE
-> > > >   Group bpf-filter test [Success]
-> > > >   ---- end(0) ----
-> > > >    95: perf record sample filtering (by BPF) tests                     : Ok
-> > > 
-> > > Ok, so I tested one of the examples you provide as a root user:
-> > > 
-> > > root@number:~# perf record -o- -e cycles:u --filter 'period < 10' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.024 MB - ]
-> > >        perf-exec  228020 53029.825757:          1 cpu_core/cycles/u:      7fe361d1cc11 [unknown] ([unknown])
-> > >        perf-exec  228020 53029.825760:          1 cpu_core/cycles/u:      7fe361d1cc11 [unknown] ([unknown])
-> > >             perf  228020 53029.826313:          1 cpu_atom/cycles/u:      7fd80d7ba040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228020 53029.826316:          1 cpu_atom/cycles/u:      7fd80d7ba040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228020 53029.838051:          1 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228020 53029.838054:          1 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228020 53029.838055:          9 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228020 53029.844137:          1 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228020 53029.844139:          1 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > > root@number:~# perf record -o- -e cycles:u --filter 'period < 100000' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.025 MB - ]
-> > >        perf-exec  228084 53076.760776:          1 cpu_core/cycles/u:      7f7e7691cc11 [unknown] ([unknown])
-> > >        perf-exec  228084 53076.760779:          1 cpu_core/cycles/u:      7f7e7691cc11 [unknown] ([unknown])
-> > >        perf-exec  228084 53076.760779:         10 cpu_core/cycles/u:      7f7e7691cc11 [unknown] ([unknown])
-> > >        perf-exec  228084 53076.760780:        497 cpu_core/cycles/u:      7f7e7691cc11 [unknown] ([unknown])
-> > >        perf-exec  228084 53076.760781:      27924 cpu_core/cycles/u:      7f7e7691cc11 [unknown] ([unknown])
-> > >             perf  228084 53076.761318:          1 cpu_atom/cycles/u:      7f317057d040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.761320:          1 cpu_atom/cycles/u:      7f317057d040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.761321:         14 cpu_atom/cycles/u:      7f317057d040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.761322:        518 cpu_atom/cycles/u:      7f317057d040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.761322:      20638 cpu_atom/cycles/u:      7f317057d040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.768070:          1 cpu_core/cycles/u:      7f317056e898 _dl_relocate_object+0x1d8 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.768072:          1 cpu_core/cycles/u:      7f317056e898 _dl_relocate_object+0x1d8 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.768073:         17 cpu_core/cycles/u:      7f317056e898 _dl_relocate_object+0x1d8 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.768073:        836 cpu_core/cycles/u:      7f317056e898 _dl_relocate_object+0x1d8 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.768074:      44346 cpu_core/cycles/u:      7f317056e89b _dl_relocate_object+0x1db (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228084 53076.843976:          1 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228084 53076.843978:          1 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228084 53076.843979:         13 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228084 53076.843979:        563 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228084 53076.843980:      26519 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > >             perf  228084 53077.482090:          1 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228084 53077.482092:          1 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228084 53077.482093:         15 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228084 53077.482093:        746 cpu_core/cycles/u:            53b062 noploop+0x62 (/home/acme/bin/perf)
-> > >             perf  228084 53077.482094:      38315 cpu_core/cycles/u:            53b05c noploop+0x5c (/home/acme/bin/perf)
-> > > root@number:~#
-> > > 
-> > > Filtering by period works as advertised, now I have done as root;
-> > > 
-> > > root@number:~# perf record --setup-filter pin
-> > > root@number:~# ls -la /sys/fs/bpf/perf_filter/
-> > > total 0
-> > > drwxr-xr-x. 2 root root 0 Jul 31 10:43 .
-> > > drwxr-xr-t. 3 root root 0 Jul 31 10:43 ..
-> > > -rw-rw-rw-. 1 root root 0 Jul 31 10:43 dropped
-> > > -rw-rw-rw-. 1 root root 0 Jul 31 10:43 filters
-> > > -rwxrwxrwx. 1 root root 0 Jul 31 10:43 perf_sample_filter
-> > > -rw-rw-rw-. 1 root root 0 Jul 31 10:43 pid_hash
-> > > -rw-------. 1 root root 0 Jul 31 10:43 sample_f_rodata
-> > > root@number:~# ls -la /sys/fs/bpf/perf_filter/perf_sample_filter 
-> > > -rwxrwxrwx. 1 root root 0 Jul 31 10:43 /sys/fs/bpf/perf_filter/perf_sample_filter
-> > > root@number:~#
-> > > 
-> > > And as a normal user I try:
-> > > 
-> > > acme@number:~$ perf record -o- -e cycles:u perf test -w noploop | perf script -i- | head
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.204 MB - ]
-> > >             perf  228218 53158.670585:          1 cpu_atom/cycles/u:      7f2fb1b6e040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.670590:          1 cpu_atom/cycles/u:      7f2fb1b6e040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.670592:          7 cpu_atom/cycles/u:      7f2fb1b6e040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.670593:        117 cpu_atom/cycles/u:      7f2fb1b6e040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.670595:       2152 cpu_atom/cycles/u:      7f2fb1b6e040 _start+0x0 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.670604:      38977 cpu_atom/cycles/u:  ffffffff99201280 [unknown] ([unknown])
-> > >             perf  228218 53158.670650:     167064 cpu_atom/cycles/u:      7f2fb1b67d7c intel_check_word.constprop.0+0x16c (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.671472:     232830 cpu_atom/cycles/u:      7f2fb1b75d98 strcmp+0x78 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.672710:     191183 cpu_atom/cycles/u:      7f2fb1b59311 _dl_map_object_from_fd+0xea1 (/usr/lib64/ld-linux-x86-64.so.2)
-> > >             perf  228218 53158.673461:     158125 cpu_atom/cycles/u:      7f2fb1b77148 strcmp+0x1428 (/usr/lib64/ld-linux-x86-64.so.2)
-> > > acme@number:~$
-> > > 
-> > > Ok, no filtering, bot samples, lets try to use filtering as with root:
-> > > 
-> > > acme@number:~$ perf record -o- -e cycles:u --filter 'period < 10000000' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.019 MB - ]
-> > > acme@number:~$ perf record -o- -e cycles:u --filter 'period < 10000000' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.019 MB - ]
-> > > acme@number:~$ perf record -o- -e cycles:u --filter 'period < 10000000' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.019 MB - ]
-> > > acme@number:~$ perf record -o- -e cycles:u --filter 'period < 10000000' perf test -w noploop | perf script -i-
-> > > [ perf record: Woken up 1 times to write data ]
-> > > [ perf record: Captured and wrote 0.019 MB - ]
-> > > acme@number:~$
-> > 
-> > Hmm.. strange.  The above command works well for me.
-> > 
-> > > 
-> > > acme@number:~$ perf record -v -e cycles:u --filter 'period < 10000000' perf test -w noploop 
-> > > Using CPUID GenuineIntel-6-B7-1
-> > > DEBUGINFOD_URLS=
-> > > nr_cblocks: 0
-> > > affinity: SYS
-> > > mmap flush: 1
-> > > comp level: 0
-> > > Problems creating module maps, continuing anyway...
-> > > pid hash: 228434 -> 13
-> > > pid hash: 228434 -> 14
-> > 
-> > This part is a little strange as it's using two entries.  Hmm, are you
-> > using a hybrid machine?  Anyway I think it should work there too..
-> 
-> Yes, I'll try it again on a 5950x since it isn't hybrid.
-> 
-> > Also the number is too high.. I expect 1 or 2.  Maybe it didn't release
-> > all the entries.  Let me think about the case.
-> 
-> I'm inclined for now to keep this series merged and then take fixes on
-> top, please advise if this isn't ok with you.
+On Thu, Aug 1, 2024 at 8:23=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+>
+> On Wed, Jul 31, 2024 at 4:55=E2=80=AFPM Namhyung Kim <namhyung@kernel.org=
+> wrote:
+> >
+> > Hello,
+> >
+> > As we added data type profiling, 'perf mem report' should support that
+> > as well.  This patches just added a couple of convenient options.
+> >
+> >   $ perf mem report -T -s mem
+> >   # To display the perf.data header info, please use --header/--header-=
+only options.
+> >   #
+> >   #
+> >   # Total Lost Samples: 0
+> >   #
+> >   # Samples: 131  of event 'cpu/mem-loads,ldlat=3D30/P'
+> >   # Total weight : 18561
+> >   # Sort order   : mem,type
+> >   #
+> >   # Overhead       Samples  Memory access                            Da=
+ta Type
+> >   # ........  ............  .......................................  ..=
+.......
+> >   #
+> >       14.84%            22  L1 hit                                   (u=
+nknown)
+> >       12.02%             8  RAM hit                                  (u=
+nknown)
+> >        7.68%             8  LFB/MAB hit                              (u=
+nknown)
+> >        6.29%            12  L1 hit                                   (s=
+tack operation)
+> >        3.97%             5  LFB/MAB hit                              st=
+ruct psi_group_cpu
+> >        3.69%             3  L1 hit                                   st=
+ruct
+> >        3.18%             3  LFB/MAB hit                              (s=
+tack operation)
+> >        2.89%             5  L3 hit                                   (u=
+nknown)
+> >        2.58%             3  L1 hit                                   un=
+signed int
+> >        2.31%             2  L1 hit                                   st=
+ruct psi_group_cpu
+> >        2.21%             2  LFB/MAB hit                              st=
+ruct cfs_rq
+> >        2.19%             2  RAM hit                                  st=
+ruct sched_entity
+> >        2.16%             1  L1 hit                                   st=
+ruct task_struct
+> >        1.85%             3  L1 hit                                   st=
+ruct pcpu_hot
+> >        1.78%             1  RAM hit                                  st=
+ruct tss_struct
+> >        1.72%             1  LFB/MAB hit                              st=
+ruct mm_struct
+> >        1.62%             2  L1 hit                                   st=
+ruct psi_group
+> >        ...
+> >
+> >
+> > The code is also available at 'perf/mem-type-v1' branch in
+> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+> >
+> > Thanks,
+> > Namhyung
+> >
+> >
+> > Namhyung Kim (6):
+> >   perf hist: Correct hist_entry->mem_info refcounts
+> >   perf mem: Free the allocated sort string
+> >   perf mem: Rework command option handling
+> >   perf tools: Add mode argument to sort_help()
+> >   perf mem: Add -s/--sort option
+> >   perf mem: Add -T/--data-type option to report subcommand
+> >
+> >  tools/perf/builtin-mem.c     | 100 ++++++++++++++++++++++-------------
+> >  tools/perf/builtin-report.c  |   4 +-
+> >  tools/perf/util/hist.c       |  14 ++---
+> >  tools/perf/util/map_symbol.c |  18 +++++++
+> >  tools/perf/util/map_symbol.h |   3 ++
+> >  tools/perf/util/mem-info.c   |  13 +++++
+> >  tools/perf/util/mem-info.h   |   1 +
+> >  tools/perf/util/sort.c       |  12 +++--
+> >  tools/perf/util/sort.h       |   2 +-
+> >  9 files changed, 116 insertions(+), 51 deletions(-)
+>
+> Lgtm, man page updates?
 
-No objections, I'll investigate why it failed on your machine..
-
-Thanks,
+Thanks for your review, I'll update the documentation.
 Namhyung
-
