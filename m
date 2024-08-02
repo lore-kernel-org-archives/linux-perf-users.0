@@ -1,211 +1,252 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EF061C2322;
-	Fri,  2 Aug 2024 12:35:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BFAE175D2D;
+	Fri,  2 Aug 2024 15:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722602124; cv=none; b=C57lk540pylixSxY8UYehThXXsC4/5JBf3+7Fn4SVyBsyoN/eB1XfDXhtnks9bEDEQ0Khc1ufdmkfOw2JubkjgcFdmu6Dd4EWGX8oHejUI5t2vH/dkouMzLlAUL3iFX3HE2DfeKK3co9kwmTZeoewzc/D1WlgzHm0FBxD42bDFg=
+	t=1722612368; cv=none; b=SWzj52MJDWJl30g+RTTMvLsi+rDe7d9WYC3wnKmQK4G6QCL4t866zxPd9jLSyy41tORy+iQ7umnMVRrrp+8XR9UxTmk9+jE4TkylsCMkqh2mlC3FPzFetFIZKhSd/YjQMgzq9/kiOiOWxbk2vJLG4+YDn5AorzptKZaFoKB3zJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722602124; c=relaxed/simple;
-	bh=FHnmpGRy8XB6Sk4thzRub55LsuEW/wUxScQBjyIdhwY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XrPUQ2QUd5E1wvCm++76GnRjjSuKJOpapUkDtCns7ykyw2DURxMsMEnrW2mhLQPPepKw9kiGa1hC2vZliBZDKONLDePil8E1A8Jp4+bq3lv3DDcrVIipOkM4id4u5shb/UyJpZHSxPes9zLU21qRjBX9fLRIxFTQroYmUQ+YKvo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a9/EjL91; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722612368; c=relaxed/simple;
+	bh=m5D3gD/Hy9UKtTCnXqA+30/hEnVScAGJ1UrYeX8hcqE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bsHHQEig5sAgBHz0uShuDzi8GSp5psusgXQA79goemGagTXUibg0FDMUcJ25ntIQf+Z9GcxWITo05Sc/0EFHQ5zwOwjmb2mkWdbIWuLTeg5tgp3Q9aY+RpMdGV48pozUo5UHreOVAWWCg7qUBXikocACKYIqS+LJzCQ1aEOo5B0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nF5xhe84; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a9/EjL91"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19629C4AF0F;
-	Fri,  2 Aug 2024 12:35:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722602124;
-	bh=FHnmpGRy8XB6Sk4thzRub55LsuEW/wUxScQBjyIdhwY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=a9/EjL91IlsfkKFaDSguE8aBOuIVCFWgc83VgXOkejD4AZr/nz0OwzLTBXkiO5U4/
-	 UGVyEcDraSbfbs+ouCnlAFSfE5bIfQ1NQSO3pL3NTbDEDLzrfyi5JV6jyABb8yTOiU
-	 EEEfM3HfLYuvVP0Z0hBenOZOrfBpL52G9dJXmfqFxZ1lmJrEoFSkHLCHRihy5dCC18
-	 5ziGLAH9km1ETO6YiSYaep2Mbp1NM43ZV4vYMVMMgZeEpaoxxEMbH9EhSnE6YwC2qj
-	 vate03mVdCLKZHLD4vBCZG3Kp0qMtfPMk+2F07DyFJh92zp3wq6XGmO7c2JsGh1joB
-	 hdnAZP8e9NwQg==
-Received: by mail-oo1-f41.google.com with SMTP id 006d021491bc7-5d5c062f65cso688639eaf.3;
-        Fri, 02 Aug 2024 05:35:24 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWRILGAz2AvHOeIQqwRrpCYHBHgbZXc11FHSm0qDwUx3B3h9CR4xQ0GU6qcVCHeqadL+FARaiIeYtrjANguIvfAjbDzaxJln95lcRTYKPEh0m82/dsm+fh8ASZaK68Rd6cPrBHSgTJzsKV4F8YfWE//xxGOTZSNWI4iFF/Ln7gBFcnXsP5+VTHS
-X-Gm-Message-State: AOJu0YwSMhKajmE+nXs3M8kiVSJbxwEmf/u9y/cAk9+OB+WobIaYvTvH
-	pFujQW/nkQVgZh7WMei/OL3SiPeXHnOcPNEtcCY3fdP5OdImYL7GSWdPvka1oI2omPkZlXVWMgk
-	eloVvyyQhhOqrmfyd4YEPqRCrmbQ=
-X-Google-Smtp-Source: AGHT+IHKCZNxxthgxzvCmtFMXc0TcRz/ZjO3WP6GHIr9DsRgpDfzGnAkKSgA+J8T0YNm7URLGmMh58HfeLoZe/mHMlM=
-X-Received: by 2002:a05:6870:c6aa:b0:260:eb92:22b5 with SMTP id
- 586e51a60fabf-26891a29870mr2381440fac.1.1722602123299; Fri, 02 Aug 2024
- 05:35:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nF5xhe84"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1722612368; x=1754148368;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=m5D3gD/Hy9UKtTCnXqA+30/hEnVScAGJ1UrYeX8hcqE=;
+  b=nF5xhe84OdmfD7QJi+1ix/kFk1rDzcT/2F5JOUqivUsz9fD5/EvO4t7i
+   fJH1xnMvRI7Erj6FUG4yJQ130ibPSgHtM1FiUpJclHwc++BZPvsUItkSB
+   A0EbghM5sZDDW/F+dLkQw5O3z+mPdCluXpR3H65w27N4hiba67xwwj2tZ
+   h24moStmP2Ix+gC+/DC+zj8XoHRs6wqXKOgSts9AASdeID3W5xObBg8KT
+   NuuOtZ1tv3nLhz9y9SdBG12TyJEB2WZDownuG4yXKr2loli/1Xn142c9J
+   2By7ylHVom6uSSayfxQyKOVjuD36ErNP2IahKctMFtd6HwIaZjeRkZQzT
+   g==;
+X-CSE-ConnectionGUID: dzHrVkPOQz6ji+45wjDtOw==
+X-CSE-MsgGUID: H7FrW9LASd+41O0p5BHBfQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="38099843"
+X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
+   d="scan'208";a="38099843"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 08:26:07 -0700
+X-CSE-ConnectionGUID: /QFu6Oe4SdS8i5wTlOih5Q==
+X-CSE-MsgGUID: Pmd+rAUTT/uAZirSpnUy8A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
+   d="scan'208";a="55352789"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 08:26:07 -0700
+Received: from [10.212.17.69] (kliang2-mobl1.ccr.corp.intel.com [10.212.17.69])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 2E51820BF41F;
+	Fri,  2 Aug 2024 08:26:03 -0700 (PDT)
+Message-ID: <3956760b-de6e-4726-ac4f-e03738233f73@linux.intel.com>
+Date: Fri, 2 Aug 2024 11:26:01 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240730044917.4680-1-Dhananjay.Ugwekar@amd.com> <20240730044917.4680-3-Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <20240730044917.4680-3-Dhananjay.Ugwekar@amd.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Fri, 2 Aug 2024 14:35:12 +0200
-X-Gmail-Original-Message-ID: <CAJZ5v0h4GAVCpUnbCMHMophsSZ522kkReAbUMdfFgRJfd0vHkw@mail.gmail.com>
-Message-ID: <CAJZ5v0h4GAVCpUnbCMHMophsSZ522kkReAbUMdfFgRJfd0vHkw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] powercap/intel_rapl: Fix the energy-pkg event for
- AMD CPUs
-To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, rui.zhang@intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-pm@vger.kernel.org, ananth.narayan@amd.com, gautham.shenoy@amd.com, 
-	kprateek.nayak@amd.com, ravi.bangoria@amd.com, 
-	Michael Larabel <michael@michaellarabel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] perf/x86/rapl: Fix the energy-pkg event for AMD
+ CPUs
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, peterz@infradead.org,
+ mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com, tglx@linutronix.de,
+ bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ rui.zhang@intel.com
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pm@vger.kernel.org, ananth.narayan@amd.com, gautham.shenoy@amd.com,
+ kprateek.nayak@amd.com, ravi.bangoria@amd.com
+References: <20240730044917.4680-1-Dhananjay.Ugwekar@amd.com>
+ <20240730044917.4680-2-Dhananjay.Ugwekar@amd.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240730044917.4680-2-Dhananjay.Ugwekar@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jul 30, 2024 at 6:53=E2=80=AFAM Dhananjay Ugwekar
-<Dhananjay.Ugwekar@amd.com> wrote:
->
-> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"=
-),
+Hi Dhananjay,
+
+On 2024-07-30 12:49 a.m., Dhananjay Ugwekar wrote:
+> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
 > on AMD processors that support extended CPUID leaf 0x80000026, the
-> topology_logical_die_id() macros, no longer returns package id, instead i=
-t
-> returns the CCD (Core Complex Die) id. This leads to the energy-pkg
+> topology_die_cpumask() and topology_logical_die_id() macros, no longer
+> return the package cpumask and package id, instead they return the CCD
+> (Core Complex Die) mask and id respectively. This leads to the energy-pkg
 > event scope to be modified to CCD instead of package.
->
+> 
 > For more historical context, please refer to commit 32fb480e0a2c
-> ("powercap/intel_rapl: Support multi-die/package"), which initially chang=
-ed
+> ("powercap/intel_rapl: Support multi-die/package"), which initially changed
 > the RAPL scope from package to die for all systems, as Intel systems
 > with Die enumeration have RAPL scope as die, and those without die
-> enumeration are not affected. So, all systems(Intel, AMD, Hygon), worked
-> correctly with topology_logical_die_id() until recently, but this changed
-> after the "0x80000026 leaf" commit mentioned above.
->
-> Future multi-die Intel systems will have package scope RAPL counters,
-> but they will be using TPMI RAPL interface, which is not affected by
-> this change.
->
+> enumeration were not affected by it. So, all systems(Intel, AMD, Hygon),
+> worked correctly with topology_logical_die_id() until recently, but this
+> changed after the "0x80000026 leaf" commit mentioned above.
+> 
 > Replacing topology_logical_die_id() with topology_physical_package_id()
 > conditionally only for AMD and Hygon fixes the energy-pkg event.
->
-> On an AMD 2 socket 8 CCD Zen4 server:
->
+> 
+> On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+> 
 > Before:
->
-> linux$ ls /sys/class/powercap/
-> intel-rapl      intel-rapl:4    intel-rapl:8:0  intel-rapl:d
-> intel-rapl:0    intel-rapl:4:0  intel-rapl:9    intel-rapl:d:0
-> intel-rapl:0:0  intel-rapl:5    intel-rapl:9:0  intel-rapl:e
-> intel-rapl:1    intel-rapl:5:0  intel-rapl:a    intel-rapl:e:0
-> intel-rapl:1:0  intel-rapl:6    intel-rapl:a:0  intel-rapl:f
-> intel-rapl:2    intel-rapl:6:0  intel-rapl:b    intel-rapl:f:0
-> intel-rapl:2:0  intel-rapl:7    intel-rapl:b:0
-> intel-rapl:3    intel-rapl:7:0  intel-rapl:c
-> intel-rapl:3:0  intel-rapl:8    intel-rapl:c:0
->
+> $ cat /sys/devices/power/cpumask
+> 0,8,16,24,32,40,48,56,64,72,80,88.
+> 
+> The expected cpumask here is supposed to be just "0", as it is a package
+> scope event, only one CPU will be collecting the event for all the CPUs in
+> the package.
+> 
 > After:
->
-> linux$ ls /sys/class/powercap/
-> intel-rapl  intel-rapl:0  intel-rapl:0:0  intel-rapl:1  intel-rapl:1:0
->
-> Only one sysfs entry per-event per-package is created after this change.
->
-> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x8000002=
-6 leaf")
-> Reported-by: Michael Larabel <michael@michaellarabel.com>
+> $ cat /sys/devices/power/cpumask
+> 0
+> 
+> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
 > Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
 > Reviewed-by: Zhang Rui <rui.zhang@intel.com>
 > ---
 > Changes in v2:
-> * Updated scope description comment, commit log
-> * Rename rapl_pmu_is_pkg_scope() to rapl_msrs_are_pkg_scope()
+> * Updated the scope description comment
+> * Dont create rapl_pmu_cpumask and rapl_pmu_idx local variables, as they're
+>   used only once, instead call the get_* functions directly where needed
 > * Check topology_logical_(die/package)_id return value
+> --->  arch/x86/events/rapl.c | 47 +++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 42 insertions(+), 5 deletions(-)
 
-This patch does not depend on the first one in the series if I'm not
-mistaken, in which case I can pick it up separately if you want me to
-do that, so please let me know.
+I just posted a patch set to clean up the hotplug code in perf.
+https://lore.kernel.org/lkml/20240802151643.1691631-1-kan.liang@linux.intel.com/
 
-Thanks!
+With the cleanup patch set, the fix may be simplified as below.
 
-> ---
->  drivers/powercap/intel_rapl_common.c | 34 ++++++++++++++++++++++++----
->  1 file changed, 30 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/inte=
-l_rapl_common.c
-> index 3cffa6c79538..4bc56acb99d6 100644
-> --- a/drivers/powercap/intel_rapl_common.c
-> +++ b/drivers/powercap/intel_rapl_common.c
-> @@ -2128,6 +2128,21 @@ void rapl_remove_package(struct rapl_package *rp)
->  }
->  EXPORT_SYMBOL_GPL(rapl_remove_package);
->
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index b70ad880c5bc..801697be4118 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -646,6 +646,10 @@ static int __init init_rapl_pmus(void)
+ 	rapl_pmus->pmu.module           = THIS_MODULE;
+ 	rapl_pmus->pmu.scope            = PERF_PMU_SCOPE_DIE;
+ 	rapl_pmus->pmu.capabilities     = PERF_PMU_CAP_NO_EXCLUDE;
++
++	if (rapl_pmu_is_pkg_scope())
++		rapl_pmus->pmu.scope = PERF_PMU_SCOPE_PKG;
++
+ 	return 0;
+ }
+
+Could you please take a look at the cleanup patch and give it a try?
+
+Thanks,
+Kan
+> 
+> diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+> index b985ca79cf97..7097c0f6a71f 100644
+> --- a/arch/x86/events/rapl.c
+> +++ b/arch/x86/events/rapl.c
+> @@ -103,6 +103,19 @@ static struct perf_pmu_events_attr event_attr_##v = {				\
+>  	.event_str	= str,							\
+>  };
+>  
 > +/*
 > + * RAPL Package energy counter scope:
-> + * 1. AMD/HYGON platforms use per-PKG package energy counter
+> + * 1. AMD/HYGON platforms have a per-PKG package energy counter
 > + * 2. For Intel platforms
-> + *     2.1 CLX-AP platform has per-DIE package energy counter
-> + *     2.2 Other platforms that uses MSR RAPL are single die systems so =
-the
-> + *          package energy counter can be considered as per-PKG/per-DIE,
-> + *          here it is considered as per-DIE.
-> + *     2.3 New platforms that use TPMI RAPL doesn't care about the
-> + *         scope because they are not MSR/CPU based.
+> + *	2.1. CLX-AP is multi-die and its RAPL MSRs are die-scope
+> + *	2.2. Other Intel platforms are single die systems so the scope can be
+> + *	     considered as either pkg-scope or die-scope, and we are considering
+> + *	     them as die-scope.
 > + */
-> +#define rapl_msrs_are_pkg_scope()                              \
-> +       (boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_AMD ||  \
-> +        boot_cpu_data.x86_vendor =3D=3D X86_VENDOR_HYGON)
+> +#define rapl_pmu_is_pkg_scope()				\
+> +	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
+> +	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
 > +
->  /* caller to ensure CPU hotplug lock is held */
->  struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct =
-rapl_if_priv *priv,
->                                                          bool id_is_cpu)
-> @@ -2135,8 +2150,14 @@ struct rapl_package *rapl_find_package_domain_cpus=
-locked(int id, struct rapl_if_
->         struct rapl_package *rp;
->         int uid;
->
-> -       if (id_is_cpu)
-> -               uid =3D topology_logical_die_id(id);
-> +       if (id_is_cpu) {
-> +               uid =3D rapl_msrs_are_pkg_scope() ?
-> +                     topology_physical_package_id(id) : topology_logical=
-_die_id(id);
-> +               if (uid < 0) {
-> +                       pr_err("topology_logical_(package/die)_id() retur=
-ned a negative value");
-> +                       return ERR_PTR(-EINVAL);
-> +               }
-> +       }
->         else
->                 uid =3D id;
->
-> @@ -2168,9 +2189,14 @@ struct rapl_package *rapl_add_package_cpuslocked(i=
-nt id, struct rapl_if_priv *pr
->                 return ERR_PTR(-ENOMEM);
->
->         if (id_is_cpu) {
-> -               rp->id =3D topology_logical_die_id(id);
-> +               rp->id =3D rapl_msrs_are_pkg_scope() ?
-> +                        topology_physical_package_id(id) : topology_logi=
-cal_die_id(id);
-> +               if ((int)(rp->id) < 0) {
-> +                       pr_err("topology_logical_(package/die)_id() retur=
-ned a negative value");
-> +                       return ERR_PTR(-EINVAL);
-> +               }
->                 rp->lead_cpu =3D id;
-> -               if (topology_max_dies_per_package() > 1)
-> +               if (!rapl_msrs_are_pkg_scope() && topology_max_dies_per_p=
-ackage() > 1)
->                         snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH, "p=
-ackage-%d-die-%d",
->                                  topology_physical_package_id(id), topolo=
-gy_die_id(id));
->                 else
-> --
-> 2.43.0
->
->
+>  struct rapl_pmu {
+>  	raw_spinlock_t		lock;
+>  	int			n_active;
+> @@ -140,9 +153,25 @@ static unsigned int rapl_cntr_mask;
+>  static u64 rapl_timer_ms;
+>  static struct perf_msr *rapl_msrs;
+>  
+> +/*
+> + * Helper functions to get the correct topology macros according to the
+> + * RAPL PMU scope.
+> + */
+> +static inline unsigned int get_rapl_pmu_idx(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
+> +					 topology_logical_die_id(cpu);
+> +}
+> +
+> +static inline const struct cpumask *get_rapl_pmu_cpumask(int cpu)
+> +{
+> +	return rapl_pmu_is_pkg_scope() ? topology_core_cpumask(cpu) :
+> +					 topology_die_cpumask(cpu);
+> +}
+> +
+>  static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+>  {
+> -	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
+> +	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+>  
+>  	/*
+>  	 * The unsigned check also catches the '-1' return value for non
+> @@ -552,7 +581,7 @@ static int rapl_cpu_offline(unsigned int cpu)
+>  
+>  	pmu->cpu = -1;
+>  	/* Find a new cpu to collect rapl events */
+> -	target = cpumask_any_but(topology_die_cpumask(cpu), cpu);
+> +	target = cpumask_any_but(get_rapl_pmu_cpumask(cpu), cpu);
+>  
+>  	/* Migrate rapl events to the new target */
+>  	if (target < nr_cpu_ids) {
+> @@ -565,6 +594,11 @@ static int rapl_cpu_offline(unsigned int cpu)
+>  
+>  static int rapl_cpu_online(unsigned int cpu)
+>  {
+> +	s32 rapl_pmu_idx = get_rapl_pmu_idx(cpu);
+> +	if (rapl_pmu_idx < 0) {
+> +		pr_err("topology_logical_(package/die)_id() returned a negative value");
+> +		return -EINVAL;
+> +	}
+>  	struct rapl_pmu *pmu = cpu_to_rapl_pmu(cpu);
+>  	int target;
+>  
+> @@ -579,14 +613,14 @@ static int rapl_cpu_online(unsigned int cpu)
+>  		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+>  		rapl_hrtimer_init(pmu);
+>  
+> -		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
+> +		rapl_pmus->pmus[rapl_pmu_idx] = pmu;
+>  	}
+>  
+>  	/*
+>  	 * Check if there is an online cpu in the package which collects rapl
+>  	 * events already.
+>  	 */
+> -	target = cpumask_any_and(&rapl_cpu_mask, topology_die_cpumask(cpu));
+> +	target = cpumask_any_and(&rapl_cpu_mask, get_rapl_pmu_cpumask(cpu));
+>  	if (target < nr_cpu_ids)
+>  		return 0;
+>  
+> @@ -675,7 +709,10 @@ static const struct attribute_group *rapl_attr_update[] = {
+>  
+>  static int __init init_rapl_pmus(void)
+>  {
+> -	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
+> +	int nr_rapl_pmu = topology_max_packages();
+> +
+> +	if (!rapl_pmu_is_pkg_scope())
+> +		nr_rapl_pmu *= topology_max_dies_per_package();
+>  
+>  	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
+>  	if (!rapl_pmus)
