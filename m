@@ -1,70 +1,91 @@
-Received: from intartek.com (intartek.com [185.20.185.233])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DB8256D
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 04:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.20.185.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98A0F211C
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 07:04:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722573195; cv=none; b=Rbvtn1fXvbmoYqvu/yFAyBb5IE3GPJj8fyiev7QLhapneeg2lOjozdQQxCUExaPyboo+xrkkIO7vHSjTGjs6+4WlOaZinO+aKYQ5iVrnXkJoE6sW0XuBYNev1cuWeXRxGuSkIpQfbWpujcntp/b32XcyrC06LcBPUTX47R2C6Dc=
+	t=1722582253; cv=none; b=ZopdHE3FHG/o2ZgKu8FEPlffBLTf2jj0uH2auzDRW/owB/nafctFDOir2Hbo/0tW6sSoVyeosHZAOR0a66n0CvHVCfh97/co08PBpRGOqA0tSMNEgfjBUdqTaHuv/7xb3WHYgKn5EeFsyhYCC0nZP2BT+JJlnYxApcPEHlqIlfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722573195; c=relaxed/simple;
-	bh=Ra2zkScJFHfGIgo34SQVyjpIe6EfxJo+kn5RywbrrLE=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=n1XdrW8e7YQW3WcpS3efnHCTLw7nYMWL6k2Ph8ach0BBFxg1Bghtkbce+0Pl24yzlkX4n/fvKEPqPcWoRUPcNiqf4xqhM0eXbbyE1Opd3pA8cFJdgE4HMqSTZZ+amLYRirZa2maEufRRaM576vpAruHg+TWEuMEqprQvHNNi5S4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=main.intartek.com; spf=pass smtp.mailfrom=main.intartek.com; dkim=pass (2048-bit key) header.d=main.intartek.com header.i=@main.intartek.com header.b=ZzQSNlX4; arc=none smtp.client-ip=185.20.185.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=main.intartek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=main.intartek.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=main.intartek.com header.i=@main.intartek.com header.b="ZzQSNlX4"
-Received: from 239.32.165.34.bc.googleusercontent.com (239.32.165.34.bc.googleusercontent.com [34.165.32.239])
-	by intartek.com (Postfix) with ESMTPA id A017982351
-	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 04:19:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=main.intartek.com;
-	s=202406; t=1722572391;
-	bh=Ra2zkScJFHfGIgo34SQVyjpIe6EfxJo+kn5RywbrrLE=;
-	h=Reply-To:From:To:Subject:Date:From;
-	b=ZzQSNlX49Twds04eTXbKMC2Wgyo+90IDacOelk4iS0gl9iy4GTQeWen3UOTUunpv1
-	 jzLgwbxjx06ukV/ZX7RdZz9gAJ9cAJ8RFDVc48W+KaPoozqaZyBQXlROgqKzlXW8wO
-	 5TjvJ1ocjI5LvN6ySqrxvHDElBkSgzRStesix4XyTPAz0YHgZJy9DFqRgNzVnTlTkk
-	 aLjLhg7KMVaF99gwfOiU3PnQPoT2kMLdHUY6d8B8vsc28k+bUzqWXgwhsIuXFHRUtq
-	 kVobxqO0r2NRWknGWiwuJEscyBjsLXyB4mxJnrjIktJPrbPhhxkt3lX0vzZxeh2fTl
-	 QjnsLaCrKEeIA==
-Reply-To: "Antonov|DPR" <antonov@neftelensk.su>
-From: "Antonov|DPR" <privateservices@main.intartek.com>
-To: linux-perf-users@vger.kernel.org
-Subject: Kazakhstan Crude Oil Product Offer REF:tpbeuf01
-Date: 2 Aug 2024 04:19:51 +0000
-Message-ID: <20240802041951.5E0F7CCCF42DC205@main.intartek.com>
+	s=arc-20240116; t=1722582253; c=relaxed/simple;
+	bh=RtHUIb3dTbiS2C1fQCHJ32OplUEwG39fQ4XUjpkkKwQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Of4cIDAH2l1/eHpdsEdtHGoW8OImGIffsSSKmc9084tc/RlgB2Q4R+C6xbq7pdvTBA9Bvx4oqenuTZeZXHiij/hRhLXH+iHKTFqgBX6aErSdXl2okYB43qgP/pvyCiFlAzo12RMF4jcEuFZu4P/At+3iFzW/fNMPH1RTK0p08+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WZxdf13Lnzcd4Q;
+	Fri,  2 Aug 2024 15:04:06 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id AD5D71800CD;
+	Fri,  2 Aug 2024 15:04:07 +0800 (CST)
+Received: from localhost.localdomain (10.50.165.33) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 2 Aug 2024 15:04:06 +0800
+From: Yicong Yang <yangyicong@huawei.com>
+To: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<mingo@redhat.com>, <peterz@infradead.org>, <irogers@google.com>,
+	<linux-perf-users@vger.kernel.org>
+CC: <linuxarm@huawei.com>, <yangyicong@hisilicon.com>,
+	<jonathan.cameron@huawei.com>, <shameerali.kolothum.thodi@huawei.com>,
+	<hejunhao3@huawei.com>, <prime.zeng@hisilicon.com>
+Subject: [PATCH] perf stat: Display iostat headers correctly
+Date: Fri, 2 Aug 2024 14:58:00 +0800
+Message-ID: <20240802065800.48774-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
-Dear linux-perf-users,
+From: Yicong Yang <yangyicong@hisilicon.com>
 
-I hope this message finds you well. My name is Antonov, and I am=20
-a sales representative authorized by leading refineries in=20
-Kazakhstan to negotiate the sale of crude oil products worldwide.
+Currently we'll only print metric headers for metric leader in
+aggregration mode. This will make `perf iostat` header not shown
+since it'll aggregrated globally but don't have metric events:
+root@ubuntu204:/home/yang/linux/tools/perf# ./perf stat --iostat --timeout 1000
+ Performance counter stats for 'system wide':
+    port
+0000:00                    0                    0                    0                    0
+0000:80                    0                    0                    0                    0
+[...]
 
-If you are interested in purchasing crude oil products, we can=20
-facilitate the process. The refinery has sufficient product=20
-allocation to supply to serious buyers.
+Fix this by excluding the iostat in the check of printing metric
+headers. Then we can see the headers:
+root@ubuntu204:/home/yang/linux/tools/perf# ./perf stat --iostat --timeout 1000
+ Performance counter stats for 'system wide':
+    port             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+0000:00                    0                    0                    0                    0
+0000:80                    0                    0                    0                    0
+[...]
 
-We currently offer a range of products including Petcoke, Ultra-
-Low Sulphur Diesel, East Siberia-Pacific Ocean (ESPO) Blend,=20
-Russian Light Cycle Oil (LCO), LNG, LPG, Jet Fuel, and more. All=20
-our products meet SGS and GOST-R standards, and we guarantee=20
-timely delivery.
+Fixes: 193a9e30207f ("perf stat: Don't display metric header for non-leader uncore events")
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ tools/perf/util/stat-display.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thank you for your attention. I look forward to your response and=20
-to discussing further details.
+diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+index c38bcb6f4c78..ea96e4ebad8c 100644
+--- a/tools/perf/util/stat-display.c
++++ b/tools/perf/util/stat-display.c
+@@ -1237,7 +1237,8 @@ static void print_metric_headers(struct perf_stat_config *config,
+ 
+ 	/* Print metrics headers only */
+ 	evlist__for_each_entry(evlist, counter) {
+-		if (config->aggr_mode != AGGR_NONE && counter->metric_leader != counter)
++		if (!config->iostat_run &&
++		    config->aggr_mode != AGGR_NONE && counter->metric_leader != counter)
+ 			continue;
+ 
+ 		os.evsel = counter;
+-- 
+2.24.0
 
-Best regards,=20=20
-Antonov
-
-Message REF1: cjwxxyl02Q
-Message Timestamp: 8/2/2024 4:19:51 a.m.
