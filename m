@@ -1,100 +1,173 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EBCB23BE;
-	Fri,  2 Aug 2024 01:38:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC514199A2;
+	Fri,  2 Aug 2024 01:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722562691; cv=none; b=QAaP3KjP76rK0yynVS7ftxELFTGK9FagyzonGM8jnY5moUrpzVor129N7BC4JndAyhrEGrqg3iaLe/PH5YIzpgEPL0HhEONoko1+jHjMIkwUXsqEMWd5UxQatGaWLNI2gdgG5Uzi/m7FkMDejryevXS0g2EA/h8Mc9aDw7/+yxc=
+	t=1722563055; cv=none; b=lK9Zs9Dj7MHQx+HKWsHpNLo1nw9C/9nZ2UdQrbduxCPI4K7WV+qcbxV2le21uPzjKYYt90A8tBXyQj/PeQ5qAUASEhuB4mXmzRA889jbBxfinXXAwWKn7E58pz87TSNjqJ7r5flT3TO8BSF9PuQjYaY3c04hU+a6rbz6yFBxQ7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722562691; c=relaxed/simple;
-	bh=mIpy2kd8VdwIWeSn1wpqNNhPbAFJkACF1nbu/Ftpb9c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hkLJo6k1ZrhPYHL2QJbw1fWz/45JOFXKYSotJ2HT4HlLC2N5rlpexv//4Sofd5FrwH+xz73iL8KgEq+6c77NUL86IaNYmP/VerNB1O47FuQef7Sh8HAnrNbj9nuCskbX9pF9lbnAkD7R9OxCtfh7IyEkJ7FoseKb22UXtKd2ZRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.234])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4WZpLC4L2yz1HFgL;
-	Fri,  2 Aug 2024 09:35:15 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 54E6D1402E0;
-	Fri,  2 Aug 2024 09:38:06 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 2 Aug 2024 09:38:05 +0800
-Message-ID: <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
-Date: Fri, 2 Aug 2024 09:38:04 +0800
+	s=arc-20240116; t=1722563055; c=relaxed/simple;
+	bh=AOHlQpp439hxXb8Yhi0cw6rbI7T9wbusdFDZsoOV5IU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mKxa+cZecpaYHSiMpuCmA7dDMnGqxzTZRyTyxHekLKHq0IU4Dmu0sQ1omm2vCWNXSdbqH2qAV1KCYnTQrEvDDG19mQdWlFvBCacvob6r8Ez96wMe1lQWvIsy+N4EIO15dNPteLBQtOffNh8ZETZwC9adywk08u6ueo1cGhwmkx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=l8kuj9LN; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="l8kuj9LN"
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [10.196.197.102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4WZpXM4GcRz9sRt;
+	Fri,  2 Aug 2024 03:44:03 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1722563043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rX5EutK1564BvFK6uRJjpD10n8gil980gFWkU6pBKcA=;
+	b=l8kuj9LNJSkG1HDlE84DRgEPD5l4U2ZvOu8ucxxAt+bBLucAibv9BFY32ZcHRT3HvJb2Oj
+	Rrr/ipAJyEn3TBchVEgoOQnx497Vw9dUw2rj3majF1imXkczlTVl7Kdp5fp0gs8srw9Swr
+	qEux0YiQuY1FSzFwLAEuw3YOt22VnAmovWpN2GOobnNlProTG7bQWk5Dt8Wd7ylJisP975
+	ubaGZg7icectV6xdUI78iaFg18JtnYA0QbWYLELGvdLnVhGdYcDA0u43t8053r8tv/DqmR
+	wiFMHaKxp+2By482c9Dgln4a8MfA6KboPF91OyZFKeDUCqoIri31gt7K2CsJ0Q==
+Date: Fri, 2 Aug 2024 11:43:50 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Josef Bacik <josef@toxicpanda.com>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Amir Goldstein <amir73il@gmail.com>, 
+	Alexander Aring <alex.aring@gmail.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH RFC v3 0/2] fhandle: expose u64 mount id to
+ name_to_handle_at(2)
+Message-ID: <20240802.010502-peachy.struggle.moldy.shape-YcRNLL7bq7EE@cyphar.com>
+References: <20240801-exportfs-u64-mount-id-v3-0-be5d6283144a@cyphar.com>
+ <20240801142812.GA4187848@perftesting>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-To: Oleg Nesterov <oleg@redhat.com>
-CC: <mhiramat@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <20240801140639.GE4038@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="c7qvxlthxg64t2lg"
+Content-Disposition: inline
+In-Reply-To: <20240801142812.GA4187848@perftesting>
 
 
+--c7qvxlthxg64t2lg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-在 2024/8/1 22:06, Oleg Nesterov 写道:
-> On 08/01, Liao Chang wrote:
->>
->> @@ -2276,22 +2277,25 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
->>  	int err = 0;
->>  
->>  	uprobe = utask->active_uprobe;
->> -	if (utask->state == UTASK_SSTEP_ACK)
->> +	switch (utask->state) {
->> +	case UTASK_SSTEP_ACK:
->>  		err = arch_uprobe_post_xol(&uprobe->arch, regs);
->> -	else if (utask->state == UTASK_SSTEP_TRAPPED)
->> +		break;
->> +	case UTASK_SSTEP_TRAPPED:
->>  		arch_uprobe_abort_xol(&uprobe->arch, regs);
->> -	else
->> +		fallthrough;
->> +	case UTASK_SSTEP_DENY_SIGNAL:
->> +		set_tsk_thread_flag(current, TIF_SIGPENDING);
->> +		break;
->> +	default:
->>  		WARN_ON_ONCE(1);
->> +	}
-> 
-> Liao, at first glance this change looks "obviously wrong" to me.
+On 2024-08-01, Josef Bacik <josef@toxicpanda.com> wrote:
+> On Thu, Aug 01, 2024 at 01:52:39PM +1000, Aleksa Sarai wrote:
+> > Now that we provide a unique 64-bit mount ID interface in statx(2), we
+> > can now provide a race-free way for name_to_handle_at(2) to provide a
+> > file handle and corresponding mount without needing to worry about
+> > racing with /proc/mountinfo parsing or having to open a file just to do
+> > statx(2).
+> >=20
+> > While this is not necessary if you are using AT_EMPTY_PATH and don't
+> > care about an extra statx(2) call, users that pass full paths into
+> > name_to_handle_at(2) need to know which mount the file handle comes from
+> > (to make sure they don't try to open_by_handle_at a file handle from a
+> > different filesystem) and switching to AT_EMPTY_PATH would require
+> > allocating a file for every name_to_handle_at(2) call, turning
+> >=20
+> >   err =3D name_to_handle_at(-EBADF, "/foo/bar/baz", &handle, &mntid,
+> >                           AT_HANDLE_MNT_ID_UNIQUE);
+> >=20
+> > into
+> >=20
+> >   int fd =3D openat(-EBADF, "/foo/bar/baz", O_PATH | O_CLOEXEC);
+> >   err1 =3D name_to_handle_at(fd, "", &handle, &unused_mntid, AT_EMPTY_P=
+ATH);
+> >   err2 =3D statx(fd, "", AT_EMPTY_PATH, STATX_MNT_ID_UNIQUE, &statxbuf);
+> >   mntid =3D statxbuf.stx_mnt_id;
+> >   close(fd);
+> >=20
+> > Also, this series adds a patch to clarify how AT_* flag allocation
+> > should work going forwards.
+> >=20
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > ---
+> > Changes in v3:
+> > - Added a patch describing how AT_* flags should be allocated in the
+> >   future, based on Amir's suggestions.
+> > - Included AT_* aliases for RENAME_* flags to further indicate that
+> >   renameat2(2) is an *at(2) syscall and to indicate that those flags
+> >   have been allocated already in the per-syscall range.
+> > - Switched AT_HANDLE_MNT_ID_UNIQUE to use 0x01 (to reuse
+> >   (AT_)RENAME_NOREPLACE).
+> > - v2: <https://lore.kernel.org/r/20240523-exportfs-u64-mount-id-v2-1-f9=
+f959f17eb1@cyphar.com>
+> > Changes in v2:
+> > - Fixed a few minor compiler warnings and a buggy copy_to_user() check.
+> > - Rename AT_HANDLE_UNIQUE_MOUNT_ID -> AT_HANDLE_MNT_ID_UNIQUE to match =
+statx.
+> > - Switched to using an AT_* bit from 0xFF and defining that range as
+> >   being "per-syscall" for future usage.
+> > - Sync tools/ copy of <linux/fcntl.h> to include changes.
+> > - v1: <https://lore.kernel.org/r/20240520-exportfs-u64-mount-id-v1-1-f5=
+5fd9215b8e@cyphar.com>
+> >=20
+> > ---
+> > Aleksa Sarai (2):
+> >       uapi: explain how per-syscall AT_* flags should be allocated
+> >       fhandle: expose u64 mount id to name_to_handle_at(2)
+> >=20
+>=20
+> Wasn't the conclusion from this discussion last time that we needed to re=
+visit
+> this API completely?  Christoph had some pretty adamant objections.
 
-Oleg. Did i overlook some thing obvious here?
+There was a discussion about reworking the API and I agree with most of
+the issues raised about file handles (I personally don't really like
+this interface and it's a bit of a shame that it seems this is going to
+be the interface that replaces inode numbers) so I'm not at all opposed
+to reworking it.
 
-> 
-> But let me read this patch more carefully and reply on weekend,
-> I am a bit busy right now.
+However, I agree with Christian[1] that we can fix this existing issue
+in the existing API fairly easily and then work on a new API separately.
+The existing usage of name_to_handle_at() is fundamentally unsafe (as
+outlined in the man page) and we can fix that fairly easily.
 
-Sure, thanks.
+[1]: https://lore.kernel.org/all/20240527-hagel-thunfisch-75781b0cf75d@brau=
+ner/
 
-> 
-> Thanks,
-> 
-> Oleg.
-> 
-> 
+> That being said the uapi comments patch looks good to me, you can add
+>=20
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+>=20
+> to that one.  The other one I'm going to let others who have stronger opi=
+nions
+> than me argue about.  Thanks,
+>=20
+> Josef
 
--- 
-BR
-Liao, Chang
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--c7qvxlthxg64t2lg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZqw51QAKCRAol/rSt+lE
+b4pZAP0REm8hqjt6l74YM2JQI+BQIfgYBKBGk78diZBwiJ5jxgD+KhCe4dt7UT3O
+P4dv9Kd0Ol79OKqHOpG5Fs+2TkIQcQg=
+=Z43g
+-----END PGP SIGNATURE-----
+
+--c7qvxlthxg64t2lg--
