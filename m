@@ -1,136 +1,192 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6E481AE04D;
-	Fri,  2 Aug 2024 17:50:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B7E13634B;
+	Fri,  2 Aug 2024 18:09:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722621011; cv=none; b=S/OP2cGx8XNmqIkKj2Vomrx/yDUb5a6WFCs/d050GQ2ACNnEJzDEL1xOoQhxE6UD7ZrNoY1itJ5SStuWQbVH6Hf1LVS2RKdK3tzSZsZIX0qGJs6K+rySPMweOdBCwK2nV71XQ0nJoVOfg4G+WuJnqG/LLvMlH4bneCtp0vsDJMc=
+	t=1722622156; cv=none; b=MI5dNSRe4w11VD6LLt+z+YG3s5n894hIxgBIn2wfThZgQA9kaz50Id6k1KyCiQlxaW4T/nNMZwxbI3oLZvUes5jxNZe3cHUTfVM6GjULXxXzFuAycaYOGpSaleBgDl6TUi1E1PQs7QDqOSEnVXApBD2bRxe9FQjRx86HKWtBT3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722621011; c=relaxed/simple;
-	bh=pi0WBPEKZORhPGpalxFXoH/Fl7HCDj8HjJmjz2dzl4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tufiREiIzVGixN4NlyuWyPVO5G+r7H2Y3l5rUqp1sYExk7iMjFfHabOMhK9cNVLToaiTMltpsrTuyyyYC9626cRZb5lTfmjBIZJS2l4U456pJ16Rf0SdsKKwEa7sGMX6whflYmmXMBYkGYPM22vZ5tJh4Q/IjQaLOtW09JCB260=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jC4vdo5F; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722622156; c=relaxed/simple;
+	bh=661HsJSYUSjLBHgbOmJlKx/oaAEcvLmKUqv7JMQThtY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JNGeI8zStoQxzbxOQH3zTRk/u2E7gnpyOxwTpFaQxPGsAbkiSBlf/pncIKDrBLWj9kEkvkHarV0B4cowXWL+ERrIFTFu/NBvlAnIOvHyyowkiBW3zX8HXv45IY6LV6DixGHqoTF0U6jLs95i5yshu6PNVpm0Kz+b9xAg3Ug648U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sadPMPVH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jC4vdo5F"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722621010; x=1754157010;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pi0WBPEKZORhPGpalxFXoH/Fl7HCDj8HjJmjz2dzl4Q=;
-  b=jC4vdo5F0yj3ccHka5w8rhu10TRn1puFLTUohVTKIQwm6pNPo19iSRsT
-   28SVIQANXSvOKk4H0R+dlralvE/PSE6BLIkgIER5AMdVALEMFZUvNVmIp
-   /kWB5Z8pbtQfcJ3QLwbytEg1Ey56ougTmeQ1PE9aPSqM0IMj4uHLcJ0b7
-   ZEBliWG9fS4pkcZgpzj9cQw/0exXShRKz7v/Nf5/hzBdOTbuYiikiuYST
-   4jHUBZj5Sxg8IhonQq7x9/m5byozc+jmmPcZ8vQyPnlxCgEkkVKNMEW6d
-   mD278n1TgaYd0bacZehNYJ/rrFSJqh357W7AwY4Blyx5l1ZKkzPGhUksJ
-   g==;
-X-CSE-ConnectionGUID: P7/kYRe2QDC8U7J0kcU/rg==
-X-CSE-MsgGUID: yeeGyY+tSpuTqZx5jqG14g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11152"; a="31802696"
-X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
-   d="scan'208";a="31802696"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 10:50:09 -0700
-X-CSE-ConnectionGUID: PgrMqxhaTRK9TXR5dvKYEA==
-X-CSE-MsgGUID: 7y7qpY1iTCSQRGYm7ZqZaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,258,1716274800"; 
-   d="scan'208";a="55391042"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Aug 2024 10:50:09 -0700
-Received: from [10.212.17.69] (kliang2-mobl1.ccr.corp.intel.com [10.212.17.69])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 435D520B5782;
-	Fri,  2 Aug 2024 10:50:06 -0700 (PDT)
-Message-ID: <c34c0726-8795-4431-80a7-7251137ec941@linux.intel.com>
-Date: Fri, 2 Aug 2024 13:50:05 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sadPMPVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5896BC32782;
+	Fri,  2 Aug 2024 18:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722622155;
+	bh=661HsJSYUSjLBHgbOmJlKx/oaAEcvLmKUqv7JMQThtY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sadPMPVHueVSeZ3h2ZrlIDd5Gaul3jfYZ48eBOyahzVv7uEjDqaUtDosUjU1KeDyW
+	 WKMFtSA0GU4aYDRxLQHMn4f2QS11mjPX/WNQnMdPgF/o9mIJcVtep1Cu7ww9rigvjn
+	 oac9fG3eUwWLDw0TT7jnTh/SqCU/s0oKthbiu3vesBGorPdu9YEgzfJizDCzqrBZWP
+	 jO3Ty7pyOvfSsAfD6T9uE5c7YDiM1Y9Fzl0Xx/0VtULocQKGdYhSNPQYidDmsnjX3l
+	 QGrAQtQ9DD6P6LNYtj5ucKvHIq1xLvzF1A4xePlSdmoP7gMLvYiQQ0TxdyTUWdF6ry
+	 UCqFJKgpJCtPw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH] perf mem: Update documentation for new options
+Date: Fri,  2 Aug 2024 11:09:13 -0700
+Message-ID: <20240802180913.1023886-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 48/58] perf/x86/intel: Support
- PERF_PMU_CAP_PASSTHROUGH_VPMU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Dapeng Mi <dapeng1.mi@linux.intel.com>, Kan Liang <kan.liang@intel.com>,
- Zhenyu Wang <zhenyuw@linux.intel.com>, Manali Shukla
- <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-49-mizhang@google.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240801045907.4010984-49-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Add a common options section and move some items to the section.  Also
+add description of new options to report options.
 
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/Documentation/perf-mem.txt | 94 ++++++++++++++++++---------
+ 1 file changed, 63 insertions(+), 31 deletions(-)
 
-On 2024-08-01 12:58 a.m., Mingwei Zhang wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Apply the PERF_PMU_CAP_PASSTHROUGH_VPMU for Intel core PMU. It only
-> indicates that the perf side of core PMU is ready to support the
-> passthrough vPMU.  Besides the capability, the hypervisor should still need
-> to check the PMU version and other capabilities to decide whether to enable
-> the passthrough vPMU.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> ---
->  arch/x86/events/intel/core.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index 38c1b1f1deaa..d5bb7d4ed062 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4743,6 +4743,8 @@ static void intel_pmu_check_hybrid_pmus(struct x86_hybrid_pmu *pmu)
->  	else
->  		pmu->pmu.capabilities &= ~PERF_PMU_CAP_AUX_OUTPUT;
->  
-> +	pmu->pmu.capabilities |= PERF_PMU_CAP_PASSTHROUGH_VPMU;
-> +
+diff --git a/tools/perf/Documentation/perf-mem.txt b/tools/perf/Documentation/perf-mem.txt
+index 47456b212e99..8a1bd9ff0f86 100644
+--- a/tools/perf/Documentation/perf-mem.txt
++++ b/tools/perf/Documentation/perf-mem.txt
+@@ -28,15 +28,8 @@ and kernel support is required. See linkperf:perf-arm-spe[1] for a setup guide.
+ Due to the statistical nature of SPE sampling, not every memory operation will
+ be sampled.
+ 
+-OPTIONS
+--------
+-<command>...::
+-	Any command you can specify in a shell.
+-
+--i::
+---input=<file>::
+-	Input file name.
+-
++COMMON OPTIONS
++--------------
+ -f::
+ --force::
+ 	Don't do ownership validation
+@@ -45,24 +38,9 @@ OPTIONS
+ --type=<type>::
+ 	Select the memory operation type: load or store (default: load,store)
+ 
+--D::
+---dump-raw-samples::
+-	Dump the raw decoded samples on the screen in a format that is easy to parse with
+-	one sample per line.
+-
+--x::
+---field-separator=<separator>::
+-	Specify the field separator used when dump raw samples (-D option). By default,
+-	The separator is the space character.
+-
+--C::
+---cpu=<cpu>::
+-	Monitor only on the list of CPUs provided. Multiple CPUs can be provided as a
+-        comma-separated list with no space: 0,1. Ranges of CPUs are specified with -: 0-2. Default
+-        is to monitor all CPUS.
+--U::
+---hide-unresolved::
+-	Only display entries resolved to a symbol.
++-v::
++--verbose::
++	Be more verbose (show counter open errors, etc)
+ 
+ -p::
+ --phys-data::
+@@ -73,6 +51,9 @@ OPTIONS
+ 
+ RECORD OPTIONS
+ --------------
++<command>...::
++	Any command you can specify in a shell.
++
+ -e::
+ --event <event>::
+ 	Event selector. Use 'perf mem record -e list' to list available events.
+@@ -85,14 +66,65 @@ RECORD OPTIONS
+ --all-user::
+ 	Configure all used events to run in user space.
+ 
+--v::
+---verbose::
+-	Be more verbose (show counter open errors, etc)
+-
+ --ldlat <n>::
+ 	Specify desired latency for loads event. Supported on Intel and Arm64
+ 	processors only. Ignored on other archs.
+ 
++REPORT OPTIONS
++--------------
++-i::
++--input=<file>::
++	Input file name.
++
++-C::
++--cpu=<cpu>::
++	Monitor only on the list of CPUs provided. Multiple CPUs can be provided as a
++        comma-separated list with no space: 0,1. Ranges of CPUs are specified with -
++	like 0-2. Default is to monitor all CPUS.
++
++-D::
++--dump-raw-samples::
++	Dump the raw decoded samples on the screen in a format that is easy to parse with
++	one sample per line.
++
++-s::
++--sort=<key>::
++	Group result by given key(s) - multiple keys can be specified
++	in CSV format.  The keys are specific to memory samples are:
++	symbol_daddr, symbol_iaddr, dso_daddr, locked, tlb, mem, snoop,
++	dcacheline, phys_daddr, data_page_size, blocked.
++
++	- symbol_daddr: name of data symbol being executed on at the time of sample
++	- symbol_iaddr: name of code symbol being executed on at the time of sample
++	- dso_daddr: name of library or module containing the data being executed
++	             on at the time of the sample
++	- locked: whether the bus was locked at the time of the sample
++	- tlb: type of tlb access for the data at the time of the sample
++	- mem: type of memory access for the data at the time of the sample
++	- snoop: type of snoop (if any) for the data at the time of the sample
++	- dcacheline: the cacheline the data address is on at the time of the sample
++	- phys_daddr: physical address of data being executed on at the time of sample
++	- data_page_size: the data page size of data being executed on at the time of sample
++	- blocked: reason of blocked load access for the data at the time of the sample
++
++	And the default sort keys are changed to local_weight, mem, sym, dso,
++	symbol_daddr, dso_daddr, snoop, tlb, locked, blocked, local_ins_lat.
++
++-T::
++--type-profile::
++	Show data-type profile result instead of code symbols.  This requires
++	the debug information and it will change the default sort keys to:
++	mem, snoop, tlb, type.
++
++-U::
++--hide-unresolved::
++	Only display entries resolved to a symbol.
++
++-x::
++--field-separator=<separator>::
++	Specify the field separator used when dump raw samples (-D option). By default,
++	The separator is the space character.
++
+ In addition, for report all perf report options are valid, and for record
+ all perf record options.
+ 
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
 
-Because of the simplification in patch 14, there is only one PASSTHROUGH
-vPMU supported on a machine. The flag has to be moved for the hybrid
-PMUs. Otherwise, the hybrid PMUs would not be registered even in the
-bare metal.
-
->  	intel_pmu_check_event_constraints(pmu->event_constraints,
->  					  pmu->num_counters,
->  					  pmu->num_counters_fixed,
-> @@ -6235,6 +6237,9 @@ __init int intel_pmu_init(void)
->  			pr_cont(" AnyThread deprecated, ");
->  	}
->  
-> +	/* The perf side of core PMU is ready to support the passthrough vPMU. */
-> +	x86_get_pmu(smp_processor_id())->capabilities |= PERF_PMU_CAP_PASSTHROUGH_VPMU;
-> +
-
-It's good enough to only set the flag here.
-
-Thanks,
-Kan
-
->  	/*
->  	 * Install the hw-cache-events table:
->  	 */
