@@ -1,48 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6755C1ABEA9;
-	Fri,  2 Aug 2024 18:23:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D797C165F03
+	for <linux-perf-users@vger.kernel.org>; Fri,  2 Aug 2024 18:26:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722623025; cv=none; b=GB6eUD73QTMmhPPQXJNYqvEzhXpRz9JvLy5EOZ9F24EMpq7qatXx5MP3Q9IBAyhVqVJZSIy0v7I3sWC6OdpXh57Xq/L2MWl1Gc/ypKwzHUT6RFPglQjxgTeZl/0qyojgcXxdEKHFr0Bl9SsbEDoAnL5HFMQnJ2nIT7R5Wy8+1ak=
+	t=1722623192; cv=none; b=ZR4mKJMkS6kdNVd7HR2bg6oG5WGgOmClocp5oiQG6ahTPrddY/6D1aw0CRYu5N++jPjfwQCxSdrEXRqls1AYGVNL+aE6D4oARo48VB7aPdfNK2vAz5iQC+DEk7Cb28Rt+dPsUeWIV8SBzyp0c23KQWKHAIsoTb2fq9alLG7STZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722623025; c=relaxed/simple;
-	bh=0nh586fdYKbqYE7Xx1zKbVfE2k9oRTxAHMyDsfqXHX4=;
+	s=arc-20240116; t=1722623192; c=relaxed/simple;
+	bh=QHVuIGobu/uFlrgbPzN3kBTmYf5lEpcAjz9UZZ+P7gk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lp+HVRzzxiwAuGo3z8qLlLaBf8Jg5o5utBec4WRAQhXbaNibOpOkLXvMMmVukmZjS+Q3mtya86uoj31KSmV3PLh1TTrx5reiVwFGVJ35W3TKfGES/kiskYWuSmHE6hKFEkeumwtL1b7apvkQZ02/9dwHmrcFuK0aSIWC6TjL08E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNDS4bDC; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Zv5lsDkTp1IfzD4dE8950Ht3uo1pWPbq2Q4pVahRt7tCE/1cZ6SBp2Ebiz4ZZdKkYkws/aR/EQl3rX9QTzpRSn7en2vLVe5O0SR3fsjaVIOh05ymLPbagsuAJxhRuEv+QuRvmiW/F84Acpj3HoLpibNsF2vw/TGZfD9JHOj/OAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YkVX+qmm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNDS4bDC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9CD1C32782;
-	Fri,  2 Aug 2024 18:23:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YkVX+qmm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C462C32782;
+	Fri,  2 Aug 2024 18:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722623025;
-	bh=0nh586fdYKbqYE7Xx1zKbVfE2k9oRTxAHMyDsfqXHX4=;
+	s=k20201202; t=1722623192;
+	bh=QHVuIGobu/uFlrgbPzN3kBTmYf5lEpcAjz9UZZ+P7gk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZNDS4bDCnwNQ9Su7UPeetcV9aqZtm8+IPybJ/LTvTbLsYvq4HCtbydVylhvLN6lXE
-	 U5j3o87n+QCLXZHE8NkUeeAhz446lYGaWFhubmXMRDWChjwm9EYoYqk9PW/HKyjd3Z
-	 A/WdEft1mY5lz148SYVeh1li8OFQUKGx109MFy/5RMnvOVekVQz8sMAengoRPqalR7
-	 tHNDRFCQ8mqvP4pixedBQ8pczsDy/7S+16DPmD/puStXYWPSQdYH+eErdffBvQ+wOw
-	 AevS+iavdWmaC9Ju0TIVuwr6+ZQTw1ba5JMWExOT8+MPOwf4ZFjbenDbDy7Z4S3KSZ
-	 38YQnaXDLioaw==
-Date: Fri, 2 Aug 2024 11:23:43 -0700
+	b=YkVX+qmmv7ypDlbIZq14gL/nNOUmlqGcUU7rJNr4DXRxG3VUxXrRNhAxHqhikGGSv
+	 CV4HU77Ug6lZrQdXNVA8ktSKvrzJ/3N5hbTb1VSWhEGKz+8nxLtvi1g8690D7JEkhZ
+	 IlF1fKSeVHoPIX2nNgCJdOPOzgMLEk28MhStm5iJSVB5KJYIREVYT6HhtuGI+tlp6r
+	 eXp+yNyH/lTvCAMrqo/a8OtqxtV1c8ngCutyEwhMP4mc/xFC8PYYm0MUYWR5ADSSe8
+	 Pdv6TNAqKg1HYyo8K76AGxDHoct0ektUD1vMpyDGP+jj/0yffGIZ2x51aupZ9wq7Xn
+	 Cz5qseYK825pQ==
+Date: Fri, 2 Aug 2024 11:26:30 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Casey Chen <cachen@purestorage.com>,
-	Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] perf inject: Inject build ids for entire call chain
-Message-ID: <Zq0kL-lyCqkM3P4G@google.com>
-References: <20240801031249.176913-1-irogers@google.com>
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v7 3/4] perf script: Fix perf script -F +metric
+Message-ID: <Zq0k1pRHZWB4N94a@google.com>
+References: <20240724190137.3810429-1-ak@linux.intel.com>
+ <20240724190137.3810429-3-ak@linux.intel.com>
+ <ZqLuWGKZjdUrkd0L@google.com>
+ <ZqqRTKW80JJpNpRj@tassilo>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,148 +44,62 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240801031249.176913-1-irogers@google.com>
+In-Reply-To: <ZqqRTKW80JJpNpRj@tassilo>
 
-Hi Ian,
-
-On Wed, Jul 31, 2024 at 08:12:49PM -0700, Ian Rogers wrote:
-> The DSO build id is injected when the dso is first encountered but the
-> checking for first encountered only looks at the sample->ip not the
-> entire callchain. Use the callchain logic to ensure all build ids are
-> inserted.
+On Wed, Jul 31, 2024 at 12:32:28PM -0700, Andi Kleen wrote:
+> > > @@ -2132,13 +2131,17 @@ static void perf_sample__fprint_metric(struct perf_script *script,
+> > >  		evlist__alloc_stats(&stat_config, script->session->evlist, /*alloc_raw=*/false);
+> > >  	if (evsel_script(leader)->gnum++ == 0)
+> > >  		perf_stat__reset_shadow_stats();
+> > > -	val = sample->period * evsel->scale;
+> > > -	evsel_script(evsel)->val = val;
+> > > +	val = sample->period;
+> > > +	/*
+> > > +	 * Always use the first storage because the groups are contiguous
+> > 
+> > Without leader sampling we cannot guarantee groups events fire
+> > together, right?
 > 
-> Add a for_each callback style API to callchain with
-> sample__for_each_callchain_node. Possibly in the future such an API
-> can avoid the overhead of constructing the call chain list.
+> Yes. I'm adding an explicit check for this.
 > 
-> Fixes: 454c407ec17a ("perf: add perf-inject builtin")
-> Signed-off-by: Ian Rogers <irogers@google.com>
+> > 
+> > 
+> > > +	 * and there's no need to handle multiple indexes for anything
+> > 
+> > Actually I think this is a behavior change that you changed the
+> > aggregation mode from NONE to GLOBAL.
+> 
+> Not with leader sampling because the group is contiguous and output
+> after its end, with all the previous values forgotten then.
+> The other cases don't really work anyways as multiple people pointed
+> out.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Right, but we cannot prevent people to do that..  Maybe we can disable
+metric with a warning if leader sampling is not used?  Or at least add
+a comment in the code that it's only intended for the use case.
 
 Thanks,
 Namhyung
 
-> ---
->  tools/perf/builtin-inject.c | 31 +++++++++++++++++++++++++++++++
->  tools/perf/util/callchain.c | 35 +++++++++++++++++++++++++++++++++++
->  tools/perf/util/callchain.h |  6 ++++++
->  3 files changed, 72 insertions(+)
 > 
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index 7b4a5d56d279..ea5f1d57e7e1 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -743,6 +743,29 @@ static int dso__inject_build_id(struct dso *dso, struct perf_tool *tool,
->  	return 0;
->  }
->  
-> +struct mark_dso_hit_args {
-> +	struct perf_tool *tool;
-> +	struct machine *machine;
-> +	u8 cpumode;
-> +};
-> +
-> +static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
-> +{
-> +	struct mark_dso_hit_args *args = data;
-> +	struct map *map = node->ms.map;
-> +
-> +	if (map) {
-> +		struct dso *dso = map__dso(map);
-> +
-> +		if (dso && !dso__hit(dso)) {
-> +			dso__set_hit(dso);
-> +			dso__inject_build_id(dso, args->tool, args->machine,
-> +					     args->cpumode, map__flags(map));
-> +		}
-> +	}
-> +	return 0;
-> +}
-> +
->  int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
->  			       struct perf_sample *sample,
->  			       struct evsel *evsel __maybe_unused,
-> @@ -750,6 +773,11 @@ int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
->  {
->  	struct addr_location al;
->  	struct thread *thread;
-> +	struct mark_dso_hit_args args = {
-> +		.tool = tool,
-> +		.machine = machine,
-> +		.cpumode = sample->cpumode,
-> +	};
->  
->  	addr_location__init(&al);
->  	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
-> @@ -769,6 +797,9 @@ int perf_event__inject_buildid(struct perf_tool *tool, union perf_event *event,
->  		}
->  	}
->  
-> +	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
-> +					mark_dso_hit_callback, &args);
-> +
->  	thread__put(thread);
->  repipe:
->  	perf_event__repipe(tool, event, sample, machine);
-> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
-> index 6d075648d2cc..0d608e875fe9 100644
-> --- a/tools/perf/util/callchain.c
-> +++ b/tools/perf/util/callchain.c
-> @@ -1797,3 +1797,38 @@ s64 callchain_avg_cycles(struct callchain_node *cnode)
->  
->  	return cycles;
->  }
-> +
-> +int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
-> +				    struct perf_sample *sample, int max_stack,
-> +				    callchain_iter_fn cb, void *data)
-> +{
-> +	struct callchain_cursor *cursor = get_tls_callchain_cursor();
-> +	int ret;
-> +
-> +	if (!cursor)
-> +		return -ENOMEM;
-> +
-> +	/* Fill in the callchain. */
-> +	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
-> +					/*parent=*/NULL, /*root_al=*/NULL,
-> +					max_stack);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* Switch from writing the callchain to reading it. */
-> +	callchain_cursor_commit(cursor);
-> +
-> +	while (1) {
-> +		struct callchain_cursor_node *node = callchain_cursor_current(cursor);
-> +
-> +		if (!node)
-> +			break;
-> +
-> +		ret = cb(node, data);
-> +		if (ret)
-> +			return ret;
-> +
-> +		callchain_cursor_advance(cursor);
-> +	}
-> +	return 0;
-> +}
-> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
-> index d5c66345ae31..76891f8e2373 100644
-> --- a/tools/perf/util/callchain.h
-> +++ b/tools/perf/util/callchain.h
-> @@ -311,4 +311,10 @@ u64 callchain_total_hits(struct hists *hists);
->  
->  s64 callchain_avg_cycles(struct callchain_node *cnode);
->  
-> +typedef int (*callchain_iter_fn)(struct callchain_cursor_node *node, void *data);
-> +
-> +int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
-> +				    struct perf_sample *sample, int max_stack,
-> +				    callchain_iter_fn cb, void *data);
-> +
->  #endif	/* __PERF_CALLCHAIN_H */
-> -- 
-> 2.46.0.rc2.264.g509ed76dc8-goog
+> > > +	 */
+> > > +	evsel->stats->aggr[0].counts.val = val;
+> > >  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
+> > >  		for_each_group_member (ev2, leader) {
+> > >  			perf_stat__print_shadow_stats(&stat_config, ev2,
+> > > -						      evsel_script(ev2)->val,
+> > > -						      sample->cpu,
+> > > +						      evsel->stats->aggr[0].counts.val,
+> > > +						      0,
+> > 
+> > Like I said to Ian, we should pass a proper aggr_idx here not just 0 to
+> > support correct aggregation.  For now I think only possible choice is
+> > AGGR_NONE (for cpu-wide record) or AGGR_THREAD (for per-task record).
+> > Then it should be an index to cpu or thread map.
 > 
+> Given the above I think that is not needed.
+> 
+> Full aggregation for metrics over longer period would belong into perf report,
+> not here.  perf script is only to get non aggregated metrics.
+> 
+> -Andi
