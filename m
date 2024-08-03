@@ -1,99 +1,114 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B86A712C486;
-	Sat,  3 Aug 2024 15:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9793E101EC;
+	Sat,  3 Aug 2024 21:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722700321; cv=none; b=IpJkIuUFYYWJhpv99w5KK8M0x3R6B6/cMLF9oh7dwsdApg05GRwYea2pWnBmkhPToZ1uK/M6MlLtF354hCeWpOtTjifk1cP2cWKDcDr0ZBoUZXM7/C95INTcAoYxQVlltca4xZZArpjXfo7Juaaqj2OlNR27ZtEi9cOxAy9HvTk=
+	t=1722719614; cv=none; b=S3mCpV90b3tI2IHwlcSbOj+cUinhxIO2H67zPCi6VoCDLrZqLGASndC3BZACQsxAicEeEKla+PkcdvUbUY7Rcp4t/cEnkGU4f/sO6JFuAJhic2brttgXX3Ky7w+9WHm2Ae72fqPIn6JIIIhmgX8KG46JkxtwD9Vp84bgF+B4KS4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722700321; c=relaxed/simple;
-	bh=xWJoVsZrZl78o2c0CARv2yjpf/FWqpfmOHGEJ6iBdTg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YBtxSUBlDc4ezZJvDZJD8Sc8ovywEoEX2Ps5Ucp7Mae4RzXBtsOtol7HPGqL8qCJu7Wd464sUgKs9f00rQ/0/Ncl0jCqD3ZCJI0M0qiAdo/tseLP3N+O9VLn2qQxRSNrDjSi89NfhLA6KiuCn0ia+Otf3F0O8dNif55IB1p26X0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71792FEC;
-	Sat,  3 Aug 2024 08:52:23 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CDF23F766;
-	Sat,  3 Aug 2024 08:51:55 -0700 (PDT)
-Message-ID: <ce758ef7-142a-453d-a37e-f64268256f3c@arm.com>
-Date: Sat, 3 Aug 2024 16:51:54 +0100
+	s=arc-20240116; t=1722719614; c=relaxed/simple;
+	bh=VbujnbgoREC/EjtlU2OLtgA7pGFcUD32j+2uA98dzIM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QNwHffugxBO5oPfQ5F8uq74qCEr8TW7snxSgepBEFGRdJ0fGKOngmGSYTXC5E89A65aj4iDiCi+sssa3SpnUqz5Mcbo+82l5gnYku/2Y+GRTHS2hL9Mp5g2ARunj2taGnFvMb0rWt0I9qT3k8w1R/xUskDnxh/aE9UZtevldAS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIARshgM; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIARshgM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3A59C116B1;
+	Sat,  3 Aug 2024 21:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722719614;
+	bh=VbujnbgoREC/EjtlU2OLtgA7pGFcUD32j+2uA98dzIM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nIARshgMFi2ztPSlWqERTh5s/U/GveczbDqGoHPAHo/oOl/NdWUUaVmJAobaniMLB
+	 SwTw00xerl4QhKGIc2QugavzZAIYuFc2Sl4Y9J5ZfNsAVaNon2bwyeoVolokh0QRkk
+	 byxrEzblR9XcDYiGVg5afDTwZsZHX1zwKZMags6sZwBDkiFHasagGSQZTrnQTUGao3
+	 uu48mNgxGK4/FIeiVtbAu4z78QVH08pVb4Vh9lx3S2aXK1SuVy6Ldgzcy88IIQFQk7
+	 GpC7E3zATNF54avXi1qkPMxfN2JYjluvAxzNiDS7mz1Pu4Az+dDybmQLJFYui54dYs
+	 4zG2n2peSbc0g==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCHSET 0/5] perf annotate: Add --skip-empty option (v1)
+Date: Sat,  3 Aug 2024 14:13:27 -0700
+Message-ID: <20240803211332.1107222-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 4/6] perf auxtrace: Iterate all AUX events when finish
- reading
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Ian Rogers <irogers@google.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, James Clark <james.clark@linaro.org>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>, coresight@lists.linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240721202113.380750-1-leo.yan@arm.com>
- <20240721202113.380750-5-leo.yan@arm.com>
- <9f08c5cb-fb4b-4994-9128-0484aa6c06d7@intel.com>
- <9f301b09-e040-456c-9bd3-6d5e96ebc8f4@arm.com>
- <1cb6fdfc-0405-4bfb-acd4-ed3b24744c8b@intel.com>
- <951fc660-58a2-4b8a-a763-5a1e4d807c75@arm.com>
- <CAP-5=fWfU40-QO_TuUMd2KQprvxPOH2pnpKCUxJf1yoUsw-9mQ@mail.gmail.com>
- <Zquj9TJM8QQKkpYL@x1>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <Zquj9TJM8QQKkpYL@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 8/1/24 16:04, Arnaldo Carvalho de Melo wrote:
-> On Wed, Jul 31, 2024 at 06:38:59PM -0700, Ian Rogers wrote:
->> Just a heads up. Arnaldo added this to tmp.perf-tools-next and it
->> caused the intel-pt tests to start failing:
+Hello,
 
-Sorry for causing regression and thanks for reporting the issue.
+This is to make perf annotate has the same behavior as perf report.
+Especially in the TUI browser, we want to maintain the same experience
+when it comes to display dummy events from perf report.
 
-> My plan right now is just to remove that cset that Ian bisected since it
-> is not on perf-tools-next, just on the scratch branch
-> tmp.perf-tools-next.
+  $ perf mem record -a -- perf test -w noploop
 
-Please leave the patch 04 out. I have sent out v2 but Adrian pointed out a 
-concern for per-thread mode, now I am working on this and after ready I will 
-send new patches.
+  $ perf evlist
+  cpu/mem-loads,ldlat=30/P
+  cpu/mem-stores/P
+  dummy:u
 
-I have verified the latest perf-tools-next branch, it works well on Arm SPE 
-(thanks for picking up patches 05 and 06).
+Just using perf annotate with --group will show the all 3 events.
 
-> Trying to do that now as it will help us with bisection in the future.
+  $ perf annotate --group --stdio | head
+   Percent                 |    Source code & Disassembly of ...
+  --------------------------------------------------------------
+                           : 0     0xe060 <_dl_relocate_object>:
+      0.00    0.00    0.00 :    e060:       pushq   %rbp
+      0.00    0.00    0.00 :    e061:       movq    %rsp, %rbp
+      0.00    0.00    0.00 :    e064:       pushq   %r15
+      0.00    0.00    0.00 :    e066:       movq    %rdi, %r15
+      0.00    0.00    0.00 :    e069:       pushq   %r14
+      0.00    0.00    0.00 :    e06b:       pushq   %r13
+      0.00    0.00    0.00 :    e06d:       movl    %edx, %r13d
 
-I am not clear this. Could you elaborate a bit what I should follow up?
+Now with --skip-empty, it'll hide the last dummy event.
 
->> ```
->> $ perf test 118 -v
->> 118: Miscellaneous Intel PT testing:
->> --- start ---
->> test child forked, pid 148999
->> --- Test system-wide sideband ---
->> Checking for CPU-wide recording on CPU 0
->> OK
->> Checking for CPU-wide recording on CPU 1
->> OK
->> Linux
->> Failed to enable event (idx=0): -22
->> Failed to record MMAP events on CPU 1 when tracing CPU 0
->> ...
->> ```
->> It's likely Adrian's comments already address this but you may also
->> want to double check this test is passing with v2.
+  $ perf annotate --group --stdio --skip-empty | head
+   Percent         |    Source code & Disassembly of ...
+  ------------------------------------------------------
+                   : 0     0xe060 <_dl_relocate_object>:
+      0.00    0.00 :    e060:       pushq   %rbp
+      0.00    0.00 :    e061:       movq    %rsp, %rbp
+      0.00    0.00 :    e064:       pushq   %r15
+      0.00    0.00 :    e066:       movq    %rdi, %r15
+      0.00    0.00 :    e069:       pushq   %r14
+      0.00    0.00 :    e06b:       pushq   %r13
+      0.00    0.00 :    e06d:       movl    %edx, %r13d
 
-Sure. I will give a test for this test when I send new patches.
+The code is available in 'perf/annotate-skip-v1' branch at
+git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
 
 Thanks,
-Leo
+Namhyung
+
+
+Namhyung Kim (5):
+  perf annotate: Use al->data_nr if possible
+  perf annotate: Set notes->src->nr_events early
+  perf annotate: Use annotation__pcnt_width() consistently
+  perf annotate: Set al->data_nr using the notes->src->nr_events
+  perf annotate: Add --skip-empty option
+
+ tools/perf/Documentation/perf-annotate.txt |  3 ++
+ tools/perf/builtin-annotate.c              |  2 +
+ tools/perf/util/annotate.c                 | 47 +++++++++++++---------
+ tools/perf/util/annotate.h                 |  2 +-
+ tools/perf/util/disasm.c                   |  6 +--
+ 5 files changed, 35 insertions(+), 25 deletions(-)
+
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
+
