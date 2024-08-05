@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C645364AB
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Aug 2024 19:23:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60712364AB
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Aug 2024 19:25:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722885804; cv=none; b=bWz2cFobxEJYQ5g5kbkBM2cqriLvEfa1P0F43XqQmEAE+7CnM+DBXJsXMmgnPvJksrWEpK8fbURsYjFxK6nuSk1e9sPCqiDHa7Ua15Enr6+DT0Ti9bstU1Hcx7TOO0GqQvuFAcTiZBbdHYQHesimjVpe8G/34rv+6wIOeUfu52I=
+	t=1722885951; cv=none; b=TMFoFOKDwQhGBXETPkfNlK3nxHpcKa758IEQ4UuaJqDlH0Vd+QjAVlqCrdMa/w4ke43oavd8s0B2k9TWYAAI5zmn/PCha2PdmC1TlprBFk64eTpTQfW5xmr8Vf9R2HyxG/R5tqc2yrPD0EOr2QUupAyVW0CiK/QOPj2C4PGr36E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722885804; c=relaxed/simple;
-	bh=nis7DM7PTY+HA5z/d9KgtqaMFEmyar/UjLOuqnu9OcI=;
+	s=arc-20240116; t=1722885951; c=relaxed/simple;
+	bh=fhkNfnsjGWd+VZGRllYXpp7QDQJLpLgJjnteHFosbNY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CdjJXSNVtJaPtzSsHWn5enpYd1PHXh/0V3DOgeR4IYX3CxlrKyH9bFo8JLcNl5odGEyUmlR9moG4CJpz1SRv/Ktr+26p+1YIcfPWp/5BL66Lri4X77YPFcHDN57RHZnwTWMwYe0J2XIGeEMaETakyJrvDg+t38bEz968OevWk+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EhxiXgDX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HY7lCS1Mhxd12kyKF61T3/Dd6ZOcWpm8sknboyqfLz6N3t+daBTmobmVrs/mtaQDzgyoiimO1ZIJGQvC09g+Q2+m3hi4r/oVukzk6LUApKQBtdxnGn+jSxSP68zE4+KDM5FiHP36v8fWJYNiqUMIdaeBoHWCzJ3dSWnB7pAKU/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QyAKHbAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EhxiXgDX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B23EC32782;
-	Mon,  5 Aug 2024 19:23:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QyAKHbAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D272BC32782;
+	Mon,  5 Aug 2024 19:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722885804;
-	bh=nis7DM7PTY+HA5z/d9KgtqaMFEmyar/UjLOuqnu9OcI=;
+	s=k20201202; t=1722885951;
+	bh=fhkNfnsjGWd+VZGRllYXpp7QDQJLpLgJjnteHFosbNY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EhxiXgDXOp7bVuplsObb9t6u1ShuWSMNlf74W81RBODFD9nO7/VyZn8YoL4xVlAnL
-	 EhEfTQZeBisBb8IDFCYJcxFA8Ogj7+wPgdsBoI8nVIe/nIoctiixOYeHT+ILPM3qXu
-	 GAh8jtzHsy7pX/Mtg0JAVVVPQFsW81HtWz1sE90nAWv+thOm5ckNWPT/zhZQeMfx++
-	 qVgmJW627mxKFHA38UdRL9YO+KbrQJ8lpLNqC0H07IQuc1X2qdwHkTba20YTsT2pPa
-	 4ViebqoI2Kyys/DHoQfWim/6KB5kUtSbDUxD/hZUQ9NIaMCVINmx0IyRHjJjJ0co+F
-	 q1w28JBWtweMA==
-Date: Mon, 5 Aug 2024 12:23:22 -0700
+	b=QyAKHbAzJYsc54FbCjmvjrGx7Hj7QK4/itW0S7FvDE0YOfTduEdQbynUiuCqVAVfF
+	 z1dhxUvW5e4+jyackbVUx2e2O0Kpl9sDCgpfIMfyq1KZ5zBDVwxRpdH0FYqdXOKGCQ
+	 XBt9yU9WcyryyPGqsbaL1g/n5xuOueSIxWAbWKPit59SQCmXFR2q8beFaw11lXKLez
+	 JX8GJrIaZ7Tbee6L3t75TIrGvqmQHpT/X+J/VgzxUpTDVwxXcu12XP1WjKt9XBUWzL
+	 sRIIbWTYpbsH8CJOMPAXwX5p5GKesAG510Dyr1G6sl/98cCJYjW7zzljEsJo8N5t7O
+	 xvqSaUOkriiXQ==
+Date: Mon, 5 Aug 2024 12:25:49 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Andi Kleen <ak@linux.intel.com>
 Cc: linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v8 3/4] perf script: Fix perf script -F +metric
-Message-ID: <ZrEmqk8yNzzGXd_4@google.com>
+Subject: Re: [PATCH v8 4/4] Add a test case for perf script -F +metric
+Message-ID: <ZrEnPYNK-59eGjoy@google.com>
 References: <20240801212844.677895-1-ak@linux.intel.com>
- <20240801212844.677895-3-ak@linux.intel.com>
+ <20240801212844.677895-4-ak@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,174 +42,63 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240801212844.677895-3-ak@linux.intel.com>
+In-Reply-To: <20240801212844.677895-4-ak@linux.intel.com>
 
-On Thu, Aug 01, 2024 at 02:28:43PM -0700, Andi Kleen wrote:
-> This fixes a regression with perf script -F +metric originally caused by :
-> 
-> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
-> Author: Ian Rogers <irogers@google.com>
-> Date:   Sun Feb 19 01:28:46 2023 -0800
-> 
->     perf metric: Directly use counts rather than saved_value
-> 
-> In the perf script environment the evsel wouldn't allocate an aggr
-> values array, which led to a -1 reference because the metric
-> evaluation would try to reference NULL - 1 (for aggr_idx)
-> 
-> Give the perf script evsels a single CPU aggr setup. That's
-> enough because the groups are always contiguous, so no need
-> to store more than one CPU's worth of values.
-> 
-> Before
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> % perf script -F +metric
-> Segmentation fault (core dumped)
-> 
-> After:
-> 
-> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
-> ...
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
-> % perf script -F +metric
->        perf-exec 1847557 264658.180789:       3009       cycles:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:        382 instructions:  ffffffff990a579a native_write_msr+0xa ([kernel.kallsyms])
->        perf-exec 1847557 264658.180789:         metric:    0.13  insn per cycle
-> ...
-> 
-> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> 
-> ----
-> 
-> v2: Reformat code
-> v3: Work around bogus warning
-> v4: Set up aggr map only for metrics case to keep perf stat record
-> working
-> v5: Broken version
-> v6: Only set up limited aggregation mode with -F +metric. Add conflict
-> checks with perf stat record files.
-> v7: Remove some unnecessary conflict checks. Fix buffer overflow. Minor cleanups.
-> v8: Add check for leader sampling. Update some comments.
-> ---
->  tools/perf/builtin-script.c | 50 +++++++++++++++++++++++++++++++++----
->  1 file changed, 45 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index c16224b1fef3..04378615b2ad 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -335,7 +335,6 @@ struct evsel_script {
->         FILE *fp;
->         u64  samples;
->         /* For metric output */
-> -       u64  val;
->         int  gnum;
->  };
->  
-> @@ -2127,18 +2126,30 @@ static void perf_sample__fprint_metric(struct perf_script *script,
->  	};
->  	struct evsel *ev2;
->  	u64 val;
-> +	static int printed;
->  
->  	if (!evsel->stats)
->  		evlist__alloc_stats(&stat_config, script->session->evlist, /*alloc_raw=*/false);
->  	if (evsel_script(leader)->gnum++ == 0)
->  		perf_stat__reset_shadow_stats();
-> -	val = sample->period * evsel->scale;
-> -	evsel_script(evsel)->val = val;
-> +	val = sample->period;
-> +	if (!(evsel->core.attr.sample_type & PERF_SAMPLE_READ)) {
+On Thu, Aug 01, 2024 at 02:28:44PM -0700, Andi Kleen wrote:
+> Just a simple test
 
-The correct check would need PERF_FORMAT_GROUP in attr.read_format for
-the leader event, and no attr.sample_period for member events.  But I
-guess practically it's enough to check the leader only.
+Can you please briefly describe what the test does?  Ideally with an
+example output with 'perf test -vv'.
 
 Thanks,
 Namhyung
 
-
-> +		if (!printed)
-> +			fprintf(stderr, "perf script: -F metric requires {}:S for groups leader sampling\n");
-> +		printed = 1;
-> +		return;
-> +	}
-> +	/*
-> +	 * Always use the first entry as storage because the leader sampling
-> +	 * groups are contiguous and there's no need to handle multiple indexes
-> +	 * for anything.
-> +	 */
-> +	evsel->stats->aggr[0].counts.val = val;
->  	if (evsel_script(leader)->gnum == leader->core.nr_members) {
->  		for_each_group_member (ev2, leader) {
->  			perf_stat__print_shadow_stats(&stat_config, ev2,
-> -						      evsel_script(ev2)->val,
-> -						      sample->cpu,
-> +						      evsel->stats->aggr[0].counts.val,
-> +						      0,
->  						      &ctx,
->  						      NULL);
->  		}
-> @@ -2325,6 +2336,20 @@ static void process_event(struct perf_script *script,
->  		fflush(fp);
+> 
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+> 
+> ----
+> 
+> v2: Avoid bashisms. Use noploop
+> v3: Avoid false positive in shellcheck
+> v4: Use :S in the test (Ian, Namhyung)
+> ---
+>  tools/perf/tests/shell/script.sh | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/tools/perf/tests/shell/script.sh b/tools/perf/tests/shell/script.sh
+> index c1a603653662..e69c3548583a 100755
+> --- a/tools/perf/tests/shell/script.sh
+> +++ b/tools/perf/tests/shell/script.sh
+> @@ -7,6 +7,7 @@ set -e
+>  temp_dir=$(mktemp -d /tmp/perf-test-script.XXXXXXXXXX)
+>  
+>  perfdatafile="${temp_dir}/perf.data"
+> +scriptoutput="${temp_dir}/script"
+>  db_test="${temp_dir}/db_test.py"
+>  
+>  err=0
+> @@ -88,8 +89,21 @@ test_parallel_perf()
+>  	echo "parallel-perf test [Success]"
 >  }
 >  
-> +static void check_metric_conflict(void)
+> +test_metric()
 > +{
-> +	int i;
-> +	/*
-> +	 * Avoid conflict with the aggregation mode used for the metric printing.
-> +	 */
-> +	for (i = 0; i < OUTPUT_TYPE_MAX; i++) {
-> +		if (output[i].fields & PERF_OUTPUT_METRIC) {
-> +			fprintf(stderr, "perf stat record files are not supported with -F metric\n");
-> +			exit(1);
-> +		}
-> +	}
+> +	echo "script metric test"
+> +	if ! perf list | grep -q cycles ; then return ; fi
+> +	if ! perf list | grep -q instructions ; then return ; fi
+> +	perf record -e '{cycles,instructions}:S' -o "${perfdatafile}" perf test -w noploop
+> +	perf script -i "${perfdatafile}" -F +metric  > $scriptoutput
+> +	test "`grep -c metric $scriptoutput`" -gt 5
+> +	grep metric $scriptoutput | head
+> +	echo "script metric test [Success]"
 > +}
 > +
->  static struct scripting_ops	*scripting_ops;
+>  test_db
+>  test_parallel_perf
+> +test_metric
 >  
->  static void __process_stat(struct evsel *counter, u64 tstamp)
-> @@ -2334,6 +2359,8 @@ static void __process_stat(struct evsel *counter, u64 tstamp)
->  	struct perf_cpu cpu;
->  	static int header_printed;
+>  cleanup
 >  
-> +	check_metric_conflict();
-> +
->  	if (!header_printed) {
->  		printf("%3s %8s %15s %15s %15s %15s %s\n",
->  		       "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVENT");
-> @@ -3725,6 +3752,8 @@ static int process_stat_config_event(struct perf_session *session __maybe_unused
->  {
->  	perf_event__read_stat_config(&stat_config, &event->stat_config);
->  
-> +	check_metric_conflict();
-> +
->  	/*
->  	 * Aggregation modes are not used since post-processing scripts are
->  	 * supposed to take care of such requirements
-> @@ -4088,6 +4117,17 @@ int cmd_script(int argc, const char **argv)
->  
->  	argc = parse_options_subcommand(argc, argv, options, script_subcommands, script_usage,
->  			     PARSE_OPT_STOP_AT_NON_OPTION);
-> +	for (i = 0; i < OUTPUT_TYPE_MAX; i++) {
-> +		if (output[i].fields & PERF_OUTPUT_METRIC) {
-> +			stat_config.aggr_map = cpu_aggr_map__empty_new(1);
-> +			err = -ENOMEM;
-> +			if (!stat_config.aggr_map)
-> +				goto out;
-> +			err = 0;
-> +			stat_config.aggr_map->nr = 1;
-> +			break;
-> +		}
-> +	}
->  
->  	if (symbol_conf.guestmount ||
->  	    symbol_conf.default_guest_vmlinux_name ||
 > -- 
 > 2.45.2
 > 
