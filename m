@@ -1,179 +1,209 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3E516C69A;
-	Mon,  5 Aug 2024 21:12:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2DA042A9F;
+	Mon,  5 Aug 2024 22:42:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722892324; cv=none; b=gWnBCxdt0T6CvHXZQ5P1sjnsFxoNFYqinvni+EAJc04/MUJXaW4eurmLSKcxZCK7boxArm7Ll/QtLjJw2H9HCwu1zMY/dJKSLCEG1xDNe8Xn4/jJb4Qj7+TSnyMMqY7k95s2kH0PyE8qbH3YUWPhjw61sIKHbn1WeteKvVLUHKI=
+	t=1722897760; cv=none; b=NDXY5VhCGKxfGKYmWqqANJkf9nux9qHyz76dvR5dmR14aMlerN8txmIAAFus7bBZN3OAUhVPjeAmc9fTU6k65tvCw6xb8bvH3KTJ336Je99rm8lNHARO0y65e4GB1JLQrUl5s/Rcyep7qSKO4DZGYX8SvD1/LN3FFsO/mgRzNIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722892324; c=relaxed/simple;
-	bh=/C6KCCXV/Y/gYFfLYENXnkylgx0vsLl6/6AYZHvkRNg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m1j1m0UqwNf+c+nfCIsPxo9FtJzLcX7R3lv7FecriDMCtXTBnsw23UEDuXSHCz1iOvwXPoL+G5DxF2bTLNI3O6z3ga7ubpC9HH5A1T7N1hgxIfUaC/Q+tIFJhReRTJPKEVEd1Uqbmi6JK2owiCy0XK+HiUmnf+U1A/pvRhIp2VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=No9yQqlV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722897760; c=relaxed/simple;
+	bh=UlNlwux5bbm5jdLR9eAScBokM7bq8M3fbpod5PSm4+M=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OnXvoqmqYXr1u+hpgD9H8MXLRwf0ecx7USM0haxuGmW8orhEeCTX7a5uo/j7SQ+OCz9tqPiFSeXb013Q52Bcv2ayZVrTcckO1vLtno3JdzIC69SJZq1HD71kvxgrSpsAU9OU6d/aPsjZrv5ab0HgK4/PELmM9yM7SIR0mLHht0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JJpMrI3i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="No9yQqlV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58D2DC32782;
-	Mon,  5 Aug 2024 21:12:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JJpMrI3i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F857C32782;
+	Mon,  5 Aug 2024 22:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722892323;
-	bh=/C6KCCXV/Y/gYFfLYENXnkylgx0vsLl6/6AYZHvkRNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=No9yQqlVaRJc2OYK9fPVCkjWVY1o8DkEuccw3jnKKFpFMzmRycMXmF9KDKvGXNV1t
-	 45WLZ55QnK2vEDH2O2afCDCIiI6Nx3/geogWIN33l7JEjD6hBzcQpfK5DlXtK4qmeG
-	 XXVRv64mwYRSrCjAmLkUTS/ojbkqut9THnPPhJZOgMpQde0vr+YG+C2Z9mJ1pHfTfo
-	 35gj7xtEqEkmgMMU5GD41kPoCRQdwFe+FgnC93BgfoEqLDXQTKUBOwyGusU0QHaf/i
-	 02kiUmmAsjnxSvrn29wIDwovDHif4i7QTEGBW22Hdb0WMtXMW11G+9lpqbvurYlvDu
-	 LtSbN8caTYhSQ==
-Date: Mon, 5 Aug 2024 14:12:01 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	s=k20201202; t=1722897759;
+	bh=UlNlwux5bbm5jdLR9eAScBokM7bq8M3fbpod5PSm4+M=;
+	h=Date:From:To:Cc:Subject:From;
+	b=JJpMrI3iZJ9coi/+jUJHg40x+aTlnme3KKvogrhw2vKIknWBYNJq/O9QCej/usshr
+	 kbbxlgzk5D+AUt8+6Mjm3AUYsXLFRX+R4SftYwKp8GhMCsPgD8DYhlbkK1Kawargci
+	 jSv8cyw79GhZiFFWLWrXvr8K900vhnL6FDRBTEJjAltUVD+Wms1tU1XFyrMCH4G/KR
+	 Pk/U2dYpHlnM1jafL6ryadO51Y5wHzljPtN7Suv6IIU3EkAMfRW/7N/pGwDoJW+C4X
+	 lx8ZYYXHX5qUwjCaH8tQd6JckqpZUq5RaapU5e3KOcZpMk/7V1xbG0RFz3kXJ0+Ukg
+	 i5jv41t+lAEGQ==
+Date: Mon, 5 Aug 2024 16:42:35 -0600
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
-	Song Liu <song@kernel.org>, bpf@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH] perf bpf-filter: Support multiple events properly
-Message-ID: <ZrFAIc0G8n0-zgxt@google.com>
-References: <20240802173752.1014527-1-namhyung@kernel.org>
- <ZrDpsnReuIClKFnk@x1>
- <ZrEgeLkZx6uor7fg@google.com>
- <ZrEolmUz_2I1fmdJ@x1>
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] perf: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <ZrFVW+6OOJ2tX23N@cute>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZrEolmUz_2I1fmdJ@x1>
 
-On Mon, Aug 05, 2024 at 04:31:34PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Mon, Aug 05, 2024 at 11:56:56AM -0700, Namhyung Kim wrote:
-> > On Mon, Aug 05, 2024 at 12:03:14PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Fri, Aug 02, 2024 at 10:37:52AM -0700, Namhyung Kim wrote:
-> > > > So far it used tgid as a key to get the filter expressions in the
-> > > > pinned filters map for regular users but it won't work well if the has
-> > > > more than one filters at the same time.  Let's add the event id to the
-> > > > key of the filter hash map so that it can identify the right filter
-> > > > expression in the BPF program.
-> > > > 
-> > > > As the event can be inherited to child tasks, it should use the primary
-> > > > id which belongs to the parent (original) event.  Since evsel opens the
-> > > > event for multiple CPUs and tasks, it needs to maintain a separate hash
-> > > > map for the event id.
-> > > 
-> > > I'm trying to test it now, it would be nice to have the series of events
-> > > needed to test that the feature is working.
-> > 
-> > Sure, I used the following command.
-> > 
-> >   ./perf record -e cycles --filter 'ip < 0xffffffff00000000' -e instructions --filter 'period < 100000' -o- ./perf test -w noploop | ./perf script -i-
-> 
-> Thanks
->  
-> > > 
-> > > Some comments below.
-> > >  
-> > > > In the user space, it keeps a list for the multiple evsel and release
-> > > > the entries in the both hash map when it closes the event.
-> > > > 
-> > > > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> > > > ---
-> > > >  tools/perf/util/bpf-filter.c                 | 288 ++++++++++++++++---
-> > > >  tools/perf/util/bpf_skel/sample-filter.h     |  11 +-
-> > > >  tools/perf/util/bpf_skel/sample_filter.bpf.c |  42 ++-
-> > > >  tools/perf/util/bpf_skel/vmlinux/vmlinux.h   |   5 +
-> > > >  4 files changed, 304 insertions(+), 42 deletions(-)
-> > > > 
-> > > > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
-> > > > index c5eb0b7eec19..69b147cba969 100644
-> > > > --- a/tools/perf/util/bpf-filter.c
-> > > > +++ b/tools/perf/util/bpf-filter.c
-> > > > @@ -1,4 +1,45 @@
-> > > >  /* SPDX-License-Identifier: GPL-2.0 */
-> > > > +/**
-> > > > + * Generic event filter for sampling events in BPF.
-> > > > + *
-> > > > + * The BPF program is fixed and just to read filter expressions in the 'filters'
-> > > > + * map and compare the sample data in order to reject samples that don't match.
-> > > > + * Each filter expression contains a sample flag (term) to compare, an operation
-> > > > + * (==, >=, and so on) and a value.
-> > > > + *
-> > > > + * Note that each entry has an array of filter repxressions and it only succeeds
-> > > 
-> > >                                                   expressions
-> > 
-> > Oops, thanks.
-> > 
-> > > 
-> > > > + * when all of the expressions are satisfied.  But it supports the logical OR
-> > > > + * using a GROUP operation which is satisfied when any of its member expression
-> > > > + * is evaluated to true.  But it doesn't allow nested GROUP operations for now.
-> > > > + *
-> > > > + * To support non-root users, the filters map can be loaded and pinned in the BPF
-> > > > + * filesystem by root (perf record --setup-filter pin).  Then each user will get
-> > > > + * a new entry in the shared filters map to fill the filter expressions.  And the
-> > > > + * BPF program will find the filter using (task-id, event-id) as a key.
-> > > > + *
-> > > > + * The pinned BPF object (shared for regular users) has:
-> > > > + *
-> > > > + *                  event_hash                   |
-> > > > + *                  |        |                   |
-> > > > + *   event->id ---> |   id   | ---+   idx_hash   |     filters
-> > > > + *                  |        |    |   |      |   |    |       |
-> > > > + *                  |  ....  |    +-> |  idx | --+--> | exprs | --->  perf_bpf_filter_entry[]
-> > > > + *                                |   |      |   |    |       |               .op
-> > > > + *   task id (tgid) --------------+   | .... |   |    |  ...  |               .term (+ part)
-> > > > + *                                               |                            .value
-> > > > + *                                               |
-> > > > + *   ======= (root would skip this part) ========                     (compares it in a loop)
-> > > > + *
-> > > > + * This is used for per-task use cases while system-wide profiling (normally from
-> > > > + * root user) uses a separate copy of the program and the maps for its own so that
-> > > > + * it can proceed even if a lot of non-root users are using the filters at the
-> > > > + * same time.  In this case the filters map has a single entry and no need to use
-> > > > + * the hash maps to get the index (key) of the filters map (IOW it's always 0).
-> > > > + *
-> > > > + * The BPF program returns 1 to accept the sample or 0 to drop it.
-> > > > + * The 'dropped' map is to keep how many samples it dropped by the filter and
-> > > > + * it will be reported as lost samples.
-> > > 
-> > > I think there is value in reporting how many were filtered out, I'm just
-> > > unsure about reporting it as "lost" samples, as lost has another
-> > > semantic associated, i.e. ring buffer was full or couldn't process it
-> > > for some other resource starvation issue, no?
-> > 
-> > Then we need a way to save the information.  It could be a new record
-> > type (PERF_RECORD_DROPPED_SAMPLES), a new misc flag in the lost samples
-> 
-> I guess "PERF_RECORD_FILTERED_SAMPLES" would be better, more precise,
-> wdyt?
-> 
-> > record or a header field.  I prefer the misc flag.
-> 
-> I think we can have both filtered and lost samples, so I would prefer
-> the new record type.
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-I think we can have two LOST_SAMPLES records then - one with the new
-misc flag for BPF and the other (without the flag) for the usual lost
-samples.  This would require minimal changes IMHO.
+So, in order to avoid ending up with a flexible-array member in the
+middle of multiple other structs, we use the `struct_group_tagged()`
+helper to create a new tagged `struct perf_branch_stack_hdr`.
+This structure groups together all the members of the flexible
+`struct perf_branch_stack` except the flexible array.
 
-Thanks,
-Namhyung
+As a result, the array is effectively separated from the rest of the
+members without modifying the memory layout of the flexible structure.
+We then change the type of the middle struct members currently causing
+trouble from `struct perf_branch_stack` to `struct perf_branch_stack_hdr`.
 
->  
-> > Also there should be a separate PERF_RECORD_LOST record in the middle
-> > when there's actual issue.  Without that we can say it's from the BPF.
-> 
-> Right, disambiguating filtered from lost samples is indeed useful.
-> 
-> - Arnaldo
->  
-> > Thanks,
-> > Namhyung
+We also want to ensure that when new members need to be added to the
+flexible structure, they are always included within the newly created
+tagged struct. For this, we use `static_assert()`. This ensures that the
+memory layout for both the flexible structure and the new tagged struct
+is the same after any changes.
+
+This approach avoids having to implement `struct perf_branch_stack_hdr`
+as a completely separate structure, thus preventing having to maintain
+two independent but basically identical structures, closing the door
+to potential bugs in the future.
+
+We also use `container_of()` whenever we need to retrieve a pointer to
+the flexible structure, through which the flexible-array member can be
+accessed, if necessary.
+
+So, with these changes, fix the following warnings:
+arch/x86/events/amd/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+arch/x86/events/intel/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+arch/x86/events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+arch/x86/events/zhaoxin/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+./arch/x86/include/generated/../../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+arch/x86/xen/../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ arch/x86/events/amd/core.c   | 4 +++-
+ arch/x86/events/core.c       | 4 +++-
+ arch/x86/events/intel/ds.c   | 4 +++-
+ arch/x86/events/intel/lbr.c  | 8 ++++++--
+ arch/x86/events/perf_event.h | 2 +-
+ include/linux/perf_event.h   | 9 +++++++--
+ 6 files changed, 23 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 920e3a640cad..37adf2fcf508 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -1001,7 +1001,9 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 			continue;
+ 
+ 		if (has_branch_stack(event))
+-			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
++			perf_sample_save_brstack(&data, event,
++				container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
++				NULL);
+ 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			x86_pmu_stop(event, 0);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 12f2a0c14d33..e7faf7eedfc4 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1704,7 +1704,9 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 		perf_sample_data_init(&data, 0, event->hw.last_period);
+ 
+ 		if (has_branch_stack(event))
+-			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
++			perf_sample_save_brstack(&data, event,
++				container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
++				NULL);
+ 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			x86_pmu_stop(event, 0);
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index fa5ea65de0d0..d5c86edbeaa9 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -1869,7 +1869,9 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
+ 		setup_pebs_time(event, data, pebs->tsc);
+ 
+ 	if (has_branch_stack(event))
+-		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
++		perf_sample_save_brstack(data, event,
++			container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
++			NULL);
+ }
+ 
+ static void adaptive_pebs_save_regs(struct pt_regs *regs,
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index dc641b50814e..79ca1a2d6ff4 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -974,11 +974,15 @@ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
+ {
+ 	if (is_branch_counters_group(event)) {
+ 		intel_pmu_lbr_counters_reorder(cpuc, event);
+-		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, cpuc->lbr_counters);
++		perf_sample_save_brstack(data, event,
++			container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
++			cpuc->lbr_counters);
+ 		return;
+ 	}
+ 
+-	perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
++	perf_sample_save_brstack(data, event,
++		container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
++		NULL);
+ }
+ 
+ static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ac1182141bf6..bf05cdc3f22f 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -286,7 +286,7 @@ struct cpu_hw_events {
+ 	 */
+ 	int				lbr_users;
+ 	int				lbr_pebs_users;
+-	struct perf_branch_stack	lbr_stack;
++	struct perf_branch_stack_hdr	lbr_stack;
+ 	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+ 	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+ 	union {
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 1a8942277dda..eb4413917b39 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -121,10 +121,15 @@ static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
+  * already stored in age order, the hw_idx should be 0.
+  */
+ struct perf_branch_stack {
+-	__u64				nr;
+-	__u64				hw_idx;
++	/* New members MUST be added within the struct_group() macro below. */
++	struct_group_tagged(perf_branch_stack_hdr, hdr,
++		__u64				nr;
++		__u64				hw_idx;
++	);
+ 	struct perf_branch_entry	entries[];
+ };
++static_assert(offsetof(struct perf_branch_stack, entries) == sizeof(struct perf_branch_stack_hdr),
++	      "struct member likely outside of struct_group_tagged()");
+ 
+ struct task_struct;
+ 
+-- 
+2.34.1
+
