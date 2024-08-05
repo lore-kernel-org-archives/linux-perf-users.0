@@ -1,368 +1,233 @@
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A73814EC7D
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Aug 2024 23:33:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F89E14F9F1;
+	Mon,  5 Aug 2024 23:46:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722900838; cv=none; b=V6ElKWVjD45/DXYywB7O4DDYM985+b+2VBSzxFMYt0wXwOml2876uoT56Q310rJKx3oaNsXYqq8zHmrLFJ3+BZoiPw7e+fmJemhIjC/hnVv4hQ0rwNwd7PJBWTx+B5lAsHZ6rrmU+E2ZY33ypbzR1/j0wCy/UTJI+/hXcMhxpJ8=
+	t=1722901610; cv=none; b=MG6puV7wT3o+PhnsAwSI0sTWXDSeNYGYZRBlp9+BRiNrR+muaNWh+YI5nXb4oqHufUlUL+JU752fnFLIQ8WLFXsZFtfHiQfwef1jXQuJroyWsRCi1TymyIQqHTqfvlLfqQiK4v0x6Ql7GKjDL5FDiIlW99ykFQDDdjtUhO+s0Ac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722900838; c=relaxed/simple;
-	bh=QTRSPPSONXMEbcP0kHZene++54R2NDacJavt0//7Wlw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Yo3ZvS5DdRvbSuqmClmYhl9FHa3A+9wua3I8XzV45RODtECmOSBBjAccAoIYf8BGviByzjNPYMrll2mA9WW4Fg0LFa1OXsYbsPn6VXiS2pX1AQJvVJGbvGsQHDnc+Au0/fAL38cHIhq/PbC41lCwy/Uo8Ewgxbi4UOxwzlMR3Wo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SRZJ8M1W; arc=none smtp.client-ip=209.85.166.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1722901610; c=relaxed/simple;
+	bh=u1bIcTmOiW+SLXAFAV2un0DLcbfc+5nOTVBv1sFXyyY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g1yL15G4FYP6896Eb7ZJUi5isj20D8njygSNUfri2Z/ImnetJEJcsVx230addvdDfNIN8OrTboo0uD6mZCU9o9YMe2n64ykDtRWsf4IQmumbYyq8G2dvLhjJG3Ej0Ou2bo8uLOqC8/JLsO5kQN+HF+IPhh06PHVvVRFxdz5dTCg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pFLSS1DB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SRZJ8M1W"
-Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-39b167a6f3bso61215ab.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Aug 2024 16:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1722900836; x=1723505636; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rqZSYteTSQcaJ4WUUtb0semnsEdWUPVp/rULAK+a2jU=;
-        b=SRZJ8M1WBAcNJrI+Pa2hDV0cuqcAaZQI2cT4j3TsJ5YqEB0ZOGx4tds9UC9hSM4PAn
-         xYW68A3m5a7v8mcaQjW/uGSpeDZs+bb4SezJyzmPA5HX+13JwOFdTBLEZqSxxUXODyiW
-         jlQ29W7ktO39qRMzKAtZEiRrmJCo0OjSwjUmmS7NDD30EXXrs7A/mkF6mWqMTSV+Pzbi
-         XAtXSZtV/l1KNl4DlqsYZxqXnUJZ8W3YY2U///oSZHLh8mLXGin3nh33EVXTYUmo/LAr
-         p0RkUbIouywBWlgN4Z6G/WHiNJIaMKXy8T6J5j+okIkZU3iSvMZmC5gKP5izfTpMfTvH
-         q3Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722900836; x=1723505636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rqZSYteTSQcaJ4WUUtb0semnsEdWUPVp/rULAK+a2jU=;
-        b=hkLlLx7y3VTwi1YRAGONe2nk7JWZawQN8fn17V5/D8xS9ZCwesv3k1E1QTtNizAGuA
-         ZPclYyKuGyDCYhx/GfXEyPdHBvEYVbqgTj7vpkNs4kOCVCGsbriSjY7pEbeZDdFBaNMm
-         wa7g8mPfArO26GdkpESOQHefmORMjfIgUd7r0eCImWzCOur2+5J0osADOt4Q1HLK6sn+
-         Bd7HCfWXowGYz62xCejvCHHq5qpLvadNcsKLt0mljkXckkjrInLXQkwWIKz6fUZQ5Lg5
-         q2xdShcbahfqMq5FJohqdGdkg9Nfb5R2dpaJItVqklpQi9BbD60eMGMN1flVQOdxFGqf
-         fiPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUz/5i68nIL0uxaED9qkVYzuY/SyzfrnjlTTfK7i4qVKxu85DQIzPhDG63hPWQ4rsF4A695wTE8P1FTh2S9blqtPo3U2rXfzQqmkJCuWq+gHA==
-X-Gm-Message-State: AOJu0YwVdm64CFimJyAgFkRIWnlC1nLp521H6W08Nd1dQv6lXAjscmXS
-	eZ08vyvwmQWefNK81TmWtSvh0ZQpj0Zoae8ToBMZeJfaVSPsmpHB0pkK5UgDEA77oxx5rgn0IO3
-	HohrdgJjRsYfsevgr6XCWVikpXWIb75k3AKfF
-X-Google-Smtp-Source: AGHT+IEibqFIXNMOsfTyowWCk0MrSVZRo1Z5RyYUsk7QJNZfWD9BuRRl9Bvn5iTz1jeqxUrQT0drknsvnjcFVWD2pQc=
-X-Received: by 2002:a05:6e02:20ca:b0:377:bde:8f1d with SMTP id
- e9e14a558f8ab-39b484700cbmr1305875ab.2.1722900835976; Mon, 05 Aug 2024
- 16:33:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pFLSS1DB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A576C32782;
+	Mon,  5 Aug 2024 23:46:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722901609;
+	bh=u1bIcTmOiW+SLXAFAV2un0DLcbfc+5nOTVBv1sFXyyY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=pFLSS1DB64VQ3gym/Oo+TYMTE/v4oD8QCAyFGOpf4UE3dWGOpPSqCoPBlFJtTF9pO
+	 Tx1RnKKu/aWt5kCIMhRFt6TgV7lESbK9T9B1XXH5gjp88EAKo6izQsMQxuUfTmZ0uE
+	 rMr7QK0sJfG+7A4McNn9Ieu+Wh5WdjykEFdUPo2dMNPp/ziuwGFcl8WTBLFz4NylyV
+	 tfeoDunZ995T220cnfvc66NNUDQ2SKJL470xqF1poVa6ykS6iv7yV0GBxq7eOLRXWS
+	 rYvim/JvjvKQPm8a+HU4QpwlNm35L7ecBnLL76ZI/U3L2LDWnjwxDTG34h/nyxcRkU
+	 gjDkdsTsIcvtA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH v3] perf annotate: Cache debuginfo for data type profiling
+Date: Mon,  5 Aug 2024 16:46:48 -0700
+Message-ID: <20240805234648.1453689-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240720062102.444578-1-weilin.wang@intel.com>
- <CAM9d7cgoTyf3Zjt=+2yZi5Pat4UrxKxN=rkLHmyUWZqwZk8_Kw@mail.gmail.com>
- <CAP-5=fWr2Qna9ikzUCFavo3OTUDSP3ztr=i6E=R962CXCdHckg@mail.gmail.com> <ZrEpJxtm5zlp5rbo@x1>
-In-Reply-To: <ZrEpJxtm5zlp5rbo@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 5 Aug 2024 16:33:44 -0700
-Message-ID: <CAP-5=fVTaHdiF8G2Dn=vnguvoapa_+ZKsQ7Wy3z51K9nDZQUtg@mail.gmail.com>
-Subject: Re: [RFC PATCH v18 0/8] TPEBS counting mode support
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>, weilin.wang@intel.com, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
-	Caleb Biggers <caleb.biggers@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 5, 2024 at 12:34=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Aug 05, 2024 at 08:10:12AM -0700, Ian Rogers wrote:
-> > On Mon, Jul 22, 2024 at 10:38=E2=80=AFAM Namhyung Kim <namhyung@kernel.=
-org> wrote:
-> > >
-> > > Hello Weilin,
-> > >
-> > > On Fri, Jul 19, 2024 at 11:21=E2=80=AFPM <weilin.wang@intel.com> wrot=
-e:
-> > > >
-> > > > From: Weilin Wang <weilin.wang@intel.com>
-> > > >
-> > > > Change in v18:
-> > > >  - Update to exit 2 in TPEBS shell test when not on Intel platform.
-> > > >  - Several updates to use EVLIST_CTL_CMD_ENABLE_TAG, EVLIST_CTL_CMD=
-_ACK_TAG, and
-> > > >  etc.
-> > > >
-> > > > Changes in v17:
-> > > >  - Add a poll on control fifo ack_fd to ensure program returns succ=
-essfully when
-> > > >  perf record failed for any reason.
-> > > >  - Add a check in the tpebs test to only run on Intel platforms.
-> > > >
-> > > > Changes in v16:
-> > > >  - Update tpebs bash test code and variable name.
-> > > >  - Add a check to ensure only use "-C" option when cpumap is not "-=
-1" when
-> > > >  forking "perf record".
-> > > >
-> > > > Changes in v15:
-> > > >  - Revert changes added for python import test failure in v14 becau=
-se the code
-> > > >  works correctly with the new python build code.
-> > > >  - Update the command line option to --record-tpebs.
-> > > >
-> > > > Changes in v14:
-> > > >  - Fix the python import test failure. We cannot support PYTHON_PER=
-F because it
-> > > >  will trigger a chain of dependency issues if we add intel-tpebs.c =
-to it. So,
-> > > >  only enable tpebs functions in evsel and evlist when PYTHON_PERF i=
-s not
-> > > >  defined.
-> > > >  - Fix shellcheck warning for the tpebs test.
-> > > >
-> > > > Changes in v13:
-> > > >  - Add document for the command line option and fix build error in =
-non-x86_64.
-> > > >  - Update example with non-zero retire_latency value when tpebs rec=
-ording is
-> > > >  enabled.
-> > > >  - Add tpebs_stop() back to tpebs_set_evsel() because in hybrid pla=
-tform, when
-> > > >  the forked perf record is not killed, the reader thread does not g=
-et any
-> > > >  sampled data from the PIPE. As a result, tpebs_set_evesel() will a=
-lways return
-> > > >  zero on retire_latency values. This does not happen on my test GNR=
- machine.
-> > > >  Since -I is not supported yet, I think we should add tpebs_stop() =
-to ensure
-> > > >  correctness for now. More investigation is required here when we w=
-ork on
-> > > >  supporting -I mode.
-> > > >  - Rebase code on top of perf-tools-next.
-> > > >
-> > > > Changes in v12:
-> > > >  - Update MTL metric JSON file to include E-Core TMA3.6 changes.
-> > > >  - Update comments and code for better code quality. Keep tpebs_sta=
-rt() and
-> > > >  tpebs_delete() at evsel level for now and add comments on these fu=
-nctions with
-> > > >  more details about potential future changes. Remove tpebs_stop() c=
-all from
-> > > >  tpebs_set_evsel(). Simplify the tpebs_start() and tpebs_stop()/tpe=
-bs_delete()
-> > > >  interfaces. Also fixed the bugs on not freed "new" pointer and the=
- incorrect
-> > > >  variable value assignment to val instead of counter->val.
-> > > >
-> > > > Changes in v11:
-> > > >  - Make retire_latency evsels not opened for counting. This works c=
-orrectly now
-> > > >  with the code Namhyung suggested that adjusting group read size wh=
-en
-> > > >  retire_latency evsels included in the group.
-> > > >  - Update retire_latency value assignment using rint() to reduce pr=
-ecision loss
-> > > >  while keeping code generic.
-> > > >  - Fix the build error caused by not used variable in the test.
-> > > >
-> > > > Other changes in v10:
-> > > >  - Change perf record fork from perf stat to evsel. All the major o=
-perations
-> > > >  like tpebs start, stop, read_evsel should directly work through ev=
-sel.
-> > > >  - Make intel-tpebs x86_64 only. This change is cross-compiled to a=
-rm64.
-> > > >  - Put tpebs code to intel-tepbs and simplify intel-tpebs APIs to m=
-inimum number
-> > > > of functions and variables. Update funtion name and variable names =
-to use
-> > > > consistent prefix. Also improve error handling.
-> > > >  - Integrate code patch from Ian for the :R parser.
-> > > >  - Update MTL metrics to TMA 4.8.
-> > > >
-> > > > V9: https://lore.kernel.org/all/20240521173952.3397644-1-weilin.wan=
-g@intel.com/
-> > > >
-> > > > Changes in v9:
-> > > >  - Update the retire_latency result print and metric calculation me=
-thod. Plugin
-> > > > the value to evsel so that no special code is required.
-> > > >  - Update --control:fifo to use pipe instead of named pipe.
-> > > >  - Add test for TPEBS counting mode.
-> > > >  - Update Document with more details.
-> > > >
-> > > > Changes in v8:
-> > > >  - In this revision, the code is updated to base on Ian's patch on =
-R modifier
-> > > > parser https://lore.kernel.org/lkml/20240428053616.1125891-3-iroger=
-s@google.com/
-> > > > After this change, there is no special code required for R modifier=
- in
-> > > > metricgroup.c and metricgroup.h files.
-> > > >
-> > > > Caveat of this change:
-> > > >   Ideally, we will need to add special handling to skip counting ev=
-ents with R
-> > > > modifier in evsel. Currently, this is not implemented so the event =
-with :R will
-> > > > be both counted and sampled. Usually, in a metric formula that uses=
- retire_latency,
-> > > > it would already require to count the event. As a result, we will e=
-ndup count the
-> > > > same event twice. This should be able to be handled properly when w=
-e finalize our
-> > > > design on evsel R modifier support.
-> > > >
-> > > >  - Move TPEBS specific code out from main perf stat code to separat=
-e files in
-> > > > util/intel-tpebs.c and util/intel-tpebs.h. [Namhyung]
-> > > >  - Use --control:fifo to ack perf stat from forked perf record inst=
-ead of sleep(2) [Namhyung]
-> > > >  - Add introductions about TPEBS and R modifier in Documents. [Namh=
-yung]
-> > > >
-> > > >
-> > > > Changes in v7:
-> > > >  - Update code and comments for better code quality [Namhyung]
-> > > >  - Add a separate commit for perf data [Namhyung]
-> > > >  - Update retire latency print function to improve alignment [Namhy=
-ung]
-> > > >
-> > > > Changes in v6:
-> > > >  - Update code and add comments for better code quality [Namhyung]
-> > > >  - Remove the added fd var and directly pass the opened fd to data.=
-file.fd [Namhyung]
-> > > >  - Add kill() to stop perf record when perf stat exists early [Namh=
-yung]
-> > > >  - Add command opt check to ensure only start perf record when -a/-=
-C given [Namhyung]
-> > > >  - Squash commits [Namhyung]
-> > > >
-> > > > Changes in v5:
-> > > >  - Update code and add comments for better code quality [Ian]
-> > > >
-> > > > Changes in v4:
-> > > >  - Remove uncessary debug print and update code and comments for be=
-tter
-> > > > readability and quality [Namhyung]
-> > > >  - Update mtl metric json file with consistent TmaL1 and TopdownL1 =
-metricgroup
-> > > >
-> > > > Changes in v3:
-> > > >  - Remove ':' when event name has '@' [Ian]
-> > > >  - Use 'R' as the modifier instead of "retire_latency" [Ian]
-> > > >
-> > > > Changes in v2:
-> > > >  - Add MTL metric file
-> > > >  - Add more descriptions and example to the patch [Arnaldo]
-> > > >
-> > > > Here is an example of running perf stat to collect a metric that us=
-es
-> > > > retire_latency value of event MEM_INST_RETIRED.STLB_HIT_STORES on a=
- MTL system.
-> > > >
-> > > > In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORE=
-S sample.
-> > > > Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p count and retire_=
-latency value
-> > > > are all 0.
-> > > >
-> > > > ./perf stat -M tma_dtlb_store -a -- sleep 1
-> > > >
-> > > > [ perf record: Woken up 1 times to write data ]
-> > > > [ perf record: Captured and wrote 0.000 MB - ]
-> > > >
-> > > >  Performance counter stats for 'system wide':
-> > > >
-> > > >        181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6=
- %  tma_dtlb_store
-> > > >          3,195,608      cpu_core/topdown-retiring/
-> > > >         40,156,649      cpu_core/topdown-mem-bound/
-> > > >          3,550,925      cpu_core/topdown-bad-spec/
-> > > >        117,571,818      cpu_core/topdown-fe-bound/
-> > > >         57,118,087      cpu_core/topdown-be-bound/
-> > > >             69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
-> > > >              4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
-> > > >         30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
-> > > >         30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
-> > > >            168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
-> > > >               0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0      =
-  0
-> > > >
-> > > >        1.003105924 seconds time elapsed
-> > > >
-> > > > v1:
-> > > > TPEBS is one of the features provided by the next generation of Int=
-el PMU.
-> > > > Please refer to Section 8.4.1 of "Intel=C2=AE Architecture Instruct=
-ion Set Extensions
-> > > > Programming Reference" [1] for more details about this feature.
-> > > >
-> > > > This set of patches supports TPEBS in counting mode. The code works=
- in the
-> > > > following way: it forks a perf record process from perf stat when r=
-etire_latency
-> > > > of one or more events are used in a metric formula. Perf stat would=
- send a
-> > > > SIGTERM signal to perf record before it needs the retire latency va=
-lue for
-> > > > metric calculation. Perf stat will then process sample data to extr=
-act the
-> > > > retire latency data for metric calculations. Currently, the code us=
-es the
-> > > > arithmetic average of retire latency values.
-> > > >
-> > > > [1] https://www.intel.com/content/www/us/en/content-details/812218/=
-intel-architecture-instruction-set-extensions-programming-reference.html?wa=
-pkw=3Dfuture%20features
-> > > >
-> > > >
-> > > >
-> > > >
-> > > > Ian Rogers (1):
-> > > >   perf parse-events: Add a retirement latency modifier
-> > > >
-> > > > Weilin Wang (7):
-> > > >   perf data: Allow to use given fd in data->file.fd
-> > > >   perf stat: Fork and launch perf record when perf stat needs to ge=
-t
-> > > >     retire latency value for a metric.
-> > > >   perf stat: Plugin retire_lat value from sampled data to evsel
-> > > >   perf vendor events intel: Add MTL metric json files
-> > > >   perf stat: Add command line option for enabling tpebs recording
-> > > >   perf Document: Add TPEBS to Documents
-> > > >   perf test: Add test for Intel TPEBS counting mode
-> > >
-> > > Thanks for your persistence!
-> > >
-> > > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Ping.
->
-> I guess Namhyung's reviewed-by should suffice, but since you're pinging
-> and I saw previous comments about this serie, would it be possible to
-> get your Reviewed-by as well?
+In find_data_type(), it creates and deletes a debug info whenver it
+tries to find data type for a sample.  This is inefficient and it most
+likely accesses the same binary again and again.
 
-I'm happy with most of the changes and they can have my reviewed-by.
-I'm not happy with:
-perf stat: Fork and launch 'perf record' when 'perf stat' needs to get
-retire latency value for a metric.
-so please leave it off there.
+Let's add a single entry cache the debug info structure for the last DSO.
+Depending on sample data, it usually gives me 2~3x (and sometimes more)
+speed ups.
 
-Context: originally the patches aimed to abstract everything inside of
-the evsel, now builtin-stat is manually starting and ending the
-sub-process and has to be aware of TPEBS. There are ugly architectural
-dependencies. My reviewed-by was correct on the earlier version, as
-you could make a tpebs evsel just like any... other, open, close, read
-it, etc. This would be useful say in a python script. This version to
-my eyes is worse as all TPEBS dependencies are made explicit and the
-caller needs to be aware of TPEBS. I understand Weilin was asked to
-make some of the changes, and there was a desire for efficiency, but I
-think things were better in earlier versions.
+Note that this will introduce a little difference in the output due to
+the order of checking stack operations.  It used to check the stack ops
+before checking the availability of debug info but I moved it after the
+symbol check.  So it'll report stack operations in DSOs without debug
+info as unknown.  But I think it's ok and better to have the checking
+near the caching logic.
 
-Thanks,
-Ian
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+v2) add an assertion for the single-threaded case.
+v3) update the comment according to Ian.
+
+ tools/perf/util/annotate-data.c | 15 ++-----------
+ tools/perf/util/annotate-data.h |  2 +-
+ tools/perf/util/annotate.c      | 37 +++++++++++++++++++++++++++++++++
+ tools/perf/util/annotate.h      |  2 ++
+ tools/perf/util/session.c       |  2 ++
+ 5 files changed, 44 insertions(+), 14 deletions(-)
+
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 734acdd8c4b7..f125ac5f0bda 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1345,16 +1345,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
+  */
+ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ {
+-	struct annotated_data_type *result = NULL;
+ 	struct dso *dso = map__dso(dloc->ms->map);
+ 	Dwarf_Die type_die;
+ 
+-	dloc->di = debuginfo__new(dso__long_name(dso));
+-	if (dloc->di == NULL) {
+-		pr_debug_dtp("cannot get the debug info\n");
+-		return NULL;
+-	}
+-
+ 	/*
+ 	 * The type offset is the same as instruction offset by default.
+ 	 * But when finding a global variable, the offset won't be valid.
+@@ -1364,13 +1357,9 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+ 	dloc->fbreg = -1;
+ 
+ 	if (find_data_type_die(dloc, &type_die) < 0)
+-		goto out;
+-
+-	result = dso__findnew_data_type(dso, &type_die);
++		return NULL;
+ 
+-out:
+-	debuginfo__delete(dloc->di);
+-	return result;
++	return dso__findnew_data_type(dso, &type_die);
+ }
+ 
+ static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_entries)
+diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
+index 992b7ce4bd11..37a1a3b68e0b 100644
+--- a/tools/perf/util/annotate-data.h
++++ b/tools/perf/util/annotate-data.h
+@@ -123,9 +123,9 @@ struct data_loc_info {
+ 	u64 var_addr;
+ 	u8 cpumode;
+ 	struct annotated_op_loc *op;
++	struct debuginfo *di;
+ 
+ 	/* These are used internally */
+-	struct debuginfo *di;
+ 	int fbreg;
+ 	bool fb_cfa;
+ 
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index a2ee4074f768..a28d8a4b8a14 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -25,6 +25,7 @@
+ #include "srcline.h"
+ #include "units.h"
+ #include "debug.h"
++#include "debuginfo.h"
+ #include "annotate.h"
+ #include "annotate-data.h"
+ #include "evsel.h"
+@@ -2326,6 +2327,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
+ 	return map__rip_2objdump(ms->map, addr);
+ }
+ 
++static struct debuginfo_cache {
++	struct dso *dso;
++	struct debuginfo *dbg;
++} di_cache;
++
++void debuginfo_cache__delete(void)
++{
++	dso__put(di_cache.dso);
++	di_cache.dso = NULL;
++
++	debuginfo__delete(di_cache.dbg);
++	di_cache.dbg = NULL;
++}
++
+ /**
+  * hist_entry__get_data_type - find data type for given hist entry
+  * @he: hist entry
+@@ -2360,6 +2375,27 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
+ 		return NULL;
+ 	}
+ 
++	/*
++	 * di_cache holds a pair of values, but code below assumes
++	 * di_cache.dso can be compared/updated and di_cache.dbg can be
++	 * read/updated independently from each other. That assumption only
++	 * holds in single threaded code.
++	 */
++	assert(perf_singlethreaded);
++
++	if (map__dso(ms->map) != di_cache.dso) {
++		dso__put(di_cache.dso);
++		di_cache.dso = dso__get(map__dso(ms->map));
++
++		debuginfo__delete(di_cache.dbg);
++		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
++	}
++
++	if (di_cache.dbg == NULL) {
++		ann_data_stat.no_dbginfo++;
++		return NULL;
++	}
++
+ 	/* Make sure it has the disasm of the function */
+ 	if (symbol__annotate(ms, evsel, &arch) < 0) {
+ 		ann_data_stat.no_insn++;
+@@ -2404,6 +2440,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
+ 			.ip = ms->sym->start + dl->al.offset,
+ 			.cpumode = he->cpumode,
+ 			.op = op_loc,
++			.di = di_cache.dbg,
+ 		};
+ 
+ 		if (!op_loc->mem_ref && op_loc->segment == INSN_SEG_NONE)
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 9ba772f46270..27d9540604ef 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -543,4 +543,6 @@ struct annotated_basic_block {
+ int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
+ 			      struct list_head *head);
+ 
++void debuginfo_cache__delete(void);
++
+ #endif	/* __PERF_ANNOTATE_H */
+diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+index 5596bed1b8c8..f9072e003367 100644
+--- a/tools/perf/util/session.c
++++ b/tools/perf/util/session.c
+@@ -36,6 +36,7 @@
+ #include "util.h"
+ #include "arch/common.h"
+ #include "units.h"
++#include "annotate.h"
+ #include <internal/lib.h>
+ 
+ #ifdef HAVE_ZSTD_SUPPORT
+@@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *session)
+ 		return;
+ 	auxtrace__free(session);
+ 	auxtrace_index__free(&session->auxtrace_index);
++	debuginfo_cache__delete();
+ 	perf_session__destroy_kernel_maps(session);
+ 	perf_decomp__release_events(session->decomp_data.decomp);
+ 	perf_env__exit(&session->header.env);
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
+
