@@ -1,129 +1,169 @@
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC3F137C37;
-	Mon,  5 Aug 2024 09:55:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A79E155CAB
+	for <linux-perf-users@vger.kernel.org>; Mon,  5 Aug 2024 11:55:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722851739; cv=none; b=AQ0lMaT8glTqdMRuKMulKL2fyAiFlSB21qIgYqeQIlqgNUOxXeazwsuS8cw+aF467qxrTZ68XHcDs82KgZHTkV7YZSu/we/of7eL0gGQ/J61e7YdAEL/DnMZR5/uhrWhhprKS3uhwAzcIHYJfHDTsGXHUw0baWcaVbw5XXW62d8=
+	t=1722858921; cv=none; b=A3qYukRg94HJPF07v/R1RRQ4utTmUvSDS4DkxidOfdKMSnxOsCBYwd42pYZs/iMkf9nSWwYlH0E6I/PKvq+z7U7LbdZesECRCtZ/gk0CrqKTdQJAUJyZNwJ26B7LIop0v9rAI0GvokTIKtWEIHzs2ORjfw76M5dBwfzvPPdJyVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722851739; c=relaxed/simple;
-	bh=Oo32KPfAzSlsZTFlTdpDxSXAB5UF0iuMjey/ZmSOxM8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b6dDlqW+ysnvfQpfcr5oZLpKF8BXPXACTBvA1TOAHtYuFU8BfEydFbZpv8ymme1PDQuiCl/XVyY8MeJIUNWsbAV0LbyQYnv2skH+sS2MBDd9aQQ6M6gwAlJP7RC+IynVUP9r8jLu8y7L9IRs9Hxq7feLexp+vPBYfAhpcXLEV1Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=I9BMxN0z; arc=none smtp.client-ip=148.163.156.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1722858921; c=relaxed/simple;
+	bh=ZbLlIzxxYDPFIYyF3cjeehmzOBwHkwsjudapvSV5ayo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OVUmcBqAPrGSfZXL859MsSKIMc9md3SYiFMgM1W+QuOhKOJ6/87Lmqy14lgG9VdoLg4BCPyJqRToOA65XQZG/r9PJmqHqn+p6P4qu2ypQhCRTALB9oeouU4z8Uxx+FACxawsII6k7lr5kA1BfPIvBr1gDhLqcZJasFSrAfktfg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=AaFiPWTf; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="I9BMxN0z"
-Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4759T7pZ009220;
-	Mon, 5 Aug 2024 09:55:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=RTfjcOdrYmt4L
-	tVQgHRg/H+uF4RPmiz4VvrPCm0qigQ=; b=I9BMxN0zexnumtwWVbilOyvHCYn7A
-	GStvuutyxhsheqjyuDQKGIWKDmBHvbRA2XcnHycufl+jK4CSgC9kLtUwnQuJNA82
-	q+ObR3lKZmkkicocBZYjpAjhR5O/gcY3n+ulrRsxYiwIk1Ov4HUCLyds9w6JwNOE
-	Ez7Bv35ccfFFUXYlB8Ldzv4SeeOyafg2aWNlJz/RXZ+nYQBxJQGccBu8rD+XJT87
-	wbBvoqekTyCdf4fwCczvcWObGy5661Y5VpNBqXUnl9hRkARv0/ftHNs/tj/gYw6C
-	/ZMCxZuQqeVeTse36OUfsTjv0z3ykTK6iJSOF0efKPUT/AVyc+/kfCVrA==
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40tv4s81ft-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Aug 2024 09:55:30 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4757oewo018034;
-	Mon, 5 Aug 2024 09:55:29 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40t0cmdnde-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 05 Aug 2024 09:55:29 +0000
-Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
-	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4759tMED46268678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 5 Aug 2024 09:55:25 GMT
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D7D092004B;
-	Mon,  5 Aug 2024 09:55:22 +0000 (GMT)
-Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 135D020040;
-	Mon,  5 Aug 2024 09:55:20 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com (unknown [9.171.50.194])
-	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Mon,  5 Aug 2024 09:55:19 +0000 (GMT)
-From: Kajol Jain <kjain@linux.ibm.com>
-To: mpe@ellerman.id.au
-Cc: atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        maddy@linux.ibm.com, disgoel@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org, hbathini@linux.ibm.com,
-        adubey@linux.ibm.com
-Subject: [RFC 2/2] docs: ABI: sysfs-bus-event_source-devices-vpa-dtl: Document sysfs event format entries for vpa_dtl pmu
-Date: Mon,  5 Aug 2024 15:25:00 +0530
-Message-Id: <20240805095500.15844-2-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20240805095500.15844-1-kjain@linux.ibm.com>
-References: <20240805095500.15844-1-kjain@linux.ibm.com>
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="AaFiPWTf"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4266f3e0df8so68106895e9.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Aug 2024 04:55:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1722858918; x=1723463718; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=k607eE+sU23kDmyW6jG14/IGhv43fCVDENewedmfdPw=;
+        b=AaFiPWTf6TUEKH+wI5sIEhOF/uO0VnmHRK/ux0OIqVKeSSVa4h5oy2a6mMejS5o/Sa
+         +ByabBDtZb/9DwGH6z+Jn4ZJjCEStIiHgXeQWDhcufiz/7M1SWlhD93pel07G2uvgxpg
+         oOYqAJBbApi0r9MoyU7x2KO0U0ThSG6/zZlg4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722858918; x=1723463718;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=k607eE+sU23kDmyW6jG14/IGhv43fCVDENewedmfdPw=;
+        b=cqb1+cFbjro5onpF2IkkUY74kYrBxtqjv30TnrJ97GOV6h/Z1eNj3KcoxXYWie8GOA
+         Oq/2KeXUsUUBLPgQ8bHUbsJxsN0RghtaGxKL6CuweftqKlSfwL4YxcWQmWZ12N4Exnej
+         bXsoBa8aNzig0JEVGrK+FkbzPfmuDMEO7mm0qQZEBpEL+lEFymYTUbslW58OP3piM5t4
+         gP+ThygnWAlR/IVGCi6ilCu8k+XZyCEshXfwIT1D0J5WdXM6Y9i80ezlgMnaRhwELiOq
+         GGOlnAfeOSwNhKeY/cAjAaOhJFVuOB8Uk7eqEAYvLYssbdqNUCVD4KIbh+KKzh3+iO+c
+         EY4Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ6y6fhqa0eGvehyjmpUR0ao1N6pGBfg6cz/bqsDnqd1EioGzHKYm0nUm1xNZA91wD0X+5NWrW5CyKL9+5ZhAz9eJbjKDzzo7xFy8fH4vHgg==
+X-Gm-Message-State: AOJu0YwbeGXje8wkZMClI5bLzcwIGFiL4MVfVD124BT6WJsZZEl1VAYa
+	1WI0qCcIwkTl8JNFZvuniHgXA4P4utusPayicaXl/ux2u7ik5hOgF4JFfoli8BU=
+X-Google-Smtp-Source: AGHT+IHezxs01d5kcwmted0mGR9db6XQJ8DPNJKKcSHGwequvX0hG8wypDlJ6PrTsz5uy59h4wPu7A==
+X-Received: by 2002:a05:600c:4fc9:b0:426:8ee5:5d24 with SMTP id 5b1f17b1804b1-428e6b2f79fmr83890145e9.20.1722858917705;
+        Mon, 05 Aug 2024 04:55:17 -0700 (PDT)
+Received: from LQ3V64L9R2.home ([2a02:c7c:f016:fc00:8d0e:f0af:9e74:240a])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb9d786sm196573695e9.44.2024.08.05.04.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Aug 2024 04:55:17 -0700 (PDT)
+Date: Mon, 5 Aug 2024 12:55:15 +0100
+From: Joe Damato <jdamato@fastly.com>
+To: Kyle Huey <me@kylehuey.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, khuey@kylehuey.com,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	robert@ocallahan.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing
+ events
+Message-ID: <ZrC9oxIcKebAKpx3@LQ3V64L9R2.home>
+References: <CAP045ArBNZ559RFrvDTsHj42S4W+BuReHe+XV2tBPSeoHOMMpA@mail.gmail.com>
+ <20240715150410.GJ14400@noisy.programming.kicks-ass.net>
+ <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
+ <20240715163003.GK14400@noisy.programming.kicks-ass.net>
+ <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
+ <ZpYgYaKKbw3FPUpv@krava>
+ <CAEf4BzZWWzio9oPe2_jS=_7CnKuJnugr2h4yd3QY1TqSF0aMXQ@mail.gmail.com>
+ <CAP045ArhO4K2vcrhG_GnJNhx=+7v6WLYKsDj4CvqO7HKzBshXg@mail.gmail.com>
+ <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
+ <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: RWzHgPShT1xOI8dh4XcDk6M3fMTJXqw2
-X-Proofpoint-ORIG-GUID: RWzHgPShT1xOI8dh4XcDk6M3fMTJXqw2
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-04_14,2024-08-02_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- suspectscore=0 adultscore=0 mlxlogscore=999 spamscore=0 malwarescore=0
- bulkscore=0 phishscore=0 clxscore=1015 impostorscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408050070
+In-Reply-To: <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
 
-Details are added for the vpa_dtl pmu event and format
-attributes in the ABI documentation.
+On Fri, Jul 26, 2024 at 09:35:43AM -0700, Kyle Huey wrote:
+> Will do.
+> 
+> - Kyle
+> 
+> On Fri, Jul 26, 2024 at 9:34 AM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Fri, Jul 26, 2024 at 5:37 AM Kyle Huey <me@kylehuey.com> wrote:
+> > >
+> > > On Fri, Jul 19, 2024 at 11:26 AM Andrii Nakryiko
+> > > <andrii.nakryiko@gmail.com> wrote:
+> > > >
+> > > > On Tue, Jul 16, 2024 at 12:25 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > > >
+> > > > > On Mon, Jul 15, 2024 at 09:48:58AM -0700, Kyle Huey wrote:
+> > > > > > On Mon, Jul 15, 2024 at 9:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > > > >
+> > > > > > > On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
+> > > > > > >
+> > > > > > > > I think this would probably work but stealing the bit seems far more
+> > > > > > > > complicated than just gating on perf_event_is_tracing().
+> > > > > > >
+> > > > > > > perf_event_is_tracing() is something like 3 branches. It is not a simple
+> > > > > > > conditional. Combined with that re-load and the wrong return value, this
+> > > > > > > all wants a cleanup.
+> > > > > > >
+> > > > > > > Using that LSB works, it's just that the code aint pretty.
+> > > > > >
+> > > > > > Maybe we could gate on !event->tp_event instead. Somebody who is more
+> > > > > > familiar with this code than me should probably confirm that tp_event
+> > > > > > being non-null and perf_event_is_tracing() being true are equivalent
+> > > > > > though.
+> > > > > >
+> > > > >
+> > > > > it looks like that's the case, AFAICS tracepoint/kprobe/uprobe events
+> > > > > are the only ones having the tp_event pointer set, Masami?
+> > > > >
+> > > > > fwiw I tried to run bpf selftests with that and it's fine
+> > > >
+> > > > Why can't we do the most straightforward thing in this case?
+> > > >
+> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > > index ab6c4c942f79..cf4645b26c90 100644
+> > > > --- a/kernel/events/core.c
+> > > > +++ b/kernel/events/core.c
+> > > > @@ -9707,7 +9707,8 @@ static int __perf_event_overflow(struct perf_event *event,
+> > > >
+> > > >         ret = __perf_event_account_interrupt(event, throttle);
+> > > >
+> > > > -       if (event->prog && !bpf_overflow_handler(event, data, regs))
+> > > > +       if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
+> > > > +           !bpf_overflow_handler(event, data, regs))
+> > > >                 return ret;
+> > > >
+> > > >
+> > > > >
+> > > > > jirka
+> > > > >
+> > >
+> > > Yes, that's effectively equivalent to calling perf_event_is_tracing()
+> > > and would work too. Do you want to land that patch? It needs to go to
+> > > 6.10 stable too.
+> >
+> > I'd appreciate it if you can just incorporate that into your patch and
+> > resend it, thank you!
+> >
+> > >
+> > > - Kyle
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- .../sysfs-bus-event_source-devices-vpa-dtl    | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl
+I probably missed the updated patch, but I am happy to test any new
+versions, if needed, to ensure that the bug I hit is fixed.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl b/Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl
-new file mode 100644
-index 000000000000..a07638aa250e
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-vpa-dtl
-@@ -0,0 +1,25 @@
-+What:           /sys/bus/event_source/devices/vpa_dtl/format
-+Date:           August 2024
-+Contact:        Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
-+Description:    Read-only. Attribute group to describe the magic bits
-+                that go into perf_event_attr.config for a particular pmu.
-+                (See ABI/testing/sysfs-bus-event_source-devices-format).
-+
-+                Each attribute under this group defines a bit range of the
-+                perf_event_attr.config. Supported attribute are listed
-+                below::
-+
-+				event  = "config:0-7"  - event ID
-+
-+		For example::
-+
-+		  dtl_cede = "event=0x1"
-+
-+What:           /sys/bus/event_source/devices/vpa_dtl/events
-+Date:           August 2024
-+Contact:        Linux on PowerPC Developer List <linuxppc-dev@lists.ozlabs.org>
-+Description:	(RO) Attribute group to describe performance monitoring events
-+                for the Virtual Processor Dispatch Trace Log. Each attribute in
-+		this group describes a single performance monitoring event
-+		supported by vpa_dtl pmu.  The name of the file is the name of
-+		the event (See ABI/testing/sysfs-bus-event_source-devices-events).
--- 
-2.39.3
+Kyle: please let me know if there's a patch you'd like me to test?
 
+- Joe
