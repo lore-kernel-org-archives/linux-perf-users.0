@@ -1,169 +1,247 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A79E155CAB
-	for <linux-perf-users@vger.kernel.org>; Mon,  5 Aug 2024 11:55:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19D72558A5;
+	Mon,  5 Aug 2024 14:25:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722858921; cv=none; b=A3qYukRg94HJPF07v/R1RRQ4utTmUvSDS4DkxidOfdKMSnxOsCBYwd42pYZs/iMkf9nSWwYlH0E6I/PKvq+z7U7LbdZesECRCtZ/gk0CrqKTdQJAUJyZNwJ26B7LIop0v9rAI0GvokTIKtWEIHzs2ORjfw76M5dBwfzvPPdJyVI=
+	t=1722867917; cv=none; b=OeUckiqnb/WSgdovbnnwUXe5OvR84R/219RLjOjq40oBq6irlLKyq076znu/0b+VbsP4pCt5smcP/TRb0n8uHaPjvPO7CXQKyLS/DfrbJc1crTMhvSOIxkjhiXqxotW4ff4e0QcQ+U/5W+h8oGWXMmcf+Ssg+l9NmuHGa1xPqsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722858921; c=relaxed/simple;
-	bh=ZbLlIzxxYDPFIYyF3cjeehmzOBwHkwsjudapvSV5ayo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OVUmcBqAPrGSfZXL859MsSKIMc9md3SYiFMgM1W+QuOhKOJ6/87Lmqy14lgG9VdoLg4BCPyJqRToOA65XQZG/r9PJmqHqn+p6P4qu2ypQhCRTALB9oeouU4z8Uxx+FACxawsII6k7lr5kA1BfPIvBr1gDhLqcZJasFSrAfktfg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=AaFiPWTf; arc=none smtp.client-ip=209.85.128.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	s=arc-20240116; t=1722867917; c=relaxed/simple;
+	bh=i5jOkpU0saQlHWBwMxEkekfn47bUW3NPXi5kCCk9udg=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=PHWpAOTKiWOuMTHE666ptT4twU3FGLQenHJ8Bmj/Fow5s+NKNBcgJ5eaHhVyeL0daocBMp65SX+hdtSAAzAkaAJ4VB1zFssQG1qWGzen+zeiD7QfBs43LUnHMzcTwy3ilIhM77kTdcF7J6Byr8TjtSXBppzzrpWqlCyWr0/XQvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Cu5tGmUf; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="AaFiPWTf"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4266f3e0df8so68106895e9.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Aug 2024 04:55:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1722858918; x=1723463718; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=k607eE+sU23kDmyW6jG14/IGhv43fCVDENewedmfdPw=;
-        b=AaFiPWTf6TUEKH+wI5sIEhOF/uO0VnmHRK/ux0OIqVKeSSVa4h5oy2a6mMejS5o/Sa
-         +ByabBDtZb/9DwGH6z+Jn4ZJjCEStIiHgXeQWDhcufiz/7M1SWlhD93pel07G2uvgxpg
-         oOYqAJBbApi0r9MoyU7x2KO0U0ThSG6/zZlg4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722858918; x=1723463718;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=k607eE+sU23kDmyW6jG14/IGhv43fCVDENewedmfdPw=;
-        b=cqb1+cFbjro5onpF2IkkUY74kYrBxtqjv30TnrJ97GOV6h/Z1eNj3KcoxXYWie8GOA
-         Oq/2KeXUsUUBLPgQ8bHUbsJxsN0RghtaGxKL6CuweftqKlSfwL4YxcWQmWZ12N4Exnej
-         bXsoBa8aNzig0JEVGrK+FkbzPfmuDMEO7mm0qQZEBpEL+lEFymYTUbslW58OP3piM5t4
-         gP+ThygnWAlR/IVGCi6ilCu8k+XZyCEshXfwIT1D0J5WdXM6Y9i80ezlgMnaRhwELiOq
-         GGOlnAfeOSwNhKeY/cAjAaOhJFVuOB8Uk7eqEAYvLYssbdqNUCVD4KIbh+KKzh3+iO+c
-         EY4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUQ6y6fhqa0eGvehyjmpUR0ao1N6pGBfg6cz/bqsDnqd1EioGzHKYm0nUm1xNZA91wD0X+5NWrW5CyKL9+5ZhAz9eJbjKDzzo7xFy8fH4vHgg==
-X-Gm-Message-State: AOJu0YwbeGXje8wkZMClI5bLzcwIGFiL4MVfVD124BT6WJsZZEl1VAYa
-	1WI0qCcIwkTl8JNFZvuniHgXA4P4utusPayicaXl/ux2u7ik5hOgF4JFfoli8BU=
-X-Google-Smtp-Source: AGHT+IHezxs01d5kcwmted0mGR9db6XQJ8DPNJKKcSHGwequvX0hG8wypDlJ6PrTsz5uy59h4wPu7A==
-X-Received: by 2002:a05:600c:4fc9:b0:426:8ee5:5d24 with SMTP id 5b1f17b1804b1-428e6b2f79fmr83890145e9.20.1722858917705;
-        Mon, 05 Aug 2024 04:55:17 -0700 (PDT)
-Received: from LQ3V64L9R2.home ([2a02:c7c:f016:fc00:8d0e:f0af:9e74:240a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4282bb9d786sm196573695e9.44.2024.08.05.04.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Aug 2024 04:55:17 -0700 (PDT)
-Date: Mon, 5 Aug 2024 12:55:15 +0100
-From: Joe Damato <jdamato@fastly.com>
-To: Kyle Huey <me@kylehuey.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-	Jiri Olsa <olsajiri@gmail.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>, khuey@kylehuey.com,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	robert@ocallahan.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing
- events
-Message-ID: <ZrC9oxIcKebAKpx3@LQ3V64L9R2.home>
-References: <CAP045ArBNZ559RFrvDTsHj42S4W+BuReHe+XV2tBPSeoHOMMpA@mail.gmail.com>
- <20240715150410.GJ14400@noisy.programming.kicks-ass.net>
- <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
- <20240715163003.GK14400@noisy.programming.kicks-ass.net>
- <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
- <ZpYgYaKKbw3FPUpv@krava>
- <CAEf4BzZWWzio9oPe2_jS=_7CnKuJnugr2h4yd3QY1TqSF0aMXQ@mail.gmail.com>
- <CAP045ArhO4K2vcrhG_GnJNhx=+7v6WLYKsDj4CvqO7HKzBshXg@mail.gmail.com>
- <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
- <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Cu5tGmUf"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 475E2LWp003425;
+	Mon, 5 Aug 2024 14:24:55 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=xIFl4TkiQtFGki9t7LsvdfvBaXPysotJQDJ/QoUV51w=; b=Cu5tGmUfpzcO
+	r7GVKQ4xlQha7IfaASwoyzvNj2VkiQdTXRv4WNuh0zsQtb37kdy5OZALY7lSnmTE
+	H6gkBqyI0a79s4BaFmdE4Q5MQTpNp9fvuy26L3Y+NnFqRlm84HejTQ5j3DFCZKRQ
+	rlS/zNoY0TV9DLEDnhc6Xm95gnCEv1db1vCPB5OLMAlgVGwQrHNQjwGen4G5gzAu
+	vGYCZBXyW+lgDVhiTIpe2UdKy/10BoG/pbGFPr1ch0YAT+tvnhOhR1jFoVJAMH/R
+	AOin9X14himwoZnV9aIi8bKxZP8zWjXUvWtz8TSenG/2WjCgmJLN4tRY1EV3+w7E
+	XfkmTM4SgQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40u04v81sp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Aug 2024 14:24:54 +0000 (GMT)
+Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 475EOsgi010509;
+	Mon, 5 Aug 2024 14:24:54 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40u04v81sm-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Aug 2024 14:24:54 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 475EGPsl018637;
+	Mon, 5 Aug 2024 14:24:53 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 40sxvty0by-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 05 Aug 2024 14:24:53 +0000
+Received: from smtpav01.fra02v.mail.ibm.com (smtpav01.fra02v.mail.ibm.com [10.20.54.100])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 475EOnOM32833876
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 5 Aug 2024 14:24:51 GMT
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5C3F42004D;
+	Mon,  5 Aug 2024 14:24:49 +0000 (GMT)
+Received: from smtpav01.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 6E2AD20040;
+	Mon,  5 Aug 2024 14:24:45 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.43.108.113])
+	by smtpav01.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Mon,  5 Aug 2024 14:24:45 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCH] perf pmus: Fix duplicate events caused segfault
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <CAPqJEFqCXd1FWCgB0919r+J0XW7KVX_OWZNdocva-bxcscjTrw@mail.gmail.com>
+Date: Mon, 5 Aug 2024 19:54:33 +0530
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        James Clark <james.clark@arm.com>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, vincent.chen@sifive.com,
+        greentime.hu@sifive.com, Samuel Holland <samuel.holland@sifive.com>
+Message-Id: <BB8E0B26-4E5F-416F-B8D1-AC745F141383@linux.vnet.ibm.com>
+References: <20240719081651.24853-1-eric.lin@sifive.com>
+ <2C7FF61F-2165-47D4-83A4-B0230D50844D@linux.vnet.ibm.com>
+ <CAPqJEFrkurD9B9smy908Y-z-f6ckv+ZFJzo6ptwXmxD0ru5=CA@mail.gmail.com>
+ <CAPqJEFqCXd1FWCgB0919r+J0XW7KVX_OWZNdocva-bxcscjTrw@mail.gmail.com>
+To: Eric Lin <eric.lin@sifive.com>, Ian Rogers <irogers@google.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: 7eIHP0mMiZw-bsYu-vHG8_1DXws6afDh
+X-Proofpoint-ORIG-GUID: XJs1nOLmiMc087DOl-63KtoeY-q6a-88
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-05_03,2024-08-02_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ phishscore=0 clxscore=1011 adultscore=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408050103
 
-On Fri, Jul 26, 2024 at 09:35:43AM -0700, Kyle Huey wrote:
-> Will do.
-> 
-> - Kyle
-> 
-> On Fri, Jul 26, 2024 at 9:34 AM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Fri, Jul 26, 2024 at 5:37 AM Kyle Huey <me@kylehuey.com> wrote:
-> > >
-> > > On Fri, Jul 19, 2024 at 11:26 AM Andrii Nakryiko
-> > > <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > On Tue, Jul 16, 2024 at 12:25 AM Jiri Olsa <olsajiri@gmail.com> wrote:
-> > > > >
-> > > > > On Mon, Jul 15, 2024 at 09:48:58AM -0700, Kyle Huey wrote:
-> > > > > > On Mon, Jul 15, 2024 at 9:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
-> > > > > > >
-> > > > > > > > I think this would probably work but stealing the bit seems far more
-> > > > > > > > complicated than just gating on perf_event_is_tracing().
-> > > > > > >
-> > > > > > > perf_event_is_tracing() is something like 3 branches. It is not a simple
-> > > > > > > conditional. Combined with that re-load and the wrong return value, this
-> > > > > > > all wants a cleanup.
-> > > > > > >
-> > > > > > > Using that LSB works, it's just that the code aint pretty.
-> > > > > >
-> > > > > > Maybe we could gate on !event->tp_event instead. Somebody who is more
-> > > > > > familiar with this code than me should probably confirm that tp_event
-> > > > > > being non-null and perf_event_is_tracing() being true are equivalent
-> > > > > > though.
-> > > > > >
-> > > > >
-> > > > > it looks like that's the case, AFAICS tracepoint/kprobe/uprobe events
-> > > > > are the only ones having the tp_event pointer set, Masami?
-> > > > >
-> > > > > fwiw I tried to run bpf selftests with that and it's fine
-> > > >
-> > > > Why can't we do the most straightforward thing in this case?
-> > > >
-> > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > > index ab6c4c942f79..cf4645b26c90 100644
-> > > > --- a/kernel/events/core.c
-> > > > +++ b/kernel/events/core.c
-> > > > @@ -9707,7 +9707,8 @@ static int __perf_event_overflow(struct perf_event *event,
-> > > >
-> > > >         ret = __perf_event_account_interrupt(event, throttle);
-> > > >
-> > > > -       if (event->prog && !bpf_overflow_handler(event, data, regs))
-> > > > +       if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
-> > > > +           !bpf_overflow_handler(event, data, regs))
-> > > >                 return ret;
-> > > >
-> > > >
-> > > > >
-> > > > > jirka
-> > > > >
-> > >
-> > > Yes, that's effectively equivalent to calling perf_event_is_tracing()
-> > > and would work too. Do you want to land that patch? It needs to go to
-> > > 6.10 stable too.
-> >
-> > I'd appreciate it if you can just incorporate that into your patch and
-> > resend it, thank you!
-> >
-> > >
-> > > - Kyle
 
-I probably missed the updated patch, but I am happy to test any new
-versions, if needed, to ensure that the bug I hit is fixed.
 
-Kyle: please let me know if there's a patch you'd like me to test?
+> On 4 Aug 2024, at 8:36=E2=80=AFPM, Eric Lin <eric.lin@sifive.com> wrote:
+>=20
+> Hi,
+>=20
+> On Sun, Jul 21, 2024 at 11:44=E2=80=AFPM Eric Lin <eric.lin@sifive.com> w=
+rote:
+>>=20
+>> Hi Athira,
+>>=20
+>> On Sat, Jul 20, 2024 at 4:35=E2=80=AFPM Athira Rajeev
+>> <atrajeev@linux.vnet.ibm.com> wrote:
+>>>=20
+>>>=20
+>>>=20
+>>>> On 19 Jul 2024, at 1:46=E2=80=AFPM, Eric Lin <eric.lin@sifive.com> wro=
+te:
+>>>>=20
+>>>> Currently, if vendor JSON files have two duplicate event names,
+>>>> the "perf list" command will trigger a segfault.
+>>>>=20
+>>>> In commit e6ff1eed3584 ("perf pmu: Lazily add JSON events"),
+>>>> pmu_events_table__num_events() gets the number of JSON events
+>>>> from table_pmu->num_entries, which includes duplicate events
+>>>> if there are duplicate event names in the JSON files.
+>>>=20
+>>> Hi Eric,
+>>>=20
+>>> Let us consider there are duplicate event names in the JSON files, say :
+>>>=20
+>>> metric.json with: EventName as pmu_cache_miss, EventCode as 0x1
+>>> cache.json with:  EventName as pmu_cache_miss, EventCode as 0x2
+>>>=20
+>>> If we fix the segfault and proceed, still =E2=80=9Cperf list=E2=80=9D w=
+ill list only one entry for pmu_cache_miss with may be 0x1/0x2 as event cod=
+e ?
+>>> Can you check the result to confirm what =E2=80=9Cperf list=E2=80=9D wi=
+ll list in this case ? If it=E2=80=99s going to have only one entry in perf=
+ list, does it mean there are two event codes for pmu_cache_miss and it can=
+ work with either of the event code ?
+>>>=20
+>>=20
+>> Sorry for the late reply.
+>> Yes, I've checked if there are duplicate pmu_cache_miss events in the
+>> JSON files, the perf list will have only one entry in perf list.
+>>=20
+>>> If it happens to be a mistake in json file to have duplicate entry with=
+ different event code (ex: with some broken commit), I am thinking if the b=
+etter fix is to keep only the valid entry in json file ?
+>>>=20
+>>=20
+>> Yes, I agree we should fix the duplicate events in vendor JSON files.
+>>=20
+>> According to this code snippet [1], it seems the perf tool originally
+>> allowed duplicate events to exist and it will skip the duplicate
+>> events not shown on the perf list.
+>> However, after this commit e6ff1eed3584 ("perf pmu: Lazily add JSON
+>> events"),  if there are two duplicate events, it causes a segfault.
+>>=20
+>> Can I ask, do you have any suggestions? Thanks.
+>>=20
+>> [1] https://github.com/torvalds/linux/blob/master/tools/perf/util/pmus.c=
+#L491
+>>=20
+>=20
+> Kindly ping.
+>=20
+> Can I ask, are there any more comments about this patch? Thanks.
+>=20
+Hi Eric,
 
-- Joe
+The functions there says alias and to skip duplicate alias. I am not sure i=
+f that is for events
+
+Namhyung, Ian, Arnaldo
+Any comments here ?
+
+Thank
+Athira
+
+>=20
+> Regards,
+> Eric Lin
+>=20
+>> Regards,
+>> Eric Lin
+>>=20
+>>> Thanks
+>>> Athira
+>>>=20
+>>>>=20
+>>>> perf_pmu__for_each_event() adds JSON events to the pmu->alias
+>>>> list and copies sevent data to the aliases array. However, the
+>>>> pmu->alias list does not contain duplicate events, as
+>>>> perf_pmu__new_alias() checks if the name was already created.
+>>>>=20
+>>>> When sorting the alias data, if there are two duplicate events,
+>>>> it causes a segfault in cmp_sevent() due to invalid aliases in
+>>>> the aliases array.
+>>>>=20
+>>>> To avoid such segfault caused by duplicate event names in the
+>>>> JSON files, the len should be updated before sorting the aliases.
+>>>>=20
+>>>> Fixes: e6ff1eed3584 ("perf pmu: Lazily add JSON events")
+>>>> Signed-off-by: Eric Lin <eric.lin@sifive.com>
+>>>> ---
+>>>> tools/perf/util/pmus.c | 5 +++--
+>>>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>>>=20
+>>>> diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+>>>> index b9b4c5eb5002..e38c3fd4d1ff 100644
+>>>> --- a/tools/perf/util/pmus.c
+>>>> +++ b/tools/perf/util/pmus.c
+>>>> @@ -443,7 +443,7 @@ void perf_pmus__print_pmu_events(const struct prin=
+t_callbacks *print_cb, void *p
+>>>> {
+>>>> struct perf_pmu *pmu;
+>>>> int printed =3D 0;
+>>>> - int len;
+>>>> + size_t len, j;
+>>>> struct sevent *aliases;
+>>>> struct events_callback_state state;
+>>>> bool skip_duplicate_pmus =3D print_cb->skip_duplicate_pmus(print_state=
+);
+>>>> @@ -474,8 +474,9 @@ void perf_pmus__print_pmu_events(const struct prin=
+t_callbacks *print_cb, void *p
+>>>> perf_pmu__for_each_event(pmu, skip_duplicate_pmus, &state,
+>>>> perf_pmus__print_pmu_events__callback);
+>>>> }
+>>>> + len =3D state.index;
+>>>> qsort(aliases, len, sizeof(struct sevent), cmp_sevent);
+>>>> - for (int j =3D 0; j < len; j++) {
+>>>> + for (j =3D 0; j < len; j++) {
+>>>> /* Skip duplicates */
+>>>> if (j > 0 && pmu_alias_is_duplicate(&aliases[j], &aliases[j - 1]))
+>>>> continue;
+>>>> --
+>>>> 2.43.2
+
+
