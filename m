@@ -1,136 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E612A1C5;
-	Tue,  6 Aug 2024 17:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2712D770FD;
+	Tue,  6 Aug 2024 17:58:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722966427; cv=none; b=tdi73QpPhtU4YwJZkyLWvIu6RFTybJDxFc43lZ3qybmSi78gomSnOIA1hDyBpDLYOBM5WNvHg6l/tk9hukcQs2SuQbAJOswV3jAsaTC0JG7h791J4c+mkez1wGRKHmwgZ6F7mEZYY9KaLIokpH+PsfK5nld/rpCT5+sWKhJJvlU=
+	t=1722967113; cv=none; b=c69XMXQsB3SBIryVODANyOVaV4ynjnyHB0ezYNyIC4Rvu0cOGXZ5meDW8+nAiZRSMa+P4V35vw5bJma2wdqpZx7twCEW+FfvUCnhUB8sMW8VoJipN7AcuBJW7IoZ38UWywIwDGV2b7vLtN4ABiXfCFFCZm3sFTuf94ESXj0teQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722966427; c=relaxed/simple;
-	bh=cAgxLRUonxQ14zEMn94zwCIcLctgqYrtfxpI11Fy8wc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gCS6DLgjmWKjkh67zc876ClACk8Mr4mYLf85HU1EKuFBId9NSlMfRnUtA1SkbcgEcDSKtWQ8LSUEWRDQeZUg1AkYc3n1TUojXdSu8jrhF38/XwVCRCAbLN6gHeoOm5GJur9vpV5ikkxL8LNCwqcVSxFs8Tjl/5pUj5jOZTu617I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fx5GUAKM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fx5GUAKM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C87C4AF0D;
-	Tue,  6 Aug 2024 17:47:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722966427;
-	bh=cAgxLRUonxQ14zEMn94zwCIcLctgqYrtfxpI11Fy8wc=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-	b=Fx5GUAKMYrw01E2NOQ1E8mDP+Pa2FREQ9xmrdnvI2JRpi70zNRNst9qUE1XYbQ5OS
-	 XPI87A12VeS0VVT4UNmPKi37STUZS7hV9suOSoVBhd9YJqSkYsL2V8xHZYl0n+d9DH
-	 T0xYjgL+2ev68pfV1bvqczTVO5nh9pzopTZawUilCCbuWUXJ+32HHZp6YV8/A2FbN/
-	 E+VUMFFhZt7uTXiYZCtctn8zWetrN08YxonF11rLBlEVPJ01zzse+0skxpZmjpL4G5
-	 kd0G1xvmJnPkRtbiI0NCi/1/Wg9SepT9nuEGezK8JPzS+bDZawHomCYoaPVrz3pEyP
-	 l9Zch34CqgXOA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-	id DEAE2CE0A72; Tue,  6 Aug 2024 10:47:06 -0700 (PDT)
-Date: Tue, 6 Aug 2024 10:47:06 -0700
-From: "Paul E. McKenney" <paulmck@kernel.org>
-To: Breno Leitao <leitao@debian.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
-	Sandipan Das <sandipan.das@amd.com>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
-	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] perf/x86/amd: Warn only on new bits set
-Message-ID: <3bbb2f65-7305-4e02-942a-484def3a04a3@paulmck-laptop>
-Reply-To: paulmck@kernel.org
-References: <20240806165848.3397232-1-leitao@debian.org>
+	s=arc-20240116; t=1722967113; c=relaxed/simple;
+	bh=/KIR/gZKpDzorl3qERaU8QNHl3C8rqIrcVVnAyuL8V8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=pmRfr7tQEoTXbnXmXq1yuaoUETjocGCAsTVEtwj4SLQs5IRCIgvc8bm4O+1Nf7uZzJ6+3Zt77NWR5/StkDKTulU7+os2C2TskG+pt1PcOtqWfWKWPdGx+EtBo5HDYoe1IZqHl5xTiuLUIbfhpSyBro8S4jsHW6shps+AAjBnhY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2cfdc4deeecso805497a91.3;
+        Tue, 06 Aug 2024 10:58:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722967111; x=1723571911;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TY5hbZeMbwhXSfDbd/rGzVmx+p5Ai/BI0gEowB/sd04=;
+        b=WTvZYJ0OSWyMp6Kf+eUQO6aIoPgW/tcLv3x7GMR9TLDO4lHSegcrDcGRj32PDBw3ho
+         2UUZZVub73SwbiGmRXvxkg8msBz6vOWSLPVEi+YuZv2Apa+kMVyMigMiz7IFi7M8R+J4
+         ncqj3Zc0isQMxl3DPHQda6jueQML2aFoEkTuMutpkIPg7X4sWIuzw83NqzFZLGc8+z+f
+         5/QH5RCZbGzPh4G3G5erUjZOjvDgJC8i8wSnxGRGkZ5jxqb0muarFF0F0vwDSUUG/3Vh
+         WdkgS8zeyrSzPCYl19Np7C0gRfbbQyoUAM33/8absvtmx/b3HhHnkLjzWEx4NUoXVXQC
+         tF7A==
+X-Forwarded-Encrypted: i=1; AJvYcCVRE7J7fqLnaPo3+KIGXZb1qUAtAnU2WnC73T7sJ2UnMb5dJaTOmLvK05kQ4cwLMElBDLrYImynIDeGSxpdLeh9Zf8GkQEEAkj6IwQSXb6b2qGvw60ocMvXlNkNk4OmrsVexhyy7PQQZnlkaV9KJQ==
+X-Gm-Message-State: AOJu0YxD/1yGRivJvdP1w3qIVRRa2+bchLC4hUiNrbX5oq7WvYKWxEeh
+	vuoaSVm83/60jyRwYKdIn0Zi7tq/qw37OSzRr2EXJG6BVIJgpxuoEq3DmIvB8853wl7DEOF0p60
+	YDpP0BCdoLdTSk5+LSmTslD/sbGc=
+X-Google-Smtp-Source: AGHT+IForZwiPRH0kD/aF8JllfkH6X0668xxvxtoLs8E6LzeI7w5bwBziec4MPX1Z0sC0ipbvgKMl5AbMCOW9CA4y9E=
+X-Received: by 2002:a17:90b:4f91:b0:2c3:40b6:293b with SMTP id
+ 98e67ed59e1d1-2cff95511a9mr19791633a91.39.1722967110895; Tue, 06 Aug 2024
+ 10:58:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240806165848.3397232-1-leitao@debian.org>
+References: <20240806114801.1652417-1-yangjihong@bytedance.com>
+In-Reply-To: <20240806114801.1652417-1-yangjihong@bytedance.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 6 Aug 2024 10:58:19 -0700
+Message-ID: <CAM9d7chhR+jsi6HZ8_xv1BwEuwOKo_87jy_jekmYjZHA+b96Ug@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] perf: build: Minor fixes for build failures
+To: Yang Jihong <yangjihong@bytedance.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Leo Yan <leo.yan@linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 06, 2024 at 09:58:48AM -0700, Breno Leitao wrote:
-> Warning at every leaking bits can cause a flood of message, triggering
-> various stall-warning mechanisms to fire, including CSD locks, which
-> makes the machine to be unusable.
-> 
-> Track the bits that are being leaked, and only warn when a new bit is
-> set.
-> 
-> That said, this patch will help with the following issues:
-> 
-> 1) It will tell us which bits are being set, so, it is easy to
->    communicate it back to vendor, and to do a root-cause analyzes.
-> 
-> 2) It avoid the machine to be unusable, because, worst case
->    scenario, the user gets less than 60 WARNs (one per unhandled bit).
-> 
-> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
-> Signed-off-by: Breno Leitao <leitao@debian.org>
+Add Leo to Cc.
 
-Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
-
-> ---
-> Changelog:
-> v3:
->  * Avoid potential false reporting when concurrent execution occurs on
->    different CPUs (Paul E. McKenney)
-> 
-> v2:
->   * Improved the patch description, getting the benefits in words.
->   * https://lore.kernel.org/all/20240731154651.1555511-1-leitao@debian.org/
-> 
-> v1:
->   * https://lore.kernel.org/all/20240524141021.3889002-1-leitao@debian.org/
-> 
-> 
->  arch/x86/events/amd/core.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-> index 920e3a640cad..b4a1a2576510 100644
-> --- a/arch/x86/events/amd/core.c
-> +++ b/arch/x86/events/amd/core.c
-> @@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
->  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
->  {
->  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> +	static atomic64_t status_warned = ATOMIC64_INIT(0);
-> +	u64 reserved, status, mask, new_bits, prev_bits;
->  	struct perf_sample_data data;
->  	struct hw_perf_event *hwc;
->  	struct perf_event *event;
->  	int handled = 0, idx;
-> -	u64 reserved, status, mask;
->  	bool pmu_enabled;
->  
->  	/*
-> @@ -1012,7 +1013,12 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
->  	 * the corresponding PMCs are expected to be inactive according to the
->  	 * active_mask
->  	 */
-> -	WARN_ON(status > 0);
-> +	if (status > 0) {
-> +		prev_bits = atomic64_fetch_or(status, &status_warned);
-> +		// A new bit was set for the very first time.
-> +		new_bits = status & ~prev_bits;
-> +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
-> +	}
->  
->  	/* Clear overflow and freeze bits */
->  	amd_pmu_ack_global_status(~status);
-> -- 
-> 2.43.5
-> 
+On Tue, Aug 6, 2024 at 4:48=E2=80=AFAM Yang Jihong <yangjihong@bytedance.co=
+m> wrote:
+>
+> This patchset contains minor fixes for build failures when statically com=
+piling in Ubuntu 20.04.
+>
+> Changes since v1:
+>  - patch3: Remove UTF-8 characters from build failure logs
+>
+> Yang Jihong (3):
+>   perf: build: Fix static compilation error when libdw is not installed
+>   perf: build: Fix build feature-dwarf_getlocations fail for old libdw
+>   perf dwarf-aux: Fix build fail when HAVE_DWARF_GETLOCATIONS_SUPPORT
+>     undefined
+>
+>  tools/build/feature/Makefile | 4 ++--
+>  tools/perf/Makefile.config   | 2 +-
+>  tools/perf/util/dwarf-aux.h  | 1 +
+>  3 files changed, 4 insertions(+), 3 deletions(-)
+>
+> --
+> 2.25.1
+>
