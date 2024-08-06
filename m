@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2901A18D62B;
-	Tue,  6 Aug 2024 20:48:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF5D15E5A2;
+	Tue,  6 Aug 2024 20:48:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722977309; cv=none; b=NreubjOHBCFwpx5MrNTB8dgiAeCK+OTdzYvkH0w25PZy31mqJBHbOq3ECQ/skKlMWUJ/fGgO6hguVHR9pwTQX9DKlo3D0ttz7JfqPGhi1xi/7uyx8eXnJeJdRWf7vn3qIBmkDBpYZAsef5/1mrZSsWDCK8GpOG6IB8PZDzUjHJU=
+	t=1722977311; cv=none; b=nPk+xqpiCQueLF7P729k7P75CFoyAtwg7IU2o85oun/vFU2cZNoACx0EKdn3ksHcsWAuQOR9Zjq5Y6O9EqUjDEps5eHrV5Ta6dAm4HoWVDgP+qyfgAoiL51tGkXvNLvmZyymXTgtQBGjLjofa9nGfnMBUhdQH0XiTskFFpXPLhA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722977309; c=relaxed/simple;
-	bh=a6DsiXojv1z/Ig3NHwypyVb6gTS4FFtygsdzyq9CcY8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=sADHy18MAMMHMpltuR9YU+zc50j8W6tmlLMSu8GyNYIcm5tfEPh7GscY/WBZ2yvgG6rjNnS0OXDalNzgLGbrGf4Jnu/Q6pPan2g6R94Ysuiq5MQiTj9CSJt0ipvVegeVXFQPMkoE78aCi2+O9zb31JPgYIj7kvlHV6c6Q+IxRSs=
+	s=arc-20240116; t=1722977311; c=relaxed/simple;
+	bh=iHwWKhcfH4WORNFTN3y6I/5tWUdWV07PGCCTKxFnIXk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=mau9MN2zOQlGix65CuavZi1X/Zo5D2IKrRLphpj4Aahwrs+jUX+H70q4odQQU1VRCRbbwqerU7ZXXdwFNDQTvYb3qP2Dm7fPCo9esmPIXa9Kz/zlpnxpDT31K2agbVlOVWfkoaCcNURPmil6RnOQ0T2ZweSPiDKzIUD9s+4ZczY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CAA1FEC;
-	Tue,  6 Aug 2024 13:48:53 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 631401063;
+	Tue,  6 Aug 2024 13:48:55 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D9783F766;
-	Tue,  6 Aug 2024 13:48:25 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BA7513F766;
+	Tue,  6 Aug 2024 13:48:27 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -30,10 +31,12 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v3 0/5] perf auxtrace: Support multiple AUX events
-Date: Tue,  6 Aug 2024 21:48:08 +0100
-Message-Id: <20240806204813.722372-1-leo.yan@arm.com>
+Subject: [PATCH v3 1/5] perf/core: Allow multiple AUX PMU events with the same module
+Date: Tue,  6 Aug 2024 21:48:09 +0100
+Message-Id: <20240806204813.722372-2-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240806204813.722372-1-leo.yan@arm.com>
+References: <20240806204813.722372-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -42,55 +45,34 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series is to support multiple events with the *same* type in Perf
-AUX trace. As the events are same type, the trace data shares the same
-format and can be decoded by the same decoder.
+This commit changes the condition from checking the same PMU instance to
+checking the same PMU driver module. This allows support for multiple
+PMU events with the same driver module.
 
-This patch series is dependent on auxtrace refactoring patch series:
-https://lore.kernel.org/lkml/20240806204130.720977-1-leo.yan@arm.com/T/#mae62825a677381797a13252c1d071caf18d957d7
+As a result, more than one AUX event (e.g. arm_spe_0 and arm_spe_1) can
+record trace into the AUX ring buffer.
 
-Note, a more complex case - different types of AUX events, (e.g. Arm
-CoreSight event and Arm SPE events are enabled simultaneously) - is
-still not supported.
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+---
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Patch 01 is to change the perf core layer in the kernel to allow
-multiple AUX events to output to single FD, so that '--per-thread' mode
-can be supported.
-
-Patch 02 validates the AUX events' CPU map. It presumes the AUX events
-do not overlap for CPU maps, otherwise, it returns failure.
-
-Patches 03, 04, 05 is to support multiple AUX events for buffer mapped
-index.
-
-As the first enabled instance, the patch series has been tested with
-multiple Arm SPE events (e.g. arm_spe_0, arm_spe_1, etc). And verified
-this patch series on Intel-PT for no regression.
-
-
-Changes from v2:
-- Added patch 01 for support per-thread mode (Adrian).
-- Added patch 02 for verifying CPU maps without overlapping (Adrian).
-- Reworked patches to fix the regression on Intel-PT (Ian).
-
-Changes from v1:
-- Added comment in patch 01 for iterating AUX events (Adrian)
-- Added patch 02 for removing unused field 'pmu' (Adrian)
-
-
-Leo Yan (5):
-  perf/core: Allow multiple AUX PMU events with the same module
-  perf auxtrace: Introduce auxtrace_record__validate_events()
-  perf auxtrace: Refactor evlist__enable_event_idx()
-  perf auxtrace: Bails out after finding the event for the map index
-  perf auxtrace: Iterate all AUX events when finish reading
-
- kernel/events/core.c        |   3 +-
- tools/perf/builtin-record.c |   4 ++
- tools/perf/util/auxtrace.c  | 110 ++++++++++++++++++++++++++++++++----
- tools/perf/util/auxtrace.h  |   7 +++
- 4 files changed, 113 insertions(+), 11 deletions(-)
-
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index aa3450bdc227..fdb8918e62a0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12344,9 +12344,10 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
+ 
+ 	/*
+ 	 * If both events generate aux data, they must be on the same PMU
++	 * module but can be with different PMU instances.
+ 	 */
+ 	if (has_aux(event) && has_aux(output_event) &&
+-	    event->pmu != output_event->pmu)
++	    event->pmu->module != output_event->pmu->module)
+ 		goto out;
+ 
+ 	/*
 -- 
 2.34.1
 
