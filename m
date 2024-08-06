@@ -1,25 +1,25 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2411B14BF9B;
-	Tue,  6 Aug 2024 21:28:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E46680043;
+	Tue,  6 Aug 2024 21:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722979713; cv=none; b=OUS65Jm+56IXceUt0JxQsIFSP76uZ9KdbL/G66e32HR3wzq08aXpzDy6sO3LChy/ryY0ZQ0SRG6P3OsXgSSO0H/5+ws90A+lA2LPwKsVEbPOF1bIDE2jLqPresTyk+wkmc2EdzPdFiXV0G2AWjdHdgC6wKWe+uXxlZx5pdc7/70=
+	t=1722980043; cv=none; b=V5s9z7OrTTg2Dz3vJYJdqKwPijTqSt8EVQgFZiFp4bqrtc3MIWy2IG3HUONSB0nP5fcZZJNQ6ceaM2vQ6UQv1Jdo7+DK+VUxGCY0SzsXkV9c/TYAoCiVB7hkeUv0ag8CBkeiK16+9uzga9YHWC+ChDZ7ByJfn9+kXQbGQs6IoRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722979713; c=relaxed/simple;
-	bh=2HazIKmqybg1sIeNZ7q9sJGZ/PfT4yHpU5L1tDejN9s=;
+	s=arc-20240116; t=1722980043; c=relaxed/simple;
+	bh=DO8014anKApOwesYndEPWUGjEgeA57oZZUbqUPxyvv8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=F1G/l06ap3lyFUdZSxPE2mgFEwHKph/jY7TJPiEV19FXv8WZ7ILLcQtWfWJjAjYQwEHlhlCrif8JoC0phx7codrJ8VnBFcWzgjGyn0nwiE3iEcS1Fd8OytnTCULCP8pCUXvZzHNos9ctIZS+44M8qFZQd+QKEIWphTNmhYmZujM=
+	 In-Reply-To:Content-Type; b=curCeyw/RZjSazHB/XGdTJEYhRQD8hQy/FYGDjtKleFFKJKgRvqb3VxoCPZhpnHBRmad+Y1RkkG+k70RwGw5wdB+tx1zCJdZtfyWwLqNDEsW9iNK1ubhVytA54eRAPrbRYGo2oBEGH6oYiSPmHsdjgV0sKJd/Z8Jbw5J+B7A2Cw=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44380FEC;
-	Tue,  6 Aug 2024 14:28:57 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B217EFEC;
+	Tue,  6 Aug 2024 14:34:26 -0700 (PDT)
 Received: from [10.57.79.15] (unknown [10.57.79.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A08B3F766;
-	Tue,  6 Aug 2024 14:28:29 -0700 (PDT)
-Message-ID: <2e9a74b5-9403-425d-8d98-9469e290d297@arm.com>
-Date: Tue, 6 Aug 2024 22:28:37 +0100
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC1823F5A1;
+	Tue,  6 Aug 2024 14:33:58 -0700 (PDT)
+Message-ID: <a3699fc9-059f-4192-b522-918952c4b264@arm.com>
+Date: Tue, 6 Aug 2024 22:34:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,95 +27,61 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] perf: build: Fix build feature-dwarf_getlocations
- fail for old libdw
+Subject: Re: [PATCH v2 3/3] perf dwarf-aux: Fix build fail when
+ HAVE_DWARF_GETLOCATIONS_SUPPORT undefined
 To: Yang Jihong <yangjihong@bytedance.com>, peterz@infradead.org,
  mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
  mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
  irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20240806114801.1652417-1-yangjihong@bytedance.com>
- <20240806114801.1652417-3-yangjihong@bytedance.com>
+ <20240806114801.1652417-4-yangjihong@bytedance.com>
 Content-Language: en-US
 From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <20240806114801.1652417-3-yangjihong@bytedance.com>
+In-Reply-To: <20240806114801.1652417-4-yangjihong@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 8/6/2024 12:48 PM, Yang Jihong wrote:
+> commit 3796eba7c137 move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
+> code from dwarf-aux.c to dwarf-aux.h, in which die_get_var_range() used ENOTSUP
+> macro, but dwarf-aux.h was not self-contained and did not include file errno.h.
 > 
-> For libdw versions below 0.177, need to link libdl.a in addition to
-> libbebl.a during static compilation, otherwise feature-dwarf_getlocations
-> compilation will fail.
+> As a result, the build failed when HAVE_DWARF_GETLOCATIONS_SUPPORT macro was not
+> defined, and the error log is as follows:
 > 
-> Before:
+>   In file included from util/disasm.h:8,
+>                    from util/annotate.h:16,
+>                    from builtin-top.c:23:
+>   util/dwarf-aux.h: In function 'die_get_var_range':
+>   util/dwarf-aux.h:184:10: error: 'ENOTSUP' undeclared (first use in this function)
+>     184 |  return -ENOTSUP;
+>         |          ^~~~~~~
+>   util/dwarf-aux.h:184:10: note: each undeclared identifier is reported only once for each function it appears
 > 
->   $ make LDFLAGS=-static
->     BUILD:   Doing 'make -j20' parallel build
->   <SNIP>
->   Makefile.config:483: Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.157
->   <SNIP>
-> 
->   $ cat ../build/feature/test-dwarf_getlocations.make.output
->   /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/libebl.a(eblclosebackend.o): in function `ebl_closebackend':
->   (.text+0x20): undefined reference to `dlclose'
->   collect2: error: ld returned 1 exit status
-
-Indeed. Thanks for pointing out this.
-
-> After:
-> 
->   $ make LDFLAGS=-static
->   <SNIP>
->     Auto-detecting system features:
->   ...                                   dwarf: [ on  ]
->   <SNIP>
-> 
->     $ ./perf probe
->    Usage: perf probe [<options>] 'PROBEDEF' ['PROBEDEF' ...]
->       or: perf probe [<options>] --add 'PROBEDEF' [--add 'PROBEDEF' ...]
->       or: perf probe [<options>] --del '[GROUP:]EVENT' ...
->       or: perf probe --list [GROUP:]EVENT ...
->   <SNIP>
-> 
-> Fixes: 536661da6ea1 ("perf: build: Only link libebl.a for old libdw")
+> Fixes: 3796eba7c137 ("perf dwarf-aux: Move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT code to the header file")
 > Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 > ---
->  tools/build/feature/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/perf/util/dwarf-aux.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index b18513ec4da6..1fc651cae9e5 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -179,7 +179,7 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
->    # Elfutils merged libebl.a into libdw.a starting from version 0.177,
->    # Link libebl.a only if libdw is older than this version.
->    ifeq ($(shell test $(LIBDW_VERSION_2)0 -lt 1770; echo $$?),0)
-> -    DWARFLIBS += -lebl
-> +    DWARFLIBS += -lebl -ldl
->    endif
-
-One critical thing is the ordering of libs. We must put libdl after libebl,
-otherwise, the building still fails (based on my test).
-
-Given libdl is a general lib, I think it is good to add a line after the
-`endif` wrapper and with a comment, something like:
-
-   ifeq ($(shell test $(LIBDW_VERSION_2)0 -lt 1770; echo $$?),0)
-      DWARFLIBS += -lebl
-   endif
-
-   # Must put -ldl after -lebl for dependency
-   DWARFLIBS += -ldl
-
-Please update the file tools/perf/Makefile.config for consistency.
-
-Thanks,
-Leo
-
->  endif
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 24446412b869..d2903894538e 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -5,6 +5,7 @@
+>   * dwarf-aux.h : libdw auxiliary interfaces
+>   */
 > 
+> +#include <errno.h>
+>  #include <dwarf.h>
+
+Please alphabet ordering. With it:
+
+Reviewed-by: Leo Yan <leo.yan@arm.com>
+
+>  #include <elfutils/libdw.h>
+>  #include <elfutils/libdwfl.h>
 > --
 > 2.25.1
 > 
