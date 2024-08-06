@@ -1,237 +1,177 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B70164A;
-	Tue,  6 Aug 2024 07:27:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209B242AA0
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Aug 2024 07:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722929265; cv=none; b=TB8Oam5N0kRmlmF8LFRHXH1kwQyPf6vTsyP21lpoZBD3WCHFEqK/p1Sfy4iR5LXsr8BTlQCRpQNqJEmUQBtJDa6q78pQ+Lhl2aSfI7MMygdbiK1U8dm6z4sLuDvu18u1eDu7ESqByNHMRru0rzf3l6yx2sgf7XINf2+4cX0cOmw=
+	t=1722930704; cv=none; b=MEQzONbgW3xzS+PfBj1IRMvvtAQ2brOF7sqIn3QWuK2ay7UvS7oT60t+ZESeuNQwT0Dyshbpgkc/l6tbcDEn8fVVps+h16eDwwdnuFRPG0zrWuW8ohjqOxJeIhF4aeQ7bFu8YsfuIRnSFkVJKjViEFGknJVl4ENT9hdMVNr8nuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722929265; c=relaxed/simple;
-	bh=gKPYLL0r0hx9riaoaOLeME5DEZsLltEzisu7gtaBBNw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ce9AO/UGvDbMRTpHIBChXXAznj7XQiomgvXyFR/sTawwUL9WWVNwtTnkuxof9KEH9s6qJA4JryBHY1zVWf5nJKQu4wQ9NwUYaQSIFCnaqVLfNJRehslqTREhaDbEHh3+vw9O4AUwEDvFTYQ0AFDuNfyxQ2p0ZMTsZp9jBCMfimY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nU10mcLX; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1722930704; c=relaxed/simple;
+	bh=cKRKDlTYzk02KIht+8zMy/vs8H/m5dVPY/usBSU0pFI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cTFDoPngfbDdpM3aFQZK1cVLSwbbylghESdnvZuuLfjW42+rDYSsebw+MhmL2FXcmh6W9sn0zNMZYBi4uDqbwtPa3HrkMtEFNXGQEdo4af4wW+DKSRvwjD332K5GcedeZeylng4mugPEmaY+Tv4iItWCV3cCls7LaNxtlqgtD+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=cu2qJ9lt; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nU10mcLX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722929263; x=1754465263;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gKPYLL0r0hx9riaoaOLeME5DEZsLltEzisu7gtaBBNw=;
-  b=nU10mcLXkid35p0iWwjaIXTyDO/T0wf0VHwyaCX9hbpRmdz7kupxOG31
-   OswIFO4dytxA28bNmSn06bPMs0Jz3HYeLg4v8tVH68bMJwkP8YHilF8EL
-   2yZsScm4lAQBwv6fGK0WlR7y9xMoufeVCMn6H6307EuxSWZLRwH+Tsjs5
-   BNsAZ5mw5sle2LSk/YjhMJb6F6hLxsyZot9uIs9tD8SswQB4j43H5okJL
-   vyeWLJiZ8KlHNiqogFJMs5X/vguSexL0p4tXDp/zqWMsVQ34Qiw2DudTw
-   DYq1rMV8pcOYqCeQpbXpBeu8Y5rAM9588x2CWxItC/YpIs3WwkEGiJey8
-   g==;
-X-CSE-ConnectionGUID: 9ij3mqigS56E84Rr456RTg==
-X-CSE-MsgGUID: A5wwdduuR5WqAuWL3L1Iyw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11155"; a="20802692"
-X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="20802692"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:27:43 -0700
-X-CSE-ConnectionGUID: JU0Yp/hxR7ata3PJTD38kg==
-X-CSE-MsgGUID: HFencd3iQiuK1GzOv02hdg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,267,1716274800"; 
-   d="scan'208";a="57124637"
-Received: from unknown (HELO [10.238.3.66]) ([10.238.3.66])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 00:27:38 -0700
-Message-ID: <602b71db-821d-40af-8ec2-d255f465b060@linux.intel.com>
-Date: Tue, 6 Aug 2024 15:27:35 +0800
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="cu2qJ9lt"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-71080f4c006so215488b3a.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 00:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1722930701; x=1723535501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=V7gGKzt0COJ+dLcQRMsfHv/hBjxXbxW2aiYGpImKKTI=;
+        b=cu2qJ9ltAHJmCbS3Lzr27LTXBkO4ENL1D8tYPbbpVDZdXu0jU9VxLkMmTK5Zavq3Xs
+         /5jPtEAXX6YPLEy5Qdt7AfKab11j4+n/xe0zi3iM/Z9DLtQPYuG04/8f7w9jPqi7oJMt
+         4KhxWcs890OlJw2EzDWwjWzMYrasPw+DCEqqAGx/RO2Z2VTUET70/P+S7UHrgsj3jKY8
+         RMzDa1kNOC2DVUhsTr6H9ouX6KI5VsAhch8CpLTKT9TkEtfCiz4vLLCiPwR0RORbn47P
+         NmizTgl6M3B8z8Q4xDSgcUxwUsTyyq53MViGmiuwMZfzQIIeWgnOpI3b5tcjTE1SDdtP
+         t1zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722930701; x=1723535501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V7gGKzt0COJ+dLcQRMsfHv/hBjxXbxW2aiYGpImKKTI=;
+        b=RKLi1w+F9tqvrPIql9mEmKblRKLhGKC6y/jttVE6oicd4kQDEFQEzM6TdXWXx4uK+m
+         g87myRX+J0cOXZE+41wfen6J1AyRh6iv0jtTe3j6tpYzoM+38zAvdfKY1Rjzi4mSUv+R
+         Lw5e150sYp1Vn46jiPGFHi54VUpL/8C+bU0ifQobCko76fTBvx0u7NPgA3xoYIimH0GU
+         6XbrZwUOphGD+yZrFUXP6xUU9USxOmAsh7Nu8hUNKARj5N9epWRYmnLxfm6KaSd7HCBh
+         IjUdJXWVq44LuCjx8Tow7RIa8A2QcmhGUyIHljO9ld0uvJxxYOsjKyWcs5x4868QOwuN
+         XPoA==
+X-Forwarded-Encrypted: i=1; AJvYcCXb/Eg7/3B1SHAF7pLxzIs6r1cZx/y1pVe/+Tdg/znPFucG+vV+I2bPLX2w4pEoxLKLbrmuAKMZqw2hfD+W7jOBfQLTSnvS9WVxdXxyR88A7g==
+X-Gm-Message-State: AOJu0YwHfWuPrhfkXDpmwcXIZ7hGEJ6AYnRTdITU34BzkWYbhSC2m08k
+	+QREnoFyi687Ys8AjQltmPrO1aV/67mtFxfnIQAIDtAvZu1MzB+GHQTebUIfx0w=
+X-Google-Smtp-Source: AGHT+IEueMGyq2f0jKR2y7ycU6Aes3+5qeMAltNcBEcOXiS1TeYV7hqPoH7+09fTBnzUixVd+dg6Qw==
+X-Received: by 2002:a05:6a21:6d8e:b0:1c2:8f50:b450 with SMTP id adf61e73a8af0-1c699580868mr16271434637.18.1722930701353;
+        Tue, 06 Aug 2024 00:51:41 -0700 (PDT)
+Received: from ubuntu20.04 ([203.208.189.5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d0126c11f9sm6162103a91.30.2024.08.06.00.51.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 00:51:40 -0700 (PDT)
+From: Yang Jihong <yangjihong@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yangjihong@bytedance.com
+Subject: [PATCH] perf sched timehist: Skip print non-idle task samples when only show idle events
+Date: Tue,  6 Aug 2024 15:51:31 +0800
+Message-Id: <20240806075131.1382728-1-yangjihong@bytedance.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v3 33/58] KVM: x86/pmu: Implement the save/restore of
- PMU state for Intel CPU
-To: Mingwei Zhang <mizhang@google.com>,
- Sean Christopherson <seanjc@google.com>, Paolo Bonzini
- <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
- Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
- Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
-Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
- Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
- Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
- Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
- Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
- linux-perf-users@vger.kernel.org
-References: <20240801045907.4010984-1-mizhang@google.com>
- <20240801045907.4010984-34-mizhang@google.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <20240801045907.4010984-34-mizhang@google.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+when only show idle events, runtime stats of non-idle tasks is not updated,
+and the value is 0, there is no need to print non-idle samples.
 
-On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
-> Implement the save/restore of PMU state for pasthrough PMU in Intel. In
-> passthrough mode, KVM owns exclusively the PMU HW when control flow goes to
-> the scope of passthrough PMU. Thus, KVM needs to save the host PMU state
-> and gains the full HW PMU ownership. On the contrary, host regains the
-> ownership of PMU HW from KVM when control flow leaves the scope of
-> passthrough PMU.
->
-> Implement PMU context switches for Intel CPUs and opptunistically use
-> rdpmcl() instead of rdmsrl() when reading counters since the former has
-> lower latency in Intel CPUs.
->
-> Co-developed-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> Signed-off-by: Mingwei Zhang <mizhang@google.com>
-> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
-> ---
->  arch/x86/kvm/pmu.c           | 46 ++++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/vmx/pmu_intel.c | 41 +++++++++++++++++++++++++++++++-
->  2 files changed, 86 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-> index 782b564bdf96..9bb733384069 100644
-> --- a/arch/x86/kvm/pmu.c
-> +++ b/arch/x86/kvm/pmu.c
-> @@ -1068,14 +1068,60 @@ void kvm_pmu_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
->  
->  void kvm_pmu_save_pmu_context(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct kvm_pmc *pmc;
-> +	u32 i;
-> +
->  	lockdep_assert_irqs_disabled();
->  
->  	static_call_cond(kvm_x86_pmu_save_pmu_context)(vcpu);
-> +
-> +	/*
-> +	 * Clear hardware selector MSR content and its counter to avoid
-> +	 * leakage and also avoid this guest GP counter get accidentally
-> +	 * enabled during host running when host enable global ctrl.
-> +	 */
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		pmc = &pmu->gp_counters[i];
-> +		rdpmcl(i, pmc->counter);
-> +		rdmsrl(pmc->msr_eventsel, pmc->eventsel);
-> +		if (pmc->counter)
-> +			wrmsrl(pmc->msr_counter, 0);
-> +		if (pmc->eventsel)
-> +			wrmsrl(pmc->msr_eventsel, 0);
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> +		pmc = &pmu->fixed_counters[i];
-> +		rdpmcl(INTEL_PMC_FIXED_RDPMC_BASE | i, pmc->counter);
-> +		if (pmc->counter)
-> +			wrmsrl(pmc->msr_counter, 0);
-> +	}
->  }
->  
->  void kvm_pmu_restore_pmu_context(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	struct kvm_pmc *pmc;
-> +	int i;
-> +
->  	lockdep_assert_irqs_disabled();
->  
->  	static_call_cond(kvm_x86_pmu_restore_pmu_context)(vcpu);
-> +
-> +	/*
-> +	 * No need to zero out unexposed GP/fixed counters/selectors since RDPMC
-> +	 * in this case will be intercepted. Accessing to these counters and
-> +	 * selectors will cause #GP in the guest.
-> +	 */
-> +	for (i = 0; i < pmu->nr_arch_gp_counters; i++) {
-> +		pmc = &pmu->gp_counters[i];
-> +		wrmsrl(pmc->msr_counter, pmc->counter);
-> +		wrmsrl(pmc->msr_eventsel, pmu->gp_counters[i].eventsel);
+Before:
 
-pmu->gp_counters[i].eventsel  -> pmc->eventsel
+  # perf sched timehist -I
+  Samples of sched_switch event do not have callchains.
+             time    cpu  task name                       wait time  sch delay   run time
+                          [tid/pid]                          (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  ---------  ---------  ---------
+   2090450.763235 [0000]  migration/0[15]                     0.000      0.000      0.000
+   2090450.763268 [0001]  migration/1[21]                     0.000      0.000      0.000
+   2090450.763309 [0002]  migration/2[27]                     0.000      0.000      0.000
+   2090450.763343 [0003]  migration/3[33]                     0.000      0.000      0.000
+   2090450.763469 [0004]  migration/4[39]                     0.000      0.000      0.000
+   2090450.763501 [0005]  migration/5[45]                     0.000      0.000      0.000
+   2090450.763622 [0006]  migration/6[51]                     0.000      0.000      0.000
+   2090450.763660 [0007]  migration/7[57]                     0.000      0.000      0.000
+   2090450.763741 [0009]  migration/9[69]                     0.000      0.000      0.000
+   2090450.763862 [0010]  migration/10[75]                    0.000      0.000      0.000
+   2090450.763894 [0011]  migration/11[81]                    0.000      0.000      0.000
+   2090450.764021 [0012]  migration/12[87]                    0.000      0.000      0.000
+   2090450.764056 [0013]  migration/13[93]                    0.000      0.000      0.000
+   2090450.764135 [0014]  migration/14[99]                    0.000      0.000      0.000
+   2090450.764163 [0015]  migration/15[105]                   0.000      0.000      0.000
+   2090450.764292 [0016]  migration/16[111]                   0.000      0.000      0.000
+   2090450.764371 [0017]  migration/17[117]                   0.000      0.000      0.000
+   2090450.764422 [0018]  migration/18[123]                   0.000      0.000      0.000
+   2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
+   2090450.764505 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+   2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
+   2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
+   2090450.764590 [0016]  s1-agent[7179/7162]                 0.000      0.000      0.000
+   2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
+   2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
+   2090450.764639 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+   2090450.764668 [0017]  s1-agent[7180/7162]                 0.000      0.000      0.000
+   2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
+   2090450.764672 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+   2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
 
+After:
 
-> +	}
-> +
-> +	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> +		pmc = &pmu->fixed_counters[i];
-> +		wrmsrl(pmc->msr_counter, pmc->counter);
-> +	}
->  }
-> diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-> index 0de918dc14ea..89c8f73a48c8 100644
-> --- a/arch/x86/kvm/vmx/pmu_intel.c
-> +++ b/arch/x86/kvm/vmx/pmu_intel.c
-> @@ -572,7 +572,7 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
->  	}
->  
->  	for (i = 0; i < pmu->nr_arch_fixed_counters; i++) {
-> -		pmu->fixed_counters[i].msr_eventsel = MSR_CORE_PERF_FIXED_CTR_CTRL;
-> +		pmu->fixed_counters[i].msr_eventsel = 0;
+  # perf sched timehist -I
+  Samples of sched_switch event do not have callchains.
+             time    cpu  task name                       wait time  sch delay   run time
+                          [tid/pid]                          (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  ---------  ---------  ---------
+   2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
+   2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
+   2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
+   2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
+   2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
+   2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
+   2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
+   2090450.764688 [0016]  <idle>                              0.019      0.019      0.097
+   2090450.764694 [0000]  <idle>                              0.001      0.001      0.009
+   2090450.764706 [0000]  <idle>                              0.001      0.001      0.010
+   2090450.764725 [0002]  <idle>                              0.000      0.000      1.415
+   2090450.764728 [0000]  <idle>                              0.002      0.002      0.019
+   2090450.764823 [0000]  <idle>                              0.003      0.003      0.091
+   2090450.764838 [0019]  <idle>                              0.000      0.000      0.154
+   2090450.764865 [0002]  <idle>                              0.109      0.109      0.029
+   2090450.764866 [0000]  <idle>                              0.012      0.012      0.030
+   2090450.764880 [0002]  <idle>                              0.013      0.013      0.001
+   2090450.764880 [0000]  <idle>                              0.002      0.002      0.011
+   2090450.764896 [0000]  <idle>                              0.001      0.001      0.013
+   2090450.764903 [0019]  <idle>                              0.063      0.063      0.002
+   2090450.764908 [0019]  <idle>                              0.003      0.003      0.001
 
-Seems unnecessary to clear msr_eventsel for fixed counters. Why?
+Fixes: 07235f84ece6 ("perf sched timehist: Add -I/--idle-hist option")
+Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+---
+ tools/perf/builtin-sched.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 8750b5f2d49b..04770c2ae008 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -2729,8 +2729,14 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 		}
+ 	}
+ 
+-	if (!sched->summary_only)
++	/*
++	 * when only show idle events, only runtime stats of idle tasks
++	 * need to update, and can skip non-idle tasks sample.
++	 */
++	if (!sched->summary_only &&
++	    !(sched->idle_hist && thread__tid(thread) != 0)) {
+ 		timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
++	}
+ 
+ out:
+ 	if (sched->hist_time.start == 0 && t >= ptime->start)
+-- 
+2.25.1
 
->  		pmu->fixed_counters[i].msr_counter = MSR_CORE_PERF_FIXED_CTR0 + i;
->  	}
->  }
-> @@ -799,6 +799,43 @@ static void intel_passthrough_pmu_msrs(struct kvm_vcpu *vcpu)
->  	vmx_set_intercept_for_msr(vcpu, MSR_CORE_PERF_GLOBAL_OVF_CTRL, MSR_TYPE_RW, msr_intercept);
->  }
->  
-> +static void intel_save_guest_pmu_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +
-> +	/* Global ctrl register is already saved at VM-exit. */
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, pmu->global_status);
-> +	/* Clear hardware MSR_CORE_PERF_GLOBAL_STATUS MSR, if non-zero. */
-> +	if (pmu->global_status)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, pmu->global_status);
-> +
-> +	rdmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> +	/*
-> +	 * Clear hardware FIXED_CTR_CTRL MSR to avoid information leakage and
-> +	 * also avoid these guest fixed counters get accidentially enabled
-> +	 * during host running when host enable global ctrl.
-> +	 */
-> +	if (pmu->fixed_ctr_ctrl)
-> +		wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, 0);
-> +}
-> +
-> +static void intel_restore_guest_pmu_context(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
-> +	u64 global_status, toggle;
-> +
-> +	/* Clear host global_ctrl MSR if non-zero. */
-> +	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, 0);
-> +	rdmsrl(MSR_CORE_PERF_GLOBAL_STATUS, global_status);
-> +	toggle = pmu->global_status ^ global_status;
-> +	if (global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_OVF_CTRL, global_status & toggle);
-> +	if (pmu->global_status & toggle)
-> +		wrmsrl(MSR_CORE_PERF_GLOBAL_STATUS_SET, pmu->global_status & toggle);
-> +
-> +	wrmsrl(MSR_CORE_PERF_FIXED_CTR_CTRL, pmu->fixed_ctr_ctrl);
-> +}
-> +
->  struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.rdpmc_ecx_to_pmc = intel_rdpmc_ecx_to_pmc,
->  	.msr_idx_to_pmc = intel_msr_idx_to_pmc,
-> @@ -812,6 +849,8 @@ struct kvm_pmu_ops intel_pmu_ops __initdata = {
->  	.cleanup = intel_pmu_cleanup,
->  	.is_rdpmc_passthru_allowed = intel_is_rdpmc_passthru_allowed,
->  	.passthrough_pmu_msrs = intel_passthrough_pmu_msrs,
-> +	.save_pmu_context = intel_save_guest_pmu_context,
-> +	.restore_pmu_context = intel_restore_guest_pmu_context,
->  	.EVENTSEL_EVENT = ARCH_PERFMON_EVENTSEL_EVENT,
->  	.MAX_NR_GP_COUNTERS = KVM_INTEL_PMC_MAX_GENERIC,
->  	.MIN_NR_GP_COUNTERS = 1,
