@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474FD3CF58;
-	Tue,  6 Aug 2024 15:57:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55B5740875;
+	Tue,  6 Aug 2024 15:57:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722959828; cv=none; b=F8nJlU/Rqd9q4oFdxL8hlgrZ2hxZ5xL8SAgwfW0QXaxopMr2b+7yOlKLaI+bNO+5wPtdo3ICTbNtwA1iUEVwPTfWxeH4GjLjy6YVxcvnjL7pOMKR+AFZrRnbxR3W3pezIq9J4pdcvdqe+ZdjtsJQwUXFM9vHrwGeHvKoJhnD0wk=
+	t=1722959830; cv=none; b=K2QWzqPGb3+GnAiP+MGdTdROfw0V8OfkjiXF9S4zeAwXam2cTkK+Xx7cSw1QKrf1kgoG0ntnUgGZtUUAA5YBmSAxg+3PuN+THSK7fvrkRMf62O0+KPL9pTjKBdi6BrkWxkslKb/vxlzxKjIx85rao+OS7ICmvsGSHsBpVv792Ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722959828; c=relaxed/simple;
-	bh=XV9oO1VsQp+MSv2Py01Sm9xIIkQ3cEXow5zO+iPUsrs=;
+	s=arc-20240116; t=1722959830; c=relaxed/simple;
+	bh=Vc4onBiyA081mqZ+u8spT9LVIyOZyH6KyTqbDavfdDU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=L/CfOcnuQQDrqBDdhpoGCNKak+x8OwRWAGlGwxyukZoGjg2a7tcAu2P54Ue7b76IhFXK9eE/ldgCSUU8ljb9CqqKGx/gHQPP2xjM3li/FWRzWqqHZVTFRk62aKLELTmtnosZaruF+u5/nMZH29cVCpGHOTlKcvxjw4TERIdWRHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Evf75KLr; arc=none smtp.client-ip=198.175.65.9
+	 MIME-Version; b=LhsCpt6jbp6epV/cHQgbGRWKjcThvoZpuqOi72L5NVQZeVLXVE19/oHaKOXlRwTXJ4MYZELUsvPb1CE3gDrEqe+pmpr7Y8CCatvKdCt67qYRuu8s/d/2FStLMW6VicTLDSRgDoBeklBO+2mfaCIjlxv1f9FDOs+avvcK6X6ECmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kRQDhUcS; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Evf75KLr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kRQDhUcS"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722959827; x=1754495827;
+  t=1722959829; x=1754495829;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=XV9oO1VsQp+MSv2Py01Sm9xIIkQ3cEXow5zO+iPUsrs=;
-  b=Evf75KLr4fqtKGESsycyI+qSsM5h36xhiJHu87ksV07ZBu1qIZ8LjUor
-   1+vS8Lesd5EtjSyiX4cDjuyAGVUaVDIT4MuY128NR3oP5vs4HI6zlU0Ez
-   hb3mv4gyC9XAHHf1EgUoRLGuXQrwdjMuzz4Hwo74x+YlXBjkOh/q+li9p
-   q5yUmPMR6olQzGhXEbZZyebsXzSnm1q+rUC9/iPAo6TKcpMTIlOX1DYH8
-   E8VBTeldIT0c22HZvBXIcbsMF8BxaB98BFstvATSEbYX9YBrNlf66zUzH
-   /pbsozCt9HH7b606FXhFlOAE7nVo1WIX7+I5kABFK08v/cxUJxb2gSllx
-   w==;
-X-CSE-ConnectionGUID: re2StaCcR4ypvYyHrhslxg==
-X-CSE-MsgGUID: z0ob98ciQmm9x2ho0xY8tg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="43514098"
+  bh=Vc4onBiyA081mqZ+u8spT9LVIyOZyH6KyTqbDavfdDU=;
+  b=kRQDhUcSICp22dFoNyQuxcmyR5DhQ9v9IAzjaA7Fx4vpfYGXZBcCtrfz
+   S1M0pLkqZ2+41QEsGGWVJiAg+/QQmUpL2hmTsRIv56SJvWnJergljNtn7
+   Q7xK4h8if0C+Jozw+Jb8zGfXD6zeB1Po79z0JHKTov2TN0mQNkDvruBqh
+   PhGZkN5CWbWB8zn2OaYpIdehv7txYwf6Es+8fuxW6d2OnYSyGBUwFjK3J
+   wV89NyCKq8YFHxXcXdimy3PlqJyNwUV12yzhfybCxLE8jwqILFLxKdd8V
+   8n+4zDbi7qYyhsW0YMJTDwk6qC9NGmas4iSx0v0h07hpApkBSu2N0XrNn
+   A==;
+X-CSE-ConnectionGUID: gEJGCQrzQPSSLlncSzsQ7g==
+X-CSE-MsgGUID: cJSesFPkTS+jcfpGvd6WtA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="43514119"
 X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="43514098"
+   d="scan'208";a="43514119"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:55:51 -0700
-X-CSE-ConnectionGUID: WQtCCycpS62r1T2KSkjJ+g==
-X-CSE-MsgGUID: YaiFC+W+SlGKDaqa3HleVA==
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:55:56 -0700
+X-CSE-ConnectionGUID: myVnSxqvSEmIiMd8WTqf1w==
+X-CSE-MsgGUID: TmNWln+xR+iKiGHo7i7D/w==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="56631163"
+   d="scan'208";a="56631198"
 Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.94.248.17])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:55:46 -0700
+  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:55:51 -0700
 From: Adrian Hunter <adrian.hunter@intel.com>
 To: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>,
@@ -66,9 +66,9 @@ Cc: Ingo Molnar <mingo@redhat.com>,
 	Andi Kleen <ak@linux.intel.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
-Subject: [PATCH V11 03/10] perf/x86/intel: Do not enable large PEBS for events with aux actions or aux sampling
-Date: Tue,  6 Aug 2024 18:55:07 +0300
-Message-Id: <20240806155514.17900-4-adrian.hunter@intel.com>
+Subject: [PATCH V11 04/10] perf tools: Add aux_start_paused, aux_pause and aux_resume
+Date: Tue,  6 Aug 2024 18:55:08 +0300
+Message-Id: <20240806155514.17900-5-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240806155514.17900-1-adrian.hunter@intel.com>
 References: <20240806155514.17900-1-adrian.hunter@intel.com>
@@ -81,37 +81,53 @@ MIME-Version: 1.0
 Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Events with aux actions or aux sampling expect the PMI to coincide with the
-event, which does not happen for large PEBS, so do not enable large PEBS in
-that case.
+Add struct perf_event_attr members to support pause and resume of AUX area
+tracing.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Acked-by: Ian Rogers <irogers@google.com>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 ---
+ tools/include/uapi/linux/perf_event.h     | 11 ++++++++++-
+ tools/perf/util/perf_event_attr_fprintf.c |  3 +++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-Changes in V11:
-	Remove definition of has_aux_action() because it has
-	already been added as an inline function.
-
-
- arch/x86/events/intel/core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index 0c9c2706d4ec..3d3b841112b3 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3962,8 +3962,8 @@ static int intel_pmu_hw_config(struct perf_event *event)
+diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+index 3a64499b0f5d..0c557f0a17b3 100644
+--- a/tools/include/uapi/linux/perf_event.h
++++ b/tools/include/uapi/linux/perf_event.h
+@@ -511,7 +511,16 @@ struct perf_event_attr {
+ 	__u16	sample_max_stack;
+ 	__u16	__reserved_2;
+ 	__u32	aux_sample_size;
+-	__u32	__reserved_3;
++
++	union {
++		__u32	aux_action;
++		struct {
++			__u32	aux_start_paused :  1, /* start AUX area tracing paused */
++				aux_pause        :  1, /* on overflow, pause AUX area tracing */
++				aux_resume       :  1, /* on overflow, resume AUX area tracing */
++				__reserved_3     : 29;
++		};
++	};
  
- 		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
--			if (!(event->attr.sample_type &
--			      ~intel_pmu_large_pebs_flags(event))) {
-+			if (!(event->attr.sample_type & ~intel_pmu_large_pebs_flags(event)) &&
-+			    !has_aux_action(event)) {
- 				event->hw.flags |= PERF_X86_EVENT_LARGE_PEBS;
- 				event->attach_state |= PERF_ATTACH_SCHED_CB;
- 			}
+ 	/*
+ 	 * User provided data if sigtrap=1, passed back to user via
+diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
+index 59fbbba79697..29db0aef9a74 100644
+--- a/tools/perf/util/perf_event_attr_fprintf.c
++++ b/tools/perf/util/perf_event_attr_fprintf.c
+@@ -335,6 +335,9 @@ int perf_event_attr__fprintf(FILE *fp, struct perf_event_attr *attr,
+ 	PRINT_ATTRf(sample_max_stack, p_unsigned);
+ 	PRINT_ATTRf(aux_sample_size, p_unsigned);
+ 	PRINT_ATTRf(sig_data, p_unsigned);
++	PRINT_ATTRf(aux_start_paused, p_unsigned);
++	PRINT_ATTRf(aux_pause, p_unsigned);
++	PRINT_ATTRf(aux_resume, p_unsigned);
+ 
+ 	return ret;
+ }
 -- 
 2.34.1
 
