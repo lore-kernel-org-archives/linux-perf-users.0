@@ -1,148 +1,91 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C9EA4315D;
-	Tue,  6 Aug 2024 21:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B39716D4DD;
+	Tue,  6 Aug 2024 21:14:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722978056; cv=none; b=kfHWlshQPXUjs2zWlHNRYQnoCIiWZc8VjIXFUte1/BUhBv+Pd20oW3ych6rZG6arwCb/MotNmHK0ECUYDdwjxTR4HZv3NS4BWmiCZ/uXoWzkAWPePgMLvvsPVAdOROUCAU2Eawx0FgdqxevvabldGm2pD1xR1z/oKtupWhACR8M=
+	t=1722978899; cv=none; b=l87XHhoXMtkpwTu+H89zCbg25wfkBj50IMoy884lj3LfJ0XbgZpDasLp3gd/i511MS6j0Y+BuvajVMkfBxQyoteRShL2q6TzZgYiDom9pterDDKUQ++ajdl40voPa/OQuBWo2YgT84RWVS6EU/HzCwuqMJbNW1b2ktl1wvsOOdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722978056; c=relaxed/simple;
-	bh=tRdf+LnGUQ0dypRJKqYjJi9TNVNSqELl/O9tqmr4reY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
-	 In-Reply-To:Content-Type; b=KPcXDDYkQDQhSH4B3qHmrStDcG3kXhU+pH6EUQnTwuRZCxEQK/MOTjfoFdht2sLvor6A49p2F8bCezOUFixUj0Vmug/Y7/mn9g6C02YOs2sDRnaqYtk8h4ike3Y2ldncYP6kdrlNh28RN1DkpC1jiGT39c1nwm7tibDQ7u94cGA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F7FAFEC;
-	Tue,  6 Aug 2024 14:01:20 -0700 (PDT)
-Received: from [10.57.79.15] (unknown [10.57.79.15])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 428623F766;
-	Tue,  6 Aug 2024 14:00:52 -0700 (PDT)
-Message-ID: <ecf3460a-7f31-4dce-9a8b-fde8f146bfd8@arm.com>
-Date: Tue, 6 Aug 2024 22:00:55 +0100
+	s=arc-20240116; t=1722978899; c=relaxed/simple;
+	bh=av28jhqRgEVBboylZgZMt5CbsMUmoJbFETR3uIhJNXg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mnEizxnm2R6kwOlEUcp6fYv/VhrVffat7F99kbCnryt3WaCG0TnBbgL9iPJBAzsET2R4WB/by5+eUoop6TsWpLNMY5XItZu7z+4yE480TQOoEJ6gTUT/AtATZSQyD+IrhtbLLqKZC2+1ypLTXhbBhaFz+8Rzh49mngFQasukPjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=JVe5DEXt; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JVe5DEXt"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=zTN4JJ8RyBIwnN8QtZbKL34OISG6SJBGEivuQ36ISDw=; b=JVe5DEXt+B3CoB1BfQY2a9f0al
+	H2XlLTU87UK6OTBYJGNb1KRjbGmHk3mrHNj4IeMkoyvZKtIsy8xGR6BiX8jnTXDUUgYiHij9usY1y
+	/5V7ZPWhIb/Ll6pfHUoY0OCe0AixNvRModgP/WlTs9aTpQ2WlwqQQnJA3psZO8+PqHokvxqqDqfoa
+	YdsnN2G/GLstZ6cCrNH8XA6O+TvwWyEGNCEigQU/J8w6lQHfrPtds8z87irWwUjXvXVgkLKVwC58h
+	6E7I16G0EoZxWoUg30LsLyvALlYKdVNDrbTOgwb1fSx7p1nKX3+GdNWoV3P0TXwVLGLJT0tdGSrbh
+	UIc4ZhWQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbRVw-00000006Wg5-3AC2;
+	Tue, 06 Aug 2024 21:14:41 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id F39AB30066A; Tue,  6 Aug 2024 23:14:39 +0200 (CEST)
+Date: Tue, 6 Aug 2024 23:14:39 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/5] perf/core: Allow multiple AUX PMU events with the
+ same module
+Message-ID: <20240806211439.GB37996@noisy.programming.kicks-ass.net>
+References: <20240806204813.722372-1-leo.yan@arm.com>
+ <20240806204813.722372-2-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH v2 1/3] perf: build: Fix static compilation error when
- libdw is not installed
-To: Yang Jihong <yangjihong@bytedance.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240806114801.1652417-1-yangjihong@bytedance.com>
- <20240806114801.1652417-2-yangjihong@bytedance.com>
-Content-Language: en-US
-In-Reply-To: <20240806114801.1652417-2-yangjihong@bytedance.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240806204813.722372-2-leo.yan@arm.com>
 
-On 8/6/2024 12:47 PM, Yang Jihong wrote:
-> If libdw is not installed in build environment, the output of
-> 'pkg-config --modversion libdw' is empty, causing LIBDW_VERSION_2
-> to be empty and the shell test will have the following error:
+On Tue, Aug 06, 2024 at 09:48:09PM +0100, Leo Yan wrote:
+> This commit changes the condition from checking the same PMU instance to
+> checking the same PMU driver module. This allows support for multiple
+> PMU events with the same driver module.
 > 
->   /bin/sh: 1: test: -lt: unexpected operator
+> As a result, more than one AUX event (e.g. arm_spe_0 and arm_spe_1) can
+> record trace into the AUX ring buffer.
 > 
-> Before:
-> 
->   $ pkg-config --modversion libdw
->   Package libdw was not found in the pkg-config search path.
->   Perhaps you should add the directory containing `libdw.pc'
->   to the PKG_CONFIG_PATH environment variable
->   No package 'libdw' found
->   $ make LDFLAGS=-static -j16
->     BUILD:   Doing 'make -j20' parallel build
->   <SNIP>
->   Package libdw was not found in the pkg-config search path.
->   Perhaps you should add the directory containing `libdw.pc'
->   to the PKG_CONFIG_PATH environment variable
->   No package 'libdw' found
->   /bin/sh: 1: test: -lt: unexpected operator
-> 
-> After:
-> 
->   1. libdw is not installed:
-> 
->   $ pkg-config --modversion libdw
->   Package libdw was not found in the pkg-config search path.
->   Perhaps you should add the directory containing `libdw.pc'
->   to the PKG_CONFIG_PATH environment variable
->   No package 'libdw' found
->   $ make LDFLAGS=-static -j16
->     BUILD:   Doing 'make -j20' parallel build
->   <SNIP>
->   Package libdw was not found in the pkg-config search path.
->   Perhaps you should add the directory containing `libdw.pc'
->   to the PKG_CONFIG_PATH environment variable
->   No package 'libdw' found
->   Makefile.config:473: No libdw DWARF unwind found, Please install elfutils-devel/libdw-dev >= 0.158 and/or set LIBDW_DIR
-> 
->   2. libdw version is lower than 0.177
-> 
->   $ pkg-config --modversion libdw
->   0.176
->   $ make LDFLAGS=-static -j16
->     BUILD:   Doing 'make -j20' parallel build
->   <SNIP>
-> 
->   Auto-detecting system features:
->   ...                                   dwarf: [ on  ]
->   <SNIP>
->     INSTALL libsubcmd_headers
->     INSTALL libapi_headers
->     INSTALL libperf_headers
->     INSTALL libsymbol_headers
->     INSTALL libbpf_headers
->     LINK    perf
-> 
->   3. libdw version is higher than 0.177
-> 
->   $ pkg-config --modversion libdw
->   0.186
->   $ make LDFLAGS=-static -j16
->     BUILD:   Doing 'make -j20' parallel build
->   <SNIP>
-> 
->   Auto-detecting system features:
->   ...                                   dwarf: [ on  ]
->   <SNIP>
->     CC      util/bpf-utils.o
->     CC      util/pfm.o
->     LD      util/perf-util-in.o
->     LD      perf-util-in.o
->     AR      libperf-util.a
->     LINK    perf
-> 
-> Fixes: 536661da6ea1 ("perf: build: Only link libebl.a for old libdw")
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
 > ---
->  tools/build/feature/Makefile | 2 +-
->  tools/perf/Makefile.config   | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+>  kernel/events/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 12796808f07a..b18513ec4da6 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -178,7 +178,7 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
-> 
->    # Elfutils merged libebl.a into libdw.a starting from version 0.177,
->    # Link libebl.a only if libdw is older than this version.
-> -  ifeq ($(shell test $(LIBDW_VERSION_2) -lt 177; echo $$?),0)
-> +  ifeq ($(shell test $(LIBDW_VERSION_2)0 -lt 1770; echo $$?),0)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index aa3450bdc227..fdb8918e62a0 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12344,9 +12344,10 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
+>  
+>  	/*
+>  	 * If both events generate aux data, they must be on the same PMU
+> +	 * module but can be with different PMU instances.
+>  	 */
+>  	if (has_aux(event) && has_aux(output_event) &&
+> -	    event->pmu != output_event->pmu)
+> +	    event->pmu->module != output_event->pmu->module)
 
-I would like to follow up the style of LIBTRACEEVENT_VERSION and
-LIBTRACEFS_VERSION, so change LIBDW_VERSION as below:
-
-  LIBDW_VERSION := $(shell $(PKG_CONFIG) --modversion libdw).0.0
-
-Does this work for you?
-
-Thanks,
-Leo
+A very quick look at: arch/x86/events/intel/pt.c seems to suggest that
+doesn't set pmu->module. Which seems to suggest the above won't work for
+us.
