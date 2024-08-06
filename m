@@ -1,57 +1,57 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A225215E8B
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Aug 2024 01:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 136B91DDEA
+	for <linux-perf-users@vger.kernel.org>; Tue,  6 Aug 2024 01:57:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722909439; cv=none; b=PgrfE15Lrcf1S2CmvJuPiMaNTc/rSpZ03uD1RW5SehN3oadcKI86I/HQl7C7DS5qFD7djl0mSI+NF1j9rVZ4NkaTB9xlOXtGyGMrj5uQzFty8SlYsWdzlAi+H/NJ4NMjHp9GfupeDDtUJ3vPsTcm/xj4atPWOHDcgKqAuFWIpb0=
+	t=1722909444; cv=none; b=fl7cIvHSVSKV1OtZVYYyro/lFp6zDJvxTtagUI3jnIOajVbwRB+bP+Bgbx4OVUv0s2Pkb9wnwTOFKZifGifIerZ73BKyogcoAw8Z3qTn6GKrb/rbAe5s0T341aY+Dfuo1Lic2LZhKBC5DWLi4KdLaZoZfRgOf0s+cldBJPiFsrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722909439; c=relaxed/simple;
-	bh=QsB/HuiAUP3j2oHu6k3JIQBeH864hahx2l563TFJlWE=;
+	s=arc-20240116; t=1722909444; c=relaxed/simple;
+	bh=T5lTh1H+KpenjsCnPwoeArAkVYsP23cMh/VNluhjGWM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LlfRilsJcjHrnpD5owad59gYr1/4rQV8DVwHrfD6sWET3btLf/IuNbw+wTTpQZaN59QDRrihoU+S+P18TrbznmGDsydLonFWHXoj79q+NAilQbP0vampLQbTnkRN3vE3FRKFH29+Wy7RGuTH8XM1xx3+1ZMz0ToiW+Qp83iEtjs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=PuDQ7IVr; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=V+a0xK9NXgrkhDUjkKCdY3laylwTqjTH1hHAf3ZIdEjP6cqV9Gu8RMKzk9R7ssVAYdUI+KMsY6YXi0w3N6nMgZT+6WD5aJisAHjXKSJ1L3LAaRxlJw67vOyM/TbgHxIKN8NMinjvpf6RG4nlgcaF9r/g6v7CA5ly911uzghnocc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=JRHmSb3p; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="PuDQ7IVr"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fc47abc040so2178805ad.0
-        for <linux-perf-users@vger.kernel.org>; Mon, 05 Aug 2024 18:57:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="JRHmSb3p"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fd9e6189d5so729915ad.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 05 Aug 2024 18:57:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1722909437; x=1723514237; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1722909442; x=1723514242; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bL++MozDycDDEd1iq7Ueyfq5gI453oZc8tfgyfS30Lk=;
-        b=PuDQ7IVrb15Ln5BVZ4Za2rZaSP1mYOP8U/drjGbaE6k2ygN6oaBBs5Ec+AGwXYx2yJ
-         /rSHrGnfUQBjy5alu+f9Zbb3/sgbgxBAmlDYpRf+gr98qefOxJZ8lGy7HH+hb8dcoAQ7
-         f1+l8ASvz8SqW88xJ2edSctJDTH7uJJH7Ga6kqQpgn+Kqgi3chX9RYzrmZnLJYQoffeN
-         xKa/JzzBwro1QpoAxH2+VKM/I/u66rJWS/MYtSANc9kHfZ+/ia1DGZJaV193Fb7S+r5B
-         ojpCOhlnQJw2Z+L8QvBdhxAzGZFBfWltQMLRLh20rWkINIeFYwaOQZssTCDvF8DNxGh4
-         Whgg==
+        bh=SPUpKaXytJIYx+EO0mIECPeSM07Nvv2jd3odmg2iV0U=;
+        b=JRHmSb3pOxSRvKD1uGln7naF7y1LLHD1qpHmWeCeJXhr8P6TQhMC1o3MsmlO15h9h4
+         MtMMOtXqcVptDxQ6nYrqZBjeJUttUc/CIxnZsSeWptURQgJaTuc9N1Weg1Q9N6RF1/Hz
+         4MCVx5H2jMkuojBCIlYIWcY9lXowhTyl3vx0Hp+aOY6ct1v9AaIcI8pFtp1oh7wgZASH
+         kEJ0VMMltXkM+UqqWET1ZKg2B3mo/kPJKT2e0df40v0Pmo3lFAzAJHV2kIEB2wYpzDSV
+         Pgeu5avys2wE020q3+rfoVwknGOBf84g/rhigX3ZGJIAJu3UY+4wFRrhft6rFWxuf/UI
+         v3Sg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722909437; x=1723514237;
+        d=1e100.net; s=20230601; t=1722909442; x=1723514242;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=bL++MozDycDDEd1iq7Ueyfq5gI453oZc8tfgyfS30Lk=;
-        b=THin3plVuLg746EcqIzXAkCcXVbTvFlt3W7+fLmCplhYYqunpBIxiGQfpS37oPfifv
-         oIGDXk8un7twOOgjDy+q934B3Y8+cTCMXC1kWp/i64P5DuYzufLKTJpXURFg8jA5iORl
-         MPqDS2cS7NP2jnB8zFt1RK2HIEijWCPsT12y+7Lo1V5DiqZji228r4kW3nPt+Wu2K1/g
-         GBlhjDeqoO4hbYNL3Bud2oOnAhS91C6ufbgm+5cfdO8Du3NKp0sc/0srDUadiAXCX3H7
-         0TjgIdcdS+9EOF5BwrmLAci6USONDM/rNb7D7ZqOoKzO1SE7fdDyCzk+5pikvE3Kh0Lt
-         oV9A==
-X-Forwarded-Encrypted: i=1; AJvYcCU1GLzPu6QRUDYAvyM1G/jDgrweKXz7D8tfrpSPUErsu8WRx1iRZU6nx9GjbJHS78BBVSKLZnMnqiUVwQmPQIYGYQ76ZNLRm35awvdqMD7YyQ==
-X-Gm-Message-State: AOJu0Yw0/rASCOvOFgL9CzZ6ycIMOnJFc5ZQJIuCY8lu22f1Z3mImh6+
-	zyE2swWXdN2YlK9KaxIgjA1ieGY6+uwjOX60S2etRNZUTzXoSzFtZFCtpqa9bDE=
-X-Google-Smtp-Source: AGHT+IGk9l+mKPU79nm1kTs+l+wE9ukejKzQQgCpSX2eJ0o/dO9qjq6VkQtkaKgQdK63y3rejl8x5Q==
-X-Received: by 2002:a17:902:d501:b0:1fb:8245:fdeb with SMTP id d9443c01a7336-1ff574fd60dmr156153455ad.64.1722909436966;
-        Mon, 05 Aug 2024 18:57:16 -0700 (PDT)
+        bh=SPUpKaXytJIYx+EO0mIECPeSM07Nvv2jd3odmg2iV0U=;
+        b=Seg+DP6DEai2fBJ4IKSHAZrb42TfUZ/0YdUVRDPAzS9zoSy3QAvINdOZrawxZWUMgV
+         zu61QrGDmTqOgjFrCLd3qLZt/iFuPHxwf2vyTifJRcxL2kvvs1W8VBK9wzxzI9ZAIY3n
+         z+MBtkZxXCf3h2XumGMfr47BDrSpcOA8Fk3EN5c2tkdNG2Tl20lHVovq2MwdqDehFcOG
+         ts1GFwZZYVI04ZRCoL5aIyuBLhUtLbEFZ7KV8S49iUqh4MqjMWh4q7MZ4zMXqc/Rrh/h
+         MK++XktUOWrQa9bgp1d5eQYmRlkrvz74RMqr2wwK/OY8Yh/4mHeZkd3cS+TfEzuf3SOk
+         /3+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVrNht/9v58F8Iyh8SCBe0fkBJNuMf1kI6KEi/dFACH6j+gNGU86pPO+NETjNySdFmRxc+hTFznkZqmO51+WnGRaNYMEZZwPKRw9x1hqHBYxw==
+X-Gm-Message-State: AOJu0YywyCB+88D98uPpNlDzvoLu28pbYjL2N0XTBuvgpBAMfmRxrSt7
+	vnVENIv/2Z9/GawSUBj98+ayXp/+1lVIOmLMoCb7XF8aNF/xhyXg5oGVomjcV14=
+X-Google-Smtp-Source: AGHT+IG1t7I0ttnnv1LNsH0qPkCMmyU0yOUwkOZouNuryfp8pW2BWsjbPOHZkV8yW6FHJEFfTDbGrg==
+X-Received: by 2002:a17:902:e885:b0:1fc:57b7:995c with SMTP id d9443c01a7336-1ff572584f3mr146229415ad.7.1722909442408;
+        Mon, 05 Aug 2024 18:57:22 -0700 (PDT)
 Received: from ubuntu20.04 ([203.208.189.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5917496fsm75509455ad.182.2024.08.05.18.57.11
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff5917496fsm75509455ad.182.2024.08.05.18.57.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Aug 2024 18:57:16 -0700 (PDT)
+        Mon, 05 Aug 2024 18:57:21 -0700 (PDT)
 From: Yang Jihong <yangjihong@bytedance.com>
 To: peterz@infradead.org,
 	mingo@redhat.com,
@@ -66,9 +66,9 @@ To: peterz@infradead.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: yangjihong@bytedance.com
-Subject: [PATCH 1/2] perf sched timehist: Add --show-prio option
-Date: Tue,  6 Aug 2024 09:57:00 +0800
-Message-Id: <20240806015701.1309833-2-yangjihong@bytedance.com>
+Subject: [PATCH 2/2] perf sched timehist: Add --prio option
+Date: Tue,  6 Aug 2024 09:57:01 +0800
+Message-Id: <20240806015701.1309833-3-yangjihong@bytedance.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240806015701.1309833-1-yangjihong@bytedance.com>
 References: <20240806015701.1309833-1-yangjihong@bytedance.com>
@@ -80,17 +80,19 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The --show-prio option is used to display the priority of task.
-It is disabled by default, which is consistent with original behavior.
-
-The display format is xxx (priority does not change during task running)
-or xxx->yyy (priority changes during task running)
+The --prio option is used to only show events for the given task priority(ies).
+The default is to show events for all priority tasks, which is consistent with
+the previous behavior.
 
 Testcase:
+  # perf sched record nice -n 9 perf bench sched messaging -l 10000
+  # Running 'sched/messaging' benchmark:
+  # 20 sender and receiver processes per group
+  # 10 groups == 400 processes run
 
-  # perf sched record nice -n 9 true
-  [ perf record: Woken up 0 times to write data ]
-  [ perf record: Captured and wrote 0.497 MB perf.data ]
+       Total time: 3.435 [sec]
+  [ perf record: Woken up 270 times to write data ]
+  [ perf record: Captured and wrote 618.688 MB perf.data (5729036 samples) ]
 
   # perf sched timehist -h
 
@@ -117,243 +119,217 @@ Testcase:
           --kallsyms <file>
                             kallsyms pathname
           --max-stack <n>   Maximum number of functions to display backtrace.
+          --prio <prio>     analyze events only for given task priority(ies)
           --show-prio       Show task priority
           --state           Show task state when sched-out
           --symfs <directory>
                             Look for files with symbols relative to this directory
           --time <str>      Time span for analysis (start,stop)
 
-  # perf sched timehist
+  # perf sched timehist --prio 140
   Samples of sched_switch event do not have callchains.
-             time    cpu  task name                       wait time  sch delay   run time
-                          [tid/pid]                          (msec)     (msec)     (msec)
-  --------------- ------  ------------------------------  ---------  ---------  ---------
-     23952.006537 [0000]  perf[534]                           0.000      0.000      0.000
-     23952.006593 [0000]  migration/0[19]                     0.000      0.014      0.056
-     23952.006899 [0001]  perf[534]                           0.000      0.000      0.000
-     23952.006947 [0001]  migration/1[22]                     0.000      0.015      0.047
-     23952.007138 [0002]  perf[534]                           0.000      0.000      0.000
-  <SNIP>
+  Invalid prio string
 
-  # perf sched timehist --show-prio
+  # perf sched timehist --show-prio --prio 129
   Samples of sched_switch event do not have callchains.
              time    cpu  task name                       prio      wait time  sch delay   run time
                           [tid/pid]                                    (msec)     (msec)     (msec)
   --------------- ------  ------------------------------  --------  ---------  ---------  ---------
-     23952.006537 [0000]  perf[534]                       120           0.000      0.000      0.000
-     23952.006593 [0000]  migration/0[19]                 0             0.000      0.014      0.056
-     23952.006899 [0001]  perf[534]                       120           0.000      0.000      0.000
+   2090450.765421 [0002]  sched-messaging[1229618]        129           0.000      0.000      0.029
+   2090450.765445 [0007]  sched-messaging[1229616]        129           0.000      0.062      0.043
+   2090450.765448 [0014]  sched-messaging[1229619]        129           0.000      0.000      0.032
+   2090450.765478 [0013]  sched-messaging[1229617]        129           0.000      0.065      0.048
+   2090450.765503 [0014]  sched-messaging[1229622]        129           0.000      0.000      0.017
+   2090450.765550 [0002]  sched-messaging[1229624]        129           0.000      0.000      0.021
+   2090450.765562 [0007]  sched-messaging[1229621]        129           0.000      0.071      0.028
+   2090450.765570 [0005]  sched-messaging[1229620]        129           0.000      0.064      0.066
+   2090450.765583 [0001]  sched-messaging[1229625]        129           0.000      0.001      0.031
+   2090450.765595 [0013]  sched-messaging[1229623]        129           0.000      0.060      0.028
+   2090450.765637 [0014]  sched-messaging[1229628]        129           0.000      0.000      0.019
+   2090450.765665 [0007]  sched-messaging[1229627]        129           0.000      0.038      0.030
   <SNIP>
-     23952.034843 [0003]  nice[535]                       120->129      0.189      0.024     23.314
+
+  # perf sched timehist --show-prio --prio 0,120-129
+  Samples of sched_switch event do not have callchains.
+             time    cpu  task name                       prio      wait time  sch delay   run time
+                          [tid/pid]                                    (msec)     (msec)     (msec)
+  --------------- ------  ------------------------------  --------  ---------  ---------  ---------
+   2090450.763231 [0000]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763235 [0000]  migration/0[15]                 0             0.000      0.001      0.003
+   2090450.763263 [0001]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763268 [0001]  migration/1[21]                 0             0.000      0.001      0.004
+   2090450.763302 [0002]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763309 [0002]  migration/2[27]                 0             0.000      0.001      0.007
+   2090450.763338 [0003]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763343 [0003]  migration/3[33]                 0             0.000      0.001      0.004
+   2090450.763459 [0004]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763469 [0004]  migration/4[39]                 0             0.000      0.002      0.010
+   2090450.763496 [0005]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763501 [0005]  migration/5[45]                 0             0.000      0.001      0.004
+   2090450.763613 [0006]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763622 [0006]  migration/6[51]                 0             0.000      0.001      0.008
+   2090450.763652 [0007]  perf[1229608]                   120           0.000      0.000      0.000
+   2090450.763660 [0007]  migration/7[57]                 0             0.000      0.001      0.008
   <SNIP>
-     23952.053838 [0005]  rcu_preempt[16]                 120           3.993      0.000      0.023
-     23952.053990 [0005]  <idle>                          120           0.023      0.023      0.152
-     23952.054137 [0006]  <idle>                          120           1.427      1.427     17.855
-     23952.054278 [0007]  <idle>                          120           0.506      0.506      1.650
+   2090450.765665 [0001]  <idle>                          120           0.031      0.031      0.081
+   2090450.765665 [0007]  sched-messaging[1229627]        129           0.000      0.038      0.030
+   2090450.765667 [0000]  s1-perf[8235/7168]              120           0.008      0.000      0.004
+   2090450.765684 [0013]  <idle>                          120           0.028      0.028      0.088
+   2090450.765685 [0001]  sched-messaging[1229630]        129           0.000      0.001      0.020
+   2090450.765688 [0000]  <idle>                          120           0.004      0.004      0.020
+   2090450.765689 [0002]  <idle>                          120           0.021      0.021      0.138
+   2090450.765691 [0005]  sched-messaging[1229626]        129           0.000      0.085      0.029
 
 Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 ---
  tools/perf/Documentation/perf-sched.txt |  3 +
- tools/perf/builtin-sched.c              | 91 +++++++++++++++++++++++--
- 2 files changed, 87 insertions(+), 7 deletions(-)
+ tools/perf/builtin-sched.c              | 74 ++++++++++++++++++++++++-
+ 2 files changed, 76 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
-index 84d49f9241b1..3efa5c58418d 100644
+index 3efa5c58418d..70a9016d5a06 100644
 --- a/tools/perf/Documentation/perf-sched.txt
 +++ b/tools/perf/Documentation/perf-sched.txt
-@@ -212,6 +212,9 @@ OPTIONS for 'perf sched timehist'
- --state::
- 	Show task state when it switched out.
+@@ -215,6 +215,9 @@ OPTIONS for 'perf sched timehist'
+ --show-prio::
+ 	Show task priority.
  
-+--show-prio::
-+	Show task priority.
++--prio::
++	Only show events for given task priority(ies).
 +
  OPTIONS for 'perf sched replay'
  ------------------------------
  
 diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-index 8750b5f2d49b..2af9dbdf4ba2 100644
+index 2af9dbdf4ba2..3981994d9921 100644
 --- a/tools/perf/builtin-sched.c
 +++ b/tools/perf/builtin-sched.c
-@@ -228,6 +228,7 @@ struct perf_sched {
- 	bool		show_next;
- 	bool		show_migrations;
- 	bool		show_state;
-+	bool		show_prio;
- 	u64		skipped_samples;
- 	const char	*time_str;
+@@ -51,6 +51,7 @@
+ #define COMM_LEN		20
+ #define SYM_LEN			129
+ #define MAX_PID			1024000
++#define MAX_PRIO		140
+ 
+ static const char *cpu_list;
+ static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+@@ -234,6 +235,8 @@ struct perf_sched {
  	struct perf_time_interval ptime;
-@@ -258,6 +259,8 @@ struct thread_runtime {
- 	bool comm_changed;
- 
- 	u64 migrations;
-+
-+	int prio;
+ 	struct perf_time_interval hist_time;
+ 	volatile bool   thread_funcs_exit;
++	const char	*prio_str;
++	DECLARE_BITMAP(prio_bitmap, MAX_PRIO);
  };
  
- /* per event run time data */
-@@ -920,6 +923,11 @@ struct sort_dimension {
- 	struct list_head	list;
- };
- 
-+static inline void init_prio(struct thread_runtime *r)
-+{
-+	r->prio = -1;
-+}
-+
- /*
-  * handle runtime stats saved per thread
-  */
-@@ -932,6 +940,7 @@ static struct thread_runtime *thread__init_runtime(struct thread *thread)
- 		return NULL;
- 
- 	init_stats(&r->run_stats);
-+	init_prio(r);
- 	thread__set_priv(thread, r);
- 
- 	return r;
-@@ -2036,6 +2045,24 @@ static char *timehist_get_commstr(struct thread *thread)
- 	return str;
- }
- 
-+/* prio field format: xxx or xxx->yyy */
-+#define MAX_PRIO_STR_LEN 8
-+static char *timehist_get_priostr(struct evsel *evsel,
-+				  struct thread *thread,
-+				  struct perf_sample *sample)
-+{
-+	static char prio_str[16];
-+	int prev_prio = (int)evsel__intval(evsel, sample, "prev_prio");
-+	struct thread_runtime *tr = thread__priv(thread);
-+
-+	if (tr->prio != prev_prio && tr->prio != -1)
-+		scnprintf(prio_str, sizeof(prio_str), "%d->%d", tr->prio, prev_prio);
-+	else
-+		scnprintf(prio_str, sizeof(prio_str), "%d", prev_prio);
-+
-+	return prio_str;
-+}
-+
- static void timehist_header(struct perf_sched *sched)
+ /* per thread run time data */
+@@ -2504,12 +2507,33 @@ static bool timehist_skip_sample(struct perf_sched *sched,
+ 				 struct perf_sample *sample)
  {
- 	u32 ncpus = sched->max_cpu.cpu + 1;
-@@ -2053,8 +2080,14 @@ static void timehist_header(struct perf_sched *sched)
- 		printf(" ");
+ 	bool rc = false;
++	int prio = -1;
++	struct thread_runtime *tr = NULL;
+ 
+ 	if (thread__is_filtered(thread)) {
+ 		rc = true;
+ 		sched->skipped_samples++;
  	}
  
--	printf(" %-*s  %9s  %9s  %9s", comm_width,
--		"task name", "wait time", "sch delay", "run time");
-+	if (sched->show_prio) {
-+		printf(" %-*s  %-*s  %9s  %9s  %9s",
-+		       comm_width, "task name", MAX_PRIO_STR_LEN, "prio",
-+		       "wait time", "sch delay", "run time");
-+	} else {
-+		printf(" %-*s  %9s  %9s  %9s", comm_width,
-+		       "task name", "wait time", "sch delay", "run time");
++	if (sched->prio_str) {
++		/*
++		 * Because priority may be changed during task execution,
++		 * first read priority from prev sched_in event for current task.
++		 * If prev sched_in event is not saved, then read priority from
++		 * current task sched_out event.
++		 */
++		tr = thread__get_runtime(thread);
++		if (tr && tr->prio != -1)
++			prio = tr->prio;
++		else if (evsel__name_is(evsel, "sched:sched_switch"))
++			prio = evsel__intval(evsel, sample, "prev_prio");
++
++		if (prio != -1 && !test_bit(prio, sched->prio_bitmap)) {
++			rc = true;
++			sched->skipped_samples++;
++		}
 +	}
- 
- 	if (sched->show_state)
- 		printf("  %s", "state");
-@@ -2069,8 +2102,14 @@ static void timehist_header(struct perf_sched *sched)
- 	if (sched->show_cpu_visual)
- 		printf(" %*s ", ncpus, "");
- 
--	printf(" %-*s  %9s  %9s  %9s", comm_width,
--	       "[tid/pid]", "(msec)", "(msec)", "(msec)");
-+	if (sched->show_prio) {
-+		printf(" %-*s  %-*s  %9s  %9s  %9s",
-+		       comm_width, "[tid/pid]", MAX_PRIO_STR_LEN, "",
-+		       "(msec)", "(msec)", "(msec)");
-+	} else {
-+		printf(" %-*s  %9s  %9s  %9s", comm_width,
-+		       "[tid/pid]", "(msec)", "(msec)", "(msec)");
-+	}
- 
- 	if (sched->show_state)
- 		printf("  %5s", "");
-@@ -2085,9 +2124,15 @@ static void timehist_header(struct perf_sched *sched)
- 	if (sched->show_cpu_visual)
- 		printf(" %.*s ", ncpus, graph_dotted_line);
- 
--	printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
--		graph_dotted_line, graph_dotted_line, graph_dotted_line,
--		graph_dotted_line);
-+	if (sched->show_prio) {
-+		printf(" %.*s  %.*s  %.9s  %.9s  %.9s",
-+		       comm_width, graph_dotted_line, MAX_PRIO_STR_LEN, graph_dotted_line,
-+		       graph_dotted_line, graph_dotted_line, graph_dotted_line);
-+	} else {
-+		printf(" %.*s  %.9s  %.9s  %.9s", comm_width,
-+		       graph_dotted_line, graph_dotted_line, graph_dotted_line,
-+		       graph_dotted_line);
-+	}
- 
- 	if (sched->show_state)
- 		printf("  %.5s", graph_dotted_line);
-@@ -2134,6 +2179,9 @@ static void timehist_print_sample(struct perf_sched *sched,
- 
- 	printf(" %-*s ", comm_width, timehist_get_commstr(thread));
- 
-+	if (sched->show_prio)
-+		printf(" %-*s ", MAX_PRIO_STR_LEN, timehist_get_priostr(evsel, thread, sample));
 +
- 	wait_time = tr->dt_sleep + tr->dt_iowait + tr->dt_preempt;
- 	print_sched_time(wait_time, 6);
- 
-@@ -2301,6 +2349,7 @@ static int init_idle_thread(struct thread *thread)
- 	if (itr == NULL)
- 		return -ENOMEM;
- 
-+	init_prio(&itr->tr);
- 	init_stats(&itr->tr.run_stats);
- 	callchain_init(&itr->callchain);
- 	callchain_cursor_reset(&itr->cursor);
-@@ -2627,6 +2676,30 @@ static int timehist_migrate_task_event(struct perf_tool *tool,
- 	return 0;
- }
- 
-+static void timehist_update_task_prio(struct evsel *evsel,
-+				      struct perf_sample *sample,
-+				      struct machine *machine)
-+{
-+	struct thread *thread;
-+	struct thread_runtime *tr = NULL;
-+	const u32 next_pid = evsel__intval(evsel, sample, "next_pid");
-+	const u32 next_prio = evsel__intval(evsel, sample, "next_prio");
-+
-+	if (next_pid == 0)
-+		thread = get_idle_thread(sample->cpu);
-+	else
-+		thread = machine__findnew_thread(machine, -1, next_pid);
-+
-+	if (thread == NULL)
-+		return;
-+
-+	tr = thread__get_runtime(thread);
-+	if (tr == NULL)
-+		return;
-+
-+	tr->prio = next_prio;
-+}
-+
- static int timehist_sched_change_event(struct perf_tool *tool,
- 				       union perf_event *event,
- 				       struct evsel *evsel,
-@@ -2650,6 +2723,9 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+ 	if (sched->idle_hist) {
+ 		if (!evsel__name_is(evsel, "sched:sched_switch"))
+ 			rc = true;
+@@ -2723,7 +2747,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
  		goto out;
  	}
  
-+	if (sched->show_prio)
-+		timehist_update_task_prio(evsel, sample, machine);
-+
+-	if (sched->show_prio)
++	if (sched->show_prio || sched->prio_str)
+ 		timehist_update_task_prio(evsel, sample, machine);
+ 
  	thread = timehist_get_thread(sched, sample, machine, evsel);
- 	if (thread == NULL) {
- 		rc = -1;
-@@ -3691,6 +3767,7 @@ int cmd_sched(int argc, const char **argv)
- 	OPT_STRING('t', "tid", &symbol_conf.tid_list_str, "tid[,tid...]",
+@@ -3142,6 +3166,47 @@ static int timehist_check_attr(struct perf_sched *sched,
+ 	return 0;
+ }
+ 
++static int timehist_parse_prio_str(struct perf_sched *sched)
++{
++	char *p;
++	unsigned long start_prio, end_prio;
++	const char *str = sched->prio_str;
++
++	if (!str)
++		return 0;
++
++	while (isdigit(*str)) {
++		p = NULL;
++		start_prio = strtoul(str, &p, 0);
++		if (start_prio >= MAX_PRIO || (*p != '\0' && *p != ',' && *p != '-'))
++			return -1;
++
++		if (*p == '-') {
++			str = ++p;
++			p = NULL;
++			end_prio = strtoul(str, &p, 0);
++
++			if (end_prio >= MAX_PRIO || (*p != '\0' && *p != ','))
++				return -1;
++
++			if (end_prio < start_prio)
++				return -1;
++		} else {
++			end_prio = start_prio;
++		}
++
++		for (; start_prio <= end_prio; start_prio++)
++			__set_bit(start_prio, sched->prio_bitmap);
++
++		if (*p)
++			++p;
++
++		str = p;
++	}
++
++	return 0;
++}
++
+ static int perf_sched__timehist(struct perf_sched *sched)
+ {
+ 	struct evsel_str_handler handlers[] = {
+@@ -3203,6 +3268,11 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	if (timehist_check_attr(sched, evlist) != 0)
+ 		goto out;
+ 
++	if (timehist_parse_prio_str(sched) != 0) {
++		pr_err("Invalid prio string\n");
++		goto out;
++	}
++
+ 	setup_pager();
+ 
+ 	/* prefer sched_waking if it is captured */
+@@ -3768,6 +3838,8 @@ int cmd_sched(int argc, const char **argv)
  		   "analyze events only for given thread id(s)"),
  	OPT_STRING('C', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
-+	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+ 	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
++	OPT_STRING(0, "prio", &sched.prio_str, "prio",
++		   "analyze events only for given task priority(ies)"),
  	OPT_PARENT(sched_options)
  	};
  
