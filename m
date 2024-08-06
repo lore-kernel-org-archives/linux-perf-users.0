@@ -1,48 +1,52 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D551D0DD6;
-	Tue,  6 Aug 2024 13:12:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80ECF1C5792;
+	Tue,  6 Aug 2024 13:32:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722949955; cv=none; b=qW/DQ5RPVgRlSSsU6Oi0sf9ln+NZ9wkoJwnxMcWlD5KR1ZQAP0pXZsBKkfrnbTIeZGvthhjchh1PpPgessiEGADIa9r16HPDA+ZhtWMml08mattp6lLjRgynHgzRIFOsttlyZH0nt6j++q+qZ4EJaeYTD6yeE5o77FQVues0UWY=
+	t=1722951156; cv=none; b=WZ2AT2nI1vTTTkdwCBR+RaQa3EXSZUvbveYv6TOKTYGroG1sVw0C/R4QRH5aHChcv7sHjSbFhPbnjGls/PfAZ9HmryscssjFh4kxKcgDnEg4YhXsNJeMGAVtjf1sxNnAdmmiScAWfHETuXpMUHY8tkGbgNY/1FfAqtPugK+Q4So=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722949955; c=relaxed/simple;
-	bh=DGsYcTK6eGFALIQNZ8BJVb+gMAQQ1GHI0TB0nXuutCM=;
+	s=arc-20240116; t=1722951156; c=relaxed/simple;
+	bh=1/hOT1teYDjCnab1J6u5zZvPN7xUqhdY7qulzsyiAHo=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EbIZ8qQKUiRiyhqIDPxyjWQlBaQ2KugtRN+52tLmNOhlXBm0sD/lZMBu1kCmtA2sGmMrET+N5YGeg25vsbzJQhhtiTRyuLYMunIvBjglTTpMLJg8rzceVlidvvD0Ox+4iUeDD7RGYxl5hcqNHiv1Iv0KDA8MJmP2TFVS4RZC1AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k2ReV+3V; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=BBprTscBYYIsgQ72lH5ZZQKVNWjYHhwCyWhLRIOQFa6F2aA1qOg6IbN+cvRoz+EI0bpIIQhbCNnN+gH1/0qs85WO6clfl5KotqWhzfarFoolC6nho+gEIA0vqxsy48UifbhSFWympOTegvX4E1hScIbZ0f5vygxwRrxkNClDW2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HHewcVbL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k2ReV+3V"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78888C32786;
-	Tue,  6 Aug 2024 13:12:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HHewcVbL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B97CDC4AF0C;
+	Tue,  6 Aug 2024 13:32:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722949954;
-	bh=DGsYcTK6eGFALIQNZ8BJVb+gMAQQ1GHI0TB0nXuutCM=;
+	s=k20201202; t=1722951156;
+	bh=1/hOT1teYDjCnab1J6u5zZvPN7xUqhdY7qulzsyiAHo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k2ReV+3V/aDyaWy/h4SdEWcIkxvvw+4wm2KNoGOyhSAavyMRnDIptwNzCm5wjZAAw
-	 u3E7s1UrKWqXRJHECe3+MPO7RE9VHEc+C7bw9HLHnFNWh6WgfAnUqBbh48RB4A4oxA
-	 RS0bfz20PlvLyuc1/l5Qv/v1rNOX7OupHjRitxjWdyE8vOzD5D/CtyqBr1ln5qasal
-	 iKS7we6ArZsJDNQo0VGdOUswwwrHuF+/NjrOsgEgk4izFbYEmx2Useju7TIskdJGzq
-	 Sxalru7NKCvjsXmANp92I8GjrPaulpW9+BnYodha0eQ8hHBpgeVmvQ2P3dL7OADnhS
-	 7If6Brgy5Cq/A==
-Date: Tue, 6 Aug 2024 10:12:30 -0300
+	b=HHewcVbLVQgPrwbAgB79Lrw0faT8+P71+hgPYj+krUOO3dQIVnPlAGjOq1XxJtchm
+	 hH76BeDhZNbxqsfdddj5AyWLlYpe+dzkYLfGnydr29bK86gJHPd33AgEAezXL+BvyA
+	 ustquKIo7gRg20dBD0GOemtP6uUL9U1BfPPw3oHDAbrs1H5se69VA1zHUB5MEnwBsD
+	 2kZnt5W4kmr93aMyd8LkD5fYqiOGsjuslsmWdV2QAlRhzJW4UrZpZJ+gG4XQGrmsV0
+	 TrT8xJPUjsEqDx88Ax97QNLdU8BVI5kpab1gJLsrwKM4pupSmieC+l55slWpuPNN/H
+	 fwjsRbrX6rs8g==
+Date: Tue, 6 Aug 2024 10:32:32 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, weilin.wang@intel.com,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 5/5] perf annotate: Add --skip-empty option
-Message-ID: <ZrIhPuFee8R9ZvVi@x1>
-References: <20240803211332.1107222-1-namhyung@kernel.org>
- <20240803211332.1107222-6-namhyung@kernel.org>
- <ZrEmZLV0vgU6GUcN@x1>
- <ZrEyo4CSm6nKU20s@google.com>
- <ZrE011BLww0LQQha@x1>
- <ZrE7EWyFJ3hThopM@google.com>
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Perry Taylor <perry.taylor@intel.com>,
+	Samantha Alt <samantha.alt@intel.com>,
+	Caleb Biggers <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v18 0/8] TPEBS counting mode support
+Message-ID: <ZrIl8NCHkIVHQVt2@x1>
+References: <20240720062102.444578-1-weilin.wang@intel.com>
+ <CAM9d7cgoTyf3Zjt=+2yZi5Pat4UrxKxN=rkLHmyUWZqwZk8_Kw@mail.gmail.com>
+ <CAP-5=fWr2Qna9ikzUCFavo3OTUDSP3ztr=i6E=R962CXCdHckg@mail.gmail.com>
+ <ZrEpJxtm5zlp5rbo@x1>
+ <CAP-5=fVTaHdiF8G2Dn=vnguvoapa_+ZKsQ7Wy3z51K9nDZQUtg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -52,210 +56,246 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZrE7EWyFJ3hThopM@google.com>
+In-Reply-To: <CAP-5=fVTaHdiF8G2Dn=vnguvoapa_+ZKsQ7Wy3z51K9nDZQUtg@mail.gmail.com>
 
-On Mon, Aug 05, 2024 at 01:50:25PM -0700, Namhyung Kim wrote:
-> On Mon, Aug 05, 2024 at 05:23:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Aug 05, 2024 at 01:14:27PM -0700, Namhyung Kim wrote:
-> > > On Mon, Aug 05, 2024 at 04:22:12PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > > On Sat, Aug 03, 2024 at 02:13:32PM -0700, Namhyung Kim wrote:
-> > > > > Like in perf report, we want to hide empty events in the perf annotate
-> > > > > output.  This is consistent when the option is set in perf report.
-> > > > > 
-> > > > > For example, the following command would use 3 events including dummy.
-> > > > > 
-> > > > >   $ perf mem record -a -- perf test -w noploop
-> > > > > 
-> > > > >   $ perf evlist
-> > > > >   cpu/mem-loads,ldlat=30/P
-> > > > >   cpu/mem-stores/P
-> > > > >   dummy:u
-> > > > > 
-> > > > > Just using perf annotate with --group will show the all 3 events.
-> > > > 
-> > > > Seems unrelated, just before compiling with this patch:
-> > > > 
-> > > > root@x1:~# perf mem record -a -- perf test -w noploop
-> > > > Memory events are enabled on a subset of CPUs: 4-11
-> > > > [ perf record: Woken up 1 times to write data ]
-> > > > [ perf record: Captured and wrote 10.506 MB perf.data (2775 samples) ]
-> > > > root@x1:~#
-> > > > 
-> > > > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > > > root@x1:~# perf annotate --stdio2 sched_clock
-> > > > Samples: 178  of event 'cpu_atom/mem-stores/P', 4000 Hz, Event count (approx.): 565268, [percent: local period]
-> > > > sched_clock() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/vmlinux
-> > > > Percent      0xffffffff810511e0 <sched_clock>:
-> > > >                endbr64        
-> > > >    5.76        incl    pcpu_hot+0x8
-> > > >    5.47      → callq   sched_clock_noinstr
-> > > >   88.78        decl    pcpu_hot+0x8
-> > > >              ↓ je      1e     
-> > > >              → jmp     __x86_return_thunk
-> > > >          1e: → callq   __SCT__preempt_schedule_notrace
-> > > >              → jmp     __x86_return_thunk
-> > > > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > > > root@x1:~# perf annotate --group --stdio sched_clock
-> > > > root@x1:~# perf annotate --group sched_clock
-> > > > root@x1:~#
-> > > > 
-> > > > root@x1:~# perf evlist
-> > > > cpu_atom/mem-loads,ldlat=30/P
-> > > > cpu_atom/mem-stores/P
-> > > > dummy:u
-> > > > root@x1:~#
-> > > > 
-> > > > root@x1:~# perf report --header-only | grep cmdline
-> > > > # cmdline : /home/acme/bin/perf mem record -a -- perf test -w noploop 
-> > > > root@x1:~#
-> > > > 
-> > > > I thought it would be some hybrid oddity but seems to be just --group
-> > > > related, seems like it stops if the first event has no samples? Because
-> > > > it works with another symbol:
-> > > 
-> > > Good catch.  Yeah I found it only checked the first event.  Something
-> > > like below should fix the issue.
-> > 
-> > Nope, with the patch applied:
-> > 
-> > root@x1:~# perf annotate --group --stdio sched_clock
-> > root@x1:~# perf annotate --stdio sched_clock
-> >  Percent |      Source code & Disassembly of vmlinux for cpu_atom/mem-stores/P (147 samples, percent: local period)
-> > -------------------------------------------------------------------------------------------------------------------
-> >          : 0                0xffffffff810511e0 <sched_clock>:
-> >     0.00 :   ffffffff810511e0:       endbr64
-> >     5.11 :   ffffffff810511e4:       incl    %gs:0x7efe2d5d(%rip)       # 33f48 <pcpu_hot+0x8>
-> >     0.13 :   ffffffff810511eb:       callq   0xffffffff821350d0
-> >    94.76 :   ffffffff810511f0:       decl    %gs:0x7efe2d51(%rip)       # 33f48 <pcpu_hot+0x8>
-> >     0.00 :   ffffffff810511f7:       je      0xffffffff810511fe
-> >     0.00 :   ffffffff810511f9:       jmp     0xffffffff82153320
-> >     0.00 :   ffffffff810511fe:       callq   0xffffffff82153990
-> >     0.00 :   ffffffff81051203:       jmp     0xffffffff82153320
-> > root@x1:~# perf annotate --group --stdio sched_clock
-> > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > root@x1:~# perf annotate --group sched_clock
-> > root@x1:~#
+On Mon, Aug 05, 2024 at 04:33:44PM -0700, Ian Rogers wrote:
+> On Mon, Aug 5, 2024 at 12:34 PM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Mon, Aug 05, 2024 at 08:10:12AM -0700, Ian Rogers wrote:
+> > > On Mon, Jul 22, 2024 at 10:38 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > > >
+> > > > Hello Weilin,
+> > > >
+> > > > On Fri, Jul 19, 2024 at 11:21 PM <weilin.wang@intel.com> wrote:
+> > > > >
+> > > > > From: Weilin Wang <weilin.wang@intel.com>
+> > > > >
+> > > > > Change in v18:
+> > > > >  - Update to exit 2 in TPEBS shell test when not on Intel platform.
+> > > > >  - Several updates to use EVLIST_CTL_CMD_ENABLE_TAG, EVLIST_CTL_CMD_ACK_TAG, and
+> > > > >  etc.
+> > > > >
+> > > > > Changes in v17:
+> > > > >  - Add a poll on control fifo ack_fd to ensure program returns successfully when
+> > > > >  perf record failed for any reason.
+> > > > >  - Add a check in the tpebs test to only run on Intel platforms.
+> > > > >
+> > > > > Changes in v16:
+> > > > >  - Update tpebs bash test code and variable name.
+> > > > >  - Add a check to ensure only use "-C" option when cpumap is not "-1" when
+> > > > >  forking "perf record".
+> > > > >
+> > > > > Changes in v15:
+> > > > >  - Revert changes added for python import test failure in v14 because the code
+> > > > >  works correctly with the new python build code.
+> > > > >  - Update the command line option to --record-tpebs.
+> > > > >
+> > > > > Changes in v14:
+> > > > >  - Fix the python import test failure. We cannot support PYTHON_PERF because it
+> > > > >  will trigger a chain of dependency issues if we add intel-tpebs.c to it. So,
+> > > > >  only enable tpebs functions in evsel and evlist when PYTHON_PERF is not
+> > > > >  defined.
+> > > > >  - Fix shellcheck warning for the tpebs test.
+> > > > >
+> > > > > Changes in v13:
+> > > > >  - Add document for the command line option and fix build error in non-x86_64.
+> > > > >  - Update example with non-zero retire_latency value when tpebs recording is
+> > > > >  enabled.
+> > > > >  - Add tpebs_stop() back to tpebs_set_evsel() because in hybrid platform, when
+> > > > >  the forked perf record is not killed, the reader thread does not get any
+> > > > >  sampled data from the PIPE. As a result, tpebs_set_evesel() will always return
+> > > > >  zero on retire_latency values. This does not happen on my test GNR machine.
+> > > > >  Since -I is not supported yet, I think we should add tpebs_stop() to ensure
+> > > > >  correctness for now. More investigation is required here when we work on
+> > > > >  supporting -I mode.
+> > > > >  - Rebase code on top of perf-tools-next.
+> > > > >
+> > > > > Changes in v12:
+> > > > >  - Update MTL metric JSON file to include E-Core TMA3.6 changes.
+> > > > >  - Update comments and code for better code quality. Keep tpebs_start() and
+> > > > >  tpebs_delete() at evsel level for now and add comments on these functions with
+> > > > >  more details about potential future changes. Remove tpebs_stop() call from
+> > > > >  tpebs_set_evsel(). Simplify the tpebs_start() and tpebs_stop()/tpebs_delete()
+> > > > >  interfaces. Also fixed the bugs on not freed "new" pointer and the incorrect
+> > > > >  variable value assignment to val instead of counter->val.
+> > > > >
+> > > > > Changes in v11:
+> > > > >  - Make retire_latency evsels not opened for counting. This works correctly now
+> > > > >  with the code Namhyung suggested that adjusting group read size when
+> > > > >  retire_latency evsels included in the group.
+> > > > >  - Update retire_latency value assignment using rint() to reduce precision loss
+> > > > >  while keeping code generic.
+> > > > >  - Fix the build error caused by not used variable in the test.
+> > > > >
+> > > > > Other changes in v10:
+> > > > >  - Change perf record fork from perf stat to evsel. All the major operations
+> > > > >  like tpebs start, stop, read_evsel should directly work through evsel.
+> > > > >  - Make intel-tpebs x86_64 only. This change is cross-compiled to arm64.
+> > > > >  - Put tpebs code to intel-tepbs and simplify intel-tpebs APIs to minimum number
+> > > > > of functions and variables. Update funtion name and variable names to use
+> > > > > consistent prefix. Also improve error handling.
+> > > > >  - Integrate code patch from Ian for the :R parser.
+> > > > >  - Update MTL metrics to TMA 4.8.
+> > > > >
+> > > > > V9: https://lore.kernel.org/all/20240521173952.3397644-1-weilin.wang@intel.com/
+> > > > >
+> > > > > Changes in v9:
+> > > > >  - Update the retire_latency result print and metric calculation method. Plugin
+> > > > > the value to evsel so that no special code is required.
+> > > > >  - Update --control:fifo to use pipe instead of named pipe.
+> > > > >  - Add test for TPEBS counting mode.
+> > > > >  - Update Document with more details.
+> > > > >
+> > > > > Changes in v8:
+> > > > >  - In this revision, the code is updated to base on Ian's patch on R modifier
+> > > > > parser https://lore.kernel.org/lkml/20240428053616.1125891-3-irogers@google.com/
+> > > > > After this change, there is no special code required for R modifier in
+> > > > > metricgroup.c and metricgroup.h files.
+> > > > >
+> > > > > Caveat of this change:
+> > > > >   Ideally, we will need to add special handling to skip counting events with R
+> > > > > modifier in evsel. Currently, this is not implemented so the event with :R will
+> > > > > be both counted and sampled. Usually, in a metric formula that uses retire_latency,
+> > > > > it would already require to count the event. As a result, we will endup count the
+> > > > > same event twice. This should be able to be handled properly when we finalize our
+> > > > > design on evsel R modifier support.
+> > > > >
+> > > > >  - Move TPEBS specific code out from main perf stat code to separate files in
+> > > > > util/intel-tpebs.c and util/intel-tpebs.h. [Namhyung]
+> > > > >  - Use --control:fifo to ack perf stat from forked perf record instead of sleep(2) [Namhyung]
+> > > > >  - Add introductions about TPEBS and R modifier in Documents. [Namhyung]
+> > > > >
+> > > > >
+> > > > > Changes in v7:
+> > > > >  - Update code and comments for better code quality [Namhyung]
+> > > > >  - Add a separate commit for perf data [Namhyung]
+> > > > >  - Update retire latency print function to improve alignment [Namhyung]
+> > > > >
+> > > > > Changes in v6:
+> > > > >  - Update code and add comments for better code quality [Namhyung]
+> > > > >  - Remove the added fd var and directly pass the opened fd to data.file.fd [Namhyung]
+> > > > >  - Add kill() to stop perf record when perf stat exists early [Namhyung]
+> > > > >  - Add command opt check to ensure only start perf record when -a/-C given [Namhyung]
+> > > > >  - Squash commits [Namhyung]
+> > > > >
+> > > > > Changes in v5:
+> > > > >  - Update code and add comments for better code quality [Ian]
+> > > > >
+> > > > > Changes in v4:
+> > > > >  - Remove uncessary debug print and update code and comments for better
+> > > > > readability and quality [Namhyung]
+> > > > >  - Update mtl metric json file with consistent TmaL1 and TopdownL1 metricgroup
+> > > > >
+> > > > > Changes in v3:
+> > > > >  - Remove ':' when event name has '@' [Ian]
+> > > > >  - Use 'R' as the modifier instead of "retire_latency" [Ian]
+> > > > >
+> > > > > Changes in v2:
+> > > > >  - Add MTL metric file
+> > > > >  - Add more descriptions and example to the patch [Arnaldo]
+> > > > >
+> > > > > Here is an example of running perf stat to collect a metric that uses
+> > > > > retire_latency value of event MEM_INST_RETIRED.STLB_HIT_STORES on a MTL system.
+> > > > >
+> > > > > In this simple example, there is no MEM_INST_RETIRED.STLB_HIT_STORES sample.
+> > > > > Therefore, the MEM_INST_RETIRED.STLB_HIT_STORES:p count and retire_latency value
+> > > > > are all 0.
+> > > > >
+> > > > > ./perf stat -M tma_dtlb_store -a -- sleep 1
+> > > > >
+> > > > > [ perf record: Woken up 1 times to write data ]
+> > > > > [ perf record: Captured and wrote 0.000 MB - ]
+> > > > >
+> > > > >  Performance counter stats for 'system wide':
+> > > > >
+> > > > >        181,047,168      cpu_core/TOPDOWN.SLOTS/          #      0.6 %  tma_dtlb_store
+> > > > >          3,195,608      cpu_core/topdown-retiring/
+> > > > >         40,156,649      cpu_core/topdown-mem-bound/
+> > > > >          3,550,925      cpu_core/topdown-bad-spec/
+> > > > >        117,571,818      cpu_core/topdown-fe-bound/
+> > > > >         57,118,087      cpu_core/topdown-be-bound/
+> > > > >             69,179      cpu_core/EXE_ACTIVITY.BOUND_ON_STORES/
+> > > > >              4,582      cpu_core/MEM_INST_RETIRED.STLB_HIT_STORES/
+> > > > >         30,183,104      cpu_core/CPU_CLK_UNHALTED.DISTRIBUTED/
+> > > > >         30,556,790      cpu_core/CPU_CLK_UNHALTED.THREAD/
+> > > > >            168,486      cpu_core/DTLB_STORE_MISSES.WALK_ACTIVE/
+> > > > >               0.00 MEM_INST_RETIRED.STLB_HIT_STORES:p       0        0
+> > > > >
+> > > > >        1.003105924 seconds time elapsed
+> > > > >
+> > > > > v1:
+> > > > > TPEBS is one of the features provided by the next generation of Intel PMU.
+> > > > > Please refer to Section 8.4.1 of "Intel® Architecture Instruction Set Extensions
+> > > > > Programming Reference" [1] for more details about this feature.
+> > > > >
+> > > > > This set of patches supports TPEBS in counting mode. The code works in the
+> > > > > following way: it forks a perf record process from perf stat when retire_latency
+> > > > > of one or more events are used in a metric formula. Perf stat would send a
+> > > > > SIGTERM signal to perf record before it needs the retire latency value for
+> > > > > metric calculation. Perf stat will then process sample data to extract the
+> > > > > retire latency data for metric calculations. Currently, the code uses the
+> > > > > arithmetic average of retire latency values.
+> > > > >
+> > > > > [1] https://www.intel.com/content/www/us/en/content-details/812218/intel-architecture-instruction-set-extensions-programming-reference.html?wapkw=future%20features
+> > > > >
+> > > > >
+> > > > >
+> > > > >
+> > > > > Ian Rogers (1):
+> > > > >   perf parse-events: Add a retirement latency modifier
+> > > > >
+> > > > > Weilin Wang (7):
+> > > > >   perf data: Allow to use given fd in data->file.fd
+> > > > >   perf stat: Fork and launch perf record when perf stat needs to get
+> > > > >     retire latency value for a metric.
+> > > > >   perf stat: Plugin retire_lat value from sampled data to evsel
+> > > > >   perf vendor events intel: Add MTL metric json files
+> > > > >   perf stat: Add command line option for enabling tpebs recording
+> > > > >   perf Document: Add TPEBS to Documents
+> > > > >   perf test: Add test for Intel TPEBS counting mode
+> > > >
+> > > > Thanks for your persistence!
+> > > >
+> > > > Reviewed-by: Namhyung Kim <namhyung@kernel.org>
+> > >
+> > > Ping.
+> >
+> > I guess Namhyung's reviewed-by should suffice, but since you're pinging
+> > and I saw previous comments about this serie, would it be possible to
+> > get your Reviewed-by as well?
 > 
-> Oh ok, it was not enough.  It should call evsel__output_resort() after
-> hists__match() and hists__link().  Use this instead.
+> I'm happy with most of the changes and they can have my reviewed-by.
 
-Ok, this works:
+Thanks.
 
-Before this patch:
+> I'm not happy with:
+> perf stat: Fork and launch 'perf record' when 'perf stat' needs to get
+> retire latency value for a metric.
 
-root@x1:~# perf annotate --stdio sched_clock
- Percent |      Source code & Disassembly of vmlinux for cpu_atom/mem-stores/P (147 samples, percent: local period)
--------------------------------------------------------------------------------------------------------------------
-         : 0                0xffffffff810511e0 <sched_clock>:
-    0.00 :   ffffffff810511e0:       endbr64
-    5.11 :   ffffffff810511e4:       incl    %gs:0x7efe2d5d(%rip)       # 33f48 <pcpu_hot+0x8>
-    0.13 :   ffffffff810511eb:       callq   0xffffffff821350d0
-   94.76 :   ffffffff810511f0:       decl    %gs:0x7efe2d51(%rip)       # 33f48 <pcpu_hot+0x8>
-    0.00 :   ffffffff810511f7:       je      0xffffffff810511fe
-    0.00 :   ffffffff810511f9:       jmp     0xffffffff82153320
-    0.00 :   ffffffff810511fe:       callq   0xffffffff82153990
-    0.00 :   ffffffff81051203:       jmp     0xffffffff82153320
-root@x1:~# perf annotate --group --stdio sched_clock
-root@x1:~#
+I don't like it either, but I couldn't find the time to engage in this
+discussion to try to offer an alternative patch and since Namhyung had
+provided his reviewed-by and you pinged me, I felt compelled to move
+forward on this.
 
-After:
+> so please leave it off there.
 
-root@x1:~# perf annotate --group --stdio sched_clock
- Percent                 |      Source code & Disassembly of vmlinux for cpu_atom/mem-loads,ldlat=30/P, cpu_atom/mem-stores/P, dummy:u (0 samples, percent: local period)
--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                         : 0                0xffffffff810511e0 <sched_clock>:
-    0.00    0.00    0.00 :   ffffffff810511e0:       endbr64
-    0.00    5.11    0.00 :   ffffffff810511e4:       incl    %gs:0x7efe2d5d(%rip)       # 33f48 <pcpu_hot+0x8>
-    0.00    0.13    0.00 :   ffffffff810511eb:       callq   0xffffffff821350d0
-    0.00   94.76    0.00 :   ffffffff810511f0:       decl    %gs:0x7efe2d51(%rip)       # 33f48 <pcpu_hot+0x8>
-    0.00    0.00    0.00 :   ffffffff810511f7:       je      0xffffffff810511fe
-    0.00    0.00    0.00 :   ffffffff810511f9:       jmp     0xffffffff82153320
-    0.00    0.00    0.00 :   ffffffff810511fe:       callq   0xffffffff82153990
-    0.00    0.00    0.00 :   ffffffff81051203:       jmp     0xffffffff82153320
-root@x1:~#
+So, what are you proposing, that we process up to some patch?
 
-One example with samples for the first two events:
-
-root@x1:~# perf annotate --group --stdio2
-Samples: 2K of events 'cpu_atom/mem-loads,ldlat=30/P, cpu_atom/mem-stores/P, dummy:u', 4000 Hz, Event count (approx.): 22892183, [percent: local period]
-cgroup_rstat_updated() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/vmlinux
-Percent                       0xffffffff8124e080 <cgroup_rstat_updated>:
-   0.00    0.24    0.00         endbr64                         
-                              → callq   __fentry__              
-   0.00   99.76    0.00         pushq   %r15                    
-                                movq    $0x251d4,%rcx           
-                                pushq   %r14                    
-                                movq    %rdi,%r14               
-                                pushq   %r13                    
-                                movslq  %esi,%r13               
-                                pushq   %r12                    
-                                pushq   %rbp                    
-                                pushq   %rbx                    
-                                subq    $0x10,%rsp              
-                                cmpq    $0x2000,%r13            
-                              ↓ jae     17f                     
-                          31:   movq    0x3d0(%r14),%rbx        
-                                movq    -0x7d3fb360(, %r13, 8),%r12
-                                cmpq    $0x2000,%r13            
-                              ↓ jae     19b                     
-  25.00    0.00    0.00   4d:   cmpq    $0,0x88(%r12, %rbx)     
-                              ↓ je      6b                      
-                                addq    $0x10,%rsp              
-                                popq    %rbx                    
-                                popq    %rbp                    
-                                popq    %r12                    
-  75.00    0.00    0.00         popq    %r13                    
-                                popq    %r14                    
-                                popq    %r15                    
-                              → jmp     __x86_return_thunk      
-<SNIP>
-
-And then skipping "empty" events:
-
-root@x1:~# perf annotate --group --skip-empty --stdio2 cgroup_rstat_updated | head -35
-Samples: 4  of events 'cpu_atom/mem-loads,ldlat=30/P, cpu_atom/mem-stores/P', 4000 Hz, Event count (approx.): 31851, [percent: local period]
-cgroup_rstat_updated() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/vmlinux
-Percent               0xffffffff8124e080 <cgroup_rstat_updated>:
-   0.00    0.24         endbr64                 
-                      → callq   __fentry__      
-   0.00   99.76         pushq   %r15            
-                        movq    $0x251d4,%rcx   
-                        pushq   %r14            
-                        movq    %rdi,%r14       
-                        pushq   %r13            
-                        movslq  %esi,%r13       
-                        pushq   %r12            
-                        pushq   %rbp            
-                        pushq   %rbx            
-                        subq    $0x10,%rsp      
-                        cmpq    $0x2000,%r13    
-                      ↓ jae     17f             
-                  31:   movq    0x3d0(%r14),%rbx
-                        movq    -0x7d3fb360(, %r13, 8),%r12
-                        cmpq    $0x2000,%r13    
-                      ↓ jae     19b             
-  25.00    0.00   4d:   cmpq    $0,0x88(%r12, %rbx)
-                      ↓ je      6b              
-                        addq    $0x10,%rsp      
-                        popq    %rbx            
-                        popq    %rbp            
-                        popq    %r12            
-  75.00    0.00         popq    %r13            
-                        popq    %r14            
-                        popq    %r15            
-                      → jmp     __x86_return_thunk
-                  6b:   addq    %r12,%rcx       
-                        movq    %rcx,%rdi       
-                        movq    %rcx,(%rsp)     
-                      → callq   *ffffffff82151500
-root@x1:~#
-
-So, I haven't done further analysis but I think this is a separate
-issue, right?
-
-Thanks for the fix!
-
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+For now I'm removing the whole series from perf-tools-next.
 
 - Arnaldo
+ 
+> Context: originally the patches aimed to abstract everything inside of
+> the evsel, now builtin-stat is manually starting and ending the
+> sub-process and has to be aware of TPEBS. There are ugly architectural
+> dependencies. My reviewed-by was correct on the earlier version, as
+> you could make a tpebs evsel just like any... other, open, close, read
+> it, etc. This would be useful say in a python script. This version to
+> my eyes is worse as all TPEBS dependencies are made explicit and the
+> caller needs to be aware of TPEBS. I understand Weilin was asked to
+> make some of the changes, and there was a desire for efficiency, but I
+> think things were better in earlier versions.
+> 
+> Thanks,
+> Ian
