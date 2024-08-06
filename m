@@ -1,142 +1,97 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34AA43ABD;
-	Tue,  6 Aug 2024 16:59:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 882BC433D0;
+	Tue,  6 Aug 2024 17:05:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722963547; cv=none; b=qxVRa2yUOxHsv3nveH7WSKxHIP11bjkQ5s0LJL1GBoHNY/z0iJ+gQNutRXg6e1XlcQ9M8lVXRtiPoWkeDza6rWUydsB+6hzfN/8sCziiFX3jiYkggJBsyOZnFZXPEYC7p/IVFrkSVpUx8BOlHTNWN0qSr/fIYWnZXRXQ5LREVAc=
+	t=1722963902; cv=none; b=BWS5/ZSl+kNPAs36SdpS7o62Jn/GI0k2T75dPOl+tpIRXDSv3WqbLBkWjwOSZKTpAIQ5sq64BUrPOxr4vfx31yqvzuI5BPZW0QGk7WJZgJ4wdXjhFpwC3IU+F5hfXLw16PXbCd/h2smz7+kZmSyiqeAlSdIYVVTxZTVlCfO+0KE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722963547; c=relaxed/simple;
-	bh=qvV8JGLW2dG3LsVakdiuL3cEqYYt8wgtT64hscNRGjQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oByqB3UTNqfPffGDEM93ipKhwq5uGWJ7hLIB9wHuAyad+XTYnlAJt1Ge35cLs9f9SWpBeaWDMkcXAbuZz8GxpYpKkjYWzey4ZxjyBAEBYtIWGcTwvrXwUzS79pBAJH1LqUF96Q6XJVkjdd/q/s0maaJkoV6QFy+PW3NWjpXtGs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7aa212c1c9so120909866b.2;
-        Tue, 06 Aug 2024 09:59:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722963544; x=1723568344;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LP89uLPrkrqKPZrtmF0GkPrurXotyMbv3q8lZc21hMg=;
-        b=kT5D+hxxzw4n844Y8/ZMO/TrRT5dOQbS1OxxqdEO/LiwL78s3j5xzdIE4OM0pa5MVa
-         0UT+RGef28K2ZmWJEVJHRSEHdfhtX8GWnbd1wocfD3pGVSf+T7S1Vr1UTO3fmGWOm+Wq
-         Qb9lVw/vu2WVqvv5+okG6KuzpXW5H0RWH98+3+Trg++WYGupOfqNr2aPNYi+UeDp/sWN
-         TpZDSpUVWBnYVD5Vw4FrLtfAHIhlUreOzTZ65eaYHm/mJxnFAzvBtQhXzliMCKfRyvuD
-         694slJwJnAuZYoBOlHAbT2g3HWiF0KAx6v6Pnv1fZHBxlp+LwFx3VaLNVIu5pN3tqWQQ
-         TuQw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhJdKhie2Ktd3CM1/Go6MNC+eDpoFsw0f39HkZ/g0hS7n6ALCeICWWZ88XQ0acJIo+WMxrGWx6ODKdM7fKknhLPw==@vger.kernel.org, AJvYcCWr9+NCqxz0o8B8HxXwTvTFKB8GiQJFwZHxJ4hQw6pN0KWexJTmuCYuZhAiOSsmAqbb8pLlG39F1lKdhG0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yys5hQXnRkQMZmFrOvGqSr3WIv2uFbFWI6t7SdFnPmA/IFET5+Z
-	CVqmghpO6qGfgT00ZO5KapRVgpmo61lAVzSlymm4z9xP0+7I6iKL
-X-Google-Smtp-Source: AGHT+IHAbswMI9BxH8YR9ZDX8JQAr+8YnEzv06RoxpEPlxTeePo/ZszVLZvNdGIUGgyoaZrjQSFGHg==
-X-Received: by 2002:a17:906:da8a:b0:a77:dd1c:6274 with SMTP id a640c23a62f3a-a7dc5124d64mr849584566b.69.1722963544050;
-        Tue, 06 Aug 2024 09:59:04 -0700 (PDT)
-Received: from localhost (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9d433e8sm561863966b.135.2024.08.06.09.59.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 09:59:03 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
+	s=arc-20240116; t=1722963902; c=relaxed/simple;
+	bh=J89hljmcuXHDqlr6QTmQWGz1fYUSlBmB823jfyPm0RQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OMvnXAL2Hmb3+ShZS/XBCvK2AUFPwB0sTdTld2RHzoucGrnf4DfxksAev9rfubCoS4RmzQ+2Dy9HNubG3Y2+wQnvqXJCbk4wPBDQ6ouhP9M6XPEIcTc2JkowpddbICeiQWX6Zh+Wagf6lt30JvdGzniOfaYaxmp/n1In3n2fV2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciRFEKNn; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciRFEKNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7285CC4AF0C;
+	Tue,  6 Aug 2024 17:05:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722963902;
+	bh=J89hljmcuXHDqlr6QTmQWGz1fYUSlBmB823jfyPm0RQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ciRFEKNnEB8G5GUHNKoJYeSGPaKcRyHKOW3nFgp7mdUV6WPk3M/ghy8UeaG8QyVlf
+	 jgaIP2g9IDNnBuCWswHyZGp6bc7blRpoDS70Kgif/eNGBqGfNz9xtwm6qT7f6RBk0R
+	 Pcj3v9B+9BAoI2yF8k+1WbsVVanH4RNzIzMdNxIMiXi7ezN4b5CQSlCphz+oKzew39
+	 aXCuG9wryXyfjhvX2062B7xpXTYwKhAc7T/oQb4+6iOKT268JDyi3pM5vkzT+B++cQ
+	 PefPwLKN7EJqWnxNxt5PveUNpFFoZPmbY/Su4gz8hvYs+JW4jpLSeP+y5/PvIr7/u6
+	 svQxKvuIhAw9A==
+Date: Tue, 6 Aug 2024 14:04:58 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Eric Lin <eric.lin@sifive.com>
+Cc: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Cc: leit@meta.com,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Sandipan Das <sandipan.das@amd.com>,
-	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
-	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
-Subject: [PATCH v3] perf/x86/amd: Warn only on new bits set
-Date: Tue,  6 Aug 2024 09:58:48 -0700
-Message-ID: <20240806165848.3397232-1-leitao@debian.org>
-X-Mailer: git-send-email 2.43.5
+	Kan Liang <kan.liang@linux.intel.com>,
+	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+	James Clark <james.clark@linaro.org>,
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Charles Ci-Jyun Wu <dminus@andestech.com>,
+	Locus Wei-Han Chen <locus84@andestech.com>,
+	Atish Patra <atishp@rivosinc.com>,
+	Ji Sheng Teoh <jisheng.teoh@starfivetech.com>,
+	Inochi Amaoto <inochiama@outlook.com>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Xu Yang <xu.yang_2@nxp.com>, Sandipan Das <sandipan.das@amd.com>,
+	Guilherme Amadio <amadio@gentoo.org>,
+	Changbin Du <changbin.du@huawei.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-riscv@lists.infradead.org, vincent.chen@sifive.com,
+	greentime.hu@sifive.com
+Subject: Re: [PATCH v1 4/5] perf pmu-events: Remove duplicated riscv firmware
+ event
+Message-ID: <ZrJXunNsGiZVVtpE@x1>
+References: <20240805194424.597244-1-irogers@google.com>
+ <20240805194424.597244-4-irogers@google.com>
+ <CAPqJEFpiy307B4OBHK4WJGjgbVm_woUrdZ+Vy_LSdQ=ECqZX-Q@mail.gmail.com>
+ <CAP-5=fWDmdAkJSoncedZTaSgFwG+p3--jywDj9krnXSfkhh6dQ@mail.gmail.com>
+ <ZrInOywRKzRmjtKF@x1>
+ <ZrIqR07cYJnhcTq8@x1>
+ <CAPqJEFoFfCG0_fqkVqakUK7CWs_8WREpmAd+f3H26UasGRPz2Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPqJEFoFfCG0_fqkVqakUK7CWs_8WREpmAd+f3H26UasGRPz2Q@mail.gmail.com>
 
-Warning at every leaking bits can cause a flood of message, triggering
-various stall-warning mechanisms to fire, including CSD locks, which
-makes the machine to be unusable.
+On Tue, Aug 06, 2024 at 11:50:01PM +0800, Eric Lin wrote:
+> On Tue, Aug 6, 2024 at 9:51 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-Track the bits that are being leaked, and only warn when a new bit is
-set.
+> > On Tue, Aug 06, 2024 at 10:38:07AM -0300, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Aug 05, 2024 at 09:05:26PM -0700, Ian Rogers wrote:
+> > > > On Mon, Aug 5, 2024 at 8:54 PM Eric Lin <eric.lin@sifive.com> wrote:
 
-That said, this patch will help with the following issues:
+> > > > > I've sent a patch to fix it and the patch already merged. Thanks.
 
-1) It will tell us which bits are being set, so, it is easy to
-   communicate it back to vendor, and to do a root-cause analyzes.
+> > Also, already merged where? Upstream? In the riscv kernel tree? where?
 
-2) It avoid the machine to be unusable, because, worst case
-   scenario, the user gets less than 60 WARNs (one per unhandled bit).
+> The patch already merged to Linux upstream:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=63ba5b0fb4f54db256ec43b3062b2606b383055d
 
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Reviewed-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
----
-Changelog:
-v3:
- * Avoid potential false reporting when concurrent execution occurs on
-   different CPUs (Paul E. McKenney)
+Ok, I'm resolving this with removing Ian's patch and doing a merge with
+upstream to pick this patch and keep perf-tools-next building.
 
-v2:
-  * Improved the patch description, getting the benefits in words.
-  * https://lore.kernel.org/all/20240731154651.1555511-1-leitao@debian.org/
-
-v1:
-  * https://lore.kernel.org/all/20240524141021.3889002-1-leitao@debian.org/
-
-
- arch/x86/events/amd/core.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 920e3a640cad..b4a1a2576510 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
- static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- {
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	static atomic64_t status_warned = ATOMIC64_INIT(0);
-+	u64 reserved, status, mask, new_bits, prev_bits;
- 	struct perf_sample_data data;
- 	struct hw_perf_event *hwc;
- 	struct perf_event *event;
- 	int handled = 0, idx;
--	u64 reserved, status, mask;
- 	bool pmu_enabled;
- 
- 	/*
-@@ -1012,7 +1013,12 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
- 	 * the corresponding PMCs are expected to be inactive according to the
- 	 * active_mask
- 	 */
--	WARN_ON(status > 0);
-+	if (status > 0) {
-+		prev_bits = atomic64_fetch_or(status, &status_warned);
-+		// A new bit was set for the very first time.
-+		new_bits = status & ~prev_bits;
-+		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
-+	}
- 
- 	/* Clear overflow and freeze bits */
- 	amd_pmu_ack_global_status(~status);
--- 
-2.43.5
-
+- Arnaldo
