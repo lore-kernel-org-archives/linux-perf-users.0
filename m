@@ -1,142 +1,142 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8912B201273;
-	Tue,  6 Aug 2024 15:57:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E34AA43ABD;
+	Tue,  6 Aug 2024 16:59:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722959855; cv=none; b=pGxmPPdGTywIYD0tHm0ROiraXoEvdUD2s2XB/sfKQpE4Kh/D7gexHZZZAYQ37hBub3pqwhOP+LejS2XNMWjWtUKYR+GxVCiEpy0uFktn61O4ShzRIJIz/df4h8zlXbsc5vm+DdY5A11nqcG+YZWpVvBS4TtqW9z7bd/D16Zwndo=
+	t=1722963547; cv=none; b=qxVRa2yUOxHsv3nveH7WSKxHIP11bjkQ5s0LJL1GBoHNY/z0iJ+gQNutRXg6e1XlcQ9M8lVXRtiPoWkeDza6rWUydsB+6hzfN/8sCziiFX3jiYkggJBsyOZnFZXPEYC7p/IVFrkSVpUx8BOlHTNWN0qSr/fIYWnZXRXQ5LREVAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722959855; c=relaxed/simple;
-	bh=T3lYCZNDTOox5kJQOOR6Dbvex/BUJB0U27xJgGtdjGk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OBK3GJ8DQRdwcspSgHqNTstOHKw2+z/EBXdBi/A87G1wEhVwjH6rF2wGeSAzWOfuJVDNVpSQBaGqr1WXtvQwzyfFJxPruVuoYxMUPvYxhdibm+hHQ5sFRm80i+o7uHVVcBkD1fPHyVQq+2DpoJRHtdS6Xeti5f2ZHrz5beT27To=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LgOyeNaw; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LgOyeNaw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1722959854; x=1754495854;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=T3lYCZNDTOox5kJQOOR6Dbvex/BUJB0U27xJgGtdjGk=;
-  b=LgOyeNawwFROUasGgZPQZAN3G4ZWiR++U1fdbgyIuxKYwIulmVNJ1ny2
-   OLtcP6+U9FEPPP3LYawHjSLU9pPwFSUR+yW+nH+X0Ac8BQCUPliiSZkUl
-   EWQWO3d6SUKMcvBzHgoARPKn27fvhthUoFm2gJvVTCFlqMJ8ceWIcnrdP
-   6vK/7mL23zfBlvmfppnu6gok1zY96Su9u2Csea6fejf080n2sF8ntgZv9
-   b0YtMAXNhZzV8V2BwoMFlmtVtgm3oZf3KhIWaOOlpvEkZsz+NtDQ2i+pk
-   kYDHSQDdUbkaijgKW9XnTxRWmRdSqdnI1u3o1pSgcWFa4NBjK3puCht2Z
-   w==;
-X-CSE-ConnectionGUID: UUkCMN4lRVmWCFlmdAV/kw==
-X-CSE-MsgGUID: tKtC/4N/RtiXokUXGxvFBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="43514306"
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="43514306"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:56:30 -0700
-X-CSE-ConnectionGUID: KmWNhmmERSCv4N7Km3j1ew==
-X-CSE-MsgGUID: AqnACi6NS2CldDv+WSzWTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="56631503"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.94.248.17])
-  by fmviesa010-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 08:56:24 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
+	s=arc-20240116; t=1722963547; c=relaxed/simple;
+	bh=qvV8JGLW2dG3LsVakdiuL3cEqYYt8wgtT64hscNRGjQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oByqB3UTNqfPffGDEM93ipKhwq5uGWJ7hLIB9wHuAyad+XTYnlAJt1Ge35cLs9f9SWpBeaWDMkcXAbuZz8GxpYpKkjYWzey4ZxjyBAEBYtIWGcTwvrXwUzS79pBAJH1LqUF96Q6XJVkjdd/q/s0maaJkoV6QFy+PW3NWjpXtGs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a7aa212c1c9so120909866b.2;
+        Tue, 06 Aug 2024 09:59:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722963544; x=1723568344;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LP89uLPrkrqKPZrtmF0GkPrurXotyMbv3q8lZc21hMg=;
+        b=kT5D+hxxzw4n844Y8/ZMO/TrRT5dOQbS1OxxqdEO/LiwL78s3j5xzdIE4OM0pa5MVa
+         0UT+RGef28K2ZmWJEVJHRSEHdfhtX8GWnbd1wocfD3pGVSf+T7S1Vr1UTO3fmGWOm+Wq
+         Qb9lVw/vu2WVqvv5+okG6KuzpXW5H0RWH98+3+Trg++WYGupOfqNr2aPNYi+UeDp/sWN
+         TpZDSpUVWBnYVD5Vw4FrLtfAHIhlUreOzTZ65eaYHm/mJxnFAzvBtQhXzliMCKfRyvuD
+         694slJwJnAuZYoBOlHAbT2g3HWiF0KAx6v6Pnv1fZHBxlp+LwFx3VaLNVIu5pN3tqWQQ
+         TuQw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhJdKhie2Ktd3CM1/Go6MNC+eDpoFsw0f39HkZ/g0hS7n6ALCeICWWZ88XQ0acJIo+WMxrGWx6ODKdM7fKknhLPw==@vger.kernel.org, AJvYcCWr9+NCqxz0o8B8HxXwTvTFKB8GiQJFwZHxJ4hQw6pN0KWexJTmuCYuZhAiOSsmAqbb8pLlG39F1lKdhG0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yys5hQXnRkQMZmFrOvGqSr3WIv2uFbFWI6t7SdFnPmA/IFET5+Z
+	CVqmghpO6qGfgT00ZO5KapRVgpmo61lAVzSlymm4z9xP0+7I6iKL
+X-Google-Smtp-Source: AGHT+IHAbswMI9BxH8YR9ZDX8JQAr+8YnEzv06RoxpEPlxTeePo/ZszVLZvNdGIUGgyoaZrjQSFGHg==
+X-Received: by 2002:a17:906:da8a:b0:a77:dd1c:6274 with SMTP id a640c23a62f3a-a7dc5124d64mr849584566b.69.1722963544050;
+        Tue, 06 Aug 2024 09:59:04 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-007.fbsv.net. [2a03:2880:30ff:7::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a7dc9d433e8sm561863966b.135.2024.08.06.09.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 09:59:03 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Hendrik Brueckner <brueckner@linux.ibm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Mike Leach <mike.leach@linaro.org>,
-	James Clark <james.clark@arm.com>,
-	coresight@lists.linaro.org,
-	linux-arm-kernel@lists.infradead.org,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	Jonathan Cameron <jonathan.cameron@huawei.com>,
-	Will Deacon <will@kernel.org>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Andi Kleen <ak@linux.intel.com>,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH V11 10/10] perf intel-pt: Add a test for pause / resume
-Date: Tue,  6 Aug 2024 18:55:14 +0300
-Message-Id: <20240806155514.17900-11-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240806155514.17900-1-adrian.hunter@intel.com>
-References: <20240806155514.17900-1-adrian.hunter@intel.com>
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Cc: leit@meta.com,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Sandipan Das <sandipan.das@amd.com>,
+	linux-perf-users@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM),
+	linux-kernel@vger.kernel.org (open list:PERFORMANCE EVENTS SUBSYSTEM)
+Subject: [PATCH v3] perf/x86/amd: Warn only on new bits set
+Date: Tue,  6 Aug 2024 09:58:48 -0700
+Message-ID: <20240806165848.3397232-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
-Add a simple sub-test to the "Miscellaneous Intel PT testing" test to
-check pause / resume.
+Warning at every leaking bits can cause a flood of message, triggering
+various stall-warning mechanisms to fire, including CSD locks, which
+makes the machine to be unusable.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Acked-by: Ian Rogers <irogers@google.com>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Track the bits that are being leaked, and only warn when a new bit is
+set.
+
+That said, this patch will help with the following issues:
+
+1) It will tell us which bits are being set, so, it is easy to
+   communicate it back to vendor, and to do a root-cause analyzes.
+
+2) It avoid the machine to be unusable, because, worst case
+   scenario, the user gets less than 60 WARNs (one per unhandled bit).
+
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+Signed-off-by: Breno Leitao <leitao@debian.org>
 ---
- tools/perf/tests/shell/test_intel_pt.sh | 28 +++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Changelog:
+v3:
+ * Avoid potential false reporting when concurrent execution occurs on
+   different CPUs (Paul E. McKenney)
 
-diff --git a/tools/perf/tests/shell/test_intel_pt.sh b/tools/perf/tests/shell/test_intel_pt.sh
-index 723ec501f99a..e359db0d0ff2 100755
---- a/tools/perf/tests/shell/test_intel_pt.sh
-+++ b/tools/perf/tests/shell/test_intel_pt.sh
-@@ -644,6 +644,33 @@ test_pipe()
- 	return 0
- }
- 
-+test_pause_resume()
-+{
-+	echo "--- Test with pause / resume ---"
-+	if ! perf_record_no_decode -o "${perfdatafile}" -e intel_pt/aux-action=start-paused/u uname ; then
-+		echo "SKIP: pause / resume is not supported"
-+		return 2
-+	fi
-+	if ! perf_record_no_bpf -o "${perfdatafile}" \
-+			-e intel_pt/aux-action=start-paused/u \
-+			-e instructions/period=50000,aux-action=resume,name=Resume/u \
-+			-e instructions/period=100000,aux-action=pause,name=Pause/u uname  ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	if ! perf script -i "${perfdatafile}" --itrace=b -Fperiod,event | \
-+			awk 'BEGIN {paused=1;branches=0}
-+			     /Resume/ {paused=0}
-+			     /branches/ {if (paused) exit 1;branches=1}
-+			     /Pause/ {paused=1}
-+			     END {if (!branches) exit 1}' ; then
-+		echo "perf record with pause / resume failed"
-+		return 1
-+	fi
-+	echo OK
-+	return 0
-+}
-+
- count_result()
+v2:
+  * Improved the patch description, getting the benefits in words.
+  * https://lore.kernel.org/all/20240731154651.1555511-1-leitao@debian.org/
+
+v1:
+  * https://lore.kernel.org/all/20240524141021.3889002-1-leitao@debian.org/
+
+
+ arch/x86/events/amd/core.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 920e3a640cad..b4a1a2576510 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
  {
- 	if [ "$1" -eq 2 ] ; then
-@@ -672,6 +699,7 @@ test_power_event			|| ret=$? ; count_result $ret ; ret=0
- test_no_tnt				|| ret=$? ; count_result $ret ; ret=0
- test_event_trace			|| ret=$? ; count_result $ret ; ret=0
- test_pipe				|| ret=$? ; count_result $ret ; ret=0
-+test_pause_resume			|| ret=$? ; count_result $ret ; ret=0
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	static atomic64_t status_warned = ATOMIC64_INIT(0);
++	u64 reserved, status, mask, new_bits, prev_bits;
+ 	struct perf_sample_data data;
+ 	struct hw_perf_event *hwc;
+ 	struct perf_event *event;
+ 	int handled = 0, idx;
+-	u64 reserved, status, mask;
+ 	bool pmu_enabled;
  
- cleanup
+ 	/*
+@@ -1012,7 +1013,12 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+ 	 * the corresponding PMCs are expected to be inactive according to the
+ 	 * active_mask
+ 	 */
+-	WARN_ON(status > 0);
++	if (status > 0) {
++		prev_bits = atomic64_fetch_or(status, &status_warned);
++		// A new bit was set for the very first time.
++		new_bits = status & ~prev_bits;
++		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
++	}
  
+ 	/* Clear overflow and freeze bits */
+ 	amd_pmu_ack_global_status(~status);
 -- 
-2.34.1
+2.43.5
 
