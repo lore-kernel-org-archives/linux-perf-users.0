@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 078D33BB30;
-	Tue,  6 Aug 2024 22:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D90171E6A;
+	Tue,  6 Aug 2024 22:50:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722984617; cv=none; b=Rj3uNY73RUQaL0JvAIdT29D1/P4CznUvXLW3zVihmjxcHn30v3Lc/NEhf9uJjRMnWNvXBVJm/vI+zhwdElMej97eBPIySveV6Xz9JmGiZH79mrCKzbPKDd8RhnQBElWoR8g1o/t2OKdxhuoEShJJUdfZJTKEJz0MCWO2mkjp7Hg=
+	t=1722984617; cv=none; b=u0mNJMuL5CdAEQLQgALFHzxFT7RDif0LBmq803oN54hO/UTSEwKi4lXY1+vWHs7eSjtQPY0kLMuj3KmHb1IWudsWV/g119LJwN8jbqYUsYcFntb5uUDTARw/lnJf4/o0//DWuRouXEruV8TyTcbVBEjKLbEFUoK3MOgJ3TzZY2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1722984617; c=relaxed/simple;
-	bh=Uuzmt+G1XXTtnYH31M+MA+kwz1Lvn26M+bDbpb4G2dM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=afKPXiwZkGRcO3jqFuPGQdieak/jeFF8pLw7AVZUJ8UJB0yyDPWzheGW58WO7LxhUMa3ihoM/wR7f1IP4izmzBdgIrZ7y/7p45c+VHcYeRiq8kOeT8vyTUsqMfgmTsTDnkFu81wMRPxhERIu9Kw5JipOZYkUIUjcFevnw+Wq2lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oA9Udird; arc=none smtp.client-ip=10.30.226.201
+	bh=v9hl09YwvwDKQBR548tw28KoGQkagQPG3RxEMj+UYWU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=kOU+PKoVK+NebbovyhbO9rUkRVCmUAA1sZa7bmNvtXwMu8RLg9o2kY2NE4kd2XraHZyBEb0EknCg5FzighQJU7wnGpOc0AMJSKBui2Zccv4EUA8lk1Al4wS6/WMu0LOtO1VicB9ZNkdj8CRIAxF8mET+i9CH5oi4+WUzTQkhHno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GRniAGc3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oA9Udird"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4301BC32786;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GRniAGc3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A85D6C4AF0F;
 	Tue,  6 Aug 2024 22:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722984616;
-	bh=Uuzmt+G1XXTtnYH31M+MA+kwz1Lvn26M+bDbpb4G2dM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=oA9UdirdUjdmup4rGaYLV/AaZ+eCS+Ktn/6dKTJ0XMFiqhDKNL0DpcUYYFVn3Jd6Z
-	 7SHHIawMDlC4n/hJDi4YSNyFrFr3zwvdqHCKrapYLIwt00hEddpQ0droQbsSremEvg
-	 ocWhI/FmEvvBs4Ln89cvItqFT+U38TZrPv0DFsaNOVs2MMaRMm4T+6QUx2mqSWb4JE
-	 4Ii81a7NULbyC+uWaRCDO+5wRicqAwswFE3Y0JaJKXM5B7ivxfFuVh6Qf9aA1SMJO6
-	 wZaxFaIkHehc3d8rlupwzCPvCDAXj11ZzEJZTRV9sbgqq1ZdL39SSOLf3Se567cNqX
-	 wBdSXiCmtaesg==
+	s=k20201202; t=1722984617;
+	bh=v9hl09YwvwDKQBR548tw28KoGQkagQPG3RxEMj+UYWU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=GRniAGc3EUDRyWbSi8tOBgjJzI6EGSEdgzzTGSqZi93j41itqSLfTQueDJA2SyNX/
+	 IlJteL79HgDMwv6GOr5l8zkbRi4WyDDgn5Qk9VHih01O68CfS1niIJRXwN8Yl+3yCO
+	 FtYYoh5ZTaHk/Ic6A/zeJ6liMlFNlkrcW9nDzF2NQnHbg9umboVEmvmgma8ymtsMEu
+	 wW1YLeWRtAmP7PNK5sg6/jZ3HvYClFWMQbn6GSioK+WVljlwhEjW1lOOkab/w9iuob
+	 TV0Y5SfcYOG56f1U4tCcKgo/pMGhIO11IyNJ75GDn1WfXWW+H4WPL+rIj0BRLg13hE
+	 Q/7w7Q8UwwArA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Ian Rogers <irogers@google.com>,
@@ -34,11 +35,14 @@ Cc: Ian Rogers <irogers@google.com>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for v6.11
-Date: Tue,  6 Aug 2024 15:50:03 -0700
-Message-ID: <20240806225013.126130-1-namhyung@kernel.org>
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Jani Nikula <jani.nikula@linux.intel.com>
+Subject: [PATCH 01/10] perf tools: Add tools/include/uapi/README
+Date: Tue,  6 Aug 2024 15:50:04 -0700
+Message-ID: <20240806225013.126130-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+In-Reply-To: <20240806225013.126130-1-namhyung@kernel.org>
+References: <20240806225013.126130-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,54 +51,97 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Write down the reason why we keep a copy of headers to the README file
+instead of adding it to every commit messages.
 
-This is the usual sync up in header files we keep in tools directory.
-I put a file to give the reason of this work and not to repeat it in
-every commit message.  The changes will be carried in the perf-tools
-tree.
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (10):
-  perf tools: Add tools/include/uapi/README
-  tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
-  tools/include: Sync uapi/linux/kvm.h with the kernel sources
-  tools/include: Sync uapi/linux/perf.h with the kernel sources
-  tools/include: Sync uapi/sound/asound.h with the kernel sources
-  tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
-  tools/include: Sync network socket headers with the kernel sources
-  tools/include: Sync filesystem headers with the kernel sources
-  tools/include: Sync x86 headers with the kernel sources
-  tools/include: Sync arm64 headers with the kernel sources
-
- tools/arch/arm64/include/asm/cputype.h        |  10 +
- tools/arch/arm64/include/uapi/asm/unistd.h    |  24 +-
- tools/arch/powerpc/include/uapi/asm/kvm.h     |   3 +
- tools/arch/x86/include/asm/cpufeatures.h      | 803 +++++++++---------
- tools/arch/x86/include/asm/msr-index.h        |  11 +
- tools/arch/x86/include/uapi/asm/kvm.h         |  49 ++
- tools/arch/x86/include/uapi/asm/svm.h         |   1 +
- tools/include/uapi/README                     |  73 ++
- tools/include/uapi/asm-generic/unistd.h       |   2 +-
- tools/include/uapi/drm/i915_drm.h             |  27 +
- tools/include/uapi/linux/in.h                 |   2 +
- tools/include/uapi/linux/kvm.h                |  17 +-
- tools/include/uapi/linux/perf_event.h         |   6 +-
- tools/include/uapi/linux/stat.h               |  12 +-
- .../arch/powerpc/entry/syscalls/syscall.tbl   |   6 +-
- .../perf/arch/s390/entry/syscalls/syscall.tbl |   2 +-
- .../arch/x86/entry/syscalls/syscall_64.tbl    |   8 +-
- .../perf/trace/beauty/include/linux/socket.h  |   5 +-
- .../perf/trace/beauty/include/uapi/linux/fs.h | 163 +++-
- .../trace/beauty/include/uapi/linux/mount.h   |  10 +-
- .../trace/beauty/include/uapi/linux/stat.h    |  12 +-
- .../trace/beauty/include/uapi/sound/asound.h  |   9 +-
- 22 files changed, 810 insertions(+), 445 deletions(-)
+Suggested-by: Jani Nikula <jani.nikula@linux.intel.com>
+Original-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Original-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/include/uapi/README | 73 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
  create mode 100644 tools/include/uapi/README
 
+diff --git a/tools/include/uapi/README b/tools/include/uapi/README
+new file mode 100644
+index 000000000000..7147b1b2cb28
+--- /dev/null
++++ b/tools/include/uapi/README
+@@ -0,0 +1,73 @@
++Why we want a copy of kernel headers in tools?
++==============================================
++
++There used to be no copies, with tools/ code using kernel headers
++directly. From time to time tools/perf/ broke due to legitimate kernel
++hacking. At some point Linus complained about such direct usage. Then we
++adopted the current model.
++
++The way these headers are used in perf are not restricted to just
++including them to compile something.
++
++There are sometimes used in scripts that convert defines into string
++tables, etc, so some change may break one of these scripts, or new MSRs
++may use some different #define pattern, etc.
++
++E.g.:
++
++  $ ls -1 tools/perf/trace/beauty/*.sh | head -5
++  tools/perf/trace/beauty/arch_errno_names.sh
++  tools/perf/trace/beauty/drm_ioctl.sh
++  tools/perf/trace/beauty/fadvise.sh
++  tools/perf/trace/beauty/fsconfig.sh
++  tools/perf/trace/beauty/fsmount.sh
++  $
++  $ tools/perf/trace/beauty/fadvise.sh
++  static const char *fadvise_advices[] = {
++        [0] = "NORMAL",
++        [1] = "RANDOM",
++        [2] = "SEQUENTIAL",
++        [3] = "WILLNEED",
++        [4] = "DONTNEED",
++        [5] = "NOREUSE",
++  };
++  $
++
++The tools/perf/check-headers.sh script, part of the tools/ build
++process, points out changes in the original files.
++
++So its important not to touch the copies in tools/ when doing changes in
++the original kernel headers, that will be done later, when
++check-headers.sh inform about the change to the perf tools hackers.
++
++Another explanation from Ingo Molnar:
++It's better than all the alternatives we tried so far:
++
++ - Symbolic links and direct #includes: this was the original approach but
++   was pushed back on from the kernel side, when tooling modified the
++   headers and broke them accidentally for kernel builds.
++
++ - Duplicate self-defined ABI headers like glibc: double the maintenance
++   burden, double the chance for mistakes, plus there's no tech-driven
++   notification mechanism to look at new kernel side changes.
++
++What we are doing now is a third option:
++
++ - A software-enforced copy-on-write mechanism of kernel headers to
++   tooling, driven by non-fatal warnings on the tooling side build when
++   kernel headers get modified:
++
++    Warning: Kernel ABI header differences:
++      diff -u tools/include/uapi/drm/i915_drm.h include/uapi/drm/i915_drm.h
++      diff -u tools/include/uapi/linux/fs.h include/uapi/linux/fs.h
++      diff -u tools/include/uapi/linux/kvm.h include/uapi/linux/kvm.h
++      ...
++
++   The tooling policy is to always pick up the kernel side headers as-is,
++   and integate them into the tooling build. The warnings above serve as a
++   notification to tooling maintainers that there's changes on the kernel
++   side.
++
++We've been using this for many years now, and it might seem hacky, but
++works surprisingly well.
++
 -- 
 2.46.0.rc2.264.g509ed76dc8-goog
 
