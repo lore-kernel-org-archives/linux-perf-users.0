@@ -1,65 +1,55 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B573B5B1FB
-	for <linux-perf-users@vger.kernel.org>; Tue,  6 Aug 2024 17:25:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E612A1C5;
+	Tue,  6 Aug 2024 17:47:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722965151; cv=none; b=Lr+Ee9yU12Hp6hKX7RXv0gCjY2H47K6iQWttgb0sIWV3Is1/4k7c8tBQkd15e6J1dzEGHnlhJEkLdJnpB4XeqhVssiJ+CVTDGkIHeRZuQvVU1OVQ0+G/mkPAPuOBX7+6NcFLhdixec8xISzYaG9v6+ty0vweGshBjQUCN2qC2dk=
+	t=1722966427; cv=none; b=tdi73QpPhtU4YwJZkyLWvIu6RFTybJDxFc43lZ3qybmSi78gomSnOIA1hDyBpDLYOBM5WNvHg6l/tk9hukcQs2SuQbAJOswV3jAsaTC0JG7h791J4c+mkez1wGRKHmwgZ6F7mEZYY9KaLIokpH+PsfK5nld/rpCT5+sWKhJJvlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722965151; c=relaxed/simple;
-	bh=rwF7zEYBr1cCawdnogP3aKnAgnE27YD8P1dhMskhzIA=;
+	s=arc-20240116; t=1722966427; c=relaxed/simple;
+	bh=cAgxLRUonxQ14zEMn94zwCIcLctgqYrtfxpI11Fy8wc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HjQKT+b+bVZ7bsQi6/a8hBrnAji7HglryllJObwjMMjSskgl3/TVrsXCUrsEx5tQKMGekzssaBU8NFfrqVb3ucKrQp0cybXyEtfVWDlT0fSTXUHdVy/+BKRyysKqdjYV807ltivaFXCodOTA3cgBcxLZeLtnMirQJq4wCJvhm2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fpJRpTND; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=gCS6DLgjmWKjkh67zc876ClACk8Mr4mYLf85HU1EKuFBId9NSlMfRnUtA1SkbcgEcDSKtWQ8LSUEWRDQeZUg1AkYc3n1TUojXdSu8jrhF38/XwVCRCAbLN6gHeoOm5GJur9vpV5ikkxL8LNCwqcVSxFs8Tjl/5pUj5jOZTu617I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fx5GUAKM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fpJRpTND"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1722965148;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3QrFC/2gKkg0zTzsJSyXYftIHvsny08W2eAJL61Pv6A=;
-	b=fpJRpTNDcI0x/Ems+nLK9o2F5iV5StZM8wl1un6YhTRgQkE/rGpEGmeBAGNt4Zeg3wfLBx
-	0bjs6NA3+PWRGg+hVYyR8BiHSFxyXeojmh4lT5vGu1PKumjpCLA3PApwz/MebNNnRzjCAz
-	kiB429vS7Z83q/tym/u1ARdTfas9g1Y=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-394-vN1vuqx9OzGAVHK44an-ew-1; Tue,
- 06 Aug 2024 13:25:42 -0400
-X-MC-Unique: vN1vuqx9OzGAVHK44an-ew-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 40F501956080;
-	Tue,  6 Aug 2024 17:25:38 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.155])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ABE3619560AE;
-	Tue,  6 Aug 2024 17:25:32 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  6 Aug 2024 19:25:36 +0200 (CEST)
-Date: Tue, 6 Aug 2024 19:25:29 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-Message-ID: <20240806172529.GC20881@redhat.com>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
- <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
- <20240802092406.GC12343@redhat.com>
- <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fx5GUAKM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44C87C4AF0D;
+	Tue,  6 Aug 2024 17:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722966427;
+	bh=cAgxLRUonxQ14zEMn94zwCIcLctgqYrtfxpI11Fy8wc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Fx5GUAKMYrw01E2NOQ1E8mDP+Pa2FREQ9xmrdnvI2JRpi70zNRNst9qUE1XYbQ5OS
+	 XPI87A12VeS0VVT4UNmPKi37STUZS7hV9suOSoVBhd9YJqSkYsL2V8xHZYl0n+d9DH
+	 T0xYjgL+2ev68pfV1bvqczTVO5nh9pzopTZawUilCCbuWUXJ+32HHZp6YV8/A2FbN/
+	 E+VUMFFhZt7uTXiYZCtctn8zWetrN08YxonF11rLBlEVPJ01zzse+0skxpZmjpL4G5
+	 kd0G1xvmJnPkRtbiI0NCi/1/Wg9SepT9nuEGezK8JPzS+bDZawHomCYoaPVrz3pEyP
+	 l9Zch34CqgXOA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id DEAE2CE0A72; Tue,  6 Aug 2024 10:47:06 -0700 (PDT)
+Date: Tue, 6 Aug 2024 10:47:06 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Breno Leitao <leitao@debian.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>, leit@meta.com,
+	Sandipan Das <sandipan.das@amd.com>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-perf-users@vger.kernel.org>,
+	"open list:PERFORMANCE EVENTS SUBSYSTEM" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] perf/x86/amd: Warn only on new bits set
+Message-ID: <3bbb2f65-7305-4e02-942a-484def3a04a3@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20240806165848.3397232-1-leitao@debian.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -68,98 +58,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <20240806165848.3397232-1-leitao@debian.org>
 
-On 08/06, Liao, Chang wrote:
->
-> You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
-> unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
-> _DENY_SIGNAL is likey replaced during next uprobe single-stepping.
->
-> I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
-> and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
-> to correctly restore TIF_SIGPENDING upon the completion of single-step.
->
-> A revised implementation would look like this:
+On Tue, Aug 06, 2024 at 09:58:48AM -0700, Breno Leitao wrote:
+> Warning at every leaking bits can cause a flood of message, triggering
+> various stall-warning mechanisms to fire, including CSD locks, which
+> makes the machine to be unusable.
+> 
+> Track the bits that are being leaked, and only warn when a new bit is
+> set.
+> 
+> That said, this patch will help with the following issues:
+> 
+> 1) It will tell us which bits are being set, so, it is easy to
+>    communicate it back to vendor, and to do a root-cause analyzes.
+> 
+> 2) It avoid the machine to be unusable, because, worst case
+>    scenario, the user gets less than 60 WARNs (one per unhandled bit).
+> 
+> Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> Reviewed-by: Sandipan Das <sandipan.das@amd.com>
+> Signed-off-by: Breno Leitao <leitao@debian.org>
 
-Still looks "obviously wrong" to me... even the approach itself.
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
 
-Perhaps I am wrong, yet another day when I can't even read emails on lkml
-carefully, sorry.
-
-But can you please send the patch which I could actually apply? This one
-looks white-space damaged...
-
-I'll try to reply with more details as soon I convince myself I fully
-understand what does your patch actually do, but most probably not tomorrow.
-
-Thanks,
-
-Oleg.
-
-> ------------------%<------------------
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
+> ---
+> Changelog:
+> v3:
+>  * Avoid potential false reporting when concurrent execution occurs on
+>    different CPUs (Paul E. McKenney)
 > 
->         if (task_sigpending(t)) {
->                 clear_tsk_thread_flag(t, TIF_SIGPENDING);
-> +               utask->state = UTASK_SSTEP_DENY_SIGNAL;
+> v2:
+>   * Improved the patch description, getting the benefits in words.
+>   * https://lore.kernel.org/all/20240731154651.1555511-1-leitao@debian.org/
 > 
->                 if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
->                         utask->state = UTASK_SSTEP_TRAPPED;
-> @@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
->         int err = 0;
+> v1:
+>   * https://lore.kernel.org/all/20240524141021.3889002-1-leitao@debian.org/
 > 
->         uprobe = utask->active_uprobe;
-> -       if (utask->state == UTASK_SSTEP_ACK)
-> +       switch (utask->state) {
-> +       case UTASK_SSTEP_ACK:
->                 err = arch_uprobe_post_xol(&uprobe->arch, regs);
-> -       else if (utask->state == UTASK_SSTEP_TRAPPED)
-> +               break;
-> +       case UTASK_SSTEP_TRAPPED:
->                 arch_uprobe_abort_xol(&uprobe->arch, regs);
-> -       else
-> +               set_thread_flag(TIF_SIGPENDING);
-> +               break;
-> +       default:
->                 WARN_ON_ONCE(1);
-> +       }
 > 
->         put_uprobe(uprobe);
->         utask->active_uprobe = NULL;
->         utask->state = UTASK_RUNNING;
->         xol_free_insn_slot(current);
+>  arch/x86/events/amd/core.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> -       spin_lock_irq(&current->sighand->siglock);
-> -       recalc_sigpending(); /* see uprobe_deny_signal() */
-> -       spin_unlock_irq(&current->sighand->siglock);
-> -
->         if (unlikely(err)) {
->                 uprobe_warn(current, "execute the probed insn, sending SIGILL.");
->                 force_sig(SIGILL);
-> @@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
->                 /* task is currently not uprobed */
->                 return 0;
-> 
-> +       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
-> +               set_thread_flag(TIF_SIGPENDING);
->         utask->state = UTASK_SSTEP_ACK;
->         set_thread_flag(TIF_UPROBE);
->         return 1;
-> 
-> ------------------>%------------------
-> 
-> > 
-> > Oleg.
-> > 
-> > 
-> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 920e3a640cad..b4a1a2576510 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -943,11 +943,12 @@ static int amd_pmu_v2_snapshot_branch_stack(struct perf_branch_entry *entries, u
+>  static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  {
+>  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> +	static atomic64_t status_warned = ATOMIC64_INIT(0);
+> +	u64 reserved, status, mask, new_bits, prev_bits;
+>  	struct perf_sample_data data;
+>  	struct hw_perf_event *hwc;
+>  	struct perf_event *event;
+>  	int handled = 0, idx;
+> -	u64 reserved, status, mask;
+>  	bool pmu_enabled;
+>  
+>  	/*
+> @@ -1012,7 +1013,12 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  	 * the corresponding PMCs are expected to be inactive according to the
+>  	 * active_mask
+>  	 */
+> -	WARN_ON(status > 0);
+> +	if (status > 0) {
+> +		prev_bits = atomic64_fetch_or(status, &status_warned);
+> +		// A new bit was set for the very first time.
+> +		new_bits = status & ~prev_bits;
+> +		WARN(new_bits, "New overflows for inactive PMCs: %llx\n", new_bits);
+> +	}
+>  
+>  	/* Clear overflow and freeze bits */
+>  	amd_pmu_ack_global_status(~status);
 > -- 
-> BR
-> Liao, Chang
+> 2.43.5
 > 
-
