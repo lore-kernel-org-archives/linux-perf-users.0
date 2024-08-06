@@ -1,221 +1,221 @@
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2060.outbound.protection.outlook.com [40.107.244.60])
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32AB516EB40;
-	Tue,  6 Aug 2024 08:10:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722931853; cv=fail; b=K06+Zxc1i0GK8YtfM0SNzWyjnJDsq18fXQBOd2Wmxto1dB08Umhn3FDtoqYgw9l7DZaCYkER16M4aiWMbLbZblWW9pP2XeQlTZ+JZEOuV+xsvtBf5fSmD0HVRhIwfeYza94fhfk10ywVdj57K1f5OcBcm/xljO15al2dQNUMEZ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722931853; c=relaxed/simple;
-	bh=EikHq8El/gI9/Vfd2PSGfeoa4aUlVCM2zDgo2Z8pwHU=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=r/M0YRb0USs0g30insdLHO8FgRY+exxdTCr6W9g+Cbj+LPPoQb4QxB63eIpjmLYBft5KvhtJ2oAvmp9ISf/MkoOjZpZeA442Rgg6x6vLAFYiDKfcEgkE0ll54O1xCXPXg0H/pXedEO6Z7/r0K9Q71N2ydnHQo7DqwlEGMK9B524=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=j29ELkaN; arc=fail smtp.client-ip=40.107.244.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A58D1C2305;
+	Tue,  6 Aug 2024 10:59:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1722941997; cv=none; b=moLQA571BNXOhKArxUcw5PSmUdetwMz5HBn1HQG5CjhdgDObZzg2qR54FxLpCjkg6j0aXDHk+EWzSs/pCorSwAEG6ugnDs3F8iEQvaWicurkF7frex1cclMtcp3m8og3FcCD/i1yxa7LmOmAXM+jRE+k49+dPefd4+/caq7KL6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1722941997; c=relaxed/simple;
+	bh=UE9CfY3BL7+FOuNznj22gUfDXffqPAM5cNoS37kH3xY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=K+nl8HVNkFInItNSPw6yrd9xkKAoEh+KObZAzLko/HVE+z35pd8luK+9mVtWgJ67BW9kwwQ1HjKOrwXGewP2desLq1mqJ324pHrSUV7EPKIf5RHcD2UHMSv0CAALgV3RDKzxew1HB816BmNZkWlDWLeCuVr6Z7eh5o2/1geuXAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qP7y6aSH; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="j29ELkaN"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=u/ysp8VdzbHKztUzjVx1swHD+geGfcIhTdWDtcK+p+cN9s3GXXd0eqLiS6jAZLgRzdaQldZIrAPrxLqmnjVqWF2zWj+cfvnXJYw7aTihD7Ej3TGqwywRxoUsRZYtJX+Nwf5sk445H909mCfMdi8ASx8caQMhvb5rpRk1keLA/65/9RqKxbTJRJcEkWEwVxOt4upMz79EviT02D/7N5HG02KTpgw1H01GLRqzRGcHtbihF8OC2osbhQYGzC5JFe23NGg1CG564s+bfGeHUIUFEpX88FsjDOxDgJ+z5spdJjqwUs6S1kP+wAWNBcszCAqDBTlYX8SBPV/houoAskH8Ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Bs2ggEnyeRQmDOLduo7ymTf/U4W++9raBxSHrQyjOl0=;
- b=rp0MbUR8Xfd9qG7kAI0FO7AfJoNTx1kBDmMxmfX0PaQtFCNS/94hgqDTT+bv6j1OBL/4loQ17waP6/v9lqZ/NtWTGFp48Sju4W/lqkX4CLnGqdZv/VRIcRLrhLy0oEPJtgo+yckWQt+ulCttj0m3ELULDeuFij0+Gwsj6KmRNiNLIjZ7BIs1X3PeJeurDG04Y7ahD9kZGac+yOLCosLfXJ/hIFMTx5RGg0vnjcu6dIK/ggCUFYrQJoa+ZTh6A/icVX1wvyKzafyOHxV8+f16Hz5E+JQ7nxphhvJyo88l41MsyIR6hNhkf7Juoe4o0EpKmkYLjUSBl+7DT+E23HrQCw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Bs2ggEnyeRQmDOLduo7ymTf/U4W++9raBxSHrQyjOl0=;
- b=j29ELkaNto47bTvHBW0lM6vC34nKNQVoQLpUaz3Equ7RG3lZFs9sD6DnCOOQxtlzvj21APMdzvYf+Y9KYwPjzwnp0k8kI1Ekbas7HaAmNAwDaMTVlVY6QimQxPBNtNtb1Nv3QSQD+pB2cWn/AWFpQO/FblurYVEPWlGVHrAXYOybSE4ybkC4Trby1JLtisq9fwAh9D5ej7CI7jSxVyyTrsnZVnqt6/Kz1vYn3ENmvruIREUR6wnBkR+bM5Po3Kc9W65riQxosWOKMfymYO1sFPRh/V2g2DhXYTXcXhnTn7aFj64ls3wvc5g4KCHzVtCRGzw3AsAX339qat+RskAKNg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from PH0PR12MB7840.namprd12.prod.outlook.com (2603:10b6:510:28a::16)
- by SJ2PR12MB8882.namprd12.prod.outlook.com (2603:10b6:a03:537::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7828.25; Tue, 6 Aug
- 2024 08:10:49 +0000
-Received: from PH0PR12MB7840.namprd12.prod.outlook.com
- ([fe80::dbe7:2850:c5de:b17f]) by PH0PR12MB7840.namprd12.prod.outlook.com
- ([fe80::dbe7:2850:c5de:b17f%6]) with mapi id 15.20.7807.026; Tue, 6 Aug 2024
- 08:10:49 +0000
-From: Jeremy Szu <jszu@nvidia.com>
-To: shuah@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	james.clark@arm.com,
-	linux-perf-users@vger.kernel.org
-Cc: Jeremy Szu <jszu@nvidia.com>
-Subject: [PATCH] selftest/perf: Add perf-test to perform perf testcase
-Date: Tue,  6 Aug 2024 16:10:43 +0800
-Message-ID: <20240806081043.44935-1-jszu@nvidia.com>
-X-Mailer: git-send-email 2.45.2
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: OSTP286CA0015.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:604:223::10) To PH0PR12MB7840.namprd12.prod.outlook.com
- (2603:10b6:510:28a::16)
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qP7y6aSH"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=LNEUfQTr0yN0Ra3a/xSbTjer6XMFV2nF/VaAnWGPJoc=; b=qP7y6aSHdOLpxqtjAYLKaJ3Pxk
+	/Lej2fceXxtg4aS4wQEM1QQjA3C86DK/lNvKOP8F5rts84L9zBJ+uBpx3WrADqn/GQbCyykUF1rjP
+	8tOZnXI1OlPz/eELJytg/jdHLDVZhzMSYfhBotbEPRAjO3qZUAljOMVFcnNCaS9ZXw217yiAD6eIw
+	6IXAds9RAekk9hr/QIRqjaTtBoDCFK1cNHNoknY00ol5D/ykd0NBGv0wDelU7Nzs48wolCKr8C6OO
+	7wloEq9oWrzgk/jE/QvCuX/3KbJrqlMLeJq0CHIRHZu6haUE1deZjX7Cldvp+AvmcJGwWEHcyXY4y
+	+sNSzS2w==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbHun-00000006R14-3PJI;
+	Tue, 06 Aug 2024 10:59:42 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 21B1630049D; Tue,  6 Aug 2024 12:59:41 +0200 (CEST)
+Date: Tue, 6 Aug 2024 12:59:41 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] perf: Avoid -Wflex-array-member-not-at-end warnings
+Message-ID: <20240806105941.GV37996@noisy.programming.kicks-ass.net>
+References: <ZrFVW+6OOJ2tX23N@cute>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR12MB7840:EE_|SJ2PR12MB8882:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7f561849-35a5-4c57-4771-08dcb5ef484d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?J9UzMx2wEJbSnFJ29YUEGk+czaWAhz3yUk4LSHJWHj5Ej7sEErDy0lLUaiQn?=
- =?us-ascii?Q?rjx7ul6x8Ln+2NZZejy5ef1fgJ22g8HoNox3WxrDi9scPdPVDMxO9D6ELnr7?=
- =?us-ascii?Q?y+5Ks1fWmCT1OGrHEC20yeHyL3h6FnUzj6mrEbIfI0K08pHkRzXmHLcKKnHY?=
- =?us-ascii?Q?5x0VtIKBbFgloPz80o3sf+vk7+cn1PC229X54wDHaIXibDA/xTPbFgCMthTg?=
- =?us-ascii?Q?JksA7a+bRzY+NEPVhXQYgF6ZsbR6Eg/nAqhoe0zrjuO8+tvAej0xh3tUo1J+?=
- =?us-ascii?Q?gGPMMAQ88lgHnIW2q/MKgNT68unLA8xDo8p43dZTKSwNo6agnMi3e+XA6fJt?=
- =?us-ascii?Q?PGXheHqo6dT+1kYcV77tCc63Wi17wxm02JiUWtCE1fTQN4tfSH1XMt8rqgrm?=
- =?us-ascii?Q?4BJbhZMJKt2TFmStyzkn9ts98SxhVBgW8BHlTQAv/8REPhwjqGzjAWaoLVJ9?=
- =?us-ascii?Q?jJrYTIcrFIAWwiaNzgbLA3dNdEgp882CM4kEDsO4vncA0ZdJq+0BsBmKX2Mi?=
- =?us-ascii?Q?xKiaEu6CRttdmmQrUxqYW1NSDjp9gwG43BnbRFclmYZ1tXPEa+8ww8xWcwSt?=
- =?us-ascii?Q?UYSy7pYzCTRwZEum+df/tjwOtQJqjweXaLdKYR9ICNUXf+3JGFKeFIERMVaY?=
- =?us-ascii?Q?8Ae2+LGzwVgC+6/WTiMfYuZOXkwrEFkNza/zVV/ZhoGb47JLtdWW/lp30bHF?=
- =?us-ascii?Q?Pp6z2dnxqVYmbUoe4jV0UhD0MvtBUS51F8ksePpcfkffIhPVtD8Zl/7TkXJv?=
- =?us-ascii?Q?p5ac1iBvDnD9fl3eMQdQ7zW/8TFv53/c6BDHbHn/5xKJuvKrtHbctbQx3BWE?=
- =?us-ascii?Q?k1YDVGID8BR9YSlCDZLbO2g65L5wzFf+e+nQLe0wArwLMffBdHL59OROlpMl?=
- =?us-ascii?Q?3gX9yzy/jK/8bRJ8nj6uFhbGv5QU2StOgbUFWXoJP1mFVOw8f1vWWnUamW0F?=
- =?us-ascii?Q?C50jCfFq8F/o2CehBLV+iEYGyfnA5hMaCEdsK5UXFsDrICwAu97k5oCHjJVM?=
- =?us-ascii?Q?zklOPZpdZmbkds5MUATrfH4kOn5et/U7iWlicHR/cJbb1EXqxghTT/LbiwgR?=
- =?us-ascii?Q?VFZ75fgYo73X15lsMd7YlYniFf/OZnMtPPRMVIRPhGVGC5SsLs5yh2bDxn7+?=
- =?us-ascii?Q?JQv1uopTIuI8nAlsrlzWBeU2ih3TdpGYQVP8b2lfAQbn7tAn1gs5uS3wxw0v?=
- =?us-ascii?Q?SflUOmbT+l3J34J7LT8CF0gb/9TyMycG/o8eAC23/J74eYvu7Jxkc2o8ryep?=
- =?us-ascii?Q?ZtkdQpeXhKe+twRIFr4jts5PNmfRZvpcdzH3fwbq5GPr1ZFn6PlLwur8lGod?=
- =?us-ascii?Q?mohSoZqmt+/lAfBoqhtfogJakru7QSDTzB2CjRPRaDg67w=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR12MB7840.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?Azp62L/qF3lHuhntQIdnv1FXqrRz03+kamAyBj/OB0bDifTqlf9fb0QJ7Vgv?=
- =?us-ascii?Q?N81CnhUQYr6kuAloixxKXzhCvGothrIVutSKoVNK7L1jW2j47ilBDggY72uM?=
- =?us-ascii?Q?5Dd18C/FMY9Idt3PyU+mv/hPNTtsGOtb4zZQvD0CP91J194D3k1BMQq9M4uk?=
- =?us-ascii?Q?J1JgC3FpiKXNHpDiUfj2cth6iHB7fgLecoiiJOGCfAWfPexRTEO1XHPd64Q7?=
- =?us-ascii?Q?wRbCQ9PIZetNphiAqsJXCCjgxHswLJNTshEqUeoFcica6mospifkcR70fuZN?=
- =?us-ascii?Q?eGkS1xoKJn/CSGF+tsuz0eEghb3aIJi6fLL9ho+FFsAMqmVC5U2Lc+JqMGru?=
- =?us-ascii?Q?lvk0JdPfbHE3OjQnz4l11aEo483lAXA1ozBGD3mYh6C4wlrcE7M6zRjTJQ8u?=
- =?us-ascii?Q?37Scm9li2OtI/Vi+SeOml+S1kU68zDE4gfIV4w2jdKXe1SfaVe3r2LBelE4b?=
- =?us-ascii?Q?1dhgvIdZ0GHrh/1Ycz5FfTAAZYfYhHJbEMIAcbcrJVz2Va0v9FzOXobSDtxV?=
- =?us-ascii?Q?+JKEUCFSHXmJUrdBBsud7sXsAmjEVCgVtdm05orYSQ0fIA92dV8g+0xvol9z?=
- =?us-ascii?Q?aRvFxn3ISsMsuFHXVkFiCjTiEB0LTt2fX1bkaTASE1JhpdQf0KlQm3ONQ7kL?=
- =?us-ascii?Q?uXx39yU/Sjw5G7RMlb8/RcW2WxxyVa9D9pGlPjWbD/Wzn+HjuK87d7qTZza/?=
- =?us-ascii?Q?zv2DdqIOQue+9XFpUeWi9q/Zac8zSR5+W112nAggru0YP/gSMXY8yopsGxpz?=
- =?us-ascii?Q?W7n0LVMFiWXh+DsuTxM2v/6n3SNdBzsEzXYcebYEqitZwrNIWHoZ8/8jftmR?=
- =?us-ascii?Q?rph61HY8XWZrFzXl9uGMMnWt3ce3c5tPEmdIYu3dcNi/zOKwDBmNCH4eFDtm?=
- =?us-ascii?Q?rTrANF4oCTTN8jrht51YrurFh+il6nG5EaWXGtWF8aN+mzRaviLWKnITAVJS?=
- =?us-ascii?Q?yUZX10o7K1ZYXa0LpuhvCj0cqMFqecSZK9SULo2Eg2CzgYAY2Cy5FeugxZA0?=
- =?us-ascii?Q?JiHXIDr/uWc37uvN1R+sy+P0J9rZij4h1hJFVykFr5dkaEzM5JrpqLiJyi4w?=
- =?us-ascii?Q?/9t58MPvxXVrGAZTyVO+GFbnpUCgHIaGnm3RkAK26Q4dgsj2YADumBl8orHx?=
- =?us-ascii?Q?/poRj/vhSyDXMNYR/3eBuDBKqEKI5ooeDKLZP/QL7PxlDbB4P62OXukBOfHX?=
- =?us-ascii?Q?nxB8GvoYG79E7MLc6XAttiPc5+hdgvfDN7OhnDGs3YKJopCTT1OJc+w6XqH3?=
- =?us-ascii?Q?s6qopuNiBseifX5yeO1USnsWRxUn7WrPCPGZ8Yt1GzPknxkQzJh4BHozYgam?=
- =?us-ascii?Q?eMGwtvtB5XbJHB7ux+qEwtU674LG8sZ/ZAr+br+3KUeRrO3spZHdS1EXDhGp?=
- =?us-ascii?Q?OHtfsPFkSw8gzQU+w/2Zb4diYW2VhoCHVv3xilfKRa3CwLXfLojKtjEtLicE?=
- =?us-ascii?Q?ZLhF0oVLo0/mkmepJrE9jFynvVVmU0XmA4+X43ricJ7YBNZzjIxP92Q8f6ew?=
- =?us-ascii?Q?9qLv5hvvZI2AmYwZIQB0TE7RvG000aK4Vqd/KxODfEadQ8EVotkSCSi4wRu2?=
- =?us-ascii?Q?fs1k6HbRk+RYGRFJgZo=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7f561849-35a5-4c57-4771-08dcb5ef484d
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR12MB7840.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Aug 2024 08:10:49.6512
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2trT/79T2G+e2u6F2q7BnGF5iEE7NjeRrxJHa2nrxZ/IEFRVEcAVRHNqMa/nhHbF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB8882
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZrFVW+6OOJ2tX23N@cute>
 
-The perf test supports testing many functions and includes a way to
-detect the prerequisites for each test case. Add a script to launch the
-perf test.
+On Mon, Aug 05, 2024 at 04:42:35PM -0600, Gustavo A. R. Silva wrote:
+> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+> getting ready to enable it, globally.
+> 
+> So, in order to avoid ending up with a flexible-array member in the
+> middle of multiple other structs, we use the `struct_group_tagged()`
+> helper to create a new tagged `struct perf_branch_stack_hdr`.
+> This structure groups together all the members of the flexible
+> `struct perf_branch_stack` except the flexible array.
+> 
+> As a result, the array is effectively separated from the rest of the
+> members without modifying the memory layout of the flexible structure.
+> We then change the type of the middle struct members currently causing
+> trouble from `struct perf_branch_stack` to `struct perf_branch_stack_hdr`.
+> 
+> We also want to ensure that when new members need to be added to the
+> flexible structure, they are always included within the newly created
+> tagged struct. For this, we use `static_assert()`. This ensures that the
+> memory layout for both the flexible structure and the new tagged struct
+> is the same after any changes.
+> 
+> This approach avoids having to implement `struct perf_branch_stack_hdr`
+> as a completely separate structure, thus preventing having to maintain
+> two independent but basically identical structures, closing the door
+> to potential bugs in the future.
+> 
+> We also use `container_of()` whenever we need to retrieve a pointer to
+> the flexible structure, through which the flexible-array member can be
+> accessed, if necessary.
+> 
+> So, with these changes, fix the following warnings:
+> arch/x86/events/amd/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> arch/x86/events/intel/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> arch/x86/events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> arch/x86/events/zhaoxin/../perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> ./arch/x86/include/generated/../../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+> arch/x86/xen/../events/perf_event.h:289:41: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-Signed-off-by: Jeremy Szu <jszu@nvidia.com>
----
- tools/testing/selftests/Makefile          |  1 +
- tools/testing/selftests/perf/Makefile     |  5 ++++
- tools/testing/selftests/perf/perf_test.sh | 30 +++++++++++++++++++++++
- tools/testing/selftests/perf/settings     |  1 +
- 4 files changed, 37 insertions(+)
- create mode 100644 tools/testing/selftests/perf/Makefile
- create mode 100755 tools/testing/selftests/perf/perf_test.sh
- create mode 100644 tools/testing/selftests/perf/settings
+Urgh, this fugly.. And you're breaking coding style :-(
 
-diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
-index 9039f3709affb..7598dd39cad28 100644
---- a/tools/testing/selftests/Makefile
-+++ b/tools/testing/selftests/Makefile
-@@ -67,6 +67,7 @@ TARGETS += net/openvswitch
- TARGETS += net/tcp_ao
- TARGETS += net/netfilter
- TARGETS += nsfs
-+TARGETS += perf
- TARGETS += perf_events
- TARGETS += pidfd
- TARGETS += pid_namespace
-diff --git a/tools/testing/selftests/perf/Makefile b/tools/testing/selftests/perf/Makefile
-new file mode 100644
-index 0000000000000..72d90c71ab290
---- /dev/null
-+++ b/tools/testing/selftests/perf/Makefile
-@@ -0,0 +1,5 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+TEST_PROGS := perf_test.sh
-+
-+include ../lib.mk
-diff --git a/tools/testing/selftests/perf/perf_test.sh b/tools/testing/selftests/perf/perf_test.sh
-new file mode 100755
-index 0000000000000..ee78b4f9906cd
---- /dev/null
-+++ b/tools/testing/selftests/perf/perf_test.sh
-@@ -0,0 +1,30 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+skip() {
-+    echo "SKIP: $1"
-+    exit 4
-+}
-+
-+fail() {
-+    echo "FAIL: $1"
-+    exit 255
-+}
-+
-+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-+    [ "$(id -u)" -ne 0 ] && \
-+        skip "this test must be run as root."
-+    which perf >/dev/null 2>&1 || \
-+        skip "perf is not installed."
-+
-+    cmd_output=$(perf test -vv 2>&1)
-+    perf_ret=$?
-+
-+    if [ $perf_ret -ne 0 ]; then
-+        (IFS='\n'; echo $cmd_output)
-+        fail "perf command returns non-zero."
-+    elif [[ $cmd_output == *"FAILED!"* ]]; then
-+        (IFS='\n'; echo $cmd_output)
-+        fail "perf test got FAILED!"
-+    fi
-+fi
-diff --git a/tools/testing/selftests/perf/settings b/tools/testing/selftests/perf/settings
-new file mode 100644
-index 0000000000000..a62d2fa1275c6
---- /dev/null
-+++ b/tools/testing/selftests/perf/settings
-@@ -0,0 +1 @@
-+timeout=600
--- 
-2.34.1
+Let me see if this can't be done sanely...
 
+> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+>  arch/x86/events/amd/core.c   | 4 +++-
+>  arch/x86/events/core.c       | 4 +++-
+>  arch/x86/events/intel/ds.c   | 4 +++-
+>  arch/x86/events/intel/lbr.c  | 8 ++++++--
+>  arch/x86/events/perf_event.h | 2 +-
+>  include/linux/perf_event.h   | 9 +++++++--
+>  6 files changed, 23 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+> index 920e3a640cad..37adf2fcf508 100644
+> --- a/arch/x86/events/amd/core.c
+> +++ b/arch/x86/events/amd/core.c
+> @@ -1001,7 +1001,9 @@ static int amd_pmu_v2_handle_irq(struct pt_regs *regs)
+>  			continue;
+>  
+>  		if (has_branch_stack(event))
+> -			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
+> +			perf_sample_save_brstack(&data, event,
+> +				container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
+> +				NULL);
+>  
+>  		if (perf_event_overflow(event, &data, regs))
+>  			x86_pmu_stop(event, 0);
+> diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> index 12f2a0c14d33..e7faf7eedfc4 100644
+> --- a/arch/x86/events/core.c
+> +++ b/arch/x86/events/core.c
+> @@ -1704,7 +1704,9 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+>  		perf_sample_data_init(&data, 0, event->hw.last_period);
+>  
+>  		if (has_branch_stack(event))
+> -			perf_sample_save_brstack(&data, event, &cpuc->lbr_stack, NULL);
+> +			perf_sample_save_brstack(&data, event,
+> +				container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
+> +				NULL);
+>  
+>  		if (perf_event_overflow(event, &data, regs))
+>  			x86_pmu_stop(event, 0);
+> diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+> index fa5ea65de0d0..d5c86edbeaa9 100644
+> --- a/arch/x86/events/intel/ds.c
+> +++ b/arch/x86/events/intel/ds.c
+> @@ -1869,7 +1869,9 @@ static void setup_pebs_fixed_sample_data(struct perf_event *event,
+>  		setup_pebs_time(event, data, pebs->tsc);
+>  
+>  	if (has_branch_stack(event))
+> -		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
+> +		perf_sample_save_brstack(data, event,
+> +			container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
+> +			NULL);
+>  }
+>  
+>  static void adaptive_pebs_save_regs(struct pt_regs *regs,
+> diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+> index dc641b50814e..79ca1a2d6ff4 100644
+> --- a/arch/x86/events/intel/lbr.c
+> +++ b/arch/x86/events/intel/lbr.c
+> @@ -974,11 +974,15 @@ void intel_pmu_lbr_save_brstack(struct perf_sample_data *data,
+>  {
+>  	if (is_branch_counters_group(event)) {
+>  		intel_pmu_lbr_counters_reorder(cpuc, event);
+> -		perf_sample_save_brstack(data, event, &cpuc->lbr_stack, cpuc->lbr_counters);
+> +		perf_sample_save_brstack(data, event,
+> +			container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
+> +			cpuc->lbr_counters);
+>  		return;
+>  	}
+>  
+> -	perf_sample_save_brstack(data, event, &cpuc->lbr_stack, NULL);
+> +	perf_sample_save_brstack(data, event,
+> +		container_of(&cpuc->lbr_stack, struct perf_branch_stack, hdr),
+> +		NULL);
+>  }
+>  
+>  static void intel_pmu_arch_lbr_read(struct cpu_hw_events *cpuc)
+> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+> index ac1182141bf6..bf05cdc3f22f 100644
+> --- a/arch/x86/events/perf_event.h
+> +++ b/arch/x86/events/perf_event.h
+> @@ -286,7 +286,7 @@ struct cpu_hw_events {
+>  	 */
+>  	int				lbr_users;
+>  	int				lbr_pebs_users;
+> -	struct perf_branch_stack	lbr_stack;
+> +	struct perf_branch_stack_hdr	lbr_stack;
+>  	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+>  	u64				lbr_counters[MAX_LBR_ENTRIES]; /* branch stack extra */
+>  	union {
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 1a8942277dda..eb4413917b39 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -121,10 +121,15 @@ static __always_inline bool perf_raw_frag_last(const struct perf_raw_frag *frag)
+>   * already stored in age order, the hw_idx should be 0.
+>   */
+>  struct perf_branch_stack {
+> -	__u64				nr;
+> -	__u64				hw_idx;
+> +	/* New members MUST be added within the struct_group() macro below. */
+> +	struct_group_tagged(perf_branch_stack_hdr, hdr,
+> +		__u64				nr;
+> +		__u64				hw_idx;
+> +	);
+>  	struct perf_branch_entry	entries[];
+>  };
+> +static_assert(offsetof(struct perf_branch_stack, entries) == sizeof(struct perf_branch_stack_hdr),
+> +	      "struct member likely outside of struct_group_tagged()");
+>  
+>  struct task_struct;
+>  
+> -- 
+> 2.34.1
+> 
