@@ -1,108 +1,146 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from casper.infradead.org (casper.infradead.org [90.155.50.34])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E8931BD01D
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 11:20:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2433171E69;
+	Wed,  7 Aug 2024 11:56:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.50.34
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723029619; cv=none; b=giDbDpfhEVzQGNB4uDMmho9iU9JyrnRJcXdJ2JA8Ur/fj/nHF+CiPolY2UjDvswLlctRHpa7Sbt9ZUzMKFjS6avihKuypHSboaf5KfnU+7tuzuR8ch1YQkYMYCILnFCtqZKBhxfLzUy1JdKXIn3j7wObl0Da3iDAuI7CLejFV8E=
+	t=1723031789; cv=none; b=H6iQo7BPiF35X/atE8ntS++2tZgRslhxhfudl6XcwHD0/GO/hDTAxcS6oxqZ/U12Me3nn+TIReog1e3QGNTt4NWn2lWvtcGfYPqLSPRdW25OHJMtDwI+mYKPfMHLUC1EeJVfi6f006RZ0IYY7DbD6BpFqeu3gXw6+KCzs/CyFEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723029619; c=relaxed/simple;
-	bh=vyUtZ+IzW/Sxj6Fm41Tuev1tyNO6KoMeXmicKETFr00=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C7EMhMO6Elx5gNpMPk5CUM155Piz+r6XKaE8YO3eoic+S6FxlJQ0k17+o0hrEYWbc2v4KLS615xQv4ngCQPk+COHFkgIRyApDIDo7LzX8aHpD85R46txW8OwLLYgmGQqOAeOYaHUg53C5A3SO4uGpMQ4fm3LMFIlpG+bN7ZvpeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vNIYzFJV; arc=none smtp.client-ip=209.85.167.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723031789; c=relaxed/simple;
+	bh=uMFl+7ygjlbqWs0UDPLyRXIAhdtOiGqRDnVBA/mNfdA=;
+	h=Message-Id:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type; b=TVP15+scxYmoNhql6bRjLH39H1ttj+Wdkqy2irYB+oH29ZKWWLEIC6kI07bsJV7Vok9N0Lz/vblVzSa3j3P5xFEWJtz0k5nEhR6RCUpUS+R1v/sqkzuWOR26ZIC3gzx06DNKjDRpfu6ruOKAibYxMPYKcSTcnkdzJmO1HmWvUxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=iTPpt8P+; arc=none smtp.client-ip=90.155.50.34
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vNIYzFJV"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-530e2235688so28339e87.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 04:20:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723029616; x=1723634416; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6AnT8tM5Re9ArEMYyFgg615Zk12421KA9IxT4E7DVwQ=;
-        b=vNIYzFJVr6ahEugShgcMbjxmhavFgCe7epQeFLM9Cfnl9G5eyHxgbQuUhbUooJZ1DG
-         2vWw+fu97xjm4G1KIr3RhTKoNmxzm7HqOUQ1LzpT/UKtcy2QZoq7UBauALz/Ms/pP4SS
-         ILa2cSlfwd3o9C1ZPIWIYqUNsjLk4yfQQ7t2L4YAEHoQEoI6Zu8F05H9QzZKQMZtZ6rk
-         2G7H+OqW+cqx1K7kuxIN4gRIyWfcw5zCpEBmNc6LKbiTq2j4YMnMPRMxTzxN4TDSa9SC
-         Dqdb3FCQNrXRZOOCPPWqtTE7FRVsxrjRg1AJGYTlJNgr8kUQoFCpiQq3H4u9Vw0jK2wR
-         cpkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723029616; x=1723634416;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AnT8tM5Re9ArEMYyFgg615Zk12421KA9IxT4E7DVwQ=;
-        b=vSalrlV1hujStbPsI+xgwrDFIoprNPrwYoyINXMtoeaKrhlGeaJieVNu1PHic9WCTv
-         5RuLRlX5K1XXd7baU5CoqL5f4jfi27grU+gKb/IaYGWK1V0QrqcFdzVZL8qmHftFjlmY
-         XKDueFZOPTuGkvR8EXUbLu0MhZ9j8TdME9iWL+qT5AUB724wrpEyghnJQ40JURYepqcK
-         ig3CotGp251pcfV5tqOtplTZ/mqZIxQpTh3XJY+a15Umxiu3EyN8t0QDTsuD7uFvkAIw
-         xgY6atSKeVQaXJos0B7eGMPsEebBdzXM1PyxX/eZXr3QjVZIt4dz1TWo6POCBEwUVn45
-         K5mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVliyOdUDRpzL1kLVKJ6MGC8S9s71eWQnOkjHsd/JaGErxPTl9Y7G/Gg1JjG56bO896yybn1IiVnbH+MoRG9ERQs2uXBYMdylOb9Uj+YiyEaQ==
-X-Gm-Message-State: AOJu0YwMD1Gffh8BZbFKzCverK4wm4TW8hmfxb1tSlI8yckJh+uTp2BV
-	A5twilWs83rCcociFhpzOxtWEQvRFYnnHfzllWI21tpSU+YIeGo9C8UGnJWu8x4=
-X-Google-Smtp-Source: AGHT+IFD1x5owvgDUm1iLMvihjtHRJQDhrCOXcBOdvIMHDZ/yDmNOdnKRPkvS3eIDRgmpeUTXRQhzQ==
-X-Received: by 2002:ac2:4c48:0:b0:52f:2adf:d445 with SMTP id 2adb3069b0e04-530bb39b88cmr13683647e87.41.1723029615408;
-        Wed, 07 Aug 2024 04:20:15 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5b83960f353sm6894900a12.15.2024.08.07.04.20.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Aug 2024 04:20:14 -0700 (PDT)
-Message-ID: <bfe18512-03fc-4e17-b945-d8e3480a32e3@linaro.org>
-Date: Wed, 7 Aug 2024 12:20:13 +0100
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iTPpt8P+"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
+	Subject:Cc:To:From:Date:Message-Id:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:In-Reply-To;
+	bh=5P0E9yKnMuzgmP4VzsJaPEqiK0GCko+7ZBlVG8EI9A4=; b=iTPpt8P+yvP3cOUYj3HP4q3/Xj
+	m0AxjNp3Uqe54q+a0Fg7+wRD3JGU8F7eEVsYpS0gnLtgZGlIcGRqcdyaQEE1eZ1DjKLZixvgL7bqs
+	br5aGYafOxVsoKK6a2l1diHAYHn4w41S7O41jZ27kuxm3Ayl2A4fh2NlO7XyuLH2QbYAYvC9/5433
+	7CQWtha6aqcvBJd6jtzDy1Ys1jJvhg807vV5uj0EzPrOIt1g0emCWyL2yua/HOwE8I1AlX8y6mCEm
+	Sqem7IvnGawtLaygGbE6dcS6c1WruZJbqj2B5IaJT9S2iU0KVSVX3mAI9el6xcR/XOpUeU7aXaVu4
+	dpFr26+g==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by casper.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbfHC-00000007FPh-2En8;
+	Wed, 07 Aug 2024 11:56:22 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 0)
+	id 9307A30074E; Wed,  7 Aug 2024 13:56:21 +0200 (CEST)
+Message-Id: <20240807115550.031212518@infradead.org>
+User-Agent: quilt/0.65
+Date: Wed, 07 Aug 2024 13:29:26 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: mingo@kernel.org
+Cc: peterz@infradead.org,
+ acme@kernel.org,
+ namhyung@kernel.org,
+ mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com,
+ jolsa@kernel.org,
+ irogers@google.com,
+ adrian.hunter@intel.com,
+ kan.liang@linux.intel.com,
+ linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: [PATCH 2/5] perf: Extract a few helpers
+References: <20240807112924.448091402@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] drivers/perf: arm_spe: Use perf_allow_kernel() for
- permissions
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-arm-kernel@lists.infradead.org, Al Grant <al.grant@arm.com>,
- Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- linux-security-module@vger.kernel.org
-References: <20240807105441.2156738-1-james.clark@linaro.org>
- <20240807111520.GC37996@noisy.programming.kicks-ass.net>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <20240807111520.GC37996@noisy.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+
+The context time update code is repeated verbatim a few times.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ kernel/events/core.c |   39 ++++++++++++++++++++++-----------------
+ 1 file changed, 22 insertions(+), 17 deletions(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2330,6 +2330,24 @@ group_sched_out(struct perf_event *group
+ 		event_sched_out(event, ctx);
+ }
+ 
++static inline void
++ctx_time_update(struct perf_cpu_context *cpuctx, struct perf_event_context *ctx)
++{
++	if (ctx->is_active & EVENT_TIME) {
++		update_context_time(ctx);
++		update_cgrp_time_from_cpuctx(cpuctx, false);
++	}
++}
++
++static inline void
++ctx_time_update_event(struct perf_event_context *ctx, struct perf_event *event)
++{
++	if (ctx->is_active & EVENT_TIME) {
++		update_context_time(ctx);
++		update_cgrp_time_from_event(event);
++	}
++}
++
+ #define DETACH_GROUP	0x01UL
+ #define DETACH_CHILD	0x02UL
+ #define DETACH_DEAD	0x04UL
+@@ -2349,10 +2367,7 @@ __perf_remove_from_context(struct perf_e
+ 	struct perf_event_pmu_context *pmu_ctx = event->pmu_ctx;
+ 	unsigned long flags = (unsigned long)info;
+ 
+-	if (ctx->is_active & EVENT_TIME) {
+-		update_context_time(ctx);
+-		update_cgrp_time_from_cpuctx(cpuctx, false);
+-	}
++	ctx_time_update(cpuctx, ctx);
+ 
+ 	/*
+ 	 * Ensure event_sched_out() switches to OFF, at the very least
+@@ -2437,12 +2452,8 @@ static void __perf_event_disable(struct
+ 	if (event->state < PERF_EVENT_STATE_INACTIVE)
+ 		return;
+ 
+-	if (ctx->is_active & EVENT_TIME) {
+-		update_context_time(ctx);
+-		update_cgrp_time_from_event(event);
+-	}
+-
+ 	perf_pmu_disable(event->pmu_ctx->pmu);
++	ctx_time_update_event(ctx, event);
+ 
+ 	if (event == event->group_leader)
+ 		group_sched_out(event, ctx);
+@@ -4529,10 +4540,7 @@ static void __perf_event_read(void *info
+ 		return;
+ 
+ 	raw_spin_lock(&ctx->lock);
+-	if (ctx->is_active & EVENT_TIME) {
+-		update_context_time(ctx);
+-		update_cgrp_time_from_event(event);
+-	}
++	ctx_time_update_event(ctx, event);
+ 
+ 	perf_event_update_time(event);
+ 	if (data->group)
+@@ -4732,10 +4740,7 @@ static int perf_event_read(struct perf_e
+ 		 * May read while context is not active (e.g., thread is
+ 		 * blocked), in that case we cannot update context time
+ 		 */
+-		if (ctx->is_active & EVENT_TIME) {
+-			update_context_time(ctx);
+-			update_cgrp_time_from_event(event);
+-		}
++		ctx_time_update_event(ctx, event);
+ 
+ 		perf_event_update_time(event);
+ 		if (group)
 
 
-
-On 07/08/2024 12:15 pm, Peter Zijlstra wrote:
-> On Wed, Aug 07, 2024 at 11:54:41AM +0100, James Clark wrote:
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index aa3450bdc227..4a69583e329a 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -417,6 +417,7 @@ static struct kmem_cache *perf_event_cache;
->>    *   2 - disallow kernel profiling for unpriv
->>    */
->>   int sysctl_perf_event_paranoid __read_mostly = 2;
->> +EXPORT_SYMBOL_GPL(sysctl_perf_event_paranoid);
-> 
-> I'm never a fan of exporting variables. Perhaps create a helper function
-> that returns the value and use that where required?
-> 
-> That avoids modules getting the idea it would be okay to change this
-> valie themselves.
-
-I could also remove the inline from perf_allow_kernel() and export that 
-instead. I don't think it really needs to be inlined but I gave it the 
-benefit of the doubt because it was added that way.
