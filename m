@@ -1,46 +1,55 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80148155352;
-	Wed,  7 Aug 2024 22:31:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4144B250EC
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 23:18:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723069915; cv=none; b=iFFOC/OvTXN9eMmzW2mdqIm91Q+yPhauPl96pgAoKuVTYsSDMWxHuRiAdlqzLiB5hQR6M1QIYVfLgoVW3uqtEoU/jMFH6f9ODkJYUNcfcS6eHn14qIHemRE4U8MvNcfiG3VKrHGW7p1w7e42UNpHcDK+1AdfrvXpLFjjH99Gwx0=
+	t=1723072714; cv=none; b=YgG0YWFpBZ+UcrF11UITN/RB0bDL/o9jNITRyEuQ0avguiQa+X4ghStDeRu9ZpbSAnfPYkLrjwXWvGHUqwJFuo/IQBYukycN5p5GygwCeLDaqSzMexYlhP9XYJUAGpiGvrZKnUKL1eWBd/3x89R7XBAwZ+vY1z8UJ/dMKFI1cOA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723069915; c=relaxed/simple;
-	bh=xxDFnP+QPMwGRiH/cGQuQ2IEzs+X53WX5tDES7h35go=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gr+ftYsn9+pVZWy3+CkHan8HoEqgEffujoREp+cizsXoXTHhnXG9RHLg4tDgsegbyamSgwgebKE9hwD9ayDz3VEjSB3fW1R8hO4Hb86+hcqC51GmSowsK/y8y5u3cY41fOzJ7ideUmgbwHA7MXDvWsiQeodb7RstdOMHrF/1XS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X11GTqE2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723072714; c=relaxed/simple;
+	bh=g1OlhmAy73Mp9feG3NskfFydzuTb6Icd413Fv9iydHU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gEMEpVUX0zPlf/nNvAAO/zEd1uowEZo9y0V+21/L+2+zOsMOEqP7IFNorP115MCxIkY49SmLTLWrhsUFBUbBmVQYuQtexJC/mEzChzFrnaNU+WVzy9Az2W4tmDGeVKrAntfqopvorMMPLkKUmGl+HdMrXUY0PudSACm98sD/zPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cPcgDUsF; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X11GTqE2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9FAC32781;
-	Wed,  7 Aug 2024 22:31:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723069915;
-	bh=xxDFnP+QPMwGRiH/cGQuQ2IEzs+X53WX5tDES7h35go=;
-	h=From:To:Cc:Subject:Date:From;
-	b=X11GTqE2/O6cne3Wve24FQ3ndaLxvagxyIMmo91QYQPJs/jTG3JEXEGfUVhOVwv5o
-	 wz5Vbj7UfP72NYiqtsPYwck1TGxsQargJtnKGpRvZ9dhZ14zuWLLq1y/Zv98pbFNYK
-	 EgFU4UyYEoTjdUdyTKbeISwhdhUO5mGCGlhOZiU+SRG940FclE6gOfO2OC+NLEJbLP
-	 CKjrV2WhaiuDeR8kJQvjWw6jamqiDdmIE4Z+91PgKjy8E3JnVlsl6+bEQKWCrewZr2
-	 mNoThl86R6bzsSoWCR/h6hykjnsQSgHglBn0wFYe0MctvsXU3N609DN6yxlTSqF5py
-	 pYun9hIsmBVkw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] perf annotate-data: Show typedef names properly
-Date: Wed,  7 Aug 2024 15:31:29 -0700
-Message-ID: <20240807223129.1738004-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cPcgDUsF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723072713; x=1754608713;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=g1OlhmAy73Mp9feG3NskfFydzuTb6Icd413Fv9iydHU=;
+  b=cPcgDUsFGtEUPMsJPdzxaU4GdJaHTwTW/AZAdx0CyFpp4OOmp+oEG/Z/
+   ta2qpp8kPWnT1WUSfafiSqxovke6c2DmoGLd4RujMb+YJgz5VGujoJweW
+   VQQcQYqzO2zWTLeMHYEfAuvrR/3BALZIzfPz21xjClRyqKlgm+QVbceaO
+   zpVEvHH/D3J+KN3xoa5sbYGYq3zjH33aRwxon/o42Bi4jfZKedSD3Xc8l
+   rN99H8x3U626ZdakEmRd2lB9Swe/wTqcCp+sZIsZfP4p6nnF7Gyf3Ld7s
+   C4iUprXyJ9tMtibTla71usq+JMXJXvrYDLdL+w9DOgCLMs+hkq+hbFUca
+   Q==;
+X-CSE-ConnectionGUID: 5/O4IV8/QveELB7hk6MkAg==
+X-CSE-MsgGUID: Qz/MGx3zQIyipPG3k7z9cw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11157"; a="32577979"
+X-IronPort-AV: E=Sophos;i="6.09,271,1716274800"; 
+   d="scan'208";a="32577979"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2024 16:18:33 -0700
+X-CSE-ConnectionGUID: buKa41peT02oGSBLpczx5A==
+X-CSE-MsgGUID: Anzxx+VySe24Kdm/VyqMMw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,271,1716274800"; 
+   d="scan'208";a="87935091"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Aug 2024 16:18:32 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org,
+	Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v9 1/4] Create source symlink in perf object dir
+Date: Wed,  7 Aug 2024 16:18:20 -0700
+Message-ID: <20240807231823.898979-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,187 +58,27 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The die_get_typename() would resolve typedef and get to the original
-type.  But sometimes the original type is a struct without name and it
-makes the output confusing and hard to read.
+Create a source symlink to the original source in the objdir.
+This is similar to what the main kernel build script does.
 
-This is a diff of perf report -s type before and after the change.
-New types such as atomic{,64}_t and sigset_t appeared and the portion
-of unnamed struct was reduced.  Also u32, u64 and size_t were splitted
-from the base types.
-
-  --- b   2024-08-01 17:02:34.307809952 -0700
-  +++ a   2024-08-07 14:17:05.245853999 -0700
-  -     2.40%  long unsigned int
-  +     2.26%  long unsigned int
-  -     1.56%  unsigned int
-  +     1.27%  unsigned int
-  -     0.98%  struct
-  -     0.79%  long long unsigned int
-  +     0.58%  long long unsigned int
-  +     0.36%  struct
-  +     0.27%  atomic64_t
-  +     0.22%  u32
-  +     0.21%  u64
-  +     0.19%  atomic_t
-  +     0.13%  size_t
-  -     0.08%  struct seqcount_spinlock
-  +     0.08%  seqcount_spinlock_t
-  +     0.08%  sigset_t
-  +     0.08%  __poll_t
-
-Let's use the typedef name directly and the resolved to get the size of
-the type.
-
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 ---
- tools/perf/util/annotate-data.c | 39 +++++++++++++++++++++++++--------
- tools/perf/util/dwarf-aux.c     |  2 +-
- tools/perf/util/dwarf-aux.h     |  2 ++
- 3 files changed, 33 insertions(+), 10 deletions(-)
+ tools/perf/Makefile.perf | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 734acdd8c4b7..092809bb92f5 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -217,8 +217,13 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	strbuf_init(&sb, 32);
- 	die_get_typename(die, &sb);
+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
+index 175e4c7898f0..d46892d8223b 100644
+--- a/tools/perf/Makefile.perf
++++ b/tools/perf/Makefile.perf
+@@ -163,6 +163,8 @@ ifneq ($(OUTPUT),)
+ # for flex/bison parsers.
+ VPATH += $(OUTPUT)
+ export VPATH
++# create symlink to the original source
++SOURCE := $(shell ln -sf $(srctree)/tools/perf $(OUTPUT)/source)
+ endif
  
--	die_get_real_type(die, &member_type);
--	if (dwarf_aggregate_size(&member_type, &size) < 0)
-+	__die_get_real_type(die, &member_type);
-+	if (dwarf_tag(&member_type) == DW_TAG_typedef)
-+		die_get_real_type(&member_type, &die_mem);
-+	else
-+		die_mem = member_type;
-+
-+	if (dwarf_aggregate_size(&die_mem, &size) < 0)
- 		size = 0;
- 
- 	if (!dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
-@@ -235,11 +240,11 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	INIT_LIST_HEAD(&member->children);
- 	list_add_tail(&member->node, &parent->children);
- 
--	tag = dwarf_tag(&member_type);
-+	tag = dwarf_tag(&die_mem);
- 	switch (tag) {
- 	case DW_TAG_structure_type:
- 	case DW_TAG_union_type:
--		die_find_child(&member_type, __add_member_cb, member, &die_mem);
-+		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
- 		break;
- 	default:
- 		break;
-@@ -281,6 +286,10 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
- 	if (die_get_typename_from_type(type_die, &sb) < 0)
- 		strbuf_add(&sb, "(unknown type)", 14);
- 	type_name = strbuf_detach(&sb, NULL);
-+
-+	if (dwarf_tag(type_die) == DW_TAG_typedef)
-+		die_get_real_type(type_die, type_die);
-+
- 	dwarf_aggregate_size(type_die, &size);
- 
- 	/* Check existing nodes in dso->data_types tree */
-@@ -342,6 +351,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
- {
- 	Dwarf_Word size;
- 	bool is_pointer = true;
-+	Dwarf_Die sized_type;
- 
- 	if (reg == DWARF_REG_PC)
- 		is_pointer = false;
-@@ -351,7 +361,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
- 		is_pointer = false;
- 
- 	/* Get the type of the variable */
--	if (die_get_real_type(var_die, type_die) == NULL) {
-+	if (__die_get_real_type(var_die, type_die) == NULL) {
- 		pr_debug_dtp("variable has no type\n");
- 		ann_data_stat.no_typeinfo++;
- 		return -1;
-@@ -365,15 +375,20 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
- 	if (is_pointer) {
- 		if ((dwarf_tag(type_die) != DW_TAG_pointer_type &&
- 		     dwarf_tag(type_die) != DW_TAG_array_type) ||
--		    die_get_real_type(type_die, type_die) == NULL) {
-+		    __die_get_real_type(type_die, type_die) == NULL) {
- 			pr_debug_dtp("no pointer or no type\n");
- 			ann_data_stat.no_typeinfo++;
- 			return -1;
- 		}
- 	}
- 
-+	if (dwarf_tag(type_die) == DW_TAG_typedef)
-+		die_get_real_type(type_die, &sized_type);
-+	else
-+		sized_type = *type_die;
-+
- 	/* Get the size of the actual type */
--	if (dwarf_aggregate_size(type_die, &size) < 0) {
-+	if (dwarf_aggregate_size(&sized_type, &size) < 0) {
- 		pr_debug_dtp("type size is unknown\n");
- 		ann_data_stat.invalid_size++;
- 		return -1;
-@@ -846,6 +861,7 @@ static int check_matching_type(struct type_state *state,
- 
- 	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_TYPE) {
- 		int tag = dwarf_tag(&state->regs[reg].type);
-+		Dwarf_Die sized_type;
- 
- 		/*
- 		 * Normal registers should hold a pointer (or array) to
-@@ -862,13 +878,18 @@ static int check_matching_type(struct type_state *state,
- 		pr_debug_dtp("\n");
- 
- 		/* Remove the pointer and get the target type */
--		if (die_get_real_type(&state->regs[reg].type, type_die) == NULL)
-+		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
- 			return -1;
- 
- 		dloc->type_offset = dloc->op->offset;
- 
-+		if (dwarf_tag(type_die) == DW_TAG_typedef)
-+			die_get_real_type(type_die, &sized_type);
-+		else
-+			sized_type = *type_die;
-+
- 		/* Get the size of the actual type */
--		if (dwarf_aggregate_size(type_die, &size) < 0 ||
-+		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
- 		    (unsigned)dloc->type_offset >= size)
- 			return -1;
- 
-diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
-index 44ef968a7ad3..5e080d7e22c2 100644
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -267,7 +267,7 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
- }
- 
- /* Get a type die, but skip qualifiers */
--static Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
-+Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
- {
- 	int tag;
- 
-diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
-index 24446412b869..336a3a183a78 100644
---- a/tools/perf/util/dwarf-aux.h
-+++ b/tools/perf/util/dwarf-aux.h
-@@ -56,6 +56,8 @@ const char *die_get_decl_file(Dwarf_Die *dw_die);
- /* Get type die */
- Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
- 
-+/* Get a type die, but skip qualifiers */
-+Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
- /* Get a type die, but skip qualifiers and typedef */
- Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
- 
+ ifeq ($(V),1)
 -- 
-2.46.0.rc2.264.g509ed76dc8-goog
+2.45.2
 
