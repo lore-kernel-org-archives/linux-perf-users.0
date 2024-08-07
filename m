@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F71E145FF5;
-	Wed,  7 Aug 2024 23:25:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0EE15665C;
+	Wed,  7 Aug 2024 23:50:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723073151; cv=none; b=XYJ/VhYYZP9nt7Aj4vjVMqyUib477m2aVEyaXbS1SPBILG4CkvOdGH+tersv7Hs8ppGyqKFhdHtXbddwP4+KgSNaOLoJKhYdlUWYspNCV9bbYNNndOWciQ9fW20A/5FhsjEMMwPJgx2Btwu3m974TrZoqDLNCHYNQvNhZGgw1xI=
+	t=1723074602; cv=none; b=aiYkxm5UEJL6eHv6CBeZq2CHppcldgdoKUEFl0mtn4ye7OaXRnK2fZ/GyoyrIZTuZc4WuvHK94X7qkQlgqx8C5m9CmqWdvAHvcRicix//OhLH2dOXV+Mq4o9XeTAH6MBShZ78CwW+beD4+6/sU7PiYxO60/pIAns/acfepCq3l0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723073151; c=relaxed/simple;
-	bh=fHY76M/H9pGxgX2OPWiXt01007xTeEUbz2O/iNpJrLY=;
+	s=arc-20240116; t=1723074602; c=relaxed/simple;
+	bh=1Y39yPQtkTDnnt4FA/xzwuldlGxg7krS0BUCu83Fk+I=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tAZCW0rPco3MFDqrf4R3kIusAQFFl1MLj6zLCs+Z7/VB+B7iOyHgCYleuRZq8LxOaFdtmiQzggmvPHm1Y8cVw4Pl4Pa4fbFZC8Vzxis5srNwzD2B0gcDAVhMsoFNYOy/JiKTiexF0p76TjWOZqHPpf0fKZK0cC85QZV5HiG6s34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OoabwbnZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=rUIwmFrWW74OlmpDdNr6BlacHnPCeIc7T1U5PSBzoMqfwCVWaMDqe0IXWJ+tr6w2Ft9H6jWwVlNcBpnL9ibTlQzzHyhb/flzkrXf4Cs2x+Ou8f69IrnJIT9dHqgqOq52eCChIVWbCv+QaSRgesBYWcWrVpzr9dg2syt/jWuFLzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nnOpG7jm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OoabwbnZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2CA1C32781;
-	Wed,  7 Aug 2024 23:25:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nnOpG7jm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48114C32781;
+	Wed,  7 Aug 2024 23:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723073151;
-	bh=fHY76M/H9pGxgX2OPWiXt01007xTeEUbz2O/iNpJrLY=;
+	s=k20201202; t=1723074601;
+	bh=1Y39yPQtkTDnnt4FA/xzwuldlGxg7krS0BUCu83Fk+I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OoabwbnZ0rnouuqReNKKoPsfbdHQi0Izea3hLk+l30DOVO3YrH1PVTWLNb1dtcLV8
-	 ILD2q9iJf+IsgzYk+XEWPlN7X5Caisjspd/Fgu/uT9GLHm+ZLgfd8WpQ+34fc64WGm
-	 STUtBQNRCMadv1avtK8VFfe0GMr7DJx68hfDCWZnEmhg0rXMj3lDO/iERbGkiQsFZc
-	 sphBpmqZg6oW1lnRlpDOTygmL6h0SHwFeFdYYgYv8UkEN28uXOJdBk22FyxSmPoXdp
-	 P+bGPEfNeOEeaA851o9XaakGpQBGumL4TmHneLjwq15Y6FlpTIOEFOR0A5K+2jO+r/
-	 F9GkB1C2l1frA==
-Date: Wed, 7 Aug 2024 16:25:49 -0700
+	b=nnOpG7jm/HLrXv/Ii1iJFHLAlp4tYYBXuDwfnk8+kNK1eJuwP66OXL/p2rqqIt09v
+	 aST3ekLNuDL0k8bw+GGX0iVQv/w3kHSmrY+7rbqbBq33NRpTx/al2wJsPIxbOi9Pze
+	 HqFVpfH4/YAE3w66tPg89DxNdUsP0vk+HIAQW4JY1BWxyyUuq86B9zh46AqYj2y/Ny
+	 mMPpK9dKXQ552FJPnYVyuBnhjKlWgek3FHm8jscAuoqjvpkTSnTsQ+EVtwnvFsivUB
+	 /dJh5EAXdWm3xL1F5BCljsXZEBXPCbiLvOHR2HE42NeGjNzmLzBEabOoeJUMi/1jO7
+	 04+M2s7fqTYhg==
+Date: Wed, 7 Aug 2024 16:49:59 -0700
 From: Namhyung Kim <namhyung@kernel.org>
 To: Howard Chu <howardchu95@gmail.com>
 Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com,
 	jolsa@kernel.org, kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 3/9] perf record --off-cpu: Parse offcpu-time event
-Message-ID: <ZrQCfQOzWpfr6SNT@google.com>
+Subject: Re: [PATCH v4 4/9] perf record off-cpu: Dump direct off-cpu samples
+ in BPF
+Message-ID: <ZrQIJ9xRg22qALoQ@google.com>
 References: <20240807153843.3231451-1-howardchu95@gmail.com>
- <20240807153843.3231451-4-howardchu95@gmail.com>
+ <20240807153843.3231451-5-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -44,127 +45,248 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240807153843.3231451-4-howardchu95@gmail.com>
+In-Reply-To: <20240807153843.3231451-5-howardchu95@gmail.com>
 
-On Wed, Aug 07, 2024 at 11:38:37PM +0800, Howard Chu wrote:
-> Parse offcpu-time event using parse_event, in off_cpu_start(), write
-> evlist fds got from evlist__open() to perf_event_array BPF map.
+On Wed, Aug 07, 2024 at 11:38:38PM +0800, Howard Chu wrote:
+> Output PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD, PERF_SAMPLE_CALLCHAIN, and
+> PERF_SAMPLE_CGROUP in BPF. Ideally, we should only output
+> PERF_SAMPLE_PERIOD (off-cpu time) and PERF_SAMPLE_CALLCHAIN (sched_in
+> process's callchain). One only needs to set PERF_SAMPLE_TID and
+> PERF_SAMPLE_CGROUP, and perf_event will do everything for us.
 > 
+> But in reality, that's not the case. Setting PERF_SAMPLE_TID will mostly
+> give us TID of 0. We might get the correct TID for offcpu-time event
+> from time to time, but it is really rare.
+>          swapper       0 [000] offcpu-time:  /
+>         :1321819 1321819 [002] offcpu-time:  /user.slice/user-1000.slice/session-2.scope
+>          swapper       0 [001] offcpu-time:  /
+>          swapper       0 [003] offcpu-time:  /
+> 
+> And setting PERF_SAMPLE_CGROUP doesn't work properly either.
+>     tmux: server    3701 [003] offcpu-time:  /
+>     blueman-tray    1064 [001] offcpu-time:  /
+>             bash 1350867 [001] offcpu-time:  /
+>             bash 1350844 [000] offcpu-time:  /
+
+Isn't it just because your system was idle?
+
+> 
+> We need to retrieve PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD,
+> PERF_SAMPLE_CALLCHAIN, and PERF_SAMPLE_CGROUP using BPF and output these
+> four fields.
+> 
+> Add perf_event_array map for dumping direct off-cpu samples, but keep
+> the at-the-end approach.
+> 
+> Tons of checking before access, to pass the BPF verifier.
+> 
+> If off-cpu time (represented as delta) exceeds the off-cpu threshold, do
+> output.
+> 
+> Suggested-by: Namhyung Kim <namhyung@kernel.org>
 > Signed-off-by: Howard Chu <howardchu95@gmail.com>
 > ---
->  tools/perf/util/bpf_off_cpu.c | 55 ++++++++++++++++++++---------------
->  tools/perf/util/evsel.c       |  2 +-
->  2 files changed, 32 insertions(+), 25 deletions(-)
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c | 133 +++++++++++++++++++++++++
+>  1 file changed, 133 insertions(+)
 > 
-> diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-> index 1e0e454bfb5e..fae0bb8aaa13 100644
-> --- a/tools/perf/util/bpf_off_cpu.c
-> +++ b/tools/perf/util/bpf_off_cpu.c
-> @@ -13,6 +13,7 @@
->  #include "util/cgroup.h"
->  #include "util/strlist.h"
->  #include <bpf/bpf.h>
-> +#include <internal/xyarray.h>
+> diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> index cca1b6990a57..95cc130bb67e 100644
+> --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> @@ -18,6 +18,9 @@
+>  #define MAX_STACKS   32
+>  #define MAX_ENTRIES  102400
 >  
->  #include "bpf_skel/off_cpu.skel.h"
+> +#define MAX_CPUS  4096
+> +#define MAX_OFFCPU_LEN 128
+> +
+>  struct tstamp_data {
+>  	__u32 stack_id;
+>  	__u32 state;
+> @@ -32,6 +35,7 @@ struct offcpu_key {
+>  	__u64 cgroup_id;
+>  };
 >  
-> @@ -38,39 +39,24 @@ union off_cpu_data {
+> +/* for dumping at the end */
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
+>  	__uint(key_size, sizeof(__u32));
+> @@ -39,6 +43,45 @@ struct {
+>  	__uint(max_entries, MAX_ENTRIES);
+>  } stacks SEC(".maps");
 >  
->  static int off_cpu_config(struct evlist *evlist)
->  {
-> -	struct evsel *evsel;
-> -	struct perf_event_attr attr = {
-> -		.type	= PERF_TYPE_SOFTWARE,
-> -		.config = PERF_COUNT_SW_BPF_OUTPUT,
-> -		.size	= sizeof(attr), /* to capture ABI version */
-> -	};
-> -	char *evname = strdup(OFFCPU_EVENT);
-> +	char off_cpu_event[64];
->  
-> -	if (evname == NULL)
-> -		return -ENOMEM;
-> -
-> -	evsel = evsel__new(&attr);
-> -	if (!evsel) {
-> -		free(evname);
-> -		return -ENOMEM;
-> +	/* after parsing off-cpu event, we'll specify its sample_type in evsel__config() */
-> +	scnprintf(off_cpu_event, sizeof(off_cpu_event), "bpf-output/no-inherit=1,name=%s/", OFFCPU_EVENT);
-> +	if (parse_event(evlist, off_cpu_event)) {
-> +		pr_err("Failed to open off-cpu event\n");
-> +		return -1;
->  	}
->  
-> -	evsel->core.attr.freq = 1;
-> -	evsel->core.attr.sample_period = 1;
-> -	/* off-cpu analysis depends on stack trace */
-> -	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
-> -
-> -	evlist__add(evlist, evsel);
-> -
-> -	free(evsel->name);
-> -	evsel->name = evname;
-> -
->  	return 0;
+> +struct offcpu_data {
+> +	u64 array[MAX_OFFCPU_LEN];
+> +};
+> +
+> +struct stack_data {
+> +	u64 array[MAX_STACKS];
+> +};
+> +
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> +	__uint(key_size, sizeof(__u32));
+> +	__uint(value_size, sizeof(__u32));
+> +	__uint(max_entries, MAX_CPUS);
+> +} offcpu_output SEC(".maps");
+> +
+> +/* temporary offcpu sample */
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+> +	__uint(key_size, sizeof(__u32));
+> +	__uint(value_size, sizeof(struct offcpu_data));
+> +	__uint(max_entries, 1);
+> +} offcpu_payload SEC(".maps");
+> +
+> +/* temporary stack data */
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+> +	__uint(key_size, sizeof(__u32));
+> +	__uint(value_size, sizeof(struct stack_data));
+> +	__uint(max_entries, 1);
+> +} stack_tmp SEC(".maps");
+> +
+> +/* cached stack per task storage */
+> +struct {
+> +	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+> +	__uint(map_flags, BPF_F_NO_PREALLOC);
+> +	__type(key, int);
+> +	__type(value, struct stack_data);
+> +} stack_cache SEC(".maps");
+> +
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+>  	__uint(map_flags, BPF_F_NO_PREALLOC);
+> @@ -184,12 +227,75 @@ static inline int can_record(struct task_struct *t, int state)
+>  	return 1;
 >  }
 >  
->  static void off_cpu_start(void *arg)
->  {
->  	struct evlist *evlist = arg;
-> +	struct evsel *evsel;
-> +	struct perf_cpu pcpu;
-> +	int i, err;
->  
->  	/* update task filter for the given workload */
->  	if (!skel->bss->has_cpu && !skel->bss->has_task &&
-> @@ -86,6 +72,27 @@ static void off_cpu_start(void *arg)
->  		bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
->  	}
->  
-> +	/* sample id and fds in BPF's perf_event_array can only be set after record__open() */
-> +	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
-> +	if (evsel == NULL) {
-> +		pr_err("%s evsel not found\n", OFFCPU_EVENT);
-> +		return;
-> +	}
+> +static inline bool check_bounds(int index)
+> +{
+> +	if (index >= 0 && index < MAX_OFFCPU_LEN)
+> +		return true;
 > +
-> +	if (evsel->core.id)
-> +		skel->bss->sample_id = evsel->core.id[0];
+> +	return false;
+> +}
 > +
-> +	perf_cpu_map__for_each_cpu(pcpu, i, evsel->core.cpus) {
-> +		err = bpf_map__update_elem(skel->maps.offcpu_output,
-> +					   &pcpu.cpu, sizeof(__u32),
-> +					   xyarray__entry(evsel->core.fd, pcpu.cpu, 0),
-> +					   sizeof(__u32), BPF_ANY);
-> +		if (err) {
-> +			pr_err("Failed to update perf event map for direct off-cpu dumping\n");
-> +			return;
+> +static inline int copy_stack(struct stack_data *from,
+> +			     struct offcpu_data *to, int n)
+> +{
+> +	int max_stacks = MAX_STACKS, len = 0;
+> +
+> +	if (!from)
+> +		return len;
+> +
+> +	for (int i = 0; i < max_stacks && from->array[i]; ++i) {
+> +		if (check_bounds(n + 2 + i)) {
+> +			to->array[n + 2 + i] = from->array[i];
+> +			++len;
 > +		}
 > +	}
+> +	return len;
+> +}
 > +
->  	skel->bss->enabled = 1;
->  }
->  
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index b961467133cf..ccd3bda02b5d 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -1379,7 +1379,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
->  		evsel__reset_sample_bit(evsel, BRANCH_STACK);
->  
->  	if (evsel__is_offcpu_event(evsel))
-> -		evsel->core.attr.sample_type &= OFFCPU_SAMPLE_TYPES;
-> +		evsel->core.attr.sample_type = OFFCPU_SAMPLE_TYPES;
+> +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
+> +			struct stack_data *stack_p, __u64 delta, __u64 timestamp)
+> +{
+> +	int size, n = 0, ip_pos = -1, len = 0;
+> +
+> +	if (sample_type & PERF_SAMPLE_TID && check_bounds(n))
+> +		data->array[n++] = (u64)key->tgid << 32 | key->pid;
+> +	if (sample_type & PERF_SAMPLE_PERIOD && check_bounds(n))
+> +		data->array[n++] = delta;
+> +	if (sample_type & PERF_SAMPLE_CALLCHAIN && check_bounds(n + 2)) {
+> +		/* data->array[n] is callchain->nr (updated later) */
+> +		data->array[n + 1] = PERF_CONTEXT_USER;
+> +		data->array[n + 2] = 0;
+> +
+> +		len = copy_stack(stack_p, data, n);
+> +
+> +		/* update length of callchain */
+> +		data->array[n] = len + 1;
+> +
+> +		/* update sample ip with the first callchain entry */
+> +		if (ip_pos >= 0)
+> +			data->array[ip_pos] = data->array[n + 2];
 
-I don't think we need this.  It should check what you requested.
-IOW you don't need to put cgroup info when user didn't ask.
+Where is ip_pos set?  I guess we don't need this as we don't update the
+SAMPLE_IP here.
+
+> +
+> +		/* calculate sample callchain data->array length */
+> +		n += len + 2;
+> +	}
+> +	if (sample_type & PERF_SAMPLE_CGROUP && check_bounds(n))
+> +		data->array[n++] = key->cgroup_id;
+> +
+> +	size = n * sizeof(u64);
+> +	if (size >= 0 && size <= MAX_OFFCPU_LEN * sizeof(u64))
+> +		bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_CPU, data, size);
+> +
+> +	return 0;
+> +}
+> +
+>  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  			struct task_struct *next, int state)
+>  {
+>  	__u64 ts;
+>  	__u32 stack_id;
+>  	struct tstamp_data *pelem;
+> +	struct stack_data *stack_tmp_p, *stack_p;
+> +	int zero = 0, len = 0;
+>  
+>  	ts = bpf_ktime_get_ns();
+>  
+> @@ -199,6 +305,25 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  	stack_id = bpf_get_stackid(ctx, &stacks,
+>  				   BPF_F_FAST_STACK_CMP | BPF_F_USER_STACK);
+>  
+> +	/* cache stacks */
+> +	stack_tmp_p = bpf_map_lookup_elem(&stack_tmp, &zero);
+> +	if (stack_tmp_p)
+> +		len = bpf_get_stack(ctx, stack_tmp_p->array, MAX_STACKS * sizeof(u64),
+> +				    BPF_F_USER_STACK) / sizeof(u64);
+
+Looks redundant, but not sure if we share the stackid..
+
+> +
+> +	/*
+> +	 * if stacks are successfully collected, cache them to task_storage, they are then
+> +	 * dumped if the off-cpu time hits the threshold.
+> +	 */
+> +	if (len > 0) {
+> +		stack_p = bpf_task_storage_get(&stack_cache, prev, NULL,
+> +					       BPF_LOCAL_STORAGE_GET_F_CREATE);
+> +		if (stack_p) {
+> +			for (int i = 0; i < len && i < MAX_STACKS; ++i)
+> +				stack_p->array[i] = stack_tmp_p->array[i];
+> +		}
+> +	}
+
+Why not use the task storage to get the stacktrace directly?
 
 Thanks,
 Namhyung
 
+> +
+>  	pelem = bpf_task_storage_get(&tstamp, prev, NULL,
+>  				     BPF_LOCAL_STORAGE_GET_F_CREATE);
+>  	if (!pelem)
+> @@ -228,6 +353,14 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+>  		else
+>  			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
 >  
->  	arch__post_evsel_config(evsel, attr);
->  }
+> +		if (delta >= offcpu_thresh) {
+> +			struct offcpu_data *data = bpf_map_lookup_elem(&offcpu_payload, &zero);
+> +
+> +			stack_p = bpf_task_storage_get(&stack_cache, next, NULL, 0);
+> +			if (data && stack_p)
+> +				off_cpu_dump(ctx, data, &key, stack_p, delta, pelem->timestamp);
+> +		}
+> +
+>  		/* prevent to reuse the timestamp later */
+>  		pelem->timestamp = 0;
+>  	}
 > -- 
 > 2.45.2
 > 
