@@ -1,200 +1,246 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2390C42058;
-	Wed,  7 Aug 2024 06:17:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0502B1B29A7
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 06:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723011435; cv=none; b=V/3FpWc026aSbldfqmzq/TbNYlN2YluVJFrWXa15XeEPWjEZo+HZc1BZdi4Iq1pmCLeSp8Kwl845+M4Vx0MIOu2YO+qi3cOLZ8vvg1FXCiIYeD8KofTxSWjQDRtUB/Ot7n/MEPQvnTR9mRy4+5lSvUeuMuRnrJ/o9SiUiOqDn78=
+	t=1723011873; cv=none; b=X20E03fvCAX4KAi5+TWzgl+qTK7n4K943uNUSzH+CHhHIf/3UtEFP8U3Zv2BbDZGE2mN9DodNM3LszFWXJMPV1QYbA8zP2OS4JpL7nKBTwTCWiWlwu5xcn94mLwcrJ/3CbBH6BnQMeTsRLxSu6s/MMRED2nHTj9RTSJi0Hrzkmc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723011435; c=relaxed/simple;
-	bh=0NZ/E7RDLgfDPnY+Jnfm2aTXMAqExctiZQfzwx2T4zQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBmuigwMVlweh7m3t22q2iAJ89wvEEYTJzyHL9qwZe05Ix1xcMjvmt0SZqZ68ko65jQ9vg7MLqwkNQthvlibpIXJfaCdHaimTbY8y3ysVWf03L9Ha0sFhCMPDoo4WyF86PPJOXv5aP2gspcmjoMa3g1VZ57dX0a319uK9uu7Hes=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbYWEZ/n; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbYWEZ/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94690C4AF10;
-	Wed,  7 Aug 2024 06:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723011434;
-	bh=0NZ/E7RDLgfDPnY+Jnfm2aTXMAqExctiZQfzwx2T4zQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=GbYWEZ/nf55qi9ItKS7XnJmc2vJX75ZwVBFtXi/T7hUtDSY3mm+RxUkXYMwk1ZsFb
-	 rZP9bdhZuLaYDiNu+gkEZOgw2MZoTb5ooZoHNSGTfZ8T3/bwbmRRyL8NBU77VGxasU
-	 aDGk6m9uUJOxyOPsASBS7HNFZuQ4jtCd3K9ZN8z79n4x5tM/PzL/U7SD7dECnmxclX
-	 apzbqvFBB1hEpuiC5pDDx7vvOYGL9IIHl9H31pfhq7tt5pqMYPwu6q4ZoOi/L6KW+A
-	 Wma3mvdbft+U+e6LSmBwCSzRa6EuZwlsL+2/MymHQRhtyOF0z8ulwnGEAMEKKp+U/+
-	 qW9PnqJf9cwgA==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf annotate-data: Support --skip-empty option
-Date: Tue,  6 Aug 2024 23:17:13 -0700
-Message-ID: <20240807061713.1642924-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+	s=arc-20240116; t=1723011873; c=relaxed/simple;
+	bh=cTIb25FogVTgKs8k3FaoK3KVIEj3c/08pOdpV4eQz5k=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PxiKgy7mgHr43jUWmSYRAv//lkjdrYl2QKS4dfQgUN1FC14fvZL0LlxGb6VzJDFrRF5PzjNJIhj8+qXZ3R7ECwSYJaHP+VnoUtR7JUhwBYUE+3VwALOVlm/HT/RhQcM+s/w8h/463XZRfYl+1F10n0lZgDnLuHUYnVfejOYoryU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2cf93dc11c6so1102663a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 23:24:31 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723011871; x=1723616671;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4mRLNrU4dNOfn30ta5TXCGehkVeCWm6XHcqer+evLf4=;
+        b=Y1isIQnM1VxbszPWORbfkKpzOjgmkqEFaMVIB8tOpwNSnOqLAAMhe6ms4PlWDRnEEa
+         YkZQhZip2xD2yiElE7/QjtpMs801Fv5C6Ub2a6ZNvAnfMgMmioKS1Na9mjSM1Opymkzl
+         aa+1xT38F2d4X+BPGIzK2CNsZCtoB52r1X0cfBdtbu4VgSLbml6eI9BkQXPrkq6IDpxE
+         MFeuyB5uebGGKiWkUEzGd+q280yG3nq/LUJtcFjihMlRtoNRwjkDZzSRus6okuuBJAZj
+         1BOZHff0f3db8wZVLbn/jI8zxF1AhxnuomjY2bbwETdQaEPPbXC4PFHgmXLkxNdfXGGw
+         aGSg==
+X-Gm-Message-State: AOJu0YySZ8aEFvunWa46SA06HATyDF3vj+zFWrwix/B1qenTkZQHhBs9
+	EAb7uLqbCFUhvF0g7OZVs/6lQZcUscwpSSrAUfwK9lwKlEQX0AP1qy4QZeJNvpuCcsZwzIV28nq
+	tyZbxu/gWr+eeykoTdjriikjYv32fF01L
+X-Google-Smtp-Source: AGHT+IHCm4i0+PMuuSfbzOAIL0xJ+ZyuREVxYXop8ba8vn/+RQxPH7MzmhsvwwzfE4c04zt+TnXM0a+IDWKTlElBIPk=
+X-Received: by 2002:a17:90a:c696:b0:2c9:6d8:d823 with SMTP id
+ 98e67ed59e1d1-2cff93c4da3mr22288879a91.1.1723011870951; Tue, 06 Aug 2024
+ 23:24:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240807033025.894167-1-ak@linux.intel.com> <20240807033025.894167-3-ak@linux.intel.com>
+In-Reply-To: <20240807033025.894167-3-ak@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 6 Aug 2024 23:24:19 -0700
+Message-ID: <CAM9d7ch131CJ0wh89XaaA6EDNriZ4G84GjrVr5-98UhXW-Tixg@mail.gmail.com>
+Subject: Re: [PATCH v8 3/4] perf script: Fix perf script -F +metric
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The --skip-empty option is to hide dummy events in a group.  Like other
-output mode like perf report and perf annotate, the data-type profiling
-output should support the option.
+On Tue, Aug 6, 2024 at 8:30=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wrot=
+e:
+>
+> This fixes a regression with perf script -F +metric originally caused by =
+:
+>
+> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Sun Feb 19 01:28:46 2023 -0800
+>
+>     perf metric: Directly use counts rather than saved_value
+>
+> In the perf script environment the evsel wouldn't allocate an aggr
+> values array, which led to a -1 reference because the metric
+> evaluation would try to reference NULL - 1 (for aggr_idx)
+>
+> Give the perf script evsels a single CPU aggr setup. That's
+> enough because the groups are always contiguous, so no need
+> to store more than one CPU's worth of values.
+>
+> Before
+>
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> % perf script -F +metric
+> Segmentation fault (core dumped)
+>
+> After:
+>
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> ...
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
+> % perf script -F +metric
+>        perf-exec 1847557 264658.180789:       3009       cycles:  fffffff=
+f990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:        382 instructions:  fffffff=
+f990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:         metric:    0.13  insn per=
+ cycle
+> ...
+>
+> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
+>
+> ----
+>
+> v2: Reformat code
+> v3: Work around bogus warning
+> v4: Set up aggr map only for metrics case to keep perf stat record
+> working
+> v5: Broken version
+> v6: Only set up limited aggregation mode with -F +metric. Add conflict
+> checks with perf stat record files.
+> v7: Remove some unnecessary conflict checks. Fix buffer overflow. Minor c=
+leanups.
+> v8: Add check for leader sampling. Update some comments.
+> v9: Correct check for leader sampling (Namhyung)
+> ---
+>  tools/perf/builtin-script.c | 50 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 45 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index c16224b1fef3..2e9f539ba4ce 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -335,7 +335,6 @@ struct evsel_script {
+>         FILE *fp;
+>         u64  samples;
+>         /* For metric output */
+> -       u64  val;
+>         int  gnum;
+>  };
+>
+> @@ -2127,18 +2126,30 @@ static void perf_sample__fprint_metric(struct per=
+f_script *script,
+>         };
+>         struct evsel *ev2;
+>         u64 val;
+> +       static int printed;
+>
+>         if (!evsel->stats)
+>                 evlist__alloc_stats(&stat_config, script->session->evlist=
+, /*alloc_raw=3D*/false);
+>         if (evsel_script(leader)->gnum++ =3D=3D 0)
+>                 perf_stat__reset_shadow_stats();
+> -       val =3D sample->period * evsel->scale;
+> -       evsel_script(evsel)->val =3D val;
+> +       val =3D sample->period;
+> +       if (!(leader->core.attr.read_format & PERF_FORMAT_GROUP)) {
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/ui/browsers/annotate-data.c | 30 ++++++++++++++----
- tools/perf/util/annotate-data.c        | 44 +++++++++++++-------------
- 2 files changed, 45 insertions(+), 29 deletions(-)
+Oh, I meant checking both PERF_SAMPLE_READ and PERF_FORMAT_GROUP.
+Sorry for the confusion, otherwise it looks good to me.
 
-diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
-index 8d6bf08d371d..c3db80a7589a 100644
---- a/tools/perf/ui/browsers/annotate-data.c
-+++ b/tools/perf/ui/browsers/annotate-data.c
-@@ -46,15 +46,18 @@ static int get_member_overhead(struct annotated_data_type *adt,
- 	struct annotated_member *member = entry->data;
- 	int i, k;
- 
--	for (i = 0; i < member->size; i++) {
-+	for (i = 0, k = 0; i < member->size; i++) {
- 		struct type_hist *h;
- 		struct evsel *evsel;
- 		int offset = member->offset + i;
- 
- 		for_each_group_evsel(evsel, leader) {
-+			if (symbol_conf.skip_empty &&
-+			    evsel__hists(evsel)->stats.nr_samples == 0)
-+				continue;
-+
- 			h = adt->histograms[evsel->core.idx];
--			k = evsel__group_idx(evsel);
--			update_hist_entry(&entry->hists[k], &h->addr[offset]);
-+			update_hist_entry(&entry->hists[k++], &h->addr[offset]);
- 		}
- 	}
- 	return 0;
-@@ -203,6 +206,7 @@ static void browser__write(struct ui_browser *uib, void *entry, int row)
- 	struct annotated_data_type *adt = he->mem_type;
- 	struct evsel *leader = hists_to_evsel(he->hists);
- 	struct evsel *evsel;
-+	int idx = 0;
- 
- 	if (member == NULL) {
- 		bool current = ui_browser__is_current_entry(uib, row);
-@@ -219,9 +223,12 @@ static void browser__write(struct ui_browser *uib, void *entry, int row)
- 	/* print the number */
- 	for_each_group_evsel(evsel, leader) {
- 		struct type_hist *h = adt->histograms[evsel->core.idx];
--		int idx = evsel__group_idx(evsel);
- 
--		browser__write_overhead(uib, h, &be->hists[idx], row);
-+		if (symbol_conf.skip_empty &&
-+		    evsel__hists(evsel)->stats.nr_samples == 0)
-+			continue;
-+
-+		browser__write_overhead(uib, h, &be->hists[idx++], row);
- 	}
- 
- 	/* print type info */
-@@ -300,8 +307,17 @@ int hist_entry__annotate_data_tui(struct hist_entry *he, struct evsel *evsel,
- 
- 	ui_helpline__push("Press ESC to exit");
- 
--	if (evsel__is_group_event(evsel))
--		browser.nr_events = evsel->core.nr_members;
-+	if (evsel__is_group_event(evsel)) {
-+		struct evsel *pos;
-+		int nr = 0;
-+
-+		for_each_group_evsel(pos, evsel) {
-+			if (!symbol_conf.skip_empty ||
-+			    evsel__hists(pos)->stats.nr_samples)
-+				nr++;
-+		}
-+		browser.nr_events = nr;
-+	}
- 
- 	ret = annotated_data_browser__collect_entries(&browser);
- 	if (ret == 0)
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 734acdd8c4b7..be3b84a82271 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -1492,10 +1492,15 @@ static void print_annotated_data_header(struct hist_entry *he, struct evsel *evs
- 		struct evsel *pos;
- 		int i = 0;
- 
--		for_each_group_evsel(pos, evsel)
--			printf(" event[%d] = %s\n", i++, pos->name);
-+		nr_members = 0;
-+		for_each_group_evsel(pos, evsel) {
-+			if (symbol_conf.skip_empty &&
-+			    evsel__hists(pos)->stats.nr_samples == 0)
-+				continue;
- 
--		nr_members = evsel->core.nr_members;
-+			printf(" event[%d] = %s\n", i++, pos->name);
-+			nr_members++;
-+		}
- 	}
- 
- 	if (symbol_conf.show_total_period) {
-@@ -1530,31 +1535,26 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
- {
- 	struct annotated_member *child;
- 	struct type_hist *h = mem_type->histograms[evsel->core.idx];
--	int i, nr_events = 1, samples = 0;
-+	int i, nr_events = 0, samples = 0;
- 	u64 period = 0;
- 	int width = symbol_conf.show_total_period ? 11 : 7;
-+	struct evsel *pos;
- 
--	for (i = 0; i < member->size; i++) {
--		samples += h->addr[member->offset + i].nr_samples;
--		period += h->addr[member->offset + i].period;
--	}
--	print_annotated_data_value(h, period, samples);
--
--	if (evsel__is_group_event(evsel)) {
--		struct evsel *pos;
-+	for_each_group_evsel(pos, evsel) {
-+		h = mem_type->histograms[pos->core.idx];
- 
--		for_each_group_member(pos, evsel) {
--			h = mem_type->histograms[pos->core.idx];
-+		if (symbol_conf.skip_empty &&
-+		    evsel__hists(pos)->stats.nr_samples == 0)
-+			continue;
- 
--			samples = 0;
--			period = 0;
--			for (i = 0; i < member->size; i++) {
--				samples += h->addr[member->offset + i].nr_samples;
--				period += h->addr[member->offset + i].period;
--			}
--			print_annotated_data_value(h, period, samples);
-+		samples = 0;
-+		period = 0;
-+		for (i = 0; i < member->size; i++) {
-+			samples += h->addr[member->offset + i].nr_samples;
-+			period += h->addr[member->offset + i].period;
- 		}
--		nr_events = evsel->core.nr_members;
-+		print_annotated_data_value(h, period, samples);
-+		nr_events++;
- 	}
- 
- 	printf(" %10d %10d  %*s%s\t%s",
--- 
-2.46.0.rc2.264.g509ed76dc8-goog
+Thanks,
+Namhyung
 
+
+> +               if (!printed)
+> +                       fprintf(stderr, "perf script: -F metric requires =
+{}:S for groups leader sampling\n");
+> +               printed =3D 1;
+> +               return;
+> +       }
+> +       /*
+> +        * Always use the first entry as storage because the leader sampl=
+ing
+> +        * groups are contiguous and there's no need to handle multiple i=
+ndexes
+> +        * for anything.
+> +        */
+> +       evsel->stats->aggr[0].counts.val =3D val;
+>         if (evsel_script(leader)->gnum =3D=3D leader->core.nr_members) {
+>                 for_each_group_member (ev2, leader) {
+>                         perf_stat__print_shadow_stats(&stat_config, ev2,
+> -                                                     evsel_script(ev2)->=
+val,
+> -                                                     sample->cpu,
+> +                                                     evsel->stats->aggr[=
+0].counts.val,
+> +                                                     0,
+>                                                       &ctx,
+>                                                       NULL);
+>                 }
+> @@ -2325,6 +2336,20 @@ static void process_event(struct perf_script *scri=
+pt,
+>                 fflush(fp);
+>  }
+>
+> +static void check_metric_conflict(void)
+> +{
+> +       int i;
+> +       /*
+> +        * Avoid conflict with the aggregation mode used for the metric p=
+rinting.
+> +        */
+> +       for (i =3D 0; i < OUTPUT_TYPE_MAX; i++) {
+> +               if (output[i].fields & PERF_OUTPUT_METRIC) {
+> +                       fprintf(stderr, "perf stat record files are not s=
+upported with -F metric\n");
+> +                       exit(1);
+> +               }
+> +       }
+> +}
+> +
+>  static struct scripting_ops    *scripting_ops;
+>
+>  static void __process_stat(struct evsel *counter, u64 tstamp)
+> @@ -2334,6 +2359,8 @@ static void __process_stat(struct evsel *counter, u=
+64 tstamp)
+>         struct perf_cpu cpu;
+>         static int header_printed;
+>
+> +       check_metric_conflict();
+> +
+>         if (!header_printed) {
+>                 printf("%3s %8s %15s %15s %15s %15s %s\n",
+>                        "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVE=
+NT");
+> @@ -3725,6 +3752,8 @@ static int process_stat_config_event(struct perf_se=
+ssion *session __maybe_unused
+>  {
+>         perf_event__read_stat_config(&stat_config, &event->stat_config);
+>
+> +       check_metric_conflict();
+> +
+>         /*
+>          * Aggregation modes are not used since post-processing scripts a=
+re
+>          * supposed to take care of such requirements
+> @@ -4088,6 +4117,17 @@ int cmd_script(int argc, const char **argv)
+>
+>         argc =3D parse_options_subcommand(argc, argv, options, script_sub=
+commands, script_usage,
+>                              PARSE_OPT_STOP_AT_NON_OPTION);
+> +       for (i =3D 0; i < OUTPUT_TYPE_MAX; i++) {
+> +               if (output[i].fields & PERF_OUTPUT_METRIC) {
+> +                       stat_config.aggr_map =3D cpu_aggr_map__empty_new(=
+1);
+> +                       err =3D -ENOMEM;
+> +                       if (!stat_config.aggr_map)
+> +                               goto out;
+> +                       err =3D 0;
+> +                       stat_config.aggr_map->nr =3D 1;
+> +                       break;
+> +               }
+> +       }
+>
+>         if (symbol_conf.guestmount ||
+>             symbol_conf.default_guest_vmlinux_name ||
+> --
+> 2.45.2
+>
