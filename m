@@ -1,57 +1,57 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2937613AD1D;
-	Wed,  7 Aug 2024 15:39:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 570E613B783;
+	Wed,  7 Aug 2024 15:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723045156; cv=none; b=ItLjYBLj38s26RfmU8bo42w/AonqOkTX7PTvwPKQ+fAcAWIgDFrRwBJE2HJa8HtJPHgrARsqWUirLLLUK9zc+oKa4o6sdUjPXbSurQEh/1TNLQiApT+rg4QtKwO1BtbqWWNkXgoX66Aa6GKyfe7g9q9UeuxeOpPslBkzq/9RnZ8=
+	t=1723045160; cv=none; b=t7Hazl4mA850VcZiNSMyYiS9O51ozvm0Ru35fc3Fo9GTEsj3j7u9JZf8LQnRO0YfykPoktEBhm2sDIpKBExnhFygoxr8w0PfEIAbA3/jnEWZZa3WNZyDQAzK7SdDMzJ/aqumDykM5lVRodzkCveU1BuRhxZK9y2l/XAR2Sdu2aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723045156; c=relaxed/simple;
-	bh=blq8IKKWWvrPrqVs1Yb9VttWa84QButnzElZfOfk1Vw=;
+	s=arc-20240116; t=1723045160; c=relaxed/simple;
+	bh=RI+3yVkIbTsBaDX4k5Qtq/bNNlaLMwk2mVtlK99zP9Q=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=I6vSU/Qy3fs85R3vSy6MF327lbQr+iKZd0T498UJ+SUU2nwOxi4psz4LV17C0TyJmOfdxHkwU+FBXXIttYyV38/i9Fi7Q8N+D+ax+O/t1M/5RsS+4CWLFJ4WFasSXcKKk1wtGHsl8xy5d/9tZCj6jKFpHlad40ne5bwXMVa9cbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqUeTtEy; arc=none smtp.client-ip=209.85.214.180
+	 MIME-Version; b=sUllEuN+iW5M1vZTW7NwpAjKKwlITH2StSGF1SO3tofQ/nqAo/c/6HSTFmEgxS+pdaEvYxgrEv4JrKvtTNEhpsUxVbJACteukSAAakMHkYa5CFJ5Ht+pqJkqB0VZofy6YM8tFVAxV+dBsWt7iyfjPh6G3aKtd8P767wg9WyvxCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k8RwrJfo; arc=none smtp.client-ip=209.85.214.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqUeTtEy"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fc49c0aaffso360555ad.3;
-        Wed, 07 Aug 2024 08:39:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8RwrJfo"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fda7fa60a9so376405ad.3;
+        Wed, 07 Aug 2024 08:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723045154; x=1723649954; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723045159; x=1723649959; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4PXh5CjG8YZ+eBmVxe++koknN2SUxUpkitH4m2ykKfM=;
-        b=EqUeTtEyOt8vFr9a3EflfxuYYN2TITF6Rznqn2xfEzKT6BTv8vjfIVjJlZzADF95mF
-         SsuIjZA3UQIU0weT7x6/oy5JV6nO9TanCBnOZHqq734aCPoxMGtBzCUKF5wxwiOqwu/f
-         iltE63xmbtGiB+r0tdBI6YWrQULq9Wxyl/wUEMjuUA+vsbGTexrDWzr1GCWGezZDeDVm
-         wJ0YTIyQGrfH6UEV0ynkKYikubMr6X9py+LmodDGx5l3Nc7eedEvywlZ/A7zUyTcvUUI
-         n9L3NdqlW4ngnRjVYaJvk2egKtTFFOz5qqSPHz5GVSHXtyB8asBDKHEo2twcbvFeE6KB
-         0/HQ==
+        bh=9CbD8V8xBx+xYu1GXsRQcpvSfOCRofW7N4CgCXoEGn4=;
+        b=k8RwrJfoA1SqpiiO+eX0duUa2GOHuLfGR9qOM4xflfXqHmxA1Yy5yRFUtwvS/oGQYT
+         a1a6AoI5Rhus/G/pTw8pmN8IKpynMJFESeWPAs7R21a0+VODZW95tj8gq0SXs8CIZTBV
+         3KUef3lt9MAL6MN/1PX2vcwplb5N3CDo/dQ4mlyNfuuwGZ+CzVvT3j3Kh9wf8th05jAW
+         2/HvK4YwHb70Jf/LlBYEthtiDvdiLOdF6H2aN0MXmgmFjoJ/Smzc7UN79cmLYOem47uz
+         du/rYfSHxMnOUFOueeC3CHhmEQqg2dA3DX0LBoxbN//gynbIQfcpiqjhTh6SD04imHZv
+         rcDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723045154; x=1723649954;
+        d=1e100.net; s=20230601; t=1723045159; x=1723649959;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4PXh5CjG8YZ+eBmVxe++koknN2SUxUpkitH4m2ykKfM=;
-        b=Wl9WfpBvcJDU/RGFCEUfGItfHqGYfPH9yr8VtfX/N0GRY9icNTSEO6xW7CX7iFPpEH
-         6jFXw9nZERKNtTYuLZwmtM9rCdhA5gNQbH7BTbwam1iCTfALAHH3Sr91YV5EqlQzwgpV
-         p3Rd07eIwo4F1/JPw9DS4HlmlyFUM81W9w8LSVIMJSqS7/nQNbPKNWLc1aS39dB7t2z9
-         FyAqeOgIMpP09I4tshQ2izNfHA7gQmqfsiErBWGa7dZfAfXxKyYYBzUtNhLY+i/m/fqJ
-         ZSewcVIR5r5jvISah2pj96PrT49yKRo+ggdonWch8mCH8qgQ2LhmCtp/ohJW162JyayQ
-         r66w==
-X-Forwarded-Encrypted: i=1; AJvYcCW4++PZScw5FbKIXiKXUtrSBxNYJAJCmrVhSs9FFP0KalMfXpO/+x4iS8i21I7JpQ498l2bGGW5YwVYTZh5Ha7guiAnw0rGzGIUEoosIFLLdu0fLob2XwWgs8BKHf2Uc7M+2583IvoCgTC4Ii+yng==
-X-Gm-Message-State: AOJu0YyXXYPLJ85N8VSpldV2Eod4cxgq/8gk3LnWnaW0dGfYyzmkhH6l
-	L49wAAgmAVMOrCjsg4V6DUsJjOUXJZ4TJdoMe0KQf9yLfEdha/83vEEw/aoN
-X-Google-Smtp-Source: AGHT+IE9swvFXbSaxaUilQQA21OlEPiC6Dsq6ZL2DUUHOK8zERyAaHtp3l30pgnfZj3CSPSpqMXtWQ==
-X-Received: by 2002:a17:902:d501:b0:1fd:9105:7dd3 with SMTP id d9443c01a7336-1ff5750acd3mr208258825ad.64.1723045154374;
-        Wed, 07 Aug 2024 08:39:14 -0700 (PDT)
+        bh=9CbD8V8xBx+xYu1GXsRQcpvSfOCRofW7N4CgCXoEGn4=;
+        b=TmhZ4uMZC+M3dZ3BkJEsCG+gr0OvKnwZ6g5jnjewUHaBPNauvv10DV1cuJwlKncWfc
+         8ZU8H6j8xIcAwDzimMuEtUNtUD3bh18cECrrrX1AUvkk0ynJTl42BFmCsHDo9NBpQiPO
+         ZIV621VNegZEjUSTU2b8NvRWMTQtEBGOsIFSUctW39HWR14zyk8k2eCoIk7jf2WO4UFS
+         hvQmhXepmV1bm3huuYSa1X7tfpfEYVjxBzKl9FMCCgkB0NZLSq0+n8c5L+iQFUs+nKmd
+         KAvT0p6fxWKZ8kz7g/3yJey/7/hI7I15df75zlup9u9br9xuQ3hZlFmTqYGa7m4OSD5a
+         rc9A==
+X-Forwarded-Encrypted: i=1; AJvYcCVK6YcAKSuxS0Qed4A1ehDaOqDCn9K5BJTiPYR1m4r8MayWHSASsYFn8W8AZyj+r2w0aE5+jzZc9goIyfCSvAnGRIHtzNrV7bHCoT+RIB9lhnFSG9W4UealfdpyZ4L7fsPFUMq2iCupTSpP0vzh/w==
+X-Gm-Message-State: AOJu0Yx9je3OU/wIMCEdQpX8mTuUE7zplNTJeae2APANLiE5zJa9LNzK
+	klfZKbNtUQZSbqB5TG/dd5HsP6pKQE8wTvN7Dbt8gXPyzaoL8o1YKlaV6KWS
+X-Google-Smtp-Source: AGHT+IFArYTQyPIXgHZ96DWXBE3P7beBq4UuR0NqZH3P8mXjhi+5QCEvOTkuxIhIxizDcM4Ev3mbMQ==
+X-Received: by 2002:a17:903:41d2:b0:1fc:a869:7fb7 with SMTP id d9443c01a7336-1ff5746074cmr244965155ad.54.1723045158566;
+        Wed, 07 Aug 2024 08:39:18 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.55])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff59297329sm108097375ad.247.2024.08.07.08.39.10
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff59297329sm108097375ad.247.2024.08.07.08.39.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 08:39:14 -0700 (PDT)
+        Wed, 07 Aug 2024 08:39:18 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com,
@@ -61,9 +61,9 @@ Cc: irogers@google.com,
 	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 4/9] perf record off-cpu: Dump direct off-cpu samples in BPF
-Date: Wed,  7 Aug 2024 23:38:38 +0800
-Message-ID: <20240807153843.3231451-5-howardchu95@gmail.com>
+Subject: [PATCH v4 5/9] perf record --off-cpu: Dump total off-cpu time at the end.
+Date: Wed,  7 Aug 2024 23:38:39 +0800
+Message-ID: <20240807153843.3231451-6-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240807153843.3231451-1-howardchu95@gmail.com>
 References: <20240807153843.3231451-1-howardchu95@gmail.com>
@@ -75,229 +75,242 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Output PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD, PERF_SAMPLE_CALLCHAIN, and
-PERF_SAMPLE_CGROUP in BPF. Ideally, we should only output
-PERF_SAMPLE_PERIOD (off-cpu time) and PERF_SAMPLE_CALLCHAIN (sched_in
-process's callchain). One only needs to set PERF_SAMPLE_TID and
-PERF_SAMPLE_CGROUP, and perf_event will do everything for us.
+By setting a placeholder sample_type and then writing real data into
+raw_data, we mimic the direct sample method to write data at the end.
 
-But in reality, that's not the case. Setting PERF_SAMPLE_TID will mostly
-give us TID of 0. We might get the correct TID for offcpu-time event
-from time to time, but it is really rare.
-         swapper       0 [000] offcpu-time:  /
-        :1321819 1321819 [002] offcpu-time:  /user.slice/user-1000.slice/session-2.scope
-         swapper       0 [001] offcpu-time:  /
-         swapper       0 [003] offcpu-time:  /
-
-And setting PERF_SAMPLE_CGROUP doesn't work properly either.
-    tmux: server    3701 [003] offcpu-time:  /
-    blueman-tray    1064 [001] offcpu-time:  /
-            bash 1350867 [001] offcpu-time:  /
-            bash 1350844 [000] offcpu-time:  /
-
-We need to retrieve PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD,
-PERF_SAMPLE_CALLCHAIN, and PERF_SAMPLE_CGROUP using BPF and output these
-four fields.
-
-Add perf_event_array map for dumping direct off-cpu samples, but keep
-the at-the-end approach.
-
-Tons of checking before access, to pass the BPF verifier.
-
-If off-cpu time (represented as delta) exceeds the off-cpu threshold, do
-output.
+Note that some data serve only as placeholders and will be overwritten
+by the data in raw_data. Additionally, since the IP will be updated in
+evsel__parse_sample(), there is no need to handle it in off_cpu_write().
 
 Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/util/bpf_skel/off_cpu.bpf.c | 133 +++++++++++++++++++++++++
- 1 file changed, 133 insertions(+)
+ tools/perf/util/bpf_off_cpu.c | 119 +++++++++++++++++++++-------------
+ tools/perf/util/off_cpu.h     |  10 ++-
+ 2 files changed, 84 insertions(+), 45 deletions(-)
 
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index cca1b6990a57..95cc130bb67e 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -18,6 +18,9 @@
- #define MAX_STACKS   32
- #define MAX_ENTRIES  102400
- 
-+#define MAX_CPUS  4096
-+#define MAX_OFFCPU_LEN 128
-+
- struct tstamp_data {
- 	__u32 stack_id;
- 	__u32 state;
-@@ -32,6 +35,7 @@ struct offcpu_key {
- 	__u64 cgroup_id;
+diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
+index fae0bb8aaa13..24104d703242 100644
+--- a/tools/perf/util/bpf_off_cpu.c
++++ b/tools/perf/util/bpf_off_cpu.c
+@@ -37,6 +37,8 @@ union off_cpu_data {
+ 	u64 array[1024 / sizeof(u64)];
  };
  
-+/* for dumping at the end */
- struct {
- 	__uint(type, BPF_MAP_TYPE_STACK_TRACE);
- 	__uint(key_size, sizeof(__u32));
-@@ -39,6 +43,45 @@ struct {
- 	__uint(max_entries, MAX_ENTRIES);
- } stacks SEC(".maps");
- 
-+struct offcpu_data {
-+	u64 array[MAX_OFFCPU_LEN];
-+};
++u64 off_cpu_raw_data[1024 / sizeof(u64)];
 +
-+struct stack_data {
-+	u64 array[MAX_STACKS];
-+};
-+
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, sizeof(__u32));
-+	__uint(max_entries, MAX_CPUS);
-+} offcpu_output SEC(".maps");
-+
-+/* temporary offcpu sample */
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, sizeof(struct offcpu_data));
-+	__uint(max_entries, 1);
-+} offcpu_payload SEC(".maps");
-+
-+/* temporary stack data */
-+struct {
-+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-+	__uint(key_size, sizeof(__u32));
-+	__uint(value_size, sizeof(struct stack_data));
-+	__uint(max_entries, 1);
-+} stack_tmp SEC(".maps");
-+
-+/* cached stack per task storage */
-+struct {
-+	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
-+	__uint(map_flags, BPF_F_NO_PREALLOC);
-+	__type(key, int);
-+	__type(value, struct stack_data);
-+} stack_cache SEC(".maps");
-+
- struct {
- 	__uint(type, BPF_MAP_TYPE_TASK_STORAGE);
- 	__uint(map_flags, BPF_F_NO_PREALLOC);
-@@ -184,12 +227,75 @@ static inline int can_record(struct task_struct *t, int state)
- 	return 1;
- }
- 
-+static inline bool check_bounds(int index)
-+{
-+	if (index >= 0 && index < MAX_OFFCPU_LEN)
-+		return true;
-+
-+	return false;
-+}
-+
-+static inline int copy_stack(struct stack_data *from,
-+			     struct offcpu_data *to, int n)
-+{
-+	int max_stacks = MAX_STACKS, len = 0;
-+
-+	if (!from)
-+		return len;
-+
-+	for (int i = 0; i < max_stacks && from->array[i]; ++i) {
-+		if (check_bounds(n + 2 + i)) {
-+			to->array[n + 2 + i] = from->array[i];
-+			++len;
-+		}
-+	}
-+	return len;
-+}
-+
-+static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct offcpu_key *key,
-+			struct stack_data *stack_p, __u64 delta, __u64 timestamp)
-+{
-+	int size, n = 0, ip_pos = -1, len = 0;
-+
-+	if (sample_type & PERF_SAMPLE_TID && check_bounds(n))
-+		data->array[n++] = (u64)key->tgid << 32 | key->pid;
-+	if (sample_type & PERF_SAMPLE_PERIOD && check_bounds(n))
-+		data->array[n++] = delta;
-+	if (sample_type & PERF_SAMPLE_CALLCHAIN && check_bounds(n + 2)) {
-+		/* data->array[n] is callchain->nr (updated later) */
-+		data->array[n + 1] = PERF_CONTEXT_USER;
-+		data->array[n + 2] = 0;
-+
-+		len = copy_stack(stack_p, data, n);
-+
-+		/* update length of callchain */
-+		data->array[n] = len + 1;
-+
-+		/* update sample ip with the first callchain entry */
-+		if (ip_pos >= 0)
-+			data->array[ip_pos] = data->array[n + 2];
-+
-+		/* calculate sample callchain data->array length */
-+		n += len + 2;
-+	}
-+	if (sample_type & PERF_SAMPLE_CGROUP && check_bounds(n))
-+		data->array[n++] = key->cgroup_id;
-+
-+	size = n * sizeof(u64);
-+	if (size >= 0 && size <= MAX_OFFCPU_LEN * sizeof(u64))
-+		bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_CPU, data, size);
-+
-+	return 0;
-+}
-+
- static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
- 			struct task_struct *next, int state)
+ static int off_cpu_config(struct evlist *evlist)
  {
- 	__u64 ts;
- 	__u32 stack_id;
- 	struct tstamp_data *pelem;
-+	struct stack_data *stack_tmp_p, *stack_p;
-+	int zero = 0, len = 0;
+ 	char off_cpu_event[64];
+@@ -139,12 +141,21 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 	int ncpus = 1, ntasks = 1, ncgrps = 1;
+ 	struct strlist *pid_slist = NULL;
+ 	struct str_node *pos;
++	struct evsel *evsel;
  
- 	ts = bpf_ktime_get_ns();
+ 	if (off_cpu_config(evlist) < 0) {
+ 		pr_err("Failed to config off-cpu BPF event\n");
+ 		return -1;
+ 	}
  
-@@ -199,6 +305,25 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
- 	stack_id = bpf_get_stackid(ctx, &stacks,
- 				   BPF_F_FAST_STACK_CMP | BPF_F_USER_STACK);
- 
-+	/* cache stacks */
-+	stack_tmp_p = bpf_map_lookup_elem(&stack_tmp, &zero);
-+	if (stack_tmp_p)
-+		len = bpf_get_stack(ctx, stack_tmp_p->array, MAX_STACKS * sizeof(u64),
-+				    BPF_F_USER_STACK) / sizeof(u64);
-+
-+	/*
-+	 * if stacks are successfully collected, cache them to task_storage, they are then
-+	 * dumped if the off-cpu time hits the threshold.
-+	 */
-+	if (len > 0) {
-+		stack_p = bpf_task_storage_get(&stack_cache, prev, NULL,
-+					       BPF_LOCAL_STORAGE_GET_F_CREATE);
-+		if (stack_p) {
-+			for (int i = 0; i < len && i < MAX_STACKS; ++i)
-+				stack_p->array[i] = stack_tmp_p->array[i];
-+		}
++	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
++	if (evsel == NULL) {
++		pr_err("%s evsel not found\n", OFFCPU_EVENT);
++		return -1 ;
 +	}
 +
- 	pelem = bpf_task_storage_get(&tstamp, prev, NULL,
- 				     BPF_LOCAL_STORAGE_GET_F_CREATE);
- 	if (!pelem)
-@@ -228,6 +353,14 @@ static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
- 		else
- 			bpf_map_update_elem(&off_cpu, &key, &delta, BPF_ANY);
- 
-+		if (delta >= offcpu_thresh) {
-+			struct offcpu_data *data = bpf_map_lookup_elem(&offcpu_payload, &zero);
++	evsel->sample_type_embed = OFFCPU_EMBEDDED_SAMPLE_TYPES;
 +
-+			stack_p = bpf_task_storage_get(&stack_cache, next, NULL, 0);
-+			if (data && stack_p)
-+				off_cpu_dump(ctx, data, &key, stack_p, delta, pelem->timestamp);
-+		}
-+
- 		/* prevent to reuse the timestamp later */
- 		pelem->timestamp = 0;
+ 	skel = off_cpu_bpf__open();
+ 	if (!skel) {
+ 		pr_err("Failed to open off-cpu BPF skeleton\n");
+@@ -257,7 +268,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
  	}
+ 
+ 	if (evlist__first(evlist)->cgrp) {
+-		struct evsel *evsel;
+ 		u8 val = 1;
+ 
+ 		skel->bss->has_cgroup = 1;
+@@ -279,6 +289,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
+ 		}
+ 	}
+ 
++	skel->bss->sample_type   = OFFCPU_EMBEDDED_SAMPLE_TYPES;
+ 	skel->bss->offcpu_thresh = opts->off_cpu_thresh * 1000ull;
+ 
+ 	err = off_cpu_bpf__attach(skel);
+@@ -304,7 +315,8 @@ int off_cpu_write(struct perf_session *session)
+ {
+ 	int bytes = 0, size;
+ 	int fd, stack;
+-	u64 sample_type, val, sid = 0;
++	u32 raw_size;
++	u64 sample_type_off_cpu, sample_type_bpf_output, val, sid = 0, tstamp = OFF_CPU_TIMESTAMP;
+ 	struct evsel *evsel;
+ 	struct perf_data_file *file = &session->data->file;
+ 	struct off_cpu_key prev, key;
+@@ -314,7 +326,6 @@ int off_cpu_write(struct perf_session *session)
+ 			.misc = PERF_RECORD_MISC_USER,
+ 		},
+ 	};
+-	u64 tstamp = OFF_CPU_TIMESTAMP;
+ 
+ 	skel->bss->enabled = 0;
+ 
+@@ -324,15 +335,10 @@ int off_cpu_write(struct perf_session *session)
+ 		return 0;
+ 	}
+ 
+-	sample_type = evsel->core.attr.sample_type;
++	sample_type_off_cpu    = OFFCPU_EMBEDDED_SAMPLE_TYPES;
++	sample_type_bpf_output = evsel->core.attr.sample_type;
+ 
+-	if (sample_type & ~OFFCPU_SAMPLE_TYPES) {
+-		pr_err("not supported sample type: %llx\n",
+-		       (unsigned long long)sample_type);
+-		return -1;
+-	}
+-
+-	if (sample_type & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
++	if (sample_type_bpf_output & (PERF_SAMPLE_ID | PERF_SAMPLE_IDENTIFIER)) {
+ 		if (evsel->core.id)
+ 			sid = evsel->core.id[0];
+ 	}
+@@ -343,49 +349,74 @@ int off_cpu_write(struct perf_session *session)
+ 
+ 	while (!bpf_map_get_next_key(fd, &prev, &key)) {
+ 		int n = 1;  /* start from perf_event_header */
+-		int ip_pos = -1;
++		int i = 0; /* raw data index */
+ 
+ 		bpf_map_lookup_elem(fd, &key, &val);
+ 
+-		if (sample_type & PERF_SAMPLE_IDENTIFIER)
+-			data.array[n++] = sid;
+-		if (sample_type & PERF_SAMPLE_IP) {
+-			ip_pos = n;
+-			data.array[n++] = 0;  /* will be updated */
+-		}
+-		if (sample_type & PERF_SAMPLE_TID)
+-			data.array[n++] = (u64)key.pid << 32 | key.tgid;
+-		if (sample_type & PERF_SAMPLE_TIME)
+-			data.array[n++] = tstamp;
+-		if (sample_type & PERF_SAMPLE_ID)
++		/* bpf output data */
++		if (sample_type_bpf_output & PERF_SAMPLE_IDENTIFIER)
+ 			data.array[n++] = sid;
+-		if (sample_type & PERF_SAMPLE_CPU)
++		/* fill in an empty value, it will be overwritten by embedded data */
++		if (sample_type_bpf_output & PERF_SAMPLE_IP)
+ 			data.array[n++] = 0;
+-		if (sample_type & PERF_SAMPLE_PERIOD)
+-			data.array[n++] = val;
+-		if (sample_type & PERF_SAMPLE_CALLCHAIN) {
+-			int len = 0;
+-
+-			/* data.array[n] is callchain->nr (updated later) */
+-			data.array[n + 1] = PERF_CONTEXT_USER;
+-			data.array[n + 2] = 0;
++		if (sample_type_bpf_output & PERF_SAMPLE_TID)
++			data.array[n++] = 0;
++		if (sample_type_bpf_output & PERF_SAMPLE_TIME)
++			data.array[n++] = tstamp; /* we won't overwrite time */
++		if (sample_type_bpf_output & PERF_SAMPLE_CPU)
++			data.array[n++] = 0;
++		if (sample_type_bpf_output & PERF_SAMPLE_PERIOD)
++			data.array[n++] = 0;
++		if (sample_type_bpf_output & PERF_SAMPLE_RAW) {
++			/*
++			 * the format of raw data is as follows:
++			 *
++			 *  [ size ][ data ]
++			 *  [     data     ]
++			 *  [     data     ]
++			 *  [     data     ]
++			 *  [ data ][ empty]
++			 *
++			 * because embedded data is in BPF output, perf script -F without bpf-output
++			 * field will not work properly
++			 *
++			 */
++			if (sample_type_off_cpu & PERF_SAMPLE_TID)
++				off_cpu_raw_data[i++] = (u64)key.pid << 32 | key.tgid;
++			if (sample_type_off_cpu & PERF_SAMPLE_PERIOD)
++				off_cpu_raw_data[i++] = val;
++			if (sample_type_off_cpu & PERF_SAMPLE_CALLCHAIN) {
++				int len = 0;
++
++				/* off_cpu_raw_data[n] is callchain->nr (updated later) */
++				off_cpu_raw_data[i + 1] = PERF_CONTEXT_USER;
++				off_cpu_raw_data[i + 2] = 0;
++
++				bpf_map_lookup_elem(stack, &key.stack_id, &off_cpu_raw_data[i + 2]);
++				while (off_cpu_raw_data[i + 2 + len])
++					len++;
++
++				/* update length of callchain */
++				off_cpu_raw_data[i] = len + 1;
++
++				/* calculate sample callchain off_cpu_raw_data length */
++				i += len + 2;
++			}
++			if (sample_type_off_cpu & PERF_SAMPLE_CGROUP)
++				off_cpu_raw_data[i++] = key.cgroup_id;
+ 
+-			bpf_map_lookup_elem(stack, &key.stack_id, &data.array[n + 2]);
+-			while (data.array[n + 2 + len])
+-				len++;
++			raw_size = i * sizeof(u64) + sizeof(u32); /* 4 empty bytes for alignment */
+ 
+-			/* update length of callchain */
+-			data.array[n] = len + 1;
++			/* raw_size */
++			memcpy((void *)data.array + n * sizeof(u64), &raw_size, sizeof(raw_size));
+ 
+-			/* update sample ip with the first callchain entry */
+-			if (ip_pos >= 0)
+-				data.array[ip_pos] = data.array[n + 2];
++			/* raw_data */
++			memcpy((void *)data.array + n * sizeof(u64) + sizeof(u32), off_cpu_raw_data, i * sizeof(u64));
+ 
+-			/* calculate sample callchain data array length */
+-			n += len + 2;
++			n += i + 1;
+ 		}
+-		if (sample_type & PERF_SAMPLE_CGROUP)
+-			data.array[n++] = key.cgroup_id;
++		if (sample_type_bpf_output & PERF_SAMPLE_CGROUP)
++			data.array[n++] = 0;
+ 
+ 		size = n * sizeof(u64);
+ 		data.hdr.size = size;
+diff --git a/tools/perf/util/off_cpu.h b/tools/perf/util/off_cpu.h
+index 2dd67c60f211..eaf7be92472d 100644
+--- a/tools/perf/util/off_cpu.h
++++ b/tools/perf/util/off_cpu.h
+@@ -10,12 +10,20 @@ struct record_opts;
+ 
+ #define OFFCPU_EVENT  "offcpu-time"
+ 
++#define OFF_CPU_THRESH_DEFAULT 500000ull
++
+ #define OFFCPU_SAMPLE_TYPES  (PERF_SAMPLE_IDENTIFIER | PERF_SAMPLE_IP | \
+ 			      PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
+ 			      PERF_SAMPLE_ID | PERF_SAMPLE_CPU | \
+-			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_CALLCHAIN | \
++			      PERF_SAMPLE_PERIOD | PERF_SAMPLE_RAW | \
+ 			      PERF_SAMPLE_CGROUP)
+ 
++/*
++ * for embedded data to overwrite the original sample, duplicated sample types
++ * must be set in the original OFFCPU_SAMPLE_TYPES, except for callchain.
++ */
++#define OFFCPU_EMBEDDED_SAMPLE_TYPES  (PERF_SAMPLE_TID | PERF_SAMPLE_PERIOD | \
++				       PERF_SAMPLE_CALLCHAIN | PERF_SAMPLE_CGROUP)
+ 
+ #ifdef HAVE_BPF_SKEL
+ int off_cpu_prepare(struct evlist *evlist, struct target *target,
 -- 
 2.45.2
 
