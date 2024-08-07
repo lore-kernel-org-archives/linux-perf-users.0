@@ -1,313 +1,149 @@
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F97319DF86;
-	Wed,  7 Aug 2024 06:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0AA6CDAB;
+	Wed,  7 Aug 2024 06:15:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723011186; cv=none; b=WhS7Hn/gTryBudZYs6eRw9Y94cPP8eEg9yvKht7cuYhyKxc0sJxjWIPftkghoeFgm+sT1bzuG5RqtZbJ0t1cthe6wCzCQ2UeCQ4yHtlM1o/4XaLtB6GUa35I7iJLflaVvsxFcCumvUOqmDjGthxEbq1mf40A46poY98tkZCNewU=
+	t=1723011358; cv=none; b=SsX8HItzUD8RBmPM9we3Y2Su8wZkgmZ5OZmsyBg5ssZcjohb6rwZOtYBcZjQ1FRoGXPW0jXDyMeUDSlY9DCEYQVgCMw85Mo9yN8QafuvKidk/CR5ginY/TKbHFiH6EtIHjKL7WpI7JKD+RX81/GlfT8FUXG1yBfPMr/XNLNm7vk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723011186; c=relaxed/simple;
-	bh=K+qxP4WWcgJDXI8X+yE8XSc+XD0JqKDQrr0AfKdv2PE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KDQILYM3+vf7Apn7O+uVo2XSLoSF3Dotq4Em0kYFEP1Usrn9Y6Wxn1cByegxq3BexHpFJYuqW6heyNF7siZrE3/NuE6RnsCaXymeEp6lolRAigPUlfALHT+lE07yXSZl/TNBNZm+hLkQnn/yg0ChaU+BDFFTJpUXIUAKKpqji0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-70d18d4b94cso1088669b3a.2;
-        Tue, 06 Aug 2024 23:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723011184; x=1723615984;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8n2OlsDXMc5wTadk3lzNRjAKDrY2Lrbi1VmKcvwH5VI=;
-        b=rsWKYSX2dSnnJj+K+PIR3p6Uz7n/uGVgbR2QJaYrrRqx9TiYOIa942uC7gtZDD+GJ8
-         TnhNr9xqvmRiDP+M+iGXqdgwSwcMqYqiRllr2yU2V8oNSR79ZD8XZNKMGEXz/nKrVQv/
-         KPykqeuiRl/IQdrcyQk/jYAC3j1b/i+GoOnXmvpFdzYsHDxjp345ezF4uqmceu/iSFci
-         JIGQ3uuiWgpPf6vBFXBpUk7WQ2YexnNMtDCJcsyLxgB4auZyLptrCCFyNNNJPLOeLulE
-         ZcWmBl2vT4hZYYUH+uKZmr4FAGFJ5Lo9WOcEa+oPGN187PNC2nL4V+6fthrcGQJfSGTZ
-         J73w==
-X-Forwarded-Encrypted: i=1; AJvYcCV6ImzyJ3Xo0nnMJfAtK8kHJ6zELE9u2C6bKplX5D60j5JWarjAFKKq4GDajG667cKODkCa0dy/p6pVPe51l83r14sMrMmFh3jLgdR4SgYzftP8/bjPHOOSNwK9N5CFd023Y1UlaIXy/zCEZiEGtw==
-X-Gm-Message-State: AOJu0YwNhwh6/moy0mY3/W1Kc4sEzIDmRzm/ns/mDb12Fo6oVxFVhJWb
-	JyxILAsaDsSNkt1BM5YWp0ssFbvv5p3ALX+rJwJeA5TnBRcIb5c5Dor5/9tKd8/p1q9sXBE5DS6
-	/lRO9KDDmblQXT7uUE/qT5aM8nJZ/weH2
-X-Google-Smtp-Source: AGHT+IFRoyDWY1SSLyws+WoffESWAAm6uUnvONlx2YSA4nwdKDAwR3b0mkU1JbpJ1lxcuKyqBn4TebX3/xillaaVm4A=
-X-Received: by 2002:a05:6a20:4d95:b0:1c6:ba8b:1e2e with SMTP id
- adf61e73a8af0-1c6ba8b1f23mr8369448637.1.1723011184117; Tue, 06 Aug 2024
- 23:13:04 -0700 (PDT)
+	s=arc-20240116; t=1723011358; c=relaxed/simple;
+	bh=o3XYizA79qMV7uBvCLbIqYFtVIa22HgWDUXyJQuGwL8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KnmcyMy6sDfpdsjuORgrvZfWAGf/nisHTSlCNMUtrOgsxWMq0inydb5ioMCmX6ORWu7m+mOHnkC1eHk6N+VHUP67TI/Ff26qtPr5Hg8NE6vydf+SbekX0YRLGK7IDFAgBab6x2B1ue6w0WcXjmMW3TwLRYtJuGCdiF6ntsmJNY8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPumBkjh; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPumBkjh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A396C32782;
+	Wed,  7 Aug 2024 06:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723011357;
+	bh=o3XYizA79qMV7uBvCLbIqYFtVIa22HgWDUXyJQuGwL8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=dPumBkjhdbkGEMs/pky9eYQdlSGJH9sBxxizfIN33q7YPz8op6sbz5TPi9oC3ZxYU
+	 wNOqaNFndpC0kUJ+TJf7wmK3wLk1+wqoeTUfZgI6jn6GbKfQfLV3Hj2/tvPQ4DhkfR
+	 vYXZftGZd6NGAaaDG0m5LJSzdLSD2/XP9DNJD0xEtkD8hyFwKnfDApV11wxmxnQisX
+	 dQqPrVFi9Inb4xXtIXSZnPksem/I2RCsVxitxb9JWu7+YD8zMjI4Sf2YEcKHVNGvlF
+	 DXUWii4nRy7OEWfji/m03867P3y/ShneureEVTXAOsTnOAtFduuwDfm1aq1qb+hreN
+	 3Q2lRgb9BVwdQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH] perf annotate: Fix --group behavior when leader has no samples
+Date: Tue,  6 Aug 2024 23:15:55 -0700
+Message-ID: <20240807061555.1642669-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+In-Reply-To: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
+References: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240803211332.1107222-1-namhyung@kernel.org> <20240803211332.1107222-6-namhyung@kernel.org>
- <ZrEmZLV0vgU6GUcN@x1> <ZrEyo4CSm6nKU20s@google.com> <ZrE011BLww0LQQha@x1>
- <ZrE7EWyFJ3hThopM@google.com> <ZrIhPuFee8R9ZvVi@x1>
-In-Reply-To: <ZrIhPuFee8R9ZvVi@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 6 Aug 2024 23:12:51 -0700
-Message-ID: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
-Subject: Re: [PATCH 5/5] perf annotate: Add --skip-empty option
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 6, 2024 at 6:12=E2=80=AFAM Arnaldo Carvalho de Melo <acme@kerne=
-l.org> wrote:
->
-> On Mon, Aug 05, 2024 at 01:50:25PM -0700, Namhyung Kim wrote:
-> > On Mon, Aug 05, 2024 at 05:23:51PM -0300, Arnaldo Carvalho de Melo wrot=
-e:
-> > > On Mon, Aug 05, 2024 at 01:14:27PM -0700, Namhyung Kim wrote:
-> > > > On Mon, Aug 05, 2024 at 04:22:12PM -0300, Arnaldo Carvalho de Melo =
-wrote:
-> > > > > On Sat, Aug 03, 2024 at 02:13:32PM -0700, Namhyung Kim wrote:
-> > > > > > Like in perf report, we want to hide empty events in the perf a=
-nnotate
-> > > > > > output.  This is consistent when the option is set in perf repo=
-rt.
-> > > > > >
-> > > > > > For example, the following command would use 3 events including=
- dummy.
-> > > > > >
-> > > > > >   $ perf mem record -a -- perf test -w noploop
-> > > > > >
-> > > > > >   $ perf evlist
-> > > > > >   cpu/mem-loads,ldlat=3D30/P
-> > > > > >   cpu/mem-stores/P
-> > > > > >   dummy:u
-> > > > > >
-> > > > > > Just using perf annotate with --group will show the all 3 event=
-s.
-> > > > >
-> > > > > Seems unrelated, just before compiling with this patch:
-> > > > >
-> > > > > root@x1:~# perf mem record -a -- perf test -w noploop
-> > > > > Memory events are enabled on a subset of CPUs: 4-11
-> > > > > [ perf record: Woken up 1 times to write data ]
-> > > > > [ perf record: Captured and wrote 10.506 MB perf.data (2775 sampl=
-es) ]
-> > > > > root@x1:~#
-> > > > >
-> > > > > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > > > > root@x1:~# perf annotate --stdio2 sched_clock
-> > > > > Samples: 178  of event 'cpu_atom/mem-stores/P', 4000 Hz, Event co=
-unt (approx.): 565268, [percent: local period]
-> > > > > sched_clock() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/v=
-mlinux
-> > > > > Percent      0xffffffff810511e0 <sched_clock>:
-> > > > >                endbr64
-> > > > >    5.76        incl    pcpu_hot+0x8
-> > > > >    5.47      =E2=86=92 callq   sched_clock_noinstr
-> > > > >   88.78        decl    pcpu_hot+0x8
-> > > > >              =E2=86=93 je      1e
-> > > > >              =E2=86=92 jmp     __x86_return_thunk
-> > > > >          1e: =E2=86=92 callq   __SCT__preempt_schedule_notrace
-> > > > >              =E2=86=92 jmp     __x86_return_thunk
-> > > > > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > > > > root@x1:~# perf annotate --group --stdio sched_clock
-> > > > > root@x1:~# perf annotate --group sched_clock
-> > > > > root@x1:~#
-> > > > >
-> > > > > root@x1:~# perf evlist
-> > > > > cpu_atom/mem-loads,ldlat=3D30/P
-> > > > > cpu_atom/mem-stores/P
-> > > > > dummy:u
-> > > > > root@x1:~#
-> > > > >
-> > > > > root@x1:~# perf report --header-only | grep cmdline
-> > > > > # cmdline : /home/acme/bin/perf mem record -a -- perf test -w nop=
-loop
-> > > > > root@x1:~#
-> > > > >
-> > > > > I thought it would be some hybrid oddity but seems to be just --g=
-roup
-> > > > > related, seems like it stops if the first event has no samples? B=
-ecause
-> > > > > it works with another symbol:
-> > > >
-> > > > Good catch.  Yeah I found it only checked the first event.  Somethi=
-ng
-> > > > like below should fix the issue.
-> > >
-> > > Nope, with the patch applied:
-> > >
-> > > root@x1:~# perf annotate --group --stdio sched_clock
-> > > root@x1:~# perf annotate --stdio sched_clock
-> > >  Percent |      Source code & Disassembly of vmlinux for cpu_atom/mem=
--stores/P (147 samples, percent: local period)
-> > > ---------------------------------------------------------------------=
-----------------------------------------------
-> > >          : 0                0xffffffff810511e0 <sched_clock>:
-> > >     0.00 :   ffffffff810511e0:       endbr64
-> > >     5.11 :   ffffffff810511e4:       incl    %gs:0x7efe2d5d(%rip)    =
-   # 33f48 <pcpu_hot+0x8>
-> > >     0.13 :   ffffffff810511eb:       callq   0xffffffff821350d0
-> > >    94.76 :   ffffffff810511f0:       decl    %gs:0x7efe2d51(%rip)    =
-   # 33f48 <pcpu_hot+0x8>
-> > >     0.00 :   ffffffff810511f7:       je      0xffffffff810511fe
-> > >     0.00 :   ffffffff810511f9:       jmp     0xffffffff82153320
-> > >     0.00 :   ffffffff810511fe:       callq   0xffffffff82153990
-> > >     0.00 :   ffffffff81051203:       jmp     0xffffffff82153320
-> > > root@x1:~# perf annotate --group --stdio sched_clock
-> > > root@x1:~# perf annotate --group --stdio2 sched_clock
-> > > root@x1:~# perf annotate --group sched_clock
-> > > root@x1:~#
-> >
-> > Oh ok, it was not enough.  It should call evsel__output_resort() after
-> > hists__match() and hists__link().  Use this instead.
->
-> Ok, this works:
->
-> Before this patch:
->
-> root@x1:~# perf annotate --stdio sched_clock
->  Percent |      Source code & Disassembly of vmlinux for cpu_atom/mem-sto=
-res/P (147 samples, percent: local period)
-> -------------------------------------------------------------------------=
-------------------------------------------
->          : 0                0xffffffff810511e0 <sched_clock>:
->     0.00 :   ffffffff810511e0:       endbr64
->     5.11 :   ffffffff810511e4:       incl    %gs:0x7efe2d5d(%rip)       #=
- 33f48 <pcpu_hot+0x8>
->     0.13 :   ffffffff810511eb:       callq   0xffffffff821350d0
->    94.76 :   ffffffff810511f0:       decl    %gs:0x7efe2d51(%rip)       #=
- 33f48 <pcpu_hot+0x8>
->     0.00 :   ffffffff810511f7:       je      0xffffffff810511fe
->     0.00 :   ffffffff810511f9:       jmp     0xffffffff82153320
->     0.00 :   ffffffff810511fe:       callq   0xffffffff82153990
->     0.00 :   ffffffff81051203:       jmp     0xffffffff82153320
-> root@x1:~# perf annotate --group --stdio sched_clock
-> root@x1:~#
->
-> After:
->
-> root@x1:~# perf annotate --group --stdio sched_clock
->  Percent                 |      Source code & Disassembly of vmlinux for =
-cpu_atom/mem-loads,ldlat=3D30/P, cpu_atom/mem-stores/P, dummy:u (0 samples,=
- percent: local period)
-> -------------------------------------------------------------------------=
----------------------------------------------------------------------------=
----------------------
->                          : 0                0xffffffff810511e0 <sched_clo=
-ck>:
->     0.00    0.00    0.00 :   ffffffff810511e0:       endbr64
->     0.00    5.11    0.00 :   ffffffff810511e4:       incl    %gs:0x7efe2d=
-5d(%rip)       # 33f48 <pcpu_hot+0x8>
->     0.00    0.13    0.00 :   ffffffff810511eb:       callq   0xffffffff82=
-1350d0
->     0.00   94.76    0.00 :   ffffffff810511f0:       decl    %gs:0x7efe2d=
-51(%rip)       # 33f48 <pcpu_hot+0x8>
->     0.00    0.00    0.00 :   ffffffff810511f7:       je      0xffffffff81=
-0511fe
->     0.00    0.00    0.00 :   ffffffff810511f9:       jmp     0xffffffff82=
-153320
->     0.00    0.00    0.00 :   ffffffff810511fe:       callq   0xffffffff82=
-153990
->     0.00    0.00    0.00 :   ffffffff81051203:       jmp     0xffffffff82=
-153320
-> root@x1:~#
->
-> One example with samples for the first two events:
->
-> root@x1:~# perf annotate --group --stdio2
-> Samples: 2K of events 'cpu_atom/mem-loads,ldlat=3D30/P, cpu_atom/mem-stor=
-es/P, dummy:u', 4000 Hz, Event count (approx.): 22892183, [percent: local p=
-eriod]
-> cgroup_rstat_updated() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/=
-vmlinux
-> Percent                       0xffffffff8124e080 <cgroup_rstat_updated>:
->    0.00    0.24    0.00         endbr64
->                               =E2=86=92 callq   __fentry__
->    0.00   99.76    0.00         pushq   %r15
->                                 movq    $0x251d4,%rcx
->                                 pushq   %r14
->                                 movq    %rdi,%r14
->                                 pushq   %r13
->                                 movslq  %esi,%r13
->                                 pushq   %r12
->                                 pushq   %rbp
->                                 pushq   %rbx
->                                 subq    $0x10,%rsp
->                                 cmpq    $0x2000,%r13
->                               =E2=86=93 jae     17f
->                           31:   movq    0x3d0(%r14),%rbx
->                                 movq    -0x7d3fb360(, %r13, 8),%r12
->                                 cmpq    $0x2000,%r13
->                               =E2=86=93 jae     19b
->   25.00    0.00    0.00   4d:   cmpq    $0,0x88(%r12, %rbx)
->                               =E2=86=93 je      6b
->                                 addq    $0x10,%rsp
->                                 popq    %rbx
->                                 popq    %rbp
->                                 popq    %r12
->   75.00    0.00    0.00         popq    %r13
->                                 popq    %r14
->                                 popq    %r15
->                               =E2=86=92 jmp     __x86_return_thunk
-> <SNIP>
->
-> And then skipping "empty" events:
->
-> root@x1:~# perf annotate --group --skip-empty --stdio2 cgroup_rstat_updat=
-ed | head -35
-> Samples: 4  of events 'cpu_atom/mem-loads,ldlat=3D30/P, cpu_atom/mem-stor=
-es/P', 4000 Hz, Event count (approx.): 31851, [percent: local period]
-> cgroup_rstat_updated() /usr/lib/debug/lib/modules/6.8.11-200.fc39.x86_64/=
-vmlinux
-> Percent               0xffffffff8124e080 <cgroup_rstat_updated>:
->    0.00    0.24         endbr64
->                       =E2=86=92 callq   __fentry__
->    0.00   99.76         pushq   %r15
->                         movq    $0x251d4,%rcx
->                         pushq   %r14
->                         movq    %rdi,%r14
->                         pushq   %r13
->                         movslq  %esi,%r13
->                         pushq   %r12
->                         pushq   %rbp
->                         pushq   %rbx
->                         subq    $0x10,%rsp
->                         cmpq    $0x2000,%r13
->                       =E2=86=93 jae     17f
->                   31:   movq    0x3d0(%r14),%rbx
->                         movq    -0x7d3fb360(, %r13, 8),%r12
->                         cmpq    $0x2000,%r13
->                       =E2=86=93 jae     19b
->   25.00    0.00   4d:   cmpq    $0,0x88(%r12, %rbx)
->                       =E2=86=93 je      6b
->                         addq    $0x10,%rsp
->                         popq    %rbx
->                         popq    %rbp
->                         popq    %r12
->   75.00    0.00         popq    %r13
->                         popq    %r14
->                         popq    %r15
->                       =E2=86=92 jmp     __x86_return_thunk
->                   6b:   addq    %r12,%rcx
->                         movq    %rcx,%rdi
->                         movq    %rcx,(%rsp)
->                       =E2=86=92 callq   *ffffffff82151500
-> root@x1:~#
->
-> So, I haven't done further analysis but I think this is a separate
-> issue, right?
+When --group option is used, it should display all events together.  But
+the current logic only checks if the first (leader) event has samples or
+not.  Let's check the member events as well.
 
-Yep, it's not related to --skip-empty.
+Also it missed to put the linked samples from member evsels to the
+output RB-tree so that it can be displayed in the output.
 
->
-> Thanks for the fix!
->
-> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+For example, take a look at this example.
 
-Will send a fix with your tags.
+  $ ./perf evlist
+  cpu/mem-loads,ldlat=30/P
+  cpu/mem-stores/P
+  dummy:u
 
-Thanks,
-Namhyung
+It has three events but 'path_put' function has samples only for
+mem-stores (second) event.
+
+  $ sudo ./perf annotate --stdio -f path_put
+   Percent |      Source code & Disassembly of kcore for cpu/mem-stores/P (2 samples, percent: local period)
+  ----------------------------------------------------------------------------------------------------------
+           : 0                0xffffffffae600020 <path_put>:
+      0.00 :   ffffffffae600020:       endbr64
+      0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
+     91.22 :   ffffffffae600029:       pushq   %rbx
+      0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
+      0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
+      8.78 :   ffffffffae600031:       callq   0xffffffffae614aa0
+      0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
+      0.00 :   ffffffffae600039:       popq    %rbx
+      0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
+      0.00 :   ffffffffae60003f:       nop
+
+Therefore, it didn't show up when --group option is used since the
+leader ("mem-loads") event has no samples.  But now it checks both
+events.
+
+Before:
+  $ sudo ./perf annotate --stdio -f --group path_put
+  (no output)
+
+After:
+  $ sudo ./perf annotate --stdio -f --group path_put
+   Percent                 |      Source code & Disassembly of kcore for cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u (0 samples, percent: local period)
+  -------------------------------------------------------------------------------------------------------------------------------------------------------------
+                           : 0                0xffffffffae600020 <path_put>:
+      0.00    0.00    0.00 :   ffffffffae600020:       endbr64
+      0.00    0.00    0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
+      0.00   91.22    0.00 :   ffffffffae600029:       pushq   %rbx
+      0.00    0.00    0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
+      0.00    0.00    0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
+      0.00    8.78    0.00 :   ffffffffae600031:       callq   0xffffffffae614aa0
+      0.00    0.00    0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
+      0.00    0.00    0.00 :   ffffffffae600039:       popq    %rbx
+      0.00    0.00    0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
+      0.00    0.00    0.00 :   ffffffffae60003f:       nop
+
+Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-annotate.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+index efcadb7620b8..1bfe41783a7c 100644
+--- a/tools/perf/builtin-annotate.c
++++ b/tools/perf/builtin-annotate.c
+@@ -632,13 +632,23 @@ static int __cmd_annotate(struct perf_annotate *ann)
+ 	evlist__for_each_entry(session->evlist, pos) {
+ 		struct hists *hists = evsel__hists(pos);
+ 		u32 nr_samples = hists->stats.nr_samples;
++		struct ui_progress prog;
++		struct evsel *evsel;
+ 
+-		if (nr_samples == 0)
++		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
+ 			continue;
+ 
+-		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
++		for_each_group_member(evsel, pos)
++			nr_samples += evsel__hists(evsel)->stats.nr_samples;
++
++		if (nr_samples == 0)
+ 			continue;
+ 
++		ui_progress__init(&prog, nr_samples,
++				  "Sorting group events for output...");
++		evsel__output_resort(pos, &prog);
++		ui_progress__finish();
++
+ 		hists__find_annotations(hists, pos, ann);
+ 	}
+ 
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
+
