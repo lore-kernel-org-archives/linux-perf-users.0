@@ -1,88 +1,92 @@
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67771428F3;
-	Wed,  7 Aug 2024 18:54:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C24B1428E6;
+	Wed,  7 Aug 2024 19:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723056889; cv=none; b=jH2ttVU1OBd8/r2UVLN+vL2umLjdzm/AkvXVQfSIFVXJe2XQ5DzfDkbID07DD3MJA8PttKLoh2+dFsRfEErIHvoW/KRcVmhX4le8QtH1j88yXSLX8LhXKVFobZybTUnuavBzHcYf1kjBgQwa5F9ms1CA0h4QU+jvsGGo6hvYBrI=
+	t=1723057796; cv=none; b=VQ//pvOLgkzNVaprt41znukG8YYJDK3j4DPFNUfRz8xLu1toN8FSqwlZesu3NizHaLBQRJ634H5teP//67chmJ513LEv+EzE8aDiLZUXaLLoqtzLDQoKxvu56cwKlZX4McxEhT9XcI8p/NPNTf3uRWnq1VSAh0xg38bIQFspfOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723056889; c=relaxed/simple;
-	bh=76yvAM+UpEbVXx7GXsbI2Zqu+E3evoZtbABWa3EDE0U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=e59pbqMEHD3fTmIRVOtb+xXylJnS1W9+BXosiyx54BWzosKdE13BTEPQ4DQcVEl1sAmzxLKd+HgM2A4wwgvuP1TqO/6O7EubHQTMR6ZBZYeKuubKctfeEJ8/TVAwyWEymDjePfsjBtFFLaeTxq9zUZ0J2tIxPgjJ33y637Tb+DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7a130ae7126so126559a12.0;
-        Wed, 07 Aug 2024 11:54:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723056887; x=1723661687;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1imuq1Y5pnXOMpobYE2ECgyePeKad/viC/fTIre5Uss=;
-        b=fq4LOUSMGjAHAzZcd2ldeiond1XAKWmrrH67AlE7oXOVG1WegT82/Hd5l4nBdjASq4
-         oUYU54tmgQlxdjxxsf8zfvv+OLsQssP5E/6TWLUDgWlQJjmvgylJtr9j0vVATX/eJJrU
-         x/ySRKNN+tkVcpIQwIt2PWSRz/KSE+k6KhrXiHRICGpkeYiZ562Q5k5eQMNWCLI+GvPI
-         dVGyGTxUfmQqjRYrLuPdRbp1h9/sCcX65ghzvTSJs523oMs/pj7hjk/qxtQAJm83X9c0
-         2lZgXfliS6fb/wVsQxxXaAHfqnqeAstQ2x45YCXiUrMSyBB70Lv/dmEiASUUhEUqSUW4
-         UZzA==
-X-Forwarded-Encrypted: i=1; AJvYcCW7zD3+I+U2iFiSN82daJ0wLutQ7RmuL0xc0fQTZABMpqjf4mKe80omspWuScXlLOWnXR8C5H0RXh2lyIOcpC7sq095NdHe4y3ukIsMggCK7ChzhE8EiWoyFDGkRZiFpIaVzR9iyQo70VB/8ppsbQ==
-X-Gm-Message-State: AOJu0YwfCd/s/P+QmFrh14pFj3V2YwoP2RmtFF8XMri42rIUET0r3Gsx
-	qMWecT1bSc0g+VFda/wLmC8PfyJXzpW1Nn5+W91rz+vMh2H2fEfpXAfMWw2YawwCwR9V3pH0i0U
-	OTSjXJQ+kl4OaYfXt5IVqIsJdBZw=
-X-Google-Smtp-Source: AGHT+IFd65zGATKjgDD0j0s8JJCpUaylkMJtTo43/IfuQ2vBHNtcKq6DjWD2rDvMABtm8DHr0qojowLr6/VLFX6bp7g=
-X-Received: by 2002:a05:6a20:7495:b0:1c0:e329:5c51 with SMTP id
- adf61e73a8af0-1c699581ce7mr27301807637.13.1723056886636; Wed, 07 Aug 2024
- 11:54:46 -0700 (PDT)
+	s=arc-20240116; t=1723057796; c=relaxed/simple;
+	bh=Xji/ATx10iwZfKisohudZjN5LAal7yhXNA5ZtAAIh+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YAOBOp5Fpk2CX6eL8jB471qXVTaI79vEfBXQKjMvPdvdnYU5Uc8XczzUGB3mXooGh/kNpCimiHfNjyeUhlfdyQMsZR49GM1MLsli8bGzzSiXolI48emKO6caigaZVs3ivhpycNSISCniVIhMygxPklC2woFaaVy+h9agAEXu0qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bsDX5Y4w; arc=none smtp.client-ip=90.155.92.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bsDX5Y4w"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=TUImU5qAYykz6ldY6pOIccN64e/13Blmc1VBBfsV0vc=; b=bsDX5Y4w9mAzMi/5nx0awTF4CN
+	hh0pdhc/uZr0gyl0XkchdWWjwoWnj/U4NBd+tYsGq0jhSmjKK61EJ2FLdaZQcZryjU5K6GaK8DHIY
+	ocm26uLaMjVC+XLa5/cSzZlq0HPPyZ1d8gIOPvnaLqMRw7U6TzTTZD/lGfc3yJE8gmHi1TuF5wWZR
+	1XVztRGbitxcC9iSSBBwry/RJQ8GGjLW81aSo3ov3OJnc4IbPD/GSebqovMT6IcpgolAspoJVUbWH
+	XDol7DyYKnfE/34y1FC6L2rOACr5yq38tBxVovR88lEBsOirehoAGO0UV8+hUWhbqRTQVqXRIEnqy
+	RTLGsGkA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sbm2E-00000006gJD-14G9;
+	Wed, 07 Aug 2024 19:09:27 +0000
+Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
+	id 4A75830033D; Wed,  7 Aug 2024 21:09:21 +0200 (CEST)
+Date: Wed, 7 Aug 2024 21:09:21 +0200
+From: Peter Zijlstra <peterz@infradead.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/5] perf: Add context time freeze
+Message-ID: <20240807190921.GE31338@noisy.programming.kicks-ass.net>
+References: <20240807112924.448091402@infradead.org>
+ <20240807115550.250637571@infradead.org>
+ <b38cc358-8e46-48bd-88c0-ff4b8db6bd15@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807112924.448091402@infradead.org>
-In-Reply-To: <20240807112924.448091402@infradead.org>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 7 Aug 2024 11:54:34 -0700
-Message-ID: <CAM9d7ci7zEQUPTLLUdNci49fJHiM_6iiCn_Gpp05aEPyrJBmAg@mail.gmail.com>
-Subject: Re: [PATCH 0/5] perf: Per PMU context reschedule and misc
-To: Peter Zijlstra <peterz@infradead.org>
-Cc: mingo@kernel.org, acme@kernel.org, mark.rutland@arm.com, 
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
-	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b38cc358-8e46-48bd-88c0-ff4b8db6bd15@linux.intel.com>
 
-Hi Peter,
+On Wed, Aug 07, 2024 at 11:17:18AM -0400, Liang, Kan wrote:
 
-On Wed, Aug 7, 2024 at 4:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
-> wrote:
->
-> Hi,
->
-> This is 'fallout' from Namhyung posting his per-pmu ctx_resched() patches=
-. It
-> started with me trying to clean up and get rid of corner cases, and then =
-got
-> involved when Kan noted the time keeping issue.
->
-> Anyway, please review / test.
+> > +static inline void __perf_ctx_unlock(struct perf_event_context *ctx)
+> > +{
+> > +	/*
+> > +	 * If ctx_sched_in() didn't again set any ALL flags, clean up
+> > +	 * after ctx_sched_out() by clearing is_active.
+> > +	 */
+> > +	if (ctx->is_active & EVENT_FROZEN) {
+> > +		if (!(ctx->is_active & EVENT_ALL))
+> 
+> Nit:
+> It may be better to add a macro/inline function to replace all the
+> (ctx->is_active & EVENT_ALL) check? For example,
+> 
+> +static inline bool perf_ctx_has_active_events(struct perf_event_context
+> *ctx)
+> +{
+> +	return ctx->is_active & EVENT_ALL;
+> +}
+> ...
+> +	if (ctx->is_active & EVENT_FROZEN) {
+> +		if (!perf_ctx_has_active_events(ctx))
+> +			ctx->is_active = 0;
+> +		else
+> +			ctx->is_active &= ~EVENT_FROZEN;
+> 
+> It can tell very straightforwardly that we want to clear all flags if
+> there is no active event.
+> The EVENT_ALL may bring confusion. It actually means all events, not all
+> event types. The developer may have to go to the define and figure out
+> what exactly the EVENT_ALL includes.
 
-It works blazingly fast!
-
-  # ./stress-pmu
-  delta: 0.000307 sec (3 usec/op)
-
-I found a problem with my patch that it called __pmu_ctx_sched_out() for
-nothing (I guess is_active only has EVENT_TIME).  I thought ctx_sched_out()
-would stop if it doesn't change EVENT_ALL but it iterated all PMUs anyway.
-
-But with this change we don't need ctx_sched_out(EVENT_TIME) anymore.
-
-Reviewed-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks,
-Namhyung
+I'll push this on the todo list. I'm running short of time before I'm
+taking a holiday and need to also spend time looking at the sched_ext
+thing.
