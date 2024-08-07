@@ -1,173 +1,197 @@
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D78F22334;
-	Wed,  7 Aug 2024 08:54:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.237.130.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA561C57A7
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 10:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723020875; cv=none; b=kgU7D4094/jxbJE+s+a5I4uXynqlzA18mAYPH4BktK5xBAoBHMhvzo4ic+ze6x/lFzYGnpp762aEp0cQJjIJj/d0LYnZM8ZllMbmrACAPZG6RuANx6+wrNYf4Iz+QlQI3/sNfn365o0I8DZe/wy8ZqaBnrbfF5l6DDKfyY6udyU=
+	t=1723025882; cv=none; b=Pw1k4SBStGeaaIArbcjULoIKg7p9N0f8Gvfq242HYlVwR4rBaJ1XrLvYNkx2Hwrxqcct8IPU9vl4YwT0MGlIRVVqHz4ZFO/Nb4QlLayy5cp1omwP78ruhTIb+Wc7n4e3uCt4i/pIj818o0P95Mr+izLibVin2Mwz5evAVzisn2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723020875; c=relaxed/simple;
-	bh=Jp1FFPAcPVLqB1cNeZutNl6ygB/KT74rhDRU/Q1H3Kc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N30uq1PzeDNDNAEi7WYcpUyXPTF+ZBUEBh+PKXAZyE4y4DU3T/Mp9BOe2pHrtYKryjX/0Ydk5P915JKJtUJk2ujvguoAl5vKHAsCG3Ug8ngaB9a1xQn+D3vIiBSiD3mYZvW5K41VL7gDW49uYG+eGfNoihvguRiNhl3tkAG65pk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info; spf=pass smtp.mailfrom=leemhuis.info; dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b=c4i49En8; arc=none smtp.client-ip=80.237.130.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=leemhuis.info
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=leemhuis.info
+	s=arc-20240116; t=1723025882; c=relaxed/simple;
+	bh=dU34Jk/zdBG66KdZqoSvUYqEsvh2JWx8pa6AroZH7QU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SKa0c/AW2G8hD+hMv3Ltj/6BFiAZ1+uOsdbMc8FhNvFmS8Fpe509ltd8J+7Jmx07lUbdZJUpZpiEEuOs3UeMwcuUF7yjts6pAeQ9+GMe2j5oLwKBFQAHEb7GxlaAxy9rysi5aCyFIksyGTFYtxcooI6ZzxQeCRm7/8Gn4kl16wE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Md03+38X; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=leemhuis.info header.i=@leemhuis.info header.b="c4i49En8"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=leemhuis.info; s=he214686; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:From:
-	Sender:Reply-To:Subject:Date:Message-ID:To:Cc:MIME-Version:Content-Type:
-	Content-Transfer-Encoding:Content-ID:Content-Description:In-Reply-To:
-	References; bh=miQ8a2DrdymNd/XsjzaRvOeIV5C9+9V6PuYpgF8FIFA=; t=1723020873;
-	x=1723452873; b=c4i49En8a0Y4N52OKAdrvHFeoTNw9miLawj1IC+esitG1lreBn4lgholBVFYS
-	qwifK6PsM8OYVeDgbkalnFs/0APMtt9ogVO7j45ls4IsMWgDwZUK4b4jPJGjLltBdiV6Ivzywbp4a
-	hSxM3P6Ryn5rKSu/R3ap2Oq90u6JzwEzrYIIqri/aKwCXEDPlF8cRHekBf6zL32Hs4C+s8UcoHTjS
-	P0wlISYNEe11PPY6ncTdVIL2TbnHr4H8FKIhhoijLUBJOd2tPKCIUObkY8ictWzmII/Tl5lheSHex
-	l8+1N4jv96qa0+jLbQ+MG0pXMVDeN9XuERec9UGKH47bgHzU6A==;
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-	by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-	id 1sbcRC-0006Qc-1L; Wed, 07 Aug 2024 10:54:30 +0200
-Message-ID: <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
-Date: Wed, 7 Aug 2024 10:54:29 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Md03+38X"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723025880;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=fToBX/B6bWnrDNLZMpsbxGATEy0ptfzvMuaWk2wqyMQ=;
+	b=Md03+38XY5Ro8K9x3fek8GWV0dCNsemcZI9HMg+n3Ez+ZGwc4yFsg2MQhiqrggoYQrmTe7
+	0Ulbs39jmOLsN+cGVV/S7VeqaJmyAwdNeIvA2OgEMCaEprenZ1VJaUU8thCEldRj9g2mFC
+	XC1v9mErSkbBpovW+GUj+wlX5qO3Q2g=
+Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-303-nAzyQwZnOiWBYSemnvehCg-1; Wed,
+ 07 Aug 2024 06:17:58 -0400
+X-MC-Unique: nAzyQwZnOiWBYSemnvehCg-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 419A01944AA9;
+	Wed,  7 Aug 2024 10:17:55 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.97])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 118BD1953BB9;
+	Wed,  7 Aug 2024 10:17:49 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  7 Aug 2024 12:17:53 +0200 (CEST)
+Date: Wed, 7 Aug 2024 12:17:47 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+Message-ID: <20240807101746.GA27715@redhat.com>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
+ <20240801140639.GE4038@redhat.com>
+ <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
+ <20240802092406.GC12343@redhat.com>
+ <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
+ <20240806172529.GC20881@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
- v6.5
-To: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Linux perf Profiling <linux-perf-users@vger.kernel.org>,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- James Clark <james.clark@arm.com>, "cc: Marc Zyngier" <maz@kernel.org>,
- Hector Martin <marcan@marcan.st>, Asahi Linux <asahi@lists.linux.dev>,
- Ian Rogers <irogers@google.com>,
- Linux regressions mailing list <regressions@lists.linux.dev>,
- "to: Mark Rutland" <mark.rutland@arm.com>
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me>
- <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
- <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
-From: Thorsten Leemhuis <regressions@leemhuis.info>
-Content-Language: en-US, de-DE
-In-Reply-To: <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1723020873;ea42c35e;
-X-HE-SMSGID: 1sbcRC-0006Qc-1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240806172529.GC20881@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-On 01.08.24 21:05, Ian Rogers wrote:
-> On Wed, Dec 6, 2023 at 4:09 AM Linux regression tracking #update
-> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> [TLDR: This mail in primarily relevant for Linux kernel regression
->> tracking. See link in footer if these mails annoy you.]
->>
->> On 22.11.23 00:43, Bagas Sanjaya wrote:
->>> On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
->>>> Perf broke on all Apple ARM64 systems (tested almost everything), and
->>>> according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
->>
->> #regzbot fix: perf parse-events: Make legacy events lower priority than
->> sysfs/JSON
->> #regzbot ignore-activity
-> 
-> Note, this is still broken.
+So. Liao, I am sorry, but I dislike your patch/approach in any case.
 
-Hmmm, so all that became somewhat messy. Arnaldo, what's the way out of
-this? Or is this a "we are screwed one way or another and someone has to
-bite the bullet" situation?
+UTASK_SSTEP_DENY_SIGNAL complicates the state machine. And I don't like the fact
+that set_thread_flag(TIF_SIGPENDING) is called twice, from handle_singlestep()
+and uprobe_post_sstep_notifier(), this complicates the logic even more.
 
-Ciao, Thorsten
+We need a flag, not the new state.
 
-> The patch changed the priority in the case
-> that you do something like:
-> 
-> $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
-> 
-> but if you do:
-> 
-> $ perf stat -e 'cycles' benchmark
-> 
-> then the broken behavior will happen as legacy events have priority
-> over sysfs/json events in that case. To fix this you need to revert:
-> 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
-> events over legacy"
-> 
-> This causes some testing issues resolved in this unmerged patch series:
-> https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
-> 
-> There is a bug as the arm_dsu PMU advertises an event called "cycles"
-> and this PMU is present on Ampere systems. Reverting the commit above
-> will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
-> __evlist__add_default") to fix ARM's BIG.little systems (opening a
-> cycles event on all PMUs not just 1) will cause the arm_dsu event to
-> be opened by perf record and fail as the event won't support sampling.
-> 
-> The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
-> fixes this by only opening the cycles event on core PMUs when choosing
-> default events.
-> 
-> Rather than take this patch the revert happened as Linus runs the
-> command "perf record -e cycles:pp" (ie using a specified event and not
-> defaults) and considers it a regression in the perf tool that on an
-> Ampere system to need to do "perf record -e
-> 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
-> will choose the cycles event correctly and with better precision the
-> pp for systems that support it, but it was still considered a
-> regression in the perf tool so the revert was made to happen. There is
-> a lack of perf testing coverage for ARM, in particular as they choose
-> to do everything in a different way to x86. The patch in question was
-> in the linux-next tree for weeks without issues.
-> 
-> ARM/Ampere could fix this by renaming the event from cycles to
-> cpu_cycles, or by following Intel's convention that anything uncore
-> uses the name clockticks rather than cycles. This could break people
-> who rely on an event called arm_dsu/cycles/ but I imagine such people
-> are rare. There has been no progress I'm aware of on renaming the
-> event.
-> 
-> Making perf not terminate on opening an event for perf record seems
-> like the most likely workaround as that is at least something under
-> the tool maintainers control. ARM have discussed doing this on the
-> lists:
-> https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
-> but since the revert in v6.10 no patches have appeared for the v6.11
-> merge window. Feature work like coresight improvements and ARMv9 are
-> being actively pursued by ARM, but feature work won't resolve this
-> regression.
-> 
-> I'm keen to see such patches as there are perf stat fixes reliant on
-> the stacked parse event fixes that are consequently not merged
-> affecting more than just ARM.
-> 
-> There is a related discussion that events specified without PMUs
-> should inherently only mean core PMUs. Unfortunately such a change
-> would break uncore events specified without a PMU, for example `perf
-> stat -e data_read -a sleep 1` gathers read memory bandwidth on uncore
-> memory controllers on recent Intel devices. Not specifying a PMU for
-> uncore events is also assumed by perf metrics, so a large number of
-> metrics would need updating to make such a change work. Many existing
-> JSON uncore events specify a PMU in their name like
-> UNC_M2HBM_CMS_CLOCKTICKS and it feels somewhat redundant to have to
-> make that h2hbm/UNC_M2HBM_CMS_CLOCKTICKS/. It is unclear who would
-> pursue fixing all of this, and so it seems not specifying a PMU with
-> an event for perf will keep meaning trying to open the event on all
-> PMUs that advertise such an event.
-> 
+And if I read this patch correctly it is wrong:
+
+	- uprobe_deny_signal() clears TIF_SIGPENDING and sets UTASK_SSTEP_DENY_SIGNAL
+
+	- another signal cames after that and sets TIF_SIGPENDING again
+
+	- in this case the task won't return to user-space and execute the probed
+	  insn, exit_to_user_mode_loop() will notice another TIF_SIGPENDING and
+	  call arch_do_signal_or_restart()->get_signal() again.
+
+	- get_signal() will call uprobe_deny_signal() again hit
+
+		WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+
+
+And no, we shouldn't change this check into UTASK_SSTEP || UTASK_SSTEP_DENY_SIGNAL.
+Again, the fact that uprobe_deny_signal() cleared TIF_SIGPENDING must not be the
+new state.
+
+Oleg.
+
+On 08/06, Oleg Nesterov wrote:
+>
+> On 08/06, Liao, Chang wrote:
+> >
+> > You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
+> > unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
+> > _DENY_SIGNAL is likey replaced during next uprobe single-stepping.
+> >
+> > I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
+> > and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
+> > to correctly restore TIF_SIGPENDING upon the completion of single-step.
+> >
+> > A revised implementation would look like this:
+>
+> Still looks "obviously wrong" to me... even the approach itself.
+>
+> Perhaps I am wrong, yet another day when I can't even read emails on lkml
+> carefully, sorry.
+>
+> But can you please send the patch which I could actually apply? This one
+> looks white-space damaged...
+>
+> I'll try to reply with more details as soon I convince myself I fully
+> understand what does your patch actually do, but most probably not tomorrow.
+>
 > Thanks,
-> Ian
-> 
->> Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
->> --
->> Everything you wanna know about Linux kernel regression tracking:
->> https://linux-regtracking.leemhuis.info/about/#tldr
->> That page also explains what to do if mails like this annoy you.
->>
-> 
-> 
+>
+> Oleg.
+>
+> > ------------------%<------------------
+> > --- a/kernel/events/uprobes.c
+> > +++ b/kernel/events/uprobes.c
+> > @@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
+> >
+> >         if (task_sigpending(t)) {
+> >                 clear_tsk_thread_flag(t, TIF_SIGPENDING);
+> > +               utask->state = UTASK_SSTEP_DENY_SIGNAL;
+> >
+> >                 if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
+> >                         utask->state = UTASK_SSTEP_TRAPPED;
+> > @@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+> >         int err = 0;
+> >
+> >         uprobe = utask->active_uprobe;
+> > -       if (utask->state == UTASK_SSTEP_ACK)
+> > +       switch (utask->state) {
+> > +       case UTASK_SSTEP_ACK:
+> >                 err = arch_uprobe_post_xol(&uprobe->arch, regs);
+> > -       else if (utask->state == UTASK_SSTEP_TRAPPED)
+> > +               break;
+> > +       case UTASK_SSTEP_TRAPPED:
+> >                 arch_uprobe_abort_xol(&uprobe->arch, regs);
+> > -       else
+> > +               set_thread_flag(TIF_SIGPENDING);
+> > +               break;
+> > +       default:
+> >                 WARN_ON_ONCE(1);
+> > +       }
+> >
+> >         put_uprobe(uprobe);
+> >         utask->active_uprobe = NULL;
+> >         utask->state = UTASK_RUNNING;
+> >         xol_free_insn_slot(current);
+> >
+> > -       spin_lock_irq(&current->sighand->siglock);
+> > -       recalc_sigpending(); /* see uprobe_deny_signal() */
+> > -       spin_unlock_irq(&current->sighand->siglock);
+> > -
+> >         if (unlikely(err)) {
+> >                 uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+> >                 force_sig(SIGILL);
+> > @@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
+> >                 /* task is currently not uprobed */
+> >                 return 0;
+> >
+> > +       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
+> > +               set_thread_flag(TIF_SIGPENDING);
+> >         utask->state = UTASK_SSTEP_ACK;
+> >         set_thread_flag(TIF_UPROBE);
+> >         return 1;
+> >
+> > ------------------>%------------------
+> >
+> > >
+> > > Oleg.
+> > >
+> > >
+> >
+> > --
+> > BR
+> > Liao, Chang
+> >
+
