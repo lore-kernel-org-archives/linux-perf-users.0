@@ -1,31 +1,30 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC0AA6CDAB;
-	Wed,  7 Aug 2024 06:15:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2390C42058;
+	Wed,  7 Aug 2024 06:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723011358; cv=none; b=SsX8HItzUD8RBmPM9we3Y2Su8wZkgmZ5OZmsyBg5ssZcjohb6rwZOtYBcZjQ1FRoGXPW0jXDyMeUDSlY9DCEYQVgCMw85Mo9yN8QafuvKidk/CR5ginY/TKbHFiH6EtIHjKL7WpI7JKD+RX81/GlfT8FUXG1yBfPMr/XNLNm7vk=
+	t=1723011435; cv=none; b=V/3FpWc026aSbldfqmzq/TbNYlN2YluVJFrWXa15XeEPWjEZo+HZc1BZdi4Iq1pmCLeSp8Kwl845+M4Vx0MIOu2YO+qi3cOLZ8vvg1FXCiIYeD8KofTxSWjQDRtUB/Ot7n/MEPQvnTR9mRy4+5lSvUeuMuRnrJ/o9SiUiOqDn78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723011358; c=relaxed/simple;
-	bh=o3XYizA79qMV7uBvCLbIqYFtVIa22HgWDUXyJQuGwL8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KnmcyMy6sDfpdsjuORgrvZfWAGf/nisHTSlCNMUtrOgsxWMq0inydb5ioMCmX6ORWu7m+mOHnkC1eHk6N+VHUP67TI/Ff26qtPr5Hg8NE6vydf+SbekX0YRLGK7IDFAgBab6x2B1ue6w0WcXjmMW3TwLRYtJuGCdiF6ntsmJNY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dPumBkjh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723011435; c=relaxed/simple;
+	bh=0NZ/E7RDLgfDPnY+Jnfm2aTXMAqExctiZQfzwx2T4zQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gBmuigwMVlweh7m3t22q2iAJ89wvEEYTJzyHL9qwZe05Ix1xcMjvmt0SZqZ68ko65jQ9vg7MLqwkNQthvlibpIXJfaCdHaimTbY8y3ysVWf03L9Ha0sFhCMPDoo4WyF86PPJOXv5aP2gspcmjoMa3g1VZ57dX0a319uK9uu7Hes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GbYWEZ/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dPumBkjh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A396C32782;
-	Wed,  7 Aug 2024 06:15:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GbYWEZ/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94690C4AF10;
+	Wed,  7 Aug 2024 06:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723011357;
-	bh=o3XYizA79qMV7uBvCLbIqYFtVIa22HgWDUXyJQuGwL8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dPumBkjhdbkGEMs/pky9eYQdlSGJH9sBxxizfIN33q7YPz8op6sbz5TPi9oC3ZxYU
-	 wNOqaNFndpC0kUJ+TJf7wmK3wLk1+wqoeTUfZgI6jn6GbKfQfLV3Hj2/tvPQ4DhkfR
-	 vYXZftGZd6NGAaaDG0m5LJSzdLSD2/XP9DNJD0xEtkD8hyFwKnfDApV11wxmxnQisX
-	 dQqPrVFi9Inb4xXtIXSZnPksem/I2RCsVxitxb9JWu7+YD8zMjI4Sf2YEcKHVNGvlF
-	 DXUWii4nRy7OEWfji/m03867P3y/ShneureEVTXAOsTnOAtFduuwDfm1aq1qb+hreN
-	 3Q2lRgb9BVwdQ==
+	s=k20201202; t=1723011434;
+	bh=0NZ/E7RDLgfDPnY+Jnfm2aTXMAqExctiZQfzwx2T4zQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GbYWEZ/nf55qi9ItKS7XnJmc2vJX75ZwVBFtXi/T7hUtDSY3mm+RxUkXYMwk1ZsFb
+	 rZP9bdhZuLaYDiNu+gkEZOgw2MZoTb5ooZoHNSGTfZ8T3/bwbmRRyL8NBU77VGxasU
+	 aDGk6m9uUJOxyOPsASBS7HNFZuQ4jtCd3K9ZN8z79n4x5tM/PzL/U7SD7dECnmxclX
+	 apzbqvFBB1hEpuiC5pDDx7vvOYGL9IIHl9H31pfhq7tt5pqMYPwu6q4ZoOi/L6KW+A
+	 Wma3mvdbft+U+e6LSmBwCSzRa6EuZwlsL+2/MymHQRhtyOF0z8ulwnGEAMEKKp+U/+
+	 qW9PnqJf9cwgA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,14 +34,11 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH] perf annotate: Fix --group behavior when leader has no samples
-Date: Tue,  6 Aug 2024 23:15:55 -0700
-Message-ID: <20240807061555.1642669-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] perf annotate-data: Support --skip-empty option
+Date: Tue,  6 Aug 2024 23:17:13 -0700
+Message-ID: <20240807061713.1642924-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
-In-Reply-To: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
-References: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -51,99 +47,154 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When --group option is used, it should display all events together.  But
-the current logic only checks if the first (leader) event has samples or
-not.  Let's check the member events as well.
+The --skip-empty option is to hide dummy events in a group.  Like other
+output mode like perf report and perf annotate, the data-type profiling
+output should support the option.
 
-Also it missed to put the linked samples from member evsels to the
-output RB-tree so that it can be displayed in the output.
-
-For example, take a look at this example.
-
-  $ ./perf evlist
-  cpu/mem-loads,ldlat=30/P
-  cpu/mem-stores/P
-  dummy:u
-
-It has three events but 'path_put' function has samples only for
-mem-stores (second) event.
-
-  $ sudo ./perf annotate --stdio -f path_put
-   Percent |      Source code & Disassembly of kcore for cpu/mem-stores/P (2 samples, percent: local period)
-  ----------------------------------------------------------------------------------------------------------
-           : 0                0xffffffffae600020 <path_put>:
-      0.00 :   ffffffffae600020:       endbr64
-      0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
-     91.22 :   ffffffffae600029:       pushq   %rbx
-      0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
-      0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
-      8.78 :   ffffffffae600031:       callq   0xffffffffae614aa0
-      0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
-      0.00 :   ffffffffae600039:       popq    %rbx
-      0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
-      0.00 :   ffffffffae60003f:       nop
-
-Therefore, it didn't show up when --group option is used since the
-leader ("mem-loads") event has no samples.  But now it checks both
-events.
-
-Before:
-  $ sudo ./perf annotate --stdio -f --group path_put
-  (no output)
-
-After:
-  $ sudo ./perf annotate --stdio -f --group path_put
-   Percent                 |      Source code & Disassembly of kcore for cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u (0 samples, percent: local period)
-  -------------------------------------------------------------------------------------------------------------------------------------------------------------
-                           : 0                0xffffffffae600020 <path_put>:
-      0.00    0.00    0.00 :   ffffffffae600020:       endbr64
-      0.00    0.00    0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
-      0.00   91.22    0.00 :   ffffffffae600029:       pushq   %rbx
-      0.00    0.00    0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
-      0.00    0.00    0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
-      0.00    8.78    0.00 :   ffffffffae600031:       callq   0xffffffffae614aa0
-      0.00    0.00    0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
-      0.00    0.00    0.00 :   ffffffffae600039:       popq    %rbx
-      0.00    0.00    0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
-      0.00    0.00    0.00 :   ffffffffae60003f:       nop
-
-Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/builtin-annotate.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/perf/ui/browsers/annotate-data.c | 30 ++++++++++++++----
+ tools/perf/util/annotate-data.c        | 44 +++++++++++++-------------
+ 2 files changed, 45 insertions(+), 29 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index efcadb7620b8..1bfe41783a7c 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -632,13 +632,23 @@ static int __cmd_annotate(struct perf_annotate *ann)
- 	evlist__for_each_entry(session->evlist, pos) {
- 		struct hists *hists = evsel__hists(pos);
- 		u32 nr_samples = hists->stats.nr_samples;
-+		struct ui_progress prog;
-+		struct evsel *evsel;
+diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
+index 8d6bf08d371d..c3db80a7589a 100644
+--- a/tools/perf/ui/browsers/annotate-data.c
++++ b/tools/perf/ui/browsers/annotate-data.c
+@@ -46,15 +46,18 @@ static int get_member_overhead(struct annotated_data_type *adt,
+ 	struct annotated_member *member = entry->data;
+ 	int i, k;
  
--		if (nr_samples == 0)
-+		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
- 			continue;
+-	for (i = 0; i < member->size; i++) {
++	for (i = 0, k = 0; i < member->size; i++) {
+ 		struct type_hist *h;
+ 		struct evsel *evsel;
+ 		int offset = member->offset + i;
  
--		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
-+		for_each_group_member(evsel, pos)
-+			nr_samples += evsel__hists(evsel)->stats.nr_samples;
+ 		for_each_group_evsel(evsel, leader) {
++			if (symbol_conf.skip_empty &&
++			    evsel__hists(evsel)->stats.nr_samples == 0)
++				continue;
 +
-+		if (nr_samples == 0)
- 			continue;
+ 			h = adt->histograms[evsel->core.idx];
+-			k = evsel__group_idx(evsel);
+-			update_hist_entry(&entry->hists[k], &h->addr[offset]);
++			update_hist_entry(&entry->hists[k++], &h->addr[offset]);
+ 		}
+ 	}
+ 	return 0;
+@@ -203,6 +206,7 @@ static void browser__write(struct ui_browser *uib, void *entry, int row)
+ 	struct annotated_data_type *adt = he->mem_type;
+ 	struct evsel *leader = hists_to_evsel(he->hists);
+ 	struct evsel *evsel;
++	int idx = 0;
  
-+		ui_progress__init(&prog, nr_samples,
-+				  "Sorting group events for output...");
-+		evsel__output_resort(pos, &prog);
-+		ui_progress__finish();
+ 	if (member == NULL) {
+ 		bool current = ui_browser__is_current_entry(uib, row);
+@@ -219,9 +223,12 @@ static void browser__write(struct ui_browser *uib, void *entry, int row)
+ 	/* print the number */
+ 	for_each_group_evsel(evsel, leader) {
+ 		struct type_hist *h = adt->histograms[evsel->core.idx];
+-		int idx = evsel__group_idx(evsel);
+ 
+-		browser__write_overhead(uib, h, &be->hists[idx], row);
++		if (symbol_conf.skip_empty &&
++		    evsel__hists(evsel)->stats.nr_samples == 0)
++			continue;
 +
- 		hists__find_annotations(hists, pos, ann);
++		browser__write_overhead(uib, h, &be->hists[idx++], row);
  	}
  
+ 	/* print type info */
+@@ -300,8 +307,17 @@ int hist_entry__annotate_data_tui(struct hist_entry *he, struct evsel *evsel,
+ 
+ 	ui_helpline__push("Press ESC to exit");
+ 
+-	if (evsel__is_group_event(evsel))
+-		browser.nr_events = evsel->core.nr_members;
++	if (evsel__is_group_event(evsel)) {
++		struct evsel *pos;
++		int nr = 0;
++
++		for_each_group_evsel(pos, evsel) {
++			if (!symbol_conf.skip_empty ||
++			    evsel__hists(pos)->stats.nr_samples)
++				nr++;
++		}
++		browser.nr_events = nr;
++	}
+ 
+ 	ret = annotated_data_browser__collect_entries(&browser);
+ 	if (ret == 0)
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 734acdd8c4b7..be3b84a82271 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -1492,10 +1492,15 @@ static void print_annotated_data_header(struct hist_entry *he, struct evsel *evs
+ 		struct evsel *pos;
+ 		int i = 0;
+ 
+-		for_each_group_evsel(pos, evsel)
+-			printf(" event[%d] = %s\n", i++, pos->name);
++		nr_members = 0;
++		for_each_group_evsel(pos, evsel) {
++			if (symbol_conf.skip_empty &&
++			    evsel__hists(pos)->stats.nr_samples == 0)
++				continue;
+ 
+-		nr_members = evsel->core.nr_members;
++			printf(" event[%d] = %s\n", i++, pos->name);
++			nr_members++;
++		}
+ 	}
+ 
+ 	if (symbol_conf.show_total_period) {
+@@ -1530,31 +1535,26 @@ static void print_annotated_data_type(struct annotated_data_type *mem_type,
+ {
+ 	struct annotated_member *child;
+ 	struct type_hist *h = mem_type->histograms[evsel->core.idx];
+-	int i, nr_events = 1, samples = 0;
++	int i, nr_events = 0, samples = 0;
+ 	u64 period = 0;
+ 	int width = symbol_conf.show_total_period ? 11 : 7;
++	struct evsel *pos;
+ 
+-	for (i = 0; i < member->size; i++) {
+-		samples += h->addr[member->offset + i].nr_samples;
+-		period += h->addr[member->offset + i].period;
+-	}
+-	print_annotated_data_value(h, period, samples);
+-
+-	if (evsel__is_group_event(evsel)) {
+-		struct evsel *pos;
++	for_each_group_evsel(pos, evsel) {
++		h = mem_type->histograms[pos->core.idx];
+ 
+-		for_each_group_member(pos, evsel) {
+-			h = mem_type->histograms[pos->core.idx];
++		if (symbol_conf.skip_empty &&
++		    evsel__hists(pos)->stats.nr_samples == 0)
++			continue;
+ 
+-			samples = 0;
+-			period = 0;
+-			for (i = 0; i < member->size; i++) {
+-				samples += h->addr[member->offset + i].nr_samples;
+-				period += h->addr[member->offset + i].period;
+-			}
+-			print_annotated_data_value(h, period, samples);
++		samples = 0;
++		period = 0;
++		for (i = 0; i < member->size; i++) {
++			samples += h->addr[member->offset + i].nr_samples;
++			period += h->addr[member->offset + i].period;
+ 		}
+-		nr_events = evsel->core.nr_members;
++		print_annotated_data_value(h, period, samples);
++		nr_events++;
+ 	}
+ 
+ 	printf(" %10d %10d  %*s%s\t%s",
 -- 
 2.46.0.rc2.264.g509ed76dc8-goog
 
