@@ -1,282 +1,182 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B6613213A
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 16:04:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE0779DC5;
+	Wed,  7 Aug 2024 17:57:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723046648; cv=none; b=aiNEuRNY8vvTdO8v2bww4M0U/Nfwi+1suKFHPcqGprSc48blj4bBtZRN3OBWT8y7O2C3bJWisNtssmMRHjgahLPkP/Dw8RB/TXnlVS8vcGOn+cKU8C4BlzUfcERHvoPNr96miWPtB/bh4MqcWwuzPe8LVBhSTFu0OrgFMElKfFE=
+	t=1723053421; cv=none; b=V4ttQPVZKvqhFh3e1Wntja6uvtQAENIDD6M64GqbnvOYgSLNxGj/pZixP2ohyNr0ZDjhYWmsMG/AOrjxWyRi5YsAH5xCp+DG2hNJ2md3a/MqgSx9oN2jkcLmAqki65y15MLnLZfEL43tV6OgxIuw7sI/w3ae92k5386TS1LJawg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723046648; c=relaxed/simple;
-	bh=8Q/HAcOWW10Wfu6QyHmyd5Q0soNFUEE7javOSm5ye2s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ul6xCoCWyQZtfRqSLsgM0SM/FhuCZz/AgJa18QfngOGQucexjTlHd0FqNZjWh29+1Et80U2c1GNla+4bfUSjSq2SljqthuAmvNUu1Uj1VA7OaVB2sn8suSxVkm/3V/Oem2GsBO3k2W1J/ZrlApPOmSUdgWoeUqNavCsUgu/cfh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cWXivQeg; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723053421; c=relaxed/simple;
+	bh=d6FviukTHiKvwlSWQr9NXWxc5Auyu7tuMFl3vBaAdjs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Gl9uD0FdpZ8tbIeS96tWSKR9gc5VewghaLOQDk2Tmz4lus/MLK4xtFhAXVbzcrzKH875499XTxQdJcyk4tCFOrV71sGGnJcaCMH/SFLCYNP7V2MbiMcUiA3qS+evCfgCJR9JtW5D3g/sVMYlxwO2+ke5mgqS3h50ohmZ4I9LCWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p/o+bFLz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cWXivQeg"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1fed726aefcso439045ad.1
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 09:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723046646; x=1723651446; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XynK2BpMdyOBcdJAwEW97KiTbwRbYddVxKkhDAkMWK4=;
-        b=cWXivQeg2SxUZETn/FVITNqqJlSEPl7MzUXHm5+LcFWTAn+lptk0a+7Dgog17G0u5H
-         BLd6mISwqSpJTdUe8XPeVmje1RMe83yI3PoFnhm38xLIiwfB+T2N4JmpoAV3+yKW71QJ
-         J02qqazfGDSPncGI+/UwtYo8E0ois8232ZDnhSFhs2JYasKLu/qKNrJRNreD1aJWxe9g
-         M1MHv3GSIe/dia9KHdDgclpfMQZtV/tf76qMN35tAhUWuFFsfRX174qRvdjhKK726fyk
-         +OHvXoQw4CXDJPHiraxUn/jMYc6uJ5CRmCupBdj+KKUF2/eh0Lw86H85qgmhSuwEiY01
-         1dyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723046646; x=1723651446;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XynK2BpMdyOBcdJAwEW97KiTbwRbYddVxKkhDAkMWK4=;
-        b=ib8BSIjjNDUG/OLC1dEQxJ3uhgH+UfPmx31EgTE/2wvTj7EdmjZQGWBJJE56LQW8Yq
-         S09J1BlkJyTHOdOLoCqiTRSbs1vIs1mig8aLCGF0+BJNZHbm87f6sRZeJfrVuXEs3HxH
-         dJEjM9NHtNrUreeEgllc4hz1qql3fj2olCJYo9hQKC5250PaFlUotg/XUOHdasQEpxgm
-         thx0LHRtc/jbMlfXzYJ36JevBo5Hz4HXsElcJKy8K6lQeJSeOSlG0ya5dv/YtPvvfchk
-         P5W88V6jkUY7FgRZa75uDhXqA0bffH9//zfoTyyvo1zJl/fLWnzwNSlel9DK0a4J3jd/
-         QoRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWCuqOakGc1hPOuCI+kUj34vqSzzCBY3713BQgMessy7vWaSF5mr4yzpnSXxYdXusqF61tEEEYJGaqI38MvepmqZB3opfAIKnbmnOQ54ofLng==
-X-Gm-Message-State: AOJu0Yzv2Sf4brxteABYy+xMA5Vfyi9UsHWSmOEK1qq8UxbhfoglHSJN
-	NJyqsujXY5ZGtKn9Y6/U8wVPZ//6rRyIvaHJhQ/NA16AHMpNmMs+pLVJ+ZCbQmwRBBOZa33JoXN
-	bW/PG+nzOB+sZ41+52kqX6ykWEdG/GvzmQ8nx
-X-Google-Smtp-Source: AGHT+IHzqx8qvcekhiBeXZcj6lhQEOhGANGLW0VXBI3+flBuJkI6sUNh+r9BXd0d9yrYIonzu8m5yWxTKMjsiAhaayc=
-X-Received: by 2002:a17:903:1107:b0:1fb:52b1:27ca with SMTP id
- d9443c01a7336-20084fb9e76mr3055445ad.9.1723046645759; Wed, 07 Aug 2024
- 09:04:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p/o+bFLz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF6EC32781;
+	Wed,  7 Aug 2024 17:57:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723053420;
+	bh=d6FviukTHiKvwlSWQr9NXWxc5Auyu7tuMFl3vBaAdjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p/o+bFLzRpX/kG9wl/VqVnEVMAq7bUZ5UhKhMZ49mLwKAkyx0xZ0RqtLhvFnievQQ
+	 HVCxtRwHYw1K5w7ssuZzwNsgtbjRS7Sjh0xZpDQitYR37EVCSNjgEawF/OyTgrij0K
+	 VQEDIo3TygCrHK/OJxXz98yN25Pm99nAkpH2Leln5mgzwDlpUCB+5QnzY62eTLOPVB
+	 vMnm2vauNABOlfNrpwWm0ywybRE/YlfOCE60rXlPHqrp9aATnpvsnjFR2eep6aoVdz
+	 /uYogGIxldjN8+QLHSb7YHYWZ26bkMVFR8OzABK9PxY2cq6D1F3Y045KA8Nd5bskU9
+	 WyVgbr691yDZQ==
+Date: Wed, 7 Aug 2024 10:56:58 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Linux-Arch <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH 06/10] tools/include: Sync uapi/asm-generic/unistd.h with
+ the kernel sources
+Message-ID: <ZrO1aqysu-jtYbtC@google.com>
+References: <20240806225013.126130-1-namhyung@kernel.org>
+ <20240806225013.126130-7-namhyung@kernel.org>
+ <10a643ba-cafe-411e-855e-d93d8144f470@app.fastmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807065136.1039977-1-irogers@google.com> <277a02a5-9355-4f06-9158-026cf4b330f7@linux.intel.com>
- <ZrONok4ZhoA6FhNi@x1> <CAP-5=fWge5+AunVPoy-jxk=5xJeCD8gwFAd0vWk8K8Jif3DB-Q@mail.gmail.com>
-In-Reply-To: <CAP-5=fWge5+AunVPoy-jxk=5xJeCD8gwFAd0vWk8K8Jif3DB-Q@mail.gmail.com>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 7 Aug 2024 09:03:41 -0700
-Message-ID: <CAP-5=fWfLqk0naUJGRKBEN93_xy4SXSdjF24Z01FGnGhJf0pJQ@mail.gmail.com>
-Subject: Re: [PATCH v1] perf hist: Fix reference counting of branch_info
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: "Liang, Kan" <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Sun Haiyong <sunhaiyong@loongson.cn>, 
-	Yanteng Si <siyanteng@loongson.cn>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <10a643ba-cafe-411e-855e-d93d8144f470@app.fastmail.com>
 
-On Wed, Aug 7, 2024 at 8:42=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> On Wed, Aug 7, 2024 at 8:07=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ker=
-nel.org> wrote:
-> >
-> > On Wed, Aug 07, 2024 at 09:27:02AM -0400, Liang, Kan wrote:
-> > >
-> > >
-> > > On 2024-08-07 2:51 a.m., Ian Rogers wrote:
-> > > > iter_finish_branch_entry doesn't put the branch_info from/to map
-> > > > elements creating memory leaks. This can be seen with:
-> > > >
-> > > > ```
-> > > > $ perf record -e cycles -b perf test -w noploop
-> > > > $ perf report -D
-> > > > ...
-> > > > Direct leak of 984344 byte(s) in 123043 object(s) allocated from:
-> > > >     #0 0x7fb2654f3bd7 in malloc libsanitizer/asan/asan_malloc_linux=
-.cpp:69
-> > > >     #1 0x564d3400d10b in map__get util/map.h:186
-> > > >     #2 0x564d3400d10b in ip__resolve_ams util/machine.c:1981
-> > > >     #3 0x564d34014d81 in sample__resolve_bstack util/machine.c:2151
-> > > >     #4 0x564d34094790 in iter_prepare_branch_entry util/hist.c:898
-> > > >     #5 0x564d34098fa4 in hist_entry_iter__add util/hist.c:1238
-> > > >     #6 0x564d33d1f0c7 in process_sample_event tools/perf/builtin-re=
-port.c:334
-> > > >     #7 0x564d34031eb7 in perf_session__deliver_event util/session.c=
-:1655
-> > > >     #8 0x564d3403ba52 in do_flush util/ordered-events.c:245
-> > > >     #9 0x564d3403ba52 in __ordered_events__flush util/ordered-event=
-s.c:324
-> > > >     #10 0x564d3402d32e in perf_session__process_user_event util/ses=
-sion.c:1708
-> > > >     #11 0x564d34032480 in perf_session__process_event util/session.=
-c:1877
-> > > >     #12 0x564d340336ad in reader__read_event util/session.c:2399
-> > > >     #13 0x564d34033fdc in reader__process_events util/session.c:244=
-8
-> > > >     #14 0x564d34033fdc in __perf_session__process_events util/sessi=
-on.c:2495
-> > > >     #15 0x564d34033fdc in perf_session__process_events util/session=
-.c:2661
-> > > >     #16 0x564d33d27113 in __cmd_report tools/perf/builtin-report.c:=
-1065
-> > > >     #17 0x564d33d27113 in cmd_report tools/perf/builtin-report.c:18=
-05
-> > > >     #18 0x564d33e0ccb7 in run_builtin tools/perf/perf.c:350
-> > > >     #19 0x564d33e0d45e in handle_internal_command tools/perf/perf.c=
-:403
-> > > >     #20 0x564d33cdd827 in run_argv tools/perf/perf.c:447
-> > > >     #21 0x564d33cdd827 in main tools/perf/perf.c:561
-> > > > ...
-> > > > ```
-> > > >
-> > > > Clearing up the map_symbols properly creates maps reference count
-> > > > issues so resolve those. Resolving this issue doesn't improve peak
-> > > > heap consumption for the test above.
-> > > >
-> > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > >
-> > >
-> > > Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> >
-> > Thanks, applying.
-> >
-> > While trying to test it:
-> >
-> > make -k CORESIGHT=3D1 EXTRA_CFLAGS=3D"-fsanitize=3Dmemory" CC=3Dclang H=
-OSTCC=3Dclang NO_LIBTRACEEVENT=3D1 NO_LIBELF=3D1 BUILD_BPF_SKEL=3D0 NO_LIBP=
-FM=3D1 O=3D/tmp/build/$(basename $PWD)/ -C tools/perf install-bin
-> >
-> > Used that from a previous patch description from Ian to get rid of some
-> > other problems with those other libraries:
-> >
-> > =E2=AC=A2[acme@toolbox perf-tools-next]$  perf record -e cycles -b perf=
- test -w noploop
-> > Uninitialized bytes in fopen64 at offset 46 inside [0x7fff1077e890, 52)
-> > =3D=3D1948231=3D=3DWARNING: MemorySanitizer: use-of-uninitialized-value
-> >     #0 0x7921df in perf_pmu_format__load pmu.c
-> >     #1 0x791f3e in perf_pmu__warn_invalid_formats (/home/acme/bin/perf+=
-0x791f3e) (BuildId: d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #2 0x6f62d0 in __add_event parse-events.c
-> >     #3 0x6fa681 in __parse_events_add_numeric parse-events.c
-> >     #4 0x6fa3e4 in parse_events_add_numeric (/home/acme/bin/perf+0x6fa3=
-e4) (BuildId: d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #5 0x78c6ca in parse_events_parse (/home/acme/bin/perf+0x78c6ca) (B=
-uildId: d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #6 0x6fd8eb in __parse_events (/home/acme/bin/perf+0x6fd8eb) (Build=
-Id: d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #7 0x6ff232 in parse_events_option (/home/acme/bin/perf+0x6ff232) (=
-BuildId: d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #8 0x5be82f in get_value /home/acme/git/perf-tools-next/tools/lib/s=
-ubcmd/parse-options.c
-> >     #9 0x5ba474 in parse_short_opt /home/acme/git/perf-tools-next/tools=
-/lib/subcmd/parse-options.c:351:11
-> >     #10 0x5ba474 in parse_options_step /home/acme/git/perf-tools-next/t=
-ools/lib/subcmd/parse-options.c:539:12
-> >     #11 0x5ba474 in parse_options_subcommand /home/acme/git/perf-tools-=
-next/tools/lib/subcmd/parse-options.c:653:10
-> >     #12 0x4f089f in cmd_record (/home/acme/bin/perf+0x4f089f) (BuildId:=
- d7742e31f05abb200493b431a6191afda9ed77c8)
-> >     #13 0x56fda9 in run_builtin perf.c
-> >     #14 0x56e9ea in main (/home/acme/bin/perf+0x56e9ea) (BuildId: d7742=
-e31f05abb200493b431a6191afda9ed77c8)
-> >     #15 0x7fbf387ea087 in __libc_start_call_main (/lib64/libc.so.6+0x2a=
-087) (BuildId: 8f53abaad945a669f2bdcd25f471d80e077568ef)
-> >     #16 0x7fbf387ea14a in __libc_start_main@GLIBC_2.2.5 (/lib64/libc.so=
-.6+0x2a14a) (BuildId: 8f53abaad945a669f2bdcd25f471d80e077568ef)
-> >     #17 0x4364e4 in _start (/home/acme/bin/perf+0x4364e4) (BuildId: d77=
-42e31f05abb200493b431a6191afda9ed77c8)
-> >
-> > SUMMARY: MemorySanitizer: use-of-uninitialized-value pmu.c in perf_pmu_=
-format__load
-> > Exiting
-> > =E2=AC=A2[acme@toolbox perf-tools-next]$
-> >
-> > So I think there is something else nor merged or is this something new?
->
-> Taking a look. You are setting HOSTCC here presumably to work past a
-> libbpf build error I see. Why are we building libbpf with HOSTCC and
-> not CC?
+Hello,
 
-The memory sanitizer error is a false positive. The msan interceptor
-hasn't worked for vfscanf so it doesn't understand that type was
-written to as an out argument. We know it must have been as the result
-of the vscanf is compared with 1 to make sure it was read:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/util/pmu.c?h=3Dperf-tools-next#n1105
-To work around the false positive you can change "__u32 type;" to be
-"__u32 type =3D 0;".
+On Wed, Aug 07, 2024 at 09:11:01AM +0200, Arnd Bergmann wrote:
+> On Wed, Aug 7, 2024, at 00:50, Namhyung Kim wrote:
+> > And arch syscall tables to pick up changes from:
+> >
+> >   b1e31c134a8a powerpc: restore some missing spu syscalls
+> >   d3882564a77c syscalls: fix compat_sys_io_pgetevents_time64 usage
+> >   54233a425403 uretprobe: change syscall number, again
+> >   63ded110979b uprobe: Change uretprobe syscall scope and number
+> >   9142be9e6443 x86/syscall: Mark exit[_group] syscall handlers __noreturn
+> >   9aae1baa1c5d x86, arm: Add missing license tag to syscall tables files
+> >   5c28424e9a34 syscalls: Fix to add sys_uretprobe to syscall.tbl
+> >   190fec72df4a uprobe: Wire up uretprobe system call
+> >
+> > This should be used to beautify syscall arguments and it addresses
+> > these tools/perf build warnings:
+> >
+> >   Warning: Kernel ABI header differences:
+> >   diff -u tools/arch/arm64/include/uapi/asm/unistd.h 
+> > arch/arm64/include/uapi/asm/unistd.h
+> >   diff -u tools/include/uapi/asm-generic/unistd.h 
+> > include/uapi/asm-generic/unistd.h
+> >   diff -u tools/perf/arch/x86/entry/syscalls/syscall_64.tbl 
+> > arch/x86/entry/syscalls/syscall_64.tbl
+> >   diff -u tools/perf/arch/powerpc/entry/syscalls/syscall.tbl 
+> > arch/powerpc/kernel/syscalls/syscall.tbl
+> >   diff -u tools/perf/arch/s390/entry/syscalls/syscall.tbl 
+> > arch/s390/kernel/syscalls/syscall.tbl
+> >
+> > Please see tools/include/uapi/README for details (it's in the first patch
+> > of this series).
+> >
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: linux-arch@vger.kernel.org
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/arch/arm64/include/uapi/asm/unistd.h    | 24 +------------------
+> >  tools/include/uapi/asm-generic/unistd.h       |  2 +-
+> >  .../arch/powerpc/entry/syscalls/syscall.tbl   |  6 ++++-
+> >  .../perf/arch/s390/entry/syscalls/syscall.tbl |  2 +-
+> >  .../arch/x86/entry/syscalls/syscall_64.tbl    |  8 ++++---
+> >  5 files changed, 13 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/tools/arch/arm64/include/uapi/asm/unistd.h 
+> > b/tools/arch/arm64/include/uapi/asm/unistd.h
+> > index 9306726337fe..df36f23876e8 100644
+> > --- a/tools/arch/arm64/include/uapi/asm/unistd.h
+> > +++ b/tools/arch/arm64/include/uapi/asm/unistd.h
+> > -
+> > -#define __ARCH_WANT_RENAMEAT
+> > -#define __ARCH_WANT_NEW_STAT
+> > -#define __ARCH_WANT_SET_GET_RLIMIT
+> > -#define __ARCH_WANT_TIME32_SYSCALLS
+> > -#define __ARCH_WANT_MEMFD_SECRET
+> > -
+> > -#include <asm-generic/unistd.h>
+> > +#include <asm/unistd_64.h>
+> 
+> This part won't work by itself, since you don't pick up
+> the generated asm/unistd_64.h header but keep the old
+> asm-generic/unistd.h header. Both have the same contents,
+> so the easy way to do this is to just keep the existing
+> version of the arm64 header for 6.11 and add a script to
+> generate it in 6.12 the way we do for x86, using an
+> architecture-independent script.
 
-To diagnose this I added to EXTRA_CFLAGS
--fsanitize-memory-track-origins=3D2. This yielded:
-```
-=3D=3D1069181=3D=3DWARNING: MemorySanitizer: use-of-uninitialized-value
-    #0 0x556c8f187881 in __perf_pmus__find_by_type tools/perf/util/pmus.c:2=
-45:7
-    #1 0x556c8f186f6e in perf_pmus__find_by_type tools/perf/util/pmus.c:258=
-:25
-    #2 0x556c8ed2c3ea in parse_events_add_numeric
-tools/perf/util/parse-events.c:1398:55
-    #3 0x556c8f129795 in parse_events_parse tools/perf/util/parse-events.y:=
-348:8
-    #4 0x556c8ed3e5fe in parse_events__scanner
-tools/perf/util/parse-events.c:1871:8
-    #5 0x556c8ed3f85b in __parse_events tools/perf/util/parse-events.c:2140=
-:8
-    #6 0x556c8ed48553 in parse_events_option
-tools/perf/util/parse-events.c:2343:8
-    #7 0x556c8e6720cc in get_value tools/lib/subcmd/parse-options.c:251:10
-    #8 0x556c8e668a63 in parse_short_opt tools/lib/subcmd/parse-options.c:3=
-51:11
-    #9 0x556c8e65c55f in parse_options_step
-tools/lib/subcmd/parse-options.c:539:12
-    #10 0x556c8e659066 in parse_options_subcommand
-tools/lib/subcmd/parse-options.c:653:10
-    #11 0x556c8e65fd07 in parse_options tools/lib/subcmd/parse-options.c:69=
-1:9
-    #12 0x556c8e07fe11 in cmd_record tools/perf/builtin-record.c:3995:9
-    #13 0x556c8e5cf19b in run_builtin tools/perf/perf.c:350:11
-    #14 0x556c8e5caa3a in handle_internal_command tools/perf/perf.c:403:8
-    #15 0x556c8e5ce677 in run_argv tools/perf/perf.c:447:2
-    #16 0x556c8e5c8e77 in main tools/perf/perf.c:561:3
-    #17 0x7f4218443b89 in __libc_start_call_main
-csu/../sysdeps/nptl/libc_start_call_main.h:58:16
-    #18 0x7f4218443c44 in __libc_start_main csu/../csu/libc-start.c:360:3
+Thanks for the review, I'll drop the arm64 parts for now.
 
-  Uninitialized value was stored to memory at
-    #0 0x556c8f1447f9 in perf_pmu__lookup tools/perf/util/pmu.c:1123:12
-    #1 0x556c8f198a68 in perf_pmu__find2 tools/perf/util/pmus.c:184:9
-    #2 0x556c8f186b26 in pmu_read_sysfs tools/perf/util/pmus.c:223:3
-    #3 0x556c8f18995b in perf_pmus__scan_core tools/perf/util/pmus.c:295:3
-    #4 0x556c8f196347 in perf_pmus__num_core_pmus tools/perf/util/pmus.c:62=
-8:17
-    #5 0x556c8f1999ad in __perf_pmus__supports_extended_type
-tools/perf/util/pmus.c:638:6
-    #6 0x556c8f196599 in perf_pmus__init_supports_extended_type
-tools/perf/util/pmus.c:653:40
-    #7 0x7f42184aa276 in __pthread_once_slow nptl/pthread_once.c:116:7
+> 
+> > @@ -68,7 +69,7 @@
+> >  57	common	fork			sys_fork
+> >  58	common	vfork			sys_vfork
+> >  59	64	execve			sys_execve
+> > -60	common	exit			sys_exit
+> > +60	common	exit			sys_exit			-			noreturn
+> >  61	common	wait4			sys_wait4
+> >  62	common	kill			sys_kill
+> >  63	common	uname			sys_newuname
+> 
+> Have you checked if this works correctly with the
+> existing tools/perf/arch/x86/entry/syscalls/syscalltbl.sh?
 
-  Uninitialized value was created by an allocation of 'type' in the stack f=
-rame
-    #0 0x556c8f143d50 in perf_pmu__lookup tools/perf/util/pmu.c:1091:2
+Yep, the script only cares about the number and the name.
 
-SUMMARY: MemorySanitizer: use-of-uninitialized-value
-tools/perf/util/pmus.c:245:7 in __perf_pmus__find_by_type
-    #0 0x556c8f143d50 in perf_pmu__lookup
-/home/irogers/kernel.org2/tools/perf/util/pmu.c:1091:2
+  # the params are: nr abi name entry compat
+  # use _ for intentionally unused variables according to SC2034
+  while read nr _ name _ _; do
+      if [ $nr -ge 512 ] ; then # discard compat sycalls
+          break
+      fi
+  
+      emit "$nr" "$name"
+      max_nr=$nr
+  done < $sorted_table
 
-SUMMARY: MemorySanitizer: use-of-uninitialized-value
-/home/irogers/kernel.org2/tools/perf/util/pmus.c:245:7 in
-__perf_pmus__find_by_type
-```
+The only difference I see was the added uretprobe syscall.
 
-As I say, there's no way for type to be uninitialized, the vscanf
-ensures it, so this is an msan interceptor issue. Fwiw, it can be
-difficult to use msan without fully recompiling things like libc, this
-is how I test perf inside of Google's monorepo with msan. Address
-sanitizer, that includes leak sanitizer, is less fussy but it lacks
-interceptors for things like the BPF system call. Ideally distros
-would ship sanitizer builds of things like libc in the same way they
-ship developer/debug packages.
+  $ tools/arch/x86/entry/syscalls/syscalltbl.sh tools/arch/x86/entry/syscalls/syscall_64.tbl x86_64 > b
+  (apply this series...)
+  $ tools/arch/x86/entry/syscalls/syscalltbl.sh tools/arch/x86/entry/syscalls/syscall_64.tbl x86_64 > a
+  
+  $ diff -u b a
+  --- b	2024-08-07 10:28:04.267738574 -0700
+  +++ a	2024-08-07 10:28:18.543965369 -0700
+  @@ -334,6 +334,7 @@
+   	[332] = "statx",
+   	[333] = "io_pgetevents",
+   	[334] = "rseq",
+  +	[335] = "uretprobe",
+   	[424] = "pidfd_send_signal",
+   	[425] = "io_uring_setup",
+   	[426] = "io_uring_enter",
 
 Thanks,
-Ian
+Namhyung
+
+> 
+> Since not just table file contents but also the file format
+> changed here, there is a good chance that the output
+> is no longer what we need.
+> 
+> Unfortunately, the format on x86 is now incompatible with
+> the one on s390. I have a patch to change s390 in the future
+> so we can use a single script for all of them.
+> 
+>       Arnd
