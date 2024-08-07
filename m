@@ -1,197 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FA561C57A7
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 10:18:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FBDA1C3D
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 10:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723025882; cv=none; b=Pw1k4SBStGeaaIArbcjULoIKg7p9N0f8Gvfq242HYlVwR4rBaJ1XrLvYNkx2Hwrxqcct8IPU9vl4YwT0MGlIRVVqHz4ZFO/Nb4QlLayy5cp1omwP78ruhTIb+Wc7n4e3uCt4i/pIj818o0P95Mr+izLibVin2Mwz5evAVzisn2c=
+	t=1723028146; cv=none; b=kjBBVSIPqQL6IAWuitnBCpSwBValSUQvtwbtG1IsvRTF2zA2MqjpkOe4fKbWjTahH5LKMXTJz1f+cqkUFJQF5h/GI+cokIZoYtcjDk5VhvEcGNs/rjrpkiMBnoQjbqx76lmQnkNalv2IVpzNBzahCoPswOgkSQEFXonDSw0r+k0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723025882; c=relaxed/simple;
-	bh=dU34Jk/zdBG66KdZqoSvUYqEsvh2JWx8pa6AroZH7QU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKa0c/AW2G8hD+hMv3Ltj/6BFiAZ1+uOsdbMc8FhNvFmS8Fpe509ltd8J+7Jmx07lUbdZJUpZpiEEuOs3UeMwcuUF7yjts6pAeQ9+GMe2j5oLwKBFQAHEb7GxlaAxy9rysi5aCyFIksyGTFYtxcooI6ZzxQeCRm7/8Gn4kl16wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Md03+38X; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723028146; c=relaxed/simple;
+	bh=4VeYB/5KjZu1xP4yhehU2c+3ldJcBRoEhBeRIzBgB1M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y6IdrZ73tua7n8BFeFdSMsG/wa24f3wudP35ALwqFv6wXCNEN9l/d6NoGK6IlGaAQk6ESfUd+ipvqPuRzaJdk28lJbcMDUjFwGWbr+i8/45gCvunf6quYxSbK5Ep39n1LGa2B8J6haw7fAN4V/SzNYQiLKlXAvRcDMjsNvTdHgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UVEJLaFb; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Md03+38X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723025880;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=fToBX/B6bWnrDNLZMpsbxGATEy0ptfzvMuaWk2wqyMQ=;
-	b=Md03+38XY5Ro8K9x3fek8GWV0dCNsemcZI9HMg+n3Ez+ZGwc4yFsg2MQhiqrggoYQrmTe7
-	0Ulbs39jmOLsN+cGVV/S7VeqaJmyAwdNeIvA2OgEMCaEprenZ1VJaUU8thCEldRj9g2mFC
-	XC1v9mErSkbBpovW+GUj+wlX5qO3Q2g=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-303-nAzyQwZnOiWBYSemnvehCg-1; Wed,
- 07 Aug 2024 06:17:58 -0400
-X-MC-Unique: nAzyQwZnOiWBYSemnvehCg-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 419A01944AA9;
-	Wed,  7 Aug 2024 10:17:55 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.97])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 118BD1953BB9;
-	Wed,  7 Aug 2024 10:17:49 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  7 Aug 2024 12:17:53 +0200 (CEST)
-Date: Wed, 7 Aug 2024 12:17:47 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
- on siglock
-Message-ID: <20240807101746.GA27715@redhat.com>
-References: <20240801082407.1618451-1-liaochang1@huawei.com>
- <20240801140639.GE4038@redhat.com>
- <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
- <20240802092406.GC12343@redhat.com>
- <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
- <20240806172529.GC20881@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UVEJLaFb"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3684eb5be64so1070830f8f.3
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 03:55:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723028141; x=1723632941; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=g1CfpUgJXS7BrN7tAFA68qWsxl5eht2ofVsjd8s8rPw=;
+        b=UVEJLaFbfMUwjaKEz2LQce5F3791HikaDXswCKrZ4hOJc8ztcyQ2E+WND5OYMbZyUL
+         LsH8vnQwF43e4E0segbL4u9sF1imxeOHgWD2/Hznj4EhGssd/QdpGTYVNxM+nvcxlveL
+         4R9Ufv+/6Dz8EZdQQhVsXNf3r3e3RbRYuxJN+NrXjWhe2I5v5Abx1tEywBF/AW4OiwOD
+         fuRWHXgQMHgAvtfqmnnOuDM/+hU2aUPp+lWe9bcOFHd3zDSy7YiKqCAIS/zaKLdLjMpj
+         I62lSoo0Z/LlKUAxDKHcl7DXySyVVT6ogZwshuwvIwjhyen37jBPOOzOhBhLmqDoW9Z0
+         aIUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723028141; x=1723632941;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=g1CfpUgJXS7BrN7tAFA68qWsxl5eht2ofVsjd8s8rPw=;
+        b=cyr1MkMbDdGQKuFFlOkK/cAKgCxhygYhz2OfCgCoqYdUkAFmQfFsPd91OtzSY+2fBq
+         eWmgK5/AYXWd4icIM6Sogu69F31C0pv8DTaWVWLoO19DrwoHu+7Dc/2ccqR2Uk1VhyHz
+         WEpZEwo85AcqFgaculaFU0FNHMNrBW2PkLp3UdwGRvXTd9ha6srZIBl+9EGhoztRlTLe
+         uo/fvJw9sNSSeKO66r0+LlbJFMFmT0wPVASFJpSd7OscHN6RL8verLDINmxyUo8a1bRT
+         vZE803UZ+7yzVaOSPSXD2W1Nf7gL84g8xcKbrDS9uLu8MdcBs3Ys8b9avAdCFb5P3Y5c
+         oFLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUpeQjf32jF9JHK+9OdCtz35hr1Lw4Bh56Q3jJVXXu521Wsvg8svBn9gv7FIbi+aOtazhUyTvSNnbLl6vFOMcRurBPyIiFMOkELUUbpzuOadg==
+X-Gm-Message-State: AOJu0YzQfL5GnX0oAexrYBRE7Eh1ZpepeP3s9BRf7UyK8+GzRgBM00hi
+	OIiVMx8NEI5/iwnjNCTstrYs+hls1D5YzYibcw87O+2s0DssHH9U1iMC8xhiaE8=
+X-Google-Smtp-Source: AGHT+IGt+z3jjIQ5JZ71Sm7Hm7Y023gn/0oFOumyjerqnx97PjhdWlctYsTLYdnmPaqcAi0kbDv17g==
+X-Received: by 2002:a05:6000:8:b0:368:747c:5a04 with SMTP id ffacd0b85a97d-36bbc10f6c5mr9798605f8f.25.1723028141352;
+        Wed, 07 Aug 2024 03:55:41 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36bbd059891sm15644743f8f.73.2024.08.07.03.55.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Aug 2024 03:55:41 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: James Clark <james.clark@linaro.org>,
+	Al Grant <al.grant@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Paul Moore <paul@paul-moore.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH] drivers/perf: arm_spe: Use perf_allow_kernel() for permissions
+Date: Wed,  7 Aug 2024 11:54:41 +0100
+Message-Id: <20240807105441.2156738-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240806172529.GC20881@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
 
-So. Liao, I am sorry, but I dislike your patch/approach in any case.
+For other PMUs, PERF_SAMPLE_PHYS_ADDR requires perf_allow_kernel()
+rather than just perfmon_capable(). Because PMSCR_EL1_PA is another form
+of physical address, make it consistent and use perf_allow_kernel() for
+SPE as well. PMSCR_EL1_PCT and PMSCR_EL1_CX also get the same change.
 
-UTASK_SSTEP_DENY_SIGNAL complicates the state machine. And I don't like the fact
-that set_thread_flag(TIF_SIGPENDING) is called twice, from handle_singlestep()
-and uprobe_post_sstep_notifier(), this complicates the logic even more.
+This improves consistency and indirectly fixes the following error
+message which is misleading because perf_event_paranoid is not taken
+into account by perfmon_capable():
 
-We need a flag, not the new state.
+  $ perf record -e arm_spe/pa_enable/
 
-And if I read this patch correctly it is wrong:
+  Error:
+  Access to performance monitoring and observability operations is
+  limited. Consider adjusting /proc/sys/kernel/perf_event_paranoid
+  setting ...
 
-	- uprobe_deny_signal() clears TIF_SIGPENDING and sets UTASK_SSTEP_DENY_SIGNAL
+Suggested-by: Al Grant <al.grant@arm.com>
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ drivers/perf/arm_spe_pmu.c | 9 ++++-----
+ kernel/events/core.c       | 1 +
+ security/security.c        | 1 +
+ 3 files changed, 6 insertions(+), 5 deletions(-)
 
-	- another signal cames after that and sets TIF_SIGPENDING again
-
-	- in this case the task won't return to user-space and execute the probed
-	  insn, exit_to_user_mode_loop() will notice another TIF_SIGPENDING and
-	  call arch_do_signal_or_restart()->get_signal() again.
-
-	- get_signal() will call uprobe_deny_signal() again hit
-
-		WARN_ON_ONCE(utask->state != UTASK_SSTEP);
-
-
-And no, we shouldn't change this check into UTASK_SSTEP || UTASK_SSTEP_DENY_SIGNAL.
-Again, the fact that uprobe_deny_signal() cleared TIF_SIGPENDING must not be the
-new state.
-
-Oleg.
-
-On 08/06, Oleg Nesterov wrote:
->
-> On 08/06, Liao, Chang wrote:
-> >
-> > You're absolutely right. handle_signlestep() has chance to handle _DENY_SIGANL
-> > unless it followed by setting TIF_UPROBE in uprobe_deny_signal(). This means
-> > _DENY_SIGNAL is likey replaced during next uprobe single-stepping.
-> >
-> > I believe introducing _DENY_SIGNAL as the immediate state between UTASK_SSTEP
-> > and UTASK_SSTEP_ACK is still necessary. This allow uprobe_post_sstep_notifier()
-> > to correctly restore TIF_SIGPENDING upon the completion of single-step.
-> >
-> > A revised implementation would look like this:
->
-> Still looks "obviously wrong" to me... even the approach itself.
->
-> Perhaps I am wrong, yet another day when I can't even read emails on lkml
-> carefully, sorry.
->
-> But can you please send the patch which I could actually apply? This one
-> looks white-space damaged...
->
-> I'll try to reply with more details as soon I convince myself I fully
-> understand what does your patch actually do, but most probably not tomorrow.
->
-> Thanks,
->
-> Oleg.
->
-> > ------------------%<------------------
-> > --- a/kernel/events/uprobes.c
-> > +++ b/kernel/events/uprobes.c
-> > @@ -1980,6 +1980,7 @@ bool uprobe_deny_signal(void)
-> >
-> >         if (task_sigpending(t)) {
-> >                 clear_tsk_thread_flag(t, TIF_SIGPENDING);
-> > +               utask->state = UTASK_SSTEP_DENY_SIGNAL;
-> >
-> >                 if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
-> >                         utask->state = UTASK_SSTEP_TRAPPED;
-> > @@ -2276,22 +2277,23 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
-> >         int err = 0;
-> >
-> >         uprobe = utask->active_uprobe;
-> > -       if (utask->state == UTASK_SSTEP_ACK)
-> > +       switch (utask->state) {
-> > +       case UTASK_SSTEP_ACK:
-> >                 err = arch_uprobe_post_xol(&uprobe->arch, regs);
-> > -       else if (utask->state == UTASK_SSTEP_TRAPPED)
-> > +               break;
-> > +       case UTASK_SSTEP_TRAPPED:
-> >                 arch_uprobe_abort_xol(&uprobe->arch, regs);
-> > -       else
-> > +               set_thread_flag(TIF_SIGPENDING);
-> > +               break;
-> > +       default:
-> >                 WARN_ON_ONCE(1);
-> > +       }
-> >
-> >         put_uprobe(uprobe);
-> >         utask->active_uprobe = NULL;
-> >         utask->state = UTASK_RUNNING;
-> >         xol_free_insn_slot(current);
-> >
-> > -       spin_lock_irq(&current->sighand->siglock);
-> > -       recalc_sigpending(); /* see uprobe_deny_signal() */
-> > -       spin_unlock_irq(&current->sighand->siglock);
-> > -
-> >         if (unlikely(err)) {
-> >                 uprobe_warn(current, "execute the probed insn, sending SIGILL.");
-> >                 force_sig(SIGILL);
-> > @@ -2351,6 +2353,8 @@ int uprobe_post_sstep_notifier(struct pt_regs *regs)
-> >                 /* task is currently not uprobed */
-> >                 return 0;
-> >
-> > +       if (utask->state == UTASK_SSTEP_DENY_SIGNAL)
-> > +               set_thread_flag(TIF_SIGPENDING);
-> >         utask->state = UTASK_SSTEP_ACK;
-> >         set_thread_flag(TIF_UPROBE);
-> >         return 1;
-> >
-> > ------------------>%------------------
-> >
-> > >
-> > > Oleg.
-> > >
-> > >
-> >
-> > --
-> > BR
-> > Liao, Chang
-> >
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index 9100d82bfabc..3569050f9cf3 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -41,7 +41,7 @@
+ 
+ /*
+  * Cache if the event is allowed to trace Context information.
+- * This allows us to perform the check, i.e, perfmon_capable(),
++ * This allows us to perform the check, i.e, perf_allow_kernel(),
+  * in the context of the event owner, once, during the event_init().
+  */
+ #define SPE_PMU_HW_FLAGS_CX			0x00001
+@@ -50,7 +50,7 @@ static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_C
+ 
+ static void set_spe_event_has_cx(struct perf_event *event)
+ {
+-	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
++	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && !perf_allow_kernel(&event->attr))
+ 		event->hw.flags |= SPE_PMU_HW_FLAGS_CX;
+ }
+ 
+@@ -745,9 +745,8 @@ static int arm_spe_pmu_event_init(struct perf_event *event)
+ 
+ 	set_spe_event_has_cx(event);
+ 	reg = arm_spe_event_to_pmscr(event);
+-	if (!perfmon_capable() &&
+-	    (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT)))
+-		return -EACCES;
++	if (reg & (PMSCR_EL1_PA | PMSCR_EL1_PCT))
++		return perf_allow_kernel(&event->attr);
+ 
+ 	return 0;
+ }
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index aa3450bdc227..4a69583e329a 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -417,6 +417,7 @@ static struct kmem_cache *perf_event_cache;
+  *   2 - disallow kernel profiling for unpriv
+  */
+ int sysctl_perf_event_paranoid __read_mostly = 2;
++EXPORT_SYMBOL_GPL(sysctl_perf_event_paranoid);
+ 
+ /* Minimum for 512 kiB + 1 user control page */
+ int sysctl_perf_event_mlock __read_mostly = 512 + (PAGE_SIZE / 1024); /* 'free' kiB per user */
+diff --git a/security/security.c b/security/security.c
+index 8cee5b6c6e6d..70cc9206e902 100644
+--- a/security/security.c
++++ b/security/security.c
+@@ -5610,6 +5610,7 @@ int security_perf_event_open(struct perf_event_attr *attr, int type)
+ {
+ 	return call_int_hook(perf_event_open, attr, type);
+ }
++EXPORT_SYMBOL_GPL(security_perf_event_open);
+ 
+ /**
+  * security_perf_event_alloc() - Allocate a perf event LSM blob
+-- 
+2.34.1
 
