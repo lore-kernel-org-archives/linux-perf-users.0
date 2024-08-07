@@ -1,59 +1,59 @@
-Received: from mail-oa1-f46.google.com (mail-oa1-f46.google.com [209.85.160.46])
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3CD18D63E
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 03:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEA918D63E
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 03:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723000705; cv=none; b=nSPolRRE5ZObx542FrWCKjg0cnYXn1OcG9cgNl9pp7K0GQ2RLmxjPqAKqloZghUGBu0vsq576uHS75Xhwm9Ld+LGiS316bqC/oFKVjqNQ9ocjBTV/v9lE6zvUhELKy8x1VzB4CCQNe2DIHvvxkGDe6V+WAxT5yU2NOd0lvCtync=
+	t=1723000760; cv=none; b=jC3Cn5rpl8gMSKh2ZxHl9Jc/RTskLkSCCaQLoFuuEJaYeuAW4reGw0Yskh6GYAWu/xo5XQ3LibIIm/y2UqPu5EgmL6Yl1S0SKaD0mmzS60Wp0zzGV/PqOH1YDPjGTp0YouBctWaEAGa5qiHcmwvAWbMvcxsxOvd45iUE+YjwcU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723000705; c=relaxed/simple;
-	bh=kLudHR9zWdtNCI6JY4gze8TzelxmZmAOYT96NkhlFOE=;
+	s=arc-20240116; t=1723000760; c=relaxed/simple;
+	bh=EUPZ31D7U+7j2+2ndr9TbTCGuEHdUOhxfNtD+5VbDrE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=M05sVQJT2UA1/FQmGJ067l6G/oY3/Dh6j4fRwZ9+XT3kBtaDs8q95EhM5PGOqlFAcNEU9C/GdYeKa2mykhkO0j7eNCK/3Pf4LzJZPgbBIwPz9RtkesnGVZvHBV+d2QqZhfz7brS6TdveZOzxfSSPXhRf4XnutZzHyf1JXfdSuss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=NjP/T7Vg; arc=none smtp.client-ip=209.85.160.46
+	 In-Reply-To:Content-Type; b=oeD6xRzDsxrMS9iahBBC5ifVrBMK+n62WkVgXCxbCXTqPLn+PmRZ/WswrTCDtb2y8YEqK1NKIvf8sdlkNRDQk9ziI3iAuxn3y2VEgIIpLDbl+E1iykF4L0H9pvft5lZD1bs2TjT0NoyV555B0DWbmIvzVltDxH7ruiLa5b6VHA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DCBPyk7j; arc=none smtp.client-ip=209.85.160.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="NjP/T7Vg"
-Received: by mail-oa1-f46.google.com with SMTP id 586e51a60fabf-260fed6c380so805988fac.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 20:18:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DCBPyk7j"
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2681941eae0so697083fac.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 20:19:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1723000703; x=1723605503; darn=vger.kernel.org;
+        d=bytedance.com; s=google; t=1723000758; x=1723605558; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=fE2Eet5ycBOR0gve8hnkWEMsxXduyT8qepRNCtnfyQ4=;
-        b=NjP/T7VgKXrd8tmg1R/8QEkTMqIw/9QSwo5hsPuwj/BoT4Gpxhi7uc9AcWkHKMtSB/
-         papwSx3TbZCPToknQA01M0Ea5QfDBQ+F9d9Yz4NcR3ORQyF1r2h4EgwYobP5zyJH6WTH
-         Jcn8MiRzi+uaJeTQmHMYWzYSOwHJ+EHnDP5OrFMTBWELUX85SdcVHMjsEepeCOb6Y6D+
-         t678DjCJdUS2XAfoUkXXf+MD7p9MgwTCyzr8+SDxBgKubHfb7R+YPW3n+0yuyuEoLKVS
-         VY05+BlLcHiXqnszoTJzB0pWVQpqKk8WtmVci/V26cTZcGQ9s96FpKylVM1mstH2g3rU
-         rRUw==
+        bh=h/mLuVdd5+pFlHQ/4T8cyFKawoHtMBnWpMcQuFXnIww=;
+        b=DCBPyk7jVUjiq9Vc1jw5GnMuDqy71EZpcCsu4Sc3J+W/BpFvL1pf7MxQErZJUOocGy
+         9V96G1E6qYe6na+RMxG/cbaFcqBa7Vgr8npCReync/HVsKWgmp7vU9Ss4tYXyiwDP3zp
+         WYbTgi5nQW/XhW/Jo1ZZUcz6lTnbT/gkbTxkPVIzxkkKfop/qY2iEh941joCyN0w7Vou
+         xdX3lS5z0Mmro+EpUWu28bNFM9/VkEBqio3cE+ONSg6f57TisFQJluQXS6Mdu3ONlLKA
+         GKdll2sX1x4dfF7tvpPrZrzLYwwi6PagGnzeQ757n9yaMtBiSxInn/sx/MUAU47fc+c+
+         wWcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723000703; x=1723605503;
+        d=1e100.net; s=20230601; t=1723000758; x=1723605558;
         h=content-transfer-encoding:in-reply-to:from:cc:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fE2Eet5ycBOR0gve8hnkWEMsxXduyT8qepRNCtnfyQ4=;
-        b=pD8lkFjNTwei6kLrH6RB8oKyf/7thI5AsyKxDhSSUKW06pvuhSf0EqqCJBFFt/seGw
-         0T2AQlTUIe8si5lx2XGi8hgsShcU+OXUIHpjgy7yK30UyCAhmloztVDEfJoBva2uPh/o
-         f1uG3N4E4+v6KeM049Y3A0J0qU/xUL1Tnv0MgyGI7Gonu5zlTILDxOmuD1wbL0w+DhrI
-         ztgNFZonAHbUA/iVTW80ceP98A8jdq83iEqCMDUJ3OGk+urBKJFY8mNdNBkSkyczrgim
-         cfv13kADpz+sgthHSikVBqYTRz9gJQEY4oy4RqiOSv/Oa5CYxXjlYMWCt2dm8r+5O+Wv
-         8RYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU0cAnJvLuSc0AoSVHEGWLAI+xRexZNmBj0+6GwxUt9kkjknlniXMxVH3SLnptZfw/yvcb5xngy/+VIeH05TcVrhGqHDn96c+M1qgIW8uKMSQ==
-X-Gm-Message-State: AOJu0Ywo0efxcycjSI9Rdkl06mHX029adPkp3bxOQTOScmRmG+48p9Mm
-	6zT15ngNXKr7Gfr+5+AcHyplWsdGqBQm94v9wS0TqIgkpiUqQgzJ24mDSWc/i9U=
-X-Google-Smtp-Source: AGHT+IHbxAwiDPJlX+k/+E1BzkquXnhpCyIJ012NgXGz/j6wtGgw6uI4NaJcmNz3dgXMt7T/NScxyw==
-X-Received: by 2002:a05:6870:e316:b0:250:7465:d221 with SMTP id 586e51a60fabf-26891d3a84cmr20931815fac.28.1723000702717;
-        Tue, 06 Aug 2024 20:18:22 -0700 (PDT)
+        bh=h/mLuVdd5+pFlHQ/4T8cyFKawoHtMBnWpMcQuFXnIww=;
+        b=K+N+Jj+TS+BykuxsxQ7assTaBMcXF4r6/cVLKda2AyOyQKa9JFg5GzjbZlAfhm74LK
+         sd83dxJZMVzIvCEaKdjdB096OsA/+DOo84FVZx41SnQ9MJyyTkTNbyHLQuOGktmoOt0b
+         WGYV9Z/RgETRt0p3xbc48tztpp+oWAnNvh7M7qQeFvWcAm/ZIiIh22ZkuiSA3xBXdMeb
+         KdCAs/0iO7mFSrn9wRyDqyqISvUgXn2O8L+dDiKsVjmGbhGF1pNMsv4AsXp1o/CGE1u6
+         mxBvEmln55/g/fFBBvvQ2+LkZYIuv/RoogzeMQzXx5Y93a0ZPE8Ygaa95FGkKEPF1zac
+         CZcw==
+X-Forwarded-Encrypted: i=1; AJvYcCX3oxW68E8fdlk5cLNQ/FRPjUGz7nXXH5QyB2WN8hF9F6+Wa1LpqpheNro6qBm9HaVF03YDS8IcM1FzXFRZYDaKBu5+MMe0zktSrwtYuEx8Yw==
+X-Gm-Message-State: AOJu0YxVyVyOlJ35bUrd05OL22kx3V8GOIqjp0vhtZEcTrIk/wzGuCya
+	md0ggqIbcWksZVZ9I6Fo6/pikRSvezcR/YZlPmIxUXXJ3rjyr8wFATUYGgK5crg=
+X-Google-Smtp-Source: AGHT+IE8FFu+fZfH5z2rhx9vZCV6x7fIVYm+sXxRCO7riqTEhiO77VEUU+dW1maCGpqbYD1McV06Ag==
+X-Received: by 2002:a05:6870:1644:b0:261:22a4:9235 with SMTP id 586e51a60fabf-26891e9303fmr17263216fac.32.1723000757739;
+        Tue, 06 Aug 2024 20:19:17 -0700 (PDT)
 Received: from [10.70.146.105] ([203.208.189.5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed3389bsm7543742b3a.213.2024.08.06.20.18.17
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed3389bsm7543742b3a.213.2024.08.06.20.19.12
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Aug 2024 20:18:22 -0700 (PDT)
-Message-ID: <a6ae5450-9293-40d2-a643-bb7c783e6c44@bytedance.com>
-Date: Wed, 7 Aug 2024 11:18:17 +0800
+        Tue, 06 Aug 2024 20:19:17 -0700 (PDT)
+Message-ID: <47e26358-86c3-485d-9de4-1b492ba5641e@bytedance.com>
+Date: Wed, 7 Aug 2024 11:19:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,95 +61,64 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/3] perf: build: Fix build feature-dwarf_getlocations
- fail for old libdw
+Subject: Re: [PATCH v2 3/3] perf dwarf-aux: Fix build fail when
+ HAVE_DWARF_GETLOCATIONS_SUPPORT undefined
 Content-Language: en-US
 To: Leo Yan <leo.yan@arm.com>
 References: <20240806114801.1652417-1-yangjihong@bytedance.com>
- <20240806114801.1652417-3-yangjihong@bytedance.com>
- <2e9a74b5-9403-425d-8d98-9469e290d297@arm.com>
+ <20240806114801.1652417-4-yangjihong@bytedance.com>
+ <a3699fc9-059f-4192-b522-918952c4b264@arm.com>
 Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
  namhyung@kernel.org, mark.rutland@arm.com,
  alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
  adrian.hunter@intel.com, kan.liang@linux.intel.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 From: Yang Jihong <yangjihong@bytedance.com>
-In-Reply-To: <2e9a74b5-9403-425d-8d98-9469e290d297@arm.com>
+In-Reply-To: <a3699fc9-059f-4192-b522-918952c4b264@arm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 Hello,
 
-On 8/7/24 05:28, Leo Yan wrote:
+On 8/7/24 05:34, Leo Yan wrote:
 > On 8/6/2024 12:48 PM, Yang Jihong wrote:
+>> commit 3796eba7c137 move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
+>> code from dwarf-aux.c to dwarf-aux.h, in which die_get_var_range() used ENOTSUP
+>> macro, but dwarf-aux.h was not self-contained and did not include file errno.h.
 >>
->> For libdw versions below 0.177, need to link libdl.a in addition to
->> libbebl.a during static compilation, otherwise feature-dwarf_getlocations
->> compilation will fail.
+>> As a result, the build failed when HAVE_DWARF_GETLOCATIONS_SUPPORT macro was not
+>> defined, and the error log is as follows:
 >>
->> Before:
+>>    In file included from util/disasm.h:8,
+>>                     from util/annotate.h:16,
+>>                     from builtin-top.c:23:
+>>    util/dwarf-aux.h: In function 'die_get_var_range':
+>>    util/dwarf-aux.h:184:10: error: 'ENOTSUP' undeclared (first use in this function)
+>>      184 |  return -ENOTSUP;
+>>          |          ^~~~~~~
+>>    util/dwarf-aux.h:184:10: note: each undeclared identifier is reported only once for each function it appears
 >>
->>    $ make LDFLAGS=-static
->>      BUILD:   Doing 'make -j20' parallel build
->>    <SNIP>
->>    Makefile.config:483: Old libdw.h, finding variables at given 'perf probe' point will not work, install elfutils-devel/libdw-dev >= 0.157
->>    <SNIP>
->>
->>    $ cat ../build/feature/test-dwarf_getlocations.make.output
->>    /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/libebl.a(eblclosebackend.o): in function `ebl_closebackend':
->>    (.text+0x20): undefined reference to `dlclose'
->>    collect2: error: ld returned 1 exit status
-> 
-> Indeed. Thanks for pointing out this.
-> 
->> After:
->>
->>    $ make LDFLAGS=-static
->>    <SNIP>
->>      Auto-detecting system features:
->>    ...                                   dwarf: [ on  ]
->>    <SNIP>
->>
->>      $ ./perf probe
->>     Usage: perf probe [<options>] 'PROBEDEF' ['PROBEDEF' ...]
->>        or: perf probe [<options>] --add 'PROBEDEF' [--add 'PROBEDEF' ...]
->>        or: perf probe [<options>] --del '[GROUP:]EVENT' ...
->>        or: perf probe --list [GROUP:]EVENT ...
->>    <SNIP>
->>
->> Fixes: 536661da6ea1 ("perf: build: Only link libebl.a for old libdw")
+>> Fixes: 3796eba7c137 ("perf dwarf-aux: Move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT code to the header file")
 >> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
 >> ---
->>   tools/build/feature/Makefile | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>   tools/perf/util/dwarf-aux.h | 1 +
+>>   1 file changed, 1 insertion(+)
 >>
->> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
->> index b18513ec4da6..1fc651cae9e5 100644
->> --- a/tools/build/feature/Makefile
->> +++ b/tools/build/feature/Makefile
->> @@ -179,7 +179,7 @@ ifeq ($(findstring -static,${LDFLAGS}),-static)
->>     # Elfutils merged libebl.a into libdw.a starting from version 0.177,
->>     # Link libebl.a only if libdw is older than this version.
->>     ifeq ($(shell test $(LIBDW_VERSION_2)0 -lt 1770; echo $$?),0)
->> -    DWARFLIBS += -lebl
->> +    DWARFLIBS += -lebl -ldl
->>     endif
+>> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+>> index 24446412b869..d2903894538e 100644
+>> --- a/tools/perf/util/dwarf-aux.h
+>> +++ b/tools/perf/util/dwarf-aux.h
+>> @@ -5,6 +5,7 @@
+>>    * dwarf-aux.h : libdw auxiliary interfaces
+>>    */
+>>
+>> +#include <errno.h>
+>>   #include <dwarf.h>
 > 
-> One critical thing is the ordering of libs. We must put libdl after libebl,
-> otherwise, the building still fails (based on my test).
+> Please alphabet ordering. With it:
 > 
-> Given libdl is a general lib, I think it is good to add a line after the
-> `endif` wrapper and with a comment, something like:
+> Reviewed-by: Leo Yan <leo.yan@arm.com>
 > 
->     ifeq ($(shell test $(LIBDW_VERSION_2)0 -lt 1770; echo $$?),0)
->        DWARFLIBS += -lebl
->     endif
-> 
->     # Must put -ldl after -lebl for dependency
->     DWARFLIBS += -ldl
-> 
-> Please update the file tools/perf/Makefile.config for consistency.
-
 Okay, will change in next version.
 
 Thanks,
