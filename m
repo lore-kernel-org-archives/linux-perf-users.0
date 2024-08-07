@@ -1,125 +1,104 @@
-Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAEA918D63E
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 03:19:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72AD18D63E
+	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 03:20:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723000760; cv=none; b=jC3Cn5rpl8gMSKh2ZxHl9Jc/RTskLkSCCaQLoFuuEJaYeuAW4reGw0Yskh6GYAWu/xo5XQ3LibIIm/y2UqPu5EgmL6Yl1S0SKaD0mmzS60Wp0zzGV/PqOH1YDPjGTp0YouBctWaEAGa5qiHcmwvAWbMvcxsxOvd45iUE+YjwcU4=
+	t=1723000833; cv=none; b=fyLDDHvNo16i2OQGXfOEKp0f28AI1DTojVNI71m35tRmXm1Irxd/m+nMvDs++28jLjeY1iA+Cp0DefzcLL57PQkwAIBN7iCF+mIRPYBTCmXxCSDp0wJKN32rt2PM7AVhX5IQdESWWgNa0wIroEibO/fU1hkWR3sT4d/mYg3Uukg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723000760; c=relaxed/simple;
-	bh=EUPZ31D7U+7j2+2ndr9TbTCGuEHdUOhxfNtD+5VbDrE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=oeD6xRzDsxrMS9iahBBC5ifVrBMK+n62WkVgXCxbCXTqPLn+PmRZ/WswrTCDtb2y8YEqK1NKIvf8sdlkNRDQk9ziI3iAuxn3y2VEgIIpLDbl+E1iykF4L0H9pvft5lZD1bs2TjT0NoyV555B0DWbmIvzVltDxH7ruiLa5b6VHA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=DCBPyk7j; arc=none smtp.client-ip=209.85.160.44
+	s=arc-20240116; t=1723000833; c=relaxed/simple;
+	bh=PSf2FfGfwm9hvlShXvVH4qt+MH+zYsoIu02haAiBcHY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=MxjDnhImyb5ElRnrGRtUph3T6ORLF3kQ3YZp5x84OIc/Rw8dSZt3B2bN5nlvSN+aFsVGh+Lgf/FwSCF53WLZoaGAUzRoej7ZFbh2TF3RpR+6XtmQUBEoulD/z79ZDApc/jB1xxUZOIoTs1uPc1lWG2aym6oiBusY+uT1+dYS8vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=c0U+rNIW; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="DCBPyk7j"
-Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-2681941eae0so697083fac.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 20:19:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="c0U+rNIW"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fc587361b6so11683225ad.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 06 Aug 2024 20:20:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1723000758; x=1723605558; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=h/mLuVdd5+pFlHQ/4T8cyFKawoHtMBnWpMcQuFXnIww=;
-        b=DCBPyk7jVUjiq9Vc1jw5GnMuDqy71EZpcCsu4Sc3J+W/BpFvL1pf7MxQErZJUOocGy
-         9V96G1E6qYe6na+RMxG/cbaFcqBa7Vgr8npCReync/HVsKWgmp7vU9Ss4tYXyiwDP3zp
-         WYbTgi5nQW/XhW/Jo1ZZUcz6lTnbT/gkbTxkPVIzxkkKfop/qY2iEh941joCyN0w7Vou
-         xdX3lS5z0Mmro+EpUWu28bNFM9/VkEBqio3cE+ONSg6f57TisFQJluQXS6Mdu3ONlLKA
-         GKdll2sX1x4dfF7tvpPrZrzLYwwi6PagGnzeQ757n9yaMtBiSxInn/sx/MUAU47fc+c+
-         wWcQ==
+        d=bytedance.com; s=google; t=1723000830; x=1723605630; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fHWiHDDtgEmQfrOkHzWRCozF8QLif4Nw1j5YmDMQe9M=;
+        b=c0U+rNIWnBohP0GwDwyasSzCr/cAbMJdxMUe/gQkGnzg0zCNVBeHdzNOB7kGD9vjTE
+         7c2nOgeVW9o69jSWlRyJdOenqb+ItUOr+EnlaYpqXqF6W/JHXpPz2WPK5kUlJZXeoJrs
+         PI7Dgo9eGDddwMy1rYdrLo7zbZxlGH4YY8gqQeIPbv0ovZbBttzf6iNJIOSQ2hXAtq8e
+         T1Y04j8aYvPs8Wn0ZV4y9oBCyoNzK0jIpvDuclr68Uz13x6sv3yPYCF1dqjhyEDhdgt1
+         uGZZkC2P2ikhLeCNNyXWlS/xc3T2SNGs1HUrzqpmvxiTLppezxQeb+z29R/FRFNoOS7x
+         XCRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723000758; x=1723605558;
-        h=content-transfer-encoding:in-reply-to:from:cc:references:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h/mLuVdd5+pFlHQ/4T8cyFKawoHtMBnWpMcQuFXnIww=;
-        b=K+N+Jj+TS+BykuxsxQ7assTaBMcXF4r6/cVLKda2AyOyQKa9JFg5GzjbZlAfhm74LK
-         sd83dxJZMVzIvCEaKdjdB096OsA/+DOo84FVZx41SnQ9MJyyTkTNbyHLQuOGktmoOt0b
-         WGYV9Z/RgETRt0p3xbc48tztpp+oWAnNvh7M7qQeFvWcAm/ZIiIh22ZkuiSA3xBXdMeb
-         KdCAs/0iO7mFSrn9wRyDqyqISvUgXn2O8L+dDiKsVjmGbhGF1pNMsv4AsXp1o/CGE1u6
-         mxBvEmln55/g/fFBBvvQ2+LkZYIuv/RoogzeMQzXx5Y93a0ZPE8Ygaa95FGkKEPF1zac
-         CZcw==
-X-Forwarded-Encrypted: i=1; AJvYcCX3oxW68E8fdlk5cLNQ/FRPjUGz7nXXH5QyB2WN8hF9F6+Wa1LpqpheNro6qBm9HaVF03YDS8IcM1FzXFRZYDaKBu5+MMe0zktSrwtYuEx8Yw==
-X-Gm-Message-State: AOJu0YxVyVyOlJ35bUrd05OL22kx3V8GOIqjp0vhtZEcTrIk/wzGuCya
-	md0ggqIbcWksZVZ9I6Fo6/pikRSvezcR/YZlPmIxUXXJ3rjyr8wFATUYGgK5crg=
-X-Google-Smtp-Source: AGHT+IE8FFu+fZfH5z2rhx9vZCV6x7fIVYm+sXxRCO7riqTEhiO77VEUU+dW1maCGpqbYD1McV06Ag==
-X-Received: by 2002:a05:6870:1644:b0:261:22a4:9235 with SMTP id 586e51a60fabf-26891e9303fmr17263216fac.32.1723000757739;
-        Tue, 06 Aug 2024 20:19:17 -0700 (PDT)
-Received: from [10.70.146.105] ([203.208.189.5])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7106ed3389bsm7543742b3a.213.2024.08.06.20.19.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Aug 2024 20:19:17 -0700 (PDT)
-Message-ID: <47e26358-86c3-485d-9de4-1b492ba5641e@bytedance.com>
-Date: Wed, 7 Aug 2024 11:19:12 +0800
+        d=1e100.net; s=20230601; t=1723000830; x=1723605630;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHWiHDDtgEmQfrOkHzWRCozF8QLif4Nw1j5YmDMQe9M=;
+        b=hIVeqZ7s9x3SJGzzSThiUdQQXw73KYv49CL9OHtRB0HGQTYp9O3Xr/R6UjdpR8F7Wv
+         9hiipml1vSrdCJL2Vrk0ja0nknQbqYwpKmm7ntvQpj8lX8vWMdsnTmZHTPmkjSwDeA1n
+         auhJ2K+mSSyJIFvs0qWgywtFLT3uRLKiEkqJUovDQeO4UHJEF95Z6+uVrMjq5DD+99X/
+         GochdI2n+fVRZn/z3LbDfTo4NJrhATKL/41/UFhozc8tPSlMw2bw+P/fxB6ltBLj1lAP
+         1+GQJAIvzx6r4gB9Zak7TeU/l9y5BNbtP59HKKILUatH+JcWyPpq5uDv0cFrxgOj8kJf
+         f4ew==
+X-Forwarded-Encrypted: i=1; AJvYcCXgaLmZR45J1cd/U/pT0SQbl0qmp8jQ0eVuSWN/VyY6i7sUJ7XJtnlxdsn5lzsdKJwBuBa30kBklnz7L5MAFgdFYHX03KWItSCJWTgLZu0A0g==
+X-Gm-Message-State: AOJu0YwcfZDvlmBmK4dmyLn566H4DDuDcyAQcDBbeISNM51/a+zY+MLj
+	KSNHtXBBHRrqM+HgAwdZFe8Z7t934EkN8v7mTAgh1YdvYwbx6pFZRYq03An8ePg=
+X-Google-Smtp-Source: AGHT+IHcZhOwKMlgZxd+felWeQBdrODExJiQTByT1SqKlSR20ml+DJFyfgohKhYvwQ4TtYQyvN/XTQ==
+X-Received: by 2002:a17:902:f68a:b0:1f9:c508:acd5 with SMTP id d9443c01a7336-1ff57257f5dmr135329335ad.5.1723000830203;
+        Tue, 06 Aug 2024 20:20:30 -0700 (PDT)
+Received: from ubuntu20.04 ([203.208.189.5])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f19ebasm95116175ad.23.2024.08.06.20.20.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Aug 2024 20:20:29 -0700 (PDT)
+From: Yang Jihong <yangjihong@bytedance.com>
+To: peterz@infradead.org,
+	mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	leo.yan@arm.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: yangjihong@bytedance.com
+Subject: [PATCH v3 0/3] perf: build: Minor fixes for build failures
+Date: Wed,  7 Aug 2024 11:20:16 +0800
+Message-Id: <20240807032019.1828674-1-yangjihong@bytedance.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] perf dwarf-aux: Fix build fail when
- HAVE_DWARF_GETLOCATIONS_SUPPORT undefined
-Content-Language: en-US
-To: Leo Yan <leo.yan@arm.com>
-References: <20240806114801.1652417-1-yangjihong@bytedance.com>
- <20240806114801.1652417-4-yangjihong@bytedance.com>
- <a3699fc9-059f-4192-b522-918952c4b264@arm.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-From: Yang Jihong <yangjihong@bytedance.com>
-In-Reply-To: <a3699fc9-059f-4192-b522-918952c4b264@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Changes since v2:
+ - patch1: change LIBDW_VERSION to follow up the style of
+   LIBTRACEEVENT_VERSION. (by Leo's suggestion)
+ - patch2: Use a new line for the -ldl dependency and with comment,
+   synchronize tools/perf/Makefile.config. (by Leo's suggestion)
+ - patch3: include header files in alphabetical order,
+   add reviewed-by tag from Leo. (by Leo's suggestion)
 
-On 8/7/24 05:34, Leo Yan wrote:
-> On 8/6/2024 12:48 PM, Yang Jihong wrote:
->> commit 3796eba7c137 move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT
->> code from dwarf-aux.c to dwarf-aux.h, in which die_get_var_range() used ENOTSUP
->> macro, but dwarf-aux.h was not self-contained and did not include file errno.h.
->>
->> As a result, the build failed when HAVE_DWARF_GETLOCATIONS_SUPPORT macro was not
->> defined, and the error log is as follows:
->>
->>    In file included from util/disasm.h:8,
->>                     from util/annotate.h:16,
->>                     from builtin-top.c:23:
->>    util/dwarf-aux.h: In function 'die_get_var_range':
->>    util/dwarf-aux.h:184:10: error: 'ENOTSUP' undeclared (first use in this function)
->>      184 |  return -ENOTSUP;
->>          |          ^~~~~~~
->>    util/dwarf-aux.h:184:10: note: each undeclared identifier is reported only once for each function it appears
->>
->> Fixes: 3796eba7c137 ("perf dwarf-aux: Move #else block of #ifdef HAVE_DWARF_GETLOCATIONS_SUPPORT code to the header file")
->> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
->> ---
->>   tools/perf/util/dwarf-aux.h | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
->> index 24446412b869..d2903894538e 100644
->> --- a/tools/perf/util/dwarf-aux.h
->> +++ b/tools/perf/util/dwarf-aux.h
->> @@ -5,6 +5,7 @@
->>    * dwarf-aux.h : libdw auxiliary interfaces
->>    */
->>
->> +#include <errno.h>
->>   #include <dwarf.h>
-> 
-> Please alphabet ordering. With it:
-> 
-> Reviewed-by: Leo Yan <leo.yan@arm.com>
-> 
-Okay, will change in next version.
+Changes since v1:
+ - patch3: Remove UTF-8 characters from build failure logs
 
-Thanks,
-Yang
+Yang Jihong (3):
+  perf: build: Fix static compilation error when libdw is not installed
+  perf: build: Fix build feature-dwarf_getlocations fail for old libdw
+  perf dwarf-aux: Fix build fail when HAVE_DWARF_GETLOCATIONS_SUPPORT
+    undefined
+
+ tools/build/feature/Makefile | 5 ++++-
+ tools/perf/Makefile.config   | 7 +++++--
+ tools/perf/util/dwarf-aux.h  | 1 +
+ 3 files changed, 10 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
+
