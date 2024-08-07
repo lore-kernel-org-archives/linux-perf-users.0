@@ -1,58 +1,40 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F090915B999
-	for <linux-perf-users@vger.kernel.org>; Wed,  7 Aug 2024 03:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 943C73F9EC;
+	Wed,  7 Aug 2024 04:03:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723001439; cv=none; b=J05bc+DP658xCxu3dU7GL3NgSkeIhIW7VOVHQmH0WmyRy0bffn/QdKtRUOIkii30u3RaocmqQGpx1sOGJQ6aycKIzJBwneSP8FB9x+jKpHsN+f2kTuxuPhCXYxsivZxGGkfVOjrvWl/tVk8IY0+KyaOVyDzVcJqPe7Tu7x7GqWQ=
+	t=1723003423; cv=none; b=X0M03/Tudjlwed723XpTMt7vgL2nFVScUqEL7n77NZatuIPNBe7vGy7NNpCI47LI1YdxQZEjCTNPILSPcB7lQ+2h7eib2LOT9K2P+p2bqEaP5ktclcg4DybPiUu7589xeggkoH/jhFhOyXsrEfOgnxmqBCX+NGIB72Llj4wsirk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723001439; c=relaxed/simple;
-	bh=iZ+huTC2VeZXV+z82FTRA9rE5V5UkSLP1+4gd9Mepds=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Ir5OPUvJKwyERR3ECuPA3Wq8rpfhCN5vkmnecmSM5KjXYYmxXRwGwl5QB0JzzPS8sydNpgUgb12aR5hD1apOmpaH6OocYgBIIrTPEqA8gAmKjqAFO+mL5g4ma05uIEaFUkj05orP28a8olZPsodlOdG/0XVe3863hHuQuPSeD2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jtbxwbCM; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jtbxwbCM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723001438; x=1754537438;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iZ+huTC2VeZXV+z82FTRA9rE5V5UkSLP1+4gd9Mepds=;
-  b=jtbxwbCMefQlr8n704NGUJ7jD2xmPN/gYPG4gmOxvGHoKdIWVlz0jYmE
-   1wfU0afP8G2ZKFkaNYKNDVJ8bG+zKEkXLgUWITje+eCrT9BbBo78qMho7
-   yiTZmEObGd2S0h/lTRHf58TXOegRnnGJmJQdNPuJIozcqvez0cIWrXkTI
-   PTxS3j4hJnOnCMdmkRbNA7/J4PP+XYJGqdIo1V+1XrHIPfhWq31aQWVs2
-   XdCPoBJGOsRdFg0t6mKS9FRcm7rqt6BIwCzfTrzL15rRHnUM6WEjUzB5z
-   KIuv6KU6/qyP6LYi4sE+W2JZes9jxJMsEOnxkfWKjBL535rqhiVJmU28B
-   g==;
-X-CSE-ConnectionGUID: aTq7UcPRQ/asdJ0IN3DrIQ==
-X-CSE-MsgGUID: LUk+3+lkTeyF4x6d+IK2Ig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11156"; a="32200034"
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="32200034"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 20:30:33 -0700
-X-CSE-ConnectionGUID: NUnu/T1pTHaO/GqWK+9atQ==
-X-CSE-MsgGUID: CT3uTPEhRbGm3VjDiIMV0g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,268,1716274800"; 
-   d="scan'208";a="57399490"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Aug 2024 20:30:33 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: namhyung@kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v8 2/4] perf test: Support external tests for separate objdir
-Date: Tue,  6 Aug 2024 20:30:23 -0700
-Message-ID: <20240807033025.894167-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240807033025.894167-1-ak@linux.intel.com>
-References: <20240807033025.894167-1-ak@linux.intel.com>
+	s=arc-20240116; t=1723003423; c=relaxed/simple;
+	bh=npwmEEvcN1kSHP5/7LUEM9jyCaJlMY277BqniJ3pWBc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=giKRHoD6IvH//puhaKdtNjoja60kgj6vg14SbI3e1Eb0ZtMxdrZvcHdGr8OnJ+1SgVUy5eg01mNz10LDNJ1dLe3H5PGEb2TjzeDZVg1UhkvKAa6hqO4/oULH72jSL8OFvx40t8tf1kKYuXAiW6/ME4cWNuwdsFsa2cqZyaDK9FY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WdxNZ65VczpVZq;
+	Wed,  7 Aug 2024 12:03:10 +0800 (CST)
+Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4969B18005F;
+	Wed,  7 Aug 2024 12:03:31 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Wed, 7 Aug 2024 12:03:30 +0800
+From: Junhao He <hejunhao3@huawei.com>
+To: <irogers@google.com>, <peterz@infradead.org>, <mingo@redhat.com>,
+	<acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
+CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<jonathan.cameron@huawei.com>, <yangyicong@huawei.com>,
+	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>, <hejunhao3@huawei.com>
+Subject: [PATCH] perf metrics: Fixes stat cmd cannot parse sys metrics when cpus MIDR mismatch
+Date: Wed, 7 Aug 2024 12:00:02 +0800
+Message-ID: <20240807040002.47119-1-hejunhao3@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,75 +42,91 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml500002.china.huawei.com (7.185.36.158)
 
-Extend the searching for the test files so that it works
-when running perf from a separate objdir, and also when
-the perf executable is symlinked.
+On some platforms that do not use cpu MIDR mapping, such as hisilicon
+HIP09 platform. The list cmd can display the CPA metrics, but the stat
+cmd cannot work well to parse of CPA metrics.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+  $ perf list metric
+  Metrics:
+    cpa_p0_avg_bw
+         [Average bandwidth of CPA Port 0]
+    cpa_p1_avg_bw
+         [Average bandwidth of CPA Port 1]
+  $ perf stat -M cpa_p0_avg_bw --timeout 1000 --> No error messages output
+  $ echo $?
+  234
 
-----
+Currently, the metricgroup__parse_groups() expects to find an cpu metric
+table, but the hisilicon/hip09 doesn't uses cpus MIDR to map json events
+and metrics, so pmu_metrics_table__find() will return NULL, than the cmd
+run failed.
+But in metricgroup__add_metric(), the function parse for each sys metric
+and add it to metric_list, which also will get an valid sys metric table.
+So, we can ignore the NULL result of pmu_metrics_table__find() and to use
+the sys metric table.
 
-v2: Fix string test (Namhyung)
-Handle both in source and out of source builds.
-v3: Remove duplicated string check (Namhyung)
+metricgroup__parse_groups
+ -> parse_groups
+     -> metricgroup__add_metric_list
+         -> metricgroup__add_metric
+             -> pmu_for_each_sys_metric   --> We've got the sys metric
+
+Testing:
+  [root@localhost ~]# perf stat -M cpa_p0_avg_bw --no-merge --timeout 1000
+
+   Performance counter stats for 'system wide':
+
+   CPU0        1,001,121,239      cpa_cycles [hisi_sicl0_cpa0]     #     0.00 cpa_p0_avg_bw
+   CPU0                    0      cpa_p0_wr_dat [hisi_sicl0_cpa0]
+   CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl0_cpa0]
+   CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl0_cpa0]
+   CPU0        1,001,094,851      cpa_cycles [hisi_sicl2_cpa0]     #     0.00 cpa_p0_avg_bw
+   CPU0                    0      cpa_p0_wr_dat [hisi_sicl2_cpa0]
+   CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl2_cpa0]
+   CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl2_cpa0]
+
+       1.001306160 seconds time elapsed
+
+Signed-off-by: Junhao He <hejunhao3@huawei.com>
 ---
- tools/perf/tests/tests-scripts.c | 35 +++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
+ tools/perf/util/metricgroup.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index e2042b368269..8dc1e398288c 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -29,16 +29,45 @@
+diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
+index 69f6a46402c3..fa62fb3418b6 100644
+--- a/tools/perf/util/metricgroup.c
++++ b/tools/perf/util/metricgroup.c
+@@ -1123,7 +1123,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
  
- static int shell_tests__dir_fd(void)
+ 	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
+ 			 d->metric_no_threshold, d->user_requested_cpu_list,
+-			 d->system_wide, d->root_metric, d->visited, d->table);
++			 d->system_wide, d->root_metric, d->visited, d->table ?: table);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -1239,7 +1239,7 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
+ 	int ret;
+ 	bool has_match = false;
+ 
+-	{
++	if (table) {
+ 		struct metricgroup__add_metric_data data = {
+ 			.list = &list,
+ 			.pmu = pmu,
+@@ -1696,8 +1696,6 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
  {
--	char path[PATH_MAX], *exec_path;
--	static const char * const devel_dirs[] = { "./tools/perf/tests/shell", "./tests/shell", };
-+	struct stat st;
-+	char path[PATH_MAX], path2[PATH_MAX], *exec_path;
-+	static const char * const devel_dirs[] = {
-+		"./tools/perf/tests/shell",
-+		"./tests/shell",
-+		"./source/tests/shell"
-+	};
-+	int fd;
-+	char *p;
+ 	const struct pmu_metrics_table *table = pmu_metrics_table__find();
  
- 	for (size_t i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
--		int fd = open(devel_dirs[i], O_PATH);
-+		fd = open(devel_dirs[i], O_PATH);
+-	if (!table)
+-		return -EINVAL;
+ 	if (hardware_aware_grouping)
+ 		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
  
- 		if (fd >= 0)
- 			return fd;
- 	}
- 
-+	/* Use directory of executable */
-+	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
-+		return -1;
-+	/* Follow another level of symlink if there */
-+	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
-+		scnprintf(path, sizeof(path), path2);
-+		if (readlink(path, path2, sizeof path2) < 0)
-+			return -1;
-+	}
-+	/* Get directory */
-+	p = strrchr(path2, '/');
-+	if (p)
-+		*p = 0;
-+	scnprintf(path, sizeof(path), "%s/tests/shell", path2);
-+	fd = open(path, O_PATH);
-+	if (fd >= 0)
-+		return fd;
-+	scnprintf(path, sizeof(path), "%s/source/tests/shell", path2);
-+	fd = open(path, O_PATH);
-+	if (fd >= 0)
-+		return fd;
-+
- 	/* Then installed path. */
- 	exec_path = get_argv_exec_path();
- 	scnprintf(path, sizeof(path), "%s/tests/shell", exec_path);
 -- 
-2.45.2
+2.33.0
 
