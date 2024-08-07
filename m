@@ -1,92 +1,235 @@
-Received: from desiato.infradead.org (desiato.infradead.org [90.155.92.199])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C24B1428E6;
-	Wed,  7 Aug 2024 19:09:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.155.92.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80148155352;
+	Wed,  7 Aug 2024 22:31:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723057796; cv=none; b=VQ//pvOLgkzNVaprt41znukG8YYJDK3j4DPFNUfRz8xLu1toN8FSqwlZesu3NizHaLBQRJ634H5teP//67chmJ513LEv+EzE8aDiLZUXaLLoqtzLDQoKxvu56cwKlZX4McxEhT9XcI8p/NPNTf3uRWnq1VSAh0xg38bIQFspfOc=
+	t=1723069915; cv=none; b=iFFOC/OvTXN9eMmzW2mdqIm91Q+yPhauPl96pgAoKuVTYsSDMWxHuRiAdlqzLiB5hQR6M1QIYVfLgoVW3uqtEoU/jMFH6f9ODkJYUNcfcS6eHn14qIHemRE4U8MvNcfiG3VKrHGW7p1w7e42UNpHcDK+1AdfrvXpLFjjH99Gwx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723057796; c=relaxed/simple;
-	bh=Xji/ATx10iwZfKisohudZjN5LAal7yhXNA5ZtAAIh+A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YAOBOp5Fpk2CX6eL8jB471qXVTaI79vEfBXQKjMvPdvdnYU5Uc8XczzUGB3mXooGh/kNpCimiHfNjyeUhlfdyQMsZR49GM1MLsli8bGzzSiXolI48emKO6caigaZVs3ivhpycNSISCniVIhMygxPklC2woFaaVy+h9agAEXu0qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=bsDX5Y4w; arc=none smtp.client-ip=90.155.92.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+	s=arc-20240116; t=1723069915; c=relaxed/simple;
+	bh=xxDFnP+QPMwGRiH/cGQuQ2IEzs+X53WX5tDES7h35go=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Gr+ftYsn9+pVZWy3+CkHan8HoEqgEffujoREp+cizsXoXTHhnXG9RHLg4tDgsegbyamSgwgebKE9hwD9ayDz3VEjSB3fW1R8hO4Hb86+hcqC51GmSowsK/y8y5u3cY41fOzJ7ideUmgbwHA7MXDvWsiQeodb7RstdOMHrF/1XS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X11GTqE2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bsDX5Y4w"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=TUImU5qAYykz6ldY6pOIccN64e/13Blmc1VBBfsV0vc=; b=bsDX5Y4w9mAzMi/5nx0awTF4CN
-	hh0pdhc/uZr0gyl0XkchdWWjwoWnj/U4NBd+tYsGq0jhSmjKK61EJ2FLdaZQcZryjU5K6GaK8DHIY
-	ocm26uLaMjVC+XLa5/cSzZlq0HPPyZ1d8gIOPvnaLqMRw7U6TzTTZD/lGfc3yJE8gmHi1TuF5wWZR
-	1XVztRGbitxcC9iSSBBwry/RJQ8GGjLW81aSo3ov3OJnc4IbPD/GSebqovMT6IcpgolAspoJVUbWH
-	XDol7DyYKnfE/34y1FC6L2rOACr5yq38tBxVovR88lEBsOirehoAGO0UV8+hUWhbqRTQVqXRIEnqy
-	RTLGsGkA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-	by desiato.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1sbm2E-00000006gJD-14G9;
-	Wed, 07 Aug 2024 19:09:27 +0000
-Received: by noisy.programming.kicks-ass.net (Postfix, from userid 1000)
-	id 4A75830033D; Wed,  7 Aug 2024 21:09:21 +0200 (CEST)
-Date: Wed, 7 Aug 2024 21:09:21 +0200
-From: Peter Zijlstra <peterz@infradead.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: mingo@kernel.org, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] perf: Add context time freeze
-Message-ID: <20240807190921.GE31338@noisy.programming.kicks-ass.net>
-References: <20240807112924.448091402@infradead.org>
- <20240807115550.250637571@infradead.org>
- <b38cc358-8e46-48bd-88c0-ff4b8db6bd15@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X11GTqE2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9FAC32781;
+	Wed,  7 Aug 2024 22:31:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723069915;
+	bh=xxDFnP+QPMwGRiH/cGQuQ2IEzs+X53WX5tDES7h35go=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X11GTqE2/O6cne3Wve24FQ3ndaLxvagxyIMmo91QYQPJs/jTG3JEXEGfUVhOVwv5o
+	 wz5Vbj7UfP72NYiqtsPYwck1TGxsQargJtnKGpRvZ9dhZ14zuWLLq1y/Zv98pbFNYK
+	 EgFU4UyYEoTjdUdyTKbeISwhdhUO5mGCGlhOZiU+SRG940FclE6gOfO2OC+NLEJbLP
+	 CKjrV2WhaiuDeR8kJQvjWw6jamqiDdmIE4Z+91PgKjy8E3JnVlsl6+bEQKWCrewZr2
+	 mNoThl86R6bzsSoWCR/h6hykjnsQSgHglBn0wFYe0MctvsXU3N609DN6yxlTSqF5py
+	 pYun9hIsmBVkw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] perf annotate-data: Show typedef names properly
+Date: Wed,  7 Aug 2024 15:31:29 -0700
+Message-ID: <20240807223129.1738004-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b38cc358-8e46-48bd-88c0-ff4b8db6bd15@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 07, 2024 at 11:17:18AM -0400, Liang, Kan wrote:
+The die_get_typename() would resolve typedef and get to the original
+type.  But sometimes the original type is a struct without name and it
+makes the output confusing and hard to read.
 
-> > +static inline void __perf_ctx_unlock(struct perf_event_context *ctx)
-> > +{
-> > +	/*
-> > +	 * If ctx_sched_in() didn't again set any ALL flags, clean up
-> > +	 * after ctx_sched_out() by clearing is_active.
-> > +	 */
-> > +	if (ctx->is_active & EVENT_FROZEN) {
-> > +		if (!(ctx->is_active & EVENT_ALL))
-> 
-> Nit:
-> It may be better to add a macro/inline function to replace all the
-> (ctx->is_active & EVENT_ALL) check? For example,
-> 
-> +static inline bool perf_ctx_has_active_events(struct perf_event_context
-> *ctx)
-> +{
-> +	return ctx->is_active & EVENT_ALL;
-> +}
-> ...
-> +	if (ctx->is_active & EVENT_FROZEN) {
-> +		if (!perf_ctx_has_active_events(ctx))
-> +			ctx->is_active = 0;
-> +		else
-> +			ctx->is_active &= ~EVENT_FROZEN;
-> 
-> It can tell very straightforwardly that we want to clear all flags if
-> there is no active event.
-> The EVENT_ALL may bring confusion. It actually means all events, not all
-> event types. The developer may have to go to the define and figure out
-> what exactly the EVENT_ALL includes.
+This is a diff of perf report -s type before and after the change.
+New types such as atomic{,64}_t and sigset_t appeared and the portion
+of unnamed struct was reduced.  Also u32, u64 and size_t were splitted
+from the base types.
 
-I'll push this on the todo list. I'm running short of time before I'm
-taking a holiday and need to also spend time looking at the sched_ext
-thing.
+  --- b   2024-08-01 17:02:34.307809952 -0700
+  +++ a   2024-08-07 14:17:05.245853999 -0700
+  -     2.40%  long unsigned int
+  +     2.26%  long unsigned int
+  -     1.56%  unsigned int
+  +     1.27%  unsigned int
+  -     0.98%  struct
+  -     0.79%  long long unsigned int
+  +     0.58%  long long unsigned int
+  +     0.36%  struct
+  +     0.27%  atomic64_t
+  +     0.22%  u32
+  +     0.21%  u64
+  +     0.19%  atomic_t
+  +     0.13%  size_t
+  -     0.08%  struct seqcount_spinlock
+  +     0.08%  seqcount_spinlock_t
+  +     0.08%  sigset_t
+  +     0.08%  __poll_t
+
+Let's use the typedef name directly and the resolved to get the size of
+the type.
+
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate-data.c | 39 +++++++++++++++++++++++++--------
+ tools/perf/util/dwarf-aux.c     |  2 +-
+ tools/perf/util/dwarf-aux.h     |  2 ++
+ 3 files changed, 33 insertions(+), 10 deletions(-)
+
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 734acdd8c4b7..092809bb92f5 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -217,8 +217,13 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	strbuf_init(&sb, 32);
+ 	die_get_typename(die, &sb);
+ 
+-	die_get_real_type(die, &member_type);
+-	if (dwarf_aggregate_size(&member_type, &size) < 0)
++	__die_get_real_type(die, &member_type);
++	if (dwarf_tag(&member_type) == DW_TAG_typedef)
++		die_get_real_type(&member_type, &die_mem);
++	else
++		die_mem = member_type;
++
++	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 		size = 0;
+ 
+ 	if (!dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
+@@ -235,11 +240,11 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	INIT_LIST_HEAD(&member->children);
+ 	list_add_tail(&member->node, &parent->children);
+ 
+-	tag = dwarf_tag(&member_type);
++	tag = dwarf_tag(&die_mem);
+ 	switch (tag) {
+ 	case DW_TAG_structure_type:
+ 	case DW_TAG_union_type:
+-		die_find_child(&member_type, __add_member_cb, member, &die_mem);
++		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+ 		break;
+ 	default:
+ 		break;
+@@ -281,6 +286,10 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+ 	if (die_get_typename_from_type(type_die, &sb) < 0)
+ 		strbuf_add(&sb, "(unknown type)", 14);
+ 	type_name = strbuf_detach(&sb, NULL);
++
++	if (dwarf_tag(type_die) == DW_TAG_typedef)
++		die_get_real_type(type_die, type_die);
++
+ 	dwarf_aggregate_size(type_die, &size);
+ 
+ 	/* Check existing nodes in dso->data_types tree */
+@@ -342,6 +351,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
+ {
+ 	Dwarf_Word size;
+ 	bool is_pointer = true;
++	Dwarf_Die sized_type;
+ 
+ 	if (reg == DWARF_REG_PC)
+ 		is_pointer = false;
+@@ -351,7 +361,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
+ 		is_pointer = false;
+ 
+ 	/* Get the type of the variable */
+-	if (die_get_real_type(var_die, type_die) == NULL) {
++	if (__die_get_real_type(var_die, type_die) == NULL) {
+ 		pr_debug_dtp("variable has no type\n");
+ 		ann_data_stat.no_typeinfo++;
+ 		return -1;
+@@ -365,15 +375,20 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
+ 	if (is_pointer) {
+ 		if ((dwarf_tag(type_die) != DW_TAG_pointer_type &&
+ 		     dwarf_tag(type_die) != DW_TAG_array_type) ||
+-		    die_get_real_type(type_die, type_die) == NULL) {
++		    __die_get_real_type(type_die, type_die) == NULL) {
+ 			pr_debug_dtp("no pointer or no type\n");
+ 			ann_data_stat.no_typeinfo++;
+ 			return -1;
+ 		}
+ 	}
+ 
++	if (dwarf_tag(type_die) == DW_TAG_typedef)
++		die_get_real_type(type_die, &sized_type);
++	else
++		sized_type = *type_die;
++
+ 	/* Get the size of the actual type */
+-	if (dwarf_aggregate_size(type_die, &size) < 0) {
++	if (dwarf_aggregate_size(&sized_type, &size) < 0) {
+ 		pr_debug_dtp("type size is unknown\n");
+ 		ann_data_stat.invalid_size++;
+ 		return -1;
+@@ -846,6 +861,7 @@ static int check_matching_type(struct type_state *state,
+ 
+ 	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_TYPE) {
+ 		int tag = dwarf_tag(&state->regs[reg].type);
++		Dwarf_Die sized_type;
+ 
+ 		/*
+ 		 * Normal registers should hold a pointer (or array) to
+@@ -862,13 +878,18 @@ static int check_matching_type(struct type_state *state,
+ 		pr_debug_dtp("\n");
+ 
+ 		/* Remove the pointer and get the target type */
+-		if (die_get_real_type(&state->regs[reg].type, type_die) == NULL)
++		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
+ 			return -1;
+ 
+ 		dloc->type_offset = dloc->op->offset;
+ 
++		if (dwarf_tag(type_die) == DW_TAG_typedef)
++			die_get_real_type(type_die, &sized_type);
++		else
++			sized_type = *type_die;
++
+ 		/* Get the size of the actual type */
+-		if (dwarf_aggregate_size(type_die, &size) < 0 ||
++		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
+ 		    (unsigned)dloc->type_offset >= size)
+ 			return -1;
+ 
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 44ef968a7ad3..5e080d7e22c2 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -267,7 +267,7 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ }
+ 
+ /* Get a type die, but skip qualifiers */
+-static Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
++Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+ {
+ 	int tag;
+ 
+diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+index 24446412b869..336a3a183a78 100644
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -56,6 +56,8 @@ const char *die_get_decl_file(Dwarf_Die *dw_die);
+ /* Get type die */
+ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+ 
++/* Get a type die, but skip qualifiers */
++Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+ /* Get a type die, but skip qualifiers and typedef */
+ Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+ 
+-- 
+2.46.0.rc2.264.g509ed76dc8-goog
+
