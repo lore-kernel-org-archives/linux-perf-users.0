@@ -1,116 +1,88 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440A413D61A;
-	Wed,  7 Aug 2024 18:12:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A67771428F3;
+	Wed,  7 Aug 2024 18:54:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723054368; cv=none; b=fre8DKbr6WzETtYMvoLwnpluuWN2ayVe9IpLxwqJ/6SUyVpO5/t8aA8QtwynfO0NT69v3wFi6TzwoElgVr0x7pDca60jqAYqZ35Ku1J4qZ1kIu28rFF9gzqvQX3iBOTwRNKT65HcLiEVkTL4Ph/RjC221hnxZ9kzDWx7Rh/GkDk=
+	t=1723056889; cv=none; b=jH2ttVU1OBd8/r2UVLN+vL2umLjdzm/AkvXVQfSIFVXJe2XQ5DzfDkbID07DD3MJA8PttKLoh2+dFsRfEErIHvoW/KRcVmhX4le8QtH1j88yXSLX8LhXKVFobZybTUnuavBzHcYf1kjBgQwa5F9ms1CA0h4QU+jvsGGo6hvYBrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723054368; c=relaxed/simple;
-	bh=ISPP/Y0DYUabn/g+gm+IohCoQEotWJ5A5dTGdvhtvq0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=k23aZSJjYM5kTF2yvMGz79X+UX2m45OvtmqxqZwRll568gVyC0F3lJdtjcWAKud1u/eouxePolhneVAHUSeHSlWIeIDVJ6fBoFQrtSrzcRXSAod1HeAjOrNonqc677+pAXaVt5gnMOcyUHvZVvcsczWuA8z5a7J36cDW+jmIz0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NDkeZhMv; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NDkeZhMv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36EB6C32781;
-	Wed,  7 Aug 2024 18:12:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723054367;
-	bh=ISPP/Y0DYUabn/g+gm+IohCoQEotWJ5A5dTGdvhtvq0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NDkeZhMv+5Y731BeDVZK+3kSkdceaAQQrABiNMuSDB66BV//Tu/PyPXIvABMEopRg
-	 Km8QsvqIvMXW7+CxiJ0BaCoZJQm+LZguhuXnn6D6jov2XTl5R6MZGgewoI0LBfAD11
-	 PsyLl5/hHvoIN/LBQtukUUE6PJn85TLRAukcDy9rH4XoHcQkqQ+KVzPuHAUJqOOjMR
-	 XNUkBK8IDAk5Ba5hW6WwaI8S3RrwGAQ0EOCeA7i8XCHaaV2gRNXd5afSll7ARSTw7H
-	 kl3dC35FojRLr4ZeezVZc1iXtoaJeCGmL3ADxwag4IpUTDjpwLG4MgxIoQm2pXCDzG
-	 eC+6EjBpsCUuQ==
-Date: Wed, 7 Aug 2024 11:12:45 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@arm.com>,
-	James Clark <james.clark@linaro.org>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>
-Cc: Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for
- v6.11
-Message-ID: <ZrO5HR9x2xyPKttx@google.com>
-References: <20240806225013.126130-1-namhyung@kernel.org>
+	s=arc-20240116; t=1723056889; c=relaxed/simple;
+	bh=76yvAM+UpEbVXx7GXsbI2Zqu+E3evoZtbABWa3EDE0U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=e59pbqMEHD3fTmIRVOtb+xXylJnS1W9+BXosiyx54BWzosKdE13BTEPQ4DQcVEl1sAmzxLKd+HgM2A4wwgvuP1TqO/6O7EubHQTMR6ZBZYeKuubKctfeEJ8/TVAwyWEymDjePfsjBtFFLaeTxq9zUZ0J2tIxPgjJ33y637Tb+DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-7a130ae7126so126559a12.0;
+        Wed, 07 Aug 2024 11:54:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723056887; x=1723661687;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1imuq1Y5pnXOMpobYE2ECgyePeKad/viC/fTIre5Uss=;
+        b=fq4LOUSMGjAHAzZcd2ldeiond1XAKWmrrH67AlE7oXOVG1WegT82/Hd5l4nBdjASq4
+         oUYU54tmgQlxdjxxsf8zfvv+OLsQssP5E/6TWLUDgWlQJjmvgylJtr9j0vVATX/eJJrU
+         x/ySRKNN+tkVcpIQwIt2PWSRz/KSE+k6KhrXiHRICGpkeYiZ562Q5k5eQMNWCLI+GvPI
+         dVGyGTxUfmQqjRYrLuPdRbp1h9/sCcX65ghzvTSJs523oMs/pj7hjk/qxtQAJm83X9c0
+         2lZgXfliS6fb/wVsQxxXaAHfqnqeAstQ2x45YCXiUrMSyBB70Lv/dmEiASUUhEUqSUW4
+         UZzA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7zD3+I+U2iFiSN82daJ0wLutQ7RmuL0xc0fQTZABMpqjf4mKe80omspWuScXlLOWnXR8C5H0RXh2lyIOcpC7sq095NdHe4y3ukIsMggCK7ChzhE8EiWoyFDGkRZiFpIaVzR9iyQo70VB/8ppsbQ==
+X-Gm-Message-State: AOJu0YwfCd/s/P+QmFrh14pFj3V2YwoP2RmtFF8XMri42rIUET0r3Gsx
+	qMWecT1bSc0g+VFda/wLmC8PfyJXzpW1Nn5+W91rz+vMh2H2fEfpXAfMWw2YawwCwR9V3pH0i0U
+	OTSjXJQ+kl4OaYfXt5IVqIsJdBZw=
+X-Google-Smtp-Source: AGHT+IFd65zGATKjgDD0j0s8JJCpUaylkMJtTo43/IfuQ2vBHNtcKq6DjWD2rDvMABtm8DHr0qojowLr6/VLFX6bp7g=
+X-Received: by 2002:a05:6a20:7495:b0:1c0:e329:5c51 with SMTP id
+ adf61e73a8af0-1c699581ce7mr27301807637.13.1723056886636; Wed, 07 Aug 2024
+ 11:54:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240806225013.126130-1-namhyung@kernel.org>
+References: <20240807112924.448091402@infradead.org>
+In-Reply-To: <20240807112924.448091402@infradead.org>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 7 Aug 2024 11:54:34 -0700
+Message-ID: <CAM9d7ci7zEQUPTLLUdNci49fJHiM_6iiCn_Gpp05aEPyrJBmAg@mail.gmail.com>
+Subject: Re: [PATCH 0/5] perf: Per PMU context reschedule and misc
+To: Peter Zijlstra <peterz@infradead.org>
+Cc: mingo@kernel.org, acme@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello folks,
+Hi Peter,
 
-On Tue, Aug 06, 2024 at 03:50:03PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> This is the usual sync up in header files we keep in tools directory.
-> I put a file to give the reason of this work and not to repeat it in
-> every commit message.  The changes will be carried in the perf-tools
-> tree.
- 
-Could you please double check what's in the tmp.perf-tools branch at the
-perf-tools tree so I don't break build and perf trace for arm64, powerpc
-and s390?  It has this patchset + arm64 unistd header revert (according
-to the discussion on patch 6/10) on top of v6.11-rc2.
+On Wed, Aug 7, 2024 at 4:56=E2=80=AFAM Peter Zijlstra <peterz@infradead.org=
+> wrote:
+>
+> Hi,
+>
+> This is 'fallout' from Namhyung posting his per-pmu ctx_resched() patches=
+. It
+> started with me trying to clean up and get rid of corner cases, and then =
+got
+> involved when Kan noted the time keeping issue.
+>
+> Anyway, please review / test.
+
+It works blazingly fast!
+
+  # ./stress-pmu
+  delta: 0.000307 sec (3 usec/op)
+
+I found a problem with my patch that it called __pmu_ctx_sched_out() for
+nothing (I guess is_active only has EVENT_TIME).  I thought ctx_sched_out()
+would stop if it doesn't change EVENT_ALL but it iterated all PMUs anyway.
+
+But with this change we don't need ctx_sched_out(EVENT_TIME) anymore.
+
+Reviewed-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
-
-> 
-> Namhyung Kim (10):
->   perf tools: Add tools/include/uapi/README
->   tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
->   tools/include: Sync uapi/linux/kvm.h with the kernel sources
->   tools/include: Sync uapi/linux/perf.h with the kernel sources
->   tools/include: Sync uapi/sound/asound.h with the kernel sources
->   tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
->   tools/include: Sync network socket headers with the kernel sources
->   tools/include: Sync filesystem headers with the kernel sources
->   tools/include: Sync x86 headers with the kernel sources
->   tools/include: Sync arm64 headers with the kernel sources
-> 
->  tools/arch/arm64/include/asm/cputype.h        |  10 +
->  tools/arch/arm64/include/uapi/asm/unistd.h    |  24 +-
->  tools/arch/powerpc/include/uapi/asm/kvm.h     |   3 +
->  tools/arch/x86/include/asm/cpufeatures.h      | 803 +++++++++---------
->  tools/arch/x86/include/asm/msr-index.h        |  11 +
->  tools/arch/x86/include/uapi/asm/kvm.h         |  49 ++
->  tools/arch/x86/include/uapi/asm/svm.h         |   1 +
->  tools/include/uapi/README                     |  73 ++
->  tools/include/uapi/asm-generic/unistd.h       |   2 +-
->  tools/include/uapi/drm/i915_drm.h             |  27 +
->  tools/include/uapi/linux/in.h                 |   2 +
->  tools/include/uapi/linux/kvm.h                |  17 +-
->  tools/include/uapi/linux/perf_event.h         |   6 +-
->  tools/include/uapi/linux/stat.h               |  12 +-
->  .../arch/powerpc/entry/syscalls/syscall.tbl   |   6 +-
->  .../perf/arch/s390/entry/syscalls/syscall.tbl |   2 +-
->  .../arch/x86/entry/syscalls/syscall_64.tbl    |   8 +-
->  .../perf/trace/beauty/include/linux/socket.h  |   5 +-
->  .../perf/trace/beauty/include/uapi/linux/fs.h | 163 +++-
->  .../trace/beauty/include/uapi/linux/mount.h   |  10 +-
->  .../trace/beauty/include/uapi/linux/stat.h    |  12 +-
->  .../trace/beauty/include/uapi/sound/asound.h  |   9 +-
->  22 files changed, 810 insertions(+), 445 deletions(-)
->  create mode 100644 tools/include/uapi/README
-> 
-> -- 
-> 2.46.0.rc2.264.g509ed76dc8-goog
-> 
