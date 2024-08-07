@@ -1,57 +1,57 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF9812C549;
-	Wed,  7 Aug 2024 15:39:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2770913A276;
+	Wed,  7 Aug 2024 15:39:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723045148; cv=none; b=kB3+1ZJrw6cgBe09lqKHjEQZdXTaM7oTGl+G6dZTM6XUlFaC8/5bztKRMcHFble2JJ4PUV+REpoPP6YKFKt9mRnOZbM8f6Z1v9G6/OS8fydzahVP8yMa+SDTQhKmH2hF5imgzF9z63Rb2EdoDR4JeFj9pbl02cu0uzrSyS9xB7s=
+	t=1723045152; cv=none; b=hztmzz6hcVCGsvvmMqdMayqnPzNmJd0Kp5gNlf99jEyBHuzffLR0dvHE8OP3yL1NOFYJ6JP3TW8NbNiOtl65eQOp8Sf1lLMuS4xrtQ2RQR9X8EW5713AF+i+0lVnNwLn+6nfUuKoCvnZyCAsBC0S+qI/ojwtTU5Py+JfblvjIZg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723045148; c=relaxed/simple;
-	bh=cMY9Ig50Ah0NrntV3IC9Hc0Iik17OIwSKC/iyfTHx74=;
+	s=arc-20240116; t=1723045152; c=relaxed/simple;
+	bh=POqXyFIlz2EObunHi26K+syLYamY1BPxYt+X4L0suqY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qqgHKKSlofLuL8YQ9vkq30tgNDl5mQCDQslVrTcFwSS4xxV0GvBg8BX1RWbH4P1glgRSB1Red3bTuat3njDVPen3UtN/mgmGmX+CtoCZyh84AxtcpKmWqDWfIvgiQQ+LL+qi9aKt37XC2eibDvGhd6iYWMaawAYo1Rcb8FU2Vpk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FOZ5XuGr; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=iVVD1cBBAkW4yZiiYaT5Ajllpx+RAJsST4nXB51Spf7xfmld9b1Z6w7wlKjDF4hTNY4N4icHkrJlPn0eQWWYbo6RQLAEQSFbJhUowU6NTmib9DzI5clNzgMHieLa2kB8j4WBN16WBKG487ibhhdVQkSPApWhZSxF/uoRaQRk0Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eWIc0zn5; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FOZ5XuGr"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1fc491f9b55so331485ad.3;
-        Wed, 07 Aug 2024 08:39:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWIc0zn5"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fc66fc35f2so8061385ad.0;
+        Wed, 07 Aug 2024 08:39:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723045146; x=1723649946; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723045150; x=1723649950; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4tZ51s1InZzXSfbxVagPKImUEHCYLFou2I7mGe5EjcQ=;
-        b=FOZ5XuGrhmAKgxMGwktVO9vSQzlCOag6u0Y5BTUJnqkKyycAkN9QxmhOi+CpS+57s0
-         jj6AIXGpuInS6zH50B3cR0RzLivcg829CiRguD/RbdNz2+1laCmDt8tjktqFcqyFEzVt
-         1NfHdx66fECFDErlmzsdyBg3HL+hKRKGptajqqXHKLMpTAEpi0xz1IzZ0lhQ2RAGqvNG
-         eoAmguTKJ0riwaMrpT/KtJj6zyk0zxPdmgKFoP3UQNWKkLQyX7362P+r2udBDk+rKUga
-         h7IxgpwaNtqWsTB4OzZYum8m5W5QMz8Il56hT8fxkpCmv6KbtyrJOI7Wmq6C/Q5RNxs5
-         ihxg==
+        bh=FB1CGIEHJSZZ9KdFY8HItW4iTLpXpK/3aHFpRN33YZo=;
+        b=eWIc0zn5Xg0b88vyCKqUlygoAT8s4p5hAIsKDfIZpfWGNd9ef/bktb7f0ZaSPdx1m2
+         ot6uxjqdsNbohLvrtJzNAdTDbYgl33g5lGb7sjgOHlKuan5Bu6akQpl03qb0rjEyKJ66
+         2k/2LrO5juEqHJEiZoSQISO4kInlyuasIfbm7VIR2sbM/XPXfRL04HDIqaRzQA2MyutO
+         c/HjZNL9uwYDsYBTNG/R3oSdFE4TSmD2HaXPkfzruPg64zZG2+4MDzYlzKqspuS+1UXt
+         a5zJ+N77phXW6oi5eWs52ZQsl2sdpzSfrRa0LwJSLNFH/RLIF9EJFTyvEzqc10kCz98l
+         5LVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723045146; x=1723649946;
+        d=1e100.net; s=20230601; t=1723045150; x=1723649950;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4tZ51s1InZzXSfbxVagPKImUEHCYLFou2I7mGe5EjcQ=;
-        b=Oc8PKD1cBIA4jCvkT0gNMCohkL7kbwR27Ed6hRq1Xr37Gm/ciDUiXSQsBJgckCjtHJ
-         ZR/axG8sjJ+RplbdkRajnibbQ/w9u7+LNf/29oWn1kmm+sfuskbnxnqrdJuigLDMpzic
-         /FZBGdla5TvvHtr7ogaGKY6W+VifDYJ0Z/rx/gpHDeTqxx8ohx2X9A4rQ47dUdFPLrdi
-         MWcQZ3OxZSzu0/wUw1BdnSm9YdMGw0iB1qbfx0AW4epMFcl3Av1C3nppNaRuxrbStbNg
-         m69swpVU5h5BFpYV/gEu6A3F32ziD45zjx0hBRZMGWQdsmHq0q13sEHZKRLgmEeL9P6/
-         olog==
-X-Forwarded-Encrypted: i=1; AJvYcCUJf9PNQljXpqcU9w/0pqo4SDmRqgKAaBQXQteTMkSOMefQ5DJeechvJbn6VlWwTIH1IwbHMi8G9161yqeu/jG7bv3wf9wjikTmLoDyc2ZiNSEsYHm+JFP66/l/Nx91QUqq0yVJ9+STtCqm2YWiZg==
-X-Gm-Message-State: AOJu0Yzmp21XJF/ywwUSXEhjKCzsRIRmh9lQoAMlUGDv4acW7mXCRiF/
-	Izs/+Dn544thSrVypvIbc6+IHM6g1x68SZxVt0awcB+1CdprEKZy
-X-Google-Smtp-Source: AGHT+IFpNk5jpD/lueIdcpc/BMbJag2YHK7eOJM3LxEZJwR71i4rba15G7VdQdcVt0U3lsrpAp249A==
-X-Received: by 2002:a17:902:ecd2:b0:1fd:93d2:fb94 with SMTP id d9443c01a7336-1ff573cc1f2mr195280415ad.48.1723045146188;
-        Wed, 07 Aug 2024 08:39:06 -0700 (PDT)
+        bh=FB1CGIEHJSZZ9KdFY8HItW4iTLpXpK/3aHFpRN33YZo=;
+        b=pvrBbuW68qwgEMIIJZ6N+UxEE4tmmFjm0Jcp1GqeTiBjLzwZXOklsId0JBjZruCd/F
+         0QKYdMCedZd1LfxwPGQaU0C7uhKPpBiJper7Iv9Rvzitgq7dwnkYOpqcR+7THMR+9C2b
+         PtkJo0QAo/fwnxtJvxj0jHparAXyA30CgqrLvKgwsKg8yYDxVq+0iUtKzbayqMFXG7uT
+         uErIdmP+bbZuz3TzxhHuVOJIKXnyLVvT6o5w5DgVjZMoXsPMFArGJ8SEfbLTCeLA140p
+         fddiocDlp1+i5IuVYuTO9tGfyLhStCVi2KPd37y8ka1rT1DAnoUUkvK/ltcnIKz/AdP2
+         IJjw==
+X-Forwarded-Encrypted: i=1; AJvYcCWzznJF4J3Z9rAzowjFxUC2JSdUpHdT4tz7SH4Qi7ZfGNliJk8rn8jNgn8U380aHRSaOZqxeSPBIbtPhuCRJGkHcMHQvwPGTvpCWeu96BoLXgxTugRpZU+fdPtQTov0nZHqJZUHg3AJim3kyldaIQ==
+X-Gm-Message-State: AOJu0YyuLLHUQAgVycsebWFBKKQLkV44KXaKX61j3PkOJfeZsZfXZsep
+	0XNoJif9VIof/lh4lD/sPBxbaJXSjd5K3W5ZJY2heHewZXdq9VkO
+X-Google-Smtp-Source: AGHT+IFBc95ZWZ1Xhdvrudq6BQGqUmBmqgVCrN8NZXvJHKDm3s4BeoPGn7Y9inAQ1Fj8xVrV5RrF4A==
+X-Received: by 2002:a17:902:ced1:b0:1fc:54c4:61a7 with SMTP id d9443c01a7336-2008552d025mr37190455ad.23.1723045150308;
+        Wed, 07 Aug 2024 08:39:10 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.55])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff59297329sm108097375ad.247.2024.08.07.08.39.02
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff59297329sm108097375ad.247.2024.08.07.08.39.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 08:39:05 -0700 (PDT)
+        Wed, 07 Aug 2024 08:39:10 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: namhyung@kernel.org
 Cc: irogers@google.com,
@@ -61,9 +61,9 @@ Cc: irogers@google.com,
 	kan.liang@linux.intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/9] perf record --off-cpu: Add --off-cpu-thresh
-Date: Wed,  7 Aug 2024 23:38:36 +0800
-Message-ID: <20240807153843.3231451-3-howardchu95@gmail.com>
+Subject: [PATCH v4 3/9] perf record --off-cpu: Parse offcpu-time event
+Date: Wed,  7 Aug 2024 23:38:37 +0800
+Message-ID: <20240807153843.3231451-4-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240807153843.3231451-1-howardchu95@gmail.com>
 References: <20240807153843.3231451-1-howardchu95@gmail.com>
@@ -75,108 +75,117 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add the --off-cpu-thresh argument to specify the off-cpu time threshold.
-If the off-cpu time exceeds this threshold, dump the off-cpu data
-directly.
+Parse offcpu-time event using parse_event, in off_cpu_start(), write
+evlist fds got from evlist__open() to perf_event_array BPF map.
 
-Suggested-by: Ian Rogers <irogers@google.com>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/builtin-record.c            | 26 ++++++++++++++++++++++++++
- tools/perf/util/bpf_off_cpu.c          |  2 ++
- tools/perf/util/bpf_skel/off_cpu.bpf.c |  2 ++
- tools/perf/util/record.h               |  1 +
- 4 files changed, 31 insertions(+)
+ tools/perf/util/bpf_off_cpu.c | 55 ++++++++++++++++++++---------------
+ tools/perf/util/evsel.c       |  2 +-
+ 2 files changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index 72345d1e54b0..60c6fe7b4804 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -3133,6 +3133,28 @@ static int record__parse_mmap_pages(const struct option *opt,
- 	return ret;
- }
- 
-+static int record__parse_off_cpu_thresh(const struct option *opt,
-+					const char *str,
-+					int unset __maybe_unused)
-+{
-+	struct record_opts *opts = opt->value;
-+	char *endptr;
-+	u64 off_cpu_thresh;
-+
-+	if (!str)
-+		return -EINVAL;
-+
-+	off_cpu_thresh = strtoul(str, &endptr, 10);
-+
-+	/* threshold isn't string "0", yet strtoull() returns 0, parsing failed. */
-+	if (*endptr || (off_cpu_thresh == 0 && strcmp(str, "0")))
-+		return -EINVAL;
-+	else
-+		opts->off_cpu_thresh = off_cpu_thresh;
-+
-+	return 0;
-+}
-+
- void __weak arch__add_leaf_frame_record_opts(struct record_opts *opts __maybe_unused)
- {
- }
-@@ -3326,6 +3348,7 @@ static struct record record = {
- 		.ctl_fd              = -1,
- 		.ctl_fd_ack          = -1,
- 		.synth               = PERF_SYNTH_ALL,
-+		.off_cpu_thresh      = OFF_CPU_THRESH_DEFAULT,
- 	},
- 	.tool = {
- 		.sample		= process_sample_event,
-@@ -3560,6 +3583,9 @@ static struct option __record_options[] = {
- 	OPT_BOOLEAN(0, "off-cpu", &record.off_cpu, "Enable off-cpu analysis"),
- 	OPT_STRING(0, "setup-filter", &record.filter_action, "pin|unpin",
- 		   "BPF filter action"),
-+	OPT_CALLBACK(0, "off-cpu-thresh", &record.opts, "us",
-+		     "Dump off-cpu samples if off-cpu time reaches this threshold. The unit is microseconds. (default: 500000)",
-+		     record__parse_off_cpu_thresh),
- 	OPT_END()
- };
- 
 diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 6af36142dc5a..1e0e454bfb5e 100644
+index 1e0e454bfb5e..fae0bb8aaa13 100644
 --- a/tools/perf/util/bpf_off_cpu.c
 +++ b/tools/perf/util/bpf_off_cpu.c
-@@ -272,6 +272,8 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		}
+@@ -13,6 +13,7 @@
+ #include "util/cgroup.h"
+ #include "util/strlist.h"
+ #include <bpf/bpf.h>
++#include <internal/xyarray.h>
+ 
+ #include "bpf_skel/off_cpu.skel.h"
+ 
+@@ -38,39 +39,24 @@ union off_cpu_data {
+ 
+ static int off_cpu_config(struct evlist *evlist)
+ {
+-	struct evsel *evsel;
+-	struct perf_event_attr attr = {
+-		.type	= PERF_TYPE_SOFTWARE,
+-		.config = PERF_COUNT_SW_BPF_OUTPUT,
+-		.size	= sizeof(attr), /* to capture ABI version */
+-	};
+-	char *evname = strdup(OFFCPU_EVENT);
++	char off_cpu_event[64];
+ 
+-	if (evname == NULL)
+-		return -ENOMEM;
+-
+-	evsel = evsel__new(&attr);
+-	if (!evsel) {
+-		free(evname);
+-		return -ENOMEM;
++	/* after parsing off-cpu event, we'll specify its sample_type in evsel__config() */
++	scnprintf(off_cpu_event, sizeof(off_cpu_event), "bpf-output/no-inherit=1,name=%s/", OFFCPU_EVENT);
++	if (parse_event(evlist, off_cpu_event)) {
++		pr_err("Failed to open off-cpu event\n");
++		return -1;
  	}
  
-+	skel->bss->offcpu_thresh = opts->off_cpu_thresh * 1000ull;
+-	evsel->core.attr.freq = 1;
+-	evsel->core.attr.sample_period = 1;
+-	/* off-cpu analysis depends on stack trace */
+-	evsel->core.attr.sample_type = PERF_SAMPLE_CALLCHAIN;
+-
+-	evlist__add(evlist, evsel);
+-
+-	free(evsel->name);
+-	evsel->name = evname;
+-
+ 	return 0;
+ }
+ 
+ static void off_cpu_start(void *arg)
+ {
+ 	struct evlist *evlist = arg;
++	struct evsel *evsel;
++	struct perf_cpu pcpu;
++	int i, err;
+ 
+ 	/* update task filter for the given workload */
+ 	if (!skel->bss->has_cpu && !skel->bss->has_task &&
+@@ -86,6 +72,27 @@ static void off_cpu_start(void *arg)
+ 		bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
+ 	}
+ 
++	/* sample id and fds in BPF's perf_event_array can only be set after record__open() */
++	evsel = evlist__find_evsel_by_str(evlist, OFFCPU_EVENT);
++	if (evsel == NULL) {
++		pr_err("%s evsel not found\n", OFFCPU_EVENT);
++		return;
++	}
 +
- 	err = off_cpu_bpf__attach(skel);
- 	if (err) {
- 		pr_err("Failed to attach off-cpu BPF skeleton\n");
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index d877a0a9731f..cca1b6990a57 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -96,6 +96,8 @@ const volatile bool uses_cgroup_v1 = false;
- 
- int perf_subsys_id = -1;
- 
-+__u64 sample_id, sample_type, offcpu_thresh;
++	if (evsel->core.id)
++		skel->bss->sample_id = evsel->core.id[0];
 +
- /*
-  * Old kernel used to call it task_struct->state and now it's '__state'.
-  * Use BPF CO-RE "ignored suffix rule" to deal with it like below:
-diff --git a/tools/perf/util/record.h b/tools/perf/util/record.h
-index a6566134e09e..3c11416e6627 100644
---- a/tools/perf/util/record.h
-+++ b/tools/perf/util/record.h
-@@ -79,6 +79,7 @@ struct record_opts {
- 	int	      synth;
- 	int	      threads_spec;
- 	const char    *threads_user_spec;
-+	u64	      off_cpu_thresh;
- };
++	perf_cpu_map__for_each_cpu(pcpu, i, evsel->core.cpus) {
++		err = bpf_map__update_elem(skel->maps.offcpu_output,
++					   &pcpu.cpu, sizeof(__u32),
++					   xyarray__entry(evsel->core.fd, pcpu.cpu, 0),
++					   sizeof(__u32), BPF_ANY);
++		if (err) {
++			pr_err("Failed to update perf event map for direct off-cpu dumping\n");
++			return;
++		}
++	}
++
+ 	skel->bss->enabled = 1;
+ }
  
- extern const char * const *record_usage;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index b961467133cf..ccd3bda02b5d 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -1379,7 +1379,7 @@ void evsel__config(struct evsel *evsel, struct record_opts *opts,
+ 		evsel__reset_sample_bit(evsel, BRANCH_STACK);
+ 
+ 	if (evsel__is_offcpu_event(evsel))
+-		evsel->core.attr.sample_type &= OFFCPU_SAMPLE_TYPES;
++		evsel->core.attr.sample_type = OFFCPU_SAMPLE_TYPES;
+ 
+ 	arch__post_evsel_config(evsel, attr);
+ }
 -- 
 2.45.2
 
