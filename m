@@ -1,306 +1,454 @@
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2048.outbound.protection.outlook.com [40.107.236.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD1010F9;
-	Thu,  8 Aug 2024 11:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.48
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723115880; cv=fail; b=mDscVK7FnGETet80og12YBp3vcd/ywmmCAuWKMvWdOxDBUPCKmhNMYMrIrcBAGL/HfX9zLx6YRL9T4hHLIBcZLWpn3l/lmSk1+frQvjnzpTn43Bnm72I4RBK5RBhppZwT4H+CYJddQmib3FDrihkloEV1ZRxO4O+PLqOxySKteM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723115880; c=relaxed/simple;
-	bh=Vqg+7Mxl7xXAtFpF1h4Q8ML+lh6DDQcWQ8UZQBRG6Zo=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=FrRXf8AC6aPopN66ETmAIwpjt3ZkTpC+VH6FIh8I/2RyqnjMMHrHGwbQ25GdwWNwgawwM81hs1aYpPP9UvebgOCXkVE5NTFZWN01qd4qqKd/JmbjNg78VVdQ1omYjA2diU1ueaj044mEhhFFnrJR2NoyH3mCcgZitU3hSS+pzlk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=RziUNJKe; arc=fail smtp.client-ip=40.107.236.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C76018C344;
+	Thu,  8 Aug 2024 11:57:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723118273; cv=none; b=TDuSPaOPC6urtaMxOWlyXnFh1sbZ/T7GzykhiA2GVo2LnT3mlhhK2z34Rc72ubFx8Wrq0gmGUZMu0eFXqk4wZm9swNAWFg8NnsOeQCaaehK0Tg2FzO9d/NT2YjQeJNbWXAKElC5kW3skFZlGsW9MPnUOW8y7+i7Y1jifaV4n480=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723118273; c=relaxed/simple;
+	bh=PYJLTdRtrV9Sp5KBPWGCdec/5VGnl080RZUHvUprMbI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=seEbZZvQtnfP2zr9b9HNFYk0HGFhhuWptzQc3YpWEPhVKwrtcBVv2WZmXKLpLy4F6iaokYt2FwzQvKyGT7+UzcaAw0sjHzVoRnJmy87t152ktj460ow0QJsSuOKIExZE6H1KX51nhD5xbLFC/uCk24hypK5vGQjCBExTSFmy6Gc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q10KVqKy; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="RziUNJKe"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E/WAqdLURMO7abinbeU8CaomiFjUPVqN/66uvHQ48qsnraCrVBN9uTwDwWGBwwUNGXI+OreYPBAXUbYqJ2Ys4DOZoqd1ksuVbWLzJrmXqcKA7Yc0Jh9TTHeSN6BQJl5RuAcxPN6ZKpbk9ANqdXINHpsoXoh8uhX8jYoKFPWKdY0tKXrC0YhtGkCDBYqFzG1QzAjGaCwKeeoswZussaxih2/AuOs2NImzQPHMMuq6x4+9+Dr6edjMx3IbP+4ev0m9rQ8SGq4yZzkKXTsyBmv08tUh7orK0D0i+xJp/jogHA367Cb1J60OEnv3Ms1CrlTGmkPns2YcgdcWcFRjcoUeNQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZznD5QBFyAVtBERQAOBWN09kfxTdxjr1nLGsngs6cDk=;
- b=dD4q9hjxG9MJjUsQ45zRCOSI/a9FifYXJNzPOyv7H8MCUpOt97S8JyDW3BC70c52jgYATSNYrrlgcLab9I/rugGY9k9WiQ/kUwiPMRqOln5SgJDGtdaucCpeaPvoVAOS2IEMQ8cpDLzRj/VjvTY1EcqU/iHX193798Fxd5Du71iAr3ewv/xVwhHcHuk0rGGMm/qpyC1oXf8hy/1mn5USLQUVOve5j31EDGit7ZTZeVTKQhdgD1XWC1B/vaRbXAt/9C3iFooLpF7utESg0ltPJuXiac8m6HHw9gQTR7GssVkZl34gZHBUvo1zn/ueXyKcz9Y7Ss0S4HJev2s2gAnKAw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZznD5QBFyAVtBERQAOBWN09kfxTdxjr1nLGsngs6cDk=;
- b=RziUNJKe6Ou6L0o+UBA1GyiXl6ORS6RCRTzBPqx1i7venIfKknID54zDiTu++ibEZasK3+bPzqQnPQx/Egq2IunKVYFLkQATyKDqWA0qLQL2xF17TEVgAn2oCBwk70gOu3PzxIkk9tIdPmxBjY53b/l7UTgU/Tz1c5CLOMVMOog=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
- by MW4PR12MB6952.namprd12.prod.outlook.com (2603:10b6:303:207::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7849.15; Thu, 8 Aug
- 2024 11:17:52 +0000
-Received: from LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
- ([fe80::3a37:4bf4:a21:87d9%4]) with mapi id 15.20.7828.021; Thu, 8 Aug 2024
- 11:17:52 +0000
-Message-ID: <3c6e2fb3-4b51-4cda-a5ca-71bed94d47b9@amd.com>
-Date: Thu, 8 Aug 2024 16:47:41 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] powercap/intel_rapl: Fix the energy-pkg event for
- AMD CPUs
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
- namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
- rui.zhang@intel.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
- ananth.narayan@amd.com, gautham.shenoy@amd.com, kprateek.nayak@amd.com,
- ravi.bangoria@amd.com, Michael Larabel <michael@michaellarabel.com>
-References: <20240730044917.4680-1-Dhananjay.Ugwekar@amd.com>
- <20240730044917.4680-3-Dhananjay.Ugwekar@amd.com>
- <CAJZ5v0h4GAVCpUnbCMHMophsSZ522kkReAbUMdfFgRJfd0vHkw@mail.gmail.com>
-Content-Language: en-US
-From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-In-Reply-To: <CAJZ5v0h4GAVCpUnbCMHMophsSZ522kkReAbUMdfFgRJfd0vHkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: PN3PR01CA0186.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:be::7) To LV8PR12MB9207.namprd12.prod.outlook.com
- (2603:10b6:408:187::15)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q10KVqKy"
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-e0b7efa1c1bso701757276.3;
+        Thu, 08 Aug 2024 04:57:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723118271; x=1723723071; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y2dqiNOl4SOG08/MuWqCZdUE2L+FuJhdjLy7tHFyhCk=;
+        b=Q10KVqKyNs3UEmYKlJRiiEc57a0Qr9ujmZdZKOd3fUfWpsXu/4k9VT5y8UKjYkn1m+
+         xWP+v/rhXxqEbEKAKBwR31hmoiqWIltw9bGg6/L9KFnYS7LldtuHeILBfJ707eNFxe0u
+         UKsr2Dc+WVEWmByyZOF50Ew/CBnOpKgR8XcZb/+aG7ZHQcPIICcg6TEA9B4us49JgqkS
+         Ne7UoQ3eieig290tAV9n/1xs81UOtjoK0gSAlKA2hTRTV/AW58E5w90zNCydD0SNGZ14
+         u0gVPFZ3YO+4rOlueUkyabPVT5pKKL0WxHaAjy06X2zerLhWVI68pSr0gzW2hFCvjOBw
+         EkRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723118271; x=1723723071;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=y2dqiNOl4SOG08/MuWqCZdUE2L+FuJhdjLy7tHFyhCk=;
+        b=YAU4nxxK7WfCmPGbhUcJ+ljuoyxg4NfL0TSVnOTOmzCPY+RqtqpFXWqTihFRlzR28c
+         j/rxAed+yA0YmuyxCoV6V6oh0pFg855WRnbRZdogi4fN0QmQri/j5x6RBEi54AaIuOiC
+         1Jc/DVepqN6t1n6k1tSjSlzmnDlY4V1Se5WT08Sru1V1RFjgYRZTL+q4KsvzmbxJ29C/
+         M6BaN1+7/tCQUPY02yO7nbHgPwlaTjDHtKHNnnfN/EHOaoSQnSXdbVcve/lEBPTKdIdF
+         np77/v8anW+CGUrOuBbMNeaA5ArB5bjl4F/+YF08Mb/3A+vjuHoZWog8S0tDr8/nSO+l
+         8SCg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQYXNc8fUOMwB8a942N1QeVol3W64L5hU9NSv8F/BxzZuXJbohtRa1LA9GwShA7Lw0OJIUfg/NvSoFbc0ctK5rq1xMpIleVrlAPHmnMTajIZb7aD/56ai49Py8oKCG2CTT1VEDvmQICFT7pIvztg==
+X-Gm-Message-State: AOJu0Yw7n25BF8fZbY1YgfZhb0Oj+mKstGGT5aeurFHEw89QZxNGd0vg
+	kmx8ZEIzbJWnp3wGu5YuWB8RbQCVETuVvX50RR6uecDL/UHBm5RAMKN2NuvCWL20BwC7JNy+jyT
+	1jz9Dvfnx+nh9ELHFN2/GWrXaPfQ=
+X-Google-Smtp-Source: AGHT+IGQXOWGIQJJizPhVH61H7Hfq5ziwNWbb+jqZ9G4SmMjlmD2spglhNdZv5qcIqLI6obIYES4xwfpiXorjqPymN0=
+X-Received: by 2002:a05:6902:2388:b0:e0e:89f8:4f8a with SMTP id
+ 3f1490d57ef6-e0e9dab0668mr1899322276.23.1723118270728; Thu, 08 Aug 2024
+ 04:57:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|MW4PR12MB6952:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2995c471-10a2-4414-9064-08dcb79bbe13
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|7416014|376014|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dWJ4UmxYRm5GdnlnV0FEeTlucnB2UTNGenNOS1Z0c2JTZ1JTNFA4WnNXamk4?=
- =?utf-8?B?b0FERm4rdWs0Q1hxRnZhUU9rcG5FWnNWUWNXdFFORlkwNERXdWdJRFh4b2dr?=
- =?utf-8?B?VGV4V2lXdm4zd09Eb1pwMU4wMWlIV0JoTG8zK1p1eFhqTytNT2VqSTYzaGZN?=
- =?utf-8?B?ejVSKzdOSHdIOGJycDhnMThaMFFhc1Q4QWlTb28wT3BNRCtKRGNkQUlzYmtV?=
- =?utf-8?B?dEJnWmUyTnY2YWYvQmFNbElQbVAwTDdOMHBqWGVyd25ULzNmbWpLQ3MxaHRL?=
- =?utf-8?B?aUd4NG5qUGY5NmltWTJIZmpQQ1krOUQ1VDdxY0xFdllRcHVXeGc0OUs1cVhT?=
- =?utf-8?B?bEZTR1ZsZHMwOHZjR3dPVDRjcGI0aWExV25FbTBZUjF2eGs0eFF1MVV3dFZM?=
- =?utf-8?B?SlR5ek5kQWhrbXpUeU9YWk1POWVmK3ZJRG9nVGs5VDNFbU9PUmFOOGhvN3pW?=
- =?utf-8?B?RWR2K29oaHlLRFVXL2FFNDVRN2h6VWRvcXZUdmUyVWdORmpQaHhhaWkySEV2?=
- =?utf-8?B?M2U5SFR2Ulpobmt3eS8vY1h5YUxFdEd2eGh5UDBuNzA1RU9ReVRUTmlQdUQ2?=
- =?utf-8?B?Y0c5bCtCRGlHdzZvMzhqblYrRmRGcFRYaFpjREEvRytDMGlzMCtjcWFQVlFB?=
- =?utf-8?B?RjI4cjBVU2lPVmtudG9FQWdVaXRQR3RMU1lLZHgrMEpwNUxSUHE0eWdlSTB1?=
- =?utf-8?B?TXJ4UWNRMzRCQk5TRjVYUmZMaDNXdS9xelFjR2xEMjlyOExZYk5rMnlBKzZk?=
- =?utf-8?B?bG83NUNQVEl3eE9URzl6VTFPZVBYTzUzOGFVTHpjY2oyL3ZNYURFMVIyUC82?=
- =?utf-8?B?SFhpbmlDMUZoS25FRzVKYmE4azVOR21zb1hOaHZ6bkFsQXJtRitPMmlZelg1?=
- =?utf-8?B?UDNHSW04N2d1YXZSeEtGSzBwckx3TENnaVNxemx6Z2xhbjFDN29WK04rcUtT?=
- =?utf-8?B?ZzJUeEV6MGlBZjMyaWVheUh1dUtvN2M4WXVrVldWRXNhcTVGWDlIdGdaWTZ5?=
- =?utf-8?B?b2N0czdjVmMrVjduanAweG84K1VhK1hhUjFDRWlvc09IZXhHbEQ0eEpqK0JC?=
- =?utf-8?B?SnB4Ykd0UFp4TGdOVXlTakRCci9GOHAzbU93NHlCeXN5TTMxOFhBMXlTQ2d5?=
- =?utf-8?B?a3liZGM2QnRQVHNNd0p6N3FNREhXM2xEejRzVzRWWFgremN5Tm1tNzBzMkE3?=
- =?utf-8?B?TjRHaXlMeXVKYklxbHdndUZHZ1prcE9UaTFHd0xvazdsWE84WUFvblYwbDgw?=
- =?utf-8?B?d2kraFJKaGhSaHRtVW5ZeWZvalF0MWE5c0JXUU8remhqQTRUMjZWR3Y5bzBN?=
- =?utf-8?B?QkVwVkxIMGNMMldUNTlNRDBxQ05DcE9mNGNyVGlwd2gveTU1Z1lIVi9OeXFU?=
- =?utf-8?B?WU1RaG13UWd3TVExaHg5K0VXQ1ZiSEUrTWJwWWYxeTFDYkFzWFpTM04wWWow?=
- =?utf-8?B?ZnNOdXZLYXhReVZuWW5CU0x0aWZ0MDN6bDBuTWhhMFNtVVl4OUtDYzlpeE84?=
- =?utf-8?B?bFhndm9HZUJoSHRSYzhhZ1pCMyswVGRxT1VLYVZVWWMvY0E2cXdtRUNaOVJQ?=
- =?utf-8?B?eUpiVDJyVHBtZlYwRUdoOUlKd0pOaTUrZ0pPeGhMejRPRkNvb2lwREtHUzJZ?=
- =?utf-8?B?aFVMVXo0elBnSlg4NWMzQWdJaThYMU84aU1nMjl6bkVKdzUwcDFaRm5xK0dB?=
- =?utf-8?B?T0tYb3czYVVWVjZtdGoxNk1ySmVyVkd4OXNTUForS28xMFNQbG15Q3pvYTFx?=
- =?utf-8?B?bWJJUDRPS01WaGZOY1NyRmZiTzRGcjhrZXdqRXlLNjF4T25ITnlaaWd6aDZF?=
- =?utf-8?B?bi9CSWZBZ2xJSjlWcDg1Zz09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?SGJiRldLSG9GZVEwTUhWMU9ERG9yVTFIVVIrcVpiaFF5dmM5T3NBZEpCRGNL?=
- =?utf-8?B?blptTnVUTWVGQ2trcWtsTWI4M0tHVmpjdWF6TDdYS1I4QWpWbEdjc0s1S3c1?=
- =?utf-8?B?U2JIMlU5T2Q0S1lGV1JhMTFYenVCLytnWkRERHVrRjBoTjlDTlFOSzRLREZJ?=
- =?utf-8?B?cW44VkJFZ1RBdVlkemtwNGNDNUZycER6aFdhTlFqd0F4WDRkemtUMmtSU2ps?=
- =?utf-8?B?YlpETmJPSjlQcGFRb2VNdGcrWmhVUVZnUW5EaUVtWHJhNFRUcjBqcG5XWktn?=
- =?utf-8?B?c2NPWCt2dGQ1UEtyT0g3dkpwRGNpeU9TYVBNNy9FcnlOQ2NBdElMcWxxYkV1?=
- =?utf-8?B?MjJzTFM3K0s3aTN5dXpSTURZaExyY1ZHbnU4U0FjN3M3ZnVFdjhDMnkzdzhs?=
- =?utf-8?B?cTZXRjZiUU40ZENuWHVvWW94YjZXQUtzblRUdnFsN0N4eU9UbGtOZmxlVnVp?=
- =?utf-8?B?bWFvL1JsUDhiT0hQS1loenJTV3FSdHZhMW55UFZGYmN2UW9laHJ4em9xOFNL?=
- =?utf-8?B?TDNiNTJGQmt3cUYvQ1lRY2g0RHJpVzh3K2x1RnVwNkhBbXpUd2R3S0JOdTY3?=
- =?utf-8?B?KzFhbGVJM24yVnE4MExyRDhvd1gvN3lTVkdQaUFqUTZjcEtiSGlJTENkL1RT?=
- =?utf-8?B?SW5aN3JTbm8xZ0o0ZWNtNy9Zemo1eXJEbVVGeFdLejEzMFFmTTJMN0Zkczho?=
- =?utf-8?B?L3o1NUpDWjZ3dXRReHBya0U3WTA3dWF4OTFhekgrL0RPWnZEOTZ3d0o0b2ls?=
- =?utf-8?B?cDRPUXdudlNXNXNXMjZEeENXSjFoRlRXeVlNcXFnTHY0NWlJZ0Z3NW1GbkdI?=
- =?utf-8?B?eVdIVHZEbzdUU0d5SklQUVd6Z2ZtTDd6dFhFNllrQkIxQy9kOHFZYmpISU9Z?=
- =?utf-8?B?T3BOcG80TlJkRFNYSjJOb2U1ZnV2d2N0Q05xQmVRWEVxUkl4RHAvaWp4L2Vh?=
- =?utf-8?B?WGZYWXQwWTA3ZlQ2N3kvd2xMK0dVRWp1U1Z6THN6NVpPNmdDM3VVWWExV1hD?=
- =?utf-8?B?MERKWXlZZVlqZHVadnc3cGR0TnNWY0gwelZrcEhVbUdVMCtFZ1VnSDM4MVdj?=
- =?utf-8?B?Y1UwOUxIZG1kVWpNM1FLSkhPM1dZTnhmSitUeWNGbnV6eDl3YXpRNUJBN0th?=
- =?utf-8?B?WmovMXJBdENnSVBmTXk4R3NzdWFjS3JQVkgvdC9GaTg2UTMzY0ZydnZXeVdx?=
- =?utf-8?B?TEJTcGdIZ1FoL0xEcnh4eDJvRDZsOVpxd1hUQUlaZ0ZPaUlTYTVzbGcvdGxR?=
- =?utf-8?B?dHpGQStxTHhYcU9VNjB3eFBTakZjT1B4bTg5Tk9USHAyNmtnL3Q5ZHZBeWpy?=
- =?utf-8?B?QUhWZ2lDYU4yQjFyZ0RCSldqcWJJNGU3bEZxb1pFdmNqVjZGQnZETkQwa3c3?=
- =?utf-8?B?dUZPc3IxRnhKUEtMbmhRUXh2c1VyelF0SXFLaUJESHdsYkZFa3BVM0pxTXdh?=
- =?utf-8?B?Wng3enpYMUlBREdDQ0lqYkkxVS83THpHU1VDeTMwVDRmNUE4ZTlzMURzWm1q?=
- =?utf-8?B?Tms0STNrZnlLREpSTWpIY056M1VDMnU1dTRFc1RKdm1QcDJFcDc2cGoxd3dE?=
- =?utf-8?B?cmlyY3EvRS9TK2tjUXJUdTVNTlFNLzZoaTM1MVJlWHk1K0dOZWJRd1B4RVpn?=
- =?utf-8?B?T3RtNkJWU3QvakduS0hkc3ZkdmFaRTdMRHpkK09KZS83RUJVYStZUVRsY1JE?=
- =?utf-8?B?OTVGR08wUktKNGNuQjEzNlVyajRlY3o5S1RkQ2RWdnZjeEtPMnBMalhoenFS?=
- =?utf-8?B?WDNHbjlxR3hnM0VDL0t1THZwY2ZXeGtjbFpqblVwNUNjd2lCa2FDY2F4L3Fa?=
- =?utf-8?B?cW9nMnFQeTJremxWTzFvUmYrM3pTYm5lYTRWaHJIeGY3S3BscnhxSHprYWZu?=
- =?utf-8?B?bjhkUlJqTjlBekcyUTBzT1NWK3FjVzVrRGJ6Z29rS3c2Zzg5eEdNOW1Tb2N2?=
- =?utf-8?B?WEk5WnhSam9TZys4NWVITGZOSHF3dHYzTWlPWjZlNlFJa1VKK2t0ZEd5cmoy?=
- =?utf-8?B?WSsvanNzenhGSnk3ZngxYkxKalNDckE0bkd2VlVReUhhSk5qY1dWVWR1dCtx?=
- =?utf-8?B?eFJRVEh3anpUVGpFU0lsS2w2amxHditYNUljb3pNOVl3cUZ2bGpWQlRyY1FC?=
- =?utf-8?Q?4w+7CwAKdgOKnsVjLJvWy/cle?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2995c471-10a2-4414-9064-08dcb79bbe13
-X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Aug 2024 11:17:51.9429
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UuxNC6/VX4/X31QH7LtfWmLX72YJBjeQHPpWV1XD/3ZB4eqSPQ4rvOa3qJwI0DhFh1h7ekUdRrVUc5225nSpmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB6952
+References: <20240807153843.3231451-1-howardchu95@gmail.com>
+ <20240807153843.3231451-5-howardchu95@gmail.com> <ZrQIJ9xRg22qALoQ@google.com>
+In-Reply-To: <ZrQIJ9xRg22qALoQ@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 8 Aug 2024 19:57:40 +0800
+Message-ID: <CAH0uvogCCm5U0nsRp93V1+YuVbL34=pcxXsQc0z6stRWE1ouAg@mail.gmail.com>
+Subject: Re: [PATCH v4 4/9] perf record off-cpu: Dump direct off-cpu samples
+ in BPF
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Rafael,
+Hello,
 
-On 8/2/2024 6:05 PM, Rafael J. Wysocki wrote:
-> On Tue, Jul 30, 2024 at 6:53 AM Dhananjay Ugwekar
-> <Dhananjay.Ugwekar@amd.com> wrote:
->>
->> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
->> on AMD processors that support extended CPUID leaf 0x80000026, the
->> topology_logical_die_id() macros, no longer returns package id, instead it
->> returns the CCD (Core Complex Die) id. This leads to the energy-pkg
->> event scope to be modified to CCD instead of package.
->>
->> For more historical context, please refer to commit 32fb480e0a2c
->> ("powercap/intel_rapl: Support multi-die/package"), which initially changed
->> the RAPL scope from package to die for all systems, as Intel systems
->> with Die enumeration have RAPL scope as die, and those without die
->> enumeration are not affected. So, all systems(Intel, AMD, Hygon), worked
->> correctly with topology_logical_die_id() until recently, but this changed
->> after the "0x80000026 leaf" commit mentioned above.
->>
->> Future multi-die Intel systems will have package scope RAPL counters,
->> but they will be using TPMI RAPL interface, which is not affected by
->> this change.
->>
->> Replacing topology_logical_die_id() with topology_physical_package_id()
->> conditionally only for AMD and Hygon fixes the energy-pkg event.
->>
->> On an AMD 2 socket 8 CCD Zen4 server:
->>
->> Before:
->>
->> linux$ ls /sys/class/powercap/
->> intel-rapl      intel-rapl:4    intel-rapl:8:0  intel-rapl:d
->> intel-rapl:0    intel-rapl:4:0  intel-rapl:9    intel-rapl:d:0
->> intel-rapl:0:0  intel-rapl:5    intel-rapl:9:0  intel-rapl:e
->> intel-rapl:1    intel-rapl:5:0  intel-rapl:a    intel-rapl:e:0
->> intel-rapl:1:0  intel-rapl:6    intel-rapl:a:0  intel-rapl:f
->> intel-rapl:2    intel-rapl:6:0  intel-rapl:b    intel-rapl:f:0
->> intel-rapl:2:0  intel-rapl:7    intel-rapl:b:0
->> intel-rapl:3    intel-rapl:7:0  intel-rapl:c
->> intel-rapl:3:0  intel-rapl:8    intel-rapl:c:0
->>
->> After:
->>
->> linux$ ls /sys/class/powercap/
->> intel-rapl  intel-rapl:0  intel-rapl:0:0  intel-rapl:1  intel-rapl:1:0
->>
->> Only one sysfs entry per-event per-package is created after this change.
->>
->> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
->> Reported-by: Michael Larabel <michael@michaellarabel.com>
->> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
->> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
->> ---
->> Changes in v2:
->> * Updated scope description comment, commit log
->> * Rename rapl_pmu_is_pkg_scope() to rapl_msrs_are_pkg_scope()
->> * Check topology_logical_(die/package)_id return value
-> 
-> This patch does not depend on the first one in the series if I'm not
-> mistaken, in which case I can pick it up separately if you want me to
-> do that, so please let me know.
+On Thu, Aug 8, 2024 at 7:50=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Wed, Aug 07, 2024 at 11:38:38PM +0800, Howard Chu wrote:
+> > Output PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD, PERF_SAMPLE_CALLCHAIN, and
+> > PERF_SAMPLE_CGROUP in BPF. Ideally, we should only output
+> > PERF_SAMPLE_PERIOD (off-cpu time) and PERF_SAMPLE_CALLCHAIN (sched_in
+> > process's callchain). One only needs to set PERF_SAMPLE_TID and
+> > PERF_SAMPLE_CGROUP, and perf_event will do everything for us.
+> >
+> > But in reality, that's not the case. Setting PERF_SAMPLE_TID will mostl=
+y
+> > give us TID of 0. We might get the correct TID for offcpu-time event
+> > from time to time, but it is really rare.
+> >          swapper       0 [000] offcpu-time:  /
+> >         :1321819 1321819 [002] offcpu-time:  /user.slice/user-1000.slic=
+e/session-2.scope
+> >          swapper       0 [001] offcpu-time:  /
+> >          swapper       0 [003] offcpu-time:  /
+> >
+> > And setting PERF_SAMPLE_CGROUP doesn't work properly either.
+> >     tmux: server    3701 [003] offcpu-time:  /
+> >     blueman-tray    1064 [001] offcpu-time:  /
+> >             bash 1350867 [001] offcpu-time:  /
+> >             bash 1350844 [000] offcpu-time:  /
+>
+> Isn't it just because your system was idle?
 
-Sorry for the late reply, was out sick,
+I'd like to say no, because close to 100% of the offcpu-time samples'
+TID is 0, using unmodified 'perf record --off-cpu' yielded different
+results, with most of the samples having a non-zero TID.
 
-Yes, please pick this patch separately, it is independent from the first one.
+I also tested collecting the cgroup id with and without BPF output.
+
+This is the process that I'm testing for:
+perf $ cat /proc/3555534/cgroup
+0::/user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-587f-408d-92=
+f5-2c8e97cb2a74.scope
+
+Without BPF, we'd get (I added a printf to print cgroup id):
+perf $ ./perf record -F 1 --all-cgroups --off-cpu -p 3555534
+^C[ perf record: Woken up 1 times to write data ]
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel offcpu-time cgroup id is 1
+evsel offcpu-time cgroup id is 1
+evsel offcpu-time cgroup id is 1
+evsel offcpu-time cgroup id is 0
+[ perf record: Captured and wrote 0.024 MB perf.data (8 samples) ]
+
+perf $ ./perf script -F cgroup,sym,event
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+offcpu-time:  /
+offcpu-time:  /
+offcpu-time:  /
+offcpu-time:  unknown
+
+Now the reason why one of the offcpu samples' cgroup id is 0, is
+because it's an at-the-end sample, 0 is used as a placeholder. The
+direct offcpu sample has a cgroup id of 1(collected by perf_event
+itself), which is wrong.
+
+Let's use BPF to collect offcpu sample, we'll get:
+perf $ ./perf record -F 1 --all-cgroups --off-cpu -p 3555534
+^C[ perf record: Woken up 1 times to write data ]
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel cycles:P cgroup id is 7654
+evsel offcpu-time cgroup id is 1
+evsel offcpu-time cgroup id is 7654 (embedded data overwrite)
+evsel offcpu-time cgroup id is 1
+evsel offcpu-time cgroup id is 7654 (embedded data overwrite)
+evsel offcpu-time cgroup id is 0
+evsel offcpu-time cgroup id is 7654 (embedded data overwrite)
+
+This time offcpu-time's cgroup_id is correct.
+perf $ ./perf script -F cgroup,sym,event
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+   cycles:P:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+offcpu-time:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+offcpu-time:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+offcpu-time:  /user.slice/user-0.slice/user@0.service/tmux-spawn-cf25ea6d-5=
+87f-408d-92f5-2c8e97>
+
+>
+> >
+> > We need to retrieve PERF_SAMPLE_TID, PERF_SAMPLE_PERIOD,
+> > PERF_SAMPLE_CALLCHAIN, and PERF_SAMPLE_CGROUP using BPF and output thes=
+e
+> > four fields.
+> >
+> > Add perf_event_array map for dumping direct off-cpu samples, but keep
+> > the at-the-end approach.
+> >
+> > Tons of checking before access, to pass the BPF verifier.
+> >
+> > If off-cpu time (represented as delta) exceeds the off-cpu threshold, d=
+o
+> > output.
+> >
+> > Suggested-by: Namhyung Kim <namhyung@kernel.org>
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/util/bpf_skel/off_cpu.bpf.c | 133 +++++++++++++++++++++++++
+> >  1 file changed, 133 insertions(+)
+> >
+> > diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/b=
+pf_skel/off_cpu.bpf.c
+> > index cca1b6990a57..95cc130bb67e 100644
+> > --- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
+> > @@ -18,6 +18,9 @@
+> >  #define MAX_STACKS   32
+> >  #define MAX_ENTRIES  102400
+> >
+> > +#define MAX_CPUS  4096
+> > +#define MAX_OFFCPU_LEN 128
+> > +
+> >  struct tstamp_data {
+> >       __u32 stack_id;
+> >       __u32 state;
+> > @@ -32,6 +35,7 @@ struct offcpu_key {
+> >       __u64 cgroup_id;
+> >  };
+> >
+> > +/* for dumping at the end */
+> >  struct {
+> >       __uint(type, BPF_MAP_TYPE_STACK_TRACE);
+> >       __uint(key_size, sizeof(__u32));
+> > @@ -39,6 +43,45 @@ struct {
+> >       __uint(max_entries, MAX_ENTRIES);
+> >  } stacks SEC(".maps");
+> >
+> > +struct offcpu_data {
+> > +     u64 array[MAX_OFFCPU_LEN];
+> > +};
+> > +
+> > +struct stack_data {
+> > +     u64 array[MAX_STACKS];
+> > +};
+> > +
+> > +struct {
+> > +     __uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
+> > +     __uint(key_size, sizeof(__u32));
+> > +     __uint(value_size, sizeof(__u32));
+> > +     __uint(max_entries, MAX_CPUS);
+> > +} offcpu_output SEC(".maps");
+> > +
+> > +/* temporary offcpu sample */
+> > +struct {
+> > +     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+> > +     __uint(key_size, sizeof(__u32));
+> > +     __uint(value_size, sizeof(struct offcpu_data));
+> > +     __uint(max_entries, 1);
+> > +} offcpu_payload SEC(".maps");
+> > +
+> > +/* temporary stack data */
+> > +struct {
+> > +     __uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+> > +     __uint(key_size, sizeof(__u32));
+> > +     __uint(value_size, sizeof(struct stack_data));
+> > +     __uint(max_entries, 1);
+> > +} stack_tmp SEC(".maps");
+> > +
+> > +/* cached stack per task storage */
+> > +struct {
+> > +     __uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+> > +     __uint(map_flags, BPF_F_NO_PREALLOC);
+> > +     __type(key, int);
+> > +     __type(value, struct stack_data);
+> > +} stack_cache SEC(".maps");
+> > +
+> >  struct {
+> >       __uint(type, BPF_MAP_TYPE_TASK_STORAGE);
+> >       __uint(map_flags, BPF_F_NO_PREALLOC);
+> > @@ -184,12 +227,75 @@ static inline int can_record(struct task_struct *=
+t, int state)
+> >       return 1;
+> >  }
+> >
+> > +static inline bool check_bounds(int index)
+> > +{
+> > +     if (index >=3D 0 && index < MAX_OFFCPU_LEN)
+> > +             return true;
+> > +
+> > +     return false;
+> > +}
+> > +
+> > +static inline int copy_stack(struct stack_data *from,
+> > +                          struct offcpu_data *to, int n)
+> > +{
+> > +     int max_stacks =3D MAX_STACKS, len =3D 0;
+> > +
+> > +     if (!from)
+> > +             return len;
+> > +
+> > +     for (int i =3D 0; i < max_stacks && from->array[i]; ++i) {
+> > +             if (check_bounds(n + 2 + i)) {
+> > +                     to->array[n + 2 + i] =3D from->array[i];
+> > +                     ++len;
+> > +             }
+> > +     }
+> > +     return len;
+> > +}
+> > +
+> > +static int off_cpu_dump(void *ctx, struct offcpu_data *data, struct of=
+fcpu_key *key,
+> > +                     struct stack_data *stack_p, __u64 delta, __u64 ti=
+mestamp)
+> > +{
+> > +     int size, n =3D 0, ip_pos =3D -1, len =3D 0;
+> > +
+> > +     if (sample_type & PERF_SAMPLE_TID && check_bounds(n))
+> > +             data->array[n++] =3D (u64)key->tgid << 32 | key->pid;
+> > +     if (sample_type & PERF_SAMPLE_PERIOD && check_bounds(n))
+> > +             data->array[n++] =3D delta;
+> > +     if (sample_type & PERF_SAMPLE_CALLCHAIN && check_bounds(n + 2)) {
+> > +             /* data->array[n] is callchain->nr (updated later) */
+> > +             data->array[n + 1] =3D PERF_CONTEXT_USER;
+> > +             data->array[n + 2] =3D 0;
+> > +
+> > +             len =3D copy_stack(stack_p, data, n);
+> > +
+> > +             /* update length of callchain */
+> > +             data->array[n] =3D len + 1;
+> > +
+> > +             /* update sample ip with the first callchain entry */
+> > +             if (ip_pos >=3D 0)
+> > +                     data->array[ip_pos] =3D data->array[n + 2];
+>
+> Where is ip_pos set?  I guess we don't need this as we don't update the
+> SAMPLE_IP here.
+
+Yes, ip_pos is unnecessary.
+>
+> > +
+> > +             /* calculate sample callchain data->array length */
+> > +             n +=3D len + 2;
+> > +     }
+> > +     if (sample_type & PERF_SAMPLE_CGROUP && check_bounds(n))
+> > +             data->array[n++] =3D key->cgroup_id;
+> > +
+> > +     size =3D n * sizeof(u64);
+> > +     if (size >=3D 0 && size <=3D MAX_OFFCPU_LEN * sizeof(u64))
+> > +             bpf_perf_event_output(ctx, &offcpu_output, BPF_F_CURRENT_=
+CPU, data, size);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  static int off_cpu_stat(u64 *ctx, struct task_struct *prev,
+> >                       struct task_struct *next, int state)
+> >  {
+> >       __u64 ts;
+> >       __u32 stack_id;
+> >       struct tstamp_data *pelem;
+> > +     struct stack_data *stack_tmp_p, *stack_p;
+> > +     int zero =3D 0, len =3D 0;
+> >
+> >       ts =3D bpf_ktime_get_ns();
+> >
+> > @@ -199,6 +305,25 @@ static int off_cpu_stat(u64 *ctx, struct task_stru=
+ct *prev,
+> >       stack_id =3D bpf_get_stackid(ctx, &stacks,
+> >                                  BPF_F_FAST_STACK_CMP | BPF_F_USER_STAC=
+K);
+> >
+> > +     /* cache stacks */
+> > +     stack_tmp_p =3D bpf_map_lookup_elem(&stack_tmp, &zero);
+> > +     if (stack_tmp_p)
+> > +             len =3D bpf_get_stack(ctx, stack_tmp_p->array, MAX_STACKS=
+ * sizeof(u64),
+> > +                                 BPF_F_USER_STACK) / sizeof(u64);
+>
+> Looks redundant, but not sure if we share the stackid..
+
+I use bpf_get_stack() because there's only one helper for
+BPF_MAP_TYPE_STACK_TRACE, that's bpf_get_stackid(). Meaning one can
+only collect, not retrieve stack traces(such as using
+bpf_map_lookup_elem()) with STACK_TRACE map in BPF program. For
+STACK_TRACE map, all the processing is in user space. Please see
+kernel/bpf/verifier.c(line 8982):
+
+case BPF_MAP_TYPE_RINGBUF:
+if (func_id !=3D BPF_FUNC_ringbuf_output &&
+    func_id !=3D BPF_FUNC_ringbuf_reserve &&
+    func_id !=3D BPF_FUNC_ringbuf_query &&
+    func_id !=3D BPF_FUNC_ringbuf_reserve_dynptr &&
+    func_id !=3D BPF_FUNC_ringbuf_submit_dynptr &&
+    func_id !=3D BPF_FUNC_ringbuf_discard_dynptr)
+    goto error;
+break;
+case BPF_MAP_TYPE_STACK_TRACE:
+if (func_id !=3D BPF_FUNC_get_stackid)
+    goto error;
+break;
+
+So I chose the easiest way to do it, which is collecting stack traces
+__twice__. Once for direct samples, once for at-the-end samples. We
+could do the similar stack_id saving for direct off-cpu samples, and
+then access that stack trace map in post, do you think we should do
+that instead?
+
+>
+> > +
+> > +     /*
+> > +      * if stacks are successfully collected, cache them to task_stora=
+ge, they are then
+> > +      * dumped if the off-cpu time hits the threshold.
+> > +      */
+> > +     if (len > 0) {
+> > +             stack_p =3D bpf_task_storage_get(&stack_cache, prev, NULL=
+,
+> > +                                            BPF_LOCAL_STORAGE_GET_F_CR=
+EATE);
+> > +             if (stack_p) {
+> > +                     for (int i =3D 0; i < len && i < MAX_STACKS; ++i)
+> > +                             stack_p->array[i] =3D stack_tmp_p->array[=
+i];
+> > +             }
+> > +     }
+>
+> Why not use the task storage to get the stacktrace directly?
+
+I'm sorry, could you elaborate? I thought we were saving the
+prev's(process that gets sched_out) stack traces for later
+dumping(when sched_in).
 
 Thanks,
-Dhananjay
-
-> 
-> Thanks!
-> 
->> ---
->>  drivers/powercap/intel_rapl_common.c | 34 ++++++++++++++++++++++++----
->>  1 file changed, 30 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/powercap/intel_rapl_common.c b/drivers/powercap/intel_rapl_common.c
->> index 3cffa6c79538..4bc56acb99d6 100644
->> --- a/drivers/powercap/intel_rapl_common.c
->> +++ b/drivers/powercap/intel_rapl_common.c
->> @@ -2128,6 +2128,21 @@ void rapl_remove_package(struct rapl_package *rp)
->>  }
->>  EXPORT_SYMBOL_GPL(rapl_remove_package);
->>
->> +/*
->> + * RAPL Package energy counter scope:
->> + * 1. AMD/HYGON platforms use per-PKG package energy counter
->> + * 2. For Intel platforms
->> + *     2.1 CLX-AP platform has per-DIE package energy counter
->> + *     2.2 Other platforms that uses MSR RAPL are single die systems so the
->> + *          package energy counter can be considered as per-PKG/per-DIE,
->> + *          here it is considered as per-DIE.
->> + *     2.3 New platforms that use TPMI RAPL doesn't care about the
->> + *         scope because they are not MSR/CPU based.
->> + */
->> +#define rapl_msrs_are_pkg_scope()                              \
->> +       (boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||  \
->> +        boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
->> +
->>  /* caller to ensure CPU hotplug lock is held */
->>  struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct rapl_if_priv *priv,
->>                                                          bool id_is_cpu)
->> @@ -2135,8 +2150,14 @@ struct rapl_package *rapl_find_package_domain_cpuslocked(int id, struct rapl_if_
->>         struct rapl_package *rp;
->>         int uid;
->>
->> -       if (id_is_cpu)
->> -               uid = topology_logical_die_id(id);
->> +       if (id_is_cpu) {
->> +               uid = rapl_msrs_are_pkg_scope() ?
->> +                     topology_physical_package_id(id) : topology_logical_die_id(id);
->> +               if (uid < 0) {
->> +                       pr_err("topology_logical_(package/die)_id() returned a negative value");
->> +                       return ERR_PTR(-EINVAL);
->> +               }
->> +       }
->>         else
->>                 uid = id;
->>
->> @@ -2168,9 +2189,14 @@ struct rapl_package *rapl_add_package_cpuslocked(int id, struct rapl_if_priv *pr
->>                 return ERR_PTR(-ENOMEM);
->>
->>         if (id_is_cpu) {
->> -               rp->id = topology_logical_die_id(id);
->> +               rp->id = rapl_msrs_are_pkg_scope() ?
->> +                        topology_physical_package_id(id) : topology_logical_die_id(id);
->> +               if ((int)(rp->id) < 0) {
->> +                       pr_err("topology_logical_(package/die)_id() returned a negative value");
->> +                       return ERR_PTR(-EINVAL);
->> +               }
->>                 rp->lead_cpu = id;
->> -               if (topology_max_dies_per_package() > 1)
->> +               if (!rapl_msrs_are_pkg_scope() && topology_max_dies_per_package() > 1)
->>                         snprintf(rp->name, PACKAGE_DOMAIN_NAME_LENGTH, "package-%d-die-%d",
->>                                  topology_physical_package_id(id), topology_die_id(id));
->>                 else
->> --
->> 2.43.0
->>
->>
+Howard
+>
+> Thanks,
+> Namhyung
+>
+> > +
+> >       pelem =3D bpf_task_storage_get(&tstamp, prev, NULL,
+> >                                    BPF_LOCAL_STORAGE_GET_F_CREATE);
+> >       if (!pelem)
+> > @@ -228,6 +353,14 @@ static int off_cpu_stat(u64 *ctx, struct task_stru=
+ct *prev,
+> >               else
+> >                       bpf_map_update_elem(&off_cpu, &key, &delta, BPF_A=
+NY);
+> >
+> > +             if (delta >=3D offcpu_thresh) {
+> > +                     struct offcpu_data *data =3D bpf_map_lookup_elem(=
+&offcpu_payload, &zero);
+> > +
+> > +                     stack_p =3D bpf_task_storage_get(&stack_cache, ne=
+xt, NULL, 0);
+> > +                     if (data && stack_p)
+> > +                             off_cpu_dump(ctx, data, &key, stack_p, de=
+lta, pelem->timestamp);
+> > +             }
+> > +
+> >               /* prevent to reuse the timestamp later */
+> >               pelem->timestamp =3D 0;
+> >       }
+> > --
+> > 2.45.2
+> >
