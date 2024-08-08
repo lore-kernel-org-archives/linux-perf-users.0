@@ -1,122 +1,106 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 440F4188CD8;
-	Thu,  8 Aug 2024 08:01:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D447A14533F;
+	Thu,  8 Aug 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723104063; cv=none; b=hAoELl7ejYqiHHo0RyQ0Y4jnEIzmN2yGSGeGJPtGaMiiNTbXvApuC8EGFetJ/weL3BYh9IZdNK+rtbf8RtESv99ZwjymvknXTPIkx/05T+f93Gl0FtFsV+J7hwMaXr1gHExw5bu9DgTfhFCORsmSh02eKIwhv8n1PzJvfjKverA=
+	t=1723106112; cv=none; b=rpY16WtSg/xCYZaXdGF718vmcbcj42DTZnwFx2Gcewgx9n/koWCA7+Q5UCFcMfuSr1mGDd7A8h/29ckolASCKsd1HP5GNtXSIRJndr32pzPh9NprBEjgjFINpp8z6L0SIr47WjCVn1yfI58JlxMW8wouBDlD/hBYBC4FXPWNuRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723104063; c=relaxed/simple;
-	bh=d107dxSOJy/IsdkIlMvwvuyrtRAfJyvlUkR1dmmmQiw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=r08B+2BYhWK0TtqbUPCqy2Hc22IBqft4vHxCgyzs2oFUwpn90RhFBQWjDdCxIcoz9yhj+wOWOFkk5rGwaI43xk5EthRrQmYDWDUMb3mOeYS+lE0raPsrxsfI4IuMjP5jVsAXQSNHAhDmuPVcWXh4ZD0/E5UyolyZhR3ggWQ5wys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=arZPw9gk; arc=none smtp.client-ip=209.85.216.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="arZPw9gk"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2cb566d528aso612199a91.1;
-        Thu, 08 Aug 2024 01:01:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723104061; x=1723708861; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=wqs6KdMLbgfGmk1QaXPQfVur5UUnGXn6qzNoZ4u3hZE=;
-        b=arZPw9gk2JYPNVgvLUiBS2BOQkxSN82dRaC8ec2xGegE/0bSNdWXmW2jFEs04VhTIe
-         VgEM0EQt2IBB6G/KBSZtyj9FPKrIFGx93dK+FYE40kL2wvHdV6kx4AhbH90ZwbbmLgr4
-         yaoc1vhAlBpspk5DeIUmAPb+aBvKtKoFPJk6oDjrq/YUcTRTExLAwCyVvN3F97MIZ3GN
-         FjbMLSy8N+isujJhTimXeowb1vi2h7hCapiwuZ5qlRCdMilTn5geEfyB393T3jUHDVxq
-         yTwJHdvvY4Xtp4d+v/sZ6sACaSX36yZW8DKSwSu7F78VibY9NQL4Dpq65MosnjvjeEkY
-         fqYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723104061; x=1723708861;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wqs6KdMLbgfGmk1QaXPQfVur5UUnGXn6qzNoZ4u3hZE=;
-        b=BhP7wZdTfvoaMZSWsmSU1SUUEtqeKz/YH8oIR0hUrBPidffqjC8E2bnM1zh0Psd0l/
-         geIrBZZVDuPOvA8OnxcDmBbCTurCooZtdk00BCCEytzojWbU8ZJgV4A9NCB3xJpGs1do
-         5If44yDyBujAPCEozlvMRXLqzN2/9I51MMJuCq2aGQi/HsFCjGrA0YAI1lKzumk08RgP
-         kROGchdWog9JT5CS4G+ISur+X67ablrheKbdHf3gMp9MGbhVwvja53FPYH2ekmn/qJaD
-         MEjwKIyD7fb74YTFV4fODWSeiUat8wN4TPWNr6PLyzKbAxX1VZ9Y9nuyLCjlcuYkjtoF
-         hFsg==
-X-Forwarded-Encrypted: i=1; AJvYcCWTZfN0z2n+bFbC2UC+lzy/jHmXTWuv7LZEDJCXBIlBHujxFjQ6R0jGhrjOyecOmTovxPcRzfLbv1191FR0ld0+12gGEfabqlz7+RuPpIq7P39wwKmj61fWgitVEnhHXR8qla3FNULRY03RQ5AZcQ==
-X-Gm-Message-State: AOJu0YzUFB3t7hM9E8RVwgU8+QKtfvfDTua7a0wy0BkFv9UByRcE+pYS
-	Dr94ajYLtSuxwW57Mo7j9GPEWXwbfK+mG3UkdzmHLuiPpjYTxv6/
-X-Google-Smtp-Source: AGHT+IEKKxAsa5qR0ckGD76B5i/PDlzs6pb8uGNHqjubWiSAL350IWQX1YGY4rvg1lwMLmPMuINM9A==
-X-Received: by 2002:a17:90a:de83:b0:2cb:3748:f5ce with SMTP id 98e67ed59e1d1-2d1c339f4d4mr1392884a91.10.1723104061381;
-        Thu, 08 Aug 2024 01:01:01 -0700 (PDT)
-Received: from alveo.moma (bullfrog.anu.edu.au. [150.203.163.126])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d1c9c9cd66sm511366a91.24.2024.08.08.01.00.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 01:01:01 -0700 (PDT)
-From: Zixian Cai <fzczx123@gmail.com>
-To: 
-Cc: fzczx123@gmail.com,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] perf script python: Add the ins_lat field to event handler
-Date: Thu,  8 Aug 2024 08:00:26 +0000
-Message-Id: <20240808080027.3559776-1-fzczx123@gmail.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1723106112; c=relaxed/simple;
+	bh=cW+F5Z3NJwA+OTcTa+kQhg5RIdMToADuCv3NjjJKaqY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=G/3WLJa4dj6p3WBPIIRNUZJodwcH3ZxFRU8PFnQHB72n43TYpZsypXDBZZNSNzDVAPcmtPCcHRBRtiZ5Zt+QV4Dq84DNjrhRpyhUpU/JMQOQD1lQX8RN5q/8w3fjR3YLiG2gvCKaqh/aY22zmijoGTPkqd3fhZ326f0kQrrDBso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D1B39FEC;
+	Thu,  8 Aug 2024 01:35:34 -0700 (PDT)
+Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09B3E3F71E;
+	Thu,  8 Aug 2024 01:35:06 -0700 (PDT)
+Message-ID: <38be6496-891f-4a6b-ab33-49d63dc9570d@arm.com>
+Date: Thu, 8 Aug 2024 09:35:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Leo Yan <leo.yan@arm.com>
+Subject: Re: [RFC/PATCH 1/1] tools headers arm64: Sync arm64's cputype.h with
+ the kernel sources
+To: Besar Wicaksono <bwicaksono@nvidia.com>,
+ Mark Rutland <mark.rutland@arm.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Will Deacon
+ <will@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+ Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim <namhyung@kernel.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+ James Clark <james.clark@arm.com>, Vikram Sethi <vsethi@nvidia.com>,
+ Rich Wiley <rwiley@nvidia.com>
+References: <Zl4MYzhP0NB-Z1DW@x1> <Zl7aOk2h4_73JmUu@J2N7QTR9R3>
+ <a1990b2e-2c10-42b6-93e9-fef324cb91b2@arm.com> <Zl9jLtiFagBcH7oH@J2N7QTR9R3>
+ <fc940d6d-7ac3-4f69-8ace-459955f72281@foss.arm.com>
+ <ZmAwYjyElYQqQy7c@J2N7QTR9R3>
+ <SJ0PR12MB56763246FC68494FB086DB84A0B92@SJ0PR12MB5676.namprd12.prod.outlook.com>
+Content-Language: en-US
+In-Reply-To: <SJ0PR12MB56763246FC68494FB086DB84A0B92@SJ0PR12MB5676.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-For example, when using the Alder Lake PMU memory load event, the
-instruction latency is stored in ins_lat, while the cache latency is
-stored in weight.
+Hi Besar,
 
-This patch reports the ins_lat field for Python scripting.
+On 8/8/24 05:37, Besar Wicaksono wrote:
 
-Signed-off-by: Zixian Cai <fzczx123@gmail.com>
----
- tools/perf/util/scripting-engines/trace-event-python.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+[...]
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 41d4f9e6a..68eb0586c 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -861,6 +861,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 	set_sample_read_in_dict(dict_sample, sample, evsel);
- 	pydict_set_item_string_decref(dict_sample, "weight",
- 			PyLong_FromUnsignedLongLong(sample->weight));
-+	pydict_set_item_string_decref(dict_sample, "ins_lat",
-+			PyLong_FromUnsignedLongLong(sample->ins_lat));
- 	pydict_set_item_string_decref(dict_sample, "transaction",
- 			PyLong_FromUnsignedLongLong(sample->transaction));
- 	set_sample_datasrc_in_dict(dict_sample, sample);
-@@ -1286,7 +1288,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	struct tables *tables = container_of(dbe, struct tables, dbe);
- 	PyObject *t;
+>>>> Today, Arm Ltd implementations happen to share a format, but that isn't
+>>>> implied by PMSIDR_EL1.LDS, and there's no guarantee that future CPUs
+>>>> will all use the same format.
+>>>>
+>>>> For the moment we'll have to keep adding to this list.
+> 
+> I apologize I didn't follow. Do you mean adding new CPU identifier to neoverse_spe[]
+> list is still the way to go for now?
 
--	t = tuple_new(25);
-+	t = tuple_new(26);
+Yes, the conclusion is we still need to maintain the CPU ID list for Arm SPE
+data source packets.
 
- 	tuple_set_d64(t, 0, es->db_id);
- 	tuple_set_d64(t, 1, es->evsel->db_id);
-@@ -1313,6 +1315,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	tuple_set_d64(t, 22, es->sample->insn_cnt);
- 	tuple_set_d64(t, 23, es->sample->cyc_cnt);
- 	tuple_set_s32(t, 24, es->sample->flags);
-+	tuple_set_s32(t, 25, es->sample->ins_lat);
+>>> I would like to use an opposite way - we can only maintain CPU variants with
+>>> special data source format, otherwise, all other CPUs use the common format.
+>>
+>> I think that's not a good idea.
+>>
+>> Today, Arm Ltd CPUs happen to share *a* common format, but that's likely
+>> to change at some point in future, and CPUs from other vendors are
+>> likely to use different formats.
+>>
+>> Assuming any format by default means that when CPUs with different
+>> formats are released, we'll produce incorrect results for those CPU by
+>> default, we'll need to update tables to exclude those CPUs, and we'll
+>> probably want to backport that exclusion to minimize the risk of users
+>> getting incorrect/misleading results.
+>>
+>> While the current situation isn't nice, I think the alternative is
+>> worse -- it will confuse and anger users.
+>>
+>> I think we need to talk with the Arm architects to see if they can
+>> define some discovery mechanism for the data source format.
+> 
+> Is there a follow-up on this from Arm?
 
- 	call_object(tables->sample_handler, t, "sample_table");
+I am working on this. The plan is to add meta data support so we can have more
+info about Arm SPE features (e.g. data source packet is supported). Then in
+the perf tool we need to consolidate to support not only Neoverse core.
 
---
-2.25.1
+It is deferred as I need to firstly resolve the multiple Arm SPE devices, then
+I will work on the meta data things and consolidate data source packet (and
+include your patches [1]).
+
+Thanks,
+Leo
+
+[1] https://lore.kernel.org/linux-perf-users/20240109192310.16234-1-bwicaksono@nvidia.com/
 
