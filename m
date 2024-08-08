@@ -1,193 +1,250 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 957EC2E400;
-	Thu,  8 Aug 2024 04:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DB3208DA
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 05:18:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723092596; cv=none; b=GeymqBjVkXYrXHlcsSFEYjMB/qneFX038vqO3Ws7Z3rQ19Lq7ARWDFmmw83FevPwtB9ODfkNu8J2OEE5//QI1/HmVTsyW+5s/KOKRgm86yD2X6wYr/HYHQONt/0VWQp0W1o8g6ZaaplW4dAzVH3jdTew8lGbDy9jFrqwTrlgeu4=
+	t=1723094310; cv=none; b=NZez3ZmeiJnON1kzA5x7Mze+jSU5WMMb4LV1DEiU1TC7nGNj1fGOB986CBXD14flSWH/RC0afILv+ZflRT5ofme4ojfboywIAo6ObBhv4Wfs3cTzDN2p0keoQa6QBZE8MIhPBUyfDCzCOXD4UDdOS9O95l545ZGJYnhfYgwcPlY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723092596; c=relaxed/simple;
-	bh=O+vnFHy5XvcbxYXq88CWEnm0lAC3QOOB4d3H/ZTGUvQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UQP3txW69nHTgZsHwmTOlyWZkU2hVTh9Wv5FuHRwtf6AS9W0/TADShF0G2V7vSpGhc94UP7BAm7MTo1S/uwmJ3JJTqCmmNeIVbYv2LvQT2a37OX/XlnOOlT3YvdgJR6w7mp7gdFnHf0jrRTvJ/WbgFs2hQefJ2tsbQiYeGtmg0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+9zquKl; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+9zquKl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3268C32782;
-	Thu,  8 Aug 2024 04:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723092596;
-	bh=O+vnFHy5XvcbxYXq88CWEnm0lAC3QOOB4d3H/ZTGUvQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=R+9zquKlwpyaOwrsPmyICBbW5BMNZ+8Iw6V2HlTJJs3AOoQ2gGc8cAJKOX05ADNA4
-	 JfADQE/YS9MbJ4RjCDSbsKyA4twApYBxEv028KzI5/TJXUH6a68RZiI6NsIOw0X00c
-	 r9BxvgDIEgQd3+/DjOc07/nhW2tC8uEeodLp3TwWIIFgeXH5jWQ9U9T1QrtB7wr3Ld
-	 iQqeaVrjstDjT8BDGKLwaecHAWRLNC95Y6n0FDsf3O/nG1mNxFhXkgG37ReUFVibRb
-	 gpjTGAWw8pFHIK1AIOCFfiVlowb32bF1z2houNOs0Tz9p2SxT9GYz9WHlLIkF0338h
-	 ZVxxUR6ttMbYQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] perf test: Add a new shell test for perf ftrace
-Date: Wed,  7 Aug 2024 21:49:54 -0700
-Message-ID: <20240808044954.1775333-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
+	s=arc-20240116; t=1723094310; c=relaxed/simple;
+	bh=+pve8w5OmDuhEfKAZ0v4QgDzAlDSeolETGcLJaL6EVc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ISWYIIBETXKJ9dplJ1DbHPKbBMVgkxt9kE7iZxN069OnL9RpciQCm1A+F+Z0IFuROZ0ZAAtHX/aK8pj2gfKEeapGY0yEye5YOsu+c+m6Dg7l8xJIlK1nNGyBbgFew4b82ZLWSzL+mROjEa2o8xBYaGHW09GcvLHIt5OHIC0yiKE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-70d23caf8ddso547376b3a.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 22:18:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723094308; x=1723699108;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xlD9KilVP/+UaWYaZ7K9co9pYkczzJbUbakDSn5gvig=;
+        b=ZAqXWI/5sdidcerV3kzb9+6Jy3NZp4wRvjMpN4JTYCQQL7AivDUr8wxqskENIVB3rF
+         sPKiGkJmcbr8Mul3eO/WOtXh018qCUpov44UaF22kScoPHFqxdttfFGBdwg0OtkiZRtF
+         I7gpxRdkPq3kcEJjxZPOTiKe4SWbS62cisGZueu1JsqhiNtMyl3G+6sxyXuMgeNLUHFb
+         XU5NP6qfXPH/5Cmz+VsCWe63uwijpPbougQwUhzjIari30CDbSSpqQqrOkLWhIkE2N/Y
+         NiVQ2V76dnLu0VQNyD4I9i1aUkHf0LN7QG6pOsoDPEHiczb2Fxshlue5QWLwqxg6HwHZ
+         dkaA==
+X-Gm-Message-State: AOJu0YzqVm4ND2O28m7diIo9gcvw88uj5NjLtQ+wcrg4QJ1hXAS8MilJ
+	wIrEftpdDuM/bmUheSHa9EPr4Bjy2jlzdvp3R8V7RKwYpJEQlrajOrTvSBOX1foxoVxTtZJsvvg
+	0YH7NihVj1ZjmGgY5O4+keawKazk=
+X-Google-Smtp-Source: AGHT+IHNVo2ZaWOQJqjUDzMFydzGL/1p8wMp46arW2418YC6XYhkJy+4gJa4bvSB1FxQt15rIMyM7BCguwf/7aU6+uk=
+X-Received: by 2002:a05:6a20:8419:b0:1c4:818c:299d with SMTP id
+ adf61e73a8af0-1c6fce3dc3bmr886845637.11.1723094308198; Wed, 07 Aug 2024
+ 22:18:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240807231823.898979-1-ak@linux.intel.com> <20240807231823.898979-3-ak@linux.intel.com>
+In-Reply-To: <20240807231823.898979-3-ak@linux.intel.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 7 Aug 2024 22:18:17 -0700
+Message-ID: <CAM9d7ci40WcV=EtsNuNXkRAWc3XHDKzb9OACNUhD5WaqTu5vxg@mail.gmail.com>
+Subject: Re: [PATCH v9 3/4] perf script: Fix perf script -F +metric
+To: Andi Kleen <ak@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-  $ sudo ./perf test ftrace -vv
-   86: perf ftrace tests:
-  --- start ---
-  test child forked, pid 1772223
-  perf ftrace list test
-  syscalls for sleep:
-  __x64_sys_nanosleep
-  __ia32_sys_nanosleep
-  __x64_sys_clock_nanosleep
-  __ia32_sys_clock_nanosleep
-  perf ftrace list test  [Success]
-  perf ftrace trace test
-  # tracer: function_graph
-  #
-  # CPU  DURATION                  FUNCTION CALLS
-  # |     |   |                     |   |   |   |
-   0)               |  __x64_sys_clock_nanosleep() {
-   0)               |    common_nsleep() {
-   0)               |      hrtimer_nanosleep() {
-   0)               |        do_nanosleep() {
-  perf ftrace trace test  [Success]
-  perf ftrace latency test
-  target function: __x64_sys_clock_nanosleep
-  #   DURATION     |      COUNT | GRAPH                                          |
-      32 - 64   ms |          1 | ############################################## |
-  perf ftrace latency test  [Success]
-  perf ftrace profile test
-  # Total (us)   Avg (us)   Max (us)      Count   Function
-    100136.400 100136.400 100136.400          1   __x64_sys_clock_nanosleep
-    100135.200 100135.200 100135.200          1   common_nsleep
-    100134.700 100134.700 100134.700          1   hrtimer_nanosleep
-    100133.700 100133.700 100133.700          1   do_nanosleep
-    100130.600 100130.600 100130.600          1   schedule
-       166.868     55.623     80.299          3   scheduler_tick
-         5.926      5.926      5.926          1   native_smp_send_reschedule
-       301.941    301.941    301.941          1   __x64_sys_execve
-       295.786    295.786    295.786          1   do_execveat_common.isra.0
-        71.397     35.699     46.403          2   bprm_execve
-         2.519      1.260      1.547          2   sched_mm_cid_before_execve
-         1.098      0.549      0.686          2   sched_mm_cid_after_execve
-  perf ftrace profile test  [Success]
-  ---- end(0) ----
-   86: perf ftrace tests                                               : Ok
+Hi Andi,
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/tests/shell/ftrace.sh | 84 ++++++++++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100755 tools/perf/tests/shell/ftrace.sh
+On Wed, Aug 7, 2024 at 4:18=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wrot=
+e:
+>
+> This fixes a regression with perf script -F +metric originally caused by =
+:
+>
+> commit 37cc8ad77cf81f3ffd226856c367b0e15333a738
+> Author: Ian Rogers <irogers@google.com>
+> Date:   Sun Feb 19 01:28:46 2023 -0800
+>
+>     perf metric: Directly use counts rather than saved_value
+>
+> In the perf script environment the evsel wouldn't allocate an aggr
+> values array, which led to a -1 reference because the metric
+> evaluation would try to reference NULL - 1 (for aggr_idx)
+>
+> Give the perf script evsels a single CPU aggr setup. That's
+> enough because the groups are always contiguous, so no need
+> to store more than one CPU's worth of values.
+>
+> Before
+>
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> % perf script -F +metric
+> Segmentation fault (core dumped)
+>
+> After:
+>
+> % perf record -e '{cycles,instructions}:S' perf bench  mem memcpy
+> ...
+> [ perf record: Woken up 1 times to write data ]
+> [ perf record: Captured and wrote 0.028 MB perf.data (90 samples) ]
+> % perf script -F +metric
+>        perf-exec 1847557 264658.180789:       3009       cycles:  fffffff=
+f990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:        382 instructions:  fffffff=
+f990a579a native_write_msr+0xa ([kernel.kallsyms])
+>        perf-exec 1847557 264658.180789:         metric:    0.13  insn per=
+ cycle
+> ...
+>
+> Fixes: 37cc8ad77cf8 ("perf metric: Directly use counts rather ...")
+> Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-new file mode 100755
-index 000000000000..b1c36d30559a
---- /dev/null
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -0,0 +1,84 @@
-+#!/bin/sh
-+# perf ftrace tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+# perf ftrace commands only works for root
-+if [ "$(id -u)" != 0 ]; then
-+    echo "perf ftrace test  [Skipped: no permission]"
-+    exit 2
-+fi
-+
-+output=$(mktemp /tmp/__perf_test.ftrace.XXXXXX)
-+
-+cleanup() {
-+  rm -f "${output}"
-+
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+# this will be set in test_ftrace_trace()
-+target_function=
-+
-+test_ftrace_list() {
-+    echo "perf ftrace list test"
-+    perf ftrace -F > "${output}"
-+    # this will be used in test_ftrace_trace()
-+    sleep_functions=$(grep 'sys_.*sleep$' "${output}")
-+    echo "syscalls for sleep:"
-+    echo "${sleep_functions}"
-+    echo "perf ftrace list test  [Success]"
-+}
-+
-+test_ftrace_trace() {
-+    echo "perf ftrace trace test"
-+    perf ftrace trace --graph-opts depth=5 sleep 0.1 > "${output}"
-+    # it should have some function name contains 'sleep'
-+    grep "^#" "${output}"
-+    grep -F 'sleep()' "${output}"
-+    # find actual syscall function name
-+    for FN in ${sleep_functions}; do
-+	if grep -q "${FN}" "${output}"; then
-+	    target_function="${FN}"
-+	    echo "perf ftrace trace test  [Success]"
-+	    return
-+	fi
-+    done
-+
-+    echo "perf ftrace trace test  [Failure: sleep syscall not found]"
-+    exit 1
-+}
-+
-+test_ftrace_latency() {
-+    echo "perf ftrace latency test"
-+    echo "target function: ${target_function}"
-+    perf ftrace latency -T "${target_function}" sleep 0.1 > "${output}"
-+    grep "^#" "${output}"
-+    grep "###" "${output}"
-+    echo "perf ftrace latency test  [Success]"
-+}
-+
-+test_ftrace_profile() {
-+    echo "perf ftrace profile test"
-+    perf ftrace profile sleep 0.1 > "${output}"
-+    grep ^# "${output}"
-+    grep sleep "${output}"
-+    grep schedule "${output}"
-+    grep execve "${output}"
-+    echo "perf ftrace profile test  [Success]"
-+}
-+
-+test_ftrace_list
-+test_ftrace_trace
-+test_ftrace_latency
-+test_ftrace_profile
-+
-+cleanup
-+exit 0
--- 
-2.46.0.rc2.264.g509ed76dc8-goog
+Thanks for your work, for the series:
 
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+
+Thanks,
+Namhyung
+
+>
+> ----
+>
+> v2: Reformat code
+> v3: Work around bogus warning
+> v4: Set up aggr map only for metrics case to keep perf stat record
+> working
+> v5: Broken version
+> v6: Only set up limited aggregation mode with -F +metric. Add conflict
+> checks with perf stat record files.
+> v7: Remove some unnecessary conflict checks. Fix buffer overflow. Minor c=
+leanups.
+> v8: Add check for leader sampling. Update some comments.
+> v9: Correct check for leader sampling (Namhyung)
+> v10: Check for PERF_FORMAT_GROUP and PERF_SAMPLE_READ (Namhyung)
+> ---
+>  tools/perf/builtin-script.c | 51 +++++++++++++++++++++++++++++++++----
+>  1 file changed, 46 insertions(+), 5 deletions(-)
+>
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index c16224b1fef3..cb63507af839 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -335,7 +335,6 @@ struct evsel_script {
+>         FILE *fp;
+>         u64  samples;
+>         /* For metric output */
+> -       u64  val;
+>         int  gnum;
+>  };
+>
+> @@ -2127,18 +2126,31 @@ static void perf_sample__fprint_metric(struct per=
+f_script *script,
+>         };
+>         struct evsel *ev2;
+>         u64 val;
+> +       static int printed;
+>
+>         if (!evsel->stats)
+>                 evlist__alloc_stats(&stat_config, script->session->evlist=
+, /*alloc_raw=3D*/false);
+>         if (evsel_script(leader)->gnum++ =3D=3D 0)
+>                 perf_stat__reset_shadow_stats();
+> -       val =3D sample->period * evsel->scale;
+> -       evsel_script(evsel)->val =3D val;
+> +       val =3D sample->period;
+> +       if (!(leader->core.attr.read_format & PERF_FORMAT_GROUP) ||
+> +           !(leader->core.attr.sample_type & PERF_SAMPLE_READ)) {
+> +               if (!printed)
+> +                       fprintf(stderr, "perf script: -F metric requires =
+{}:S for groups leader sampling\n");
+> +               printed =3D 1;
+> +               return;
+> +       }
+> +       /*
+> +        * Always use the first entry as storage because the leader sampl=
+ing
+> +        * groups are contiguous and there's no need to handle multiple i=
+ndexes
+> +        * for anything.
+> +        */
+> +       evsel->stats->aggr[0].counts.val =3D val;
+>         if (evsel_script(leader)->gnum =3D=3D leader->core.nr_members) {
+>                 for_each_group_member (ev2, leader) {
+>                         perf_stat__print_shadow_stats(&stat_config, ev2,
+> -                                                     evsel_script(ev2)->=
+val,
+> -                                                     sample->cpu,
+> +                                                     evsel->stats->aggr[=
+0].counts.val,
+> +                                                     0,
+>                                                       &ctx,
+>                                                       NULL);
+>                 }
+> @@ -2325,6 +2337,20 @@ static void process_event(struct perf_script *scri=
+pt,
+>                 fflush(fp);
+>  }
+>
+> +static void check_metric_conflict(void)
+> +{
+> +       int i;
+> +       /*
+> +        * Avoid conflict with the aggregation mode used for the metric p=
+rinting.
+> +        */
+> +       for (i =3D 0; i < OUTPUT_TYPE_MAX; i++) {
+> +               if (output[i].fields & PERF_OUTPUT_METRIC) {
+> +                       fprintf(stderr, "perf stat record files are not s=
+upported with -F metric\n");
+> +                       exit(1);
+> +               }
+> +       }
+> +}
+> +
+>  static struct scripting_ops    *scripting_ops;
+>
+>  static void __process_stat(struct evsel *counter, u64 tstamp)
+> @@ -2334,6 +2360,8 @@ static void __process_stat(struct evsel *counter, u=
+64 tstamp)
+>         struct perf_cpu cpu;
+>         static int header_printed;
+>
+> +       check_metric_conflict();
+> +
+>         if (!header_printed) {
+>                 printf("%3s %8s %15s %15s %15s %15s %s\n",
+>                        "CPU", "THREAD", "VAL", "ENA", "RUN", "TIME", "EVE=
+NT");
+> @@ -3725,6 +3753,8 @@ static int process_stat_config_event(struct perf_se=
+ssion *session __maybe_unused
+>  {
+>         perf_event__read_stat_config(&stat_config, &event->stat_config);
+>
+> +       check_metric_conflict();
+> +
+>         /*
+>          * Aggregation modes are not used since post-processing scripts a=
+re
+>          * supposed to take care of such requirements
+> @@ -4088,6 +4118,17 @@ int cmd_script(int argc, const char **argv)
+>
+>         argc =3D parse_options_subcommand(argc, argv, options, script_sub=
+commands, script_usage,
+>                              PARSE_OPT_STOP_AT_NON_OPTION);
+> +       for (i =3D 0; i < OUTPUT_TYPE_MAX; i++) {
+> +               if (output[i].fields & PERF_OUTPUT_METRIC) {
+> +                       stat_config.aggr_map =3D cpu_aggr_map__empty_new(=
+1);
+> +                       err =3D -ENOMEM;
+> +                       if (!stat_config.aggr_map)
+> +                               goto out;
+> +                       err =3D 0;
+> +                       stat_config.aggr_map->nr =3D 1;
+> +                       break;
+> +               }
+> +       }
+>
+>         if (symbol_conf.guestmount ||
+>             symbol_conf.default_guest_vmlinux_name ||
+> --
+> 2.45.2
+>
