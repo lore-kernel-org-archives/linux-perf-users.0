@@ -1,220 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D5318A6B3;
-	Thu,  8 Aug 2024 13:01:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14C3718CC08
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 13:17:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723122088; cv=none; b=K+B6hfHkFyQO64lHnL0eF/gcG4TNeqtaBwenkznzTd9Ar+daNdOHloVetFJmv7iX5DTyW30uIkC2P93UA/sjGXTo2WnxwSEmAn6cm9xnl10+PUgybCrdHh7GgJdaRgkvSvlNXlfMT4QWy51XvQnfDwAEa/mU67QNJPIjrh6C+Hc=
+	t=1723123060; cv=none; b=iP35FIrLbhxqScyTCtB9uwdEXOZhAji63TcI+xapLs/XxzCnSuCOTMp64NXToVsyIsgdcBfctp4i0RMcy2cWktMgLeeHij3MXseLuWPVugX2YissNJ3dpv7j/4jIsgLtR7P+kcBLY/HZ5QBLwFwEi3uPmkAVtakjFio9RZIOk5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723122088; c=relaxed/simple;
-	bh=T4RdaDLDFwBenuUKBcPyXWxSawbxj6a3jc5VnVJcxCc=;
+	s=arc-20240116; t=1723123060; c=relaxed/simple;
+	bh=t+LPtWnKwFmta+rcn4kHZtopq4a0rOzX4dLqMmte6o8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TrJqLpWZapiPfjCQUorywN6raUX2wkfBl/0owCZcccy/svQzVKZain1MDM9A5ctT52kOhq4NwIdufWT2UE9vYa557QJ3K/uLzF6GjWFF9v5gcs5YIiZuzYDC9Ca8BDQfU0+5xzTQena2H2bkW5nHXhPYwSNPFtxGGaZAMCL8jNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nAEIB9GZ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcrgBRJpb4Q4ON/9ioKfStt6tQuATeavo2X0K4/8HSYFhPEIxfR42Lu9SK5jYhAKEjVh0kV48BWaJ+faQx7xXHNq0a0a3vwMLILEYp/QpUYkAJ3hq2O5rgTkeZSh6CBO5N16HxeKfevDXfuA33/WTFyHjPYOEZLSorO1zyJFO10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=f8Db1RlY; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nAEIB9GZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5523C32782;
-	Thu,  8 Aug 2024 13:01:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723122087;
-	bh=T4RdaDLDFwBenuUKBcPyXWxSawbxj6a3jc5VnVJcxCc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nAEIB9GZu5oEqYVhpiqpwjrH0SKc/tI1lqfWlF2PpGwHstQDzgz/qc7Xd5Yy1g5gO
-	 2HxTHOISWYBf7UxxHeoSIgFJ9Oyhenpd+T1//+d9gE9qt1S7QkwncpmL9wfBij+e4W
-	 svH9yOjwKVIxQtpsqTJ+KTZdF6VEJ/H4C+p6mUhwJNdCFkTg3PNXOSwsNdwwe5wfkD
-	 7SF5rl06emxK4rssCKuZBPDIsSm7Pa9cVNnJdpOo1/vvgJHJ5/thAJ1j2t1CyTsPLi
-	 mhO5D4P7LGwH8hOgpjexngGNEF6fc5eWOgUc6/8By2WDv10Kucixt0KZNsb5C+kKGh
-	 rkcRjUPKBDD4A==
-Date: Thu, 8 Aug 2024 10:01:23 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] perf test: Add a new shell test for perf ftrace
-Message-ID: <ZrTBo7KACZeuCyLj@x1>
-References: <20240808044954.1775333-1-namhyung@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f8Db1RlY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723123058;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=XD7FvdIckarUhrXzB2SzlPRAVb193xDecLuQI6dSDYI=;
+	b=f8Db1RlY9iMuEku4FE9qFw7Q4j4Fy3U5P8aikV6ut6D+Hf6qnGbcErCd8SFt1XEPXyQoiH
+	uyLcRvGRW0oD09Fc3WNh1wnlsKePNRbpXwHftMVE4DmSo5EdWv47JZ83NrCNKIEDh1XzKF
+	CUfYwsSJ/CMhkyh1L2+Cycm7r7L8ftQ=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-435-2rSh06GzOoKOsVWkOzbomQ-1; Thu,
+ 08 Aug 2024 09:17:34 -0400
+X-MC-Unique: 2rSh06GzOoKOsVWkOzbomQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DF5811955D59;
+	Thu,  8 Aug 2024 13:17:31 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.225.189])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 182F319560AA;
+	Thu,  8 Aug 2024 13:17:24 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Thu,  8 Aug 2024 15:17:30 +0200 (CEST)
+Date: Thu, 8 Aug 2024 15:17:22 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: "Liao, Chang" <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Andrii Nakryiko <andrii@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org
+Subject: Re: [PATCH] uprobes: Improve scalability by reducing the contention
+ on siglock
+Message-ID: <20240808131722.GD8020@redhat.com>
+References: <20240801082407.1618451-1-liaochang1@huawei.com>
+ <20240801140639.GE4038@redhat.com>
+ <51a756b7-3c2f-9aeb-1418-b38b74108ee6@huawei.com>
+ <20240802092406.GC12343@redhat.com>
+ <0c69ef28-26d8-4b6e-fa78-2211a7b84eca@huawei.com>
+ <20240806172529.GC20881@redhat.com>
+ <20240807101746.GA27715@redhat.com>
+ <3bb87fb4-c32e-0a35-0e93-5e1971fe8268@huawei.com>
+ <20240808102837.GC8020@redhat.com>
+ <ef7b6889-7e15-1ff3-c7a5-b3c6dabb13d4@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240808044954.1775333-1-namhyung@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ef7b6889-7e15-1ff3-c7a5-b3c6dabb13d4@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Wed, Aug 07, 2024 at 09:49:54PM -0700, Namhyung Kim wrote:
->   $ sudo ./perf test ftrace -vv
->    86: perf ftrace tests:
->   --- start ---
->   test child forked, pid 1772223
->   perf ftrace list test
->   syscalls for sleep:
->   __x64_sys_nanosleep
->   __ia32_sys_nanosleep
->   __x64_sys_clock_nanosleep
->   __ia32_sys_clock_nanosleep
->   perf ftrace list test  [Success]
->   perf ftrace trace test
->   # tracer: function_graph
->   #
->   # CPU  DURATION                  FUNCTION CALLS
->   # |     |   |                     |   |   |   |
->    0)               |  __x64_sys_clock_nanosleep() {
->    0)               |    common_nsleep() {
->    0)               |      hrtimer_nanosleep() {
->    0)               |        do_nanosleep() {
->   perf ftrace trace test  [Success]
->   perf ftrace latency test
->   target function: __x64_sys_clock_nanosleep
->   #   DURATION     |      COUNT | GRAPH                                          |
->       32 - 64   ms |          1 | ############################################## |
->   perf ftrace latency test  [Success]
->   perf ftrace profile test
->   # Total (us)   Avg (us)   Max (us)      Count   Function
->     100136.400 100136.400 100136.400          1   __x64_sys_clock_nanosleep
->     100135.200 100135.200 100135.200          1   common_nsleep
->     100134.700 100134.700 100134.700          1   hrtimer_nanosleep
->     100133.700 100133.700 100133.700          1   do_nanosleep
->     100130.600 100130.600 100130.600          1   schedule
->        166.868     55.623     80.299          3   scheduler_tick
->          5.926      5.926      5.926          1   native_smp_send_reschedule
->        301.941    301.941    301.941          1   __x64_sys_execve
->        295.786    295.786    295.786          1   do_execveat_common.isra.0
->         71.397     35.699     46.403          2   bprm_execve
->          2.519      1.260      1.547          2   sched_mm_cid_before_execve
->          1.098      0.549      0.686          2   sched_mm_cid_after_execve
->   perf ftrace profile test  [Success]
->   ---- end(0) ----
->    86: perf ftrace tests                                               : Ok
-> 
-> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> ---
->  tools/perf/tests/shell/ftrace.sh | 84 ++++++++++++++++++++++++++++++++
->  1 file changed, 84 insertions(+)
->  create mode 100755 tools/perf/tests/shell/ftrace.sh
-> 
-> diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-> new file mode 100755
-> index 000000000000..b1c36d30559a
-> --- /dev/null
-> +++ b/tools/perf/tests/shell/ftrace.sh
-> @@ -0,0 +1,84 @@
-> +#!/bin/sh
-> +# perf ftrace tests
-> +# SPDX-License-Identifier: GPL-2.0
-> +
-> +set -e
-> +
-> +# perf ftrace commands only works for root
-> +if [ "$(id -u)" != 0 ]; then
-> +    echo "perf ftrace test  [Skipped: no permission]"
-> +    exit 2
-> +fi
-> +
-> +output=$(mktemp /tmp/__perf_test.ftrace.XXXXXX)
-> +
-> +cleanup() {
-> +  rm -f "${output}"
-> +
-> +  trap - EXIT TERM INT
-> +}
-> +
-> +trap_cleanup() {
-> +  cleanup
-> +  exit 1
-> +}
-> +trap trap_cleanup EXIT TERM INT
-> +
-> +# this will be set in test_ftrace_trace()
-> +target_function=
-> +
-> +test_ftrace_list() {
-> +    echo "perf ftrace list test"
-> +    perf ftrace -F > "${output}"
-> +    # this will be used in test_ftrace_trace()
-> +    sleep_functions=$(grep 'sys_.*sleep$' "${output}")
-> +    echo "syscalls for sleep:"
-> +    echo "${sleep_functions}"
-> +    echo "perf ftrace list test  [Success]"
-> +}
-> +
-> +test_ftrace_trace() {
-> +    echo "perf ftrace trace test"
-> +    perf ftrace trace --graph-opts depth=5 sleep 0.1 > "${output}"
-> +    # it should have some function name contains 'sleep'
-> +    grep "^#" "${output}"
-> +    grep -F 'sleep()' "${output}"
-> +    # find actual syscall function name
-> +    for FN in ${sleep_functions}; do
-> +	if grep -q "${FN}" "${output}"; then
-> +	    target_function="${FN}"
-> +	    echo "perf ftrace trace test  [Success]"
-> +	    return
-> +	fi
-> +    done
-> +
-> +    echo "perf ftrace trace test  [Failure: sleep syscall not found]"
-> +    exit 1
-> +}
-> +
-> +test_ftrace_latency() {
-> +    echo "perf ftrace latency test"
-> +    echo "target function: ${target_function}"
-> +    perf ftrace latency -T "${target_function}" sleep 0.1 > "${output}"
-> +    grep "^#" "${output}"
-> +    grep "###" "${output}"
-> +    echo "perf ftrace latency test  [Success]"
-> +}
-> +
-> +test_ftrace_profile() {
-> +    echo "perf ftrace profile test"
-> +    perf ftrace profile sleep 0.1 > "${output}"
-> +    grep ^# "${output}"
-> +    grep sleep "${output}"
-> +    grep schedule "${output}"
-> +    grep execve "${output}"
-> +    echo "perf ftrace profile test  [Success]"
-> +}
+On 08/08, Liao, Chang wrote:
+>
+>
+> 在 2024/8/8 18:28, Oleg Nesterov 写道:
+> > --- x/kernel/events/uprobes.c
+> > +++ x/kernel/events/uprobes.c
+> > @@ -2308,9 +2308,10 @@ static void handle_singlestep(struct upr
+> >  	utask->state = UTASK_RUNNING;
+> >  	xol_free_insn_slot(current);
+> >
+> > -	spin_lock_irq(&current->sighand->siglock);
+> > -	recalc_sigpending(); /* see uprobe_deny_signal() */
+> > -	spin_unlock_irq(&current->sighand->siglock);
+> > +	if (utask->xxx) {
+> > +		set_thread_flag(TIF_SIGPENDING);
+> > +		utask->xxx = 0;
+> > +	}
+>
+> Agree, if no more discussion about this flag, I will just send v2 today.
 
-I think this will cover the problem I reported to you, i.e. strange
-times:
+Please also resend the previous patch a 1/2, this one as 2/2.
 
-root@x1:~# perf ftrace profile sleep 1s > a
-root@x1:~# time_re="[[:space:]]+100[[:digit:]]{4}\.[[:digit:]]{3}"
-root@x1:~# grep -E "^${time_re}${time_re}${time_re}[[:space:]]+1[[:space:]]+.*clock_nanosleep" a
- 1000171.000 1000171.000 1000171.000          1   __x64_sys_clock_nanosleep
-root@x1:~#
+Oleg.
 
-I.e. we know that we will have just one call to *clock_nanosleep and
-that it will take a bit more than 1 second (100 followed by 4 digits to
-get to something like 1000171).
-
-So I cooked up the following patch, on top of yours, I tested it
-replacing the '10' in the time_re with 20 and it fails, with '10', as
-expected, it passes.
-
-- Arnaldo
-
-diff --git a/tools/perf/tests/shell/ftrace.sh b/tools/perf/tests/shell/ftrace.sh
-index b1c36d30559a900a..a6ee740f0d7eca07 100755
---- a/tools/perf/tests/shell/ftrace.sh
-+++ b/tools/perf/tests/shell/ftrace.sh
-@@ -72,6 +72,11 @@ test_ftrace_profile() {
-     grep sleep "${output}"
-     grep schedule "${output}"
-     grep execve "${output}"
-+    time_re="[[:space:]]+10[[:digit:]]{4}\.[[:digit:]]{3}"
-+    # 100283.000 100283.000 100283.000          1   __x64_sys_clock_nanosleep
-+    # Check for one *clock_nanosleep line with a Count of just 1 that takes a bit more than 0.1 seconds
-+    # Strip the _x64_sys part to work with other architectures
-+    grep -E "^${time_re}${time_re}${time_re}[[:space:]]+1[[:space:]]+.*clock_nanosleep" "${output}"
-     echo "perf ftrace profile test  [Success]"
- }
- 
