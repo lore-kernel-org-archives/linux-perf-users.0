@@ -1,217 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9356FB0;
-	Thu,  8 Aug 2024 01:11:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BFB815FB9C;
+	Thu,  8 Aug 2024 03:58:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723079483; cv=none; b=TPVdrycHu9ZwBCpDUDzZ7YV3WTPpFYfBp7T+ivEk4ELy9zn8PPwvqjCqcaqIbihCeQjoyaVpgUon8LQygub0bnNPhmc11lFgfQuHW2Y2fwu657fwAOThnHJQtUkffVL+mTgYCzhSqhCwpg9GprxXF5/DD0FWgv5rYyZejDqZwpk=
+	t=1723089519; cv=none; b=SyleEVp6rdqSmOJhPEXfFFDe49wZmzokE0Q6KYC0HL8gxaIpK1tiNt/gKzkY+1+X3On3LrNYpMGpndbkumDJ7ZuPah0PhbFD/g6fygNNIvsV8vts6arcf7WYplKog0BfVEIFmcS5/1xaWkkowes4XzFMQYNH6HPNjRMkUAVCO38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723079483; c=relaxed/simple;
-	bh=9cwcJwD2oFV3GuhOKOZnwg10DfpgHVH065g5lC627eQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=amUM35zecOwNa7pEizK5myhti8AOG61k2YC7rhcqDE8gU0B+6am2NB2HwIUPw7Snw49VRKgzkiqk9hteb8PIMBCqG1smyM+k3IAabS6ZMGi54Jx/fmoKhGns1ogV3sTBbN9PyUmyW9cFDOotEmqjVqsSCaxY0ejCMk0QDgUrdeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGYB0TYo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723089519; c=relaxed/simple;
+	bh=Ko4WY2u2LKJaZw4KMHOzOZ0DLZctoeMfEWI4iTxs8Xc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=emojo+MHl80ciPCfWVDjWcmtIoOMoWpbwO2PSvhOnSpPYBR+xeBeGkDSnBkO1QsRl8vMLu39e+UMUD65f+2lf/PiP1CmkjEx9d93UonZisUjicVcg6sc6TXmhLdr2OHr6WBE39YCO7p7yfODPSn4tihcu44G53fCcxI4vBsAnmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TlGAPmfU; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGYB0TYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E037C32781;
-	Thu,  8 Aug 2024 01:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723079482;
-	bh=9cwcJwD2oFV3GuhOKOZnwg10DfpgHVH065g5lC627eQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nGYB0TYobLTgZx1Wq2FRNVa3VDlbvtXC04RbIYk9iWFGDDkdgF/q/bWv6WjPnaFk5
-	 SACL172kz5LTd6R153Mbh8c0qAC/llSV5sKFNMRaEH3Y9TX05jQpexPX4GW1/Omz1p
-	 +4rSU7vN2MVgf+XFzugWsj0WYJwe4hwGkxWpiNF1WeInM6WV9L/QeEeZcQHmnAPw5P
-	 qkx0cB2O2ZGKaiDARQZdTXHRF25YlOgQBzWChujPnB4Q7o60ZnkNC516Z29cpX9gE+
-	 pBg2aAwgKAhTrKzI5LZ7ku4eoqahr+rp/rve0xrdHqqjevfNnOe1ATA5fCJjfagvc8
-	 GoOCiUV/3/dMA==
-Date: Wed, 7 Aug 2024 22:11:18 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
-	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for
- v6.11
-Message-ID: <ZrQbNtK3LSpyXpMu@x1>
-References: <20240806225013.126130-1-namhyung@kernel.org>
- <ZrO5HR9x2xyPKttx@google.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TlGAPmfU"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dff17fd97b3so503768276.2;
+        Wed, 07 Aug 2024 20:58:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723089517; x=1723694317; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b6H+J7gyW248YbZemlc+1uERhUVoaYKarFsZhFfXjhg=;
+        b=TlGAPmfUvKiQ+sClgwv1TrxO8Jv9O4DTTal4lbn1lXN1mRsPClqa249FMygZSC/s9c
+         byCQzoQ9tzcpfMK3I7h9kbtXyBUYa5X4K6SvWN6v8YqjeW7pgvs+xC2jP2rm3Sozy1Kw
+         w7moQpkUXYn92bebc/gLyffSToztZzUv2C8Oor7kn5xmLVmow0kQTV6nH0danBSISifG
+         VCd7+cVW94ppoxUiWUGr8JO5p5mYgXb6eP1tWH7JGbj4Whh4Z334zQ0wTLM/0AZdw4Sy
+         q0Pfl711yDPImm/PPLoaCD0sfEMIAB18mpbWgV1cdKtps4RiazD64sO+DkWp8IhMiN95
+         zsPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723089517; x=1723694317;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b6H+J7gyW248YbZemlc+1uERhUVoaYKarFsZhFfXjhg=;
+        b=onRPBBxhZLNVRHDg3oAyJJNfc7wbZ7LlNOZg/DCIdhkTe9G5C3z1Y2j85ga9u3Surx
+         DxWc5MVOb0obpd1buOvZXeA330U4mDOebNXDMhgu3kSUbNHI7YK0QnMJ7UXTzV3PQUKC
+         PL+9kkCPl/Ttdo65xjbFn2XY6ZHJzdsVhhOPLi1BfBxjvbxm8ZZ9iXYTvj5plLMJBOSm
+         C+GJLXoh6SuPbjaEBvMiz5q/3ImsudH/flf14PnBhjFdldIuEJpF1NU6gEPFmNV56hh4
+         KFFMg/RFDWFug7mSmXW/7M9DYz89Xf2+P6iIZ+2hUMwbyH8hprpbXfeDmSr78HnwqYiK
+         2RvA==
+X-Forwarded-Encrypted: i=1; AJvYcCX7V4HFSIK2odxF3g0cIPkZDyswjEB7fkitOrymmgeESIO7UeESs83rfBjSpoaOpOoWoSEmfCSypPkMTPn/PGd4qmakS0/CtG735Uc6/f/VBFSl28uYLlogMS8eOcoOnTFWe5bOUCapiEK3z5Ge1Q==
+X-Gm-Message-State: AOJu0YzuRw3zbCS+AkcDsCytDL3SqEiB4s0YbtTp5r0aM/h8LfpnpXu/
+	rniAXnWNweHuPEFFAQAj3yIUPKFwn5RTy6xiZ3i1RR99SGZnK4cnTSvuDYPXIVM1hp9Eq7QGeeR
+	/rlkT9633iXbe7zTWbUz8r8cWA8Y=
+X-Google-Smtp-Source: AGHT+IFtX/TH+DhR5ZlVXkh35kFjDykqjTAVEcs0mIVtd1h8WlOvpjmXonMige64j7m6yUfqbXVLw/0q23IYe7UEKuo=
+X-Received: by 2002:a05:6902:2b0c:b0:e0b:f0cf:5ef2 with SMTP id
+ 3f1490d57ef6-e0e9dbc2040mr874481276.47.1723089516728; Wed, 07 Aug 2024
+ 20:58:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZrO5HR9x2xyPKttx@google.com>
+References: <20240807153843.3231451-1-howardchu95@gmail.com>
+ <20240807153843.3231451-2-howardchu95@gmail.com> <ZrQBbMiIt1NCvxbY@google.com>
+In-Reply-To: <ZrQBbMiIt1NCvxbY@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 8 Aug 2024 11:58:26 +0800
+Message-ID: <CAH0uvojQORE2WJziQ4Ru8vsZzr6OLsnn3HOVRkWHW4VFzpKkEg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/9] perf evsel: Set BPF output to system-wide
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 07, 2024 at 11:12:45AM -0700, Namhyung Kim wrote:
-> On Tue, Aug 06, 2024 at 03:50:03PM -0700, Namhyung Kim wrote:
-> > This is the usual sync up in header files we keep in tools directory.
-> > I put a file to give the reason of this work and not to repeat it in
-> > every commit message.  The changes will be carried in the perf-tools
-> > tree.
+Hello,
 
-> Could you please double check what's in the tmp.perf-tools branch at the
-> perf-tools tree so I don't break build and perf trace for arm64, powerpc
-> and s390?  It has this patchset + arm64 unistd header revert (according
-> to the discussion on patch 6/10) on top of v6.11-rc2.
+The event does open, but bpf_perf_event_output() in BPF will return
+-95(-EOPNOTSUPP), so no output. I think this EOPNOTSUPP is not in
+bpf_trace.c's __bpf_perf_event_output(), but in perf_event's
+perf_event_output() called by BPF.
 
-On arm64:
+          <idle>-0       [001] d..4. 154921.079230: bpf_trace_printk: err -=
+95
 
-acme@roc-rk3399-pc:~/git/perf-tools$ git log --oneline -10
-d5b854893d27 (HEAD -> perf-tools, perf-tools/tmp.perf-tools) tools/include: Sync arm64 headers with the kernel sources
-f6d9883f8e68 tools/include: Sync x86 headers with the kernel sources
-845295f4004c tools/include: Sync filesystem headers with the kernel sources
-ed86525f1f4b tools/include: Sync network socket headers with the kernel sources
-568901e709d7 tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
-b97350067626 tools/include: Sync uapi/sound/asound.h with the kernel sources
-8ec9497d3ef3 tools/include: Sync uapi/linux/perf.h with the kernel sources
-a625df3995c3 tools/include: Sync uapi/linux/kvm.h with the kernel sources
-aef21f6b6a4a tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
-fbc05142ccdd perf tools: Add tools/include/uapi/README
-acme@roc-rk3399-pc:~/git/perf-tools$
-acme@roc-rk3399-pc:~/git/perf-tools$ sudo su -
-[sudo] password for acme: 
-root@roc-rk3399-pc:~# perf -vv
-perf version 6.11.rc2.gd5b854893d27
-                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
-    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
-         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
-                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
-            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
-                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
-               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
-               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
-             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
-              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
-             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
-             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
-    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
-           libcapstone: [ OFF ]  # HAVE_LIBCAPSTONE_SUPPORT
-                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
-                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
-             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
-                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-                   aio: [ on  ]  # HAVE_AIO_SUPPORT
-                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
-               libpfm4: [ on  ]  # HAVE_LIBPFM
-         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
-  dwarf-unwind-support: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
-            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
-root@roc-rk3399-pc:~# perf trace -e *sleep sleep 1.2345678
-     0.000 (1235.340 ms): sleep/8628 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567800 }, rmtp: 0xfffff4ae40d8) = 0
-root@roc-rk3399-pc:~# strace -e bpf perf trace -e *sleep sleep 1.2345678 |& head
-bpf(0x24 /* BPF_??? */, 0xffffc86fb670, 8) = -1 EINVAL (Invalid argument)
-bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb420, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 8
-bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb6b8, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 8
-bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 40) = 8
-bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\5\0\0\0\0\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=77, btf_log_size=0, btf_log_level=0}, 40) = 8
-bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0l\0\0\0l\0\0\0\16\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=146, btf_log_size=0, btf_log_level=0}, 40) = 8
-bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb150, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="libbpf_nametest", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 9
-bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_KPROBE, insn_cnt=4, insns=0xffffc86fb4f8, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="det_arg_ctx", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=8, func_info_rec_size=8, func_info=0xffffc86fb4e8, func_info_cnt=2, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = -1 EINVAL (Invalid argument)
-bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0\20\0\0\0\20\0\0\0\5\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=45, btf_log_size=0, btf_log_level=0}, 40) = 8
-bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 40) = 8
-root@roc-rk3399-pc:~# perf trace -e open* sleep 1
-     0.000 ( 0.078 ms): sleep/8635 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
-     0.162 ( 0.031 ms): sleep/8635 openat(dfd: CWD, filename: "/lib/aarch64-linux-gnu/libc.so.6", flags: RDONLY|CLOEXEC) = 3
-     1.279 ( 0.043 ms): sleep/8635 openat(dfd: CWD, filename: "", flags: RDONLY|CLOEXEC)                 = -1 ENOENT (No such file or directory)
-     1.371 ( 0.031 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/share/locale/locale.alias", flags: RDONLY|CLOEXEC) = 3
-     1.542 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     1.573 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_IDENTIFICATION", flags: RDONLY|CLOEXEC) = 3
-     1.664 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/aarch64-linux-gnu/gconv/gconv-modules.cache") = 3
-     1.782 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MEASUREMENT", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     1.821 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MEASUREMENT", flags: RDONLY|CLOEXEC) = 3
-     1.909 ( 0.018 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_TELEPHONE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     1.938 ( 0.019 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_TELEPHONE", flags: RDONLY|CLOEXEC) = 3
-     2.023 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_ADDRESS", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.059 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_ADDRESS", flags: RDONLY|CLOEXEC) = 3
-     2.151 ( 0.019 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_NAME", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.180 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_NAME", flags: RDONLY|CLOEXEC) = 3
-     2.279 ( 0.017 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_PAPER", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.311 ( 0.023 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_PAPER", flags: RDONLY|CLOEXEC) = 3
-     2.420 ( 0.027 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MESSAGES", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.460 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MESSAGES", flags: RDONLY|CLOEXEC) = 3
-     2.514 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES", flags: RDONLY|CLOEXEC) = 3
-     2.609 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MONETARY", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.646 ( 0.022 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MONETARY", flags: RDONLY|CLOEXEC) = 3
-     2.741 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_COLLATE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.778 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_COLLATE", flags: RDONLY|CLOEXEC) = 3
-     2.881 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_TIME", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     2.917 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_TIME", flags: RDONLY|CLOEXEC) = 3
-     3.013 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_NUMERIC", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     3.050 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_NUMERIC", flags: RDONLY|CLOEXEC) = 3
-     3.138 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_CTYPE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
-     3.174 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_CTYPE", flags: RDONLY|CLOEXEC) = 3
-root@roc-rk3399-pc:~#
-
-The only problem that is outstanding is that one I need to send a patch
-for, 32-bit build is broken due to some trivial stuff:
-
-  18    79.36 debian:experimental           : Ok   gcc (Debian 14.1.0-5) 14.1.0 , Debian clang version 16.0.6 (27+b1) flex 2.6.4
-  19     3.96 debian:experimental-x-arm64   : FAIL gcc version 14.1.0 (Debian 14.1.0-5) 
-                     from libbpf.c:36:
-    /git/perf-6.11.0-rc2/tools/include/uapi/asm/bpf_perf_event.h:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No such file or directory
-        2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
-          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    compilation terminated.
-      CC      /tmp/build/perf/libbpf/staticobjs/btf_iter.o
-      CC      /tmp/build/perf/libbpf/staticobjs/btf_relocate.o
-      LD      /tmp/build/perf/libapi/fs/libapi-in.o
-      LD      /tmp/build/perf/libapi/libapi-in.o
-    In file included from /git/perf-6.11.0-rc2/tools/include/uapi/linux/bpf_perf_event.h:11,
-                     from libbpf.c:36:
-    /git/perf-6.11.0-rc2/tools/include/uapi/asm/bpf_perf_event.h:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No such file or directory
-        2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
-          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    compilation terminated.
-      LD      /tmp/build/perf/libperf/libperf-in.o
-    make[4]: *** [/git/perf-6.11.0-rc2/tools/build/Makefile.build:105: /tmp/build/perf/libbpf/staticobjs/libbpf.o] Error 1
-    make[4]: *** Waiting for unfinished jobs....
-      AR      /tmp/build/perf/libperf/libperf.a
-      AR      /tmp/build/perf/libapi/libapi.a
-
-Also works on x86_64:
-
-root@number:~# perf -v
-perf version 6.11.rc2.gd5b854893d27
-root@number:~# 
-root@number:~# 
-root@number:~# perf trace -e *sleep sleep 1.92837465
-     0.000 (1928.436 ms): sleep/158555 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 928374651 }, rmtp: 0x7ffd188426d0) = 0
-root@number:~# perf trace -e *mmsg --max-events 5
-     0.000 ( 0.017 ms): NetworkManager/1322 recvmmsg(fd: 22, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
-     0.048 ( 0.010 ms): NetworkManager/1322 recvmmsg(fd: 26, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
-  1012.269 ( 0.018 ms): NetworkManager/1322 recvmmsg(fd: 22, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
-  1012.321 ( 0.005 ms): NetworkManager/1322 recvmmsg(fd: 26, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
-  2393.486 ( 0.029 ms): dbus-broker/2438 sendmmsg(fd: 31, mmsg: 0x7ffca4625ba0, vlen: 1, flags: DONTWAIT|NOSIGNAL) = 1
-root@number:~# perf trace -e *nnect* --max-events 5
-     0.000 ( 0.047 ms): pool/3064 connect(fd: 7, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) = 0
-  2694.480 ( 0.021 ms): DNS Res~ver #4/2450896 connect(fd: 242, uservaddr: { .family: LOCAL, path: /run/systemd/resolve/io.systemd.Resolve }, addrlen: 42) = 0
-  2694.906 ( 0.015 ms): systemd-resolv/1185 connect(fd: 25, uservaddr: { .family: INET6, port: 53, addr: fe80::1ae8:29ff:fe4c:90b0, scope_id: 3 }, addrlen: 28) = 0
-  2694.969 ( 0.005 ms): systemd-resolv/1185 connect(fd: 26, uservaddr: { .family: INET6, port: 53, addr: fe80::1ae8:29ff:fe4c:90b0, scope_id: 6 }, addrlen: 28) = 0
-  2696.329 ( 0.014 ms): DNS Res~ver #4/2450896 connect(fd: 242, uservaddr: { .family: INET6, port: 0, addr: 2800:3f0:4004:803::200e }, addrlen: 28) = 0
-root@number:~# uname -a
-Linux number 6.9.10-200.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 18 21:39:30 UTC 2024 x86_64 GNU/Linux
-root@number:~#
-
-All the other container builds didn't regress.
+This is also a bug in perf trace -p <PID>.
 
 Thanks,
+Howard
 
-- Arnaldo
-
-
+On Thu, Aug 8, 2024 at 7:21=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Wed, Aug 07, 2024 at 11:38:35PM +0800, Howard Chu wrote:
+> > pid =3D -1 for bpf-output event.
+> >
+> > This makes perf record -p <PID> --off-cpu work. Otherwise bpf-output
+> > cannot be collected.
+>
+> I don't understand why it's necessary.  Why isn't it collected?
+> Is it the kernel to reject the BPF output event to open?
+>
+> Thanks,
+> Namhyung
+>
+> >
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/util/evsel.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> > index bc603193c477..b961467133cf 100644
+> > --- a/tools/perf/util/evsel.c
+> > +++ b/tools/perf/util/evsel.c
+> > @@ -2282,6 +2282,10 @@ static int evsel__open_cpu(struct evsel *evsel, =
+struct perf_cpu_map *cpus,
+> >
+> >                       test_attr__ready();
+> >
+> > +                     /* BPF output event can only be system-wide */
+> > +                     if (evsel__is_bpf_output(evsel))
+> > +                             pid =3D -1;
+> > +
+> >                       /* Debug message used by test scripts */
+> >                       pr_debug2_peo("sys_perf_event_open: pid %d  cpu %=
+d  group_fd %d  flags %#lx",
+> >                               pid, perf_cpu_map__cpu(cpus, idx).cpu, gr=
+oup_fd, evsel->open_flags);
+> > --
+> > 2.45.2
+> >
