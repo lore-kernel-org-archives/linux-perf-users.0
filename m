@@ -1,126 +1,171 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95899EADA;
-	Thu,  8 Aug 2024 13:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D457718E04A;
+	Thu,  8 Aug 2024 13:57:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723123948; cv=none; b=flqqGb9FdOyiMCNs0z2M+7G7h2OEmv3YnKJQec2juplixcfRzpCwTkdZAUqXCHh5dsK9vnnQyfM+R4Ieki1O/25OkbCg5k+r7MKdD/FCdYZnNa+NEFXiZbhXEU6QbodV4ry2IIro6RMVmv8DNP8Fx+16WMK4aV2suCwtvrdT05E=
+	t=1723125474; cv=none; b=K1RkJnoCbfv/BrzUd2Y0bUr25PTP8PeTs/TtPKp3BUoVVMgo1kJpcQpi8LL0qkpPg7mUkq5n1ujbQDuBjyhv9lNychqvP0dEaONnQLZW6oma5b2BaUqXxljHkl9HIjlCGiXq0OPa2//6brdgwjwYFHFSnBpK3xzl+weSRj0K3J0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723123948; c=relaxed/simple;
-	bh=PY69VKc0O3FGKqim7+fFbR195skWqhuZpW3Ef61ULVE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LYMGGCMQ8NKzbrFySxwXN+jM+ljTnmY6RWGAIOEidAHRLhElPhsEeQpr1HrJLyy3ji7z1CLw8NzpBX7euZHXW9PGauO3Jxeh88+gFbP0Ml3V8icajq70rVKE+yddFDh6SLjfil6IVj62FzxDtNkVkf3U7i1oyVMKNqtA8xDTYjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nlXTUXBb; arc=none smtp.client-ip=209.85.214.179
+	s=arc-20240116; t=1723125474; c=relaxed/simple;
+	bh=dlBOxcBzszM9a26QCowrnCHLBygMV2d3k8m8ynT5nOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fsUu/8hezBJttAlK2DTdm6IfbS5vX2iIRN9Nb7BTZQuB4IZvrIMge2frCpPMzsicBxtWaiQhTaT0RaV4iiz1NzPViztA5Z0X2RRE2NInpJ8Z3v95GKF1GwvxEywPnmmX2qpF9mvWvT38ONgzyAdY7SSmFUJ1pzABJvEhd1P1jco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IMutYaVi; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nlXTUXBb"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fc49c0aaffso8965785ad.3;
-        Thu, 08 Aug 2024 06:32:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IMutYaVi"
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-e0e6cbec8caso927949276.1;
+        Thu, 08 Aug 2024 06:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723123946; x=1723728746; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fAKXh2R2AFOAbLJH/+A+18aqMNWogzmzZjhkD45bQP0=;
-        b=nlXTUXBb8DRVXz9UNIU6jkGNj9OYPn0qYmnNQlnO1MFLtgC/pO+dpw6MAFjUDMFF33
-         UYqdTbctsANGAc5jcagl0hN0Jg/BS+Ul5+vT5BeJtSBelDOOGdZjPxiI2nTU4PF6+Dx0
-         j5MsfjhMd2LGON8/ePzlDdqE8iilOnJ16aHUYBkNAmgpR/RK0BH4tRIWv0TVdZqX4LCj
-         XmsNiFDLfEAm3NU2fadkRDU5dAQ2Vy1npvbWj9Kho3ftonR09wCl20lXsHkj1DY2ftaf
-         +T0SgWAQ+p8aF69ZhDxt6p8sds5M+jTyXfBaReXFXwGkKsgQU5iGgv3OA0s0kfSgSIzv
-         jz2Q==
+        d=gmail.com; s=20230601; t=1723125472; x=1723730272; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbCqVb5c3ARBU1UzJZxnxP5hp6ETF544QjOnOlGCd+Q=;
+        b=IMutYaViWGYO73LsM+E3ZixSr8OSw2rYbSLnc8cr8F75knfb+wMePF4B5nhiW5kWV9
+         +dfNwVvvKwd1Tv7b0cEtMOgwnbVf/PvV7HOPHCdAvB2H4FDVTsvUY12ZX310U49hDVWW
+         Z77VLFXYsrNpMtrYtjIZx6GFpKDW3xM6oo6iSwFFxKpODhh8HD563HqOAeh6SK5G0nnh
+         CC1TAvBkz7rvHuYNsij1OH3Xwjx+FDq86z6XvdoHmV7ihuUJ9osajxiHU6W8btn9n08w
+         ro/Z7fmVshpah0VzCQcCr7QhF5Dq6cpsl4/YE1zq1BaaEY3LKIqxguF0Gy8VAjrAMZNA
+         9Ybw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723123946; x=1723728746;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fAKXh2R2AFOAbLJH/+A+18aqMNWogzmzZjhkD45bQP0=;
-        b=rKMUZ36WYFOEQMV4yOztbksl7mrcmHjzzPfoYFQ5o4WqK5c5v4dBBR/SGnA9nWs1bZ
-         hZuBDUuP45OUv4DMObzSDH/rnZpZlWpb7npBne2YpQRuE5B4wtYV8s5I7eY80etSZEMw
-         w0OvooJNl1AO8G2kKCEXRWKB6GAaYTdIP3/ZTgwy6E2Msu+WRvqvFVQlv+BihROTWF+Q
-         s7p9hJ56pkDGH5W1by2kO9QB9jJOVyxMea+Q39sNwpWTnjMaL4xoW1/h4zyAAuJxGg2O
-         M3Tp9WQ3AiLnc0MglFLNzPUxBVLupK0qVs810vMNXlv7Gq7DIMWIGBA3Y+jBhbnN6ply
-         yQXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUWfU+7YygeGtVOZKaQIDtDn5M/3wRhlEPQUdkWTI/hO4pLLvrMtckzWmGm5liSaAj5YAzcqlsiIdRGig/WdgXwrhbdc32A/5rq3Huj8F+NTltQAiEA8SCY5JTpmFZ1FkvYBYyzVmxnZzLo5pSViw==
-X-Gm-Message-State: AOJu0YzwfQiT84Eging6FDrnytKQFXkh+CTD4Ls5yPMdQvKoaxqrTP0r
-	C9HwumDX9p9qrxf2oIqeOFCXzaurt1BpHrOxNanEkQDDaX89fx2V
-X-Google-Smtp-Source: AGHT+IG7f6HOQ4hgxFfNXUzJqxHSDJxtwa+R+2ZGiznZtFKXCUtpBKg1LDWxyfy2yRG6NPaUTvWYDw==
-X-Received: by 2002:a17:902:ce87:b0:1fd:d6d8:1355 with SMTP id d9443c01a7336-200952487afmr19714395ad.17.1723123945832;
-        Thu, 08 Aug 2024 06:32:25 -0700 (PDT)
-Received: from alveo.moma (bullfrog.anu.edu.au. [150.203.163.126])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f6d80csm124458395ad.119.2024.08.08.06.32.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Aug 2024 06:32:25 -0700 (PDT)
-From: Zixian Cai <fzczx123@gmail.com>
-To: 
-Cc: Zixian Cai <fzczx123@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Paran Lee <p4ranlee@gmail.com>,
-	Ben Gainey <ben.gainey@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] perf script python: Add the ins_lat field to event handler
-Date: Thu,  8 Aug 2024 13:32:07 +0000
-Message-Id: <20240808133208.3577910-1-fzczx123@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        d=1e100.net; s=20230601; t=1723125472; x=1723730272;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xbCqVb5c3ARBU1UzJZxnxP5hp6ETF544QjOnOlGCd+Q=;
+        b=NZeUpSOYgI0tZzk0jAmXxuGxrqmbHFqJb98kTwN+CjYOMj+CzK7FPVOQCm+YRx+kEX
+         otXG/xAHKZuvbxcsr6k+L6Uz7vukkXH+THcqHZkwmfOZqn7QtGzZhwGqNeP4/OpnBEDs
+         r4YRVkoc5jCHuNoEOXyTKVHlEByzTwHAkTWb3xq+snDsgDShFt18hcxzjs9CFJkQgoGK
+         uaBNdwgGw34+LmTcExz4zVkSzoVuAwpPxrfth0M67RmEB0N0gJW8uBsow1gkVTXaAawo
+         CEPB/dUZJtPnHx7vhhnl6JCOmLRXsNMpCnVXeI/AGyRkcCrU2W5eAOgFXQlI2gbLAkc8
+         iz4g==
+X-Forwarded-Encrypted: i=1; AJvYcCXaGB+HOSDtG6mPnj+Rd0d2RFmFVL+JRQ6H3f1rw2iNEi2gsTVLIrePebaGarjySWnHZ3/IOLYDakrSgoCf1MDuY7pKzpAJYQ4eM+6ZqKpaKTGk1HmmJgNfN96mYUkgzhZiLTKGNVkjoqx0gYE3Jw==
+X-Gm-Message-State: AOJu0YzVZD/UcKD/XoieiUsO7FUdq578TRnhzPNo3aNQqvpae8hRTLQ4
+	QOXg2SJzdZm0fHegKgomd7Z5c50Rb6MxDBTMT+1ohGfG3VOXgoB8n5TWYYFa+EaF2/d5Ag/Lef0
+	YUJarTf39gKy0mlkglPiAIAqufSA=
+X-Google-Smtp-Source: AGHT+IEEk08qtgIgSqPUGUMAfa6V5mIX2slIFMVDA9F1AC5vh1NI6XXqGrrOfM2+JASKNqw+lHVSEx7/cLqQcDCSsAA=
+X-Received: by 2002:a05:6902:2405:b0:e0b:daca:4ec7 with SMTP id
+ 3f1490d57ef6-e0e9da95289mr2227362276.2.1723125471716; Thu, 08 Aug 2024
+ 06:57:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240807153843.3231451-1-howardchu95@gmail.com>
+ <20240807153843.3231451-9-howardchu95@gmail.com> <ZrQI1w1B3hnWbd6j@google.com>
+In-Reply-To: <ZrQI1w1B3hnWbd6j@google.com>
+From: Howard Chu <howardchu95@gmail.com>
+Date: Thu, 8 Aug 2024 21:57:40 +0800
+Message-ID: <CAH0uvoiL2LWTVCiEfbuuY+QfjznHB2wsREJGi1kL5rGdQtuThg@mail.gmail.com>
+Subject: Re: [PATCH v4 8/9] perf header: Add field 'embed'
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: irogers@google.com, acme@kernel.org, adrian.hunter@intel.com, 
+	jolsa@kernel.org, kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-For example, when using the Alder Lake PMU memory load event, the instruction latency is stored in ins_lat, while the cache latency is stored in weight.
+Hello,
 
-This patch reports the ins_lat field for Python scripting.
+On Thu, Aug 8, 2024 at 7:52=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> w=
+rote:
+>
+> On Wed, Aug 07, 2024 at 11:38:42PM +0800, Howard Chu wrote:
+> > We have to save the embedded data's sample type for it to be consumed
+> > correctly by perf script or perf report.
+> >
+> > This will approach most definitely break some perf.data convertor.
+> >
+> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> > ---
+> >  tools/perf/util/header.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> >
+> > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+> > index 55e9553861d0..d60e77d5c25c 100644
+> > --- a/tools/perf/util/header.c
+> > +++ b/tools/perf/util/header.c
+> > @@ -80,6 +80,7 @@ const char perf_version_string[] =3D PERF_VERSION;
+> >
+> >  struct perf_file_attr {
+> >       struct perf_event_attr  attr;
+> > +     __u64 embed;
+>
+> Can we just set bpf_output.attr correctly and get rid of this?
 
-Signed-off-by: Zixian Cai <fzczx123@gmail.com>
----
-v2) rebase on top of perf-tools-next
+"I think this is ugly as well. I believe I can sneak sample_type_embed
+into struct perf_event_attr without side effects, but some hacks are
+needed. Firstly, the __u64 inherit field can be used to store __u64
+sample_type_embed. If BPF output can be collected, we can guarantee
+that inherit is 0 (remember when parsing the off-CPU time event, we
+used bpf-output/no-inherit=3D1,name=3D%s/), so we are certain about its
+value. And since it's also a u64, sample_type_embed will fit.
+Additionally, it isn't used much in the userspace perf tool (nothing
+related to parsing and visualization), so maybe after
+perf_event_open(), we can overwrite it."
 
- tools/perf/util/scripting-engines/trace-event-python.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+But that will lead to another question of mine, do you think we should
+make this 'sample_type_embed' thing only for off-cpu, or there's a
+possibility for scaling? The reason why I ask this question is because
+there are things that's not API-ish in this patch, such as overwriting
+the 'inherit' for sample_type_embed, it's clearly a hack. I don't have
+enough foresight on this matter. Could you please provide some
+insight? This could impact the direction of my programming. For
+example, if it's only used by off-cpu, the implementation could likely
+become much simpler.
 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index fb00f3ad6815..c9e8dbd6feb5 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -888,6 +888,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
- 	set_sample_read_in_dict(dict_sample, sample, evsel);
- 	pydict_set_item_string_decref(dict_sample, "weight",
- 			PyLong_FromUnsignedLongLong(sample->weight));
-+	pydict_set_item_string_decref(dict_sample, "ins_lat",
-+			PyLong_FromUnsignedLongLong(sample->ins_lat));
- 	pydict_set_item_string_decref(dict_sample, "transaction",
- 			PyLong_FromUnsignedLongLong(sample->transaction));
- 	set_sample_datasrc_in_dict(dict_sample, sample);
-@@ -1317,7 +1319,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	struct tables *tables = container_of(dbe, struct tables, dbe);
- 	PyObject *t;
-
--	t = tuple_new(27);
-+	t = tuple_new(28);
-
- 	tuple_set_d64(t, 0, es->db_id);
- 	tuple_set_d64(t, 1, es->evsel->db_id);
-@@ -1346,6 +1348,7 @@ static void python_export_sample_table(struct db_export *dbe,
- 	tuple_set_s32(t, 24, es->sample->flags);
- 	tuple_set_d64(t, 25, es->sample->id);
- 	tuple_set_d64(t, 26, es->sample->stream_id);
-+	tuple_set_s32(t, 27, es->sample->ins_lat);
-
- 	call_object(tables->sample_handler, t, "sample_table");
-
---
-2.25.1
-
+Thanks,
+Howard
+>
+> Thanks,
+> Namhyung
+>
+>
+> >       struct perf_file_section        ids;
+> >  };
+> >
+> > @@ -3713,6 +3714,7 @@ static int perf_session__do_write_header(struct p=
+erf_session *session,
+> >               }
+> >               f_attr =3D (struct perf_file_attr){
+> >                       .attr =3D evsel->core.attr,
+> > +                     .embed =3D evsel->sample_type_embed,
+> >                       .ids  =3D {
+> >                               .offset =3D evsel->id_offset,
+> >                               .size   =3D evsel->core.ids * sizeof(u64)=
+,
+> > @@ -4147,6 +4149,14 @@ static int read_attr(int fd, struct perf_header =
+*ph,
+> >
+> >               ret =3D readn(fd, ptr, left);
+> >       }
+> > +
+> > +     ret =3D readn(fd, &f_attr->embed, sizeof(f_attr->embed));
+> > +     if (ret <=3D 0) {
+> > +             pr_debug("failed to read %d bytes of embedded sample type=
+\n",
+> > +                      (int)sizeof(f_attr->embed));
+> > +             return -1;
+> > +     }
+> > +
+> >       /* read perf_file_section, ids are read in caller */
+> >       ret =3D readn(fd, &f_attr->ids, sizeof(f_attr->ids));
+> >
+> > @@ -4272,6 +4282,8 @@ int perf_session__read_header(struct perf_session=
+ *session, int repipe_fd)
+> >               tmp =3D lseek(fd, 0, SEEK_CUR);
+> >               evsel =3D evsel__new(&f_attr.attr);
+> >
+> > +             evsel->sample_type_embed =3D f_attr.embed;
+> > +
+> >               if (evsel =3D=3D NULL)
+> >                       goto out_delete_evlist;
+> >
+> > --
+> > 2.45.2
+> >
