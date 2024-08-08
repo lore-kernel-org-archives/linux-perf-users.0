@@ -1,128 +1,119 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D270618A926
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 10:38:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D79A18CBE9
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 10:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723113496; cv=none; b=CxlKJ8YNsvT3SqKB13MzuVIrBSimtc86pDWr15jfSZAIusL5aLi03Y71nQpgxZmP1qXnf3Akm+RAM8GTdtDjLQ73iKUMtX1GoyToz2zfX3peghqbJ+nifVhGVgrg+lSZTNPU6Nlg9vVlncUiZoJz1ALcvgI3mSIYpIXG2FRVZ7o=
+	t=1723113614; cv=none; b=oBMFs2mkTVPWG3A3Mpw9e1CRtb/2I33V5VVTIGzkwcD8PwoxQbs8b5JdeuJ1HGFU00l4u/cymTf+z4KCtk5tRE50PKI/Qwio0BqBTa89rpcsVPhr5dBrN1qWBfZgaScI9LgyaTIK85lkJBhnrt3xR+oIIUgfQYD8xlmfeUrtDAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723113496; c=relaxed/simple;
-	bh=rR17yrg504Ke28r2unGDV2/hQ+tUtHNUJJ4sgFouloI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=OByRFoihnKj4m/x+i8EcFuBK8I8chir4o0ecm6qc4mh5poc54YxCsY38h22r9lPJQ6u3XpZcFjbDTtbSV72+LzBrgEU/2dihQ6nHcZ1EGqCwjAJMJgDuz1cgKODDnZNTwArPV58D7/VnS0LqKvQ5MzXHNemixn5Mb+Axjso5qMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CxgrlWND; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723113614; c=relaxed/simple;
+	bh=93EvhuTl9ahqB5emxkAMtf9z0ofEgXEiFiod3siNX7I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=A3df49XfbSV4/rQKGXAynE3nLTu0AK4AagwwNz4GVbYsvTkJqwBYgFAgWtPIOqkigHNXriGcnz7m8sVUyR6uw0KmFLN+lSBZjf/xKYWDUur3EksKjU+2P1omXkHOPcUv/NmqlMdVRii275vTKFUq8iRGYjff0wj1oIvfBPWahes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=MIK9K2KT; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CxgrlWND"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723113493;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=L7DMpfvCFqWQFDmhUzUmqiLllEgTPzDZJPD9HmVCjy8=;
-	b=CxgrlWNDfVjHb0Jnxchk3GV+DLcgAoCeg3qpWPWtUQehQIIvfrUPbpkUkDJuNSwS45dCfv
-	Ddftpq7zS38a9Blw/Ooj8ImPBK5MO8ExL+pHmqxFoyMxHyt9pDfy9P+6+SpP2UH90vvFIl
-	3zccVzSvdVejWa2uzw0UdGf6oMPxQDM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-328-au0ldaNgM9OXsPMI5AhHFA-1; Thu,
- 08 Aug 2024 06:38:10 -0400
-X-MC-Unique: au0ldaNgM9OXsPMI5AhHFA-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9C7CF1955F3D;
-	Thu,  8 Aug 2024 10:38:09 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.226.3])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 02BB6195396E;
-	Thu,  8 Aug 2024 10:38:06 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com,
-	james.clark@arm.com,
-	rstoyano@redhat.com
-Subject: [PATCH] perf test pmu: Set uninitialized PMU alias to null
-Date: Thu,  8 Aug 2024 12:37:49 +0200
-Message-ID: <20240808103749.9356-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MIK9K2KT"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-428243f928cso5273935e9.3
+        for <linux-perf-users@vger.kernel.org>; Thu, 08 Aug 2024 03:40:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723113611; x=1723718411; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=3Vywnv2khWwNnQXbEb1k0L/IQrqUeraWcCrhITh2GYs=;
+        b=MIK9K2KT8LuLBxskCnDtBcQbyvCV33fYpsicldzOmBRoBfJkMrDJm0eAwESrD3Lme5
+         oFOPzOUkBAnEz7NtiUMyY2GKx/x0Sp6xoR60r13hH8VpceEk3rViglWH7Fyt+SZFdPco
+         wcg3ea0EPgj/mWKJhHhMr3zsUIi8LjwfPklpSobbVcghlw8SunHvJo2pC8CE32n0HAQj
+         3KBFYKE82mWwH6+5ND7fvDdXak+6RyXkrqvmdLDsdMlreKdkcCYmhcRtARojBGkLmwu9
+         rTdQkqSs8T5MsdRFdCLGbvRTBtG8TInLN9vUS8JqzuoslbTnaSI0ZaxA64XegpqDmWN3
+         /gbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723113611; x=1723718411;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Vywnv2khWwNnQXbEb1k0L/IQrqUeraWcCrhITh2GYs=;
+        b=fm4Btdhf8RV+PJ8QTuqzG/j3uUjY08FKyo5DDR2BaQRAqlc7rgmAJ7JQugbyvPUqPT
+         3nwocTzbXZnCe1w2QvY6B29BVaQPGTi7L3d8xSBgvuDV0HABgrGkBGvHhZ937uVS6E/L
+         egf/wiKxXbfY3Uqrs8aEd6MQ6TnuuWkBHMejXeFMiB7cuGnkHFBBf8kspU1RcjeIyaNC
+         +q9CZSkWQ3daHLXL2osS6JEoWGHAmnEZSLFvqV3UYTq1rjw/8zrt6rq8dXvOU1VA8S5y
+         Il0zMz4iwWAKB7pzptJipHPqzGm/PSyKvU30dc0HF2pA0sOKpx1s9w6CgUaduK4xOrxm
+         udhQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWAR7rG5TMQJ/XUwf8a8hrCFP/a3Xa8VcNopdwWqS63a+RDDDcb1NUMm4saI4erc3bHGKaPyhmfIW+cHsVczb3o7ufUj5a4+g1llkbnlrLXDA==
+X-Gm-Message-State: AOJu0YyxR0b+aN0utfSte/kcWOL1rInitsjtlHSrfzPmrmCAEkUWFIp0
+	ifnk8lMI7g080HFZpd3TJLBV/ZtKv+wafLFcJlWHKx0LpWspfiR9QUcemCJJjkE=
+X-Google-Smtp-Source: AGHT+IEGxZsKPo0MfhXCCFxSfCW7K4JInkbw4e4NnCHx4wlQJHciyyD/pmRe1wNjUVMP3CXg9q2VBw==
+X-Received: by 2002:a05:6000:1007:b0:367:9614:fb99 with SMTP id ffacd0b85a97d-36d273bfaf4mr1044354f8f.10.1723113610569;
+        Thu, 08 Aug 2024 03:40:10 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36d271569d1sm1459252f8f.18.2024.08.08.03.40.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 08 Aug 2024 03:40:10 -0700 (PDT)
+Message-ID: <67ac1ce4-7d95-4215-ae49-c32869bfe6eb@linaro.org>
+Date: Thu, 8 Aug 2024 11:40:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/7] arm64: Add support for Armv9.4 PMU fixed
+ instruction counter
+To: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, kvmarm@lists.linux.dev,
+ Will Deacon <will@kernel.org>, Marc Zyngier <maz@kernel.org>,
+ Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Oliver Upton <oliver.upton@linux.dev>, Zenghui Yu <yuzenghui@huawei.com>
+References: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Commit 3e0bf9 ("perf pmu: Restore full PMU name wildcard support") adds
-a test case "PMU cmdline match" that covers PMU name wildcard support
-provided by function perf_pmu__match(). The test works with a wide
-range of supported combinations of PMU name matching but omits the case
-that if the perf_pmu__match() cannot match the PMU name to the wildcard,
-it tries to match its alias. However, this variable is not set up,
-causing the test case to fail when run with subprocesses or to segfault
-if run as a single process.
 
-./perf test -vv 9
-  9: Sysfs PMU tests                                                 :
-  9.1: Parsing with PMU format directory                             : Ok
-  9.2: Parsing with PMU event                                        : Ok
-  9.3: PMU event names                                               : Ok
-  9.4: PMU name combining                                            : Ok
-  9.5: PMU name comparison                                           : Ok
-  9.6: PMU cmdline match                                             : FAILED!
+On 31/07/2024 5:51 pm, Rob Herring (Arm) wrote:
+> This series adds support for the optional fixed instruction counter
+> added in Armv9.4 PMU. Most of the series is a refactoring to remove the
+> index to counter number conversion which dates back to the Armv7 PMU
+> driver. Removing it is necessary in order to support more than 32
+> counters without a bunch of conditional code further complicating the
+> conversion.
+> 
+> Patch 1 changes struct arm_pmu.num_events to a bitmap of events, and
+> updates all the users. This removes the index to counter conversion
+> on the PMUv3 and Armv7 drivers.
+> 
+> Patch 2 updates various register accessors to use 64-bit values matching
+> the register size.
+> 
+> Patches 3-4 update KVM PMU register accesses to use shared accessors
+> from asm/arm_pmuv3.h.
+> 
+> Patches 5-6 rework KVM and perf PMU defines for counter indexes and
+> number of counters.
+> 
+> Patch 7 finally adds support for the fixed instruction counter.
+> 
+> I tested this on FVP with VHE host and a guest. Also ran kvm-unittests
+> in Arm's kernelCI.
+> 
 
-./perf test -F 9
-  9.1: Parsing with PMU format directory                             : Ok
-  9.2: Parsing with PMU event                                        : Ok
-  9.3: PMU event names                                               : Ok
-  9.4: PMU name combining                                            : Ok
-  9.5: PMU name comparison                                           : Ok
-Segmentation fault (core dumped)
+I ran the Perf tests and poked around a bit with PMUs and chaining 
+events (on non-fixed instruction counter hardware):
 
-Initialize the PMU alias to null for all tests of perf_pmu__match()
-as this functionality is not being tested and the alias matching works
-exactly the same as the matching of the PMU name.
-
-./perf test -F 9
-  9.1: Parsing with PMU format directory                             : Ok
-  9.2: Parsing with PMU event                                        : Ok
-  9.3: PMU event names                                               : Ok
-  9.4: PMU name combining                                            : Ok
-  9.5: PMU name comparison                                           : Ok
-  9.6: PMU cmdline match                                             : Ok
-
-Fixes: 3e0bf9 ("perf pmu: Restore full PMU name wildcard support")
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- tools/perf/tests/pmu.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index 0b2f04a55d7b..a4730b5dc0d9 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -453,11 +453,13 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
- /**
-  * Test perf_pmu__match() that's used to search for a PMU given a name passed
-  * on the command line. The name that's passed may also be a filename type glob
-- * match.
-+ * match. If the name does not match, perf_pmu__match() attempts to match the
-+ * alias of the PMU, if provided.
-  */
- static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
- {
- 	struct perf_pmu test_pmu;
-+	test_pmu.alias_name = NULL;
- 
- 	test_pmu.name = "pmuname";
- 	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
--- 
-2.43.0
-
+Tested-by: James Clark <james.clark@linaro.org>
