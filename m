@@ -1,167 +1,273 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B706D18E75D
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 14:12:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43CE318E056;
+	Thu,  8 Aug 2024 14:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723126369; cv=none; b=IjiSAMk/9lEclM2SGiy+y2WEoV6qgYKkdR5m8XuFU/541X7VTSp3v7Tx89lh1DXM/JyKj0QCMfjXepoXK8lXdzhYiMGsP5jeQvSC0OnYY77NlACcciFr3Aw0iMh4Bt1LShc7QqvNZcKmtPLLYA1tDZ/Rg50YoIjBtxTMy1S0AZ8=
+	t=1723127688; cv=none; b=KqMufeFri6F7k7VL8tJFhPjMqP9QzevZZvXhRCJYAy2RXRzIdWbeLUHPMSU4QWA+i0QS/gxwtaY3xMWrtNmpqyZYg9I2Lha7rTBGUkxAQU5mCD6gZBxTz9JlP55Yuw/tNw4yDYxbRm/1oM3GR58rMk15/SLg5pjwaKTsf/r10FU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723126369; c=relaxed/simple;
-	bh=NS8GNpYYbDrL7nMocT3ohHippFGz2A1Ks5qDTh+SRC4=;
+	s=arc-20240116; t=1723127688; c=relaxed/simple;
+	bh=3bmBR8LGeH2dYpdGK2nOw0cjjBNumXI44Uzp2DOECW4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mH4H0sXPDkYogqxNB34/mS+aleo/Zt/Z7qtZE4bDt2FkoOLEw0xlgyb/YSTb5X5F3gQR3WncbUj2UaQKHshGHeL4T70JQQVjXqSu4oz0+sNz0BKeiolFUZIkzcpPkWdQY4ixeubs0xHzkcnBbSTtm9MHM5ypGNZpBbDv1hOsuoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aogPd4/x; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=audKK6apmzCmEQV3BebRHuTB/y/5AuDgki2IVMi+RN/rTEdtoQj5iJotyhZ/JdbGe8Oqmiy9+n6W6pjOtrpSvdpbcwLB63x+CrxBiL9FoGpj8uWEeyS7cKlL4K+qKatlJQfT9pgJsPklL8bCzBZYuyAFtvZpY+qicNfMIIyGyAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NANa96po; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aogPd4/x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D96C4AF0C;
-	Thu,  8 Aug 2024 14:12:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NANa96po"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144F4C4AF0D;
+	Thu,  8 Aug 2024 14:34:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723126369;
-	bh=NS8GNpYYbDrL7nMocT3ohHippFGz2A1Ks5qDTh+SRC4=;
+	s=k20201202; t=1723127687;
+	bh=3bmBR8LGeH2dYpdGK2nOw0cjjBNumXI44Uzp2DOECW4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aogPd4/xUtJhbkRvHaCN5ir+XuFXjqhkSUNv1SxjEfJR+lq4nr8EGIMPXWSivxvIZ
-	 D4cvYvvSBzo5SWrTAKdSH6WStNA6xM0NPa7NdwxZyPuQrK6Uf7gFAotxez1tQ40Y6i
-	 /HRpMSYpz4w1ggNTVbq3RTg+iNQwuRBSexud+R/ph/HAV0Xwb/GE6TLkqbegDIZ2e5
-	 zxVEqk7rwvGJwt8PtYf/nKx2Zg5+NmvHURD2FMMsml0aorzedC7tgVADGmR+3JQKay
-	 xa7itUA8ckDwZ32qL3b78IgRMGdYVv0opGdDY2Z/TY40ehXehDGUUFbJPQBZN+hItL
-	 39udqur6gKnlA==
-Date: Thu, 8 Aug 2024 11:12:42 -0300
+	b=NANa96po9l7Bb3N5HpsY2lCmRDc2A+ZGed6ONmFrm/k7HwrU1QR3omNOdTNdNQVce
+	 vMflAztH8OPhr+3XFuH6KyRMdFSwD/1QFJl/sJg0XhgZHeQJCLsR58vbxKt1CO8Wnf
+	 qYRBTb34L5HLeRiWkozOoL/ZaqH7O4dA4OiHotud/qon3KS8zMlL1LJPPh/Y6j5Ev7
+	 6cePMitTNePp61/g9tQO5jVPVXbcA4nD+fBU3fRM8ZDIgslvF6xa8kFK0CLfE6Kgg3
+	 JmO8Jbg7ksMKp6E7qZwF8GCv/UA9WB1AikioBEVjNeX/LvAyfyaI68GavwZHi2SdAB
+	 /Nx/nReQ03wwg==
+Date: Thu, 8 Aug 2024 11:34:38 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
-	james.clark@arm.com, rstoyano@redhat.com
-Subject: Re: [PATCH] perf test pmu: Set uninitialized PMU alias to null
-Message-ID: <ZrTSWvyox2ET1eNm@x1>
-References: <20240808103749.9356-1-vmolnaro@redhat.com>
- <ZrTPqy3omGsTTati@x1>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	Changbin Du <changbin.du@huawei.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] perf test: Add set of perf record LBR tests
+Message-ID: <ZrTXftup0H46R8WK@x1>
+References: <20240808054644.1286065-1-irogers@google.com>
+ <20240808054644.1286065-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZrTPqy3omGsTTati@x1>
+In-Reply-To: <20240808054644.1286065-2-irogers@google.com>
 
-On Thu, Aug 08, 2024 at 11:01:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Aug 08, 2024 at 12:37:49PM +0200, vmolnaro@redhat.com wrote:
-> > From: Veronika Molnarova <vmolnaro@redhat.com>
-> > 
-> > Commit 3e0bf9 ("perf pmu: Restore full PMU name wildcard support") adds
-> > a test case "PMU cmdline match" that covers PMU name wildcard support
-> > provided by function perf_pmu__match(). The test works with a wide
-> > range of supported combinations of PMU name matching but omits the case
-> > that if the perf_pmu__match() cannot match the PMU name to the wildcard,
-> > it tries to match its alias. However, this variable is not set up,
-> > causing the test case to fail when run with subprocesses or to segfault
-> > if run as a single process.
-> > 
-> > ./perf test -vv 9
-> >   9: Sysfs PMU tests                                                 :
-> >   9.1: Parsing with PMU format directory                             : Ok
-> >   9.2: Parsing with PMU event                                        : Ok
-> >   9.3: PMU event names                                               : Ok
-> >   9.4: PMU name combining                                            : Ok
-> >   9.5: PMU name comparison                                           : Ok
-> >   9.6: PMU cmdline match                                             : FAILED!
-> > 
-> > ./perf test -F 9
-> >   9.1: Parsing with PMU format directory                             : Ok
-> >   9.2: Parsing with PMU event                                        : Ok
-> >   9.3: PMU event names                                               : Ok
-> >   9.4: PMU name combining                                            : Ok
-> >   9.5: PMU name comparison                                           : Ok
-> > Segmentation fault (core dumped)
-> > 
-> > Initialize the PMU alias to null for all tests of perf_pmu__match()
-> > as this functionality is not being tested and the alias matching works
-> > exactly the same as the matching of the PMU name.
-> > 
-> > ./perf test -F 9
-> >   9.1: Parsing with PMU format directory                             : Ok
-> >   9.2: Parsing with PMU event                                        : Ok
-> >   9.3: PMU event names                                               : Ok
-> >   9.4: PMU name combining                                            : Ok
-> >   9.5: PMU name comparison                                           : Ok
-> >   9.6: PMU cmdline match                                             : Ok
-> > 
-> > Fixes: 3e0bf9 ("perf pmu: Restore full PMU name wildcard support")
-> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> > ---
-> >  tools/perf/tests/pmu.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> > index 0b2f04a55d7b..a4730b5dc0d9 100644
-> > --- a/tools/perf/tests/pmu.c
-> > +++ b/tools/perf/tests/pmu.c
-> > @@ -453,11 +453,13 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
-> >  /**
-> >   * Test perf_pmu__match() that's used to search for a PMU given a name passed
-> >   * on the command line. The name that's passed may also be a filename type glob
-> > - * match.
-> > + * match. If the name does not match, perf_pmu__match() attempts to match the
-> > + * alias of the PMU, if provided.
-> >   */
-> >  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> >  {
-> >  	struct perf_pmu test_pmu;
-> > +	test_pmu.alias_name = NULL;
+On Wed, Aug 07, 2024 at 10:46:44PM -0700, Ian Rogers wrote:
+> Adds coverage for LBR operations and LBR callgraph.
 > 
-> We can do a bit more future proofing by instead doing:
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> ---
+>  tools/perf/tests/shell/record_lbr.sh | 161 +++++++++++++++++++++++++++
+>  1 file changed, 161 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/record_lbr.sh
 > 
-> 	struct perf_pmu test_pmu = {
-> 		.name = "pmuname",
-> 	};
-> 
-> So that all the other fields are initialized to zero, ok? I'll do this
-> change and make a note in the commit, lemme know if you disagree.
+> diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+> new file mode 100755
+> index 000000000000..baf168d0ddbb
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/record_lbr.sh
+> @@ -0,0 +1,161 @@
+> +#!/bin/bash
+> +# perf record LBR tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +set -e
+> +
+> +if [ ! -f /sys/devices/cpu/caps/branches ]
+> +then
+> +  echo "Skip: only x86 CPUs support LBR"
+> +  exit 2
+> +fi
 
-Nah, tried with:
+root@x1:~# ls -la /sys/devices/cpu*/caps/branches 
+-r--r--r--. 1 root root 4096 Jun  4 16:07 /sys/devices/cpu_atom/caps/branches
+-r--r--r--. 1 root root 4096 Aug  8 11:21 /sys/devices/cpu_core/caps/branches
+root@x1:~#
 
-diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-index a4730b5dc0d9259d..c9d4ed6d684551c1 100644
---- a/tools/perf/tests/pmu.c
-+++ b/tools/perf/tests/pmu.c
-@@ -457,11 +457,11 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
-  * alias of the PMU, if provided.
-  */
- static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
--{
--	struct perf_pmu test_pmu;
--	test_pmu.alias_name = NULL;
- 
--	test_pmu.name = "pmuname";
-+	struct perf_pmu test_pmu = {
-+		.name = "pmuname",
-+	};
-+
- 	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
- 	TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
- 	TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),	     false);
+I'm getting:
 
-But those macros are not liking it:
+root@x1:~# perf test -vvvv LBR
+ 97: perf record LBR tests:
+--- start ---
+test child forked, pid 2033388
+Skip: only x86 CPUs support LBR
+---- end(-2) ----
+ 97: perf record LBR tests                                           : Skip
+root@x1:~#
 
-tests/pmu.c: In function ‘test__pmu_match’:
-tests/pmu.c:461:16: error: parameter ‘test_pmu’ is initialized
-  461 |         struct perf_pmu test_pmu = {
-      |                ^~~~~~~~
-In file included from tests/pmu.c:7:
-tests/tests.h:22:1: error: expected declaration specifiers before ‘do’
-   22 | do {                                                                     \
-      | ^~
-tests/pmu.c:465:9: note: in expansion of macro ‘TEST_ASSERT_EQUAL’
-  465 |         TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),      true);
-      |         ^~~~~~~~~~~~~~~~~
-tests/tests.h:28:3: error: expected declaration specifiers before ‘while’
-   28 | } while (0)
-      |   ^~~~~
-
-So I'll not spend more time here, I'm keeping your patch as-is.
-
-Thanks and sorry for the noise :-)
+So I added the following follow-up patch, ack?
 
 - Arnaldo
+
+From f6ea332dd25cc62b9493b2d40040c2fb35253d9e Mon Sep 17 00:00:00 2001
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
+Date: Thu, 8 Aug 2024 11:26:13 -0300
+Subject: [PATCH 1/1] perf test shell lbr: Support hybrid x86 systems too
+
+Running on a:
+
+  root@x1:~# grep 'model name' -m1 /proc/cpuinfo
+  model name	: 13th Gen Intel(R) Core(TM) i7-1365U
+  root@x1:~#
+
+It skips all the tests with:
+
+  root@x1:~# perf test -vvvv LBR
+   97: perf record LBR tests:
+  --- start ---
+  test child forked, pid 2033388
+  Skip: only x86 CPUs support LBR
+  ---- end(-2) ----
+   97: perf record LBR tests                                           : Skip
+  root@x1:~#
+
+Because the test checks for the /sys/devices/cpu/caps/branches file,
+that isn't present as we have instead:
+
+  root@x1:~# ls -la /sys/devices/cpu*/caps/branches
+  -r--r--r--. 1 root root 4096 Aug  8 11:22 /sys/devices/cpu_atom/caps/branches
+  -r--r--r--. 1 root root 4096 Aug  8 11:21 /sys/devices/cpu_core/caps/branches
+  root@x1:~#
+
+If we check as well for one of those,
+/sys/devices/cpu_core/caps/branches, then we don't skip the tests and
+all are run on these x86 Intel Hybrid systems as well, passing all of
+them:
+
+  root@x1:~# perf test -vvvv LBR
+   97: perf record LBR tests:
+  --- start ---
+  test child forked, pid 2034956
+  LBR callgraph
+  [ perf record: Woken up 5 times to write data ]
+  [ perf record: Captured and wrote 1.812 MB /tmp/__perf_test.perf.data.B2HvQ (8114 samples) ]
+  LBR callgraph [Success]
+  LBR any branch test
+  [ perf record: Woken up 25 times to write data ]
+  [ perf record: Captured and wrote 6.382 MB /tmp/__perf_test.perf.data.B2HvQ (8071 samples) ]
+  LBR any branch test: 8071 samples
+  LBR any branch test [Success]
+  LBR any call test
+  [ perf record: Woken up 23 times to write data ]
+  [ perf record: Captured and wrote 6.208 MB /tmp/__perf_test.perf.data.B2HvQ (8092 samples) ]
+  LBR any call test: 8092 samples
+  LBR any call test [Success]
+  LBR any ret test
+  [ perf record: Woken up 24 times to write data ]
+  [ perf record: Captured and wrote 6.396 MB /tmp/__perf_test.perf.data.B2HvQ (8093 samples) ]
+  LBR any ret test: 8093 samples
+  LBR any ret test [Success]
+  LBR any indirect call test
+  [ perf record: Woken up 25 times to write data ]
+  [ perf record: Captured and wrote 6.344 MB /tmp/__perf_test.perf.data.B2HvQ (8067 samples) ]
+  LBR any indirect call test: 8067 samples
+  LBR any indirect call test [Success]
+  LBR any indirect jump test
+  [ perf record: Woken up 12 times to write data ]
+  [ perf record: Captured and wrote 3.073 MB /tmp/__perf_test.perf.data.B2HvQ (8061 samples) ]
+  LBR any indirect jump test: 8061 samples
+  LBR any indirect jump test [Success]
+  LBR direct calls test
+  [ perf record: Woken up 25 times to write data ]
+  [ perf record: Captured and wrote 6.380 MB /tmp/__perf_test.perf.data.B2HvQ (8076 samples) ]
+  LBR direct calls test: 8076 samples
+  LBR direct calls test [Success]
+  LBR any indirect user call test
+  [ perf record: Woken up 5 times to write data ]
+  [ perf record: Captured and wrote 1.597 MB /tmp/__perf_test.perf.data.B2HvQ (8079 samples) ]
+  LBR any indirect user call test: 8079 samples
+  LBR any indirect user call test [Success]
+  LBR system wide any branch test
+  [ perf record: Woken up 26 times to write data ]
+  [ perf record: Captured and wrote 9.088 MB /tmp/__perf_test.perf.data.B2HvQ (9209 samples) ]
+  LBR system wide any branch test: 9209 samples
+  LBR system wide any branch test [Success]
+  LBR system wide any call test
+  [ perf record: Woken up 25 times to write data ]
+  [ perf record: Captured and wrote 8.945 MB /tmp/__perf_test.perf.data.B2HvQ (9333 samples) ]
+  LBR system wide any call test: 9333 samples
+  LBR system wide any call test [Success]
+  LBR parallel any branch test
+  LBR parallel any call test
+  LBR parallel any ret test
+  LBR parallel any indirect call test
+  LBR parallel any indirect jump test
+  LBR parallel direct calls test
+  LBR parallel system wide any branch test
+  LBR parallel any indirect user call test
+  LBR parallel system wide any call test
+  [ perf record: Woken up 9 times to write data ]
+  [ perf record: Woken up 51 times to write data ]
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Woken up 5 times to write data ]
+  [ perf record: Woken up 559 times to write data ]
+  [ perf record: Woken up 14 times to write data ]
+  [ perf record: Woken up 17 times to write data ]
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Woken up 11 times to write data ]
+  [ perf record: Captured and wrote 0.150 MB /tmp/__perf_test.perf.data.lANpR (1909 samples) ]
+  [ perf record: Captured and wrote 2.371 MB /tmp/__perf_test.perf.data.Olum8 (3033 samples) ]
+  [ perf record: Captured and wrote 1.230 MB /tmp/__perf_test.perf.data.njfJ8 (1742 samples) ]
+  [ perf record: Captured and wrote 5.554 MB /tmp/__perf_test.perf.data.4ZTrj (29662 samples) ]
+  [ perf record: Captured and wrote 19.906 MB /tmp/__perf_test.perf.data.dlGQt (29576 samples) ]
+  [ perf record: Captured and wrote 0.289 MB /tmp/__perf_test.perf.data.CAT7y (4311 samples) ]
+  [ perf record: Captured and wrote 3.129 MB /tmp/__perf_test.perf.data.diuKG (3971 samples) ]
+  LBR parallel any indirect user call test: 1909 samples
+  [ perf record: Captured and wrote 4.858 MB /tmp/__perf_test.perf.data.sVjtN (6130 samples) ]
+  LBR parallel any indirect user call test [Success]
+  [ perf record: Captured and wrote 3.669 MB /tmp/__perf_test.perf.data.AJtNI (4827 samples) ]
+  LBR parallel any indirect jump test: 4311 samples
+  LBR parallel any indirect jump test [Success]
+  LBR parallel direct calls test: 3033 samples
+  LBR parallel direct calls test [Success]
+  LBR parallel any indirect call test: 1742 samples
+  LBR parallel any indirect call test [Success]
+  LBR parallel any call test: 4827 samples
+  LBR parallel any call test [Success]
+  LBR parallel any branch test: 6130 samples
+  LBR parallel any branch test [Success]
+  LBR parallel system wide any branch test: 29662 samples
+  LBR parallel any ret test: 3971 samples
+  LBR parallel any ret test [Success]
+  LBR parallel system wide any branch test [Success]
+  LBR parallel system wide any call test: 29576 samples
+  LBR parallel system wide any call test [Success]
+  ---- end(0) ----
+   97: perf record LBR tests                                           : Ok
+  root@x1:~#
+
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Anne Macedo <retpolanne@posteo.net>,
+Cc: Changbin Du <changbin.du@huawei.com>,
+Cc: Ian Rogers <irogers@google.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+Cc: Jiri Olsa <jolsa@kernel.org>,
+Cc: Kan Liang <kan.liang@linux.intel.com>,
+Cc: Mark Rutland <mark.rutland@arm.com>,
+Cc: Namhyung Kim <namhyung@kernel.org>,
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/tests/shell/record_lbr.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+index baf168d0ddbbf447..ead87b731898d70b 100755
+--- a/tools/perf/tests/shell/record_lbr.sh
++++ b/tools/perf/tests/shell/record_lbr.sh
+@@ -4,7 +4,7 @@
+ 
+ set -e
+ 
+-if [ ! -f /sys/devices/cpu/caps/branches ]
++if [ ! -f /sys/devices/cpu/caps/branches -a ! -f /sys/devices/cpu_core/caps/branches ]
+ then
+   echo "Skip: only x86 CPUs support LBR"
+   exit 2
+-- 
+2.44.0
+
