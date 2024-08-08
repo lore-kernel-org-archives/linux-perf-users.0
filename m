@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FD6F18C910;
-	Thu,  8 Aug 2024 12:40:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1027618B481;
+	Thu,  8 Aug 2024 12:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723120816; cv=none; b=Ibi6hkOiCISQUcA8Mxzk5ICkZGvvoVxt5iKpfLmHkKghJTGtTtf9h1HsOwTM+J8eLHieiOgpm+R/0+KhJS/56lD+9vxwpb+aO7naUuDdLF6NvSfE6Sgmk7GTdzxE9iptpwaxwSE+Ndb0+gHJh1TpKoZfQ6/Iy1AsdQH33bpmcYo=
+	t=1723120861; cv=none; b=RlYp6V6umK/gr3mcvsvVWHC/mSI4rBM+mmDfT5jIxKiwwQtPvqwqKEWXCDNMsV7BQ8y95RLG4mgssT4fPp8deb5DKkhVlabknnoLZtagBn1jQH9n9gihEx0r909iFnvJIosE2DRwwE1jEsFsbGqawIIHEoFMcIlEuJXMMtLMwFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723120816; c=relaxed/simple;
-	bh=GyX//lK787LZvjPjS3bRSLEAfNMrRavA9dkEwuHWV6U=;
+	s=arc-20240116; t=1723120861; c=relaxed/simple;
+	bh=SqsjwATOwxh5HgstfBnGNM2pEfS0km7BeQHFVEfTvy4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FtqotdBpiRNFxDRs8Qc47jfmGScg44/a8Hcd7g4DJUqRPaZp2QNqpvSFD2kDGvt4NL+MkrYnD0JaSQ6ODhamGPI0f2ZhmWvG1MLXsPe9crALn5qP2kqsp8ooPso0sLntx5wgrBke463qe7+lT5jvR0FBnoCqviHy+ZQ0NMWK7jQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7NW62FT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=hqOATZnNQKBmHB+BsMOPpspj0gidYjPnmU7HRpvI61ZG91dKQezmU0i2mG2gVa+bLRJb3aV7yzbLS73t/8sxU+4RM87HiH2oS2BGFF+iCL0mOhTBB2jwhFIX18nAR3KDnDk1HL13vKxC5xcvJIwyV1muY9vAbD2sGBcUUzsVYPQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qa99HQFA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7NW62FT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498C8C32782;
-	Thu,  8 Aug 2024 12:40:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qa99HQFA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351EEC32782;
+	Thu,  8 Aug 2024 12:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723120815;
-	bh=GyX//lK787LZvjPjS3bRSLEAfNMrRavA9dkEwuHWV6U=;
+	s=k20201202; t=1723120860;
+	bh=SqsjwATOwxh5HgstfBnGNM2pEfS0km7BeQHFVEfTvy4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a7NW62FTxOEsHjJ/rt5daim2TUVOYA3H7UzmXpuq/EKnUJYqSuafmn/92R1tUkf2p
-	 hABuz14RAppkvcKR3VCdXBhV5bj22p/Fv8eoEeHCEx8cXEGrcWCNujJIBkqpSxKyCT
-	 u5bbr8mMG5Tc6o6rxLrqZu6tKCfUaBfSb9KZmRpqW8eZaii/oVjlLggzwgpC6D2BVQ
-	 lLy/ZsYYvfWYipeersowcNWWjzNqDjKw/lCScYgHmdGwvVcUAET3F/EBKbkovGlg2v
-	 Hit0Zw28Q9mBjkMMxoVTd0UgJ5M1y8SyobjHwQhJjnciZBhlJoyXb6yUJOxBD4UlFR
-	 80vsYwKdEH9bw==
-Date: Thu, 8 Aug 2024 09:40:11 -0300
+	b=qa99HQFABIvZ/hpnxY2vxmfTo8z5rqQ+akByj+KQLETsGXZLNr0hv8yjiAcD/STKu
+	 3O535Z+WsRvfkbjHeA/toDq6AzqZtxj5ljZ3ROGow+yebYKAPL4SSAoFKr8nYYnsKm
+	 rHDq5C8wACiwdGZPFnD7rtln+GqjoqlgT3aY1Wo7wyR6WtlIeMFemL2uC3KlFKIBli
+	 C4WAM92qBsR9U1V5FhIRKS2agIUtjlmftonuBoPqSYcQPLHScbnmzIEYTvsNhH4XPJ
+	 ffOZnyglSStm5FhZyzcYSz4uGAmPl3t+j0CJsjrqQ1TLKgHOmx3pvKOFqYF2mEWyVr
+	 qSFh55kE1U8dg==
+Date: Thu, 8 Aug 2024 09:40:56 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
@@ -35,10 +35,11 @@ Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: Re: [PATCH v3] perf annotate: Cache debuginfo for data type profiling
-Message-ID: <ZrS8q2J93G6xdFrx@x1>
-References: <20240805234648.1453689-1-namhyung@kernel.org>
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH] perf annotate-data: Show typedef names properly
+Message-ID: <ZrS82E_HAG7HcKag@x1>
+References: <20240807223129.1738004-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,192 +48,193 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240805234648.1453689-1-namhyung@kernel.org>
+In-Reply-To: <20240807223129.1738004-1-namhyung@kernel.org>
 
-On Mon, Aug 05, 2024 at 04:46:48PM -0700, Namhyung Kim wrote:
-> In find_data_type(), it creates and deletes a debug info whenver it
-> tries to find data type for a sample.  This is inefficient and it most
-> likely accesses the same binary again and again.
+On Wed, Aug 07, 2024 at 03:31:29PM -0700, Namhyung Kim wrote:
+> The die_get_typename() would resolve typedef and get to the original
+> type.  But sometimes the original type is a struct without name and it
+> makes the output confusing and hard to read.
 > 
-> Let's add a single entry cache the debug info structure for the last DSO.
-> Depending on sample data, it usually gives me 2~3x (and sometimes more)
-> speed ups.
+> This is a diff of perf report -s type before and after the change.
+> New types such as atomic{,64}_t and sigset_t appeared and the portion
+> of unnamed struct was reduced.  Also u32, u64 and size_t were splitted
+> from the base types.
 > 
-> Note that this will introduce a little difference in the output due to
-> the order of checking stack operations.  It used to check the stack ops
-> before checking the availability of debug info but I moved it after the
-> symbol check.  So it'll report stack operations in DSOs without debug
-> info as unknown.  But I think it's ok and better to have the checking
-> near the caching logic.
+>   --- b   2024-08-01 17:02:34.307809952 -0700
+>   +++ a   2024-08-07 14:17:05.245853999 -0700
+>   -     2.40%  long unsigned int
+>   +     2.26%  long unsigned int
+>   -     1.56%  unsigned int
+>   +     1.27%  unsigned int
+>   -     0.98%  struct
+>   -     0.79%  long long unsigned int
+>   +     0.58%  long long unsigned int
+>   +     0.36%  struct
+>   +     0.27%  atomic64_t
+>   +     0.22%  u32
+>   +     0.21%  u64
+>   +     0.19%  atomic_t
+>   +     0.13%  size_t
+>   -     0.08%  struct seqcount_spinlock
+>   +     0.08%  seqcount_spinlock_t
+>   +     0.08%  sigset_t
+>   +     0.08%  __poll_t
+> 
+> Let's use the typedef name directly and the resolved to get the size of
+> the type.
 
-Thanks, tested and applied.
+Great improvement! Tested and applied.
 
 - Arnaldo
  
 > Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
 > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
-> v2) add an assertion for the single-threaded case.
-> v3) update the comment according to Ian.
-> 
->  tools/perf/util/annotate-data.c | 15 ++-----------
->  tools/perf/util/annotate-data.h |  2 +-
->  tools/perf/util/annotate.c      | 37 +++++++++++++++++++++++++++++++++
->  tools/perf/util/annotate.h      |  2 ++
->  tools/perf/util/session.c       |  2 ++
->  5 files changed, 44 insertions(+), 14 deletions(-)
+>  tools/perf/util/annotate-data.c | 39 +++++++++++++++++++++++++--------
+>  tools/perf/util/dwarf-aux.c     |  2 +-
+>  tools/perf/util/dwarf-aux.h     |  2 ++
+>  3 files changed, 33 insertions(+), 10 deletions(-)
 > 
 > diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-> index 734acdd8c4b7..f125ac5f0bda 100644
+> index 734acdd8c4b7..092809bb92f5 100644
 > --- a/tools/perf/util/annotate-data.c
 > +++ b/tools/perf/util/annotate-data.c
-> @@ -1345,16 +1345,9 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
->   */
->  struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
+> @@ -217,8 +217,13 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	strbuf_init(&sb, 32);
+>  	die_get_typename(die, &sb);
+>  
+> -	die_get_real_type(die, &member_type);
+> -	if (dwarf_aggregate_size(&member_type, &size) < 0)
+> +	__die_get_real_type(die, &member_type);
+> +	if (dwarf_tag(&member_type) == DW_TAG_typedef)
+> +		die_get_real_type(&member_type, &die_mem);
+> +	else
+> +		die_mem = member_type;
+> +
+> +	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+>  		size = 0;
+>  
+>  	if (!dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
+> @@ -235,11 +240,11 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+>  	INIT_LIST_HEAD(&member->children);
+>  	list_add_tail(&member->node, &parent->children);
+>  
+> -	tag = dwarf_tag(&member_type);
+> +	tag = dwarf_tag(&die_mem);
+>  	switch (tag) {
+>  	case DW_TAG_structure_type:
+>  	case DW_TAG_union_type:
+> -		die_find_child(&member_type, __add_member_cb, member, &die_mem);
+> +		die_find_child(&die_mem, __add_member_cb, member, &die_mem);
+>  		break;
+>  	default:
+>  		break;
+> @@ -281,6 +286,10 @@ static struct annotated_data_type *dso__findnew_data_type(struct dso *dso,
+>  	if (die_get_typename_from_type(type_die, &sb) < 0)
+>  		strbuf_add(&sb, "(unknown type)", 14);
+>  	type_name = strbuf_detach(&sb, NULL);
+> +
+> +	if (dwarf_tag(type_die) == DW_TAG_typedef)
+> +		die_get_real_type(type_die, type_die);
+> +
+>  	dwarf_aggregate_size(type_die, &size);
+>  
+>  	/* Check existing nodes in dso->data_types tree */
+> @@ -342,6 +351,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
 >  {
-> -	struct annotated_data_type *result = NULL;
->  	struct dso *dso = map__dso(dloc->ms->map);
->  	Dwarf_Die type_die;
+>  	Dwarf_Word size;
+>  	bool is_pointer = true;
+> +	Dwarf_Die sized_type;
 >  
-> -	dloc->di = debuginfo__new(dso__long_name(dso));
-> -	if (dloc->di == NULL) {
-> -		pr_debug_dtp("cannot get the debug info\n");
-> -		return NULL;
-> -	}
-> -
->  	/*
->  	 * The type offset is the same as instruction offset by default.
->  	 * But when finding a global variable, the offset won't be valid.
-> @@ -1364,13 +1357,9 @@ struct annotated_data_type *find_data_type(struct data_loc_info *dloc)
->  	dloc->fbreg = -1;
+>  	if (reg == DWARF_REG_PC)
+>  		is_pointer = false;
+> @@ -351,7 +361,7 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
+>  		is_pointer = false;
 >  
->  	if (find_data_type_die(dloc, &type_die) < 0)
-> -		goto out;
-> -
-> -	result = dso__findnew_data_type(dso, &type_die);
-> +		return NULL;
->  
-> -out:
-> -	debuginfo__delete(dloc->di);
-> -	return result;
-> +	return dso__findnew_data_type(dso, &type_die);
->  }
->  
->  static int alloc_data_type_histograms(struct annotated_data_type *adt, int nr_entries)
-> diff --git a/tools/perf/util/annotate-data.h b/tools/perf/util/annotate-data.h
-> index 992b7ce4bd11..37a1a3b68e0b 100644
-> --- a/tools/perf/util/annotate-data.h
-> +++ b/tools/perf/util/annotate-data.h
-> @@ -123,9 +123,9 @@ struct data_loc_info {
->  	u64 var_addr;
->  	u8 cpumode;
->  	struct annotated_op_loc *op;
-> +	struct debuginfo *di;
->  
->  	/* These are used internally */
-> -	struct debuginfo *di;
->  	int fbreg;
->  	bool fb_cfa;
->  
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index a2ee4074f768..a28d8a4b8a14 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -25,6 +25,7 @@
->  #include "srcline.h"
->  #include "units.h"
->  #include "debug.h"
-> +#include "debuginfo.h"
->  #include "annotate.h"
->  #include "annotate-data.h"
->  #include "evsel.h"
-> @@ -2326,6 +2327,20 @@ u64 annotate_calc_pcrel(struct map_symbol *ms, u64 ip, int offset,
->  	return map__rip_2objdump(ms->map, addr);
->  }
->  
-> +static struct debuginfo_cache {
-> +	struct dso *dso;
-> +	struct debuginfo *dbg;
-> +} di_cache;
-> +
-> +void debuginfo_cache__delete(void)
-> +{
-> +	dso__put(di_cache.dso);
-> +	di_cache.dso = NULL;
-> +
-> +	debuginfo__delete(di_cache.dbg);
-> +	di_cache.dbg = NULL;
-> +}
-> +
->  /**
->   * hist_entry__get_data_type - find data type for given hist entry
->   * @he: hist entry
-> @@ -2360,6 +2375,27 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
->  		return NULL;
+>  	/* Get the type of the variable */
+> -	if (die_get_real_type(var_die, type_die) == NULL) {
+> +	if (__die_get_real_type(var_die, type_die) == NULL) {
+>  		pr_debug_dtp("variable has no type\n");
+>  		ann_data_stat.no_typeinfo++;
+>  		return -1;
+> @@ -365,15 +375,20 @@ static int check_variable(struct data_loc_info *dloc, Dwarf_Die *var_die,
+>  	if (is_pointer) {
+>  		if ((dwarf_tag(type_die) != DW_TAG_pointer_type &&
+>  		     dwarf_tag(type_die) != DW_TAG_array_type) ||
+> -		    die_get_real_type(type_die, type_die) == NULL) {
+> +		    __die_get_real_type(type_die, type_die) == NULL) {
+>  			pr_debug_dtp("no pointer or no type\n");
+>  			ann_data_stat.no_typeinfo++;
+>  			return -1;
+>  		}
 >  	}
 >  
-> +	/*
-> +	 * di_cache holds a pair of values, but code below assumes
-> +	 * di_cache.dso can be compared/updated and di_cache.dbg can be
-> +	 * read/updated independently from each other. That assumption only
-> +	 * holds in single threaded code.
-> +	 */
-> +	assert(perf_singlethreaded);
+> +	if (dwarf_tag(type_die) == DW_TAG_typedef)
+> +		die_get_real_type(type_die, &sized_type);
+> +	else
+> +		sized_type = *type_die;
 > +
-> +	if (map__dso(ms->map) != di_cache.dso) {
-> +		dso__put(di_cache.dso);
-> +		di_cache.dso = dso__get(map__dso(ms->map));
-> +
-> +		debuginfo__delete(di_cache.dbg);
-> +		di_cache.dbg = debuginfo__new(dso__long_name(di_cache.dso));
-> +	}
-> +
-> +	if (di_cache.dbg == NULL) {
-> +		ann_data_stat.no_dbginfo++;
-> +		return NULL;
-> +	}
-> +
->  	/* Make sure it has the disasm of the function */
->  	if (symbol__annotate(ms, evsel, &arch) < 0) {
->  		ann_data_stat.no_insn++;
-> @@ -2404,6 +2440,7 @@ struct annotated_data_type *hist_entry__get_data_type(struct hist_entry *he)
->  			.ip = ms->sym->start + dl->al.offset,
->  			.cpumode = he->cpumode,
->  			.op = op_loc,
-> +			.di = di_cache.dbg,
->  		};
+>  	/* Get the size of the actual type */
+> -	if (dwarf_aggregate_size(type_die, &size) < 0) {
+> +	if (dwarf_aggregate_size(&sized_type, &size) < 0) {
+>  		pr_debug_dtp("type size is unknown\n");
+>  		ann_data_stat.invalid_size++;
+>  		return -1;
+> @@ -846,6 +861,7 @@ static int check_matching_type(struct type_state *state,
 >  
->  		if (!op_loc->mem_ref && op_loc->segment == INSN_SEG_NONE)
-> diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-> index 9ba772f46270..27d9540604ef 100644
-> --- a/tools/perf/util/annotate.h
-> +++ b/tools/perf/util/annotate.h
-> @@ -543,4 +543,6 @@ struct annotated_basic_block {
->  int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
->  			      struct list_head *head);
+>  	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_TYPE) {
+>  		int tag = dwarf_tag(&state->regs[reg].type);
+> +		Dwarf_Die sized_type;
 >  
-> +void debuginfo_cache__delete(void);
+>  		/*
+>  		 * Normal registers should hold a pointer (or array) to
+> @@ -862,13 +878,18 @@ static int check_matching_type(struct type_state *state,
+>  		pr_debug_dtp("\n");
+>  
+>  		/* Remove the pointer and get the target type */
+> -		if (die_get_real_type(&state->regs[reg].type, type_die) == NULL)
+> +		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
+>  			return -1;
+>  
+>  		dloc->type_offset = dloc->op->offset;
+>  
+> +		if (dwarf_tag(type_die) == DW_TAG_typedef)
+> +			die_get_real_type(type_die, &sized_type);
+> +		else
+> +			sized_type = *type_die;
 > +
->  #endif	/* __PERF_ANNOTATE_H */
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index 5596bed1b8c8..f9072e003367 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -36,6 +36,7 @@
->  #include "util.h"
->  #include "arch/common.h"
->  #include "units.h"
-> +#include "annotate.h"
->  #include <internal/lib.h>
+>  		/* Get the size of the actual type */
+> -		if (dwarf_aggregate_size(type_die, &size) < 0 ||
+> +		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
+>  		    (unsigned)dloc->type_offset >= size)
+>  			return -1;
 >  
->  #ifdef HAVE_ZSTD_SUPPORT
-> @@ -304,6 +305,7 @@ void perf_session__delete(struct perf_session *session)
->  		return;
->  	auxtrace__free(session);
->  	auxtrace_index__free(&session->auxtrace_index);
-> +	debuginfo_cache__delete();
->  	perf_session__destroy_kernel_maps(session);
->  	perf_decomp__release_events(session->decomp_data.decomp);
->  	perf_env__exit(&session->header.env);
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 44ef968a7ad3..5e080d7e22c2 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -267,7 +267,7 @@ Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+>  }
+>  
+>  /* Get a type die, but skip qualifiers */
+> -static Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+> +Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem)
+>  {
+>  	int tag;
+>  
+> diff --git a/tools/perf/util/dwarf-aux.h b/tools/perf/util/dwarf-aux.h
+> index 24446412b869..336a3a183a78 100644
+> --- a/tools/perf/util/dwarf-aux.h
+> +++ b/tools/perf/util/dwarf-aux.h
+> @@ -56,6 +56,8 @@ const char *die_get_decl_file(Dwarf_Die *dw_die);
+>  /* Get type die */
+>  Dwarf_Die *die_get_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+>  
+> +/* Get a type die, but skip qualifiers */
+> +Dwarf_Die *__die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+>  /* Get a type die, but skip qualifiers and typedef */
+>  Dwarf_Die *die_get_real_type(Dwarf_Die *vr_die, Dwarf_Die *die_mem);
+>  
 > -- 
 > 2.46.0.rc2.264.g509ed76dc8-goog
