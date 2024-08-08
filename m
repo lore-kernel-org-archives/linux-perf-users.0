@@ -1,252 +1,183 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42CFA183098
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 05:46:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F068E5228;
+	Thu,  8 Aug 2024 06:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723096014; cv=none; b=DlMhuXm6+kkmoT+KHaF7k7ZZvTub3bD8RXdrZZsSF0OYqCbk1hIlh4gMTOorRtRrDangnaYR/PKzdPj+9yq3r7z+juaKaI2X+VuA6cRfDFE/WLqYpDbPalOUABdNu/ru32q3Aee7JHhVSOkCSm4IMzkd1u4YEVLzwAoWpSiVEEE=
+	t=1723099510; cv=none; b=Wn5JuTRVm900Ydtx/XZHiVChROHr8v6YHHE6g1WdI4GQr4SSRpU3+hGZlXFDWXh7AOn930iZpF+E2fclJrCa+t73PSwE+8pfQr/jWSHQ0ti+FnyBY919dNwG/VEFdpLs2DEnWd5hgzpNxpMVDU0CQuK5+FjeD+6Idb+IDv6wEqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723096014; c=relaxed/simple;
-	bh=1xM/obalM1Zz/Qgs0+hW+TUUWAOW2S/SDCArn56ZLuY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Zpputdwuxu3vD1pSMNcqkIvL83EEP7lq0KvD2voz7GiP+rXq4gL2w/VQ3gp8Xct/tsSkw/tdiv1emcron38askKi6iTuJLmPaKxuca8umjfP/K93ocAstAyB10rJPXuaVio56TvUP3AcMF1znnQo5i/YrCVOlem7DifHhMF8860=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zGpda7uX; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1723099510; c=relaxed/simple;
+	bh=9f6hQpfsYWEx7XOtkE5bZ+rq2R72IjDOqr3b7kLC7P0=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=Y1vfqL2SxlHMgCHwAY4XUqBl/A4pD+ZzDLUwrxm9mBO3QicHhi/295UDR0K1eJc0b2vBuVGqiKdVNpN/bGls1VA/XB1iWjZ0Mu3gbDM4HeYA4umJxVQIrbLD1yVOUOxl28tnW7xiG2c2vfDPBPgSJIs+QCt0tOSQKcowu57JqrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qtmsmih4; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zGpda7uX"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-654d96c2bb5so13134027b3.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 22:46:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723096011; x=1723700811; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xhM04XOuy0Npad0DaVUlBDWgqhxXjCFufiJExS1b808=;
-        b=zGpda7uXm02C6mBL72Yau0EccRjGzwuq17ZFTVy7EZzMO1ImFAIAxXqehlbYqxSb8Q
-         ly6DHF4zxavfCta/6WZSJKsIgJcYf73ev5JkG02mTbcM6iTcGMazI1FDUfhgDUfQGlUw
-         2iE1pg3wl3UppCjj27NECxuiskil8HzOZHYsElL3LAUhDxJc+sLuzxGVJhFYkQMw8xfg
-         P8rvHQ0k5UDx6xfOrBGCzPkZRlZpKUk2CELVKPO0qenAQyOX4FwGGpVtyX90lYGwlY4V
-         wJ1VsYl/IGGTr3cYBNsumDgGpwwGOxsylNPCdtqE9s+lJV/6MMJWfpyx9HwVniNI0Kob
-         1PKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723096011; x=1723700811;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xhM04XOuy0Npad0DaVUlBDWgqhxXjCFufiJExS1b808=;
-        b=rdleCjzuSTqDuefm3OfGHu8iDhqHhtiXehNd/Y3gqBJfXmp/JCo2FI/1R+7wHVkPNN
-         O0JA9yENlmx4JYrH9AwF+ip1XScQj9A0XU5zWsyeRuqVMhm0wsrSHkj7cOnOo0Y77LHy
-         MmJjyqJN1MKFFbfIjePsaToTs576ORwV+zJ91Qqfd7cZyIySA/bcdFck80Bd12C7BbNv
-         m3o2UFp6+oUQBh0vJeyqrKytvAPchEwXrLBwgu7BBI7SNzAEKuUjqBcVkbCNOsDAdUbX
-         rhQijG4bVPPw4OFXtEE90TIhzNEaE869MMyxDPIC+OiTMKY7jYOWC8ONXwjxL3MsuvNp
-         rO3A==
-X-Forwarded-Encrypted: i=1; AJvYcCU+eDT3cJt69+UDlgcLQ0E0qQ6SUOkjEPHuSzjDri8XbQlSpGuMWu5fQRnQDK6xXS1vfGPa9J58rHNpRU5PKbTQ@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz1zn+N2Fgp+Rm7cZTZhRZ2v+ULNyZjsZcOr2qhVsMQjlQSnB1b
-	CBuZIDF2GrtH//CQQ2tB0+6VnqzIC+H5PPA/emFJI1J8Ke3wGNNMfOf2KDexsuJK6+izi+I+REn
-	NW36Bwg==
-X-Google-Smtp-Source: AGHT+IE7F+fXcgGfS593aciFSAJIuK69gAAk1Ygg943wWj2kCII1jjYfAXNtT1xgN7qTAer0RD197wqazTeK
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b5fd:72d8:6b88:65f6])
- (user=irogers job=sendgmr) by 2002:a81:ae25:0:b0:64a:8adc:f95c with SMTP id
- 00721157ae682-69bfbf958bcmr230557b3.8.1723096011145; Wed, 07 Aug 2024
- 22:46:51 -0700 (PDT)
-Date: Wed,  7 Aug 2024 22:46:44 -0700
-In-Reply-To: <20240808054644.1286065-1-irogers@google.com>
-Message-Id: <20240808054644.1286065-2-irogers@google.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qtmsmih4"
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4783raWW005829;
+	Thu, 8 Aug 2024 06:44:44 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=LEg29M2yqo1wvbO42uopFKk9Gjuc//TOv0IVcWZHbGs=; b=qtmsmih4vFCJ
+	/ybdMAs6kxwQyUQloCJHt72JMN7XatXBrUwkpN5O0KO4XLMPlT5hvKJQEPFXtWCR
+	9ELo5jnjuTv9F4zDvMNTlm1uEiUKJKw/jCSCsLROciagbP250ZIgIGSuMpMIaAuM
+	tIAOmQW3SbygHUa7YBaXwIk+CW79IoVaSxuIBOFejFOvv0klBYjB/HB1/gbAzLCy
+	W2fpo0g6GttEI0nxXZkHKifB7Cpn5P4mDpdftglpEybVTy2vS6NirTM0+oNDxuI4
+	+LHL/468xJiL71hM1WVjb7Pm079uGCMgKvD8VUpVDEGpd/i5SJCnlGzKf4StMtvf
+	NNZA54IjMw==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40urpuby7p-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 06:44:43 +0000 (GMT)
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4786igWp030241;
+	Thu, 8 Aug 2024 06:44:42 GMT
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40urpuby7m-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 06:44:42 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 4783xS2T018004;
+	Thu, 8 Aug 2024 06:44:41 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40t0cmvtkq-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 08 Aug 2024 06:44:41 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4786iZHZ57737710
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 8 Aug 2024 06:44:38 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DCDE620043;
+	Thu,  8 Aug 2024 06:44:35 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EC93920040;
+	Thu,  8 Aug 2024 06:44:26 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.113.139])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu,  8 Aug 2024 06:44:26 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for
+ v6.11
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZrO5HR9x2xyPKttx@google.com>
+Date: Thu, 8 Aug 2024 12:14:12 +0530
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Leo Yan <leo.yan@arm.com>,
+        James Clark <james.clark@linaro.org>, Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org
+Message-Id: <F3C6DE61-8E10-4814-A6C0-C7569B3FD613@linux.vnet.ibm.com>
+References: <20240806225013.126130-1-namhyung@kernel.org>
+ <ZrO5HR9x2xyPKttx@google.com>
+To: Namhyung Kim <namhyung@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: L2gBmFoGup1EK_PG9EwlwP3G5Ww1ljlb
+X-Proofpoint-GUID: tvb4B9ZyOUHFlc5FqnowrES5Pbrzd0es
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240808054644.1286065-1-irogers@google.com>
-X-Mailer: git-send-email 2.46.0.rc2.264.g509ed76dc8-goog
-Subject: [PATCH v1 2/2] perf test: Add set of perf record LBR tests
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Anne Macedo <retpolanne@posteo.net>, 
-	Changbin Du <changbin.du@huawei.com>, Andi Kleen <ak@linux.intel.com>, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-08_06,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ lowpriorityscore=0 mlxlogscore=999 malwarescore=0 priorityscore=1501
+ suspectscore=0 clxscore=1011 phishscore=0 bulkscore=0 spamscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408080046
 
-Adds coverage for LBR operations and LBR callgraph.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/tests/shell/record_lbr.sh | 161 +++++++++++++++++++++++++++
- 1 file changed, 161 insertions(+)
- create mode 100755 tools/perf/tests/shell/record_lbr.sh
 
-diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
-new file mode 100755
-index 000000000000..baf168d0ddbb
---- /dev/null
-+++ b/tools/perf/tests/shell/record_lbr.sh
-@@ -0,0 +1,161 @@
-+#!/bin/bash
-+# perf record LBR tests
-+# SPDX-License-Identifier: GPL-2.0
-+
-+set -e
-+
-+if [ ! -f /sys/devices/cpu/caps/branches ]
-+then
-+  echo "Skip: only x86 CPUs support LBR"
-+  exit 2
-+fi
-+
-+err=0
-+perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+
-+cleanup() {
-+  rm -rf "${perfdata}"
-+  rm -rf "${perfdata}".old
-+  rm -rf "${perfdata}".txt
-+
-+  trap - EXIT TERM INT
-+}
-+
-+trap_cleanup() {
-+  cleanup
-+  exit 1
-+}
-+trap trap_cleanup EXIT TERM INT
-+
-+
-+lbr_callgraph_test() {
-+  test="LBR callgraph"
-+
-+  echo "$test"
-+  if ! perf record -e cycles --call-graph lbr -o "${perfdata}" perf test -w thloop
-+  then
-+    echo "$test [Failed support missing]"
-+    if [ $err -eq 0 ]
-+    then
-+      err=2
-+    fi
-+    return
-+  fi
-+
-+  if ! perf report --stitch-lbr -i "${perfdata}" > "${perfdata}".txt
-+  then
-+    cat "${perfdata}".txt
-+    echo "$test [Failed in perf report]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "$test [Success]"
-+}
-+
-+lbr_test() {
-+  local branch_flags=$1
-+  local test="LBR $2 test"
-+  local threshold=$3
-+  local out
-+  local sam_nr
-+  local bs_nr
-+  local zero_nr
-+  local r
-+
-+  echo "$test"
-+  if ! perf record -e cycles $branch_flags -o "${perfdata}" perf test -w thloop
-+  then
-+    echo "$test [Failed support missing]"
-+    perf record -e cycles $branch_flags -o "${perfdata}" perf test -w thloop || true
-+    if [ $err -eq 0 ]
-+    then
-+      err=2
-+    fi
-+    return
-+  fi
-+
-+  out=$(perf report -D -i "${perfdata}" 2> /dev/null | grep -A1 'PERF_RECORD_SAMPLE')
-+  sam_nr=$(echo "$out" | grep -c 'PERF_RECORD_SAMPLE' || true)
-+  if [ $sam_nr -eq 0 ]
-+  then
-+    echo "$test [Failed no samples captured]"
-+    err=1
-+    return
-+  fi
-+  echo "$test: $sam_nr samples"
-+
-+  bs_nr=$(echo "$out" | grep -c 'branch stack: nr:' || true)
-+  if [ $sam_nr -ne $bs_nr ]
-+  then
-+    echo "$test [Failed samples missing branch stacks]"
-+    err=1
-+    return
-+  fi
-+
-+  zero_nr=$(echo "$out" | grep -c 'branch stack: nr:0' || true)
-+  r=$(($zero_nr * 100 / $bs_nr))
-+  if [ $r -gt $threshold ]; then
-+    echo "$test [Failed empty br stack ratio exceed $threshold%: $r%]"
-+    err=1
-+    return
-+  fi
-+
-+  echo "$test [Success]"
-+}
-+
-+parallel_lbr_test() {
-+  err=0
-+  perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
-+  lbr_test "$1" "$2" "$3"
-+  cleanup
-+  exit $err
-+}
-+
-+lbr_callgraph_test
-+
-+# Sequential
-+lbr_test "-b" "any branch" 2
-+lbr_test "-j any_call" "any call" 2
-+lbr_test "-j any_ret" "any ret" 2
-+lbr_test "-j ind_call" "any indirect call" 2
-+lbr_test "-j ind_jmp" "any indirect jump" 100
-+lbr_test "-j call" "direct calls" 2
-+lbr_test "-j ind_call,u" "any indirect user call" 100
-+lbr_test "-a -b" "system wide any branch" 2
-+lbr_test "-a -j any_call" "system wide any call" 2
-+
-+# Parallel
-+parallel_lbr_test "-b" "parallel any branch" 100 &
-+pid1=$!
-+parallel_lbr_test "-j any_call" "parallel any call" 100 &
-+pid2=$!
-+parallel_lbr_test "-j any_ret" "parallel any ret" 100 &
-+pid3=$!
-+parallel_lbr_test "-j ind_call" "parallel any indirect call" 100 &
-+pid4=$!
-+parallel_lbr_test "-j ind_jmp" "parallel any indirect jump" 100 &
-+pid5=$!
-+parallel_lbr_test "-j call" "parallel direct calls" 100 &
-+pid6=$!
-+parallel_lbr_test "-j ind_call,u" "parallel any indirect user call" 100 &
-+pid7=$!
-+parallel_lbr_test "-a -b" "parallel system wide any branch" 100 &
-+pid8=$!
-+parallel_lbr_test "-a -j any_call" "parallel system wide any call" 100 &
-+pid9=$!
-+
-+for pid in $pid1 $pid2 $pid3 $pid4 $pid5 $pid6 $pid7 $pid8 $pid9
-+do
-+  set +e
-+  wait $pid
-+  child_err=$?
-+  set -e
-+  if ([ $err -eq 2 ] && [ $child_err -eq 1 ]) || [ $err -eq 0 ]
-+  then
-+    err=$child_err
-+  fi
-+done
-+
-+cleanup
-+exit $err
--- 
-2.46.0.rc2.264.g509ed76dc8-goog
+> On 7 Aug 2024, at 11:42=E2=80=AFPM, Namhyung Kim <namhyung@kernel.org> wr=
+ote:
+>=20
+> Hello folks,
+>=20
+> On Tue, Aug 06, 2024 at 03:50:03PM -0700, Namhyung Kim wrote:
+>> Hello,
+>>=20
+>> This is the usual sync up in header files we keep in tools directory.
+>> I put a file to give the reason of this work and not to repeat it in
+>> every commit message.  The changes will be carried in the perf-tools
+>> tree.
+>=20
+> Could you please double check what's in the tmp.perf-tools branch at the
+> perf-tools tree so I don't break build and perf trace for arm64, powerpc
+> and s390?  It has this patchset + arm64 unistd header revert (according
+> to the discussion on patch 6/10) on top of v6.11-rc2.
+>=20
+> Thanks,
+> Namhyung
+Hi Namhyung,
+
+Can you please point to the tree. I checked in https://git.kernel.org/pub/s=
+cm/linux/kernel/git/acme/linux.git as well as https://git.kernel.org/pub/sc=
+m/linux/kernel/git/perf/perf-tools-next.git , but didn=E2=80=99t find the c=
+hanges. May be I am missing something. I am trying to check the build in po=
+werpc.
+
+Thanks
+Athira
+
+
+>=20
+>>=20
+>> Namhyung Kim (10):
+>>  perf tools: Add tools/include/uapi/README
+>>  tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
+>>  tools/include: Sync uapi/linux/kvm.h with the kernel sources
+>>  tools/include: Sync uapi/linux/perf.h with the kernel sources
+>>  tools/include: Sync uapi/sound/asound.h with the kernel sources
+>>  tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
+>>  tools/include: Sync network socket headers with the kernel sources
+>>  tools/include: Sync filesystem headers with the kernel sources
+>>  tools/include: Sync x86 headers with the kernel sources
+>>  tools/include: Sync arm64 headers with the kernel sources
+>>=20
+>> tools/arch/arm64/include/asm/cputype.h        |  10 +
+>> tools/arch/arm64/include/uapi/asm/unistd.h    |  24 +-
+>> tools/arch/powerpc/include/uapi/asm/kvm.h     |   3 +
+>> tools/arch/x86/include/asm/cpufeatures.h      | 803 +++++++++---------
+>> tools/arch/x86/include/asm/msr-index.h        |  11 +
+>> tools/arch/x86/include/uapi/asm/kvm.h         |  49 ++
+>> tools/arch/x86/include/uapi/asm/svm.h         |   1 +
+>> tools/include/uapi/README                     |  73 ++
+>> tools/include/uapi/asm-generic/unistd.h       |   2 +-
+>> tools/include/uapi/drm/i915_drm.h             |  27 +
+>> tools/include/uapi/linux/in.h                 |   2 +
+>> tools/include/uapi/linux/kvm.h                |  17 +-
+>> tools/include/uapi/linux/perf_event.h         |   6 +-
+>> tools/include/uapi/linux/stat.h               |  12 +-
+>> .../arch/powerpc/entry/syscalls/syscall.tbl   |   6 +-
+>> .../perf/arch/s390/entry/syscalls/syscall.tbl |   2 +-
+>> .../arch/x86/entry/syscalls/syscall_64.tbl    |   8 +-
+>> .../perf/trace/beauty/include/linux/socket.h  |   5 +-
+>> .../perf/trace/beauty/include/uapi/linux/fs.h | 163 +++-
+>> .../trace/beauty/include/uapi/linux/mount.h   |  10 +-
+>> .../trace/beauty/include/uapi/linux/stat.h    |  12 +-
+>> .../trace/beauty/include/uapi/sound/asound.h  |   9 +-
+>> 22 files changed, 810 insertions(+), 445 deletions(-)
+>> create mode 100644 tools/include/uapi/README
+>>=20
+>> --=20
+>> 2.46.0.rc2.264.g509ed76dc8-goog
+>>=20
 
