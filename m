@@ -1,256 +1,217 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9F5C133
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 00:02:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9356FB0;
+	Thu,  8 Aug 2024 01:11:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723075368; cv=none; b=OMbdaEvgZhc1Bx+ZY048xnPI3j0Aufi5Q80yD9pH09lbRypWHSAgZqcY2I0/h2+SFQ2BgTAh7RTqZbvOeKfiImbxgvOxY89XPzsjfdnXuIltpIWSFmjXAU9F2C6H83REao41dfttFwEsex6sujoaoV51O5mab+UlWyGAIqP584Q=
+	t=1723079483; cv=none; b=TPVdrycHu9ZwBCpDUDzZ7YV3WTPpFYfBp7T+ivEk4ELy9zn8PPwvqjCqcaqIbihCeQjoyaVpgUon8LQygub0bnNPhmc11lFgfQuHW2Y2fwu657fwAOThnHJQtUkffVL+mTgYCzhSqhCwpg9GprxXF5/DD0FWgv5rYyZejDqZwpk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723075368; c=relaxed/simple;
-	bh=PLec4BWlWUsM/t9o8cJqaayRfPM3UGKocb1ebQzR44c=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Au1nOBidh+7HAm6Tqc1llmXqPgXYC3W+vAB/EeeXZ07dfYKHwoBQ+fFWzN4kc2Y7Wag+v6GQ/YYR7JNN+73cFBWGWBylny4WLWFpacOZ6A3NZKieTECv/yebv2Tt7OkgcTX8sF7SMNg2pCFgYjjaflgqTWFQDIUfU0wyhDVuGfE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=StF8rwwY; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1723079483; c=relaxed/simple;
+	bh=9cwcJwD2oFV3GuhOKOZnwg10DfpgHVH065g5lC627eQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=amUM35zecOwNa7pEizK5myhti8AOG61k2YC7rhcqDE8gU0B+6am2NB2HwIUPw7Snw49VRKgzkiqk9hteb8PIMBCqG1smyM+k3IAabS6ZMGi54Jx/fmoKhGns1ogV3sTBbN9PyUmyW9cFDOotEmqjVqsSCaxY0ejCMk0QDgUrdeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nGYB0TYo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="StF8rwwY"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1fc6ee64512so4464045ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 07 Aug 2024 17:02:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1723075366; x=1723680166; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WxNS3a4ltAskNvEMrzz4GNQwPwNhtM7sueZi805L88w=;
-        b=StF8rwwYjLiPxEZlZcLhg1H/RG8ijKxZwUCVxuVAcO/xTy30lf+0XvFSukHiihCajP
-         8RqAEs9jHMJwfuZEBGxh3hmZZdPHV98m4TM8H8RkUqc8T4r2BHlFWt5IEESvttMrL7qc
-         f9aUkAH7g07izhWBxOpA1SOazHo9ityiAjyrRpnldS/XXLEzKNTXs10GOdR3whgUwt0D
-         eVGGq41LPMujMdGoSy0RMLXJz5A4DpMrGtJ09zgKOxSegoHHo2Y2Or/xWp8EUSnAKbjf
-         XrdGP1f7oEMCR3m+FjEdb3tGLFKiWQi2fw3uFU05UjuyRPbEL8BWhppJH6PSiuZCZwhl
-         AnYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723075366; x=1723680166;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WxNS3a4ltAskNvEMrzz4GNQwPwNhtM7sueZi805L88w=;
-        b=qoMZhGP8Gv4FFgAGT/Zqf5D/sfDOa21ax2s63ghK4zIsV78F/uA6PfiXg1oA9qnmiO
-         iPSzAhNq7kPpz9wHeMZTu6+b5uwP0ycprWffVkXf8XuTzK6yCBQu9aJ8/bLKaSL5ygXh
-         9/iCVi3Xmcp+sQt7NPrw400iHHW7pw4RZiX7P9cGdKTVQriy6BsZLMpSRZP3pA25Lpqq
-         mdeYq6CiViySw7SBC7Xfbz8yZ7+Lj47S7WytpnJw+Dqwk8iIyEsAkOlg1tMKgdZnFXiE
-         TTglpsCsZXRnwqjesoo9J3FYs002JNTh7Q5CAJhwe5BS6Csfge6jUarbrzngTE5YWZdr
-         b08w==
-X-Gm-Message-State: AOJu0Yw1zCAldZNx6K35mViyCD7S3LsuM/zw/B3QHmtn8aDgksuXGeq8
-	NxLprv5bACNkw89QARVrOA1TMZYrYWu1xqxOrmAN1SQ1EqrxpHZq2cmhRtQWOk62FmNgU1U6i3j
-	J
-X-Google-Smtp-Source: AGHT+IHmY7jw5RPrhhkeTFYtNulkLVfNeKpreQMsWh2pSTjIaEQbmV03fRSpB1FH63AQYQl496TJug==
-X-Received: by 2002:a17:903:41ca:b0:200:8c4d:9120 with SMTP id d9443c01a7336-2009527d669mr3253175ad.39.1723075366476;
-        Wed, 07 Aug 2024 17:02:46 -0700 (PDT)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ff58f586f7sm112867015ad.90.2024.08.07.17.02.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Aug 2024 17:02:45 -0700 (PDT)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Wed, 07 Aug 2024 17:02:42 -0700
-Subject: [PATCH v2 3/3] libperf: Add perf_evsel__refresh() function
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nGYB0TYo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E037C32781;
+	Thu,  8 Aug 2024 01:11:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723079482;
+	bh=9cwcJwD2oFV3GuhOKOZnwg10DfpgHVH065g5lC627eQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nGYB0TYobLTgZx1Wq2FRNVa3VDlbvtXC04RbIYk9iWFGDDkdgF/q/bWv6WjPnaFk5
+	 SACL172kz5LTd6R153Mbh8c0qAC/llSV5sKFNMRaEH3Y9TX05jQpexPX4GW1/Omz1p
+	 +4rSU7vN2MVgf+XFzugWsj0WYJwe4hwGkxWpiNF1WeInM6WV9L/QeEeZcQHmnAPw5P
+	 qkx0cB2O2ZGKaiDARQZdTXHRF25YlOgQBzWChujPnB4Q7o60ZnkNC516Z29cpX9gE+
+	 pBg2aAwgKAhTrKzI5LZ7ku4eoqahr+rp/rve0xrdHqqjevfNnOe1ATA5fCJjfagvc8
+	 GoOCiUV/3/dMA==
+Date: Wed, 7 Aug 2024 22:11:18 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for
+ v6.11
+Message-ID: <ZrQbNtK3LSpyXpMu@x1>
+References: <20240806225013.126130-1-namhyung@kernel.org>
+ <ZrO5HR9x2xyPKttx@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240807-perf_set_event_limit-v2-3-823b78d04c76@rivosinc.com>
-References: <20240807-perf_set_event_limit-v2-0-823b78d04c76@rivosinc.com>
-In-Reply-To: <20240807-perf_set_event_limit-v2-0-823b78d04c76@rivosinc.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, Atish Patra <atishp@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>, 
- Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1723075360; l=6556;
- i=charlie@rivosinc.com; s=20231120; h=from:subject:message-id;
- bh=PLec4BWlWUsM/t9o8cJqaayRfPM3UGKocb1ebQzR44c=;
- b=ZqA/4Nnzj0RoCv5FaSNncMVmhDEIvj6ivD4GQoB11G2GhUBeLI2+tN75ypxQGbeqUPfk5KLr1
- /VmiGfR+3cPCy5RJtC8+IJvAmswfJbRi2yEjtFcMf4GMywYmEAnRjeI
-X-Developer-Key: i=charlie@rivosinc.com; a=ed25519;
- pk=t4RSWpMV1q5lf/NWIeR9z58bcje60/dbtxxmoSfBEcs=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZrO5HR9x2xyPKttx@google.com>
 
-Introduce perf_evsel__refresh() to increment the overflow limit. Can
-optionally enable the event immediately.
+On Wed, Aug 07, 2024 at 11:12:45AM -0700, Namhyung Kim wrote:
+> On Tue, Aug 06, 2024 at 03:50:03PM -0700, Namhyung Kim wrote:
+> > This is the usual sync up in header files we keep in tools directory.
+> > I put a file to give the reason of this work and not to repeat it in
+> > every commit message.  The changes will be carried in the perf-tools
+> > tree.
 
-Co-developed-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Signed-off-by: Shunsuke Nakamura <nakamura.shun@fujitsu.com>
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- tools/lib/perf/Documentation/libperf.txt |  2 ++
- tools/lib/perf/evsel.c                   | 49 ++++++++++++++++++++++++++------
- tools/lib/perf/include/perf/evsel.h      |  2 ++
- tools/lib/perf/libperf.map               |  2 ++
- 4 files changed, 47 insertions(+), 8 deletions(-)
+> Could you please double check what's in the tmp.perf-tools branch at the
+> perf-tools tree so I don't break build and perf trace for arm64, powerpc
+> and s390?  It has this patchset + arm64 unistd header revert (according
+> to the discussion on patch 6/10) on top of v6.11-rc2.
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index fcfb9499ef9c..a6c3bab5c995 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -147,6 +147,8 @@ SYNOPSIS
-   int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-   int perf_evsel__disable(struct perf_evsel *evsel);
-   int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-+  int perf_evsel__refresh(struct perf_evsel *evsel, int refresh, bool enable);
-+  int perf_evsel__period(struct perf_evsel *evsel, int period);
-   struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
-   struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-   struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c07160953224..2b7ca7fa4998 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -18,6 +18,7 @@
- #include <sys/ioctl.h>
- #include <sys/mman.h>
- #include <asm/bug.h>
-+#include "internal.h"
- 
- void perf_evsel__init(struct perf_evsel *evsel, struct perf_event_attr *attr,
- 		      int idx)
-@@ -412,7 +413,7 @@ int perf_evsel__read(struct perf_evsel *evsel, int cpu_map_idx, int thread,
- 	return 0;
- }
- 
--static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
-+static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, unsigned long arg,
- 			     int cpu_map_idx, int thread)
- {
- 	int *fd = FD(evsel, cpu_map_idx, thread);
-@@ -424,7 +425,7 @@ static int perf_evsel__ioctl(struct perf_evsel *evsel, int ioc, void *arg,
- }
- 
- static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
--				 int ioc,  void *arg,
-+				 int ioc, unsigned long arg,
- 				 int cpu_map_idx)
- {
- 	int thread;
-@@ -441,7 +442,7 @@ static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
- 
- int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, cpu_map_idx);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu_map_idx);
- }
- 
- int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread)
-@@ -451,7 +452,7 @@ int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread)
- 	int err;
- 
- 	perf_cpu_map__for_each_cpu(cpu, idx, evsel->cpus) {
--		err = perf_evsel__ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, idx, thread);
-+		err = perf_evsel__ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, idx, thread);
- 		if (err)
- 			return err;
- 	}
-@@ -465,13 +466,13 @@ int perf_evsel__enable(struct perf_evsel *evsel)
- 	int err = 0;
- 
- 	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
--		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, NULL, i);
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, i);
- 	return err;
- }
- 
- int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx)
- {
--	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, cpu_map_idx);
-+	return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, cpu_map_idx);
- }
- 
- int perf_evsel__disable(struct perf_evsel *evsel)
-@@ -480,7 +481,39 @@ int perf_evsel__disable(struct perf_evsel *evsel)
- 	int err = 0;
- 
- 	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
--		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, NULL, i);
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, i);
-+	return err;
-+}
-+
-+int perf_evsel__refresh(struct perf_evsel *evsel, int refresh, bool enable)
-+{
-+	int i, ioc;
-+	int err = 0;
-+
-+	ioc = enable ? PERF_EVENT_IOC_REFRESH : PERF_EVENT_IOC_INC_EVENT_LIMIT;
-+
-+	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel, ioc, refresh, i);
-+	return err;
-+}
-+
-+int perf_evsel__period(struct perf_evsel *evsel, __u64 period)
-+{
-+	struct perf_event_attr *attr;
-+	int i;
-+	int err = 0;
-+
-+	attr = perf_evsel__attr(evsel);
-+
-+	for (i = 0; i < xyarray__max_x(evsel->fd); i++) {
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_PERIOD,
-+					    (unsigned long)&period, i);
-+		if (err)
-+			return err;
-+	}
-+
-+	attr->sample_period = period;
-+
- 	return err;
- }
- 
-@@ -491,7 +524,7 @@ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
- 	for (i = 0; i < perf_cpu_map__nr(evsel->cpus) && !err; i++)
- 		err = perf_evsel__run_ioctl(evsel,
- 				     PERF_EVENT_IOC_SET_FILTER,
--				     (void *)filter, i);
-+				     (unsigned long)filter, i);
- 	return err;
- }
- 
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 6f92204075c2..e562dd9f39e0 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -40,6 +40,8 @@ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread);
- LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
-+LIBPERF_API int perf_evsel__refresh(struct perf_evsel *evsel, int refresh, bool enable);
-+LIBPERF_API int perf_evsel__period(struct perf_evsel *evsel, __u64 period);
- LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
-diff --git a/tools/lib/perf/libperf.map b/tools/lib/perf/libperf.map
-index 2aa79b696032..bb7a48befdd5 100644
---- a/tools/lib/perf/libperf.map
-+++ b/tools/lib/perf/libperf.map
-@@ -34,6 +34,8 @@ LIBPERF_0.0.1 {
- 		perf_evsel__munmap;
- 		perf_evsel__mmap_base;
- 		perf_evsel__read;
-+		perf_evsel__refresh;
-+		perf_evsel__period;
- 		perf_evsel__cpus;
- 		perf_evsel__threads;
- 		perf_evsel__attr;
+On arm64:
 
--- 
-2.45.0
+acme@roc-rk3399-pc:~/git/perf-tools$ git log --oneline -10
+d5b854893d27 (HEAD -> perf-tools, perf-tools/tmp.perf-tools) tools/include: Sync arm64 headers with the kernel sources
+f6d9883f8e68 tools/include: Sync x86 headers with the kernel sources
+845295f4004c tools/include: Sync filesystem headers with the kernel sources
+ed86525f1f4b tools/include: Sync network socket headers with the kernel sources
+568901e709d7 tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
+b97350067626 tools/include: Sync uapi/sound/asound.h with the kernel sources
+8ec9497d3ef3 tools/include: Sync uapi/linux/perf.h with the kernel sources
+a625df3995c3 tools/include: Sync uapi/linux/kvm.h with the kernel sources
+aef21f6b6a4a tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
+fbc05142ccdd perf tools: Add tools/include/uapi/README
+acme@roc-rk3399-pc:~/git/perf-tools$
+acme@roc-rk3399-pc:~/git/perf-tools$ sudo su -
+[sudo] password for acme: 
+root@roc-rk3399-pc:~# perf -vv
+perf version 6.11.rc2.gd5b854893d27
+                 dwarf: [ on  ]  # HAVE_DWARF_SUPPORT
+    dwarf_getlocations: [ on  ]  # HAVE_DWARF_GETLOCATIONS_SUPPORT
+         syscall_table: [ on  ]  # HAVE_SYSCALL_TABLE_SUPPORT
+                libbfd: [ OFF ]  # HAVE_LIBBFD_SUPPORT
+            debuginfod: [ OFF ]  # HAVE_DEBUGINFOD_SUPPORT
+                libelf: [ on  ]  # HAVE_LIBELF_SUPPORT
+               libnuma: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+numa_num_possible_cpus: [ on  ]  # HAVE_LIBNUMA_SUPPORT
+               libperl: [ on  ]  # HAVE_LIBPERL_SUPPORT
+             libpython: [ on  ]  # HAVE_LIBPYTHON_SUPPORT
+              libslang: [ on  ]  # HAVE_SLANG_SUPPORT
+             libcrypto: [ on  ]  # HAVE_LIBCRYPTO_SUPPORT
+             libunwind: [ on  ]  # HAVE_LIBUNWIND_SUPPORT
+    libdw-dwarf-unwind: [ on  ]  # HAVE_DWARF_SUPPORT
+           libcapstone: [ OFF ]  # HAVE_LIBCAPSTONE_SUPPORT
+                  zlib: [ on  ]  # HAVE_ZLIB_SUPPORT
+                  lzma: [ on  ]  # HAVE_LZMA_SUPPORT
+             get_cpuid: [ on  ]  # HAVE_AUXTRACE_SUPPORT
+                   bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+                   aio: [ on  ]  # HAVE_AIO_SUPPORT
+                  zstd: [ on  ]  # HAVE_ZSTD_SUPPORT
+               libpfm4: [ on  ]  # HAVE_LIBPFM
+         libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+         bpf_skeletons: [ on  ]  # HAVE_BPF_SKEL
+  dwarf-unwind-support: [ on  ]  # HAVE_DWARF_UNWIND_SUPPORT
+            libopencsd: [ on  ]  # HAVE_CSTRACE_SUPPORT
+root@roc-rk3399-pc:~# perf trace -e *sleep sleep 1.2345678
+     0.000 (1235.340 ms): sleep/8628 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 234567800 }, rmtp: 0xfffff4ae40d8) = 0
+root@roc-rk3399-pc:~# strace -e bpf perf trace -e *sleep sleep 1.2345678 |& head
+bpf(0x24 /* BPF_??? */, 0xffffc86fb670, 8) = -1 EINVAL (Invalid argument)
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb420, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 8
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb6b8, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 8
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 40) = 8
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\5\0\0\0\0\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=77, btf_log_size=0, btf_log_level=0}, 40) = 8
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0l\0\0\0l\0\0\0\16\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=146, btf_log_size=0, btf_log_level=0}, 40) = 8
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_SOCKET_FILTER, insn_cnt=2, insns=0xffffc86fb150, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="libbpf_nametest", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=0, func_info_rec_size=0, func_info=NULL, func_info_cnt=0, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = 9
+bpf(BPF_PROG_LOAD, {prog_type=BPF_PROG_TYPE_KPROBE, insn_cnt=4, insns=0xffffc86fb4f8, license="GPL", log_level=0, log_size=0, log_buf=NULL, kern_version=KERNEL_VERSION(0, 0, 0), prog_flags=0, prog_name="det_arg_ctx", prog_ifindex=0, expected_attach_type=BPF_CGROUP_INET_INGRESS, prog_btf_fd=8, func_info_rec_size=8, func_info=0xffffc86fb4e8, func_info_cnt=2, line_info_rec_size=0, line_info=NULL, line_info_cnt=0, attach_btf_id=0, attach_prog_fd=0, fd_array=NULL}, 148) = -1 EINVAL (Invalid argument)
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0\20\0\0\0\20\0\0\0\5\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=45, btf_log_size=0, btf_log_level=0}, 40) = 8
+bpf(BPF_BTF_LOAD, {btf="\237\353\1\0\30\0\0\0\0\0\0\0000\0\0\0000\0\0\0\t\0\0\0\1\0\0\0\0\0\0\1"..., btf_log_buf=NULL, btf_size=81, btf_log_size=0, btf_log_level=0}, 40) = 8
+root@roc-rk3399-pc:~# perf trace -e open* sleep 1
+     0.000 ( 0.078 ms): sleep/8635 openat(dfd: CWD, filename: "/etc/ld.so.cache", flags: RDONLY|CLOEXEC) = 3
+     0.162 ( 0.031 ms): sleep/8635 openat(dfd: CWD, filename: "/lib/aarch64-linux-gnu/libc.so.6", flags: RDONLY|CLOEXEC) = 3
+     1.279 ( 0.043 ms): sleep/8635 openat(dfd: CWD, filename: "", flags: RDONLY|CLOEXEC)                 = -1 ENOENT (No such file or directory)
+     1.371 ( 0.031 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/share/locale/locale.alias", flags: RDONLY|CLOEXEC) = 3
+     1.542 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_IDENTIFICATION", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     1.573 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_IDENTIFICATION", flags: RDONLY|CLOEXEC) = 3
+     1.664 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/aarch64-linux-gnu/gconv/gconv-modules.cache") = 3
+     1.782 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MEASUREMENT", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     1.821 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MEASUREMENT", flags: RDONLY|CLOEXEC) = 3
+     1.909 ( 0.018 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_TELEPHONE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     1.938 ( 0.019 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_TELEPHONE", flags: RDONLY|CLOEXEC) = 3
+     2.023 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_ADDRESS", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.059 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_ADDRESS", flags: RDONLY|CLOEXEC) = 3
+     2.151 ( 0.019 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_NAME", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.180 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_NAME", flags: RDONLY|CLOEXEC) = 3
+     2.279 ( 0.017 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_PAPER", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.311 ( 0.023 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_PAPER", flags: RDONLY|CLOEXEC) = 3
+     2.420 ( 0.027 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MESSAGES", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.460 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MESSAGES", flags: RDONLY|CLOEXEC) = 3
+     2.514 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MESSAGES/SYS_LC_MESSAGES", flags: RDONLY|CLOEXEC) = 3
+     2.609 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_MONETARY", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.646 ( 0.022 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_MONETARY", flags: RDONLY|CLOEXEC) = 3
+     2.741 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_COLLATE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.778 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_COLLATE", flags: RDONLY|CLOEXEC) = 3
+     2.881 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_TIME", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     2.917 ( 0.020 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_TIME", flags: RDONLY|CLOEXEC) = 3
+     3.013 ( 0.025 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_NUMERIC", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     3.050 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_NUMERIC", flags: RDONLY|CLOEXEC) = 3
+     3.138 ( 0.024 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.UTF-8/LC_CTYPE", flags: RDONLY|CLOEXEC) = -1 ENOENT (No such file or directory)
+     3.174 ( 0.021 ms): sleep/8635 openat(dfd: CWD, filename: "/usr/lib/locale/C.utf8/LC_CTYPE", flags: RDONLY|CLOEXEC) = 3
+root@roc-rk3399-pc:~#
+
+The only problem that is outstanding is that one I need to send a patch
+for, 32-bit build is broken due to some trivial stuff:
+
+  18    79.36 debian:experimental           : Ok   gcc (Debian 14.1.0-5) 14.1.0 , Debian clang version 16.0.6 (27+b1) flex 2.6.4
+  19     3.96 debian:experimental-x-arm64   : FAIL gcc version 14.1.0 (Debian 14.1.0-5) 
+                     from libbpf.c:36:
+    /git/perf-6.11.0-rc2/tools/include/uapi/asm/bpf_perf_event.h:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No such file or directory
+        2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
+          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    compilation terminated.
+      CC      /tmp/build/perf/libbpf/staticobjs/btf_iter.o
+      CC      /tmp/build/perf/libbpf/staticobjs/btf_relocate.o
+      LD      /tmp/build/perf/libapi/fs/libapi-in.o
+      LD      /tmp/build/perf/libapi/libapi-in.o
+    In file included from /git/perf-6.11.0-rc2/tools/include/uapi/linux/bpf_perf_event.h:11,
+                     from libbpf.c:36:
+    /git/perf-6.11.0-rc2/tools/include/uapi/asm/bpf_perf_event.h:2:10: fatal error: ../../arch/arm64/include/uapi/asm/bpf_perf_event.h: No such file or directory
+        2 | #include "../../arch/arm64/include/uapi/asm/bpf_perf_event.h"
+          |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    compilation terminated.
+      LD      /tmp/build/perf/libperf/libperf-in.o
+    make[4]: *** [/git/perf-6.11.0-rc2/tools/build/Makefile.build:105: /tmp/build/perf/libbpf/staticobjs/libbpf.o] Error 1
+    make[4]: *** Waiting for unfinished jobs....
+      AR      /tmp/build/perf/libperf/libperf.a
+      AR      /tmp/build/perf/libapi/libapi.a
+
+Also works on x86_64:
+
+root@number:~# perf -v
+perf version 6.11.rc2.gd5b854893d27
+root@number:~# 
+root@number:~# 
+root@number:~# perf trace -e *sleep sleep 1.92837465
+     0.000 (1928.436 ms): sleep/158555 clock_nanosleep(rqtp: { .tv_sec: 1, .tv_nsec: 928374651 }, rmtp: 0x7ffd188426d0) = 0
+root@number:~# perf trace -e *mmsg --max-events 5
+     0.000 ( 0.017 ms): NetworkManager/1322 recvmmsg(fd: 22, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
+     0.048 ( 0.010 ms): NetworkManager/1322 recvmmsg(fd: 26, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
+  1012.269 ( 0.018 ms): NetworkManager/1322 recvmmsg(fd: 22, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
+  1012.321 ( 0.005 ms): NetworkManager/1322 recvmmsg(fd: 26, mmsg: 0x7ffe36cb6380, vlen: 8)                       = 1
+  2393.486 ( 0.029 ms): dbus-broker/2438 sendmmsg(fd: 31, mmsg: 0x7ffca4625ba0, vlen: 1, flags: DONTWAIT|NOSIGNAL) = 1
+root@number:~# perf trace -e *nnect* --max-events 5
+     0.000 ( 0.047 ms): pool/3064 connect(fd: 7, uservaddr: { .family: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) = 0
+  2694.480 ( 0.021 ms): DNS Res~ver #4/2450896 connect(fd: 242, uservaddr: { .family: LOCAL, path: /run/systemd/resolve/io.systemd.Resolve }, addrlen: 42) = 0
+  2694.906 ( 0.015 ms): systemd-resolv/1185 connect(fd: 25, uservaddr: { .family: INET6, port: 53, addr: fe80::1ae8:29ff:fe4c:90b0, scope_id: 3 }, addrlen: 28) = 0
+  2694.969 ( 0.005 ms): systemd-resolv/1185 connect(fd: 26, uservaddr: { .family: INET6, port: 53, addr: fe80::1ae8:29ff:fe4c:90b0, scope_id: 6 }, addrlen: 28) = 0
+  2696.329 ( 0.014 ms): DNS Res~ver #4/2450896 connect(fd: 242, uservaddr: { .family: INET6, port: 0, addr: 2800:3f0:4004:803::200e }, addrlen: 28) = 0
+root@number:~# uname -a
+Linux number 6.9.10-200.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Thu Jul 18 21:39:30 UTC 2024 x86_64 GNU/Linux
+root@number:~#
+
+All the other container builds didn't regress.
+
+Thanks,
+
+- Arnaldo
+
 
