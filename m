@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C74E156863;
-	Thu,  8 Aug 2024 19:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18599158D7F;
+	Thu,  8 Aug 2024 19:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723145576; cv=none; b=BLcZbnA3/bM0NF9Nksb1WKqF6rE9cvm2lSS/dGGcu3aTmvnKCgx7q1c8GjQV2vyCdR7F1UxGJJJ8srStDd+zbsEsD9aWBnn8MInVSfBrkHVIy6ce16XU/VOBtbiYsDVmJakYfYUyYjkkpoJAdtbqedGsg1HwMZt+x8g7DOXixw8=
+	t=1723145578; cv=none; b=uZ1Id0UMuYrdeNCPKAWF9sQXcQt4lByBq7uefXHeM+E+jDPmWmHTYTwF7fJRaQXgbWVVr2GsxP+RYNx4QjU8Fe8d+zwOZrhC//2duF5u1WNmq4mkcMQJtJ1Nop6PRZJTgNj127ZyBz6G3C9Tu5aK1HVBnWd5aYKiUCufn2D6w7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723145576; c=relaxed/simple;
-	bh=INmGvse47m1TyhqqOxl4EU0UajeILdDJuF9VfmuIi70=;
+	s=arc-20240116; t=1723145578; c=relaxed/simple;
+	bh=uGTVDkdrvwFlvuGrqN9edS0YP1xklyILPlHsg95cnas=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=S+H9q3maTOWTTMr68n89k0aF11uIfFwyREF4jIQY8JhQko2vSCHzepY6OHKMvLkBWza0nDvsMZpNYu1qiNc33Hi9dtrMARJb5LPfCZaD7Fx5VvZOkp/w18KybqS1C4a3xEY19Oks+6AtDOLyy3tk7uIITC8YgiswiSM8xeJh4gk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kFFM0TiN; arc=none smtp.client-ip=198.175.65.14
+	 MIME-Version; b=n8kG9AJ7qGBOiTs3a1MHGnOSr+1+A15bBUFu8M4ydkuxeyzx99VkKCO+1pDpwDM4VaeMgxNw64mdUGML7iMU4jxgUhtJGIIlQJyqp1mofeSdAlE6uYD+O+TXzfosjjc6kk4tuiTxbC/LGDf9A5//22T5Rsvq7P6RYORJF7vK/7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EbTgIsgm; arc=none smtp.client-ip=198.175.65.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kFFM0TiN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EbTgIsgm"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723145575; x=1754681575;
+  t=1723145576; x=1754681576;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=INmGvse47m1TyhqqOxl4EU0UajeILdDJuF9VfmuIi70=;
-  b=kFFM0TiN/Mc5/RGzqAOf8zFU2pbgKh3TLKQ62m78WGDS0ebfpv2MBuOD
-   +6JwkM+6AFikRGJctseq1HYoPzIwlyCRZQOyb8q7Z+u+pYdHdPufggiXR
-   Nd9yyfr6/OLDpq/7nTUO/hI5Gs8utjSY5GhQwq3y8Pv4fU+YtAGiW4QE+
-   NKQGV8iP5u3Fdd36T76MKD4WzITtIbGpii3wR7+NTytAZHK5xWrycePjn
-   j+MNk8aYPMRgAXWWHZQmhQ+7Ilcs1qrGaxap7SlCGBcuFp8mO97HRq8G6
-   p8GmsbBKQTwTgcqtkVzYpNYvf3uXom0qbeYSx14pPELVBYuzsp4WPXBnr
-   g==;
-X-CSE-ConnectionGUID: dxKGErKQTfyjyfdno1EXyA==
-X-CSE-MsgGUID: VlIntO9lS8qon9T2+fEVFA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="25091711"
+  bh=uGTVDkdrvwFlvuGrqN9edS0YP1xklyILPlHsg95cnas=;
+  b=EbTgIsgm/k+tEfPK+lXgeQ+NUFPnC3N0OXoa7yHeNxFuqh9PsHOMO6dC
+   WTpGrsjf/tWykoFcx0Rk4n2eSuE3TtkEMUFl/PmaIDRgNT6xt7h2+OL8a
+   12AmqgDk7GPlzm7dewCNsI1uFTC1BQ9+2aWqTUVS/lhQPTw8fBm19DLVq
+   dBQj3hjdNT1bflBZ7lkNXYvPToNxPGpN+7QKbMOWMX4gclSyHZ6zWfNOP
+   CCXRQMNbTp2uyH9XvxoZmrZWiNLWz3cKJXIoCLkCm1toAIJsIJXsQ/Or8
+   lix8QDQAb2N/O/E+2KiaBUdQMsy45UPWdTtocrsFR6Z2HztRfUN5aZcmd
+   A==;
+X-CSE-ConnectionGUID: OqLu8GYsTcG6tLd6qVEMxQ==
+X-CSE-MsgGUID: GXbBJdevQVqMxzj7KeSB8w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="25091715"
 X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="25091711"
+   d="scan'208";a="25091715"
 Received: from fmviesa010.fm.intel.com ([10.60.135.150])
   by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 12:32:52 -0700
-X-CSE-ConnectionGUID: dfRly6t1RZieXLB738TbLg==
-X-CSE-MsgGUID: 24ONvpEbSi+IoyvkbY2cjw==
+X-CSE-ConnectionGUID: O6aUIHl0T6OHKF6fRSy74A==
+X-CSE-MsgGUID: KTUb5YJHTNyHaeBaceLwCQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="57402593"
+   d="scan'208";a="57402597"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by fmviesa010.fm.intel.com with ESMTP; 08 Aug 2024 12:32:52 -0700
 From: kan.liang@linux.intel.com
@@ -55,9 +55,9 @@ Cc: adrian.hunter@intel.com,
 	ak@linux.intel.com,
 	eranian@google.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 5/9] perf evsel: Assign abbr name for the branch counter events
-Date: Thu,  8 Aug 2024 12:33:20 -0700
-Message-Id: <20240808193324.2027665-6-kan.liang@linux.intel.com>
+Subject: [PATCH V2 6/9] perf report: Display the branch counter histogram
+Date: Thu,  8 Aug 2024 12:33:21 -0700
+Message-Id: <20240808193324.2027665-7-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20240808193324.2027665-1-kan.liang@linux.intel.com>
 References: <20240808193324.2027665-1-kan.liang@linux.intel.com>
@@ -71,123 +71,581 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-There could be several branch counter events. If perf tool output the
-result via the format "event name + a number", the line could be very
-long and hard to read.
+Reusing the existing --total-cycles option to display the branch
+counters. Add a new PERF_HPP_REPORT__BLOCK_BRANCH_COUNTER to display
+the logged branch counter events. They are shown right after all the
+cycle-related annotations.
+Extend the struct block_info to store and pass the branch counter
+related information.
 
-An abbreviation is introduced to replace the full event name in the
-display. The abbreviation starts from 'A' to 'Z9', which can support
-up to 286 events. The same abbreviation will be assigned if the same
-events are found in the evlist. The next patch will utilize the
-abbreviation name to show the branch counter events in the output.
+The annotation_br_cntr_entry() is to print the histogram of each branch
+counter event. If the number of logged events is less than 4, the exact
+number of the abbr name is printed. Otherwise, using '+' to stands for
+more than 3 events.
+
+Assume the number of logged events is less than 4.
+
+The annotation_br_cntr_abbr_list() prints the branch counter's
+abbreviation list. Press 'B' to display the list in the TUI mode.
+
+$perf record -e "{branch-instructions:ppp,branch-misses}:S" -j any,counter
+$perf report  --total-cycles --stdio
+
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }'
+ # Event count (approx.): 1610046
+ #
+ # Branch counter abbr list:
+ # branch-instructions:ppp = A
+ # branch-misses = B
+ # '-' No event occurs
+ # '+' Event occurrences may be lost due to branch counter saturated
+ #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles          Branch Counter [Program Block Range]
+ # ...............  ..............  ...........  ..........  ......................  ..................
+ #
+           57.55%            2.5M        0.00%           3             |A   |-   |                 ...
+           25.27%            1.1M        0.00%           2             |AA  |-   |                 ...
+           15.61%          667.2K        0.00%           1             |A   |-   |                 ...
+            0.16%            6.9K        0.81%         575             |A   |-   |                 ...
+            0.16%            6.8K        1.38%         977             |AA  |-   |                 ...
+            0.16%            6.8K        0.04%          28             |AA  |B   |                 ...
+            0.15%            6.6K        1.33%         946             |A   |-   |                 ...
+            0.11%            4.5K        0.06%          46             |AAA+|-   |                 ...
+            0.10%            4.4K        0.88%         624             |A   |-   |                 ...
+            0.09%            3.7K        0.74%         524             |AAA+|B   |                 ...
+
+With -v applied,
+
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles          Branch Counter [Program Block Range]
+ # ...............  ..............  ...........  ..........  ......................  ..................
+ #
+           57.55%            2.5M        0.00%           3               A=1 ,B=-                  ...
+           25.27%            1.1M        0.00%           2               A=2 ,B=-                  ...
+           15.61%          667.2K        0.00%           1               A=1 ,B=-                  ...
+            0.16%            6.9K        0.81%         575               A=1 ,B=-                  ...
+            0.16%            6.8K        1.38%         977               A=2 ,B=-                  ...
+            0.16%            6.8K        0.04%          28               A=2 ,B=1                  ...
+            0.15%            6.6K        1.33%         946               A=1 ,B=-                  ...
+            0.11%            4.5K        0.06%          46               A=3+,B=-                  ...
+            0.10%            4.4K        0.88%         624               A=1 ,B=-                  ...
+            0.09%            3.7K        0.74%         524               A=3+,B=1                  ...
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/util/evlist.c | 55 +++++++++++++++++++++++++++++++++++++++-
- tools/perf/util/evsel.h  |  6 +++++
- 2 files changed, 60 insertions(+), 1 deletion(-)
+ tools/perf/Documentation/perf-report.txt |   1 +
+ tools/perf/builtin-diff.c                |   4 +-
+ tools/perf/builtin-report.c              |  20 +++-
+ tools/perf/ui/browsers/hists.c           |  17 ++-
+ tools/perf/util/annotate.c               | 145 +++++++++++++++++++++++
+ tools/perf/util/annotate.h               |   3 +
+ tools/perf/util/block-info.c             |  66 +++++++++--
+ tools/perf/util/block-info.h             |   8 +-
+ 8 files changed, 246 insertions(+), 18 deletions(-)
 
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index 68bbd3ea771b..c0379fa1ccfe 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -33,6 +33,7 @@
- #include "util/bpf-filter.h"
- #include "util/stat.h"
- #include "util/util.h"
-+#include "util/env.h"
- #include "util/intel-tpebs.h"
- #include <signal.h>
- #include <unistd.h>
-@@ -1265,15 +1266,67 @@ u64 evlist__combined_branch_type(struct evlist *evlist)
- 	return branch_type;
+diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
+index d2b1593ef700..7c66d81ab978 100644
+--- a/tools/perf/Documentation/perf-report.txt
++++ b/tools/perf/Documentation/perf-report.txt
+@@ -614,6 +614,7 @@ include::itrace.txt[]
+ 	'Avg Cycles%'     - block average sampled cycles / sum of total block average
+ 			    sampled cycles
+ 	'Avg Cycles'      - block average sampled cycles
++	'Branch Counter'  - block branch counter histogram (with -v showing the number)
+ 
+ --skip-empty::
+ 	Do not print 0 results in the --stat output.
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 2d9226b1de52..de24892dc7b8 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -705,7 +705,7 @@ static void hists__precompute(struct hists *hists)
+ 		if (compute == COMPUTE_CYCLES) {
+ 			bh = container_of(he, struct block_hist, he);
+ 			init_block_hist(bh);
+-			block_info__process_sym(he, bh, NULL, 0);
++			block_info__process_sym(he, bh, NULL, 0, 0);
+ 		}
+ 
+ 		data__for_each_file_new(i, d) {
+@@ -728,7 +728,7 @@ static void hists__precompute(struct hists *hists)
+ 				pair_bh = container_of(pair, struct block_hist,
+ 						       he);
+ 				init_block_hist(pair_bh);
+-				block_info__process_sym(pair, pair_bh, NULL, 0);
++				block_info__process_sym(pair, pair_bh, NULL, 0, 0);
+ 
+ 				bh = container_of(he, struct block_hist, he);
+ 
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 13b41c5f99ed..a8d0135166c0 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -575,6 +575,13 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
+ 		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
+ 
+ 		if (rep->total_cycles_mode) {
++			char *buf;
++
++			if (!annotation_br_cntr_abbr_list(&buf, pos, true)) {
++				fprintf(stdout, "%s", buf);
++				fprintf(stdout, "#\n");
++				free(buf);
++			}
+ 			report__browse_block_hists(&rep->block_reports[i - 1].hist,
+ 						   rep->min_percent, pos, NULL);
+ 			continue;
+@@ -1120,18 +1127,23 @@ static int __cmd_report(struct report *rep)
+ 	report__output_resort(rep);
+ 
+ 	if (rep->total_cycles_mode) {
+-		int block_hpps[6] = {
++		int nr_hpps = 4;
++		int block_hpps[PERF_HPP_REPORT__BLOCK_MAX_INDEX] = {
+ 			PERF_HPP_REPORT__BLOCK_TOTAL_CYCLES_PCT,
+ 			PERF_HPP_REPORT__BLOCK_LBR_CYCLES,
+ 			PERF_HPP_REPORT__BLOCK_CYCLES_PCT,
+ 			PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+-			PERF_HPP_REPORT__BLOCK_RANGE,
+-			PERF_HPP_REPORT__BLOCK_DSO,
+ 		};
+ 
++		if (session->evlist->nr_br_cntr > 0)
++			block_hpps[nr_hpps++] = PERF_HPP_REPORT__BLOCK_BRANCH_COUNTER;
++
++		block_hpps[nr_hpps++] = PERF_HPP_REPORT__BLOCK_RANGE;
++		block_hpps[nr_hpps++] = PERF_HPP_REPORT__BLOCK_DSO;
++
+ 		rep->block_reports = block_info__create_report(session->evlist,
+ 							       rep->total_cycles,
+-							       block_hpps, 6,
++							       block_hpps, nr_hpps,
+ 							       &rep->nr_block_reports);
+ 		if (!rep->block_reports)
+ 			return -1;
+diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
+index b7219df51236..970f7f349298 100644
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3684,8 +3684,10 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 	struct hist_browser *browser;
+ 	int key = -1;
+ 	struct popup_action action;
++	char *br_cntr_text = NULL;
+ 	static const char help[] =
+-	" q             Quit \n";
++	" q             Quit \n"
++	" B             Branch counter abbr list (Optional)\n";
+ 
+ 	browser = hist_browser__new(hists);
+ 	if (!browser)
+@@ -3703,6 +3705,8 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 
+ 	memset(&action, 0, sizeof(action));
+ 
++	annotation_br_cntr_abbr_list(&br_cntr_text, evsel, false);
++
+ 	while (1) {
+ 		key = hist_browser__run(browser, "? - help", true, 0);
+ 
+@@ -3723,6 +3727,16 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 			action.ms.sym = browser->selection->sym;
+ 			do_annotate(browser, &action);
+ 			continue;
++		case 'B':
++			if (br_cntr_text) {
++				ui__question_window("Branch counter abbr list",
++						    br_cntr_text, "Press any key...", 0);
++			} else {
++				ui__question_window("Branch counter abbr list",
++						    "\n The branch counter is not available.\n",
++						    "Press any key...", 0);
++			}
++			continue;
+ 		default:
+ 			break;
+ 		}
+@@ -3730,5 +3744,6 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
+ 
+ out:
+ 	hist_browser__delete(browser);
++	free(br_cntr_text);
+ 	return 0;
+ }
+diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
+index f3d8e703f81b..0c19133133f2 100644
+--- a/tools/perf/util/annotate.c
++++ b/tools/perf/util/annotate.c
+@@ -40,6 +40,7 @@
+ #include "namespaces.h"
+ #include "thread.h"
+ #include "hashmap.h"
++#include "strbuf.h"
+ #include <regex.h>
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
+@@ -47,6 +48,7 @@
+ #include <linux/zalloc.h>
+ #include <subcmd/parse-options.h>
+ #include <subcmd/run-command.h>
++#include <math.h>
+ 
+ /* FIXME: For the HE_COLORSET */
+ #include "ui/browser.h"
+@@ -1718,6 +1720,149 @@ static void ipc_coverage_string(char *bf, int size, struct annotation *notes)
+ 		  ipc, coverage);
  }
  
-+static struct evsel *
-+evlist__find_dup_event_from_prev(struct evlist *evlist, struct evsel *event)
++int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header)
 +{
 +	struct evsel *pos;
++	struct strbuf sb;
 +
-+	evlist__for_each_entry(evlist, pos) {
-+		if (event == pos)
-+			break;
-+		if ((pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) &&
-+		    !strcmp(pos->name, event->name))
-+			return pos;
++	if (evsel->evlist->nr_br_cntr <= 0)
++		return -ENOTSUP;
++
++	strbuf_init(&sb, /*hint=*/ 0);
++
++	if (header && strbuf_addf(&sb, "# Branch counter abbr list:\n"))
++		goto err;
++
++	evlist__for_each_entry(evsel->evlist, pos) {
++		if (!(pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
++			continue;
++		if (header && strbuf_addf(&sb, "#"))
++			goto err;
++
++		if (strbuf_addf(&sb, " %s = %s\n", pos->name, pos->abbr_name))
++			goto err;
 +	}
-+	return NULL;
++
++	if (header && strbuf_addf(&sb, "#"))
++		goto err;
++	if (strbuf_addf(&sb, " '-' No event occurs\n"))
++		goto err;
++
++	if (header && strbuf_addf(&sb, "#"))
++		goto err;
++	if (strbuf_addf(&sb, " '+' Event occurrences may be lost due to branch counter saturated\n"))
++		goto err;
++
++	*str = strbuf_detach(&sb, NULL);
++
++	return 0;
++err:
++	strbuf_release(&sb);
++	return -ENOMEM;
 +}
 +
-+#define MAX_NR_ABBR_NAME	(26 * 11)
++/* Assume the branch counter saturated at 3 */
++#define ANNOTATION_BR_CNTR_SATURATION		3
 +
-+/*
-+ * The abbr name is from A to Z9. If the number of event
-+ * which requires the branch counter > MAX_NR_ABBR_NAME,
-+ * return NA.
-+ */
-+static void evlist__new_abbr_name(char *name)
++int annotation_br_cntr_entry(char **str, int br_cntr_nr,
++			     u64 *br_cntr, int num_aggr,
++			     struct evsel *evsel)
 +{
-+	static int idx;
-+	int i = idx / 26;
++	struct evsel *pos = evsel ? evlist__first(evsel->evlist) : NULL;
++	bool saturated = false;
++	int i, j, avg, used;
++	struct strbuf sb;
 +
-+	if (idx >= MAX_NR_ABBR_NAME) {
-+		name[0] = 'N';
-+		name[1] = 'A';
-+		name[2] = '\0';
-+		return;
++	strbuf_init(&sb, /*hint=*/ 0);
++	for (i = 0; i < br_cntr_nr; i++) {
++		used = 0;
++		avg = ceil((double)(br_cntr[i] & ~ANNOTATION__BR_CNTR_SATURATED_FLAG) /
++			   (double)num_aggr);
++
++		/*
++		 * A histogram with the abbr name is displayed by default.
++		 * With -v, the exact number of branch counter is displayed.
++		 */
++		if (verbose) {
++			evlist__for_each_entry_from(evsel->evlist, pos) {
++				if ((pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) &&
++				    (pos->br_cntr_idx == i))
++				break;
++			}
++			if (strbuf_addstr(&sb, pos->abbr_name))
++				goto err;
++
++			if (!br_cntr[i]) {
++				if (strbuf_addstr(&sb, "=-"))
++					goto err;
++			} else {
++				if (strbuf_addf(&sb, "=%d", avg))
++					goto err;
++			}
++			if (br_cntr[i] & ANNOTATION__BR_CNTR_SATURATED_FLAG) {
++				if (strbuf_addch(&sb, '+'))
++					goto err;
++			} else {
++				if (strbuf_addch(&sb, ' '))
++					goto err;
++			}
++
++			if ((i < br_cntr_nr - 1) && strbuf_addch(&sb, ','))
++				goto err;
++			continue;
++		}
++
++		if (strbuf_addch(&sb, '|'))
++			goto err;
++
++		if (!br_cntr[i]) {
++			if (strbuf_addch(&sb, '-'))
++				goto err;
++			used++;
++		} else {
++			evlist__for_each_entry_from(evsel->evlist, pos) {
++				if ((pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) &&
++				    (pos->br_cntr_idx == i))
++					break;
++			}
++			if (br_cntr[i] & ANNOTATION__BR_CNTR_SATURATED_FLAG)
++				saturated = true;
++
++			for (j = 0; j < avg; j++, used++) {
++				/* Print + if the number of logged events > 3 */
++				if (j >= ANNOTATION_BR_CNTR_SATURATION) {
++					saturated = true;
++					break;
++				}
++				if (strbuf_addstr(&sb, pos->abbr_name))
++					goto err;
++			}
++
++			if (saturated) {
++				if (strbuf_addch(&sb, '+'))
++					goto err;
++				used++;
++			}
++			pos = list_next_entry(pos, core.node);
++		}
++
++		for (j = used; j < ANNOTATION_BR_CNTR_SATURATION + 1; j++) {
++			if (strbuf_addch(&sb, ' '))
++				goto err;
++		}
 +	}
 +
-+	name[0] = 'A' + (idx % 26);
++	if (!verbose && strbuf_addch(&sb, br_cntr_nr ? '|' : ' '))
++		goto err;
 +
-+	if (!i)
-+		name[1] = '\0';
-+	else {
-+		name[1] = '0' + i - 1;
-+		name[2] = '\0';
-+	}
++	*str = strbuf_detach(&sb, NULL);
 +
-+	idx++;
++	return 0;
++err:
++	strbuf_release(&sb);
++	return -ENOMEM;
 +}
 +
- void evlist__update_br_cntr(struct evlist *evlist)
- {
--	struct evsel *evsel;
-+	struct evsel *evsel, *dup;
- 	int i = 0;
+ static void __annotation_line__write(struct annotation_line *al, struct annotation *notes,
+ 				     bool first_line, bool current_entry, bool change_color, int width,
+ 				     void *obj, unsigned int percent_type,
+diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
+index 76ccb0e721c7..f0539001472e 100644
+--- a/tools/perf/util/annotate.h
++++ b/tools/perf/util/annotate.h
+@@ -551,4 +551,7 @@ struct annotated_basic_block {
+ int annotate_get_basic_blocks(struct symbol *sym, s64 src, s64 dst,
+ 			      struct list_head *head);
  
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS) {
- 			evsel->br_cntr_idx = i++;
- 			evsel__leader(evsel)->br_cntr_nr++;
-+
-+			dup = evlist__find_dup_event_from_prev(evlist, evsel);
-+			if (dup)
-+				memcpy(evsel->abbr_name, dup->abbr_name, 3 * sizeof(char));
-+			else
-+				evlist__new_abbr_name(evsel->abbr_name);
- 		}
++int annotation_br_cntr_entry(char **str, int br_cntr_nr, u64 *br_cntr,
++			     int num_aggr, struct evsel *evsel);
++int annotation_br_cntr_abbr_list(char **str, struct evsel *evsel, bool header);
+ #endif	/* __PERF_ANNOTATE_H */
+diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
+index 04068d48683f..649392bee7ed 100644
+--- a/tools/perf/util/block-info.c
++++ b/tools/perf/util/block-info.c
+@@ -40,16 +40,32 @@ static struct block_header_column {
+ 	[PERF_HPP_REPORT__BLOCK_DSO] = {
+ 		.name = "Shared Object",
+ 		.width = 20,
++	},
++	[PERF_HPP_REPORT__BLOCK_BRANCH_COUNTER] = {
++		.name = "Branch Counter",
++		.width = 30,
  	}
- 	evlist->nr_br_cntr = i;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index a393dae1dc96..4316992f6a69 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -153,9 +153,15 @@ struct evsel {
- 	 * br_cntr_idx: The idx of the branch counter event in the evlist
- 	 * br_cntr_nr:  The number of the branch counter event in the group
- 	 *	        (Only available for the leader event)
-+	 * abbr_name:   The abbreviation name assigned to an event which is
-+	 *		logged by the branch counter.
-+	 *		The abbr name is from A to Z9. NA is applied if out
-+	 *		of the range.
- 	 */
- 	int			br_cntr_idx;
- 	int			br_cntr_nr;
-+	char			abbr_name[3];
+ };
+ 
+-struct block_info *block_info__new(void)
++static struct block_info *block_info__new(unsigned int br_cntr_nr)
+ {
+-	return zalloc(sizeof(struct block_info));
++	struct block_info *bi = zalloc(sizeof(struct block_info));
 +
- 	/*
- 	 * bpf_counter_ops serves two use cases:
- 	 *   1. perf-stat -b          counting events used byBPF programs
++	if (bi && br_cntr_nr) {
++		bi->br_cntr = calloc(br_cntr_nr, sizeof(u64));
++		if (!bi->br_cntr) {
++			free(bi);
++			return NULL;
++		}
++	}
++
++	return bi;
+ }
+ 
+ void block_info__delete(struct block_info *bi)
+ {
++	if (bi)
++		free(bi->br_cntr);
+ 	free(bi);
+ }
+ 
+@@ -86,7 +102,8 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 
+ static void init_block_info(struct block_info *bi, struct symbol *sym,
+ 			    struct cyc_hist *ch, int offset,
+-			    u64 total_cycles)
++			    u64 total_cycles, unsigned int br_cntr_nr,
++			    u64 *br_cntr, struct evsel *evsel)
+ {
+ 	bi->sym = sym;
+ 	bi->start = ch->start;
+@@ -99,10 +116,18 @@ static void init_block_info(struct block_info *bi, struct symbol *sym,
+ 
+ 	memcpy(bi->cycles_spark, ch->cycles_spark,
+ 	       NUM_SPARKS * sizeof(u64));
++
++	if (br_cntr && br_cntr_nr) {
++		bi->br_cntr_nr = br_cntr_nr;
++		memcpy(bi->br_cntr, &br_cntr[offset * br_cntr_nr],
++		       br_cntr_nr * sizeof(u64));
++	}
++	bi->evsel = evsel;
+ }
+ 
+ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
+-			    u64 *block_cycles_aggr, u64 total_cycles)
++			    u64 *block_cycles_aggr, u64 total_cycles,
++			    unsigned int br_cntr_nr)
+ {
+ 	struct annotation *notes;
+ 	struct cyc_hist *ch;
+@@ -125,12 +150,14 @@ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
+ 			struct block_info *bi;
+ 			struct hist_entry *he_block;
+ 
+-			bi = block_info__new();
++			bi = block_info__new(br_cntr_nr);
+ 			if (!bi)
+ 				return -1;
+ 
+ 			init_block_info(bi, he->ms.sym, &ch[i], i,
+-					total_cycles);
++					total_cycles, br_cntr_nr,
++					notes->branch->br_cntr,
++					hists_to_evsel(he->hists));
+ 			cycles += bi->cycles_aggr / bi->num_aggr;
+ 
+ 			he_block = hists__add_entry_block(&bh->block_hists,
+@@ -327,6 +354,24 @@ static void init_block_header(struct block_fmt *block_fmt)
+ 	fmt->width = block_column_width;
+ }
+ 
++static int block_branch_counter_entry(struct perf_hpp_fmt *fmt,
++				      struct perf_hpp *hpp,
++				      struct hist_entry *he)
++{
++	struct block_fmt *block_fmt = container_of(fmt, struct block_fmt, fmt);
++	struct block_info *bi = he->block_info;
++	char *buf;
++	int ret;
++
++	if (annotation_br_cntr_entry(&buf, bi->br_cntr_nr, bi->br_cntr,
++				     bi->num_aggr, bi->evsel))
++		return 0;
++
++	ret = scnprintf(hpp->buf, hpp->size, "%*s", block_fmt->width, buf);
++	free(buf);
++	return ret;
++}
++
+ static void hpp_register(struct block_fmt *block_fmt, int idx,
+ 			 struct perf_hpp_list *hpp_list)
+ {
+@@ -357,6 +402,9 @@ static void hpp_register(struct block_fmt *block_fmt, int idx,
+ 	case PERF_HPP_REPORT__BLOCK_DSO:
+ 		fmt->entry = block_dso_entry;
+ 		break;
++	case PERF_HPP_REPORT__BLOCK_BRANCH_COUNTER:
++		fmt->entry = block_branch_counter_entry;
++		break;
+ 	default:
+ 		return;
+ 	}
+@@ -390,7 +438,7 @@ static void init_block_hist(struct block_hist *bh, struct block_fmt *block_fmts,
+ static int process_block_report(struct hists *hists,
+ 				struct block_report *block_report,
+ 				u64 total_cycles, int *block_hpps,
+-				int nr_hpps)
++				int nr_hpps, unsigned int br_cntr_nr)
+ {
+ 	struct rb_node *next = rb_first_cached(&hists->entries);
+ 	struct block_hist *bh = &block_report->hist;
+@@ -405,7 +453,7 @@ static int process_block_report(struct hists *hists,
+ 	while (next) {
+ 		he = rb_entry(next, struct hist_entry, rb_node);
+ 		block_info__process_sym(he, bh, &block_report->cycles,
+-					total_cycles);
++					total_cycles, br_cntr_nr);
+ 		next = rb_next(&he->rb_node);
+ 	}
+ 
+@@ -435,7 +483,7 @@ struct block_report *block_info__create_report(struct evlist *evlist,
+ 		struct hists *hists = evsel__hists(pos);
+ 
+ 		process_block_report(hists, &block_reports[i], total_cycles,
+-				     block_hpps, nr_hpps);
++				     block_hpps, nr_hpps, evlist->nr_br_cntr);
+ 		i++;
+ 	}
+ 
+diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
+index 0b9e1aad4c55..b9329dc3ab59 100644
+--- a/tools/perf/util/block-info.h
++++ b/tools/perf/util/block-info.h
+@@ -18,6 +18,9 @@ struct block_info {
+ 	u64			total_cycles;
+ 	int			num;
+ 	int			num_aggr;
++	int			br_cntr_nr;
++	u64			*br_cntr;
++	struct evsel		*evsel;
+ };
+ 
+ struct block_fmt {
+@@ -36,6 +39,7 @@ enum {
+ 	PERF_HPP_REPORT__BLOCK_AVG_CYCLES,
+ 	PERF_HPP_REPORT__BLOCK_RANGE,
+ 	PERF_HPP_REPORT__BLOCK_DSO,
++	PERF_HPP_REPORT__BLOCK_BRANCH_COUNTER,
+ 	PERF_HPP_REPORT__BLOCK_MAX_INDEX
+ };
+ 
+@@ -46,7 +50,6 @@ struct block_report {
+ 	int			nr_fmts;
+ };
+ 
+-struct block_info *block_info__new(void);
+ void block_info__delete(struct block_info *bi);
+ 
+ int64_t __block_info__cmp(struct hist_entry *left, struct hist_entry *right);
+@@ -55,7 +58,8 @@ int64_t block_info__cmp(struct perf_hpp_fmt *fmt __maybe_unused,
+ 			struct hist_entry *left, struct hist_entry *right);
+ 
+ int block_info__process_sym(struct hist_entry *he, struct block_hist *bh,
+-			    u64 *block_cycles_aggr, u64 total_cycles);
++			    u64 *block_cycles_aggr, u64 total_cycles,
++			    unsigned int br_cntr_nr);
+ 
+ struct block_report *block_info__create_report(struct evlist *evlist,
+ 					       u64 total_cycles,
 -- 
 2.38.1
 
