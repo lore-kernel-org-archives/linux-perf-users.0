@@ -1,126 +1,167 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AAAA29AF
-	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 14:01:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B706D18E75D
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 14:12:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723125687; cv=none; b=Bj0ZXR648C3XrvyvA4GoAFRpCTMmHNTjobJ+EfDTyqIy5Nqmr1d/WM8BMaFko7jwdB5YJEC1geKIj+QDfwuS7IpdKfzML5rDTIcItyI+QjoAACZkiiRPYHwG8g3DEE9EYnR0Jdj6i2Q/o3UPgK+88E2cPBZtJ3IY3HWSWe3EdmU=
+	t=1723126369; cv=none; b=IjiSAMk/9lEclM2SGiy+y2WEoV6qgYKkdR5m8XuFU/541X7VTSp3v7Tx89lh1DXM/JyKj0QCMfjXepoXK8lXdzhYiMGsP5jeQvSC0OnYY77NlACcciFr3Aw0iMh4Bt1LShc7QqvNZcKmtPLLYA1tDZ/Rg50YoIjBtxTMy1S0AZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723125687; c=relaxed/simple;
-	bh=b3BWpaPbrAdjFYcK0agAd52SMUVvtu9/q7i6ykmTr0c=;
+	s=arc-20240116; t=1723126369; c=relaxed/simple;
+	bh=NS8GNpYYbDrL7nMocT3ohHippFGz2A1Ks5qDTh+SRC4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BkJ/xPf4J7DHXIkFgUTe3cSE+d5n6oEkkkeoyT7udPgJcDQ/2AXeAoYvfw+su+za45BS2mrc7nk6pO1GaEdj0PZQNfTnJg/sC1DJtJAWSFmETyiZi3re6dArWcbp8ZR8r2forpHKsGqd4gGBHzoafEOlJSkcaGAR06oitH7MvQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i1xQEYMi; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=mH4H0sXPDkYogqxNB34/mS+aleo/Zt/Z7qtZE4bDt2FkoOLEw0xlgyb/YSTb5X5F3gQR3WncbUj2UaQKHshGHeL4T70JQQVjXqSu4oz0+sNz0BKeiolFUZIkzcpPkWdQY4ixeubs0xHzkcnBbSTtm9MHM5ypGNZpBbDv1hOsuoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aogPd4/x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i1xQEYMi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44210C32782;
-	Thu,  8 Aug 2024 14:01:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aogPd4/x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2D96C4AF0C;
+	Thu,  8 Aug 2024 14:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723125687;
-	bh=b3BWpaPbrAdjFYcK0agAd52SMUVvtu9/q7i6ykmTr0c=;
+	s=k20201202; t=1723126369;
+	bh=NS8GNpYYbDrL7nMocT3ohHippFGz2A1Ks5qDTh+SRC4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i1xQEYMiqnSMUgptmjjOsnWF9T1Of7CljknXlTcUXREUr5MXJYcXyCCVFbEn/TbUU
-	 a4okBDUlekzBILvgx8jUMyWPesoFqioCUAPo1d3ed9zJTSfx6O7iUVIG4JOUcGAJhO
-	 kM9bEu8ss55V2rB5fbPiskxOSAw0pbzeqt9Zs6fH1X70xK7Xuu9fbZJifsZhg1N4sr
-	 LlDYVxtoNkVU5ZBadwefUhtopf8DSOoVnifbJZ89Czq9LtWhDTcOomHPoO4Jij1ijq
-	 w64myT5EaB+s2qH6c89NRtPLVuhV1S8cqGC9rv4gOilEH5YsHqJy/mzokDhfzvxlEy
-	 R2TU1mP6daiHA==
-Date: Thu, 8 Aug 2024 11:01:15 -0300
+	b=aogPd4/xUtJhbkRvHaCN5ir+XuFXjqhkSUNv1SxjEfJR+lq4nr8EGIMPXWSivxvIZ
+	 D4cvYvvSBzo5SWrTAKdSH6WStNA6xM0NPa7NdwxZyPuQrK6Uf7gFAotxez1tQ40Y6i
+	 /HRpMSYpz4w1ggNTVbq3RTg+iNQwuRBSexud+R/ph/HAV0Xwb/GE6TLkqbegDIZ2e5
+	 zxVEqk7rwvGJwt8PtYf/nKx2Zg5+NmvHURD2FMMsml0aorzedC7tgVADGmR+3JQKay
+	 xa7itUA8ckDwZ32qL3b78IgRMGdYVv0opGdDY2Z/TY40ehXehDGUUFbJPQBZN+hItL
+	 39udqur6gKnlA==
+Date: Thu, 8 Aug 2024 11:12:42 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: vmolnaro@redhat.com
 Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
 	james.clark@arm.com, rstoyano@redhat.com
 Subject: Re: [PATCH] perf test pmu: Set uninitialized PMU alias to null
-Message-ID: <ZrTPqy3omGsTTati@x1>
+Message-ID: <ZrTSWvyox2ET1eNm@x1>
 References: <20240808103749.9356-1-vmolnaro@redhat.com>
+ <ZrTPqy3omGsTTati@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240808103749.9356-1-vmolnaro@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZrTPqy3omGsTTati@x1>
 
-On Thu, Aug 08, 2024 at 12:37:49PM +0200, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
+On Thu, Aug 08, 2024 at 11:01:28AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Thu, Aug 08, 2024 at 12:37:49PM +0200, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > 
+> > Commit 3e0bf9 ("perf pmu: Restore full PMU name wildcard support") adds
+> > a test case "PMU cmdline match" that covers PMU name wildcard support
+> > provided by function perf_pmu__match(). The test works with a wide
+> > range of supported combinations of PMU name matching but omits the case
+> > that if the perf_pmu__match() cannot match the PMU name to the wildcard,
+> > it tries to match its alias. However, this variable is not set up,
+> > causing the test case to fail when run with subprocesses or to segfault
+> > if run as a single process.
+> > 
+> > ./perf test -vv 9
+> >   9: Sysfs PMU tests                                                 :
+> >   9.1: Parsing with PMU format directory                             : Ok
+> >   9.2: Parsing with PMU event                                        : Ok
+> >   9.3: PMU event names                                               : Ok
+> >   9.4: PMU name combining                                            : Ok
+> >   9.5: PMU name comparison                                           : Ok
+> >   9.6: PMU cmdline match                                             : FAILED!
+> > 
+> > ./perf test -F 9
+> >   9.1: Parsing with PMU format directory                             : Ok
+> >   9.2: Parsing with PMU event                                        : Ok
+> >   9.3: PMU event names                                               : Ok
+> >   9.4: PMU name combining                                            : Ok
+> >   9.5: PMU name comparison                                           : Ok
+> > Segmentation fault (core dumped)
+> > 
+> > Initialize the PMU alias to null for all tests of perf_pmu__match()
+> > as this functionality is not being tested and the alias matching works
+> > exactly the same as the matching of the PMU name.
+> > 
+> > ./perf test -F 9
+> >   9.1: Parsing with PMU format directory                             : Ok
+> >   9.2: Parsing with PMU event                                        : Ok
+> >   9.3: PMU event names                                               : Ok
+> >   9.4: PMU name combining                                            : Ok
+> >   9.5: PMU name comparison                                           : Ok
+> >   9.6: PMU cmdline match                                             : Ok
+> > 
+> > Fixes: 3e0bf9 ("perf pmu: Restore full PMU name wildcard support")
+> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> > ---
+> >  tools/perf/tests/pmu.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+> > index 0b2f04a55d7b..a4730b5dc0d9 100644
+> > --- a/tools/perf/tests/pmu.c
+> > +++ b/tools/perf/tests/pmu.c
+> > @@ -453,11 +453,13 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
+> >  /**
+> >   * Test perf_pmu__match() that's used to search for a PMU given a name passed
+> >   * on the command line. The name that's passed may also be a filename type glob
+> > - * match.
+> > + * match. If the name does not match, perf_pmu__match() attempts to match the
+> > + * alias of the PMU, if provided.
+> >   */
+> >  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+> >  {
+> >  	struct perf_pmu test_pmu;
+> > +	test_pmu.alias_name = NULL;
 > 
-> Commit 3e0bf9 ("perf pmu: Restore full PMU name wildcard support") adds
-> a test case "PMU cmdline match" that covers PMU name wildcard support
-> provided by function perf_pmu__match(). The test works with a wide
-> range of supported combinations of PMU name matching but omits the case
-> that if the perf_pmu__match() cannot match the PMU name to the wildcard,
-> it tries to match its alias. However, this variable is not set up,
-> causing the test case to fail when run with subprocesses or to segfault
-> if run as a single process.
+> We can do a bit more future proofing by instead doing:
 > 
-> ./perf test -vv 9
->   9: Sysfs PMU tests                                                 :
->   9.1: Parsing with PMU format directory                             : Ok
->   9.2: Parsing with PMU event                                        : Ok
->   9.3: PMU event names                                               : Ok
->   9.4: PMU name combining                                            : Ok
->   9.5: PMU name comparison                                           : Ok
->   9.6: PMU cmdline match                                             : FAILED!
+> 	struct perf_pmu test_pmu = {
+> 		.name = "pmuname",
+> 	};
 > 
-> ./perf test -F 9
->   9.1: Parsing with PMU format directory                             : Ok
->   9.2: Parsing with PMU event                                        : Ok
->   9.3: PMU event names                                               : Ok
->   9.4: PMU name combining                                            : Ok
->   9.5: PMU name comparison                                           : Ok
-> Segmentation fault (core dumped)
-> 
-> Initialize the PMU alias to null for all tests of perf_pmu__match()
-> as this functionality is not being tested and the alias matching works
-> exactly the same as the matching of the PMU name.
-> 
-> ./perf test -F 9
->   9.1: Parsing with PMU format directory                             : Ok
->   9.2: Parsing with PMU event                                        : Ok
->   9.3: PMU event names                                               : Ok
->   9.4: PMU name combining                                            : Ok
->   9.5: PMU name comparison                                           : Ok
->   9.6: PMU cmdline match                                             : Ok
-> 
-> Fixes: 3e0bf9 ("perf pmu: Restore full PMU name wildcard support")
-> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> ---
->  tools/perf/tests/pmu.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> index 0b2f04a55d7b..a4730b5dc0d9 100644
-> --- a/tools/perf/tests/pmu.c
-> +++ b/tools/perf/tests/pmu.c
-> @@ -453,11 +453,13 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
->  /**
->   * Test perf_pmu__match() that's used to search for a PMU given a name passed
->   * on the command line. The name that's passed may also be a filename type glob
-> - * match.
-> + * match. If the name does not match, perf_pmu__match() attempts to match the
-> + * alias of the PMU, if provided.
->   */
->  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
->  {
->  	struct perf_pmu test_pmu;
-> +	test_pmu.alias_name = NULL;
+> So that all the other fields are initialized to zero, ok? I'll do this
+> change and make a note in the commit, lemme know if you disagree.
 
-We can do a bit more future proofing by instead doing:
+Nah, tried with:
 
-	struct perf_pmu test_pmu = {
-		.name = "pmuname",
-	};
+diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
+index a4730b5dc0d9259d..c9d4ed6d684551c1 100644
+--- a/tools/perf/tests/pmu.c
++++ b/tools/perf/tests/pmu.c
+@@ -457,11 +457,11 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
+  * alias of the PMU, if provided.
+  */
+ static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
+-{
+-	struct perf_pmu test_pmu;
+-	test_pmu.alias_name = NULL;
+ 
+-	test_pmu.name = "pmuname";
++	struct perf_pmu test_pmu = {
++		.name = "pmuname",
++	};
++
+ 	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
+ 	TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
+ 	TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),	     false);
 
-So that all the other fields are initialized to zero, ok? I'll do this
-change and make a note in the commit, lemme know if you disagree.
+But those macros are not liking it:
+
+tests/pmu.c: In function ‘test__pmu_match’:
+tests/pmu.c:461:16: error: parameter ‘test_pmu’ is initialized
+  461 |         struct perf_pmu test_pmu = {
+      |                ^~~~~~~~
+In file included from tests/pmu.c:7:
+tests/tests.h:22:1: error: expected declaration specifiers before ‘do’
+   22 | do {                                                                     \
+      | ^~
+tests/pmu.c:465:9: note: in expansion of macro ‘TEST_ASSERT_EQUAL’
+  465 |         TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),      true);
+      |         ^~~~~~~~~~~~~~~~~
+tests/tests.h:28:3: error: expected declaration specifiers before ‘while’
+   28 | } while (0)
+      |   ^~~~~
+
+So I'll not spend more time here, I'm keeping your patch as-is.
+
+Thanks and sorry for the noise :-)
 
 - Arnaldo
-  
->  	test_pmu.name = "pmuname";
->  	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
-> -- 
-> 2.43.0
-> 
