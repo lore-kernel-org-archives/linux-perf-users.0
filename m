@@ -1,140 +1,171 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A94C15B986;
-	Thu,  8 Aug 2024 19:32:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6675FBE40
+	for <linux-perf-users@vger.kernel.org>; Thu,  8 Aug 2024 20:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723145579; cv=none; b=i0UQm6nGf5/NyN/oDxUwHnfcG3aObwUaSHksy+fsiGthLfkYvLZTtCKzAcmMWOF4zL06DnLj4XT76EGyLlLFaxWakcB+DMPjbY7cpBE2o5ZBJXOowWOs0HgOMudyH1xXvtmzh1ZDvihFkcH/+dzZa3mMoe+jWt2ehg6NITqZ23s=
+	t=1723148302; cv=none; b=Yge9bpOfLYNb4KAIE4LtTT1kNmrw8puZx6HkRV+wqy7jSBdaMqswYJpXbyqJ1r3B0bgRGqyC0pc2Tctqlyie0nvP4j/IwZMJX/KKFywPX+Z4qL3UQiR77N6bl6FMb67n+yTdWF7MEZhS7qgLLbKG8c48gwbyhC/BF+V89pF8XT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723145579; c=relaxed/simple;
-	bh=eRSy0qosXqU6Hszy6JkiW6BncOZYM9c0YyE7hCnYkgM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tnfyFtSvZ9gxoOHlfDApmAAzsUYy4bexnXo8lceMIu/a39fhioZMOfmvpVF+mB0GP92z7otwvcuzI1sJmrjia4k3id0/YhPEmXO8rfiWhiO2wVXNO4+2sWx5EvSouKf+HHDXQUrkDjcDZFpz9JxPj0VjV+pBhShAfSlMPlHoQrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=b85OF0wA; arc=none smtp.client-ip=198.175.65.14
+	s=arc-20240116; t=1723148302; c=relaxed/simple;
+	bh=LHy49onU8KSZ6Y0DSMDdQ9sAucLC2/zJmNyOkFbkdRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=alIs5I00L9os0l625cUa2ZEvkHlem0981Polsn8h2Po6q9NyoDfGL4A04OiJEBb3nPzinAtADNxBN3tv5bOlxgcB7Lpzzr9t+kL8lsC8mYXdeV4k0Ssr2bu7iwqdxntokyImw/J76aJdt7h0eE/KoQpaGsMXN7YCl9umxq1Vadw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=X7voRDu4; arc=none smtp.client-ip=192.198.163.13
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="b85OF0wA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="X7voRDu4"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723145578; x=1754681578;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=eRSy0qosXqU6Hszy6JkiW6BncOZYM9c0YyE7hCnYkgM=;
-  b=b85OF0wA68HeifVB+vqhVhVh718IZJW73T6CAXErrXWTikwaoQxAMdXg
-   VwkJSqeP15TlTNjtnVSD0Y7tpS50MxITtvRFh2tN+1qAJyVM768sWQsiS
-   Olh1Sqz8XgBcm1zOOl5vzgX3Izuzoc8CcLeZkP5nnFAIwIDmIvG23vzAr
-   +O00+dcDWxaM/jy7/lfdXNieMJZTYmPWydk3Br99GGXl1OFt2O2w+Q9LC
-   22UF6M3tWHd/COXtZ2gPzNwaDvu8MzHfg64f+iF9Z7JIsmRkdAydNoYcN
-   pBNvaMPmnKA6WYaMXewRfwUVI5v9DhDZgaAB97K77OWtFYpxwChiBhGWt
+  t=1723148300; x=1754684300;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LHy49onU8KSZ6Y0DSMDdQ9sAucLC2/zJmNyOkFbkdRo=;
+  b=X7voRDu4tRbn3u860TwrLtG3hLLI7eqp4Pcf65JlrhYAvu2zyNYejFBj
+   DdvSNMUV0+u2UWwQL43Ioonw4Q+5/kUzV0y2IhQtcSQYAqtn97yXEXUGH
+   44U+O/ObT5ivSNohh+qLmxNdyPUE2HgiinrdtOyBfQdPeH0cc5Xq+scKW
+   wVdJItVRohV1CNByOuQFj+1mPaGfqVvpfxrL4/FXl7lpbh1rM2nuL1QIi
+   lNrtkVm8zUx+S3Pv7Z/L+v3Gj/CCqxkvaik2MMiU99QlFTcB73SB6lF7J
+   deKWDxnY7D550RGSQyGY+xNUuUPQT54/Sf3MLyaAm5o52LOGb4I+DtYQK
    A==;
-X-CSE-ConnectionGUID: KVPFH18qT7yg0hNCpjSaSg==
-X-CSE-MsgGUID: xOgD5xJaQ3+zfWgvFEsWKA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="25091730"
+X-CSE-ConnectionGUID: xwkyZ8AcR+OYm1V9bAZVpw==
+X-CSE-MsgGUID: 6mnubX43TzysIsLiv078aA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="24209401"
 X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="25091730"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 12:32:53 -0700
-X-CSE-ConnectionGUID: 7aa5ssSXTvKAi/5GMRzVIw==
-X-CSE-MsgGUID: t09XSuMsSO6hRoacedCXtg==
+   d="scan'208";a="24209401"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 13:18:19 -0700
+X-CSE-ConnectionGUID: ff/9LKvQQnewSfG44yACwA==
+X-CSE-MsgGUID: zR0uzkG2QJKyJDFJoWAlAg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="57402607"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa010.fm.intel.com with ESMTP; 08 Aug 2024 12:32:53 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: adrian.hunter@intel.com,
-	ak@linux.intel.com,
-	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 9/9] perf test: Add new test cases for the branch counter feature
-Date: Thu,  8 Aug 2024 12:33:24 -0700
-Message-Id: <20240808193324.2027665-10-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240808193324.2027665-1-kan.liang@linux.intel.com>
-References: <20240808193324.2027665-1-kan.liang@linux.intel.com>
+   d="scan'208";a="57891459"
+Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 13:18:19 -0700
+Date: Thu, 8 Aug 2024 13:18:17 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v9 3/4] perf script: Fix perf script -F +metric
+Message-ID: <ZrUoCRu4HGoROUs2@tassilo>
+References: <20240807231823.898979-1-ak@linux.intel.com>
+ <20240807231823.898979-3-ak@linux.intel.com>
+ <CAM9d7ci40WcV=EtsNuNXkRAWc3XHDKzb9OACNUhD5WaqTu5vxg@mail.gmail.com>
+ <CAP-5=fVZ0_orgpLcG492WtjW05QWu2Mbnuv=_NKweouVXq2icA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAP-5=fVZ0_orgpLcG492WtjW05QWu2Mbnuv=_NKweouVXq2icA@mail.gmail.com>
 
-From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> Fwiw, not acked-by me. Repeating my comments below:
 
-Enhance the test case for the branch counter feature.
+Let me just point out that you broke it in the first place.
 
-Now, the test verifies
-- The new filter can be successfully applied on the supported platforms.
-- The counter value can be outputted via the perf report -D
-- The counter value and the abbr name can be outputted via the
-  perf script (New)
+A little more enthusiasm in handling regressions would be appreciated.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/tests/shell/record.sh | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+> > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> > > index c16224b1fef3..cb63507af839 100644
+> > > --- a/tools/perf/builtin-script.c
+> > > +++ b/tools/perf/builtin-script.c
+> > > @@ -335,7 +335,6 @@ struct evsel_script {
+> > >         FILE *fp;
+> > >         u64  samples;
+> > >         /* For metric output */
+> > > -       u64  val;
+> > >         int  gnum;
+> 
+> We're globally assuming properties of events assuming leader sampling.
+> gnum shouldn't exist. The assumptions will be invalid when leader
+> sampling isn't enabled.
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 3d1a7759a7b2..7964ebd9007d 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -21,6 +21,7 @@ testprog="perf test -w thloop"
- cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
- br_cntr_file="/caps/branch_counter_nr"
- br_cntr_output="branch stack counters"
-+br_cntr_script_output="br_cntr: A"
- 
- cleanup() {
-   rm -rf "${perfdata}"
-@@ -165,7 +166,7 @@ test_workload() {
- }
- 
- test_branch_counter() {
--  echo "Basic branch counter test"
-+  echo "Branch counter test"
-   # Check if the branch counter feature is supported
-   for dir in $cpu_pmu_dir
-   do
-@@ -175,19 +176,25 @@ test_branch_counter() {
-       return
-     fi
-   done
--  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
-+  if ! perf record -o "${perfdata}" -e "{branches:p,instructions}" -j any,counter ${testprog} 2> /dev/null
-   then
--    echo "Basic branch counter test [Failed record]"
-+    echo "Branch counter record test [Failed record]"
-     err=1
-     return
-   fi
-   if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
-   then
--    echo "Basic branch record test [Failed missing output]"
-+    echo "Branch counter report test [Failed missing output]"
-     err=1
-     return
-   fi
--  echo "Basic branch counter test [Success]"
-+  if ! perf script -i "${perfdata}" -F +brstackinsn,+brcntr | grep -q "$br_cntr_script_output"
-+  then
-+    echo " Branch counter script test [Failed missing output]"
-+    err=1
-+    return
-+  fi
-+  echo "Branch counter test [Success]"
- }
- 
- test_per_thread
--- 
-2.38.1
+This is checked for now, see the earlier discussion.
 
+> > > +       if (!(leader->core.attr.read_format & PERF_FORMAT_GROUP) ||
+> > > +           !(leader->core.attr.sample_type & PERF_SAMPLE_READ)) {
+> > > +               if (!printed)
+> > > +                       fprintf(stderr, "perf script: -F metric requires {}:S for groups leader sampling\n");
+> > > +               printed = 1;
+> > > +               return;
+> > > +       }
+> > > +       /*
+> > > +        * Always use the first entry as storage because the leader sampling
+> > > +        * groups are contiguous and there's no need to handle multiple indexes
+> > > +        * for anything.
+> > > +        */
+> > > +       evsel->stats->aggr[0].counts.val = val;
+> 
+> Updating counts needs perf_stat_process_counter to update the
+> aggregation. How does sample->cpu given below relate to aggr[0] here?
+> This and the comment above are a hack liable to break in anything but
+> straightforward circumstances. See:
+> https://lore.kernel.org/lkml/20240720074552.1915993-2-irogers@google.com/
+> on how to handle this.
+
+Your patch is based on a fundamental misunderstanding on the perf script
+metrics use model, see below.
+
+> 
+> > >         if (evsel_script(leader)->gnum == leader->core.nr_members) {
+> > >                 for_each_group_member (ev2, leader) {
+> > >                         perf_stat__print_shadow_stats(&stat_config, ev2,
+> > > -                                                     evsel_script(ev2)->val,
+> > > -                                                     sample->cpu,
+> > > +                                                     evsel->stats->aggr[0].counts.val,
+> > > +                                                     0,
+> 
+> Similarly this hard coded and unexplained constant.
+
+There's a comment just on top of it explaining it:
+
+        /*
+         * Always use the first entry as storage because the leader sampling
+         * groups are contiguous and there's no need to handle multiple indexes
+         * for anything.
+         */
+
+
+> 
+> > >                                                       &ctx,
+> > >                                                       NULL);
+> > >                 }
+> > > @@ -2325,6 +2337,20 @@ static void process_event(struct perf_script *script,
+> > >                 fflush(fp);
+> > >  }
+> > >
+> > > +static void check_metric_conflict(void)
+> > > +{
+> > > +       int i;
+> > > +       /*
+> > > +        * Avoid conflict with the aggregation mode used for the metric printing.
+> > > +        */
+> 
+> Why is it a conflict, why not support aggregation modes?
+
+I thought I had explained that before.
+
+perf script has two touch point with perf stat output code: one is this one
+(for metrics on sampling group) and the other is for perf stat record / script
+
+None of them actually support aggregation because perf script as a
+general rule doesn't aggregate, it only handles single events.
+
+But the later one forces AGGR_NONE which doesn't work with the mode the group
+output uses.
+
+This feature is only to report the metric state for a single sampling period
+and group as explained in the original commit [1]
+
+If you want to aggregate multiple sample periods you need a lot the
+machinery from perf report, which doesn't make sense to duplicate
+in perf script.
+
+[1] https://www.uwsg.indiana.edu/hypermail/linux/kernel/1712.0/04705.html
+
+-Andi
