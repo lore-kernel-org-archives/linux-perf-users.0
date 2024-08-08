@@ -1,68 +1,82 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0FCE13D8A2;
-	Thu,  8 Aug 2024 20:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 218289460;
+	Thu,  8 Aug 2024 20:28:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723148831; cv=none; b=J6uSZVE3+zj3lcwsyFogYAPxnUgCaa1HRig8IlpXynX4ZZlUf4xs8knLydX327+NBFBrPklAODOeEkuwQg+Pc70P5+zaLh3sxUZx8zRh9E0iGRJk2VN2y1KiUW5U0OkwEPUJofmeLoTtJOFXiWxmHtyrth79yQn5ocs2WVX54dM=
+	t=1723148901; cv=none; b=cwrVXaGEoErF6pvA+fwXA9GZJcrFdPnSgueh1Nwk2EVIj7MwSJhQ5z7o6+yTdGVKmiNQagDzBpJiRsUI3JsaUPE//QLBarO88D/9psQx6NjaB9ocxR0hr9Ib8HL/bqccD/8FR6w6Oj7nogdSLk0P8ccIuP9JG5l2vcMBLr2KY4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723148831; c=relaxed/simple;
-	bh=SEETdzXsGLJjBMachZ8uZP2L2aFsUOCJw1Br58Y+dtU=;
+	s=arc-20240116; t=1723148901; c=relaxed/simple;
+	bh=xtTZEW5I7TuOaEuBLUqLGoRetoaj4yFeUqX8YLjj92s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XUcaf1lKTzyRGeot/JSjy28cVcEUndWUxfBP+p7gzwiohkz4RvoiffYa76d6KCHOyYDRTCSCDU8YfGolODiOrlrgGXUj1XVWdlwjKYor+h/5/cASZkXD/6tTIVQUeLO+3zB1x/+0WwBjXN7OTDgvGUi69qhdZLhiwww3r16bJpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q9dnm7KE; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=WjZZoGjr4PS2N7sAxbgEYWrUss6IY8kM2wxMX+MY79wa9GFdFzfWp7RwkDVmG8n+nCAi9FVnS3WsS3Mnk717pSQiHKgQ/wVeP15vwUPjg8VICOcAiZ0NMzq2+zyjGbwX6QgCVM39KW5+DcKWtCfz7hHR5WXz6IDZzvzmZHTfPaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NFoN/6dH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q9dnm7KE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723148830; x=1754684830;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=SEETdzXsGLJjBMachZ8uZP2L2aFsUOCJw1Br58Y+dtU=;
-  b=Q9dnm7KEQjMxHt7SAExhfaIN77PR6TRV5jF1bKfNvoqz7IiheZPtSWYB
-   v93RdpvnLX9zb/jFiRjJhRNr23BJEGel4LKLhRvxZL+RbdHLWjL//yZjM
-   jNEl0148g0bijLB1wBK1zWJMjeRTHN9RBtZzF4nhB6Olx47laPPw/atcb
-   s+Z1SI9Git1Mln+WG5bWK3FqNJnYOOcmdN11Ruj7QOpTAdEIr6dpQtDzy
-   gB8r/EciQ4jxZQlvefrD2nctq2XhaED/TukpLGsx2Nz+8bQ4PWfrQBgti
-   w4EfYJee8AkmNYB8tVuQEcn9IFNuixuzz5ubMj0jNuuEERnHqT2fxjMVh
-   w==;
-X-CSE-ConnectionGUID: yrS834X9SdCW8qTNn5Kndg==
-X-CSE-MsgGUID: +8OxnxjzQYyBlh3LCQMAGA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11158"; a="32448888"
-X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="32448888"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 13:27:09 -0700
-X-CSE-ConnectionGUID: XaiJ0b99Sq2lAZZiX3khBg==
-X-CSE-MsgGUID: gZWBjUzcQBelj7nZaDyR8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,274,1716274800"; 
-   d="scan'208";a="57306104"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Aug 2024 13:27:08 -0700
-Date: Thu, 8 Aug 2024 13:27:06 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, namhyung@kernel.org, irogers@google.com,
-	peterz@infradead.org, mingo@kernel.org,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	adrian.hunter@intel.com, eranian@google.com
-Subject: Re: [PATCH V2 0/9] Support branch counters in block annotation
-Message-ID: <ZrUqGkXkf7x1cCm-@tassilo>
-References: <20240808193324.2027665-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NFoN/6dH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CFDEC32782;
+	Thu,  8 Aug 2024 20:28:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723148900;
+	bh=xtTZEW5I7TuOaEuBLUqLGoRetoaj4yFeUqX8YLjj92s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NFoN/6dHn0EtxQROrl5L9fEYumgNQd8ld6rUM/TVOem9rF1bbKMAAoNonKSJAsFrs
+	 h78EfmYvq0zPtluYJ4+Ab2D8VeUnvC12sHyjbfNJ5TKrBzV6MYaTPR8xxof+HOw/nO
+	 C8H9Kj3/uSeLWnS7X9FcP/L4jHr6WmB/Uty2ruC0Dy7Bv592ESgc+R8MUNyLUD6aho
+	 hsiiBktdiuab1gaFgdTBnYYg+xQNicOw2Rd/B3q/rheBH6dkr9J+jvFVNyEKuD+2bm
+	 7ZAkptiO2a+M/duvdhUAllB0oRklxudDHMQ7BoJuq/Qn8rrtSIv9068e5NsILa0wnS
+	 OcS0fwGrk2RhA==
+Date: Thu, 8 Aug 2024 17:28:17 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Anne Macedo <retpolanne@posteo.net>,
+	Changbin Du <changbin.du@huawei.com>,
+	Andi Kleen <ak@linux.intel.com>, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v1 2/2] perf test: Add set of perf record LBR tests
+Message-ID: <ZrUqYbwbiURGDVJB@x1>
+References: <20240808054644.1286065-1-irogers@google.com>
+ <20240808054644.1286065-2-irogers@google.com>
+ <ZrTXftup0H46R8WK@x1>
+ <CAP-5=fUq+yNNyg4Xn6aOoEBiXwJfO6CNCz8JhaA2jAxQg+MKKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240808193324.2027665-1-kan.liang@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fUq+yNNyg4Xn6aOoEBiXwJfO6CNCz8JhaA2jAxQg+MKKQ@mail.gmail.com>
 
-For the series
+On Thu, Aug 08, 2024 at 09:00:49AM -0700, Ian Rogers wrote:
+> On Thu, Aug 8, 2024 at 7:34 AM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> [snip]
+> > -if [ ! -f /sys/devices/cpu/caps/branches ]
+> > +if [ ! -f /sys/devices/cpu/caps/branches -a ! -f /sys/devices/cpu_core/caps/branches ]
+> 
+> Adding this lgtm, thanks for testing.
 
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Changed to the one below to address a ShellCheck warning/suggestion.
+
+diff --git a/tools/perf/tests/shell/record_lbr.sh b/tools/perf/tests/shell/record_lbr.sh
+index ead87b731898d70b..32314641217e6db9 100755
+--- a/tools/perf/tests/shell/record_lbr.sh
++++ b/tools/perf/tests/shell/record_lbr.sh
+@@ -4,7 +4,7 @@
+ 
+ set -e
+ 
+-if [ ! -f /sys/devices/cpu/caps/branches -a ! -f /sys/devices/cpu_core/caps/branches ]
++if [ ! -f /sys/devices/cpu/caps/branches ] && [ ! -f /sys/devices/cpu_core/caps/branches ]
+ then
+   echo "Skip: only x86 CPUs support LBR"
+   exit 2
