@@ -1,140 +1,242 @@
-Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453D1DFE1;
-	Fri,  9 Aug 2024 14:44:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D817552
+	for <linux-perf-users@vger.kernel.org>; Fri,  9 Aug 2024 15:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723214681; cv=none; b=ZZ49QHIrLlKrxQqy9qyyR8m/Jme1knx8EP8Tr47ds37CqMjad98xuGtKg6BgNJCWYcPRFcwKSwsI799lvPQM9BY8UR2cI2+xL5MkFGbIztcpxE2WxU//2CEZmZtkoaZv3tU7W9UXVyoiwQk8cgcXbkxUh89uGqjrDE2rUAT51p8=
+	t=1723215655; cv=none; b=Zf5Ql3kIar8ptE0zuIc86+6TbvPw8r3WCJQVZYGa/q0HAPbMA+iKH+ZtlxE3QlegOipKl6fXQdW0v9i+fPZBfaOXSESPXeXkM8xVIM/r7Eskvlw9yGpqPZY9UVK8+gbQsoZcroKR481YqkJ0MW3EE4GfOEg3QQMViAmQKoHmjOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723214681; c=relaxed/simple;
-	bh=TrF/mr/2zI8FT+BViDYpEcVJbQ3l7PzuFtp6y3/Szts=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XaqvUGkJ4hcgq3CYSiOvUPyyr2tcs2nQleS7V5+DeZRz87nF/FzfjibSmf0Gh3g7eg/za6gTah7QmDznBkQRVDK1xGQOZyHL7JNsz8x1+Ax8s4k7Rf2Obut6y96nxMoK0RRXAZCX/wyHST9rd2vjS/m0OtL8c3QszUIjpjPFNgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=mKrqswFu; arc=none smtp.client-ip=148.163.152.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
+	s=arc-20240116; t=1723215655; c=relaxed/simple;
+	bh=2/VoztJBuXDprKNoI0vzxSIB06IEaQPTPLnouZqaoEc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=M7f8B5ctUXABm6D91v6xzQNhSqnedit7GJEk9oaSUW+qhtFoPvn+u+RFNvrJXaSmChEv5FXAHJlWlTIzRRCtIhXwiZNhPgL3DRWa8uEvn3GZImVtnlNpG+ptIiIftzK6+3ExLS4aaNUNvPKkO/A3fZZSKG1gO5Wq1bLZ7RMKTpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fzZlKBB7; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="mKrqswFu"
-Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
-	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 479E0b2x019365;
-	Fri, 9 Aug 2024 14:16:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
-	 h=cc:content-transfer-encoding:content-type:date:from
-	:message-id:mime-version:subject:to; s=default; bh=pzF8DEytzWMJR
-	E2Zo3V+oeXaX+x2DcWjDmWLTnsk25A=; b=mKrqswFupu7596N0VzXCAg5YXFtiF
-	WxPasbQtAQYVosQkXDhVqJQQZ3nfwCuob2mDmWiBEUbcjE17CVSVECb5xOCNMOh+
-	hgn5J0LCPbaKCBwvGsy+xTkhUxmYdRXLX9d4fWq6Cs++JyD6y/AAV4wsxpv+QgRO
-	FHgXCt2YrOX8Z+eWLyOi0fDPYeLXXzGH0i7IQXI2vB80SoNqgkjvd8LX7ktRCPDw
-	B8tfpN34xXl9gp8W9Ow0mnGGdHM7RJL7b2oQbYyUnf2cr03dwmeOmaVDC+MyRnSg
-	0yTRAbEnwE5ahp+HdWor2MEzNIbjiNCUrAeuDqYGfYl60GecODQ6qG+yg==
-Received: from 03wpexch12.crowdstrike.sys (74-209-223-77.static.ash01.latisys.net [74.209.223.77] (may be forged))
-	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 40wf908qvw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 09 Aug 2024 14:16:55 +0000 (GMT)
-Received: from 03wpexch13.crowdstrike.sys (10.80.52.143) by
- 03WPEXCH12.crowdstrike.sys (10.80.52.17) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Fri, 9 Aug 2024 07:16:54 -0700
-Received: from 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d]) by
- 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d%14]) with mapi id
- 15.02.1544.009; Fri, 9 Aug 2024 14:16:54 +0000
-From: Rahul Shah <rahul.shah@crowdstrike.com>
-To: "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-CC: Marco Vedovati <marco.vedovati@crowdstrike.com>,
-        Kelly Martin
-	<kelly.martin@crowdstrike.com>,
-        "andrii@kernel.org" <andrii@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
-        Rahul Shah <rahul.shah@crowdstrike.com>
-Subject: uprobe causing a process to crash on file modification
-Thread-Topic: uprobe causing a process to crash on file modification
-Thread-Index: AQHa6mU1CRKX5L7u10y95iAPiGl51Q==
-Date: Fri, 9 Aug 2024 14:16:54 +0000
-Message-ID: <d26368538d5f4504b9ca239b14328d33@crowdstrike.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-disclaimer: USA
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fzZlKBB7"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fd657c9199so120575ad.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 09 Aug 2024 08:00:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723215653; x=1723820453; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cHRyJ+nR6PS8lEPUMrhPMIf0CdwrJbRWFLUbhbjnnGE=;
+        b=fzZlKBB7dDzpzHfDRepjLSE4M02iggRf6yxjTcjPzKC2qXjD84CdWeKUrCgZpB/lR2
+         6RDLzmgJxWJc/j+JQfU6uGC6Jtle/lWYMgNrzKoCoUiaVc9sZkSi3IT4NU9N/tOmYnAb
+         QixJL9eB8G2G7vyw5YRUrz8Y6lLPnJV3AySpaJqpanHjl5TmKAiNGV/wLMQmUHUvisX6
+         BGFS4srV3sjDMzjYaugKRV/QNnFZExfvf64DQSV5IoRtSEYkrdjSDRTt9PrZz8SN2YtZ
+         K1Mahh/bSok5A7C1BOi8CDM/RflDwUHZQH84LLUW6slCXQ1hfKygjRxg1hUOk+Z0eA2m
+         zr1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723215653; x=1723820453;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cHRyJ+nR6PS8lEPUMrhPMIf0CdwrJbRWFLUbhbjnnGE=;
+        b=ohDfOuG7kD0QPmqVefUer3+K7ceAHhYXKS4BFMi6+9vXtrMnsA5J/gHdl7dtauBSnB
+         xRMd+QEXGipm8rAO5Y884wPOFEoew3z016wFEF1zjjscf8aa11uy/Qg6LzOtj3vIWMZ7
+         ZlEW+SJSwzthC6Yp3b56Ey8ckJnXGemKFBq9k/FDBPCyFaD+GmWxokOQ5nZoWF08Lzt9
+         SlTS3VBQ7zkSxLonioDG6u6bgcruPPiQgsVJhlrV7p50pdqE0objlpZul7NnJNxg7hGJ
+         03zDEqZPmv0vpNpWMLDtbTWiSR4X3W2aP2F8XghcfwMgqYF/8Ey9shAd3is+hOnzTBOS
+         Lqig==
+X-Forwarded-Encrypted: i=1; AJvYcCU0ZbC2fZY48TZFU6fcTh3fk3Xqp+pThCMTGMWjE9OfOyCuEIXmRDhEVVI8B56xRTHy4pxySFX5ZDheCN6j1EcanYb80fKM/iLHnJNjpL48+g==
+X-Gm-Message-State: AOJu0YzAFTYpUVYiNFHEWRDAcG5ecbUvnBdnSjDLXgiHQxh3NtSCKzaY
+	QHOJPQgcGAlGPoYi/Qymudsm3OoGcTwXT5ie3zNR8OghswhHXxo0N4iqj3xDeNsRckVpQNJKpyp
+	eJfSGG6o1ml4O8AfFOJQGVn5MUZeSxNmLflKs/pYCSrPFMbvzyMkY4Xs=
+X-Google-Smtp-Source: AGHT+IEjqtGNJN8nTjVWi7BZ18r7XFGwoTMObY+KUXZFvZ6Qt8VWZ/Smx/vdOpP/kQLadpZhqYMs0fsGzKguzZ+ijG8=
+X-Received: by 2002:a17:903:22c1:b0:1fd:d0c0:1a69 with SMTP id
+ d9443c01a7336-200aa49d2fcmr2492125ad.9.1723215652358; Fri, 09 Aug 2024
+ 08:00:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Authority-Analysis: v=2.4 cv=AqC83/9P c=1 sm=1 tr=0 ts=66b624d7 cx=c_pps a=gZx6DIAxr9wtOoIAvRqG0Q==:117 a=gZx6DIAxr9wtOoIAvRqG0Q==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=N659UExz7-8A:10 a=yoJbH4e0A30A:10 a=gYw7AgALRtIvlrhRB3wA:9 a=pILNOxqGKmIA:10
-X-Proofpoint-ORIG-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
-X-Proofpoint-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-09_10,2024-08-07_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0
- mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1011
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2407110000 definitions=main-2408090103
+References: <20240807231823.898979-1-ak@linux.intel.com> <20240807231823.898979-3-ak@linux.intel.com>
+ <CAM9d7ci40WcV=EtsNuNXkRAWc3XHDKzb9OACNUhD5WaqTu5vxg@mail.gmail.com>
+ <CAP-5=fVZ0_orgpLcG492WtjW05QWu2Mbnuv=_NKweouVXq2icA@mail.gmail.com> <ZrUoCRu4HGoROUs2@tassilo>
+In-Reply-To: <ZrUoCRu4HGoROUs2@tassilo>
+From: Ian Rogers <irogers@google.com>
+Date: Fri, 9 Aug 2024 08:00:40 -0700
+Message-ID: <CAP-5=fXraYBGd2UPB-VmSn92ug-o+33NHJpx3rf+9v+xYncE4Q@mail.gmail.com>
+Subject: Re: [PATCH v9 3/4] perf script: Fix perf script -F +metric
+To: Andi Kleen <ak@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, Aug 8, 2024 at 1:18=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wrot=
+e:
+>
+> >
+> > Fwiw, not acked-by me. Repeating my comments below:
+>
+> Let me just point out that you broke it in the first place.
+>
+> A little more enthusiasm in handling regressions would be appreciated.
 
-We have noticed an issue when a uprobe is attached to a valid file offset, =
-and the content of that file is modified (with no inode change).
-Executing from a modified file while the uprobe is attached may cause a pro=
-cess to crash. The crash happens if the probed offset is invalid for the ne=
-w file content.
+You want more than a patch series that reimplements things correctly?
+https://lore.kernel.org/lkml/20240720074552.1915993-1-irogers@google.com/
+You have not listened to feedback from the earlier patch series you
+sent and keep sending something that I have explained I disagree with.
 
-Here's a simple scenario for an executable leading to consistent crashes (b=
-ut something similar can happen for DSO too):
+> > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-scrip=
+t.c
+> > > > index c16224b1fef3..cb63507af839 100644
+> > > > --- a/tools/perf/builtin-script.c
+> > > > +++ b/tools/perf/builtin-script.c
+> > > > @@ -335,7 +335,6 @@ struct evsel_script {
+> > > >         FILE *fp;
+> > > >         u64  samples;
+> > > >         /* For metric output */
+> > > > -       u64  val;
+> > > >         int  gnum;
+> >
+> > We're globally assuming properties of events assuming leader sampling.
+> > gnum shouldn't exist. The assumptions will be invalid when leader
+> > sampling isn't enabled.
+>
+> This is checked for now, see the earlier discussion.
 
-1. Create a simple binary B1 that has symbol S1 at offset O1. The binary B1=
- has inode INO_1.
-2. Start a new process P1 and attach an uprobe to this binary at B1:S1:O1
-3. Run the binary B1 and the uprobe is fired as expected.
-4. Continue to run the process P1 (a.k.a the uprobe is still attached to B1=
-:S1:O1)
-5. Create a new binary B2 that no longer has the symbol S1 at offset O1. Th=
-e binary B2 has inode INO_2
-6. Copy the content of binary INO_2 to INO_1 using cp command. As a result =
-the original binary B1 with INO_1  has new contents and no longer has symbo=
-l S1 at offset O1. The key here is it=92s the same inode.
-7. The original process P1 still has an uprobe attached to B1:S1:O1.
-8. Re-run the binary B1 and it seg faults immediately. In short any B1 beco=
-me completely unusable.
-9. Detach the uprobe.
-10. Re-run the binary B1 and all good
+So you can then remove the gnum as the samples are all in the event.
 
-Sample gdb output where it crashes (Notice the (bad))
+> > > > +       if (!(leader->core.attr.read_format & PERF_FORMAT_GROUP) ||
+> > > > +           !(leader->core.attr.sample_type & PERF_SAMPLE_READ)) {
+> > > > +               if (!printed)
+> > > > +                       fprintf(stderr, "perf script: -F metric req=
+uires {}:S for groups leader sampling\n");
+> > > > +               printed =3D 1;
+> > > > +               return;
+> > > > +       }
+> > > > +       /*
+> > > > +        * Always use the first entry as storage because the leader=
+ sampling
+> > > > +        * groups are contiguous and there's no need to handle mult=
+iple indexes
+> > > > +        * for anything.
+> > > > +        */
+> > > > +       evsel->stats->aggr[0].counts.val =3D val;
+> >
+> > Updating counts needs perf_stat_process_counter to update the
+> > aggregation. How does sample->cpu given below relate to aggr[0] here?
+> > This and the comment above are a hack liable to break in anything but
+> > straightforward circumstances. See:
+> > https://lore.kernel.org/lkml/20240720074552.1915993-2-irogers@google.co=
+m/
+> > on how to handle this.
+>
+> Your patch is based on a fundamental misunderstanding on the perf script
+> metrics use model, see below.
 
-0x0000555555555154 in _fini ()
-(gdb) x/20i _fini
-   0x555555555148 <_fini>:	repz int3
-   0x55555555514a <_fini+2>:	(bad)
-   0x55555555514b <_fini+3>:	cli
-   0x55555555514c <_fini+4>:	sub    $0x8,%rsp
-   0x555555555150 <_fini+8>:	add    $0x8,%rsp
-=3D> 0x555555555154 <_fini+12>:	ret
+Great, that's explained like where?
 
-Syslogs output:
-Aug  8 21:33:00 rshahvm2 kernel: [50553.686400] hello_world[30144]: segfaul=
-t at f7d3e9c8 ip 00007f9701b40144 sp 00000000f7d3e9c8 error 4 in libfoo.so[=
-7f9701b40000+1000]
-Aug  8 21:33:00 rshahvm2 kernel: [50553.686409] Code: 0f 1e fa 55 48 89 e5 =
-90 90 90 5d c3 f3 0f 1e fa 55 48 89 e5 e8 1d ff ff ff 5d c3 00 00 00 f3 cc =
-1e fa 48 83 ec 08 48 83 c4 08 <c3> 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
-0 00 00 00 00
+> >
+> > > >         if (evsel_script(leader)->gnum =3D=3D leader->core.nr_membe=
+rs) {
+> > > >                 for_each_group_member (ev2, leader) {
+> > > >                         perf_stat__print_shadow_stats(&stat_config,=
+ ev2,
+> > > > -                                                     evsel_script(=
+ev2)->val,
+> > > > -                                                     sample->cpu,
+> > > > +                                                     evsel->stats-=
+>aggr[0].counts.val,
+> > > > +                                                     0,
+> >
+> > Similarly this hard coded and unexplained constant.
+>
+> There's a comment just on top of it explaining it:
 
-What we saw is that when a file (executable or a DSO) is mapped in a proces=
-s memory, the kernel installs all uprobes registered for that file's inode,=
- no matter if the file has been changed since the initial uprobe registrati=
-on.
+No, I mean if you are going to use 0 as your special index do something lik=
+e:
 
-If uprobes are installed at a offset that's mo more valid, this behavior ca=
-n make all new application completely unusable.
+const int andis_special_aggr_index =3D 0;
 
-Just wondering if there is any fix in the kernel for this of if anyone else=
- has observed similar behavior.
+then pass that around rather than 0 otherwise people have to figure
+out the numbers are connected. At least in the case of arbitrary
+constants you can name them like:
+
+/*aggr_idx=3D*/0,
+
+/*
+
+>         /*
+>          * Always use the first entry as storage because the leader sampl=
+ing
+>          * groups are contiguous and there's no need to handle multiple i=
+ndexes
+>          * for anything.
+>          */
+>
+>
+> >
+> > > >                                                       &ctx,
+> > > >                                                       NULL);
+> > > >                 }
+> > > > @@ -2325,6 +2337,20 @@ static void process_event(struct perf_script=
+ *script,
+> > > >                 fflush(fp);
+> > > >  }
+> > > >
+> > > > +static void check_metric_conflict(void)
+> > > > +{
+> > > > +       int i;
+> > > > +       /*
+> > > > +        * Avoid conflict with the aggregation mode used for the me=
+tric printing.
+> > > > +        */
+> >
+> > Why is it a conflict, why not support aggregation modes?
+>
+> I thought I had explained that before.
+>
+> perf script has two touch point with perf stat output code: one is this o=
+ne
+> (for metrics on sampling group) and the other is for perf stat record / s=
+cript
+>
+> None of them actually support aggregation because perf script as a
+> general rule doesn't aggregate, it only handles single events.
+
+evsels have counts, counts are per thread, per cpu, etc. we get >1
+event and so we have aggregation. You can put counts into aggregation
+and then clear the aggregation immediately afterward. Metrics are
+determined from aggregated counts as that's the most generic way of
+doing things.
+
+> But the later one forces AGGR_NONE which doesn't work with the mode the g=
+roup
+> output uses.
+>
+> This feature is only to report the metric state for a single sampling per=
+iod
+> and group as explained in the original commit [1]
+>
+> If you want to aggregate multiple sample periods you need a lot the
+> machinery from perf report, which doesn't make sense to duplicate
+> in perf script.
+>
+> [1] https://www.uwsg.indiana.edu/hypermail/linux/kernel/1712.0/04705.html
+>
+> -Andi
+
+You are arguing you are special and don't need to use aggregation
+machinery then calling APIs that use the aggregation machinery - as
+the person maintaining the other end I'm asking to not do that.
+Randomly combining samples with gnum and claiming their periods are
+related is just weird, and also fundamentally broken for perf inject:
+https://lore.kernel.org/lkml/20240729220620.2957754-1-irogers@google.com/
+Making assumptions about aggregation indices is brittle, and prone to
+break on the other end.
+
+Tbh, nobody noticed in years that there was a segv here. The hard
+coded metrics have been disappearing and should disappear even more
+so. I don't consider it bad that this is broken, we can then just
+delete it knowing nobody has cared about it in years.
 
 Thanks,
-Rahul
+Ian
