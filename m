@@ -1,181 +1,130 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50B2716727B;
-	Fri,  9 Aug 2024 07:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BCFAC8D1;
+	Fri,  9 Aug 2024 08:02:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723187797; cv=none; b=qiyp5Or5GOl6838JlqapPKS2bPx5L1wCi7Rmzl2fH3RwLngTC68gewxdXQmbJf4gny7t/Hvj3kz6kuaPcq0yfPaQvsZDCzxjsdGgevtgvcQwBTjjeS6NiklUfcS7MZunfigmUou3OZWQWdVA0viBlLD1LmqkJJn655R/zLvT69w=
+	t=1723190522; cv=none; b=cxg7lLO982vU0uUDhEVK8Fsi+scQCK42MfH0bHICP6jULUpgk8aNYW71St51b2b2GMPGdoFZylzaGiilN28crQWi5mbIaHnWBXbRZPYF18GUYUuCwwjpBw6yphw2JUZtmR6Zx2C1W89PXQnAn5VG9nwsaOdN9MAsSGWLmWkJe+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723187797; c=relaxed/simple;
-	bh=hpq9fOdRKYTtwWhIuq1TOzTYVzc9MCHgR7VgytysXIA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Rc0g5vhZZ65yvX1xIz9ck3we5W9sxz9SGrbM50dMJQn/RgiQyWUJwQd6Bnpy9eLDkWsZTAStZ4WGhG9QAQagblXPs5zpHzoTBoR81NxGUu9t1MhuWX+sDKwPln07fr+Es+6CjVA4XjUHz/FeIIZ4cPhfVjHlAVdVCwBjIHT6Gg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WgFTB0XgCz2ClmD;
-	Fri,  9 Aug 2024 15:11:42 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6D59A140159;
-	Fri,  9 Aug 2024 15:16:27 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 9 Aug 2024 15:16:26 +0800
-Message-ID: <a22d6d79-fa7e-62b2-0ac1-575068f176a5@huawei.com>
-Date: Fri, 9 Aug 2024 15:16:25 +0800
+	s=arc-20240116; t=1723190522; c=relaxed/simple;
+	bh=jQjWmYNbejJ8eAQkjviIwQ3DgSsmbdepFeqkOM1I6eE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aFWA5sua3tHT9fROXk/S2U8gJt8vZtZcaVMz52VLDPYrgVLYhw5zBOT9S2s6sLQQZ4Y1l0iDFjWU2vN3zfiVqPN6nm6KW4wGok/QApnOAt/NV9rL6FJmmI4NH1u5Kl/JAwnR2oIcB+H7H2FVX8hSjNfRzNoF6QFMPZJgkhY+CoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QTGNs2Z2; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QTGNs2Z2"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2cd5d6b2581so1452036a91.2;
+        Fri, 09 Aug 2024 01:02:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723190520; x=1723795320; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=k1CNYqLAJBSiRCPmzssQ1Zg4wb+jIfTjQrz6LCzlylA=;
+        b=QTGNs2Z2Fpaf7EFDq6VxvMCbHEkmjeJ7KHaTiIQ0Fz5tvvP+q8jWMjZXjFlhqEHdDa
+         e/Z8hg6hmmoLPM/NyCk2BZdAh8Zn1R8T0G6frfYrf6yEIHAzqCGU6RapX9tes6KFReuZ
+         tGLMv3GhRs42EApFetOgkTKDS/rK7vjavkLLrNDXzihTs9zhDHpZxkNSMkHAQx8zAave
+         JbvUvZt//80VE70IpprH2M8m1ayyJ8DjugjjBqcvRyDld4qrhHE1R4kOSdhMa4RZTbJE
+         P/2svIGnb8vT6Nd167+hm6PjJ2aPJwypdpKtrcv4umJ9YppXLBgTyj1OIRfWqhBXFCWs
+         CJ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723190520; x=1723795320;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=k1CNYqLAJBSiRCPmzssQ1Zg4wb+jIfTjQrz6LCzlylA=;
+        b=E7XEs2BQ6laUIblnCrAz/ovhyFDYY04S3CCli3TxWlF2K21QsJYg/G4PT7hEHTvJM8
+         /bu2QLVBjIvPcst+V+R20Q2Mgi19RWm0wUPMlM+EUXkijcab8oH78tDhdJ7/GjrSWrWC
+         eV0wzsHmVkdg/9zXzBpuL2goEjQnwzuvwCwNSbOJ/5BWqfVTNtk7XJUmX6pXpkAao2cS
+         gl/gX/CRLfPst7pAntBgV7nqW2xWNLjY3Iucq3AY0zO19a+X+d2SCA3ZP0psxd0vYA2v
+         s8ng04xQQNOE0Y3FZGjtVjBiQn6QiKucyHkBOFLOTpI29/Zt1IOkme3+wuqbyjVHi8xR
+         1IDw==
+X-Forwarded-Encrypted: i=1; AJvYcCUo/ykLoeEHCFQqEnW7XqQZmmS0S4fMG6gr067NozywjIFl9Bpzs/LfhpeQ2kwLV2GVg5mqlgvHzwKPWJLn8ydHnyORXVatkvoks7ioKMHqqzRPVtOYTFHMIMYLnAEGNnpd8tcnpuXwxwyh9jM1Bg==
+X-Gm-Message-State: AOJu0YzCORYtLoOM7k4+G0lc12YV9g7wwdfyKtEYJTA4M3F78JFwnuc2
+	kQunv/ZCMpn6vk0T1W4WiaPKdlI5Q8MomwJ3kckaun7CZAS/ozSS
+X-Google-Smtp-Source: AGHT+IEPSPIVq9WWED3UQMmchGn9WG0dcWWIQ5HvpqN3kBBE5FW5DOwqrrTD5CynQLzz8ScVxMyrlg==
+X-Received: by 2002:a17:90b:1806:b0:2cd:b938:770b with SMTP id 98e67ed59e1d1-2d1e7fa9fe6mr672079a91.5.1723190520437;
+        Fri, 09 Aug 2024 01:02:00 -0700 (PDT)
+Received: from alveo.moma (bullfrog.anu.edu.au. [150.203.163.126])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d1b3addc29sm4694276a91.29.2024.08.09.01.01.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Aug 2024 01:01:59 -0700 (PDT)
+From: Zixian Cai <fzczx123@gmail.com>
+To: 
+Cc: Zixian Cai <fzczx123@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Ben Gainey <ben.gainey@arm.com>,
+	Paran Lee <p4ranlee@gmail.com>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] perf script python: Add the ins_lat field to event handler
+Date: Fri,  9 Aug 2024 08:01:36 +0000
+Message-Id: <20240809080137.3590148-1-fzczx123@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
+For example, when using the Alder Lake PMU memory load event, the
+instruction latency is stored in ins_lat, while the cache latency
+is stored in weight.
 
+This patch reports the ins_lat field for Python scripting.
 
-在 2024/8/9 2:26, Andrii Nakryiko 写道:
-> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->> Hi Andrii and Oleg.
->>
->> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->> on arm64. I notice recent discussions on the performance and scalability of uprobes
->> within the mailing list. Considering this interest, I've added you and other relevant
->> maintainers to the CC list for broader visibility and potential collaboration.
->>
-> 
-> Hi Liao,
-> 
-> As you can see there is an active work to improve uprobes, that
-> changes lifetime management of uprobes, removes a bunch of locks taken
-> in the uprobe/uretprobe hot path, etc. It would be nice if you can
-> hold off a bit with your changes until all that lands. And then
-> re-benchmark, as costs might shift.
+Signed-off-by: Zixian Cai <fzczx123@gmail.com>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+v4) reformat commit message for max line length
+v3) address review comments
+v2) rebase on top of perf-tools-next
 
-Andrii, I'm trying to integrate your lockless changes into the upstream
-next-20240806 kernel tree. And I ran into some conflicts. please let me
-know which kernel you're currently working on.
+ tools/perf/util/scripting-engines/trace-event-python.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Thanks.
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index fb00f3ad6815..6971dd6c231f 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -888,6 +888,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	set_sample_read_in_dict(dict_sample, sample, evsel);
+ 	pydict_set_item_string_decref(dict_sample, "weight",
+ 			PyLong_FromUnsignedLongLong(sample->weight));
++	pydict_set_item_string_decref(dict_sample, "ins_lat",
++			PyLong_FromUnsignedLong(sample->ins_lat));
+ 	pydict_set_item_string_decref(dict_sample, "transaction",
+ 			PyLong_FromUnsignedLongLong(sample->transaction));
+ 	set_sample_datasrc_in_dict(dict_sample, sample);
+@@ -1317,7 +1319,7 @@ static void python_export_sample_table(struct db_export *dbe,
+ 	struct tables *tables = container_of(dbe, struct tables, dbe);
+ 	PyObject *t;
 
-> 
-> But also see some remarks below.
-> 
->> Thanks.
->>
->> 在 2024/7/27 17:44, Liao Chang 写道:
->>> The profiling result of single-thread model of selftests bench reveals
->>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
->>> ARM64. On my local testing machine, 5% of CPU time is consumed by
->>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
->>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
->>>
->>> This patch introduce struct uprobe_breakpoint to track previously
->>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
->>> need for redundant insn_slot writes and subsequent expensive cache
->>> flush, especially on architecture like ARM64. This patch has been tested
->>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
->>> bench and Redis GET/SET benchmark result below reveal obivious
->>> performance gain.
->>>
->>> before-opt
->>> ----------
->>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
->>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
->>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
-> 
-> I'm surprised that nop and push variants are much slower than ret
-> variant. This is exactly opposite on x86-64. Do you have an
-> explanation why this might be happening? I see you are trying to
-> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
-> variant of uprobe that normally shouldn't be used. Typically uprobe is
-> installed on nop (for USDT) and on function entry (which would be push
-> variant, `push %rbp` instruction).
-> 
-> ret variant, for x86-64, causes one extra step to go back to user
-> space to execute original instruction out-of-line, and then trapping
-> back to kernel for running uprobe. Which is what you normally want to
-> avoid.
-> 
-> What I'm getting at here. It seems like maybe arm arch is missing fast
-> emulated implementations for nops/push or whatever equivalents for
-> ARM64 that is. Please take a look at that and see why those are slow
-> and whether you can make those into fast uprobe cases?
+-	t = tuple_new(27);
++	t = tuple_new(28);
 
-I will spend the weekend figuring out the questions you raised. Thanks for
-pointing them out.
+ 	tuple_set_d64(t, 0, es->db_id);
+ 	tuple_set_d64(t, 1, es->evsel->db_id);
+@@ -1346,6 +1348,7 @@ static void python_export_sample_table(struct db_export *dbe,
+ 	tuple_set_s32(t, 24, es->sample->flags);
+ 	tuple_set_d64(t, 25, es->sample->id);
+ 	tuple_set_d64(t, 26, es->sample->stream_id);
++	tuple_set_u32(t, 27, es->sample->ins_lat);
 
-> 
->>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
->>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
->>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
->>> Redis SET (RPS) uprobe: 42728.52
->>> Redis GET (RPS) uprobe: 43640.18
->>> Redis SET (RPS) uretprobe: 40624.54
->>> Redis GET (RPS) uretprobe: 41180.56
->>>
->>> after-opt
->>> ---------
->>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>> Redis SET (RPS) uprobe: 43939.69
->>> Redis GET (RPS) uprobe: 45200.80
->>> Redis SET (RPS) uretprobe: 41658.58
->>> Redis GET (RPS) uretprobe: 42805.80
->>>
->>> While some uprobes might still need to share the same insn_slot, this
->>> patch compare the instructions in the resued insn_slot with the
->>> instructions execute out-of-line firstly to decides allocate a new one
->>> or not.
->>>
->>> Additionally, this patch use a rbtree associated with each thread that
->>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
->>> rbtree of uprobe_breakpoints has smaller node, better locality and less
->>> contention, it result in faster lookup times compared to find_uprobe().
->>>
->>> The other part of this patch are some necessary memory management for
->>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
->>> hit uprobe that doesn't already have a corresponding node in rbtree. All
->>> uprobe_breakpoints will be freed when thread exit.
->>>
->>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->>> ---
->>>  include/linux/uprobes.h |   3 +
->>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
->>>  2 files changed, 211 insertions(+), 38 deletions(-)
->>>
-> 
-> [...]
+ 	call_object(tables->sample_handler, t, "sample_table");
 
--- 
-BR
-Liao, Chang
+--
+2.25.1
+
