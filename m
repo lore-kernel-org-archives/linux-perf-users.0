@@ -1,160 +1,154 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41BE148823;
-	Fri,  9 Aug 2024 20:12:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DCF0225D6;
+	Fri,  9 Aug 2024 21:15:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723234352; cv=none; b=gelkK7hhCi99UZlgSZ8VM+YIJkhXditEe1LIf4Ab3mL4SAg7rlusV1G4O2KgBxpq9cdIyUh5kMD9GRKDorBXcnlKM5U7WAaDyUtL1feZa6qf7oAb3UOzts4g7SZJNVvtMxYsbf7oieRjXtSFIv0ajf3CMPFeWpikoNgbJoCvd4s=
+	t=1723238134; cv=none; b=lXuWXksm2Ny5bQ7lfpoxNCGsMtFbqFURcNTUa0I/f9KhTUiY7jd8xdaOBtTSlE3+taVu0Aauk89SrrQlvqDNXuOJlC5iFSiNuiwMnwaVqABrus9zF0pa7zST8M7eeEm2eysTICkdZmYt86xRAxnmNn4EKoLFhRwQd/9oqp+O+rI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723234352; c=relaxed/simple;
-	bh=lfYB0FW/wjA0IG7TtrciXw9cT3EbzR04+wRaHmnFmRk=;
+	s=arc-20240116; t=1723238134; c=relaxed/simple;
+	bh=WDLxd448HftortWiAdBjWMSTzbRSfPU4kr/k4P1TZyk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DM1WQxIBQKDKTtDl+O1zYb81anaD+PPji8+gUdsy5zSJuLmBt6lFwlOMPiGn+bbDEqRohu/xDwo6I747BprzVpPkw/GjcQgTNl9qQbXRiIFuVq1nv9vh9ISUJRMHx/Ve6y5u5Zy/qikTsIYWx3U7F0PTGc2DyPlILYsoYmm8+YE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwNL9uhn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=X5ntoArXLliv+aJwEq8rmAtu0LgxrFCbBqDAmQEfKy+1OFhWLneYBxorWswwId6YxgDpuAOEGW5BPFZ7lYMyj6i1iTDYbhvC7H0YCMelqyUyVBOucPmmZaPbJmU66VmLUS8Ia3XsjRLBLAVTm2pohtEZ/MAtVNxW1xOw1ihfoO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VHstCtmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwNL9uhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D6D5C32782;
-	Fri,  9 Aug 2024 20:12:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VHstCtmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59000C32782;
+	Fri,  9 Aug 2024 21:15:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723234351;
-	bh=lfYB0FW/wjA0IG7TtrciXw9cT3EbzR04+wRaHmnFmRk=;
+	s=k20201202; t=1723238133;
+	bh=WDLxd448HftortWiAdBjWMSTzbRSfPU4kr/k4P1TZyk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LwNL9uhn4/LXxYIksEahdoIEXqHNdDDpIwz02ugA9WHS0XFYSKN+izcLRonlCfO0u
-	 dFGhdMyrEyqfr4DzHNyniWySjux6t1RRaG8/uDGetSfQBpwOwGfsgrk5BcV2nd6mLj
-	 DWdzPhlYxEGiadizimykNdwVZu5LjB64P9wAfB1L3Hgzw+u+8WAXWrTchqkqe845Bl
-	 SJMR+PyJ1x/XogpyfgkPz7ZaozFy5XpfZmBvR87KhG8rguMsM0tw2SUaJALkwTo3VV
-	 aDVv2fKDzGJzU3AX1x42SbNUZ1X6BCJKRl29BcbqwW7osDVtLFGbjX1C0QJlIZrOC7
-	 3ZeX7RwGS8udQ==
-Date: Fri, 9 Aug 2024 13:12:29 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf sched timehist: Skip print non-idle task samples
- when only show idle events
-Message-ID: <ZrZ4LX20hN5w7MsJ@google.com>
-References: <20240806075131.1382728-1-yangjihong@bytedance.com>
+	b=VHstCtmu0TcueqpNSJ8DYR/q9JqgdqfFS0kcfbMES/8FqKK4x+zfM+Is+qbRUFlbL
+	 6pUuatyLut4MeIL0vIl5D8amJs24w96rwlNI1snB+QqsCU0DEuicS4dEMcctND1RxX
+	 a1BwjdifR1E98tsk/hj6p+vYlGJtimJ+IwKaWbSFOY5DM1PBqIh1eUQtZ4KoChK0rb
+	 bRbC+hJK4K/XlFhbLvLjUiHctYANHzSJSXH6if6ykScSoq8nJcQTXijmwwO0UDnF2q
+	 EMk/do5xNFx3BNTf7LJySMllN+MF4baJMTNgreTcgXbwRCpFmVBVn8drv92sIH5zF1
+	 EAS/gbdRHBIpA==
+Date: Fri, 9 Aug 2024 18:15:30 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH] perf annotate: Fix --group behavior when leader has no
+ samples
+Message-ID: <ZraG8ryV_qubOt8R@x1>
+References: <CAM9d7cjXmaMuidQR10PXrp9khZ4LhDZbLno1rN2JcCncaYyp7Q@mail.gmail.com>
+ <20240807061555.1642669-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240806075131.1382728-1-yangjihong@bytedance.com>
+In-Reply-To: <20240807061555.1642669-1-namhyung@kernel.org>
 
-Hello,
+On Tue, Aug 06, 2024 at 11:15:55PM -0700, Namhyung Kim wrote:
+> When --group option is used, it should display all events together.  But
+> the current logic only checks if the first (leader) event has samples or
+> not.  Let's check the member events as well.
+> 
+> Also it missed to put the linked samples from member evsels to the
+> output RB-tree so that it can be displayed in the output.
 
-On Tue, Aug 06, 2024 at 03:51:31PM +0800, Yang Jihong wrote:
-> when only show idle events, runtime stats of non-idle tasks is not updated,
-> and the value is 0, there is no need to print non-idle samples.
+Thanks, re-tested and applied.
+
+- Arnaldo
+
+> For example, take a look at this example.
+> 
+>   $ ./perf evlist
+>   cpu/mem-loads,ldlat=30/P
+>   cpu/mem-stores/P
+>   dummy:u
+> 
+> It has three events but 'path_put' function has samples only for
+> mem-stores (second) event.
+> 
+>   $ sudo ./perf annotate --stdio -f path_put
+>    Percent |      Source code & Disassembly of kcore for cpu/mem-stores/P (2 samples, percent: local period)
+>   ----------------------------------------------------------------------------------------------------------
+>            : 0                0xffffffffae600020 <path_put>:
+>       0.00 :   ffffffffae600020:       endbr64
+>       0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
+>      91.22 :   ffffffffae600029:       pushq   %rbx
+>       0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
+>       0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
+>       8.78 :   ffffffffae600031:       callq   0xffffffffae614aa0
+>       0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
+>       0.00 :   ffffffffae600039:       popq    %rbx
+>       0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
+>       0.00 :   ffffffffae60003f:       nop
+> 
+> Therefore, it didn't show up when --group option is used since the
+> leader ("mem-loads") event has no samples.  But now it checks both
+> events.
 > 
 > Before:
-> 
->   # perf sched timehist -I
->   Samples of sched_switch event do not have callchains.
->              time    cpu  task name                       wait time  sch delay   run time
->                           [tid/pid]                          (msec)     (msec)     (msec)
->   --------------- ------  ------------------------------  ---------  ---------  ---------
->    2090450.763235 [0000]  migration/0[15]                     0.000      0.000      0.000
->    2090450.763268 [0001]  migration/1[21]                     0.000      0.000      0.000
->    2090450.763309 [0002]  migration/2[27]                     0.000      0.000      0.000
->    2090450.763343 [0003]  migration/3[33]                     0.000      0.000      0.000
->    2090450.763469 [0004]  migration/4[39]                     0.000      0.000      0.000
->    2090450.763501 [0005]  migration/5[45]                     0.000      0.000      0.000
->    2090450.763622 [0006]  migration/6[51]                     0.000      0.000      0.000
->    2090450.763660 [0007]  migration/7[57]                     0.000      0.000      0.000
->    2090450.763741 [0009]  migration/9[69]                     0.000      0.000      0.000
->    2090450.763862 [0010]  migration/10[75]                    0.000      0.000      0.000
->    2090450.763894 [0011]  migration/11[81]                    0.000      0.000      0.000
->    2090450.764021 [0012]  migration/12[87]                    0.000      0.000      0.000
->    2090450.764056 [0013]  migration/13[93]                    0.000      0.000      0.000
->    2090450.764135 [0014]  migration/14[99]                    0.000      0.000      0.000
->    2090450.764163 [0015]  migration/15[105]                   0.000      0.000      0.000
->    2090450.764292 [0016]  migration/16[111]                   0.000      0.000      0.000
->    2090450.764371 [0017]  migration/17[117]                   0.000      0.000      0.000
->    2090450.764422 [0018]  migration/18[123]                   0.000      0.000      0.000
->    2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
->    2090450.764505 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
->    2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
->    2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
->    2090450.764590 [0016]  s1-agent[7179/7162]                 0.000      0.000      0.000
->    2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
->    2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
->    2090450.764639 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
->    2090450.764668 [0017]  s1-agent[7180/7162]                 0.000      0.000      0.000
->    2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
->    2090450.764672 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
->    2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
+>   $ sudo ./perf annotate --stdio -f --group path_put
+>   (no output)
 > 
 > After:
+>   $ sudo ./perf annotate --stdio -f --group path_put
+>    Percent                 |      Source code & Disassembly of kcore for cpu/mem-loads,ldlat=30/P, cpu/mem-stores/P, dummy:u (0 samples, percent: local period)
+>   -------------------------------------------------------------------------------------------------------------------------------------------------------------
+>                            : 0                0xffffffffae600020 <path_put>:
+>       0.00    0.00    0.00 :   ffffffffae600020:       endbr64
+>       0.00    0.00    0.00 :   ffffffffae600024:       nopl    (%rax, %rax)
+>       0.00   91.22    0.00 :   ffffffffae600029:       pushq   %rbx
+>       0.00    0.00    0.00 :   ffffffffae60002a:       movq    %rdi, %rbx
+>       0.00    0.00    0.00 :   ffffffffae60002d:       movq    8(%rdi), %rdi
+>       0.00    8.78    0.00 :   ffffffffae600031:       callq   0xffffffffae614aa0
+>       0.00    0.00    0.00 :   ffffffffae600036:       movq    (%rbx), %rdi
+>       0.00    0.00    0.00 :   ffffffffae600039:       popq    %rbx
+>       0.00    0.00    0.00 :   ffffffffae60003a:       jmp     0xffffffffae620670
+>       0.00    0.00    0.00 :   ffffffffae60003f:       nop
 > 
->   # perf sched timehist -I
->   Samples of sched_switch event do not have callchains.
->              time    cpu  task name                       wait time  sch delay   run time
->                           [tid/pid]                          (msec)     (msec)     (msec)
->   --------------- ------  ------------------------------  ---------  ---------  ---------
->    2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
->    2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
->    2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
->    2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
->    2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
->    2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
->    2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
->    2090450.764688 [0016]  <idle>                              0.019      0.019      0.097
->    2090450.764694 [0000]  <idle>                              0.001      0.001      0.009
->    2090450.764706 [0000]  <idle>                              0.001      0.001      0.010
->    2090450.764725 [0002]  <idle>                              0.000      0.000      1.415
->    2090450.764728 [0000]  <idle>                              0.002      0.002      0.019
->    2090450.764823 [0000]  <idle>                              0.003      0.003      0.091
->    2090450.764838 [0019]  <idle>                              0.000      0.000      0.154
->    2090450.764865 [0002]  <idle>                              0.109      0.109      0.029
->    2090450.764866 [0000]  <idle>                              0.012      0.012      0.030
->    2090450.764880 [0002]  <idle>                              0.013      0.013      0.001
->    2090450.764880 [0000]  <idle>                              0.002      0.002      0.011
->    2090450.764896 [0000]  <idle>                              0.001      0.001      0.013
->    2090450.764903 [0019]  <idle>                              0.063      0.063      0.002
->    2090450.764908 [0019]  <idle>                              0.003      0.003      0.001
-> 
-> Fixes: 07235f84ece6 ("perf sched timehist: Add -I/--idle-hist option")
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> Reported-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 > ---
->  tools/perf/builtin-sched.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
+>  tools/perf/builtin-annotate.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 8750b5f2d49b..04770c2ae008 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2729,8 +2729,14 @@ static int timehist_sched_change_event(struct perf_tool *tool,
->  		}
+> diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
+> index efcadb7620b8..1bfe41783a7c 100644
+> --- a/tools/perf/builtin-annotate.c
+> +++ b/tools/perf/builtin-annotate.c
+> @@ -632,13 +632,23 @@ static int __cmd_annotate(struct perf_annotate *ann)
+>  	evlist__for_each_entry(session->evlist, pos) {
+>  		struct hists *hists = evsel__hists(pos);
+>  		u32 nr_samples = hists->stats.nr_samples;
+> +		struct ui_progress prog;
+> +		struct evsel *evsel;
+>  
+> -		if (nr_samples == 0)
+> +		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
+>  			continue;
+>  
+> -		if (!symbol_conf.event_group || !evsel__is_group_leader(pos))
+> +		for_each_group_member(evsel, pos)
+> +			nr_samples += evsel__hists(evsel)->stats.nr_samples;
+> +
+> +		if (nr_samples == 0)
+>  			continue;
+>  
+> +		ui_progress__init(&prog, nr_samples,
+> +				  "Sorting group events for output...");
+> +		evsel__output_resort(pos, &prog);
+> +		ui_progress__finish();
+> +
+>  		hists__find_annotations(hists, pos, ann);
 >  	}
 >  
-> -	if (!sched->summary_only)
-> +	/*
-> +	 * when only show idle events, only runtime stats of idle tasks
-> +	 * need to update, and can skip non-idle tasks sample.
-> +	 */
-> +	if (!sched->summary_only &&
-> +	    !(sched->idle_hist && thread__tid(thread) != 0)) {
->  		timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
-> +	}
-
-I think we already have the same condition in the previous block, maybe
-better to move this code into the block.  Or, we can change it to goto
-out and reduce the indentation level of the block.
-
-Thanks,
-Namhyung
-
->  
->  out:
->  	if (sched->hist_time.start == 0 && t >= ptime->start)
 > -- 
-> 2.25.1
+> 2.46.0.rc2.264.g509ed76dc8-goog
 > 
