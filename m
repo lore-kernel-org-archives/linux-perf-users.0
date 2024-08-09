@@ -1,157 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-00206402.pphosted.com (mx0b-00206402.pphosted.com [148.163.152.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 670AC192B9F;
-	Fri,  9 Aug 2024 13:36:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2453D1DFE1;
+	Fri,  9 Aug 2024 14:44:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.152.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723210608; cv=none; b=Lbc6WquMkYx9iSAt5fkmJRzEyu/Eh6KuYnH3+bs5LRTDxlGSgy+vEYOsBcrFVpU12VAUf+UJ8Kd19m8gOeiZge64hE+EH1JJ9obzlQskHSPkLx3/hFo3hSopK3ZkNGskzAYirXwFJZJCDA31eGgRskT59oQcPmYlKW2ZmDvK158=
+	t=1723214681; cv=none; b=ZZ49QHIrLlKrxQqy9qyyR8m/Jme1knx8EP8Tr47ds37CqMjad98xuGtKg6BgNJCWYcPRFcwKSwsI799lvPQM9BY8UR2cI2+xL5MkFGbIztcpxE2WxU//2CEZmZtkoaZv3tU7W9UXVyoiwQk8cgcXbkxUh89uGqjrDE2rUAT51p8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723210608; c=relaxed/simple;
-	bh=qbki987gaYsmofTdGaOrSNO/2m7rpUZOrujXQCXht1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R56B5Sqj5UTTRJW9T55IpGJaZ//voXLd6dT0KzlR1+BVZDXSpr6qmg4ct9ECnEvkQ4PVGYhPEhY7wf7owyzifY8GuoU+c60b2uS827Sh7AJ8QAl3MtWY7nZ+KKxRbXXat4znlk3y4drDmJ7AUoL4JDuk3MSd1nwryQPyZl1uYYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z0P2qDVO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723214681; c=relaxed/simple;
+	bh=TrF/mr/2zI8FT+BViDYpEcVJbQ3l7PzuFtp6y3/Szts=;
+	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=XaqvUGkJ4hcgq3CYSiOvUPyyr2tcs2nQleS7V5+DeZRz87nF/FzfjibSmf0Gh3g7eg/za6gTah7QmDznBkQRVDK1xGQOZyHL7JNsz8x1+Ax8s4k7Rf2Obut6y96nxMoK0RRXAZCX/wyHST9rd2vjS/m0OtL8c3QszUIjpjPFNgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com; spf=pass smtp.mailfrom=crowdstrike.com; dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b=mKrqswFu; arc=none smtp.client-ip=148.163.152.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=crowdstrike.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crowdstrike.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z0P2qDVO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996E0C32782;
-	Fri,  9 Aug 2024 13:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723210608;
-	bh=qbki987gaYsmofTdGaOrSNO/2m7rpUZOrujXQCXht1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z0P2qDVONXxvOeB7wDiYJ+x5raP/IoD8prvxqS5xCi1b77IL5lpzGbtSVQMntbMgw
-	 g0L9IyHWLojoOpssXX/AG0jmlZKOq46rDBgZYFCoq11v43yVN5dkTra3+Kq5ZeM1Hn
-	 MOo6/gGFxEC/CVqFLcXBOeLJE7LhqC3zXqpsvg0Ua+tk4T17JWq/MVsyMUqD9FS4Q4
-	 7FY+56yJyMqHf18y6Pj6UdnejnVLkw03Rdt+K7FKWRshPbxY1MTUqjq7G5XZTa2s3t
-	 GCHUQdKbABG52APNgm4S9trksTnKxYkxQ1bcJgOh94PtTT7mYSsxhniFiLLvy53/dz
-	 tVznqBS7/pnBQ==
-Date: Fri, 9 Aug 2024 10:36:45 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Zixian Cai <fzczx123@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Ben Gainey <ben.gainey@arm.com>, Paran Lee <p4ranlee@gmail.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] perf script python: Add the ins_lat field to event
- handler
-Message-ID: <ZrYbbZVE4BQ-oqba@x1>
-References: <20240809080137.3590148-1-fzczx123@gmail.com>
+	dkim=pass (2048-bit key) header.d=crowdstrike.com header.i=@crowdstrike.com header.b="mKrqswFu"
+Received: from pps.filterd (m0354655.ppops.net [127.0.0.1])
+	by mx0b-00206402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 479E0b2x019365;
+	Fri, 9 Aug 2024 14:16:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crowdstrike.com;
+	 h=cc:content-transfer-encoding:content-type:date:from
+	:message-id:mime-version:subject:to; s=default; bh=pzF8DEytzWMJR
+	E2Zo3V+oeXaX+x2DcWjDmWLTnsk25A=; b=mKrqswFupu7596N0VzXCAg5YXFtiF
+	WxPasbQtAQYVosQkXDhVqJQQZ3nfwCuob2mDmWiBEUbcjE17CVSVECb5xOCNMOh+
+	hgn5J0LCPbaKCBwvGsy+xTkhUxmYdRXLX9d4fWq6Cs++JyD6y/AAV4wsxpv+QgRO
+	FHgXCt2YrOX8Z+eWLyOi0fDPYeLXXzGH0i7IQXI2vB80SoNqgkjvd8LX7ktRCPDw
+	B8tfpN34xXl9gp8W9Ow0mnGGdHM7RJL7b2oQbYyUnf2cr03dwmeOmaVDC+MyRnSg
+	0yTRAbEnwE5ahp+HdWor2MEzNIbjiNCUrAeuDqYGfYl60GecODQ6qG+yg==
+Received: from 03wpexch12.crowdstrike.sys (74-209-223-77.static.ash01.latisys.net [74.209.223.77] (may be forged))
+	by mx0b-00206402.pphosted.com (PPS) with ESMTPS id 40wf908qvw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Aug 2024 14:16:55 +0000 (GMT)
+Received: from 03wpexch13.crowdstrike.sys (10.80.52.143) by
+ 03WPEXCH12.crowdstrike.sys (10.80.52.17) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 9 Aug 2024 07:16:54 -0700
+Received: from 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d]) by
+ 03wpexch13.crowdstrike.sys ([fe80::595e:a96f:853f:da0d%14]) with mapi id
+ 15.02.1544.009; Fri, 9 Aug 2024 14:16:54 +0000
+From: Rahul Shah <rahul.shah@crowdstrike.com>
+To: "bpf@vger.kernel.org" <bpf@vger.kernel.org>
+CC: Marco Vedovati <marco.vedovati@crowdstrike.com>,
+        Kelly Martin
+	<kelly.martin@crowdstrike.com>,
+        "andrii@kernel.org" <andrii@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" <linux-trace-kernel@vger.kernel.org>,
+        Rahul Shah <rahul.shah@crowdstrike.com>
+Subject: uprobe causing a process to crash on file modification
+Thread-Topic: uprobe causing a process to crash on file modification
+Thread-Index: AQHa6mU1CRKX5L7u10y95iAPiGl51Q==
+Date: Fri, 9 Aug 2024 14:16:54 +0000
+Message-ID: <d26368538d5f4504b9ca239b14328d33@crowdstrike.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-disclaimer: USA
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240809080137.3590148-1-fzczx123@gmail.com>
+X-Authority-Analysis: v=2.4 cv=AqC83/9P c=1 sm=1 tr=0 ts=66b624d7 cx=c_pps a=gZx6DIAxr9wtOoIAvRqG0Q==:117 a=gZx6DIAxr9wtOoIAvRqG0Q==:17 a=xqWC_Br6kY4A:10 a=EjBHVkixTFsA:10 a=N659UExz7-8A:10 a=yoJbH4e0A30A:10 a=gYw7AgALRtIvlrhRB3wA:9 a=pILNOxqGKmIA:10
+X-Proofpoint-ORIG-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
+X-Proofpoint-GUID: KE0GaMDCDTws6WXWNTkzS1AeEiMiYAxT
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-09_10,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 suspectscore=0 mlxscore=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1011
+ priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2407110000 definitions=main-2408090103
 
-On Fri, Aug 09, 2024 at 08:01:36AM +0000, Zixian Cai wrote:
-> For example, when using the Alder Lake PMU memory load event, the
-> instruction latency is stored in ins_lat, while the cache latency
-> is stored in weight.
-> 
-> This patch reports the ins_lat field for Python scripting.
 
-So, how did you test this? I tried:
+We have noticed an issue when a uprobe is attached to a valid file offset, =
+and the content of that file is modified (with no inode change).
+Executing from a modified file while the uprobe is attached may cause a pro=
+cess to crash. The crash happens if the probed offset is invalid for the ne=
+w file content.
 
-Committer testing:
+Here's a simple scenario for an executable leading to consistent crashes (b=
+ut something similar can happen for DSO too):
 
-On a Rocket Lake Refresh Intel machine (14th gen):
+1. Create a simple binary B1 that has symbol S1 at offset O1. The binary B1=
+ has inode INO_1.
+2. Start a new process P1 and attach an uprobe to this binary at B1:S1:O1
+3. Run the binary B1 and the uprobe is fired as expected.
+4. Continue to run the process P1 (a.k.a the uprobe is still attached to B1=
+:S1:O1)
+5. Create a new binary B2 that no longer has the symbol S1 at offset O1. Th=
+e binary B2 has inode INO_2
+6. Copy the content of binary INO_2 to INO_1 using cp command. As a result =
+the original binary B1 with INO_1  has new contents and no longer has symbo=
+l S1 at offset O1. The key here is it=92s the same inode.
+7. The original process P1 still has an uprobe attached to B1:S1:O1.
+8. Re-run the binary B1 and it seg faults immediately. In short any B1 beco=
+me completely unusable.
+9. Detach the uprobe.
+10. Re-run the binary B1 and all good
 
-  root@number:~# grep -m1 'model name' /proc/cpuinfo
-  model name    : Intel(R) Core(TM) i7-14700K
-  root@number:~# perf mem record -a sleep 5
-  Memory events are enabled on a subset of CPUs: 16-27
-  [ perf record: Woken up 85 times to write data ]
-  [ perf record: Captured and wrote 41.236 MB perf.data (191390 samples) ]
-  root@number:~# perf evlist -v
-  cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-  cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|CPU|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, precise_ip: 3, sample_id_all: 1
-  dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|CPU|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-  root@number:~#
+Sample gdb output where it crashes (Notice the (bad))
 
-Now generate a python script to then dump the dictionary that now needs
-to have that 'ins_lat' field:
+0x0000555555555154 in _fini ()
+(gdb) x/20i _fini
+   0x555555555148 <_fini>:	repz int3
+   0x55555555514a <_fini+2>:	(bad)
+   0x55555555514b <_fini+3>:	cli
+   0x55555555514c <_fini+4>:	sub    $0x8,%rsp
+   0x555555555150 <_fini+8>:	add    $0x8,%rsp
+=3D> 0x555555555154 <_fini+12>:	ret
 
-  root@number:~# perf script --gen python
-  generated Python script: perf-script.py
-  root@number:~# vim perf-script.py
-  root@number:~# perf script -s perf-script.py | head -40
-  in trace_begin
-  in trace_end
-  root@number:~# vim perf-script.py
+Syslogs output:
+Aug  8 21:33:00 rshahvm2 kernel: [50553.686400] hello_world[30144]: segfaul=
+t at f7d3e9c8 ip 00007f9701b40144 sp 00000000f7d3e9c8 error 4 in libfoo.so[=
+7f9701b40000+1000]
+Aug  8 21:33:00 rshahvm2 kernel: [50553.686409] Code: 0f 1e fa 55 48 89 e5 =
+90 90 90 5d c3 f3 0f 1e fa 55 48 89 e5 e8 1d ff ff ff 5d c3 00 00 00 f3 cc =
+1e fa 48 83 ec 08 48 83 c4 08 <c3> 00 00 00 00 00 00 00 00 00 00 00 00 00 0=
+0 00 00 00 00
 
-But now the perf-script.py doesn't have a handler for the events and I
-got just:
+What we saw is that when a file (executable or a DSO) is mapped in a proces=
+s memory, the kernel installs all uprobes registered for that file's inode,=
+ no matter if the file has been changed since the initial uprobe registrati=
+on.
 
-  root@number:~# perf script -s perf-script.py 
-  in trace_begin
-  in trace_end
-  root@number:~# perf evlist 
-  cpu_atom/mem-loads,ldlat=30/P
-  cpu_atom/mem-stores/P
-  dummy:u
-  root@number:~# perf report -D | grep PERF_RECORD_SAMPLE | wc -l
-  5857
-  root@number:~#
+If uprobes are installed at a offset that's mo more valid, this behavior ca=
+n make all new application completely unusable.
 
-So now I'm investigating if this is some 'perf script' script generation
-oddity by trying to run this on an AMD machine, non-hybrid...
-
-But in general try to provide the steps to show that the functionality
-that you are adding is actually working, making it easy for other
-people to try reproducing your results.
+Just wondering if there is any fix in the kernel for this of if anyone else=
+ has observed similar behavior.
 
 Thanks,
-
-- Arnaldo
- 
-> Signed-off-by: Zixian Cai <fzczx123@gmail.com>
-> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
-> ---
-> v4) reformat commit message for max line length
-> v3) address review comments
-> v2) rebase on top of perf-tools-next
-> 
->  tools/perf/util/scripting-engines/trace-event-python.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-> index fb00f3ad6815..6971dd6c231f 100644
-> --- a/tools/perf/util/scripting-engines/trace-event-python.c
-> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
-> @@ -888,6 +888,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
->  	set_sample_read_in_dict(dict_sample, sample, evsel);
->  	pydict_set_item_string_decref(dict_sample, "weight",
->  			PyLong_FromUnsignedLongLong(sample->weight));
-> +	pydict_set_item_string_decref(dict_sample, "ins_lat",
-> +			PyLong_FromUnsignedLong(sample->ins_lat));
->  	pydict_set_item_string_decref(dict_sample, "transaction",
->  			PyLong_FromUnsignedLongLong(sample->transaction));
->  	set_sample_datasrc_in_dict(dict_sample, sample);
-> @@ -1317,7 +1319,7 @@ static void python_export_sample_table(struct db_export *dbe,
->  	struct tables *tables = container_of(dbe, struct tables, dbe);
->  	PyObject *t;
-> 
-> -	t = tuple_new(27);
-> +	t = tuple_new(28);
-> 
->  	tuple_set_d64(t, 0, es->db_id);
->  	tuple_set_d64(t, 1, es->evsel->db_id);
-> @@ -1346,6 +1348,7 @@ static void python_export_sample_table(struct db_export *dbe,
->  	tuple_set_s32(t, 24, es->sample->flags);
->  	tuple_set_d64(t, 25, es->sample->id);
->  	tuple_set_d64(t, 26, es->sample->stream_id);
-> +	tuple_set_u32(t, 27, es->sample->ins_lat);
-> 
->  	call_object(tables->sample_handler, t, "sample_table");
-> 
-> --
-> 2.25.1
+Rahul
