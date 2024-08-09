@@ -1,242 +1,165 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04D817552
-	for <linux-perf-users@vger.kernel.org>; Fri,  9 Aug 2024 15:00:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A2821922CD;
+	Fri,  9 Aug 2024 15:39:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723215655; cv=none; b=Zf5Ql3kIar8ptE0zuIc86+6TbvPw8r3WCJQVZYGa/q0HAPbMA+iKH+ZtlxE3QlegOipKl6fXQdW0v9i+fPZBfaOXSESPXeXkM8xVIM/r7Eskvlw9yGpqPZY9UVK8+gbQsoZcroKR481YqkJ0MW3EE4GfOEg3QQMViAmQKoHmjOk=
+	t=1723217994; cv=none; b=S84I/zQdV91zeHCFCIm4e9YPdShLE++4DkF66lq2jgezGu8UO5q7S7w/Lk9iYBpFfHTzY+pNG7x3Nc39EUDFt3Vpu8k5aPFAm/U6R/xoSH1pqXK+yWFD5JwPwSSuGW+XYvZZV/plCWEQK8DeubMduNZt8xztouZbWm8E2KlViqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723215655; c=relaxed/simple;
-	bh=2/VoztJBuXDprKNoI0vzxSIB06IEaQPTPLnouZqaoEc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M7f8B5ctUXABm6D91v6xzQNhSqnedit7GJEk9oaSUW+qhtFoPvn+u+RFNvrJXaSmChEv5FXAHJlWlTIzRRCtIhXwiZNhPgL3DRWa8uEvn3GZImVtnlNpG+ptIiIftzK6+3ExLS4aaNUNvPKkO/A3fZZSKG1gO5Wq1bLZ7RMKTpU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fzZlKBB7; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723217994; c=relaxed/simple;
+	bh=TLpJsiKmeS1itxanDPbIYMhASh/6HsH6VHYF3q/6PO8=;
+	h=Content-Type:Subject:From:In-Reply-To:Date:Cc:Message-Id:
+	 References:To:MIME-Version; b=bKuNBJeTxAHO5s47GKE9repK+cNb2gJdXHkFjVXrVCvtTfdR71nyjb7crLeHN8NvCno0ruOlPPGQhRWdRINJ6i9p/eauZ95omezQEIuwDawbLFVRV1ZAV1JTtTYlLrqRlFeysmEsbysjiIkK7Bdtb6dV1xnef+Y0OO+sbxB0wfs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com; spf=none smtp.mailfrom=linux.vnet.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YECeYLsV; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.vnet.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.vnet.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fzZlKBB7"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fd657c9199so120575ad.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 09 Aug 2024 08:00:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723215653; x=1723820453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cHRyJ+nR6PS8lEPUMrhPMIf0CdwrJbRWFLUbhbjnnGE=;
-        b=fzZlKBB7dDzpzHfDRepjLSE4M02iggRf6yxjTcjPzKC2qXjD84CdWeKUrCgZpB/lR2
-         6RDLzmgJxWJc/j+JQfU6uGC6Jtle/lWYMgNrzKoCoUiaVc9sZkSi3IT4NU9N/tOmYnAb
-         QixJL9eB8G2G7vyw5YRUrz8Y6lLPnJV3AySpaJqpanHjl5TmKAiNGV/wLMQmUHUvisX6
-         BGFS4srV3sjDMzjYaugKRV/QNnFZExfvf64DQSV5IoRtSEYkrdjSDRTt9PrZz8SN2YtZ
-         K1Mahh/bSok5A7C1BOi8CDM/RflDwUHZQH84LLUW6slCXQ1hfKygjRxg1hUOk+Z0eA2m
-         zr1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723215653; x=1723820453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cHRyJ+nR6PS8lEPUMrhPMIf0CdwrJbRWFLUbhbjnnGE=;
-        b=ohDfOuG7kD0QPmqVefUer3+K7ceAHhYXKS4BFMi6+9vXtrMnsA5J/gHdl7dtauBSnB
-         xRMd+QEXGipm8rAO5Y884wPOFEoew3z016wFEF1zjjscf8aa11uy/Qg6LzOtj3vIWMZ7
-         ZlEW+SJSwzthC6Yp3b56Ey8ckJnXGemKFBq9k/FDBPCyFaD+GmWxokOQ5nZoWF08Lzt9
-         SlTS3VBQ7zkSxLonioDG6u6bgcruPPiQgsVJhlrV7p50pdqE0objlpZul7NnJNxg7hGJ
-         03zDEqZPmv0vpNpWMLDtbTWiSR4X3W2aP2F8XghcfwMgqYF/8Ey9shAd3is+hOnzTBOS
-         Lqig==
-X-Forwarded-Encrypted: i=1; AJvYcCU0ZbC2fZY48TZFU6fcTh3fk3Xqp+pThCMTGMWjE9OfOyCuEIXmRDhEVVI8B56xRTHy4pxySFX5ZDheCN6j1EcanYb80fKM/iLHnJNjpL48+g==
-X-Gm-Message-State: AOJu0YzAFTYpUVYiNFHEWRDAcG5ecbUvnBdnSjDLXgiHQxh3NtSCKzaY
-	QHOJPQgcGAlGPoYi/Qymudsm3OoGcTwXT5ie3zNR8OghswhHXxo0N4iqj3xDeNsRckVpQNJKpyp
-	eJfSGG6o1ml4O8AfFOJQGVn5MUZeSxNmLflKs/pYCSrPFMbvzyMkY4Xs=
-X-Google-Smtp-Source: AGHT+IEjqtGNJN8nTjVWi7BZ18r7XFGwoTMObY+KUXZFvZ6Qt8VWZ/Smx/vdOpP/kQLadpZhqYMs0fsGzKguzZ+ijG8=
-X-Received: by 2002:a17:903:22c1:b0:1fd:d0c0:1a69 with SMTP id
- d9443c01a7336-200aa49d2fcmr2492125ad.9.1723215652358; Fri, 09 Aug 2024
- 08:00:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YECeYLsV"
+Received: from pps.filterd (m0353723.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47927qVs012438;
+	Fri, 9 Aug 2024 15:39:20 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-type:subject:from:in-reply-to:date:cc:message-id
+	:references:to:content-transfer-encoding:mime-version; s=pp1;
+	 bh=CQ5vYN2zycF2NisNzQnQlk6p5VFwwC2IDFoIE1a52e4=; b=YECeYLsV7AAg
+	pF8+h77VKzvVleDtRu4bSKwvXYx8O8gqFFJEIa5EXJ1HWNBaXNli1o1nVo5WAFsN
+	680f6gxqlM8b4AHfglAzR3DwcVbbO/5M9tV1KV539MCl9iARxKQ0L0gIxp+m1yLY
+	PhF+TqLppmEHS0MtBXsgIeaUi3TzlZWhyVrOgeI8Hl4Gazav6Vs8OoQ1wDB2q+TD
+	gUgkuFkQs+MngxsCMyZvtV2/MaYtF4Dl6swue6ScPCt1noiGfsj1g6t8vQ1wPo+r
+	jPzeBpb8TaryZOvqj5DAbxxuhucCesazOgduGfp3cEcZ/Q3P5wOYbGwwOB+OfgGj
+	dz8cRHqE8A==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkcb6ux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Aug 2024 15:39:20 +0000 (GMT)
+Received: from m0353723.ppops.net (m0353723.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 479FdJ7E012836;
+	Fri, 9 Aug 2024 15:39:19 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40vwkcb6uv-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Aug 2024 15:39:19 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 479FFF0q024314;
+	Fri, 9 Aug 2024 15:39:18 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 40sy914bja-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 09 Aug 2024 15:39:18 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 479FdCr954133024
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 9 Aug 2024 15:39:14 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 180A52004B;
+	Fri,  9 Aug 2024 15:39:12 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7D7F620043;
+	Fri,  9 Aug 2024 15:39:04 +0000 (GMT)
+Received: from smtpclient.apple (unknown [9.61.57.29])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Fri,  9 Aug 2024 15:39:04 +0000 (GMT)
+Content-Type: text/plain;
+	charset=utf-8
+Subject: Re: [PATCHSET 00/10] perf tools: Sync tools and kernel headers for
+ v6.11
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+In-Reply-To: <ZrUSCFLWDg9iJ_23@google.com>
+Date: Fri, 9 Aug 2024 21:08:50 +0530
+Cc: Leo Yan <leo.yan@arm.com>, James Clark <james.clark@linaro.org>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-perf-users <linux-perf-users@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org
+Message-Id: <56008678-7B06-4E54-8447-1C0DCBC15521@linux.vnet.ibm.com>
+References: <20240806225013.126130-1-namhyung@kernel.org>
+ <ZrO5HR9x2xyPKttx@google.com>
+ <F3C6DE61-8E10-4814-A6C0-C7569B3FD613@linux.vnet.ibm.com>
+ <ZrUSCFLWDg9iJ_23@google.com>
+To: Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+X-Mailer: Apple Mail (2.3774.600.62)
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: dFzNbUi65ljJENPKSlFBOuM9lMdJrV7K
+X-Proofpoint-ORIG-GUID: GMbLGUIBQ8rikTIWTw2WrduGxoCXnU7w
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240807231823.898979-1-ak@linux.intel.com> <20240807231823.898979-3-ak@linux.intel.com>
- <CAM9d7ci40WcV=EtsNuNXkRAWc3XHDKzb9OACNUhD5WaqTu5vxg@mail.gmail.com>
- <CAP-5=fVZ0_orgpLcG492WtjW05QWu2Mbnuv=_NKweouVXq2icA@mail.gmail.com> <ZrUoCRu4HGoROUs2@tassilo>
-In-Reply-To: <ZrUoCRu4HGoROUs2@tassilo>
-From: Ian Rogers <irogers@google.com>
-Date: Fri, 9 Aug 2024 08:00:40 -0700
-Message-ID: <CAP-5=fXraYBGd2UPB-VmSn92ug-o+33NHJpx3rf+9v+xYncE4Q@mail.gmail.com>
-Subject: Re: [PATCH v9 3/4] perf script: Fix perf script -F +metric
-To: Andi Kleen <ak@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-09_12,2024-08-07_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ bulkscore=0 clxscore=1015 impostorscore=0 suspectscore=0 phishscore=0
+ malwarescore=0 adultscore=0 spamscore=0 mlxlogscore=855 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408090113
 
-On Thu, Aug 8, 2024 at 1:18=E2=80=AFPM Andi Kleen <ak@linux.intel.com> wrot=
-e:
->
-> >
-> > Fwiw, not acked-by me. Repeating my comments below:
->
-> Let me just point out that you broke it in the first place.
->
-> A little more enthusiasm in handling regressions would be appreciated.
 
-You want more than a patch series that reimplements things correctly?
-https://lore.kernel.org/lkml/20240720074552.1915993-1-irogers@google.com/
-You have not listened to feedback from the earlier patch series you
-sent and keep sending something that I have explained I disagree with.
 
-> > > > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-scrip=
-t.c
-> > > > index c16224b1fef3..cb63507af839 100644
-> > > > --- a/tools/perf/builtin-script.c
-> > > > +++ b/tools/perf/builtin-script.c
-> > > > @@ -335,7 +335,6 @@ struct evsel_script {
-> > > >         FILE *fp;
-> > > >         u64  samples;
-> > > >         /* For metric output */
-> > > > -       u64  val;
-> > > >         int  gnum;
-> >
-> > We're globally assuming properties of events assuming leader sampling.
-> > gnum shouldn't exist. The assumptions will be invalid when leader
-> > sampling isn't enabled.
->
-> This is checked for now, see the earlier discussion.
+> On 9 Aug 2024, at 12:14=E2=80=AFAM, Namhyung Kim <namhyung@kernel.org> wr=
+ote:
+>=20
+> Hello,
+>=20
+> On Thu, Aug 08, 2024 at 12:14:12PM +0530, Athira Rajeev wrote:
+>>=20
+>>=20
+>>> On 7 Aug 2024, at 11:42=E2=80=AFPM, Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>>>=20
+>>> Hello folks,
+>>>=20
+>>> On Tue, Aug 06, 2024 at 03:50:03PM -0700, Namhyung Kim wrote:
+>>>> Hello,
+>>>>=20
+>>>> This is the usual sync up in header files we keep in tools directory.
+>>>> I put a file to give the reason of this work and not to repeat it in
+>>>> every commit message.  The changes will be carried in the perf-tools
+>>>> tree.
+>>>=20
+>>> Could you please double check what's in the tmp.perf-tools branch at the
+>>> perf-tools tree so I don't break build and perf trace for arm64, powerpc
+>>> and s390?  It has this patchset + arm64 unistd header revert (according
+>>> to the discussion on patch 6/10) on top of v6.11-rc2.
+>>>=20
+>>> Thanks,
+>>> Namhyung
+>> Hi Namhyung,
+>>=20
+>> Can you please point to the tree. I checked in https://git.kernel.org/pu=
+b/scm/linux/kernel/git/acme/linux.git as well as https://git.kernel.org/pub=
+/scm/linux/kernel/git/perf/perf-tools-next.git , but didn=E2=80=99t find th=
+e changes. May be I am missing something. I am trying to check the build in=
+ powerpc.
+>=20
+> Oh, sorry about that.  It's in:
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git
+>=20
+> (no -next at the end)
 
-So you can then remove the gnum as the samples are all in the event.
+Hi,
 
-> > > > +       if (!(leader->core.attr.read_format & PERF_FORMAT_GROUP) ||
-> > > > +           !(leader->core.attr.sample_type & PERF_SAMPLE_READ)) {
-> > > > +               if (!printed)
-> > > > +                       fprintf(stderr, "perf script: -F metric req=
-uires {}:S for groups leader sampling\n");
-> > > > +               printed =3D 1;
-> > > > +               return;
-> > > > +       }
-> > > > +       /*
-> > > > +        * Always use the first entry as storage because the leader=
- sampling
-> > > > +        * groups are contiguous and there's no need to handle mult=
-iple indexes
-> > > > +        * for anything.
-> > > > +        */
-> > > > +       evsel->stats->aggr[0].counts.val =3D val;
-> >
-> > Updating counts needs perf_stat_process_counter to update the
-> > aggregation. How does sample->cpu given below relate to aggr[0] here?
-> > This and the comment above are a hack liable to break in anything but
-> > straightforward circumstances. See:
-> > https://lore.kernel.org/lkml/20240720074552.1915993-2-irogers@google.co=
-m/
-> > on how to handle this.
->
-> Your patch is based on a fundamental misunderstanding on the perf script
-> metrics use model, see below.
+I did compile test on powerpc and results are good.=20
 
-Great, that's explained like where?
+Tested-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-> >
-> > > >         if (evsel_script(leader)->gnum =3D=3D leader->core.nr_membe=
-rs) {
-> > > >                 for_each_group_member (ev2, leader) {
-> > > >                         perf_stat__print_shadow_stats(&stat_config,=
- ev2,
-> > > > -                                                     evsel_script(=
-ev2)->val,
-> > > > -                                                     sample->cpu,
-> > > > +                                                     evsel->stats-=
->aggr[0].counts.val,
-> > > > +                                                     0,
-> >
-> > Similarly this hard coded and unexplained constant.
->
-> There's a comment just on top of it explaining it:
+Thanks
+Athira
+>=20
+> Thanks,
+> Namhyung
 
-No, I mean if you are going to use 0 as your special index do something lik=
-e:
 
-const int andis_special_aggr_index =3D 0;
-
-then pass that around rather than 0 otherwise people have to figure
-out the numbers are connected. At least in the case of arbitrary
-constants you can name them like:
-
-/*aggr_idx=3D*/0,
-
-/*
-
->         /*
->          * Always use the first entry as storage because the leader sampl=
-ing
->          * groups are contiguous and there's no need to handle multiple i=
-ndexes
->          * for anything.
->          */
->
->
-> >
-> > > >                                                       &ctx,
-> > > >                                                       NULL);
-> > > >                 }
-> > > > @@ -2325,6 +2337,20 @@ static void process_event(struct perf_script=
- *script,
-> > > >                 fflush(fp);
-> > > >  }
-> > > >
-> > > > +static void check_metric_conflict(void)
-> > > > +{
-> > > > +       int i;
-> > > > +       /*
-> > > > +        * Avoid conflict with the aggregation mode used for the me=
-tric printing.
-> > > > +        */
-> >
-> > Why is it a conflict, why not support aggregation modes?
->
-> I thought I had explained that before.
->
-> perf script has two touch point with perf stat output code: one is this o=
-ne
-> (for metrics on sampling group) and the other is for perf stat record / s=
-cript
->
-> None of them actually support aggregation because perf script as a
-> general rule doesn't aggregate, it only handles single events.
-
-evsels have counts, counts are per thread, per cpu, etc. we get >1
-event and so we have aggregation. You can put counts into aggregation
-and then clear the aggregation immediately afterward. Metrics are
-determined from aggregated counts as that's the most generic way of
-doing things.
-
-> But the later one forces AGGR_NONE which doesn't work with the mode the g=
-roup
-> output uses.
->
-> This feature is only to report the metric state for a single sampling per=
-iod
-> and group as explained in the original commit [1]
->
-> If you want to aggregate multiple sample periods you need a lot the
-> machinery from perf report, which doesn't make sense to duplicate
-> in perf script.
->
-> [1] https://www.uwsg.indiana.edu/hypermail/linux/kernel/1712.0/04705.html
->
-> -Andi
-
-You are arguing you are special and don't need to use aggregation
-machinery then calling APIs that use the aggregation machinery - as
-the person maintaining the other end I'm asking to not do that.
-Randomly combining samples with gnum and claiming their periods are
-related is just weird, and also fundamentally broken for perf inject:
-https://lore.kernel.org/lkml/20240729220620.2957754-1-irogers@google.com/
-Making assumptions about aggregation indices is brittle, and prone to
-break on the other end.
-
-Tbh, nobody noticed in years that there was a segv here. The hard
-coded metrics have been disappearing and should disappear even more
-so. I don't consider it bad that this is broken, we can then just
-delete it knowing nobody has cared about it in years.
-
-Thanks,
-Ian
