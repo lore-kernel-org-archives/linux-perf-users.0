@@ -1,47 +1,40 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A21514DC;
-	Sat, 10 Aug 2024 10:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 285311798C;
+	Sat, 10 Aug 2024 16:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723285110; cv=none; b=tcNM2nQFOH6UwRxpaTDwNuT7x2cIQNmsUItB5nEqLfQX254AFHx8r8kl/6lT37/LG3BWTsGzFNjf1kBTey1nq/azP/O34TxA/M5w2G6F1bVx+b2oSiiS4mAvtM59x0snFQHaoXPYMxxHqVl8Smw/TrKaraHWvKRKkPb/e/btm60=
+	t=1723306577; cv=none; b=BCGmQcKxC4cqcbDH2ZjDKZIBwgU3ayfA7l1DQOhJJbGvpIKwIyAiQ0F6gZCAJyf8VEuVmXEaBTdSrCwLrmbloP7kqj0vq/YaSdDEwwXzSF5f+zEVlRhuTGQTAHZaUUTPDXiqGmC6sNUIu8pfHvtacG6LB+zBj99dHpw3tG4qAVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723285110; c=relaxed/simple;
-	bh=IbU8lDGRSb6RrSmjo8Ux+vm167vgMSbXpHUYhLvr66M=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MLnF83MMK5Z51BTzcjVBdB/m69GQ4T3vcAaiOrZGpIIVMvIDAm2WgYSM15I0BvxNO8ReGGCiuKYF4Z39B1Z57PHrS/DX3NUDegQysgpwKs0Q85hVrxDBrXrCOJI9XIGMhoCEi19iIMWIR1hUVe8mAi1Ba4oBla07KhBcDw1vs+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WgxYv10Mxz4f3jdG;
-	Sat, 10 Aug 2024 18:18:11 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id A4C631A1629;
-	Sat, 10 Aug 2024 18:18:24 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgBXfoRuPrdmTV4rBQ--.16555S6;
-	Sat, 10 Aug 2024 18:18:24 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
+	s=arc-20240116; t=1723306577; c=relaxed/simple;
+	bh=D3D32SrpDNrDy4cockWsCqpamN76Db0cd49m73FiSxM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=bEYXc+H8OCpX/c+iqRiUWvovI9kHLVPXPJ/dIYOOQfKrUlfPyQpfVqfqiqAt/BsPgLJXJZPmhpAFZwAvYmDkISQtns22gumsVZ9WdWlYzdskJZ2f+aePYyEHendYriCLxF5llMH5QFCHNpiC11WKSp4DvC73VrduO4CGr1l16W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65437FEC;
+	Sat, 10 Aug 2024 09:16:34 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8DF673F71E;
+	Sat, 10 Aug 2024 09:16:06 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH v3 2/2] perf/core: Fix incorrected time diff in tick adjust period
-Date: Sat, 10 Aug 2024 10:24:05 +0000
-Message-Id: <20240810102406.1190402-3-luogengkun@huaweicloud.com>
+	james.clark@linaro.org,
+	Govindarajan.Mohandoss@arm.com
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH] perf docs: Refine the description for the buffer size
+Date: Sat, 10 Aug 2024 17:15:40 +0100
+Message-Id: <20240810161540.2282535-1-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240810102406.1190402-1-luogengkun@huaweicloud.com>
-References: <20240810102406.1190402-1-luogengkun@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,127 +42,39 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXfoRuPrdmTV4rBQ--.16555S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF4xCw4xuF4UCFWDZrykGrg_yoWrWFyUpr
-	Z0yry3tFsrJF1j9wnYka4Fgry5Ww48Aan8G348Cw18Aw1fGr9xJF4kKF1UGF98AFZrZFyI
-	y3s0gw4ayFWjqaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
-	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
-	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
-	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUADGOUUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-Adrian found that there is a probability that the number of samples
-is small, which is caused by the unreasonable large sampling period.
+Current description for the AUX trace buffer size is misleading. When a
+user specifies the option '-m,512M', it represents a size value in bytes
+(512MiB) but not 512M pages (512M x 4KiB regard to a page of 4KiB).
 
- # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
- [ perf record: Woken up 1 times to write data ]
- [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
- # perf script
- ...
- test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
- test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
- ...
+Make the document clear that the normal buffer and the AUX tracing
+buffer share the same semantics.
 
-And the reason is perf_adjust_freq_unthr_events() calculates a value that is too
-big because it incorrectly assumes the count has accumulated only since the last
-tick, whereas it can have been much longer. To fix this problem, perf can calculate
-the tick interval by itself. For perf_adjust_freq_unthr_events we can use jiffies
-to calculate the tick interval more efficiently, as sugguested by Adrian.
-
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 16 +++++++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+ tools/perf/Documentation/perf-record.txt | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index afb028c54f33..2708f1d0692c 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -265,6 +265,7 @@ struct hw_perf_event {
- 	 * State for freq target events, see __perf_event_overflow() and
- 	 * perf_adjust_freq_unthr_context().
- 	 */
-+	u64				freq_tick_stamp;
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
- #endif
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index cad50d3439f1..309af5520f52 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -55,6 +55,7 @@
- #include <linux/pgtable.h>
- #include <linux/buildid.h>
- #include <linux/task_work.h>
-+#include <linux/jiffies.h>
+diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+index 41e36b4dc765..242223240a08 100644
+--- a/tools/perf/Documentation/perf-record.txt
++++ b/tools/perf/Documentation/perf-record.txt
+@@ -273,10 +273,11 @@ OPTIONS
+ -m::
+ --mmap-pages=::
+ 	Number of mmap data pages (must be a power of two) or size
+-	specification with appended unit character - B/K/M/G. The
+-	size is rounded up to have nearest pages power of two value.
+-	Also, by adding a comma, the number of mmap pages for AUX
+-	area tracing can be specified.
++	specification in bytes with appended unit character - B/K/M/G.
++	The size is rounded up to the nearest power-of-two page value.
++	By adding a comma, an additional parameter with the same
++	semantics used for the normal mmap areas can be specified for
++	AUX tracing area.
  
- #include "internal.h"
- 
-@@ -4112,7 +4113,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- {
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
--	u64 now, period = TICK_NSEC;
-+	u64 now, period, tick_stamp;
- 	s64 delta;
- 
- 	/*
-@@ -4151,6 +4152,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 */
- 		event->pmu->stop(event, PERF_EF_UPDATE);
- 
-+		tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
-+		period = tick_stamp - hwc->freq_tick_stamp;
-+		hwc->freq_tick_stamp = tick_stamp;
-+
- 		now = local64_read(&event->count);
- 		delta = now - hwc->freq_count_stamp;
- 		hwc->freq_count_stamp = now;
-@@ -4162,8 +4167,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
- 		 * to perf_adjust_period() to avoid stopping it
- 		 * twice.
- 		 */
--		if (delta > 0)
--			perf_adjust_period(event, period, delta, false);
-+		if (delta > 0) {
-+			/*
-+			 * we skip first tick adjust period
-+			 */
-+			if (likely(period != tick_stamp))
-+				perf_adjust_period(event, period, delta, false);
-+		}
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
- 	next:
+ -g::
+ 	Enables call-graph (stack chain/backtrace) recording for both
 -- 
 2.34.1
 
