@@ -1,28 +1,28 @@
 Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C90514F124;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D12A21514DC;
 	Sat, 10 Aug 2024 10:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723285109; cv=none; b=CgUgZ77Ch0BTLRuDUE7AMUKN/ckUBRYVPzxIH9Uw26Fe9Hki1PpIJZRtmYlAyu08M4RglTRLqAXocI0vss5EGAptCalfqYXNXNiCExFGHLc/mhD4Q8FMHHr4SxZ29o/0/SVuIWdSrjJB3maFimTV41U49BGJNYA9FDlfZ6FF5jA=
+	t=1723285110; cv=none; b=tcNM2nQFOH6UwRxpaTDwNuT7x2cIQNmsUItB5nEqLfQX254AFHx8r8kl/6lT37/LG3BWTsGzFNjf1kBTey1nq/azP/O34TxA/M5w2G6F1bVx+b2oSiiS4mAvtM59x0snFQHaoXPYMxxHqVl8Smw/TrKaraHWvKRKkPb/e/btm60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723285109; c=relaxed/simple;
-	bh=CaJWLCdpiiwysIA0Q1EuxnIjXXUmHomP6gLyl8CgG+c=;
+	s=arc-20240116; t=1723285110; c=relaxed/simple;
+	bh=IbU8lDGRSb6RrSmjo8Ux+vm167vgMSbXpHUYhLvr66M=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LucJuYETtuMQwBEFDl8Qhv0VO80oE9S8Zr2QzPU872np9u0Q3bGAjBgUxrq9Wwd8X+OX/GwKspOeU1+38gEq2iiTvQsbc7Te3Ebk7dDhnwqrsDffruU7bpHQuLkjGhrvWhQ1WeB+rbbrt8TGogDNCaZdh7hhvEKHp6Kg3Vt9eZI=
+	 MIME-Version; b=MLnF83MMK5Z51BTzcjVBdB/m69GQ4T3vcAaiOrZGpIIVMvIDAm2WgYSM15I0BvxNO8ReGGCiuKYF4Z39B1Z57PHrS/DX3NUDegQysgpwKs0Q85hVrxDBrXrCOJI9XIGMhoCEi19iIMWIR1hUVe8mAi1Ba4oBla07KhBcDw1vs+k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
 Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WgxYt3fnyz4f3jcv;
-	Sat, 10 Aug 2024 18:18:10 +0800 (CST)
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WgxYv10Mxz4f3jdG;
+	Sat, 10 Aug 2024 18:18:11 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 0CBE01A14D2;
+	by mail.maildlp.com (Postfix) with ESMTP id A4C631A1629;
 	Sat, 10 Aug 2024 18:18:24 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgBXfoRuPrdmTV4rBQ--.16555S5;
-	Sat, 10 Aug 2024 18:18:23 +0800 (CST)
+	by APP4 (Coremail) with SMTP id gCh0CgBXfoRuPrdmTV4rBQ--.16555S6;
+	Sat, 10 Aug 2024 18:18:24 +0800 (CST)
 From: Luo Gengkun <luogengkun@huaweicloud.com>
 To: peterz@infradead.org
 Cc: mingo@redhat.com,
@@ -36,9 +36,9 @@ Cc: mingo@redhat.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	luogengkun@huaweicloud.com
-Subject: [PATCH v3 1/2] perf/core: Fix small negative period being ignored
-Date: Sat, 10 Aug 2024 10:24:04 +0000
-Message-Id: <20240810102406.1190402-2-luogengkun@huaweicloud.com>
+Subject: [PATCH v3 2/2] perf/core: Fix incorrected time diff in tick adjust period
+Date: Sat, 10 Aug 2024 10:24:05 +0000
+Message-Id: <20240810102406.1190402-3-luogengkun@huaweicloud.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240810102406.1190402-1-luogengkun@huaweicloud.com>
 References: <20240810102406.1190402-1-luogengkun@huaweicloud.com>
@@ -49,13 +49,13 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgBXfoRuPrdmTV4rBQ--.16555S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxXFyxtr48tr1DuF4DKw43Awb_yoW5uFyfpr
-	WvyrnxKr4kGFy5Kw1kAw1rXry5J3y8Aa17Wrn5KrW5Ca1Y9r4UJrWIvr12gr1kCF4Sva4I
-	k3Z8Xr4fG3WvyF7anT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+X-CM-TRANSID:gCh0CgBXfoRuPrdmTV4rBQ--.16555S6
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF4xCw4xuF4UCFWDZrykGrg_yoWrWFyUpr
+	Z0yry3tFsrJF1j9wnYka4Fgry5Ww48Aan8G348Cw18Aw1fGr9xJF4kKF1UGF98AFZrZFyI
+	y3s0gw4ayFWjqaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
 	9KBjDU0xBIdaVrnRJUUUQv14x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
-	x26xkF7I0E14v26r4j6ryUM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
+	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
 	Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
 	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
 	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
@@ -64,103 +64,112 @@ X-Coremail-Antispam: 1UD129KBjvJXoWxXFyxtr48tr1DuF4DKw43Awb_yoW5uFyfpr
 	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AK
 	xVWUtVW8ZwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I
 	0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-	cVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
+	cVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcV
 	CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIE
-	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUfKs8UUUUU=
+	c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUADGOUUUUU=
 X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-In perf_adjust_period, we will first calculate period, and then use
-this period to calculate delta. However, when delta is less than 0,
-there will be a deviation compared to when delta is greater than or
-equal to 0. For example, when delta is in the range of [-14,-1], the
-range of delta = delta + 7 is between [-7,6], so the final value of
-delta/8 is 0. Therefore, the impact of -1 and -2 will be ignored.
-This is unacceptable when the target period is very short, because
-we will lose a lot of samples.
+Adrian found that there is a probability that the number of samples
+is small, which is caused by the unreasonable large sampling period.
 
-Here are some tests and analyzes:
-before:
-  # perf record -e cs -F 1000  ./a.out
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.022 MB perf.data (518 samples) ]
+ # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
+ # perf script
+ ...
+ test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
+ test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
+ ...
 
-  # perf script
-  ...
-  a.out     396   257.956048:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.957891:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.959730:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.961545:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.963355:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.965163:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.966973:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.968785:         23 cs:  ffffffff81f4eeec schedul>
-  a.out     396   257.970593:         23 cs:  ffffffff81f4eeec schedul>
-  ...
+And the reason is perf_adjust_freq_unthr_events() calculates a value that is too
+big because it incorrectly assumes the count has accumulated only since the last
+tick, whereas it can have been much longer. To fix this problem, perf can calculate
+the tick interval by itself. For perf_adjust_freq_unthr_events we can use jiffies
+to calculate the tick interval more efficiently, as sugguested by Adrian.
 
-after:
-  # perf record -e cs -F 1000  ./a.out
-  [ perf record: Woken up 1 times to write data ]
-  [ perf record: Captured and wrote 0.058 MB perf.data (1466 samples) ]
-
-  # perf script
-  ...
-  a.out     395    59.338813:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.339707:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.340682:         13 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.341751:         13 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.342799:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.343765:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.344651:         11 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.345539:         12 cs:  ffffffff81f4eeec schedul>
-  a.out     395    59.346502:         13 cs:  ffffffff81f4eeec schedul>
-  ...
-
-test.c
-
-int main() {
-        for (int i = 0; i < 20000; i++)
-                usleep(10);
-
-        return 0;
-}
-
-  # time ./a.out
-  real    0m1.583s
-  user    0m0.040s
-  sys     0m0.298s
-
-The above results were tested on x86-64 qemu with KVM enabled using
-test.c as test program. Ideally, we should have around 1500 samples,
-but the previous algorithm had only about 500, whereas the modified
-algorithm now has about 1400. Further more, the new version shows 1
-sample per 0.001s, while the previous one is 1 sample per 0.002s.This
-indicates that the new algorithm is more sensitive to small negative
-values compared to old algorithm.
-
-Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
 Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 ---
- kernel/events/core.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 16 +++++++++++++---
+ 2 files changed, 14 insertions(+), 3 deletions(-)
 
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index afb028c54f33..2708f1d0692c 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -265,6 +265,7 @@ struct hw_perf_event {
+ 	 * State for freq target events, see __perf_event_overflow() and
+ 	 * perf_adjust_freq_unthr_context().
+ 	 */
++	u64				freq_tick_stamp;
+ 	u64				freq_time_stamp;
+ 	u64				freq_count_stamp;
+ #endif
 diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 683dc086ef10..cad50d3439f1 100644
+index cad50d3439f1..309af5520f52 100644
 --- a/kernel/events/core.c
 +++ b/kernel/events/core.c
-@@ -4078,7 +4078,11 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
- 	period = perf_calculate_period(event, nsec, count);
+@@ -55,6 +55,7 @@
+ #include <linux/pgtable.h>
+ #include <linux/buildid.h>
+ #include <linux/task_work.h>
++#include <linux/jiffies.h>
  
- 	delta = (s64)(period - hwc->sample_period);
--	delta = (delta + 7) / 8; /* low pass filter */
-+	if (delta >= 0)
-+		delta += 7;
-+	else
-+		delta -= 7;
-+	delta /= 8; /* low pass filter */
+ #include "internal.h"
  
- 	sample_period = hwc->sample_period + delta;
+@@ -4112,7 +4113,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ {
+ 	struct perf_event *event;
+ 	struct hw_perf_event *hwc;
+-	u64 now, period = TICK_NSEC;
++	u64 now, period, tick_stamp;
+ 	s64 delta;
  
+ 	/*
+@@ -4151,6 +4152,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ 		 */
+ 		event->pmu->stop(event, PERF_EF_UPDATE);
+ 
++		tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
++		period = tick_stamp - hwc->freq_tick_stamp;
++		hwc->freq_tick_stamp = tick_stamp;
++
+ 		now = local64_read(&event->count);
+ 		delta = now - hwc->freq_count_stamp;
+ 		hwc->freq_count_stamp = now;
+@@ -4162,8 +4167,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
+ 		 * to perf_adjust_period() to avoid stopping it
+ 		 * twice.
+ 		 */
+-		if (delta > 0)
+-			perf_adjust_period(event, period, delta, false);
++		if (delta > 0) {
++			/*
++			 * we skip first tick adjust period
++			 */
++			if (likely(period != tick_stamp))
++				perf_adjust_period(event, period, delta, false);
++		}
+ 
+ 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
+ 	next:
 -- 
 2.34.1
 
