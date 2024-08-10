@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A0613CF8C;
-	Sat, 10 Aug 2024 19:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A504552F88;
+	Sat, 10 Aug 2024 19:17:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723317304; cv=none; b=Wj24NEL3qiaU3N1AKcrWZc2plOl/Mas6lvUtpZWfcT+Ypv6QfU3+f494BR014k86ozy7I6sgzSq0FwRKbSm2SqjAW5VyEeUxLvM9UXH8rOcPHpTEI1T6wFnvRghEhYSwAo6YfnqDWpwGDG6S6+aFjDE8U2ZlF5sA8OHgn5WLCRY=
+	t=1723317426; cv=none; b=nVAWMqRtfHm3uuCDg0fSvNGdpvIKpBGj9hlbCjZgI4uqAbSms4d+87ZCqUMNbR1Med0lSaMKqzcE9UqCowSucCpCwDKXjaeQFrx/KzwNYvXPTu98VKV2miK0f6E2KdARyNXTcWnoPetvsCwuNp4c/cen9x66k38xd/Qx5CrFkAg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723317304; c=relaxed/simple;
-	bh=UfuaYCE9A6dy6rV17fG+J80wNjWQc0fQQISknMXjsMw=;
+	s=arc-20240116; t=1723317426; c=relaxed/simple;
+	bh=DrfiZ87KnciqJiOypxyxPHEBjB8boZVAzVZhPjg0CVc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Nb2TE5p2D2BvpwsjRwy7ISsT0UHpvtqABQeppQFKSYfs9SjIOI4KObnZr5N0k1ah3ERYNKuaPFanseDgh8IDOBFfBrDysuvQF4VBkg16GzuDsDSPP649OXRD09+BiV6wL/7FjVzrbxysk2wDvUf70GhLqKzT6JZGPRIt+GgxRso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnxNLere; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HrhIb/UTOiZI/R6BZBx4Ca+mcEiWwKvoDzlIrvPrA7C9LlzowQHkbAfKWITMzHm8si4w1I/vTm+cot0e1uE+ydIAkrvgXBGH3G9iWrpC3+dHoR3iAt1SxD6RQOq6EWjr3idTCyM8cJQT1/lbky7tdBKhG7MTPoG5EJUGsj+y9UQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N8UOI6gP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnxNLere"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37991C32781;
-	Sat, 10 Aug 2024 19:15:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N8UOI6gP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB516C4AF0C;
+	Sat, 10 Aug 2024 19:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723317303;
-	bh=UfuaYCE9A6dy6rV17fG+J80wNjWQc0fQQISknMXjsMw=;
+	s=k20201202; t=1723317426;
+	bh=DrfiZ87KnciqJiOypxyxPHEBjB8boZVAzVZhPjg0CVc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MnxNLeretaUXpQ9R9KAfa4HZTiKq/sqsYGNSjpn1SzfW/bWxHtXmWS1zjrhIhjpGR
-	 /pnZpxPIZpdy+YsJM+mUcRWK9jog1VdMzlwW9mVjMY0iOctKtSSj9A74fIhxvDfNWy
-	 INfQH6hJNOrNpdj/PboE6uqw5knYcMfcINq1SKAIhUUb/F3ZudyqbKuRp/66qCW2hv
-	 7hNoThp3EbXYoAufwSZa8otO4D5DGVf8LlIbf3MrbhtMEC7G0M6L6uA2vv3b4ZjmYA
-	 br8fAGXnE3QhEwjQVsBUYEAa+0cEvbGPcESAppOFZw5WUtJR/Z1u6W+vHT+hOK7dPo
-	 Z0xK6J5JmncWw==
+	b=N8UOI6gPfmNMLRrfRiDnCeomw+rJtd3X///YwfGyMtqUUpK/Gppu38Q4AvoX1u/8H
+	 bZGKOUjBV+jtSQVPawZA09vb8b8teNuarP4+K/b+EaiL7Zlda9apUaMKxlx7HDUzxG
+	 x6L3IkTn4DHxFs61VheKoFTega4q5RqFk9zx2vV34PdetF0O0kv7nd+98tBLikwhuV
+	 SjYm0rDekpVPsVDwVg83NGXNIJNUioG464aa8lTFevS89e+QkK65bMIF4UGXxmNWVH
+	 ZrkjyeM+8UtzYp+CH3RuYH0cSyuQOk8qGTrsB5C70XKl7W8dSY0RMoceUvLxYmTjHE
+	 yLLSmDotiUxxw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,13 +35,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf annotate-data: Fix a buffer overflow in TUI browser
-Date: Sat, 10 Aug 2024 12:15:02 -0700
-Message-ID: <20240810191502.1947959-1-namhyung@kernel.org>
+	linux-perf-users@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: [PATCH] perf lock contention: Change stack_id type to s32
+Date: Sat, 10 Aug 2024 12:17:04 -0700
+Message-ID: <20240810191704.1948365-1-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
-In-Reply-To: <CA+JHD90ZChq4FFyrqVYE9RvK=K2sKoD6T5dyYknK=STST9_AEQ@mail.gmail.com>
-References: <CA+JHD90ZChq4FFyrqVYE9RvK=K2sKoD6T5dyYknK=STST9_AEQ@mail.gmail.com>
+In-Reply-To: <909abbc8-efca-40df-9876-8c36b6942a83@stanley.mountain>
+References: <909abbc8-efca-40df-9876-8c36b6942a83@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,36 +51,45 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In get_member_overhead(), k is updated when it has a entry in the
-histogram.  But the entry->hists array is allocated with the number of
-evsel in the group.  So the k should be reset when it iterates the event
-using for_each_group_evsel(), otherwise it'd crash due to a buffer
-overflow.
+The bpf_get_stackid() helper returns a signed type to check whether it
+failed to get a stacktrace or not.  But it saved the result in u32 and
+checked if the value is negative.
 
-Fixes: cb1898f58e0f ("perf annotate-data: Support --skip-empty option")
+      376         if (needs_callstack) {
+      377                 pelem->stack_id = bpf_get_stackid(ctx, &stacks,
+      378                                                   BPF_F_FAST_STACK_CMP | stack_skip);
+  --> 379                 if (pelem->stack_id < 0)
+
+  ./tools/perf/util/bpf_skel/lock_contention.bpf.c:379 contention_begin()
+  warn: unsigned 'pelem->stack_id' is never less than zero.
+
+Let's change the type to s32 instead.
+
+Fixes: 6d499a6b3d90 ("perf lock: Print the number of lost entries for BPF")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/ui/browsers/annotate-data.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/perf/util/bpf_skel/lock_data.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/ui/browsers/annotate-data.c b/tools/perf/ui/browsers/annotate-data.c
-index c3db80a7589a..a937b55da736 100644
---- a/tools/perf/ui/browsers/annotate-data.c
-+++ b/tools/perf/ui/browsers/annotate-data.c
-@@ -46,11 +46,12 @@ static int get_member_overhead(struct annotated_data_type *adt,
- 	struct annotated_member *member = entry->data;
- 	int i, k;
+diff --git a/tools/perf/util/bpf_skel/lock_data.h b/tools/perf/util/bpf_skel/lock_data.h
+index 36af11faad03..de12892f992f 100644
+--- a/tools/perf/util/bpf_skel/lock_data.h
++++ b/tools/perf/util/bpf_skel/lock_data.h
+@@ -7,11 +7,11 @@ struct tstamp_data {
+ 	u64 timestamp;
+ 	u64 lock;
+ 	u32 flags;
+-	u32 stack_id;
++	s32 stack_id;
+ };
  
--	for (i = 0, k = 0; i < member->size; i++) {
-+	for (i = 0; i < member->size; i++) {
- 		struct type_hist *h;
- 		struct evsel *evsel;
- 		int offset = member->offset + i;
- 
-+		k = 0;
- 		for_each_group_evsel(evsel, leader) {
- 			if (symbol_conf.skip_empty &&
- 			    evsel__hists(evsel)->stats.nr_samples == 0)
+ struct contention_key {
+-	u32 stack_id;
++	s32 stack_id;
+ 	u32 pid;
+ 	u64 lock_addr_or_cgroup;
+ };
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
