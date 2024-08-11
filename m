@@ -1,186 +1,869 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA29EAC5;
-	Sun, 11 Aug 2024 03:52:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6987517BB7
+	for <linux-perf-users@vger.kernel.org>; Sun, 11 Aug 2024 04:20:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723348381; cv=none; b=VLf7ThlrBR1RAPZuihA0Qo6TQ4cLOQFb/2vuh3WtnbRv+vJY4bQZoAwdDcdPYtCIG9C4B6ZjDc2+FO99Rf1Lttw+0YWENBmhWfemsfb+s77T1HGGprvrFJafwSupUY+y5ZzJTHVJF0i9pP7E0N6CBFlvqmXDTt+10qwtWKU07lM=
+	t=1723350021; cv=none; b=SOZ5PZJmJMG+bGlPfmnQboa8PcWZ9ysYbRb+aYG1dLY0BaMsPssDtZn3Wtsb7EqjXJYxuYZBa8hu2RVhBgR5fHFnsCOyu3q9i+cAmeOeI2vuN8oLI+eLGCdV/0z55qyGr0vpNlTAwNP/2dtRK3ss9hmR9Pj9Ug2jQvXtSVz/hPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723348381; c=relaxed/simple;
-	bh=vBmzwVO0mkzkIBgG3/PCFDwKtz21gQaF5AtUaaUZ2pE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GoOssz0MUYWBUiSIrFhVWDtF3SHSXwc2HjDIbVcnAYw+LRyYrPzzSuez0U8c0Ry0OMM08SJoRoRx1pKJ5f0rU5HujcIAd04v3ChxWVAzwnTuezP9roTusl099Q9va/aUrelfKALo4tJ3ifRIQbnOQtZ/NPI4kHbbHZ4mVEMTYOc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eXmsVZBV; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723350021; c=relaxed/simple;
+	bh=9wB5WbEwTw9O8SC3yq8hcASjvJOTUh+PG9zViRiT4lQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Cc:Content-Type; b=pA4qNUVKqgIcfE4/gSSmFPsKDwgkkmSWrUo4xhEindLhGf0KVl1yz5/BYh533LesdEpZK8OlytE6assaBGTQvxAIEdUtZ7pn8eQtBYIdsAGSX29XC0yQ+/07bTGzQfFpF2ACG5VQJq9WeY4XgJO01ukcXs4Sg4T5DJ41TO2re3E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eZAfr2H5; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eXmsVZBV"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-70eae5896bcso3091223b3a.2;
-        Sat, 10 Aug 2024 20:52:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eZAfr2H5"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-68f95e37bbfso82798737b3.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 10 Aug 2024 21:20:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723348378; x=1723953178; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=RdJG8hKTqnv7E9J4qtLFQGlZTULiT6h+FzDENLf5SHo=;
-        b=eXmsVZBVL31Ey1GQ6QW0Er6z9wzyxauPQpKwqmV42DcKJGPRA+jZP0kINtXTlwPl5l
-         yIqe6EkWpcO4O/+6Wy+uCaiGkkY42qjaE4az+3qgONGSCWtd77t11n+uLLbW5SUgTumD
-         UVyrzZn+iwgW+AhViVTOSY0v06qAdu3h+iUD++MlDVwqZMOUIb8zrPyUW4LRu5k15954
-         XdoODDjDffSrov1c14/xpVULrWhf55ySnyftSatC8TjWNGxH1AVl+AzwoZT4eLeHYJga
-         QkM7C7L9LRxBa5OJ/EbbdI1XfTvEILMpUXkWHcOyaOTiezKlSPuZO5rl2eI6XJz48rfZ
-         vKBA==
+        d=google.com; s=20230601; t=1723350018; x=1723954818; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:from:subject:mime-version
+         :message-id:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=avsZetUrmUaVFvNuI6iHf0CdeIN2+n8kp9n024Qka3E=;
+        b=eZAfr2H5DTLP3U7DrKwRpEWRo71BdffJHld2u2ln+lKCvEU9Ulbj0uo0hO0yPB+ZiC
+         lSOn1IvUL64dclxVWsFPUI5JgkZlypjOlp25zAyJw9Gf2AGlcaHrAtjvd1AoEz/FFdWP
+         220qGSwP0DO4Ezg+/JSv0DL9Xo63Nhg7tzhu0QQXrQ5Af/ZJmecqQO/7nRc+pfjX71Yq
+         BKOXcMIEDHX+TBTSmOaMfleDWMrb0fmRr8/ZgdA16jHCHiOFFNfeaBYhhmrZfOIUhKaC
+         EyCC+O9F+pdLvHA1yiSYZ78gP0/OHxNC0XS8Vn2lVbiN+FH1AW8SZ+kbINmsNtIb1uIu
+         vOqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723348378; x=1723953178;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RdJG8hKTqnv7E9J4qtLFQGlZTULiT6h+FzDENLf5SHo=;
-        b=WYKuS6IcB7yvUdtgCeG9Dg/OwY4g67hyfzI9F65j9QHMLPXsCGKGLgYJ7NgE6k8XAV
-         n/7gdJCyD+6//XnjBhqkJo0NUjwJsHOjn61qZJU+VzawCwgR6E8nFMBWVLHGVoNzhuyO
-         aHyTR8esDb6GZXg5a+05eVNavc0gZZet0MaAOMcGEVR9XQelxgbY7tCFv6LBGjH4ITig
-         X8yIMJBcsvlTrOAm/msXEPdxZHVGID5wHHGkZDmpO9rKr1CDAbDllHHx0QKzwBrvdOHQ
-         WaE1gnXwQQyB4GpfSCQHVOyquen3ZooOgHxLuUc4wV5PWMuXL+gz43cBJeJpepyhyBPE
-         O6Jg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrAc3PSkSHhhVKEzFp2uWgc4zjByWTnoBdKSdiGCeo6RgEN56yYGc7nhIDI4eiYne2W6kQgZ2rwHJ1gExG0LvKfE0dzLWCJtbKda5N8WMQmIlxiznGM+IGVfksKDfNfa8kubEci0lnN0F+eh6Erg==
-X-Gm-Message-State: AOJu0Yw7GP20BFit4osl2DpRGj8U+ZtF+pnjGsX8MGDH1J8WGQ3YHPwv
-	1HzHvqV2Vng3IgfvHMM5+sfMLvGaD2QmCyeSv7xRAYsOJ9EfQiO5
-X-Google-Smtp-Source: AGHT+IGeCR7tCS+AYHJEbvX1MlEd7jEEGx4/snmN8pUVrWSCYrX5WNLCAq1x5T5e0MRzfX03+jEGYw==
-X-Received: by 2002:a05:6a00:2d8a:b0:70d:33b3:2d7f with SMTP id d2e1a72fcca58-710dcab70ecmr7388601b3a.26.1723348378198;
-        Sat, 10 Aug 2024 20:52:58 -0700 (PDT)
-Received: from [192.168.1.3] (123-243-193-68.tpgi.com.au. [123.243.193.68])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7c3dbea2327sm1966642a12.79.2024.08.10.20.52.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 10 Aug 2024 20:52:57 -0700 (PDT)
-Message-ID: <f6aca7df-3fc6-4676-bb5b-cb15eba8f97c@gmail.com>
-Date: Sun, 11 Aug 2024 13:52:50 +1000
+        d=1e100.net; s=20230601; t=1723350018; x=1723954818;
+        h=content-transfer-encoding:cc:to:from:subject:mime-version
+         :message-id:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=avsZetUrmUaVFvNuI6iHf0CdeIN2+n8kp9n024Qka3E=;
+        b=CDVsPqQ5qoc6lPFinwgXZZM7Kj4GOjJar09o0q5p1qLbNXSEWl/VwK5zEkjxPKqgP0
+         CP1vo1tAl+iBDQxG80I18c1kb0zNk9B2Lb48WFBHnTFCD/i7/4kOkGL0iYdAFRiYbPfX
+         MMFD5uzudHir5b9aBp6C6BUG9M6WmF6xj8cXMpY/I2kSx/2eX5/VBk2vNdtqcI1SYFUY
+         e4tFlQ2LCjikIdVd5ydV6ITd4GFWtwbDjXp8htwQG28zqgwbDtHtCgQ+YgQ5mTTXQuNr
+         WfwvFBmUhQuFBCduZ3H/frF/TeZ51YUrgIRsl0jmTbc9+zKF17qGYQzWMa5RGYDR62sb
+         j3bQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWxbZwYtzsqXuVQAp9W+KcG9+MMCMc1X8zGMS07JgYjP+QKkP9JfQD97C76OYuwsl/CLSphFSXbxvq+LwozOZgKExFyLK4ZNdsshp7ZrcRGbQ==
+X-Gm-Message-State: AOJu0YyHVNexr+q3Tyr7MYFOUa9u8tMR8OUZkce9zwjVSC9yW7zP8X4n
+	5AKXOPlglGj6AEj1louAI4Zs6ylXP6369laevSUTG06/OpxBa4PXksq2GIKIJaiZTkTeiEkbjro
+	ATwTAwg==
+X-Google-Smtp-Source: AGHT+IHbzIh+vXHX20Y9SswZS44w5LYBqWDkVe1xw2pxjtcQpATlqOAhciKTaqtjQ5pYqwbUbK/fe6BIIjXZ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:2bfd:b612:c5ad:197e])
+ (user=irogers job=sendgmr) by 2002:a0d:fdc5:0:b0:663:ddc1:eab8 with SMTP id
+ 00721157ae682-69ec84d3af4mr3448757b3.4.1723350018384; Sat, 10 Aug 2024
+ 21:20:18 -0700 (PDT)
+Date: Sat, 10 Aug 2024 21:20:04 -0700
+Message-Id: <20240811042004.421869-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] perf script python: Add the ins_lat field to event
- handler
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, Ben Gainey <ben.gainey@arm.com>,
- Paran Lee <p4ranlee@gmail.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240809080137.3590148-1-fzczx123@gmail.com>
- <ZrYbbZVE4BQ-oqba@x1>
-Content-Language: en-US
-From: Zixian Cai <fzczx123@gmail.com>
-In-Reply-To: <ZrYbbZVE4BQ-oqba@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+Subject: [PATCH v1] perf vendor events: SKX, CLX, SNR uncore cache event fixes
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Cc: Weilin Wang <weilin.wang@intel.com>, Song Liu <song@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 9/8/2024 23:36, Arnaldo Carvalho de Melo wrote:
-> On Fri, Aug 09, 2024 at 08:01:36AM +0000, Zixian Cai wrote:
->> For example, when using the Alder Lake PMU memory load event, the
->> instruction latency is stored in ins_lat, while the cache latency
->> is stored in weight.
->>
->> This patch reports the ins_lat field for Python scripting.
-> 
-> So, how did you test this? I tried:
+Cache home agent (CHA) events were setting the low rather than high
+config1 bits. SNR was using CLX CHA events, however its CHA is similar
+to ICX so remove the events.
 
-This is how I tested it.
+Incorporate the updates in:
+https://github.com/intel/perfmon/pull/215
+https://github.com/intel/perfmon/pull/216
 
-My machine is running 6.5.0-41-generic from Ubuntu 22.04 LTS, and I use OS's perf to record.
+Co-authored-by: Weilin Wang <weilin.wang@intel.com>
+Reported-by: Song Liu <song@kernel.org>
+Closes: https://lore.kernel.org/linux-perf-users/CAPhsuW4nem9XZP+b=3DsJJ7kq=
+XG-cafz0djZf51HsgjCiwkGBA+A@mail.gmail.com/
+Fixes: 4cc49942444e ("perf vendor events: Update cascadelakex events/metric=
+s")
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ .../arch/x86/cascadelakex/uncore-cache.json   | 60 +++++++++----------
+ .../arch/x86/skylakex/uncore-cache.json       | 60 +++++++++----------
+ .../arch/x86/snowridgex/uncore-cache.json     | 57 ------------------
+ 3 files changed, 60 insertions(+), 117 deletions(-)
 
-$ grep -m1 'model name' /proc/cpuinfo
-model name	: 12th Gen Intel(R) Core(TM) i9-12900KF
+diff --git a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json =
+b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
+index c9596e18ec09..6347eba48810 100644
+--- a/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/cascadelakex/uncore-cache.json
+@@ -4577,7 +4577,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : CRds issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4588,7 +4588,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : DRds issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4599,7 +4599,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4609,7 +4609,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4619,7 +4619,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : LLCPrefRFO issued by iA Cores =
+that hit the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4630,7 +4630,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : RFOs issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4651,7 +4651,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : CRds issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4662,7 +4662,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : DRds issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4673,7 +4673,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4683,7 +4683,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4693,7 +4693,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : LLCPrefRFO issued by iA Cores =
+that missed the LLC : Counts the number of entries successfully inserted in=
+to the TOR that match qualifications specified by the subevent.   Does not =
+include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4704,7 +4704,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : RFOs issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4747,7 +4747,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_ITOM",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x49033",
++        "Filter": "config1=3D0x4903300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO ItoM requests that mis=
+s the LLC. An ItoM request is used by IIO to request a data write without f=
+irst reading the data for ownership.",
+         "UMask": "0x24",
+@@ -4759,7 +4759,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_RDCUR",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x43C33",
++        "Filter": "config1=3D0x43c3300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO RdCur requests and mis=
+s the LLC. A RdCur request is used by IIO to read data without changing sta=
+te.",
+         "UMask": "0x24",
+@@ -4771,7 +4771,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_RFO",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO RFO requests that miss=
+ the LLC. A read for ownership (RFO) requests a cache line to be cached in =
+E state with the intent to modify.",
+         "UMask": "0x24",
+@@ -4999,7 +4999,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : CRds issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -5010,7 +5010,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : DRds issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -5021,7 +5021,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -5031,7 +5031,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -5041,7 +5041,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : LLCPrefRFO issued by iA Core=
+s that hit the LLC : For each cycle, this event accumulates the number of v=
+alid entries in the TOR that match qualifications specified by the subevent=
+.     Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -5052,7 +5052,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : RFOs issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -5073,7 +5073,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : CRds issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -5084,7 +5084,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : DRds issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -5095,7 +5095,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -5105,7 +5105,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -5115,7 +5115,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : LLCPrefRFO issued by iA Core=
+s that missed the LLC : For each cycle, this event accumulates the number o=
+f valid entries in the TOR that match qualifications specified by the subev=
+ent.     Does not include addressless requests such as locks and interrupts=
+.",
+         "UMask": "0x21",
+@@ -5126,7 +5126,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : RFOs issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -5171,7 +5171,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x49033",
++        "Filter": "config1=3D0x4903300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO ItoM req=
+uests that miss the LLC. An ItoM is used by IIO to request a data write wit=
+hout first reading the data for ownership.",
+         "UMask": "0x24",
+@@ -5183,7 +5183,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_RDCUR",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x43C33",
++        "Filter": "config1=3D0x43c3300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO RdCur re=
+quests that miss the LLC. A RdCur request is used by IIO to read data witho=
+ut changing state.",
+         "UMask": "0x24",
+@@ -5195,7 +5195,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_RFO",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO RFO requ=
+ests that miss the LLC. A read for ownership (RFO) requests data to be cach=
+ed in E state with the intent to modify.",
+         "UMask": "0x24",
+diff --git a/tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json b/to=
+ols/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
+index da46a3aeb58c..4fc818626491 100644
+--- a/tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/skylakex/uncore-cache.json
+@@ -4454,7 +4454,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : CRds issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4465,7 +4465,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : DRds issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4476,7 +4476,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4486,7 +4486,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4496,7 +4496,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : LLCPrefRFO issued by iA Cores =
+that hit the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4507,7 +4507,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_HIT_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : RFOs issued by iA Cores that H=
+it the LLC : Counts the number of entries successfully inserted into the TO=
+R that match qualifications specified by the subevent.   Does not include a=
+ddressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4528,7 +4528,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : CRds issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4539,7 +4539,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : DRds issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4550,7 +4550,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4560,7 +4560,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4570,7 +4570,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : LLCPrefRFO issued by iA Cores =
+that missed the LLC : Counts the number of entries successfully inserted in=
+to the TOR that match qualifications specified by the subevent.   Does not =
+include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4581,7 +4581,7 @@
+         "Counter": "0,1,2,3",
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IA_MISS_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Inserts : RFOs issued by iA Cores that M=
+issed the LLC : Counts the number of entries successfully inserted into the=
+ TOR that match qualifications specified by the subevent.   Does not includ=
+e addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4624,7 +4624,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_ITOM",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x49033",
++        "Filter": "config1=3D0x4903300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO ItoM requests that mis=
+s the LLC. An ItoM request is used by IIO to request a data write without f=
+irst reading the data for ownership.",
+         "UMask": "0x24",
+@@ -4636,7 +4636,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_RDCUR",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x43C33",
++        "Filter": "config1=3D0x43c3300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO RdCur requests and mis=
+s the LLC. A RdCur request is used by IIO to read data without changing sta=
+te.",
+         "UMask": "0x24",
+@@ -4648,7 +4648,7 @@
+         "EventCode": "0x35",
+         "EventName": "UNC_CHA_TOR_INSERTS.IO_MISS_RFO",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "Counts the number of entries successfully in=
+serted into the TOR that are generated from local IO RFO requests that miss=
+ the LLC. A read for ownership (RFO) requests a cache line to be cached in =
+E state with the intent to modify.",
+         "UMask": "0x24",
+@@ -4865,7 +4865,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : CRds issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4876,7 +4876,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : DRds issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4887,7 +4887,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4897,7 +4897,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x11",
+         "Unit": "CHA"
+@@ -4907,7 +4907,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : LLCPrefRFO issued by iA Core=
+s that hit the LLC : For each cycle, this event accumulates the number of v=
+alid entries in the TOR that match qualifications specified by the subevent=
+.     Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4918,7 +4918,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_HIT_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : RFOs issued by iA Cores that=
+ Hit the LLC : For each cycle, this event accumulates the number of valid e=
+ntries in the TOR that match qualifications specified by the subevent.     =
+Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x11",
+@@ -4939,7 +4939,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_CRD",
+-        "Filter": "config1=3D0x40233",
++        "Filter": "config1=3D0x4023300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : CRds issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4950,7 +4950,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_DRD",
+-        "Filter": "config1=3D0x40433",
++        "Filter": "config1=3D0x4043300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : DRds issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -4961,7 +4961,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefCRD",
+-        "Filter": "config1=3D0x4b233",
++        "Filter": "config1=3D0x4b23300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4971,7 +4971,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefDRD",
+-        "Filter": "config1=3D0x4b433",
++        "Filter": "config1=3D0x4b43300000000",
+         "PerPkg": "1",
+         "UMask": "0x21",
+         "Unit": "CHA"
+@@ -4981,7 +4981,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_LlcPrefRFO",
+-        "Filter": "config1=3D0x4b033",
++        "Filter": "config1=3D0x4b03300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : LLCPrefRFO issued by iA Core=
+s that missed the LLC : For each cycle, this event accumulates the number o=
+f valid entries in the TOR that match qualifications specified by the subev=
+ent.     Does not include addressless requests such as locks and interrupts=
+.",
+         "UMask": "0x21",
+@@ -4992,7 +4992,7 @@
+         "Counter": "0",
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IA_MISS_RFO",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "TOR Occupancy : RFOs issued by iA Cores that=
+ Missed the LLC : For each cycle, this event accumulates the number of vali=
+d entries in the TOR that match qualifications specified by the subevent.  =
+   Does not include addressless requests such as locks and interrupts.",
+         "UMask": "0x21",
+@@ -5037,7 +5037,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_ITOM",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x49033",
++        "Filter": "config1=3D0x4903300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO ItoM req=
+uests that miss the LLC. An ItoM is used by IIO to request a data write wit=
+hout first reading the data for ownership.",
+         "UMask": "0x24",
+@@ -5049,7 +5049,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_RDCUR",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x43C33",
++        "Filter": "config1=3D0x43c3300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO RdCur re=
+quests that miss the LLC. A RdCur request is used by IIO to read data witho=
+ut changing state.",
+         "UMask": "0x24",
+@@ -5061,7 +5061,7 @@
+         "EventCode": "0x36",
+         "EventName": "UNC_CHA_TOR_OCCUPANCY.IO_MISS_RFO",
+         "Experimental": "1",
+-        "Filter": "config1=3D0x40033",
++        "Filter": "config1=3D0x4003300000000",
+         "PerPkg": "1",
+         "PublicDescription": "For each cycle, this event accumulates the n=
+umber of valid entries in the TOR that are generated from local IO RFO requ=
+ests that miss the LLC. A read for ownership (RFO) requests data to be cach=
+ed in E state with the intent to modify.",
+         "UMask": "0x24",
+diff --git a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json b/=
+tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
+index 7551fb91a9d7..a81776deb2e6 100644
+--- a/tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
++++ b/tools/perf/pmu-events/arch/x86/snowridgex/uncore-cache.json
+@@ -1,61 +1,4 @@
+ [
+-    {
+-        "BriefDescription": "MMIO reads. Derived from unc_cha_tor_inserts.=
+ia_miss",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x35",
+-        "EventName": "LLC_MISSES.MMIO_READ",
+-        "Filter": "config1=3D0x40040e33",
+-        "PerPkg": "1",
+-        "PublicDescription": "TOR Inserts : All requests from iA Cores tha=
+t Missed the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+-        "UMask": "0xc001fe01",
+-        "Unit": "CHA"
+-    },
+-    {
+-        "BriefDescription": "MMIO writes. Derived from unc_cha_tor_inserts=
+.ia_miss",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x35",
+-        "EventName": "LLC_MISSES.MMIO_WRITE",
+-        "Filter": "config1=3D0x40041e33",
+-        "PerPkg": "1",
+-        "PublicDescription": "TOR Inserts : All requests from iA Cores tha=
+t Missed the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+-        "UMask": "0xc001fe01",
+-        "Unit": "CHA"
+-    },
+-    {
+-        "BriefDescription": "LLC misses - Uncacheable reads (from cpu) . D=
+erived from unc_cha_tor_inserts.ia_miss",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x35",
+-        "EventName": "LLC_MISSES.UNCACHEABLE",
+-        "Filter": "config1=3D0x40e33",
+-        "PerPkg": "1",
+-        "PublicDescription": "TOR Inserts : All requests from iA Cores tha=
+t Missed the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+-        "UMask": "0xc001fe01",
+-        "Unit": "CHA"
+-    },
+-    {
+-        "BriefDescription": "Streaming stores (full cache line). Derived f=
+rom unc_cha_tor_inserts.ia_miss",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x35",
+-        "EventName": "LLC_REFERENCES.STREAMING_FULL",
+-        "Filter": "config1=3D0x41833",
+-        "PerPkg": "1",
+-        "PublicDescription": "TOR Inserts : All requests from iA Cores tha=
+t Missed the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+-        "ScaleUnit": "64Bytes",
+-        "UMask": "0xc001fe01",
+-        "Unit": "CHA"
+-    },
+-    {
+-        "BriefDescription": "Streaming stores (partial cache line). Derive=
+d from unc_cha_tor_inserts.ia_miss",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x35",
+-        "EventName": "LLC_REFERENCES.STREAMING_PARTIAL",
+-        "Filter": "config1=3D0x41a33",
+-        "PerPkg": "1",
+-        "PublicDescription": "TOR Inserts : All requests from iA Cores tha=
+t Missed the LLC : Counts the number of entries successfully inserted into =
+the TOR that match qualifications specified by the subevent.   Does not inc=
+lude addressless requests such as locks and interrupts.",
+-        "ScaleUnit": "64Bytes",
+-        "UMask": "0xc001fe01",
+-        "Unit": "CHA"
+-    },
+     {
+         "BriefDescription": "CMS Agent0 AD Credits Acquired : For Transgre=
+ss 0",
+         "Counter": "0,1,2,3",
+--=20
+2.46.0.76.ge559c4bf1a-goog
 
-$ perf version
-perf version 6.5.13
-
-$ perf mem record taskset -c 0-15 java -jar /usr/share/benchmarks/dacapo/dacapo-23.11-chopin.jar biojava
-...
-Using scaled threading model. 16 processors detected, 16 threads used to drive the workload, in a possible range of [1,unlimited]
-Version: biojava 7.0.2 (use -p to print nominal benchmark stats)
-===== DaCapo 23.11-chopin biojava starting =====
-Processing sequences: 100%
-===== DaCapo 23.11-chopin biojava PASSED in 7988 msec =====
-[ perf record: Woken up 11 times to write data ]
-[ perf record: Captured and wrote 3.530 MB perf.data (47646 samples) ]
-
-$ ./perf evlist -v
-cpu_core/mem-loads-aux/: type: 4 (PERF_TYPE_RAW), size: 136, config: 0x8203, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1
-cpu_core/mem-loads,ldlat=30/: type: 4 (PERF_TYPE_RAW), size: 136, config: 0x1cd, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, freq: 1, precise_ip: 2, sample_id_all: 1, exclude_guest: 1, { bp_addr, config1 }: 0x1f
-cpu_atom/mem-loads,ldlat=30/P: type: 10, size: 136, config: 0x5d0, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-cpu_core/mem-stores/P: type: 4 (PERF_TYPE_RAW), size: 136, config: 0x2cd, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
-cpu_atom/mem-stores/P: type: 10, size: 136, config: 0x6d0, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
-dummy:HG: type: 1 (PERF_TYPE_SOFTWARE), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-
-$ ./perf script -g python
-
-Add a new method to perf-script.py
-
-def process_event(params):
-    if "cpu_core/mem-loads,ldlat" in params["ev_name"]:
-        print(params["sample"]["weight"], params["sample"]["ins_lat"])
-
-$ ./perf script|grep ldlat=|head
-         taskset  182628 247517.778385:          1  cpu_core/mem-loads,ldlat=30/: ffffb33a850078a0     40268100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  Addr               5              33               0 ffffffff8cc2ba08 [unknown] ([unknown])
-         taskset  182628 247517.778409:          1  cpu_core/mem-loads,ldlat=30/: ffffb33a85007860     10268100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                5              85               0 ffffffff8ce23476 [unknown] ([unknown])
-         taskset  182628 247517.778431:          3  cpu_core/mem-loads,ldlat=30/: ffffb33a85007b78     10268100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                5             163               0 ffffffff8d2061d0 [unknown] ([unknown])
-         taskset  182628 247517.778444:          7  cpu_core/mem-loads,ldlat=30/: ffff90cf25b26280     10668100842 |OP LOAD|LVL L3 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A               96             120               0 ffffffff8dab2627 [unknown] ([unknown])
-         taskset  182628 247517.778484:         23  cpu_core/mem-loads,ldlat=30/: ffffb33a85007cf0     10268100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A                5             218               0 ffffffff8cd96124 [unknown] ([unknown])
-         taskset  182628 247517.778561:         39  cpu_core/mem-loads,ldlat=30/: ffffe271848b6600     20268100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  Data               5             111               0 ffffffff8cd948cc [unknown] ([unknown])
-         taskset  182628 247517.778629:         50  cpu_core/mem-loads,ldlat=30/: ffffe27184b6d280     11868100242 |OP LOAD|LVL LFB/MAB hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A              71              73               0 ffffffff8cd94792 [unknown] ([unknown])
-         taskset  182628 247517.778725:         67  cpu_core/mem-loads,ldlat=30/: ffff90c061ed6b48     11868100242 |OP LOAD|LVL LFB/MAB hit|SNP None|TLB L1 or L2 hit|LCK No|BLK  N/A             240             242               0 ffffffff8cf9785b [unknown] ([unknown])
-            java  182628 247517.778886:         81  cpu_core/mem-loads,ldlat=30/: ffffe27184888430     4026a100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  Addr                  5              68               0 ffffffff8ce13245 [unknown] ([unknown])
-            java  182628 247517.779164:         87  cpu_core/mem-loads,ldlat=30/: ffffe271bf9bca40     1026a100142 |OP LOAD|LVL L1 hit|SNP None|TLB L1 or L2 hit|LCK Yes|BLK  N/A                   5              90               0 ffffffff8cd96387 [unknown] ([unknown])
-
-$ ./perf script -s perf-script.py|head
-in trace_begin
-5 33
-5 85
-5 163
-96 120
-5 218
-5 111
-71 73
-240 242
-5 68
-
-The output from the Python script matches the output of plain perf script output, showing both weight and ins_lat.
-
-> 
-> But in general try to provide the steps to show that the functionality
-> that you are adding is actually working, making it easy for other
-> people to try reproducing your results.
-
-Will do for future patches.
-
-> Thanks,
-> 
-> - Arnaldo
-
-One thing I haven't figure out is that if I use perf I built from source, perf mem record doesn't seem to record the events for the Golden Cove P-cores.
-
-$ ./perf version
-perf version 6.11.0-rc2
-
-$ ./perf mem record taskset -c 0-15 java -jar /usr/share/benchmarks/dacapo/dacapo-23.11-chopin.jar biojava
-
-Using scaled threading model. 16 processors detected, 16 threads used to drive the workload, in a possible range of [1,unlimited]
-Version: biojava 7.0.2 (use -p to print nominal benchmark stats)
-===== DaCapo 23.11-chopin biojava starting =====
-Processing sequences: 100%
-===== DaCapo 23.11-chopin biojava PASSED in 7157 msec =====
-[ perf record: Woken up 1 times to write data ]
-[ perf record: Captured and wrote 0.251 MB perf.data ]
-
-$ ./perf evlist -v
-cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
-cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
-dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
-
-I think the above recording issue is orthogonal to this patch, and possibly a result of running 6.11 perf userland on a 6.5 kernel.
