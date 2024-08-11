@@ -1,63 +1,62 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE914D8C1
-	for <linux-perf-users@vger.kernel.org>; Sun, 11 Aug 2024 12:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA5D17BB14
+	for <linux-perf-users@vger.kernel.org>; Sun, 11 Aug 2024 12:58:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723379722; cv=none; b=DMu6RTwE3TtBDZJx9ojtODZ1hYVX9fJbeNcEIMMCnEOJwoZueskwMhIl2vHliRykq6W5CO275fI7i3M9lE+a8x+0Hpvlx7DexYSEk/9vHNG+COjeScbJMtAp8ubmih1w6CrUovsGe8wNm9kzRYoy1eVvOfHTFT4SLL8evCOSZ9Y=
+	t=1723381114; cv=none; b=diPFOtCEt0xjVl7PV6qlXv5Lbk5NmikULj/Wzz62tAwDAEHDOvFAifvTFDzP5gMSptQBeW0fgvKOUdEBsw+DRpLyqJ4RQoHeUvCjNnGNpWcPA06tw2GHIzVy0aJDPEOT2uHUNQq2M1WUbnYfppX8D5mUAh0J4tbBuOa1BwjZ0o8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723379722; c=relaxed/simple;
-	bh=8HbDmLL+NTBeeBc0mZ30qbLS+R+pE60UQRFzXh0Qd40=;
+	s=arc-20240116; t=1723381114; c=relaxed/simple;
+	bh=SmUBeweGlG9h1e+KLfkVevn7xSXjum33hgn8pIpdjmk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKZCd5KAT7OF0ctCv5yNpGUopncGFOh9RYr0UO+ouwpE39U9+/F9eAe6FazgfCvnTWbDWTM5U9si/YkecZSmIfIfL/cKTgbUpBo7cWMzQTvRvxUufTjEQAkGdZ9FC6PoETdQLXUkEVpbWS/TsL2lGkR+OxoViCORdyXAE+yA8nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RYOFdVh4; arc=none smtp.client-ip=170.10.129.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=KQikWphMSrIAgdMegVr6Yhp0hzPkSKGz3joteNutqTydFXbM1aXuT9drL9OtXAC6DjqndprftIrhlwT8OnwkB32AJClDzMEu1BEYaGvqjC+x8buQuLAzyufv/DRa+n3zKGWfBkv+7lfa51EWw67E0AKdIGT5Ie5dySt0VDgfQYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IHlfyUcr; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RYOFdVh4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IHlfyUcr"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723379720;
+	s=mimecast20190719; t=1723381111;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=iHlXnDYMSxlvXOLG5yqCHeaThdF+GjL3IUfr75SJ08A=;
-	b=RYOFdVh4Gn3i6AeimSIxoE8JewQ3lozLF3IaqOYp4bJgRLtewLEndqR6uZeBYaV4gIaB0r
-	gXt3UG10h8MoBqvvvYDmEuoxTcL5HbaNBgvygSSd4TXJPfixXIfomgmmxMdjgjg55CPP5M
-	PWFdnchnwr63yk3D3bMuWv6zAuoRpS0=
+	bh=v2HguoHPzRVuxUUDp+trnORIi63m6XbTZ+IAUIpDVOo=;
+	b=IHlfyUcrFK+1rGKx8XUQejwAJ+xdqrmzXQijMsx9jgvivsrvXSYReY8RFfYPS/c2ecoyI+
+	J3YgJ8hddzzrGJ9z3Dv2mNVnAojn1zJuAqJWft9jXr2L1Z8uZw+K+0zD04K3a3c3GZ/ySr
+	WA1eZFDTfPLeExo67fAvE9SGKa5itVY=
 Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-357-H9lsxKNuPV-qWIxBFCY7Sg-1; Sun,
- 11 Aug 2024 08:35:16 -0400
-X-MC-Unique: H9lsxKNuPV-qWIxBFCY7Sg-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-448-jNUMuJw3OOmvrNzKhFvErg-1; Sun,
+ 11 Aug 2024 08:58:29 -0400
+X-MC-Unique: jNUMuJw3OOmvrNzKhFvErg-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4ABCF195609E;
-	Sun, 11 Aug 2024 12:35:14 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CD68E19560A6;
+	Sun, 11 Aug 2024 12:58:26 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.19])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1F5A219560AE;
-	Sun, 11 Aug 2024 12:35:07 +0000 (UTC)
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 8400D1955F3A;
+	Sun, 11 Aug 2024 12:58:20 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Sun, 11 Aug 2024 14:35:11 +0200 (CEST)
-Date: Sun, 11 Aug 2024 14:35:04 +0200
+	oleg@redhat.com; Sun, 11 Aug 2024 14:58:24 +0200 (CEST)
+Date: Sun, 11 Aug 2024 14:58:17 +0200
 From: Oleg Nesterov <oleg@redhat.com>
-To: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org
+To: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>
 Cc: acme@kernel.org, adrian.hunter@intel.com,
 	alexander.shishkin@linux.intel.com, irogers@google.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
 	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
 	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+	andrii@kernel.org
 Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in
  __uprobe_unregister
-Message-ID: <20240811123504.GB30068@redhat.com>
+Message-ID: <20240811125816.GC30068@redhat.com>
 References: <000000000000382d39061f59f2dd@google.com>
- <20240811121444.GA30068@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -66,41 +65,28 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240811121444.GA30068@redhat.com>
+In-Reply-To: <000000000000382d39061f59f2dd@google.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-On 08/11, Oleg Nesterov wrote:
+On 08/10, syzbot wrote:
 >
-> Hmm, bpf_uprobe_multi_link_attach() looks obviously wrong.
+> syzbot found the following issue on:
 >
-> bpf_link_prime() is called after the
->
-> 	for (i = 0; i < cnt; i++) {
-> 		uprobe_register(...);
-> 		...
-> 	}
->
-> loop. If bpf_link_prime() fails, bpf_uprobe_multi_link_attach() just do
-> kvfree(uprobes) without _unregister(). In particular, this leaks the freed
-> bpf_uprobe->consumer in the uprobe->consumers list.
->
-> After that another _unregister() on the same uprobe can hit the problem.
->
-> I guess we need a simple patch for -stable...
+> HEAD commit:    6a0e38264012 Merge tag 'for-6.11-rc2-tag' of git://git.ker..
+> git tree:       upstream
 
-Something like below on top of perf/core. But I don't like the usage of
-"i" in the +error_unregister path...
+#syz test: upstream 6a0e38264012
 
-Oleg.
-
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index cd098846e251..5d9c96c69733 100644
 --- a/kernel/trace/bpf_trace.c
 +++ b/kernel/trace/bpf_trace.c
-@@ -3486,17 +3486,19 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 						    &uprobes[i].consumer);
- 		if (IS_ERR(uprobes[i].uprobe)) {
- 			err = PTR_ERR(uprobes[i].uprobe);
--			bpf_uprobe_unregister(uprobes, i);
+@@ -3485,17 +3485,19 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+ 					     uprobes[i].ref_ctr_offset,
+ 					     &uprobes[i].consumer);
+ 		if (err) {
+-			bpf_uprobe_unregister(&path, uprobes, i);
 -			goto error_free;
 +			goto error_unregister;
  		}
@@ -114,7 +100,7 @@ Oleg.
  	return bpf_link_settle(&link_primer);
  
 +error_unregister:
-+	bpf_uprobe_unregister(uprobes, i);
++	bpf_uprobe_unregister(&path, uprobes, i);
 +
  error_free:
  	kvfree(uprobes);
