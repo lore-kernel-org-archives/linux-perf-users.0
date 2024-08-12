@@ -1,189 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 977AF13C914;
-	Mon, 12 Aug 2024 15:37:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70C96184522
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 15:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723477068; cv=none; b=aSJOvqG/d109W/7vhpK7y0ieUIlXah/1s/AdYDAjG9fxn7u8OAVdcxwYXiO7NuD8jRQdfgtuaS7hVmbMLqPxikzHskilpmI4dj3cpy+gTsvtzJ5l6vWZdWqD52W5pKCm/DlbPqg4tDOy2kntC15UXoDDg4WFSWscDX282OjHFLw=
+	t=1723477100; cv=none; b=de/C1Fz19xcdAiBHC95wrucj51ho2e2t79ZnKQ4ct6TQAS0uw/TgbRRaBC14p7F5RkoJwyLqNEqLe9YTRQgVYvQL3XyIdtDMo8bDAJ1gri6D0l2sike9g2I2EWUHhiNQ3m06ZKc+T12xNffS5lPL1TM46HUt2Xn2229phtzlUiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723477068; c=relaxed/simple;
-	bh=8Hjm1/IFZkDKbzzM86qkJ0VVnODcexaFGKfuAN7Ht3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NHkDPGBk8+gqPHMR9khacOzu7qDQ6Yp688o/JlZiz6imc1hTYjSfHixf3HhLQmS2NT59SqeXEnFOls9SzoDaUqXaeAVzh6yZvS0lKbrIrva//8DIu2rGs2h7BeNpbgbzIoKF6bQ1NUH01UJdNXeYkjyAsczT95xWxMAg4LlrSis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WqQHY6eZ; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723477100; c=relaxed/simple;
+	bh=fovMrnD9gDJAqpq2rBZeirL5Ie5rNowYy/qO5wGZ5wQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GEiEhAT6n6e8kIJeZXAaFna4cWMp26ShKh+2FUmgRBBQ8jpx1MzDPTvbCuHRut7h+nJAKj1j4EoPmPh8Ya6DaI6FrOXtGbVMarQXnYZmXqWoUzgKn1v5ft9tk15Vjwlu0DwQRFMrenbUlznWZ3mC11W1WygMLumvekJhECX/r4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TYk0p+yU; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WqQHY6eZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723477067; x=1755013067;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8Hjm1/IFZkDKbzzM86qkJ0VVnODcexaFGKfuAN7Ht3E=;
-  b=WqQHY6eZsjoPoVaFey5fuMMYMQTJXi4fvitUkzTM3k9HO49rLWXSRme4
-   TiZt/0RmlsY2Cipo/z3yMec5QU4Kbq7AU7+2V7NBPJ4AYVpM6hjr3avkv
-   wv4UPp5+1b2srQq9bBkjaPtohN2zb3VgGUrmYMW1eOIl2FNAcQk5R8fE6
-   Ieth95J8HygYqdqWTJImt3+zr64Rrpt0NT7axrzX0ruUJ7XBphLQHnIAq
-   hrNrlhnkwJnFBZXHel4m/s0QXgHVllwpqQPZ+A6FVGABfVYHA5Q9kBQ6i
-   dQAnUmTV/mfgFtyfRiAu9UaioItfKcezzSuTuirn9YoAF1XiIW5SUSBso
-   Q==;
-X-CSE-ConnectionGUID: Gjp1iSNsRgK2Pv7yh+UHbA==
-X-CSE-MsgGUID: 5fMy30FYTzqyJXrdkkAunA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="21761507"
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="21761507"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:37:46 -0700
-X-CSE-ConnectionGUID: QbZqhkEgQNmTS7pgaanK5A==
-X-CSE-MsgGUID: XWOj6JaXSS2UIf6rNUXJxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="81559746"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:37:45 -0700
-Received: from [10.212.112.28] (kliang2-mobl1.ccr.corp.intel.com [10.212.112.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C9D1C20CFED6;
-	Mon, 12 Aug 2024 08:37:43 -0700 (PDT)
-Message-ID: <83cfa057-1791-4aab-ace8-fb0ad5a607b7@linux.intel.com>
-Date: Mon, 12 Aug 2024 11:37:42 -0400
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TYk0p+yU"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1fed726aefcso291935ad.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 08:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723477099; x=1724081899; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fovMrnD9gDJAqpq2rBZeirL5Ie5rNowYy/qO5wGZ5wQ=;
+        b=TYk0p+yUL35MHa5EJPe+iKRiAsVVVeAIQP5C4YdSXtZwNrHksOaiiwIeLUWjJPrz47
+         Zuirtoabb21W1owuBWsPJhrcpt5VfIqK3Smmn6i4knroYoYDOEpj3hteOrxPCABq9tya
+         8ZlAh3aYK5Wuh8p5BZP2phsQqVuee+wXSHg0jhvq55lrt82y76dxq0rjZrEU7MyCb9YO
+         oPnnZ+zf3kVYqKAnV+wbh1QRTAG9SA3huyUErxKbchTmfjZl/oKGlMSzzhKtDzenYhg4
+         57PLxWTi+DaRYd4JhAyE0DDZ6l/vZ4UDjNl8pqvwyDMsGAsqSBjA+u2mQM/mGoxaYVwG
+         o7jQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723477099; x=1724081899;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fovMrnD9gDJAqpq2rBZeirL5Ie5rNowYy/qO5wGZ5wQ=;
+        b=mWFipfnsp/TF9OWEV+mJO8t2oMlAhPcDeaS/75MgKeBMrscL+bGc11PybreFtdF2ns
+         rimsAKTMjVZLN6PMpMu5Pqr6diQIGdr1SleibjBvEIfhl3QW0zItQmBOX27oSbfow7ja
+         PV9NrJDleg8HoX/IRPuXVbRIeF7n8U/nff53sO7JYaidrVDg6jiYY7JvXt6UtGwRcAuD
+         5VwxT6g7amuuEOYqw4m0JEk6699v89iEDL8h3gKBtKic5VJSq4TuF2qz0NF7eQIIV+nU
+         +WMXz1H8ZbkZ8UlkCvv/z0Zw/cSlBgsf7jQFgN5XzYo8hokKB6Srvepmj1fuMPqSbAde
+         0KBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUJQg5HZx/6pDcalYoRHKDZZR3sLFoTS+ple07rsKe0LZUqZPy+RkiiypimzqAXK0DmsksJTpYHZFY36KrCCHOqFVoEwVTusyQ/oHJxqJqirQ==
+X-Gm-Message-State: AOJu0YwzM0J2DbfSNv2TnsbXGvv7GfwkSKGhWW9FoLpNmP+blUopin8P
+	A8ZR9W1HrprhyYfehMlkmD6+sxFrso5cgtZ7uuJ2o+Hj5UmbZnk+CFsn5yXP6siAyhBozfLkCuv
+	wyAFXIo/gLjjQNdJhF7Ccw8pnXxEpRNer4F7t
+X-Google-Smtp-Source: AGHT+IG97BRuEEX7J48w7ngQNipoppQKhKZdtlslt6rnfBm8NKOyyNVNUALmqitFj7qXIxa+CCCelcOZ+lqurZlacT4=
+X-Received: by 2002:a17:902:ecc4:b0:1fa:cd15:985e with SMTP id
+ d9443c01a7336-200bbb57eb7mr4865115ad.6.1723477098446; Mon, 12 Aug 2024
+ 08:38:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 3/5] perf x86/topdown: Don't move topdown metric events
- in group
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
- <20240712170339.185824-4-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240712170339.185824-4-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240720062102.444578-1-weilin.wang@intel.com>
+ <CAM9d7cgoTyf3Zjt=+2yZi5Pat4UrxKxN=rkLHmyUWZqwZk8_Kw@mail.gmail.com>
+ <CAP-5=fWr2Qna9ikzUCFavo3OTUDSP3ztr=i6E=R962CXCdHckg@mail.gmail.com>
+ <ZrEpJxtm5zlp5rbo@x1> <CAP-5=fVTaHdiF8G2Dn=vnguvoapa_+ZKsQ7Wy3z51K9nDZQUtg@mail.gmail.com>
+ <ZrIl8NCHkIVHQVt2@x1> <CAP-5=fUVcBw4GBT8tcOWS1MV1C6zbfbovon1pCqk7gmfMN=J_Q@mail.gmail.com>
+In-Reply-To: <CAP-5=fUVcBw4GBT8tcOWS1MV1C6zbfbovon1pCqk7gmfMN=J_Q@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 12 Aug 2024 08:38:06 -0700
+Message-ID: <CAP-5=fXtDeddhfB8UQcjSAoWPSMo=ve1Xfr2-2K7L1LsMOQenQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v18 0/8] TPEBS counting mode support
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>, weilin.wang@intel.com, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Perry Taylor <perry.taylor@intel.com>, Samantha Alt <samantha.alt@intel.com>, 
+	Caleb Biggers <caleb.biggers@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Aug 6, 2024 at 7:35=E2=80=AFAM Ian Rogers <irogers@google.com> wrot=
+e:
+> On Tue, Aug 6, 2024 at 6:32=E2=80=AFAM Arnaldo Carvalho de Melo <acme@ker=
+nel.org> wrote:
+> > For now I'm removing the whole series from perf-tools-next.
+>
+> Ugh.
 
-
-On 2024-07-12 1:03 p.m., Dapeng Mi wrote:
-> when running below perf command, we say error is reported.
-> 
-> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
-> 
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             4 (cpu)
->   size                             168
->   config                           0x400 (slots)
->   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   disabled                         1
->   sample_id_all                    1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             4 (cpu)
->   size                             168
->   config                           0x8000 (topdown-retiring)
->   { sample_period, sample_freq }   4000
->   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   freq                             1
->   sample_id_all                    1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
-> sys_perf_event_open failed, error -22
-> 
-> Error:
-> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
-> 
-> The reason of error is that the events are regrouped and
-> topdown-retiring event is moved to closely after the slots event and
-> topdown-retiring event needs to do the sampling, but Intel PMU driver
-> doesn't support to sample topdown metrics events.
-> 
-> For topdown metrics events, it just requires to be in a group which has
-> slots event as leader. It doesn't require topdown metrics event must be
-> closely after slots event. Thus it's a overkill to move topdown metrics
-> event closely after slots event in events regrouping and furtherly cause
-> the above issue.
-> 
-> Thus don't move topdown metrics events forward if they are already in a
-> group.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-> ---
->  tools/perf/arch/x86/util/evlist.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-> index 332e8907f43e..6ae044f21843 100644
-> --- a/tools/perf/arch/x86/util/evlist.c
-> +++ b/tools/perf/arch/x86/util/evlist.c
-> @@ -85,7 +85,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->  		/* Followed by topdown events. */
->  		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->  			return -1;
-> -		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
-> +		/*
-> +		 * Move topdown events forward only when topdown events
-> +		 * are not in same group with previous event.
-> +		 */
-
-Do you mean this case?
-
-perf stat -e '{slots,branches},topdown-retiring' -C0 sleep 1
-WARNING: events were regrouped to match PMUs
-
- Performance counter stats for 'CPU(s) 0':
-
-        22,568,316      slots
-           569,904      branches
-         3,805,637      topdown-retiring
-
-
-But if I add one more event before topdown-retiring, it seems break again.
-
-perf stat -e '{slots,branches},cycles,topdown-retiring' -C0 sleep 1
-
- Performance counter stats for 'CPU(s) 0':
-
-        25,218,108      slots
-           647,598      branches
-         4,345,121      cycles
-   <not supported>      topdown-retiring
-
-I'm not asking to support all the above cases. I just try to understand
-which cases you plan to support.
-
-Can you please add some comments or update the document to clearly show
-which format is supported, which format will be automatically adjusted
-by the tool, and which format will be error out?
-
-We should also need test cases for all the supported formats, not just
-the standard one.
+Hi, what's the plan here? The topdown (aka TMA) metrics on recent
+Intel CPUs (client and server) are dependent on timed PEBS. I think we
+should land this series and move forward from there.
 
 Thanks,
-Kan
-
-> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
-> +		    lhs->core.leader != rhs->core.leader)
->  			return 1;
->  	}
->  
+Ian
