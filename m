@@ -1,372 +1,127 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC0D13A24D;
-	Mon, 12 Aug 2024 17:57:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB4E8C156
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 18:10:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723485438; cv=none; b=DkimOSU7YZRm92nxzt10MICBT7/+qV0GWuRD3ON2PreLFlp40KMM/3npxrn46M816Of4tX9g+kOgyweGG/kl9qjx4Y1Xy3E+PvrLBAqANET7EL1JlxXmPYnPF39iKia8X9l/jjN2TDhSyH1A8NUssHIlUvVSaxtRSmWcDII7e4o=
+	t=1723486217; cv=none; b=uyQu8hlJGT9NWII2bcMhC5QuFTQz+ypoO1JqemLJewF16sq53vw0eDrqsFquU1ypn+1lSPOjo+8wkKYvQ9FPh9FMOrwMCrTiurn5t8yfbhKgNLBYfwoCypYAxRgfjejBHsd13QksTVnbaHLa5L7XXNrJE80mzH6X5BqmARW6M1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723485438; c=relaxed/simple;
-	bh=BSSIelT9b3lNDXNhVTXlTATdVA/AKFX98mMP/WgRPCQ=;
+	s=arc-20240116; t=1723486217; c=relaxed/simple;
+	bh=e5zIyxIrDjlnfGb53pONco0/BZToTmfTinFeg12plds=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EjLVnw/hSi/xnPtL5tCIXVF3xWqbYnPAMPNyFgPnHcrnYkqslNV4/1hXelGWWUSeoj75EW0cBXBvM4gvcjKTsF1zA9rrXsdjsfTog9NsUF4n0Hfpi7ygBSeoE1camacW5Vho+rvAcY5R1HOa0iGSCL27JZOJYHgSHjsPWf5iLdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d3CKDdq7; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=jHc/t1zqED2gAUdv7b8g63ltIv2g3E54pLqGtjWSuJjDOF/cN5LdmQY/y6lMYNdvZTPkFn6J8IAABQ+KEvtqWRkQQKsSwKqCrTW68pm/ho8hqJGhHhSRE1h0sLFRxUqoKTiN6NDvB5eGILBq/Fd+8vhAPXI5s3LZKXHv1FsO3lw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wk8F+83l; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3CKDdq7"
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7c3e1081804so980210a12.3;
-        Mon, 12 Aug 2024 10:57:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wk8F+83l"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-39b6493b7dfso9405ab.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 11:10:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723485436; x=1724090236; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723486215; x=1724091015; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QzMBVT5Buj7QKeGM9sscOvVq0ggegn0Fv1hQ4+00Cfo=;
-        b=d3CKDdq73we+r8SMMFIK9q2UMkACoH3eOyiOTxPF67gAHAnqis1gNSBxNDfVN2zKPc
-         LYVwmB5kCNgLV3fitz2+liSaF2wDJaCyIC6mV3zqNENqPt9ggSU0/ZPP77zK5avQJy72
-         gs6/bFnaIwqLXonB5oSinRp19Hln9RXyQE7fb1HSJLGnu0xgv628KQL+giD/XyPqSiRL
-         ugccv83/ieKkryRuxhXbMllVcmNM7pnRHQ63O9kWLRgt7l28ov2yb8boI26BQfHsQre7
-         PUzNhB6R0mkqaiRDTQ83wK9YlNOhXOJwZ1HfsTyy2LHUjJ2IMHnWFNnlSB8zacbEu1lx
-         kQVQ==
+        bh=e5zIyxIrDjlnfGb53pONco0/BZToTmfTinFeg12plds=;
+        b=wk8F+83lFYSrRFo9G3p22NCcQwJksWFZb5PzJV6P1oavBxwMwRJy+KnyVgSCG8jHPp
+         u6Q5DF2oIXOeF6VoMaf1Cno4omI233hJfLjdO5uhMjy/GtKTOan1UjcD1K8jzTieGKCV
+         /Td9tjqIUMBRhcuDgbZIcvQH53VWHCzbWPtmqDbqISwpJJ70LI2dWOMRY4YaQon5y2yo
+         E+dSptqJrt4dCgqpUDjpWCwdkYCCUgTkuFGR4JbZAsQg+05UFsDELRuG+hGFiUvvtopq
+         I71IoiKp95oxT+h19APijlH5IM2irR28fiaZdqM8slKTZMG9+lzx/sUz6OZ/DWVLsMG0
+         sc5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723485436; x=1724090236;
+        d=1e100.net; s=20230601; t=1723486215; x=1724091015;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QzMBVT5Buj7QKeGM9sscOvVq0ggegn0Fv1hQ4+00Cfo=;
-        b=DDS3HZLO38QQ7aMGiLR0wxnIy6K/vKExDW/HGSM32tcQlWOiGqJO/Lp5MnNA57fx3T
-         Af7Ra/zSykX+Oz10VdZa/iU7yrdSauZOlic3URdAbCW294L0A9B1cmcb2aBpN1ilUOgA
-         CfeecG8e/4rM9mrtKnMtyV2dp84h7f16IPu9icfBfL4qFVNI4ygrHiBR++lthcqrOaaK
-         tf11EUMBOR+F9WkYMfGv77DfyIGzFDwtVvIL+NRB2BZElJG6Dva2p7/yKeI97841MMKc
-         JFbA+XDlagxB2MH/88sXMt1vMuDzPaGwyi04Xwf4D7QJboAwJFub2RL8DML8jUhT/yhJ
-         I+Kg==
-X-Forwarded-Encrypted: i=1; AJvYcCXzKgeEk5hfcpD9AYqUbx4DVC+WpPm3a3KIyHOb394uM9z1h7fSNdIUHzkSRs5hhbwjzfG7twgNrots+g4AlkHLsP+g+9P0aLeEkULCNWC6v9sf6zC+AAgdu6Y1GJ74EnxuefPBa2+MtuzZ/1kOa1c4mjFwZ7zEHmDb4pSIN6cl40NlyT/ve+rWR5dcWJld5jsapzLuPXZPHMp3/dhjhK02n3f8VjxSFA==
-X-Gm-Message-State: AOJu0YwRkP4gHoPx5U3YPKV7GNfB77m/626Ts8MdBUMRJI6xHwlFVQXQ
-	h20Jr0BD9xwM2A3tqWAMqUXpRv8cJGjUcwHygJv6HxWPs+K0L9zcq5V36rUiBOKoXXypbThD0Cs
-	e7Wn0PJLePzt7HTfsuNQkPXZ+zICWaxJf
-X-Google-Smtp-Source: AGHT+IEWaYU5TsSpZLF5Bkdw/GK/BBXBLxCLFfdL4qcFIBnZ8hPnO9Rx+YBlm8RCzsDmaVwoTkdtAdtlP5m6paJiMC4=
-X-Received: by 2002:a17:90a:cce:b0:2d1:b36c:6bc1 with SMTP id
- 98e67ed59e1d1-2d3924cba8emr1091937a91.2.1723485436373; Mon, 12 Aug 2024
- 10:57:16 -0700 (PDT)
+        bh=e5zIyxIrDjlnfGb53pONco0/BZToTmfTinFeg12plds=;
+        b=pI0OSpQ7KvsQDQ+QlUyw/2fDeXesk4/QOf0BQDR/GbAwQalpYMrbuIYLvhTORfLdYe
+         W1GpcUTd2ZiY0SFUX0WWciPR4ODgV9v/z4U/Ld8HpEQ59ur377RbZj8ljI6iAU4ZdRV8
+         BmAC/byu1YZhZeL/dPLljgrJI1NOH2rMQ74RZpfvExkIZUkbs1BRDjz48/ZfxN01mJ91
+         uvJj9Cc4/OthvzXtsOIeSSp/PzjC0v+T5b30W8greAVf95RPIWdqF0IeSq2fgrlF9a1M
+         xCwM7ySCDWxSt+nQWgSNz2tSNZbT+XuvVIFufkwpUirxz6qu/v+hkdZHo784SgVmu66N
+         LM7g==
+X-Forwarded-Encrypted: i=1; AJvYcCUNq1s+8CBx7HZZU0UET19bS2/VB0ixKcBPmRaXXbAXE4OzIyhJ9+WevfRo/ll1e06bVzaNPLUa4lYVhuU6ulz7PUM6V3/RI1lKrkdtKIOwWg==
+X-Gm-Message-State: AOJu0YxuAfcwanDD5LlRTfa3PYNZlCwoWEF8RSfgx0gFQecGJ5g2hDMZ
+	WEGrx/V9leQ1WWyMOHYhHoWQXcc0gYGdvRBkokXRzRuxaaA4ZfWALj3GJjnjRBdYDF4ZrM3mj8M
+	/U2Q/WpMCKOLiMNnFFratj98e+3rUcmjFKT4V
+X-Google-Smtp-Source: AGHT+IGpNuhX2zqj3reQmzL50R1acs8rnYKxRU8rM5gMQeTjOMAcLtkuLA3l5tjMqboxzrcHuixoT/nrDbFq+TiC5vc=
+X-Received: by 2002:a05:6e02:198e:b0:398:ce8f:5d39 with SMTP id
+ e9e14a558f8ab-39c49e5823dmr132585ab.14.1723486214478; Mon, 12 Aug 2024
+ 11:10:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com> <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <a22d6d79-fa7e-62b2-0ac1-575068f176a5@huawei.com> <CAEf4BzbN-+p0cDnHQPDwhVaqs-r-_Ft-LdUwY2KHG1xfrmyjBQ@mail.gmail.com>
- <CAEf4BzZyCd7ECbWQyEpcB4va_U33v8BdfWVY4cMH4zN-Z1sESw@mail.gmail.com> <5a110f15-024f-d693-e04f-7892fc8d7757@huawei.com>
-In-Reply-To: <5a110f15-024f-d693-e04f-7892fc8d7757@huawei.com>
-From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Mon, 12 Aug 2024 10:57:03 -0700
-Message-ID: <CAEf4BzaGPB+AybJNhzD+4rT6ioLuhjp4sW3uG0ST4sCtqSjx1A@mail.gmail.com>
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for performance
-To: "Liao, Chang" <liaochang1@huawei.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org, 
-	namhyung@kernel.org, mark.rutland@arm.com, alexander.shishkin@linux.intel.com, 
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com, 
-	kan.liang@linux.intel.com, 
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko <andrii@kernel.org>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, paulmck@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
-	bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20240718010023.1495687-1-irogers@google.com> <738b5c89-acb2-46a5-92a1-c36bd90abc30@intel.com>
+ <CAP-5=fU=5LxF0SKuAqVP+xtmdERCCgxh_mdpw5okMi1fmvpE+Q@mail.gmail.com> <ZroT3Xut5omFg7ud@x1>
+In-Reply-To: <ZroT3Xut5omFg7ud@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 12 Aug 2024 11:10:02 -0700
+Message-ID: <CAP-5=fWyEX6+HX5tJNzhzNp81GLjZCDdHZu1vAMN15SVz1Qfiw@mail.gmail.com>
+Subject: Re: [PATCH v6 00/27] Constify tool pointers
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Kan Liang <kan.liang@linux.intel.com>, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, James Clark <james.clark@arm.com>, 
+	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Suzuki K Poulose <suzuki.poulose@arm.com>, Yicong Yang <yangyicong@hisilicon.com>, 
+	Jonathan Cameron <jonathan.cameron@huawei.com>, Nick Terrell <terrelln@fb.com>, 
+	Nick Desaulniers <ndesaulniers@google.com>, Oliver Upton <oliver.upton@linux.dev>, 
+	Anshuman Khandual <anshuman.khandual@arm.com>, Song Liu <song@kernel.org>, 
+	Ilkka Koskinen <ilkka@os.amperecomputing.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Huacai Chen <chenhuacai@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 12, 2024 at 5:05=E2=80=AFAM Liao, Chang <liaochang1@huawei.com>=
- wrote:
+On Mon, Aug 12, 2024 at 6:53=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
 >
->
->
-> =E5=9C=A8 2024/8/10 2:40, Andrii Nakryiko =E5=86=99=E9=81=93:
-> > On Fri, Aug 9, 2024 at 11:34=E2=80=AFAM Andrii Nakryiko
-> > <andrii.nakryiko@gmail.com> wrote:
-> >>
-> >> On Fri, Aug 9, 2024 at 12:16=E2=80=AFAM Liao, Chang <liaochang1@huawei=
-.com> wrote:
-> >>>
-> >>>
-> >>>
-> >>> =E5=9C=A8 2024/8/9 2:26, Andrii Nakryiko =E5=86=99=E9=81=93:
-> >>>> On Thu, Aug 8, 2024 at 1:45=E2=80=AFAM Liao, Chang <liaochang1@huawe=
-i.com> wrote:
-> >>>>>
-> >>>>> Hi Andrii and Oleg.
-> >>>>>
-> >>>>> This patch sent by me two weeks ago also aim to optimize the perfor=
-mance of uprobe
-> >>>>> on arm64. I notice recent discussions on the performance and scalab=
-ility of uprobes
-> >>>>> within the mailing list. Considering this interest, I've added you =
-and other relevant
-> >>>>> maintainers to the CC list for broader visibility and potential col=
-laboration.
-> >>>>>
-> >>>>
-> >>>> Hi Liao,
-> >>>>
-> >>>> As you can see there is an active work to improve uprobes, that
-> >>>> changes lifetime management of uprobes, removes a bunch of locks tak=
-en
-> >>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
-> >>>> hold off a bit with your changes until all that lands. And then
-> >>>> re-benchmark, as costs might shift.
-> >>>
-> >>> Andrii, I'm trying to integrate your lockless changes into the upstre=
-am
-> >>> next-20240806 kernel tree. And I ran into some conflicts. please let =
-me
-> >>> know which kernel you're currently working on.
-> >>>
-> >>
-> >> My patches are  based on tip/perf/core. But I also just pushed all the
-> >> changes I have accumulated (including patches I haven't sent for
-> >> review just yet), plus your patches for sighand lock removed applied
-> >> on top into [0]. So you can take a look and use that as a base for
-> >> now. Keep in mind, a bunch of those patches might still change, but
-> >> this should give you the best currently achievable performance with
-> >> uprobes/uretprobes. E.g., I'm getting something like below on x86-64
-> >> (note somewhat linear scalability with number of CPU cores, with
-> >> per-CPU performance *slowly* declining):
-> >>
-> >> uprobe-nop            ( 1 cpus):    3.565 =C2=B1 0.004M/s  (  3.565M/s=
-/cpu)
-> >> uprobe-nop            ( 2 cpus):    6.742 =C2=B1 0.009M/s  (  3.371M/s=
-/cpu)
-> >> uprobe-nop            ( 3 cpus):   10.029 =C2=B1 0.056M/s  (  3.343M/s=
-/cpu)
-> >> uprobe-nop            ( 4 cpus):   13.118 =C2=B1 0.014M/s  (  3.279M/s=
-/cpu)
-> >> uprobe-nop            ( 5 cpus):   16.360 =C2=B1 0.011M/s  (  3.272M/s=
-/cpu)
-> >> uprobe-nop            ( 6 cpus):   19.650 =C2=B1 0.045M/s  (  3.275M/s=
-/cpu)
-> >> uprobe-nop            ( 7 cpus):   22.926 =C2=B1 0.010M/s  (  3.275M/s=
-/cpu)
-> >> uprobe-nop            ( 8 cpus):   24.707 =C2=B1 0.025M/s  (  3.088M/s=
-/cpu)
-> >> uprobe-nop            (10 cpus):   30.842 =C2=B1 0.018M/s  (  3.084M/s=
-/cpu)
-> >> uprobe-nop            (12 cpus):   33.623 =C2=B1 0.037M/s  (  2.802M/s=
-/cpu)
-> >> uprobe-nop            (14 cpus):   39.199 =C2=B1 0.009M/s  (  2.800M/s=
-/cpu)
-> >> uprobe-nop            (16 cpus):   41.698 =C2=B1 0.018M/s  (  2.606M/s=
-/cpu)
-> >> uprobe-nop            (24 cpus):   65.078 =C2=B1 0.018M/s  (  2.712M/s=
-/cpu)
-> >> uprobe-nop            (32 cpus):   84.580 =C2=B1 0.017M/s  (  2.643M/s=
-/cpu)
-> >> uprobe-nop            (40 cpus):  101.992 =C2=B1 0.268M/s  (  2.550M/s=
-/cpu)
-> >> uprobe-nop            (48 cpus):  101.032 =C2=B1 1.428M/s  (  2.105M/s=
-/cpu)
-> >> uprobe-nop            (56 cpus):  110.986 =C2=B1 0.736M/s  (  1.982M/s=
-/cpu)
-> >> uprobe-nop            (64 cpus):  124.145 =C2=B1 0.110M/s  (  1.940M/s=
-/cpu)
-> >> uprobe-nop            (72 cpus):  134.940 =C2=B1 0.200M/s  (  1.874M/s=
-/cpu)
-> >> uprobe-nop            (80 cpus):  143.918 =C2=B1 0.235M/s  (  1.799M/s=
-/cpu)
-> >>
-> >> uretprobe-nop         ( 1 cpus):    1.987 =C2=B1 0.001M/s  (  1.987M/s=
-/cpu)
-> >> uretprobe-nop         ( 2 cpus):    3.766 =C2=B1 0.003M/s  (  1.883M/s=
-/cpu)
-> >> uretprobe-nop         ( 3 cpus):    5.638 =C2=B1 0.002M/s  (  1.879M/s=
-/cpu)
-> >> uretprobe-nop         ( 4 cpus):    7.275 =C2=B1 0.003M/s  (  1.819M/s=
-/cpu)
-> >> uretprobe-nop         ( 5 cpus):    9.124 =C2=B1 0.004M/s  (  1.825M/s=
-/cpu)
-> >> uretprobe-nop         ( 6 cpus):   10.818 =C2=B1 0.007M/s  (  1.803M/s=
-/cpu)
-> >> uretprobe-nop         ( 7 cpus):   12.721 =C2=B1 0.014M/s  (  1.817M/s=
-/cpu)
-> >> uretprobe-nop         ( 8 cpus):   13.639 =C2=B1 0.007M/s  (  1.705M/s=
-/cpu)
-> >> uretprobe-nop         (10 cpus):   17.023 =C2=B1 0.009M/s  (  1.702M/s=
-/cpu)
-> >> uretprobe-nop         (12 cpus):   18.576 =C2=B1 0.014M/s  (  1.548M/s=
-/cpu)
-> >> uretprobe-nop         (14 cpus):   21.660 =C2=B1 0.004M/s  (  1.547M/s=
-/cpu)
-> >> uretprobe-nop         (16 cpus):   22.922 =C2=B1 0.013M/s  (  1.433M/s=
-/cpu)
-> >> uretprobe-nop         (24 cpus):   34.756 =C2=B1 0.069M/s  (  1.448M/s=
-/cpu)
-> >> uretprobe-nop         (32 cpus):   44.869 =C2=B1 0.153M/s  (  1.402M/s=
-/cpu)
-> >> uretprobe-nop         (40 cpus):   53.397 =C2=B1 0.220M/s  (  1.335M/s=
-/cpu)
-> >> uretprobe-nop         (48 cpus):   48.903 =C2=B1 2.277M/s  (  1.019M/s=
-/cpu)
-> >> uretprobe-nop         (56 cpus):   42.144 =C2=B1 1.206M/s  (  0.753M/s=
-/cpu)
-> >> uretprobe-nop         (64 cpus):   42.656 =C2=B1 1.104M/s  (  0.666M/s=
-/cpu)
-> >> uretprobe-nop         (72 cpus):   46.299 =C2=B1 1.443M/s  (  0.643M/s=
-/cpu)
-> >> uretprobe-nop         (80 cpus):   46.469 =C2=B1 0.808M/s  (  0.581M/s=
-/cpu)
-> >>
-> >> uprobe-ret            ( 1 cpus):    1.219 =C2=B1 0.008M/s  (  1.219M/s=
-/cpu)
-> >> uprobe-ret            ( 2 cpus):    1.862 =C2=B1 0.008M/s  (  0.931M/s=
-/cpu)
-> >> uprobe-ret            ( 3 cpus):    2.874 =C2=B1 0.005M/s  (  0.958M/s=
-/cpu)
-> >> uprobe-ret            ( 4 cpus):    3.512 =C2=B1 0.002M/s  (  0.878M/s=
-/cpu)
-> >> uprobe-ret            ( 5 cpus):    3.549 =C2=B1 0.001M/s  (  0.710M/s=
-/cpu)
-> >> uprobe-ret            ( 6 cpus):    3.425 =C2=B1 0.003M/s  (  0.571M/s=
-/cpu)
-> >> uprobe-ret            ( 7 cpus):    3.551 =C2=B1 0.009M/s  (  0.507M/s=
-/cpu)
-> >> uprobe-ret            ( 8 cpus):    3.050 =C2=B1 0.002M/s  (  0.381M/s=
-/cpu)
-> >> uprobe-ret            (10 cpus):    2.706 =C2=B1 0.002M/s  (  0.271M/s=
-/cpu)
-> >> uprobe-ret            (12 cpus):    2.588 =C2=B1 0.003M/s  (  0.216M/s=
-/cpu)
-> >> uprobe-ret            (14 cpus):    2.589 =C2=B1 0.003M/s  (  0.185M/s=
-/cpu)
-> >> uprobe-ret            (16 cpus):    2.575 =C2=B1 0.001M/s  (  0.161M/s=
-/cpu)
-> >> uprobe-ret            (24 cpus):    1.808 =C2=B1 0.011M/s  (  0.075M/s=
-/cpu)
-> >> uprobe-ret            (32 cpus):    1.853 =C2=B1 0.001M/s  (  0.058M/s=
-/cpu)
-> >> uprobe-ret            (40 cpus):    1.952 =C2=B1 0.002M/s  (  0.049M/s=
-/cpu)
-> >> uprobe-ret            (48 cpus):    2.075 =C2=B1 0.007M/s  (  0.043M/s=
-/cpu)
-> >> uprobe-ret            (56 cpus):    2.441 =C2=B1 0.004M/s  (  0.044M/s=
-/cpu)
-> >> uprobe-ret            (64 cpus):    1.880 =C2=B1 0.012M/s  (  0.029M/s=
-/cpu)
-> >> uprobe-ret            (72 cpus):    0.962 =C2=B1 0.002M/s  (  0.013M/s=
-/cpu)
-> >> uprobe-ret            (80 cpus):    1.040 =C2=B1 0.011M/s  (  0.013M/s=
-/cpu)
-> >>
-> >> uretprobe-ret         ( 1 cpus):    0.981 =C2=B1 0.000M/s  (  0.981M/s=
-/cpu)
-> >> uretprobe-ret         ( 2 cpus):    1.421 =C2=B1 0.001M/s  (  0.711M/s=
-/cpu)
-> >> uretprobe-ret         ( 3 cpus):    2.050 =C2=B1 0.003M/s  (  0.683M/s=
-/cpu)
-> >> uretprobe-ret         ( 4 cpus):    2.596 =C2=B1 0.002M/s  (  0.649M/s=
-/cpu)
-> >> uretprobe-ret         ( 5 cpus):    3.105 =C2=B1 0.003M/s  (  0.621M/s=
-/cpu)
-> >> uretprobe-ret         ( 6 cpus):    3.886 =C2=B1 0.002M/s  (  0.648M/s=
-/cpu)
-> >> uretprobe-ret         ( 7 cpus):    3.016 =C2=B1 0.001M/s  (  0.431M/s=
-/cpu)
-> >> uretprobe-ret         ( 8 cpus):    2.903 =C2=B1 0.000M/s  (  0.363M/s=
-/cpu)
-> >> uretprobe-ret         (10 cpus):    2.755 =C2=B1 0.001M/s  (  0.276M/s=
-/cpu)
-> >> uretprobe-ret         (12 cpus):    2.400 =C2=B1 0.001M/s  (  0.200M/s=
-/cpu)
-> >> uretprobe-ret         (14 cpus):    3.972 =C2=B1 0.001M/s  (  0.284M/s=
-/cpu)
-> >> uretprobe-ret         (16 cpus):    3.940 =C2=B1 0.003M/s  (  0.246M/s=
-/cpu)
-> >> uretprobe-ret         (24 cpus):    3.002 =C2=B1 0.003M/s  (  0.125M/s=
-/cpu)
-> >> uretprobe-ret         (32 cpus):    3.018 =C2=B1 0.003M/s  (  0.094M/s=
-/cpu)
-> >> uretprobe-ret         (40 cpus):    1.846 =C2=B1 0.000M/s  (  0.046M/s=
-/cpu)
-> >> uretprobe-ret         (48 cpus):    2.487 =C2=B1 0.004M/s  (  0.052M/s=
-/cpu)
-> >> uretprobe-ret         (56 cpus):    2.470 =C2=B1 0.006M/s  (  0.044M/s=
-/cpu)
-> >> uretprobe-ret         (64 cpus):    2.027 =C2=B1 0.014M/s  (  0.032M/s=
-/cpu)
-> >> uretprobe-ret         (72 cpus):    1.108 =C2=B1 0.011M/s  (  0.015M/s=
-/cpu)
-> >> uretprobe-ret         (80 cpus):    0.982 =C2=B1 0.005M/s  (  0.012M/s=
-/cpu)
-> >>
-> >>
-> >> -ret variants (single-stepping case for x86-64) still suck, but they
-> >> suck 2x less now with your patches :) Clearly more work ahead for
-> >> those, though.
-> >>
-> >
-> > Quick profiling shows that it's mostly xol_take_insn_slot() and
-> > xol_free_insn_slot(), now. So it seems like your planned work might
-> > help here.
->
-> Andrii, I'm glad we've reached a similar result, The profiling result on
-> my machine reveals that about 80% cycles spent on the atomic operations
-> on area->bitmap and area->slot_count. I guess the atomic access leads to
-> the intensive cacheline bouncing bewteen CPUs.
->
-> In the passed weekend, I have been working on another patch that optimize=
+> On Fri, Jul 19, 2024 at 09:26:57AM -0700, Ian Rogers wrote:
+> > On Fri, Jul 19, 2024 at 1:51=E2=80=AFAM Adrian Hunter <adrian.hunter@in=
+tel.com> wrote:
+> > >
+> > > On 18/07/24 03:59, Ian Rogers wrote:
+> > > > struct perf_tool provides a set of function pointers that are calle=
+d
+> > > > through when processing perf data. To make filling the pointers les=
 s
-> the xol_take_insn_slot() and xol_free_inns_slot() for better scalability.
-> This involves delaying the freeing of xol insn slots to reduce the times
-> of atomic operations and cacheline bouncing. Additionally, per-task refco=
-unts
-> and an RCU-style management of linked-list of allocated insn slots. In sh=
-ort
-> summary, this patch try to replace coarse-grained atomic variables with
-> finer-grained ones, aiming to elimiate the expensive atomic instructions
-> in the hot path. If you or others have bandwidth and interest, I'd welcom=
-e
-> a brainstorming session on this topic.
-
-I'm happy to help, but I still feel like it's best to concentrate on
-landing all the other pending things for uprobe, and then switch to
-optimizing the xol case.
-
-We have:
-  - RCU protection and avoiding refcounting for uprobes (I'll be
-sending latest revision soon);
-  - SRCU+timeout for uretprobe and single-step (pending the above
-landing first);
-  - removing shared nhit counter increment in trace_uprobe (I've sent
-patches last week, see [0]);
-  - lockless VMA -> inode -> uprobe look up (also pending for #1 to
-land, and some more benchmarking for mm_lock_seq changes from Suren,
-see [1]);
-  - and, of course, your work to remove sighand lock.
-
-So as you can see, there is plenty to discuss and land already, I just
-don't want to spread the efforts too thin. But if you can help improve
-the benchmark for ARM64, that would be a great parallel effort setting
-us up for further work nicely. Thanks!
-
-  [0] https://lore.kernel.org/bpf/20240809192357.4061484-1-andrii@kernel.or=
-g/
-  [1] https://lore.kernel.org/linux-mm/CAEf4BzaocU-CQsFZ=3Ds5gDM6XQ0Foss_Hr=
-oFsPUesBn=3DqgJCprg@mail.gmail.com/
-
+> > > > cumbersome, if they are NULL perf_tools__fill_defaults will add
+> > > > default do nothing implementations.
+> > > >
+> > > > This change refactors struct perf_tool to have an init function tha=
+t
+> > > > provides the default implementation. The special use of NULL and
+> > > > perf_tools__fill_defaults are removed. As a consequence the tool
+> > > > pointers can then all be made const, which better reflects the
+> > > > behavior a particular perf command would expect of the tool and to
+> > > > some extent can reduce the cognitive load on someone working on a
+> > > > command.
+> > > >
+> > > > v6: Rebase adding Adrian's reviewed-by/tested-by and Leo's tested-b=
+y.
+> > >
+> > > The tags were really meant only for patch 1, the email that was repli=
+ed to.
+> > >
+> > > But now for patches 2 and 3:
+> > >
+> > > Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
 >
-> Thanks.
->
-> >
-> >>
-> >>   [0] https://github.com/anakryiko/linux/commits/uprobes-lockless-cumu=
-lative/
-> >>
-> >>
-> >>> Thanks.
-> >>>
-> >>>>
-> >>>> But also see some remarks below.
-> >>>>
-> >>>>> Thanks.
-> >>>>>
+> Applied 1-3, 4 is not applying, I'll look at it later.
 
-[...]
+I have a rebase and can resend. I haven't addressed Adrian's feedback
+as I prefer callers of the tool function pointers not to have to do
+NULL tests, I'm trying to minimize spaghetti. Not sure if you're
+applying the whole series here or just the beginning.
+
+Thanks,
+Ian
