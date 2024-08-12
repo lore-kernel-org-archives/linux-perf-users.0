@@ -1,99 +1,88 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC83194143
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 20:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A114E613D;
+	Mon, 12 Aug 2024 20:46:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723495453; cv=none; b=ajwsn/3Tui+KrZDGLRzIBqs0223eYNbRX8e4X22vkUlmz6dIvZuY4f3q/wMUwBWEAWoGbn8oF7i0RlG2S79ulgx7ReaioZwqIq2zsI5KIekyKAABXzw7hBjcpEFCorpN1yOksFGhDhc4W/oPTcVq16afPydyeSWLDBvCrfG985A=
+	t=1723495583; cv=none; b=cJSKAby+YaOd/FJxv9wQ16B6/QNDeW6y29TQQDLwI/uu7Hs3FLid8zk5mIbRcCGZYFE1OyYxvwy7r9urd8AYyGbQPGqxMWtJUPug24DvIE4tLZ8gp3ZpFBqsu6MNqWxqrvpJenOuZ/Npd447P/1w3bVW9Vy66rUGlJoOrV6z06I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723495453; c=relaxed/simple;
-	bh=OKt4cWE0ZR9fy32NKqDd7AWgvE7+np3QM+thgHcpW2c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dxFNgubkDxyPirGi7kv9xWqRt01ahz80uHjnHANXvWF6P17K7wSg18dYyjudBHRyZIBORyVobwNkRuUaREXjwUUEKZx6stsm0IGF0+puUGkCrESjzK5bmyNNMaOwYeMmphDCSfl4WtZn/DyUAhUWXfDZCY9wlhPDWoHe8usSlzo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=22fXSgrr; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723495583; c=relaxed/simple;
+	bh=BFoX/qrFoQp39Oml7ZScH5DCyVCYHo4zgqWnP4mlhkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kx+hZDB77Rln1liBslA5DizIUo7h53DKixnfO6YbWAVEsOc+e9LWP+QWNLii2wkuMRm4CZMACGF2rnB2kF2dPwas9xLwXWFypWbylF2PhynMB7Fz31vBb6HjVpZIhmMSwI3/L7puRVgLEsmZvwQaL9RFbkXr5x06riBbCAa0E9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L1Kbi/Pf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="22fXSgrr"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fed726aefcso6935ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 13:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723495452; x=1724100252; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OKt4cWE0ZR9fy32NKqDd7AWgvE7+np3QM+thgHcpW2c=;
-        b=22fXSgrrupdFxpH+x/JHVhqg7qke2JazogrGOB9wfg9fdF/YU2pY0F9JC4I/tcrffP
-         m8cBZr9gYXS7JeFlvzVeuGPzGlySgpVw28IsZFWlXrNvx8O1cQdBObJ/2pHbhRTX5+Ze
-         Htd3O04eX9GgmgWlrpJE0CkpsNTRmheupF9R3Im5n5Wf1g3D3J7JfGX0YQiT9pH7zeG+
-         HqEUhi5i4FMQqgbN35LfcBSTjJszruEIE+hsJd7v2zCWiCHZca8R2tjiX5Dg5vOvMgZ8
-         IKcXkLrbJZflO8iOO7WqPDOYZUjtphVzEMVKfhcKjwtZalAQrK4KKKw7i78Zd7TCulTi
-         +RSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723495452; x=1724100252;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OKt4cWE0ZR9fy32NKqDd7AWgvE7+np3QM+thgHcpW2c=;
-        b=IxXlLX5oBqvq8DAjcpChaERpqPmsEfnLvx4OagLS9ADlOcVHQGe6prHlbCST0ZgbnS
-         Zy7DUnGm8whrEZZy7Pu5P/6hLEddck0RpOcG4lQFGlY98/M9BKI8GW1c7HiKdQN6HwIj
-         BTv46dPMT/NMfYh3AZc+WjQa/QHHvYxDJcgphjhNGouNGmyT4GoHf3z22trep+GtTUM0
-         CPC9u+vxv56QVBiVZfAdfoT5xwkgG9AWJs0JiG87vgWkWKlZ86uq85q6kEbyMxf/MX/z
-         81c1YdIgsMFnHJltMVNR0dc0Vjeqq+kuJMjd9nZpKD6b5YolKgCnTdRa/LLk1FM9tqob
-         C58Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWpgIX8fR3Q+HZUOZpZGX2YbsXGwdEsqMdLgEIF4xx3eZLzMazhxP2tAJ4Y1M72KtBuAIcXn2t+/Yv3OtsY8W6YWuDFskQjksVomeDIbfPlQQ==
-X-Gm-Message-State: AOJu0Yy3Gu6AgSWsBP8IpvDBnK0UniMkJxVPWXlZdDCSvr8TBP6e/p+H
-	1I/wrih26v89DJzU42MRk7bf4d8uTt9Rm94tsyEwBsCuVofAwbcuNLDGof5N43Rdp2HO3i4uQY5
-	0qjf5qNoznB3IGK1QvtEstej4wddEMTaAONF0
-X-Google-Smtp-Source: AGHT+IGE5Tl+Gga3w/4KldporNOqhqhFglC+AC11EJZLS4naKh298Ze5RefiDxOY9/Atd5BoSplPlMUPy3fALcvgfUU=
-X-Received: by 2002:a17:903:11cc:b0:1fd:67c2:f982 with SMTP id
- d9443c01a7336-201ccb368d3mr410965ad.2.1723495451258; Mon, 12 Aug 2024
- 13:44:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L1Kbi/Pf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E9BC32782;
+	Mon, 12 Aug 2024 20:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723495583;
+	bh=BFoX/qrFoQp39Oml7ZScH5DCyVCYHo4zgqWnP4mlhkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L1Kbi/PftL4upq+gPUnhjBCgBe9HEO1iloSYXCfyNjCWV+exmjhuA2N2yBdrrBSoV
+	 WE/1UfiLSKALv8KDpkdMdmmLYaS2xXu1VBUmy0uZEm9el1uvjzWKvlkGQ9M6xY/ZEf
+	 s/UKFVEqQncUq2+QEODGOZTBAHQx3t1UkhaTBsCbMzlEWBNX+zJVW+YzhAESWC6+z/
+	 hFaFS7YKgDD32PbaOWIYcJD/9+jUYA8ONxEAVW0K7iKJTNR5/2o9z/d6G7Pag8b5td
+	 XKNSq8OJ60HJznMhAUDAyzxigeh32EdnFve3Osn0qvKJOJcpAVygc1i7Pb+8sLWXHG
+	 tWJmONrA/u5DA==
+Date: Mon, 12 Aug 2024 17:46:19 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 0/3] perf annotate-data: Implement folding in TUI browser
+Message-ID: <Zrp0m53X7STRB8gU@x1>
+References: <20240812194447.2049187-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240801031249.176913-1-irogers@google.com> <Zq0kL-lyCqkM3P4G@google.com>
-In-Reply-To: <Zq0kL-lyCqkM3P4G@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 12 Aug 2024 13:43:59 -0700
-Message-ID: <CAP-5=fUy6sx5ZMs6L1we2tpaq1iyUz4GW_ps7c7xE1zqjVzvgg@mail.gmail.com>
-Subject: Re: [PATCH v1] perf inject: Inject build ids for entire call chain
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Casey Chen <cachen@purestorage.com>, 
-	Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240812194447.2049187-1-namhyung@kernel.org>
 
-On Fri, Aug 2, 2024 at 11:23=E2=80=AFAM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> Hi Ian,
->
-> On Wed, Jul 31, 2024 at 08:12:49PM -0700, Ian Rogers wrote:
-> > The DSO build id is injected when the dso is first encountered but the
-> > checking for first encountered only looks at the sample->ip not the
-> > entire callchain. Use the callchain logic to ensure all build ids are
-> > inserted.
-> >
-> > Add a for_each callback style API to callchain with
-> > sample__for_each_callchain_node. Possibly in the future such an API
-> > can avoid the overhead of constructing the call chain list.
-> >
-> > Fixes: 454c407ec17a ("perf: add perf-inject builtin")
-> > Signed-off-by: Ian Rogers <irogers@google.com>
->
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Mon, Aug 12, 2024 at 12:44:44PM -0700, Namhyung Kim wrote:
+> Hello,
+> 
+> I've implemented the folding logic to expand/collapse the current entry
+> in the TUI data type browser.  Users can use 'e' or 'E' to toggle the
+> entry (with or without children, respectively).
+> 
+> Ax example output looks like below.
+> 
+>   Annotate type: 'struct socket' (1 samples)
+>         Percent     Offset       Size  Field
+>   -      100.00          0        128  struct socket {                                  ◆
+>            0.00          0          4      socket_state   state;                        ▒
+>            0.00          4          2      short int      type;                         ▒
+>            0.00          8          8      long unsigned int      flags;                ▒
+>            0.00         16          8      struct file*   file;                         ▒
+>          100.00         24          8      struct sock*   sk;                           ▒
+>            0.00         32          8      struct proto_ops*      ops;                  ▒
+>   -        0.00         64         64      struct socket_wq       wq {                  ▒
+>   -        0.00         64         24          wait_queue_head_t  wait {                ▒
+>   +        0.00         64          4              spinlock_t     lock;                 ▒
+>   -        0.00         72         16              struct list_head       head {        ▒
+>            0.00         72          8                  struct list_head*  next;         ▒
+>            0.00         80          8                  struct list_head*  prev;         ▒
+>                                                    };                                   ▒
+>                                                };                                       ▒
+>            0.00         88          8          struct fasync_struct*      fasync_list;  ▒
+>            0.00         96          8          long unsigned int  flags;                ▒
+>   +        0.00        104         16          struct callback_head       rcu;          ▒
+>                                            };                                           ▒
+>                                        };                                               ▒
+> 
+> It hides the detail of spinlock_t and struct callback_head.
 
-Ping.
+Thanks, useful feature! All tested and applied.
 
-Thanks,
-Ian
+- Arnaldo
