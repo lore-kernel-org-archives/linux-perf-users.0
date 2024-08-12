@@ -1,57 +1,57 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 492D919B3C8
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 20:48:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5131C19B59F
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 20:48:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723495686; cv=none; b=E1mu9UVF9kQdpwlpice6ElLF0KFVbbkvNVhaCYXbg6uW2zVmxf7TFyHF0TCeupLmyi2KK+4oYCv3Yj6Gr51Yo6xDG3dFkl4JcS6qWPKMxTzcdGlqi44PThwfTQHaSo6C2SA6ooo5HSqMsAW+YHlmDDlFlt9ip+f9QI9dioJw8V8=
+	t=1723495688; cv=none; b=WfYa2VbrVMvvB2pqK1GsmMG8q0/30L0HvUddIfDQOHldJpv+assl7OSwtmFy9H4ZHcWDK6K5IY7tZImzRqDaI+T8zavmxxOctPyAkRHmPPCDoA6KPX8xk0mX9jcRF2vsUxUR09aTAm+AUaoMrIoI1Nz3qpFbEu7DvAI7L05btk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723495686; c=relaxed/simple;
-	bh=b54MC+ntQ/UsxIu0AteN/AwjjxsXrg4DU7gP4POno/c=;
+	s=arc-20240116; t=1723495688; c=relaxed/simple;
+	bh=eQpDTuk3ZSz6r9lF7a8nKcTsMzqFFfSknou6gI+gPWA=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=eIOEtKYYPuAjNnrUoW7SoYkY3mFIBWCFO0cS3mi+tPOZr6SAbuQZ8Akh0BC1eIW/FLOrJuowqZDXGZMqhUOfC/ipjeSJudPBk/f4rNIF0nrCcORuOiCYfcUNkq14mWzSzezEfoI7aMxvu1n4dczsOIiIKaGB2zlz5HLqFfAssBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aaTbbxWD; arc=none smtp.client-ip=209.85.219.202
+	 To:Content-Type; b=uP5Ox68KlD6D2BtjhktFComN327HWscUrcd96sNFNjEiLmS7IKgWRnWn5b5RHQEjKJ3IqSF9rgM2jiYQ8e7K+a5h9+d0P5Vz9FsW3bYn7OTkScMwbCc9j7rRUIo9AA8pn8bpHM2SrcxyiLYRcYUK2s9o06sspRVMZHEatDPYcso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=RMPbkid5; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aaTbbxWD"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0353b731b8so8092696276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 13:48:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RMPbkid5"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0b6584bbdcso7638879276.1
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 13:48:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723495684; x=1724100484; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723495686; x=1724100486; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=h4IuJMX0YASP6mDRB5sblKvDCNi7GxHX4wO+9+ISAHw=;
-        b=aaTbbxWDNUPwfmRc3+K3S0GPFXBjf/FO2F9OnRlalN5CVfpugAsQbTDEg+0A09jDBv
-         8ZBkPH9ZeWEPZPSv+Fy0AVz66tCrQeUXglLJwvDos27Y7e31zSulMFvL0azz35PCCbxL
-         VdUKiToujYqLelDFJzzxAeGwT4wNY5AR7+0yoIrRtcanM0w9dhMxi2T/b97ZUuTAmA5q
-         8NRZ8QQuCq/zea21Xnt+hE/lu5GLs3VEKY7Pw2+VEmwlCvRPOaLYEwVZNB1OUt/J7o7w
-         7sFoNnQcMZO/EWn8B6qM2LJE+/aowrZOGbQ6tja12WfgmKYIv+Gchw8zAgJtVmeHTmbT
-         O/PQ==
+        bh=Kpr+cu9QRMpy3TlpvKDVPMxM+YZp/esLhrg70XBtQYY=;
+        b=RMPbkid5ljpkEwqSaacXUStG+AiWBo+OoHmEA0gFHtgYmtl+2Jjh6oyYoAIHKamHU9
+         Z8SJ3dkrEp0vWHCCUD/ruEhzEb6FJe3SQVUBtcaM/hYMJSOEcpuSrjJ9SeidFV6rk/4e
+         FcVFwFzEhKtpLLxDyRrc3flpCydTVUhnAm3o0f4FLcTJBJ/7psxdcoR0o9eeRQMbbU9S
+         gsfsrxZ8Bj2pJG/BpjFNqUx+xNFW3+Sem+EyDa4XQ+I80Fw5W1nSy6GIBdVdeiAD3JRv
+         cSO7dveMXCO7ltQkde4Tia1vcNW8RAY3Ae9sJcefWTR+Svp0yN2Yl5xA1dLo94kqKoX/
+         JBww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723495684; x=1724100484;
+        d=1e100.net; s=20230601; t=1723495686; x=1724100486;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=h4IuJMX0YASP6mDRB5sblKvDCNi7GxHX4wO+9+ISAHw=;
-        b=TsIinydxCaA2HwxHm6Ni7VJr8+en9bXUwp/KUAGc8fHNhVQBQ9rL3RrPA0UcaXEXWy
-         n/WQZOe7qDfsPOhQdXF03Vl5PVgJojMGFLOq8wkHT+hNwLp3iGLcMH06wFRFdBnk/7DZ
-         WerClC15oVs3ih//+QirvCykmWmY3w2S6U0+OKR6eQEgGuWqmjYTmMBbDqRu6hi72tQX
-         CvOeqYJ2Uuj0v/UYHGKBNlEEEGEMcWSnjncJOQrzdiP9I6TUepZx+NJnElNC+x+9/Usx
-         stc7W708Mljf1c6PCwSz2XuohOcTAJRFAX15Brgmzs1ENv+25kV0IbXxSk5uGWOhv63R
-         vgLw==
-X-Forwarded-Encrypted: i=1; AJvYcCVs3McygqGcDeM5hIHeRuwVUApBnyyetU0D1r2IDPO4AYW7aqrVu6V1D1rjeLQDf+GGFVWGT8Oi6DOiB1CvVT6JjEzY6tclsf/JjmmC04JWMQ==
-X-Gm-Message-State: AOJu0YxbaxQTCyHkcw4ytyf93588VrJSz6gqGC11uo3wTZs1kJHTijMq
-	DKSWHH1pDsauGAslVqiYCpbjguwkbIMLaZmXC0PZ0W8lm3+uiQ+hfhvAWY4RfY+6BzKzSEe6RZY
-	bk2t8jw==
-X-Google-Smtp-Source: AGHT+IENcikM/2xpbAI0+iXGHI86bo1OAG2rCZ1wxfc4b5c0Ca8mqN3x5IE3uLmAUHqZLRaOz95pxfCbyXVD
+        bh=Kpr+cu9QRMpy3TlpvKDVPMxM+YZp/esLhrg70XBtQYY=;
+        b=ckxTzqSppU3x3E/TqEQG706/YvQ86vIfbaLURL3DRzqlpsqCErjiQ1sgu4Pto07zCy
+         /q0SvxCJEi1pfTwcJKG+AWatZ42o9sOOtqEQGRJJh+02nkm2cxjFaZS3S7hrdbB5WA0L
+         4Jl+3Obcvx28IOI/01nMulsGtQ9CWACVzV/VArFBPWDFKelJTlcNmVrQqcloyukucdPq
+         l1/YWAKES2mdaGiWOBhpmmGy96SBOJza1ki+zkNtd5OWax7H9rwp+w8uqnKG9DyU62zD
+         Q0gs0PXFc9pSSKL+gi22UCser8KrK06z2asGVv29ITx9rKwIrrQoQJsbmxPQZLZ4toPZ
+         618Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXYocFDP9JLMXRnyS+7CqyfR0UhSXeo2U/3e9wLu/BJZ2lEslhkIQHed94XeZjd0rQp0ehGmvjVcqp4gKm3z5ZCtMhP4V8arSyGmfQW1Z5u/w==
+X-Gm-Message-State: AOJu0YxFs65vN6X6qKWYaJFmrmk1LLaXZbWodahhY8CT1OxLLYRb3dZ2
+	uDvrS0NOGY5UgIqBnyY0oXdQpzBLAj7CTW9AB0/Q52fbCAOLyKByqWT9sY6TqEM6FQJWrUUGjv9
+	5e6brIQ==
+X-Google-Smtp-Source: AGHT+IEbmaQbF7ylO1nyDJgivkzHHy3Dhc+dF+2T8SKBziKDX+/728BYpHWLDYabb5WwkODPfpNU22Bg1vcQ
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:e7f1:b90:720c:35bf])
- (user=irogers job=sendgmr) by 2002:a25:cec7:0:b0:e11:44fb:af26 with SMTP id
- 3f1490d57ef6-e1144fbbcb1mr64276.2.1723495683936; Mon, 12 Aug 2024 13:48:03
+ (user=irogers job=sendgmr) by 2002:a25:abe9:0:b0:e03:5b06:6db2 with SMTP id
+ 3f1490d57ef6-e113cd4619fmr2763276.3.1723495686242; Mon, 12 Aug 2024 13:48:06
  -0700 (PDT)
-Date: Mon, 12 Aug 2024 13:47:09 -0700
+Date: Mon, 12 Aug 2024 13:47:10 -0700
 In-Reply-To: <20240812204720.631678-1-irogers@google.com>
-Message-Id: <20240812204720.631678-18-irogers@google.com>
+Message-Id: <20240812204720.631678-19-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240812204720.631678-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
-Subject: [PATCH v7 17/27] perf annotate: Use perf_tool__init
+Subject: [PATCH v7 18/27] perf sched: Use perf_tool__init
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -85,69 +85,50 @@ and not relying on perf_tool__fill_defaults.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-annotate.c | 42 +++++++++++++++++------------------
- 1 file changed, 20 insertions(+), 22 deletions(-)
+ tools/perf/builtin-sched.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index cc65e6f8f4da..d6f6ba5a569d 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -696,28 +696,7 @@ static const char * const annotate_usage[] = {
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 2c60bd3a8149..34fe8e540c43 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3100,7 +3100,6 @@ static int perf_sched__timehist(struct perf_sched *sched)
+ 	sched->tool.tracing_data = perf_event__process_tracing_data;
+ 	sched->tool.build_id	 = perf_event__process_build_id;
  
- int cmd_annotate(int argc, const char **argv)
+-	sched->tool.ordered_events = true;
+ 	sched->tool.ordering_requires_timestamps = true;
+ 
+ 	symbol_conf.use_callchain = sched->show_callchain;
+@@ -3605,14 +3604,6 @@ int cmd_sched(int argc, const char **argv)
  {
--	struct perf_annotate annotate = {
+ 	static const char default_sort_order[] = "avg, max, switch, runtime";
+ 	struct perf_sched sched = {
 -		.tool = {
--			.sample	= process_sample_event,
--			.mmap	= perf_event__process_mmap,
--			.mmap2	= perf_event__process_mmap2,
--			.comm	= perf_event__process_comm,
--			.exit	= perf_event__process_exit,
--			.fork	= perf_event__process_fork,
--			.namespaces = perf_event__process_namespaces,
--			.attr	= perf_event__process_attr,
--			.build_id = perf_event__process_build_id,
--#ifdef HAVE_LIBTRACEEVENT
--			.tracing_data   = perf_event__process_tracing_data,
--#endif
--			.id_index	= perf_event__process_id_index,
--			.auxtrace_info	= perf_event__process_auxtrace_info,
--			.auxtrace	= perf_event__process_auxtrace,
--			.feature	= process_feature_event,
+-			.sample		 = perf_sched__process_tracepoint_sample,
+-			.comm		 = perf_sched__process_comm,
+-			.namespaces	 = perf_event__process_namespaces,
+-			.lost		 = perf_event__process_lost,
+-			.fork		 = perf_sched__process_fork_event,
 -			.ordered_events = true,
--			.ordering_requires_timestamps = true,
 -		},
--	};
-+	struct perf_annotate annotate = {};
- 	struct perf_data data = {
- 		.mode  = PERF_DATA_MODE_READ,
+ 		.cmp_pid	      = LIST_HEAD_INIT(sched.cmp_pid),
+ 		.sort_list	      = LIST_HEAD_INIT(sched.sort_list),
+ 		.sort_order	      = default_sort_order,
+@@ -3733,6 +3724,13 @@ int cmd_sched(int argc, const char **argv)
  	};
-@@ -876,6 +855,25 @@ int cmd_annotate(int argc, const char **argv)
+ 	int ret;
  
- 	data.path = input_name;
- 
-+	perf_tool__init(&annotate.tool, /*ordered_events=*/true);
-+	annotate.tool.sample	= process_sample_event;
-+	annotate.tool.mmap	= perf_event__process_mmap;
-+	annotate.tool.mmap2	= perf_event__process_mmap2;
-+	annotate.tool.comm	= perf_event__process_comm;
-+	annotate.tool.exit	= perf_event__process_exit;
-+	annotate.tool.fork	= perf_event__process_fork;
-+	annotate.tool.namespaces = perf_event__process_namespaces;
-+	annotate.tool.attr	= perf_event__process_attr;
-+	annotate.tool.build_id = perf_event__process_build_id;
-+#ifdef HAVE_LIBTRACEEVENT
-+	annotate.tool.tracing_data   = perf_event__process_tracing_data;
-+#endif
-+	annotate.tool.id_index	= perf_event__process_id_index;
-+	annotate.tool.auxtrace_info	= perf_event__process_auxtrace_info;
-+	annotate.tool.auxtrace	= perf_event__process_auxtrace;
-+	annotate.tool.feature	= process_feature_event;
-+	annotate.tool.ordering_requires_timestamps = true;
++	perf_tool__init(&sched.tool, /*ordered_events=*/true);
++	sched.tool.sample	 = perf_sched__process_tracepoint_sample;
++	sched.tool.comm		 = perf_sched__process_comm;
++	sched.tool.namespaces	 = perf_event__process_namespaces;
++	sched.tool.lost		 = perf_event__process_lost;
++	sched.tool.fork		 = perf_sched__process_fork_event;
 +
- 	annotate.session = perf_session__new(&data, &annotate.tool);
- 	if (IS_ERR(annotate.session))
- 		return PTR_ERR(annotate.session);
+ 	argc = parse_options_subcommand(argc, argv, sched_options, sched_subcommands,
+ 					sched_usage, PARSE_OPT_STOP_AT_NON_OPTION);
+ 	if (!argc)
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
