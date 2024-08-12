@@ -1,157 +1,207 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 249B580C
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 10:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD9016F907;
+	Mon, 12 Aug 2024 11:11:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723456848; cv=none; b=X3trrCaiqbIYs13j/dHEs/Evii1uOhSoH8GZmOuqLREDQ5o+Rox4lVKYu//a1wEkgTCdOjBnO5Ggo/dqzW5VICuw66hiiEpnk/+itbiyEgwGDvhfZH3f9Jur8Su9mq2bPqc27fxlY5wpqL7OEFizKbtx2e5V6E1ntkcQ8SFKGJE=
+	t=1723461112; cv=none; b=ox0GGKZaoZpgYWkSE0tdpqJ6Zqlco4VLs9vJsj+1HtsV8A6hqwK6QDKWepjHcgMXcHb4EwKEp6XjMVZXL/znSGrCVJF2XqVDN4ZTtqnfza1bVRTzUADFZnXyFc/t4JZ1e1k2qUVUgxfhwdLbJH8lrqpiLnYA2jW6u6QFqQIchXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723456848; c=relaxed/simple;
-	bh=1ScUciWogHjmKRVSwQmXQGyugl3YVgp7XQoDiei4zcc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PgvC+rleELOGqrwZS+xeeu+8Fppb6MPtBMW4URplT2pWYPlCGjanbqS91HI/yK301tyFuKcGXDAnPKkBRPbpqFE61SnjdKco1604UglQx7QFHpiS3bcQR+pGBcBnJZhQEQG8jau6ThN9rWTdjDi2O+zv18IxDCV9Oq5dTn767/c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XNgH9La9; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XNgH9La9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723456846;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=f81rvnkheDUqXD/+ZGX/tQ13uHZx0W8+/XahKIlC0eU=;
-	b=XNgH9La982QjBNHNseMWSFv/uTyvTcjHL7oOjZzI1ZC7blq4m5MWA/doOXl965dfqVYSqp
-	MiuVZiNDfVtM3pAAdiWmrLEcHZU6Q59xcY4T2Ap/eibgc6kaSd3gHMr9VH0nb9jP93c4/Y
-	9RuTB7DXAZet5T52J1Duw2rJhe7+cwk=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-130-CP-IX_DpNxGWY2QmQJbCSg-1; Mon,
- 12 Aug 2024 06:00:42 -0400
-X-MC-Unique: CP-IX_DpNxGWY2QmQJbCSg-1
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id BA87418EB230;
-	Mon, 12 Aug 2024 10:00:39 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.102])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9161430001A1;
-	Mon, 12 Aug 2024 10:00:33 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Mon, 12 Aug 2024 12:00:36 +0200 (CEST)
-Date: Mon, 12 Aug 2024 12:00:29 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org,
-	acme@kernel.org, adrian.hunter@intel.com,
-	alexander.shishkin@linux.intel.com, irogers@google.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
-	peterz@infradead.org, syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in
- __uprobe_unregister
-Message-ID: <20240812100028.GA11656@redhat.com>
-References: <000000000000382d39061f59f2dd@google.com>
- <20240811121444.GA30068@redhat.com>
- <20240811123504.GB30068@redhat.com>
- <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+	s=arc-20240116; t=1723461112; c=relaxed/simple;
+	bh=UBV1iGhqSk+MzMClMnpysA7/BT26iWrkRlslDlGQg4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=nH54xFBKT8+EM1vP7Z5f/y6YctoWclgv6ghA13Ze+024D+KnV6TgXoHE0DQmHPQ+HO4ROe4ewRysYtIy9JaM7Qa53VvateTqoZA9xLR+Fy1F+L75rCL15hgZW1ui2Rd9NQ6S6242cne9HOIeT/qNzhDFFfhWrJhNW77wrrAR3w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WjBfD12QwzyPH1;
+	Mon, 12 Aug 2024 19:11:16 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 87D821800A6;
+	Mon, 12 Aug 2024 19:11:43 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Mon, 12 Aug 2024 19:11:41 +0800
+Message-ID: <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
+Date: Mon, 12 Aug 2024 19:11:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
+ performance
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
+	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+References: <20240727094405.1362496-1-liaochang1@huawei.com>
+ <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
+ <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
-On 08/11, Andrii Nakryiko wrote:
->
-> On Sun, Aug 11, 2024 at 5:35 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >
-> > Something like below on top of perf/core. But I don't like the usage of
-> > "i" in the +error_unregister path...
-> >
->
-> Wouldn't the below be cleaner?
->
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index cd098846e251..3ca65454f888 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
-> bpf_attr *attr, struct bpf_prog *pr
->         }
->
->         err = bpf_link_prime(&link->link, &link_primer);
-> -       if (err)
-> +       if (err) {
-> +               bpf_uprobe_unregister(&path, uprobes, cnt);
 
-I disagree. This code already uses the "goto error_xxx" pattern, why
-duplicate bpf_uprobe_unregister() ? What if another "can fail" code
-comes between register and bpf_link_prime() ?
 
-See the patch below, on top of perf/core.
+在 2024/8/9 2:26, Andrii Nakryiko 写道:
+> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
+>>
+>> Hi Andrii and Oleg.
+>>
+>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
+>> on arm64. I notice recent discussions on the performance and scalability of uprobes
+>> within the mailing list. Considering this interest, I've added you and other relevant
+>> maintainers to the CC list for broader visibility and potential collaboration.
+>>
+> 
+> Hi Liao,
+> 
+> As you can see there is an active work to improve uprobes, that
+> changes lifetime management of uprobes, removes a bunch of locks taken
+> in the uprobe/uretprobe hot path, etc. It would be nice if you can
+> hold off a bit with your changes until all that lands. And then
+> re-benchmark, as costs might shift.
+> 
+> But also see some remarks below.
+> 
+>> Thanks.
+>>
+>> 在 2024/7/27 17:44, Liao Chang 写道:
+>>> The profiling result of single-thread model of selftests bench reveals
+>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
+>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
+>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
+>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
+>>>
+>>> This patch introduce struct uprobe_breakpoint to track previously
+>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
+>>> need for redundant insn_slot writes and subsequent expensive cache
+>>> flush, especially on architecture like ARM64. This patch has been tested
+>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
+>>> bench and Redis GET/SET benchmark result below reveal obivious
+>>> performance gain.
+>>>
+>>> before-opt
+>>> ----------
+>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
+>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
+>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
+> 
+> I'm surprised that nop and push variants are much slower than ret
+> variant. This is exactly opposite on x86-64. Do you have an
+> explanation why this might be happening? I see you are trying to
+> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
+> variant of uprobe that normally shouldn't be used. Typically uprobe is
+> installed on nop (for USDT) and on function entry (which would be push
+> variant, `push %rbp` instruction).
+> 
+> ret variant, for x86-64, causes one extra step to go back to user
+> space to execute original instruction out-of-line, and then trapping
+> back to kernel for running uprobe. Which is what you normally want to
+> avoid.
+> 
+> What I'm getting at here. It seems like maybe arm arch is missing fast
+> emulated implementations for nops/push or whatever equivalents for
+> ARM64 that is. Please take a look at that and see why those are slow
+> and whether you can make those into fast uprobe cases?
 
-> We should probably route this through the bpf tree, I don't think it
-> will conflict with your changes, right?
+Hi Andrii,
 
-It will conflict, and in this sense it is even worse than the "#syz test"
-patch I sent in https://lore.kernel.org/all/20240811125816.GC30068@redhat.com/
+As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
+compared to X86 behavior. My investigation revealed that the root cause lies in
+the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
+of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
+to handle these instructions out-of-line in userspace upon breakpoint exception
+is handled, leading to a significant performance overhead compared to 'ret' variant,
+which is already emulated.
 
-Because with your version above the necessary change
+To address this issue, I've developed a patch supports  the emulation of 'nop' and
+'push' variants. The benchmark results below indicates the performance gain of
+emulation is obivious.
 
-	-	bpf_uprobe_unregister(&path, uprobes, cnt);
-	+	bpf_uprobe_unregister(uprobes, cnt);
+xol (1 cpus)
+------------
+uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
 
-won't be noticed during the merge, I guess.
+emulation (1 cpus)
+-------------------
+uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
+uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
+uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
+uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
+uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
+uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
 
-So can we route this fix through the perf/core ? I'll add "cc: stable",
-in the next merge window the Greg's scripts will report the "FAILED"
-status of the -stable patch, I'll send the trivial backport in reply.
+As you can see, the performance gap between nop/push and ret variants has been significantly
+reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
+more cycles than the other.
 
-No?
+> 
+>>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
+>>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
+>>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
+>>> Redis SET (RPS) uprobe: 42728.52
+>>> Redis GET (RPS) uprobe: 43640.18
+>>> Redis SET (RPS) uretprobe: 40624.54
+>>> Redis GET (RPS) uretprobe: 41180.56
+>>>
+>>> after-opt
+>>> ---------
+>>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+>>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+>>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+>>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+>>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+>>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+>>> Redis SET (RPS) uprobe: 43939.69
+>>> Redis GET (RPS) uprobe: 45200.80
+>>> Redis SET (RPS) uretprobe: 41658.58
+>>> Redis GET (RPS) uretprobe: 42805.80
+>>>
+>>> While some uprobes might still need to share the same insn_slot, this
+>>> patch compare the instructions in the resued insn_slot with the
+>>> instructions execute out-of-line firstly to decides allocate a new one
+>>> or not.
+>>>
+>>> Additionally, this patch use a rbtree associated with each thread that
+>>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
+>>> rbtree of uprobe_breakpoints has smaller node, better locality and less
+>>> contention, it result in faster lookup times compared to find_uprobe().
+>>>
+>>> The other part of this patch are some necessary memory management for
+>>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
+>>> hit uprobe that doesn't already have a corresponding node in rbtree. All
+>>> uprobe_breakpoints will be freed when thread exit.
+>>>
+>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>>> ---
+>>>  include/linux/uprobes.h |   3 +
+>>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
+>>>  2 files changed, 211 insertions(+), 38 deletions(-)
+>>>
+> 
+> [...]
 
-Oleg.
----
-
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 4e391daafa64..90cd30e9723e 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -3484,17 +3484,20 @@ int bpf_uprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 						    &uprobes[i].consumer);
- 		if (IS_ERR(uprobes[i].uprobe)) {
- 			err = PTR_ERR(uprobes[i].uprobe);
--			bpf_uprobe_unregister(uprobes, i);
--			goto error_free;
-+			link->cnt = i;
-+			goto error_unregister;
- 		}
- 	}
- 
- 	err = bpf_link_prime(&link->link, &link_primer);
- 	if (err)
--		goto error_free;
-+		goto error_unregister;
- 
- 	return bpf_link_settle(&link_primer);
- 
-+error_unregister:
-+	bpf_uprobe_unregister(uprobes, link->cnt);
-+
- error_free:
- 	kvfree(uprobes);
- 	kfree(link);
-
+-- 
+BR
+Liao, Chang
