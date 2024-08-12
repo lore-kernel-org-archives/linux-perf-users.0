@@ -1,207 +1,130 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD9016F907;
-	Mon, 12 Aug 2024 11:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85F5814D6FE
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 11:29:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723461112; cv=none; b=ox0GGKZaoZpgYWkSE0tdpqJ6Zqlco4VLs9vJsj+1HtsV8A6hqwK6QDKWepjHcgMXcHb4EwKEp6XjMVZXL/znSGrCVJF2XqVDN4ZTtqnfza1bVRTzUADFZnXyFc/t4JZ1e1k2qUVUgxfhwdLbJH8lrqpiLnYA2jW6u6QFqQIchXw=
+	t=1723462196; cv=none; b=qHMvyU+LmoSgYPwxVttIgT+7/e68v6HH6qmowsva8C+M0RF5xiEMHCuw6p6CuZCB2vBAnKFJZW+Aios0nq8qVhr1t3q+FbQJB3YNo1Rrpg8nf7ybe0kejxmj+gYmUUSM0yf6tgIXC2BksPD7n+C8LZ8xTVxVhz63ewwX4xRN4Lg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723461112; c=relaxed/simple;
-	bh=UBV1iGhqSk+MzMClMnpysA7/BT26iWrkRlslDlGQg4k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=nH54xFBKT8+EM1vP7Z5f/y6YctoWclgv6ghA13Ze+024D+KnV6TgXoHE0DQmHPQ+HO4ROe4ewRysYtIy9JaM7Qa53VvateTqoZA9xLR+Fy1F+L75rCL15hgZW1ui2Rd9NQ6S6242cne9HOIeT/qNzhDFFfhWrJhNW77wrrAR3w0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WjBfD12QwzyPH1;
-	Mon, 12 Aug 2024 19:11:16 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 87D821800A6;
-	Mon, 12 Aug 2024 19:11:43 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 12 Aug 2024 19:11:41 +0800
-Message-ID: <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
-Date: Mon, 12 Aug 2024 19:11:41 +0800
+	s=arc-20240116; t=1723462196; c=relaxed/simple;
+	bh=BcS7e5OSUdegHmPBjuOnztz2GWyLnhPJwGxbx8iNC9A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TLImHIvUMU9tvtiyQXcVudF/m8rX5jg34RJ4aYnBwb/F483T29c7GtJti3/nzQGeHCUPDjJGZvYpn5R38BBQqrgFlgE1NT376J31L8esoy8LrzDgaDUoD/sl/CM/KsxLvLaYgUKSsfJgSmPv3rHYSE9H3K0RM7xV/KyNcd8J458=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Knf67Tqf; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Knf67Tqf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723462192;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=dOjdqADSWC8inLVd6ovXTdUwFoHmzNkQ2gTz2o2Yt4Y=;
+	b=Knf67TqfzrL91eO2w8f2rt5Nt264oWYmD5ei7XA2x112igUaIGlYBIxd0cL94126YfL355
+	HxndFEqCsiKEJQgFADKhHdPtd7McjQqDEEFYkZQgPQ4JTNr4PjBu50t3G7tpl77jBWuAtU
+	NojutjLm0RCqPkRSJEzsrNw1RjXk6kc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-675-m5cnWKV1PdS9PLq1WPeyZg-1; Mon,
+ 12 Aug 2024 07:29:49 -0400
+X-MC-Unique: m5cnWKV1PdS9PLq1WPeyZg-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 9924A1953961;
+	Mon, 12 Aug 2024 11:29:46 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.102])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 86E9C19560A3;
+	Mon, 12 Aug 2024 11:29:38 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 12 Aug 2024 13:29:43 +0200 (CEST)
+Date: Mon, 12 Aug 2024 13:29:29 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Liao Chang <liaochang1@huawei.com>
+Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
+	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, andrii@kernel.org, rostedt@goodmis.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] uprobes: Remove the spinlock within
+ handle_singlestep()
+Message-ID: <20240812112929.GB11656@redhat.com>
+References: <20240809061004.2112369-1-liaochang1@huawei.com>
+ <20240809061004.2112369-3-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240809061004.2112369-3-liaochang1@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+On 08/09, Liao Chang wrote:
+>
+> --- a/include/linux/uprobes.h
+> +++ b/include/linux/uprobes.h
+> @@ -75,6 +75,7 @@ struct uprobe_task {
+>  
+>  	struct uprobe			*active_uprobe;
+>  	unsigned long			xol_vaddr;
+> +	bool				deny_signal;
 
+Ack, but... I can't believe I am arguing with the naming ;)
+Can we have a better name for this flag?
 
-在 2024/8/9 2:26, Andrii Nakryiko 写道:
-> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->> Hi Andrii and Oleg.
->>
->> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->> on arm64. I notice recent discussions on the performance and scalability of uprobes
->> within the mailing list. Considering this interest, I've added you and other relevant
->> maintainers to the CC list for broader visibility and potential collaboration.
->>
+	utask->signal_denied ?
+	utask->restore_sigpending ?
+
+or just
+
+	utask->sigpending ?
+
+utask->deny_signal looks as if handle_singlestep/whatever should
+"deny" the pending signal cleared by uprobe_deny_signal(), while
+it fact it should restore TIF_SIGPENDING.
+
+Oleg.
+
+>  
+>  	struct return_instance		*return_instances;
+>  	unsigned int			depth;
+> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+> index 76a51a1f51e2..77934fbd1370 100644
+> --- a/kernel/events/uprobes.c
+> +++ b/kernel/events/uprobes.c
+> @@ -1979,6 +1979,7 @@ bool uprobe_deny_signal(void)
+>  	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
+>  
+>  	if (task_sigpending(t)) {
+> +		utask->deny_signal = true;
+>  		clear_tsk_thread_flag(t, TIF_SIGPENDING);
+>  
+>  		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
+> @@ -2288,9 +2289,10 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
+>  	utask->state = UTASK_RUNNING;
+>  	xol_free_insn_slot(current);
+>  
+> -	spin_lock_irq(&current->sighand->siglock);
+> -	recalc_sigpending(); /* see uprobe_deny_signal() */
+> -	spin_unlock_irq(&current->sighand->siglock);
+> +	if (utask->deny_signal) {
+> +		set_thread_flag(TIF_SIGPENDING);
+> +		utask->deny_signal = false;
+> +	}
+>  
+>  	if (unlikely(err)) {
+>  		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+> -- 
+> 2.34.1
 > 
-> Hi Liao,
-> 
-> As you can see there is an active work to improve uprobes, that
-> changes lifetime management of uprobes, removes a bunch of locks taken
-> in the uprobe/uretprobe hot path, etc. It would be nice if you can
-> hold off a bit with your changes until all that lands. And then
-> re-benchmark, as costs might shift.
-> 
-> But also see some remarks below.
-> 
->> Thanks.
->>
->> 在 2024/7/27 17:44, Liao Chang 写道:
->>> The profiling result of single-thread model of selftests bench reveals
->>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
->>> ARM64. On my local testing machine, 5% of CPU time is consumed by
->>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
->>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
->>>
->>> This patch introduce struct uprobe_breakpoint to track previously
->>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
->>> need for redundant insn_slot writes and subsequent expensive cache
->>> flush, especially on architecture like ARM64. This patch has been tested
->>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
->>> bench and Redis GET/SET benchmark result below reveal obivious
->>> performance gain.
->>>
->>> before-opt
->>> ----------
->>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
->>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
->>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
-> 
-> I'm surprised that nop and push variants are much slower than ret
-> variant. This is exactly opposite on x86-64. Do you have an
-> explanation why this might be happening? I see you are trying to
-> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
-> variant of uprobe that normally shouldn't be used. Typically uprobe is
-> installed on nop (for USDT) and on function entry (which would be push
-> variant, `push %rbp` instruction).
-> 
-> ret variant, for x86-64, causes one extra step to go back to user
-> space to execute original instruction out-of-line, and then trapping
-> back to kernel for running uprobe. Which is what you normally want to
-> avoid.
-> 
-> What I'm getting at here. It seems like maybe arm arch is missing fast
-> emulated implementations for nops/push or whatever equivalents for
-> ARM64 that is. Please take a look at that and see why those are slow
-> and whether you can make those into fast uprobe cases?
 
-Hi Andrii,
-
-As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
-compared to X86 behavior. My investigation revealed that the root cause lies in
-the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
-of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
-to handle these instructions out-of-line in userspace upon breakpoint exception
-is handled, leading to a significant performance overhead compared to 'ret' variant,
-which is already emulated.
-
-To address this issue, I've developed a patch supports  the emulation of 'nop' and
-'push' variants. The benchmark results below indicates the performance gain of
-emulation is obivious.
-
-xol (1 cpus)
-------------
-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
-
-emulation (1 cpus)
--------------------
-uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
-uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
-uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
-uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
-uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
-uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
-
-As you can see, the performance gap between nop/push and ret variants has been significantly
-reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
-more cycles than the other.
-
-> 
->>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
->>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
->>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
->>> Redis SET (RPS) uprobe: 42728.52
->>> Redis GET (RPS) uprobe: 43640.18
->>> Redis SET (RPS) uretprobe: 40624.54
->>> Redis GET (RPS) uretprobe: 41180.56
->>>
->>> after-opt
->>> ---------
->>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>> Redis SET (RPS) uprobe: 43939.69
->>> Redis GET (RPS) uprobe: 45200.80
->>> Redis SET (RPS) uretprobe: 41658.58
->>> Redis GET (RPS) uretprobe: 42805.80
->>>
->>> While some uprobes might still need to share the same insn_slot, this
->>> patch compare the instructions in the resued insn_slot with the
->>> instructions execute out-of-line firstly to decides allocate a new one
->>> or not.
->>>
->>> Additionally, this patch use a rbtree associated with each thread that
->>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
->>> rbtree of uprobe_breakpoints has smaller node, better locality and less
->>> contention, it result in faster lookup times compared to find_uprobe().
->>>
->>> The other part of this patch are some necessary memory management for
->>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
->>> hit uprobe that doesn't already have a corresponding node in rbtree. All
->>> uprobe_breakpoints will be freed when thread exit.
->>>
->>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
->>> ---
->>>  include/linux/uprobes.h |   3 +
->>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
->>>  2 files changed, 211 insertions(+), 38 deletions(-)
->>>
-> 
-> [...]
-
--- 
-BR
-Liao, Chang
