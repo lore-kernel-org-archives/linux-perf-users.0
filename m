@@ -1,212 +1,161 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E182F17B511
-	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 12:56:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB0C1547D6
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 13:13:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723467389; cv=none; b=lqsnWNp7ohwDd4HgAGlY6S7MPcXlKel23vRjLFJRDjpNa/5ckKesDhFFJ8XuzFvI284AyoxaFNVurAIjMfUp36oiv0BAXvdzT01AJFHWTw66goz30yHx1EOl5zfSWQGPPgT42YaWz9JA/vikoUeoZ5owxPyAZL0mqMF9hYK5MVU=
+	t=1723468435; cv=none; b=PKMBUgMCuMc9Rv9bjTRCOn2wDAmChsNDTM+LhVpOyfmP7jDoqHhX84mGOy2jhbD8udqKDOTsRuYi1JfqzORiuKX6/ktAJ3IVBGPN10EXapGRu+/jObcUpn1GaBL1fNy33WinyqDg4X1N13kocYXS7HdIq20EvWYQ3LgQrfPwoOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723467389; c=relaxed/simple;
-	bh=aSkcJ4ECRllbIitgwLvE8jHpGCYEFdX03fywowYQHT8=;
+	s=arc-20240116; t=1723468435; c=relaxed/simple;
+	bh=C22V6pX1/BVB5U7Q1Fp54WFm9WJ3vzbytwmcZgLHAt4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JqBHSF2HJHXDeryAU91p/Re/RJhzITP2dZqhzvXIor8phGQIil8SMzMxUnkgPmYV5GEuZEsRhKZT7hbeZIijmpTjbOSkkC4zTuydUr8k4njM04gILU7cWS3Kgo1d4BrlyL43d7i/2qEdfntWx70MneXeFrJ/sCAZTBx/1WUNgyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DLMJr+9Q; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nABjZz6gZSazZTxkfvmsXDVfIanBp2aHhqhx5GEfRGIf/T3X1tL8sURALAnhJvjc+MeX5mwfZTOVVPdt8RY/c75DPigQK9VEpvz/PP8R3ioZEFDh+kZI/qta+fu4PMaHD5v++2T8TvRYks9abc5LU/dMba1JFF9aTZHnwvecDD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir+j3lAp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DLMJr+9Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CCE0C32782;
-	Mon, 12 Aug 2024 12:56:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir+j3lAp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DE8EC32782;
+	Mon, 12 Aug 2024 13:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723467388;
-	bh=aSkcJ4ECRllbIitgwLvE8jHpGCYEFdX03fywowYQHT8=;
+	s=k20201202; t=1723468434;
+	bh=C22V6pX1/BVB5U7Q1Fp54WFm9WJ3vzbytwmcZgLHAt4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DLMJr+9QjvAVqiHFYpbSwA+H5LoNs/9WzwIu99mTkLWfXk1Bc0kLiElMp/XI4iYXb
-	 OXentcFTObf5gezg+2pJbbFXZoyJrvLHcga13+q4LIBk1CaJKxnywvCIHlt2wwPuMC
-	 ERKmjr6jn5M4AfKXV45YcNtcv9mGCOM48FM4TAzPj5l86L5pKJ7C4JUelwTCMmSpb/
-	 hAXjElAz76iNBA+aqrct0SPcyRpKbapqzEh7Ga7zk1acNr/uWiix49Wvk/PDILUfnn
-	 vmOReEBKf9S3DS82RM0eUMGZxOz+oQx491jgEeAun4+xRK2hpACGuj3jbufiA5HkNs
-	 9BN4geBpHE89w==
-Date: Mon, 12 Aug 2024 09:56:24 -0300
+	b=ir+j3lApUsXEg35KFmOqWpqO6nV00rnn4Pxyop2AzX/RfGrOA5xNoLkqtQgcd9W+A
+	 4UyPA0075pdAXeQPO0Xpddd8IMMQyj7Rm85/PRfJPOVjFQDT0x6OQdNEUo7yc2fsf+
+	 BlyWb5JJZIdDos21XYzWHTPDGepqyicXs2G1RGij2OAwjcvhpcBxLYr5wJFNmHgQvE
+	 +2EhvN2rJHvWGT3NHhhX/AQx5yPWQ/rmA//SV/qEl1lpd5vgtTVhjoVVCMJi0fB4vW
+	 IQ5JIPWHJIpMLXMqvDWxF7AwtforItOT6CmWVxFFeQfdqDAsStbZ2MF+ydORxVXqo7
+	 fELao9kUhKjkQ==
+Date: Mon, 12 Aug 2024 10:13:50 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Veronika Molnarova <vmolnaro@redhat.com>
+To: vmolnaro@redhat.com
 Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
-	james.clark@arm.com, rstoyano@redhat.com
-Subject: Re: [PATCH] perf test pmu: Set uninitialized PMU alias to null
-Message-ID: <ZroGeHn3M7kbm48A@x1>
-References: <20240808103749.9356-1-vmolnaro@redhat.com>
- <ZrTPqy3omGsTTati@x1>
- <ZrTSWvyox2ET1eNm@x1>
- <40af7af7-598b-41aa-8a2f-119f5d3fb034@redhat.com>
+	Ian Rogers <irogers@google.com>, Kajol Jain <kjain@linux.ibm.com>,
+	Disha Goel <disgoel@linux.ibm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+Message-ID: <ZroKjgWHYwPpvbau@x1>
+References: <Zh6ZEGOfgcEfwha4@x1>
+ <20240429110439.17362-1-vmolnaro@redhat.com>
+ <ZjVIQa3JouJde7I1@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <40af7af7-598b-41aa-8a2f-119f5d3fb034@redhat.com>
+In-Reply-To: <ZjVIQa3JouJde7I1@x1>
 
-On Thu, Aug 08, 2024 at 04:42:30PM +0200, Veronika Molnarova wrote:
-> On 8/8/24 16:12, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Aug 08, 2024 at 11:01:28AM -0300, Arnaldo Carvalho de Melo wrote:
-> >> On Thu, Aug 08, 2024 at 12:37:49PM +0200, vmolnaro@redhat.com wrote:
-> >>> From: Veronika Molnarova <vmolnaro@redhat.com>
-> >>>
-> >>> Commit 3e0bf9 ("perf pmu: Restore full PMU name wildcard support") adds
-> >>> a test case "PMU cmdline match" that covers PMU name wildcard support
-> >>> provided by function perf_pmu__match(). The test works with a wide
-> >>> range of supported combinations of PMU name matching but omits the case
-> >>> that if the perf_pmu__match() cannot match the PMU name to the wildcard,
-> >>> it tries to match its alias. However, this variable is not set up,
-> >>> causing the test case to fail when run with subprocesses or to segfault
-> >>> if run as a single process.
-> >>>
-> >>> ./perf test -vv 9
-> >>>   9: Sysfs PMU tests                                                 :
-> >>>   9.1: Parsing with PMU format directory                             : Ok
-> >>>   9.2: Parsing with PMU event                                        : Ok
-> >>>   9.3: PMU event names                                               : Ok
-> >>>   9.4: PMU name combining                                            : Ok
-> >>>   9.5: PMU name comparison                                           : Ok
-> >>>   9.6: PMU cmdline match                                             : FAILED!
-> >>>
-> >>> ./perf test -F 9
-> >>>   9.1: Parsing with PMU format directory                             : Ok
-> >>>   9.2: Parsing with PMU event                                        : Ok
-> >>>   9.3: PMU event names                                               : Ok
-> >>>   9.4: PMU name combining                                            : Ok
-> >>>   9.5: PMU name comparison                                           : Ok
-> >>> Segmentation fault (core dumped)
-> >>>
-> >>> Initialize the PMU alias to null for all tests of perf_pmu__match()
-> >>> as this functionality is not being tested and the alias matching works
-> >>> exactly the same as the matching of the PMU name.
-> >>>
-> >>> ./perf test -F 9
-> >>>   9.1: Parsing with PMU format directory                             : Ok
-> >>>   9.2: Parsing with PMU event                                        : Ok
-> >>>   9.3: PMU event names                                               : Ok
-> >>>   9.4: PMU name combining                                            : Ok
-> >>>   9.5: PMU name comparison                                           : Ok
-> >>>   9.6: PMU cmdline match                                             : Ok
-> >>>
-> >>> Fixes: 3e0bf9 ("perf pmu: Restore full PMU name wildcard support")
-> >>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
-> >>> ---
-> >>>  tools/perf/tests/pmu.c | 4 +++-
-> >>>  1 file changed, 3 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> >>> index 0b2f04a55d7b..a4730b5dc0d9 100644
-> >>> --- a/tools/perf/tests/pmu.c
-> >>> +++ b/tools/perf/tests/pmu.c
-> >>> @@ -453,11 +453,13 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
-> >>>  /**
-> >>>   * Test perf_pmu__match() that's used to search for a PMU given a name passed
-> >>>   * on the command line. The name that's passed may also be a filename type glob
-> >>> - * match.
-> >>> + * match. If the name does not match, perf_pmu__match() attempts to match the
-> >>> + * alias of the PMU, if provided.
-> >>>   */
-> >>>  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> >>>  {
-> >>>  	struct perf_pmu test_pmu;
-> >>> +	test_pmu.alias_name = NULL;
-> >>
-> >> We can do a bit more future proofing by instead doing:
-> >>
-> >> 	struct perf_pmu test_pmu = {
-> >> 		.name = "pmuname",
-> >> 	};
-> >>
-> >> So that all the other fields are initialized to zero, ok? I'll do this
-> >> change and make a note in the commit, lemme know if you disagree.
+On Fri, May 03, 2024 at 05:25:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Apr 29, 2024 at 12:56:24PM +0200, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
 > > 
-> > Nah, tried with:
-> > 
-> > diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> > index a4730b5dc0d9259d..c9d4ed6d684551c1 100644
-> > --- a/tools/perf/tests/pmu.c
-> > +++ b/tools/perf/tests/pmu.c
-> > @@ -457,11 +457,11 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
-> >   * alias of the PMU, if provided.
-> >   */
-> >  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
-> > -{
-> > -	struct perf_pmu test_pmu;
-> > -	test_pmu.alias_name = NULL;
-> >  
-> > -	test_pmu.name = "pmuname";
-> > +	struct perf_pmu test_pmu = {
-> > +		.name = "pmuname",
-> > +	};
-> > +
-> >  	TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),	     true);
-> >  	TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
-> >  	TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),	     false);
-> > 
-> Isn't the error caused by a missing curly bracket at the start of the function?
-> Tried it and works just fine for me.
+> > With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
+> > Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
+> > stat for hv_gpci events without required permission set returns an
+> > error value of -1 to differentiate the output from the unsupported
+> > events. The stat_all_pmu test was designed in a way, that if any
+> > command exits with a non-zero value the test exits with an error
+> > value without any information provided due to the 'set -e' option.
+> 
+> Is this v2 or v3? Kajol, can I have your tested-by?
 
-Right, well spotted! My bad :-\
+Oops, Kajol wasn't on the CC list, nor Ian, I'm adding them, maybe Kajol
+can test it on those machines and Ian, who wrote the test can take a
+look, also adding all the perf tools reviewers, as listed in
+MAINTAINERS.
 
-Anyway, it is already in perf-tools-next, so I can't change it anymore,
-so I'll add a patch on top of it doing this more future-proof approach.
-
-Thanks for finding my mistake!
+Thanks,
 
 - Arnaldo
  
-> diff --git a/tools/perf/tests/pmu.c b/tools/perf/tests/pmu.c
-> index a4730b5dc0d9..be18506f6a24 100644
-> --- a/tools/perf/tests/pmu.c
-> +++ b/tools/perf/tests/pmu.c
-> @@ -458,10 +458,10 @@ static int test__name_cmp(struct test_suite *test __maybe_unused, int subtest __
->   */
->  static int test__pmu_match(struct test_suite *test __maybe_unused, int subtest __maybe_unused)
->  {
-> -       struct perf_pmu test_pmu;
-> -       test_pmu.alias_name = NULL;
-> +       struct perf_pmu test_pmu = {
-> +               .name = "pmuname",
-> +       };
->  
-> -       test_pmu.name = "pmuname";
->         TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),      true);
->         TEST_ASSERT_EQUAL("Longer token", perf_pmu__match(&test_pmu, "longertoken"), false);
->         TEST_ASSERT_EQUAL("Shorter token", perf_pmu__match(&test_pmu, "pmu"),        false);
-> 
-> ./perf test -F 9
->   9.1: Parsing with PMU format directory                             : Ok
->   9.2: Parsing with PMU event                                        : Ok
->   9.3: PMU event names                                               : Ok
->   9.4: PMU name combining                                            : Ok
->   9.5: PMU name comparison                                           : Ok
->   9.6: PMU cmdline match                                             : Ok
-> 
-> > But those macros are not liking it:
+> > Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
+> > event causes failure after the MR as the zero return value was required.
+> > The issue propagated upstream as the list of the files that affected perf
+> > did not cover the changed files and was updated after the issue was
+> > discovered. It was caught by CKI testing where it was triaged to stop
+> > blocking further MRs, as most of the powerpc machines do not support
+> > some of the hv_gpci events.
 > > 
-> > tests/pmu.c: In function ‘test__pmu_match’:
-> > tests/pmu.c:461:16: error: parameter ‘test_pmu’ is initialized
-> >   461 |         struct perf_pmu test_pmu = {
-> >       |                ^~~~~~~~
-> > In file included from tests/pmu.c:7:
-> > tests/tests.h:22:1: error: expected declaration specifiers before ‘do’
-> >    22 | do {                                                                     \
-> >       | ^~
-> > tests/pmu.c:465:9: note: in expansion of macro ‘TEST_ASSERT_EQUAL’
-> >   465 |         TEST_ASSERT_EQUAL("Exact match", perf_pmu__match(&test_pmu, "pmuname"),      true);
-> >       |         ^~~~~~~~~~~~~~~~~
-> > tests/tests.h:28:3: error: expected declaration specifiers before ‘while’
-> >    28 | } while (0)
-> >       |   ^~~~~
+> > Remove the 'set -e' option from the test and rework the test case to log
+> > the status of the event for better maintainability. Instead of exiting
+> > immediately after 'perf stat' ends with a non-zero value, check the
+> > return value and output of the 'perf stat' command with the appropriate action.
 > > 
-> > So I'll not spend more time here, I'm keeping your patch as-is.
+> > Link to the MR !3916 of commit ad86d7ee43b22aa2:
+> > https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
 > > 
-> > Thanks and sorry for the noise :-)
+> > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> > ---
+> > Fixed the issue with applying due to a fixed comment typo upstream and
+> > added Ian's suggestion for the 'device busy' issue during parallel
+> > testing.
 > > 
-> > - Arnaldo
+> >  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
+> >  1 file changed, 29 insertions(+), 12 deletions(-)
 > > 
-> 
+> > diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+> > index c77955419173..a75beddda4db 100755
+> > --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> > +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> > @@ -2,21 +2,38 @@
+> >  # perf all PMU test
+> >  # SPDX-License-Identifier: GPL-2.0
+> >  
+> > -set -e
+> >  
+> >  # Test all PMU events; however exclude parameterized ones (name contains '?')
+> >  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+> > -  echo "Testing $p"
+> > -  result=$(perf stat -e "$p" true 2>&1)
+> > -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+> > -    # We failed to see the event and it is supported. Possibly the workload was
+> > -    # too small so retry with something longer.
+> > -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> > -    if ! echo "$result" | grep -q "$p" ; then
+> > -      echo "Event '$p' not printed in:"
+> > -      echo "$result"
+> > -      exit 1
+> > +  echo -n "Testing event '$p' -- "
+> > +  stat_output=$(perf stat -e "$p" true 2>&1)
+> > +  stat_result=$?
+> > +  if echo "$stat_output" | grep -q "$p"; then
+> > +    # return value 0 if counters get printed either if the event is supported or not
+> > +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+> > +        echo "supported"
+> > +    elif [ $stat_result -eq 0 ]; then
+> > +        echo "not supported"
+> > +    # return value 255 when the required permission for the event is not set
+> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+> > +        echo "no permission to enable"
+> > +    # return value 255 in case of resource busy during parallel testing of events
+> > +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
+> > +        echo "resource busy"
+> > +    # return value 129 when trying to run 'perf stat' with a non-existent event
+> > +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+> > +        echo "Fail: Bad event name"
+> > +        echo "$stat_output"
+> > +        exit 1
+> > +    else
+> > +        echo "Fail: Unknown return value $stat_result"
+> > +        echo "$stat_output"
+> > +        exit 1
+> >      fi
+> > +  else
+> > +      echo "Fail: Event '$p' not printed in:"
+> > +      echo "$stat_output"
+> > +      exit 1
+> >    fi
+> >  done
+> >  
+> > -- 
+> > 2.43.0
+> > 
