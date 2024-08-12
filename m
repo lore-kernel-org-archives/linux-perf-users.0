@@ -1,110 +1,145 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AF22178378;
-	Mon, 12 Aug 2024 13:28:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564FA33C5;
+	Mon, 12 Aug 2024 13:30:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723469297; cv=none; b=PHsPLkvY9tgYu40pKlsBlmttq6fzg7AQDbkUxbMrQ09QRuCjqAb95O8ojRWfUaJzk4SLUwtB3ywYPgyP7O6AKFkx+SRi7Ik7L0l0NtSwUoDiKnEIpBbRLYU4/O2CVzfpMOHO3pjSWlN5GiWRhvVVEcKhJcFcd54w1uOtlce+PSg=
+	t=1723469448; cv=none; b=ZMOhXegiMPNX67pEHCbkOB+XtmtFOfkQ7ysUidGaVELqbODIOHaa1yb/7LS2CH/8+whgICuEKUk51Rc4sFkMOA2rD+avy8GFm6dHzLt65qWrdUtJSVeYdArCRJFM2Vruv6elnP7m6ceWYKBg9dHoR3grSYYMHeBEVVRVj0P8gS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723469297; c=relaxed/simple;
-	bh=oLYG42XDJsIF5OhNCfjLHyTVMQ0mMbUbjIGN+UZxMuc=;
+	s=arc-20240116; t=1723469448; c=relaxed/simple;
+	bh=OJQQgwlsPZ6iolgnL+6Oe7gq/bg2vyI9hu1xOqlu6q0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Y6Wr7n4O7jkhfHFVc0k4BmHwL3jrRl2sIJVdGAYCuO0So9NhWvDgIP0xZtZ6jrPwQ8om+ptScYdmnJcOBV+5VV8ZrrKT+XLNS/fzTCbSCHOdkB4raQz3M+Cnk2w3LHXo8/eUk8+gdmHkMP4wP+bxZrWk7gUT1A5+yXDKuFKcGQ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=npLltXVD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=K/FRubDWs81KgoDh+PHbcszcYjytZgJLr8VkGroEvGrQfeNEeZCL09bsVIx/9Q0IppvsrWTVpeTN2KnlchoNJ4W0GRqmPTI58KE7BM4vMsEXIHzD+s65g9NOYWIWaeMoFqURLgol6fYcmgfvge4Srm1ckcfH6qCVhrCXI9fdhSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIMHr34K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="npLltXVD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F904C32782;
-	Mon, 12 Aug 2024 13:28:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIMHr34K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 578A6C32782;
+	Mon, 12 Aug 2024 13:30:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723469296;
-	bh=oLYG42XDJsIF5OhNCfjLHyTVMQ0mMbUbjIGN+UZxMuc=;
+	s=k20201202; t=1723469447;
+	bh=OJQQgwlsPZ6iolgnL+6Oe7gq/bg2vyI9hu1xOqlu6q0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=npLltXVDPW4Avf+2R77/vKIv1ZgXL5WSs2sJveh9HnNuZIg3GsqgAqqEuOmRoeyuW
-	 DBnFeR1IevmkpDwVBy2pYRdJ11V/6qfKCnZmQV0i5OyNNnc/ZXXr4j15J8FW9pzmwH
-	 0j3TlJZIM/3JNb+jrUXOVI4WikqHkBwozS9keZ73CqiXVe+9zKwkSBoNpHEzIL2xsT
-	 ekuC4qNxKLj5PDW6v/aYn56gCh4zEALsWuUU6+vSkPgFNabyb3WUdPGWeX+jDMyHdt
-	 f+XvVG9rt6GDDIE0p0Jch1MS4SkvxCqBa67gswew4Q6MNoc3sUuHI+y0EYjeKxd5cn
-	 FP7xBjbnXMSMg==
-Date: Mon, 12 Aug 2024 10:28:13 -0300
+	b=LIMHr34K8u3yVIWPa7Yi4docrq4wmJoJaqNrU9JDRj/f+54SxZsj1qFZYPcPICG9r
+	 3UDpj51+XvAfnRAkjt4TY59OolZ0SApTYw/IQgYL8XMEo+6TlLs+yOK/OaD7SAU9+U
+	 ejooodO/Uxf5qfcO0wXf4SkVlu+ifIel1/p1DjMhzvgyRGOT+J0mcijXyQOoM3QobL
+	 AeRRABLb9ueLcCewz1wIM8qPVQqcCrGfG+c1CCRgroT9aNNR2qGfRDrRA/7984irsn
+	 UOgH6NqSp2bD/BupGiqlmkVQW6+sK8G9hmHN0cQ/gn++4HATyQn77cyHxxDPOllw1l
+	 kNUH+6+nRlxaA==
+Date: Mon, 12 Aug 2024 10:30:44 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Martin =?utf-8?B?TGnFoWth?= <m.liska@foxlink.cz>
-Cc: irogers@google.com, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] perf script: add --addr2line option
-Message-ID: <ZroN7XhtSSbQs6m8@x1>
-References: <CAP-5=fXPC+pXmJCpvkr5x2Ae1hdKeL7Cd6Uak+7mn+uG+R8yVQ@mail.gmail.com>
- <eadc3e36-029d-4848-9d69-272fe5a83a26@foxlink.cz>
- <c814c49f-fdd6-46cf-ba89-ca46ff7e64b9@foxlink.cz>
+To: Leo Yan <leo.yan@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	James Clark <james.clark@linaro.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf docs: Refine the description for the buffer size
+Message-ID: <ZroOhMIKF0OkmoaY@x1>
+References: <20240812093459.2575278-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c814c49f-fdd6-46cf-ba89-ca46ff7e64b9@foxlink.cz>
+In-Reply-To: <20240812093459.2575278-1-leo.yan@arm.com>
 
-On Mon, Aug 12, 2024 at 11:42:31AM +0200, Martin Liška wrote:
-> @acme: May I please ping this patch?
+On Mon, Aug 12, 2024 at 10:34:59AM +0100, Leo Yan wrote:
+> Current description for the AUX trace buffer size is misleading. When a
+> user specifies the option '-m,512M', it represents a size value in bytes
+> (512MiB) but not 512M pages (512M x 4KiB regard to a page of 4KiB).
+> 
+> Make the document clear that the normal buffer and the AUX tracing
+> buffer share the same semantics. Syncs the documents for consistent
+> text.
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> Reviewed-by: James Clark <james.clark@linaro.org>
+> ---
+> 
+> Changes from v1:
+>  Synced for all documents for consistent description (James)
 
-Simple enough, merged, thanks for the ping.
+Thanks, applied to tmp.perf-tools-next,
 
 - Arnaldo
  
-> Thanks,
-> Martin
+>  tools/perf/Documentation/perf-kvm.txt    | 6 +++---
+>  tools/perf/Documentation/perf-record.txt | 9 +++++----
+>  tools/perf/Documentation/perf-top.txt    | 4 ++--
+>  tools/perf/Documentation/perf-trace.txt  | 4 ++--
+>  4 files changed, 12 insertions(+), 11 deletions(-)
 > 
-> On 7/19/24 12:57, Martin Liška wrote:
-> > Similarly to other subcommands (like report, top), it would be handy to
-> > provide a path for addr2line command.
-> > 
-> > Signed-off-by: Martin Liska <martin.liska@hey.com>
-> > ---
-> >  tools/perf/Documentation/perf-script.txt | 3 +++
-> >  tools/perf/builtin-script.c              | 2 ++
-> >  tools/perf/util/symbol_conf.h            | 2 +-
-> >  3 files changed, 6 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-> > index ff086ef05a0c..5abb960c4960 100644
-> > --- a/tools/perf/Documentation/perf-script.txt
-> > +++ b/tools/perf/Documentation/perf-script.txt
-> > @@ -369,6 +369,9 @@ OPTIONS
-> >  --demangle-kernel::
-> >  	Demangle kernel symbol names to human readable form (for C++ kernels).
-> >  
-> > +--addr2line=<path>::
-> > +	Path to addr2line binary.
-> > +
-> >  --header
-> >  	Show perf.data header.
-> >  
-> > diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> > index c16224b1fef3..932167b2362b 100644
-> > --- a/tools/perf/builtin-script.c
-> > +++ b/tools/perf/builtin-script.c
-> > @@ -4052,6 +4052,8 @@ int cmd_script(int argc, const char **argv)
-> >  			"Enable symbol demangling"),
-> >  	OPT_BOOLEAN(0, "demangle-kernel", &symbol_conf.demangle_kernel,
-> >  			"Enable kernel symbol demangling"),
-> > +	OPT_STRING(0, "addr2line", &symbol_conf.addr2line_path, "path",
-> > +			"addr2line binary to use for line numbers"),
-> >  	OPT_STRING(0, "time", &script.time_str, "str",
-> >  		   "Time span of interest (start,stop)"),
-> >  	OPT_BOOLEAN(0, "inline", &symbol_conf.inline_name,
-> > diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-> > index c114bbceef40..d41b25e10f1b 100644
-> > --- a/tools/perf/util/symbol_conf.h
-> > +++ b/tools/perf/util/symbol_conf.h
-> > @@ -63,7 +63,7 @@ struct symbol_conf {
-> >  			*sym_list_str,
-> >  			*col_width_list_str,
-> >  			*bt_stop_list_str;
-> > -	char		*addr2line_path;
-> > +	const char		*addr2line_path;
-> >  	unsigned long	time_quantum;
-> >         struct strlist	*dso_list,
-> >  			*comm_list,
+> diff --git a/tools/perf/Documentation/perf-kvm.txt b/tools/perf/Documentation/perf-kvm.txt
+> index b66be66fe836..c26524d38f47 100644
+> --- a/tools/perf/Documentation/perf-kvm.txt
+> +++ b/tools/perf/Documentation/perf-kvm.txt
+> @@ -115,9 +115,9 @@ STAT LIVE OPTIONS
+>  
+>  -m::
+>  --mmap-pages=::
+> -    Number of mmap data pages (must be a power of two) or size
+> -    specification with appended unit character - B/K/M/G. The
+> -    size is rounded up to have nearest pages power of two value.
+> +        Number of mmap data pages (must be a power of two) or size
+> +        specification in bytes with appended unit character - B/K/M/G.
+> +        The size is rounded up to the nearest power-of-two page value.
+>  
+>  -a::
+>  --all-cpus::
+> diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
+> index 41e36b4dc765..242223240a08 100644
+> --- a/tools/perf/Documentation/perf-record.txt
+> +++ b/tools/perf/Documentation/perf-record.txt
+> @@ -273,10 +273,11 @@ OPTIONS
+>  -m::
+>  --mmap-pages=::
+>  	Number of mmap data pages (must be a power of two) or size
+> -	specification with appended unit character - B/K/M/G. The
+> -	size is rounded up to have nearest pages power of two value.
+> -	Also, by adding a comma, the number of mmap pages for AUX
+> -	area tracing can be specified.
+> +	specification in bytes with appended unit character - B/K/M/G.
+> +	The size is rounded up to the nearest power-of-two page value.
+> +	By adding a comma, an additional parameter with the same
+> +	semantics used for the normal mmap areas can be specified for
+> +	AUX tracing area.
+>  
+>  -g::
+>  	Enables call-graph (stack chain/backtrace) recording for both
+> diff --git a/tools/perf/Documentation/perf-top.txt b/tools/perf/Documentation/perf-top.txt
+> index 667e5102075e..af3e4230c72f 100644
+> --- a/tools/perf/Documentation/perf-top.txt
+> +++ b/tools/perf/Documentation/perf-top.txt
+> @@ -83,8 +83,8 @@ Default is to monitor all CPUS.
+>  -m <pages>::
+>  --mmap-pages=<pages>::
+>  	Number of mmap data pages (must be a power of two) or size
+> -	specification with appended unit character - B/K/M/G. The
+> -	size is rounded up to have nearest pages power of two value.
+> +	specification in bytes with appended unit character - B/K/M/G.
+> +	The size is rounded up to the nearest power-of-two page value.
+>  
+>  -p <pid>::
+>  --pid=<pid>::
+> diff --git a/tools/perf/Documentation/perf-trace.txt b/tools/perf/Documentation/perf-trace.txt
+> index f0da8cf63e9a..6e0cc50bbc13 100644
+> --- a/tools/perf/Documentation/perf-trace.txt
+> +++ b/tools/perf/Documentation/perf-trace.txt
+> @@ -106,8 +106,8 @@ filter out the startup phase of the program, which is often very different.
+>  -m::
+>  --mmap-pages=::
+>  	Number of mmap data pages (must be a power of two) or size
+> -	specification with appended unit character - B/K/M/G. The
+> -	size is rounded up to have nearest pages power of two value.
+> +	specification in bytes with appended unit character - B/K/M/G.
+> +	The size is rounded up to the nearest power-of-two page value.
+>  
+>  -C::
+>  --cpu::
+> -- 
+> 2.34.1
