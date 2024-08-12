@@ -1,44 +1,70 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C2F18E02E;
-	Mon, 12 Aug 2024 19:04:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5AE318F2F6
+	for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 19:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723489446; cv=none; b=PrBJLlKiSb2cS0vD+a7Bacv53/TUkqFB96W2aKd5IqiF83tWSqzgCr5hmDWnHFbIKJjcyrR7YNdsIN7NiMPN1EI+6KZRKyaq1Jb3YYb8sJirf8rfiGZamL0mqXEQ//TGy1ovs2S9SAUrcsylA9UNoexB0+xPAW2jWfFOkEDopqw=
+	t=1723490719; cv=none; b=PGgj6DLNpRiEYtqQyZYvGrMsC0t74Ogib23KIxCjaIXu3iG6WFYwxQP6T8hU2TZ20yzIhtDlL2g8x7LmRwNdDKcqc4eh0h6D0EGHuwTz6jQ0/EqN8PJrodits95AYBGPlvfjGgmKsSo0LgEw+K/dSIjEXe8nC+yOEptP4GUPDHg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723489446; c=relaxed/simple;
-	bh=P4kzq2nJdwbceeIcm6PDqHrbtu0pNEAaDv1hyaG4UXA=;
+	s=arc-20240116; t=1723490719; c=relaxed/simple;
+	bh=iaYZkpwvbW8Fxk0F02wbvEY/BH18iaDQKbywqSsY6CM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WjqDt4FHq5iowHrEJ4uTmvqjsxFBiuj7PTCergogF+/oRUiKC1Tc5nbVBSgju3w1DEhIxCz1oysDDElqI1ydtHyCBBIO6h4Entr4KFRWhQQtudPNM2GRfzUrrMHcZynydsX9jLglRBww/iFhha1h2QO7WGJLUV8nnjV/M4DnZ5c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a16Yifiw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y2ay2XMP00kESWk7zJRgyqwsnlEXoaT73lyn4448lZ5H/jU/VbHeLjccPsa5RYUoLp4V6me7XlKu7bWEbHUWR+o2TjeXBp6XRo2Ga1/OmjnRYDVSBs/7+0WuNnruNonRTue9E9HbrgJceDYW2QbQSXeRRKRZ1Q+Ymlm2eLX4LqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SzDO81X+; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a16Yifiw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A38C32782;
-	Mon, 12 Aug 2024 19:04:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723489445;
-	bh=P4kzq2nJdwbceeIcm6PDqHrbtu0pNEAaDv1hyaG4UXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=a16YifiwWy5pkN70TOWiSeECbOKlCzs0VE9cfFgLHjFhajl8ZYSkghjjRVdMBHaxK
-	 k8LhuFYWbjQQXzPax7gVV1Nz8wnQt3nU6d11sWtooLpSOghOQxZ4z4eQ+8bYwGxp0c
-	 lGR7GhopvVQsqw3uqO/75qD8atMLpP8uOGMBzBIBAM50svoKehvMIdkWY5fCQqZ0yr
-	 jjBraDy/IMczJigWwzPKp1UFNAykO2wLQ6yJAAWGQL1nyF4YO0XdUjQpQBx0a1JBPA
-	 9nCIxC90Snj5Z32jbI41562VM3a5NNvxe+8ZeAs5xWMRb5UBHIvEabkAueFQCUNUKE
-	 /NRiK2oDciE1g==
-Date: Mon, 12 Aug 2024 12:04:03 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Yang Jihong <yangjihong@bytedance.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, james.clark@arm.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] perf sched timehist: Remove BUG_ON in
- timehist_sched_change_event()
-Message-ID: <Zrpco5rOa9n7S5RN@google.com>
-References: <20240812132606.3126490-1-yangjihong@bytedance.com>
- <20240812132606.3126490-2-yangjihong@bytedance.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SzDO81X+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723490716;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=V0i5d9v7X1l3ubpz0F2qG2g28SR1YyQRgT0SFjyAASI=;
+	b=SzDO81X+oxMvwvwizfaBKkbaimiPwPXw9yKlICwaVI8s+eDyQ9e9r+LcHOclQLozqu7ET2
+	bjstJB/Qtszh9qtpMwTJBhM87VN6iJzSEzW2uqiuDI/61n6/Rj4VHwGgaGFhU1tpa1j7Xt
+	gq918rXRp/+BynZicwrSjTO86r47GEI=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-128-lA2PaeWKMh2j0Hy6U-uE_Q-1; Mon,
+ 12 Aug 2024 15:25:11 -0400
+X-MC-Unique: lA2PaeWKMh2j0Hy6U-uE_Q-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 18AE5188FE4F;
+	Mon, 12 Aug 2024 19:25:01 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.73])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 1CFDE19541B6;
+	Mon, 12 Aug 2024 19:24:35 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Mon, 12 Aug 2024 21:24:54 +0200 (CEST)
+Date: Mon, 12 Aug 2024 21:24:31 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org,
+	acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com,
+	bpf <bpf@vger.kernel.org>
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in
+ __uprobe_unregister
+Message-ID: <20240812192405.GD11656@redhat.com>
+References: <000000000000382d39061f59f2dd@google.com>
+ <20240811121444.GA30068@redhat.com>
+ <20240811123504.GB30068@redhat.com>
+ <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+ <20240812100028.GA11656@redhat.com>
+ <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -47,39 +73,67 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240812132606.3126490-2-yangjihong@bytedance.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-On Mon, Aug 12, 2024 at 09:26:06PM +0800, Yang Jihong wrote:
-> The BUG_ON(thread__tid(thread) != 0) in timehist_sched_change_event()
-> is redundant, remove it.
-> No functional change.
-> 
-> Fixes: 07235f84ece6 ("perf sched timehist: Add -I/--idle-hist option")
-> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+On 08/12, Andrii Nakryiko wrote:
+>
+> adding bpf ML, given it's bpf's code base
 
 Thanks,
-Namhyung
 
+> On Mon, Aug 12, 2024 at 3:00 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
+> > > bpf_attr *attr, struct bpf_prog *pr
+> > >         }
+> > >
+> > >         err = bpf_link_prime(&link->link, &link_primer);
+> > > -       if (err)
+> > > +       if (err) {
+> > > +               bpf_uprobe_unregister(&path, uprobes, cnt);
+> >
+> > I disagree. This code already uses the "goto error_xxx" pattern, why
+>
+> Well, if you have strong preferences,
 
-> ---
->  tools/perf/builtin-sched.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
-> index 177634df1ba5..309dcfb3796d 100644
-> --- a/tools/perf/builtin-sched.c
-> +++ b/tools/perf/builtin-sched.c
-> @@ -2700,8 +2700,6 @@ static int timehist_sched_change_event(struct perf_tool *tool,
->  			struct idle_thread_runtime *itr = (void *)tr;
->  			struct thread_runtime *last_tr;
->  
-> -			BUG_ON(thread__tid(thread) != 0);
-> -
->  			if (itr->last_thread == NULL)
->  				goto out;
->  
-> -- 
-> 2.25.1
-> 
+Well, YES and NO ;) please see below.
+
+> so be it (it's too trivial code
+> to argue about).
+
+Agreed. On a closer look both the code and the problem look very trivial.
+
+But note that nobody noticed this trivial problem before. Including me who
+had to change this trivial code to adapt to the recent API changes.
+
+May be this means that we should keep the error handling in this function
+more consistent ;)
+
+> We do have quite a lot of "hybrid" error handling
+
+And YES, I don't like this kind of error handling.
+
+But, at the same time: NO, I never-never argue with the maintainers when it
+comes to "cosmetic" issues.
+
+My main point was (and you seem to agree) that this simpler patch above won't
+simplify the routing. I too thought about the change above initially.
+
+-------------------------------------------------------------------------------
+> Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
+> any problem for it to go together with your refactorings.
+>
+> For the fix:
+>
+> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+Thanks! I'll write the changelog and send this patch with your ack included
+tomorrow.
+
+Oleg.
+
