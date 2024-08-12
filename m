@@ -1,131 +1,113 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD5A184558;
-	Mon, 12 Aug 2024 16:57:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F94B6CDBA;
+	Mon, 12 Aug 2024 17:02:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723481862; cv=none; b=GsYJWCpPjnkAyt/O60TptVcAgypdfEpYTqJSdMys9iw5/dTovENFSweeP0AXxGSSoAKkZyxLSXySEOLX0pzvP7DZkStwp8f37UehADcGRrr+Ofci1r2A6zC8Sydl5ELu+X7GwUAmd5cNpeiAMJvj+DYYWfKwJaNu7w1xasfpzMQ=
+	t=1723482134; cv=none; b=S2xW6u4tSNIQs0e+51rBi079EGYL0+1u4VjU88PGzoIKNVR/K0XkJV4FQElfXSmF/rqpmBrjCEEoy2poGlK0zQ4KkgHvY2nf5r1mjtFnBoeLKnW2PxuJVts3/22+kg6uwAL+gRCgN47PdlcY2MppR3Qz2gcurMQbl+Cu+nZ7ulc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723481862; c=relaxed/simple;
-	bh=PFOeBR7DEWkdt/jQdta5OhkaVmv7rjz82/c3N9bXu5Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nwKs53HtS0miyN3zdU3hKjZfIDWeWdU7k2grbJLtLijhz9OOY8CTyz9tag/USH0zV/T61ETkN4mI9wBY/REfAO+vj3R05WyPA81asaztyeHdJXvDodSioCVIra3LJs00oM2jvVaNIXVe1PRMiIhUWvZgtC/iNPvyyi9F34+0UGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2cb4c4de4cbso2925215a91.1;
-        Mon, 12 Aug 2024 09:57:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723481860; x=1724086660;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RBT6GUroxASOGIZcaDGkgoB7aJF/nxAzTjccxRYF0yA=;
-        b=HftjBlctT9vSmeEwXaZX1IkTUMazo3HI0MlTEINiSzIeAxtYVv14eeK4aPwyI/4iEp
-         fKTqQe2ExIVxxsUAdo0aTyI+hJOZoUaKY4AWc8d2aOaNtVZFKtMH1HpAQqNnXB2pF3RV
-         eFPNIe71GyH/QHHamzUJuPwbvkiZq81zVKHnz559ecsT6om26/mru3fRi1zkZEXfnV4C
-         8XOTf4hpyXAKtVYIflsltth/faTGxuBoYFAvX2OiJCAmguYVr43N2mEkLdfOHCxGQM9M
-         qVrd5v7SwiOt8aio9+0KmOSahOA5oaSwt7gyHwCl4Jaom0nNFkXEUn+7S7pMu3h6HT0c
-         /9/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXuQuDlAt597UW7PC8bLs4rwkr8BnxxWeshMl0QqGAnOG+dDh601YDY5Fcz2+r6PD4eKfkxtp/th/dxwIVUw85KzzYmqx1vuerbwfzyLT5bIxi2QvMG8TAkoW51m3Jq1BDCqpbrTebo53oDgaWqiA==
-X-Gm-Message-State: AOJu0YzpcHCQ1YRGbfGLCJgQlu1omD4p0Md1DCr5IxYbwASdJ3G0VXUX
-	NG56sQxsi81Nrb5swnWUgT+me2N09uYlgEdy0oXwa5kpqiyJ1FQ/q5q5zmFrknYpsyoL+tGn2Kk
-	+kpOV7BkH5oPU8ybLwjsM/eKC0d0=
-X-Google-Smtp-Source: AGHT+IHWp42ThEM9dW+KrJQ0c4HyecKzjeMkYed6s9Ndqys32WZ9fNaZLY3ER+aplHGMgQImA7IjNNuaAO89dP+kRog=
-X-Received: by 2002:a17:90a:ea0a:b0:2cb:5654:8367 with SMTP id
- 98e67ed59e1d1-2d3926407bcmr946152a91.26.1723481860169; Mon, 12 Aug 2024
- 09:57:40 -0700 (PDT)
+	s=arc-20240116; t=1723482134; c=relaxed/simple;
+	bh=LnvNoTAR8vjJ1LQByGVXDpVvDgNROHTS8ajYGW7bCaA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sujGqJzSJdy2iitI9OmWD8joz28EjyfaS1dGRPW/GcW7BuKQD6+oV9aqwKlwOdcpZehnauSlJOO5rdspFOpt906bhpbFRzjgw8mliF1kwsjcTC75B0wEJzqfyLM5FvJ8KCnAFyuVecl6Gw0WFNOtoe/4Ywdjikv3U7ZfdhOcCeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DL9XYvoB; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DL9XYvoB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595D3C4AF0F;
+	Mon, 12 Aug 2024 17:02:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723482133;
+	bh=LnvNoTAR8vjJ1LQByGVXDpVvDgNROHTS8ajYGW7bCaA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DL9XYvoB4D52CaYOVnMuPXJJIlwQTSWd2DV7QJH2zL5jfeH0ytnnZ2C2rO6IBXz/A
+	 IovGVTeRKrSUmqNPANX4WtEJ90V+dApqTym82IG1gjYKXx9WGywJPFH7R8VqyyT4yY
+	 JEYWtab6BcNQMAOiOEsDQN/3zmYbBCh9AxGe3vq7ZDHaAOp3CuAUW7bx7ZaCqN+ECb
+	 YKCnAqdmazSGSmsUruR3L/gNP2h0MwpDrGcwwk06RS8xXOG0lDBrpk5hejzXsClcdi
+	 yw7eAkOMh8Zfory8uXA4qnqkNp24wYAv6qwG1l7JEuK+6GrEhgq1WzT1fLSLmGybsj
+	 juJgUBi1iJrOg==
+Date: Mon, 12 Aug 2024 14:02:10 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: Michael Petlan <mpetlan@redhat.com>, linux-perf-users@vger.kernel.org,
+	acme@redhat.com, Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf test record.sh: Raise limit of open file
+ descriptors
+Message-ID: <ZrpAEnWa0M_HV1H3@x1>
+References: <ZiqoWj3f-P3ChlWa@x1>
+ <20240429085721.10122-1-vmolnaro@redhat.com>
+ <alpine.LRH.2.20.2405211127360.4040@Diego>
+ <ZroLGg6W9DKsexpp@x1>
+ <ZroMXJoNXCsh2ghd@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <909abbc8-efca-40df-9876-8c36b6942a83@stanley.mountain>
- <20240810191704.1948365-1-namhyung@kernel.org> <ZrozwIQcB_viRsKt@x1> <Zro90YPyLCB9PsfL@x1>
-In-Reply-To: <Zro90YPyLCB9PsfL@x1>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Mon, 12 Aug 2024 09:57:27 -0700
-Message-ID: <CAM9d7ch1ESEhJW-1j0O-0xxr-w1we+opD1xWTs4Eq=u7Gg7unQ@mail.gmail.com>
-Subject: Re: [PATCH] perf lock contention: Change stack_id type to s32
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZroMXJoNXCsh2ghd@x1>
 
-On Mon, Aug 12, 2024 at 9:52=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Mon, Aug 12, 2024 at 01:09:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Sat, Aug 10, 2024 at 12:17:04PM -0700, Namhyung Kim wrote:
-> > > The bpf_get_stackid() helper returns a signed type to check whether i=
-t
-> > > failed to get a stacktrace or not.  But it saved the result in u32 an=
-d
-> > > checked if the value is negative.
-> > >
-> > >       376         if (needs_callstack) {
-> > >       377                 pelem->stack_id =3D bpf_get_stackid(ctx, &s=
-tacks,
-> > >       378                                                   BPF_F_FAS=
-T_STACK_CMP | stack_skip);
-> > >   --> 379                 if (pelem->stack_id < 0)
-> > >
-> > >   ./tools/perf/util/bpf_skel/lock_contention.bpf.c:379 contention_beg=
-in()
-> > >   warn: unsigned 'pelem->stack_id' is never less than zero.
-> > >
-> > > Let's change the type to s32 instead.
-> > >
-> > > Fixes: 6d499a6b3d90 ("perf lock: Print the number of lost entries for=
- BPF")
-> >
-> > Thanks, applied to perf-tools-next,
->
-> I'll try to fix this later, but now it fails the first 'make -C
-> tools/perf build-test' target, that you can run directly as:
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ tools/perf/tests/perf-targz-src-=
-pkg tools/perf
-> <SNIP>
->   CLANG   /tmp/tmp.FRZLVEwqdz/perf-6.11.0-rc2/tools/perf/util/bpf_skel/.t=
-mp/augmented_raw_syscalls.bpf.o
-> In file included from util/bpf_skel/lock_contention.bpf.c:9:
-> util/bpf_skel/lock_data.h:10:2: error: unknown type name 's32'; did you m=
-ean 'u32'?
->    10 |         s32 stack_id;
->       |         ^~~
->       |         u32
-> util/bpf_skel/vmlinux.h:17:15: note: 'u32' declared here
->    17 | typedef __u32 u32;
->       |               ^
+On Mon, Aug 12, 2024 at 10:21:36AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Aug 12, 2024 at 10:16:10AM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Tue, May 21, 2024 at 11:27:56AM +0200, Michael Petlan wrote:
+> > > On Mon, 29 Apr 2024, vmolnaro@redhat.com wrote:
+> > > > From: Veronika Molnarova <vmolnaro@redhat.com>
 
-Oops, sorry about this.  There was a kernel test robot report.
-It seems we need 'typedef __s32 s32;' too.
+> > > > Subtest for system-wide record with '--threads=cpu' option fails due
+> > > > to a limit of open file descriptors on systems with 128 or more CPUs
+> > > > as the default limit is set to 1024.
 
-Thanks,
-Namhyung
+> > > > The number of open file descriptors should be slightly above
+> > > > nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
+> > > > which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
+> > > > 16*nmb_cpus for the test.
+
+> > > > Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+
+> > > Acked-by: Michael Petlan <mpetlan@redhat.com>
+
+> > b4 got confused, I'll pick the rigth version manually...
+
+Also please install ShellCheck, with it installed, as I do, you'll get
+this warning, that we should address:
+
+  CC      /tmp/build/perf-tools-next/util/synthetic-events.o
+
+In tests/shell/record.sh line 24:
+default_fd_limit=$(ulimit -n)
+                          ^-- SC3045 (warning): In POSIX sh, ulimit -n is undefined.
 
 
-> In file included from util/bpf_skel/lock_contention.bpf.c:9:
-> util/bpf_skel/lock_data.h:14:2: error: unknown type name 's32'; did you m=
-ean 'u32'?
->    14 |         s32 stack_id;
->       |         ^~~
->       |         u32
-> util/bpf_skel/vmlinux.h:17:15: note: 'u32' declared here
->    17 | typedef __u32 u32;
->       |               ^
-> 2 errors generated.
-> make[2]: *** [Makefile.perf:1247: /tmp/tmp.FRZLVEwqdz/perf-6.11.0-rc2/too=
-ls/perf/util/bpf_skel/.tmp/lock_contention.bpf.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> make[1]: *** [Makefile.perf:292: sub-make] Error 2
-> make: *** [Makefile:76: all] Error 2
-> make: Leaving directory '/tmp/tmp.FRZLVEwqdz/perf-6.11.0-rc2/tools/perf'
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
+In tests/shell/record.sh line 203:
+if [[ $default_fd_limit -lt $min_fd_limit ]]; then
+   ^-- SC3010 (warning): In POSIX sh, [[ ]] is undefined.
+
+
+In tests/shell/record.sh line 204:
+       ulimit -n $min_fd_limit
+              ^-- SC3045 (warning): In POSIX sh, ulimit -n is undefined.
+
+
+In tests/shell/record.sh line 214:
+ulimit -n $default_fd_limit
+       ^-- SC3045 (warning): In POSIX sh, ulimit -n is undefined.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC3010 -- In POSIX sh, [[ ]] is undefined.
+  https://www.shellcheck.net/wiki/SC3045 -- In POSIX sh, ulimit -n is undefin...
+make[4]: *** [tests/Build:90: /tmp/build/perf-tools-next/tests/shell/record.sh.shellcheck_log] Error 1
+make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:158: tests] Error 2
+make[2]: *** [Makefile.perf:777: /tmp/build/perf-tools-next/perf-test-in.o] Error 2
+  CC      /tmp/build/perf-tools-next/util/data.o
+make[2]: *** Waiting for unfinished jobs....
+
