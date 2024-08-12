@@ -1,170 +1,187 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 478DF130AC8;
-	Mon, 12 Aug 2024 15:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D164B183CB4;
+	Mon, 12 Aug 2024 15:22:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723475911; cv=none; b=oxpKEwr0/QGLPwhNsu6wAKVuX6+S6kb8n660KzD5UnUOB2jsbWA6pxBYsvqQ5tuLdmwajIr05R/7DA7dc0id36bILhGxnWccK+zotku7C310MVgG6FZ5ravar/w6FE/7FSIKv4TqgPHdpNXuM+8MODaUybuw/DChatxM5AFFf+8=
+	t=1723476172; cv=none; b=N/IwmZ3mMeuX8cwikALv+F7llCg6tBXMZQpcNQKCcba1FaGUKBpygtZDH36fFD0FRsA1lzNUVAtOL0UB3M2+QlU7TJso7yvDRzcasJhL0vPP4tOrfPIPtauN0Seie92jPe2z1Hum3UYJwhzJX2wReWwGZ2o52I0yd23F2AsnPJI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723475911; c=relaxed/simple;
-	bh=L+S8wUs38FK7FjSSmrWhkS4nFZyIzpYU7kJGEaQBflc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jQv6D1Khfx9QC1F9RYFN63bz/yfA1qExz/eYrzUkf5AD/djWchURbLWi6PTANMp/Jokg+I5Etzpudh3so3VdUfjWE4snEoYJ/3IoPR1wQKUIzD5YmPJbLgUj5Lh96EvmSSLyVBtvqKc1k16G0bp92hNcKDDndfp8/XHs9aBzCKE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fOzbFKbM; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723476172; c=relaxed/simple;
+	bh=qpEUS3rYpbENzBlOxYTw3kKabVJQQCAW1JuPdQCxAng=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bCoKV5940LKusLot1OEoz6C7GWbvOylbgxoch3X5TDIsu2vmH8tmMRQVPnESMD0HxmsEMMJiwqQF1zX19n2FmTccgbKpMtYlLFedIj/fFBRFkmjOnIr4MDz6Jz0yqf+PlCz6EZM74kzyXVpSk7z0ys/6H26DYlC00PbYcKCEbd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iErFR8Wx; arc=none smtp.client-ip=209.85.215.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fOzbFKbM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723475909; x=1755011909;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=L+S8wUs38FK7FjSSmrWhkS4nFZyIzpYU7kJGEaQBflc=;
-  b=fOzbFKbMHaTlUJF5gSjCNQ1pklLBgf0Qdy1b3Il1btCW4kvNoRS0QVdx
-   AiXDTTql9IOiN2pHw0yImmO+/wnRw5IfBfGJb1TxrPhu2P0s+xiIEYjyg
-   D5btGjHEUO+GjBq3lWkvZtjSjDRZvLU24ax0IXfmvBc9EZlvtQgUoq4Cx
-   My8+D+TdORWe6RLmZSVgwp+ElF0BZl/H8BW9tOElFJF4aDMS1NIPkpKV3
-   9Dm7gLu+ypmBtlqOcXEm+F+I2aH4I9wMembMmhulC089SuuPpANs7SbKf
-   D0e14mWtRtFMtinpJS0Cm2+Rexns5rnTdJYZZX8NI8x8LUQREtghwpUeg
-   A==;
-X-CSE-ConnectionGUID: jGAgvNFsRIuB/ZdlrMy7BA==
-X-CSE-MsgGUID: VzwfiviWTr+BFj7BPC5uWw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="46994629"
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="46994629"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:18:28 -0700
-X-CSE-ConnectionGUID: uxy9Spg9Q0a5wAVnlz6HQw==
-X-CSE-MsgGUID: XW8upg89SLyrXMFUngqBCw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,283,1716274800"; 
-   d="scan'208";a="59004473"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Aug 2024 08:18:28 -0700
-Received: from [10.212.112.28] (kliang2-mobl1.ccr.corp.intel.com [10.212.112.28])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E46D520CFED0;
-	Mon, 12 Aug 2024 08:18:26 -0700 (PDT)
-Message-ID: <ab4e2929-a9f7-445d-9eb0-547556799a57@linux.intel.com>
-Date: Mon, 12 Aug 2024 11:18:25 -0400
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iErFR8Wx"
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-656d8b346d2so2590982a12.2;
+        Mon, 12 Aug 2024 08:22:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723476170; x=1724080970; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
+        b=iErFR8Wx2xwquzphdV5/+GVA1NsWMX0iNPnVfAbUV+P8HvbhXX9nZS/FYr4SwRjlWq
+         yR3zblQpjnmmgxjLIhEPyJLovNeEmC2AEG+KIYm67BwyoP9nNsoVUAvd+tERck2ErKIs
+         M95iYbmMJN8OxJjCPS7+AH7PR07oKbD/lkda4cNHPZYDRgtXnp+6jhYssmnx2QaZ0PGx
+         7bMqHvCoJuJS1nUAlsUg5rihKETToC3dc6VnQC9RSU3XUfcA9O9FnjR5SaR8uhyYYn3Q
+         AMLpSLL8pMMT936A7X+BZhSHwuNhYaSYjK0x4PJtwMyzwN5ewtTImDhSKbxZ7wap1uw+
+         GIzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723476170; x=1724080970;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dpZ18i+l3ZklnBKOQpiJoYi+QXkzGYaSATzzcHWTrOQ=;
+        b=aSNFc1CJB5U6+HZO+r01P0PaEyYin1ULeQONLZ1kxoYgBqIAzdq/S7eVu3k3rLBLBB
+         gKvQ8UhynGKXpbZQOzFtYupqWypgKLclcrcpb+BS0IKcx7bR79AjYyIgMyIiwkLgWHFY
+         H8BmrHwgQguAWAZhkidkfS0kTi1zRCAeiNyLQzDP3+ExdSfFx8Ah/Vh4ZKfGYgd8XNai
+         i81gHceQ+MBiLQ+85eo1w9Ul9bdpC8Tm1SZqWyDWp/heC+y+eiyEeuimPlQGmBtuPSe+
+         raHYVexMhdvNkKcPaZUikxcgjJ2vXleq7kiZUDFMbgwbPmbP6/D/X+nAzhBYYlBxmw4Q
+         cnsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUy+hDhMD/fE4Faqcu5YZKzaWRudWTae/g9nQ0Pts76mSyop6S4TXKU+LwHR+HVSIXZ1Gf+rtiiRLUte+zo3eM1MlXH9C10YtN55jkih62yaxcVo+GRC8fiKfwq/vHY6PHcUoojlq1NDGe2uDWs8rACF98fJ+DddbacsO6kcvTJf3EOTYqlLFQk80LptZ07UR96+3K1vTIZ6VN7g/KEQ2MYapD6VQyXBw==
+X-Gm-Message-State: AOJu0YydfWMW9N4iDC0MiBz8setgJCrE7o2hlNtxcPpgjoVR+F83uhbQ
+	c2RdFONpAoagaUIxECpGByyrouFsCGH+ZwKaOGNlYVvTdJ9UqMBxAGY1z/EDenFSI1irZTh2GYU
+	a5Jsiov9PhHyTbujYOIac6sI05gI=
+X-Google-Smtp-Source: AGHT+IHnFJyV11a3EU8J8N3K1x1M16K/y4cKmqEh2p++7UG3C19tPYQT99trjEzXWSi0Zkhm9/1S8wZ1G2i0SavJEA8=
+X-Received: by 2002:a17:90a:d90d:b0:2c9:8189:7b4f with SMTP id
+ 98e67ed59e1d1-2d39264bf9emr567114a91.32.1723476169915; Mon, 12 Aug 2024
+ 08:22:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 2/5] perf x86/topdown: Correct leader selection with
- sample_read enabled
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
- <20240712170339.185824-3-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240712170339.185824-3-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <000000000000382d39061f59f2dd@google.com> <20240811121444.GA30068@redhat.com>
+ <20240811123504.GB30068@redhat.com> <CAEf4Bza8Ptd4eLfhqci2OVgGQZYrFC-bn-250ErFPcsKzQoRXA@mail.gmail.com>
+ <20240812100028.GA11656@redhat.com>
+In-Reply-To: <20240812100028.GA11656@redhat.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Mon, 12 Aug 2024 08:22:37 -0700
+Message-ID: <CAEf4BzZ6coCZHY_KMnSQQUyc_-xziKurOQ0j3xaCvHhnDaafuQ@mail.gmail.com>
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: syzbot <syzbot+f7a1c2c2711e4a780f19@syzkaller.appspotmail.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, jolsa@kernel.org, acme@kernel.org, 
+	adrian.hunter@intel.com, alexander.shishkin@linux.intel.com, 
+	irogers@google.com, kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
+	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org, syzkaller-bugs@googlegroups.com, 
+	bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+adding bpf ML, given it's bpf's code base
 
+On Mon, Aug 12, 2024 at 3:00=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
+>
+> On 08/11, Andrii Nakryiko wrote:
+> >
+> > On Sun, Aug 11, 2024 at 5:35=E2=80=AFAM Oleg Nesterov <oleg@redhat.com>=
+ wrote:
+> > >
+> > > Something like below on top of perf/core. But I don't like the usage =
+of
+> > > "i" in the +error_unregister path...
+> > >
+> >
+> > Wouldn't the below be cleaner?
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index cd098846e251..3ca65454f888 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -3491,8 +3491,10 @@ int bpf_uprobe_multi_link_attach(const union
+> > bpf_attr *attr, struct bpf_prog *pr
+> >         }
+> >
+> >         err =3D bpf_link_prime(&link->link, &link_primer);
+> > -       if (err)
+> > +       if (err) {
+> > +               bpf_uprobe_unregister(&path, uprobes, cnt);
+>
+> I disagree. This code already uses the "goto error_xxx" pattern, why
 
-On 2024-07-12 1:03 p.m., Dapeng Mi wrote:
-> Addresses an issue where, in the absence of a topdown metrics event
-> within a sampling group, the slots event was incorrectly bypassed as
-> the sampling leader when sample_read was enabled.
-> 
-> perf record -e '{slots,branches}:S' -c 10000 -vv sleep 1
-> 
-> In this case, the slots event should be sampled as leader but the
-> branches event is sampled in fact like the verbose output shows.
-> 
-> perf_event_attr:
->   type                             4 (cpu)
->   size                             168
->   config                           0x400 (slots)
->   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   disabled                         1
->   sample_id_all                    1
->   exclude_guest                    1
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-> ------------------------------------------------------------
-> perf_event_attr:
->   type                             0 (PERF_TYPE_HARDWARE)
->   size                             168
->   config                           0x4 (PERF_COUNT_HW_BRANCH_INSTRUCTIONS)
->   { sample_period, sample_freq }   10000
->   sample_type                      IP|TID|TIME|READ|CPU|IDENTIFIER
->   read_format                      ID|GROUP|LOST
->   sample_id_all                    1
->   exclude_guest                    1
-> 
-> The sample period of slots event instead of branches event is reset to
-> 0.
-> 
-> This fix ensures the slots event remains the leader under these
-> conditions.
-> 
-> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+Well, if you have strong preferences, so be it (it's too trivial code
+to argue about). We do have quite a lot of "hybrid" error handling
+code that combines undoing the last step (especially if it's a simple
+function call) and then doing goto for the rest of common error
+handling, so I didn't (and still don't) see any problem with that.
+
+> duplicate bpf_uprobe_unregister() ? What if another "can fail" code
+> comes between register and bpf_link_prime() ?
+>
+> See the patch below, on top of perf/core.
+>
+> > We should probably route this through the bpf tree, I don't think it
+> > will conflict with your changes, right?
+>
+> It will conflict, and in this sense it is even worse than the "#syz test"
+> patch I sent in https://lore.kernel.org/all/20240811125816.GC30068@redhat=
+.com/
+>
+> Because with your version above the necessary change
+>
+>         -       bpf_uprobe_unregister(&path, uprobes, cnt);
+>         +       bpf_uprobe_unregister(uprobes, cnt);
+>
+> won't be noticed during the merge, I guess.
+>
+
+Yeah, my bad, I forgot that the signature of bpf_uprobe_unregister()
+also changed with your patches.
+
+> So can we route this fix through the perf/core ? I'll add "cc: stable",
+> in the next merge window the Greg's scripts will report the "FAILED"
+> status of the -stable patch, I'll send the trivial backport in reply.
+
+Yep, absolutely, given the bpf_uprobe_unregister() change, I don't see
+any problem for it to go together with your refactorings.
+
+For the fix:
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>
+> No?
+>
+> Oleg.
 > ---
->  tools/perf/arch/x86/util/topdown.c | 16 ++++++++++++++--
->  1 file changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
-> index 49f25d67ed77..857e00cf579f 100644
-> --- a/tools/perf/arch/x86/util/topdown.c
-> +++ b/tools/perf/arch/x86/util/topdown.c
-> @@ -1,6 +1,7 @@
->  // SPDX-License-Identifier: GPL-2.0
->  #include "api/fs/fs.h"
->  #include "util/evsel.h"
-> +#include "util/evlist.h"
->  #include "util/pmu.h"
->  #include "util/pmus.h"
->  #include "util/topdown.h"
-> @@ -87,11 +88,22 @@ bool arch_is_topdown_metrics(const struct evsel *evsel)
->   */
->  bool arch_topdown_sample_read(struct evsel *leader)
->  {
-> +	struct evsel *evsel;
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 4e391daafa64..90cd30e9723e 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -3484,17 +3484,20 @@ int bpf_uprobe_multi_link_attach(const union bpf_=
+attr *attr, struct bpf_prog *pr
+>                                                     &uprobes[i].consumer)=
+;
+>                 if (IS_ERR(uprobes[i].uprobe)) {
+>                         err =3D PTR_ERR(uprobes[i].uprobe);
+> -                       bpf_uprobe_unregister(uprobes, i);
+> -                       goto error_free;
+> +                       link->cnt =3D i;
+> +                       goto error_unregister;
+>                 }
+>         }
+>
+>         err =3D bpf_link_prime(&link->link, &link_primer);
+>         if (err)
+> -               goto error_free;
+> +               goto error_unregister;
+>
+>         return bpf_link_settle(&link_primer);
+>
+> +error_unregister:
+> +       bpf_uprobe_unregister(uprobes, link->cnt);
 > +
->  	if (!evsel__sys_has_perf_metrics(leader))
->  		return false;
->  
-> -	if (arch_is_topdown_slots(leader))
-> -		return true;
-> +	if (!arch_is_topdown_slots(leader))
-> +		return false;
-> +
-> +	/*
-> +	 * If slots event as leader event but no topdown metric events
-> +	 * in group, slots event should still sample as leader.
-> +	 */
-> +	evlist__for_each_entry(leader->evlist, evsel) {
-		evsel = leader->leader;
-		evlist__for_each_entry_continue(leader->evlist, evsel)
-			if (evsel->leader != leader->leader)
-				return false;
-
-Maybe we should limit the check in a group, rather than the entire
-evlist. Something as above (not tested)?
-
-Thanks,
-Kan
-> +		if (evsel != leader && arch_is_topdown_metrics(evsel))
-> +			return true;
-> +	}
->  
->  	return false;
->  }
+>  error_free:
+>         kvfree(uprobes);
+>         kfree(link);
+>
