@@ -1,202 +1,238 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B44C72582;
-	Tue, 13 Aug 2024 07:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF68C3AC01
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 07:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723534244; cv=none; b=pHANQnPtqb5/UBDgIjIqZV899lF+j3ifzBI+EmxJZsEtrjm5DzR+DyCiy2bwW604umHdZGZH/aPYPxK77MDYCJguc5xY6+xu5tSNtWK4auGp0aHC0AMypcDvNtBH2lz5FBKWdeyJp/KlOgqMNzPIUjxv6bv2ChCeCxxwLG7/tpg=
+	t=1723535499; cv=none; b=lfLL+i68UkobEjgsQOoLxOm+1WnVwEiw9NBzODaEIcT+3asNt/wc5fadgtAGTcdlc0os8Sk7Kq3ReNqeilAwPoR6bmciCBQnzA8V76XwmgApX2MhoRIua565WUOR70Dd96Kw5EQ5Kg8CqdPOZLtOn36qD539f9Elx/BEc2d9rvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723534244; c=relaxed/simple;
-	bh=hAQZixzCwYGKYk26E6wIRzn58O+FkXlUjBRcl1zSt7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BW8vCf6eWcFiqsqYaim2Entc3vwYZs1/n1lt1UGpwHu68vYH1r5xcNjOuS+sy777dG3vqxFpV3+4yo2//X+sVJ8JM8X9REikwcPwDDOvHqqkYXfxsRF4/8fIpdnR3aVjBtwRVD3qjZPuyb/W5x3KZD1mhNmreZAqR7o9NuDJ//Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHfK14FR; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723535499; c=relaxed/simple;
+	bh=uy7EbA4adCpmBV+XAxZRnyemUj+sq3qJroIknwk7CY8=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=hNMxvQntzvWg/ea8Lx9zLay2hh+todU/Uatr1+yJ+3zwtd576Ju+MWob3l8meT9tsRo/Vr2+3bWrmtsDIXA7xJlCy3oSEd9l38PowjXaoMNeKd0KO6uE7HWaK5+PdxrGy0IurAboy03/KUyBWFjcISYiP6IRuGpv4A4QYJNde6g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=klvrMJ+C; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHfK14FR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723534243; x=1755070243;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hAQZixzCwYGKYk26E6wIRzn58O+FkXlUjBRcl1zSt7o=;
-  b=FHfK14FR7ArJ3kf4XPnPfTkGJKex7iUY21QX7Q12QLuoVvO7+IGIWHJE
-   Zv54bTnpAbXqX0XkcVi3OW/HO3iUYA0aw7+JVE7cV/KEOxnEIG3rBHtfI
-   e6mOqiBncE6JxYQ6/AJ0RYUBIOw7YGS+QC447nseRDYF2SHEDcF+qVf7w
-   +ECP8ZFlyAAIQ91OspNo/Em5nEqbDVjW2WIo+UXqPm8i6fJwPTgIu3jIb
-   LnOvwBg92AiY251of4GrmdQKO584P0WVI9Pr52flW+JIZS9Bz7O7RSSof
-   OgZ3gt/Uo22Age+AaVDT9yrBWbKIZ9cCm/N05uC0SzDajYS5Dznb4MP9L
-   A==;
-X-CSE-ConnectionGUID: MaXQpgswTPSBVyevIM6tqA==
-X-CSE-MsgGUID: c4GE1hxyR8iBynqoYO1cQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11162"; a="33081609"
-X-IronPort-AV: E=Sophos;i="6.09,285,1716274800"; 
-   d="scan'208";a="33081609"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 00:30:42 -0700
-X-CSE-ConnectionGUID: lPH5BXBIRXqcBqpddxUMog==
-X-CSE-MsgGUID: BZSLQ1NsRa6MB7i6CexvgA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,285,1716274800"; 
-   d="scan'208";a="62969865"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by fmviesa005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 00:30:39 -0700
-Message-ID: <adc34dd8-88bf-4a3e-9939-c2fa0ddb4b65@linux.intel.com>
-Date: Tue, 13 Aug 2024 15:30:36 +0800
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="klvrMJ+C"
+Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47D4nRCL003513;
+	Tue, 13 Aug 2024 07:51:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	4lOSm3QcNI38xr730OjvcbzCPOYpBB+fW8uXv6QK19Y=; b=klvrMJ+C/8MkNU2k
+	FbBCMbvwlzg/NFfHSfTHDoE6RuWbwQNCpp9l8Z4KOzteHWQM7BnpTZ4KHJ1jkf55
+	B/F1vOzXyizAIfdsmlEu6SwumiE8GcoYmELNhupRa/4TxzjRsW4osHME2o2mrKO0
+	J7PLrm5AbpnGWsa4dpxf9bxPZfEvGUS5XufExPlDnEtRTvCYrNucj+cb0A+zMzHx
+	9VpuyNp+F64szlnXusnYRX16m4ovuMbBGkRm77mOGF68t3zNOZzc5/P+dXra47ej
+	dQAuVgluaiQOF38BajouINCpckhy9eKygAPBp9zd5sPIrGL9Bu2q/r6aOgbjZfdy
+	BXI9Ng==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wwmpq24a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 07:51:23 +0000 (GMT)
+Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47D7pMtv015653;
+	Tue, 13 Aug 2024 07:51:22 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wwmpq244-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 07:51:22 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47D58FTm029691;
+	Tue, 13 Aug 2024 07:51:21 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40xmrma8q7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 13 Aug 2024 07:51:21 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47D7pIPQ54001996
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 13 Aug 2024 07:51:20 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 2777D2004D;
+	Tue, 13 Aug 2024 07:51:18 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A530C2004B;
+	Tue, 13 Aug 2024 07:51:15 +0000 (GMT)
+Received: from [9.171.86.190] (unknown [9.171.86.190])
+	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 13 Aug 2024 07:51:15 +0000 (GMT)
+Message-ID: <e1435347-404e-4ff4-a4b1-c9338a60c8d3@linux.ibm.com>
+Date: Tue, 13 Aug 2024 13:21:14 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+To: Arnaldo Carvalho de Melo <acme@kernel.org>, vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
+        Ian Rogers <irogers@google.com>, Disha Goel <disgoel@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <Zh6ZEGOfgcEfwha4@x1> <20240429110439.17362-1-vmolnaro@redhat.com>
+ <ZjVIQa3JouJde7I1@x1> <ZroKjgWHYwPpvbau@x1>
+Content-Language: en-US
+From: kajoljain <kjain@linux.ibm.com>
+In-Reply-To: <ZroKjgWHYwPpvbau@x1>
+Content-Type: text/plain; charset=UTF-8
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: WMf9r7kV6ZWy0VWy1cLkniiF6ariiBgZ
+X-Proofpoint-GUID: u-KO2xItUGfnfdzox_h8O1_8GR73SZPJ
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 3/5] perf x86/topdown: Don't move topdown metric events
- in group
-To: "Liang, Kan" <kan.liang@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
- <20240712170339.185824-4-dapeng1.mi@linux.intel.com>
- <83cfa057-1791-4aab-ace8-fb0ad5a607b7@linux.intel.com>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <83cfa057-1791-4aab-ace8-fb0ad5a607b7@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-12_12,2024-08-13_01,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ impostorscore=0 suspectscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 mlxscore=0 clxscore=1011 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
+ definitions=main-2408130053
 
 
-On 8/12/2024 11:37 PM, Liang, Kan wrote:
->
-> On 2024-07-12 1:03 p.m., Dapeng Mi wrote:
->> when running below perf command, we say error is reported.
+
+On 8/12/24 18:43, Arnaldo Carvalho de Melo wrote:
+> On Fri, May 03, 2024 at 05:25:37PM -0300, Arnaldo Carvalho de Melo wrote:
+>> On Mon, Apr 29, 2024 at 12:56:24PM +0200, vmolnaro@redhat.com wrote:
+>>> From: Veronika Molnarova <vmolnaro@redhat.com>
+>>>
+>>> With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
+>>> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
+>>> stat for hv_gpci events without required permission set returns an
+>>> error value of -1 to differentiate the output from the unsupported
+>>> events. The stat_all_pmu test was designed in a way, that if any
+>>> command exits with a non-zero value the test exits with an error
+>>> value without any information provided due to the 'set -e' option.
 >>
->> perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
->>
->> ------------------------------------------------------------
->> perf_event_attr:
->>   type                             4 (cpu)
->>   size                             168
->>   config                           0x400 (slots)
->>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->>   read_format                      ID|GROUP|LOST
->>   disabled                         1
->>   sample_id_all                    1
->>   exclude_guest                    1
->> ------------------------------------------------------------
->> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
->> ------------------------------------------------------------
->> perf_event_attr:
->>   type                             4 (cpu)
->>   size                             168
->>   config                           0x8000 (topdown-retiring)
->>   { sample_period, sample_freq }   4000
->>   sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
->>   read_format                      ID|GROUP|LOST
->>   freq                             1
->>   sample_id_all                    1
->>   exclude_guest                    1
->> ------------------------------------------------------------
->> sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
->> sys_perf_event_open failed, error -22
->>
->> Error:
->> The sys_perf_event_open() syscall returned with 22 (Invalid argument) for event (topdown-retiring).
->>
->> The reason of error is that the events are regrouped and
->> topdown-retiring event is moved to closely after the slots event and
->> topdown-retiring event needs to do the sampling, but Intel PMU driver
->> doesn't support to sample topdown metrics events.
->>
->> For topdown metrics events, it just requires to be in a group which has
->> slots event as leader. It doesn't require topdown metrics event must be
->> closely after slots event. Thus it's a overkill to move topdown metrics
->> event closely after slots event in events regrouping and furtherly cause
->> the above issue.
->>
->> Thus don't move topdown metrics events forward if they are already in a
->> group.
->>
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/arch/x86/util/evlist.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
->> index 332e8907f43e..6ae044f21843 100644
->> --- a/tools/perf/arch/x86/util/evlist.c
->> +++ b/tools/perf/arch/x86/util/evlist.c
->> @@ -85,7 +85,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->>  		/* Followed by topdown events. */
->>  		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->>  			return -1;
->> -		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
->> +		/*
->> +		 * Move topdown events forward only when topdown events
->> +		 * are not in same group with previous event.
->> +		 */
-> Do you mean this case?
->
-> perf stat -e '{slots,branches},topdown-retiring' -C0 sleep 1
-> WARNING: events were regrouped to match PMUs
->
->  Performance counter stats for 'CPU(s) 0':
->
->         22,568,316      slots
->            569,904      branches
->          3,805,637      topdown-retiring
-
-Yes, this case can be regrouped.
-
-
->
-> But if I add one more event before topdown-retiring, it seems break again.
->
-> perf stat -e '{slots,branches},cycles,topdown-retiring' -C0 sleep 1
->
->  Performance counter stats for 'CPU(s) 0':
->
->         25,218,108      slots
->            647,598      branches
->          4,345,121      cycles
->    <not supported>      topdown-retiring
-
-Yes, this case can't be supported by original code. I ever tried to support
-this format, but it's not easy, it needs to fully change current sort logic.
-
-
->
-> I'm not asking to support all the above cases. I just try to understand
-> which cases you plan to support.
->
-> Can you please add some comments or update the document to clearly show
-> which format is supported, which format will be automatically adjusted
-> by the tool, and which format will be error out?
-
-Yeah, I would list all currently supported regrouping format. BTW, is there
-a document to describe the topdown metrics feaeture. If not, I would add
-comments here.
-
-
->
-> We should also need test cases for all the supported formats, not just
-> the standard one.
-
-Sure. thanks.
-
-
->
+>> Is this v2 or v3? Kajol, can I have your tested-by?
+> 
+> Oops, Kajol wasn't on the CC list, nor Ian, I'm adding them, maybe Kajol
+> can test it on those machines and Ian, who wrote the test can take a
+> look, also adding all the perf tools reviewers, as listed in
+> MAINTAINERS.
+> 
 > Thanks,
-> Kan
->
->> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
->> +		    lhs->core.leader != rhs->core.leader)
->>  			return 1;
->>  	}
->>  
+> 
+> - Arnaldo
+>  
+Hi Veronika,
+I checked the patch, code wise patch looks fine to me. I also tested it
+on powerpc system.
+
+Just have concern on your commit message, you added below text as part
+of your commit message:
+
+It was caught by CKI testing where it was triaged to stop
+blocking further MRs, as most of the powerpc machines do not support
+some of the hv_gpci events.
+
+The hv-gpci events are supported in pseries system.
+And for different power processors, we already have code to include only
+supported event as part of perf list.
+
+If you are taking about parametrized events which are skipped in this
+testcase, its not that those parametrized events are not supported.
+Since testing proper values of the parameters is out of scope of this
+script we are skipping those events.
+
+Can you remove that part from commit message? Rest looks fine to me.
+
+Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+Tested-by: Kajol Jain <kjain@linux.ibm.com>
+
+Thanks,
+Kajol Jain
+
+>>> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
+>>> event causes failure after the MR as the zero return value was required.
+>>> The issue propagated upstream as the list of the files that affected perf
+>>> did not cover the changed files and was updated after the issue was
+>>> discovered. It was caught by CKI testing where it was triaged to stop
+>>> blocking further MRs, as most of the powerpc machines do not support
+>>> some of the hv_gpci events.
+>>>
+>>> Remove the 'set -e' option from the test and rework the test case to log
+>>> the status of the event for better maintainability. Instead of exiting
+>>> immediately after 'perf stat' ends with a non-zero value, check the
+>>> return value and output of the 'perf stat' command with the appropriate action.
+>>>
+>>> Link to the MR !3916 of commit ad86d7ee43b22aa2:
+>>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
+>>>
+>>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+>>> ---
+>>> Fixed the issue with applying due to a fixed comment typo upstream and
+>>> added Ian's suggestion for the 'device busy' issue during parallel
+>>> testing.
+>>>
+>>>  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
+>>>  1 file changed, 29 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+>>> index c77955419173..a75beddda4db 100755
+>>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+>>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+>>> @@ -2,21 +2,38 @@
+>>>  # perf all PMU test
+>>>  # SPDX-License-Identifier: GPL-2.0
+>>>  
+>>> -set -e
+>>>  
+>>>  # Test all PMU events; however exclude parameterized ones (name contains '?')
+>>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+>>> -  echo "Testing $p"
+>>> -  result=$(perf stat -e "$p" true 2>&1)
+>>> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+>>> -    # We failed to see the event and it is supported. Possibly the workload was
+>>> -    # too small so retry with something longer.
+>>> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+>>> -    if ! echo "$result" | grep -q "$p" ; then
+>>> -      echo "Event '$p' not printed in:"
+>>> -      echo "$result"
+>>> -      exit 1
+>>> +  echo -n "Testing event '$p' -- "
+>>> +  stat_output=$(perf stat -e "$p" true 2>&1)
+>>> +  stat_result=$?
+>>> +  if echo "$stat_output" | grep -q "$p"; then
+>>> +    # return value 0 if counters get printed either if the event is supported or not
+>>> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+>>> +        echo "supported"
+>>> +    elif [ $stat_result -eq 0 ]; then
+>>> +        echo "not supported"
+>>> +    # return value 255 when the required permission for the event is not set
+>>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+>>> +        echo "no permission to enable"
+>>> +    # return value 255 in case of resource busy during parallel testing of events
+>>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
+>>> +        echo "resource busy"
+>>> +    # return value 129 when trying to run 'perf stat' with a non-existent event
+>>> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+>>> +        echo "Fail: Bad event name"
+>>> +        echo "$stat_output"
+>>> +        exit 1
+>>> +    else
+>>> +        echo "Fail: Unknown return value $stat_result"
+>>> +        echo "$stat_output"
+>>> +        exit 1
+>>>      fi
+>>> +  else
+>>> +      echo "Fail: Event '$p' not printed in:"
+>>> +      echo "$stat_output"
+>>> +      exit 1
+>>>    fi
+>>>  done
+>>>  
+>>> -- 
+>>> 2.43.0
+>>>
+> 
