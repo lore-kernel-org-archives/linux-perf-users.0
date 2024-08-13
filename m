@@ -1,121 +1,202 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C520019D08F
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 14:28:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41D8519EEC0;
+	Tue, 13 Aug 2024 14:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723559301; cv=none; b=hQJpIqEu0isqAk5iWUriprxgNtM4p46DxIOztuErA1Yxf27ijPRF2TBe1Vi84I21FpRH4QYR6xRPiCdhfk2tcNZaSVLADVwgt4bqk4lCEjIi26tZEDyfucNM3ZGwsHWZVDeClUooLHJjJsFb+qBv3l/xJOP5B5HEcwngXuJOmRU=
+	t=1723559316; cv=none; b=sdyg5q9irzxOEAu5kZ2n9r/h3AkEh8P9pCE/aiZCao7ZgLUJgFbx33WO1xCtt2qSHDiadxHjlr3LglKoZhs/cIDipOKd2nACAC8YckD5Gwk2vn/prKTmCSCfP/nTtGsodJNtC1jZwGcSQHji38fw8Ro7yxNV/zMBLgCieKUFxUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723559301; c=relaxed/simple;
-	bh=MGfamdGAk8HrKfaDqakpaY7IT3Ti3k5iPmyzw0pKF6Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HzRm5uYydg+RysNPX7xb102ZN7xUxIA8tg4tdjP088zXuRk4Ube5hTNcAM2HVy/e984nAbkIz7PF2LVT07gmFtC+qnFjd3Ku/9XkjWtYHow7YTrny/9GiEyNi90jrx+ZoH09z1APybh6APa9ysFoEEkaxrAfoHyQ9oF1oZFnX50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8NVb/cO; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723559316; c=relaxed/simple;
+	bh=MXNZ/zeDWQXz9ILdX6QMiT8hkUjUFvD51FnJbgAZ3o4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e4Q7iCP1sywoFyC0O273I9DkJQvzmZUEnqOK4+wdTgLPoRUTBY3pfBqdPAgDwjKACUnhD30MD1snF77afgbl9yDyykIBBiFjNU8umbI6NNgW72A9G7dLqWACui0Ou3bCc3GvuqSsd6sR7am6nH8r+XeBO/z8w5bZrzhzSbfHok0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ms+JB4ZP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8NVb/cO"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44fdc70e695so206501cf.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 07:28:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723559298; x=1724164098; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SwMwCe9XraET4qEmC7d2hSRU8Grm1zoGQun5Yl3pIFQ=;
-        b=r8NVb/cOhvjkNZQrbDxyVUlbNZ8bbxIJfuFeWeFN9hJUq/EIPqvRvLbDTBqX3/o12V
-         drsOn1vmyVrfuXEKZLg6NeeTMbBhb26UojjehAVUQngQJvgByFIuvFlUPWwT6Ako7xnV
-         eOZoI0qATA6hQWQ04PDvmoFLfM+PROg8Kw9mo4njh5yFhfN10UPk+9D2v60hwSDvd6+U
-         bBNlnmh2UvB2CLaq5tNpqplPJaBuIwcQ7ZdZDA92ytv4vIlz6W0F17d4hLwjqy7xdSxE
-         7j4euz3tc/bFp22DvCqdofhVX7UnICj6d2FE9bQAaM2sgVApawTxQw0RtEJiG4xQ2cgS
-         UAXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723559298; x=1724164098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SwMwCe9XraET4qEmC7d2hSRU8Grm1zoGQun5Yl3pIFQ=;
-        b=Qx6stpz8lgK0892iQi2rWSmzqQPhpm+juRrC86lzfn82L9c/hba6B+xQcIzVY/f/aE
-         q7PR3laZqyp1a6KnZ5k04x7+q19O2CQPQysFuUAtN0Nicp/7qo34x+oyqNwvckcpaqFn
-         DbpxhvFkJIzL/qIaqRunVBYKV+5Ob5GkhWJFfMbcy+Z3NNZiBGKFNiL8JctJL01kE+xy
-         oczyjtGwEj0jd1r1+7lYDTG5XXE66N/QFyyer0r387hYWhYBpUOXqXz7zDm+mf8qJCvd
-         67PYWnnl1lrxdYlkPNpAwYUo3Nj8uTPu3ZEhqsQp+T+vNPomfAXbJgY4uMj5lYSwohbu
-         8xDQ==
-X-Gm-Message-State: AOJu0Yz61G/0pS8QULf/vFGMQasiAUGJcMqitbw49i6WgdNcnYLzd66c
-	4QxF4YBGJnOmahdJrPkEjxdHQrZJzGcqALaP6VTeOzQQ9q6NErso1CaV4bHoZpwDPklEQiEQYlc
-	Yo+jLQPshcpsmbGWPf2WbddRTV/NJ73yeCFKT
-X-Google-Smtp-Source: AGHT+IEHcwqV4cFmhHUR8wPvObTxmaxWalQoPmmrv/9ZEE67XYps098QKeZ/3rcuQ+XnEfwzoGkAkOkUdzIssDWVrWg=
-X-Received: by 2002:a05:622a:102:b0:447:e497:95d0 with SMTP id
- d75a77b69052e-4534f9d9f38mr1372091cf.17.1723559298338; Tue, 13 Aug 2024
- 07:28:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ms+JB4ZP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75F94C4AF09;
+	Tue, 13 Aug 2024 14:28:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723559316;
+	bh=MXNZ/zeDWQXz9ILdX6QMiT8hkUjUFvD51FnJbgAZ3o4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Ms+JB4ZPldx9SMqL/CSuafJ0nAGICY6NuBj/s1vhr6Mh+Nu3MjOfLRx20h0sVTgvf
+	 9vNDspD6cB5nch2/hQJTvVkldq3CyypACAxrf06+kA8awQLmYxq/xDNTPL2UfSLRoE
+	 6E5eMKbUYX5F1Mw80U4c/q8ESQj2e9O5esYEANPqhQlikuBOY1zMAjvMlhkwHgvxkc
+	 NTrMn1nXDTuljOmGjf/TWwyuTpLVwmMBaJoy8KWANW6cxN+4xsYRGg78Q9K8UH6Vm0
+	 8yrZaL3iT7UXvbWh3d+IYxq7Lx8m+vDN0wFwg56AooCo5sbMe5YB/c18AF8gk3OpKA
+	 QF6QTaMapseSw==
+Date: Tue, 13 Aug 2024 11:28:32 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Ian Rogers <irogers@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Casey Chen <cachen@purestorage.com>,
+	Tom Zanussi <tzanussi@gmail.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] perf inject: Inject build ids for entire call chain
+Message-ID: <ZrttkJHX5DAmHGvP@x1>
+References: <20240812224119.744968-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813132323.98728-1-james.clark@linaro.org> <20240813132323.98728-2-james.clark@linaro.org>
-In-Reply-To: <20240813132323.98728-2-james.clark@linaro.org>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 Aug 2024 07:28:05 -0700
-Message-ID: <CAP-5=fX-m3mhi0sGsGo9biWmFV_U=35Tp7h9X0reg3zHMEsy_Q@mail.gmail.com>
-Subject: Re: [PATCH 1/7] perf stat: Initialize instead of overwriting clock event
-To: James Clark <james.clark@linaro.org>
-Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240812224119.744968-1-irogers@google.com>
 
-On Tue, Aug 13, 2024 at 6:24=E2=80=AFAM James Clark <james.clark@linaro.org=
-> wrote:
->
-> This overwrite relies on the clock event remaining at index 0 and is
-> quite a way down from where the array is initialized, making it easy to
-> miss. Just initialize it with the correct clock event to begin with.
->
-> Signed-off-by: James Clark <james.clark@linaro.org>
-> ---
->  tools/perf/builtin-stat.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
-> index 1f92445f7480..a65f58f8783f 100644
-> --- a/tools/perf/builtin-stat.c
-> +++ b/tools/perf/builtin-stat.c
-> @@ -1817,7 +1817,9 @@ static int add_default_attributes(void)
->  {
->         struct perf_event_attr default_attrs0[] =3D {
->
-> -  { .type =3D PERF_TYPE_SOFTWARE, .config =3D PERF_COUNT_SW_TASK_CLOCK  =
-           },
-> +  { .type =3D PERF_TYPE_SOFTWARE, .config =3D target__has_cpu(&target) ?
-> +                                               PERF_COUNT_SW_CPU_CLOCK :
-> +                                               PERF_COUNT_SW_TASK_CLOCK =
-       },
+On Mon, Aug 12, 2024 at 03:41:19PM -0700, Ian Rogers wrote:
+> The DSO build id is injected when the dso is first encountered but the
+> checking for first encountered only looks at the sample->ip not the
+> entire callchain. Use the callchain logic to ensure all build ids are
+> inserted.
 
-Hand crafting perf_event_attr when we have an event name to
-perf_event_atttr parser doesn't make sense. Doing things this way
-means we need to duplicate logic between event parsing and these
-default configurations. The default configurations are also using
-legacy events which of course are broken on Apple ARM M? (albeit for
-hardware events, here it is software). Event and metric parsing has to
-worry about things like grouping topdown events. All-in-all let's have
-one way to do things, event parsing, otherwise this code is going to
-end up reinventing all the workarounds the event parsing has to have.
-Lots of struct perf_event_attr also contribute to binary size.
+Split into two patches, one with the paragraph below and the other, a
+followup to that, with the fix and the paragraph above.
 
-If you are worried about a cycles event being opened on arm_dsu PMUs,
-there is this patch:
-https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
+Applied to perf-tools-next,
 
 Thanks,
-Ian
+
+- Arnaldo
+ 
+> Add a for_each callback style API to callchain with
+> sample__for_each_callchain_node. Possibly in the future such an API
+> can avoid the overhead of constructing the call chain list.
+> 
+> Fixes: 454c407ec17a ("perf: add perf-inject builtin")
+> Signed-off-by: Ian Rogers <irogers@google.com>
+> Acked-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+> v2. Rebase and add Namhyung's acked-by.
+> ---
+>  tools/perf/builtin-inject.c | 31 +++++++++++++++++++++++++++++++
+>  tools/perf/util/callchain.c | 35 +++++++++++++++++++++++++++++++++++
+>  tools/perf/util/callchain.h |  6 ++++++
+>  3 files changed, 72 insertions(+)
+> 
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index ef9cba173dd2..a35bde3f3c09 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -743,6 +743,29 @@ static int dso__inject_build_id(struct dso *dso, const struct perf_tool *tool,
+>  	return 0;
+>  }
+>  
+> +struct mark_dso_hit_args {
+> +	const struct perf_tool *tool;
+> +	struct machine *machine;
+> +	u8 cpumode;
+> +};
+> +
+> +static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
+> +{
+> +	struct mark_dso_hit_args *args = data;
+> +	struct map *map = node->ms.map;
+> +
+> +	if (map) {
+> +		struct dso *dso = map__dso(map);
+> +
+> +		if (dso && !dso__hit(dso)) {
+> +			dso__set_hit(dso);
+> +			dso__inject_build_id(dso, args->tool, args->machine,
+> +					     args->cpumode, map__flags(map));
+> +		}
+> +	}
+> +	return 0;
+> +}
+> +
+>  int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *event,
+>  			       struct perf_sample *sample,
+>  			       struct evsel *evsel __maybe_unused,
+> @@ -750,6 +773,11 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
+>  {
+>  	struct addr_location al;
+>  	struct thread *thread;
+> +	struct mark_dso_hit_args args = {
+> +		.tool = tool,
+> +		.machine = machine,
+> +		.cpumode = sample->cpumode,
+> +	};
+>  
+>  	addr_location__init(&al);
+>  	thread = machine__findnew_thread(machine, sample->pid, sample->tid);
+> @@ -769,6 +797,9 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
+>  		}
+>  	}
+>  
+> +	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
+> +					mark_dso_hit_callback, &args);
+> +
+>  	thread__put(thread);
+>  repipe:
+>  	perf_event__repipe(tool, event, sample, machine);
+> diff --git a/tools/perf/util/callchain.c b/tools/perf/util/callchain.c
+> index 6d075648d2cc..0d608e875fe9 100644
+> --- a/tools/perf/util/callchain.c
+> +++ b/tools/perf/util/callchain.c
+> @@ -1797,3 +1797,38 @@ s64 callchain_avg_cycles(struct callchain_node *cnode)
+>  
+>  	return cycles;
+>  }
+> +
+> +int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
+> +				    struct perf_sample *sample, int max_stack,
+> +				    callchain_iter_fn cb, void *data)
+> +{
+> +	struct callchain_cursor *cursor = get_tls_callchain_cursor();
+> +	int ret;
+> +
+> +	if (!cursor)
+> +		return -ENOMEM;
+> +
+> +	/* Fill in the callchain. */
+> +	ret = thread__resolve_callchain(thread, cursor, evsel, sample,
+> +					/*parent=*/NULL, /*root_al=*/NULL,
+> +					max_stack);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* Switch from writing the callchain to reading it. */
+> +	callchain_cursor_commit(cursor);
+> +
+> +	while (1) {
+> +		struct callchain_cursor_node *node = callchain_cursor_current(cursor);
+> +
+> +		if (!node)
+> +			break;
+> +
+> +		ret = cb(node, data);
+> +		if (ret)
+> +			return ret;
+> +
+> +		callchain_cursor_advance(cursor);
+> +	}
+> +	return 0;
+> +}
+> diff --git a/tools/perf/util/callchain.h b/tools/perf/util/callchain.h
+> index d5c66345ae31..76891f8e2373 100644
+> --- a/tools/perf/util/callchain.h
+> +++ b/tools/perf/util/callchain.h
+> @@ -311,4 +311,10 @@ u64 callchain_total_hits(struct hists *hists);
+>  
+>  s64 callchain_avg_cycles(struct callchain_node *cnode);
+>  
+> +typedef int (*callchain_iter_fn)(struct callchain_cursor_node *node, void *data);
+> +
+> +int sample__for_each_callchain_node(struct thread *thread, struct evsel *evsel,
+> +				    struct perf_sample *sample, int max_stack,
+> +				    callchain_iter_fn cb, void *data);
+> +
+>  #endif	/* __PERF_CALLCHAIN_H */
+> -- 
+> 2.46.0.76.ge559c4bf1a-goog
+> 
