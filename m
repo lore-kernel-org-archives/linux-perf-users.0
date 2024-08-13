@@ -1,57 +1,57 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F4819B3E3
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 13:25:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D6419CCE7
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 13:25:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723555540; cv=none; b=gOYSKLCaoRaSvSFSzjDnfLfDko4wydINzoQcOEmM9+hbScRYmwZjH1tnYXA1kuqDQJ/3wM8idH4Z2EjzITOjMs47T/ww66tUvW5IZm4/ZqT73NsmqMg6PPz66AxXDOhOuU3OxNwRCimDD9bUp1pbyf+B1EJeLB6ZA6m8Fo6NwTM=
+	t=1723555549; cv=none; b=DM3IcRLbw26kqVzFdap/vtLBbK2+s96h7WgBt3mkXLY/x6k+KNHc7daXQ6vdngAUlstsQmG45GIN6Q/pZruXUX1LTWguE0fxLk7Qaq+kCRs+KT/6PDtBb/AOrlfOcErZTFAoEZpPw49j2IH69gJrWvmtDfLzwBhw/w9uxOeG01g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723555540; c=relaxed/simple;
-	bh=TCmY5/W8UjZo5v+UmsAxTLf+W/oV6ui66khMLptw/MU=;
+	s=arc-20240116; t=1723555549; c=relaxed/simple;
+	bh=iGoL+HLhqexTWkJ+dZ/JHwY3v5/+1jHfueA9y1XMENI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=VzxjDCqvCK7nYFBeKJH8qyfm97IslP+Tt0vbxztRPfCE/MupdMrqngfISUs7yAD5jdbC2ksYXbCbkyvtdnMcMtkT3Pz5Lj5C0MTZezzhXkjJ/boMB02ipurMhh7lia0if/jYw0CtvDmpnCuy0oiHcAWt/RUNhjccKsD7w/gaLPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SyEubhuE; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=fRB9glKaO+Vw8j1PGkSRP82YVYbWnE4xsXCfev16L4Ej1BsMaVZf3uYAhmY8sTqzf/CQXwlBzC3K3m6DTa2FNQ/dnrJiE7ztA7bFQpViSb2+dITtX6CD73iXjchL3t9ok3XFxSuSvSclpY6PseoRkvQDqQDUaFK8ZJDLmJncWM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VacMwHr5; arc=none smtp.client-ip=209.85.167.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SyEubhuE"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-428f5c0833bso37037995e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 06:25:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VacMwHr5"
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-530d0882370so5291940e87.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 06:25:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723555537; x=1724160337; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1723555546; x=1724160346; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
-        b=SyEubhuEKik3hYXSQIEkZ30iK4uJjqe3fZfSo4RIn9Iz8Hz7w7TDuqAiDazlwSIVbV
-         4gNAe4IJAdnPNivrWzM8C7i3vRuibrUMXnIcjCN6bQcozqS2O8gnMTcRCXATEfg1hC/V
-         r5bfi62NgxifckMKRxv4d2MiPzZQRylFom2MJWXoMVIJrfv+7DoGHdWmBTsj3/zzPveG
-         fWIxyQJGy+cp+XcLMVkGL3iSHTrtMewDIJhoC4vJi0/UJuwFA7PAwapcnEQUwE+dHbAT
-         g+whSboAI6dGGva1UYlI3rvZqmFjJfdr6+xR7wjYtRzeUJNYLUo9bTO9FUJYo7Jxa6RR
-         M5vQ==
+        bh=Vqh5EYvMFCPE5arJzUrVuYN8olqKoGJkP7ilX3wyAGI=;
+        b=VacMwHr5yxVPr+U0smjT2svEZ0i/m5fxq0A+O4pdyImIjbn8dpW2gEGKYpoGQCq3uL
+         3WuOoYVm8yYckSGZmpqcR+1BfIm/M3M5qHNN9USHOZfkT/vDF/kRe+w6qzu9mcCp07XG
+         Xr59FoESDgWF8Th/eOTFtOzs7mVxA7y9g6FvdswgaY4LoqRiIbEtxt8viO48cI77tc89
+         /iqIftiJfLGof4G6uFJKcYPzaRsliYjPAWYREwr7UxP9onv4Az7oL+qRx0T3mH0EhgdY
+         O/N5bTtC6np+CppNWvBApLGBpsLKHlxJdBzqbx29gO3qZRl6Qn/BGiq0mkbOHb3LBGan
+         eSQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723555537; x=1724160337;
+        d=1e100.net; s=20230601; t=1723555546; x=1724160346;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
-        b=dq1AZfugoC1awFkipuKMeERI+PVtajDw2ajdxunBibAuzxRw1GdR7JF3Puo1PJOlN+
-         n9HdTJCBZd8AQ+S1IocL7Pocx8OgvWAQCqvlnXmBtn7RTKPCw38XFadzwot/a+3LOKHw
-         qBJqVPupJMRuJIDxtC+HPqZxZUA/kn4TXunRBPkqHM3sPoCHJH96J+2i7xMmxbZwJlMK
-         4PJMwtJlXzzC1st/K5QI3AFDgDItoA7ci3t4pWIRzluXofprb+HS8yxX2LNLnHByxiT8
-         4I7COXPLpURHx+PgAhdLN0HWAC6cW0UDINAlr2Q49HMqJ9lBdeYw7/01zQLLh5vX0aCa
-         RG+g==
-X-Forwarded-Encrypted: i=1; AJvYcCVeb+CCu+3E6zT4Stt3hdZr+5el/72u4E512jOH5NNA++TnA1qXe1yoUaA/8aXcTzQYPT5zdMn2KDN0eh5J5bDl/L3/WrXZw1kCDQ4BLhEuOg==
-X-Gm-Message-State: AOJu0Yw0GKh0T1dBs1GzB5mjI2UflmlmkWjWBrIsvAuD2ye64T+xITn1
-	DykpJCIGp/hRfgP/fnd0zt8g5rBA1zDHpD6e5vfEl2yZqbys1z6UAEEjgnOOr+w=
-X-Google-Smtp-Source: AGHT+IGc9t+MTAwYwGAaBX95OSnKFftghFZ3NfLAkZ7AAvwA9zVwqXl0BELY2LWwoeQ2oa+XAXA1ag==
-X-Received: by 2002:a05:600c:3550:b0:424:a401:f012 with SMTP id 5b1f17b1804b1-429d6269733mr21164045e9.3.1723555537440;
-        Tue, 13 Aug 2024 06:25:37 -0700 (PDT)
+        bh=Vqh5EYvMFCPE5arJzUrVuYN8olqKoGJkP7ilX3wyAGI=;
+        b=dFfci5cQFoJndxeK4kChqBGm8tu8MDCV8SpmwWpnd6rAdjYFW1mhjHdlBytFl+AQc5
+         NGYj8S/LInHQXBZ2VQuwlkU8HAzDHlcnZ6k5fHiFFtwEyjn1WAF4m+p1IL7OHIG5xliL
+         kX/7An1saoumA4Gujaven/m5/gNvLnvi395wqN8FvR0avPUiwuLmy+2FtOfoIShAr0sW
+         gk+gwrE3IzjSMDCkc+Zn3wh7ApGRnjohE5IolKIkGITwplKzv6aAOop7n9yYfF0pdhUC
+         +qnrB8fTCm5c2lvmkYb14YrqWE8YKsteYbmCLYKuTJ+GVOHzEl7adny1ilJ7+hIJBPwH
+         Il/w==
+X-Forwarded-Encrypted: i=1; AJvYcCVq94Vzr9rqRsbJsW2dUvWzmICK6nyMzQf3B6L7nx1ENJAjMIwfiIo0vMtueWaWuPnIc58Qgue6BRnYNuJXk+Aawky44P5agiLg5zKV5oOjIA==
+X-Gm-Message-State: AOJu0Yy6FZtW16VIjbV1ifhGE2nH3HftjQorUrzjw89z7WNojF2Ct9t4
+	aJ2kk/tddnp469pgK8H6VrZRQhAMbzcTlJ/1qqqssTqdB4/sWqBq4qingXFDrXI=
+X-Google-Smtp-Source: AGHT+IHMLVGDigrqektOOEcKtHUBUrZ0H1yBfl4W0aPOysz0l5q5wIN+XwIpSkq9sMLm2xPQfj7tKA==
+X-Received: by 2002:a05:6512:2348:b0:52c:e0e1:9ae3 with SMTP id 2adb3069b0e04-53213694527mr2503106e87.57.1723555546132;
+        Tue, 13 Aug 2024 06:25:46 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c738d21sm223186625e9.12.2024.08.13.06.25.36
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c738d21sm223186625e9.12.2024.08.13.06.25.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2024 06:25:36 -0700 (PDT)
+        Tue, 13 Aug 2024 06:25:45 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: irogers@google.com,
 	linux-perf-users@vger.kernel.org
@@ -74,9 +74,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Ze Gao <zegao2021@gmail.com>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 6/7] perf test: Make stat test work on DT devices
-Date: Tue, 13 Aug 2024 14:23:14 +0100
-Message-Id: <20240813132323.98728-7-james.clark@linaro.org>
+Subject: [PATCH 7/7] perf test: Add a test for default perf stat command
+Date: Tue, 13 Aug 2024 14:23:15 +0100
+Message-Id: <20240813132323.98728-8-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240813132323.98728-1-james.clark@linaro.org>
 References: <20240813132323.98728-1-james.clark@linaro.org>
@@ -88,44 +88,51 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PMUs aren't listed in /sys/devices/ on DT devices, so change the search
-directory to /sys/bus/event_source/devices which works everywhere. Also
-add armv8_cortex_* as a known PMU type to search for to make the test
-run on more devices.
+Test that one cycles event is opened for each core PMU when "perf stat"
+is run without arguments.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/tests/shell/stat.sh | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/tests/shell/stat.sh | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 3f1e67795490..525d0c44fdc6 100755
+index 525d0c44fdc6..7118cfc37f48 100755
 --- a/tools/perf/tests/shell/stat.sh
 +++ b/tools/perf/tests/shell/stat.sh
-@@ -117,16 +117,18 @@ test_cputype() {
+@@ -148,6 +148,26 @@ test_cputype() {
+   echo "cputype test [Success]"
+ }
  
-   # Find a known PMU for cputype.
-   pmu=""
--  for i in cpu cpu_atom armv8_pmuv3_0
-+  devs="/sys/bus/event_source/devices"
-+  for i in $devs/cpu $devs/cpu_atom $devs/armv8_pmuv3_0 $devs/armv8_cortex_*
-   do
--    if test -d "/sys/devices/$i"
-+    i_base=$(basename "$i")
-+    if test -d "$i"
-     then
--      pmu="$i"
-+      pmu="$i_base"
-       break
-     fi
--    if perf stat -e "$i/instructions/" true > /dev/null 2>&1
-+    if perf stat -e "$i_base/instructions/" true > /dev/null 2>&1
-     then
--      pmu="$i"
-+      pmu="$i_base"
-       break
-     fi
-   done
++test_hybrid() {
++  # Test the default stat command on hybrid devices opens one cycles event for
++  # each CPU type.
++  echo "hybrid test"
++
++  # Count the number of core PMUs
++  pmus=$(ls /sys/bus/event_source/devices/*/cpus 2>/dev/null | wc -l)
++
++  # Run default Perf stat
++  cycles_events=$(perf stat -- true 2>&1 | grep "cycles" | wc -l)
++
++  if [ "$pmus" -ne "$cycles_events" ]
++  then
++    echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
++    err=1
++    return
++  fi
++  echo "hybrid test [Success]"
++}
++
+ test_default_stat
+ test_stat_record_report
+ test_stat_record_script
+@@ -155,4 +175,5 @@ test_stat_repeat_weak_groups
+ test_topdown_groups
+ test_topdown_weak_groups
+ test_cputype
++test_hybrid
+ exit $err
 -- 
 2.34.1
 
