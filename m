@@ -1,104 +1,194 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFE71A7058
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 19:11:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8CE944C61;
+	Tue, 13 Aug 2024 20:06:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723576299; cv=none; b=MMr2V9wFxE5TBp2SkM7F4ZbQujTQpcGGfYr01ZLakJwkKSKa2PTaoDJ5vJp6gS3Up+oggzo2X+lfPV5Gb+oo16UWSDdeNoPjTnWr5jxG7MfHNzJVMwr1IQ4W78GFJYraYOmKhezpZx6H4LVRHTca5ApZyIqDvPrnzH4oEeXPNvA=
+	t=1723579572; cv=none; b=nNj8mEluJNL6ccCxFoN3Xtd/Q1Be73lLyo1PydeTVFJV4Yi6UYszWABjyYqpUQWbz0mfLuV3xqCo6gawks9Fc8yQsaXaWm/clXG94MK4+NNp+wuNe9E0ZXMyd/cQW7iD42GU96WIGMrYmCwlQa5UM+tqKK0Q3dmp/Y0KpW24cAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723576299; c=relaxed/simple;
-	bh=0akCB2lUXwXXL4c4nPCxosaE3I857/U47hgI91ToH8w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ze/77pwc6PlFn8zYsYLMYEbIJUD7Sly0kaJwNCvxWWfZXQr4xFOIvgHc55HzjrpN2zzlmjpwZUyFhEHxsyzVYvIymxXC00N64Gt+xPtfCS4gBOfflAw3/XZ8QvYMVtLfUOrvxOS5ATRQicfSsHagoGqRprR9sAIR5u4qCoIVRz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=B729vSPr; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1723579572; c=relaxed/simple;
+	bh=54vHcE4NSp0HZdHFv1znwaX2jlb0ZcZWWvDg02d3Tv0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hPIRq5xfNiLZp/OwX0Z9A/LBEUIsS5sRipPXDPf8zbHlyTUgv/O96mCGF4P+89EazUSEJ311eIH0y5G/ybbwihIpwQMwaoFG+Y4qVuRFGosfBG2RmzOT3iayBG32DmZb/k1V2FM/Obaq0e27uDxYsjltY67SA0oRpXqyuunXkDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PSCYpLlD; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B729vSPr"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1fd657c9199so185ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 12:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723576297; x=1724181097; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0akCB2lUXwXXL4c4nPCxosaE3I857/U47hgI91ToH8w=;
-        b=B729vSPrcNEGQKlsKDz6guarSKr345ecj6c36vuXCOJpMRNeIm5yyy6dnYwAmStzAw
-         JTju1PSEx2fGmj+e9HHOJ8x1xj6Hkxt/WktJ5cNPZ4zy9+itvTiF0BLZB79I7hnG70XE
-         STa7LCS/ddZD0UPZ7SD8S7atBtMdqpC3VdDTzS9L5libqZmgm9a7g2Kw5kOZgzZpHrSX
-         TdlDhT172CdZ30wccrS7Ak1Bq5xt8UwJwJXEHgancPaMFL98Pot83SBaIAdeH032mTUd
-         Gw8+b5KOh24PXehk9ZAtbKMfVYuGXAFhS2f4Lbm9+Q/sFKM9ShTR8N7Wwgn3WOIfnJOQ
-         yTFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723576297; x=1724181097;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0akCB2lUXwXXL4c4nPCxosaE3I857/U47hgI91ToH8w=;
-        b=HO2JSt3IpMARPaOJNssFpjcIZ0Ft+wPWcrrnRspDlJj93lGojjwxphksKu2k0aZ9xF
-         RWm/9zyi+iu8aNOhefNgigvNhzMRC7CB0vrjPTtjhH1HMtKJ0rvzsedpI8zKReaX2JcR
-         1Qwt9A/Qtd0bJTwZ6YssMxDlvCUEkdNs3GWj2L0R0vibhb7q+UNm01j4XIztsjEd6iyI
-         kLWGWx0XO+cKp3k5ee/dKzulTHa6+tJIDHakoCV1Hqor9d+KEoASyMpRcXYucAb99/xA
-         IS0u2y9c7zYVJX+LGlEvSWHcCRBZQIO0YFw6JDx+3gRmcJghcy6smmQod0ZDW3rOggAz
-         CFVw==
-X-Forwarded-Encrypted: i=1; AJvYcCV0VvG8enNoo1mRExdC7FV6HN4xNDoIU90x7uAxC66TCIX8NKhq4wzOExAACBlwoVgUx9yf5H+KbKpKDsk2NVhA544VEG5fIsYS4fcI+iaDbA==
-X-Gm-Message-State: AOJu0YxgRZvkaPPfOYv0KyI/Dl6W5vGvNy1gJ2ODUHWpcmB37KI+vsEG
-	VgwXYRrwLLrDOtDWgmb+ZjY7usT/GSHOkljCLS6vjjBOzGxfsd1TO2XLay/5SDy27P5u6PsemwB
-	Y8yUq/cZk8fbog8oezkx/T2tGsGTVRexneBk7
-X-Google-Smtp-Source: AGHT+IHdvTrBByfKnXhhh6zwnJjdbwU4J5mMe1EDQZ4dHX8vp3horZ6QsjNBJr6Goj6FpxG/8/69jGclyK5ceJGotzY=
-X-Received: by 2002:a17:902:a515:b0:1fd:d807:b29d with SMTP id
- d9443c01a7336-201d747b187mr219165ad.28.1723576297094; Tue, 13 Aug 2024
- 12:11:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PSCYpLlD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723579570; x=1755115570;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=54vHcE4NSp0HZdHFv1znwaX2jlb0ZcZWWvDg02d3Tv0=;
+  b=PSCYpLlD0e9Wr5b2Q7nos5aFeaVzRBXEV6PSAT3fA0isLmxUps8AXnKI
+   QvxOhrJMi1xqns3JFy9y7J7iX8K6bKluez9XKNmCZqQSSLV5ZjITQRSGo
+   FKNWTffumXD3Oa6tTMClp8/1MXLz+uxt4nB45fN5ZR5v4CwE318VH88MH
+   quox1x8s6seG5zjg4NksEKalyk955c2efi+ScfWUWi6shX1YKgT81D1nB
+   yWICv4IQO9wSB1GP57LsM5e+3e++RNuCU3JKKcHlxFTkPRGnrLTVHbBmo
+   lAhgTC3wMwl9jGwJFZ82LUqH13D89Qd84W3HwhZzZAnVZI0MvZPQUcY9o
+   A==;
+X-CSE-ConnectionGUID: XV4LlxTZTBm1r6eI0ciJtg==
+X-CSE-MsgGUID: 1kVffGZTSmClFgdsOQ4KPA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="25530595"
+X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
+   d="scan'208";a="25530595"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 13:06:09 -0700
+X-CSE-ConnectionGUID: Z7uGyN09QjWg1oF8aIlKfw==
+X-CSE-MsgGUID: ZqNnll1oRsiTr0h+r/Gk4A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
+   d="scan'208";a="89593604"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 13:06:08 -0700
+Received: from [10.212.113.57] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.57])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0CE3120CFED6;
+	Tue, 13 Aug 2024 13:06:06 -0700 (PDT)
+Message-ID: <aedabebd-dad1-4b2b-93d7-e2d9884bdaf7@linux.intel.com>
+Date: Tue, 13 Aug 2024 16:06:05 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813040613.882075-1-irogers@google.com> <ZrtzTTHim_vGX1ma@x1>
- <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com> <ZruhsN4i6xtc59nJ@x1>
-In-Reply-To: <ZruhsN4i6xtc59nJ@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 Aug 2024 12:11:21 -0700
-Message-ID: <CAP-5=fXVrhanvW6vrUJsubuWUC4jBM5v_NOFp40cqTsqdHHNaw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V3 1/9] perf report: Fix --total-cycles --stdio output
+ error
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: namhyung@kernel.org, irogers@google.com, peterz@infradead.org,
+ mingo@kernel.org, linux-kernel@vger.kernel.org,
+ linux-perf-users@vger.kernel.org, adrian.hunter@intel.com,
+ ak@linux.intel.com, eranian@google.com
+References: <20240813160208.2493643-1-kan.liang@linux.intel.com>
+ <20240813160208.2493643-2-kan.liang@linux.intel.com> <ZrupfUSZwem-hCZm@x1>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <ZrupfUSZwem-hCZm@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Aug 13, 2024 at 11:11=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Tue, Aug 13, 2024 at 09:04:57AM -0700, Ian Rogers wrote:
-> > On Tue, Aug 13, 2024 at 7:53=E2=80=AFAM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
-> > > > lock__parse calls disasm_line__parse passing
-> > > > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
-> > > > lock__delete.
-> > > >
-> > > > Found with lock/leak sanitizer.
-> >
-> > Ooops, I meant address/leak sanitizer.
-> >
-> > > Applied both patches to perf-tools-next.
-> >
-> > Thanks, could you fix the commit message.
->
-> Sure,
 
-Also, it'd be good if maybe Namhyung could take a look. I did things
-this way as it made sense to me, but we have nested things going on
-and potentially the free would be more natural in ins_ops__delete.
+
+On 2024-08-13 2:44 p.m., Arnaldo Carvalho de Melo wrote:
+> On Tue, Aug 13, 2024 at 09:02:00AM -0700, kan.liang@linux.intel.com wrote:
+>> From: Kan Liang <kan.liang@linux.intel.com>
+>>
+>> The --total-cycles may output wrong information with the --stdio.
+> 
+> Hey, I tried --total-cycles with --group but that didn't work, do you
+> think that would make sense?
+
+The current implementation doesn't handle the symbol_conf.event_group
+for the tui mode.
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-report.c#n543
+
+I will send a separate patch to fix it and make it consistent.
 
 Thanks,
-Ian
+Kan
+
+> 
+> Anyway, all applied, now testing and reviewing the changes,
+> 
+> thanks!
+> 
+> - Arnaldo
+>  
+>> For example,
+>>   perf record -e "{cycles,instructions}",cache-misses -b sleep 1
+>>   perf report --total-cycles --stdio
+>>
+>> The total cycles output of {cycles,instructions} and cache-misses are
+>> almost the same.
+>>
+>>  # Samples: 938  of events 'anon group { cycles, instructions }'
+>>  # Event count (approx.): 938
+>>  #
+>>  # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+>>  # ...............  ..............  ...........  ..........
+>>   ..................................................>
+>>  #
+>>            11.19%            2.6K        0.10%          21
+>>                           [perf_iterate_ctx+48 -> >
+>>             5.79%            1.4K        0.45%          97
+>>             [__intel_pmu_enable_all.constprop.0+80 -> __intel_>
+>>             5.11%            1.2K        0.33%          71
+>>                              [native_write_msr+0 ->>
+>>
+>>  # Samples: 293  of event 'cache-misses'
+>>  # Event count (approx.): 293
+>>  #
+>>  # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+>>                                                   [>
+>>  # ...............  ..............  ...........  ..........
+>>    ..................................................>
+>>  #
+>>            11.19%            2.6K        0.13%          21
+>>                           [perf_iterate_ctx+48 -> >
+>>             5.79%            1.4K        0.59%          97
+>> [__intel_pmu_enable_all.constprop.0+80 -> __intel_>
+>>             5.11%            1.2K        0.43%          71
+>>                              [native_write_msr+0 ->>
+>>
+>> With the symbol_conf.event_group, the perf report should only report the
+>> block information of the leader event in a group.
+>> However, the current implementation retrieves the next event's block
+>> information, rather than the next group leader's block information.
+>>
+>> Make sure the index is updated even if the event is skipped.
+>>
+>> With the patch,
+>>
+>>  # Samples: 293  of event 'cache-misses'
+>>  # Event count (approx.): 293
+>>  #
+>>  # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+>>                                                   [>
+>>  # ...............  ..............  ...........  ..........
+>>    ..................................................>
+>>  #
+>>            37.98%            9.0K        4.05%         299
+>>    [perf_event_addr_filters_exec+0 -> perf_event_a>
+>>            11.19%            2.6K        0.28%          21
+>>                           [perf_iterate_ctx+48 -> >
+>>             5.79%            1.4K        1.32%          97
+>> [__intel_pmu_enable_all.constprop.0+80 -> __intel_>
+>>
+>> Fixes: 6f7164fa231a ("perf report: Sort by sampled cycles percent per block for stdio")
+>> Acked-by: Namhyung Kim <namhyung@kernel.org>
+>> Reviewed-by: Andi Kleen <ak@linux.intel.com>
+>> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+>> ---
+>>  tools/perf/builtin-report.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+>> index dfb47fa85e5c..04b9a5c1bc7e 100644
+>> --- a/tools/perf/builtin-report.c
+>> +++ b/tools/perf/builtin-report.c
+>> @@ -565,6 +565,7 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
+>>  		struct hists *hists = evsel__hists(pos);
+>>  		const char *evname = evsel__name(pos);
+>>  
+>> +		i++;
+>>  		if (symbol_conf.event_group && !evsel__is_group_leader(pos))
+>>  			continue;
+>>  
+>> @@ -574,7 +575,7 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
+>>  		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
+>>  
+>>  		if (rep->total_cycles_mode) {
+>> -			report__browse_block_hists(&rep->block_reports[i++].hist,
+>> +			report__browse_block_hists(&rep->block_reports[i - 1].hist,
+>>  						   rep->min_percent, pos, NULL);
+>>  			continue;
+>>  		}
+>> -- 
+>> 2.38.1
+> 
