@@ -1,58 +1,58 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E802F19B3D3
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 14:56:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB619EEA7
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 15:10:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723560971; cv=none; b=NERc0vzvwjprMEBKQABC62ecrgsl3ScIeBR/LGQS++Mkra2OGwD7V3QvfABPALV+3MbroCPbfkU2CqNOAhadk73AO2O3OT9adtcXbImYPDXKmu8WV2fldTSIXJpw2qysrQqP3/dDPVNdpt1IO2DyzyDa3J8YHeECqqW0LwEOj2s=
+	t=1723561860; cv=none; b=tIQhv+Uwxy1hqKVouwdS9Ws2YF3Cpbr1nzdnO/vyawDkjKqFSbS64PCbzdFrHYtLLZznQbcvhJMnRCq/wtroS6/0xG2KkMBx+yCC/bonwHjhuo09gisIIi9Ay5hh8iaYacgMfdR0p0pAIkUVxPQayU3GCPaC5keplCJTk8QL+Jk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723560971; c=relaxed/simple;
-	bh=YJVPtcP3xBblRvsGTOkCtQsiaJruhggxGSYEIjcAO7M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IGNqbyFFtSaddoet2HuCDt8j277nQdLdDPaUo/RaNtzSS1P+nb0l9s6P15KUICH5RECUMZs0cMUOVo8foaF/DTnixBYiW1FDx7r1KF6UGWsXitgSJ6o4T1j6FGg5wyuh5vNZuS7rXC/TxYDSrA2oKvQT+sKvm6VbKm9ZI5Ya9qA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lPCYD2Ex; arc=none smtp.client-ip=209.85.221.42
+	s=arc-20240116; t=1723561860; c=relaxed/simple;
+	bh=LYIWBtskN6sXTvpBnGG3C6nVsnJ6dgWuEna51QeBeQ0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jJ88dmgNIQ8MAjm6jqX0/Ekm02LXemscLp6lZ04Db5CaceRcRNpetM2lBUscECj6HSTDDfLaDgfviW1c83NyRkoAWmoBaE/iF2DW85X/2u+Jt+STEWuXid6yVZ8wvYdrie3VzeLSM2ycudFzr474Io2kszzNtzt03nwEly+XkDs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SxzWBppV; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lPCYD2Ex"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3686b554cfcso2898484f8f.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 07:56:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxzWBppV"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-36887ca3da2so2774920f8f.2
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 08:10:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723560968; x=1724165768; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=O/d6A/qhlCYrDmQa5ZxJBHKaNKQHaV6za1HEEAuYgug=;
-        b=lPCYD2ExpRO3I0spqLhqgv7rKmGfQq5qIZgY+FfHH1OOr1K4U9+FDsY37kYpg932EV
-         4QrerDDwoEHggdNkcwzAlOfHY2i4DAbN4zBuOVGCjHX1p2pYVNNaLcL2EFr8RCfOuXGe
-         GGNZYuTlHsgGoOLRLHOmZOkmctA/6beXppsoTm+x7uP0KeVcuG3MxVYSoNj72R6tC0Mn
-         gPN2SwU3YLXrXlErw4SX4nnsUevmHHxkNyXN3sKRKQkrNXgXEfiljPLdDFAFTDXBa+u+
-         NOYOVZh9KRfjoSYIGr3hx++Bp625b7DvycrGIKJRBTPuR2ahB0YRGPjQwdVgfaxkX35R
-         GVjQ==
+        d=linaro.org; s=google; t=1723561856; x=1724166656; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=uNaRquM+gUEb0pKk86KM3Zb+qh4ZVa6K8vPWsqTERgs=;
+        b=SxzWBppVNP7mJOaH64PP55cpZp8KBgFA7GOAVUEKCxgSFsG4qa5LPWuEMynAq3AnHe
+         I850ph4Vizos/37qGt9Gt6PCMxPnPQyF+2/xb1qVJsbwLQBmY542DxS9gzBPlH0Pju3h
+         dgSO7DT4PJBpTiH4I+5RNL4L+GkA4FE4Hgkug8sVcr27mKFGhIJjWQeOAbNAsA46ur2n
+         +o7JyX2KG9nE1e9as/40k7cxtpzkl2Ak1aqMC8G5Y88R/SeyTetq375tee1A/ux7VRSQ
+         WLQFdhPK4UyN/AJBtMhleGWoSBAfwCCyAkpGYkd5mvQTvqwwFv4fwcepoAToeU6KaJLv
+         ewZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723560968; x=1724165768;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1723561856; x=1724166656;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=O/d6A/qhlCYrDmQa5ZxJBHKaNKQHaV6za1HEEAuYgug=;
-        b=vYTJveOwumaZBChM//Z0WrQid/AEdoX5sHaYjye9GKeDt1SUXvE1uCc7x2z36A+QCb
-         p2TbWjAil7H8IIBFsh/BVI/jG7FDRNux6i5poNlwDQlhSAKHvHGJV3znRyBo2RuzlnbZ
-         kNpFE7gSH7eODhhrwn0mb7pPgXjsMcT0ki1XgRJSV6Eb1AphUTzVuoEpcJQTGbTJFYTD
-         s4R1NiWAOQgwUVEwOrx/kpHfBQyiw5+uBQitEld1KNcnPe0Cy7y+cSVGZ3YQ8aHW6kAf
-         /5zGtOVPm/yQlk7lWU5pHFlk5kSUAUan68AwnCCcqIxCFN7jgb0Tf+GlJzulN1vR21n6
-         0BOA==
-X-Gm-Message-State: AOJu0YziHq1obNnwhiECIdbWxuPQvZNrfqMU6NKTovziom2tDoDA13ce
-	9RX9KCTmcUWGNGeSYX/YK97ZWxcGAdcMfwgyMGAnLTCA5VbEYEW35I893TLRVio=
-X-Google-Smtp-Source: AGHT+IH7RYPn9n3FNQLlyWO1pof58QJznrPiQ53W+LJb5iUy2dFNCJFeItywrmlmentV2tdDZTVzxQ==
-X-Received: by 2002:adf:e04a:0:b0:367:998a:87b3 with SMTP id ffacd0b85a97d-3716ccfe7f7mr2817949f8f.28.1723560968081;
-        Tue, 13 Aug 2024 07:56:08 -0700 (PDT)
+        bh=uNaRquM+gUEb0pKk86KM3Zb+qh4ZVa6K8vPWsqTERgs=;
+        b=Fhv1MhXbuZFp4FHfWLn7PXL6MyDRWfN2i1ZgP6cXuRykPqTmSg01YSQEyqcsHJ9rp9
+         6XyPaBLVo8ZK8tlidDH57f98vz7HloX7tgaFBVfnkupzX85qKTD6azTWOQrKvzgJNYGg
+         5OMANYpychps9OjKcqcA0zAzqguq/Ck1Gm9rcCRle9H6ZtCFpD1iQNXU2UT8NpUIOzWu
+         7NTOiv7znh3L6Tz/WZ7J+QSgxmu0+TOwyX8eiUQ9zUOE+My/qc9AJ4x1iW1vGdr0vNqg
+         vElRuAwIx5DWoAEfXXyRiNLq1PCqs1PZWlKhwgude2ytLer+ZAk8Tvf+EEAq81A2Psht
+         cboQ==
+X-Gm-Message-State: AOJu0YwbKL/yccDkfHwzyiKghgBFldgiQBV/dyAd+Sko/E4h4OHFGQho
+	q/VaeyTq6Z/9GyX474juYuY596xm105QMVN/qwFL6hiWoFVlQLIYNFzoTFSh+vU=
+X-Google-Smtp-Source: AGHT+IFanGBAh+3UifeFJiJZmUQP8fwxUmBb7RFyv+AjfsrU47xau9UjVEIrnOY5ZlY3yXWI/pOLGQ==
+X-Received: by 2002:a05:6000:118e:b0:368:4c54:ae27 with SMTP id ffacd0b85a97d-3716cd07857mr2680656f8f.36.1723561856037;
+        Tue, 13 Aug 2024 08:10:56 -0700 (PDT)
 Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4c937b23sm10542160f8f.35.2024.08.13.07.56.07
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4cfeefedsm10639103f8f.58.2024.08.13.08.10.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 07:56:07 -0700 (PDT)
-Message-ID: <9c0ab8c6-fdb1-49b2-a030-b74e779b6e48@linaro.org>
-Date: Tue, 13 Aug 2024 15:56:06 +0100
+        Tue, 13 Aug 2024 08:10:55 -0700 (PDT)
+Message-ID: <dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org>
+Date: Tue, 13 Aug 2024 16:10:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,9 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/7] perf stat: Initialize instead of overwriting clock
- event
+Subject: Re: [PATCH 0/7] perf stat: Make default perf stat command work on Arm
+ big.LITTLE
+From: James Clark <james.clark@linaro.org>
 To: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
  Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
@@ -71,94 +72,104 @@ Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
  Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
  "Liang, Kan" <kan.liang@linux.intel.com>,
- Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>,
- Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
+ Dominique Martinet <asmadeus@codewreck.org>, Ze Gao <zegao2021@gmail.com>,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 References: <20240813132323.98728-1-james.clark@linaro.org>
- <20240813132323.98728-2-james.clark@linaro.org>
- <CAP-5=fX-m3mhi0sGsGo9biWmFV_U=35Tp7h9X0reg3zHMEsy_Q@mail.gmail.com>
- <76ee9150-36fa-4dfc-ba9f-8a10df580c92@linaro.org>
- <CAP-5=fXYSLH9QcvdgV0D8Z-FoVxO25F_SN0BUdge4G_eCDDjZg@mail.gmail.com>
+ <CAP-5=fUVchraZxYg9LY-CtqYZ5DN05-T3vhJmaUG+24Ka6Bsyg@mail.gmail.com>
+ <5ac3fc9d-4ed6-46ed-b537-13d27ba46e3b@linaro.org>
 Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <CAP-5=fXYSLH9QcvdgV0D8Z-FoVxO25F_SN0BUdge4G_eCDDjZg@mail.gmail.com>
+In-Reply-To: <5ac3fc9d-4ed6-46ed-b537-13d27ba46e3b@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 
 
-On 13/08/2024 3:43 pm, Ian Rogers wrote:
-> On Tue, Aug 13, 2024 at 7:38 AM James Clark <james.clark@linaro.org> wrote:
->>
->>
->>
->> On 13/08/2024 3:28 pm, Ian Rogers wrote:
->>> On Tue, Aug 13, 2024 at 6:24 AM James Clark <james.clark@linaro.org> wrote:
->>>>
->>>> This overwrite relies on the clock event remaining at index 0 and is
->>>> quite a way down from where the array is initialized, making it easy to
->>>> miss. Just initialize it with the correct clock event to begin with.
->>>>
->>>> Signed-off-by: James Clark <james.clark@linaro.org>
->>>> ---
->>>>    tools/perf/builtin-stat.c | 7 +++----
->>>>    1 file changed, 3 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
->>>> index 1f92445f7480..a65f58f8783f 100644
->>>> --- a/tools/perf/builtin-stat.c
->>>> +++ b/tools/perf/builtin-stat.c
->>>> @@ -1817,7 +1817,9 @@ static int add_default_attributes(void)
->>>>    {
->>>>           struct perf_event_attr default_attrs0[] = {
->>>>
->>>> -  { .type = PERF_TYPE_SOFTWARE, .config = PERF_COUNT_SW_TASK_CLOCK             },
->>>> +  { .type = PERF_TYPE_SOFTWARE, .config = target__has_cpu(&target) ?
->>>> +                                               PERF_COUNT_SW_CPU_CLOCK :
->>>> +                                               PERF_COUNT_SW_TASK_CLOCK        },
->>>
->>> Hand crafting perf_event_attr when we have an event name to
->>> perf_event_atttr parser doesn't make sense. Doing things this way
->>> means we need to duplicate logic between event parsing and these
->>> default configurations. The default configurations are also using
->>> legacy events which of course are broken on Apple ARM M? (albeit for
->>> hardware events, here it is software). Event and metric parsing has to
->>> worry about things like grouping topdown events. All-in-all let's have
->>> one way to do things, event parsing, otherwise this code is going to
->>> end up reinventing all the workarounds the event parsing has to have.
->>> Lots of struct perf_event_attr also contribute to binary size.
->>>
->>> If you are worried about a cycles event being opened on arm_dsu PMUs,
->>> there is this patch:
->>> https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
->>>
->>> Thanks,
->>> Ian
->>
->> Hi Ian,
->>
->> Is this comment related to this patch specifically or is it more of a
->> general comment?
->>
->> This patch doesn't really make any actual changes other than move one
->> line of code from one place to another.
+On 13/08/2024 3:45 pm, James Clark wrote:
 > 
-> James, this code is removed here:
-> https://lore.kernel.org/lkml/20240510053705.2462258-4-irogers@google.com/
 > 
-> Thanks,
-> Ian
+> On 13/08/2024 3:35 pm, Ian Rogers wrote:
+>> On Tue, Aug 13, 2024 at 6:24 AM James Clark <james.clark@linaro.org> 
+>> wrote:
+>>>
+>>> The important patches are 3 and 5, the rest are tidyups and tests.
+>>>
+>>> I don't think there is any interaction with the other open issues
+>>> about the uncore DSU cycles event or JSON/legacy hw event priorities
+>>> because only hw events on core PMUs are used for the default
+>>> stat command. And also just sharing the existing x86 code works so
+>>> no big changes are required.
+>>>
+>>> For patch 3 the weak arch specific symbol has to continue to be used
+>>> rather than picking the implementation based on
+>>> perf_pmus__supports_extended_type() like in patch 5. This is because
+>>> that function ends up calling evsel__hw_name() itself which results
+>>> in recursion. But at least one weak arch_* construct has been removed,
+>>> so it's better than nothing.
+>>
+>> Let's not do things this way. The use of strings is architecture
+>> neutral, means we don't need to create new arch functions on things
+>> like RISC-V, it encapsulates the complexity of things like topdown
+> 
+> If the new arch function is an issue that could be worked around by 
+> calling perf_pmus__supports_extended_type() on patch 3 as well? It just 
+> needs a small change to not recurse.
+> 
+>> events, Apple ARM M CPUs not supporting legacy events, etc.
+> 
+> If Apple M doesn't support the HW events does _any_ default Perf stat 
+> command (hybrid or not) work? I'm not really trying to fix that here, 
+> just make whatever already works work on big.LITTLE.
+> 
+>> Duplicating the existing x86 logic, when that was something trying to
+>> be removed, is not the way to go. That logic was a holdover from the
+>> hybrid tech debt we've been working to remove with a generic approach.
+>>
+>> Thanks,
+>> Ian
+>>
+> 
+> I think all of that may make sense, but in this case I haven't actually 
+> duplicated anything, rather shared the existing code to also be used on 
+> Arm.
+> 
+> This means we can have the default perf stat working on Arm from today, 
+> and if any other changes get made it will continue to work as I've also 
+> added a test for it.
+> 
 
-Oh I see yeah. We can still work on that change, merging this one 
-doesn't necessarily have to block that one, it just makes this one a bit 
-redundant when the other one gets done.
+I would also like to note that (not including the new test) this 
+patchset _removes_ more code than it adds, so to say it duplicates code 
+is a bit unfair.
 
-If I remember correctly in one of the last related discussions we 
-thought that opening the cycles event as a sampling event should be a 
-softer warning?
+Of course this touches some similar areas to your other change, but that 
+doesn't mean I think we shouldn't continue with that one. I'm still 
+happy to review and test or contribute to that one if you like. I think 
+it just helped me to do it in this order and get this thing in a working 
+state first before the next bigger step.
 
-Actually it seems like the DSU cycles event is a non-issue specifically 
-for perf stat because it will open successfully anyway? It was just in 
-perf record where it was the issue?
-
-
+>>> James Clark (7):
+>>>    perf stat: Initialize instead of overwriting clock event
+>>>    perf stat: Remove unused default_null_attrs
+>>>    perf evsel: Use the same arch_evsel__hw_name() on arm64 as x86
+>>>    perf evsel: Remove duplicated __evsel__hw_name() code
+>>>    perf evlist: Use hybrid default attrs whenever extended type is
+>>>      supported
+>>>    perf test: Make stat test work on DT devices
+>>>    perf test: Add a test for default perf stat command
+>>>
+>>>   tools/perf/arch/arm64/util/Build   |  1 +
+>>>   tools/perf/arch/arm64/util/evsel.c |  7 ++++
+>>>   tools/perf/arch/x86/util/evlist.c  | 65 ------------------------------
+>>>   tools/perf/arch/x86/util/evsel.c   | 17 +-------
+>>>   tools/perf/builtin-stat.c          | 12 ++----
+>>>   tools/perf/tests/shell/stat.sh     | 33 ++++++++++++---
+>>>   tools/perf/util/evlist.c           | 65 ++++++++++++++++++++++++++----
+>>>   tools/perf/util/evlist.h           |  6 +--
+>>>   tools/perf/util/evsel.c            | 19 +++++++++
+>>>   tools/perf/util/evsel.h            |  2 +-
+>>>   10 files changed, 119 insertions(+), 108 deletions(-)
+>>>   create mode 100644 tools/perf/arch/arm64/util/evsel.c
+>>>
+>>> -- 
+>>> 2.34.1
+>>>
