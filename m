@@ -1,100 +1,93 @@
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D571AB501;
-	Tue, 13 Aug 2024 22:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E1C019925F;
+	Tue, 13 Aug 2024 23:33:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723587943; cv=none; b=kQAc/k3ibur1UXJ8a+sbUr2alaITE4KSqtY6weJvj4Z34usoTsHx2JW1oc8U7s1Q1IRPn+mf/V36fElpd+uerU0wL1mpQ+fF9SmnVLKMp5QTFNd2Uc6oWXsiRnsRyNt8miiL4VITjkQqtROcFNkk3O7TWb7Dk/NSldXlatf3SAs=
+	t=1723592036; cv=none; b=KO8/a5ny12pY1s8gN8YIyUU09wA3zx9/i2lISqE+Bd9yoR2yMvnuSVvzLWuyndgE58UDr3hBIT1k6Khs8EigcbqXQVG2/ZacSRbDr/ST+YKJpzlrxey+tnyH+bZK9fhiJlqqC+OSQfYbdjKgUusi94I9BfcesN83NEdC3SK4Il0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723587943; c=relaxed/simple;
-	bh=7wq5gLfK4IB/xjONTqnamdgL1z1dkr5pbPijAsZHsjM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nezr2zFE0zX2UMdcs8dQ3ev5I09WNOPeTmt8k797jGvOzlOgO32MSi4LZZ2UGn2CiGIE4MDTLL10LZTRMIPgw6AYh4GeYzUQs9sgSQ/0YlsY0u9QvQecsCE4uJ9Irvj/Bev6j4mynNZUcILGX6kXchwsA4FViiNVaqHboQ94A2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2cb52e2cb33so3979251a91.0;
-        Tue, 13 Aug 2024 15:25:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723587941; x=1724192741;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7wq5gLfK4IB/xjONTqnamdgL1z1dkr5pbPijAsZHsjM=;
-        b=GM/XpTvgtYSNAyjOz5pYE9LZpJaNg0JwQQxacAffQ38cV3Xh2g4mRQNcIprRD6xfbT
-         Z255uRL0ws6J3FZBQR97TYSrunkY2nzmlXGd5odO+HpfPItHvvoFG8c8sm5LeBHDTTbA
-         heKiP25tl6JBqvCoxAXIk7xs53myStDesccH3nK3OXs4xywCboI6IQT5wIhrzmG+I57b
-         i789YgEM4lM0aqQywUfCda5o5RP7eTE78MMtwC+oOiwpKGmRJaZUVhtYDhkh/Z3b9v8k
-         MpH05t0VqnfONJoheNvUupNRwnynA7yY97EaYBhT1K5rKVuYn2512GCCeGa5LvdWIJU2
-         jnaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXAWlYwxm0wjmDctWUjghN0iPiBBaaMRbPIcxuh2jPXRqbNuk3oU8JclAlcodiZAMJOm9OnckcxBe6BnJDLc9KPGKBqMbEQ9a74GKVbAh1DI5XAI1dKkHZP/csF8D7+9jSUHMqY+3ydSHGiuXLfPA==
-X-Gm-Message-State: AOJu0YyqyCgkSnlcBRLRtReOus2dppJBs+Jb00Tqvs00zObiEZf6OXwQ
-	/SaDj5HmW3IMKJh/xoQjx+CZ21+k0pm+z2qk4f4Eb8yUxuF2QcvqvPj4/xZWVdmvQfByIcnlShv
-	+a3ITUFcdDiGa6V+FFJOhTex286E=
-X-Google-Smtp-Source: AGHT+IGQoGjKm2LiV9QvLIAVRkvBCME+pT9Cy7oJ1hnCzwqF972+q00209OQi+lfQtzSB5Y70fVyh4Iu+lDmguZKHm8=
-X-Received: by 2002:a17:90a:a617:b0:2c7:e46e:f8b7 with SMTP id
- 98e67ed59e1d1-2d3aaa71696mr1105839a91.4.1723587940460; Tue, 13 Aug 2024
- 15:25:40 -0700 (PDT)
+	s=arc-20240116; t=1723592036; c=relaxed/simple;
+	bh=wdy5dYHo0VRi5HWt7oMQmCvCvw4I+YE+5vJ/T8fyW7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kHAkxWmOJaC3bxgU9whi/Khw/bsKicTb3UKrpU19isCrDsQI81eU+CCmZKw0dIkJ4SmvRRq92IH7B6ZemUIn/Sh4ajqOxvlHyu26YJLsYWfnU4w7+REaqj+9ro5PXgqH91H72ROyrwCTU6wU+Bcg1J/+01K//o9LhNg1rL4bBrA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCnKqR+K; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCnKqR+K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CE16C32782;
+	Tue, 13 Aug 2024 23:33:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723592035;
+	bh=wdy5dYHo0VRi5HWt7oMQmCvCvw4I+YE+5vJ/T8fyW7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PCnKqR+K4YuZXFBEprwPB3R8OgkJ6yScS1NwQ2Zq4nJjoD5UJmtgxTEtxjdusjsAu
+	 INZ8+8OHC7qNu1mQnmre5dnvycPd9fB/BUZ5hpd/p2bBco68ep+467eIXfPwspMrvs
+	 4HhNMAoqKlcyU3A7zCBgNQeDh40vysvK4FYdudID/sLjUOWjlskVEUtDHZreg8NBcy
+	 L9ePz+zNmPJ9WEIud10yCuRtZxNRp1Q9F7vGZ40VGVsQw4z6DSNeLfosa9LuhSfqfq
+	 jC0Yy8Azu2Zkm8AjnMdnuVYB7OJMiFphJqT67ktZBHhCwJ23o4fYNs1YnI+xthe4cK
+	 i3dnEldsNB/Dg==
+Date: Tue, 13 Aug 2024 16:33:53 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org,
+	Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH] perf bpf-filter: Support multiple events properly
+Message-ID: <ZrvtYf2BG1hQlLGM@google.com>
+References: <20240802173752.1014527-1-namhyung@kernel.org>
+ <ZrDpsnReuIClKFnk@x1>
+ <ZrEgeLkZx6uor7fg@google.com>
+ <ZrEolmUz_2I1fmdJ@x1>
+ <ZrFAIc0G8n0-zgxt@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813040613.882075-1-irogers@google.com> <ZrtzTTHim_vGX1ma@x1>
- <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
- <ZruhsN4i6xtc59nJ@x1> <CAP-5=fXVrhanvW6vrUJsubuWUC4jBM5v_NOFp40cqTsqdHHNaw@mail.gmail.com>
-In-Reply-To: <CAP-5=fXVrhanvW6vrUJsubuWUC4jBM5v_NOFp40cqTsqdHHNaw@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Tue, 13 Aug 2024 15:25:29 -0700
-Message-ID: <CAM9d7cgGgXTyTQNPDyVuKWM=Gxt3=J6QZ6FiYDXZRWASgKPskA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <ZrFAIc0G8n0-zgxt@google.com>
 
-Hi Ian,
+On Mon, Aug 05, 2024 at 02:12:01PM -0700, Namhyung Kim wrote:
+> On Mon, Aug 05, 2024 at 04:31:34PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Mon, Aug 05, 2024 at 11:56:56AM -0700, Namhyung Kim wrote:
+> > > On Mon, Aug 05, 2024 at 12:03:14PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > > On Fri, Aug 02, 2024 at 10:37:52AM -0700, Namhyung Kim wrote:
+> > > > > + * The BPF program returns 1 to accept the sample or 0 to drop it.
+> > > > > + * The 'dropped' map is to keep how many samples it dropped by the filter and
+> > > > > + * it will be reported as lost samples.
+> > > > 
+> > > > I think there is value in reporting how many were filtered out, I'm just
+> > > > unsure about reporting it as "lost" samples, as lost has another
+> > > > semantic associated, i.e. ring buffer was full or couldn't process it
+> > > > for some other resource starvation issue, no?
+> > > 
+> > > Then we need a way to save the information.  It could be a new record
+> > > type (PERF_RECORD_DROPPED_SAMPLES), a new misc flag in the lost samples
+> > 
+> > I guess "PERF_RECORD_FILTERED_SAMPLES" would be better, more precise,
+> > wdyt?
+> > 
+> > > record or a header field.  I prefer the misc flag.
+> > 
+> > I think we can have both filtered and lost samples, so I would prefer
+> > the new record type.
+> 
+> I think we can have two LOST_SAMPLES records then - one with the new
+> misc flag for BPF and the other (without the flag) for the usual lost
+> samples.  This would require minimal changes IMHO.
 
-On Tue, Aug 13, 2024 at 12:11=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
-ote:
->
-> On Tue, Aug 13, 2024 at 11:11=E2=80=AFAM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Aug 13, 2024 at 09:04:57AM -0700, Ian Rogers wrote:
-> > > On Tue, Aug 13, 2024 at 7:53=E2=80=AFAM Arnaldo Carvalho de Melo
-> > > <acme@kernel.org> wrote:
-> > > >
-> > > > On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
-> > > > > lock__parse calls disasm_line__parse passing
-> > > > > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
-> > > > > lock__delete.
-> > > > >
-> > > > > Found with lock/leak sanitizer.
-> > >
-> > > Ooops, I meant address/leak sanitizer.
-> > >
-> > > > Applied both patches to perf-tools-next.
-> > >
-> > > Thanks, could you fix the commit message.
-> >
-> > Sure,
->
-> Also, it'd be good if maybe Namhyung could take a look. I did things
-> this way as it made sense to me, but we have nested things going on
-> and potentially the free would be more natural in ins_ops__delete.
+I've realized that I already added PERF_RECORD_MISC_LOST_SAMPLES_BPF in
+the commit 27c6f2455b29f ("perf record: Record dropped sample count"). :)
 
-Looks good to me.
-
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+I'll add that to the event stats.
 
 Thanks,
 Namhyung
+
