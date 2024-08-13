@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2E1A2C21;
-	Tue, 13 Aug 2024 16:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18831A38C8;
+	Tue, 13 Aug 2024 16:01:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564905; cv=none; b=TKAy2vSKmhU+tAnlseOi+fQOnwryxl2YlXe5H6xk+cYNx3yg4FvWvQ74GexwiFvsdtT+yaVdsXyXcy4SnOhddgxJFN3E5MU8/5UkgM/kNeorYXCOZPjAwRvL7fVzfWRd4S3bVROHxfdKzG1a+b7WWBsjqtPc5Xk1xQOJCvVDSrk=
+	t=1723564905; cv=none; b=BlI5d60nLwlXdu1zSXWU9xXRmvjssvHPCovJGslrriZomkN8twVGHBKdagyNGhnCmAtFTYhV1rgZb/m0NJ2WxLcrkrgElLRGhhZc7Gija3kqt/xIgcwuVh8QX6W3xAew4DEIqJXoqq0qIyrhQIcw8v3byAtWBM0x9zLUiXLbNiw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723564905; c=relaxed/simple;
-	bh=u1pTqMjYDZsfAePqwZ018IaSJayVWkUkjKUsn88vuXM=;
+	bh=iDcHhBjklszsHCFlB1I+Epu/zTkyEf/8+o8VvG5QsHY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UuCYjE0twYfMyx7NxiWPqK/5ignCOhkm2NbcvtLR0f1/fOuTImmaHZ3F2HWH2+6OMBJdrxCGqKbxuiXlJBE8P07fb665HnbitH7h6txKm4blcmjiwVAe5oCJeS3wNyx26VW4h7AszShEw238suz3W3+k9tlbVpsMvehcrkJV+PU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGQmA57m; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=V5CXfET0wWDKWDXZctyut/kA7x1PwN/5aYpNja0E9g9kMLO9Cmu89hHlEodNSYEPrTq/rG4mhGPBF4Wco9zfDgRaUIw3sC2NQXWMUAJtDsv9O07yYE0RhBsAiiQag8DxirJr/zRzhChjJe2yWUWJdFactu4U7jEMjRKcGxQZqYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUqKfY8f; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGQmA57m"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUqKfY8f"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723564903; x=1755100903;
+  t=1723564904; x=1755100904;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=u1pTqMjYDZsfAePqwZ018IaSJayVWkUkjKUsn88vuXM=;
-  b=EGQmA57m+8azj8Ldujttu2Y5wLZ4J/Cs6G5rtJRk78Oz8yy489b0GAqv
-   rzew+exsRg6q2pCS2wsk9if+kICVuXW6DsEp/7gVz9KsyksPYRfyscasc
-   cC3PepIHpCQp5yGU58v4zCVqCNzf3zDqcdjzReqLyobmXz+Hk7o/RMNEr
-   6ttSAaJradCjJhAEnRs2ObO2vOlFoACPXv7uSZLrgq6SG3RBITtvy5U2i
-   4nZ9WHJavpSSZP8w03rrjHWId0U61xVicOalB8bSHtcVVgXMSiSq+o7Xt
-   +mhz4rzBHZJf+A6yZMR9jlRhJBbxpVTKIhTxW1+aqpItFQaUO2/pjGORw
+  bh=iDcHhBjklszsHCFlB1I+Epu/zTkyEf/8+o8VvG5QsHY=;
+  b=UUqKfY8fUgjL5dinrRnCk/R5rz4JpTekt6zdbiJy3OUPNeYXb3TpEAVF
+   nSEvOGJXvxvVQd2ScyVUqe2N2bEjEvIp46BB1g637AuflcnO/goThuv7c
+   BbLMdBJ10PFhKFFpiDZWRjuYbMY0q/Bqytpynd8+cfkE3z+jDGTYeP+bm
+   pffh27M09qDQV9YuuHXL910Znl0FBldrqFlMJtSvUshebQ7eH858Sd3gg
+   rGjjGkRw7cAnvPXjmiD+s+2Tg0e24GGqUtzb8l5EEKOuIhnwSmvOyZUOw
+   evkD7VZyF3ppdeBmVqjdUjS/KNofFPk9YuXWqHHY8HnO7YVSPiPsuD6HX
    g==;
-X-CSE-ConnectionGUID: 2ooB/QomTdur9oRpGMLOcQ==
-X-CSE-MsgGUID: RxgNjpkjQgG/+oZpq7PK4Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383225"
+X-CSE-ConnectionGUID: rUDSSvcGTImf6py9rMIU5A==
+X-CSE-MsgGUID: vHr4eDkyTK6C678xjTU3SA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383230"
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21383225"
+   d="scan'208";a="21383230"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:37 -0700
-X-CSE-ConnectionGUID: fEq8fnvdTL+38A2PRuMVqg==
-X-CSE-MsgGUID: yj1wM1+4QmqfwrS/P2wYtA==
+X-CSE-ConnectionGUID: lTzbP6CeSUCGpyZWHRARFg==
+X-CSE-MsgGUID: 5V37HyPHQcO0+keY8/NkFg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="59479759"
+   d="scan'208";a="59479762"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by orviesa008.jf.intel.com with ESMTP; 13 Aug 2024 09:01:37 -0700
 From: kan.liang@linux.intel.com
@@ -54,11 +54,10 @@ To: acme@kernel.org,
 Cc: adrian.hunter@intel.com,
 	ak@linux.intel.com,
 	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Tinghao Zhang <tinghao.zhang@intel.com>
-Subject: [PATCH V3 8/9] perf script: Add branch counters
-Date: Tue, 13 Aug 2024 09:02:07 -0700
-Message-Id: <20240813160208.2493643-9-kan.liang@linux.intel.com>
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH V3 9/9] perf test: Add new test cases for the branch counter feature
+Date: Tue, 13 Aug 2024 09:02:08 -0700
+Message-Id: <20240813160208.2493643-10-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20240813160208.2493643-1-kan.liang@linux.intel.com>
 References: <20240813160208.2493643-1-kan.liang@linux.intel.com>
@@ -72,264 +71,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-It's useful to print the branch counter information for each jump in
-the brstackinsn when it's available.
+Enhance the test case for the branch counter feature.
 
-Add a new field brcntr to display the branch counter information.
+Now, the test verifies
+- The new filter can be successfully applied on the supported platforms.
+- The counter value can be outputted via the perf report -D
+- The counter value and the abbr name can be outputted via the
+  perf script (New)
 
-By default, the abbreviation will be used to indicate the branch
-counter. In the verbose mode, the real event name is shown.
-
-$perf script -F +brstackinsn,+brcntr
-
- # Branch counter abbr list:
- # branch-instructions:ppp = A
- # branch-misses = B
- # '-' No event occurs
- # '+' Event occurrences may be lost due to branch counter saturated
-     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (home/sdp/test/tchain_edit)
-        f3+31:
-        0000000000401774        insn: eb 04                     br_cntr: AA     # PRED 5 cycles [5]
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 1 cycles [6] 2.00 IPC
-        0000000000401766        insn: 8b 45 fc
-        0000000000401769        insn: 83 e0 01
-        000000000040176c        insn: 85 c0
-        000000000040176e        insn: 74 06                     br_cntr: A      # PRED 1 cycles [7] 4.00 IPC
-        0000000000401776        insn: 83 45 fc 01
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 7 cycles [14] 0.43 IPC
-
-$perf script -F +brstackinsn,+brcntr -v
-
-     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (/home/sdp/os.linux.perf.test-suite/kernels/lbr_kernel/tchain_edit)
-        f3+31:
-        0000000000401774        insn: eb 04                     br_cntr: branch-instructions:ppp 2 branch-misses 0      # PRED 5 cycles [5]
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [6] 2.00 IPC
-        0000000000401766        insn: 8b 45 fc
-        0000000000401769        insn: 83 e0 01
-        000000000040176c        insn: 85 c0
-        000000000040176e        insn: 74 06                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [7] 4.00 IPC
-        0000000000401776        insn: 83 45 fc 01
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 7 cycles [14] 0.43 IPC
-
-Originally-by: Tinghao Zhang <tinghao.zhang@intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/Documentation/perf-script.txt |  2 +-
- tools/perf/builtin-script.c              | 69 +++++++++++++++++++++---
- 2 files changed, 63 insertions(+), 8 deletions(-)
+ tools/perf/tests/shell/record.sh | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index 5abb960c4960..b72866ef270b 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -134,7 +134,7 @@ OPTIONS
-         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
-         brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
-         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
--        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
-+        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat, brcntr,
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 3d1a7759a7b2..7964ebd9007d 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -21,6 +21,7 @@ testprog="perf test -w thloop"
+ cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
+ br_cntr_file="/caps/branch_counter_nr"
+ br_cntr_output="branch stack counters"
++br_cntr_script_output="br_cntr: A"
  
-         Field list can be prepended with the type, trace, sw or hw,
-         to indicate to which event type the field list applies.
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 54598d1e815a..206b08426555 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -62,6 +62,7 @@
- #include "util/record.h"
- #include "util/util.h"
- #include "util/cgroup.h"
-+#include "util/annotate.h"
- #include "perf.h"
- 
- #include <linux/ctype.h>
-@@ -138,6 +139,7 @@ enum perf_output_field {
- 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
- 	PERF_OUTPUT_DISASM          = 1ULL << 42,
- 	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
-+	PERF_OUTPUT_BRCNTR          = 1ULL << 44,
- };
- 
- struct perf_script {
-@@ -213,6 +215,7 @@ struct output_option {
- 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
- 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
- 	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
-+	{.str = "brcntr", .field = PERF_OUTPUT_BRCNTR},
- };
- 
- enum {
-@@ -520,6 +523,12 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
- 		       "Hint: run 'perf record -b ...'\n");
- 		return -EINVAL;
- 	}
-+	if (PRINT_FIELD(BRCNTR) &&
-+	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_COUNTERS)) {
-+		pr_err("Display of branch counter requested but it's not enabled\n"
-+		       "Hint: run 'perf record -j any,counter ...'\n");
-+		return -EINVAL;
-+	}
- 	if ((PRINT_FIELD(PID) || PRINT_FIELD(TID)) &&
- 	    evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID", PERF_OUTPUT_TID|PERF_OUTPUT_PID))
- 		return -EINVAL;
-@@ -789,6 +798,19 @@ static int perf_sample__fprintf_start(struct perf_script *script,
- 	int printed = 0;
- 	char tstr[128];
- 
-+	/*
-+	 * Print the branch counter's abbreviation list,
-+	 * if the branch counter is available.
-+	 */
-+	if (PRINT_FIELD(BRCNTR) && !verbose) {
-+		char *buf;
-+
-+		if (!annotation_br_cntr_abbr_list(&buf, evsel, true)) {
-+			printed += fprintf(stdout, "%s", buf);
-+			free(buf);
-+		}
-+	}
-+
- 	if (PRINT_FIELD(MACHINE_PID) && sample->machine_pid)
- 		printed += fprintf(fp, "VM:%5d ", sample->machine_pid);
- 
-@@ -1195,7 +1217,9 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 			    struct perf_insn *x, u8 *inbuf, int len,
- 			    int insn, FILE *fp, int *total_cycles,
- 			    struct perf_event_attr *attr,
--			    struct thread *thread)
-+			    struct thread *thread,
-+			    struct evsel *evsel,
-+			    u64 br_cntr)
- {
- 	int ilen = 0;
- 	int printed = fprintf(fp, "\t%016" PRIx64 "\t", ip);
-@@ -1216,6 +1240,28 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
- 		addr_location__exit(&al);
- 	}
- 
-+	if (PRINT_FIELD(BRCNTR)) {
-+		unsigned int width = evsel__env(evsel)->br_cntr_width;
-+		unsigned int i = 0, j, num, mask = (1L << width) - 1;
-+		struct evsel *pos = evsel__leader(evsel);
-+
-+		printed += fprintf(fp, "br_cntr: ");
-+		evlist__for_each_entry_from(evsel->evlist, pos) {
-+			if (!(pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
-+				continue;
-+			if (evsel__leader(pos) != evsel__leader(evsel))
-+				break;
-+
-+			num = (br_cntr >> (i++ * width)) & mask;
-+			if (!verbose) {
-+				for (j = 0; j < num; j++)
-+					printed += fprintf(fp, "%s", pos->abbr_name);
-+			} else
-+				printed += fprintf(fp, "%s %d ", pos->name, num);
-+		}
-+		printed += fprintf(fp, "\t");
-+	}
-+
- 	printed += fprintf(fp, "#%s%s%s%s",
- 			      en->flags.predicted ? " PRED" : "",
- 			      en->flags.mispred ? " MISPRED" : "",
-@@ -1272,6 +1318,7 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
+ cleanup() {
+   rm -rf "${perfdata}"
+@@ -165,7 +166,7 @@ test_workload() {
  }
  
- static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
-+					    struct evsel *evsel,
- 					    struct thread *thread,
- 					    struct perf_event_attr *attr,
- 					    struct machine *machine, FILE *fp)
-@@ -1285,6 +1332,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	unsigned off;
- 	struct symbol *lastsym = NULL;
- 	int total_cycles = 0;
-+	u64 br_cntr = 0;
- 
- 	if (!(br && br->nr))
- 		return 0;
-@@ -1296,6 +1344,9 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 	x.machine = machine;
- 	x.cpu = sample->cpu;
- 
-+	if (PRINT_FIELD(BRCNTR) && sample->branch_stack_cntr)
-+		br_cntr = sample->branch_stack_cntr[nr - 1];
-+
- 	printed += fprintf(fp, "%c", '\n');
- 
- 	/* Handle first from jump, of which we don't know the entry. */
-@@ -1307,7 +1358,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 					   x.cpumode, x.cpu, &lastsym, attr, fp);
- 		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
- 					    &x, buffer, len, 0, fp, &total_cycles,
--					    attr, thread);
-+					    attr, thread, evsel, br_cntr);
- 		if (PRINT_FIELD(SRCCODE))
- 			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
- 	}
-@@ -1337,8 +1388,10 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
- 
- 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
- 			if (ip == end) {
-+				if (PRINT_FIELD(BRCNTR) && sample->branch_stack_cntr)
-+					br_cntr = sample->branch_stack_cntr[i];
- 				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
--							    &total_cycles, attr, thread);
-+							    &total_cycles, attr, thread, evsel, br_cntr);
- 				if (PRINT_FIELD(SRCCODE))
- 					printed += print_srccode(thread, x.cpumode, ip);
- 				break;
-@@ -1547,6 +1600,7 @@ void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
+ test_branch_counter() {
+-  echo "Basic branch counter test"
++  echo "Branch counter test"
+   # Check if the branch counter feature is supported
+   for dir in $cpu_pmu_dir
+   do
+@@ -175,19 +176,25 @@ test_branch_counter() {
+       return
+     fi
+   done
+-  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
++  if ! perf record -o "${perfdata}" -e "{branches:p,instructions}" -j any,counter ${testprog} 2> /dev/null
+   then
+-    echo "Basic branch counter test [Failed record]"
++    echo "Branch counter record test [Failed record]"
+     err=1
+     return
+   fi
+   if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
+   then
+-    echo "Basic branch record test [Failed missing output]"
++    echo "Branch counter report test [Failed missing output]"
+     err=1
+     return
+   fi
+-  echo "Basic branch counter test [Success]"
++  if ! perf script -i "${perfdata}" -F +brstackinsn,+brcntr | grep -q "$br_cntr_script_output"
++  then
++    echo " Branch counter script test [Failed missing output]"
++    err=1
++    return
++  fi
++  echo "Branch counter test [Success]"
  }
  
- static int perf_sample__fprintf_insn(struct perf_sample *sample,
-+				     struct evsel *evsel,
- 				     struct perf_event_attr *attr,
- 				     struct thread *thread,
- 				     struct machine *machine, FILE *fp,
-@@ -1567,7 +1621,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
- 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
- 	}
- 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
--		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
-+		printed += perf_sample__fprintf_brstackinsn(sample, evsel, thread, attr, machine, fp);
- 
- 	return printed;
- }
-@@ -1639,7 +1693,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
- 	if (print_srcline_last)
- 		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
- 
--	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
-+	printed += perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
- 	printed += fprintf(fp, "\n");
- 	if (PRINT_FIELD(SRCCODE)) {
- 		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
-@@ -2297,7 +2351,7 @@ static void process_event(struct perf_script *script,
- 
- 	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
- 		perf_sample__fprintf_bpf_output(sample, fp);
--	perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
-+	perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
- 
- 	if (PRINT_FIELD(PHYS_ADDR))
- 		fprintf(fp, "%16" PRIx64, sample->phys_addr);
-@@ -3947,7 +4001,8 @@ int cmd_script(int argc, const char **argv)
- 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
- 		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
- 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
--		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
-+		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat,"
-+		     "brcntr",
- 		     parse_output_fields),
- 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
- 		    "system-wide collection from all CPUs"),
+ test_per_thread
 -- 
 2.38.1
 
