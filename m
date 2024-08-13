@@ -1,121 +1,177 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E61EE1C20;
-	Tue, 13 Aug 2024 01:25:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4277FF;
+	Tue, 13 Aug 2024 03:08:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723512358; cv=none; b=FCYjUT7Vy22NrBobb6EACs7xXa5SwowUN1MSpigCnXYOm/QR5+zNH3ZZank1VNe3ntVYP2lDTqcayqOIMkIfTViUEPKnnU494t3cXZjlRpJX8r5o0QhbAZfrKJv9z4wm6Xqe3jbR7U0bZTKEweHQIlD8U9l3IgB2zxFWcWcTiSk=
+	t=1723518540; cv=none; b=q7c7Gv56Y263cJVXwGj3CU5pckiEaqwY2MPPMAMBLktWObEkhDzII8mRQ7si7iAOIl65yWjQ/4B6dAEYn96Jau0NE7jh8Az4buNV2OCyyYYop5cKBpIvKtAZ06SRr+0GB7iMUSnZ5UQL2byaC0raZpGBChpu0PlzMKmCADleigA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723512358; c=relaxed/simple;
-	bh=LHGQ9diN0yw0weuaW7O7NWpu9ryH+uVEtRf7pyxzZcY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VEQ7ZcSpgZX8moVmca8nf45pxTm/r6Hm21QfDfvZCPptofiIQgFFZp4JdkSvd+UdXyJuFJsaEeBH4Dq+U6NSEMmVoxJ5IANlNtDAmkqyeHux2gxoWbeMj7hbARpxHuYZgOLZDIczLK5Wmb75IwZQrEA7FC9P6qrqU0/a/bZ16lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjjpJddv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723518540; c=relaxed/simple;
+	bh=6k5nSQtJtH639Pc0R1xX1c1uq0+Pcw9PtbV+Zs8RPoU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SOan6Se5d4bAuWOemyCqDNHTW1JpOV8oFRVBG2wy2iFQnJf4eUw3AUcPhb7u+N7YmpkXpu+RUR9mGScLKYQ9vrcopbrJJTdlaSQEjglfKNysRUfZEmbSOLwdG37Rjg7qJjJpfEyqWK6Gbk/Yp5Cvya3e8KPWCYm4Civ6BazJaUg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri9eYZNG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjjpJddv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11AD9C4AF0D;
-	Tue, 13 Aug 2024 01:25:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri9eYZNG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3014EC4AF0D;
+	Tue, 13 Aug 2024 03:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723512357;
-	bh=LHGQ9diN0yw0weuaW7O7NWpu9ryH+uVEtRf7pyxzZcY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=TjjpJddvBGz3yFJqGBjxfZJSYfHf6syDquqGXjcMQSAT4dVlHuJs5USloKjF9QK4s
-	 JvDlaeJmsF7Mh7OAeEy+a8/caPXk2rIjbUmc9gy+962qDkMxKdQDP+26AO6TV9eYfX
-	 9U8Rv57G16qpv94FNm7UN+8h3ZaZfNfQ59/wEEqpl2LjHdW7jEuRmzdxtJ7peC1Vfj
-	 2og3HLG20/dlJJE3fS1/ymW72HDh3vgUicCFPtMimcQcJeCZUA1NWqlqxxPL488kCk
-	 A24FAO6nuMaamZywBoCQHUgQglLSRlF8ybuMabMNsXGU+7O96KrMwzonLyg1IRozjM
-	 HoVnATr5AwURw==
-Date: Mon, 12 Aug 2024 22:25:54 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: weilin.wang@intel.com
-Cc: Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	s=k20201202; t=1723518539;
+	bh=6k5nSQtJtH639Pc0R1xX1c1uq0+Pcw9PtbV+Zs8RPoU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ri9eYZNGU1jl4ElFnp6jIgpb+01H+uCG91c018sngULAYs0l7FAZAKuj/Ns490ob7
+	 ZD6saz/lGOxnkJ7ig+QwfW819Rgx/xpsOvQJEyYmHEk/DmpQmaVIuZIajyDbNKV2jj
+	 gyGko9UexVxcRmUSdB4tCtE6tbfDowI39qSRw2lu8FgJK5qj4rA25+Gyj8K4qLjLjo
+	 sgFDGI7lQ6fq4DVF2K9q4BnngcIMw4J108xwJNEmKntOv29ZSc8V7efS2izWSOikQP
+	 1B45RreXCvMYAoVTu0Ip0SIJnWt20CXgwdYENjzTRksf8Hbu4gBDVhTukU6pbl8uDg
+	 hDQJ1KFsYel1A==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Perry Taylor <perry.taylor@intel.com>,
-	Samantha Alt <samantha.alt@intel.com>,
-	Caleb Biggers <caleb.biggers@intel.com>
-Subject: Re: [RFC PATCH v18 8/8] perf test: Add test for Intel TPEBS counting
- mode
-Message-ID: <Zrq2IoAgopw1NbbA@x1>
-References: <20240720062102.444578-1-weilin.wang@intel.com>
- <20240720062102.444578-9-weilin.wang@intel.com>
- <Zrq11fq_F9vImsQh@x1>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Subject: [PATCH] perf annotate-data: Set bitfield member offset and size properly
+Date: Mon, 12 Aug 2024 20:08:58 -0700
+Message-ID: <20240813030858.2138615-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Zrq11fq_F9vImsQh@x1>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Aug 12, 2024 at 10:24:40PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Sat, Jul 20, 2024 at 02:21:01AM -0400, weilin.wang@intel.com wrote:
-> > From: Weilin Wang <weilin.wang@intel.com>
-> > 
-> > Intel TPEBS sampling mode is supported through perf record. The counting mode
-> > code uses perf record to capture retire_latency value and use it in metric
-> > calculation. This test checks the counting mode code on Intel platforms.
-> 
-> root@x1:~# perf test -vvvvv 123
-> 123: test Intel TPEBS counting mode:
-> --- start ---
-> test child forked, pid 2600160
-> Testing without --record-tpebs
-> Testing with --record-tpebs
-> ---- end(-1) ----
-> 123: test Intel TPEBS counting mode                                  : FAILED!
-> root@x1:~# grep -m1 "model name" /proc/cpuinfo 
-> model name	: 13th Gen Intel(R) Core(TM) i7-1365U
-> root@x1:~#
-> 
-> What am I missing?
-> 
-> The current codebase is in tmp.perf-tools-next
+The bitfield members might not have DW_AT_data_member_location.  Let's
+use DW_AT_data_bit_offset to set the member offset correct.  Also use
+DW_AT_bit_size for the name like in a C program.
 
-acme@x1:~/git/perf-tools-next$ uname -a
-Linux x1 6.8.11-200.fc39.x86_64 #1 SMP PREEMPT_DYNAMIC Sun May 26 20:05:41 UTC 2024 x86_64 GNU/Linux
+Before:
+  Annotate type: 'struct sk_buff' (1 samples)
+        Percent     Offset       Size  Field
+  -      100.00          0        232  struct sk_buff {
+  +        0.00          0         24      union  ;
+  +        0.00         24          8      union  ;
+  +        0.00         32          8      union  ;
+           0.00         40         48      char[] cb;
+  +        0.00         88         16      union  ;
+           0.00        104          8      long unsigned int      _nfct;
+         100.00        112          4      unsigned int   len;
+           0.00        116          4      unsigned int   data_len;
+           0.00        120          2      __u16  mac_len;
+           0.00        122          2      __u16  hdr_len;
+           0.00        124          2      __u16  queue_mapping;
+           0.00        126          0      __u8[] __cloned_offset;
+           0.00          0          1      __u8   cloned;
+           0.00          0          1      __u8   nohdr;
+           0.00          0          1      __u8   fclone;
+           0.00          0          1      __u8   peeked;
+           0.00          0          1      __u8   head_frag;
+           0.00          0          1      __u8   pfmemalloc;
+           0.00          0          1      __u8   pp_recycle;
+           0.00        127          1      __u8   active_extensions;
+  +        0.00        128         60      union  ;
+           0.00        188          4      sk_buff_data_t tail;
+           0.00        192          4      sk_buff_data_t end;
+           0.00        200          8      unsigned char* head;
+
+After:
+  Annotate type: 'struct sk_buff' (1 samples)
+        Percent     Offset       Size  Field
+  -      100.00          0        232  struct sk_buff {
+  +        0.00          0         24      union  ;
+  +        0.00         24          8      union  ;
+  +        0.00         32          8      union  ;
+           0.00         40         48      char[] cb
+  +        0.00         88         16      union  ;
+           0.00        104          8      long unsigned int      _nfct;
+         100.00        112          4      unsigned int   len;
+           0.00        116          4      unsigned int   data_len;
+           0.00        120          2      __u16  mac_len;
+           0.00        122          2      __u16  hdr_len;
+           0.00        124          2      __u16  queue_mapping;
+           0.00        126          0      __u8[] __cloned_offset;
+           0.00        126          1      __u8   cloned:1;
+           0.00        126          1      __u8   nohdr:1;
+           0.00        126          1      __u8   fclone:2;
+           0.00        126          1      __u8   peeked:1;
+           0.00        126          1      __u8   head_frag:1;
+           0.00        126          1      __u8   pfmemalloc:1;
+           0.00        126          1      __u8   pp_recycle:1;
+           0.00        127          1      __u8   active_extensions;
+  +        0.00        128         60      union  ;
+           0.00        188          4      sk_buff_data_t tail;
+           0.00        192          4      sk_buff_data_t end;
+           0.00        200          8      unsigned char* head;
+
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/annotate-data.c | 34 +++++++++++++++++++++++++++------
+ 1 file changed, 28 insertions(+), 6 deletions(-)
+
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index ff85d190e3ac..d9e0ca61b6b5 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -202,7 +202,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	struct annotated_member *parent = arg;
+ 	struct annotated_member *member;
+ 	Dwarf_Die member_type, die_mem;
+-	Dwarf_Word size, loc;
++	Dwarf_Word size, loc, bit_size = 0;
+ 	Dwarf_Attribute attr;
+ 	struct strbuf sb;
+ 	int tag;
+@@ -226,15 +226,37 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
+ 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
+ 		size = 0;
  
-> - Arnaldo
->  
-> > Signed-off-by: Weilin Wang <weilin.wang@intel.com>
-> > ---
-> >  .../perf/tests/shell/test_stat_intel_tpebs.sh | 19 +++++++++++++++++++
-> >  1 file changed, 19 insertions(+)
-> >  create mode 100755 tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > 
-> > diff --git a/tools/perf/tests/shell/test_stat_intel_tpebs.sh b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > new file mode 100755
-> > index 000000000000..c60b29add980
-> > --- /dev/null
-> > +++ b/tools/perf/tests/shell/test_stat_intel_tpebs.sh
-> > @@ -0,0 +1,19 @@
-> > +#!/bin/bash
-> > +# test Intel TPEBS counting mode
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +
-> > +set -e
-> > +grep -q GenuineIntel /proc/cpuinfo || { echo Skipping non-Intel; exit 2; }
-> > +
-> > +# Use this event for testing because it should exist in all platforms
-> > +event=cache-misses:R
-> > +
-> > +# Without this cmd option, default value or zero is returned
-> > +echo "Testing without --record-tpebs"
-> > +result=$(perf stat -e "$event" true 2>&1)
-> > +[[ "$result" =~ $event ]] || exit 1
-> > +
-> > +# In platforms that do not support TPEBS, it should execute without error.
-> > +echo "Testing with --record-tpebs"
-> > +result=$(perf stat -e "$event" --record-tpebs -a sleep 0.01 2>&1)
-> > +[[ "$result" =~ "perf record" && "$result" =~ $event ]] || exit 1
-> > -- 
-> > 2.43.0
-> > 
+-	if (!dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
+-		loc = 0;
+-	else
++	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
+ 		dwarf_formudata(&attr, &loc);
++	else {
++		/* bitfield member */
++		if (dwarf_attr_integrate(die, DW_AT_data_bit_offset, &attr) &&
++		    dwarf_formudata(&attr, &loc) == 0)
++			loc /= 8;
++		else
++			loc = 0;
++
++		if (dwarf_attr_integrate(die, DW_AT_bit_size, &attr) &&
++		    dwarf_formudata(&attr, &bit_size) == 0)
++			size = (bit_size + 7) / 8;
++	}
+ 
+ 	member->type_name = strbuf_detach(&sb, NULL);
+ 	/* member->var_name can be NULL */
+-	if (dwarf_diename(die))
+-		member->var_name = strdup(dwarf_diename(die));
++	if (dwarf_diename(die)) {
++		if (bit_size) {
++			if (asprintf(&member->var_name, "%s:%ld",
++				     dwarf_diename(die), (long)bit_size) < 0)
++				member->var_name = NULL;
++		} else {
++			member->var_name = strdup(dwarf_diename(die));
++		}
++
++		if (member->var_name == NULL) {
++			free(member);
++			return DIE_FIND_CB_END;
++		}
++	}
+ 	member->size = size;
+ 	member->offset = loc + parent->offset;
+ 	INIT_LIST_HEAD(&member->children);
+-- 
+2.46.0.76.ge559c4bf1a-goog
+
