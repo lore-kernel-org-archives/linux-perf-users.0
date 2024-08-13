@@ -1,136 +1,100 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342821A76D5
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 21:37:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D571AB501;
+	Tue, 13 Aug 2024 22:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723585023; cv=none; b=Y/YBB9Ei6YoKu2TQ107moKOQTk+TvuizSYiw5PhsOoSYd4JotAxZYu28TyP4CdstFbN7whU4UUZqGoBhDSIT21Thr5MOuuftcQMHjxqhvus9EKAVSaJ2sYnR3HkjpIuAx4y9cT0aeBm3DyfKYb/I6jWlhL6IBIusD56KGRcZwUc=
+	t=1723587943; cv=none; b=kQAc/k3ibur1UXJ8a+sbUr2alaITE4KSqtY6weJvj4Z34usoTsHx2JW1oc8U7s1Q1IRPn+mf/V36fElpd+uerU0wL1mpQ+fF9SmnVLKMp5QTFNd2Uc6oWXsiRnsRyNt8miiL4VITjkQqtROcFNkk3O7TWb7Dk/NSldXlatf3SAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723585023; c=relaxed/simple;
-	bh=TOMqMiWNXgbqstyXwhZJ4rz/CqU5PeSl2+BJnXwzdCw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IbrorKvifqkTSAUYNlE538F8IYD/zYFVRM9lXEBAjoCTERJ56avtMcDAx54HMgs8KCK9GQGFuouwB8DmLBvWYra5gAI+KtSi0NqIwuA3xKz9369f4hVIwFnsHig+UTayDDT5VZ0gloPIxyVIBm0g8bX3uqcvv6E0xywDM0yH0bQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IG2A+fQ5; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IG2A+fQ5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723585022; x=1755121022;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=TOMqMiWNXgbqstyXwhZJ4rz/CqU5PeSl2+BJnXwzdCw=;
-  b=IG2A+fQ5SG21EsfvH1uU2N10gu2w/rBW3NjlLCA4Gtfr9pmnehoMtfzy
-   XS1qzad5H+AIJ9cw4TsUhdt32htzoDiUYGBT7JU11149vDWZQ0v1K/ELW
-   TcnpCblDMp577rD97QA81Zl/SDTSDTsLX+fnSskdYvgg2WWNJGTqgdYh+
-   Tc4xoJeuEFq36uUjCcE4CbqgDVF+cAODBu26lol4BzhvCQo28kIdaLZMw
-   X446ZYgKp+Su2x+G3SQ7QBY0mEr6qyOFLIgk7auYYNPou1rhJ//35N49l
-   2dtZKwYGUEppDjdehdPFi+DSvRpQ0z6hvPtznO9wFe291qhCK1aiyfH98
-   Q==;
-X-CSE-ConnectionGUID: IiWWrBA4SO2J4S8gyc+hcw==
-X-CSE-MsgGUID: mtWJyyvPTtWnXbN7ZHuz/Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21746623"
-X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
-   d="scan'208";a="21746623"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 14:36:58 -0700
-X-CSE-ConnectionGUID: N4P2XoQLTe29PZkQxN1Ohw==
-X-CSE-MsgGUID: HhRzkXTgTYS/x6E0UUGqAg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,287,1716274800"; 
-   d="scan'208";a="63734355"
-Received: from tassilo.jf.intel.com ([10.54.38.190])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 14:36:58 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: acme@kernel.org
-Cc: linux-perf-users@vger.kernel.org,
-	Andi Kleen <ak@linux.intel.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH v10 2/4] perf test: Support external tests for separate objdir
-Date: Tue, 13 Aug 2024 14:36:49 -0700
-Message-ID: <20240813213651.1057362-2-ak@linux.intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20240813213651.1057362-1-ak@linux.intel.com>
-References: <20240813213651.1057362-1-ak@linux.intel.com>
+	s=arc-20240116; t=1723587943; c=relaxed/simple;
+	bh=7wq5gLfK4IB/xjONTqnamdgL1z1dkr5pbPijAsZHsjM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Nezr2zFE0zX2UMdcs8dQ3ev5I09WNOPeTmt8k797jGvOzlOgO32MSi4LZZ2UGn2CiGIE4MDTLL10LZTRMIPgw6AYh4GeYzUQs9sgSQ/0YlsY0u9QvQecsCE4uJ9Irvj/Bev6j4mynNZUcILGX6kXchwsA4FViiNVaqHboQ94A2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2cb52e2cb33so3979251a91.0;
+        Tue, 13 Aug 2024 15:25:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723587941; x=1724192741;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7wq5gLfK4IB/xjONTqnamdgL1z1dkr5pbPijAsZHsjM=;
+        b=GM/XpTvgtYSNAyjOz5pYE9LZpJaNg0JwQQxacAffQ38cV3Xh2g4mRQNcIprRD6xfbT
+         Z255uRL0ws6J3FZBQR97TYSrunkY2nzmlXGd5odO+HpfPItHvvoFG8c8sm5LeBHDTTbA
+         heKiP25tl6JBqvCoxAXIk7xs53myStDesccH3nK3OXs4xywCboI6IQT5wIhrzmG+I57b
+         i789YgEM4lM0aqQywUfCda5o5RP7eTE78MMtwC+oOiwpKGmRJaZUVhtYDhkh/Z3b9v8k
+         MpH05t0VqnfONJoheNvUupNRwnynA7yY97EaYBhT1K5rKVuYn2512GCCeGa5LvdWIJU2
+         jnaQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXAWlYwxm0wjmDctWUjghN0iPiBBaaMRbPIcxuh2jPXRqbNuk3oU8JclAlcodiZAMJOm9OnckcxBe6BnJDLc9KPGKBqMbEQ9a74GKVbAh1DI5XAI1dKkHZP/csF8D7+9jSUHMqY+3ydSHGiuXLfPA==
+X-Gm-Message-State: AOJu0YyqyCgkSnlcBRLRtReOus2dppJBs+Jb00Tqvs00zObiEZf6OXwQ
+	/SaDj5HmW3IMKJh/xoQjx+CZ21+k0pm+z2qk4f4Eb8yUxuF2QcvqvPj4/xZWVdmvQfByIcnlShv
+	+a3ITUFcdDiGa6V+FFJOhTex286E=
+X-Google-Smtp-Source: AGHT+IGQoGjKm2LiV9QvLIAVRkvBCME+pT9Cy7oJ1hnCzwqF972+q00209OQi+lfQtzSB5Y70fVyh4Iu+lDmguZKHm8=
+X-Received: by 2002:a17:90a:a617:b0:2c7:e46e:f8b7 with SMTP id
+ 98e67ed59e1d1-2d3aaa71696mr1105839a91.4.1723587940460; Tue, 13 Aug 2024
+ 15:25:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240813040613.882075-1-irogers@google.com> <ZrtzTTHim_vGX1ma@x1>
+ <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
+ <ZruhsN4i6xtc59nJ@x1> <CAP-5=fXVrhanvW6vrUJsubuWUC4jBM5v_NOFp40cqTsqdHHNaw@mail.gmail.com>
+In-Reply-To: <CAP-5=fXVrhanvW6vrUJsubuWUC4jBM5v_NOFp40cqTsqdHHNaw@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Tue, 13 Aug 2024 15:25:29 -0700
+Message-ID: <CAM9d7cgGgXTyTQNPDyVuKWM=Gxt3=J6QZ6FiYDXZRWASgKPskA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
+To: Ian Rogers <irogers@google.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Extend the searching for the test files so that it works
-when running perf from a separate objdir, and also when
-the perf executable is symlinked.
+Hi Ian,
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
+On Tue, Aug 13, 2024 at 12:11=E2=80=AFPM Ian Rogers <irogers@google.com> wr=
+ote:
+>
+> On Tue, Aug 13, 2024 at 11:11=E2=80=AFAM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Tue, Aug 13, 2024 at 09:04:57AM -0700, Ian Rogers wrote:
+> > > On Tue, Aug 13, 2024 at 7:53=E2=80=AFAM Arnaldo Carvalho de Melo
+> > > <acme@kernel.org> wrote:
+> > > >
+> > > > On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
+> > > > > lock__parse calls disasm_line__parse passing
+> > > > > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
+> > > > > lock__delete.
+> > > > >
+> > > > > Found with lock/leak sanitizer.
+> > >
+> > > Ooops, I meant address/leak sanitizer.
+> > >
+> > > > Applied both patches to perf-tools-next.
+> > >
+> > > Thanks, could you fix the commit message.
+> >
+> > Sure,
+>
+> Also, it'd be good if maybe Namhyung could take a look. I did things
+> this way as it made sense to me, but we have nested things going on
+> and potentially the free would be more natural in ins_ops__delete.
+
+Looks good to me.
+
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 
-----
-
-v2: Fix string test (Namhyung)
-Handle both in source and out of source builds.
-v3: Remove duplicated string check (Namhyung)
----
- tools/perf/tests/tests-scripts.c | 35 +++++++++++++++++++++++++++++---
- 1 file changed, 32 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/tests/tests-scripts.c b/tools/perf/tests/tests-scripts.c
-index e2042b368269..8dc1e398288c 100644
---- a/tools/perf/tests/tests-scripts.c
-+++ b/tools/perf/tests/tests-scripts.c
-@@ -29,16 +29,45 @@
- 
- static int shell_tests__dir_fd(void)
- {
--	char path[PATH_MAX], *exec_path;
--	static const char * const devel_dirs[] = { "./tools/perf/tests/shell", "./tests/shell", };
-+	struct stat st;
-+	char path[PATH_MAX], path2[PATH_MAX], *exec_path;
-+	static const char * const devel_dirs[] = {
-+		"./tools/perf/tests/shell",
-+		"./tests/shell",
-+		"./source/tests/shell"
-+	};
-+	int fd;
-+	char *p;
- 
- 	for (size_t i = 0; i < ARRAY_SIZE(devel_dirs); ++i) {
--		int fd = open(devel_dirs[i], O_PATH);
-+		fd = open(devel_dirs[i], O_PATH);
- 
- 		if (fd >= 0)
- 			return fd;
- 	}
- 
-+	/* Use directory of executable */
-+	if (readlink("/proc/self/exe", path2, sizeof path2) < 0)
-+		return -1;
-+	/* Follow another level of symlink if there */
-+	if (lstat(path2, &st) == 0 && (st.st_mode & S_IFMT) == S_IFLNK) {
-+		scnprintf(path, sizeof(path), path2);
-+		if (readlink(path, path2, sizeof path2) < 0)
-+			return -1;
-+	}
-+	/* Get directory */
-+	p = strrchr(path2, '/');
-+	if (p)
-+		*p = 0;
-+	scnprintf(path, sizeof(path), "%s/tests/shell", path2);
-+	fd = open(path, O_PATH);
-+	if (fd >= 0)
-+		return fd;
-+	scnprintf(path, sizeof(path), "%s/source/tests/shell", path2);
-+	fd = open(path, O_PATH);
-+	if (fd >= 0)
-+		return fd;
-+
- 	/* Then installed path. */
- 	exec_path = get_argv_exec_path();
- 	scnprintf(path, sizeof(path), "%s/tests/shell", exec_path);
--- 
-2.45.2
-
+Thanks,
+Namhyung
