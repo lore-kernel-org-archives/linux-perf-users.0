@@ -1,158 +1,124 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16C11A2564;
-	Tue, 13 Aug 2024 15:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18351A0715
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 15:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723562154; cv=none; b=m7Kuwq1NrAvf5O7xq/cJB9bcPP7w4eBAwnBlMsFlKkk1+d03/ZIZcVciNl9c+ESxAmolHj/0Wdbl+fkJzqpZKan2MabwFm7lFxwzUDqFbzkRTLbbvrFDg+sMIBD2aj1DEuRs/KldQ3srHoPRFjfB4iRK1ExWikQKz3sxDDNz4os=
+	t=1723562271; cv=none; b=bTAjgM+J5vKiSXHiVeJ9wHHupBDP1XwV8CT0Oe6raGzzVjkH4T5Wnwr0AIxVSIsbeYRHGKIWyx6Jop4mxZsF6uVkqHBwIqeIXTwNV6+5/KSRi9o3bE5pMEaGCtGZnX3fZQgUjWXeyfNqGcaJllBjREvGiixGM1vnm9NMALVA9vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723562154; c=relaxed/simple;
-	bh=vRrhVOIyv1RSRh5C7dPq7mX0Z9S2yF6t+GXeZ380Rgo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gQn9JYLEDtkoPLiGXA3GhH87R2PD5BCMab/7820p8K/IHjw4RLf3ctdT99f6EmjXHFCwrA2DPszlXB7fXCO+zCHgB4ckmB+4w8krZSRihnmz9qhVliPE+YG07WtCpE53civ5HAXNCiaH7VMayBsSseBNkwBAfwsyonftyzpwwMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MySqx+rA; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723562271; c=relaxed/simple;
+	bh=9Chp8Kdbu6SYoSV/XqRtuBNB0Ulomj1BCqRJZlB19WI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nzGR1xVtDFEkj6Q9IwSnxBtmasEt2te+PQsNzVIuyi1HOVBBe+zRsE3n8IstieHlzBmicJSnhwBx/146zau6i/nIs/1rjH2oSnfSCLYFh/g20ZbpeuZCAQC1lGgnm/8Ox0apQlZbfEljQOxOQon0zKF1A9zoHLQKPXBVbZXSh7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=PAuH7uDl; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MySqx+rA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723562152; x=1755098152;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=vRrhVOIyv1RSRh5C7dPq7mX0Z9S2yF6t+GXeZ380Rgo=;
-  b=MySqx+rA5qVcPYeNKkG9CQkaqAqu3TvPDhjXD1kLjVUWlhsXmP7v6N22
-   LIYicScM3iTUYZiZUs8l56UR1IywL7XtnKHWTMHq/eKVNTJpfJyalq9sK
-   nTxUqjnedq/VyLpK8bs7quMTA4QAukSwas/iTQO9sLOIIfquCjY1Wqp5g
-   FmHMR6cbE4M+Oqqxp1q5615q3I391ONHjyHLu6cqoOArmI8EQbQAOVkog
-   31afqlb/ztLRro2+DbiAnVA6+MfaFl2APNrgpq0DLNvhqU8g1kjydlq2c
-   qGsKnCvG6tPpCLOd5igxA4bQC72tHMbr3feDoSZ5xHLqKKlmeLVxxEgs7
-   A==;
-X-CSE-ConnectionGUID: 2ftjFGlnTPSgUn8ePaaIsQ==
-X-CSE-MsgGUID: Cjyr70OuT+u9TStqrBHV7Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21600433"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21600433"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 08:15:52 -0700
-X-CSE-ConnectionGUID: HYtjqdavTpaHcImOGoDl/g==
-X-CSE-MsgGUID: c/OcaRZcQHqp4JvERCpClg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="96229172"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa001.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 08:15:51 -0700
-Received: from [10.212.113.39] (kliang2-mobl1.ccr.corp.intel.com [10.212.113.39])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 606F920CFED0;
-	Tue, 13 Aug 2024 08:15:50 -0700 (PDT)
-Message-ID: <bdf150ed-6a41-4c54-a754-13c1f194fac3@linux.intel.com>
-Date: Tue, 13 Aug 2024 11:15:49 -0400
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="PAuH7uDl"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d1fe3754f4so2034322a91.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 08:17:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1723562269; x=1724167069; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=w4KRY8X4IunmA74dEqtckpgjQWJ1kH7nl8/HPopsHUI=;
+        b=PAuH7uDl5Gl7xTwu3yB3F/xF/ZurbydAsWO1VBqxwxjmGmgpo4iKptv04vQgblewf2
+         FH03WSdbcIu7ypdvF/Ea8W7XLXEU1Ozj9mTc+Ma0lTkG6li7XN+JV9/pw8Ys5hcmNLgN
+         vrSwZ/3mjaQuX07k5vGAD8Pleq4qu7hCNXzm4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723562269; x=1724167069;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=w4KRY8X4IunmA74dEqtckpgjQWJ1kH7nl8/HPopsHUI=;
+        b=v8l9p1fGQgk7eiPMDoWpiUTfWNGh5fLzDC9kJAJWtFc6BBrAVytl8NvgfiCw229OnC
+         aADHQxS2uO4LXtw+RD0tTDMm144PLD+2BFWfCVLN+US5OyBQKeVvhDfR8g2tw+5oIHuj
+         sIYp3I8ahBhXSQBTkHFhftQv+iFyY5LiWFB8LeCo7KBakKbQPZH+DzGNwjrTBEIAEEUv
+         jpbe08K/K/NYQw6Nu0xsQdGmIIA3kGKHxlGkrhLOE3yzsyJFLCdOnDBLTXiGBGr+BVI1
+         hnz6fFKQGHgZvLfAJqVwzMTZ+UUoWgjBYnwt6CE88ydIEAX6o4d7qWt6kSxl2WqAlicy
+         X+0w==
+X-Gm-Message-State: AOJu0YymimonGMNWZcwwIUuSc/3V8NkTrpbTNauuGnXIIiH2gJn520gX
+	yi9QmZ6kzav05/4djWrix0YkOf22U+omcfEe+N5M1QBtSuDAmaDUfDoNoz/zc2YvNEhHAnFQLij
+	8J5rzq8TXpq8fuAeGHo07xl8yJfhwsFJn5n3nHkGDfkhgr2hYsUS/d8kkyDniXLquO9QyR2YQ3C
+	LvQiF2cvvxsf469C2BgE66XKG9Y6leg4YNq8d1Z5iUFrSpyoNaeLY=
+X-Google-Smtp-Source: AGHT+IHXm0x6rVFLg4sEMfOVNl/u+rp1s8fKEkxeX/qIQGEqM6BLnURVvMM4eI5C7/juC0jCPJ61ww==
+X-Received: by 2002:a17:90a:cf08:b0:2c6:ee50:5af4 with SMTP id 98e67ed59e1d1-2d3924d8178mr4202148a91.6.1723562268440;
+        Tue, 13 Aug 2024 08:17:48 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d1fce6cfc1sm7409649a91.6.2024.08.13.08.17.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2024 08:17:48 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Cc: peterz@infradead.org,
+	andrii@kernel.org,
+	mhiramat@kernel.org,
+	olsajiri@gmail.com,
+	me@kylehuey.com,
+	Kyle Huey <khuey@kylehuey.com>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Joe Damato <jdamato@fastly.com>,
+	stable@vger.kernel.org
+Subject: [PATCH v2] perf/bpf: Don't call bpf_overflow_handler() for tracing events
+Date: Tue, 13 Aug 2024 15:17:27 +0000
+Message-Id: <20240813151727.28797-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 0/9] Support branch counters in block annotation
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, peterz@infradead.org, mingo@kernel.org,
- linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
- adrian.hunter@intel.com, ak@linux.intel.com, eranian@google.com
-References: <20240808193324.2027665-1-kan.liang@linux.intel.com>
- <Zrpk5a2GQl5i5APD@google.com> <Zrps-_ajW_zfze66@x1>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Zrps-_ajW_zfze66@x1>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+From: Kyle Huey <me@kylehuey.com>
 
+The regressing commit is new in 6.10. It assumed that anytime event->prog
+is set bpf_overflow_handler() should be invoked to execute the attached bpf
+program. This assumption is false for tracing events, and as a result the
+regressing commit broke bpftrace by invoking the bpf handler with garbage
+inputs on overflow.
 
-On 2024-08-12 4:13 p.m., Arnaldo Carvalho de Melo wrote:
-> On Mon, Aug 12, 2024 at 12:39:17PM -0700, Namhyung Kim wrote:
->> On Thu, Aug 08, 2024 at 12:33:15PM -0700, kan.liang@linux.intel.com wrote:
->>> From: Kan Liang <kan.liang@linux.intel.com>
->>> Kan Liang (9):
->>>   perf report: Fix --total-cycles --stdio output error
->>>   perf report: Remove the first overflow check for branch counters
->>>   perf evlist: Save branch counters information
->>>   perf annotate: Save branch counters for each block
->>>   perf evsel: Assign abbr name for the branch counter events
->>>   perf report: Display the branch counter histogram
->>>   perf annotate: Display the branch counter histogram
->>>   perf script: Add branch counters
->>>   perf test: Add new test cases for the branch counter feature
->>
->> Acked-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Clashed with something here, can you please take a look and rebase to
-> what is in perf-tools-next/perf-tools-next?
+Prior to the regression the overflow handlers formed a chain (of length 0,
+1, or 2) and perf_event_set_bpf_handler() (the !tracing case) added
+bpf_overflow_handler() to that chain, while perf_event_attach_bpf_prog()
+(the tracing case) did not. Both set event->prog. The chain of overflow
+handlers was replaced by a single overflow handler slot and a fixed call to
+bpf_overflow_handler() when appropriate. This modifies the condition there
+to check event->prog->type == BPF_PROG_TYPE_PERF_EVENT, restoring the
+previous behavior and fixing bpftrace.
 
-Tools-next/perf-tools-next doesn't include Weilin's TPEBS patch. So I
-fail at the patch 5, rather than patch 6 (the failure you observed.)
+Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Reported-by: Joe Damato <jdamato@fastly.com>
+Closes: https://lore.kernel.org/lkml/ZpFfocvyF3KHaSzF@LQ3V64L9R2/
+Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through overflow machinery")
+Cc: stable@vger.kernel.org
+Tested-by: Joe Damato <jdamato@fastly.com> # bpftrace
+---
+v2:
+  - Update patch based on Andrii's suggestion
+  - Update commit message
 
-Can you please update the perf-tools-next?
-Or should I re-base on top of the tmp.perf-tools-next?
+ kernel/events/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-$ git branch -v
-  master              1639fae5132b Merge tag 'drm-fixes-2023-06-17' of
-git://anongit.freedesktop.org/drm/drm
-* perf-tools-next     cb1898f58e0f perf annotate-data: Support
---skip-empty option
-  tmp.perf-tools-next 9da782071202 perf test: Add test for Intel TPEBS
-counting mode
-$ git branch --show-current
-perf-tools-next
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index aa3450bdc227..c973e3c11e03 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -9706,7 +9706,8 @@ static int __perf_event_overflow(struct perf_event *event,
+ 
+ 	ret = __perf_event_account_interrupt(event, throttle);
+ 
+-	if (event->prog && !bpf_overflow_handler(event, data, regs))
++	if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
++	    !bpf_overflow_handler(event, data, regs))
+ 		return ret;
+ 
+ 	/*
+-- 
+2.25.1
 
-$ git am lbr_event_logging_v2/000*
-Applying: perf report: Fix --total-cycles --stdio output error
-Applying: perf report: Remove the first overflow check for branch counters
-Applying: perf evlist: Save branch counters information
-Applying: perf annotate: Save branch counters for each block
-Applying: perf evsel: Assign abbr name for the branch counter events
-error: patch failed: tools/perf/util/evlist.c:33
-error: tools/perf/util/evlist.c: patch does not apply
-Patch failed at 0005 perf evsel: Assign abbr name for the branch counter
-events
-
-Thanks,
-Kan
-
-> 
-> - Arnaldo
-> 
->   ✓ [PATCH v2 9/9] perf test: Add new test cases for the branch counter feature
->     + Acked-by: Namhyung Kim <namhyung@kernel.org> (✓ DKIM/kernel.org)
->     + Reviewed-by: Andi Kleen <ak@linux.intel.com> (✓ DKIM/intel.com)
->     + Link: https://lore.kernel.org/r/20240808193324.2027665-10-kan.liang@linux.intel.com
->     + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
->   ---
->   ✓ Signed: DKIM/intel.com (From: kan.liang@linux.intel.com)
-> ---
-> Total patches: 9
-> ---
-> Cover: ./v2_20240808_kan_liang_support_branch_counters_in_block_annotation.cover
->  Link: https://lore.kernel.org/r/20240808193324.2027665-1-kan.liang@linux.intel.com
->  Base: not specified
->        git am ./v2_20240808_kan_liang_support_branch_counters_in_block_annotation.mbx
-> ⬢[acme@toolbox perf-tools-next]$        git am ./v2_20240808_kan_liang_support_branch_counters_in_block_annotation.mbx
-> Applying: perf report: Fix --total-cycles --stdio output error
-> Applying: perf report: Remove the first overflow check for branch counters
-> Applying: perf evlist: Save branch counters information
-> Applying: perf annotate: Save branch counters for each block
-> Applying: perf evsel: Assign abbr name for the branch counter events
-> Applying: perf report: Display the branch counter histogram
-> error: patch failed: tools/perf/util/annotate.h:551
-> error: tools/perf/util/annotate.h: patch does not apply
-> Patch failed at 0006 perf report: Display the branch counter histogram
-> hint: Use 'git am --show-current-patch=diff' to see the failed patch
-> When you have resolved this problem, run "git am --continue".
-> If you prefer to skip this patch, run "git am --skip" instead.
-> To restore the original branch and stop patching, run "git am --abort".
-> ⬢[acme@toolbox perf-tools-next]$
