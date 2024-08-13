@@ -1,142 +1,117 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D18831A38C8;
-	Tue, 13 Aug 2024 16:01:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEE1A0AEA
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 16:05:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564905; cv=none; b=BlI5d60nLwlXdu1zSXWU9xXRmvjssvHPCovJGslrriZomkN8twVGHBKdagyNGhnCmAtFTYhV1rgZb/m0NJ2WxLcrkrgElLRGhhZc7Gija3kqt/xIgcwuVh8QX6W3xAew4DEIqJXoqq0qIyrhQIcw8v3byAtWBM0x9zLUiXLbNiw=
+	t=1723565112; cv=none; b=rMdwGKsGkH/E9PROO8LCoQL/eR8Oaq5Sju4Zsiagl11SLbj/6fF512DJDCQJgzj5ILCLaTCXgMgE4lPfeoGO+X4sJOhvoNwfjlz6PFRNuk0CANiTE3c53QtCD4sFklwh1Ww0UTxRQV0wQrLQTd6sb8EXgVOz2IMDdcqy+34ozsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723564905; c=relaxed/simple;
-	bh=iDcHhBjklszsHCFlB1I+Epu/zTkyEf/8+o8VvG5QsHY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=V5CXfET0wWDKWDXZctyut/kA7x1PwN/5aYpNja0E9g9kMLO9Cmu89hHlEodNSYEPrTq/rG4mhGPBF4Wco9zfDgRaUIw3sC2NQXWMUAJtDsv9O07yYE0RhBsAiiQag8DxirJr/zRzhChjJe2yWUWJdFactu4U7jEMjRKcGxQZqYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UUqKfY8f; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723565112; c=relaxed/simple;
+	bh=dsnEFrXQEe30129gATA65SKh4tPfceYgp5NXlRzsf+Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JWRzdSUFs0zcq2enheJ6OFtYd5/L11swU+R1QBtFCOUjbep86U0P2w/DQQCijwC1LYK28c4RTMiDU2S88NuHzGFCotVktPOYCe/iwjvgj74p4YQCnMoGW/vcqXIp1ZkMUYB04NjBVxo/SIFuyrhnA/wSzy8G3ae8Kcxqd53JcGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0aOVX3Hz; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UUqKfY8f"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723564904; x=1755100904;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=iDcHhBjklszsHCFlB1I+Epu/zTkyEf/8+o8VvG5QsHY=;
-  b=UUqKfY8fUgjL5dinrRnCk/R5rz4JpTekt6zdbiJy3OUPNeYXb3TpEAVF
-   nSEvOGJXvxvVQd2ScyVUqe2N2bEjEvIp46BB1g637AuflcnO/goThuv7c
-   BbLMdBJ10PFhKFFpiDZWRjuYbMY0q/Bqytpynd8+cfkE3z+jDGTYeP+bm
-   pffh27M09qDQV9YuuHXL910Znl0FBldrqFlMJtSvUshebQ7eH858Sd3gg
-   rGjjGkRw7cAnvPXjmiD+s+2Tg0e24GGqUtzb8l5EEKOuIhnwSmvOyZUOw
-   evkD7VZyF3ppdeBmVqjdUjS/KNofFPk9YuXWqHHY8HnO7YVSPiPsuD6HX
-   g==;
-X-CSE-ConnectionGUID: rUDSSvcGTImf6py9rMIU5A==
-X-CSE-MsgGUID: vHr4eDkyTK6C678xjTU3SA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383230"
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21383230"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:37 -0700
-X-CSE-ConnectionGUID: lTzbP6CeSUCGpyZWHRARFg==
-X-CSE-MsgGUID: 5V37HyPHQcO0+keY8/NkFg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="59479762"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by orviesa008.jf.intel.com with ESMTP; 13 Aug 2024 09:01:37 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: adrian.hunter@intel.com,
-	ak@linux.intel.com,
-	eranian@google.com,
-	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 9/9] perf test: Add new test cases for the branch counter feature
-Date: Tue, 13 Aug 2024 09:02:08 -0700
-Message-Id: <20240813160208.2493643-10-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20240813160208.2493643-1-kan.liang@linux.intel.com>
-References: <20240813160208.2493643-1-kan.liang@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0aOVX3Hz"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-200aa53d6d2so113275ad.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 09:05:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723565110; x=1724169910; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hYWzJyvpTQNIlST/TNx5IAt/1qpwACIOgkuhkXZEt38=;
+        b=0aOVX3Hz9czVpRqT+ewLN0sKVAbXC/UdzZGHVoKKPJcF3N2vatmszAPxh/udHq2iwi
+         cNVfZ7z/Ip8807GXyVpmUTl972pvJeCqvQ6ubOm4Hkd4rSS6d03FMKMDTdO/nl/4LWXH
+         gq01qezG0fcrEmM+LzYrE8ygvcZU2W6b/hdwvdwrf5eenHcbjSZVy17zEhTHljWZUmD0
+         TnQ67n/eKYeAye45uqX5QP8JPmcAgQY7gwczoyc6hJmRDm8VEl+XgihZr6kg0he+pgtV
+         ww1MFggGvTjLeCB0jLb/xEq1fVWbOUEg5NrQIKoQ7OlBDyJg84P24NzNt+7vM5UpUzvT
+         LsQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723565110; x=1724169910;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hYWzJyvpTQNIlST/TNx5IAt/1qpwACIOgkuhkXZEt38=;
+        b=wx8wbs68zUQJVIJmIQ6Vd7+zLBOmj1jC21zgDrsX8R8S2T3PuJwKsP7gihwx/LZFZX
+         mMY8kKpISDtnzQqALuWrheAuTLlLYij/9Q+daW6y7rETDiD8zv7F+I3cGO7gpb++3BBF
+         R+vodj52OiGvf9gbNvCqdPEvri4E+RM0it416xlVLhfnQEhI2O6gFyb2GMnbXIQgU0g5
+         KXoyvJummq8OripQ+jfcalzhSspYJ3lKLUzv39l68yzXopXr4cvuTmpckxeUfr95t3/l
+         WhoUFpl0KCJEHlK4K/hTNtn4dPL/a0zzTSoOCA4ZcLqqclxqogyT2dS5DB8z+1rTlJ2M
+         E4mw==
+X-Forwarded-Encrypted: i=1; AJvYcCVhyK9W1GpasOB/QBQEzFtS0nt8JCoONB6thiL3gJNlAg1GU251O+BKH3nMrvBOg+C/7fjbjYpSirxDG/NgqUllSrRwHZKDcrR1dg6XTe2bog==
+X-Gm-Message-State: AOJu0YxPfyECuXEFhwl+10X2JRjk2v4QUBN0gA2eF2XjSxbm9RATPV9B
+	TGiry2A8wsepfrMUObcxiaTcgK1vTTXV+j9Bu4oIXbQxk1yWNwJQ/IQHp7sCyOhsRgXzwLJEzwv
+	3HbnZSPOy4T1ijpZddaAmXkzAcpXpILhRM9ec
+X-Google-Smtp-Source: AGHT+IEub4FIB+lio4i4nkw8sW+gRiszAfxdnYj0Bw1TMl0dWkbkwnfXacTcpG2yDl8Cz2lsKatOfYpP8MFyLU5J8so=
+X-Received: by 2002:a17:902:c40c:b0:1f3:3ede:9b0 with SMTP id
+ d9443c01a7336-201ccba5f3fmr1740695ad.10.1723565110178; Tue, 13 Aug 2024
+ 09:05:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240813040613.882075-1-irogers@google.com> <ZrtzTTHim_vGX1ma@x1>
+In-Reply-To: <ZrtzTTHim_vGX1ma@x1>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 Aug 2024 09:04:57 -0700
+Message-ID: <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Thomas Richter <tmricht@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, Aug 13, 2024 at 7:53=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
+> > lock__parse calls disasm_line__parse passing
+> > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
+> > lock__delete.
+> >
+> > Found with lock/leak sanitizer.
 
-Enhance the test case for the branch counter feature.
+Ooops, I meant address/leak sanitizer.
 
-Now, the test verifies
-- The new filter can be successfully applied on the supported platforms.
-- The counter value can be outputted via the perf report -D
-- The counter value and the abbr name can be outputted via the
-  perf script (New)
+> Applied both patches to perf-tools-next.
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
----
- tools/perf/tests/shell/record.sh | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Thanks, could you fix the commit message.
 
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 3d1a7759a7b2..7964ebd9007d 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -21,6 +21,7 @@ testprog="perf test -w thloop"
- cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
- br_cntr_file="/caps/branch_counter_nr"
- br_cntr_output="branch stack counters"
-+br_cntr_script_output="br_cntr: A"
- 
- cleanup() {
-   rm -rf "${perfdata}"
-@@ -165,7 +166,7 @@ test_workload() {
- }
- 
- test_branch_counter() {
--  echo "Basic branch counter test"
-+  echo "Branch counter test"
-   # Check if the branch counter feature is supported
-   for dir in $cpu_pmu_dir
-   do
-@@ -175,19 +176,25 @@ test_branch_counter() {
-       return
-     fi
-   done
--  if ! perf record -o "${perfdata}" -j any,counter ${testprog} 2> /dev/null
-+  if ! perf record -o "${perfdata}" -e "{branches:p,instructions}" -j any,counter ${testprog} 2> /dev/null
-   then
--    echo "Basic branch counter test [Failed record]"
-+    echo "Branch counter record test [Failed record]"
-     err=1
-     return
-   fi
-   if ! perf report -i "${perfdata}" -D -q | grep -q "$br_cntr_output"
-   then
--    echo "Basic branch record test [Failed missing output]"
-+    echo "Branch counter report test [Failed missing output]"
-     err=1
-     return
-   fi
--  echo "Basic branch counter test [Success]"
-+  if ! perf script -i "${perfdata}" -F +brstackinsn,+brcntr | grep -q "$br_cntr_script_output"
-+  then
-+    echo " Branch counter script test [Failed missing output]"
-+    err=1
-+    return
-+  fi
-+  echo "Branch counter test [Success]"
- }
- 
- test_per_thread
--- 
-2.38.1
+Thanks,
+Ian
 
+> Thanks,
+>
+> - Arnaldo
+>
+> > Signed-off-by: Ian Rogers <irogers@google.com>
+> > ---
+> >  tools/perf/util/disasm.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+> > index 22289003e16d..226d2181f694 100644
+> > --- a/tools/perf/util/disasm.c
+> > +++ b/tools/perf/util/disasm.c
+> > @@ -566,6 +566,7 @@ static void lock__delete(struct ins_operands *ops)
+> >               ins_ops__delete(ops->locked.ops);
+> >
+> >       zfree(&ops->locked.ops);
+> > +     zfree(&ops->locked.ins.name);
+> >       zfree(&ops->target.raw);
+> >       zfree(&ops->target.name);
+> >  }
+> > --
+> > 2.46.0.76.ge559c4bf1a-goog
