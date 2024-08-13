@@ -1,238 +1,177 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF68C3AC01
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 07:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EB218B48E
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 10:37:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723535499; cv=none; b=lfLL+i68UkobEjgsQOoLxOm+1WnVwEiw9NBzODaEIcT+3asNt/wc5fadgtAGTcdlc0os8Sk7Kq3ReNqeilAwPoR6bmciCBQnzA8V76XwmgApX2MhoRIua565WUOR70Dd96Kw5EQ5Kg8CqdPOZLtOn36qD539f9Elx/BEc2d9rvg=
+	t=1723545452; cv=none; b=X2g0WZDaGzspmdh0lNoZUT3LJ8VUn6PBSBVClTjRQWbLIHo2G84nff1UDlbctPyZoT38lrcmTF+NOSuYr2b286Ktqm+8iyylwa0XOiqPLygnxv2Pvox+8SfcdgzcKWhH/zKJoTUX2y17gtt4X2fn2x3VOrvhOmLJUrsafGduGEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723535499; c=relaxed/simple;
-	bh=uy7EbA4adCpmBV+XAxZRnyemUj+sq3qJroIknwk7CY8=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=hNMxvQntzvWg/ea8Lx9zLay2hh+todU/Uatr1+yJ+3zwtd576Ju+MWob3l8meT9tsRo/Vr2+3bWrmtsDIXA7xJlCy3oSEd9l38PowjXaoMNeKd0KO6uE7HWaK5+PdxrGy0IurAboy03/KUyBWFjcISYiP6IRuGpv4A4QYJNde6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=klvrMJ+C; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1723545452; c=relaxed/simple;
+	bh=Fx86RWNFPGzFcoJ2+JGDsyIXnDup4PvG8KrfisUsS6k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pfw2jZnlWtlV/BGs1WKCGRwTRjOL70Nexa3MoLC8FEse9gp1x2rZKqBMjbgbOL5yWWYy/45bA1QuZYETFkfEchxVOWiCW+9QMVrTKdXUeoTpM5hdULQkepP5reePbmGjQMFXSPX04ESc6uSCn2vvs+EUh3FvfZJkjftHr5Ivw7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=qmX3GpIP; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="klvrMJ+C"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47D4nRCL003513;
-	Tue, 13 Aug 2024 07:51:23 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:subject:to:cc:references:from:in-reply-to
-	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
-	4lOSm3QcNI38xr730OjvcbzCPOYpBB+fW8uXv6QK19Y=; b=klvrMJ+C/8MkNU2k
-	FbBCMbvwlzg/NFfHSfTHDoE6RuWbwQNCpp9l8Z4KOzteHWQM7BnpTZ4KHJ1jkf55
-	B/F1vOzXyizAIfdsmlEu6SwumiE8GcoYmELNhupRa/4TxzjRsW4osHME2o2mrKO0
-	J7PLrm5AbpnGWsa4dpxf9bxPZfEvGUS5XufExPlDnEtRTvCYrNucj+cb0A+zMzHx
-	9VpuyNp+F64szlnXusnYRX16m4ovuMbBGkRm77mOGF68t3zNOZzc5/P+dXra47ej
-	dQAuVgluaiQOF38BajouINCpckhy9eKygAPBp9zd5sPIrGL9Bu2q/r6aOgbjZfdy
-	BXI9Ng==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wwmpq24a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 07:51:23 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47D7pMtv015653;
-	Tue, 13 Aug 2024 07:51:22 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 40wwmpq244-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 07:51:22 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47D58FTm029691;
-	Tue, 13 Aug 2024 07:51:21 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40xmrma8q7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 13 Aug 2024 07:51:21 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47D7pIPQ54001996
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 13 Aug 2024 07:51:20 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2777D2004D;
-	Tue, 13 Aug 2024 07:51:18 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A530C2004B;
-	Tue, 13 Aug 2024 07:51:15 +0000 (GMT)
-Received: from [9.171.86.190] (unknown [9.171.86.190])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 13 Aug 2024 07:51:15 +0000 (GMT)
-Message-ID: <e1435347-404e-4ff4-a4b1-c9338a60c8d3@linux.ibm.com>
-Date: Tue, 13 Aug 2024 13:21:14 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
- stat
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, vmolnaro@redhat.com
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, mpetlan@redhat.com,
-        Ian Rogers <irogers@google.com>, Disha Goel <disgoel@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <Zh6ZEGOfgcEfwha4@x1> <20240429110439.17362-1-vmolnaro@redhat.com>
- <ZjVIQa3JouJde7I1@x1> <ZroKjgWHYwPpvbau@x1>
-Content-Language: en-US
-From: kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <ZroKjgWHYwPpvbau@x1>
-Content-Type: text/plain; charset=UTF-8
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: WMf9r7kV6ZWy0VWy1cLkniiF6ariiBgZ
-X-Proofpoint-GUID: u-KO2xItUGfnfdzox_h8O1_8GR73SZPJ
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="qmX3GpIP"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-428fb103724so35800955e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 03:37:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1723545449; x=1724150249; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fvbee0SW+pMXz7sN1ET87bGiGH6l11oU5neEpsez9DU=;
+        b=qmX3GpIPoaxrAglEZvmDbvbR6fLKPjQyMnBL+E3TawEvHnXdqEcXu4S8JoCjrlGXpo
+         0nYx9HGvxXBjSKRYZFL5yLnd8hS5vFIWoGCcDawN8iIJlK9wj/YAAqAAW3tuorK8Jf2c
+         rMzAJRavPGPN39MmMVVOuTheOS5C2fK50sRv8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723545449; x=1724150249;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fvbee0SW+pMXz7sN1ET87bGiGH6l11oU5neEpsez9DU=;
+        b=QHGINMsus5ficU9llyD6b/QVUA3jfHMQ/RPG77ah/fUBqwpUdhfM1RgdTiwMIXtQx0
+         ja86Kl4E/rvqT54tajuu7mC51O1WGuTiBtHwwu5hFscj/uSnc4Q6xuq2GhXD3yEchCuM
+         6LIrHv1g5FkDW9Jav4M2mctieVel7/yzy57UI6zfQl0V5w44k8CSlFFoTLYA/2cEJtc4
+         Gl+BjsRqngqD1eM9IbVW+bH4oALL6ew0y6va6GUH+Yb8jpC820G/eAZPZ+UgEccBD7Of
+         NxyoiNcEC3D0Ug3LezSoLOjk1gkBxtBIBD4fGSLWZofDIF7JSWNtGAdOp+lUOCrWwqoa
+         MeSg==
+X-Forwarded-Encrypted: i=1; AJvYcCVzu/yrAe6rC5qB2AkOkg9eA2v6/3uNx/CBZpt6eclP62Li3nVzBIGV/AyrSkdCQudZpWMvAGIT3qM73UPR8Y+Y1LzAYDPcVhDOnWJWwIkczg==
+X-Gm-Message-State: AOJu0YycKGmAdu5KVe7zN77uUYs//Dve560hEYG0x0Ehi1vw1ByDhUMa
+	sUVGehhLttfwnb1QXVyXNzXO6G3z/Bi08rqIt5Yz0Q6eik2D5LSd4GSQJLt4Nik=
+X-Google-Smtp-Source: AGHT+IH8waElxjdjm7UZ/RIkANd5DqTvRYZsedUWRh/rC+5Ycr+cgQv+7sCp7T6Chbqa2sHZt6mn6Q==
+X-Received: by 2002:a05:600c:4fd5:b0:424:71f7:77f2 with SMTP id 5b1f17b1804b1-429d62fe07fmr16832245e9.16.1723545448849;
+        Tue, 13 Aug 2024 03:37:28 -0700 (PDT)
+Received: from LQ3V64L9R2.home ([80.208.222.2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-429c75044a8sm133746935e9.9.2024.08.13.03.37.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2024 03:37:28 -0700 (PDT)
+Date: Tue, 13 Aug 2024 11:37:26 +0100
+From: Joe Damato <jdamato@fastly.com>
+To: Kyle Huey <me@kylehuey.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Jiri Olsa <olsajiri@gmail.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>, khuey@kylehuey.com,
+	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	robert@ocallahan.org, Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing
+ events
+Message-ID: <Zrs3ZqRtT3_lNj6a@LQ3V64L9R2.home>
+References: <20240715150410.GJ14400@noisy.programming.kicks-ass.net>
+ <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
+ <20240715163003.GK14400@noisy.programming.kicks-ass.net>
+ <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
+ <ZpYgYaKKbw3FPUpv@krava>
+ <CAEf4BzZWWzio9oPe2_jS=_7CnKuJnugr2h4yd3QY1TqSF0aMXQ@mail.gmail.com>
+ <CAP045ArhO4K2vcrhG_GnJNhx=+7v6WLYKsDj4CvqO7HKzBshXg@mail.gmail.com>
+ <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
+ <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
+ <ZrC9oxIcKebAKpx3@LQ3V64L9R2.home>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-12_12,2024-08-13_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- impostorscore=0 suspectscore=0 spamscore=0 phishscore=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 mlxscore=0 clxscore=1011 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
- definitions=main-2408130053
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZrC9oxIcKebAKpx3@LQ3V64L9R2.home>
 
-
-
-On 8/12/24 18:43, Arnaldo Carvalho de Melo wrote:
-> On Fri, May 03, 2024 at 05:25:37PM -0300, Arnaldo Carvalho de Melo wrote:
->> On Mon, Apr 29, 2024 at 12:56:24PM +0200, vmolnaro@redhat.com wrote:
->>> From: Veronika Molnarova <vmolnaro@redhat.com>
->>>
->>> With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
->>> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
->>> stat for hv_gpci events without required permission set returns an
->>> error value of -1 to differentiate the output from the unsupported
->>> events. The stat_all_pmu test was designed in a way, that if any
->>> command exits with a non-zero value the test exits with an error
->>> value without any information provided due to the 'set -e' option.
->>
->> Is this v2 or v3? Kajol, can I have your tested-by?
+On Mon, Aug 05, 2024 at 12:55:17PM +0100, Joe Damato wrote:
+> On Fri, Jul 26, 2024 at 09:35:43AM -0700, Kyle Huey wrote:
+> > Will do.
+> > 
+> > - Kyle
+> > 
+> > On Fri, Jul 26, 2024 at 9:34 AM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Fri, Jul 26, 2024 at 5:37 AM Kyle Huey <me@kylehuey.com> wrote:
+> > > >
+> > > > On Fri, Jul 19, 2024 at 11:26 AM Andrii Nakryiko
+> > > > <andrii.nakryiko@gmail.com> wrote:
+> > > > >
+> > > > > On Tue, Jul 16, 2024 at 12:25 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> > > > > >
+> > > > > > On Mon, Jul 15, 2024 at 09:48:58AM -0700, Kyle Huey wrote:
+> > > > > > > On Mon, Jul 15, 2024 at 9:30 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > > > > > >
+> > > > > > > > On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote:
+> > > > > > > >
+> > > > > > > > > I think this would probably work but stealing the bit seems far more
+> > > > > > > > > complicated than just gating on perf_event_is_tracing().
+> > > > > > > >
+> > > > > > > > perf_event_is_tracing() is something like 3 branches. It is not a simple
+> > > > > > > > conditional. Combined with that re-load and the wrong return value, this
+> > > > > > > > all wants a cleanup.
+> > > > > > > >
+> > > > > > > > Using that LSB works, it's just that the code aint pretty.
+> > > > > > >
+> > > > > > > Maybe we could gate on !event->tp_event instead. Somebody who is more
+> > > > > > > familiar with this code than me should probably confirm that tp_event
+> > > > > > > being non-null and perf_event_is_tracing() being true are equivalent
+> > > > > > > though.
+> > > > > > >
+> > > > > >
+> > > > > > it looks like that's the case, AFAICS tracepoint/kprobe/uprobe events
+> > > > > > are the only ones having the tp_event pointer set, Masami?
+> > > > > >
+> > > > > > fwiw I tried to run bpf selftests with that and it's fine
+> > > > >
+> > > > > Why can't we do the most straightforward thing in this case?
+> > > > >
+> > > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > > > > index ab6c4c942f79..cf4645b26c90 100644
+> > > > > --- a/kernel/events/core.c
+> > > > > +++ b/kernel/events/core.c
+> > > > > @@ -9707,7 +9707,8 @@ static int __perf_event_overflow(struct perf_event *event,
+> > > > >
+> > > > >         ret = __perf_event_account_interrupt(event, throttle);
+> > > > >
+> > > > > -       if (event->prog && !bpf_overflow_handler(event, data, regs))
+> > > > > +       if (event->prog && event->prog->type == BPF_PROG_TYPE_PERF_EVENT &&
+> > > > > +           !bpf_overflow_handler(event, data, regs))
+> > > > >                 return ret;
+> > > > >
+> > > > >
+> > > > > >
+> > > > > > jirka
+> > > > > >
+> > > >
+> > > > Yes, that's effectively equivalent to calling perf_event_is_tracing()
+> > > > and would work too. Do you want to land that patch? It needs to go to
+> > > > 6.10 stable too.
+> > >
+> > > I'd appreciate it if you can just incorporate that into your patch and
+> > > resend it, thank you!
+> > >
+> > > >
+> > > > - Kyle
 > 
-> Oops, Kajol wasn't on the CC list, nor Ian, I'm adding them, maybe Kajol
-> can test it on those machines and Ian, who wrote the test can take a
-> look, also adding all the perf tools reviewers, as listed in
-> MAINTAINERS.
+> I probably missed the updated patch, but I am happy to test any new
+> versions, if needed, to ensure that the bug I hit is fixed.
 > 
-> Thanks,
-> 
-> - Arnaldo
->  
-Hi Veronika,
-I checked the patch, code wise patch looks fine to me. I also tested it
-on powerpc system.
+> Kyle: please let me know if there's a patch you'd like me to test?
 
-Just have concern on your commit message, you added below text as part
-of your commit message:
+Sorry for pinging this thread again; let me know if a fix was merged
+and I missed it?
 
-It was caught by CKI testing where it was triaged to stop
-blocking further MRs, as most of the powerpc machines do not support
-some of the hv_gpci events.
+Otherwise, if it'd be helpful, I am happy to modify Kyle's patch to
+take Andrii's suggestion and resend, but I don't want to step on
+anyone's toes :)
 
-The hv-gpci events are supported in pseries system.
-And for different power processors, we already have code to include only
-supported event as part of perf list.
-
-If you are taking about parametrized events which are skipped in this
-testcase, its not that those parametrized events are not supported.
-Since testing proper values of the parameters is out of scope of this
-script we are skipping those events.
-
-Can you remove that part from commit message? Rest looks fine to me.
-
-Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
-Tested-by: Kajol Jain <kjain@linux.ibm.com>
-
-Thanks,
-Kajol Jain
-
->>> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
->>> event causes failure after the MR as the zero return value was required.
->>> The issue propagated upstream as the list of the files that affected perf
->>> did not cover the changed files and was updated after the issue was
->>> discovered. It was caught by CKI testing where it was triaged to stop
->>> blocking further MRs, as most of the powerpc machines do not support
->>> some of the hv_gpci events.
->>>
->>> Remove the 'set -e' option from the test and rework the test case to log
->>> the status of the event for better maintainability. Instead of exiting
->>> immediately after 'perf stat' ends with a non-zero value, check the
->>> return value and output of the 'perf stat' command with the appropriate action.
->>>
->>> Link to the MR !3916 of commit ad86d7ee43b22aa2:
->>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
->>>
->>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
->>> ---
->>> Fixed the issue with applying due to a fixed comment typo upstream and
->>> added Ian's suggestion for the 'device busy' issue during parallel
->>> testing.
->>>
->>>  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
->>>  1 file changed, 29 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
->>> index c77955419173..a75beddda4db 100755
->>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
->>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
->>> @@ -2,21 +2,38 @@
->>>  # perf all PMU test
->>>  # SPDX-License-Identifier: GPL-2.0
->>>  
->>> -set -e
->>>  
->>>  # Test all PMU events; however exclude parameterized ones (name contains '?')
->>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
->>> -  echo "Testing $p"
->>> -  result=$(perf stat -e "$p" true 2>&1)
->>> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
->>> -    # We failed to see the event and it is supported. Possibly the workload was
->>> -    # too small so retry with something longer.
->>> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
->>> -    if ! echo "$result" | grep -q "$p" ; then
->>> -      echo "Event '$p' not printed in:"
->>> -      echo "$result"
->>> -      exit 1
->>> +  echo -n "Testing event '$p' -- "
->>> +  stat_output=$(perf stat -e "$p" true 2>&1)
->>> +  stat_result=$?
->>> +  if echo "$stat_output" | grep -q "$p"; then
->>> +    # return value 0 if counters get printed either if the event is supported or not
->>> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
->>> +        echo "supported"
->>> +    elif [ $stat_result -eq 0 ]; then
->>> +        echo "not supported"
->>> +    # return value 255 when the required permission for the event is not set
->>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
->>> +        echo "no permission to enable"
->>> +    # return value 255 in case of resource busy during parallel testing of events
->>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
->>> +        echo "resource busy"
->>> +    # return value 129 when trying to run 'perf stat' with a non-existent event
->>> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
->>> +        echo "Fail: Bad event name"
->>> +        echo "$stat_output"
->>> +        exit 1
->>> +    else
->>> +        echo "Fail: Unknown return value $stat_result"
->>> +        echo "$stat_output"
->>> +        exit 1
->>>      fi
->>> +  else
->>> +      echo "Fail: Event '$p' not printed in:"
->>> +      echo "$stat_output"
->>> +      exit 1
->>>    fi
->>>  done
->>>  
->>> -- 
->>> 2.43.0
->>>
-> 
+- Joe
