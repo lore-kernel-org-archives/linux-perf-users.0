@@ -1,166 +1,180 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59CBA19B3DD;
-	Tue, 13 Aug 2024 13:14:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 068B21D556;
+	Tue, 13 Aug 2024 13:23:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723554847; cv=none; b=kyv/3MMGedZwDisaKNovOfjk9rDC9PdnN7Nrp4n8r9MxtoS5G4YdcjlUdQ5HLsju/PI5FiVmfLwdyogxxEn5rygpAIGmeW06Yqqmvo4ZGenwkYWV8GdQeaQUD8Or2V6w+z5v9+XKGKH8mkjFicH3Zyu1pIgdLUqnt/tmfYYSCsU=
+	t=1723555440; cv=none; b=DXYU2WZu09y+o6rerRDW6ZmnzsL6JSOyzs9rZfXrB8tzRizNrUXSZZAk8+De3E3F+Rs3phYNAqOwuHE6TGwbVmflLennA4f8Plne7dc+lj0CwAObg0/4ZWbX0kw2rvW/NWXDUX2PAJscRADcbFmkT26mI8oNSODPi2Lc+KfVE+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723554847; c=relaxed/simple;
-	bh=SlRisIpCNCpm6zvwnFEUNWuu0OeVFENHsXjtjgFQ/f8=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=FsvTMO8oESGjywp3up1XK8ILNGAGOKNG+eMIsKF5WnQa7AYF3PVsV4UAQZ5ryUZbd7r/spmTaPZyw3BT4Hvay00aGgnOeEcelDNYtj1L8bClPtv5L9WqC1dKnz4rgxklJAB6TKvHDwfFzTOOjY4mOQXxLVU1754kayxp3rCaIJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4WjsCn5fB9z2CmYC;
-	Tue, 13 Aug 2024 21:09:09 +0800 (CST)
-Received: from kwepemf500004.china.huawei.com (unknown [7.202.181.242])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9B2FB140337;
-	Tue, 13 Aug 2024 21:14:00 +0800 (CST)
-Received: from [10.67.110.237] (10.67.110.237) by
- kwepemf500004.china.huawei.com (7.202.181.242) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Tue, 13 Aug 2024 21:13:59 +0800
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-To: Thomas Gleixner <tglx@linutronix.de>, <peterz@infradead.org>,
-	<mingo@redhat.com>
-CC: <acme@kernel.org>, <namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	<bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-	<hpa@zytor.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-References: <20240729223328.327835-1-lihuafei1@huawei.com>
- <875xsl5pwv.ffs@tglx>
-From: Li Huafei <lihuafei1@huawei.com>
-Message-ID: <fb87cc82-94b7-31aa-0374-a1d7fa49470e@huawei.com>
-Date: Tue, 13 Aug 2024 21:13:59 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
+	s=arc-20240116; t=1723555440; c=relaxed/simple;
+	bh=NGdg1BLP0GPAMP86ABodjR+cWgdJjUmHIa3XeU8bCbk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Y5J+CPja6AS6KPzzXOTzTLZki3CL6n5PGDJCJJBHR0aivAn025xuDt04zeqWHvPcFIJpraDZcwISGS+58lVQ2lFWL/2jDe+m7raPwvbtUxHF0eeo+P4hj8awN/spZGGyBwnmegJugvyPzEwnUrfHDgE0NFk865nNQet6xEetXfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from ThinkPad-T480s.. (unknown [121.237.44.107])
+	by APP-03 (Coremail) with SMTP id rQCowACHKRlVXrtm7WsLBg--.54503S2;
+	Tue, 13 Aug 2024 21:23:34 +0800 (CST)
+From: zhouquan@iscas.ac.cn
+To: anup@brainfault.org,
+	ajones@ventanamicro.com,
+	atishp@atishpatra.org,
+	paul.walmsley@sifive.com,
+	palmer@dabbelt.com,
+	aou@eecs.berkeley.edu,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	kvm@vger.kernel.org,
+	kvm-riscv@lists.infradead.org,
+	linux-perf-users@vger.kernel.org,
+	Quan Zhou <zhouquan@iscas.ac.cn>
+Subject: [PATCH v2 0/2] riscv: Add perf support to collect KVM guest statistics from host side
+Date: Tue, 13 Aug 2024 21:23:33 +0800
+Message-Id: <cover.1723518282.git.zhouquan@iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <875xsl5pwv.ffs@tglx>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemf500004.china.huawei.com (7.202.181.242)
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:rQCowACHKRlVXrtm7WsLBg--.54503S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxJw17AFy7Gr4UGF1rCr1xKrg_yoWrKF1Dpr
+	43Cr43tF4rAryIqw1Ivr1Y9ryUJ397XrnxGrnxJw4rAr4jvaykXwn2gr1xZ3y0qrykKryr
+	Xw1vqFy2kas0yFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5Gw
+	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
+	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
+	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
+	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUkkuxUUUUU=
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiBwwIBma7QjdI8QAAsU
+
+From: Quan Zhou <zhouquan@iscas.ac.cn>
+
+Add basic guest support to RISC-V perf, enabling it to distinguish
+whether PMU interrupts occur in the host or the guest, and then
+collect some basic guest information from the host side
+(guest os callchain is not supported for now).
+
+Based on the x86/arm implementation, tested with kvm-riscv.
+test env:
+- host: qemu-9.0.0
+- guest: qemu-9.0.0 --enable-kvm (only start one guest and run top)
+
+-----------------------------------------
+1) perf kvm top
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules top
+
+PerfTop:      41 irqs/sec  kernel:97.6% us: 0.0% guest kernel: 0.0% guest us: 0.0% exact:  0.0% [250Hz cycles:P],  (all, 4 CPUs)
+-------------------------------------------------------------------------------
+
+    64.57%  [kernel]        [k] default_idle_call
+     3.12%  [kernel]        [k] _raw_spin_unlock_irqrestore
+     3.03%  [guest.kernel]  [g] mem_serial_out
+     2.61%  [kernel]        [k] handle_softirqs
+     2.32%  [kernel]        [k] do_trap_ecall_u
+     1.71%  [kernel]        [k] _raw_spin_unlock_irq
+     1.26%  [guest.kernel]  [g] do_raw_spin_lock
+     1.25%  [kernel]        [k] finish_task_switch.isra.0
+     1.16%  [kernel]        [k] do_idle
+     0.77%  libc.so.6       [.] ioctl
+     0.76%  [kernel]        [k] queue_work_on
+     0.69%  [kernel]        [k] __local_bh_enable_ip
+     0.67%  [guest.kernel]  [g] __noinstr_text_start
+     0.64%  [guest.kernel]  [g] mem_serial_in
+     0.41%  libc.so.6       [.] pthread_sigmask
+     0.39%  [kernel]        [k] mem_cgroup_uncharge_skmem
+     0.39%  [kernel]        [k] __might_resched
+     0.39%  [guest.kernel]  [g] _nohz_idle_balance.isra.0
+     0.37%  [kernel]        [k] sched_balance_update_blocked_averages
+     0.34%  [kernel]        [k] sched_balance_rq
+
+2) perf kvm record
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules record -a sleep 60
+
+[ perf record: Woken up 3 times to write data ]
+[ perf record: Captured and wrote 1.292 MB perf.data.kvm (17990 samples) ]
+
+3) perf kvm report (the data shown here is not complete)
+./perf kvm --host --guest \
+  --guestkallsyms=/root/repo/shared/kallsyms \
+  --guestmodules=/root/repo/shared/modules report -i perf.data.kvm
+
+# Total Lost Samples: 0
+#
+# Samples: 17K of event 'cycles:P'
+# Event count (approx.): 269968947184
+#
+# Overhead  Command          Shared Object            Symbol                                        
+# ........  ...............  .......................  ..............................................
+#
+    61.86%  swapper          [kernel.kallsyms]        [k] default_idle_call
+     2.93%  :6463            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     2.82%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_out
+     2.11%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     1.78%  :6462            [guest.kernel.kallsyms]  [g] do_raw_spin_lock
+     1.37%  swapper          [kernel.kallsyms]        [k] handle_softirqs
+     1.36%  swapper          [kernel.kallsyms]        [k] do_idle
+     1.21%  sshd             [kernel.kallsyms]        [k] do_trap_ecall_u
+     1.21%  sshd             [kernel.kallsyms]        [k] _raw_spin_unlock_irq
+     1.11%  qemu-system-ris  [kernel.kallsyms]        [k] do_trap_ecall_u
+     0.93%  qemu-system-ris  libc.so.6                [.] ioctl
+     0.89%  sshd             [kernel.kallsyms]        [k] __local_bh_enable_ip
+     0.77%  qemu-system-ris  [kernel.kallsyms]        [k] _raw_spin_unlock_irqrestore
+     0.68%  qemu-system-ris  [kernel.kallsyms]        [k] queue_work_on
+     0.65%  sshd             [kernel.kallsyms]        [k] handle_softirqs
+     0.44%  :6462            [guest.kernel.kallsyms]  [g] mem_serial_in
+     0.42%  sshd             libc.so.6                [.] pthread_sigmask
+     0.34%  :6462            [guest.kernel.kallsyms]  [g] serial8250_tx_chars
+     0.30%  swapper          [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.29%  swapper          [kernel.kallsyms]        [k] sched_balance_rq
+     0.29%  sshd             [kernel.kallsyms]        [k] __might_resched
+     0.26%  swapper          [kernel.kallsyms]        [k] tick_nohz_idle_exit
+     0.26%  swapper          [kernel.kallsyms]        [k] sched_balance_update_blocked_averages
+     0.26%  swapper          [kernel.kallsyms]        [k] _nohz_idle_balance.isra.0
+     0.24%  qemu-system-ris  [kernel.kallsyms]        [k] finish_task_switch.isra.0
+     0.23%  :6462            [guest.kernel.kallsyms]  [g] __noinstr_text_start
+     
+---
+Change since v1:
+- Rebased on v6.11-rc3
+- Fix incorrect misc type (Andrew)
+
+---
+v1 link:
+https://lore.kernel.org/all/cover.1721271251.git.zhouquan@iscas.ac.cn/
+
+Quan Zhou (2):
+  riscv: perf: add guest vs host distinction
+  riscv: KVM: add basic support for host vs guest profiling
+
+ arch/riscv/include/asm/kvm_host.h   |  5 ++++
+ arch/riscv/include/asm/perf_event.h |  7 ++++++
+ arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+ arch/riscv/kvm/Kconfig              |  1 +
+ arch/riscv/kvm/main.c               | 12 +++++++--
+ arch/riscv/kvm/vcpu.c               |  7 ++++++
+ 6 files changed, 68 insertions(+), 2 deletions(-)
 
 
-Hi Thomas, sorry for the late reply.
+base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+-- 
+2.34.1
 
-On 2024/8/1 3:20, Thomas Gleixner wrote:
-> On Tue, Jul 30 2024 at 06:33, Li Huafei wrote:
->> On my Haswell machine, running the ltp test cve-2015-3290 concurrently
->> reports the following warnings:
->>
->>   perfevents: irq loop stuck!
->>   WARNING: CPU: 31 PID: 32438 at arch/x86/events/intel/core.c:3174 intel_pmu_handle_irq+0x285/0x370
->>   CPU: 31 UID: 0 PID: 32438 Comm: cve-2015-3290 Kdump: loaded Tainted: G S      W          6.11.0-rc1+ #3
->>   ...
->>   Call Trace:
->>    <NMI>
->>    ? __warn+0xa4/0x220
->>    ? intel_pmu_handle_irq+0x285/0x370
->>    ? __report_bug+0x123/0x130
->>    ? intel_pmu_handle_irq+0x285/0x370
->>    ? __report_bug+0x123/0x130
->>    ? intel_pmu_handle_irq+0x285/0x370
->>    ? report_bug+0x3e/0xa0
->>    ? handle_bug+0x3c/0x70
->>    ? exc_invalid_op+0x18/0x50
->>    ? asm_exc_invalid_op+0x1a/0x20
->>    ? irq_work_claim+0x1e/0x40
->>    ? intel_pmu_handle_irq+0x285/0x370
->>    perf_event_nmi_handler+0x3d/0x60
->>    nmi_handle+0x104/0x330
->>    ? ___ratelimit+0xe4/0x1b0
->>    default_do_nmi+0x40/0x100
->>    exc_nmi+0x104/0x180
->>    end_repeat_nmi+0xf/0x53
->>    ...
->>    ? intel_pmu_lbr_enable_all+0x2a/0x90
->>    ? __intel_pmu_enable_all.constprop.0+0x16d/0x1b0
->>    ? __intel_pmu_enable_all.constprop.0+0x16d/0x1b0
->>    perf_ctx_enable+0x8e/0xc0
->>    __perf_install_in_context+0x146/0x3e0
->>    ? __pfx___perf_install_in_context+0x10/0x10
->>    remote_function+0x7c/0xa0
->>    ? __pfx_remote_function+0x10/0x10
->>    generic_exec_single+0xf8/0x150
->>    smp_call_function_single+0x1dc/0x230
->>    ? __pfx_remote_function+0x10/0x10
->>    ? __pfx_smp_call_function_single+0x10/0x10
->>    ? __pfx_remote_function+0x10/0x10
->>    ? lock_is_held_type+0x9e/0x120
->>    ? exclusive_event_installable+0x4f/0x140
->>    perf_install_in_context+0x197/0x330
->>    ? __pfx_perf_install_in_context+0x10/0x10
->>    ? __pfx___perf_install_in_context+0x10/0x10
->>    __do_sys_perf_event_open+0xb80/0x1100
->>    ? __pfx___do_sys_perf_event_open+0x10/0x10
->>    ? __pfx___lock_release+0x10/0x10
->>    ? lockdep_hardirqs_on_prepare+0x135/0x200
->>    ? ktime_get_coarse_real_ts64+0xee/0x100
->>    ? ktime_get_coarse_real_ts64+0x92/0x100
->>    do_syscall_64+0x70/0x180
->>    entry_SYSCALL_64_after_hwframe+0x76/0x7e
->>    ...
-> 
-> Please trim the backtrace to something useful:
-> 
-> https://www.kernel.org/doc/html/latest/process/submitting-patches.html#backtraces
-> 
-
-Okay, thanks for the tip!
-
->> My machine has 32 physical cores, each with two logical cores. During
->> testing, it executes the CVE-2015-3290 test case 100 times concurrently.
->>
->> This warning was already present in [1] and a patch was given there to
->> limit period to 128 on Haswell, but that patch was not merged into the
->> mainline.  In [2] the period on Nehalem was limited to 32. I tested 16
->> and 32 period on my machine and found that the problem could be
->> reproduced with a limit of 16, but the problem did not reproduce when
->> set to 32. It looks like we can limit the cycles to 32 on Haswell as
->> well.
-> 
-> It looks like? Either it works or not.
-> 
-
-It worked for my test scenario. I say "looks like" because I'm not sure
-how it circumvents the problem, and if the limit of 32 no longer works
-if I increase the number of test cases executed in parallel. Any
-suggestions?
-
->>  
->> +static void hsw_limit_period(struct perf_event *event, s64 *left)
->> +{
->> +	*left = max(*left, 32LL);
->> +}
-> 
-> And why do we need a copy of nhm_limit_period() ?
-> 
-
-Do you mean why the period is limited to 32 like nhm_limit_period()? I
-referred to nhm_limit_period() and found that the problem cannot be
-reproduced when the limit is 32, while it can be reproduced when the
-limit is 16. Therefore, similar to nhm, the limit period is 32. As
-mentioned earlier, I am not sure how it works and need expert advice.
-
-Thanks,
-Huafei
-
-> Thanks,
-> 
->         tglx
-> 
-> .
-> 
