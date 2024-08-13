@@ -1,50 +1,56 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF9437E;
-	Tue, 13 Aug 2024 18:11:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D83791A2C27;
+	Tue, 13 Aug 2024 18:27:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723572662; cv=none; b=AKksLoZpGGsuRIUEVbt4xA96pLX9asieQKdlITXjEcIvPskyccum3acWOQjG7c9MJCZMGyr4j9zf8MDGI09KI5NTFfL8MlJjTtQf3z9BM7Rb6o84GEh2/t1bBfEYXyOqmJpk2gw8Moy576W4eqLRDTC1M1EfyMzb2wvui/oZyI4=
+	t=1723573663; cv=none; b=K7ptPLY9E3vNwWNzAPFDxl0DwXIgkIpYmLdZTwynt/2kEyN0z2g5T+o6sYfFvfYaHfWgiuBVBW1PQq2bvfb7/jl4UvriUccvAe3WeBSQHOdZYoBWUciYPZao1EvNeDO5c0XUbkcLyt1/SDtPl52hCvAKMKUjx+0d2br7X4cYcCc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723572662; c=relaxed/simple;
-	bh=NESDk1hBrlDDjEoFAGg7Zo88DWS8q93HbtxAe268zkA=;
+	s=arc-20240116; t=1723573663; c=relaxed/simple;
+	bh=fYKETN0ue5J6jFSSC2xMfeoJPHJbnH37wBF/DAF1Lxk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8YwCIOzGmCzhqu8TBH3BYJLEYTMAtZhgVlqYwvoL9Z98ppJJQzvTFoP2yr2ENliDENHO14yXpRHJsG6QbibBpBdhMI2RcAq9GN7b/ZzFX6OLf76gmYeP3ug/L5qAC9CTHL+6ImQ/HpvZya7CRzjCRP7DnFKO2w348T7c8YeAqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OBIB4WY8; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=Rg2QAZHTS/GjMLPlV4YGa9Rdn5E2v+ql/jkXr8T6hjLckoLklGQvgtD6dmjoHn3aaXkFYYeij7gBHnIi957b6Yo3YTAociKo3rtfmm+nemw/mW/Zbu8nL72BCGSANTNZt3jbUjWVqcXctyyD1lw2fuOR0pOAB4swTvMZkFgSC+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HH+A0fmG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OBIB4WY8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5F9DC32782;
-	Tue, 13 Aug 2024 18:11:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HH+A0fmG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AE55C32782;
+	Tue, 13 Aug 2024 18:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723572661;
-	bh=NESDk1hBrlDDjEoFAGg7Zo88DWS8q93HbtxAe268zkA=;
+	s=k20201202; t=1723573663;
+	bh=fYKETN0ue5J6jFSSC2xMfeoJPHJbnH37wBF/DAF1Lxk=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OBIB4WY8l9mm9MD14+GmXXtCw4+38Zb/jNtFHaT8yUptAzaMZrtvU8gNxOnwnkQQJ
-	 cSP3SreptKwUyQvr+Z2IT6aC7OXQlYPRZSan2PrVL2Fo3kEKnhq1SoNEWjfKEoVnN5
-	 X8qUtoQg1n3PURyQb4oOET0n5HekkGC7kjyAXgMImxsVRLqqXdDhTFT9NRrXlSR3+z
-	 R2jc2cHctqkNUo9/LmY+SbktaP8Sif+xAdvSbSYrg7vddQyy+JyHN0x7YGKtYY+JQI
-	 PV+L6CHw0Bqwab2rdqaSrC6O1jHBdwDIbhkHVW6hxiWvvzs3Ey0YBIJDcm9wrC0nQK
-	 EyxDu8IQ1GyWg==
-Date: Tue, 13 Aug 2024 15:10:56 -0300
+	b=HH+A0fmGo6FLh34/bP9e9Z32XNQGGSxvI+H/KKZYHujw8pWxGzoIknR2ZzQe7aZp4
+	 po7LNuV8wcoRsSbwcMUyQmI0jm43W8rRaZEJPKnHqYWBdHrbVEtwuU0OurIcCHNiEu
+	 yVclUB4Q88iBPAI0eJauWXlNiQYB5hiesGLzwYx3pH9ItbFJ7xAIEwh9eb+Kigfdxu
+	 ncigJgHUBGxGJvM44ey3Kgz6umYF8qVu17K+jShNT4x9rS48LF4++WVV12/RKzcbrL
+	 yoqLQQUPDFDmZ97rmLazc2MpHI1C2QmsWfh7phQ+6cNHjg+A7AzHG6Hqoz8JF3nlYR
+	 Vfttpl1GMngoA==
+Date: Tue, 13 Aug 2024 15:27:39 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Cc: "Wang, Weilin" <weilin.wang@intel.com>,
 	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	"Hunter, Adrian" <adrian.hunter@intel.com>,
 	Kan Liang <kan.liang@linux.intel.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
-Message-ID: <ZruhsN4i6xtc59nJ@x1>
-References: <20240813040613.882075-1-irogers@google.com>
- <ZrtzTTHim_vGX1ma@x1>
- <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"Taylor, Perry" <perry.taylor@intel.com>,
+	"Alt, Samantha" <samantha.alt@intel.com>,
+	"Biggers, Caleb" <caleb.biggers@intel.com>
+Subject: Re: [RFC PATCH v18 8/8] perf test: Add test for Intel TPEBS counting
+ mode
+Message-ID: <Zrulm_giiqaFP1li@x1>
+References: <20240720062102.444578-1-weilin.wang@intel.com>
+ <20240720062102.444578-9-weilin.wang@intel.com>
+ <Zrq11fq_F9vImsQh@x1>
+ <Zrq2IoAgopw1NbbA@x1>
+ <CO6PR11MB5635B87159218287A4E8108CEE862@CO6PR11MB5635.namprd11.prod.outlook.com>
+ <CAP-5=fX9pLRig7qJ+6Wk1g9ysDUDDKXMbo4s1GYvz28iAPs1iA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,25 +60,68 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
+In-Reply-To: <CAP-5=fX9pLRig7qJ+6Wk1g9ysDUDDKXMbo4s1GYvz28iAPs1iA@mail.gmail.com>
 
-On Tue, Aug 13, 2024 at 09:04:57AM -0700, Ian Rogers wrote:
-> On Tue, Aug 13, 2024 at 7:53 AM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
-> > > lock__parse calls disasm_line__parse passing
-> > > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
-> > > lock__delete.
-> > >
-> > > Found with lock/leak sanitizer.
-> 
-> Ooops, I meant address/leak sanitizer.
-> 
-> > Applied both patches to perf-tools-next.
-> 
-> Thanks, could you fix the commit message.
+On Tue, Aug 13, 2024 at 10:48:21AM -0700, Ian Rogers wrote:
+> On Tue, Aug 13, 2024 at 10:18 AM Wang, Weilin <weilin.wang@intel.com> wrote:
+> > I just checkout the code and tested it. The failure is caused by a seg fault on a
+> > perf_tool struct that is not initialized correctly. I think this is related to the patches
+> > on struct perf_tool in this branch that applied right before the tpebs patches.
 
-Sure,
+> > I was able to fix the seg fault by adding the perf_tool__fill_defaults() back. Since
+> > Ian updated the code to replace this function, I think I need some advice on how
+> > to use the new code to initialize perf_tool correctly here. Should I call the
+> > perf_tool__init()?
+ 
+> Yep. If you've added or refactored a tool struct the intent now is
+> that you call perf_tool__init then override the functions you want to
+> override. I don't mind to rebase those changes over your changes,
+> Arnaldo if you want to drop those changes.
+
+So I'm adding the patch below, which should be enough, right?
+
+Now:
+
+root@x1:~# perf test tpebs
+123: test Intel TPEBS counting mode                                  : Ok
+root@x1:~# set -o vi
+root@x1:~# perf test tpebs
+123: test Intel TPEBS counting mode                                  : Ok
+root@x1:~# perf test -v tpebs
+123: test Intel TPEBS counting mode                                  : Ok
+root@x1:~# perf test -vvv tpebs
+123: test Intel TPEBS counting mode:
+--- start ---
+test child forked, pid 16603
+Testing without --record-tpebs
+Testing with --record-tpebs
+---- end(0) ----
+123: test Intel TPEBS counting mode                                  : Ok
+root@x1:~#
+
+diff --git a/tools/perf/util/intel-tpebs.c b/tools/perf/util/intel-tpebs.c
+index 3729caeba645a3e8..50a3c3e0716065f8 100644
+--- a/tools/perf/util/intel-tpebs.c
++++ b/tools/perf/util/intel-tpebs.c
+@@ -164,11 +164,12 @@ static void *__sample_reader(void *arg)
+ 		.path = PERF_DATA,
+ 		.file.fd = child->out,
+ 	};
+-	struct perf_tool tool = {
+-		.sample = process_sample_event,
+-		.feature = process_feature_event,
+-		.attr = perf_event__process_attr,
+-	};
++	struct perf_tool tool;
++
++	perf_tool__init(&tool, /*ordered_events=*/false);
++	tool.sample = process_sample_event;
++	tool.feature = process_feature_event;
++	tool.attr = perf_event__process_attr;
+ 
+ 	session = perf_session__new(&data, &tool);
+ 	if (IS_ERR(session))
+
+Thanks for root causing, my mistake,
 
 - Arnaldo
