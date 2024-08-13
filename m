@@ -1,177 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4277FF;
-	Tue, 13 Aug 2024 03:08:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B60D014F98
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 04:06:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723518540; cv=none; b=q7c7Gv56Y263cJVXwGj3CU5pckiEaqwY2MPPMAMBLktWObEkhDzII8mRQ7si7iAOIl65yWjQ/4B6dAEYn96Jau0NE7jh8Az4buNV2OCyyYYop5cKBpIvKtAZ06SRr+0GB7iMUSnZ5UQL2byaC0raZpGBChpu0PlzMKmCADleigA=
+	t=1723521984; cv=none; b=ovsWPvDYjKIjF3U77Iiq4XIvr50MCH8i7nVgE181+GNoio8H1XLGcXMZLb1+mZoXsHRJblynEZkvyHQBLfNCgfMUM9bL7hWpPhcNk618Tg38TT72pjbcYR1Iv2AoKpaI7vAoQmmPej30Cr66nUkPqsw9VBBKfzwYdGbra7RlTX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723518540; c=relaxed/simple;
-	bh=6k5nSQtJtH639Pc0R1xX1c1uq0+Pcw9PtbV+Zs8RPoU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SOan6Se5d4bAuWOemyCqDNHTW1JpOV8oFRVBG2wy2iFQnJf4eUw3AUcPhb7u+N7YmpkXpu+RUR9mGScLKYQ9vrcopbrJJTdlaSQEjglfKNysRUfZEmbSOLwdG37Rjg7qJjJpfEyqWK6Gbk/Yp5Cvya3e8KPWCYm4Civ6BazJaUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ri9eYZNG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723521984; c=relaxed/simple;
+	bh=r7VLecbvEUYJZiNB7TVZd9Y4ujlIzmSV6v7MT/SSs8g=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=jWHy/DcSlUqIfCwEX/XsWUgfbC27x99lWDyYJcLmEErNfMyVxw7Wfuw/zopnWNo6Xe5vIDycyw7dIRJ0ACKvujY32QZ77TYpqgvYmACHu2M+83SVFmonu4uW9Xd3ILrUQIQGGV/hbBxMEwcWhtJn/8+51kOh+ll9Sbpa9rONhYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SGMrBUvI; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ri9eYZNG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3014EC4AF0D;
-	Tue, 13 Aug 2024 03:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723518539;
-	bh=6k5nSQtJtH639Pc0R1xX1c1uq0+Pcw9PtbV+Zs8RPoU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ri9eYZNGU1jl4ElFnp6jIgpb+01H+uCG91c018sngULAYs0l7FAZAKuj/Ns490ob7
-	 ZD6saz/lGOxnkJ7ig+QwfW819Rgx/xpsOvQJEyYmHEk/DmpQmaVIuZIajyDbNKV2jj
-	 gyGko9UexVxcRmUSdB4tCtE6tbfDowI39qSRw2lu8FgJK5qj4rA25+Gyj8K4qLjLjo
-	 sgFDGI7lQ6fq4DVF2K9q4BnngcIMw4J108xwJNEmKntOv29ZSc8V7efS2izWSOikQP
-	 1B45RreXCvMYAoVTu0Ip0SIJnWt20CXgwdYENjzTRksf8Hbu4gBDVhTukU6pbl8uDg
-	 hDQJ1KFsYel1A==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH] perf annotate-data: Set bitfield member offset and size properly
-Date: Mon, 12 Aug 2024 20:08:58 -0700
-Message-ID: <20240813030858.2138615-1-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SGMrBUvI"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-672bea19bedso121178327b3.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 12 Aug 2024 21:06:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723521982; x=1724126782; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=N5G8ycQLaD3nMVPTOXPScjjttSakw9EtQa3FEUmBo6I=;
+        b=SGMrBUvIcUAef7dnNvuhb1B97BfqY3vyk689NTPyNSwE/5mFGR111rcUGM+YLhNxOR
+         4cTA06GOKR99P0B7xE1YautXPHDOuB0137bxf0HtvZLEHv0qD2fENIb3JqMmvO8tOJwa
+         ueXGWqfAs24NGv/vRmWyRYE4LcQykIo0uIil9juc1Vtw/xSgZ4DcKL1PKJjYv8WbWFK8
+         k0HwuKLiNi+ObTJp1jHIogubJqtXdZHJ4XT5iTY8x09zARED2ipw8LpxBroyOQQtajcM
+         y0IuHPzShHc31EJnapA59NAv5bFBJeLdvG4edU42TiDxYQ5uP3B6mqxAXCenKISCxthL
+         IcFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723521982; x=1724126782;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=N5G8ycQLaD3nMVPTOXPScjjttSakw9EtQa3FEUmBo6I=;
+        b=CaWJz71I0+XN3qTBb/7xoScsjY+hVKKbY5apDbnkJBKHe3tW4TycSeNnw5FOIS5S6m
+         y084yXENDkfOP+Ezr5dKJ1HAtVzW4vC9YSgN61/Dw5t7atlj5eLpoZddUbm0bZbFryEa
+         b0NXWDn3qmM7QgqTPXByAtPQvqX4wv/A1NXU5rQCz0/DhN+vOyjjb0QsYPQ+rvgvYK8i
+         ko8dT6gePrkiMFwtD/H02WLpRBQYoziM1/6dajOYZAloDInQGBHVnEsyJUUc/SpfAom+
+         vEjX6bEBJKdM+6xB0dYmrFJT/jfMQuaKhXjNWFdgVVzMo6PRERaW1n5uznXp93jnp4p5
+         6gSQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU4yx0L2IhUTFFLomcZzGF/SIoUTcayK/SszEIL6a9Vv0rVWqfQoUUiAFYVR1kPRdMsD4nQTx2JTQoRvE0sVxBq19WJmKkAU97G3EHsaadVgQ==
+X-Gm-Message-State: AOJu0YwusPB8KMDAZ+eWQjRKrk/tqDprHf7tWNtZY0GrwO0y1bh29pUI
+	i3R+4gm5mTDn2PfS9j/R5vfa86KPj1m2eCxM+pA8Ewmr287tEZoq8PSfi+Z03dv8lEFVnhef7OX
+	LUtBKgw==
+X-Google-Smtp-Source: AGHT+IHk5ugUWyyThW7pxKGjaf9kqmY9IFupwIrVuW8y8MBzmDy6CjYnNOFMda07TvzD1c+Cdw29uEdYt2JJ
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:ae34:31b6:7154:c399])
+ (user=irogers job=sendgmr) by 2002:a0d:e706:0:b0:699:fc36:65ad with SMTP id
+ 00721157ae682-6a97238e489mr851317b3.3.1723521981709; Mon, 12 Aug 2024
+ 21:06:21 -0700 (PDT)
+Date: Mon, 12 Aug 2024 21:06:12 -0700
+Message-Id: <20240813040613.882075-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.76.ge559c4bf1a-goog
+Subject: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Thomas Richter <tmricht@linux.ibm.com>, 
+	Kajol Jain <kjain@linux.ibm.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The bitfield members might not have DW_AT_data_member_location.  Let's
-use DW_AT_data_bit_offset to set the member offset correct.  Also use
-DW_AT_bit_size for the name like in a C program.
+lock__parse calls disasm_line__parse passing
+&ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
+lock__delete.
 
-Before:
-  Annotate type: 'struct sk_buff' (1 samples)
-        Percent     Offset       Size  Field
-  -      100.00          0        232  struct sk_buff {
-  +        0.00          0         24      union  ;
-  +        0.00         24          8      union  ;
-  +        0.00         32          8      union  ;
-           0.00         40         48      char[] cb;
-  +        0.00         88         16      union  ;
-           0.00        104          8      long unsigned int      _nfct;
-         100.00        112          4      unsigned int   len;
-           0.00        116          4      unsigned int   data_len;
-           0.00        120          2      __u16  mac_len;
-           0.00        122          2      __u16  hdr_len;
-           0.00        124          2      __u16  queue_mapping;
-           0.00        126          0      __u8[] __cloned_offset;
-           0.00          0          1      __u8   cloned;
-           0.00          0          1      __u8   nohdr;
-           0.00          0          1      __u8   fclone;
-           0.00          0          1      __u8   peeked;
-           0.00          0          1      __u8   head_frag;
-           0.00          0          1      __u8   pfmemalloc;
-           0.00          0          1      __u8   pp_recycle;
-           0.00        127          1      __u8   active_extensions;
-  +        0.00        128         60      union  ;
-           0.00        188          4      sk_buff_data_t tail;
-           0.00        192          4      sk_buff_data_t end;
-           0.00        200          8      unsigned char* head;
+Found with lock/leak sanitizer.
 
-After:
-  Annotate type: 'struct sk_buff' (1 samples)
-        Percent     Offset       Size  Field
-  -      100.00          0        232  struct sk_buff {
-  +        0.00          0         24      union  ;
-  +        0.00         24          8      union  ;
-  +        0.00         32          8      union  ;
-           0.00         40         48      char[] cb
-  +        0.00         88         16      union  ;
-           0.00        104          8      long unsigned int      _nfct;
-         100.00        112          4      unsigned int   len;
-           0.00        116          4      unsigned int   data_len;
-           0.00        120          2      __u16  mac_len;
-           0.00        122          2      __u16  hdr_len;
-           0.00        124          2      __u16  queue_mapping;
-           0.00        126          0      __u8[] __cloned_offset;
-           0.00        126          1      __u8   cloned:1;
-           0.00        126          1      __u8   nohdr:1;
-           0.00        126          1      __u8   fclone:2;
-           0.00        126          1      __u8   peeked:1;
-           0.00        126          1      __u8   head_frag:1;
-           0.00        126          1      __u8   pfmemalloc:1;
-           0.00        126          1      __u8   pp_recycle:1;
-           0.00        127          1      __u8   active_extensions;
-  +        0.00        128         60      union  ;
-           0.00        188          4      sk_buff_data_t tail;
-           0.00        192          4      sk_buff_data_t end;
-           0.00        200          8      unsigned char* head;
-
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/annotate-data.c | 34 +++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
+ tools/perf/util/disasm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index ff85d190e3ac..d9e0ca61b6b5 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -202,7 +202,7 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	struct annotated_member *parent = arg;
- 	struct annotated_member *member;
- 	Dwarf_Die member_type, die_mem;
--	Dwarf_Word size, loc;
-+	Dwarf_Word size, loc, bit_size = 0;
- 	Dwarf_Attribute attr;
- 	struct strbuf sb;
- 	int tag;
-@@ -226,15 +226,37 @@ static int __add_member_cb(Dwarf_Die *die, void *arg)
- 	if (dwarf_aggregate_size(&die_mem, &size) < 0)
- 		size = 0;
+diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
+index 22289003e16d..226d2181f694 100644
+--- a/tools/perf/util/disasm.c
++++ b/tools/perf/util/disasm.c
+@@ -566,6 +566,7 @@ static void lock__delete(struct ins_operands *ops)
+ 		ins_ops__delete(ops->locked.ops);
  
--	if (!dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
--		loc = 0;
--	else
-+	if (dwarf_attr_integrate(die, DW_AT_data_member_location, &attr))
- 		dwarf_formudata(&attr, &loc);
-+	else {
-+		/* bitfield member */
-+		if (dwarf_attr_integrate(die, DW_AT_data_bit_offset, &attr) &&
-+		    dwarf_formudata(&attr, &loc) == 0)
-+			loc /= 8;
-+		else
-+			loc = 0;
-+
-+		if (dwarf_attr_integrate(die, DW_AT_bit_size, &attr) &&
-+		    dwarf_formudata(&attr, &bit_size) == 0)
-+			size = (bit_size + 7) / 8;
-+	}
- 
- 	member->type_name = strbuf_detach(&sb, NULL);
- 	/* member->var_name can be NULL */
--	if (dwarf_diename(die))
--		member->var_name = strdup(dwarf_diename(die));
-+	if (dwarf_diename(die)) {
-+		if (bit_size) {
-+			if (asprintf(&member->var_name, "%s:%ld",
-+				     dwarf_diename(die), (long)bit_size) < 0)
-+				member->var_name = NULL;
-+		} else {
-+			member->var_name = strdup(dwarf_diename(die));
-+		}
-+
-+		if (member->var_name == NULL) {
-+			free(member);
-+			return DIE_FIND_CB_END;
-+		}
-+	}
- 	member->size = size;
- 	member->offset = loc + parent->offset;
- 	INIT_LIST_HEAD(&member->children);
+ 	zfree(&ops->locked.ops);
++	zfree(&ops->locked.ins.name);
+ 	zfree(&ops->target.raw);
+ 	zfree(&ops->target.name);
+ }
 -- 
 2.46.0.76.ge559c4bf1a-goog
 
