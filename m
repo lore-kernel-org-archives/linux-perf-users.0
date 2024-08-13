@@ -1,44 +1,81 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC59D1E517;
-	Tue, 13 Aug 2024 13:24:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A2DD1E517
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 13:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723555466; cv=none; b=PLdPCP733tCy0NHDixf80YRG5au/E71xgxoYfh54XpJ5iHjb+AA6MQglFfkCzzN6XrS9LXtG9Ku5QGiR9ibjo/9bOL67+/iK9OZRjnWJJzilmYnd76+iFtZpZzsgIHidp7l12tf1FiyIiDYKGWVrM/0sfXbyhJhXg/SVKhhKpgY=
+	t=1723555489; cv=none; b=QvczBmgE5IcqgTVewhsrwZ5PcyXM1hNnqCG54fi0CDer6nAhAEk4hXAPaQ2or0E7v4U89qlbL4RNLewtK3/j6eHw/BhUzyQUSMidNTYqHKrPNVmezOC3drI+LdTYbwD543nyPLRoh1+NtJTB/cWlqv7+yAmRE6Yf48KBjw7ZIoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723555466; c=relaxed/simple;
-	bh=tBEcZlXpZMhV2zmUkgcK8FbfSfMntIwWkn6x1/toavo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=khZ3k3Vh6tc0oaJqFmDsKElYkPZd+ltWklDhdOaFJ2NVXd8ST0HPFYhqgxXYGIUOUKp7vZXxxMcfPpDbyRuLtvRQG4/nhGWpNFESP65y66PWrCPVsT8gW7Bs2rKVr0LOWjJignfKlWHCeVq/W2kqqdHx3akp9HX1iz52AaeEKwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from ThinkPad-T480s.. (unknown [121.237.44.107])
-	by APP-03 (Coremail) with SMTP id rQCowABXNRh6XrtmInsLBg--.53871S2;
-	Tue, 13 Aug 2024 21:24:11 +0800 (CST)
-From: zhouquan@iscas.ac.cn
-To: anup@brainfault.org,
-	ajones@ventanamicro.com,
-	atishp@atishpatra.org,
-	paul.walmsley@sifive.com,
-	palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org,
-	linux-perf-users@vger.kernel.org,
-	Quan Zhou <zhouquan@iscas.ac.cn>
-Subject: [PATCH v2 2/2] riscv: KVM: add basic support for host vs guest profiling
-Date: Tue, 13 Aug 2024 21:24:10 +0800
-Message-Id: <7eb3e1a8fc9f9aa0340a6a1fb88a127b767480ea.1723518282.git.zhouquan@iscas.ac.cn>
+	s=arc-20240116; t=1723555489; c=relaxed/simple;
+	bh=vbJDszVbFZo5V6bkkKmF3OewIJREyf0evahZxMqFmW0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ea/WsTl0KBxj7D11iLP9FXTfaQMti6HO+vSS8+PlQr0TPWh1k3Nj1sq6S4WEgEY8H2xD5PT1U1sPv0NqIyd9Y4FMj0xNefgbSZfoSUq8/ALvmizeYykQ1hPixDdhFQxt9o8rN7cBlH8AvnIeuCnlnAktE93JT/ytXrkQpTjm+rE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=J8wGZRmn; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="J8wGZRmn"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-429d2d7be1eso10271965e9.1
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 06:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1723555486; x=1724160286; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CuKn3zCZ70JZQp+93StFA2ZNN01UscP73ZJf7VHOy5k=;
+        b=J8wGZRmn7M1xvO8I3laNY+JTkJsi7O5dpEwiyqqLgFYGyRwETOBgxqg3nv4zai5R+L
+         cPhmSPF2Hv32K+oSRd3FHFQY+pW6Fsqvc85TnCZQmlsYquhmA7oUMnW4ZrlLEIko8Ouy
+         1r0J7QBIBPEIt8+G9IVjpLwnhhojz2NB54jXMlIkvW0Ad69GjgDxtdfoGSI3lI/2YLEX
+         BdwRaiV+rsx4Swioj/KcRXKwxtfGNRnY09vM38S2dONNyetiY+8FKODbV74nCKhRH5r/
+         4BZ8r6qpALNZniukc8WcUL0BL5JWLrenrCIGAoXRSb1EY9qfkTu9hAxOqBad/ZaXKRne
+         91HQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723555486; x=1724160286;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CuKn3zCZ70JZQp+93StFA2ZNN01UscP73ZJf7VHOy5k=;
+        b=PaJb7/BiKxhL8t/p4oXJoRF9/TV6YbP4OkUyIfWaaU0zeNA79nFXN2trlJdLh9KgtB
+         PP07vCrqOfjSk2+w82TXkMLn2pRJwlPZsy/ZGB4VPTKFySer5sepIx0naTe3jpI5pqej
+         NsUSZ5MUMhIbGZvMhIT2VWLCZ28uc5s5vdp2KtKKs2vCw5p4z/L08XGs12y4fcL2xBZv
+         BujCLx6c/cO/T21k3wUZgc6SQw55GJdKFmWZSIaCGqo6i/YF2SZDj4Bs14KgKh80DDs/
+         uz/t2h9+Ud0bti+5omUID88iPmnhbfJ4n0I7SJbp2e4s1oT4dxWiqr9BPWV6TFaYOef2
+         rtpg==
+X-Forwarded-Encrypted: i=1; AJvYcCX/FaYq4rcpLkUV2FbshXfmkY6ItjxW0l84QbgL8mwvBhodqyT7HjhCEsRn3guIBXIVNnvzznaisNkiR7UHJ4p/2UOShpCJe3AZJL5PCEsyWA==
+X-Gm-Message-State: AOJu0YwWOpE7ChpwIpY+oqlrH5HHWfYd1WV5UqHyDkebp+Ja3LMO8EqK
+	ntsIN2WWsMJcCXaVSESBJa4XEbPuBMu8VIVYugtrWawsIiRwZjGwmCI7qGPJTRM=
+X-Google-Smtp-Source: AGHT+IE5Wty2PhcPyeB3adoas1B2d+fRB+FpKrHGaJmkMiJ3JOcxRs+Gg6UES+MUF4AfDgXHAeTrVw==
+X-Received: by 2002:a05:600c:4689:b0:426:5b19:d2b3 with SMTP id 5b1f17b1804b1-429d62f6d77mr23808865e9.14.1723555486482;
+        Tue, 13 Aug 2024 06:24:46 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c738d21sm223186625e9.12.2024.08.13.06.24.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Aug 2024 06:24:46 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: irogers@google.com,
+	linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Jihong <yangjihong1@huawei.com>,
+	Ze Gao <zegao2021@gmail.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/7] perf stat: Make default perf stat command work on Arm big.LITTLE
+Date: Tue, 13 Aug 2024 14:23:08 +0100
+Message-Id: <20240813132323.98728-1-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1723518282.git.zhouquan@iscas.ac.cn>
-References: <cover.1723518282.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,125 +83,46 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowABXNRh6XrtmInsLBg--.53871S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxJFW7KrWUtFWxXw4DGr17Wrg_yoW5AFyfpF
-	Z8ur95ur4F9ryxCryayr1v9r45WFsYgw13Xry7CFy5Wr4Utry8Jr4vg34DAry5JFW8Xa4f
-	CFyrGFyruwn8Aw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUBG14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-	6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-	I7IYx2IY67AKxVWUAVWUtwAv7VC2z280aVAFwI0_Cr0_Gr1UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW5Gw
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0x
-	vEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUyT5JUUUUU=
-X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiCQ8IBma7QjpIzQAAso
 
-From: Quan Zhou <zhouquan@iscas.ac.cn>
+The important patches are 3 and 5, the rest are tidyups and tests.
 
-For the information collected on the host side, we need to
-identify which data originates from the guest and record
-these events separately, this can be achieved by having
-KVM register perf callbacks.
+I don't think there is any interaction with the other open issues
+about the uncore DSU cycles event or JSON/legacy hw event priorities
+because only hw events on core PMUs are used for the default
+stat command. And also just sharing the existing x86 code works so
+no big changes are required.
 
-Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
----
- arch/riscv/include/asm/kvm_host.h |  5 +++++
- arch/riscv/kvm/Kconfig            |  1 +
- arch/riscv/kvm/main.c             | 12 ++++++++++--
- arch/riscv/kvm/vcpu.c             |  7 +++++++
- 4 files changed, 23 insertions(+), 2 deletions(-)
+For patch 3 the weak arch specific symbol has to continue to be used
+rather than picking the implementation based on 
+perf_pmus__supports_extended_type() like in patch 5. This is because
+that function ends up calling evsel__hw_name() itself which results
+in recursion. But at least one weak arch_* construct has been removed,
+so it's better than nothing.
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 2e2254fd2a2a..d2350b08a3f4 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -286,6 +286,11 @@ struct kvm_vcpu_arch {
- 	} sta;
- };
- 
-+static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
-+{
-+	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
-+}
-+
- static inline void kvm_arch_sync_events(struct kvm *kvm) {}
- 
- #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
-diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
-index 26d1727f0550..0c3cbb0915ff 100644
---- a/arch/riscv/kvm/Kconfig
-+++ b/arch/riscv/kvm/Kconfig
-@@ -32,6 +32,7 @@ config KVM
- 	select KVM_XFER_TO_GUEST_WORK
- 	select KVM_GENERIC_MMU_NOTIFIER
- 	select SCHED_INFO
-+	select GUEST_PERF_EVENTS if PERF_EVENTS
- 	help
- 	  Support hosting virtualized guest machines.
- 
-diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-index bab2ec34cd87..734b48d8f6dd 100644
---- a/arch/riscv/kvm/main.c
-+++ b/arch/riscv/kvm/main.c
-@@ -51,6 +51,12 @@ void kvm_arch_hardware_disable(void)
- 	csr_write(CSR_HIDELEG, 0);
- }
- 
-+static void kvm_riscv_teardown(void)
-+{
-+	kvm_riscv_aia_exit();
-+	kvm_unregister_perf_callbacks();
-+}
-+
- static int __init riscv_kvm_init(void)
- {
- 	int rc;
-@@ -105,9 +111,11 @@ static int __init riscv_kvm_init(void)
- 		kvm_info("AIA available with %d guest external interrupts\n",
- 			 kvm_riscv_aia_nr_hgei);
- 
-+	kvm_register_perf_callbacks(NULL);
-+
- 	rc = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
- 	if (rc) {
--		kvm_riscv_aia_exit();
-+		kvm_riscv_teardown();
- 		return rc;
- 	}
- 
-@@ -117,7 +125,7 @@ module_init(riscv_kvm_init);
- 
- static void __exit riscv_kvm_exit(void)
- {
--	kvm_riscv_aia_exit();
-+	kvm_riscv_teardown();
- 
- 	kvm_exit();
- }
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 8d7d381737ee..e8ffb3456898 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -226,6 +226,13 @@ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
- 	return (vcpu->arch.guest_context.sstatus & SR_SPP) ? true : false;
- }
- 
-+#ifdef CONFIG_GUEST_PERF_EVENTS
-+unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
-+{
-+	return vcpu->arch.guest_context.sepc;
-+}
-+#endif
-+
- vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
- {
- 	return VM_FAULT_SIGBUS;
+
+James Clark (7):
+  perf stat: Initialize instead of overwriting clock event
+  perf stat: Remove unused default_null_attrs
+  perf evsel: Use the same arch_evsel__hw_name() on arm64 as x86
+  perf evsel: Remove duplicated __evsel__hw_name() code
+  perf evlist: Use hybrid default attrs whenever extended type is
+    supported
+  perf test: Make stat test work on DT devices
+  perf test: Add a test for default perf stat command
+
+ tools/perf/arch/arm64/util/Build   |  1 +
+ tools/perf/arch/arm64/util/evsel.c |  7 ++++
+ tools/perf/arch/x86/util/evlist.c  | 65 ------------------------------
+ tools/perf/arch/x86/util/evsel.c   | 17 +-------
+ tools/perf/builtin-stat.c          | 12 ++----
+ tools/perf/tests/shell/stat.sh     | 33 ++++++++++++---
+ tools/perf/util/evlist.c           | 65 ++++++++++++++++++++++++++----
+ tools/perf/util/evlist.h           |  6 +--
+ tools/perf/util/evsel.c            | 19 +++++++++
+ tools/perf/util/evsel.h            |  2 +-
+ 10 files changed, 119 insertions(+), 108 deletions(-)
+ create mode 100644 tools/perf/arch/arm64/util/evsel.c
+
 -- 
 2.34.1
 
