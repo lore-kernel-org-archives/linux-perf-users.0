@@ -1,201 +1,121 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1990019B5A3
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 13:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C520019D08F
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 14:28:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723556325; cv=none; b=rNlAFviYxEywfwdj6+YwPZKNPceNKr+SUwM71G3v4Z0K8J+PnOhhJBfrxFe42yF5jnGdm7JBDHtsXO8V9VLYSuJX63SNUmSoVmlQl7rIRgL5k+BAyHUkz7azY7EbfmboUvwHlN40zQNWXDaT54qs3bqxDFR1e8FCvMAN35AirqY=
+	t=1723559301; cv=none; b=hQJpIqEu0isqAk5iWUriprxgNtM4p46DxIOztuErA1Yxf27ijPRF2TBe1Vi84I21FpRH4QYR6xRPiCdhfk2tcNZaSVLADVwgt4bqk4lCEjIi26tZEDyfucNM3ZGwsHWZVDeClUooLHJjJsFb+qBv3l/xJOP5B5HEcwngXuJOmRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723556325; c=relaxed/simple;
-	bh=43igTuJor3nq4TOqUbEZQycMVXzKpmUbmi9vcEwrMUA=;
+	s=arc-20240116; t=1723559301; c=relaxed/simple;
+	bh=MGfamdGAk8HrKfaDqakpaY7IT3Ti3k5iPmyzw0pKF6Y=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NQsFoTuSWHHz8yuBp8aBF6j6s/9FKTf52wEqQZqRebqk5QZ3YX7vnwMuCFhQ/pqQ4yYhzcdO0c5cRnkzGaiRzqPOQa5lNy5GbkjHbyhfiSwPN3mhvMO2js2h/i6h+c08XdBNXKj0ZOm7Yu8fStnQKhQbNG0/OOYDQdA5FeMJiQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com; spf=pass smtp.mailfrom=kylehuey.com; dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b=NZNcxwKP; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylehuey.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylehuey.com
+	 To:Cc:Content-Type; b=HzRm5uYydg+RysNPX7xb102ZN7xUxIA8tg4tdjP088zXuRk4Ube5hTNcAM2HVy/e984nAbkIz7PF2LVT07gmFtC+qnFjd3Ku/9XkjWtYHow7YTrny/9GiEyNi90jrx+ZoH09z1APybh6APa9ysFoEEkaxrAfoHyQ9oF1oZFnX50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=r8NVb/cO; arc=none smtp.client-ip=209.85.160.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kylehuey.com header.i=@kylehuey.com header.b="NZNcxwKP"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-52efd8807aaso7267846e87.3
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 06:38:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="r8NVb/cO"
+Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-44fdc70e695so206501cf.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 07:28:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kylehuey.com; s=google; t=1723556321; x=1724161121; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723559298; x=1724164098; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hLTqSL9xOGJSln+6oYEQ8vVYIDiotdSevswl3wN47gE=;
-        b=NZNcxwKPLZ1l5EE0atKjMmqxMTrRDFqnLXW6/uLFnsI3DlIuH1e4SOlaWLQz4y9m03
-         Td2NTU8OG3Gwd1eqx0HfLyk5xOQnIJ56O5uX8aJdvNPhu8lUD+vd8fB/V/Py9mjTd1ui
-         X92XPImxd+QYqz8YECFer31kJhKny7769aeGae3yANDBHcAFuUaLmft6sYKQH+gDb+p9
-         83rceZ3gmYP9oagqGL1k7JN9ziFWwDoESu5pahfFiMlMzOyvXLSa2ybtlQstUSm+1Ww/
-         UvNonxQscc5obvkcQOpfqenWUtNqRqp6PSBAy1BrcGGz10rfVCwBRa4jdZirCWYC15pq
-         zaog==
+        bh=SwMwCe9XraET4qEmC7d2hSRU8Grm1zoGQun5Yl3pIFQ=;
+        b=r8NVb/cOhvjkNZQrbDxyVUlbNZ8bbxIJfuFeWeFN9hJUq/EIPqvRvLbDTBqX3/o12V
+         drsOn1vmyVrfuXEKZLg6NeeTMbBhb26UojjehAVUQngQJvgByFIuvFlUPWwT6Ako7xnV
+         eOZoI0qATA6hQWQ04PDvmoFLfM+PROg8Kw9mo4njh5yFhfN10UPk+9D2v60hwSDvd6+U
+         bBNlnmh2UvB2CLaq5tNpqplPJaBuIwcQ7ZdZDA92ytv4vIlz6W0F17d4hLwjqy7xdSxE
+         7j4euz3tc/bFp22DvCqdofhVX7UnICj6d2FE9bQAaM2sgVApawTxQw0RtEJiG4xQ2cgS
+         UAXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723556321; x=1724161121;
+        d=1e100.net; s=20230601; t=1723559298; x=1724164098;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hLTqSL9xOGJSln+6oYEQ8vVYIDiotdSevswl3wN47gE=;
-        b=W1/Ez/Cpma0ETl0E8TjF4I1r+Ms0wnMNqcZPBaAuE7kn8meKBgFDQncr61pDPMuohp
-         9v1TGaSYXk6xweW6R9rGEl8ZPiRXx8XJy5CdwAsmFreeRYLyuP/bHujsrYJ4dKGXWxEK
-         hEpo7L1ATE1c03C98uRWBlrrfYgFieSJvxiGsTOiOPHInBHyzHs+ESutDh0o2IJCGlP2
-         DJ08JIziCS03pNuNI7LNU6HoYmSqxu442LHvNsdqqCz9YGpZ/x7e275+f1an9jTGy2vt
-         /TUumZ6ES812kM/42B0CbuvJdm9CRLeMrWhVz6ZpofCd/DPSQccVQ623Qnb5a+7PNw4l
-         ZOpw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4H+w9m9N0Le4FPj4Bw9oevzt4SWMCAqOH+WSAOpJkUixnKA7qoGPE9Qq6+Ced+a0Xcr9MwZlO90/JJ6oxj4VX9/AEccxqK2KRmmpaRvAwRA==
-X-Gm-Message-State: AOJu0YzHq72xSpNRTdaM5eqtbUV92S3YmScE1XAlxW9to+In+yGpNvCa
-	A1QzZ5zfwWK3QXlxE3Ty72QOVyAFYmJ5mrek0102QSQM8ZXgzgGb1Hd7LkfVJ373hdtZyCsw42k
-	IJ3e2jTX5l9/oMG5TgncOYP/Z3vTMfT685rWt
-X-Google-Smtp-Source: AGHT+IE+nNeBsXzq8AYhTZpzokdNZ0mZWmEpb0RS22YZUXsbGpDyqS6vAtqPQIv/45k+PjQ/HO8v6uwE2iVwuW/+2r8=
-X-Received: by 2002:a2e:b894:0:b0:2ef:2638:48cd with SMTP id
- 38308e7fff4ca-2f2b7177c80mr32730081fa.30.1723556320633; Tue, 13 Aug 2024
- 06:38:40 -0700 (PDT)
+        bh=SwMwCe9XraET4qEmC7d2hSRU8Grm1zoGQun5Yl3pIFQ=;
+        b=Qx6stpz8lgK0892iQi2rWSmzqQPhpm+juRrC86lzfn82L9c/hba6B+xQcIzVY/f/aE
+         q7PR3laZqyp1a6KnZ5k04x7+q19O2CQPQysFuUAtN0Nicp/7qo34x+oyqNwvckcpaqFn
+         DbpxhvFkJIzL/qIaqRunVBYKV+5Ob5GkhWJFfMbcy+Z3NNZiBGKFNiL8JctJL01kE+xy
+         oczyjtGwEj0jd1r1+7lYDTG5XXE66N/QFyyer0r387hYWhYBpUOXqXz7zDm+mf8qJCvd
+         67PYWnnl1lrxdYlkPNpAwYUo3Nj8uTPu3ZEhqsQp+T+vNPomfAXbJgY4uMj5lYSwohbu
+         8xDQ==
+X-Gm-Message-State: AOJu0Yz61G/0pS8QULf/vFGMQasiAUGJcMqitbw49i6WgdNcnYLzd66c
+	4QxF4YBGJnOmahdJrPkEjxdHQrZJzGcqALaP6VTeOzQQ9q6NErso1CaV4bHoZpwDPklEQiEQYlc
+	Yo+jLQPshcpsmbGWPf2WbddRTV/NJ73yeCFKT
+X-Google-Smtp-Source: AGHT+IEHcwqV4cFmhHUR8wPvObTxmaxWalQoPmmrv/9ZEE67XYps098QKeZ/3rcuQ+XnEfwzoGkAkOkUdzIssDWVrWg=
+X-Received: by 2002:a05:622a:102:b0:447:e497:95d0 with SMTP id
+ d75a77b69052e-4534f9d9f38mr1372091cf.17.1723559298338; Tue, 13 Aug 2024
+ 07:28:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240715150410.GJ14400@noisy.programming.kicks-ass.net>
- <CAP045Aq3Mv2oDMCU8-Afe7Ne+RLH62120F3RWqc+p9STpcxyxg@mail.gmail.com>
- <20240715163003.GK14400@noisy.programming.kicks-ass.net> <CAP045Apu6Sb=eKLXkZ5TWitWbmGHMDArD1++81vdN2_NqeFTyw@mail.gmail.com>
- <ZpYgYaKKbw3FPUpv@krava> <CAEf4BzZWWzio9oPe2_jS=_7CnKuJnugr2h4yd3QY1TqSF0aMXQ@mail.gmail.com>
- <CAP045ArhO4K2vcrhG_GnJNhx=+7v6WLYKsDj4CvqO7HKzBshXg@mail.gmail.com>
- <CAEf4BzbE4keci=hyt2APp5sfimvqfpLoWgEgEnC=Yp5S-jejKg@mail.gmail.com>
- <CAP045ArBf5Ja4s_gkg3vQciw0v7_h4kWjnbLUSk=uFgQ7WbTqQ@mail.gmail.com>
- <ZrC9oxIcKebAKpx3@LQ3V64L9R2.home> <Zrs3ZqRtT3_lNj6a@LQ3V64L9R2.home>
-In-Reply-To: <Zrs3ZqRtT3_lNj6a@LQ3V64L9R2.home>
-From: Kyle Huey <me@kylehuey.com>
-Date: Tue, 13 Aug 2024 06:38:27 -0700
-Message-ID: <CAP045AoTAX7MOObBq0ubS0bSbu1MmrG4wEEiXpKV54W9up1zJg@mail.gmail.com>
-Subject: Re: [PATCH] perf/bpf: Don't call bpf_overflow_handler() for tracing events
-To: Joe Damato <jdamato@fastly.com>
-Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Jiri Olsa <olsajiri@gmail.com>, 
-	Masami Hiramatsu <mhiramat@kernel.org>, Peter Zijlstra <peterz@infradead.org>, khuey@kylehuey.com, 
-	Ingo Molnar <mingo@redhat.com>, Namhyung Kim <namhyung@kernel.org>, 
-	Linus Torvalds <torvalds@linux-foundation.org>, robert@ocallahan.org, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Ian Rogers <irogers@google.com>, 
+References: <20240813132323.98728-1-james.clark@linaro.org> <20240813132323.98728-2-james.clark@linaro.org>
+In-Reply-To: <20240813132323.98728-2-james.clark@linaro.org>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 13 Aug 2024 07:28:05 -0700
+Message-ID: <CAP-5=fX-m3mhi0sGsGo9biWmFV_U=35Tp7h9X0reg3zHMEsy_Q@mail.gmail.com>
+Subject: Re: [PATCH 1/7] perf stat: Initialize instead of overwriting clock event
+To: James Clark <james.clark@linaro.org>
+Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>, 
+	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
 	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Song Liu <song@kernel.org>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+	Yang Jihong <yangjihong1@huawei.com>, Ze Gao <zegao2021@gmail.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 13, 2024 at 3:37=E2=80=AFAM Joe Damato <jdamato@fastly.com> wro=
-te:
+On Tue, Aug 13, 2024 at 6:24=E2=80=AFAM James Clark <james.clark@linaro.org=
+> wrote:
 >
-> On Mon, Aug 05, 2024 at 12:55:17PM +0100, Joe Damato wrote:
-> > On Fri, Jul 26, 2024 at 09:35:43AM -0700, Kyle Huey wrote:
-> > > Will do.
-> > >
-> > > - Kyle
-> > >
-> > > On Fri, Jul 26, 2024 at 9:34=E2=80=AFAM Andrii Nakryiko
-> > > <andrii.nakryiko@gmail.com> wrote:
-> > > >
-> > > > On Fri, Jul 26, 2024 at 5:37=E2=80=AFAM Kyle Huey <me@kylehuey.com>=
- wrote:
-> > > > >
-> > > > > On Fri, Jul 19, 2024 at 11:26=E2=80=AFAM Andrii Nakryiko
-> > > > > <andrii.nakryiko@gmail.com> wrote:
-> > > > > >
-> > > > > > On Tue, Jul 16, 2024 at 12:25=E2=80=AFAM Jiri Olsa <olsajiri@gm=
-ail.com> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jul 15, 2024 at 09:48:58AM -0700, Kyle Huey wrote:
-> > > > > > > > On Mon, Jul 15, 2024 at 9:30=E2=80=AFAM Peter Zijlstra <pet=
-erz@infradead.org> wrote:
-> > > > > > > > >
-> > > > > > > > > On Mon, Jul 15, 2024 at 08:19:44AM -0700, Kyle Huey wrote=
-:
-> > > > > > > > >
-> > > > > > > > > > I think this would probably work but stealing the bit s=
-eems far more
-> > > > > > > > > > complicated than just gating on perf_event_is_tracing()=
-.
-> > > > > > > > >
-> > > > > > > > > perf_event_is_tracing() is something like 3 branches. It =
-is not a simple
-> > > > > > > > > conditional. Combined with that re-load and the wrong ret=
-urn value, this
-> > > > > > > > > all wants a cleanup.
-> > > > > > > > >
-> > > > > > > > > Using that LSB works, it's just that the code aint pretty=
-.
-> > > > > > > >
-> > > > > > > > Maybe we could gate on !event->tp_event instead. Somebody w=
-ho is more
-> > > > > > > > familiar with this code than me should probably confirm tha=
-t tp_event
-> > > > > > > > being non-null and perf_event_is_tracing() being true are e=
-quivalent
-> > > > > > > > though.
-> > > > > > > >
-> > > > > > >
-> > > > > > > it looks like that's the case, AFAICS tracepoint/kprobe/uprob=
-e events
-> > > > > > > are the only ones having the tp_event pointer set, Masami?
-> > > > > > >
-> > > > > > > fwiw I tried to run bpf selftests with that and it's fine
-> > > > > >
-> > > > > > Why can't we do the most straightforward thing in this case?
-> > > > > >
-> > > > > > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > > > > > index ab6c4c942f79..cf4645b26c90 100644
-> > > > > > --- a/kernel/events/core.c
-> > > > > > +++ b/kernel/events/core.c
-> > > > > > @@ -9707,7 +9707,8 @@ static int __perf_event_overflow(struct p=
-erf_event *event,
-> > > > > >
-> > > > > >         ret =3D __perf_event_account_interrupt(event, throttle)=
-;
-> > > > > >
-> > > > > > -       if (event->prog && !bpf_overflow_handler(event, data, r=
-egs))
-> > > > > > +       if (event->prog && event->prog->type =3D=3D BPF_PROG_TY=
-PE_PERF_EVENT &&
-> > > > > > +           !bpf_overflow_handler(event, data, regs))
-> > > > > >                 return ret;
-> > > > > >
-> > > > > >
-> > > > > > >
-> > > > > > > jirka
-> > > > > > >
-> > > > >
-> > > > > Yes, that's effectively equivalent to calling perf_event_is_traci=
-ng()
-> > > > > and would work too. Do you want to land that patch? It needs to g=
-o to
-> > > > > 6.10 stable too.
-> > > >
-> > > > I'd appreciate it if you can just incorporate that into your patch =
-and
-> > > > resend it, thank you!
-> > > >
-> > > > >
-> > > > > - Kyle
-> >
-> > I probably missed the updated patch, but I am happy to test any new
-> > versions, if needed, to ensure that the bug I hit is fixed.
-> >
-> > Kyle: please let me know if there's a patch you'd like me to test?
+> This overwrite relies on the clock event remaining at index 0 and is
+> quite a way down from where the array is initialized, making it easy to
+> miss. Just initialize it with the correct clock event to begin with.
 >
-> Sorry for pinging this thread again; let me know if a fix was merged
-> and I missed it?
+> Signed-off-by: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/builtin-stat.c | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
 >
-> Otherwise, if it'd be helpful, I am happy to modify Kyle's patch to
-> take Andrii's suggestion and resend, but I don't want to step on
-> anyone's toes :)
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index 1f92445f7480..a65f58f8783f 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -1817,7 +1817,9 @@ static int add_default_attributes(void)
+>  {
+>         struct perf_event_attr default_attrs0[] =3D {
 >
-> - Joe
+> -  { .type =3D PERF_TYPE_SOFTWARE, .config =3D PERF_COUNT_SW_TASK_CLOCK  =
+           },
+> +  { .type =3D PERF_TYPE_SOFTWARE, .config =3D target__has_cpu(&target) ?
+> +                                               PERF_COUNT_SW_CPU_CLOCK :
+> +                                               PERF_COUNT_SW_TASK_CLOCK =
+       },
 
-Hi Joe,
+Hand crafting perf_event_attr when we have an event name to
+perf_event_atttr parser doesn't make sense. Doing things this way
+means we need to duplicate logic between event parsing and these
+default configurations. The default configurations are also using
+legacy events which of course are broken on Apple ARM M? (albeit for
+hardware events, here it is software). Event and metric parsing has to
+worry about things like grouping topdown events. All-in-all let's have
+one way to do things, event parsing, otherwise this code is going to
+end up reinventing all the workarounds the event parsing has to have.
+Lots of struct perf_event_attr also contribute to binary size.
 
-You didn't miss anything. I've been remiss in getting back to this.
-I'm currently away from home (and the machine I usually do kernel
-development on), so if you want to run with this please do so.
+If you are worried about a cycles event being opened on arm_dsu PMUs,
+there is this patch:
+https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
 
-Sorry for the inconvenience,
-
-- Kyle
+Thanks,
+Ian
