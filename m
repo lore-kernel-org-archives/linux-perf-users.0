@@ -1,45 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B29E17C7A2;
-	Tue, 13 Aug 2024 16:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330FF1A08B2;
+	Tue, 13 Aug 2024 16:01:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564899; cv=none; b=Jf8SrE0Ld8AQAdBgUZm6xpCXC/qiW3gbIHyWrMzfZMDStfTXF5+7h/jHpzAjwuti42WUiCRWKeYmQn1dGG1oiwapCWVfODKQ1eUqFjXZZ5NAN4MIcBR2vtIoqaXv16escYGGXNaNakgGl73g8Wq8LhMRG/qi+NQvBTxDBQXTxRs=
+	t=1723564900; cv=none; b=ZlaYAxP9kbffz3AlBts1l9SEvfUQ3qQzeoXs03tQmcNuNMf9xpmxeFWYLXGGYVJpEGttSFrBh6PXvGQd+ICfpFkhL3QzNrrrhzLSI72T3T0K6+kTldb4c5Eya62jFPPbxBIkSzwAYZsu6nPJwxQTqLM5ZmRbliNxaM1ktXVQlx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723564899; c=relaxed/simple;
-	bh=yOJNwrPClHXxl9mLkaX0xaNZvmNxXuLngFKmJ2wnDsI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=V3h/M+Vk7BiO28A1K8yvMJeFtcp4F00FHECd6ztwGPSSg7WN/TCgQsoljhVSvVfx9SwOvyoWXFjwOV/U8hx/UmkHkxjF3Kciruq3cIn8kJVQNn/rhAOv9DImgahtRtngG0LXKvo8TejVnawpGtgNrWVpEHDOv5AKqKTtGcpiH4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FpdIQdZa; arc=none smtp.client-ip=192.198.163.19
+	s=arc-20240116; t=1723564900; c=relaxed/simple;
+	bh=uaqPUDHCk+yLcH1dAcO1xohze5+IXSI+7YEmes/BJck=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=qj/phGuKDy6r7AkTj2JO84HxRu/DAeeU1NqS0ThvTYtcLNaa47g7txUqZte0L6TWvYXNZlkwMVBy8F3ntot0MMssrnX7ik1+CVCoRWZK6HSDENihLSKKoMbnJ5FKsGhbBGb/MZVgFfy5LZlTp9OeY5bziwExUIpB4veImkAREgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FB7K8sCv; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FpdIQdZa"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FB7K8sCv"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723564897; x=1755100897;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yOJNwrPClHXxl9mLkaX0xaNZvmNxXuLngFKmJ2wnDsI=;
-  b=FpdIQdZaguvcPrMvLrljHn+GDN9tBgkCTQnbH+zxwjr8wM4DbuiRJ3xc
-   GV/GO7lj5aWQSQ04RvGOlqHYKmfpHZCCn7OiOEMyauaYCLt0/5Iwc91iQ
-   tjwoefhgjV1vDkpBUPGFWOQh7k+knRxCQv/ILJl7oAbXDctM7p9dLILBU
-   lLmhuUH8+/gcSCqVQkRqrCzIR1eW6ZlWqfO1e7dEE4kLHRxYa3PtKmHBU
-   n6BljGMod77bffN/UtN2y7K/MybTt5J/fyXj+4DjYnJEcbEtRP2mzT+Qo
-   DxaGuRDkR1Nt23fftxmCf7ZJHSnkKhgSxMPPg0O+HdLZvtuo0FYRwyQg1
+  t=1723564898; x=1755100898;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=uaqPUDHCk+yLcH1dAcO1xohze5+IXSI+7YEmes/BJck=;
+  b=FB7K8sCvXT4ekeclUBAHTzmZbaxYxCqpz6G+s2G49b9AmKyij617AzMd
+   1pzPeEyo0i6YQz4jYwAcWDWriU4/Zc0UoVx/pU9k5yWT7On28YBjZvQ9b
+   N0hT3N5s3fgc6e2dVZd02k6nRG6svB6sTOAQeMujdT6MKZp0dZJLr+aj1
+   lWqa/jUAEwaX0tIt12flC3yCQhQTy/bRtVx/LBNZEvER71d70MCFwy73T
+   q335R89GGni/AuQxHrbIIr8Pyig95lgM0bKBDRMcgHxOiPyXWV3v8p37A
+   IoaUYlv3gJiCPE2tu8Dxoob/mh77VmrNXNP5Azu25wiRYzUiAhFaVz/e/
    w==;
-X-CSE-ConnectionGUID: za6kyO8xT2W6J6hm13mRYA==
-X-CSE-MsgGUID: cH8pJDavSkCIYyuo48X7RA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383197"
+X-CSE-ConnectionGUID: OfKD106ORguMj4BrzroJeQ==
+X-CSE-MsgGUID: x4aTjU0EQs+5/6mIKj1HCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383200"
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21383197"
+   d="scan'208";a="21383200"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:36 -0700
-X-CSE-ConnectionGUID: ZRAK+fOMS5CcNT3fewP2+g==
-X-CSE-MsgGUID: YEu22bKcRm6kldpR1itX2g==
+X-CSE-ConnectionGUID: fyigixwAQKaBfC8Dz9wKhQ==
+X-CSE-MsgGUID: 3FVWG5zCQbyunyVueRDEQQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="59479737"
+   d="scan'208";a="59479739"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by orviesa008.jf.intel.com with ESMTP; 13 Aug 2024 09:01:36 -0700
 From: kan.liang@linux.intel.com
@@ -54,191 +55,113 @@ Cc: adrian.hunter@intel.com,
 	ak@linux.intel.com,
 	eranian@google.com,
 	Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V3 0/9] Support branch counters in block annotation
-Date: Tue, 13 Aug 2024 09:01:59 -0700
-Message-Id: <20240813160208.2493643-1-kan.liang@linux.intel.com>
+Subject: [PATCH V3 1/9] perf report: Fix --total-cycles --stdio output error
+Date: Tue, 13 Aug 2024 09:02:00 -0700
+Message-Id: <20240813160208.2493643-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20240813160208.2493643-1-kan.liang@linux.intel.com>
+References: <20240813160208.2493643-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Changes since V2:
-- Rebase on top of the tmp.perf-tools-next commit 9da782071202
-  ("perf test: Add test for Intel TPEBS")
-- Add Acked-by from Namhyung and Reviewed-by from Andi
+The --total-cycles may output wrong information with the --stdio.
 
-Changes since V1:
-- Add Acked-by from Namhyung for patch 1 and 2.
-- Use array to replace pointer to store the abbr name. (Patch 5)
-  (Namhyung)
-- Add -v to print the value like "A=<n>,B=<n>", rather than histogram.
-  (Patch 6) (Namhyung)
+For example,
+  perf record -e "{cycles,instructions}",cache-misses -b sleep 1
+  perf report --total-cycles --stdio
 
-The branch counters logging (A.K.A LBR event logging) introduces a
-per-counter indication of precise event occurrences in LBRs. It can
-provide a means to attribute exposed retirement latency to combinations
-of events across a block of instructions. It also provides a means of
-attributing Timed LBR latencies to events.
+The total cycles output of {cycles,instructions} and cache-misses are
+almost the same.
 
-The kernel support and basic perf tool support have been merged.
-https://lore.kernel.org/lkml/20231025201626.3000228-1-kan.liang@linux.intel.com/
-
-This series is to provide advanced perf tool support via adding the
-branch counters information in block annotation. It can further
-facilitate the analysis of branch blocks.
-
-The patch 1 and 2 are to fix two existing issues of --total-cycles and
-the branch counters feature.
-
-The patch 3-9 are the advanced perf tool support.
-
-Here are some examples.
-
-perf annotation:
-
-$perf record -e "{branch-instructions:ppp,branch-misses}:S" -j any,counter
-$perf report  --total-cycles --stdio
-
- # To display the perf.data header info, please use --header/--header-only options.
+ # Samples: 938  of events 'anon group { cycles, instructions }'
+ # Event count (approx.): 938
  #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+ # ...............  ..............  ...........  ..........
+  ..................................................>
  #
- # Total Lost Samples: 0
+           11.19%            2.6K        0.10%          21
+                          [perf_iterate_ctx+48 -> >
+            5.79%            1.4K        0.45%          97
+            [__intel_pmu_enable_all.constprop.0+80 -> __intel_>
+            5.11%            1.2K        0.33%          71
+                             [native_write_msr+0 ->>
+
+ # Samples: 293  of event 'cache-misses'
+ # Event count (approx.): 293
  #
- # Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }'
- # Event count (approx.): 1610046
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+                                                  [>
+ # ...............  ..............  ...........  ..........
+   ..................................................>
  #
- # Branch counter abbr list:
- # branch-instructions:ppp = A
- # branch-misses = B
- # '-' No event occurs
- # '+' Event occurrences may be lost due to branch counter saturated
+           11.19%            2.6K        0.13%          21
+                          [perf_iterate_ctx+48 -> >
+            5.79%            1.4K        0.59%          97
+[__intel_pmu_enable_all.constprop.0+80 -> __intel_>
+            5.11%            1.2K        0.43%          71
+                             [native_write_msr+0 ->>
+
+With the symbol_conf.event_group, the perf report should only report the
+block information of the leader event in a group.
+However, the current implementation retrieves the next event's block
+information, rather than the next group leader's block information.
+
+Make sure the index is updated even if the event is skipped.
+
+With the patch,
+
+ # Samples: 293  of event 'cache-misses'
+ # Event count (approx.): 293
  #
- # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles          Branch Counter [Program Block Range]
- # ...............  ..............  ...........  ..........  ......................  ..
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles
+                                                  [>
+ # ...............  ..............  ...........  ..........
+   ..................................................>
  #
-           57.55%            2.5M        0.00%           3             |A   |-   |                 ...
-           25.27%            1.1M        0.00%           2             |AA  |-   |                 ...
-           15.61%          667.2K        0.00%           1             |A   |-   |                 ...
-            0.16%            6.9K        0.81%         575             |A   |-   |                 ...
-            0.16%            6.8K        1.38%         977             |AA  |-   |                 ...
-            0.16%            6.8K        0.04%          28             |AA  |B   |                 ...
-            0.15%            6.6K        1.33%         946             |A   |-   |                 ...
-            0.11%            4.5K        0.06%          46             |AAA+|-   |                 ...
+           37.98%            9.0K        4.05%         299
+   [perf_event_addr_filters_exec+0 -> perf_event_a>
+           11.19%            2.6K        0.28%          21
+                          [perf_iterate_ctx+48 -> >
+            5.79%            1.4K        1.32%          97
+[__intel_pmu_enable_all.constprop.0+80 -> __intel_>
 
-With -v applied,
-$perf report  --total-cycles --stdio -v
+Fixes: 6f7164fa231a ("perf report: Sort by sampled cycles percent per block for stdio")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/builtin-report.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
- # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles          Branch Counter [Program Block Range]
- # ...............  ..............  ...........  ..........  ......................  ..................
- #
-           57.55%            2.5M        0.00%           3               A=1 ,B=-                  ...
-           25.27%            1.1M        0.00%           2               A=2 ,B=-                  ...
-           15.61%          667.2K        0.00%           1               A=1 ,B=-                  ...
-            0.16%            6.9K        0.81%         575               A=1 ,B=-                  ...
-            0.16%            6.8K        1.38%         977               A=2 ,B=-                  ...
-            0.16%            6.8K        0.04%          28               A=2 ,B=1                  ...
-            0.15%            6.6K        1.33%         946               A=1 ,B=-                  ...
-            0.11%            4.5K        0.06%          46               A=3+,B=-                  ...
-
-(The below output is in the TUI mode. Users can press 'B' to display
-the Branch counter abbr list.)
-
-Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }',
-4000 Hz, Event count (approx.):
-f3  /home/sdp/test/tchain_edit [Percent: local period]
-Percent       │ IPC Cycle       Branch Counter (Average IPC: 1.39, IPC Coverage: 29.4%)
-              │                                     0000000000401755 <f3>:
-  0.00   0.00 │                                       endbr64
-              │                                       push    %rbp
-              │                                       mov     %rsp,%rbp
-              │                                       movl    $0x0,-0x4(%rbp)
-  0.00   0.00 │1.33     3          |A   |-   |      ↓ jmp     25
- 11.03  11.03 │                                 11:   mov     -0x4(%rbp),%eax
-              │                                       and     $0x1,%eax
-              │                                       test    %eax,%eax
- 17.13  17.13 │2.41     1          |A   |-   |      ↓ je      21
-              │                                       addl    $0x1,-0x4(%rbp)
- 21.84  21.84 │2.22     2          |AA  |-   |      ↓ jmp     25
- 17.13  17.13 │                                 21:   addl    $0x1,-0x4(%rbp)
- 21.84  21.84 │                                 25:   cmpl    $0x270f,-0x4(%rbp)
- 11.03  11.03 │0.61     3          |A   |-   |      ↑ jle     11
-              │                                       nop
-              │                                       pop     %rbp
-  0.00   0.00 │0.24    20          |AA  |B   |      ← ret
-
-perf script:
-
-$perf script -F +brstackinsn,+brcntr
-
- # Branch counter abbr list:
- # branch-instructions:ppp = A
- # branch-misses = B
- # '-' No event occurs
- # '+' Event occurrences may be lost due to branch counter saturated
-     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (home/sdp/test/tchain_edit)
-        f3+31:
-        0000000000401774        insn: eb 04                     br_cntr: AA     # PRED 5 cycles [5]
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 1 cycles [6] 2.00 IPC
-        0000000000401766        insn: 8b 45 fc
-        0000000000401769        insn: 83 e0 01
-        000000000040176c        insn: 85 c0
-
-$perf script -F +brstackinsn,+brcntr -v
-
-     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (/home/sdp/test/tchain_edit)
-        f3+31:
-        0000000000401774        insn: eb 04                     br_cntr: branch-instructions:ppp 2 branch-misses 0      # PRED 5 cycles [5]
-        000000000040177a        insn: 81 7d fc 0f 27 00 00
-        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [6] 2.00 IPC
-        0000000000401766        insn: 8b 45 fc
-        0000000000401769        insn: 83 e0 01
-        000000000040176c        insn: 85 c0
-
-
-Kan Liang (9):
-  perf report: Fix --total-cycles --stdio output error
-  perf report: Remove the first overflow check for branch counters
-  perf evlist: Save branch counters information
-  perf annotate: Save branch counters for each block
-  perf evsel: Assign abbr name for the branch counter events
-  perf report: Display the branch counter histogram
-  perf annotate: Display the branch counter histogram
-  perf script: Add branch counters
-  perf test: Add new test cases for the branch counter feature
-
- tools/perf/Documentation/perf-report.txt |   1 +
- tools/perf/Documentation/perf-script.txt |   2 +-
- tools/perf/builtin-annotate.c            |  13 +-
- tools/perf/builtin-diff.c                |   8 +-
- tools/perf/builtin-report.c              |  25 ++-
- tools/perf/builtin-script.c              |  69 ++++++-
- tools/perf/builtin-top.c                 |   4 +-
- tools/perf/tests/shell/record.sh         |  17 +-
- tools/perf/ui/browsers/annotate.c        |  18 +-
- tools/perf/ui/browsers/hists.c           |  18 +-
- tools/perf/util/annotate.c               | 253 +++++++++++++++++++++--
- tools/perf/util/annotate.h               |  24 ++-
- tools/perf/util/block-info.c             |  66 +++++-
- tools/perf/util/block-info.h             |   8 +-
- tools/perf/util/branch.h                 |   1 +
- tools/perf/util/disasm.c                 |   1 +
- tools/perf/util/evlist.c                 |  68 ++++++
- tools/perf/util/evlist.h                 |   2 +
- tools/perf/util/evsel.c                  |  15 +-
- tools/perf/util/evsel.h                  |  14 ++
- tools/perf/util/hist.c                   |   5 +-
- tools/perf/util/hist.h                   |   2 +-
- tools/perf/util/machine.c                |   3 +
- 23 files changed, 567 insertions(+), 70 deletions(-)
-
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index dfb47fa85e5c..04b9a5c1bc7e 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -565,6 +565,7 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
+ 		struct hists *hists = evsel__hists(pos);
+ 		const char *evname = evsel__name(pos);
+ 
++		i++;
+ 		if (symbol_conf.event_group && !evsel__is_group_leader(pos))
+ 			continue;
+ 
+@@ -574,7 +575,7 @@ static int evlist__tty_browse_hists(struct evlist *evlist, struct report *rep, c
+ 		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
+ 
+ 		if (rep->total_cycles_mode) {
+-			report__browse_block_hists(&rep->block_reports[i++].hist,
++			report__browse_block_hists(&rep->block_reports[i - 1].hist,
+ 						   rep->min_percent, pos, NULL);
+ 			continue;
+ 		}
 -- 
 2.38.1
 
