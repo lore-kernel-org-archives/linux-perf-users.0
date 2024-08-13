@@ -1,117 +1,137 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41BEE1A0AEA
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 16:05:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2EF1A01C5;
+	Tue, 13 Aug 2024 17:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723565112; cv=none; b=rMdwGKsGkH/E9PROO8LCoQL/eR8Oaq5Sju4Zsiagl11SLbj/6fF512DJDCQJgzj5ILCLaTCXgMgE4lPfeoGO+X4sJOhvoNwfjlz6PFRNuk0CANiTE3c53QtCD4sFklwh1Ww0UTxRQV0wQrLQTd6sb8EXgVOz2IMDdcqy+34ozsQ=
+	t=1723568861; cv=none; b=M9+2FR2lUwTsuCG486Tuv/S4VXQMiTX3VCcn1sQcAO5VwJNp42TqkBAeZ3RBoAGcR9jW7dZmGXcbDpsCjZp74P7FpsezoG59iDHgp3O2kTFWuuTJxXDE7jL58mSdpeX84s43RuzzXbcPReri4ehymtacWpgZpMfBStulRbOlkOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723565112; c=relaxed/simple;
-	bh=dsnEFrXQEe30129gATA65SKh4tPfceYgp5NXlRzsf+Y=;
+	s=arc-20240116; t=1723568861; c=relaxed/simple;
+	bh=2UTRpyixsnI2Mt3H9E3lwr3skLjqQavuwS+t2Y5B5ZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JWRzdSUFs0zcq2enheJ6OFtYd5/L11swU+R1QBtFCOUjbep86U0P2w/DQQCijwC1LYK28c4RTMiDU2S88NuHzGFCotVktPOYCe/iwjvgj74p4YQCnMoGW/vcqXIp1ZkMUYB04NjBVxo/SIFuyrhnA/wSzy8G3ae8Kcxqd53JcGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0aOVX3Hz; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=aquWXHSTXhVy0+iHmzW+gUfXYZ8tbVWWtJb8J5WGArEJpJEZSooObR2A5jZ/mOsDsF/8M/DxrHJuWlEY/c3a6/wtd3xgqkqwg4fEcM1mPGJggEhndvBxnLQyAqejvQbtGvEvsc7cHwEZ78TlRF7MVLHkdNleXmrxSocXnd6nH8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LSWMfKR6; arc=none smtp.client-ip=209.85.210.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0aOVX3Hz"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-200aa53d6d2so113275ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 09:05:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LSWMfKR6"
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-7093efbade6so3872816a34.2;
+        Tue, 13 Aug 2024 10:07:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723565110; x=1724169910; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723568859; x=1724173659; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hYWzJyvpTQNIlST/TNx5IAt/1qpwACIOgkuhkXZEt38=;
-        b=0aOVX3Hz9czVpRqT+ewLN0sKVAbXC/UdzZGHVoKKPJcF3N2vatmszAPxh/udHq2iwi
-         cNVfZ7z/Ip8807GXyVpmUTl972pvJeCqvQ6ubOm4Hkd4rSS6d03FMKMDTdO/nl/4LWXH
-         gq01qezG0fcrEmM+LzYrE8ygvcZU2W6b/hdwvdwrf5eenHcbjSZVy17zEhTHljWZUmD0
-         TnQ67n/eKYeAye45uqX5QP8JPmcAgQY7gwczoyc6hJmRDm8VEl+XgihZr6kg0he+pgtV
-         ww1MFggGvTjLeCB0jLb/xEq1fVWbOUEg5NrQIKoQ7OlBDyJg84P24NzNt+7vM5UpUzvT
-         LsQA==
+        bh=kqDQdMqa6edkrhtgWmvvQHLQOD3Y1jZC7HmcMHP1B7Y=;
+        b=LSWMfKR6TO0cQN3x6ScNmj3uvtJUXvzP1czlaGX3XKPUQcRq9uyIvkrq9tWXVePZs3
+         YZGFjuBIotwHzzp3NJCqRUGtv2Oopj3aIPX5oE3Gk4nmnwuM7XN2tOla6ixIFHCNalrs
+         UnF98INbkkP3Ze+ChqVFOhim5tzKw/ARVdEBEcj+/mFCrogwzoqaX7TWS6/jvimjtkyO
+         UJIEp5gEECr7U8tmGIZkrGRqQauWYg5pZr1nVubGkfuHcSpOQ1G68EF3T+rVqwdkFAGl
+         WS2ZPYePybqjnv6rLcDdlobEM0UTwhOlWhnk2v/7fhHgGgOvNLZI/rQ6p7BpdyQEQctA
+         /Svg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723565110; x=1724169910;
+        d=1e100.net; s=20230601; t=1723568859; x=1724173659;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hYWzJyvpTQNIlST/TNx5IAt/1qpwACIOgkuhkXZEt38=;
-        b=wx8wbs68zUQJVIJmIQ6Vd7+zLBOmj1jC21zgDrsX8R8S2T3PuJwKsP7gihwx/LZFZX
-         mMY8kKpISDtnzQqALuWrheAuTLlLYij/9Q+daW6y7rETDiD8zv7F+I3cGO7gpb++3BBF
-         R+vodj52OiGvf9gbNvCqdPEvri4E+RM0it416xlVLhfnQEhI2O6gFyb2GMnbXIQgU0g5
-         KXoyvJummq8OripQ+jfcalzhSspYJ3lKLUzv39l68yzXopXr4cvuTmpckxeUfr95t3/l
-         WhoUFpl0KCJEHlK4K/hTNtn4dPL/a0zzTSoOCA4ZcLqqclxqogyT2dS5DB8z+1rTlJ2M
-         E4mw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhyK9W1GpasOB/QBQEzFtS0nt8JCoONB6thiL3gJNlAg1GU251O+BKH3nMrvBOg+C/7fjbjYpSirxDG/NgqUllSrRwHZKDcrR1dg6XTe2bog==
-X-Gm-Message-State: AOJu0YxPfyECuXEFhwl+10X2JRjk2v4QUBN0gA2eF2XjSxbm9RATPV9B
-	TGiry2A8wsepfrMUObcxiaTcgK1vTTXV+j9Bu4oIXbQxk1yWNwJQ/IQHp7sCyOhsRgXzwLJEzwv
-	3HbnZSPOy4T1ijpZddaAmXkzAcpXpILhRM9ec
-X-Google-Smtp-Source: AGHT+IEub4FIB+lio4i4nkw8sW+gRiszAfxdnYj0Bw1TMl0dWkbkwnfXacTcpG2yDl8Cz2lsKatOfYpP8MFyLU5J8so=
-X-Received: by 2002:a17:902:c40c:b0:1f3:3ede:9b0 with SMTP id
- d9443c01a7336-201ccba5f3fmr1740695ad.10.1723565110178; Tue, 13 Aug 2024
- 09:05:10 -0700 (PDT)
+        bh=kqDQdMqa6edkrhtgWmvvQHLQOD3Y1jZC7HmcMHP1B7Y=;
+        b=gsfYm7lYly/uSCs1/hSd0eHECYtAgsAYi41vCTuYBuAicUmSLZ8WoSHiY7GjgmAsn7
+         vjZE7RQmB58DgSXRFkXGOYshbqy6BSsF10KZl4xiqiU4P9xbKm2dElB+Ev941P2vQkrc
+         DVR2Ox7ZR7KKVnwrfmdTOCcTnxjy04bFLSoRHjsHVB52AxERKddMuFHQXorrv4u7ejC9
+         gBqXwy4cr018AoDl+A+4yrVv+Jl6UjON8Wfk68swBShMVFUTJb3CD2yJoW2x6BQYh91E
+         iHzLrbhYDVQ8W5WTwa98SXus/OkZr4Rb99/wee6fEYBeM/PrxaTG2d/Exz803zqdTSUP
+         v6HA==
+X-Forwarded-Encrypted: i=1; AJvYcCW6LcDQF+zMWpZTacuUkLR4vUwUmuddX8JAs7gEL+o/pRlzmciquhH+lLQ9rzoaG1mkkyy/h1ZyCfA4A6/AlQxTqnbXKEj2jYSPq7tPWiv2jXVCW2xg6aP6gFZvHnUc9FFqsDboBM6w8doPq/WQbC9J0XXUIj1cuYP2
+X-Gm-Message-State: AOJu0YwKWjMBFJ2deErCqVun/ZBW8NitSo69AWlEJDvIsg7EIgyftQlO
+	CyqNKvXs240s0SqvWiO1pWOq9I+P/ynLrzGPnAed0UelKdLva4B9hpcCdaYwcXyLeZeG3iniH6P
+	GrG6zl8vB8wkhLV2ikSWLNlpH6+9NtITh
+X-Google-Smtp-Source: AGHT+IHbYc4Q+YiQBykiM0mnghoF6UZNPJpC/R2FJZoiqWDI4lIHR+ADHM5+gVZ6JC123rB3oqYm4s/9Xh1rty1ofbg=
+X-Received: by 2002:a17:90a:c84:b0:2c9:7219:1db0 with SMTP id
+ 98e67ed59e1d1-2d3aaa7af67mr200689a91.3.1723568847980; Tue, 13 Aug 2024
+ 10:07:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240813040613.882075-1-irogers@google.com> <ZrtzTTHim_vGX1ma@x1>
-In-Reply-To: <ZrtzTTHim_vGX1ma@x1>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 13 Aug 2024 09:04:57 -0700
-Message-ID: <CAP-5=fUA8T9B2RvXg-Hpj_fHXmwB18ah6Krm3qm5ULH-M04Lqw@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] perf disasm: Fix memory leak for locked operations
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Thomas Richter <tmricht@linux.ibm.com>, Kajol Jain <kjain@linux.ibm.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20240813151727.28797-1-jdamato@fastly.com>
+In-Reply-To: <20240813151727.28797-1-jdamato@fastly.com>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Tue, 13 Aug 2024 10:07:15 -0700
+Message-ID: <CAEf4Bza1C1X+t7xbU1rRAMG1+oy=UoZyyGPaBkFJ4_tVQMJQsw@mail.gmail.com>
+Subject: Re: [PATCH v2] perf/bpf: Don't call bpf_overflow_handler() for
+ tracing events
+To: Joe Damato <jdamato@fastly.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	bpf@vger.kernel.org, peterz@infradead.org, andrii@kernel.org, 
+	mhiramat@kernel.org, olsajiri@gmail.com, me@kylehuey.com, 
+	Kyle Huey <khuey@kylehuey.com>, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Aug 13, 2024 at 7:53=E2=80=AFAM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
+On Tue, Aug 13, 2024 at 8:17=E2=80=AFAM Joe Damato <jdamato@fastly.com> wro=
+te:
 >
-> On Mon, Aug 12, 2024 at 09:06:12PM -0700, Ian Rogers wrote:
-> > lock__parse calls disasm_line__parse passing
-> > &ops->locked.ins.name. Ensure ops->locked.ins.name is freed in
-> > lock__delete.
-> >
-> > Found with lock/leak sanitizer.
-
-Ooops, I meant address/leak sanitizer.
-
-> Applied both patches to perf-tools-next.
-
-Thanks, could you fix the commit message.
-
-Thanks,
-Ian
-
-> Thanks,
+> From: Kyle Huey <me@kylehuey.com>
 >
-> - Arnaldo
+> The regressing commit is new in 6.10. It assumed that anytime event->prog
+> is set bpf_overflow_handler() should be invoked to execute the attached b=
+pf
+> program. This assumption is false for tracing events, and as a result the
+> regressing commit broke bpftrace by invoking the bpf handler with garbage
+> inputs on overflow.
 >
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> > ---
-> >  tools/perf/util/disasm.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-> > index 22289003e16d..226d2181f694 100644
-> > --- a/tools/perf/util/disasm.c
-> > +++ b/tools/perf/util/disasm.c
-> > @@ -566,6 +566,7 @@ static void lock__delete(struct ins_operands *ops)
-> >               ins_ops__delete(ops->locked.ops);
-> >
-> >       zfree(&ops->locked.ops);
-> > +     zfree(&ops->locked.ins.name);
-> >       zfree(&ops->target.raw);
-> >       zfree(&ops->target.name);
-> >  }
-> > --
-> > 2.46.0.76.ge559c4bf1a-goog
+> Prior to the regression the overflow handlers formed a chain (of length 0=
+,
+> 1, or 2) and perf_event_set_bpf_handler() (the !tracing case) added
+> bpf_overflow_handler() to that chain, while perf_event_attach_bpf_prog()
+> (the tracing case) did not. Both set event->prog. The chain of overflow
+> handlers was replaced by a single overflow handler slot and a fixed call =
+to
+> bpf_overflow_handler() when appropriate. This modifies the condition ther=
+e
+> to check event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EVENT, restoring the
+> previous behavior and fixing bpftrace.
+>
+> Signed-off-by: Kyle Huey <khuey@kylehuey.com>
+> Suggested-by: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Reported-by: Joe Damato <jdamato@fastly.com>
+> Closes: https://lore.kernel.org/lkml/ZpFfocvyF3KHaSzF@LQ3V64L9R2/
+> Fixes: f11f10bfa1ca ("perf/bpf: Call BPF handler directly, not through ov=
+erflow machinery")
+> Cc: stable@vger.kernel.org
+> Tested-by: Joe Damato <jdamato@fastly.com> # bpftrace
+> ---
+> v2:
+>   - Update patch based on Andrii's suggestion
+>   - Update commit message
+>
+
+LGTM, thanks.
+
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+
+>  kernel/events/core.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index aa3450bdc227..c973e3c11e03 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -9706,7 +9706,8 @@ static int __perf_event_overflow(struct perf_event =
+*event,
+>
+>         ret =3D __perf_event_account_interrupt(event, throttle);
+>
+> -       if (event->prog && !bpf_overflow_handler(event, data, regs))
+> +       if (event->prog && event->prog->type =3D=3D BPF_PROG_TYPE_PERF_EV=
+ENT &&
+> +           !bpf_overflow_handler(event, data, regs))
+>                 return ret;
+>
+>         /*
+> --
+> 2.25.1
+>
