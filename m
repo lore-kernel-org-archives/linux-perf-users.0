@@ -1,46 +1,46 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C891A2C10;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C2E1A2C21;
 	Tue, 13 Aug 2024 16:01:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564904; cv=none; b=qVoj02yYCEMe4PhI+/nPTShCS976aEjOtR+wI+iiYnIqjGwiKnRt5ezLyFKdKsPN/TyRls0G3OSWW1I7f4XC0IrMRgALx2CHl7bIOhbdrWHrUgzCKU+7lQgfsk91PAKaktkf2nbJCXDbQsPT/nPyjd8MLysjXiMriIUq+rxENH0=
+	t=1723564905; cv=none; b=TKAy2vSKmhU+tAnlseOi+fQOnwryxl2YlXe5H6xk+cYNx3yg4FvWvQ74GexwiFvsdtT+yaVdsXyXcy4SnOhddgxJFN3E5MU8/5UkgM/kNeorYXCOZPjAwRvL7fVzfWRd4S3bVROHxfdKzG1a+b7WWBsjqtPc5Xk1xQOJCvVDSrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723564904; c=relaxed/simple;
-	bh=TyKtHmmCdz/4DUzVCTAlXYoZjzK1XVvU5QFAXNpcfeQ=;
+	s=arc-20240116; t=1723564905; c=relaxed/simple;
+	bh=u1pTqMjYDZsfAePqwZ018IaSJayVWkUkjKUsn88vuXM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=VfkubVBzSd6B/1h6vmapepJBGinikjjyFRhX8V+0PiFQ9OlOMHMxEIVoDBIwRlqYH2QDIlFC6B/8AczKY4w/WLHu1TpWBVfptFbspRY0aaT8LwqBgR/by3YgBPPYV+ekiK5Hs8bez5WfL7Sy9+8/Frbqz+wc63SssVXUxjn5n6Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fikfgq5I; arc=none smtp.client-ip=192.198.163.19
+	 MIME-Version; b=UuCYjE0twYfMyx7NxiWPqK/5ignCOhkm2NbcvtLR0f1/fOuTImmaHZ3F2HWH2+6OMBJdrxCGqKbxuiXlJBE8P07fb665HnbitH7h6txKm4blcmjiwVAe5oCJeS3wNyx26VW4h7AszShEw238suz3W3+k9tlbVpsMvehcrkJV+PU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EGQmA57m; arc=none smtp.client-ip=192.198.163.19
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fikfgq5I"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EGQmA57m"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1723564903; x=1755100903;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=TyKtHmmCdz/4DUzVCTAlXYoZjzK1XVvU5QFAXNpcfeQ=;
-  b=fikfgq5ImrZw8vQP7Q+vE9lpcgfhysQ8iWDlr9ACuhea4xvgEYS5k5Aj
-   zPE7f5ds9lNuUR1Rzq/G8dntN8VZlLms1wFn7k5Wz2EPpARkvCO7abe3A
-   jobuQZbPjN22Gz/4g5ifOb8KoO3jF/Qrh10Ao22YiKzXUfYOcRV86Fz4R
-   hh0x8MhqAFRbK/aVi4pHqyOGvyK430I2/Bvdp6prdvoMIDS4lcBxlPFgG
-   mCWL3BnhaAkaJQBHD4J/dMHNfIKFGv7XTU3Ys66RmKb31mT72zDZU08AJ
-   qcNUji1JCuow/x1jjWhyzmawLMTs8h4yGQ9R/W6y6QThzRYf3Yg9ceTtk
+  bh=u1pTqMjYDZsfAePqwZ018IaSJayVWkUkjKUsn88vuXM=;
+  b=EGQmA57m+8azj8Ldujttu2Y5wLZ4J/Cs6G5rtJRk78Oz8yy489b0GAqv
+   rzew+exsRg6q2pCS2wsk9if+kICVuXW6DsEp/7gVz9KsyksPYRfyscasc
+   cC3PepIHpCQp5yGU58v4zCVqCNzf3zDqcdjzReqLyobmXz+Hk7o/RMNEr
+   6ttSAaJradCjJhAEnRs2ObO2vOlFoACPXv7uSZLrgq6SG3RBITtvy5U2i
+   4nZ9WHJavpSSZP8w03rrjHWId0U61xVicOalB8bSHtcVVgXMSiSq+o7Xt
+   +mhz4rzBHZJf+A6yZMR9jlRhJBbxpVTKIhTxW1+aqpItFQaUO2/pjGORw
    g==;
-X-CSE-ConnectionGUID: p55ynFgHRWuZ+HNEnOsnJQ==
-X-CSE-MsgGUID: cQ/iDAIbSUmYN4OLTry2pg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383221"
+X-CSE-ConnectionGUID: 2ooB/QomTdur9oRpGMLOcQ==
+X-CSE-MsgGUID: RxgNjpkjQgG/+oZpq7PK4Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11163"; a="21383225"
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="21383221"
+   d="scan'208";a="21383225"
 Received: from orviesa008.jf.intel.com ([10.64.159.148])
   by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Aug 2024 09:01:37 -0700
-X-CSE-ConnectionGUID: GrZgQ8BDRkim3BxoKW0h0w==
-X-CSE-MsgGUID: A5z//xiJSDCJoJ9sB2rd3Q==
+X-CSE-ConnectionGUID: fEq8fnvdTL+38A2PRuMVqg==
+X-CSE-MsgGUID: yj1wM1+4QmqfwrS/P2wYtA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.09,286,1716274800"; 
-   d="scan'208";a="59479756"
+   d="scan'208";a="59479759"
 Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
   by orviesa008.jf.intel.com with ESMTP; 13 Aug 2024 09:01:37 -0700
 From: kan.liang@linux.intel.com
@@ -56,9 +56,9 @@ Cc: adrian.hunter@intel.com,
 	eranian@google.com,
 	Kan Liang <kan.liang@linux.intel.com>,
 	Tinghao Zhang <tinghao.zhang@intel.com>
-Subject: [PATCH V3 7/9] perf annotate: Display the branch counter histogram
-Date: Tue, 13 Aug 2024 09:02:06 -0700
-Message-Id: <20240813160208.2493643-8-kan.liang@linux.intel.com>
+Subject: [PATCH V3 8/9] perf script: Add branch counters
+Date: Tue, 13 Aug 2024 09:02:07 -0700
+Message-Id: <20240813160208.2493643-9-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20240813160208.2493643-1-kan.liang@linux.intel.com>
 References: <20240813160208.2493643-1-kan.liang@linux.intel.com>
@@ -68,300 +68,268 @@ List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Display the branch counter histogram in the annotation view.
+It's useful to print the branch counter information for each jump in
+the brstackinsn when it's available.
 
-Press 'B' to display the branch counter's abbreviation list as well.
+Add a new field brcntr to display the branch counter information.
 
-Samples: 1M of events 'anon group { branch-instructions:ppp, branch-misses }',
-4000 Hz, Event count (approx.):
-f3  /home/sdp/test/tchain_edit [Percent: local period]
-Percent       │ IPC Cycle       Branch Counter (Average IPC: 1.39, IPC Coverage: 29.4%)
-              │                                     0000000000401755 <f3>:
-  0.00   0.00 │                                       endbr64
-              │                                       push    %rbp
-              │                                       mov     %rsp,%rbp
-              │                                       movl    $0x0,-0x4(%rbp)
-  0.00   0.00 │1.33     3          |A   |-   |      ↓ jmp     25
- 11.03  11.03 │                                 11:   mov     -0x4(%rbp),%eax
-              │                                       and     $0x1,%eax
-              │                                       test    %eax,%eax
- 17.13  17.13 │2.41     1          |A   |-   |      ↓ je      21
-              │                                       addl    $0x1,-0x4(%rbp)
- 21.84  21.84 │2.22     2          |AA  |-   |      ↓ jmp     25
- 17.13  17.13 │                                 21:   addl    $0x1,-0x4(%rbp)
- 21.84  21.84 │                                 25:   cmpl    $0x270f,-0x4(%rbp)
- 11.03  11.03 │0.61     3          |A   |-   |      ↑ jle     11
-              │                                       nop
-              │                                       pop     %rbp
-  0.00   0.00 │0.24    20          |AA  |B   |      ← ret
+By default, the abbreviation will be used to indicate the branch
+counter. In the verbose mode, the real event name is shown.
+
+$perf script -F +brstackinsn,+brcntr
+
+ # Branch counter abbr list:
+ # branch-instructions:ppp = A
+ # branch-misses = B
+ # '-' No event occurs
+ # '+' Event occurrences may be lost due to branch counter saturated
+     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (home/sdp/test/tchain_edit)
+        f3+31:
+        0000000000401774        insn: eb 04                     br_cntr: AA     # PRED 5 cycles [5]
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 1 cycles [6] 2.00 IPC
+        0000000000401766        insn: 8b 45 fc
+        0000000000401769        insn: 83 e0 01
+        000000000040176c        insn: 85 c0
+        000000000040176e        insn: 74 06                     br_cntr: A      # PRED 1 cycles [7] 4.00 IPC
+        0000000000401776        insn: 83 45 fc 01
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: A      # PRED 7 cycles [14] 0.43 IPC
+
+$perf script -F +brstackinsn,+brcntr -v
+
+     tchain_edit  332203 3366329.405674:      53030 branch-instructions:ppp:            401781 f3+0x2c (/home/sdp/os.linux.perf.test-suite/kernels/lbr_kernel/tchain_edit)
+        f3+31:
+        0000000000401774        insn: eb 04                     br_cntr: branch-instructions:ppp 2 branch-misses 0      # PRED 5 cycles [5]
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [6] 2.00 IPC
+        0000000000401766        insn: 8b 45 fc
+        0000000000401769        insn: 83 e0 01
+        000000000040176c        insn: 85 c0
+        000000000040176e        insn: 74 06                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 1 cycles [7] 4.00 IPC
+        0000000000401776        insn: 83 45 fc 01
+        000000000040177a        insn: 81 7d fc 0f 27 00 00
+        0000000000401781        insn: 7e e3                     br_cntr: branch-instructions:ppp 1 branch-misses 0      # PRED 7 cycles [14] 0.43 IPC
 
 Originally-by: Tinghao Zhang <tinghao.zhang@intel.com>
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Reviewed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 ---
- tools/perf/builtin-annotate.c     | 10 +++++---
- tools/perf/ui/browsers/annotate.c | 18 ++++++++++++--
- tools/perf/ui/browsers/hists.c    |  3 ++-
- tools/perf/util/annotate.c        | 40 ++++++++++++++++++++++++++++---
- tools/perf/util/annotate.h        | 11 +++++++++
- tools/perf/util/disasm.c          |  1 +
- 6 files changed, 74 insertions(+), 9 deletions(-)
+ tools/perf/Documentation/perf-script.txt |  2 +-
+ tools/perf/builtin-script.c              | 69 +++++++++++++++++++++---
+ 2 files changed, 63 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/builtin-annotate.c b/tools/perf/builtin-annotate.c
-index 9b4a8a379b5b..3dc6197ef3fa 100644
---- a/tools/perf/builtin-annotate.c
-+++ b/tools/perf/builtin-annotate.c
-@@ -927,11 +927,15 @@ int cmd_annotate(int argc, const char **argv)
- 		sort_order = "dso,symbol";
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index 5abb960c4960..b72866ef270b 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -134,7 +134,7 @@ OPTIONS
+         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output,
+         brstackinsn, brstackinsnlen, brstackdisasm, brstackoff, callindent, insn, disasm,
+         insnlen, synth, phys_addr, metric, misc, srccode, ipc, data_page_size,
+-        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat,
++        code_page_size, ins_lat, machine_pid, vcpu, cgroup, retire_lat, brcntr,
  
- 	/*
--	 * Set SORT_MODE__BRANCH so that annotate display IPC/Cycle
--	 * if branch info is in perf data in TUI mode.
-+	 * Set SORT_MODE__BRANCH so that annotate displays IPC/Cycle and
-+	 * branch counters, if the corresponding branch info is available
-+	 * in the perf data in the TUI mode.
- 	 */
--	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack)
-+	if ((use_browser == 1 || annotate.use_stdio2) && annotate.has_br_stack) {
- 		sort__mode = SORT_MODE__BRANCH;
-+		if (annotate.session->evlist->nr_br_cntr > 0)
-+			annotate_opts.show_br_cntr = true;
+         Field list can be prepended with the type, trace, sw or hw,
+         to indicate to which event type the field list applies.
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 54598d1e815a..206b08426555 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -62,6 +62,7 @@
+ #include "util/record.h"
+ #include "util/util.h"
+ #include "util/cgroup.h"
++#include "util/annotate.h"
+ #include "perf.h"
+ 
+ #include <linux/ctype.h>
+@@ -138,6 +139,7 @@ enum perf_output_field {
+ 	PERF_OUTPUT_DSOFF           = 1ULL << 41,
+ 	PERF_OUTPUT_DISASM          = 1ULL << 42,
+ 	PERF_OUTPUT_BRSTACKDISASM   = 1ULL << 43,
++	PERF_OUTPUT_BRCNTR          = 1ULL << 44,
+ };
+ 
+ struct perf_script {
+@@ -213,6 +215,7 @@ struct output_option {
+ 	{.str = "cgroup", .field = PERF_OUTPUT_CGROUP},
+ 	{.str = "retire_lat", .field = PERF_OUTPUT_RETIRE_LAT},
+ 	{.str = "brstackdisasm", .field = PERF_OUTPUT_BRSTACKDISASM},
++	{.str = "brcntr", .field = PERF_OUTPUT_BRCNTR},
+ };
+ 
+ enum {
+@@ -520,6 +523,12 @@ static int evsel__check_attr(struct evsel *evsel, struct perf_session *session)
+ 		       "Hint: run 'perf record -b ...'\n");
+ 		return -EINVAL;
+ 	}
++	if (PRINT_FIELD(BRCNTR) &&
++	    !(evlist__combined_branch_type(session->evlist) & PERF_SAMPLE_BRANCH_COUNTERS)) {
++		pr_err("Display of branch counter requested but it's not enabled\n"
++		       "Hint: run 'perf record -j any,counter ...'\n");
++		return -EINVAL;
 +	}
+ 	if ((PRINT_FIELD(PID) || PRINT_FIELD(TID)) &&
+ 	    evsel__check_stype(evsel, PERF_SAMPLE_TID, "TID", PERF_OUTPUT_TID|PERF_OUTPUT_PID))
+ 		return -EINVAL;
+@@ -789,6 +798,19 @@ static int perf_sample__fprintf_start(struct perf_script *script,
+ 	int printed = 0;
+ 	char tstr[128];
  
- 	if (setup_sorting(NULL) < 0)
- 		usage_with_options(annotate_usage, options);
-diff --git a/tools/perf/ui/browsers/annotate.c b/tools/perf/ui/browsers/annotate.c
-index fe991a81256b..d7e727345dab 100644
---- a/tools/perf/ui/browsers/annotate.c
-+++ b/tools/perf/ui/browsers/annotate.c
-@@ -156,6 +156,7 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 	struct symbol *sym = ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
- 	u8 pcnt_width = annotation__pcnt_width(notes);
-+	u8 cntr_width = annotation__br_cntr_width();
- 	int width;
- 	int diff = 0;
- 
-@@ -205,13 +206,13 @@ static void annotate_browser__draw_current_jump(struct ui_browser *browser)
- 
- 	ui_browser__set_color(browser, HE_COLORSET_JUMP_ARROWS);
- 	__ui_browser__line_arrow(browser,
--				 pcnt_width + 2 + notes->src->widths.addr + width,
-+				 pcnt_width + 2 + notes->src->widths.addr + width + cntr_width,
- 				 from, to);
- 
- 	diff = is_fused(ab, cursor);
- 	if (diff > 0) {
- 		ui_browser__mark_fused(browser,
--				       pcnt_width + 3 + notes->src->widths.addr + width,
-+				       pcnt_width + 3 + notes->src->widths.addr + width + cntr_width,
- 				       from - diff, diff, to > from);
- 	}
- }
-@@ -714,6 +715,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 	struct annotation *notes = symbol__annotation(ms->sym);
- 	const char *help = "Press 'h' for help on key bindings";
- 	int delay_secs = hbt ? hbt->refresh : 0;
-+	char *br_cntr_text = NULL;
- 	char title[256];
- 	int key;
- 
-@@ -730,6 +732,8 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 
- 	nd = browser->curr_hot;
- 
-+	annotation_br_cntr_abbr_list(&br_cntr_text, evsel, false);
++	/*
++	 * Print the branch counter's abbreviation list,
++	 * if the branch counter is available.
++	 */
++	if (PRINT_FIELD(BRCNTR) && !verbose) {
++		char *buf;
 +
- 	while (1) {
- 		key = ui_browser__run(&browser->b, delay_secs);
- 
-@@ -796,6 +800,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 		"r             Run available scripts\n"
- 		"p             Toggle percent type [local/global]\n"
- 		"b             Toggle percent base [period/hits]\n"
-+		"B             Branch counter abbr list (Optional)\n"
- 		"?             Search string backwards\n"
- 		"f             Toggle showing offsets to full address\n");
- 			continue;
-@@ -904,6 +909,14 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 			hists__scnprintf_title(hists, title, sizeof(title));
- 			annotate_browser__show(&browser->b, title, help);
- 			continue;
-+		case 'B':
-+			if (br_cntr_text)
-+				ui_browser__help_window(&browser->b, br_cntr_text);
-+			else {
-+				ui_browser__help_window(&browser->b,
-+							"\n The branch counter is not available.\n");
-+			}
-+			continue;
- 		case 'f':
- 			annotation__toggle_full_addr(notes, ms);
- 			continue;
-@@ -923,6 +936,7 @@ static int annotate_browser__run(struct annotate_browser *browser,
- 	}
- out:
- 	ui_browser__hide(&browser->b);
-+	free(br_cntr_text);
- 	return key;
- }
- 
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 970f7f349298..49ba82bf3391 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -3705,7 +3705,8 @@ int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
- 
- 	memset(&action, 0, sizeof(action));
- 
--	annotation_br_cntr_abbr_list(&br_cntr_text, evsel, false);
-+	if (!annotation_br_cntr_abbr_list(&br_cntr_text, evsel, false))
-+		annotate_opts.show_br_cntr = true;
- 
- 	while (1) {
- 		key = hist_browser__run(browser, "? - help", true, 0);
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 5200cafe20e7..4990c70b1794 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -501,8 +501,10 @@ static void annotation__count_and_fill(struct annotation *notes, u64 start, u64
- 	}
- }
- 
--static int annotation__compute_ipc(struct annotation *notes, size_t size)
-+static int annotation__compute_ipc(struct annotation *notes, size_t size,
-+				   struct evsel *evsel)
- {
-+	unsigned int br_cntr_nr = evsel->evlist->nr_br_cntr;
- 	int err = 0;
- 	s64 offset;
- 
-@@ -537,6 +539,20 @@ static int annotation__compute_ipc(struct annotation *notes, size_t size)
- 				al->cycles->max = ch->cycles_max;
- 				al->cycles->min = ch->cycles_min;
- 			}
-+			if (al && notes->branch->br_cntr) {
-+				if (!al->br_cntr) {
-+					al->br_cntr = calloc(br_cntr_nr, sizeof(u64));
-+					if (!al->br_cntr) {
-+						err = ENOMEM;
-+						break;
-+					}
-+				}
-+				al->num_aggr = ch->num_aggr;
-+				al->br_cntr_nr = br_cntr_nr;
-+				al->evsel = evsel;
-+				memcpy(al->br_cntr, &notes->branch->br_cntr[offset * br_cntr_nr],
-+				       br_cntr_nr * sizeof(u64));
-+			}
- 		}
- 	}
- 
-@@ -548,8 +564,10 @@ static int annotation__compute_ipc(struct annotation *notes, size_t size)
- 				struct annotation_line *al;
- 
- 				al = annotated_source__get_line(notes->src, offset);
--				if (al)
-+				if (al) {
- 					zfree(&al->cycles);
-+					zfree(&al->br_cntr);
-+				}
- 			}
- 		}
- 	}
-@@ -1960,6 +1978,22 @@ static void __annotation_line__write(struct annotation_line *al, struct annotati
- 					    "Cycle(min/max)");
- 		}
- 
-+		if (annotate_opts.show_br_cntr) {
-+			if (show_title) {
-+				obj__printf(obj, "%*s ",
-+					    ANNOTATION__BR_CNTR_WIDTH,
-+					    "Branch Counter");
-+			} else {
-+				char *buf;
-+
-+				if (!annotation_br_cntr_entry(&buf, al->br_cntr_nr, al->br_cntr,
-+							      al->num_aggr, al->evsel)) {
-+					obj__printf(obj, "%*s ", ANNOTATION__BR_CNTR_WIDTH, buf);
-+					free(buf);
-+				}
-+			}
++		if (!annotation_br_cntr_abbr_list(&buf, evsel, true)) {
++			printed += fprintf(stdout, "%s", buf);
++			free(buf);
 +		}
++	}
 +
- 		if (show_title && !*al->line) {
- 			ipc_coverage_string(bf, sizeof(bf), notes);
- 			obj__printf(obj, "%*s", ANNOTATION__AVG_IPC_WIDTH, bf);
-@@ -2056,7 +2090,7 @@ int symbol__annotate2(struct map_symbol *ms, struct evsel *evsel,
- 	annotation__set_index(notes);
- 	annotation__mark_jump_targets(notes, sym);
+ 	if (PRINT_FIELD(MACHINE_PID) && sample->machine_pid)
+ 		printed += fprintf(fp, "VM:%5d ", sample->machine_pid);
  
--	err = annotation__compute_ipc(notes, size);
-+	err = annotation__compute_ipc(notes, size, evsel);
- 	if (err)
- 		return err;
+@@ -1195,7 +1217,9 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+ 			    struct perf_insn *x, u8 *inbuf, int len,
+ 			    int insn, FILE *fp, int *total_cycles,
+ 			    struct perf_event_attr *attr,
+-			    struct thread *thread)
++			    struct thread *thread,
++			    struct evsel *evsel,
++			    u64 br_cntr)
+ {
+ 	int ilen = 0;
+ 	int printed = fprintf(fp, "\t%016" PRIx64 "\t", ip);
+@@ -1216,6 +1240,28 @@ static int ip__fprintf_jump(uint64_t ip, struct branch_entry *en,
+ 		addr_location__exit(&al);
+ 	}
  
-diff --git a/tools/perf/util/annotate.h b/tools/perf/util/annotate.h
-index 4fdaa3d5e8d2..8b9e05a1932f 100644
---- a/tools/perf/util/annotate.h
-+++ b/tools/perf/util/annotate.h
-@@ -31,6 +31,7 @@ struct annotated_data_type;
- #define ANNOTATION__CYCLES_WIDTH 6
- #define ANNOTATION__MINMAX_CYCLES_WIDTH 19
- #define ANNOTATION__AVG_IPC_WIDTH 36
-+#define ANNOTATION__BR_CNTR_WIDTH 30
- #define ANNOTATION_DUMMY_LEN	256
- 
- struct annotation_options {
-@@ -44,6 +45,7 @@ struct annotation_options {
- 	     show_nr_jumps,
- 	     show_minmax_cycle,
- 	     show_asm_raw,
-+	     show_br_cntr,
- 	     annotate_src,
- 	     full_addr;
- 	u8   offset_level;
-@@ -104,6 +106,10 @@ struct annotation_line {
- 	char			*fileloc;
- 	char			*path;
- 	struct cycles_info	*cycles;
-+	int			 num_aggr;
-+	int			 br_cntr_nr;
-+	u64			*br_cntr;
-+	struct evsel		*evsel;
- 	int			 jump_sources;
- 	u32			 idx;
- 	int			 idx_asm;
-@@ -353,6 +359,11 @@ static inline bool annotation_line__filter(struct annotation_line *al)
- 	return annotate_opts.hide_src_code && al->offset == -1;
++	if (PRINT_FIELD(BRCNTR)) {
++		unsigned int width = evsel__env(evsel)->br_cntr_width;
++		unsigned int i = 0, j, num, mask = (1L << width) - 1;
++		struct evsel *pos = evsel__leader(evsel);
++
++		printed += fprintf(fp, "br_cntr: ");
++		evlist__for_each_entry_from(evsel->evlist, pos) {
++			if (!(pos->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_COUNTERS))
++				continue;
++			if (evsel__leader(pos) != evsel__leader(evsel))
++				break;
++
++			num = (br_cntr >> (i++ * width)) & mask;
++			if (!verbose) {
++				for (j = 0; j < num; j++)
++					printed += fprintf(fp, "%s", pos->abbr_name);
++			} else
++				printed += fprintf(fp, "%s %d ", pos->name, num);
++		}
++		printed += fprintf(fp, "\t");
++	}
++
+ 	printed += fprintf(fp, "#%s%s%s%s",
+ 			      en->flags.predicted ? " PRED" : "",
+ 			      en->flags.mispred ? " MISPRED" : "",
+@@ -1272,6 +1318,7 @@ static int ip__fprintf_sym(uint64_t addr, struct thread *thread,
  }
  
-+static inline u8 annotation__br_cntr_width(void)
-+{
-+	return annotate_opts.show_br_cntr ? ANNOTATION__BR_CNTR_WIDTH : 0;
-+}
-+
- void annotation__update_column_widths(struct annotation *notes);
- void annotation__toggle_full_addr(struct annotation *notes, struct map_symbol *ms);
+ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
++					    struct evsel *evsel,
+ 					    struct thread *thread,
+ 					    struct perf_event_attr *attr,
+ 					    struct machine *machine, FILE *fp)
+@@ -1285,6 +1332,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 	unsigned off;
+ 	struct symbol *lastsym = NULL;
+ 	int total_cycles = 0;
++	u64 br_cntr = 0;
  
-diff --git a/tools/perf/util/disasm.c b/tools/perf/util/disasm.c
-index 22289003e16d..68aae87101bd 100644
---- a/tools/perf/util/disasm.c
-+++ b/tools/perf/util/disasm.c
-@@ -1014,6 +1014,7 @@ static void annotation_line__exit(struct annotation_line *al)
- 	zfree_srcline(&al->path);
- 	zfree(&al->line);
- 	zfree(&al->cycles);
-+	zfree(&al->br_cntr);
+ 	if (!(br && br->nr))
+ 		return 0;
+@@ -1296,6 +1344,9 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 	x.machine = machine;
+ 	x.cpu = sample->cpu;
+ 
++	if (PRINT_FIELD(BRCNTR) && sample->branch_stack_cntr)
++		br_cntr = sample->branch_stack_cntr[nr - 1];
++
+ 	printed += fprintf(fp, "%c", '\n');
+ 
+ 	/* Handle first from jump, of which we don't know the entry. */
+@@ -1307,7 +1358,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 					   x.cpumode, x.cpu, &lastsym, attr, fp);
+ 		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
+ 					    &x, buffer, len, 0, fp, &total_cycles,
+-					    attr, thread);
++					    attr, thread, evsel, br_cntr);
+ 		if (PRINT_FIELD(SRCCODE))
+ 			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
+ 	}
+@@ -1337,8 +1388,10 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+ 
+ 			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+ 			if (ip == end) {
++				if (PRINT_FIELD(BRCNTR) && sample->branch_stack_cntr)
++					br_cntr = sample->branch_stack_cntr[i];
+ 				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
+-							    &total_cycles, attr, thread);
++							    &total_cycles, attr, thread, evsel, br_cntr);
+ 				if (PRINT_FIELD(SRCCODE))
+ 					printed += print_srccode(thread, x.cpumode, ip);
+ 				break;
+@@ -1547,6 +1600,7 @@ void script_fetch_insn(struct perf_sample *sample, struct thread *thread,
  }
  
- static size_t disasm_line_size(int nr)
+ static int perf_sample__fprintf_insn(struct perf_sample *sample,
++				     struct evsel *evsel,
+ 				     struct perf_event_attr *attr,
+ 				     struct thread *thread,
+ 				     struct machine *machine, FILE *fp,
+@@ -1567,7 +1621,7 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 		printed += sample__fprintf_insn_asm(sample, thread, machine, fp, al);
+ 	}
+ 	if (PRINT_FIELD(BRSTACKINSN) || PRINT_FIELD(BRSTACKINSNLEN) || PRINT_FIELD(BRSTACKDISASM))
+-		printed += perf_sample__fprintf_brstackinsn(sample, thread, attr, machine, fp);
++		printed += perf_sample__fprintf_brstackinsn(sample, evsel, thread, attr, machine, fp);
+ 
+ 	return printed;
+ }
+@@ -1639,7 +1693,7 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+ 	if (print_srcline_last)
+ 		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
+ 
+-	printed += perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
++	printed += perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
+ 	printed += fprintf(fp, "\n");
+ 	if (PRINT_FIELD(SRCCODE)) {
+ 		int ret = map__fprintf_srccode(al->map, al->addr, stdout,
+@@ -2297,7 +2351,7 @@ static void process_event(struct perf_script *script,
+ 
+ 	if (evsel__is_bpf_output(evsel) && PRINT_FIELD(BPF_OUTPUT))
+ 		perf_sample__fprintf_bpf_output(sample, fp);
+-	perf_sample__fprintf_insn(sample, attr, thread, machine, fp, al);
++	perf_sample__fprintf_insn(sample, evsel, attr, thread, machine, fp, al);
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR))
+ 		fprintf(fp, "%16" PRIx64, sample->phys_addr);
+@@ -3947,7 +4001,8 @@ int cmd_script(int argc, const char **argv)
+ 		     "brstacksym,flags,data_src,weight,bpf-output,brstackinsn,"
+ 		     "brstackinsnlen,brstackdisasm,brstackoff,callindent,insn,disasm,insnlen,synth,"
+ 		     "phys_addr,metric,misc,srccode,ipc,tod,data_page_size,"
+-		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat",
++		     "code_page_size,ins_lat,machine_pid,vcpu,cgroup,retire_lat,"
++		     "brcntr",
+ 		     parse_output_fields),
+ 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+ 		    "system-wide collection from all CPUs"),
 -- 
 2.38.1
 
