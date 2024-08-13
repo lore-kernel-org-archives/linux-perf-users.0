@@ -1,175 +1,203 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBFB619EEA7
-	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 15:10:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E54B71A01DB
+	for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 15:15:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723561860; cv=none; b=tIQhv+Uwxy1hqKVouwdS9Ws2YF3Cpbr1nzdnO/vyawDkjKqFSbS64PCbzdFrHYtLLZznQbcvhJMnRCq/wtroS6/0xG2KkMBx+yCC/bonwHjhuo09gisIIi9Ay5hh8iaYacgMfdR0p0pAIkUVxPQayU3GCPaC5keplCJTk8QL+Jk=
+	t=1723562130; cv=none; b=aLrBYlutw2VrReegn9COLjhinsj1bvTeYEjMbTA2kfpK/TgVmV3iGJlTK5nHnltP/7EuYq9yge301rSbbbEvdxirx0uNqC8OjrsvT7bPeHmvCxyKGpTEjhAq5fmhMbt2xYk3DCWbNgeZA8bIoqmBIM1kTrKMKGKIJQ7HNn10Q04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723561860; c=relaxed/simple;
-	bh=LYIWBtskN6sXTvpBnGG3C6nVsnJ6dgWuEna51QeBeQ0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jJ88dmgNIQ8MAjm6jqX0/Ekm02LXemscLp6lZ04Db5CaceRcRNpetM2lBUscECj6HSTDDfLaDgfviW1c83NyRkoAWmoBaE/iF2DW85X/2u+Jt+STEWuXid6yVZ8wvYdrie3VzeLSM2ycudFzr474Io2kszzNtzt03nwEly+XkDs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SxzWBppV; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1723562130; c=relaxed/simple;
+	bh=77+g095/DpouJPwuMC87rOvMp4/EIlWKTTAX+Xk9y1o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LFB5xCZXrLLVPvAOEMDIcIiff2h+7QrSjWEmVwct4vYb30xndSnevKA3NotIzRY/x1kRIqsif/Z6dBPifJ9003qLObxVZA4lJcVv0yFTc8ZAKouRwKHe4ko0M27xYetOQoKdWYCT4hsWqLVvpbIixEl8bQXOlm9JSpndMcwu8Y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q2ZMK8br; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SxzWBppV"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-36887ca3da2so2774920f8f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 13 Aug 2024 08:10:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1723561856; x=1724166656; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=uNaRquM+gUEb0pKk86KM3Zb+qh4ZVa6K8vPWsqTERgs=;
-        b=SxzWBppVNP7mJOaH64PP55cpZp8KBgFA7GOAVUEKCxgSFsG4qa5LPWuEMynAq3AnHe
-         I850ph4Vizos/37qGt9Gt6PCMxPnPQyF+2/xb1qVJsbwLQBmY542DxS9gzBPlH0Pju3h
-         dgSO7DT4PJBpTiH4I+5RNL4L+GkA4FE4Hgkug8sVcr27mKFGhIJjWQeOAbNAsA46ur2n
-         +o7JyX2KG9nE1e9as/40k7cxtpzkl2Ak1aqMC8G5Y88R/SeyTetq375tee1A/ux7VRSQ
-         WLQFdhPK4UyN/AJBtMhleGWoSBAfwCCyAkpGYkd5mvQTvqwwFv4fwcepoAToeU6KaJLv
-         ewZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723561856; x=1724166656;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uNaRquM+gUEb0pKk86KM3Zb+qh4ZVa6K8vPWsqTERgs=;
-        b=Fhv1MhXbuZFp4FHfWLn7PXL6MyDRWfN2i1ZgP6cXuRykPqTmSg01YSQEyqcsHJ9rp9
-         6XyPaBLVo8ZK8tlidDH57f98vz7HloX7tgaFBVfnkupzX85qKTD6azTWOQrKvzgJNYGg
-         5OMANYpychps9OjKcqcA0zAzqguq/Ck1Gm9rcCRle9H6ZtCFpD1iQNXU2UT8NpUIOzWu
-         7NTOiv7znh3L6Tz/WZ7J+QSgxmu0+TOwyX8eiUQ9zUOE+My/qc9AJ4x1iW1vGdr0vNqg
-         vElRuAwIx5DWoAEfXXyRiNLq1PCqs1PZWlKhwgude2ytLer+ZAk8Tvf+EEAq81A2Psht
-         cboQ==
-X-Gm-Message-State: AOJu0YwbKL/yccDkfHwzyiKghgBFldgiQBV/dyAd+Sko/E4h4OHFGQho
-	q/VaeyTq6Z/9GyX474juYuY596xm105QMVN/qwFL6hiWoFVlQLIYNFzoTFSh+vU=
-X-Google-Smtp-Source: AGHT+IFanGBAh+3UifeFJiJZmUQP8fwxUmBb7RFyv+AjfsrU47xau9UjVEIrnOY5ZlY3yXWI/pOLGQ==
-X-Received: by 2002:a05:6000:118e:b0:368:4c54:ae27 with SMTP id ffacd0b85a97d-3716cd07857mr2680656f8f.36.1723561856037;
-        Tue, 13 Aug 2024 08:10:56 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-36e4cfeefedsm10639103f8f.58.2024.08.13.08.10.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 08:10:55 -0700 (PDT)
-Message-ID: <dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org>
-Date: Tue, 13 Aug 2024 16:10:54 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q2ZMK8br"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A2A8C4AF09;
+	Tue, 13 Aug 2024 15:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723562129;
+	bh=77+g095/DpouJPwuMC87rOvMp4/EIlWKTTAX+Xk9y1o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=q2ZMK8brfAnN8M2meFXQFdp5Z0AmjB1FFj+OaIYhPgNgr99TENRi9kAkVqOrDAigU
+	 xCQKzYy5P1fnmIoHSWH4tSMzrMRgueg8a6Gi5a6/xPf30dFdpSRPVdAy3Ofyd2B1Ew
+	 Xqt2ypRdijK5NNUFsemxYiDG98OZaZpcIbpTIOJpIirFfGKtIG1TvoNQv4/ZUzt0j5
+	 JxpVj2aJZdsFdkTNi/VF+6Z662+/YORA6YrfaBCd9FZsd2zwhA4vy5K/WN0KWTprEs
+	 ecPNsjtRRcOZA/zT2yaXzr/VjA68KBnN9vxcKlYxsrAN1cRuNjXpPKvvFrgCOkr1kG
+	 EzWLJm+eiKnbA==
+Date: Tue, 13 Aug 2024 12:15:25 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: kajoljain <kjain@linux.ibm.com>
+Cc: vmolnaro@redhat.com, linux-perf-users@vger.kernel.org, acme@redhat.com,
+	mpetlan@redhat.com, Ian Rogers <irogers@google.com>,
+	Disha Goel <disgoel@linux.ibm.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>
+Subject: Re: [PATCH v2] perf test stat_all_pmu.sh: Parse return value of perf
+ stat
+Message-ID: <Zrt4jZckGWIFH8n3@x1>
+References: <Zh6ZEGOfgcEfwha4@x1>
+ <20240429110439.17362-1-vmolnaro@redhat.com>
+ <ZjVIQa3JouJde7I1@x1>
+ <ZroKjgWHYwPpvbau@x1>
+ <e1435347-404e-4ff4-a4b1-c9338a60c8d3@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/7] perf stat: Make default perf stat command work on Arm
- big.LITTLE
-From: James Clark <james.clark@linaro.org>
-To: Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>, Ze Gao <zegao2021@gmail.com>,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240813132323.98728-1-james.clark@linaro.org>
- <CAP-5=fUVchraZxYg9LY-CtqYZ5DN05-T3vhJmaUG+24Ka6Bsyg@mail.gmail.com>
- <5ac3fc9d-4ed6-46ed-b537-13d27ba46e3b@linaro.org>
-Content-Language: en-US
-In-Reply-To: <5ac3fc9d-4ed6-46ed-b537-13d27ba46e3b@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e1435347-404e-4ff4-a4b1-c9338a60c8d3@linux.ibm.com>
 
+On Tue, Aug 13, 2024 at 01:21:14PM +0530, kajoljain wrote:
+> 
+> 
+> On 8/12/24 18:43, Arnaldo Carvalho de Melo wrote:
+> > On Fri, May 03, 2024 at 05:25:37PM -0300, Arnaldo Carvalho de Melo wrote:
+> >> On Mon, Apr 29, 2024 at 12:56:24PM +0200, vmolnaro@redhat.com wrote:
+> >>> From: Veronika Molnarova <vmolnaro@redhat.com>
+> >>>
+> >>> With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
+> >>> Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
+> >>> stat for hv_gpci events without required permission set returns an
+> >>> error value of -1 to differentiate the output from the unsupported
+> >>> events. The stat_all_pmu test was designed in a way, that if any
+> >>> command exits with a non-zero value the test exits with an error
+> >>> value without any information provided due to the 'set -e' option.
+> >>
+> >> Is this v2 or v3? Kajol, can I have your tested-by?
+> > 
+> > Oops, Kajol wasn't on the CC list, nor Ian, I'm adding them, maybe Kajol
+> > can test it on those machines and Ian, who wrote the test can take a
+> > look, also adding all the perf tools reviewers, as listed in
+> > MAINTAINERS.
+> > 
+> > Thanks,
+> > 
+> > - Arnaldo
+> >  
+> Hi Veronika,
+> I checked the patch, code wise patch looks fine to me. I also tested it
+> on powerpc system.
+> 
+> Just have concern on your commit message, you added below text as part
+> of your commit message:
+> 
+> It was caught by CKI testing where it was triaged to stop
+> blocking further MRs, as most of the powerpc machines do not support
+> some of the hv_gpci events.
+> 
+> The hv-gpci events are supported in pseries system.
+> And for different power processors, we already have code to include only
+> supported event as part of perf list.
+> 
+> If you are taking about parametrized events which are skipped in this
+> testcase, its not that those parametrized events are not supported.
+> Since testing proper values of the parameters is out of scope of this
+> script we are skipping those events.
+> 
+> Can you remove that part from commit message? Rest looks fine to me.
 
+Veronika, can you please address the reviewer's comment and send a v4
+patch, collecting the tags he provided?
 
-On 13/08/2024 3:45 pm, James Clark wrote:
-> 
-> 
-> On 13/08/2024 3:35 pm, Ian Rogers wrote:
->> On Tue, Aug 13, 2024 at 6:24 AM James Clark <james.clark@linaro.org> 
->> wrote:
->>>
->>> The important patches are 3 and 5, the rest are tidyups and tests.
->>>
->>> I don't think there is any interaction with the other open issues
->>> about the uncore DSU cycles event or JSON/legacy hw event priorities
->>> because only hw events on core PMUs are used for the default
->>> stat command. And also just sharing the existing x86 code works so
->>> no big changes are required.
->>>
->>> For patch 3 the weak arch specific symbol has to continue to be used
->>> rather than picking the implementation based on
->>> perf_pmus__supports_extended_type() like in patch 5. This is because
->>> that function ends up calling evsel__hw_name() itself which results
->>> in recursion. But at least one weak arch_* construct has been removed,
->>> so it's better than nothing.
->>
->> Let's not do things this way. The use of strings is architecture
->> neutral, means we don't need to create new arch functions on things
->> like RISC-V, it encapsulates the complexity of things like topdown
-> 
-> If the new arch function is an issue that could be worked around by 
-> calling perf_pmus__supports_extended_type() on patch 3 as well? It just 
-> needs a small change to not recurse.
-> 
->> events, Apple ARM M CPUs not supporting legacy events, etc.
-> 
-> If Apple M doesn't support the HW events does _any_ default Perf stat 
-> command (hybrid or not) work? I'm not really trying to fix that here, 
-> just make whatever already works work on big.LITTLE.
-> 
->> Duplicating the existing x86 logic, when that was something trying to
->> be removed, is not the way to go. That logic was a holdover from the
->> hybrid tech debt we've been working to remove with a generic approach.
->>
->> Thanks,
->> Ian
->>
-> 
-> I think all of that may make sense, but in this case I haven't actually 
-> duplicated anything, rather shared the existing code to also be used on 
-> Arm.
-> 
-> This means we can have the default perf stat working on Arm from today, 
-> and if any other changes get made it will continue to work as I've also 
-> added a test for it.
-> 
+Thanks,
 
-I would also like to note that (not including the new test) this 
-patchset _removes_ more code than it adds, so to say it duplicates code 
-is a bit unfair.
-
-Of course this touches some similar areas to your other change, but that 
-doesn't mean I think we shouldn't continue with that one. I'm still 
-happy to review and test or contribute to that one if you like. I think 
-it just helped me to do it in this order and get this thing in a working 
-state first before the next bigger step.
-
->>> James Clark (7):
->>>    perf stat: Initialize instead of overwriting clock event
->>>    perf stat: Remove unused default_null_attrs
->>>    perf evsel: Use the same arch_evsel__hw_name() on arm64 as x86
->>>    perf evsel: Remove duplicated __evsel__hw_name() code
->>>    perf evlist: Use hybrid default attrs whenever extended type is
->>>      supported
->>>    perf test: Make stat test work on DT devices
->>>    perf test: Add a test for default perf stat command
->>>
->>>   tools/perf/arch/arm64/util/Build   |  1 +
->>>   tools/perf/arch/arm64/util/evsel.c |  7 ++++
->>>   tools/perf/arch/x86/util/evlist.c  | 65 ------------------------------
->>>   tools/perf/arch/x86/util/evsel.c   | 17 +-------
->>>   tools/perf/builtin-stat.c          | 12 ++----
->>>   tools/perf/tests/shell/stat.sh     | 33 ++++++++++++---
->>>   tools/perf/util/evlist.c           | 65 ++++++++++++++++++++++++++----
->>>   tools/perf/util/evlist.h           |  6 +--
->>>   tools/perf/util/evsel.c            | 19 +++++++++
->>>   tools/perf/util/evsel.h            |  2 +-
->>>   10 files changed, 119 insertions(+), 108 deletions(-)
->>>   create mode 100644 tools/perf/arch/arm64/util/evsel.c
->>>
->>> -- 
->>> 2.34.1
->>>
+- Arnaldo
+ 
+> Reviewed-by: Kajol Jain <kjain@linux.ibm.com>
+> Tested-by: Kajol Jain <kjain@linux.ibm.com>
+> 
+> Thanks,
+> Kajol Jain
+> 
+> >>> Running stat_all_pmu test on powerpc machine with unsupported hv_gpci
+> >>> event causes failure after the MR as the zero return value was required.
+> >>> The issue propagated upstream as the list of the files that affected perf
+> >>> did not cover the changed files and was updated after the issue was
+> >>> discovered. It was caught by CKI testing where it was triaged to stop
+> >>> blocking further MRs, as most of the powerpc machines do not support
+> >>> some of the hv_gpci events.
+> >>>
+> >>> Remove the 'set -e' option from the test and rework the test case to log
+> >>> the status of the event for better maintainability. Instead of exiting
+> >>> immediately after 'perf stat' ends with a non-zero value, check the
+> >>> return value and output of the 'perf stat' command with the appropriate action.
+> >>>
+> >>> Link to the MR !3916 of commit ad86d7ee43b22aa2:
+> >>> https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
+> >>>
+> >>> Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+> >>> ---
+> >>> Fixed the issue with applying due to a fixed comment typo upstream and
+> >>> added Ian's suggestion for the 'device busy' issue during parallel
+> >>> testing.
+> >>>
+> >>>  tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
+> >>>  1 file changed, 29 insertions(+), 12 deletions(-)
+> >>>
+> >>> diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
+> >>> index c77955419173..a75beddda4db 100755
+> >>> --- a/tools/perf/tests/shell/stat_all_pmu.sh
+> >>> +++ b/tools/perf/tests/shell/stat_all_pmu.sh
+> >>> @@ -2,21 +2,38 @@
+> >>>  # perf all PMU test
+> >>>  # SPDX-License-Identifier: GPL-2.0
+> >>>  
+> >>> -set -e
+> >>>  
+> >>>  # Test all PMU events; however exclude parameterized ones (name contains '?')
+> >>>  for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
+> >>> -  echo "Testing $p"
+> >>> -  result=$(perf stat -e "$p" true 2>&1)
+> >>> -  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
+> >>> -    # We failed to see the event and it is supported. Possibly the workload was
+> >>> -    # too small so retry with something longer.
+> >>> -    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
+> >>> -    if ! echo "$result" | grep -q "$p" ; then
+> >>> -      echo "Event '$p' not printed in:"
+> >>> -      echo "$result"
+> >>> -      exit 1
+> >>> +  echo -n "Testing event '$p' -- "
+> >>> +  stat_output=$(perf stat -e "$p" true 2>&1)
+> >>> +  stat_result=$?
+> >>> +  if echo "$stat_output" | grep -q "$p"; then
+> >>> +    # return value 0 if counters get printed either if the event is supported or not
+> >>> +    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
+> >>> +        echo "supported"
+> >>> +    elif [ $stat_result -eq 0 ]; then
+> >>> +        echo "not supported"
+> >>> +    # return value 255 when the required permission for the event is not set
+> >>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
+> >>> +        echo "no permission to enable"
+> >>> +    # return value 255 in case of resource busy during parallel testing of events
+> >>> +    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
+> >>> +        echo "resource busy"
+> >>> +    # return value 129 when trying to run 'perf stat' with a non-existent event
+> >>> +    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
+> >>> +        echo "Fail: Bad event name"
+> >>> +        echo "$stat_output"
+> >>> +        exit 1
+> >>> +    else
+> >>> +        echo "Fail: Unknown return value $stat_result"
+> >>> +        echo "$stat_output"
+> >>> +        exit 1
+> >>>      fi
+> >>> +  else
+> >>> +      echo "Fail: Event '$p' not printed in:"
+> >>> +      echo "$stat_output"
+> >>> +      exit 1
+> >>>    fi
+> >>>  done
+> >>>  
+> >>> -- 
+> >>> 2.43.0
+> >>>
+> > 
