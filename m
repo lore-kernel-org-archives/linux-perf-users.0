@@ -1,40 +1,40 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B0F71B373B;
-	Wed, 14 Aug 2024 14:43:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8DD1B010F;
+	Wed, 14 Aug 2024 14:52:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723646587; cv=none; b=MsqilVnyOlGS7pxHVqEb09Vn2S/5tRXDnzykYL/xuqN/XXyM8ySbnOMuTlfw2Yf3Xp+KJ6PJc95BbSxYAXdZkBAXKXpaBrUX3eFUPzvfnoCTR5zbHWJ1aVMaqre4ZJa3kf+NOMbCU798oWDXBManv1eLs9Zzujwb5GhmT0AInLc=
+	t=1723647143; cv=none; b=aasCV5KeLTvDjobwGQGE/dI2tvWh+3gO2ABaNKG+JmoMRgZTtX85rBa2oF0zE2dIEPBHa1cVrW/LPN7BUjeMfSi6pz8c6c+UPxNicsUU+fG9W2XL9oF/4vlxIJ54bJf+sS5LJNOn+TeHclk01HoFxfGkNNQlI1AMhr7LAGCAyoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723646587; c=relaxed/simple;
-	bh=9xtS5oXDruHKmH17qtvD0oi54++fWO816Kyvd6zH9XQ=;
+	s=arc-20240116; t=1723647143; c=relaxed/simple;
+	bh=JX4CX4RS/fbVbTxsqNHDT4AQKuyk4tOmTZkf7PsN2VQ=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=EVB1roPB2GgR5mZNfHhmSth9sKD9PI9r5vlisbr2sGdfNtYXIBbyoKAXn150ZJ4y7iEJdoUUo328FoU0TDXGc2FW+pNEWIKH00zbCZSD2M1+yGM1Z6zl/k7hrQXEfp9ls6i8gYkgyVb+tG2J2E8+7JRJ6MhPKHDRpyEPJhy65HU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=WO+cjit1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lnyiN52O; arc=none smtp.client-ip=193.142.43.55
+	 Content-Type; b=Q8F3eMxzZl4v2mNO/nu89azOa5SZVKP3/zPgCBXnDAWvUvyomA1AxbLtZ7vFFO5mtlIzIiMc/hmZCb29FgjdJPRjCNEWLAciVKLHl2bffbU6fjUlpR70p2keaocmD6+KkBDaeLv8ojF50qG4F5fZW2WwmymzjeoDI3sOckyWXKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GiZMoR3n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nw4jBGPA; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WO+cjit1";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lnyiN52O"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GiZMoR3n";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nw4jBGPA"
 From: Thomas Gleixner <tglx@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723646583;
+	s=2020; t=1723647140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=Lcrk78kvLD57a6HRaT+x89f6hNY7nMNBaXWKad4tGQk=;
-	b=WO+cjit1yxdN2ENumLFlf+zFyiMX8QxmE8+rmSWwqHSy73vw0hO4t1xNak4/0/S5jA3bp7
-	FDKLx45uGpJ98AaIBjsOT/Z4TZRU79Zc20P3dDpcnMvgbP92ck0d+gnsc/nteKVt8KW6hW
-	b7qcUgWPoGNKU6bvaHhKqFPWck776zxNxAZjr1k51I/OKQT+3GM8IL291dgsl5v9pZGRIt
-	WpJD0f3bBHGWoNU5HRU63J9iwnnjki2Te+MtvtWx+Djf0WzCvf2RteMiRDzsHSFBaN4vWj
-	dK+s1SDq/5phjs+ObdiELDJfl6qhD6yBuUr0lie//vpSOG70o6kVyXUUzv6PBQ==
+	 in-reply-to:in-reply-to; bh=TeROMW4ncpWRXfRpylE22foqYWiEQaY91Vj1aVGafOo=;
+	b=GiZMoR3nWmobbf/bfK6k1uKXer0GiaO2TnPDwcGT+KEIcUDYnw/5hLqpchsMjD5SKa9bDl
+	cS0jvJ9kkFwhesttQQztfwEscEeTi8Q+0r7+i8q9QpnSsKBwh9FdF8tFMM/oARwvz/mekn
+	DaATEpjom20bJ+eqguwGjUHym868Q35gyMiUaGF4PdPjOkjiac3+oPF9Uw28li5DtZTNcv
+	NvDAZMba3C1fUFS2lQnGTDsSFAq+rgjStsCIv09wuaBizwOm9feRqco+hL7frozoNuxcZP
+	rPYfZv7Bf6Svpt+ID+D0tD4fgOSL0PHZa7XOUTyMmH9hRfVVW111ncbgKAZShQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723646583;
+	s=2020e; t=1723647140;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=Lcrk78kvLD57a6HRaT+x89f6hNY7nMNBaXWKad4tGQk=;
-	b=lnyiN52OR9QBONN9sQB46j5NRyoTYp5K0VDTj00SUkm0V+6wpg+bm9OBBsVCTGUEe+dCKR
-	Pq5dfe18nyMMLAAQ==
+	 in-reply-to:in-reply-to; bh=TeROMW4ncpWRXfRpylE22foqYWiEQaY91Vj1aVGafOo=;
+	b=nw4jBGPAp33nmes3D0gMAyiYSka4bVKz/xZ0JU+ePC+EVv6lvcuLo85kH5Gbx/RsHHQ9ez
+	Uf79Me03S9O+bABQ==
 To: Li Huafei <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
 Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
  alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
@@ -43,8 +43,8 @@ Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
 In-Reply-To: <fb87cc82-94b7-31aa-0374-a1d7fa49470e@huawei.com>
-Date: Wed, 14 Aug 2024 16:43:03 +0200
-Message-ID: <87ttfnnp1k.ffs@tglx>
+Date: Wed, 14 Aug 2024 16:52:19 +0200
+Message-ID: <87sev7nom4.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -109,12 +109,13 @@ identify which generations are affected by this and fix it once and
 forever in a sane way instead of relying on 'tried until it works by
 some definition of works' hacks. These errata are there for a reason.
 
-But that does not explain the fallout with that cve test because that
-does not use PEBS AFAICT. It's using fixed counter 0.
 
-Li, you added that huge useless backtrace to your changelog, but omitted
-the output of perf_event_print_debug() after that. It should tell us
-about which counter is causing that.
+But that does not explain the fallout with that cve test because that
+does not use PEBS. It's using fixed counter 0.
+
+Li, you added that huge useless backtrace but cut off the output of
+perf_event_print_debug() after it. Can you please provide that
+information so we can see what the counter states are?
 
 >>> +static void hsw_limit_period(struct perf_event *event, s64 *left)
 >>> +{
