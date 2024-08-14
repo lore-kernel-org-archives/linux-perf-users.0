@@ -1,120 +1,174 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AFEA1B8E94
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 16:39:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C3A1B1405;
+	Wed, 14 Aug 2024 16:41:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723653558; cv=none; b=tLernfp7MQ8ECZet9wwjR4AFpwKVZ8smgIFQgL+AbFupos/6tKd8uJUXXeKWjnPHgTp4Xd+2qDlJd1yWt/8JzPe+2ZT6acgq2x2ha8QgXttp/w6pqsXeMtG4xbyod1BHK04MIuGvI6XPR0hSm/7GMLA9mLWgC0PNseSsYtUdPxU=
+	t=1723653703; cv=none; b=hymzJ9PUs8hCS6lCN2DXBv6DqKWqiVZVKiGZHx9J+PP9LcoBH6BKGUgKlYrE0lQV40ufVdwD0g0fYTYzrnvmDrV7kpK5a8O6a/ltvQqR1I3/foUczQCcUykA4B3hJIoWJAk7XEHnC12KLyl+TEvukLNjMv7qB4uGhFJiwAS3AqY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723653558; c=relaxed/simple;
-	bh=pNeJw06P0QVUZ1Aa5sq3s/a77ejvj/klxkaDa0/vIiM=;
+	s=arc-20240116; t=1723653703; c=relaxed/simple;
+	bh=oRBsxwoUBV8IWRdPaDOxWP9dB1rTaBy9f/k7rxBrtXw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MdSo9BfTy/iAOs95/+RlUy4JOo4RhYS5Mcx0gaM7vFRQGeRIc4ITpZG5ANvep1RSJLZgwl9LJ1/XOSQt2uDmkAonctvPeZV5IZfKv5S8Uz7SUv6ndngGinyC6ozJ6A6nwQc4Kz56oA0sO6Dr6BTAyLBXdDGG1pxfpIMY8xyC85Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pnRep9vD; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=YLZa1Pou3HXsJM9JKWIaepQwvifZvJ5Jcu59vTIZ3q6p0v/+jYWn0mcW2B3hg6pV9ZtJgYIWUuYYp/VZkYZIG5HIFldvNRwenqlkP7fdMBiwh7zzFIFlBTpPMZYLG8JJxHycOxMjZ/0bVmMvdwe5NovdLzf0mrGpWBNRfOU8yeI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sytFp4g1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pnRep9vD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C9EC116B1;
-	Wed, 14 Aug 2024 16:39:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sytFp4g1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64031C116B1;
+	Wed, 14 Aug 2024 16:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723653557;
-	bh=pNeJw06P0QVUZ1Aa5sq3s/a77ejvj/klxkaDa0/vIiM=;
+	s=k20201202; t=1723653702;
+	bh=oRBsxwoUBV8IWRdPaDOxWP9dB1rTaBy9f/k7rxBrtXw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=pnRep9vDQyWVYUA22B2zexNHv4t0brI2GDa4oBsCRLtqtBz1WOsTQ6Oc8kg/dZNs9
-	 qTsk4/x9LWOtHDqFQMdeDfQZq2S743cwqPxZU/pIreEThWtqbVdLk9K6WO/ebMIroi
-	 IU2gAxK2LNhie3HxBv+fEdBy/Qux8H5uebKwQpgsAbZu4HRYwQ8Ll+Y/x1LzvJqfMw
-	 ddXB6SYWYUFW5iJFW3vZ6EUICSS+vWIBElVfNO43YcMvARk3/BlbWlAtsTmLGjtRT6
-	 FWrb2PJMH2cZNnTaUC7vDt+xmDf1NkixEN6p7idy03hRzUguIMMZMK/ECNLcZj1im4
-	 PVQOxlu7/zQBA==
-Date: Wed, 14 Aug 2024 13:39:15 -0300
+	b=sytFp4g1ZMhTycSnPEaJtY8FkKC1U6V24Oq2pHY+zQqRagfQhuvoXiV1eoL+9Osb2
+	 ioEgdQuMtyC+1ifVVcA436f0CdNB4rFSalhNvqCxCR222sedIoh5ax3KfH8//wpMMI
+	 Sf3YNckrAMeiZPutvKT0Fv75r05uj8YHxhP1DDnbqwZS4SRm9yT1H9UJEzcugRbVU+
+	 M20W0HA2NG+bC0OjlqhnIWDKK7Xhgz//scASd1iSB57AOmKlsjbc1RyDVBiQIIHGjK
+	 +DNa4fa9qBPBuOYjznUSfkVnAshjmcRImNZuj2/1F8OTthTB5SOU/jEKpWFJGruSTM
+	 tkHsYS8eZVeNQ==
+Date: Wed, 14 Aug 2024 13:41:40 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Veronika Molnarova <vmolnaro@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com,
-	adrian.hunter@intel.com, atrajeev@linux.vnet.ibm.com,
-	irogers@google.com, jolsa@kernel.org, kjain@linux.ibm.com,
-	mpetlan@redhat.com, rstoyano@redhat.com
-Subject: Re: [PATCH v3] perf test record.sh: Raise limit of open file
- descriptors
-Message-ID: <Zrzds_xPdjI_rljK@x1>
-References: <20240814151734.15409-1-vmolnaro@redhat.com>
- <ZrzOFDmwl9Z8F8NP@x1>
- <ZrzO2T1s_tIpqizG@x1>
- <d847f760-896e-4bdf-9f8c-933f52a5aed8@redhat.com>
- <ZrzTS46l3Ct_I0Oj@x1>
- <ZrzTyVLQCQPiV_D3@x1>
- <15098bfe-e1c1-4d97-bbb8-be26d589664b@redhat.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Ian Rogers <irogers@google.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	James Clark <james.clark@arm.com>,
+	"cc: Marc Zyngier" <maz@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	Asahi Linux <asahi@lists.linux.dev>,
+	Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
+ v6.5
+Message-ID: <ZrzeRM3ekLl9zp3z@x1>
+References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
+ <ZV1AnNB2CSbAUFVg@archie.me>
+ <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
+ <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
+ <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
+ <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <15098bfe-e1c1-4d97-bbb8-be26d589664b@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
 
-On Wed, Aug 14, 2024 at 06:04:27PM +0200, Veronika Molnarova wrote:
+On Wed, Aug 14, 2024 at 05:28:42PM +0100, James Clark wrote:
 > 
 > 
-> On 8/14/24 17:56, Arnaldo Carvalho de Melo wrote:
-> > On Wed, Aug 14, 2024 at 12:54:51PM -0300, Arnaldo Carvalho de Melo wrote:
-> >> On Wed, Aug 14, 2024 at 05:42:01PM +0200, Veronika Molnarova wrote:
-> >>>
-> >>>
-> >>> On 8/14/24 17:35, Arnaldo Carvalho de Melo wrote:
-> >>>> On Wed, Aug 14, 2024 at 12:32:39PM -0300, Arnaldo Carvalho de Melo wrote:
-> >>>>> On Wed, Aug 14, 2024 at 05:17:34PM +0200, vmolnaro@redhat.com wrote:
-> >>>>>> From: Veronika Molnarova <vmolnaro@redhat.com>
-> >>>>>
-> >>>>> Ok? I'm applying it with this change. Thanks,
-> >>>>
-> >>>> So I added this to the log message:
-> >>>>
-> >>>> Committer notes:
-> >>>>
-> >>>> Instead of disabling ShellCheck warnings all the uses of 'uname -n',
-> >>>> i.e. those:
-> >>>>
-> >>>>   In tests/shell/record.sh line 35:
-> >>>>   default_fd_limit=$(ulimit -Sn)
-> >>>>                             ^-^ SC3045 (warning): In POSIX sh, ulimit -S is undefined.
-> >>>>
-> >>>> We can just switch from using '/bin/sh' to '/bin/bash' for this test, as
-> >>>> bash _has_ 'ulimit -n', so ShellCheck will not emit that warning.
-> >>>>
-> >>>> There are dozens of 'perf test' shell tests that do just that,
-> >>>> '/bin/bash' is a reasonable expectation for those tests.
-> >>>>
-> >>>> ----------------------------------------------------------
-> >>>>
-> >>>> Please let me know if you find any issues with this course of action,
-> >>>>
-> >>>> Thanks,
-> >>>>
-> >>>> - Arnaldo
-> >>>>
-> >>> If so then the check whether the ulimit is supported doesn't need to be done
-> >>> as bash is given as a requirement. Thought that it should be supporting all
-> >>> possible shells, even though couldn't find shell not supporting 'ulimit -Sn'.
-> >>>
-> >>> Can I send a quick fix that just changes to the '/bin/bash' so that the code
-> >>> won't have unnecessary code?
-> >>
-> >> See my last message, I went with your v2 + switch from /bin/sh to
-> >> /bin/bash, as you suggest above.
+> On 07/08/2024 9:54 am, Thorsten Leemhuis wrote:
+> > On 01.08.24 21:05, Ian Rogers wrote:
+> > > On Wed, Dec 6, 2023 at 4:09 AM Linux regression tracking #update
+> > > (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
+> > > > 
+> > > > [TLDR: This mail in primarily relevant for Linux kernel regression
+> > > > tracking. See link in footer if these mails annoy you.]
+> > > > 
+> > > > On 22.11.23 00:43, Bagas Sanjaya wrote:
+> > > > > On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
+> > > > > > Perf broke on all Apple ARM64 systems (tested almost everything), and
+> > > > > > according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
+> > > > 
+> > > > #regzbot fix: perf parse-events: Make legacy events lower priority than
+> > > > sysfs/JSON
+> > > > #regzbot ignore-activity
+> > > 
+> > > Note, this is still broken.
 > > 
-> > And added the '-S' to ulimit, since you changed that from v2, are you
-> > sure that is better than using just -n? Why?
+> > Hmmm, so all that became somewhat messy. Arnaldo, what's the way out of
+> > this? Or is this a "we are screwed one way or another and someone has to
+> > bite the bullet" situation?
 > > 
-> > - Arnaldo
+> > Ciao, Thorsten
 > > 
+> > > The patch changed the priority in the case
+> > > that you do something like:
+> > > 
+> > > $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
+> > > 
+> > > but if you do:
+> > > 
+> > > $ perf stat -e 'cycles' benchmark
+> > > 
+> > > then the broken behavior will happen as legacy events have priority
+> > > over sysfs/json events in that case. To fix this you need to revert:
+> > > 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
+> > > events over legacy"
+> > > 
+> > > This causes some testing issues resolved in this unmerged patch series:
+> > > https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
+> > > 
+> > > There is a bug as the arm_dsu PMU advertises an event called "cycles"
+> > > and this PMU is present on Ampere systems. Reverting the commit above
+> > > will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
+> > > __evlist__add_default") to fix ARM's BIG.little systems (opening a
+> > > cycles event on all PMUs not just 1) will cause the arm_dsu event to
+> > > be opened by perf record and fail as the event won't support sampling.
+> > > 
+> > > The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
+> > > fixes this by only opening the cycles event on core PMUs when choosing
+> > > default events.
+> > > 
+> > > Rather than take this patch the revert happened as Linus runs the
+> > > command "perf record -e cycles:pp" (ie using a specified event and not
+> > > defaults) and considers it a regression in the perf tool that on an
+> > > Ampere system to need to do "perf record -e
+> > > 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
+> > > will choose the cycles event correctly and with better precision the
+> > > pp for systems that support it, but it was still considered a
+> > > regression in the perf tool so the revert was made to happen. There is
+> > > a lack of perf testing coverage for ARM, in particular as they choose
+> > > to do everything in a different way to x86. The patch in question was
+> > > in the linux-next tree for weeks without issues.
+> > > 
+> > > ARM/Ampere could fix this by renaming the event from cycles to
+> > > cpu_cycles, or by following Intel's convention that anything uncore
+> > > uses the name clockticks rather than cycles. This could break people
+> > > who rely on an event called arm_dsu/cycles/ but I imagine such people
+> > > are rare. There has been no progress I'm aware of on renaming the
+> > > event.
+> > > 
+> > > Making perf not terminate on opening an event for perf record seems
+> > > like the most likely workaround as that is at least something under
+> > > the tool maintainers control. ARM have discussed doing this on the
+> > > lists:
+> > > https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
+> > > but since the revert in v6.10 no patches have appeared for the v6.11
+> > > merge window. Feature work like coresight improvements and ARMv9 are
+> > > being actively pursued by ARM, but feature work won't resolve this
+> > > regression.
+> > > 
 > 
-> It doesn't matter for checking the value, 'ulimit -n' is the same as 'ulimit -Sn'.
-> But when setting up the value without the option -S, both soft and hard limits are
-> set to the provided value. For us, only raising the soft limit is important, as it
-> is very unlikely that that hard limit would need to be raised. Also, then the hard
-> limit would have to be restored separately to its original value.
+> I got some hardware with the DSU PMU so I'm going to have a go at trying to
+> send some fixes for this. My initial idea was to try incorporate the "not
+> terminate on opening" change as discussed in the link directly above. And
+> then do the revert of the "revert of prefer sysfs/json".
+> 
+> FWIW I don't think Juno currently is broken if the kernel supports extended
+> type ID? I could have missed some output in this thread but it seems like
+> it's mostly related to Apple M hardware. I'm also a bit confused why the
+> "supports extended type" check fails there, but maybe the v6.9 commit
+> 25412c036 from Mark is missing?
+> 
+> I sent a small fix the other day to make perf stat default arguments work on
+> Juno, and didn't notice anything out of the ordinary: https://lore.kernel.org/linux-perf-users/dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org/T/#t
+> I agree that change is quite narrow but it does incrementally improve things
+> for the time being. It's possible that it would become redundant if I can
+> just include Ian's change to use strings for Perf stat.
+> 
+> Of course I only think I have a handle on the issue right now, seems like it
+> has a lot of moving parts and something else always comes up. If I hit a
+> wall at some point I will come back here.
 
-Thanks for the explanation, I kept the -S.
+Thanks for working on this, hopefully we'll get to a solution that keeps
+all the expectations expressed in this thread about not breaking
+existing muscle memory and that allows us to progress on this matter.
 
 - Arnaldo
