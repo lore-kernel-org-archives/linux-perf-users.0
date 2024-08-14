@@ -1,174 +1,719 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39C3A1B1405;
-	Wed, 14 Aug 2024 16:41:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DAF01B3F0E;
+	Wed, 14 Aug 2024 16:51:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723653703; cv=none; b=hymzJ9PUs8hCS6lCN2DXBv6DqKWqiVZVKiGZHx9J+PP9LcoBH6BKGUgKlYrE0lQV40ufVdwD0g0fYTYzrnvmDrV7kpK5a8O6a/ltvQqR1I3/foUczQCcUykA4B3hJIoWJAk7XEHnC12KLyl+TEvukLNjMv7qB4uGhFJiwAS3AqY=
+	t=1723654283; cv=none; b=aRRzq0/D7l13uJ3z6bw4HKlM77ZNUZgcNWAT7L94I0rzLKO9/uYwnKNfMKaKLQnrGhYmrS8KkYXqQ2CkRFGQSQmJbX2qsigzjbW66FhfkgicVT4MqFOXWIcz4Ixmj5m2sUYMm/jRSLHQ16MTlZyLPzeaxkdj9ffP17OZgZLiYx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723653703; c=relaxed/simple;
-	bh=oRBsxwoUBV8IWRdPaDOxWP9dB1rTaBy9f/k7rxBrtXw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YLZa1Pou3HXsJM9JKWIaepQwvifZvJ5Jcu59vTIZ3q6p0v/+jYWn0mcW2B3hg6pV9ZtJgYIWUuYYp/VZkYZIG5HIFldvNRwenqlkP7fdMBiwh7zzFIFlBTpPMZYLG8JJxHycOxMjZ/0bVmMvdwe5NovdLzf0mrGpWBNRfOU8yeI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sytFp4g1; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sytFp4g1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64031C116B1;
-	Wed, 14 Aug 2024 16:41:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723653702;
-	bh=oRBsxwoUBV8IWRdPaDOxWP9dB1rTaBy9f/k7rxBrtXw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sytFp4g1ZMhTycSnPEaJtY8FkKC1U6V24Oq2pHY+zQqRagfQhuvoXiV1eoL+9Osb2
-	 ioEgdQuMtyC+1ifVVcA436f0CdNB4rFSalhNvqCxCR222sedIoh5ax3KfH8//wpMMI
-	 Sf3YNckrAMeiZPutvKT0Fv75r05uj8YHxhP1DDnbqwZS4SRm9yT1H9UJEzcugRbVU+
-	 M20W0HA2NG+bC0OjlqhnIWDKK7Xhgz//scASd1iSB57AOmKlsjbc1RyDVBiQIIHGjK
-	 +DNa4fa9qBPBuOYjznUSfkVnAshjmcRImNZuj2/1F8OTthTB5SOU/jEKpWFJGruSTM
-	 tkHsYS8eZVeNQ==
-Date: Wed, 14 Aug 2024 13:41:40 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: Thorsten Leemhuis <regressions@leemhuis.info>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Ian Rogers <irogers@google.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Linux perf Profiling <linux-perf-users@vger.kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	James Clark <james.clark@arm.com>,
-	"cc: Marc Zyngier" <maz@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	Asahi Linux <asahi@lists.linux.dev>,
-	Linux regressions mailing list <regressions@lists.linux.dev>
-Subject: Re: [REGRESSION] Perf (userspace) broken on big.LITTLE systems since
- v6.5
-Message-ID: <ZrzeRM3ekLl9zp3z@x1>
-References: <08f1f185-e259-4014-9ca4-6411d5c1bc65@marcan.st>
- <ZV1AnNB2CSbAUFVg@archie.me>
- <a9c14dfd-3269-4758-9174-4710bef07088@leemhuis.info>
- <CAP-5=fXqx_k1miPTkcAmS3z2GBPt2KeDtP5fknmdDghZqxXPew@mail.gmail.com>
- <714ed350-0e6c-4922-bf65-36de48f62879@leemhuis.info>
- <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
+	s=arc-20240116; t=1723654283; c=relaxed/simple;
+	bh=/+Jj6AwRi0cOqIQ+weRWqcy8rjcBHsJ2Bpv7eiiC4sg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cOpJChrzERM7BCeXMNF4O0MR5ISyT8hvaz3fzXOFQMvZIF12eI10MgyRCZkxnO9LZEtiaRttslfoWITa7GH2OlvGvCHiltPmp0N8ClY5WHm1Vv8d8j+aIk4WV7+J9WG88o1WxIdjvkuBhtD5wLcQbgBJJjd+cPxTOQozkYD+inE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2cfdc4deeecso5093608a91.3;
+        Wed, 14 Aug 2024 09:51:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723654280; x=1724259080;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uGqUvaCbbE1LrXAAu5TDSSvO9gkkldxB1vMnvwmvTbQ=;
+        b=Vdou5jnbUQA96kMGSbZ0TMRowOv5bqIRM+pglTRAunFYKRQUDJx335Y17YfPnCNefr
+         dEXudipQqMPMDFFBWvqnJRVOvD1S5MtpZyTvJWDOoAkztqTKiC8X5DlNzA2nQMU7CbNc
+         rgrdRyys+9BkugHd0iLq9UsdNKEbPsuEfJBVciKPn43BdR0i6wFzHsZq4M3W7b8eaZPT
+         oiRfFGoujK3ReaxBchFZRD60ioV/e82je7CN/DTvhq3VHA9pqaLUQMvKR4xNzTnWiw6f
+         jdSTWVW07HLI7ZMPtMdHxY5h0VJMlTVqdGcYI5MdkPxWcLubBiXdq6UjIoTXm6XGxhne
+         kLJQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwiRRYVb9olbkM8jLF530N7rFMHYaZbXMt3yyBGng7UyGfRQm6Tz6YHd/Giq0TQPoIKX8PEZrddOHdlYrn3IEzIIbmxQlHRaR620MB80/+rFi01zGCdkN60AudYuo8pj/Ul6t5po3E7b53IaD7ZfDk7CU7zg8nd2cfi7NY9DZy5QQMEA==
+X-Gm-Message-State: AOJu0YwCgk6nR5U7WQuTJKXyJb48xxHo35GfBRqqanzTqFoB0XsO65DM
+	R+KdtJikCJpazlDnu+lSQ8jUn5xB9/xiDfipWgCzX50ZOdhyJRYEIKFc+/QIeGqzx2/dSKev7rv
+	Mu2AbZfwtUcWpYzTquwLTo7KVsVQ=
+X-Google-Smtp-Source: AGHT+IHN20OmmIA0mTVBsQaK5TcJP8oOUtxlc26OJoh6E0A2CDZr43Pi4iL7wMzkHsYC48712R9UkxiesUam2yMzndg=
+X-Received: by 2002:a17:90a:9e5:b0:2cd:5d13:40ba with SMTP id
+ 98e67ed59e1d1-2d3aaa9934dmr3998410a91.14.1723654279677; Wed, 14 Aug 2024
+ 09:51:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0de3b572-f5f7-42e4-b410-d1e315943a3c@linaro.org>
+References: <20240813234117.2265235-1-namhyung@kernel.org> <ZrzcgE_GEzWbPOcQ@x1>
+In-Reply-To: <ZrzcgE_GEzWbPOcQ@x1>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Wed, 14 Aug 2024 09:51:07 -0700
+Message-ID: <CAM9d7cipmhztFZkffd6dreO7CP7-NMYyo7Awr_11NZgENn9ECQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] perf bpf-filter: Support multiple events properly
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org, 
+	Stephane Eranian <eranian@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Aug 14, 2024 at 05:28:42PM +0100, James Clark wrote:
-> 
-> 
-> On 07/08/2024 9:54 am, Thorsten Leemhuis wrote:
-> > On 01.08.24 21:05, Ian Rogers wrote:
-> > > On Wed, Dec 6, 2023 at 4:09 AM Linux regression tracking #update
-> > > (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
-> > > > 
-> > > > [TLDR: This mail in primarily relevant for Linux kernel regression
-> > > > tracking. See link in footer if these mails annoy you.]
-> > > > 
-> > > > On 22.11.23 00:43, Bagas Sanjaya wrote:
-> > > > > On Tue, Nov 21, 2023 at 09:08:48PM +0900, Hector Martin wrote:
-> > > > > > Perf broke on all Apple ARM64 systems (tested almost everything), and
-> > > > > > according to maz also on Juno (so, probably all big.LITTLE) since v6.5.
-> > > > 
-> > > > #regzbot fix: perf parse-events: Make legacy events lower priority than
-> > > > sysfs/JSON
-> > > > #regzbot ignore-activity
-> > > 
-> > > Note, this is still broken.
-> > 
-> > Hmmm, so all that became somewhat messy. Arnaldo, what's the way out of
-> > this? Or is this a "we are screwed one way or another and someone has to
-> > bite the bullet" situation?
-> > 
-> > Ciao, Thorsten
-> > 
-> > > The patch changed the priority in the case
-> > > that you do something like:
-> > > 
-> > > $ perf stat -e 'armv8_pmuv3_0/cycles/' benchmark
-> > > 
-> > > but if you do:
-> > > 
-> > > $ perf stat -e 'cycles' benchmark
-> > > 
-> > > then the broken behavior will happen as legacy events have priority
-> > > over sysfs/json events in that case. To fix this you need to revert:
-> > > 4f1b067359ac Revert "perf parse-events: Prefer sysfs/JSON hardware
-> > > events over legacy"
-> > > 
-> > > This causes some testing issues resolved in this unmerged patch series:
-> > > https://lore.kernel.org/lkml/20240510053705.2462258-1-irogers@google.com/
-> > > 
-> > > There is a bug as the arm_dsu PMU advertises an event called "cycles"
-> > > and this PMU is present on Ampere systems. Reverting the commit above
-> > > will cause an issue as the commit 7b100989b4f6 ("perf evlist: Remove
-> > > __evlist__add_default") to fix ARM's BIG.little systems (opening a
-> > > cycles event on all PMUs not just 1) will cause the arm_dsu event to
-> > > be opened by perf record and fail as the event won't support sampling.
-> > > 
-> > > The patch https://lore.kernel.org/lkml/20240525152927.665498-1-irogers@google.com/
-> > > fixes this by only opening the cycles event on core PMUs when choosing
-> > > default events.
-> > > 
-> > > Rather than take this patch the revert happened as Linus runs the
-> > > command "perf record -e cycles:pp" (ie using a specified event and not
-> > > defaults) and considers it a regression in the perf tool that on an
-> > > Ampere system to need to do "perf record -e
-> > > 'armv8_pmuv3_0/cycles/pp'". It was pointed out that not specifying -e
-> > > will choose the cycles event correctly and with better precision the
-> > > pp for systems that support it, but it was still considered a
-> > > regression in the perf tool so the revert was made to happen. There is
-> > > a lack of perf testing coverage for ARM, in particular as they choose
-> > > to do everything in a different way to x86. The patch in question was
-> > > in the linux-next tree for weeks without issues.
-> > > 
-> > > ARM/Ampere could fix this by renaming the event from cycles to
-> > > cpu_cycles, or by following Intel's convention that anything uncore
-> > > uses the name clockticks rather than cycles. This could break people
-> > > who rely on an event called arm_dsu/cycles/ but I imagine such people
-> > > are rare. There has been no progress I'm aware of on renaming the
-> > > event.
-> > > 
-> > > Making perf not terminate on opening an event for perf record seems
-> > > like the most likely workaround as that is at least something under
-> > > the tool maintainers control. ARM have discussed doing this on the
-> > > lists:
-> > > https://lore.kernel.org/lkml/f30f676e-a1d7-4d6b-94c1-3bdbd1448887@arm.com/
-> > > but since the revert in v6.10 no patches have appeared for the v6.11
-> > > merge window. Feature work like coresight improvements and ARMv9 are
-> > > being actively pursued by ARM, but feature work won't resolve this
-> > > regression.
-> > > 
-> 
-> I got some hardware with the DSU PMU so I'm going to have a go at trying to
-> send some fixes for this. My initial idea was to try incorporate the "not
-> terminate on opening" change as discussed in the link directly above. And
-> then do the revert of the "revert of prefer sysfs/json".
-> 
-> FWIW I don't think Juno currently is broken if the kernel supports extended
-> type ID? I could have missed some output in this thread but it seems like
-> it's mostly related to Apple M hardware. I'm also a bit confused why the
-> "supports extended type" check fails there, but maybe the v6.9 commit
-> 25412c036 from Mark is missing?
-> 
-> I sent a small fix the other day to make perf stat default arguments work on
-> Juno, and didn't notice anything out of the ordinary: https://lore.kernel.org/linux-perf-users/dac6ad1d-5aca-48b4-9dcb-ff7e54ca43f6@linaro.org/T/#t
-> I agree that change is quite narrow but it does incrementally improve things
-> for the time being. It's possible that it would become redundant if I can
-> just include Ian's change to use strings for Perf stat.
-> 
-> Of course I only think I have a handle on the issue right now, seems like it
-> has a lot of moving parts and something else always comes up. If I hit a
-> wall at some point I will come back here.
+On Wed, Aug 14, 2024 at 9:34=E2=80=AFAM Arnaldo Carvalho de Melo
+<acme@kernel.org> wrote:
+>
+> On Tue, Aug 13, 2024 at 04:41:16PM -0700, Namhyung Kim wrote:
+> > So far it used tgid as a key to get the filter expressions in the
+> > pinned filters map for regular users but it won't work well if the has
+> > more than one filters at the same time.  Let's add the event id to the
+> > key of the filter hash map so that it can identify the right filter
+> > expression in the BPF program.
+> >
+> > As the event can be inherited to child tasks, it should use the primary
+> > id which belongs to the parent (original) event.  Since evsel opens the
+> > event for multiple CPUs and tasks, it needs to maintain a separate hash
+> > map for the event id.
+> >
+> > In the user space, it keeps a list for the multiple evsel and release
+> > the entries in the both hash map when it closes the event.
+>
+> Can you please provide an example of a command that uses this feature?
+>
+> Or if there is a 'perf test' shell for this already please point it out,
 
-Thanks for working on this, hopefully we'll get to a solution that keeps
-all the expectations expressed in this thread about not breaking
-existing muscle memory and that allows us to progress on this matter.
+Sorry, please try:
 
-- Arnaldo
+  sudo ./perf record -e cycles --filter 'ip < 0xffffffff00000000' -e
+instructions --filter 'period < 100000' -o- ./perf test -w noploop |
+./perf script -i-
+
+It's on the second patch.  I'll update the test as well.
+
+Thanks,
+Namhyung
+
+>
+> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> > ---
+> >  tools/perf/util/bpf-filter.c                 | 288 ++++++++++++++++---
+> >  tools/perf/util/bpf_skel/sample-filter.h     |  11 +-
+> >  tools/perf/util/bpf_skel/sample_filter.bpf.c |  42 ++-
+> >  tools/perf/util/bpf_skel/vmlinux/vmlinux.h   |   5 +
+> >  4 files changed, 304 insertions(+), 42 deletions(-)
+> >
+> > diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.=
+c
+> > index c5eb0b7eec19..0a1832564dd2 100644
+> > --- a/tools/perf/util/bpf-filter.c
+> > +++ b/tools/perf/util/bpf-filter.c
+> > @@ -1,4 +1,45 @@
+> >  /* SPDX-License-Identifier: GPL-2.0 */
+> > +/**
+> > + * Generic event filter for sampling events in BPF.
+> > + *
+> > + * The BPF program is fixed and just to read filter expressions in the=
+ 'filters'
+> > + * map and compare the sample data in order to reject samples that don=
+'t match.
+> > + * Each filter expression contains a sample flag (term) to compare, an=
+ operation
+> > + * (=3D=3D, >=3D, and so on) and a value.
+> > + *
+> > + * Note that each entry has an array of filter expressions and it only=
+ succeeds
+> > + * when all of the expressions are satisfied.  But it supports the log=
+ical OR
+> > + * using a GROUP operation which is satisfied when any of its member e=
+xpression
+> > + * is evaluated to true.  But it doesn't allow nested GROUP operations=
+ for now.
+> > + *
+> > + * To support non-root users, the filters map can be loaded and pinned=
+ in the BPF
+> > + * filesystem by root (perf record --setup-filter pin).  Then each use=
+r will get
+> > + * a new entry in the shared filters map to fill the filter expression=
+s.  And the
+> > + * BPF program will find the filter using (task-id, event-id) as a key=
+.
+> > + *
+> > + * The pinned BPF object (shared for regular users) has:
+> > + *
+> > + *                  event_hash                   |
+> > + *                  |        |                   |
+> > + *   event->id ---> |   id   | ---+   idx_hash   |     filters
+> > + *                  |        |    |   |      |   |    |       |
+> > + *                  |  ....  |    +-> |  idx | --+--> | exprs | --->  =
+perf_bpf_filter_entry[]
+> > + *                                |   |      |   |    |       |       =
+        .op
+> > + *   task id (tgid) --------------+   | .... |   |    |  ...  |       =
+        .term (+ part)
+> > + *                                               |                    =
+        .value
+> > + *                                               |
+> > + *   =3D=3D=3D=3D=3D=3D=3D (root would skip this part) =3D=3D=3D=3D=3D=
+=3D=3D=3D                     (compares it in a loop)
+> > + *
+> > + * This is used for per-task use cases while system-wide profiling (no=
+rmally from
+> > + * root user) uses a separate copy of the program and the maps for its=
+ own so that
+> > + * it can proceed even if a lot of non-root users are using the filter=
+s at the
+> > + * same time.  In this case the filters map has a single entry and no =
+need to use
+> > + * the hash maps to get the index (key) of the filters map (IOW it's a=
+lways 0).
+> > + *
+> > + * The BPF program returns 1 to accept the sample or 0 to drop it.
+> > + * The 'dropped' map is to keep how many samples it dropped by the fil=
+ter and
+> > + * it will be reported as lost samples.
+> > + */
+> >  #include <stdlib.h>
+> >  #include <fcntl.h>
+> >  #include <sys/ioctl.h>
+> > @@ -6,6 +47,7 @@
+> >
+> >  #include <bpf/bpf.h>
+> >  #include <linux/err.h>
+> > +#include <linux/list.h>
+> >  #include <api/fs/fs.h>
+> >  #include <internal/xyarray.h>
+> >  #include <perf/threadmap.h>
+> > @@ -27,7 +69,14 @@
+> >  #define PERF_SAMPLE_TYPE(_st, opt)   __PERF_SAMPLE_TYPE(PBF_TERM_##_st=
+, PERF_SAMPLE_##_st, opt)
+> >
+> >  /* Index in the pinned 'filters' map.  Should be released after use. *=
+/
+> > -static int pinned_filter_idx =3D -1;
+> > +struct pinned_filter_idx {
+> > +     struct list_head list;
+> > +     struct evsel *evsel;
+> > +     u64 event_id;
+> > +     int hash_idx;
+> > +};
+> > +
+> > +static LIST_HEAD(pinned_filters);
+> >
+> >  static const struct perf_sample_info {
+> >       enum perf_bpf_filter_term type;
+> > @@ -175,24 +224,145 @@ static int convert_to_tgid(int tid)
+> >       return tgid;
+> >  }
+> >
+> > -static int update_pid_hash(struct evsel *evsel, struct perf_bpf_filter=
+_entry *entry)
+> > +/*
+> > + * The event might be closed already so we cannot get the list of ids =
+using FD
+> > + * like in create_event_hash() below, let's iterate the event_hash map=
+ and
+> > + * delete all entries that have the event id as a key.
+> > + */
+> > +static void destroy_event_hash(u64 event_id)
+> > +{
+> > +     int fd;
+> > +     u64 key, *prev_key =3D NULL;
+> > +     int num =3D 0, alloced =3D 32;
+> > +     u64 *ids =3D calloc(alloced, sizeof(*ids));
+> > +
+> > +     if (ids =3D=3D NULL)
+> > +             return;
+> > +
+> > +     fd =3D get_pinned_fd("event_hash");
+> > +     if (fd < 0) {
+> > +             pr_debug("cannot get fd for 'event_hash' map\n");
+> > +             free(ids);
+> > +             return;
+> > +     }
+> > +
+> > +     /* Iterate the whole map to collect keys for the event id. */
+> > +     while (!bpf_map_get_next_key(fd, prev_key, &key)) {
+> > +             u64 id;
+> > +
+> > +             if (bpf_map_lookup_elem(fd, &key, &id) =3D=3D 0 && id =3D=
+=3D event_id) {
+> > +                     if (num =3D=3D alloced) {
+> > +                             void *tmp;
+> > +
+> > +                             alloced *=3D 2;
+> > +                             tmp =3D realloc(ids, alloced * sizeof(*id=
+s));
+> > +                             if (tmp =3D=3D NULL)
+> > +                                     break;
+> > +
+> > +                             ids =3D tmp;
+> > +                     }
+> > +                     ids[num++] =3D key;
+> > +             }
+> > +
+> > +             prev_key =3D &key;
+> > +     }
+> > +
+> > +     for (int i =3D 0; i < num; i++)
+> > +             bpf_map_delete_elem(fd, &ids[i]);
+> > +
+> > +     free(ids);
+> > +     close(fd);
+> > +}
+> > +
+> > +/*
+> > + * Return a representative id if ok, or 0 for failures.
+> > + *
+> > + * The perf_event->id is good for this, but an evsel would have multip=
+le
+> > + * instances for CPUs and tasks.  So pick up the first id and setup a =
+hash
+> > + * from id of each instance to the representative id (the first one).
+> > + */
+> > +static u64 create_event_hash(struct evsel *evsel)
+> > +{
+> > +     int x, y, fd;
+> > +     u64 the_id =3D 0, id;
+> > +
+> > +     fd =3D get_pinned_fd("event_hash");
+> > +     if (fd < 0) {
+> > +             pr_err("cannot get fd for 'event_hash' map\n");
+> > +             return 0;
+> > +     }
+> > +
+> > +     for (x =3D 0; x < xyarray__max_x(evsel->core.fd); x++) {
+> > +             for (y =3D 0; y < xyarray__max_y(evsel->core.fd); y++) {
+> > +                     int ret =3D ioctl(FD(evsel, x, y), PERF_EVENT_IOC=
+_ID, &id);
+> > +
+> > +                     if (ret < 0) {
+> > +                             pr_err("Failed to get the event id\n");
+> > +                             if (the_id)
+> > +                                     destroy_event_hash(the_id);
+> > +                             return 0;
+> > +                     }
+> > +
+> > +                     if (the_id =3D=3D 0)
+> > +                             the_id =3D id;
+> > +
+> > +                     bpf_map_update_elem(fd, &id, &the_id, BPF_ANY);
+> > +             }
+> > +     }
+> > +
+> > +     close(fd);
+> > +     return the_id;
+> > +}
+> > +
+> > +static void destroy_idx_hash(struct pinned_filter_idx *pfi)
+> > +{
+> > +     int fd, nr;
+> > +     struct perf_thread_map *threads;
+> > +
+> > +     fd =3D get_pinned_fd("filters");
+> > +     bpf_map_delete_elem(fd, &pfi->hash_idx);
+> > +     close(fd);
+> > +
+> > +     if (pfi->event_id)
+> > +             destroy_event_hash(pfi->event_id);
+> > +
+> > +     threads =3D perf_evsel__threads(&pfi->evsel->core);
+> > +     if (threads =3D=3D NULL)
+> > +             return;
+> > +
+> > +     fd =3D get_pinned_fd("idx_hash");
+> > +     nr =3D perf_thread_map__nr(threads);
+> > +     for (int i =3D 0; i < nr; i++) {
+> > +             /* The target task might be dead already, just try the pi=
+d */
+> > +             struct idx_hash_key key =3D {
+> > +                     .evt_id =3D pfi->event_id,
+> > +                     .tgid =3D perf_thread_map__pid(threads, i),
+> > +             };
+> > +
+> > +             bpf_map_delete_elem(fd, &key);
+> > +     }
+> > +     close(fd);
+> > +}
+> > +
+> > +/* Maintain a hashmap from (tgid, event-id) to filter index */
+> > +static int create_idx_hash(struct evsel *evsel, struct perf_bpf_filter=
+_entry *entry)
+> >  {
+> >       int filter_idx;
+> >       int fd, nr, last;
+> > +     u64 event_id =3D 0;
+> > +     struct pinned_filter_idx *pfi =3D NULL;
+> >       struct perf_thread_map *threads;
+> >
+> >       fd =3D get_pinned_fd("filters");
+> >       if (fd < 0) {
+> > -             pr_debug("cannot get fd for 'filters' map\n");
+> > +             pr_err("cannot get fd for 'filters' map\n");
+> >               return fd;
+> >       }
+> >
+> >       /* Find the first available entry in the filters map */
+> >       for (filter_idx =3D 0; filter_idx < MAX_FILTERS; filter_idx++) {
+> > -             if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXI=
+ST) =3D=3D 0) {
+> > -                     pinned_filter_idx =3D filter_idx;
+> > +             if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXI=
+ST) =3D=3D 0)
+> >                       break;
+> > -             }
+> >       }
+> >       close(fd);
+> >
+> > @@ -201,22 +371,44 @@ static int update_pid_hash(struct evsel *evsel, s=
+truct perf_bpf_filter_entry *en
+> >               return -EBUSY;
+> >       }
+> >
+> > +     pfi =3D zalloc(sizeof(*pfi));
+> > +     if (pfi =3D=3D NULL) {
+> > +             pr_err("Cannot save pinned filter index\n");
+> > +             goto err;
+> > +     }
+> > +
+> > +     pfi->evsel =3D evsel;
+> > +     pfi->hash_idx =3D filter_idx;
+> > +
+> > +     event_id =3D create_event_hash(evsel);
+> > +     if (event_id =3D=3D 0) {
+> > +             pr_err("Cannot update the event hash\n");
+> > +             goto err;
+> > +     }
+> > +
+> > +     pfi->event_id =3D event_id;
+> > +
+> >       threads =3D perf_evsel__threads(&evsel->core);
+> >       if (threads =3D=3D NULL) {
+> >               pr_err("Cannot get the thread list of the event\n");
+> > -             return -EINVAL;
+> > +             goto err;
+> >       }
+> >
+> >       /* save the index to a hash map */
+> > -     fd =3D get_pinned_fd("pid_hash");
+> > -     if (fd < 0)
+> > -             return fd;
+> > +     fd =3D get_pinned_fd("idx_hash");
+> > +     if (fd < 0) {
+> > +             pr_err("cannot get fd for 'idx_hash' map\n");
+> > +             goto err;
+> > +     }
+> >
+> >       last =3D -1;
+> >       nr =3D perf_thread_map__nr(threads);
+> >       for (int i =3D 0; i < nr; i++) {
+> >               int pid =3D perf_thread_map__pid(threads, i);
+> >               int tgid;
+> > +             struct idx_hash_key key =3D {
+> > +                     .evt_id =3D event_id,
+> > +             };
+> >
+> >               /* it actually needs tgid, let's get tgid from /proc. */
+> >               tgid =3D convert_to_tgid(pid);
+> > @@ -228,16 +420,25 @@ static int update_pid_hash(struct evsel *evsel, s=
+truct perf_bpf_filter_entry *en
+> >               if (tgid =3D=3D last)
+> >                       continue;
+> >               last =3D tgid;
+> > +             key.tgid =3D tgid;
+> >
+> > -             if (bpf_map_update_elem(fd, &tgid, &filter_idx, BPF_ANY) =
+< 0) {
+> > -                     pr_err("Failed to update the pid hash\n");
+> > +             if (bpf_map_update_elem(fd, &key, &filter_idx, BPF_ANY) <=
+ 0) {
+> > +                     pr_err("Failed to update the idx_hash\n");
+> >                       close(fd);
+> > -                     return -1;
+> > +                     goto err;
+> >               }
+> > -             pr_debug("pid hash: %d -> %d\n", tgid, filter_idx);
+> > +             pr_debug("bpf-filter: idx_hash (task=3D%d,%s) -> %d\n",
+> > +                      tgid, evsel__name(evsel), filter_idx);
+> >       }
+> > +
+> > +     list_add(&pfi->list, &pinned_filters);
+> >       close(fd);
+> > -     return 0;
+> > +     return filter_idx;
+> > +
+> > +err:
+> > +     destroy_idx_hash(pfi);
+> > +     free(pfi);
+> > +     return -1;
+> >  }
+> >
+> >  int perf_bpf_filter__prepare(struct evsel *evsel, struct target *targe=
+t)
+> > @@ -247,7 +448,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
+truct target *target)
+> >       struct bpf_program *prog;
+> >       struct bpf_link *link;
+> >       struct perf_bpf_filter_entry *entry;
+> > -     bool needs_pid_hash =3D !target__has_cpu(target) && !target->uid_=
+str;
+> > +     bool needs_idx_hash =3D !target__has_cpu(target) && !target->uid_=
+str;
+> >
+> >       entry =3D calloc(MAX_FILTERS, sizeof(*entry));
+> >       if (entry =3D=3D NULL)
+> > @@ -259,11 +460,11 @@ int perf_bpf_filter__prepare(struct evsel *evsel,=
+ struct target *target)
+> >               goto err;
+> >       }
+> >
+> > -     if (needs_pid_hash && geteuid() !=3D 0) {
+> > +     if (needs_idx_hash && geteuid() !=3D 0) {
+> >               int zero =3D 0;
+> >
+> >               /* The filters map is shared among other processes */
+> > -             ret =3D update_pid_hash(evsel, entry);
+> > +             ret =3D create_idx_hash(evsel, entry);
+> >               if (ret < 0)
+> >                       goto err;
+> >
+> > @@ -274,7 +475,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
+truct target *target)
+> >               }
+> >
+> >               /* Reset the lost count */
+> > -             bpf_map_update_elem(fd, &pinned_filter_idx, &zero, BPF_AN=
+Y);
+> > +             bpf_map_update_elem(fd, &ret, &zero, BPF_ANY);
+> >               close(fd);
+> >
+> >               fd =3D get_pinned_fd("perf_sample_filter");
+> > @@ -288,6 +489,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
+truct target *target)
+> >                               ret =3D ioctl(FD(evsel, x, y), PERF_EVENT=
+_IOC_SET_BPF, fd);
+> >                               if (ret < 0) {
+> >                                       pr_err("Failed to attach perf sam=
+ple-filter\n");
+> > +                                     close(fd);
+> >                                       goto err;
+> >                               }
+> >                       }
+> > @@ -332,6 +534,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, =
+struct target *target)
+> >
+> >  err:
+> >       free(entry);
+> > +     if (!list_empty(&pinned_filters)) {
+> > +             struct pinned_filter_idx *pfi, *tmp;
+> > +
+> > +             list_for_each_entry_safe(pfi, tmp, &pinned_filters, list)=
+ {
+> > +                     destroy_idx_hash(pfi);
+> > +                     list_del(&pfi->list);
+> > +                     free(pfi);
+> > +             }
+> > +     }
+> >       sample_filter_bpf__destroy(skel);
+> >       return ret;
+> >  }
+> > @@ -339,6 +550,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, s=
+truct target *target)
+> >  int perf_bpf_filter__destroy(struct evsel *evsel)
+> >  {
+> >       struct perf_bpf_filter_expr *expr, *tmp;
+> > +     struct pinned_filter_idx *pfi, *pos;
+> >
+> >       list_for_each_entry_safe(expr, tmp, &evsel->bpf_filters, list) {
+> >               list_del(&expr->list);
+> > @@ -346,14 +558,11 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
+> >       }
+> >       sample_filter_bpf__destroy(evsel->bpf_skel);
+> >
+> > -     if (pinned_filter_idx >=3D 0) {
+> > -             int fd =3D get_pinned_fd("filters");
+> > -
+> > -             bpf_map_delete_elem(fd, &pinned_filter_idx);
+> > -             pinned_filter_idx =3D -1;
+> > -             close(fd);
+> > +     list_for_each_entry_safe(pfi, pos, &pinned_filters, list) {
+> > +             destroy_idx_hash(pfi);
+> > +             list_del(&pfi->list);
+> > +             free(pfi);
+> >       }
+> > -
+> >       return 0;
+> >  }
+> >
+> > @@ -364,10 +573,20 @@ u64 perf_bpf_filter__lost_count(struct evsel *evs=
+el)
+> >       if (list_empty(&evsel->bpf_filters))
+> >               return 0;
+> >
+> > -     if (pinned_filter_idx >=3D 0) {
+> > +     if (!list_empty(&pinned_filters)) {
+> >               int fd =3D get_pinned_fd("dropped");
+> > +             struct pinned_filter_idx *pfi;
+> > +
+> > +             if (fd < 0)
+> > +                     return 0;
+> >
+> > -             bpf_map_lookup_elem(fd, &pinned_filter_idx, &count);
+> > +             list_for_each_entry(pfi, &pinned_filters, list) {
+> > +                     if (pfi->evsel !=3D evsel)
+> > +                             continue;
+> > +
+> > +                     bpf_map_lookup_elem(fd, &pfi->hash_idx, &count);
+> > +                     break;
+> > +             }
+> >               close(fd);
+> >       } else if (evsel->bpf_skel) {
+> >               struct sample_filter_bpf *skel =3D evsel->bpf_skel;
+> > @@ -429,9 +648,10 @@ int perf_bpf_filter__pin(void)
+> >
+> >       /* pinned program will use pid-hash */
+> >       bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
+> > -     bpf_map__set_max_entries(skel->maps.pid_hash, MAX_PIDS);
+> > +     bpf_map__set_max_entries(skel->maps.event_hash, MAX_EVT_HASH);
+> > +     bpf_map__set_max_entries(skel->maps.idx_hash, MAX_IDX_HASH);
+> >       bpf_map__set_max_entries(skel->maps.dropped, MAX_FILTERS);
+> > -     skel->rodata->use_pid_hash =3D 1;
+> > +     skel->rodata->use_idx_hash =3D 1;
+> >
+> >       if (sample_filter_bpf__load(skel) < 0) {
+> >               ret =3D -errno;
+> > @@ -484,8 +704,12 @@ int perf_bpf_filter__pin(void)
+> >               pr_debug("chmod for filters failed\n");
+> >               ret =3D -errno;
+> >       }
+> > -     if (fchmodat(dir_fd, "pid_hash", 0666, 0) < 0) {
+> > -             pr_debug("chmod for pid_hash failed\n");
+> > +     if (fchmodat(dir_fd, "event_hash", 0666, 0) < 0) {
+> > +             pr_debug("chmod for event_hash failed\n");
+> > +             ret =3D -errno;
+> > +     }
+> > +     if (fchmodat(dir_fd, "idx_hash", 0666, 0) < 0) {
+> > +             pr_debug("chmod for idx_hash failed\n");
+> >               ret =3D -errno;
+> >       }
+> >       if (fchmodat(dir_fd, "dropped", 0666, 0) < 0) {
+> > diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util=
+/bpf_skel/sample-filter.h
+> > index e666bfd5fbdd..5f0c8e4e83d3 100644
+> > --- a/tools/perf/util/bpf_skel/sample-filter.h
+> > +++ b/tools/perf/util/bpf_skel/sample-filter.h
+> > @@ -1,8 +1,9 @@
+> >  #ifndef PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+> >  #define PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+> >
+> > -#define MAX_FILTERS  64
+> > -#define MAX_PIDS     (16 * 1024)
+> > +#define MAX_FILTERS   64
+> > +#define MAX_IDX_HASH  (16 * 1024)
+> > +#define MAX_EVT_HASH  (1024 * 1024)
+> >
+> >  /* supported filter operations */
+> >  enum perf_bpf_filter_op {
+> > @@ -62,4 +63,10 @@ struct perf_bpf_filter_entry {
+> >       __u64 value;
+> >  };
+> >
+> > +struct idx_hash_key {
+> > +     __u64 evt_id;
+> > +     __u32 tgid;
+> > +     __u32 reserved;
+> > +};
+> > +
+> >  #endif /* PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H */
+> > diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/=
+util/bpf_skel/sample_filter.bpf.c
+> > index 4c75354b84fd..4872a16eedfd 100644
+> > --- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+> > @@ -15,13 +15,25 @@ struct filters {
+> >       __uint(max_entries, 1);
+> >  } filters SEC(".maps");
+> >
+> > -/* tgid to filter index */
+> > -struct pid_hash {
+> > +/*
+> > + * An evsel has multiple instances for each CPU or task but we need a =
+single
+> > + * id to be used as a key for the idx_hash.  This hashmap would transl=
+ate the
+> > + * instance's ID to a representative ID.
+> > + */
+> > +struct event_hash {
+> >       __uint(type, BPF_MAP_TYPE_HASH);
+> > -     __type(key, int);
+> > +     __type(key, __u64);
+> > +     __type(value, __u64);
+> > +     __uint(max_entries, 1);
+> > +} event_hash SEC(".maps");
+> > +
+> > +/* tgid/evtid to filter index */
+> > +struct idx_hash {
+> > +     __uint(type, BPF_MAP_TYPE_HASH);
+> > +     __type(key, struct idx_hash_key);
+> >       __type(value, int);
+> >       __uint(max_entries, 1);
+> > -} pid_hash SEC(".maps");
+> > +} idx_hash SEC(".maps");
+> >
+> >  /* tgid to filter index */
+> >  struct lost_count {
+> > @@ -31,7 +43,7 @@ struct lost_count {
+> >       __uint(max_entries, 1);
+> >  } dropped SEC(".maps");
+> >
+> > -volatile const int use_pid_hash;
+> > +volatile const int use_idx_hash;
+> >
+> >  void *bpf_cast_to_kern_ctx(void *) __ksym;
+> >
+> > @@ -202,11 +214,25 @@ int perf_sample_filter(void *ctx)
+> >
+> >       k =3D 0;
+> >
+> > -     if (use_pid_hash) {
+> > -             int tgid =3D bpf_get_current_pid_tgid() >> 32;
+> > +     if (use_idx_hash) {
+> > +             struct idx_hash_key key =3D {
+> > +                     .tgid =3D bpf_get_current_pid_tgid() >> 32,
+> > +             };
+> > +             __u64 eid =3D kctx->event->id;
+> > +             __u64 *key_id;
+> >               int *idx;
+> >
+> > -             idx =3D bpf_map_lookup_elem(&pid_hash, &tgid);
+> > +             /* get primary_event_id */
+> > +             if (kctx->event->parent)
+> > +                     eid =3D kctx->event->parent->id;
+> > +
+> > +             key_id =3D bpf_map_lookup_elem(&event_hash, &eid);
+> > +             if (key_id =3D=3D NULL)
+> > +                     goto drop;
+> > +
+> > +             key.evt_id =3D *key_id;
+> > +
+> > +             idx =3D bpf_map_lookup_elem(&idx_hash, &key);
+> >               if (idx)
+> >                       k =3D *idx;
+> >               else
+> > diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/ut=
+il/bpf_skel/vmlinux/vmlinux.h
+> > index d818e30c5457..4fa21468487e 100644
+> > --- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> > +++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+> > @@ -175,6 +175,11 @@ struct perf_sample_data {
+> >       u64                      code_page_size;
+> >  } __attribute__((__aligned__(64))) __attribute__((preserve_access_inde=
+x));
+> >
+> > +struct perf_event {
+> > +     struct perf_event       *parent;
+> > +     u64                     id;
+> > +} __attribute__((preserve_access_index));
+> > +
+> >  struct bpf_perf_event_data_kern {
+> >       struct perf_sample_data *data;
+> >       struct perf_event       *event;
+> > --
+> > 2.46.0.76.ge559c4bf1a-goog
