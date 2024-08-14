@@ -1,56 +1,67 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606713CABC;
-	Wed, 14 Aug 2024 18:15:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E4681BD4EE;
+	Wed, 14 Aug 2024 18:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723659318; cv=none; b=A9fcgh+bvICgSD+J4XSjDBYNaNe7YX+q+nFb3NYsLPjPlXGI/XCuSzbrro23XE5xxiykKxA1MvUzkrVyDZtJ3sOO3Y59GpgPB7rXkZiaj06f82f5/Wib1387wCjexd4OhKcIrtZXtcAYl43DMJ8vlCYKjgP0805MF8ZFdXRlMfE=
+	t=1723660729; cv=none; b=qMxKVnBQvb5M9SObBQby3Ujyl2P8AA5JkIuNbQwBKLP0zZo+JHvfZdRu/QN03FdzTsB3VNtjSP9L4BBS3Lya2r55FLAUtXJxvdmkOi2mjoYFEfJtKEzySVhCllKQ2U40DXByve4lsmJ6fn+t2TGALmDvly5+n3CiPdl7iP8mYJ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723659318; c=relaxed/simple;
-	bh=is7S2/rJ4MTcclVdO3VVsiHsnMVP/hqoxQUNrq2oNUg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GtlT0kHeY7X9RfKV0miuCgW2LhJu+7L+SOnaHz3WTfTR/6f9nF/mgBNGLeLXZcjSLHuC31S39UOWwbIshdM4TghKmUChcOiYNwyBxrthxhiXLUVLuUu8xtW5ymS/lnnLJIgzj/5b9q+Z+NPxV+zYd7JMCOs3Cg1/VEaogJiNbFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+RD1Ec0; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723660729; c=relaxed/simple;
+	bh=9VIQjITdMElJEambMlWS0EUo5gmcdfLMfeiEW59NMR4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=WkwqgOewd9yzf5zC46c5brAxTdFA8uL1Kje9iJyv1g7UvE22KlxECOD/NiWzH1Z7y/G2IW2cS9ELZOmt/RmnFMJqhShGXPvqZihbFQ8Uh8vCDsBwkKoo7u7SUPi2A9IosuPng/SAaIyCRUmwRMYjn9ChFdl/wvGk1GxPBSVpxbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=phRED2rR; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+RD1Ec0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723659317; x=1755195317;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=is7S2/rJ4MTcclVdO3VVsiHsnMVP/hqoxQUNrq2oNUg=;
-  b=i+RD1Ec0pO+8Ehhjk0o7OkiOOGMo2KnzHLpvydUZP4Cdwoqov92IFsqi
-   3Feq1IqCPPcy3dte+LqMBjpbCmIc6g2d0LM02p/zPdfU9xKWt4TDjx4CY
-   eEL/Wb+o8A4Uf+c1X5jI9oeOx2vO/OL0KA3gVNV94bp0JiYojihIUZd9u
-   nHXds35bPyMGRHhpP7Erdnl81IU+NrLm1ZfDBzcgCnGtpPc2SEpIbYzY4
-   TXKkO5fW3FOH/8LRHzEJXhxf5zs43NJpEqhhYd9Tz8wWqZONlY9rFcANm
-   8gYeWoHTp9beqhZCArfEliC+3T7pAclAXqbEINFLG6uvpVXXXUd3wu4PF
-   Q==;
-X-CSE-ConnectionGUID: DCwE11ZoRjeZc9d88/jrPA==
-X-CSE-MsgGUID: hNyLFZdQQMOH4ofXDV6KSA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="32525568"
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="32525568"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 11:15:16 -0700
-X-CSE-ConnectionGUID: CPZA/4CmT8+ybdwBjwyLRg==
-X-CSE-MsgGUID: poKIMBO7RS6shBqh0/JtHA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
-   d="scan'208";a="58767112"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 11:15:15 -0700
-Received: from [10.212.17.191] (kliang2-mobl1.ccr.corp.intel.com [10.212.17.191])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 57C7120CFED8;
-	Wed, 14 Aug 2024 11:15:13 -0700 (PDT)
-Message-ID: <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com>
-Date: Wed, 14 Aug 2024 14:15:11 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="phRED2rR"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47EHslWn025058;
+	Wed, 14 Aug 2024 18:38:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:references:cc:reply-to
+	:from:in-reply-to:content-type:content-transfer-encoding; s=pp1;
+	 bh=TLYgqOZWGdWRFJr+qo1vXuDeJWB1UFxGLirI4LhM9+s=; b=phRED2rR8/n+
+	9/ikjJ7zhETx2jMJpY+Qu84e2kAxPqQmNjm4q4FKg467aDmkBmtxCvYxCx2majfz
+	UjCLaJ66fL6Fu7YB2E61fagDNFcFqD4L7Ro/Fp23ltMou8Fw3EeXJVDyi7AVnJzD
+	OHL5VqgpBCFI855YuA1FflPuB+/kqC5bxSAWWke10Wbaa583q3262Od4Cz0+1+Cj
+	g4l23Jo7mJZN5+pSHcEwLMKLQPjbtTGqsEUvEq6QdxoKR3SFmN0WK8jXRoQKwmX+
+	dq3GonMTj4SAbJwoAzKKUxEVLYbB4bZuYNOPON7Ii8ZxsGk0PPJjECtot/2GIyFW
+	jXw+w9WfVg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4111d686tn-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 18:38:22 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47EIcM4u017890;
+	Wed, 14 Aug 2024 18:38:22 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4111d686te-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 18:38:22 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 47EHfQvH029668;
+	Wed, 14 Aug 2024 18:38:21 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([172.16.1.73])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 40xmrmjnvj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 14 Aug 2024 18:38:21 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+	by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47EIcICG36503816
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 14 Aug 2024 18:38:20 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id F03B058063;
+	Wed, 14 Aug 2024 18:38:17 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9965E5805E;
+	Wed, 14 Aug 2024 18:38:11 +0000 (GMT)
+Received: from [9.43.10.208] (unknown [9.43.10.208])
+	by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 14 Aug 2024 18:38:11 +0000 (GMT)
+Message-ID: <2ff74780-4649-4522-bc5b-e57f83f0ff96@linux.ibm.com>
+Date: Thu, 15 Aug 2024 00:08:09 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,115 +69,134 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-To: Thomas Gleixner <tglx@linutronix.de>, Li Huafei <lihuafei1@huawei.com>,
- peterz@infradead.org, mingo@redhat.com
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <87sev7nom4.ffs@tglx>
+Subject: Re: [PATCH v2 1/2] perf sched timehist: Skip print non-idle task
+ samples when only show idle events
+To: Yang Jihong <yangjihong@bytedance.com>
+References: <20240812132606.3126490-1-yangjihong@bytedance.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <87sev7nom4.ffs@tglx>
+Cc: namhyung@kernel.org, acme@kernel.org, kan.liang@linux.intel.com,
+        peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, james.clark@arm.com,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Reply-To: 20240812132606.3126490-1-yangjihong@bytedance.com
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+In-Reply-To: <20240812132606.3126490-1-yangjihong@bytedance.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: OJlM8tXJcmHCWG6IpBhyeVx08UZZgsjg
+X-Proofpoint-GUID: Qf-X3bvWOnhtnV4Xf7mKEZZ_S5mSxwzG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-14_14,2024-08-13_02,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ phishscore=0 suspectscore=0 impostorscore=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1011 adultscore=0 spamscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408140126
 
+Hi Yang Jihong,
 
+On 12/08/24 18:56, Yang Jihong wrote:
+> when only show idle events, runtime stats of non-idle tasks is not updated,
+> and the value is 0, there is no need to print non-idle samples.
+> 
+> Before:
+> 
+>   # perf sched timehist -I
+>   Samples of sched_switch event do not have callchains.
+>              time    cpu  task name                       wait time  sch delay   run time
+>                           [tid/pid]                          (msec)     (msec)     (msec)
+>   --------------- ------  ------------------------------  ---------  ---------  ---------
+>    2090450.763235 [0000]  migration/0[15]                     0.000      0.000      0.000
+>    2090450.763268 [0001]  migration/1[21]                     0.000      0.000      0.000
+>    2090450.763309 [0002]  migration/2[27]                     0.000      0.000      0.000
+>    2090450.763343 [0003]  migration/3[33]                     0.000      0.000      0.000
+>    2090450.763469 [0004]  migration/4[39]                     0.000      0.000      0.000
+>    2090450.763501 [0005]  migration/5[45]                     0.000      0.000      0.000
+>    2090450.763622 [0006]  migration/6[51]                     0.000      0.000      0.000
+>    2090450.763660 [0007]  migration/7[57]                     0.000      0.000      0.000
+>    2090450.763741 [0009]  migration/9[69]                     0.000      0.000      0.000
+>    2090450.763862 [0010]  migration/10[75]                    0.000      0.000      0.000
+>    2090450.763894 [0011]  migration/11[81]                    0.000      0.000      0.000
+>    2090450.764021 [0012]  migration/12[87]                    0.000      0.000      0.000
+>    2090450.764056 [0013]  migration/13[93]                    0.000      0.000      0.000
+>    2090450.764135 [0014]  migration/14[99]                    0.000      0.000      0.000
+>    2090450.764163 [0015]  migration/15[105]                   0.000      0.000      0.000
+>    2090450.764292 [0016]  migration/16[111]                   0.000      0.000      0.000
+>    2090450.764371 [0017]  migration/17[117]                   0.000      0.000      0.000
+>    2090450.764422 [0018]  migration/18[123]                   0.000      0.000      0.000
+>    2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
+>    2090450.764505 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+>    2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
+>    2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
+>    2090450.764590 [0016]  s1-agent[7179/7162]                 0.000      0.000      0.000
+>    2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
+>    2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
+>    2090450.764639 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+>    2090450.764668 [0017]  s1-agent[7180/7162]                 0.000      0.000      0.000
+>    2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
+>    2090450.764672 [0000]  s1-perf[8235/7168]                  0.000      0.000      0.000
+>    2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
+> 
+> After:
+> 
+>   # perf sched timehist -I
+>   Samples of sched_switch event do not have callchains.
+>              time    cpu  task name                       wait time  sch delay   run time
+>                           [tid/pid]                          (msec)     (msec)     (msec)
+>   --------------- ------  ------------------------------  ---------  ---------  ---------
+>    2090450.764490 [0000]  <idle>                              0.000      0.000      1.255
+>    2090450.764571 [0016]  <idle>                              0.000      0.000      0.278
+>    2090450.764588 [0010]  <idle>                              0.000      0.000      0.725
+>    2090450.764635 [0000]  <idle>                              0.015      0.015      0.129
+>    2090450.764637 [0017]  <idle>                              0.000      0.000      0.266
+>    2090450.764669 [0000]  <idle>                              0.003      0.003      0.029
+>    2090450.764683 [0000]  <idle>                              0.003      0.003      0.010
+>    2090450.764688 [0016]  <idle>                              0.019      0.019      0.097
+>    2090450.764694 [0000]  <idle>                              0.001      0.001      0.009
+>    2090450.764706 [0000]  <idle>                              0.001      0.001      0.010
+>    2090450.764725 [0002]  <idle>                              0.000      0.000      1.415
+>    2090450.764728 [0000]  <idle>                              0.002      0.002      0.019
+>    2090450.764823 [0000]  <idle>                              0.003      0.003      0.091
+>    2090450.764838 [0019]  <idle>                              0.000      0.000      0.154
+>    2090450.764865 [0002]  <idle>                              0.109      0.109      0.029
+>    2090450.764866 [0000]  <idle>                              0.012      0.012      0.030
+>    2090450.764880 [0002]  <idle>                              0.013      0.013      0.001
+>    2090450.764880 [0000]  <idle>                              0.002      0.002      0.011
+>    2090450.764896 [0000]  <idle>                              0.001      0.001      0.013
+>    2090450.764903 [0019]  <idle>                              0.063      0.063      0.002
+>    2090450.764908 [0019]  <idle>                              0.003      0.003      0.001
+> 
 
-On 2024-08-14 10:52 a.m., Thomas Gleixner wrote:
-> Li!
-> 
-> On Tue, Aug 13 2024 at 21:13, Li Huafei wrote:
->> On 2024/8/1 3:20, Thomas Gleixner wrote:
->>>> My machine has 32 physical cores, each with two logical cores. During
->>>> testing, it executes the CVE-2015-3290 test case 100 times concurrently.
->>>>
->>>> This warning was already present in [1] and a patch was given there to
->>>> limit period to 128 on Haswell, but that patch was not merged into the
->>>> mainline.  In [2] the period on Nehalem was limited to 32. I tested 16
->>>> and 32 period on my machine and found that the problem could be
->>>> reproduced with a limit of 16, but the problem did not reproduce when
->>>> set to 32. It looks like we can limit the cycles to 32 on Haswell as
->>>> well.
->>>
->>> It looks like? Either it works or not.
->>
->> It worked for my test scenario. I say "looks like" because I'm not sure
->> how it circumvents the problem, and if the limit of 32 no longer works
->> if I increase the number of test cases executed in parallel. Any
->> suggestions?
-> 
-> If you read back through the email history of these limits, then you can
-> see that too short periods cause that problem on Broadwell due to a
-> erratum, which is explained on top of the BDW limit.
-> 
-> Now looking at the HSW specification update specifically erratum HSW11:
-> 
->   Performance Monitor Precise Instruction Retired Event May Present
->   Wrong Indications
-> 
->   Problem:
->          When the Precise Distribution for Instructions Retired (PDIR)
->          mechanism is activated (INST_RETIRED.ALL (event C0H, umask
->          value 00H) on Counter 1 programmed in PEBS mode), the processor
->          may return wrong PEBS or Performance Monitoring Interrupt (PMI)
->          interrupts and/or incorrect counter values if the counter is
->          reset with a Sample- After-Value (SAV) below 100 (the SAV is
->          the counter reset value software programs in the MSR
->          IA32_PMC1[47:0] in order to control interrupt frequency).
-> 
->   Implication:
->          Due to this erratum, when using low SAV values, the program may
->          get incorrect PEBS or PMI interrupts and/or an invalid counter
->          state.
-> 
->   Workaround:
->          The sampling driver should avoid using SAV<100.
-> 
-> IOW, that's exactly the same issue as the BDM11 erratum.
-> 
-> Kan: Can you please go through the various specification updates and
-> identify which generations are affected by this and fix it once and
-> forever in a sane way instead of relying on 'tried until it works by
-> some definition of works' hacks. These errata are there for a reason.
+LGTM and also tested the changes.
 
-Sure. I will check all the related erratum and propose a fix.
+Reviewed-and-tested-by: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
 
+> Fixes: 07235f84ece6 ("perf sched timehist: Add -I/--idle-hist option")
+> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> ---
+>  tools/perf/builtin-sched.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> 
-> But that does not explain the fallout with that cve test because that
-> does not use PEBS. It's using fixed counter 0.
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 8750b5f2d49b..177634df1ba5 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -2727,10 +2727,10 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+>  
+>  			itr->last_thread = NULL;
+>  		}
+> -	}
+>  
+> -	if (!sched->summary_only)
+> -		timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
+> +		if (!sched->summary_only)
+> +			timehist_print_sample(sched, evsel, sample, &al, thread, t, state);
+> +	}
+>  
+>  out:
+>  	if (sched->hist_time.start == 0 && t >= ptime->start)
 
-The errata also mentions about the PMI interrupts, which may imply
-non-PEBS case. I will double check with the architect.
-
-According to the description of the patch, if I understand correctly, it
-runs 100 CVE-2015-3290 tests at the same time. If so, all the GP
-counters are used. Huafei, could you please confirm?
-
-Thanks,
-Kan
-> 
-> Li, you added that huge useless backtrace but cut off the output of
-> perf_event_print_debug() after it. Can you please provide that
-> information so we can see what the counter states are?
-> 
->>>> +static void hsw_limit_period(struct perf_event *event, s64 *left)
->>>> +{
->>>> +	*left = max(*left, 32LL);
->>>> +}
->>>
->>> And why do we need a copy of nhm_limit_period() ?
->>>
->>
->> Do you mean why the period is limited to 32 like nhm_limit_period()?
-> 
-> No. If 32 is the correct limit, then we don't need another function
-> which does exactly the same. So you can assign exactly that function for
-> HSW, no?
-> 
-> Thanks,
-> 
->         tglx
