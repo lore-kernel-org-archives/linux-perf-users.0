@@ -1,136 +1,155 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D8DD1B010F;
-	Wed, 14 Aug 2024 14:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053A2D7B8
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 15:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723647143; cv=none; b=aasCV5KeLTvDjobwGQGE/dI2tvWh+3gO2ABaNKG+JmoMRgZTtX85rBa2oF0zE2dIEPBHa1cVrW/LPN7BUjeMfSi6pz8c6c+UPxNicsUU+fG9W2XL9oF/4vlxIJ54bJf+sS5LJNOn+TeHclk01HoFxfGkNNQlI1AMhr7LAGCAyoM=
+	t=1723648671; cv=none; b=l/vguWhuptSkMl9cCuEYEi8O9Sx06qtiYPSr3F7H0Wq34H+DphTbbg4+VVudnV7qAoOkhdHjD51WLYhhyq2vdGbj4pKVRPqRNQzedlD62qnDkdicqM6/w/dccKYZ/K6dX/PhwLMLirUw8eufAPmsmNcnuZrblukqrIGCsbQLQCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723647143; c=relaxed/simple;
-	bh=JX4CX4RS/fbVbTxsqNHDT4AQKuyk4tOmTZkf7PsN2VQ=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:Message-ID:MIME-Version:
-	 Content-Type; b=Q8F3eMxzZl4v2mNO/nu89azOa5SZVKP3/zPgCBXnDAWvUvyomA1AxbLtZ7vFFO5mtlIzIiMc/hmZCb29FgjdJPRjCNEWLAciVKLHl2bffbU6fjUlpR70p2keaocmD6+KkBDaeLv8ojF50qG4F5fZW2WwmymzjeoDI3sOckyWXKA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GiZMoR3n; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nw4jBGPA; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1723648671; c=relaxed/simple;
+	bh=aRFyNechgxwKfivMiydKxMx3V0Va9iWCfEAI+jT3esg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqLFg42m/nE/4J8RTNFEeuo7NprlIElAN3RU5IuOHHE9Y3hFhJoy79c2f0lO5kc+GQHRigj3yKmMVgMRJKqp4A9Pudo4ypyBDf6tTrV2Jt5WdgW701ORZR8dd3cJLi3/2EfVfdOzXNZ/ZT83gCqgKuYE3Gqa5qJRwUoBFT+zhdQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GlNqicOD; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GiZMoR3n";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nw4jBGPA"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723647140;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlNqicOD"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1723648668;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=TeROMW4ncpWRXfRpylE22foqYWiEQaY91Vj1aVGafOo=;
-	b=GiZMoR3nWmobbf/bfK6k1uKXer0GiaO2TnPDwcGT+KEIcUDYnw/5hLqpchsMjD5SKa9bDl
-	cS0jvJ9kkFwhesttQQztfwEscEeTi8Q+0r7+i8q9QpnSsKBwh9FdF8tFMM/oARwvz/mekn
-	DaATEpjom20bJ+eqguwGjUHym868Q35gyMiUaGF4PdPjOkjiac3+oPF9Uw28li5DtZTNcv
-	NvDAZMba3C1fUFS2lQnGTDsSFAq+rgjStsCIv09wuaBizwOm9feRqco+hL7frozoNuxcZP
-	rPYfZv7Bf6Svpt+ID+D0tD4fgOSL0PHZa7XOUTyMmH9hRfVVW111ncbgKAZShQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723647140;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to; bh=TeROMW4ncpWRXfRpylE22foqYWiEQaY91Vj1aVGafOo=;
-	b=nw4jBGPAp33nmes3D0gMAyiYSka4bVKz/xZ0JU+ePC+EVv6lvcuLo85kH5Gbx/RsHHQ9ez
-	Uf79Me03S9O+bABQ==
-To: Li Huafei <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, kan.liang@linux.intel.com, bp@alien8.de,
- dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-In-Reply-To: <fb87cc82-94b7-31aa-0374-a1d7fa49470e@huawei.com>
-Date: Wed, 14 Aug 2024 16:52:19 +0200
-Message-ID: <87sev7nom4.ffs@tglx>
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Kbhb030fjOV/7gP5XT45pz/WKEU7wwGKMm6aYzIdmb8=;
+	b=GlNqicODVgBYn8RmG+VVR+CV9QbQhCptOv/IjMBsmAhj8bVOqmJyCajVyIZBGsQRrZYMd6
+	eMpqgwyrYZU8j9bLZXcQHjA9rj+bvE+tWcvsB8s4qg2wubUlWYKhx94aUdqbf3IqS5rpDT
+	FbsSt9Z/U0MrmNIK0VdTFDIA+oS43jo=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-364-P6bweoCfN_CkBWF6jD1dig-1; Wed,
+ 14 Aug 2024 11:17:45 -0400
+X-MC-Unique: P6bweoCfN_CkBWF6jD1dig-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9D891944CEE;
+	Wed, 14 Aug 2024 15:17:43 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.111])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C41441955F3F;
+	Wed, 14 Aug 2024 15:17:39 +0000 (UTC)
+From: vmolnaro@redhat.com
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	acme@redhat.com
+Cc: adrian.hunter@intel.com,
+	atrajeev@linux.vnet.ibm.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	kjain@linux.ibm.com,
+	mpetlan@redhat.com,
+	rstoyano@redhat.com
+Subject: [PATCH v3] perf test record.sh: Raise limit of open file descriptors
+Date: Wed, 14 Aug 2024 17:17:34 +0200
+Message-ID: <20240814151734.15409-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
 
-Li!
+From: Veronika Molnarova <vmolnaro@redhat.com>
 
-On Tue, Aug 13 2024 at 21:13, Li Huafei wrote:
-> On 2024/8/1 3:20, Thomas Gleixner wrote:
->>> My machine has 32 physical cores, each with two logical cores. During
->>> testing, it executes the CVE-2015-3290 test case 100 times concurrently.
->>>
->>> This warning was already present in [1] and a patch was given there to
->>> limit period to 128 on Haswell, but that patch was not merged into the
->>> mainline.  In [2] the period on Nehalem was limited to 32. I tested 16
->>> and 32 period on my machine and found that the problem could be
->>> reproduced with a limit of 16, but the problem did not reproduce when
->>> set to 32. It looks like we can limit the cycles to 32 on Haswell as
->>> well.
->> 
->> It looks like? Either it works or not.
->
-> It worked for my test scenario. I say "looks like" because I'm not sure
-> how it circumvents the problem, and if the limit of 32 no longer works
-> if I increase the number of test cases executed in parallel. Any
-> suggestions?
+Subtest for system-wide record with '--threads=cpu' option fails due
+to a limit of open file descriptors on systems with 128 or more CPUs
+as the default limit is set to 1024.
 
-If you read back through the email history of these limits, then you can
-see that too short periods cause that problem on Broadwell due to a
-erratum, which is explained on top of the BDW limit.
+The number of open file descriptors should be slightly above
+nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
+which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
+16*nmb_cpus for the test.
 
-Now looking at the HSW specification update specifically erratum HSW11:
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Radostin Stoyanov <rstoyano@redhat.com>
+Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+---
+v2: Rebase the patch to apply upstream
+v3: Fix shellcheck warnings
+---
+ tools/perf/tests/shell/record.sh | 32 ++++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-  Performance Monitor Precise Instruction Retired Event May Present
-  Wrong Indications
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 3d1a7759a7b2..c1160d36311a 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -22,6 +22,21 @@ cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
+ br_cntr_file="/caps/branch_counter_nr"
+ br_cntr_output="branch stack counters"
+ 
++ulimit_supported=false
++# With option --threads=cpu the number of open file descriptors should be
++# equal to sum of:    nmb_cpus * nmb_events (2+dummy),
++#                     nmb_threads for perf.data.n (equal to nmb_cpus) and
++#                     2*nmb_cpus of pipes = 4*nmb_cpus (each pipe has 2 ends)
++# All together it needs 8*nmb_cpus file descriptors plus some are also used
++# outside of testing, thus raising the limit to 16*nmb_cpus
++min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
++
++# shellcheck disable=SC3045 # ulimit is required for testing --threads option
++default_fd_limit=$(ulimit -Sn)
++if [ $? -eq 0 ]; then
++  ulimit_supported=true
++fi
++
+ cleanup() {
+   rm -rf "${perfdata}"
+   rm -rf "${perfdata}".old
+@@ -107,6 +122,11 @@ test_register_capture() {
+ 
+ test_system_wide() {
+   echo "Basic --system-wide mode test"
++  if [ ! $ulimit_supported ] && [ $min_fd_limit -gt 1024 ]
++  then
++    echo "Limited file descriptors for --threads option [Skipped not available]"
++    return
++  fi
+   if ! perf record -aB --synth=no -o "${perfdata}" ${testprog} 2> /dev/null
+   then
+     echo "System-wide record [Skipped not supported]"
+@@ -190,11 +210,23 @@ test_branch_counter() {
+   echo "Basic branch counter test [Success]"
+ }
+ 
++# raise the limit of file descriptors to required minimum
++if [ $ulimit_supported ] && [ $default_fd_limit -lt $min_fd_limit ]; then
++  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
++  ulimit -Sn $min_fd_limit
++fi
++
+ test_per_thread
+ test_register_capture
+ test_system_wide
+ test_workload
+ test_branch_counter
+ 
++# restore the default value
++if [ $ulimit_supported ]; then
++  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
++  ulimit -Sn $default_fd_limit
++fi
++
+ cleanup
+ exit $err
+-- 
+2.43.0
 
-  Problem:
-         When the Precise Distribution for Instructions Retired (PDIR)
-         mechanism is activated (INST_RETIRED.ALL (event C0H, umask
-         value 00H) on Counter 1 programmed in PEBS mode), the processor
-         may return wrong PEBS or Performance Monitoring Interrupt (PMI)
-         interrupts and/or incorrect counter values if the counter is
-         reset with a Sample- After-Value (SAV) below 100 (the SAV is
-         the counter reset value software programs in the MSR
-         IA32_PMC1[47:0] in order to control interrupt frequency).
-
-  Implication:
-         Due to this erratum, when using low SAV values, the program may
-         get incorrect PEBS or PMI interrupts and/or an invalid counter
-         state.
-
-  Workaround:
-         The sampling driver should avoid using SAV<100.
-
-IOW, that's exactly the same issue as the BDM11 erratum.
-
-Kan: Can you please go through the various specification updates and
-identify which generations are affected by this and fix it once and
-forever in a sane way instead of relying on 'tried until it works by
-some definition of works' hacks. These errata are there for a reason.
-
-
-But that does not explain the fallout with that cve test because that
-does not use PEBS. It's using fixed counter 0.
-
-Li, you added that huge useless backtrace but cut off the output of
-perf_event_print_debug() after it. Can you please provide that
-information so we can see what the counter states are?
-
->>> +static void hsw_limit_period(struct perf_event *event, s64 *left)
->>> +{
->>> +	*left = max(*left, 32LL);
->>> +}
->> 
->> And why do we need a copy of nhm_limit_period() ?
->> 
->
-> Do you mean why the period is limited to 32 like nhm_limit_period()?
-
-No. If 32 is the correct limit, then we don't need another function
-which does exactly the same. So you can assign exactly that function for
-HSW, no?
-
-Thanks,
-
-        tglx
