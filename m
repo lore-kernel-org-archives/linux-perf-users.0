@@ -1,155 +1,137 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9053A2D7B8
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 15:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972F1B1402
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 15:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723648671; cv=none; b=l/vguWhuptSkMl9cCuEYEi8O9Sx06qtiYPSr3F7H0Wq34H+DphTbbg4+VVudnV7qAoOkhdHjD51WLYhhyq2vdGbj4pKVRPqRNQzedlD62qnDkdicqM6/w/dccKYZ/K6dX/PhwLMLirUw8eufAPmsmNcnuZrblukqrIGCsbQLQCA=
+	t=1723649559; cv=none; b=Iua4CcREgmYqNaz7l40uSYjKRVaX5o20JbbbA2y0Kra6x+zZZ5O0TB74cj7Em6KoBva11PtdW6DprVp2+3M2ztrUFEnhdIWUjai6kQ1v0e+KyCQJR8qNt8WM3jfk1NbnHSKaeqEVjkrqor79te9vIASKbpkxy230Kom1DuOt+uE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723648671; c=relaxed/simple;
-	bh=aRFyNechgxwKfivMiydKxMx3V0Va9iWCfEAI+jT3esg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZqLFg42m/nE/4J8RTNFEeuo7NprlIElAN3RU5IuOHHE9Y3hFhJoy79c2f0lO5kc+GQHRigj3yKmMVgMRJKqp4A9Pudo4ypyBDf6tTrV2Jt5WdgW701ORZR8dd3cJLi3/2EfVfdOzXNZ/ZT83gCqgKuYE3Gqa5qJRwUoBFT+zhdQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GlNqicOD; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723649559; c=relaxed/simple;
+	bh=zz+YrMBOpf3lZ1InXmWnXj4epipPZp4tSK8KUaYj5Dw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c9kF8AQYsdf0GvY4WfSIdMheRf5IpxEriDQmHjm+wq14x7r8FRJZwzlg95Wkplvh3Xi75F3AVSKqX6luC66SLkfG09Py4XuL/sDYRD1Szi+WSFr7AlAG5ewzbkUCUiKZEkcIujQMym8LdB6ZWBLCmGtlfBJVPD3MWBc/ZBuGItg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOY32ZiA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GlNqicOD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723648668;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Kbhb030fjOV/7gP5XT45pz/WKEU7wwGKMm6aYzIdmb8=;
-	b=GlNqicODVgBYn8RmG+VVR+CV9QbQhCptOv/IjMBsmAhj8bVOqmJyCajVyIZBGsQRrZYMd6
-	eMpqgwyrYZU8j9bLZXcQHjA9rj+bvE+tWcvsB8s4qg2wubUlWYKhx94aUdqbf3IqS5rpDT
-	FbsSt9Z/U0MrmNIK0VdTFDIA+oS43jo=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-364-P6bweoCfN_CkBWF6jD1dig-1; Wed,
- 14 Aug 2024 11:17:45 -0400
-X-MC-Unique: P6bweoCfN_CkBWF6jD1dig-1
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B9D891944CEE;
-	Wed, 14 Aug 2024 15:17:43 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.111])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C41441955F3F;
-	Wed, 14 Aug 2024 15:17:39 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: adrian.hunter@intel.com,
-	atrajeev@linux.vnet.ibm.com,
-	irogers@google.com,
-	jolsa@kernel.org,
-	kjain@linux.ibm.com,
-	mpetlan@redhat.com,
-	rstoyano@redhat.com
-Subject: [PATCH v3] perf test record.sh: Raise limit of open file descriptors
-Date: Wed, 14 Aug 2024 17:17:34 +0200
-Message-ID: <20240814151734.15409-1-vmolnaro@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOY32ZiA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84824C116B1;
+	Wed, 14 Aug 2024 15:32:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723649559;
+	bh=zz+YrMBOpf3lZ1InXmWnXj4epipPZp4tSK8KUaYj5Dw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eOY32ZiARmrTUuTq20HbOvUcmFOaZOMjwwVZL72W2tZfH9A4ADXmZKaWunCznnju3
+	 gvXOsemcbDSDwSeij77WRmqzez5FZV8yzenCIZ9RjkAtODQdXHitsdAFzzGV0JToc0
+	 LKpskECeV+PexzhnDGP6uQ1lW4mY2iyK/Ikk7xgAhQThNGalOwJfr3GmZYxT27DSn8
+	 vLwDgORxwoOezGhuUO66xgnwhNNjG7tFMgRz+sdGikuSpELlQEOp+A/QhSAyUbh+1K
+	 tf50dBeadSVBD2T8QSMDMBTgl+t5laxv3WA1G8Iym+pOhSGJmx0+WYu33zeSHa03T5
+	 1nah9kLQ/6tGA==
+Date: Wed, 14 Aug 2024 12:32:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: vmolnaro@redhat.com
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com,
+	adrian.hunter@intel.com, atrajeev@linux.vnet.ibm.com,
+	irogers@google.com, jolsa@kernel.org, kjain@linux.ibm.com,
+	mpetlan@redhat.com, rstoyano@redhat.com
+Subject: Re: [PATCH v3] perf test record.sh: Raise limit of open file
+ descriptors
+Message-ID: <ZrzOFDmwl9Z8F8NP@x1>
+References: <20240814151734.15409-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20240814151734.15409-1-vmolnaro@redhat.com>
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+On Wed, Aug 14, 2024 at 05:17:34PM +0200, vmolnaro@redhat.com wrote:
+> From: Veronika Molnarova <vmolnaro@redhat.com>
+> 
+> Subtest for system-wide record with '--threads=cpu' option fails due
+> to a limit of open file descriptors on systems with 128 or more CPUs
+> as the default limit is set to 1024.
+> 
+> The number of open file descriptors should be slightly above
+> nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
+> which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
+> 16*nmb_cpus for the test.
 
-Subtest for system-wide record with '--threads=cpu' option fails due
-to a limit of open file descriptors on systems with 128 or more CPUs
-as the default limit is set to 1024.
+So it is not applying anymore, Kan Liang changed that file, I'm fixing
+it up:
 
-The number of open file descriptors should be slightly above
-nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
-which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
-16*nmb_cpus for the test.
+⬢[acme@toolbox perf-tools-next]$        git am ./v3_20240814_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
+Applying: perf test record.sh: Raise limit of open file descriptors
+error: patch failed: tools/perf/tests/shell/record.sh:22
+error: tools/perf/tests/shell/record.sh: patch does not apply
+Patch failed at 0001 perf test record.sh: Raise limit of open file descriptors
+hint: Use 'git am --show-current-patch=diff' to see the failed patch
+hint: When you have resolved this problem, run "git am --continue".
+hint: If you prefer to skip this patch, run "git am --skip" instead.
+hint: To restore the original branch and stop patching, run "git am --abort".
+hint: Disable this message with "git config advice.mergeConflict false"
+⬢[acme@toolbox perf-tools-next]$
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kajol Jain <kjain@linux.ibm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Radostin Stoyanov <rstoyano@redhat.com>
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
-v2: Rebase the patch to apply upstream
-v3: Fix shellcheck warnings
----
- tools/perf/tests/shell/record.sh | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+Doing it manually makes us go farther:
 
+⬢[acme@toolbox perf-tools-next]$ patch -p1 < ./v3_20240814_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
+patching file tools/perf/tests/shell/record.sh
+Hunk #1 succeeded at 23 with fuzz 2 (offset 1 line).
+Hunk #2 succeeded at 123 (offset 1 line).
+Hunk #3 succeeded at 217 with fuzz 1 (offset 7 lines).
+⬢[acme@toolbox perf-tools-next]$
+
+After applying it with the resulting diff, I think we should not disable
+those changes, just state the precise shell we think is needed for this
+particular test:
+
+⬢[acme@toolbox perf-tools-next]$ git diff
 diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 3d1a7759a7b2..c1160d36311a 100755
+index 28f5fe3b380e0b06..de913ebeb54ba220 100755
 --- a/tools/perf/tests/shell/record.sh
 +++ b/tools/perf/tests/shell/record.sh
-@@ -22,6 +22,21 @@ cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
- br_cntr_file="/caps/branch_counter_nr"
- br_cntr_output="branch stack counters"
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # perf record tests
+ # SPDX-License-Identifier: GPL-2.0
  
-+ulimit_supported=false
-+# With option --threads=cpu the number of open file descriptors should be
-+# equal to sum of:    nmb_cpus * nmb_events (2+dummy),
-+#                     nmb_threads for perf.data.n (equal to nmb_cpus) and
-+#                     2*nmb_cpus of pipes = 4*nmb_cpus (each pipe has 2 ends)
-+# All together it needs 8*nmb_cpus file descriptors plus some are also used
-+# outside of testing, thus raising the limit to 16*nmb_cpus
-+min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
-+
-+# shellcheck disable=SC3045 # ulimit is required for testing --threads option
-+default_fd_limit=$(ulimit -Sn)
-+if [ $? -eq 0 ]; then
-+  ulimit_supported=true
-+fi
-+
- cleanup() {
-   rm -rf "${perfdata}"
-   rm -rf "${perfdata}".old
-@@ -107,6 +122,11 @@ test_register_capture() {
+@@ -32,7 +32,6 @@ ulimit_supported=false
+ # outside of testing, thus raising the limit to 16*nmb_cpus
+ min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
  
- test_system_wide() {
-   echo "Basic --system-wide mode test"
-+  if [ ! $ulimit_supported ] && [ $min_fd_limit -gt 1024 ]
-+  then
-+    echo "Limited file descriptors for --threads option [Skipped not available]"
-+    return
-+  fi
-   if ! perf record -aB --synth=no -o "${perfdata}" ${testprog} 2> /dev/null
-   then
-     echo "System-wide record [Skipped not supported]"
-@@ -190,11 +210,23 @@ test_branch_counter() {
-   echo "Basic branch counter test [Success]"
- }
+-# shellcheck disable=SC3045 # ulimit is required for testing --threads option
+ default_fd_limit=$(ulimit -Sn)
+ if [ $? -eq 0 ]; then
+   ulimit_supported=true
+@@ -219,7 +218,6 @@ test_branch_counter() {
  
-+# raise the limit of file descriptors to required minimum
-+if [ $ulimit_supported ] && [ $default_fd_limit -lt $min_fd_limit ]; then
-+  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
-+  ulimit -Sn $min_fd_limit
-+fi
-+
- test_per_thread
- test_register_capture
- test_system_wide
- test_workload
- test_branch_counter
+ # raise the limit of file descriptors to required minimum
+ if [ $ulimit_supported ] && [ $default_fd_limit -lt $min_fd_limit ]; then
+-  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
+   ulimit -Sn $min_fd_limit
+ fi
  
-+# restore the default value
-+if [ $ulimit_supported ]; then
-+  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
-+  ulimit -Sn $default_fd_limit
-+fi
-+
- cleanup
- exit $err
--- 
-2.43.0
+@@ -231,7 +229,6 @@ test_branch_counter
+ 
+ # restore the default value
+ if [ $ulimit_supported ]; then
+-  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
+   ulimit -Sn $default_fd_limit
+ fi
+ 
+⬢[acme@toolbox perf-tools-next]$
 
+I.e. just state that /bin/bash is needed, like is done in multiple other
+shell tests:
+
+⬢[acme@toolbox perf-tools-next]$ head -1 tools/perf/tests/shell/*.sh | grep bash | wc -l
+16
+⬢[acme@toolbox perf-tools-next]$
+
+Ok? I'm applying it with this change. Thanks,
+
+- Arnaldo
