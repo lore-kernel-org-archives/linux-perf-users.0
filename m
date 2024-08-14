@@ -1,160 +1,172 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D41C1BBBDE
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 17:02:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9606713CABC;
+	Wed, 14 Aug 2024 18:15:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723654923; cv=none; b=A1LzG6V9D9UsF6z5Igj7KQgGkive07UdEwE9iPLnnAJs2ENE+gaimygl185WJqj+qWIJ2dr8/RO+S44sTgm+sazl3sNnoPBgM959HOZNlbuxmR9O6rCoUoqUw7nZdzpgxsrHLvwJN0A5LimCZ9Ob97voAjk7KkHfbMt7PPB4oZc=
+	t=1723659318; cv=none; b=A9fcgh+bvICgSD+J4XSjDBYNaNe7YX+q+nFb3NYsLPjPlXGI/XCuSzbrro23XE5xxiykKxA1MvUzkrVyDZtJ3sOO3Y59GpgPB7rXkZiaj06f82f5/Wib1387wCjexd4OhKcIrtZXtcAYl43DMJ8vlCYKjgP0805MF8ZFdXRlMfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723654923; c=relaxed/simple;
-	bh=sTMdZ9woXqF8X8oUxhp2oJfyl5X5AVclLdFthtfujys=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AtK9+euZA3eygm02FD9+pEV1doOn0EMtNhA447/OS5f3n9rBZZ4jvTqRawoitp7x3DCq4/f5LzSjdRR+enQF8BcDTbfAXnlFGoLUS79pf8GqIOm89HF44cSr/DqnGM1oqxw5RPrciZFLfSqg+hL89E3BFZG6duz+kAgoo/evpjE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=WGZ8Vsw3; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1723659318; c=relaxed/simple;
+	bh=is7S2/rJ4MTcclVdO3VVsiHsnMVP/hqoxQUNrq2oNUg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GtlT0kHeY7X9RfKV0miuCgW2LhJu+7L+SOnaHz3WTfTR/6f9nF/mgBNGLeLXZcjSLHuC31S39UOWwbIshdM4TghKmUChcOiYNwyBxrthxhiXLUVLuUu8xtW5ymS/lnnLJIgzj/5b9q+Z+NPxV+zYd7JMCOs3Cg1/VEaogJiNbFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+RD1Ec0; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WGZ8Vsw3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723654920;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=iAOw1/o21opkXE6SecINtnPRNY9unTE3VQjS4j3Sdp4=;
-	b=WGZ8Vsw3/yE8rSo0j09ItIDZ5LciipM+m0YQ4BD9IyMl6mggQuTrpcq7LRzyx58v76cPrz
-	QHnjyLC+K2W42nCoiRhjFzwAFRgfSjEs0T8EyTZSbqo8W62vH/4YXQzyiG7zNqQM1vvjjM
-	sPpc5QufQRNj8eoyQFMiI7DKVTwd/gE=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-12-TZkV2-MLPm-Ol8t6o7x5EQ-1; Wed,
- 14 Aug 2024 13:01:57 -0400
-X-MC-Unique: TZkV2-MLPm-Ol8t6o7x5EQ-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+RD1Ec0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723659317; x=1755195317;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=is7S2/rJ4MTcclVdO3VVsiHsnMVP/hqoxQUNrq2oNUg=;
+  b=i+RD1Ec0pO+8Ehhjk0o7OkiOOGMo2KnzHLpvydUZP4Cdwoqov92IFsqi
+   3Feq1IqCPPcy3dte+LqMBjpbCmIc6g2d0LM02p/zPdfU9xKWt4TDjx4CY
+   eEL/Wb+o8A4Uf+c1X5jI9oeOx2vO/OL0KA3gVNV94bp0JiYojihIUZd9u
+   nHXds35bPyMGRHhpP7Erdnl81IU+NrLm1ZfDBzcgCnGtpPc2SEpIbYzY4
+   TXKkO5fW3FOH/8LRHzEJXhxf5zs43NJpEqhhYd9Tz8wWqZONlY9rFcANm
+   8gYeWoHTp9beqhZCArfEliC+3T7pAclAXqbEINFLG6uvpVXXXUd3wu4PF
+   Q==;
+X-CSE-ConnectionGUID: DCwE11ZoRjeZc9d88/jrPA==
+X-CSE-MsgGUID: hNyLFZdQQMOH4ofXDV6KSA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="32525568"
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="32525568"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 11:15:16 -0700
+X-CSE-ConnectionGUID: CPZA/4CmT8+ybdwBjwyLRg==
+X-CSE-MsgGUID: poKIMBO7RS6shBqh0/JtHA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,146,1719903600"; 
+   d="scan'208";a="58767112"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 11:15:15 -0700
+Received: from [10.212.17.191] (kliang2-mobl1.ccr.corp.intel.com [10.212.17.191])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 90956190FEFF;
-	Wed, 14 Aug 2024 17:01:55 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.224.111])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id DA83419560A3;
-	Wed, 14 Aug 2024 17:01:51 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: kjain@linux.ibm.com,
-	mpetlan@redhat.com,
-	rstoyano@redhat.com,
-	mark.rutland@arm.com,
-	jolsa@kernel.org,
-	alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com
-Subject: [PATCH v4] perf test stat_all_pmu.sh: Parse return value of perf stat
-Date: Wed, 14 Aug 2024 19:01:46 +0200
-Message-ID: <20240814170146.20678-1-vmolnaro@redhat.com>
+	by linux.intel.com (Postfix) with ESMTPS id 57C7120CFED8;
+	Wed, 14 Aug 2024 11:15:13 -0700 (PDT)
+Message-ID: <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com>
+Date: Wed, 14 Aug 2024 14:15:11 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
+To: Thomas Gleixner <tglx@linutronix.de>, Li Huafei <lihuafei1@huawei.com>,
+ peterz@infradead.org, mingo@redhat.com
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <87sev7nom4.ffs@tglx>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <87sev7nom4.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
 
-With the upstream MR !3916 of commit ad86d7ee43b22aa2 ('powerpc/hv-gpci:
-Fix the H_GET_PERF_COUNTER_INFO hcall return value checks') the perf
-stat for hv_gpci events without required permission set returns an
-error value of -1 to differentiate the output from the unsupported
-events. The stat_all_pmu test was designed in a way, that if any
-command exits with a non-zero value the test exits with an error
-value without any information provided due to the 'set -e' option.
 
-The issue propagated upstream as the list of the files that affected perf
-did not cover the changed files and was updated after the issue was
-discovered. It was caught by CKI testing where it was triaged to stop
-blocking further MRs, as most of the powerpc machines have some of
-the hv_gpci events without the required permissions.
+On 2024-08-14 10:52 a.m., Thomas Gleixner wrote:
+> Li!
+> 
+> On Tue, Aug 13 2024 at 21:13, Li Huafei wrote:
+>> On 2024/8/1 3:20, Thomas Gleixner wrote:
+>>>> My machine has 32 physical cores, each with two logical cores. During
+>>>> testing, it executes the CVE-2015-3290 test case 100 times concurrently.
+>>>>
+>>>> This warning was already present in [1] and a patch was given there to
+>>>> limit period to 128 on Haswell, but that patch was not merged into the
+>>>> mainline.  In [2] the period on Nehalem was limited to 32. I tested 16
+>>>> and 32 period on my machine and found that the problem could be
+>>>> reproduced with a limit of 16, but the problem did not reproduce when
+>>>> set to 32. It looks like we can limit the cycles to 32 on Haswell as
+>>>> well.
+>>>
+>>> It looks like? Either it works or not.
+>>
+>> It worked for my test scenario. I say "looks like" because I'm not sure
+>> how it circumvents the problem, and if the limit of 32 no longer works
+>> if I increase the number of test cases executed in parallel. Any
+>> suggestions?
+> 
+> If you read back through the email history of these limits, then you can
+> see that too short periods cause that problem on Broadwell due to a
+> erratum, which is explained on top of the BDW limit.
+> 
+> Now looking at the HSW specification update specifically erratum HSW11:
+> 
+>   Performance Monitor Precise Instruction Retired Event May Present
+>   Wrong Indications
+> 
+>   Problem:
+>          When the Precise Distribution for Instructions Retired (PDIR)
+>          mechanism is activated (INST_RETIRED.ALL (event C0H, umask
+>          value 00H) on Counter 1 programmed in PEBS mode), the processor
+>          may return wrong PEBS or Performance Monitoring Interrupt (PMI)
+>          interrupts and/or incorrect counter values if the counter is
+>          reset with a Sample- After-Value (SAV) below 100 (the SAV is
+>          the counter reset value software programs in the MSR
+>          IA32_PMC1[47:0] in order to control interrupt frequency).
+> 
+>   Implication:
+>          Due to this erratum, when using low SAV values, the program may
+>          get incorrect PEBS or PMI interrupts and/or an invalid counter
+>          state.
+> 
+>   Workaround:
+>          The sampling driver should avoid using SAV<100.
+> 
+> IOW, that's exactly the same issue as the BDM11 erratum.
+> 
+> Kan: Can you please go through the various specification updates and
+> identify which generations are affected by this and fix it once and
+> forever in a sane way instead of relying on 'tried until it works by
+> some definition of works' hacks. These errata are there for a reason.
 
-Remove the 'set -e' option from the test and rework the test case to log
-the status of the event for better maintainability. Instead of exiting
-immediately after 'perf stat' ends with a non-zero value, check the
-return value and output of the 'perf stat' command with the appropriate action.
+Sure. I will check all the related erratum and propose a fix.
 
-Link to the MR !3916 of commit ad86d7ee43b22aa2:
-https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-9/-/merge_requests/3916
+> 
+> 
+> But that does not explain the fallout with that cve test because that
+> does not use PEBS. It's using fixed counter 0.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Radostin Stoyanov <rstoyano@redhat.com>
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
-v2: Fix commit hash
-v3: Add 'device busy' for parallel testing
-v4: Change commit message
----
- tools/perf/tests/shell/stat_all_pmu.sh | 41 ++++++++++++++++++--------
- 1 file changed, 29 insertions(+), 12 deletions(-)
+The errata also mentions about the PMI interrupts, which may imply
+non-PEBS case. I will double check with the architect.
 
-diff --git a/tools/perf/tests/shell/stat_all_pmu.sh b/tools/perf/tests/shell/stat_all_pmu.sh
-index c77955419173..a75beddda4db 100755
---- a/tools/perf/tests/shell/stat_all_pmu.sh
-+++ b/tools/perf/tests/shell/stat_all_pmu.sh
-@@ -2,21 +2,38 @@
- # perf all PMU test
- # SPDX-License-Identifier: GPL-2.0
- 
--set -e
- 
- # Test all PMU events; however exclude parameterized ones (name contains '?')
- for p in $(perf list --raw-dump pmu | sed 's/[[:graph:]]\+?[[:graph:]]\+[[:space:]]//g'); do
--  echo "Testing $p"
--  result=$(perf stat -e "$p" true 2>&1)
--  if ! echo "$result" | grep -q "$p" && ! echo "$result" | grep -q "<not supported>" ; then
--    # We failed to see the event and it is supported. Possibly the workload was
--    # too small so retry with something longer.
--    result=$(perf stat -e "$p" perf bench internals synthesize 2>&1)
--    if ! echo "$result" | grep -q "$p" ; then
--      echo "Event '$p' not printed in:"
--      echo "$result"
--      exit 1
-+  echo -n "Testing event '$p' -- "
-+  stat_output=$(perf stat -e "$p" true 2>&1)
-+  stat_result=$?
-+  if echo "$stat_output" | grep -q "$p"; then
-+    # return value 0 if counters get printed either if the event is supported or not
-+    if [ $stat_result -eq 0 ] && ! echo "$stat_output" | grep -q "<not supported>"; then
-+        echo "supported"
-+    elif [ $stat_result -eq 0 ]; then
-+        echo "not supported"
-+    # return value 255 when the required permission for the event is not set
-+    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "No permission"; then
-+        echo "no permission to enable"
-+    # return value 255 in case of resource busy during parallel testing of events
-+    elif [ $stat_result -eq 255 ] && echo "$stat_output" | grep -q "Device or resource busy"; then
-+        echo "resource busy"
-+    # return value 129 when trying to run 'perf stat' with a non-existent event
-+    elif [ $stat_result -eq 129 ] && echo "$stat_output" | grep -q "Bad event name"; then
-+        echo "Fail: Bad event name"
-+        echo "$stat_output"
-+        exit 1
-+    else
-+        echo "Fail: Unknown return value $stat_result"
-+        echo "$stat_output"
-+        exit 1
-     fi
-+  else
-+      echo "Fail: Event '$p' not printed in:"
-+      echo "$stat_output"
-+      exit 1
-   fi
- done
- 
--- 
-2.43.0
+According to the description of the patch, if I understand correctly, it
+runs 100 CVE-2015-3290 tests at the same time. If so, all the GP
+counters are used. Huafei, could you please confirm?
 
+Thanks,
+Kan
+> 
+> Li, you added that huge useless backtrace but cut off the output of
+> perf_event_print_debug() after it. Can you please provide that
+> information so we can see what the counter states are?
+> 
+>>>> +static void hsw_limit_period(struct perf_event *event, s64 *left)
+>>>> +{
+>>>> +	*left = max(*left, 32LL);
+>>>> +}
+>>>
+>>> And why do we need a copy of nhm_limit_period() ?
+>>>
+>>
+>> Do you mean why the period is limited to 32 like nhm_limit_period()?
+> 
+> No. If 32 is the correct limit, then we don't need another function
+> which does exactly the same. So you can assign exactly that function for
+> HSW, no?
+> 
+> Thanks,
+> 
+>         tglx
