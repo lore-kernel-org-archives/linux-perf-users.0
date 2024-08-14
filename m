@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8972F1B1402
-	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 15:32:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0872F1B4C54
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 15:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723649559; cv=none; b=Iua4CcREgmYqNaz7l40uSYjKRVaX5o20JbbbA2y0Kra6x+zZZ5O0TB74cj7Em6KoBva11PtdW6DprVp2+3M2ztrUFEnhdIWUjai6kQ1v0e+KyCQJR8qNt8WM3jfk1NbnHSKaeqEVjkrqor79te9vIASKbpkxy230Kom1DuOt+uE=
+	t=1723649756; cv=none; b=ZmXjc8mIZIIvkPY5A8WtQPAkBO0HZSB2R3FBHFZbTtHBea5dDU+10gNjE3E/6LqzhKcdBul5EKY6CEckDpnCuS8KU1eIkNS1IXBmb6J7G5ujl+EUAypkFWD9oMR4IqnPEtRegGh85v34d4Y/3hiAOe4Rw1b64K2fUGxY3k3uQBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723649559; c=relaxed/simple;
-	bh=zz+YrMBOpf3lZ1InXmWnXj4epipPZp4tSK8KUaYj5Dw=;
+	s=arc-20240116; t=1723649756; c=relaxed/simple;
+	bh=lU4ilFcNy8RuoBY57DFb45lojL2+GsQSpFC95tedjVU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c9kF8AQYsdf0GvY4WfSIdMheRf5IpxEriDQmHjm+wq14x7r8FRJZwzlg95Wkplvh3Xi75F3AVSKqX6luC66SLkfG09Py4XuL/sDYRD1Szi+WSFr7AlAG5ewzbkUCUiKZEkcIujQMym8LdB6ZWBLCmGtlfBJVPD3MWBc/ZBuGItg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eOY32ZiA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=O7VvGEl+zdrFP4owlKVx7gEaM8vuOeXVXn6zYX1CZ9vfLhebR0p/8C9FEJHSJETROMwkmfL9AAEgjlptvVReHO1XGYjOWmNoH1r8Qaqwaj/2ZB0lurvjQbDoC4CpcydUaW1Ek5YNuwv1J8gzL0wZYC60/GKQjL4WqMQtkqPudZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ED70q5zS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eOY32ZiA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84824C116B1;
-	Wed, 14 Aug 2024 15:32:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ED70q5zS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36D36C116B1;
+	Wed, 14 Aug 2024 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723649559;
-	bh=zz+YrMBOpf3lZ1InXmWnXj4epipPZp4tSK8KUaYj5Dw=;
+	s=k20201202; t=1723649755;
+	bh=lU4ilFcNy8RuoBY57DFb45lojL2+GsQSpFC95tedjVU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eOY32ZiARmrTUuTq20HbOvUcmFOaZOMjwwVZL72W2tZfH9A4ADXmZKaWunCznnju3
-	 gvXOsemcbDSDwSeij77WRmqzez5FZV8yzenCIZ9RjkAtODQdXHitsdAFzzGV0JToc0
-	 LKpskECeV+PexzhnDGP6uQ1lW4mY2iyK/Ikk7xgAhQThNGalOwJfr3GmZYxT27DSn8
-	 vLwDgORxwoOezGhuUO66xgnwhNNjG7tFMgRz+sdGikuSpELlQEOp+A/QhSAyUbh+1K
-	 tf50dBeadSVBD2T8QSMDMBTgl+t5laxv3WA1G8Iym+pOhSGJmx0+WYu33zeSHa03T5
-	 1nah9kLQ/6tGA==
-Date: Wed, 14 Aug 2024 12:32:36 -0300
+	b=ED70q5zSGkgQGa72ar8GZ9uaNIuSuV1JDiGx9Xv0WHHGd07D/lUB/pYIsi/P/9cSv
+	 X3/WQFzeiD8jTGNWttQdWim8KV9UgLs8iEWC6h90ph6yQ0ACXiEWC1dWxFcj+/Spa0
+	 uY4nkxoN6pd4tTshIgtlvre8w9wmSFNMrSljnMIj6k7LaNVvp/VsfBZx6d3i1mdybF
+	 RzVXHG3Ik1pT7pD2hz5d1SPUZofz+9jZordxZ/U0uTIwPUENC+4oh8WkNMctJSOPpv
+	 tqOSTEZtNxEGI0J8xzM0MeFP5cg3xw1KjFcQhXjyK6rp9h+CmMYDgi/+6QXEr1RGCw
+	 7rzBmsHjbhohw==
+Date: Wed, 14 Aug 2024 12:35:53 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: vmolnaro@redhat.com
 Cc: linux-perf-users@vger.kernel.org, acme@redhat.com,
@@ -35,103 +35,46 @@ Cc: linux-perf-users@vger.kernel.org, acme@redhat.com,
 	mpetlan@redhat.com, rstoyano@redhat.com
 Subject: Re: [PATCH v3] perf test record.sh: Raise limit of open file
  descriptors
-Message-ID: <ZrzOFDmwl9Z8F8NP@x1>
+Message-ID: <ZrzO2T1s_tIpqizG@x1>
 References: <20240814151734.15409-1-vmolnaro@redhat.com>
+ <ZrzOFDmwl9Z8F8NP@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240814151734.15409-1-vmolnaro@redhat.com>
+In-Reply-To: <ZrzOFDmwl9Z8F8NP@x1>
 
-On Wed, Aug 14, 2024 at 05:17:34PM +0200, vmolnaro@redhat.com wrote:
-> From: Veronika Molnarova <vmolnaro@redhat.com>
+On Wed, Aug 14, 2024 at 12:32:39PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Wed, Aug 14, 2024 at 05:17:34PM +0200, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
 > 
-> Subtest for system-wide record with '--threads=cpu' option fails due
-> to a limit of open file descriptors on systems with 128 or more CPUs
-> as the default limit is set to 1024.
-> 
-> The number of open file descriptors should be slightly above
-> nmb_events*nmb_cpus + nmb_cpus(for perf.data.n) + 4*nmb_cpus(for pipes),
-> which equals 8*nmb_cpus. Therefore, temporarily raise the limit to
-> 16*nmb_cpus for the test.
+> Ok? I'm applying it with this change. Thanks,
 
-So it is not applying anymore, Kan Liang changed that file, I'm fixing
-it up:
+So I added this to the log message:
 
-⬢[acme@toolbox perf-tools-next]$        git am ./v3_20240814_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
-Applying: perf test record.sh: Raise limit of open file descriptors
-error: patch failed: tools/perf/tests/shell/record.sh:22
-error: tools/perf/tests/shell/record.sh: patch does not apply
-Patch failed at 0001 perf test record.sh: Raise limit of open file descriptors
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config advice.mergeConflict false"
-⬢[acme@toolbox perf-tools-next]$
+Committer notes:
 
-Doing it manually makes us go farther:
+Instead of disabling ShellCheck warnings all the uses of 'uname -n',
+i.e. those:
 
-⬢[acme@toolbox perf-tools-next]$ patch -p1 < ./v3_20240814_vmolnaro_perf_test_record_sh_raise_limit_of_open_file_descriptors.mbx
-patching file tools/perf/tests/shell/record.sh
-Hunk #1 succeeded at 23 with fuzz 2 (offset 1 line).
-Hunk #2 succeeded at 123 (offset 1 line).
-Hunk #3 succeeded at 217 with fuzz 1 (offset 7 lines).
-⬢[acme@toolbox perf-tools-next]$
+  In tests/shell/record.sh line 35:
+  default_fd_limit=$(ulimit -Sn)
+                            ^-^ SC3045 (warning): In POSIX sh, ulimit -S is undefined.
 
-After applying it with the resulting diff, I think we should not disable
-those changes, just state the precise shell we think is needed for this
-particular test:
+We can just switch from using '/bin/sh' to '/bin/bash' for this test, as
+bash _has_ 'ulimit -n', so ShellCheck will not emit that warning.
 
-⬢[acme@toolbox perf-tools-next]$ git diff
-diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
-index 28f5fe3b380e0b06..de913ebeb54ba220 100755
---- a/tools/perf/tests/shell/record.sh
-+++ b/tools/perf/tests/shell/record.sh
-@@ -1,4 +1,4 @@
--#!/bin/sh
-+#!/bin/bash
- # perf record tests
- # SPDX-License-Identifier: GPL-2.0
- 
-@@ -32,7 +32,6 @@ ulimit_supported=false
- # outside of testing, thus raising the limit to 16*nmb_cpus
- min_fd_limit=$(($(getconf _NPROCESSORS_ONLN) * 16))
- 
--# shellcheck disable=SC3045 # ulimit is required for testing --threads option
- default_fd_limit=$(ulimit -Sn)
- if [ $? -eq 0 ]; then
-   ulimit_supported=true
-@@ -219,7 +218,6 @@ test_branch_counter() {
- 
- # raise the limit of file descriptors to required minimum
- if [ $ulimit_supported ] && [ $default_fd_limit -lt $min_fd_limit ]; then
--  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
-   ulimit -Sn $min_fd_limit
- fi
- 
-@@ -231,7 +229,6 @@ test_branch_counter
- 
- # restore the default value
- if [ $ulimit_supported ]; then
--  # shellcheck disable=SC3045 # ulimit is required for testing --threads option
-   ulimit -Sn $default_fd_limit
- fi
- 
-⬢[acme@toolbox perf-tools-next]$
+There are dozens of 'perf test' shell tests that do just that,
+'/bin/bash' is a reasonable expectation for those tests.
 
-I.e. just state that /bin/bash is needed, like is done in multiple other
-shell tests:
+----------------------------------------------------------
 
-⬢[acme@toolbox perf-tools-next]$ head -1 tools/perf/tests/shell/*.sh | grep bash | wc -l
-16
-⬢[acme@toolbox perf-tools-next]$
+Please let me know if you find any issues with this course of action,
 
-Ok? I'm applying it with this change. Thanks,
+Thanks,
 
 - Arnaldo
