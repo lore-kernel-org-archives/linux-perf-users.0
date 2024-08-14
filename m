@@ -1,272 +1,351 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01788182B5;
-	Wed, 14 Aug 2024 04:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A482D524B4
+	for <linux-perf-users@vger.kernel.org>; Wed, 14 Aug 2024 09:31:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723609080; cv=none; b=eQCC+fG7FiMEKFT4NgdwvBV7H0FUg5yoUQOqt0P1vTxLFL3DVgYBTZ2MMMwUjH8h4zWHeFwozwba6b549IVNyU1g4OAZXxt1YkILwD4nPU21s8NHCXL4qMFobbFtsaXHQdCA6fXq/n5NKNvJHstoGvkZ8u7VdagGHWChO74pmZM=
+	t=1723627882; cv=none; b=QfHYZrscm5HqxHJp4vS8M/XqtqwkUPWzIXUS/MiBvMERbeDAFpoauHRDUURVlwX9oXx99HTSN26DC0CPpUU5mel0ZK8IFA3ZSWekj114+5VDiTNRCHhqpA8JbgenXyXvgbDDCbPLhj8/ZmuerbpQPnr5gtmNLBlrHdqK1WnYiNc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723609080; c=relaxed/simple;
-	bh=aUSmNuue/AkXUWPP12jzk5pWyg5JlEitzEVfGB/cnsQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZDEYTAYWV7Slm21GDWV3l2QWrAQSKJ3fngDNSlqL4r9koX+hxQMrUMWvFMZNa2ozELWvErBhfeV40C8KkPI7Wb/ZJ9jE+9UwtZnpTSmFKrwuXSmiUkuz4CU6UMzvTtQUxj0H92J5p4ITtHvIoKapSdQsj/wMddf6Nym4q7oINpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1723627882; c=relaxed/simple;
+	bh=Dux3JsWK4jL1SRBfORyUbLyBvDj/bKUyGG7gN23xQtw=;
+	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
+	 In-Reply-To:Content-Type; b=ops+23lxlnFrqw3QhCZ0beQXVpCKo9nafdwKC1MFIVdH+m5VtOhrqsY7QpGYiRKnAuTfnpzVMop52u1eV+Wd/yayLPzQPRAQx5oIGkPBvYdmH722yKZmlSqna0HXgD6RLCtxTT1hr/j4QCuOMiGjFD7ZnCSig9gj6fyXcXmleFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WkFLq0C6gzndxJ;
-	Wed, 14 Aug 2024 12:16:35 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 55C3E1800A0;
-	Wed, 14 Aug 2024 12:17:55 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WkNKL4GKtz1T73G;
+	Wed, 14 Aug 2024 17:30:46 +0800 (CST)
+Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
+	by mail.maildlp.com (Postfix) with ESMTPS id 424C31400C9;
+	Wed, 14 Aug 2024 17:31:16 +0800 (CST)
+Received: from [10.67.121.177] (10.67.121.177) by
+ kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Wed, 14 Aug 2024 12:17:53 +0800
-Message-ID: <ddf680b7-181c-fb61-6c56-d0e6dfb756c4@huawei.com>
-Date: Wed, 14 Aug 2024 12:17:52 +0800
+ 15.2.1258.34; Wed, 14 Aug 2024 17:31:15 +0800
+CC: <yangyicong@hisilicon.com>, <linuxarm@huawei.com>,
+	<jonathan.cameron@huawei.com>, <prime.zeng@hisilicon.com>,
+	<hejunhao3@huawei.com>
+Subject: Re: [PATCH] perf vender events arm64: Use "Topdown" as topdown metric
+ group name
+To: <acme@kernel.org>, <namhyung@kernel.org>, <irogers@google.com>,
+	<john.g.garry@oracle.com>, <will@kernel.org>, <james.clark@linaro.org>,
+	<peterz@infradead.org>, <mingo@redhat.com>, <mark.rutland@arm.com>,
+	<linux-perf-users@vger.kernel.org>
+References: <20240730020145.30227-1-yangyicong@huawei.com>
+From: Yicong Yang <yangyicong@huawei.com>
+Message-ID: <84a65340-f9c6-80bf-3648-a470c1335c69@huawei.com>
+Date: Wed, 14 Aug 2024 17:31:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <a22d6d79-fa7e-62b2-0ac1-575068f176a5@huawei.com>
- <CAEf4BzbN-+p0cDnHQPDwhVaqs-r-_Ft-LdUwY2KHG1xfrmyjBQ@mail.gmail.com>
- <CAEf4BzZyCd7ECbWQyEpcB4va_U33v8BdfWVY4cMH4zN-Z1sESw@mail.gmail.com>
- <5a110f15-024f-d693-e04f-7892fc8d7757@huawei.com>
- <CAEf4BzaGPB+AybJNhzD+4rT6ioLuhjp4sW3uG0ST4sCtqSjx1A@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzaGPB+AybJNhzD+4rT6ioLuhjp4sW3uG0ST4sCtqSjx1A@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
+In-Reply-To: <20240730020145.30227-1-yangyicong@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200014.china.huawei.com (7.221.188.8)
 
+A gentle ping...
 
-
-在 2024/8/13 1:57, Andrii Nakryiko 写道:
-> On Mon, Aug 12, 2024 at 5:05 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/8/10 2:40, Andrii Nakryiko 写道:
->>> On Fri, Aug 9, 2024 at 11:34 AM Andrii Nakryiko
->>> <andrii.nakryiko@gmail.com> wrote:
->>>>
->>>> On Fri, Aug 9, 2024 at 12:16 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>
->>>>>
->>>>>
->>>>> 在 2024/8/9 2:26, Andrii Nakryiko 写道:
->>>>>> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>>>
->>>>>>> Hi Andrii and Oleg.
->>>>>>>
->>>>>>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->>>>>>> on arm64. I notice recent discussions on the performance and scalability of uprobes
->>>>>>> within the mailing list. Considering this interest, I've added you and other relevant
->>>>>>> maintainers to the CC list for broader visibility and potential collaboration.
->>>>>>>
->>>>>>
->>>>>> Hi Liao,
->>>>>>
->>>>>> As you can see there is an active work to improve uprobes, that
->>>>>> changes lifetime management of uprobes, removes a bunch of locks taken
->>>>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
->>>>>> hold off a bit with your changes until all that lands. And then
->>>>>> re-benchmark, as costs might shift.
->>>>>
->>>>> Andrii, I'm trying to integrate your lockless changes into the upstream
->>>>> next-20240806 kernel tree. And I ran into some conflicts. please let me
->>>>> know which kernel you're currently working on.
->>>>>
->>>>
->>>> My patches are  based on tip/perf/core. But I also just pushed all the
->>>> changes I have accumulated (including patches I haven't sent for
->>>> review just yet), plus your patches for sighand lock removed applied
->>>> on top into [0]. So you can take a look and use that as a base for
->>>> now. Keep in mind, a bunch of those patches might still change, but
->>>> this should give you the best currently achievable performance with
->>>> uprobes/uretprobes. E.g., I'm getting something like below on x86-64
->>>> (note somewhat linear scalability with number of CPU cores, with
->>>> per-CPU performance *slowly* declining):
->>>>
->>>> uprobe-nop            ( 1 cpus):    3.565 ± 0.004M/s  (  3.565M/s/cpu)
->>>> uprobe-nop            ( 2 cpus):    6.742 ± 0.009M/s  (  3.371M/s/cpu)
->>>> uprobe-nop            ( 3 cpus):   10.029 ± 0.056M/s  (  3.343M/s/cpu)
->>>> uprobe-nop            ( 4 cpus):   13.118 ± 0.014M/s  (  3.279M/s/cpu)
->>>> uprobe-nop            ( 5 cpus):   16.360 ± 0.011M/s  (  3.272M/s/cpu)
->>>> uprobe-nop            ( 6 cpus):   19.650 ± 0.045M/s  (  3.275M/s/cpu)
->>>> uprobe-nop            ( 7 cpus):   22.926 ± 0.010M/s  (  3.275M/s/cpu)
->>>> uprobe-nop            ( 8 cpus):   24.707 ± 0.025M/s  (  3.088M/s/cpu)
->>>> uprobe-nop            (10 cpus):   30.842 ± 0.018M/s  (  3.084M/s/cpu)
->>>> uprobe-nop            (12 cpus):   33.623 ± 0.037M/s  (  2.802M/s/cpu)
->>>> uprobe-nop            (14 cpus):   39.199 ± 0.009M/s  (  2.800M/s/cpu)
->>>> uprobe-nop            (16 cpus):   41.698 ± 0.018M/s  (  2.606M/s/cpu)
->>>> uprobe-nop            (24 cpus):   65.078 ± 0.018M/s  (  2.712M/s/cpu)
->>>> uprobe-nop            (32 cpus):   84.580 ± 0.017M/s  (  2.643M/s/cpu)
->>>> uprobe-nop            (40 cpus):  101.992 ± 0.268M/s  (  2.550M/s/cpu)
->>>> uprobe-nop            (48 cpus):  101.032 ± 1.428M/s  (  2.105M/s/cpu)
->>>> uprobe-nop            (56 cpus):  110.986 ± 0.736M/s  (  1.982M/s/cpu)
->>>> uprobe-nop            (64 cpus):  124.145 ± 0.110M/s  (  1.940M/s/cpu)
->>>> uprobe-nop            (72 cpus):  134.940 ± 0.200M/s  (  1.874M/s/cpu)
->>>> uprobe-nop            (80 cpus):  143.918 ± 0.235M/s  (  1.799M/s/cpu)
->>>>
->>>> uretprobe-nop         ( 1 cpus):    1.987 ± 0.001M/s  (  1.987M/s/cpu)
->>>> uretprobe-nop         ( 2 cpus):    3.766 ± 0.003M/s  (  1.883M/s/cpu)
->>>> uretprobe-nop         ( 3 cpus):    5.638 ± 0.002M/s  (  1.879M/s/cpu)
->>>> uretprobe-nop         ( 4 cpus):    7.275 ± 0.003M/s  (  1.819M/s/cpu)
->>>> uretprobe-nop         ( 5 cpus):    9.124 ± 0.004M/s  (  1.825M/s/cpu)
->>>> uretprobe-nop         ( 6 cpus):   10.818 ± 0.007M/s  (  1.803M/s/cpu)
->>>> uretprobe-nop         ( 7 cpus):   12.721 ± 0.014M/s  (  1.817M/s/cpu)
->>>> uretprobe-nop         ( 8 cpus):   13.639 ± 0.007M/s  (  1.705M/s/cpu)
->>>> uretprobe-nop         (10 cpus):   17.023 ± 0.009M/s  (  1.702M/s/cpu)
->>>> uretprobe-nop         (12 cpus):   18.576 ± 0.014M/s  (  1.548M/s/cpu)
->>>> uretprobe-nop         (14 cpus):   21.660 ± 0.004M/s  (  1.547M/s/cpu)
->>>> uretprobe-nop         (16 cpus):   22.922 ± 0.013M/s  (  1.433M/s/cpu)
->>>> uretprobe-nop         (24 cpus):   34.756 ± 0.069M/s  (  1.448M/s/cpu)
->>>> uretprobe-nop         (32 cpus):   44.869 ± 0.153M/s  (  1.402M/s/cpu)
->>>> uretprobe-nop         (40 cpus):   53.397 ± 0.220M/s  (  1.335M/s/cpu)
->>>> uretprobe-nop         (48 cpus):   48.903 ± 2.277M/s  (  1.019M/s/cpu)
->>>> uretprobe-nop         (56 cpus):   42.144 ± 1.206M/s  (  0.753M/s/cpu)
->>>> uretprobe-nop         (64 cpus):   42.656 ± 1.104M/s  (  0.666M/s/cpu)
->>>> uretprobe-nop         (72 cpus):   46.299 ± 1.443M/s  (  0.643M/s/cpu)
->>>> uretprobe-nop         (80 cpus):   46.469 ± 0.808M/s  (  0.581M/s/cpu)
->>>>
->>>> uprobe-ret            ( 1 cpus):    1.219 ± 0.008M/s  (  1.219M/s/cpu)
->>>> uprobe-ret            ( 2 cpus):    1.862 ± 0.008M/s  (  0.931M/s/cpu)
->>>> uprobe-ret            ( 3 cpus):    2.874 ± 0.005M/s  (  0.958M/s/cpu)
->>>> uprobe-ret            ( 4 cpus):    3.512 ± 0.002M/s  (  0.878M/s/cpu)
->>>> uprobe-ret            ( 5 cpus):    3.549 ± 0.001M/s  (  0.710M/s/cpu)
->>>> uprobe-ret            ( 6 cpus):    3.425 ± 0.003M/s  (  0.571M/s/cpu)
->>>> uprobe-ret            ( 7 cpus):    3.551 ± 0.009M/s  (  0.507M/s/cpu)
->>>> uprobe-ret            ( 8 cpus):    3.050 ± 0.002M/s  (  0.381M/s/cpu)
->>>> uprobe-ret            (10 cpus):    2.706 ± 0.002M/s  (  0.271M/s/cpu)
->>>> uprobe-ret            (12 cpus):    2.588 ± 0.003M/s  (  0.216M/s/cpu)
->>>> uprobe-ret            (14 cpus):    2.589 ± 0.003M/s  (  0.185M/s/cpu)
->>>> uprobe-ret            (16 cpus):    2.575 ± 0.001M/s  (  0.161M/s/cpu)
->>>> uprobe-ret            (24 cpus):    1.808 ± 0.011M/s  (  0.075M/s/cpu)
->>>> uprobe-ret            (32 cpus):    1.853 ± 0.001M/s  (  0.058M/s/cpu)
->>>> uprobe-ret            (40 cpus):    1.952 ± 0.002M/s  (  0.049M/s/cpu)
->>>> uprobe-ret            (48 cpus):    2.075 ± 0.007M/s  (  0.043M/s/cpu)
->>>> uprobe-ret            (56 cpus):    2.441 ± 0.004M/s  (  0.044M/s/cpu)
->>>> uprobe-ret            (64 cpus):    1.880 ± 0.012M/s  (  0.029M/s/cpu)
->>>> uprobe-ret            (72 cpus):    0.962 ± 0.002M/s  (  0.013M/s/cpu)
->>>> uprobe-ret            (80 cpus):    1.040 ± 0.011M/s  (  0.013M/s/cpu)
->>>>
->>>> uretprobe-ret         ( 1 cpus):    0.981 ± 0.000M/s  (  0.981M/s/cpu)
->>>> uretprobe-ret         ( 2 cpus):    1.421 ± 0.001M/s  (  0.711M/s/cpu)
->>>> uretprobe-ret         ( 3 cpus):    2.050 ± 0.003M/s  (  0.683M/s/cpu)
->>>> uretprobe-ret         ( 4 cpus):    2.596 ± 0.002M/s  (  0.649M/s/cpu)
->>>> uretprobe-ret         ( 5 cpus):    3.105 ± 0.003M/s  (  0.621M/s/cpu)
->>>> uretprobe-ret         ( 6 cpus):    3.886 ± 0.002M/s  (  0.648M/s/cpu)
->>>> uretprobe-ret         ( 7 cpus):    3.016 ± 0.001M/s  (  0.431M/s/cpu)
->>>> uretprobe-ret         ( 8 cpus):    2.903 ± 0.000M/s  (  0.363M/s/cpu)
->>>> uretprobe-ret         (10 cpus):    2.755 ± 0.001M/s  (  0.276M/s/cpu)
->>>> uretprobe-ret         (12 cpus):    2.400 ± 0.001M/s  (  0.200M/s/cpu)
->>>> uretprobe-ret         (14 cpus):    3.972 ± 0.001M/s  (  0.284M/s/cpu)
->>>> uretprobe-ret         (16 cpus):    3.940 ± 0.003M/s  (  0.246M/s/cpu)
->>>> uretprobe-ret         (24 cpus):    3.002 ± 0.003M/s  (  0.125M/s/cpu)
->>>> uretprobe-ret         (32 cpus):    3.018 ± 0.003M/s  (  0.094M/s/cpu)
->>>> uretprobe-ret         (40 cpus):    1.846 ± 0.000M/s  (  0.046M/s/cpu)
->>>> uretprobe-ret         (48 cpus):    2.487 ± 0.004M/s  (  0.052M/s/cpu)
->>>> uretprobe-ret         (56 cpus):    2.470 ± 0.006M/s  (  0.044M/s/cpu)
->>>> uretprobe-ret         (64 cpus):    2.027 ± 0.014M/s  (  0.032M/s/cpu)
->>>> uretprobe-ret         (72 cpus):    1.108 ± 0.011M/s  (  0.015M/s/cpu)
->>>> uretprobe-ret         (80 cpus):    0.982 ± 0.005M/s  (  0.012M/s/cpu)
->>>>
->>>>
->>>> -ret variants (single-stepping case for x86-64) still suck, but they
->>>> suck 2x less now with your patches :) Clearly more work ahead for
->>>> those, though.
->>>>
->>>
->>> Quick profiling shows that it's mostly xol_take_insn_slot() and
->>> xol_free_insn_slot(), now. So it seems like your planned work might
->>> help here.
->>
->> Andrii, I'm glad we've reached a similar result, The profiling result on
->> my machine reveals that about 80% cycles spent on the atomic operations
->> on area->bitmap and area->slot_count. I guess the atomic access leads to
->> the intensive cacheline bouncing bewteen CPUs.
->>
->> In the passed weekend, I have been working on another patch that optimizes
->> the xol_take_insn_slot() and xol_free_inns_slot() for better scalability.
->> This involves delaying the freeing of xol insn slots to reduce the times
->> of atomic operations and cacheline bouncing. Additionally, per-task refcounts
->> and an RCU-style management of linked-list of allocated insn slots. In short
->> summary, this patch try to replace coarse-grained atomic variables with
->> finer-grained ones, aiming to elimiate the expensive atomic instructions
->> in the hot path. If you or others have bandwidth and interest, I'd welcome
->> a brainstorming session on this topic.
+On 2024/7/30 10:01, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> I'm happy to help, but I still feel like it's best to concentrate on
-> landing all the other pending things for uprobe, and then switch to
-> optimizing the xol case.
+> HiSilicon HIP08 does support Topdown metrics but perf tool complains
+> when trying to count Topdown metrics:
+> [root@localhost tracing]# perf stat --topdown
+> Topdown requested but the topdown metric groups aren't present.
+> (See perf list the metric groups have names like TopdownL1)
 > 
-> We have:
->   - RCU protection and avoiding refcounting for uprobes (I'll be
-> sending latest revision soon);
->   - SRCU+timeout for uretprobe and single-step (pending the above
-> landing first);
->   - removing shared nhit counter increment in trace_uprobe (I've sent
-> patches last week, see [0]);
->   - lockless VMA -> inode -> uprobe look up (also pending for #1 to
-> land, and some more benchmarking for mm_lock_seq changes from Suren,
-> see [1]);
->   - and, of course, your work to remove sighand lock.
+> It's because tool's using "Topdown" as the metric group name[1] rather
+> than "TopDown", so follow the convention.
 > 
-> So as you can see, there is plenty to discuss and land already, I just
-> don't want to spread the efforts too thin. But if you can help improve
-> the benchmark for ARM64, that would be a great parallel effort setting
-> us up for further work nicely. Thanks!
-
-Agree. Let's prioritize landing your exising patches. I'll build upon
-you works for the further uprobe optimizatoin for Arm64.
-
-Thanks.
-
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/perf/builtin-stat.c?h=v6.11-rc1#n1994
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> ---
+>  .../arch/arm64/hisilicon/hip08/metrics.json   | 74 +++++++++----------
+>  1 file changed, 37 insertions(+), 37 deletions(-)
 > 
->   [0] https://lore.kernel.org/bpf/20240809192357.4061484-1-andrii@kernel.org/
->   [1] https://lore.kernel.org/linux-mm/CAEf4BzaocU-CQsFZ=s5gDM6XQ0Foss_HroFsPUesBn=qgJCprg@mail.gmail.com/
+> diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
+> index 6463531b9941..b6a0d2de8534 100644
+> --- a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
+> +++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/metrics.json
+> @@ -3,235 +3,235 @@
+>          "MetricExpr": "FETCH_BUBBLE / (4 * CPU_CYCLES)",
+>          "PublicDescription": "Frontend bound L1 topdown metric",
+>          "BriefDescription": "Frontend bound L1 topdown metric",
+> -        "DefaultMetricgroupName": "TopDownL1",
+> -        "MetricGroup": "Default;TopDownL1",
+> +        "DefaultMetricgroupName": "TopdownL1",
+> +        "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "frontend_bound"
+>      },
+>      {
+>          "MetricExpr": "(INST_SPEC - INST_RETIRED) / (4 * CPU_CYCLES)",
+>          "PublicDescription": "Bad Speculation L1 topdown metric",
+>          "BriefDescription": "Bad Speculation L1 topdown metric",
+> -        "DefaultMetricgroupName": "TopDownL1",
+> -        "MetricGroup": "Default;TopDownL1",
+> +        "DefaultMetricgroupName": "TopdownL1",
+> +        "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "bad_speculation"
+>      },
+>      {
+>          "MetricExpr": "INST_RETIRED / (CPU_CYCLES * 4)",
+>          "PublicDescription": "Retiring L1 topdown metric",
+>          "BriefDescription": "Retiring L1 topdown metric",
+> -        "DefaultMetricgroupName": "TopDownL1",
+> -        "MetricGroup": "Default;TopDownL1",
+> +        "DefaultMetricgroupName": "TopdownL1",
+> +        "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "retiring"
+>      },
+>      {
+>          "MetricExpr": "1 - (frontend_bound + bad_speculation + retiring)",
+>          "PublicDescription": "Backend Bound L1 topdown metric",
+>          "BriefDescription": "Backend Bound L1 topdown metric",
+> -        "DefaultMetricgroupName": "TopDownL1",
+> -        "MetricGroup": "Default;TopDownL1",
+> +        "DefaultMetricgroupName": "TopdownL1",
+> +        "MetricGroup": "Default;TopdownL1",
+>          "MetricName": "backend_bound"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x201d@ / CPU_CYCLES",
+>          "PublicDescription": "Fetch latency bound L2 topdown metric",
+>          "BriefDescription": "Fetch latency bound L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "fetch_latency_bound"
+>      },
+>      {
+>          "MetricExpr": "frontend_bound - fetch_latency_bound",
+>          "PublicDescription": "Fetch bandwidth bound L2 topdown metric",
+>          "BriefDescription": "Fetch bandwidth bound L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "fetch_bandwidth_bound"
+>      },
+>      {
+>          "MetricExpr": "(bad_speculation * BR_MIS_PRED) / (BR_MIS_PRED + armv8_pmuv3_0@event\\=0x2013@)",
+>          "PublicDescription": "Branch mispredicts L2 topdown metric",
+>          "BriefDescription": "Branch mispredicts L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "branch_mispredicts"
+>      },
+>      {
+>          "MetricExpr": "bad_speculation - branch_mispredicts",
+>          "PublicDescription": "Machine clears L2 topdown metric",
+>          "BriefDescription": "Machine clears L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "machine_clears"
+>      },
+>      {
+>          "MetricExpr": "(EXE_STALL_CYCLE - (MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@)) / CPU_CYCLES",
+>          "PublicDescription": "Core bound L2 topdown metric",
+>          "BriefDescription": "Core bound L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "core_bound"
+>      },
+>      {
+>          "MetricExpr": "(MEM_STALL_ANYLOAD + armv8_pmuv3_0@event\\=0x7005@) / CPU_CYCLES",
+>          "PublicDescription": "Memory bound L2 topdown metric",
+>          "BriefDescription": "Memory bound L2 topdown metric",
+> -        "MetricGroup": "TopDownL2",
+> +        "MetricGroup": "TopdownL2",
+>          "MetricName": "memory_bound"
+>      },
+>      {
+>          "MetricExpr": "(((L2I_TLB - L2I_TLB_REFILL) * 15) + (L2I_TLB_REFILL * 100)) / CPU_CYCLES",
+>          "PublicDescription": "Idle by itlb miss L3 topdown metric",
+>          "BriefDescription": "Idle by itlb miss L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "idle_by_itlb_miss"
+>      },
+>      {
+>          "MetricExpr": "(((L2I_CACHE - L2I_CACHE_REFILL) * 15) + (L2I_CACHE_REFILL * 100)) / CPU_CYCLES",
+>          "PublicDescription": "Idle by icache miss L3 topdown metric",
+>          "BriefDescription": "Idle by icache miss L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "idle_by_icache_miss"
+>      },
+>      {
+>          "MetricExpr": "(BR_MIS_PRED * 5) / CPU_CYCLES",
+>          "PublicDescription": "BP misp flush L3 topdown metric",
+>          "BriefDescription": "BP misp flush L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "bp_misp_flush"
+>      },
+>      {
+>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x2013@ * 5) / CPU_CYCLES",
+>          "PublicDescription": "OOO flush L3 topdown metric",
+>          "BriefDescription": "OOO flush L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "ooo_flush"
+>      },
+>      {
+>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x1001@ * 5) / CPU_CYCLES",
+>          "PublicDescription": "Static predictor flush L3 topdown metric",
+>          "BriefDescription": "Static predictor flush L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "sp_flush"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x1010@ / BR_MIS_PRED",
+>          "PublicDescription": "Indirect branch L3 topdown metric",
+>          "BriefDescription": "Indirect branch L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "indirect_branch"
+>      },
+>      {
+>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x1013@ + armv8_pmuv3_0@event\\=0x1016@) / BR_MIS_PRED",
+>          "PublicDescription": "Push branch L3 topdown metric",
+>          "BriefDescription": "Push branch L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "push_branch"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x100d@ / BR_MIS_PRED",
+>          "PublicDescription": "Pop branch L3 topdown metric",
+>          "BriefDescription": "Pop branch L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "pop_branch"
+>      },
+>      {
+>          "MetricExpr": "(BR_MIS_PRED - armv8_pmuv3_0@event\\=0x1010@ - armv8_pmuv3_0@event\\=0x1013@ - armv8_pmuv3_0@event\\=0x1016@ - armv8_pmuv3_0@event\\=0x100d@) / BR_MIS_PRED",
+>          "PublicDescription": "Other branch L3 topdown metric",
+>          "BriefDescription": "Other branch L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "other_branch"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2012@ / armv8_pmuv3_0@event\\=0x2013@",
+>          "PublicDescription": "Nuke flush L3 topdown metric",
+>          "BriefDescription": "Nuke flush L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "nuke_flush"
+>      },
+>      {
+>          "MetricExpr": "1 - nuke_flush",
+>          "PublicDescription": "Other flush L3 topdown metric",
+>          "BriefDescription": "Other flush L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "other_flush"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2010@ / CPU_CYCLES",
+>          "PublicDescription": "Sync stall L3 topdown metric",
+>          "BriefDescription": "Sync stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "sync_stall"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2004@ / CPU_CYCLES",
+>          "PublicDescription": "Rob stall L3 topdown metric",
+>          "BriefDescription": "Rob stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "rob_stall"
+>      },
+>      {
+>          "MetricExpr": "(armv8_pmuv3_0@event\\=0x2006@ + armv8_pmuv3_0@event\\=0x2007@ + armv8_pmuv3_0@event\\=0x2008@) / CPU_CYCLES",
+>          "PublicDescription": "Ptag stall L3 topdown metric",
+>          "BriefDescription": "Ptag stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "ptag_stall"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x201e@ / CPU_CYCLES",
+>          "PublicDescription": "SaveOpQ stall L3 topdown metric",
+>          "BriefDescription": "SaveOpQ stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "saveopq_stall"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x2005@ / CPU_CYCLES",
+>          "PublicDescription": "PC buffer stall L3 topdown metric",
+>          "BriefDescription": "PC buffer stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "pc_buffer_stall"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7002@ / CPU_CYCLES",
+>          "PublicDescription": "Divider L3 topdown metric",
+>          "BriefDescription": "Divider L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "divider"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7003@ / CPU_CYCLES",
+>          "PublicDescription": "FSU stall L3 topdown metric",
+>          "BriefDescription": "FSU stall L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "fsu_stall"
+>      },
+>      {
+>          "MetricExpr": "core_bound - divider - fsu_stall",
+>          "PublicDescription": "EXE ports util L3 topdown metric",
+>          "BriefDescription": "EXE ports util L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "exe_ports_util"
+>      },
+>      {
+>          "MetricExpr": "(MEM_STALL_ANYLOAD - MEM_STALL_L1MISS) / CPU_CYCLES",
+>          "PublicDescription": "L1 bound L3 topdown metric",
+>          "BriefDescription": "L1 bound L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "l1_bound"
+>      },
+>      {
+>          "MetricExpr": "(MEM_STALL_L1MISS - MEM_STALL_L2MISS) / CPU_CYCLES",
+>          "PublicDescription": "L2 bound L3 topdown metric",
+>          "BriefDescription": "L2 bound L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "l2_bound"
+>      },
+>      {
+>          "MetricExpr": "MEM_STALL_L2MISS / CPU_CYCLES",
+>          "PublicDescription": "Mem bound L3 topdown metric",
+>          "BriefDescription": "Mem bound L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "mem_bound"
+>      },
+>      {
+>          "MetricExpr": "armv8_pmuv3_0@event\\=0x7005@ / CPU_CYCLES",
+>          "PublicDescription": "Store bound L3 topdown metric",
+>          "BriefDescription": "Store bound L3 topdown metric",
+> -        "MetricGroup": "TopDownL3",
+> +        "MetricGroup": "TopdownL3",
+>          "MetricName": "store_bound"
+>      }
+>  ]
 > 
->>
->> Thanks.
->>
->>>
->>>>
->>>>   [0] https://github.com/anakryiko/linux/commits/uprobes-lockless-cumulative/
->>>>
->>>>
->>>>> Thanks.
->>>>>
->>>>>>
->>>>>> But also see some remarks below.
->>>>>>
->>>>>>> Thanks.
->>>>>>>
-> 
-> [...]
-
--- 
-BR
-Liao, Chang
