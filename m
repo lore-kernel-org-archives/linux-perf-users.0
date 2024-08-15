@@ -1,57 +1,57 @@
 Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DED43ABD;
-	Thu, 15 Aug 2024 01:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C12547A4C;
+	Thu, 15 Aug 2024 01:37:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723685834; cv=none; b=RS6d0yDdbssRwxbXVE/ah/HqsMMQ3Tjk0BxLQz5Q03vbSBRlePenhR5XL6XwcSXJ/SyYaaY+rvNdWCU18XdkTQQRi7xV9rV3pfZxQBPxbwbwAWPYB8ydOMPOwTsjXfihGaymiYNUC1ar//3TiUmsN3Paa8wzagp4IQBXOQUFEnw=
+	t=1723685838; cv=none; b=FRyRfNYrhxCZWWzUAgH/uVRD4Kfx/RdgDv2+CzQwmRXPNL+yscuhSES9UbKYv4fP+J7dl4AGLlB6ixNjD1iuFW5O4gW+MK5bQLBVZn/oNZljruo1mQyJvXqRt/F4H+K+lGdwVxhmBKqYIFl3TK2wjtA02Pv03MqJrBZqNSaSq0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723685834; c=relaxed/simple;
-	bh=xxzhKCQXRaMbX2Fn/2LQ9SCl/677hbD30vUhW6gsF/M=;
+	s=arc-20240116; t=1723685838; c=relaxed/simple;
+	bh=FAra7IslueJ2M3LeoV4wY0d8qZzY2HkcWrqATM3x3RI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fm9rPg8VlJJQ7p3uU/9PrefOYceyzsRGNfecgZpgmpMRP9ptyt+2XTDoRmggrshRGbxm/ARdwojZB/Q5hzQZbtBTQFNBMVrSnMcSMkc29cmkOCe+lynFVr/GnEoxIuWyGR5gSDLxGzWtqRP5T3wOxnmgSJbPEsksAhF9osnTPts=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4IE2lAM; arc=none smtp.client-ip=209.85.167.174
+	 MIME-Version; b=riZ3F6KbyfhtI94CrQyMtA25WJn37qOzYehfCgRpuYSkpGw1o1OkrguTwZLZU77Qit9jQS3YS9FFZJ2a4vmI0QgDMRrjJqpgPpYJNlTMEJq1fmQU0VgOg2SxmAvqE2dUS6p6n+4A7om/Uf84IzjSOE5ktCG7MVlhv6ynPo8sCwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A6Rvvufa; arc=none smtp.client-ip=209.85.167.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4IE2lAM"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3db145c8010so276881b6e.3;
-        Wed, 14 Aug 2024 18:37:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6Rvvufa"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3db14cc9066so304838b6e.3;
+        Wed, 14 Aug 2024 18:37:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723685832; x=1724290632; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723685835; x=1724290635; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ncTc6lP7++Cc+HdCfft7z5xIYc9fKy5pzTa2YoxTlfI=;
-        b=a4IE2lAMjk81Jzuie9HhBbXwXKB36myXhdFUBiZHgDEeTbenhkvQiKg8R25xA4GPnP
-         TUcaYoUnsqppRSkvlddbd92/jkpZAdn51S6gShhhTtWAmJTrOf/fXSUQ4cd3IYWPd7hA
-         SFDT1qpOSAWduboXOwRh4+4fEkLiTAPbtLY5O9/59brjBb+IzPARaFdjvzmJ3AA5TAvP
-         /F9AcOZlzGsUg2LbffUKgF1qI4z6pS7DUs4BzJaw4T5Z6KMSkM5SWlg6l2vqRnru2+GD
-         A5TcAJvjhveK/eBUkAjGxnUO3BX0nNWzJV1PG3Td2qln04r3Gd7DhYIgrJgCcswHPeCV
-         /RFw==
+        bh=dMGaOVIVwJJwP5Xk416IMkcEFAeT/3CwfvbFdC0BmwM=;
+        b=A6RvvufaW/f4PZepkmsF4PYJH9UBInYC2obMOdsKgwd6mn/TRGX12AxSQHMiAHGqT7
+         nT4u4jXLpZUaCm4gh5n5iBLhplDsU/C9wiGgi+HaGnTEEL3SRgpGbB8mLlEe4Bc2O6N+
+         eyetqS/gLSv/UlODOAuYgvjdvScF16+KFg0Qww12ainr2xmAamMnw/HCPi7yWzcP0fl7
+         JnKsAL5WhBYcFwI6P9KgFYokgCZRrW9pXSzWoGrZ12FMnM2z9XtRVydeQv8fXqASsE26
+         FGMpM/mJ7a4z1THdEYEyL0+vncIUKPAfNpxuotn7FJeJSiIJZHnFt6mZZjugwg0ig9Yx
+         9OSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723685832; x=1724290632;
+        d=1e100.net; s=20230601; t=1723685835; x=1724290635;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ncTc6lP7++Cc+HdCfft7z5xIYc9fKy5pzTa2YoxTlfI=;
-        b=qVv5lWD1tapoSn1BiVKqhNqbRLFI3qU6gQ9MyX9Pa1wiJ5fVi+x/HoPEUM7X26gw7/
-         02UOjIKbjimr25kLWenT79nV6Y8dCviJ/9dejjeJN+NvXoxDnDenRm+PrO/tLd9L33bx
-         Pz8Ctk3SkMSCjBUXpDEdnEqCmgxHrMBOteJccuXP0LqntYZkcUjQhG+3DxUtMtsmjl2L
-         32zeTyg06t1TxNxhPNaa3E8xjtROck7Ow+pjZ71PEduI0vFRSVfyHVgEEeB54GVkI+Oi
-         ZcDa4+CfUdnFXn62McIfeZR48OPIYnaEMCpCJEvhc3OR+cTQgpRkZFWB2eSTvcgr79A9
-         KJkg==
-X-Forwarded-Encrypted: i=1; AJvYcCVQwdBDwx0fIdxSQi+WTUhgno+46Sjwde40F0vgiyC5pf1LepSanUi2PvOhpp2xhWIuzNIO/EoDcV1XlT0xt7Fe7u1PmyMfB9D2GCCm9GxDMIPPxAxEwJizHcoYiqgPcnGSRfIfYj9E3Uta5HUgRg==
-X-Gm-Message-State: AOJu0YyRzWTPeISUjtnPGpoMdOe3T+1a0X7lr1VeM7rQqXKiHccf/hkc
-	HM0+HzigFJ7jGaw+EP3PE6SOFT2WBq8QUTgLb5bxyH45aI9Ajum4
-X-Google-Smtp-Source: AGHT+IHHEA3KWK7ZOw21EV+fqQNDddcFqMeUxyBqceNCIUnQxWubCiUbYNCxCfK6FXWcowCjMlhVWg==
-X-Received: by 2002:a05:6870:96a5:b0:260:ee13:e665 with SMTP id 586e51a60fabf-26fe5bb9896mr5677248fac.37.1723685831713;
-        Wed, 14 Aug 2024 18:37:11 -0700 (PDT)
+        bh=dMGaOVIVwJJwP5Xk416IMkcEFAeT/3CwfvbFdC0BmwM=;
+        b=FHHj6CVlKkj1IprWf3epbGtzvvu5dwlz9FwaJgTJMgdrwvMHIj0y+9md9vO+jTQDGm
+         UsOKyUZkreX07V+V/HHy7SddP1DgWJTLPAwSwOiQ1u1LgKafiIVQfXI4dGqZ3BeCFwqC
+         bKA4svfK9iP6psCJtdKdwFnaScIq/O9vTBVxSv1ylE51O5aDQAuRdI/MrAK8CN1tCfxk
+         o5pRg3+2g145PYvphMqwBY/CJtEyL8PZA7DMKvUW+MfkSsitjYSpXEDbLGCdUKRsWuiA
+         bkBL6wZhfN90DiRAGfhPIuK0TE5uJ1RBSL0Zj1y6B8OLPJGjSx1Wi0t2tknCu9d/wZJm
+         a6Qg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqPmENO9HXCgW6DFTyRQve+/RhqkAcJZ+ARBYS3HZzfPctkdmI055gRnr/vkHuWwbHhVJxEP2WBhMWQea+QKHqa1CfffVQEigYcwwg787bj37nfCudPdSYhAeZGGdcc686CZAWR72vGqZtsseIhA==
+X-Gm-Message-State: AOJu0YyxqKMQo+NMtmGkeVzckiN10U3tItcZM0pXa64vsgEotkrQSgVJ
+	9CSyV3D0f+4kyOYxjAHyR4H9olNjiKzDnG1+xjqI+EYUG4olKWAZWCLrf876paA=
+X-Google-Smtp-Source: AGHT+IF3VFR6FbD1wRel2opwl5OqQ6FBZmTPd0eL8xF7JXvyUiVAaim/4wAUmzJ69PcagK8hNAu5BA==
+X-Received: by 2002:a05:6870:bac8:b0:268:a074:39cf with SMTP id 586e51a60fabf-26fe59dd845mr5141614fac.8.1723685835543;
+        Wed, 14 Aug 2024 18:37:15 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.37.08
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.37.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 18:37:11 -0700 (PDT)
+        Wed, 14 Aug 2024 18:37:15 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -61,9 +61,9 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 09/10] perf trace: Collect augmented data using BPF
-Date: Thu, 15 Aug 2024 09:36:25 +0800
-Message-ID: <20240815013626.935097-10-howardchu95@gmail.com>
+Subject: [PATCH v2 10/10] perf trace: Add general tests for augmented syscalls
+Date: Thu, 15 Aug 2024 09:36:26 +0800
+Message-ID: <20240815013626.935097-11-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240815013626.935097-1-howardchu95@gmail.com>
 References: <20240815013626.935097-1-howardchu95@gmail.com>
@@ -75,184 +75,89 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Include trace_augment.h for TRACE_AUG_MAX_BUF, so that BPF reads
-TRACE_AUG_MAX_BUF bytes of buffer maximum.
+In this test, augmentation for:
 
-Determine what type of argument and how many bytes to read from user space, us ing the
-value in the beauty_map. This is the relation of parameter type and its corres ponding
-value in the beauty map, and how many bytes we read eventually:
+* string
+* buffer
+* struct
 
-string: 1                          -> size of string (till null)
-struct: size of struct             -> size of struct
-buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_ MAX_BUF)
+Is tested.
 
-After reading from user space, we output the augmented data using
-bpf_perf_event_output().
+Please use this command to test it out:
 
-If the struct augmenter, augment_sys_enter() failed, we fall back to
-using bpf_tail_call().
-
-I have to make the payload 6 times the size of augmented_arg, to pass the
-BPF verifier.
+perf test "perf trace general tests"
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 114 +++++++++++++++++-
- 1 file changed, 113 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/trace_btf_general.sh | 59 +++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index c7b9f80239c7..d665af449b1b 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -7,6 +7,8 @@
-  */
- 
- #include "vmlinux.h"
-+#include "../trace_augment.h"
+diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tests/shell/trace_btf_general.sh
+new file mode 100755
+index 000000000000..9c5e9d321b42
+--- /dev/null
++++ b/tools/perf/tests/shell/trace_btf_general.sh
+@@ -0,0 +1,59 @@
++#!/bin/sh
++# perf trace general tests
++# SPDX-License-Identifier: GPL-2.0
 +
- #include <bpf/bpf_helpers.h>
- #include <linux/limits.h>
- 
-@@ -135,6 +137,25 @@ struct augmented_args_tmp {
- 	__uint(max_entries, 1);
- } augmented_args_tmp SEC(".maps");
- 
-+struct beauty_payload_enter {
-+	struct syscall_enter_args args;
-+	struct augmented_arg aug_args[6];
-+};
++err=0
++set -e
 +
-+struct beauty_map_enter {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__type(key, int);
-+	__type(value, __u32[6]);
-+	__uint(max_entries, 512);
-+} beauty_map_enter SEC(".maps");
++. "$(dirname $0)"/lib/probe.sh
++skip_if_no_perf_trace || exit 2
 +
-+struct beauty_payload_enter_map {
-+	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
-+	__type(key, int);
-+	__type(value, struct beauty_payload_enter);
-+	__uint(max_entries, 1);
-+} beauty_payload_enter_map SEC(".maps");
++file1=$(mktemp /tmp/file1_XXXXX)
++file2=$(echo $file1 | sed 's/file1/file2/g')
 +
- static inline struct augmented_args_payload *augmented_args_payload(void)
- {
- 	int key = 0;
-@@ -147,6 +168,11 @@ static inline int augmented__output(void *ctx, struct augmented_args_payload *ar
- 	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
- }
- 
-+static inline int augmented__beauty_output(void *ctx, void *data, int len)
-+{
-+	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, data, len);
++buffer="this is a buffer for testing"
++
++trace_test_string() {
++  echo "Testing perf trace's string augmentation"
++  if ! perf trace -e renameat* --max-events=1 -- mv ${file1} ${file2} 2>&1 | grep -q -E "renameat[2]*.*oldname: \"${file1}\".*newname: \"${file2}\".*"
++  then
++    echo "String augmentation failed"
++    err=1
++  fi
 +}
 +
- static inline
- unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
- {
-@@ -399,6 +425,91 @@ static inline bool task_can_trace()
- 	return true;
- }
- 
-+static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-+{
-+	bool augmented, do_output = false;
-+	int zero = 0, size, aug_size, index, output = 0,
-+	    value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
-+	unsigned int nr, *beauty_map;
-+	struct beauty_payload_enter *payload;
-+	void *arg, *payload_offset;
-+
-+	/* fall back to do predefined tail call */
-+	if (args == NULL)
-+		return 1;
-+
-+	/* use syscall number to get beauty_map entry */
-+	nr             = (__u32)args->syscall_nr;
-+	beauty_map     = bpf_map_lookup_elem(&beauty_map_enter, &nr);
-+
-+	/* set up payload for output */
-+	payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero);
-+	payload_offset = (void *)&payload->aug_args;
-+
-+	if (beauty_map == NULL || payload == NULL)
-+		return 1;
-+
-+	/* copy the sys_enter header, which has the syscall_nr */
-+	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
-+
-+	/*
-+	 * Determine what type of argument and how many bytes to read from user space, using the
-+	 * value in the beauty_map. This is the relation of parameter type and its corresponding
-+	 * value in the beauty map, and how many bytes we read eventually:
-+	 *
-+	 * string: 1			      -> size of string
-+	 * struct: size of struct	      -> size of struct
-+	 * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
-+	 */
-+	for (int i = 0; i < 6; i++) {
-+		arg = (void *)args->args[i];
-+		augmented = false;
-+		size = beauty_map[i];
-+		aug_size = size; /* size of the augmented data read from user space */
-+
-+		if (size == 0 || arg == NULL)
-+			continue;
-+
-+		if (size == 1) { /* string */
-+			aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg);
-+			/* minimum of 0 to pass the verifier */
-+			if (aug_size < 0)
-+				aug_size = 0;
-+
-+			augmented = true;
-+		} else if (size > 0 && size <= value_size) { /* struct */
-+			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
-+				augmented = true;
-+		} else if (size < 0 && size >= -6) { /* buffer */
-+			index = -(size + 1);
-+			aug_size = args->args[index];
-+
-+			if (aug_size > TRACE_AUG_MAX_BUF)
-+				aug_size = TRACE_AUG_MAX_BUF;
-+
-+			if (aug_size > 0) {
-+				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
-+					augmented = true;
-+			}
-+		}
-+
-+		/* write data to payload */
-+		if (augmented) {
-+			int written = offsetof(struct augmented_arg, value) + aug_size;
-+
-+			((struct augmented_arg *)payload_offset)->size = aug_size;
-+			output += written;
-+			payload_offset += written;
-+			do_output = true;
-+		}
-+	}
-+
-+	if (!do_output)
-+		return 1;
-+
-+	return augmented__beauty_output(ctx, payload, sizeof(struct syscall_enter_args) + output);
++trace_test_buffer() {
++  echo "Testing perf trace's buffer augmentation"
++  if ! perf trace -e write --max-events=1 -- echo "${buffer}" 2>&1 | grep -q -E ".*write.*buf: \"${buffer}.*\".*"
++  then
++    echo "Buffer augmentation failed"
++    err=1
++  fi
 +}
 +
- SEC("tp/raw_syscalls/sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
-@@ -427,7 +538,8 @@ int sys_enter(struct syscall_enter_args *args)
- 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
- 	 * unaugmented tracepoint payload.
- 	 */
--	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
-+	if (augment_sys_enter(args, &augmented_args->args))
-+		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
- 
- 	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
- 	return 0;
++trace_test_struct() {
++  echo "Testing perf trace's struct augmentation"
++  if ! perf trace -e clock_nanosleep --max-events=1 -- sleep 1 2>&1 | grep -q -E ".*clock_nanosleep\(rqtp: \{1,\}, rmtp: \{1,\}\).* = 0"
++  then
++    echo "Struct augmentation failed"
++    err=1
++  fi
++}
++
++cleanup() {
++	rm -rf ${file2}
++}
++
++trace_test_string
++
++if [ $err = 0 ]; then
++  trace_test_buffer
++fi
++
++if [ $err = 0 ]; then
++  trace_test_struct
++fi
++
++cleanup
++
++exit $err
 -- 
 2.45.2
 
