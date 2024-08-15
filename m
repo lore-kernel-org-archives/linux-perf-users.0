@@ -1,29 +1,28 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D94117C9;
-	Thu, 15 Aug 2024 01:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB90917C9;
+	Thu, 15 Aug 2024 01:55:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723686954; cv=none; b=jMkohAqJTf5CU53sKLRZZ94mY0cjG+s+g/tQZIR0wAV/V4USsvUCSPSMgkZGn85RUKgbrO2ciPBdFHvj8ONReeakdVwm7VPNLfgZm6FBVfOk/w0+wdeR38jEj3Jfg/3UGV97yX1wcwcv+01o3EK1KjIiq9P79GeUgwOxAqFYhXA=
+	t=1723686960; cv=none; b=rdpHKSP8HIqdRlH+AwqcPVu9ozXr4aIJX8D9JQ9NVfxQ4VT6JIRTwL8TKhITERAFYhCz6nKNvxhUzfc4DLEybtdQWUBiDde1ipYNJ2hZFDTqYK+N0tqiomh0ICJLSKpA2FwqsRTSGCs3SowmcuUVF+ieOl9Akv8q1BBUhNOYA64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723686954; c=relaxed/simple;
-	bh=KPC8PNKJWO9x7079EAV5XPUP1x1DIynJMpFCxV7arJs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tDw1KgxI6QX5I+2H6O0pNQsFqz3+KS1+By5wg03MSVaHfW1k5kisiSUDAH7GPVI6A/jvKLUsC4YH9uR+ucDfR21UJdVpca0t6IvWB2mgQPN4kE/pheBHRf/MatwRuvM8hvL/47g7h5M/S+g3cYOVJ1IT/6JLCMbgRoHyc6dRVx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1723686960; c=relaxed/simple;
+	bh=jS9I6vz/mLqWFHm0al0X2/o7/JXJYiIVeFzeJPA0xrs=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=bMO3fDOW++PqAbmDo3hIWj9jbHthtsaNHZ1/PYz4sILxa8EkKAFHPnSbcNKIXy5KdMC/MHVlcELSNx4EHqM9KRFQVsFWggLuQYbGVFTdlwP97/7SUzs1UNfEG3P9CAKq0hTpwWErX7Dtw/R1SLI4kO2yxIfAVEVW0xkIdDfpnqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Wkp8M2DlszpTLb;
-	Thu, 15 Aug 2024 09:54:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.48])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Wkp9K1NPHz1T77H;
+	Thu, 15 Aug 2024 09:55:17 +0800 (CST)
 Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 042F5180100;
-	Thu, 15 Aug 2024 09:55:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id BA3DB18006C;
+	Thu, 15 Aug 2024 09:55:47 +0800 (CST)
 Received: from huawei.com (10.67.174.28) by kwepemd200013.china.huawei.com
  (7.221.188.133) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1258.34; Thu, 15 Aug
- 2024 09:55:48 +0800
+ 2024 09:55:46 +0800
 From: Liao Chang <liaochang1@huawei.com>
 To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
 	<mingo@redhat.com>, <acme@kernel.org>, <namhyung@kernel.org>,
@@ -32,12 +31,10 @@ To: <mhiramat@kernel.org>, <oleg@redhat.com>, <peterz@infradead.org>,
 	<kan.liang@linux.intel.com>
 CC: <linux-kernel@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
 	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>
-Subject: [PATCH v3 2/2] uprobes: Remove the spinlock within handle_singlestep()
-Date: Thu, 15 Aug 2024 01:46:29 +0000
-Message-ID: <20240815014629.2685155-3-liaochang1@huawei.com>
+Subject: [PATCH v3 0/2] uprobes: Improve scalability by reducing the contention on siglock
+Date: Thu, 15 Aug 2024 01:46:27 +0000
+Message-ID: <20240815014629.2685155-1-liaochang1@huawei.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240815014629.2685155-1-liaochang1@huawei.com>
-References: <20240815014629.2685155-1-liaochang1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -49,15 +46,18 @@ Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
  kwepemd200013.china.huawei.com (7.221.188.133)
 
-This patch introduces a flag to track TIF_SIGPENDING is suppress
-temporarily during the uprobe single-step. Upon uprobe singlestep is
-handled and the flag is confirmed, it could resume the TIF_SIGPENDING
-directly without acquiring the siglock in most case, then reducing
-contention and improving overall performance.
+The profiling result of BPF selftest on ARM64 platform reveals the
+significant contention on the current->sighand->siglock is the
+scalability bottleneck. The reason is also very straightforward that all
+producer threads of benchmark have to contend the spinlock mentioned to
+resume the TIF_SIGPENDING bit in thread_info that might be removed in
+uprobe_deny_signal().
 
-I've use the script developed by Andrii in [1] to run benchmark. The CPU
-used was Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@2.4GHz running the
-kernel on next tree + the optimization for get_xol_insn_slot() [2].
+The contention on current->sighand->siglock is unnecessary, this series
+remove them thoroughly. I've use the script developed by Andrii in [1]
+to run benchmark. The CPU used was Kunpeng916 (Hi1616), 4 NUMA nodes,
+64 cores@2.4GHz running the kernel on next tree + the optimization in
+[2] for get_xol_insn_slot().
 
 before-opt
 ----------
@@ -115,54 +115,28 @@ Above benchmark results demonstrates a obivious improvement in the
 scalability of trig-uprobe-nop and trig-uprobe-push, the peak throughput
 of which are from 4.5M/s to 6.4M/s and 3.3M/s to 5.1M/s individually.
 
+v3->v2:
+Renaming the flag in [2/2], s/deny_signal/signal_denied/g.
+
+v2->v1:
+Oleg pointed out the _DENY_SIGNAL will be replaced by _ACK upon the
+completion of singlestep which leads to handle_singlestep() has no
+chance to restore the removed TIF_SIGPENDING [3] and some case in
+question. So this revision proposes to use a flag in uprobe_task to
+track the denied TIF_SIGPENDING instead of new UPROBE_SSTEP state.
+
 [1] https://lore.kernel.org/all/20240731214256.3588718-1-andrii@kernel.org
 [2] https://lore.kernel.org/all/20240727094405.1362496-1-liaochang1@huawei.com
+[3] https://lore.kernel.org/all/20240801082407.1618451-1-liaochang1@huawei.com
 
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- include/linux/uprobes.h | 1 +
- kernel/events/uprobes.c | 8 +++++---
- 2 files changed, 6 insertions(+), 3 deletions(-)
+Liao Chang (2):
+  uprobes: Remove redundant spinlock in uprobe_deny_signal()
+  uprobes: Remove the spinlock within handle_singlestep()
 
-diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
-index b503fafb7fb3..e4f57117d9c3 100644
---- a/include/linux/uprobes.h
-+++ b/include/linux/uprobes.h
-@@ -75,6 +75,7 @@ struct uprobe_task {
- 
- 	struct uprobe			*active_uprobe;
- 	unsigned long			xol_vaddr;
-+	bool				signal_denied;
- 
- 	struct return_instance		*return_instances;
- 	unsigned int			depth;
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 76a51a1f51e2..589aa2af1a99 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1979,6 +1979,7 @@ bool uprobe_deny_signal(void)
- 	WARN_ON_ONCE(utask->state != UTASK_SSTEP);
- 
- 	if (task_sigpending(t)) {
-+		utask->signal_denied = true;
- 		clear_tsk_thread_flag(t, TIF_SIGPENDING);
- 
- 		if (__fatal_signal_pending(t) || arch_uprobe_xol_was_trapped(t)) {
-@@ -2288,9 +2289,10 @@ static void handle_singlestep(struct uprobe_task *utask, struct pt_regs *regs)
- 	utask->state = UTASK_RUNNING;
- 	xol_free_insn_slot(current);
- 
--	spin_lock_irq(&current->sighand->siglock);
--	recalc_sigpending(); /* see uprobe_deny_signal() */
--	spin_unlock_irq(&current->sighand->siglock);
-+	if (utask->signal_denied) {
-+		set_thread_flag(TIF_SIGPENDING);
-+		utask->signal_denied = false;
-+	}
- 
- 	if (unlikely(err)) {
- 		uprobe_warn(current, "execute the probed insn, sending SIGILL.");
+ include/linux/uprobes.h |  1 +
+ kernel/events/uprobes.c | 10 +++++-----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
 -- 
 2.34.1
 
