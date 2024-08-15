@@ -1,250 +1,321 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586B81448FD;
-	Thu, 15 Aug 2024 06:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FB54198E78;
+	Thu, 15 Aug 2024 07:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723704150; cv=none; b=p2wN22hmhw9u5+jOog9agCMAmmt43VOH4WYkdAVeFWBT+cI5dW0NPiStJ3a4Rqvw6VMy/zUWTB8fJhK19jQfGVoPsMD7XAoZjS9Z+UhJmTRvtXNrJAjnTOFvXiBeKrKmlmXWzBJT3V0o2PmYg9Xyb4aeljIOcTmwkmgS43sX3L8=
+	t=1723708800; cv=none; b=t01oqhcY9PaZoEHgzLMip+tjTwdkuwpQHEGzhs9EzlK5k8YQhLXr7Gzvhi8Mtq3KWwVCyRv/PUCaVLdGApmNTjWINyqybml23RLciDW/ThTJ02Q0+J3SmuFkGrH4vt2tjcVPmrqsBpcNgh4XmroxOHrmh5J54KbBLGska6G2dLk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723704150; c=relaxed/simple;
-	bh=sH6QnAl702Pa6jtq1WpXYAM+8fcYbnfY+emhpZgIWJE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uImfUektE3hX+oB6/AIXBoEgAo4dRigUTQBOsEKPvYEb1pr0noaUOrv7tEkTmxKFmOuYbnRvfhq4HmmA6DK+2xn0+HdQ7Tz4BjyIsv8hZ6Qy1JEVMLx7Pu6VuMHczjbu0y7XjAkvW8TkIfPahCR2cKDpJgEq4+Vxe5rxLQnR3d4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KgPZcXQl; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KgPZcXQl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723704149; x=1755240149;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sH6QnAl702Pa6jtq1WpXYAM+8fcYbnfY+emhpZgIWJE=;
-  b=KgPZcXQlsVlT3KG9BayhKUxlFquTJzIes1tvLzPcbx7cY0OeBl7bPmz4
-   ZdVao1BCzyTKgZYRnh6GHEGszC8idm9UF7MXaHwgtgCZ3GuZq01G5fPis
-   oBi1xNq7YidVRQCKpx3NH0DGdSoZVgRDQySjAf7jKuWrqTjKwtu7mJxcW
-   35xnGGBtPdF2B6kD4/UmLMeTsv24vZQwe3/lvp+PEC3ReBtl3K91Z7DN2
-   e/ukvyp05ngq/GeFnH35SfTntT3HKMd+HdJ47LxtTM2KNICtjJWRC4gny
-   xxSZ09oNXiuToOdP8kfYSnKXGwUYBVtB6tw3imdjABucYzrdCO8hlaJMZ
-   A==;
-X-CSE-ConnectionGUID: ANF1zOSGTZi0TcQ46btqnA==
-X-CSE-MsgGUID: 6TMq6R4hQm6wZF+epXSqZA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="33100982"
-X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
-   d="scan'208";a="33100982"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 23:42:26 -0700
-X-CSE-ConnectionGUID: 39JrdeVASwO2wsLWySoSmA==
-X-CSE-MsgGUID: Sq41damTR8uzPn3it21WSA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
-   d="scan'208";a="59553296"
-Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 23:42:23 -0700
-Message-ID: <ad0b8f56-8613-44d1-b37a-d05e2a4f6529@linux.intel.com>
-Date: Thu, 15 Aug 2024 14:42:20 +0800
+	s=arc-20240116; t=1723708800; c=relaxed/simple;
+	bh=XwDdYd67nw6O4gN2C/AFvJ5qOri7xBwic0zMAeUdy14=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=mjZ0rnUeXWAtAFi9SwBge1O6mjqg1VVM10eXvqS9FjFtvW/OKptf8QdigEz8MYnJNsDUpqrE8k/71bV7IfNSFnb7O5QCU9cyuma9WJGPqwF+r1JZJjGseR8NlqdWJvCXUQ0KiO8qWGZ9GMn7qCWwz+BFoLGX1x/tIGRHiWX7CpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4WkyFQ1B2Hz1T4GR;
+	Thu, 15 Aug 2024 15:59:22 +0800 (CST)
+Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
+	by mail.maildlp.com (Postfix) with ESMTPS id 11267140159;
+	Thu, 15 Aug 2024 15:59:53 +0800 (CST)
+Received: from [10.67.110.108] (10.67.110.108) by
+ kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Thu, 15 Aug 2024 15:59:51 +0800
+Message-ID: <e17cf2d1-e3e0-f549-b04a-664ca2708817@huawei.com>
+Date: Thu, 15 Aug 2024 15:59:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v3 1/5] perf x86/topdown: Complete topdown slots/metrics
- events check
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
- Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
- <20240712170339.185824-2-dapeng1.mi@linux.intel.com> <ZroQ7wiw6JB-sjps@x1>
-Content-Language: en-US
-From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
-In-Reply-To: <ZroQ7wiw6JB-sjps@x1>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
+ performance
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
+	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
+	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
+	<linux-trace-kernel@vger.kernel.org>
+References: <20240727094405.1362496-1-liaochang1@huawei.com>
+ <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
+ <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
+ <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
+ <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
+ <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
+ <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
+From: "Liao, Chang" <liaochang1@huawei.com>
+In-Reply-To: <CAEf4BzYSC+OQ0D+B0oEi3uN0kyZ07kPaneLJLJqF=oA6gTXLbg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemd200013.china.huawei.com (7.221.188.133)
 
 
-On 8/12/2024 9:41 PM, Arnaldo Carvalho de Melo wrote:
-> On Fri, Jul 12, 2024 at 05:03:35PM +0000, Dapeng Mi wrote:
->> It's not complete to check whether an event is a topdown slots or
->> topdown metrics event by only comparing the event name since user
->> may assign the event by RAW format, e.g.
->>
->> perf stat -e '{instructions,cpu/r400/,cpu/r8300/}' sleep 1
->>
->>  Performance counter stats for 'sleep 1':
->>
->>      <not counted>      instructions
->>      <not counted>      cpu/r400/
->>    <not supported>      cpu/r8300/
->>
->>        1.002917796 seconds time elapsed
->>
->>        0.002955000 seconds user
->>        0.000000000 seconds sys
->>
->> The RAW format slots and topdown-be-bound events are not recognized and
->> not regroup the events, and eventually cause error.
->>
->> Thus add two helpers arch_is_topdown_slots()/arch_is_topdown_metrics()
->> to detect whether an event is topdown slots/metrics event by comparing
->> the event config directly, and use these two helpers to replace the
->> original event name comparisons.
-> Looks ok, I made a comment below, please take a look
->  
->> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
->> ---
->>  tools/perf/arch/x86/util/evlist.c  |  8 ++---
->>  tools/perf/arch/x86/util/evsel.c   |  3 +-
->>  tools/perf/arch/x86/util/topdown.c | 48 +++++++++++++++++++++++++++++-
->>  tools/perf/arch/x86/util/topdown.h |  2 ++
->>  4 files changed, 55 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
->> index b1ce0c52d88d..332e8907f43e 100644
->> --- a/tools/perf/arch/x86/util/evlist.c
->> +++ b/tools/perf/arch/x86/util/evlist.c
->> @@ -78,14 +78,14 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
->>  	if (topdown_sys_has_perf_metrics() &&
->>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
->>  		/* Ensure the topdown slots comes first. */
->> -		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
->> +		if (arch_is_topdown_slots(lhs))
->>  			return -1;
->> -		if (strcasestr(rhs->name, "slots") && !strcasestr(rhs->name, "uops_retired.slots"))
->> +		if (arch_is_topdown_slots(rhs))
->>  			return 1;
->>  		/* Followed by topdown events. */
->> -		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
->> +		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
->>  			return -1;
->> -		if (!strcasestr(lhs->name, "topdown") && strcasestr(rhs->name, "topdown"))
->> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
->>  			return 1;
->>  	}
->>  
->> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
->> index 090d0f371891..181f2ba0bb2a 100644
->> --- a/tools/perf/arch/x86/util/evsel.c
->> +++ b/tools/perf/arch/x86/util/evsel.c
->> @@ -6,6 +6,7 @@
->>  #include "util/pmu.h"
->>  #include "util/pmus.h"
->>  #include "linux/string.h"
->> +#include "topdown.h"
->>  #include "evsel.h"
->>  #include "util/debug.h"
->>  #include "env.h"
->> @@ -44,7 +45,7 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
->>  	    strcasestr(evsel->name, "uops_retired.slots"))
->>  		return false;
->>  
->> -	return strcasestr(evsel->name, "topdown") || strcasestr(evsel->name, "slots");
->> +	return arch_is_topdown_metrics(evsel) || arch_is_topdown_slots(evsel);
->>  }
->>  
->>  int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
->> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
->> index 3f9a267d4501..49f25d67ed77 100644
->> --- a/tools/perf/arch/x86/util/topdown.c
->> +++ b/tools/perf/arch/x86/util/topdown.c
->> @@ -32,6 +32,52 @@ bool topdown_sys_has_perf_metrics(void)
->>  }
->>  
->>  #define TOPDOWN_SLOTS		0x0400
->> +bool arch_is_topdown_slots(const struct evsel *evsel)
->> +{
->> +	if (evsel->core.attr.config == TOPDOWN_SLOTS)
->> +		return true;
->> +
->> +	return false;
->> +}
->> +
->> +static int compare_topdown_event(void *vstate, struct pmu_event_info *info)
->> +{
->> +	int *config = vstate;
->> +	int event = 0;
->> +	int umask = 0;
->> +	char *str;
->> +
->> +	if (!strcasestr(info->name, "topdown"))
->> +		return 0;
->> +
->> +	str = strcasestr(info->str, "event=");
->> +	if (str)
->> +		sscanf(str, "event=%x", &event);
->> +
->> +	str = strcasestr(info->str, "umask=");
->> +	if (str)
->> +		sscanf(str, "umask=%x", &umask);
->> +
->> +	if (event == 0 && *config == (event | umask << 8))
->> +		return 1;
->> +
->> +	return 0;
->> +}
->> +
->> +bool arch_is_topdown_metrics(const struct evsel *evsel)
->> +{
->> +	struct perf_pmu *pmu = evsel__find_pmu(evsel);
->> +	int config = evsel->core.attr.config;
-> Humm, can we cache this information? I.e. have some evsel->is_topdown:1
-> bit to avoid having to traverse all events if we call this multiple
-> times for the same evsel? 
 
-Arnaldo, I tried to add a variable in evsel structure to represent if the
-evsel is a topdown metrics event, but unfortunately the helper argument
-"evsel" has "const" qualifier, it forces the "evsel" structure can't be
-modified. If we want to add this optimization, the entire call-chain
-functions have to be modified and this would reduce the security of code as
-well. Since this helper is not in a performance critical patch, I suppose
-it won't introduce too much performance hit as the traverse. I would drop
-this optimization and keep the original code.
-
-
->
-> - Arnaldo
->
->> +	if (!pmu || !pmu->is_core)
->> +		return false;
->> +
->> +	if (perf_pmu__for_each_event(pmu, false, &config,
->> +				     compare_topdown_event))
->> +		return true;
->> +
->> +	return false;
->> +}
->>  
->>  /*
->>   * Check whether a topdown group supports sample-read.
->> @@ -44,7 +90,7 @@ bool arch_topdown_sample_read(struct evsel *leader)
->>  	if (!evsel__sys_has_perf_metrics(leader))
->>  		return false;
->>  
->> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
->> +	if (arch_is_topdown_slots(leader))
->>  		return true;
->>  
->>  	return false;
->> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
->> index 46bf9273e572..1bae9b1822d7 100644
->> --- a/tools/perf/arch/x86/util/topdown.h
->> +++ b/tools/perf/arch/x86/util/topdown.h
->> @@ -3,5 +3,7 @@
->>  #define _TOPDOWN_H 1
->>  
->>  bool topdown_sys_has_perf_metrics(void);
->> +bool arch_is_topdown_slots(const struct evsel *evsel);
->> +bool arch_is_topdown_metrics(const struct evsel *evsel);
->>  
->>  #endif
->> -- 
->> 2.40.1
+在 2024/8/15 0:57, Andrii Nakryiko 写道:
+> On Tue, Aug 13, 2024 at 9:17 PM Liao, Chang <liaochang1@huawei.com> wrote:
 >>
+>>
+>>
+>> 在 2024/8/13 1:49, Andrii Nakryiko 写道:
+>>> On Mon, Aug 12, 2024 at 4:11 AM Liao, Chang <liaochang1@huawei.com> wrote:
+>>>>
+>>>>
+>>>>
+>>>> 在 2024/8/9 2:26, Andrii Nakryiko 写道:
+>>>>> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
+>>>>>>
+>>>>>> Hi Andrii and Oleg.
+>>>>>>
+>>>>>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
+>>>>>> on arm64. I notice recent discussions on the performance and scalability of uprobes
+>>>>>> within the mailing list. Considering this interest, I've added you and other relevant
+>>>>>> maintainers to the CC list for broader visibility and potential collaboration.
+>>>>>>
+>>>>>
+>>>>> Hi Liao,
+>>>>>
+>>>>> As you can see there is an active work to improve uprobes, that
+>>>>> changes lifetime management of uprobes, removes a bunch of locks taken
+>>>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
+>>>>> hold off a bit with your changes until all that lands. And then
+>>>>> re-benchmark, as costs might shift.
+>>>>>
+>>>>> But also see some remarks below.
+>>>>>
+>>>>>> Thanks.
+>>>>>>
+>>>>>> 在 2024/7/27 17:44, Liao Chang 写道:
+>>>>>>> The profiling result of single-thread model of selftests bench reveals
+>>>>>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
+>>>>>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
+>>>>>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
+>>>>>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
+>>>>>>>
+>>>>>>> This patch introduce struct uprobe_breakpoint to track previously
+>>>>>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
+>>>>>>> need for redundant insn_slot writes and subsequent expensive cache
+>>>>>>> flush, especially on architecture like ARM64. This patch has been tested
+>>>>>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
+>>>>>>> bench and Redis GET/SET benchmark result below reveal obivious
+>>>>>>> performance gain.
+>>>>>>>
+>>>>>>> before-opt
+>>>>>>> ----------
+>>>>>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
+>>>>>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
+>>>>>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
+>>>>>
+>>>>> I'm surprised that nop and push variants are much slower than ret
+>>>>> variant. This is exactly opposite on x86-64. Do you have an
+>>>>> explanation why this might be happening? I see you are trying to
+>>>>> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
+>>>>> variant of uprobe that normally shouldn't be used. Typically uprobe is
+>>>>> installed on nop (for USDT) and on function entry (which would be push
+>>>>> variant, `push %rbp` instruction).
+>>>>>
+>>>>> ret variant, for x86-64, causes one extra step to go back to user
+>>>>> space to execute original instruction out-of-line, and then trapping
+>>>>> back to kernel for running uprobe. Which is what you normally want to
+>>>>> avoid.
+>>>>>
+>>>>> What I'm getting at here. It seems like maybe arm arch is missing fast
+>>>>> emulated implementations for nops/push or whatever equivalents for
+>>>>> ARM64 that is. Please take a look at that and see why those are slow
+>>>>> and whether you can make those into fast uprobe cases?
+>>>>
+>>>> Hi Andrii,
+>>>>
+>>>> As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
+>>>> compared to X86 behavior. My investigation revealed that the root cause lies in
+>>>> the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
+>>>> of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
+>>>> to handle these instructions out-of-line in userspace upon breakpoint exception
+>>>> is handled, leading to a significant performance overhead compared to 'ret' variant,
+>>>> which is already emulated.
+>>>>
+>>>> To address this issue, I've developed a patch supports  the emulation of 'nop' and
+>>>> 'push' variants. The benchmark results below indicates the performance gain of
+>>>> emulation is obivious.
+>>>>
+>>>> xol (1 cpus)
+>>>> ------------
+>>>> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+>>>> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+>>>> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+>>>> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+>>>> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+>>>> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+>>>>
+>>>> emulation (1 cpus)
+>>>> -------------------
+>>>> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
+>>>> uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
+>>>> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
+>>>> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
+>>>> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
+>>>> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
+>>>>
+>>>> As you can see, the performance gap between nop/push and ret variants has been significantly
+>>>> reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
+>>>> more cycles than the other.
+>>>
+>>> Great, it's an obvious improvement. Are you going to send patches
+>>> upstream? Please cc bpf@vger.kernel.org as well.
+>>
+>> I'll need more time to thoroughly test this patch. The emulation o push/nop
+>> instructions also impacts the kprobe/kretprobe paths on Arm64, As as result,
+>> I'm working on enhancements to trig-kprobe/kretprobe to prevent performance
+>> regression.
+>>
+>>>
+>>>
+>>> I'm also thinking we should update uprobe/uretprobe benchmarks to be
+>>> less x86-specific. Right now "-nop" is the happy fastest case, "-push"
+>>> is still happy, slightly slower case (due to the need to emulate stack
+>>> operation) and "-ret" is meant to be the slow single-step case. We
+>>> should adjust the naming and make sure that on ARM64 we hit similar
+>>> code paths. Given you seem to know arm64 pretty well, can you please
+>>> take a look at updating bench tool for ARM64 (we can also rename
+>>> benchmarks to something a bit more generic, rather than using
+>>> instruction names)?
+>>
+>> Let me use a matrix below for the structured comparsion of uprobe/uretprobe
+>> benchmarks on X86 and Arm64:
+>>
+>> Architecture  Instrution Type   Handling method   Performance
+>> X86           nop               Emulated          Fastest
+>> X86           push              Emulated          Fast
+>> X86           ret               Single-step       Slow
+>> Arm64         nop               Emulated          Fastest
+>> Arm64         push              Emulated          Fast
+>> Arm64         ret               Emulated          Faster
+>>
+>> I suggest categorize benchmarks into 'emu' for emulated instructions and 'ss'
+>> for 'single-steppable' instructions. Generally, emulated instructions should
+>> outperform single-step ones across different architectures. Regarding the
+>> generic naming, I propose using a self-explanatory style, such as
+>> s/nop/empty-insn/g, s/push/push-stack/g, s/ret/func-return/g.
+>>
+>> Above all, example "bench --list" output:
+>>
+>> X86:
+>>   ...
+>>   trig-uprobe-emu-empty-insn
+>>   trig-uprobe-ss-func-return
+>>   trig-uprobe-emu-push-stack
+>>   trig-uretprobe-emu-empyt-insn
+>>   trig-uretprobe-ss-func-return
+>>   trig-uretprobe-emu-push-stack
+>>   ...
+>>
+>> Arm64:
+>>   ...
+>>   trig-uprobe-emu-empty-insn
+>>   trig-uprobe-emu-func-return
+>>   trig-uprobe-emu-push-stack
+>>   trig-uretprobe-emu-empyt-insn
+>>   trig-uretprobe-emu-func-return
+>>   trig-uretprobe-emu-push-stack
+>>   ...
+>>
+>> This structure will allow for direct comparison of uprobe/uretprobe
+>> performance across different architectures and instruction types.
+>> Please let me know your thought, Andrii.
+> 
+> Tbh, sounds a bit like an overkill. But before we decide on naming,
+> what kind of situation is single-stepped on arm64?
+
+On Arm64, the following instruction types are generally not single-steppable.
+
+  - Modifying and reading PC, including 'ret' and various branch instructions.
+
+  - Forming a PC-relative address using the PC and an immediate value.
+
+  - Generating exception, includes BRK, HLT, HVC, SMC, SVC.
+
+  - Loading memory at address calculated based on the PC and an immediate offset.
+
+  - Moving general-purpose register to system registers of PE (similar to logical cores on x86).
+
+  - Hint instruction cause exception or unintend behavior for single-stepping.
+    However, 'nop' is steppable hint.
+
+Most parts of instructions that doesn't fall into any of these types are single-stepped,
+including the Arm64 equvialents of 'push'.
+
+Thanks.
+
+> 
+>>
+>> Thanks.
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>> trig-uretprobe-nop:  0.331 ± 0.004M/s (0.331M/prod)
+>>>>>>> trig-uretprobe-push: 0.333 ± 0.000M/s (0.333M/prod)
+>>>>>>> trig-uretprobe-ret:  0.854 ± 0.002M/s (0.854M/prod)
+>>>>>>> Redis SET (RPS) uprobe: 42728.52
+>>>>>>> Redis GET (RPS) uprobe: 43640.18
+>>>>>>> Redis SET (RPS) uretprobe: 40624.54
+>>>>>>> Redis GET (RPS) uretprobe: 41180.56
+>>>>>>>
+>>>>>>> after-opt
+>>>>>>> ---------
+>>>>>>> trig-uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
+>>>>>>> trig-uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
+>>>>>>> trig-uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
+>>>>>>> trig-uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
+>>>>>>> trig-uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
+>>>>>>> trig-uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
+>>>>>>> Redis SET (RPS) uprobe: 43939.69
+>>>>>>> Redis GET (RPS) uprobe: 45200.80
+>>>>>>> Redis SET (RPS) uretprobe: 41658.58
+>>>>>>> Redis GET (RPS) uretprobe: 42805.80
+>>>>>>>
+>>>>>>> While some uprobes might still need to share the same insn_slot, this
+>>>>>>> patch compare the instructions in the resued insn_slot with the
+>>>>>>> instructions execute out-of-line firstly to decides allocate a new one
+>>>>>>> or not.
+>>>>>>>
+>>>>>>> Additionally, this patch use a rbtree associated with each thread that
+>>>>>>> hit uprobes to manage these allocated uprobe_breakpoint data. Due to the
+>>>>>>> rbtree of uprobe_breakpoints has smaller node, better locality and less
+>>>>>>> contention, it result in faster lookup times compared to find_uprobe().
+>>>>>>>
+>>>>>>> The other part of this patch are some necessary memory management for
+>>>>>>> uprobe_breakpoint data. A uprobe_breakpoint is allocated for each newly
+>>>>>>> hit uprobe that doesn't already have a corresponding node in rbtree. All
+>>>>>>> uprobe_breakpoints will be freed when thread exit.
+>>>>>>>
+>>>>>>> Signed-off-by: Liao Chang <liaochang1@huawei.com>
+>>>>>>> ---
+>>>>>>>  include/linux/uprobes.h |   3 +
+>>>>>>>  kernel/events/uprobes.c | 246 +++++++++++++++++++++++++++++++++-------
+>>>>>>>  2 files changed, 211 insertions(+), 38 deletions(-)
+>>>>>>>
+>>>>>
+>>>>> [...]
+>>>>
+>>>> --
+>>>> BR
+>>>> Liao, Chang
+>>
+>> --
+>> BR
+>> Liao, Chang
+
+-- 
+BR
+Liao, Chang
