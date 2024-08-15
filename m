@@ -1,160 +1,250 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE9439AE3;
-	Thu, 15 Aug 2024 03:26:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 586B81448FD;
+	Thu, 15 Aug 2024 06:42:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723692389; cv=none; b=DATjLySNCOko5ddbUhBLL+ebnHQFrm34v9pc39PuBzuTtgiUOdrzp7Y826zN1SniBHftd/3yoHwooJn/gwMO8yydCBKOjTEqAOMAMob+wUu+zVsKJazBnDZrzQOihtHReA4L66ZDfAQvi1maSrYHMsCTk7JUlqCTo928t+M2av0=
+	t=1723704150; cv=none; b=p2wN22hmhw9u5+jOog9agCMAmmt43VOH4WYkdAVeFWBT+cI5dW0NPiStJ3a4Rqvw6VMy/zUWTB8fJhK19jQfGVoPsMD7XAoZjS9Z+UhJmTRvtXNrJAjnTOFvXiBeKrKmlmXWzBJT3V0o2PmYg9Xyb4aeljIOcTmwkmgS43sX3L8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723692389; c=relaxed/simple;
-	bh=jZd0e8AlCeccIrI+TjyspmDO83JLXOK3oAqwexxCFkw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=K1kzSzaVTYmIRaqAaPuHovbZ39dgtxKZTM9JvkO2JPS4qwrIjxIrmS39QWsOzsExIB4ZfeSlaT5tmHG7vmdAmJUKF5YlzDzHVlNOrar9YDsOecUxl97MADyAviNRusJnd/pUhZfw/FuozDt+ueTsHuup2qpK+Hq0VzbVEgrV9U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.194])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Wkr9r3M5hzyPvC;
-	Thu, 15 Aug 2024 11:25:52 +0800 (CST)
-Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6766314022E;
-	Thu, 15 Aug 2024 11:26:23 +0800 (CST)
-Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
- kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 15 Aug 2024 11:26:23 +0800
-Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
- kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
- Thu, 15 Aug 2024 11:26:23 +0800
-From: duchangbin <changbin.du@huawei.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-CC: duchangbin <changbin.du@huawei.com>, Adrian Hunter
-	<adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa
-	<jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim
-	<namhyung@kernel.org>, Andi Kleen <andi@firstfloor.org>, "Linux Kernel
- Mailing List" <linux-kernel@vger.kernel.org>,
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Re: [PATCH 1/1] perf build: Fix up broken capstone feature detection
- fast path
-Thread-Topic: [PATCH 1/1] perf build: Fix up broken capstone feature detection
- fast path
-Thread-Index: AQHa7lAYZwgNZDGaUkS80NPtR1ZNSbInqQqA
-Date: Thu, 15 Aug 2024 03:26:22 +0000
-Message-ID: <76c92af3b3544f8a9fed412fc287947d@huawei.com>
-References: <Zry0sepD5Ppa5YKP@x1>
-In-Reply-To: <Zry0sepD5Ppa5YKP@x1>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
-x-ms-exchange-messagesentrepresentingtype: 1
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <09DE3855F974F245AE8CF8A95706EC08@huawei.com>
-Content-Transfer-Encoding: base64
+	s=arc-20240116; t=1723704150; c=relaxed/simple;
+	bh=sH6QnAl702Pa6jtq1WpXYAM+8fcYbnfY+emhpZgIWJE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uImfUektE3hX+oB6/AIXBoEgAo4dRigUTQBOsEKPvYEb1pr0noaUOrv7tEkTmxKFmOuYbnRvfhq4HmmA6DK+2xn0+HdQ7Tz4BjyIsv8hZ6Qy1JEVMLx7Pu6VuMHczjbu0y7XjAkvW8TkIfPahCR2cKDpJgEq4+Vxe5rxLQnR3d4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KgPZcXQl; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KgPZcXQl"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723704149; x=1755240149;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sH6QnAl702Pa6jtq1WpXYAM+8fcYbnfY+emhpZgIWJE=;
+  b=KgPZcXQlsVlT3KG9BayhKUxlFquTJzIes1tvLzPcbx7cY0OeBl7bPmz4
+   ZdVao1BCzyTKgZYRnh6GHEGszC8idm9UF7MXaHwgtgCZ3GuZq01G5fPis
+   oBi1xNq7YidVRQCKpx3NH0DGdSoZVgRDQySjAf7jKuWrqTjKwtu7mJxcW
+   35xnGGBtPdF2B6kD4/UmLMeTsv24vZQwe3/lvp+PEC3ReBtl3K91Z7DN2
+   e/ukvyp05ngq/GeFnH35SfTntT3HKMd+HdJ47LxtTM2KNICtjJWRC4gny
+   xxSZ09oNXiuToOdP8kfYSnKXGwUYBVtB6tw3imdjABucYzrdCO8hlaJMZ
+   A==;
+X-CSE-ConnectionGUID: ANF1zOSGTZi0TcQ46btqnA==
+X-CSE-MsgGUID: 6TMq6R4hQm6wZF+epXSqZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11164"; a="33100982"
+X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
+   d="scan'208";a="33100982"
+Received: from orviesa006.jf.intel.com ([10.64.159.146])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 23:42:26 -0700
+X-CSE-ConnectionGUID: 39JrdeVASwO2wsLWySoSmA==
+X-CSE-MsgGUID: Sq41damTR8uzPn3it21WSA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,148,1719903600"; 
+   d="scan'208";a="59553296"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.225.1]) ([10.124.225.1])
+  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Aug 2024 23:42:23 -0700
+Message-ID: <ad0b8f56-8613-44d1-b37a-d05e2a4f6529@linux.intel.com>
+Date: Thu, 15 Aug 2024 14:42:20 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v3 1/5] perf x86/topdown: Complete topdown slots/metrics
+ events check
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yongwei Ma <yongwei.ma@intel.com>,
+ Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240712170339.185824-1-dapeng1.mi@linux.intel.com>
+ <20240712170339.185824-2-dapeng1.mi@linux.intel.com> <ZroQ7wiw6JB-sjps@x1>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <ZroQ7wiw6JB-sjps@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-SGksIEFybmFsZG8sDQoNCkhvdyBhYm91dCB3b3JrYXJvdW5kIGl0IGJ5IHJlbmFtZSB0aGUgJ2Jw
-Zl9pbnNuJyBpbiBjYXBzdGlvbmU/DQoNCkNoYW5nZSB0ZXN0LWxpYmNhcHN0b25lLmMgYXM6DQoN
-CiNkZWZpbmUgYnBmX2luc24gY2Fwc3RvbmVfYnBmX2luc24NCiNpbmNsdWRlIDxjYXBzdG9uZS9j
-YXBzdG9uZS5oPg0KI3VuZGVmIGJwZl9pbnNuDQoNCkkgaGF2ZW4ndCB0cmllZCBpdCBidXQgc2Vl
-bXMgZmVhc2libGUuDQoNCk9uIFdlZCwgQXVnIDE0LCAyMDI0IGF0IDEwOjQ0OjE3QU0gLTAzMDAs
-IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyB3cm90ZToNCj4gVGhlIGNhcHN0b25lIGRldmVsIGhl
-YWRlcnMgZGVmaW5lICdzdHJ1Y3QgYnBmX2luc24nIGluIGEgd2F5IHRoYXQgY2xhc2hlcyB3aXRo
-DQo+IHdoYXQgaXMgaW4gdGhlIGxpYmJwZiBkZXZlbCBoZWFkZXJzLCBzbyB3ZSBzbyBmYXIgbmVl
-ZCB0byBhdm9pZCBpbmNsdWRpbmcgYm90aC4NCj4gDQo+IFRoaXMgaXMgaGFwcGVuaW5nIG9uIHRo
-ZSB0b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtYWxsLmMgZmlsZSwgd2hlcmUgd2UgdHJ5DQo+IGJ1
-aWxkaW5nIGFsbCB0aGUgZXhwZWN0ZWQgc2V0IG9mIGxpYnJhcmllcyB0byBiZSBub3JtYWxseSBh
-dmFpbGFibGUgb24gYQ0KPiBzeXN0ZW06DQo+IA0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10
-b29scy1uZXh0XSQgY2F0IC90bXAvYnVpbGQvcGVyZi10b29scy1uZXh0L2ZlYXR1cmUvdGVzdC1h
-bGwubWFrZS5vdXRwdXQNCj4gICBJbiBmaWxlIGluY2x1ZGVkIGZyb20gdGVzdC1icGYuYzozLA0K
-PiAgICAgICAgICAgICAgICAgICAgZnJvbSB0ZXN0LWFsbC5jOjE1MDoNCj4gICAvaG9tZS9hY21l
-L2dpdC9wZXJmLXRvb2xzLW5leHQvdG9vbHMvaW5jbHVkZS91YXBpL2xpbnV4L2JwZi5oOjc3Ojg6
-IGVycm9yOiDigJhicGZfaW5zbuKAmSBkZWZpbmVkIGFzIHdyb25nIGtpbmQgb2YgdGFnDQo+ICAg
-ICAgNzcgfCBzdHJ1Y3QgYnBmX2luc24gew0KPiAgICAgICAgIHwgICAgICAgIF5+fn5+fn5+DQo+
-ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBjYXQgL3RtcC9idWlsZC9wZXJm
-LXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFsbC5tYWtlLm91dHB1dA0KPiANCj4gV2hlbiBkb2lu
-ZyBzbyB0aGVyZSBpcyBhIHRyaWNrIHdoZXJlIHdlIGRlZmluZSBtYWluIHRvIGJlDQo+IG1haW5f
-dGVzdF9saWJjYXBzdG9uZSwgdGhlbiBpbmNsdWRlIHRoZSBpbmRpdmlkdWFsDQo+IHRvb2xzL2J1
-aWxkL2ZldHVyZS90ZXN0LWxpYmNhcHN0b25lLmMgY2FwYWJpbGl0eSBxdWVyeSB0ZXN0LCBhbmQg
-dGhlbiB3ZSB1bmRlZg0KPiAnbWFpbicgYmVjYXVzZSB3ZSdsbCBkbyBpdCBhbGwgb3ZlciBhZ2Fp
-biB3aXRoIHRoZSBuZXh0IGV4cGVjdGVkIGxpYnJhcnkgdG8NCj4gYmUgdGVzdGVkIChhdCB0aGlz
-IHRpbWUgJ2x6bWEnKS4NCj4gDQo+IFRvIGNvbXBsZXRlIHRoaXMgbWVjaGFuaXNtIHdlIG5lZWQg
-dG8sIGluIHRlc3QtYWxsLmMgJ21haW4nIHJvdXRpbmUsIHRvDQo+IGNhbGwgbWFpbl90ZXN0X2xp
-YmNhcHN0b25lKCksIHdoaWNoIGlzbid0IGJlaW5nIGRvbmUsIHNvIHRoZSBlZmZlY3Qgb2YNCj4g
-YWRkaW5nIHJlZmVyZW5jZXMgdG8gY2Fwc3RvbmUgaW4gdGVzdC1hbGwuYyBhcmUgbm90IGFjaGll
-dmVkLg0KPiANCj4gVGhlIG9ubHkgdGhpbmcgdGhhdCBpcyBoYXBwZW5pbmcgaXMgdGhhdCB0ZXN0
-LWFsbC5jIGlzIGZhaWxpbmcgdG8gYnVpbGQgYW5kIHRodXMNCj4gYWxsIHRoZSB0ZXN0cyB3aWxs
-IGhhdmUgdG8gYmUgZG9uZSBpbmRpdmlkdWFsbHksIHdoaWNoIG51bGxpZmllcyB0aGUgdGVzdC1h
-bGwuYw0KPiBzaW5nbGUgYnVpbGQgc3BlZWR1cC4NCj4gDQo+IFNvIGxldHMgcmVtb3ZlIHJlZmVy
-ZW5jZXMgdG8gY2Fwc3RvbmUgZnJvbSB0ZXN0LWFsbC5jIHRvIHNlZSBpZiB0aGlzIG1ha2VzIGl0
-DQo+IGJ1aWxkIGFnYWluIHNvIHRoYXQgd2UgZ2V0IGZhc3RlciBidWlsZHMgb3IgZ28gb24gZml4
-aW5nIHVwIHdoYXRldmVyIGlzDQo+IHByZXZlbnRpbmcgdXMgdG8gZ2V0IHRoYXQgYmVuZWZpdC4N
-Cj4gDQo+IE5vdGhpbmc6IGFmdGVyIHRoaXMgZml4IHdlIGdldCBhIGNsZWFuIHRlc3QtYWxsLmMg
-YnVpbGQgYW5kIGdldCB0aGUgYnVpbGQgc3BlZWR1cCBiYWNrOg0KPiANCj4gICDirKJbYWNtZUB0
-b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kIGNhdCAvdG1wL2J1aWxkL3BlcmYtdG9vbHMtbmV4dC9m
-ZWF0dXJlL3Rlc3QtYWxsLm1ha2Uub3V0cHV0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRv
-b2xzLW5leHRdJCBjYXQgL3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFs
-bC4NCj4gICB0ZXN0LWFsbC5iaW4gICAgICAgICAgdGVzdC1hbGwuZCAgICAgICAgICAgIHRlc3Qt
-YWxsLm1ha2Uub3V0cHV0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBj
-YXQgL3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFsbC5tYWtlLm91dHB1
-dA0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQgbGRkIC90bXAvYnVpbGQv
-cGVyZi10b29scy1uZXh0L2ZlYXR1cmUvdGVzdC1hbGwuYmluDQo+ICAgCWxpbnV4LXZkc28uc28u
-MSAoMHgwMDAwN2YxMzI3N2ExMDAwKQ0KPiAgIAlsaWJweXRob24zLjEyLnNvLjEuMCA9PiAvbGli
-NjQvbGlicHl0aG9uMy4xMi5zby4xLjAgKDB4MDAwMDdmMTMyNmUwMDAwMCkNCj4gICAJbGlibS5z
-by42ID0+IC9saWI2NC9saWJtLnNvLjYgKDB4MDAwMDdmMTMyNzRiZTAwMCkNCj4gICAJbGlidHJh
-Y2VldmVudC5zby4xID0+IC9saWI2NC9saWJ0cmFjZWV2ZW50LnNvLjEgKDB4MDAwMDdmMTMyNzQ5
-NjAwMCkNCj4gICAJbGlidHJhY2Vmcy5zby4xID0+IC9saWI2NC9saWJ0cmFjZWZzLnNvLjEgKDB4
-MDAwMDdmMTMyNzQ2ZjAwMCkNCj4gICAJbGliY3J5cHRvLnNvLjMgPT4gL2xpYjY0L2xpYmNyeXB0
-by5zby4zICgweDAwMDA3ZjEzMjY4MDAwMDApDQo+ICAgCWxpYnVud2luZC14ODZfNjQuc28uOCA9
-PiAvbGliNjQvbGlidW53aW5kLXg4Nl82NC5zby44ICgweDAwMDA3ZjEzMjc0NTIwMDApDQo+ICAg
-CWxpYnVud2luZC5zby44ID0+IC9saWI2NC9saWJ1bndpbmQuc28uOCAoMHgwMDAwN2YxMzI3NDM2
-MDAwKQ0KPiAgIAlsaWJsem1hLnNvLjUgPT4gL2xpYjY0L2xpYmx6bWEuc28uNSAoMHgwMDAwN2Yx
-MzI3NDAzMDAwKQ0KPiAgIAlsaWJkdy5zby4xID0+IC9saWI2NC9saWJkdy5zby4xICgweDAwMDA3
-ZjEzMjZkNmYwMDApDQo+ICAgCWxpYnouc28uMSA9PiAvbGliNjQvbGliei5zby4xICgweDAwMDA3
-ZjEzMjczZTIwMDApDQo+ICAgCWxpYmVsZi5zby4xID0+IC9saWI2NC9saWJlbGYuc28uMSAoMHgw
-MDAwN2YxMzI2ZDUzMDAwKQ0KPiAgIAlsaWJudW1hLnNvLjEgPT4gL2xpYjY0L2xpYm51bWEuc28u
-MSAoMHgwMDAwN2YxMzI3M2Q0MDAwKQ0KPiAgIAlsaWJzbGFuZy5zby4yID0+IC9saWI2NC9saWJz
-bGFuZy5zby4yICgweDAwMDA3ZjEzMjY0MDAwMDApDQo+ICAgCWxpYnBlcmwuc28uNS4zOCA9PiAv
-bGliNjQvbGlicGVybC5zby41LjM4ICgweDAwMDA3ZjEzMjYwMDAwMDApDQo+ICAgCWxpYmMuc28u
-NiA9PiAvbGliNjQvbGliYy5zby42ICgweDAwMDA3ZjEzMjVlMGYwMDApDQo+ICAgCWxpYnpzdGQu
-c28uMSA9PiAvbGliNjQvbGlienN0ZC5zby4xICgweDAwMDA3ZjEzMjY3NDEwMDApDQo+ICAgCS9s
-aWI2NC9sZC1saW51eC14ODYtNjQuc28uMiAoMHgwMDAwN2YxMzI3N2EzMDAwKQ0KPiAgIAlsaWJi
-ejIuc28uMSA9PiAvbGliNjQvbGliYnoyLnNvLjEgKDB4MDAwMDdmMTMyNmQzZjAwMCkNCj4gICAJ
-bGliY3J5cHQuc28uMiA9PiAvbGliNjQvbGliY3J5cHQuc28uMiAoMHgwMDAwN2YxMzI2ZDA3MDAw
-KQ0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQNCj4gDQo+IEFuZCB3aGVu
-IGhhdmluZyBjYXBzdG9uZS1kZXZlbCBpbnN0YWxsZWQgd2UgZ2V0IGl0IGRldGVjdGVkIGFuZCBs
-aW5rZWQgd2l0aA0KPiBwZXJmLCBhbGxvd2luZyB1cyB0byBiZW5lZml0IGZyb20gdGhlIGZlYXR1
-cmVzIHRoYXQgaXQgZW5hYmxlczoNCj4gDQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xz
-LW5leHRdJCBycG0gLXEgY2Fwc3RvbmUtZGV2ZWwNCj4gICBjYXBzdG9uZS1kZXZlbC01LjAuMS0z
-LmZjNDAueDg2XzY0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBsZGQg
-L3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvcGVyZiB8IGdyZXAgY2Fwc3RvbmUNCj4gICAJbGli
-Y2Fwc3RvbmUuc28uNSA9PiAvbGliNjQvbGliY2Fwc3RvbmUuc28uNSAoMHgwMDAwN2ZlNmE1YzAw
-MDAwKQ0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQgL3RtcC9idWlsZC9w
-ZXJmLXRvb2xzLW5leHQvcGVyZiAtdnYgfCBncmVwIGNhcA0KPiAgICAgICAgICAgICAgbGliY2Fw
-c3RvbmU6IFsgb24gIF0gICMgSEFWRV9MSUJDQVBTVE9ORV9TVVBQT1JUDQo+ICAg4qyiW2FjbWVA
-dG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJA0KPiANCj4gRml4ZXM6IDhiNzY3ZGIzMzA5NTk1YTIg
-KCJwZXJmOiBidWlsZDogaW50cm9kdWNlIHRoZSBsaWJjYXBzdG9uZSIpDQo+IENjOiBBZHJpYW4g
-SHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT4NCj4gQ2M6IEFuZGkgS2xlZW4gPGFuZGlA
-Zmlyc3RmbG9vci5vcmc+DQo+IENjOiBDaGFuZ2JpbiBEdSA8Y2hhbmdiaW4uZHVAaHVhd2VpLmNv
-bT4NCj4gQ2M6IElhbiBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT4NCj4gQ2M6IEppcmkgT2xz
-YSA8am9sc2FAa2VybmVsLm9yZz4NCj4gQ2M6IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4Lmlu
-dGVsLmNvbT4NCj4gQ2M6IE5hbWh5dW5nIEtpbSA8bmFtaHl1bmdAa2VybmVsLm9yZz4NCj4gU2ln
-bmVkLW9mZi1ieTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+DQo+
-IC0tLQ0KPiAgdG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWFsbC5jIHwgNCAtLS0tDQo+ICAxIGZp
-bGUgY2hhbmdlZCwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS90b29scy9idWls
-ZC9mZWF0dXJlL3Rlc3QtYWxsLmMgYi90b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtYWxsLmMNCj4g
-aW5kZXggZGQwYTE4YzJlZjhmYzA4MC4uNmY0YmYzODZhM2I1YzRiMCAxMDA2NDQNCj4gLS0tIGEv
-dG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWFsbC5jDQo+ICsrKyBiL3Rvb2xzL2J1aWxkL2ZlYXR1
-cmUvdGVzdC1hbGwuYw0KPiBAQCAtMTM0LDEwICsxMzQsNiBAQA0KPiAgI3VuZGVmIG1haW4NCj4g
-ICNlbmRpZg0KPiAgDQo+IC0jZGVmaW5lIG1haW4gbWFpbl90ZXN0X2xpYmNhcHN0b25lDQo+IC0j
-IGluY2x1ZGUgInRlc3QtbGliY2Fwc3RvbmUuYyINCj4gLSN1bmRlZiBtYWluDQo+IC0NCj4gICNk
-ZWZpbmUgbWFpbiBtYWluX3Rlc3RfbHptYQ0KPiAgIyBpbmNsdWRlICJ0ZXN0LWx6bWEuYyINCj4g
-ICN1bmRlZiBtYWluDQo+IC0tIA0KPiAyLjQ1LjINCj4gDQo+IA0KDQotLSANCkNoZWVycywNCkNo
-YW5nYmluIER1DQo=
+
+On 8/12/2024 9:41 PM, Arnaldo Carvalho de Melo wrote:
+> On Fri, Jul 12, 2024 at 05:03:35PM +0000, Dapeng Mi wrote:
+>> It's not complete to check whether an event is a topdown slots or
+>> topdown metrics event by only comparing the event name since user
+>> may assign the event by RAW format, e.g.
+>>
+>> perf stat -e '{instructions,cpu/r400/,cpu/r8300/}' sleep 1
+>>
+>>  Performance counter stats for 'sleep 1':
+>>
+>>      <not counted>      instructions
+>>      <not counted>      cpu/r400/
+>>    <not supported>      cpu/r8300/
+>>
+>>        1.002917796 seconds time elapsed
+>>
+>>        0.002955000 seconds user
+>>        0.000000000 seconds sys
+>>
+>> The RAW format slots and topdown-be-bound events are not recognized and
+>> not regroup the events, and eventually cause error.
+>>
+>> Thus add two helpers arch_is_topdown_slots()/arch_is_topdown_metrics()
+>> to detect whether an event is topdown slots/metrics event by comparing
+>> the event config directly, and use these two helpers to replace the
+>> original event name comparisons.
+> Looks ok, I made a comment below, please take a look
+>  
+>> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+>> ---
+>>  tools/perf/arch/x86/util/evlist.c  |  8 ++---
+>>  tools/perf/arch/x86/util/evsel.c   |  3 +-
+>>  tools/perf/arch/x86/util/topdown.c | 48 +++++++++++++++++++++++++++++-
+>>  tools/perf/arch/x86/util/topdown.h |  2 ++
+>>  4 files changed, 55 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
+>> index b1ce0c52d88d..332e8907f43e 100644
+>> --- a/tools/perf/arch/x86/util/evlist.c
+>> +++ b/tools/perf/arch/x86/util/evlist.c
+>> @@ -78,14 +78,14 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
+>>  	if (topdown_sys_has_perf_metrics() &&
+>>  	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
+>>  		/* Ensure the topdown slots comes first. */
+>> -		if (strcasestr(lhs->name, "slots") && !strcasestr(lhs->name, "uops_retired.slots"))
+>> +		if (arch_is_topdown_slots(lhs))
+>>  			return -1;
+>> -		if (strcasestr(rhs->name, "slots") && !strcasestr(rhs->name, "uops_retired.slots"))
+>> +		if (arch_is_topdown_slots(rhs))
+>>  			return 1;
+>>  		/* Followed by topdown events. */
+>> -		if (strcasestr(lhs->name, "topdown") && !strcasestr(rhs->name, "topdown"))
+>> +		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
+>>  			return -1;
+>> -		if (!strcasestr(lhs->name, "topdown") && strcasestr(rhs->name, "topdown"))
+>> +		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
+>>  			return 1;
+>>  	}
+>>  
+>> diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
+>> index 090d0f371891..181f2ba0bb2a 100644
+>> --- a/tools/perf/arch/x86/util/evsel.c
+>> +++ b/tools/perf/arch/x86/util/evsel.c
+>> @@ -6,6 +6,7 @@
+>>  #include "util/pmu.h"
+>>  #include "util/pmus.h"
+>>  #include "linux/string.h"
+>> +#include "topdown.h"
+>>  #include "evsel.h"
+>>  #include "util/debug.h"
+>>  #include "env.h"
+>> @@ -44,7 +45,7 @@ bool arch_evsel__must_be_in_group(const struct evsel *evsel)
+>>  	    strcasestr(evsel->name, "uops_retired.slots"))
+>>  		return false;
+>>  
+>> -	return strcasestr(evsel->name, "topdown") || strcasestr(evsel->name, "slots");
+>> +	return arch_is_topdown_metrics(evsel) || arch_is_topdown_slots(evsel);
+>>  }
+>>  
+>>  int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
+>> diff --git a/tools/perf/arch/x86/util/topdown.c b/tools/perf/arch/x86/util/topdown.c
+>> index 3f9a267d4501..49f25d67ed77 100644
+>> --- a/tools/perf/arch/x86/util/topdown.c
+>> +++ b/tools/perf/arch/x86/util/topdown.c
+>> @@ -32,6 +32,52 @@ bool topdown_sys_has_perf_metrics(void)
+>>  }
+>>  
+>>  #define TOPDOWN_SLOTS		0x0400
+>> +bool arch_is_topdown_slots(const struct evsel *evsel)
+>> +{
+>> +	if (evsel->core.attr.config == TOPDOWN_SLOTS)
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>> +
+>> +static int compare_topdown_event(void *vstate, struct pmu_event_info *info)
+>> +{
+>> +	int *config = vstate;
+>> +	int event = 0;
+>> +	int umask = 0;
+>> +	char *str;
+>> +
+>> +	if (!strcasestr(info->name, "topdown"))
+>> +		return 0;
+>> +
+>> +	str = strcasestr(info->str, "event=");
+>> +	if (str)
+>> +		sscanf(str, "event=%x", &event);
+>> +
+>> +	str = strcasestr(info->str, "umask=");
+>> +	if (str)
+>> +		sscanf(str, "umask=%x", &umask);
+>> +
+>> +	if (event == 0 && *config == (event | umask << 8))
+>> +		return 1;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +bool arch_is_topdown_metrics(const struct evsel *evsel)
+>> +{
+>> +	struct perf_pmu *pmu = evsel__find_pmu(evsel);
+>> +	int config = evsel->core.attr.config;
+> Humm, can we cache this information? I.e. have some evsel->is_topdown:1
+> bit to avoid having to traverse all events if we call this multiple
+> times for the same evsel? 
+
+Arnaldo, I tried to add a variable in evsel structure to represent if the
+evsel is a topdown metrics event, but unfortunately the helper argument
+"evsel" has "const" qualifier, it forces the "evsel" structure can't be
+modified. If we want to add this optimization, the entire call-chain
+functions have to be modified and this would reduce the security of code as
+well. Since this helper is not in a performance critical patch, I suppose
+it won't introduce too much performance hit as the traverse. I would drop
+this optimization and keep the original code.
+
+
+>
+> - Arnaldo
+>
+>> +	if (!pmu || !pmu->is_core)
+>> +		return false;
+>> +
+>> +	if (perf_pmu__for_each_event(pmu, false, &config,
+>> +				     compare_topdown_event))
+>> +		return true;
+>> +
+>> +	return false;
+>> +}
+>>  
+>>  /*
+>>   * Check whether a topdown group supports sample-read.
+>> @@ -44,7 +90,7 @@ bool arch_topdown_sample_read(struct evsel *leader)
+>>  	if (!evsel__sys_has_perf_metrics(leader))
+>>  		return false;
+>>  
+>> -	if (leader->core.attr.config == TOPDOWN_SLOTS)
+>> +	if (arch_is_topdown_slots(leader))
+>>  		return true;
+>>  
+>>  	return false;
+>> diff --git a/tools/perf/arch/x86/util/topdown.h b/tools/perf/arch/x86/util/topdown.h
+>> index 46bf9273e572..1bae9b1822d7 100644
+>> --- a/tools/perf/arch/x86/util/topdown.h
+>> +++ b/tools/perf/arch/x86/util/topdown.h
+>> @@ -3,5 +3,7 @@
+>>  #define _TOPDOWN_H 1
+>>  
+>>  bool topdown_sys_has_perf_metrics(void);
+>> +bool arch_is_topdown_slots(const struct evsel *evsel);
+>> +bool arch_is_topdown_metrics(const struct evsel *evsel);
+>>  
+>>  #endif
+>> -- 
+>> 2.40.1
+>>
