@@ -1,55 +1,57 @@
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-oa1-f49.google.com (mail-oa1-f49.google.com [209.85.160.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B25DF5C;
-	Thu, 15 Aug 2024 01:36:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23482B663;
+	Thu, 15 Aug 2024 01:36:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723685799; cv=none; b=YECOqQpnTerMjMToTzrkaYVnQFEuQs0AJ1qrFSsema6PLjIspNVpIp19tOWgdRRIzdjfukZ5Z8Hx8RCHIgA2QmI/n0js8DWgoFiK7HpoXrAJBVIqvwJZNuA1grFvKiSdAMNv+7EFqUm0Jb9VZ09e7/uf1kbe/naA4LrhCzuPGko=
+	t=1723685803; cv=none; b=HqoT0H2Sdz00CTVEqRxDuoLGD4g6pkx+yG73KilAULa3v5WyHWL45m6hbAvHYzaRBKhe0lJXKoyqH0HqytBsTYDEwEzhSv+9oRyi1zTcwKJ1OjWbC5F6Mk3HSsciv4DEcRRvTc23RRHoQeVq1isfYv0fAXNLg553ZolBb/PFNn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723685799; c=relaxed/simple;
-	bh=IFi8uvn52QdYmt6ggaKmxuLsi+NR6UsiUWW9c9Wzv3k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TmYMzTw0HBjLuDIv3Uk544qY476+UddBnacEcGu9DAFBo0BCZoxrHJMLgAQLYvkRKGAnRdR3CK2/9WZAojbEVQ/jiFEBoBEB2XrciejS6FzDjkT8W9McTB6zMgzoNEPgduqG34jmVIqosqKVUnlpg7KK6e8yPgBvzD8HKzAy+Rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czPd5aU0; arc=none smtp.client-ip=209.85.210.179
+	s=arc-20240116; t=1723685803; c=relaxed/simple;
+	bh=/zEv8M9GajqLNiVXDbDbUzFLJxXKfIlEjtf7j8fihFY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=C1wbnSgZLubyyHAu9iy2EYxB3hW0UcEh+PbFb2CTc8BbnIdFhMsrmDEKX5pzV7jA8pFoWadwgaPYTL0P9AkS4Mg5pID+5dG2iYeLRh2QItMJcnMFPLpnDST4y2r+nZ2NXLFIJ58M3MaiBs6QXChYMKGbOi5XzlSKyY9sfCOAwis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y6oP6Aah; arc=none smtp.client-ip=209.85.160.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czPd5aU0"
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70d399da0b5so339867b3a.3;
-        Wed, 14 Aug 2024 18:36:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y6oP6Aah"
+Received: by mail-oa1-f49.google.com with SMTP id 586e51a60fabf-26fd5a65057so415491fac.0;
+        Wed, 14 Aug 2024 18:36:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723685797; x=1724290597; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PRLKb0rmcXp13Q50D18RGznr+MFWvb7LZRgjYz1SnTw=;
-        b=czPd5aU0meBeZQAxEM4OPU0UQlYr8IydB6ZYdUv1qub0uUpEDMnuTluDZn3X9PXxP6
-         nK4L/FHFFsV3CW5xiv3oAy/D09m1haoaP5T60+RVhgcKJC2JZqXNxXT4PJF3tQPQXaVo
-         o5J0mlgVltfJpcNsrRLdB1O49xruWmLrX7k/6tHlpQsVdk6Sbsg8+DmVWFpicqbH954I
-         57NhIern2LTYrQoQsw9Py+t1aLUusf1I+b8iKWov0nAbxS1iLKc4ancK0XcHykEe33Yo
-         8bDrNin6vcNzF7SZEno+AsfzJRg6+k9OWa9swHEjDtZNal+Xv/+EREPKwfmBQLPHVwSR
-         TU/Q==
+        d=gmail.com; s=20230601; t=1723685801; x=1724290601; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zhAQIULCNKZIk1tNzCvuYy9BXBZ3c18NDxYNH/x924A=;
+        b=Y6oP6AahXY6Jst/aPocxvO9fmD6qfsH8KIGpoITN1RzyDCHrAAxz9txbwCSi7Yyzzo
+         fnnvCB5YJu1fb4e5DUhFMWc56PnmCJayxfBNWGNIOXtZJQzITbyC9s0OkwyoMhZNZHea
+         u6OW8pgU7f1GNmZ7izk5RzOEYmlb5g7gxlj6r+vd4HVmAIyP9c8bg5n6NwxHdVrgtMjs
+         XT3Lqd0g+/7BauoPZ8RFDqqYZm87dy4M7KavLOHDY9pt/MlZNeJmM0PHHrpTSpgTXNkX
+         yf/HHw/+zRQN17OSJRRfUy3qLj6t95QmLKe/we3UoFDoWtGJfLz9xJiGfNYYZp3c8Ofs
+         Q8Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723685797; x=1724290597;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=PRLKb0rmcXp13Q50D18RGznr+MFWvb7LZRgjYz1SnTw=;
-        b=QiV1vhts9EU+/KUzgCbVl6IHSCjizf8CUwSwUtoI6T7OwLslV8kJPFN8rJtyOnnV2n
-         yGYbIa5wWsSqbUV6AjH69WNRmU2Ekt2i31m4K2wwRcsDpDQHuWjuRNo/3L7I6cRENgCc
-         NYCv65n6yktYW18grmdYzleeSr84qWSXEt9BTOVnTuIxC6SLY0Qd2BkXRBAbWFTMseWa
-         R5505Y0S03s5sh7InugbtcC+FRekah+85VipvxqEhz3Gs1gJSf3i5b9j+LQcptr91lCW
-         wvxL5K1NeX7e4egst54ZtS3OBLFNjbvE5pxJu14FN8PRKozcqvVUKnqt7SRvbVbfJDPt
-         he6w==
-X-Forwarded-Encrypted: i=1; AJvYcCXpYeoSnK7adUJ2BlT4u4QXRcyoERJbpSYuWUucGwLRX+o7f9gXORZTztsKGNR6Hs11AXJEJ72p2vqa+CENy1vIt9EdzVgU6sa7D3pmRJQuChnzbwA0+Jrpyv0yytEM31hJmq5saoyx0QCuNXXcEQ==
-X-Gm-Message-State: AOJu0YyrLhRkUdHpVEHSsPqQB5EdGIw7ZBE7iCNYIme6rSJjjbnbs2LQ
-	5fSQBhcv/31a26wLELPApGpv7yA2JPyjNkzloEONyQpQVnYqzV7D
-X-Google-Smtp-Source: AGHT+IEYscdqVdr/3O3mv1a/K8DDC6sjcHBlB/ERXE2lVwuqroRNPlBOr2hts5sggvNeNfKAzeHqHg==
-X-Received: by 2002:a05:6a00:1ad1:b0:706:29e6:2ed2 with SMTP id d2e1a72fcca58-712670fa392mr6674255b3a.5.1723685797228;
-        Wed, 14 Aug 2024 18:36:37 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1723685801; x=1724290601;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zhAQIULCNKZIk1tNzCvuYy9BXBZ3c18NDxYNH/x924A=;
+        b=baDHuueLF36y1CGEgQnQPmv1fq518DXlHcLS9RbRD38HPhK9cmQMN4f4vic2cR7XM6
+         Wi5gd0dBWpZyHYvQ1BDXZ87foo+lm9291q8tlAR2QZJAT6qJT1XPq2DroQjATI+/IBe0
+         aTq9zc3IocbdkCX91iJTZmYNtRH2AmAZwkEgnNshSlV/NwDrCdgQ2nS+Wou8JuJS40l9
+         W0gdvHEBPDT86/aX3WQFhl91fpH1AvW1H2PtpCbGu157nSZRY8FD5wCG3XGrMyA0Vvkw
+         H1EJICR1Radflugvb9DNyxaEE0OCPjVyKWmbDt5p0Q/9HXxu+KJOqYeoA/HnN2Wlzp63
+         vF7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXRBHe+oQt8d5BnEM5S8LgovsdkRxS2SdzVE8wlZmuuig0rzEChoLIh77+7DLorwFHdtPdKBhxL2hlMYFjG5KahcA==@vger.kernel.org, AJvYcCXYnsAarSJCiI1xsTZIErVxn0+NY0AIQ3ubrdXWUGzhBp3V4LiN/qbypHJxS6W1J+01aVcZWwOWLWvXxgc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy24AQ/U/I1/Wem+b2gXZW5J5E/93W6EEZCusISLC9/cJzWunf9
+	WjpUf99He0gAxCB4be7DJPDc8YBi3I+kuf9qXGMzphZRA+eoYXcg
+X-Google-Smtp-Source: AGHT+IGXgoLIiAXccpht+n/Mwm7s3WcADg4LTBbUE+zLZ70P4sh6n80+FmF9XI42AMZ58p2SW4a9VQ==
+X-Received: by 2002:a05:6870:9691:b0:261:72a:1336 with SMTP id 586e51a60fabf-26fe5c45c67mr4816123fac.50.1723685801064;
+        Wed, 14 Aug 2024 18:36:41 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.36.33
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.36.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 18:36:36 -0700 (PDT)
+        Wed, 14 Aug 2024 18:36:40 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -59,10 +61,12 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 00/10] perf trace: Enhanced augmentation for pointer arguments
-Date: Thu, 15 Aug 2024 09:36:16 +0800
-Message-ID: <20240815013626.935097-1-howardchu95@gmail.com>
+Subject: [PATCH v2 01/10] perf trace: Fix perf trace -p <PID>
+Date: Thu, 15 Aug 2024 09:36:17 +0800
+Message-ID: <20240815013626.935097-2-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20240815013626.935097-1-howardchu95@gmail.com>
+References: <20240815013626.935097-1-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -71,71 +75,50 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Changes in v2:
-- Fix perf trace workload bug.
-- Rename pids_filtered to pids_filtered_out, and add pids_allowed to
-avoid confusion.
-- Add tests.
+perf trace -p <PID> work on a syscall that is unaugmented, but doesn't
+work on a syscall that's augmented (when it calls perf_event_output() in
+BPF).
 
-Forgot to add some before & afters in v1, here they are:
+Let's take open() as an example. open() is augmented in perf trace.
 
-before:
+Before:
+```
+perf $ perf trace -e open -p 3792392
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+```
 
-# struct
-perf $ perf trace -e epoll_wait
-     0.068 (500.192 ms): Hyprland/539 epoll_wait(epfd: 3, events: 0x7ffd9f6f1730, maxevents: 32, timeout: 4294967295) = 1
+We can see there's no output.
 
-# string 
-perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
-     0.024 ( 0.012 ms): mv/294902 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "")  = 0
+After:
+```
+perf $ perf trace -e open -p 3792392
+     0.000 ( 0.123 ms): a.out/3792392 open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+  1000.398 ( 0.116 ms): a.out/3792392 open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+```
 
-# buffer
-perf $ perf trace -e write echo "Hikawa Sayo"
-Hikawa Sayo
-     0.000 ( 0.011 ms): echo/928215 write(fd: 1, buf: 0x5b292f307410, count: 12)                          = 12
+Reason:
 
-after:
+bpf_perf_event_output() will fail when you specify a pid in perf trace (EOPNOTSUPP).
 
-# struct
-perf $ perf trace -e epoll_wait
-     0.023 (500.128 ms): Hyprland/539 epoll_wait(epfd: 3, events: {1,102459045712424,}, maxevents: 32, timeout: 4294967295) = 1
+When using perf trace -p 114, before perf_event_open(), we'll have PID
+= 114, and CPU = -1.
 
-# string 
-perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
-     0.039 ( 0.018 ms): mv/295046 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "/tmp/f2") = 0
+This is bad for bpf-output event, because the ring buffer won't accept
+output from BPF's perf_event_output(), making it fail. I'm still trying
+to find out why.
 
-# buffer
-perf $ perf trace -e write echo "Hikawa Sayo"
-Hikawa Sayo
-     0.000 ( 0.013 ms): echo/929159 write(fd: 1, buf: "Hikawa Sayo\10", count: 12)                        = 12
+If we open bpf-output for every cpu, instead of setting it to -1, like
+this:
+PID = <PID>, CPU = 0
+PID = <PID>, CPU = 1
+PID = <PID>, CPU = 2
+PID = <PID>, CPU = 3
+...
 
-Still debugging read-like syscalls augmentation such as read, readlinkat
-and gettimeofday. The support for read-like syscalls will be added in a
-separated patch.
+Everything works.
 
-
-
-
-v1:
-
-This patch series adds augmentation feature to struct pointer, string
-and buffer arguments all-in-one. It also fixes 'perf trace -p <PID>'.
-
-With this patch series, perf trace will augment struct pointers well, it
-can be applied to syscalls such as clone3, epoll_wait, write, and so on.
-But unfortunately, it only collects the data once, when syscall enters.
-This makes syscalls that pass a pointer in order to let it get
-written, not to be augmented very well, I call them the read-like
-syscalls, because it reads from the kernel, using the syscall. This
-patch series only augments write-like syscalls well.
-
-Unfortunately, there are more read-like syscalls(such as read,
-readlinkat, even gettimeofday) than write-like syscalls(write, pwrite64,
-epoll_wait, clone3).
-
-Here are three test scripts that I find useful:
-
-pwrite64
+You can test it with this script:
 ```
  #include <unistd.h>
  #include <sys/syscall.h>
@@ -143,41 +126,10 @@ pwrite64
 int main()
 {
 	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
-	char s1[] = "DI\0NGZ\0HE\1N", s2[] = "XUEBAO";
-
-	while (1) {
-		syscall(SYS_pwrite64, i1, s1, sizeof(s1), i2);
-		sleep(1);
-	}
-
-	return 0;
-}
-```
-
-epoll_wait
-```
- #include <unistd.h>
- #include <sys/epoll.h>
- #include <stdlib.h>
- #include <string.h>
-
-#define MAXEVENTS 2
-
-int main()
-{
-	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
 	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
 
-	struct epoll_event ee = {
-		.events = 114,
-		.data.ptr = NULL,
-	};
-
-	struct epoll_event *events = calloc(MAXEVENTS, sizeof(struct epoll_event));
-	memcpy(events, &ee, sizeof(ee));
-
 	while (1) {
-		epoll_wait(i1, events, i2, i3);
+		syscall(SYS_open, s1, i1, i2);
 		sleep(1);
 	}
 
@@ -185,71 +137,62 @@ int main()
 }
 ```
 
-clone3
+save, compile
 ```
- #include <unistd.h>
- #include <sys/syscall.h>
- #include <linux/sched.h>
- #include <string.h>
- #include <stdio.h>
- #include <stdlib.h>
-
-int main()
-{
-	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
-	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
-
-	struct clone_args cla = {
-		.flags = 1,
-		.pidfd = 1,
-		.child_tid = 4,
-		.parent_tid = 5,
-		.exit_signal = 1,
-		.stack = 4,
-		.stack_size = 1,
-		.tls = 9,
-		.set_tid = 1,
-		.set_tid_size = 9,
-		.cgroup = 8,
-	};
-
-	while (1) {
-		syscall(SYS_clone3, &cla, i1);
-		sleep(1);
-	}
-
-	return 0;
-}
+gcc open.c
 ```
 
-Please save them, compile and trace them using perf trace <workload>.
-Reminder: For the third script, you can't trace it with -e clone, please
-use -e clone3.
+perf trace
+```
+perf trace -e open <path-to-the-executable>
+```
 
-Howard Chu (10):
-  perf trace: Fix perf trace -p <PID>
-  perf trace: Change some comments
-  perf trace: Add trace__bpf_sys_enter_beauty_map() to prepare for
-    fetching data in BPF
-  perf trace: Add some string arguments' name in
-    syscall_arg_fmt__init_array()
-  perf trace: Add a new argument to trace__btf_scnprintf()
-  perf trace: Pretty print struct data
-  perf trace: Pretty print buffer data
-  perf trace: Add pids_allowed and rename pids_filtered
-  perf trace: Collect augmented data using BPF
-  perf trace: Add general tests for augmented syscalls
+Signed-off-by: Howard Chu <howardchu95@gmail.com>
+---
+ tools/perf/util/evlist.c | 14 +++++++++++++-
+ tools/perf/util/evlist.h |  1 +
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
- tools/perf/builtin-trace.c                    | 279 +++++++++++++++++-
- tools/perf/tests/shell/trace_btf_general.sh   |  59 ++++
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 153 +++++++++-
- tools/perf/util/evlist.c                      |  14 +-
- tools/perf/util/evlist.h                      |   1 +
- tools/perf/util/trace_augment.h               |   6 +
- 6 files changed, 492 insertions(+), 20 deletions(-)
- create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
- create mode 100644 tools/perf/util/trace_augment.h
-
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index c0379fa1ccfe..f14b7e6ff1dc 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1067,7 +1067,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	if (!threads)
+ 		return -1;
+ 
+-	if (target__uses_dummy_map(target))
++	if (target__uses_dummy_map(target) && !evlist__has_bpf_output(evlist))
+ 		cpus = perf_cpu_map__new_any_cpu();
+ 	else
+ 		cpus = perf_cpu_map__new(target->cpu_list);
+@@ -2627,3 +2627,15 @@ void evlist__uniquify_name(struct evlist *evlist)
+ 		}
+ 	}
+ }
++
++bool evlist__has_bpf_output(struct evlist *evlist)
++{
++	struct evsel *evsel;
++
++	evlist__for_each_entry(evlist, evsel) {
++		if (evsel__is_bpf_output(evsel))
++			return true;
++	}
++
++	return false;
++}
+diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
+index b46f1a320783..bcc1c6984bb5 100644
+--- a/tools/perf/util/evlist.h
++++ b/tools/perf/util/evlist.h
+@@ -447,5 +447,6 @@ int evlist__scnprintf_evsels(struct evlist *evlist, size_t size, char *bf);
+ void evlist__check_mem_load_aux(struct evlist *evlist);
+ void evlist__warn_user_requested_cpus(struct evlist *evlist, const char *cpu_list);
+ void evlist__uniquify_name(struct evlist *evlist);
++bool evlist__has_bpf_output(struct evlist *evlist);
+ 
+ #endif /* __PERF_EVLIST_H */
 -- 
 2.45.2
 
