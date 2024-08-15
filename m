@@ -1,209 +1,119 @@
-Received: from mail-pg1-f175.google.com (mail-pg1-f175.google.com [209.85.215.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 862F2155314;
-	Thu, 15 Aug 2024 22:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9897E12B94;
+	Thu, 15 Aug 2024 23:03:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723761894; cv=none; b=cwqudw1sXX7KXqrvfkmr2uqPuEC3kIUhZF51iyaC2Eehxmst2C9bTXQHiJaER3ILEITOh8aJh+PJIgl8dFz785xZZ9gBkaOADRn+uJ7HDKC0+OpSv3sEiVY7549eI9S537hvRxp/TPb3OGy7Eq/gDpgI/4Hbvkwk4P+tjPjYIzU=
+	t=1723763002; cv=none; b=mgb+lCbwVTqEzX+ObUPtPkcnOPKqQcrecbnaOwmRNy9atLn+KS4pf41Js3ntO4HNp0D+YZxTkp2LBmy5XMFU+IKblphP/FptlJrX9b9dK1+kfEagpCXvw9+UJz8mcuh+LF6YtbQTspH836AqUbXUQ/+MgPztk9r1u2w263CjHqw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723761894; c=relaxed/simple;
-	bh=qkYGMFqPQuKI3g5yvw3VsNeFCwrBDk6bgsSaPFQsnps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lq28Y9kmIDxVB6De56EcO3YL38BLNNxSMcr50ABcas9Qdh6dBGPGsTRgvHKB/ojRqlz4sUZ+ExrnOiobzGFMQFUNhlUNn1HyqJMohqo7fdyykFbnSW7y6j78J69fUnAwschZY3foae8ytf7z03ioQIfi2Ool9BfI8oBPDPxeurU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f175.google.com with SMTP id 41be03b00d2f7-7c6b4222fe3so872066a12.3;
-        Thu, 15 Aug 2024 15:44:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723761892; x=1724366692;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XmncF1jhdBEnDZjbmCr4nruq8dsXgg90IMyxWFpb25I=;
-        b=FsHcsJsGwwcy191GRGMpOQZ2ZE1pveFOW1MLhXGPNCHvw0XBQsbelPVqVJNrl4qOSX
-         O9CNfkyjfI+B2V9OGySyCFCsrostZeVzHdK6OZ5UV6w1mTf2KBMMlBNJ+Hp09mAILdk8
-         ot+dWZyWlMVjIhn73gtr7SYEIPnEFdbfuctaU0f1ekNucu3oKnMp1YUCXr0i6yFrJHmY
-         QiAKR7vlgKGXlGQdbp+bSvMj9Ipb7Ftmj/B2EoorCkRlO/h4kozLOIvPAc2pRVG6R5QR
-         aajgae+agfNLRdAW11Kgx0thUU+mY5vRn2ohbXgdPIJZzC1TCCdc4qz9LnlSUUlQp4a8
-         clWw==
-X-Forwarded-Encrypted: i=1; AJvYcCWyTeuiAAtupPxQvft7soo4GP4HG4cudO47tVgEb8PqmAfZlmJYAPFBf3jkVlzmrGyoPW9AbuGklG/YfbAebxG5mbWObyOhGigzhuAEGdN0XRmSbqTE0SIbJJMTEZoj7kOcoIOHDQiKJG5pVgBoCw==
-X-Gm-Message-State: AOJu0Ywp+Tq/XxmAT9zy3pIc/wiaJRGJ7R0PAr/BClegpb6LZ1xSLzaI
-	Degq28ISRogQ4Pd5KHoCj9Vr864YOnrihcZxL5JrmgX/OBtR0E0Cc34Zrd1TWZ5xKEfl2ewRilx
-	EEO6lufGuEmzxgiaqVaDPG2py+vQ=
-X-Google-Smtp-Source: AGHT+IF6atLDPCwVfGWCELFiOjqrj/abs9HEFzhYVfGZMvo+MFpsR7nkmr/rybEiy9hQphN9sndDMRc9gDUIZURw/Cc=
-X-Received: by 2002:a17:90a:f483:b0:2c9:8105:483 with SMTP id
- 98e67ed59e1d1-2d3dfc6ada6mr1307221a91.14.1723761891499; Thu, 15 Aug 2024
- 15:44:51 -0700 (PDT)
+	s=arc-20240116; t=1723763002; c=relaxed/simple;
+	bh=YjpR+HVze/ORFUtpJLBKTrS28pzM0tK3Ma5uh7Wlw8k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=lGkMz9IBDi9tWx5P9g8jEaWB6VfhGVm7YHBessiemcNeTOtuWui8PGeX9muH8+M4fOgz7pb4ikt2CpPEhRl6PcNlHfPnujuc82gOXT6FGl5zELVI4Bpu1gaNgTCeQKPtKwJxyTrIOBbiiB9z17XBfokA3OOCPhUxeSv3IZ9ZNhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FI86mII2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FI86mII2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDDAC32786;
+	Thu, 15 Aug 2024 23:03:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723763002;
+	bh=YjpR+HVze/ORFUtpJLBKTrS28pzM0tK3Ma5uh7Wlw8k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FI86mII2kpYLV3gSo0rTE7R2DILUVD4uvkevYIQhANTmVtv4wdNAKT1zpNvO8+6NV
+	 hjWYsdjYbAwjbj2INfPpnZo5c9P4g/tccHhQQ1kRij/oXENLqiAi/AHl0NrfCncUuA
+	 Amnq0xKPoPBTLlawarzFNyXyeWa1qpPMCb1k3bbABa3QSNkNegCyhgNZD1SmOD0NMe
+	 9KcJBa0oznE+WI+2h4H35UUpyNjcBYEvDuAx4EnRsYst3pPcSxN2r0vz0hHgV4uA8p
+	 /xEST+9vyTdjB4VOrFBLH2+b+0O5dGv+yD6zNk28aU1mFTjI5Z85CGz9y4DGC81nQs
+	 PQVlzkgu5hzbw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org
+Subject: [GIT PULL] perf-tools fixes for v6.11-rc4
+Date: Thu, 15 Aug 2024 16:03:19 -0700
+Message-ID: <20240815230319.2406358-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240814141942.2513194-1-kan.liang@linux.intel.com>
-In-Reply-To: <20240814141942.2513194-1-kan.liang@linux.intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 15 Aug 2024 15:44:40 -0700
-Message-ID: <CAM9d7ciPg_1DJ+gJxqU2O0nwX_L9-2+K+NkObq64e12_6vDA_g@mail.gmail.com>
-Subject: Re: [PATCH] perf report: Support --total-cycles --group in the tui mode
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org, 
-	mingo@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Kan,
+Hi Linus,
 
-On Wed, Aug 14, 2024 at 7:19=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> With the --total-cycles, the --group is only supported in the stdio
-> mode, but not supported in the tui mode. The output is inconsistent
-> with different modes.
->
-> if symbol_conf.event_group is applied, always output the event group
-> information together in tui mode as well.
->
-> $perf record -e "{cycles,instructions}",cache-misses -b sleep 1
-> $perf report --total-cycles --group --tui
->
-> Before the patch,
->
-> Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                 =
-        [Pro
->           6.45%            2.0K        0.57%         667    [dl-cacheinfo=
-.h:164 -> dl
->           5.62%            1.7K        0.74%         871            [dl-c=
-ache.c:230 -
->           5.21%            1.6K        1.37%        1.6K          [setup-=
-vdso.h:37 ->
->           4.92%            1.5K        0.09%         109            [dl-c=
-ache.c:367 -
->
-> Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                 =
-        [Pro
->           5.62%            1.7K        2.76%         871            [dl-c=
-ache.c:230 -
->           4.92%            1.5K        0.35%         109            [dl-c=
-ache.c:367 -
->           1.12%             346        0.55%         173
->           0.87%             270        0.43%         135                 =
-   [rtld.c:5
->           0.64%             197        0.03%           8      [dl-tunable=
-s.c:305 -> d
->           0.60%             185        0.01%           3      [dl-tunable=
-s.c:305 -> d
->
-> Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                 =
-        [Pro
->           5.90%            1.8K        1.28%        1.8K                 =
- [strtod.c:8
->           5.70%            1.8K        1.24%        1.8K            [strt=
-od_l.c:681 -
->           5.68%            1.8K        1.24%        1.8K            [strt=
-od_l.c:508 -
->           5.48%            1.7K        1.19%        1.7K          [strtod=
-_l.c:1175 ->
->           5.21%            1.6K        1.13%        1.6K          [setup-=
-vdso.h:37 ->
->
-> With the patch,
->
-> Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                 =
-        [Pro
->           6.45%            2.0K        0.57%         667    [dl-cacheinfo=
-.h:164 -> dl
->           5.62%            1.7K        0.74%         871            [dl-c=
-ache.c:230 -
->           5.21%            1.6K        1.37%        1.6K          [setup-=
-vdso.h:37 ->
->           4.92%            1.5K        0.09%         109            [dl-c=
-ache.c:367 -
-
-Hmm.. it seems the output just removed the second one.
-I guess it should combine the first and second output somehow.
+Please consider pulling the following changes in perf tools for v6.11.
 
 Thanks,
 Namhyung
 
->
-> Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                 =
-        [Pro
->           5.90%            1.8K        1.28%        1.8K                 =
- [strtod.c:8
->           5.70%            1.8K        1.24%        1.8K            [strt=
-od_l.c:681 -
->           5.68%            1.8K        1.24%        1.8K            [strt=
-od_l.c:508 -
->           5.48%            1.7K        1.19%        1.7K          [strtod=
-_l.c:1175 ->
->           5.21%            1.6K        1.13%        1.6K          [setup-=
-vdso.h:37 ->
->
-> Fixes: 7fa46cbf20d3 ("perf report: Sort by sampled cycles percent per blo=
-ck for tui")
-> Closes: https://lore.kernel.org/lkml/ZrupfUSZwem-hCZm@x1/
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> ---
->  tools/perf/builtin-report.c    |  6 +++++-
->  tools/perf/ui/browsers/hists.c | 12 ++++++++++--
->  2 files changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index 1643113616f4..574342fb7269 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -541,7 +541,11 @@ static int evlist__tui_block_hists_browse(struct evl=
-ist *evlist, struct report *
->         int i =3D 0, ret;
->
->         evlist__for_each_entry(evlist, pos) {
-> -               ret =3D report__browse_block_hists(&rep->block_reports[i+=
-+].hist,
-> +               i++;
-> +               if (symbol_conf.event_group && !evsel__is_group_leader(po=
-s))
-> +                       continue;
-> +
-> +               ret =3D report__browse_block_hists(&rep->block_reports[i =
-- 1].hist,
->                                                  rep->min_percent, pos,
->                                                  &rep->session->header.en=
-v);
->                 if (ret !=3D 0)
-> diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hist=
-s.c
-> index 49ba82bf3391..22af1a6e29d6 100644
-> --- a/tools/perf/ui/browsers/hists.c
-> +++ b/tools/perf/ui/browsers/hists.c
-> @@ -3665,11 +3665,19 @@ single_entry: {
->  static int block_hists_browser__title(struct hist_browser *browser, char=
- *bf,
->                                       size_t size)
->  {
-> -       struct hists *hists =3D evsel__hists(browser->block_evsel);
-> -       const char *evname =3D evsel__name(browser->block_evsel);
-> +       struct evsel *evsel =3D browser->block_evsel;
-> +       struct hists *hists =3D evsel__hists(evsel);
->         unsigned long nr_samples =3D hists->stats.nr_samples;
-> +       const char *evname;
-> +       char buf[512];
->         int ret;
->
-> +       if (evsel__is_group_event(evsel)) {
-> +               evsel__group_desc(evsel, buf, sizeof(buf));
-> +               evname =3D buf;
-> +       } else
-> +               evname =3D evsel__name(evsel);
-> +
->         ret =3D scnprintf(bf, size, "# Samples: %lu", nr_samples);
->         if (evname)
->                 scnprintf(bf + ret, size -  ret, " of event '%s'", evname=
-);
-> --
-> 2.38.1
->
+
+The following changes since commit de9c2c66ad8e787abec7c9d7eff4f8c3cdd28aed:
+
+  Linux 6.11-rc2 (2024-08-04 13:50:53 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git tags/perf-tools-fixes-for-v6.11-2024-08-15
+
+for you to fetch changes up to 4bbe6002931954bbe82b25f25990b987b0392e18:
+
+  perf daemon: Fix the build on 32-bit architectures (2024-08-09 19:36:20 -0700)
+
+----------------------------------------------------------------
+perf tools fixes for v6.11
+
+The usual header file sync-ups and one more build fix.
+
+* Add README file to explain why we copy the headers
+* Sync UAPI and other header files with kernel source
+* Fix build on MIPS 32-bit
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+
+----------------------------------------------------------------
+Arnaldo Carvalho de Melo (1):
+      perf daemon: Fix the build on 32-bit architectures
+
+Namhyung Kim (10):
+      perf tools: Add tools/include/uapi/README
+      tools/include: Sync uapi/drm/i915_drm.h with the kernel sources
+      tools/include: Sync uapi/linux/kvm.h with the kernel sources
+      tools/include: Sync uapi/linux/perf.h with the kernel sources
+      tools/include: Sync uapi/sound/asound.h with the kernel sources
+      tools/include: Sync uapi/asm-generic/unistd.h with the kernel sources
+      tools/include: Sync network socket headers with the kernel sources
+      tools/include: Sync filesystem headers with the kernel sources
+      tools/include: Sync x86 headers with the kernel sources
+      tools/include: Sync arm64 headers with the kernel sources
+
+ tools/arch/arm64/include/asm/cputype.h             |  10 +
+ tools/arch/powerpc/include/uapi/asm/kvm.h          |   3 +
+ tools/arch/x86/include/asm/cpufeatures.h           | 803 +++++++++++----------
+ tools/arch/x86/include/asm/msr-index.h             |  11 +
+ tools/arch/x86/include/uapi/asm/kvm.h              |  49 ++
+ tools/arch/x86/include/uapi/asm/svm.h              |   1 +
+ tools/include/uapi/README                          |  73 ++
+ tools/include/uapi/asm-generic/unistd.h            |   2 +-
+ tools/include/uapi/drm/i915_drm.h                  |  27 +
+ tools/include/uapi/linux/in.h                      |   2 +
+ tools/include/uapi/linux/kvm.h                     |  17 +-
+ tools/include/uapi/linux/perf_event.h              |   6 +-
+ tools/include/uapi/linux/stat.h                    |  12 +-
+ tools/perf/arch/powerpc/entry/syscalls/syscall.tbl |   6 +-
+ tools/perf/arch/s390/entry/syscalls/syscall.tbl    |   2 +-
+ tools/perf/arch/x86/entry/syscalls/syscall_64.tbl  |   8 +-
+ tools/perf/builtin-daemon.c                        |   9 +-
+ tools/perf/trace/beauty/include/linux/socket.h     |   5 +-
+ tools/perf/trace/beauty/include/uapi/linux/fs.h    | 163 ++++-
+ tools/perf/trace/beauty/include/uapi/linux/mount.h |  10 +-
+ tools/perf/trace/beauty/include/uapi/linux/stat.h  |  12 +-
+ .../perf/trace/beauty/include/uapi/sound/asound.h  |   9 +-
+ 22 files changed, 814 insertions(+), 426 deletions(-)
+ create mode 100644 tools/include/uapi/README
