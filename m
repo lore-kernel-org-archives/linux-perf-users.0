@@ -1,303 +1,255 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C3337346D;
-	Wed, 14 Aug 2024 22:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47B25DF5C;
+	Thu, 15 Aug 2024 01:36:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723675668; cv=none; b=BtdT8P607BEkza1SBZReOhf3dNZP5yODfHD3941x0G5LVsdON2X0GCrfGI35BEqC5EpMK6JdxcMcvyz9VYB1cW9BQ8sOywxQL/at5eRe5+A5V8J0z3dnUaDfhcocUcY0dA0nCTgbPxyZ2V1jVPca6hYiDi+DOYhKa5XsomozaCo=
+	t=1723685799; cv=none; b=YECOqQpnTerMjMToTzrkaYVnQFEuQs0AJ1qrFSsema6PLjIspNVpIp19tOWgdRRIzdjfukZ5Z8Hx8RCHIgA2QmI/n0js8DWgoFiK7HpoXrAJBVIqvwJZNuA1grFvKiSdAMNv+7EFqUm0Jb9VZ09e7/uf1kbe/naA4LrhCzuPGko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723675668; c=relaxed/simple;
-	bh=oAsW3ALRb2L/L1VSxlS3PeVwvzoUTOy9LVHYau2FFUI=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Y9Vo9IJudulmQYqi+MOVCY7jK7NwpOegS7Oh7hAbvPJhVmkk2EM8l7v1pmG2Su7xCHV+LX7jHJ+t3KCdrA+DdmuTN/FSZlgPN6Ksgoc9HLHK1h96GQLwuRccO+qn4vOOJyictTjDGNg7boQD4HoVTJ8MSq3wycjG1ZJsBw+UbbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qoZWWgRc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UQcyJcQo; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1723685799; c=relaxed/simple;
+	bh=IFi8uvn52QdYmt6ggaKmxuLsi+NR6UsiUWW9c9Wzv3k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TmYMzTw0HBjLuDIv3Uk544qY476+UddBnacEcGu9DAFBo0BCZoxrHJMLgAQLYvkRKGAnRdR3CK2/9WZAojbEVQ/jiFEBoBEB2XrciejS6FzDjkT8W9McTB6zMgzoNEPgduqG34jmVIqosqKVUnlpg7KK6e8yPgBvzD8HKzAy+Rs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=czPd5aU0; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qoZWWgRc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UQcyJcQo"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723675663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TEBkZJEgq/1j0sqdK8RDzUheGmdmMnYbuKi5UkgQAbo=;
-	b=qoZWWgRcsuDkXjOpRyz7WFFEnpHWWB3SvJMReyx1SmPyIc62yxiYlV5h2Qp2Vwgg4+ww8m
-	PMiW17eoxpaU6LtwUtP3O/mJ6HmgXlBdWIj1baJxRyl4P4oUI2/bWaiMeT3eHb2I8X70s8
-	M1bdc9YdLYAuZvjCiyJk4OJTKz/x7EE87X5iSpsay/WcGXnKLaN7zeuGPi9WTpiZ6v33BX
-	wycj4/rkWzEwfwMqCjd1FVaqMuD+5h1Q9bq9W6nrWzUqUZ4ddsJxUc4FVXc/5xwsRj46Nd
-	fzYCSp4AMQWlUJAQncn2QIL9wsm9J8tavICpDAQVcs5yUD1DOun8O/1sLFxa1Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723675663;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=TEBkZJEgq/1j0sqdK8RDzUheGmdmMnYbuKi5UkgQAbo=;
-	b=UQcyJcQoOxSPnW6A7lzK5oG/VKeoWNfJ1Cr3UtaJPD2oPV0h+hM8grogjvXH0v/5UoVc9z
-	0BebqUH3HOgf4AAw==
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Li Huafei
- <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-In-Reply-To: <70657c5e-f771-456b-a5ac-3df590249288@linux.intel.com>
-References: <87sev7nom4.ffs@tglx>
- <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com>
- <87frr7nd28.ffs@tglx>
- <70657c5e-f771-456b-a5ac-3df590249288@linux.intel.com>
-Date: Thu, 15 Aug 2024 00:47:42 +0200
-Message-ID: <875xs2oh69.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czPd5aU0"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-70d399da0b5so339867b3a.3;
+        Wed, 14 Aug 2024 18:36:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723685797; x=1724290597; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PRLKb0rmcXp13Q50D18RGznr+MFWvb7LZRgjYz1SnTw=;
+        b=czPd5aU0meBeZQAxEM4OPU0UQlYr8IydB6ZYdUv1qub0uUpEDMnuTluDZn3X9PXxP6
+         nK4L/FHFFsV3CW5xiv3oAy/D09m1haoaP5T60+RVhgcKJC2JZqXNxXT4PJF3tQPQXaVo
+         o5J0mlgVltfJpcNsrRLdB1O49xruWmLrX7k/6tHlpQsVdk6Sbsg8+DmVWFpicqbH954I
+         57NhIern2LTYrQoQsw9Py+t1aLUusf1I+b8iKWov0nAbxS1iLKc4ancK0XcHykEe33Yo
+         8bDrNin6vcNzF7SZEno+AsfzJRg6+k9OWa9swHEjDtZNal+Xv/+EREPKwfmBQLPHVwSR
+         TU/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723685797; x=1724290597;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PRLKb0rmcXp13Q50D18RGznr+MFWvb7LZRgjYz1SnTw=;
+        b=QiV1vhts9EU+/KUzgCbVl6IHSCjizf8CUwSwUtoI6T7OwLslV8kJPFN8rJtyOnnV2n
+         yGYbIa5wWsSqbUV6AjH69WNRmU2Ekt2i31m4K2wwRcsDpDQHuWjuRNo/3L7I6cRENgCc
+         NYCv65n6yktYW18grmdYzleeSr84qWSXEt9BTOVnTuIxC6SLY0Qd2BkXRBAbWFTMseWa
+         R5505Y0S03s5sh7InugbtcC+FRekah+85VipvxqEhz3Gs1gJSf3i5b9j+LQcptr91lCW
+         wvxL5K1NeX7e4egst54ZtS3OBLFNjbvE5pxJu14FN8PRKozcqvVUKnqt7SRvbVbfJDPt
+         he6w==
+X-Forwarded-Encrypted: i=1; AJvYcCXpYeoSnK7adUJ2BlT4u4QXRcyoERJbpSYuWUucGwLRX+o7f9gXORZTztsKGNR6Hs11AXJEJ72p2vqa+CENy1vIt9EdzVgU6sa7D3pmRJQuChnzbwA0+Jrpyv0yytEM31hJmq5saoyx0QCuNXXcEQ==
+X-Gm-Message-State: AOJu0YyrLhRkUdHpVEHSsPqQB5EdGIw7ZBE7iCNYIme6rSJjjbnbs2LQ
+	5fSQBhcv/31a26wLELPApGpv7yA2JPyjNkzloEONyQpQVnYqzV7D
+X-Google-Smtp-Source: AGHT+IEYscdqVdr/3O3mv1a/K8DDC6sjcHBlB/ERXE2lVwuqroRNPlBOr2hts5sggvNeNfKAzeHqHg==
+X-Received: by 2002:a05:6a00:1ad1:b0:706:29e6:2ed2 with SMTP id d2e1a72fcca58-712670fa392mr6674255b3a.5.1723685797228;
+        Wed, 14 Aug 2024 18:36:37 -0700 (PDT)
+Received: from localhost.localdomain ([120.229.49.183])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.36.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Aug 2024 18:36:36 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: adrian.hunter@intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/10] perf trace: Enhanced augmentation for pointer arguments
+Date: Thu, 15 Aug 2024 09:36:16 +0800
+Message-ID: <20240815013626.935097-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 
-On Wed, Aug 14 2024 at 15:37, Kan Liang wrote:
-> On 2024-08-14 3:01 p.m., Thomas Gleixner wrote:
->> This happens at the very same time and CPU#88 is the HT sibling of
->> CPU#16
->
-> The fixed counter 0 is used which doesn't match of what the HSW11
-> describes. I will check if the HSW11 missed the case, or if there is
-> another issue.
+Changes in v2:
+- Fix perf trace workload bug.
+- Rename pids_filtered to pids_filtered_out, and add pids_allowed to
+avoid confusion.
+- Add tests.
 
-This looks like a plain stupid software issue at the first glance. The
-hack I use to look at that is at the end of the mail. Most of the output
-here is heavily trimmed for readability:
+Forgot to add some before & afters in v1, here they are:
 
-65.147782: x86_perf_event_set_period: idx:    32 period:         1 left:  2
-65.147783: intel_pmu_handle_irq:      loops: 001 status: 100000000
+before:
 
-65.147784: x86_perf_event_set_period: idx:    32 period:         1 left:  2
-65.147784: intel_pmu_handle_irq:      loops: 002 status: 100000000         
+# struct
+perf $ perf trace -e epoll_wait
+     0.068 (500.192 ms): Hyprland/539 epoll_wait(epfd: 3, events: 0x7ffd9f6f1730, maxevents: 32, timeout: 4294967295) = 1
 
-and this continues up to 100 times.
+# string 
+perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
+     0.024 ( 0.012 ms): mv/294902 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "")  = 0
 
-If I'm not missing something then a period of 1 or even 2 is way too
-small for fixed counter 0 which is rearmed in the NMI and counts user
-_and_ kernel.
+# buffer
+perf $ perf trace -e write echo "Hikawa Sayo"
+Hikawa Sayo
+     0.000 ( 0.011 ms): echo/928215 write(fd: 1, buf: 0x5b292f307410, count: 12)                          = 12
 
-But what's weird is that earlier in the trace I can see in the context
-of a different task the following w/o looping in the handler:
+after:
 
-65.084029: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-65.084033: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-65.085654: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-65.085660: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-65.085667: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-65.085673: x86_perf_event_set_period: idx: 32 period:          2 left:          2
-65.085681: x86_perf_event_set_period: idx: 32 period:          4 left:          4
-65.085687: x86_perf_event_set_period: idx: 32 period:          7 left:          7
-65.085693: x86_perf_event_set_period: idx: 32 period:         14 left:         14
-65.085699: x86_perf_event_set_period: idx: 32 period:         26 left:         26
-65.085705: x86_perf_event_set_period: idx: 32 period:         49 left:         49
-65.085708: x86_perf_event_set_period: idx: 32 period:         95 left:         95
-65.085711: x86_perf_event_set_period: idx: 32 period:        303 left:        303
-65.085713: x86_perf_event_set_period: idx: 32 period:        967 left:        550
-65.085716: x86_perf_event_set_period: idx: 32 period:       3118 left:       2799
-65.085722: x86_perf_event_set_period: idx: 32 period:       9723 left:       9411
+# struct
+perf $ perf trace -e epoll_wait
+     0.023 (500.128 ms): Hyprland/539 epoll_wait(epfd: 3, events: {1,102459045712424,}, maxevents: 32, timeout: 4294967295) = 1
 
-This goes on to almost 100k period and then goes back down to 50k.
+# string 
+perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
+     0.039 ( 0.018 ms): mv/295046 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "/tmp/f2") = 0
 
-The test case sets it up with
+# buffer
+perf $ perf trace -e write echo "Hikawa Sayo"
+Hikawa Sayo
+     0.000 ( 0.013 ms): echo/929159 write(fd: 1, buf: "Hikawa Sayo\10", count: 12)                        = 12
 
-    attr::freq        = 1
-    attr::sample_freq = max_sample_rate / 5
-
-max_sample_rate is read from /proc/sys/kernel/perf_event_max_sample_rate,
-which contains 100000 after boot, so the requested value is 20000.
-
-So in the good case the period = 1 manages to not have the status bit
-set at, after handling.
-
-The bad case stays there forever. Of course setting a limit makes this
-magically go away, but honestly this is not a solution.
-
-Another one magically cures itself:
-
-65.131743: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131745: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131745: intel_pmu_handle_irq:      loops: 001 status: 100000000
-65.131746: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131746: intel_pmu_handle_irq:      loops: 002 status: 100000000
-65.131747: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131944: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131950: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131955: x86_perf_event_set_period: idx:    32 period:         1 left:          2
-65.131961: x86_perf_event_set_period: idx:    32 period:         2 left:          2
-65.131965: x86_perf_event_set_period: idx:    32 period:         5 left:          5
-....
-65.132331: x86_perf_event_set_period: idx:    32 period:     83183 left:      82871
-
-I just wanted to look at something else and started a single instance of
-the cve test right after booting and that ran into the same problem.
-
-Full trace at: https://tglx.de/~tglx/t.txt
-
-I think I see a pattern with that now. In all cases I saw so far the
-problem happens when two HT siblings get the PMI at the very same time.
-
-# grep handle t.txt
-
-shows you the cases where it goes into the loop. I checked all the
-previous traces and the pattern is always identical.
-
-That aside. What really puzzles me is this period adjustment
-algorithm.
-
-# grep 'cve-2015-3290-2715.*idx: 32' t.txt
-
-316.966607: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-316.966621: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-316.966977: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-316.966985: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-316.970507: x86_perf_event_set_period: idx: 32 period:       9980 left:       9980
-316.970516: x86_perf_event_set_period: idx: 32 period:       9980 left:       9616
-316.970562: x86_perf_event_set_period: idx: 32 period:       9980 left:       9674
-316.970580: x86_perf_event_set_period: idx: 32 period:       8751 left:       8446
-316.970596: x86_perf_event_set_period: idx: 32 period:      10733 left:      10428
-
-This looks more than broken .... Seriously. 
-
-    attr::freq        = 1
-    attr::sample_freq = 20000
-
-means 20000 samples per second, i.e. one sample every 50 microseconds,
-unless this uses some magic new fangled math.
-
-That CPU runs with 3.3GHz. Let's assume 1.0 IPC for simplicity. That
-means in 50us it executes 16500 instructions, right?
-
-So why on earth start with 1 as the estimate for the frequency
-especially for this particular event which is guaranteed to fire
-immediately? That makes no sense at all.
-
-But even when you start with 1, then latest at the third event in the
-loop or the third event within a couple of microseconds the frequency
-estimate algorithm should notice that a period of 1 is bonkers.
+Still debugging read-like syscalls augmentation such as read, readlinkat
+and gettimeofday. The support for read-like syscalls will be added in a
+separated patch.
 
 
-But ranting^Wreasoning about all of this made me understand what goes
-actually wrong.
 
-Look at the "good" case:
 
-316.966607: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-316.966621: x86_perf_event_set_period: idx: 32 period:          1 left:          2
+v1:
 
-Now the bad case:
+This patch series adds augmentation feature to struct pointer, string
+and buffer arguments all-in-one. It also fixes 'perf trace -p <PID>'.
 
-# grep -E '\[063|135\]' t.txt
+With this patch series, perf trace will augment struct pointers well, it
+can be applied to syscalls such as clone3, epoll_wait, write, and so on.
+But unfortunately, it only collects the data once, when syscall enters.
+This makes syscalls that pass a pointer in order to let it get
+written, not to be augmented very well, I call them the read-like
+syscalls, because it reads from the kernel, using the syscall. This
+patch series only augments write-like syscalls well.
 
-   cve-2015-3290-2725    [063] d..3.   316.967339: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2725    [063] d.Z3.   316.967343: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-           <...>-2743    [135] d..3.   316.968473: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-           <...>-2743    [135] d.Z3.   316.968478: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-           <...>-2743    [135] d.h2.   316.970502: x86_perf_event_set_period: idx: 32 period:       5596 left:       5596
-   cve-2015-3290-2725    [063] d.h2.   316.970503: x86_perf_event_set_period: idx: 32 period:       9385 left:       9385
+Unfortunately, there are more read-like syscalls(such as read,
+readlinkat, even gettimeofday) than write-like syscalls(write, pwrite64,
+epoll_wait, clone3).
 
-Here the two hyperthread NMIs are interleaved by a few microseconds,
-which is still good by some definition of good, but later it goes south:
+Here are three test scripts that I find useful:
 
-   cve-2015-3290-2808    [063] d.Z3.   316.970712: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2806    [135] d.Z3.   316.970712: x86_perf_event_set_period: idx: 32 period:          1 left:          2
+pwrite64
+```
+ #include <unistd.h>
+ #include <sys/syscall.h>
 
-Starting here they are not longer interleaved. They happen simultanously.
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DI\0NGZ\0HE\1N", s2[] = "XUEBAO";
 
-   cve-2015-3290-2806    [135] d.Z3.   316.970713: intel_pmu_handle_irq: 001        100000000
-   cve-2015-3290-2808    [063] d.Z3.   316.970713: intel_pmu_handle_irq: 001        100000000
-   cve-2015-3290-2808    [063] d.Z3.   316.970713: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2806    [135] d.Z3.   316.970713: x86_perf_event_set_period: idx: 32 period:          1 left:          2
+	while (1) {
+		syscall(SYS_pwrite64, i1, s1, sizeof(s1), i2);
+		sleep(1);
+	}
 
-...
-   cve-2015-3290-2808    [063] d.Z3.   316.970819: intel_pmu_handle_irq: 099        100000000
-   cve-2015-3290-2806    [135] d.Z3.   316.970819: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2808    [063] d.Z3.   316.970819: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2806    [135] d.Z3.   316.970819: intel_pmu_handle_irq: 099        100000000
-   cve-2015-3290-2808    [063] d.Z3.   316.970820: intel_pmu_handle_irq: 100        100000000
-   cve-2015-3290-2806    [135] d.Z3.   316.970820: x86_perf_event_set_period: idx: 32 period:          1 left:          2
-   cve-2015-3290-2806    [135] d.Z3.   316.970820: intel_pmu_handle_irq: 100        100000000
+	return 0;
+}
+```
 
-Which means they are almost in lockstep. TBH, I could not be bothered to
-repeat the experiment and turn on nanoseconds resolution for the trace
-because it's too obvious what's going on.
+epoll_wait
+```
+ #include <unistd.h>
+ #include <sys/epoll.h>
+ #include <stdlib.h>
+ #include <string.h>
 
-In the single threaded case period == 1 (left == 2) does not matter
-because the status register stays zero after handling the event and is
-only updated after the NMI returns which makes the NMI come back
-immediately, but that does not cause a loop.
+#define MAXEVENTS 2
 
-But in the HT sibling concurrent case the hardware behaves differently
-and the status register is updated for whatever reason before returning
-from the NMI, which causes the endless loop because both hyper threads
-get that treatment.
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
 
-To prove my point I disabled hyperthreading via /sys/.../cpu/smt/control
-and as expected the test case can't trigger the problem anymore.
-Grepping for the loop trace_printk() comes back empty. I disabled the
-other one to reduce the noise over several runs, which keeps the trace
-completely empty.
+	struct epoll_event ee = {
+		.events = 114,
+		.data.ptr = NULL,
+	};
 
-Reverse engineering hardware is fun, isn't it?
+	struct epoll_event *events = calloc(MAXEVENTS, sizeof(struct epoll_event));
+	memcpy(events, &ee, sizeof(ee));
 
-It's not hard either because every reproducible problem has a pattern.
-You just have to look for it.
+	while (1) {
+		epoll_wait(i1, events, i2, i3);
+		sleep(1);
+	}
 
-Now the conclusion of this fun exercise is:
+	return 0;
+}
+```
 
-    1) The hardware behaves differently when the perf event happens
-       concurrently on HT siblings
+clone3
+```
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <linux/sched.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <stdlib.h>
 
-    2) The frequency estimation algorithm is broken
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
 
-    3) Using a 'limit' guestimate is just papering over the underlying
-       problems
+	struct clone_args cla = {
+		.flags = 1,
+		.pidfd = 1,
+		.child_tid = 4,
+		.parent_tid = 5,
+		.exit_signal = 1,
+		.stack = 4,
+		.stack_size = 1,
+		.tls = 9,
+		.set_tid = 1,
+		.set_tid_size = 9,
+		.cgroup = 8,
+	};
 
-Thanks,
+	while (1) {
+		syscall(SYS_clone3, &cla, i1);
+		sleep(1);
+	}
 
-        tglx
----
- arch/x86/events/core.c       |    1 +
- arch/x86/events/intel/core.c |    5 ++++-
- 2 files changed, 5 insertions(+), 1 deletion(-)
+	return 0;
+}
+```
 
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1400,6 +1400,7 @@ int x86_perf_event_set_period(struct per
- 
- 	static_call_cond(x86_pmu_limit_period)(event, &left);
- 
-+	trace_printk("idx: %2d period: %10lld left: %10lld\n", idx, period, left);
- 	this_cpu_write(pmc_prev_left[idx], left);
- 
- 	/*
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3164,13 +3164,16 @@ static int intel_pmu_handle_irq(struct p
- 
- 	loops = 0;
- again:
-+	if (loops)
-+		trace_printk("%03d %16llx\n,", loops, status);
- 	intel_pmu_lbr_read();
- 	intel_pmu_ack_status(status);
- 	if (++loops > 100) {
- 		static bool warned;
- 
- 		if (!warned) {
--			WARN(1, "perfevents: irq loop stuck!\n");
-+			tracing_off();
-+			//WARN(1, "perfevents: irq loop stuck!\n");
- 			perf_event_print_debug();
- 			warned = true;
- 		}
+Please save them, compile and trace them using perf trace <workload>.
+Reminder: For the third script, you can't trace it with -e clone, please
+use -e clone3.
 
+Howard Chu (10):
+  perf trace: Fix perf trace -p <PID>
+  perf trace: Change some comments
+  perf trace: Add trace__bpf_sys_enter_beauty_map() to prepare for
+    fetching data in BPF
+  perf trace: Add some string arguments' name in
+    syscall_arg_fmt__init_array()
+  perf trace: Add a new argument to trace__btf_scnprintf()
+  perf trace: Pretty print struct data
+  perf trace: Pretty print buffer data
+  perf trace: Add pids_allowed and rename pids_filtered
+  perf trace: Collect augmented data using BPF
+  perf trace: Add general tests for augmented syscalls
+
+ tools/perf/builtin-trace.c                    | 279 +++++++++++++++++-
+ tools/perf/tests/shell/trace_btf_general.sh   |  59 ++++
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 153 +++++++++-
+ tools/perf/util/evlist.c                      |  14 +-
+ tools/perf/util/evlist.h                      |   1 +
+ tools/perf/util/trace_augment.h               |   6 +
+ 6 files changed, 492 insertions(+), 20 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
+ create mode 100644 tools/perf/util/trace_augment.h
+
+-- 
+2.45.2
 
