@@ -1,219 +1,160 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DB3C38382;
-	Thu, 15 Aug 2024 02:58:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE9439AE3;
+	Thu, 15 Aug 2024 03:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723690729; cv=none; b=so+zn0p31FG4g0vuf6CfL1SQN/D6oUZdbMaYvwVtvagHmqdIW3meGZ+THX5ABXcJLlE2WT/lXoOedk3/cDWC2nTcrpgHidzBRQD/jIoxXdJR+iPWnHoFWmh3zkbd2BBQBsDXAr+fe0iY1YaMvQqBRtOr9eFhTJHHB2qqfesIheA=
+	t=1723692389; cv=none; b=DATjLySNCOko5ddbUhBLL+ebnHQFrm34v9pc39PuBzuTtgiUOdrzp7Y826zN1SniBHftd/3yoHwooJn/gwMO8yydCBKOjTEqAOMAMob+wUu+zVsKJazBnDZrzQOihtHReA4L66ZDfAQvi1maSrYHMsCTk7JUlqCTo928t+M2av0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723690729; c=relaxed/simple;
-	bh=86J0cKNCLMIx8ugIr/ubHmolU32V6osL0szusAhIeNk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=DxRdYQOtWIeofKLuy20hiEYw7YCs5p52zAk+fQNNJ0O0P4hQ6mnx5RHaJiINmyMIxVIA315SfA4wIG905yc3RUzJzAtmfjlqoMDpTfJeH0Cuse86FfOSHBaQm05XY0UGjZLf+T5vd0Y5jG7mJtixuVFBjhF2jUlqMGBQUvXNqYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+	s=arc-20240116; t=1723692389; c=relaxed/simple;
+	bh=jZd0e8AlCeccIrI+TjyspmDO83JLXOK3oAqwexxCFkw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=K1kzSzaVTYmIRaqAaPuHovbZ39dgtxKZTM9JvkO2JPS4qwrIjxIrmS39QWsOzsExIB4ZfeSlaT5tmHG7vmdAmJUKF5YlzDzHVlNOrar9YDsOecUxl97MADyAviNRusJnd/pUhZfw/FuozDt+ueTsHuup2qpK+Hq0VzbVEgrV9U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4WkqXy3MGgzpTDN;
-	Thu, 15 Aug 2024 10:57:22 +0800 (CST)
-Received: from kwepemd200013.china.huawei.com (unknown [7.221.188.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 3AB981800A0;
-	Thu, 15 Aug 2024 10:58:44 +0800 (CST)
-Received: from [10.67.110.108] (10.67.110.108) by
- kwepemd200013.china.huawei.com (7.221.188.133) with Microsoft SMTP Server
+Received: from mail.maildlp.com (unknown [172.19.88.194])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Wkr9r3M5hzyPvC;
+	Thu, 15 Aug 2024 11:25:52 +0800 (CST)
+Received: from kwepemd100010.china.huawei.com (unknown [7.221.188.107])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6766314022E;
+	Thu, 15 Aug 2024 11:26:23 +0800 (CST)
+Received: from kwepemd100011.china.huawei.com (7.221.188.204) by
+ kwepemd100010.china.huawei.com (7.221.188.107) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 15 Aug 2024 10:58:42 +0800
-Message-ID: <9044640f-727a-f4ec-cb70-35eeeb28111e@huawei.com>
-Date: Thu, 15 Aug 2024 10:58:42 +0800
+ 15.2.1258.34; Thu, 15 Aug 2024 11:26:23 +0800
+Received: from kwepemd100011.china.huawei.com ([7.221.188.204]) by
+ kwepemd100011.china.huawei.com ([7.221.188.204]) with mapi id 15.02.1258.034;
+ Thu, 15 Aug 2024 11:26:23 +0800
+From: duchangbin <changbin.du@huawei.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+CC: duchangbin <changbin.du@huawei.com>, Adrian Hunter
+	<adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>, Jiri Olsa
+	<jolsa@kernel.org>, Kan Liang <kan.liang@linux.intel.com>, Namhyung Kim
+	<namhyung@kernel.org>, Andi Kleen <andi@firstfloor.org>, "Linux Kernel
+ Mailing List" <linux-kernel@vger.kernel.org>,
+	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
+Subject: Re: [PATCH 1/1] perf build: Fix up broken capstone feature detection
+ fast path
+Thread-Topic: [PATCH 1/1] perf build: Fix up broken capstone feature detection
+ fast path
+Thread-Index: AQHa7lAYZwgNZDGaUkS80NPtR1ZNSbInqQqA
+Date: Thu, 15 Aug 2024 03:26:22 +0000
+Message-ID: <76c92af3b3544f8a9fed412fc287947d@huawei.com>
+References: <Zry0sepD5Ppa5YKP@x1>
+In-Reply-To: <Zry0sepD5Ppa5YKP@x1>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-exchange-imapappendstamp: kwepemd100011.china.huawei.com (15.02.1258.034)
+x-ms-exchange-messagesentrepresentingtype: 1
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <09DE3855F974F245AE8CF8A95706EC08@huawei.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH] uprobes: Optimize the allocation of insn_slot for
- performance
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-CC: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
-	"oleg@redhat.com >> Oleg Nesterov" <oleg@redhat.com>, Andrii Nakryiko
-	<andrii@kernel.org>, Masami Hiramatsu <mhiramat@kernel.org>, Steven Rostedt
-	<rostedt@goodmis.org>, <paulmck@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-perf-users@vger.kernel.org>, <bpf@vger.kernel.org>,
-	<linux-trace-kernel@vger.kernel.org>
-References: <20240727094405.1362496-1-liaochang1@huawei.com>
- <7eefae59-8cd1-14a5-ef62-fc0e62b26831@huawei.com>
- <CAEf4BzaO4eG6hr2hzXYpn+7Uer4chS0R99zLn02ezZ5YruVuQw@mail.gmail.com>
- <85991ce3-674d-b46e-b4f9-88a50f7f5122@huawei.com>
- <CAEf4BzYvpgfFGckcKdzkC_g1J1SFi7xBe=_cjdVy4KEMikvGMw@mail.gmail.com>
- <2c23e9cc-5593-84d0-9157-1e946df941d9@huawei.com>
- <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
-From: "Liao, Chang" <liaochang1@huawei.com>
-In-Reply-To: <CAEf4BzZkXWcE7=2FNm-DrSFOR-Pd9LqrQJvV0ShXfPnXzSzYjg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemd200013.china.huawei.com (7.221.188.133)
 
-
-
-在 2024/8/15 2:42, Andrii Nakryiko 写道:
-> On Tue, Aug 13, 2024 at 9:17 PM Liao, Chang <liaochang1@huawei.com> wrote:
->>
->>
->>
->> 在 2024/8/13 1:49, Andrii Nakryiko 写道:
->>> On Mon, Aug 12, 2024 at 4:11 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>
->>>>
->>>>
->>>> 在 2024/8/9 2:26, Andrii Nakryiko 写道:
->>>>> On Thu, Aug 8, 2024 at 1:45 AM Liao, Chang <liaochang1@huawei.com> wrote:
->>>>>>
->>>>>> Hi Andrii and Oleg.
->>>>>>
->>>>>> This patch sent by me two weeks ago also aim to optimize the performance of uprobe
->>>>>> on arm64. I notice recent discussions on the performance and scalability of uprobes
->>>>>> within the mailing list. Considering this interest, I've added you and other relevant
->>>>>> maintainers to the CC list for broader visibility and potential collaboration.
->>>>>>
->>>>>
->>>>> Hi Liao,
->>>>>
->>>>> As you can see there is an active work to improve uprobes, that
->>>>> changes lifetime management of uprobes, removes a bunch of locks taken
->>>>> in the uprobe/uretprobe hot path, etc. It would be nice if you can
->>>>> hold off a bit with your changes until all that lands. And then
->>>>> re-benchmark, as costs might shift.
->>>>>
->>>>> But also see some remarks below.
->>>>>
->>>>>> Thanks.
->>>>>>
->>>>>> 在 2024/7/27 17:44, Liao Chang 写道:
->>>>>>> The profiling result of single-thread model of selftests bench reveals
->>>>>>> performance bottlenecks in find_uprobe() and caches_clean_inval_pou() on
->>>>>>> ARM64. On my local testing machine, 5% of CPU time is consumed by
->>>>>>> find_uprobe() for trig-uprobe-ret, while caches_clean_inval_pou() take
->>>>>>> about 34% of CPU time for trig-uprobe-nop and trig-uprobe-push.
->>>>>>>
->>>>>>> This patch introduce struct uprobe_breakpoint to track previously
->>>>>>> allocated insn_slot for frequently hit uprobe. it effectively reduce the
->>>>>>> need for redundant insn_slot writes and subsequent expensive cache
->>>>>>> flush, especially on architecture like ARM64. This patch has been tested
->>>>>>> on Kunpeng916 (Hi1616), 4 NUMA nodes, 64 cores@ 2.4GHz. The selftest
->>>>>>> bench and Redis GET/SET benchmark result below reveal obivious
->>>>>>> performance gain.
->>>>>>>
->>>>>>> before-opt
->>>>>>> ----------
->>>>>>> trig-uprobe-nop:  0.371 ± 0.001M/s (0.371M/prod)
->>>>>>> trig-uprobe-push: 0.370 ± 0.001M/s (0.370M/prod)
->>>>>>> trig-uprobe-ret:  1.637 ± 0.001M/s (1.647M/prod)
->>>>>
->>>>> I'm surprised that nop and push variants are much slower than ret
->>>>> variant. This is exactly opposite on x86-64. Do you have an
->>>>> explanation why this might be happening? I see you are trying to
->>>>> optimize xol_get_insn_slot(), but that is (at least for x86) a slow
->>>>> variant of uprobe that normally shouldn't be used. Typically uprobe is
->>>>> installed on nop (for USDT) and on function entry (which would be push
->>>>> variant, `push %rbp` instruction).
->>>>>
->>>>> ret variant, for x86-64, causes one extra step to go back to user
->>>>> space to execute original instruction out-of-line, and then trapping
->>>>> back to kernel for running uprobe. Which is what you normally want to
->>>>> avoid.
->>>>>
->>>>> What I'm getting at here. It seems like maybe arm arch is missing fast
->>>>> emulated implementations for nops/push or whatever equivalents for
->>>>> ARM64 that is. Please take a look at that and see why those are slow
->>>>> and whether you can make those into fast uprobe cases?
->>>>
->>>> Hi Andrii,
->>>>
->>>> As you correctly pointed out, the benchmark result on Arm64 is counterintuitive
->>>> compared to X86 behavior. My investigation revealed that the root cause lies in
->>>> the arch_uprobe_analyse_insn(), which excludes the Arm64 equvialents instructions
->>>> of 'nop' and 'push' from the emulatable instruction list. This forces the kernel
->>>> to handle these instructions out-of-line in userspace upon breakpoint exception
->>>> is handled, leading to a significant performance overhead compared to 'ret' variant,
->>>> which is already emulated.
->>>>
->>>> To address this issue, I've developed a patch supports  the emulation of 'nop' and
->>>> 'push' variants. The benchmark results below indicates the performance gain of
->>>> emulation is obivious.
->>>>
->>>> xol (1 cpus)
->>>> ------------
->>>> uprobe-nop:  0.916 ± 0.001M/s (0.916M/prod)
->>>> uprobe-push: 0.908 ± 0.001M/s (0.908M/prod)
->>>> uprobe-ret:  1.855 ± 0.000M/s (1.855M/prod)
->>>> uretprobe-nop:  0.640 ± 0.000M/s (0.640M/prod)
->>>> uretprobe-push: 0.633 ± 0.001M/s (0.633M/prod)
->>>> uretprobe-ret:  0.978 ± 0.003M/s (0.978M/prod)
->>>>
->>>> emulation (1 cpus)
->>>> -------------------
->>>> uprobe-nop:  1.862 ± 0.002M/s  (1.862M/s/cpu)
->>>> uprobe-push: 1.743 ± 0.006M/s  (1.743M/s/cpu)
->>>> uprobe-ret:  1.840 ± 0.001M/s  (1.840M/s/cpu)
->>>> uretprobe-nop:  0.964 ± 0.004M/s  (0.964M/s/cpu)
->>>> uretprobe-push: 0.936 ± 0.004M/s  (0.936M/s/cpu)
->>>> uretprobe-ret:  0.940 ± 0.001M/s  (0.940M/s/cpu)
->>>>
->>>> As you can see, the performance gap between nop/push and ret variants has been significantly
->>>> reduced. Due to the emulation of 'push' instruction need to access userspace memory, it spent
->>>> more cycles than the other.
->>>
->>> Great, it's an obvious improvement. Are you going to send patches
->>> upstream? Please cc bpf@vger.kernel.org as well.
->>
->> I'll need more time to thoroughly test this patch. The emulation o push/nop
->> instructions also impacts the kprobe/kretprobe paths on Arm64, As as result,
->> I'm working on enhancements to trig-kprobe/kretprobe to prevent performance
->> regression.
-> 
-> Why would the *benchmarks* have to be modified? The typical
-> kprobe/kretprobe attachment should be fast, and those benchmarks
-> simulate typical fast path kprobe/kretprobe. Is there some simulation
-> logic that is shared between uprobes and kprobes or something?
-
-Yes, kprobe and uprobe share many things for Arm64, but there are curical
-difference. Let me explain further. Simulating a 'push' instruction on
-arm64 will modify the stack pointer at *probe breakpoint. However, kprobe
-and uprobe use different way to restore the stack pointer upon returning
-from the breakpoint exception. Consequently.sharing the same simulation
-logic for both would result in kernel panic for kprobe.
-
-To avoid complicating the exception return logic, I've opted to simuate
-'push' only for uprobe and maintain the single-stepping for kprobe [0].
-This trade-off avoid the impacts to kprobe/kretprobe, and no need to
-change the kprobe/kretprobe related benchmark.
-
-[0] https://lore.kernel.org/all/20240814080356.2639544-1-liaochang1@huawei.com/
-
-> 
->>
->>>
->>>
->>> I'm also thinking we should update uprobe/uretprobe benchmarks to be
->>> less x86-specific. Right now "-nop" is the happy fastest case, "-push"
->>> is still happy, slightly slower case (due to the need to emulate stack
->>> operation) and "-ret" is meant to be the slow single-step case. We
->>> should adjust the naming and make sure that on ARM64 we hit similar
->>> code paths. Given you seem to know arm64 pretty well, can you please
->>> take a look at updating bench tool for ARM64 (we can also rename
->>> benchmarks to something a bit more generic, rather than using
->>> instruction names)?
->>
-> 
-> [...]
-
--- 
-BR
-Liao, Chang
+SGksIEFybmFsZG8sDQoNCkhvdyBhYm91dCB3b3JrYXJvdW5kIGl0IGJ5IHJlbmFtZSB0aGUgJ2Jw
+Zl9pbnNuJyBpbiBjYXBzdGlvbmU/DQoNCkNoYW5nZSB0ZXN0LWxpYmNhcHN0b25lLmMgYXM6DQoN
+CiNkZWZpbmUgYnBmX2luc24gY2Fwc3RvbmVfYnBmX2luc24NCiNpbmNsdWRlIDxjYXBzdG9uZS9j
+YXBzdG9uZS5oPg0KI3VuZGVmIGJwZl9pbnNuDQoNCkkgaGF2ZW4ndCB0cmllZCBpdCBidXQgc2Vl
+bXMgZmVhc2libGUuDQoNCk9uIFdlZCwgQXVnIDE0LCAyMDI0IGF0IDEwOjQ0OjE3QU0gLTAzMDAs
+IEFybmFsZG8gQ2FydmFsaG8gZGUgTWVsbyB3cm90ZToNCj4gVGhlIGNhcHN0b25lIGRldmVsIGhl
+YWRlcnMgZGVmaW5lICdzdHJ1Y3QgYnBmX2luc24nIGluIGEgd2F5IHRoYXQgY2xhc2hlcyB3aXRo
+DQo+IHdoYXQgaXMgaW4gdGhlIGxpYmJwZiBkZXZlbCBoZWFkZXJzLCBzbyB3ZSBzbyBmYXIgbmVl
+ZCB0byBhdm9pZCBpbmNsdWRpbmcgYm90aC4NCj4gDQo+IFRoaXMgaXMgaGFwcGVuaW5nIG9uIHRo
+ZSB0b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtYWxsLmMgZmlsZSwgd2hlcmUgd2UgdHJ5DQo+IGJ1
+aWxkaW5nIGFsbCB0aGUgZXhwZWN0ZWQgc2V0IG9mIGxpYnJhcmllcyB0byBiZSBub3JtYWxseSBh
+dmFpbGFibGUgb24gYQ0KPiBzeXN0ZW06DQo+IA0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10
+b29scy1uZXh0XSQgY2F0IC90bXAvYnVpbGQvcGVyZi10b29scy1uZXh0L2ZlYXR1cmUvdGVzdC1h
+bGwubWFrZS5vdXRwdXQNCj4gICBJbiBmaWxlIGluY2x1ZGVkIGZyb20gdGVzdC1icGYuYzozLA0K
+PiAgICAgICAgICAgICAgICAgICAgZnJvbSB0ZXN0LWFsbC5jOjE1MDoNCj4gICAvaG9tZS9hY21l
+L2dpdC9wZXJmLXRvb2xzLW5leHQvdG9vbHMvaW5jbHVkZS91YXBpL2xpbnV4L2JwZi5oOjc3Ojg6
+IGVycm9yOiDigJhicGZfaW5zbuKAmSBkZWZpbmVkIGFzIHdyb25nIGtpbmQgb2YgdGFnDQo+ICAg
+ICAgNzcgfCBzdHJ1Y3QgYnBmX2luc24gew0KPiAgICAgICAgIHwgICAgICAgIF5+fn5+fn5+DQo+
+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBjYXQgL3RtcC9idWlsZC9wZXJm
+LXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFsbC5tYWtlLm91dHB1dA0KPiANCj4gV2hlbiBkb2lu
+ZyBzbyB0aGVyZSBpcyBhIHRyaWNrIHdoZXJlIHdlIGRlZmluZSBtYWluIHRvIGJlDQo+IG1haW5f
+dGVzdF9saWJjYXBzdG9uZSwgdGhlbiBpbmNsdWRlIHRoZSBpbmRpdmlkdWFsDQo+IHRvb2xzL2J1
+aWxkL2ZldHVyZS90ZXN0LWxpYmNhcHN0b25lLmMgY2FwYWJpbGl0eSBxdWVyeSB0ZXN0LCBhbmQg
+dGhlbiB3ZSB1bmRlZg0KPiAnbWFpbicgYmVjYXVzZSB3ZSdsbCBkbyBpdCBhbGwgb3ZlciBhZ2Fp
+biB3aXRoIHRoZSBuZXh0IGV4cGVjdGVkIGxpYnJhcnkgdG8NCj4gYmUgdGVzdGVkIChhdCB0aGlz
+IHRpbWUgJ2x6bWEnKS4NCj4gDQo+IFRvIGNvbXBsZXRlIHRoaXMgbWVjaGFuaXNtIHdlIG5lZWQg
+dG8sIGluIHRlc3QtYWxsLmMgJ21haW4nIHJvdXRpbmUsIHRvDQo+IGNhbGwgbWFpbl90ZXN0X2xp
+YmNhcHN0b25lKCksIHdoaWNoIGlzbid0IGJlaW5nIGRvbmUsIHNvIHRoZSBlZmZlY3Qgb2YNCj4g
+YWRkaW5nIHJlZmVyZW5jZXMgdG8gY2Fwc3RvbmUgaW4gdGVzdC1hbGwuYyBhcmUgbm90IGFjaGll
+dmVkLg0KPiANCj4gVGhlIG9ubHkgdGhpbmcgdGhhdCBpcyBoYXBwZW5pbmcgaXMgdGhhdCB0ZXN0
+LWFsbC5jIGlzIGZhaWxpbmcgdG8gYnVpbGQgYW5kIHRodXMNCj4gYWxsIHRoZSB0ZXN0cyB3aWxs
+IGhhdmUgdG8gYmUgZG9uZSBpbmRpdmlkdWFsbHksIHdoaWNoIG51bGxpZmllcyB0aGUgdGVzdC1h
+bGwuYw0KPiBzaW5nbGUgYnVpbGQgc3BlZWR1cC4NCj4gDQo+IFNvIGxldHMgcmVtb3ZlIHJlZmVy
+ZW5jZXMgdG8gY2Fwc3RvbmUgZnJvbSB0ZXN0LWFsbC5jIHRvIHNlZSBpZiB0aGlzIG1ha2VzIGl0
+DQo+IGJ1aWxkIGFnYWluIHNvIHRoYXQgd2UgZ2V0IGZhc3RlciBidWlsZHMgb3IgZ28gb24gZml4
+aW5nIHVwIHdoYXRldmVyIGlzDQo+IHByZXZlbnRpbmcgdXMgdG8gZ2V0IHRoYXQgYmVuZWZpdC4N
+Cj4gDQo+IE5vdGhpbmc6IGFmdGVyIHRoaXMgZml4IHdlIGdldCBhIGNsZWFuIHRlc3QtYWxsLmMg
+YnVpbGQgYW5kIGdldCB0aGUgYnVpbGQgc3BlZWR1cCBiYWNrOg0KPiANCj4gICDirKJbYWNtZUB0
+b29sYm94IHBlcmYtdG9vbHMtbmV4dF0kIGNhdCAvdG1wL2J1aWxkL3BlcmYtdG9vbHMtbmV4dC9m
+ZWF0dXJlL3Rlc3QtYWxsLm1ha2Uub3V0cHV0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRv
+b2xzLW5leHRdJCBjYXQgL3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFs
+bC4NCj4gICB0ZXN0LWFsbC5iaW4gICAgICAgICAgdGVzdC1hbGwuZCAgICAgICAgICAgIHRlc3Qt
+YWxsLm1ha2Uub3V0cHV0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBj
+YXQgL3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvZmVhdHVyZS90ZXN0LWFsbC5tYWtlLm91dHB1
+dA0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQgbGRkIC90bXAvYnVpbGQv
+cGVyZi10b29scy1uZXh0L2ZlYXR1cmUvdGVzdC1hbGwuYmluDQo+ICAgCWxpbnV4LXZkc28uc28u
+MSAoMHgwMDAwN2YxMzI3N2ExMDAwKQ0KPiAgIAlsaWJweXRob24zLjEyLnNvLjEuMCA9PiAvbGli
+NjQvbGlicHl0aG9uMy4xMi5zby4xLjAgKDB4MDAwMDdmMTMyNmUwMDAwMCkNCj4gICAJbGlibS5z
+by42ID0+IC9saWI2NC9saWJtLnNvLjYgKDB4MDAwMDdmMTMyNzRiZTAwMCkNCj4gICAJbGlidHJh
+Y2VldmVudC5zby4xID0+IC9saWI2NC9saWJ0cmFjZWV2ZW50LnNvLjEgKDB4MDAwMDdmMTMyNzQ5
+NjAwMCkNCj4gICAJbGlidHJhY2Vmcy5zby4xID0+IC9saWI2NC9saWJ0cmFjZWZzLnNvLjEgKDB4
+MDAwMDdmMTMyNzQ2ZjAwMCkNCj4gICAJbGliY3J5cHRvLnNvLjMgPT4gL2xpYjY0L2xpYmNyeXB0
+by5zby4zICgweDAwMDA3ZjEzMjY4MDAwMDApDQo+ICAgCWxpYnVud2luZC14ODZfNjQuc28uOCA9
+PiAvbGliNjQvbGlidW53aW5kLXg4Nl82NC5zby44ICgweDAwMDA3ZjEzMjc0NTIwMDApDQo+ICAg
+CWxpYnVud2luZC5zby44ID0+IC9saWI2NC9saWJ1bndpbmQuc28uOCAoMHgwMDAwN2YxMzI3NDM2
+MDAwKQ0KPiAgIAlsaWJsem1hLnNvLjUgPT4gL2xpYjY0L2xpYmx6bWEuc28uNSAoMHgwMDAwN2Yx
+MzI3NDAzMDAwKQ0KPiAgIAlsaWJkdy5zby4xID0+IC9saWI2NC9saWJkdy5zby4xICgweDAwMDA3
+ZjEzMjZkNmYwMDApDQo+ICAgCWxpYnouc28uMSA9PiAvbGliNjQvbGliei5zby4xICgweDAwMDA3
+ZjEzMjczZTIwMDApDQo+ICAgCWxpYmVsZi5zby4xID0+IC9saWI2NC9saWJlbGYuc28uMSAoMHgw
+MDAwN2YxMzI2ZDUzMDAwKQ0KPiAgIAlsaWJudW1hLnNvLjEgPT4gL2xpYjY0L2xpYm51bWEuc28u
+MSAoMHgwMDAwN2YxMzI3M2Q0MDAwKQ0KPiAgIAlsaWJzbGFuZy5zby4yID0+IC9saWI2NC9saWJz
+bGFuZy5zby4yICgweDAwMDA3ZjEzMjY0MDAwMDApDQo+ICAgCWxpYnBlcmwuc28uNS4zOCA9PiAv
+bGliNjQvbGlicGVybC5zby41LjM4ICgweDAwMDA3ZjEzMjYwMDAwMDApDQo+ICAgCWxpYmMuc28u
+NiA9PiAvbGliNjQvbGliYy5zby42ICgweDAwMDA3ZjEzMjVlMGYwMDApDQo+ICAgCWxpYnpzdGQu
+c28uMSA9PiAvbGliNjQvbGlienN0ZC5zby4xICgweDAwMDA3ZjEzMjY3NDEwMDApDQo+ICAgCS9s
+aWI2NC9sZC1saW51eC14ODYtNjQuc28uMiAoMHgwMDAwN2YxMzI3N2EzMDAwKQ0KPiAgIAlsaWJi
+ejIuc28uMSA9PiAvbGliNjQvbGliYnoyLnNvLjEgKDB4MDAwMDdmMTMyNmQzZjAwMCkNCj4gICAJ
+bGliY3J5cHQuc28uMiA9PiAvbGliNjQvbGliY3J5cHQuc28uMiAoMHgwMDAwN2YxMzI2ZDA3MDAw
+KQ0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQNCj4gDQo+IEFuZCB3aGVu
+IGhhdmluZyBjYXBzdG9uZS1kZXZlbCBpbnN0YWxsZWQgd2UgZ2V0IGl0IGRldGVjdGVkIGFuZCBs
+aW5rZWQgd2l0aA0KPiBwZXJmLCBhbGxvd2luZyB1cyB0byBiZW5lZml0IGZyb20gdGhlIGZlYXR1
+cmVzIHRoYXQgaXQgZW5hYmxlczoNCj4gDQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xz
+LW5leHRdJCBycG0gLXEgY2Fwc3RvbmUtZGV2ZWwNCj4gICBjYXBzdG9uZS1kZXZlbC01LjAuMS0z
+LmZjNDAueDg2XzY0DQo+ICAg4qyiW2FjbWVAdG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJCBsZGQg
+L3RtcC9idWlsZC9wZXJmLXRvb2xzLW5leHQvcGVyZiB8IGdyZXAgY2Fwc3RvbmUNCj4gICAJbGli
+Y2Fwc3RvbmUuc28uNSA9PiAvbGliNjQvbGliY2Fwc3RvbmUuc28uNSAoMHgwMDAwN2ZlNmE1YzAw
+MDAwKQ0KPiAgIOKsolthY21lQHRvb2xib3ggcGVyZi10b29scy1uZXh0XSQgL3RtcC9idWlsZC9w
+ZXJmLXRvb2xzLW5leHQvcGVyZiAtdnYgfCBncmVwIGNhcA0KPiAgICAgICAgICAgICAgbGliY2Fw
+c3RvbmU6IFsgb24gIF0gICMgSEFWRV9MSUJDQVBTVE9ORV9TVVBQT1JUDQo+ICAg4qyiW2FjbWVA
+dG9vbGJveCBwZXJmLXRvb2xzLW5leHRdJA0KPiANCj4gRml4ZXM6IDhiNzY3ZGIzMzA5NTk1YTIg
+KCJwZXJmOiBidWlsZDogaW50cm9kdWNlIHRoZSBsaWJjYXBzdG9uZSIpDQo+IENjOiBBZHJpYW4g
+SHVudGVyIDxhZHJpYW4uaHVudGVyQGludGVsLmNvbT4NCj4gQ2M6IEFuZGkgS2xlZW4gPGFuZGlA
+Zmlyc3RmbG9vci5vcmc+DQo+IENjOiBDaGFuZ2JpbiBEdSA8Y2hhbmdiaW4uZHVAaHVhd2VpLmNv
+bT4NCj4gQ2M6IElhbiBSb2dlcnMgPGlyb2dlcnNAZ29vZ2xlLmNvbT4NCj4gQ2M6IEppcmkgT2xz
+YSA8am9sc2FAa2VybmVsLm9yZz4NCj4gQ2M6IEthbiBMaWFuZyA8a2FuLmxpYW5nQGxpbnV4Lmlu
+dGVsLmNvbT4NCj4gQ2M6IE5hbWh5dW5nIEtpbSA8bmFtaHl1bmdAa2VybmVsLm9yZz4NCj4gU2ln
+bmVkLW9mZi1ieTogQXJuYWxkbyBDYXJ2YWxobyBkZSBNZWxvIDxhY21lQHJlZGhhdC5jb20+DQo+
+IC0tLQ0KPiAgdG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWFsbC5jIHwgNCAtLS0tDQo+ICAxIGZp
+bGUgY2hhbmdlZCwgNCBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS90b29scy9idWls
+ZC9mZWF0dXJlL3Rlc3QtYWxsLmMgYi90b29scy9idWlsZC9mZWF0dXJlL3Rlc3QtYWxsLmMNCj4g
+aW5kZXggZGQwYTE4YzJlZjhmYzA4MC4uNmY0YmYzODZhM2I1YzRiMCAxMDA2NDQNCj4gLS0tIGEv
+dG9vbHMvYnVpbGQvZmVhdHVyZS90ZXN0LWFsbC5jDQo+ICsrKyBiL3Rvb2xzL2J1aWxkL2ZlYXR1
+cmUvdGVzdC1hbGwuYw0KPiBAQCAtMTM0LDEwICsxMzQsNiBAQA0KPiAgI3VuZGVmIG1haW4NCj4g
+ICNlbmRpZg0KPiAgDQo+IC0jZGVmaW5lIG1haW4gbWFpbl90ZXN0X2xpYmNhcHN0b25lDQo+IC0j
+IGluY2x1ZGUgInRlc3QtbGliY2Fwc3RvbmUuYyINCj4gLSN1bmRlZiBtYWluDQo+IC0NCj4gICNk
+ZWZpbmUgbWFpbiBtYWluX3Rlc3RfbHptYQ0KPiAgIyBpbmNsdWRlICJ0ZXN0LWx6bWEuYyINCj4g
+ICN1bmRlZiBtYWluDQo+IC0tIA0KPiAyLjQ1LjINCj4gDQo+IA0KDQotLSANCkNoZWVycywNCkNo
+YW5nYmluIER1DQo=
