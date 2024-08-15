@@ -1,57 +1,57 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2ED41C85;
-	Thu, 15 Aug 2024 01:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DED43ABD;
+	Thu, 15 Aug 2024 01:37:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723685830; cv=none; b=m7z2VF9EuzHbWoBF0LJRgnlW8fbo6U1w3rgAxxTeaujj2u+5dyjy26qDcmGSxkxyUYfW1e/EeJiCB91Z2oP5pYPfX9FhJroUNAPY/Ly3FLPwNqS0iZc3MO/Z5uJBJtSYGpwU6CkUaDVq5CsNJLtqT37OjfEszOyUswMIz9z+11I=
+	t=1723685834; cv=none; b=RS6d0yDdbssRwxbXVE/ah/HqsMMQ3Tjk0BxLQz5Q03vbSBRlePenhR5XL6XwcSXJ/SyYaaY+rvNdWCU18XdkTQQRi7xV9rV3pfZxQBPxbwbwAWPYB8ydOMPOwTsjXfihGaymiYNUC1ar//3TiUmsN3Paa8wzagp4IQBXOQUFEnw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723685830; c=relaxed/simple;
-	bh=dXAx1IOj5EFw26EiR6phyEx2pV+x6J1qogFrwbESj0Q=;
+	s=arc-20240116; t=1723685834; c=relaxed/simple;
+	bh=xxzhKCQXRaMbX2Fn/2LQ9SCl/677hbD30vUhW6gsF/M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nf92k+bdXEsDMbxRKIaIVJs9npWVBmcV8lmI4OvqMvOSt+0h4rpO3f1aFuGHedGV9Q+bN2qn9q1UgfaosMONTpllMnEcz2/ZJuRL8c7JS0n6wZpeShz5gSW/J/jOncYhHx/ZKYWWQc5x/DxKrle4h/ffp9N7r82Qj7u8gbTUyGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBkXQL8y; arc=none smtp.client-ip=209.85.210.174
+	 MIME-Version; b=fm9rPg8VlJJQ7p3uU/9PrefOYceyzsRGNfecgZpgmpMRP9ptyt+2XTDoRmggrshRGbxm/ARdwojZB/Q5hzQZbtBTQFNBMVrSnMcSMkc29cmkOCe+lynFVr/GnEoxIuWyGR5gSDLxGzWtqRP5T3wOxnmgSJbPEsksAhF9osnTPts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a4IE2lAM; arc=none smtp.client-ip=209.85.167.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBkXQL8y"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-710d1de6ee5so398974b3a.0;
-        Wed, 14 Aug 2024 18:37:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a4IE2lAM"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3db145c8010so276881b6e.3;
+        Wed, 14 Aug 2024 18:37:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723685828; x=1724290628; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1723685832; x=1724290632; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KMyjLjgcp28DS5DbcvmQBHlVC/BS4wgpfivdvBamMwU=;
-        b=HBkXQL8ybK09W9GosFr5fujuLAAGjjisuEhltUSm0dHs5zhPmDJgvy4OyBMUPXfhVX
-         eefaNVpm9u2SKcxTcdqu8Ccng5SonQtOAsnQPnmI5hhxvH3ZncixZC1+485qU4bvJXuv
-         Ncksd8BR1bt6iIixBkC4l5HRz5gUIGo88t/zMmXaHTGuZQXgaWtBktW+lfrtzR8YhPR4
-         MPCpXcsJALgouu/2Xd0cBwJSneqV6Kzr/uqsNXKbIpZZHWuxKoJNN4wskZc57edu0Ka8
-         bg3oy2ZjGJQuOgwuP1aiX5Sb1I/CJTuTEnfIMq+bR3KxULIP1Mlu2IytQPs/E5Hv2+2m
-         o1fg==
+        bh=ncTc6lP7++Cc+HdCfft7z5xIYc9fKy5pzTa2YoxTlfI=;
+        b=a4IE2lAMjk81Jzuie9HhBbXwXKB36myXhdFUBiZHgDEeTbenhkvQiKg8R25xA4GPnP
+         TUcaYoUnsqppRSkvlddbd92/jkpZAdn51S6gShhhTtWAmJTrOf/fXSUQ4cd3IYWPd7hA
+         SFDT1qpOSAWduboXOwRh4+4fEkLiTAPbtLY5O9/59brjBb+IzPARaFdjvzmJ3AA5TAvP
+         /F9AcOZlzGsUg2LbffUKgF1qI4z6pS7DUs4BzJaw4T5Z6KMSkM5SWlg6l2vqRnru2+GD
+         A5TcAJvjhveK/eBUkAjGxnUO3BX0nNWzJV1PG3Td2qln04r3Gd7DhYIgrJgCcswHPeCV
+         /RFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723685828; x=1724290628;
+        d=1e100.net; s=20230601; t=1723685832; x=1724290632;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KMyjLjgcp28DS5DbcvmQBHlVC/BS4wgpfivdvBamMwU=;
-        b=iF1NAZyMEqH3h9G4+oAbf4z9aSk026LuKcjQESQnzRaQ3i8fuiTQdgLwRnsSu++AQZ
-         U/V1lk6uFRuSXxb7S2HkNkm9ZupdGYVcskc/nKtzgsjtjc4hPZrh5YLSCxKEPkSJiyV2
-         RoA8vIcpN5Fejy+HzohIJTLtCJe/a/2Qi+NdDK3QHJG8IPJq0FIcPmv1oO8DRl9xulyL
-         Sz5PZy1uU6PBO3CPw65k7W0MRSuHsEINTAgVg9cJad1v9KVJG4ZMm/rNNZ0BxLuUbTR7
-         Rh9VXW5ef/djedGBht7jJbMIhlA0zstc9KScHVWvM5+hwsHmDyYl4NQij1cFXVt/tt6h
-         dV6w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtcqojqCKGttfjzMY+NyWT2Mgh+hMXRIInCWQdmKP5GaZjgLwbi/PZmnFb+8+1USZCFgK3f13ADji3T9m8dA29I7mvk5Avh4y5Y9kcqZ18RCRejkxlHvjd/weTLRGi2tYpIi5/4Py6RouvB36H9Q==
-X-Gm-Message-State: AOJu0YzT7jKTx2drPomrTRS8KWYA7+801VW9SkMa0KhfmZ6xynoNAhIB
-	9P1ViD7bZlZeMWAR/XDa99Ife454dUkj3VttafPlgHAgNGFh4zmg
-X-Google-Smtp-Source: AGHT+IFB9mXnEs8+/EZwTUhpDOjqZH2on30/R5i1w/qIhSwvoG6SizfiZEdOIdZ3wD2D/6v6uP99eA==
-X-Received: by 2002:a05:6a21:150b:b0:1c2:8d91:634 with SMTP id adf61e73a8af0-1c8eaf8b4f5mr6159760637.45.1723685827885;
-        Wed, 14 Aug 2024 18:37:07 -0700 (PDT)
+        bh=ncTc6lP7++Cc+HdCfft7z5xIYc9fKy5pzTa2YoxTlfI=;
+        b=qVv5lWD1tapoSn1BiVKqhNqbRLFI3qU6gQ9MyX9Pa1wiJ5fVi+x/HoPEUM7X26gw7/
+         02UOjIKbjimr25kLWenT79nV6Y8dCviJ/9dejjeJN+NvXoxDnDenRm+PrO/tLd9L33bx
+         Pz8Ctk3SkMSCjBUXpDEdnEqCmgxHrMBOteJccuXP0LqntYZkcUjQhG+3DxUtMtsmjl2L
+         32zeTyg06t1TxNxhPNaa3E8xjtROck7Ow+pjZ71PEduI0vFRSVfyHVgEEeB54GVkI+Oi
+         ZcDa4+CfUdnFXn62McIfeZR48OPIYnaEMCpCJEvhc3OR+cTQgpRkZFWB2eSTvcgr79A9
+         KJkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQwdBDwx0fIdxSQi+WTUhgno+46Sjwde40F0vgiyC5pf1LepSanUi2PvOhpp2xhWIuzNIO/EoDcV1XlT0xt7Fe7u1PmyMfB9D2GCCm9GxDMIPPxAxEwJizHcoYiqgPcnGSRfIfYj9E3Uta5HUgRg==
+X-Gm-Message-State: AOJu0YyRzWTPeISUjtnPGpoMdOe3T+1a0X7lr1VeM7rQqXKiHccf/hkc
+	HM0+HzigFJ7jGaw+EP3PE6SOFT2WBq8QUTgLb5bxyH45aI9Ajum4
+X-Google-Smtp-Source: AGHT+IHHEA3KWK7ZOw21EV+fqQNDddcFqMeUxyBqceNCIUnQxWubCiUbYNCxCfK6FXWcowCjMlhVWg==
+X-Received: by 2002:a05:6870:96a5:b0:260:ee13:e665 with SMTP id 586e51a60fabf-26fe5bb9896mr5677248fac.37.1723685831713;
+        Wed, 14 Aug 2024 18:37:11 -0700 (PDT)
 Received: from localhost.localdomain ([120.229.49.183])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.37.04
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127aef412bsm196842b3a.123.2024.08.14.18.37.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Aug 2024 18:37:07 -0700 (PDT)
+        Wed, 14 Aug 2024 18:37:11 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -61,9 +61,9 @@ Cc: adrian.hunter@intel.com,
 	namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 08/10] perf trace: Add pids_allowed and rename pids_filtered
-Date: Thu, 15 Aug 2024 09:36:24 +0800
-Message-ID: <20240815013626.935097-9-howardchu95@gmail.com>
+Subject: [PATCH v2 09/10] perf trace: Collect augmented data using BPF
+Date: Thu, 15 Aug 2024 09:36:25 +0800
+Message-ID: <20240815013626.935097-10-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240815013626.935097-1-howardchu95@gmail.com>
 References: <20240815013626.935097-1-howardchu95@gmail.com>
@@ -75,191 +75,184 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add pids_allowed so that we only trace these pids. Rename pids_filtered
-to pids_filtered_out to prevent confusion. (pids_filtered_out is for
-reducing the observer effect)
+Include trace_augment.h for TRACE_AUG_MAX_BUF, so that BPF reads
+TRACE_AUG_MAX_BUF bytes of buffer maximum.
 
-We write -p argument as well as workload pid to pids_allowed to leave
-only the pids that we are interested in.
+Determine what type of argument and how many bytes to read from user space, us ing the
+value in the beauty_map. This is the relation of parameter type and its corres ponding
+value in the beauty map, and how many bytes we read eventually:
+
+string: 1                          -> size of string (till null)
+struct: size of struct             -> size of struct
+buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_ MAX_BUF)
+
+After reading from user space, we output the augmented data using
+bpf_perf_event_output().
+
+If the struct augmenter, augment_sys_enter() failed, we fall back to
+using bpf_tail_call().
+
+I have to make the payload 6 times the size of augmented_arg, to pass the
+BPF verifier.
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/builtin-trace.c                    | 49 ++++++++++++++++++-
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 39 ++++++++++++---
- 2 files changed, 80 insertions(+), 8 deletions(-)
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 114 +++++++++++++++++-
+ 1 file changed, 113 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 593b0b8724d0..e7574146165e 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -3922,6 +3922,45 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index c7b9f80239c7..d665af449b1b 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -7,6 +7,8 @@
+  */
  
- 	return err;
+ #include "vmlinux.h"
++#include "../trace_augment.h"
++
+ #include <bpf/bpf_helpers.h>
+ #include <linux/limits.h>
+ 
+@@ -135,6 +137,25 @@ struct augmented_args_tmp {
+ 	__uint(max_entries, 1);
+ } augmented_args_tmp SEC(".maps");
+ 
++struct beauty_payload_enter {
++	struct syscall_enter_args args;
++	struct augmented_arg aug_args[6];
++};
++
++struct beauty_map_enter {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__type(key, int);
++	__type(value, __u32[6]);
++	__uint(max_entries, 512);
++} beauty_map_enter SEC(".maps");
++
++struct beauty_payload_enter_map {
++	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
++	__type(key, int);
++	__type(value, struct beauty_payload_enter);
++	__uint(max_entries, 1);
++} beauty_payload_enter_map SEC(".maps");
++
+ static inline struct augmented_args_payload *augmented_args_payload(void)
+ {
+ 	int key = 0;
+@@ -147,6 +168,11 @@ static inline int augmented__output(void *ctx, struct augmented_args_payload *ar
+ 	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, args, len);
  }
-+
-+static int trace__set_allowed_pids(struct trace *trace)
+ 
++static inline int augmented__beauty_output(void *ctx, void *data, int len)
 +{
-+	int err, pids_allowed_fd = bpf_map__fd(trace->skel->maps.pids_allowed);
-+	bool exists = true;
-+	struct str_node *pos;
-+	struct strlist *pids_slist = strlist__new(trace->opts.target.pid, NULL);
++	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, data, len);
++}
 +
-+	trace->skel->bss->task_specific = false;
+ static inline
+ unsigned int augmented_arg__read_str(struct augmented_arg *augmented_arg, const void *arg, unsigned int arg_len)
+ {
+@@ -399,6 +425,91 @@ static inline bool task_can_trace()
+ 	return true;
+ }
+ 
++static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
++{
++	bool augmented, do_output = false;
++	int zero = 0, size, aug_size, index, output = 0,
++	    value_size = sizeof(struct augmented_arg) - offsetof(struct augmented_arg, value);
++	unsigned int nr, *beauty_map;
++	struct beauty_payload_enter *payload;
++	void *arg, *payload_offset;
 +
-+	if (pids_slist) {
-+		strlist__for_each_entry(pos, pids_slist) {
-+			char *end_ptr;
-+			int pid = strtol(pos->s, &end_ptr, 10);
++	/* fall back to do predefined tail call */
++	if (args == NULL)
++		return 1;
 +
-+			if (pid == INT_MIN || pid == INT_MAX ||
-+			    (*end_ptr != '\0' && *end_ptr != ','))
-+				continue;
++	/* use syscall number to get beauty_map entry */
++	nr             = (__u32)args->syscall_nr;
++	beauty_map     = bpf_map_lookup_elem(&beauty_map_enter, &nr);
 +
-+			err = bpf_map_update_elem(pids_allowed_fd, &pid, &exists, BPF_ANY);
-+			if (err)
-+				return err;
++	/* set up payload for output */
++	payload        = bpf_map_lookup_elem(&beauty_payload_enter_map, &zero);
++	payload_offset = (void *)&payload->aug_args;
 +
-+			trace->skel->bss->task_specific = true;
++	if (beauty_map == NULL || payload == NULL)
++		return 1;
++
++	/* copy the sys_enter header, which has the syscall_nr */
++	__builtin_memcpy(&payload->args, args, sizeof(struct syscall_enter_args));
++
++	/*
++	 * Determine what type of argument and how many bytes to read from user space, using the
++	 * value in the beauty_map. This is the relation of parameter type and its corresponding
++	 * value in the beauty map, and how many bytes we read eventually:
++	 *
++	 * string: 1			      -> size of string
++	 * struct: size of struct	      -> size of struct
++	 * buffer: -1 * (index of paired len) -> value of paired len (maximum: TRACE_AUG_MAX_BUF)
++	 */
++	for (int i = 0; i < 6; i++) {
++		arg = (void *)args->args[i];
++		augmented = false;
++		size = beauty_map[i];
++		aug_size = size; /* size of the augmented data read from user space */
++
++		if (size == 0 || arg == NULL)
++			continue;
++
++		if (size == 1) { /* string */
++			aug_size = bpf_probe_read_user_str(((struct augmented_arg *)payload_offset)->value, value_size, arg);
++			/* minimum of 0 to pass the verifier */
++			if (aug_size < 0)
++				aug_size = 0;
++
++			augmented = true;
++		} else if (size > 0 && size <= value_size) { /* struct */
++			if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, size, arg))
++				augmented = true;
++		} else if (size < 0 && size >= -6) { /* buffer */
++			index = -(size + 1);
++			aug_size = args->args[index];
++
++			if (aug_size > TRACE_AUG_MAX_BUF)
++				aug_size = TRACE_AUG_MAX_BUF;
++
++			if (aug_size > 0) {
++				if (!bpf_probe_read_user(((struct augmented_arg *)payload_offset)->value, aug_size, arg))
++					augmented = true;
++			}
++		}
++
++		/* write data to payload */
++		if (augmented) {
++			int written = offsetof(struct augmented_arg, value) + aug_size;
++
++			((struct augmented_arg *)payload_offset)->size = aug_size;
++			output += written;
++			payload_offset += written;
++			do_output = true;
 +		}
 +	}
 +
-+	if (workload_pid != -1) {
-+		err = bpf_map_update_elem(pids_allowed_fd, &workload_pid, &exists, BPF_ANY);
-+		if (err)
-+			return err;
++	if (!do_output)
++		return 1;
 +
-+		trace->skel->bss->task_specific = true;
-+	}
-+
-+	strlist__delete(pids_slist);
-+	return 0;
-+}
-+
- #endif // HAVE_BPF_SKEL
- 
- static int trace__set_ev_qualifier_filter(struct trace *trace)
-@@ -3980,7 +4019,7 @@ static int trace__set_filter_loop_pids(struct trace *trace)
- 	return err;
- }
- 
--static int trace__set_filter_pids(struct trace *trace)
-+static int trace__set_filtered_out_pids(struct trace *trace)
- {
- 	int err = 0;
- 	/*
-@@ -4309,13 +4348,19 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
- 		}
- 	}
- #endif
--	err = trace__set_filter_pids(trace);
-+	err = trace__set_filtered_out_pids(trace);
- 	if (err < 0)
- 		goto out_error_mem;
- 
- #ifdef HAVE_BPF_SKEL
- 	if (trace->skel && trace->skel->progs.sys_enter)
- 		trace__init_syscalls_bpf_prog_array_maps(trace);
-+
-+	if (trace->skel) {
-+		err = trace__set_allowed_pids(trace);
-+		if (err)
-+			goto out_error_mem;
-+	}
- #endif
- 
- 	if (trace->ev_qualifier_ids.nr > 0) {
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index 0acbd74e8c76..c7b9f80239c7 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -22,6 +22,8 @@
- 
- #define MAX_CPUS  4096
- 
-+volatile bool task_specific;
-+
- /* bpf-output associated map */
- struct __augmented_syscalls__ {
- 	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-@@ -72,12 +74,21 @@ struct augmented_arg {
- 	char		value[PATH_MAX];
- };
- 
--struct pids_filtered {
-+/* Do not trace these PIDs to prevent the observer effect */
-+struct pids_filtered_out {
- 	__uint(type, BPF_MAP_TYPE_HASH);
- 	__type(key, pid_t);
- 	__type(value, bool);
- 	__uint(max_entries, 64);
--} pids_filtered SEC(".maps");
-+} pids_filtered_out SEC(".maps");
-+
-+/* Only trace these PIDs, disregard the rest */
-+struct pids_allowed {
-+	__uint(type, BPF_MAP_TYPE_HASH);
-+	__type(key, pid_t);
-+	__type(value, bool);
-+	__uint(max_entries, 512);
-+} pids_allowed SEC(".maps");
- 
- /*
-  * Desired design of maximum size and alignment (see RFC2553)
-@@ -367,18 +378,34 @@ static pid_t getpid(void)
- 	return bpf_get_current_pid_tgid();
- }
- 
--static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-+static inline bool pid_filtered_out__has(struct pids_filtered_out *pids, pid_t pid)
- {
- 	return bpf_map_lookup_elem(pids, &pid) != NULL;
- }
- 
-+static inline bool pid_allowed__has(struct pids_allowed *pids, pid_t pid)
-+{
-+	return bpf_map_lookup_elem(pids, &pid) != NULL;
-+}
-+
-+static inline bool task_can_trace(void)
-+{
-+	if (pid_filtered_out__has(&pids_filtered_out, getpid()))
-+		return false;
-+
-+	if (task_specific && !pid_allowed__has(&pids_allowed, getpid()))
-+		return false;
-+
-+	return true;
++	return augmented__beauty_output(ctx, payload, sizeof(struct syscall_enter_args) + output);
 +}
 +
  SEC("tp/raw_syscalls/sys_enter")
  int sys_enter(struct syscall_enter_args *args)
  {
- 	struct augmented_args_payload *augmented_args;
- 	/*
- 	 * We start len, the amount of data that will be in the perf ring
--	 * buffer, if this is not filtered out by one of pid_filter__has(),
-+	 * buffer, if this is not filtered out by one of pid_filtered_out__has(),
- 	 * syscall->enabled, etc, with the non-augmented raw syscall payload,
- 	 * i.e. sizeof(augmented_args->args).
- 	 *
-@@ -386,7 +413,7 @@ int sys_enter(struct syscall_enter_args *args)
- 	 * initial, non-augmented raw_syscalls:sys_enter payload.
+@@ -427,7 +538,8 @@ int sys_enter(struct syscall_enter_args *args)
+ 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
+ 	 * unaugmented tracepoint payload.
  	 */
+-	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
++	if (augment_sys_enter(args, &augmented_args->args))
++		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
  
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (!task_can_trace())
- 		return 0;
- 
- 	augmented_args = augmented_args_payload();
-@@ -411,7 +438,7 @@ int sys_exit(struct syscall_exit_args *args)
- {
- 	struct syscall_exit_args exit_args;
- 
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (!task_can_trace())
- 		return 0;
- 
- 	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+ 	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
+ 	return 0;
 -- 
 2.45.2
 
