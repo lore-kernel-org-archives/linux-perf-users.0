@@ -1,332 +1,314 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D65601BF32B;
-	Fri, 16 Aug 2024 17:26:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0A791BE233;
+	Fri, 16 Aug 2024 17:27:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723829163; cv=none; b=q+SHpTHvqzYrrLpSPW/lOtO4pglrSvEUJ9DF+zMOT5aJgNt8qak6fQ6XoXJknfefHS5bRKgMr0Ks9JakGuOyI2gu1guyiTlCKYze18yOoCvL3Y9F1Kq2Fj+spK+XZ83+36D6qLgy1LPfZiQivwM8v76y2/3shM8btcbIzxZqAJI=
+	t=1723829275; cv=none; b=mobc7bUYy7usrpcYl7XAhCnYs5YJ7CCL6aD2LbxQu9H3Uatd6cSh9DCKEqIcEqWiHyo34oES393ill6R1AS9/EeJxe+GOLBFiBCvwIfjjEhlqyP8b4OzBTB29oPYLNUi8smw7je4oojCXTXJlvLMQPXQaGKDzT/UyPFbVEWERDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723829163; c=relaxed/simple;
-	bh=3nQvv8Als6rOPUcJ7zrtdi1QMhsT3TgoiQ/Du/9Z6PI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RWLF/gMPuE87ACbEkAQjbgbHUEvyzhtt1d7VC35a9Pdpzia3/C73KrN84cqXre498TLuj500byFQKJtZokQ+LUsrRe5Bbysr+rx6isx+IR7j1CUDUdtHlMlCk84+JerMt35sZq5tyANrcv+AI1aY/8YI32MQRkSUOeIt/OjDjVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=akNMUqJ4; arc=none smtp.client-ip=209.85.128.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723829275; c=relaxed/simple;
+	bh=fygN0P5usEVtwcOi4i36r518jPka1qvkd+wRSQxFbBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D3A97u8YhJYoDhUMqBg04MZ0dK6Gw5SUOOAPzi16YpSjMLEk9J4t1mRasOexhKNviqUNk5DH3pPGOgCqYLwOupIgVSxhjPsefU32IvWYDLIVJTdBnC6GyefaiLZOkfDVQ9j3zW77QXJf58rl9lavMZ0nqtj2RkJI3rzzRHi1XZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d1HZJkS/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akNMUqJ4"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-66a048806e6so23368507b3.3;
-        Fri, 16 Aug 2024 10:26:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723829160; x=1724433960; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OBIyOaQDlB5W56TivbiL02BLcb9MzJxBkMYceNa+hKQ=;
-        b=akNMUqJ4Nb3FVSdTPTWf9hw7t6fsGFjPryF9iFUQjxy0fNScG/WmTAI1Vs1g/XOoW3
-         UAtBGQHAjuC0ubu+ahXt8SBAIio4V8cKyrYOaMdPnD6cYmJKuUlV/Gbrhn1+ooNOjGiW
-         kSeu4Xj5DGBXEGRUqXNbTrCtZqAwSBvzWFPaYyQlvlDjlpg47bDeGUHCgXo51P614cfR
-         96HiVaBkQI/EdlMYu0lg0wECMed7t13XgracZw0Ny9sj/hKyWb7TMK5odtbJ3LbaVF2k
-         6n/YcCsC/I/PyxSxKjw3lX086WYV9sQuKqKCMYxLHRPf3XZnLOY/PGtQp4nXxtzsb4w0
-         XLPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723829160; x=1724433960;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OBIyOaQDlB5W56TivbiL02BLcb9MzJxBkMYceNa+hKQ=;
-        b=ndZf9HPqM8sjKSmpHSXIvKTu9/JNDYdU+2xYm5LNBL2NaiEXygxVBTTfMJekg2sIsS
-         NlG8ICFJY+I6Fklyx+h43GOGgj8ngGYO37u/Y/h8PG2ighv4TZ6q6UkEUbczgopRpf3Y
-         d9Qo9iPVbCl4Y5whpFRPEz01RMcBe45+cB27481qDmXAk34U/gjaTc4wuo2vC0CQLavE
-         qj0oWbRt6/u/CIz5NYjOee9JcCGEI31PW22DQboKwJV6adRn/LbUlaSqlrCFp/lLGTVp
-         QrLlHkN6eUHD+8kdYK4RbPz8aJ9mWa01+B0KNaNhzKEtuEb8g85z0tEylRaGycR+B5uu
-         pnPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWBHG1EmFHIk+kEiasunSwCfS6pQ1NP8oz5FduFjj5L4T53Ar+eynhdhKXgVN5gIGyJkcq6NUeChb0D5zy8Bh2JcwCQ3BVwB7amn0N1YGxmPd9XpTHMz+4gYjZ0jefvGFiK1BD9WqK8BKi4BakBYg==
-X-Gm-Message-State: AOJu0Ywvd48sdDnd0T0AcrIaPztEH8n45XUR4wsTv8g7kKSX7dyH7Qzv
-	GyPJYivEDxayw5LQ8IJ3iEw8i78+YvHP9GFqmLqEnXBMi44sZcqd2L3PghwxAaYZ8fFufGb2TJD
-	jCipk7UQ/z6mZZg7wfWjUpkIvlYo=
-X-Google-Smtp-Source: AGHT+IHaGTU484NjDJUhst9NOuSOvYfKH06kYzmoqxmm8uR0lfHkCKiTAq8JygM4CUALyx4SxogkYW2eDoe5xPQBOnk=
-X-Received: by 2002:a05:690c:6009:b0:6b0:cd9d:8f5c with SMTP id
- 00721157ae682-6b1bb28f34emr43744817b3.29.1723829159719; Fri, 16 Aug 2024
- 10:25:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d1HZJkS/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C454FC32782;
+	Fri, 16 Aug 2024 17:27:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723829275;
+	bh=fygN0P5usEVtwcOi4i36r518jPka1qvkd+wRSQxFbBE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=d1HZJkS/g7RlEWwTeLhxyYgvwuoQrWqgntz9kJrQwVS6CATOosxQzZmouOsWxVOON
+	 18V39eS9UBlIjMQkE9tmb8ppaDU2JAD3hmEElpit+fYVJuveC3bNILcrkQMP1lT9/x
+	 liwkdMwhbZ18Xkh5IT8gmh/PqYnhQR7Qe0XShWf2Ltj6Q63FjAGX+1oxWLp8/9a0U0
+	 wcDOHZ3YTuIGAVQW5qOM/Cu0Q1jENc7IX8X/BYYPHaV0NupoJ/X2shbGe1JsQmzKGE
+	 PAHtOt4m6M1V5gvYyylo5ntbmFR6ItL0012ecWfE2sGUn0AvIFEHZlvD50PICV3ec/
+	 SSWQizCN3Lqbw==
+Date: Fri, 16 Aug 2024 10:27:53 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Yang Jihong <yangjihong@bytedance.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
+	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] perf sched timehist: Add --prio option
+Message-ID: <Zr-MGX2RfaBFfaMP@google.com>
+References: <20240806015701.1309833-1-yangjihong@bytedance.com>
+ <20240806015701.1309833-3-yangjihong@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815013626.935097-1-howardchu95@gmail.com>
- <20240815013626.935097-2-howardchu95@gmail.com> <CAP-5=fXCt4axmdjqDZXZzjW-gZK_KZ8R--OTR-M1sZYxZ94k5A@mail.gmail.com>
- <Zr9ntEtIvseYwG90@x1>
-In-Reply-To: <Zr9ntEtIvseYwG90@x1>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Sat, 17 Aug 2024 01:25:48 +0800
-Message-ID: <CAH0uvoggxJZYaYAiWuUt-i+0rx24yZNA2hCCjVcbYMmZ7=BAyg@mail.gmail.com>
-Subject: Re: [PATCH v2 01/10] perf trace: Fix perf trace -p <PID>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Peter Zijlstra <peterz@infradead.org>, Andrii Nakryiko <andrii.nakryiko@gmail.com>, 
-	adrian.hunter@intel.com, jolsa@kernel.org, kan.liang@linux.intel.com, 
-	namhyung@kernel.org, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240806015701.1309833-3-yangjihong@bytedance.com>
 
-Hello,
+On Tue, Aug 06, 2024 at 09:57:01AM +0800, Yang Jihong wrote:
+> The --prio option is used to only show events for the given task priority(ies).
+> The default is to show events for all priority tasks, which is consistent with
+> the previous behavior.
+> 
+> Testcase:
+>   # perf sched record nice -n 9 perf bench sched messaging -l 10000
+>   # Running 'sched/messaging' benchmark:
+>   # 20 sender and receiver processes per group
+>   # 10 groups == 400 processes run
+> 
+>        Total time: 3.435 [sec]
+>   [ perf record: Woken up 270 times to write data ]
+>   [ perf record: Captured and wrote 618.688 MB perf.data (5729036 samples) ]
+> 
+>   # perf sched timehist -h
+> 
+>    Usage: perf sched timehist [<options>]
+> 
+>       -C, --cpu <cpu>       list of cpus to profile
+>       -D, --dump-raw-trace  dump raw trace in ASCII
+>       -f, --force           don't complain, do it
+>       -g, --call-graph      Display call chains if present (default on)
+>       -I, --idle-hist       Show idle events only
+>       -i, --input <file>    input file name
+>       -k, --vmlinux <file>  vmlinux pathname
+>       -M, --migrations      Show migration events
+>       -n, --next            Show next task
+>       -p, --pid <pid[,pid...]>
+>                             analyze events only for given process id(s)
+>       -s, --summary         Show only syscall summary with statistics
+>       -S, --with-summary    Show all syscalls and summary with statistics
+>       -t, --tid <tid[,tid...]>
+>                             analyze events only for given thread id(s)
+>       -V, --cpu-visual      Add CPU visual
+>       -v, --verbose         be more verbose (show symbol address, etc)
+>       -w, --wakeups         Show wakeup events
+>           --kallsyms <file>
+>                             kallsyms pathname
+>           --max-stack <n>   Maximum number of functions to display backtrace.
+>           --prio <prio>     analyze events only for given task priority(ies)
+>           --show-prio       Show task priority
+>           --state           Show task state when sched-out
+>           --symfs <directory>
+>                             Look for files with symbols relative to this directory
+>           --time <str>      Time span for analysis (start,stop)
+> 
+>   # perf sched timehist --prio 140
+>   Samples of sched_switch event do not have callchains.
+>   Invalid prio string
+> 
+>   # perf sched timehist --show-prio --prio 129
+>   Samples of sched_switch event do not have callchains.
+>              time    cpu  task name                       prio      wait time  sch delay   run time
+>                           [tid/pid]                                    (msec)     (msec)     (msec)
+>   --------------- ------  ------------------------------  --------  ---------  ---------  ---------
+>    2090450.765421 [0002]  sched-messaging[1229618]        129           0.000      0.000      0.029
+>    2090450.765445 [0007]  sched-messaging[1229616]        129           0.000      0.062      0.043
+>    2090450.765448 [0014]  sched-messaging[1229619]        129           0.000      0.000      0.032
+>    2090450.765478 [0013]  sched-messaging[1229617]        129           0.000      0.065      0.048
+>    2090450.765503 [0014]  sched-messaging[1229622]        129           0.000      0.000      0.017
+>    2090450.765550 [0002]  sched-messaging[1229624]        129           0.000      0.000      0.021
+>    2090450.765562 [0007]  sched-messaging[1229621]        129           0.000      0.071      0.028
+>    2090450.765570 [0005]  sched-messaging[1229620]        129           0.000      0.064      0.066
+>    2090450.765583 [0001]  sched-messaging[1229625]        129           0.000      0.001      0.031
+>    2090450.765595 [0013]  sched-messaging[1229623]        129           0.000      0.060      0.028
+>    2090450.765637 [0014]  sched-messaging[1229628]        129           0.000      0.000      0.019
+>    2090450.765665 [0007]  sched-messaging[1229627]        129           0.000      0.038      0.030
+>   <SNIP>
+> 
+>   # perf sched timehist --show-prio --prio 0,120-129
+>   Samples of sched_switch event do not have callchains.
+>              time    cpu  task name                       prio      wait time  sch delay   run time
+>                           [tid/pid]                                    (msec)     (msec)     (msec)
+>   --------------- ------  ------------------------------  --------  ---------  ---------  ---------
+>    2090450.763231 [0000]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763235 [0000]  migration/0[15]                 0             0.000      0.001      0.003
+>    2090450.763263 [0001]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763268 [0001]  migration/1[21]                 0             0.000      0.001      0.004
+>    2090450.763302 [0002]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763309 [0002]  migration/2[27]                 0             0.000      0.001      0.007
+>    2090450.763338 [0003]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763343 [0003]  migration/3[33]                 0             0.000      0.001      0.004
+>    2090450.763459 [0004]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763469 [0004]  migration/4[39]                 0             0.000      0.002      0.010
+>    2090450.763496 [0005]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763501 [0005]  migration/5[45]                 0             0.000      0.001      0.004
+>    2090450.763613 [0006]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763622 [0006]  migration/6[51]                 0             0.000      0.001      0.008
+>    2090450.763652 [0007]  perf[1229608]                   120           0.000      0.000      0.000
+>    2090450.763660 [0007]  migration/7[57]                 0             0.000      0.001      0.008
+>   <SNIP>
+>    2090450.765665 [0001]  <idle>                          120           0.031      0.031      0.081
+>    2090450.765665 [0007]  sched-messaging[1229627]        129           0.000      0.038      0.030
+>    2090450.765667 [0000]  s1-perf[8235/7168]              120           0.008      0.000      0.004
+>    2090450.765684 [0013]  <idle>                          120           0.028      0.028      0.088
+>    2090450.765685 [0001]  sched-messaging[1229630]        129           0.000      0.001      0.020
+>    2090450.765688 [0000]  <idle>                          120           0.004      0.004      0.020
+>    2090450.765689 [0002]  <idle>                          120           0.021      0.021      0.138
+>    2090450.765691 [0005]  sched-messaging[1229626]        129           0.000      0.085      0.029
+> 
+> Signed-off-by: Yang Jihong <yangjihong@bytedance.com>
+> ---
+>  tools/perf/Documentation/perf-sched.txt |  3 +
+>  tools/perf/builtin-sched.c              | 74 ++++++++++++++++++++++++-
+>  2 files changed, 76 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-sched.txt b/tools/perf/Documentation/perf-sched.txt
+> index 3efa5c58418d..70a9016d5a06 100644
+> --- a/tools/perf/Documentation/perf-sched.txt
+> +++ b/tools/perf/Documentation/perf-sched.txt
+> @@ -215,6 +215,9 @@ OPTIONS for 'perf sched timehist'
+>  --show-prio::
+>  	Show task priority.
+>  
+> +--prio::
+> +	Only show events for given task priority(ies).
 
-Thanks to Namhyung Kim <namhyung@kernel.org>, this bug is fixed. There
-is no problem in BPF, sorry for causing the trouble.
+Please describe how it takes multiple priorities.  Like 0,120-129.
 
 Thanks,
-Howard
+Namhyung
 
-On Fri, Aug 16, 2024 at 10:52=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Thu, Aug 15, 2024 at 11:28:17AM -0700, Ian Rogers wrote:
-> > On Wed, Aug 14, 2024 at 6:36=E2=80=AFPM Howard Chu <howardchu95@gmail.c=
-om> wrote:
-> > >
-> > > perf trace -p <PID> work on a syscall that is unaugmented, but doesn'=
-t
-> > > work on a syscall that's augmented (when it calls perf_event_output()=
- in
-> > > BPF).
-> > >
-> > > Let's take open() as an example. open() is augmented in perf trace.
-> > >
-> > > Before:
-> > > ```
-> > > perf $ perf trace -e open -p 3792392
-> > >          ? (         ):  ... [continued]: open())                    =
-                         =3D -1 ENOENT (No such file or directory)
-> > >          ? (         ):  ... [continued]: open())                    =
-                         =3D -1 ENOENT (No such file or directory)
-> > > ```
-> > >
-> > > We can see there's no output.
-> > >
-> > > After:
-> > > ```
-> > > perf $ perf trace -e open -p 3792392
-> > >      0.000 ( 0.123 ms): a.out/3792392 open(filename: "DINGZHEN", flag=
-s: WRONLY)                             =3D -1 ENOENT (No such file or direc=
-tory)
-> > >   1000.398 ( 0.116 ms): a.out/3792392 open(filename: "DINGZHEN", flag=
-s: WRONLY)                             =3D -1 ENOENT (No such file or direc=
-tory)
-> > > ```
-> > >
-> > > Reason:
-> > >
-> > > bpf_perf_event_output() will fail when you specify a pid in perf trac=
-e (EOPNOTSUPP).
->
-> Trying to figure out why it returns EOPNOTSUPP:
->
-> static __always_inline u64
-> __bpf_perf_event_output(struct pt_regs *regs, struct bpf_map *map,
->                         u64 flags, struct perf_sample_data *sd)
-> {
->         struct bpf_array *array =3D container_of(map, struct bpf_array, m=
-ap);
->         unsigned int cpu =3D smp_processor_id();
->         u64 index =3D flags & BPF_F_INDEX_MASK;
->         struct bpf_event_entry *ee;
->         struct perf_event *event;
->
->         if (index =3D=3D BPF_F_CURRENT_CPU)
->                 index =3D cpu;
->         if (unlikely(index >=3D array->map.max_entries))
->                 return -E2BIG;
->
->         ee =3D READ_ONCE(array->ptrs[index]);
-> <SNIP>
->         if (unlikely(event->oncpu !=3D cpu))
->                 return -EOPNOTSUPP;
->
->         return perf_event_output(event, sd, regs);
-> }
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ git grep -- '->oncpu'
-> arch/x86/kvm/vmx/pmu_intel.c:    *   cpu pinned event reclaims LBR, the e=
-vent->oncpu will be set to -1;
-> kernel/events/core.c:   event->oncpu =3D -1;
-> kernel/events/core.c:   WRITE_ONCE(event->oncpu, smp_processor_id());
-> kernel/events/core.c:    * ->oncpu if it sees ACTIVE.
-> kernel/events/core.c:           event->oncpu =3D -1;
-> kernel/events/core.c:   if (READ_ONCE(event->oncpu) !=3D smp_processor_id=
-())
-> kernel/events/core.c:            * inactive here (event->oncpu=3D=3D-1), =
-there's nothing more to do;
-> kernel/events/core.c:           ret =3D cpu_function_call(READ_ONCE(event=
-->oncpu),
-> kernel/events/core.c:   event_oncpu =3D __perf_event_read_cpu(event, even=
-t->oncpu);
-> kernel/events/core.c:            * Orders the ->state and ->oncpu loads s=
-uch that if we see
-> kernel/events/core.c:            * ACTIVE we must also see the right ->on=
-cpu.
-> kernel/events/core.c:           event_cpu =3D READ_ONCE(event->oncpu);
-> kernel/events/core.c:   int cpu =3D READ_ONCE(event->oncpu);
-> kernel/events/core.c:   if (WARN_ON_ONCE(READ_ONCE(sampler->oncpu) !=3D s=
-mp_processor_id()))
-> kernel/events/core.c:                   cpu =3D READ_ONCE(iter->oncpu);
-> kernel/events/core.c:   event->oncpu            =3D -1;
-> kernel/trace/bpf_trace.c:       if (unlikely(event->oncpu !=3D cpu))
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> This looks like a bug, no? It seems what this patch is doing is papering
-> onver that bug :-\
->
-> Alexei, Peter?
->
-> That part in the cset introducing bpf_perf_output_event() says:
->
-> "User space needs to perf_event_open() it (either for one or all cpus)"
->
-> -1 should mean all cpus, right, or is bpf_perf_event_output() only
-> supported if we do as Howard did in this patch?
->
-> ---
-> commit a43eec304259a6c637f4014a6d4767159b6a3aa3
-> Author: Alexei Starovoitov <ast@kernel.org>
-> Date:   Tue Oct 20 20:02:34 2015 -0700
->
->     bpf: introduce bpf_perf_event_output() helper
->
->     This helper is used to send raw data from eBPF program into
->     special PERF_TYPE_SOFTWARE/PERF_COUNT_SW_BPF_OUTPUT perf_event.
->     User space needs to perf_event_open() it (either for one or all cpus)=
- and
->     store FD into perf_event_array (similar to bpf_perf_event_read() help=
-er)
->     before eBPF program can send data into it.
-> ---
->
-> We're missing something, can you help?
->
-> - Arnaldo
->
-> > > When using perf trace -p 114, before perf_event_open(), we'll have PI=
-D
-> > > =3D 114, and CPU =3D -1.
-> > >
-> > > This is bad for bpf-output event, because the ring buffer won't accep=
-t
-> > > output from BPF's perf_event_output(), making it fail. I'm still tryi=
-ng
-> > > to find out why.
-> > >
-> > > If we open bpf-output for every cpu, instead of setting it to -1, lik=
-e
-> > > this:
-> > > PID =3D <PID>, CPU =3D 0
-> > > PID =3D <PID>, CPU =3D 1
-> > > PID =3D <PID>, CPU =3D 2
-> > > PID =3D <PID>, CPU =3D 3
-> > > ...
-> > >
-> > > Everything works.
-> > >
-> > > You can test it with this script:
-> > > ```
-> > >  #include <unistd.h>
-> > >  #include <sys/syscall.h>
-> > >
-> > > int main()
-> > > {
-> > >         int i1 =3D 1, i2 =3D 2, i3 =3D 3, i4 =3D 4;
-> > >         char s1[] =3D "DINGZHEN", s2[] =3D "XUEBAO";
-> > >
-> > >         while (1) {
-> > >                 syscall(SYS_open, s1, i1, i2);
-> > >                 sleep(1);
-> > >         }
-> > >
-> > >         return 0;
-> > > }
-> > > ```
-> > >
-> > > save, compile
-> > > ```
-> > > gcc open.c
-> > > ```
-> > >
-> > > perf trace
-> > > ```
-> > > perf trace -e open <path-to-the-executable>
-> > > ```
-> > >
-> > > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > > ---
-> > >  tools/perf/util/evlist.c | 14 +++++++++++++-
-> > >  tools/perf/util/evlist.h |  1 +
-> > >  2 files changed, 14 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-> > > index c0379fa1ccfe..f14b7e6ff1dc 100644
-> > > --- a/tools/perf/util/evlist.c
-> > > +++ b/tools/perf/util/evlist.c
-> > > @@ -1067,7 +1067,7 @@ int evlist__create_maps(struct evlist *evlist, =
-struct target *target)
-> > >         if (!threads)
-> > >                 return -1;
-> > >
-> > > -       if (target__uses_dummy_map(target))
-> > > +       if (target__uses_dummy_map(target) && !evlist__has_bpf_output=
-(evlist))
-> >
-> > I'm wondering if there should be a comment above this, something like:
-> >
-> > Do we need the "any"/-1 CPU value or do we need to open an event on
-> > all target CPUs (the default NULL implies all online CPUs). The dummy
-> > map indicates that we need sideband perf record events in order to
-> > symbolize samples. The mmap-ed ring buffers need CPUs. Similarly BPF
-> > output events need ring buffers.
-> >
-> > I'm not 100% on the ring buffer perf_event_open restrictions, and the
-> > man page doesn't cover it, my knowledge is implied from failures and
-> > seeing what the tool does.
-> >
-> > Thanks,
-> > Ian
-> >
-> >
-> > >                 cpus =3D perf_cpu_map__new_any_cpu();
-> > >         else
-> > >                 cpus =3D perf_cpu_map__new(target->cpu_list);
-> > > @@ -2627,3 +2627,15 @@ void evlist__uniquify_name(struct evlist *evli=
-st)
-> > >                 }
-> > >         }
-> > >  }
-> > > +
-> > > +bool evlist__has_bpf_output(struct evlist *evlist)
-> > > +{
-> > > +       struct evsel *evsel;
-> > > +
-> > > +       evlist__for_each_entry(evlist, evsel) {
-> > > +               if (evsel__is_bpf_output(evsel))
-> > > +                       return true;
-> > > +       }
-> > > +
-> > > +       return false;
-> > > +}
-> > > diff --git a/tools/perf/util/evlist.h b/tools/perf/util/evlist.h
-> > > index b46f1a320783..bcc1c6984bb5 100644
-> > > --- a/tools/perf/util/evlist.h
-> > > +++ b/tools/perf/util/evlist.h
-> > > @@ -447,5 +447,6 @@ int evlist__scnprintf_evsels(struct evlist *evlis=
-t, size_t size, char *bf);
-> > >  void evlist__check_mem_load_aux(struct evlist *evlist);
-> > >  void evlist__warn_user_requested_cpus(struct evlist *evlist, const c=
-har *cpu_list);
-> > >  void evlist__uniquify_name(struct evlist *evlist);
-> > > +bool evlist__has_bpf_output(struct evlist *evlist);
-> > >
-> > >  #endif /* __PERF_EVLIST_H */
-> > > --
-> > > 2.45.2
-> > >
+
+> +
+>  OPTIONS for 'perf sched replay'
+>  ------------------------------
+>  
+> diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+> index 2af9dbdf4ba2..3981994d9921 100644
+> --- a/tools/perf/builtin-sched.c
+> +++ b/tools/perf/builtin-sched.c
+> @@ -51,6 +51,7 @@
+>  #define COMM_LEN		20
+>  #define SYM_LEN			129
+>  #define MAX_PID			1024000
+> +#define MAX_PRIO		140
+>  
+>  static const char *cpu_list;
+>  static DECLARE_BITMAP(cpu_bitmap, MAX_NR_CPUS);
+> @@ -234,6 +235,8 @@ struct perf_sched {
+>  	struct perf_time_interval ptime;
+>  	struct perf_time_interval hist_time;
+>  	volatile bool   thread_funcs_exit;
+> +	const char	*prio_str;
+> +	DECLARE_BITMAP(prio_bitmap, MAX_PRIO);
+>  };
+>  
+>  /* per thread run time data */
+> @@ -2504,12 +2507,33 @@ static bool timehist_skip_sample(struct perf_sched *sched,
+>  				 struct perf_sample *sample)
+>  {
+>  	bool rc = false;
+> +	int prio = -1;
+> +	struct thread_runtime *tr = NULL;
+>  
+>  	if (thread__is_filtered(thread)) {
+>  		rc = true;
+>  		sched->skipped_samples++;
+>  	}
+>  
+> +	if (sched->prio_str) {
+> +		/*
+> +		 * Because priority may be changed during task execution,
+> +		 * first read priority from prev sched_in event for current task.
+> +		 * If prev sched_in event is not saved, then read priority from
+> +		 * current task sched_out event.
+> +		 */
+> +		tr = thread__get_runtime(thread);
+> +		if (tr && tr->prio != -1)
+> +			prio = tr->prio;
+> +		else if (evsel__name_is(evsel, "sched:sched_switch"))
+> +			prio = evsel__intval(evsel, sample, "prev_prio");
+> +
+> +		if (prio != -1 && !test_bit(prio, sched->prio_bitmap)) {
+> +			rc = true;
+> +			sched->skipped_samples++;
+> +		}
+> +	}
+> +
+>  	if (sched->idle_hist) {
+>  		if (!evsel__name_is(evsel, "sched:sched_switch"))
+>  			rc = true;
+> @@ -2723,7 +2747,7 @@ static int timehist_sched_change_event(struct perf_tool *tool,
+>  		goto out;
+>  	}
+>  
+> -	if (sched->show_prio)
+> +	if (sched->show_prio || sched->prio_str)
+>  		timehist_update_task_prio(evsel, sample, machine);
+>  
+>  	thread = timehist_get_thread(sched, sample, machine, evsel);
+> @@ -3142,6 +3166,47 @@ static int timehist_check_attr(struct perf_sched *sched,
+>  	return 0;
+>  }
+>  
+> +static int timehist_parse_prio_str(struct perf_sched *sched)
+> +{
+> +	char *p;
+> +	unsigned long start_prio, end_prio;
+> +	const char *str = sched->prio_str;
+> +
+> +	if (!str)
+> +		return 0;
+> +
+> +	while (isdigit(*str)) {
+> +		p = NULL;
+> +		start_prio = strtoul(str, &p, 0);
+> +		if (start_prio >= MAX_PRIO || (*p != '\0' && *p != ',' && *p != '-'))
+> +			return -1;
+> +
+> +		if (*p == '-') {
+> +			str = ++p;
+> +			p = NULL;
+> +			end_prio = strtoul(str, &p, 0);
+> +
+> +			if (end_prio >= MAX_PRIO || (*p != '\0' && *p != ','))
+> +				return -1;
+> +
+> +			if (end_prio < start_prio)
+> +				return -1;
+> +		} else {
+> +			end_prio = start_prio;
+> +		}
+> +
+> +		for (; start_prio <= end_prio; start_prio++)
+> +			__set_bit(start_prio, sched->prio_bitmap);
+> +
+> +		if (*p)
+> +			++p;
+> +
+> +		str = p;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static int perf_sched__timehist(struct perf_sched *sched)
+>  {
+>  	struct evsel_str_handler handlers[] = {
+> @@ -3203,6 +3268,11 @@ static int perf_sched__timehist(struct perf_sched *sched)
+>  	if (timehist_check_attr(sched, evlist) != 0)
+>  		goto out;
+>  
+> +	if (timehist_parse_prio_str(sched) != 0) {
+> +		pr_err("Invalid prio string\n");
+> +		goto out;
+> +	}
+> +
+>  	setup_pager();
+>  
+>  	/* prefer sched_waking if it is captured */
+> @@ -3768,6 +3838,8 @@ int cmd_sched(int argc, const char **argv)
+>  		   "analyze events only for given thread id(s)"),
+>  	OPT_STRING('C', "cpu", &cpu_list, "cpu", "list of cpus to profile"),
+>  	OPT_BOOLEAN(0, "show-prio", &sched.show_prio, "Show task priority"),
+> +	OPT_STRING(0, "prio", &sched.prio_str, "prio",
+> +		   "analyze events only for given task priority(ies)"),
+>  	OPT_PARENT(sched_options)
+>  	};
+>  
+> -- 
+> 2.25.1
+> 
