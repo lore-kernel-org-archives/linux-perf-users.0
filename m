@@ -1,148 +1,175 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1495726AC3
-	for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 03:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87DFE1877
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 03:16:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723777855; cv=none; b=FjCq85Tb8qQVZzq2za++L1TPfQlnQn2l9tt8undnxmqn6KgTTkjhzWD5jzPIVUjz2miZtTCnBjC3qs7VYP+LNq7hPssHUB6fI0oN7mK5Oq9PVMmYkmi4NSFH7A/GBZlGJOgZWOzGR2ye94b1KlpJmdq6IDf3Bk1R39Ds3z6Sqdo=
+	t=1723778165; cv=none; b=kbzLMZTmjeKT3ieIHISdEWZO9LK0zuTzlzLM3NLI86LRTFJo2Du3Ppk4fwUVHkclGMDDB5fKAxSZZsDDKOfAn1taNg2i9j9IPFcXqSpGzXibFhsPDMKBM4qhOcSlVroPuTUEWlkaYjDV67n7HzkrqKGXCAll2AojbOLPFqNEf18=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723777855; c=relaxed/simple;
-	bh=pDkx8ngnUQRjIclWtfWHA39LO7XC/50Owe9Vmjxe8yY=;
+	s=arc-20240116; t=1723778165; c=relaxed/simple;
+	bh=QvgCRCVIJQlf3c9D/c6CQexGv/AVEDoPki6TZ6C+lgU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QEXorpf29Wv/l5vz/cFwD3f5OrIEdbtL8hJegEv3kG8ejZYAF7jwnBXqMA5ljxVfYY3jf9ZYNha8Xtjc3qRlIDYnsyXAeYKiwcqpSJ3mWAizilinMEZDXemalACy0JUTueOdreHOXkrU8I6RjzBiJgdmjaXukl9vRTrmNlrVE2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=29V0ypQP; arc=none smtp.client-ip=209.85.214.182
+	 To:Cc:Content-Type; b=GXK7PPbYhzJsK5aINc0ldN4oNZXdUQljvGUnwS9jpJ8Rg7Qfb6guzYEkCKW++bccjh0Adkwzw8Cqh2kubpOkKlzJCxE1KmXZboCgaTI7bXQjcis6OihzCXt+dG3znhPRMpFcoEZtUApTDyNIm+XMV7rAn+KpU/7v0RDUhhr5w5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2SFQMqCU; arc=none smtp.client-ip=209.85.166.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="29V0ypQP"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-201fed75b38so29115ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 15 Aug 2024 20:10:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2SFQMqCU"
+Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-39d2a107aebso18845ab.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Aug 2024 20:16:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723777853; x=1724382653; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723778162; x=1724382962; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TksdukPAgZv3CISxfFNPNoWEfe+SnBkoBwJZG9NR5no=;
-        b=29V0ypQPCK02vMOCwAzezmndAahVmclJuzQG1OmBOhVmjS8EBVVzfwYQf0RdHlgRvN
-         H8a/8ruoukofjP4KKcpEF3uAGOsOw9rBUGav8O20xX7/7aMr1AbB6jn1S+q208UMCcYk
-         27CCwjzweIKNvsyzX8KTgaIxH0f8uaCBtGZeAyeGESg+moO566xjbxaUkOXa7glYz7fE
-         sreGy/cUPP15OVdQ6yGvergZ4jZ/46cSwcP8+BdMH+kEty5smDS/2zHCUmq9IosTnS2c
-         vzVH0IpkZ2/JDfds8f6a8T559YPQ9VjXWHT6YqVf5wIL8NOrOWzo6SotO7Tpan9gKJos
-         Tlhw==
+        bh=cBDLm5A+RDH4WkOIu6haLqh5HgWheaTx6ZttayiUTD8=;
+        b=2SFQMqCUIpkJUZxtgzkCIqfZ97iypt9gOlvR5s0M9Cvu5BZ9+9pCTp151Fgwju2Qsr
+         GBIK4zCxXRBk0q/phrcpYwJ9Glm1GWm548wFw7sn5WIQ/RX36tQNlCDWnzwXa/ZtIzZW
+         TJKubAKN1e8wQidEd1H/X+R8unfofl/eb1I0APcO/KTcw8g3he9coVhf1rncCdK/q5J9
+         YQNZomjSXDxDr9ahVKeKZaGj4Knuj2eSSpUcSyeHlA+6dD/sytegWuBn8IfGntopML7w
+         +MQLYf5BSlTIfWZ4yrG/BtravblKaVcCud1GaWL1/P1AcOwWUSZTmfNMilXycQoyHgGA
+         X7Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723777853; x=1724382653;
+        d=1e100.net; s=20230601; t=1723778162; x=1724382962;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TksdukPAgZv3CISxfFNPNoWEfe+SnBkoBwJZG9NR5no=;
-        b=t4th+m0zFppbpbMLSGu19FZG2xFcQhPyH3dvb4L6dCGS218PKkejTBmUkrTazTQkk+
-         cW/vFSYreQ335gsRMcYmQ7PTTBkxKHGOhjLjyAIjszShvEYUlFLnWJ/9yFLwSCfMEoZr
-         RADzv7f+z9vhrU/DCQJOw7Gda9XAR+l4AJoOC1ZkqqJd1H5EmqPh1smqrLo0rM9ZJLKM
-         tNxgnMMGgNndXQ/RKwOs8AR3TD0eVLYp4IfaJykA5vKTl9a9/RDy5KwCj00QR2ohHNq1
-         rjP0yTidxWIz1iONqLON7+t/ikLf2Bje7Il5NdKXXb5H3yb1ywJdJlTG3mMz6s/nlV30
-         dyNw==
-X-Forwarded-Encrypted: i=1; AJvYcCXirOg1DVaNCb8c6YTYQCmYcklS1czxIhw0hC2xxGSk1auHPyRus0ezhj+ZQGkHofCnfEz4d94H7WtKTuuVLBnY@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyuk27jzvp+2Hnw5txUwOrpdM5Jm0RV6y3S4Wwg9vumA+0TmliJ
-	ObtIwWthT8tDbt+ndm3Bk4J6YK66l34+TR5DsVrJQUs3L6Fc3hneZkNG7t9zyN/1TC8NYW/s27T
-	zHiu+skBc8AOi9hYHsyhYGzGFOxSexPwl9nNm
-X-Google-Smtp-Source: AGHT+IGZLeBKv3CMMAwWol2fV8fxptjq88r8Yrtm01DrODCf8SauDZd7ISG+PN303isiBbUK4suCZa1K107RgC107lI=
-X-Received: by 2002:a17:902:e5d0:b0:1eb:3f4f:6f02 with SMTP id
- d9443c01a7336-2020600ae4dmr794735ad.12.1723777852732; Thu, 15 Aug 2024
- 20:10:52 -0700 (PDT)
+        bh=cBDLm5A+RDH4WkOIu6haLqh5HgWheaTx6ZttayiUTD8=;
+        b=wEaXPLItxcxabwVU4Rs34X7YTEHNeCuRbFYczwfxeR+5uA3gxpJ/0OdJYHNcEsdMPm
+         5arJ+78SvluQ0/y5fXmHGfllf6+ZQsG+Q7j19GnREF16y2lMurVEPGZxll8VGyGxC8Du
+         hd/tg0pj7TaaWup2wKvfq/vatoz3pxnX/kn6YBvqmNLdLXFelIUAjLE3Y9349AfDrUst
+         jEXjvbnIeru1nvdiQiop0eCsNnY3szLBvzaZzuDYBJb2cwSHQf9lHDIVYB1tyK8WlZjv
+         xTkUF3hmSPymaJqG1Mxg7EhWNxSYeI50kdISoOmT5tH3o0M/9BW0ig2+a4fTXnRbo/6W
+         YOsw==
+X-Forwarded-Encrypted: i=1; AJvYcCUr1ObQ1w0TJ9Jvg4yccSaBREzaFGlG3Ks0Xbz7z2xdTEbfGlNfFOao9enBTbEyYaDqz2N+Lxuh5jd9e0l9vi5AvhKywNWB1qBpE/cgBBk/SA==
+X-Gm-Message-State: AOJu0Yyy40QT0a2F+b9xmhzlsvZJHqmc4uBwsxosjqWnqltsI/BRhu/x
+	JQpMWtfwTxQ2JAqml4A/zGBDGYLwYjqhKWPQdhTzO3TYN5N/AeIhVuqo8Ugb5/FNZUwaHb6W9rW
+	YyaLrAAxwNOmUvRjtVij/0dJlTh0Q035bEsf/
+X-Google-Smtp-Source: AGHT+IFG54skZod88kVSUZv1syt2i20zv5Fvy6Kdg2iPfl7E7+fCdF6DLOt5umNOo0pJ6e7zslmiGSByBIx+/w+nThY=
+X-Received: by 2002:a05:6e02:16cf:b0:39a:14f7:1bfd with SMTP id
+ e9e14a558f8ab-39d28eecf1cmr543285ab.5.1723778162148; Thu, 15 Aug 2024
+ 20:16:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240815142212.3834625-1-matt@readmodwrite.com>
-In-Reply-To: <20240815142212.3834625-1-matt@readmodwrite.com>
+References: <20240815013626.935097-1-howardchu95@gmail.com> <20240815013626.935097-11-howardchu95@gmail.com>
+In-Reply-To: <20240815013626.935097-11-howardchu95@gmail.com>
 From: Ian Rogers <irogers@google.com>
-Date: Thu, 15 Aug 2024 20:10:40 -0700
-Message-ID: <CAP-5=fU4Lv76Yv5HdhPZz4woZuZ-WMemEC3vGpKJgKhwqrE_rg@mail.gmail.com>
-Subject: Re: [PATCH] perf hist: Update hist symbol when updating maps
-To: Matt Fleming <matt@readmodwrite.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, kernel-team@cloudflare.com, 
-	Namhyung Kim <namhyung@kernel.org>, Yunzhao Li <yunzhao@cloudflare.com>, stable@vger.kernel.org
+Date: Thu, 15 Aug 2024 20:15:51 -0700
+Message-ID: <CAP-5=fUqU0sKKNaQmA=ra0en3Mky_PvRu=-48E5Q-6Wov7_UNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/10] perf trace: Add general tests for augmented syscalls
+To: Howard Chu <howardchu95@gmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, namhyung@kernel.org, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 15, 2024 at 7:22=E2=80=AFAM Matt Fleming <matt@readmodwrite.com=
-> wrote:
+On Wed, Aug 14, 2024 at 6:37=E2=80=AFPM Howard Chu <howardchu95@gmail.com> =
+wrote:
 >
-> AddressSanitizer found a use-after-free bug in the symbol code which
-> manifested as perf top segfaulting.
+> In this test, augmentation for:
 >
->   =3D=3D1238389=3D=3DERROR: AddressSanitizer: heap-use-after-free on addr=
-ess 0x60b00c48844b at pc 0x5650d8035961 bp 0x7f751aaecc90 sp 0x7f751aaecc80
->   READ of size 1 at 0x60b00c48844b thread T193
->       #0 0x5650d8035960 in _sort__sym_cmp util/sort.c:310
->       #1 0x5650d8043744 in hist_entry__cmp util/hist.c:1286
->       #2 0x5650d8043951 in hists__findnew_entry util/hist.c:614
->       #3 0x5650d804568f in __hists__add_entry util/hist.c:754
->       #4 0x5650d8045bf9 in hists__add_entry util/hist.c:772
->       #5 0x5650d8045df1 in iter_add_single_normal_entry util/hist.c:997
->       #6 0x5650d8043326 in hist_entry_iter__add util/hist.c:1242
->       #7 0x5650d7ceeefe in perf_event__process_sample /home/matt/src/linu=
-x/tools/perf/builtin-top.c:845
->       #8 0x5650d7ceeefe in deliver_event /home/matt/src/linux/tools/perf/=
-builtin-top.c:1208
->       #9 0x5650d7fdb51b in do_flush util/ordered-events.c:245
->       #10 0x5650d7fdb51b in __ordered_events__flush util/ordered-events.c=
-:324
->       #11 0x5650d7ced743 in process_thread /home/matt/src/linux/tools/per=
-f/builtin-top.c:1120
->       #12 0x7f757ef1f133 in start_thread nptl/pthread_create.c:442
->       #13 0x7f757ef9f7db in clone3 ../sysdeps/unix/sysv/linux/x86_64/clon=
-e3.S:81
+> * string
+> * buffer
+> * struct
 >
-> When updating hist maps it's also necessary to update the hist symbol
-> reference because the old one gets freed in map__put().
+> Is tested.
 >
-> While this bug was probably introduced with 5c24b67aae72 ("perf tools:
-> Replace map->referenced & maps->removed_maps with map->refcnt"), the
-> symbol objects were leaked until c087e9480cf3 ("perf machine: Fix
-> refcount usage when processing PERF_RECORD_KSYMBOL") was merged so the
-> bug was masked.
+> Please use this command to test it out:
 >
-> Fixes: c087e9480cf3 ("perf machine: Fix refcount usage when processing PE=
-RF_RECORD_KSYMBOL")
-> Signed-off-by: Matt Fleming (Cloudflare) <matt@readmodwrite.com>
-> Reported-by: Yunzhao Li <yunzhao@cloudflare.com>
-> Cc: stable@vger.kernel.org # v5.13+
+> perf test "perf trace general tests"
+>
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
 > ---
->  tools/perf/util/hist.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  tools/perf/tests/shell/trace_btf_general.sh | 59 +++++++++++++++++++++
+>  1 file changed, 59 insertions(+)
+>  create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
 >
-> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-> index 0f554febf9a1..0f9ce2ee2c31 100644
-> --- a/tools/perf/util/hist.c
-> +++ b/tools/perf/util/hist.c
-> @@ -639,6 +639,11 @@ static struct hist_entry *hists__findnew_entry(struc=
-t hists *hists,
->                          * the history counter to increment.
->                          */
->                         if (he->ms.map !=3D entry->ms.map) {
-> +                               if (he->ms.sym) {
-> +                                       u64 addr =3D he->ms.sym->start;
+> diff --git a/tools/perf/tests/shell/trace_btf_general.sh b/tools/perf/tes=
+ts/shell/trace_btf_general.sh
+> new file mode 100755
+> index 000000000000..9c5e9d321b42
+> --- /dev/null
+> +++ b/tools/perf/tests/shell/trace_btf_general.sh
+> @@ -0,0 +1,59 @@
+> +#!/bin/sh
+> +# perf trace general tests
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +err=3D0
+> +set -e
+> +
+> +. "$(dirname $0)"/lib/probe.sh
+> +skip_if_no_perf_trace || exit 2
+> +
+> +file1=3D$(mktemp /tmp/file1_XXXXX)
+> +file2=3D$(echo $file1 | sed 's/file1/file2/g')
+> +
+> +buffer=3D"this is a buffer for testing"
+> +
+> +trace_test_string() {
+> +  echo "Testing perf trace's string augmentation"
+> +  if ! perf trace -e renameat* --max-events=3D1 -- mv ${file1} ${file2} =
+2>&1 | grep -q -E "renameat[2]*.*oldname: \"${file1}\".*newname: \"${file2}=
+\".*"
+> +  then
+> +    echo "String augmentation failed"
+> +    err=3D1
+> +  fi
+> +}
+> +
+> +trace_test_buffer() {
+> +  echo "Testing perf trace's buffer augmentation"
+> +  if ! perf trace -e write --max-events=3D1 -- echo "${buffer}" 2>&1 | g=
+rep -q -E ".*write.*buf: \"${buffer}.*\".*"
+> +  then
+> +    echo "Buffer augmentation failed"
+> +    err=3D1
+> +  fi
+> +}
+> +
+> +trace_test_struct() {
+> +  echo "Testing perf trace's struct augmentation"
+> +  if ! perf trace -e clock_nanosleep --max-events=3D1 -- sleep 1 2>&1 | =
+grep -q -E ".*clock_nanosleep\(rqtp: \{1,\}, rmtp: \{1,\}\).* =3D 0"
+> +  then
+> +    echo "Struct augmentation failed"
+> +    err=3D1
+> +  fi
+> +}
+> +
+> +cleanup() {
+> +       rm -rf ${file2}
+> +}
 
-nit: we normally put a newline between a variable and the first
-non-variable line of code.
-
-Acked-by: Ian Rogers <irogers@google.com>
+It can be nice to have a trap handler clean things up, as well as to
+say a trap happened (as will happen with any non-zero exit with "set
+-e" above). There's an example here where the function of the trap is
+printed:
+https://lore.kernel.org/lkml/20240813043439.933329-2-irogers@google.com/
 
 Thanks,
 Ian
 
-> +                                       he->ms.sym =3D map__find_symbol(e=
-ntry->ms.map, addr);
-> +                               }
 > +
->                                 map__put(he->ms.map);
->                                 he->ms.map =3D map__get(entry->ms.map);
->                         }
+> +trace_test_string
+> +
+> +if [ $err =3D 0 ]; then
+> +  trace_test_buffer
+> +fi
+> +
+> +if [ $err =3D 0 ]; then
+> +  trace_test_struct
+> +fi
+> +
+> +cleanup
+> +
+> +exit $err
 > --
-> 2.34.1
+> 2.45.2
 >
