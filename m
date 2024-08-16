@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAF3F8175F;
-	Fri, 16 Aug 2024 17:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB66D28FF
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 17:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723829501; cv=none; b=Yy0GBGXLY2Knh+1hW8br9a5et1JEWRhdwAdZOwUMiDynBI2hUnN/BdDFwjazgs0TKIzAtLz313/ALuqCyg8lKmobCT7d45uQp7lkZc1Bo9AtVz1tgqaAql8PSQ5gNVxjmJ/v/ht36YTAAK2sMy2d72N2i1bwV9jlgX4FHqTAmvU=
+	t=1723829673; cv=none; b=nwbC9xq7HVhaSCPgUM+l6HCeUmQVUEqyuVUdpX0R5aVzCM+N1a+k4r5m0PT+vEHqbRYh+a7W+dYVW/MnpJoWb5Ok+zW4c5xK/3/UgDDkB5gQTyZoD0r6DFwkQGvX9FqJlmS6GRykO8f0QJ/AG7rICuBbLC3PRwrpHJuPLs0mktU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723829501; c=relaxed/simple;
-	bh=SfEzZM+SRzAxJmCjIXHzBLpMu427s1d9B2TcFaQN4Xw=;
+	s=arc-20240116; t=1723829673; c=relaxed/simple;
+	bh=ySv9KWm67fLRgy9afTLLmtjFqVvhVKRqNxE62mu23gU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rDbQ5A23A1JUtq52Djq8owIZ3ZGwyhw8O5TRdysADz83SraF3/qxsRGJBkBm73fYiOF2yFBTU1KEENnWdfhCKGrwH7hRGQUVf5tCrOWX7hpdCKRaGantDKvCJiCfcoraqL1iozChU0DRXpIP+/wqQGmCyinvfsHEmbZ6zZQJdKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oicthh54; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=DtqZzHaK70awsP/6vlybWN1TryyaLNz9u2FpXnhLTvdQ5K19J88qum2nBprEmt7tHAVg+2COOg0kRSrO9YOTAgBU1Bimco2HAxob2RvvbdG8+hsLKd6zM2PZXHWs30WRupTdn7cq4OIPE4Bi1tkhLIc3CWb9g3gxoKYvLvBQoJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mM77EWG/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oicthh54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBA5C32782;
-	Fri, 16 Aug 2024 17:31:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mM77EWG/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB1EC32782;
+	Fri, 16 Aug 2024 17:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723829501;
-	bh=SfEzZM+SRzAxJmCjIXHzBLpMu427s1d9B2TcFaQN4Xw=;
+	s=k20201202; t=1723829671;
+	bh=ySv9KWm67fLRgy9afTLLmtjFqVvhVKRqNxE62mu23gU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oicthh54Ypp+/yoT/90GPsdKpzzuw0OUcCQuLu6zNcMIxHShedsZQU/S7hdKTgSdN
-	 n8UKDzhE9mlAY/DkUnIh5jLI7VNgG6HLrR+FujAvueJuMZ9wVAb8pXA8QRAizoYQ5o
-	 rp03Hb3C6fh5zjBj+9oKztSychnAQtbEZ4qa1wVzqIGNiQF+mBpATdfklaNivF0z+r
-	 u+vM3c2O0IJ5UIuU5ZmKWIvpxKh7HlLBeUkwjiPOcG4HyfIlQpCpB1i+ILxlud56Pp
-	 jGu4bjrri6ruRwPIOLv2mWDu6opVzedxtDxRuYDX6ic6m4n87HQbihFYQLCRLJ8VXy
-	 weZ783bkXq1yQ==
-Date: Fri, 16 Aug 2024 10:31:39 -0700
+	b=mM77EWG/wbwWo/XVp/mP29vYwkt+nuzb/zbs2iZN2CWBv9L0e7wlJffKMPDjNXwhg
+	 FYi62ini0dPiOjXtJodT0/px23ZDG3SgxOmjL59I/W2uFtskkhUlHLZsM4IyYyXVFN
+	 FMeMkVqJo6TZsht2BAX4qLQaa5b5tc+L4jQ0oiwbIGLsJtgaidradKJpU6YHpB9Kxm
+	 jfKnO4TEpbjTUXCaA8zJp1j2P0nu4VV65lH+uyJioTZ1Erg7E1p59J81O0UsT16Spd
+	 IvJSrEllymeD71xda7WsENJXeKTrtaxbjVkWB1EmqVoniKyD1w/BpLtOAcEzRybhln
+	 Wz5nffZ9vpfZA==
+Date: Fri, 16 Aug 2024 10:34:29 -0700
 From: Namhyung Kim <namhyung@kernel.org>
-To: Xu Yang <xu.yang_2@nxp.com>
-Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-perf-users@vger.kernel.org,
-	imx@lists.linux.dev
-Subject: Re: [PATCH] perf kvm: move HAVE_KVM_STAT_SUPPORT down
-Message-ID: <Zr-M-9mJyJ9G51sA@google.com>
-References: <20240809115335.540947-1-xu.yang_2@nxp.com>
+To: Yicong Yang <yangyicong@huawei.com>
+Cc: acme@kernel.org, mark.rutland@arm.com, mingo@redhat.com,
+	peterz@infradead.org, irogers@google.com,
+	linux-perf-users@vger.kernel.org, linuxarm@huawei.com,
+	yangyicong@hisilicon.com, jonathan.cameron@huawei.com,
+	shameerali.kolothum.thodi@huawei.com, hejunhao3@huawei.com,
+	prime.zeng@hisilicon.com
+Subject: Re: [PATCH] perf stat: Display iostat headers correctly
+Message-ID: <Zr-Npc3oKa5juMr3@google.com>
+References: <20240802065800.48774-1-yangyicong@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -45,59 +46,57 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240809115335.540947-1-xu.yang_2@nxp.com>
+In-Reply-To: <20240802065800.48774-1-yangyicong@huawei.com>
 
-On Fri, Aug 09, 2024 at 07:53:35PM +0800, Xu Yang wrote:
-> The 32-bit arm build system will complain:
+On Fri, Aug 02, 2024 at 02:58:00PM +0800, Yicong Yang wrote:
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> tools/perf/util/python.c:75:28: error: field ‘sample’ has incomplete type
->    75 |         struct perf_sample sample;
+> Currently we'll only print metric headers for metric leader in
+> aggregration mode. This will make `perf iostat` header not shown
+> since it'll aggregrated globally but don't have metric events:
+> root@ubuntu204:/home/yang/linux/tools/perf# ./perf stat --iostat --timeout 1000
+>  Performance counter stats for 'system wide':
+>     port
+> 0000:00                    0                    0                    0                    0
+> 0000:80                    0                    0                    0                    0
+> [...]
 > 
-> However, arm64 build system doesn't complain this.
+> Fix this by excluding the iostat in the check of printing metric
+> headers. Then we can see the headers:
+> root@ubuntu204:/home/yang/linux/tools/perf# ./perf stat --iostat --timeout 1000
+>  Performance counter stats for 'system wide':
+>     port             Inbound Read(MB)    Inbound Write(MB)    Outbound Read(MB)   Outbound Write(MB)
+> 0000:00                    0                    0                    0                    0
+> 0000:80                    0                    0                    0                    0
+> [...]
 > 
-> The root cause is arm64 define "HAVE_KVM_STAT_SUPPORT := 1" in
-> tools/perf/arch/arm64/Makefile, but arm arch doesn't define this.
-> This will lead to kvm-stat.h include other header files on arm64 build
-> system, especially "sort.h" for util/python.c.
+> Fixes: 193a9e30207f ("perf stat: Don't display metric header for non-leader uncore events")
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 
-But it's not intuitive.  I think you can include "util/sample.h" in the
-util/python.c.
+Acked-by: Namhyung Kim <namhyung@kernel.org>
 
 Thanks,
 Namhyung
 
-> 
-> This will try to move HAVE_KVM_STAT_SUPPORT down, so normal header files
-> can be exported to source files on other arch too.
-> 
-> Signed-off-by: Xu Yang <xu.yang_2@nxp.com>
+
 > ---
->  tools/perf/util/kvm-stat.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  tools/perf/util/stat-display.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/tools/perf/util/kvm-stat.h b/tools/perf/util/kvm-stat.h
-> index 3e9ac754c3d1..92f1191cd462 100644
-> --- a/tools/perf/util/kvm-stat.h
-> +++ b/tools/perf/util/kvm-stat.h
-> @@ -2,8 +2,6 @@
->  #ifndef __PERF_KVM_STAT_H
->  #define __PERF_KVM_STAT_H
+> diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> index c38bcb6f4c78..ea96e4ebad8c 100644
+> --- a/tools/perf/util/stat-display.c
+> +++ b/tools/perf/util/stat-display.c
+> @@ -1237,7 +1237,8 @@ static void print_metric_headers(struct perf_stat_config *config,
 >  
-> -#ifdef HAVE_KVM_STAT_SUPPORT
-> -
->  #include "tool.h"
->  #include "sort.h"
->  #include "stat.h"
-> @@ -13,6 +11,8 @@
->  #include <stdlib.h>
->  #include <linux/zalloc.h>
+>  	/* Print metrics headers only */
+>  	evlist__for_each_entry(evlist, counter) {
+> -		if (config->aggr_mode != AGGR_NONE && counter->metric_leader != counter)
+> +		if (!config->iostat_run &&
+> +		    config->aggr_mode != AGGR_NONE && counter->metric_leader != counter)
+>  			continue;
 >  
-> +#ifdef HAVE_KVM_STAT_SUPPORT
-> +
->  #define KVM_EVENT_NAME_LEN	40
->  
->  struct evsel;
+>  		os.evsel = counter;
 > -- 
-> 2.34.1
+> 2.24.0
 > 
