@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24AE814D2B8;
-	Fri, 16 Aug 2024 23:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C515F13D51B;
+	Fri, 16 Aug 2024 23:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723852724; cv=none; b=EyLp7JhrszwNAfz3/d+iEeA6zxCO4AeoyM+xr5pUayRG2HvNlUehgNA6cvoRwgDnAeFMBioX8iEhBdHszMONZ6dIcIpavcC2mJX2r5q7RNPN3mC+H3SET8u5NAQLjYnEebw6krhHydFYcLDnsyGRkjlnf4mkFHW0rqWZ5e4akD4=
+	t=1723852724; cv=none; b=GYE6kRg18YeviLt7bPVjRq/sT8totye/fCJgyneiYBFeR59jWLkP2yzpuUMD2qIfaoaYEwGsBP9gHy2ZB34UgHyz8hXiCuwVBOB0j11jDqYlLxiR/p22KtINbujkwgatUMBZOr9ew440/1rseS/WpEKOHO+Qb+xIMJKRxE5EEEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1723852724; c=relaxed/simple;
-	bh=WFqLrUsJ90ZZBi2rRNTqQUEvO6udoH82ef5MZBqnMCA=;
+	bh=OoqgGDfXJTydY97bMo4SdpTXavrvCBBCpnszshPk/mY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Wfol/UKVK/Fxod8v1qQGddbxCj5QTvS2RpREVQw+HTnM9/EUwOs5IWemLPAVSCDgO6vnNpzzQJBK2+YWp3+/n5QDT6p8CrSaFbEvVAX0IHJdoz0d9w3Cc4f9m9wZIdr9ibe5T3Pa0nlmPCAo0DKg2rZqG2hWHuoXSVtfY2jxAGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7g6GFtR; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=MXRYrfye5G8MOKAlb0fOdJVJG+na31k5N0GYJIp94lkvzkfshsZShp6OUcynE1NvCE6gLp1VCaynLDBQAJmeGzYrKvJh0fYogSPOf3ZIfaAhFTovrbFwmUq2oT6m/zn0J8aQIfEZ8+gficlx1mxZALitIoVfIu+qIstIlpRlI8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tNyb2oDB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7g6GFtR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 637E4C4AF09;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tNyb2oDB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBBBBC4AF0E;
 	Fri, 16 Aug 2024 23:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723852723;
-	bh=WFqLrUsJ90ZZBi2rRNTqQUEvO6udoH82ef5MZBqnMCA=;
+	s=k20201202; t=1723852724;
+	bh=OoqgGDfXJTydY97bMo4SdpTXavrvCBBCpnszshPk/mY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=o7g6GFtRBCqdz+ABbzaiBg5N/cti+AgbeoTBvQ8SOWx2OQfdnh7LuDemyM4Y9IZ30
-	 vWnjKCbAMfmLm7M8IkeBGFbtwls6DIxkewV1qlzjD6sV6Yfp8v9qf7zrezwLTJriTq
-	 47+qUsvbB+wSRK+Tybd4LAEqnMiRWzqBMnVUjjiWBSTRsujGsLNzIys5KeeKImUWLX
-	 l1E481GWFOl+bNgy9GnV4UHlVnA2t8Zviqa+z+7pPQyT/wgiiT20XB4yaUiD0TgDLI
-	 OaXEn9BA+mSCL6qwznGuQCHkkb/AFJ57aAlwQBkG1dM5v9z7MsF4re/CmZQwtEO+Jy
-	 EnsSQdV/HAU7A==
+	b=tNyb2oDB6cdvoIX7Z6OiR2r9BzWRmwtsP2YskSRZQBArirv8yekFZVFlTwubHMTKV
+	 HwKwdTPtwovFffaVsp2Z/wcCVBYHUurnh9Fks92qqQJ6fhSD9yCa6APB3JB+z9ZxF+
+	 6/bXESQ0zL8lt+nH9PJRvKc1Xp0M33sf4oFK/7aA3XpXATYGmrNlVe38KaIfa/5pLh
+	 uMcTGFITXynAmmPPPoks3GJHsKRH9MlTZF1NqomGfjeAbJ4HQbtYF3bvVvHHH8AduM
+	 lBtA7Ljem7i1bcXuq9sHiZAC29H5oSY43hVJ3sKyP81pARdFT1AeucEI1nkXiNlpZ0
+	 rA0VFFugeWaFA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -37,9 +37,9 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 5/9] perf annotate-data: Change return type of find_data_type_block()
-Date: Fri, 16 Aug 2024 16:58:35 -0700
-Message-ID: <20240816235840.2754937-6-namhyung@kernel.org>
+Subject: [PATCH 6/9] perf annotate-data: Add is_pointer_type() helper
+Date: Fri, 16 Aug 2024 16:58:36 -0700
+Message-ID: <20240816235840.2754937-7-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
 In-Reply-To: <20240816235840.2754937-1-namhyung@kernel.org>
 References: <20240816235840.2754937-1-namhyung@kernel.org>
@@ -51,355 +51,79 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-So that it can return enum variable_match_type to be propagated to the
-find_data_type_die().  Also update the debug message to show the result
-of the check_matching_type().
-
-  chk [dd] reg0 offset=0 ok=1 kind=1  : Good!
-or
-  chk [177] reg4 offset=0x138 ok=0 kind=0 cfa : no type information
+It treats pointers and arrays in the same way.  Let's add the helper and
+use it when it checks if it needs a pointer.
 
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/util/annotate-data.c | 117 ++++++++++++++++----------------
- 1 file changed, 58 insertions(+), 59 deletions(-)
+ tools/perf/util/annotate-data.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
 diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index 332254da49be..5548cd8e84ba 100644
+index 5548cd8e84ba..b2414747cdeb 100644
 --- a/tools/perf/util/annotate-data.c
 +++ b/tools/perf/util/annotate-data.c
-@@ -352,6 +352,7 @@ enum type_match_result {
- 	PERF_TMR_NO_POINTER,
- 	PERF_TMR_NO_SIZE,
- 	PERF_TMR_BAD_OFFSET,
-+	PERF_TMR_BAIL_OUT,
- };
- 
- static const char *match_result_str(enum type_match_result tmr)
-@@ -368,6 +369,7 @@ static const char *match_result_str(enum type_match_result tmr)
- 	case PERF_TMR_BAD_OFFSET:
- 		return "offset bigger than size";
- 	case PERF_TMR_UNKNOWN:
-+	case PERF_TMR_BAIL_OUT:
- 	default:
- 		return "invalid state";
+@@ -375,6 +375,13 @@ static const char *match_result_str(enum type_match_result tmr)
  	}
-@@ -868,19 +870,19 @@ static void setup_stack_canary(struct data_loc_info *dloc)
- 
- /*
-  * It's at the target address, check if it has a matching type.
-- * It returns 1 if found, 0 if not or -1 if not found but no need to
-- * repeat the search.  The last case is for per-cpu variables which
-+ * It returns PERF_TMR_BAIL_OUT when it looks up per-cpu variables which
-  * are similar to global variables and no additional info is needed.
-  */
--static int check_matching_type(struct type_state *state,
--			       struct data_loc_info *dloc,
--			       Dwarf_Die *cu_die, Dwarf_Die *type_die)
-+static enum type_match_result check_matching_type(struct type_state *state,
-+						  struct data_loc_info *dloc,
-+						  Dwarf_Die *cu_die,
-+						  Dwarf_Die *type_die)
- {
- 	Dwarf_Word size;
- 	u32 insn_offset = dloc->ip - dloc->ms->sym->start;
- 	int reg = dloc->op->reg1;
- 
--	pr_debug_dtp("chk [%x] reg%d offset=%#x ok=%d kind=%d",
-+	pr_debug_dtp("chk [%x] reg%d offset=%#x ok=%d kind=%d ",
- 		     insn_offset, reg, dloc->op->offset,
- 		     state->regs[reg].ok, state->regs[reg].kind);
- 
-@@ -896,15 +898,12 @@ static int check_matching_type(struct type_state *state,
- 			if (dloc->op->offset < 0 && reg != state->stack_reg)
- 				goto check_kernel;
- 
--			pr_debug_dtp("\n");
--			return -1;
-+			return PERF_TMR_NO_POINTER;
- 		}
- 
--		pr_debug_dtp("\n");
--
- 		/* Remove the pointer and get the target type */
- 		if (__die_get_real_type(&state->regs[reg].type, type_die) == NULL)
--			return -1;
-+			return PERF_TMR_NO_POINTER;
- 
- 		dloc->type_offset = dloc->op->offset;
- 
-@@ -916,33 +915,33 @@ static int check_matching_type(struct type_state *state,
- 		/* Get the size of the actual type */
- 		if (dwarf_aggregate_size(&sized_type, &size) < 0 ||
- 		    (unsigned)dloc->type_offset >= size)
--			return -1;
-+			return PERF_TMR_BAD_OFFSET;
- 
--		return 1;
-+		return PERF_TMR_OK;
- 	}
- 
- 	if (reg == dloc->fbreg) {
- 		struct type_state_stack *stack;
- 
--		pr_debug_dtp(" fbreg\n");
-+		pr_debug_dtp("fbreg");
- 
- 		stack = find_stack_state(state, dloc->type_offset);
- 		if (stack == NULL)
--			return 0;
-+			return PERF_TMR_NO_TYPE;
- 
- 		if (stack->kind == TSR_KIND_CANARY) {
- 			setup_stack_canary(dloc);
--			return -1;
-+			return PERF_TMR_BAIL_OUT;
- 		}
- 
- 		if (stack->kind != TSR_KIND_TYPE)
--			return 0;
-+			return PERF_TMR_NO_TYPE;
- 
- 		*type_die = stack->type;
- 		/* Update the type offset from the start of slot */
- 		dloc->type_offset -= stack->offset;
- 
--		return 1;
-+		return PERF_TMR_OK;
- 	}
- 
- 	if (dloc->fb_cfa) {
-@@ -950,38 +949,38 @@ static int check_matching_type(struct type_state *state,
- 		u64 pc = map__rip_2objdump(dloc->ms->map, dloc->ip);
- 		int fbreg, fboff;
- 
--		pr_debug_dtp(" cfa\n");
-+		pr_debug_dtp("cfa");
- 
- 		if (die_get_cfa(dloc->di->dbg, pc, &fbreg, &fboff) < 0)
- 			fbreg = -1;
- 
- 		if (reg != fbreg)
--			return 0;
-+			return PERF_TMR_NO_TYPE;
- 
- 		stack = find_stack_state(state, dloc->type_offset - fboff);
- 		if (stack == NULL)
--			return 0;
-+			return PERF_TMR_NO_TYPE;
- 
- 		if (stack->kind == TSR_KIND_CANARY) {
- 			setup_stack_canary(dloc);
--			return -1;
-+			return PERF_TMR_BAIL_OUT;
- 		}
- 
- 		if (stack->kind != TSR_KIND_TYPE)
--			return 0;
-+			return PERF_TMR_NO_TYPE;
- 
- 		*type_die = stack->type;
- 		/* Update the type offset from the start of slot */
- 		dloc->type_offset -= fboff + stack->offset;
- 
--		return 1;
-+		return PERF_TMR_OK;
- 	}
- 
- 	if (state->regs[reg].kind == TSR_KIND_PERCPU_BASE) {
- 		u64 var_addr = dloc->op->offset;
- 		int var_offset;
- 
--		pr_debug_dtp(" percpu var\n");
-+		pr_debug_dtp("percpu var");
- 
- 		if (dloc->op->multi_regs) {
- 			int reg2 = dloc->op->reg2;
-@@ -997,14 +996,14 @@ static int check_matching_type(struct type_state *state,
- 		if (get_global_var_type(cu_die, dloc, dloc->ip, var_addr,
- 					&var_offset, type_die)) {
- 			dloc->type_offset = var_offset;
--			return 1;
-+			return PERF_TMR_OK;
- 		}
- 		/* No need to retry per-cpu (global) variables */
--		return -1;
-+		return PERF_TMR_BAIL_OUT;
- 	}
- 
- 	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_POINTER) {
--		pr_debug_dtp(" percpu ptr\n");
-+		pr_debug_dtp("percpu ptr");
- 
- 		/*
- 		 * It's actaully pointer but the address was calculated using
-@@ -1017,13 +1016,13 @@ static int check_matching_type(struct type_state *state,
- 		/* Get the size of the actual type */
- 		if (dwarf_aggregate_size(type_die, &size) < 0 ||
- 		    (unsigned)dloc->type_offset >= size)
--			return -1;
-+			return PERF_TMR_BAIL_OUT;
- 
--		return 1;
-+		return PERF_TMR_OK;
- 	}
- 
- 	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_CANARY) {
--		pr_debug_dtp(" stack canary\n");
-+		pr_debug_dtp("stack canary");
- 
- 		/*
- 		 * This is a saved value of the stack canary which will be handled
-@@ -1032,7 +1031,7 @@ static int check_matching_type(struct type_state *state,
- 		 */
- 		setup_stack_canary(dloc);
- 
--		return -1;
-+		return PERF_TMR_BAIL_OUT;
- 	}
- 
- check_kernel:
-@@ -1043,16 +1042,16 @@ static int check_matching_type(struct type_state *state,
- 		/* Direct this-cpu access like "%gs:0x34740" */
- 		if (dloc->op->segment == INSN_SEG_X86_GS && dloc->op->imm &&
- 		    arch__is(dloc->arch, "x86")) {
--			pr_debug_dtp(" this-cpu var\n");
-+			pr_debug_dtp("this-cpu var");
- 
- 			addr = dloc->op->offset;
- 
- 			if (get_global_var_type(cu_die, dloc, dloc->ip, addr,
- 						&offset, type_die)) {
- 				dloc->type_offset = offset;
--				return 1;
-+				return PERF_TMR_OK;
- 			}
--			return -1;
-+			return PERF_TMR_BAIL_OUT;
- 		}
- 
- 		/* Access to global variable like "-0x7dcf0500(,%rdx,8)" */
-@@ -1061,31 +1060,30 @@ static int check_matching_type(struct type_state *state,
- 
- 			if (get_global_var_type(cu_die, dloc, dloc->ip, addr,
- 						&offset, type_die)) {
--				pr_debug_dtp(" global var\n");
-+				pr_debug_dtp("global var");
- 
- 				dloc->type_offset = offset;
--				return 1;
-+				return PERF_TMR_OK;
- 			}
--			pr_debug_dtp(" negative offset\n");
--			return -1;
-+			return PERF_TMR_BAIL_OUT;
- 		}
- 	}
- 
--	pr_debug_dtp("\n");
--	return 0;
-+	return PERF_TMR_UNKNOWN;
  }
  
- /* Iterate instructions in basic blocks and update type table */
--static int find_data_type_insn(struct data_loc_info *dloc,
--			       struct list_head *basic_blocks,
--			       struct die_var_type *var_types,
--			       Dwarf_Die *cu_die, Dwarf_Die *type_die)
-+static enum type_match_result find_data_type_insn(struct data_loc_info *dloc,
-+						  struct list_head *basic_blocks,
-+						  struct die_var_type *var_types,
-+						  Dwarf_Die *cu_die,
-+						  Dwarf_Die *type_die)
++static bool is_pointer_type(Dwarf_Die *type_die)
++{
++	int tag = dwarf_tag(type_die);
++
++	return tag == DW_TAG_pointer_type || tag == DW_TAG_array_type;
++}
++
+ /* The type info will be saved in @type_die */
+ static enum type_match_result check_variable(struct data_loc_info *dloc,
+ 					     Dwarf_Die *var_die,
+@@ -382,15 +389,15 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
+ 					     int offset, bool is_fbreg)
  {
- 	struct type_state state;
- 	struct symbol *sym = dloc->ms->sym;
- 	struct annotation *notes = symbol__annotation(sym);
- 	struct annotated_basic_block *bb;
--	int ret = 0;
-+	enum type_match_result ret = PERF_TMR_UNKNOWN;
+ 	Dwarf_Word size;
+-	bool is_pointer = true;
++	bool needs_pointer = true;
+ 	Dwarf_Die sized_type;
  
- 	init_type_state(&state, dloc->arch);
+ 	if (reg == DWARF_REG_PC)
+-		is_pointer = false;
++		needs_pointer = false;
+ 	else if (reg == dloc->fbreg || is_fbreg)
+-		is_pointer = false;
++		needs_pointer = false;
+ 	else if (arch__is(dloc->arch, "x86") && reg == X86_REG_SP)
+-		is_pointer = false;
++		needs_pointer = false;
  
-@@ -1111,6 +1109,7 @@ static int find_data_type_insn(struct data_loc_info *dloc,
- 			if (this_ip == dloc->ip) {
- 				ret = check_matching_type(&state, dloc,
- 							  cu_die, type_die);
-+				pr_debug_dtp(" : %s\n", match_result_str(ret));
- 				goto out;
- 			}
+ 	/* Get the type of the variable */
+ 	if (__die_get_real_type(var_die, type_die) == NULL) {
+@@ -403,9 +410,8 @@ static enum type_match_result check_variable(struct data_loc_info *dloc,
+ 	 * Convert to a real type it points to.  But global variables
+ 	 * and local variables are accessed directly without a pointer.
+ 	 */
+-	if (is_pointer) {
+-		if ((dwarf_tag(type_die) != DW_TAG_pointer_type &&
+-		     dwarf_tag(type_die) != DW_TAG_array_type) ||
++	if (needs_pointer) {
++		if (!is_pointer_type(type_die) ||
+ 		    __die_get_real_type(type_die, type_die) == NULL) {
+ 			ann_data_stat.no_typeinfo++;
+ 			return PERF_TMR_NO_POINTER;
+@@ -887,14 +893,13 @@ static enum type_match_result check_matching_type(struct type_state *state,
+ 		     state->regs[reg].ok, state->regs[reg].kind);
  
-@@ -1137,24 +1136,25 @@ static int arch_supports_insn_tracking(struct data_loc_info *dloc)
-  * Construct a list of basic blocks for each scope with variables and try to find
-  * the data type by updating a type state table through instructions.
-  */
--static int find_data_type_block(struct data_loc_info *dloc,
--				Dwarf_Die *cu_die, Dwarf_Die *scopes,
--				int nr_scopes, Dwarf_Die *type_die)
-+static enum type_match_result find_data_type_block(struct data_loc_info *dloc,
-+						   Dwarf_Die *cu_die,
-+						   Dwarf_Die *scopes,
-+						   int nr_scopes,
-+						   Dwarf_Die *type_die)
- {
- 	LIST_HEAD(basic_blocks);
- 	struct die_var_type *var_types = NULL;
- 	u64 src_ip, dst_ip, prev_dst_ip;
--	int ret = -1;
-+	enum type_match_result ret = PERF_TMR_UNKNOWN;
+ 	if (state->regs[reg].ok && state->regs[reg].kind == TSR_KIND_TYPE) {
+-		int tag = dwarf_tag(&state->regs[reg].type);
+ 		Dwarf_Die sized_type;
  
- 	/* TODO: other architecture support */
- 	if (!arch_supports_insn_tracking(dloc))
--		return -1;
-+		return PERF_TMR_BAIL_OUT;
- 
- 	prev_dst_ip = dst_ip = dloc->ip;
- 	for (int i = nr_scopes - 1; i >= 0; i--) {
- 		Dwarf_Addr base, start, end;
- 		LIST_HEAD(this_blocks);
--		int found;
- 
- 		if (dwarf_ranges(&scopes[i], 0, &base, &start, &end) < 0)
- 			break;
-@@ -1185,9 +1185,9 @@ static int find_data_type_block(struct data_loc_info *dloc,
- 		fixup_var_address(var_types, start);
- 
- 		/* Find from start of this scope to the target instruction */
--		found = find_data_type_insn(dloc, &basic_blocks, var_types,
-+		ret = find_data_type_insn(dloc, &basic_blocks, var_types,
- 					    cu_die, type_die);
--		if (found > 0) {
-+		if (ret == PERF_TMR_OK) {
- 			char buf[64];
- 
- 			if (dloc->op->multi_regs)
-@@ -1199,11 +1199,10 @@ static int find_data_type_block(struct data_loc_info *dloc,
- 			pr_debug_dtp("found by insn track: %#x(%s) type-offset=%#x\n",
- 				     dloc->op->offset, buf, dloc->type_offset);
- 			pr_debug_type_name(type_die, TSR_KIND_TYPE);
--			ret = 0;
- 			break;
- 		}
- 
--		if (found < 0)
-+		if (ret == PERF_TMR_BAIL_OUT)
- 			break;
- 
- 		/* Go up to the next scope and find blocks to the start */
-@@ -1357,11 +1356,11 @@ static int find_data_type_die(struct data_loc_info *dloc, Dwarf_Die *type_die)
- 	}
- 
- 	if (reg != DWARF_REG_PC) {
--		ret = find_data_type_block(dloc, &cu_die, scopes,
-+		result = find_data_type_block(dloc, &cu_die, scopes,
- 					   nr_scopes, type_die);
--		if (ret == 0) {
-+		if (result == PERF_TMR_OK) {
- 			ann_data_stat.insn_track++;
--			goto out;
-+			ret = 0;
- 		}
- 	}
+ 		/*
+ 		 * Normal registers should hold a pointer (or array) to
+ 		 * dereference a memory location.
+ 		 */
+-		if (tag != DW_TAG_pointer_type && tag != DW_TAG_array_type) {
++		if (!is_pointer_type(&state->regs[reg].type)) {
+ 			if (dloc->op->offset < 0 && reg != state->stack_reg)
+ 				goto check_kernel;
  
 -- 
 2.46.0.184.g6999bdac58-goog
