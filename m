@@ -1,240 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C10857CA7;
-	Thu, 15 Aug 2024 23:43:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 518501AC8A6
+	for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 00:00:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723765407; cv=none; b=EEet/g6IlgvwMnZR3xKXSIp04x+8Y3Rh2gLgSTEib8KmtdgIMwHCiZ4S0GpQ91QA51XEs0oVnnTlZecPdfnfsk4V4SbrExBfJKIh7FPbStbgo5jti62rTq5g0H3RIchjEDaiGmYRsflMZnl6zS9gdhDer317WxA/CJbYasQ5W5Y=
+	t=1723766431; cv=none; b=dW+3D9nJfPTptnd69GhToDbNG2qedAWgnbWmB2g7DLVnuN6mWWUy+Ew73bDdtWBy8/tOA7gq3qGBGRIEZsAWJMeK68eNE6WyFb3Nvd3dy5DHiwWR6mv2nJWVxC6XBWFAOx3bOO69a1PkS+6ya7pwk3RuHyzMz3nq4MzOtEPm1i0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723765407; c=relaxed/simple;
-	bh=K+DgR8uw6O5PFI3wr1VI3pgqxp5LaYmdr4rVlO+twn8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=UxwPI8IFb5BNDFNCl6foxeMQrs2uvS8+eHUDzJfl99DBjgzWDqNdUkQ2uxHk1dEbx/ryAQEwipfXVyg0HTbB8PJH+Uze4MgciwLriF5lBdbZ58nbczXUJ/6dfKD5/VUWf1wx9lelRT3Idt11hQKVPtGTgbfnIqK7DkffGkM94TM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uHuKJBGm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=oZXohWjR; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1723766431; c=relaxed/simple;
+	bh=k90ZT05quib4caGUBiFc57Usz6uy7VWpEw3cKsHg+KQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=CcuemN+QNIA4Pbg9zTuVv3gJnEQH+J7aREIAfeKiJk+H+MZts+wcwiZQqfVFPqd1OxfkO1kIjX/0Ms6+iVmHxmeU6bxXHqWdPR4EdtUrTQAY2d2x4RcNUyUe082zHO4LkwSWOKpCnSsyRWBFuGwu3hsGnKhbOK6vRMjJxJW8HLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=XKvBT8BF; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uHuKJBGm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="oZXohWjR"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723765401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XRidH6KjhjXg8a6GEx4Lu5EO4pdvkhDlc0K73HvSQE=;
-	b=uHuKJBGmoXryXSFUbrm1ydhs96IUQwYr5I80JKhSjtBbpvdNB/a0RyR/NYOXEl6BarQKEf
-	GiVlLwHsatYv3U9t3e++z4Xn924Q00j38/clmSfLEbCjiGRv6slDJgTkiHTrLO/hGSvYLC
-	6rMB9KqgYxytoVLdNzu2KXLn5CrSJ6VLBSgKHUs/a/U6q1Ic8FNwiCNKeWe2hbAw/bYJOF
-	xDb+IweEG8kntI+LwgC8ccRbj4EA3tC2lXPpUaOfi4bHLV32Bx8R+WPwZdf5mrYpLRMXN2
-	G+yN/VaPG1m3M4wdkkYtgCY0syzJMRarC9IPQ/VB2ZdoqgO8BfzXD4gzhL9zNg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723765401;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2XRidH6KjhjXg8a6GEx4Lu5EO4pdvkhDlc0K73HvSQE=;
-	b=oZXohWjRkoDGTnkrsA6lSLzC2T1evvFF4+x0yEyCrUUNaHDWXaFHdBoCkQg3YqjF10Hy6/
-	vwmmohkI5/xPcWCw==
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Li Huafei
- <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Vince
- Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-In-Reply-To: <059d6217-10a5-4d2a-b639-90806c04a13b@linux.intel.com>
-References: <87sev7nom4.ffs@tglx>
- <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com>
- <87frr7nd28.ffs@tglx>
- <70657c5e-f771-456b-a5ac-3df590249288@linux.intel.com>
- <875xs2oh69.ffs@tglx>
- <166fdbdf-b24d-4267-b42d-f11348b87b1b@linux.intel.com>
- <87wmkhlk1l.ffs@tglx>
- <059d6217-10a5-4d2a-b639-90806c04a13b@linux.intel.com>
-Date: Fri, 16 Aug 2024 01:43:21 +0200
-Message-ID: <87plq9l5d2.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XKvBT8BF"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-201e4cf371eso37455ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 15 Aug 2024 17:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1723766429; x=1724371229; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=k90ZT05quib4caGUBiFc57Usz6uy7VWpEw3cKsHg+KQ=;
+        b=XKvBT8BFuSZBeWGBJp7JZOzNjSZpOIbO97TeCOLSFSfwurdutFZZ4BiYt0XBPCE3Mk
+         MS+n72fYoZWSQAVMGv1sq+50WU0y4rpwI9q06aAePEifNpZwUpp+vevlkr6pRo3YIN4m
+         a6xMj6iHFZUxbeHwmndbog6yyDcxXYCF9Ty0joifK5vmTCeew7+APrF3IgwpEmfTyZWW
+         3Y3r8FkZC8GzDKwNa0XrfFoG3s3k9L4A9WpQbmPtt18XgiIvzJqRN5keHr7cdOmkRMK5
+         cFE8s1MEnprO5d8Fg28e9UgNc5ETtUzeOHG1GKNYJIvCTh7QwspMP/V2VwqTq+QciN3Q
+         foJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723766429; x=1724371229;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=k90ZT05quib4caGUBiFc57Usz6uy7VWpEw3cKsHg+KQ=;
+        b=nO92lAc9+hD35GnDrlg5FU5MctfjANP136DH+xNKgbvh7dDRykSYKlLxCFDtlt9/1x
+         tQDfuBYnwwIKCzC8Tsx3Mo8PLrknt8/y1l4NpbFUBsk7447u1kpj8mNOcqfbYLfdYApF
+         bGgEkZoxwguDYAgGIBNyihRDlF2wGGid1v8/03kakEydcNt1rftS2nHv5JYwuaQUxiZS
+         QL90TeP10Mk7x4YV0bDcUpjCF+msi57T1BjUe3k749mdJxYZ0IvmeEMuDv7jyUDP3rsm
+         8fK4+bdM49S8P8PGsxu+312aiR+LRQiYjkOkye1n1wrGSX61XsknoLAQ4KAU0fFs9Y7A
+         ld1g==
+X-Forwarded-Encrypted: i=1; AJvYcCU5cIwuLVGQ3FqQfQppw3HElE7uQK2065tAr2m1R0bz+MU0H8KwTD4YmWk6g9uPCVBrfAssIZK/cLC75aD8MjNDnDLxkMVfO7yM8ZShUFTSCg==
+X-Gm-Message-State: AOJu0YxCTf2A9IRV92PD3qc0PDNrhU2nE50zArA2NwhUI0dYGCDI4ftq
+	xfPNRlXDSmvEx1dQzsnf5FOK2fj7xnCYwutX68GCYQzqQipdFiuDBch+VxsA5o43iisq+WHK7CL
+	YzhnNoppeBg1S8/9vH1Fcqxj/OdmeydXObxNR
+X-Google-Smtp-Source: AGHT+IHa6juDFMAMS6B0huLXTFiZsxLdn8sNWl7ANIVBRxCn5iHB9MSOzDWU5IaU3tHbjL5+tEnIwgbFVj+zju+kZSE=
+X-Received: by 2002:a17:902:e849:b0:201:fba5:3ed with SMTP id
+ d9443c01a7336-2020854d15cmr328195ad.27.1723766427440; Thu, 15 Aug 2024
+ 17:00:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
+ <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
+ <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
+ <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
+ <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
+ <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
+ <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com>
+ <CAP-5=fUSMDhooNetywiLfcYEHMPeyPaGHuBhJHUb34zM8DqtQA@mail.gmail.com>
+ <CAP-5=fUbJcxO=h65bqZ2nx8UTPHsapOVsfcCaY=+q4yO9YBY-A@mail.gmail.com>
+ <CAP-5=fVazh93ZRqyubCC1MEE-thDKoamO-L_d0-LZjNyYmD0vw@mail.gmail.com> <CAP-5=fU4fwZdWNXbCKjs5+T4G2NnfibyhXFfif130vKZwyYcBg@mail.gmail.com>
+In-Reply-To: <CAP-5=fU4fwZdWNXbCKjs5+T4G2NnfibyhXFfif130vKZwyYcBg@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 15 Aug 2024 17:00:15 -0700
+Message-ID: <CAP-5=fWKfUFV8f2b06cTOp2JSJg4WnEja2f6dH2_NggOiKKNxA@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To: Howard Chu <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 15 2024 at 16:15, Kan Liang wrote:
-> On 2024-08-15 2:26 p.m., Thomas Gleixner wrote:
->>> Implication: When this erratum occurs, the fixed-function performance
->>> counter IA32_FIXED_CTR0 may over count by up to 32.
->> 
->> Sure. That's only explaining half of the problem.
->> 
->> As I demonstrated in the non-contended case even with a count of 2 (I
->> tried 1 too) the status bit is never set on the second check.
->> 
->
-> Do you mean the below example? The status bit (32) of the fixed counter
-> 0 is always set.
+Hi,
 
-When HT is off or the threads are not running the handler concurrently
-then there is zero looping. Once they start do fiddle concurrently the
-looping starts and potentially never ends.
+Next week is the last week of GSoC [1], so our 2nd to last office
+hours are tomorrow:
 
-> 65.147782: x86_perf_event_set_period: idx:    32 period:         1 left:  2
-> 65.147783: intel_pmu_handle_irq:      loops: 001 status: 100000000
->
-> 65.147784: x86_perf_event_set_period: idx:    32 period:         1 left:  2
-> 65.147784: intel_pmu_handle_irq:      loops: 002 status: 100000000
+Linux perf tool office hours
+Friday, August 16 =C2=B7 8:00 =E2=80=93 9:00am
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/tif-efem-uiq
+Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
 
-So in the non-concurrent (which includes !HT) case the status check
-after handling the event is always 0. This never gets into a loop, not
-even once.
-
->>> It should explains that the issue is gone with the magic number 32 or
->>> disabling the Hyper-Threading.
->> 
->> It explains only half of it. If you use 32, then the counter is set to
->> -32 so the overcount of 32 will still bring it to 0, which should set
->> the status bit, no?
->
-> I think it's up to 32, not always 32.
-> I don't have more details regarding the issue. The architect of HSW has
-> left. I'm asking around internally to find the original bug report of
-> the erratum. Hope there are more details in the report.
-
-See below.
-
->>> I also found a related discussion about 9 years ago.
->>> https://lore.kernel.org/lkml/alpine.DEB.2.11.1505181343090.32481@vincent-weaver-1.umelst.maine.edu/
->>> Vince tried the workaround but it seems not work.
->> 
->> Let me play with that. :)
->
-> Appreciate it.
-
-I got it actually working. The inital sequence which "worked" is:
-
-    1) Clear bit 32  in IA32_PERF_GLOBAL_CTRL
-    2) Clear bit 0/1 in IA32_PERF_FIXED_CTR_CTRL
-    3) Zero the IA32_FIXED_CTR0 MSR
-    4) Set IA32_FIXED_CTR0 to (-left) & mask;
-    5) Set bit 0/1 in IA32_PERF_FIXED_CTR_CTRL
-    6) Set bit 32  in IA32_PERF_GLOBAL_CTRL
-
-If I omit #3 it does not work. If I flip #5 and #6 it does not work.
-
-So the initial "working" variant I had was hacking this sequence into
-x86_perf_event_set_period() (omitting the fixed counter 0 conditionals
-for readability):
-
-	rdmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl & ~(1ULL << 32));
-
-	rdmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd);
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd & ~3ULL);
-
-	wrmsrl(hwc->event_base, 0);
-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd);
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-
-Now I thought, that needs to be in intel/core.c and implemented a proper
-quirk. And of course being smart I decided it's a brilliant idea to use
-the cached values instead of the rdmsrl()s.
-
-	cglbl = hybrid(cpuc->pmu, intel_ctrl) & ~cpuc->intel_ctrl_guest_mask;
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl & ~(1ULL << 32));
-
-        cfixd = cpuc->fixed_ctrl_val;
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd & ~3ULL);
-
-	wrmsrl(hwc->event_base, 0);
-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd);
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-
-Surprise, surprise, that does not work. So I went back and wanted to
-know which rdmslr() is curing it:
-
-	rdmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl & ~(1ULL << 32));
-
-        cfixd = cpuc->fixed_ctrl_val;
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd & ~3ULL);
-
-	wrmsrl(hwc->event_base, 0);
-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-
-	wrmsrl(MSR_ARCH_PERFMON_FIXED_CTR_CTRL, cfixd);
-	wrmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-
-This worked. Using the rdmsrl() only for MSR_ARCH_PERFMON_FIXED_CTR_CTRL
-did not.
-
-Now I got bold and boiled it down to:
-
-	rdmsrl(MSR_CORE_PERF_GLOBAL_CTRL, cglbl);
-
-	wrmsrl(hwc->event_base, 0);
-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-
-and the whole thing still worked. *BLINK*
-
-Exactly zero loop entries in the trace when running 100 instances of
-that cve test case, which otherwise spams the trace with entries and
-ends up in the loop > 100 path within a split second.
-
-Removing the zeroing of the counter makes it come back, but reducing the
-whole nonsense to:
-
-	wrmsrl(hwc->event_base, 0);
-	wrmsrl(hwc->event_base, (u64)(-left) & x86_pmu.cntval_mask);
-
-makes the loop problem go away, but it "works" so well that the stupid
-frequency adjustment algorithm keeps the left == 1, i.e count == 2 case
-stay long enough around to trigger 'hung task messages' ....
-
-Now I looked more at the dmesg output of all the experiments. In all
-"working" cases except one running these 100 instances of cve... results
-in a varying cascade of
-
-   perf: interrupt took too long (2503 > 2500), lowering ...
-
-messages.
-
-The one case where this does not happen is when the limit is
-unconditionally set to 32. But when I apply this limit only for the
-fixed counter 0 it comes back. 
-
-Now I looked at when these 'took too long' problems surface aside of the
-obvious case of extensive looping. They are unrelated to the hyper
-threading issue as I can reproduce with smt=off too.
-
-They always happen when a counter was armed with a count < 32 and two
-events expired in the same NMI. The test case uses fixed counter 0 and
-general counter 0 for the other event.
-
-So that erratum is a good hint, but that hardware does have more issues
-than it tells.
-
-So I think we should just apply that limit patch with a proper change
-log and also make it:
-
-hsw_limit(...)
-{
-	*left = max(*left, erratum_hsw11(event) ? 128 : 32;);
-}
-
-or such.
-
-That limit won't cure the overcount issue from that HSM154 erratum, but
-*SHRUG*.
-
+Topics of the day and GSoC. Looking forward to seeing you.
 Thanks,
+Ian
 
-        tglx
+[1] https://developers.google.com/open-source/gsoc/timeline
