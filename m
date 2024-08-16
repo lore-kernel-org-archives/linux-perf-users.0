@@ -1,90 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1E91B8EA0;
-	Fri, 16 Aug 2024 14:58:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4661BDAB8;
+	Fri, 16 Aug 2024 15:16:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723820323; cv=none; b=ebNwL7mlz8rQpJpdEe8/z4gnspAxVcK+v4WBI2n1Jhlja1VitO9iSHa04U64vfI+rEE+x/JutFs511jS1qXhUpOEc4lFhJd+LuU74wtwu9ySfGmMNtqJQ6OflINF6OPo/bbR6qGFpuYXJ6GxcyBCZcbznN50Uqzr9BpJEK7PLnU=
+	t=1723821400; cv=none; b=Iay5nC+4wRKCKTzK4C/qIF/UjUeVHxIhObEzLNuAwXO85KaSjglAHbCUNGl0i9BoeS9bgL5IVP4g6DMHgDAg+MWpiSNYlRrgeu1OwuOmk1jBW2M+uLbZoqCOS94w5LyQtkCK1BVCfKNxv1+qqf0ms8Mm/XGQ8xCZAtxUiFVWLDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723820323; c=relaxed/simple;
-	bh=h2Mxlym2VPEMV8Ydic1LoJsLPgznB/klNI53OAeg7C8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ywsb4DXn7xrThZiQkkBhsoN/bq0exwGKjHfAG1mFYcd22P+1LEZ0zjLuaojhWY/VDPfOzdJnDz49NMAzGrN9Ch5BvbZ/NZ2ZUi0GLLdfuRo1iEq90hy1TOgd7p3TDA4MwYnHYrsB1e/+w/h5lQ/tmRCBqWqLBP7jJpDP/YSnKmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DCiT0ipJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723821400; c=relaxed/simple;
+	bh=HrCbWr5sE7d1FSdM7OLBHJqb9SmFXoXZLsUxeMJ23UI=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=OLzeYLLxKHAOrY1uGjiDrp8lkpG/tX/nYT+oc/v5ZapGRxVNhGD6T3v+zm1IwdjVSEIJoJOShJz8yFVjCci+UAflcnF0opJ2rb/Qlq1WXnFzxVpBIf/lv+vlbRte4qKcq0I9isuCWmuoxHOtno0iUU4Y2bRUA8CwyroW8R1g2/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g0ow7PZC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DCiT0ipJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8609C32782;
-	Fri, 16 Aug 2024 14:58:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g0ow7PZC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB04DC4AF15;
+	Fri, 16 Aug 2024 15:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723820323;
-	bh=h2Mxlym2VPEMV8Ydic1LoJsLPgznB/klNI53OAeg7C8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DCiT0ipJa2L3qpLxaa6VyFiUew1sdUBgmQnxB5FE7ST5vZPaynG2NFiQY69UJOto4
-	 Bgyy4npmxKoOlrfdEp8huKBaH9ZEtTUJDNrecTEqFUPxH75H/yYxA1KpxMkQcUAzyJ
-	 it8srxaSjqUqq8AXXdwcgV1/9O+Zbe+XbiCbgws3xv//eV1SXkA4pHRJD4wgBAwqx5
-	 E+qqQHTI/yyfYPjgWU5nS1LpMteorFv64d++nAoQOFIOxF3opDuW4nIo12hkTgeExP
-	 P/wBNX6/zUK4DF8ZORPzMbnZLcgFpUgesj6Vib47IDB6fX+LSHsxKCP6hLshnUwI0D
-	 /yafgLppdwX8w==
-Date: Fri, 16 Aug 2024 11:58:39 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
-	kan.liang@linux.intel.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 02/10] perf trace: Change some comments
-Message-ID: <Zr9pH1MC3L7Vr1-X@x1>
-References: <20240815013626.935097-1-howardchu95@gmail.com>
- <20240815013626.935097-3-howardchu95@gmail.com>
+	s=k20201202; t=1723821397;
+	bh=HrCbWr5sE7d1FSdM7OLBHJqb9SmFXoXZLsUxeMJ23UI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=g0ow7PZCEAeb1DhfX64PhHghH8VhkFKmrwqQMgR9rLVNBmd43SIIOtS9FOi0qX87X
+	 cUiRlvGtXuTGsgtYcFxohdKZmuHSSd8c4sbESFF3D2QK8pmWOM4qwKXL1NT30h/UeD
+	 r9jE65tOX6EtKYQVm7Juj2voDjuY3UmN6jAqmm+/jGos7P78CW0+3m329QJ9u8+oiO
+	 5EX+MbrCoGy0qHv8iKYxH1LVj4feBTxQknCiQP5DAY0q+bNYvaaY66dBc4GksU7tIS
+	 HZ5dRigI+gtE7jjSrTaKl0+kr2arqwy7vaMbtoKd0Ftf3BHovRC5UBvE+qga02mZTt
+	 ur8Qgvx40jshg==
+From: Will Deacon <will@kernel.org>
+To: Marc Zyngier <maz@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	James Clark <james.clark@linaro.org>,
+	James Morse <james.morse@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	"Rob Herring (Arm)" <robh@kernel.org>
+Cc: kernel-team@android.com,
+	Will Deacon <will@kernel.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	kvmarm@lists.linux.dev
+Subject: Re: [PATCH v3 0/7] arm64: Add support for Armv9.4 PMU fixed instruction counter
+Date: Fri, 16 Aug 2024 16:16:00 +0100
+Message-Id: <172381015369.134151.12311687013802000544.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
+References: <20240731-arm-pmu-3-9-icntr-v3-0-280a8d7ff465@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240815013626.935097-3-howardchu95@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, Aug 15, 2024 at 09:36:18AM +0800, Howard Chu wrote:
-> Change them from '//' to '/* */'
-
-You didn't state why you did it, is it to follow coding styles? IIRC //
-is acceptable.
-
-- Arnaldo
- 
-> Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> ---
->  tools/perf/builtin-trace.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+On Wed, 31 Jul 2024 10:51:17 -0600, Rob Herring (Arm) wrote:
+> This series adds support for the optional fixed instruction counter
+> added in Armv9.4 PMU. Most of the series is a refactoring to remove the
+> index to counter number conversion which dates back to the Armv7 PMU
+> driver. Removing it is necessary in order to support more than 32
+> counters without a bunch of conditional code further complicating the
+> conversion.
 > 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index d6ca541fdc78..97076b962688 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -957,17 +957,16 @@ static bool syscall_arg__strtoul_btf_type(char *bf, size_t size, struct syscall_
->  	if (btf == NULL)
->  		return false;
->  
-> -	if (arg->fmt->type == NULL) {
-> -		// See if this is an enum
-> +	/* See if this is an enum */
-> +	if (arg->fmt->type == NULL)
->  		syscall_arg_fmt__cache_btf_enum(arg->fmt, btf, type);
-> -	}
->  
-> -	// Now let's see if we have a BTF type resolved
-> +	/* Now let's see if we have a BTF type resolved */
->  	bt = arg->fmt->type;
->  	if (bt == NULL)
->  		return false;
->  
-> -	// If it is an enum:
-> +	/* If it is an enum: */
->  	if (btf_is_enum(arg->fmt->type))
->  		return syscall_arg__strtoul_btf_enum(bf, size, arg, val);
->  
-> -- 
-> 2.45.2
-> 
+> [...]
+
+Applied to will (for-next/perf), thanks!
+
+[1/7] perf: arm_pmu: Remove event index to counter remapping
+      https://git.kernel.org/will/c/bf5ffc8c80e0
+[2/7] perf: arm_pmuv3: Prepare for more than 32 counters
+      https://git.kernel.org/will/c/a4a6e2078d85
+[3/7] KVM: arm64: pmu: Use arm_pmuv3.h register accessors
+      https://git.kernel.org/will/c/741ee5284551
+[4/7] KVM: arm64: pmu: Use generated define for PMSELR_EL0.SEL access
+      https://git.kernel.org/will/c/f9b11aa00708
+[5/7] arm64: perf/kvm: Use a common PMU cycle counter define
+      https://git.kernel.org/will/c/126d7d7cce5e
+[6/7] KVM: arm64: Refine PMU defines for number of counters
+      https://git.kernel.org/will/c/2f62701fa5b0
+[7/7] perf: arm_pmuv3: Add support for Armv9.4 PMU instruction counter
+      https://git.kernel.org/will/c/d8226d8cfbaf
+
+Cheers,
+-- 
+Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
