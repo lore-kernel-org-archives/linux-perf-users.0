@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 095618289E;
-	Fri, 16 Aug 2024 06:45:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3503712C7F9;
+	Fri, 16 Aug 2024 06:45:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723790751; cv=none; b=aseNt/bOXrs4xgqPPmWhyEBSnCAu8jvv8B+eU4agh8FHTZ5+uMRNd7BgBEdOgj4GpgdL02EdVM0xM+8sgzIvkIXd6RaWubxpbwUXpq2jPJz2GzppwVT+YE0HhkcjOa/uOx3QGpjuMSqAbxVVI7UJsOTU6rEqivf4hcIj9IATyY4=
+	t=1723790753; cv=none; b=TOm3f+rG1aiv+4QQ1yLkNcZmQDOy+AZZ+/EtGKtUxHK9R40/Ca8GCaMbgzz1xaIhmgkV8N8vY2mPRLEB2kQmHJznIxrNeRZFwdtnYBTPMogu7XjMrY4jmxMrYni/MMtEgDCxaX7ZjkVvGB24T5AUquZ17uGhPhDIVPE607MRwFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723790751; c=relaxed/simple;
-	bh=co+r/S4tHY9XhzKEcE2Gsywi4LBChhsgb5rJOjHPSe8=;
+	s=arc-20240116; t=1723790753; c=relaxed/simple;
+	bh=7NPeKnDoJ/P82slpVaSMciOgj75XI6ViCTDAXn0KGrA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gTH6luNyH0Piqsjly5cMneUqHhEkxQJvLon7fZ5R1FliW4FczH2+pwN8NjW0S9bx64c+dWwOrEfo+HQZo7QEwb9bhhrrPtDGqmAa32Z1Q8GllUvXKPMT6ujvVROduFxWPjceExnZ0mVA67a7s81if3tTFkZbY+Ps4oeJ7tPhfBc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NEhXG8/K; arc=none smtp.client-ip=198.175.65.10
+	 MIME-Version; b=eBTYfnHVzKkzDkC4nJ5eN7tMsck6kQoBUwjDM4gJVINH/DrjLjOAHR8+qP1A26vZbFIwVDlRywil64hkZFXHaIEqTTRoSirJ+BIM44KhgHpWAbORbwtaK/vm06fOUb2Agg80tFidkDx1cVwtgTKSz3EFj54puLdvaoAmYSmJCek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cs5Uu5Yk; arc=none smtp.client-ip=198.175.65.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NEhXG8/K"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cs5Uu5Yk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723790750; x=1755326750;
+  t=1723790752; x=1755326752;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=co+r/S4tHY9XhzKEcE2Gsywi4LBChhsgb5rJOjHPSe8=;
-  b=NEhXG8/KUPihy3XbwROa2h2HKRiK4PQaqJLQF0NV/nxtczzFWzWKOtky
-   AyF6Tj5T84ZTPF5MHP1hWV9ca0t9ulLakLPaZt0HchrsBqhWpREMPbkiU
-   Si+V+stniRh04f3RleUQ7U5SLOVGDUN+BVKnVsIwKCy1cY/+YlhfLTrzx
-   2HHUePqWT91laQ9cL/OC7G+3HdY/tyFit4n86nQ0K1UXqi7XtiR1AKInJ
-   K/oVj9sTxCHrBA8Fm7Xt6bdvMDeYCYivDhvPxeOs38BekrZ81wlfB8gTN
-   UIQnMbaiP7WESIcsvBSdpLnuHCKv0TzxOFf4ci8ZU9YSxGpZLirgZfzJd
+  bh=7NPeKnDoJ/P82slpVaSMciOgj75XI6ViCTDAXn0KGrA=;
+  b=Cs5Uu5YkG79FfNvQNpez62mSYDXhNAEiYWuuwjlIcoroBOlr6wxoX+O2
+   wx1Larf3J6RQtkQaK3j7FdeaG4ONAM0Ptdjov59aUAI13ov4mkFOG/rMb
+   Q48O/Q0cYhvcdPvRmTiiAm+QpK2wYa+qXGf55Kcz9T27SKrw6rtJjwv36
+   K3imNdCDBWMx5cx5vDl27bXtIoi7MyJDivBJIZQnzHggDfEgH5WuSX3rt
+   HUIsjNbPhselFNWz1B4WWD1TvD5Ya10C0M5W6w7uz3r/dmMp/3FYLVGfj
+   bKtvhqzBk3K9K2JAkv2DpIhjwyM6EX120yiT5mbXguf08oEa2LLlKyXx5
    A==;
-X-CSE-ConnectionGUID: XM9wUaAWSgSEijPTZjTX/g==
-X-CSE-MsgGUID: INwE2Ee3RIiN5Lqz8yZ/aA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11165"; a="39530757"
+X-CSE-ConnectionGUID: m65m93loSaaPHJRaW/pJ1A==
+X-CSE-MsgGUID: bRXpYF13RPWqlJYaq+/4iQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11165"; a="39530770"
 X-IronPort-AV: E=Sophos;i="6.10,150,1719903600"; 
-   d="scan'208";a="39530757"
+   d="scan'208";a="39530770"
 Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 23:45:49 -0700
-X-CSE-ConnectionGUID: GxxgxZB7QVm8s8WQ4+/zzQ==
-X-CSE-MsgGUID: OaI3UZdqQZ6TnF8YlvoOjQ==
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Aug 2024 23:45:52 -0700
+X-CSE-ConnectionGUID: FOaWWgknTkO2Syj3YrtOZQ==
+X-CSE-MsgGUID: cMxC8OtmTK601jyX7ia21Q==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.10,150,1719903600"; 
-   d="scan'208";a="60150026"
+   d="scan'208";a="60150033"
 Received: from emr.sh.intel.com ([10.112.229.56])
-  by orviesa007.jf.intel.com with ESMTP; 15 Aug 2024 23:45:46 -0700
+  by orviesa007.jf.intel.com with ESMTP; 15 Aug 2024 23:45:49 -0700
 From: Dapeng Mi <dapeng1.mi@linux.intel.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Ingo Molnar <mingo@redhat.com>,
@@ -57,9 +57,9 @@ Cc: linux-perf-users@vger.kernel.org,
 	Yongwei Ma <yongwei.ma@intel.com>,
 	Dapeng Mi <dapeng1.mi@intel.com>,
 	Dapeng Mi <dapeng1.mi@linux.intel.com>
-Subject: [Patch v4 3/6] perf x86/topdown: Don't move topdown metric events in group
-Date: Fri, 16 Aug 2024 12:29:35 +0000
-Message-Id: <20240816122938.32228-4-dapeng1.mi@linux.intel.com>
+Subject: [Patch v4 4/6] perf tests: Add leader sampling test in record tests
+Date: Fri, 16 Aug 2024 12:29:36 +0000
+Message-Id: <20240816122938.32228-5-dapeng1.mi@linux.intel.com>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
 References: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
@@ -71,140 +71,66 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-when running below perf command, we say error is reported.
+Add leader sampling test to validate event counts are captured into
+record and the count value is consistent.
 
-perf record -e "{slots,instructions,topdown-retiring}:S" -vv -C0 sleep 1
-
-------------------------------------------------------------
-perf_event_attr:
-  type                             4 (cpu)
-  size                             168
-  config                           0x400 (slots)
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  disabled                         1
-  sample_id_all                    1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8 = 5
-------------------------------------------------------------
-perf_event_attr:
-  type                             4 (cpu)
-  size                             168
-  config                           0x8000 (topdown-retiring)
-  { sample_period, sample_freq }   4000
-  sample_type                      IP|TID|TIME|READ|CPU|PERIOD|IDENTIFIER
-  read_format                      ID|GROUP|LOST
-  freq                             1
-  sample_id_all                    1
-  exclude_guest                    1
-------------------------------------------------------------
-sys_perf_event_open: pid -1  cpu 0  group_fd 5  flags 0x8
-sys_perf_event_open failed, error -22
-
-Error:
-The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
-event (topdown-retiring).
-
-The reason of error is that the events are regrouped and
-topdown-retiring event is moved to closely after the slots event and
-topdown-retiring event needs to do the sampling, but Intel PMU driver
-doesn't support to sample topdown metrics events.
-
-For topdown metrics events, it just requires to be in a group which has
-slots event as leader. It doesn't require topdown metrics event must be
-closely after slots event. Thus it's a overkill to move topdown metrics
-event closely after slots event in events regrouping and furtherly cause
-the above issue.
-
-Thus don't move topdown metrics events forward if they are already in a
-group.
-
+Suggested-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- tools/perf/arch/x86/util/evlist.c | 62 ++++++++++++++++++++++++++++++-
- 1 file changed, 61 insertions(+), 1 deletion(-)
+ tools/perf/tests/shell/record.sh | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/tools/perf/arch/x86/util/evlist.c b/tools/perf/arch/x86/util/evlist.c
-index 332e8907f43e..b8a38c0ca36d 100644
---- a/tools/perf/arch/x86/util/evlist.c
-+++ b/tools/perf/arch/x86/util/evlist.c
-@@ -75,6 +75,61 @@ int arch_evlist__add_default_attrs(struct evlist *evlist,
+diff --git a/tools/perf/tests/shell/record.sh b/tools/perf/tests/shell/record.sh
+index 3d1a7759a7b2..8e3e66780fed 100755
+--- a/tools/perf/tests/shell/record.sh
++++ b/tools/perf/tests/shell/record.sh
+@@ -17,6 +17,7 @@ skip_test_missing_symbol ${testsym}
  
- int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- {
-+	/*
-+	 * Currently the following topdown events sequence are supported to
-+	 * move and regroup correctly.
-+	 *
-+	 * a. all events in a group
-+	 *    perf stat -e "{instructions,topdown-retiring,slots}" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *     Performance counter stats for 'CPU(s) 0':
-+	 *          15,066,240     slots
-+	 *          1,899,760      instructions
-+	 *          2,126,998      topdown-retiring
-+	 * b. all events not in a group
-+	 *    perf stat -e "instructions,topdown-retiring,slots" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *     Performance counter stats for 'CPU(s) 0':
-+	 *          2,045,561      instructions
-+	 *          17,108,370     slots
-+	 *          2,281,116      topdown-retiring
-+	 * c. slots event in a group but topdown metrics events outside the group
-+	 *    perf stat -e "{instructions,slots},topdown-retiring" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *     Performance counter stats for 'CPU(s) 0':
-+	 *         20,323,878      slots
-+	 *          2,634,884      instructions
-+	 *          3,028,656      topdown-retiring
-+	 * d. slots event and topdown metrics events in two groups
-+	 *    perf stat -e "{instructions,slots},{topdown-retiring}" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *     Performance counter stats for 'CPU(s) 0':
-+	 *         26,319,024      slots
-+	 *          2,427,791      instructions
-+	 *          2,683,508      topdown-retiring
-+	 *
-+	 * If slots event and topdown metrics events are not in same group, the
-+	 * topdown metrics events must be first event after the slots event group,
-+	 * otherwise topdown metrics events can't be regrouped correctly, e.g.
-+	 *
-+	 * a. perf stat -e "{instructions,slots},cycles,topdown-retiring" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *     Performance counter stats for 'CPU(s) 0':
-+	 *         17,923,134      slots
-+	 *          2,154,855      instructions
-+	 *          3,015,058      cycles
-+	 *    <not supported>      topdown-retiring
-+	 *
-+	 * if slots event and topdown metrics events are in two groups, the group which
-+	 * has topdown metrics events must contain only the topdown metrics event,
-+	 * otherwise topdown metrics event can't be regrouped correctly as well, e.g.
-+	 *
-+	 * a. perf stat -e "{instructions,slots},{topdown-retiring,cycles}" -C0 sleep 1
-+	 *    WARNING: events were regrouped to match PMUs
-+	 *    Error:
-+	 *    The sys_perf_event_open() syscall returned with 22 (Invalid argument) for
-+	 *    event (topdown-retiring)
-+	 */
- 	if (topdown_sys_has_perf_metrics() &&
- 	    (arch_evsel__must_be_in_group(lhs) || arch_evsel__must_be_in_group(rhs))) {
- 		/* Ensure the topdown slots comes first. */
-@@ -85,7 +140,12 @@ int arch_evlist__cmp(const struct evsel *lhs, const struct evsel *rhs)
- 		/* Followed by topdown events. */
- 		if (arch_is_topdown_metrics(lhs) && !arch_is_topdown_metrics(rhs))
- 			return -1;
--		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs))
-+		/*
-+		 * Move topdown events forward only when topdown events
-+		 * are not in same group with previous event.
-+		 */
-+		if (!arch_is_topdown_metrics(lhs) && arch_is_topdown_metrics(rhs) &&
-+		    lhs->core.leader != rhs->core.leader)
- 			return 1;
- 	}
+ err=0
+ perfdata=$(mktemp /tmp/__perf_test.perf.data.XXXXX)
++script_output=$(mktemp /tmp/__perf_test.perf.data.XXXXX.script)
+ testprog="perf test -w thloop"
+ cpu_pmu_dir="/sys/bus/event_source/devices/cpu*"
+ br_cntr_file="/caps/branch_counter_nr"
+@@ -190,11 +191,38 @@ test_branch_counter() {
+   echo "Basic branch counter test [Success]"
+ }
  
++test_leader_sampling() {
++  echo "Basic leader sampling test"
++  if ! perf record -o "${perfdata}" -e "{branches,branches}:Su" perf test -w brstack 2> /dev/null
++  then
++    echo "Leader sampling [Failed record]"
++    err=1
++    return
++  fi
++  index=0
++  perf script -i "${perfdata}" > $script_output
++  while IFS= read -r line
++  do
++    # Check if the two branches counts are equal in each record
++    branches=$(echo $line | awk '{for(i=1;i<=NF;i++) if($i=="branches:") print $(i-1)}')
++    if [ $(($index%2)) -ne 0 ] && [ ${branches}x != ${prev_branches}x ]
++    then
++      echo "Leader sampling [Failed inconsistent branches count]"
++      err=1
++      return
++    fi
++    index=$(($index+1))
++    prev_branches=$branches
++  done < $script_output
++  echo "Basic leader sampling test [Success]"
++}
++
+ test_per_thread
+ test_register_capture
+ test_system_wide
+ test_workload
+ test_branch_counter
++test_leader_sampling
+ 
+ cleanup
+ exit $err
 -- 
 2.40.1
 
