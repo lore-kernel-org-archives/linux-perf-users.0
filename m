@@ -1,57 +1,57 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ECC14533F
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Aug 2024 06:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C4614431B
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Aug 2024 06:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723877115; cv=none; b=aAAwQz5gxgcf9m5vZ7CJIkEq3iPNNbv2WYQrgHNP60ajVQouF+dYtS+XNWGjl+qFXv2lFYlZmHMU5VBuqYrjK/CGp3n6PvW3qHLn4pD9V1iON0GN70EJo5li//1I+7v5H8JAupg3DPxWmxmdorwna7ik0J43RUcdaQZIE1H/VY0=
+	t=1723877117; cv=none; b=h1MC/ZvU+e0hj5AAC4NRQ7q5sSc/7EFTaQL6lr+aTT/MuPjdjpYg2b9WheeisOWornoPC6l9q5rcHShF0+8iI7JvKU910rCkc6Eahlthv/UojZG+NRrVn7DjD+mwV0FpuZgkoT7SMHI2aalJ0lEyUcxXxpUoP4bSDtwcGCT/J+Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723877115; c=relaxed/simple;
-	bh=Rb69KRKaI/u5A/8MYxV4P2TpQD+CHCaIYh533YAFMbc=;
+	s=arc-20240116; t=1723877117; c=relaxed/simple;
+	bh=svsXcTMaRqZcv7GQdX5SDwbX/PNPLJVnzNXlCv1HOwg=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=quh2x+ZjlF1BFqS7zJkJ3BahKgVmz/azV+lvRQEoY9RjPQW+RwHkJoqulhTKzdeBwIVBDgmIUxmYJypBNLxLmFyTupqhG5ljG042YPbMuDs4PWnmrkJQOUxfNSUauDz1YXKMvwHhJXVJBWNaSkxgpxj8VkX1ciZmA8zurMUPpEs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KlcxmJZz; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=OIaiYAd/D5CquVhnn4IwAQQPuMWkxZSne6S+1ZAg7JCiGjr9a+TFEmVF0tedjrWGsLd9H6vZyBT7KmbBNqX7AJBMK99IuNaxdnLsPP5ZHNozyPj5u6nziKzsqQ0oeevg5sva7988yh8GjO3g280gyWsDCfURY1A5FKscXICZtNk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o7F4B4a7; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KlcxmJZz"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6b46b3dcc96so10544887b3.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 23:45:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o7F4B4a7"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6b351a76beeso18121957b3.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 23:45:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723877113; x=1724481913; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723877115; x=1724481915; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oUA8AhsoJNih2SdQBlGMtrsJvyfXDO16nIF63MLLSZI=;
-        b=KlcxmJZz8S+i/TH8jg3hz0ttl0oIxPnUV4uUqLYGfqVW3uDLklrA92+HBUTvyrmMVI
-         P+QbhkLTIGi4F2K98HvTT1QWffNo/wc1iAALkNrQe0guhOMCvQs/6wl3tFoxU5xIP3qb
-         1TUyiw7i9wB88uhXvqWFS1i7KQxC5SijCT1JNsRT6Eu4g+Rai+5Gx8UCuEZ2VkjVNeVd
-         NZ7D4UxrLl8b3RQmkaWCaA5+AqlqFeGJKulatdA8J86H6XPTzzCdvLCxTZ8Hq0vq9Cmy
-         iMUlwMU5hMpNmui5mZsViaDqSmxeVztWg0o72GyMPCFG4V/kZAJLc2icGu+/gkV4cHbS
-         hChA==
+        bh=uiIb0LHFpPGuH8DbvZrhFnBLb6AIQ7thHhf5YFck8Ko=;
+        b=o7F4B4a72LTF0ZtAZDSYFB+3PzHhy77VR9b9FUa0cGmPfKIU1iIk0Q6Pjt3IVk0oo+
+         8wVCO6ZtlzbUh7gO93+SA3XsBMTaPBzliuHi6NJJFh0GiUnRfRaXy249BiFYo5Jkw6UO
+         9h/a6/5E3PBS6hqH2f/x93+yoPKqi6FfvgQGVoiVVBEF+oZ4cjygUyMNiHVHwazWWtDZ
+         TO4uzD4Zov4gKgJTYqrBpSf0c0uBgO4zILHyTtbWMOogZ/k9+oj2Wzg9bd/awnTWoYyv
+         baKuHGAjDKyYPlWJEHYWX85UB+BFjkVMpUqN1OX5qNxse89Iihrd+Nr3izoxfdWITSAy
+         hSgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723877113; x=1724481913;
+        d=1e100.net; s=20230601; t=1723877115; x=1724481915;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oUA8AhsoJNih2SdQBlGMtrsJvyfXDO16nIF63MLLSZI=;
-        b=JnITl4ESHCaRyKSztcokcsMNGUaqU9+PBj4t3BfQ0VYSt4d+oaDwSvIhoQg6fe0RYV
-         FpSG/eHblX67ilB6gBBPUt01yfBBbkrT8NeH77isy7n+QYnXztlIwyZ3cLjuSbHesp1f
-         5zdyEhoCaEtR8UbGQbq4yns3458kmzw2aEQdbz6wt51jxmHfUJadiWHyufbMNjCZqXYF
-         K76Az0YpIvnJ9dm5kOu48lw9nMlcWJq3nGqtT397xajUyzVj6jbV/q5tDgU40L5yNnBU
-         +UsxGbFw4vK+4gVJlykNs9jSO21yeCvt22CR7UgsmmUPu4PZcg7Kda6m/HPcC66qNp8V
-         MPbQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX7NNXmttUrDR3FzBT3OfO+szJVxsgWl9z5A7NPnPguOWIDwYj97Ia7K1hWqRaIn+3/G42JRjC3a4FYu2AK1E5KRYSLhrGejgU8JpVkZSCO4A==
-X-Gm-Message-State: AOJu0YwztX0apXfUNsanP4OiEr74oZxPUkW9Tj7zddm2uck/rhxOu65I
-	I9MrBkXCUNfQRjGwbORcItc1oo2uZCnKkQ79Ef6L6JqIdUCPQw3ijP7JPaapvxPz7I2Hoc3lmrQ
-	LxY5tqA==
-X-Google-Smtp-Source: AGHT+IF6UXe62Ch7dXHjA82oHLXQrRvck/l/nZacvEl3Mldvm/x0HxqD1wmw0YpclopA5YWKR3dSdsq8Yluo
+        bh=uiIb0LHFpPGuH8DbvZrhFnBLb6AIQ7thHhf5YFck8Ko=;
+        b=i9BtbA8vsAv1mYFkS/B88hosinduUg0dKMn7ndNlkn+FKG/kCjxkmZeFXfyDW0OYfn
+         IfZRwTZcqSegRPhvk/GEClGtW0ylf8DvwRoMhqIJqLPQWO7Rsndxqz7MYxKNp3udR2f8
+         l8aKC+69d9jT2f7h/kjoSP7vd8Gb1/dCuFkiALGAWJ6am+nVo7TywcQ2QofdLl7/uabb
+         jcp2DMd82meRQp02QAqRLNjNmn9+1kAG+SGXwT/006iF6T6I5wY3LLQ5wCPrVDxPzJkh
+         5IC3sw63xwD8Xx6mINiFdbtT2h2A2jv8j73mhYuxub08XSw7nq68qvdba1MH7/c+Eupc
+         aAuw==
+X-Forwarded-Encrypted: i=1; AJvYcCXkuEoEl0oYAJY4OxGOrB3GHzLJBOBcraZfjOBXwV/J+C85eG6phcfjQFcrKBLkr5Wo4WIHCgN3Fr0erEPoYq5Y86OYoNTNxiZadIBViXP+Fw==
+X-Gm-Message-State: AOJu0YwqGbfavOGg8ozxydyr0lQrRx2p6VUeBt24oAuVyBdUrMaWG3it
+	ePh1gMdqdX0vHbNghkpt/pBVGvol5VceGOvPGyd4OFQ0cuoepLuT2K4cRbK+kwoOoZsnSByZflF
+	jWTnWHg==
+X-Google-Smtp-Source: AGHT+IHpIQH3Z4+neJvbwuE+BMqXxfg4n05M1ztGFk7NZrFg4BazntZ8QBZQfcIgDAHYHp5Rx83a8q7z27Ab
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:78c9:5e58:734f:c59f])
- (user=irogers job=sendgmr) by 2002:a05:690c:2e86:b0:65c:1db1:9235 with SMTP
- id 00721157ae682-6b1b16adf5fmr649637b3.0.1723877113170; Fri, 16 Aug 2024
- 23:45:13 -0700 (PDT)
-Date: Fri, 16 Aug 2024 23:44:34 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:2f0b:b0:6ad:9825:6a2f with SMTP
+ id 00721157ae682-6b1b6cb7a10mr534947b3.1.1723877115221; Fri, 16 Aug 2024
+ 23:45:15 -0700 (PDT)
+Date: Fri, 16 Aug 2024 23:44:35 -0700
 In-Reply-To: <20240817064442.2152089-1-irogers@google.com>
-Message-Id: <20240817064442.2152089-6-irogers@google.com>
+Message-Id: <20240817064442.2152089-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240817064442.2152089-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
-Subject: [PATCH v1 05/13] perf evsel: Constify evsel__id_hdr_size argument
+Subject: [PATCH v1 06/13] perf test: Expand pipe/inject test
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -79,40 +79,133 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Allows evsel__id_hdr_size to be used when the evsel is const.
+Test recording of call-graphs and injecting --build-all. Add/expand
+trap handler.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/evsel.c | 2 +-
- tools/perf/util/evsel.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/tests/shell/pipe_test.sh | 101 ++++++++++++++++++++++------
+ 1 file changed, 79 insertions(+), 22 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 38a74d6dde49..49cc71511c0c 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -3048,7 +3048,7 @@ int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 	return 0;
- }
+diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+index a78d35d2cff0..ad10012fdc29 100755
+--- a/tools/perf/tests/shell/pipe_test.sh
++++ b/tools/perf/tests/shell/pipe_test.sh
+@@ -1,4 +1,4 @@
+-#!/bin/sh
++#!/bin/bash
+ # perf pipe recording and injection test
+ # SPDX-License-Identifier: GPL-2.0
  
--u16 evsel__id_hdr_size(struct evsel *evsel)
-+u16 evsel__id_hdr_size(const struct evsel *evsel)
- {
- 	u64 sample_type = evsel->core.attr.sample_type;
- 	u16 size = 0;
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 4316992f6a69..15acf293e12a 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -442,7 +442,7 @@ int evsel__parse_sample(struct evsel *evsel, union perf_event *event,
- int evsel__parse_sample_timestamp(struct evsel *evsel, union perf_event *event,
- 				  u64 *timestamp);
+@@ -12,30 +12,87 @@ skip_test_missing_symbol ${sym}
  
--u16 evsel__id_hdr_size(struct evsel *evsel);
-+u16 evsel__id_hdr_size(const struct evsel *evsel);
+ data=$(mktemp /tmp/perf.data.XXXXXX)
+ prog="perf test -w noploop"
+-task="perf"
++err=0
  
- static inline struct evsel *evsel__next(struct evsel *evsel)
- {
+-if ! perf record -e task-clock:u -o - ${prog} | perf report -i - --task | grep ${task}; then
+-	echo "cannot find the test file in the perf report"
+-	exit 1
+-fi
++set -e
+ 
+-if ! perf record -e task-clock:u -o - ${prog} | perf inject -b | perf report -i - | grep ${sym}; then
+-	echo "cannot find noploop function in pipe #1"
+-	exit 1
+-fi
++cleanup() {
++  rm -rf "${data}"
++  rm -rf "${data}".old
+ 
+-perf record -e task-clock:u -o - ${prog} | perf inject -b -o ${data}
+-if ! perf report -i ${data} | grep ${sym}; then
+-	echo "cannot find noploop function in pipe #2"
+-	exit 1
+-fi
++  trap - EXIT TERM INT
++}
+ 
+-perf record -e task-clock:u -o ${data} ${prog}
+-if ! perf inject -b -i ${data} | perf report -i - | grep ${sym}; then
+-	echo "cannot find noploop function in pipe #3"
+-	exit 1
+-fi
++trap_cleanup() {
++  echo "Unexpected signal in ${FUNCNAME[1]}"
++  cleanup
++  exit 1
++}
++trap trap_cleanup EXIT TERM INT
+ 
++test_record_report() {
++  echo
++  echo "Record+report pipe test"
++
++  task="perf"
++  if ! perf record -e task-clock:u -o - ${prog} | perf report -i - --task | grep -q ${task}
++  then
++    echo "Record+report pipe test [Failed - cannot find the test file in the perf report #1]"
++    err=1
++    return
++  fi
++
++  if ! perf record -g -e task-clock:u -o - ${prog} | perf report -i - --task | grep -q ${task}
++  then
++    echo "Record+report pipe test [Failed - cannot find the test file in the perf report #2]"
++    err=1
++    return
++  fi
++
++  echo "Record+report pipe test [Success]"
++}
++
++test_inject_bids() {
++  inject_opt=$1
++
++  echo
++  echo "Inject ${inject_opt} build-ids test"
++
++  if ! perf record -e task-clock:u -o - ${prog} | perf inject ${inject_opt}| perf report -i - | grep -q ${sym}
++  then
++    echo "Inject build-ids test [Failed - cannot find noploop function in pipe #1]"
++    err=1
++    return
++  fi
++
++  if ! perf record -g -e task-clock:u -o - ${prog} | perf inject ${inject_opt} | perf report -i - | grep -q ${sym}
++  then
++    echo "Inject ${inject_opt} build-ids test [Failed - cannot find noploop function in pipe #2]"
++    err=1
++    return
++  fi
++
++  perf record -e task-clock:u -o - ${prog} | perf inject ${inject_opt} -o ${data}
++  if ! perf report -i ${data} | grep -q ${sym}; then
++    echo "Inject ${inject_opt} build-ids test [Failed - cannot find noploop function in pipe #3]"
++    err=1
++    return
++  fi
++
++  perf record -e task-clock:u -o ${data} ${prog}
++  if ! perf inject ${inject_opt} -i ${data} | perf report -i - | grep -q ${sym}; then
++    echo "Inject ${inject_opt} build-ids test [Failed - cannot find noploop function in pipe #4]"
++    err=1
++    return
++  fi
++
++  echo "Inject ${inject_opt} build-ids test [Success]"
++}
++
++test_record_report
++test_inject_bids -b
++test_inject_bids --buildid-all
++
++cleanup
++exit $err
+ 
+-rm -f ${data} ${data}.old
+-exit 0
 -- 
 2.46.0.184.g6999bdac58-goog
 
