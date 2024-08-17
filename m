@@ -1,99 +1,121 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7EDD7DA97;
-	Sat, 17 Aug 2024 12:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C73145B37;
+	Sat, 17 Aug 2024 12:41:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723897397; cv=none; b=QfpEtVrC/j/EAYrnCn3TAKdV5qsr4W2h1YOq1zgm+falZb/icaFxqP00k2YnlO1hnRuy0LZPh0xsIq6sgvEWk12P6j4l6b1H9tZ7XldMWMK7biMzdjcQp1lIyBASN6sAlCIQha8cZGSqIgxqbN+jc8wZNw9sOgjLK45rNt0FHOU=
+	t=1723898499; cv=none; b=mdfVnECSGUf+grXVPZfOmxGqxqQU6M7HFdjMH2kjHj3PX+pNEzMUqhLoUSW36hue0K5yzk2C4hGrIAWbaAEvfWZg1uB6TVI1LMph5elsDLR76iWUus6QhDtkoc9bbwWPsLnjtqk4vGWQgp4O3RtUG8yceGyIQSybE0T+6st1xIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723897397; c=relaxed/simple;
-	bh=dHWX1SdrRQ3+NHhcPCDipEoG6DZEdRjwQN6EQqRzqOM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=NhDFp96dRtwLDKaDu2SNbKGwtsf8C+gbTfODV6JtOSS7Y6rLQFiacdOvXADJ6cJvL0qXEsHUFAKCh2UMpwT65Q7ae3Sne+7sewbJT0Hd8cS7PjI01B7t0V2lc9XpqPHmkVTS1cKY0nER5XAuj2Fg5Mtn+btMRZ1R5YXFve8VETc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=S9J9SCMu; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=+eh/8WeN; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1723898499; c=relaxed/simple;
+	bh=VNuPAgxI8P5vCLJztz29EedhOgCl/W2GK21rdo1koRI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ETeuOrNLhExCjWezqB0d+YGEG7Iji/cqjuyLVObZGDkvAcS3YrjaWmcU/bvMp1ITISR5hMYyX2obmLZ2jC4RUvHJKCJanr6TiQ+pqL7etXznrnzXq0yKR7a5H/0vWHuuMYhcMBUr4pXB3ozM/lvryUbQrpCUiWEc1jy7ZWh3SQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ci9E6VXF; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S9J9SCMu";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="+eh/8WeN"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1723897388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0pDMQ1csewAZjVObVNdm6EOoseVhQ4C3pzjLXmRpsEs=;
-	b=S9J9SCMuuU/XZZ9Zgq9rXGp0LHLod0TzKdK50rKTFm+70D83Xo70xE6BOliMWf8vUDV+pN
-	2cWedD/+6zJ6JqRjg/O1VQHMtgAf7WlqyMWgZnvJdlsv2uYoO1okMWm+1IDVJZDeNzSL0l
-	gTdYcHShtKMSzFZFS8C6tVUKLbt98id9mKfD59CN57wAjApFPaA0viieR5bxZQaTS5KR9w
-	F2dXH50CTBVStsH+WwZAnUZbjs5F3MJW+0oXtssITTtBgnRJp62GvFkiOQyzFx/IW1IvMD
-	MwQw61chA8n8WrHdc/c05oqdbaomYIhxPpQC6iO5tmKDpZcg3V+SWQ/qdR8Jzw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1723897388;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0pDMQ1csewAZjVObVNdm6EOoseVhQ4C3pzjLXmRpsEs=;
-	b=+eh/8WeNOsV8xRg8hx0BakthH9HtsyLtHNbeMQgXSLYD3Nr8xBNf1YFV+5UT6TPkJSZLbX
-	gIbaClIXTPjESCDA==
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Li Huafei
- <lihuafei1@huawei.com>, peterz@infradead.org, mingo@redhat.com
-Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
- adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
- x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Vince
- Weaver <vincent.weaver@maine.edu>
-Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
-In-Reply-To: <705dc2fe-7ab3-458a-9b5a-7ea0b30756b8@linux.intel.com>
-References: <87sev7nom4.ffs@tglx>
- <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com>
- <87frr7nd28.ffs@tglx>
- <70657c5e-f771-456b-a5ac-3df590249288@linux.intel.com>
- <875xs2oh69.ffs@tglx>
- <166fdbdf-b24d-4267-b42d-f11348b87b1b@linux.intel.com>
- <87wmkhlk1l.ffs@tglx>
- <059d6217-10a5-4d2a-b639-90806c04a13b@linux.intel.com>
- <87plq9l5d2.ffs@tglx>
- <705dc2fe-7ab3-458a-9b5a-7ea0b30756b8@linux.intel.com>
-Date: Sat, 17 Aug 2024 14:23:07 +0200
-Message-ID: <87cym7l4no.ffs@tglx>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ci9E6VXF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723898498; x=1755434498;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=VNuPAgxI8P5vCLJztz29EedhOgCl/W2GK21rdo1koRI=;
+  b=Ci9E6VXFZ+++nXYnaqXz9Pyf0SufBYDXtgGWpdhGtlWipUaIGGiu+nTk
+   2NrxR93aEgEkgW0Le6pUGRtASgJjphmo1mLGeRSgGXwbwtgQsVwP6ui0z
+   k3PzE+wOoC4iskDqQ9acTbsQR5fgH5G7pY8iZCPffrMqyzm5HKsbfhQzQ
+   zlPdv144r5r7TgdndRE2fsxbGuQbgtBtKDhDWZotregUwczftM83w9p+I
+   EZnlgwUa5jmqjtzm1/HQDj1jRiLvJidljhD5XjP7dyF4gK1SEyibjf7Uh
+   FIftfgNyn2TAib2qvkA/NrG77hKXeoRUhwSpBWCgOPpcD+wdKSxgWtX2p
+   Q==;
+X-CSE-ConnectionGUID: Y43plSj0TuiMORVbn+lm0A==
+X-CSE-MsgGUID: zqdOFdoaRnOh+12sY4FLjg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11167"; a="13069756"
+X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
+   d="scan'208";a="13069756"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:41:37 -0700
+X-CSE-ConnectionGUID: wzTGwqwLTWOxKYWyp0nxKQ==
+X-CSE-MsgGUID: +c9znqAIQ4eEQVUlcxhGvw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
+   d="scan'208";a="60707501"
+Received: from linux.intel.com ([10.54.29.200])
+  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:39:43 -0700
+Received: from [10.212.114.32] (kliang2-mobl1.ccr.corp.intel.com [10.212.114.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 0210D20CFED8;
+	Sat, 17 Aug 2024 05:39:41 -0700 (PDT)
+Message-ID: <df279b32-54f0-4aeb-894a-c06ef91b34f0@linux.intel.com>
+Date: Sat, 17 Aug 2024 08:39:40 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [Patch v4 0/6] Bug fixes on topdown events reordering
+To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
+References: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Aug 16 2024 at 15:27, Kan Liang wrote:
-> On 2024-08-15 7:43 p.m., Thomas Gleixner wrote:
->
-> The HSW11 is also BDM11. It sounds like we need the trick from both bdw
-> and nhm.
->
-> How about this?
->
-> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> index e8bd45556c30..42f557a128b9 100644
-> --- a/arch/x86/events/intel/core.c
-> +++ b/arch/x86/events/intel/core.c
-> @@ -4664,6 +4664,12 @@ static void nhm_limit_period(struct perf_event
-> *event, s64 *left)
->  	*left = max(*left, 32LL);
->  }
->
-> +static void hsw_limit_period(struct perf_event *event, s64 *left)
-> +{
-> +	nhm_limit_period(event, left);
-> +	bdw_limit_period(event, left);
-> +}
->  static void glc_limit_period(struct perf_event *event, s64 *left)
->  {
->  	if (event->attr.precise_ip == 3)
->
-> Do you plan to post the "limit" patch for HSW?
-> Or should I send the patch?
 
-Go wild...
+
+On 2024-08-16 8:29 a.m., Dapeng Mi wrote:
+> Changes:
+> v3 -> v4:
+>   * limit metrics event searching inside group for group leader
+>     sampling (Kan)
+>   * add comments to illustrate supported and unsupported topdown events
+>     regrouping formats (Kan)
+>   * add more test cases to verify supported topdown regrouping
+>     formats (Kan)
+> 
+> History:
+>   v3: https://lore.kernel.org/all/20240712170339.185824-1-dapeng1.mi@linux.intel.com/
+>   v2: https://lore.kernel.org/all/20240708144204.839486-1-dapeng1.mi@linux.intel.com/
+>   v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.mi@linux.intel.com/
+> 
+> Dapeng Mi (6):
+>   perf x86/topdown: Complete topdown slots/metrics events check
+>   perf x86/topdown: Correct leader selection with sample_read enabled
+>   perf x86/topdown: Don't move topdown metric events in group
+>   perf tests: Add leader sampling test in record tests
+>   perf tests: Add topdown events counting and sampling tests
+>   perf tests: Add more topdown events regroup tests
+
+
+Thanks Dapeng.
+
+The series look good to me.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+
+Thanks,
+Kan
+> 
+>  tools/perf/arch/x86/util/evlist.c  | 68 ++++++++++++++++++++++++++++--
+>  tools/perf/arch/x86/util/evsel.c   |  3 +-
+>  tools/perf/arch/x86/util/topdown.c | 64 +++++++++++++++++++++++++++-
+>  tools/perf/arch/x86/util/topdown.h |  2 +
+>  tools/perf/tests/shell/record.sh   | 45 ++++++++++++++++++++
+>  tools/perf/tests/shell/stat.sh     | 28 +++++++++++-
+>  6 files changed, 201 insertions(+), 9 deletions(-)
+> 
+> 
+> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
