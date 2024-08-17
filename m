@@ -1,134 +1,167 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05olkn2026.outbound.protection.outlook.com [40.92.91.26])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A418712CDA5
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Aug 2024 11:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.92.91.26
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723893732; cv=fail; b=EJuSHBpuyepXx+W7tbSlb3JpY/Ho/7zDKoNR1KclAuTHfFc+2mOpdgMb7K0M0BKswkgutrRWQDEDkhO0EjHEpDLRCV3m7pk/otRQy8U87TpFOcpPcW4s6CYGbCeAwAya9lIN6zwXTSq5k2/KoYAjRjJSK97a8ynZ3gvorH4HHxg=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723893732; c=relaxed/simple;
-	bh=CeFS99e5R5z6SVERRQE6JbN/cLUZwEpJYB9q/A7cSVM=;
-	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=oGRW+4Qd6Fsw8+sJDu70mtpYqDptKW7u7VapP/44g/54DWJWHM70V0GmP5eGLhDSHb/AhRdz2xWbfgKXjlKbqnUDID+MlerxO2FvMEHC9gGiRyvW2KWf/BOFlG7V1aKO0C87BrQc6TvthIBFuBFnI5uL4vS7ANSfzWf9jxdPjw0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com; spf=pass smtp.mailfrom=hotmail.com; dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b=lBWq/0wx; arc=fail smtp.client-ip=40.92.91.26
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hotmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3917A7DA97;
+	Sat, 17 Aug 2024 12:22:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1723897335; cv=none; b=dSdpVuSk2H9HY3Q8kgo+hmaapt5/oMXkaXGMzOLlW63ENcCfXvhgLhlXhipT+hJboPU+yMoHKaXjS9hkJFtWrsGf6UIdpdu5EJg6si/GQNx/uddheRhbaQt+4Rx9ii+RQjtpai5GuUggM5EoULhCVJ8BtY5atxnA6l0ZWc0q5Go=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1723897335; c=relaxed/simple;
+	bh=j+kK/b6pBwqtHra2GIarQFWh132XpgrW+BqMkYbIXig=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WhkJhkd2DSyvy+8IO1b0QOmi19q5JkxISjdjVHHBmlASGd0UiDr+/ttYw+i4kgZrJV2Jls7uOdRkXQNbqjcyeM+sXCFPflE+ITYIWWQJXPAdTs/zcVpQyil76pvZ+T+QCst+UO7oX4xpKhqupf5pBKKFg66DlXPpgwGMJFQu3C0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=llvI+OzO; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hotmail.com header.i=@hotmail.com header.b="lBWq/0wx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZX4f1fUS8bAeqRfdKLb56h4ZJNfhOBR8KLdWZnxoeRxkuBXsn49fI2SYeeQEbwOFJi7U70yiUyV6KAukpuFSxQhk6oQsIvlnim6+o/vuoUK7Yy5rrs3PIC4ho9NER2XmedoGqfhes7iIRN1emQ9BwRuEmKPEqzru/BJ+MKPl3rrT/kJ8WPrpl695HtZSPuaZOwHBb6Os92dHkFi7txlEcBYJ5IOdmGz4P88o9TMnrJMOTjyi7osQDT1HQ04jqh83dpQfl/15bIvG6entl3laimYmRQCuw993H1h2MH9febn7rbKG9ZWXh2OZUbdlvjAplzpvagCVDGYdGVT63uJBxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Du4OsOMsHvPrQgvyGeqRdfME4m2N1GIY451JfjkzYV4=;
- b=Ku4AR2dBUBU09uDq884ozdrRQzR2bYXgeQg9KSI25Q2dFpbNdHBhmCL5SunPAxfgc0uV1agJo5WeEVZs0Bnoel/SzNHU7mUGy713kRsMJ9JS9VUj2aoRU58oOpU5R7wQld7ZUZwVzIIdvvtf5b0P2uFz3ugolNabYjdOTF9LHhsso7el7VhwVdCjqsHbWU15/xPG01ukZvnaRQbfcAjd62+hiaA9exGGjO6DgvNj8KdEPKMLccr3+2ZmzJgNwgYifTe/2BQc/0YpKNMrkOevLAaFDxPc6c81N6MiBdK4sIOrBOXFeG/0z3DYM69nVEC2pkPwCknRoVUA2wisPp0WkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hotmail.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Du4OsOMsHvPrQgvyGeqRdfME4m2N1GIY451JfjkzYV4=;
- b=lBWq/0wx5NG7q9nAkSjvh4bJ5jloYQesyTg/jX9aFAuMiCxY7onpzUUixpxRccwHc4aTcIcMqz/1D7s498oFx8xme38Ff0fu70QJ4EPl5JvhMOUk83aWwxytrUrvXYRWGAOMV2qP89N7vsxSdUlUOXGDZP4InBJ+NQSeTq9/zSR+Z3gdRs2QuBUfWZytuc5QP0Zse8uxY7r7fqUe/f5LGwph14FLjiHmroT4QUrTCt0t7n/HaceS7hcMKFIOyn1t3XVDG2joXAo335UMubcb2DnQZF7HKqmYdALZRqFuOEPMAy7JMehfII5p5A+NcaJbPNTwZe6W9uCQu6hbygdg8g==
-Received: from DB9P195MB1682.EURP195.PROD.OUTLOOK.COM (2603:10a6:10:392::9) by
- GVXP195MB2647.EURP195.PROD.OUTLOOK.COM (2603:10a6:150:1fd::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7875.19; Sat, 17 Aug 2024 11:22:08 +0000
-Received: from DB9P195MB1682.EURP195.PROD.OUTLOOK.COM
- ([fe80::a0a:2cc0:d82a:d8fe]) by DB9P195MB1682.EURP195.PROD.OUTLOOK.COM
- ([fe80::a0a:2cc0:d82a:d8fe%2]) with mapi id 15.20.7875.019; Sat, 17 Aug 2024
- 11:22:08 +0000
-From: Odysseas Georgoudis <odygrd@hotmail.com>
-To: "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>
-Subject: Question about perf c2c support on Alder Lake
-Thread-Topic: Question about perf c2c support on Alder Lake
-Thread-Index: AQHa8Jb9KmK32xrWE0+MmnsaBTztqA==
-Date: Sat, 17 Aug 2024 11:22:07 +0000
-Message-ID:
- <DB9P195MB16821F21F5D8EEBE68D24B0ACC822@DB9P195MB1682.EURP195.PROD.OUTLOOK.COM>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:
- [3EcUVv1HoSYmyp423btLgS8w0G3+TYXqzA8A5I6Gi40uNd16GIq32o6BaO/R6Ht8XoJ8I8UI+WE=]
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DB9P195MB1682:EE_|GVXP195MB2647:EE_
-x-ms-office365-filtering-correlation-id: 718dc0b0-1fdc-4db4-063d-08dcbeaed493
-x-microsoft-antispam:
- BCL:0;ARA:14566002|461199028|15030799003|19110799003|15080799003|8060799006|440099028|3412199025|4302099013|102099032|1602099012;
-x-microsoft-antispam-message-info:
- HxIbusTsq/GGqpZyUi4qiDeb2v5vqv/uj/XoW4V6tvwEy3NW2W11RmszslnvH00T3YMTllv7JrZVrZOvimQXTxLnVb2JrywxSeTKZg+OS+EJ2hir4KprArZk26rrMCC3TjLqViI1NeAXuOAm9VuAY6Gp+iySKfPVhYCw+ZJw3k/T1QTPU6DYMOmOwNqEX+inmnqvYtbKFySYt7CZBtUrDFIk5Mr4QjwAph69i/KcdcWMswaL8B8uh1/XvbLTofYvRnc1O/87ech2IiRBn2Uch9xV3LabKTURHXnKbRJEWXui8Nt/klia4UNXagv1R2NrnQiFGEdPjciGutYTw9XqeVx54Y+uYVCHSt5Y1+nksZAfbhywcMKzR/vUUO5FzwfVk9bikPEeusMGdvI1CIAvUan+pUbvrXAgfTr/JFgN4J8CviL9NpMoY0Y6zyF9zqnZQUta7ferNgaSsw4hRO2oGAnzI9lISbznxWOs0/ij3f36wWTt0U3ZqrI6G592Jin82B0XRXiOEj1gKNGtpii1yXmrO70vweWpwMxseJyhm7P5AcKuEcqWv8L161ujlCUIVEb/SIMTwRIzKzf7wA/j6WQRR4aE4KYd/iuPnBd9el4Wlf54y+6kgk0gmIYupKXXpa/03s7gOoReOltV/vt5T/aC3j9cc7utMX76mS1lF6Sk0GHVzl+mUGHF5Rf+vMX0NrQLAdIjv3/DEWov0QFOEOtCSyeaRT2M8Kp/2yyJBKqnIJkahc8U/P6U+Zo7/uwPpCOot7/3YiO5XhUn4OB6AUQbpZ138XWq4aNuPLAu2Tppx6046QBJe4MYU34YgIxY
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?Windows-1252?Q?3aOLJze2ynfrhK9qkvZZc1Je2iARqjB6oLi2x2UGMuGWv099uTj2JR2w?=
- =?Windows-1252?Q?bT4k4tyglF+uAN3IYZ+qKeSV4fcXNFxZ9R+Gb1EbXUWr3geD77Rfrrc2?=
- =?Windows-1252?Q?dXLvf5XpHYvkdUI3/b6kG16KKi3DliecW9BaXU6/s85sb1e6ai8XmYat?=
- =?Windows-1252?Q?1oJFNqfxvReJCauh2Bg9KDnQxsYf1sJuaFRGGt1kF5otj+uE6L9EHC3L?=
- =?Windows-1252?Q?f8M+7+MH8QG99CLv4d2ajRYy9bx9bsqNmiHWMeIpZM8Me15sdSE4yQeE?=
- =?Windows-1252?Q?Vqe6QJ7gPxzCOQRMLjwXdOJKdFB8bz/ealMnhCur3gUn8oeP/Xzu+3Ky?=
- =?Windows-1252?Q?htqZ1gE8aNtAiPfGOsSYYtkO+dbAla4rLM0XApMA+USEG2qoHgEPwBKn?=
- =?Windows-1252?Q?CJoxbgGsSBlB3eXSvEMwi1t/3a4DRoIAhTFGPjdPTL3OkbDr+gA3+WUS?=
- =?Windows-1252?Q?QY2iQ3WipvuWab/6txMCgHnxEXw5zBAz28USdY9lbabLGKvLUVodQI6d?=
- =?Windows-1252?Q?3JVANVSCenp/sqNK80QoLXgGM3/g00K3x9JMIuU8brSu8Wen2cF1PyBn?=
- =?Windows-1252?Q?zDuY+zrlse9WE3Cgy25Z+hhj+xljoLLxlB2D6tL+enWRBrDCcMFfNjNj?=
- =?Windows-1252?Q?FtMCUBezOWdk+UE0vKufYKGEl3co9bR12Edf1BiBLFvK4fvhVn8bpPr+?=
- =?Windows-1252?Q?jJCT+UwrbrzMCTm9AmYNgzyUaMOm/GN7qSKT5XIH0eU1+DFgeDjX0XHW?=
- =?Windows-1252?Q?OAxpM1gZHmGh/6MbMobI6UDzzr4e8H9mR6CnrzEHrDucwknjx32ED0WG?=
- =?Windows-1252?Q?L+63SrkWG4Ado1EKLX6iFAlHuCm4Kssq2GGwR5cvG3qFelURR2uqGfWA?=
- =?Windows-1252?Q?UIwKsUMX3LYCNvj9WdXcdAZQZCuNsI2MaYkbH251wRdOjug7+PeL5JEP?=
- =?Windows-1252?Q?fO0XLLkyylC/cNLLKd/v8UlCXuT5ZO99jB57haN3kjyITZKNlqr7AYuI?=
- =?Windows-1252?Q?JP/cKZAVNSi7Ro9EXNF8K9B8yHJA8XyC6R2ynNzSUIraSLt6Zgh3Q7fW?=
- =?Windows-1252?Q?XAO2T2nGWpndwL0fZQHdIgQ6O//me6J5Z5kWppbltQEziylK9sYh30qv?=
- =?Windows-1252?Q?kdmmViQrEce4MPzFxD1DoGHIH/XB21NUxQGPtO/yB68InLCi2MfsY6nB?=
- =?Windows-1252?Q?yYA9bJL8RdRk8g89y9wCh1c4OrbW1lqS38LYYbY+2vTWrChe5KW/H+Fa?=
- =?Windows-1252?Q?YMMKUhCTdgd1wV97rHjfWdIpRiMtc69NKYTvNxGkzF0IHDe8TvOPr6wo?=
- =?Windows-1252?Q?xWfWSNO2HXVoHVIv2qxmsZJDzAyjATqPv+l164wvPM0d8jczOHpYwSl6?=
- =?Windows-1252?Q?SpE9R2FzdJ+DvA=3D=3D?=
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="llvI+OzO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1723897334; x=1755433334;
+  h=message-id:date:mime-version:subject:from:to:cc:
+   references:in-reply-to:content-transfer-encoding;
+  bh=j+kK/b6pBwqtHra2GIarQFWh132XpgrW+BqMkYbIXig=;
+  b=llvI+OzOIC0wxPZe0MceZJctb3zZyKAGvsOtLj6LKrWgQmcCzONcnv+I
+   nVxm8uZaHvaAoLh2NnwyygXgMAEQbUVMu/ngZts5NgfoxpyXJ8kKo8eYV
+   GHP6hgHFBoJSZJKEsiTDsgqtaZkiasW4lT7UnA5wAUDVjExJwbKwVLCIM
+   mUIadmeDlV6lZUX2Jz1LXtLrp+l5gSa1ZpsZ0rNfQH6VAV2QCzPMlyJEf
+   0oHTJzXEU+ZeqkJd2PefWixSDfMZUcXpolveJlOktVDKt26iR9/l+8mnk
+   UtJxuzbdKddgPbB5bRqxJK17l1XfOYSEWHQ+Igi8sMvfkm/cCR0Kf8Yqs
+   w==;
+X-CSE-ConnectionGUID: LXGaHZIKSYuKIoB7h2qjTg==
+X-CSE-MsgGUID: BE5VvK77RfanmXJfgRiGUA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11167"; a="21814000"
+X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
+   d="scan'208";a="21814000"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:22:13 -0700
+X-CSE-ConnectionGUID: RZLSlPiUSbunEEV04rgjPA==
+X-CSE-MsgGUID: hvYQWV9GS0uVO/itomCosQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
+   d="scan'208";a="59959602"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:22:13 -0700
+Received: from [10.212.114.32] (kliang2-mobl1.ccr.corp.intel.com [10.212.114.32])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id B9B1020CFED8;
+	Sat, 17 Aug 2024 05:22:10 -0700 (PDT)
+Message-ID: <4a2761ee-1e6a-4d8a-b228-0702c11b7ea9@linux.intel.com>
+Date: Sat, 17 Aug 2024 08:22:09 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: sct-15-20-4755-11-msonline-outlook-49ed2.templateTenant
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB9P195MB1682.EURP195.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 718dc0b0-1fdc-4db4-063d-08dcbeaed493
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Aug 2024 11:22:07.9161
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXP195MB2647
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] perf/x86/intel: Restrict period on Haswell
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Li Huafei <lihuafei1@huawei.com>,
+ peterz@infradead.org, mingo@redhat.com
+Cc: acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com,
+ adrian.hunter@intel.com, bp@alien8.de, dave.hansen@linux.intel.com,
+ x86@kernel.org, hpa@zytor.com, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
+ Vince Weaver <vincent.weaver@maine.edu>
+References: <87sev7nom4.ffs@tglx>
+ <a42a3e35-2166-4539-930b-21ea0921e8d8@linux.intel.com> <87frr7nd28.ffs@tglx>
+ <70657c5e-f771-456b-a5ac-3df590249288@linux.intel.com> <875xs2oh69.ffs@tglx>
+ <166fdbdf-b24d-4267-b42d-f11348b87b1b@linux.intel.com> <87wmkhlk1l.ffs@tglx>
+ <059d6217-10a5-4d2a-b639-90806c04a13b@linux.intel.com> <87plq9l5d2.ffs@tglx>
+ <705dc2fe-7ab3-458a-9b5a-7ea0b30756b8@linux.intel.com>
+Content-Language: en-US
+In-Reply-To: <705dc2fe-7ab3-458a-9b5a-7ea0b30756b8@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello perf-users,=0A=
-=0A=
-I=92m currently attempting to run 'perf c2c record' on an Alder Lake, but I=
-=92ve encountered some issues. =0A=
-While 'perf record' functions correctly, 'c2c' seems to be problematic.=0A=
-=0A=
-When I try to run 'perf c2c record', I receive the following error:=0A=
-=0A=
-event syntax error: '..em-loads,ldlat=3D30/P'=0A=
-                                  \___ unknown term 'ldlat' for pmu 'cpu_at=
-om'=0A=
-=0A=
-Kernel Version: 6.8.0=0A=
-Perf Version: 6.8.12=0A=
-CPU: 12th Gen Intel(R) Core(TM) i5-12600=0A=
-=0A=
-I=92ve found this patch that mentions adding support for hybrid architectur=
-es: https://lwn.net/Articles/852302/ =0A=
-However, I=92m unsure if it extends to the perf c2c tool.=0A=
-=0A=
-Could anyone confirm whether `perf c2c` is supported on Alder Lake CPUs in =
-the 6.8.0 kernel ? This would help me avoid further troubleshooting if it=
-=92s simply not supported.=0A=
-=0A=
-Thanks,=0A=
-Odysseas=
+
+
+On 2024-08-16 3:27 p.m., Liang, Kan wrote:
+> The HSW11 is also BDM11. It sounds like we need the trick from both bdw
+> and nhm.
+> 
+> How about this?
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index e8bd45556c30..42f557a128b9 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -4664,6 +4664,12 @@ static void nhm_limit_period(struct perf_event
+> *event, s64 *left)
+>  	*left = max(*left, 32LL);
+>  }
+> 
+> +static void hsw_limit_period(struct perf_event *event, s64 *left)
+> +{
+> +	nhm_limit_period(event, left);
+
+
+Sigh, apparently, I used an old specification update (Rev 003) for HSW.
+It claims that the BDM55 is also applied to HSW (HSW75).
+https://www.mouser.com/pdfdocs/xeone31200v3specupdate.PDF
+So I thought the nhm_limit_period() should be used for HSW as well.
+
+However, a newer version (Rev 016) deleted the HSW75 for HSW.
+https://www.intel.com/content/dam/www/public/us/en/documents/specification-updates/xeon-e3-1200v3-spec-update-oct2016.pdf
+
+Yes, as you suggested, something as below is required.
+
+
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index e8bd45556c30..b22a4289553b 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4634,6 +4634,17 @@ static enum hybrid_cpu_type
+adl_get_hybrid_cpu_type(void)
+ 	return HYBRID_INTEL_CORE;
+ }
+
++static inline bool erratum_hsw11(struct perf_event *event)
++{
++	return (event->hw.config & INTEL_ARCH_EVENT_MASK) ==
++		X86_CONFIG(.event=0xc0, .umask=0x01);
++}
++
++static void hsw_limit_period(struct perf_event *event, s64 *left)
++{
++	*left = max(*left, erratum_hsw11(event) ? 128 : 32);
++}
++
+ /*
+  * Broadwell:
+  *
+@@ -4651,8 +4662,7 @@ static enum hybrid_cpu_type
+adl_get_hybrid_cpu_type(void)
+  */
+ static void bdw_limit_period(struct perf_event *event, s64 *left)
+ {
+-	if ((event->hw.config & INTEL_ARCH_EVENT_MASK) ==
+-			X86_CONFIG(.event=0xc0, .umask=0x01)) {
++	if (erratum_hsw11(event)) {
+ 		if (*left < 128)
+ 			*left = 128;
+ 		*left &= ~0x3fULL;
+@@ -6821,6 +6831,7 @@ __init int intel_pmu_init(void)
+
+ 		x86_pmu.hw_config = hsw_hw_config;
+ 		x86_pmu.get_event_constraints = hsw_get_event_constraints;
++		x86_pmu.limit_period = hsw_limit_period;
+ 		x86_pmu.lbr_double_abort = true;
+ 		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
+ 			hsw_format_attr : nhm_format_attr;
+Thanks,
+Kan
+
+> +	bdw_limit_period(event, left);
+> +}
+>  static void glc_limit_period(struct perf_event *event, s64 *left)
+>  {
+>  	if (event->attr.precise_ip == 3)
+> 
+> Do you plan to post the "limit" patch for HSW?
+> Or should I send the patch?
