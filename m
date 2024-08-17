@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C812145FE8
-	for <linux-perf-users@vger.kernel.org>; Sat, 17 Aug 2024 06:45:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11B614659C
+	for <linux-perf-users@vger.kernel.org>; Sat, 17 Aug 2024 06:45:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723877120; cv=none; b=iysl+IYl1U04r3r+ZNa73enbdPuDozd+6s1Ic1JxuW+MYeV5wnnMi999w92XZvygP6F3EI1eYTNibc+V7JijsaPXicLPPBCvlU37kUx9ptETMv1Hsy1c9XYu5cPwB3+v2NJa64H2RvrGKqKOQ9Fg/KBmDK0v1OxMR+PPSsVuiTw=
+	t=1723877122; cv=none; b=KbhmMVwvNAMB7bKAlwq8aQCTH8oGHt+vual5GcAEHUZcc4Roegt7/kA5u6e+IPC8Jv4Acp3UBJqIa3Gve6hDIYgUE1434Rh2TEXOUF/bFrM4qHWD/drAQACRd+CSE2Li5wXGF1rM8wLmhQlwVozsPplYM//139u8FAxWTpSIR14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723877120; c=relaxed/simple;
-	bh=pRY5AZfCbwpYgGVAWMLYaicbhD2xuRtNblur1R1C4z8=;
+	s=arc-20240116; t=1723877122; c=relaxed/simple;
+	bh=WW1VpISX2ocellr2odfdikhDznsZtCHPvqIBB2Ouivw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=hJzwuz6CS59TsY+TMnweb1jA9Dbyr9QfqBxcP3lxXPyvfYReB35e5sYVR/eaKH6eJ9uTTVe7dGka1q8H6nDtP9lbdEgObUAIUNZTu0F2m7DOhwL6Bh/0nczTbX8tKd09EzQUdyF0hGgG37lZLfICNkV8c5e9AcgNkms2p2ByKdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FCi8ExA4; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=ua+YBFSSEsawe6HJGr07x6xUMAUr+TUrV6ILw227Fh03C3g7lxTy/kmI7ufGLfA3mg37wCjBFTq++IVHknuiiau4CQ3rCo62GLWSbQKcf+v2DwJiEAWjX8WDHedh8Ep9UAKMfoAIecQNsVDww8ULs+97Y21podOhd2NBS3np9zA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FQWMugF3; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FCi8ExA4"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6af8f7a30dbso45327797b3.2
-        for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 23:45:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FQWMugF3"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e11cdb464f2so2538748276.0
+        for <linux-perf-users@vger.kernel.org>; Fri, 16 Aug 2024 23:45:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1723877117; x=1724481917; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1723877120; x=1724481920; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=wAJzyWm13hc0XphEnwse3Fp8/0A+sQVmN1fNLb1gecE=;
-        b=FCi8ExA4ISx306zIPeeadGugF1ffeTgK9NRLZR45pqPkb3ew/4cMCajkVfwlvGtrLi
-         8LAOn+3rMhGElMx5KinBcs/qYIy69XPbLZNnpdjhv//wLxQoa+xuag1xalQby9Y0i2cn
-         5Ws1oHZF/Ip0TV7Zhsk6SR1wrrMl2ZiKLMzBPtigsHI0/KdAQMJfbYmm/pwSoEY4xAh3
-         z2CbckixxoHReN80WBC0oz0+MOiIPmHN9CUsRyMcqkLsGZ1gRuFi7XbATSfGMnPZuEgy
-         Bf8A102E0NpL1Du37P5AkU+aPsI7KvbMgqrewR4gNP5E/gWzHnwgqqas4TPSwfatjkkN
-         i/LA==
+        bh=CgTxrjJSN3UEpj2V6TaLEsH3nbDGy1R5SWod1sFWZ8c=;
+        b=FQWMugF39G5RanQ9cS21+F0MOil3LvrnnI6Mhjqo1xUlCz3mUN7PqDJiz6gAhAznaz
+         7JTWSqmrWTYBvED/TxY0vt5I8qgQ+QoKwg4fp+RcEqLidWg/DgvOEybLofOh7RVywacn
+         kl/3tY+xb/bhJ+DJuitA0V4lVADn31e4eGlYbC/3ccYEYEb4vx7xi5Zpdc888udcYjVv
+         wUBt6C0bQjjVi8umAzCgNDcq05PnF/j5+0DX8LizkbTkk4JdB52I7hJ+lvK5yxp2Dp8v
+         zwf98/XKhHdwzcekKYY26LW0vKcQuOVhQtRdZwW84GEAY9wPfYuOKYxQkCRTDP2l8D42
+         zZXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723877117; x=1724481917;
+        d=1e100.net; s=20230601; t=1723877120; x=1724481920;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wAJzyWm13hc0XphEnwse3Fp8/0A+sQVmN1fNLb1gecE=;
-        b=B/MuYU7gztEirAYJ+BBDLtc4uf4Xty+1Kw7dRX1igRtIUn3F11KpJnPBYVsDTnNrWc
-         5zBbUcdifmz03Awsy4MlIta4hFajnD+Ko+k/iNpUHJZokJ8oM+9uoXIbijTykzhqwoEe
-         NEYo9WnLgSRZfn/HpMG17hxLn6rF82VaCFY1JyXf77rnPdda6XINB6x+mdOKuP/Z7Qv/
-         Mue1Q6fB4/rcs0UvA4BLjzZJ5XuAhwY4f+juoifeNxYAHbeIgv7gh/GMSgf1nEMwDYnr
-         XpD3ONEWZl5biSRZhMyu4rZhL5EMrnKQpWvFmvUmLn0//+I01MMVDGJyvBmnhPGOBvBV
-         UIBQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUTgzsxJVIe1Edac4Z//4aBGDgWRojf1FvVuWWHMMSuRgV/27pnSoGza3Wg+NLZ94hxkrI1+i2ukbe8r7Ox/1km85H/wbv39Ehzn78q5PjyqQ==
-X-Gm-Message-State: AOJu0Yx1REXGdOkz9ODcfWa6ClR86ds7AXZXa1j4KDS1MSmMps/2dGKp
-	zg3KsUQypiieuBj7XaYgEh+OEQcJELV7ZoOWxPM/l01xbAUrTLEKRUrTWXQWPqyLorHrZ1G0w5N
-	Od2pmAA==
-X-Google-Smtp-Source: AGHT+IH7Yu232gNnniV3EHstk3fBHEEIjNkNXlA2pzSz4OdB3zq/IUPHPuAWRECkAxMJmLLflc2sJAA69/1d
+        bh=CgTxrjJSN3UEpj2V6TaLEsH3nbDGy1R5SWod1sFWZ8c=;
+        b=coU1ikQ0j4l/HXAL4jJ8mSRC5zsW27jcgBXZKAn6UkXqk+sZWNGUmJjjhFZsMH7VaT
+         gN+DY3GV+Hf+Q96jzOQgcN1EL872PFB+bl6//0nSgMh02jITQlFh+5aOP1SPqYEDlbCg
+         LZFj//YUlWNy15R2sRzceXndXr1rGCQIJqnl/aXPYvjn2hBCeo0d1cKi1jSq5VJ/mF2f
+         GzQIWezcKGU2H3WanM65283EWOQsj3eVP7CyuuzmukXzXORhhTq3oPOjU07zyvz+Ja7R
+         msrYjsL9c9J0S9+0ywbdjDfs38CDS7H87YGF5F+TurjhwfHx8Cb5N+bc8lq2VaWpAtM4
+         7KqA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7T/97PqBlW/EX8Epghf7DX3btk7fY/GUT4grEPQp1hKAaHNobESqvc5wvLd1mbH/ygMEmuuVsJB4HiNPl+k2todEJcg/8tPqBdY4WNn0DwA==
+X-Gm-Message-State: AOJu0Yxy8rNmGamuZSjjBSffQI5sp9nG/oDaVR0ryGRvMmHZSca1V5vd
+	ZHEwnoKuvJkgUkyY4r2fcT8QeP0OfaMkYsH4WhRNxbdYZbLORXUZqsYMFvYJzXVA4ID3i4OwC+e
+	mErbozg==
+X-Google-Smtp-Source: AGHT+IERi9GSRMxTnykwrvZUawENrgJqpnxu9ZqGvySjlAvzwYvNnKXGoblaCJvhtARlkORt4uKlhsK9fAHn
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:78c9:5e58:734f:c59f])
- (user=irogers job=sendgmr) by 2002:a05:690c:4606:b0:691:2f66:4b1c with SMTP
- id 00721157ae682-6b1baeadc0amr594057b3.6.1723877117487; Fri, 16 Aug 2024
- 23:45:17 -0700 (PDT)
-Date: Fri, 16 Aug 2024 23:44:36 -0700
+ (user=irogers job=sendgmr) by 2002:a25:83d0:0:b0:e11:584f:c2ca with SMTP id
+ 3f1490d57ef6-e1180e8eb8emr212527276.6.1723877119735; Fri, 16 Aug 2024
+ 23:45:19 -0700 (PDT)
+Date: Fri, 16 Aug 2024 23:44:37 -0700
 In-Reply-To: <20240817064442.2152089-1-irogers@google.com>
-Message-Id: <20240817064442.2152089-8-irogers@google.com>
+Message-Id: <20240817064442.2152089-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240817064442.2152089-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
-Subject: [PATCH v1 07/13] perf inject: Combine build_ids and build_id_all into enum
+Subject: [PATCH v1 08/13] perf inject: Combine different mmap and mmap2 functions
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -79,146 +79,276 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-It is clearer to have a single enum that determines how build ids are
-injected, it also allows for future extension.
-
-Set the header build ID feature whether lazy or all are generated,
-previously only the lazy case would set it.
-
-Allow parsing of known build IDs for either the lazy or all cases.
+There are repipe, build ID and JIT dump variants of the mmap and mmap2
+repipe functions. The organization doesn't allow JIT dump to work with
+build ID injection and the structure is less than clear. Combine the
+function and enable the different behaviors based on ifs.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c | 51 ++++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 20 deletions(-)
+ tools/perf/builtin-inject.c | 199 ++++++++++++++----------------------
+ 1 file changed, 76 insertions(+), 123 deletions(-)
 
 diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 8440ddfbf4fe..865d16ceead2 100644
+index 865d16ceead2..d99868953ff2 100644
 --- a/tools/perf/builtin-inject.c
 +++ b/tools/perf/builtin-inject.c
-@@ -103,11 +103,16 @@ struct guest_session {
- 	struct guest_event		ev;
- };
+@@ -377,44 +377,6 @@ static int perf_event__repipe_sample(const struct perf_tool *tool,
+ 	return perf_event__repipe_synth(tool, event);
+ }
  
-+enum build_id_rewrite_style {
-+	BID_RWS__NONE = 0,
-+	BID_RWS__INJECT_HEADER_LAZY,
-+	BID_RWS__INJECT_HEADER_ALL,
-+};
+-static int perf_event__repipe_mmap(const struct perf_tool *tool,
+-				   union perf_event *event,
+-				   struct perf_sample *sample,
+-				   struct machine *machine)
+-{
+-	int err;
+-
+-	err = perf_event__process_mmap(tool, event, sample, machine);
+-	perf_event__repipe(tool, event, sample, machine);
+-
+-	return err;
+-}
+-
+-#ifdef HAVE_JITDUMP
+-static int perf_event__jit_repipe_mmap(const struct perf_tool *tool,
+-				       union perf_event *event,
+-				       struct perf_sample *sample,
+-				       struct machine *machine)
+-{
+-	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+-	u64 n = 0;
+-	int ret;
+-
+-	/*
+-	 * if jit marker, then inject jit mmaps and generate ELF images
+-	 */
+-	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap.filename, event->mmap.pid, event->mmap.tid, &n);
+-	if (ret < 0)
+-		return ret;
+-	if (ret) {
+-		inject->bytes_written += n;
+-		return 0;
+-	}
+-	return perf_event__repipe_mmap(tool, event, sample, machine);
+-}
+-#endif
+-
+ static struct dso *findnew_dso(int pid, int tid, const char *filename,
+ 			       const struct dso_id *id, struct machine *machine)
+ {
+@@ -460,114 +422,108 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
+ 	return dso;
+ }
+ 
+-static int perf_event__repipe_buildid_mmap(const struct perf_tool *tool,
+-					   union perf_event *event,
+-					   struct perf_sample *sample,
+-					   struct machine *machine)
+-{
+-	struct dso *dso;
+-
+-	dso = findnew_dso(event->mmap.pid, event->mmap.tid,
+-			  event->mmap.filename, NULL, machine);
+-
+-	if (dso && !dso__hit(dso)) {
+-		dso__set_hit(dso);
+-		dso__inject_build_id(dso, tool, machine, sample->cpumode, 0);
+-	}
+-	dso__put(dso);
+-
+-	return perf_event__repipe(tool, event, sample, machine);
+-}
+-
+-static int perf_event__repipe_mmap2(const struct perf_tool *tool,
++static int perf_event__repipe_mmap(const struct perf_tool *tool,
+ 				   union perf_event *event,
+ 				   struct perf_sample *sample,
+ 				   struct machine *machine)
+ {
+-	int err;
++	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+ 
+-	err = perf_event__process_mmap2(tool, event, sample, machine);
+-	perf_event__repipe(tool, event, sample, machine);
++#ifdef HAVE_JITDUMP
++	if (inject->jit_mode) {
++		u64 n = 0;
++		int ret;
+ 
+-	if (event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID) {
+-		struct dso *dso;
++		/* If jit marker, then inject jit mmaps and generate ELF images. */
++		ret = jit_process(inject->session, &inject->output, machine,
++				  event->mmap.filename, event->mmap.pid, event->mmap.tid, &n);
++		if (ret < 0)
++			return ret;
++		if (ret) {
++			inject->bytes_written += n;
++			return 0;
++		}
++	}
++#endif
++	if (inject->build_id_style == BID_RWS__INJECT_HEADER_ALL) {
++		struct dso *dso = findnew_dso(event->mmap.pid, event->mmap.tid,
++					      event->mmap.filename, NULL, machine);
+ 
+-		dso = findnew_dso(event->mmap2.pid, event->mmap2.tid,
+-				  event->mmap2.filename, NULL, machine);
+-		if (dso) {
+-			/* mark it not to inject build-id */
++		if (dso && !dso__hit(dso)) {
+ 			dso__set_hit(dso);
++			dso__inject_build_id(dso, tool, machine, sample->cpumode, 0);
+ 		}
+ 		dso__put(dso);
+-	}
++	} else {
++		/* Create the thread, map, etc. Not done for the unordered inject all case. */
++		int err = perf_event__process_mmap(tool, event, sample, machine);
+ 
+-	return err;
++		if (err)
++			return err;
++	}
++	return perf_event__repipe(tool, event, sample, machine);
+ }
+ 
+-#ifdef HAVE_JITDUMP
+-static int perf_event__jit_repipe_mmap2(const struct perf_tool *tool,
+-					union perf_event *event,
+-					struct perf_sample *sample,
+-					struct machine *machine)
++static int perf_event__repipe_mmap2(const struct perf_tool *tool,
++				   union perf_event *event,
++				   struct perf_sample *sample,
++				   struct machine *machine)
+ {
+ 	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
+-	u64 n = 0;
+-	int ret;
++	struct dso *dso = NULL;
+ 
+-	/*
+-	 * if jit marker, then inject jit mmaps and generate ELF images
+-	 */
+-	ret = jit_process(inject->session, &inject->output, machine,
+-			  event->mmap2.filename, event->mmap2.pid, event->mmap2.tid, &n);
+-	if (ret < 0)
+-		return ret;
+-	if (ret) {
+-		inject->bytes_written += n;
+-		return 0;
++#ifdef HAVE_JITDUMP
++	if (inject->jit_mode) {
++		u64 n = 0;
++		int ret;
 +
- struct perf_inject {
- 	struct perf_tool	tool;
- 	struct perf_session	*session;
--	bool			build_ids;
--	bool			build_id_all;
-+	enum build_id_rewrite_style build_id_style;
- 	bool			sched_stat;
- 	bool			have_auxtrace;
- 	bool			strip;
-@@ -2015,8 +2020,8 @@ static int __cmd_inject(struct perf_inject *inject)
++		/* If jit marker, then inject jit mmaps and generate ELF images. */
++		ret = jit_process(inject->session, &inject->output, machine,
++				event->mmap2.filename, event->mmap2.pid, event->mmap2.tid, &n);
++		if (ret < 0)
++			return ret;
++		if (ret) {
++			inject->bytes_written += n;
++			return 0;
++		}
+ 	}
+-	return perf_event__repipe_mmap2(tool, event, sample, machine);
+-}
+ #endif
+-
+-static int perf_event__repipe_buildid_mmap2(const struct perf_tool *tool,
+-					    union perf_event *event,
+-					    struct perf_sample *sample,
+-					    struct machine *machine)
+-{
+-	struct dso_id dso_id = {
+-		.maj = event->mmap2.maj,
+-		.min = event->mmap2.min,
+-		.ino = event->mmap2.ino,
+-		.ino_generation = event->mmap2.ino_generation,
+-	};
+-	struct dso *dso;
+-
+ 	if (event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID) {
+-		/* cannot use dso_id since it'd have invalid info */
+ 		dso = findnew_dso(event->mmap2.pid, event->mmap2.tid,
+ 				  event->mmap2.filename, NULL, machine);
+ 		if (dso) {
+ 			/* mark it not to inject build-id */
+ 			dso__set_hit(dso);
+ 		}
+-		dso__put(dso);
+-		perf_event__repipe(tool, event, sample, machine);
+-		return 0;
+ 	}
++	if (inject->build_id_style == BID_RWS__INJECT_HEADER_ALL) {
++		if (!(event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)) {
++			struct dso_id dso_id = {
++				.maj = event->mmap2.maj,
++				.min = event->mmap2.min,
++				.ino = event->mmap2.ino,
++				.ino_generation = event->mmap2.ino_generation,
++			};
++
++			dso = findnew_dso(event->mmap2.pid, event->mmap2.tid,
++					  event->mmap2.filename, &dso_id, machine);
++		}
++		if (dso && !dso__hit(dso)) {
++			dso__set_hit(dso);
++			dso__inject_build_id(dso, tool, machine, sample->cpumode,
++					event->mmap2.flags);
++		}
++	} else {
++		/* Create the thread, map, etc. Not done for the unordered inject all case. */
++		int err = perf_event__process_mmap(tool, event, sample, machine);
  
- 	signal(SIGINT, sig_handler);
+-	dso = findnew_dso(event->mmap2.pid, event->mmap2.tid,
+-			  event->mmap2.filename, &dso_id, machine);
+-
+-	if (dso && !dso__hit(dso)) {
+-		dso__set_hit(dso);
+-		dso__inject_build_id(dso, tool, machine, sample->cpumode,
+-				     event->mmap2.flags);
++		if (err) {
++			dso__put(dso);
++			return err;
++		}
+ 	}
+ 	dso__put(dso);
+-
+-	perf_event__repipe(tool, event, sample, machine);
+-
+-	return 0;
++	return perf_event__repipe(tool, event, sample, machine);
+ }
  
--	if (inject->build_ids || inject->sched_stat ||
--	    inject->itrace_synth_opts.set || inject->build_id_all) {
-+	if (inject->build_id_style != BID_RWS__NONE || inject->sched_stat ||
-+	    inject->itrace_synth_opts.set) {
- 		inject->tool.mmap	  = perf_event__repipe_mmap;
- 		inject->tool.mmap2	  = perf_event__repipe_mmap2;
- 		inject->tool.fork	  = perf_event__repipe_fork;
-@@ -2027,10 +2032,10 @@ static int __cmd_inject(struct perf_inject *inject)
+ static int perf_event__repipe_fork(const struct perf_tool *tool,
+@@ -2032,10 +1988,7 @@ static int __cmd_inject(struct perf_inject *inject)
  
  	output_data_offset = perf_session__data_offset(session->evlist);
  
--	if (inject->build_id_all) {
-+	if (inject->build_id_style == BID_RWS__INJECT_HEADER_ALL) {
- 		inject->tool.mmap	  = perf_event__repipe_buildid_mmap;
- 		inject->tool.mmap2	  = perf_event__repipe_buildid_mmap2;
--	} else if (inject->build_ids) {
-+	} else if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
+-	if (inject->build_id_style == BID_RWS__INJECT_HEADER_ALL) {
+-		inject->tool.mmap	  = perf_event__repipe_buildid_mmap;
+-		inject->tool.mmap2	  = perf_event__repipe_buildid_mmap2;
+-	} else if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
++	if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
  		inject->tool.sample = perf_event__inject_buildid;
  	} else if (inject->sched_stat) {
  		struct evsel *evsel;
-@@ -2148,9 +2153,9 @@ static int __cmd_inject(struct perf_inject *inject)
- 			.inject = inject,
- 		};
+@@ -2430,8 +2383,8 @@ int cmd_inject(int argc, const char **argv)
  
--		if (inject->build_ids)
--			perf_header__set_feat(&session->header,
--					      HEADER_BUILD_ID);
-+		if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY ||
-+		    inject->build_id_style == BID_RWS__INJECT_HEADER_ALL)
-+			perf_header__set_feat(&session->header, HEADER_BUILD_ID);
- 		/*
- 		 * Keep all buildids when there is unprocessed AUX data because
- 		 * it is not known which ones the AUX trace hits.
-@@ -2211,11 +2216,13 @@ int cmd_inject(int argc, const char **argv)
- 	int ret;
- 	bool repipe = true;
- 	const char *known_build_ids = NULL;
-+	bool build_ids;
-+	bool build_id_all;
- 
- 	struct option options[] = {
--		OPT_BOOLEAN('b', "build-ids", &inject.build_ids,
-+		OPT_BOOLEAN('b', "build-ids", &build_ids,
- 			    "Inject build-ids into the output stream"),
--		OPT_BOOLEAN(0, "buildid-all", &inject.build_id_all,
-+		OPT_BOOLEAN(0, "buildid-all", &build_id_all,
- 			    "Inject build-ids of all DSOs into the output stream"),
- 		OPT_STRING(0, "known-build-ids", &known_build_ids,
- 			   "buildid path [,buildid path...]",
-@@ -2313,6 +2320,10 @@ int cmd_inject(int argc, const char **argv)
- 			return -1;
- 		}
- 	}
-+	if (build_ids)
-+		inject.build_id_style = BID_RWS__INJECT_HEADER_LAZY;
-+	if (build_id_all)
-+		inject.build_id_style = BID_RWS__INJECT_HEADER_ALL;
- 
- 	data.path = inject.input_name;
- 	if (!strcmp(inject.input_name, "-") || inject.output.is_pipe) {
-@@ -2326,7 +2337,7 @@ int cmd_inject(int argc, const char **argv)
- 			repipe = false;
- 	}
- 	ordered_events = inject.jit_mode || inject.sched_stat ||
--		(inject.build_ids && !inject.build_id_all);
-+		(inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY);
- 	perf_tool__init(&inject.tool, ordered_events);
- 	inject.tool.sample		= perf_event__repipe_sample;
- 	inject.tool.read		= perf_event__repipe_sample;
-@@ -2398,7 +2409,7 @@ int cmd_inject(int argc, const char **argv)
- 			goto out_delete;
- 	}
- 
--	if (inject.build_ids && !inject.build_id_all) {
-+	if (inject.build_id_style == BID_RWS__INJECT_HEADER_LAZY) {
- 		/*
- 		 * to make sure the mmap records are ordered correctly
- 		 * and so that the correct especially due to jitted code
-@@ -2406,14 +2417,14 @@ int cmd_inject(int argc, const char **argv)
- 		 * inject the jit mmaps at the same time for now.
- 		 */
+ #ifdef HAVE_JITDUMP
+ 	if (inject.jit_mode) {
+-		inject.tool.mmap2	   = perf_event__jit_repipe_mmap2;
+-		inject.tool.mmap	   = perf_event__jit_repipe_mmap;
++		inject.tool.mmap2	   = perf_event__repipe_mmap2;
++		inject.tool.mmap	   = perf_event__repipe_mmap;
  		inject.tool.ordering_requires_timestamps = true;
--		if (known_build_ids != NULL) {
--			inject.known_build_ids =
--				perf_inject__parse_known_build_ids(known_build_ids);
-+	}
-+	if (inject.build_id_style != BID_RWS__NONE && known_build_ids != NULL) {
-+		inject.known_build_ids =
-+			perf_inject__parse_known_build_ids(known_build_ids);
- 
--			if (inject.known_build_ids == NULL) {
--				pr_err("Couldn't parse known build ids.\n");
--				goto out_delete;
--			}
-+		if (inject.known_build_ids == NULL) {
-+			pr_err("Couldn't parse known build ids.\n");
-+			goto out_delete;
- 		}
- 	}
- 
+ 		/*
+ 		 * JIT MMAP injection injects all MMAP events in one go, so it
 -- 
 2.46.0.184.g6999bdac58-goog
 
