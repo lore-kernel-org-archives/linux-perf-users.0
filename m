@@ -1,121 +1,119 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1C73145B37;
-	Sat, 17 Aug 2024 12:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FB48BE8;
+	Sat, 17 Aug 2024 16:24:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723898499; cv=none; b=mdfVnECSGUf+grXVPZfOmxGqxqQU6M7HFdjMH2kjHj3PX+pNEzMUqhLoUSW36hue0K5yzk2C4hGrIAWbaAEvfWZg1uB6TVI1LMph5elsDLR76iWUus6QhDtkoc9bbwWPsLnjtqk4vGWQgp4O3RtUG8yceGyIQSybE0T+6st1xIQ=
+	t=1723911857; cv=none; b=H0Bxt83Hs3H9tEx6FfEwKdUqbtpW8cEuBllYG2eqfhwXchFg+3xQXO30Zbx30PKX577HHRGTDtp42iLL0Nhp0A9aSLmVj7KLpReHdCaJ89IJlTk7lQV+77u7NqwNAk+XNQgmDfxmhNNXIQgxviB40i+fu7z+KhLn6iS6xh7ZNAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723898499; c=relaxed/simple;
-	bh=VNuPAgxI8P5vCLJztz29EedhOgCl/W2GK21rdo1koRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ETeuOrNLhExCjWezqB0d+YGEG7Iji/cqjuyLVObZGDkvAcS3YrjaWmcU/bvMp1ITISR5hMYyX2obmLZ2jC4RUvHJKCJanr6TiQ+pqL7etXznrnzXq0yKR7a5H/0vWHuuMYhcMBUr4pXB3ozM/lvryUbQrpCUiWEc1jy7ZWh3SQk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ci9E6VXF; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1723911857; c=relaxed/simple;
+	bh=a8dBuNVNq92Ukh754Ghth06R/U4P6kBCoB3toZgEH8M=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=ZnQ6y+lxQxxAPWMFgL2YxYsP+e6vgtiAiNk6YUfNuLQ9fTHpvplUM4PMlMGfpTH5VJVFqltez1renIvlLhgZedVSD+qzD+U2FGiJHMuJcDdO3en0zL9goQ5DbrVGapUdCjlSOf21nrJ87gr/uKeKx7fFwZLQZYNBrEC4WzbZ9ls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Br1mcI9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ci9E6VXF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1723898498; x=1755434498;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=VNuPAgxI8P5vCLJztz29EedhOgCl/W2GK21rdo1koRI=;
-  b=Ci9E6VXFZ+++nXYnaqXz9Pyf0SufBYDXtgGWpdhGtlWipUaIGGiu+nTk
-   2NrxR93aEgEkgW0Le6pUGRtASgJjphmo1mLGeRSgGXwbwtgQsVwP6ui0z
-   k3PzE+wOoC4iskDqQ9acTbsQR5fgH5G7pY8iZCPffrMqyzm5HKsbfhQzQ
-   zlPdv144r5r7TgdndRE2fsxbGuQbgtBtKDhDWZotregUwczftM83w9p+I
-   EZnlgwUa5jmqjtzm1/HQDj1jRiLvJidljhD5XjP7dyF4gK1SEyibjf7Uh
-   FIftfgNyn2TAib2qvkA/NrG77hKXeoRUhwSpBWCgOPpcD+wdKSxgWtX2p
-   Q==;
-X-CSE-ConnectionGUID: Y43plSj0TuiMORVbn+lm0A==
-X-CSE-MsgGUID: zqdOFdoaRnOh+12sY4FLjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11167"; a="13069756"
-X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
-   d="scan'208";a="13069756"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:41:37 -0700
-X-CSE-ConnectionGUID: wzTGwqwLTWOxKYWyp0nxKQ==
-X-CSE-MsgGUID: +c9znqAIQ4eEQVUlcxhGvw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,154,1719903600"; 
-   d="scan'208";a="60707501"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Aug 2024 05:39:43 -0700
-Received: from [10.212.114.32] (kliang2-mobl1.ccr.corp.intel.com [10.212.114.32])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 0210D20CFED8;
-	Sat, 17 Aug 2024 05:39:41 -0700 (PDT)
-Message-ID: <df279b32-54f0-4aeb-894a-c06ef91b34f0@linux.intel.com>
-Date: Sat, 17 Aug 2024 08:39:40 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Br1mcI9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 083D4C116B1;
+	Sat, 17 Aug 2024 16:24:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723911856;
+	bh=a8dBuNVNq92Ukh754Ghth06R/U4P6kBCoB3toZgEH8M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Br1mcI9lYUiQLxjtthDaIZdes03XTL9RPi1ubI2ZYBaod0U1IhJSz2C1p35ofKjez
+	 Lksi0Rf6qhAxgvmsR7z7PjuofJJ6KhSUF7WNQrCNTTKLtsKsEvCUQJjpMtk7JsHypm
+	 O2KmH6Gw+Ogsi/iY43QzDGh26npFw1H3HUWaATKKJ+gir6qiKth8LnIZZPBN1EwGEK
+	 /uPUOKw0HSl2+hFDJBz4F3kVtUhg543H205SXWKth//XCf0sBmRZG26QsFa/OX2Mh/
+	 11eQTUaWr7WK5AeW84IgpZv7Jo/8K16SVhxbyJqMI4aOzgUDw8P0t2HFQib1qEkl5s
+	 la0OolN6gFhHw==
+Date: Sun, 18 Aug 2024 01:24:11 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers
+ <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa
+ <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, Peter Zijlstra
+ <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML
+ <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, Athira
+ Rajeev <atrajeev@linux.vnet.ibm.com>, Masami Hiramatsu
+ <mhiramat@kernel.org>
+Subject: Re: [PATCH 1/9] perf dwarf-aux: Check allowed location expressions
+ when collecting variables
+Message-Id: <20240818012411.a00eb93e5b8f9cf45e2f513b@kernel.org>
+In-Reply-To: <20240816235840.2754937-2-namhyung@kernel.org>
+References: <20240816235840.2754937-1-namhyung@kernel.org>
+	<20240816235840.2754937-2-namhyung@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch v4 0/6] Bug fixes on topdown events reordering
-To: Dapeng Mi <dapeng1.mi@linux.intel.com>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- Yongwei Ma <yongwei.ma@intel.com>, Dapeng Mi <dapeng1.mi@intel.com>
-References: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240816122938.32228-1-dapeng1.mi@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Fri, 16 Aug 2024 16:58:31 -0700
+Namhyung Kim <namhyung@kernel.org> wrote:
 
-
-On 2024-08-16 8:29 a.m., Dapeng Mi wrote:
-> Changes:
-> v3 -> v4:
->   * limit metrics event searching inside group for group leader
->     sampling (Kan)
->   * add comments to illustrate supported and unsupported topdown events
->     regrouping formats (Kan)
->   * add more test cases to verify supported topdown regrouping
->     formats (Kan)
+> It missed to call check_allowed_ops() in __die_collect_vars_cb() so it
+> can take variables with complex location expression incorrectly.
 > 
-> History:
->   v3: https://lore.kernel.org/all/20240712170339.185824-1-dapeng1.mi@linux.intel.com/
->   v2: https://lore.kernel.org/all/20240708144204.839486-1-dapeng1.mi@linux.intel.com/
->   v1: https://lore.kernel.org/all/20240702224037.343958-1-dapeng1.mi@linux.intel.com/
+> For example, I found some variable has this expression.
 > 
-> Dapeng Mi (6):
->   perf x86/topdown: Complete topdown slots/metrics events check
->   perf x86/topdown: Correct leader selection with sample_read enabled
->   perf x86/topdown: Don't move topdown metric events in group
->   perf tests: Add leader sampling test in record tests
->   perf tests: Add topdown events counting and sampling tests
->   perf tests: Add more topdown events regroup tests
+>     015d8df8 ffffffff81aacfb3 (base address)
+>     015d8e01 v000000000000004 v000000000000000 views at 015d8df2 for:
+>              ffffffff81aacfb3 ffffffff81aacfd2 (DW_OP_fbreg: -176; DW_OP_deref;
+> 						DW_OP_plus_uconst: 332; DW_OP_deref_size: 4;
+> 						DW_OP_lit1; DW_OP_shra; DW_OP_const1u: 64;
+> 						DW_OP_minus; DW_OP_stack_value)
+>     015d8e14 v000000000000000 v000000000000000 views at 015d8df4 for:
+>              ffffffff81aacfd2 ffffffff81aacfd7 (DW_OP_reg3 (rbx))
+>     015d8e19 v000000000000000 v000000000000000 views at 015d8df6 for:
+>              ffffffff81aacfd7 ffffffff81aad020 (DW_OP_fbreg: -176; DW_OP_deref;
+> 						DW_OP_plus_uconst: 332; DW_OP_deref_size: 4;
+> 						DW_OP_lit1; DW_OP_shra; DW_OP_const1u: 64;
+> 						DW_OP_minus; DW_OP_stack_value)
+>     015d8e2c <End of list>
+> 
+> It looks like '((int *)(-176(%rbp) + 332) >> 1) - 64' but the current
+> code thought it's just -176(%rbp) and processed the variable incorrectly.
+> It should reject such a complex expression if check_allowed_ops()
+> doesn't like it. :)
 
+Looks good to me. Hmm, I should reconsider to support this complex variable
+on ftrace probe events...
 
-Thanks Dapeng.
-
-The series look good to me.
-
-Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thanks,
-Kan
+
 > 
->  tools/perf/arch/x86/util/evlist.c  | 68 ++++++++++++++++++++++++++++--
->  tools/perf/arch/x86/util/evsel.c   |  3 +-
->  tools/perf/arch/x86/util/topdown.c | 64 +++++++++++++++++++++++++++-
->  tools/perf/arch/x86/util/topdown.h |  2 +
->  tools/perf/tests/shell/record.sh   | 45 ++++++++++++++++++++
->  tools/perf/tests/shell/stat.sh     | 28 +++++++++++-
->  6 files changed, 201 insertions(+), 9 deletions(-)
+> Fixes: 932dcc2c39ae ("perf dwarf-aux: Add die_collect_vars()")
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/util/dwarf-aux.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+> index 5e080d7e22c2..beb632153a74 100644
+> --- a/tools/perf/util/dwarf-aux.c
+> +++ b/tools/perf/util/dwarf-aux.c
+> @@ -1598,6 +1598,9 @@ static int __die_collect_vars_cb(Dwarf_Die *die_mem, void *arg)
+>  	if (dwarf_getlocations(&attr, 0, &base, &start, &end, &ops, &nops) <= 0)
+>  		return DIE_FIND_CB_SIBLING;
+>  
+> +	if (!check_allowed_ops(ops, nops))
+> +		return DIE_FIND_CB_SIBLING;
+> +
+>  	if (die_get_real_type(die_mem, &type_die) == NULL)
+>  		return DIE_FIND_CB_SIBLING;
+>  
+> -- 
+> 2.46.0.184.g6999bdac58-goog
 > 
 > 
-> base-commit: 7c626ce4bae1ac14f60076d00eafe71af30450ba
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
