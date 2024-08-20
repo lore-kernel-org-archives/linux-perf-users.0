@@ -1,280 +1,631 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCDFF18EFC9
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 15:18:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81D3E19408E;
+	Tue, 20 Aug 2024 15:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724167091; cv=none; b=RnnVnK3+Yn82J+avSpsxAjNbsWPiGxFWfUMYx3NrqSV4yb4tuEby+ESj3SsaaobN7jvT5NKp37WDOO8F0k0ZwAesI9/NrBlGuIASi566c64VHJ9O+XtpxmpaHWkR3IzTPhtNX8NpDMewc/kemC+hsQxN1XsZMQT1NUL8zl6gHlQ=
+	t=1724168707; cv=none; b=iWgUjOZPDAksjzvCTYLkcUUqTsfvBrWQcQGjR+UHjmPRHJRBV1OQ+bt2vHoK+LE/3fAd82R+AxYm3XjgmYPV0DpMjPEP4sbWLVOIZde8ryci/dG0wtHyngQs8RydQTNaIcIzVkD1bMvup+rFipCqHwkjAbqJH1yMVpu/cB+mVMk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724167091; c=relaxed/simple;
-	bh=FnN5/suzVL2Cva0ZHkqQgBsCNk7qLoyougZpblbcotY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ArUe9RJD7Rp7NF6LO/xNU2kLB6gPNfseo/4B+rOONE1wJ40aSghdMX2CnYqzIJI5J/fnZhaTEY0JrNVM3xbP06/mmRBtQMQqFTfx6q6Yj2qoeIbccWj9cYLu5c63b/NyYXp5JVWrMQyOCYaEsFGqOq45iNsOzLzGDq8b1LSGqr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=D6qLqCJo; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724168707; c=relaxed/simple;
+	bh=tUJMJpL2U4JlbJsp1icWr2AH4+/1QysCL0hGcP6ixbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GSrMdmqDZNOKlL8EBr3xeJg9oA6CmiMsx7xDuuOF505JB14a+KAHEskEq4tSVrSyguPvk+nan7U6Gjf728pAH1GssREfkiecXD2eJPlW3jI3sTsr76m/ABGtA6pf3jZSWb8vWxmOybqeYZS0VO+0pK7kv1GdHll+YR2uZiB2Pis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LT7w89jR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="D6qLqCJo"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-201fed75b38so97075ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 08:18:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724167089; x=1724771889; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=urAcmCCjiI5rmedKtqZs0p7Ogn4+RDAWlFm24KhnpUk=;
-        b=D6qLqCJo4nPDCDTOJ78D2MMNdlssuy6xedoNIFQFIJ9tFfex6YMiNE5AWnj8M57+/U
-         WpFol0UuagLZaO/WTYsO8IX43FXhwcB8HMJUQWTFzdlhRvW27ZUMsHC1YXuCGOPvUdQO
-         w8ldST5UAMvWYMif9QbDh4IQQoGwlXf0/jpJOkhDkT4qBW301gJ9rhJ3oUq46bJXKqs4
-         ISg+1UedVtTe2qv9YU6fs1J3w1kRNyifCx2IFbBPwrECc0+GstUC0Yq+4bWxa8OSGrpD
-         jYcs82l1yr1iyn9WWAhi/yG8Y3EL5DHGfRxY77+NOZTch5e9m59+sYXupdyGV/OU8vti
-         u+2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724167089; x=1724771889;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=urAcmCCjiI5rmedKtqZs0p7Ogn4+RDAWlFm24KhnpUk=;
-        b=RiN4gv2IF2Eceb5V/YRt4r0s5+Y37hQnUvx+w7Hq4TVwTEKb5slEZxC2Gb8NqKoLg0
-         LzwCnpzrEUxEEl9AcxnU3IZWkkhItrk2smsWoSOpb8rnK9enH9V7Pdus+O2RVjg/nr5u
-         s0zmSSQ4m9j5spGeV8eLToZAWiSFd0LEd3jiD7yuoOU/Q0rqr2O0L0VALRmuHHqB7GSi
-         z7Kf+lvYhDVEAnLLAl0NzJSvtamT9mpxCYuvDd6lonpcEE35MVHNxJ4u8XRQoRjNXhc2
-         T/JpChjnol7eGkMl7pHAywHxBOHtlpoSqzB6ZErqZ2VlAVLXNoTuoy95cFIJEIkijBVq
-         hwNA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcJSXUXhimN310l66S5bPM5bMZ2DFSocIXqeTpl41EZ3Y5BHtnAMvPdElAgYb4jzKzZUQyU44xeoLWCmeTh9YD@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4PE/5zQiTyJcqhAk1tfNK04vt9Zwb6sZz++D1T3Jvl98gWxwd
-	9xhDWI5jxLHQ6wVO2elK7/UcePhoKf/VI5lRT0xSCa2sFoOwZc+QC/0XkCrEDQd097pTD3aR/Aq
-	fcc9WkIsZ+SOfkRruYpZxSnalxrQ9cIyUWOBF
-X-Google-Smtp-Source: AGHT+IGBuKYlyGvyMtwjB7GmMn9F6PQG1M2n1FofJFMl4pYMFx93UcVcYXMjA6H1/Apqzp82uCY/T9QmhnvQ1rUT5C4=
-X-Received: by 2002:a17:902:ecca:b0:201:daee:6fac with SMTP id
- d9443c01a7336-202d5beb511mr1914625ad.16.1724167088460; Tue, 20 Aug 2024
- 08:18:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LT7w89jR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D717C4AF0B;
+	Tue, 20 Aug 2024 15:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724168706;
+	bh=tUJMJpL2U4JlbJsp1icWr2AH4+/1QysCL0hGcP6ixbU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LT7w89jRFU+ErWBJ4kVJiDbBkudhhlctCOXvm5kcnQiBYg8I98KWQH9G+oqSTXej7
+	 VWvjVxarx+Qh1Co+uqAXSBYNrvtfLsRn70oNakDdGqmffoTb0sfqdziibSFa3oIFnZ
+	 KqMwZIEA9bpNpe2YQcc1rb/Ovf3QB1829WOg6dVEGLwbrwIfyRB73PVX2erBnh/Jrv
+	 7NJJD8wmWosUHpVYsCLYYtp/fXfNCBIZi0+jeZlM5kaQfdWcPc+wet5zZglaGAEpcd
+	 s/I8kOvyJqfHveKurj3OQAursI/wEof8ElfoWGJ5MuT6L95ndEgw2pM6puoRUqaXT0
+	 H+zr3rbBFWPZw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	KP Singh <kpsingh@kernel.org>,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [PATCH v3 1/3] perf bpf-filter: Support multiple events properly
+Date: Tue, 20 Aug 2024 08:45:02 -0700
+Message-ID: <20240820154504.128923-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <05E55194-C265-4BDA-911D-B9E57EED3CBB@nutanix.com>
- <CAP-5=fUndbBhSLb35_bL-+Xu3erB6ssx-sAEYaf7mgxPawNEbA@mail.gmail.com> <65A24EAA-A348-4E77-AF5B-933B41C9CAB6@nutanix.com>
-In-Reply-To: <65A24EAA-A348-4E77-AF5B-933B41C9CAB6@nutanix.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 Aug 2024 08:17:56 -0700
-Message-ID: <CAP-5=fVTB5DUybd7KnX-qb8yau+onkscm1a13izuZLH_WdXiyw@mail.gmail.com>
-Subject: Re: Perf test failures for 10.2 PMU event map aliases
-To: Jon Kohler <jon@nutanix.com>
-Cc: "adrian.hunter@intel.com" <adrian.hunter@intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Aug 20, 2024 at 6:54=E2=80=AFAM Jon Kohler <jon@nutanix.com> wrote:
->
->
->
-> > On Aug 20, 2024, at 1:41=E2=80=AFAM, Ian Rogers <irogers@google.com> wr=
-ote:
-> >
-> > !-------------------------------------------------------------------|
-> >  CAUTION: External Email
-> >
-> > |-------------------------------------------------------------------!
-> >
-> > On Mon, Aug 19, 2024 at 7:06=E2=80=AFPM Jon Kohler <jon@nutanix.com> wr=
-ote:
-> >>
-> >> Reaching out to the perf community for feedback on the following
-> >> observed test failure. On 6.6.y, I see persistent failures with test
-> >> 10.2 PMU event map aliases, complaining about testing aliases uncore
-> >> PMU mismatches. I've included two outputs below, one with a bit of
-> >> hacky print debugging.
-> >>
-> >> Using Intel(R) Xeon(R) Gold 6154 CPU:
-> >>        10.2: PMU event map aliases                                    =
-     :
-> >>        --- start ---
-> >>        test child forked, pid 962901
-> >>        Using CPUID GenuineIntel-6-55-4
-> >
-> > Hi Jon,
-> >
-> > Sorry for the brief reply but I thought some quick hints might unblock
-> > you on this. The CPUID lines up with a SkylakeX:
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_p=
-ub_scm_linux_kernel_git_perf_perf-2Dtools-2Dnext.git_tree_tools_perf_pmu-2D=
-events_arch_x86_mapfile.csv-3Fh-3Dperf-2Dtools-2Dnext-23n33&d=3DDwIFaQ&c=3D=
-s883GpUCOChKOHiocYtGcg&r=3DNGPRGGo37mQiSXgHKm5rCQ&m=3DRJx661xzakrB42hsUsFD1=
-HhJczkgpaYur9lHVtl7j36__CBOqYfKf4Dnq0xdpBZl&s=3DF-eXsmTASgRsptt5Gahro6fRyMw=
-EQdjZ6PtY7vhzIKM&e=3D
-> >
-> >>        testing core PMU cpu aliases: pass
-> >>        JKDBG: pmu nr total 3 pmu->sysfs_aliases 3 pmu->sys_json_aliase=
-s 0
-> >>        JKDBG: pmu cpu_aliases_added nr total 4 pmu->cpu_json_aliases 1
-> >>        testing aliases uncore PMU uncore_imc_0: mismatch expected alia=
-ses
-> >>          (1) vs found (4)
-> >>        test child finished with -1
-> >>        ---- end ----
-> >>        PMU events subtest 2: FAILED!
-> >>
-> >> Using Intel(R) Xeon(R) Platinum 8352Y:
-> >>        10.2: PMU event map aliases                                    =
-     :
-> >>        --- start ---
-> >>        test child forked, pid 1765070
-> >>        Using CPUID GenuineIntel-6-6A-6
-> >
-> > This is an IcelakeX:
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_p=
-ub_scm_linux_kernel_git_perf_perf-2Dtools-2Dnext.git_tree_tools_perf_pmu-2D=
-events_arch_x86_mapfile.csv-3Fh-3Dperf-2Dtools-2Dnext-23n18&d=3DDwIFaQ&c=3D=
-s883GpUCOChKOHiocYtGcg&r=3DNGPRGGo37mQiSXgHKm5rCQ&m=3DRJx661xzakrB42hsUsFD1=
-HhJczkgpaYur9lHVtl7j36__CBOqYfKf4Dnq0xdpBZl&s=3D6DwD4ZmywAtcwCnRjx7wRfmdW_G=
-65wHIuyZJIc__2yc&e=3D
-> >
-> >>        testing core PMU cpu aliases: pass
-> >>        testing aliases uncore PMU uncore_imc_free_running_0: mismatch
-> >>          expected aliases (1) vs found (6)
-> >>        test child finished with -1
-> >>        ---- end ----
-> >>        PMU events subtest 2: FAILED!
-> >>
-> >> Digging in more, looking at pmu_aliases_parse, I see that we'll discar=
-d
-> >> scale and unit files in pmu_alias_info_file, which leaves us with 3x
-> >> aliases in the uncore_imc_0 in the first case and 5x aliases in the
-> >> uncore_imc_free_running_0 second case.
-> >>
-> >> # From 6154-based system:
-> >> ls -lhat /sys/devices/uncore_imc_0/events
-> >
-> > The "uncore_" prefix and the "_0" suffix are optional, the naming
-> > matching is case insensitive. In the event json the events are listed
-> > here:
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_p=
-ub_scm_linux_kernel_git_perf_perf-2Dtools-2Dnext.git_tree_tools_perf_pmu-2D=
-events_arch_x86_skylakex_uncore-2Dmemory.json-3Fh-3Dperf-2Dtools-2Dnext&d=
-=3DDwIFaQ&c=3Ds883GpUCOChKOHiocYtGcg&r=3DNGPRGGo37mQiSXgHKm5rCQ&m=3DRJx661x=
-zakrB42hsUsFD1HhJczkgpaYur9lHVtl7j36__CBOqYfKf4Dnq0xdpBZl&s=3DFpAgVwLmTyXUF=
-QIMZ_gbPlH9aXvrmcJ8CZaW3tKIaj4&e=3D
-> >
-> >> total 0
-> >> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_read.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_read.unit
-> >> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_write.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_write.unit
-> >> -r--r--r--. 1 root root 4.0K Aug  9 15:30 cas_count_read
-> >> -r--r--r--. 1 root root 4.0K Aug  9 15:30 cas_count_write
-> >> -r--r--r--. 1 root root 4.0K Aug  9 15:30 clockticks
-> >
-> > This should be 3 sysfs events (I don't like the term alias), note that
-> > we load the sysfs and json events lazily to avoid overhead.
-> >
-> >> drwxr-xr-x. 2 root root    0 Jul 17 03:40 .
-> >> drwxr-xr-x. 5 root root    0 Jul 17 02:52 ..
-> >>
-> >> # From the 8352Y-based system:
-> >> ls -lhat /sys/bus/event_source/devices/uncore_imc_free_running_0/event=
-s
-> >> total 0
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_read.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_read.unit
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_write.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_write.unit
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 read.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 read.unit
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 write.scale
-> >> -r--r--r--. 1 root root 4.0K Aug 20 01:44 write.unit
-> >> -r--r--r--. 1 root root 4.0K Aug 19 21:33 dclk
-> >> -r--r--r--. 1 root root 4.0K Aug 19 21:33 ddrt_read
-> >> -r--r--r--. 1 root root 4.0K Aug 19 21:33 ddrt_write
-> >> -r--r--r--. 1 root root 4.0K Aug 19 21:33 read
-> >> -r--r--r--. 1 root root 4.0K Aug 19 21:33 write
-> >
-> > This is 5 sysfs events, the json events are here:
-> > https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__git.kernel.org_p=
-ub_scm_linux_kernel_git_perf_perf-2Dtools-2Dnext.git_tree_tools_perf_pmu-2D=
-events_arch_x86_icelakex_uncore-2Dmemory.json-3Fh-3Dperf-2Dtools-2Dnext-23n=
-134&d=3DDwIFaQ&c=3Ds883GpUCOChKOHiocYtGcg&r=3DNGPRGGo37mQiSXgHKm5rCQ&m=3DRJ=
-x661xzakrB42hsUsFD1HhJczkgpaYur9lHVtl7j36__CBOqYfKf4Dnq0xdpBZl&s=3DMrHuUCZF=
-qrNrd05IPyq4fuZDH4_owkEw0xHcc7bvGvU&e=3D
-> > Note, the "Unit", meaning the PMU should be imc_free_running to match
-> > this device.
-> >
-> >> drwxr-xr-x. 2 root root    0 Aug 15 03:15 .
-> >> drwxr-xr-x. 5 root root    0 Aug 15 02:42 ..
-> >>
-> >> Looking at the structure of __test_uncore_pmu_event_aliases, however,
-> >> I'm not quite sure how this is supposed to work. I've annotated a walk
-> >> through below to highlight where things are going off the rails.
-> >>
-> >> static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *t=
-est_pmu)
-> >> {
-> >> ...
-> >>        /* Count how many aliases we generated */
-> >>        alias_count =3D perf_pmu__num_events(pmu);
-> >>                // alias_count =3D=3D 4 in the 6154-based system
-> >>                // alias_count =3D=3D 6 in the 8352Y-based system
-> >>
-> >>        /* Count how many aliases we expect from the known table */
-> >>        for (table =3D &test_pmu->aliases[0]; *table; table++)
-> >>                to_match_count++;
-> >>                        // this is looking at aliases in struct perf_pm=
-u_test_pmu
-> >>                        // table, which for uncore_imc_0 is a single en=
-try for
-> >>                        // &uncore_imc_cache_hits.
-> >>                        //
-> >>                        // for the 8352Y case, likewise, we only have a=
- single alias
-> >>                        // in the table for &uncore_imc_free_running_ca=
-che_miss.
-> >>                        //
-> >>                        // in both cases, to_match_count =3D=3D 1
-> >>
-> >>        // Compare 4 vs 1 or 6 vs 1
-> >>        if (alias_count !=3D to_match_count) {
-> >>                pr_debug("testing aliases uncore PMU %s: mismatch expec=
-ted aliases (%d) vs found (%d)\n",
-> >>                         pmu_name, to_match_count /* 1 */, alias_count =
-/* 4 */);
-> >>                return -1;
-> >>                        // we seemed doomed to hit this conditional alw=
-ays, no?
-> >>        }
-> >> ...
-> >> }
-> >>
-> >> I did a walkthrough of the latest mainline code, and don't see a marke=
-d
-> >> difference that jump off the page to me that'd correct this behavior,
-> >> and would love a helping hand to point in the right direction on this.
-> >>
-> >> What am I missing here?
-> >
-> > I'll need some more time to dig into this. Hopefully the pointers above=
- help.
->
-> Thanks for the quick reply and pointers, I appreciate it. The tricky bit =
-still
-> remains, as the code I posted to above seems to solely depend on the
-> info filled into struct perf_pmu_test_pmu, right? If so, I don=E2=80=99t =
-see how the
-> dots connect from this test to the other events in sysfs/json=E2=80=99s.
+So far it used tgid as a key to get the filter expressions in the
+pinned filters map for regular users but it won't work well if the has
+more than one filters at the same time.  Let's add the event id to the
+key of the filter hash map so that it can identify the right filter
+expression in the BPF program.
 
-So looking at the test it is using the testcpu:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/tests/pmu-events.c?h=3Dperf-tools-next#n602
-the json for that is here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/test/test_soc/cpu?h=3Dperf-tools-next
-The names in the test are based on ones seen on real CPUs, so this may
-be leading to the confusion.
+As the event can be inherited to child tasks, it should use the primary
+id which belongs to the parent (original) event.  Since evsel opens the
+event for multiple CPUs and tasks, it needs to maintain a separate hash
+map for the event id.
 
-Thanks,
-Ian
+In the user space, it keeps a list for the multiple evsel and release
+the entries in the both hash map when it closes the event.
+
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf-filter.c                 | 288 ++++++++++++++++---
+ tools/perf/util/bpf_skel/sample-filter.h     |  11 +-
+ tools/perf/util/bpf_skel/sample_filter.bpf.c |  42 ++-
+ tools/perf/util/bpf_skel/vmlinux/vmlinux.h   |   5 +
+ 4 files changed, 304 insertions(+), 42 deletions(-)
+
+diff --git a/tools/perf/util/bpf-filter.c b/tools/perf/util/bpf-filter.c
+index c5eb0b7eec19..0a1832564dd2 100644
+--- a/tools/perf/util/bpf-filter.c
++++ b/tools/perf/util/bpf-filter.c
+@@ -1,4 +1,45 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++/**
++ * Generic event filter for sampling events in BPF.
++ *
++ * The BPF program is fixed and just to read filter expressions in the 'filters'
++ * map and compare the sample data in order to reject samples that don't match.
++ * Each filter expression contains a sample flag (term) to compare, an operation
++ * (==, >=, and so on) and a value.
++ *
++ * Note that each entry has an array of filter expressions and it only succeeds
++ * when all of the expressions are satisfied.  But it supports the logical OR
++ * using a GROUP operation which is satisfied when any of its member expression
++ * is evaluated to true.  But it doesn't allow nested GROUP operations for now.
++ *
++ * To support non-root users, the filters map can be loaded and pinned in the BPF
++ * filesystem by root (perf record --setup-filter pin).  Then each user will get
++ * a new entry in the shared filters map to fill the filter expressions.  And the
++ * BPF program will find the filter using (task-id, event-id) as a key.
++ *
++ * The pinned BPF object (shared for regular users) has:
++ *
++ *                  event_hash                   |
++ *                  |        |                   |
++ *   event->id ---> |   id   | ---+   idx_hash   |     filters
++ *                  |        |    |   |      |   |    |       |
++ *                  |  ....  |    +-> |  idx | --+--> | exprs | --->  perf_bpf_filter_entry[]
++ *                                |   |      |   |    |       |               .op
++ *   task id (tgid) --------------+   | .... |   |    |  ...  |               .term (+ part)
++ *                                               |                            .value
++ *                                               |
++ *   ======= (root would skip this part) ========                     (compares it in a loop)
++ *
++ * This is used for per-task use cases while system-wide profiling (normally from
++ * root user) uses a separate copy of the program and the maps for its own so that
++ * it can proceed even if a lot of non-root users are using the filters at the
++ * same time.  In this case the filters map has a single entry and no need to use
++ * the hash maps to get the index (key) of the filters map (IOW it's always 0).
++ *
++ * The BPF program returns 1 to accept the sample or 0 to drop it.
++ * The 'dropped' map is to keep how many samples it dropped by the filter and
++ * it will be reported as lost samples.
++ */
+ #include <stdlib.h>
+ #include <fcntl.h>
+ #include <sys/ioctl.h>
+@@ -6,6 +47,7 @@
+ 
+ #include <bpf/bpf.h>
+ #include <linux/err.h>
++#include <linux/list.h>
+ #include <api/fs/fs.h>
+ #include <internal/xyarray.h>
+ #include <perf/threadmap.h>
+@@ -27,7 +69,14 @@
+ #define PERF_SAMPLE_TYPE(_st, opt)	__PERF_SAMPLE_TYPE(PBF_TERM_##_st, PERF_SAMPLE_##_st, opt)
+ 
+ /* Index in the pinned 'filters' map.  Should be released after use. */
+-static int pinned_filter_idx = -1;
++struct pinned_filter_idx {
++	struct list_head list;
++	struct evsel *evsel;
++	u64 event_id;
++	int hash_idx;
++};
++
++static LIST_HEAD(pinned_filters);
+ 
+ static const struct perf_sample_info {
+ 	enum perf_bpf_filter_term type;
+@@ -175,24 +224,145 @@ static int convert_to_tgid(int tid)
+ 	return tgid;
+ }
+ 
+-static int update_pid_hash(struct evsel *evsel, struct perf_bpf_filter_entry *entry)
++/*
++ * The event might be closed already so we cannot get the list of ids using FD
++ * like in create_event_hash() below, let's iterate the event_hash map and
++ * delete all entries that have the event id as a key.
++ */
++static void destroy_event_hash(u64 event_id)
++{
++	int fd;
++	u64 key, *prev_key = NULL;
++	int num = 0, alloced = 32;
++	u64 *ids = calloc(alloced, sizeof(*ids));
++
++	if (ids == NULL)
++		return;
++
++	fd = get_pinned_fd("event_hash");
++	if (fd < 0) {
++		pr_debug("cannot get fd for 'event_hash' map\n");
++		free(ids);
++		return;
++	}
++
++	/* Iterate the whole map to collect keys for the event id. */
++	while (!bpf_map_get_next_key(fd, prev_key, &key)) {
++		u64 id;
++
++		if (bpf_map_lookup_elem(fd, &key, &id) == 0 && id == event_id) {
++			if (num == alloced) {
++				void *tmp;
++
++				alloced *= 2;
++				tmp = realloc(ids, alloced * sizeof(*ids));
++				if (tmp == NULL)
++					break;
++
++				ids = tmp;
++			}
++			ids[num++] = key;
++		}
++
++		prev_key = &key;
++	}
++
++	for (int i = 0; i < num; i++)
++		bpf_map_delete_elem(fd, &ids[i]);
++
++	free(ids);
++	close(fd);
++}
++
++/*
++ * Return a representative id if ok, or 0 for failures.
++ *
++ * The perf_event->id is good for this, but an evsel would have multiple
++ * instances for CPUs and tasks.  So pick up the first id and setup a hash
++ * from id of each instance to the representative id (the first one).
++ */
++static u64 create_event_hash(struct evsel *evsel)
++{
++	int x, y, fd;
++	u64 the_id = 0, id;
++
++	fd = get_pinned_fd("event_hash");
++	if (fd < 0) {
++		pr_err("cannot get fd for 'event_hash' map\n");
++		return 0;
++	}
++
++	for (x = 0; x < xyarray__max_x(evsel->core.fd); x++) {
++		for (y = 0; y < xyarray__max_y(evsel->core.fd); y++) {
++			int ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_ID, &id);
++
++			if (ret < 0) {
++				pr_err("Failed to get the event id\n");
++				if (the_id)
++					destroy_event_hash(the_id);
++				return 0;
++			}
++
++			if (the_id == 0)
++				the_id = id;
++
++			bpf_map_update_elem(fd, &id, &the_id, BPF_ANY);
++		}
++	}
++
++	close(fd);
++	return the_id;
++}
++
++static void destroy_idx_hash(struct pinned_filter_idx *pfi)
++{
++	int fd, nr;
++	struct perf_thread_map *threads;
++
++	fd = get_pinned_fd("filters");
++	bpf_map_delete_elem(fd, &pfi->hash_idx);
++	close(fd);
++
++	if (pfi->event_id)
++		destroy_event_hash(pfi->event_id);
++
++	threads = perf_evsel__threads(&pfi->evsel->core);
++	if (threads == NULL)
++		return;
++
++	fd = get_pinned_fd("idx_hash");
++	nr = perf_thread_map__nr(threads);
++	for (int i = 0; i < nr; i++) {
++		/* The target task might be dead already, just try the pid */
++		struct idx_hash_key key = {
++			.evt_id = pfi->event_id,
++			.tgid = perf_thread_map__pid(threads, i),
++		};
++
++		bpf_map_delete_elem(fd, &key);
++	}
++	close(fd);
++}
++
++/* Maintain a hashmap from (tgid, event-id) to filter index */
++static int create_idx_hash(struct evsel *evsel, struct perf_bpf_filter_entry *entry)
+ {
+ 	int filter_idx;
+ 	int fd, nr, last;
++	u64 event_id = 0;
++	struct pinned_filter_idx *pfi = NULL;
+ 	struct perf_thread_map *threads;
+ 
+ 	fd = get_pinned_fd("filters");
+ 	if (fd < 0) {
+-		pr_debug("cannot get fd for 'filters' map\n");
++		pr_err("cannot get fd for 'filters' map\n");
+ 		return fd;
+ 	}
+ 
+ 	/* Find the first available entry in the filters map */
+ 	for (filter_idx = 0; filter_idx < MAX_FILTERS; filter_idx++) {
+-		if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXIST) == 0) {
+-			pinned_filter_idx = filter_idx;
++		if (bpf_map_update_elem(fd, &filter_idx, entry, BPF_NOEXIST) == 0)
+ 			break;
+-		}
+ 	}
+ 	close(fd);
+ 
+@@ -201,22 +371,44 @@ static int update_pid_hash(struct evsel *evsel, struct perf_bpf_filter_entry *en
+ 		return -EBUSY;
+ 	}
+ 
++	pfi = zalloc(sizeof(*pfi));
++	if (pfi == NULL) {
++		pr_err("Cannot save pinned filter index\n");
++		goto err;
++	}
++
++	pfi->evsel = evsel;
++	pfi->hash_idx = filter_idx;
++
++	event_id = create_event_hash(evsel);
++	if (event_id == 0) {
++		pr_err("Cannot update the event hash\n");
++		goto err;
++	}
++
++	pfi->event_id = event_id;
++
+ 	threads = perf_evsel__threads(&evsel->core);
+ 	if (threads == NULL) {
+ 		pr_err("Cannot get the thread list of the event\n");
+-		return -EINVAL;
++		goto err;
+ 	}
+ 
+ 	/* save the index to a hash map */
+-	fd = get_pinned_fd("pid_hash");
+-	if (fd < 0)
+-		return fd;
++	fd = get_pinned_fd("idx_hash");
++	if (fd < 0) {
++		pr_err("cannot get fd for 'idx_hash' map\n");
++		goto err;
++	}
+ 
+ 	last = -1;
+ 	nr = perf_thread_map__nr(threads);
+ 	for (int i = 0; i < nr; i++) {
+ 		int pid = perf_thread_map__pid(threads, i);
+ 		int tgid;
++		struct idx_hash_key key = {
++			.evt_id = event_id,
++		};
+ 
+ 		/* it actually needs tgid, let's get tgid from /proc. */
+ 		tgid = convert_to_tgid(pid);
+@@ -228,16 +420,25 @@ static int update_pid_hash(struct evsel *evsel, struct perf_bpf_filter_entry *en
+ 		if (tgid == last)
+ 			continue;
+ 		last = tgid;
++		key.tgid = tgid;
+ 
+-		if (bpf_map_update_elem(fd, &tgid, &filter_idx, BPF_ANY) < 0) {
+-			pr_err("Failed to update the pid hash\n");
++		if (bpf_map_update_elem(fd, &key, &filter_idx, BPF_ANY) < 0) {
++			pr_err("Failed to update the idx_hash\n");
+ 			close(fd);
+-			return -1;
++			goto err;
+ 		}
+-		pr_debug("pid hash: %d -> %d\n", tgid, filter_idx);
++		pr_debug("bpf-filter: idx_hash (task=%d,%s) -> %d\n",
++			 tgid, evsel__name(evsel), filter_idx);
+ 	}
++
++	list_add(&pfi->list, &pinned_filters);
+ 	close(fd);
+-	return 0;
++	return filter_idx;
++
++err:
++	destroy_idx_hash(pfi);
++	free(pfi);
++	return -1;
+ }
+ 
+ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+@@ -247,7 +448,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 	struct bpf_program *prog;
+ 	struct bpf_link *link;
+ 	struct perf_bpf_filter_entry *entry;
+-	bool needs_pid_hash = !target__has_cpu(target) && !target->uid_str;
++	bool needs_idx_hash = !target__has_cpu(target) && !target->uid_str;
+ 
+ 	entry = calloc(MAX_FILTERS, sizeof(*entry));
+ 	if (entry == NULL)
+@@ -259,11 +460,11 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		goto err;
+ 	}
+ 
+-	if (needs_pid_hash && geteuid() != 0) {
++	if (needs_idx_hash && geteuid() != 0) {
+ 		int zero = 0;
+ 
+ 		/* The filters map is shared among other processes */
+-		ret = update_pid_hash(evsel, entry);
++		ret = create_idx_hash(evsel, entry);
+ 		if (ret < 0)
+ 			goto err;
+ 
+@@ -274,7 +475,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 		}
+ 
+ 		/* Reset the lost count */
+-		bpf_map_update_elem(fd, &pinned_filter_idx, &zero, BPF_ANY);
++		bpf_map_update_elem(fd, &ret, &zero, BPF_ANY);
+ 		close(fd);
+ 
+ 		fd = get_pinned_fd("perf_sample_filter");
+@@ -288,6 +489,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 				ret = ioctl(FD(evsel, x, y), PERF_EVENT_IOC_SET_BPF, fd);
+ 				if (ret < 0) {
+ 					pr_err("Failed to attach perf sample-filter\n");
++					close(fd);
+ 					goto err;
+ 				}
+ 			}
+@@ -332,6 +534,15 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ 
+ err:
+ 	free(entry);
++	if (!list_empty(&pinned_filters)) {
++		struct pinned_filter_idx *pfi, *tmp;
++
++		list_for_each_entry_safe(pfi, tmp, &pinned_filters, list) {
++			destroy_idx_hash(pfi);
++			list_del(&pfi->list);
++			free(pfi);
++		}
++	}
+ 	sample_filter_bpf__destroy(skel);
+ 	return ret;
+ }
+@@ -339,6 +550,7 @@ int perf_bpf_filter__prepare(struct evsel *evsel, struct target *target)
+ int perf_bpf_filter__destroy(struct evsel *evsel)
+ {
+ 	struct perf_bpf_filter_expr *expr, *tmp;
++	struct pinned_filter_idx *pfi, *pos;
+ 
+ 	list_for_each_entry_safe(expr, tmp, &evsel->bpf_filters, list) {
+ 		list_del(&expr->list);
+@@ -346,14 +558,11 @@ int perf_bpf_filter__destroy(struct evsel *evsel)
+ 	}
+ 	sample_filter_bpf__destroy(evsel->bpf_skel);
+ 
+-	if (pinned_filter_idx >= 0) {
+-		int fd = get_pinned_fd("filters");
+-
+-		bpf_map_delete_elem(fd, &pinned_filter_idx);
+-		pinned_filter_idx = -1;
+-		close(fd);
++	list_for_each_entry_safe(pfi, pos, &pinned_filters, list) {
++		destroy_idx_hash(pfi);
++		list_del(&pfi->list);
++		free(pfi);
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -364,10 +573,20 @@ u64 perf_bpf_filter__lost_count(struct evsel *evsel)
+ 	if (list_empty(&evsel->bpf_filters))
+ 		return 0;
+ 
+-	if (pinned_filter_idx >= 0) {
++	if (!list_empty(&pinned_filters)) {
+ 		int fd = get_pinned_fd("dropped");
++		struct pinned_filter_idx *pfi;
++
++		if (fd < 0)
++			return 0;
+ 
+-		bpf_map_lookup_elem(fd, &pinned_filter_idx, &count);
++		list_for_each_entry(pfi, &pinned_filters, list) {
++			if (pfi->evsel != evsel)
++				continue;
++
++			bpf_map_lookup_elem(fd, &pfi->hash_idx, &count);
++			break;
++		}
+ 		close(fd);
+ 	} else if (evsel->bpf_skel) {
+ 		struct sample_filter_bpf *skel = evsel->bpf_skel;
+@@ -429,9 +648,10 @@ int perf_bpf_filter__pin(void)
+ 
+ 	/* pinned program will use pid-hash */
+ 	bpf_map__set_max_entries(skel->maps.filters, MAX_FILTERS);
+-	bpf_map__set_max_entries(skel->maps.pid_hash, MAX_PIDS);
++	bpf_map__set_max_entries(skel->maps.event_hash, MAX_EVT_HASH);
++	bpf_map__set_max_entries(skel->maps.idx_hash, MAX_IDX_HASH);
+ 	bpf_map__set_max_entries(skel->maps.dropped, MAX_FILTERS);
+-	skel->rodata->use_pid_hash = 1;
++	skel->rodata->use_idx_hash = 1;
+ 
+ 	if (sample_filter_bpf__load(skel) < 0) {
+ 		ret = -errno;
+@@ -484,8 +704,12 @@ int perf_bpf_filter__pin(void)
+ 		pr_debug("chmod for filters failed\n");
+ 		ret = -errno;
+ 	}
+-	if (fchmodat(dir_fd, "pid_hash", 0666, 0) < 0) {
+-		pr_debug("chmod for pid_hash failed\n");
++	if (fchmodat(dir_fd, "event_hash", 0666, 0) < 0) {
++		pr_debug("chmod for event_hash failed\n");
++		ret = -errno;
++	}
++	if (fchmodat(dir_fd, "idx_hash", 0666, 0) < 0) {
++		pr_debug("chmod for idx_hash failed\n");
+ 		ret = -errno;
+ 	}
+ 	if (fchmodat(dir_fd, "dropped", 0666, 0) < 0) {
+diff --git a/tools/perf/util/bpf_skel/sample-filter.h b/tools/perf/util/bpf_skel/sample-filter.h
+index e666bfd5fbdd..5f0c8e4e83d3 100644
+--- a/tools/perf/util/bpf_skel/sample-filter.h
++++ b/tools/perf/util/bpf_skel/sample-filter.h
+@@ -1,8 +1,9 @@
+ #ifndef PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+ #define PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H
+ 
+-#define MAX_FILTERS  64
+-#define MAX_PIDS     (16 * 1024)
++#define MAX_FILTERS   64
++#define MAX_IDX_HASH  (16 * 1024)
++#define MAX_EVT_HASH  (1024 * 1024)
+ 
+ /* supported filter operations */
+ enum perf_bpf_filter_op {
+@@ -62,4 +63,10 @@ struct perf_bpf_filter_entry {
+ 	__u64 value;
+ };
+ 
++struct idx_hash_key {
++	__u64 evt_id;
++	__u32 tgid;
++	__u32 reserved;
++};
++
+ #endif /* PERF_UTIL_BPF_SKEL_SAMPLE_FILTER_H */
+diff --git a/tools/perf/util/bpf_skel/sample_filter.bpf.c b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+index 4c75354b84fd..4872a16eedfd 100644
+--- a/tools/perf/util/bpf_skel/sample_filter.bpf.c
++++ b/tools/perf/util/bpf_skel/sample_filter.bpf.c
+@@ -15,13 +15,25 @@ struct filters {
+ 	__uint(max_entries, 1);
+ } filters SEC(".maps");
+ 
+-/* tgid to filter index */
+-struct pid_hash {
++/*
++ * An evsel has multiple instances for each CPU or task but we need a single
++ * id to be used as a key for the idx_hash.  This hashmap would translate the
++ * instance's ID to a representative ID.
++ */
++struct event_hash {
+ 	__uint(type, BPF_MAP_TYPE_HASH);
+-	__type(key, int);
++	__type(key, __u64);
++	__type(value, __u64);
++	__uint(max_entries, 1);
++} event_hash SEC(".maps");
++
++/* tgid/evtid to filter index */
++struct idx_hash {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__type(key, struct idx_hash_key);
+ 	__type(value, int);
+ 	__uint(max_entries, 1);
+-} pid_hash SEC(".maps");
++} idx_hash SEC(".maps");
+ 
+ /* tgid to filter index */
+ struct lost_count {
+@@ -31,7 +43,7 @@ struct lost_count {
+ 	__uint(max_entries, 1);
+ } dropped SEC(".maps");
+ 
+-volatile const int use_pid_hash;
++volatile const int use_idx_hash;
+ 
+ void *bpf_cast_to_kern_ctx(void *) __ksym;
+ 
+@@ -202,11 +214,25 @@ int perf_sample_filter(void *ctx)
+ 
+ 	k = 0;
+ 
+-	if (use_pid_hash) {
+-		int tgid = bpf_get_current_pid_tgid() >> 32;
++	if (use_idx_hash) {
++		struct idx_hash_key key = {
++			.tgid = bpf_get_current_pid_tgid() >> 32,
++		};
++		__u64 eid = kctx->event->id;
++		__u64 *key_id;
+ 		int *idx;
+ 
+-		idx = bpf_map_lookup_elem(&pid_hash, &tgid);
++		/* get primary_event_id */
++		if (kctx->event->parent)
++			eid = kctx->event->parent->id;
++
++		key_id = bpf_map_lookup_elem(&event_hash, &eid);
++		if (key_id == NULL)
++			goto drop;
++
++		key.evt_id = *key_id;
++
++		idx = bpf_map_lookup_elem(&idx_hash, &key);
+ 		if (idx)
+ 			k = *idx;
+ 		else
+diff --git a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+index d818e30c5457..4fa21468487e 100644
+--- a/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
++++ b/tools/perf/util/bpf_skel/vmlinux/vmlinux.h
+@@ -175,6 +175,11 @@ struct perf_sample_data {
+ 	u64			 code_page_size;
+ } __attribute__((__aligned__(64))) __attribute__((preserve_access_index));
+ 
++struct perf_event {
++	struct perf_event	*parent;
++	u64			id;
++} __attribute__((preserve_access_index));
++
+ struct bpf_perf_event_data_kern {
+ 	struct perf_sample_data *data;
+ 	struct perf_event	*event;
+-- 
+2.46.0.184.g6999bdac58-goog
+
