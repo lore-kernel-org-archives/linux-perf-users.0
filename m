@@ -1,382 +1,140 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3289190671
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 16:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D03910A24;
+	Tue, 20 Aug 2024 18:02:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724171046; cv=none; b=ERQXLyg6vtPci7nORoCpZRJ0Z14YJLRMitJan7MQ5ap2vdxht/sK99VZ/j7wd25ZnGN9J4BNF6dKTYGoMfhHzlNj349OmznhWQcTx1hnp/OIJkCj5KYxY0wW0cEU4jf/3zEZ+XB3Yx+ZbjqxKMvB9mvF9/kvu+aFOkxBZOjgXJY=
+	t=1724176970; cv=none; b=jA/yB//Gw4kdTbpGbY5wZt/1B6J/NVjq22GMerG2M3dNw1QFdzY5F88RsblsUuWgdNfnfJ1klu6GIcb/NcfZ5PwrHXcFZv6YUSvnjw3v00FR0XxAEloGM0MkqhS1m2S2bgnTwCD0MMZzztqSlhzdvI1PshAT0mBauQqZuH18AjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724171046; c=relaxed/simple;
-	bh=4k+s4YO3Hy+CWFesWYwNFzAF5MNfDwpDXFAaMaImg0k=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Content-Type; b=LuVOEWbtxKYXRhtK89uKDI/zg4PminFYvQtUzO18VzRbEWzVua4CrpRGKoIBdswMFo4XmdDaPUyndt6fxHAHzYZUOaPbNOzEsc6WSyvzqo8VQzahxQrwBgto4l7dGQvzhLhOfrTqsqsb8irNnf3blIpwvirqhGlOaSB9kjPT87c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2UlyOhll; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724176970; c=relaxed/simple;
+	bh=iSqNOsCxBquraU6mIesrLuVfzrgI3A6X/HDSmIqZno8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=XOobO6buM9vuPyTC4sNhN3dQ2fat/k0BITVH4cXnsqwt1yTRn8Vo6G9/HeSQvaBDko8t4cXqWFummUZ8hK5qMVGEkzhiJi8MPm+BhHmWN/chE3oHcq6mWbytc5+4v/BGrqT2K5wyWq2eXIqUjryIR+5gi+72xD3XpCuI1XEeWE4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=aV8O4s4m; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2UlyOhll"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-202018541afso118375ad.1
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 09:24:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724171044; x=1724775844; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4TN4jMg0OxJ5q97VBngUzGeWPosFAHW2jqYW6n7n/G0=;
-        b=2UlyOhll7oQiqESF9DygKHV4+B731dw/aB/zHfl7shJtMHtxiarxtBi8+z86okJZ5o
-         5QdJevm0PfUMBInv6dPnQmTknFIRsZaqzGclAjSLfUqSP9WombJ4fGOe9t76gDCJp69v
-         d6/VaMA4iTH0CSs/0GeU2/ax32WNbm78Le3IM/4wBUAWoJDLQ3doQOYhl47ovXFetMlT
-         1YSB53dW8gq59MsvxTDiz+gOyX2ptr9AWbj2mpQ7h+N5we8+IRwVamJ8IcEm2yR+2I3B
-         Le9mpPZecZGIQlzIQcGXnCSHxikYJ5kZ3OqC7m2xrQyGZE9R1az6wEJcTjdlEq4OOKtd
-         j+dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724171044; x=1724775844;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4TN4jMg0OxJ5q97VBngUzGeWPosFAHW2jqYW6n7n/G0=;
-        b=GiFOq6K/KIo51ZKTeSggFR6SiHTuNcfqu5dUtID5LchJdZOlF72/mq1p1fUZCo2qgU
-         rYVVLPd7quvH3dQWq82/SB0Sem0In6RTVSzOzFbD2EknQR4iNiYiW7z8m/bN/qpIx4r9
-         4Pc6PrS/ZKw6q5ylE+FeOI6Cc5GxG45Z9IszmpgIvXz6L8woTRjOuWZ9J/EFVavzLiid
-         t3anMNWSj2Iwot3qch8NYgDQrau0jmS5KYAf2gRDdYPpo4mmHI3fdLuGdpkvbRBK+RA1
-         iWIWqNqhjzmAZk12daymQs59ZMWXl3dXWrNnCcWQixdzt4nkW83SXENlT4GP2yvdi/zh
-         zi+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW6eGgWNKcnjhU4HZkiku9R/CW+S1m60+dutiAIg2qKyCo8BF45Lh1OoqoqfvwJwfFD7gZSVGKKh+tPOtVLZ1kK@vger.kernel.org
-X-Gm-Message-State: AOJu0YyQZfVbMODB+4bSqyDDGtkONn7b+Hp/Wa5Rz4i1FtdP8Xz8yG7P
-	qc6n4VsEiRDdmJX9any3F+Eao9R3blP7QWkbCIYoM5XBOGEL/OcUXDD5vwsPG6I8dXFqEB/anMr
-	r0ILQnn61/he+g877XkZLc3fl3xHNEt/nPdjp
-X-Google-Smtp-Source: AGHT+IH9+HswIKSue9tbinWSCbFaxM44Z4MveZEgdvZVAJq6LajSaXPVLVYHfMuDSk7YdHiO4zsrdR7LzVmYOCjzTDo=
-X-Received: by 2002:a17:902:ea02:b0:201:dc7b:a882 with SMTP id
- d9443c01a7336-202e629dfbcmr2012145ad.26.1724171043500; Tue, 20 Aug 2024
- 09:24:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="aV8O4s4m"
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47KDnUvA027428;
+	Tue, 20 Aug 2024 18:00:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:mime-version:subject:to:references:from:cc
+	:reply-to:in-reply-to:content-type:content-transfer-encoding; s=
+	pp1; bh=Rikyvsd0HhNcc2B9hSzBfYnTTE1dA/oGWZIVAoBhWwE=; b=aV8O4s4m
+	sUuTVA4secYek5Hm+C+NDGhZecMVj1VkiWFPp7UabaRRoAVLa3K3JiVAQWUw5yoD
+	GSVXMieiL9ZVdwdqKVg98rjufq3d32+Q1AUghSIsi85oOW/uDsCFSwc5c8Mq95oi
+	itQdKT2jdnDhEiIuK1V9HPk0eBi1GA7fVDatmQYgzDBMXHL0hGUzvjgwfPTrH3d/
+	NwUMnUCpZuOwkv1whn1tcywexBz0Rx7SyvhjtUulumyQlpWrs7NTq0i9kwPRv3Qb
+	NZdNJ0YMZcV6IoupNcCi/8qS6pmVdUJogUEEi2Ig9Y2/H1tyYYEYoIV2fwgFgWwy
+	6YM60vnL89bNzA==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4141y1qf21-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Aug 2024 18:00:31 +0000 (GMT)
+Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47KHvjs5022873;
+	Tue, 20 Aug 2024 18:00:30 GMT
+Received: from ppma22.wdc07v.mail.ibm.com (5c.69.3da9.ip4.static.sl-reverse.com [169.61.105.92])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 4141y1qf1t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Aug 2024 18:00:30 +0000 (GMT)
+Received: from pps.filterd (ppma22.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma22.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47KEE9Tq003097;
+	Tue, 20 Aug 2024 18:00:28 GMT
+Received: from smtprelay03.wdc07v.mail.ibm.com ([172.16.1.70])
+	by ppma22.wdc07v.mail.ibm.com (PPS) with ESMTPS id 4136k0m5k8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 20 Aug 2024 18:00:28 +0000
+Received: from smtpav04.wdc07v.mail.ibm.com (smtpav04.wdc07v.mail.ibm.com [10.39.53.231])
+	by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47KI0Qc51704676
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 20 Aug 2024 18:00:28 GMT
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 557A258056;
+	Tue, 20 Aug 2024 18:00:26 +0000 (GMT)
+Received: from smtpav04.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9375358045;
+	Tue, 20 Aug 2024 18:00:17 +0000 (GMT)
+Received: from [9.43.7.117] (unknown [9.43.7.117])
+	by smtpav04.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Tue, 20 Aug 2024 18:00:17 +0000 (GMT)
+Message-ID: <05cd1773-d0c9-4c89-a6f3-f4daa4371b21@linux.ibm.com>
+Date: Tue, 20 Aug 2024 23:30:15 +0530
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240806220614.831914-1-irogers@google.com>
-In-Reply-To: <20240806220614.831914-1-irogers@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 20 Aug 2024 09:23:51 -0700
-Message-ID: <CAP-5=fUWdyp++BKgwZoKWv_mYNGhKj2LKG8p2Ghfg74T+6PLXg@mail.gmail.com>
-Subject: Re: [PATCH v3] perf cap: Tidy up and improve capability testing
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, James Clark <james.clark@arm.com>, 
-	Oliver Upton <oliver.upton@linux.dev>, Leo Yan <leo.yan@linux.dev>, 
-	Changbin Du <changbin.du@huawei.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf sched timehist: Fixed timestamp error when unable
+ to confirm event sched_in time
+To: Yang Jihong <yangjihong@bytedance.com>
+References: <20240819024720.2405244-1-yangjihong@bytedance.com>
+Content-Language: en-US
+From: Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Cc: peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        namhyung@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        irogers@google.com, adrian.hunter@intel.com, kan.liang@linux.intel.com,
+        james.clark@arm.com, linux-perf-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Madadi Vineeth Reddy <vineethr@linux.ibm.com>
+Reply-To: 20240819024720.2405244-1-yangjihong@bytedance.com
+In-Reply-To: <20240819024720.2405244-1-yangjihong@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: -Yc2PHsg-VvG3ZbLgxrBkzQYYcg5KbjX
+X-Proofpoint-ORIG-GUID: fYONtE1AXefq_w_11F5A-CGYTr5W59SF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
+ definitions=2024-08-20_13,2024-08-19_03,2024-05-17_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ suspectscore=0 spamscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0
+ malwarescore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2408200131
 
-On Tue, Aug 6, 2024 at 3:06=E2=80=AFPM Ian Rogers <irogers@google.com> wrot=
-e:
->
-> Remove dependence on libcap. libcap is only used to query whether a
-> capability is supported, which is just 1 capget system call.
->
-> If the capget system call fails, fall back on root permission
-> checking. Previously if libcap fails then the permission is assumed
-> not present which may be pessimistic/wrong.
->
-> Add a used_root out argument to perf_cap__capable to say whether the
-> fall back root check was used. This allows the correct error message,
-> "root" vs "users with the CAP_PERFMON or CAP_SYS_ADMIN capability", to
-> be selected.
->
-> Tidy uses of perf_cap__capable so that tests aren't repeated if capget
-> isn't supported.
->
-> Signed-off-by: Ian Rogers <irogers@google.com>
+Hi Yang Jihong,
 
-Ping.
+On 19/08/24 08:17, Yang Jihong wrote:
+> If sched_in event for current task is not recorded, sched_in timestamp
+> will be set to end_time of time window interest, causing an error in
+> timestamp show. In this case, we choose to ignore this event.
+> 
 
-Thanks,
-Ian
+Why sched-in is not happening for the perf task continuously
 
-> ---
-> v3: rebase resolving builtin-ftrace.c conflicts and incorporating
->     change in:
-> https://lore.kernel.org/lkml/20240729004127.238611-3-namhyung@kernel.org/
-> v2: fix syscall number and '>' should have been '>=3D'.
-> ---
->  tools/perf/Makefile.config  | 11 -------
->  tools/perf/builtin-ftrace.c | 28 ++++++++---------
->  tools/perf/util/Build       |  2 +-
->  tools/perf/util/cap.c       | 63 ++++++++++++++++++++++++++-----------
->  tools/perf/util/cap.h       | 23 ++------------
->  tools/perf/util/symbol.c    |  8 ++---
->  tools/perf/util/util.c      | 12 +++++--
->  7 files changed, 75 insertions(+), 72 deletions(-)
->
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index fa679db61f62..4eb1fc897baf 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -1031,17 +1031,6 @@ ifndef NO_LIBZSTD
->    endif
->  endif
->
-> -ifndef NO_LIBCAP
-> -  ifeq ($(feature-libcap), 1)
-> -    CFLAGS +=3D -DHAVE_LIBCAP_SUPPORT
-> -    EXTLIBS +=3D -lcap
-> -    $(call detected,CONFIG_LIBCAP)
-> -  else
-> -    $(warning No libcap found, disables capability support, please insta=
-ll libcap-devel/libcap-dev)
-> -    NO_LIBCAP :=3D 1
-> -  endif
-> -endif
-> -
->  ifndef NO_BACKTRACE
->    ifeq ($(feature-backtrace), 1)
->      CFLAGS +=3D -DHAVE_BACKTRACE_SUPPORT
-> diff --git a/tools/perf/builtin-ftrace.c b/tools/perf/builtin-ftrace.c
-> index a615c405d98f..88a87bf387d2 100644
-> --- a/tools/perf/builtin-ftrace.c
-> +++ b/tools/perf/builtin-ftrace.c
-> @@ -63,20 +63,21 @@ static void ftrace__workload_exec_failed_signal(int s=
-igno __maybe_unused,
->         done =3D true;
->  }
->
-> -static int check_ftrace_capable(void)
-> +static bool check_ftrace_capable(void)
->  {
-> -       if (!(perf_cap__capable(CAP_PERFMON) ||
-> -             perf_cap__capable(CAP_SYS_ADMIN))) {
-> -               pr_err("ftrace only works for %s!\n",
-> -#ifdef HAVE_LIBCAP_SUPPORT
-> -               "users with the CAP_PERFMON or CAP_SYS_ADMIN capability"
-> -#else
-> -               "root"
-> -#endif
-> +       bool used_root;
-> +
-> +       if (perf_cap__capable(CAP_PERFMON, &used_root))
-> +               return true;
-> +
-> +       if (!used_root && perf_cap__capable(CAP_SYS_ADMIN, &used_root))
-> +               return true;
-> +
-> +       pr_err("ftrace only works for %s!\n",
-> +               used_root ? "root"
-> +                         : "users with the CAP_PERFMON or CAP_SYS_ADMIN =
-capability"
->                 );
-> -               return -1;
-> -       }
-> -       return 0;
-> +       return false;
->  }
->
->  static int __write_tracing_file(const char *name, const char *val, bool =
-append)
-> @@ -1579,8 +1580,7 @@ int cmd_ftrace(int argc, const char **argv)
->         signal(SIGCHLD, sig_handler);
->         signal(SIGPIPE, sig_handler);
->
-> -       ret =3D check_ftrace_capable();
-> -       if (ret < 0)
-> +       if (!check_ftrace_capable())
->                 return -1;
->
->         ret =3D perf_config(perf_ftrace_config, &ftrace);
-> diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-> index b24360c04aae..adbaf7748019 100644
-> --- a/tools/perf/util/Build
-> +++ b/tools/perf/util/Build
-> @@ -221,7 +221,7 @@ perf-util-$(CONFIG_ZLIB) +=3D zlib.o
->  perf-util-$(CONFIG_LZMA) +=3D lzma.o
->  perf-util-$(CONFIG_ZSTD) +=3D zstd.o
->
-> -perf-util-$(CONFIG_LIBCAP) +=3D cap.o
-> +perf-util-y +=3D cap.o
->
->  perf-util-$(CONFIG_CXX_DEMANGLE) +=3D demangle-cxx.o
->  perf-util-y +=3D demangle-ocaml.o
-> diff --git a/tools/perf/util/cap.c b/tools/perf/util/cap.c
-> index c3ba841bbf37..7574a67651bc 100644
-> --- a/tools/perf/util/cap.c
-> +++ b/tools/perf/util/cap.c
-> @@ -3,27 +3,52 @@
->   * Capability utilities
->   */
->
-> -#ifdef HAVE_LIBCAP_SUPPORT
-> -
->  #include "cap.h"
-> -#include <stdbool.h>
-> -#include <sys/capability.h>
-> -
-> -bool perf_cap__capable(cap_value_t cap)
-> -{
-> -       cap_flag_value_t val;
-> -       cap_t caps =3D cap_get_proc();
-> +#include "debug.h"
-> +#include <errno.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <linux/capability.h>
-> +#include <sys/syscall.h>
->
-> -       if (!caps)
-> -               return false;
-> +#ifndef SYS_capget
-> +#define SYS_capget 90
-> +#endif
->
-> -       if (cap_get_flag(caps, cap, CAP_EFFECTIVE, &val) !=3D 0)
-> -               val =3D CAP_CLEAR;
-> +#define MAX_LINUX_CAPABILITY_U32S _LINUX_CAPABILITY_U32S_3
->
-> -       if (cap_free(caps) !=3D 0)
-> -               return false;
-> -
-> -       return val =3D=3D CAP_SET;
-> +bool perf_cap__capable(int cap, bool *used_root)
-> +{
-> +       struct __user_cap_header_struct header =3D {
-> +               .version =3D _LINUX_CAPABILITY_VERSION_3,
-> +               .pid =3D getpid(),
-> +       };
-> +       struct __user_cap_data_struct data[MAX_LINUX_CAPABILITY_U32S];
-> +       __u32 cap_val;
-> +
-> +       *used_root =3D false;
-> +       while (syscall(SYS_capget, &header, &data[0]) =3D=3D -1) {
-> +               /* Retry, first attempt has set the header.version correc=
-tly. */
-> +               if (errno =3D=3D EINVAL && header.version !=3D _LINUX_CAP=
-ABILITY_VERSION_3 &&
-> +                   header.version =3D=3D _LINUX_CAPABILITY_VERSION_1)
-> +                       continue;
-> +
-> +               pr_debug2("capget syscall failed (%s - %d) fall back on r=
-oot check\n",
-> +                         strerror(errno), errno);
-> +               *used_root =3D true;
-> +               return geteuid() =3D=3D 0;
-> +       }
-> +
-> +       /* Extract the relevant capability bit. */
-> +       if (cap >=3D 32) {
-> +               if (header.version =3D=3D _LINUX_CAPABILITY_VERSION_3) {
-> +                       cap_val =3D data[1].effective;
-> +               } else {
-> +                       /* Capability beyond 32 is requested but only 32 =
-are supported. */
-> +                       return false;
-> +               }
-> +       } else {
-> +               cap_val =3D data[0].effective;
-> +       }
-> +       return (cap_val & (1 << (cap & 0x1f))) !=3D 0;
->  }
-> -
-> -#endif  /* HAVE_LIBCAP_SUPPORT */
-> diff --git a/tools/perf/util/cap.h b/tools/perf/util/cap.h
-> index ae52878c0b2e..0c6a1ff55f07 100644
-> --- a/tools/perf/util/cap.h
-> +++ b/tools/perf/util/cap.h
-> @@ -3,26 +3,6 @@
->  #define __PERF_CAP_H
->
->  #include <stdbool.h>
-> -#include <linux/capability.h>
-> -#include <linux/compiler.h>
-> -
-> -#ifdef HAVE_LIBCAP_SUPPORT
-> -
-> -#include <sys/capability.h>
-> -
-> -bool perf_cap__capable(cap_value_t cap);
-> -
-> -#else
-> -
-> -#include <unistd.h>
-> -#include <sys/types.h>
-> -
-> -static inline bool perf_cap__capable(int cap __maybe_unused)
-> -{
-> -       return geteuid() =3D=3D 0;
-> -}
-> -
-> -#endif /* HAVE_LIBCAP_SUPPORT */
->
->  /* For older systems */
->  #ifndef CAP_SYSLOG
-> @@ -33,4 +13,7 @@ static inline bool perf_cap__capable(int cap __maybe_un=
-used)
->  #define CAP_PERFMON    38
->  #endif
->
-> +/* Query if a capability is supported, used_root is set if the fallback =
-root check was used. */
-> +bool perf_cap__capable(int cap, bool *used_root);
-> +
->  #endif /* __PERF_CAP_H */
-> diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-> index 19eb623e0826..a18927d792af 100644
-> --- a/tools/perf/util/symbol.c
-> +++ b/tools/perf/util/symbol.c
-> @@ -2425,14 +2425,14 @@ static bool symbol__read_kptr_restrict(void)
->  {
->         bool value =3D false;
->         FILE *fp =3D fopen("/proc/sys/kernel/kptr_restrict", "r");
-> +       bool used_root;
-> +       bool cap_syslog =3D perf_cap__capable(CAP_SYSLOG, &used_root);
->
->         if (fp !=3D NULL) {
->                 char line[8];
->
->                 if (fgets(line, sizeof(line), fp) !=3D NULL)
-> -                       value =3D perf_cap__capable(CAP_SYSLOG) ?
-> -                                       (atoi(line) >=3D 2) :
-> -                                       (atoi(line) !=3D 0);
-> +                       value =3D cap_syslog ? (atoi(line) >=3D 2) : (ato=
-i(line) !=3D 0);
->
->                 fclose(fp);
->         }
-> @@ -2440,7 +2440,7 @@ static bool symbol__read_kptr_restrict(void)
->         /* Per kernel/kallsyms.c:
->          * we also restrict when perf_event_paranoid > 1 w/o CAP_SYSLOG
->          */
-> -       if (perf_event_paranoid() > 1 && !perf_cap__capable(CAP_SYSLOG))
-> +       if (perf_event_paranoid() > 1 && !cap_syslog)
->                 value =3D true;
->
->         return value;
-> diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
-> index 4f561e5e4162..9d55a13787ce 100644
-> --- a/tools/perf/util/util.c
-> +++ b/tools/perf/util/util.c
-> @@ -325,9 +325,15 @@ int perf_event_paranoid(void)
->
->  bool perf_event_paranoid_check(int max_level)
->  {
-> -       return perf_cap__capable(CAP_SYS_ADMIN) ||
-> -                       perf_cap__capable(CAP_PERFMON) ||
-> -                       perf_event_paranoid() <=3D max_level;
-> +       bool used_root;
-> +
-> +       if (perf_cap__capable(CAP_SYS_ADMIN, &used_root))
-> +               return true;
-> +
-> +       if (!used_root && perf_cap__capable(CAP_PERFMON, &used_root))
-> +               return true;
-> +
-> +       return perf_event_paranoid() <=3D max_level;
->  }
->
->  static int
-> --
-> 2.46.0.rc2.264.g509ed76dc8-goog
->
+perf sched record -a sleep 5
+
+perf sched script
+            perf   19593 [000] 42668.450179: sched:sched_stat_runtime: comm=perf pid=19593 runtime=69449 [ns] vruntime=7303687 [ns]
+            perf   19593 [000] 42668.450190: sched:sched_stat_runtime: comm=perf pid=19593 runtime=6039 [ns] vruntime=7309726 [ns]
+            perf   19593 [000] 42668.450191:       sched:sched_waking: comm=migration/0 pid=19 prio=0 target_cpu=000
+            perf   19593 [000] 42668.450192: sched:sched_stat_runtime: comm=perf pid=19593 runtime=2397 [ns] vruntime=7312123 [ns]
+            perf   19593 [000] 42668.450193:       sched:sched_switch: perf:19593 [120] R ==> migration/0:19 [0]
+     migration/0      19 [000] 42668.450195: sched:sched_migrate_task: comm=perf pid=19593 prio=120 orig_cpu=0 dest_cpu=1
+     migration/0      19 [000] 42668.450200:       sched:sched_switch: migration/0:19 [0] S ==> swapper/0:0 [120]
+            perf   19593 [001] 42668.450308: sched:sched_stat_runtime: comm=perf pid=19593 runtime=112515 [ns] vruntime=9972397 [ns]
+            perf   19593 [001] 42668.450311:       sched:sched_waking: comm=migration/1 pid=24 prio=0 target_cpu=001
+            perf   19593 [001] 42668.450313: sched:sched_stat_runtime: comm=perf pid=19593 runtime=4690 [ns] vruntime=9977087 [ns]
+            perf   19593 [001] 42668.450314:       sched:sched_switch: perf:19593 [120] R ==> migration/1:24 [0]
+     migration/1      24 [001] 42668.450316: sched:sched_migrate_task: comm=perf pid=19593 prio=120 orig_cpu=1 dest_cpu=2
+     migration/1      24 [001] 42668.450322:       sched:sched_switch: migration/1:24 [0] S ==> swapper/1:0 [120]
+            perf   19593 [002] 42668.450385: sched:sched_stat_runtime: comm=perf pid=19593 runtime=67379 [ns] vruntime=2885994 [ns]
+            perf   19593 [002] 42668.450389:       sched:sched_waking: comm=migration/2 pid=30 prio=0 target_cpu=002
+            perf   19593 [002] 42668.450391: sched:sched_stat_runtime: comm=perf pid=19593 runtime=5526 [ns] vruntime=2891520 [ns]
+            perf   19593 [002] 42668.450392:       sched:sched_switch: perf:19593 [120] R ==> migration/2:30 [0]
+
+The perf task (PID 19593) is being switched out without being switched in after CPU migration. The task migrates to a different CPU,
+and then immediately switches out without a sched_in event in between.
+
+Thanks and Regards
+Madadi Vineeth Reddy
+
+> Test scenario:
+>   perf[1229608] does not record the first sched_in event, run time and sch delay are both 0
+          
