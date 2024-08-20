@@ -1,60 +1,50 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1D9EEAC5;
-	Tue, 20 Aug 2024 18:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1A6C148FEB;
+	Tue, 20 Aug 2024 18:47:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724178691; cv=none; b=eitLMMOT8s4oOr5OARopTzkwHhyktrnW+1dN//nOtmRePS3BCqNGFqaSHHHEY81C9dZ6casGbqip+zmba9tBFekW0l5Td5XI3xmbRdZYxY7UMlpF1geGyRNjFhmPonh18t7X5Q8WyG3Oo7qYMEkzPTP8dU8fi8G4lU4w1Q1eXp4=
+	t=1724179672; cv=none; b=rYpNpdBClFBOtULNl6QIz5kLzB3LmGbFggWy2HM2fVt4gyOmB1Ox22zmEQTswby0Ne0KqLoX7wmBLGgo3jUp9Z1eYOzU7pGUqfSgXoRLAfESinrK1iRvzbaw2Jze2ts2zYYRSDwvDerEsFgamN27Q9ijZgUd/Nh/+byWw1ySFHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724178691; c=relaxed/simple;
-	bh=liGTDXoscxLcCROjnOLpYkcFAv6EbxOlUytlw+YakPw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ePIQbszzwaLpQh6IM8X0YnJ3DEwa9GJjol4/ZnmAn6kZOwEUNdpYrrPcT00Q2/ZebFFQGD/4TzBKFM9WzdY7ea5y6VVWeYp3NaYpMVc2r/2ibutzZ9A2qvMdIZQdlCDQYHY7jusVBkfd+2OrtHVazViNmVFsojhxvOYz95EjmVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Orm8RUUX; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Orm8RUUX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724178689; x=1755714689;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=liGTDXoscxLcCROjnOLpYkcFAv6EbxOlUytlw+YakPw=;
-  b=Orm8RUUXrQ5JZ28mCvtaLe62wrBNHWcKCTS51g4Uv50w6MDiHGgyRBX/
-   xKPLYXWgrprdXDp+ledjItq4qzeqvFUtFa2UoTaHq1G533G4CyIXWtd5Y
-   Pt+vDAPrZfBHp5cWdu3m+aXLXPVojEbbRt9CQ/pe47M4Eddqde8TflSsF
-   H6GpdqlxmpEIfQzyMJjB7tfXk+bScFdxbT9DjBaitLIvxi0O6gM4/3K5y
-   WYwNhzu9lFfgWT/EXFM6q0JIHgOrMpHM3ixfdN9EQqme123dDRcso+edv
-   E3AD6tP4c47UAj99Hev4AGIQ6HvvxeIdxQ19VXOHIrbdY9uiKYyHeqIjF
-   w==;
-X-CSE-ConnectionGUID: iBNf1kUgS7OKcOU81MAfXQ==
-X-CSE-MsgGUID: x8RG1vswS8y7+PhiMa4PWQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="33164131"
-X-IronPort-AV: E=Sophos;i="6.10,162,1719903600"; 
-   d="scan'208";a="33164131"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 11:31:28 -0700
-X-CSE-ConnectionGUID: GT3sWMfNRtOHB08T3IEVlw==
-X-CSE-MsgGUID: mZjCh3r/SbSazfChsvVoVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,162,1719903600"; 
-   d="scan'208";a="60458133"
-Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
-  by fmviesa006.fm.intel.com with ESMTP; 20 Aug 2024 11:31:28 -0700
-From: kan.liang@linux.intel.com
-To: acme@kernel.org,
-	namhyung@kernel.org,
-	irogers@google.com,
-	peterz@infradead.org,
-	mingo@kernel.org,
+	s=arc-20240116; t=1724179672; c=relaxed/simple;
+	bh=5rbaWl90Uj47ndUy3ZaQmzwKLrGiylTs/LIKcyJIsas=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RTZemrv0WYVdjUexRohNzXslqFy87a6fKfRfWzxJHAldHV2iYuZHe5bEcF2um6rze8lKtiuxuHi9HMIz3AwoaonI2Mm0d9ECWrCd5QnPhzTMxVu+VKMY+Q4y7iAVXRRCFKXG8KDXYuydgYfe1DxjVFP6KwfGSeVamDrLEqqsUVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B678FEC;
+	Tue, 20 Aug 2024 11:48:15 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B82AA3F58B;
+	Tue, 20 Aug 2024 11:47:46 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Besar Wicaksono <bwicaksono@nvidia.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH] perf hist: Don't set hpp_fmt_value for members in --no-group
-Date: Tue, 20 Aug 2024 11:32:02 -0700
-Message-Id: <20240820183202.3174323-1-kan.liang@linux.intel.com>
-X-Mailer: git-send-email 2.38.1
+	coresight@lists.linaro.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v5 1/8] perf/core: Allow multiple AUX PMU events with the same module
+Date: Tue, 20 Aug 2024 19:47:24 +0100
+Message-Id: <20240820184731.2937551-2-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240820184731.2937551-1-leo.yan@arm.com>
+References: <20240820184731.2937551-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -63,60 +53,41 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Kan Liang <kan.liang@linux.intel.com>
+This commit changes the condition from checking the same PMU instance to
+checking the same .setup_aux() callback pointer. If PMU events have the
+same callback pointer, it means they share the same PMU driver module.
+This allows support for multiple PMU events with the same driver module.
 
-Perf crashes as below when applying --no-group
+As a result, more than one AUX event (e.g. arm_spe_0 and arm_spe_1)
+can record trace into the AUX ring buffer.
 
-perf record -e "{cache-misses,branches"} -b sleep 1
-perf report --stdio --no-group
-free(): invalid next size (fast)
-Aborted (core dumped)
-
-In the __hpp__fmt(), only 1 hpp_fmt_value is allocated for the current
-event when --no-group is applied. However, the current implementation
-tries to assign the hists from all members to the hpp_fmt_value, which
-exceeds the allocated memory.
-
-Fixes: 8f6071a3dce4 ("perf hist: Simplify __hpp_fmt() using hpp_fmt_data")
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/ui/hist.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ kernel/events/core.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-index 5d1f04f66a5a..e5491995adf0 100644
---- a/tools/perf/ui/hist.c
-+++ b/tools/perf/ui/hist.c
-@@ -62,7 +62,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 	struct evsel *pos;
- 	char *buf = hpp->buf;
- 	size_t size = hpp->size;
--	int i, nr_members = 1;
-+	int i = 0, nr_members = 1;
- 	struct hpp_fmt_value *values;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index c973e3c11e03..883c457911a3 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -12345,9 +12345,16 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
  
- 	if (evsel__is_group_event(evsel))
-@@ -72,16 +72,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist_entry *he,
- 	if (values == NULL)
- 		return 0;
+ 	/*
+ 	 * If both events generate aux data, they must be on the same PMU
++	 * module but can be with different PMU instances.
++	 *
++	 * For a built-in PMU module, the 'pmu->module' pointer is NULL,
++	 * thus it is not feasible to compare the module pointers when
++	 * AUX PMU drivers are built into the kernel image. Instead,
++	 * comparing the .setup_aux() callback pointer can determine if
++	 * the two PMU events come from the same PMU driver.
+ 	 */
+ 	if (has_aux(event) && has_aux(output_event) &&
+-	    event->pmu != output_event->pmu)
++	    event->pmu->setup_aux != output_event->pmu->setup_aux)
+ 		goto out;
  
--	i = 0;
--	for_each_group_evsel(pos, evsel)
--		values[i++].hists = evsel__hists(pos);
--
-+	values[0].hists = evsel__hists(evsel);
- 	values[0].val = get_field(he);
- 	values[0].samples = he->stat.nr_events;
- 
- 	if (evsel__is_group_event(evsel)) {
- 		struct hist_entry *pair;
- 
-+		for_each_group_member(pos, evsel)
-+			values[++i].hists = evsel__hists(pos);
-+
- 		list_for_each_entry(pair, &he->pairs.head, pairs.node) {
- 			for (i = 0; i < nr_members; i++) {
- 				if (values[i].hists != pair->hists)
+ 	/*
 -- 
-2.38.1
+2.34.1
 
