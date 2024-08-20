@@ -1,233 +1,147 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A00F1459F6
-	for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 05:42:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EEA2A1B2;
+	Tue, 20 Aug 2024 06:26:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724132524; cv=none; b=QPjeLSjgwI9pDtrVu3B05c/IzaQMNqYpgVR4+6IGTy6/VUdaUKWwClAS3CZl9IZF03zIqGOQAUTIFN6xQFw0LEQrw4SrhSQnWPUbOc8h1nHF4o2UKaoOgVxCzvro3RBnElG1RWYPkNpGsgTjQKDARvzj7XWj+9teDRY3vvtJ63c=
+	t=1724135183; cv=none; b=Def0CwwfjonbI0fYWnTR+vTSJ162hFcqpRNR6QIuuRGoSQ3rRX7y3+tWIyHyYbD5kELuNDsDaHT/Ukz75RA9ue+s5eB+MsLaEDAk58ZpWMUpklNz75ReKFOr9zsFPLI4HEYI4P/aP8gGxn+H/iFC5GU1JlGbmBClD8jxK6HB6ss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724132524; c=relaxed/simple;
-	bh=5mECyQMWCA4UoldcrDVE778to70b3gZuWOt0A2mVTgY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=qY3luyPSEYfkAUSNDbGkQaJA9IQEGnp4nAFTFL6T7byfKi+hOB7qDzlN7RcjOcYTPzXNi4lPwN2fTJP1GyxEbBziUj3NxpfVa6dzmfCD0EEL47CnvEbz35pMm0cSI8SKot6Mllv50ml5WZk7vwCla6qsexZYCVdka6WHf52ZqJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=i4TGZEFr; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724135183; c=relaxed/simple;
+	bh=EZqc+00fgRRrEC4Xf7joFqSZzq2p9IEziTklnKWVHQU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ezzobHz57/lRMfjCLaQNSoL8nNlOZ03/XJw/fmh5CuK83nrpknlqwgg6TPlqAkyVu3ARgoBFiMO7ytfvupIPc4FUAmzQN7TqluhrCTf88uxRNxzN+aGGeI6cj+khq/OmM63bkUThhNf7xuVdMaP8/dJJBpUBAVHEnjv+quTwefY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=D/6Y8OiT; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="i4TGZEFr"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-202018541afso46315ad.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 19 Aug 2024 22:42:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724132522; x=1724737322; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0sXlKMgezFk9YmzRqDAumjH2NXxbyGsXE/M0JdVh6XI=;
-        b=i4TGZEFrIO6MFN8eFPMUEEAX9XzxrNz08yllNsWXiSbbrHmm19Sb1x+v2Q2QXcQxKv
-         Wss3TTKXamZRI9pGOzbuX0neOv0g05ZaBGAKxoAY3Dy5Nq5Obmf78TGmWAgXheaQ73Qa
-         nk0MjOrTHkHjoymGOArYl4CqyzPGJLNcVJ0itMR+Gd6Wv85RI23Z3UMRGq5BJoqmSZSX
-         ZOqQcSkS7/6Q4tOSxRSIRgEz2v42vzPE6hYYRObKff7tsV8MXTd+CjdqLAIko7z5T8j1
-         fY02mSRKKEz3pv3690+MWlETrnvMfqlKvjC4w6qOwawNgXdUHS4daDlzrrimwQhS1L5r
-         5qeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724132522; x=1724737322;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0sXlKMgezFk9YmzRqDAumjH2NXxbyGsXE/M0JdVh6XI=;
-        b=f98RJLeKEZhknsvGp+pQXATCtzLOmo2zz5f7fTqZ/g06yCoCtMeG7Z2ZUx05kwoZqt
-         3Gik27Nt1z9Aszvu555TBXkpXWd5e8Uw6Bk0o00p0abtp1CTOSqdOciCmJEeSDS368BA
-         0hZ5tjgjcRONiMGcAwawk1aDrIBMOKZJFawZtGHVC2FGVNFQmpMo2QkzILSBqMGj7Bhf
-         XxIWoH4MjqEaoD4RMVFNvvtmqO7yB5IfyRW+O96022j+hLwGRmE5GocMFnFtnewu77xo
-         qI+L0it54DJ+8Wxp/TqOfOiNersQT5Gw4Xt+tDcuk1ZELIQRi7gVQtdc6/8hvELoFmpx
-         ij0Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUT7xjuFzml/REra9a0Hy3yNjxFvrdbwEjj7R5xWNTPSeBT9di7a6sv9gLWUCcTVvGpno1zABPoYhHp/EbAS57Om+7HkrwbqGdQyEn7NuqWTQ==
-X-Gm-Message-State: AOJu0YwwpSTO6xdi3j0Y5uTXl2bRdJE68NrV9Lxk3HfIZfdPc9bkNXv6
-	Mvg7lfZNr7k+EBDBZUbYeynWkerUXayRUVh5QYVE/pWZvRvq5X1tmuaibLWfiGsBXXE6YKYklJw
-	DHCDf5VHpoPpw6t1oeJJ0jYfSMx4uBfw3+PsM
-X-Google-Smtp-Source: AGHT+IF4A/aUKQUbevp/C7WmTZ8eYCM8cnrCJmPc2q7c7pOtV9iekmj8oJhbOQgDd8ORQb+thaUpWv3h/iMKvFu0YsA=
-X-Received: by 2002:a17:902:ec83:b0:1fd:6c5b:afcd with SMTP id
- d9443c01a7336-202e629dfb1mr823495ad.22.1724132521033; Mon, 19 Aug 2024
- 22:42:01 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="D/6Y8OiT"
+Received: from [192.168.7.205] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.17.2/8.17.1) with ESMTPSA id 47K6PI6O1345101
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Mon, 19 Aug 2024 23:25:18 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 47K6PI6O1345101
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2024081601; t=1724135119;
+	bh=0XPUli4E+h8MfiBpjbCNlGzGqEZNzuKAKWqIuKRJBpg=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=D/6Y8OiTNzjIp70nymc7pWQduoyXtY2bHPbNJeqx8lvge9gWjETD+Mwu/DuE42R8g
+	 d5nFb4civvTUK8rLi/4pj9m8MzKy15KeqtfSDJv1lw3Mw4xBLQQu+fqHl6z1GL6jpt
+	 5JmSJTnwfEL/IB1cl9n8h7kILxXE25p4Z4ERPSHBfDGeKHUZ0ZgIRqvDJH4PVWbpPW
+	 1c8N8v99xolCQfBmoBmPnEgocHzVV4dKxFm2y6myIpIGsBQP0vgy7TANSSQT1Gcyr9
+	 tNuCPnuTjoSHDesMmEGpnFSqGGiWJjiMl16po9QDiU7waq90RUPlfnZmfAAbMEcn7V
+	 UC2tEeG/wsleQ==
+Message-ID: <23b9e88b-9d3b-4c34-a243-232ca2f53527@zytor.com>
+Date: Mon, 19 Aug 2024 23:25:17 -0700
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <05E55194-C265-4BDA-911D-B9E57EED3CBB@nutanix.com>
-In-Reply-To: <05E55194-C265-4BDA-911D-B9E57EED3CBB@nutanix.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 19 Aug 2024 22:41:49 -0700
-Message-ID: <CAP-5=fUndbBhSLb35_bL-+Xu3erB6ssx-sAEYaf7mgxPawNEbA@mail.gmail.com>
-Subject: Re: Perf test failures for 10.2 PMU event map aliases
-To: Jon Kohler <jon@nutanix.com>
-Cc: "adrian.hunter@intel.com" <adrian.hunter@intel.com>, 
-	"linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Kan Liang <kan.liang@linux.intel.com>, 
-	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/4] x86/cpufeatures: Automatically generate required
+ and disabled feature masks
+From: Xin Li <xin@zytor.com>
+To: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        will@kernel.org, peterz@infradead.org, akpm@linux-foundation.org,
+        acme@kernel.org, namhyung@kernel.org, brgerst@gmail.com,
+        andrew.cooper3@citrix.com, nik.borisov@suse.com
+References: <20240628174544.3118826-1-xin@zytor.com>
+Content-Language: en-US
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20240628174544.3118826-1-xin@zytor.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 19, 2024 at 7:06=E2=80=AFPM Jon Kohler <jon@nutanix.com> wrote:
->
-> Reaching out to the perf community for feedback on the following
-> observed test failure. On 6.6.y, I see persistent failures with test
-> 10.2 PMU event map aliases, complaining about testing aliases uncore
-> PMU mismatches. I've included two outputs below, one with a bit of
-> hacky print debugging.
->
-> Using Intel(R) Xeon(R) Gold 6154 CPU:
->         10.2: PMU event map aliases                                      =
-   :
->         --- start ---
->         test child forked, pid 962901
->         Using CPUID GenuineIntel-6-55-4
+On 6/28/2024 10:45 AM, Xin Li (Intel) wrote:
+> The x86 build process first generates required and disabled feature
+> masks based on current build config, and then uses these generated
+> masks to compile the source code. When a CPU feature is not enabled
+> in a build config, e.g., when CONFIG_X86_FRED=n, its feature disable
+> flag, i.e., DISABLE_FRED, needs to be properly defined and added to
+> a specific disabled CPU features mask in <asm/disabled-features.h>,
+> as the following patch does:
+> https://lore.kernel.org/all/20231205105030.8698-8-xin3.li@intel.com/.
+> As a result, the FRED feature bit is surely cleared in the generated
+> kernel binary when CONFIG_X86_FRED=n.
+> 
+> Recently there is another case to repeat the same exercise for the
+> AMD SEV-SNP CPU feature:
+> https://lore.kernel.org/all/20240126041126.1927228-2-michael.roth@amd.com/.
+> https://lore.kernel.org/all/20240126041126.1927228-23-michael.roth@amd.com/.
+> 
+> It was one thing when there were four of CPU feature masks, but with
+> over 20 it is going to cause mistakes, e.g.,
+> https://lore.kernel.org/lkml/aaed79d5-d683-d1bc-7ba1-b33c8d6db618@suse.com/.
+> 
+> We want to eliminate the stupidly repeated exercise to manually assign
+> features to CPU feature words through introducing an AWK script to
+> automatically generate a header with required and disabled CPU feature
+> masks based on current build config, and this patch set does that.
+> 
+> Link to v3:
+> https://lore.kernel.org/lkml/20240622171435.3725548-1-xin@zytor.com/
+> 
+> Changes since v3:
+> * Add a few high-level comments to the AWK script (Nikolay Borisov).
+> * Use '1U' instead of '1' in feature mask shifting (Andrew Cooper).
+> * Checking NCAPINTS isn't necessary anymore.  It was needed when these
+>    macros had to be manually updated, but now if cpufeatures.h changes
+>    this header will be regenerated (Brian Gerst).
+> * Enforce CPU feature mask values to be unsigned.
+> 
+> Changes since v2:
+> * Remove AWK code that generates extra debugging comments (Brian Gerst).
+> * Move SSE_MASK to verify_cpu.S, the only place it is used (Brian Gerst).
+> * Add a patch to generate macros {REQUIRED|DISABLED}_MASK_BIT_SET in the
+>    new AWK script (Brian Gerst).
+> 
+> Changes since v1:
+> * Keep the X86_{REQUIRED,DISABLED}_FEATURE_ prefixes solely in
+>    arch/x86/Kconfig.cpufeatures (Borislav Petkov).
+> * Explain how config option names X86_{REQUIRED,DISABLED}_FEATURE_<name>
+>    are formed (Borislav Petkov).
+> * Remove code generating unused macros {REQUIRED,DISABLED}_FEATURE(x)
+>    to tell if a CPU feature, e.g., X86_FEATURE_FRED, is a required or
+>    disabled feature for this particular compile-time configuration.
+> 
 
-Hi Jon,
+A gentle ping...
 
-Sorry for the brief reply but I thought some quick hints might unblock
-you on this. The CPUID lines up with a SkylakeX:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/mapfile.csv?h=3Dperf-tools-next#n33
-
->         testing core PMU cpu aliases: pass
->         JKDBG: pmu nr total 3 pmu->sysfs_aliases 3 pmu->sys_json_aliases =
-0
->         JKDBG: pmu cpu_aliases_added nr total 4 pmu->cpu_json_aliases 1
->         testing aliases uncore PMU uncore_imc_0: mismatch expected aliase=
-s
->           (1) vs found (4)
->         test child finished with -1
->         ---- end ----
->         PMU events subtest 2: FAILED!
->
-> Using Intel(R) Xeon(R) Platinum 8352Y:
->         10.2: PMU event map aliases                                      =
-   :
->         --- start ---
->         test child forked, pid 1765070
->         Using CPUID GenuineIntel-6-6A-6
-
-This is an IcelakeX:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/mapfile.csv?h=3Dperf-tools-next#n18
-
->         testing core PMU cpu aliases: pass
->         testing aliases uncore PMU uncore_imc_free_running_0: mismatch
->           expected aliases (1) vs found (6)
->         test child finished with -1
->         ---- end ----
->         PMU events subtest 2: FAILED!
->
-> Digging in more, looking at pmu_aliases_parse, I see that we'll discard
-> scale and unit files in pmu_alias_info_file, which leaves us with 3x
-> aliases in the uncore_imc_0 in the first case and 5x aliases in the
-> uncore_imc_free_running_0 second case.
->
-> # From 6154-based system:
-> ls -lhat /sys/devices/uncore_imc_0/events
-
-The "uncore_" prefix and the "_0" suffix are optional, the naming
-matching is case insensitive. In the event json the events are listed
-here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/skylakex/uncore-memory.json?h=3Dperf-tool=
-s-next
-
-> total 0
-> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_read.scale
-> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_read.unit
-> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_write.scale
-> -r--r--r--. 1 root root 4.0K Aug 19 18:50 cas_count_write.unit
-> -r--r--r--. 1 root root 4.0K Aug  9 15:30 cas_count_read
-> -r--r--r--. 1 root root 4.0K Aug  9 15:30 cas_count_write
-> -r--r--r--. 1 root root 4.0K Aug  9 15:30 clockticks
-
-This should be 3 sysfs events (I don't like the term alias), note that
-we load the sysfs and json events lazily to avoid overhead.
-
-> drwxr-xr-x. 2 root root    0 Jul 17 03:40 .
-> drwxr-xr-x. 5 root root    0 Jul 17 02:52 ..
->
-> # From the 8352Y-based system:
-> ls -lhat /sys/bus/event_source/devices/uncore_imc_free_running_0/events
-> total 0
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_read.scale
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_read.unit
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_write.scale
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 ddrt_write.unit
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 read.scale
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 read.unit
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 write.scale
-> -r--r--r--. 1 root root 4.0K Aug 20 01:44 write.unit
-> -r--r--r--. 1 root root 4.0K Aug 19 21:33 dclk
-> -r--r--r--. 1 root root 4.0K Aug 19 21:33 ddrt_read
-> -r--r--r--. 1 root root 4.0K Aug 19 21:33 ddrt_write
-> -r--r--r--. 1 root root 4.0K Aug 19 21:33 read
-> -r--r--r--. 1 root root 4.0K Aug 19 21:33 write
-
-This is 5 sysfs events, the json events are here:
-https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tr=
-ee/tools/perf/pmu-events/arch/x86/icelakex/uncore-memory.json?h=3Dperf-tool=
-s-next#n134
-Note, the "Unit", meaning the PMU should be imc_free_running to match
-this device.
-
-> drwxr-xr-x. 2 root root    0 Aug 15 03:15 .
-> drwxr-xr-x. 5 root root    0 Aug 15 02:42 ..
->
-> Looking at the structure of __test_uncore_pmu_event_aliases, however,
-> I'm not quite sure how this is supposed to work. I've annotated a walk
-> through below to highlight where things are going off the rails.
->
-> static int __test_uncore_pmu_event_aliases(struct perf_pmu_test_pmu *test=
-_pmu)
-> {
-> ...
->         /* Count how many aliases we generated */
->         alias_count =3D perf_pmu__num_events(pmu);
->                 // alias_count =3D=3D 4 in the 6154-based system
->                 // alias_count =3D=3D 6 in the 8352Y-based system
->
->         /* Count how many aliases we expect from the known table */
->         for (table =3D &test_pmu->aliases[0]; *table; table++)
->                 to_match_count++;
->                         // this is looking at aliases in struct perf_pmu_=
-test_pmu
->                         // table, which for uncore_imc_0 is a single entr=
-y for
->                         // &uncore_imc_cache_hits.
->                         //
->                         // for the 8352Y case, likewise, we only have a s=
-ingle alias
->                         // in the table for &uncore_imc_free_running_cach=
-e_miss.
->                         //
->                         // in both cases, to_match_count =3D=3D 1
->
->         // Compare 4 vs 1 or 6 vs 1
->         if (alias_count !=3D to_match_count) {
->                 pr_debug("testing aliases uncore PMU %s: mismatch expecte=
-d aliases (%d) vs found (%d)\n",
->                          pmu_name, to_match_count /* 1 */, alias_count /*=
- 4 */);
->                 return -1;
->                         // we seemed doomed to hit this conditional alway=
-s, no?
->         }
-> ...
-> }
->
-> I did a walkthrough of the latest mainline code, and don't see a marked
-> difference that jump off the page to me that'd correct this behavior,
-> and would love a helping hand to point in the right direction on this.
->
-> What am I missing here?
-
-I'll need some more time to dig into this. Hopefully the pointers above hel=
-p.
-
-Thanks,
-Ian
