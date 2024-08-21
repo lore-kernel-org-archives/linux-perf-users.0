@@ -1,289 +1,557 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EC7165F05
-	for <linux-perf-users@vger.kernel.org>; Wed, 21 Aug 2024 05:11:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFEA314D2A8;
+	Wed, 21 Aug 2024 05:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724217081; cv=none; b=b8XrPQvvdMdq+sgIRY/IoDLCwRfMTXhEL0D1rc+ctgxcB4Ofv54RbjW6dZDp6PIn+W0Si8NeNFVbcGzcysOfs3KzQ7xSXkCbrh3blZMWOihqKjwkzZerWpSqMuxHNOpu6tRA4K1UQdt/AopGQE1UPKq5XmjbIRBqMUV63oqpLB0=
+	t=1724218049; cv=none; b=GfRE0nXUb64lMc7tClllNXGF+2AcIMJIfB4H85YhhD139XHrki4wk8+z4rkZV2nYT41dFuvL+MEHE7XKtYujkjEXvqfcUsyjW+jKIQ4w01AM2wq5DEemMAPlHNu3NnUlKOM980TmQhUPbKMI8N73GE+T1mhahGFv4T3gIndHqgw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724217081; c=relaxed/simple;
-	bh=9hAGW16LhPkRPhpTRb0XKNwvnBW8DIVakApzw8V0dVg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:Cc:
-	 Content-Type; b=lwt8M1lqlm6xIFddd59jt5AYBR/CR88tp/6fBocMGqBsrAUAD5cETcscWjWtIEToJThZquuGr+0Xvb487mqO86d5UwwrXlu7D+efIk0RM4FtPO1/6DH1sH27QbqDamVN8dYoS56ugBoOZ6jpNg8sBnq+0Wk8NhnWv9KX6XIBIt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-81f8c78cc66so608774339f.2
-        for <linux-perf-users@vger.kernel.org>; Tue, 20 Aug 2024 22:11:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724217079; x=1724821879;
-        h=cc:to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EzwkSPBVr2flWhF+XH/SrKMDLovEf3cWuKDqAJvwSE=;
-        b=ZLQe647R/uN0ncsAnRuyt0ci0AKVInYs4qtt5W18EvL+pDEktcNeyuhva8mN8FZlLU
-         zRp28vsCpITXfEENpq9WdZsehNMV3EPkVzlPFAvvQAtM0kClFSwjHq5TxLnHp+CuHheS
-         zY/aJCwWuViR5MKMqffBKKjRpU78ruvThN/HBrUyWXoU4+P/kAG/ZPgeaeg7xvmek2cw
-         S4WlDP0N+CYvXU//YbfBBLNk+6/jBDa869WbgULkE0UnzhG8m/oMbKCUZm09CGNnukq+
-         k4cHBB+LBowyHuy4/kvxvEuOfICWq3VTAKb4DSVwW446PPdf0P1gu7SkVKlWy8/WFYyB
-         g9/w==
-X-Forwarded-Encrypted: i=1; AJvYcCXQu5pjY8xz9RKElqTHyPdJGsZKILNwu5GskuXbElUXkoG+40NUTdL2M5fclPV06aH2DIw0MpDwad3aMiBQZCG3@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQOdeU0pS9Cm763+uA0IE6R3tdpHzu4ZADAezSVhgJOmLkwCif
-	oeIHmfz8P4ILSQLmi1xp498J99zdj4sKCOWGhNAPhgttOpiJ/2+bmUDvnFV3VNfxcrC9lXMqm/f
-	upZ9jKpYCPiaHV5HfiL+OEWu0d28/oyFkIcfOMNlpNcFtULoyzL6xClQ=
-X-Google-Smtp-Source: AGHT+IGSeMPg6U57+A3+41mwJfvmsCvAgo+cj1kitmPiExELTL09t2bUxyjfKuDPCZ/Oyi9ezOaMbHEjEaGl73nKK6QN31D1vjzu
+	s=arc-20240116; t=1724218049; c=relaxed/simple;
+	bh=/H4PxOMwFoRyKuzdZox0lLuTtZXLRz30Br4m1gEi6+M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QLIgck4Ex/EhP/KfjdiLxnaM6KKQBDTqnTkq3DguFCHme0Smc7ffw6wXmLjD2Ig2QjJBFHHbMri78ky5c989tat8Slw7nCsUvbD+tP8mBhkz9pkdXPLhO1CVBueFmkrQCAui2DjSUH0IzBhejfbGHE7E789Nx7noXIFVJnwWFe8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hLcD23W6; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLcD23W6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724218047; x=1755754047;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=/H4PxOMwFoRyKuzdZox0lLuTtZXLRz30Br4m1gEi6+M=;
+  b=hLcD23W6/Pk29Tnrua1Ipn0lZjMsrgu8qNPyEh6DV+Yybf2jvKnVlQ8V
+   GyZMMzQrV2GCp+OzaK+9yBHwUeck1owXGe0RkSRt6UOgTELihvVPMaYCr
+   YYCwqSwOsAdN8x3ExjljcCIQ8ZUhto7pQ0jHepw6JJFPiCKOoCMr7+jvf
+   CHjp+iObjGnThefZdXDZhku7wfbK8Ed1c41XeeEMeRLIRAchQWQOdf1l9
+   a2YFzHpoSweiHi7hl1CJOz7OrAIDk0fpnVzT1ghfizLXUbZ6l/0S0bYog
+   258A9mJal1vhVqnqnGQU0TaWQak1Z6KwsIIMzghHrh0gV0ZdKjvmi4qH2
+   A==;
+X-CSE-ConnectionGUID: jlbBKU0QSRyo/2/s9WoLcQ==
+X-CSE-MsgGUID: 0tonBEc5R6O2qOcuZuCLbw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="40067528"
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="40067528"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 22:27:26 -0700
+X-CSE-ConnectionGUID: XcXle3SqQTusau/6WQ6uaA==
+X-CSE-MsgGUID: 5x98EG9WRLi/nadwb4P4yA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
+   d="scan'208";a="61739957"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.125]) ([10.124.233.125])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Aug 2024 22:27:20 -0700
+Message-ID: <095522b1-faad-4544-9282-4dda8be03695@linux.intel.com>
+Date: Wed, 21 Aug 2024 13:27:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6424:b0:822:3d11:10ab with SMTP id
- ca18e2360f4ac-8252f31bb20mr2212139f.1.1724217078998; Tue, 20 Aug 2024
- 22:11:18 -0700 (PDT)
-Date: Tue, 20 Aug 2024 22:11:18 -0700
-In-Reply-To: <20240821051054.GA15751@redhat.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000082801206202a92fb@google.com>
-Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in uprobe_unregister
-From: syzbot <syzbot+b32fa80fe75273685f9c@syzkaller.appspotmail.com>
-To: oleg@redhat.com
-Cc: acme@kernel.org, adrian.hunter@intel.com, 
-	alexander.shishkin@linux.intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	mark.rutland@arm.com, mhiramat@kernel.org, mingo@redhat.com, 
-	namhyung@kernel.org, oleg@redhat.com, peterz@infradead.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 09/58] perf: Add a EVENT_GUEST flag
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-10-mizhang@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240801045907.4010984-10-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-> #syz dup: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister syzbot
 
-can't find the dup bug
+On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Current perf doesn't explicitly schedule out all exclude_guest events
+> while the guest is running. There is no problem with the current
+> emulated vPMU. Because perf owns all the PMU counters. It can mask the
+> counter which is assigned to an exclude_guest event when a guest is
+> running (Intel way), or set the corresponding HOSTONLY bit in evsentsel
+> (AMD way). The counter doesn't count when a guest is running.
+>
+> However, either way doesn't work with the introduced passthrough vPMU.
+> A guest owns all the PMU counters when it's running. The host should not
+> mask any counters. The counter may be used by the guest. The evsentsel
+> may be overwritten.
+>
+> Perf should explicitly schedule out all exclude_guest events to release
+> the PMU resources when entering a guest, and resume the counting when
+> exiting the guest.
+>
+> It's possible that an exclude_guest event is created when a guest is
+> running. The new event should not be scheduled in as well.
+>
+> The ctx time is shared among different PMUs. The time cannot be stopped
+> when a guest is running. It is required to calculate the time for events
+> from other PMUs, e.g., uncore events. Add timeguest to track the guest
+> run time. For an exclude_guest event, the elapsed time equals
+> the ctx time - guest time.
+> Cgroup has dedicated times. Use the same method to deduct the guest time
+> from the cgroup time as well.
+>
+> Co-developed-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  include/linux/perf_event.h |   6 ++
+>  kernel/events/core.c       | 178 +++++++++++++++++++++++++++++++------
+>  2 files changed, 155 insertions(+), 29 deletions(-)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index e22cdb6486e6..81a5f8399cb8 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -952,6 +952,11 @@ struct perf_event_context {
+>  	 */
+>  	struct perf_time_ctx		time;
+>  
+> +	/*
+> +	 * Context clock, runs when in the guest mode.
+> +	 */
+> +	struct perf_time_ctx		timeguest;
+> +
+>  	/*
+>  	 * These fields let us detect when two contexts have both
+>  	 * been cloned (inherited) from a common ancestor.
+> @@ -1044,6 +1049,7 @@ struct bpf_perf_event_data_kern {
+>   */
+>  struct perf_cgroup_info {
+>  	struct perf_time_ctx		time;
+> +	struct perf_time_ctx		timeguest;
+>  	int				active;
+>  };
+>  
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index c25e2bf27001..57648736e43e 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -376,7 +376,8 @@ enum event_type_t {
+>  	/* see ctx_resched() for details */
+>  	EVENT_CPU = 0x8,
+>  	EVENT_CGROUP = 0x10,
+> -	EVENT_FLAGS = EVENT_CGROUP,
+> +	EVENT_GUEST = 0x20,
+> +	EVENT_FLAGS = EVENT_CGROUP | EVENT_GUEST,
+>  	EVENT_ALL = EVENT_FLEXIBLE | EVENT_PINNED,
+>  };
+>  
+> @@ -407,6 +408,7 @@ static atomic_t nr_include_guest_events __read_mostly;
+>  
+>  static atomic_t nr_mediated_pmu_vms;
+>  static DEFINE_MUTEX(perf_mediated_pmu_mutex);
+> +static DEFINE_PER_CPU(bool, perf_in_guest);
+>  
+>  /* !exclude_guest event of PMU with PERF_PMU_CAP_PASSTHROUGH_VPMU */
+>  static inline bool is_include_guest_event(struct perf_event *event)
+> @@ -706,6 +708,10 @@ static bool perf_skip_pmu_ctx(struct perf_event_pmu_context *pmu_ctx,
+>  	if ((event_type & EVENT_CGROUP) && !pmu_ctx->nr_cgroups)
+>  		return true;
+>  
+> +	if ((event_type & EVENT_GUEST) &&
+> +	    !(pmu_ctx->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU))
+> +		return true;
+> +
+>  	return false;
+>  }
+>  
+> @@ -770,12 +776,21 @@ static inline int is_cgroup_event(struct perf_event *event)
+>  	return event->cgrp != NULL;
+>  }
+>  
+> +static inline u64 __perf_event_time_ctx(struct perf_event *event,
+> +					struct perf_time_ctx *time,
+> +					struct perf_time_ctx *timeguest);
+> +
+> +static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
+> +					    struct perf_time_ctx *time,
+> +					    struct perf_time_ctx *timeguest,
+> +					    u64 now);
+> +
+>  static inline u64 perf_cgroup_event_time(struct perf_event *event)
+>  {
+>  	struct perf_cgroup_info *t;
+>  
+>  	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+> -	return t->time.time;
+> +	return __perf_event_time_ctx(event, &t->time, &t->timeguest);
+>  }
+>  
+>  static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
+> @@ -784,9 +799,9 @@ static inline u64 perf_cgroup_event_time_now(struct perf_event *event, u64 now)
+>  
+>  	t = per_cpu_ptr(event->cgrp->info, event->cpu);
+>  	if (!__load_acquire(&t->active))
+> -		return t->time.time;
+> -	now += READ_ONCE(t->time.offset);
+> -	return now;
+> +		return __perf_event_time_ctx(event, &t->time, &t->timeguest);
+> +
+> +	return __perf_event_time_ctx_now(event, &t->time, &t->timeguest, now);
+>  }
+>  
+>  static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, bool adv);
+> @@ -796,6 +811,18 @@ static inline void __update_cgrp_time(struct perf_cgroup_info *info, u64 now, bo
+>  	update_perf_time_ctx(&info->time, now, adv);
+>  }
+>  
+> +static inline void __update_cgrp_guest_time(struct perf_cgroup_info *info, u64 now, bool adv)
+> +{
+> +	update_perf_time_ctx(&info->timeguest, now, adv);
+> +}
+> +
+> +static inline void update_cgrp_time(struct perf_cgroup_info *info, u64 now)
+> +{
+> +	__update_cgrp_time(info, now, true);
+> +	if (__this_cpu_read(perf_in_guest))
+> +		__update_cgrp_guest_time(info, now, true);
+> +}
+> +
+>  static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx, bool final)
+>  {
+>  	struct perf_cgroup *cgrp = cpuctx->cgrp;
+> @@ -809,7 +836,7 @@ static inline void update_cgrp_time_from_cpuctx(struct perf_cpu_context *cpuctx,
+>  			cgrp = container_of(css, struct perf_cgroup, css);
+>  			info = this_cpu_ptr(cgrp->info);
+>  
+> -			__update_cgrp_time(info, now, true);
+> +			update_cgrp_time(info, now);
+>  			if (final)
+>  				__store_release(&info->active, 0);
+>  		}
+> @@ -832,11 +859,11 @@ static inline void update_cgrp_time_from_event(struct perf_event *event)
+>  	 * Do not update time when cgroup is not active
+>  	 */
+>  	if (info->active)
+> -		__update_cgrp_time(info, perf_clock(), true);
+> +		update_cgrp_time(info, perf_clock());
+>  }
+>  
+>  static inline void
+> -perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx)
+> +perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx, bool guest)
+>  {
+>  	struct perf_event_context *ctx = &cpuctx->ctx;
+>  	struct perf_cgroup *cgrp = cpuctx->cgrp;
+> @@ -856,8 +883,12 @@ perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx)
+>  	for (css = &cgrp->css; css; css = css->parent) {
+>  		cgrp = container_of(css, struct perf_cgroup, css);
+>  		info = this_cpu_ptr(cgrp->info);
+> -		__update_cgrp_time(info, ctx->time.stamp, false);
+> -		__store_release(&info->active, 1);
+> +		if (guest) {
+> +			__update_cgrp_guest_time(info, ctx->time.stamp, false);
+> +		} else {
+> +			__update_cgrp_time(info, ctx->time.stamp, false);
+> +			__store_release(&info->active, 1);
+> +		}
+>  	}
+>  }
+>  
+> @@ -1061,7 +1092,7 @@ static inline int perf_cgroup_connect(pid_t pid, struct perf_event *event,
+>  }
+>  
+>  static inline void
+> -perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx)
+> +perf_cgroup_set_timestamp(struct perf_cpu_context *cpuctx, bool guest)
+>  {
+>  }
+>  
+> @@ -1488,16 +1519,34 @@ static inline void update_perf_time_ctx(struct perf_time_ctx *time, u64 now, boo
+>   */
+>  static void __update_context_time(struct perf_event_context *ctx, bool adv)
+>  {
+> -	u64 now = perf_clock();
+> +	lockdep_assert_held(&ctx->lock);
+> +
+> +	update_perf_time_ctx(&ctx->time, perf_clock(), adv);
+> +}
+>  
+> +static void __update_context_guest_time(struct perf_event_context *ctx, bool adv)
+> +{
+>  	lockdep_assert_held(&ctx->lock);
+>  
+> -	update_perf_time_ctx(&ctx->time, now, adv);
+> +	/* must be called after __update_context_time(); */
+> +	update_perf_time_ctx(&ctx->timeguest, ctx->time.stamp, adv);
+>  }
+>  
+>  static void update_context_time(struct perf_event_context *ctx)
+>  {
+>  	__update_context_time(ctx, true);
+> +	if (__this_cpu_read(perf_in_guest))
+> +		__update_context_guest_time(ctx, true);
+> +}
+> +
+> +static inline u64 __perf_event_time_ctx(struct perf_event *event,
+> +					struct perf_time_ctx *time,
+> +					struct perf_time_ctx *timeguest)
+> +{
+> +	if (event->attr.exclude_guest)
+> +		return time->time - timeguest->time;
+> +	else
+> +		return time->time;
+>  }
+>  
+>  static u64 perf_event_time(struct perf_event *event)
+> @@ -1510,7 +1559,26 @@ static u64 perf_event_time(struct perf_event *event)
+>  	if (is_cgroup_event(event))
+>  		return perf_cgroup_event_time(event);
+>  
+> -	return ctx->time.time;
+> +	return __perf_event_time_ctx(event, &ctx->time, &ctx->timeguest);
+> +}
+> +
+> +static inline u64 __perf_event_time_ctx_now(struct perf_event *event,
+> +					    struct perf_time_ctx *time,
+> +					    struct perf_time_ctx *timeguest,
+> +					    u64 now)
+> +{
+> +	/*
+> +	 * The exclude_guest event time should be calculated from
+> +	 * the ctx time -  the guest time.
+> +	 * The ctx time is now + READ_ONCE(time->offset).
+> +	 * The guest time is now + READ_ONCE(timeguest->offset).
+> +	 * So the exclude_guest time is
+> +	 * READ_ONCE(time->offset) - READ_ONCE(timeguest->offset).
+> +	 */
+> +	if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest))
 
->
-> https://lore.kernel.org/all/000000000000382d39061f59f2dd@google.com/
->
-> Hopefully fixed by
-> [PATCH tip/perf/core] bpf: fix use-after-free in bpf_uprobe_multi_link_attach()
-> https://lore.kernel.org/all/20240813152524.GA7292@redhat.com/
->
-> On 08/20, syzbot wrote:
->>
->> Hello,
->>
->> syzbot found the following issue on:
->>
->> HEAD commit:    367b5c3d53e5 Add linux-next specific files for 20240816
->> git tree:       linux-next
->> console+strace: https://syzkaller.appspot.com/x/log.txt?x=109d46a3980000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=61ba6f3b22ee5467
->> dashboard link: https://syzkaller.appspot.com/bug?extid=b32fa80fe75273685f9c
->> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1099b7d3980000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c513e5980000
->>
->> Downloadable assets:
->> disk image: https://storage.googleapis.com/syzbot-assets/0b1b4e3cad3c/disk-367b5c3d.raw.xz
->> vmlinux: https://storage.googleapis.com/syzbot-assets/5bb090f7813c/vmlinux-367b5c3d.xz
->> kernel image: https://storage.googleapis.com/syzbot-assets/6674cb0709b1/bzImage-367b5c3d.xz
->>
->> IMPORTANT: if you fix the issue, please add the following tag to the commit:
->> Reported-by: syzbot+b32fa80fe75273685f9c@syzkaller.appspotmail.com
->>
->> R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
->> R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
->>  </TASK>
->> ==================================================================
->> BUG: KASAN: slab-use-after-free in consumer_del kernel/events/uprobes.c:772 [inline]
->> BUG: KASAN: slab-use-after-free in uprobe_unregister+0x99/0x220 kernel/events/uprobes.c:1097
->> Read of size 8 at addr ffff888022b9eb40 by task syz-executor227/5226
->>
->> CPU: 0 UID: 0 PID: 5226 Comm: syz-executor227 Not tainted 6.11.0-rc3-next-20240816-syzkaller #0
->> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
->> Call Trace:
->>  <TASK>
->>  __dump_stack lib/dump_stack.c:94 [inline]
->>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
->>  print_address_description mm/kasan/report.c:377 [inline]
->>  print_report+0x169/0x550 mm/kasan/report.c:488
->>  kasan_report+0x143/0x180 mm/kasan/report.c:601
->>  consumer_del kernel/events/uprobes.c:772 [inline]
->>  uprobe_unregister+0x99/0x220 kernel/events/uprobes.c:1097
->>  bpf_uprobe_unregister kernel/trace/bpf_trace.c:3119 [inline]
->>  bpf_uprobe_multi_link_release+0x8c/0x1b0 kernel/trace/bpf_trace.c:3127
->>  bpf_link_free+0xf5/0x250 kernel/bpf/syscall.c:2998
->>  bpf_link_put_direct kernel/bpf/syscall.c:3038 [inline]
->>  bpf_link_release+0x7b/0x90 kernel/bpf/syscall.c:3045
->>  __fput+0x24b/0x890 fs/file_table.c:424
->>  task_work_run+0x24f/0x310 kernel/task_work.c:228
->>  exit_task_work include/linux/task_work.h:40 [inline]
->>  do_exit+0xa2f/0x28e0 kernel/exit.c:939
->>  do_group_exit+0x207/0x2c0 kernel/exit.c:1088
->>  __do_sys_exit_group kernel/exit.c:1099 [inline]
->>  __se_sys_exit_group kernel/exit.c:1097 [inline]
->>  __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1097
->>  x64_sys_call+0x26a8/0x26b0 arch/x86/include/generated/asm/syscalls_64.h:232
->>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->> RIP: 0033:0x7f409a857c79
->> Code: Unable to access opcode bytes at 0x7f409a857c4f.
->> RSP: 002b:00007fff689d0b48 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
->> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f409a857c79
->> RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
->> RBP: 00007f409a8cb370 R08: ffffffffffffffb8 R09: 00000000000000a0
->> R10: 0000000000000001 R11: 0000000000000246 R12: 00007f409a8cb370
->> R13: 0000000000000000 R14: 00007f409a8cbdc0 R15: 00007f409a821340
->>  </TASK>
->>
->> Allocated by task 5226:
->>  kasan_save_stack mm/kasan/common.c:47 [inline]
->>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
->>  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
->>  __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
->>  kasan_kmalloc include/linux/kasan.h:260 [inline]
->>  __do_kmalloc_node mm/slub.c:4202 [inline]
->>  __kmalloc_node_noprof+0x22a/0x440 mm/slub.c:4208
->>  __kvmalloc_node_noprof+0x72/0x1b0 mm/util.c:658
->>  kvmalloc_array_node_noprof include/linux/slab.h:835 [inline]
->>  bpf_uprobe_multi_link_attach+0x43e/0xb90 kernel/trace/bpf_trace.c:3369
->>  link_create+0x6e9/0x870 kernel/bpf/syscall.c:5236
->>  __sys_bpf+0x4bc/0x810 kernel/bpf/syscall.c:5697
->>  __do_sys_bpf kernel/bpf/syscall.c:5734 [inline]
->>  __se_sys_bpf kernel/bpf/syscall.c:5732 [inline]
->>  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5732
->>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> Freed by task 5226:
->>  kasan_save_stack mm/kasan/common.c:47 [inline]
->>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
->>  kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
->>  poison_slab_object mm/kasan/common.c:247 [inline]
->>  __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
->>  kasan_slab_free include/linux/kasan.h:233 [inline]
->>  slab_free_hook mm/slub.c:2295 [inline]
->>  slab_free mm/slub.c:4517 [inline]
->>  kfree+0x196/0x3e0 mm/slub.c:4665
->>  bpf_uprobe_multi_link_attach+0xa7d/0xb90 kernel/trace/bpf_trace.c:3431
->>  link_create+0x6e9/0x870 kernel/bpf/syscall.c:5236
->>  __sys_bpf+0x4bc/0x810 kernel/bpf/syscall.c:5697
->>  __do_sys_bpf kernel/bpf/syscall.c:5734 [inline]
->>  __se_sys_bpf kernel/bpf/syscall.c:5732 [inline]
->>  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5732
->>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> The buggy address belongs to the object at ffff888022b9eb00
->>  which belongs to the cache kmalloc-96 of size 96
->> The buggy address is located 64 bytes inside of
->>  freed 96-byte region [ffff888022b9eb00, ffff888022b9eb60)
->>
->> The buggy address belongs to the physical page:
->> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888022b9e400 pfn:0x22b9e
->> flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
->> page_type: 0xfdffffff(slab)
->> raw: 00fff00000000000 ffff888015841280 ffffea000061ec40 dead000000000004
->> raw: ffff888022b9e400 000000008020001f 00000001fdffffff 0000000000000000
->> page dumped because: kasan: bad access detected
->> page_owner tracks the page as allocated
->> page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 4681, tgid 4681 (udevd), ts 17930004975, free_ts 17928166567
->>  set_page_owner include/linux/page_owner.h:32 [inline]
->>  post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1518
->>  prep_new_page mm/page_alloc.c:1526 [inline]
->>  get_page_from_freelist+0x3004/0x30c0 mm/page_alloc.c:3477
->>  __alloc_pages_noprof+0x29e/0x780 mm/page_alloc.c:4744
->>  __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
->>  alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
->>  alloc_slab_page+0x5f/0x120 mm/slub.c:2364
->>  allocate_slab+0x5a/0x2f0 mm/slub.c:2527
->>  new_slab mm/slub.c:2580 [inline]
->>  ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3767
->>  __slab_alloc+0x58/0xa0 mm/slub.c:3857
->>  __slab_alloc_node mm/slub.c:3910 [inline]
->>  slab_alloc_node mm/slub.c:4069 [inline]
->>  __do_kmalloc_node mm/slub.c:4201 [inline]
->>  __kmalloc_noprof+0x25a/0x400 mm/slub.c:4214
->>  kmalloc_noprof include/linux/slab.h:685 [inline]
->>  kzalloc_noprof include/linux/slab.h:807 [inline]
->>  tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
->>  tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
->>  tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
->>  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
->>  tomoyo_check_open_permission+0x255/0x500 security/tomoyo/file.c:771
->>  security_file_open+0x6a/0x750 security/security.c:2996
->>  do_dentry_open+0x359/0x13f0 fs/open.c:946
->>  vfs_open+0x3e/0x330 fs/open.c:1089
->>  do_open fs/namei.c:3774 [inline]
->>  path_openat+0x2c87/0x3590 fs/namei.c:3933
->>  do_filp_open+0x235/0x490 fs/namei.c:3960
->> page last free pid 4688 tgid 4688 stack trace:
->>  reset_page_owner include/linux/page_owner.h:25 [inline]
->>  free_pages_prepare mm/page_alloc.c:1099 [inline]
->>  free_unref_page+0xc07/0xd90 mm/page_alloc.c:2652
->>  __slab_free+0x31b/0x3d0 mm/slub.c:4428
->>  qlink_free mm/kasan/quarantine.c:163 [inline]
->>  qlist_free_all+0x9e/0x140 mm/kasan/quarantine.c:179
->>  kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
->>  __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:329
->>  kasan_slab_alloc include/linux/kasan.h:250 [inline]
->>  slab_post_alloc_hook mm/slub.c:4032 [inline]
->>  slab_alloc_node mm/slub.c:4081 [inline]
->>  __kmalloc_cache_noprof+0x132/0x2c0 mm/slub.c:4228
->>  kmalloc_noprof include/linux/slab.h:681 [inline]
->>  kzalloc_noprof include/linux/slab.h:807 [inline]
->>  kernfs_fop_open+0x3e0/0xd10 fs/kernfs/file.c:623
->>  do_dentry_open+0x928/0x13f0 fs/open.c:959
->>  vfs_open+0x3e/0x330 fs/open.c:1089
->>  do_open fs/namei.c:3774 [inline]
->>  path_openat+0x2c87/0x3590 fs/namei.c:3933
->>  do_filp_open+0x235/0x490 fs/namei.c:3960
->>  do_sys_openat2+0x13e/0x1d0 fs/open.c:1416
->>  do_sys_open fs/open.c:1431 [inline]
->>  __do_sys_openat fs/open.c:1447 [inline]
->>  __se_sys_openat fs/open.c:1442 [inline]
->>  __x64_sys_openat+0x247/0x2a0 fs/open.c:1442
->>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
->>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
->>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
->>
->> Memory state around the buggy address:
->>  ffff888022b9ea00: 00 00 00 00 00 00 00 00 00 00 00 06 fc fc fc fc
->>  ffff888022b9ea80: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
->> >ffff888022b9eb00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
->>                                            ^
->>  ffff888022b9eb80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
->>  ffff888022b9ec00: 00 00 00 00 00 00 00 00 00 00 00 06 fc fc fc fc
->> ==================================================================
->>
->>
->> ---
->> This report is generated by a bot. It may contain errors.
->> See https://goo.gl/tpsmEJ for more information about syzbot.
->> syzbot engineers can be reached at syzkaller@googlegroups.com.
->>
->> syzbot will keep track of this issue. See:
->> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->>
->> If the report is already addressed, let syzbot know by replying with:
->> #syz fix: exact-commit-title
->>
->> If you want syzbot to run the reproducer, reply with:
->> #syz test: git://repo/address.git branch-or-commit-hash
->> If you attach or paste a git patch, syzbot will apply it before testing.
->>
->> If you want to overwrite report's subsystems, reply with:
->> #syz set subsystems: new-subsystem
->> (See the list of subsystem names on the web dashboard)
->>
->> If the report is a duplicate of another one, reply with:
->> #syz dup: exact-subject-of-another-report
->>
->> If you want to undo deduplication, reply with:
->> #syz undup
->>
->
+Hi Kan,
+
+we see the following the warning when run perf record command after
+enabling "CONFIG_DEBUG_PREEMPT" config item.
+
+[  166.779208] BUG: using __this_cpu_read() in preemptible [00000000] code:
+perf/9494
+[  166.779234] caller is __this_cpu_preempt_check+0x13/0x20
+[  166.779241] CPU: 56 UID: 0 PID: 9494 Comm: perf Not tainted
+6.11.0-rc4-perf-next-mediated-vpmu-v3+ #80
+[  166.779245] Hardware name: Quanta Cloud Technology Inc. QuantaGrid
+D54Q-2U/S6Q-MB-MPS, BIOS 3A11.uh 12/02/2022
+[  166.779248] Call Trace:
+[  166.779250]  <TASK>
+[  166.779252]  dump_stack_lvl+0x76/0xa0
+[  166.779260]  dump_stack+0x10/0x20
+[  166.779267]  check_preemption_disabled+0xd7/0xf0
+[  166.779273]  __this_cpu_preempt_check+0x13/0x20
+[  166.779279]  calc_timer_values+0x193/0x200
+[  166.779287]  perf_event_update_userpage+0x4b/0x170
+[  166.779294]  ? ring_buffer_attach+0x14c/0x200
+[  166.779301]  perf_mmap+0x533/0x5d0
+[  166.779309]  mmap_region+0x243/0xaa0
+[  166.779322]  do_mmap+0x35b/0x640
+[  166.779333]  vm_mmap_pgoff+0xf0/0x1c0
+[  166.779345]  ksys_mmap_pgoff+0x17a/0x250
+[  166.779354]  __x64_sys_mmap+0x33/0x70
+[  166.779362]  x64_sys_call+0x1fa4/0x25f0
+[  166.779369]  do_syscall_64+0x70/0x130
+
+The season that kernel complains this is __perf_event_time_ctx_now() calls
+__this_cpu_read() in preemption enabled context.
+
+To eliminate the warning, we may need to use this_cpu_read() to replace
+__this_cpu_read().
+
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index ccd61fd06e8d..1eb628f8b3a0 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -1581,7 +1581,7 @@ static inline u64 __perf_event_time_ctx_now(struct
+perf_event *event,
+         * So the exclude_guest time is
+         * READ_ONCE(time->offset) - READ_ONCE(timeguest->offset).
+         */
+-       if (event->attr.exclude_guest && __this_cpu_read(perf_in_guest))
++       if (event->attr.exclude_guest && this_cpu_read(perf_in_guest))
+                return READ_ONCE(time->offset) - READ_ONCE(timeguest->offset);
+        else
+                return now + READ_ONCE(time->offset);
+
+> +		return READ_ONCE(time->offset) - READ_ONCE(timeguest->offset);
+> +	else
+> +		return now + READ_ONCE(time->offset);
+>  }
+>  
+>  static u64 perf_event_time_now(struct perf_event *event, u64 now)
+> @@ -1524,10 +1592,9 @@ static u64 perf_event_time_now(struct perf_event *event, u64 now)
+>  		return perf_cgroup_event_time_now(event, now);
+>  
+>  	if (!(__load_acquire(&ctx->is_active) & EVENT_TIME))
+> -		return ctx->time.time;
+> +		return __perf_event_time_ctx(event, &ctx->time, &ctx->timeguest);
+>  
+> -	now += READ_ONCE(ctx->time.offset);
+> -	return now;
+> +	return __perf_event_time_ctx_now(event, &ctx->time, &ctx->timeguest, now);
+>  }
+>  
+>  static enum event_type_t get_event_type(struct perf_event *event)
+> @@ -3334,9 +3401,15 @@ ctx_sched_out(struct perf_event_context *ctx, enum event_type_t event_type)
+>  	 * would only update time for the pinned events.
+>  	 */
+>  	if (is_active & EVENT_TIME) {
+> +		bool stop;
+> +
+> +		/* vPMU should not stop time */
+> +		stop = !(event_type & EVENT_GUEST) &&
+> +		       ctx == &cpuctx->ctx;
+> +
+>  		/* update (and stop) ctx time */
+>  		update_context_time(ctx);
+> -		update_cgrp_time_from_cpuctx(cpuctx, ctx == &cpuctx->ctx);
+> +		update_cgrp_time_from_cpuctx(cpuctx, stop);
+>  		/*
+>  		 * CPU-release for the below ->is_active store,
+>  		 * see __load_acquire() in perf_event_time_now()
+> @@ -3354,7 +3427,18 @@ ctx_sched_out(struct perf_event_context *ctx, enum event_type_t event_type)
+>  			cpuctx->task_ctx = NULL;
+>  	}
+>  
+> -	is_active ^= ctx->is_active; /* changed bits */
+> +	if (event_type & EVENT_GUEST) {
+> +		/*
+> +		 * Schedule out all !exclude_guest events of PMU
+> +		 * with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+> +		 */
+> +		is_active = EVENT_ALL;
+> +		__update_context_guest_time(ctx, false);
+> +		perf_cgroup_set_timestamp(cpuctx, true);
+> +		barrier();
+> +	} else {
+> +		is_active ^= ctx->is_active; /* changed bits */
+> +	}
+>  
+>  	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+>  		if (perf_skip_pmu_ctx(pmu_ctx, event_type))
+> @@ -3853,10 +3937,15 @@ static inline void group_update_userpage(struct perf_event *group_event)
+>  		event_update_userpage(event);
+>  }
+>  
+> +struct merge_sched_data {
+> +	int can_add_hw;
+> +	enum event_type_t event_type;
+> +};
+> +
+>  static int merge_sched_in(struct perf_event *event, void *data)
+>  {
+>  	struct perf_event_context *ctx = event->ctx;
+> -	int *can_add_hw = data;
+> +	struct merge_sched_data *msd = data;
+>  
+>  	if (event->state <= PERF_EVENT_STATE_OFF)
+>  		return 0;
+> @@ -3864,13 +3953,22 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  	if (!event_filter_match(event))
+>  		return 0;
+>  
+> -	if (group_can_go_on(event, *can_add_hw)) {
+> +	/*
+> +	 * Don't schedule in any exclude_guest events of PMU with
+> +	 * PERF_PMU_CAP_PASSTHROUGH_VPMU, while a guest is running.
+> +	 */
+> +	if (__this_cpu_read(perf_in_guest) && event->attr.exclude_guest &&
+> +	    event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU &&
+> +	    !(msd->event_type & EVENT_GUEST))
+> +		return 0;
+> +
+> +	if (group_can_go_on(event, msd->can_add_hw)) {
+>  		if (!group_sched_in(event, ctx))
+>  			list_add_tail(&event->active_list, get_event_list(event));
+>  	}
+>  
+>  	if (event->state == PERF_EVENT_STATE_INACTIVE) {
+> -		*can_add_hw = 0;
+> +		msd->can_add_hw = 0;
+>  		if (event->attr.pinned) {
+>  			perf_cgroup_event_disable(event, ctx);
+>  			perf_event_set_state(event, PERF_EVENT_STATE_ERROR);
+> @@ -3889,11 +3987,15 @@ static int merge_sched_in(struct perf_event *event, void *data)
+>  
+>  static void pmu_groups_sched_in(struct perf_event_context *ctx,
+>  				struct perf_event_groups *groups,
+> -				struct pmu *pmu)
+> +				struct pmu *pmu,
+> +				enum event_type_t event_type)
+>  {
+> -	int can_add_hw = 1;
+> +	struct merge_sched_data msd = {
+> +		.can_add_hw = 1,
+> +		.event_type = event_type,
+> +	};
+>  	visit_groups_merge(ctx, groups, smp_processor_id(), pmu,
+> -			   merge_sched_in, &can_add_hw);
+> +			   merge_sched_in, &msd);
+>  }
+>  
+>  static void ctx_groups_sched_in(struct perf_event_context *ctx,
+> @@ -3905,14 +4007,14 @@ static void ctx_groups_sched_in(struct perf_event_context *ctx,
+>  	list_for_each_entry(pmu_ctx, &ctx->pmu_ctx_list, pmu_ctx_entry) {
+>  		if (perf_skip_pmu_ctx(pmu_ctx, event_type))
+>  			continue;
+> -		pmu_groups_sched_in(ctx, groups, pmu_ctx->pmu);
+> +		pmu_groups_sched_in(ctx, groups, pmu_ctx->pmu, event_type);
+>  	}
+>  }
+>  
+>  static void __pmu_ctx_sched_in(struct perf_event_context *ctx,
+>  			       struct pmu *pmu)
+>  {
+> -	pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu);
+> +	pmu_groups_sched_in(ctx, &ctx->flexible_groups, pmu, 0);
+>  }
+>  
+>  static void
+> @@ -3927,9 +4029,11 @@ ctx_sched_in(struct perf_event_context *ctx, enum event_type_t event_type)
+>  		return;
+>  
+>  	if (!(is_active & EVENT_TIME)) {
+> +		/* EVENT_TIME should be active while the guest runs */
+> +		WARN_ON_ONCE(event_type & EVENT_GUEST);
+>  		/* start ctx time */
+>  		__update_context_time(ctx, false);
+> -		perf_cgroup_set_timestamp(cpuctx);
+> +		perf_cgroup_set_timestamp(cpuctx, false);
+>  		/*
+>  		 * CPU-release for the below ->is_active store,
+>  		 * see __load_acquire() in perf_event_time_now()
+> @@ -3945,7 +4049,23 @@ ctx_sched_in(struct perf_event_context *ctx, enum event_type_t event_type)
+>  			WARN_ON_ONCE(cpuctx->task_ctx != ctx);
+>  	}
+>  
+> -	is_active ^= ctx->is_active; /* changed bits */
+> +	if (event_type & EVENT_GUEST) {
+> +		/*
+> +		 * Schedule in all !exclude_guest events of PMU
+> +		 * with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+> +		 */
+> +		is_active = EVENT_ALL;
+> +
+> +		/*
+> +		 * Update ctx time to set the new start time for
+> +		 * the exclude_guest events.
+> +		 */
+> +		update_context_time(ctx);
+> +		update_cgrp_time_from_cpuctx(cpuctx, false);
+> +		barrier();
+> +	} else {
+> +		is_active ^= ctx->is_active; /* changed bits */
+> +	}
+>  
+>  	/*
+>  	 * First go through the list and put on any pinned groups
