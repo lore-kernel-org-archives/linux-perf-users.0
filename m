@@ -1,202 +1,183 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708CA1D12F9;
-	Wed, 21 Aug 2024 11:32:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F891531F4
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Aug 2024 12:48:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724239970; cv=none; b=YCCrXRT//TS9FpNmhNsB9oj0uFzpnGhRNalkzwsoeLqhWRK7erl7hwBiCEzQaBoCE3cMjXIrr6s/nuSxhE8WNzQM/aY5/AawkBiQQpqk0qnVyxhSn2jb6Gc/fCYNG4tvtRULEgVCraTOJxMi8qZyIoESWca8uTMGJ//McQ6cYwY=
+	t=1724244495; cv=none; b=t5j9rcYVUcniOwLbHLcfo2pgLOPfUPtEHabrcBArH2tKeNwslTgat6FVq772Bm9/BbFHJ5Li6sYJkvHrNiW5QUFV862OBfHVLuY+Txe5XfPrgoTY3HAN6Db1xebB7MXEcAWwtpIhnj0B1kKpFIni3tiPHagK9cPMdhgeIQDGl9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724239970; c=relaxed/simple;
-	bh=GAYO2SzL67TGDwj3OAWiFes7R4j2AvIw/Z/lL7qAvqg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KofpiraT543cuDhSnikeiwZN0CK5orqg7ESCuexiWCpZuvMr/Bi9nXgf3VB6AVg8FqpjDBAZb/Y/IN9f7f6kdCTJd+/ew1RlzXS4d6Ha1/suwZHyNg+v1qPb3cOvJzlNOEzclXH3P4iJA5uz6tTYbrePyBMTugy/A2ECv2Ns0nM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PATGGonF; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1724244495; c=relaxed/simple;
+	bh=NZ1G9QalOD4q3lb9VPf4Bnu2xhhNbO2CqFkeuFlGODE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XN8pD58UVOkR8Qv3uNuT1hLfHanT0BSVEUDa6EjbmDZyEPB7lAmdq5s/3pgw2JWPbpr2dOQAapULXCWZggQUZh2JEhMYYdx8txeoabiGnECrfjZ6hmtcl1AmoC0IcEa9sJXuBts9CTeNA9kXxabR1FsI6NLww3czSquv7Kk4bic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=fmFZKt4+; arc=none smtp.client-ip=209.85.208.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PATGGonF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724239968; x=1755775968;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=GAYO2SzL67TGDwj3OAWiFes7R4j2AvIw/Z/lL7qAvqg=;
-  b=PATGGonF0ArQO7iLctt28+bty2FUUI2yevX69n6IhhwDdu4EIha6xAG+
-   chg+pNQ/P/+7BX4uSwEMBW6icuntHmnGoCHJ3k37tUoi+Q3TzAKRhRQPy
-   +UJfYxXa2fnDKyI00aFPnjG0zSRxvTlhnPggT8WxC7sepfxffqPbAe7o4
-   GO9RlCOkr5+nCRSI9QllHobm2RZHF5fHAUbZzdDoIgWr3tdW0+SUNynvM
-   p/qqn0ZRgjMjqtqYSmgsOqtaAIA8OVfX01XjNuhqif4xst2DFgREsVhg+
-   bzV6XwdIWXbvgtCi6eLSQ9SOPIhpKDxf5udlxyTkLnLb5b0JHOgFfgDLY
-   Q==;
-X-CSE-ConnectionGUID: SZ+/anhTRZu6S/Xnf4LDTQ==
-X-CSE-MsgGUID: 5/mmafvxS/Opa3HPdy+XRw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11170"; a="22779421"
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="22779421"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 04:32:48 -0700
-X-CSE-ConnectionGUID: exVbdZs0TJe5XcNoG+Sk2Q==
-X-CSE-MsgGUID: Og1arBsVQmKlr+HNU1f3Pg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,164,1719903600"; 
-   d="scan'208";a="60918344"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.0.178])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Aug 2024 04:32:44 -0700
-Message-ID: <f9442d81-d92d-4b91-87cf-4beb4a41de22@intel.com>
-Date: Wed, 21 Aug 2024 14:32:40 +0300
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="fmFZKt4+"
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5bef4d9e7f8so4569555a12.2
+        for <linux-perf-users@vger.kernel.org>; Wed, 21 Aug 2024 05:48:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ventanamicro.com; s=google; t=1724244492; x=1724849292; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=owctU5UF/MrOqJiKH/wjLFTDxdDZZM8Or/kAuo7tn/8=;
+        b=fmFZKt4+Qe2zrlQ78EPEHtw4+LNl0jGtLwxC1fRFSYjbLlGiQYy7Ov1kgXh0v1wg3I
+         9Wd5dFG8cm9pieAnqIpk2hMi447YX9ukGvM+qxnlyiRXxZE/whESXAsIxmpB+8epoil+
+         mebb9OeVklrCTYLLi/V/QRPIyDxycjZaPqkHW2YgL6ukFCzDdn95FjuRtzv29VZh72S6
+         WgbGu2/sMSsrb6dHPHIoozavjlQWE3VwthvDh+c8z2fQ5DNrYQgBkXGeK0zZsRumDDFT
+         s9JpTI3U81NOZWNcTXHyNtE/NydCXRGbqOCsFJcpeluDJ5+/sE9qLnWfXVPOmM5G/JKA
+         IxMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724244492; x=1724849292;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=owctU5UF/MrOqJiKH/wjLFTDxdDZZM8Or/kAuo7tn/8=;
+        b=ZYxwhYPY8gecGftDuHWKtMOoXE/bf/cVrYt+pOG9uMpf9bV54PCECBCAal2MElq0Aa
+         rIe+ej5F84fk7typgoiNapoJTD5v2JTd+4/t6psdbcjFr23HCKDIxefnCbs0RN6vNwyO
+         jQ55DgdqtrMjtS5MiGVvl4JzGAyMYMiZhIZ2Omnl5/XDrk9fIr8Hr2xrHRoCRr6ITWsc
+         urRyWTEbkJGZuHGVzlJUzu/O+fF9sEAyrVM8ZedUFzRs0MiZ2i92il2oMXuLOqt2hycB
+         5bXOooV9T3t3LgeV+V78RKcrUItQORz8NK6CjP8b6q/glFhZCPvpLJ6vv7RNzmk+YaAL
+         5EHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVatYJq0VLOjoqPfIU8/B/vNFm6FdnPgHURqkXBwKpJsyn+FZmbSN6wUjtErrdvixSfbtxy5NhyIe1ZepIm0n9Q@vger.kernel.org
+X-Gm-Message-State: AOJu0YwGaAsGc6kILdkABlIK2jnwSTVZmDwWMef8vbLm7nZCR5p2iA1N
+	siSAqY+UkwfkyGty1bHCclDPpgWpJZoicwcXLbB30xq3vkArzjqxowcBWUM78a9OLB1LDn5+ALH
+	qxiM=
+X-Google-Smtp-Source: AGHT+IEBHJpECbZj9IKLd7v7eqsKAcU06neT/8vBwwygqFiwFCmvnkErVfPeY9IwiKfaKQItm4XXxw==
+X-Received: by 2002:a17:907:a41:b0:a7d:3de1:4ab2 with SMTP id a640c23a62f3a-a866f3616a2mr165794866b.27.1724244491373;
+        Wed, 21 Aug 2024 05:48:11 -0700 (PDT)
+Received: from localhost (cst2-173-13.cust.vodafone.cz. [31.30.173.13])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a83838c69easm901792366b.40.2024.08.21.05.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 05:48:10 -0700 (PDT)
+Date: Wed, 21 Aug 2024 14:48:10 +0200
+From: Andrew Jones <ajones@ventanamicro.com>
+To: zhouquan@iscas.ac.cn
+Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com, 
+	palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, linux-kernel@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] riscv: perf: add guest vs host distinction
+Message-ID: <20240821-f5e1d6afb0d2230c1256a75b@orel>
+References: <cover.1723518282.git.zhouquan@iscas.ac.cn>
+ <3729354b59658535c4370d3c1c7e2f162433807b.1723518282.git.zhouquan@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] perf/core: Fix incorrected time diff in tick
- adjust period
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, mark.rutland@arm.com,
- alexander.shishkin@linux.intel.com, jolsa@kernel.org, namhyung@kernel.org,
- irogers@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240810102406.1190402-1-luogengkun@huaweicloud.com>
- <20240810102406.1190402-3-luogengkun@huaweicloud.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240810102406.1190402-3-luogengkun@huaweicloud.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3729354b59658535c4370d3c1c7e2f162433807b.1723518282.git.zhouquan@iscas.ac.cn>
 
-On 10/08/24 13:24, Luo Gengkun wrote:
-> Adrian found that there is a probability that the number of samples
-> is small, which is caused by the unreasonable large sampling period.
-
-Subject: incorrected -> incorrect
-
-Note, the patch now needs to be re-based.
-
-Also maybe tidy up the commit message e.g.
-
-perf events has the notion of sampling frequency which is implemented in
-software by dynamically adjusting the counter period so that samples occur
-at approximately the target frequency.  Period adjustment is done in 2
-places:
- - when the counter overflows (and a sample is recorded)
- - each timer tick, when the event is active
-The later case is slightly flawed because it assumes that the time since
-the last timer-tick period adjustment is 1 tick, whereas the event may not
-have been active (e.g. for a task that is sleeping).
-
-Fix by using jiffies to determine the elapsed time in that case.
-
+On Tue, Aug 13, 2024 at 09:23:54PM GMT, zhouquan@iscas.ac.cn wrote:
+> From: Quan Zhou <zhouquan@iscas.ac.cn>
 > 
->  # taskset --cpu 0 perf record -F 1000 -e cs -- taskset --cpu 1 ./test
->  [ perf record: Woken up 1 times to write data ]
->  [ perf record: Captured and wrote 0.010 MB perf.data (204 samples) ]
->  # perf script
->  ...
->  test   865   265.377846:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.378900:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.379845:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.380770:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.381647:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.382638:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.383647:         16 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.384704:         15 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.385649:         14 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.386578:        152 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.396383:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.406183:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.415839:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.425445:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.435052:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.444708:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.454314:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.463970:        154 cs:  ffffffff832e927b schedule+0x2b
->  test   865   265.473577:        154 cs:  ffffffff832e927b schedule+0x2b
->  ...
+> Introduce basic guest support in perf, enabling it to distinguish
+> between PMU interrupts in the host or guest, and collect
+> fundamental information.
 > 
-> And the reason is perf_adjust_freq_unthr_events() calculates a value that is too
-> big because it incorrectly assumes the count has accumulated only since the last
-> tick, whereas it can have been much longer. To fix this problem, perf can calculate
-> the tick interval by itself. For perf_adjust_freq_unthr_events we can use jiffies
-> to calculate the tick interval more efficiently, as sugguested by Adrian.
-> 
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
 > ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 16 +++++++++++++---
->  2 files changed, 14 insertions(+), 3 deletions(-)
+>  arch/riscv/include/asm/perf_event.h |  7 ++++++
+>  arch/riscv/kernel/perf_callchain.c  | 38 +++++++++++++++++++++++++++++
+>  2 files changed, 45 insertions(+)
 > 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index afb028c54f33..2708f1d0692c 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -265,6 +265,7 @@ struct hw_perf_event {
->  	 * State for freq target events, see __perf_event_overflow() and
->  	 * perf_adjust_freq_unthr_context().
->  	 */
-> +	u64				freq_tick_stamp;
->  	u64				freq_time_stamp;
->  	u64				freq_count_stamp;
->  #endif
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cad50d3439f1..309af5520f52 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -55,6 +55,7 @@
->  #include <linux/pgtable.h>
->  #include <linux/buildid.h>
->  #include <linux/task_work.h>
-> +#include <linux/jiffies.h>
+> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+> index 665bbc9b2f84..c2b73c3aefe4 100644
+> --- a/arch/riscv/include/asm/perf_event.h
+> +++ b/arch/riscv/include/asm/perf_event.h
+> @@ -8,13 +8,20 @@
+>  #ifndef _ASM_RISCV_PERF_EVENT_H
+>  #define _ASM_RISCV_PERF_EVENT_H
 >  
->  #include "internal.h"
+> +#ifdef CONFIG_PERF_EVENTS
+>  #include <linux/perf_event.h>
+>  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
 >  
-> @@ -4112,7 +4113,7 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  {
->  	struct perf_event *event;
->  	struct hw_perf_event *hwc;
-> -	u64 now, period = TICK_NSEC;
-> +	u64 now, period, tick_stamp;
->  	s64 delta;
->  
->  	/*
-> @@ -4151,6 +4152,10 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  		 */
->  		event->pmu->stop(event, PERF_EF_UPDATE);
->  
-> +		tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
-> +		period = tick_stamp - hwc->freq_tick_stamp;
-> +		hwc->freq_tick_stamp = tick_stamp;
+> +extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> +extern unsigned short perf_misc_flags(struct pt_regs *regs);
+> +#define perf_misc_flags(regs) perf_misc_flags(regs)
 > +
->  		now = local64_read(&event->count);
->  		delta = now - hwc->freq_count_stamp;
->  		hwc->freq_count_stamp = now;
-> @@ -4162,8 +4167,13 @@ perf_adjust_freq_unthr_context(struct perf_event_context *ctx, bool unthrottle)
->  		 * to perf_adjust_period() to avoid stopping it
->  		 * twice.
->  		 */
-> -		if (delta > 0)
-> -			perf_adjust_period(event, period, delta, false);
-> +		if (delta > 0) {
-> +			/*
-> +			 * we skip first tick adjust period
-> +			 */
-
-Could be a single line comment.
-
-> +			if (likely(period != tick_stamp))
-
-Kernel style is to combine if-statements if possible i.e.
-
-		/* Skip if no delta or it is the first tick adjust period */
-		if (delta > 0 && likely(period != tick_stamp))
-
-> +				perf_adjust_period(event, period, delta, false);
-> +		}
+>  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+>  	(regs)->epc = (__ip); \
+>  	(regs)->s0 = (unsigned long) __builtin_frame_address(0); \
+>  	(regs)->sp = current_stack_pointer; \
+>  	(regs)->status = SR_PP; \
+>  }
+> +#endif
+> +
+>  #endif /* _ASM_RISCV_PERF_EVENT_H */
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+> index 3348a61de7d9..7af90a3bb373 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
+> @@ -58,6 +58,11 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  {
+>  	unsigned long fp = 0;
 >  
->  		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
->  	next:
+> +	if (perf_guest_state()) {
+> +		/* TODO: We don't support guest os callchain now */
+> +		return;
+> +	}
+> +
+>  	fp = regs->s0;
+>  	perf_callchain_store(entry, regs->epc);
+>  
+> @@ -74,5 +79,38 @@ static bool fill_callchain(void *entry, unsigned long pc)
+>  void perf_callchain_kernel(struct perf_callchain_entry_ctx *entry,
+>  			   struct pt_regs *regs)
+>  {
+> +	if (perf_guest_state()) {
+> +		/* TODO: We don't support guest os callchain now */
+> +		return;
+> +	}
+> +
+>  	walk_stackframe(NULL, regs, fill_callchain, entry);
+>  }
+> +
+> +unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> +{
+> +	if (perf_guest_state())
+> +		return perf_guest_get_ip();
+> +
+> +	return instruction_pointer(regs);
+> +}
+> +
+> +unsigned short perf_misc_flags(struct pt_regs *regs)
 
+I see that the consumer of perf_misc_flags is only a u16, but all other
+architectures define this function as returning an unsigned long, and
+your last version did as well. My comment in the last version was that
+we should use an unsigned long for the 'misc' variable to match the
+return type of the function. I still think we should do that instead
+since the function should be consistent with the other architectures.
+
+> +{
+> +	unsigned int guest_state = perf_guest_state();
+> +	unsigned short misc = 0;
+> +
+> +	if (guest_state) {
+> +		if (guest_state & PERF_GUEST_USER)
+> +			misc |= PERF_RECORD_MISC_GUEST_USER;
+> +		else
+> +			misc |= PERF_RECORD_MISC_GUEST_KERNEL;
+> +	} else {
+> +		if (user_mode(regs))
+> +			misc |= PERF_RECORD_MISC_USER;
+> +		else
+> +			misc |= PERF_RECORD_MISC_KERNEL;
+> +	}
+> +
+> +	return misc;
+> +}
+> -- 
+> 2.34.1
+>
+
+Thanks,
+drew
