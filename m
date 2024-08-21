@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA0E18475C;
-	Wed, 21 Aug 2024 06:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A14A6185B5B;
+	Wed, 21 Aug 2024 06:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724223250; cv=none; b=U7BKZlE7TIMiOAzG6Dcka0OJkCLnutBZnV75Qc7hveGaN3msZO5GSr7hZfpoSIgMQQLBNhtI45obLGJhrc1zSJdBWqMFmzDQ09kimfWzwjrr4aEE8RwhQ/Ns1q/u5gQnkVnvqyRQgwF9mzr7JLkMBcJcDUvUfmZEFe9L/EiVyws=
+	t=1724223250; cv=none; b=iTNOlG6Ulhwf2fAybq06GEZ89kjXwbtBpi/xuM9iZCNgNvlsRkCNW3GdS2mzeCtgw7aknje9XLNYQbymeBXJH0WIrcCRIK03fRZXQp+6gEKXsn5l/TFvtpdy7cYI2Jbfk8kqQ3eJLGU7vSz0CnaAbKBAN7DevcyrSXBA5IH9g3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724223250; c=relaxed/simple;
-	bh=lBjQlKE3w5epF0YAuSwIcDk2n3dg7KcCujTXXA3loxw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=krrYyQPJuyi2lhGB6DJjCgGvtBNiuTgOI37/vtLlDCpXlW5OHomvH5oCLUqA1uIV+BODed834NTPYrGMNJ3xEvX+udjE0FrlGDw2PmtI5+2/JoBwWKhx3++quWxT8apwI3in9Gd3lt3fgtEZeIJMhSLerpN2XoQQwE165P/zTiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VBiQ6KFY; arc=none smtp.client-ip=10.30.226.201
+	bh=40JIck12LRZQFAYFdd1yRRPbX0IsQ0JHeE3vUXaJ+UM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=p+FAk5XQn/xFehPUmR65MpXbx9DMzD/rCxZfsgPcK8vbnISipOYyCy6tSoPIWcEXvoGI6wOOvIumzu7iUxziZOQOsSAkw7+wMwVc2ZB6o1OCacyrAsuZvW00qC/7m61Vu2Ft0bFu7sWfGR2LAp8aCIHquG5ylRJhEgkQ6wJRzm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oNJsNBTt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VBiQ6KFY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A3B6C32782;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oNJsNBTt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE900C4AF12;
 	Wed, 21 Aug 2024 06:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724223249;
-	bh=lBjQlKE3w5epF0YAuSwIcDk2n3dg7KcCujTXXA3loxw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VBiQ6KFYp48nsvScqEj8ngZtYr1GnlPsQX/2uoGLXpA5LP0veZ0kxxL5M9CjDf14A
-	 LunL2JPO/mFJTJZX+yAf+B+B5LVBLLCH0nfwht4XgPS7ex/nfMpivxhWvozgKr1kVi
-	 tLBNNVCrIu7yff1DZ21PS0IjWZOF7TwXxLi32ESvAfI7Nimz9I6ZiuFdnbTF4JLmRc
-	 AbgukeBPXeeF0QY3XajlhzOlbJLBBGuOi3DqjRniLwasshn5l1oAPMHFcsWHoFGxeg
-	 62fQDWbRfrDG7XBVBSgldUjzHLUNMCAS0SWrrFz92w/ebnyWIavQIWPsb2YEIkxOna
-	 NTk8LrysbZLvw==
+	s=k20201202; t=1724223250;
+	bh=40JIck12LRZQFAYFdd1yRRPbX0IsQ0JHeE3vUXaJ+UM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oNJsNBTtg1ljBcl476Z9uKy3Wc91dezhc6hiCCL6GiMSf3n8jcdRrFaVt6uHGLbVl
+	 4nuD5Jeuvm7u/krDxks7JvFJStaSGzX5Jd8MMlV7AIEzu73rdMC1tIPcSLJGLDnvoe
+	 uVC0/Srsn0uE1k7iNw1e4FyRUy4Vo81YFEbnroGbvU73YN6Q1tRLgL+3hiINYG4Q3R
+	 e6YjCFCgpNlSJFaZfAvkb8q38ly9kfBlmEFdotP6FzWOtniyZ0WRiiPKAmueAn/+Oi
+	 z0sqtlfS14wZtpR8C4dKSVZ7pWNZaR4DrCkO0wNYDbJ8yqXx7YvLM30NmBLJ4kgy9k
+	 cpL5/mD2jzBqw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -36,10 +37,12 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCH 1/3] perf annotate-data: Fix missing constant copy
-Date: Tue, 20 Aug 2024 23:54:06 -0700
-Message-ID: <20240821065408.285548-1-namhyung@kernel.org>
+Subject: [PATCH 2/3] perf annotate-data: Prefer struct/union over base type
+Date: Tue, 20 Aug 2024 23:54:07 -0700
+Message-ID: <20240821065408.285548-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
+In-Reply-To: <20240821065408.285548-1-namhyung@kernel.org>
+References: <20240821065408.285548-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,28 +51,55 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-I found it missed to copy the immediate constant when it moves the
-register value.  This could result in a wrong type inference since the
-address for the per-cpu variable would be 0 always.
+Sometimes a compound type can have a single field and the size is the
+same as the base type.  But it's still preferred as struct or union
+could carry more information than the base type.
 
-Fixes: eb9190afaed6 ("perf annotate-data: Handle ADD instructions")
+Also put a slight priority on the typedef for the same reason.
+
 Signed-off-by: Namhyung Kim <namhyung@kernel.org>
 ---
- tools/perf/arch/x86/annotate/instructions.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/annotate-data.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/arch/x86/annotate/instructions.c b/tools/perf/arch/x86/annotate/instructions.c
-index 7b7d462c6c6b..88b5bcf2116f 100644
---- a/tools/perf/arch/x86/annotate/instructions.c
-+++ b/tools/perf/arch/x86/annotate/instructions.c
-@@ -382,6 +382,7 @@ static void update_insn_state_x86(struct type_state *state,
+diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
+index 25105b3b9a13..d3db945afac9 100644
+--- a/tools/perf/util/annotate-data.c
++++ b/tools/perf/util/annotate-data.c
+@@ -382,6 +382,13 @@ static bool is_pointer_type(Dwarf_Die *type_die)
+ 	return tag == DW_TAG_pointer_type || tag == DW_TAG_array_type;
+ }
  
- 		tsr->type = state->regs[src->reg1].type;
- 		tsr->kind = state->regs[src->reg1].kind;
-+		tsr->imm_value = state->regs[src->reg1].imm_value;
- 		tsr->ok = true;
++static bool is_compound_type(Dwarf_Die *type_die)
++{
++	int tag = dwarf_tag(type_die);
++
++	return tag == DW_TAG_structure_type || tag == DW_TAG_union_type;
++}
++
+ /* returns if Type B has better information than Type A */
+ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
+ {
+@@ -411,7 +418,18 @@ static bool is_better_type(Dwarf_Die *type_a, Dwarf_Die *type_b)
+ 	    dwarf_aggregate_size(type_b, &size_b) < 0)
+ 		return false;
  
- 		pr_debug_dtp("mov [%x] reg%d -> reg%d",
+-	return size_a < size_b;
++	if (size_a != size_b)
++		return size_a < size_b;
++
++	/* struct or union is preferred */
++	if (is_compound_type(type_a) != is_compound_type(type_b))
++		return is_compound_type(type_b);
++
++	/* typedef is preferred */
++	if (dwarf_tag(type_b) == DW_TAG_typedef)
++		return true;
++
++	return false;
+ }
+ 
+ /* The type info will be saved in @type_die */
 -- 
 2.46.0.184.g6999bdac58-goog
 
