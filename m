@@ -1,250 +1,296 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2070.outbound.protection.outlook.com [40.107.102.70])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0EA175A6;
-	Wed, 21 Aug 2024 04:57:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724216241; cv=fail; b=H53JL5iY+gsjjPUlKRcLWhw4W+4Z2/i/03Y86YlFvy5V6aqolDg27YcpJXuLWBK/+D2kMkSDXKdEzLyLSxvSA/ywvLu9RB/dNUxFf2GoGb5JFOBDxnmfQd2Ch5yWwqLxnJwQgVDyV0ennkVr+GYodqOPd4ehYeGZZnNu/6FzAcc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724216241; c=relaxed/simple;
-	bh=2daLoqu64NughYDmM06NbWuZOJRqtjLZ1/W+2/wmYTM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=Iuy7SlCkxslCjla369f7IlBl0NPM/3vW63qR28TLNANp1aM/+q8rxGIpThQwQrOT/leKFe6hULZ0tyI3pB1NgE6ygA/gszTFPlAVqaeIjsrgRKhim1gh2fFZDVxSqv8kr4byc+2YyJqQLdqYZB4D2nM8mmtAAQ5hTzISuduPYDI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=E6hkHJtu; arc=fail smtp.client-ip=40.107.102.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C96D155A32
+	for <linux-perf-users@vger.kernel.org>; Wed, 21 Aug 2024 05:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1724217078; cv=none; b=KOFSh2NzpPBOOw7vbWFNXwNgnuWeJLJTsEATS6RDbBQgKBCQPOf0+8QswwGTJtdFK/ko8P5BFhryvo9XWHEd1AGn7B22XHdrysS0ivFWKzR6tAdVoMsoVR6LoZZSX4Z84bSyYyZOZATf384M//MqEDQBQ7tu6AUvXOG05OjthJg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1724217078; c=relaxed/simple;
+	bh=gFlBS35qcj+rFEXGs+xgpYxirv+Rwj2xxb5pK/QsPhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ORBVjtKG+7yzTdU9+Hgm4LE7i+Xl0cHM7t+XlpVKteI9c4FIY+oNbgyUayqKYU+YoNqMtON4bXNHlu1X3pFIjMl6R/DsYL+nMRzUv1gTySUchz2K/gIjVIW5PHJ7IdfVXdYMdcXt27gu51VE+pOiC4IiBGef5ZSw2MxFPD49Z84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SpQQKnWO; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="E6hkHJtu"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=VCiVqxcIo1pG1ah4DnQAQhH+bolmRqGq+JZblCp79rRNfuMigMTqv2j2w7M3KAphd/WEoJjt9mjVKLBmYr/5orkdLHgFjvJseM62tqnbO8jKOkVCq/NhyxfPR9b89viLOPbOMdGT1iL/wUOzkhw2nJ8UtKmoduvqeUb4yr5jzCh/aQynYV75DSlB/gl3YT+QqNFMOAlmpOHMESlbkB3yAmN6ivf3R8uqcG/x1O5ozHQXTkrhV+LKkxIlLe8jUlf9xEgBt+URJdnHBWmWTX1krLz1exWCV4Gs598J/kj1nvegdqhZUOhvD70az8EKT8h0aXEu8y3z+QURr5Ay4kyunw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5Fp3h28TUG86ZqADVZTQ+RM61W/UiY2yK8F6qXumGPY=;
- b=su2PsCLMxOBMf+oyLNDWZdLHA+hcI9r0Nd1uIAdRj4rpk9S4Ucs/IYP44U+GPyitgYTRWv3BWB+b8WNRGnkWZEp8jTZL69l0q7LbllQZCdqGOFJ7tOqGlmgw1d+giqASjw0S7oPoUDMe7IVdrvJ9uATcWTvuLpMyOJPowhznmGE/9ReF6I9BieGPtiBgcfb4AaqxYh/BNdiiOzdz74aqtlFZKwygPOr8c0RKGTADgRYEjSpDsOXXE5fYalwWeoFHtSdHpsNhVz7x54WdLemYsYf0vTte/iQEy3ws9w0+5PGOxvJcKi9QFTrgbb7nfd+invUxUtE0lYmYklNfLaIM9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5Fp3h28TUG86ZqADVZTQ+RM61W/UiY2yK8F6qXumGPY=;
- b=E6hkHJtuX2J7Vx69NxXnB2g8nbD3/ivnnnnSDRqEyWnK9iBR7C5Sr2pDJjvettyqjmscz8vbdnj+YHkjaOPSowDXNW5FdCg/ULp3dq1N8zOZSa0+i61heHJUc6dtRWwOdEWDtzg3ChetmLC/uRUH1n67jCBejwjg1Zx5/QagmPU=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com (2603:10b6:8:ee::7) by
- SA1PR12MB7224.namprd12.prod.outlook.com (2603:10b6:806:2bb::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7875.20; Wed, 21 Aug
- 2024 04:57:17 +0000
-Received: from DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7]) by DS7PR12MB8252.namprd12.prod.outlook.com
- ([fe80::2d0c:4206:cb3c:96b7%4]) with mapi id 15.20.7875.019; Wed, 21 Aug 2024
- 04:57:17 +0000
-Date: Wed, 21 Aug 2024 10:27:05 +0530
-From: "Gautham R. Shenoy" <gautham.shenoy@amd.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, tglx@linutronix.de, bp@alien8.de,
-	dave.hansen@linux.intel.com, x86@kernel.org, rui.zhang@intel.com,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, ananth.narayan@amd.com,
-	kprateek.nayak@amd.com, ravi.bangoria@amd.com,
-	Michael Larabel <michael@michaellarabel.com>
-Subject: Re: [PATCH v2 2/2] powercap/intel_rapl: Fix the energy-pkg event for
- AMD CPUs
-Message-ID: <ZsVzoRrkrfCZ3ncM@BLRRASHENOY1.amd.com>
-References: <20240730044917.4680-1-Dhananjay.Ugwekar@amd.com>
- <20240730044917.4680-3-Dhananjay.Ugwekar@amd.com>
- <CAJZ5v0h4GAVCpUnbCMHMophsSZ522kkReAbUMdfFgRJfd0vHkw@mail.gmail.com>
- <3c6e2fb3-4b51-4cda-a5ca-71bed94d47b9@amd.com>
- <CAJZ5v0gxD_nUabYLKoO2NoQ-TTYd5-4mocyri6M4g0xZ+4sd2A@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJZ5v0gxD_nUabYLKoO2NoQ-TTYd5-4mocyri6M4g0xZ+4sd2A@mail.gmail.com>
-X-ClientProxiedBy: PN3PR01CA0042.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:98::7) To DS7PR12MB8252.namprd12.prod.outlook.com
- (2603:10b6:8:ee::7)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SpQQKnWO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724217075;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=BGCt3DrVugrCfa33u/KErLv8ZSFt2Jwl4ocgFJ7U6Q8=;
+	b=SpQQKnWOGHDi5qZeNQozcgUxQ04t98MOLvY5kXZ9AWdyNU+w61MsmQCEUPnq4eYAtX6EUs
+	Hg+hwNqHVkLhA40Oejg+SMGOVwy0/S2ngRi+c8IM4bX32YXycLwB0AdNCyTuihEyMOuKB3
+	0y61liTkDJatcuRmjAOHerS/+SzuT7E=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-39-01nKYROuPguVNlKhe8ENlQ-1; Wed,
+ 21 Aug 2024 01:11:11 -0400
+X-MC-Unique: 01nKYROuPguVNlKhe8ENlQ-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E00F31955D48;
+	Wed, 21 Aug 2024 05:11:08 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.224.52])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id BC00B19560AA;
+	Wed, 21 Aug 2024 05:11:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 21 Aug 2024 07:11:03 +0200 (CEST)
+Date: Wed, 21 Aug 2024 07:10:55 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: syzbot <syzbot+b32fa80fe75273685f9c@syzkaller.appspotmail.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com,
+	alexander.shishkin@linux.intel.com, irogers@google.com,
+	jolsa@kernel.org, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+	mhiramat@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+	peterz@infradead.org, syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [perf?] KASAN: slab-use-after-free Read in
+ uprobe_unregister
+Message-ID: <20240821051054.GA15751@redhat.com>
+References: <000000000000e99e800620277ffa@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR12MB8252:EE_|SA1PR12MB7224:EE_
-X-MS-Office365-Filtering-Correlation-Id: 912e08cc-bc43-46ee-26a9-08dcc19dbb1a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eGNEVlNGak5SZTBhNzNvOUNOM01FWHI4MlErMi94RnJPQklkUUJSLzkzR2tj?=
- =?utf-8?B?RDhXbElIWXo2TkFwVWxIZ1ZEWUNuMlNGR0VMaWZpSEo5OXh5bnNUNVJ4ZFI2?=
- =?utf-8?B?ditubnVJQTFRdU5IaXo4QkRSZWNqQ0p1UldOUEFDUkhobEQ4TEtPSFppM3BS?=
- =?utf-8?B?L3l6TlU0bk9KdzBNUnZFN1FaNVU2SDJYUjJBN0srdHlzRjJDRXJzTnJtTFAx?=
- =?utf-8?B?c2oxRE1kSXd6SWppTHBXZXpVK25PVk4wZjZ6by9SN1h2OTFDTHVOS2hvcUVF?=
- =?utf-8?B?VGdjeFFnYWZiclNFRS8wcjRKa0xYWnkwTy9Pd0I0cit2NnVMV2hJOWtOUndW?=
- =?utf-8?B?YkdRdXNQQTdMR2J4TDh4MnFBeGJGRjQ5T1lwU0ttbkZGRmVTcUZRU0gvbEtZ?=
- =?utf-8?B?KzRmY2svUktNeUhEUW43WXREYkdQemljYys3TUdkTmJnVnl4UE1Nbkp1WHVr?=
- =?utf-8?B?OWd0RzJOblZXQlFWRGVraC9qcG9mbUl5dEhndU95ZDVxSjQwSXl1ejh3WHUr?=
- =?utf-8?B?RzMwT01TcHNIbmlDcHgzSjhDSERyS0c1Ni9VK3MvdGhZMmtkZTNJdXlqZ0pV?=
- =?utf-8?B?cHU5V0VUeXQ4NDNVbFpvTTVTZUloMVp5U1NWOEhibmVBN1FuSGJid1MwNTZP?=
- =?utf-8?B?RklIb0MxU3g4ZkhjTEJHeGZPRVgwY1BhcW5LdUVLazcvVGlZS1J5NkVTempD?=
- =?utf-8?B?UFdYa0lpY1NwaDRlWFlEMWtOVmxmaWZuN0QwLzZYdFJjc3FVN2ZxRzY2dE5j?=
- =?utf-8?B?WnJ3OTBYMWRKZW92ZjB6bkdtNkhuVTk3RWFzaGQ2N0Q3cGRJa0syTURFTUpp?=
- =?utf-8?B?OUdJWUx3eGx2U0lLTHdBcXc5SWVQN054QXd0Wnc5SHRsL2pvNUZZZGtaNTJ4?=
- =?utf-8?B?Zmt1NlVNLzduenlkUVZRRmxSVmVIdnhLU2kxeTFSYlZPelF5cDhmVUxVTFFR?=
- =?utf-8?B?aGh1eVRISWY4L0JXVUFRYkNPTkZQZ1RVc2FoOG9yQlFCZmwxeFB3c2lGYzls?=
- =?utf-8?B?Y2FVT0pWek0yc2pWaFNHdUxQMHFjWUtuZnZKdjFWVjUyRjgydEJGOXgzaFNU?=
- =?utf-8?B?NVU5RVlMcjN1dGZkQTJCUFNSUVd5aTNjL292Y2kvRTJCZ0Q3bVdCWDJpOEMy?=
- =?utf-8?B?MHFQSGg1a1daQWtRdWZtWDNoVVcwU09rTlhTNlBMOW5qR3FNM0tYVWdnVEtW?=
- =?utf-8?B?WVVobFhSLzFyNEVremx1QTl5SHFnSHlzUDlzTG83c2tZaUlORVFOUU04WUwv?=
- =?utf-8?B?SE4rRFFiY25ZVzNTZTVJTStvc2pzT2gxTlFLWUszb3pMV0cwRk91eG9mNVBB?=
- =?utf-8?B?cW80NXFjWlRMeGdtYlNUUVpiY25SclNITjVSYTRBeXJGLys5Qm51aXhjR3pi?=
- =?utf-8?B?ZmNja2MzcUxrTkdUU0ZwUEN3YWp3SHJBNno1UENqanU3QUc2ekdGWW5hUVIr?=
- =?utf-8?B?Q3RLSVhVTEo0aDYvZ3F1MkI3STZVMEFvd1YvNmsyeDlSMllpYUxacjhsL0xy?=
- =?utf-8?B?L2UvQWt0NzhCZlVxd2ZKUWJaNnNvRFZxNjFHZFIvZnJJZURDbzFFb3o2c3B2?=
- =?utf-8?B?a2tGaVlVRjhRa0tnVTkzZnhNLzlWOUxjdDc3U3ZUTmhNQ3JYeEtPY1lVUFo0?=
- =?utf-8?B?UUFtZXdFWnk1SUdOTkp5SjBRV3BvQms0RWsyYWxmT3lFQ1hiMmJuUU5HWGtu?=
- =?utf-8?B?YWlJSnhBU1g1SXphYmR5VWhYOFIwTWhGOHcycjBsZFVUbC9YMzBFR1FoTDJk?=
- =?utf-8?B?THdCTmc2Yml4UERWbGJXQStJVGtJU3JwYTA5dzIrMktZMDF6YlhlV2gzN3h5?=
- =?utf-8?B?aHNLeUFiY0RYdktTeW1yQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB8252.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?K0lpSmsrT0NYSmdWN0xMZEZIRmdnaklXY25NN1Q4RVdjM1ViYVVQd2U3N3Zy?=
- =?utf-8?B?dWNUSGUrdTlyZHFzSWQwZVBQTDJCQXYxUXllOHRRS3RVYUJJb3E2QzVudktm?=
- =?utf-8?B?NW5YQnp3eWFuTTlwRi9Cd0RqZHJFK1JFWnIwcWk4SkJYMy9JYkxtUktZMjVm?=
- =?utf-8?B?T1VYVEVKWlVsK3ZBMmZ1UEtiekVGRVYvUjV3VGVJajFpZ3pKRWRHMyt3MXNt?=
- =?utf-8?B?TzN3QWpqSjVxSHROMzBJNTJvNzhSQzRvYklnOVl3NHpxUzEvZzJRc2IxeTJk?=
- =?utf-8?B?NSt5bkUwR0JNcUc1TG9lS0llN2lGZkgvcDcvYU1DUmp4OTRPZVF3NVVwSzN5?=
- =?utf-8?B?c2Z0RjB4TXFCUG1yeXY2YlBXQWMzci9rOEZKc0xZaFFYOGxMM2VzVkJ5MTBk?=
- =?utf-8?B?N2ExSXNWL2NpcTdaTzlHdVpoTG9MM2RsVnFLdlo5L1NRd1VzVUhZSnRXMkR2?=
- =?utf-8?B?ajFiZzlWSUt2NWhJTjJyZmxmOEpZYkNESFhpNmFRMGthSUU1aEl3TGFuSHVw?=
- =?utf-8?B?M1BhNENibFBWTHpkeXdKdXhRZ3d4SnkwamtBbnlpSVJTK0VnS1JCUHg0Rzl0?=
- =?utf-8?B?M05LejJSaitBNk9SWi9oVS9qZENEblI0ZTJFTURxQkwzOWt1ZlNPdlp4MlAw?=
- =?utf-8?B?dkRtSjdiZm9DK2NySXBGejJKTnFKVFJOWXFTT0EwekQwZmdPNm51d1IrL1Iz?=
- =?utf-8?B?L04zZG9sb0RTdnlSOEl0dEdpTVJacEJEOTJkRDBsTFdxWkQ5eHVQMDZtTnZQ?=
- =?utf-8?B?enNRUGNUNUZrM2Z1Z1RZY1RmNjB3TkFvQ3dzZi9kNHVNVVEwTjdQaXluOVlq?=
- =?utf-8?B?Q3lYZzBuYnovZjVOVGxGZVdpQmlUUUlsSlh6eUJlaXAreEpRemdwRTlDME0y?=
- =?utf-8?B?NGhEbXV6T0h4cStkTVlxVGkveTdWNXVBald6a0pqRVhoN3R3ZDUxUGVYL05H?=
- =?utf-8?B?WGd4RjR2RmhrQWNBMXJzM1BwMlVtMTZ2a2JrejVRM05XcHBYUW9JYVBCelRE?=
- =?utf-8?B?MmFCVlVCTEtFWDByVXljaEJROXB1M1Qya1htTXlQTWN3S1c3QkEydlBuTUVG?=
- =?utf-8?B?cldNTDFnN0dPWkpScEtISzBhNWdDaWhCTkI3Y0xoeGJnNlRZOVR5L2o0amQx?=
- =?utf-8?B?c0UzRVB4R0dGZFIvemxKS2tLSjEra3IxTlk5UkxmbFc4YW12dTBVZkE4LzVH?=
- =?utf-8?B?TUtqdDV1NTZZcW15a2Q4WkhNd2ZlUHVGV01VRkpYQzZZOHdTSGZiT2pBQTJa?=
- =?utf-8?B?d1d6S21IMUtkMGRLcU0vRkJkaXdqM2tyRFgrYmJWMGlyRU45a2h6TzEwbm1F?=
- =?utf-8?B?REwxcXhzWitLd3J4dnlZZFpSQk1IYU5MbUQwcytwajltSHJwU3RTNGMyVFNY?=
- =?utf-8?B?bWc0cG1UMUhOUGFGempxVDNBS2JXVkdnYktqY0oxS3l0Qzk4bWdCZGZYTys1?=
- =?utf-8?B?emozaUhZa0FPL0xmNlJNVjRYUlo2ODRCWERSN3VHcllqY2hHSjNOaW00bUt3?=
- =?utf-8?B?OS90ODdIU29oanBPZ2oyc0hKUzc0NUJUVWJQd1ZjSzV0ekY0UnA1RGhRTDNL?=
- =?utf-8?B?VEZSMGhyemlUY21QR1VicXROeHBWaElNcjVRZGxpRFNOSlBQVjZPU2kzWTM3?=
- =?utf-8?B?MDNIMFFZVHU4a2FyOWdXcDF0S2ZjdjlSMUxXZnNXZHM1SXBBTkllNFh6TG1B?=
- =?utf-8?B?YUFvem8yeENpanh4N3FXbloxTms2NkRtS1RTVy95Qi9sUUJRN2dPNytEaUpZ?=
- =?utf-8?B?b3cxZFFrQ1BFUE5MN0lIQWw3WDZkak5xUDlFckFNMXpPQ3hVa3NGTWpvRjBx?=
- =?utf-8?B?T0k5WE1mY0NQNVlEcHVnMGNTK2dpWklNZlpvbW52cVAzS2twNHhSUE5GNTZj?=
- =?utf-8?B?QjRFTGFYdk9rbk9hbVpvcXVwSjIxKzlEODhMOGNOaXdCZ1RqZ1l6dlV5MWo0?=
- =?utf-8?B?cUxTWnpyRmc4b2Q2a0JuODJIM3BBdVdqeml4MExwdVJHV2JwbFFnaDhCNXVO?=
- =?utf-8?B?eXIycnlaTTBBVnBUWTdMMjBVbjZYVlJhQzZqbmhpYjU1RnJGalU0aWVza2p4?=
- =?utf-8?B?dlhyVEZ3Zm80TG9xT1gxdkk1a2sxUWJRUHAyMUVRS3dxajltZUhHb0l5Y25G?=
- =?utf-8?Q?aI5E/XcRUR6JGsq6peccr1P6p?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 912e08cc-bc43-46ee-26a9-08dcc19dbb1a
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB8252.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Aug 2024 04:57:17.4481
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: BjrWIxaZEvGw6bV7hwa0SX18z6F5c0TI43gaSWSZx3mTQIdCACAW2MoGfO6cAyR+A05IJRTUq8VtiSjEDZnDzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7224
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <000000000000e99e800620277ffa@google.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-Hello Rafael,
+#syz dup: [syzbot] [perf?] KASAN: slab-use-after-free Read in __uprobe_unregister syzbot
 
-On Mon, Aug 19, 2024 at 03:34:09PM +0200, Rafael J. Wysocki wrote:
-> On Thu, Aug 8, 2024 at 1:18 PM Dhananjay Ugwekar
-> <Dhananjay.Ugwekar@amd.com> wrote:
-> >
-> > Hello Rafael,
-> >
-> > On 8/2/2024 6:05 PM, Rafael J. Wysocki wrote:
-> > > On Tue, Jul 30, 2024 at 6:53 AM Dhananjay Ugwekar
-> > > <Dhananjay.Ugwekar@amd.com> wrote:
-> > >>
-> > >> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
-> > >> on AMD processors that support extended CPUID leaf 0x80000026, the
-> > >> topology_logical_die_id() macros, no longer returns package id, instead it
-> > >> returns the CCD (Core Complex Die) id. This leads to the energy-pkg
-> > >> event scope to be modified to CCD instead of package.
-> > >>
-> > >> For more historical context, please refer to commit 32fb480e0a2c
-> > >> ("powercap/intel_rapl: Support multi-die/package"), which initially changed
-> > >> the RAPL scope from package to die for all systems, as Intel systems
-> > >> with Die enumeration have RAPL scope as die, and those without die
-> > >> enumeration are not affected. So, all systems(Intel, AMD, Hygon), worked
-> > >> correctly with topology_logical_die_id() until recently, but this changed
-> > >> after the "0x80000026 leaf" commit mentioned above.
-> > >>
-> > >> Future multi-die Intel systems will have package scope RAPL counters,
-> > >> but they will be using TPMI RAPL interface, which is not affected by
-> > >> this change.
-> > >>
-> > >> Replacing topology_logical_die_id() with topology_physical_package_id()
-> > >> conditionally only for AMD and Hygon fixes the energy-pkg event.
-> > >>
-> > >> On an AMD 2 socket 8 CCD Zen4 server:
-> > >>
-> > >> Before:
-> > >>
-> > >> linux$ ls /sys/class/powercap/
-> > >> intel-rapl      intel-rapl:4    intel-rapl:8:0  intel-rapl:d
-> > >> intel-rapl:0    intel-rapl:4:0  intel-rapl:9    intel-rapl:d:0
-> > >> intel-rapl:0:0  intel-rapl:5    intel-rapl:9:0  intel-rapl:e
-> > >> intel-rapl:1    intel-rapl:5:0  intel-rapl:a    intel-rapl:e:0
-> > >> intel-rapl:1:0  intel-rapl:6    intel-rapl:a:0  intel-rapl:f
-> > >> intel-rapl:2    intel-rapl:6:0  intel-rapl:b    intel-rapl:f:0
-> > >> intel-rapl:2:0  intel-rapl:7    intel-rapl:b:0
-> > >> intel-rapl:3    intel-rapl:7:0  intel-rapl:c
-> > >> intel-rapl:3:0  intel-rapl:8    intel-rapl:c:0
-> > >>
-> > >> After:
-> > >>
-> > >> linux$ ls /sys/class/powercap/
-> > >> intel-rapl  intel-rapl:0  intel-rapl:0:0  intel-rapl:1  intel-rapl:1:0
-> > >>
-> > >> Only one sysfs entry per-event per-package is created after this change.
-> > >>
-> > >> Fixes: 63edbaa48a57 ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf")
-> > >> Reported-by: Michael Larabel <michael@michaellarabel.com>
-> > >> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
-> > >> Reviewed-by: Zhang Rui <rui.zhang@intel.com>
-> > >> ---
-> > >> Changes in v2:
-> > >> * Updated scope description comment, commit log
-> > >> * Rename rapl_pmu_is_pkg_scope() to rapl_msrs_are_pkg_scope()
-> > >> * Check topology_logical_(die/package)_id return value
-> > >
-> > > This patch does not depend on the first one in the series if I'm not
-> > > mistaken, in which case I can pick it up separately if you want me to
-> > > do that, so please let me know.
-> >
-> > Sorry for the late reply, was out sick,
-> >
-> > Yes, please pick this patch separately, it is independent from the first one.
-> 
-> OK, applied as 6.12 material.
+https://lore.kernel.org/all/000000000000382d39061f59f2dd@google.com/
 
-Can this go into 6.11 fixes?
+Hopefully fixed by
+[PATCH tip/perf/core] bpf: fix use-after-free in bpf_uprobe_multi_link_attach()
+https://lore.kernel.org/all/20240813152524.GA7292@redhat.com/
 
-It fixes the commit 63edbaa48a57 ("x86/cpu/topology: Add support for
-the AMD 0x80000026 leaf") which got merged in 6.10.
+On 08/20, syzbot wrote:
+>
+> Hello,
+>
+> syzbot found the following issue on:
+>
+> HEAD commit:    367b5c3d53e5 Add linux-next specific files for 20240816
+> git tree:       linux-next
+> console+strace: https://syzkaller.appspot.com/x/log.txt?x=109d46a3980000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=61ba6f3b22ee5467
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b32fa80fe75273685f9c
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1099b7d3980000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c513e5980000
+>
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/0b1b4e3cad3c/disk-367b5c3d.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/5bb090f7813c/vmlinux-367b5c3d.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/6674cb0709b1/bzImage-367b5c3d.xz
+>
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+b32fa80fe75273685f9c@syzkaller.appspotmail.com
+>
+> R10: 0000000000000001 R11: 0000000000000246 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000001
+>  </TASK>
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in consumer_del kernel/events/uprobes.c:772 [inline]
+> BUG: KASAN: slab-use-after-free in uprobe_unregister+0x99/0x220 kernel/events/uprobes.c:1097
+> Read of size 8 at addr ffff888022b9eb40 by task syz-executor227/5226
+>
+> CPU: 0 UID: 0 PID: 5226 Comm: syz-executor227 Not tainted 6.11.0-rc3-next-20240816-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
+> Call Trace:
+>  <TASK>
+>  __dump_stack lib/dump_stack.c:94 [inline]
+>  dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+>  print_address_description mm/kasan/report.c:377 [inline]
+>  print_report+0x169/0x550 mm/kasan/report.c:488
+>  kasan_report+0x143/0x180 mm/kasan/report.c:601
+>  consumer_del kernel/events/uprobes.c:772 [inline]
+>  uprobe_unregister+0x99/0x220 kernel/events/uprobes.c:1097
+>  bpf_uprobe_unregister kernel/trace/bpf_trace.c:3119 [inline]
+>  bpf_uprobe_multi_link_release+0x8c/0x1b0 kernel/trace/bpf_trace.c:3127
+>  bpf_link_free+0xf5/0x250 kernel/bpf/syscall.c:2998
+>  bpf_link_put_direct kernel/bpf/syscall.c:3038 [inline]
+>  bpf_link_release+0x7b/0x90 kernel/bpf/syscall.c:3045
+>  __fput+0x24b/0x890 fs/file_table.c:424
+>  task_work_run+0x24f/0x310 kernel/task_work.c:228
+>  exit_task_work include/linux/task_work.h:40 [inline]
+>  do_exit+0xa2f/0x28e0 kernel/exit.c:939
+>  do_group_exit+0x207/0x2c0 kernel/exit.c:1088
+>  __do_sys_exit_group kernel/exit.c:1099 [inline]
+>  __se_sys_exit_group kernel/exit.c:1097 [inline]
+>  __x64_sys_exit_group+0x3f/0x40 kernel/exit.c:1097
+>  x64_sys_call+0x26a8/0x26b0 arch/x86/include/generated/asm/syscalls_64.h:232
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f409a857c79
+> Code: Unable to access opcode bytes at 0x7f409a857c4f.
+> RSP: 002b:00007fff689d0b48 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f409a857c79
+> RDX: 000000000000003c RSI: 00000000000000e7 RDI: 0000000000000000
+> RBP: 00007f409a8cb370 R08: ffffffffffffffb8 R09: 00000000000000a0
+> R10: 0000000000000001 R11: 0000000000000246 R12: 00007f409a8cb370
+> R13: 0000000000000000 R14: 00007f409a8cbdc0 R15: 00007f409a821340
+>  </TASK>
+>
+> Allocated by task 5226:
+>  kasan_save_stack mm/kasan/common.c:47 [inline]
+>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+>  poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+>  __kasan_kmalloc+0x98/0xb0 mm/kasan/common.c:394
+>  kasan_kmalloc include/linux/kasan.h:260 [inline]
+>  __do_kmalloc_node mm/slub.c:4202 [inline]
+>  __kmalloc_node_noprof+0x22a/0x440 mm/slub.c:4208
+>  __kvmalloc_node_noprof+0x72/0x1b0 mm/util.c:658
+>  kvmalloc_array_node_noprof include/linux/slab.h:835 [inline]
+>  bpf_uprobe_multi_link_attach+0x43e/0xb90 kernel/trace/bpf_trace.c:3369
+>  link_create+0x6e9/0x870 kernel/bpf/syscall.c:5236
+>  __sys_bpf+0x4bc/0x810 kernel/bpf/syscall.c:5697
+>  __do_sys_bpf kernel/bpf/syscall.c:5734 [inline]
+>  __se_sys_bpf kernel/bpf/syscall.c:5732 [inline]
+>  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5732
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> Freed by task 5226:
+>  kasan_save_stack mm/kasan/common.c:47 [inline]
+>  kasan_save_track+0x3f/0x80 mm/kasan/common.c:68
+>  kasan_save_free_info+0x40/0x50 mm/kasan/generic.c:579
+>  poison_slab_object mm/kasan/common.c:247 [inline]
+>  __kasan_slab_free+0x59/0x70 mm/kasan/common.c:264
+>  kasan_slab_free include/linux/kasan.h:233 [inline]
+>  slab_free_hook mm/slub.c:2295 [inline]
+>  slab_free mm/slub.c:4517 [inline]
+>  kfree+0x196/0x3e0 mm/slub.c:4665
+>  bpf_uprobe_multi_link_attach+0xa7d/0xb90 kernel/trace/bpf_trace.c:3431
+>  link_create+0x6e9/0x870 kernel/bpf/syscall.c:5236
+>  __sys_bpf+0x4bc/0x810 kernel/bpf/syscall.c:5697
+>  __do_sys_bpf kernel/bpf/syscall.c:5734 [inline]
+>  __se_sys_bpf kernel/bpf/syscall.c:5732 [inline]
+>  __x64_sys_bpf+0x7c/0x90 kernel/bpf/syscall.c:5732
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> The buggy address belongs to the object at ffff888022b9eb00
+>  which belongs to the cache kmalloc-96 of size 96
+> The buggy address is located 64 bytes inside of
+>  freed 96-byte region [ffff888022b9eb00, ffff888022b9eb60)
+>
+> The buggy address belongs to the physical page:
+> page: refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888022b9e400 pfn:0x22b9e
+> flags: 0xfff00000000000(node=0|zone=1|lastcpupid=0x7ff)
+> page_type: 0xfdffffff(slab)
+> raw: 00fff00000000000 ffff888015841280 ffffea000061ec40 dead000000000004
+> raw: ffff888022b9e400 000000008020001f 00000001fdffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+> page_owner tracks the page as allocated
+> page last allocated via order 0, migratetype Unmovable, gfp_mask 0x52c40(GFP_NOFS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP), pid 4681, tgid 4681 (udevd), ts 17930004975, free_ts 17928166567
+>  set_page_owner include/linux/page_owner.h:32 [inline]
+>  post_alloc_hook+0x1f3/0x230 mm/page_alloc.c:1518
+>  prep_new_page mm/page_alloc.c:1526 [inline]
+>  get_page_from_freelist+0x3004/0x30c0 mm/page_alloc.c:3477
+>  __alloc_pages_noprof+0x29e/0x780 mm/page_alloc.c:4744
+>  __alloc_pages_node_noprof include/linux/gfp.h:269 [inline]
+>  alloc_pages_node_noprof include/linux/gfp.h:296 [inline]
+>  alloc_slab_page+0x5f/0x120 mm/slub.c:2364
+>  allocate_slab+0x5a/0x2f0 mm/slub.c:2527
+>  new_slab mm/slub.c:2580 [inline]
+>  ___slab_alloc+0xcd1/0x14b0 mm/slub.c:3767
+>  __slab_alloc+0x58/0xa0 mm/slub.c:3857
+>  __slab_alloc_node mm/slub.c:3910 [inline]
+>  slab_alloc_node mm/slub.c:4069 [inline]
+>  __do_kmalloc_node mm/slub.c:4201 [inline]
+>  __kmalloc_noprof+0x25a/0x400 mm/slub.c:4214
+>  kmalloc_noprof include/linux/slab.h:685 [inline]
+>  kzalloc_noprof include/linux/slab.h:807 [inline]
+>  tomoyo_encode2 security/tomoyo/realpath.c:45 [inline]
+>  tomoyo_encode+0x26f/0x540 security/tomoyo/realpath.c:80
+>  tomoyo_realpath_from_path+0x59e/0x5e0 security/tomoyo/realpath.c:283
+>  tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+>  tomoyo_check_open_permission+0x255/0x500 security/tomoyo/file.c:771
+>  security_file_open+0x6a/0x750 security/security.c:2996
+>  do_dentry_open+0x359/0x13f0 fs/open.c:946
+>  vfs_open+0x3e/0x330 fs/open.c:1089
+>  do_open fs/namei.c:3774 [inline]
+>  path_openat+0x2c87/0x3590 fs/namei.c:3933
+>  do_filp_open+0x235/0x490 fs/namei.c:3960
+> page last free pid 4688 tgid 4688 stack trace:
+>  reset_page_owner include/linux/page_owner.h:25 [inline]
+>  free_pages_prepare mm/page_alloc.c:1099 [inline]
+>  free_unref_page+0xc07/0xd90 mm/page_alloc.c:2652
+>  __slab_free+0x31b/0x3d0 mm/slub.c:4428
+>  qlink_free mm/kasan/quarantine.c:163 [inline]
+>  qlist_free_all+0x9e/0x140 mm/kasan/quarantine.c:179
+>  kasan_quarantine_reduce+0x14f/0x170 mm/kasan/quarantine.c:286
+>  __kasan_slab_alloc+0x23/0x80 mm/kasan/common.c:329
+>  kasan_slab_alloc include/linux/kasan.h:250 [inline]
+>  slab_post_alloc_hook mm/slub.c:4032 [inline]
+>  slab_alloc_node mm/slub.c:4081 [inline]
+>  __kmalloc_cache_noprof+0x132/0x2c0 mm/slub.c:4228
+>  kmalloc_noprof include/linux/slab.h:681 [inline]
+>  kzalloc_noprof include/linux/slab.h:807 [inline]
+>  kernfs_fop_open+0x3e0/0xd10 fs/kernfs/file.c:623
+>  do_dentry_open+0x928/0x13f0 fs/open.c:959
+>  vfs_open+0x3e/0x330 fs/open.c:1089
+>  do_open fs/namei.c:3774 [inline]
+>  path_openat+0x2c87/0x3590 fs/namei.c:3933
+>  do_filp_open+0x235/0x490 fs/namei.c:3960
+>  do_sys_openat2+0x13e/0x1d0 fs/open.c:1416
+>  do_sys_open fs/open.c:1431 [inline]
+>  __do_sys_openat fs/open.c:1447 [inline]
+>  __se_sys_openat fs/open.c:1442 [inline]
+>  __x64_sys_openat+0x247/0x2a0 fs/open.c:1442
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+>
+> Memory state around the buggy address:
+>  ffff888022b9ea00: 00 00 00 00 00 00 00 00 00 00 00 06 fc fc fc fc
+>  ffff888022b9ea80: 00 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc
+> >ffff888022b9eb00: fa fb fb fb fb fb fb fb fb fb fb fb fc fc fc fc
+>                                            ^
+>  ffff888022b9eb80: 00 00 00 00 00 00 00 00 00 00 fc fc fc fc fc fc
+>  ffff888022b9ec00: 00 00 00 00 00 00 00 00 00 00 00 06 fc fc fc fc
+> ==================================================================
+>
+>
+> ---
+> This report is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this issue. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>
+> If the report is already addressed, let syzbot know by replying with:
+> #syz fix: exact-commit-title
+>
+> If you want syzbot to run the reproducer, reply with:
+> #syz test: git://repo/address.git branch-or-commit-hash
+> If you attach or paste a git patch, syzbot will apply it before testing.
+>
+> If you want to overwrite report's subsystems, reply with:
+> #syz set subsystems: new-subsystem
+> (See the list of subsystem names on the web dashboard)
+>
+> If the report is a duplicate of another one, reply with:
+> #syz dup: exact-subject-of-another-report
+>
+> If you want to undo deduplication, reply with:
+> #syz undup
+>
 
---
-Thanks and Regards
-gautham.
