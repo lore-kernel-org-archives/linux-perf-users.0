@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3259D26ACB;
-	Wed, 21 Aug 2024 23:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C7017965E;
+	Wed, 21 Aug 2024 23:26:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724282790; cv=none; b=qmP80FSxaWhyd3iW9+YZMagSQ92XkGFVOxD8YbI9J4sceYPkB7h2QIFM8UM/JadFuI+9z+PzRVE6/pRmHtjaNWWFUHs3hGQ+DcFl5c6QtKxGX9SXDMmsvs99BooCF6DvTcEHq3vLeuOoftH7+XlLKodWbDmuIwFgVSfNJYFjLm0=
+	t=1724282790; cv=none; b=dFFEBeOcBLc0yyCKIY6kliq9BgdokK0OMEV8Fj14lcH51WK0C+87VQuxNVaEtzH27dAm/OnpIVuEm12zbijYdJ34xa9VfqzHrnoM7rFnPvR4HTrbAEXQN/R3tH6StiMoYttM4jjzYXusPhIjx4OjR+w9NNjXQ7PIoVPa74d7yp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1724282790; c=relaxed/simple;
-	bh=sdtmAYRaSQyFzyxiZhKYSHqvUMrR2fuTBoJ81TsXhx4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PIgWZ1h+NWpR4jBD9DzFCze7g/kVweKyVOzO0wb94sXbexMVXJBU5rAB1c/Nit8QjrJ5bl7xtCtkpeWPZEr0GuxCRTglPYQHnGQdizsULVN1P7gZpwsQJAdvCTT5/cOwQ0qaIwZbVNmWD30axe39F+Gim9JDWcMQbYqVC6Rix+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NTELkQhy; arc=none smtp.client-ip=10.30.226.201
+	bh=V9uUFtnCEofy9pZNCgLGWmzdiSL6s971iB5YFrDqJro=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Kj7t/sAEoeSHerFc1R4K5agdNMZwQ5e8M78/h11d7csNuM/js0Hi18WwynzL+lEC320tudhT4h5/PewZP7g5BGU2SERdRO8ooiSFP2NIJanvLOb8MWcZHO6DcHtGKqBLJVIvssJ2WfVor5JoIBFrlBEFhPDt8rwBZOI/8w782SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAIGhEDS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NTELkQhy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EC97C32781;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAIGhEDS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C35CAC32782;
 	Wed, 21 Aug 2024 23:26:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724282789;
-	bh=sdtmAYRaSQyFzyxiZhKYSHqvUMrR2fuTBoJ81TsXhx4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=NTELkQhy0tqAG8Bf2PTE6Wi0UbldtPUE4gHPEVpk2o0XXbzOZItNGfrfziRx1NckK
-	 m3ykTRj+dESHIPEIsXKSwTrcXBzBROucy7lL+Z5WQFp1I5NOqSnoeeSbJIHunSxNKB
-	 smcA77M/du0GSEBA9LFAQekkuplJ62p/PsuCcfthAxTHjLfUDcb3422DhG08AWrzRE
-	 bxM4i94NDD2cWm9t4o9vCMsZr+JytPesZHYGmkizpTpYUNZrShVDtlWh/4MQufP8/9
-	 UgZJXLGYNhPHmq2JJwjnyRsxo4Ykn64vyshr3eO4gTFGtjJgA3S1Alf7Qm1bfxeiLg
-	 7Ad3rynLl6JbA==
+	s=k20201202; t=1724282790;
+	bh=V9uUFtnCEofy9pZNCgLGWmzdiSL6s971iB5YFrDqJro=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KAIGhEDSkHbQhszZZczJGE7kVJkDSDTw2EzjSwWolGg2qfZaafyDgoxQO5HmQ5W7W
+	 C35Cox9UhnmpRY5X2St6LvdZCE1I0s62Q52m9QPVWsDlsP89b3P01p5AvfMfLSh4d+
+	 y/QeuPrEn/Mog45AYAeNamBb0xteo2cdIHPkil4Vz0/7CeNkwNoA3DypOJ3vIX4UlT
+	 ByAyO3S/38SMsAVzc/3w3zZKcITN/nsjqf7YELPn/ZmAgFydENb5PzvjvI1IdDWOdF
+	 aH5PzFsan18rvb/WC5MO2zPCJAW5pgOYqSsTl/KQRrq1Dgem1pWxga7Cxkg3Y3xed8
+	 s/zpkc3KXY0aA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,11 +36,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Subject: [PATCHSET 0/4] perf annotate-data: Update data-type profiling quality (v2)
-Date: Wed, 21 Aug 2024 16:26:24 -0700
-Message-ID: <20240821232628.353177-1-namhyung@kernel.org>
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 1/4] perf dwarf-aux: Handle bitfield members from pointer access
+Date: Wed, 21 Aug 2024 16:26:25 -0700
+Message-ID: <20240821232628.353177-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.184.g6999bdac58-goog
+In-Reply-To: <20240821232628.353177-1-namhyung@kernel.org>
+References: <20240821232628.353177-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,48 +52,40 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The __die_find_member_offset_cb() missed to handle bitfield members
+which don't have DW_AT_data_member_location.  Like in adding member
+types in __add_member_cb() it should fallback to check the bit offset
+when it resolves the member type for an offset.
 
-This is continuation of data type profiling series to improve its quality.
-I've also found some more bugs and room for improvements.
+Fixes: 437683a994189 ("perf dwarf-aux: Handle type transfer for memory access")
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/dwarf-aux.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-Acutally it depends on the a couple of fixes I sent out yesterday.
-But as they will be merged to perf-tools-next, I omitted them here.
-
-There's no dramatic improvements at this moment, but I handled some
-corner cases which makes instruction tracking more flexible.  One
-change is when it accesses (stores) a stack slot for the first time.
-As it doesn't save anything there yet, it doesn't come with a type
-info.  In that case it can try to process the instruction with
-update_insn_state() and get the type information again.
-
-Another update is when compiler generates the debug info inaccurately.
-A variable information is there but in some cases it was using another
-register to access the data and it resulted in no type information.
-So I tracked the (direct) register move and update the type info for
-the source registre as well.
-
-The code is available at 'perf/data-profile-update-v2' branch in 
-
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (4):
-  perf dwarf-aux: Handle bitfield members from pointer access
-  perf annotate-data: Update debug messages
-  perf annotate-data: Update stack slot for the store
-  perf annotate-data: Copy back variable types after move
-
- tools/perf/arch/x86/annotate/instructions.c |   8 ++
- tools/perf/util/annotate-data.c             | 105 +++++++++++++++++---
- tools/perf/util/annotate-data.h             |   1 +
- tools/perf/util/dwarf-aux.c                 |  11 +-
- 4 files changed, 109 insertions(+), 16 deletions(-)
-
+diff --git a/tools/perf/util/dwarf-aux.c b/tools/perf/util/dwarf-aux.c
+index 0151a8d14350..92eb9c8dc3e5 100644
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -1977,8 +1977,15 @@ static int __die_find_member_offset_cb(Dwarf_Die *die_mem, void *arg)
+ 		return DIE_FIND_CB_SIBLING;
+ 
+ 	/* Unions might not have location */
+-	if (die_get_data_member_location(die_mem, &loc) < 0)
+-		loc = 0;
++	if (die_get_data_member_location(die_mem, &loc) < 0) {
++		Dwarf_Attribute attr;
++
++		if (dwarf_attr_integrate(die_mem, DW_AT_data_bit_offset, &attr) &&
++		    dwarf_formudata(&attr, &loc) == 0)
++			loc /= 8;
++		else
++			loc = 0;
++	}
+ 
+ 	if (offset == loc)
+ 		return DIE_FIND_CB_END;
 -- 
 2.46.0.184.g6999bdac58-goog
 
