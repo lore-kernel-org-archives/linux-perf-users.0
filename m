@@ -1,105 +1,212 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5421CC170;
-	Thu, 22 Aug 2024 14:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB1F1CBE94;
+	Thu, 22 Aug 2024 14:26:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724335588; cv=none; b=bGvxGz20DsK5f3OBuWLHoO7zpNgYfTct+T8wHKU7wHDJm8RHsE6b6y59nm1rZLHggMWLjr5XhJqb0pVNw9ivWAIUXz4ZcuSceKS8rwpiGiAr8PtBIT7QG1a1sPh/FW1asq2A0JiBNqHe8MX2+ifHAhQ3gwgPtDYb5MVh7xeVHxQ=
+	t=1724336776; cv=none; b=LCBaM2LDwpJNIzHYAiodSX3f7ZA4lGTou/ILI648H/ZVtN4uyBd5uODQ6i+YUMiJ4tLFqKtpDVqrXALSPfMJ17mJlHQj7BO9i1LnibtXTmnCMMmmRNNP6DGqZz/VPZig4tmTL+Y4vxJvPCW6rpShmlAcDR5K+dntvthEJT1Dclc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724335588; c=relaxed/simple;
-	bh=BPtoV+Z2sZAtwy9VZzlsztIQ+D4S9C7Y7xrQ4jNccaU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=K7w/1ylcb2TghJivLj4PM1HVyG8zsYrbAt4V1BFhlybqazX2+SFr2Xgy3h1U0CLCvI/2iaLMOGy+mBPS3DnYcCLcQm+rIm0vjt6oBnAwf99mLcz+EjVwdNXQ7zaLU+EyeJCPPjuVTlFii6kL7rsQVwxZxlxXHkiVhmrpC5JijXg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4EC40DA7;
-	Thu, 22 Aug 2024 07:06:51 -0700 (PDT)
-Received: from ewhatever.cambridge.arm.com (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 403FE3F66E;
-	Thu, 22 Aug 2024 07:06:22 -0700 (PDT)
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-To: anshuman.khandual@arm.com,
-	James Clark <james.clark@linaro.org>,
-	gankulkarni@os.amperecomputing.com,
-	mike.leach@linaro.org,
-	leo.yan@linux.dev,
-	coresight@lists.linaro.org
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ian Rogers <irogers@google.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	linux-perf-users@vger.kernel.org,
-	Ingo Molnar <mingo@redhat.com>,
-	linux-stm32@st-md-mailman.stormreply.com,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Will Deacon <will@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	linux-arm-kernel@lists.infradead.org,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	James Clark <james.clark@arm.com>
-Subject: Re: (subset) [PATCH v6 00/17] coresight: Use per-sink trace ID maps for Perf sessions
-Date: Thu, 22 Aug 2024 15:05:53 +0100
-Message-Id: <172433479466.350842.6920589600831615538.b4-ty@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240722101202.26915-1-james.clark@linaro.org>
-References: <20240722101202.26915-1-james.clark@linaro.org>
+	s=arc-20240116; t=1724336776; c=relaxed/simple;
+	bh=P15XruFNGOkx76SqKUReYXS/QXrAGCqT1Dbomqu/S2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QMg4XI4mzmcQZcspvHT8PMwIVzfU6U7BoKqYPxKZnGu5yVt0kvTArnBvX7MPUoGhHhzdcGlkzFcbN7uHcNDFzLLAD1u5lNb12X204JPPAUMl83v/mmikh6ojlhSydfhrVlCNF+NqXjsHW6CopcGlqRf8FOw94iMe83q0sWhAsao=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AOA+A/cY; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AOA+A/cY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDF2C32782;
+	Thu, 22 Aug 2024 14:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724336775;
+	bh=P15XruFNGOkx76SqKUReYXS/QXrAGCqT1Dbomqu/S2k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=AOA+A/cYIFuGp7dMTr9xh4a1xoBbL4vDGyO4ZaXWeqXKM2uNmjD7CdEG2UW+T2Mh/
+	 LJOEIkbKr9FEjxCUKQIwmjljO2k80sI/6n3YAyTeeCVSk51twnolS03pFaH0W6UK4w
+	 3JspTdqUZTaec1ooMfbHAtVLMhEcqqL1a1b8p3v8v9U0ZxmjQKkzhKoKWFh6XHkUdW
+	 6Z6IzMrcQPlIFIWc6e604Z0Q4sUEk3l9q1W+x1Azsoaao6JgdoWKdRG6cg7OX2rnfp
+	 uqYkSqpfYiP6gn3ZG0RYOd+wMAdBtlzGQlkRWTdJWQEPN1kUEje88ChzDoeJKI3YwQ
+	 1LYgJ9H0lzNkQ==
+Date: Thu, 22 Aug 2024 11:26:12 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Sedat Dilek <sedat.dilek@gmail.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Nathan Chancellor <nathan@kernel.org>
+Subject: Re: [Linux-6.11-rc4] perf BROKEN with LLVM/Clang 19.1.0-rc3
+Message-ID: <ZsdKhLaPy-uzKsuH@x1>
+References: <CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com>
 
-On Mon, 22 Jul 2024 11:11:42 +0100, James Clark wrote:
-> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
-> as long as there are fewer than that many ETMs connected to each sink.
+On Wed, Aug 21, 2024 at 09:23:36PM +0200, Sedat Dilek wrote:
+> Hi,
 > 
-> Each sink owns its own trace ID map, and any Perf session connecting to
-> that sink will allocate from it, even if the sink is currently in use by
-> other users. This is similar to the existing behavior where the dynamic
-> trace IDs are constant as long as there is any concurrent Perf session
-> active. It's not completely optimal because slightly more IDs will be
-> used than necessary, but the optimal solution involves tracking the PIDs
-> of each session and allocating ID maps based on the session owner. This
-> is difficult to do with the combination of per-thread and per-cpu modes
-> and some scheduling issues. The complexity of this isn't likely to worth
-> it because even with multiple users they'd just see a difference in the
-> ordering of ID allocations rather than hitting any limits (unless the
-> hardware does have too many ETMs connected to one sink).
+> yesterday I jumped to Linux v6.11-rc4+.
 > 
-> [...]
+> Today, I played with perf.
+> 
+> I use the SLIM LLVM toolchains from kernel.org.
+> 
+> Link: https://mirrors.edge.kernel.org/pub/tools/llvm/files/
+> 
+> LLVM-18 is OK.
+> 
+> LLVM-19 produces ERRORS.
+> 
+> [ REPRODUCER ]
+> 
+> ##LLVM_MVER="18"
+> LLVM_MVER="19"
+> 
+> # Debian LLVM
+> ##LLVM_TOOLCHAIN_PATH="/usr/lib/llvm-${LLVM_MVER}/bin"
+> # Selfmade LLVM
+> LLVM_TOOLCHAIN_PATH="/opt/llvm/bin"
+> if [ -d ${LLVM_TOOLCHAIN_PATH} ]; then
+>    export PATH="${LLVM_TOOLCHAIN_PATH}:${PATH}"
+> fi
+> 
+> PYTHON_VER="3.12"
+> MAKE="make"
+> MAKE_OPTS="V=1 -j1 HOSTCC=clang-$LLVM_MVER HOSTLD=ld.lld
+> HOSTAR=llvm-ar CC=clang-$LLVM_MVER LD=ld.lld AR=llvm-ar
+> STRIP=llvm-strip"
+> ##MAKE_OPTS="$MAKE_OPTS NO_LIBTRACEEVENT=1"
+> ##MAKE_OPTS="$MAKE_OPTS NO_LIBDEBUGINFOD=1"
+> 
+> echo "LLVM MVER ........ $LLVM_MVER"
+> echo "Path settings .... $PATH"
+> echo "Python version ... $PYTHON_VER"
+> echo "make line ........ $MAKE $MAKE_OPTS"
+> 
+> LANG=C LC_ALL=C make -C tools/perf clean 2>&1 | tee ../make-log_perf-clean.txt
+> 
+> LANG=C LC_ALL=C $MAKE $MAKE_OPTS -C tools/perf
+> PYTHON=python${PYTHON_VER} install-bin 2>&1 | tee
+> ../make-log_perf-install_bin_python${PYTHON_VER}_llvm${LLVM_MVER}.txt
+> 
+> [ ERRORS ]
+> 
+>   '/usr/bin/python3.12' util/setup.py \
+>  --quiet build_ext; \
+> cp python_ext_build/lib/perf*.so python/
+> /home/dileks/src/linux/git/tools/perf/util/python.c:816:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evsel *, PyObject *, PyObject *)'
+> (aka 'struct _object *(*)(str
+> uct pyrf_evsel *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible funct
+> ion type [-Werror,-Wcast-function-type-mismatch]
+>  816 |                 .ml_meth  = (PyCFunction)pyrf_evsel__open,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Applied, the kernel driver changes to coresight/next. Thanks!
+/usr/include/python3.12/object.h:/* PyObject_HEAD defines the initial segment of every PyObject. */
+/usr/include/python3.12/object.h:#define PyObject_HEAD                   PyObject ob_base;
 
-[09/17] coresight: Remove unused ETM Perf stubs
-        https://git.kernel.org/coresight/c/34172002bdac
-[10/17] coresight: Clarify comments around the PID of the sink owner
-        https://git.kernel.org/coresight/c/eda1d11979c0
-[11/17] coresight: Move struct coresight_trace_id_map to common header
-        https://git.kernel.org/coresight/c/acb0184fe9bc
-[12/17] coresight: Expose map arguments in trace ID API
-        https://git.kernel.org/coresight/c/7e52877868ae
-[13/17] coresight: Make CPU id map a property of a trace ID map
-        https://git.kernel.org/coresight/c/d53c8253c782
-[14/17] coresight: Use per-sink trace ID maps for Perf sessions
-        https://git.kernel.org/coresight/c/5ad628a76176
-[15/17] coresight: Remove pending trace ID release mechanism
-        https://git.kernel.org/coresight/c/de0029fdde86
-[16/17] coresight: Emit sink ID in the HW_ID packets
-        https://git.kernel.org/coresight/c/487eec8da80a
-[17/17] coresight: Make trace ID map spinlock local to the map
-        https://git.kernel.org/coresight/c/988d40a4d4e7
+And:
 
-Best regards,
--- 
-Suzuki K Poulose <suzuki.poulose@arm.com>
+struct pyrf_evsel {
+        PyObject_HEAD
+
+        struct evsel evsel;
+};
+
+So the cast is ok, I think we should disable that
+-Wcast-function-type-mismatch for util/python.o when building with
+clang.
+
+Lemme try to cook a patch for you to test...
+
+- Arnaldo
+
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1050:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1050 |                 .ml_meth  = (PyCFunction)pyrf_evlist__mmap,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1056:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1056 |                 .ml_meth  = (PyCFunction)pyrf_evlist__open,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1062:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1062 |                 .ml_meth  = (PyCFunction)pyrf_evlist__poll,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1068:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1068 |                 .ml_meth  = (PyCFunction)pyrf_evlist__get_pollfd,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1074:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1074 |                 .ml_meth  = (PyCFunction)pyrf_evlist__add,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1080:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evlist *, PyObject *, PyObject
+> *)' (aka 'struct _object *(*)(s
+> truct pyrf_evlist *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible fu
+> nction type [-Werror,-Wcast-function-type-mismatch]
+> 1080 |                 .ml_meth  = (PyCFunction)pyrf_evlist__read_on_cpu,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> /home/dileks/src/linux/git/tools/perf/util/python.c:1244:15: error:
+> cast from 'PyObject *(*)(struct pyrf_evsel *, PyObject *, PyObject *)'
+> (aka 'struct _object *(*)(st
+> ruct pyrf_evsel *, struct _object *, struct _object *)') to
+> 'PyCFunction' (aka 'struct _object *(*)(struct _object *, struct
+> _object *)') converts to incompatible func
+> tion type [-Werror,-Wcast-function-type-mismatch]
+> 1244 |                 .ml_meth  = (PyCFunction) pyrf__tracepoint,
+>      |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 8 errors generated.
+> error: command '/opt/llvm/bin/clang-19' failed with exit code 1
+> cp: cannot stat 'python_ext_build/lib/perf*.so': No such file or directory
+> make[2]: *** [Makefile.perf:737:
+> python/perf.cpython-312-x86_64-linux-gnu.so] Error 1
+> make[1]: *** [Makefile.perf:290: sub-make] Error 2
+> make: *** [Makefile:113: install-bin] Error 2
+> make: Leaving directory '/home/dileks/src/linux/git/tools/perf'
+> 
+> INFO: Full build-log is attached.
+> 
+> Any known issue?
+> 
+> Thanks,
+> 
+> Best regards,
+> -Sedat-
+
+
+
