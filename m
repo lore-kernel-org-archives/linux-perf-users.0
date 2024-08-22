@@ -1,122 +1,103 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4971C9ECE;
-	Thu, 22 Aug 2024 21:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F14CA933;
+	Thu, 22 Aug 2024 21:35:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724360982; cv=none; b=GDjpcL090jLVy1ZfXJ0BoKyPO2mgxEQhoOurSlsD8MTqGli+8XIc6gsoVQOgK93q4CFTYYOqw/+OUfdLa8VgkXQkK9WLSXkE1Hz4di2Ft3b2cnZjxuEV06E+t36AYjYId73xjBqadP0aNbsgEv4R/fDR3ffHDMOfFlIKgtmH9kM=
+	t=1724362545; cv=none; b=MCLfBfwdCL4thZyFdnoGf8hEe52ixO5ZuO/nWc2co20JQvZYqKRxK1v3UiRLeygPSDolEVQOVAmQOg2DoCcUvgxT+DxydbDvruHdaVmJjTP+m3yrrsttzclDx5bEEZ1DqNvLsh5+hVoQMakkkiLnX/x4aKoHFQdRMrWsqn6lL4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724360982; c=relaxed/simple;
-	bh=8iBDpoxfMgDUeOxD63UGaKxo3EyWxDxolFmv468LCfU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R5Gz/zaaxTfmQhjMcHDikUZXTjxPToZXJiNiW/fyTltCPBROf+F7IIUPPTbbEKGaSabtL2/aZNhAteXvv5/fzvHDIOnC67liA5IBC0LqYA3/gqGeH02+OAJhQysJY9VtrDnFITdndpubR+3mxQliIVWDaLybe6Gnqu+FFGDzDrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q1wVX/nH; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q1wVX/nH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1088BC32782;
-	Thu, 22 Aug 2024 21:09:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724360981;
-	bh=8iBDpoxfMgDUeOxD63UGaKxo3EyWxDxolFmv468LCfU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q1wVX/nHs2zAdvWu+r9zFRP/apRq/b/+ryhzSm1No8U7QdXqE7tGoggTrjvSyu8DO
-	 ei0o7FtzqdyX41lNzOQa2TeoyyfLJ/dbNFwtATXggZNQfqCQiSoETkJ4XcppK7Q6Pw
-	 4FBLdqn4f00J4jEJ9Ee6CIty+oWwT9lLxvMJGug5LWn0PGKSYx/4xkiYUmMoF3aXKr
-	 Pg32345iyScXOHkgSYFjuwUIAKBgIOl4SD5Fbbo7WRxy46uTLX6mB0DBWNPZ9w6CaI
-	 Rz1nZDWMN+kyDx/PS1Fsr7q1JbrtnU+8ClZ+cej6Ib2w8i+/Q6e9KWaVgWHQ6kVTZb
-	 xBb4zDHZ2kvMw==
-Date: Thu, 22 Aug 2024 18:09:38 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
-	kan.liang@linux.intel.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 03/10] perf trace: Add
- trace__bpf_sys_enter_beauty_map() to prepare for fetching data in BPF
-Message-ID: <ZsepEpr-hGXkI8Vw@x1>
-References: <20240815013626.935097-1-howardchu95@gmail.com>
- <20240815013626.935097-4-howardchu95@gmail.com>
- <Zsd6MgrCs0ybQ9EW@x1>
- <Zsd7Ep6H24Qq-h5F@x1>
+	s=arc-20240116; t=1724362545; c=relaxed/simple;
+	bh=A6Ig3DIj20iSmms1/sNE5z9cyEcEk2xGv4yIfHNffXc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mYUy6/QSZy5pDE2FoEaXkVaF/8Hgs+ahU62s6kBBojSD9vwOScW0xCbfw+0NnkoNTHfyHVJHoiO9jRcRsvS6vvw/6i5SUWehzr4HEY4ZJoGK7cnApkU6G5fjz6cZvcyaQABtflkpGogSrgw+NoNSNRXH/W/YT5Db7/tP0zwXSfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d41b082ab8so968877a91.3;
+        Thu, 22 Aug 2024 14:35:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724362544; x=1724967344;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4p9wr4Okb0X4f99n+dpYBp3cuqpqdb5cSoZFZz5Yzys=;
+        b=Tg41TJhNg/7ApMJ28InkQKFpmpcKf1gS3FmPWmQMWlgpv4yozfBM2ngHEakJ3tCuKl
+         Ly3KOOAj+aF51/V69OGogqQUtqGySQbpnf35NSIL6D6vew68GcoPnFOZLvvltQ46tls8
+         9OFfiZvivZ9gbur7/ofrYDK50xvix9q57Jc2LYfoWGvpEDO2PAARdB9Kordg8fXKrHev
+         OdI0fx2gvTGKFVc4ieSUxAg+hku74psFeVRlAbXb6ZQo0r3h0o0cXxTP28PDpjUARW1y
+         l0rzDHmLjuJeFQ6nyYrpAf0AVK086rLcCqMJ+xVAP3gtuLb20z7vvgEU7g7R6LCIazGb
+         hojg==
+X-Forwarded-Encrypted: i=1; AJvYcCUyprQTyjjDvonXwLrW0w5aFAUHPhNpB+t1FBdCN8BUEt7GkM8+FxnY5xkHo/kbAS8oW+Pnh6JMIRj7Q/zt2PIHfg==@vger.kernel.org, AJvYcCVNkrKdDa9qRiUawjm2TzUcYwSSKSNCW4sPdsJlo2AeXrkqyMwe+MrTULwoN9EeUv6PUW1nGSn1bcoFXcOy@vger.kernel.org, AJvYcCXKy8qSjlHLXzGGiiDwm7ak6OwNN7iAAq8kM0Ki38tp9/wtLXtOxZzot8zgc68/Cwhgzng=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxudbqnWPRNqyqX99kz8K1NRunxIz9fEimerurlJ2+8DnPSVC3Q
+	hTy4XCnrQQ2Pjto08ujCgueKae5oOPh6AaqFRKpAFOmNTmJkrJk+nfjS0YAupkQzCpBJnuDHUgQ
+	ia5CMYZUywWQGKf5SVXTBxWzBaV0=
+X-Google-Smtp-Source: AGHT+IEJKbmFokzgoavY7n974YSn4Suu2Erwxe3CdPc+gdQf0oBf7ZMv3X7CHg926U7CDuKfJ64EHOiOOU+C3mWYPNE=
+X-Received: by 2002:a17:90b:3ecd:b0:2c4:e333:35e5 with SMTP id
+ 98e67ed59e1d1-2d646d6db7dmr6211a91.36.1724362543468; Thu, 22 Aug 2024
+ 14:35:43 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Zsd7Ep6H24Qq-h5F@x1>
+References: <20240820154504.128923-1-namhyung@kernel.org> <20240820154504.128923-2-namhyung@kernel.org>
+ <ZsUB57VlFtdY0O0M@x1> <CAM9d7chUfoHgZ=uyVEua8XCi4HigzT6p0i7rsL6rZLU2N9r_ZA@mail.gmail.com>
+In-Reply-To: <CAM9d7chUfoHgZ=uyVEua8XCi4HigzT6p0i7rsL6rZLU2N9r_ZA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Thu, 22 Aug 2024 14:35:32 -0700
+Message-ID: <CAM9d7chPsZUMAraWzyf5z7OjCxWUxMz-ufntr1x34c=wRVt3XQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] perf tools: Print lost samples due to BPF filter
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
+	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
+	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 02:53:22PM -0300, Arnaldo Carvalho de Melo wrote:
-> On Thu, Aug 22, 2024 at 02:49:41PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Aug 15, 2024 at 09:36:19AM +0800, Howard Chu wrote:
-> > > @@ -3624,7 +3719,9 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
-> > >  {
-> > >  	int map_enter_fd = bpf_map__fd(trace->skel->maps.syscalls_sys_enter);
-> > >  	int map_exit_fd  = bpf_map__fd(trace->skel->maps.syscalls_sys_exit);
-> > > +	int beauty_map_fd = bpf_map__fd(trace->skel->maps.beauty_map_enter);
->  
-> > At this point we still don't have that, right? I.e. building with this
-> > patch, without the ones following it in your series, I get:
->  
-> > builtin-trace.c: In function ‘trace__init_syscalls_bpf_prog_array_maps’:
-> > builtin-trace.c:3723:58: error: ‘struct <anonymous>’ has no member named ‘beauty_map_enter’
-> >  3723 |         int beauty_map_fd = bpf_map__fd(trace->skel->maps.beauty_map_enter);
-> >       |                                                          ^
-> >   CC      /tmp/build/perf-tools-next/tests/code-reading.o
-> >   CC      /tmp/build/perf-tools-next/trace/beauty/clone.o
-> > make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:105: /tmp/build/perf-tools-next/builtin-trace.o] Error 1
-> > make[3]: *** Waiting for unfinished jobs....
-> > 
-> > So we need to squash the patch that introduces beauty_map_enter in the
-> > augmented_raw_syscalls.bpf.c file to this one, so that we keep things
-> > bisectable, I'll try to do that.
-> 
-> So just this did the trick, I'll remove it from the later patch in your
-> series:
+On Tue, Aug 20, 2024 at 3:50=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
+wrote:
+>
+> On Tue, Aug 20, 2024 at 1:51=E2=80=AFPM Arnaldo Carvalho de Melo
+> <acme@kernel.org> wrote:
+> >
+> > On Tue, Aug 20, 2024 at 08:45:03AM -0700, Namhyung Kim wrote:
+> > > +++ b/tools/perf/builtin-report.c
+> > > @@ -795,8 +795,13 @@ static int count_lost_samples_event(const struct=
+ perf_tool *tool,
+> > >
+> > >       evsel =3D evlist__id2evsel(rep->session->evlist, sample->id);
+> > >       if (evsel) {
+> > > -             hists__inc_nr_lost_samples(evsel__hists(evsel),
+> > > -                                        event->lost_samples.lost);
+> > > +             struct hists *hists =3D evsel__hists(evsel);
+> > > +             u32 count =3D event->lost_samples.lost;
+> > > +
+> > > +             if (event->header.misc & PERF_RECORD_MISC_LOST_SAMPLES_=
+BPF)
+> > > +                     hists__inc_nr_dropped_samples(hists, count);
+> >
+> > So this is inconsistent, we call it sometimes "lost", sometines
+> > "dropped", I think we should make it consistent and call it "dropped",
+> > because its not like it was "lost" because we didn't have the required
+> > resources, memory, ring buffer being full, etc, i.e. the semantic
+> > associated with PERF_RECORD_LOST.
+> >
+> > I.e. LOST is non intentional, not expected, DROPPED is the result of th=
+e
+> > user _asking_ for something to be trown away, to be filtered, its
+> > expected behaviour, there is value in differentiating one from the
+> > other.
+>
+> Yep, that's because it's piggybacking on PERF_RECORD_LOST_SAMPLES.
+> Do you want me to add a new (user) record format for dropped samples?
 
-But then you added syscall_arg_fmt__cache_btf_struct() ifdef'ed by
-HAVE_LIBBPF_SUPPORT to then use it on trace__bpf_sys_enter_beauty_map())
-that is ifdef'ed by HAVE_BPF_SKEL, so when building with
-BUILD_BPF_SKEL=0 we get this splat:
+Ok, I have a related issue with AMD IBS.  I'll start a new discussion
+in a different thread.  I think you can take patch 1 and 3 in this series
+as they are not controversial, right?
 
-  CC      /tmp/build/perf-tools-next/builtin-trace.o
-  AR      /tmp/build/perf-tools-next/libperf-util.a
-builtin-trace.c:930:12: error: ‘syscall_arg_fmt__cache_btf_struct’ defined but not used [-Werror=unused-function]
-  930 | static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_fmt *arg_fmt, struct btf *btf, char *type)
-      |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  GEN     /tmp/build/perf-tools-next/python/perf.cpython-312-x86_64-linux-gnu.so
-cc1: all warnings being treated as errors
-make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:105: /tmp/build/perf-tools-next/builtin-trace.o] Error 1
-make[2]: *** [Makefile.perf:762: /tmp/build/perf-tools-next/perf-in.o] Error 2
-make[1]: *** [Makefile.perf:292: sub-make] Error 2
-make: *** [Makefile:119: install-bin] Error 2
-make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
-⬢[acme@toolbox perf-tools-next]$
-
-I'm moving syscall_arg_fmt__cache_btf_struct() to the same block where
-trace__bpf_sys_enter_beauty_map() is.
- 
-> - Arnaldo
-> 
-> diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> index 0acbd74e8c760956..c885673f416dff39 100644
-> --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> @@ -79,6 +79,13 @@ struct pids_filtered {
->  	__uint(max_entries, 64);
->  } pids_filtered SEC(".maps");
->  
-> +struct beauty_map_enter {
-> +	__uint(type, BPF_MAP_TYPE_HASH);
-> +	__type(key, int);
-> +	__type(value, __u32[6]);
-> +	__uint(max_entries, 512);
-> +} beauty_map_enter SEC(".maps");
-> +
->  /*
->   * Desired design of maximum size and alignment (see RFC2553)
->   */
+Thanks,
+Namhyung
