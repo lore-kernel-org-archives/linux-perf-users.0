@@ -1,103 +1,95 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F14CA933;
-	Thu, 22 Aug 2024 21:35:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963C1CC17A;
+	Thu, 22 Aug 2024 22:14:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724362545; cv=none; b=MCLfBfwdCL4thZyFdnoGf8hEe52ixO5ZuO/nWc2co20JQvZYqKRxK1v3UiRLeygPSDolEVQOVAmQOg2DoCcUvgxT+DxydbDvruHdaVmJjTP+m3yrrsttzclDx5bEEZ1DqNvLsh5+hVoQMakkkiLnX/x4aKoHFQdRMrWsqn6lL4s=
+	t=1724364849; cv=none; b=of1VOiDqKKlC8QZIGZm73Eh1ZCRjYeRQkqhAhFN3Hv6IDyAmFubzm457O6T5TYZuYCXWKrkA4cJNTwu7aZNWChSFBHHmkvfpcbu4ryrN92Sj07L9OVhLx7GOZsPj/46FN4sq5/M7sySKCPvjs1T1ex5tjP6sakP3WB08SwWxVjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724362545; c=relaxed/simple;
-	bh=A6Ig3DIj20iSmms1/sNE5z9cyEcEk2xGv4yIfHNffXc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mYUy6/QSZy5pDE2FoEaXkVaF/8Hgs+ahU62s6kBBojSD9vwOScW0xCbfw+0NnkoNTHfyHVJHoiO9jRcRsvS6vvw/6i5SUWehzr4HEY4ZJoGK7cnApkU6G5fjz6cZvcyaQABtflkpGogSrgw+NoNSNRXH/W/YT5Db7/tP0zwXSfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d41b082ab8so968877a91.3;
-        Thu, 22 Aug 2024 14:35:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724362544; x=1724967344;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4p9wr4Okb0X4f99n+dpYBp3cuqpqdb5cSoZFZz5Yzys=;
-        b=Tg41TJhNg/7ApMJ28InkQKFpmpcKf1gS3FmPWmQMWlgpv4yozfBM2ngHEakJ3tCuKl
-         Ly3KOOAj+aF51/V69OGogqQUtqGySQbpnf35NSIL6D6vew68GcoPnFOZLvvltQ46tls8
-         9OFfiZvivZ9gbur7/ofrYDK50xvix9q57Jc2LYfoWGvpEDO2PAARdB9Kordg8fXKrHev
-         OdI0fx2gvTGKFVc4ieSUxAg+hku74psFeVRlAbXb6ZQo0r3h0o0cXxTP28PDpjUARW1y
-         l0rzDHmLjuJeFQ6nyYrpAf0AVK086rLcCqMJ+xVAP3gtuLb20z7vvgEU7g7R6LCIazGb
-         hojg==
-X-Forwarded-Encrypted: i=1; AJvYcCUyprQTyjjDvonXwLrW0w5aFAUHPhNpB+t1FBdCN8BUEt7GkM8+FxnY5xkHo/kbAS8oW+Pnh6JMIRj7Q/zt2PIHfg==@vger.kernel.org, AJvYcCVNkrKdDa9qRiUawjm2TzUcYwSSKSNCW4sPdsJlo2AeXrkqyMwe+MrTULwoN9EeUv6PUW1nGSn1bcoFXcOy@vger.kernel.org, AJvYcCXKy8qSjlHLXzGGiiDwm7ak6OwNN7iAAq8kM0Ki38tp9/wtLXtOxZzot8zgc68/Cwhgzng=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxudbqnWPRNqyqX99kz8K1NRunxIz9fEimerurlJ2+8DnPSVC3Q
-	hTy4XCnrQQ2Pjto08ujCgueKae5oOPh6AaqFRKpAFOmNTmJkrJk+nfjS0YAupkQzCpBJnuDHUgQ
-	ia5CMYZUywWQGKf5SVXTBxWzBaV0=
-X-Google-Smtp-Source: AGHT+IEJKbmFokzgoavY7n974YSn4Suu2Erwxe3CdPc+gdQf0oBf7ZMv3X7CHg926U7CDuKfJ64EHOiOOU+C3mWYPNE=
-X-Received: by 2002:a17:90b:3ecd:b0:2c4:e333:35e5 with SMTP id
- 98e67ed59e1d1-2d646d6db7dmr6211a91.36.1724362543468; Thu, 22 Aug 2024
- 14:35:43 -0700 (PDT)
+	s=arc-20240116; t=1724364849; c=relaxed/simple;
+	bh=jb43N9TsK73cP08FhYPnstm//ojSGwfD2/0o5mDH2Nc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eQUpN6yyz2RbJsW9Di5Xpw+E+YAPBLbbI1aFeyyT/GDeZQ42O6lOZ8mpzksD/vXr9/tHvVgP/vu14kG4FvlkGuYE2/CmC5bZ0kCFUyOElbUans0NVd4MWG4qmlHjBvXIYTB7S6OSSKPi3x61zB55C2HDf1jPrMXK2sFl/3GIHD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NLw8NIZr; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NLw8NIZr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BCC7C32782;
+	Thu, 22 Aug 2024 22:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724364849;
+	bh=jb43N9TsK73cP08FhYPnstm//ojSGwfD2/0o5mDH2Nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NLw8NIZrP9wqlyLT+Qer/79YOdW1bvFoU8suD+dxVIII+kWTcN0ur7fnW0bpXHhe+
+	 Y6MV/2OieRyVUQPl8BUeRjr6Nl2D20dPGe+P343r2EbEgfl6ux2Mw5N96XLZdey7J5
+	 VIFvCYe9EEHk+VxO9E6QAq1Mrx8/hPZ8NVliVGuTVGqKqTGbbsPfqL22H5qtMwr4bO
+	 kEQq/fmYNkw/vf499EyftM+H4Zt1vUsKGzu8XHpdvZUVNnAobOis3szK/mL2Ry7CMi
+	 CJ+Bjh3EKHRQofmJvmrlKCIMcuMWhBOZtO2VdNmakE87JqpjDkrDMS1CQbxQsDlx/q
+	 JhPo4wUukiAeA==
+Date: Thu, 22 Aug 2024 19:14:05 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
+	kan.liang@linux.intel.com, namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] perf trace: Add some string arguments' name in
+ syscall_arg_fmt__init_array()
+Message-ID: <Zse4LR6gtIO8-Fch@x1>
+References: <20240815013626.935097-1-howardchu95@gmail.com>
+ <20240815013626.935097-5-howardchu95@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820154504.128923-1-namhyung@kernel.org> <20240820154504.128923-2-namhyung@kernel.org>
- <ZsUB57VlFtdY0O0M@x1> <CAM9d7chUfoHgZ=uyVEua8XCi4HigzT6p0i7rsL6rZLU2N9r_ZA@mail.gmail.com>
-In-Reply-To: <CAM9d7chUfoHgZ=uyVEua8XCi4HigzT6p0i7rsL6rZLU2N9r_ZA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Thu, 22 Aug 2024 14:35:32 -0700
-Message-ID: <CAM9d7chPsZUMAraWzyf5z7OjCxWUxMz-ufntr1x34c=wRVt3XQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] perf tools: Print lost samples due to BPF filter
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, 
-	LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org, 
-	KP Singh <kpsingh@kernel.org>, Song Liu <song@kernel.org>, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240815013626.935097-5-howardchu95@gmail.com>
 
-On Tue, Aug 20, 2024 at 3:50=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Tue, Aug 20, 2024 at 1:51=E2=80=AFPM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Tue, Aug 20, 2024 at 08:45:03AM -0700, Namhyung Kim wrote:
-> > > +++ b/tools/perf/builtin-report.c
-> > > @@ -795,8 +795,13 @@ static int count_lost_samples_event(const struct=
- perf_tool *tool,
-> > >
-> > >       evsel =3D evlist__id2evsel(rep->session->evlist, sample->id);
-> > >       if (evsel) {
-> > > -             hists__inc_nr_lost_samples(evsel__hists(evsel),
-> > > -                                        event->lost_samples.lost);
-> > > +             struct hists *hists =3D evsel__hists(evsel);
-> > > +             u32 count =3D event->lost_samples.lost;
-> > > +
-> > > +             if (event->header.misc & PERF_RECORD_MISC_LOST_SAMPLES_=
-BPF)
-> > > +                     hists__inc_nr_dropped_samples(hists, count);
-> >
-> > So this is inconsistent, we call it sometimes "lost", sometines
-> > "dropped", I think we should make it consistent and call it "dropped",
-> > because its not like it was "lost" because we didn't have the required
-> > resources, memory, ring buffer being full, etc, i.e. the semantic
-> > associated with PERF_RECORD_LOST.
-> >
-> > I.e. LOST is non intentional, not expected, DROPPED is the result of th=
-e
-> > user _asking_ for something to be trown away, to be filtered, its
-> > expected behaviour, there is value in differentiating one from the
-> > other.
->
-> Yep, that's because it's piggybacking on PERF_RECORD_LOST_SAMPLES.
-> Do you want me to add a new (user) record format for dropped samples?
+On Thu, Aug 15, 2024 at 09:36:20AM +0800, Howard Chu wrote:
+> Add them so that we can augment more strings (which is a file path)
+> 
+> Signed-off-by: Howard Chu <howardchu95@gmail.com>
+> ---
+>  tools/perf/builtin-trace.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index e7e8c89d9538..84c7398312d8 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1918,7 +1918,13 @@ syscall_arg_fmt__init_array(struct syscall_arg_fmt *arg, struct tep_format_field
+>  
+>  		if (strcmp(field->type, "const char *") == 0 &&
+>  		    ((len >= 4 && strcmp(field->name + len - 4, "name") == 0) ||
+> -		     strstr(field->name, "path") != NULL))
+> +		     strstr(field->name, "path") ||
+> +		     strstr(field->name, "file") ||
+> +		     strstr(field->name, "root") ||
+> +		     strstr(field->name, "key") ||
+> +		     strstr(field->name, "special") ||
+> +		     strstr(field->name, "type") ||
+> +		     strstr(field->name, "description")))
+>  			arg->scnprintf = SCA_FILENAME;
+>  		else if ((field->flags & TEP_FIELD_IS_POINTER) || strstr(field->name, "addr"))
+>  			arg->scnprintf = SCA_PTR;
 
-Ok, I have a related issue with AMD IBS.  I'll start a new discussion
-in a different thread.  I think you can take patch 1 and 3 in this series
-as they are not controversial, right?
+Humm?
 
-Thanks,
-Namhyung
+root@number:~# for field_name in file root key special type description ; do grep "field:.* $field_name\>" /sys/kernel/tracing/events/syscalls/sys_enter_*/format ; done
+
+/sys/kernel/tracing/events/syscalls/sys_enter_msgget/format:	field:key_t key;	offset:16;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_semget/format:	field:key_t key;	offset:16;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_shmget/format:	field:key_t key;	offset:16;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_quotactl/format:	field:const char * special;	offset:24;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_kcmp/format:	field:int type;	offset:32;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_mount/format:	field:char * type;	offset:32;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_socket/format:	field:int type;	offset:24;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_socketpair/format:	field:int type;	offset:24;	size:8;	signed:0;
+/sys/kernel/tracing/events/syscalls/sys_enter_syslog/format:	field:int type;	offset:16;	size:8;	signed:0;
+root@number:~#
+
+Skipping this one. Please ellaborate, what am I missing?
+
+- Arnaldo
