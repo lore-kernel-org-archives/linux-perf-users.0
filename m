@@ -1,214 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33B487AE;
-	Thu, 22 Aug 2024 17:40:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9414F1CEAC8
+	for <linux-perf-users@vger.kernel.org>; Thu, 22 Aug 2024 17:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724348411; cv=none; b=HJi5zemtzggABwELkqDCzpDZaD/Khw7b6nZq1XaLCVCRO+ZJXzNU5JnbVJvtmr7ey1HBbr3xy0vAn17HdBhtSuRCJfgfPo4rOLnIUAngl5kniF6MoEjx7ftDaZLkdnBABq0y5io+LBHyWUIGJk/RMa6c4ZRTFq38+7tkgwevoC8=
+	t=1724348635; cv=none; b=jUF0J7rQTnw+d4sXgpLKoYj1QmgcanZzu2bOeMWx6h04SUz7/8Xwuakkev+u95zyrs26jA/sAveFb6O63cGMc8x/k/8MPrJJ7YZdQ35CM6wlv6+0lpM8T4/tS558+KTl3Y1tXr0H06bAgkdwNJblgGwryLIIhIZR57ZWxU8pZSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724348411; c=relaxed/simple;
-	bh=bOvfXFEBJ7hru/SrBmVn2vRabF2j+tb8OvK48mGn5qA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i4KMgucm4VNy/vePwCVZR9TDyPI943jf8hoeDoTToiqORuzGcrYBdHFcgQGdFl7l4WDJ0ivN/etVNd9E/RSSAgQI/ZSUWJutbXoUJNJw5T3Kf/wQfQg8X+tht1PA2eSjGu4mbnY18LyCU6WkioD2wdSV8axqxdzBDGMeRuQIorI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gqczij/O; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724348635; c=relaxed/simple;
+	bh=gBwYdCWoxYKHB3pjFQnlQt8nWinlcImOnljxnMc8RxU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=CAiY/c9uLROq+HEZujOxc+SPUwpBuetXciaad/2IpehKY8BSESiH7ot6eBqV60X3JlZAKMhuVwZeSmcLcmP1x/z6RHnRTFknKwnwD7XLQerY4TFjmVtFPh7actelI+9W3xGjx1yZTuWn7q25WSd7+yf6bhDaSxSWmXcDUf9RZAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2sE1S8xy; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gqczij/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1898BC32782;
-	Thu, 22 Aug 2024 17:40:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724348410;
-	bh=bOvfXFEBJ7hru/SrBmVn2vRabF2j+tb8OvK48mGn5qA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Gqczij/OrYIZ/u9U8W1H3wa6kMNVmANz2nlw/TKj5o/u9+b94ArUq7w0UShqBAtNb
-	 hd/tEE6qLMwkogpM5zMMQegWBkLHqp1JasWwPver0olKGajV0Gq20RDxx/S8Gf7KZJ
-	 9vNGwcJjIERJ4a5dqv60oF+kR/Uxt7FcB/Dpga+B6Y0MxYAzz0JKrkmE4ioLNj8o8G
-	 5390EZNhWKBG+Ea/xhVvxSVtZri5zh8YaxYbzkkO0lsrUkXCQCykoH4pY0cCWSWsyq
-	 QgzHkH3OmLhG2+SHLagYKytAVuBQznfI0o8+vjmuQfjXgz08UBpPNdv8LgwOlNptvb
-	 2QdijYKxXwdEg==
-Date: Thu, 22 Aug 2024 14:40:07 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Sedat Dilek <sedat.dilek@gmail.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Nathan Chancellor <nathan@kernel.org>
-Subject: Re: [Linux-6.11-rc4] perf BROKEN with LLVM/Clang 19.1.0-rc3
-Message-ID: <Zsd39zG9BuGpZ8aA@x1>
-References: <CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com>
- <ZsdKhLaPy-uzKsuH@x1>
- <ZsdUxxBrpbuYxtXN@x1>
- <CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com>
- <ZsdxinrZP1kHINWT@x1>
- <ZsdzLmIFWRqsXeXD@x1>
- <CA+icZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5+zQNQGUxK7+2aw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2sE1S8xy"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20353e5de9cso15365ad.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 22 Aug 2024 10:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724348634; x=1724953434; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gBwYdCWoxYKHB3pjFQnlQt8nWinlcImOnljxnMc8RxU=;
+        b=2sE1S8xywt5Egsn099EXKm2IdxY8Lp5S8N06ehl9oA/S9MPLQFJ5XuWoEwS7U+XWWS
+         b+TZabdYH0zlG/fvNFL2wePdUx92tld628eZ7nSeb8yy0UeEt1tryw2ugtpVaKdASOr4
+         Xum8X67ffOi2j4wqbBBMY/OGq34Q7YheyI5Dpo/wnj6vt2BPvLsXeGK82MtNlUE9CSQr
+         IU1HtGAXCilOW49+KnFG6oU5GCZYcel2bLRtvcsjPeRdiuDm6K9F/WcxJDQyiowHfCW+
+         V+BjmRhWJITwml32yrGVMVHNvd5B3dPpEsfo55g5EP/G7czL8u414hafaB89mDeAGa7o
+         uiVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724348634; x=1724953434;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gBwYdCWoxYKHB3pjFQnlQt8nWinlcImOnljxnMc8RxU=;
+        b=R2tf1DLxM6c3RqFJK0/Qjna4cvUMu0m7HuBq8RtsGiBpDrA99bmoPsX19t4f4SHb7/
+         1UcXwBBfGwJRy5K2WjI45qLJ6va7w6k2gQtlZmOC73C5zXgnMQpZ8ka/kyF/nshhePfA
+         wGV4Jh3C1W6L8Bbohb8L4SLhpG/SFYnE8VYNu3NF6eU+qZIJE5Kv4kTOWC9wNJi5iPGG
+         nOBr0SNJ/g4zhYl+arHwhhiyU4MAV1IHrpKU955Bc933SQbEJjexdKsq+I/WvvQ4CvnQ
+         k62/wX0zjOyc6L7AgtLu3FRT0nlGfcFld0AMroHf9b2XgqGSZcJwhWKGU/NB/cKtHZJm
+         8H9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWWxqQU+J+cYNM73P34SDzKo0AfMoX30zu1ft/x2zeV4QpzkqV6ZPgwkSxPPfI7aLwKkv/7v63W7Q710E+PZquL@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzqhld3kF+A7dEJTXVgvlGP1KIDZGH8Eo4XvZw79MrHLLWiKIrZ
+	Myn0xn4ZQiuRrL2egb0uwsqI7z9uazXOtNLmaZSVNUTEomJ4R1Qw4fupq7wKy/yVheHpxLNrxru
+	DvPY92ZNPgl8BX5jFu1+4rwM/nAvfWYgYFIcO
+X-Google-Smtp-Source: AGHT+IE5mcoF++97X335wv3Sc8tojC3jQDCPkfTD3rKhCYg0Yw1XwNSdK91WlLqVgjFxyGWr1JpSvBBoAqGh+xWzzj4=
+X-Received: by 2002:a17:903:1c6:b0:201:df0b:2b77 with SMTP id
+ d9443c01a7336-20398fce025mr125465ad.0.1724348633363; Thu, 22 Aug 2024
+ 10:43:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+icZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5+zQNQGUxK7+2aw@mail.gmail.com>
+References: <CAP-5=fXOQxiKJBfzKs3Gz4DuMoxxoTWf-Hw4dKDbhRguSup9Qw@mail.gmail.com>
+ <CAP-5=fU3D9YZ+O-Mm0CqrpY4Ubhe6qW_nn8NkjuQ_jfVu2-scw@mail.gmail.com>
+ <CAP-5=fVF9LVxO5kpyutmbOTC31ywQCO-qgNk3qnqv5rVOf-JDA@mail.gmail.com>
+ <CAH0uvoiCX=asogf6e4D8mZ2Yw+8pj3HMTyvYTtQjFTtgKKP6GQ@mail.gmail.com>
+ <ZnRP4hJLcRpZzs4x@x1> <CAP-5=fVtutBamCT9VJNJv+nXB1VMBZ3V9ed-mAMtWNaVbygvHA@mail.gmail.com>
+ <CAH0uvogumw30VSAjX_RmmxABLsvD_FhEUeUo4nNE6vwBNSni1w@mail.gmail.com>
+ <CAP-5=fVNC-bBvkg851705msG+jA_Qu8HNPPX1evqDD6TM7ZrVA@mail.gmail.com>
+ <CAP-5=fUSMDhooNetywiLfcYEHMPeyPaGHuBhJHUb34zM8DqtQA@mail.gmail.com>
+ <CAP-5=fUbJcxO=h65bqZ2nx8UTPHsapOVsfcCaY=+q4yO9YBY-A@mail.gmail.com>
+ <CAP-5=fVazh93ZRqyubCC1MEE-thDKoamO-L_d0-LZjNyYmD0vw@mail.gmail.com>
+ <CAP-5=fU4fwZdWNXbCKjs5+T4G2NnfibyhXFfif130vKZwyYcBg@mail.gmail.com> <CAP-5=fWKfUFV8f2b06cTOp2JSJg4WnEja2f6dH2_NggOiKKNxA@mail.gmail.com>
+In-Reply-To: <CAP-5=fWKfUFV8f2b06cTOp2JSJg4WnEja2f6dH2_NggOiKKNxA@mail.gmail.com>
+From: Ian Rogers <irogers@google.com>
+Date: Thu, 22 Aug 2024 10:43:41 -0700
+Message-ID: <CAP-5=fWd6DuPsM=2Q8xOBtTZn01rTKgEDrWtYQf=61GLjT2Hmg@mail.gmail.com>
+Subject: Re: Linux Perf Tool Office Hours
+To: Howard Chu <howardchu95@gmail.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, 
+	linux-perf-users <linux-perf-users@vger.kernel.org>, Namhyung Kim <namhyung@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Aug 22, 2024 at 07:31:55PM +0200, Sedat Dilek wrote:
-> On Thu, Aug 22, 2024 at 7:19 PM Arnaldo Carvalho de Melo
-> <acme@kernel.org> wrote:
-> >
-> > On Thu, Aug 22, 2024 at 02:12:46PM -0300, Arnaldo Carvalho de Melo wrote:
-> > > On Thu, Aug 22, 2024 at 07:02:52PM +0200, Sedat Dilek wrote:
-> > > > On Thu, Aug 22, 2024 at 5:10 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
-> > > > > +++ b/tools/perf/util/setup.py
-> > > > > @@ -17,7 +17,7 @@ src_feature_tests  = getenv('srctree') + '/tools/build/feature'
-> > >
-> > > > >  def clang_has_option(option):
-> > > > >      cc_output = Popen([cc, cc_options + option, path.join(src_feature_tests, "test-hello.c") ], stderr=PIPE).stderr.readlines()
-> > > > > -    return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o))] == [ ]
-> > > > > +    return [o for o in cc_output if ((b"unknown argument" in o) or (b"is not supported" in o) or (b"unknown warning option" in o))] == [ ]
-> > > > >  if cc_is_clang:
-> > > > >      from sysconfig import get_config_vars
-> > > > > @@ -63,6 +63,8 @@ cflags = getenv('CFLAGS', '').split()
-> > > > >  cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
-> > > > >  if cc_is_clang:
-> > > > >      cflags += ["-Wno-unused-command-line-argument" ]
-> > > > > +    if clang_has_option("-Wno-cast-function-type-mismatch"):
-> > > > > +        cflags += ["-Wno-cast-function-type-mismatch" ]
-> > > > >  else:
-> > > > >      cflags += ['-Wno-cast-function-type' ]
-> > >
-> > > > I tried with your diff with SLIM LLVM toolchains 18 and 19.
-> > >
-> > > > Both work - see attached build-logs.
-> > >
-> > > > Yes, are right that LLVM/Clang v19 was first introducing:
-> > >
-> > > > -Wcast-function-type-mismatch / -Wno-cast-function-type-mismatch
-> > >
-> > > > [4] says for LLVM 18.1.8:
-> > >
-> > > > -Wcast-function-type
-> > > > -Wcast-function-type-strict
-> > >
-> > > > Feel free to add my Reported-by/Tested-by credentials if you sent a full patch.
-> > >
-> > > Thanks for the report and test of the fix, I'll add both tags,
-> >
-> > So below is the part that deals with disabling the warning if present,
-> > the other patch supporting checking warning options I merged as a prep
-> > patch.
-> >
-> > Thanks!
-> >
-> > - Arnaldo
-> >
-> > From 155212c965b5b23a90b8558449dbfd1c60dad934 Mon Sep 17 00:00:00 2001
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date: Thu, 22 Aug 2024 14:13:49 -0300
-> > Subject: [PATCH 1/1] perf python: Disable -Wno-cast-function-type-mismatch if
-> >  present on clang
-> >
-> > The -Wcast-function-type-mismatch option was introduced in clang 19 and
-> > its enabled by default, since we use -Werror, and python bindings do
-> > casts that are valid but trips this warning, disable it if present.
-> >
-> > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Ingo Molnar <mingo@redhat.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Cc: Nathan Chancellor <nathan@kernel.org>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  tools/perf/util/setup.py | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-> > index 26c0f2614fe92eb6..649550e9b7aa8c8f 100644
-> > --- a/tools/perf/util/setup.py
-> > +++ b/tools/perf/util/setup.py
-> > @@ -63,6 +63,8 @@ cflags = getenv('CFLAGS', '').split()
-> >  cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
-> >  if cc_is_clang:
-> >      cflags += ["-Wno-unused-command-line-argument" ]
-> > +    if clang_has_option("-Wno-cast-function-type-mismatch"):
-> > +        cflags += ["-Wno-cast-function-type-mismatch" ]
-> >  else:
-> >      cflags += ['-Wno-cast-function-type' ]
-> >
-> > --
-> > 2.46.0
-> >
-> 
-> Thanks for the patch, Arnanldo.
-> 
-> @Nathan Chancellor
-> What was the b4 magic to retrieve a patch included in a ML thread?
-> 
-> I tried:
-> 
-> link="https://lore.kernel.org/all/CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com/"
-> 
-> b4 am $link
-> Grabbing thread from
-> lore.kernel.org/all/CA%2BicZUXoJ6BS3GMhJHV3aZWyb5Cz2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com/t.mbox.gz
-> Analyzing 9 messages in the thread
-> No patches found.
+Hi,
 
-I use:
+It is the last week of GSoC [1] and time for our final office hours of
+the summer:
 
-⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers CA+icZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5+zQNQGUxK7+2aw@mail.gmail.com
-Grabbing thread from lore.kernel.org/all/CA%2BicZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5%2BzQNQGUxK7%2B2aw@mail.gmail.com/t.mbox.gz
-Analyzing 10 messages in the thread
-No patches found.
-⬢[acme@toolbox perf-tools-next]$
+Linux perf tool office hours
+Friday, August 23 =C2=B7 8:00 =E2=80=93 9:00am
 
-Using the Message-ID for your message, which normally is enough, but I
-think I didn't separate the patch from the rest of the message with ---.
+Time zone: America/Los_Angeles
+Google Meet joining info
+Video call link: https://meet.google.com/tif-efem-uiq
+Or dial: =E2=80=AA(US) +1 425-217-5482=E2=80=AC PIN: =E2=80=AA791 261 968=
+=E2=80=AC#
+More phone numbers: https://tel.meet/tif-efem-uiq?pin=3D2651187837256
 
-Lemme try...
+Topics of the day, GSoC and thanking Howard for his contributions.
+Looking forward to seeing you.
 
----
+Thanks,
+Ian
 
-From 155212c965b5b23a90b8558449dbfd1c60dad934 Mon Sep 17 00:00:00 2001
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
-Date: Thu, 22 Aug 2024 14:13:49 -0300
-Subject: [PATCH 1/1] perf python: Disable -Wno-cast-function-type-mismatch if
- present on clang
-
-The -Wcast-function-type-mismatch option was introduced in clang 19 and
-its enabled by default, since we use -Werror, and python bindings do
-casts that are valid but trips this warning, disable it if present.
-
-Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Nathan Chancellor <nathan@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/setup.py | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/tools/perf/util/setup.py b/tools/perf/util/setup.py
-index 26c0f2614fe92eb6..649550e9b7aa8c8f 100644
---- a/tools/perf/util/setup.py
-+++ b/tools/perf/util/setup.py
-@@ -63,6 +63,8 @@ cflags = getenv('CFLAGS', '').split()
- cflags += ['-fno-strict-aliasing', '-Wno-write-strings', '-Wno-unused-parameter', '-Wno-redundant-decls' ]
- if cc_is_clang:
-     cflags += ["-Wno-unused-command-line-argument" ]
-+    if clang_has_option("-Wno-cast-function-type-mismatch"):
-+        cflags += ["-Wno-cast-function-type-mismatch" ]
- else:
-     cflags += ['-Wno-cast-function-type' ]
- 
--- 
-2.46.0
-
+[1] https://developers.google.com/open-source/gsoc/timeline
