@@ -1,127 +1,185 @@
-Received: from mail-pg1-f182.google.com (mail-pg1-f182.google.com [209.85.215.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from cstnet.cn (smtp21.cstnet.cn [159.226.251.21])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638421D12E0;
-	Thu, 22 Aug 2024 00:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE7813B2B0;
+	Thu, 22 Aug 2024 06:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724287139; cv=none; b=b5AlJp7WM79dWLgW8+uZhTnUZj3vUHdp1guCK52sUkkVa9w+sr5fvE//GBRnAZ0I/NycOqE157x2Z6FClgL1vFd0kiG/1wU0o3cdOWTcQM6Rlw7teBJh1kuOsAU3R4QWGNnJemI5yrjbmdNoSAgjFE7JDfl/bGlSdNZliN5CpXE=
+	t=1724308992; cv=none; b=gWd1ejzwSV1SMdJLyMhG69vmyuHPGxSBfe5dMzND58kiyqYtv4cBjRJFkLbYmV5nBDa0u6rNbcNPev3Ll/DNLjZR0tGRHsj/SE323AUA+wKlggNnsrCQZfKaSJ/lG2AfYK4vn9VCklJJ/OigLvdSVgvf8AkpOvHCIZ8GIkwNlm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724287139; c=relaxed/simple;
-	bh=uODybORlW1Kn4hk/0jntMAIqd+PQSZLqURGiujbvz78=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hsA9NpBD9oN3eSmWkjYFob5Ot+SWyPZMQ4oaVnaEMAejiupJio9aT/yrN4bifK2swFhT9PlUXZ5io5K9LV8Lyffb7u77q5vuyGVDsFqK8TujDBbSb9m6rKEaXJFVWVSd4czlO2CX3QImCGI+rREXfOrrJWrL4E+Yrr/bC4F3F34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.215.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f182.google.com with SMTP id 41be03b00d2f7-7c3d8f260easo188870a12.1;
-        Wed, 21 Aug 2024 17:38:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724287138; x=1724891938;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nFpmgSqC6zlZh7xPVeXEKWlc28TttUJByYddICCMgAU=;
-        b=hpA83QMls7HxoW5oN8sAvWZCep/eGeR15fqkidgQaezi+afHttjX72y/uAn+8tPB/x
-         uW/VpO9vwovdSHpsYlXoKWVar/2O/R2KIuU229o9vGuDjWhHEcmCT50d3Hm0LIAZBPDg
-         NG1XN4xSlW0swmKAEm2zoKcN8v7NHyPh1Jg7x13up0bbmeUoTjAKDIGnneP8KtUYuE72
-         LaYyPSMLiSdwew6fikXLePxVlqlpdZnRK1Miueg4G/dmvD7lUHeMFkx3jwNbVCxbYFbq
-         2d+jgh+H35cFceK1n0mgb7IIVXoavAX5XuCAM0qR2OfKO+cS3amKPpp25qOOXRlDsMh3
-         oU9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU7SMSqKRqG0wQ/+b0Cp0ccJWHJuFOr6Nzc4Y+dgRpHxqxQbILCyBJrITiwuHE857nFmgRlc88roJsS4khaRu4EnA==@vger.kernel.org, AJvYcCWdQQUrfEDJL6semyJZCvsusiQFLOI8hX/jAasRPUar7UDX7Uh4lyVKBx/dUi19IzKT8j14TkKrqzhaLF4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0kkb94xSInsy6kSIct3VLscyvQdfLlyN0etHwljh0TAKrK10e
-	ZiEqDpvAsG+/DhygC3vIgrqjUHP7jiLSIDnl1UUoTwPhfwxpwho3JGWr86TFJJTJPm9i5j1Agmy
-	rpDfX45dGrQYoJu1dkY1TKqN9XcI=
-X-Google-Smtp-Source: AGHT+IEZAhCN3obd4iWx6i1hVZ/nzpajIeDbS5jp84c4JIOQUC6gRflxdHKz2kY2uuYUd2uktuewTTzAN167Luvz0ac=
-X-Received: by 2002:a05:6a21:1786:b0:1c3:fc87:374e with SMTP id
- adf61e73a8af0-1cada15f583mr4694795637.41.1724287137418; Wed, 21 Aug 2024
- 17:38:57 -0700 (PDT)
+	s=arc-20240116; t=1724308992; c=relaxed/simple;
+	bh=X29w5xt9nJTkUZs2UHTC9nuFtNbz6aHwGbv9Bg3+R9g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VTap1inpldlC5b2VKS/FiOSilTcombu3ShpNX9GHhU1zO2dEWiYuMviYWf+m9kv+gXJBSrq7Od4oc395SYAAlMdUCUAemNCJD1VGatqRSySIeq6uaLw2FigbY5TZQ5J2ErHZA3XB2R6eRvfg3tcGpRA26+vysoOHocIUwtZMJuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from [192.168.12.218] (unknown [121.237.44.107])
+	by APP-01 (Coremail) with SMTP id qwCowADHz8Pt3cZmsJgfCQ--.23985S2;
+	Thu, 22 Aug 2024 14:42:54 +0800 (CST)
+Message-ID: <3e5e4ba4-acb6-4cea-96f8-b16886bb6285@iscas.ac.cn>
+Date: Thu, 22 Aug 2024 14:42:53 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240820183202.3174323-1-kan.liang@linux.intel.com>
-In-Reply-To: <20240820183202.3174323-1-kan.liang@linux.intel.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Wed, 21 Aug 2024 17:38:45 -0700
-Message-ID: <CAM9d7ch1tmkmrpcxdW4Txz20Xzt6NFx_-0m6HQzTwXAV7Opg2Q@mail.gmail.com>
-Subject: Re: [PATCH] perf hist: Don't set hpp_fmt_value for members in --no-group
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, irogers@google.com, peterz@infradead.org, 
-	mingo@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] riscv: KVM: add basic support for host vs guest
+ profiling
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: anup@brainfault.org, atishp@atishpatra.org, paul.walmsley@sifive.com,
+ palmer@dabbelt.com, aou@eecs.berkeley.edu, mark.rutland@arm.com,
+ alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-perf-users@vger.kernel.org
+References: <cover.1723518282.git.zhouquan@iscas.ac.cn>
+ <7eb3e1a8fc9f9aa0340a6a1fb88a127b767480ea.1723518282.git.zhouquan@iscas.ac.cn>
+ <20240821-5284bf727abbb08a379e1d06@orel>
+Content-Language: en-US
+From: Quan Zhou <zhouquan@iscas.ac.cn>
+In-Reply-To: <20240821-5284bf727abbb08a379e1d06@orel>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID:qwCowADHz8Pt3cZmsJgfCQ--.23985S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxGw47uF1DXr47Zr43GFy3Arb_yoW5KFWDpF
+	Z8CFs5Ca1rtryxGa4Svr1v9r4FgrsYgw1a9ryUCFy5Ar4DKry8Jr4vg34DCryDJF48XF1I
+	kFy0gF13uws8t3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUU9qb7Iv0xC_Zr1lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwV
+	C2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xv
+	F2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r4j6F
+	4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwACI402YVCY1x02628vn2kIc2xK
+	xwCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE14v_GF1l42xK82IYc2Ij64vIr41l4I8I3I
+	0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWU
+	GVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI
+	0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0
+	rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r
+	4UJbIYCTnIWIevJa73UjIFyTuYvjxUxwZ2UUUUU
+X-CM-SenderInfo: 52kr31xxdqqxpvfd2hldfou0/1tbiDAcRBmbGjC-49gABsQ
 
-Hi Kan,
 
-On Tue, Aug 20, 2024 at 11:31=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> Perf crashes as below when applying --no-group
->
-> perf record -e "{cache-misses,branches"} -b sleep 1
-> perf report --stdio --no-group
-> free(): invalid next size (fast)
-> Aborted (core dumped)
->
-> In the __hpp__fmt(), only 1 hpp_fmt_value is allocated for the current
-> event when --no-group is applied. However, the current implementation
-> tries to assign the hists from all members to the hpp_fmt_value, which
-> exceeds the allocated memory.
->
-> Fixes: 8f6071a3dce4 ("perf hist: Simplify __hpp_fmt() using hpp_fmt_data"=
-)
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+On 2024/8/21 20:51, Andrew Jones wrote:
+> On Tue, Aug 13, 2024 at 09:24:10PM GMT, zhouquan@iscas.ac.cn wrote:
+>> From: Quan Zhou <zhouquan@iscas.ac.cn>
+>>
+>> For the information collected on the host side, we need to
+>> identify which data originates from the guest and record
+>> these events separately, this can be achieved by having
+>> KVM register perf callbacks.
+>>
+>> Signed-off-by: Quan Zhou <zhouquan@iscas.ac.cn>
+>> ---
+>>   arch/riscv/include/asm/kvm_host.h |  5 +++++
+>>   arch/riscv/kvm/Kconfig            |  1 +
+>>   arch/riscv/kvm/main.c             | 12 ++++++++++--
+>>   arch/riscv/kvm/vcpu.c             |  7 +++++++
+>>   4 files changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
+>> index 2e2254fd2a2a..d2350b08a3f4 100644
+>> --- a/arch/riscv/include/asm/kvm_host.h
+>> +++ b/arch/riscv/include/asm/kvm_host.h
+>> @@ -286,6 +286,11 @@ struct kvm_vcpu_arch {
+>>   	} sta;
+>>   };
+>>
+> 
+> Let's add the same comment here that arm64 has unless you determine
+> that 'any event that arrives while a vCPU is loaded is considered to be
+> "in guest"' is not true for riscv.
+> 
 
-Acked-by: Namhyung Kim <namhyung@kernel.org>
+Ok, i will add this comment to clarify the point.
 
 Thanks,
-Namhyung
+Quan
 
-> ---
->  tools/perf/ui/hist.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
->
-> diff --git a/tools/perf/ui/hist.c b/tools/perf/ui/hist.c
-> index 5d1f04f66a5a..e5491995adf0 100644
-> --- a/tools/perf/ui/hist.c
-> +++ b/tools/perf/ui/hist.c
-> @@ -62,7 +62,7 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hist=
-_entry *he,
->         struct evsel *pos;
->         char *buf =3D hpp->buf;
->         size_t size =3D hpp->size;
-> -       int i, nr_members =3D 1;
-> +       int i =3D 0, nr_members =3D 1;
->         struct hpp_fmt_value *values;
->
->         if (evsel__is_group_event(evsel))
-> @@ -72,16 +72,16 @@ static int __hpp__fmt(struct perf_hpp *hpp, struct hi=
-st_entry *he,
->         if (values =3D=3D NULL)
->                 return 0;
->
-> -       i =3D 0;
-> -       for_each_group_evsel(pos, evsel)
-> -               values[i++].hists =3D evsel__hists(pos);
-> -
-> +       values[0].hists =3D evsel__hists(evsel);
->         values[0].val =3D get_field(he);
->         values[0].samples =3D he->stat.nr_events;
->
->         if (evsel__is_group_event(evsel)) {
->                 struct hist_entry *pair;
->
-> +               for_each_group_member(pos, evsel)
-> +                       values[++i].hists =3D evsel__hists(pos);
-> +
->                 list_for_each_entry(pair, &he->pairs.head, pairs.node) {
->                         for (i =3D 0; i < nr_members; i++) {
->                                 if (values[i].hists !=3D pair->hists)
-> --
-> 2.38.1
->
+>> +static inline bool kvm_arch_pmi_in_guest(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return IS_ENABLED(CONFIG_GUEST_PERF_EVENTS) && !!vcpu;
+>> +}
+>> +
+>>   static inline void kvm_arch_sync_events(struct kvm *kvm) {}
+>>   
+>>   #define KVM_RISCV_GSTAGE_TLB_MIN_ORDER		12
+>> diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+>> index 26d1727f0550..0c3cbb0915ff 100644
+>> --- a/arch/riscv/kvm/Kconfig
+>> +++ b/arch/riscv/kvm/Kconfig
+>> @@ -32,6 +32,7 @@ config KVM
+>>   	select KVM_XFER_TO_GUEST_WORK
+>>   	select KVM_GENERIC_MMU_NOTIFIER
+>>   	select SCHED_INFO
+>> +	select GUEST_PERF_EVENTS if PERF_EVENTS
+>>   	help
+>>   	  Support hosting virtualized guest machines.
+>>   
+>> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+>> index bab2ec34cd87..734b48d8f6dd 100644
+>> --- a/arch/riscv/kvm/main.c
+>> +++ b/arch/riscv/kvm/main.c
+>> @@ -51,6 +51,12 @@ void kvm_arch_hardware_disable(void)
+>>   	csr_write(CSR_HIDELEG, 0);
+>>   }
+>>   
+>> +static void kvm_riscv_teardown(void)
+>> +{
+>> +	kvm_riscv_aia_exit();
+>> +	kvm_unregister_perf_callbacks();
+>> +}
+>> +
+>>   static int __init riscv_kvm_init(void)
+>>   {
+>>   	int rc;
+>> @@ -105,9 +111,11 @@ static int __init riscv_kvm_init(void)
+>>   		kvm_info("AIA available with %d guest external interrupts\n",
+>>   			 kvm_riscv_aia_nr_hgei);
+>>   
+>> +	kvm_register_perf_callbacks(NULL);
+>> +
+>>   	rc = kvm_init(sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+>>   	if (rc) {
+>> -		kvm_riscv_aia_exit();
+>> +		kvm_riscv_teardown();
+>>   		return rc;
+>>   	}
+>>   
+>> @@ -117,7 +125,7 @@ module_init(riscv_kvm_init);
+>>   
+>>   static void __exit riscv_kvm_exit(void)
+>>   {
+>> -	kvm_riscv_aia_exit();
+>> +	kvm_riscv_teardown();
+>>   
+>>   	kvm_exit();
+>>   }
+>> diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
+>> index 8d7d381737ee..e8ffb3456898 100644
+>> --- a/arch/riscv/kvm/vcpu.c
+>> +++ b/arch/riscv/kvm/vcpu.c
+>> @@ -226,6 +226,13 @@ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
+>>   	return (vcpu->arch.guest_context.sstatus & SR_SPP) ? true : false;
+>>   }
+>>   
+>> +#ifdef CONFIG_GUEST_PERF_EVENTS
+>> +unsigned long kvm_arch_vcpu_get_ip(struct kvm_vcpu *vcpu)
+>> +{
+>> +	return vcpu->arch.guest_context.sepc;
+>> +}
+>> +#endif
+>> +
+>>   vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+>>   {
+>>   	return VM_FAULT_SIGBUS;
+>> -- 
+>> 2.34.1
+>>
+> 
+> Thanks,
+> drew
+
