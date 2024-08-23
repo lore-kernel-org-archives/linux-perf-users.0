@@ -1,22 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB388469D;
-	Fri, 23 Aug 2024 11:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 307CD17C211;
+	Fri, 23 Aug 2024 11:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724412817; cv=none; b=YCFy7igpz9MRBmM89/wT58RrJACsHB5rAjJSBi4zt97QJu/enPDBEGlQn9yutDc9w6esMeBKcxBqF/4Z1du+aWrarn3GenWANeuU0AOYC4Y+nrYXA/KxBish+6PIujYQEDX+zD4Bo1eyPPXuv/yVyE1kOoCAxK0VNj+mwtBN8Cs=
+	t=1724412819; cv=none; b=IWNvgSlzx5TD2Z6fQzXKIAKv358kEr9vQPXReDyzlzA8fAtM/yw3YNI2STeWne3jTCFn/I0QLc6inmwuoY7497TeN01WTaRu3JXzrFqf356SzNrGGgYk7yOEGDB56HHYOlCPMy1pMSg7DIcroFy8X5qSkT777gqR8HFVDcrC2XE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724412817; c=relaxed/simple;
-	bh=Ya0YompZ78xHu5FXa+le+gsHI9P9F7LCgLYaQw87L/4=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=En98Ngroz4E8P5Kbu2BjSHFHXd8BqYSgt1GktI3qkX94D+ExSxoWu1ZtHhOqgcetoNGl3HV+C5YFa/HQyzVQVZ0ns125BIUJApxVJQFjSSHIgUPh/W2eKYqbLlGHjDyKzGID7TpFphgDtE8NTkLr/rd8pCTYYocanGGNvFMidgo=
+	s=arc-20240116; t=1724412819; c=relaxed/simple;
+	bh=obz0C+FpcdM6N6VsfsEmviC3TU3bTDwL9sKihig86y8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=RLxmMKa0HAd2fcZKsPNGxvHYGDek40lorB1bXaHNFIcz0Te3xbwm5lrKPYhXa8nr8jq6E5mOT5Y3N0SCTmitvuUvx2hdS4rZtxzEydq+dGa7uvCbcmqpl8rDD/33zg5d48rLSb4dfzJZgTPGvjxUu1Tpz5cIswTtC3wTsyVQ0gI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E547DA7;
-	Fri, 23 Aug 2024 04:33:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56DB9168F;
+	Fri, 23 Aug 2024 04:34:02 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 323ED3F58B;
-	Fri, 23 Aug 2024 04:33:26 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E171A3F58B;
+	Fri, 23 Aug 2024 04:33:33 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -38,10 +39,12 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-arm-kernel@lists.infradead.org,
 	coresight@lists.linaro.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v6 0/8] perf auxtrace: Support multiple AUX events
-Date: Fri, 23 Aug 2024 12:32:58 +0100
-Message-Id: <20240823113306.2310957-1-leo.yan@arm.com>
+Subject: [PATCH v6 3/8] perf auxtrace: Remove unused 'pmu' pointer from struct auxtrace_record
+Date: Fri, 23 Aug 2024 12:33:01 +0100
+Message-Id: <20240823113306.2310957-4-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240823113306.2310957-1-leo.yan@arm.com>
+References: <20240823113306.2310957-1-leo.yan@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -50,76 +53,92 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This series is to support multiple events with the *same* type in Perf
-AUX trace. As the events are same type, the trace data shares the same
-format and can be decoded by the same decoder.
+The 'pmu' pointer in the auxtrace_record structure is not used after
+support multiple AUX events, remove it.
 
-Note, a more complex case - different types of AUX events, (e.g. Arm
-CoreSight event and Arm SPE events are enabled simultaneously) - is
-still not supported.
+Signed-off-by: Leo Yan <leo.yan@arm.com>
+Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ tools/perf/arch/arm/util/cs-etm.c     | 1 -
+ tools/perf/arch/arm64/util/arm-spe.c  | 1 -
+ tools/perf/arch/arm64/util/hisi-ptt.c | 1 -
+ tools/perf/arch/x86/util/intel-bts.c  | 1 -
+ tools/perf/arch/x86/util/intel-pt.c   | 1 -
+ tools/perf/util/auxtrace.h            | 1 -
+ 6 files changed, 6 deletions(-)
 
-Patch 01 is to change the perf core layer in the kernel to allow
-multiple AUX events to output to single FD, so that '--per-thread' mode
-can be supported.
-
-Patches 02 and 03 are refactoring with using evsel__is_aux_event().
-
-Patch 04 validates the AUX events' CPU map. It presumes the AUX events
-do not overlap for CPU maps, otherwise, it returns failure.
-
-Patches 05, 06, 07 are to support multiple AUX events for buffer mapped
-index.
-
-Patch 08 is to support multiple Arm SPE events during report phase.
-
-The patch series has been tested with multiple Arm SPE events (arm_spe_0
-and arm_spe_1). And verified this patch series on Intel-PT test for no
-regression.
-
-Changes from v5:
-- Changed to comparing string "arm_spe" in patch 08, as "arm_spe"
-  is a general even name and passed Arm SPE test.
-
-Changes from v4:
-- Used 'evsel->name' to replace 'evsel->pmu_name' in patch 08.
-
-Changes from v3:
-- Changed to compare .setup_aux() callback in patch 01 (Peter.Z).
-- Picked up patches 02 / 03 with evsel__is_aux_event() refactoring.
-- Added new patch 08.
-
-Changes from v2:
-- Added patch 01 for support per-thread mode (Adrian).
-- Added patch 02 for verifying CPU maps without overlapping (Adrian).
-- Reworked patches to fix the regression on Intel-PT (Ian).
-
-Changes from v1:
-- Added comment in patch 01 for iterating AUX events (Adrian)
-- Added patch 02 for removing unused field 'pmu' (Adrian)
-
-
-Leo Yan (8):
-  perf/core: Allow multiple AUX PMU events with the same module
-  perf auxtrace: Use evsel__is_aux_event() for checking AUX event
-  perf auxtrace: Remove unused 'pmu' pointer from struct auxtrace_record
-  perf auxtrace: Introduce auxtrace_record__validate_events()
-  perf auxtrace: Refactor evlist__enable_event_idx()
-  perf auxtrace: Bails out after finding the event for the map index
-  perf auxtrace: Iterate all AUX events when finish reading
-  perf arm-spe: Support multiple events in arm_spe_evsel_is_auxtrace()
-
- kernel/events/core.c                  |   9 +-
- tools/perf/arch/arm/util/cs-etm.c     |   1 -
- tools/perf/arch/arm64/util/arm-spe.c  |   1 -
- tools/perf/arch/arm64/util/hisi-ptt.c |   1 -
- tools/perf/arch/x86/util/intel-bts.c  |   1 -
- tools/perf/arch/x86/util/intel-pt.c   |   1 -
- tools/perf/builtin-record.c           |   4 +
- tools/perf/util/arm-spe.c             |  11 +--
- tools/perf/util/auxtrace.c            | 114 +++++++++++++++++++++++---
- tools/perf/util/auxtrace.h            |   8 +-
- 10 files changed, 125 insertions(+), 26 deletions(-)
-
+diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
+index da6231367993..96aeb7cdbee1 100644
+--- a/tools/perf/arch/arm/util/cs-etm.c
++++ b/tools/perf/arch/arm/util/cs-etm.c
+@@ -888,7 +888,6 @@ struct auxtrace_record *cs_etm_record_init(int *err)
+ 	}
+ 
+ 	ptr->cs_etm_pmu			= cs_etm_pmu;
+-	ptr->itr.pmu			= cs_etm_pmu;
+ 	ptr->itr.parse_snapshot_options	= cs_etm_parse_snapshot_options;
+ 	ptr->itr.recording_options	= cs_etm_recording_options;
+ 	ptr->itr.info_priv_size		= cs_etm_info_priv_size;
+diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
+index d59f6ca499f2..2be99fdf997d 100644
+--- a/tools/perf/arch/arm64/util/arm-spe.c
++++ b/tools/perf/arch/arm64/util/arm-spe.c
+@@ -514,7 +514,6 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
+ 	}
+ 
+ 	sper->arm_spe_pmu = arm_spe_pmu;
+-	sper->itr.pmu = arm_spe_pmu;
+ 	sper->itr.snapshot_start = arm_spe_snapshot_start;
+ 	sper->itr.snapshot_finish = arm_spe_snapshot_finish;
+ 	sper->itr.find_snapshot = arm_spe_find_snapshot;
+diff --git a/tools/perf/arch/arm64/util/hisi-ptt.c b/tools/perf/arch/arm64/util/hisi-ptt.c
+index ba97c8a562a0..eac9739c87e6 100644
+--- a/tools/perf/arch/arm64/util/hisi-ptt.c
++++ b/tools/perf/arch/arm64/util/hisi-ptt.c
+@@ -174,7 +174,6 @@ struct auxtrace_record *hisi_ptt_recording_init(int *err,
+ 	}
+ 
+ 	pttr->hisi_ptt_pmu = hisi_ptt_pmu;
+-	pttr->itr.pmu = hisi_ptt_pmu;
+ 	pttr->itr.recording_options = hisi_ptt_recording_options;
+ 	pttr->itr.info_priv_size = hisi_ptt_info_priv_size;
+ 	pttr->itr.info_fill = hisi_ptt_info_fill;
+diff --git a/tools/perf/arch/x86/util/intel-bts.c b/tools/perf/arch/x86/util/intel-bts.c
+index 34696f3d3d5d..85c8186300c8 100644
+--- a/tools/perf/arch/x86/util/intel-bts.c
++++ b/tools/perf/arch/x86/util/intel-bts.c
+@@ -434,7 +434,6 @@ struct auxtrace_record *intel_bts_recording_init(int *err)
+ 	}
+ 
+ 	btsr->intel_bts_pmu = intel_bts_pmu;
+-	btsr->itr.pmu = intel_bts_pmu;
+ 	btsr->itr.recording_options = intel_bts_recording_options;
+ 	btsr->itr.info_priv_size = intel_bts_info_priv_size;
+ 	btsr->itr.info_fill = intel_bts_info_fill;
+diff --git a/tools/perf/arch/x86/util/intel-pt.c b/tools/perf/arch/x86/util/intel-pt.c
+index 4b710e875953..ea510a7486b1 100644
+--- a/tools/perf/arch/x86/util/intel-pt.c
++++ b/tools/perf/arch/x86/util/intel-pt.c
+@@ -1197,7 +1197,6 @@ struct auxtrace_record *intel_pt_recording_init(int *err)
+ 	}
+ 
+ 	ptr->intel_pt_pmu = intel_pt_pmu;
+-	ptr->itr.pmu = intel_pt_pmu;
+ 	ptr->itr.recording_options = intel_pt_recording_options;
+ 	ptr->itr.info_priv_size = intel_pt_info_priv_size;
+ 	ptr->itr.info_fill = intel_pt_info_fill;
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index d405efcd8708..a1895a4f530b 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -411,7 +411,6 @@ struct auxtrace_record {
+ 	int (*read_finish)(struct auxtrace_record *itr, int idx);
+ 	unsigned int alignment;
+ 	unsigned int default_aux_sample_size;
+-	struct perf_pmu *pmu;
+ 	struct evlist *evlist;
+ };
+ 
 -- 
 2.34.1
 
