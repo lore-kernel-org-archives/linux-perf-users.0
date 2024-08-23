@@ -1,55 +1,55 @@
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9135C47A7C;
-	Fri, 23 Aug 2024 04:05:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC1720DF4;
+	Fri, 23 Aug 2024 04:09:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724385925; cv=none; b=KpFBgwG37r2yOWb6wkACEQSMfB09RuKXN9x/xmKknEVft7dCS3+7CbR39UF/SB4s+QezQZnwbVlaIOJZyEsfNoQDlasEIh638t4WJ4Y5LxBPQj+wyVrSJMWSbbn8Bk6I7jqJv0LFhLSA3cLbjc1KbGY2pWMCfaffzzKcxg81pUI=
+	t=1724386197; cv=none; b=Doz/DSPyrCI/MekgUTYEA3JCxtaaGj6F8hqv4i/N0tgIXLwG7aHxiHMI8L/Li55EOSDmW0qL/yMNatMBeqzNi9XJAbgmOJh8AbNiCyAXqtpoQ6A1L3ftKi7tu9uo+BfupB6WVtxIXvaYoarmdyp7k44v7MGmommPACKI/Ru9rKQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724385925; c=relaxed/simple;
-	bh=unFcSoRafG2tQZVIb3XLQD5IIG3f0AZYTrwVmRgmU9U=;
+	s=arc-20240116; t=1724386197; c=relaxed/simple;
+	bh=pT9uqXYn2KpXAXKCn7T6VWnWSynN3uJMq8rcYtkVK3E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nl0DEz6cD6sUPWtXSYecnzpD7ysAWnThr/7YmUraDTFkIiQvS/U7hisrghBeMJojr2Rwc9ggqCqnyUJETW3vdgG/E904M27wWAuZASCUhtnVqISoZilEoWn+eLzk14FL9wKA2KSkievs7ID6eJLKkSlW5vjsrK0KtbueC2x5DMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Pk2Ccgwr; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=g32ermslxfUcSqlx15s2t3KtBXhZDbNNbTu70FlUDUhSGC+c5beIdxIHht/IcakvnHVG8YwezWYnTsvkpSXnq3zncZ3bW1h3vZQirRB4N/Iz+gpY+kWxOfeulaKCM1MRbe46RYWMxd8NiZq5kJrAtsNXjfV+DI7Vu4TxTTeQSLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jUVGZ9zN; arc=none smtp.client-ip=209.85.128.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pk2Ccgwr"
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6c32daf0797so15939787b3.0;
-        Thu, 22 Aug 2024 21:05:23 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jUVGZ9zN"
+Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6b47ff8a59aso13249057b3.2;
+        Thu, 22 Aug 2024 21:09:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724385922; x=1724990722; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724386194; x=1724990994; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=007om7FbnVA1/sSaH1/Z0H7IlWO16A2yApr1RpemrwM=;
-        b=Pk2CcgwrOoG9TULKQ3rSM7e5W+87xnYcU2Rx21/5D+O8Ycrd1MpCvKAgfTXtVBzQVb
-         hBaM9eKiGB3A84S45rAouI3UplaDs0GkhpJo23Pa1CrdDC1GZSMP/7lIj67juymrw81A
-         SUIB0d027VCrwP/qHn+6sttWLxUaBol0BsEq2rXCfu44jzfJEDD2dfSpxHvyY4SktxS4
-         sc0lMxUKOmnC8YTNfNf8h8YmRZvpFN6Pfxt/7NyKhpMBGgAKLUi1uLc1r6tYTjWFmR0h
-         wuMl3XiBMfHoVtWe6fQSXMh294N5/hNKmdTekqsJOzZYxmMdXZj32/R3EfFWAeo/K6Mp
-         eBZw==
+        bh=fpZDLHPABX8XYAz4LLTVL/cZmCGogxXLhreWDxIqGTw=;
+        b=jUVGZ9zND96YoTSsTYN2dn68UGT9kmxll+IGfxmr9HysNrLz41yve8FyCzVyTDxKXJ
+         og0R6F++ywsIjH0LeSJ4x22Cw4EMnUcdmcmKpa4sGCMwSc3cLTNrmLZ9oM2/iVfZUEh4
+         NY0NRFg4NWYmOxeUDDM0b9h9BNTwzHZcLF2Yms8S76Gzl7dWXYjc1qlp1BcwYKhI0SGe
+         h5zHIUE2Hd9yoHlmPYPjr3Qb2guC1cIcNwG1wifLgoIAQZpl2RDLgQooGDrH24b37l6D
+         hCf6pfC8OpwwNHrujhlb14zEaO9Mlt7Iqj3yqIFMUmuu5+tv+iA+yOhVsnQQ5CKf9T4p
+         QbEw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724385922; x=1724990722;
+        d=1e100.net; s=20230601; t=1724386194; x=1724990994;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=007om7FbnVA1/sSaH1/Z0H7IlWO16A2yApr1RpemrwM=;
-        b=Pw8Peg45wMavMRuoNRgXFveAK3Eq7HEI10WLhnqDz0ISbsd/GnfCNFhoZz2znYnHU4
-         9+b4GocuhzrIv7rrxxAlCNwA8AzrUlrc33dFQmZTealq3gN9KrqB3kM1gK+nJyjcAYru
-         meQnH3EtjrBb9kAROhZ2eD5QMHHHtFQ++lJe1nzmABDnrN0Cbdn+lqt9YE5nBDNVgfx6
-         +Zdh81ecw6umSV01o4snAxWOWFRzCVYIRtPYJArJ/M0dmtwd0Zpb2LWKnngDrQ2SZ2vc
-         luLoIdiYjpfzMKG8F+KRkfg7qnVZLpHoXeUHUlHTr/g7GXdenlBfPhvnAE+WHl+Zmx1N
-         bGYg==
-X-Forwarded-Encrypted: i=1; AJvYcCUKNzlGc795PpL6KGxDTY0uPrgH7Z+7wF4SOtzuPU5qsIDhAA8KPf26L0VBT32lPzUzDMZYyjDQeHd3vxQ=@vger.kernel.org, AJvYcCVuA5WJihZRkvQAQtYfsNQymrqB27WvT+oVA7YnwWaPrqa6aOVisac9M6rT8JGkdTga8swVKKL28ST1+z6SFXgjFA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNfgkk4mkrAKJKcegMKAwfuCEKVEefa3rh6BMme4Dp1BkcYpor
-	SC5zzA3XrNhRrUJhwVJB1NfOPA1FxzMN8vYseBugZSyKCC8iHLulRilnKVOHKhw2xJCunluq/4C
-	VQWXJXMTU9db7OsScgExJY61TgjQ=
-X-Google-Smtp-Source: AGHT+IG5A4QgseUEyX+ceIYYIhxwSO6f3o/ON96XDMe77yLSaK64HR/0DEXBgCmXabw0+kKmEeg7LMlxzcbqfhz63hk=
-X-Received: by 2002:a05:690c:4288:b0:650:858c:9b9c with SMTP id
- 00721157ae682-6c62962718bmr9082827b3.29.1724385922411; Thu, 22 Aug 2024
- 21:05:22 -0700 (PDT)
+        bh=fpZDLHPABX8XYAz4LLTVL/cZmCGogxXLhreWDxIqGTw=;
+        b=F+rwF6TH6zgfMtGqZUdMhkqB9JJRVlICBOp8vP/cQdmK5fAgPvj80J9hfBi6/BFWhO
+         JfybKUg+CZY9sr8FIrhenU8nx4hJCfKswkeYF/0XypnxTxTV+hTJ9/DpGnN7/nHeNhzr
+         uI7ZanoNelreqyVHVpfluAmH1eb2msBl+GgpRihpDTjbDyA706ovBcZVyL4bKdAfw4hR
+         ZWiBo7mv+sWIz4dH1uWv1zaV1Cdy8fm9RBNbe+SLnRryUW+QUTd8Pd6pIIHF8RvSkxHY
+         diWLp3F/DRVIeW8KLUXfZKWxUeZPAdaMnc6Kcudufbes14Ugvradp6v4MQoRScuFJIQ7
+         ue8g==
+X-Forwarded-Encrypted: i=1; AJvYcCWImyFaftbDbzBlyDY3OaExNu/Z305FI9MqX1vVqfF23bbXF9RGsWMCxtI2nZOVItuMoOa49oSq1E0u8+ynU8cD8Q==@vger.kernel.org, AJvYcCXszEsFp/JsmXL2YNkJBeP6RxG8Z/Afk78RD10j4dlFVBuPdwNjn3CxPZe1Ud+mKz6XIdaesH3TpLBj6OI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxIgf1uDoxyUqWXoCHt+g9dz4T2qcJPlMHlpYeMFaXPFqmBJdJ6
+	fEoYntdcrXhNPZrlJSu2mXlA7SJFLATDa4D/eRmqDLy90MSaai07jXyFEmp936fowPaI5QOalbT
+	fpkNlMjLtD9CPmJEdHxBIFtgLuXo=
+X-Google-Smtp-Source: AGHT+IFbTnAybcb7YAzS41TU+gvgYt6QOZDdTXtwWTv4tvGkuDoRhAVGPyy2yKZcr1YPqTi144auF1qYgHTwFrjCKHo=
+X-Received: by 2002:a05:690c:95:b0:64b:69f0:f8f2 with SMTP id
+ 00721157ae682-6c62441920amr9805297b3.3.1724386194402; Thu, 22 Aug 2024
+ 21:09:54 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -57,12 +57,14 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240815013626.935097-1-howardchu95@gmail.com>
- <20240815013626.935097-6-howardchu95@gmail.com> <Zsd8vqCrTh5h69rp@x1> <Zsd_278bECAXUzmC@x1>
-In-Reply-To: <Zsd_278bECAXUzmC@x1>
+ <20240815013626.935097-4-howardchu95@gmail.com> <Zsd6MgrCs0ybQ9EW@x1>
+ <Zsd7Ep6H24Qq-h5F@x1> <ZsepEpr-hGXkI8Vw@x1>
+In-Reply-To: <ZsepEpr-hGXkI8Vw@x1>
 From: Howard Chu <howardchu95@gmail.com>
-Date: Fri, 23 Aug 2024 12:05:11 +0800
-Message-ID: <CAH0uvoia0ewN+KomxwUEYDvsLyLXCO4_0+jzCc=HZkB_Sz1+OQ@mail.gmail.com>
-Subject: Re: [PATCH v2 05/10] perf trace: Add a new argument to trace__btf_scnprintf()
+Date: Fri, 23 Aug 2024 12:09:43 +0800
+Message-ID: <CAH0uvoigqSHEcC0+BUkdGMq5ODhJXh_JSjNB0d+-mf2UUkYfzQ@mail.gmail.com>
+Subject: Re: [PATCH v2 03/10] perf trace: Add trace__bpf_sys_enter_beauty_map()
+ to prepare for fetching data in BPF
 To: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org, 
 	kan.liang@linux.intel.com, namhyung@kernel.org, 
@@ -70,134 +72,103 @@ Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Fri, Aug 23, 2024 at 2:13=E2=80=AFAM Arnaldo Carvalho de Melo
+On Fri, Aug 23, 2024 at 5:09=E2=80=AFAM Arnaldo Carvalho de Melo
 <acme@kernel.org> wrote:
 >
-> On Thu, Aug 22, 2024 at 03:00:30PM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Aug 15, 2024 at 09:36:21AM +0800, Howard Chu wrote:
-> > > Pass the struct syscall_arg, so that we can use the augmented_arg lat=
-er
-> > > in the struct augmentation.
+> On Thu, Aug 22, 2024 at 02:53:22PM -0300, Arnaldo Carvalho de Melo wrote:
+> > On Thu, Aug 22, 2024 at 02:49:41PM -0300, Arnaldo Carvalho de Melo wrot=
+e:
+> > > On Thu, Aug 15, 2024 at 09:36:19AM +0800, Howard Chu wrote:
+> > > > @@ -3624,7 +3719,9 @@ static int trace__init_syscalls_bpf_prog_arra=
+y_maps(struct trace *trace)
+> > > >  {
+> > > >   int map_enter_fd =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
+nter);
+> > > >   int map_exit_fd  =3D bpf_map__fd(trace->skel->maps.syscalls_sys_e=
+xit);
+> > > > + int beauty_map_fd =3D bpf_map__fd(trace->skel->maps.beauty_map_en=
+ter);
 > >
-> > Breaks the build with:
+> > > At this point we still don't have that, right? I.e. building with thi=
+s
+> > > patch, without the ones following it in your series, I get:
 > >
-> > builtin-trace.c: In function =E2=80=98trace__btf_scnprintf=E2=80=99:
-> > builtin-trace.c:1011:78: error: unused parameter =E2=80=98arg=E2=80=99 =
-[-Werror=3Dunused-parameter]
-> >  1011 |                                    size_t size, int val, struct=
- syscall_arg *arg, char *type)
-> >       |                                                          ~~~~~~=
-~~~~~~~~~~~~~~^~~
-> >   LD      /tmp/build/perf-tools-next/util/perf-util-in.o
-> >   LD      /tmp/build/perf-tools-next/perf-util-in.o
-> >   AR      /tmp/build/perf-tools-next/libperf-util.a
-> >   GEN     /tmp/build/perf-tools-next/python/perf.cpython-312-x86_64-lin=
-ux-gnu.so
-> > cc1: all warnings being treated as errors
+> > > builtin-trace.c: In function =E2=80=98trace__init_syscalls_bpf_prog_a=
+rray_maps=E2=80=99:
+> > > builtin-trace.c:3723:58: error: =E2=80=98struct <anonymous>=E2=80=99 =
+has no member named =E2=80=98beauty_map_enter=E2=80=99
+> > >  3723 |         int beauty_map_fd =3D bpf_map__fd(trace->skel->maps.b=
+eauty_map_enter);
+> > >       |                                                          ^
+> > >   CC      /tmp/build/perf-tools-next/tests/code-reading.o
+> > >   CC      /tmp/build/perf-tools-next/trace/beauty/clone.o
+> > > make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.bui=
+ld:105: /tmp/build/perf-tools-next/builtin-trace.o] Error 1
+> > > make[3]: *** Waiting for unfinished jobs....
+> > >
+> > > So we need to squash the patch that introduces beauty_map_enter in th=
+e
+> > > augmented_raw_syscalls.bpf.c file to this one, so that we keep things
+> > > bisectable, I'll try to do that.
 > >
-> > So we either use __maybe_unused at this point or combine it with the
-> > patch where it really gets used. I think the later is better, will do.
->
-> So here what I think we should do is to use the patch below, ok? I'm
-> continuing...
->
-> - Arnaldo
->
-> ---
->
-> From 2c1ea68ac3d18109d96bd16e2860e076d2e0d61e Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Thu, 22 Aug 2024 15:10:27 -0300
-> Subject: [PATCH 1/1] perf trace: Pass the richer 'struct syscall_arg' poi=
-nter
->  to trace__btf_scnprintf()
->
-> Since we'll need it later in the current patch series and we can get the
-> syscall_arg_fmt from syscall_arg->fmt.
->
-> Based-on-a-patch-by: Howard Chu <howardchu95@gmail.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Ian Rogers <irogers@google.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/lkml/Zsd8vqCrTh5h69rp@x1
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> ---
->  tools/perf/builtin-trace.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 37ca96e130a5862d..a909880bd25e51d1 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1007,9 +1007,11 @@ static size_t btf_enum_scnprintf(const struct btf_=
-type *type, struct btf *btf, c
->         return 0;
->  }
->
-> -static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_a=
-rg_fmt *arg_fmt, char *bf,
-> +static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_a=
-rg *arg, char *bf,
->                                    size_t size, int val, char *type)
->  {
-> +       struct syscall_arg_fmt *arg_fmt =3D arg->fmt;
-> +
->         if (trace->btf =3D=3D NULL)
->                 return 0;
->
-> @@ -1029,7 +1031,7 @@ static size_t trace__btf_scnprintf(struct trace *tr=
-ace, struct syscall_arg_fmt *
->  }
->
->  #else // HAVE_LIBBPF_SUPPORT
-> -static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, s=
-truct syscall_arg_fmt *arg_fmt __maybe_unused,
-> +static size_t trace__btf_scnprintf(struct trace *trace __maybe_unused, s=
-truct syscall_arg *arg __maybe_unused,
->                                    char *bf __maybe_unused, size_t size _=
-_maybe_unused, int val __maybe_unused,
->                                    char *type __maybe_unused)
->  {
-> @@ -2284,7 +2286,7 @@ static size_t syscall__scnprintf_args(struct syscal=
-l *sc, char *bf, size_t size,
->                         if (trace->show_arg_names)
->                                 printed +=3D scnprintf(bf + printed, size=
- - printed, "%s: ", field->name);
->
-> -                       btf_printed =3D trace__btf_scnprintf(trace, &sc->=
-arg_fmt[arg.idx], bf + printed,
-> +                       btf_printed =3D trace__btf_scnprintf(trace, &arg,=
- bf + printed,
->                                                            size - printed=
-, val, field->type);
->                         if (btf_printed) {
->                                 printed +=3D btf_printed;
-> @@ -2987,7 +2989,7 @@ static size_t trace__fprintf_tp_fields(struct trace=
- *trace, struct evsel *evsel,
->                 if (trace->show_arg_names)
->                         printed +=3D scnprintf(bf + printed, size - print=
-ed, "%s: ", field->name);
->
-> -               btf_printed =3D trace__btf_scnprintf(trace, arg, bf + pri=
-nted, size - printed, val, field->type);
-> +               btf_printed =3D trace__btf_scnprintf(trace, &syscall_arg,=
- bf + printed, size - printed, val, field->type);
->                 if (btf_printed) {
->                         printed +=3D btf_printed;
->                         continue;
-> --
-> 2.46.0
+> > So just this did the trick, I'll remove it from the later patch in your
+> > series:
 
-We pass the syscall_arg to get both format and augmented args, I think
-that's the best way to do it.
+Okay, making every patch buildable on their own, I see, didn't know
+that's the rule, sorry (separating hunks is a little too hard for me).
+Will do that in the future.
 
-LGTM, thank you.
+>
+> But then you added syscall_arg_fmt__cache_btf_struct() ifdef'ed by
+> HAVE_LIBBPF_SUPPORT to then use it on trace__bpf_sys_enter_beauty_map())
+> that is ifdef'ed by HAVE_BPF_SKEL, so when building with
+> BUILD_BPF_SKEL=3D0 we get this splat:
+>
+>   CC      /tmp/build/perf-tools-next/builtin-trace.o
+>   AR      /tmp/build/perf-tools-next/libperf-util.a
+> builtin-trace.c:930:12: error: =E2=80=98syscall_arg_fmt__cache_btf_struct=
+=E2=80=99 defined but not used [-Werror=3Dunused-function]
+>   930 | static int syscall_arg_fmt__cache_btf_struct(struct syscall_arg_f=
+mt *arg_fmt, struct btf *btf, char *type)
+>       |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   GEN     /tmp/build/perf-tools-next/python/perf.cpython-312-x86_64-linux=
+-gnu.so
+> cc1: all warnings being treated as errors
+> make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:1=
+05: /tmp/build/perf-tools-next/builtin-trace.o] Error 1
+> make[2]: *** [Makefile.perf:762: /tmp/build/perf-tools-next/perf-in.o] Er=
+ror 2
+> make[1]: *** [Makefile.perf:292: sub-make] Error 2
+> make: *** [Makefile:119: install-bin] Error 2
+> make: Leaving directory '/home/acme/git/perf-tools-next/tools/perf'
+> =E2=AC=A2[acme@toolbox perf-tools-next]$
+>
+> I'm moving syscall_arg_fmt__cache_btf_struct() to the same block where
+> trace__bpf_sys_enter_beauty_map() is.
+
+Yes exactly, I did it in my branch as well.
 
 Thanks,
 Howard
-
 >
+> > - Arnaldo
+> >
+> > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/to=
+ols/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > index 0acbd74e8c760956..c885673f416dff39 100644
+> > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+> > @@ -79,6 +79,13 @@ struct pids_filtered {
+> >       __uint(max_entries, 64);
+> >  } pids_filtered SEC(".maps");
+> >
+> > +struct beauty_map_enter {
+> > +     __uint(type, BPF_MAP_TYPE_HASH);
+> > +     __type(key, int);
+> > +     __type(value, __u32[6]);
+> > +     __uint(max_entries, 512);
+> > +} beauty_map_enter SEC(".maps");
+> > +
+> >  /*
+> >   * Desired design of maximum size and alignment (see RFC2553)
+> >   */
