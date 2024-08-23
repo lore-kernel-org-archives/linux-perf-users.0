@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D792187FEA;
-	Fri, 23 Aug 2024 11:33:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A09E188912;
+	Fri, 23 Aug 2024 11:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724412820; cv=none; b=nr4/1KzBzO51mr7WsiwpDIw2eSMokZnNJE4j0OsOxViBdvekEArbC+v2DExRIl7IMtbocJeJT99m5LsqROrAQTBt/B7pIzSDjd7cHUcjhw4mvO/alaNOWGxxiMTkDuXXKGiyKpEd/EYgtUTKofVEhv3JHZXCn7IimuCP8d7c/9A=
+	t=1724412823; cv=none; b=lfJkv0RCOKSkkl9d61mPWuOn7okBRIMxrMgQe6D7qJ70xQpkViJlUIeYbXSjw67gExZm+fmtPzIXkMwKaB5DEOrgSKAYXu1UK1sVoZndQNylPKKx/cJgdVCGE6tfpBMOkdsWI7nUd6kJSXRdsGhfNMAx9zAoXexDPRuXsf7+cHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724412820; c=relaxed/simple;
-	bh=H6w10jYTrJ+KZDCrCKg26+egc1UhDEhCUqlEYNIWxOQ=;
+	s=arc-20240116; t=1724412823; c=relaxed/simple;
+	bh=PyVjx29IENoLqvyx/30UeLm79Y8N0zd+gXIAcNt6/g4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=lmY+lg8aLg5Nya5rNQjeq3P5DJkr7xHzpEatRG/cY7GO4/tAxxjObxWudgHZtsFFgApk7x9qI18vtzTv/AzBfko6vyTd4IwG/Fr9lpHG4vv2C78TAfws4Md2jDTL65mNNtzFkcgZxz+UpLDqUrtA/5+ZppHnlgEUjVYhIQZsu+k=
+	 MIME-Version; b=rkNvaH3JGZnsxOIEHMq4zblIqziUQFoYcPgB5n0MZVmxggkYtp7CDfwkBEth0xz+8WY1czZv+MaIvQxcwdjPcHBrNNS4JFUQioS8BW3E4+BtXlzOFhxUySSTr0ZZOQrx6G2DcEYUQExGW4zesBwOlg/hB3i4yl9umCsS8jYGmoo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE6EDDA7;
-	Fri, 23 Aug 2024 04:34:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 897D2FEC;
+	Fri, 23 Aug 2024 04:34:07 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 74F6D3F58B;
-	Fri, 23 Aug 2024 04:33:36 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 086553F58B;
+	Fri, 23 Aug 2024 04:33:38 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -39,9 +39,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-arm-kernel@lists.infradead.org,
 	coresight@lists.linaro.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v6 4/8] perf auxtrace: Introduce auxtrace_record__validate_events()
-Date: Fri, 23 Aug 2024 12:33:02 +0100
-Message-Id: <20240823113306.2310957-5-leo.yan@arm.com>
+Subject: [PATCH v6 5/8] perf auxtrace: Refactor evlist__enable_event_idx()
+Date: Fri, 23 Aug 2024 12:33:03 +0100
+Message-Id: <20240823113306.2310957-6-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240823113306.2310957-1-leo.yan@arm.com>
 References: <20240823113306.2310957-1-leo.yan@arm.com>
@@ -53,138 +53,84 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-A prerequisite for multiple AUX events is that the AUX events cannot
-overlap CPU maps. The reason is that every CPU has only one AUX trace
-buffer and maps it to an unique buffer index for CPU and system tracing
-mode.
-
-To prevent the case of CPU maps overlapping occurring within multiple
-AUX events, the auxtrace_record__validate_events() function is
-introduced. It iterates through all AUX events and returns failure if
-it detects CPU maps overlapping.
+This commit splits the evlist__enable_event_idx() function into two
+steps. The first step uses a new function evlist__find_cpu_map_idx() to
+find the CPU map index, based on the found CPU map index or a thread map
+index, it continues to call evlist__enable_event_idx() for enabling the
+corresponding event.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/builtin-record.c |  4 +++
- tools/perf/util/auxtrace.c  | 64 +++++++++++++++++++++++++++++++++++++
- tools/perf/util/auxtrace.h  |  7 ++++
- 3 files changed, 75 insertions(+)
+ tools/perf/util/auxtrace.c | 42 +++++++++++++++++++++++++++++---------
+ 1 file changed, 32 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
-index adbaf80b398c..2c618efba97d 100644
---- a/tools/perf/builtin-record.c
-+++ b/tools/perf/builtin-record.c
-@@ -862,6 +862,10 @@ static int record__auxtrace_init(struct record *rec)
- 
- 	auxtrace_regroup_aux_output(rec->evlist);
- 
-+	err = auxtrace_validate_events(rec->evlist);
-+	if (err)
-+		return err;
-+
- 	return auxtrace_parse_filters(rec->evlist);
- }
- 
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index ca8682966fae..87e4f21b6edf 100644
+index 87e4f21b6edf..e7b582d92811 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -2828,6 +2828,70 @@ int auxtrace_parse_filters(struct evlist *evlist)
- 	return 0;
+@@ -651,20 +651,30 @@ int auxtrace_parse_snapshot_options(struct auxtrace_record *itr,
+ 	return -EINVAL;
  }
  
-+int auxtrace_validate_events(struct evlist *evlist)
-+{
-+	struct evsel *evsel;
-+	struct perf_cpu_map *cpu_map = NULL;
-+	struct perf_cpu_map *cpu_map_intersect = NULL;
-+	struct perf_cpu_map *cpu_map_merged = NULL;
-+	int ret = 0;
-+
-+	if (!evlist)
-+		return 0;
-+
-+	/*
-+	 * Currently the tool only supports multiple AUX events without
-+	 * overlapping CPU maps and every CPU has its unique AUX buffer
-+	 * for CPU or system mode tracing.
-+	 *
-+	 * Returns failure if detects CPU maps overlapping.
-+	 */
-+	evlist__for_each_entry(evlist, evsel) {
-+		if (!evsel__is_aux_event(evsel))
-+			continue;
-+
-+		if (perf_cpu_map__is_empty(evsel->pmu->cpus))
-+			continue;
-+
-+		cpu_map_intersect = perf_cpu_map__intersect(cpu_map, evsel->pmu->cpus);
-+		if (cpu_map_intersect) {
-+			perf_cpu_map__put(cpu_map_intersect);
-+			pr_err("Doesn't support AUX events with overlapping CPU masks\n");
-+			ret = -EINVAL;
-+			break;
-+		}
-+		perf_cpu_map__put(cpu_map_intersect);
-+
-+		cpu_map_merged = perf_cpu_map__merge(cpu_map, evsel->pmu->cpus);
-+		if (!cpu_map_merged) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+
-+		/* Update the CPU maps after merging */
-+		perf_cpu_map__put(cpu_map);
-+		cpu_map = cpu_map_merged;
-+	}
-+
-+	if (!ret)
-+		goto out;
-+
-+	/* If fails, dump CPU maps for debugging */
-+	evlist__for_each_entry(evlist, evsel) {
-+		char buf[200];
-+
-+		if (!evsel__is_aux_event(evsel))
-+			continue;
-+
-+		cpu_map__snprint(evsel->pmu->cpus, buf, sizeof(buf));
-+		pr_debug("AUX event [%s]'s cpu map is: %s\n", evsel->pmu->name, buf);
-+	}
-+
-+out:
-+	perf_cpu_map__put(cpu_map);
-+	return ret;
-+}
-+
- int auxtrace__process_event(struct perf_session *session, union perf_event *event,
- 			    struct perf_sample *sample, const struct perf_tool *tool)
+-static int evlist__enable_event_idx(struct evlist *evlist, struct evsel *evsel, int idx)
++static int evlist__find_cpu_map_idx(struct evlist *evlist, struct evsel *evsel,
++				    int idx)
  {
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index a1895a4f530b..67a74ad0c383 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -636,6 +636,7 @@ void addr_filters__exit(struct addr_filters *filts);
- int addr_filters__parse_bare_filter(struct addr_filters *filts,
- 				    const char *filter);
- int auxtrace_parse_filters(struct evlist *evlist);
-+int auxtrace_validate_events(struct evlist *evlist);
+ 	bool per_cpu_mmaps = !perf_cpu_map__has_any_cpu(evlist->core.user_requested_cpus);
++	struct perf_cpu evlist_cpu;
++	int cpu_map_idx;
  
- int auxtrace__process_event(struct perf_session *session, union perf_event *event,
- 			    struct perf_sample *sample, const struct perf_tool *tool);
-@@ -875,6 +876,12 @@ int auxtrace_parse_filters(struct evlist *evlist __maybe_unused)
- 	return 0;
+-	if (per_cpu_mmaps) {
+-		struct perf_cpu evlist_cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
+-		int cpu_map_idx = perf_cpu_map__idx(evsel->core.cpus, evlist_cpu);
++	if (!per_cpu_mmaps)
++		return -EINVAL;
+ 
+-		if (cpu_map_idx == -1)
+-			return -EINVAL;
+-		return perf_evsel__enable_cpu(&evsel->core, cpu_map_idx);
+-	}
++	evlist_cpu = perf_cpu_map__cpu(evlist->core.all_cpus, idx);
++	cpu_map_idx = perf_cpu_map__idx(evsel->core.cpus, evlist_cpu);
++	if (cpu_map_idx == -1)
++		return -ENOENT;
++
++	return cpu_map_idx;
++}
+ 
+-	return perf_evsel__enable_thread(&evsel->core, idx);
++static int evlist__enable_event_idx(struct evsel *evsel, int cpu_mode, int idx)
++{
++	if (cpu_mode)
++		return perf_evsel__enable_cpu(&evsel->core, idx);
++	else
++		return perf_evsel__enable_thread(&evsel->core, idx);
  }
  
-+static inline
-+int auxtrace_validate_events(struct evlist *evlist __maybe_unused)
-+{
-+	return 0;
-+}
+ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
+@@ -676,9 +686,21 @@ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
+ 
+ 	evlist__for_each_entry(itr->evlist, evsel) {
+ 		if (evsel__is_aux_event(evsel)) {
++			int cpu_map_idx;
 +
- int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
- 			struct auxtrace_mmap_params *mp,
- 			void *userpg, int fd);
+ 			if (evsel->disabled)
+ 				return 0;
+-			return evlist__enable_event_idx(itr->evlist, evsel, idx);
++
++			cpu_map_idx = evlist__find_cpu_map_idx(itr->evlist,
++							       evsel, idx);
++			/* No map is found in per CPU mmap */
++			if (cpu_map_idx == -ENOENT)
++				return cpu_map_idx;
++
++			if (cpu_map_idx >= 0)
++				return evlist__enable_event_idx(evsel, 1, cpu_map_idx);
++			else
++				return evlist__enable_event_idx(evsel, 0, idx);
+ 		}
+ 	}
+ 	return -EINVAL;
 -- 
 2.34.1
 
