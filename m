@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4F9C18893A;
-	Fri, 23 Aug 2024 11:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0DF188A14;
+	Fri, 23 Aug 2024 11:33:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724412826; cv=none; b=U+rUxUq51LuVvYTXZoqELTt4N3gMtsNzIuGjQ/Jb/x/oRzGr25ljYwA0KmxKMowsfq0WzOZ+Xkz6oZbUjWK/llXRY/9GmHcOwa5sJ7amAEwKIFKwcjW28Y63SnY1M2lBGFvkSDlrjCUbvVa54w2LOd8aPFDXS4Wmi8ynksuOvFQ=
+	t=1724412829; cv=none; b=sMTtqe5WxxuCI+gzNDVoK4Kql01bYLNAqPpTZny7WquV5ob6hO5H41Q5YHp+aeI/oQ5x6lYDvyO09vHCYcBF/nS2Wrgyv+Cyigvcr1TpypHj7pUOPie5Jg2xz1uJV5PIV053WENLNhD0ZCBHdLtLTyc9PkZu3Uh2fvGFupCefV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724412826; c=relaxed/simple;
-	bh=NutnnobzY1pqk5yfZrczr9W27ytQvNp5oF4OsYwZfIg=;
+	s=arc-20240116; t=1724412829; c=relaxed/simple;
+	bh=Gp4VwjnMboKK/ZjgCFtsQFxNA2MCi84eMCBEeV59tGw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rzU9MmqOpVeSC1LU38bAgYVzayZcxd/5FxkX0Na9tuEEsPYnXmKgn8FYb98UYi/EsYb5RITKG2+hwNlt2I3C7njo6sfJUddlYBjBIA/4pLUkTiiHvVcohUW8VJ7Z3WknQhVtzZh8fdgeUWQI9hucJgtvHB1M4rwqOQgM1k2j1rE=
+	 MIME-Version; b=M3vBkej6zbo2m3gF2z3tTO77NOjcyvDl5bfNtKKT5Q/d0dAbvXfhrRuc+qoXbBq6zJTxTcdsRcyWVXeEP4oiuvnUPJzx0AfJPBKjMzSj2Yltl2d9RU9ZIDfaMTXLvqACzPnvJcRgwoGFkFuviXuCTBljG2iWMdYrCY7Uetyq7ug=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F4E81688;
-	Fri, 23 Aug 2024 04:34:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98315DA7;
+	Fri, 23 Aug 2024 04:34:12 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 90D5D3F58B;
-	Fri, 23 Aug 2024 04:33:41 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E23E3F58B;
+	Fri, 23 Aug 2024 04:33:44 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -39,9 +39,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-arm-kernel@lists.infradead.org,
 	coresight@lists.linaro.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v6 6/8] perf auxtrace: Bails out after finding the event for the map index
-Date: Fri, 23 Aug 2024 12:33:04 +0100
-Message-Id: <20240823113306.2310957-7-leo.yan@arm.com>
+Subject: [PATCH v6 7/8] perf auxtrace: Iterate all AUX events when finish reading
+Date: Fri, 23 Aug 2024 12:33:05 +0100
+Message-Id: <20240823113306.2310957-8-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240823113306.2310957-1-leo.yan@arm.com>
 References: <20240823113306.2310957-1-leo.yan@arm.com>
@@ -53,38 +53,42 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-After finding the corresponding event for the passed buffer index, it is
-safe to say the found event has been used. Then, the tool can check the
-event status and bails out if it has been disabled.
+When finished to read AUX trace data from mmaped buffer, based on the
+AUX buffer index the core layer needs to search the corresponding PMU
+event and re-enable it to continue tracing.
+
+However, current code only searches the first AUX event. It misses to
+search other enabled AUX events, thus, it returns failure if the buffer
+index does not belong to the first AUX event.
+
+This patch changes to continue searching every enabled AUX events for
+covering the mmaped buffer indexes.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/auxtrace.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ tools/perf/util/auxtrace.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index e7b582d92811..2acf63efab1d 100644
+index 2acf63efab1d..864ed20794ab 100644
 --- a/tools/perf/util/auxtrace.c
 +++ b/tools/perf/util/auxtrace.c
-@@ -688,15 +688,15 @@ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
- 		if (evsel__is_aux_event(evsel)) {
- 			int cpu_map_idx;
+@@ -690,9 +690,13 @@ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
  
--			if (evsel->disabled)
--				return 0;
--
  			cpu_map_idx = evlist__find_cpu_map_idx(itr->evlist,
  							       evsel, idx);
- 			/* No map is found in per CPU mmap */
+-			/* No map is found in per CPU mmap */
++			/*
++			 * No map is found in per CPU mmap. Multiple AUX events
++			 * might be opened in a session, continue to check if
++			 * the next AUX event can cover the mmaped buffer 'idx'.
++			 */
  			if (cpu_map_idx == -ENOENT)
- 				return cpu_map_idx;
+-				return cpu_map_idx;
++				continue;
  
-+			if (evsel->disabled)
-+				return 0;
-+
- 			if (cpu_map_idx >= 0)
- 				return evlist__enable_event_idx(evsel, 1, cpu_map_idx);
- 			else
+ 			if (evsel->disabled)
+ 				return 0;
 -- 
 2.34.1
 
