@@ -1,194 +1,149 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5F1188A1D;
-	Fri, 23 Aug 2024 15:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA06518BC30
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 18:58:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724425414; cv=none; b=MKB5cnF7cc1vEC1hLhONclD7Ip1OQwfTFPw7JCwBFuHtWhuR8kiHrcy/vWgFwPO8ItN3kWGPIlVcKGgh0qyIX9XiDlKPl2sTd6iTQRCuJI4fraCMwggpPusDKdVD01cMf1wrIWsmHrgFAk/ogVm4bKHNAfmrm+ZZa2hzJe7VigI=
+	t=1724439532; cv=none; b=gSg66QoZhgkRXwLNCyzhN4YL9gbTe0xQwzCqWrvXlzEdvdPc0KNtGMBoPQocvWcnHF1o52q/ZZ9cMrcd98eKMPd0BnFXbbbvwHAgtsQfT7b4BrkL51ZBZHeFZg4MyUBuy9m6lgFrCetnEMWR0JZviDLWQLieZtz9xBuVAhVYcj4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724425414; c=relaxed/simple;
-	bh=gykgH+6JWBbff+zeRNo9D74pHYYr6Yy/NsNQ+aGR0Ew=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=K0jJhUQNWJzJ4lvZ0gocjur3KUUZInakvmRDigZUtHVo73FPnTPajzIjGZkziCTPVU8hKa1/eQgSjM1VXMlMjSixCKHpkjpTvGzwIv9TMT6ugoF49DLST+zyt0KVfU+zXTl9LGlghx04Jlb4c1wr0b/1957I56wS0Qu7ZTiGm8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7142a30e3bdso2245616b3a.0;
-        Fri, 23 Aug 2024 08:03:32 -0700 (PDT)
+	s=arc-20240116; t=1724439532; c=relaxed/simple;
+	bh=OL8zr06dGVXX8/JNnl4KISBbwjutHYB3v6J2H8cHVqs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PJjXqYehD8wDyFrqmXlkSI4F9dP8Z7tSnQTY6pyyK482JCfkxS5XbPCJdRyK/8Bk1Ywxz++MZRMad+FfE/XbKox63YrGvLHLwUC8ncumSpqpo4jdttPbDEoevHYXFYcztNHFE+0+i5tyJ7KiG+Sr5XFBZLKCiyvuGe9RSaALGws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=l5FCax2L; arc=none smtp.client-ip=209.85.210.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="l5FCax2L"
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7142448aaf9so1651378b3a.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 11:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724439529; x=1725044329; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yorPWSJYc8UNX8jsP1Uyq6fHvCa9beJkHZhYtqkCUp4=;
+        b=l5FCax2LBK5Dp5Yw3Zw83gIAe1yQ6+D8b5mjofVnRjtq4i/Xt08D8htqEfAHbpwz2Q
+         nDM/EAmkL+OXhAADjDACh2vfVpizrYhAWB7a9hXSLjyZXI5sbnIMprqt3Y1zPncJp7h9
+         3pTnqCkvVSs+JOlWQwpq0I4Ceg1iWmSfnnL9O2skrmswWTSX8ZS/lL1rKOKa3CXrRxdr
+         peOeJvKCmAGnh0+TajU+g95Ws1LyvsrU3SpdK/NJ3fyjbSLgTskiqOZv28VEJ6jQwnNP
+         zb59DTFPaR17LdB2jfI9NVzD7IZ2bqWy6/lSMZNSyg5GmoSd/m42zmdzJBVAUmow6JEQ
+         Cm0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724425412; x=1725030212;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Fdc7YPwMv5DLi3k6hItQO4DUfLZWrss/h9+026P/6Fc=;
-        b=WqW4+Y6QFxhTShrZgHLHR6qViwYytesstjnBNT67FubTTCoBtCBrkVre2Ka1BwnCc5
-         ORmI5Z/E5sGjDRHxj65zGNNlISQTd1EQAeDagsK79/IZ6qQyt3v3u3KG4cFtlKuayuLt
-         drksWHcPmwvrfHSh58BLgD+JEf1rt++FhM9l+0248uU1+CfKFez0lPBIwClf+oDtTSHB
-         uEK9vANH/LF3bLqRf6MpvkATiePojmHICPQV1rRH3uhKoHWL3LUoKqtHbtHUMphUNwdS
-         OQkD3g+s19+AB/OIsKDAk/woPAHJaTVsHGwqLAi7bT006B5VYz/HlHwFBJngPKC7Bt+t
-         f7sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVk7iYIu41nAEur8UncnZ9VGlD5nhgYxfJfO+21rfUP33qQPPZeqL/Fs1Ywk7P/+TKhkp2bWK/ArXNSHc=@vger.kernel.org, AJvYcCVX1EIW1NDNZtmYIb3KoxKHx4QsZEKa4qRxbbo4qiIVQhk7J9ytI9yvzltSLbQkVk6c151XMqjGNOkvTaKXSnyPiQ==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyqg0VJlTf+p0utApTftCS+z1snbcMMJ5Kjp/T28cvFAnh2mn4J
-	BAAsZB5ksDBTM9KC6QEvztYKXyH1qoqowuj5Tg85Cgy05lTx0NwHfUl3tGOr7KgFQ9xokoj7VND
-	1EvBFmzIgjBmgUpDRDmlL7VIbT+c=
-X-Google-Smtp-Source: AGHT+IFEoz0JT4PpFagbOargPSg0CQqxTNRJB+tiFmyoiR3T2et4lYVe7mTN31g0rSZ5sgvGwkz9NQMgplj4D0PqJDk=
-X-Received: by 2002:a17:90b:3907:b0:2c9:a831:3b7d with SMTP id
- 98e67ed59e1d1-2d60a9fd3f2mr10630608a91.18.1724425411713; Fri, 23 Aug 2024
- 08:03:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1724439529; x=1725044329;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yorPWSJYc8UNX8jsP1Uyq6fHvCa9beJkHZhYtqkCUp4=;
+        b=jad/FCIuhF0PjokIyBCMjyT2NgeJ1uH1NUeEmpYJRiYxTeWpjy6opluEAlvIBj1+c4
+         diTIp+H/ETEZBWQPtqCzdlKrBYWj9yctsr0ku5TlUuFqy/kgBfKze3k+9d0n82ML2B25
+         /xkYnC9a9pi6rrIVg640iBnPJ87qKlab8BM+OlTag+GUzS60gQWCqcl7QvwQxq4dIKfR
+         05023sLasQEkxEsPA+hvvgYxEaHRAmkIin6mP30w+kaaGG1Z1Gsk9jzZMUjrOG9WdIv0
+         JyYi2QUutN0MNJouwgy1CmR9SL5/1KIqm4pbdaQqgdn54YbB6fy5X1R8WsdCP+S50dh0
+         McdQ==
+X-Gm-Message-State: AOJu0YzsfvvreD8NHNtpODlEPgietVQM+ioMsvGer8HxwuTSxRTHsuFX
+	CAMtiA8WpFlqMMSAbZfegcA3+/qs+o6gQH5mCR7jBlT4ohOlwvehdU9JxBQoeUk=
+X-Google-Smtp-Source: AGHT+IFawJQXOP4HPBZOeYzX+BNP0Qr+kt+7szwDGJXyVIrQHEtcZM9vyLrqns+0VupnLR/ut52lcA==
+X-Received: by 2002:aa7:8ec2:0:b0:714:2371:7a02 with SMTP id d2e1a72fcca58-7143173d6b0mr11838910b3a.5.1724439528774;
+        Fri, 23 Aug 2024 11:58:48 -0700 (PDT)
+Received: from charlie.ba.rivosinc.com ([64.71.180.162])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-714342731acsm3366222b3a.88.2024.08.23.11.58.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 11:58:48 -0700 (PDT)
+From: Charlie Jenkins <charlie@rivosinc.com>
+Date: Fri, 23 Aug 2024 11:58:38 -0700
+Subject: [PATCH] libperf: Add perf_evsel__id() function
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZsdUxxBrpbuYxtXN@x1> <CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com>
- <ZsdxinrZP1kHINWT@x1> <ZsdzLmIFWRqsXeXD@x1> <CA+icZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5+zQNQGUxK7+2aw@mail.gmail.com>
- <Zsd39zG9BuGpZ8aA@x1> <CA+icZUXGV9dMGcRwJiP7WLcYUaY5CRCcDw1HLFr+9Sn7CrRGDw@mail.gmail.com>
- <CAM9d7cgSR4OroaX0FuBvC_bPPMeEr7ThXJwqgMfAnj-Lfk8wNw@mail.gmail.com>
- <ZseBZ1DIi4Y5zC2W@x1> <CAM9d7cib0JFJPM4KdFDPkw_2K0Nu79QGHBsVZ7XyR-Yz1ZBHdg@mail.gmail.com>
- <ZsefAWKrE7jdlxhl@x1> <CAM9d7chAryBEq7NH_oKdBEg=VD-j82BC_1YTY7t1UH0xrs5L2A@mail.gmail.com>
- <CA+icZUUazXQVzf1AcuFSvT2FAL2Ag=xTFYxM35tvw8h-ix+rXA@mail.gmail.com>
-In-Reply-To: <CA+icZUUazXQVzf1AcuFSvT2FAL2Ag=xTFYxM35tvw8h-ix+rXA@mail.gmail.com>
-From: Namhyung Kim <namhyung@kernel.org>
-Date: Fri, 23 Aug 2024 08:03:20 -0700
-Message-ID: <CAM9d7cgbP3WV05hMkaoNrD843NYw6pTyP05JRmRuoMTX9hoHBg@mail.gmail.com>
-Subject: Re: [Linux-6.11-rc4] perf BROKEN with LLVM/Clang 19.1.0-rc3
-To: sedat.dilek@gmail.com
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240823-perf_evsel_get_id-v1-1-0ffa204c4164@rivosinc.com>
+X-B4-Tracking: v=1; b=H4sIAN3byGYC/x3MWwqAIBBG4a3EPCc4YhRtJUK6/NZAVGhIEO096
+ fF7OOehiCCI1BYPBSSJcuwZXBY0rcO+QMmcTUYbqxtj1IngHVLE5hZcTmblazB7riptR8rdGeD
+ l/p9d/74fnmOTE2MAAAA=
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+ Arnaldo Carvalho de Melo <acme@kernel.org>, 
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+ Adrian Hunter <adrian.hunter@intel.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Charlie Jenkins <charlie@rivosinc.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2669; i=charlie@rivosinc.com;
+ h=from:subject:message-id; bh=OL8zr06dGVXX8/JNnl4KISBbwjutHYB3v6J2H8cHVqs=;
+ b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9qJ2/e/z2PYuvAu97UFoUdsy6v/Jz1gOX6m9fH2Ex/el
+ 1/p/MD2oaOUhUGMg0FWTJGF51oDc+sd/bKjomUTYOawMoEMYeDiFICJBLEzMvTlS9xX3MDvE3GY
+ r+BidplB9JKrod93y/1ff+6oEn/NMTuGPxys4dMPaC4wMV6m53Vm1ZkZ11Y6MFzY6JB88cR6geJ
+ Tj/kA
+X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
+ fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
 
-Hello,
+Introduce perf_evsel__id() to collect the id of an evsel. It is not
+currently possible when using libperf to determine the id of an evsel.
+This will allow applications to link the id returned by PERF_SAMPLE_ID
+to the event being sampled.
 
-On Fri, Aug 23, 2024 at 6:58=E2=80=AFAM Sedat Dilek <sedat.dilek@gmail.com>=
- wrote:
->
-> On Thu, Aug 22, 2024 at 10:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
-g> wrote:
-> >
-> > On Thu, Aug 22, 2024 at 1:26=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Thu, Aug 22, 2024 at 01:11:22PM -0700, Namhyung Kim wrote:
-> > > > On Thu, Aug 22, 2024 at 11:20=E2=80=AFAM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Aug 22, 2024 at 11:17:21AM -0700, Namhyung Kim wrote:
-> > > > > > > On Thu, Aug 22, 2024 at 7:40=E2=80=AFPM Arnaldo Carvalho de M=
-elo
-> > > > > > > <acme@kernel.org> wrote:
-> > > > > > > > From 155212c965b5b23a90b8558449dbfd1c60dad934 Mon Sep 17 00=
-:00:00 2001
-> > > > > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > > > > > Date: Thu, 22 Aug 2024 14:13:49 -0300
-> > > > > > > > Subject: [PATCH 1/1] perf python: Disable -Wno-cast-functio=
-n-type-mismatch if
-> > > > > > > >  present on clang
-> > > > > > > >
-> > > > > > > > The -Wcast-function-type-mismatch option was introduced in =
-clang 19 and
-> > > > > > > > its enabled by default, since we use -Werror, and python bi=
-ndings do
-> > > > > > > > casts that are valid but trips this warning, disable it if =
-present.
-> > > > > > > >
-> > > > > > > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > > > > > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > > > > > > > Cc: Ian Rogers <irogers@google.com>
-> > > > > > > > Cc: Ingo Molnar <mingo@redhat.com>
-> > > > > > > > Cc: Namhyung Kim <namhyung@kernel.org>
-> > > > > > > > Cc: Nathan Chancellor <nathan@kernel.org>
-> > > > > > > > Cc: Peter Zijlstra <peterz@infradead.org>
-> > > > > > > > Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-Ws=
-wsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
-> > > > > > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > > > > >
-> > > > > > Can we also add 'Fixes' tag to make this picked by stable kerne=
-ls?
-> > > > >
-> > > > > Fixes what? This isn't a regression, clang 19 isn't available for=
- Fedora
-> > > > > 40, the most recent.
-> > > >
-> > > > No, I'm not saying it's a bug.  But we may want to build the old
-> > > > source code using new clang.
-> > >
-> > > Sure, and with the tags we have now, we can signal it by using Closes=
-:
-> > > and Cc: stable@kernel.org, without a version, I added those, the tags
-> > > section then is this:
-> > >
-> > >     Closes: https://lore.kernel.org/all/CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz=
-2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com
-> > >     Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > >     Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-> > >     Cc: Ian Rogers <irogers@google.com>
-> > >     Cc: Ingo Molnar <mingo@redhat.com>
-> > >     Cc: Namhyung Kim <namhyung@kernel.org>
-> > >     Cc: Nathan Chancellor <nathan@kernel.org>
-> > >     Cc: Peter Zijlstra <peterz@infradead.org>
-> > >     Cc: stable@vger.kernel.org # To allow building with the upcoming =
-clang 19
-> > >     Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8=
-U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
-> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > >
-> > > Ok?
-> >
-> > Acked-by: Namhyung Kim <namhyung@kernel.org>
-> >
-> > Thanks,
-> > Namhyung
->
-> Hey Namhyung,
->
-> are you aware of ...?
+Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+---
+ tools/lib/perf/Documentation/libperf.txt |  2 ++
+ tools/lib/perf/evsel.c                   | 10 ++++++++++
+ tools/lib/perf/include/perf/evsel.h      |  1 +
+ 3 files changed, 13 insertions(+)
 
-Oh.. I tentatively added your original patch to tmp.perf-tools branch.
-I'll drop that and go with Arnaldo's fix in perf-tools-next.
+diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
+index fcfb9499ef9c..69c1d7efb659 100644
+--- a/tools/lib/perf/Documentation/libperf.txt
++++ b/tools/lib/perf/Documentation/libperf.txt
+@@ -94,6 +94,8 @@ SYNOPSIS
+   void perf_evlist__enable(struct perf_evlist *evlist);
+   void perf_evlist__disable(struct perf_evlist *evlist);
+ 
++  void perf_evsel__id(struct perf_evsel *evsel, u64 *id);
++
+   #define perf_evlist__for_each_evsel(evlist, pos)
+ 
+   void perf_evlist__set_maps(struct perf_evlist *evlist,
+diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
+index c07160953224..765b17045342 100644
+--- a/tools/lib/perf/evsel.c
++++ b/tools/lib/perf/evsel.c
+@@ -484,6 +484,16 @@ int perf_evsel__disable(struct perf_evsel *evsel)
+ 	return err;
+ }
+ 
++int perf_evsel__id(struct perf_evsel *evsel, __u64 *id)
++{
++	int i;
++	int err = 0;
++
++	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
++		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ID, (unsigned long)id, i);
++	return err;
++}
++
+ int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
+ {
+ 	int err = 0, i;
+diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
+index 6f92204075c2..1457e5a46b28 100644
+--- a/tools/lib/perf/include/perf/evsel.h
++++ b/tools/lib/perf/include/perf/evsel.h
+@@ -41,6 +41,7 @@ LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx
+ LIBPERF_API int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread);
+ LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
+ LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
++LIBPERF_API int perf_evsel__id(struct perf_evsel *evsel, __u64 *id);
+ LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
+ LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
 
-Thanks,
-Namhyung
+---
+base-commit: 47ac09b91befbb6a235ab620c32af719f8208399
+change-id: 20240822-perf_evsel_get_id-f7e11f15504b
+-- 
+- Charlie
 
->
-> From: kernel test robot <lkp@intel.com>
-> To: oe-kbuild@lists.linux.dev
-> Cc: lkp@intel.com
-> Subject: [perf-tools:tmp.perf-tools 1/1] error: command 'clang' failed
-> with exit code 1
-> Date: Fri, 23 Aug 2024 18:43:32 +0800 [thread overview]
-> Message-ID: <202408231822.dWGP67uY-lkp@intel.com> (raw)
->
-> https://lore.kernel.org/all/202408231822.dWGP67uY-lkp@intel.com/
->
-> That points to commit:
->
-> perf tools: Fix a build error with clang 19
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git/commi=
-t/?h=3Dtmp.perf-tools&id=3Dcf36d63d7cc9a9770f69f44a10904e9fb0895fa9
->
-> That is fine with lLVM/Clang-19, but breaks previous versions like
-> LLVM-18 as explained in [1].
->
-> The REAL fixes are:
->
-> perf python: Allow checking for the existence of warning options in clang
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=
-=3Dtmp.perf-tools-next&id=3Db81162302001f41157f6e93654aaccc30e817e2a
->
-> perf python: Disable -Wno-cast-function-type-mismatch if present on clang
-> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=
-=3Dtmp.perf-tools-next&id=3D155212c965b5b23a90b8558449dbfd1c60dad934
->
-> Unsure if the commit-ids will change.
->
-> Do you happen to know how to feed the LKP-tests bot?
->
-> Best regards,
-> -Sedat-
->
-> [1] https://lore.kernel.org/all/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKX=
-wTA5THtL7w@mail.gmail.com/
