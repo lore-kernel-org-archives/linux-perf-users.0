@@ -1,135 +1,194 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F5731CD3D;
-	Fri, 23 Aug 2024 15:02:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF5F1188A1D;
+	Fri, 23 Aug 2024 15:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724425363; cv=none; b=O65rDNiijGwpZbR3SSJ7cdI4seFMG2n46+pbeVmuPIV4s9H4fiNo0NKvDC1xKh9Kt+FTscgcs8bAw6UArWGjsmucXJh531QQNv2mqZZ1sayypTIXOJmqo42sQKanuRwVPuDZb0yTaRmMEEn0GtcUFqEUMPBH3qez7H9//CpKw2s=
+	t=1724425414; cv=none; b=MKB5cnF7cc1vEC1hLhONclD7Ip1OQwfTFPw7JCwBFuHtWhuR8kiHrcy/vWgFwPO8ItN3kWGPIlVcKGgh0qyIX9XiDlKPl2sTd6iTQRCuJI4fraCMwggpPusDKdVD01cMf1wrIWsmHrgFAk/ogVm4bKHNAfmrm+ZZa2hzJe7VigI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724425363; c=relaxed/simple;
-	bh=rEyyg+xn4o9Md6QUaT9B5lyqywHCgzfMkFreOWkBSaE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GicUkWMn59GYR9MsrHLWGwxn64gb4NnOS3wxSxt8cWwtJuPefOnNR91uRPA4D0induH6q/BOMdhPYhMyIOWx+SB/QUl/mjBMXS18IAC6mK2/bROEiST5C/i+pTvcC5te2AU2jb3R9/n4NOep5Z7DOuhQwwyNyT2o//g9iZ3XnI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gtSTONTe; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gtSTONTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6192CC32786;
-	Fri, 23 Aug 2024 15:02:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724425363;
-	bh=rEyyg+xn4o9Md6QUaT9B5lyqywHCgzfMkFreOWkBSaE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gtSTONTeITfK0dOc6MCAhM9vcByK8VWvN2cCbvfjVDscvcWxc802hhSDVC2b2GZ49
-	 u79Jn/w6WBiAd8cphQmdjINCjkQMNq4mFV2IfJFM6+2W18G1O7jPp9WtDzX6AR93BA
-	 CTiVYWO0Qv0sJsRNxVSdOd9Jix/WSxiygG1nLALDu9yZCSNJikW1jIDJxX4B9wgKbF
-	 WtXv8KAaUbIQET1ru+UwkgcgHW1coc6cmxKpD+yXQOAxJFN4TVZK5K741bnESYLsy4
-	 dayDnP4H+rJ0ALRo5JZcEGFIR7QftTpFnCafbz6FA8GvGyQojuDoWjIRUQZlWX7uI1
-	 bwPedPz2GhB2A==
-Date: Fri, 23 Aug 2024 16:02:36 +0100
-From: Will Deacon <will@kernel.org>
-To: James Clark <james.clark@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, peterz@infradead.org,
-	Al Grant <al.grant@arm.com>, Mark Rutland <mark.rutland@arm.com>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] drivers/perf: arm_spe: Use perf_allow_kernel() for
- permissions
-Message-ID: <20240823150236.GA32691@willie-the-truck>
-References: <20240807155153.2714025-1-james.clark@linaro.org>
- <20240816124459.GA24323@willie-the-truck>
- <177108bc-2bdd-4914-97cc-ee09dfef75c3@linaro.org>
+	s=arc-20240116; t=1724425414; c=relaxed/simple;
+	bh=gykgH+6JWBbff+zeRNo9D74pHYYr6Yy/NsNQ+aGR0Ew=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=K0jJhUQNWJzJ4lvZ0gocjur3KUUZInakvmRDigZUtHVo73FPnTPajzIjGZkziCTPVU8hKa1/eQgSjM1VXMlMjSixCKHpkjpTvGzwIv9TMT6ugoF49DLST+zyt0KVfU+zXTl9LGlghx04Jlb4c1wr0b/1957I56wS0Qu7ZTiGm8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7142a30e3bdso2245616b3a.0;
+        Fri, 23 Aug 2024 08:03:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724425412; x=1725030212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Fdc7YPwMv5DLi3k6hItQO4DUfLZWrss/h9+026P/6Fc=;
+        b=WqW4+Y6QFxhTShrZgHLHR6qViwYytesstjnBNT67FubTTCoBtCBrkVre2Ka1BwnCc5
+         ORmI5Z/E5sGjDRHxj65zGNNlISQTd1EQAeDagsK79/IZ6qQyt3v3u3KG4cFtlKuayuLt
+         drksWHcPmwvrfHSh58BLgD+JEf1rt++FhM9l+0248uU1+CfKFez0lPBIwClf+oDtTSHB
+         uEK9vANH/LF3bLqRf6MpvkATiePojmHICPQV1rRH3uhKoHWL3LUoKqtHbtHUMphUNwdS
+         OQkD3g+s19+AB/OIsKDAk/woPAHJaTVsHGwqLAi7bT006B5VYz/HlHwFBJngPKC7Bt+t
+         f7sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUVk7iYIu41nAEur8UncnZ9VGlD5nhgYxfJfO+21rfUP33qQPPZeqL/Fs1Ywk7P/+TKhkp2bWK/ArXNSHc=@vger.kernel.org, AJvYcCVX1EIW1NDNZtmYIb3KoxKHx4QsZEKa4qRxbbo4qiIVQhk7J9ytI9yvzltSLbQkVk6c151XMqjGNOkvTaKXSnyPiQ==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyqg0VJlTf+p0utApTftCS+z1snbcMMJ5Kjp/T28cvFAnh2mn4J
+	BAAsZB5ksDBTM9KC6QEvztYKXyH1qoqowuj5Tg85Cgy05lTx0NwHfUl3tGOr7KgFQ9xokoj7VND
+	1EvBFmzIgjBmgUpDRDmlL7VIbT+c=
+X-Google-Smtp-Source: AGHT+IFEoz0JT4PpFagbOargPSg0CQqxTNRJB+tiFmyoiR3T2et4lYVe7mTN31g0rSZ5sgvGwkz9NQMgplj4D0PqJDk=
+X-Received: by 2002:a17:90b:3907:b0:2c9:a831:3b7d with SMTP id
+ 98e67ed59e1d1-2d60a9fd3f2mr10630608a91.18.1724425411713; Fri, 23 Aug 2024
+ 08:03:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <177108bc-2bdd-4914-97cc-ee09dfef75c3@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <ZsdUxxBrpbuYxtXN@x1> <CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com>
+ <ZsdxinrZP1kHINWT@x1> <ZsdzLmIFWRqsXeXD@x1> <CA+icZUURwYd8nJSdMU7KW6nFjubi-VD2f-a5+zQNQGUxK7+2aw@mail.gmail.com>
+ <Zsd39zG9BuGpZ8aA@x1> <CA+icZUXGV9dMGcRwJiP7WLcYUaY5CRCcDw1HLFr+9Sn7CrRGDw@mail.gmail.com>
+ <CAM9d7cgSR4OroaX0FuBvC_bPPMeEr7ThXJwqgMfAnj-Lfk8wNw@mail.gmail.com>
+ <ZseBZ1DIi4Y5zC2W@x1> <CAM9d7cib0JFJPM4KdFDPkw_2K0Nu79QGHBsVZ7XyR-Yz1ZBHdg@mail.gmail.com>
+ <ZsefAWKrE7jdlxhl@x1> <CAM9d7chAryBEq7NH_oKdBEg=VD-j82BC_1YTY7t1UH0xrs5L2A@mail.gmail.com>
+ <CA+icZUUazXQVzf1AcuFSvT2FAL2Ag=xTFYxM35tvw8h-ix+rXA@mail.gmail.com>
+In-Reply-To: <CA+icZUUazXQVzf1AcuFSvT2FAL2Ag=xTFYxM35tvw8h-ix+rXA@mail.gmail.com>
+From: Namhyung Kim <namhyung@kernel.org>
+Date: Fri, 23 Aug 2024 08:03:20 -0700
+Message-ID: <CAM9d7cgbP3WV05hMkaoNrD843NYw6pTyP05JRmRuoMTX9hoHBg@mail.gmail.com>
+Subject: Re: [Linux-6.11-rc4] perf BROKEN with LLVM/Clang 19.1.0-rc3
+To: sedat.dilek@gmail.com
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
+	Ingo Molnar <mingo@redhat.com>, Ian Rogers <irogers@google.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Aug 16, 2024 at 02:27:19PM +0100, James Clark wrote:
-> 
-> 
-> On 16/08/2024 1:45 pm, Will Deacon wrote:
-> > On Wed, Aug 07, 2024 at 04:51:53PM +0100, James Clark wrote:
-> > > For other PMUs, PERF_SAMPLE_PHYS_ADDR requires perf_allow_kernel()
-> > > rather than just perfmon_capable(). Because PMSCR_EL1_PA is another form
-> > > of physical address, make it consistent and use perf_allow_kernel() for
-> > > SPE as well. PMSCR_EL1_PCT and PMSCR_EL1_CX also get the same change.
-> > > 
-> > > This improves consistency and indirectly fixes the following error
-> > > message which is misleading because perf_event_paranoid is not taken
-> > > into account by perfmon_capable():
-> > > 
-> > >    $ perf record -e arm_spe/pa_enable/
-> > > 
-> > >    Error:
-> > >    Access to performance monitoring and observability operations is
-> > >    limited. Consider adjusting /proc/sys/kernel/perf_event_paranoid
-> > >    setting ...
-> > > 
-> > > Suggested-by: Al Grant <al.grant@arm.com>
-> > > Signed-off-by: James Clark <james.clark@linaro.org>
-> > > ---
-> > > Changes since v1:
-> > > 
-> > >    * Export perf_allow_kernel() instead of sysctl_perf_event_paranoid
-> > > 
-> > >   drivers/perf/arm_spe_pmu.c | 9 ++++-----
-> > >   include/linux/perf_event.h | 8 +-------
-> > >   kernel/events/core.c       | 9 +++++++++
-> > >   3 files changed, 14 insertions(+), 12 deletions(-)
-> > > 
-> > > diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
-> > > index 9100d82bfabc..3569050f9cf3 100644
-> > > --- a/drivers/perf/arm_spe_pmu.c
-> > > +++ b/drivers/perf/arm_spe_pmu.c
-> > > @@ -41,7 +41,7 @@
-> > >   /*
-> > >    * Cache if the event is allowed to trace Context information.
-> > > - * This allows us to perform the check, i.e, perfmon_capable(),
-> > > + * This allows us to perform the check, i.e, perf_allow_kernel(),
-> > >    * in the context of the event owner, once, during the event_init().
-> > >    */
-> > >   #define SPE_PMU_HW_FLAGS_CX			0x00001
-> > > @@ -50,7 +50,7 @@ static_assert((PERF_EVENT_FLAG_ARCH & SPE_PMU_HW_FLAGS_CX) == SPE_PMU_HW_FLAGS_C
-> > >   static void set_spe_event_has_cx(struct perf_event *event)
-> > >   {
-> > > -	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && perfmon_capable())
-> > > +	if (IS_ENABLED(CONFIG_PID_IN_CONTEXTIDR) && !perf_allow_kernel(&event->attr))
-> > >   		event->hw.flags |= SPE_PMU_HW_FLAGS_CX;
-> > 
-> > The rationale for this change in the commit message is because other
-> > drivers gate PERF_SAMPLE_PHYS_ADDR on perf_allow_kernel(). However,
-> > putting the PID in contextidr doesn't seem to have anything to do with
-> > that...
-> > 
-> 
-> That is true, I suppose I was thinking of two reasons to do it this way that
-> I didn't really elaborate on:
-> 
-> #1 because context IDs and physical timestamps didn't seem to be any more
-> sensitive than physical addresses, so it wouldn't make sense for them to
-> have a stricter permissions model than addresses.
-> 
-> #2 (although this is indirect and not really related to the driver) but Perf
-> will still print the misleading warning when physical timestamps are
-> requested. So some other fix would eventually have to be made for that.
-> 
-> I'm not sure if you are objecting to the permissions change for the other
-> two things, or it's just a lack of reasoning in the commit message?
+Hello,
 
-I'm just objecting to the rationale in the commit message not being
-applicable to some of the changes made in the code. A much better rationale
-to use perf_allow_kernel() is because of its integration with the LSM hooks.
+On Fri, Aug 23, 2024 at 6:58=E2=80=AFAM Sedat Dilek <sedat.dilek@gmail.com>=
+ wrote:
+>
+> On Thu, Aug 22, 2024 at 10:31=E2=80=AFPM Namhyung Kim <namhyung@kernel.or=
+g> wrote:
+> >
+> > On Thu, Aug 22, 2024 at 1:26=E2=80=AFPM Arnaldo Carvalho de Melo
+> > <acme@kernel.org> wrote:
+> > >
+> > > On Thu, Aug 22, 2024 at 01:11:22PM -0700, Namhyung Kim wrote:
+> > > > On Thu, Aug 22, 2024 at 11:20=E2=80=AFAM Arnaldo Carvalho de Melo
+> > > > <acme@kernel.org> wrote:
+> > > > >
+> > > > > On Thu, Aug 22, 2024 at 11:17:21AM -0700, Namhyung Kim wrote:
+> > > > > > > On Thu, Aug 22, 2024 at 7:40=E2=80=AFPM Arnaldo Carvalho de M=
+elo
+> > > > > > > <acme@kernel.org> wrote:
+> > > > > > > > From 155212c965b5b23a90b8558449dbfd1c60dad934 Mon Sep 17 00=
+:00:00 2001
+> > > > > > > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > > > > Date: Thu, 22 Aug 2024 14:13:49 -0300
+> > > > > > > > Subject: [PATCH 1/1] perf python: Disable -Wno-cast-functio=
+n-type-mismatch if
+> > > > > > > >  present on clang
+> > > > > > > >
+> > > > > > > > The -Wcast-function-type-mismatch option was introduced in =
+clang 19 and
+> > > > > > > > its enabled by default, since we use -Werror, and python bi=
+ndings do
+> > > > > > > > casts that are valid but trips this warning, disable it if =
+present.
+> > > > > > > >
+> > > > > > > > Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > > > Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > > > > > > > Cc: Ian Rogers <irogers@google.com>
+> > > > > > > > Cc: Ingo Molnar <mingo@redhat.com>
+> > > > > > > > Cc: Namhyung Kim <namhyung@kernel.org>
+> > > > > > > > Cc: Nathan Chancellor <nathan@kernel.org>
+> > > > > > > > Cc: Peter Zijlstra <peterz@infradead.org>
+> > > > > > > > Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-Ws=
+wsO0K8U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
+> > > > > > > > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > > > >
+> > > > > > Can we also add 'Fixes' tag to make this picked by stable kerne=
+ls?
+> > > > >
+> > > > > Fixes what? This isn't a regression, clang 19 isn't available for=
+ Fedora
+> > > > > 40, the most recent.
+> > > >
+> > > > No, I'm not saying it's a bug.  But we may want to build the old
+> > > > source code using new clang.
+> > >
+> > > Sure, and with the tags we have now, we can signal it by using Closes=
+:
+> > > and Cc: stable@kernel.org, without a version, I added those, the tags
+> > > section then is this:
+> > >
+> > >     Closes: https://lore.kernel.org/all/CA+icZUXoJ6BS3GMhJHV3aZWyb5Cz=
+2haFneX0C5pUMUUhG-UVKQ@mail.gmail.com
+> > >     Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > >     Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
+> > >     Cc: Ian Rogers <irogers@google.com>
+> > >     Cc: Ingo Molnar <mingo@redhat.com>
+> > >     Cc: Namhyung Kim <namhyung@kernel.org>
+> > >     Cc: Nathan Chancellor <nathan@kernel.org>
+> > >     Cc: Peter Zijlstra <peterz@infradead.org>
+> > >     Cc: stable@vger.kernel.org # To allow building with the upcoming =
+clang 19
+> > >     Link: https://lore.kernel.org/lkml/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8=
+U9uy3r2MzKXwTA5THtL7w@mail.gmail.com
+> > >     Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > >
+> > > Ok?
+> >
+> > Acked-by: Namhyung Kim <namhyung@kernel.org>
+> >
+> > Thanks,
+> > Namhyung
+>
+> Hey Namhyung,
+>
+> are you aware of ...?
 
-Will
+Oh.. I tentatively added your original patch to tmp.perf-tools branch.
+I'll drop that and go with Arnaldo's fix in perf-tools-next.
+
+Thanks,
+Namhyung
+
+>
+> From: kernel test robot <lkp@intel.com>
+> To: oe-kbuild@lists.linux.dev
+> Cc: lkp@intel.com
+> Subject: [perf-tools:tmp.perf-tools 1/1] error: command 'clang' failed
+> with exit code 1
+> Date: Fri, 23 Aug 2024 18:43:32 +0800 [thread overview]
+> Message-ID: <202408231822.dWGP67uY-lkp@intel.com> (raw)
+>
+> https://lore.kernel.org/all/202408231822.dWGP67uY-lkp@intel.com/
+>
+> That points to commit:
+>
+> perf tools: Fix a build error with clang 19
+> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git/commi=
+t/?h=3Dtmp.perf-tools&id=3Dcf36d63d7cc9a9770f69f44a10904e9fb0895fa9
+>
+> That is fine with lLVM/Clang-19, but breaks previous versions like
+> LLVM-18 as explained in [1].
+>
+> The REAL fixes are:
+>
+> perf python: Allow checking for the existence of warning options in clang
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=
+=3Dtmp.perf-tools-next&id=3Db81162302001f41157f6e93654aaccc30e817e2a
+>
+> perf python: Disable -Wno-cast-function-type-mismatch if present on clang
+> https://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git/commit/?h=
+=3Dtmp.perf-tools-next&id=3D155212c965b5b23a90b8558449dbfd1c60dad934
+>
+> Unsure if the commit-ids will change.
+>
+> Do you happen to know how to feed the LKP-tests bot?
+>
+> Best regards,
+> -Sedat-
+>
+> [1] https://lore.kernel.org/all/CA+icZUVtHn8X1Tb_Y__c-WswsO0K8U9uy3r2MzKX=
+wTA5THtL7w@mail.gmail.com/
