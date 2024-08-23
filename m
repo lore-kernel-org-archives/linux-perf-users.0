@@ -1,43 +1,61 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 869C3188591;
-	Fri, 23 Aug 2024 13:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25DB4430
+	for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 13:43:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724420547; cv=none; b=jetnRM9VtTu6vKDXnKWvxFm7Z7GbA0xmO2cXfJJzHZmYUMqHohcncAr31Ilnm0d5oV1d+AUXPwJnHxxO0wZgh472rfzAFFGdL3alTAFyrRN72QiF+FFYn/jzI5cJILRKBfl5wYrWUpm4MWaqCoRYOPsUdSQZ1cKAZua7ZxgGRxk=
+	t=1724420621; cv=none; b=QSjXXYFU5fUBClaQ3cXFtfkpnAN9vmbABwIf/NnmOGPYd4iIwfbRqcP9bkDDK279cnHLEFaq8kMBGBtb0zIu5bLQ3Xk3xl9jM2lUeZSGXEyhWFKfRhV+iL+okvo1gd5nHHALDXVqOio3jrIKmtzHeQsGoiLNmUfssrOed+qtOi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724420547; c=relaxed/simple;
-	bh=dCj6bF2nA2GRixqyvPE/0f13PcD/enz+/Phadf1/f3Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qse47AkYXrntTkR75m6ctRiiJAmdp6iBEsdlXOlfDQ/DgolRxQF5s8ADyRuG2o0jijNbyBSTQeJldAf9x2+irP76BzOqPPuHpuDpE8FQ0N9TtePn70tfEGGo36SWx45E17gEjBQyDl4GoUQXsmmr1ZHHR32YYDiqctgoiRz8CAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mankESo1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724420621; c=relaxed/simple;
+	bh=cLLnHvDkSqyRKoXw7u5aN3T1vaPp8+PHSwr7OMPFl90=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=LWTINlyrI1T3rCksc08duN2HgHUYn4KqrY+UlBFgkwKdvt7u+fkdCDcWLVZj4feoe7mt71XX8XWgxG94y8l+c0QDkOHnuHji94WI+DcKhzJZHmaWQmEvTX+ZMfdmUKEoSA3UbtUU1dT58LZowNcN9oWBzcFqCokppTv0Efj/6K8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XDGEqpoI; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mankESo1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C8C3C4AF09;
-	Fri, 23 Aug 2024 13:42:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724420545;
-	bh=dCj6bF2nA2GRixqyvPE/0f13PcD/enz+/Phadf1/f3Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mankESo1CNmQtgGMz++7Ug3Bm1vjKtGPd2LSLkL4x6PWHB5ZPAVMRThPuTwU2LtDU
-	 s5ioHuIOl39Fa8+knwm17ifYkrY09p9+XEyv0/IfdJN7Kg1FFsFm927jcE9CBbTi5h
-	 LHraRL7jl1WDx6LmLfvsV3vMDArbjjdXcAeJ5pGqoUXULdmbNJLKEwNSYwBRKFnhtE
-	 8PQxHIFwX9oBsvMbOBNThmD8m3ghX1c3dG9z1uIxJH1LcliuSpoZvVq+hel7FtLlBp
-	 /TNrPxE/2PF4tm3jwugUF7tjIk5Qy/AfC1Rmu8euSgX883T7Uw26uD6nPoYUHNbqBf
-	 zzudNKj3ZC+fg==
-Date: Fri, 23 Aug 2024 10:42:21 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Howard Chu <howardchu95@gmail.com>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org,
-	kan.liang@linux.intel.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 09/10] perf trace: Collect augmented data using BPF
-Message-ID: <ZsiRvQiaIK4qN9Vs@x1>
-References: <20240815013626.935097-1-howardchu95@gmail.com>
- <20240815013626.935097-10-howardchu95@gmail.com>
- <ZsiNef72pSLnQO_c@x1>
- <ZsiQyahfNYCAmbZq@x1>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XDGEqpoI"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5bef4d9e7f8so2673488a12.2
+        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 06:43:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724420618; x=1725025418; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=/93O2lVtVfAQLoREFUo7A80V927wBhIQxx6ZicbCtjk=;
+        b=XDGEqpoIiDfY7lDJjDWIzS/Qz/MUJMHNenvTYuYMMUDnbVqIAvsp4TxYfoFl3TgVBy
+         8O4/DrLIQlun0BoiTepn33Wok6QEolVHrjZ/OIoj2hZcl1G4IpkLVoSLYgR+yAF4dbia
+         D5Swr3xTsOv9SYrDzIZO8so3MUlL+DYAQH5lVbmrzphobhCGsCvjvNCqTyfJdDwPnkBR
+         dcqAuKwTbfSP88bZwiKzVFcF0y3E6WDAXgAkFFm4gdZaoHjOwO80djSlxdzjIPf+kaQL
+         MIsea+nauFlKgTkUgdCC27Jv+sZXb1K7wucPmfN4WXwt0Wx6giaEX07tgBFXNsRhmaMO
+         Audg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724420618; x=1725025418;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/93O2lVtVfAQLoREFUo7A80V927wBhIQxx6ZicbCtjk=;
+        b=H4GZzi2h+BuTpsXCIzJau8T/R8zn21aUUpGrDUEklRv+QvUdbL5eWy0MGznU2FvnkU
+         3LVzzoluOf+DqpRxLsELp170PkLOOyiL2ARTa45gzcx+d0aNuvdBujS01fsAarLdqy5q
+         +M8Y7TFi65FJaSJn3LHlOkZ2t+d2ZqNb2QwoB8VcZa04K1lx6Zk8wnIh3DZhSSfr6it4
+         A3sggJQ2FsUxZLYjrtZkO0HSUnHhNiMlvQYMEaJMwdbpC4PW0l75TuByf/fNg39SnBBa
+         YRMEMyPAsku4GqMOa+95n4HYul0J9NiVdKYcVwT+8I/uSVONTfHIo+YqaWM7/8ztPzei
+         gDIA==
+X-Gm-Message-State: AOJu0Yw16wTvftU6h0yUUuKG3lqPjmbgg+S6UMuCl+cFxQZBDRZyvOY4
+	7sJMhg9S1RT9OlqGHAvYSse95bdz8KEEw1FLEiq2jSeTtRWBtvUVaKJ3PM40pML2Le82rQjREUQ
+	mDxDpVQ==
+X-Google-Smtp-Source: AGHT+IHUomNKmWB4zTt3pKoh1c7oiKylbsfBsyiKBWdAA5W8efuxHqkx4Mop5tgWB3QMAm86685GzA==
+X-Received: by 2002:a17:907:f18d:b0:a86:7c6f:7cfa with SMTP id a640c23a62f3a-a86a52c49ddmr163783666b.37.1724420617943;
+        Fri, 23 Aug 2024 06:43:37 -0700 (PDT)
+Received: from localhost ([196.207.164.177])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a868f223596sm260485066b.28.2024.08.23.06.43.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Aug 2024 06:43:37 -0700 (PDT)
+Date: Fri, 23 Aug 2024 16:43:33 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: linux-perf-users@vger.kernel.org
+Subject: [bug report] perf: Fix event leak upon exec and file release
+Message-ID: <5cc313bc-c44d-4f6c-80ee-5a9fe9356f43@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -46,74 +64,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZsiQyahfNYCAmbZq@x1>
 
-On Fri, Aug 23, 2024 at 10:38:21AM -0300, Arnaldo Carvalho de Melo wrote:
-> On Fri, Aug 23, 2024 at 10:24:09AM -0300, Arnaldo Carvalho de Melo wrote:
-> > On Thu, Aug 15, 2024 at 09:36:25AM +0800, Howard Chu wrote:
-> > > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > > @@ -427,7 +538,8 @@ int sys_enter(struct syscall_enter_args *args)
-> > >  	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
-> > >  	 * unaugmented tracepoint payload.
-> > >  	 */
-> > > -	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
-> > > +	if (augment_sys_enter(args, &augmented_args->args))
-> > > +		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
-> > 
-> > We shouldn't do that, instead we keep doing
-> > 
-> > 	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
-> > 
-> > And userspace will setup the syscalls_sys_enter map adding the generic
-> > pointer collector (augment_sys_enter) for syscalls that have pointers
-> > _and_ are not serviced by a pre-existing, specialized handler, this way
-> > we keep the ones we have already and that already take into account
-> > pretty printing network addresses based on the network family, knows how
-> > to pretty print flags (the perf_event_open, etc).
-> > 
-> > I'll try to do this now.
-> 
-> So, step by step, first this, and then hook it to the syscalls that:
-> 
-> 1) have a pointer to collect and no handler, i.e. as a last step in
-> assigning the functions to be tail called from the syscalls BPF map.
-> 
+Hello Frederic Weisbecker,
 
-Sorry, sent the wrong patch, this one is the right one:
+Commit 3a5465418f5f ("perf: Fix event leak upon exec and file
+release") from Jun 21, 2024 (linux-next), leads to the following
+Smatch static checker warning:
 
-diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index f29a8dfca044649b..4c8176f9a77ca5bb 100644
---- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-+++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -398,7 +398,11 @@ static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
- 	return bpf_map_lookup_elem(pids, &pid) != NULL;
- }
- 
--static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-+// Will be tail called for syscalls with pointers, the setup is done
-+// in builtin-trace.c as the fallback for syscalls not handled by specialed code,
-+// like the network ones that need to look at one field to then decide how to
-+// pretty print a network specific address, etc.
-+int sys_enter_augmented(struct syscall_enter_args *args)
- {
- 	bool augmented, do_output = false;
- 	int zero = 0, size, aug_size, index, output = 0,
-@@ -480,7 +484,7 @@ static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
- 	if (!do_output)
- 		return 1;
- 
--	return augmented__beauty_output(ctx, payload, sizeof(struct syscall_enter_args) + output);
-+	return augmented__beauty_output(args, payload, sizeof(struct syscall_enter_args) + output);
- }
- 
- SEC("tp/raw_syscalls/sys_enter")
-@@ -511,8 +515,7 @@ int sys_enter(struct syscall_enter_args *args)
- 	 * "!raw_syscalls:unaugmented" that will just return 1 to return the
- 	 * unaugmented tracepoint payload.
- 	 */
--	if (augment_sys_enter(args, &augmented_args->args))
--		bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
-+	bpf_tail_call(args, &syscalls_sys_enter, augmented_args->args.syscall_nr);
- 
- 	// If not found on the PROG_ARRAY syscalls map, then we're filtering it:
- 	return 0;
+	kernel/events/core.c:5301 perf_pending_task_sync()
+	warn: sleeping in atomic context
+
+kernel/events/core.c
+    5280 static void perf_pending_task_sync(struct perf_event *event)
+    5281 {
+    5282         struct callback_head *head = &event->pending_task;
+    5283 
+    5284         if (!event->pending_work)
+    5285                 return;
+    5286         /*
+    5287          * If the task is queued to the current task's queue, we
+    5288          * obviously can't wait for it to complete. Simply cancel it.
+    5289          */
+    5290         if (task_work_cancel(current, head)) {
+    5291                 event->pending_work = 0;
+    5292                 local_dec(&event->ctx->nr_no_switch_fast);
+    5293                 return;
+    5294         }
+    5295 
+    5296         /*
+    5297          * All accesses related to the event are within the same RCU section in
+    5298          * perf_pending_task(). The RCU grace period before the event is freed
+    5299          * will make sure all those accesses are complete by then.
+    5300          */
+--> 5301         rcuwait_wait_event(&event->pending_work_wait, !event->pending_work, TASK_UNINTERRUPTIBLE);
+                         ^^^^^^^^^^
+The commit adds a sleep
+
+    5302 }
+
+Smatch is complaining about four call trees which are holding a spinlock.
+
+One:
+pl330_free_chan_resources() <- disables preempt
+-> pl330_release_channel()
+   -> _free_event()
+      -> perf_pending_task_sync()
+
+Two and three:
+perf_remove_from_context() <- disables preempt
+__perf_event_exit_context() <- disables preempt
+-> __perf_remove_from_context()
+   -> perf_group_detach()
+      -> perf_put_aux_event()
+         -> put_event()
+            -> _free_event()
+               -> perf_pending_task_sync()
+
+Four:
+perf_free_event() <- disables preempt
+-> perf_group_detach()
+   -> perf_put_aux_event()
+      -> put_event()
+         -> _free_event()
+            -> perf_pending_task_sync()
+
+
+This check tends to have more false positive when the call tree is long.  For
+example, maybe event->pending_work is always zero or something.  I've looked it
+over, but I'm a newbie to this code.
+
+regards,
+dan carpenter
