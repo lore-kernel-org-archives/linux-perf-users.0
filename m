@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7C0DF188A14;
-	Fri, 23 Aug 2024 11:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B27C7188A24;
+	Fri, 23 Aug 2024 11:33:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724412829; cv=none; b=sMTtqe5WxxuCI+gzNDVoK4Kql01bYLNAqPpTZny7WquV5ob6hO5H41Q5YHp+aeI/oQ5x6lYDvyO09vHCYcBF/nS2Wrgyv+Cyigvcr1TpypHj7pUOPie5Jg2xz1uJV5PIV053WENLNhD0ZCBHdLtLTyc9PkZu3Uh2fvGFupCefV8=
+	t=1724412831; cv=none; b=XzpoT9qh3G8HskqTkTupz8da+aXj88stfjn/P0fYQStnvRZxVtuqBEGBAgScuC75V1eQ315+dYQjoP3QJM3EqECW6CCCvXhhMLnvNIr8Yi/opHv5Z1ClrLAPgCuJx8I6TQrr8/0GTnnrD1Mq58QHLG6RbZapWQRT9zpJ2kQsIDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724412829; c=relaxed/simple;
-	bh=Gp4VwjnMboKK/ZjgCFtsQFxNA2MCi84eMCBEeV59tGw=;
+	s=arc-20240116; t=1724412831; c=relaxed/simple;
+	bh=cMHzfQ9hXRH0a2cw3aKhfnQcf1GD+TH3ZUYtvgpZyXE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=M3vBkej6zbo2m3gF2z3tTO77NOjcyvDl5bfNtKKT5Q/d0dAbvXfhrRuc+qoXbBq6zJTxTcdsRcyWVXeEP4oiuvnUPJzx0AfJPBKjMzSj2Yltl2d9RU9ZIDfaMTXLvqACzPnvJcRgwoGFkFuviXuCTBljG2iWMdYrCY7Uetyq7ug=
+	 MIME-Version; b=YN8y1V8Ju9q0GOWg8hTmY+VxerVhRnmKQQyyU2XbsW5AYpBuNwvF5Yd0kLk9p6cH6BSZuTgF+xm8EgcFijVDJ6C8BrYsNJN5xmUVQi/uc7sBi80hTGB0uio/zRV6G+1Vy90gifdaK+SDLDzEmeRXsWzDLm/X/DalP2uuG06jd/s=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 98315DA7;
-	Fri, 23 Aug 2024 04:34:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C0D5FEC;
+	Fri, 23 Aug 2024 04:34:15 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2E23E3F58B;
-	Fri, 23 Aug 2024 04:33:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B5E7D3F58B;
+	Fri, 23 Aug 2024 04:33:46 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Peter Zijlstra <peterz@infradead.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
@@ -39,9 +39,9 @@ To: Peter Zijlstra <peterz@infradead.org>,
 	linux-arm-kernel@lists.infradead.org,
 	coresight@lists.linaro.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v6 7/8] perf auxtrace: Iterate all AUX events when finish reading
-Date: Fri, 23 Aug 2024 12:33:05 +0100
-Message-Id: <20240823113306.2310957-8-leo.yan@arm.com>
+Subject: [PATCH v6 8/8] perf arm-spe: Support multiple events in arm_spe_evsel_is_auxtrace()
+Date: Fri, 23 Aug 2024 12:33:06 +0100
+Message-Id: <20240823113306.2310957-9-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240823113306.2310957-1-leo.yan@arm.com>
 References: <20240823113306.2310957-1-leo.yan@arm.com>
@@ -53,42 +53,70 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When finished to read AUX trace data from mmaped buffer, based on the
-AUX buffer index the core layer needs to search the corresponding PMU
-event and re-enable it to continue tracing.
+The 'pmu_type' field is an unique value and cannot support multiple PMU
+events.
 
-However, current code only searches the first AUX event. It misses to
-search other enabled AUX events, thus, it returns failure if the buffer
-index does not belong to the first AUX event.
-
-This patch changes to continue searching every enabled AUX events for
-covering the mmaped buffer indexes.
+The arm_spe_evsel_is_auxtrace() function changes to compare PMU name to
+decide if it is a Arm SPE event. This leads to the 'pmu_type' field is
+no longer used, remove it.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/util/auxtrace.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ tools/perf/util/arm-spe.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
-index 2acf63efab1d..864ed20794ab 100644
---- a/tools/perf/util/auxtrace.c
-+++ b/tools/perf/util/auxtrace.c
-@@ -690,9 +690,13 @@ int auxtrace_record__read_finish(struct auxtrace_record *itr, int idx)
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 138ffc71b32d..27724711e763 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -11,6 +11,7 @@
+ #include <linux/bitops.h>
+ #include <linux/kernel.h>
+ #include <linux/log2.h>
++#include <linux/string.h>
+ #include <linux/types.h>
+ #include <linux/zalloc.h>
+ #include <stdlib.h>
+@@ -45,7 +46,6 @@ struct arm_spe {
+ 	u32				auxtrace_type;
+ 	struct perf_session		*session;
+ 	struct machine			*machine;
+-	u32				pmu_type;
+ 	u64				midr;
  
- 			cpu_map_idx = evlist__find_cpu_map_idx(itr->evlist,
- 							       evsel, idx);
--			/* No map is found in per CPU mmap */
-+			/*
-+			 * No map is found in per CPU mmap. Multiple AUX events
-+			 * might be opened in a session, continue to check if
-+			 * the next AUX event can cover the mmaped buffer 'idx'.
-+			 */
- 			if (cpu_map_idx == -ENOENT)
--				return cpu_map_idx;
-+				continue;
+ 	struct perf_tsc_conversion	tc;
+@@ -1053,12 +1053,10 @@ static void arm_spe_free(struct perf_session *session)
+ 	free(spe);
+ }
  
- 			if (evsel->disabled)
- 				return 0;
+-static bool arm_spe_evsel_is_auxtrace(struct perf_session *session,
++static bool arm_spe_evsel_is_auxtrace(struct perf_session *session __maybe_unused,
+ 				      struct evsel *evsel)
+ {
+-	struct arm_spe *spe = container_of(session->auxtrace, struct arm_spe, auxtrace);
+-
+-	return evsel->core.attr.type == spe->pmu_type;
++	return strstarts(evsel->name, "arm_spe");
+ }
+ 
+ static const char * const arm_spe_info_fmts[] = {
+@@ -1099,7 +1097,7 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
+ 	int err;
+ 
+ 	evlist__for_each_entry(evlist, evsel) {
+-		if (evsel->core.attr.type == spe->pmu_type) {
++		if (arm_spe_evsel_is_auxtrace(session, evsel)) {
+ 			found = true;
+ 			break;
+ 		}
+@@ -1284,7 +1282,6 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 	spe->session = session;
+ 	spe->machine = &session->machines.host; /* No kvm support */
+ 	spe->auxtrace_type = auxtrace_info->type;
+-	spe->pmu_type = auxtrace_info->priv[ARM_SPE_PMU_TYPE];
+ 	spe->midr = midr;
+ 
+ 	spe->timeless_decoding = arm_spe__is_timeless_decoding(spe);
 -- 
 2.34.1
 
