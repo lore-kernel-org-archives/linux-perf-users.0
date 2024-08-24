@@ -1,57 +1,57 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA9D17BED2;
-	Sat, 24 Aug 2024 16:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D87185B7E;
+	Sat, 24 Aug 2024 16:33:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724517211; cv=none; b=h+eu540LqpNw2c2OFk2ud6L7lFjmcpsW2xaaEtcogHTzymxkEKRLaeE2AfsjTcwAZeSWB1RMcTno2591BSC/mN+IcBpIjFVNPUHl8S5hHdHELX1FM6WMZ4GUzhrxr967eHMY4ulWkDRaY+aiqoSy58sWrMcoPMY8LuTs3NVj4so=
+	t=1724517214; cv=none; b=tQCmZ4kDcMeAtsQ8rJzJXGkEBtzCIdUbm6VhB2vY3LijTHFWpdc/ZDFZ5aPQwBWkqv+zecLrQ2vPR2hz5Z8YuAnwvYNBFIAqbjolIGrIgRzpyLd1bvkQRZ3/QxaoGWNPwxdT0Kpa6GNPR+1qvt8EHinnWysJPB7wL9IxZSUdpSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724517211; c=relaxed/simple;
-	bh=DhvbL1P1QdBR+sRLyNlNmk0DRBaHP202JuLTh7457Jg=;
+	s=arc-20240116; t=1724517214; c=relaxed/simple;
+	bh=kOaFaDR+DhlmRt4+1xw22YBHxgGeGE1RqeYgr19yVnc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XfW4lIXdg+02gyGDJKyZnA7a6sF6ZNgyxidiIJLpvyNJ/OGIAm9i7jjwHG0yqCKZ6cJhIwIgdHxexzgKK1bRUalg0Lygb1Xvs+y7Vw5JSFY8sLi6GCXvcTZQ+7B8yNvcH37MnctJjtTAJe3MlT4ri+dehrA/Rro4AXrpt7qZV2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q//a0wS0; arc=none smtp.client-ip=209.85.210.173
+	 MIME-Version; b=ZfRO9GbzJG+lMnNBmdLxgdD5qV4Etr9IZ7fHmIkyYzOtMSGOk7B0QsFsvV7fLL0ezLJ8fSXMhp2JqEmFoZJCmTtE6TofRsqnBPjf00xd2a0kxvIq5x549e/xLnWXD08DbAl/Iy6rmTR7GjdH9EyJhBq5FSyhlJDBWytvNUKEBWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fPBg2AIH; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q//a0wS0"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7142a30e3bdso2910123b3a.0;
-        Sat, 24 Aug 2024 09:33:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fPBg2AIH"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-2d3dacaccfaso2038098a91.0;
+        Sat, 24 Aug 2024 09:33:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724517209; x=1725122009; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724517212; x=1725122012; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QiGTpTFrW930dnsO08eww04nlYiG3CY1GeWlH+yxrak=;
-        b=Q//a0wS0GW3g+V6jYtQ06US4De5WBg0QeBWZm1Q0C6Qg5/luzqUZk+cTwjyswCh6rM
-         iSGS8meJMdnByMTy1KxccnFzdT4i6NfIO+GXn7Y+ms+qWmvCgwC5v8v3ocSAS4AzPlO0
-         XsZhCnm82iFTj1MiaPvkFU4qdB7B1+NvrnMDoZGys26/fF0ON6EzCCAiePLFZXTjx1gU
-         f7ZAekFcGWudEOFg7Z1PyPtDAXOY87DRzsvUspI0JnIDgfBUpnTUrBdpXLFumv+SBhDH
-         YljT2JSGo19RHinUHTvknD+qLHJfrcTlVX8N8F3/nkxfq/PNofc6M4SIB7Vh4JrzqIlS
-         f0dA==
+        bh=iMBnSHxXkm746u32J0TUWktc3i+DQ1/O7EpofHyk9PU=;
+        b=fPBg2AIHzuwsLzbrlzZFWjf32GV8lYWVsHP4L0lv2O2kV6mNqK/BOMg71QwHsSzy8/
+         O6BoB/5qCmzq87ynhap38zdhl6tGUgtkrcCNohz2ElBDAC7PTL8B5a2/IWPnAVmk8YG1
+         jC1HBTkEFwzU1qN+uxNJ7M2JrQqjnEysSiPE92H/uZmCTQrE9QW5ye+uy6TSwBRlJWTE
+         dDIwVg4HHXV8DczsDL1j5tRHHf/sLIZtq5uITWYI7aqYSiIVMrnuHAKCr3834G0YH85p
+         hDMmmZVL7/qVccuh2Zk6kgOwlmXuVgtxqybgipo5B6Tb5NxCho3GRyfeUlPeSnVqefNC
+         icTQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724517209; x=1725122009;
+        d=1e100.net; s=20230601; t=1724517212; x=1725122012;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QiGTpTFrW930dnsO08eww04nlYiG3CY1GeWlH+yxrak=;
-        b=r90EPTrO9FVcDfeXrt/Ob07afdRvPH1bPUgU9jgCjHAyBZbHyXPGwsoLnz/0ThzUxZ
-         Bqs3knObXcf5CyqlBea0zaASO4Ie8Ze+Q56IZ5lzdp+rwqEu4dNBWEMZbsWdDPJDpd8q
-         U7jrGrhqT3fP6F85vi49rNhBJHS/CQCGz38rCJ0/FPaWMTz1G1Uo9Xc5dKzqlvPE9Ib8
-         5V8AoSaPIr/W/cePPFbz3OyLYNgmOCbEVI7fendA8fN6YTe67g3PReBsSn3/AvT49geq
-         0Bn4NtEULY68dJOCVpkFsyjKnHd6T5/P+BatarebZdwH70+Xd2LW8R6QuepLj6dZYElj
-         9glg==
-X-Forwarded-Encrypted: i=1; AJvYcCWK9VwdGxWmHmmVhvvLTUMJQtXfTOjvB2vfFHTuAslssgRGib3BWs3IFS8lhVmf70QfxAxoPCUZkrnrlYE=@vger.kernel.org, AJvYcCWuENnUHTZGu5O5YX2aMHxl2bKgQq2LeBuziRTfEu550tdPQfBDrHtUVwbM9Fy+dRRMPklV1m975QD0Kbn9rL0HpA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzRXQ3KOgzmmA6cbWRQzK88oR38KnBfsaS4I9E3kMTW2L3zUQYr
-	JlxfikZo7x1z2dtzlGr/JIhBDMPYdX73hel5DmBTZJ/kIodIOcPF
-X-Google-Smtp-Source: AGHT+IEZCltjk7dbDEj3mX13JhOKjxJqj7mTtabsH2y6E6bCqxovXsICCmbmERO3ZVSEIfyWYS73nw==
-X-Received: by 2002:a17:90a:ad82:b0:2c8:f3b5:7dd1 with SMTP id 98e67ed59e1d1-2d644ab7f2bmr9597234a91.16.1724517208749;
-        Sat, 24 Aug 2024 09:33:28 -0700 (PDT)
+        bh=iMBnSHxXkm746u32J0TUWktc3i+DQ1/O7EpofHyk9PU=;
+        b=Ue+J50Kv/CTfbD+LrzmhIQO6K9xpZOr3hzs+3fwBmt5Y9UTfullX6eMsfby82gPL5S
+         x5Ar8v9/Ns7oAoR77ia+ZlOZm12O+Iu8hTM8W6Dl1nWyRjshkgjiU+Z2k24z2k3a6Dtd
+         v5L0jTcN9/L35827wwqPEQIolZBy1pWsQlNpxxMJiuG/9FHRvM/rRHtgacYqwPNyH8ix
+         qs5yc3XfmWDYo1CY6k7Ds2kYGHw04EVWN+ZKuWtvyEAYfhOOJVAHYDXXK9Q2SOZPoYxi
+         5qS06zDAbCZZqfrdepMpvpqD49T5EmGq2uVjmP2QcS38zBt2naP4BZUE0yvSro5YOXKQ
+         kNXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTU/lTm3AAuNlP3kDt7Ac3SGXy/XihnrowJ5y69P40wkMCJbvYrUxvqG6HaJM4WpjigTXwmEeqt80nfA8=@vger.kernel.org, AJvYcCWhej27VDSyay+ezCwAd88Du4/47E3w07pD6ILYNalGOqxz9Z2UcCAepVqVBPXF8zpmQVytdwGyDwKiKADqGAR7+w==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx80SFwPf3c2mE4ERjQZJ6Hpl6mwObuHeySn1es46GPwbSGJ+08
+	t3b0FhWG3//v7TfMIgu7LNsE2vutiwzFaOfl+uLSvUAuU7j/AOCY
+X-Google-Smtp-Source: AGHT+IFNmWvjqJh7TIaO12e+QxSBbkf82H0IIQr6osSp4N6WTXUZJ0tyEQgxkJtQnMq3GGlJXOm5hg==
+X-Received: by 2002:a17:90b:438f:b0:2c9:64fb:1c7e with SMTP id 98e67ed59e1d1-2d646bbb1ccmr5728528a91.14.1724517211971;
+        Sat, 24 Aug 2024 09:33:31 -0700 (PDT)
 Received: from localhost.localdomain (104-58-203-241.lightspeed.sntcca.sbcglobal.net. [104.58.203.241])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d613941ee7sm6376216a91.24.2024.08.24.09.33.27
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d613941ee7sm6376216a91.24.2024.08.24.09.33.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 24 Aug 2024 09:33:28 -0700 (PDT)
+        Sat, 24 Aug 2024 09:33:31 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: adrian.hunter@intel.com,
@@ -62,9 +62,9 @@ Cc: adrian.hunter@intel.com,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH v3 4/8] perf trace: Pretty print struct data
-Date: Sun, 25 Aug 2024 00:33:18 +0800
-Message-ID: <20240824163322.60796-5-howardchu95@gmail.com>
+Subject: [PATCH v3 7/8] perf trace: Add --force-btf for debugging
+Date: Sun, 25 Aug 2024 00:33:21 +0800
+Message-ID: <20240824163322.60796-8-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20240824163322.60796-1-howardchu95@gmail.com>
 References: <20240824163322.60796-1-howardchu95@gmail.com>
@@ -76,173 +76,49 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Change the arg->augmented.args to arg->augmented.args->value to skip the
-header for customized pretty printers, since we collect data in BPF
-using the general augment_sys_enter(), which always adds the header.
+If --force-btf is enabled, prefer btf_dump general pretty printer to
+perf trace's customized pretty printers.
 
-Use btf_dump API to pretty print augmented struct pointer.
-
-Prefer existed pretty-printer than btf general pretty-printer.
-
-set compact = true and skip_names = true, so that no newline character
-and argument name are printed.
-
-Committer notes:
-
-Simplified the btf_dump_snprintf callback to avoid using multiple
-buffers, as discussed in the thread accessible via the Link tag below.
+Mostly for debug purposes.
 
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lore.kernel.org/r/20240815013626.935097-7-howardchu95@gmail.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Suggested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/builtin-trace.c                | 65 +++++++++++++++++++++--
- tools/perf/trace/beauty/perf_event_open.c |  2 +-
- tools/perf/trace/beauty/sockaddr.c        |  2 +-
- tools/perf/trace/beauty/timespec.c        |  2 +-
- 4 files changed, 63 insertions(+), 8 deletions(-)
+ tools/perf/builtin-trace.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 43b1f63415b4..048bcb92624c 100644
+index 470d74e3f875..115f8dffb272 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -990,6 +990,54 @@ static size_t btf_enum_scnprintf(const struct btf_type *type, struct btf *btf, c
- 	return 0;
- }
+@@ -205,6 +205,7 @@ struct trace {
+ 	bool			show_string_prefix;
+ 	bool			force;
+ 	bool			vfs_getname;
++	bool			force_btf;
+ 	int			trace_pgfaults;
+ 	char			*perfconfig_events;
+ 	struct {
+@@ -2349,7 +2350,9 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
  
-+struct trace_btf_dump_snprintf_ctx {
-+	char   *bf;
-+	size_t printed, size;
-+};
-+
-+static void trace__btf_dump_snprintf(void *vctx, const char *fmt, va_list args)
-+{
-+	struct trace_btf_dump_snprintf_ctx *ctx = vctx;
-+
-+	ctx->printed += vscnprintf(ctx->bf + ctx->printed, ctx->size - ctx->printed, fmt, args);
-+}
-+
-+static size_t btf_struct_scnprintf(const struct btf_type *type, struct btf *btf, char *bf, size_t size, struct syscall_arg *arg)
-+{
-+	struct trace_btf_dump_snprintf_ctx ctx = {
-+		.bf   = bf,
-+		.size = size,
-+	};
-+	struct augmented_arg *augmented_arg = arg->augmented.args;
-+	int type_id = arg->fmt->type_id, consumed;
-+	struct btf_dump *btf_dump;
-+
-+	LIBBPF_OPTS(btf_dump_opts, dump_opts);
-+	LIBBPF_OPTS(btf_dump_type_data_opts, dump_data_opts);
-+
-+	if (arg == NULL || arg->augmented.args == NULL)
-+		return 0;
-+
-+	dump_data_opts.compact     = true;
-+	dump_data_opts.skip_names  = true;
-+
-+	btf_dump = btf_dump__new(btf, trace__btf_dump_snprintf, &ctx, &dump_opts);
-+	if (btf_dump == NULL)
-+		return 0;
-+
-+	/* pretty print the struct data here */
-+	if (btf_dump__dump_type_data(btf_dump, type_id, arg->augmented.args->value, type->size, &dump_data_opts) == 0)
-+		return 0;
-+
-+	consumed = sizeof(*augmented_arg) + augmented_arg->size;
-+	arg->augmented.args = ((void *)arg->augmented.args) + consumed;
-+	arg->augmented.size -= consumed;
-+
-+	btf_dump__free(btf_dump);
-+
-+	return ctx.printed;
-+}
-+
- static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg *arg, char *bf,
- 				   size_t size, int val, char *type)
- {
-@@ -1009,6 +1057,8 @@ static size_t trace__btf_scnprintf(struct trace *trace, struct syscall_arg *arg,
+ 			default_scnprintf = sc->arg_fmt[arg.idx].scnprintf;
  
- 	if (btf_is_enum(arg_fmt->type))
- 		return btf_enum_scnprintf(arg_fmt->type, trace->btf, bf, size, val);
-+	else if (btf_is_struct(arg_fmt->type))
-+		return btf_struct_scnprintf(arg_fmt->type, trace->btf, bf, size, arg);
- 
- 	return 0;
- }
-@@ -2222,6 +2272,7 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 		.show_string_prefix = trace->show_string_prefix,
+-			if (default_scnprintf == NULL || default_scnprintf == SCA_PTR) {
++			if (trace->force_btf ||
++			    (default_scnprintf == NULL ||
++			     (default_scnprintf == SCA_PTR && strstr(field->type, "struct")))) {
+ 				btf_printed = trace__btf_scnprintf(trace, &arg, bf + printed,
+ 								   size - printed, val, field->type);
+ 				if (btf_printed) {
+@@ -5153,6 +5156,8 @@ int cmd_trace(int argc, const char **argv)
+ 	OPT_INTEGER('D', "delay", &trace.opts.target.initial_delay,
+ 		     "ms to wait before starting measurement after program "
+ 		     "start"),
++	OPT_BOOLEAN(0, "force-btf", &trace.force_btf, "Prefer btf_dump general pretty printer"
++		       "to customized ones"),
+ 	OPTS_EVSWITCH(&trace.evswitch),
+ 	OPT_END()
  	};
- 	struct thread_trace *ttrace = thread__priv(thread);
-+	void *default_scnprintf;
- 
- 	/*
- 	 * Things like fcntl will set this in its 'cmd' formatter to pick the
-@@ -2263,11 +2314,15 @@ static size_t syscall__scnprintf_args(struct syscall *sc, char *bf, size_t size,
- 			if (trace->show_arg_names)
- 				printed += scnprintf(bf + printed, size - printed, "%s: ", field->name);
- 
--			btf_printed = trace__btf_scnprintf(trace, &arg, bf + printed,
--							   size - printed, val, field->type);
--			if (btf_printed) {
--				printed += btf_printed;
--				continue;
-+			default_scnprintf = sc->arg_fmt[arg.idx].scnprintf;
-+
-+			if (default_scnprintf == NULL || default_scnprintf == SCA_PTR) {
-+				btf_printed = trace__btf_scnprintf(trace, &arg, bf + printed,
-+								   size - printed, val, field->type);
-+				if (btf_printed) {
-+					printed += btf_printed;
-+					continue;
-+				}
- 			}
- 
- 			printed += syscall_arg_fmt__scnprintf_val(&sc->arg_fmt[arg.idx],
-diff --git a/tools/perf/trace/beauty/perf_event_open.c b/tools/perf/trace/beauty/perf_event_open.c
-index 01ee15fe9d0c..632237128640 100644
---- a/tools/perf/trace/beauty/perf_event_open.c
-+++ b/tools/perf/trace/beauty/perf_event_open.c
-@@ -76,7 +76,7 @@ static size_t perf_event_attr___scnprintf(struct perf_event_attr *attr, char *bf
- 
- static size_t syscall_arg__scnprintf_augmented_perf_event_attr(struct syscall_arg *arg, char *bf, size_t size)
- {
--	return perf_event_attr___scnprintf((void *)arg->augmented.args, bf, size, arg->trace->show_zeros);
-+	return perf_event_attr___scnprintf((void *)arg->augmented.args->value, bf, size, arg->trace->show_zeros);
- }
- 
- static size_t syscall_arg__scnprintf_perf_event_attr(char *bf, size_t size, struct syscall_arg *arg)
-diff --git a/tools/perf/trace/beauty/sockaddr.c b/tools/perf/trace/beauty/sockaddr.c
-index 2e0e867c0c1b..6ecebf776899 100644
---- a/tools/perf/trace/beauty/sockaddr.c
-+++ b/tools/perf/trace/beauty/sockaddr.c
-@@ -47,7 +47,7 @@ static size_t (*af_scnprintfs[])(struct sockaddr *sa, char *bf, size_t size) = {
- 
- static size_t syscall_arg__scnprintf_augmented_sockaddr(struct syscall_arg *arg, char *bf, size_t size)
- {
--	struct sockaddr *sa = (struct sockaddr *)arg->augmented.args;
-+	struct sockaddr *sa = (struct sockaddr *)arg->augmented.args->value;
- 	char family[32];
- 	size_t printed;
- 
-diff --git a/tools/perf/trace/beauty/timespec.c b/tools/perf/trace/beauty/timespec.c
-index e1a61f092aad..b14ab72a2738 100644
---- a/tools/perf/trace/beauty/timespec.c
-+++ b/tools/perf/trace/beauty/timespec.c
-@@ -7,7 +7,7 @@
- 
- static size_t syscall_arg__scnprintf_augmented_timespec(struct syscall_arg *arg, char *bf, size_t size)
- {
--	struct timespec *ts = (struct timespec *)arg->augmented.args;
-+	struct timespec *ts = (struct timespec *)arg->augmented.args->value;
- 
- 	return scnprintf(bf, size, "{ .tv_sec: %" PRIu64 ", .tv_nsec: %" PRIu64 " }", ts->tv_sec, ts->tv_nsec);
- }
 -- 
 2.45.2
 
