@@ -1,149 +1,259 @@
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA06518BC30
-	for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 18:58:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743224430;
+	Sat, 24 Aug 2024 16:33:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724439532; cv=none; b=gSg66QoZhgkRXwLNCyzhN4YL9gbTe0xQwzCqWrvXlzEdvdPc0KNtGMBoPQocvWcnHF1o52q/ZZ9cMrcd98eKMPd0BnFXbbbvwHAgtsQfT7b4BrkL51ZBZHeFZg4MyUBuy9m6lgFrCetnEMWR0JZviDLWQLieZtz9xBuVAhVYcj4=
+	t=1724517207; cv=none; b=dCjVagKfM2vEXs7U3eSCWwYHyJzlgfelLZLhkTDHl0ykT2LwzCfb5I2bgdyzzVxKlSX+RZPL9/gIj6uej2qiR7MvzgoQCoppLRbfLzb88VjCgj41jyc7KOQZR4mTPhpyvmoDMEFEgNoLJ3lNAQmv5yitt8g/Vd0H/4WiT7UbYwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724439532; c=relaxed/simple;
-	bh=OL8zr06dGVXX8/JNnl4KISBbwjutHYB3v6J2H8cHVqs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=PJjXqYehD8wDyFrqmXlkSI4F9dP8Z7tSnQTY6pyyK482JCfkxS5XbPCJdRyK/8Bk1Ywxz++MZRMad+FfE/XbKox63YrGvLHLwUC8ncumSpqpo4jdttPbDEoevHYXFYcztNHFE+0+i5tyJ7KiG+Sr5XFBZLKCiyvuGe9RSaALGws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=l5FCax2L; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1724517207; c=relaxed/simple;
+	bh=ycABlzuDVSFSFJtOUr4WXvNFgy9OJ2JP4Y6iFpnMG8w=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WXxlBU1VXiknsYpjAnVn11U6Vdt2/GYJH8Tgvv2r3V5JLBPZONZ+BaIbvrVn9p9IgqV9upfL4AbpCoO73dpFLWMTr3rH6Xtwy6XIvm9aLK+C7MLIeu37tYjNtlyccyAVp5xRzn+ur8q1JVCdz4yMMSF5HKtaD17o64c0+g48c3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HanYBYP2; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="l5FCax2L"
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-7142448aaf9so1651378b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 23 Aug 2024 11:58:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HanYBYP2"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2d1daa2577bso2260814a91.2;
+        Sat, 24 Aug 2024 09:33:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1724439529; x=1725044329; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=yorPWSJYc8UNX8jsP1Uyq6fHvCa9beJkHZhYtqkCUp4=;
-        b=l5FCax2LBK5Dp5Yw3Zw83gIAe1yQ6+D8b5mjofVnRjtq4i/Xt08D8htqEfAHbpwz2Q
-         nDM/EAmkL+OXhAADjDACh2vfVpizrYhAWB7a9hXSLjyZXI5sbnIMprqt3Y1zPncJp7h9
-         3pTnqCkvVSs+JOlWQwpq0I4Ceg1iWmSfnnL9O2skrmswWTSX8ZS/lL1rKOKa3CXrRxdr
-         peOeJvKCmAGnh0+TajU+g95Ws1LyvsrU3SpdK/NJ3fyjbSLgTskiqOZv28VEJ6jQwnNP
-         zb59DTFPaR17LdB2jfI9NVzD7IZ2bqWy6/lSMZNSyg5GmoSd/m42zmdzJBVAUmow6JEQ
-         Cm0g==
+        d=gmail.com; s=20230601; t=1724517205; x=1725122005; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dM8CcuX7++y5SJ6qny9ROmrU6rNXnLsy6WhwhKunxw=;
+        b=HanYBYP2KNXiielxCMI/uBdzCQK5MBi71YlD6cglvvDmqvBvQ61cNGhFDrLdOEnvNl
+         J4Jdq9y6/kXASNXyah+ZPouO2Fk2a2NMG8t5Bq6mZNdZokyKqmSGIewgLxy9yq3pHeEV
+         3JnAe24WxymuEXJwItZC0rhh5DKcQgRAQHBhd2Ox8AYLvncRLJ5ArJjO2u1OpTw3MFg7
+         I+Wmtg7l9Ituy/JKgCFYw7aG63aIe9nZlxCZTCSYIhXBtGrzOi/JQyVpQXvybkkHi8vl
+         jaDwNlm38t8q2FNsLKhG4R4vlFYatI7Omq5KKZE15ZDBPBQ78yBLwRxpMo1IgOCiCV5y
+         GbJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724439529; x=1725044329;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1724517205; x=1725122005;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=yorPWSJYc8UNX8jsP1Uyq6fHvCa9beJkHZhYtqkCUp4=;
-        b=jad/FCIuhF0PjokIyBCMjyT2NgeJ1uH1NUeEmpYJRiYxTeWpjy6opluEAlvIBj1+c4
-         diTIp+H/ETEZBWQPtqCzdlKrBYWj9yctsr0ku5TlUuFqy/kgBfKze3k+9d0n82ML2B25
-         /xkYnC9a9pi6rrIVg640iBnPJ87qKlab8BM+OlTag+GUzS60gQWCqcl7QvwQxq4dIKfR
-         05023sLasQEkxEsPA+hvvgYxEaHRAmkIin6mP30w+kaaGG1Z1Gsk9jzZMUjrOG9WdIv0
-         JyYi2QUutN0MNJouwgy1CmR9SL5/1KIqm4pbdaQqgdn54YbB6fy5X1R8WsdCP+S50dh0
-         McdQ==
-X-Gm-Message-State: AOJu0YzsfvvreD8NHNtpODlEPgietVQM+ioMsvGer8HxwuTSxRTHsuFX
-	CAMtiA8WpFlqMMSAbZfegcA3+/qs+o6gQH5mCR7jBlT4ohOlwvehdU9JxBQoeUk=
-X-Google-Smtp-Source: AGHT+IFawJQXOP4HPBZOeYzX+BNP0Qr+kt+7szwDGJXyVIrQHEtcZM9vyLrqns+0VupnLR/ut52lcA==
-X-Received: by 2002:aa7:8ec2:0:b0:714:2371:7a02 with SMTP id d2e1a72fcca58-7143173d6b0mr11838910b3a.5.1724439528774;
-        Fri, 23 Aug 2024 11:58:48 -0700 (PDT)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-714342731acsm3366222b3a.88.2024.08.23.11.58.47
+        bh=1dM8CcuX7++y5SJ6qny9ROmrU6rNXnLsy6WhwhKunxw=;
+        b=C5TTIjf9R+AlvZ8KRfl9EVT4fX2koCdkej7G+SLGZwTS52UzRRpZP5RWGinCffbiNJ
+         V08dPgNCT7oGASN02gp3bUv8EP7Gzpy7wmyg051zAJP+DGtrxXIdHroaPP8k6w6+Au9z
+         i+G9+YN4DtaLZ0Nj8n85dZaNQj8PSyLWd/3ltWTSrCIrZepSLWBGH+fXRPYBgaP2tDVL
+         fdAAq4SvnSzRrxykbjrsDcruJ0vWoX4oaScZUC8xckxmGk7e9VrhNskDWnKh8G7fCND1
+         Bl3uVNE4fiaUjPzLrpi2L6+dFvtGZQB85RQ4x3pCPdqkjy3r8KYAZ3ayKUBY6c3w+6xT
+         t5hA==
+X-Forwarded-Encrypted: i=1; AJvYcCUArFVl2DXJXkLiFlvVX/RFG2kxDLk4VtAecoNQdkuLcXs3ed1raZhjbEyH35yLa0V7z00FKPF1s76DlMg=@vger.kernel.org, AJvYcCVK4yTJbqCWq+ctTJeLC84BPhLTvOxGBwMG906jAXfHW19GTqk118L4HYX5aYx86G1wS4hYHz4ugya/aRubiPLa4w==@vger.kernel.org
+X-Gm-Message-State: AOJu0YyFKl7BvY8KwDFvkh2Q4v7dS6iTz5ZMI7/sg5XQa/TqhtTf0gSC
+	TjCJOe8AbSI2P2HdNABeotPSyMi+kJtwYtbX7+2EdC1STYCsHx+x
+X-Google-Smtp-Source: AGHT+IEOtBnAxw5CffKRUcl7L5f4DAq7GlJyAO8rhn7+XniCZlpnXy/o6Y5OEIBg2sri0EixtiPs3A==
+X-Received: by 2002:a17:90a:4e02:b0:2d3:b357:7859 with SMTP id 98e67ed59e1d1-2d646bf63f7mr7097502a91.13.1724517204458;
+        Sat, 24 Aug 2024 09:33:24 -0700 (PDT)
+Received: from localhost.localdomain (104-58-203-241.lightspeed.sntcca.sbcglobal.net. [104.58.203.241])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d613941ee7sm6376216a91.24.2024.08.24.09.33.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Aug 2024 11:58:48 -0700 (PDT)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Fri, 23 Aug 2024 11:58:38 -0700
-Subject: [PATCH] libperf: Add perf_evsel__id() function
+        Sat, 24 Aug 2024 09:33:24 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: adrian.hunter@intel.com,
+	irogers@google.com,
+	jolsa@kernel.org,
+	kan.liang@linux.intel.com,
+	namhyung@kernel.org,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] perf trace: Enhanced augmentation for pointer arguments
+Date: Sun, 25 Aug 2024 00:33:14 +0800
+Message-ID: <20240824163322.60796-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240823-perf_evsel_get_id-v1-1-0ffa204c4164@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIAN3byGYC/x3MWwqAIBBG4a3EPCc4YhRtJUK6/NZAVGhIEO096
- fF7OOehiCCI1BYPBSSJcuwZXBY0rcO+QMmcTUYbqxtj1IngHVLE5hZcTmblazB7riptR8rdGeD
- l/p9d/74fnmOTE2MAAAA=
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2669; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=OL8zr06dGVXX8/JNnl4KISBbwjutHYB3v6J2H8cHVqs=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9qJ2/e/z2PYuvAu97UFoUdsy6v/Jz1gOX6m9fH2Ex/el
- 1/p/MD2oaOUhUGMg0FWTJGF51oDc+sd/bKjomUTYOawMoEMYeDiFICJBLEzMvTlS9xX3MDvE3GY
- r+BidplB9JKrod93y/1ff+6oEn/NMTuGPxys4dMPaC4wMV6m53Vm1ZkZ11Y6MFzY6JB88cR6geJ
- Tj/kA
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+Content-Transfer-Encoding: 8bit
 
-Introduce perf_evsel__id() to collect the id of an evsel. It is not
-currently possible when using libperf to determine the id of an evsel.
-This will allow applications to link the id returned by PERF_SAMPLE_ID
-to the event being sampled.
+Changes in v3:
+- Prefer customized pretty printers to BTF general pretty printer
+- Add --force-btf for debugging purpose (use BTF printer instead of the
+customized ones that already exist)
+- Add trap-handling cleanup to tests
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
----
- tools/lib/perf/Documentation/libperf.txt |  2 ++
- tools/lib/perf/evsel.c                   | 10 ++++++++++
- tools/lib/perf/include/perf/evsel.h      |  1 +
- 3 files changed, 13 insertions(+)
+Changes in v2:
+- Fix perf trace workload bug.
+- Rename pids_filtered to pids_filtered_out, and add pids_allowed to
+avoid confusion.
+- Add tests.
 
-diff --git a/tools/lib/perf/Documentation/libperf.txt b/tools/lib/perf/Documentation/libperf.txt
-index fcfb9499ef9c..69c1d7efb659 100644
---- a/tools/lib/perf/Documentation/libperf.txt
-+++ b/tools/lib/perf/Documentation/libperf.txt
-@@ -94,6 +94,8 @@ SYNOPSIS
-   void perf_evlist__enable(struct perf_evlist *evlist);
-   void perf_evlist__disable(struct perf_evlist *evlist);
- 
-+  void perf_evsel__id(struct perf_evsel *evsel, u64 *id);
-+
-   #define perf_evlist__for_each_evsel(evlist, pos)
- 
-   void perf_evlist__set_maps(struct perf_evlist *evlist,
-diff --git a/tools/lib/perf/evsel.c b/tools/lib/perf/evsel.c
-index c07160953224..765b17045342 100644
---- a/tools/lib/perf/evsel.c
-+++ b/tools/lib/perf/evsel.c
-@@ -484,6 +484,16 @@ int perf_evsel__disable(struct perf_evsel *evsel)
- 	return err;
- }
- 
-+int perf_evsel__id(struct perf_evsel *evsel, __u64 *id)
-+{
-+	int i;
-+	int err = 0;
-+
-+	for (i = 0; i < xyarray__max_x(evsel->fd) && !err; i++)
-+		err = perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ID, (unsigned long)id, i);
-+	return err;
-+}
-+
- int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filter)
- {
- 	int err = 0, i;
-diff --git a/tools/lib/perf/include/perf/evsel.h b/tools/lib/perf/include/perf/evsel.h
-index 6f92204075c2..1457e5a46b28 100644
---- a/tools/lib/perf/include/perf/evsel.h
-+++ b/tools/lib/perf/include/perf/evsel.h
-@@ -41,6 +41,7 @@ LIBPERF_API int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu_map_idx
- LIBPERF_API int perf_evsel__enable_thread(struct perf_evsel *evsel, int thread);
- LIBPERF_API int perf_evsel__disable(struct perf_evsel *evsel);
- LIBPERF_API int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu_map_idx);
-+LIBPERF_API int perf_evsel__id(struct perf_evsel *evsel, __u64 *id);
- LIBPERF_API struct perf_cpu_map *perf_evsel__cpus(struct perf_evsel *evsel);
- LIBPERF_API struct perf_thread_map *perf_evsel__threads(struct perf_evsel *evsel);
- LIBPERF_API struct perf_event_attr *perf_evsel__attr(struct perf_evsel *evsel);
+Forgot to add some before & afters in v1, here they are:
 
----
-base-commit: 47ac09b91befbb6a235ab620c32af719f8208399
-change-id: 20240822-perf_evsel_get_id-f7e11f15504b
+before:
+
+# struct
+perf $ perf trace -e epoll_wait
+     0.068 (500.192 ms): Hyprland/539 epoll_wait(epfd: 3, events: 0x7ffd9f6f1730, maxevents: 32, timeout: 4294967295) = 1
+
+# string 
+perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
+     0.024 ( 0.012 ms): mv/294902 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "")  = 0
+
+# buffer
+perf $ perf trace -e write echo "Hikawa Sayo"
+Hikawa Sayo
+     0.000 ( 0.011 ms): echo/928215 write(fd: 1, buf: 0x5b292f307410, count: 12)                          = 12
+
+after:
+
+# struct
+perf $ perf trace -e epoll_wait
+     0.023 (500.128 ms): Hyprland/539 epoll_wait(epfd: 3, events: {1,102459045712424,}, maxevents: 32, timeout: 4294967295) = 1
+
+# string 
+perf $ perf trace -e renameat2 -- mv /tmp/f1 /tmp/f2
+     0.039 ( 0.018 ms): mv/295046 renameat2(olddfd: CWD, oldname: "/tmp/f1", newdfd: CWD, newname: "/tmp/f2") = 0
+
+# buffer
+perf $ perf trace -e write echo "Hikawa Sayo"
+Hikawa Sayo
+     0.000 ( 0.013 ms): echo/929159 write(fd: 1, buf: "Hikawa Sayo\10", count: 12)                        = 12
+
+Still debugging read-like syscalls augmentation such as read, readlinkat
+and gettimeofday. The support for read-like syscalls will be added in a
+separated patch.
+
+
+
+
+v1:
+
+This patch series adds augmentation feature to struct pointer, string
+and buffer arguments all-in-one. It also fixes 'perf trace -p <PID>'.
+
+With this patch series, perf trace will augment struct pointers well, it
+can be applied to syscalls such as clone3, epoll_wait, write, and so on.
+But unfortunately, it only collects the data once, when syscall enters.
+This makes syscalls that pass a pointer in order to let it get
+written, not to be augmented very well, I call them the read-like
+syscalls, because it reads from the kernel, using the syscall. This
+patch series only augments write-like syscalls well.
+
+Unfortunately, there are more read-like syscalls(such as read,
+readlinkat, even gettimeofday) than write-like syscalls(write, pwrite64,
+epoll_wait, clone3).
+
+Here are three test scripts that I find useful:
+
+pwrite64
+```
+ #include <unistd.h>
+ #include <sys/syscall.h>
+
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DI\0NGZ\0HE\1N", s2[] = "XUEBAO";
+
+	while (1) {
+		syscall(SYS_pwrite64, i1, s1, sizeof(s1), i2);
+		sleep(1);
+	}
+
+	return 0;
+}
+```
+
+epoll_wait
+```
+ #include <unistd.h>
+ #include <sys/epoll.h>
+ #include <stdlib.h>
+ #include <string.h>
+
+#define MAXEVENTS 2
+
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
+
+	struct epoll_event ee = {
+		.events = 114,
+		.data.ptr = NULL,
+	};
+
+	struct epoll_event *events = calloc(MAXEVENTS, sizeof(struct epoll_event));
+	memcpy(events, &ee, sizeof(ee));
+
+	while (1) {
+		epoll_wait(i1, events, i2, i3);
+		sleep(1);
+	}
+
+	return 0;
+}
+```
+
+clone3
+```
+ #include <unistd.h>
+ #include <sys/syscall.h>
+ #include <linux/sched.h>
+ #include <string.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+
+int main()
+{
+	int i1 = 1, i2 = 2, i3 = 3, i4 = 4;
+	char s1[] = "DINGZHEN", s2[] = "XUEBAO";
+
+	struct clone_args cla = {
+		.flags = 1,
+		.pidfd = 1,
+		.child_tid = 4,
+		.parent_tid = 5,
+		.exit_signal = 1,
+		.stack = 4,
+		.stack_size = 1,
+		.tls = 9,
+		.set_tid = 1,
+		.set_tid_size = 9,
+		.cgroup = 8,
+	};
+
+	while (1) {
+		syscall(SYS_clone3, &cla, i1);
+		sleep(1);
+	}
+
+	return 0;
+}
+```
+
+Arnaldo Carvalho de Melo (1):
+  perf trace: Pass the richer 'struct syscall_arg' pointer to
+    trace__btf_scnprintf()
+
+Howard Chu (7):
+  perf trace: Fix perf trace -p <PID>
+  perf trace: Add trace__bpf_sys_enter_beauty_map() to prepare for
+    fetching data in BPF
+  perf trace: Pretty print struct data
+  perf trace: Pretty print buffer data
+  perf trace: Collect augmented data using BPF
+  perf trace: Add --force-btf for debugging
+  perf trace: Add general tests for augmented syscalls
+
+ tools/perf/builtin-trace.c                    | 217 +++++++++++++++++-
+ tools/perf/tests/shell/trace_btf_general.sh   |  67 ++++++
+ tools/perf/trace/beauty/perf_event_open.c     |   2 +-
+ tools/perf/trace/beauty/sockaddr.c            |   2 +-
+ tools/perf/trace/beauty/timespec.c            |   2 +-
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 114 ++++++++-
+ tools/perf/util/evlist.c                      |   2 +-
+ tools/perf/util/trace_augment.h               |   6 +
+ 8 files changed, 399 insertions(+), 13 deletions(-)
+ create mode 100755 tools/perf/tests/shell/trace_btf_general.sh
+ create mode 100644 tools/perf/util/trace_augment.h
+
 -- 
-- Charlie
+2.45.2
 
