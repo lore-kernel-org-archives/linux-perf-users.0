@@ -1,77 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F951143C70;
-	Mon, 26 Aug 2024 14:33:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFAD718BBBF;
+	Mon, 26 Aug 2024 14:39:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724682823; cv=none; b=AIORKEp8so4eBRT+fMdgKwqv1sOXVPLeiQL1N86otaUCQxfOn66+wxaNr1+7cSVG5PU/EhTNapIHrpBZ9j/kzNzteYuUKMAe0GzP0OP4YhXlMuQ8GclKoPxuScqEbiJvWnCHxIOvYXx9btvFq7rTsu4T0MDvq+advt4l2B6Cjto=
+	t=1724683148; cv=none; b=Rf1CV5Yd2ZVOOzTufQ8x6xwzGmCKuSXqM1R43mKi9zgWpeZpBiHzN3z4cFxDT5k4jyvDS3dUZJobGN71h8bFUG3mq+9e/I98WRTzV1cJVSe+6T7W6LVW1U5hzOf9iYRV1WYXDGiFWngdohfwhsRm1hrNVRBUkfu0VodjjkDWoZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724682823; c=relaxed/simple;
-	bh=l/+SPXXc/fG12j/0jauNpuKR04TNoWJBFRvZLUJm+0Y=;
+	s=arc-20240116; t=1724683148; c=relaxed/simple;
+	bh=Q9cvkCm+QmO1/pKn33PAu1ov/cyn+nHAhRP/EgZb/io=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=soZY8b0hsLQswzouMxS7YZwKqr8pnzyrMRvaCrDjuL7PYAbR3WixiS6Vpqd58L3fnkifognUlX8Q+PpO/8EGshxZbzi/iktks/clIrLp1gRGMT4CDBHqxWbYAcLIvEV7KCHNq5I4AQ0PMHq3oK6MEHu0GkBxuUR9sLh/arAC0tc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YIe9SSts; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WTNKFghpfk6mIXoWeXXYBO71mMUAWXT3TgzyrGG4+LgINHtX4HELDfjfGBrcjTces8nkMgfBpAnz8hu3fhLnMfhVRrxYHiYwsP1r+GA0Edb5LLWBkTru23x4Hhx7sbxl1m+tVIoeqTNkzy4eZR6ZNGy5VtIMNowW1ZOWqUlaGDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efm049mD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YIe9SSts"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 343D7C4DE04;
-	Mon, 26 Aug 2024 14:33:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efm049mD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93147C4FEEB;
+	Mon, 26 Aug 2024 14:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724682822;
-	bh=l/+SPXXc/fG12j/0jauNpuKR04TNoWJBFRvZLUJm+0Y=;
+	s=k20201202; t=1724683148;
+	bh=Q9cvkCm+QmO1/pKn33PAu1ov/cyn+nHAhRP/EgZb/io=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YIe9SStsZbSfCXeirt3V7FcFAFF4cSSyXZ8za/G7QwlQV3y9pR00CJl3esBWj/st3
-	 IDLjzzJmpRtHOmeN/L/vfLERZ97jtvb9ve+HZSpOBDsN27qGoZZunDJIZUtAblukBf
-	 0xf+bkcwi1zwt1oPwAYNH6oeVL6upQ2H0tuUMwh4TjiGSJ1ykj5itvowMLvGRZwE/Q
-	 6cth5bLeS54DHHMtJsDqWUyBdNoMYWNz5Jtr+gIV8VfrrcHXsm6NXYRB20n3m04GPO
-	 WMgmI7FR1YfMhF+jm/C2sJlu2VQJli2JlE4UApuhWGxXpbMCbzP0HrfJHaa0aD5ck4
-	 /+R3wAFiRv+7g==
-Date: Mon, 26 Aug 2024 11:33:39 -0300
+	b=efm049mD2kZwjY0XKiloGnyNBxieWW7od3YFciHShVzKzoWWrAwPvboJiSKLIDWOD
+	 3XSLIqeVluPjQuJ0i09ks34OCls2YpPrB81nSqMIDkvFFvQjtL8qT0A2R9vEKi/K+O
+	 hegx/5mnHutGnd0GyfU6SvGpETGn3rqBjnSa4iS6iAcTxcn6waqeASZ0V0W4XJkJCP
+	 zV2LrMCe04cFZ1Gh9oSwAxGZP4qKD9tlS9MyzGQ6JEXOOLZ9Ke55y4QiiqyBP3gTnY
+	 A0fQ7yosjfw2lKkeXj4HYK6fzQcYaRstIk47xVEQsLPxESUVTREPxucpazTzx9SQFB
+	 dGvWbkBfBoDqg==
+Date: Mon, 26 Aug 2024 11:39:04 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
-Cc: kan.liang@linux.intel.com, irogers@google.com, peterz@infradead.org,
-	mingo@kernel.org, linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] perf hist: Don't set hpp_fmt_value for members in
- --no-group
-Message-ID: <ZsySQ9MADfhrABFy@x1>
-References: <20240820183202.3174323-1-kan.liang@linux.intel.com>
- <CAM9d7ch1tmkmrpcxdW4Txz20Xzt6NFx_-0m6HQzTwXAV7Opg2Q@mail.gmail.com>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, KP Singh <kpsingh@kernel.org>,
+	Song Liu <song@kernel.org>, bpf@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] perf tools: Print lost samples due to BPF filter
+Message-ID: <ZsyTiEmr8_OsSnup@x1>
+References: <20240820154504.128923-1-namhyung@kernel.org>
+ <20240820154504.128923-2-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAM9d7ch1tmkmrpcxdW4Txz20Xzt6NFx_-0m6HQzTwXAV7Opg2Q@mail.gmail.com>
+In-Reply-To: <20240820154504.128923-2-namhyung@kernel.org>
 
-On Wed, Aug 21, 2024 at 05:38:45PM -0700, Namhyung Kim wrote:
-> Hi Kan,
-> 
-> On Tue, Aug 20, 2024 at 11:31 AM <kan.liang@linux.intel.com> wrote:
-> >
-> > From: Kan Liang <kan.liang@linux.intel.com>
-> >
-> > Perf crashes as below when applying --no-group
-> >
-> > perf record -e "{cache-misses,branches"} -b sleep 1
-> > perf report --stdio --no-group
-> > free(): invalid next size (fast)
-> > Aborted (core dumped)
-> >
-> > In the __hpp__fmt(), only 1 hpp_fmt_value is allocated for the current
-> > event when --no-group is applied. However, the current implementation
-> > tries to assign the hists from all members to the hpp_fmt_value, which
-> > exceeds the allocated memory.
-> >
-> > Fixes: 8f6071a3dce4 ("perf hist: Simplify __hpp_fmt() using hpp_fmt_data")
-> > Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Acked-by: Namhyung Kim <namhyung@kernel.org>
+On Tue, Aug 20, 2024 at 08:45:03AM -0700, Namhyung Kim wrote:
+> Print the actual dropped sample count in the event stat.
 
-Thanks, applied to perf-tools-next,
+Thanks, applied the series.
 
 - Arnaldo
