@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B5FD199E9E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29E7019D074;
 	Mon, 26 Aug 2024 22:10:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724710247; cv=none; b=DxesvccCN4g+J5kmN4mADnlpjPTA9Pa6RUeW0iS6KMkgtDjEqEA/DNPFtNrJm63MataO8mZXGaLNzUuYdyUwyacIA05d2dKI6xv0vTR4BOIEpa/8hf7l2qsceMaJpa9zp72LWaZFra5kHT2atBaCJHterCTkniDI5W09NBD7SMo=
+	t=1724710248; cv=none; b=SP+KSmNs6iG7M7qW5rbReB0/jUSGhtQ2IySl+unVBUBN4Pc2v3qmk2N1b9b4W1mSWMi8+fzJQcHMgJjeNJKdCW+olj49iuuDOuTFXjwHsDcJaOWBLmhx1nyDxL3+ht0UgngrwZgOk86sRxBpAgfX/KKAmfzCmgw9EJHU77hSlt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724710247; c=relaxed/simple;
-	bh=JkfxekS+W466Brz06l8M63jsU2+f+MeKbbTPTtcrgp8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bNXWM2P36evTZ28mxiZ90KD+mCeqhs5COJ+QSJYT8eC8ILq0wlDlakJ3efTB+QdlvdnJIwlTSo+5eWvW26QRs0i9wKfiKKCuHKscBcKm7aWtPA/fMK7XZae5kbCnbvNjm+JgKOSety0L4Kl811OPBzYnPb0KI/D+TseN2F+XYMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U+0CbOeR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724710248; c=relaxed/simple;
+	bh=eg+RpaI+kxukrhpWwDABFKaS8hD7evFQFlWQc7pH2CE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BSixNEyPZzhH0V5QOaShZHEYmhs5Iapxh1/N8bOf54T3MbfWtDC56t0OPJITs7iLfXpzxsef7j0h2oX6aQuxA8NOOOhxyaKEs4pXC1P16siLorBwSpV9SMvgav2yzssPmzWhbF2YYY8Joeolf4Q4GYNPVuZny1aJnZwLYzQLKZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OcfsNLUh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U+0CbOeR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88243C8B7BC;
-	Mon, 26 Aug 2024 22:10:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OcfsNLUh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E749C8B7C6;
+	Mon, 26 Aug 2024 22:10:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1724710247;
-	bh=JkfxekS+W466Brz06l8M63jsU2+f+MeKbbTPTtcrgp8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=U+0CbOeRSvMXFXyRClSB82HVXfyMGN4uVSGrjfWhc4oESuNvIolfPym3mCe1885f0
-	 Nfzq1SmgHAT2VM39YyYiPBw6nhOhL4NLO3vAZR6vUXT5h7M2elRoHwjukQ90o///MA
-	 TKnP0ndvcGgktqo3fXMz5AZaFeOPfwVS0B4tdkvqR1XEa/P74bLaImQgJsGDcW3xTc
-	 3QiYNZ0UbCpnMajPeTlFwvmq/mgKNF4TUpoQ5nsW+NrDI4oCmksmc2vwOljaO1JLCP
-	 vcHaQOmUid1vo2KO3oYCkpqVLeKEFQ2zk/rPsxQWL6N009FwtZL3EqdNlLEfMKBq4K
-	 hrbJ296aczX6A==
+	bh=eg+RpaI+kxukrhpWwDABFKaS8hD7evFQFlWQc7pH2CE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OcfsNLUhDEEjvOhm4td22x9YiGv9VIgRBmVFRLr/Ge5m93hFZOZCVXx2Sm/Iei4VD
+	 x588O+xBt/ngYnqXvnTF93ZIeM3D4StFpfJNTF2NokDlVqchub/h+Ktq30pN1msony
+	 ySqvvAKwF/GUIJU2HxWzmru2zWOoeKgcVGRiOl8yV2hHQhj/bledJsZCdN+GUky+gh
+	 Md4b/hM5+r5o6rI70oWTSdH29bLMGTs55iXd6BuIvIKBVAG6hYvoYszcq5OjtwIQeu
+	 t2jPfct1EVEYGnSbjQYjHBDonSxQUuovbatsTkBhbV6Qx2TLwBIfFd+aP87JgGZEnH
+	 9+rBsmleiXVXA==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -35,11 +36,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Ingo Molnar <mingo@kernel.org>,
 	LKML <linux-kernel@vger.kernel.org>,
 	linux-perf-users@vger.kernel.org,
-	Stephane Eranian <eranian@google.com>
-Subject: [PATCH 0/4] perf bpf-filter: Add cgroup filter term (v1)
-Date: Mon, 26 Aug 2024 15:10:41 -0700
-Message-ID: <20240826221045.1202305-1-namhyung@kernel.org>
+	Stephane Eranian <eranian@google.com>,
+	Matt Fleming <matt@readmodwrite.com>
+Subject: [PATCH 1/4] perf report: Fix segfault when 'sym' sort key is not used
+Date: Mon, 26 Aug 2024 15:10:42 -0700
+Message-ID: <20240826221045.1202305-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
+In-Reply-To: <20240826221045.1202305-1-namhyung@kernel.org>
+References: <20240826221045.1202305-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,79 +52,75 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The fields in the hist_entry are filled on-demand which means they only
+have meaningful values when relevant sort keys are used.  So if neither
+of 'dso' nor 'sym' sort keys are used, the map/symbols in the hist entry
+can be garbage.  So it shouldn't access it unconditionally.
 
-I'm adding a new 'cgroup' filter term in the filter expression so that
-it can be used in the BPF.
+I got a segfault, when I wanted to see cgroup profiles.
 
-The cgroup filter takes a pathname and allows either '==' or '!='
-operators only.  The requires '--all-cgroups' option so it can see the
-cgroup_id in the sample data.  Actually BPF programs can get the
-cgroup of the current task without looking sample data, but I added it
-for consistency with other fields.
+  $ sudo perf record -a --all-cgroups --synth=cgroup true
 
-  $ sudo perf record --synth=cgroup -e cycles --filter 'cgroup > /' -a true
-  perf_bpf_filter: cgroup accepts '==' or '!=' only
+  $ sudo perf report -s cgroup
 
-   Usage: perf record [<options>] [<command>]
-      or: perf record [<options>] -- <command> [<options>]
+  Program received signal SIGSEGV, Segmentation fault.
+  0x00005555557a8d90 in map__dso (map=0x0) at util/map.h:48
+  48		return RC_CHK_ACCESS(map)->dso;
+  (gdb) bt
+  #0  0x00005555557a8d90 in map__dso (map=0x0) at util/map.h:48
+  #1  0x00005555557aa39b in map__load (map=0x0) at util/map.c:344
+  #2  0x00005555557aa592 in map__find_symbol (map=0x0, addr=140736115941088) at util/map.c:385
+  #3  0x00005555557ef000 in hists__findnew_entry (hists=0x555556039d60, entry=0x7fffffffa4c0, al=0x7fffffffa8c0, sample_self=true)
+      at util/hist.c:644
+  #4  0x00005555557ef61c in __hists__add_entry (hists=0x555556039d60, al=0x7fffffffa8c0, sym_parent=0x0, bi=0x0, mi=0x0, ki=0x0,
+      block_info=0x0, sample=0x7fffffffaa90, sample_self=true, ops=0x0) at util/hist.c:761
+  #5  0x00005555557ef71f in hists__add_entry (hists=0x555556039d60, al=0x7fffffffa8c0, sym_parent=0x0, bi=0x0, mi=0x0, ki=0x0,
+      sample=0x7fffffffaa90, sample_self=true) at util/hist.c:779
+  #6  0x00005555557f00fb in iter_add_single_normal_entry (iter=0x7fffffffa900, al=0x7fffffffa8c0) at util/hist.c:1015
+  #7  0x00005555557f09a7 in hist_entry_iter__add (iter=0x7fffffffa900, al=0x7fffffffa8c0, max_stack_depth=127, arg=0x7fffffffbce0)
+      at util/hist.c:1260
+  #8  0x00005555555ba7ce in process_sample_event (tool=0x7fffffffbce0, event=0x7ffff7c14128, sample=0x7fffffffaa90, evsel=0x555556039ad0,
+      machine=0x5555560388e8) at builtin-report.c:334
+  #9  0x00005555557b30c8 in evlist__deliver_sample (evlist=0x555556039010, tool=0x7fffffffbce0, event=0x7ffff7c14128,
+      sample=0x7fffffffaa90, evsel=0x555556039ad0, machine=0x5555560388e8) at util/session.c:1232
+  #10 0x00005555557b32bc in machines__deliver_event (machines=0x5555560388e8, evlist=0x555556039010, event=0x7ffff7c14128,
+      sample=0x7fffffffaa90, tool=0x7fffffffbce0, file_offset=110888, file_path=0x555556038ff0 "perf.data") at util/session.c:1271
+  #11 0x00005555557b3848 in perf_session__deliver_event (session=0x5555560386d0, event=0x7ffff7c14128, tool=0x7fffffffbce0,
+      file_offset=110888, file_path=0x555556038ff0 "perf.data") at util/session.c:1354
+  #12 0x00005555557affaf in ordered_events__deliver_event (oe=0x555556038e60, event=0x555556135aa0) at util/session.c:132
+  #13 0x00005555557bb605 in do_flush (oe=0x555556038e60, show_progress=false) at util/ordered-events.c:245
+  #14 0x00005555557bb95c in __ordered_events__flush (oe=0x555556038e60, how=OE_FLUSH__ROUND, timestamp=0) at util/ordered-events.c:324
+  #15 0x00005555557bba46 in ordered_events__flush (oe=0x555556038e60, how=OE_FLUSH__ROUND) at util/ordered-events.c:342
+  #16 0x00005555557b1b3b in perf_event__process_finished_round (tool=0x7fffffffbce0, event=0x7ffff7c15bb8, oe=0x555556038e60)
+      at util/session.c:780
+  #17 0x00005555557b3b27 in perf_session__process_user_event (session=0x5555560386d0, event=0x7ffff7c15bb8, file_offset=117688,
+      file_path=0x555556038ff0 "perf.data") at util/session.c:1406
 
-          --filter <filter>
-                            event filter
+As you can see the entry->ms.map was NULL even if he->ms.map has a
+value.  This is because 'sym' sort key is not given, so it cannot assume
+whether he->ms.sym and entry->ms.sym is the same.  I only checked the
+'sym' sort key here as it implies 'dso' behavior (so maps are the same).
 
-  $ sudo perf record -e cycles --filter 'cgroup == /' \
-      -a --synth=cgroup -o- sleep 1 | perf report -i- -s cgroup
-  Error: cycles event does not have PERF_SAMPLE_CGROUP
-   Hint: please add --all-cgroups option to perf record
-  Failed to process filter entries
-  failed to set filter "BPF" on event cycles with 2 (No such file or directory)
-  incompatible file format (rerun with -v to learn more)
+Fixes: ac01c8c42465 ("perf hist: Update hist symbol when updating maps")
+Cc: Matt Fleming <matt@readmodwrite.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On the filter syntax, it used to reject arbitrary strings.  But it
-needs to handle strings because of the cgroup paths.  For now, the bpf
-filter parser will reject strings if it's not used for cgroups.
-
-For now, it only supports the exact matching of target cgroups.  So
-specifying the root cgroup ("/") will match tasks in the root cgroup
-directly (not in the descendants).
-
-  $ sudo perf record --all-cgroups -e cycles --filter 'cgroup == /' \
-      -a --synth=cgroup -o- sleep 1 | perf report -i- -s cgroup
-  ...
-  #
-  # Total Lost Samples: 0
-  #
-  # Samples: 621  of event 'cycles'
-  # Event count (approx.): 108101281
-  #
-  # Overhead  Cgroup
-  # ........  ......
-  #
-     100.00%  /
-  
-  
-
-Thanks,
-Namhyung
-
-
-Namhyung Kim (4):
-  perf report: Fix segfault when 'sym' sort key is not used
-  perf bpf-filter: Add build dependency to header files
-  perf bpf-filter: Support filtering on cgroups
-  perf test: Add perf record cgroup filtering test
-
- tools/perf/tests/shell/record_bpf_filter.sh  | 39 ++++++++++++++++++--
- tools/perf/util/Build                        |  4 +-
- tools/perf/util/bpf-filter.c                 |  1 +
- tools/perf/util/bpf-filter.l                 | 28 +++++++++++---
- tools/perf/util/bpf-filter.y                 | 28 +++++++++++++-
- tools/perf/util/bpf_skel/sample-filter.h     |  2 +-
- tools/perf/util/bpf_skel/sample_filter.bpf.c |  4 +-
- tools/perf/util/bpf_skel/vmlinux/vmlinux.h   |  1 +
- tools/perf/util/hist.c                       |  2 +-
- 9 files changed, 94 insertions(+), 15 deletions(-)
-
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index dadce2889e52..f387e85a0087 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -638,7 +638,7 @@ static struct hist_entry *hists__findnew_entry(struct hists *hists,
+ 			 * mis-adjust symbol addresses when computing
+ 			 * the history counter to increment.
+ 			 */
+-			if (he->ms.map != entry->ms.map) {
++			if (hists__has(hists, sym) && he->ms.map != entry->ms.map) {
+ 				if (he->ms.sym) {
+ 					u64 addr = he->ms.sym->start;
+ 					he->ms.sym = map__find_symbol(entry->ms.map, addr);
 -- 
 2.46.0.295.g3b9ea8a38a-goog
 
