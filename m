@@ -1,166 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 092ED1CFEDE;
-	Tue, 27 Aug 2024 16:42:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84EE954767;
+	Tue, 27 Aug 2024 16:44:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724776970; cv=none; b=RoFKkEcVZQpXtOJCalPyzp+XOHp06smMnSGw+GDt3uyLuwkZeHxjVVQrur0x4g2rjULpkxqo5G8FD7xUxtO2iuW6Nou+j5gVyvOrDyoH7ZxyRmOaqI5bOMBnmYCjFnXGeaYaLtuG9xHKPdrw3BFEzy/kzLz0h2KaQHYrbwShPQ4=
+	t=1724777076; cv=none; b=DuK3KVrqDhkt8AQixOdgZjAxSGJCxjaViPMZ0dvvxToEEg6q+JH5aNZ80mJG7cVQWRgH5GVYl1z4Ok/aFxegfxukj7NVVqWvyj0vvMN4x5+nA0AamEG8pcM/t3WOpC1S5TA07x49e/Ih8UTPbSD1YLctoba7uO5NiHyi7ZH2ncA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724776970; c=relaxed/simple;
-	bh=FUn+XXWJl/8CVQEPrZs7NCpIG7c8hlemPC0XE2FjIEI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j9qP/Yr/t6y9keFmjxEoJmvipduHWzJXGEEbEiYQBaUXmaivgZEN81MEOPtL0rWxNElxaamkam/Jfjm1A3k8DlnZsH5CcdFFuP8NbKzI8b4dD+SWnnPJnEGXZ/m9Vo/CM+VvS82MGztZqy8q//fXvKp9tqI9E8rrfmaJyACk9bk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VPlcZbE3; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VPlcZbE3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724776969; x=1756312969;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FUn+XXWJl/8CVQEPrZs7NCpIG7c8hlemPC0XE2FjIEI=;
-  b=VPlcZbE3JXRKSJhru7YvD6WUU3W1WDcjbAc2FZ3FiVZ6n5y0iYKni3hU
-   zp/zsOwvaVaDcNWV7Y4xaBt794mUm7bp9ILuV7DloANkYL4JBS98WCLTX
-   iubQ0JsrJtRYFzj7gpAEfV8IY59cGOtKcy6UN3iHQ4T3RCNQTEt+Dj3OX
-   MikAA0X3nOOYO9UL7LuOMuWxNOniOYdwYmBI5sGGBLWWlu2BKwYh8JFYk
-   K5Az90XT9yqVZAOxY26SFaiQOfN0wO0+ZnAz/tFW15U8di2ja8dMhwHRM
-   xO/tIiUeif3bs+bxcWBY42WnJQm3oDfOk+NUo2I9ZPFamNOx5f7faglUI
-   Q==;
-X-CSE-ConnectionGUID: 0UXo/QN3Txu1k+TejWlwyQ==
-X-CSE-MsgGUID: CQe0+45ATpWXWh54OnSw5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="23394924"
-X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="23394924"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 09:42:49 -0700
-X-CSE-ConnectionGUID: p5CE+HKmTjyNEtsGco1r6Q==
-X-CSE-MsgGUID: +p+2BrwtSEqgvv17DBHnUg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
-   d="scan'208";a="67271729"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 09:42:48 -0700
-Received: from [10.212.83.97] (kliang2-mobl1.ccr.corp.intel.com [10.212.83.97])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id E3E8920CFEDF;
-	Tue, 27 Aug 2024 09:42:46 -0700 (PDT)
-Message-ID: <c5b73b4f-b257-4847-a213-741889d89159@linux.intel.com>
-Date: Tue, 27 Aug 2024 12:42:46 -0400
+	s=arc-20240116; t=1724777076; c=relaxed/simple;
+	bh=EiGY5P6XTjDUe1V4OcObLD+qrQAq2fjWcwNLrUmnhxE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=Kav5q9MjQmh2v98dEoAHaA3NHw+asa4uHvEkUu9Ho4NxirooOG1kWfruUwPZAnESbVkiQNP7dSJnMjNFOD0AmUF8AXvDacBRn/7HuYVk7JaRv22ixCmFCZhqmgkCJnGMHb01fyJwO+bilBt0H4HPFm8KqVD/245dF1DqZ7so+z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 85390DA7;
+	Tue, 27 Aug 2024 09:44:59 -0700 (PDT)
+Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 355F33F762;
+	Tue, 27 Aug 2024 09:44:31 -0700 (PDT)
+From: Leo Yan <leo.yan@arm.com>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Mike Leach <mike.leach@linaro.org>,
+	James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Jonathan Cameron <jonathan.cameron@huawei.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	coresight@lists.linaro.org,
+	linux-perf-users@vger.kernel.org
+Cc: Leo Yan <leo.yan@arm.com>
+Subject: [PATCH v1 0/9] perf arm-spe: Introduce metadata version 2
+Date: Tue, 27 Aug 2024 17:44:08 +0100
+Message-Id: <20240827164417.3309560-1-leo.yan@arm.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] perf/core: Fix incorrect time diff in tick adjust
- period
-To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240821134227.577544-1-luogengkun@huaweicloud.com>
- <20240821134227.577544-3-luogengkun@huaweicloud.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <20240821134227.577544-3-luogengkun@huaweicloud.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+
+This patch series enhances Arm SPE metadata in the Perf file to a
+version 2 format.
+
+The version 2 metadata contains a global structure with fields for CPU
+numbers and the metadata version number. It also expands to store
+per-CPU metadata, which includes the CPU logical number in the kernel,
+MIDR, and capacity values associated with Arm SPE.
+
+This set exposes a new sysfs node, ‘lds’ (Load Data Source), which
+indicates if the Arm SPE supports data source packets. This flag will be
+used to decide if the data source packet needs to be decoded during the
+report phase, which will be sent out in a separate series for data
+source decoding refactoring.
+
+This patch series need to be applied on the top of the changes:
+https://lore.kernel.org/linux-perf-users/20240823113306.2310957-1-leo.yan@arm.com/T/#t
 
 
+Leo Yan (9):
+  perf: arm_spe: Introduce 'lds' capacity
+  perf auxtrace arm: Refactor error handling
+  perf auxtrace arm: Introduce find_auxtrace_pmus_by_name()
+  perf: arm-spe: Record multiple PMUs
+  perf arm-spe: Extend meta data header for version 2
+  perf arm-spe: Calculate meta data size
+  perf arm-spe: Save per CPU information in metadata
+  perf arm-spe: Support metadata version 2
+  perf arm-spe: Dump metadata with version 2
 
-On 2024-08-21 9:42 a.m., Luo Gengkun wrote:
-> Perf events has the notion of sampling frequency which is implemented in
-> software by dynamically adjusting the counter period so that samples occur
-> at approximately the target frequency.  Period adjustment is done in 2
-> places:
->  - when the counter overflows (and a sample is recorded)
->  - each timer tick, when the event is active
-> The later case is slightly flawed because it assumes that the time since
-> the last timer-tick period adjustment is 1 tick, whereas the event may not
-> have been active (e.g. for a task that is sleeping).
->
+ drivers/perf/arm_spe_pmu.c           |   3 +
+ tools/perf/arch/arm/util/auxtrace.c  | 191 +++++++++------------------
+ tools/perf/arch/arm64/util/arm-spe.c | 126 +++++++++++++++++-
+ tools/perf/util/arm-spe.c            | 119 ++++++++++++++++-
+ tools/perf/util/arm-spe.h            |  37 +++++-
+ 5 files changed, 328 insertions(+), 148 deletions(-)
 
-Do you have a real-world example to demonstrate how bad it is if the
-algorithm doesn't take sleep into account?
+-- 
+2.34.1
 
-I'm not sure if introducing such complexity in the critical path is
-worth it.
-
-> Fix by using jiffies to determine the elapsed time in that case.
-> 
-> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-> ---
->  include/linux/perf_event.h |  1 +
->  kernel/events/core.c       | 11 ++++++++---
->  2 files changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 1a8942277dda..d29b7cf971a1 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -265,6 +265,7 @@ struct hw_perf_event {
->  	 * State for freq target events, see __perf_event_overflow() and
->  	 * perf_adjust_freq_unthr_context().
->  	 */
-> +	u64				freq_tick_stamp;
->  	u64				freq_time_stamp;
->  	u64				freq_count_stamp;
->  #endif
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index a9395bbfd4aa..86e80e3ef6ac 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -55,6 +55,7 @@
->  #include <linux/pgtable.h>
->  #include <linux/buildid.h>
->  #include <linux/task_work.h>
-> +#include <linux/jiffies.h>
->  
->  #include "internal.h"
->  
-> @@ -4120,7 +4121,7 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->  {
->  	struct perf_event *event;
->  	struct hw_perf_event *hwc;
-> -	u64 now, period = TICK_NSEC;
-> +	u64 now, period, tick_stamp;
->  	s64 delta;
->  
->  	list_for_each_entry(event, event_list, active_list) {
-> @@ -4148,6 +4149,10 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->  		 */
->  		event->pmu->stop(event, PERF_EF_UPDATE);
->  
-> +		tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
-
-Seems it only needs to retrieve the time once at the beginning, not for
-each event.
-
-There is a perf_clock(). It's better to use it for the consistency.
-
-Thanks,
-Kan
-> +		period = tick_stamp - hwc->freq_tick_stamp;
-> +		hwc->freq_tick_stamp = tick_stamp;
-> +
->  		now = local64_read(&event->count);
->  		delta = now - hwc->freq_count_stamp;
->  		hwc->freq_count_stamp = now;
-> @@ -4157,9 +4162,9 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->  		 * reload only if value has changed
->  		 * we have stopped the event so tell that
->  		 * to perf_adjust_period() to avoid stopping it
-> -		 * twice.
-> +		 * twice. And skip if it is the first tick adjust period.
->  		 */
-> -		if (delta > 0)
-> +		if (delta > 0 && likely(period != tick_stamp))
->  			perf_adjust_period(event, period, delta, false);>
->  		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
