@@ -1,23 +1,23 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54AA81D1735;
-	Tue, 27 Aug 2024 16:44:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D0FC1D1F60;
+	Tue, 27 Aug 2024 16:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724777084; cv=none; b=tALo9CYhbLo6djJy7fO9/LZQN7G8+16mk68Y/1hI3RywbkybQnH0BPVnQbXdTYNPhmsioYx2VQllnVm7Fnp2zpqaBTvuXWOM/HRmJI62BwVA1M2m1a+bpReRr1aT+NoBuXZrVN4hsaAxCkKJgU1IDUd4Emrcunm/eSBu55MSkAc=
+	t=1724777087; cv=none; b=mbw5ec/TC8Yq0SNLtALKEx6lxqqbBb5xscapT6muQIGtmND1epUacXkzNWwIq+UQiR/dd+AHUzVMvCAZSsVvwhyg9zaMmb12kWd1cV0CmgVsphLgQAnMxmYB1nWQxeIGLKyul85bZCt/+z/28TYYpGh8iOpBcKS9ilhFpyET6dk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724777084; c=relaxed/simple;
-	bh=Hu/fohuMR1YEeV30QvO9/h7LNFQQcbY0053t9Nrov9U=;
+	s=arc-20240116; t=1724777087; c=relaxed/simple;
+	bh=Yx1/eeMFtrkQb8jXlUjvHxpXhc00/yH+KkRyKEXgz/E=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MZXfMwNxTh3wjE8iyrVgGwHqlyqHRyy9qNV2+CwqaVhnGCIXaLnYmaumAAGXb9oy6g9Oq0jTe9LYC6WaA592evHRBzfI2pGKeH5PvYJ5Ry/YVf3xjUVwEF/UnBVU/RC0spCnpjuA/rqPbM2Z2g+mbBdwQbDfZf1BYJ+Al/Tw88w=
+	 MIME-Version; b=L5PpBzcGG4KcUaE6Q2XZpZFvc9idFEbxTOGMgCqvU2w+xLcaQK0HOiCt6miK6bBHB7zqS1DWuBBKSBPWdrhijeQME6Pq2PILXwuzvXjkwRoAzLj1zBm0F08odryq+rp52Nyh/clt+ueE0rjV2DCPhQCruYHR0zk9tG6jrwFN1GM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E56EDDA7;
-	Tue, 27 Aug 2024 09:45:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4673FDA7;
+	Tue, 27 Aug 2024 09:45:11 -0700 (PDT)
 Received: from e132581.cambridge.arm.com (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 979E03F762;
-	Tue, 27 Aug 2024 09:44:40 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id ED06A3F762;
+	Tue, 27 Aug 2024 09:44:42 -0700 (PDT)
 From: Leo Yan <leo.yan@arm.com>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Will Deacon <will@kernel.org>,
@@ -37,9 +37,9 @@ To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org
 Cc: Leo Yan <leo.yan@arm.com>
-Subject: [PATCH v1 4/9] perf: arm-spe: Record multiple PMUs
-Date: Tue, 27 Aug 2024 17:44:12 +0100
-Message-Id: <20240827164417.3309560-5-leo.yan@arm.com>
+Subject: [PATCH v1 5/9] perf arm-spe: Extend meta data header for version 2
+Date: Tue, 27 Aug 2024 17:44:13 +0100
+Message-Id: <20240827164417.3309560-6-leo.yan@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240827164417.3309560-1-leo.yan@arm.com>
 References: <20240827164417.3309560-1-leo.yan@arm.com>
@@ -51,102 +51,105 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, the arm_spe_recording structure only saves the first Arm SPE
-PMU pointer and it cannot cover all PMU events for the multiple Arm SPE
-event case.
+This commit extends the meta data header structure for version 2.
 
-Save the all Arm SPE PMU pointers into the arm_spe_recording structure,
-later changes will use these pointers to retrieve meta data.
+The first version's header structure doesn't include a field to indicate
+the header's version, adds a new field for it. And extends to support
+per CPU's meta data. Add macros for metadata header size and per CPU
+data size, and update the code with these macros.
+
+No functional change.
 
 Signed-off-by: Leo Yan <leo.yan@arm.com>
 ---
- tools/perf/arch/arm/util/auxtrace.c  |  2 +-
- tools/perf/arch/arm64/util/arm-spe.c | 19 +++++++++++++++----
- tools/perf/util/arm-spe.h            |  3 ++-
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ tools/perf/arch/arm64/util/arm-spe.c |  4 ++--
+ tools/perf/util/arm-spe.c            |  2 +-
+ tools/perf/util/arm-spe.h            | 34 +++++++++++++++++++++++++++-
+ 3 files changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/arch/arm/util/auxtrace.c b/tools/perf/arch/arm/util/auxtrace.c
-index 2fca16659858..55877418b6c4 100644
---- a/tools/perf/arch/arm/util/auxtrace.c
-+++ b/tools/perf/arch/arm/util/auxtrace.c
-@@ -100,7 +100,7 @@ struct auxtrace_record
- 
- #if defined(__aarch64__)
- 	if (arm_spe_pmus)
--		itr = arm_spe_recording_init(err, arm_spe_pmus[0]);
-+		itr = arm_spe_recording_init(err, arm_spe_pmus, nr_spe);
- 
- 	if (hisi_ptt_pmus)
- 		itr = hisi_ptt_recording_init(err, hisi_ptt_pmus[0]);
 diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index 2be99fdf997d..7880190c3dd6 100644
+index 7880190c3dd6..3e7f62bac2e0 100644
 --- a/tools/perf/arch/arm64/util/arm-spe.c
 +++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -31,7 +31,8 @@
- 
- struct arm_spe_recording {
- 	struct auxtrace_record		itr;
--	struct perf_pmu			*arm_spe_pmu;
-+	struct perf_pmu			**pmu;
-+	int				nr_pmu;
- 	struct evlist		*evlist;
- 	int			wrapped_cnt;
- 	bool			*wrapped;
-@@ -51,7 +52,7 @@ static int arm_spe_info_fill(struct auxtrace_record *itr,
+@@ -42,7 +42,7 @@ static size_t
+ arm_spe_info_priv_size(struct auxtrace_record *itr __maybe_unused,
+ 		       struct evlist *evlist __maybe_unused)
  {
- 	struct arm_spe_recording *sper =
- 			container_of(itr, struct arm_spe_recording, itr);
--	struct perf_pmu *arm_spe_pmu = sper->arm_spe_pmu;
-+	struct perf_pmu *arm_spe_pmu = sper->pmu[0];
- 
- 	if (priv_size != ARM_SPE_AUXTRACE_PRIV_SIZE)
- 		return -EINVAL;
-@@ -494,11 +495,13 @@ static void arm_spe_recording_free(struct auxtrace_record *itr)
- 			container_of(itr, struct arm_spe_recording, itr);
- 
- 	zfree(&sper->wrapped);
-+	zfree(&sper->pmu);
- 	free(sper);
+-	return ARM_SPE_AUXTRACE_PRIV_SIZE;
++	return ARM_SPE_AUXTRACE_V1_PRIV_SIZE;
  }
  
- struct auxtrace_record *arm_spe_recording_init(int *err,
--					       struct perf_pmu *arm_spe_pmu)
-+					       struct perf_pmu **arm_spe_pmu,
-+					       int nr_pmu)
+ static int arm_spe_info_fill(struct auxtrace_record *itr,
+@@ -54,7 +54,7 @@ static int arm_spe_info_fill(struct auxtrace_record *itr,
+ 			container_of(itr, struct arm_spe_recording, itr);
+ 	struct perf_pmu *arm_spe_pmu = sper->pmu[0];
+ 
+-	if (priv_size != ARM_SPE_AUXTRACE_PRIV_SIZE)
++	if (priv_size != ARM_SPE_AUXTRACE_V1_PRIV_SIZE)
+ 		return -EINVAL;
+ 
+ 	if (!session->evlist->core.nr_mmaps)
+diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
+index 3f8695fe6a20..1e87342f4bd8 100644
+--- a/tools/perf/util/arm-spe.c
++++ b/tools/perf/util/arm-spe.c
+@@ -1260,7 +1260,7 @@ int arm_spe_process_auxtrace_info(union perf_event *event,
+ 				  struct perf_session *session)
  {
- 	struct arm_spe_recording *sper;
- 
-@@ -513,7 +516,15 @@ struct auxtrace_record *arm_spe_recording_init(int *err,
- 		return NULL;
- 	}
- 
--	sper->arm_spe_pmu = arm_spe_pmu;
-+	sper->pmu = zalloc(sizeof(struct perf_pmu *) * nr_pmu);
-+	if (!sper->pmu) {
-+		free(sper);
-+		*err = -ENOMEM;
-+		return NULL;
-+	}
-+	memcpy(sper->pmu, arm_spe_pmu, sizeof(struct perf_pmu *) * nr_pmu);
-+	sper->nr_pmu = nr_pmu;
-+
- 	sper->itr.snapshot_start = arm_spe_snapshot_start;
- 	sper->itr.snapshot_finish = arm_spe_snapshot_finish;
- 	sper->itr.find_snapshot = arm_spe_find_snapshot;
+ 	struct perf_record_auxtrace_info *auxtrace_info = &event->auxtrace_info;
+-	size_t min_sz = sizeof(u64) * ARM_SPE_AUXTRACE_PRIV_MAX;
++	size_t min_sz = ARM_SPE_AUXTRACE_V1_PRIV_SIZE;
+ 	struct perf_record_time_conv *tc = &session->time_conv;
+ 	const char *cpuid = perf_env__cpuid(session->evlist->env);
+ 	u64 midr = strtol(cpuid, NULL, 16);
 diff --git a/tools/perf/util/arm-spe.h b/tools/perf/util/arm-spe.h
-index 4f4900c18f3e..e1327e1b3fec 100644
+index e1327e1b3fec..5d587a8e3cf8 100644
 --- a/tools/perf/util/arm-spe.h
 +++ b/tools/perf/util/arm-spe.h
-@@ -22,7 +22,8 @@ struct perf_session;
- struct perf_pmu;
+@@ -12,10 +12,42 @@
+ enum {
+ 	ARM_SPE_PMU_TYPE,
+ 	ARM_SPE_PER_CPU_MMAPS,
++	/*
++	 * The initial version doesn't have version number, so version 1 is
++	 * reserved and the header version starts from 2.
++	 */
++	ARM_SPE_HEADER_VERSION,
++	ARM_SPE_CPU_NUM,
+ 	ARM_SPE_AUXTRACE_PRIV_MAX,
+ };
  
- struct auxtrace_record *arm_spe_recording_init(int *err,
--					       struct perf_pmu *arm_spe_pmu);
-+					       struct perf_pmu **arm_spe_pmu,
-+					       int nr_pmu);
+-#define ARM_SPE_AUXTRACE_PRIV_SIZE (ARM_SPE_AUXTRACE_PRIV_MAX * sizeof(u64))
++enum {
++	ARM_SPE_CPU,
++	ARM_SPE_CPU_MIDR,
++	ARM_SPE_CPU_PMU_TYPE,
++	ARM_SPE_CAP_MIN_IVAL,
++	ARM_SPE_CAP_LDS,
++	ARM_SPE_PER_CPU_PRIV_MAX,
++};
++
++#define ARM_SPE_HEADER_CURRENT_VERSION	2
++
++#define ARM_SPE_METADATA_SIZE(cnt)	((cnt) * sizeof(u64))
++
++#define ARM_SPE_AUXTRACE_V1_PRIV_MAX		\
++	(ARM_SPE_PER_CPU_MMAPS + 1)
++#define ARM_SPE_AUXTRACE_V1_PRIV_SIZE		\
++	ARM_SPE_METADATA_SIZE(ARM_SPE_AUXTRACE_V1_PRIV_MAX)
++
++#define ARM_SPE_AUXTRACE_V2_PRIV_MAX		\
++	(ARM_SPE_CPU_NUM + 1)
++#define ARM_SPE_AUXTRACE_V2_PRIV_SIZE		\
++	ARM_SPE_METADATA_SIZE(ARM_SPE_AUXTRACE_V2_PRIV_MAX)
++
++#define ARM_SPE_AUXTRACE_V2_PRIV_PER_CPU_MAX	\
++	(ARM_SPE_CAP_LDS + 1)
++#define ARM_SPE_AUXTRACE_V2_PER_CPU_SIZE	\
++	ARM_SPE_METADATA_SIZE(ARM_SPE_AUXTRACE_V2_PRIV_PER_CPU_MAX)
  
- int arm_spe_process_auxtrace_info(union perf_event *event,
- 				  struct perf_session *session);
+ union perf_event;
+ struct perf_session;
 -- 
 2.34.1
 
