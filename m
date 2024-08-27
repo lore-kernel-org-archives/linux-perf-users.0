@@ -1,56 +1,25 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0931B2EAE6;
-	Tue, 27 Aug 2024 20:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0A6186A
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 20:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724789220; cv=none; b=QvknDPA53GVXT3j56EfQ1yYMnhBfItgo1EI/LRhFTkzL3oRupG7nT1TT0/DiRjl8tYXFQQUZVVGBaUW8BnMd0218/dub3xTFOQco0GrtfrmYtGqUB41AcfPnWzaMdqk0xP3ohiWlCzHfIin5v6y6AU4r3rtHJCKMyeKSwfsrgOg=
+	t=1724790189; cv=none; b=I8OKGT2ddfPevYLor1iJVkHLaM4aq8+w9N3PkW6VhvEnfsjxfXsvm4gg5UfXjPOJhgaI0uiRCrysM17A6gAez8i8mWJafEDmDkc03yQnycWiplVyDnLv7i3RxiEidDFrIZvEsavOiUN8y3eI8FBr6Pe38dvyF62HGpv7FW5av7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724789220; c=relaxed/simple;
-	bh=+Kv1FoMn6DdNMFhcZJX7ztqIFzrkHlqBxGxB8fS9Hic=;
+	s=arc-20240116; t=1724790189; c=relaxed/simple;
+	bh=QVLgtXAaJFNDXp7w1NC+JndVmgL9ys/BNveX+wGv6Ro=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vB3BmbYnYlE+8sHkiJuKWEL1hlt+YcN0YUA6++fxkQaKFe9Z38euCK1+H4HbZOc1EhZy5BnSmE1dmw4gVQIrlQiqiF9/cOdgsRlgTTU7uzG4dsOfKTT8r+HRdYg1Rq1wcEGJthIEsjzthx40kdjCbVe22U8LHZPcqXNJYrD4kg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W4nlT81X; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W4nlT81X"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724789218; x=1756325218;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=+Kv1FoMn6DdNMFhcZJX7ztqIFzrkHlqBxGxB8fS9Hic=;
-  b=W4nlT81XDMNDhQxOgddRiEigIrhFoexQLAWjxcW30c/nG05xUfr7u+7T
-   0ywiHKgTRVhqpG6kkPbqLRACdJ1ngzhS3bS9n9MLgA2m0xinFjknKEca9
-   yXHPL13IxqpZmVndHLh2ryo5sua0kBNpBpek6bzqB7OFtbUpEiEenXuqm
-   4TW/u1jpmZPKoLUAQH+hbQIiCWpbM1yOQbk0xdEfZ320uLGLM1ildwumx
-   qgMNDePb2oGol6g4LDDAtI2HH/nQj6wZJ8NFvbPFUz/0eZio3Ol5qKaIu
-   KeJbBNY0HrdNrm5xDkXmNcrLG+SLRrSuXNYyHOYWNRqNpQF7PGCKmTXI2
-   w==;
-X-CSE-ConnectionGUID: WFBnyGBERGywfGF167yXvQ==
-X-CSE-MsgGUID: 4WIL/shDSQy62Uy1HIxAWA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="48675216"
-X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
-   d="scan'208";a="48675216"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 13:06:57 -0700
-X-CSE-ConnectionGUID: KOOuaoK1TTKsaIvYVecdLw==
-X-CSE-MsgGUID: J09S6uxsQIuboq3uPYM2bQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
-   d="scan'208";a="63498828"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 13:06:58 -0700
-Received: from [10.212.83.97] (kliang2-mobl1.ccr.corp.intel.com [10.212.83.97])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 11E9C20CFEDD;
-	Tue, 27 Aug 2024 13:06:55 -0700 (PDT)
-Message-ID: <e15110af-c2f2-47ff-99fd-649cf5b46e46@linux.intel.com>
-Date: Tue, 27 Aug 2024 16:06:55 -0400
+	 In-Reply-To:Content-Type; b=t9F+GtI5n5rH8hvCYI5Ln4s2ESV8/a6ffYPxRYDmx/otxx8skk9LO80s5yyFqsOQK3AiSRYJ3KHA7V8DnmOY4MhwVjgDUIMGh6roRh8J7XpEaWqILXw9341qd+hZYN2zro3vn2Pt3z/QsAVE9Lr8MqeFRk4WZQcregi0qHFpNi4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42891DA7;
+	Tue, 27 Aug 2024 13:23:32 -0700 (PDT)
+Received: from [10.57.81.3] (unknown [10.57.81.3])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9A5B3F73B;
+	Tue, 27 Aug 2024 13:23:04 -0700 (PDT)
+Message-ID: <23c27981-76c0-4921-b8aa-04f46ac3d6f1@arm.com>
+Date: Tue, 27 Aug 2024 21:23:00 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -58,135 +27,102 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 2/2] perf/core: Fix incorrect time diff in tick adjust
- period
-To: Adrian Hunter <adrian.hunter@intel.com>,
- Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
-Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240821134227.577544-1-luogengkun@huaweicloud.com>
- <20240821134227.577544-3-luogengkun@huaweicloud.com>
- <c5b73b4f-b257-4847-a213-741889d89159@linux.intel.com>
- <c1b2a1b6-8b6d-40b4-84d4-d007c024fc84@intel.com>
+Subject: Re: [PATCH V2 5/5] Adjust objdump start/end range per map pgoff
+ parameter
+To: Steve Clevenger <scclevenger@os.amperecomputing.com>,
+ james.clark@linaro.org, mike.leach@linaro.org
+Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
+ coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <cover.1724698250.git.scclevenger@os.amperecomputing.com>
+ <7bbd5ca482b052d1c52efc52742f5c2713d5c26c.1724698250.git.scclevenger@os.amperecomputing.com>
 Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <c1b2a1b6-8b6d-40b4-84d4-d007c024fc84@intel.com>
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <7bbd5ca482b052d1c52efc52742f5c2713d5c26c.1724698250.git.scclevenger@os.amperecomputing.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-
-
-On 2024-08-27 1:16 p.m., Adrian Hunter wrote:
-> On 27/08/24 19:42, Liang, Kan wrote:
->>
->>
->> On 2024-08-21 9:42 a.m., Luo Gengkun wrote:
->>> Perf events has the notion of sampling frequency which is implemented in
->>> software by dynamically adjusting the counter period so that samples occur
->>> at approximately the target frequency.  Period adjustment is done in 2
->>> places:
->>>  - when the counter overflows (and a sample is recorded)
->>>  - each timer tick, when the event is active
->>> The later case is slightly flawed because it assumes that the time since
->>> the last timer-tick period adjustment is 1 tick, whereas the event may not
->>> have been active (e.g. for a task that is sleeping).
->>>
->>
->> Do you have a real-world example to demonstrate how bad it is if the
->> algorithm doesn't take sleep into account?
->>
->> I'm not sure if introducing such complexity in the critical path is
->> worth it.
->>
->>> Fix by using jiffies to determine the elapsed time in that case.
->>>
->>> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
->>> ---
->>>  include/linux/perf_event.h |  1 +
->>>  kernel/events/core.c       | 11 ++++++++---
->>>  2 files changed, 9 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
->>> index 1a8942277dda..d29b7cf971a1 100644
->>> --- a/include/linux/perf_event.h
->>> +++ b/include/linux/perf_event.h
->>> @@ -265,6 +265,7 @@ struct hw_perf_event {
->>>  	 * State for freq target events, see __perf_event_overflow() and
->>>  	 * perf_adjust_freq_unthr_context().
->>>  	 */
->>> +	u64				freq_tick_stamp;
->>>  	u64				freq_time_stamp;
->>>  	u64				freq_count_stamp;
->>>  #endif
->>> diff --git a/kernel/events/core.c b/kernel/events/core.c
->>> index a9395bbfd4aa..86e80e3ef6ac 100644
->>> --- a/kernel/events/core.c
->>> +++ b/kernel/events/core.c
->>> @@ -55,6 +55,7 @@
->>>  #include <linux/pgtable.h>
->>>  #include <linux/buildid.h>
->>>  #include <linux/task_work.h>
->>> +#include <linux/jiffies.h>
->>>  
->>>  #include "internal.h"
->>>  
->>> @@ -4120,7 +4121,7 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>>  {
->>>  	struct perf_event *event;
->>>  	struct hw_perf_event *hwc;
->>> -	u64 now, period = TICK_NSEC;
->>> +	u64 now, period, tick_stamp;
->>>  	s64 delta;
->>>  
->>>  	list_for_each_entry(event, event_list, active_list) {
->>> @@ -4148,6 +4149,10 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>>  		 */
->>>  		event->pmu->stop(event, PERF_EF_UPDATE);
->>>  
->>> +		tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
->>
->> Seems it only needs to retrieve the time once at the beginning, not for
->> each event.
->>
->> There is a perf_clock(). It's better to use it for the consistency.
+On 8/26/2024 10:35 PM, Steve Clevenger wrote:
 > 
-> perf_clock() is much slower, and for statistical sampling it doesn't
-> have to be perfect.
+> Changes in V2:
+>   - Updated mailing list distribution
+> 
+> Extract map_pgoff parameter from the dictionary, and adjust start/end
+> range passed to objdump based on the value.
+> 
+> The start_addr/stop_addr address checks are changed to print a warning
+> only if verbose == True. This script repeatedly sees a zero value passed
+> in for
+>       start_addr = cpu_data[str(cpu) + 'addr']
+> 
+> These zero values are not a new problem. The start_addr/stop_addr warning
+> clutters the instruction trace output, hence this change.
+> 
+> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
+> ---
+>  .../perf/scripts/python/arm-cs-trace-disasm.py  | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> index d973c2baed1c..6bf806078f9a 100755
+> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+> @@ -187,6 +187,7 @@ def process_event(param_dict):
+>         dso_start = get_optional(param_dict, "dso_map_start")
+>         dso_end = get_optional(param_dict, "dso_map_end")
+>         symbol = get_optional(param_dict, "symbol")
+> +       map_pgoff = get_optional(param_dict, "map_pgoff")
+> 
+>         cpu = sample["cpu"]
+>         ip = sample["ip"]
+> @@ -250,13 +251,25 @@ def process_event(param_dict):
+>                 return
+> 
+>         if (start_addr < int(dso_start) or start_addr > int(dso_end)):
+> -               print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
+> +               if (options.verbose == True):
+> +                       print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
+>                 return
+> 
+>         if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
+> -               print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
+> +               if (options.verbose == True):
+> +                       print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
+>                 return
+> 
+> +       if map_pgoff != None and map_pgoff != '[unknown]':
+> +               if (dso == "[kernel.kallsyms]"):
+> +                       dso_vm_start = 0
+> +                       map_pgoff = '[unknown]'
+> +               else:
+> +                       dso_vm_start = int(dso_start)
+> +                       start_addr += map_pgoff
+> +                       stop_addr += map_pgoff
+> +                       map_pgoff = '[unknown]'
 
-Because of rdtsc?
+Every sample has its own field `map_pgoff`. So I am confused why we need the
+sentence: map_pgoff = '[unknown]'. And you can see with above change, we will
+set dso_vm_start delicately with below code section.
 
-If it is only used here, it should be fine. What I'm worried about is
-that someone may use it with other timestamp in perf later. Anyway, it's
-not a big deal.
+How about a simple change like below?
 
-The main concern I have is that do we really need the patch?
-It seems can only bring us a better guess of the period for the sleep
-test. Then we have to do all the calculate for each tick.
+@@ -267,7 +268,7 @@ def process_event(param_dict):
+
+  dso_fname = get_dso_file_path(dso, dso_bid)
+  if path.exists(dso_fname):
+-     print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
++     print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff, stop_addr +
+map_pgoff)
+
+If this change does not work, I am curious if anything we missed to handle in
+the perf's C code (frontend).
 
 Thanks,
-Kan
-> 
->>
->> Thanks,
->> Kan
->>> +		period = tick_stamp - hwc->freq_tick_stamp;
->>> +		hwc->freq_tick_stamp = tick_stamp;
->>> +
->>>  		now = local64_read(&event->count);
->>>  		delta = now - hwc->freq_count_stamp;
->>>  		hwc->freq_count_stamp = now;
->>> @@ -4157,9 +4162,9 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
->>>  		 * reload only if value has changed
->>>  		 * we have stopped the event so tell that
->>>  		 * to perf_adjust_period() to avoid stopping it
->>> -		 * twice.
->>> +		 * twice. And skip if it is the first tick adjust period.
->>>  		 */
->>> -		if (delta > 0)
->>> +		if (delta > 0 && likely(period != tick_stamp))
->>>  			perf_adjust_period(event, period, delta, false);>
->>>  		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
-> 
+Leo
+
+>         if (options.objdump_name != None):
+>                 # It doesn't need to decrease virtual memory offset for disassembly
+>                 # for kernel dso and executable file dso, so in this case we set
+> --
+> 2.25.1
 > 
