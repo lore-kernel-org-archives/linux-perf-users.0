@@ -1,59 +1,58 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCB6C13D;
-	Tue, 27 Aug 2024 05:49:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E059198A34
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 09:13:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724737769; cv=none; b=ci/3hBvYkLi03Ty4o4lPq5isxIPW29nZx7SxBdr6xo33gql/AihoJ23fSzKLeQ578oUIQuB6fl471rYkKkvQznJnnMc6vMOn5T58Bhj8HF+mRVY4jZtan4NSV2pAboKJ62//n5x90zC/0Efk2ggmV7mvN4i2HyWDdE0y0pnnw8w=
+	t=1724750008; cv=none; b=mxZUvYJrig1lVy7ErtO6FiE7rcVMEpyDEQllG/TsvP2EXpQ+4mvou9YoDVoTPTRgAX3OSIcrE1EP4Sa5/8ZMennKT+wrHyRUUoFSJUQyzdib0HYRAaMcECkveLi+f4UjtJBXSC7X/57EY9OBzr05uqWJA0AGeZ+OwbubUs5tl3c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724737769; c=relaxed/simple;
-	bh=H71/aYAXqYJwAN8sgbtfV+aIuHl/VGuoiUnucCnLxJE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=a3LmPjXZt3np+EtANExgL/fWL913Vs/UOiVsRo4nUWTxpUqq3516ZbHMLZIB3Imi23d1xawg2nhe8ejHldWAgJ+Q/pNPYYQ+1XRHZARdju8oOlsVcwaTAPmWUcfwmJezgyboSwYyqWB3e+vuFC0BYXXCVzT7cBJNAggao+3U/ag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEzUS56v; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724750008; c=relaxed/simple;
+	bh=V90sN7VBxnn8Ka2+52DS2oyXgNuXtvZg40rY21lxveA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OHMe5vItWE1Kg2AmeQo2zQyDPMcQ834qNbCw/m8HJSEZbICR8fJ25xn5H/olLiGtj21vsmiwkI2cNM/z3S0McZZyNmZfnp3agIQ/iGEg8ANXd7odfQ00C87KFT6YCuCEEtkpJnVYw1k6toX3RdHfwju5/5QU07m38iUf1STrUus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3wA0W5f; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEzUS56v"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2d3c99c5d69so571138a91.1;
-        Mon, 26 Aug 2024 22:49:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3wA0W5f"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-37198a6da58so3663947f8f.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 02:13:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724737767; x=1725342567; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KlV3mNALClF5Ml0OpbfhYTioIXZRLuIAswgGkI4NLF8=;
-        b=ZEzUS56vrY6Uzwk/QhQvL8v+koc7a0erKxsLOe9OhGNL9MF9aWKsGy3vJejTNV9lU4
-         FoXMKYZvhWFWXHgm3kxpPj63YnSuwcwAO5BcUyHXqg+1p7TB1DEuD1sFrUJP3NNUahJl
-         OfvHR0+dVlaOPdJ0N/o+2pqDIQR9w65LAVscWhJcjsLsDl4I8p2viPpRa82w8MlVgTRz
-         y/HM3pMXyll6pxUzpadwoAlmecX8OiE/AR2uy1CYTyv3QtMK7Qo81/jnje0LBoDRx64u
-         QidyspwMHQb9DTPp17SHl6iH4rYTnFW36H8sqoJdV295EVTpv53ap2v+y9PSTsVJtEEa
-         9i+w==
+        d=linaro.org; s=google; t=1724750003; x=1725354803; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MkOblmPhkLIe6oEykDBHRoLpfI5FhOdoxnXEnkmHpFs=;
+        b=x3wA0W5fwAJMZ1ennsL+jpLhUrZnH3/2xMa+KeLmsvMLfWN55GmsUXoQ4NpMFGlfYy
+         UHtOucwYkIlisZb7jThzduXEZjU0N4GnPrS0g+JGl+YBFA1A0ch/pnyW3WBngkvbyH4+
+         6mW/d6UKWLIHERqtKezf2FCo/ibEOzzQzLbD8konFARULVJehiJqbHLSquBRuRhOxGdi
+         1f/L1nvOD6wL+pSAKxkcdlT2fMV7bf8Y6W651qbSCV+Ed8QBnRaZ3pDBBlitpOsT65Sv
+         HuRnpvQmK8HxdfuKgFUAMg043im6dIsvS+/R7EpZl66ZtGWVoh60GvcclGOoOPBiF+CT
+         r4aQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724737767; x=1725342567;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1724750003; x=1725354803;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KlV3mNALClF5Ml0OpbfhYTioIXZRLuIAswgGkI4NLF8=;
-        b=DdQObydYVVVGe7Li0DoJFzNVOKMo05i1FDZ8Yhqpn9WYWNwt8SE33LguJ5N2Ql1lKH
-         OcYLKf3pvWjTzvZ3bCFzGJGWQw6Tg1eTPrFkmE1CcYbs3n794gh46Nn6egqMnPV/YiUV
-         xtJxU88B74u5wEzg5mS6L40o3U36X2Fl53B07dg+vmdAtBIc0sDfeT1we4zQJtINzMCt
-         BhIroPbkDo4VLOUC+YPdj0TCPGm9PQIBeCNksLKlXEe6rhVYL72wnjvhOh756MHdnahh
-         2m0M+EQ1dt46YKRhKY5re60RvXoBDg8t+pkN0R+/7zy1QRSrQ/4gWpt935D4D8WkCACr
-         x8Gg==
-X-Forwarded-Encrypted: i=1; AJvYcCVaB9pCJYKwZFo8yiJTFqfGF88lb2y5ykdMGmcrS+wEoCqhdftZTFv8aslrGWv524bKvQ37Sf4GwHX6MwLvz4YfmQ==@vger.kernel.org, AJvYcCWCSfn654QyxqrlBoNiswLUZl7vgUTJR1Np9+u3Dx8VPViv67Y2g+E7Im+YJehKIaf9WmpzHHX3YBA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyO1b2vyUwhnq0wDj4CXAptPTAVljki65co2qTZx6wZJRKyVh7A
-	gCnVcclXEW6exh+zL3EPy08hxf7UJFxTpNHDL5A8ch/fLIJMs1z4
-X-Google-Smtp-Source: AGHT+IGfucX9mDgUrzuySTCskPK0kKV/1nkYr22Dy0uEMx1ge1Jh/riVvE/aoiayy+EYt3LC7FNegQ==
-X-Received: by 2002:a05:6a20:4329:b0:1c4:92fc:7c79 with SMTP id adf61e73a8af0-1cc89ed9494mr9798523637.5.1724737767113;
-        Mon, 26 Aug 2024 22:49:27 -0700 (PDT)
-Received: from [192.168.50.95] ([118.32.98.101])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-203856099c9sm75766165ad.210.2024.08.26.22.49.24
+        bh=MkOblmPhkLIe6oEykDBHRoLpfI5FhOdoxnXEnkmHpFs=;
+        b=OvOcFTy2fCIcYfNpX5BPOjMUKDcaV/dpgk2mw7whbWazdp8Si4Q+WXZd83bSdROyrv
+         6kN7M2ahn/RiOkWlHvrM3SC6ikm2GLgxt5uvEBc06QbQztL7WGxNtOAFhEIT+xj88B5d
+         xL+lZBRqbaII6HtaG+OhksEdQKx+qflpAYXvakWLb1sI2/Wq42LohL2dnitABpnNfitH
+         SHVslSQGb5TyCDJrvbbzgwuMniZ/M09Z5CosQlZSOYti/F3Xu9jnPFQeqwSgNo+Dhy2o
+         VLfkRwdEwGjsf1grtp/ewySR3TeI1rUVQTm/BKm+WE2X9m/INaJ+3tBpyXz5st7xrinT
+         Ex0g==
+X-Gm-Message-State: AOJu0YzojSjoF0p5nS5oiiS5pJm1+uLj85/FIU1SoasIbeaxAduIRJIL
+	8finpk7vtT0EYcy/zVqUcXxdQzg7dBAY3uB3YuQxlqR55s54EfHXILng1SgI8EQ=
+X-Google-Smtp-Source: AGHT+IELDbQ0YInZRqLz+AEkpiYsCf7f42uK8vcwLez7hBLrv03kT5qUnySR5SzQV+tSfEm/vuuEJg==
+X-Received: by 2002:a05:6000:1b92:b0:371:79f0:2cfb with SMTP id ffacd0b85a97d-373118c8523mr8634246f8f.46.1724750003086;
+        Tue, 27 Aug 2024 02:13:23 -0700 (PDT)
+Received: from [192.168.1.3] ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a86e594e809sm83491966b.219.2024.08.27.02.13.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Aug 2024 22:49:26 -0700 (PDT)
-Message-ID: <aed2411c-fd24-43e6-9094-9247513b1915@gmail.com>
-Date: Tue, 27 Aug 2024 14:49:23 +0900
+        Tue, 27 Aug 2024 02:13:22 -0700 (PDT)
+Message-ID: <b9ff0a13-7a77-4cb3-b8c0-e5fdf2d86e87@linaro.org>
+Date: Tue, 27 Aug 2024 10:13:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,140 +60,150 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Yunseong Kim <yskelg@gmail.com>
-Subject: Re: publish: perfwiki.github.io
-To: Ian Rogers <irogers@google.com>
-Cc: Namhyung Kim <namhyung@kernel.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- linux-perf-users <linux-perf-users@vger.kernel.org>,
- linux-doc@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
- MichelleJin <shjy180909@gmail.com>, Yeoreum Yun <ppbuk5246@gmail.com>,
- Jiri Olsa <olsajiri@gmail.com>, Gichoel Choi <gichoel3101@gmail.com>
-References: <7f2b1c74-4087-4da4-94eb-51d37f3d8fc2@gmail.com>
- <CAP-5=fVmP0sNaE-T0PAHb0y+Eoo7eNgDFyu7kCT+Hp+G62KXHw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] Event parsing fixes
+To: "Liang, Kan" <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>
+Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
+ Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
+ Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
+ Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Weilin Wang <weilin.wang@intel.com>,
+ Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Yang Jihong <yangjihong@bytedance.com>,
+ Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>,
+ Ze Gao <zegao2021@gmail.com>, Jing Zhang <renyu.zj@linux.alibaba.com>,
+ Sun Haiyong <sunhaiyong@loongson.cn>, Yicong Yang
+ <yangyicong@hisilicon.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20240822132506.1468090-1-james.clark@linaro.org>
+ <db095820-58a7-4b40-a12a-04b2f82cf903@linux.intel.com>
+ <CAP-5=fX632gBrCG6Z+oQGkk=daFcrGM605t_2H1Jo20sVwvtqQ@mail.gmail.com>
+ <961ff6d6-a9b3-4329-9a22-6934ca152318@linux.intel.com>
 Content-Language: en-US
-In-Reply-To: <CAP-5=fVmP0sNaE-T0PAHb0y+Eoo7eNgDFyu7kCT+Hp+G62KXHw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <961ff6d6-a9b3-4329-9a22-6934ca152318@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Ian,
 
-On 8/25/24 2:06 오후, Ian Rogers wrote:
-> On Fri, Aug 9, 2024 at 10:11 PM Yunseong Kim <yskelg@gmail.com> wrote:
 
->> Link: https://perfwiki.github.io/main/
+On 22/08/2024 4:18 pm, Liang, Kan wrote:
 > 
-> I think this is great Yunseong, thank you for doing it! Sorry for not
-> seeing your email earlier!
-
-Thank you so much for your encouragement. I was truly happy to receive your reply.
-Namhyung also offered a lot of encouragement through discord. :)
-
-I also appreciate you taking the time to read through my lengthy mail.
-
-I've currently added Namhyung, Ian, and Arnaldo as owners on perfwiki Github.
-Feel free to update the perfwiki markdown contents whenever it’s convenient for you.
-
-> Can you explain a little on how to create updates to the pages? For
-> example, I see the topdown markdown here:
-> https://github.com/perfwiki/main/blob/main/docs/top-down-analysis.md
-
-I'm open to receiving contributions via GitHub Pull Requests
-Link: https://github.com/perfwiki/main/pulls
-
-Similarly, if someone have any discussions or requests, anyone can leave them as issues
-Link: https://github.com/perfwiki/main/issues
-or contact me via email.
-
-I’ve written a guide on this topic in the README.md file.
-Link: https://github.com/perfwiki/main?tab=readme-ov-file#automated-deployment-from-markdown
-
-> It looks like if I update the markdown, in a fork, I then need to
-> generate the HTML:
-> https://github.com/perfwiki/main/blob/main/site/top-down-analysis/index.html
-> Presumably I send a pull request containing the HTML and the mark down?
-I took some time to review the deployment process for MkDocs.
-Link: https://www.mkdocs.org/user-guide/deploying-your-docs/#project-pages
-
-The branch used for deploying to the actual website is this one: "gh-pages" branch.
-Link: https://github.com/perfwiki/main/tree/gh-pages
-
-You can make changes to the markdown files in "main" branch directly.
-I’ve already deleted the site directory from the main branch where I
-previously made an incorrect push.
-
->> I noticed from the perf mailing list that there were issues with
->> logging in, and it seems the door lock is still broken with no sign
->> of it being fixed. This motivated me to start this migration.
 > 
-> Log in problems to the wiki have definitely been an issue. I think
-> using github is a sensible way to resolve this.
-
-Thank you for your feedback. Once the mirroring to GitLab is set up as planned,
-it will be even better, as anyone will be able to access the repository even
-if GitHub is down. :)
-
->> I wasn’t sure how long we’d have to wait to regain login access.
->> I hope you see this in a positive work and not as an act of rebellion
->> against using the original wiki. I genuinely believe this was the
->> best action I could take.
+> On 2024-08-22 11:10 a.m., Ian Rogers wrote:
+>> On Thu, Aug 22, 2024 at 7:32 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
+>>>
+>>>
+>>>
+>>> On 2024-08-22 9:24 a.m., James Clark wrote:
+>>>> I rebased this one and made some other fixes so that I could test it,
+>>>> so I thought I'd repost it here in case it's helpful. I also added a
+>>>> new test.
+>>>>
+>>>> But for the testing it all looks ok.
+>>>>
+>>>> There is one small difference where it now shows "stalled-cycles-..."
+>>>> as <not supported> events, when before it just didn't show them at all when
+>>>> they weren't supported:
+>>>>
+>>>>    $ perf stat -- true
+>>>>
+>>>>    Performance counter stats for 'true':
+>>>>
+>>>>                0.66 msec task-clock                       #    0.384 CPUs utilized
+>>>>                   0      context-switches                 #    0.000 /sec
+>>>>                   0      cpu-migrations                   #    0.000 /sec
+>>>>                  52      page-faults                      #   78.999 K/sec
+>>>>       <not counted>      cpu_atom/instructions/                                                  (0.00%)
+>>>>             978,399      cpu_core/instructions/           #    1.02  insn per cycle
+>>>>       <not counted>      cpu_atom/cycles/                                                        (0.00%)
+>>>>             959,722      cpu_core/cycles/                 #    1.458 GHz
+>>>>     <not supported>      cpu_atom/stalled-cycles-frontend/
+>>>>     <not supported>      cpu_core/stalled-cycles-frontend/
+>>>>
+>>>
+>>> Intel didn't support the events for a very long time. It would impact
+>>> many existing generations and all future generations.
+>>> The current method is to hide the non-exist events. The TopdownL1 is an
+>>> example. If it doesn't exist in the json file, perf stat will not
+>>> display it.
+>>> I don't think it's a good idea to disclose non-exist events in the perf
+>>> stat default.
+>>>
+>>> The <not supported> doesn't help here, since there could be many reasons
+>>> that the perf tool fails to open a counter. It just provides a
+>>> misleading message for an event that never existed.
 >>
->> This situation also made me wonder: Is it really a good idea for a
->> wiki, which is linked to the kernel and serves as an official
->> reference, to be updated without review from others through the
->> mailing list?
->>
->> While it might be convenient, during the migration,
->> I found quite a few documents that were linked for future additions
->> but never actually created.
+>> The list of "default" events, not metrics, similarly has "<not
+>> supported>" in many configurations with "-dd" or "-ddd" on AMD. I'm
+>> not sure the set of default events, at different detail levels, is
+>> necessarily the best. The default events can also be a source of
+>> multiplexing, for example, showing branch miss rate alongside topdown
+>> metrics. Anyway, for the "<not supported>" we should probably be able
+>> to tweak should_skip_zero_counter that is in stat-display.c and tag
+>> these default events as "skippable".
 > 
-> Agreed, the wiki has been a work in progress for a long time. It is
-> quite sad the corners haven't been filled out and the documentation
-> that is there slowly bitrots.
-
-Yes, as you mentioned, I will make the issue entries I identified during this
-migration as issues so that others can be informed as well.
-
->> With a review process through the
->> mailing list, I believe the documentation could have been more
->> systematically organized.
->>
->> One thing we need to check is the licensing of the original wiki
->> content. The existing documents do not clearly specify their licenses.
+> The "skippable" should be fine as long as it's completely hidden.
 > 
-> Agreed. Are there examples we can learn from? For example, libbpf is
-> active on github:
-> https://github.com/libbpf/libbpf
-
-Thank you Ian for providing the reference information. It would be great
-to have a guide with improved accessibility and easily accessible questions,
-similar to "libbpf" project. Going forward, when issues arise, I plan to refer
-to how popular opensource projects label issues for open source contributors.
-
-> Agreed. The perf documentation itself, largely the man pages, is a
-> fork from the git source code 15 years ago. I did a round of deleting
-> documentation that related to git and not to perf. I'm not sure how
-> you'd propose packaging the documentation if it were part of the perf
-> tool. I believe the thought in the wiki was to remove the burden that
-> exists sending things to LKML. It is also for the best that the build
-> not have external dependencies (such as downloading files) and is
-> reproducible. An issue with the man pages was that they defaulted to
-> placing the current date in them, I modified this so that we use the
-> git last modified date and it thereby made builds reproducible.
+> BTW: The stalled-cycles-backend should be similar to the
+> stalled-cycles-frontend, but it isn't shown in the example. Is the
+> stalled-cycles-backend event missed?
 > 
 > Thanks,
-> Ian
+> Kan
 
-You're right. I completely agree. It's definitely best to avoid external dependencies.
-Currently, there’s no specific packaging plan, and I’m just planning to link to the perf man
-documentation in the kernel repository for now.
+Sorry I should have made it clearer that I truncated the output just to 
+focus on the <not supported> part. The full output is below and it does 
+include stalled-cycles-backend.
 
-If you think there’s anything else I should work on or if I missed something, please let me know.
+I'll have a look at trying to hide the ones that don't exist, I think it 
+will look cleaner. But at the same time what it says isn't incorrect, 
+and it's not like we hide the lines from cores where the process didn't 
+run, so it doesn't look out of place with the <not counted> ones.
 
-Thank you for taking the time to read my long email.
 
-Please feel free to reach out anytime.
 
-Best regards,
-Yunseong Kim
+   $ perf stat -- true
 
+   Performance counter stats for 'true':
+
+                0.42 msec task-clock                #    0.439 CPUs 
+utilized
+                   0      context-switches          #    0.000 /sec 
+
+                   0      cpu-migrations            #    0.000 /sec 
+
+                  53      page-faults               #  125.592 K/sec 
+
+             978,160      cpu_atom/instructions/    #    0.91  insn per 
+cycle
+       <not counted>      cpu_core/instructions/                 (0.00%)
+           1,070,525      cpu_atom/cycles/          #    2.537 GHz 
+
+       <not counted>      cpu_core/cycles/                       (0.00%)
+     <not supported>      cpu_atom/stalled-cycles-frontend/
+     <not supported>      cpu_core/stalled-cycles-frontend/
+     <not supported>      cpu_atom/stalled-cycles-backend/
+     <not supported>      cpu_core/stalled-cycles-backend/
+             175,814      cpu_atom/branches/        #  416.620 M/sec 
+
+       <not counted>      cpu_core/branches/                     (0.00%)
+               6,851      cpu_atom/branch-misses/   #    3.90% of all 
+branches
+       <not counted>      cpu_core/branch-misses/                (0.00%)
+               TopdownL1 (cpu_atom)     #     17.4 % 
+tma_bad_speculation
+                                        #     21.8 %  tma_retiring 
+
+               TopdownL1 (cpu_atom)     #     27.5 %  tma_backend_bound 
+
+                                        #     33.3 %  tma_frontend_bound 
+
+
+         0.000960792 seconds time elapsed
+
+         0.000000000 seconds user
+         0.000471000 seconds sys
