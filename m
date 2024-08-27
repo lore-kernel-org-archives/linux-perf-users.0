@@ -1,193 +1,176 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0BAD517
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 15:30:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C6419D074;
+	Tue, 27 Aug 2024 16:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724772624; cv=none; b=oz7ghJi1Q6Ds4kgVYkI70l288yFODL0ke3MSAmoWh1s5w8PoUh2Up7Yajtr1p9rc/9AnCkvwBmRvqbQUztosTqpysjJT4ODKUvHy1UEpIpTNc4KvXfXJJuFvBQ8P1/7EF9J+ne+upbeVMgasqdt9ccPFR6JH8NxzrLAfMPfWlRU=
+	t=1724776369; cv=none; b=pDt5LJe688R1bAlgenxrDWCDYt7aXdAW9bujNJ41HCu22aUaZzohjAePXGUA9Oz8KhRdzTnCXX53H9nTitNgx48u7vcEKgrbhvHekHbZaOqri8gLH9kKfFStgW0nMNj21ka2IhPxuD2V2eFGmxGLsqlz5qkuo8HAM/xvHa4FxEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724772624; c=relaxed/simple;
-	bh=RrvifVylM460xSV6ryQ4sWHiMF2Na1CL/DEMc3KrLmo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Nvz7MYgJA1DDsJ3fVlikBKPH4aEBzNUE9N5RwF1O94oe0qevETVOmfgVE7VW3YY/iKGHY9czhyKRCt8YjrrFJ+NJwZSIHi2DOb7VwzDimhek/ERvSn4NhFEgG1x4gGv0+8Ip8T7O+45Dq00i/J/0BuZWfBXXqObDIpjKJHnrNJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zCEpO5Cv; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724776369; c=relaxed/simple;
+	bh=UWasNlc54W1BHwFGH/q2jps6anYu8yLxqPLhNlKOaOw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XzSRMO38GEg0oEuER1kV78WgJY/ARA3daVLSvIjsh6kXO5NoBeBWlGEQxqfLDMO+1QjOPXKIAC0F/MhgMAAMy0LEwqn6V4CHKuNJbqMu94U8EnAudOZefA/sludAZ3RD7uNYojcDUqFNe6Re9qC+4Ads4p02CFjBxPe8XuNaMFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VNO7YGCQ; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zCEpO5Cv"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-20260346ca1so239255ad.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 08:30:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724772622; x=1725377422; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=52lDzClgWIfDwjLe7orO5wLRybHMcHJGueg5E+ukdi8=;
-        b=zCEpO5CvFRqPFXdkZuHLCngkjbOAfVLpxbNUqmL8W9uYwLUipqTjVVN2JFozjOhhyB
-         pnYS6hVOD1vawdgk/v00y4Rv+R4H8z1IOr/Je/PEwUWcDp3emTHJ+XNB+ezBS6LR+nA4
-         oMaD626XSzLuyZRVNiiTJ/t/2lRZ8otzkowhSfXlt6CV7bkfe26gRxxPEuiPQwdXM2xD
-         kQVrUI58S91P1xiSVRWTKiCVe7f14DBbs1WZqiv+trqmnpW+Q556Wytwjcg76lfSMB8+
-         yNHdJs7693I1XoBcvNJ98zr3qPnRfU15Kvgu5tUaBEkkE2DPIPoD+uor9HOLSFo9RLxY
-         ERNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724772622; x=1725377422;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=52lDzClgWIfDwjLe7orO5wLRybHMcHJGueg5E+ukdi8=;
-        b=k4Ii1gdg6ZWq2yPbPRGkzAwfC3+3SeTE3aFaSi4xzjY7zyHIvBiCNdFyIYfEn2JgzV
-         TOc081VYub7QVSafTH7y0xcqys9uMpsKBXKDuTy0br9h/yRsEOnjNp9s4zhMfyuAW8nW
-         fMTrsubhptZ9kncOReXQi72NIWXzLZifD7nQm0+RLHk4s49lPtaZbL7mIjazTitTpHMk
-         51CdL+EOaw/+a9ZTUTljtbJjMDT5OSTpjVXOvrcMKtv/ufXJ0a4DH6qByLszsuD2esGf
-         neKRXJaFELlOgwMXHkIhpmovYRUl3x5bhcf2hF2TEkpUAVFKPO78oeCoZ0LCFQRYvcn+
-         XBSA==
-X-Forwarded-Encrypted: i=1; AJvYcCXmmmFp/yd7qShklNOq8BEY/nDZpjj54Gnb4Y82wkSJdNydgqxwZAGkqQP4q3qDX/8Z3Rs7pKpnQ1s0sxp1Wtum@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywu6qEv549T4/bPuk3NvFa5Ads2cUiEVybUoWeKo5Wuh5uYeU/2
-	6UX7Ze6e0KkBzfszZL5Yl1dE5+SRAj/cUwFcQ73XeaRoe7JFTZ2TBPN9UmDUGDQBluTeFXOUbl9
-	jy18RFgWZ6to1A5fLeYDgH3YqaPyk+PLGH5IZ
-X-Google-Smtp-Source: AGHT+IGaDewL8Pg/Wjw0RU5NHRtlyKO6nhTpAU3Lg4rCcydL7fHaObnOyrHHsW4jK9kJ8V5hhAMz5j4P9PyZyYtN7Hc=
-X-Received: by 2002:a17:903:247:b0:201:e2db:7be3 with SMTP id
- d9443c01a7336-204e50afb13mr2895225ad.21.1724772621940; Tue, 27 Aug 2024
- 08:30:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNO7YGCQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1724776368; x=1756312368;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=UWasNlc54W1BHwFGH/q2jps6anYu8yLxqPLhNlKOaOw=;
+  b=VNO7YGCQMjA2N00hgbucYYGlpdiv7gFyiHOIc9PuUhph2nRay3H7cijT
+   53DmdtoabKg5mbOp2uFhdiziuvfE3IsZQrDOmH83+ZnMY/9UoMtIsQ824
+   pGeXtrsqSGWJxeZ3gLZDqkeGEkxAEPsnaZNp4SU4WrJhkPhgCJdV1S43p
+   ctcZxCsv4zOnUZ9WJ0sUy1/EvuNRiP4qfpO33Kb6+Hx21JSODmPYQ94n9
+   k/OnA1ThdG6aJPGio/ladrtVE/0We5Ob4WXsm6hQJcxfHJq0jBrOx0LOz
+   PFb/W42i0dhvaSGJBjSbzBRtXCZHS7x2HP9fJ4QrIOuWuOJ2vx53UIQ6d
+   g==;
+X-CSE-ConnectionGUID: vundmbgJT2SxUwcdKhMDOw==
+X-CSE-MsgGUID: uPJjy7dtTIO4aMxaGk7F3A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="23448504"
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="23448504"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 09:32:47 -0700
+X-CSE-ConnectionGUID: b8XDM3wTReyzNPyQBYvNTQ==
+X-CSE-MsgGUID: epHKnMABQkuJZjqCwmY6MA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,180,1719903600"; 
+   d="scan'208";a="63084795"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 09:32:46 -0700
+Received: from [10.212.83.97] (kliang2-mobl1.ccr.corp.intel.com [10.212.83.97])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 43D3620CFED7;
+	Tue, 27 Aug 2024 09:32:45 -0700 (PDT)
+Message-ID: <a530f6de-3a89-47fc-bc4e-ea5cc57ee006@linux.intel.com>
+Date: Tue, 27 Aug 2024 12:32:44 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240827053206.538814-1-kjain@linux.ibm.com>
-In-Reply-To: <20240827053206.538814-1-kjain@linux.ibm.com>
-From: Ian Rogers <irogers@google.com>
-Date: Tue, 27 Aug 2024 08:30:09 -0700
-Message-ID: <CAP-5=fWBjt3pypEwEsbKsuNTqX+ZA7v9WbNJCUgc09xxF=pt1A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] perf vendor events power10: Update JSON/events
-To: Kajol Jain <kjain@linux.ibm.com>
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
-	maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, hbathini@linux.ibm.com, 
-	disgoel@linux.vnet.ibm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/2] perf/core: Fix small negative period being ignored
+To: Luo Gengkun <luogengkun@huaweicloud.com>, peterz@infradead.org
+Cc: mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
+ mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+ irogers@google.com, adrian.hunter@intel.com,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240821134227.577544-1-luogengkun@huaweicloud.com>
+ <20240821134227.577544-2-luogengkun@huaweicloud.com>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240821134227.577544-2-luogengkun@huaweicloud.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Aug 26, 2024 at 10:33=E2=80=AFPM Kajol Jain <kjain@linux.ibm.com> w=
-rote:
->
-> Update JSON/events for power10 platform with additional events.
->
-> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
 
-For the series:
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Just to note, the moving of events in patches 2 and 3 is necessary as
-the filename sets the "topic" in perf list. I'm not sure the whole
-"topic" thing makes total sense and we may want to revisit it at some
-date. For example, AMD generally put the topic into the event name,
-the PMU gives a strong hint of "topic", etc.
+On 2024-08-21 9:42 a.m., Luo Gengkun wrote:
+> In perf_adjust_period, we will first calculate period, and then use
+> this period to calculate delta. However, when delta is less than 0,
+> there will be a deviation compared to when delta is greater than or
+> equal to 0. For example, when delta is in the range of [-14,-1], the
+> range of delta = delta + 7 is between [-7,6], so the final value of
+> delta/8 is 0. Therefore, the impact of -1 and -2 will be ignored.
+> This is unacceptable when the target period is very short, because
+> we will lose a lot of samples.
+> 
+> Here are some tests and analyzes:
+> before:
+>   # perf record -e cs -F 1000  ./a.out
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.022 MB perf.data (518 samples) ]
+> 
+>   # perf script
+>   ...
+>   a.out     396   257.956048:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.957891:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.959730:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.961545:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.963355:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.965163:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.966973:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.968785:         23 cs:  ffffffff81f4eeec schedul>
+>   a.out     396   257.970593:         23 cs:  ffffffff81f4eeec schedul>
+>   ...
+> 
+> after:
+>   # perf record -e cs -F 1000  ./a.out
+>   [ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.058 MB perf.data (1466 samples) ]
+> 
+>   # perf script
+>   ...
+>   a.out     395    59.338813:         11 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.339707:         12 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.340682:         13 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.341751:         13 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.342799:         12 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.343765:         11 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.344651:         11 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.345539:         12 cs:  ffffffff81f4eeec schedul>
+>   a.out     395    59.346502:         13 cs:  ffffffff81f4eeec schedul>
+>   ...
+> 
+> test.c
+> 
+> int main() {
+>         for (int i = 0; i < 20000; i++)
+>                 usleep(10);
+> 
+>         return 0;
+> }
+> 
+>   # time ./a.out
+>   real    0m1.583s
+>   user    0m0.040s
+>   sys     0m0.298s
+> 
+> The above results were tested on x86-64 qemu with KVM enabled using
+> test.c as test program. Ideally, we should have around 1500 samples,
+> but the previous algorithm had only about 500, whereas the modified
+> algorithm now has about 1400. Further more, the new version shows 1
+> sample per 0.001s, while the previous one is 1 sample per 0.002s.This
+> indicates that the new algorithm is more sensitive to small negative
+> values compared to old algorithm.
+> 
+> Fixes: bd2b5b12849a ("perf_counter: More aggressive frequency adjustment")
+> Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
+> Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
+
+You may want to Cc stable to back port it to the LTS kernel.
+
+Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
 
 Thanks,
-Ian
-
+Kan
 > ---
->  .../arch/powerpc/power10/datasource.json      | 25 +++++++++++++++++++
->  .../arch/powerpc/power10/frontend.json        | 10 ++++++++
->  .../pmu-events/arch/powerpc/power10/pmc.json  |  5 ++++
->  3 files changed, 40 insertions(+)
->
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b=
-/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> index 0eeaaf1a95b8..283284745d9c 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
-> @@ -14,6 +14,31 @@
->      "EventName": "PM_DATA_FROM_MEMORY",
->      "BriefDescription": "The processor's data cache was reloaded from lo=
-cal, remote, or distant memory due to a demand miss."
->    },
-> +  {
-> +    "EventCode": "0x0000004080",
-> +    "EventName": "PM_INST_FROM_L1",
-> +    "BriefDescription": "An instruction fetch hit in the L1. Each fetch =
-group contains 8 instructions. The same line can hit 4 times if 32 sequenti=
-al instructions are fetched."
-> +  },
-> +  {
-> +    "EventCode": "0x000000026080",
-> +    "EventName": "PM_L2_LD_MISS",
-> +    "BriefDescription": "All successful D-Side Load dispatches for this =
-thread that missed in the L2. Since the event happens in a 2:1 clock domain=
- and is time-sliced across all 4 threads, the event count should be multipl=
-ied by 2."
-> +  },
-> +  {
-> +    "EventCode": "0x000000026880",
-> +    "EventName": "PM_L2_ST_MISS",
-> +    "BriefDescription": "All successful D-Side Store dispatches for this=
- thread that missed in the L2. Since the event happens in a 2:1 clock domai=
-n and is time-sliced across all 4 threads, the event count should be multip=
-lied by 2."
-> +  },
-> +  {
-> +    "EventCode": "0x010000046880",
-> +    "EventName": "PM_L2_ST_HIT",
-> +    "BriefDescription": "All successful D-side store dispatches for this=
- thread that were L2 hits. Since the event happens in a 2:1 clock domain an=
-d is time-sliced across all 4 threads, the event count should be multiplied=
- by 2."
-> +  },
-> +  {
-> +    "EventCode": "0x000000036880",
-> +    "EventName": "PM_L2_INST_MISS",
-> +    "BriefDescription": "All successful instruction (demand and prefetch=
-) dispatches for this thread that missed in the L2. Since the event happens=
- in a 2:1 clock domain and is time-sliced across all 4 threads, the event c=
-ount should be multiplied by 2."
-> +  },
->    {
->      "EventCode": "0x000300000000C040",
->      "EventName": "PM_INST_FROM_L2",
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/t=
-ools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> index 53660c279286..456971f60814 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-> @@ -93,5 +93,15 @@
->      "EventCode": "0x400FC",
->      "EventName": "PM_ITLB_MISS",
->      "BriefDescription": "Instruction TLB reload (after a miss), all page=
- sizes. Includes only demand misses."
-> +  },
-> +  {
-> +    "EventCode": "0x00000040B8",
-> +    "EventName": "PM_PRED_BR_TKN_COND_DIR",
-> +    "BriefDescription": "A conditional branch finished with correctly pr=
-edicted direction. Resolved taken."
-> +  },
-> +  {
-> +    "EventCode": "0x00000048B8",
-> +    "EventName": "PM_PRED_BR_NTKN_COND_DIR",
-> +    "BriefDescription": "A conditional branch finished with correctly pr=
-edicted direction. Resolved not taken."
->    }
->  ]
-> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json b/tools/=
-perf/pmu-events/arch/powerpc/power10/pmc.json
-> index 0e0253d0e757..04732698d9b2 100644
-> --- a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
-> +++ b/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
-> @@ -104,6 +104,11 @@
->      "EventName": "PM_RUN_CYC",
->      "BriefDescription": "Processor cycles gated by the run latch."
->    },
-> +  {
-> +    "EventCode": "0x200F8",
-> +    "EventName": "PM_EXT_INT",
-> +    "BriefDescription": "Cycles an external interrupt was active."
-> +  },
->    {
->      "EventCode": "0x30010",
->      "EventName": "PM_PMC2_OVERFLOW",
-> --
-> 2.43.5
->
+>  kernel/events/core.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index c973e3c11e03..a9395bbfd4aa 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -4092,7 +4092,11 @@ static void perf_adjust_period(struct perf_event *event, u64 nsec, u64 count, bo
+>  	period = perf_calculate_period(event, nsec, count);
+>  
+>  	delta = (s64)(period - hwc->sample_period);
+> -	delta = (delta + 7) / 8; /* low pass filter */
+> +	if (delta >= 0)
+> +		delta += 7;
+> +	else
+> +		delta -= 7;
+> +	delta /= 8; /* low pass filter */
+>  
+>  	sample_period = hwc->sample_period + delta;
+>  
