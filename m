@@ -1,128 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD0A6186A
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 20:23:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22C076056
+	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 21:37:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724790189; cv=none; b=I8OKGT2ddfPevYLor1iJVkHLaM4aq8+w9N3PkW6VhvEnfsjxfXsvm4gg5UfXjPOJhgaI0uiRCrysM17A6gAez8i8mWJafEDmDkc03yQnycWiplVyDnLv7i3RxiEidDFrIZvEsavOiUN8y3eI8FBr6Pe38dvyF62HGpv7FW5av7A=
+	t=1724794628; cv=none; b=f5eOu7qvZ6G9IQ0xZyQ3kvFcRDQXKSZThk2g+HFFPE8rqCgbMiR9bAjm3GhyNUonzYgOQa22NKYIaDp/1V+L/vydqAiP3FYfc4SzsCi5czQOcKucvB9v92MQO0nbfm8hvZMFX/RE4wOg35GHFSFyiPKMSm+8/9heToeZS+FfybI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724790189; c=relaxed/simple;
-	bh=QVLgtXAaJFNDXp7w1NC+JndVmgL9ys/BNveX+wGv6Ro=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=t9F+GtI5n5rH8hvCYI5Ln4s2ESV8/a6ffYPxRYDmx/otxx8skk9LO80s5yyFqsOQK3AiSRYJ3KHA7V8DnmOY4MhwVjgDUIMGh6roRh8J7XpEaWqILXw9341qd+hZYN2zro3vn2Pt3z/QsAVE9Lr8MqeFRk4WZQcregi0qHFpNi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42891DA7;
-	Tue, 27 Aug 2024 13:23:32 -0700 (PDT)
-Received: from [10.57.81.3] (unknown [10.57.81.3])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9A5B3F73B;
-	Tue, 27 Aug 2024 13:23:04 -0700 (PDT)
-Message-ID: <23c27981-76c0-4921-b8aa-04f46ac3d6f1@arm.com>
-Date: Tue, 27 Aug 2024 21:23:00 +0100
+	s=arc-20240116; t=1724794628; c=relaxed/simple;
+	bh=zgEgmrdD0ptR2rv9IaNbtPHc6vf0nOiTzwH2GpRCEzQ=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=baO1Ht6iBrmIKr9QTjUo3WMmO9066uaZEBQFF8Y23NBSLrxfAhW0jO5seo9owGv1MTNkBnEpPNaxrw2x+v5gsgQGywJhWucHThXs1hI/e/ob6vQn/x27bzwM6qZANEEkADhldqIl/LvgdzVL7HZwETddmwiNI7FaIPLWOX4bCSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P28gqYxO; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P28gqYxO"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6886cd07673so131695927b3.3
+        for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 14:37:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1724794625; x=1725399425; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=dluq5P0RLumNyO/9SBujDaYG7Xf4enGWH7djPxvSwQE=;
+        b=P28gqYxOzLOcekosT5rk31dumiVBRdC32Ksezu252N/Xz/Mem12Wepr2okANMyx03g
+         MGrMozFm+11aI53Txj7uIkysSqgZePk++s+UNR6KN/gIogXviF11AcbddH2OgXDOndy6
+         YwIAwO5AZIiJAsSmoSfFpGOBnwkOa0NsgGIGWvfY2EkaCLafaUIu6xldOcYQZn6o1HDk
+         /up4S3bHC8fnATpJSJamDXcF7zUQLLkUZlMRpTJqxYfHqTs7Q3HzJblRWZVfGNzfpuQb
+         w2lr4KMPoe9C3VJemB2ZAEySVk2wFoaFJzP07PBgoU9kz7GHk6H0bSvZieEhPz76WTUP
+         0/nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724794625; x=1725399425;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=dluq5P0RLumNyO/9SBujDaYG7Xf4enGWH7djPxvSwQE=;
+        b=tYbY/WJ04evotMwHk3KX5LOL/z1ZcZL61Ki3a88+8eLb3Yq9+EvnLf2aGb1khceRco
+         CUyzwYxYUnuULkquq50i9V3ATMbLv+zJ4rLvYRKMilDim/iE4FiFZ+UDOC07WD1NCWqS
+         yX9v+pJ0YHM71Fgr4WHk84Vn6u3BnXcx8yaaR4vwagzGZZGWXxsJDJ+fFeZYwmp06tHr
+         NKlanHs6SBxoCq2nabSmQVPz1gw0QfnGJj++qbRUcKeTHdKuiPRuZ4lTt00qpIVivkdJ
+         VEg1+TqQwrJFrTZgv49+G46TaUXKseds+f+VupD8k5X7Rivn42wIagyTHKtyXdW1UWia
+         ahIg==
+X-Forwarded-Encrypted: i=1; AJvYcCWQkAESKv1A5B+hJv55AcFMDPqhjVGf7dBczy9QmIQ/jd/HbXZKhf0Hc+QPFhZXf0ubhAp88qKd9fjKrpnXJmQP@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz9IWCFN4UIbOiVc03o3VeRY/K5DDwtncIy0PuulK0qcystYHPX
+	gwZmK4d5ZnUxvOwiITAM9mEcLpyN647c6QA+cjMCxwNXVN7N9cUN3RfjVUP8moOxwGjik0+TICo
+	ayFq6Ag==
+X-Google-Smtp-Source: AGHT+IHbgUiW+/3JydibTmeqr1pN94Tpwab3g7gq4l2Vdwkn9FplXLFyQAmd6R3YKxgoZ3pbUdYAZpmw3qtG
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:efd2:6807:80da:9919])
+ (user=irogers job=sendgmr) by 2002:a81:dc07:0:b0:691:41f5:7f3d with SMTP id
+ 00721157ae682-6c627f0b1e1mr569987b3.4.1724794625608; Tue, 27 Aug 2024
+ 14:37:05 -0700 (PDT)
+Date: Tue, 27 Aug 2024 14:27:57 -0700
+Message-Id: <20240827212757.1469340-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 5/5] Adjust objdump start/end range per map pgoff
- parameter
-To: Steve Clevenger <scclevenger@os.amperecomputing.com>,
- james.clark@linaro.org, mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
- coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1724698250.git.scclevenger@os.amperecomputing.com>
- <7bbd5ca482b052d1c52efc52742f5c2713d5c26c.1724698250.git.scclevenger@os.amperecomputing.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <7bbd5ca482b052d1c52efc52742f5c2713d5c26c.1724698250.git.scclevenger@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
+Subject: [PATCH v1] perf report: Name events in stats for pipe mode
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 8/26/2024 10:35 PM, Steve Clevenger wrote:
-> 
-> Changes in V2:
->   - Updated mailing list distribution
-> 
-> Extract map_pgoff parameter from the dictionary, and adjust start/end
-> range passed to objdump based on the value.
-> 
-> The start_addr/stop_addr address checks are changed to print a warning
-> only if verbose == True. This script repeatedly sees a zero value passed
-> in for
->       start_addr = cpu_data[str(cpu) + 'addr']
-> 
-> These zero values are not a new problem. The start_addr/stop_addr warning
-> clutters the instruction trace output, hence this change.
-> 
-> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
-> ---
->  .../perf/scripts/python/arm-cs-trace-disasm.py  | 17 +++++++++++++++--
->  1 file changed, 15 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> index d973c2baed1c..6bf806078f9a 100755
-> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> @@ -187,6 +187,7 @@ def process_event(param_dict):
->         dso_start = get_optional(param_dict, "dso_map_start")
->         dso_end = get_optional(param_dict, "dso_map_end")
->         symbol = get_optional(param_dict, "symbol")
-> +       map_pgoff = get_optional(param_dict, "map_pgoff")
-> 
->         cpu = sample["cpu"]
->         ip = sample["ip"]
-> @@ -250,13 +251,25 @@ def process_event(param_dict):
->                 return
-> 
->         if (start_addr < int(dso_start) or start_addr > int(dso_end)):
-> -               print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
-> +               if (options.verbose == True):
-> +                       print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
->                 return
-> 
->         if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
-> -               print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
-> +               if (options.verbose == True):
-> +                       print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
->                 return
-> 
-> +       if map_pgoff != None and map_pgoff != '[unknown]':
-> +               if (dso == "[kernel.kallsyms]"):
-> +                       dso_vm_start = 0
-> +                       map_pgoff = '[unknown]'
-> +               else:
-> +                       dso_vm_start = int(dso_start)
-> +                       start_addr += map_pgoff
-> +                       stop_addr += map_pgoff
-> +                       map_pgoff = '[unknown]'
+In stats mode PERF_RECORD_EVENT_UPDATE isn't being handled meaning the
+evsels aren't named when handling pipe mode output.
 
-Every sample has its own field `map_pgoff`. So I am confused why we need the
-sentence: map_pgoff = '[unknown]'. And you can see with above change, we will
-set dso_vm_start delicately with below code section.
+Before:
+```
+$ perf record -e inst_retired.any -a -o - sleep 0.1|perf report --stats -i -
+...
+Aggregated stats:
+           TOTAL events:      23358
+            COMM events:       2608  (11.2%)
+            EXIT events:          1  ( 0.0%)
+            FORK events:       2607  (11.2%)
+          SAMPLE events:        174  ( 0.7%)
+           MMAP2 events:      17936  (76.8%)
+            ATTR events:          2  ( 0.0%)
+  FINISHED_ROUND events:          2  ( 0.0%)
+        ID_INDEX events:          1  ( 0.0%)
+      THREAD_MAP events:          1  ( 0.0%)
+         CPU_MAP events:          1  ( 0.0%)
+    EVENT_UPDATE events:          3  ( 0.0%)
+       TIME_CONV events:          1  ( 0.0%)
+         FEATURE events:         20  ( 0.1%)
+   FINISHED_INIT events:          1  ( 0.0%)
+raw 0xc0 stats:
+          SAMPLE events:        174
+```
 
-How about a simple change like below?
+After:
+```
+$ perf record -e inst_retired.any -a -o - sleep 0.1|perf report --stats -i -
+...
+Aggregated stats:
+           TOTAL events:      23742
+            COMM events:       2620  (11.0%)
+            EXIT events:          2  ( 0.0%)
+            FORK events:       2619  (11.0%)
+          SAMPLE events:        165  ( 0.7%)
+           MMAP2 events:      18304  (77.1%)
+            ATTR events:          2  ( 0.0%)
+  FINISHED_ROUND events:          2  ( 0.0%)
+        ID_INDEX events:          1  ( 0.0%)
+      THREAD_MAP events:          1  ( 0.0%)
+         CPU_MAP events:          1  ( 0.0%)
+    EVENT_UPDATE events:          3  ( 0.0%)
+       TIME_CONV events:          1  ( 0.0%)
+         FEATURE events:         20  ( 0.1%)
+   FINISHED_INIT events:          1  ( 0.0%)
+inst_retired.any stats:
+          SAMPLE events:        165
+```
 
-@@ -267,7 +268,7 @@ def process_event(param_dict):
+This makes the pipe output match the regular output.
 
-  dso_fname = get_dso_file_path(dso, dso_bid)
-  if path.exists(dso_fname):
--     print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
-+     print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff, stop_addr +
-map_pgoff)
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+This bug pre-dates commit 113f614c6dd0 ("perf report: Use
+perf_tool__init()")
+---
+ tools/perf/builtin-report.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-If this change does not work, I am curious if anything we missed to handle in
-the perf's C code (frontend).
+diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
+index 1643113616f4..5c21ca33ca08 100644
+--- a/tools/perf/builtin-report.c
++++ b/tools/perf/builtin-report.c
+@@ -811,6 +811,7 @@ static void stats_setup(struct report *rep)
+ 	rep->tool.attr = process_attr;
+ 	rep->tool.sample = count_sample_event;
+ 	rep->tool.lost_samples = count_lost_samples_event;
++	rep->tool.event_update = perf_event__process_event_update;
+ 	rep->tool.no_warn = true;
+ }
+ 
+-- 
+2.46.0.295.g3b9ea8a38a-goog
 
-Thanks,
-Leo
-
->         if (options.objdump_name != None):
->                 # It doesn't need to decrease virtual memory offset for disassembly
->                 # for kernel dso and executable file dso, so in this case we set
-> --
-> 2.25.1
-> 
