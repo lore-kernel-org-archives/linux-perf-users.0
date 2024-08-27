@@ -1,209 +1,110 @@
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E059198A34
-	for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 09:13:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88BB76056;
+	Tue, 27 Aug 2024 09:20:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724750008; cv=none; b=mxZUvYJrig1lVy7ErtO6FiE7rcVMEpyDEQllG/TsvP2EXpQ+4mvou9YoDVoTPTRgAX3OSIcrE1EP4Sa5/8ZMennKT+wrHyRUUoFSJUQyzdib0HYRAaMcECkveLi+f4UjtJBXSC7X/57EY9OBzr05uqWJA0AGeZ+OwbubUs5tl3c=
+	t=1724750433; cv=none; b=s88NO5edwx0nTRs7j9PgyleV00QIXaW7N3yQtDwBYEQtI1I/QSTKW882wPxahd5Im8JlrMmVBYb4Xlug8mE24GmH0E4FPz11YMWY50hSeTTu6zd8zASNjsxJUlSHpIkf3giN0Rk66vsvqLHHXv3X2/7/+rQZlBHkYR9LkmLNzXI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724750008; c=relaxed/simple;
-	bh=V90sN7VBxnn8Ka2+52DS2oyXgNuXtvZg40rY21lxveA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OHMe5vItWE1Kg2AmeQo2zQyDPMcQ834qNbCw/m8HJSEZbICR8fJ25xn5H/olLiGtj21vsmiwkI2cNM/z3S0McZZyNmZfnp3agIQ/iGEg8ANXd7odfQ00C87KFT6YCuCEEtkpJnVYw1k6toX3RdHfwju5/5QU07m38iUf1STrUus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=x3wA0W5f; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1724750433; c=relaxed/simple;
+	bh=gtbhb54O0RAnnazSqHDzmfQXO7JPiWdE7fDbWQ9dxwI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kk7cHewPTdET7ihbb3OSEjIPUsTLOtkjoSYrAtvrYMaBXOsbN1ADIVMiUIZEKcB7Z2ZDYsaaReFswetv2QYuzPbq7G+zIkUj6olfLhSMAT/T6bcrKl486+cYp3q6EqD/tnnOzIS9g4OVV7PZUhSJFFYG+S+Glgy/fmZra6aqNsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D3WwBUse; arc=none smtp.client-ip=209.85.210.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x3wA0W5f"
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-37198a6da58so3663947f8f.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 27 Aug 2024 02:13:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D3WwBUse"
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-7142e002aceso4297963b3a.2;
+        Tue, 27 Aug 2024 02:20:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724750003; x=1725354803; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MkOblmPhkLIe6oEykDBHRoLpfI5FhOdoxnXEnkmHpFs=;
-        b=x3wA0W5fwAJMZ1ennsL+jpLhUrZnH3/2xMa+KeLmsvMLfWN55GmsUXoQ4NpMFGlfYy
-         UHtOucwYkIlisZb7jThzduXEZjU0N4GnPrS0g+JGl+YBFA1A0ch/pnyW3WBngkvbyH4+
-         6mW/d6UKWLIHERqtKezf2FCo/ibEOzzQzLbD8konFARULVJehiJqbHLSquBRuRhOxGdi
-         1f/L1nvOD6wL+pSAKxkcdlT2fMV7bf8Y6W651qbSCV+Ed8QBnRaZ3pDBBlitpOsT65Sv
-         HuRnpvQmK8HxdfuKgFUAMg043im6dIsvS+/R7EpZl66ZtGWVoh60GvcclGOoOPBiF+CT
-         r4aQ==
+        d=gmail.com; s=20230601; t=1724750431; x=1725355231; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=S3OD8akG8wHAOaiKj8NG5SpXVJ2rOAl/ksW7Y2RAtL8=;
+        b=D3WwBUse7ibh7Vuz8axqGEisi8HCeOYGl4ZBxNlZUFHZRnSozBqS7drJkTcERkZMsj
+         WSvSUMFUTIHFopX8PyU+KELiFIQVCR05tPofLuGzpTKYiHi1UI9ZfIAf1RVl6ywP55am
+         hcqrIiwzDWRl3/QVcQD7VFlYkbxN/RoyXzVXFCdsX6KSgx1v3CD/cVGtn9cbQKKJ/ZB7
+         voLucjBGCF60711CPxQON0rf0rsoS53mYEoe8/zBY9CY5cjw3/JEtYAfJo9Cur7iF1u4
+         BtrvFb4PCzkbn7norgCLFG7bWNopGmevLmqNUmu/CUB0fyC6RliuD5jZvJZzEmUBTcNu
+         ORKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724750003; x=1725354803;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MkOblmPhkLIe6oEykDBHRoLpfI5FhOdoxnXEnkmHpFs=;
-        b=OvOcFTy2fCIcYfNpX5BPOjMUKDcaV/dpgk2mw7whbWazdp8Si4Q+WXZd83bSdROyrv
-         6kN7M2ahn/RiOkWlHvrM3SC6ikm2GLgxt5uvEBc06QbQztL7WGxNtOAFhEIT+xj88B5d
-         xL+lZBRqbaII6HtaG+OhksEdQKx+qflpAYXvakWLb1sI2/Wq42LohL2dnitABpnNfitH
-         SHVslSQGb5TyCDJrvbbzgwuMniZ/M09Z5CosQlZSOYti/F3Xu9jnPFQeqwSgNo+Dhy2o
-         VLfkRwdEwGjsf1grtp/ewySR3TeI1rUVQTm/BKm+WE2X9m/INaJ+3tBpyXz5st7xrinT
-         Ex0g==
-X-Gm-Message-State: AOJu0YzojSjoF0p5nS5oiiS5pJm1+uLj85/FIU1SoasIbeaxAduIRJIL
-	8finpk7vtT0EYcy/zVqUcXxdQzg7dBAY3uB3YuQxlqR55s54EfHXILng1SgI8EQ=
-X-Google-Smtp-Source: AGHT+IELDbQ0YInZRqLz+AEkpiYsCf7f42uK8vcwLez7hBLrv03kT5qUnySR5SzQV+tSfEm/vuuEJg==
-X-Received: by 2002:a05:6000:1b92:b0:371:79f0:2cfb with SMTP id ffacd0b85a97d-373118c8523mr8634246f8f.46.1724750003086;
-        Tue, 27 Aug 2024 02:13:23 -0700 (PDT)
-Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a86e594e809sm83491966b.219.2024.08.27.02.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 27 Aug 2024 02:13:22 -0700 (PDT)
-Message-ID: <b9ff0a13-7a77-4cb3-b8c0-e5fdf2d86e87@linaro.org>
-Date: Tue, 27 Aug 2024 10:13:21 +0100
+        d=1e100.net; s=20230601; t=1724750431; x=1725355231;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=S3OD8akG8wHAOaiKj8NG5SpXVJ2rOAl/ksW7Y2RAtL8=;
+        b=CV67H+JzQuKkZIPxN8Sn4/euJ+qoEnqF19cXZl27LmrIXDPiRM5CkUecGOJ2/nynJw
+         SC4Mi54hqetMRfrDgd+8m6ZXyKHdTinksBWocCRjBT/axLZqRfZ42V4vQk3sKqZGDO59
+         BcCgrquX8zC7LV00Xr8ILIaUgPnik/xdLjg0H9PL/aJvbJBb7NKJSBTmQr/BPW6DnNws
+         cG4CcZrXM2UkP2LzgtITGCXVip7CFEUOoAUlMSubDdIAQ7v/SrYLSaiYnTZ9OptZGcLg
+         pNOcCdD0435BAaRXl5TXM2uiKUrB2gne4c53tWHn8zDCDKN/VEPQKnNb4tsYv1z0fZ6a
+         zTQw==
+X-Forwarded-Encrypted: i=1; AJvYcCV3Hmpck5w6q7YPRo0J4XZ1JPO4vJISK78DBIO3c+kIKlRJ/VawFSeMt4CImhNUZU83cKI8GY2Q8O1ZHYomvXNrlg==@vger.kernel.org, AJvYcCXOVqWyfLcjc0CLKJvME8hdNEffUJsMuV0Vxifmt83IC30SBuhG51rCPtPyOjJn8iHAt09YxcJ4Y3b51/A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyOzau+WkfDUOzg03I/MwwMNEWvhkgMQJO35Yn1sJilgDRbXzcW
+	bc4ybNCI2bnI7ulzUNK630FOo028Xd3K1LkupGqvqdaV6QcaaPyn
+X-Google-Smtp-Source: AGHT+IFMwNpEwzOdchRiBCm0k59fIKZASq1grwE3RloSqqXcnhuwbbbg7sQHO5ePgA5wBR2h9Asmjg==
+X-Received: by 2002:a05:6a21:164e:b0:1be:bfa2:5ac3 with SMTP id adf61e73a8af0-1ccc0997455mr2219641637.35.1724750431121;
+        Tue, 27 Aug 2024 02:20:31 -0700 (PDT)
+Received: from localhost.localdomain ([2600:1700:ab14:280:f82b:883b:12eb:74c7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d6136fdaeasm11523939a91.7.2024.08.27.02.20.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 27 Aug 2024 02:20:30 -0700 (PDT)
+From: Howard Chu <howardchu95@gmail.com>
+To: acme@kernel.org
+Cc: namhyung@kernel.org,
+	irogers@google.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Howard Chu <howardchu95@gmail.com>
+Subject: [PATCH v1 0/2] perf trace: Better -p support
+Date: Tue, 27 Aug 2024 17:20:11 +0800
+Message-Id: <20240827092013.1596-1-howardchu95@gmail.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/7] Event parsing fixes
-To: "Liang, Kan" <kan.liang@linux.intel.com>, Ian Rogers <irogers@google.com>
-Cc: linux-perf-users@vger.kernel.org, John Garry <john.g.garry@oracle.com>,
- Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>,
- Leo Yan <leo.yan@linux.dev>, Peter Zijlstra <peterz@infradead.org>,
- Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Weilin Wang <weilin.wang@intel.com>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Yang Jihong <yangjihong@bytedance.com>,
- Colin Ian King <colin.i.king@gmail.com>, Andi Kleen <ak@linux.intel.com>,
- Ze Gao <zegao2021@gmail.com>, Jing Zhang <renyu.zj@linux.alibaba.com>,
- Sun Haiyong <sunhaiyong@loongson.cn>, Yicong Yang
- <yangyicong@hisilicon.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20240822132506.1468090-1-james.clark@linaro.org>
- <db095820-58a7-4b40-a12a-04b2f82cf903@linux.intel.com>
- <CAP-5=fX632gBrCG6Z+oQGkk=daFcrGM605t_2H1Jo20sVwvtqQ@mail.gmail.com>
- <961ff6d6-a9b3-4329-9a22-6934ca152318@linux.intel.com>
-Content-Language: en-US
-From: James Clark <james.clark@linaro.org>
-In-Reply-To: <961ff6d6-a9b3-4329-9a22-6934ca152318@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
+Currently we don't support only collecting data for certain pids in perf
+trace. We either collect nothing or everything.
 
+Another thing is when using -p, becausing it's a per-pid mmap,
+bpf_perf_event_output will fail under current per-cpu only
+configuration. But since I fixed the -p problem already in the perf
+trace augmentation v3 patch series, this method will be an optimization
+instead of an actually bug fix.
 
-On 22/08/2024 4:18 pm, Liang, Kan wrote:
-> 
-> 
-> On 2024-08-22 11:10 a.m., Ian Rogers wrote:
->> On Thu, Aug 22, 2024 at 7:32 AM Liang, Kan <kan.liang@linux.intel.com> wrote:
->>>
->>>
->>>
->>> On 2024-08-22 9:24 a.m., James Clark wrote:
->>>> I rebased this one and made some other fixes so that I could test it,
->>>> so I thought I'd repost it here in case it's helpful. I also added a
->>>> new test.
->>>>
->>>> But for the testing it all looks ok.
->>>>
->>>> There is one small difference where it now shows "stalled-cycles-..."
->>>> as <not supported> events, when before it just didn't show them at all when
->>>> they weren't supported:
->>>>
->>>>    $ perf stat -- true
->>>>
->>>>    Performance counter stats for 'true':
->>>>
->>>>                0.66 msec task-clock                       #    0.384 CPUs utilized
->>>>                   0      context-switches                 #    0.000 /sec
->>>>                   0      cpu-migrations                   #    0.000 /sec
->>>>                  52      page-faults                      #   78.999 K/sec
->>>>       <not counted>      cpu_atom/instructions/                                                  (0.00%)
->>>>             978,399      cpu_core/instructions/           #    1.02  insn per cycle
->>>>       <not counted>      cpu_atom/cycles/                                                        (0.00%)
->>>>             959,722      cpu_core/cycles/                 #    1.458 GHz
->>>>     <not supported>      cpu_atom/stalled-cycles-frontend/
->>>>     <not supported>      cpu_core/stalled-cycles-frontend/
->>>>
->>>
->>> Intel didn't support the events for a very long time. It would impact
->>> many existing generations and all future generations.
->>> The current method is to hide the non-exist events. The TopdownL1 is an
->>> example. If it doesn't exist in the json file, perf stat will not
->>> display it.
->>> I don't think it's a good idea to disclose non-exist events in the perf
->>> stat default.
->>>
->>> The <not supported> doesn't help here, since there could be many reasons
->>> that the perf tool fails to open a counter. It just provides a
->>> misleading message for an event that never existed.
->>
->> The list of "default" events, not metrics, similarly has "<not
->> supported>" in many configurations with "-dd" or "-ddd" on AMD. I'm
->> not sure the set of default events, at different detail levels, is
->> necessarily the best. The default events can also be a source of
->> multiplexing, for example, showing branch miss rate alongside topdown
->> metrics. Anyway, for the "<not supported>" we should probably be able
->> to tweak should_skip_zero_counter that is in stat-display.c and tag
->> these default events as "skippable".
-> 
-> The "skippable" should be fine as long as it's completely hidden.
-> 
-> BTW: The stalled-cycles-backend should be similar to the
-> stalled-cycles-frontend, but it isn't shown in the example. Is the
-> stalled-cycles-backend event missed?
-> 
-> Thanks,
-> Kan
+!! Note that this patch series should be applied on top of the perf
+trace v3 patch series.
 
-Sorry I should have made it clearer that I truncated the output just to 
-focus on the <not supported> part. The full output is below and it does 
-include stalled-cycles-backend.
+Before:
+perf $ perf trace -e open -p 79768
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
 
-I'll have a look at trying to hide the ones that don't exist, I think it 
-will look cleaner. But at the same time what it says isn't incorrect, 
-and it's not like we hide the lines from cores where the process didn't 
-run, so it doesn't look out of place with the <not counted> ones.
+After:
+perf $ ./perf trace -e open -p 79768
+     0.000 ( 0.019 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+  1000.187 ( 0.031 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+  2000.377 ( 0.019 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
 
+Howard Chu (2):
+  perf trace: Collect data only for certain pids
+  perf trace: Use pid to index perf_event in BPF
 
+ tools/perf/builtin-trace.c                    | 100 ++++++++++++++++--
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     |  54 ++++++++--
+ tools/perf/util/evlist.c                      |   2 +-
+ 3 files changed, 135 insertions(+), 21 deletions(-)
 
-   $ perf stat -- true
+-- 
+2.46.0
 
-   Performance counter stats for 'true':
-
-                0.42 msec task-clock                #    0.439 CPUs 
-utilized
-                   0      context-switches          #    0.000 /sec 
-
-                   0      cpu-migrations            #    0.000 /sec 
-
-                  53      page-faults               #  125.592 K/sec 
-
-             978,160      cpu_atom/instructions/    #    0.91  insn per 
-cycle
-       <not counted>      cpu_core/instructions/                 (0.00%)
-           1,070,525      cpu_atom/cycles/          #    2.537 GHz 
-
-       <not counted>      cpu_core/cycles/                       (0.00%)
-     <not supported>      cpu_atom/stalled-cycles-frontend/
-     <not supported>      cpu_core/stalled-cycles-frontend/
-     <not supported>      cpu_atom/stalled-cycles-backend/
-     <not supported>      cpu_core/stalled-cycles-backend/
-             175,814      cpu_atom/branches/        #  416.620 M/sec 
-
-       <not counted>      cpu_core/branches/                     (0.00%)
-               6,851      cpu_atom/branch-misses/   #    3.90% of all 
-branches
-       <not counted>      cpu_core/branch-misses/                (0.00%)
-               TopdownL1 (cpu_atom)     #     17.4 % 
-tma_bad_speculation
-                                        #     21.8 %  tma_retiring 
-
-               TopdownL1 (cpu_atom)     #     27.5 %  tma_backend_bound 
-
-                                        #     33.3 %  tma_frontend_bound 
-
-
-         0.000960792 seconds time elapsed
-
-         0.000000000 seconds user
-         0.000471000 seconds sys
