@@ -1,57 +1,57 @@
-Received: from mail-pg1-f180.google.com (mail-pg1-f180.google.com [209.85.215.180])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7742619D88C;
-	Tue, 27 Aug 2024 09:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ED919D8B8;
+	Tue, 27 Aug 2024 09:20:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724750436; cv=none; b=gzq32RFwyhD7iAEmQjbLNeWWQ9yXIkdH7QhkXeBoJfjJ6JVa+rGWjzipll03HAMEas8idmq7EzyYY8MTlsCo5mfU1i9qKVfDx3AljUrkAzzenGiYaFwEK+51eHNRKk8QA2kZe8xZYnrd+T5smNYGWuvSnhbw9Rn3puimrOzv1xg=
+	t=1724750439; cv=none; b=ULOoRXonmQfRMuEz9lpGSUuUk0qy6RnIW8BNF98rKg0kHfUmSGEVHDaLMslIyXZfaKfkBlFr16OBQj7tJXQuUnzq3ZZ6OxduDElruCbUrhlkWjq9h5PlfeDeLzu3npxKbw3GCBqFG2BLYXNkKtekZG0hPS+/Tu4MbXLqbwGBA1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724750436; c=relaxed/simple;
-	bh=9aLLDm/VAlfzFoqOKhyK5jdipQ2A/0PKm5gpIg/eXUE=;
+	s=arc-20240116; t=1724750439; c=relaxed/simple;
+	bh=J9ep6SvvhVvWae5Siyf9xQ4d9pIREuEisVKN1WZ0ypg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=PyHw9YFLcOc7j86+bXGCA8OqW2ZCUdToYHsGIfOEFuhaevb/JconbZIv0GMiUIWL4kxqoaMS7AJg33xTpwkVW2FdWNFem3LVC5rjNKrixPoxQjN0eFlSkYrWA9R9fmrNqysaX8NhuHTw9S4ah1itesW6Sx5CKW30Cn2lznGuYZU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kWe9cIcf; arc=none smtp.client-ip=209.85.215.180
+	 MIME-Version; b=Ttb7lLU/Fha59skwlWWcKLJt8WExxgTC+/PNgaIlR24aso6nfLmhOyvtJQpUAU0kJ0r7/gd2S7nL+TfwKrHqV5xU5J1+FG6rOQT2ibF6iDIbngLUod05+EyqBNFL9tdBgfrG321YiX7TSdE93RFD8kAUS+ZyMmLoojJv/m3Lz38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qlk/3bzO; arc=none smtp.client-ip=209.85.210.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kWe9cIcf"
-Received: by mail-pg1-f180.google.com with SMTP id 41be03b00d2f7-7bb75419123so3400224a12.3;
-        Tue, 27 Aug 2024 02:20:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qlk/3bzO"
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-71446fefddfso2830944b3a.0;
+        Tue, 27 Aug 2024 02:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724750435; x=1725355235; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1724750437; x=1725355237; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7x374P9F0jPNFMTHJtbiCnmxTGpC6qte4AieI2H+Lys=;
-        b=kWe9cIcfZVR/86vDz1/q/+zZxTeTrVtc4E4VzuzUGrjoY4xXaAaF1qYfHgNSY1DijO
-         IW7+md/e94hq5zL+22MlFwulNX4s5Q7f/S7Z8YsqHUgkLp793MKvhqP62B1oufCB+Q3B
-         10fpxs5VAsEFTHSt34nHBSUrC7JhL+0RsWO9VLtl0A1dfiHs6BhCyle/ARTTU2I8emEo
-         VmqBvg4zk4eGPDoJZHO1MYhD/EuwGS0D/g9b+lhU6UiNqXV5cs6aMQ/X58CNOhqmb02a
-         L82m2OWYLn8tomaZEJFDvJB2RC7GBBSMcAKeeZDsHsyqW1ZZTHW/Jah8RW+N0NsT+Hua
-         jMfA==
+        bh=wrpdlMQ1W0rFqxCLf05gZ+eKlSN802JEZH3ICSjn+mU=;
+        b=Qlk/3bzOqvvFUDgIEiAdo/9iRqBJsIVA9vYCqxEDCYdjOGgJIpVm+0AV7FSTlCHvEj
+         ko40E22sy5+RZF3Wp/ir0GIfMfu6mIFvJ4z4lmSGK4c4R5twO4sFuzKdWtamxoPSyduA
+         mPPl/rMUb1OGTlvPVqd76B90cPVh/jQ80uw2O1ULlYHRoydk5ae64d2sGTwGBb4ZopqY
+         DBsIvkCCg4DrQzFgTRUm2jdnVqFh57hy8MxHiFdWDg0LyUp78HZ1+j9kz2g9DMXHAKAt
+         gyDZhU2f0yl9rrfi9o1j3MA4iTUpOLDJ4bIJiBWof6ESXPTJyskpxySyVP8S6QatJErg
+         ROqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724750435; x=1725355235;
+        d=1e100.net; s=20230601; t=1724750437; x=1725355237;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7x374P9F0jPNFMTHJtbiCnmxTGpC6qte4AieI2H+Lys=;
-        b=VK9XkYedAobatBaMjcLbBJXopy7DPs1vB5wmpLfmz44FAqjCCRSb8NwONNm6e8MTXG
-         nYasNG86g+gZzskUQ4nKt6+dfHgRnSqwzAOrvw3F9beUEQwgSyald8puIq8NBouYEwNm
-         j1q6iDVguiPXbw/iqtubhptoapss+60kSaEUqtCKT2dGe9dG0IbsS4PQC2TORQ65pAeM
-         UvSN8FzmZWex3N34Rgzth4kw9soc7/eMMcz7F6lEbnM+FPKM3ZYmacn24B3O7OyiXORa
-         K6w6yPhxl7xJZi5i9peo+SlUERlO4JBJezVASpGrsOchF13XdXGjb1qkjDBnDdmZUID9
-         xeRw==
-X-Forwarded-Encrypted: i=1; AJvYcCW0022JANx8v74ClyD85Dux7ktLMKQCAOoDbzGAJzpeJOwnjVsDUJdlxzvj6nDDzLdLf9jsT1e4WKm0ovL24pk7SQ==@vger.kernel.org, AJvYcCWqMqvuu6vzKRCWREOtl5CmThjcfPwc503z5a2kCF8dd0ucIGrKYuvwCRN1cehQMZ1rlR+XPyJguPnDdsw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzyI8jqnIK4OGJHjxCmiMDjR2cnby9ZsJtYoDaGv5FkW4/u9Mol
-	9PtK/YxxM0Ygb++SPYlawqR82Lw/cIjdB4IQnebUaldu2t1vZufH
-X-Google-Smtp-Source: AGHT+IEe+J6TtekHsFrhNpNYcW8Me2/gb17EXuvBQwu+oS6MZ6y7WSXGX8ymCj6bYo7Bc7Eefg2OKA==
-X-Received: by 2002:a17:90b:3b88:b0:2cb:4c32:a7e4 with SMTP id 98e67ed59e1d1-2d646bca003mr11206955a91.15.1724750434510;
-        Tue, 27 Aug 2024 02:20:34 -0700 (PDT)
+        bh=wrpdlMQ1W0rFqxCLf05gZ+eKlSN802JEZH3ICSjn+mU=;
+        b=jUToeghT1vgziBaiUey8/KakhjZA21DeXZlCseDzIHfEiigYh8leHk9Wm/ypM0RDrT
+         HZxwUYVwoQQc1DI0UdCJvcpp2o3KlVqGxDYliUcRBsdknEvWcwlXa1aZuyS4JGtzHR3l
+         F17ERaHqBeKnpXAxm8frKcHHaI4Qj5KTtjXyrhRoMV73u92Cz1XaPegNjcljoVQBj+GY
+         ScSDX/mxuLGsTc4AcrF3zC7O2PEQxVIVZ9J1h02dUQZqVkvYWOMDh+X5IlrPUlZ0Aur6
+         VzK/ksm99UjYx4OY1S6uDLrhXD/szx5WJJd/Dkig6k3YlSuFOmg4WXiibBDjaE4PfGR7
+         3L7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCURdoY3qlruNVy3nLBvRv+nHVwRVnaqeQp4f80mZ/00abwFu0X0cJzn0uXLzQFy9oj4KY7zKBO0yZiBHEISCm0Okw==@vger.kernel.org, AJvYcCWRx/Wbj4bK8JitSNOFjvU9wigxxCO/gLYKZ2K0IcMlI57lx9Q7oxWedo4w0wZfu0EfLUCIV6pkBrEMj1o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz5naGPz0KpktKuGnarjKHWCcHpRVYjq0xl5eNfE34trksqczp9
+	4ZTg93qFW9cj/+yyatWF9pDewPPh96g5L5oa/Bto7OmRjt0IN8HI
+X-Google-Smtp-Source: AGHT+IFGXDFRw5VzdW5zdoyd7BG1p/ClFVmdN+5eYllG2ePkcd0IhsdwnjOR6L1/7bnpjJ2gHWN1Kg==
+X-Received: by 2002:a05:6a20:cf8d:b0:1c4:9f31:ac8f with SMTP id adf61e73a8af0-1cc89ee960emr13469666637.37.1724750436768;
+        Tue, 27 Aug 2024 02:20:36 -0700 (PDT)
 Received: from localhost.localdomain ([2600:1700:ab14:280:f82b:883b:12eb:74c7])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d6136fdaeasm11523939a91.7.2024.08.27.02.20.33
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d6136fdaeasm11523939a91.7.2024.08.27.02.20.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 27 Aug 2024 02:20:34 -0700 (PDT)
+        Tue, 27 Aug 2024 02:20:36 -0700 (PDT)
 From: Howard Chu <howardchu95@gmail.com>
 To: acme@kernel.org
 Cc: namhyung@kernel.org,
@@ -62,9 +62,9 @@ Cc: namhyung@kernel.org,
 	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Howard Chu <howardchu95@gmail.com>
-Subject: [PATCH v1 1/2] perf trace: Collect data only for certain pids
-Date: Tue, 27 Aug 2024 17:20:12 +0800
-Message-Id: <20240827092013.1596-2-howardchu95@gmail.com>
+Subject: [PATCH v1 2/2] perf trace: Use pid to index perf_event in BPF
+Date: Tue, 27 Aug 2024 17:20:13 +0800
+Message-Id: <20240827092013.1596-3-howardchu95@gmail.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20240827092013.1596-1-howardchu95@gmail.com>
 References: <20240827092013.1596-1-howardchu95@gmail.com>
@@ -76,151 +76,231 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Currently, we collect augmented data for __every__ process, even when -p
-argument is used.
+Currently, perf trace -p <PID> is broken for some syscalls. This patch
+fixes the it.
 
-For instance, if we do perf trace -e write -p 11451, we don't just
-collect write buffer for process 11451, we collect write buffers for all
-the processes running on the system. Those data will eventually go to
-waste, we are not interested in them.
+Before:
+perf $ perf trace -e open -p 79768
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
+         ? (         ):  ... [continued]: open())                                             = -1 ENOENT (No such file or directory)
 
-In this patch, I add a new BPF map: pids_allowed. We only allow
-augmented data collection on certain processes. This is different from
-pids_filtered, which is a map that filters the pids we don't want, for
-example, we don't want to trace the perf trace itself.
+After:
+perf $ ./perf trace -e open -p 79768
+     0.000 ( 0.019 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+  1000.187 ( 0.031 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
+  2000.377 ( 0.019 ms): open(filename: "DINGZHEN", flags: WRONLY)                             = -1 ENOENT (No such file or directory)
 
+This is because when using -p <PID> in perf trace, we mmap the pids
+instead of cpus. But in BPF, we tend to use a per-cpu mapped perf_event
+to output the augmented data (such as using BPF_F_CURRENT_CPU). That
+means the index for perf_event map is cpu.
+
+When we are using -p <PID>, there is "cpu = -1, pid = <PID>".
+
+perf_event_map
+[-1]  =  target_perf_event_of_this_pid
+
+This -1 index will never work in BPF. So my original solution is to map
+every cpu on this single pid, which is:
+
+perf_event_map
+[0]   =  target_perf_event_of_this_pid
+[1]   =  target_perf_event_of_this_pid
+[2]   =  target_perf_event_of_this_pid
+[3]   =  target_perf_event_of_this_pid
+
+But that will cause <number-of-pid> * <number-of-cpu> times
+sys_perf_event_open.
+
+So Namhyung's solution is to introduce a new map. I call it
+pid2perf_event.
+
+pid2perf_event_map
+[pid] = perf_event_index
+
+and then:
+
+perf_event_map
+[perf_event_index] = target_perf_event_of_this_pid
+
+we use pid to get the correct index in perf_event map, and
+retrieve the correct perf_event using this index.
+
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Howard Chu <howardchu95@gmail.com>
 ---
- tools/perf/builtin-trace.c                    | 45 +++++++++++++++++++
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 23 ++++++++--
- 2 files changed, 64 insertions(+), 4 deletions(-)
+ tools/perf/builtin-trace.c                    | 55 +++++++++++++++----
+ .../bpf_skel/augmented_raw_syscalls.bpf.c     | 33 +++++++++--
+ tools/perf/util/evlist.c                      |  2 +-
+ 3 files changed, 72 insertions(+), 18 deletions(-)
 
 diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 115f8dffb272..d38e0b919e8e 100644
+index d38e0b919e8e..f9ff65c3d4d2 100644
 --- a/tools/perf/builtin-trace.c
 +++ b/tools/perf/builtin-trace.c
-@@ -3911,6 +3911,44 @@ static int trace__init_syscalls_bpf_prog_array_maps(struct trace *trace)
+@@ -3920,6 +3920,7 @@ static int trace__set_allowed_pids(struct trace *trace)
+ 	struct strlist *pids_slist = strlist__new(trace->opts.target.pid, NULL);
  
- 	return err;
- }
-+
-+static int trace__set_allowed_pids(struct trace *trace)
-+{
-+	int err, pids_allowed_fd = bpf_map__fd(trace->skel->maps.pids_allowed);
-+	bool exists = true;
-+	struct str_node *pos;
-+	struct strlist *pids_slist = strlist__new(trace->opts.target.pid, NULL);
-+
-+	trace->skel->bss->task_specific = false;
-+
-+	if (pids_slist) {
-+		strlist__for_each_entry(pos, pids_slist) {
-+			char *end_ptr;
-+			int pid = strtol(pos->s, &end_ptr, 10);
-+
-+			if (pid == INT_MIN || pid == INT_MAX ||
-+			    (*end_ptr != '\0' && *end_ptr != ','))
-+				continue;
-+
-+			err = bpf_map_update_elem(pids_allowed_fd, &pid, &exists, BPF_ANY);
-+			if (err)
-+				return err;
-+
-+			trace->skel->bss->task_specific = true;
-+		}
-+	}
-+
-+	if (workload_pid != -1) {
-+		err = bpf_map_update_elem(pids_allowed_fd, &workload_pid, &exists, BPF_ANY);
-+		if (err)
-+			return err;
-+
-+		trace->skel->bss->task_specific = true;
-+	}
-+
-+	strlist__delete(pids_slist);
-+	return 0;
-+}
- #endif // HAVE_BPF_SKEL
+ 	trace->skel->bss->task_specific = false;
++	trace->skel->bss->is_workload = false;
  
- static int trace__set_ev_qualifier_filter(struct trace *trace)
-@@ -4305,6 +4343,13 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 	if (pids_slist) {
+ 		strlist__for_each_entry(pos, pids_slist) {
+@@ -3944,6 +3945,7 @@ static int trace__set_allowed_pids(struct trace *trace)
+ 			return err;
+ 
+ 		trace->skel->bss->task_specific = true;
++		trace->skel->bss->is_workload = true;
+ 	}
+ 
+ 	strlist__delete(pids_slist);
+@@ -4321,18 +4323,49 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		goto out_error_open;
  #ifdef HAVE_BPF_SKEL
- 	if (trace->skel && trace->skel->progs.sys_enter)
- 		trace__init_syscalls_bpf_prog_array_maps(trace);
-+
-+	if (trace->skel) {
-+		/* set up workload and user-specified pids for BPF */
-+		err = trace__set_allowed_pids(trace);
-+		if (err)
-+			goto out_error_mem;
-+	}
- #endif
+ 	if (trace->syscalls.events.bpf_output) {
+-		struct perf_cpu cpu;
++		if (trace->opts.target.pid) {
++			/*
++			 * perf_event map is supposed to be a cpu to perf_event mapping, which is
++			 * different from which when we specified -p, with cpu = -1, pid = <PID>.
++			 * In this case, we treat perf_event map as an array and ignore the cpu
++			 * mapping side of it, and use pid to retrieve the correct index to its
++			 * corresponding perf_event.
++			 */
++			int j = 0;
++			struct perf_thread_map *threads;
++			struct evsel *evsel_aug_sys = evlist__find_evsel_by_str(trace->evlist, "__augmented_syscalls__");
  
- 	if (trace->ev_qualifier_ids.nr > 0) {
+-		/*
+-		 * Set up the __augmented_syscalls__ BPF map to hold for each
+-		 * CPU the bpf-output event's file descriptor.
+-		 */
+-		perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
+-			bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
+-					&cpu.cpu, sizeof(int),
+-					xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
+-						       cpu.cpu, 0),
+-					sizeof(__u32), BPF_ANY);
++			if (evsel_aug_sys == NULL)
++				goto out_error;
++
++			threads = evsel_aug_sys->core.threads;
++
++			for (int thread = 0; thread < perf_thread_map__nr(threads); thread++, j++) {
++				pid_t pid = perf_thread_map__pid(threads, thread);
++
++				bpf_map__update_elem(trace->skel->maps.pid2perf_event, &pid, sizeof(pid_t),
++						     &j, sizeof(int), BPF_ANY);
++
++				bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
++						&j, sizeof(int),
++						xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
++							       0, j),
++						sizeof(__u32), BPF_ANY);
++			}
++		} else {
++			struct perf_cpu cpu;
++
++			/*
++			 * Set up the __augmented_syscalls__ BPF map to hold for each
++			 * CPU the bpf-output event's file descriptor.
++			 */
++			perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
++				bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
++						&cpu.cpu, sizeof(int),
++						xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
++							       cpu.cpu, 0),
++						sizeof(__u32), BPF_ANY);
++			}
+ 		}
+ 	}
+ #endif
 diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-index f29a8dfca044..1ab0a56c8f35 100644
+index 1ab0a56c8f35..ef8aa0bd2275 100644
 --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
 +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-@@ -24,6 +24,8 @@
- 
+@@ -25,6 +25,7 @@
  #define MAX_CPUS  4096
  
-+volatile bool task_specific;
-+
+ volatile bool task_specific;
++volatile bool is_workload;
+ 
  /* bpf-output associated map */
  struct __augmented_syscalls__ {
- 	__uint(type, BPF_MAP_TYPE_PERF_EVENT_ARRAY);
-@@ -81,6 +83,13 @@ struct pids_filtered {
- 	__uint(max_entries, 64);
- } pids_filtered SEC(".maps");
+@@ -90,6 +91,13 @@ struct pids_allowed {
+ 	__uint(max_entries, 512);
+ } pids_allowed SEC(".maps");
  
-+struct pids_allowed {
++struct pid2perf_event {
 +	__uint(type, BPF_MAP_TYPE_HASH);
 +	__type(key, pid_t);
-+	__type(value, bool);
-+	__uint(max_entries, 512);
-+} pids_allowed SEC(".maps");
++	__type(value, int);
++	__uint(max_entries, MAX_CPUS);
++} pid2perf_event SEC(".maps");
 +
  /*
   * Desired design of maximum size and alignment (see RFC2553)
   */
-@@ -393,9 +402,15 @@ static pid_t getpid(void)
- 	return bpf_get_current_pid_tgid();
+@@ -154,6 +162,11 @@ struct beauty_payload_enter_map {
+ 	__uint(max_entries, 1);
+ } beauty_payload_enter_map SEC(".maps");
+ 
++static pid_t getpid(void)
++{
++	return bpf_get_current_pid_tgid();
++}
++
+ static inline struct augmented_args_payload *augmented_args_payload(void)
+ {
+ 	int key = 0;
+@@ -168,7 +181,20 @@ static inline int augmented__output(void *ctx, struct augmented_args_payload *ar
+ 
+ static inline int augmented__beauty_output(void *ctx, void *data, int len)
+ {
+-	return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, data, len);
++	/*
++	 * when it's cpu = -1 pid = PID, we look up the perf_event for this PID. Workload is
++	 * per-cpu mapped so we don't do so.
++	 */
++	if (task_specific && !is_workload) {
++		pid_t pid = getpid();
++		u32 *perf_event = bpf_map_lookup_elem(&pid2perf_event, &pid);
++		if (perf_event)
++			return bpf_perf_event_output(ctx, &__augmented_syscalls__, *perf_event, data, len);
++	} else {
++		return bpf_perf_event_output(ctx, &__augmented_syscalls__, BPF_F_CURRENT_CPU, data, len);
++	}
++
++	return -1;
  }
  
--static bool pid_filter__has(struct pids_filtered *pids, pid_t pid)
-+static inline bool should_filter(void)
- {
--	return bpf_map_lookup_elem(pids, &pid) != NULL;
-+	pid_t pid = getpid();
-+
-+	if (bpf_map_lookup_elem(&pids_filtered, &pid) ||
-+	    (task_specific && !bpf_map_lookup_elem(&pids_allowed, &pid)))
-+		return true;
-+
-+	return false;
+ static inline
+@@ -397,11 +423,6 @@ int sys_enter_nanosleep(struct syscall_enter_args *args)
+ 	return 1; /* Failure: don't filter */
  }
  
- static int augment_sys_enter(void *ctx, struct syscall_enter_args *args)
-@@ -497,7 +512,7 @@ int sys_enter(struct syscall_enter_args *args)
- 	 * initial, non-augmented raw_syscalls:sys_enter payload.
- 	 */
- 
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (should_filter())
- 		return 0;
- 
- 	augmented_args = augmented_args_payload();
-@@ -523,7 +538,7 @@ int sys_exit(struct syscall_exit_args *args)
+-static pid_t getpid(void)
+-{
+-	return bpf_get_current_pid_tgid();
+-}
+-
+ static inline bool should_filter()
  {
- 	struct syscall_exit_args exit_args;
+ 	pid_t pid = getpid();
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index f14b7e6ff1dc..ef58a7764318 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -1067,7 +1067,7 @@ int evlist__create_maps(struct evlist *evlist, struct target *target)
+ 	if (!threads)
+ 		return -1;
  
--	if (pid_filter__has(&pids_filtered, getpid()))
-+	if (should_filter())
- 		return 0;
- 
- 	bpf_probe_read_kernel(&exit_args, sizeof(exit_args), args);
+-	if (target__uses_dummy_map(target) && !evlist__has_bpf_output(evlist))
++	if (target__uses_dummy_map(target))
+ 		cpus = perf_cpu_map__new_any_cpu();
+ 	else
+ 		cpus = perf_cpu_map__new(target->cpu_list);
 -- 
 2.46.0
 
