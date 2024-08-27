@@ -1,135 +1,200 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C809A84D34;
-	Tue, 27 Aug 2024 05:33:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FCB6C13D;
+	Tue, 27 Aug 2024 05:49:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724736833; cv=none; b=EaIrmZag5A1tZacjUCKHDDlKj8rmMjTOxPwV5oHkix8/VM5Eij69/7PRXM8R90Cf2qHdhzWTBYsDlQVuY4/8+YcAqH5le1BYq/cE5qtkE2dOxvP6fQegrBm3CD5NKwBf+nJcBPNGlahxi+yH6B7BIEnjmTStel2q7BD9VnIg06Q=
+	t=1724737769; cv=none; b=ci/3hBvYkLi03Ty4o4lPq5isxIPW29nZx7SxBdr6xo33gql/AihoJ23fSzKLeQ578oUIQuB6fl471rYkKkvQznJnnMc6vMOn5T58Bhj8HF+mRVY4jZtan4NSV2pAboKJ62//n5x90zC/0Efk2ggmV7mvN4i2HyWDdE0y0pnnw8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724736833; c=relaxed/simple;
-	bh=zrPRCQFfWs0AsTqRvX8XIl+6nm9INVWGrsZG8yK8GHQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IFS/eJfGB4fA+InHBwixZWuiymYBe/J92d43i7i+Uj/Jy1tcqmN8cGYkgAqse3lKsDIMIZOgmsInwZWg2SvpqnjTg7QWFkn4EWqAU6/u909D0NJHusAtGmS+OgoIQAnrxgHGQSAfD6R7pDZVp/CZqRcOQJdw2+vaVq+xbeThQ3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=p2laHNNH; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1724737769; c=relaxed/simple;
+	bh=H71/aYAXqYJwAN8sgbtfV+aIuHl/VGuoiUnucCnLxJE=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=a3LmPjXZt3np+EtANExgL/fWL913Vs/UOiVsRo4nUWTxpUqq3516ZbHMLZIB3Imi23d1xawg2nhe8ejHldWAgJ+Q/pNPYYQ+1XRHZARdju8oOlsVcwaTAPmWUcfwmJezgyboSwYyqWB3e+vuFC0BYXXCVzT7cBJNAggao+3U/ag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZEzUS56v; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="p2laHNNH"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47R1tVLo015136;
-	Tue, 27 Aug 2024 05:33:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=L8Sjx5YSltujz
-	I60JahR8FVhesLAlU00v4fqtvSMiGY=; b=p2laHNNHTI/0ykTeuNBTu5GWbb9Kk
-	DrpSNih83djzsCqkomzswBwCAJDagHd/3jY4yBrorY0VZjdOdwwnFbSn3fD+uXoO
-	s2i+I7lTd8Iq7uSaDTE0hTVtYscsxfpTZK89tMgqywDAo7I8OUSXmtqio/27kXBy
-	1NsKHv2xYjadkrIfHYuVMI1Dx66VwHW+CdRmt6GbM6fh+//FesD9K4Eu7Flwlob/
-	OsKBX16y1J7d9tAYC89JrPihXZORvp+1Bn4WEz8GLEEKssffkEonpsWB1PNBS0j5
-	emUDuAgjzFCrBo6DKvSuW3NkCKfGrJmLVt4TByx8ZqBzTCZ18z1YITSaA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 417fvc1tsg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Aug 2024 05:33:45 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47R5XiDA028487;
-	Tue, 27 Aug 2024 05:33:44 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 417fvc1tsa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Aug 2024 05:33:44 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47R3XFZ9008239;
-	Tue, 27 Aug 2024 05:33:41 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 417v2mh4xq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Aug 2024 05:33:40 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47R5Xb9u55509362
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 27 Aug 2024 05:33:37 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E9512004B;
-	Tue, 27 Aug 2024 05:33:37 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C580B20040;
-	Tue, 27 Aug 2024 05:33:30 +0000 (GMT)
-Received: from li-e8dccbcc-2adc-11b2-a85c-bc1f33b9b810.ibm.com.ustream.lldns.net (unknown [9.200.51.96])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 27 Aug 2024 05:33:30 +0000 (GMT)
-From: Kajol Jain <kjain@linux.ibm.com>
-To: acme@kernel.org, irogers@google.com
-Cc: namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
-Subject: [PATCH 3/3] perf vendor events: Move PM_BR_MPRED_CMPL event for power10 platform
-Date: Tue, 27 Aug 2024 11:02:06 +0530
-Message-ID: <20240827053206.538814-3-kjain@linux.ibm.com>
-X-Mailer: git-send-email 2.43.5
-In-Reply-To: <20240827053206.538814-1-kjain@linux.ibm.com>
-References: <20240827053206.538814-1-kjain@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZEzUS56v"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2d3c99c5d69so571138a91.1;
+        Mon, 26 Aug 2024 22:49:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724737767; x=1725342567; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KlV3mNALClF5Ml0OpbfhYTioIXZRLuIAswgGkI4NLF8=;
+        b=ZEzUS56vrY6Uzwk/QhQvL8v+koc7a0erKxsLOe9OhGNL9MF9aWKsGy3vJejTNV9lU4
+         FoXMKYZvhWFWXHgm3kxpPj63YnSuwcwAO5BcUyHXqg+1p7TB1DEuD1sFrUJP3NNUahJl
+         OfvHR0+dVlaOPdJ0N/o+2pqDIQR9w65LAVscWhJcjsLsDl4I8p2viPpRa82w8MlVgTRz
+         y/HM3pMXyll6pxUzpadwoAlmecX8OiE/AR2uy1CYTyv3QtMK7Qo81/jnje0LBoDRx64u
+         QidyspwMHQb9DTPp17SHl6iH4rYTnFW36H8sqoJdV295EVTpv53ap2v+y9PSTsVJtEEa
+         9i+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724737767; x=1725342567;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KlV3mNALClF5Ml0OpbfhYTioIXZRLuIAswgGkI4NLF8=;
+        b=DdQObydYVVVGe7Li0DoJFzNVOKMo05i1FDZ8Yhqpn9WYWNwt8SE33LguJ5N2Ql1lKH
+         OcYLKf3pvWjTzvZ3bCFzGJGWQw6Tg1eTPrFkmE1CcYbs3n794gh46Nn6egqMnPV/YiUV
+         xtJxU88B74u5wEzg5mS6L40o3U36X2Fl53B07dg+vmdAtBIc0sDfeT1we4zQJtINzMCt
+         BhIroPbkDo4VLOUC+YPdj0TCPGm9PQIBeCNksLKlXEe6rhVYL72wnjvhOh756MHdnahh
+         2m0M+EQ1dt46YKRhKY5re60RvXoBDg8t+pkN0R+/7zy1QRSrQ/4gWpt935D4D8WkCACr
+         x8Gg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaB9pCJYKwZFo8yiJTFqfGF88lb2y5ykdMGmcrS+wEoCqhdftZTFv8aslrGWv524bKvQ37Sf4GwHX6MwLvz4YfmQ==@vger.kernel.org, AJvYcCWCSfn654QyxqrlBoNiswLUZl7vgUTJR1Np9+u3Dx8VPViv67Y2g+E7Im+YJehKIaf9WmpzHHX3YBA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyO1b2vyUwhnq0wDj4CXAptPTAVljki65co2qTZx6wZJRKyVh7A
+	gCnVcclXEW6exh+zL3EPy08hxf7UJFxTpNHDL5A8ch/fLIJMs1z4
+X-Google-Smtp-Source: AGHT+IGfucX9mDgUrzuySTCskPK0kKV/1nkYr22Dy0uEMx1ge1Jh/riVvE/aoiayy+EYt3LC7FNegQ==
+X-Received: by 2002:a05:6a20:4329:b0:1c4:92fc:7c79 with SMTP id adf61e73a8af0-1cc89ed9494mr9798523637.5.1724737767113;
+        Mon, 26 Aug 2024 22:49:27 -0700 (PDT)
+Received: from [192.168.50.95] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-203856099c9sm75766165ad.210.2024.08.26.22.49.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 26 Aug 2024 22:49:26 -0700 (PDT)
+Message-ID: <aed2411c-fd24-43e6-9094-9247513b1915@gmail.com>
+Date: Tue, 27 Aug 2024 14:49:23 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: Yunseong Kim <yskelg@gmail.com>
+Subject: Re: publish: perfwiki.github.io
+To: Ian Rogers <irogers@google.com>
+Cc: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ linux-perf-users <linux-perf-users@vger.kernel.org>,
+ linux-doc@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+ MichelleJin <shjy180909@gmail.com>, Yeoreum Yun <ppbuk5246@gmail.com>,
+ Jiri Olsa <olsajiri@gmail.com>, Gichoel Choi <gichoel3101@gmail.com>
+References: <7f2b1c74-4087-4da4-94eb-51d37f3d8fc2@gmail.com>
+ <CAP-5=fVmP0sNaE-T0PAHb0y+Eoo7eNgDFyu7kCT+Hp+G62KXHw@mail.gmail.com>
+Content-Language: en-US
+In-Reply-To: <CAP-5=fVmP0sNaE-T0PAHb0y+Eoo7eNgDFyu7kCT+Hp+G62KXHw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: _PMNOpisS7R51y7GDlnBtpvGFuTfQJod
-X-Proofpoint-GUID: l8-l_rXsSQmF8Lv2U7hQ4MJIdQl8Lwg_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-27_04,2024-08-26_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
- mlxscore=0 priorityscore=1501 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 adultscore=0 phishscore=0 spamscore=0 bulkscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408270039
 
-Move PM_BR_MPRED_CMPL event from cache.json to frontend.json file
-for power10 platform
+Hi Ian,
 
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
----
- tools/perf/pmu-events/arch/powerpc/power10/cache.json    | 5 -----
- tools/perf/pmu-events/arch/powerpc/power10/frontend.json | 5 +++++
- 2 files changed, 5 insertions(+), 5 deletions(-)
+On 8/25/24 2:06 오후, Ian Rogers wrote:
+> On Fri, Aug 9, 2024 at 10:11 PM Yunseong Kim <yskelg@gmail.com> wrote:
 
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/cache.json b/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-index 9814a59fce31..b7e0be09ff57 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/cache.json
-@@ -18,10 +18,5 @@
-     "EventCode": "0x300F4",
-     "EventName": "PM_RUN_INST_CMPL_CONC",
-     "BriefDescription": "PowerPC instruction completed by this thread when all threads in the core had the run-latch set."
--  },
--  {
--    "EventCode": "0x400F6",
--    "EventName": "PM_BR_MPRED_CMPL",
--    "BriefDescription": "A mispredicted branch completed. Includes direction and target."
-   }
- ]
-diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-index 684374fe5699..b6998987ab75 100644
---- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-+++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
-@@ -94,6 +94,11 @@
-     "EventName": "PM_DTLB_HIT_1G",
-     "BriefDescription": "Data TLB hit (DERAT reload) page size 1G. Implies radix translation. When MMCR1[16]=0 this event counts only for demand misses. When MMCR1[16]=1 this event includes demand misses and prefetches."
-   },
-+  {
-+    "EventCode": "0x400F6",
-+    "EventName": "PM_BR_MPRED_CMPL",
-+    "BriefDescription": "A mispredicted branch completed. Includes direction and target."
-+  },
-   {
-     "EventCode": "0x400FC",
-     "EventName": "PM_ITLB_MISS",
--- 
-2.43.5
+>> Link: https://perfwiki.github.io/main/
+> 
+> I think this is great Yunseong, thank you for doing it! Sorry for not
+> seeing your email earlier!
+
+Thank you so much for your encouragement. I was truly happy to receive your reply.
+Namhyung also offered a lot of encouragement through discord. :)
+
+I also appreciate you taking the time to read through my lengthy mail.
+
+I've currently added Namhyung, Ian, and Arnaldo as owners on perfwiki Github.
+Feel free to update the perfwiki markdown contents whenever it’s convenient for you.
+
+> Can you explain a little on how to create updates to the pages? For
+> example, I see the topdown markdown here:
+> https://github.com/perfwiki/main/blob/main/docs/top-down-analysis.md
+
+I'm open to receiving contributions via GitHub Pull Requests
+Link: https://github.com/perfwiki/main/pulls
+
+Similarly, if someone have any discussions or requests, anyone can leave them as issues
+Link: https://github.com/perfwiki/main/issues
+or contact me via email.
+
+I’ve written a guide on this topic in the README.md file.
+Link: https://github.com/perfwiki/main?tab=readme-ov-file#automated-deployment-from-markdown
+
+> It looks like if I update the markdown, in a fork, I then need to
+> generate the HTML:
+> https://github.com/perfwiki/main/blob/main/site/top-down-analysis/index.html
+> Presumably I send a pull request containing the HTML and the mark down?
+I took some time to review the deployment process for MkDocs.
+Link: https://www.mkdocs.org/user-guide/deploying-your-docs/#project-pages
+
+The branch used for deploying to the actual website is this one: "gh-pages" branch.
+Link: https://github.com/perfwiki/main/tree/gh-pages
+
+You can make changes to the markdown files in "main" branch directly.
+I’ve already deleted the site directory from the main branch where I
+previously made an incorrect push.
+
+>> I noticed from the perf mailing list that there were issues with
+>> logging in, and it seems the door lock is still broken with no sign
+>> of it being fixed. This motivated me to start this migration.
+> 
+> Log in problems to the wiki have definitely been an issue. I think
+> using github is a sensible way to resolve this.
+
+Thank you for your feedback. Once the mirroring to GitLab is set up as planned,
+it will be even better, as anyone will be able to access the repository even
+if GitHub is down. :)
+
+>> I wasn’t sure how long we’d have to wait to regain login access.
+>> I hope you see this in a positive work and not as an act of rebellion
+>> against using the original wiki. I genuinely believe this was the
+>> best action I could take.
+>>
+>> This situation also made me wonder: Is it really a good idea for a
+>> wiki, which is linked to the kernel and serves as an official
+>> reference, to be updated without review from others through the
+>> mailing list?
+>>
+>> While it might be convenient, during the migration,
+>> I found quite a few documents that were linked for future additions
+>> but never actually created.
+> 
+> Agreed, the wiki has been a work in progress for a long time. It is
+> quite sad the corners haven't been filled out and the documentation
+> that is there slowly bitrots.
+
+Yes, as you mentioned, I will make the issue entries I identified during this
+migration as issues so that others can be informed as well.
+
+>> With a review process through the
+>> mailing list, I believe the documentation could have been more
+>> systematically organized.
+>>
+>> One thing we need to check is the licensing of the original wiki
+>> content. The existing documents do not clearly specify their licenses.
+> 
+> Agreed. Are there examples we can learn from? For example, libbpf is
+> active on github:
+> https://github.com/libbpf/libbpf
+
+Thank you Ian for providing the reference information. It would be great
+to have a guide with improved accessibility and easily accessible questions,
+similar to "libbpf" project. Going forward, when issues arise, I plan to refer
+to how popular opensource projects label issues for open source contributors.
+
+> Agreed. The perf documentation itself, largely the man pages, is a
+> fork from the git source code 15 years ago. I did a round of deleting
+> documentation that related to git and not to perf. I'm not sure how
+> you'd propose packaging the documentation if it were part of the perf
+> tool. I believe the thought in the wiki was to remove the burden that
+> exists sending things to LKML. It is also for the best that the build
+> not have external dependencies (such as downloading files) and is
+> reproducible. An issue with the man pages was that they defaulted to
+> placing the current date in them, I modified this so that we use the
+> git last modified date and it thereby made builds reproducible.
+> 
+> Thanks,
+> Ian
+
+You're right. I completely agree. It's definitely best to avoid external dependencies.
+Currently, there’s no specific packaging plan, and I’m just planning to link to the perf man
+documentation in the kernel repository for now.
+
+If you think there’s anything else I should work on or if I missed something, please let me know.
+
+Thank you for taking the time to read my long email.
+
+Please feel free to reach out anytime.
+
+Best regards,
+Yunseong Kim
 
