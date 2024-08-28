@@ -1,109 +1,113 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41F4145A18;
-	Wed, 28 Aug 2024 05:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06E414A4C7;
+	Wed, 28 Aug 2024 05:29:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724822197; cv=none; b=kymSyKALle0pcbTM8A3uAQD4rurncvtYPQZxxCcY5GkSfXBCyBHwnw8f4yNAYh72hPQFC2JRzIn+LvEdxNxggwigakEFT8MmlsMIB87Jovw1vQZVDEXJZcS2x0pelx7thD7oj0FTUX8cyvYTAsbsQNwevGZG8unRAQpbwiisOpM=
+	t=1724822995; cv=none; b=REow6OxpyM3zPO5TYKfUyZw8k7TEk1ANpLsqcHYxUcJ1+66s68xZbS8MTED+8TBiiF9NAjTjQzxzuKCrcp2EhkBRtxosZkzH+ebkZC6TKRhwFRi6Zhp+Vdgl0SlGEMxbUPBsLV6J/F2R8HFXH55Bd+dXlQM02JGEO3Sn1HGlVT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724822197; c=relaxed/simple;
-	bh=uQ4zHhOASLf5+tQUdvE7W1/GxJn6R2hEG5FvZy+cLF4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CpdnEGHpNZK0mVhkU31bsWngZ5insLUUfcjjKqkgeQykSaDfNh5Yk564gytj+7evMyvGQZJGHiQ3oBbHX+wOv8yD4p5WSIjh4E6A321051if9crIs+7UYByQMwXbZotCElIWuphLyGntv1yjv0JWBgLsuC3ROMDPP8zeeawlOrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=depymiI0; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1724822995; c=relaxed/simple;
+	bh=FGISyqZO8CsSpcS8+QnbUGriIY/DF/FJMlaX57XnfLM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=A295W0qCJL3VKC4vUDlPVArPHk2f2031Lubgju0uwI0tLimz56jrMTvEHV1q2aR4iwXdov4vYj3jb1DLEIQbY+1Jgq5s66uJib8OZcU/mcsgXm4AtvGkMS8J3wze9/lF3CxzpQdGVOxzXnmYP3juCgNx8LaOkWtWH1hjp8g44C8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nF36T2Jb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="depymiI0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1724822196; x=1756358196;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=uQ4zHhOASLf5+tQUdvE7W1/GxJn6R2hEG5FvZy+cLF4=;
-  b=depymiI0bFuW+jd2AZTjbYrrfx+th8xzIoDMwfb34EqbXUgtCXuaWtaU
-   mv+peKEQRexmyefa48Tsn92aPY6nk4kJIBzXm/AHnVDOYETeCykV+ErKL
-   KsUDvNu8001OQhU7/e6tkZ8DS+qqF1TfwvA22WkDPStulIeToLtwS87/R
-   0+zG0oML+Lo6kmnfzMgnR+niU01kG1IHwp7hYsF9C4WST3T+CwbOymmQW
-   dK5IMQiaMfwKLfY+IKcZ1JFCvcqmvvEuEJhqFRHFlVqAex2w4uYE5h5lC
-   BIhcgxNQdXnXWsuup4NpDvFoRiNaxpUj3YDSu261LU36ZtkQ4OL/ZeBdA
-   Q==;
-X-CSE-ConnectionGUID: Op5vOUlsRHCj/aPC7s/6Xg==
-X-CSE-MsgGUID: 2BNIXkzNTaOtd8xVwXLjVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11177"; a="40805355"
-X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
-   d="scan'208";a="40805355"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 22:16:35 -0700
-X-CSE-ConnectionGUID: iyONb+z2Qq+g9wVeNiYrog==
-X-CSE-MsgGUID: hZyHfb87S9++pIFxUtKPxg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,181,1719903600"; 
-   d="scan'208";a="67917350"
-Received: from tassilo.jf.intel.com (HELO tassilo) ([10.54.38.190])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Aug 2024 22:16:35 -0700
-Date: Tue, 27 Aug 2024 22:16:31 -0700
-From: Andi Kleen <ak@linux.intel.com>
-To: James Clark <james.clark@linaro.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
-	Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nF36T2Jb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8084C4AF19;
+	Wed, 28 Aug 2024 05:29:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724822994;
+	bh=FGISyqZO8CsSpcS8+QnbUGriIY/DF/FJMlaX57XnfLM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=nF36T2JbCPgL6N4jf3rJ4iEsuAuNqm0VlAnLTpy3LyG/BAaaxJeDBvdLwz0jOdLTH
+	 Q6Oj8q4N5cEYpqQCaG8MdlwH3YzsPmYCgDJlNsYlE0w9r91Ph2vhSPH1Q/nr5CMDbe
+	 Crqr+rAkhh+A3H5hlRMrqcQFZhM6Rh7Nton4ZYf1LgEl+LbUUZMH36bjnKdyCyOL1q
+	 +PB8kCZ8hrXj0dj1Ea1asmwHvUXRM6r/rsM1WNqPaRaa8+bO3nDbNRgrwjZas3g7/W
+	 745RZ4YQLK7+9w7PnC4sZqT4XOUyLiP1a9U33jjJKnbzl/Gvp2QaYGF3w426+OFN79
+	 bf6bp+7cM8ADw==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Weilin Wang <weilin.wang@intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Ze Gao <zegao2021@gmail.com>,
-	Jing Zhang <renyu.zj@linux.alibaba.com>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
-	Yicong Yang <yangyicong@hisilicon.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] Event parsing fixes
-Message-ID: <Zs6yrwmn-rJWWaCr@tassilo>
-References: <20240822132506.1468090-1-james.clark@linaro.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org,
+	Xi Wang <xii@google.com>
+Subject: [PATCH] perf lock contention: Fix spinlock and rwlock accounting
+Date: Tue, 27 Aug 2024 22:29:53 -0700
+Message-ID: <20240828052953.1445862-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240822132506.1468090-1-james.clark@linaro.org>
+Content-Transfer-Encoding: 8bit
 
-> There is one small difference where it now shows "stalled-cycles-..."
-> as <not supported> events, when before it just didn't show them at all when
-> they weren't supported:
-> 
->   $ perf stat -- true
-> 
->   Performance counter stats for 'true':
-> 
->               0.66 msec task-clock                       #    0.384 CPUs utilized             
->                  0      context-switches                 #    0.000 /sec                      
->                  0      cpu-migrations                   #    0.000 /sec                      
->                 52      page-faults                      #   78.999 K/sec                     
->      <not counted>      cpu_atom/instructions/                                                  (0.00%)
->            978,399      cpu_core/instructions/           #    1.02  insn per cycle            
->      <not counted>      cpu_atom/cycles/                                                        (0.00%)
->            959,722      cpu_core/cycles/                 #    1.458 GHz                       
->    <not supported>      cpu_atom/stalled-cycles-frontend/                                      
->    <not supported>      cpu_core/stalled-cycles-frontend/                                      
-> 
-> I don't think that's a big deal though and could probably be fixed up
-> later if we really want to.
+The spinlock and rwlock use a single-element per-cpu array to track
+current locks due to performance reason.  But this means the key is
+always available and it cannot simply account lock stats in the array
+because some of them are invalid.
 
-I would prefer if that was fixed up. That's quite ugly for the default
-view on x86/Intel.
+In fact, the contention_end() program in the BPF invalidates the entry
+by setting the 'lock' value to 0 instead of deleting the entry for the
+hashmap.  So it should skip entries with the lock value of 0 in the
+account_end_timestamp().
 
--Andi
+Otherwise, it'd have spurious high contention on an idle machine:
+
+  $ sudo perf lock con -ab -Y spinlock sleep 3
+   contended   total wait     max wait     avg wait         type   caller
+
+           8      4.72 s       1.84 s     590.46 ms     spinlock   rcu_core+0xc7
+           8      1.87 s       1.87 s     233.48 ms     spinlock   process_one_work+0x1b5
+           2      1.87 s       1.87 s     933.92 ms     spinlock   worker_thread+0x1a2
+           3      1.81 s       1.81 s     603.93 ms     spinlock   tmigr_update_events+0x13c
+           2      1.72 s       1.72 s     861.98 ms     spinlock   tick_do_update_jiffies64+0x25
+           6     42.48 us     13.02 us      7.08 us     spinlock   futex_q_lock+0x2a
+           1     13.03 us     13.03 us     13.03 us     spinlock   futex_wake+0xce
+           1     11.61 us     11.61 us     11.61 us     spinlock   rcu_core+0xc7
+
+I don't believe it has contention on a spinlock longer than 1 second.
+After this change, it only reports some small contentions.
+
+  $ sudo perf lock con -ab -Y spinlock sleep 3
+   contended   total wait     max wait     avg wait         type   caller
+
+           4    133.51 us     43.29 us     33.38 us     spinlock   tick_do_update_jiffies64+0x25
+           4     69.06 us     31.82 us     17.27 us     spinlock   process_one_work+0x1b5
+           2     50.66 us     25.77 us     25.33 us     spinlock   rcu_core+0xc7
+           1     28.45 us     28.45 us     28.45 us     spinlock   rcu_core+0xc7
+           1     24.77 us     24.77 us     24.77 us     spinlock   tmigr_update_events+0x13c
+           1     23.34 us     23.34 us     23.34 us     spinlock   raw_spin_rq_lock_nested+0x15
+
+Fixes: b5711042a1c8 ("perf lock contention: Use per-cpu array map for spinlocks")
+Reported-by: Xi Wang <xii@google.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/util/bpf_lock_contention.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/tools/perf/util/bpf_lock_contention.c b/tools/perf/util/bpf_lock_contention.c
+index 4ee54538aba2..a3d40940fb23 100644
+--- a/tools/perf/util/bpf_lock_contention.c
++++ b/tools/perf/util/bpf_lock_contention.c
+@@ -296,6 +296,9 @@ static void account_end_timestamp(struct lock_contention *con)
+ 			goto next;
+ 
+ 		for (int i = 0; i < total_cpus; i++) {
++			if (cpu_data[i].lock == 0)
++				continue;
++
+ 			update_lock_stat(stat_fd, -1, end_ts, aggr_mode,
+ 					 &cpu_data[i]);
+ 		}
+-- 
+2.46.0.295.g3b9ea8a38a-goog
+
