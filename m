@@ -1,28 +1,28 @@
 Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11020104.outbound.protection.outlook.com [52.101.85.104])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8E3381AF
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 01:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B76B73D0A9
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 01:50:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.104
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724809838; cv=fail; b=TyllNu0KbFFpar/A4/XO8i10o0I42j+m/RpNGLfaAE3w0rhvaDzi01A97YnQDWLLg4I+z1CsZu2xe8cHHJDJHHmzS2KMKUTKFRdWfut9mF2rjeyVzAnziUM00TclQ8OhQ6AwqZ/VCyKYwwHIqOYPekmrANM70S5w/d4FF1Jm5PM=
+	t=1724809840; cv=fail; b=gM6onvZzK2M1J7T3C8RgGHZqWN/OHlgfH9ewwWKZAo/vEuZK+4KxDATkNt6RXBhjrZGTKW+oCyCpqY97Ywo38tDKGLdTd7HcPqd3gV5ZwgqAxzmgF4wOSavjSMXMmY18ZZ8osQowTXJ/XC5mwSEHutVmD4KLUwHt/uoNk0/Fh5E=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724809838; c=relaxed/simple;
-	bh=fOtGtNIfviqc+tR0octYlWhz/Ce085hAZNdrGONbAII=;
+	s=arc-20240116; t=1724809840; c=relaxed/simple;
+	bh=288RDyyvD7HlX2onrVrALePdzgoYeqahlPc25CZ8Xlg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=kQ6v5aeBOLrsmjlOM+UUNT3nEJ9KFYE/azqSybQG7R2b/XDw2wYZZb9TFbFhgpnPga8cbbdDvcLwAMC51ThVRPxmFI1IoXvKGwaV/zlrnHY7XFHY/IoHf7ogKJfZE2LCdIGW1xIAJbIa65JLZ7g4HvYmAnkjmQrbz1qaOpNzZ/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=f0Nx2w2d; arc=fail smtp.client-ip=52.101.85.104
+	 Content-Type:MIME-Version; b=BLtu6+DGM9Blrhgr9fsk7DokUvTHdM5cu4Lo9z5he3wZ3pkpctmzf+6Dxi/Fv1z0UVWUu5/VnUzxlgVlvdRm8yTN101Gyad96k9Bqflkuits7953nxp3bPWgyaNN/dGytfqQeSeB4yats2x+/VMe6jXnTW5rymJHnqcgfBG0tL0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=Wpr3yOgr; arc=fail smtp.client-ip=52.101.85.104
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="f0Nx2w2d"
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="Wpr3yOgr"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=TOIN5BFgNPzhwtA4SYO4Cc0HBDrZ6Tya1AQr4JHarh/L7ZOjUYnklDEef9qgicZ9jNgDwtjfmCm7n91FO4J7r24vvVVSsZZtCckgL5/K2JJ1p4jsgloEJOWBDw1d7tA9VIcdNAmg8mIt/MTF48+3qvVj9+W1YSp0lMqoroizCLxomU/crfUS4Wu7KsaFL7de5HdAto66y2a2jHoiXfK6v8mT7Iv2F9XFdtD/IDqz20/fY1H51M690EI+5HF4u0rrlsEDeSnKz2oPlUAfFiaiB1Yh/rgdPKr74/3t+iZg9qSzduzZ9SLn1TddESaqJd77ErC/VcEu2ctBciyYaV6DWA==
+ b=eyr7gUO5uIeJsks1+jnvnDsTclxHwtld3VDXaXnDmBsvGNysesdJGL/N9eOj15ToidI42O17jYabYRYnlSdDh6L1MzHb8rz5X83+8TevIGVXIECK58TdayB5YOzuprglUpC8WYcd0qg+v2xV2mKfxzVpIyJl8qCfn8ypi+Qw7FMjsSZnEfyNZTHbm7PpazpooqntTJm1Gx77qWaap/yFSMg8IGEEXTCK/Novto0mYhes4fZkMpROo8glEOJnlR13TKbDEu2acnrEcs+UIRdlWBmdGO0SehtQK0uMEr0K/CQ7uX8TKQULKQQN3hGxqF8INbFQPnQEPvR7c9LyZL14ug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=YigPosKCyA+QVqyfOxzq74WG+dtaoYHC96nYTYgVgG8=;
- b=LFGcknnEH4Ty3nrMb+QBwW9KqW8+Y1+fs+gXJe98stNq34Ntxzfs8D4Yl1plMv/CMBu6NuxwzX+vQXMJqKS+3lPe8G4crv/dvrrZ28PkP5UgzT/bVfUnJyo/6l8U6PtyMpE5CLJfPmkCnl1opxJHda7izgYGGjYitKU94iPQHljjcBldTfy6P4X79DGBIufbwfVa/UzTdebmPwoTXeWYtPoSixA2zrDJN7CSpg3TZvUvVgClMLmMMQ8M8zgxC4EN7xJbi0oLVY8MVdFT+Y+jNcdA1RxSX4Q6QC2WP3pc5z8B0QoIyuV3VTc2wtB4rUrqk5SLKb8ZLfPJIwmWrcdm8w==
+ bh=zkwZ+2zdwZ2vNhcwe9ZZTBO7ZbaQ5vYDrtH5ERwTq94=;
+ b=ldZxuNUMuRGsJdSSzl0seRZLJ5FWags8YsfLfzHv/S3n5LIqyEMeOSdjfkfAvVB+/LcP0ubONvM6d/Jy0b7MsNaRoYkdBEoOirfglFC06bf11i+B96Wc1fIdfPh1S+1sqoNeeu/AMN97O07f0dzlFfTvUcRpmjyX3KOo9V6FjkkkBbHfaNe+yfK9cHmXJHO0A8eUHxd9p8CJscMeDN5ObgN/zTqDKvx2cwmlp0lmYZKnliIcm+nDAA2Eg3NNJILOE+dV1ONQM/hWYsR2YnnT5OHhJ0mD/cbkGIwF7FqigcWT8yhyFtQbNATFmfZ6YwCB48/Mhj4wtVf9ggf7B9PBcw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -30,18 +30,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YigPosKCyA+QVqyfOxzq74WG+dtaoYHC96nYTYgVgG8=;
- b=f0Nx2w2dOBZnRkurLyQYMLYF3npO4dTc0TZpmoxsT7k+UB9wRA57l1moyuRc6+3KV5cPZv+Qyp+fNWcHxC+AUJEJ24iYVrcC+rqfqP2GWq7SgjP2+dTtVag7iDW9G0fjEAfaKqwR9frcCBxa0kriOtNPhBLborbAkgdFUAxZRrE=
+ bh=zkwZ+2zdwZ2vNhcwe9ZZTBO7ZbaQ5vYDrtH5ERwTq94=;
+ b=Wpr3yOgrDAqIlfdzsJqxUl7gHa/qKKziNFq5ACDlbmNti/C2Kx4gowoxxCWqVcKaflIf93sbTuvyQbC0nrdNtniPM1kBaEs48e955znIp3ze8gTE7LoOUGgzQadVSnhJfONjSx5rJoE5WKm6lzhMERUXh4mWAcF+QOgZvj7w7Ww=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from PH7PR01MB8146.prod.exchangelabs.com (2603:10b6:510:2bd::18) by
  LV2PR01MB7576.prod.exchangelabs.com (2603:10b6:408:17c::21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7875.21; Wed, 28 Aug 2024 01:50:34 +0000
+ 15.20.7875.21; Wed, 28 Aug 2024 01:50:35 +0000
 Received: from PH7PR01MB8146.prod.exchangelabs.com
  ([fe80::2972:642:93d1:e9d4]) by PH7PR01MB8146.prod.exchangelabs.com
  ([fe80::2972:642:93d1:e9d4%4]) with mapi id 15.20.7897.021; Wed, 28 Aug 2024
- 01:50:33 +0000
+ 01:50:35 +0000
 From: Steve Clevenger <scclevenger@os.amperecomputing.com>
 To: james.clark@linaro.org,
 	mike.leach@linaro.org
@@ -51,14 +51,14 @@ Cc: suzuki.poulose@arm.com,
 	coresight@lists.linaro.org,
 	linux-perf-users@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH V3 4/4] Adjust objdump start/end range per map pgoff parameter
-Date: Tue, 27 Aug 2024 19:50:13 -0600
-Message-Id: <2c8d8f931a1484939fe0251424477f2e53423417.1724808513.git.scclevenger@os.amperecomputing.com>
+Subject: [PATCH V3 3/4] Add map pgoff to python dictionary based on MAPPING_TYPE
+Date: Tue, 27 Aug 2024 19:50:14 -0600
+Message-Id: <afca22382f5ee58c8ec5aabe18b8fc680af0fbdc.1724808513.git.scclevenger@os.amperecomputing.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1724808513.git.scclevenger@os.amperecomputing.com>
 References: <cover.1724808513.git.scclevenger@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-ClientProxiedBy: BY1P220CA0004.NAMP220.PROD.OUTLOOK.COM
  (2603:10b6:a03:59d::15) To PH7PR01MB8146.prod.exchangelabs.com
  (2603:10b6:510:2bd::18)
@@ -70,150 +70,128 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: PH7PR01MB8146:EE_|LV2PR01MB7576:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1d692de0-3c00-4c7e-a574-08dcc703cdc4
+X-MS-Office365-Filtering-Correlation-Id: f2f588c1-cd5c-452e-d542-08dcc703ceef
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|366016|376014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?bUhYVkVrZkU0aFlQOXZIVGtjaGFMWVMyK3publBhV2VJcytNcXhCbXF1MjFM?=
- =?utf-8?B?TmFydjJXcVhoM0pmTlVLSHdFb21EZXMyTG04QTM0a25lZkhGclNHemdFOXFh?=
- =?utf-8?B?TGV1cnBjY1ZMZzY2c3RDRHhTaGxKVTVaRmVOaUZOUGhRNlllL3V4ZTB4SE5a?=
- =?utf-8?B?Ry9PUWNXOFBkbldOdGdHOFNxN2NQL1ZpdE1WemtveCthSkxENk1lU1dmOW9p?=
- =?utf-8?B?L1NxSVNxaDVSRE9YMjFwME5adUk4Nm5GWEp2YUFhcTVmZHlOeWs3dC91Q1pM?=
- =?utf-8?B?MzB0Tm9BTjkvT21uYlYzeUczd0srRHJZYWk0TldTQlNvUW9KcFdJSXl5TUhn?=
- =?utf-8?B?YVo2NFljVkhRaGZ0Q1VTTWxDaHBnY3Jmb0YwZnhyQmZmay92UnRjWmdTZ1c1?=
- =?utf-8?B?MlBGYkpaVStPcXhaeEJ1UU00UmhDbFlrYmpzNjcxd2VPVmhLWElyQzg3R1RO?=
- =?utf-8?B?M2g4TnlVZzRTTFZRZ3dKUm92OEhzbmh6ZW40dU01cnVmZCsyU2ljVEhXYlZ4?=
- =?utf-8?B?dW5CYnJSUE4xYWtnczdlQThaS3AvdGp2UWx4TmdUNlhtdzNNaml5bHdqY3Fm?=
- =?utf-8?B?MkVNei81Q01qcFBySjYwYXkxVGhMVVRjbVY4dFVVMXQ5VkRKUWI1NDFLUlov?=
- =?utf-8?B?KzBDbVVPQ3h0VERpa0JiZE1EZXdCdEVFTWVXRldpeDNRWThqN2Nhd00yUUkv?=
- =?utf-8?B?alo0R0tqODUzVkJiclpvQm5BTFFDZHZwYzhxUmpmTkxwZzZpdGdvcDBBem91?=
- =?utf-8?B?WG80NW5aSWszZ3lwaTZNM2JNNjFpNncxajdqU2VydFF0Zm1qWWVuVGJDZ1Mr?=
- =?utf-8?B?aUlKWG5Ea1FpWW5WMDZ1L0R1WHd4NlNJVXdWYUhmUzZlK0NkTzVKaGlXTjNk?=
- =?utf-8?B?SS9DY2dCbWZna1U0OURkRUp2akFhZTFCSmlicWVnZTZlY2h6UWdHd21mOU5W?=
- =?utf-8?B?WTF3d0dhV3RSK1FSZDBybERkWG4wN0dyWFNxNkw2dnRhVWZNRVVxN2d4aGlV?=
- =?utf-8?B?bXZ3cy9UQVNOL1RjOW9LVGtuYjhHUklGMFVWaEE3L0UwdnhFM04yZ0hHTnNu?=
- =?utf-8?B?ay8xS1E0MUtBcFREZmRUZTIzL0hYakRraHBXaXVJRnVVVDVmMndsZHJibGIy?=
- =?utf-8?B?TjRzSHpFd3NXY1FQQlUwa0RqTXBoOC9EdU1sbkgvcldNUEE2WngyNzM5bHRa?=
- =?utf-8?B?ZnVNaWcyNzRaK1JJUWVzYXNpeldtWkFuRzhhRllGVTI5YmxMK0dJeXIzdW0v?=
- =?utf-8?B?c2tqMno4K2FyKzVHbHB0ek54bm1sdlR0QjVYbFpya0ZqRWlhbmUvQlh3ZWMx?=
- =?utf-8?B?Z1lOVjVBMnhKa3pPNG9RZW5XZGtMZDBza1R1b3NpNUViZ1VxUHhsOFBOQ1Qr?=
- =?utf-8?B?NDJOemg0OUQ4cE02SFB4eGMzamdwb1o3Z0EyZ0ExWnZ0Q3E5ekFTTkxtUEs5?=
- =?utf-8?B?Q0JJeTlSTnB6QTJnaUh5REZTUVU3d0tsZFlpQ1pwdFFObmlOUURpN2hSTWJC?=
- =?utf-8?B?YnlFWU5lUWIyL2tVcURVUDRFc3V3OG5tbFZGNmZ0MmgyYldHQStMb0pMOXhm?=
- =?utf-8?B?R25VSmZTcUR5UUp0c2pDZklsbGZOa3FtSU9WTExyTmV3N2RJNzhnM0c4VENE?=
- =?utf-8?B?THppMkRsQ2xVV1BBeDZLVnBHUjBnTkRlUmlPY0dVTFRtZHRUMUducndqd2Rz?=
- =?utf-8?B?MGFSSkRqNjk0cHdUcktGVW9tMHVpaDdNeDZYV0xnMUhrOFRLZ3phNDBKWjhx?=
- =?utf-8?B?U0krWmhETUV2QTFnSzQ1VW5raG8vdUl1aTcwbzN2OW0weFJZV0VwQ0FWbWMr?=
- =?utf-8?B?ajZwcXhYTXI3YkdjMHQ4QWhhSjl6ZjM0TDZXTE5iL0Z6QmIvZUMxeml4cGRu?=
- =?utf-8?B?eUY4UWd0U1ZtMzZGUXdLcFQ5T21ESE9EaDExcjVZSjBhenc9PQ==?=
+	=?us-ascii?Q?qkUuxJZxHXgYMm241vLqILXai7tAPBuwhwewHNmhC55nZHZ7iH6MoAnQPkO4?=
+ =?us-ascii?Q?5rX4TrwXo/UkBl3DlFqgRNyw4bmS1S9/NNEl4bL8TH9l96+drg4UnyRCmAEx?=
+ =?us-ascii?Q?5+2K63Dc80j7zS8R4BT39SuBzq/+NoPylEOV8pEN8DiD4hz50tM6cmR1I9yq?=
+ =?us-ascii?Q?9yVm0LArmg4RJv2KSmbKPA2HffaL2z5eZL+bUW8kalY898XwSRoFj1kk+orQ?=
+ =?us-ascii?Q?I0+IU35mt8YzuxYF8TVs5/EgVTb2nXxTuDrHt8S1BubPYso2Rs2NeMREBcAx?=
+ =?us-ascii?Q?CRgSnY3aFTRjHyAfT/BpjOMeEe08mdzCIU0rg+Nt/M9dFl+ViPrx4bq9Eiqv?=
+ =?us-ascii?Q?0r48pkfDPNlLt7LFfwECEuichd5iOhqJVzn8bVqBdRAcIJ8BwJc08ta8SLuT?=
+ =?us-ascii?Q?iXpAWWBXQyRXbPoGk1oRCBmCXxvcEe/W56NJRXveejQ/7MI5pBQuHCQRAeQI?=
+ =?us-ascii?Q?HaqbHDABGeRJ2cGT4RCvERahQMiqHMDvCRzchvC5OX6pAsrsJSnqUHZx1jkW?=
+ =?us-ascii?Q?G9ithmFWRGWY3rRZyuqBjTno9R1kNEnv5Rto3X/w20E9RsCWgBYLU62aB2hQ?=
+ =?us-ascii?Q?Gky3qwFau0hopJf9ehJoPgrtoAhiAGqysh2WFhaHVQ80kzeG8gVH/w1UlyKj?=
+ =?us-ascii?Q?gcSFb0FVNyXNRy1yzdFH5nBaQ9Pz81/5aJPdsobh3pVZQtB+2OdopvY15TGv?=
+ =?us-ascii?Q?CbJsMX7zdY6vB+/CQxdzCmisSNwI6l3/3ku3indJdpQyRzW8c+x4evEdxWTY?=
+ =?us-ascii?Q?rTeFj3JxDNfVsdlw6gyUBYG2JaKmeWPGJZypwMqcNwt5uaIyAMDv9D4HEUpl?=
+ =?us-ascii?Q?OekR6NB6hrcKPjTwLW5pLP9kA2nHf+3KsfAwiCtGwQ+NCtMapkmJ0wTG53mn?=
+ =?us-ascii?Q?JB6aFQuqHt9lsJW3ycsWL7JLYv5akKxv7EDzxbGl/lFGrlR3irjl5Vigz52O?=
+ =?us-ascii?Q?PUUroq768DGd0+MrLLgktHeqdOxWzhLJit7r4QhJ9P8eiyEd1fEWpbkSNOFQ?=
+ =?us-ascii?Q?r1QwXeducip2rtgXlXTKqeFkFvg1FAYIWwAlpEdAc53qUXWpP7pEYx1D1Dvi?=
+ =?us-ascii?Q?irMDM0B4Z6PPF+nJ/OMpi95lSdb3iULct0U96KaB0kqJFFK08QYpMtXUfpeL?=
+ =?us-ascii?Q?wOdDtXwHaLy4BXaqjKXyskDssQZpa/rTolr6aGWXO/gngcjcFmwtyE4r0XlA?=
+ =?us-ascii?Q?HUhO2lprqqQjRb1aDltnYUBpvfj6fMUr3g4BAT51dlyjI1n0o+QWZTzvoef9?=
+ =?us-ascii?Q?QtHBfw09oRm0Um/qv+zZw0nzG41mfhGbll3k5YvkZPbTIUuvKe/ev2sreT4M?=
+ =?us-ascii?Q?ulry+CpEm7qFMWmgXjtGbDzB0e/mpKjWXbDrub9goutvnrtdyVwBkEfPYwwl?=
+ =?us-ascii?Q?1vj/F4vLtYaD2dNqu6tCjhj085b2dBCOw6yO3vvNECtgDHHL5Q=3D=3D?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR01MB8146.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(52116014)(38350700014);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?Qk1veEpxM3NrUTV6ckh3YWJMWE9YS1c3U1FDbmh2NkI2YVBoOTNWa0cwU0VD?=
- =?utf-8?B?VUJ4cXUrbDNqM2NPejlUYXFpTUsweGFOZ2pPRktIVUhBN3h6UUJ2eVVvdHR6?=
- =?utf-8?B?c1M3eWtaNFVqTWxBZ2MrMlZmVi93ZHh6SnZYcVRURWozNXRPc3pscFliMHRP?=
- =?utf-8?B?RTFndU8xVDc0VFVEWEFHbGtLZnB0WDNlbHRUc212NWlOcEMydm9rY3R5SHZT?=
- =?utf-8?B?NlY0U2lKQzMyNGNIa29aRHRhMDY1TlYvRkJmMXd6bkFGTHJwUVl4citmU0Rs?=
- =?utf-8?B?RDB0MDNTRjhrV3VoYnFLeHA4KzIzc0dpZkVZQzFzcWNLbElQQTRZeFRTZCtK?=
- =?utf-8?B?OEFxL1FuVGp3VXVRdC9YcjNmd3hFYjIvRkFqbCt5elhRcm56QjhSOUxlbk5j?=
- =?utf-8?B?WnRrRXF1bVZEUXo0OHAzY3N6SzErT3k4cURxY1VEcXhZYzRtT1JGcEhlMTlK?=
- =?utf-8?B?dnllcUFVRmxtT3dmenV1RXQyeHdmOTUzcWZ1NXA2blZ6aEUyTnU4cERtSUZh?=
- =?utf-8?B?UzBCcG0va0R5MmNIQk44bHZQanJvcDJTWWtBWDBwUVl2MzlIQlFRSFNlVGNV?=
- =?utf-8?B?ZmRITGh3MEZLbTVDQ1FoNjErcjYyNGhwQkdvZWVLL1B1UnJ0dlpqMzJKNTZV?=
- =?utf-8?B?dzV3b2FJWEREbUVmcmxqMkh2c2U1cVlGWlRMVnFyMkNHTTNyWm02UDJFSnJJ?=
- =?utf-8?B?MWREMTY3cmNxTVp3U3pCYXJZOHZOYXEyclh2eWVsUmJLWVQ2VXJmN2poeEVi?=
- =?utf-8?B?d3BoNFQ3VXhVNHF4YjI3UUhkdDVWb3lpZkZlbXpndUtlZitNRFErVk9WbThZ?=
- =?utf-8?B?c1V2cC9ZTk5NWnpKQS9EeWNDSTZhRXp1dEJ1ZDF3MXgzaER5b0N6WGh2Tzhk?=
- =?utf-8?B?RjZTYjhEMVJEODcvdzgvUUh3WGRPUzlEaHJOVEtLUm5xLzJiNlBMeVBxbjkw?=
- =?utf-8?B?elhIQ1BFaUhhQm0rNHY3YXFQQUVEOXB1N2xkTXRmdjBqZzMxRlZXT1ZDNkZj?=
- =?utf-8?B?YTNoZFNPMTAxMGZDYmpRcUxGbk16dW1SM2VoM1Z5akdxWDc0aGRJZk5MNWc5?=
- =?utf-8?B?UUJYakZ1YmV2UmJFR3FiRkJuT0Z2ODRrY2lLS05rcDgrK2RkQ09NM0JFYVE5?=
- =?utf-8?B?SzJtWkVJeCtOa1FNQUd5V2c1TTcwR2YrUDU4T0NNZWRPS0J1a2l5YTVKWlJD?=
- =?utf-8?B?anJtNy80RUlkOXNzKzZFdVhSdWttZWRjcm9jb1pFTUplZUFpQWh3SlFYVDNj?=
- =?utf-8?B?Zk1Ic1MzKzZFUnNwTzdOY0V6MEZLcFlQenBkKzlHaWMrcXppSm1wSnkvVS92?=
- =?utf-8?B?bmhJallOQTRHVUtTdDYzSzVlM3I0QVR2bzhVN2hBN2daMEFTQVRCQ001cGNX?=
- =?utf-8?B?STlMZ0RUMnlHUS94QWc0MHVEdTVuYm5zNUlEQVFNdm5EOHVWTU4xVnFGTzlE?=
- =?utf-8?B?a0t6bjZrWktFQlNpSjVxWGlRczkzZEVVeGZEYnVtZWtTRWN2Y0NLVml1NjhX?=
- =?utf-8?B?UW1yS2wycnhIYlRZVG9uQlFQWDVVNnFSeDlmMnZTOFFsOU5aZ3dlaUpITi8v?=
- =?utf-8?B?MkpidWlMOHU4Nnc0ZDFhcDRqZU0vMVRvSG9vQTRTMmVPazN1aldzbGh4WEty?=
- =?utf-8?B?ZExQcXROQ242Q2hvanQwVXVQTkhnYjhUY0dHcHpTNmNyQXpaTk5BSnFCeUhp?=
- =?utf-8?B?aHZJcXdBY3lWZHpxMzZzeHR5ZnU0MnVZMzJhM0U0dU54c1NpOWkwcHpPQWh6?=
- =?utf-8?B?TUhTUk5xL1JmaW9abnhicGgzTDRERHpRM2t1SWhsT3pVWmFuc1VwdUNiRjJv?=
- =?utf-8?B?Q2hHd2dBcTVYOGZMSC9BVG5rYWNEc1dvZUF4alE1UzdEUXdSMTVEYmsxYWlx?=
- =?utf-8?B?Tk1BN0czaGZXTDNLSUUzYUpWb29UMHQ2SVVFZ2NLSlFxR0hEeTVOOFdxMlZq?=
- =?utf-8?B?aXhHS0d6eTlGa2tuTzBLa0VOcG9XclhaaFZkcUp1WUk1WVJiangxQTBvbEdp?=
- =?utf-8?B?SU1NdHJENUpkUEVLT09XSmdQUWhMeHJna0dVVHZCRSs4QVNueWJRZVdwVjhH?=
- =?utf-8?B?eVptZnJjVCtzR3dnVVBydSsvYVRITDhSNy9VWHRpZlhjbVNUVHRBM1dnZVRY?=
- =?utf-8?B?anZoNVFLdlUyMGc3WVJ1Sk90eVRFT2VxMzBkUWpTM1N5bEFuNnNEVGVXWVNi?=
- =?utf-8?Q?DHMO9Oc6y8rjrvCFXavoy+QezrCTzRO4zNAat0x2MJ9E?=
+	=?us-ascii?Q?SRN3PpZDGlAHzRUwGWA49S7DRIn1bX80vu+r2FxgshcdTr+Wpaa+EFKI17Ab?=
+ =?us-ascii?Q?mN19N/D1o+6C+BjqQO96bApL6Y4RrHvEnaqnZtgv9wEJ/txuWgMQDHGlz10M?=
+ =?us-ascii?Q?+0b0vX5mCHcW5R87Knm8Z2aNEz8T+E9o+SpRgmyh9f8G1roVS4vMT4Zd1Xl+?=
+ =?us-ascii?Q?/90n2aV9+eBr/XBSpQCJdaGSVpN+YnyQ/98NFxfEmpHjbpB0Gw1ksVWOS8/B?=
+ =?us-ascii?Q?IIV10NSRv8u1xDcYpUxbrQGIjir2J3M1tSDWw2UTxYDKIr//9DWqEEEOeJKC?=
+ =?us-ascii?Q?hGDLkTuwWfT/imuK1fdSyJAFkIkoBsvIZqLWZJ8OjRH3UnXCwzh53l4JD6/4?=
+ =?us-ascii?Q?09klcgPdFhntQx2hYOFheyBA+nSkcwLzRlG8Yh6LS3LqqyvbLrsxvITLBD1S?=
+ =?us-ascii?Q?LjIW6A8019lA5rPqCd9ZQFngPub3XBeqOAn5bWnrMpuhHNmLqAcYrQ6Y/i1W?=
+ =?us-ascii?Q?gubNBiJCTRS9A2pVCrS87V/h620XNL5P2gDyl+x6slLPaZAODnuFaDfj0pqV?=
+ =?us-ascii?Q?TykuyAd5CFp1qbaGHqHT6COsvUKGP7nXFzFPJjiv+hUbTL0jXNqdeS0eOLJC?=
+ =?us-ascii?Q?SGiKtGTpGJZOHVis3iTw4rAqsE39xuwwS8eNl8lUyNrVDXYBEt9wW8Gqz84q?=
+ =?us-ascii?Q?Bt8xgTFmUfiX6fYFVdj1HTv+oS8EsiO7y97bnObhBkpYb3han7OvBz6DnAWd?=
+ =?us-ascii?Q?ZVdKUpLY/+7VzCJRxsPG+gGayPQA3V20xbIgiBkB0WT8YFZcqo93k+vu/7iT?=
+ =?us-ascii?Q?CNaz75s3gRYgkohmn6H7iBug8xhyZKSme7smjUe6mLyTX3KtX9fRLBDX5p+y?=
+ =?us-ascii?Q?7y3RQzRXHXnUA9Xynyue8BvVvAiRDsX5KGvP2xj/JZ9LTj7yEVb+2vMUV4uN?=
+ =?us-ascii?Q?BcEJTkSTPqNAd+9bKb4kXG8cRRGBp3Q0GCX0X2HY5dPBopjJdy3wHtbxtXqo?=
+ =?us-ascii?Q?F2ahei8cLIgcq+Q2+T9A1cC/PsEOa2RVzUS3SAKGwbavJKtKx1Qr8+aPxCA7?=
+ =?us-ascii?Q?ONRh1kgQIXBQcU5xc0QQ967r0pbcrGiO2l/riPJNhsgWb4UkZSOf0HE8pW0k?=
+ =?us-ascii?Q?DFDLhzlUiYsJeb6W8jQYmrCnT9vF7n4WkPj1z+BXu6W41OvKmRj8aBkJpSe2?=
+ =?us-ascii?Q?Htp1nDPCyy+muyMl6fl0eBp92HVe394gUDYdMUxLdgCFKcuFCS7e9vQzKn0w?=
+ =?us-ascii?Q?NFhhJKi4jMM59hqW+ffLwhiisicgcNB654J7gsI7tFC3QHrQN/x9w6A9V3H+?=
+ =?us-ascii?Q?QL96CZ0UsyrrsuAagSh0by2tPdC01l5OjHsNobILrhVX7MuIoxbvhAHCpYSv?=
+ =?us-ascii?Q?tsrYvesAaMrOtkzoDIN3Rr7+IzqiTvS3dht/Nqp7wSoX1C0rMw+96fnYvA+l?=
+ =?us-ascii?Q?loI9M7EW/umXitdgaZos33h0rIY/i9pL5rpxl+rTFtv/Mkz7otrGGBb4c7M/?=
+ =?us-ascii?Q?P9v6VNnvMnw6hOYOYuMHN3fPAi8ZmCuh4PvmQDQ7txcUuAKEo4cMwycmLv2D?=
+ =?us-ascii?Q?nNcLgyK9k6nH2awj0ww/LQnx0WR05TYOBYtXYiPLMWUBWMf3Q3FxWqUJjfK6?=
+ =?us-ascii?Q?s4KRciCEQvqktnhD+HaSoLk76uSI0GhVVvZnrTibsv2uLhPG5x0sTCIitRJI?=
+ =?us-ascii?Q?2x70MA72yJYXZ3VbibhdhzTfC/eefmqXwca0nisbzEzl?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1d692de0-3c00-4c7e-a574-08dcc703cdc4
+X-MS-Exchange-CrossTenant-Network-Message-Id: f2f588c1-cd5c-452e-d542-08dcc703ceef
 X-MS-Exchange-CrossTenant-AuthSource: PH7PR01MB8146.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2024 01:50:33.1787
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2024 01:50:35.1505
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 0RcPW+w4KeqCwm+zfwCLhLLDUPSiwOO4BSSQKY5QOEbI+XN8pVQWOs2fo2cR60jkLI/vqko7ytin1pGPYhhGofc79iNzI7ldNrTwcVbEP7UqsUag1SkzDtN37H8CfX3h
+X-MS-Exchange-CrossTenant-UserPrincipalName: aHz8PO2G5lSTgorlvesG81bj69x5eJkDOAlGcx8DO6GOVfs0IPYMfBWgY+9QZOaLjB3GaFHRwl4PSVL7gKT4MlWFtEh7l8I3hMLpI0hajiXzIsMiG0sbdFhXluuMIFCp
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR01MB7576
 
-Extract map_pgoff parameter from the dictionary, and adjust start/end
-range passed to objdump based on the value.
-
-The start_addr/stop_addr address checks are changed to print a warning
-only if verbose == True. This script repeatedly sees a zero value passed
-in for
-      start_addr = cpu_data[str(cpu) + 'addr']
-
-These zero values are not a new problem. The start_addr/stop_addr warning
-clutters the instruction trace output, hence this change.
+Add map_pgoff parameter to python dictionary so it can be seen by the
+python script, arm-cs-trace-disasm.py. map_pgoff is forced to zero in
+the dictionary if file type is MAPPING_TYPE__IDENTITY. Otherwise, the
+map_pgoff value is directly added to the dictionary.
 
 Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
 ---
- tools/perf/scripts/python/arm-cs-trace-disasm.py | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ .../util/scripting-engines/trace-event-python.c     | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-index 7aff02d84ffb..e8cf5d80d850 100755
---- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-+++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-@@ -187,6 +187,7 @@ def process_event(param_dict):
- 	dso_start = get_optional(param_dict, "dso_map_start")
- 	dso_end = get_optional(param_dict, "dso_map_end")
- 	symbol = get_optional(param_dict, "symbol")
-+	map_pgoff = get_optional(param_dict, "map_pgoff")
+diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+index 6971dd6c231f..74b66692e3a3 100644
+--- a/tools/perf/util/scripting-engines/trace-event-python.c
++++ b/tools/perf/util/scripting-engines/trace-event-python.c
+@@ -798,7 +798,8 @@ static int set_regs_in_dict(PyObject *dict,
+ static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+ 			    const char *dso_field, const char *dso_bid_field,
+ 			    const char *dso_map_start, const char *dso_map_end,
+-			    const char *sym_field, const char *symoff_field)
++			    const char *sym_field, const char *symoff_field,
++			    const char *map_pgoff)
+ {
+ 	char sbuild_id[SBUILD_ID_SIZE];
  
- 	cpu = sample["cpu"]
- 	ip = sample["ip"]
-@@ -249,11 +250,13 @@ def process_event(param_dict):
- 		return
+@@ -814,6 +815,12 @@ static void set_sym_in_dict(PyObject *dict, struct addr_location *al,
+ 			PyLong_FromUnsignedLong(map__start(al->map)));
+ 		pydict_set_item_string_decref(dict, dso_map_end,
+ 			PyLong_FromUnsignedLong(map__end(al->map)));
++		if (al->map->mapping_type == MAPPING_TYPE__DSO)
++			pydict_set_item_string_decref(dict, map_pgoff,
++					PyLong_FromUnsignedLongLong(al->map->pgoff));	
++		else
++			pydict_set_item_string_decref(dict, map_pgoff,
++				PyLong_FromUnsignedLongLong(0));		
+ 	}
+ 	if (al->sym) {
+ 		pydict_set_item_string_decref(dict, sym_field,
+@@ -900,8 +907,8 @@ static PyObject *get_perf_sample_dict(struct perf_sample *sample,
+ 	pydict_set_item_string_decref(dict, "comm",
+ 			_PyUnicode_FromString(thread__comm_str(al->thread)));
+ 	set_sym_in_dict(dict, al, "dso", "dso_bid", "dso_map_start", "dso_map_end",
+-			"symbol", "symoff");
+-
++			"symbol", "symoff", "map_pgoff");
++	
+ 	pydict_set_item_string_decref(dict, "callchain", callchain);
  
- 	if (start_addr < int(dso_start) or start_addr > int(dso_end)):
--		print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
-+		if (options.verbose == True):
-+			print("Start address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (start_addr, int(dso_start), int(dso_end), dso))
- 		return
- 
- 	if (stop_addr < int(dso_start) or stop_addr > int(dso_end)):
--		print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
-+		if (options.verbose == True):
-+			print("Stop address 0x%x is out of range [ 0x%x .. 0x%x ] for dso %s" % (stop_addr, int(dso_start), int(dso_end), dso))
- 		return
- 
- 	if (options.objdump_name != None):
-@@ -267,7 +270,7 @@ def process_event(param_dict):
- 
- 		dso_fname = get_dso_file_path(dso, dso_bid)
- 		if path.exists(dso_fname):
--			print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
-+			print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff, stop_addr + map_pgoff)
- 		else:
- 			print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr, stop_addr))
- 
+ 	brstack = python_process_brstack(sample, al->thread);
 -- 
 2.25.1
 
