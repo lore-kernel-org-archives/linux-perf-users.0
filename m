@@ -1,159 +1,113 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCF0215749A
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 20:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32DDB1AC890
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 20:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724877378; cv=none; b=GgBTfIECF7v4UtDTc9IXK/nh6mPcXAtg5q0A4TjAy3Q73rZvCyJhExdhXjp7VZuaPr1zOYYwQljzW8/IXTCFvRcdcUTGA6c8ppJ3+IC6Url5nr3WF7yND3obshwZtvCcrTsH7k9XNyzQM/onOnreuzZ1oOF5hT1WPg7Aw8MmMA8=
+	t=1724877588; cv=none; b=WqA/O3IVbEgoxfGHfe1mssmVHFfYDt0drwcfidFWfv8jhfL8LMnbYVP9r7HV1lMlPq9Hdnzmq9jp6zes0HxTfGRtv3sdj+GXWgB2rJsk0rxJ0TROT8zXMcMfoBRhGOqZ9hJnxoT4pRgo2OR4VDrpNyN1VWzlrJxzigictwyz27c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724877378; c=relaxed/simple;
-	bh=xYDhrKHNRNbCm4aNzM4JtnJ3ART2wL+7FTMEmCiN/M0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HzkvnqOtiXlmG1Q6MCLKmwzo18riSHvPr3H0YVO0xyj60VqNzC2KzN3h6Kz6bCBi3p5LjABItBrnRrUWXu0JPk50ls5l0olYdkYDwNkiLzCUNyJYDQLgUqLIRpYmBh7RKdMeeJvd/eS+zartEMpYmC9op+RRrYloe9ojDZAUhBE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6660BDA7;
-	Wed, 28 Aug 2024 13:36:42 -0700 (PDT)
-Received: from [10.57.86.86] (unknown [10.57.86.86])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 70D383F66E;
-	Wed, 28 Aug 2024 13:36:14 -0700 (PDT)
-Message-ID: <b671a11e-5a6c-476c-85e8-22f629e39129@arm.com>
-Date: Wed, 28 Aug 2024 21:36:12 +0100
+	s=arc-20240116; t=1724877588; c=relaxed/simple;
+	bh=tDchGxAlNcs3df/AxtPBcJgCizYcXOvwwJ+ZGHkYmOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlZLX6S+5YI/fD8LbDe9iJfrWfKv/ieOr/LWsXQw1UWc7WvZb57YdTOyHxofMvjS0c7m0wAhsIvUGUmmA6ppIjn1ojtgbsvfMepoWw00LW53BNdzQitYFDjxSNPpC5+38jRtlgY0q17Tcdtyp4stHzx3v8MpR/+K1EJ0ZADZUnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fn/zqTb2; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fn/zqTb2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45AEAC4CEC2;
+	Wed, 28 Aug 2024 20:39:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724877587;
+	bh=tDchGxAlNcs3df/AxtPBcJgCizYcXOvwwJ+ZGHkYmOE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fn/zqTb2+fOA9MjVkNPgW9RvtWOwm8m/RxZtQlwEk1YPJcmyA1FMKH2O1RhriY1bv
+	 s9M1r5x1zfneecpiv0mHrbEzdZIiOV+/RzGpQ7I0bzBF8vfJqno99o9fXVNKHDRG5a
+	 GbhExxJNoOqvlJk8e9JWVUG/VV7c2JZahsHjg3HeWOMe6+H6VBdgtrCACqoHEInPmO
+	 ugje39uaj+EWpLJPyS0qCOInqIxdKNA8bT5SweFIFC2WPDLItS0fyOn3Cke0kZ/H1B
+	 3uEtHRvaQB4erd/PwWbfqkTR/rk9k05FDXG5mz0p0Z3eRSt3Zh9YJawH8RCeKvSf36
+	 rabEwI+NS3oOQ==
+Date: Wed, 28 Aug 2024 17:39:44 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
+	mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com,
+	masami.hiramatsu.pt@hitachi.com
+Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
+Message-ID: <Zs-LEEutfp0hkjh5@x1>
+References: <Zn3n0JwfdfFdjbzj@google.com>
+ <20240702110849.31904-1-vmolnaro@redhat.com>
+ <66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 1/4] Add dso__is_pie call to identify ELF PIE
-To: scclevenger@os.amperecomputing.com, james.clark@linaro.org,
- mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
- coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1724820993.git.scclevenger@os.amperecomputing.com>
- <ee7a0b4944093db90a589040be39ef3e7e747f63.1724820993.git.scclevenger@os.amperecomputing.com>
- <1a58ddcd-c386-49b5-a540-4369a1f1469b@arm.com>
- <ce98443a-e79d-4f92-b0cf-4e6603928bbc@os.amperecomputing.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <ce98443a-e79d-4f92-b0cf-4e6603928bbc@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
 
-On 8/28/2024 4:48 PM, Steve Clevenger wrote:
-> 
-> On 8/28/2024 1:23 AM, Leo Yan wrote:
->> On 8/28/2024 6:09 AM, Steve Clevenger wrote:
->>>
->>> Add dso__is_pie global to read the .dynamic section DT_FLAGS_1 entry for
->>> the DF_1_PIE flag. This identifies position executable code.
->>>
->>> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
->>> ---
->>>  tools/perf/util/symbol-elf.c | 60 ++++++++++++++++++++++++++++++++++++
->>>  tools/perf/util/symbol.h     |  1 +
->>>  2 files changed, 61 insertions(+)
->>>
->>> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
->>> index e398abfd13a0..0e49c1345a67 100644
->>> --- a/tools/perf/util/symbol-elf.c
->>> +++ b/tools/perf/util/symbol-elf.c
->>> @@ -662,6 +662,66 @@ static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
->>>         return err;
->>>  }
->>>
->>> +/*
->>> + * Check dynamic section DT_FLAGS_1 for a Position Independent
->>> + * Executable (PIE).
->>> + */
->>> +bool dso__is_pie(struct dso *dso)
->>> +{
->>> +       Elf *elf = NULL;
->>> +       Elf_Scn *scn = NULL;
->>> +       GElf_Ehdr ehdr;
->>> +       GElf_Shdr shdr;
->>> +       bool is_pie = false;
->>> +       char dso_path[PATH_MAX];
->>> +       int fd = -1;
->>> +
->>> +       if (!dso || (elf_version(EV_CURRENT) == EV_NONE))
->>> +               goto exit;      // false
->>> +
->>> +       dso__build_id_filename(dso, dso_path, sizeof(dso_path), false);
->>> +
->>> +       fd = open(dso_path, O_RDONLY);
->>> +
->>> +       if (fd < 0) {
->>> +               pr_debug("%s: cannot read cached %s.\n", __func__, dso_path);
->>> +               goto exit;      // false
->>> +       }
->>> +
->>> +       elf = elf_begin(fd, ELF_C_READ, NULL);
->>> +       gelf_getehdr(elf, &ehdr);
->>> +
->>> +       if (ehdr.e_type == ET_DYN) {
->>> +               Elf_Data *data;
->>> +               GElf_Dyn *entry;
->>> +               int n_entries = shdr.sh_size / sizeof(GElf_Dyn);
->>> +
->>> +               scn = elf_section_by_name(elf, &ehdr, &shdr, ".dynamic", NULL);
->>> +               if (!scn)
->>> +                       goto exit;      // false
->>
->> It should goto a new tag (e.g. exit_failed) so can invoke elf_end(elf) and
->> close(fd).
->>
->>> +
->>> +               data = (Elf_Data *) elf_getdata(scn, NULL);
->>> +               if (!data || !data->d_buf)
->>> +                       goto exit;      // false
->>
->> Ditto.
->>
->>> +
->>> +               // check DT_FLAGS_1
->>> +               for (int i = 0; i < n_entries; i++) {
->>> +                       entry = ((GElf_Dyn *) data->d_buf) + i;
->>> +                       if (entry->d_tag == DT_FLAGS_1) {
->>> +                               if ((entry->d_un.d_val & DF_1_PIE) != 0) {
->>> +                                       is_pie = true;
->>> +                                       break;
->>> +                               }
->>> +                       }
->>> +               } // end for
->>> +       }
->>> +
->>
->> Put 'exit_failed' tag at here.
->>
->> With the changes:
->>
->> Reviewed-by: Leo Yan <leo.yan@arm.com>
->>
->>> +       elf_end(elf);
->>> +       close(fd);
->>> +exit:
->>> +       return is_pie;
->>> +}
->>> +
-> 
-> Hi Leo,
-> 
-> It's been a long time since I've seen goto's used as a rule rather than
-> an exception. I see it introduced the problem you've mentioned.
+On Wed, Aug 28, 2024 at 04:10:55PM +0200, Veronika Molnarova wrote:
+> Ping
 
-I am not sure if I understand this. In the Linux code, it is quite common to
-use goto to handle failure cases (for releasing resources).
+Since this v2 series came from you, we need to have your Signed-off-by
+in Michael's patch, please provide them in response to this message.
 
-> Is it ok to simply update the cover letter (patch 0), and this one (patch 1)
-> as V5? If I don't hear from you, I'll resubmit all.
+I'm adding them tentatively to my local branch, but I need your public
+confirmation to follow the rules.
 
-I assume you also need to address patch 03? It is good to send the all patches
-in one go, this would be easier for maintainers to pick up the whole series
-(e.g. using b4).
-
-Thanks,
-Leo
+- Arnaldo
+ 
+> On 7/2/24 13:08, vmolnaro@redhat.com wrote:
+> > From: Veronika Molnarova <vmolnaro@redhat.com>
+> > 
+> > Hello,
+> > 
+> > rebased the patches for the current perf-tools-next branch in v2 as it
+> > was not applying.
+> > 
+> > Thanks for the notice,
+> > Veronika
+> > 
+> > Michael Petlan (2):
+> >   perf tests shell: Skip base_* dirs in test script search
+> >   perf testsuite: Install perf-report tests
+> > 
+> > Veronika Molnarova (9):
+> >   perf testsuite: Merge settings files for shell tests
+> >   perf testsuite: Fix shellcheck warnings
+> >   perf testsuite probe: Add test for blacklisted kprobes handling
+> >   perf testsuite probe: Add test for basic perf-probe options
+> >   perf testsuite probe: Add test for invalid options
+> >   perf testsuite probe: Add test for line semantics
+> >   perf testsuite: Add common output checking helper
+> >   perf testsuite report: Add test for perf-report basic functionality
+> >   perf testsuite report: Add test case for perf report
+> > 
+> >  tools/perf/Makefile.perf                      |   2 +
+> >  tools/perf/tests/shell/base_probe/settings.sh |  48 -----
+> >  .../base_probe/test_adding_blacklisted.sh     |  67 ++++++
+> >  .../shell/base_probe/test_adding_kernel.sh    |   3 -
+> >  .../perf/tests/shell/base_probe/test_basic.sh |  80 ++++++++
+> >  .../shell/base_probe/test_invalid_options.sh  |  79 ++++++++
+> >  .../shell/base_probe/test_line_semantics.sh   |  55 +++++
+> >  tools/perf/tests/shell/base_report/setup.sh   |  32 +++
+> >  .../shell/base_report/stderr-whitelist.txt    |   5 +
+> >  .../tests/shell/base_report/test_basic.sh     | 190 ++++++++++++++++++
+> >  .../shell/common/check_errors_whitelisted.pl  |  51 +++++
+> >  tools/perf/tests/shell/common/init.sh         |  31 ++-
+> >  tools/perf/tests/shell/common/settings.sh     |  28 ++-
+> >  .../tests/shell/perftool-testsuite_report.sh  |  23 +++
+> >  tools/perf/tests/tests-scripts.c              |   2 +
+> >  15 files changed, 640 insertions(+), 56 deletions(-)
+> >  delete mode 100644 tools/perf/tests/shell/base_probe/settings.sh
+> >  create mode 100755 tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+> >  create mode 100755 tools/perf/tests/shell/base_probe/test_basic.sh
+> >  create mode 100755 tools/perf/tests/shell/base_probe/test_invalid_options.sh
+> >  create mode 100755 tools/perf/tests/shell/base_probe/test_line_semantics.sh
+> >  create mode 100755 tools/perf/tests/shell/base_report/setup.sh
+> >  create mode 100644 tools/perf/tests/shell/base_report/stderr-whitelist.txt
+> >  create mode 100755 tools/perf/tests/shell/base_report/test_basic.sh
+> >  create mode 100755 tools/perf/tests/shell/common/check_errors_whitelisted.pl
+> >  create mode 100755 tools/perf/tests/shell/perftool-testsuite_report.sh
+> > 
