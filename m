@@ -1,216 +1,169 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A659A158DC2;
-	Wed, 28 Aug 2024 10:39:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A173915B0E4
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 13:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724841601; cv=none; b=nct3OKv4ao8k0kx/le8a0pJEBJPdSgp5c7n6mWpTV9TzawUsw6srhVaeILDiPK1ZCxlXy082UTeeY0Ft9uFs/pFDVvLoZK+g/fNQ6mrAoLx2HfnjQiXTkN84cCGK0lLVLnx9rf2pdzY1GOaOlLELrZ4I1JdTOOpggddWvdWuRL0=
+	t=1724852834; cv=none; b=org+vxpjul3ONS77GgaNHP2hEYOw4HkMbt1Hvls3SrbvaMao+Khs/NN5cRJLoZlGO0AadVOns0cFFLPJeywTmoRCTVo4IGyr+bZHibMTdFKc4R9CSmFw13tn46ecuabMXuTxyomMZ7/GsPu+iY6qj9KngM9XQgKp8ox0K+cP8j8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724841601; c=relaxed/simple;
-	bh=lypZN8Ptv+m64d7B5Itdi6jh1xC4xI6bvj1nplhou8I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SNC1y5EmN/VZzQx3LuKUZEYhlaxbQBl/piRfvmuUB1bn3bb3mmuM3jLy37prAiooa0eseuTm+MdssQSwoMV1KpAGmnTYqcsdzqatF7uPIRYo2JfFSalBGE8hwjpC/vSZepRQxDkVNWLjpcXtzl0KVe6eCasI2AmBX9KZzyXvQJY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=V1o5oMWR; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1724852834; c=relaxed/simple;
+	bh=kRYprtY9BPYMcTbRMPQpYQKMqRWSyo8AJ74TBjibN6I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f6PbDTz66WO0aQ4LEh2aIDWCMQAso6bmcRGWXq6rJpJoy4llRuZWEN7yBunOJP7wW0wqIwDwYTs0F83H1wuplbjk6Dcq4PF2iE6JpvE9ETP5HFx2luPjmGoJpDrvq+WXeoEIPBLB1bTyPFMsncOUQmN445/NpsO7Keo/egc6TYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aN61vXRd; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="V1o5oMWR"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 47RM3gOi032469;
-	Wed, 28 Aug 2024 10:39:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=pp1; bh=D
-	qi/bjjpKWWI81s91WHaD7aZLkRMpDLLY8cSHktKSYM=; b=V1o5oMWRr7qBMnt1y
-	+Wl1fOWH4Snlyu+bK/wb3K1JK7B5QPTASYdt7OZkkjn8boGA/GM7sLhrmwzYuo1a
-	OZZGgyXfz+O/fl8iJfUojSoYrOXKgMsSQy68l8PF5n/AD/BSEAJA0XJgkiOg0Fw+
-	Ixe84HjX7yKva9haDv9PKRFyhiQBfJLZGzAGWHv/+XRPYSZ1V+zDbTjGBa1tBTBH
-	VdzuMoIcRWf5D/Y5pWMCIKu+5KRMqfDHTyj+CNA1wD7sY2MnqZOGCjPQaOukWyNT
-	5X/21bEdYZY36DDCwkuZemtqU/p3a3z+Ce/XV7se0i4eFGBYqZEnIx/JANwEER0r
-	Kk8RA==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 419q8u29sv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Aug 2024 10:39:44 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 47SAcYSg023254;
-	Wed, 28 Aug 2024 10:39:44 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 419q8u29sr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Aug 2024 10:39:44 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 47S8N1Qg021752;
-	Wed, 28 Aug 2024 10:39:43 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 417suufd3q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 28 Aug 2024 10:39:43 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 47SAdeCE46268678
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 28 Aug 2024 10:39:40 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 408722004E;
-	Wed, 28 Aug 2024 10:39:40 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1CBAB20040;
-	Wed, 28 Aug 2024 10:39:38 +0000 (GMT)
-Received: from [9.171.52.187] (unknown [9.171.52.187])
-	by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 28 Aug 2024 10:39:37 +0000 (GMT)
-Message-ID: <0b84b538-e40c-4e93-9bb4-33e5a2f1e09c@linux.ibm.com>
-Date: Wed, 28 Aug 2024 16:09:26 +0530
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aN61vXRd"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1724852831;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=VjWNH+PldJI5/bt/V+sqxJdxQZEZZnfm0s3//uHANdg=;
+	b=aN61vXRd+mKAe6hmY6fOnpPCq3OAShu1PeGV7KyycLD032Z5c8f3HOqnFuNKKtc1BOA58z
+	irzcDlt0eCFhw1MmqaPBlxCXa0QopIWjLMzTpdKSG/j2/7DA8wUP+UBc5wgvF19R9xt1Og
+	hkV47kZqFsNcyv80ze4n5Th1f+jOrys=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-kdfYF392Oj-mHHzPrV02Gw-1; Wed,
+ 28 Aug 2024 09:47:06 -0400
+X-MC-Unique: kdfYF392Oj-mHHzPrV02Gw-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1C511955D53;
+	Wed, 28 Aug 2024 13:47:04 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.226.63])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BA4319560A3;
+	Wed, 28 Aug 2024 13:47:00 +0000 (UTC)
+From: vmolnaro@redhat.com
+To: linux-perf-users@vger.kernel.org,
+	acme@kernel.org,
+	acme@redhat.com
+Cc: mpetlan@redhat.com,
+	rstoyano@redhat.com,
+	mark.rutland@arm.com,
+	kan.liang@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	alexander.shishkin@linux.intel.com,
+	adrian.hunter@intel.com
+Subject: [PATCH] perf test: Restore sample rate for perf_event_attr
+Date: Wed, 28 Aug 2024 15:46:54 +0200
+Message-ID: <20240828134655.29267-1-vmolnaro@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/3] perf vendor events power10: Update JSON/events
-To: Ian Rogers <irogers@google.com>
-Cc: acme@kernel.org, namhyung@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.ibm.com, atrajeev@linux.vnet.ibm.com,
-        hbathini@linux.ibm.com, disgoel@linux.vnet.ibm.com
-References: <20240827053206.538814-1-kjain@linux.ibm.com>
- <CAP-5=fWBjt3pypEwEsbKsuNTqX+ZA7v9WbNJCUgc09xxF=pt1A@mail.gmail.com>
-Content-Language: en-US
-From: kajoljain <kjain@linux.ibm.com>
-In-Reply-To: <CAP-5=fWBjt3pypEwEsbKsuNTqX+ZA7v9WbNJCUgc09xxF=pt1A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 78gOJYNIXuVW2o2rUE5A5ejV4_VXH6_8
-X-Proofpoint-ORIG-GUID: J3ULAgdu2pbosU0P-8ecZO2-pFUV93Rr
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.28.16
- definitions=2024-08-28_03,2024-08-27_01,2024-05-17_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 clxscore=1015 bulkscore=0 phishscore=0 mlxscore=0
- malwarescore=0 mlxlogscore=999 spamscore=0 priorityscore=1501 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2407110000 definitions=main-2408280076
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+From: Veronika Molnarova <vmolnaro@redhat.com>
 
+Test "Setup struct perf_event_attr" consists of multiple test cases that
+can affect the max sample rate value for perf events. Some test cases
+check this value as it should not be lowered under the set minimum for
+the given test. Currently, it is possible for the test cases to affect
+each other as the previous tests can lower the sample rate, leading to
+a possible failure of some of the future test cases as the value is not
+restored at any point.
 
-On 8/27/24 21:00, Ian Rogers wrote:
-> On Mon, Aug 26, 2024 at 10:33 PM Kajol Jain <kjain@linux.ibm.com> wrote:
->>
->> Update JSON/events for power10 platform with additional events.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-> 
-> For the series:
-> Reviewed-by: Ian Rogers <irogers@google.com>
+ 10: Setup struct perf_event_attr:
+--- start ---
+test child forked, pid 104220
+Using CPUID 0x00000000413fd0c1
+running './tests/attr/test-record-C0'
+Current sample rate: 10000
+running './tests/attr/test-record-basic'
+Current sample rate: 900
+running './tests/attr/test-record-branch-any'
+Current sample rate: 600
+running './tests/attr/test-record-dummy-C0'
+Current sample rate: 600
+expected sample_period=4000, got 600
+FAILED './tests/attr/test-record-dummy-C0' - match failure
 
-Hi Ian,
-Thanks for reviewing the patchset.
+Restore the max sample rate value for perf events to a reasonable value
+before each test case if its value was lowered too much to ensure the
+same conditions for each test case.
 
-> 
-> Just to note, the moving of events in patches 2 and 3 is necessary as
-> the filename sets the "topic" in perf list. I'm not sure the whole
-> "topic" thing makes total sense and we may want to revisit it at some
-> date. For example, AMD generally put the topic into the event name,
-> the PMU gives a strong hint of "topic", etc.
+ 10: Setup struct perf_event_attr:
+--- start ---
+test child forked, pid 107222
+Using CPUID 0x00000000413fd0c1
+running './tests/attr/test-record-C0'
+Current sample rate: 10000
+running './tests/attr/test-record-basic'
+Current sample rate: 800
+running './tests/attr/test-record-branch-any'
+Current sample rate: 700
+unsupp  './tests/attr/test-record-branch-any'
+running './tests/attr/test-record-branch-filter-any'
+Current sample rate: 10000
+running './tests/attr/test-record-count'
+Current sample rate: 10000
+running './tests/attr/test-record-data'
+Current sample rate: 600
+running './tests/attr/test-record-dummy-C0'
+Current sample rate: 800
+running './tests/attr/test-record-freq'
+Current sample rate: 10000
+...
 
-In my opinion, having topic helps in understanding the area to which
-given event belongs. And since we have multiple event categories in case
-of core PMU, Just having PMU name may not not sufficient.
-I will check further on adding topic to event name(which AMD is using),
-my concern is it will increase the event name size. As we already have
-bigger event names.
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Radostin Stoyanov <rstoyano@redhat.com>
+Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
+---
+ tools/perf/tests/attr.py | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-But may be rather then picking topic from file name, we can add one
-separate field to define the topic in json and use that instead?
+diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
+index e890c261ad26..3db9a7d78715 100644
+--- a/tools/perf/tests/attr.py
++++ b/tools/perf/tests/attr.py
+@@ -246,6 +246,23 @@ class Test(object):
+                 return False
+         return True
+ 
++    def restore_sample_rate(self, value=10000):
++        try:
++            # Check value of sample_rate
++            with open("/proc/sys/kernel/perf_event_max_sample_rate", "r") as fIn:
++                curr_value = fIn.readline()
++            # If too low restore to reasonable value
++            if not curr_value or int(curr_value) < int(value):
++                with open("/proc/sys/kernel/perf_event_max_sample_rate", "w") as fOut:
++                    fOut.write(str(value))
++
++        except IOError as e:
++            log.warning("couldn't restore sample_rate value: I/O error %s" % e)
++        except ValueError as e:
++            log.warning("couldn't restore sample_rate value: Value error %s" % e)
++        except TypeError as e:
++            log.warning("couldn't restore sample_rate value: Type error %s" % e)
++
+     def load_events(self, path, events):
+         parser_event = configparser.ConfigParser()
+         parser_event.read(path)
+@@ -283,6 +300,7 @@ class Test(object):
+         if self.skip_test_kernel_until():
+             raise Notest(self, "new kernel skip")
+ 
++        self.restore_sample_rate()
+         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
+               self.perf, self.command, tempdir, self.args)
+         ret = os.WEXITSTATUS(os.system(cmd))
+-- 
+2.43.0
 
-Thanks,
-Kajol Jain
-
-> 
-> Thanks,
-> Ian
-> 
->> ---
->>  .../arch/powerpc/power10/datasource.json      | 25 +++++++++++++++++++
->>  .../arch/powerpc/power10/frontend.json        | 10 ++++++++
->>  .../pmu-events/arch/powerpc/power10/pmc.json  |  5 ++++
->>  3 files changed, 40 insertions(+)
->>
->> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
->> index 0eeaaf1a95b8..283284745d9c 100644
->> --- a/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
->> +++ b/tools/perf/pmu-events/arch/powerpc/power10/datasource.json
->> @@ -14,6 +14,31 @@
->>      "EventName": "PM_DATA_FROM_MEMORY",
->>      "BriefDescription": "The processor's data cache was reloaded from local, remote, or distant memory due to a demand miss."
->>    },
->> +  {
->> +    "EventCode": "0x0000004080",
->> +    "EventName": "PM_INST_FROM_L1",
->> +    "BriefDescription": "An instruction fetch hit in the L1. Each fetch group contains 8 instructions. The same line can hit 4 times if 32 sequential instructions are fetched."
->> +  },
->> +  {
->> +    "EventCode": "0x000000026080",
->> +    "EventName": "PM_L2_LD_MISS",
->> +    "BriefDescription": "All successful D-Side Load dispatches for this thread that missed in the L2. Since the event happens in a 2:1 clock domain and is time-sliced across all 4 threads, the event count should be multiplied by 2."
->> +  },
->> +  {
->> +    "EventCode": "0x000000026880",
->> +    "EventName": "PM_L2_ST_MISS",
->> +    "BriefDescription": "All successful D-Side Store dispatches for this thread that missed in the L2. Since the event happens in a 2:1 clock domain and is time-sliced across all 4 threads, the event count should be multiplied by 2."
->> +  },
->> +  {
->> +    "EventCode": "0x010000046880",
->> +    "EventName": "PM_L2_ST_HIT",
->> +    "BriefDescription": "All successful D-side store dispatches for this thread that were L2 hits. Since the event happens in a 2:1 clock domain and is time-sliced across all 4 threads, the event count should be multiplied by 2."
->> +  },
->> +  {
->> +    "EventCode": "0x000000036880",
->> +    "EventName": "PM_L2_INST_MISS",
->> +    "BriefDescription": "All successful instruction (demand and prefetch) dispatches for this thread that missed in the L2. Since the event happens in a 2:1 clock domain and is time-sliced across all 4 threads, the event count should be multiplied by 2."
->> +  },
->>    {
->>      "EventCode": "0x000300000000C040",
->>      "EventName": "PM_INST_FROM_L2",
->> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
->> index 53660c279286..456971f60814 100644
->> --- a/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
->> +++ b/tools/perf/pmu-events/arch/powerpc/power10/frontend.json
->> @@ -93,5 +93,15 @@
->>      "EventCode": "0x400FC",
->>      "EventName": "PM_ITLB_MISS",
->>      "BriefDescription": "Instruction TLB reload (after a miss), all page sizes. Includes only demand misses."
->> +  },
->> +  {
->> +    "EventCode": "0x00000040B8",
->> +    "EventName": "PM_PRED_BR_TKN_COND_DIR",
->> +    "BriefDescription": "A conditional branch finished with correctly predicted direction. Resolved taken."
->> +  },
->> +  {
->> +    "EventCode": "0x00000048B8",
->> +    "EventName": "PM_PRED_BR_NTKN_COND_DIR",
->> +    "BriefDescription": "A conditional branch finished with correctly predicted direction. Resolved not taken."
->>    }
->>  ]
->> diff --git a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json b/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
->> index 0e0253d0e757..04732698d9b2 100644
->> --- a/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
->> +++ b/tools/perf/pmu-events/arch/powerpc/power10/pmc.json
->> @@ -104,6 +104,11 @@
->>      "EventName": "PM_RUN_CYC",
->>      "BriefDescription": "Processor cycles gated by the run latch."
->>    },
->> +  {
->> +    "EventCode": "0x200F8",
->> +    "EventName": "PM_EXT_INT",
->> +    "BriefDescription": "Cycles an external interrupt was active."
->> +  },
->>    {
->>      "EventCode": "0x30010",
->>      "EventName": "PM_PMC2_OVERFLOW",
->> --
->> 2.43.5
->>
