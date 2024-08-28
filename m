@@ -1,57 +1,58 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB0FC18786F
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 14:09:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD46518991E
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 14:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724854162; cv=none; b=abTurlmc8vT31khMCpI0w60GQfDwpTkGJzxY9FqjwuBWGSc+ariSOZIUtg75P2mHsvrixauwLxG/OKgOnJ4X5GR2f9JD2nChjSoUIHEL1c3G6pDTkoIWHq+Jy23wYqAFI3S6W9Y8vu0JVVGM9rGolRFKHaL8VW1BqOm73Ik9x9o=
+	t=1724854178; cv=none; b=afTqrvnZ+PJEB+tzZO1TNStiR0ndiGG/WGgz8ld1P3KXk97ecrv4a/pwJy7VLhfpqJtLXuK8O6vYI6+kRx14O4cZaeO8pajp2IcMCk9auSPd+LvHMiHUL+7hC6NrC1Ei29WlFJIHZWpeq4NwgB1zylpnbuSo4Fo4UY3QACSmnY0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724854162; c=relaxed/simple;
-	bh=svDylw00YDrOwEUlgnNGbWMFv5+C8tkXtzLrWQTqGS8=;
+	s=arc-20240116; t=1724854178; c=relaxed/simple;
+	bh=TCmY5/W8UjZo5v+UmsAxTLf+W/oV6ui66khMLptw/MU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=tkwxuOds9uykq8nWC6n53VJNnb1A71wgd+T0j+/f0Uka8kx+04CFoVf4NUV3fFOfJMDjkzxAkeowSMY7CEMVP/pEwOLFGKdnX8GoE2V2jL5kuNGKWHRs/KyVW/XNax7n4XSuBmQxKJppzrRxE09oRqXrf818CS8OBUaTpu9j3sI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=edASUSrd; arc=none smtp.client-ip=209.85.208.44
+	 MIME-Version; b=Xv+cwJVjhBwbvpTtdMClmALvVDYPY/PmloFfbG9Uq9X4UG1FTU3f/8YJeTa8ZayiZcYJWAEupmMRtpVTEM9cujRFolxSYV+5ShCNe/cbLk7gOw7XaVc4zffSxKPuZ0uiC9wUZkSAdjT0x/tLq7MKjCdQj50DSHMnHIEIiusxcSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mtWUrWCu; arc=none smtp.client-ip=209.85.208.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="edASUSrd"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5befd2f35bfso7343523a12.2
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 07:09:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mtWUrWCu"
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2f409c87b07so80042571fa.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 07:09:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1724854159; x=1725458959; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1724854175; x=1725458975; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jt6m2cvFLahBiVh7r4fU/dK5iwEboYmsnljQ5bVAR6o=;
-        b=edASUSrd4cK9z7RjRa53kv4XsNfhyubuKycpdzSDT1idwoy547PmkfET+xom/G/lkn
-         gHfCIjuTLEBjH5jgrJpm5OE9YindjxdBGiYLJLBNE/QqqsesswzQgWZiKKiwnRlOwgv1
-         A6IdbC4aivL/HrGgFfE5nwQFAkMwy0weWzkC4rvRJiO6v0+gxzz8gXH2G60sBvZZooLU
-         mMK8PZrUIj+D3rIkw27O/fay6FC/NUeeO9d34zD9BTP08HUbAyJlF2sStuW5bwgcu8Tk
-         fmfrKlFIXsn8a9A+zi7Fn4cMkCPUqMiyDwrh0BbwW1wK+M71SIMOfErXZzlKqIn5Wq+V
-         pS0w==
+        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
+        b=mtWUrWCujaC6GK3StEy2a+IP/zyH/FH8WWgjSFMnjzOYuDY9u5buUBmpL2gIKtPQfH
+         JHhdpegfr4TWg54mdmL4nIbuU5Mj7JvHIkxayJCfW6ECvPK60SOzvE1UMTJP+2oSrxOm
+         NKDi4ptva+h7tAa5jnHZP6U7Fi946O6f9ml5mpNkuO/zxmSlxfwZVSw59F57sH3VRM3X
+         Thro2XX+q82Xz7pbsHjpbNTHK+ohprR6ufpA2lCKWMSZXOn+6fM58HdJyhjrkJIlXguG
+         bHYWLcKDDSp0Lo55+uTGFa2mHcVGmp+HRXKjFIKI8FvO0grc/oljl02ECn2fNuWxVYXM
+         Iqsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724854159; x=1725458959;
+        d=1e100.net; s=20230601; t=1724854175; x=1725458975;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jt6m2cvFLahBiVh7r4fU/dK5iwEboYmsnljQ5bVAR6o=;
-        b=r7S1Kh32Atv0sLML7YWbGJTrW/kopxMeah+ouKMF1oU76hqR3fYfyZ7Wa7cLP3SlDP
-         2KbB0beop9XovJ/GB7CxlS3HOSy2DvxxvJrS0BG7gszBsCCdYNYrlAutsxEfRAej5Ou/
-         3wkUJVdvKJi0zatjh/sP79LYDLq+ahavEoLF51KepHglnB7fkCq1bw2Hbz4d4kY2eC0A
-         Qd4Zc7UKWzjl07Npz7kq8nhUVFLEOMhC3el3TzY/2VBeqpSBbSQ/nwpo9HGuoKlLm9SK
-         pML24gkfYTrEXUuX9g6N9QpApgd+Qk5ZOT1y5f+W6IzEZqyKtbeFDEvljpXNAQy66wOy
-         5Npw==
-X-Forwarded-Encrypted: i=1; AJvYcCX5D7QDe0sNZdHLO/AmyazjA2eQXt1auafdoXriuMOBcHrnSx3GvjyATbIscklx9pRdCsD8kLT76duAv5TVI42S@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy+qfUKJJLnerv//4OzRtzmojheOjUpvSUaRcnygFI/6h0OtXlQ
-	dxJKp1g+V2/tRqryOMNEOC1NH5whByflIBSvMfuAWkzZ/mKn8O7tJUSgA3m1oRs=
-X-Google-Smtp-Source: AGHT+IEDIEQ2Rb6mMuhZRhKlOmgcL5qvZ0lVR3CiSqYPIS/pHPTSXlf0WK3OQbxqv7ZdpffIHJZv0w==
-X-Received: by 2002:a17:907:e283:b0:a86:9776:ef40 with SMTP id a640c23a62f3a-a86a52c160fmr1200932366b.36.1724854158564;
-        Wed, 28 Aug 2024 07:09:18 -0700 (PDT)
+        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
+        b=VcX/pYisFABJ6irMcfJxCEYwt9mDcYxiiyx0PCdH5vt+6YxFzLQWbzDtWaVaobwarD
+         PLd6NNJAlaBW373qTwnstajvFo66LR0MJ79zC/YGj/BOp+PIniWbWppVJMA1L5A76gBt
+         K7gyKTXcmKPJhWxgYs6WP65tufu+NdzDBX/Xpn1rDvPwvwrHfPtgtkcOznB0GRdnuomN
+         cUoOoQFeANZ36tmsb9Mxmgi7Jmy1u/bFCU828EYf0kl9452aBdY+YbOaXgxhMXQDQEyK
+         n+IqZLDNvZhwNIqqI2Fu6qGs8G9teBxCKQ1tLFmrT5JFIjagIB/EWbo9cj98x+pnX1Zn
+         RPqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZQt+OgvMs7N5oc7Ma0w01M9uHN+jPzlqSsKcTxVzulFMkkfqcJyTCpcY1qwRHgDpDvzaMYcw943KfKPPwtjIm@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx/i+f8mmVKWJw1KaQm5K0rSDd8Lu4zIYEhgO8Uod6hoda345/y
+	Y9rP61O83ZJUUj9w3eyxgo38NwZwVk2QN0p9KTGUs9QCRW4d2qIiDSNKF3d6ghvXP23yt8/17OX
+	QvezgZw==
+X-Google-Smtp-Source: AGHT+IFgmIslD8aeXezPJ8omK9Ym59j23rdPHAVaCBU3pdKjqfegi/dglTnAMLH6nBwoXlF35NdpKw==
+X-Received: by 2002:a05:6512:3e08:b0:52c:825e:3b1c with SMTP id 2adb3069b0e04-53438783f89mr11126822e87.26.1724854174372;
+        Wed, 28 Aug 2024 07:09:34 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a86e5832855sm251302666b.130.2024.08.28.07.09.16
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a86e5832855sm251302666b.130.2024.08.28.07.09.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Aug 2024 07:09:17 -0700 (PDT)
+        Wed, 28 Aug 2024 07:09:33 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: irogers@google.com,
 	linux-perf-users@vger.kernel.org,
@@ -73,17 +74,18 @@ Cc: James Clark <james.clark@linaro.org>,
 	Weilin Wang <weilin.wang@intel.com>,
 	Dominique Martinet <asmadeus@codewreck.org>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Yang Jihong <yangjihong@bytedance.com>,
 	Colin Ian King <colin.i.king@gmail.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
 	Ze Gao <zegao2021@gmail.com>,
-	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Yanteng Si <siyanteng@loongson.cn>,
 	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v5 5/7] perf evsel: Remove pmu_name
-Date: Wed, 28 Aug 2024 15:07:19 +0100
-Message-Id: <20240828140736.156703-6-james.clark@linaro.org>
+Subject: [PATCH v5 6/7] perf test: Make stat test work on DT devices
+Date: Wed, 28 Aug 2024 15:07:20 +0100
+Message-Id: <20240828140736.156703-7-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240828140736.156703-1-james.clark@linaro.org>
 References: <20240828140736.156703-1-james.clark@linaro.org>
@@ -95,226 +97,44 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ian Rogers <irogers@google.com>
+PMUs aren't listed in /sys/devices/ on DT devices, so change the search
+directory to /sys/bus/event_source/devices which works everywhere. Also
+add armv8_cortex_* as a known PMU type to search for to make the test
+run on more devices.
 
-"evsel->pmu_name" is only ever assigned a strdup of "pmu->name", a
-strdup of "evsel->pmu_name" or NULL. As such, prefer to use
-"pmu->name" directly and even to directly compare PMUs than PMU
-names. For safety, add some additional NULL tests.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
-[ Fix arm-spe.c usage of pmu_name ]
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/arch/arm64/util/arm-spe.c |  4 ++--
- tools/perf/arch/x86/util/evsel.c     |  4 ++--
- tools/perf/tests/parse-events.c      |  2 +-
- tools/perf/util/evlist.c             |  3 ++-
- tools/perf/util/evsel.c              |  7 -------
- tools/perf/util/evsel.h              |  3 +--
- tools/perf/util/metricgroup.c        |  4 ++--
- tools/perf/util/parse-events.c       |  1 -
- tools/perf/util/stat-shadow.c        | 10 +++++-----
- tools/perf/util/stat.c               |  2 +-
- 10 files changed, 16 insertions(+), 24 deletions(-)
+ tools/perf/tests/shell/stat.sh | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/arch/arm64/util/arm-spe.c b/tools/perf/arch/arm64/util/arm-spe.c
-index d59f6ca499f2..81dcfeccdaf8 100644
---- a/tools/perf/arch/arm64/util/arm-spe.c
-+++ b/tools/perf/arch/arm64/util/arm-spe.c
-@@ -188,9 +188,9 @@ static int arm_spe_recording_options(struct auxtrace_record *itr,
+diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
+index 3f1e67795490..525d0c44fdc6 100755
+--- a/tools/perf/tests/shell/stat.sh
++++ b/tools/perf/tests/shell/stat.sh
+@@ -117,16 +117,18 @@ test_cputype() {
  
- 	evlist__for_each_entry(evlist, evsel) {
- 		if (evsel__is_aux_event(evsel)) {
--			if (!strstarts(evsel->pmu_name, ARM_SPE_PMU_NAME)) {
-+			if (!strstarts(evsel->pmu->name, ARM_SPE_PMU_NAME)) {
- 				pr_err("Found unexpected auxtrace event: %s\n",
--				       evsel->pmu_name);
-+				       evsel->pmu->name);
- 				return -EINVAL;
- 			}
- 			opts->full_auxtrace = true;
-diff --git a/tools/perf/arch/x86/util/evsel.c b/tools/perf/arch/x86/util/evsel.c
-index 1eaae8819c5e..fe8a817d2061 100644
---- a/tools/perf/arch/x86/util/evsel.c
-+++ b/tools/perf/arch/x86/util/evsel.c
-@@ -84,7 +84,7 @@ int arch_evsel__hw_name(struct evsel *evsel, char *bf, size_t size)
- 		return  scnprintf(bf, size, "%s", event_name);
- 
- 	return scnprintf(bf, size, "%s/%s/",
--			 evsel->pmu_name ? evsel->pmu_name : "cpu",
-+			 evsel->pmu ? evsel->pmu->name : "cpu",
- 			 event_name);
- }
- 
-@@ -129,7 +129,7 @@ int arch_evsel__open_strerror(struct evsel *evsel, char *msg, size_t size)
- 		return 0;
- 
- 	if (!evsel->core.attr.precise_ip &&
--	    !(evsel->pmu_name && !strncmp(evsel->pmu_name, "ibs", 3)))
-+	    !(evsel->pmu && !strncmp(evsel->pmu->name, "ibs", 3)))
- 		return 0;
- 
- 	/* More verbose IBS errors. */
-diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
-index edc2adcf1bae..c38fa4e16670 100644
---- a/tools/perf/tests/parse-events.c
-+++ b/tools/perf/tests/parse-events.c
-@@ -730,7 +730,7 @@ static int test__checkevent_pmu_events(struct evlist *evlist)
- 
- 	TEST_ASSERT_VAL("wrong number of entries", 1 == evlist->core.nr_entries);
- 	TEST_ASSERT_VAL("wrong type", PERF_TYPE_RAW == evsel->core.attr.type ||
--				      strcmp(evsel->pmu_name, "cpu"));
-+				      strcmp(evsel->pmu->name, "cpu"));
- 	TEST_ASSERT_VAL("wrong exclude_user",
- 			!evsel->core.attr.exclude_user);
- 	TEST_ASSERT_VAL("wrong exclude_kernel",
-diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
-index a941f46c958d..fff7fd4ae785 100644
---- a/tools/perf/util/evlist.c
-+++ b/tools/perf/util/evlist.c
-@@ -2576,7 +2576,8 @@ void evlist__uniquify_name(struct evlist *evlist)
- 		else
- 			attributes = empty_attributes;
- 
--		if (asprintf(&new_name, "%s/%s/%s", pos->pmu_name, pos->name, attributes + 1)) {
-+		if (asprintf(&new_name, "%s/%s/%s", pos->pmu ? "" : pos->pmu->name,
-+			     pos->name, attributes + 1)) {
- 			free(pos->name);
- 			pos->name = new_name;
- 		} else {
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 2928c1f76dad..082159fb2091 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -296,7 +296,6 @@ void evsel__init(struct evsel *evsel,
- 	evsel->metric_events = NULL;
- 	evsel->per_pkg_mask  = NULL;
- 	evsel->collect_stat  = false;
--	evsel->pmu_name      = NULL;
- 	evsel->group_pmu_name = NULL;
- 	evsel->skippable     = false;
- 	evsel->alternate_hw_config = PERF_COUNT_HW_MAX;
-@@ -394,11 +393,6 @@ struct evsel *evsel__clone(struct evsel *orig)
- 		if (evsel->group_name == NULL)
- 			goto out_err;
- 	}
--	if (orig->pmu_name) {
--		evsel->pmu_name = strdup(orig->pmu_name);
--		if (evsel->pmu_name == NULL)
--			goto out_err;
--	}
- 	if (orig->group_pmu_name) {
- 		evsel->group_pmu_name = strdup(orig->group_pmu_name);
- 		if (evsel->group_pmu_name == NULL)
-@@ -1497,7 +1491,6 @@ void evsel__exit(struct evsel *evsel)
- 	zfree(&evsel->group_name);
- 	zfree(&evsel->name);
- 	zfree(&evsel->filter);
--	zfree(&evsel->pmu_name);
- 	zfree(&evsel->group_pmu_name);
- 	zfree(&evsel->unit);
- 	zfree(&evsel->metric_id);
-diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
-index 430441fdfbbc..936aafb046b6 100644
---- a/tools/perf/util/evsel.h
-+++ b/tools/perf/util/evsel.h
-@@ -72,7 +72,6 @@ struct evsel {
- 	struct {
- 		char			*name;
- 		char			*group_name;
--		const char		*pmu_name;
- 		const char		*group_pmu_name;
- #ifdef HAVE_LIBTRACEEVENT
- 		struct tep_event	*tp_format;
-@@ -184,7 +183,7 @@ struct evsel {
- 	unsigned long		open_flags;
- 	int			precise_ip_original;
- 
--	/* for missing_features */
-+	/* The PMU the event is from. Used for missing_features, PMU name, etc. */
- 	struct perf_pmu		*pmu;
- 
- 	/* For tool events */
-diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-index 69f6a46402c3..bbbb2e7eb8db 100644
---- a/tools/perf/util/metricgroup.c
-+++ b/tools/perf/util/metricgroup.c
-@@ -297,8 +297,8 @@ static int setup_metric_events(const char *pmu, struct hashmap *ids,
- 		struct expr_id_data *val_ptr;
- 
- 		/* Don't match events for the wrong hybrid PMU. */
--		if (!all_pmus && ev->pmu_name && evsel__is_hybrid(ev) &&
--		    strcmp(ev->pmu_name, pmu))
-+		if (!all_pmus && ev->pmu && evsel__is_hybrid(ev) &&
-+		    strcmp(ev->pmu->name, pmu))
- 			continue;
- 		/*
- 		 * Check for duplicate events with the same name. For
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index d1355e492df3..fa37567e0323 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -262,7 +262,6 @@ __add_event(struct list_head *list, int *idx,
- 	evsel->core.is_pmu_core = pmu ? pmu->is_core : false;
- 	evsel->auto_merge_stats = auto_merge_stats;
- 	evsel->pmu = pmu;
--	evsel->pmu_name = pmu ? strdup(pmu->name) : NULL;
- 	evsel->alternate_hw_config = alternate_hw_config;
- 
- 	if (name)
-diff --git a/tools/perf/util/stat-shadow.c b/tools/perf/util/stat-shadow.c
-index 5548f751e56e..72275806e6e2 100644
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -573,7 +573,7 @@ static void perf_stat__print_metricgroup_header(struct perf_stat_config *config,
- {
- 	bool need_full_name = perf_pmus__num_core_pmus() > 1;
- 	static const char *last_name;
--	static const char *last_pmu;
-+	static const struct perf_pmu *last_pmu;
- 	char full_name[64];
- 
- 	/*
-@@ -584,21 +584,21 @@ static void perf_stat__print_metricgroup_header(struct perf_stat_config *config,
- 	 * different metric events.
- 	 */
- 	if (last_name && !strcmp(last_name, name)) {
--		if (!need_full_name || !strcmp(last_pmu, evsel->pmu_name)) {
-+		if (!need_full_name || last_pmu != evsel->pmu) {
- 			out->print_metricgroup_header(config, ctxp, NULL);
- 			return;
- 		}
- 	}
- 
--	if (need_full_name)
--		scnprintf(full_name, sizeof(full_name), "%s (%s)", name, evsel->pmu_name);
-+	if (need_full_name && evsel->pmu)
-+		scnprintf(full_name, sizeof(full_name), "%s (%s)", name, evsel->pmu->name);
- 	else
- 		scnprintf(full_name, sizeof(full_name), "%s", name);
- 
- 	out->print_metricgroup_header(config, ctxp, full_name);
- 
- 	last_name = name;
--	last_pmu = evsel->pmu_name;
-+	last_pmu = evsel->pmu;
- }
- 
- /**
-diff --git a/tools/perf/util/stat.c b/tools/perf/util/stat.c
-index 0bd5467389e4..7c2ccdcc3fdb 100644
---- a/tools/perf/util/stat.c
-+++ b/tools/perf/util/stat.c
-@@ -553,7 +553,7 @@ static bool evsel__is_alias(struct evsel *evsel_a, struct evsel *evsel_b)
- 	if (evsel__is_clock(evsel_a) != evsel__is_clock(evsel_b))
- 		return false;
- 
--	return !!strcmp(evsel_a->pmu_name, evsel_b->pmu_name);
-+	return evsel_a->pmu != evsel_b->pmu;
- }
- 
- static void evsel__merge_aliases(struct evsel *evsel)
+   # Find a known PMU for cputype.
+   pmu=""
+-  for i in cpu cpu_atom armv8_pmuv3_0
++  devs="/sys/bus/event_source/devices"
++  for i in $devs/cpu $devs/cpu_atom $devs/armv8_pmuv3_0 $devs/armv8_cortex_*
+   do
+-    if test -d "/sys/devices/$i"
++    i_base=$(basename "$i")
++    if test -d "$i"
+     then
+-      pmu="$i"
++      pmu="$i_base"
+       break
+     fi
+-    if perf stat -e "$i/instructions/" true > /dev/null 2>&1
++    if perf stat -e "$i_base/instructions/" true > /dev/null 2>&1
+     then
+-      pmu="$i"
++      pmu="$i_base"
+       break
+     fi
+   done
 -- 
 2.34.1
 
