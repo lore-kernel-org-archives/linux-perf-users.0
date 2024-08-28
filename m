@@ -1,59 +1,89 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A173915B0E4
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 13:47:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E85113BAC3
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 14:08:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724852834; cv=none; b=org+vxpjul3ONS77GgaNHP2hEYOw4HkMbt1Hvls3SrbvaMao+Khs/NN5cRJLoZlGO0AadVOns0cFFLPJeywTmoRCTVo4IGyr+bZHibMTdFKc4R9CSmFw13tn46ecuabMXuTxyomMZ7/GsPu+iY6qj9KngM9XQgKp8ox0K+cP8j8=
+	t=1724854083; cv=none; b=Sy5+inKHEIchl4NizZpDn8xZryUPLRR/HJsJu4FhuyUWPphX3I1g2nzhUZf0gwdBo9tm4cGwbhwdZW+/uhUD4Ljh0CG7EuARNpKj+FrXs+1pF79AfQ6gi084+ZoTY1WFuNwO1gnALa20411YevUOj3lK6KHZmYQ0kD5limNAymg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724852834; c=relaxed/simple;
-	bh=kRYprtY9BPYMcTbRMPQpYQKMqRWSyo8AJ74TBjibN6I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f6PbDTz66WO0aQ4LEh2aIDWCMQAso6bmcRGWXq6rJpJoy4llRuZWEN7yBunOJP7wW0wqIwDwYTs0F83H1wuplbjk6Dcq4PF2iE6JpvE9ETP5HFx2luPjmGoJpDrvq+WXeoEIPBLB1bTyPFMsncOUQmN445/NpsO7Keo/egc6TYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aN61vXRd; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1724854083; c=relaxed/simple;
+	bh=4xE/vzrw3jJwfmxRQTphStFe7kpYvfTa09+FdtD4X0U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=DERyJDoahWTf95qye0P8UXvL43rYquPjyUiSO+ta2Q8dONTAXub0C8RKLSFc3l9gXSvgnXOy+FtmS+9SdXU/EYnx4aiaTp6PS54ZWFtmqiM6xbIVOiupEHZRJ7HbM44H8ddaubHpSF4czdJ0BnGOMVcKcS5IUm56G0doNIv63Wk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yZaZQ4CT; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aN61vXRd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1724852831;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=VjWNH+PldJI5/bt/V+sqxJdxQZEZZnfm0s3//uHANdg=;
-	b=aN61vXRd+mKAe6hmY6fOnpPCq3OAShu1PeGV7KyycLD032Z5c8f3HOqnFuNKKtc1BOA58z
-	irzcDlt0eCFhw1MmqaPBlxCXa0QopIWjLMzTpdKSG/j2/7DA8wUP+UBc5wgvF19R9xt1Og
-	hkV47kZqFsNcyv80ze4n5Th1f+jOrys=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-606-kdfYF392Oj-mHHzPrV02Gw-1; Wed,
- 28 Aug 2024 09:47:06 -0400
-X-MC-Unique: kdfYF392Oj-mHHzPrV02Gw-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1C511955D53;
-	Wed, 28 Aug 2024 13:47:04 +0000 (UTC)
-Received: from fedora.redhat.com (unknown [10.45.226.63])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4BA4319560A3;
-	Wed, 28 Aug 2024 13:47:00 +0000 (UTC)
-From: vmolnaro@redhat.com
-To: linux-perf-users@vger.kernel.org,
-	acme@kernel.org,
-	acme@redhat.com
-Cc: mpetlan@redhat.com,
-	rstoyano@redhat.com,
-	mark.rutland@arm.com,
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yZaZQ4CT"
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a866cea40c4so775874066b.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 07:08:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1724854080; x=1725458880; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5aAwIVJgVIh1Hv8hW6DlJQ9xqCzcxOReEhk3tFKI30U=;
+        b=yZaZQ4CTACX1VlFrjY6HMvytN0DdXUUgzz2/HtKCuDmiuP3DXn0mvw8N4hby1ii6iS
+         8I2VDKYwvevKuJrybcG06V62TlRI+9jgG0maFuqImWk6fu9FVaUXdyFfzmXj1Q22iRLA
+         B5BP6nL/Or9e1c88GgRWwRkaN8SuLx3mEdtNZAfOtQS7V2/FL195TXGUr0l1XMcc4YAQ
+         3KdRLyRgL4DOOjJ+wWZYGPP4UQ8JGDO2QenjQiBW61pVyOIbfbMgnIgSOrFXFbyRC8Xq
+         wKctHG5kmirJgPlq+s/FGKzjkXI1+FJL7Pw8OY5emyLGAcdFPaJA/U1ELQ7Nhw3XOw7e
+         n1lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724854080; x=1725458880;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5aAwIVJgVIh1Hv8hW6DlJQ9xqCzcxOReEhk3tFKI30U=;
+        b=VP3Au391pbqW3GIimtlyXfuLoXvCpvEfXQzIX4k8dFXa0bs9oZeQ0PNcm5YtqbRYDE
+         jcHr/KnOvUEe9n5HfFUdgefXkFIYdOFtbauSG9u1w4f08eEVKDDiRT6YaSO74waTPdc7
+         w8+l44ZL7VAs3DPxgiE4BbKx04iBF20HLbEumT+z1I1+2flosi2+te8wqZguFy+aG1iK
+         qQz1+ecfqBcVddTHDdWw2bHX6SkASQAoBD75vikHqBpKG0P6A1J36TxeSmm2JBtVTvFN
+         NQjjFyyziaiVJWId5Xv5uL0DAZ1Kg3mgG0tq/wrOS9XE+htSR2PVhepyy4F/dQACA/xh
+         y94g==
+X-Forwarded-Encrypted: i=1; AJvYcCWRrJmVB8RbA9F7kMH55gcWLunPINFnq1lI8D9gsujAvH8/vMTbZdtwBa0x8MU5QvezhhN+sQsMKP7c2GJ9z51u@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTzshtOVY1L39IWNsOna6rpSioNe2xC6hmXbWS1RCBhtvunAYN
+	0H04+G3HJNZWX3xhXukHr21inCIkba6pgOC/SZ+OJRpbwJ56fKdkS4/Id7bDTOU=
+X-Google-Smtp-Source: AGHT+IEoC5n0vdz3tJYOdnNb4XTomlnmxEipp/sr7m19JHJooP7z4Rm7SltooV8l5QLlj4Ott0pVNQ==
+X-Received: by 2002:a17:907:1b1e:b0:a86:e9ab:f6c6 with SMTP id a640c23a62f3a-a86e9abfe01mr432673066b.68.1724854079782;
+        Wed, 28 Aug 2024 07:07:59 -0700 (PDT)
+Received: from localhost.localdomain ([89.47.253.130])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a86e5832855sm251302666b.130.2024.08.28.07.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 28 Aug 2024 07:07:59 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: irogers@google.com,
+	linux-perf-users@vger.kernel.org,
 	kan.liang@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	alexander.shishkin@linux.intel.com,
-	adrian.hunter@intel.com
-Subject: [PATCH] perf test: Restore sample rate for perf_event_attr
-Date: Wed, 28 Aug 2024 15:46:54 +0200
-Message-ID: <20240828134655.29267-1-vmolnaro@redhat.com>
+	ak@linux.intel.com
+Cc: James Clark <james.clark@linaro.org>,
+	John Garry <john.g.garry@oracle.com>,
+	Will Deacon <will@kernel.org>,
+	Mike Leach <mike.leach@linaro.org>,
+	Leo Yan <leo.yan@linux.dev>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Weilin Wang <weilin.wang@intel.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Yang Jihong <yangjihong@bytedance.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Ze Gao <zegao2021@gmail.com>,
+	Yunseong Kim <yskelg@gmail.com>,
+	Sun Haiyong <sunhaiyong@loongson.cn>,
+	Jing Zhang <renyu.zj@linux.alibaba.com>,
+	Yicong Yang <yangyicong@hisilicon.com>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/7] Event parsing fixes
+Date: Wed, 28 Aug 2024 15:07:14 +0100
+Message-Id: <20240828140736.156703-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,109 +91,71 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-From: Veronika Molnarova <vmolnaro@redhat.com>
+I rebased this one and made some other fixes so that I could test it,
+so I thought I'd repost it here in case it's helpful. I also added a
+new test.
 
-Test "Setup struct perf_event_attr" consists of multiple test cases that
-can affect the max sample rate value for perf events. Some test cases
-check this value as it should not be lowered under the set minimum for
-the given test. Currently, it is possible for the test cases to affect
-each other as the previous tests can lower the sample rate, leading to
-a possible failure of some of the future test cases as the value is not
-restored at any point.
+But for the testing it all looks ok.
 
- 10: Setup struct perf_event_attr:
---- start ---
-test child forked, pid 104220
-Using CPUID 0x00000000413fd0c1
-running './tests/attr/test-record-C0'
-Current sample rate: 10000
-running './tests/attr/test-record-basic'
-Current sample rate: 900
-running './tests/attr/test-record-branch-any'
-Current sample rate: 600
-running './tests/attr/test-record-dummy-C0'
-Current sample rate: 600
-expected sample_period=4000, got 600
-FAILED './tests/attr/test-record-dummy-C0' - match failure
+There is one small difference where it now hides _all_ <not supported>
+events, when previously it would only hide some selected subset of
+events like "stalled-cycles-frontend". I think this is now more
+consistent across platforms because, for example, Apple M only has
+cycles and instructions, and the rest of the default events would
+always show as <not supported> there.
 
-Restore the max sample rate value for perf events to a reasonable value
-before each test case if its value was lowered too much to ensure the
-same conditions for each test case.
+Tested on Raptor Lake, Juno, N1, Ampere (with the DSU cycles PMU) and
+I also faked an Apple M on Juno. 
 
- 10: Setup struct perf_event_attr:
---- start ---
-test child forked, pid 107222
-Using CPUID 0x00000000413fd0c1
-running './tests/attr/test-record-C0'
-Current sample rate: 10000
-running './tests/attr/test-record-basic'
-Current sample rate: 800
-running './tests/attr/test-record-branch-any'
-Current sample rate: 700
-unsupp  './tests/attr/test-record-branch-any'
-running './tests/attr/test-record-branch-filter-any'
-Current sample rate: 10000
-running './tests/attr/test-record-count'
-Current sample rate: 10000
-running './tests/attr/test-record-data'
-Current sample rate: 600
-running './tests/attr/test-record-dummy-C0'
-Current sample rate: 800
-running './tests/attr/test-record-freq'
-Current sample rate: 10000
-...
+Changes since v4:
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ian Rogers <irogers@google.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Radostin Stoyanov <rstoyano@redhat.com>
-Signed-off-by: Veronika Molnarova <vmolnaro@redhat.com>
----
- tools/perf/tests/attr.py | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-diff --git a/tools/perf/tests/attr.py b/tools/perf/tests/attr.py
-index e890c261ad26..3db9a7d78715 100644
---- a/tools/perf/tests/attr.py
-+++ b/tools/perf/tests/attr.py
-@@ -246,6 +246,23 @@ class Test(object):
-                 return False
-         return True
+  * Hide all <not supported> default events when not verbose
+  * Remove previous note about <not supported> behavior from the cover
+    letter and replace it with a new note about the new behavior
  
-+    def restore_sample_rate(self, value=10000):
-+        try:
-+            # Check value of sample_rate
-+            with open("/proc/sys/kernel/perf_event_max_sample_rate", "r") as fIn:
-+                curr_value = fIn.readline()
-+            # If too low restore to reasonable value
-+            if not curr_value or int(curr_value) < int(value):
-+                with open("/proc/sys/kernel/perf_event_max_sample_rate", "w") as fOut:
-+                    fOut.write(str(value))
-+
-+        except IOError as e:
-+            log.warning("couldn't restore sample_rate value: I/O error %s" % e)
-+        except ValueError as e:
-+            log.warning("couldn't restore sample_rate value: Value error %s" % e)
-+        except TypeError as e:
-+            log.warning("couldn't restore sample_rate value: Type error %s" % e)
-+
-     def load_events(self, path, events):
-         parser_event = configparser.ConfigParser()
-         parser_event.read(path)
-@@ -283,6 +300,7 @@ class Test(object):
-         if self.skip_test_kernel_until():
-             raise Notest(self, "new kernel skip")
- 
-+        self.restore_sample_rate()
-         cmd = "PERF_TEST_ATTR=%s %s %s -o %s/perf.data %s" % (tempdir,
-               self.perf, self.command, tempdir, self.args)
-         ret = os.WEXITSTATUS(os.system(cmd))
+Changes since v3:
+
+  * Rebase onto perf-tools-next 6236ebe07
+  * Fix Intel TPEBS counting mode test
+  * Fix arm-spe build
+  * Add support for DT devices in stat test
+  * Add a new test for hybrid perf stat default arguments
+
+Ian Rogers (5):
+  perf evsel: Add alternate_hw_config and use in evsel__match
+  perf stat: Uniquify event name improvements
+  perf stat: Remove evlist__add_default_attrs use strings
+  perf evsel x86: Make evsel__has_perf_metrics work for legacy events
+  perf evsel: Remove pmu_name
+
+James Clark (2):
+  perf test: Make stat test work on DT devices
+  perf test: Add a test for default perf stat command
+
+ tools/perf/arch/arm64/util/arm-spe.c          |   4 +-
+ tools/perf/arch/x86/util/evlist.c             |  74 +----
+ tools/perf/arch/x86/util/evsel.c              |  35 ++-
+ tools/perf/builtin-diff.c                     |   6 +-
+ tools/perf/builtin-stat.c                     | 291 +++++++-----------
+ tools/perf/tests/parse-events.c               |   2 +-
+ tools/perf/tests/shell/stat.sh                |  33 +-
+ .../perf/tests/shell/test_stat_intel_tpebs.sh |  11 +-
+ tools/perf/util/evlist.c                      |  46 +--
+ tools/perf/util/evlist.h                      |  12 -
+ tools/perf/util/evsel.c                       |  28 +-
+ tools/perf/util/evsel.h                       |  22 +-
+ tools/perf/util/metricgroup.c                 |   4 +-
+ tools/perf/util/parse-events.c                |  58 ++--
+ tools/perf/util/parse-events.h                |   8 +-
+ tools/perf/util/parse-events.y                |   2 +-
+ tools/perf/util/pmu.c                         |   6 +-
+ tools/perf/util/pmu.h                         |   2 +-
+ tools/perf/util/stat-display.c                | 109 +++++--
+ tools/perf/util/stat-shadow.c                 |  14 +-
+ tools/perf/util/stat.c                        |   2 +-
+ 21 files changed, 356 insertions(+), 413 deletions(-)
+
 -- 
-2.43.0
+2.34.1
 
