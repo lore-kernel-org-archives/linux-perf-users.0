@@ -1,121 +1,159 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3C591A4F0F
-	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 17:14:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B358615749A
+	for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 20:35:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724865256; cv=none; b=fySW48BzAH1g5HIJG5bDNRuv1t+oH8ieX0sJrg7/LMcCwLBEpDK1BFzFLyPSY0ea4BXtSIwo80ZBseaPFSzZig75VLKHwwxDxnHDm8YMcPTx7qjQ3gFwvA4QEbk1Y8voojxWUz6mJTqpwJK2dYdlQPbKgOhtU69qVTUQ9xmXfpc=
+	t=1724877305; cv=none; b=Z0y0L1xqPtJNyreEj3Jy+9rBlmUTE696fU5AQT1hdlYpLOu9e/M3EvcSkksaCy6URRJveh/4cv1xvHW9kQtonB4dwrt+U0IbEEmq93hbZ05f+RCphxTMqUQIQfGDttWh98+SwzAtqA5KMkVCSgGBZEaqrhpMc7Nqatnjr2uaB/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724865256; c=relaxed/simple;
-	bh=XuU6lfnAXc7wBWZXO3LoSeJokR3ZvXf1xIXUsa6plnw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZD/uCKbJ4gfTUd0V8Vlo/lDA8h5msP4n/SqMXGK/5OwywnTLfn/50m5LhOCwlaT91/ntAM2HoWHeXluZbDifhvMOj0+16wV7RKRA7cVfnDnHQTR/CKxLrgl1nABY1ofA+cycAHONdBqa09jZ9c4Hu/a8WTazZSGs3YsL2OaTp/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=VBLCCn7E; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VBLCCn7E"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20260346ca1so13455ad.0
-        for <linux-perf-users@vger.kernel.org>; Wed, 28 Aug 2024 10:14:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724865254; x=1725470054; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sgsg9KYlOPgnINZ9GfyD+BBUo6PvUfKigYVEMj5LYlU=;
-        b=VBLCCn7Ezc56gL7vPp1OxXFkJWx8jAiTv0mUjPaAAvyu9Q54RSTGZk5WYPf5/Cuney
-         HmVvgHK1gmRL+MqRrQ1UFyzR8ClsYgByXUcVolKD+HheNu8dhHOY4rn9WbWn94O7dDXd
-         CMHvJkiiH5oTL+0juR0ZVOdwbAN5pY/1owU+grTKXK/THk+hntu6WO+94/ASNyoVIKsW
-         MBGqoEqkH4baLsuvXhV2oeLX/2R82hUckXEge9H/w0X1RCQUnwBDu2USW6ivrxgch3M4
-         RjZyzr23IxbzV3RzmBbCxgVStk7lWg6xGOWF3XM96LeNfZvk4cxAMVhSu5Hul1V5h2zx
-         wpuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724865254; x=1725470054;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sgsg9KYlOPgnINZ9GfyD+BBUo6PvUfKigYVEMj5LYlU=;
-        b=d4LXKyRkJkImbfbYFfrZPyVRR2oJBtexP5XnFjj1XZU5bg72WfeGD1pjtJBYQJhKf4
-         cNPmnhA6DuhvlLh2Kh2IJxhn1E0jnvntHUZzBrSlGR5iXLjteq5Lhvd1EzcZVnXx1kMv
-         i9FRnnFZILiF9Dw68o2kqG9JAgXhs66h1CUbO3lvp9MNBrFvkJe7QqYe31kGk/y/WwZK
-         z9tM768zMsTedX+JXXkyVeEZoHn7fNh4bK0Kk0qbLGJGV802t9QOR+0Bt+QaNZ7lJNSp
-         wHPAueXH3j2tJgbLtShN2BWCNCRjQyrlS+C5EjKutMrf5KLPhLUDybnRzFFn4vIXnkVv
-         RMlg==
-X-Forwarded-Encrypted: i=1; AJvYcCXbRlFoGiVXbqp20K0S4Kzms5+YLBatIZ57jJ+GQQtCX5aqKLyWUvYV2Fx3MV4rXEKcNTQjKm7VfOEwiUWdVcVG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzxHnBNmDqFPG/8urBnZAcW0mizn+0leJXm3oR6XSHFBVxj6GL0
-	nw+pehOIOaXZkU966OE+ekExteSGFaNabwMxkdy5kE0eoU5oQxfOE1BcuJVozJpzosnNnss8ml4
-	FUy1wLDoB2HgVa/lWEYwBZmdKS1VtBeyz+Fto
-X-Google-Smtp-Source: AGHT+IEclezY9FbFmYOMIJpk7h1+XOP+3gwZEglT1ovqH0RFwg8+37NHUTVC2VrWG5GzhCh5VftM3Q+HdyA8/UzsKJM=
-X-Received: by 2002:a17:902:d512:b0:201:e2db:7be3 with SMTP id
- d9443c01a7336-204f960ea01mr3339395ad.21.1724865253338; Wed, 28 Aug 2024
- 10:14:13 -0700 (PDT)
+	s=arc-20240116; t=1724877305; c=relaxed/simple;
+	bh=xYDhrKHNRNbCm4aNzM4JtnJ3ART2wL+7FTMEmCiN/M0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Ij0lfpe7caPy4qWjeujByZV63okP0JDqRS5sUn0RHcQdsfFE7tygAMhnUcCLRBRUcd8jjPqEyK6zAYlwpC44mNF49brIa3qvw9iUaPs2V8o00Jj/r0+/Ud7TbUFhLDr5iF1rBmjU9nF4pOH3ABjD3+s4Bk7cpNaoV6EAzYR/0m0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD192DA7;
+	Wed, 28 Aug 2024 13:35:27 -0700 (PDT)
+Received: from [192.168.0.8] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7AF643F66E;
+	Wed, 28 Aug 2024 13:34:59 -0700 (PDT)
+Message-ID: <fb493d85-2bb1-4275-b22f-701e60d95a81@arm.com>
+Date: Wed, 28 Aug 2024 21:34:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240828140736.156703-1-james.clark@linaro.org> <Zs9YGP4d0_QanpoA@tassilo>
-In-Reply-To: <Zs9YGP4d0_QanpoA@tassilo>
-From: Ian Rogers <irogers@google.com>
-Date: Wed, 28 Aug 2024 10:14:01 -0700
-Message-ID: <CAP-5=fW=eYuKQtnd=1gM3wh7MubZ+P56ZCHn9dwvkhUn_NQZMQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/7] Event parsing fixes
-To: Andi Kleen <ak@linux.intel.com>
-Cc: James Clark <james.clark@linaro.org>, linux-perf-users@vger.kernel.org, 
-	kan.liang@linux.intel.com, John Garry <john.g.garry@oracle.com>, 
-	Will Deacon <will@kernel.org>, Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Weilin Wang <weilin.wang@intel.com>, 
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
-	Yang Jihong <yangjihong@bytedance.com>, Colin Ian King <colin.i.king@gmail.com>, 
-	Ze Gao <zegao2021@gmail.com>, Yunseong Kim <yskelg@gmail.com>, 
-	Sun Haiyong <sunhaiyong@loongson.cn>, Jing Zhang <renyu.zj@linux.alibaba.com>, 
-	Yicong Yang <yangyicong@hisilicon.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 1/4] Add dso__is_pie call to identify ELF PIE
+To: scclevenger@os.amperecomputing.com, james.clark@linaro.org,
+ mike.leach@linaro.org
+Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
+ coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org
+References: <cover.1724820993.git.scclevenger@os.amperecomputing.com>
+ <ee7a0b4944093db90a589040be39ef3e7e747f63.1724820993.git.scclevenger@os.amperecomputing.com>
+ <1a58ddcd-c386-49b5-a540-4369a1f1469b@arm.com>
+ <ce98443a-e79d-4f92-b0cf-4e6603928bbc@os.amperecomputing.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <ce98443a-e79d-4f92-b0cf-4e6603928bbc@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Aug 28, 2024 at 10:02=E2=80=AFAM Andi Kleen <ak@linux.intel.com> wr=
-ote:
->
-> On Wed, Aug 28, 2024 at 03:07:14PM +0100, James Clark wrote:
-> > I rebased this one and made some other fixes so that I could test it,
-> > so I thought I'd repost it here in case it's helpful. I also added a
-> > new test.
-> >
-> > But for the testing it all looks ok.
-> >
-> > There is one small difference where it now hides _all_ <not supported>
-> > events, when previously it would only hide some selected subset of
-> > events like "stalled-cycles-frontend". I think this is now more
-> > consistent across platforms because, for example, Apple M only has
-> > cycles and instructions, and the rest of the default events would
-> > always show as <not supported> there.
->
-> I'm not a big fan of hiding all of <unsupported>, when they are explicitl=
-y
-> specified on the command line they should be absolutely shown.
->
-> I do have tools that specify events on the command line and expect
-> the same order/events in the output. This might well cause breakage.
+On 8/28/2024 4:48 PM, Steve Clevenger wrote:
+> 
+> On 8/28/2024 1:23 AM, Leo Yan wrote:
+>> On 8/28/2024 6:09 AM, Steve Clevenger wrote:
+>>>
+>>> Add dso__is_pie global to read the .dynamic section DT_FLAGS_1 entry for
+>>> the DF_1_PIE flag. This identifies position executable code.
+>>>
+>>> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
+>>> ---
+>>>  tools/perf/util/symbol-elf.c | 60 ++++++++++++++++++++++++++++++++++++
+>>>  tools/perf/util/symbol.h     |  1 +
+>>>  2 files changed, 61 insertions(+)
+>>>
+>>> diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+>>> index e398abfd13a0..0e49c1345a67 100644
+>>> --- a/tools/perf/util/symbol-elf.c
+>>> +++ b/tools/perf/util/symbol-elf.c
+>>> @@ -662,6 +662,66 @@ static int dso__synthesize_plt_got_symbols(struct dso *dso, Elf *elf,
+>>>         return err;
+>>>  }
+>>>
+>>> +/*
+>>> + * Check dynamic section DT_FLAGS_1 for a Position Independent
+>>> + * Executable (PIE).
+>>> + */
+>>> +bool dso__is_pie(struct dso *dso)
+>>> +{
+>>> +       Elf *elf = NULL;
+>>> +       Elf_Scn *scn = NULL;
+>>> +       GElf_Ehdr ehdr;
+>>> +       GElf_Shdr shdr;
+>>> +       bool is_pie = false;
+>>> +       char dso_path[PATH_MAX];
+>>> +       int fd = -1;
+>>> +
+>>> +       if (!dso || (elf_version(EV_CURRENT) == EV_NONE))
+>>> +               goto exit;      // false
+>>> +
+>>> +       dso__build_id_filename(dso, dso_path, sizeof(dso_path), false);
+>>> +
+>>> +       fd = open(dso_path, O_RDONLY);
+>>> +
+>>> +       if (fd < 0) {
+>>> +               pr_debug("%s: cannot read cached %s.\n", __func__, dso_path);
+>>> +               goto exit;      // false
+>>> +       }
+>>> +
+>>> +       elf = elf_begin(fd, ELF_C_READ, NULL);
+>>> +       gelf_getehdr(elf, &ehdr);
+>>> +
+>>> +       if (ehdr.e_type == ET_DYN) {
+>>> +               Elf_Data *data;
+>>> +               GElf_Dyn *entry;
+>>> +               int n_entries = shdr.sh_size / sizeof(GElf_Dyn);
+>>> +
+>>> +               scn = elf_section_by_name(elf, &ehdr, &shdr, ".dynamic", NULL);
+>>> +               if (!scn)
+>>> +                       goto exit;      // false
+>>
+>> It should goto a new tag (e.g. exit_failed) so can invoke elf_end(elf) and
+>> close(fd).
+>>
+>>> +
+>>> +               data = (Elf_Data *) elf_getdata(scn, NULL);
+>>> +               if (!data || !data->d_buf)
+>>> +                       goto exit;      // false
+>>
+>> Ditto.
+>>
+>>> +
+>>> +               // check DT_FLAGS_1
+>>> +               for (int i = 0; i < n_entries; i++) {
+>>> +                       entry = ((GElf_Dyn *) data->d_buf) + i;
+>>> +                       if (entry->d_tag == DT_FLAGS_1) {
+>>> +                               if ((entry->d_un.d_val & DF_1_PIE) != 0) {
+>>> +                                       is_pie = true;
+>>> +                                       break;
+>>> +                               }
+>>> +                       }
+>>> +               } // end for
+>>> +       }
+>>> +
+>>
+>> Put 'exit_failed' tag at here.
+>>
+>> With the changes:
+>>
+>> Reviewed-by: Leo Yan <leo.yan@arm.com>
+>>
+>>> +       elf_end(elf);
+>>> +       close(fd);
+>>> +exit:
+>>> +       return is_pie;
+>>> +}
+>>> +
+> 
+> Hi Leo,
+> 
+> It's been a long time since I've seen goto's used as a rule rather than
+> an exception. I see it introduced the problem you've mentioned.
 
-The patch series doesn't do this, it just doesn't display unsupported
-events that came from the set of default events - default evsels have
-a "skippable" flag set. In patch 3 James has added to
-should_skip_zero_counter in stat-display.c:
+I am not sure if I understand this. In the Linux code, it is quite common to
+use goto to handle failure cases (for releasing resources).
 
-+       /*
-+        * Skip unsupported default events when not verbose. (default event=
-s
-+        * are all marked 'skippable').
-+        */
-+       if (verbose =3D=3D 0 && counter->skippable && !counter->supported)
-+               return true;
+> Is it ok to simply update the cover letter (patch 0), and this one (patch 1)
+> as V5? If I don't hear from you, I'll resubmit all.
+
+I assume you also need to address patch 03? It is good to send the all patches
+in one go, this would be easier for maintainers to pick up the whole series
+(e.g. using b4).
 
 Thanks,
-Ian
+Leo
