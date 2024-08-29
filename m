@@ -1,57 +1,57 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7922F1B151A
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 15:02:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 849FC1B3F1D
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 15:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724943749; cv=none; b=LyaNpEmBx+6YWbh97uvN1fq1J5lo3wn9JDMAIp/uDg9+/UYgQq+Osw8CrThtg794A6cT58WmJiNFLa36CIk7uuY/kea20AVBJxuTASfSv4YQ3gzr2mS7LS+EipVAe8X203F9ICTICsjsjeu7R7nkyy2j+fMnTM8PxbI3kx/S9I4=
+	t=1724943752; cv=none; b=YNRam1ihAu1IY0qPXCCPI/wgRwZ83stxtyeIYG0s+Xd5gazu8Cs9QhvUaqGQsqQDewEQ1LxkkM2pY37yz9YE+in2B8SnO/RtrkhUORDj+KRcQtvl+oI95IgUYInqXqAexA+m4QGo5SxHAMHakiYhzx/t0ekkRYiwVv/As2X5+Po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724943749; c=relaxed/simple;
-	bh=BtmlMrMAHzQZUpmltBgdlhBhq2zYxwAKCQUSA4rmo2g=;
+	s=arc-20240116; t=1724943752; c=relaxed/simple;
+	bh=6JtjT923jGc/V3FlUSejai1b0EYlPO9Lq7KBqzesy7A=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Q91qyai99X3xaiRGqCD/692SwBh/g9qyEqqVdSAcHy4TOviH86jxRkQgEblSuqcmKYM3SvIZ0u4SCu4ZdmclsURw18jekov1BZKvesGJNABAT4hNDEdpgJH4dn/A+sfBnZnNbf8HYPHOWdlnHtxpzoaxdyf630W1m9yk80Sonkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=z5oNuDS7; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=eyBwBclrN1lFEQEV8vmRmwDM+AyYSumFK3253d+h7CdL5x1vqrCrD+u4mRk2kgS31mlMXjASuovxd36wmFlkkkoA9+WfF+/y3ELnGb36qX3X3AfrJGCY+WrHG6C12BtXgCl1p/D80Nxbb1M6YczvY8GQju9kyNo0VA+qlT4KmHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=WQsyUIEa; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="z5oNuDS7"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6ac83a71d45so12479577b3.3
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 08:02:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WQsyUIEa"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-dc691f1f83aso309419276.1
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 08:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724943747; x=1725548547; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1724943749; x=1725548549; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=zLDviNvuuZGMvTdlOAKtIuEnHhCZdbVpbH4SWUDE26w=;
-        b=z5oNuDS7F98V0xuO+9yhd4e1FsIrneYbBnVYAYSrmJ/nXxtLN1K3grq7V5BRN3glSL
-         GeDioxahrlMGB0Zm+HxEPMAHHngCrGdFCGBF+siDbm+UzFFDJvMJtKuMv2S44FRoCQyP
-         a6EfD7Q5Opyt/egOxRSbW0/RRkYeWfWorQM3FY3OpO3fsosnMDiTD2XDvyuFWu7uLn2V
-         16jf6ewvrliH7fqtXJCbjbyqxPGD/JETaEwpGnpUF0YWmLvGJxKE1cGaVFi1KYaOCjkF
-         22Ml1PjOzVJ8xwbIe8Np3G7hBRrwm8UdnBleFRAZYBxLdMMCzCx/KkPHw+9pTvEwfnL+
-         vn+w==
+        bh=Av0NGxXt1nyH9OnYaW8cLl1uNekiq9nEwkTz2fTJczM=;
+        b=WQsyUIEadsJZNsHIriKVcJWmcDgeCjycIXmi7h2/XNl108Dm3DWiKJGEUSmHHpJOUh
+         4YUxF4eXRYkeqx86vQsX98XZ+v34Ace03Hgdhu4AXhiRAxZ5Uv595zePrnU208msWsDc
+         UMRlc9Bp2k/L75OU5NlRwfp5c/vokH542CyF6BKqzDsF9YZorCMupg9Cv2QsP7tU1opF
+         sV8Hi/jmloBzVFdGHw+PNw4bl3PrH1sUkaXFGSdmaQDx+CcaH+n+Ro9qE/4qG5RMDwuC
+         ZUV/u8epjr2EyxBGMfxJ9ENZ0PCBmfYNKqDdkeihkFf6ugYwvXcTC0Y9sctSDktiMLCd
+         hr+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724943747; x=1725548547;
+        d=1e100.net; s=20230601; t=1724943749; x=1725548549;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zLDviNvuuZGMvTdlOAKtIuEnHhCZdbVpbH4SWUDE26w=;
-        b=j3/PkHLM+2v5NxJgQXyUWYOxq13I7vVWSpnBKDE/0jIQIEa8OZ01tbEKICvOAiCMA9
-         ePNbFwhwgZB/wPvRFmY1QSjucbvT+ht78zdOIVEdEakku8QbT+jL6SRA4HRu1WaGogQ1
-         obeZyyB7twJEx/AG0xBr21FU1bd0vxRSpTcj8+HQnMm2PmZNSnIwpuo9TCFV2sgIQeMj
-         SzCQYcIRzTxu8rXxF28ssVWp5RlwkE+y1b0wl1nIZKOiJDXxoEqL1QCfmr6Q3wvypa4S
-         tIHONWFis+fTSW31x7myIeM5XJMN/AMzGPTbJQ794DRSxxrHkBTE7utYURoHbPp/fhkq
-         P7rA==
-X-Forwarded-Encrypted: i=1; AJvYcCVnDUg9bS4WwofUrgPA2VzTiuHVNK8dFDF1WTxadHhvb8Sgy2VzQ7gnYdksX+jy6Fbvp7esPj2vogGkXIZ7M41m@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwFRSmAPc2AaLrQBWFAwaQppOBfk1At1zSMmY8i+t47S0QjIn5
-	LccWcxWntMwjUrOlb5W7qPj1QPsXlxMNvX2adBmUImISO1kUzcsuOxRtP0SFpdQ/zFxWEHJDPrm
-	ZGoXLLQ==
-X-Google-Smtp-Source: AGHT+IGwsMKtEw0yeh+uAV4sy4WEt9ZJVXFDo6115QZAyihbKw+75lOKL3DGWFgr6WL0lHHspaVfE7SuoQHu
+        bh=Av0NGxXt1nyH9OnYaW8cLl1uNekiq9nEwkTz2fTJczM=;
+        b=gKwKJ1Pfe6BY9jv6k6NjT0XqiNtOB7O0jk4bbx6dRB4zrlVio9J/osSj5f8TslGF1p
+         ZhcM2RVbHtkKaMBy7M4jTRxLgtiLWEbn8CcDJdCn8xu6X5YnAE/wnbaeyTXRsRPCgzDq
+         n6pQu07wjWj+cjmPK/aW5swNFhqHbauF+UzBlNSMe/cedSiD2ovCrRvgFMK4BN7dD63U
+         O/mePOj0xf556MuyHN/4whdpPs94xsTz7weZtf+B8D32MXBiiHDEBAM24sHm8Ier6ZgH
+         oimRW1LsXLMSOv3Mzl3fPnJNPV5OMv0wMbzs6Mpw4G7pusDUtR9iTvNMisJqdKsplACk
+         4Eqw==
+X-Forwarded-Encrypted: i=1; AJvYcCWD8r+WU0BacgAMpnlwL84v8Ie1jKfiVDPoQujRqA9M/ZNymEPPwyL8YdtBQrgXh2khykxpXKoeivnorffwhIWf@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQ/61QglBT27xqlDKSjQQHxehtnww+Owtnq7dDkT5BjE7vea4a
+	q+jh/6TmvxYxCL5LBPI99N75zvIRjNkLAj4buF12WbxV7+MWK0DeuKtSZBh6ykX4hzu4xfqTUlG
+	5x3R5CA==
+X-Google-Smtp-Source: AGHT+IFJieNy9A3Uv3j3AZR9Z45ANYmI2LGJZlQ+SwIrR3g7cbpr9Y1OJRykDxOd+oXunJ3IU0lxYLvJDeLt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:e51a:f73b:d117:cb13])
- (user=irogers job=sendgmr) by 2002:a05:690c:6305:b0:680:cd2b:90ed with SMTP
- id 00721157ae682-6d2e745b27amr434437b3.3.1724943747495; Thu, 29 Aug 2024
- 08:02:27 -0700 (PDT)
-Date: Thu, 29 Aug 2024 08:01:53 -0700
+ (user=irogers job=sendgmr) by 2002:a25:6b0b:0:b0:e0b:acc7:b1fd with SMTP id
+ 3f1490d57ef6-e1a5c6b65bbmr54154276.4.1724943749450; Thu, 29 Aug 2024 08:02:29
+ -0700 (PDT)
+Date: Thu, 29 Aug 2024 08:01:54 -0700
 In-Reply-To: <20240829150154.37929-1-irogers@google.com>
-Message-Id: <20240829150154.37929-8-irogers@google.com>
+Message-Id: <20240829150154.37929-9-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,8 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240829150154.37929-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
-Subject: [PATCH v1 7/8] perf header: Remove repipe option
+Subject: [PATCH v1 8/8] perf test: Additional pipe tests with pipe output
+ written to a file
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,115 +74,72 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-No longer used by `perf inject` the repipe_fd is always -1 and repipe
-is always false. Remove the options and associated code knowing the
-constant values of the removed variables.
+Additional pipe tests where piped files are written to disk. This
+means that spotting a file name of "-" isn't a sufficient "is pipe?"
+test.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/header.c  | 19 +++++--------------
- tools/perf/util/header.h  |  2 +-
- tools/perf/util/session.c |  6 +++---
- 3 files changed, 9 insertions(+), 18 deletions(-)
+ tools/perf/tests/shell/pipe_test.sh | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 59e2f37c1cb4..a6386d12afd7 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -4113,13 +4113,8 @@ static int perf_file_section__process(struct perf_file_section *section,
+diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+index ad10012fdc29..a3c94b4182c2 100755
+--- a/tools/perf/tests/shell/pipe_test.sh
++++ b/tools/perf/tests/shell/pipe_test.sh
+@@ -11,6 +11,7 @@ sym="noploop"
+ skip_test_missing_symbol ${sym}
  
- static int perf_file_header__read_pipe(struct perf_pipe_file_header *header,
- 				       struct perf_header *ph,
--				       struct perf_data* data,
--				       bool repipe, int repipe_fd)
-+				       struct perf_data *data)
- {
--	struct feat_fd ff = {
--		.fd = repipe_fd,
--		.ph = ph,
--	};
- 	ssize_t ret;
+ data=$(mktemp /tmp/perf.data.XXXXXX)
++data2=$(mktemp /tmp/perf.data2.XXXXXX)
+ prog="perf test -w noploop"
+ err=0
  
- 	ret = perf_data__read(data, header, sizeof(*header));
-@@ -4134,19 +4129,15 @@ static int perf_file_header__read_pipe(struct perf_pipe_file_header *header,
- 	if (ph->needs_swap)
- 		header->size = bswap_64(header->size);
+@@ -19,6 +20,8 @@ set -e
+ cleanup() {
+   rm -rf "${data}"
+   rm -rf "${data}".old
++  rm -rf "${data2}"
++  rm -rf "${data2}".old
  
--	if (repipe && do_write(&ff, header, sizeof(*header)) < 0)
--		return -1;
--
- 	return 0;
+   trap - EXIT TERM INT
+ }
+@@ -49,6 +52,14 @@ test_record_report() {
+     return
+   fi
+ 
++  perf record -g -e task-clock:u -o - ${prog} > ${data}
++  if ! perf report -i ${data} --task | grep -q ${task}
++  then
++    echo "Record+report pipe test [Failed - cannot find the test file in the perf report #3]"
++    err=1
++    return
++  fi
++
+   echo "Record+report pipe test [Success]"
  }
  
--static int perf_header__read_pipe(struct perf_session *session, int repipe_fd)
-+static int perf_header__read_pipe(struct perf_session *session)
- {
- 	struct perf_header *header = &session->header;
- 	struct perf_pipe_file_header f_header;
+@@ -86,6 +97,21 @@ test_inject_bids() {
+     return
+   fi
  
--	if (perf_file_header__read_pipe(&f_header, header, session->data,
--					/*repipe=*/false, repipe_fd) < 0) {
-+	if (perf_file_header__read_pipe(&f_header, header, session->data) < 0) {
- 		pr_debug("incompatible file format\n");
- 		return -EINVAL;
- 	}
-@@ -4246,7 +4237,7 @@ static int evlist__prepare_tracepoint_events(struct evlist *evlist, struct tep_h
++  perf record -e task-clock:u -o - ${prog} > ${data}
++  if ! perf inject ${inject_opt} -i ${data} | perf report -i - | grep -q ${sym}; then
++    echo "Inject ${inject_opt} build-ids test [Failed - cannot find noploop function in pipe #5]"
++    err=1
++    return
++  fi
++
++  perf record -e task-clock:u -o - ${prog} > ${data}
++  perf inject ${inject_opt} -i ${data} -o ${data2}
++  if ! perf report -i ${data2} | grep -q ${sym}; then
++    echo "Inject ${inject_opt} build-ids test [Failed - cannot find noploop function in pipe #6]"
++    err=1
++    return
++  fi
++
+   echo "Inject ${inject_opt} build-ids test [Success]"
  }
- #endif
- 
--int perf_session__read_header(struct perf_session *session, int repipe_fd)
-+int perf_session__read_header(struct perf_session *session)
- {
- 	struct perf_data *data = session->data;
- 	struct perf_header *header = &session->header;
-@@ -4267,7 +4258,7 @@ int perf_session__read_header(struct perf_session *session, int repipe_fd)
- 	 * We can read 'pipe' data event from regular file,
- 	 * check for the pipe header regardless of source.
- 	 */
--	err = perf_header__read_pipe(session, repipe_fd);
-+	err = perf_header__read_pipe(session);
- 	if (!err || perf_data__is_pipe(data)) {
- 		data->is_pipe = true;
- 		return err;
-diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
-index 7137509cf6d8..a63a361f20f4 100644
---- a/tools/perf/util/header.h
-+++ b/tools/perf/util/header.h
-@@ -131,7 +131,7 @@ union perf_event;
- 
- extern const char perf_version_string[];
- 
--int perf_session__read_header(struct perf_session *session, int repipe_fd);
-+int perf_session__read_header(struct perf_session *session);
- int perf_session__write_header(struct perf_session *session,
- 			       struct evlist *evlist,
- 			       int fd, bool at_exit);
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index 23449d01093a..578010be046b 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -45,11 +45,11 @@ static int perf_session__deliver_event(struct perf_session *session,
- 				       u64 file_offset,
- 				       const char *file_path);
- 
--static int perf_session__open(struct perf_session *session, int repipe_fd)
-+static int perf_session__open(struct perf_session *session)
- {
- 	struct perf_data *data = session->data;
- 
--	if (perf_session__read_header(session, repipe_fd) < 0) {
-+	if (perf_session__read_header(session) < 0) {
- 		pr_err("incompatible file format (rerun with -v to learn more)\n");
- 		return -1;
- 	}
-@@ -162,7 +162,7 @@ struct perf_session *__perf_session__new(struct perf_data *data,
- 		session->data = data;
- 
- 		if (perf_data__is_read(data)) {
--			ret = perf_session__open(session, /*repipe_fd=*/-1);
-+			ret = perf_session__open(session);
- 			if (ret < 0)
- 				goto out_delete;
  
 -- 
 2.46.0.295.g3b9ea8a38a-goog
