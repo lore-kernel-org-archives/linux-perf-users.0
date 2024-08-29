@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA891B1432
-	for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 15:02:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC5D91B29AD
+	for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 15:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724943735; cv=none; b=tv2xHZ1lXNNN/LyToEyKd6tK05JpRnFf6mC5j7atMBPqss2aM2r1hPI+yRAo1KpGYQhFyYSbQvheE9lTRR6OmY6Rv69pEAXucn+CW8E15tkAqIR4JYf0A4dr7X8m8COgiIgCLCD6PfEajE80mPUHYDGD7KWG20Cj/dLE3iNNMUA=
+	t=1724943738; cv=none; b=Qzw7M7fdVQKJhbj1SAV7fZDQu1ucW/7ca+pt78slNlr2AnsBOgkkbZFyei0e0pcrMn9PQdATElwjmYxxuFwQ2jiYmtwDNxUcOyaVHy3oSMefdaFLSXXPuy6IGAVvfYcTH+Af6nS99Nf5YTnOpxCAkn0ofKAs665xRTqbMh/oy1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724943735; c=relaxed/simple;
-	bh=zgEgmrdD0ptR2rv9IaNbtPHc6vf0nOiTzwH2GpRCEzQ=;
+	s=arc-20240116; t=1724943738; c=relaxed/simple;
+	bh=YbH/w7Q2IRfQc3HCYtBu77nA+Z23ro96SsDZawy8A6g=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=cC+RHe3hExRcsj4hex6+rx6R+gP/3bGAucQsWRPHDTSEiLlpBeDRgorGb4Bm9B5cXfQCDt7r4aqTFTlmIXK+1sTHEsYObPzvbQhl5iDd+hsKk2uyUdq84PEGcQQEb2F+o/pr3sSnqWn9evgDG0ImUB14+OsNE8UfE7Nr2/z2seo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NMHVrK1W; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=Rn4jKwzDeHErNAmWjlLUFdQqak5lp43g1TNrkQW+TBFUeJQyokwrAqUNwwIEev1LeCc/40uf6o11eIRJ70p/UQLreF0Y6o2cXfoI22CcIKk3koSN68MRigkKTuaPiBPCuP0nh0yEHIrrYviHISEh1M/A1G7rorByyQeuvxHjPqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=2fagBM+X; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NMHVrK1W"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6d34c57a88eso6429807b3.0
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 08:02:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="2fagBM+X"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e11cdb464f2so1260748276.0
+        for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 08:02:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724943733; x=1725548533; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1724943736; x=1725548536; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=dluq5P0RLumNyO/9SBujDaYG7Xf4enGWH7djPxvSwQE=;
-        b=NMHVrK1WxA5xHhkCsD8bF1dpr/PGQeDx1x9OlcNiTReOxJ7k4NxdCHggdXAVLMHsi6
-         ExF4mFfbZOoRCbLOZMhMBCox1gpY3/uofZ21yBTyDQONKXER0J14lH/9J+JC2hKxV0Dc
-         yHG7wOvRSFCVILOpdsXEYhKzmiaQWUypZ1AhoXGeV2+8jWrkZ4VXaJwnNHS9NdHy/HSF
-         UIHrB4kP24fmgxtjICZs0CRI0teQZIXOsRjbK/fNepH6m7EgPXVweUvvk1Os0hbQ66Ip
-         o0fvnfTLd2nw9b4Zfo8f3mzkRfHKPXwH1c/tBZzEWU8ZllbMXRSf3betwQuF7cuT0j7e
-         fO3g==
+        bh=26cUqoseK8PMtNLolCaTO1poipR4Q8jBH4RycCyqvMg=;
+        b=2fagBM+XR4Ww+O1YYXwhVI76KAvuOv6sfbToDAGfIN6IBBx2TFXSpSnFtwfSh2004P
+         HKDya02j0zajeZhe8cKgXzY2T7UN/KucVGKll7+BYD1hbEOyN3aT57IwrX76abt7w17J
+         8IQUmQrw/7Ekm8R9KqTjxw6/a2EzQy36SUZJt4KkvDPUelCQS6Kw8A7v6jiYa3MuGCwM
+         v2u5TD4fNPrHAlGsy4ahD+581geDoC/6AWXQ22vJTafgA3cXv5+NeU9xw84A8izYVmZr
+         nvAN89cF8SNdTMeyh/IPAfu6mSEsqEkR7vcF3PIR9S7GqvTnrHtgiWLRJwhzqjQ/HE13
+         SCdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724943733; x=1725548533;
+        d=1e100.net; s=20230601; t=1724943736; x=1725548536;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dluq5P0RLumNyO/9SBujDaYG7Xf4enGWH7djPxvSwQE=;
-        b=AXJqp+qGuLyNkJ4tZAoFhnbvShe4ajSu3VC+7f0mAjTS+PosN8nFWeFqov4ZZD5Ksa
-         70yLcLqyoVg9QvX0UI2Ha5kopSNEX+x77tOVJ11COxkeYbDpjPxoUbErdhDEcvRQbp+3
-         fKhALwyTOtrB1fb3sMZtRqRo/SaCI/jMReV7lhqpWCUZsVWr5NoHbYZm8aeRlPzPJ69p
-         x/6IgpSA7bDuqqedb9WgBhrIxiwVp4ZButNRgnqZXg7U9NDJBEcATUQ1W+a4vCu/rpu4
-         vyKaDbiDroBe8bO+atPs+gAjxf7kL0w9u0ymLs5tdfO+oSqBR+PC7nXZZJppbj1dIV/8
-         t1hA==
-X-Forwarded-Encrypted: i=1; AJvYcCUN/EIFRZ2YUeq33m8MJb/KkrSaLfRjJmf8ywTf6Jdg4Gk0xi0TPvRZ6auJyDjXrqsXAJUeugNlRERAHOnRyyo0@vger.kernel.org
-X-Gm-Message-State: AOJu0YzX+/cyLl7w2xYuTvUxwPd7YC5sNdE63+gOFtz06Z87ETJJNn3+
-	86Sj5PV/i1LupAjx3eLivIZQk6/K2QK459htNpiZ0A7pl7N5/NEVUaIgYgwupDRJnWUc4UDC2XY
-	2XRLjNg==
-X-Google-Smtp-Source: AGHT+IEdQzNDjrLSj8WCqHhsyY9AarRDhFOz9K/cT4ZO+HLVQ56DRWKoceVvIf15U6oWf+LD8VSWetf46MRm
+        bh=26cUqoseK8PMtNLolCaTO1poipR4Q8jBH4RycCyqvMg=;
+        b=HVgjL/NKWzBqO4mmb3+1ogxwSV5A5P16+wHdsvqKRg8yHwS7s8jFGve0REJk15uNnB
+         DEisuGTc6tNZ/tnipDRZokBjC6Wq9rEh2kDR/4CX4wslZsQCCFgk3VrUWqNtZZ4/295H
+         6GLywzRB1o/f3OCyE77aoE2c4jSfVzC9O6mQeLN7AHDXq1fAi3D/MupILogZjzPGdgEA
+         3ZLFnSmHlZ4xUnAs2SQtPuMwslWRaR9MIV6JyrNE8ZanZVOaIn82Bd3ACQ9vYoOUOfq3
+         W2kCu+UXgOiB0/Saq/r59t6Ernvr0ZKwfvmK38q96QJKmEjuigO5qwbEkn3AuCSDMJVA
+         3smA==
+X-Forwarded-Encrypted: i=1; AJvYcCVbKNG3baroLT7fa3r5sx1lf4Xlb5A7Ph9pW9CYP2iN0CU8V/81YPKgb+9O2tQuy36pTeQtcQr6IqY7hPLpIEPy@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz8wrwiRATzquUhqk6fjNT3Gg6frcNaDhv4Jp1zvy8A5oWzIkx4
+	7BoIdYOyUhQnatR8YWW4CskjzoBKPeMOEdcbcA9U1o59izdiEY/4cp1ohEGEMqBEFfJVB7BtOrR
+	X0AF8KA==
+X-Google-Smtp-Source: AGHT+IE5Puj8WGaPepDdvNVYEm+iM1nKWd1L3XPtWu5Ysb0Sv/gFkGsoPfS165yMmxR1Go63SQBsjBYpq0qu
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:e51a:f73b:d117:cb13])
- (user=irogers job=sendgmr) by 2002:a81:d10b:0:b0:6ad:feb0:d010 with SMTP id
- 00721157ae682-6d2e94d0921mr376307b3.6.1724943733046; Thu, 29 Aug 2024
- 08:02:13 -0700 (PDT)
-Date: Thu, 29 Aug 2024 08:01:47 -0700
+ (user=irogers job=sendgmr) by 2002:a25:8489:0:b0:e11:584f:c2ca with SMTP id
+ 3f1490d57ef6-e1a5ac86f68mr33881276.6.1724943735472; Thu, 29 Aug 2024 08:02:15
+ -0700 (PDT)
+Date: Thu, 29 Aug 2024 08:01:48 -0700
 In-Reply-To: <20240829150154.37929-1-irogers@google.com>
-Message-Id: <20240829150154.37929-2-irogers@google.com>
+Message-Id: <20240829150154.37929-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240829150154.37929-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.295.g3b9ea8a38a-goog
-Subject: [PATCH v1 1/8] perf report: Name events in stats for pipe mode
+Subject: [PATCH v1 2/8] perf session: Document struct and constify auxtrace
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,79 +73,92 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-In stats mode PERF_RECORD_EVENT_UPDATE isn't being handled meaning the
-evsels aren't named when handling pipe mode output.
-
-Before:
-```
-$ perf record -e inst_retired.any -a -o - sleep 0.1|perf report --stats -i -
-...
-Aggregated stats:
-           TOTAL events:      23358
-            COMM events:       2608  (11.2%)
-            EXIT events:          1  ( 0.0%)
-            FORK events:       2607  (11.2%)
-          SAMPLE events:        174  ( 0.7%)
-           MMAP2 events:      17936  (76.8%)
-            ATTR events:          2  ( 0.0%)
-  FINISHED_ROUND events:          2  ( 0.0%)
-        ID_INDEX events:          1  ( 0.0%)
-      THREAD_MAP events:          1  ( 0.0%)
-         CPU_MAP events:          1  ( 0.0%)
-    EVENT_UPDATE events:          3  ( 0.0%)
-       TIME_CONV events:          1  ( 0.0%)
-         FEATURE events:         20  ( 0.1%)
-   FINISHED_INIT events:          1  ( 0.0%)
-raw 0xc0 stats:
-          SAMPLE events:        174
-```
-
-After:
-```
-$ perf record -e inst_retired.any -a -o - sleep 0.1|perf report --stats -i -
-...
-Aggregated stats:
-           TOTAL events:      23742
-            COMM events:       2620  (11.0%)
-            EXIT events:          2  ( 0.0%)
-            FORK events:       2619  (11.0%)
-          SAMPLE events:        165  ( 0.7%)
-           MMAP2 events:      18304  (77.1%)
-            ATTR events:          2  ( 0.0%)
-  FINISHED_ROUND events:          2  ( 0.0%)
-        ID_INDEX events:          1  ( 0.0%)
-      THREAD_MAP events:          1  ( 0.0%)
-         CPU_MAP events:          1  ( 0.0%)
-    EVENT_UPDATE events:          3  ( 0.0%)
-       TIME_CONV events:          1  ( 0.0%)
-         FEATURE events:         20  ( 0.1%)
-   FINISHED_INIT events:          1  ( 0.0%)
-inst_retired.any stats:
-          SAMPLE events:        165
-```
-
-This makes the pipe output match the regular output.
+perf_session is a central data structure to the tool so let's comment
+it. The auxtrace callbacks are never modified in session so constify.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
-This bug pre-dates commit 113f614c6dd0 ("perf report: Use
-perf_tool__init()")
----
- tools/perf/builtin-report.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/perf/util/session.h | 48 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 1643113616f4..5c21ca33ca08 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -811,6 +811,7 @@ static void stats_setup(struct report *rep)
- 	rep->tool.attr = process_attr;
- 	rep->tool.sample = count_sample_event;
- 	rep->tool.lost_samples = count_lost_samples_event;
-+	rep->tool.event_update = perf_event__process_event_update;
- 	rep->tool.no_warn = true;
- }
+diff --git a/tools/perf/util/session.h b/tools/perf/util/session.h
+index 7c8dd6956330..e56518639711 100644
+--- a/tools/perf/util/session.h
++++ b/tools/perf/util/session.h
+@@ -26,26 +26,72 @@ struct decomp_data {
+ 	struct zstd_data *zstd_decomp;
+ };
  
++/**
++ * struct perf_session- A Perf session holds the main state when the program is
++ * working with live perf events or reading data from an input file.
++ *
++ * The rough organization of a perf_session is:
++ * ```
++ * +--------------+           +-----------+           +------------+
++ * |   Session    |1..* ----->|  Machine  |1..* ----->|   Thread   |
++ * +--------------+           +-----------+           +------------+
++ * ```
++ */
+ struct perf_session {
++	/**
++	 * @header: The read version of a perf_file_header, or captures global
++	 * information from a live session.
++	 */
+ 	struct perf_header	header;
++	/** @machines: Machines within the session a host and 0 or more guests. */
+ 	struct machines		machines;
++	/** @evlist: List of evsels/events of the session. */
+ 	struct evlist	*evlist;
+-	struct auxtrace		*auxtrace;
++	/** @auxtrace: callbacks to allow AUX area data decoding. */
++	const struct auxtrace	*auxtrace;
++	/** @itrace_synth_opts: AUX area tracing synthesis options. */
+ 	struct itrace_synth_opts *itrace_synth_opts;
++	/** @auxtrace_index: index of AUX area tracing events within a perf.data file. */
+ 	struct list_head	auxtrace_index;
+ #ifdef HAVE_LIBTRACEEVENT
++	/** @tevent: handles for libtraceevent and plugins. */
+ 	struct trace_event	tevent;
+ #endif
++	/** @time_conv: Holds contents of last PERF_RECORD_TIME_CONV event. */
+ 	struct perf_record_time_conv	time_conv;
++	/**
++	 * @repipe: When set causes certain reading (header and trace events) to
++	 * also write events. The written file descriptor must be provided for
++	 * the header but is implicitly stdout for trace events.
++	 */
+ 	bool			repipe;
++	/**
++	 * @one_mmap: The reader will use a single mmap by default. There may be
++	 * multiple data files in particular for aux events. If this is true
++	 * then the single big mmap for the data file can be assumed.
++	 */
+ 	bool			one_mmap;
++	/** @one_mmap_addr: Address of initial perf data file reader mmap. */
+ 	void			*one_mmap_addr;
++	/** @one_mmap_offset: File offset in perf.data file when mapped. */
+ 	u64			one_mmap_offset;
++	/** @ordered_events: Used to turn unordered events into ordered ones. */
+ 	struct ordered_events	ordered_events;
++	/** @data: Optional perf data file being read from. */
+ 	struct perf_data	*data;
++	/** @tool: callbacks for event handling. */
+ 	const struct perf_tool	*tool;
++	/**
++	 * @bytes_transferred: Used by perf record to count written bytes before
++	 * compression.
++	 */
+ 	u64			bytes_transferred;
++	/**
++	 * @bytes_compressed: Used by perf record to count written bytes after
++	 * compression.
++	 */
+ 	u64			bytes_compressed;
++	/** @zstd_data: Owner of global compression state, buffers, etc. */
+ 	struct zstd_data	zstd_data;
+ 	struct decomp_data	decomp_data;
+ 	struct decomp_data	*active_decomp;
 -- 
 2.46.0.295.g3b9ea8a38a-goog
 
