@@ -1,59 +1,59 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474FE16D31B
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 08:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6674116DC18
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 08:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725006948; cv=none; b=SDgTWxfAFAM4JHx1EnCOLBROyRKpYPGfbTmRWnr+LRoq/oAGNix/0VrkmTGZwdJlPKK3azfpIqdAs9myIp4aI0y2O1VXsAUyKbZuwgZDNAUosjCiDv2XUT0aAGyyGmu8UvptZrEuzAS0hvsb6i6Fyw7UN9ahNaXC+pAv3NIfsng=
+	t=1725007032; cv=none; b=LUWdpihx4/W9KW3mt/HNM5gA7UMIc3kMzje9d9vNLJ5q0ybu4t37z4wFfBVA3Y4sx6f/kIw7MKC75HfrxUbQs51LzctwLUcY+rasdRjkVDt9vzZdAFrl0wd15D6ian1CYwVW85wON/E/ozxnZ9PU/VjKOEQE/x1s5i4DD757pkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725006948; c=relaxed/simple;
-	bh=/yC4n1ZnnZ996SSJcD6Xr4o/5hyPYxr8s7D7HElsUME=;
+	s=arc-20240116; t=1725007032; c=relaxed/simple;
+	bh=zfa1T1gdUZwq4rVhGcFaFYQTRXA6gMGAhbYQ7XxE2Pc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U5gqCYYnsZZ2voIVpCzjbqVx2PO+3mRjpWMu6jkZBUJd3EoS/a0YiDF/QsfYvf1n4gtGoNG7zxLheyYtwuv456SW7Rhi1arIYdakYafUA8/cQWyYdT40NT/QlONPnsFXlAjpRbNFEVRY5w3v3GxAFrZqcpclrW7NYoZNUCqwWTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oydtrN2F; arc=none smtp.client-ip=209.85.128.43
+	 In-Reply-To:Content-Type; b=jwX3A25o9TJUnbYjlNXOXVIG2i/W5mjmZ+0lhzSHnTM6gKImoJUqw8DecynYP0XtvjFXmSWOeVVZDADLWW1ilkdTpzBVKH59CVbqCwOQwL+AswfD/e6+wAu9ooZqaRUKsulrxo3F+Y9GxITDOMYsCR2nmocwZ7RTgFnCNlH7BCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vsMU/Vh+; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oydtrN2F"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42bb72a5e0bso12682175e9.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 01:35:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vsMU/Vh+"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-428e1915e18so12939685e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 01:37:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725006945; x=1725611745; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725007029; x=1725611829; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=MDgErpkUKnQe50JSRwQXTxpchIY80U2OBlsTDwNP1cQ=;
-        b=oydtrN2Fbx0E6NTowOJqvynwrKMlM/OA2frmvJo27ma4wUJMTfKAZSZqHa3ld+SWgs
-         q5KpJjsLb7PHS8Y8j5LFO5sFrTb901ip/hy/rhx3bIdrBBlZkQP95Sn5RNTlvWl9iNYG
-         cZR/IRbUdW6+oXaSBIm5WAKaare/nlMEwqtL5HoI8jRx0frb8R9C/dGHALL6ZWAWYIyZ
-         GOGOECRohn0NnKZNv4Aiy13AmFqr2hDy7YuDpNkEERMpIl4rFI16xwV9/jPA6vYT1F7V
-         zylIbjcvNOok7d/p6gukKCJqA111Qd0zNwcDk5JiTV+GVoSNpyb+CR7L+bMstgjUlmqp
-         M5Jw==
+        bh=q97qi+NPXZmdP6linxr81NHdFxQIXiFaev92ohLiISM=;
+        b=vsMU/Vh+e+FP7zLZwvp4XnY2PxkHqiXZsoFf/4aiib16i52d+NzoVYuMTR0jIdVEV9
+         7lLN48gz5TOldcRKu5qYeAFg3XV6d9L407he39iBOx3ZtTeQM7FyK/LIjpeZAC6LN+Li
+         WY+cnkh/a9AXHIbBpHJrYJhkJ9MQyDZ+aUG1JBQqEocB7FoxeLWMIcixmi6FIe0fZ+eH
+         xx/YUA/mM+vDPBBRpNbXYkUBMQLWlGJXGPo0gPBNpoaKOpk38UE9+z4o4jvhenqW+mpn
+         gOcA6pktaOTDVLQjU16oxerwr3YOyushhH8PwqwUTuZ2vyH1w5CtME5yIAF/ZBBM0Aj7
+         E8Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725006945; x=1725611745;
+        d=1e100.net; s=20230601; t=1725007029; x=1725611829;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MDgErpkUKnQe50JSRwQXTxpchIY80U2OBlsTDwNP1cQ=;
-        b=BTxVW4OYPOfqV+Zj+k8lCXWjeQ6cH8aXTh0Jh2ki5LQvRPtRuJnC+iO9rkqQvFe4kC
-         1rhV1tHB2y9rhvJZnCKW/+6TvVg+CvGcrpTVIAOlp+On/wSxhvO2jd0EevACQWndKR/b
-         BasPY4a2UFfLmCR1CvV3HOyaJ98NVoa69mS7W/i8PuY+q5CCL2eJkHcGhGsVU+yiUROM
-         7tDCURFxnvhXtmGXllnzL78ijYtu+Rj0o6PWzRdflYsicrBNo3YschGoJ7MKmQSw1fU3
-         MEvfL+O5hY2kviwUl2g8EF/aapxFWR0vV0KPQl4L7ZsIOp1Y3XX41o82usDGe+uXCsW5
-         0UXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2hBJuftU+EBFW+Gld/hMxtjn7vxj35mFDPsTiTYtVDSDEaH0BQbJSQwpLsDeCQqAt6vhBd8ohWjhbNak8X9E3@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz7EZi6h17Zw4GcZgAscQS1P+Nx1KnpB4reiaozZsmOSqJZTHBY
-	HtsgNRyGKxyQLKrAtn5I3R7UlvyVQOZnWVHM+qkwKZFSEKGp3U3RjMtfjZOX1RY=
-X-Google-Smtp-Source: AGHT+IG2YQtB+es4bpO/DPjIWcCbaKmtKE3m6I0KAaWGTR3kPHJqRAnzrYl/zAokjrpuA+J7gIfXFQ==
-X-Received: by 2002:a05:600c:4585:b0:426:51dc:f6cd with SMTP id 5b1f17b1804b1-42bb01bfbdemr48151025e9.18.1725006943921;
-        Fri, 30 Aug 2024 01:35:43 -0700 (PDT)
+        bh=q97qi+NPXZmdP6linxr81NHdFxQIXiFaev92ohLiISM=;
+        b=My+JUKIEyBIThPPYWrIpM/uyTDXmIgJnbiTn3XYVi+SQzpQpniW0972CreJ3KuS9e8
+         oQAOqnfud3DMmBfBliD3RIEDIANdbeEZt3aoISEm5WNK9QEUekU/AciTqHAy22zTZBBe
+         ddVi7hgUNN+Qhzv1JtlIYQUUZWBHX3/YWwDZr1o5hfmANoHrXCvREJvUusm92mgG+Lng
+         CQXBqBZ1RqA/mwGTAb6yvA9UCoF2Oa6IWoHtZaSbxGLyOGwZPQE751sLE+pK4jxRyJYt
+         4IU3arvaAhVCEeEum8YF7ICdyPCHucEM/Y1On4SfAZinJIYP1LmTS05ZiJw8pgxSGXvH
+         e2wA==
+X-Forwarded-Encrypted: i=1; AJvYcCVuFdNpg0vim+FHA+5xssixMXuECiK49ang4vP395oeQKm5mOdwnjGXuXVZDAwNTwR43NwXXyseY3HT8xWxxPTP@vger.kernel.org
+X-Gm-Message-State: AOJu0YzF7FJjuBh/onCiVlwuUQ3Yn6A22NLc0nSvROLnvQkyFWlusfA4
+	tviBY/CKKWShzxi2/0aEGSfrbh5B6wln723Ou/vcnhIn/EJCKeEbgnWxBSUs2gk=
+X-Google-Smtp-Source: AGHT+IHg1jJiD58wDqMuaJqk1HwadfKudlUpN9Y4ONSFOCiQ/xd759tBR9XHQjM3McI2u6NEnVce5g==
+X-Received: by 2002:a05:600c:3154:b0:42b:a9bb:924a with SMTP id 5b1f17b1804b1-42bb27a0dfcmr41442705e9.23.1725007028293;
+        Fri, 30 Aug 2024 01:37:08 -0700 (PDT)
 Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb239sm39581435e9.5.2024.08.30.01.35.41
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb3efsm39328495e9.6.2024.08.30.01.37.06
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2024 01:35:42 -0700 (PDT)
-Message-ID: <18a60d79-e94d-4fe9-ba9e-867bed175a6a@linaro.org>
-Date: Fri, 30 Aug 2024 09:35:41 +0100
+        Fri, 30 Aug 2024 01:37:07 -0700 (PDT)
+Message-ID: <8afae0a6-5322-47a8-a189-68629ea1991f@linaro.org>
+Date: Fri, 30 Aug 2024 09:37:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -128,24 +128,10 @@ On 29/08/2024 4:31 pm, Arnaldo Carvalho de Melo wrote:
 > 
 > I'm taking this as an Acked-by: Suzuki, ok?
 > 
->>> Thanks
->>> Suzuki
->>>
->>> [0] https://lkml.kernel.org/r/172433479466.350842.6920589600831615538.b4-ty@arm.com
->>>
->>>
->>>>
->>>> Thanks,
->>>>
->>>> - Arnaldo
->>>
->>
->> Hi Arnaldo,
->>
->> I just checked and the tool patches still apply cleanly if you're able to
->> take them.
-> 
-> Sure.
-> 
-> - Arnaldo
+
+Suzuki is out of office at the moment and can't email but he said it was 
+ok for the acked-by.
+
+Thanks
+James
 
