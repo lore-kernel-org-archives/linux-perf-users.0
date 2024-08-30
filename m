@@ -1,314 +1,186 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 623621D1301
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 05:03:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFE89136E3F;
+	Fri, 30 Aug 2024 06:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724994202; cv=none; b=fVM2UsItwoMVrYlr0i6x1XiG2eqIIzrodoxb+vVJcEPIsSMgre7uLSmX9RF1lSR1dgJa+vvPE8gSDfKtzBeCv58BKSKUC+cfeJh+NjlD3NThkwUlELmb7V3yGMwOaX466FZdr4y/+Df3yOhLyPS0Bbz0uarpCmYtFkT7guQhzCg=
+	t=1724998426; cv=none; b=p0DTvP5RAvlrkQ5jlgCHW6ZOAcvsgSfKdkBnFKs9XE7Ca/fTPSGMnaZbFB8Xyv1nMUyN106UL4P0Gx1Vehw2w4KO/m9RWXWiOIj5cWbdiwmwMoVw3YRTFQyGAhRQv0J90uMuAPZOwJK6W9USPA1b5hNbOFqz83ad5rzJHc38gjg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724994202; c=relaxed/simple;
-	bh=mQ1V9vtht8gvS/gPKViWliFRq0kasHUtQt+/GmxDbOw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=YZfVLN6K+4zu8j4+9NHdx16tZnHDXWPiUnfNlQwVLIeqcVVuOMj/Oxdmxxomcjz2NZo427JgwUzaAWN/tOadXH4I7SHY2QR1u8rJVHxEEJ/r7QdFFtPVfIITu1Kh02sFHhH1vRR7ezS/OL+bXRXYRWDQB+OurjKVfK9D64hu0KI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=tNed384F; arc=none smtp.client-ip=209.85.214.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1724998426; c=relaxed/simple;
+	bh=apBdBhGYDEIgPSX8O85iHr2OVAYQZauF8WnD58crLVw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ESqttQR/k/SXwPmBouT27W7NkyYog5kZFWZIEMa8EaOAa64D0PZoJ/YZPI7SxT3JfaLjqn059KK+EKmvP+SEj+5ooEpL27BEVoWW7cKk2Wz5Cc/Wmv9koxuas7Z/H5WKKwPfefwnTu2aCMrQDS+CjvFL+bSbdwR/0J6U1HHDv6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdQY4DwX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tNed384F"
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-202018541afso89015ad.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 29 Aug 2024 22:03:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1724994200; x=1725599000; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=raUxZzvhZbS9A+c7y+jcXcysIHOB5XgejC1F0pUBzyE=;
-        b=tNed384FKLVbWEiCd9Y3sd1cGeyiHYhXFb4BCC7i8kAa+PlCDewIDSQBWTygGMeGo0
-         0fOZFmM/JntlcGeq0GbV7T4R6HWUsNAunU/jgxs4cwt64c7WIwUWKLgXiNSjpKLO6ts1
-         WQBU1scIkos2xVEYLwJHYS/3DV7WoonWAcz0J5M3wJXK8W5Es41kIfT/ggvwqvz5mUOb
-         lkFMg3rUlqizl+Lawk/j9BlwxThpE0hqzmblIqWF5qa5ZISVQTj1r86UFQmrgmsHU0SS
-         K8CygBabFv3bniYcdogA9NlCTqZnysL6QajyDIhUizSbiZdZ5o9IbEb//DHLl2LvUCbs
-         HEog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724994200; x=1725599000;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=raUxZzvhZbS9A+c7y+jcXcysIHOB5XgejC1F0pUBzyE=;
-        b=BRyBHsALaqQDfkEvy4w8Hk3qJIE7kJpuSE5QMtXjUU1Eg7uZP3X3qEK3gcrxDmCbal
-         YHsTAPgPIIkLtiOonAAaF7DZRaNtL1leB4wzb40aa9cXeIy+MPdSZaYBWQmjCF7q3v3t
-         anUcWbmDqF/eQgk4H72/A0iv0zx0bMJlnD1vbT1b0NApCQ1yBUMe1vim4+nZJloO66Fk
-         3kbR2RBl18c1jNDRgdHZ/1tmgGt3HQ6Sdzx/U6mTYH3NXNLAXdO/FGPVUNfWqeEfHtHO
-         pVNy9km5P9dOZM1egaryblX0VpUV9AZaKNM0PG7GGGPuhyZcB+rbH09VY2Hn+b9gjVhi
-         uYrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUPSczyPGZv2OwArbYuNSz5VMxSnacfY6cbmLwIgMxczTD8ihCL/MfiehwcwjtKiIGOvVr2QBePhrd0BZVOw4J7@vger.kernel.org
-X-Gm-Message-State: AOJu0YysADdU4qS5VbotvUjIWELo5xflOWR283xNHsV/KiAJmjMr3PBh
-	tXDf4PsU5DfqYsViZThB5aP0eKronyt+UZzoU88ZQ4yz/JTHNlQjYKDqxKfaD0NDLPvgNgjrQG/
-	M3l1GP9UaNuYNtHD59qzwVaFM3FzSs4k2juT7
-X-Google-Smtp-Source: AGHT+IHSUgg6ATJs7pnQKAKrK3/YGT4kkwVUjAvIhYMGjl3dGcnJIlbuCCn8fVpCtRLJb3OAylI3L1uxPcskCqldDH8=
-X-Received: by 2002:a17:903:189:b0:1fb:563:3c25 with SMTP id
- d9443c01a7336-20523a48c6emr1825065ad.18.1724994199104; Thu, 29 Aug 2024
- 22:03:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdQY4DwX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA2FDC4CEC4;
+	Fri, 30 Aug 2024 06:13:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724998425;
+	bh=apBdBhGYDEIgPSX8O85iHr2OVAYQZauF8WnD58crLVw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mdQY4DwX+SmrhNvdHvXMX+yZs0g3qsdTp5fhCufHsca8W7Pp7uZIQtUekflhHUxsq
+	 z2pAweXKH2W+iHjMSg/Kf9IKzCXRNFEJ3Nq2CXmsif8gRoWMuWH5180k/l9bAbFind
+	 yy8oU4tcCg6iLm5lo9R3pQfWEdiOZICd7e0IP7PST2ARZcW8+IbYhiEmkpVS8GevKt
+	 Q8+7tXLuyNANpRPSXmNUGWigDV5+tfB0zcl7Kt9TVbIzAS/NfoayLuL2aqyDejjC+X
+	 gsLIjUuSmSGdzBOd2yVMYqvGkKmeERtmgOKXvda6yU4i22zD25/n7ULi+NAHqXh8Zz
+	 Nl3bZF3SXAFmQ==
+Date: Thu, 29 Aug 2024 23:13:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: kan.liang@linux.intel.com
+Cc: peterz@infradead.org, mingo@redhat.com, tglx@linutronix.de,
+	acme@kernel.org, mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+	irogers@google.com, adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ravi.bangoria@amd.com, sandipan.das@amd.com,
+	atrajeev@linux.vnet.ibm.com, luogengkun@huaweicloud.com,
+	ak@linux.intel.com
+Subject: Re: [RFC PATCH] perf: New start period for the freq mode
+Message-ID: <ZtFjFpg0MCcLbgnq@google.com>
+References: <20240829152036.3923842-1-kan.liang@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240829150154.37929-1-irogers@google.com> <20240829150154.37929-6-irogers@google.com>
- <ZtDMf886_1vXWt49@x1> <CAP-5=fURe7yVy6OGWdKn1eSzsdfZPyvvc5fRMPeNAjukaWOe1w@mail.gmail.com>
- <ZtDg2BAI0V5zKpjn@x1> <CAP-5=fXa0r7sD9xbtBVbJQFgnq=3i-cnj6gUX9tze0JyhLhvZw@mail.gmail.com>
- <ZtFNGuwj0WzRQ8fd@google.com>
-In-Reply-To: <ZtFNGuwj0WzRQ8fd@google.com>
-From: Ian Rogers <irogers@google.com>
-Date: Thu, 29 Aug 2024 22:03:06 -0700
-Message-ID: <CAP-5=fUjjOLJ2fUd5gN7SbS0Apgtqft0RCP1HpghFxRt==LOCg@mail.gmail.com>
-Subject: Re: [PATCH v1 5/8] perf header: Allow attributes to be written after data
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	Nick Terrell <terrelln@fb.com>, Yanteng Si <siyanteng@loongson.cn>, 
-	Yicong Yang <yangyicong@hisilicon.com>, James Clark <james.clark@linaro.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240829152036.3923842-1-kan.liang@linux.intel.com>
 
-On Thu, Aug 29, 2024 at 9:39=E2=80=AFPM Namhyung Kim <namhyung@kernel.org> =
-wrote:
->
-> On Thu, Aug 29, 2024 at 02:42:38PM -0700, Ian Rogers wrote:
-> > On Thu, Aug 29, 2024 at 1:58=E2=80=AFPM Arnaldo Carvalho de Melo
-> > <acme@kernel.org> wrote:
-> > >
-> > > On Thu, Aug 29, 2024 at 01:12:32PM -0700, Ian Rogers wrote:
-> > > > On Thu, Aug 29, 2024 at 12:31=E2=80=AFPM Arnaldo Carvalho de Melo
-> > > > <acme@kernel.org> wrote:
-> > > > >
-> > > > > On Thu, Aug 29, 2024 at 08:01:51AM -0700, Ian Rogers wrote:
-> > > > > > With a file, to write data an offset needs to be known. Typical=
-ly data
-> > > > > > follows the event attributes in a file. However, if processing =
-a pipe
-> > > > > > the number of event attributes may not be known. It is convenie=
-nt in
-> > > > > > that case to write the attributes after the data. Expand
-> > > > > > perf_session__do_write_header to allow this when the data offse=
-t and
-> > > > > > size are known.
-> > > > > >
-> > > > > > This approach may be useful for more than just taking a pipe fi=
-le to
-> > > > > > write into a data file, `perf inject --itrace` will reserve and
-> > > > > > additional 8kb for attributes, which would be unnecessary if th=
-e
-> > > > > > attributes were written after the data.
-> > > > > >
-> > > > > > Signed-off-by: Ian Rogers <irogers@google.com>
-> > > > > > ---
-> > > > > >  tools/perf/util/header.c | 106 +++++++++++++++++++++++++------=
---------
-> > > > > >  1 file changed, 67 insertions(+), 39 deletions(-)
-> > > > > >
-> > > > > > diff --git a/tools/perf/util/header.c b/tools/perf/util/header.=
-c
-> > > > > > index 65c9086610cb..4eb39463067e 100644
-> > > > > > --- a/tools/perf/util/header.c
-> > > > > > +++ b/tools/perf/util/header.c
-> > > > > > @@ -3676,32 +3676,50 @@ int perf_header__write_pipe(int fd)
-> > > > > >  static int perf_session__do_write_header(struct perf_session *=
-session,
-> > > > > >                                        struct evlist *evlist,
-> > > > > >                                        int fd, bool at_exit,
-> > > > > > -                                      struct feat_copier *fc)
-> > > > > > +                                      struct feat_copier *fc,
-> > > > > > +                                      bool write_attrs_after_d=
-ata)
-> > > > > >  {
-> > > > > >       struct perf_file_header f_header;
-> > > > > > -     struct perf_file_attr   f_attr;
-> > > > > >       struct perf_header *header =3D &session->header;
-> > > > > >       struct evsel *evsel;
-> > > > > >       struct feat_fd ff =3D {
-> > > > > >               .fd =3D fd,
-> > > > > >       };
-> > > > > > -     u64 attr_offset;
-> > > > > > +     u64 attr_offset =3D sizeof(f_header), attr_size =3D 0;
-> > > > > >       int err;
-> > > > > >
-> > > > > > -     lseek(fd, sizeof(f_header), SEEK_SET);
-> > > > > > +     if (write_attrs_after_data && at_exit) {
-> > > > > > +             /*
-> > > > > > +              * Write features at the end of the file first so=
- that
-> > > > > > +              * attributes may come after them.
-> > > > > > +              */
-> > > > > > +             if (!header->data_offset && header->data_size) {
-> > > > > > +                     pr_err("File contains data but offset unk=
-nown\n");
-> > > > > > +                     err =3D -1;
-> > > > > > +                     goto err_out;
-> > > > > > +             }
-> > > > > > +             header->feat_offset =3D header->data_offset + hea=
-der->data_size;
-> > > > > > +             err =3D perf_header__adds_write(header, evlist, f=
-d, fc);
-> > > > > > +             if (err < 0)
-> > > > > > +                     goto err_out;
-> > > > > > +             attr_offset =3D lseek(fd, 0, SEEK_CUR);
-> > > > > > +     } else {
-> > > > > > +             lseek(fd, attr_offset, SEEK_SET);
-> > > > > > +     }
-> > > > > >
-> > > > > >       evlist__for_each_entry(session->evlist, evsel) {
-> > > > > > -             evsel->id_offset =3D lseek(fd, 0, SEEK_CUR);
-> > > > > > -             err =3D do_write(&ff, evsel->core.id, evsel->core=
-.ids * sizeof(u64));
-> > > > > > -             if (err < 0) {
-> > > > > > -                     pr_debug("failed to write perf header\n")=
-;
-> > > > > > -                     free(ff.buf);
-> > > > > > -                     return err;
-> > > > > > +             evsel->id_offset =3D attr_offset;
-> > > > > > +             /* Avoid writing at the end of the file until the=
- session is exiting. */
-> > > > > > +             if (!write_attrs_after_data || at_exit) {
-> > > > > > +                     err =3D do_write(&ff, evsel->core.id, evs=
-el->core.ids * sizeof(u64));
-> > > > > > +                     if (err < 0) {
-> > > > > > +                             pr_debug("failed to write perf he=
-ader\n");
-> > > > > > +                             goto err_out;
-> > > > > > +                     }
-> > > > > >               }
-> > > > > > +             attr_offset +=3D evsel->core.ids * sizeof(u64);
-> > > > >
-> > > > > So in the past we were using lseek(fd, 0, SEEK_CUR) to set the
-> > > > > evsel->id_offset, now you're assuming that do_write will honour t=
-he size
-> > > > > parameter, i.e. write evsel->core.ids * sizeof(u64), but:
-> > > > >
-> > > > > /* Return: 0 if succeeded, -ERR if failed. */
-> > > > > int do_write(struct feat_fd *ff, const void *buf, size_t size)
-> > > > > {
-> > > > >         if (!ff->buf)
-> > > > >                 return __do_write_fd(ff, buf, size);
-> > > > >         return __do_write_buf(ff, buf, size);
-> > > > > }
-> > > > >
-> > > > > And then:
-> > > > >
-> > > > > static int __do_write_fd(struct feat_fd *ff, const void *buf, siz=
-e_t size)
-> > > > > {
-> > > > >         ssize_t ret =3D writen(ff->fd, buf, size);
-> > > > >
-> > > > >         if (ret !=3D (ssize_t)size)
-> > > > >                 return ret < 0 ? (int)ret : -1;
-> > > > >         return 0;
-> > > > > }
-> > > > >
-> > > > > I see that writen calls ion that even has a BUG_ON() if it doesn'=
-t write
-> > > > > exactly the requested size bytes, I got distracted with __do_writ=
-e_fd
-> > > > > extra check that ret !=3D size returning ret if not negative...
-> > > > >
-> > > > > I.e. your code _should_ be equivalent due to the check in ion(), =
-and
-> > > > > taking that as an assumption you reduce the number of lseek sysca=
-lls,
-> > > > > which is a good thing...
-> > > > >
-> > > > > I was just trying to see that the !write_attrs_after_data case wa=
-s
-> > > > > _exactly_ the same as before, which it doesn't look like it is :-=
-\
-> > > >
-> > > > I'm not seeing the difference. Before:
-> > >
-> > > You noticed the difference: before we used lseek to get the current
-> > > offset to use, afterwards we moved to doing plain math.
-> > >
-> > > So I had to check if we could assume that, and with the current code
-> > > structure, yes, we can assume that, so seems safe, but it is differen=
-t
-> > > and if the assumption somehow breaks, as the code in __do_write_fd()
-> > > guard against (unneeded at the moment as ion has even a BUG_ON for th=
-at
-> > > not to happen), then the offset will not be where the data is.
-> > >
-> > > Using lseek() is more costly (syscalls) but it is the ultimate answer=
- to
-> > > get where in the file the current offset is.
-> > >
-> > > So that is the difference I noticed.
-> > >
-> > > Doing multiple things in the same patch causes these reviewing delays=
-,
-> > > doubts, its something we discussed multiple times in the past, and th=
-at
-> > > continue to cause these discussions.
-> >
-> > Right, but it is something of an unfortunate coincidence of how the
-> > code is structured. The fact that writing the header updates
-> > data_offset which is a thing that other things depend upon while
-> > depending on its value itself, etc. - ie the function does more than
-> > just a write, it also sometimes computes the layout, has inbuilt
-> > assumptions on the values lseek will return, and so on. To get to this
-> > final structure took a fair few iterations and I've separated this
-> > change out from the bulk in the next change to keep the patch size
-> > down. I could have done a patch switching from lseeks to math, then a
-> > patch to add write_attrs_after_data. It probably would have yielded
-> > about 4 lines of shared code, more lines that would have been deleted,
-> > while creating quite a bit of work for me. Ideally when these
-> > functions were created there would have been far more liberal use of
-> > things like immutability, so side-effects are minimized. Yes I could
-> > refactor everything, but time..
->
-> Maybe I'm too naive but can we skip header updates on pipe data?  I'm
-> curious if this makes sense..
->
-> Thanks,
-> Namhyung
->
->
-> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-> index a7c859db2e15..b36f84f29295 100644
-> --- a/tools/perf/builtin-inject.c
-> +++ b/tools/perf/builtin-inject.c
-> @@ -2341,6 +2341,9 @@ int cmd_inject(int argc, const char **argv)
->         if (ret)
->                 goto out_delete;
->
-> +       if (data.is_pipe)
-> +               inject.is_pipe =3D true;
-> +
+Hi Kan,
 
-I'm not sure what you are saying. We can't know definitively if the
-input is a pipe style file or pipe until the header is read, which is
-part of session__new and something we pass whether we want to repipe
-the header or not. So we've made a decision or not to repipe but
-opening the header may change the decision that was already made. As
-you say we can opportunistically just copy/repipe the header if we
-know the input and output types match, but:
-1) generating the header isn't that much work,
-2) if the header needs to change for extra attributes, such as with
-some of the auxiliary flags, then the repiped header was no good
-anyway.
-Trying to keep header repiping alive for inject, the only use, is
-weird given all the gotchas. I think it is simpler to open, know what
-we're dealing with, then generate the output header accordingly -
-possibly synthesizing events for the attributes in the case of file to
-pipe.
+On Thu, Aug 29, 2024 at 08:20:36AM -0700, kan.liang@linux.intel.com wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The freq mode is the current default mode of Linux perf. 1 period is
+> used as a start period. The period is auto-adjusted in each tick or an
+> overflow to meet the frequency target.
+> 
+> The start period 1 is too low and may trigger some issues.
+> - Many HWs do not support period 1 well.
+>   https://lore.kernel.org/lkml/875xs2oh69.ffs@tglx/
+> - For an event that occurs frequently, period 1 is too far away from the
+>   real period. Lots of the samples are generated at the beginning.
+>   The distribution of samples may not be even.
+> 
+> It's hard to find a universal start period for all events. The idea is
+> only to give an estimate for the popular HW and HW cache events. For the
+> rest of the events, start from the lowest possible recommended value.
+> 
+> Only the Intel event list JSON file provides the recommended SAV
+> (sample after value) for each event. The estimation is based on the
+> Intel's SAV.
+> 
+> This patch implements a generic perf_freq_start_period() which impacts
+> all ARCHs.
+> If the other ARCHs don't like the start period, a per-pmu
+> (*freq_start_period) may be introduced instead. Or make it a __weak
+> function.
+> The other option would be exposing a start_period knob in the sysfs or a
+> per-event config. So the end users can set their preferred start period.
+> Please let me know your thoughts.
+> 
+> SW events may need to be specially handled, which is not implemented in
+> the patch.
+
+Sounds like a per-pmu callback is fine.  PMUs don't have the callback
+(including SW) can use 1 same as of now.
 
 Thanks,
-Ian
+Namhyung
 
->         if (!data.is_pipe && inject.output.is_pipe) {
->                 ret =3D perf_header__write_pipe(perf_data__fd(&inject.out=
-put));
->                 if (ret < 0) {
->
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  kernel/events/core.c | 65 +++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 64 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 4b855b018a79..7a028474caef 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -12017,6 +12017,69 @@ static void account_event(struct perf_event *event)
+>  	account_pmu_sb_event(event);
+>  }
+>  
+> +static u64 perf_freq_start_period(struct perf_event *event)
+> +{
+> +	int type = event->attr.type;
+> +	u64 config, factor;
+> +
+> +	/*
+> +	 * The 127 is the lowest possible recommended SAV (sample after value)
+> +	 * for a 4000 freq (default freq), according to Intel event list JSON
+> +	 * file, which is the only JSON file that provides a recommended value.
+> +	 */
+> +	factor = 127 * 4000;
+> +	if (type != PERF_TYPE_HARDWARE && type != PERF_TYPE_HW_CACHE)
+> +		goto end;
+> +
+> +	/*
+> +	 * The estimation of the start period in the freq mode is
+> +	 * based on the below assumption.
+> +	 *
+> +	 * For a cycles or an instructions event, 1GHZ of the
+> +	 * underlying platform, 1 IPC. The workload is idle 50% time.
+> +	 * The start period = 1,000,000,000 * 1 / freq / 2.
+> +	 *		    = 500,000,000 / freq
+> +	 *
+> +	 * Usually, the branch-related events occur less than the
+> +	 * instructions event. According to the Intel event list JSON
+> +	 * file, the SAV (sample after value) of a branch-related event
+> +	 * is usually 1/4 of an instruction event.
+> +	 * The start period of branch-related events = 125,000,000 / freq.
+> +	 *
+> +	 * The cache-related events occurs even less. The SAV is usually
+> +	 * 1/20 of an instruction event.
+> +	 * The start period of cache-related events = 25,000,000 / freq.
+> +	 */
+> +	config = event->attr.config & PERF_HW_EVENT_MASK;
+> +	if (type == PERF_TYPE_HARDWARE) {
+> +		switch (config) {
+> +		case PERF_COUNT_HW_CPU_CYCLES:
+> +		case PERF_COUNT_HW_INSTRUCTIONS:
+> +		case PERF_COUNT_HW_BUS_CYCLES:
+> +		case PERF_COUNT_HW_STALLED_CYCLES_FRONTEND:
+> +		case PERF_COUNT_HW_STALLED_CYCLES_BACKEND:
+> +		case PERF_COUNT_HW_REF_CPU_CYCLES:
+> +			factor = 500000000;
+> +			break;
+> +		case PERF_COUNT_HW_BRANCH_INSTRUCTIONS:
+> +		case PERF_COUNT_HW_BRANCH_MISSES:
+> +			factor = 125000000;
+> +			break;
+> +		case PERF_COUNT_HW_CACHE_REFERENCES:
+> +		case PERF_COUNT_HW_CACHE_MISSES:
+> +			factor = 25000000;
+> +			break;
+> +		default:
+> +			goto end;
+> +		}
+> +	}
+> +
+> +	if (type == PERF_TYPE_HW_CACHE)
+> +		factor = 25000000;
+> +end:
+> +	return DIV_ROUND_UP_ULL(factor, event->attr.sample_freq);
+> +}
+> +
+>  /*
+>   * Allocate and initialize an event structure
+>   */
+> @@ -12140,7 +12203,7 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	hwc = &event->hw;
+>  	hwc->sample_period = attr->sample_period;
+>  	if (attr->freq && attr->sample_freq)
+> -		hwc->sample_period = 1;
+> +		hwc->sample_period = perf_freq_start_period(event);
+>  	hwc->last_period = hwc->sample_period;
+>  
+>  	local64_set(&hwc->period_left, hwc->sample_period);
+> -- 
+> 2.38.1
+> 
