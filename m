@@ -1,59 +1,59 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8C31667ED
-	for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 08:29:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474FE16D31B
+	for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 08:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725006595; cv=none; b=fEXvXQp4vIV1pcA02o9bSA0qof9Bve3r1h2qFaUkYHQq90xsJAnxNDeK9yciX6xZkBfM1hIVQgrRMuIyAAtSKL7/KQ+98uyTC8B6vosMBmds1La8puzG2UucLdpLmFLLV6lS6HZvCUfPvE7yMYXuxKS4IxbypTFePLX9GrBDngI=
+	t=1725006948; cv=none; b=SDgTWxfAFAM4JHx1EnCOLBROyRKpYPGfbTmRWnr+LRoq/oAGNix/0VrkmTGZwdJlPKK3azfpIqdAs9myIp4aI0y2O1VXsAUyKbZuwgZDNAUosjCiDv2XUT0aAGyyGmu8UvptZrEuzAS0hvsb6i6Fyw7UN9ahNaXC+pAv3NIfsng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725006595; c=relaxed/simple;
-	bh=PEOIxs5LjJjG1TP88VrEzuRawH5lO29+HzEvL0DZZMs=;
+	s=arc-20240116; t=1725006948; c=relaxed/simple;
+	bh=/yC4n1ZnnZ996SSJcD6Xr4o/5hyPYxr8s7D7HElsUME=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HiHc/D+gdHuF8T3aM6S8S2wM689zd+KNOimW65opoO7QOQQnobEb7W2hXmnUwoLS4cZqdjuoWDasb2u2fh9eA1r/hfsd14SK2EPCYH/KXt6RIC9k3eFrtOXNRwfvSSMWPzHT8aCnZncl5Z1w/ik1J4JOSCvKQMUFT4KiYUQkg8U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WrirVqYM; arc=none smtp.client-ip=209.85.128.42
+	 In-Reply-To:Content-Type; b=U5gqCYYnsZZ2voIVpCzjbqVx2PO+3mRjpWMu6jkZBUJd3EoS/a0YiDF/QsfYvf1n4gtGoNG7zxLheyYtwuv456SW7Rhi1arIYdakYafUA8/cQWyYdT40NT/QlONPnsFXlAjpRbNFEVRY5w3v3GxAFrZqcpclrW7NYoZNUCqwWTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oydtrN2F; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WrirVqYM"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-428178fc07eso12834425e9.3
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 01:29:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oydtrN2F"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-42bb72a5e0bso12682175e9.1
+        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 01:35:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725006592; x=1725611392; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725006945; x=1725611745; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e8bFM4m8jLEQPCLvvCmN9XubuaZ9hTngOviE1bkHqrs=;
-        b=WrirVqYMgeiosKofactJWCeRyAJ4eQEGxXRmcy8HlDHNlhCiDoW4uxwo93nZV76Stl
-         WaS0oBvhQu8t5c90Q9tW82uV1VXLZ2wo/kjwa2HNlN6TAmqS20kjSjL6l0nI+JcG1F5+
-         mKojTmSnDSw3idQ/FPJ2guAsttzbQ1I4XsN1eLhKRgPuuGCWeu4PHuTTvrRqlu9Gtted
-         N5MTlGgSioQQ2LwFzBTjCQnzAgnSvXxS3R6q8wvA8JdcwWBLWU4iEAo6PYfdNyzDqFun
-         xMPR6XTeix/CQVWH39huKYcfhcS3+j03uEToCFsOjb0Nq8x7VXYRQULPrDWj9xRdfcHQ
-         WUAg==
+        bh=MDgErpkUKnQe50JSRwQXTxpchIY80U2OBlsTDwNP1cQ=;
+        b=oydtrN2Fbx0E6NTowOJqvynwrKMlM/OA2frmvJo27ma4wUJMTfKAZSZqHa3ld+SWgs
+         q5KpJjsLb7PHS8Y8j5LFO5sFrTb901ip/hy/rhx3bIdrBBlZkQP95Sn5RNTlvWl9iNYG
+         cZR/IRbUdW6+oXaSBIm5WAKaare/nlMEwqtL5HoI8jRx0frb8R9C/dGHALL6ZWAWYIyZ
+         GOGOECRohn0NnKZNv4Aiy13AmFqr2hDy7YuDpNkEERMpIl4rFI16xwV9/jPA6vYT1F7V
+         zylIbjcvNOok7d/p6gukKCJqA111Qd0zNwcDk5JiTV+GVoSNpyb+CR7L+bMstgjUlmqp
+         M5Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725006592; x=1725611392;
+        d=1e100.net; s=20230601; t=1725006945; x=1725611745;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e8bFM4m8jLEQPCLvvCmN9XubuaZ9hTngOviE1bkHqrs=;
-        b=LeJsN+xvLg2VUWUCIDKDyd49Tq1CxrHbDbLVtUJ8mPpSS08y5GtKdkF8z1+kO51Xci
-         PGVL7BK5n2PPND/X63qIkVUyn4urejOrMU4YWtGEHXSOC8flUi8WGGjlmpcWRhpDg3xP
-         JhKdFAaM/INLI26gvkt6i23cx+QWcqZo50QhXIm7lyAaurrej8f+nxX/MtH73jwh+MpC
-         ajvDSEZWKidimsYgtXjfUHMq4+EwYuGWuDfTZKpRmKz7ZbwofiF4eM9ceWbwGBnM0v7N
-         fz3Alwq9JslIiJ3qEZvoLGjLV6zjmMy4zUM+L45/CMCAzVZZaFOzFcMEAmuHEbd+ckKh
-         C8Bw==
-X-Forwarded-Encrypted: i=1; AJvYcCX57Fx01CgpogHknKljglT+pGnEbdYze9rCMbmh+uqN9y+zNw7p9nrMSpcuakES4kLp1d1iwN14W6FxbfPOrhPx@vger.kernel.org
-X-Gm-Message-State: AOJu0YynE9jphP3DZI52BDlohxegS0P0f7DzkI9nEdL4egwK3+FJBuAB
-	ClojDobga1HT6WJOg1t4AxA1hqJtCyBD/XH/1lklyOXkkBQGJZxWVwVuR3aBAJI=
-X-Google-Smtp-Source: AGHT+IEobN+bHBPjf1e2A/qY63oP+9QONb1iyLzUpttiXiN+oD3C491CC8vj44GHn2p7po01axW+Iw==
-X-Received: by 2002:a05:600c:6d8c:b0:426:5dd0:a1ea with SMTP id 5b1f17b1804b1-42bb27a1015mr43610085e9.28.1725006591184;
-        Fri, 30 Aug 2024 01:29:51 -0700 (PDT)
+        bh=MDgErpkUKnQe50JSRwQXTxpchIY80U2OBlsTDwNP1cQ=;
+        b=BTxVW4OYPOfqV+Zj+k8lCXWjeQ6cH8aXTh0Jh2ki5LQvRPtRuJnC+iO9rkqQvFe4kC
+         1rhV1tHB2y9rhvJZnCKW/+6TvVg+CvGcrpTVIAOlp+On/wSxhvO2jd0EevACQWndKR/b
+         BasPY4a2UFfLmCR1CvV3HOyaJ98NVoa69mS7W/i8PuY+q5CCL2eJkHcGhGsVU+yiUROM
+         7tDCURFxnvhXtmGXllnzL78ijYtu+Rj0o6PWzRdflYsicrBNo3YschGoJ7MKmQSw1fU3
+         MEvfL+O5hY2kviwUl2g8EF/aapxFWR0vV0KPQl4L7ZsIOp1Y3XX41o82usDGe+uXCsW5
+         0UXQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2hBJuftU+EBFW+Gld/hMxtjn7vxj35mFDPsTiTYtVDSDEaH0BQbJSQwpLsDeCQqAt6vhBd8ohWjhbNak8X9E3@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7EZi6h17Zw4GcZgAscQS1P+Nx1KnpB4reiaozZsmOSqJZTHBY
+	HtsgNRyGKxyQLKrAtn5I3R7UlvyVQOZnWVHM+qkwKZFSEKGp3U3RjMtfjZOX1RY=
+X-Google-Smtp-Source: AGHT+IG2YQtB+es4bpO/DPjIWcCbaKmtKE3m6I0KAaWGTR3kPHJqRAnzrYl/zAokjrpuA+J7gIfXFQ==
+X-Received: by 2002:a05:600c:4585:b0:426:51dc:f6cd with SMTP id 5b1f17b1804b1-42bb01bfbdemr48151025e9.18.1725006943921;
+        Fri, 30 Aug 2024 01:35:43 -0700 (PDT)
 Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42baf7fa745sm53174145e9.31.2024.08.30.01.29.49
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6deb239sm39581435e9.5.2024.08.30.01.35.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 30 Aug 2024 01:29:50 -0700 (PDT)
-Message-ID: <52de8df9-4554-4bc0-9735-fdbd197dbb7c@linaro.org>
-Date: Fri, 30 Aug 2024 09:29:48 +0100
+        Fri, 30 Aug 2024 01:35:42 -0700 (PDT)
+Message-ID: <18a60d79-e94d-4fe9-ba9e-867bed175a6a@linaro.org>
+Date: Fri, 30 Aug 2024 09:35:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -61,76 +61,91 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 7/7] perf test: Add a test for default perf stat
- command
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: irogers@google.com, linux-perf-users@vger.kernel.org,
- kan.liang@linux.intel.com, ak@linux.intel.com,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Mike Leach <mike.leach@linaro.org>, Leo Yan <leo.yan@linux.dev>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
+Subject: Re: [PATCH v6 00/17] coresight: Use per-sink trace ID maps for Perf
+ sessions
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: coresight@lists.linaro.org, gankulkarni@os.amperecomputing.com,
+ mike.leach@linaro.org, leo.yan@linux.dev, anshuman.khandual@arm.com,
+ James Clark <james.clark@arm.com>,
  Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- Weilin Wang <weilin.wang@intel.com>,
- Dominique Martinet <asmadeus@codewreck.org>,
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
- Colin Ian King <colin.i.king@gmail.com>,
- Yang Jihong <yangjihong@bytedance.com>, Ze Gao <zegao2021@gmail.com>,
- Sun Haiyong <sunhaiyong@loongson.cn>, Jing Zhang
- <renyu.zj@linux.alibaba.com>, Yicong Yang <yangyicong@hisilicon.com>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20240828140736.156703-1-james.clark@linaro.org>
- <20240828140736.156703-8-james.clark@linaro.org>
- <ZtFnbq_158fxttmW@google.com>
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org,
+ linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org,
+ Suzuki K Poulose <suzuki.poulose@arm.com>
+References: <20240722101202.26915-1-james.clark@linaro.org>
+ <ZqOwGWcYosGe9ru4@x1> <6476a228-847b-4804-9229-c11a881663c7@arm.com>
+ <ZqOzio8Oco9ZFsDm@x1> <8068c8ff-a8ce-4bcd-bb19-2c25b45cf6f3@arm.com>
+ <ZqO3gPcCCVh1r5WM@x1> <aab886f3-ebbf-4853-b26b-5cf70c801683@arm.com>
+ <7b96894c-f5df-473b-be50-ee118ce3cfaf@linaro.org> <ZtCUUsJNj9Z1CRLK@x1>
 Content-Language: en-US
 From: James Clark <james.clark@linaro.org>
-In-Reply-To: <ZtFnbq_158fxttmW@google.com>
+In-Reply-To: <ZtCUUsJNj9Z1CRLK@x1>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
 
 
-On 30/08/2024 7:32 am, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, Aug 28, 2024 at 03:07:21PM +0100, James Clark wrote:
->> Test that one cycles event is opened for each core PMU when "perf stat"
->> is run without arguments.
+On 29/08/2024 4:31 pm, Arnaldo Carvalho de Melo wrote:
+> On Thu, Aug 29, 2024 at 10:05:02AM +0100, James Clark wrote:
 >>
->> The event line can either be output as "pmu/cycles/" or just "cycles" if
->> there is only one PMU. Include 2 spaces for padding in the one PMU case
->> to avoid matching when the word cycles is included in metric
->> descriptions.
 >>
->> Signed-off-by: James Clark <james.clark@linaro.org>
->> ---
->>   tools/perf/tests/shell/stat.sh | 21 +++++++++++++++++++++
->>   1 file changed, 21 insertions(+)
+>> On 22/08/2024 3:35 pm, Suzuki K Poulose wrote:
+>>> Hi Arnaldo,
+>>>
+>>> On 26/07/2024 15:49, Arnaldo Carvalho de Melo wrote:
+>>>> On Fri, Jul 26, 2024 at 03:38:13PM +0100, Suzuki K Poulose wrote:
+>>>>> On 26/07/2024 15:32, Arnaldo Carvalho de Melo wrote:
+>>>>>> On Fri, Jul 26, 2024 at 03:26:04PM +0100, Suzuki K Poulose wrote:
+>>>>>>> On 26/07/2024 15:18, Arnaldo Carvalho de Melo wrote:
+>>>>>>>> On Mon, Jul 22, 2024 at 11:11:42AM +0100, James Clark wrote:
+>>>>>>>>> This will allow sessions with more than CORESIGHT_TRACE_IDS_MAX ETMs
+>>>>>>>>> as long as there are fewer than that many ETMs
+>>>>>>>>> connected to each sink.
+>>>>>>>>
+>>>>>>>> Hey, may I take the tools part, i.e. patches 0-7 and
+>>>>>>>> someone on the ARM
+>>>>>>>> kernel team pick the driver bits?
+>>>>
+>>>>>>> I plan to pick the kernel driver bits for v6.12
+>>>>
+>>>>>> Perhaps it is better for me to wait for that?
+>>>>
+>>>>> Yes, please.
+>>>>
+>>>> Please let me know when you do so so that I can merge the tooling bits.
+>>>
+>>> I have now merged the driver changes to coresight/next, they will be
+>>> sent to Greg for v6.12. [0]
+>>>
+>>> You may go ahead and merge the tool bits.
+> 
+> I'm taking this as an Acked-by: Suzuki, ok?
+> 
+>>> Thanks
+>>> Suzuki
+>>>
+>>> [0] https://lkml.kernel.org/r/172433479466.350842.6920589600831615538.b4-ty@arm.com
+>>>
+>>>
+>>>>
+>>>> Thanks,
+>>>>
+>>>> - Arnaldo
+>>>
 >>
->> diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
->> index 525d0c44fdc6..24ace1de71cc 100755
->> --- a/tools/perf/tests/shell/stat.sh
->> +++ b/tools/perf/tests/shell/stat.sh
->> @@ -148,6 +148,26 @@ test_cputype() {
->>     echo "cputype test [Success]"
->>   }
->>   
->> +test_hybrid() {
->> +  # Test the default stat command on hybrid devices opens one cycles event for
->> +  # each CPU type.
->> +  echo "hybrid test"
->> +
->> +  # Count the number of core PMUs
->> +  pmus=$(ls /sys/bus/event_source/devices/*/cpus 2>/dev/null | wc -l)
+>> Hi Arnaldo,
+>>
+>> I just checked and the tool patches still apply cleanly if you're able to
+>> take them.
 > 
-> Is it working on non-hybrid systems?  I don't think they have cpus file
-> in the core PMU.
+> Sure.
 > 
-> Thanks,
-> Namhyung
-> 
+> - Arnaldo
 
-Good point I only tested on Arm non-hybrid. I can change it to assume 1 
-PMU for no cpus files?
