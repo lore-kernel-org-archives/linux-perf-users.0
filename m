@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F0B170A16
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9E0175D3F
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725087875; cv=none; b=LxYRHMe3zXbobDwzQ3Op/8Yo91+oJnQB3B3NxXSdmeTMdc1bd7FxhFd1lcNnqZYb4nLRWMu7KznZTRUH6A6jn1188mK1eDyhixPbGLXVnU25NjciHZGO/NwJAhSn+R7frvcxn20dVRH7vUeiuUGcZM9cUNk1GGC+BqT1O/LJYSU=
+	t=1725087878; cv=none; b=gbMVymJ+wkA6KK5llKY8U/Ok6pDOTLqe+ur7fNwMDIWgT5sdhTssM+yiipEQlobFcr8lnB4A0ka97GzILhNQNyiaLyfO80wzTuryCHn2K+7yGMHYuVg7GuF/HHOjFdgArLdH2TNlBa2rhbiQ1M9hW5gHc/hcTujrBmxuDtlDW1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725087875; c=relaxed/simple;
-	bh=5gbFoYoAAv+z9iYcQzJxmKjtjoR9rkjq5SseKmfmyZc=;
+	s=arc-20240116; t=1725087878; c=relaxed/simple;
+	bh=8UPkJyqmMUZX6rxp//OAQh9bbpxpB7gHGefxdcxc+Iw=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=ZB3SEjEHI7TkCOPA9r2Jxw1e8rD6P5x2JZ54EOrFiN2nZ7EMHq/wBQZ//gy5jNjWXQSg7XUs/7nNUUQ3p7009LBp4UlVpWxvAB99Lz07mUxE8QeBHVrGjK5pLVaQllrFgO75EmLp7GoDuLZ9DNNuWDhJKf9aeDJeGeCP/PsOfv8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=piMKGFgF; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=TXCDJJOh5SSSLMP5C3cA92vnE1wBfQ/I15g04O5jg/P72kBdDmnMqAwRwDV382uhQaDzHmyBMBqTlM/SdMqH8ChIk3e8YxUIJMu2p71IA2rX3j5zly6kw20sngcJAsIrnAQ+80Oo7WmV7RZ96nd6Z95znJK7ozRuDJ20Bx/eSaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1QVuN1YZ; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="piMKGFgF"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6b8f13f2965so54310057b3.1
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1QVuN1YZ"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6d3e062dbeeso22960447b3.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725087873; x=1725692673; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725087875; x=1725692675; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=pHNCvvAGAccTwrROKiH6oXmaoTXEGMqssDdptckzxqE=;
-        b=piMKGFgFqa9wQ1E5K2F437ur+RkQq/2mcjFbrElaAr9+UTZChhqSBkxRH+bYcm9d8v
-         29F7EQQqoahoIsnt13NTdeaBP/zJAUuvjYnJ/uwJXcQOb91+UiBHAs+vP4ssnRq/4lec
-         bh+b4jJBSa0n0gT55xnqWWZ2xtYKI97OuDGgKluKa13d3jUwfOsYE23b4VcaJgqXsRUU
-         otB40M3VXHoM3eNXEDe5me8hKdh+LQ+sFoYYNBaP8J3Llr7t/5iP5kvSe/9CS6NggNRU
-         cxzncTdTltmFDTgJHniTxibEX0ye4NofJSja4onT5av6kI4dKvh8ojS24ev+HebPDse0
-         eifw==
+        bh=3TY7dleA8hoe/b0STghmEa4EVbup5XFL8ChSr6jPnf0=;
+        b=1QVuN1YZOdCQ4cRtAIjf2rOxQH70jwbVmI42HpY7v1TpFVJu8xsbvEHYJlSGPNyDeH
+         igeq98AlmuD4/hWVb0h0D6AFuVUqVYatslbifMLGn8uIZVY4S3KubPocW8IsJ9Rvy+1u
+         l/VGC/HRvBr/PHcYqIyrLGziUUL0oLr8fdfWzv7QQvbVmtDfPl2IwoCOw6ONNxjZFSZe
+         bjE4ISxmR4zZrmqsrmVoymV+X++OKlo7tv6LuUNcTERRGDr37CUL31erfwJrM4dHE2U7
+         M7U47C0A0qZ7duLqErB8YOSIV09aSHIxhiwBC+GvjLdGwcsvmOdqrDKizskyzjiLSkJQ
+         WqnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725087873; x=1725692673;
+        d=1e100.net; s=20230601; t=1725087875; x=1725692675;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pHNCvvAGAccTwrROKiH6oXmaoTXEGMqssDdptckzxqE=;
-        b=N4B8gKoXWtT8o+daVs+5mD8J/6Guv9UKhG+mSAxmt6w1uXqiiF6C/Q3h0kdtwowb07
-         vsBtMwDZG7ZOxhcJnv9DQVydwD+uHL8mw4MBbr+hYHg4Yiokx7wD/uD9CzscIV4CaNbc
-         BjKogefIvueWrmY3at+t1FaFkf6An45OzAZwxrUzT6k4secRkayBNZIPX7nQ7bspEXkb
-         JqAsV0EsPlvZrDpi7Y4hMKQjP20M/sX6yiwRli/CXtSIUbyY5SN8wNVw7dnXp1ciXfnD
-         OzIrYtJWlWGan4RZQPoZHejiY3N8vOecjuTEAh7qu1EPvqbvYpzTax8Wt70SNZ7mW6Rp
-         tyuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURpdrP5BpPzx6kDSzSRp2EVgZBI9btpxu9KyIq+0PiTDjaQ7hr5pU6vK9YGvd2kuSZsfs3wjuXI7Ye11uy/NuB@vger.kernel.org
-X-Gm-Message-State: AOJu0YxwQhenvSJsrO1yfKdUJVwboARfn7k0+kvPwgFL6QBQni/Wm5ZI
-	xTJ5U3OTRtumSrR6IhhozloE6IlImC5J5f+2ykcnJujD1MBLqzYQ8wiHIB56cPH3+0DlBJl6QCk
-	p8nRFfw==
-X-Google-Smtp-Source: AGHT+IHP+Q4nMc9YeG5NMkEAMx87MhHBoryoHgfbR7qMaWbgos9SQIWlIWLQeYrfoOeLCo+Z/SO7M3dGHGl5
+        bh=3TY7dleA8hoe/b0STghmEa4EVbup5XFL8ChSr6jPnf0=;
+        b=iDFKvGhb919mfjDIgusG+pSKrnOClO1K4x/HeL++ndXJzxd72PmmJ/+QxBAYGXooZV
+         UpRDG3YKve4P83cVV9LBB9Gmr+kCW4whOfMypuIl2xfl5Xnn4skLuocRPXt65A1zgrRX
+         /zThrOy/W8OWAlF7pDuBr3tec0YHXCPUmUsgXjP1Jy9dvkcJGTLcnEy56vSmluWsju2B
+         HwQdbelolssuDoKmdBq4c2uvE/TsgEgbf+4K+roJcnFJ9/tkka/vuniBsoSp2RuR1XNd
+         DFFqblsWpwf2FpMJDIfjlD0b9pJVJjp5NNUfsyo/gmhhmdLSDfX7r7/xXzWwnSkg539Z
+         ciIg==
+X-Forwarded-Encrypted: i=1; AJvYcCVbAJARlonTuOqLkacz0m4p1Mka2+7ooO4oKTTpBMU/tCG1ANLOJMnBrzVRKw8/NB8KIzfK6g2owW1bLBCVG6Wt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyKvxzJWm73Bat2hbDMa49JhaGzDiPDOQdn9an4TXel8fMgqIqJ
+	OaZn2mTvQUJfnknvN/k2+aOwllmw/OFL4flzkOgIJtcOHrha/hmOdd1IOB2e4h3ZGVBb3Q6/oDZ
+	luryzuw==
+X-Google-Smtp-Source: AGHT+IGnoAl7EJ4WctiSw6Y64whqdTB5BzobJZ3VDTVwGagWDxUuDNSHQY1Pw0RhThEdjT9oJNjsj9+X+qt9
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4974:82ff:2f9:edb6])
- (user=irogers job=sendgmr) by 2002:a05:690c:3386:b0:68e:8de6:618b with SMTP
- id 00721157ae682-6d40d88f6a3mr1853387b3.2.1725087872962; Sat, 31 Aug 2024
- 00:04:32 -0700 (PDT)
-Date: Sat, 31 Aug 2024 00:04:12 -0700
+ (user=irogers job=sendgmr) by 2002:a0d:ce07:0:b0:6be:523:af53 with SMTP id
+ 00721157ae682-6d2868a316amr2536287b3.3.1725087875282; Sat, 31 Aug 2024
+ 00:04:35 -0700 (PDT)
+Date: Sat, 31 Aug 2024 00:04:13 -0700
 In-Reply-To: <20240831070415.506194-1-irogers@google.com>
-Message-Id: <20240831070415.506194-4-irogers@google.com>
+Message-Id: <20240831070415.506194-5-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240831070415.506194-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Subject: [PATCH v1 3/6] perf test: Skip uprobe test if probe command isn't present
+Subject: [PATCH v1 4/6] perf parse-events: Add default_breakpoint_len helper
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,32 +76,154 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-The probe command is dependent on libelf. Skip the test if the
-required probe command isn't present.
+The default breakpoint length is "sizeof(long)" however this is
+incorrect on platforms like Aarch64 where sizeof(long) is 8 but the
+breakpoint length is 4. Add a helper function that can be used to
+determine the correct breakpoint length, in this change it just
+returns the existing default sizeof(long) value.
+
+Use the helper in the bp_account test so that, when modifying the
+event from a watchpoint to a breakpoint, the breakpoint length is
+appropriate for the architecture and not just sizeof(long).
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/shell/test_uprobe_from_different_cu.sh | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/tests/bp_account.c         | 4 +++-
+ tools/perf/tests/bp_signal.c          | 3 ++-
+ tools/perf/tests/bp_signal_overflow.c | 3 ++-
+ tools/perf/tests/parse-events.c       | 3 ++-
+ tools/perf/util/parse-events.c        | 7 ++++++-
+ tools/perf/util/parse-events.h        | 2 ++
+ 6 files changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-index 82bc774a078a..33387c329f92 100755
---- a/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-+++ b/tools/perf/tests/shell/test_uprobe_from_different_cu.sh
-@@ -4,6 +4,13 @@
+diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+index 6f921db33cf9..4cb7d486b5c1 100644
+--- a/tools/perf/tests/bp_account.c
++++ b/tools/perf/tests/bp_account.c
+@@ -16,6 +16,7 @@
+ #include "tests.h"
+ #include "debug.h"
+ #include "event.h"
++#include "parse-events.h"
+ #include "../perf-sys.h"
+ #include "cloexec.h"
  
- set -e
+@@ -50,7 +51,7 @@ static int __event(bool is_x, void *addr, struct perf_event_attr *attr)
+ 	attr->config = 0;
+ 	attr->bp_type = is_x ? HW_BREAKPOINT_X : HW_BREAKPOINT_W;
+ 	attr->bp_addr = (unsigned long) addr;
+-	attr->bp_len = sizeof(long);
++	attr->bp_len = is_x ? default_breakpoint_len() : sizeof(long);
  
-+# Skip if there's no probe command.
-+if ! perf | grep probe
-+then
-+        echo "Skip: probe command isn't present"
-+        exit 2
-+fi
+ 	attr->sample_period = 1;
+ 	attr->sample_type = PERF_SAMPLE_IP;
+@@ -92,6 +93,7 @@ static int bp_accounting(int wp_cnt, int share)
+ 	attr_mod = attr;
+ 	attr_mod.bp_type = HW_BREAKPOINT_X;
+ 	attr_mod.bp_addr = (unsigned long) test_function;
++	attr_mod.bp_len = default_breakpoint_len();
+ 
+ 	ret = ioctl(fd[0], PERF_EVENT_IOC_MODIFY_ATTRIBUTES, &attr_mod);
+ 	TEST_ASSERT_VAL("failed to modify wp\n", ret == 0);
+diff --git a/tools/perf/tests/bp_signal.c b/tools/perf/tests/bp_signal.c
+index 1f2908f02389..3faeb5b6fe0b 100644
+--- a/tools/perf/tests/bp_signal.c
++++ b/tools/perf/tests/bp_signal.c
+@@ -26,6 +26,7 @@
+ #include "tests.h"
+ #include "debug.h"
+ #include "event.h"
++#include "parse-events.h"
+ #include "perf-sys.h"
+ #include "cloexec.h"
+ 
+@@ -111,7 +112,7 @@ static int __event(bool is_x, void *addr, int sig)
+ 	pe.config = 0;
+ 	pe.bp_type = is_x ? HW_BREAKPOINT_X : HW_BREAKPOINT_W;
+ 	pe.bp_addr = (unsigned long) addr;
+-	pe.bp_len = sizeof(long);
++	pe.bp_len = is_x ? default_breakpoint_len() : sizeof(long);
+ 
+ 	pe.sample_period = 1;
+ 	pe.sample_type = PERF_SAMPLE_IP;
+diff --git a/tools/perf/tests/bp_signal_overflow.c b/tools/perf/tests/bp_signal_overflow.c
+index 4e897c2cf26b..ee560e156be6 100644
+--- a/tools/perf/tests/bp_signal_overflow.c
++++ b/tools/perf/tests/bp_signal_overflow.c
+@@ -25,6 +25,7 @@
+ #include "tests.h"
+ #include "debug.h"
+ #include "event.h"
++#include "parse-events.h"
+ #include "../perf-sys.h"
+ #include "cloexec.h"
+ 
+@@ -88,7 +89,7 @@ static int test__bp_signal_overflow(struct test_suite *test __maybe_unused, int
+ 	pe.config = 0;
+ 	pe.bp_type = HW_BREAKPOINT_X;
+ 	pe.bp_addr = (unsigned long) test_function;
+-	pe.bp_len = sizeof(long);
++	pe.bp_len = default_breakpoint_len();
+ 
+ 	pe.sample_period = THRESHOLD;
+ 	pe.sample_type = PERF_SAMPLE_IP;
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index edc2adcf1bae..0681653b12d2 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -5,6 +5,7 @@
+ #include <api/fs/fs.h>
+ #include "tests.h"
+ #include "debug.h"
++#include "parse-events.h"
+ #include "pmu.h"
+ #include "pmus.h"
+ #include <dirent.h>
+@@ -262,7 +263,7 @@ static int test__checkevent_breakpoint_x(struct evlist *evlist)
+ 	TEST_ASSERT_VAL("wrong config", test_config(evsel, 0));
+ 	TEST_ASSERT_VAL("wrong bp_type",
+ 			HW_BREAKPOINT_X == evsel->core.attr.bp_type);
+-	TEST_ASSERT_VAL("wrong bp_len", sizeof(long) == evsel->core.attr.bp_len);
++	TEST_ASSERT_VAL("wrong bp_len", default_breakpoint_len() == (int)evsel->core.attr.bp_len);
+ 	return TEST_OK;
+ }
+ 
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index fab01ba54e34..dfb951bb184b 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -670,6 +670,11 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+ }
+ #endif /* HAVE_LIBTRACEEVENT */
+ 
++int default_breakpoint_len(void)
++{
++	return sizeof(long);
++}
 +
- # skip if there's no gcc
- if ! [ -x "$(command -v gcc)" ]; then
-         echo "failed: no gcc compiler"
+ static int
+ parse_breakpoint_type(const char *type, struct perf_event_attr *attr)
+ {
+@@ -728,7 +733,7 @@ int parse_events_add_breakpoint(struct parse_events_state *parse_state,
+ 	/* Provide some defaults if len is not specified */
+ 	if (!len) {
+ 		if (attr.bp_type == HW_BREAKPOINT_X)
+-			len = sizeof(long);
++			len = default_breakpoint_len();
+ 		else
+ 			len = HW_BREAKPOINT_LEN_4;
+ 	}
+diff --git a/tools/perf/util/parse-events.h b/tools/perf/util/parse-events.h
+index b735cd9e0acf..f79d076cd1bd 100644
+--- a/tools/perf/util/parse-events.h
++++ b/tools/perf/util/parse-events.h
+@@ -286,4 +286,6 @@ static inline bool is_sdt_event(char *str __maybe_unused)
+ }
+ #endif /* HAVE_LIBELF_SUPPORT */
+ 
++int default_breakpoint_len(void);
++
+ #endif /* __PERF_PARSE_EVENTS_H */
 -- 
 2.46.0.469.g59c65b2a67-goog
 
