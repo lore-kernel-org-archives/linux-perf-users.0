@@ -1,154 +1,93 @@
-Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FC2916A94F;
-	Sat, 31 Aug 2024 07:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33684165EEB
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 09:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725089884; cv=none; b=b1+uG78uiQMuhxnwpJGJibQ3+K7TmLDOAy1kXoAmzgRrHWnfe5GWIc/g8RgOx80nnrDBYtZq5tWuNchNzvKrk1tMRYisTIfuWddsF1nTzLw0spABlhrLm/BtTbcGUmizbri0H5ZOz4faEz4kgo91c9swLa3nJOsmxjBkD4ItaOc=
+	t=1725097580; cv=none; b=DwDOGTXtSSRLrZH3uR6DzyUp6pW2S2d7xdy1R05ldxnIwqAXjj4M79Xfcv2kc2BGwlixsGbga07VqfX1KRpfkxav4VPxud0NabdYO7P2Bn8A9l3myc6sLAICtWYB7VUPCBUJTuzHJdh8qGvkWIJ9ZmnsPmgzs0qPb+C8sv9/xE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725089884; c=relaxed/simple;
-	bh=j0XOpFyagEYUW9FYGaJGqvJddW77ivLx+Jdq21ViqPc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=m91fkWTJgDfz9BBz0fRHVo5hyoOloSCSipqIF6+ZjEzfmTzd4Nifp1Q0qQ8tqE8fu6cHa8pFc6DGNa6bFmf0edbkqxZYE8tfVmZSDfxAD3YqwpNsY8E0/rrOi5Mcna3ZUcPo6nC0VYPdcTOL1C3sZXUJZkQSKqicIrgBLp9CUJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wwn181Q8Dz4f3jZQ;
-	Sat, 31 Aug 2024 15:37:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 499E11A0568;
-	Sat, 31 Aug 2024 15:37:58 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.67.174.193])
-	by APP4 (Coremail) with SMTP id gCh0CgCXv4VQyNJmLLDdDA--.28814S6;
-	Sat, 31 Aug 2024 15:37:58 +0800 (CST)
-From: Luo Gengkun <luogengkun@huaweicloud.com>
-To: peterz@infradead.org
-Cc: mingo@redhat.com,
-	acme@kernel.org,
-	namhyung@kernel.org,
-	mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org,
-	irogers@google.com,
-	adrian.hunter@intel.com,
-	kan.liang@linux.intel.com,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	luogengkun@huaweicloud.com
-Subject: [PATCH v5 2/2] perf/core: Fix incorrect time diff in tick adjust period
-Date: Sat, 31 Aug 2024 07:43:16 +0000
-Message-Id: <20240831074316.2106159-3-luogengkun@huaweicloud.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240831074316.2106159-1-luogengkun@huaweicloud.com>
-References: <20240831074316.2106159-1-luogengkun@huaweicloud.com>
+	s=arc-20240116; t=1725097580; c=relaxed/simple;
+	bh=H8n+IZh7NDO2lGGGJAq70ToHaH0UAug872TCkp5AB5I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AEzBQ5xc18R4oxHKy/FsaIgC8kalIer89e/yadza6imDQ53kkJ05TIDBUt3T5/+3G/RHhDHnlaH+cGM0eHMK/12910utFnWfzUNWAagxrZvhZG1zsimpjZd3sMjBQAWSManO245WlN3ED/NmK1vckFXN1FNd3XdlJW4ZHRT0jeg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dD4rvBuU; arc=none smtp.client-ip=209.85.167.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dD4rvBuU"
+Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3db3763e924so276844b6e.2
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 02:46:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725097578; x=1725702378; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=iwT8VsI/OllNWFN75ti2nJT245mIWR2gthEfvHeAWXw=;
+        b=dD4rvBuUpO48hmw3GzX1EWRoOtxXqriO2/Rwl4Zt7seo89ksQ+JYSGzmvml3D7Q2pi
+         4dQBtvyRTs2+kC2jLAZF/od1S6Wcc5qmylRLLAGjeIf+o/11O8D5MzMHj8WtmxIq6+Lu
+         fzk355PkDOV33oQgHdpNO79Rb2rXh/lkifJLluvHVFb2ASg0bwqP62U0tw2c9c/TpzyI
+         6pozCZnPVX3Zc+2OeTk4ae91FM+lbkAkaaD5/WD5hDfEWQfom0aouXUBlkRLwdJZbOxZ
+         J36lR5/wvh6239Te9EEAf2OYYMTYFAUGV782+9yK4217hN57nRe8r5bqZtMUtbdeOBvm
+         rRjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725097578; x=1725702378;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=iwT8VsI/OllNWFN75ti2nJT245mIWR2gthEfvHeAWXw=;
+        b=cmE5M9aKNnva50feMsNeRRk9z7wcFkQHCIybKyWYMkYB6uV4ncmNZ3asgVTDskmPQQ
+         MmXMVOPmsbZ2MkOJs9oUElsETNVl9Eq0VCoLp/aHNUpGEAKTkRmjYNRhJIAJk43SkkPy
+         d9Ojtwn1HwS4pxoBU4UEifqFz/OP1kfju5M/WJzHVFV5S6KlfmsZTqDZ2UByQF4Tfijq
+         t69+x7djy2qW79H1NV2y8zusyOT1isc9W/XNfjXIkF8BcDBJvuRFCRupXex0b+24ctNQ
+         /Zp/HeV5ljABvVWzqqtkS9t6xm2bshw81zk2hQPGXMWLflwW6BsSTPQQSbQUJ+FHLknc
+         bWjQ==
+X-Gm-Message-State: AOJu0YyfhX4+euY5vJI+8HyBuXq8e9o2edvoRj71LwUvizGUi8PInfGY
+	Gc0t9lmNkgQnxXH8M32waU2ldv1AyFChSHUR/PwTc9zSRwpsLAio
+X-Google-Smtp-Source: AGHT+IGJ/2a3FGQSmKRKubsFygtpzctBI0atBfEDHh1/8TomEEbuEnXos0ykwTUK6dvmxQp209+jgQ==
+X-Received: by 2002:a05:6871:520d:b0:270:eb9:e17d with SMTP id 586e51a60fabf-277b0df369fmr2763588fac.8.1725097578007;
+        Sat, 31 Aug 2024 02:46:18 -0700 (PDT)
+Received: from [192.168.50.95] ([118.32.98.101])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e55a45e1sm3948135b3a.58.2024.08.31.02.46.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 31 Aug 2024 02:46:17 -0700 (PDT)
+Message-ID: <160b2df1-3838-463f-8365-9c789180a2de@gmail.com>
+Date: Sat, 31 Aug 2024 18:46:14 +0900
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCXv4VQyNJmLLDdDA--.28814S6
-X-Coremail-Antispam: 1UD129KBjvJXoWxWF4rXryDtF4kAr13XrW3GFg_yoW5WFy7pF
-	Z8AF1aqFWkXw1F9w15C3Z2g345W3WkArsxWa45KrWfZw17trZ3XFsrWF15JF15AFZ7Za4a
-	vwnFgryUC3yjqFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUm014x267AKxVWrJVCq3wAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jryl82xGYIkIc2
-	x26xkF7I0E14v26ryj6s0DM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
-	Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJw
-	A2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS
-	0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2
-	IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0
-	Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628vn2kIc2
-	xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWU
-	JVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67
-	kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0x
-	vEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVj
-	vjDU0xZFpf9x0JUQXo7UUUUU=
-X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
+User-Agent: Mozilla Thunderbird
+Subject: Re: publish: perfwiki.github.io/main
+To: Howard Chu <howardchu95@gmail.com>
+Cc: linux-perf-users <linux-perf-users@vger.kernel.org>
+References: <7f2b1c74-4087-4da4-94eb-51d37f3d8fc2@gmail.com>
+ <CAP-5=fVmP0sNaE-T0PAHb0y+Eoo7eNgDFyu7kCT+Hp+G62KXHw@mail.gmail.com>
+ <CAH0uvohyjLojJYtwCQeD2zmDYavjYWmom3C4O3Xmou-ez_hCkg@mail.gmail.com>
+Content-Language: en-US
+From: Yunseong Kim <yskelg@gmail.com>
+In-Reply-To: <CAH0uvohyjLojJYtwCQeD2zmDYavjYWmom3C4O3Xmou-ez_hCkg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Perf events has the notion of sampling frequency which is implemented in
-software by dynamically adjusting the counter period so that samples occur
-at approximately the target frequency.  Period adjustment is done in 2
-places:
- - when the counter overflows (and a sample is recorded)
- - each timer tick, when the event is active
-The later case is slightly flawed because it assumes that the time since
-the last timer-tick period adjustment is 1 tick, whereas the event may not
-have been active (e.g. for a task that is sleeping).
+Hi Howard,
 
-Fix by using jiffies to determine the elapsed time in that case.
+> Thank you so much, absolutely amazing work.
+> 
+> Just sent a pull request to the perfwiki github page for some minor
+> improvements, can you please take a look?
 
-Signed-off-by: Luo Gengkun <luogengkun@huaweicloud.com>
-Reviewed-by: Adrian Hunter <adrian.hunter@intel.com>
----
- include/linux/perf_event.h |  1 +
- kernel/events/core.c       | 12 +++++++++---
- 2 files changed, 10 insertions(+), 3 deletions(-)
+Thank you so much for comparing and updating the main page!
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 1a8942277dda..d29b7cf971a1 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -265,6 +265,7 @@ struct hw_perf_event {
- 	 * State for freq target events, see __perf_event_overflow() and
- 	 * perf_adjust_freq_unthr_context().
- 	 */
-+	u64				freq_tick_stamp;
- 	u64				freq_time_stamp;
- 	u64				freq_count_stamp;
- #endif
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index a9395bbfd4aa..183291e0d070 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -55,6 +55,7 @@
- #include <linux/pgtable.h>
- #include <linux/buildid.h>
- #include <linux/task_work.h>
-+#include <linux/jiffies.h>
- 
- #include "internal.h"
- 
-@@ -4120,9 +4121,11 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
- {
- 	struct perf_event *event;
- 	struct hw_perf_event *hwc;
--	u64 now, period = TICK_NSEC;
-+	u64 now, period, tick_stamp;
- 	s64 delta;
- 
-+	tick_stamp = jiffies64_to_nsecs(get_jiffies_64());
-+
- 	list_for_each_entry(event, event_list, active_list) {
- 		if (event->state != PERF_EVENT_STATE_ACTIVE)
- 			continue;
-@@ -4148,6 +4151,9 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
- 		 */
- 		event->pmu->stop(event, PERF_EF_UPDATE);
- 
-+		period = tick_stamp - hwc->freq_tick_stamp;
-+		hwc->freq_tick_stamp = tick_stamp;
-+
- 		now = local64_read(&event->count);
- 		delta = now - hwc->freq_count_stamp;
- 		hwc->freq_count_stamp = now;
-@@ -4157,9 +4163,9 @@ static void perf_adjust_freq_unthr_events(struct list_head *event_list)
- 		 * reload only if value has changed
- 		 * we have stopped the event so tell that
- 		 * to perf_adjust_period() to avoid stopping it
--		 * twice.
-+		 * twice. And skip if it is the first tick adjust period.
- 		 */
--		if (delta > 0)
-+		if (delta > 0 && likely(period != tick_stamp))
- 			perf_adjust_period(event, period, delta, false);
- 
- 		event->pmu->start(event, delta > 0 ? PERF_EF_RELOAD : 0);
--- 
-2.34.1
+Your pull request was the first one for perf wiki mkdocs version, thank you for updating the documentation!
+Link: https://github.com/perfwiki/main/pull/5
 
+> Cool.
+> 
+> Thanks,
+> Howard
+
+Best regards,
+Yunseong Kim
