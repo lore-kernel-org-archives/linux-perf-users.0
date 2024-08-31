@@ -1,57 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81C3170855
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E6716DEB5
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725087880; cv=none; b=q8U3l1cjHsPXcTf63njmbHl4AH+2Ha29KDDSPb2a/q6m1Us9Dg2x6dtMaU2eZJAnTx7tXt3Fmnz5KZ12pzNZ3/a5VAtdn4j9AnqIRU8TyzzrCRoK/wXp26FCiSmhcUG8FQToEoWXAqkLCDbOW664yNHtVbF8RtGN7WkoulJS+nM=
+	t=1725087882; cv=none; b=d8BT6TyDU64UbCqPHqWloq4w+pKrrzfnbVNzFjMWG5+oCrki/n0FBJ0qakro5+PUv5ncS7SzZ1+gXtObpeOMZDa+t9TwMQj3CXCUgoMZklz6kp7IGOI8WOiTBla91zRk6HZ77B3C6WjYw4ZDFwaVQlu3BPg31Q9dnjKKBq0m9aA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725087880; c=relaxed/simple;
-	bh=neE8KUj5swSBbTAvkEmb7HlGQpVC/JyPFNunQxVwu/U=;
+	s=arc-20240116; t=1725087882; c=relaxed/simple;
+	bh=Zzp47YpjJrlq/7aNuFnEG/sx74AzSK2oA4jiAlYD1m4=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=Oqy4HEiiDf5PpRmDVBYFZk9r3Wz8FUdG1EpyKV92u3Jn1q2QJJCFNL1+70duPRM48y+SE/vLCHhOlHcrknqMJ6GfNHmjNzWiqY47b3IMXs+WxJM5lKoyTA7R5xeBIhHMOoqk2ybsIjw32Vh1h/gFEBMbmOoan0F2VTYxJbhgNKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bTYqouWs; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=VolgSsTr29KupfMoGRD/zG1cjphz0maLU++ZdLhhFcPZinuQ+vRRsp7FlFuZF7UpHPjzxbibH6YlEc3V4k+K6XOeYemCtJTjqhhBg5hoi0TffGzBONah+xi5s5/8mJkrBPe0McvNk+bad25IbLhbsg4Pru6cxTzlMv884cMwB1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YXeqqu1/; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bTYqouWs"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6886cd07673so54767687b3.3
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXeqqu1/"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6d4daca4a4bso12685037b3.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725087877; x=1725692677; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725087880; x=1725692680; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hMHouUPm/pUbpqXHpAwu3f/Ggg/o8qY6+an2XmPnD00=;
-        b=bTYqouWsvhPu/wRbjJDDrLM9vx9g9U/ljPv/SCltgoZKaAKi9laHtmCY+8CDdKyD4q
-         XHWJirKM6rruYrjRN21+5Hspl5xvaj3LBov1vfCJf56i5mXwFtqS+7occ5upO0oS23N8
-         mvz3bQ8eORRS44ip3EGyxG6JCTYBMshOkeYeiVLPEIcdOy6xAGDI0K7hTFCQVeBEuNcG
-         i6OEMlglaoj3p1jmRuPGkA4bwYnHmICnib5Qit2pr4VkY9onSo0EIxDwzFa0F48cyTKc
-         kKFN6MGYqVpDChUF2O1i0P1dN27rTISoK8kNH2JMXXh6w+zHA91chg2V0Sdjp/t0KwhY
-         Efhg==
+        bh=J5+jy8suatSYU8agZ+1zFUqOrIedBbY+ji9A0DmCUwg=;
+        b=YXeqqu1/T7EB5q0Xc87ElZRffeI9/OqXF2z6+sv10twgx0LlS2FzfyLNqAb7runij4
+         LU/YsVB9jIQMI/tG5y8ZR/OjQWwJaue32N12goBcQxD82fTCF8hrv5a/3u4oGfnSIqoU
+         yS6Yp4B/hKjft/JeJbQiAdetOLqgTqJ6IVz+/i1VOexTsqs4KCm/iXv3w7HXWKJVAzqo
+         E4K/yNQy559qDdX6BkXYGBZyy/5lJSFR9FI4NU6vdWYpxyRFgoUWzvu1nQvrO/B5RspJ
+         /KSM9ehFLRqMx2z8vD+rONSrlz6hUc0nGkFBcIsjtCJ3k4cK0WlKcrEeq7vj+PXaL4Kf
+         WD7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725087877; x=1725692677;
+        d=1e100.net; s=20230601; t=1725087880; x=1725692680;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hMHouUPm/pUbpqXHpAwu3f/Ggg/o8qY6+an2XmPnD00=;
-        b=YzH1feOUCqvs4fcHa55kr4/gCdCJE2MGnK72OmYFRdZj58jpbgWz9XbP0LMWF8Nrww
-         vbnYQh6p6BDpcO9OEET31xlEbUCVkW4NJbONcYwTkCRUcWF+3OsbivIIIiS8OE0amaoe
-         MAKFa5rut2Jvigr1WlWIzWuwKLP4bkwwctxIvJcM57TkMQEAI5EnxEtf7E+cCD/HO8r8
-         WynJEkoG8nrc4SEJiEsnjtkLaVS4tkucw2eB0Y7jrXhpGtKKEoeTVJ4ctZi6L4oo0Y9M
-         v3xK5jNym2eS6fIhktmSIVKFe74KgRRaXiB3XSCC35hCYcWgcgP/qqvVO1As229DwHJh
-         V/yQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUHpoE5XwN/Qzk15Q5glesHWgBWNia7TWnuz+S7b5oUOD8svDXLN7VSTCPnFFZjp/H/DOp9kEj3ViuBDL4stoVN@vger.kernel.org
-X-Gm-Message-State: AOJu0YysTlKSU40QE3GyLoqfocuDQqmzkbSZMfwn+15bNlVG2qEJ2u+T
-	vQ8Axl7SwvtEfz+86aX2GZebLjEz90/IHUOOha3sIFbZFtA/tcowpP83iVs4StYqaPwIGBA0GYf
-	LZajNxQ==
-X-Google-Smtp-Source: AGHT+IEQRxwFyMDSw6Mj2d4DGqVL/glGW1ecwaCsu3ve2y6MdyDP3o6KRg8tCHoQeSLhIeD+/Ar8hkGrgI+x
+        bh=J5+jy8suatSYU8agZ+1zFUqOrIedBbY+ji9A0DmCUwg=;
+        b=Rhy+0yW4oMq93AgItTdPKEkDB36WQmjYunHNzAFbuaByRPpxQNkJMg8FtjabkPVQDF
+         jWeVKAHfqikZBb76qOJI5FekxoOSg+lqYoZkFtfg+Hzos1I2JZB6YAWJMqhERRgkBeAl
+         BV/QUSNi3JV0J6P7fg+XKV53Va9mhJu5g6ufOcZG1WuZ7y/FcKHjjd3GA6enRrC06elh
+         1IFBZ1qhXS5sc1Z5AhiZ0U3u3SnnlsDsUz/TmRnnFDVDHy6neb6tdfIio88cz8gVb9/f
+         S6BH/XUJpF4ZBeFeK41DeejvwfUM2RmpgmYnw57F5/7oAQYoVPoVmkiMwxplnJ2y8qdQ
+         ZYzg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsuGVceft1NPvHd3lDLKLa9W17wqnxYTwhq2ZXepuvJDTvN86EEsclE5e58j/ZJOZDTinM0QG9tnC60FQ414Sr@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXfqRj/P7ZxmQ4fH0YqeBdfzoYLluEpnmRD3aFIvLi8F5lNygs
+	P2TqX42vobDI1rUr3+dw4PRUZE1hsw4IhgKWp0Fb9x1Byd54VfO5jaxMp6CCQbHbsa1dVWB71Ru
+	QajB1BQ==
+X-Google-Smtp-Source: AGHT+IG1XD+JUjlCpgglYclPZZLQJ4BWz+jqR+qm5DgB0ka+M75PUfqNm5Cwbhc6EFTAGgHWlo8uxtzePXRt
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4974:82ff:2f9:edb6])
- (user=irogers job=sendgmr) by 2002:a5b:1:0:b0:e0e:8b26:484e with SMTP id
- 3f1490d57ef6-e1a7a176b02mr7463276.8.1725087877533; Sat, 31 Aug 2024 00:04:37
+ (user=irogers job=sendgmr) by 2002:a05:6902:281:b0:e11:757f:30af with SMTP id
+ 3f1490d57ef6-e1a5c85d46amr83900276.3.1725087879809; Sat, 31 Aug 2024 00:04:39
  -0700 (PDT)
-Date: Sat, 31 Aug 2024 00:04:14 -0700
+Date: Sat, 31 Aug 2024 00:04:15 -0700
 In-Reply-To: <20240831070415.506194-1-irogers@google.com>
-Message-Id: <20240831070415.506194-6-irogers@google.com>
+Message-Id: <20240831070415.506194-7-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,8 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240831070415.506194-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Subject: [PATCH v1 5/6] perf parse-events: Vary default_breakpoint_len on i386
- and arm64
+Subject: [PATCH v1 6/6] perf test: Make watchpoint data 32-bits on i386
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -77,54 +76,31 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-On arm64 the breakpoint length should be 4-bytes but 8-bytes is
-tolerated as perf passes that as sizeof(long). Just pass the correct
-value.
-
-On i386 the sizeof(long) check in the kernel needs to match the
-kernel's long size. Check using an environment (uname checks) whether
-4 or 8 bytes needs to be passed. Cache the value in a static.
+i386 only supports watchpoints up to size 4, 8 bytes causes extra
+counts and test failures.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/util/parse-events.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ tools/perf/tests/wp.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index dfb951bb184b..c7fe8b4167d7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -8,6 +8,7 @@
- #include <sys/ioctl.h>
- #include <sys/param.h>
- #include "term.h"
-+#include "env.h"
- #include "evlist.h"
- #include "evsel.h"
- #include <subcmd/parse-options.h>
-@@ -672,7 +673,22 @@ static int add_tracepoint_multi_sys(struct parse_events_state *parse_state,
+diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
+index cc8719609b19..6c178985e37f 100644
+--- a/tools/perf/tests/wp.c
++++ b/tools/perf/tests/wp.c
+@@ -20,7 +20,12 @@ do {                                            \
+ 	TEST_ASSERT_VAL(text, count == val);    \
+ } while (0)
  
- int default_breakpoint_len(void)
- {
-+#if defined(__i386__)
-+	static int len;
-+
-+	if (len == 0) {
-+		struct perf_env env = {};
-+
-+		perf_env__init(&env);
-+		len = perf_env__kernel_is_64_bit(&env) ? sizeof(u64) : sizeof(long);
-+		perf_env__exit(&env);
-+	}
-+	return len;
-+#elif defined(__aarch64__)
-+	return 4;
++#ifdef __i386__
++/* Only breakpoint length less-than 8 has hardware support on i386. */
++volatile u32 data1;
 +#else
- 	return sizeof(long);
+ volatile u64 data1;
 +#endif
- }
+ volatile u8 data2[3];
  
- static int
+ #ifndef __s390x__
 -- 
 2.46.0.469.g59c65b2a67-goog
 
