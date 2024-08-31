@@ -1,63 +1,66 @@
 Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8F93D8E
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CD7916D4FF
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725087868; cv=none; b=dzuBtfiyfvGikqDNZBbkCQOFRCXfofR+6gTBl6VQl+F0uVPAOcJ15NtZ6DWcm3IAQ3zribWF7v2SYDnwadKZ8Vx0WuTlF3Dj8/5LGpWRwY5yboxMFXBquwN0yFW3WB15TO52iLd9NdStmNU/81DDmnB2C0Rys1mV0wQlE47E/bw=
+	t=1725087870; cv=none; b=g2jvkdnte/sssbz64NxcbsTuRJXRHn9iq1wH2t/XuhEzH1sTe3JSdC4+wx/+BcPjKw2xVzjOWIGgsbsyr+jBkf1oydouzVlOQH1Dxs/493FjjrNU+hRUq+JPJJM/cGNuwD36rSpjaZdGkMDRxpRo8AAysINX9oUqj5BpUGRzdu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725087868; c=relaxed/simple;
-	bh=XVNfhs0bK32n2PUsqr3Dy1HmPIqiOmkZ0KlzLN1Y2bI=;
-	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=gP9IWzn903m2n+yrDCsszhKjwLXF/AEnjRMt5MHnVbP3CqwEk0R7VK8FJjFa/8gpWlb5ZSPGtKmy5634B+istJMNBZSksM0O6qIJMe6BOwhA62+lKqD5++Di5FeUguhvzoQGQYjk7H3OUyl4IsoDZfkig0e8aSXVrYwfJm+wNxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Q2XQ2XX; arc=none smtp.client-ip=209.85.219.202
+	s=arc-20240116; t=1725087870; c=relaxed/simple;
+	bh=e7twF7D4RZxswFbYZbFUFk/hv4Xp6qmoMYXmywlWvMQ=;
+	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
+	 To:Content-Type; b=LhLrgj6g2ldnXb4/9/O7601yvjBIN2ZxBBNzLSlqoUfDyo05W+4ushulluYi6HTULfLKNr1uR2cz6j/93cQBGJ1I/nsLGOiH436FRoJg1NWBE/Gg/QKbwI7vgdT4vlcA1wrC5ZGsLb9JvXgPv7ooyhNJIxeWrTsUMXLDOk9bja4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LO55cXUg; arc=none smtp.client-ip=209.85.219.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Q2XQ2XX"
-Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0b8fa94718so4432339276.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LO55cXUg"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e1a8de19f5fso905236276.3
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725087866; x=1725692666; darn=vger.kernel.org;
-        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Yix+TBZPkXSa49ue1ChfBQwhkMaD26rQNK5r6EhEs+8=;
-        b=1Q2XQ2XXs4Wwe8kHtQTTeibT2lNIs6kK7/cAcmYTEf546xE3Og448m5RUdTkyzn49T
-         LhSgwJS28adATwR4Nrgf62yzVJZWziNThD01jftL3aTkRrbm58QGaaAI+LjOztviC61y
-         QiIfKzSMTzc52satrat2ktShRgEQwxcsyE5TAVVxdnshRRWRgkoCDjZD9pJq8hcPc9wH
-         0uP8mY78W+qU1i3jZAsTLHAGl5Th9RjmnsjWPCP/2uVgRB0MEwWEdAKJneypu/fR5PBh
-         bYu/kQ9h7T0HOs5ZFU6vBDnobauIYQqdtoAJx8t1D0jMmnUKe8iVf02VosXscexYMPSX
-         y/8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725087866; x=1725692666;
-        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+        d=google.com; s=20230601; t=1725087868; x=1725692668; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Yix+TBZPkXSa49ue1ChfBQwhkMaD26rQNK5r6EhEs+8=;
-        b=SRPkEKYrxD3eSBJhQ0vjKObyGzH9ochkuv+JI8upisWKI8RYx14WVc2/YJ4cpsa76r
-         /izEAPB51FStWOntNgBCo2IXB6dP8QEYwHELU91+/mIjdgEwzNKQi1t581s7NApR9EeX
-         Xsvllk2jOBfnl/SPiCA9nFT+v8WZvsMjysJQz1NAiwIWXbBr9M+P5vzI6loUfgwwRmgW
-         yqupdtfzdKRW68Jbn6/h8KfcVOeW54Td14OiBzB6npywNBdZruJjejSPo19uHKVd0yup
-         sHs1W92vFoCJVRZSCOkViY3ou7+PLLVOYdLhfZH3/St28BNN3T1qxc+rxrOunEl+RgKL
-         D/ig==
-X-Forwarded-Encrypted: i=1; AJvYcCW341i+D8lf9SarYBwoYjA4Cgr4KKSTIuCc07G1BSd556817S8VCLBYQ2xsYW6ZeYsZRE7/P6z8y5v7wV3A0J5w@vger.kernel.org
-X-Gm-Message-State: AOJu0YyK5wAflTBCDIoeA33WveWSOV3NY83GecAFtjRGkYvPGSdd1nof
-	9ujSG8gUOTWL+b212wMxmFTHy/M0bjjHVYUI+q3NmBAoTZJ/BD2jOEATk662xVP924ndgX7ml8A
-	BtXfPCA==
-X-Google-Smtp-Source: AGHT+IFSQlqCaooK8EKm3oSpG167pQvMkiIAlIb5MBJCP0D74T3jspayC9ArNyHScKXixrYOkTzvSYAFVc0S
+        bh=5JYnw2dXbPbmg3NZBXlioPl/0JNNRzqtalz3T5B9FgQ=;
+        b=LO55cXUgFO9f58d+MRZBv35n+pVpR4useOAwGWcn4XVMrfJ8WO68IMzmTp/mwhEQ1j
+         DVJnHRgINOkZzRHLj3/vZMrvyehKlklGgM6RM51XfUZYgueanx3MH8RUvta3/4VznHMW
+         Xi6u4vt8Z9VK68MQz9VB7N5Mey01XmlxOA1tlYUNQBcE0tzzypC9hh3zULKpB26GRvfJ
+         vdifa/S9P1AT8nCiIsLZJkwuqqtWzmzxvTNciNxHYICCf9W+/PyyIWUBgJZ8Cryqb5ZG
+         I7P3fsSkwIlU9Qe+vKbhMPYHV1BGVoIW0skCWEFXkTs7HjNJPwxnmZQQxw64enOVfGqI
+         Ulmw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725087868; x=1725692668;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5JYnw2dXbPbmg3NZBXlioPl/0JNNRzqtalz3T5B9FgQ=;
+        b=YQ4zdGVMRzMJsktck/nXpw0r5keqthuyIdfek0DxIRCto8BciIGVLI5nJk535l/K1l
+         7MPI35ssLwwouNH9bKgdwpSMzJH4Ukym4nuGlIHTpUDIBPwCcdwfe9c4pcNQVT/Giqoi
+         yL69MmjYXhU5kYrXmb1rXQysSSoqwCWrbzhRRyvUuotYc6lboFJyiDJEgRxvr/wR512f
+         PuzWLlhx9ctRnfXGi8hMHj1oGQyI93F5zljQuCrBN7GriHqlZnAxzuK/SzSwvVq2T9aq
+         vUnvh0kuoTF2+cbWoOq8xCu0GZaoC7+OhLik2+2DYgYPKN3VJeN9G0FcilhP9/xwXpYT
+         KZnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUPHPV45U3FB1JnaQgtSagkS/crOHPBewD9TOQX3P8soqiuSWEyWTdmW6cGyIkUhUOuQKRgqkjSBVM16Pz/w679@vger.kernel.org
+X-Gm-Message-State: AOJu0YwLd0s2NbHnIvZbLr382BgjXc5jWs4WG7Q2UWShFBEowe2U8lfU
+	9oL6Ymtat+CryRecjOjYP+GuIY4BRBVTORGpPoQsMS7QygQFQDkLPieBauswuqVmysakgidMKC4
+	Q7mA34A==
+X-Google-Smtp-Source: AGHT+IGdUhZFJPlK/Qxv//Vm6pYoy9bw5mKZTru8Hmeo9HYUH5eUEev/E5gQd0OB4l5BuG8DCERNpBMJv/70
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4974:82ff:2f9:edb6])
- (user=irogers job=sendgmr) by 2002:a05:6902:18d5:b0:e05:fb86:1909 with SMTP
- id 3f1490d57ef6-e1a7a1a339bmr674564276.6.1725087866165; Sat, 31 Aug 2024
- 00:04:26 -0700 (PDT)
-Date: Sat, 31 Aug 2024 00:04:09 -0700
-Message-Id: <20240831070415.506194-1-irogers@google.com>
+ (user=irogers job=sendgmr) by 2002:a25:6883:0:b0:e17:c4c5:bcb2 with SMTP id
+ 3f1490d57ef6-e1a7a1a6710mr228774276.7.1725087868388; Sat, 31 Aug 2024
+ 00:04:28 -0700 (PDT)
+Date: Sat, 31 Aug 2024 00:04:10 -0700
+In-Reply-To: <20240831070415.506194-1-irogers@google.com>
+Message-Id: <20240831070415.506194-2-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
+References: <20240831070415.506194-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Subject: [PATCH v1 0/6] Various 32-bit and test fixes
+Subject: [PATCH v1 1/6] perf pmus: Fix name comparisons on 32-bit systems
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,43 +76,40 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Running `perf test` as an i386 executable yielded a number of
-failures, some of which are addressed here.
+The hex PMU suffix maybe 64-bit but the comparisons were "unsigned
+long" or 32-bit on 32-bit systems. This was causing the "PMU name
+comparison" test to fail in a 32-bit build.
 
-The first 2 are straightforward use strtoull issues when parsing a
-64-bit quantity in 32-bit land.
+Signed-off-by: Ian Rogers <irogers@google.com>
+---
+ tools/perf/util/pmus.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-The 3rd patch just avoids a fail when `perf probe` isn't compiled in
-(in my case as LIBELF wasn't present).
-
-The 4th and 5th cases fix the breakpoint length, on i386 so the
-sizeof(long) used matches the kernel's sizeof(long). On aarch64 the
-value is change to 4 instead of sizeof(long), ie 8, as future kernels
-may make 8 an invalid argument.
-
-The final change addresses i386 watchpoint support not supporting
-8-byte values.
-
-Ian Rogers (6):
-  perf pmus: Fix name comparisons on 32-bit systems
-  perf time-utils: Fix 32-bit nsec parsing
-  perf test: Skip uprobe test if probe command isn't present
-  perf parse-events: Add default_breakpoint_len helper
-  perf parse-events: Vary default_breakpoint_len on i386 and arm64
-  perf test: Make watchpoint data 32-bits on i386
-
- tools/perf/tests/bp_account.c                 |  4 +++-
- tools/perf/tests/bp_signal.c                  |  3 ++-
- tools/perf/tests/bp_signal_overflow.c         |  3 ++-
- tools/perf/tests/parse-events.c               |  3 ++-
- .../shell/test_uprobe_from_different_cu.sh    |  7 ++++++
- tools/perf/tests/wp.c                         |  5 ++++
- tools/perf/util/parse-events.c                | 23 ++++++++++++++++++-
- tools/perf/util/parse-events.h                |  2 ++
- tools/perf/util/pmus.c                        |  6 ++---
- tools/perf/util/time-utils.c                  |  4 ++--
- 10 files changed, 50 insertions(+), 10 deletions(-)
-
+diff --git a/tools/perf/util/pmus.c b/tools/perf/util/pmus.c
+index 3fcabfd8fca1..769b920d9250 100644
+--- a/tools/perf/util/pmus.c
++++ b/tools/perf/util/pmus.c
+@@ -69,7 +69,7 @@ size_t pmu_name_len_no_suffix(const char *str)
+ 
+ int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name)
+ {
+-	unsigned long lhs_num = 0, rhs_num = 0;
++	unsigned long long lhs_num = 0, rhs_num = 0;
+ 	size_t lhs_pmu_name_len = pmu_name_len_no_suffix(lhs_pmu_name);
+ 	size_t rhs_pmu_name_len = pmu_name_len_no_suffix(rhs_pmu_name);
+ 	int ret = strncmp(lhs_pmu_name, rhs_pmu_name,
+@@ -79,9 +79,9 @@ int pmu_name_cmp(const char *lhs_pmu_name, const char *rhs_pmu_name)
+ 		return ret;
+ 
+ 	if (lhs_pmu_name_len + 1 < strlen(lhs_pmu_name))
+-		lhs_num = strtoul(&lhs_pmu_name[lhs_pmu_name_len + 1], NULL, 16);
++		lhs_num = strtoull(&lhs_pmu_name[lhs_pmu_name_len + 1], NULL, 16);
+ 	if (rhs_pmu_name_len + 1 < strlen(rhs_pmu_name))
+-		rhs_num = strtoul(&rhs_pmu_name[rhs_pmu_name_len + 1], NULL, 16);
++		rhs_num = strtoull(&rhs_pmu_name[rhs_pmu_name_len + 1], NULL, 16);
+ 
+ 	return lhs_num < rhs_num ? -1 : (lhs_num > rhs_num ? 1 : 0);
+ }
 -- 
 2.46.0.469.g59c65b2a67-goog
 
