@@ -1,147 +1,115 @@
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-yb1-f202.google.com (mail-yb1-f202.google.com [209.85.219.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45BF822EED
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 04:31:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C8F93D8E
+	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725078710; cv=none; b=hH9JQjpYmT0fbAYt0+ALcH1EooWU54WX34e9PE1XSqJKUKiElfsXxIE/GhQw2WzI1/NaaZKfe0wNm52rsSduQzf8LzywZwpJs1UJ6tt2SllblR43sQSLdO4gDea4VOXf1UjlAj0sQg+KRJj3iOFBQxRgcYfJztpRhrx7/B+/jFM=
+	t=1725087868; cv=none; b=dzuBtfiyfvGikqDNZBbkCQOFRCXfofR+6gTBl6VQl+F0uVPAOcJ15NtZ6DWcm3IAQ3zribWF7v2SYDnwadKZ8Vx0WuTlF3Dj8/5LGpWRwY5yboxMFXBquwN0yFW3WB15TO52iLd9NdStmNU/81DDmnB2C0Rys1mV0wQlE47E/bw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725078710; c=relaxed/simple;
-	bh=8GBs99s2ipPdDYyn7Cp9pfYjyv56y3V4qn3Ysb2DMbE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=kTlEz/qjy7ozr798RX7n9RnUKPl4zNRQWf8uF3/u76mSomzXXChP5iyoI3Dl9CEBnZAAUok9y2NAgXh5/KxNbfLcRQDl9c4UFDKJ2vZfi04XEQsDeVuufpldZ42XGujZMDqIvTLy4X0K0V4/vRVgspocPQSiz5W4wEg+hzDmjhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=JE9jIcxT; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	s=arc-20240116; t=1725087868; c=relaxed/simple;
+	bh=XVNfhs0bK32n2PUsqr3Dy1HmPIqiOmkZ0KlzLN1Y2bI=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=gP9IWzn903m2n+yrDCsszhKjwLXF/AEnjRMt5MHnVbP3CqwEk0R7VK8FJjFa/8gpWlb5ZSPGtKmy5634B+istJMNBZSksM0O6qIJMe6BOwhA62+lKqD5++Di5FeUguhvzoQGQYjk7H3OUyl4IsoDZfkig0e8aSXVrYwfJm+wNxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=1Q2XQ2XX; arc=none smtp.client-ip=209.85.219.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="JE9jIcxT"
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-7143165f23fso2097526b3a.1
-        for <linux-perf-users@vger.kernel.org>; Fri, 30 Aug 2024 21:31:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="1Q2XQ2XX"
+Received: by mail-yb1-f202.google.com with SMTP id 3f1490d57ef6-e0b8fa94718so4432339276.0
+        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1725078708; x=1725683508; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=AqHseBOIrzbXPNScCBf/4rC10NMVAn6bCAlgVTHbNrA=;
-        b=JE9jIcxTZNZUp8bLJ+dYTdih8LaY4U+cPxkwZzMdZhOrWQ+lJMittwGgnoUxBAm37d
-         ReGh0jUWZSXcw5rgQg2LW9r8iG8ZnpwjLZqs/CQfFDmedywH5IqPLQHvuOaLD9WYs7b2
-         +VHhLl898m8KN37dS9NflJBvp4mniv65Bef+SyxBwBh5ikKXhFH1GLVON30g8eSbxr8D
-         DO6+4ss3I2cQEXdaSr47NKb/fbf2HX57Z97GEFoHOb5mzEhk98YAxtLK/xWFkWR6vInI
-         uWoFNi6SOlTmjUxXqy5bFy1P3aXNxXzUevUrzng6ymkjDHVmgQY5FCP0X9J2D/jCY8JY
-         EELg==
+        d=google.com; s=20230601; t=1725087866; x=1725692666; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Yix+TBZPkXSa49ue1ChfBQwhkMaD26rQNK5r6EhEs+8=;
+        b=1Q2XQ2XXs4Wwe8kHtQTTeibT2lNIs6kK7/cAcmYTEf546xE3Og448m5RUdTkyzn49T
+         LhSgwJS28adATwR4Nrgf62yzVJZWziNThD01jftL3aTkRrbm58QGaaAI+LjOztviC61y
+         QiIfKzSMTzc52satrat2ktShRgEQwxcsyE5TAVVxdnshRRWRgkoCDjZD9pJq8hcPc9wH
+         0uP8mY78W+qU1i3jZAsTLHAGl5Th9RjmnsjWPCP/2uVgRB0MEwWEdAKJneypu/fR5PBh
+         bYu/kQ9h7T0HOs5ZFU6vBDnobauIYQqdtoAJx8t1D0jMmnUKe8iVf02VosXscexYMPSX
+         y/8w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725078708; x=1725683508;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=AqHseBOIrzbXPNScCBf/4rC10NMVAn6bCAlgVTHbNrA=;
-        b=hgCM83Tz8qsye37JeAHnMwQ4UPG4T663LxKeQhUFQdEheGcPymyKdyBDipvkaU/S5m
-         d650UlnCIbuWruSEps/lIxGRdQVmER460dOX5Vd3c3QGNowbvdxgn6MsRUjRtKtcBODo
-         tACNqKUU1gRTn0iqSIzmuPU299Ds2qNI2j7EtZ7nxBfDK7QegC8mzPy9XVGNFSqlpa8Z
-         LbQ+p/kEInO8k07q0Is0Lgq21+7OgUH4aGtHapFqQkZdWBWEA1Rsss/NQCbB+kpjRn0M
-         YhrRXHFPo5SGBtPlCtm1uiDCrDL8xMvPrCjMbB92+2cLZeQAhOQ/KGEgqJ89T2RfehwQ
-         CeqA==
-X-Gm-Message-State: AOJu0YydSaTjc7UKvTB41qX0fIcz7kKK2QYuO5sApAq2eB3W/UvJCbcY
-	d9XVSMJaNQ1RU8Ih57A88wYweGeOOZgHVc6rgTKWHMV0upQbKlBJb3ZME2WAizQ=
-X-Google-Smtp-Source: AGHT+IEVfVxTh9O/Prc9cqZKqT7+Ms4R+Qe/6R5MqTusHWzC77xL8vi5tuVksIYgreLjKfHXmdGvfg==
-X-Received: by 2002:a05:6a00:4f93:b0:70d:11d9:8a3c with SMTP id d2e1a72fcca58-7173c5c237emr1446912b3a.26.1725078708306;
-        Fri, 30 Aug 2024 21:31:48 -0700 (PDT)
-Received: from charlie.ba.rivosinc.com ([64.71.180.162])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-715e55771fesm3499773b3a.23.2024.08.30.21.31.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Aug 2024 21:31:47 -0700 (PDT)
-From: Charlie Jenkins <charlie@rivosinc.com>
-Date: Fri, 30 Aug 2024 21:30:50 -0700
-Subject: [PATCH] perf syscalltbl: Add syscalltbl__id_at_idx() with no
- syscall table support
+        d=1e100.net; s=20230601; t=1725087866; x=1725692666;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Yix+TBZPkXSa49ue1ChfBQwhkMaD26rQNK5r6EhEs+8=;
+        b=SRPkEKYrxD3eSBJhQ0vjKObyGzH9ochkuv+JI8upisWKI8RYx14WVc2/YJ4cpsa76r
+         /izEAPB51FStWOntNgBCo2IXB6dP8QEYwHELU91+/mIjdgEwzNKQi1t581s7NApR9EeX
+         Xsvllk2jOBfnl/SPiCA9nFT+v8WZvsMjysJQz1NAiwIWXbBr9M+P5vzI6loUfgwwRmgW
+         yqupdtfzdKRW68Jbn6/h8KfcVOeW54Td14OiBzB6npywNBdZruJjejSPo19uHKVd0yup
+         sHs1W92vFoCJVRZSCOkViY3ou7+PLLVOYdLhfZH3/St28BNN3T1qxc+rxrOunEl+RgKL
+         D/ig==
+X-Forwarded-Encrypted: i=1; AJvYcCW341i+D8lf9SarYBwoYjA4Cgr4KKSTIuCc07G1BSd556817S8VCLBYQ2xsYW6ZeYsZRE7/P6z8y5v7wV3A0J5w@vger.kernel.org
+X-Gm-Message-State: AOJu0YyK5wAflTBCDIoeA33WveWSOV3NY83GecAFtjRGkYvPGSdd1nof
+	9ujSG8gUOTWL+b212wMxmFTHy/M0bjjHVYUI+q3NmBAoTZJ/BD2jOEATk662xVP924ndgX7ml8A
+	BtXfPCA==
+X-Google-Smtp-Source: AGHT+IFSQlqCaooK8EKm3oSpG167pQvMkiIAlIb5MBJCP0D74T3jspayC9ArNyHScKXixrYOkTzvSYAFVc0S
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4974:82ff:2f9:edb6])
+ (user=irogers job=sendgmr) by 2002:a05:6902:18d5:b0:e05:fb86:1909 with SMTP
+ id 3f1490d57ef6-e1a7a1a339bmr674564276.6.1725087866165; Sat, 31 Aug 2024
+ 00:04:26 -0700 (PDT)
+Date: Sat, 31 Aug 2024 00:04:09 -0700
+Message-Id: <20240831070415.506194-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240830-perf_syscalltbl_fix-v1-1-e2ff61ee5e8e@rivosinc.com>
-X-B4-Tracking: v=1; b=H4sIAHmc0mYC/x2MWwqAIBAArxL7nWCmva4SET3WWpAKN6KQ7p70O
- QMzARg9IUOTBPB4EdO+RcjSBKZ12BYUNEcGJZWWVS7Fgd72/PA0OHeOrrd0C21NVSiVlbVBiOX
- hMer/2nbv+wF4IT/dZQAAAA==
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
+Subject: [PATCH v1 0/6] Various 32-bit and test fixes
+From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
- Howard Chu <howardchu95@gmail.com>, 
- David Abdurachmanov <davidlt@rivosinc.com>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-riscv@lists.infradead.org, Charlie Jenkins <charlie@rivosinc.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2359; i=charlie@rivosinc.com;
- h=from:subject:message-id; bh=8GBs99s2ipPdDYyn7Cp9pfYjyv56y3V4qn3Ysb2DMbE=;
- b=owGbwMvMwCHWx5hUnlvL8Y3xtFoSQ9qlOctkYh0Znr6aWvI29F6U4mHlKgM9q29fumd7HJn77
- t43zz7TjlIWBjEOBlkxRRaeaw3MrXf0y46Klk2AmcPKBDKEgYtTACaSHcrIMHGKn92tI1wdidmn
- Jk1P7sj5X/zXNfdBvfqcRXoncpf7mzP8d+O2CH2zvvvERUXZ6Y43qnpO+r6dpDv5w7t4ryp96XB
- lfgA=
-X-Developer-Key: i=charlie@rivosinc.com; a=openpgp;
- fpr=7D834FF11B1D8387E61C776FFB10D1F27D6B1354
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
+	Dominique Martinet <asmadeus@codewreck.org>, Yang Jihong <yangjihong@bytedance.com>, 
+	Colin Ian King <colin.i.king@gmail.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
+	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
+	John Garry <john.g.garry@oracle.com>, Junhao He <hejunhao3@huawei.com>, 
+	David Ahern <dsa@cumulusnetworks.com>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When HAVE_SYSCALL_TABLE_SUPPORT is not defined, neither is
-syscalltbl__id_at_idx(). However, this function is expected to be
-defined when HAVE_BPF_SKEL is defined.
+Running `perf test` as an i386 executable yielded a number of
+failures, some of which are addressed here.
 
-Return -1 from syscalltbl__id_at_idx() to match the other functions when
-HAVE_SYSCALL_TABLE_SUPPORT is not defined.
+The first 2 are straightforward use strtoull issues when parsing a
+64-bit quantity in 32-bit land.
 
-Without this, compiling perf on riscv when libtraceevents, libelf, and
-clang are available will cause the functions trying to call
-syscalltbl__id_at_idx() to be compiled. This results in the following
-error:
+The 3rd patch just avoids a fail when `perf probe` isn't compiled in
+(in my case as LIBELF wasn't present).
 
-/usr/bin/ld: perf-in.o: in function `.L0 ':
-builtin-trace.c:(.text+0x60b14): undefined reference to `syscalltbl__id_at_idx'
-/usr/bin/ld: builtin-trace.c:(.text+0x60c6c): undefined reference to `syscalltbl__id_at_idx'
-/usr/bin/ld: perf-in.o: in function `.L2564':
-builtin-trace.c:(.text+0x60cb6): undefined reference to `syscalltbl__id_at_idx'
-collect2: error: ld returned 1 exit status
-make[2]: *** [Makefile.perf:793: perf] Error 1
-make[1]: *** [Makefile.perf:290: sub-make] Error 2
-make: *** [Makefile:70: all] Error 2
-make: Leaving directory '/src/linux-6.11-rc5/tools/perf'
+The 4th and 5th cases fix the breakpoint length, on i386 so the
+sizeof(long) used matches the kernel's sizeof(long). On aarch64 the
+value is change to 4 instead of sizeof(long), ie 8, as future kernels
+may make 8 an invalid argument.
 
-This patch resolves this issue for all architectures which do not define
-HAVE_SYSCALL_TABLE_SUPPORT.
+The final change addresses i386 watchpoint support not supporting
+8-byte values.
 
-$ ./perf trace -e syscalls:sys_enter_mmap --max-events=1 ls
-0.000 ls/287 syscalls:sys_enter_mmap(__syscall_nr: 222, len: 9939, prot: READ, flags: PRIVATE, fd: 3)
+Ian Rogers (6):
+  perf pmus: Fix name comparisons on 32-bit systems
+  perf time-utils: Fix 32-bit nsec parsing
+  perf test: Skip uprobe test if probe command isn't present
+  perf parse-events: Add default_breakpoint_len helper
+  perf parse-events: Vary default_breakpoint_len on i386 and arm64
+  perf test: Make watchpoint data 32-bits on i386
 
-Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-Reported-by: David Abdurachmanov <davidlt@rivosinc.com>
-Suggested-by: David Abdurachmanov <davidlt@rivosinc.com>
-Fixes: 7a2fb5619cc1 ("perf trace: Fix iteration of syscall ids in syscalltbl->entries")
----
- tools/perf/util/syscalltbl.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/tests/bp_account.c                 |  4 +++-
+ tools/perf/tests/bp_signal.c                  |  3 ++-
+ tools/perf/tests/bp_signal_overflow.c         |  3 ++-
+ tools/perf/tests/parse-events.c               |  3 ++-
+ .../shell/test_uprobe_from_different_cu.sh    |  7 ++++++
+ tools/perf/tests/wp.c                         |  5 ++++
+ tools/perf/util/parse-events.c                | 23 ++++++++++++++++++-
+ tools/perf/util/parse-events.h                |  2 ++
+ tools/perf/util/pmus.c                        |  6 ++---
+ tools/perf/util/time-utils.c                  |  4 ++--
+ 10 files changed, 50 insertions(+), 10 deletions(-)
 
-diff --git a/tools/perf/util/syscalltbl.c b/tools/perf/util/syscalltbl.c
-index 0dd26b991b3f..12654460428f 100644
---- a/tools/perf/util/syscalltbl.c
-+++ b/tools/perf/util/syscalltbl.c
-@@ -188,4 +188,9 @@ int syscalltbl__strglobmatch_first(struct syscalltbl *tbl, const char *syscall_g
- {
- 	return syscalltbl__strglobmatch_next(tbl, syscall_glob, idx);
- }
-+
-+int syscalltbl__id_at_idx(struct syscalltbl *tbl __always_unused, int idx __always_unused)
-+{
-+	return -1;
-+}
- #endif /* HAVE_SYSCALL_TABLE_SUPPORT */
-
----
-base-commit: 985bf40edf4343dcb04c33f58b40b4a85c1776d4
-change-id: 20240830-perf_syscalltbl_fix-4f586221795e
 -- 
-- Charlie
+2.46.0.469.g59c65b2a67-goog
 
