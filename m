@@ -1,106 +1,102 @@
-Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7E6716DEB5
-	for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 07:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B098F14D28F;
+	Sat, 31 Aug 2024 07:37:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725087882; cv=none; b=d8BT6TyDU64UbCqPHqWloq4w+pKrrzfnbVNzFjMWG5+oCrki/n0FBJ0qakro5+PUv5ncS7SzZ1+gXtObpeOMZDa+t9TwMQj3CXCUgoMZklz6kp7IGOI8WOiTBla91zRk6HZ77B3C6WjYw4ZDFwaVQlu3BPg31Q9dnjKKBq0m9aA=
+	t=1725089881; cv=none; b=tvVM1kfZa62ZPAFVUJDw+2B7Qmoifm/KDW5iYu++xJSiVbz3ASvogXbbLXeMwDAf3TcKo9+LFq5cNl/kJZVlCNuGpyues/hy8vOdacwNfIwA5CjrOH+/dyDyp/L7/slEaYx3epd3ZgONq6LF6tlcuTRrfF76pOUTq6laJCl+Qms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725087882; c=relaxed/simple;
-	bh=Zzp47YpjJrlq/7aNuFnEG/sx74AzSK2oA4jiAlYD1m4=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=VolgSsTr29KupfMoGRD/zG1cjphz0maLU++ZdLhhFcPZinuQ+vRRsp7FlFuZF7UpHPjzxbibH6YlEc3V4k+K6XOeYemCtJTjqhhBg5hoi0TffGzBONah+xi5s5/8mJkrBPe0McvNk+bad25IbLhbsg4Pru6cxTzlMv884cMwB1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YXeqqu1/; arc=none smtp.client-ip=209.85.128.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YXeqqu1/"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6d4daca4a4bso12685037b3.0
-        for <linux-perf-users@vger.kernel.org>; Sat, 31 Aug 2024 00:04:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725087880; x=1725692680; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=J5+jy8suatSYU8agZ+1zFUqOrIedBbY+ji9A0DmCUwg=;
-        b=YXeqqu1/T7EB5q0Xc87ElZRffeI9/OqXF2z6+sv10twgx0LlS2FzfyLNqAb7runij4
-         LU/YsVB9jIQMI/tG5y8ZR/OjQWwJaue32N12goBcQxD82fTCF8hrv5a/3u4oGfnSIqoU
-         yS6Yp4B/hKjft/JeJbQiAdetOLqgTqJ6IVz+/i1VOexTsqs4KCm/iXv3w7HXWKJVAzqo
-         E4K/yNQy559qDdX6BkXYGBZyy/5lJSFR9FI4NU6vdWYpxyRFgoUWzvu1nQvrO/B5RspJ
-         /KSM9ehFLRqMx2z8vD+rONSrlz6hUc0nGkFBcIsjtCJ3k4cK0WlKcrEeq7vj+PXaL4Kf
-         WD7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725087880; x=1725692680;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=J5+jy8suatSYU8agZ+1zFUqOrIedBbY+ji9A0DmCUwg=;
-        b=Rhy+0yW4oMq93AgItTdPKEkDB36WQmjYunHNzAFbuaByRPpxQNkJMg8FtjabkPVQDF
-         jWeVKAHfqikZBb76qOJI5FekxoOSg+lqYoZkFtfg+Hzos1I2JZB6YAWJMqhERRgkBeAl
-         BV/QUSNi3JV0J6P7fg+XKV53Va9mhJu5g6ufOcZG1WuZ7y/FcKHjjd3GA6enRrC06elh
-         1IFBZ1qhXS5sc1Z5AhiZ0U3u3SnnlsDsUz/TmRnnFDVDHy6neb6tdfIio88cz8gVb9/f
-         S6BH/XUJpF4ZBeFeK41DeejvwfUM2RmpgmYnw57F5/7oAQYoVPoVmkiMwxplnJ2y8qdQ
-         ZYzg==
-X-Forwarded-Encrypted: i=1; AJvYcCWsuGVceft1NPvHd3lDLKLa9W17wqnxYTwhq2ZXepuvJDTvN86EEsclE5e58j/ZJOZDTinM0QG9tnC60FQ414Sr@vger.kernel.org
-X-Gm-Message-State: AOJu0YzXfqRj/P7ZxmQ4fH0YqeBdfzoYLluEpnmRD3aFIvLi8F5lNygs
-	P2TqX42vobDI1rUr3+dw4PRUZE1hsw4IhgKWp0Fb9x1Byd54VfO5jaxMp6CCQbHbsa1dVWB71Ru
-	QajB1BQ==
-X-Google-Smtp-Source: AGHT+IG1XD+JUjlCpgglYclPZZLQJ4BWz+jqR+qm5DgB0ka+M75PUfqNm5Cwbhc6EFTAGgHWlo8uxtzePXRt
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:4974:82ff:2f9:edb6])
- (user=irogers job=sendgmr) by 2002:a05:6902:281:b0:e11:757f:30af with SMTP id
- 3f1490d57ef6-e1a5c85d46amr83900276.3.1725087879809; Sat, 31 Aug 2024 00:04:39
- -0700 (PDT)
-Date: Sat, 31 Aug 2024 00:04:15 -0700
-In-Reply-To: <20240831070415.506194-1-irogers@google.com>
-Message-Id: <20240831070415.506194-7-irogers@google.com>
+	s=arc-20240116; t=1725089881; c=relaxed/simple;
+	bh=0t6r8K4+BuzINWItainCjUJV4Y8eunJfwWqFqylvwB8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=a9N85GHhiw+bI0Mc1pU4kkt8P4DxeM04vx35UlwbW5iNDtwdypglaCvS4IL5Op8uVUJaDz6dYrh7Gu1atvrNFfDBeHNMqkDUWxTgbxgRxUnYpWPRKcF+n4YukLr2gxAZgjq/v5Qe2lNt7ZC+Z1ObigU599OB6pnQgzig/Xq0Fvo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wwn152q39z4f3jjw;
+	Sat, 31 Aug 2024 15:37:45 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 7B27B1A12E5;
+	Sat, 31 Aug 2024 15:37:55 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.67.174.193])
+	by APP4 (Coremail) with SMTP id gCh0CgCXv4VQyNJmLLDdDA--.28814S4;
+	Sat, 31 Aug 2024 15:37:54 +0800 (CST)
+From: Luo Gengkun <luogengkun@huaweicloud.com>
+To: peterz@infradead.org
+Cc: mingo@redhat.com,
+	acme@kernel.org,
+	namhyung@kernel.org,
+	mark.rutland@arm.com,
+	alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org,
+	irogers@google.com,
+	adrian.hunter@intel.com,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org,
+	luogengkun@huaweicloud.com
+Subject: [PATCH v5 0/2] Fix perf adjust period algorithm
+Date: Sat, 31 Aug 2024 07:43:14 +0000
+Message-Id: <20240831074316.2106159-1-luogengkun@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20240831070415.506194-1-irogers@google.com>
-X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-Subject: [PATCH v1 6/6] perf test: Make watchpoint data 32-bits on i386
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Yang Jihong <yangjihong@bytedance.com>, 
-	Colin Ian King <colin.i.king@gmail.com>, Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>, James Clark <james.clark@linaro.org>, 
-	John Garry <john.g.garry@oracle.com>, Junhao He <hejunhao3@huawei.com>, 
-	David Ahern <dsa@cumulusnetworks.com>, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgCXv4VQyNJmLLDdDA--.28814S4
+X-Coremail-Antispam: 1UD129KBjvdXoWrKw47tFW7GrWxGr1rZr43Jrb_yoWkArgE9r
+	17AFy0kwn7WF40ga4IyF45tasYkrWUAr1FkF1UtryagwnFyry8GF4kJFyrArnxGa1FqryD
+	J3Z8ArnYvr1ayjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUd-B_UUUUU=
+X-CM-SenderInfo: 5oxrwvpqjn3046kxt4xhlfz01xgou0bp/
 
-i386 only supports watchpoints up to size 4, 8 bytes causes extra
-counts and test failures.
-
-Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/tests/wp.c | 5 +++++
- 1 file changed, 5 insertions(+)
+Changes in v5:
+1. Read the time once at the beginning instead of each loop
+2. Add reviewed by
+Link to v4: https://lore.kernel.org/all/20240821134227.577544-1-luogengkun@huaweicloud.com/
 
-diff --git a/tools/perf/tests/wp.c b/tools/perf/tests/wp.c
-index cc8719609b19..6c178985e37f 100644
---- a/tools/perf/tests/wp.c
-+++ b/tools/perf/tests/wp.c
-@@ -20,7 +20,12 @@ do {                                            \
- 	TEST_ASSERT_VAL(text, count == val);    \
- } while (0)
- 
-+#ifdef __i386__
-+/* Only breakpoint length less-than 8 has hardware support on i386. */
-+volatile u32 data1;
-+#else
- volatile u64 data1;
-+#endif
- volatile u8 data2[3];
- 
- #ifndef __s390x__
+Changes in v4:
+1. Rebase the patch 
+2. Tidy up the commit message
+3. Modify the code style
+Link to v3: https://lore.kernel.org/all/20240810102406.1190402-1-luogengkun@huaweicloud.com/
+
+Changes in v3:
+1. Replace perf_clock with jiffies in perf_adjust_freq_unthr_context
+Link to v2: https://lore.kernel.org/all/20240417115446.2908769-1-luogengkun@huaweicloud.com/
+
+Changes in v2:
+1. Add reviewed by for perf/core: Fix small negative period being ignored
+2. Add new patch perf/core: Fix incorrected time diff in tick adjust period
+Link to v1: https://lore.kernel.org/all/20240116083915.2859302-1-luogengkun2@huawei.com/
+---
+
+Luo Gengkun (2):
+  perf/core: Fix small negative period being ignored
+  perf/core: Fix incorrect time diff in tick adjust period
+
+ include/linux/perf_event.h |  1 +
+ kernel/events/core.c       | 18 ++++++++++++++----
+ 2 files changed, 15 insertions(+), 4 deletions(-)
+
 -- 
-2.46.0.469.g59c65b2a67-goog
+2.34.1
 
