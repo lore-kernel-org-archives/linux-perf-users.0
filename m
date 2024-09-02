@@ -1,46 +1,50 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36EEF382;
-	Mon,  2 Sep 2024 05:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0641842A9E;
+	Mon,  2 Sep 2024 07:51:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725254723; cv=none; b=Aomx3MY6J2aZdiaF1QU98HLeMJUNZ2i4UWFq1YygamoazDMfsVCim/9BqoLcxQgYNfHgMB//UIfph0BsFqdNbkvCT6gpTKzWH38BCbFxbatP35tKjYhSeeaVAVkLUD+ntI44Ry5daTxu3kzB+u0zI3D+40g+yOtHMXSSVQ7glCE=
+	t=1725263497; cv=none; b=bAJVsG3QiO7iJZcgNhCxkWv7yVwIy7O4ZN9f39lCDq+9QzVV7wbmXLciRqLerCDTDPBOUmB/x6h0jT0ZZArMzme8+gHBNTZeRjNc+QueUdURX5wD23V96URRw+SYwMt1dHw8fleNEH9M2NiIu6UqJWaUw8jCRYMs0Gi+gPJdYlw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725254723; c=relaxed/simple;
-	bh=0UEugsHaHTIIBze8ZhMsvGgEDYyHs4eEbl2x1MZTfyk=;
+	s=arc-20240116; t=1725263497; c=relaxed/simple;
+	bh=9egc8bzS4xp559knJ0MSFXZijI3tK94YnswRk3BODsA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nQ8QAo1BtQ09s/buKBcjTE0yD/2U6/EBVKT7XfVxSzY10pGq/v3iDMtNd5c4V8jaDX4QACd12Of+YNJvqKIuLDX6jTZEXMqA58XMRBTn4qdtdKXHUTWtd1cOOY8LLQoXxs4WqIqQRTz0lKwhLOmDRZS46Pzz2tLzYOYATJb+Rzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-53346132348so4738320e87.2;
-        Sun, 01 Sep 2024 22:25:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725254720; x=1725859520;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9g7m3dcp33M2h8ZbP0cmHo9kPQpGKFN1tV81kjzpYoc=;
-        b=EpETliXvYiLNHWE0HYq7LXJ4lI681anFy7uByM3wh5rErvO1znLwnymryecWLxreNl
-         M3qSbEam9tNAqJmMDmKHCuFyIJL/mEabdheZAR/z8QI8dAUVpUBCeeZxsMe7xYgr/dil
-         oZNOIZR+bk4kU3cZdhQtQrtAclGIk92VH1A2H0hYWzWMylYNPRGpQ1feUP0bMYYRi2Cf
-         zioEDf0JL/ho4iQQFjd+TXfA/g+EagIJRtHJpP4OxjfbuG09rtaFttxUw3T+ZAp7nKAZ
-         lH7gK075uXROJGKz1ILLQ3i8MOFgJ2CJXIJzXVnVvG0GlQ2gyQqU5ZEALMB4E8h3rgUO
-         Kqcw==
-X-Forwarded-Encrypted: i=1; AJvYcCUUUz2ZoQWdknPpTCvxRXxa28dLwktqGMreeAKPWaqUa3X3kyxbw0Dfc+1p5m8JJD3pB7qg23OcqrmqzsNJ30ENZA==@vger.kernel.org, AJvYcCX7CQZYXmiJmqDN4C4AAShGnFtJb9PJVe1rou3hidfcs5WQLd87O9IxhCF1OJ+j7j1M5W1db6OCF3ToMAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyvRKi+L9yNMgMrWvbyTld6SXP5vNHcoxObgAGcx7oqp6TO7ew
-	zwXfMjoIJdNrrjTAGqSWs7W/bKDQjuXCn3KQzBfK7R4UfVKOy51l
-X-Google-Smtp-Source: AGHT+IH9dxyFUwWBvQo0uLnPJLwBa/lSZK/j8rk+3pCpkjzIy7IKB8qk6Tx9FDW9f3rVtOLJUvoStA==
-X-Received: by 2002:a05:6512:128b:b0:52e:fefe:49c9 with SMTP id 2adb3069b0e04-53546b3ffb0mr5822064e87.36.1725254719804;
-        Sun, 01 Sep 2024 22:25:19 -0700 (PDT)
-Received: from ?IPV6:2a0b:e7c0:0:107::aaaa:69? ([2a0b:e7c0:0:107::aaaa:69])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a8989196b89sm509012166b.114.2024.09.01.22.25.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 01 Sep 2024 22:25:18 -0700 (PDT)
-Message-ID: <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
-Date: Mon, 2 Sep 2024 07:25:17 +0200
+	 In-Reply-To:Content-Type; b=rSldp5Hkyojw2nyJZznFzFsci2uRyTN33wJ3uxf5ePpWhryW+LPpgQqWzvf/ykuzrMQEmdxxv22sxxT1ag8OayTB5H4QyLr4ufLzGE1SwCseqXlNL5S612NWYNZVdka8k1BAtPFDLScCS/+g1UPfT/9uySBgzdbW2UBUWRdmJeE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D21SgXdt; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D21SgXdt"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725263496; x=1756799496;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9egc8bzS4xp559knJ0MSFXZijI3tK94YnswRk3BODsA=;
+  b=D21SgXdt3NVlHp8LSgyGV4MdadaBVWFCfTTR1f6kMHyrA4x8cVC20K2A
+   /R7WsqD8jccCTUm3SR+aNDQGxRQ2O/5JTGoCNxrQoZThu8GciCBQBVVs3
+   SHJu1U8T9q2wY6ut+DwbEhlFAFLPC+Buh1Foh6cyFW32Orrh2TfuSdiFm
+   KAt2Foj7ifkcbv5Dxn/GIO3fz2AGiIh9O7oHXHHbBQENzYU+N4MOw6h0H
+   E7BT3uyI/tQN+VHT1V1NqvyW0HfE3F7eikfvzVpybBeTnWHo8Yuzjguwj
+   FyV5KClvqn5CDPn7rIgkkd3wqTl+ly63uk8XRYqMnin0KbQTmv3p7+w4p
+   w==;
+X-CSE-ConnectionGUID: gTh6WVzQSv+NaNh4qZ2g1A==
+X-CSE-MsgGUID: LehYEzh3S/+Wl2z6IPmehQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11182"; a="35230525"
+X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
+   d="scan'208";a="35230525"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 00:51:35 -0700
+X-CSE-ConnectionGUID: SKP+GlhvSjep7rlZSp9g/A==
+X-CSE-MsgGUID: S5ESiWwRTvK4Zhvb2Zbavw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,195,1719903600"; 
+   d="scan'208";a="95335117"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.125]) ([10.124.233.125])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2024 00:51:30 -0700
+Message-ID: <3b82df84-d7cd-4804-864a-253b5de5b5d2@linux.intel.com>
+Date: Mon, 2 Sep 2024 15:51:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -48,95 +52,91 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
- syscall ids in syscalltbl->entries
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>,
- Adrian Hunter <adrian.hunter@intel.com>, Ian Rogers <irogers@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>,
- Namhyung Kim <namhyung@kernel.org>, linux-perf-users@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@redhat.com>
-References: <20240705132059.853205-1-howardchu95@gmail.com>
- <20240705132059.853205-2-howardchu95@gmail.com>
- <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org> <ZtJWEVn8-w07Wm0q@x1>
+Subject: Re: [RFC PATCH v3 30/58] KVM: x86/pmu: Exclude PMU MSRs in
+ vmx_get_passthrough_msr_slot()
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-31-mizhang@google.com>
 Content-Language: en-US
-From: Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jirislaby@kernel.org; keydata=
- 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
-In-Reply-To: <ZtJWEVn8-w07Wm0q@x1>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240801045907.4010984-31-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 31. 08. 24, 1:30, Arnaldo Carvalho de Melo wrote:
->  From 174899051e54ecdab06c07652a3d04ad000ab301 Mon Sep 17 00:00:00 2001
-> From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> Date: Fri, 30 Aug 2024 19:53:47 -0300
-> Subject: [PATCH 1/1] perf tools: Build x86 32-bit syscall table from
->   arch/x86/entry/syscalls/syscall_32.tbl
-> 
-> To remove one more use of the audit libs and address a problem reported
-> with a recent change where a function isn't available when using the
-> audit libs method, that should really go away, this being one step in
-> that direction.
-> 
-> The script used to generate the 64-bit syscall table was already
-> parametrized to generate for both 64-bit and 32-bit, so just use it and
-> wire the generated table to the syscalltbl.c routines.
-> 
-> Reported-by: Jiri Slaby <jirislaby@kernel.org>
-> Suggested-by: Ian Rogers <irogers@google.com>
-> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> Cc: Howard Chu <howardchu95@gmail.com>
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Kan Liang <kan.liang@linux.intel.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Link: https://lore.kernel.org/lkml/6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org
-> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Tested-by: Jiri Slaby <jirislaby@kernel.org>
+On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
+> Reject PMU MSRs interception explicitly in
+> vmx_get_passthrough_msr_slot() since interception of PMU MSRs are
+> specially handled in intel_passthrough_pmu_msrs().
+>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 34a420fa98c5..41102658ed21 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -166,7 +166,7 @@ module_param(enable_passthrough_pmu, bool, 0444);
+>  
+>  /*
+>   * List of MSRs that can be directly passed to the guest.
+> - * In addition to these x2apic, PT and LBR MSRs are handled specially.
+> + * In addition to these x2apic, PMU, PT and LBR MSRs are handled specially.
+>   */
+>  static u32 vmx_possible_passthrough_msrs[MAX_POSSIBLE_PASSTHROUGH_MSRS] = {
+>  	MSR_IA32_SPEC_CTRL,
+> @@ -695,6 +695,13 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+>  	case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+>  	case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+>  		/* LBR MSRs. These are handled in vmx_update_intercept_for_lbr_msrs() */
+> +	case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
+> +	case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
+> +	case MSR_CORE_PERF_FIXED_CTR0 ... MSR_CORE_PERF_FIXED_CTR0 + 2:
 
-thanks,
--- 
-js
-suse labs
+We'd better to use the macro
+KVM_MAX_NR_GP_COUNTERS/KVM_MAX_NR_FIXED_COUNTERS to replace these magic number.
 
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 6d9ccac839b4..68d9c5e7f91e 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -696,9 +696,9 @@ static int vmx_get_passthrough_msr_slot(u32 msr)
+        case MSR_LBR_CORE_FROM ... MSR_LBR_CORE_FROM + 8:
+        case MSR_LBR_CORE_TO ... MSR_LBR_CORE_TO + 8:
+                /* LBR MSRs. These are handled in
+vmx_update_intercept_for_lbr_msrs() */
+-       case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + 7:
+-       case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 + 7:
+-       case MSR_CORE_PERF_FIXED_CTR0 ... MSR_CORE_PERF_FIXED_CTR0 + 2:
++       case MSR_IA32_PMC0 ... MSR_IA32_PMC0 + KVM_MAX_NR_GP_COUNTERS - 1:
++       case MSR_IA32_PERFCTR0 ... MSR_IA32_PERFCTR0 +
+KVM_MAX_NR_GP_COUNTERS - 1:
++       case MSR_CORE_PERF_FIXED_CTR0 ... MSR_CORE_PERF_FIXED_CTR0 +
+KVM_MAX_NR_FIXED_COUNTERS -1:
+        case MSR_CORE_PERF_GLOBAL_STATUS:
+        case MSR_CORE_PERF_GLOBAL_CTRL:
+        case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+
+
+> +	case MSR_CORE_PERF_GLOBAL_STATUS:
+> +	case MSR_CORE_PERF_GLOBAL_CTRL:
+> +	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+> +		/* PMU MSRs. These are handled in intel_passthrough_pmu_msrs() */
+>  		return -ENOENT;
+>  	}
+>  
