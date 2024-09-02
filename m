@@ -1,103 +1,96 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C37811E50B
-	for <linux-perf-users@vger.kernel.org>; Sun,  1 Sep 2024 13:53:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 423411F957;
+	Mon,  2 Sep 2024 01:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725198828; cv=none; b=GAAXYXET7AYhLkmGMmN+tcF17JvzcnRfphI15r5ymOiDhU2qa9WMK9uOYjEi6MvzvHFo9gH6hkVHVg6mvIP9EhIquMVnY17fIA4yGT67VLeeBkXeyde8b0Ju6UqNvaoD+3R8J6YYj8w9Au1PRHanTpPqHiSsJ5fSZAFzk+YieEk=
+	t=1725241583; cv=none; b=Eiw4GS9gAbtGQY0j2bgt810bfGxPtz/yOLHiT391zWzOQ1KjMAjT0g3f0We80umnuOf7uAdVWTnyORYhqkQ6AjP+A9yMHlHrBXC0Ou+qGXWIxCocRjLnEoi5tWloZRVJUm/zm0YvYyRN3H1ZfdjIKO1SnuzQY0WtAXRR0K7uy38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725198828; c=relaxed/simple;
-	bh=22so55yO1J4X/TmkYVFJwCKz2L20OlEtzb6p0lcohSE=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hsnSB91RU7XvXi9wo8nwgV0Bnju6dc9mYyL7eiEoZ8QZrmBZ4guWIA4PW/Pq7/kJp5kloGWjsNWsD2a4Zo23gx7FsdzCECS/AYFhXGVtBfmm/gI87K2mxGzoTDpDEWYJVtgbvNyWJrjzoonJSiak2YobEjhgXo22AqcbIxswuhE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3D5F1FEC;
-	Sun,  1 Sep 2024 06:54:05 -0700 (PDT)
-Received: from [10.57.81.125] (unknown [10.57.81.125])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D7843F73F;
-	Sun,  1 Sep 2024 06:53:37 -0700 (PDT)
-Message-ID: <8e6ecb00-81fa-4e24-92cb-de2120034309@arm.com>
-Date: Sun, 1 Sep 2024 14:53:29 +0100
+	s=arc-20240116; t=1725241583; c=relaxed/simple;
+	bh=5TIMmVwf/PXHNn43q33d7bP3iTu1S6Dyy5ds7Ki1SuY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WguKFRmZn5lxR9IM91j/bD2A0TpETp/7pdm0B1P9OXVj8L0iS2Wz1gTdxMwGE5fOrqozU+1LPcrXnlpHJjG1LYERvrC0i+HB21BhxIbLqL++EmWhPPFam+EZUdqUmNRGXdUSMTc3IlazwKPVkJcnUvmNg5PGG3SOWIaYcCpQVfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l6rwT7mi; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l6rwT7mi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30F49C4CEC3;
+	Mon,  2 Sep 2024 01:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725241582;
+	bh=5TIMmVwf/PXHNn43q33d7bP3iTu1S6Dyy5ds7Ki1SuY=;
+	h=From:To:Cc:Subject:Date:From;
+	b=l6rwT7miUNBWfhhPo7wd8Muat+s3k3egG0JBRbi8ZkRsVY9IPvrz3FpDbIlKQed/K
+	 VZJL6tnQRUP0cB1mXpRuCmYaIU0Tq6hdzi9Y8Uzc8sP2Hksuj8eDxz78NQzS1e1sTY
+	 IV38IrjuB5Wo0SFf+3aaiK7IB2ux7OqpTJgP2z05gmPgn74JrgSpWC3M9Nd8uLRZPZ
+	 JAsbI7MtchDuykAMlZ6FcXrYhuFgWGhXmaCldPvqZjUT5hbkCafvx7BnObElfPBpGE
+	 NOqguDkBJJGafXWkokhZI0Ui49pBdJIXQPd8UkhzjlHkt/sW5SSLd4PK4OR1oPv1L9
+	 gj92bE4Jj90iA==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	James Clark <james.clark@arm.com>,
+	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Kajol Jain <kjain@linux.ibm.com>,
+	Thomas Richter <tmricht@linux.ibm.com>,
+	Atish Patra <atishp@atishpatra.org>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Mingwei Zhang <mizhang@google.com>
+Subject: [RFC/PATCH 0/4] perf tools: Do not set attr.exclude_guest by default (v1)
+Date: Sun,  1 Sep 2024 18:46:17 -0700
+Message-ID: <20240902014621.2002343-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Leo Yan <leo.yan@arm.com>
-Subject: Re: [PATCH V5 0/4] arm-cs-trace-disasm.py/perf must accommodate
- non-zero DSO text offset
-To: scclevenger@os.amperecomputing.com,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Ian Rogers <irogers@google.com>,
- james.clark@linaro.org, mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
- coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1724879699.git.scclevenger@os.amperecomputing.com>
- <cover.1724879699.git.scclevenger@os.amperecomputing.com>
- <35c19a0f-580a-4d97-b0d4-b8708a4dbdb4@arm.com>
- <01419593-056b-41e9-a3d2-6ac490f7734a@os.amperecomputing.com>
- <9822c444-69d6-436d-b1dd-6d9c910678ee@arm.com>
- <7a2c53c0-0bac-4a53-824d-6efdff8ed3ce@os.amperecomputing.com>
-Content-Language: en-US
-In-Reply-To: <7a2c53c0-0bac-4a53-824d-6efdff8ed3ce@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Steve,
+Hello,
 
-On 8/31/2024 8:19 PM, Steve Clevenger wrote:
+I found perf tools set exclude_guest bit inconsistently.  It used to
+set the bit but now the default event for perf record doesn't.  So I'm
+wondering why we want the bit in the first place.
 
-[...]
+Actually it's not good for PMUs don't support any exclusion like AMD
+IBS because it disables new features after the exclude_guest due to
+the missing feature detection logic.
 
-> Hi Leo,
-> 
-> That's great. Unfortuantely, I need to submit a V6 for patch 4/4, which
-> is the arm-cs-trace-disasm.py script. Kernel instruction trace requires
-> zeroing map_pgoff. perf makes most offset decisions, but this one is in
-> the script. It's a one liner.
-
-Agreed the kernel symbols should be zero map offset. 
-
-Thanks for correcting this.
-
-> I know you're a b4 fan, but I've never used it. If I'm able to make
-> progress with it I'll use it to resubmit. Otherwise more of the same.
-
-For using the b4 command:
-
-$ b4 am <Message-ID>
-
-You can find the message ID in the lore webpage, e.g. for this series,
-in the cover letter link [1], click the 'raw' hyper link, then you can
-fine the Message ID is:
-cover.1724879699.git.scclevenger@os.amperecomputing.com
-
-Run 'b4 am cover.1724879699.git.scclevenger@os.amperecomputing.com' for
-downloading the patches (with automatic amending ACK and review tags).
-
-As result, you will get the file:
-v5_20240828_scclevenger_arm_cs_trace_disasm_py_perf_must_accommodate_non_zero_dso_text_offset.mbx
-
-$ git am v5_20240828_scclevenger_arm_cs_trace_disasm_py_perf_must_accommodate_non_zero_dso_text_offset.mbx
-
-Alternatively, if you are using new b4 version, you can directly use
-the command 'b4 shazam <Message-ID>' for downloading series and applying
-it on your local branch in one go.
-
-I tried the b4 command for your series but failed, I can see you used `git
-send-email` but the series was not discontinuous so b4 command cannot fetch
-the whole series.
-
-You can just work on you existed patches - don't forget to append my review
-tags for patches 01 ~ 03. For the patch 04, after you send out I will review
-it.
+AFAIK it doesn't matter for the most cases but perf kvm.  If users
+need to set the bit, they can still use :H modifier.  Please let me
+know if it's ok for you.
 
 Thanks,
-Leo    
-  
-[1] https://lore.kernel.org/linux-perf-users/7a2c53c0-0bac-4a53-824d-6efdff8ed3ce@os.amperecomputing.com/T/#mc76180d8076cf3414ba81e7c379cda93297aa4a9
+Namhyung
+
+
+Namhyung Kim (4):
+  perf tools: Don't set attr.exclude_guest by default
+  perf tools: Simplify evsel__add_modifier()
+  perf stat: Add --exclude-guest option
+  perf tools: Do not set exclude_guest for precise_ip
+
+ tools/perf/Documentation/perf-stat.txt     |  7 +++++
+ tools/perf/builtin-kvm.c                   |  1 +
+ tools/perf/builtin-stat.c                  |  2 ++
+ tools/perf/tests/attr/test-record-dummy-C0 |  2 +-
+ tools/perf/tests/parse-events.c            | 30 ++++++++++------------
+ tools/perf/util/evsel.c                    |  5 +---
+ tools/perf/util/parse-events.c             |  6 +----
+ tools/perf/util/util.c                     | 10 ++++++--
+ tools/perf/util/util.h                     |  3 +++
+ 9 files changed, 37 insertions(+), 29 deletions(-)
+
+-- 
+2.46.0.469.g59c65b2a67-goog
+
