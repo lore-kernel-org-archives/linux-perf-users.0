@@ -1,139 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD7531A3A86
-	for <linux-perf-users@vger.kernel.org>; Mon,  2 Sep 2024 18:46:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE4971A3A80;
+	Mon,  2 Sep 2024 18:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725302806; cv=none; b=KpDtiq9jzTj9jnG8Ixyow3fjiRkIXB0JaYWkKxHG1xY7sTtTA3DgBnMKyjIxR+9yu4YG3CU5YzgwMaXynZp1AFHi+pL1GVlBTiWSAA8tEQDzPMSj5wrymWXfafSIzVIBYS508Z0o3cPKICBGwaYb9LY4DCRWCkGxoiUpp1Irg/A=
+	t=1725303229; cv=none; b=fKLeoY+2+dQ7m/Bq+BHJ46Wm/o8AWB+ZmEyuLQG/YRD9cf8xOh34u9j9PcGJ1N7O8OvED7O2LlxkIQoeQl8bjcD/awUsylg/w//dR3TbqaZ0akj24iZdK+QZgZISrMZV7N0A/8yA1/aXuoqzValP1vTJl4PCC4bmsrAoT4bl6b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725302806; c=relaxed/simple;
-	bh=C4dnQsyuiAjoGPXHd0sENzdetaRE2dLUj+/4dKwLoBU=;
+	s=arc-20240116; t=1725303229; c=relaxed/simple;
+	bh=6TV4CZzcc9S1jXCBjpCp5jq37IukydqYrt9uRs7zaOA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LLnzAqj/1k7x+UttvmodOT6ecdYJJCon5SGNGUtZyk7m+gOtrfRUs7bGCQikixhHGm6QUFONZDk/gedHBfqC4ZH9LtU1Nrr3CzihAwQJdKJQORS+DEa8peh0L/klMznl/GUbFCP6NEQHy1uJ+YNmjZuqatRObS+ciYcxSsSKzOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THuE/nFM; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qmz0dPzamzgpTOCJbO8iJRqIh7Fgkw4XWRMmdyWR8EUSIqDgkU/kyr2WRHAku6aj+7/GU3SyFvF9Jm9tKFpId4OQiCJCOUrPczibGRUqQzavTh/X3vwNOw+eVuEzognJBUGappitpAgcpEfRcJ79P7x2wBPa0qPYGamsBG59k94=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LgSkU6Xd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THuE/nFM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07CA3C4CEC2;
-	Mon,  2 Sep 2024 18:46:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LgSkU6Xd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05678C4CEC2;
+	Mon,  2 Sep 2024 18:53:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725302806;
-	bh=C4dnQsyuiAjoGPXHd0sENzdetaRE2dLUj+/4dKwLoBU=;
+	s=k20201202; t=1725303229;
+	bh=6TV4CZzcc9S1jXCBjpCp5jq37IukydqYrt9uRs7zaOA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=THuE/nFMo9YJVNXqvWwUi/IEQPLiciqUaEzmzQvmiHULRHJ+Bt5U0ndrXQJ6xWxWG
-	 XxcOUmWTO4A8UnB7d4jUmVpC6VR/FEzIXamwlGiX1bMuecixLRzyciciyT7vJAT6SY
-	 JINBqD767Y9NxtiINUH1JYO80aQ/AH3lePPNt3bhK6V0DS7Shv7cdE0FEB8TPG5ZBr
-	 OJbA3QCilL2k9GSg928qb96ydN17G0FVxMvsYDL7+jxNGUBxGHAUkXCjD2sGG0jgcq
-	 8/1q50WjrcnQ1dcI2OAeDlNtkbAG0TH81hg5GolxqnM/20HlOafUYDOVL/F8eVhkFK
-	 TkvwkKiDYcJdQ==
-Date: Mon, 2 Sep 2024 15:46:42 -0300
+	b=LgSkU6XdYTGXDq2d1Ejbqn6I73I8e0YPj9hmS65oWN6volk88NexybAIULfFymvVJ
+	 44AAb/hmCoSXMVD+WZ6KukafleKH5/Bm2iYyI0v8j62AyZpxXK2ckFh+c7OOS1Fo+j
+	 jIdr32ybFbqZZVtgDQ/G7pIU41Nm+IjqCydM1ZsXHYUugfSyEqEirWbIhqVJvD1a5T
+	 2ZTox7ZkrtgVJPQy1s1eSOOwr4ovc8kQAHuWxsOx5xqXKKesT3vBNbAEut3p5ZTBU8
+	 f8ZgaQu+q9M12jZYPPuFBEX5j+C8ioPyq6wI6cJOiDupUStOVxkmF0cpEcOuSNe5n6
+	 syffRYvik3bCg==
+Date: Mon, 2 Sep 2024 15:53:46 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Veronika Molnarova <vmolnaro@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
-	mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com,
-	Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
-Message-ID: <ZtYIElLzMIzEVH9t@x1>
-References: <Zn3n0JwfdfFdjbzj@google.com>
- <20240702110849.31904-1-vmolnaro@redhat.com>
- <66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
- <Zs-LEEutfp0hkjh5@x1>
- <ZtHk6Tj7KioLRd10@x1>
- <6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com>
- <ZtXMRffIGVmjptcf@x1>
- <ZtXOrJdxvrI7Kk6n@x1>
- <b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+To: Ian Rogers <irogers@google.com>
+Cc: Jiri Slaby <jirislaby@kernel.org>, Howard Chu <howardchu95@gmail.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Kan Liang <kan.liang@intel.com>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
+ syscall ids in syscalltbl->entries
+Message-ID: <ZtYJutp0CfRYXONf@x1>
+References: <20240705132059.853205-1-howardchu95@gmail.com>
+ <20240705132059.853205-2-howardchu95@gmail.com>
+ <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org>
+ <ZtJWEVn8-w07Wm0q@x1>
+ <CAP-5=fWyPN48AcVZ3jdDnDdg4t2Q6fMXFV9HVymk0ynZnKcj+A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAP-5=fWyPN48AcVZ3jdDnDdg4t2Q6fMXFV9HVymk0ynZnKcj+A@mail.gmail.com>
 
-On Mon, Sep 02, 2024 at 05:10:48PM +0200, Veronika Molnarova wrote:
-> 
-> 
-> On 9/2/24 16:41, Arnaldo Carvalho de Melo wrote:
-> > On Mon, Sep 02, 2024 at 11:31:36AM -0300, Arnaldo Carvalho de Melo wrote:
-> >> On Mon, Sep 02, 2024 at 04:05:04PM +0200, Veronika Molnarova wrote:
-> >>> On 8/30/24 17:27, Arnaldo Carvalho de Melo wrote:
-> >>>> On Wed, Aug 28, 2024 at 05:39:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> >>>>> On Wed, Aug 28, 2024 at 04:10:55PM +0200, Veronika Molnarova wrote:
-> >>>> So, is there some other knob to get further output from that FAIL case?
-> >>>> Like the command that is failing? I'll try to take a look at the
-> >>>> sources, but are you seeing this problem with what is in
-> >>>> perf-tools-next/perf-tools-next?
-> > 
-> >>> Couldn't reproduce the issue on multiple systems. There is no further way
-> >>> of getting more logs from the test case. The output of the failure is from
-> >>> the regex checking when a line wasn't matched to any possible regex.
-> >>> Looking at the test case "adding blacklisted function warn_thunk_thunk",
-> >>> the failure is caused by command 'perf probe warn_thunk_thunk', which is
-> >>> a blacklisted function taken from "/sys/kernel/debug/kprobes/blacklist".
-> > 
-> > root@x1:~# grep thunk_thunk /sys/kernel/debug/kprobes/blacklist
-> > 0xffffffff97004af0-0xffffffff97004b20	warn_thunk_thunk
-> > root@x1:~#
-> > 
-> > <SNIP>
-> > 
-> >> /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err:A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err
-> >> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> >> Probe point 'warn_thunk_thunk' not found.
-> >>   Error: Failed to add events.
-> >> root@x1:~#
-> >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted_list.log 
-> >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.log 
-> >> root@x1:~#
-> >>
-> >> So is it just a matter of adding this output to the expected outputs?
-> >> In test_adding_blacklisted.sh?
-> > 
-> > Did the patch below, now it passes, Ack?
-> > 
-> > root@x1:~# export PERFTEST_KEEP_LOGS=y
-> > root@x1:~# perf test 88
-> >  88: perftool-testsuite_probe                                        : Ok
-> > root@x1:~#
-> > 
-> > Or am I missing the point? :-)
-> > 
-> > - Arnaldo
-> 
-> Yeah, that would fix the test case, the question is whether we should
+On Fri, Aug 30, 2024 at 05:35:32PM -0700, Ian Rogers wrote:
+> On Fri, Aug 30, 2024 at 4:30 PM Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+> > The script used to generate the 64-bit syscall table was already
+> > parametrized to generate for both 64-bit and 32-bit, so just use it and
+> > wire the generated table to the syscalltbl.c routines.
 
-I was lazy, but yeah, that thought crossed my mind, good thing you did
-the due diligence and found that patch! Looking at it now.
+> > Reported-by: Jiri Slaby <jirislaby@kernel.org>
+> > Suggested-by: Ian Rogers <irogers@google.com>
 
-> accept it as a possible output. Found some old patch that should have
-> fixed the mentioned issue: 
-> https://lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/
+> This looks great!
+> Reviewed-by: Ian Rogers <irogers@google.com>
+> It seems strange to me that the 64-bit binary doesn't need a 32-bit
+> syscall table given it could start a 32-bit binary, but that's a
+> problem for another day.
 
-I updated Masami's e-mail to a more recent one, Masami-san, wdyt? Can I
-have your opinion on the patch pointed out by Veronika?
+Just one in a list of things TODO, how to get info about specific
+binaries issuing syscalls and then use the right syscall table on a
+system wide/CPU list/cgroup/whatever 'perf trace' session?
 
-Thanks in advance!
+Yeah, a problem for another day, but at least now we have both syscall
+tables (32 and 64 bit) available.
+
+Thanks for reviewing it, added to the cset,
 
 - Arnaldo
- 
-> > 
-> > diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > index b5dc10b2a73810b3..14290d08a4a96eaf 100755
-> > --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > @@ -42,7 +42,8 @@ REGEX_ERROR_MESSAGE="Error: Failed to add events."
-> >  REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
-> >  REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
-> >  REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
-> > -../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> > +REGEX_MISSING_DECL_LINE="A function DIE doesn't have decl_line. Maybe broken DWARF?"
-> > +../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" "$REGEX_MISSING_DECL_LINE" < $LOGS_DIR/adding_blacklisted.err
-> >  CHECK_EXIT_CODE=$?
-> >  
-> >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
-> > 
