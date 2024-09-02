@@ -1,87 +1,87 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6063E1A3A87;
-	Mon,  2 Sep 2024 18:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6FB1C62D2;
+	Mon,  2 Sep 2024 20:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725303255; cv=none; b=gYeItIMmGEVNm6RsTbFlAKa9ZLluSp7edAS+PAYL3b3F2Ghn51vZ350iTrzlC2FKjT9sIwUiSh8IHfiJjrhXNo2IezreO1R+Wg9eheXNzDH9BPWCi8gZKQ5p0mJ5MmgZu80NqLLCZ1/HjioMrg0/xbn6xPX68nUcW2oWcVZvCe8=
+	t=1725307516; cv=none; b=iD4RzRfXAdPNwansGOYe9wLfk81AmEs+zvL9ADxYmYwKMEUvbWxjKcJDiF5PrYPTmBLFCtg/H3Oa3VfDMdM5gRyNYwAcBoY+8MhELaG80I89hugMWo8bzd80rosnsOiWqWykterd1oT1Pgwt6cH8NSZ3idlebK486vOF+XBFYqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725303255; c=relaxed/simple;
-	bh=x6KTZuenD7p0PdSDKZxP6dWikTN2SEdS4eNXb36SVK8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QNmaYAJEiBcLyr1fO1xAPmDEfFW3cUTj9cEU4tJF5cEHJqON74wTfzFXuOAlYu09fn4S250VbD4CBHfbEHtWy2Qvzlibl7L9sU0qYWhouY2LegXuMX658RUtGE5aGOYHH45isU8EXBJAASbZN1LrceClI4TkzmmijOLv2xr8qtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RquFLRjJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725307516; c=relaxed/simple;
+	bh=rlcVAYAHHXvi4YAo/PA0SyrdQOJptJuD1RuUQmeZcFI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gamnmFsBR6FNY8SjYW8c9I8UE8Tzl3EXL2PGiq7H0eZUwGtuefr68zq9fqiW4nbfaGAH3d3c5W/Ut1QzkuhQv+6Co1Ob8oizzBWz5oU1zXSrUSTWPsTrmEw6U5/5EL8gdpJTCDCe3MR2jGHdbqCL9+2peeLH84AZhZAIk1hBGDo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QELLTP63; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RquFLRjJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793F3C4CEC2;
-	Mon,  2 Sep 2024 18:54:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QELLTP63"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D70CDC4CEC6;
+	Mon,  2 Sep 2024 20:05:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725303254;
-	bh=x6KTZuenD7p0PdSDKZxP6dWikTN2SEdS4eNXb36SVK8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RquFLRjJ7jOp8ofqzdYa62Pwf0FOVtB/Fgs9V/PLZ7dSAQLb4hFd4y3weoYXyO44N
-	 cAQtM7CC5Yuzvakgr8z5KxclpiXOixrHsJd+5nDPKhk/GeZYEOrZAPJ8t9C/DPFVkS
-	 oW/U9LSXqbKvbcJQhdlK9OJm34SMzhqxOhOt7DFchygIiAomJ9ghViVgkdiq3Sddot
-	 XZ4uA3DuWz0R9vUvNouH7ddurjJxgARA8g44CYUMlAeKN92s9VSLc7Kq3rTw8oJ3tA
-	 2J0HON5vK/zLsPsSSHmu5MNaS4++0AYPtEoI/gt9Q4M2c1/mac2XqPHB+6wcYKzxi7
-	 qN95vP3QlbCew==
-Date: Mon, 2 Sep 2024 15:54:11 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Jiri Slaby <jirislaby@kernel.org>
-Cc: Howard Chu <howardchu95@gmail.com>,
+	s=k20201202; t=1725307516;
+	bh=rlcVAYAHHXvi4YAo/PA0SyrdQOJptJuD1RuUQmeZcFI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=QELLTP63tQsZXzfkQzsDPlagiqFN/5MBFcw/t92Mqc7wodBRsaSvDdtdjNnmOSFDv
+	 JkkS1WsSCGDzbHeERs58VVMHq6Kpd8x8VdEoSibh/no+2VeryXJTky5me2042EMqIx
+	 EvOLcLlX3KTBL3rwb4c/WG2A/fDbOyFRx2GtQgNdeIgWHq6bKnQwGEUp1HfeKaX9+p
+	 D8S+XrY6Xu3dYiBC0YKGR0eiLxA/7v4b7NlItZNkgrU3mYlXaLH9j3E6MXnnahXCtf
+	 YNfq/v5HvZPGjmuzBzV6w0uymgAEy8VaSMp0OJB6zkaVbidYmTXFyFE5mmBaL8U1Ip
+	 FzBw3BMTVDXxQ==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Ian Rogers <irogers@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Kan Liang <kan.liang@intel.com>, Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: Re: [PATCH/RFT] Re: [PATCH v5 1/8] perf trace: Fix iteration of
- syscall ids in syscalltbl->entries
-Message-ID: <ZtYJ0z8f-1jwYSbV@x1>
-References: <20240705132059.853205-1-howardchu95@gmail.com>
- <20240705132059.853205-2-howardchu95@gmail.com>
- <6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org>
- <ZtJWEVn8-w07Wm0q@x1>
- <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>,
+	LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: [PATCHSET 0/5] perf tools: Constify BPF control data properly (v1)
+Date: Mon,  2 Sep 2024 13:05:10 -0700
+Message-ID: <20240902200515.2103769-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0f841525-e02a-4e11-b5f8-1acc61979ccf@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Sep 02, 2024 at 07:25:17AM +0200, Jiri Slaby wrote:
-> On 31. 08. 24, 1:30, Arnaldo Carvalho de Melo wrote:
-> >  From 174899051e54ecdab06c07652a3d04ad000ab301 Mon Sep 17 00:00:00 2001
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Date: Fri, 30 Aug 2024 19:53:47 -0300
-> > Subject: [PATCH 1/1] perf tools: Build x86 32-bit syscall table from
-> >   arch/x86/entry/syscalls/syscall_32.tbl
-> > 
-> > To remove one more use of the audit libs and address a problem reported
-> > with a recent change where a function isn't available when using the
-> > audit libs method, that should really go away, this being one step in
-> > that direction.
-> > 
-> > The script used to generate the 64-bit syscall table was already
-> > parametrized to generate for both 64-bit and 32-bit, so just use it and
-> > wire the generated table to the syscalltbl.c routines.
-> > 
-> > Reported-by: Jiri Slaby <jirislaby@kernel.org>
-> > Suggested-by: Ian Rogers <irogers@google.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Howard Chu <howardchu95@gmail.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Link: https://lore.kernel.org/lkml/6fe63fa3-6c63-4b75-ac09-884d26f6fb95@kernel.org
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> 
-> Tested-by: Jiri Slaby <jirislaby@kernel.org>
+Hello,
 
-Thanks a lot! Added to the cset.
+I've realized that some control data (usually for filter actions)
+should be defined as 'const volatile' so that it can passed to the BPF
+core and to be optimized properly (like with dead code elimination).
 
-- Arnaldo
+Convert the existing codes with the similar patterns.
+
+Thanks,
+Namhyung
+
+
+Namhyung Kim (5):
+  perf stat: Constify control data for BPF
+  perf ftrace latency: Constify control data for BPF
+  perf kwork: Constify control data for BPF
+  perf lock contention: Constify control data for BPF
+  perf record offcpu: Constify control data for BPF
+
+ tools/perf/util/bpf_counter_cgroup.c          |  6 +--
+ tools/perf/util/bpf_ftrace.c                  |  8 ++--
+ tools/perf/util/bpf_kwork.c                   |  9 ++--
+ tools/perf/util/bpf_kwork_top.c               |  7 +--
+ tools/perf/util/bpf_lock_contention.c         | 45 ++++++++++---------
+ tools/perf/util/bpf_off_cpu.c                 | 16 +++----
+ tools/perf/util/bpf_skel/bperf_cgroup.bpf.c   |  2 +-
+ tools/perf/util/bpf_skel/func_latency.bpf.c   |  7 +--
+ tools/perf/util/bpf_skel/kwork_top.bpf.c      |  2 +-
+ tools/perf/util/bpf_skel/kwork_trace.bpf.c    |  5 ++-
+ .../perf/util/bpf_skel/lock_contention.bpf.c  | 27 +++++------
+ tools/perf/util/bpf_skel/off_cpu.bpf.c        |  9 ++--
+ 12 files changed, 76 insertions(+), 67 deletions(-)
+
+-- 
+2.46.0.469.g59c65b2a67-goog
+
