@@ -1,172 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9B621C19E;
-	Mon,  2 Sep 2024 20:05:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B02182E3EB
+	for <linux-perf-users@vger.kernel.org>; Mon,  2 Sep 2024 21:00:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725307519; cv=none; b=OLcrY3yPFGBxBho3TSP3EEH997ZM6vKhUKFHfpYUU8x0Gepa3zVCBYhNbKNSBi6xlinKHxGlICEwR8kNOl2/Olemqgjwq1rrEnJTZkYfnhxs3rS7CokiQGza6rnApRVF0Mj29AFanjYuncb5uMGT0i5S4QtqjH0D/f0IzW+685I=
+	t=1725310837; cv=none; b=Tma11yeCDXSEvXh/aJhCq1CrSOGhyn/iNodV3Kq8SxfGms1g0xe9SNo/OQ4b8UceT6qcwX1R7fDCpUX6s+3BejxgovNwhU+H9L7wxHeVuiBsO+pQW8tXrW96isqwuJKqlhDTUoSqI1i5vQKzJ4/pWEnzOhyw/6NJpGig43qJCzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725307519; c=relaxed/simple;
-	bh=+Pwd5GaA9knREy8lwTTeOVCpbI0xDH9FKh/p825ZiW4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QBq006awsAbS+2e6xiZNAPZQ3/J+R90KtY1UrKpLEGgWdfEN3eQDwi/rAovVblrzGhX8mqjhRxMhUsxoF/Yo5nod8ihNjragtRquYb0+ZNLfxz1pANqA+GnEikV0yHXTwfqRSNR+VLnbwjFy5m14Zf5jLIi3Xp6kvYLqUnHLqas=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MHKAT3vc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725310837; c=relaxed/simple;
+	bh=qn77SDky3QOINLZ+EK6gSXcXTNLMpa35uAhQ3UMv/QE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gHjG2F4Aftq3P078tY/yRo3IxeN0GHehX72Zmi7q3q09C+n/Du3Bz5s2nf8LNM6m8lmyHMHc2fK3m/MEa6P7RZRFbWeqIC9B4cBFIc++2obOGsKxv/m4uDn3a8sSz2jDv7AkzO2ThUQW3E+DAZkKiwaMzaUj1hEBF63d9A8DE5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj11kMuG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MHKAT3vc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8CE1C4CED4;
-	Mon,  2 Sep 2024 20:05:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oj11kMuG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D78A5C4CEC2;
+	Mon,  2 Sep 2024 21:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725307519;
-	bh=+Pwd5GaA9knREy8lwTTeOVCpbI0xDH9FKh/p825ZiW4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MHKAT3vcR/3ZyLfB90CSL3UldTyRqP/Z4jDLAbdHrop+kFB6gZFw9TBniv0PORXHJ
-	 eUKgiWz3MS1acbIFVyApmYtjT6pS5ZEP9bKx2eE+Y3mKF4eFMoOUH1875B2QRkFhRz
-	 2Ktd/b6xnzr6IK32MUcxs4ribt2JWoLh5VRhZWxLnERn2Xfxm8d06yZs4OHCGMZBcy
-	 N+35ssm00BaE2gtjPEsRNnJpH2jlnzn4jOrRDemLVXxIrWj3ru17T6cKy3laY0Y+di
-	 d1+AVY6tx0GOiE1wBWZug0OzLat/WP+Dj3efcDQ4udm5CldeqToRaQXBwREQj+vL6t
-	 USohxECgf5Tpg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Song Liu <song@kernel.org>,
-	bpf@vger.kernel.org
-Subject: [PATCH 5/5] perf record offcpu: Constify control data for BPF
-Date: Mon,  2 Sep 2024 13:05:15 -0700
-Message-ID: <20240902200515.2103769-6-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-In-Reply-To: <20240902200515.2103769-1-namhyung@kernel.org>
-References: <20240902200515.2103769-1-namhyung@kernel.org>
+	s=k20201202; t=1725310837;
+	bh=qn77SDky3QOINLZ+EK6gSXcXTNLMpa35uAhQ3UMv/QE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oj11kMuG2sWPFiXLITDS//FNoyqnFyhoFOJi+Orligsq8JJNiQ4Li1V3IYJa5N63n
+	 kk/EuQ3CMjFnE1hxfoHrBxbUpGGHpHILWKOlYCgwz7yS6u23DQNssoT3HrQctnMXBC
+	 RBjr2tgL2K+xthlBixY813jGFF5VWtPYN5TfFs0lR68UaoHzPddOcjR7O5OMAx7r8n
+	 9yW9L0wmwec3eBxy2JjrXYb0zx7VbhGaYHiphFpD/Jufw1EQKTbuIE85nyOkPu1znb
+	 I3X1UiwPJu3Gsp0wbZL25I7xhFbcTVI0+ldRQav0qLSSIIefq+M6++9jk2hYhOVrUx
+	 K2/GX1GmwNyqg==
+Date: Mon, 2 Sep 2024 18:00:33 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: Veronika Molnarova <vmolnaro@redhat.com>
+Cc: linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
+	mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
+Message-ID: <ZtYncRvFQ6mxtioT@x1>
+References: <Zn3n0JwfdfFdjbzj@google.com>
+ <20240702110849.31904-1-vmolnaro@redhat.com>
+ <66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
+ <Zs-LEEutfp0hkjh5@x1>
+ <ZtHk6Tj7KioLRd10@x1>
+ <6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com>
+ <ZtXMRffIGVmjptcf@x1>
+ <ZtXOrJdxvrI7Kk6n@x1>
+ <b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+ <ZtYIElLzMIzEVH9t@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZtYIElLzMIzEVH9t@x1>
 
-The control knobs set before loading BPF programs should be declared as
-'const volatile' so that it can be optimized by the BPF core.
+On Mon, Sep 02, 2024 at 03:46:46PM -0300, Arnaldo Carvalho de Melo wrote:
+> On Mon, Sep 02, 2024 at 05:10:48PM +0200, Veronika Molnarova wrote:
+> > On 9/2/24 16:41, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Sep 02, 2024 at 11:31:36AM -0300, Arnaldo Carvalho de Melo wrote:
+> > >> On Mon, Sep 02, 2024 at 04:05:04PM +0200, Veronika Molnarova wrote:
+> > >>> On 8/30/24 17:27, Arnaldo Carvalho de Melo wrote:
+> > >> So is it just a matter of adding this output to the expected outputs?
+> > >> In test_adding_blacklisted.sh?
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/bpf_off_cpu.c          | 16 ++++++++--------
- tools/perf/util/bpf_skel/off_cpu.bpf.c |  9 +++++----
- 2 files changed, 13 insertions(+), 12 deletions(-)
+> > > Did the patch below, now it passes, Ack?
 
-diff --git a/tools/perf/util/bpf_off_cpu.c b/tools/perf/util/bpf_off_cpu.c
-index 6af36142dc5a7fd0..a590a8ac1f9d42f0 100644
---- a/tools/perf/util/bpf_off_cpu.c
-+++ b/tools/perf/util/bpf_off_cpu.c
-@@ -73,14 +73,12 @@ static void off_cpu_start(void *arg)
- 	struct evlist *evlist = arg;
+> > > root@x1:~# export PERFTEST_KEEP_LOGS=y
+> > > root@x1:~# perf test 88
+> > >  88: perftool-testsuite_probe                                        : Ok
+> > > root@x1:~#
+
+> > > Or am I missing the point? :-)
+
+> > Yeah, that would fix the test case, the question is whether we should
  
- 	/* update task filter for the given workload */
--	if (!skel->bss->has_cpu && !skel->bss->has_task &&
-+	if (skel->rodata->has_task && skel->rodata->uses_tgid &&
- 	    perf_thread_map__pid(evlist->core.threads, 0) != -1) {
- 		int fd;
- 		u32 pid;
- 		u8 val = 1;
+> I was lazy, but yeah, that thought crossed my mind, good thing you did
+> the due diligence and found that patch! Looking at it now.
  
--		skel->bss->has_task = 1;
--		skel->bss->uses_tgid = 1;
- 		fd = bpf_map__fd(skel->maps.task_filter);
- 		pid = perf_thread_map__pid(evlist->core.threads, 0);
- 		bpf_map_update_elem(fd, &pid, &val, BPF_ANY);
-@@ -148,6 +146,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 	if (target->cpu_list) {
- 		ncpus = perf_cpu_map__nr(evlist->core.user_requested_cpus);
- 		bpf_map__set_max_entries(skel->maps.cpu_filter, ncpus);
-+		skel->rodata->has_cpu = 1;
- 	}
+> > accept it as a possible output. Found some old patch that should have
+> > fixed the mentioned issue: 
+> > https://lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/
  
- 	if (target->pid) {
-@@ -173,11 +172,16 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 			ntasks = MAX_PROC;
- 
- 		bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
-+		skel->rodata->has_task = 1;
-+		skel->rodata->uses_tgid = 1;
- 	} else if (target__has_task(target)) {
- 		ntasks = perf_thread_map__nr(evlist->core.threads);
- 		bpf_map__set_max_entries(skel->maps.task_filter, ntasks);
-+		skel->rodata->has_task = 1;
- 	} else if (target__none(target)) {
- 		bpf_map__set_max_entries(skel->maps.task_filter, MAX_PROC);
-+		skel->rodata->has_task = 1;
-+		skel->rodata->uses_tgid = 1;
- 	}
- 
- 	if (evlist__first(evlist)->cgrp) {
-@@ -186,6 +190,7 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 
- 		if (!cgroup_is_v2("perf_event"))
- 			skel->rodata->uses_cgroup_v1 = true;
-+		skel->rodata->has_cgroup = 1;
- 	}
- 
- 	if (opts->record_cgroup) {
-@@ -208,7 +213,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		u32 cpu;
- 		u8 val = 1;
- 
--		skel->bss->has_cpu = 1;
- 		fd = bpf_map__fd(skel->maps.cpu_filter);
- 
- 		for (i = 0; i < ncpus; i++) {
-@@ -220,8 +224,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 	if (target->pid) {
- 		u8 val = 1;
- 
--		skel->bss->has_task = 1;
--		skel->bss->uses_tgid = 1;
- 		fd = bpf_map__fd(skel->maps.task_filter);
- 
- 		strlist__for_each_entry(pos, pid_slist) {
-@@ -240,7 +242,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		u32 pid;
- 		u8 val = 1;
- 
--		skel->bss->has_task = 1;
- 		fd = bpf_map__fd(skel->maps.task_filter);
- 
- 		for (i = 0; i < ntasks; i++) {
-@@ -253,7 +254,6 @@ int off_cpu_prepare(struct evlist *evlist, struct target *target,
- 		struct evsel *evsel;
- 		u8 val = 1;
- 
--		skel->bss->has_cgroup = 1;
- 		fd = bpf_map__fd(skel->maps.cgroup_filter);
- 
- 		evlist__for_each_entry(evlist, evsel) {
-diff --git a/tools/perf/util/bpf_skel/off_cpu.bpf.c b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-index d877a0a9731f9f2f..c152116df72f9bc1 100644
---- a/tools/perf/util/bpf_skel/off_cpu.bpf.c
-+++ b/tools/perf/util/bpf_skel/off_cpu.bpf.c
-@@ -85,10 +85,11 @@ struct task_struct___old {
- } __attribute__((preserve_access_index));
- 
- int enabled = 0;
--int has_cpu = 0;
--int has_task = 0;
--int has_cgroup = 0;
--int uses_tgid = 0;
-+
-+const volatile int has_cpu = 0;
-+const volatile int has_task = 0;
-+const volatile int has_cgroup = 0;
-+const volatile int uses_tgid = 0;
- 
- const volatile bool has_prev_state = false;
- const volatile bool needs_cgroup = false;
--- 
-2.46.0.469.g59c65b2a67-goog
+> I updated Masami's e-mail to a more recent one, Masami-san, wdyt? Can I
+> have your opinion on the patch pointed out by Veronika?
+
+And b4 doesn't like it, I'm trying to find it manually
+
+⬢[acme@toolbox perf-tools-next]$ b4 am -ctsl --cc-trailers 20230628082337.1857302-3-georgmueller@gmx.net
+Grabbing thread from lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/t.mbox.gz
+Checking for newer revisions
+Grabbing search results from lore.kernel.org
+Analyzing 21 messages in the thread
+WARNING: duplicate messages found at index 1
+   Subject 1: tools/perf: Fix to avoid crashing if DW_AT_decl_file is NULL
+   Subject 2: perf probe: add test for regression introduced by switch to die_get_decl_file
+  2 is not a reply... assume additional patch
+WARNING: duplicate messages found at index 2
+   Subject 1: tools/perf: Fix to use dwarf_attr_integrate for generic attr accessor
+   Subject 2: perf probe: add test for regression introduced by switch to die_get_decl_file
+  2 is not a reply... assume additional patch
+^CTraceback (most recent call last):
+  File "/home/acme/git/b4/src/b4/command.py", line 428, in <module>
+    cmd()
+  File "/home/acme/git/b4/src/b4/command.py", line 410, in cmd
+
+And then I noticed that his _was_ already merged, see below, so we're
+back to the previous square, can you try to continue this analysis, I'm
+rather busy with preparing for the upcoming conferences, so any help I
+can get is appreciated :-)
+
+- Arnaldo
+
+commit c66e1c68c13b872505f25ab641c44b77313ee7fe
+Author: Georg Müller <georgmueller@gmx.net>
+Date:   Wed Jun 28 10:45:51 2023 +0200
+
+    perf probe: Read DWARF files from the correct CU
+    
+    After switching from dwarf_decl_file() to die_get_decl_file(), it is not
+    possible to add probes for certain functions:
+    
+      $ perf probe -x /usr/lib/systemd/systemd-logind match_unit_removed
+      A function DIE doesn't have decl_line. Maybe broken DWARF?
+      A function DIE doesn't have decl_line. Maybe broken DWARF?
+      Probe point 'match_unit_removed' not found.
+         Error: Failed to add events.
+    
+    The problem is that die_get_decl_file() uses the wrong CU to search for
+    the file. elfutils commit e1db5cdc9f has some good explanation for this:
+    
+        dwarf_decl_file uses dwarf_attr_integrate to get the DW_AT_decl_file
+        attribute. This means the attribute might come from a different DIE
+        in a different CU. If so, we need to use the CU associated with the
+        attribute, not the original DIE, to resolve the file name.
+    
+    This patch uses the same source of information as elfutils: use attribute
+    DW_AT_decl_file and use this CU to search for the file.
+    
+    Fixes: dc9a5d2ccd5c823c ("perf probe: Fix to get declared file name from clang DWARF5")
+    Signed-off-by: Georg Müller <georgmueller@gmx.net>
+    Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+    Cc: Adrian Hunter <adrian.hunter@intel.com>
+    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+    Cc: Ian Rogers <irogers@google.com>
+    Cc: Ingo Molnar <mingo@redhat.com>
+    Cc: Jiri Olsa <jolsa@kernel.org>
+    Cc: Mark Rutland <mark.rutland@arm.com>
+    Cc: Namhyung Kim <namhyung@kernel.org>
+    Cc: Peter Zijlstra <peterz@infradead.org>
+    Cc: regressions@lists.linux.dev
+    Cc: stable@vger.kernel.org
+    Link: https://lore.kernel.org/r/20230628084551.1860532-6-georgmueller@gmx.net
+    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 
