@@ -1,121 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CED8538DC8;
-	Tue,  3 Sep 2024 14:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3055B22EE5;
+	Tue,  3 Sep 2024 15:18:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725373498; cv=none; b=iI6QGtAfQJ/ryBz/PEqMYEtporzEV/TTRFU650nOKRq18vHgsVrn+FnujKxhBUIFILo+qIU1vVAPCaLouidTSLyr6l34iSRl3eN3vRWSjmExO69Uu2qdWbZLKdoFHRxKEBspOgqo48pjMfGgcecucXayo6o+iHF5BL+6NERgxxk=
+	t=1725376721; cv=none; b=TcvMvL9LpzWZKpT0YpIhSB8Q8DHfRjwJWfnrc0R8oz3TcuK51O7xNSC+Vh5RfzuHvfInAkEGp44UEr7IqJaAGf/+Y9n9lGAOuLpi0t6ET+CSW11I3qnz5eVD2zuM9tn2/MzZZZhlvpYtBzTqRwtoJ6E3tNwHWiOM/PEa+2W8oo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725373498; c=relaxed/simple;
-	bh=lxtQMSDCNV97wtJ76fkig2XFoSSsFkh8jb0VAzcF+JQ=;
+	s=arc-20240116; t=1725376721; c=relaxed/simple;
+	bh=2z43npMWeb2qk5CIDIRw0W+N2lQ4P58mK0pr8KfONrM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=toDF3+JTLKUITftM6cARZBLYwO6OJL8YcG9P04pNgLkcuXN1vJU5Ij21HdUqbuVBYYByk9KWYA70SbUScQC1aBbFdxMy6CC0Rm41bkodxmwo/ySfr9LOE7auRpM4DZTfZINNPsv5CwofeOS+mpaqmEJyrCSzeTyqMrv54AYmdpc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCKo6DGB; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=TBq3fft08UpNsTDpfVjH9RuH7nQWCwm8uKeZTGg050WYpyFupS92vtASL0icSb4A7Yy+ngBXd2qr30/7mz0sFs12uJ/QktraHmDBSQqW5/NiAYJznjGg/ajRwbBe7U2a+VKN7Sy6kgL9wRKf7YmxbW7vsEGLTshcWvv9sT9Iymk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDFXK/p7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCKo6DGB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92F25C4CEC7;
-	Tue,  3 Sep 2024 14:24:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDFXK/p7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4943C4CEC4;
+	Tue,  3 Sep 2024 15:18:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725373498;
-	bh=lxtQMSDCNV97wtJ76fkig2XFoSSsFkh8jb0VAzcF+JQ=;
+	s=k20201202; t=1725376720;
+	bh=2z43npMWeb2qk5CIDIRw0W+N2lQ4P58mK0pr8KfONrM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hCKo6DGBjbRIg275y5P7WN9pXlCv2hdo4L0xHv9auv7rAOMY2LqrgVxbgScv6VAL6
-	 B+bT2Uq97cGtvHMhaCm9WCO44eYIJWACxrYJk8iwqCO+rrBkAbnzyPQxsaQs4aCeSP
-	 THDbO5edcmQoqF4eAVStxPeegjWbUSb10AHUW/8G7+NeHOmEKwwhGjm4PrpKYcdsBB
-	 rrjU0+Oif/OF7eIyXIDInaQceKqQyWjI2zYeja7o4xl0nw773zfaZP2NYeDeX8NxOu
-	 Zd/2GnAV4X7hJhlIOvsDgrKZ+KBf574j/duFK2tbSuEB/oEqwti+J2PpaTA+sOAAUH
-	 WQXB4kz01mYYA==
-Date: Tue, 3 Sep 2024 11:24:54 -0300
+	b=HDFXK/p7nUPdbpuMX3mokRDZjPXIFvaMKU4ud9LXIw7khRgwqvk0+pUNRiITxXNuE
+	 z2OqP3AQBRHeY9DUriIoTMJuQznJ8egQKsYuVREVeLYNhMtqhYSDUZfL7cw1NUTFhW
+	 Jof1j6yiJalulasvhHWbXtBsRLojnewdngO30Y+xzjiJnaK5W6AC5DoGtZr2+gMbdy
+	 6wgvfcSdqqYWN7mquV/Y03vvHU9Mi4iz/pjnTG6DOySp2Dx674PeWU8J0Mxpl0op7Q
+	 8hPeQ5gBllK6+wtFwLstWGA8kGjUa4AwgaOW4PUyJ768CAF20TXfjNxwKx72J8OHx0
+	 qHGrTQDUxg0lQ==
+Date: Tue, 3 Sep 2024 12:18:36 -0300
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>,
 	Jiri Olsa <jolsa@kernel.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
-	Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-	"Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-	James Clark <james.clark@linaro.org>,
-	John Garry <john.g.garry@oracle.com>,
-	Junhao He <hejunhao3@huawei.com>,
-	David Ahern <dsa@cumulusnetworks.com>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/6] perf parse-events: Vary default_breakpoint_len on
- i386 and arm64
-Message-ID: <ZtccNpePJAM24nA7@x1>
-References: <20240831070415.506194-1-irogers@google.com>
- <20240831070415.506194-6-irogers@google.com>
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, Song Liu <song@kernel.org>,
+	bpf@vger.kernel.org
+Subject: Re: [PATCHSET 0/5] perf tools: Constify BPF control data properly
+ (v1)
+Message-ID: <ZtcozBEf_RItlB9Y@x1>
+References: <20240902200515.2103769-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240831070415.506194-6-irogers@google.com>
+In-Reply-To: <20240902200515.2103769-1-namhyung@kernel.org>
 
-On Sat, Aug 31, 2024 at 12:04:14AM -0700, Ian Rogers wrote:
-> On arm64 the breakpoint length should be 4-bytes but 8-bytes is
-> tolerated as perf passes that as sizeof(long). Just pass the correct
-> value.
+On Mon, Sep 02, 2024 at 01:05:10PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> On i386 the sizeof(long) check in the kernel needs to match the
-> kernel's long size. Check using an environment (uname checks) whether
-> 4 or 8 bytes needs to be passed. Cache the value in a static.
+> I've realized that some control data (usually for filter actions)
+> should be defined as 'const volatile' so that it can passed to the BPF
+> core and to be optimized properly (like with dead code elimination).
+> 
+> Convert the existing codes with the similar patterns.
 
-⬢[acme@toolbox perf-tools-next]$ gcc --version
-gcc (GCC) 14.2.1 20240801 (Red Hat 14.2.1-1)
-Copyright (C) 2024 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+Thanks, tested all the features using BPF, applied to perf-tools-next,
 
-⬢[acme@toolbox perf-tools-next]$ gcc --version
-gcc (GCC) 14.2.1 20240801 (Red Hat 14.2.1-1)
-Copyright (C) 2024 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-
-⬢[acme@toolbox perf-tools-next]$ uname -a
-Linux toolbox 6.10.4-200.fc40.x86_64 #1 SMP PREEMPT_DYNAMIC Sun Aug 11 15:32:50 UTC 2024 x86_64 GNU/Linux
-⬢[acme@toolbox perf-tools-next]$ head /etc/os-release 
-NAME="Fedora Linux"
-VERSION="40 (Toolbx Container Image)"
-ID=fedora
-VERSION_ID=40
-VERSION_CODENAME=""
-PLATFORM_ID="platform:f40"
-PRETTY_NAME="Fedora Linux 40 (Toolbx Container Image)"
-ANSI_COLOR="0;38;2;60;110;180"
-LOGO=fedora-logo-icon
-CPE_NAME="cpe:/o:fedoraproject:fedora:40"
-⬢[acme@toolbox perf-tools-next]$
-
- CC      /tmp/build/perf-tools-next/tests/bp_signal_overflow.o
-tests/bp_signal.c: In function ‘__event’:
-tests/bp_signal.c:115:28: error: operand of ‘?:’ changes signedness from ‘int’ to ‘long unsigned int’ due to unsignedness of other operand [-Werror=sign-compare]
-  115 |         pe.bp_len = is_x ? default_breakpoint_len() : sizeof(long);
-      |                            ^~~~~~~~~~~~~~~~~~~~~~~~
-  LD      /tmp/build/perf-tools-next/pmu-events/pmu-events-in.o
-cc1: all warnings being treated as errors
-make[4]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:105: /tmp/build/perf-tools-next/tests/bp_signal.o] Error 1
-  CC      /tmp/build/perf-tools-next/builtin-mem.o
-make[4]: *** Waiting for unfinished jobs....
-  CC      /tmp/build/perf-tools-next/util/symbol.o
-  CC      /tmp/build/perf-tools-next/builtin-version.o
-  AR      /tmp/build/perf-tools-next/libpmu-events.a
-  CC      /tmp/build/perf-tools-next/util/metricgroup.o
-  CC      /tmp/build/perf-tools-next/builtin-c2c.o
-  CC      /tmp/build/perf-tools-next/util/header.o
-make[3]: *** [/home/acme/git/perf-tools-next/tools/build/Makefile.build:158: tests] Error 2
-make[2]: *** [Makefile.perf:777: /tmp/build/perf-tools-next/perf-test-in.o] Error 2
-make[2]: *** Waiting for unfinished jobs....
-
+- Arnaldo
+ 
+> Thanks,
+> Namhyung
+> 
+> 
+> Namhyung Kim (5):
+>   perf stat: Constify control data for BPF
+>   perf ftrace latency: Constify control data for BPF
+>   perf kwork: Constify control data for BPF
+>   perf lock contention: Constify control data for BPF
+>   perf record offcpu: Constify control data for BPF
+> 
+>  tools/perf/util/bpf_counter_cgroup.c          |  6 +--
+>  tools/perf/util/bpf_ftrace.c                  |  8 ++--
+>  tools/perf/util/bpf_kwork.c                   |  9 ++--
+>  tools/perf/util/bpf_kwork_top.c               |  7 +--
+>  tools/perf/util/bpf_lock_contention.c         | 45 ++++++++++---------
+>  tools/perf/util/bpf_off_cpu.c                 | 16 +++----
+>  tools/perf/util/bpf_skel/bperf_cgroup.bpf.c   |  2 +-
+>  tools/perf/util/bpf_skel/func_latency.bpf.c   |  7 +--
+>  tools/perf/util/bpf_skel/kwork_top.bpf.c      |  2 +-
+>  tools/perf/util/bpf_skel/kwork_trace.bpf.c    |  5 ++-
+>  .../perf/util/bpf_skel/lock_contention.bpf.c  | 27 +++++------
+>  tools/perf/util/bpf_skel/off_cpu.bpf.c        |  9 ++--
+>  12 files changed, 76 insertions(+), 67 deletions(-)
+> 
+> -- 
+> 2.46.0.469.g59c65b2a67-goog
