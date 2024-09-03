@@ -1,216 +1,171 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905031C7669;
-	Tue,  3 Sep 2024 09:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8DD11C984F;
+	Tue,  3 Sep 2024 09:32:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725354705; cv=none; b=P6CnQzMLM5M7aT6FB6hQjjdTwwYSzeT+GmP7xaZeg1n+3zP1MVt4OX541t/oVUb3t/UR/yNfoAIg5Pw67zHHZByzffpzATFx4sXkn132sQc3VKpUaDg8/BmxGl8rOyxYqbmMVw4GY3SnYtxDkXm8GufC5mu1AH2icFP5fF+1NBw=
+	t=1725355948; cv=none; b=DhmW8PF6mY1plkH0Uy68AiNNlZvzWDt1eIeIVrcHj7iMdD031PEWiBy1EK+Uvbd1i710MQqTQS61RsEVeYQSCkAiaCy71VF3Stef5/iO0CrZF2qT4GD7JWCPuKlPEs8iWSsiJTe8daWb77asqQUhN/NN9h6joZdaRIrUcV7hv4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725354705; c=relaxed/simple;
-	bh=vTXnBN7RkGqWdbB/SBRPMbiet1ycfG5/HgtzTsoYtfc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JuA24i9cFzUPbACXt0VaKnYmzaEYYbWOdIH/ovr3b2NVnimEioVd+vIKgHyzbH0diWHNeflU1Db4bb57Hjt/UHjzJkgnRTlKPxd7vFDScEKSlBeKrJk9HB5dg1rfISu/5CR+jgwUKNhLxIJ1vdirRnutUYDglOoZ6ezVD+J2VV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=ZBZAXABY; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	s=arc-20240116; t=1725355948; c=relaxed/simple;
+	bh=9vKpXNDJSa5XEMHjQtFePtkf4UhKKVqLGwUVgyeDXJA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 Content-Type:MIME-Version; b=Jy8dYP72/BTdp1albtxO6kj7ygIk2Xc2cvE7l2dwzmJK94LdpgTXOTT8x1OuZvkXy7aEb6515MKOyE0oajE6trJgwS5dbBPJMzEefkk2q07MUhlScjHASQ5xpgUMjxfSJTV6Ch1KfDlkBky09zz59Hfjv3qOu+L5V75btj+gOgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=YIo0gOXA; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="ZBZAXABY"
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Wyfy23z0Tz9tCJ;
-	Tue,  3 Sep 2024 11:11:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1725354698;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZPzW6zq/WcQ/WiA0gxrcLJjcmAKmM8AZOEgUBVGohqU=;
-	b=ZBZAXABYVG2geXwbPM3S25PkgrHwvEQKgFi6QrCVNgQFuXfmqoT55sUlP9C4u26sOWaUR2
-	Ak9EVSIGIWcE+x1lwyaKkwHd3CjUehNN1jOSWo3Q71adbymmg82h7I3vGEtvaGjc5ddRUF
-	jojEcwx4S274kwzQ3ytsoYnnnTSheNseaHZSovzFZk3D2mxSWTur14Kfo8WMM4g6U/ge4m
-	7VfdButVk4vNzkBZtkFkRYfuu+2vwIrSL+tF3qAI9sXdSOkjkl9D6GLTvNLYboTfizO+gX
-	lTZbz/SPjZD+lGSMHlHWSINaZ7syGXUrJjwtdcMOY4gie+xQm5G2syNxCVEFVQ==
-Date: Tue, 3 Sep 2024 19:11:14 +1000
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Christoph Hellwig <hch@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount
- ID
-Message-ID: <20240903.084814-meek.porthole.lonely.employer-6kt9HpTqtbg4@cyphar.com>
-References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
- <20240902164554.928371-1-cyphar@cyphar.com>
- <20240902164554.928371-2-cyphar@cyphar.com>
- <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="YIo0gOXA"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4832q46b002730;
+	Tue, 3 Sep 2024 09:32:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:in-reply-to:references:date:message-id
+	:content-type:mime-version; s=pp1; bh=qSifLb6x1zwIny2PFCWIyHyUmI
+	krG0SN/fg0te/rcRw=; b=YIo0gOXA4F1FJJfoMsk5v/aJJl33JJIYQDkfNhmezS
+	oFKGApbYTIi30DJsEDWgbqgvNyC0nAd5TMrCSQrveQ9a66AEukcg19u2St1zVmsL
+	9xKg3HJQY8s7OS1QEg+dWyhBloe7mwROZVjawbFwUQ1dT1DXLwOVHI8Sfkc4olq5
+	HZkVyHrh2YvB1i8MEJARmmSiJxaAhR2XaqLsLZu4/qNj9T1qEVl9nbnZCsQ7JI88
+	0z5JGRdnNhfKBwTY2o0tUdEBmbG4bVg1Hc05d5TNcgxi7Ri6ffqLZb8OJQkkeMUF
+	ljaSE9ETtiAa/stZOfzfXpkckrZ06OevldwVHiUJ2h5g==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9cx4f-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 09:32:09 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4839W8F2027853;
+	Tue, 3 Sep 2024 09:32:08 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9cx4c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 09:32:08 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4838Yghs007930;
+	Tue, 3 Sep 2024 09:32:07 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cfqmsv7x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 03 Sep 2024 09:32:07 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4839W5NT54067458
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 3 Sep 2024 09:32:06 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D3C642004D;
+	Tue,  3 Sep 2024 09:32:05 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9D65420043;
+	Tue,  3 Sep 2024 09:32:05 +0000 (GMT)
+Received: from tuxmaker.linux.ibm.com (unknown [9.152.85.9])
+	by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Tue,  3 Sep 2024 09:32:05 +0000 (GMT)
+From: Sven Schnelle <svens@linux.ibm.com>
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>,
+        Masami Hiramatsu
+ <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, Ingo
+ Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa
+ <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+        Adrian Hunter
+ <adrian.hunter@intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
+In-Reply-To: <20240903090843.GA17936@redhat.com> (Oleg Nesterov's message of
+	"Tue, 3 Sep 2024 11:08:43 +0200")
+References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
+	<20240903073629.2442754-1-svens@linux.ibm.com>
+	<20240903090843.GA17936@redhat.com>
+Date: Tue, 03 Sep 2024 11:32:05 +0200
+Message-ID: <yt9d8qw99j6y.fsf@linux.ibm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: Sr4tz1I6d4hAYZVDJsJkGLaE5aGfXyis
+X-Proofpoint-ORIG-GUID: xHkIv-4FlDgm8pLYfOijK6JpAp0X464w
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ctvs2l4bgcgrysaf"
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
-X-Rspamd-Queue-Id: 4Wyfy23z0Tz9tCJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-02_06,2024-09-03_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=800 adultscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2409030072
 
+Oleg Nesterov <oleg@redhat.com> writes:
 
---ctvs2l4bgcgrysaf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 09/03, Sven Schnelle wrote:
+>>
+>> [   44.505448] ==================================================================                                                                      20:37:27 [3421/145075]
+>> [   44.505455] BUG: KASAN: slab-use-after-free in special_mapping_close+0x9c/0xc8
+>> [   44.505471] Read of size 8 at addr 00000000868dac48 by task sh/1384
+>> [   44.505479]
+>> [   44.505486] CPU: 51 UID: 0 PID: 1384 Comm: sh Not tainted 6.11.0-rc6-next-20240902-dirty #1496
+>> [   44.505503] Hardware name: IBM 3931 A01 704 (z/VM 7.3.0)
+>> [   44.505508] Call Trace:
+>> [   44.505511]  [<000b0324d2f78080>] dump_stack_lvl+0xd0/0x108
+>> [   44.505521]  [<000b0324d2f5435c>] print_address_description.constprop.0+0x34/0x2e0
+>> [   44.505529]  [<000b0324d2f5464c>] print_report+0x44/0x138
+>> [   44.505536]  [<000b0324d1383192>] kasan_report+0xc2/0x140
+>> [   44.505543]  [<000b0324d2f52904>] special_mapping_close+0x9c/0xc8
+>                                        ^^^^^^^^^^^^^^^^^^^^^
+> Caused by
+>
+> 	[PATCH v2 1/4] mm: Add optional close() to struct vm_special_mapping
+> 	https://lore.kernel.org/all/20240812082605.743814-1-mpe@ellerman.id.au/
+>
+> ?
+>
+>> +static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
+>> +{
+>> +	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
+>> +
+>> +	mutex_lock(&delayed_uprobe_lock);
+>> +	delayed_uprobe_remove(NULL, vma->vm_mm);
+>> +	mutex_unlock(&delayed_uprobe_lock);
+>> +
+>> +	if (!area)
+>> +		return;
+>> +
+>> +	put_page(area->pages[0]);
+>> +	kfree(area->bitmap);
+>> +	kfree(area);
+>> +}
+>> +
+>>  static struct xol_area *__create_xol_area(unsigned long vaddr)
+>>  {
+>>  	struct mm_struct *mm = current->mm;
+>> @@ -1481,6 +1500,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+>>
+>>  	area->xol_mapping.name = "[uprobes]";
+>>  	area->xol_mapping.fault = NULL;
+>> +	area->xol_mapping.close = uprobe_clear_state;
+>
+> LGTM.
+>
+> but with or without this fix __create_xol_area() also needs
+>
+> 	area->xol_mapping.mremap = NULL;
+>
+> ?
 
-On 2024-09-03, Amir Goldstein <amir73il@gmail.com> wrote:
-> On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
-rote:
-> >
-> > Now that open_by_handle_at(2) can return u64 mount IDs, do some tests to
-> > make sure they match properly as part of the regular open_by_handle
-> > tests.
-> >
-> > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0-1=
-0c2c4c16708@cyphar.com/
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
-> > ---
-> > v2:
-> > - Remove -M argument and always do the mount ID tests. [Amir Goldstein]
-> > - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
-> >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
-> > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cyph=
-ar.com/>
-> >
-> >  src/open_by_handle.c | 128 +++++++++++++++++++++++++++++++++----------
-> >  1 file changed, 99 insertions(+), 29 deletions(-)
-> >
-> > diff --git a/src/open_by_handle.c b/src/open_by_handle.c
-> > index d9c802ca9bd1..0ad591da632e 100644
-> > --- a/src/open_by_handle.c
-> > +++ b/src/open_by_handle.c
-> > @@ -86,10 +86,16 @@ Examples:
-> >  #include <errno.h>
-> >  #include <linux/limits.h>
-> >  #include <libgen.h>
-> > +#include <stdint.h>
-> > +#include <stdbool.h>
-> >
-> >  #include <sys/stat.h>
-> >  #include "statx.h"
-> >
-> > +#ifndef AT_HANDLE_MNT_ID_UNIQUE
-> > +#      define AT_HANDLE_MNT_ID_UNIQUE 0x001
-> > +#endif
-> > +
-> >  #define MAXFILES 1024
-> >
-> >  struct handle {
-> > @@ -120,6 +126,94 @@ void usage(void)
-> >         exit(EXIT_FAILURE);
-> >  }
-> >
-> > +int do_name_to_handle_at(const char *fname, struct file_handle *fh, in=
-t bufsz)
-> > +{
-> > +       int ret;
-> > +       int mntid_short;
-> > +
-> > +       static bool skip_mntid_unique;
-> > +
-> > +       uint64_t statx_mntid_short =3D 0, statx_mntid_unique =3D 0;
-> > +       struct statx statxbuf;
-> > +
-> > +       /* Get both the short and unique mount id. */
-> > +       if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID, &statxbuf) < 0) {
->=20
-> This fails build on top of latest for-next branch with commit
-> 873e36c9 - statx.h: update to latest kernel UAPI
->=20
-> It can be fixed by changing to use the private xfstests_statx()
-> implementation, same as in stat_test.c.
->=20
-> I am not sure how elegant this is, but that's the easy fix.
-
-Ah, I was using master as the base. Sorry about that...
-
-> > +               fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n", fname);
-> > +               return EXIT_FAILURE;
-> > +       }
-> > +       if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
-> > +               fprintf(stderr, "%s: no STATX_MNT_ID in stx_mask\n", fn=
-ame);
-> > +               return EXIT_FAILURE;
-> > +       }
-> > +       statx_mntid_short =3D statxbuf.stx_mnt_id;
-> > +
-> > +       if (!skip_mntid_unique) {
-> > +               if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID_UNIQUE, &sta=
-txbuf) < 0) {
-> > +                       fprintf(stderr, "%s: statx(STATX_MNT_ID_UNIQUE)=
-: %m\n", fname);
-> > +                       return EXIT_FAILURE;
-> > +               }
-> > +               /*
-> > +                * STATX_MNT_ID_UNIQUE was added fairly recently in Lin=
-ux 6.8, so if the
-> > +                * kernel doesn't give us a unique mount ID just skip i=
-t.
-> > +                */
-> > +               if ((skip_mntid_unique |=3D !(statxbuf.stx_mask & STATX=
-_MNT_ID_UNIQUE)))
-> > +                       printf("statx(STATX_MNT_ID_UNIQUE) not supporte=
-d by running kernel -- skipping unique mount ID test\n");
->=20
-> This verbose print breaks all existing "exportfs" tests which do not
-> expect it in the golden output.
->=20
-> I understand that silently ignoring the failure is not good, but I also
-> would like to add this test coverage to all the existing tests.
->=20
-> One solution is to resurrect the command line option -M from v1,
-> but instead of meaning "test unique mount id" let it mean
-> "do not allow to skip unique mount id" test.
->=20
-> Then you can add a new test that runs open_by_handle -M, but also
-> implement a helper _require_unique_mntid similar to _require_btime
-> which is needed for the new test to run only on new kernels.
->=20
-> I'm sorry for this complication, but fstest is a testsuite that runs on
-> disto and stable kernels as well and we need to allow test coverage
-> of new features along with stability of the test env.
-
-No worries, I'll write it up. I'm not familiar with the exact
-requirements of xfstests, sorry for the noise! (^_^")
-
->=20
-> Thanks,
-> Amir.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---ctvs2l4bgcgrysaf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZtbSsgAKCRAol/rSt+lE
-bwxGAQDiAoDf52s+LenWo4ttMhBeDkXrmdgs1mOXMqJLRHnbwQD+PRJRjDKv6qU4
-BM1xu+Z4CvaDhwgbzw8kVRLkpAlSago=
-=VcBz
------END PGP SIGNATURE-----
-
---ctvs2l4bgcgrysaf--
+I think the code should just use kzalloc() instead of kmalloc() so all
+members are cleared. I noticed that when looking into the issue because
+the new close member of xol_mapping wasn't initialized. My plan was to
+send that change as a separate patch - because it's not related to this
+issue.
