@@ -1,117 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D5F17C9B3;
-	Tue,  3 Sep 2024 10:07:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C5A1AD27F;
+	Tue,  3 Sep 2024 10:09:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725358029; cv=none; b=slT7Mnjfsfcq+waa8xzSekhjIRJ2s1Fk6UWX2dbsNwd7DcAyb40Hdckz1dhhRCZ9jAUZ9mTau9Dwri6RHcYdSBAnCvf2nAhE8e8iUsVmdunO8j6bGtwXaxM4X9I/3gMAb0OBCwqFFzXSYd/czb8fqsWN26EsvXbJWNRbkklnGzU=
+	t=1725358191; cv=none; b=FDWTp9yZRoGI4meL4NZ2jHIfJgPfxbtsJcRAt7PCC9g6GGE4p6UxnbH4lttEfyJyuHhqf9Xfw57P5p6zSFWMN4jBAF7RBQbNb2h6ktW4Jfk5m49ECMvcPYTizIXZmhWpywDTsEQJ9d9VXvbtjx3v5V1tOL89poLcqWxHe3Jy76w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725358029; c=relaxed/simple;
-	bh=8KOhIo4507EuwcvtkBjOPT1UdLYvJ4MkGgnucRoMW7c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RUO/zj/bDUVy9Uz3dmCPK/YxWZZjFmN3d4npNYCBOBnPL6Wo4zl/z8cQazS2USt6G4eKw0s9+ffrI9Ojaly8qbY+5JsvDZu4Ss+LbLtv2KLGbLjubBxEeS4H3tFAeQqxqWleiI2FJ18LT2xZrS9BunfPTe0L18mgeHk9IDF3ZbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SPQzhnot; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1725358191; c=relaxed/simple;
+	bh=hJhnW1J0MnYQwBnhBo37+19gPvvBs+Mh3HX/l9vRD9Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=faDner0a90s0cZsJHH9IKIP8fdUoZX5ATbchZNUKCRdPzCGibGQIC6vFZrpVmTljYtWmvBfuvDpwYLoGzVgO83LxWWJPXqtAgGfy2xSYtxxS2xfp9FClbM5Ek8Ppgsz4BQ0L1+S9XznUp+vUCV9STRO1goXPuAOJ+RIZurRNHpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YSdQ+8hu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SPQzhnot"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725358028; x=1756894028;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=8KOhIo4507EuwcvtkBjOPT1UdLYvJ4MkGgnucRoMW7c=;
-  b=SPQzhnotv02GRNUUuJCTUHpXGQb5dhP6Hs/ydui4G3riw9a9qtuJkjCQ
-   2JhtQTUfbOZGDLdbXX+17mrSiOjOku6vof2mOxjBjjeEwKx3e+q999rIh
-   HmXvZ2n3yoDZKP2ifnQSdfo2yqd2LE2RjHgqJF12mQpIyIjHiH4+0VVNN
-   b9NpsUsNPYF1I7xiXKDNZis/Ok2BJFT3AK2fprKC3UKw1Z6ka0OKThk3I
-   ywRvPmBnktiwzEneN1UyXPu1Jj9lIo2i6m5RYB03NJGw0JiSY4tEfiXIh
-   0ndb1PGa/34SuttiPaS617CnKXQQ0U6Xk5fHy8/7ZP1kn8h06Ey20a1rX
-   Q==;
-X-CSE-ConnectionGUID: 5Pjj7k/nTH+F9t+AR7wdgA==
-X-CSE-MsgGUID: VB96WCz5Q3+8A4Ji6jivRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11183"; a="23754184"
-X-IronPort-AV: E=Sophos;i="6.10,198,1719903600"; 
-   d="scan'208";a="23754184"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 03:07:07 -0700
-X-CSE-ConnectionGUID: qNRwZHUqSNugyq2z4HfgpQ==
-X-CSE-MsgGUID: MqkRV2ThTZucNuoB0EAmWw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,198,1719903600"; 
-   d="scan'208";a="64494453"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.246.0.178])
-  by fmviesa006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Sep 2024 03:07:02 -0700
-Message-ID: <70a58dca-01dc-408b-a2f7-a854718a405b@intel.com>
-Date: Tue, 3 Sep 2024 13:06:55 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YSdQ+8hu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FEC0C4CEC5;
+	Tue,  3 Sep 2024 10:09:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725358191;
+	bh=hJhnW1J0MnYQwBnhBo37+19gPvvBs+Mh3HX/l9vRD9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=YSdQ+8hu9Xi3EolQSfosP84baYa81R7/LGrCIpmdbjmWdd2L5iSeo6nChyA/6I3bO
+	 vKhcAxWSPLxyNUV3R0GDX5bBEMyYsgKYWJi5EYJmTdooiPAJyhHBD4t1s5PZoDE+y9
+	 fH0jbo7GuXc5zDkFEWZFetpi7imN+0mx8ioHAcz8vgS8333n2LHEdZXhp+ANYoodTE
+	 URZilUMDr1jCcFtqLPmtmoBThLNU9MCIpbZsd6blOTs7x4/jtSF5L2jGnDp2zW6N1L
+	 vBhKBg7BUJP43BW+GlQpBDxA8uXdIGVZPckvpyBw5V96pU1ME5Khmt9OEMidRftrdq
+	 BnUB7+fl7nJdw==
+Date: Tue, 3 Sep 2024 07:09:47 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Steinar H. Gunderson" <sesse@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	irogers@google.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v9 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <Ztbga0xLyt1eaehi@x1>
+References: <20240719150051.520317-1-sesse@google.com>
+ <ZqlCIJ4khe2_xyp9@x1>
+ <ZqlDuIj_nMVXhYou@x1>
+ <ZtRIla5pCqlMIKvN@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/8] perf/core: Allow multiple AUX PMU events with the
- same module
-To: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
- <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Yicong Yang <yangyicong@hisilicon.com>,
- Jonathan Cameron <jonathan.cameron@huawei.com>,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
-References: <20240823113306.2310957-1-leo.yan@arm.com>
- <20240823113306.2310957-2-leo.yan@arm.com>
-Content-Language: en-US
-From: Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-In-Reply-To: <20240823113306.2310957-2-leo.yan@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZtRIla5pCqlMIKvN@google.com>
 
-On 23/08/24 14:32, Leo Yan wrote:
-> This commit changes the condition from checking the same PMU instance to
-> checking the same .setup_aux() callback pointer. If PMU events have the
-> same callback pointer, it means they share the same PMU driver module.
-> This allows support for multiple PMU events with the same driver module.
+On Sun, Sep 01, 2024 at 12:57:25PM +0200, Steinar H. Gunderson wrote:
+> On Tue, Jul 30, 2024 at 04:49:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Unfortunately it clashed with recent patches in the capstone related
+> > codebase, IIRC Athira's for powerpc data-type profiling.
+> > 
+> > […]
+> > 
+> > I'll continue processing other patched and eventually try to fix this if
+> > you're busy,
 > 
-> As a result, more than one AUX event (e.g. arm_spe_0 and arm_spe_1)
-> can record trace into the AUX ring buffer.
+> Hi,
 > 
-> Signed-off-by: Leo Yan <leo.yan@arm.com>
-> ---
->  kernel/events/core.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index c973e3c11e03..883c457911a3 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -12345,9 +12345,16 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
->  
->  	/*
->  	 * If both events generate aux data, they must be on the same PMU
-> +	 * module but can be with different PMU instances.
-> +	 *
-> +	 * For a built-in PMU module, the 'pmu->module' pointer is NULL,
-> +	 * thus it is not feasible to compare the module pointers when
-> +	 * AUX PMU drivers are built into the kernel image. Instead,
-> +	 * comparing the .setup_aux() callback pointer can determine if
-> +	 * the two PMU events come from the same PMU driver.
->  	 */
->  	if (has_aux(event) && has_aux(output_event) &&
-> -	    event->pmu != output_event->pmu)
-> +	    event->pmu->setup_aux != output_event->pmu->setup_aux)
+> Is there any movement in getting v10 merged? :-) I haven't heard back
+> since I sent out the rebase
 
-It is not very flexible and risks someone adding aux PMUs that
-do not want that rule but accidentally support it.  Another
-option is to add a PMU callback, but really you need to Peter's
-feedback.
+Test building is detecting some problems, I'll try to address them:
 
+perfbuilder@number:~$ time dm
+   1    13.50 almalinux:8                   : FAIL gcc version 8.5.0 20210514 (Red Hat 8.5.0-22) (GCC) 
+    util/srcline.c: In function 'dso__free_a2l':
+    util/srcline.c:184:20: error: parameter name omitted
+     void dso__free_a2l(struct dso *)
+                        ^~~~~~~~~~~~
+    make[3]: *** [/git/perf-6.11.0-rc3/tools/build/Makefile.build:158: util] Error 2
+   2    68.46 almalinux:9                   : FAIL clang version 17.0.6 (AlmaLinux OS Foundation 17.0.6-5.el9)
+    util/srcline.c:184:32: error: omitting the parameter name in a function definition is a C2x extension [-Werror,-Wc2x-extensions]
+      184 | void dso__free_a2l(struct dso *)
+          |                                ^
+    1 error generated.
+    make[3]: *** [/git/perf-6.11.0-rc3/tools/build/Makefile.build:158: util] Error 2
+   3: almalinux:9-i386WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+WARNING: image platform (linux/386) does not match the expected platform (linux/amd64)
+    17.58 almalinux:9-i386              : FAIL gcc version 11.4.1 20231218 (Red Hat 11.4.1-3) (GCC) 
+    util/llvm-c-helpers.cpp: In function ‘char* make_symbol_relative_string(dso*, const char*, u64, u64)’:
+    util/llvm-c-helpers.cpp:150:52: error: format ‘%lx’ expects argument of type ‘long unsigned int’, but argument 5 has type ‘u64’ {aka ‘long long unsigned int’} [-Werror=format=]
+      150 |                 snprintf(buf, sizeof(buf), "%s+0x%lx",
+          |                                                  ~~^
+          |                                                    |
+          |                                                    long unsigned int
+          |                                                  %llx
+      151 |                          demangled ? demangled : sym_name, addr - base_addr);
+          |                                                            ~~~~~~~~~~~~~~~~
+          |                                                                 |
+          |                                                                 u64 {aka long long unsigned int}
+    cc1plus: all warnings being treated as errors
+    make[3]: *** [/git/perf-6.11.0-rc3/tools/build/Makefile.build:158: util] Error 2
+   4    18.08 alpine:3.15                   : FAIL gcc version 10.3.1 20211027 (Alpine 10.3.1_git20211027) 
+    util/srcline.c: In function 'dso__free_a2l':
+    util/srcline.c:184:20: error: parameter name omitted
+      184 | void dso__free_a2l(struct dso *)
+          |                    ^~~~~~~~~~~~
+    make[3]: *** [/git/perf-6.11.0-rc3/tools/build/Makefile.build:158: util] Error 2
