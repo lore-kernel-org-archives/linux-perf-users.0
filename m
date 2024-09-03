@@ -1,57 +1,57 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF5F1AD25C
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Sep 2024 10:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A86551AD24B
+	for <linux-perf-users@vger.kernel.org>; Tue,  3 Sep 2024 10:22:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725358922; cv=none; b=BskHxbJ/JdXHrqkFsL5P61626b2VF38Lx5zgkFL40MXGoYnOdbHIXpioV8AV0YJoUKy74aHXjAmZs0eM/tai4OUftNJqxkFtps61lDJFnYwPrESG/OWjmQbNMAKTBKBGScW1JYNeuC9F33YiYQ8p+GWjHPorAGJcV45HOtAPGUM=
+	t=1725358938; cv=none; b=P9ZatsvpTkrJIGoFqaaxji3KFS0LaS4/MT/N/pibmJLaodQU61vLV8ZLqK0Ys0SVmbU69V5cMQzUah2x9Q5G3XVX1tYYjg7j29oQxYqBTaUnaqoedlx5a+xGIDKm7E0V+FP90Lyo9B6SwC5YtArEGrVU3pMvBdVwofvPaV6F4O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725358922; c=relaxed/simple;
-	bh=TCmY5/W8UjZo5v+UmsAxTLf+W/oV6ui66khMLptw/MU=;
+	s=arc-20240116; t=1725358938; c=relaxed/simple;
+	bh=9zOMPSCaKIlKWc42AsHnEYsvI3nEJ1h/7wDK7dHA3RU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ByLHqpWjVs8Q8OiREOyUiNB0/CCQHHcDczpFGvMP659E85aksNeREjprtOLY1v1ETtHygKyEZKlm5Tv+IDuhz6oqaa31fJSLno9a57buGDh9G1lnHnWg74Fp5MBgE/07PniqDfADk49cMOZirsUkC30n18/03DFNVRu6YQALYlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T9KXqpdR; arc=none smtp.client-ip=209.85.128.42
+	 MIME-Version; b=SAoA37SFKdOpE+X7+zuk73jsDn1SA3LHo/QyrL3OorLcLiMjKM2lwR9ffCXejTGZuJtfGNIjs7IWRicEPQKjt4q5XZmQ0jHoPg/MM42p953z3m7Qjdf7ecvH5dwtUZQ0HrNBT/madgtKIJHvDLarDx35CxMn0TB7cD/8MBMwpXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ruQdr/yK; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T9KXqpdR"
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-42c5347b2f7so27673195e9.0
-        for <linux-perf-users@vger.kernel.org>; Tue, 03 Sep 2024 03:22:00 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ruQdr/yK"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-42c7a384b18so23120775e9.0
+        for <linux-perf-users@vger.kernel.org>; Tue, 03 Sep 2024 03:22:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725358919; x=1725963719; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725358935; x=1725963735; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
-        b=T9KXqpdRcK6yUw8FjCTY3wMO0UJIsDxMVMDoMXeUrw5yNcZ/7diKn0I9R6J4buyR9X
-         XoCMATjd82wSIlWEPSywZwCdzlSfXIzWPj41D31tPPo8DsyhKCo6t9TGv9uXEfA/ySWs
-         HaGbKY0X2+GCx0YnlIeyWcWiiv/slatxRLu1qxEniTVm6UL8qr/O7RcAvyKLJpXFhl+M
-         5+q16TEqtYRF3NKCZ2Jr9LKV2nI1aZzHz5ZAJ8Q9Sr+Mpjt8QEQnBNmf0bPxy7lYthpy
-         SKiiUooH4T+835/+e8BKv6PaDlxPcFdwFMhRc0Og/AXrVimMzkJSfW/quP/KHMqYMj3w
-         GgmQ==
+        bh=VJKJCBpUvVPcGAEYnax2qcSOD0MR4G3nPcSezle+qU4=;
+        b=ruQdr/yKU0QuGV8XorD21dAEZ3d/hPbb4uYXcf0SL9rQ3h3j/v9n0jp2RHKA8GDhkX
+         HvzY/iIS9Cf1d9K5wBp/xbLV1TV1KPZhT3leE7KvOtEMfOk541ns7qYA47RF0KxSt7Ut
+         l2/NKkHiCV4HxSOW9wBNVknYoNkVVZHTtCZ+V8+W1uj7pjLXZhLngRyp9+1+irRiW/wW
+         +UfQKHpeMGhl8g9uEJX9GGOO2j37VN2LMVN5dHwQ/bwqB2glcYgSVC6szOHcbcwMHcng
+         sKE3iNtE2b2g3Yj+0/1O7QbNb4UxXpvbkDTo2QO9kNlgnAGHJhsEmXwNMiuZyzGFmx1M
+         a3pQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725358919; x=1725963719;
+        d=1e100.net; s=20230601; t=1725358935; x=1725963735;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FXow/HXS2t6eZsIhNK0KrvK5I+CXmczupsEF4/wQsaM=;
-        b=Oin0349KdGnpkVhCngtX6T8MP9932ZpgnuFdn40sj1XwIfXziYeg7nnDp5bhQldXGb
-         7ik+BNNLZQYg1+7OPZHRZ5t7fSNLzrNCkKxfvEY1nwcLdXgzdLgo8MgMv8EGY3tPWqA8
-         7L+ahYpeNknUOdSv+nIz6HXRLLv/aDX35XQC2tmuLVtIY1dE+e0FbBp2FKuf5t6Qf/Lb
-         cU1k4H+yTbxV5E3dbpwaux0TDXYN+z4oeiBB7E4eP0naQpbg1E/0/Fvm1QHH+zDR7rr6
-         HDw+VTuDa22scv5EoveY40jyfpnH8aA8WUtPlB279gAbsmjtfjfFBPB9ev2hpXJfhWRx
-         P/9g==
-X-Forwarded-Encrypted: i=1; AJvYcCVIgyT29GlyRDPYVvPqSAyKTM5U9O/CpojE6diATeKj7vbHXgchYqlfjWDBU3SD3MHtU0KIZuauYTgEQjvfUDiz@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrI8u2KWE60yzG3mwn8iC3SR4NDXXlzXKgMFrVk6Fva2lvkv3o
-	P1BMIvxtF3bBC30jshww3Pub75gjaa3IxDs6570uMKr9jWSvz7gDTFw8gKBF/K8=
-X-Google-Smtp-Source: AGHT+IHkBX4KzIJzZmErwYTrZ+5GhpDTKAgX+51Byz51rMyHGi/ROqeYUZBfKl487Mq1nQLo3tEQCg==
-X-Received: by 2002:a05:600c:1c1b:b0:426:6f27:379a with SMTP id 5b1f17b1804b1-42bb01b4c35mr118683625e9.13.1725358918867;
-        Tue, 03 Sep 2024 03:21:58 -0700 (PDT)
+        bh=VJKJCBpUvVPcGAEYnax2qcSOD0MR4G3nPcSezle+qU4=;
+        b=n38o3oZXgjqkRrnIRxcos/SRdxAX32f2UoPvmUAiuyi3x4zeiCltpQiaq2dPG3ZEDP
+         1o1WSu+408YraWRIJORun93hg1LjYztEbR2N8SpaJlU9uc6b+L2w397GuLn9+3PrGGM7
+         Npl5pLFfhOsy8QdWjKF9V6MIiOlho/toPSwwAo1c0aIUF5sibUJBBENvM5EHWED1exhJ
+         0IguuDFh5sPX0REjUzA6MGcKXxowQgCaoBP0lW3fieBJ0BjHhbZd5yMFgDdisfVP0Y9B
+         omzlHAWHQWoLz7HjQNyh12OPfg9jir+nnLZD8WZDpRTj2H7KIQhS9ZRezIqE3Y/1uPw4
+         Cotg==
+X-Forwarded-Encrypted: i=1; AJvYcCXXNyw36sSWso88hYE7QepYpHFWBgYtXinp2dy4PiTVR89vKnPFK9b0A7oAJfMXFeWhX7YDP37l+Ddfahx6jM1X@vger.kernel.org
+X-Gm-Message-State: AOJu0YwbZLY3RbeuOfCyf7sO9Nx9BXfNNb6ANUH1ze8IAzPPgo/Ce5+Q
+	HKp4Bet4JgQkMOHwH4TwTCCiKmk8P7EKPAN4+3VYV75Rnn6drqEqzsVrxy6J6xo=
+X-Google-Smtp-Source: AGHT+IFgSoyyOtImdhFvpIkfkxAvYNeSg4DDCvj9dTZ/CYpAWzZrXxUx8ASLwX+TMI1prEH2Ay5XJA==
+X-Received: by 2002:a05:600c:3b1b:b0:42a:a6d2:328b with SMTP id 5b1f17b1804b1-42bdc64e691mr64706745e9.30.1725358934675;
+        Tue, 03 Sep 2024 03:22:14 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6e274ccsm168739995e9.37.2024.09.03.03.21.57
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6e274ccsm168739995e9.37.2024.09.03.03.22.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 03:21:58 -0700 (PDT)
+        Tue, 03 Sep 2024 03:22:14 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: irogers@google.com,
 	linux-perf-users@vger.kernel.org,
@@ -72,9 +72,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Adrian Hunter <adrian.hunter@intel.com>,
 	Weilin Wang <weilin.wang@intel.com>,
 	Dominique Martinet <asmadeus@codewreck.org>,
-	Yang Jihong <yangjihong@bytedance.com>,
-	Colin Ian King <colin.i.king@gmail.com>,
 	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	Yang Jihong <yangjihong@bytedance.com>,
 	Howard Chu <howardchu95@gmail.com>,
 	Ze Gao <zegao2021@gmail.com>,
 	Yunseong Kim <yskelg@gmail.com>,
@@ -83,9 +83,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Yicong Yang <yangyicong@hisilicon.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v6 6/7] perf test: Make stat test work on DT devices
-Date: Tue,  3 Sep 2024 11:19:50 +0100
-Message-Id: <20240903102005.78049-7-james.clark@linaro.org>
+Subject: [PATCH v6 7/7] perf test: Add a test for default perf stat command
+Date: Tue,  3 Sep 2024 11:19:51 +0100
+Message-Id: <20240903102005.78049-8-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240903102005.78049-1-james.clark@linaro.org>
 References: <20240903102005.78049-1-james.clark@linaro.org>
@@ -97,44 +97,60 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-PMUs aren't listed in /sys/devices/ on DT devices, so change the search
-directory to /sys/bus/event_source/devices which works everywhere. Also
-add armv8_cortex_* as a known PMU type to search for to make the test
-run on more devices.
+Test that one cycles event is opened for each core PMU when "perf stat"
+is run without arguments.
+
+The event line can either be output as "pmu/cycles/" or just "cycles" if
+there is only one PMU. Include 2 spaces for padding in the one PMU case
+to avoid matching when the word cycles is included in metric
+descriptions.
 
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/tests/shell/stat.sh | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ tools/perf/tests/shell/stat.sh | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
 diff --git a/tools/perf/tests/shell/stat.sh b/tools/perf/tests/shell/stat.sh
-index 3f1e67795490..525d0c44fdc6 100755
+index 525d0c44fdc6..5a2ca2bcf94d 100755
 --- a/tools/perf/tests/shell/stat.sh
 +++ b/tools/perf/tests/shell/stat.sh
-@@ -117,16 +117,18 @@ test_cputype() {
+@@ -148,6 +148,30 @@ test_cputype() {
+   echo "cputype test [Success]"
+ }
  
-   # Find a known PMU for cputype.
-   pmu=""
--  for i in cpu cpu_atom armv8_pmuv3_0
-+  devs="/sys/bus/event_source/devices"
-+  for i in $devs/cpu $devs/cpu_atom $devs/armv8_pmuv3_0 $devs/armv8_cortex_*
-   do
--    if test -d "/sys/devices/$i"
-+    i_base=$(basename "$i")
-+    if test -d "$i"
-     then
--      pmu="$i"
-+      pmu="$i_base"
-       break
-     fi
--    if perf stat -e "$i/instructions/" true > /dev/null 2>&1
-+    if perf stat -e "$i_base/instructions/" true > /dev/null 2>&1
-     then
--      pmu="$i"
-+      pmu="$i_base"
-       break
-     fi
-   done
++test_hybrid() {
++  # Test the default stat command on hybrid devices opens one cycles event for
++  # each CPU type.
++  echo "hybrid test"
++
++  # Count the number of core PMUs, assume minimum of 1
++  pmus=$(ls /sys/bus/event_source/devices/*/cpus 2>/dev/null | wc -l)
++  if [ "$pmus" -lt 1 ]
++  then
++    pmus=1
++  fi
++
++  # Run default Perf stat
++  cycles_events=$(perf stat -- true 2>&1 | grep -E "/cycles/|  cycles  " | wc -l)
++
++  if [ "$pmus" -ne "$cycles_events" ]
++  then
++    echo "hybrid test [Found $pmus PMUs but $cycles_events cycles events. Failed]"
++    err=1
++    return
++  fi
++  echo "hybrid test [Success]"
++}
++
+ test_default_stat
+ test_stat_record_report
+ test_stat_record_script
+@@ -155,4 +179,5 @@ test_stat_repeat_weak_groups
+ test_topdown_groups
+ test_topdown_weak_groups
+ test_cputype
++test_hybrid
+ exit $err
 -- 
 2.34.1
 
