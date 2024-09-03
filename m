@@ -1,116 +1,99 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC3BD1CA693
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Sep 2024 12:46:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24A91A724E;
+	Tue,  3 Sep 2024 13:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725367597; cv=none; b=BgMX613qzw5B9T7lP7BNqOYbMkY6DxK0O2R+T51kmhKXiW9vfAOOmN2653wQhqjhFqlNy1KfwEB0aM5ZTkVhw9Al+ZptuQX/APqp6XCp7af9oJkIiESav30tuL7+SEd3aZuhlWmABYRx+9d0JlIvMe3CEy8Z0AF4ceQTvZuOOEw=
+	t=1725369300; cv=none; b=sC4vNy4zb9uPt4bHunM8cbxShQPVADlJeRC4qmgyV8VrL7NPZgdtujzXzqR/aYizIC4T0CAZf8kvLJitxJVz2Wzjqgh5Lp5lQ98tmWbw4dZPVP/aUVJgGiQF4E6YKeQzZSpx7KLi6Fo4zKoLwiVf6sDpKajvTztnY43eVGBAfNs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725367597; c=relaxed/simple;
-	bh=Rlyxtlo5hzI9N3YYU1nTTHUB+oS3mO6LVjK+srmICQg=;
+	s=arc-20240116; t=1725369300; c=relaxed/simple;
+	bh=gNdxP6S0Q6kJNJkwFbpyMiRiJgpoTPY2bFnMnkVEEqM=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hh/HVfBj/2wT9jHSYHHHOVWTpbTd7uHoPsKAvKJMb/aCkz8hydqL4OwAGuIU4BYamlSAZJy5X+AIISle802LNXFInWLyrBcmPqXnEH8gO8onW/ZuIMRwLazSiiWq8T++if/g2/Vhv6n4YjHSvud9bdNRzaTsWB/dahz8/41IHrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VZtMPNpa; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=DR2nrK97BEuoF4RUZuXRkITTyN3cr8ZBlLqv4nuUlOtUtqZNWarGAeadATQqdvzNoDQAZMxAEZwPdaYrVpkqm+MYw9plf/gGuDNddj5xJOZqloRzXRQytf426MzhcV+0zjQXjOL5vEh9ZKwV3250qvh56gxziE2zAHVs7eOlnEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vE6SdtP3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VZtMPNpa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725367593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ixgiDmvar1tWfYl+K7VyNawCctRA3Ge+tCMoawRgM90=;
-	b=VZtMPNpavK7qBqLA/Phs3iiYDUJfm8HlBq4loR+hYn2xiR5Umv1pyouHafAy1Xi7e65jtk
-	Ad4MKwUKWgl6qB02XyH4hyjXdpq6o/jPqsLQcbq/llk28stGQlMSp2HnVUqeNgFhnfo4KV
-	QNbve75Ynx1bx9w5BMjU54EIexlqOng=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-36-Ows8vTQyP96DVRLqnAUn_A-1; Tue,
- 03 Sep 2024 08:46:29 -0400
-X-MC-Unique: Ows8vTQyP96DVRLqnAUn_A-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 4F9F519560B4;
-	Tue,  3 Sep 2024 12:46:24 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id DE32D1955DD8;
-	Tue,  3 Sep 2024 12:46:18 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  3 Sep 2024 14:46:14 +0200 (CEST)
-Date: Tue, 3 Sep 2024 14:46:07 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use kzalloc to allocate xol area
-Message-ID: <20240903124607.GB17936@redhat.com>
-References: <20240903102313.3402529-1-svens@linux.ibm.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vE6SdtP3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03A4C4CEC4;
+	Tue,  3 Sep 2024 13:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725369299;
+	bh=gNdxP6S0Q6kJNJkwFbpyMiRiJgpoTPY2bFnMnkVEEqM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=vE6SdtP3elsN193nAEe74tdIDzuF3cKpc6wwxLjKVq6CoVQv2tsx7+5h+BzZuSmpO
+	 r67xuDn0By5BxmrLIC+HiwMXSiKK0QfE0pkFLK+BZJHgQgX1eti9W8wdjTQQkkYS83
+	 oy1fZETQp4mEE4fI/4VqgZ+cMRpYuw9BQfAIH0Sv5y4zX20NRQt8eK57MOVRTOM1wO
+	 138NQW/FFdkDtgPt/X195D3nFQwQLlGtgff6e9Jr91XHkljbJe8m+v8FsWqBEQbMZm
+	 71lFBHF+C8ogi1/NTvJu81D/5p/1JX/klN62PvoB8o2U8XxGhQDvYnFu2Y8tJSlDcY
+	 1usbXnEIOIV/w==
+Date: Tue, 3 Sep 2024 10:14:55 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Steinar H. Gunderson" <sesse@google.com>
+Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	irogers@google.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
+	Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v9 1/3] perf report: Support LLVM for addr2line()
+Message-ID: <ZtcLz45rJYJR7FCQ@x1>
+References: <20240719150051.520317-1-sesse@google.com>
+ <ZqlCIJ4khe2_xyp9@x1>
+ <ZqlDuIj_nMVXhYou@x1>
+ <ZtRIla5pCqlMIKvN@google.com>
+ <Ztbga0xLyt1eaehi@x1>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240903102313.3402529-1-svens@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Ztbga0xLyt1eaehi@x1>
 
-On 09/03, Sven Schnelle wrote:
->
-> To prevent unitialized members, use kzalloc to allocate
-> the xol area.
->
-> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-
-and since this looks easily exploitable, I'd sugest
-
-Cc: stable@vger.kernel.org
-Fixes: b059a453b1cf1 ("x86/vdso: Add mremap hook to vm_special_mapping")
-
-> ---
->  kernel/events/uprobes.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+On Tue, Sep 03, 2024 at 07:09:47AM -0300, Arnaldo Carvalho de Melo wrote:
+> On Sun, Sep 01, 2024 at 12:57:25PM +0200, Steinar H. Gunderson wrote:
+> > On Tue, Jul 30, 2024 at 04:49:12PM -0300, Arnaldo Carvalho de Melo wrote:
+> > > Unfortunately it clashed with recent patches in the capstone related
+> > > codebase, IIRC Athira's for powerpc data-type profiling.
+> > > 
+> > > […]
+> > > 
+> > > I'll continue processing other patched and eventually try to fix this if
+> > > you're busy,
+> > 
+> > Hi,
+> > 
+> > Is there any movement in getting v10 merged? :-) I haven't heard back
+> > since I sent out the rebase
 > 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index 73cc47708679..50d7949be2b1 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -1489,7 +1489,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  	struct xol_area *area;
->  	void *insns;
->  
-> -	area = kmalloc(sizeof(*area), GFP_KERNEL);
-> +	area = kzalloc(sizeof(*area), GFP_KERNEL);
->  	if (unlikely(!area))
->  		goto out;
->  
-> @@ -1499,7 +1499,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->  		goto free_area;
->  
->  	area->xol_mapping.name = "[uprobes]";
-> -	area->xol_mapping.fault = NULL;
->  	area->xol_mapping.pages = area->pages;
->  	area->pages[0] = alloc_page(GFP_HIGHUSER);
->  	if (!area->pages[0])
-> -- 
-> 2.43.0
+> Test building is detecting some problems, I'll try to address them:
 > 
+> perfbuilder@number:~$ time dm
+>    1    13.50 almalinux:8                   : FAIL gcc version 8.5.0 20210514 (Red Hat 8.5.0-22) (GCC) 
+>     util/srcline.c: In function 'dso__free_a2l':
+>     util/srcline.c:184:20: error: parameter name omitted
+>      void dso__free_a2l(struct dso *)
+>                         ^~~~~~~~~~~~
+>     make[3]: *** [/git/perf-6.11.0-rc3/tools/build/Makefile.build:158: util] Error 2
 
+diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+index 2e3845ac07ee7be6..f32d0d4f4bc9e659 100644
+--- a/tools/perf/util/srcline.c
++++ b/tools/perf/util/srcline.c
+@@ -6,6 +6,7 @@
+ #include <string.h>
+ #include <sys/types.h>
+ 
++#include <linux/compiler.h>
+ #include <linux/kernel.h>
+ #include <linux/string.h>
+ #include <linux/zalloc.h>
+@@ -181,7 +182,7 @@ static int addr2line(const char *dso_name, u64 addr,
+ 	return num_frames;
+ }
+ 
+-void dso__free_a2l(struct dso *)
++void dso__free_a2l(struct dso *dso __maybe_unused)
+ {
+ 	/* Nothing to free. */
+ }
