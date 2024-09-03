@@ -1,138 +1,216 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680E319CC2A
-	for <linux-perf-users@vger.kernel.org>; Tue,  3 Sep 2024 09:09:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905031C7669;
+	Tue,  3 Sep 2024 09:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725354552; cv=none; b=He9ChYcoq5l9ybGXjeHklw/rHH58H9y06FDbRayL5p4aYbLkJMCoMH39kYpaj/4gYB90BGS+nlL1Dy5wwYQbLDVy9U7VUANPBEI0kvn31SA0xj7urRLkejRWUmi3NUcNh+qyINuyKtI8lGd1LvS8536jP1BZFke8OU4X12L7BEc=
+	t=1725354705; cv=none; b=P6CnQzMLM5M7aT6FB6hQjjdTwwYSzeT+GmP7xaZeg1n+3zP1MVt4OX541t/oVUb3t/UR/yNfoAIg5Pw67zHHZByzffpzATFx4sXkn132sQc3VKpUaDg8/BmxGl8rOyxYqbmMVw4GY3SnYtxDkXm8GufC5mu1AH2icFP5fF+1NBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725354552; c=relaxed/simple;
-	bh=1e4R+IYDECEe9tAhq3UujNE6N7X5OljGX3s7WihMi+o=;
+	s=arc-20240116; t=1725354705; c=relaxed/simple;
+	bh=vTXnBN7RkGqWdbB/SBRPMbiet1ycfG5/HgtzTsoYtfc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FHa1tZ1ZgOkdosWH53l+Bv5KPTPZZ9X2jYEoghp+ksLlUz/0n2r6ePlP81T973xgH8pUOHaOaUqrWfuytdkvnke4HZ+yc6Ava91BxLHhUJHTInIuKbZVECL92LArVt28444lZU1xOAmjrAzGYaA6VHNvx/RkICqJ1u7bjCWBa7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M7T5y6sR; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=JuA24i9cFzUPbACXt0VaKnYmzaEYYbWOdIH/ovr3b2NVnimEioVd+vIKgHyzbH0diWHNeflU1Db4bb57Hjt/UHjzJkgnRTlKPxd7vFDScEKSlBeKrJk9HB5dg1rfISu/5CR+jgwUKNhLxIJ1vdirRnutUYDglOoZ6ezVD+J2VV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=ZBZAXABY; arc=none smtp.client-ip=80.241.56.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M7T5y6sR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725354549;
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="ZBZAXABY"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4Wyfy23z0Tz9tCJ;
+	Tue,  3 Sep 2024 11:11:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1725354698;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=3wZSFTVAkBBwZOhZbgXmk5W4midhZVoWG1SBfmC4Uh4=;
-	b=M7T5y6sRaROWEC6JColggtwlTKpW8sp/zjzQiOm5m85C93rnvYz995UR5dRj47NbmHsRno
-	UC06M2IVgtlVskgnr/s156JpuPam+oI7Q7hw2yb54WYguSEF4k3OexGOIWMa4YR8sqaTXa
-	GMDOJmzuXtCmZ81NPSylKkEQpny3Fk0=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-UeqO92NEOPeS0Oogj4V-_g-1; Tue,
- 03 Sep 2024 05:09:06 -0400
-X-MC-Unique: UeqO92NEOPeS0Oogj4V-_g-1
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 81DBA18BC2DE;
-	Tue,  3 Sep 2024 09:09:01 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.38])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 94EDD19560AA;
-	Tue,  3 Sep 2024 09:08:54 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Tue,  3 Sep 2024 11:08:51 +0200 (CEST)
-Date: Tue, 3 Sep 2024 11:08:43 +0200
-From: Oleg Nesterov <oleg@redhat.com>
-To: Sven Schnelle <svens@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-Message-ID: <20240903090843.GA17936@redhat.com>
-References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
- <20240903073629.2442754-1-svens@linux.ibm.com>
+	bh=ZPzW6zq/WcQ/WiA0gxrcLJjcmAKmM8AZOEgUBVGohqU=;
+	b=ZBZAXABYVG2geXwbPM3S25PkgrHwvEQKgFi6QrCVNgQFuXfmqoT55sUlP9C4u26sOWaUR2
+	Ak9EVSIGIWcE+x1lwyaKkwHd3CjUehNN1jOSWo3Q71adbymmg82h7I3vGEtvaGjc5ddRUF
+	jojEcwx4S274kwzQ3ytsoYnnnTSheNseaHZSovzFZk3D2mxSWTur14Kfo8WMM4g6U/ge4m
+	7VfdButVk4vNzkBZtkFkRYfuu+2vwIrSL+tF3qAI9sXdSOkjkl9D6GLTvNLYboTfizO+gX
+	lTZbz/SPjZD+lGSMHlHWSINaZ7syGXUrJjwtdcMOY4gie+xQm5G2syNxCVEFVQ==
+Date: Tue, 3 Sep 2024 19:11:14 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Christoph Hellwig <hch@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount
+ ID
+Message-ID: <20240903.084814-meek.porthole.lonely.employer-6kt9HpTqtbg4@cyphar.com>
+References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
+ <20240902164554.928371-1-cyphar@cyphar.com>
+ <20240902164554.928371-2-cyphar@cyphar.com>
+ <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ctvs2l4bgcgrysaf"
 Content-Disposition: inline
-In-Reply-To: <20240903073629.2442754-1-svens@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+In-Reply-To: <CAOQ4uxi291jBJ5ycZgiicVebjkcRQjhXJRgOgvSPBV4-TOcQvA@mail.gmail.com>
+X-Rspamd-Queue-Id: 4Wyfy23z0Tz9tCJ
 
-On 09/03, Sven Schnelle wrote:
->
-> [   44.505448] ==================================================================                                                                      20:37:27 [3421/145075]
-> [   44.505455] BUG: KASAN: slab-use-after-free in special_mapping_close+0x9c/0xc8
-> [   44.505471] Read of size 8 at addr 00000000868dac48 by task sh/1384
-> [   44.505479]
-> [   44.505486] CPU: 51 UID: 0 PID: 1384 Comm: sh Not tainted 6.11.0-rc6-next-20240902-dirty #1496
-> [   44.505503] Hardware name: IBM 3931 A01 704 (z/VM 7.3.0)
-> [   44.505508] Call Trace:
-> [   44.505511]  [<000b0324d2f78080>] dump_stack_lvl+0xd0/0x108
-> [   44.505521]  [<000b0324d2f5435c>] print_address_description.constprop.0+0x34/0x2e0
-> [   44.505529]  [<000b0324d2f5464c>] print_report+0x44/0x138
-> [   44.505536]  [<000b0324d1383192>] kasan_report+0xc2/0x140
-> [   44.505543]  [<000b0324d2f52904>] special_mapping_close+0x9c/0xc8
-                                       ^^^^^^^^^^^^^^^^^^^^^
-Caused by
 
-	[PATCH v2 1/4] mm: Add optional close() to struct vm_special_mapping
-	https://lore.kernel.org/all/20240812082605.743814-1-mpe@ellerman.id.au/
+--ctvs2l4bgcgrysaf
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-?
+On 2024-09-03, Amir Goldstein <amir73il@gmail.com> wrote:
+> On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
+rote:
+> >
+> > Now that open_by_handle_at(2) can return u64 mount IDs, do some tests to
+> > make sure they match properly as part of the regular open_by_handle
+> > tests.
+> >
+> > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-id-v3-0-1=
+0c2c4c16708@cyphar.com/
+> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > ---
+> > v2:
+> > - Remove -M argument and always do the mount ID tests. [Amir Goldstein]
+> > - Do not error out if the kernel doesn't support STATX_MNT_ID_UNIQUE
+> >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
+> > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyphar@cyph=
+ar.com/>
+> >
+> >  src/open_by_handle.c | 128 +++++++++++++++++++++++++++++++++----------
+> >  1 file changed, 99 insertions(+), 29 deletions(-)
+> >
+> > diff --git a/src/open_by_handle.c b/src/open_by_handle.c
+> > index d9c802ca9bd1..0ad591da632e 100644
+> > --- a/src/open_by_handle.c
+> > +++ b/src/open_by_handle.c
+> > @@ -86,10 +86,16 @@ Examples:
+> >  #include <errno.h>
+> >  #include <linux/limits.h>
+> >  #include <libgen.h>
+> > +#include <stdint.h>
+> > +#include <stdbool.h>
+> >
+> >  #include <sys/stat.h>
+> >  #include "statx.h"
+> >
+> > +#ifndef AT_HANDLE_MNT_ID_UNIQUE
+> > +#      define AT_HANDLE_MNT_ID_UNIQUE 0x001
+> > +#endif
+> > +
+> >  #define MAXFILES 1024
+> >
+> >  struct handle {
+> > @@ -120,6 +126,94 @@ void usage(void)
+> >         exit(EXIT_FAILURE);
+> >  }
+> >
+> > +int do_name_to_handle_at(const char *fname, struct file_handle *fh, in=
+t bufsz)
+> > +{
+> > +       int ret;
+> > +       int mntid_short;
+> > +
+> > +       static bool skip_mntid_unique;
+> > +
+> > +       uint64_t statx_mntid_short =3D 0, statx_mntid_unique =3D 0;
+> > +       struct statx statxbuf;
+> > +
+> > +       /* Get both the short and unique mount id. */
+> > +       if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID, &statxbuf) < 0) {
+>=20
+> This fails build on top of latest for-next branch with commit
+> 873e36c9 - statx.h: update to latest kernel UAPI
+>=20
+> It can be fixed by changing to use the private xfstests_statx()
+> implementation, same as in stat_test.c.
+>=20
+> I am not sure how elegant this is, but that's the easy fix.
 
-> +static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_area_struct *vma)
-> +{
-> +	struct xol_area *area = container_of(vma->vm_private_data, struct xol_area, xol_mapping);
-> +
-> +	mutex_lock(&delayed_uprobe_lock);
-> +	delayed_uprobe_remove(NULL, vma->vm_mm);
-> +	mutex_unlock(&delayed_uprobe_lock);
-> +
-> +	if (!area)
-> +		return;
-> +
-> +	put_page(area->pages[0]);
-> +	kfree(area->bitmap);
-> +	kfree(area);
-> +}
-> +
->  static struct xol_area *__create_xol_area(unsigned long vaddr)
->  {
->  	struct mm_struct *mm = current->mm;
-> @@ -1481,6 +1500,7 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
->
->  	area->xol_mapping.name = "[uprobes]";
->  	area->xol_mapping.fault = NULL;
-> +	area->xol_mapping.close = uprobe_clear_state;
+Ah, I was using master as the base. Sorry about that...
 
-LGTM.
+> > +               fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n", fname);
+> > +               return EXIT_FAILURE;
+> > +       }
+> > +       if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
+> > +               fprintf(stderr, "%s: no STATX_MNT_ID in stx_mask\n", fn=
+ame);
+> > +               return EXIT_FAILURE;
+> > +       }
+> > +       statx_mntid_short =3D statxbuf.stx_mnt_id;
+> > +
+> > +       if (!skip_mntid_unique) {
+> > +               if (statx(AT_FDCWD, fname, 0, STATX_MNT_ID_UNIQUE, &sta=
+txbuf) < 0) {
+> > +                       fprintf(stderr, "%s: statx(STATX_MNT_ID_UNIQUE)=
+: %m\n", fname);
+> > +                       return EXIT_FAILURE;
+> > +               }
+> > +               /*
+> > +                * STATX_MNT_ID_UNIQUE was added fairly recently in Lin=
+ux 6.8, so if the
+> > +                * kernel doesn't give us a unique mount ID just skip i=
+t.
+> > +                */
+> > +               if ((skip_mntid_unique |=3D !(statxbuf.stx_mask & STATX=
+_MNT_ID_UNIQUE)))
+> > +                       printf("statx(STATX_MNT_ID_UNIQUE) not supporte=
+d by running kernel -- skipping unique mount ID test\n");
+>=20
+> This verbose print breaks all existing "exportfs" tests which do not
+> expect it in the golden output.
+>=20
+> I understand that silently ignoring the failure is not good, but I also
+> would like to add this test coverage to all the existing tests.
+>=20
+> One solution is to resurrect the command line option -M from v1,
+> but instead of meaning "test unique mount id" let it mean
+> "do not allow to skip unique mount id" test.
+>=20
+> Then you can add a new test that runs open_by_handle -M, but also
+> implement a helper _require_unique_mntid similar to _require_btime
+> which is needed for the new test to run only on new kernels.
+>=20
+> I'm sorry for this complication, but fstest is a testsuite that runs on
+> disto and stable kernels as well and we need to allow test coverage
+> of new features along with stability of the test env.
 
-but with or without this fix __create_xol_area() also needs
+No worries, I'll write it up. I'm not familiar with the exact
+requirements of xfstests, sorry for the noise! (^_^")
 
-	area->xol_mapping.mremap = NULL;
+>=20
+> Thanks,
+> Amir.
 
-?
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-And in the longer term I think we should probably add a single instance
-of "struct vm_special_mapping uprobe_special_mapping with ->fault != NULL
-but this is another issue.
+--ctvs2l4bgcgrysaf
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Oleg.
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZtbSsgAKCRAol/rSt+lE
+bwxGAQDiAoDf52s+LenWo4ttMhBeDkXrmdgs1mOXMqJLRHnbwQD+PRJRjDKv6qU4
+BM1xu+Z4CvaDhwgbzw8kVRLkpAlSago=
+=VcBz
+-----END PGP SIGNATURE-----
+
+--ctvs2l4bgcgrysaf--
