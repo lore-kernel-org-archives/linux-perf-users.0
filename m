@@ -1,59 +1,59 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF2C71CF7B9
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 13:29:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 722EE1DC05C
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 13:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725456564; cv=none; b=eTRAP/WjRoa98Vg/aI8PylzudVoRLqpNUMZVo2kgLOw9Zf1cD4NFXSIj1A1kJUTAP/iEEb2q8HU9OuOM6CR7M6/J9m3a/ss9n8krkwiP+omBsU+/nJb2zQUAPqfjRIWV/SYcvF3iCQpDR10kd0dPwo/TaOACVdZfKxXS9jTKx9w=
+	t=1725457009; cv=none; b=gT6p4LsTCtuXDWjwG82I2GSfEW6IV/Vj2KlivuD+TA++hUCx6Tan2twiNnTk0Vbems8ReCNI9vjTGW4DjfQHgvb3qTVRPrR8fxLt38PZjqd8TFRmF9swQiBgC948g9ESnSajHVjIP5tYpFLGxjctZzSVzFx1+mYUi0Ai3sMTsJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725456564; c=relaxed/simple;
-	bh=hTwz7T+kA1ZdMphX8cn3RJOdysmUSUewq+ktL3MQIpU=;
+	s=arc-20240116; t=1725457009; c=relaxed/simple;
+	bh=qtJkX2PqoVFYdBdlWbYyp5mzAidzj4chLb44Ln6lBOg=;
 	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=sjP+KSiODaJXncpzeyjY+oO/1efjxWho4yBfJZiylZZP4qCMH1eDUm+epQ/+xFyMS4X6kpXfwgqU4NmbQ2FAZE6F1byrEMfPy9vd7+A0Hp7WVF7H2ZCH83q/koe+7GrCVvMQpwxZU9Hvv4lQsl9uSa28RAE4CSoS8PlO54plmbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ov/XTk/n; arc=none smtp.client-ip=209.85.128.49
+	 In-Reply-To:Content-Type; b=JMN32mvkDLQTie4XryIwKOAz2RAj0u8WdrKsJZeR54UgBnLypL29MS+2Ens+ibCAJszGOUMQWYjlsDDbUAEOUv7Lrx75qfosmyfjBLMUfhIYRQRVzehP4ZBamvHJpNiKiABiYFbxMHar8D5ZvJlTUWXzHTwtSB4mxObdlIaeBIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aZaUrtjU; arc=none smtp.client-ip=209.85.221.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ov/XTk/n"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-42c7856ed66so36461845e9.3
-        for <linux-perf-users@vger.kernel.org>; Wed, 04 Sep 2024 06:29:21 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aZaUrtjU"
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-374b25263a3so2928290f8f.0
+        for <linux-perf-users@vger.kernel.org>; Wed, 04 Sep 2024 06:36:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725456560; x=1726061360; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725457006; x=1726061806; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=Xj+Wgvo3JkMcqvVd3ksJTTHYIece7AGFEnbRLynw6+s=;
-        b=ov/XTk/nsb33mRfYMR95y0apTMBbtVmHnxwuCiQpZK0mNiO0F7XcX3WOFYkw1dTknw
-         JfwC4JObLrVzhdo2UBZDlOX8LGBPaJEBtEEHWhddY2LzfHCx4+XNFpnXDSYbKU8o2+ad
-         jokdaAEz5FcKaUehluRGv1phEixlrX59QCr3wdWD0JVCSwlhxJL361soehnbX5rN9gjV
-         1fBQhSwGU8yFod02RmzERNH0fW4NTk+evwKeOOG2weAiyivr2OCMACTx22TFxxlFuyMS
-         D8sWBgpoYC2RBQ8YoD9KivNc302p/xvU0y1iyc4wbq8SHtrRsL1cvyRJ/hJjkcHWEK9l
-         LNxA==
+        bh=B86/UPLKVaKSm0EPiBkbujK3A4YitMx5WggFUmn8Coo=;
+        b=aZaUrtjUoiOKODP03m0E1QtWt25s3due8GXQtYB1sJPlfv0HkN1Ih8yT2frU/NJBzX
+         MybB9/dQfc3eotODJn1Fml6VMsS9giwkTxj4Byzh7GWUuPUnDqfAO3NQrkMwcYYjkRHq
+         h/FORv+gyMX9o6uo9kckP0XBhz5jU2s7TDs53QUD2rJJcGZB0upothlZ6cTEQ3vbUkJ/
+         dtYkKcrV8xndg1NNXlcDmu+QBLyx7E2iEyCCiIen7V0tP/H8fT4fqwcjs1/6vAIBxVAg
+         dghXeVAHnLeU6PNon9kNIACRj4NOOFN1+z/TBWYHkGlWwB4NhmIZPu7+HPPRvfZqYK/K
+         wquA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725456560; x=1726061360;
+        d=1e100.net; s=20230601; t=1725457006; x=1726061806;
         h=content-transfer-encoding:in-reply-to:content-language:references
          :cc:to:from:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Xj+Wgvo3JkMcqvVd3ksJTTHYIece7AGFEnbRLynw6+s=;
-        b=Z2iuXlZ1Ug0gU9m0Nx4ys2wGWwKqeqISlB0RN7Epjo3ey20gy3KxtysvycfHxC0kyr
-         OvyjjCqVqpBWYxfak1hs/QZEXMJEDeaZfJxJ8cS285w9ZQKLOOq4SoOdb1PSSVId7Ije
-         8stQZSTQWXkFiPyRB9wGBIpWWu04fkEdeUkFfLajubTQkMSyG1s9DEPrnozmm8Raqygm
-         Sh5YG73inoAvUUjd+9m0gD4uVzb5jjLU1KfFA5saoacM4wmVc480Bjcfs/7U5HXETkDe
-         DDv0pst40y2NeBT9oQHD3lY3g1m9Yq2P+frVLnqsoqTavMuJuO58ixsZKm/q0YQWDNMQ
-         kcFg==
-X-Forwarded-Encrypted: i=1; AJvYcCWAiKHUNomvIdxWg1fJY7ksUpJePdJLfVAJel1ea3ouuJGC3g/8bxd4b9ciW1l+Rdjsxh5F77nKD+v/ZBRA7BMq@vger.kernel.org
-X-Gm-Message-State: AOJu0YxlITuIMIE+FUYWPxH8qeq+6WSJUBA/z7aGIrnG5KMOEYQ/fk8V
-	W6EWdpfsxyWabxeG3hyWsbdFuPfs3SzKUXgrgA5yj6W7FEwc/Hcx7xbqLAzoYOE=
-X-Google-Smtp-Source: AGHT+IH4ZFL2+hN2XCv+e/8g7SeM4o2fEGG1dQ4/Uh11y3ctyio8U+lxhaPAht3QfOXq4fDudCTE7Q==
-X-Received: by 2002:a5d:4576:0:b0:374:c654:204a with SMTP id ffacd0b85a97d-374c6542086mr7291508f8f.61.1725456559282;
-        Wed, 04 Sep 2024 06:29:19 -0700 (PDT)
+        bh=B86/UPLKVaKSm0EPiBkbujK3A4YitMx5WggFUmn8Coo=;
+        b=s6bMZK26+ud65rrzUYWoJyejr63b9CrF9k7Mrr63E8KxK9ygENsPz+Ou7H4eYA/Y7L
+         yiDStS8lQ1NM4TzEwKtoGlKoW+iB2WxcCBdaLMfyApwsfP3T7xntlQ8zgDxdjRTPF4ic
+         pXfBuz1gFLzFQooq66uwgEQEkLwMC3oh4xWk04EuxNqf0sjRQWEQ4RhpUsU9X+O0bbaA
+         Jyia51cQkyD28RLk/xSMnrz6IuJDZK9NmgwCEyUqlEIfGGeK7Q/7i0ySxFOkisJPOsrk
+         anRPjD2G5jROa71/M/2a1mhiQr77kPyas8TvmsvpGM9s2uHQiRHYUUyn+qllZhmCts/m
+         P5lQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXQkZCrubkBCJlILdJhsqNcKmY4aoNTekM//ojMmbzUR62KsmpBllNVCZcHkgtl6PyukbtRp3EdI62ztOZ37U+Z@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxm0965dAsV7nXLk8g1gdRRVpUYTVe9bTqZuHqFNWWupyRQgsuo
+	jHMbDC5sN0pc9d9Vgdiybq+rhV/THXUNM1qZ9JXuyFHQRM5VxWIGQqRq6heOBvk=
+X-Google-Smtp-Source: AGHT+IGCca6VtkCUEewJ04oZM5OKZlmILREvFYANBtzDYBJo5Pgpzgh/80aH7ezyMm1sRLB/m6/1WA==
+X-Received: by 2002:adf:f2d1:0:b0:374:c3f7:6af1 with SMTP id ffacd0b85a97d-374c3f76cd2mr7592505f8f.15.1725457005502;
+        Wed, 04 Sep 2024 06:36:45 -0700 (PDT)
 Received: from [192.168.1.3] ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-374c1b0a62esm11591070f8f.47.2024.09.04.06.29.17
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3749ee71616sm17094656f8f.31.2024.09.04.06.36.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Sep 2024 06:29:18 -0700 (PDT)
-Message-ID: <9cdc97eb-a194-454a-916c-2acf64f0c726@linaro.org>
-Date: Wed, 4 Sep 2024 14:29:17 +0100
+        Wed, 04 Sep 2024 06:36:45 -0700 (PDT)
+Message-ID: <251acd21-7d0d-451c-b581-cdb74b4096ed@linaro.org>
+Date: Wed, 4 Sep 2024 14:36:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -136,53 +136,24 @@ On 04/09/2024 2:28 pm, James Clark wrote:
 > Not sure if this is working, for some reason it doesn't try the 
 > fallback. With exclude guest made mandatory in the Arm PMU, then:
 > 
->   $ perf stat -e cycles -vvv -- true
-> 
->    Control descriptor is not initialized
->    Opening: cycles
->    ------------------------------------------------------------
->    perf_event_attr:
->      type                             0 (PERF_TYPE_HARDWARE)
->      size                             136
->      config                           0xb00000000
->      sample_type                      IDENTIFIER
->      read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->      disabled                         1
->      inherit                          1
->      enable_on_exec                   1
->    ------------------------------------------------------------
->    sys_perf_event_open: pid 698  cpu -1  group_fd -1  flags 0x8
->    sys_perf_event_open failed, error -95
->    Warning:
->    cycles event is not supported by the kernel.
->    Opening: cycles
->    ------------------------------------------------------------
->    perf_event_attr:
->      type                             0 (PERF_TYPE_HARDWARE)
->      size                             136
->      config                           0xa00000000
->      sample_type                      IDENTIFIER
->      read_format                      TOTAL_TIME_ENABLED|TOTAL_TIME_RUNNING
->      disabled                         1
->      inherit                          1
->      enable_on_exec                   1
->    ------------------------------------------------------------
->    sys_perf_event_open: pid 698  cpu -1  group_fd -1  flags 0x8
->    sys_perf_event_open failed, error -95
->    Warning:
->    cycles event is not supported by the kernel.
->    failed to read counter cycles
->    failed to read counter cycles
-> 
->     Performance counter stats for 'true':
-> 
->       <not supported>      armv8_cortex_a53/cycles/
->       <not supported>      armv8_cortex_a57/cycles/
-> 
-> 
-> 
-> Other than that, all the tests are passing on Juno (without the 
-> exclude_guest requirement).
 
-Sorry one other thing, I think this commit would also need to come 
-before the change to the exclude_guest default to keep bisect working.
+Looks like you change this, but it's not obvious why the stat behavior 
+is different to perf record anyway:
+
+diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+index 8b9889873d3e..6f2ee3032f5f 100644
+--- a/tools/perf/builtin-stat.c
++++ b/tools/perf/builtin-stat.c
+@@ -639,7 +639,7 @@ static enum counter_recovery 
+stat_handle_error(struct evsel *counter)
+          * (behavior changed with commit b0a873e).
+          */
+         if (errno == EINVAL || errno == ENOSYS ||
+-           errno == ENOENT || errno == EOPNOTSUPP ||
++           errno == ENOENT ||
+             errno == ENXIO) {
+                 if (verbose > 0)
+                         ui__warning("%s event is not supported by the 
+kernel.\n",
+
+
