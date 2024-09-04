@@ -1,25 +1,56 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7361EB44;
-	Wed,  4 Sep 2024 14:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14371D88DF;
+	Wed,  4 Sep 2024 15:21:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725461493; cv=none; b=sHUelnoXvkfjZ2n2xh5LUP0ACsfp+Qsmjr/JViNnnwmnHJ342jopQnoD1XHGcc+Nst3LiAP0kqtUc80CUR/OOzRHQ3SyNfiVZcTsAt5KUFoXJuDmZrepRcO/cVb69p2Fi4Q4JMd9RtWfycfEAnO6LZaFdPzbCAykyB6dH+FyPyo=
+	t=1725463263; cv=none; b=uN7jCmo9WEDebUSlK2iuTwnKGNwBtQsH7MKwjwLAn1wArTujJH7K3fE1AJC1l9cPLM79fzPOrjTTYy0hdKtpRymYSzZoLWZjwOx/yiA/J4buGEBm2hfpXRtz+EinFDLyhWKFzRomZd63khlm10psY7Ex/elAcoR71WtVoJwYAso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725461493; c=relaxed/simple;
-	bh=o8v/rQNAQIK86jePZEox/Q5xxIeCYH9BaBX2L+kOPx8=;
+	s=arc-20240116; t=1725463263; c=relaxed/simple;
+	bh=G6e42ZvLcKnMUFQznAoffYFdr8gDHDsObIEdwNyWko8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tGpEzEdta+uZmU0dfL13ZFEa9gY3R692DRgzOOdDXxwqEoVOWWpboK98o3s73m6JWo4sF4RK6mKcuJmXqBx7iWVUwt3IxmLA8eTfUrIfFriZ+ATJN2De06Dc3YZ0CGJgVEM6RoVopNqJdDIYS+tGsrvuvbWvrJLCPodx+hDBb08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EAECFEC;
-	Wed,  4 Sep 2024 07:51:50 -0700 (PDT)
-Received: from [10.57.74.1] (unknown [10.57.74.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8A1E43F73F;
-	Wed,  4 Sep 2024 07:51:20 -0700 (PDT)
-Message-ID: <21e9e78e-f25c-40e9-8131-17478b6b717f@arm.com>
-Date: Wed, 4 Sep 2024 15:51:19 +0100
+	 In-Reply-To:Content-Type; b=cRIcKHwAAUSSs0Yr+ZDBDwkmJg91wG85X8Bfh7L/TBclLqSG/ubiLLI6ME6k8AP3n6fiwK2ROarNbWI0B2K4bTwyeNS+0Qx0W8lucNfTL9ewnVAswKnebE/0ov5aTe1eW3HoJ16+Xn6nbItX648UXKaj07N4KERtpC0Oqhx4b7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NFmQxOsG; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NFmQxOsG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725463262; x=1756999262;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=G6e42ZvLcKnMUFQznAoffYFdr8gDHDsObIEdwNyWko8=;
+  b=NFmQxOsGKo7kBofzNtyQpitB4MipJhmbbnsuoclVVW4lLZRFtdjyFCrB
+   ybiHJ1hjZKcC+XLRwLdGvG1+T8YioTHaeS1cRurIVlc7cW6w27y/lKHJj
+   VtZ7b9jx3o7+/3upJJG8wp/pPvIIxWNAw9a3bwbXQO/kxYIGSRE7EkO5f
+   Fpi+hZLH1zriaqxGawVcQmMxC57KtAQly9o9Nubg5EK4oVjDs9qv0G9Ow
+   1tScqlyF9LleD6xIMxr2LEL2ozP4OYYbt0BBuc1jk61a5TdI3cI3SN2xJ
+   qto8uCy2Z5Sxp6Ql8x1To/CbS7QjrvEsVWT39RVHZdkx0KWsfWqllwQJw
+   w==;
+X-CSE-ConnectionGUID: ra5IEnK+QJCRvI6Wm6HXYg==
+X-CSE-MsgGUID: ywoUmu+gQYqgDlykkmOk/A==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="24292936"
+X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
+   d="scan'208";a="24292936"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 08:21:01 -0700
+X-CSE-ConnectionGUID: H2idS7vzTOaZxLKVe+ijoA==
+X-CSE-MsgGUID: cE2UTth3RR2G7qhtwDel8Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
+   d="scan'208";a="64966311"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 08:20:59 -0700
+Received: from [10.212.117.74] (hantran-MOBL1.amr.corp.intel.com [10.212.117.74])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id 45EA520B5782;
+	Wed,  4 Sep 2024 08:20:58 -0700 (PDT)
+Message-ID: <e848ad7b-bc9d-4eca-8918-0dd5a67c347e@linux.intel.com>
+Date: Wed, 4 Sep 2024 11:20:57 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -27,88 +58,65 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 00/17] coresight: Use per-sink trace ID maps for Perf
- sessions
-Content-Language: en-GB
-To: James Clark <james.clark@linaro.org>,
- Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: coresight@lists.linaro.org, gankulkarni@os.amperecomputing.com,
- mike.leach@linaro.org, leo.yan@linux.dev, anshuman.khandual@arm.com,
- James Clark <james.clark@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>,
- John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
- Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>,
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com, linux-perf-users@vger.kernel.org
-References: <20240722101202.26915-1-james.clark@linaro.org>
- <ZqOwGWcYosGe9ru4@x1> <6476a228-847b-4804-9229-c11a881663c7@arm.com>
- <ZqOzio8Oco9ZFsDm@x1> <8068c8ff-a8ce-4bcd-bb19-2c25b45cf6f3@arm.com>
- <ZqO3gPcCCVh1r5WM@x1> <aab886f3-ebbf-4853-b26b-5cf70c801683@arm.com>
- <7b96894c-f5df-473b-be50-ee118ce3cfaf@linaro.org> <ZtCUUsJNj9Z1CRLK@x1>
- <8afae0a6-5322-47a8-a189-68629ea1991f@linaro.org>
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <8afae0a6-5322-47a8-a189-68629ea1991f@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: Re: perf mem record not getting the mem_load_aux events by default
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ linux-perf-users@vger.kernel.org,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <Zthu81fA3kLC2CS2@x1>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <Zthu81fA3kLC2CS2@x1>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 30/08/2024 09:37, James Clark wrote:
+
+
+On 2024-09-04 10:30 a.m., Arnaldo Carvalho de Melo wrote:
+> Hi Kan,
 > 
+> Recently I presented about 'perf mem record' and found that I had use
+> 'perf record' directly as 'perf mem record' on a Intel Hybrid system
+> wasn't selecting the required aux event:
 > 
-> On 29/08/2024 4:31 pm, Arnaldo Carvalho de Melo wrote:
->> On Thu, Aug 29, 2024 at 10:05:02AM +0100, James Clark wrote:
->>>
->>>
->>> On 22/08/2024 3:35 pm, Suzuki K Poulose wrote:
->>>> Hi Arnaldo,
->>>>
->>>> On 26/07/2024 15:49, Arnaldo Carvalho de Melo wrote:
->>>>> On Fri, Jul 26, 2024 at 03:38:13PM +0100, Suzuki K Poulose wrote:
->>>>>> On 26/07/2024 15:32, Arnaldo Carvalho de Melo wrote:
->>>>>>> On Fri, Jul 26, 2024 at 03:26:04PM +0100, Suzuki K Poulose wrote:
->>>>>>>> On 26/07/2024 15:18, Arnaldo Carvalho de Melo wrote:
->>>>>>>>> On Mon, Jul 22, 2024 at 11:11:42AM +0100, James Clark wrote:
->>>>>>>>>> This will allow sessions with more than 
->>>>>>>>>> CORESIGHT_TRACE_IDS_MAX ETMs
->>>>>>>>>> as long as there are fewer than that many ETMs
->>>>>>>>>> connected to each sink.
->>>>>>>>>
->>>>>>>>> Hey, may I take the tools part, i.e. patches 0-7 and
->>>>>>>>> someone on the ARM
->>>>>>>>> kernel team pick the driver bits?
->>>>>
->>>>>>>> I plan to pick the kernel driver bits for v6.12
->>>>>
->>>>>>> Perhaps it is better for me to wait for that?
->>>>>
->>>>>> Yes, please.
->>>>>
->>>>> Please let me know when you do so so that I can merge the tooling 
->>>>> bits.
->>>>
->>>> I have now merged the driver changes to coresight/next, they will be
->>>> sent to Greg for v6.12. [0]
->>>>
->>>> You may go ahead and merge the tool bits.
->>
->> I'm taking this as an Acked-by: Suzuki, ok?
-
-
->>
+>   http://vger.kernel.org/~acme/prez/lsfmm-bpf-2024/#/19
 > 
-> Suzuki is out of office at the moment and can't email but he said it was 
-> ok for the acked-by.
+> The previous slides show the problem and the one above shows what worked
+> for me.
+> 
+> I saw this while trying to fix that:
+> 
+> Author: Kan Liang <kan.liang@linux.intel.com>
+> commit abbdd79b786e036e60f01b7907977943ebe7a74d
+> Date:   Tue Jan 23 10:50:32 2024 -0800
+> 
+>     perf mem: Clean up perf_mem_events__name()
+>     
+>     Introduce a generic perf_mem_events__name(). Remove the ARCH-specific
+>     one.
+>     
+>     The mem_load events may have a different format. Add ldlat and aux_event
+>     in the struct perf_mem_event to indicate the format and the extra aux
+>     event.
+>     
+>     Add perf_mem_events_intel_aux[] to support the extra mem_load_aux event.
+>     
+>     Rename perf_mem_events__name to perf_pmu__mem_events_name.
+> 
+> --------------------------´
+> 
+> So there are provisions for selecting the right events, but it doesn't
+> seem to be working when I tried, can you take a look at what I describe
+> on those slides and see what am I doing wrong?
+> 
 
-Thanks James for conveying the message.
+If I understand the example in the slides correctly, the issue is that
+no mem events from big core are selected when running perf mem record,
+rather than wrong mem events are selected.
 
-For the record:
+I don't see an obvious issue. That looks like a regression of the perf
+mem record. I will find a Alder Lake or Raptor Lake to take a deep look.
 
-For patches 1-8:
-
-Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
+Thanks,
+Kan
