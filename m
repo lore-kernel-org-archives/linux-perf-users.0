@@ -1,178 +1,226 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 727B11E132F;
-	Wed,  4 Sep 2024 17:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81D31E00AF;
+	Wed,  4 Sep 2024 17:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725471967; cv=none; b=qLjQKUDtmZRlQUzGxg8hzY/uqeuG4QjusGLsblsy8ZByhu6Pw/+PJC+e98me9kNW+V/qZGmxnIYKrk2JNL/O7IOqa7i1eEMRFM8yfax9Bil8kUTiimtyjHy3IvNv0V8uznx+gYSovjALz7xXARA9XGErAlYW778YI2exZaTJHCI=
+	t=1725472419; cv=none; b=aeiV4Z6i3sn+0VC9Sw3CyH66ZAXrJUbMxnx3bZegQwW5lr9x4OgRoPRaVLBvEEg7rr0ukj7PHP5JDxtd5EYqJinHZsFyOFcfWX1PaPpfdZuulXehxc7h1XqoxMHiU+mu1Z2h9haKxNiSb2cZrm8v6V7BX/0gtu8sC25tMGMAKK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725471967; c=relaxed/simple;
-	bh=irxYBNFy4EClqg+5d7p7Vn8xZAMgVMf7T7CNAtDKyzc=;
+	s=arc-20240116; t=1725472419; c=relaxed/simple;
+	bh=+iOA0p81T6D+b7dL88cQfXEKiGSHHFexNpERoZi42iw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=d8LdK5OHeLslGJts3qnhIHwHzszkVpMxTuQWB4QJcz9aRQ/y1erCnGOalMX/hCVQUR9mlitODgMVzB/eWsbMxTJVTtCs6oKIUKC/RjKCcRBNEbE0Tvb1TO4o5Vw8zKc5f2NcOmI39uAbqvSNNYDsDfA0JLess/6uioZGf3h0NvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfA/i04C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRAKmPLDVObjRP1JH2S4bYB+v0wKk7dupwfRBwMWb+Dfd/MjmS6mzkXiXQYt88YbIAvOM2JvlrX7WTfZ1xp3j6xnvt2DYi7LzAJm7TYCvxmnftdZ2zjhR9spzHTt9lwKkew0o+3Zjl7grWTKyD5A98qV0AH3GN54iiYAW7lue5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=1a0jFqqS; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfA/i04C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53720C4CEC2;
-	Wed,  4 Sep 2024 17:46:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725471966;
-	bh=irxYBNFy4EClqg+5d7p7Vn8xZAMgVMf7T7CNAtDKyzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dfA/i04C1wzL9s43385zxc0pEM8iayfJ/cy+nOLorVz6Ju7drxZwXi9OcvCZYhikQ
-	 CkGgMsNkTJx9ETcqUBSGkiiTfrqJt0VF63GA7HcPeP10u/xvGCZekMfll+2qJ6pffX
-	 DjXfDc0iNl2GKe393+LHOkM9NqSXC7VfnWKcdZDXtcEQUgguU+wVLY8/8Rizj4TCOy
-	 02Q6J0svWqNjawI9IjZcDNN/CRP8tY/r5x/OX0pUA2z9RaTyk6fZeQPg1OqaLq9wEs
-	 qP2Y1isVBlZHYXzAwFVMLAZrxEF8LlOgoJlZGUuC7/DsEssM8TO7il/3LG73MsKh7j
-	 mqbPidgyt9s2w==
-Date: Wed, 4 Sep 2024 10:46:04 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Ian Rogers <irogers@google.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
-	Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: Re: [RFC/PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by
- default (v2)
-Message-ID: <Ztic3BR4UUdhIVrq@google.com>
-References: <20240904064131.2377873-1-namhyung@kernel.org>
- <CAP-5=fU5UeHER5hPAUhq_9_fSUR9okp_i0sOk_E7Q_aZkvo+DQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="1a0jFqqS"
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4WzVTg232gz9sWc;
+	Wed,  4 Sep 2024 19:53:27 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
+	t=1725472407;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=pwlQBWXYq/opPvFlbWP173b1Nlq+n+PtL6lZzaZ58hA=;
+	b=1a0jFqqSgV+SpmrZuk4pkJP3Hm5AIush1Kk6IRRTxwmTOFYaE3Z1XMFsPs/AOTnUoozMyU
+	YYc1ZC7NAACOLdVoJhhmKu1kBVVE8+DkpZJ7kHrT29SPMs2mkEWKOMaR8BB+sFDxSqnteC
+	GLm0NAh2MgsmkrHibJzytx8h9Lvkhg+n9+bZ+Cb2tzUD/m6+n6wiKpwIT2r4k5kieWI4EM
+	3ru7kHCPk5KrVMysb+KOCsvKp9JbiPlgzBnnaeAG5wwbif8vX9h7NMHthZvGZWb+Fc+43x
+	x7Ps1t1d1cORzplQdki0kjM1hC16kLxqOtGoGrl5zhvpDbjEQkDji/GZcnnnng==
+Date: Thu, 5 Sep 2024 03:53:07 +1000
+From: Aleksa Sarai <cyphar@cyphar.com>
+To: Amir Goldstein <amir73il@gmail.com>
+Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
+	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
+	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
+	Christoph Hellwig <hch@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
+	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH xfstests v2 2/2] open_by_handle: add tests for u64 mount
+ ID
+Message-ID: <20240904.170511-plaid.cupcake.bright.comedy-wgajfvBqCgUK@cyphar.com>
+References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
+ <20240902164554.928371-1-cyphar@cyphar.com>
+ <20240902164554.928371-2-cyphar@cyphar.com>
+ <CAOQ4uxgS6DvsbUsEoM1Vr2wcd_7Bj=xFXMAy4z9PphTu+G6RaQ@mail.gmail.com>
+ <20240903.044647-some.sprint.silent.snacks-jdKnAVp7XuBZ@cyphar.com>
+ <CAOQ4uxhXa-1Xjd58p8oGd9Q4hgfDtGnae1YrmDWwQp3t5uGHeg@mail.gmail.com>
+ <20240904.162424-novel.fangs.vital.nursery-BQvjXGlIi7vb@cyphar.com>
+ <CAOQ4uxg7EgOH5s_RZz27XpVSwgWu9bROT9JRzTycxi8D2_3d3A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="desv3b7yboboqrpl"
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxg7EgOH5s_RZz27XpVSwgWu9bROT9JRzTycxi8D2_3d3A@mail.gmail.com>
+X-Rspamd-Queue-Id: 4WzVTg232gz9sWc
+
+
+--desv3b7yboboqrpl
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAP-5=fU5UeHER5hPAUhq_9_fSUR9okp_i0sOk_E7Q_aZkvo+DQ@mail.gmail.com>
+Content-Transfer-Encoding: quoted-printable
 
-Hi Ian,
-
-On Wed, Sep 04, 2024 at 09:36:02AM -0700, Ian Rogers wrote:
-> On Tue, Sep 3, 2024 at 11:41 PM Namhyung Kim <namhyung@kernel.org> wrote:
+On 2024-09-04, Amir Goldstein <amir73il@gmail.com> wrote:
+> On Wed, Sep 4, 2024 at 6:31=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
+rote:
 > >
-> > Hello,
+> > On 2024-09-03, Amir Goldstein <amir73il@gmail.com> wrote:
+> > > On Tue, Sep 3, 2024 at 8:41=E2=80=AFAM Aleksa Sarai <cyphar@cyphar.co=
+m> wrote:
+> > > >
+> > > > On 2024-09-02, Amir Goldstein <amir73il@gmail.com> wrote:
+> > > > > On Mon, Sep 2, 2024 at 6:46=E2=80=AFPM Aleksa Sarai <cyphar@cypha=
+r.com> wrote:
+> > > > > >
+> > > > > > Now that open_by_handle_at(2) can return u64 mount IDs, do some=
+ tests to
+> > > > > > make sure they match properly as part of the regular open_by_ha=
+ndle
+> > > > > > tests.
+> > > > > >
+> > > > > > Link: https://lore.kernel.org/all/20240828-exportfs-u64-mount-i=
+d-v3-0-10c2c4c16708@cyphar.com/
+> > > > > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > > > > ---
+> > > > > > v2:
+> > > > > > - Remove -M argument and always do the mount ID tests. [Amir Go=
+ldstein]
+> > > > > > - Do not error out if the kernel doesn't support STATX_MNT_ID_U=
+NIQUE
+> > > > > >   or AT_HANDLE_MNT_ID_UNIQUE. [Amir Goldstein]
+> > > > > > - v1: <https://lore.kernel.org/all/20240828103706.2393267-1-cyp=
+har@cyphar.com/>
+> > > > >
+> > > > > Looks good.
+> > > > >
+> > > > > You may add:
+> > > > >
+> > > > > Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> > > > >
+> > > > > It'd be nice to get a verification that this is indeed tested on =
+the latest
+> > > > > upstream and does not regress the tests that run the open_by_hand=
+le program.
+> > > >
+> > > > I've tested that the fallback works on mainline and correctly does =
+the
+> > > > test on patched kernels (by running open_by_handle directly) but I
+> > > > haven't run the suite yet (still getting my mkosi testing setup wor=
+king
+> > > > to run fstests...).
+> > >
+> > > I am afraid this has to be tested.
+> > > I started testing myself and found that it breaks existing tests.
+> > > Even if you make the test completely opt-in as in v1 it need to be
+> > > tested and _notrun on old kernels.
+> > >
+> > > If you have a new version, I can test it until you get your fstests s=
+etup
+> > > ready, because anyway I would want to check that your test also
+> > > works with overlayfs which has some specialized exportfs tests.
+> > > Test by running ./check -overlay -g exportfs, but I can also do that =
+for you.
 > >
-> > I found perf tools set exclude_guest bit inconsistently.  It used to
-> > set the bit but now the default event for perf record doesn't.  So I'm
-> > wondering why we want the bit in the first place.
+> > I managed to get fstests running, sorry about that...
 > >
-> > Actually it's not good for PMUs don't support any exclusion like AMD
-> > IBS because it disables new features after the exclude_guest due to
-> > the missing feature detection logic.
-> 
-> I think trying to clean this up is good but there's a wac-a-moie
-> problem whenever a default or fallback is changed - it can break a
-> hard to test platform in unthought of ways. I wonder if we can expand
-> PMU testing to at least capture the differences in behavior. For
+> > For the v3 I have ready (which includes a new test using -M), the
+> > following runs work in my VM:
+> >
+> >  - ./check -g exportfs
+> >  - ./check -overlay -g exportfs
+> >
+> > Should I check anything else before sending it?
+> >
+>=20
+> That should be enough.
+> So you have one new test that does not run on upstream kernel
+> and runs and passes on patched kernel?
 
-Right, that's why I use a software event to test kernel features and
-separate branch stack, precise_ip and excludes testing.
+Yes. Both of those suite runs succeed without issues on v6.6.49,
+v6.11-rc6 and with the AT_HANDLE_MNT_ID_UNIQUE patches.
 
+I also added skipping logic such that it _should_ work on pre-5.8
+kernels (pre-STATX_MNT_ID) as well, but I can't test that at the moment
+(mkosi-kernel fails to boot kernels that old it seems...).
 
-> example, pick an event that works, like legacy cycles, then increase
-> the precision to 3 and the event should either open again or fail with
-> EINVAL, if it opens then it should count. Similarly for the exclude_*
+I'll send it now.
 
-But sometimes precision and exclude_* interfere each other.  AMD IBS
-accepts precise_ip up to 2 but it'd fail if exclude_guest is set.  And
-sometimes the same PMU requires different exclude bits.  For instance,
-Intel branch stack sampling needs exclude_hv as well as exclude_kernel
-for regular users, but normally it is enough to have exclude_kernel
-for other events.
+> > Also, when running the tests I think I may have found a bug? Using
+> > overlayfs+xfs leads to the following error when doing ./check -overlay
+> > if the scratch device is XFS:
+> >
+> >   ./common/rc: line 299: _xfs_has_feature: command not found
+> >     not run: upper fs needs to support d_type
+> >
+> > The fix I applied was simply:
+> >
+> > diff --git a/common/rc b/common/rc
+> > index 0beaf2ff1126..e6af1b16918f 100644
+> > --- a/common/rc
+> > +++ b/common/rc
+> > @@ -296,6 +296,7 @@ _supports_filetype()
+> >         local fstyp=3D`$DF_PROG $dir | tail -1 | $AWK_PROG '{print $2}'`
+> >         case "$fstyp" in
+> >         xfs)
+> > +               . common/xfs
+> >                 _xfs_has_feature $dir ftype
+> >                 ;;
+> >         ext2|ext3|ext4)
+> >
+> > Should I include this patch as well, or did I make a mistake somewhere?
+> > (I could add the import to the top instead if you'd prefer that.)
+>=20
+> This should already be handled by
+> if [ -n "$OVL_BASE_FSTYP" ];then
+>         _source_specific_fs $OVL_BASE_FSTYP
+> fi
+>=20
+> in common/overlay
+>=20
+> I think what you are missing is to
+> export FSTYP=3Dxfs
+> as README.overlay suggests.
+>=20
+> It's true that ./check does not *require* defining FSTYP
+> and can auto detect the test filesystem, but for running -overlay
+> is it a requirement to define the base FSTYP.
 
-I agree that we need to save this info to per-PMU and reuse it for
-other events.  Actually I tried this but failed to get it working.
-IIRC sometimes legacy events don't have evsel->pmu and looking up a
-PMU for the evsel failed to get a correct PMU.  Also I couldn't come
-up with an absolute way to make sure if it checks the PMU features
-100% correct.  I think I need to add something to the kernel to show
-supported (and required?) PMU exclude_* capabilities.
+Ah okay, I missed that. That fixed the issue, thanks!
 
-Maybe we can revisit this later, but having the missing kernel feature
-checks separate from the PMU specific checks is an improvement IMHO.
-Also having another fallback for exclude_guest would fix an existing
-problem on Apple M1.
-
-
-> bits. I think some PMUs don't behave like they should and we can add
-> ifs to the test to capture these behaviours - for example an
-> exclude_.. is accepted for an event but then the event doesn't count
-> if the bit is set. There are many cases where a large group of events
-
-So I want to start from no exclude_* and to add a bit at a time until
-the PMU accepts the event so that it won't have unnecessary bits.
-
-Thanks,
-Namhyung
-
-
-> will cause the group to stop counting, in metrics we work around this
-> with grouping flags for the metric:
-> https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git/tree/tools/perf/pmu-events/pmu-events.h?h=perf-tools-next#n16
-> but these shouldn't be necessary as the PMU kernel driver should
-> reject the perf_event_open.
-> 
 > Thanks,
-> Ian
-> 
-> > v2 changes)
-> >  * update the missing feature detection logic
-> >  * separate exclude_hv fallback
-> >  * add new fallback for exclude_guest
-> >
-> > v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
-> >
-> > AFAIK it doesn't matter for the most cases but perf kvm.  If users
-> > need to set the bit, they can still use :H modifier.  For vPMU pass-
-> > through or Apple M1, it'd add the exclude_guest during the fallback
-> > logic.  Please let me know if it's ok for you.
-> >
-> > The code is available at 'perf/exclude-v2' branch in
-> > git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
-> >
-> > Thanks,
-> > Namhyung
-> >
-> >
-> > Namhyung Kim (8):
-> >   perf tools: Don't set attr.exclude_guest by default
-> >   perf tools: Simplify evsel__add_modifier()
-> >   perf stat: Add --exclude-guest option
-> >   perf tools: Do not set exclude_guest for precise_ip
-> >   perf tools: Detect missing kernel features properly
-> >   perf tools: Separate exclude_hv fallback
-> >   perf tools: Add fallback for exclude_guest
-> >   perf tools: Check fallback error and order
-> >
-> >  tools/perf/Documentation/perf-stat.txt      |   7 +
-> >  tools/perf/builtin-kvm.c                    |   1 +
-> >  tools/perf/builtin-stat.c                   |   2 +
-> >  tools/perf/dlfilters/dlfilter-test-api-v0.c |   2 +-
-> >  tools/perf/dlfilters/dlfilter-test-api-v2.c |   2 +-
-> >  tools/perf/tests/attr/test-record-dummy-C0  |   2 +-
-> >  tools/perf/tests/parse-events.c             |  30 +-
-> >  tools/perf/util/evsel.c                     | 393 ++++++++++++++------
-> >  tools/perf/util/evsel.h                     |   1 -
-> >  tools/perf/util/parse-events.c              |   6 +-
-> >  tools/perf/util/util.c                      |  10 +-
-> >  tools/perf/util/util.h                      |   3 +
-> >  12 files changed, 322 insertions(+), 137 deletions(-)
-> >
-> > --
-> > 2.46.0.469.g59c65b2a67-goog
-> >
+> Amir.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--desv3b7yboboqrpl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZtiegwAKCRAol/rSt+lE
+b+FxAQDWDbG8ZcUXpeo+h6HVuVli6xVHlHWngRmTvTcWENFkngD/W7QXKg+f3YSB
+9oBIQrNw1bMCPg25g/SKHI6VKH85DAM=
+=6l+u
+-----END PGP SIGNATURE-----
+
+--desv3b7yboboqrpl--
