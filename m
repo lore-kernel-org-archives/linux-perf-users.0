@@ -1,75 +1,78 @@
 Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC713811E2
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 06:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E33812C489
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 06:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725430731; cv=none; b=dZ60Ilu8ys/8QZLwus4KxDzktw1yn0LARhq97drI8BS5lH24goF4INeDkQNYJQ3IvIx3BWfESYXVMX8mOm2YrIg1rQwAIxfK6H+0SWmDH0ykFiHQuQfiMlm2IpRRUmSNlRRTbWxKmcmUg4rcMo8R/QxJwnS0eSgKOC1YX8WpOlI=
+	t=1725430732; cv=none; b=UahJbL9Hjqwx3TsesmJDTP9WwFU8L2YRg1r5/bKkl6WAzzdUV74kfmGy13/TvtGdoGcAoMQ3SlRoxFeCOifn+gFxz89M8sQO0cSEPiiHxQ69KQCLpb8w77PTTYLlWOgthAQimJUyYM2JqMFysQ0mYI8AHH7bcLuOLlIN6LbyCkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725430731; c=relaxed/simple;
-	bh=cAH+dBNUJP7awDVYpfVnli2iW3ZoylepaOrRu5VS5yE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kglW4CqGLM4TIeq60At6AlbDqjqzVWKLShUgdGKXDojuvZP389eiehj00v0/D5DKS0CtZB5qM/Lv1Lke6CDgI+QYtd4qlSqvpaGcCjYZcGWNyG40Ni8o9g830nNkhWOaWMnRk+HcKu+dPQa3DIbRhZMvVmPwArEdMj6yM0A6E24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=psqrxffH; arc=none smtp.client-ip=148.163.156.1
+	s=arc-20240116; t=1725430732; c=relaxed/simple;
+	bh=bJyi4E1Efu0mYmul6ZDlLr+fCtkBBjx9ubQ74RpjL/g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=NjYuwq4t4MIuYO5jTMVi660OoAxIwbCPEg9EArkizBD+UJxTue/4Uw9j4nXfIMZjs5NZ7DwZGNiw6HMxijXKRcqQsEgHBwTRulYq2eohA3uegEEiz2tlrIdQoW1XScvYKzoa2cmmDsShsL2KshsPsjFEZ4GCtSOOV9Oza+Fem28=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=LkilHogC; arc=none smtp.client-ip=148.163.156.1
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="psqrxffH"
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4840ESRv017358;
-	Wed, 4 Sep 2024 06:18:45 GMT
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="LkilHogC"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4840ld0G013012;
+	Wed, 4 Sep 2024 06:18:47 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
-	:to:cc:subject:date:message-id:content-transfer-encoding
-	:mime-version; s=pp1; bh=EJXmQ50VLxO6Ecv5FG8AoxIt4d/y49Y7oR2zIBK
-	EGRM=; b=psqrxffHTjmHhB6aK/qdH0L4zrKvFVRt4J9J/DFDmsuFsXim7HivRvB
-	1t2DzMVgpZPNYi+lWW659BCESLHPUyOLT3DaD5fM6xDVWvGHjCz7QtBVgMAsULhj
-	WXulyo89uwr8efFPydwT+TKfDBspJQRBbL0l4PIZtfVJHuG509YFRdEQ69zQsDWO
-	QagnpMgh4grTjYmcUKX5R8hs8yqgpaQO22jM2fkXU+Grp4MX4wug/m+JqIsdmk4L
-	oX3uAt/4RRsWxFP1iTNgPapcwup5AWRfxz7GRgF689TFsU6qMCGIvjCrSs3EqM6+
-	ScqYg4L6l48R1B1sIblIqHlmhOIy8Ag==
+	:to:cc:subject:date:message-id:in-reply-to:references
+	:content-transfer-encoding:mime-version; s=pp1; bh=70SoIlHphQ/lF
+	5fIzzmb24WyPuhIbNgi6CIwI2fY9wc=; b=LkilHogCsqPky23Tesyx0wYZX53ht
+	ZdVzc+W8nERsm0C1ee/VoVbthraynSoBEz+ZmoyAMk4xpCdRfrDnCV3tqfS4ni7X
+	iONqQOzlRoksLuIXHg9ZjFTumfKANguL0zMJjcWIb7BGZVb3tiGsbTXl33Lj9wN8
+	3TAcXyIUtZR25wR7uO/Pu7/N1iphzxLZZDHG6zIl85M9HvOl0Ig5VdOMZT9FOp+y
+	vwY7rY/69POXkhLcl+OuqsnEGa3P83J6wHfUBkdnKMcN+J4wkW0qzuGY/dmlntZd
+	J3YsSoIhtcokiuKfaZ15I8cXMzu23PGnIZ9+is4VTIESCecm9/sFez2NQ==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btux1grf-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9hgkx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:45 +0000 (GMT)
-Received: from m0353729.ppops.net (m0353729.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4846GGUG017373;
-	Wed, 4 Sep 2024 06:18:44 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btux1grc-1
+	Wed, 04 Sep 2024 06:18:46 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4846ILFM019264;
+	Wed, 4 Sep 2024 06:18:46 GMT
+Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btp9hgkv-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:44 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48454WAx000941;
-	Wed, 4 Sep 2024 06:18:43 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41cf0mx8ur-1
+	Wed, 04 Sep 2024 06:18:46 +0000 (GMT)
+Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4843dJPQ000957;
+	Wed, 4 Sep 2024 06:18:45 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cdgupk83-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:43 +0000
+	Wed, 04 Sep 2024 06:18:45 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4846IdaZ7667970
+	by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4846IfP956885598
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Sep 2024 06:18:39 GMT
+	Wed, 4 Sep 2024 06:18:41 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 8F5A720049;
+	by IMSVA (Postfix) with ESMTP id B009F2004E;
+	Wed,  4 Sep 2024 06:18:41 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id D920C20049;
 	Wed,  4 Sep 2024 06:18:39 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 80FF92004B;
-	Wed,  4 Sep 2024 06:18:37 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.38])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  4 Sep 2024 06:18:37 +0000 (GMT)
+	Wed,  4 Sep 2024 06:18:39 +0000 (GMT)
 From: Aditya Gupta <adityag@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [PATCH v14 0/7] Introduce perf check subcommand
-Date: Wed,  4 Sep 2024 11:48:29 +0530
-Message-ID: <20240904061836.55873-1-adityag@linux.ibm.com>
+Subject: [PATCH v14 1/7] tools/lib/subcmd: Don't free the usage string
+Date: Wed,  4 Sep 2024 11:48:30 +0530
+Message-ID: <20240904061836.55873-2-adityag@linux.ibm.com>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20240904061836.55873-1-adityag@linux.ibm.com>
+References: <20240904061836.55873-1-adityag@linux.ibm.com>
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rcXo0wx-rlU8LtoJQx76xpdYItKTEMdz
-X-Proofpoint-ORIG-GUID: ItofRtbwsgzkoVrv0qLRqYOeuHzhfVBF
+X-Proofpoint-GUID: g7yDPV0cyvvH9tr-99CS3u8sLZaRc8ir
+X-Proofpoint-ORIG-GUID: KV9ue48njl3lQhuj_INnhVkgGjL6uFvX
 Content-Transfer-Encoding: 8bit
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
@@ -81,207 +84,187 @@ MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-04_04,2024-09-03_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ bulkscore=0 lowpriorityscore=0 phishscore=0 impostorscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 adultscore=0 mlxscore=0 suspectscore=0
  clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.19.0-2407110000 definitions=main-2409040045
 
-The Problem
-===========
+Currently, commands which depend on 'parse_options_subcommand()' don't
+show the usage string, and instead show '(null)'
 
-Currently the presence of a feature is checked with a combination of
-perf version --build-options and greps, such as:
+    $ ./perf sched
+	Usage: (null)
 
-    perf version --build-options | grep " on .* HAVE_FEATURE"
+    -D, --dump-raw-trace  dump raw trace in ASCII
+    -f, --force           don't complain, do it
+    -i, --input <file>    input file name
+    -v, --verbose         be more verbose (show symbol address, etc)
 
-This relies on the output of perf version, and is a common pattern in tests.
+'parse_options_subcommand()' is generally expected to initialise the usage
+string, with information in the passed 'subcommands[]' array
 
-Proposed solution
-=================
+This behaviour was changed in:
 
-As suggested by contributors in:
-https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
+    commit 230a7a71f9221 ("libsubcmd: Fix parse-options memory leak")
 
-Introduce a subcommand "perf check feature", with which
-scripts can test for presence of a feature or multiple features, such as:
+Where the generated usage string is deallocated, and usage[0] string is
+reassigned as NULL.
 
-    perf check feature HAVE_LIBTRACEEVENT  (feature macro)
+As discussed in [1], free the allocated usage string in the main function
+itself, and don't reset usage string to NULL in parse_options_subcommand
 
-    or
+With this change, the behaviour is restored.
 
-    perf check feature libtraceevent       (feature name)
+    $ ./perf sched
+        Usage: perf sched [<options>] {record|latency|map|replay|script|timehist}
 
-    or
+           -D, --dump-raw-trace  dump raw trace in ASCII
+           -f, --force           don't complain, do it
+           -i, --input <file>    input file name
+           -v, --verbose         be more verbose (show symbol address, etc)
 
-    perf check feature LibTraceEvent       (case-insensitive)
+[1]: https://lore.kernel.org/linux-perf-users/htq5vhx6piet4nuq2mmhk7fs2bhfykv52dbppwxmo3s7du2odf@styd27tioc6e/
 
-    or
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Cc: Disha Goel <disgoel@linux.vnet.ibm.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Kajol Jain <kjain@linux.ibm.com>
+Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 230a7a71f922 ("libsubcmd: Fix parse-options memory leak")
+Acked-by: Namhyung Kim <namhyung@kernel.org>
+Suggested-by: Namhyung Kim <namhyung@kernel.org>
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 
-    perf check feature libtraceevent,bpf   (multiple features)
+---
+Note:
+This patch is independent of the series.
 
-The usage of "perf version --build-options | grep" has been replaced in two
-tests, with "perf check feature" command
+But I kept it along with the series, since the rest of the patches should
+be applied only after this patch is applied (else the 'free' in
+builtin-check.c will crash)
+---
+---
+ tools/lib/subcmd/parse-options.c | 8 +++-----
+ tools/perf/builtin-kmem.c        | 2 ++
+ tools/perf/builtin-kvm.c         | 3 +++
+ tools/perf/builtin-kwork.c       | 3 +++
+ tools/perf/builtin-lock.c        | 3 +++
+ tools/perf/builtin-mem.c         | 3 +++
+ tools/perf/builtin-sched.c       | 3 +++
+ 7 files changed, 20 insertions(+), 5 deletions(-)
 
-Also, to not duplicate the same feature list at multiple places, a new global
-'supported_features' array has been introduced in builtin.h, so both commands
-'perf check feature' and 'perf version --build-options' use the same array
-
-'supported_features' feature is an array of 'struct feature_support', which
-also has the name of the feature, macro used to test it's presence, and a
-is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
-
-Architectures Tested
-====================
-* x86_64
-* ppc64le
-
-Commands ran for testing (Fedora & RHEL):
-
-    sudo dnf install -y libtraceevent-devel
-    make clean
-    make -j$(nproc)
-    ./perf check feature libtraceevent,bpf; echo Return Code: $?
-    ./perf check feature libtraceevent; echo Return Code: $?
-
-    sudo ./perf test -v "task-analyzer"
-    sudo ./perf test -v "probe libc's inet_pton & backtrace it with ping"
-    sudo ./perf test -v "Use vfs_getname probe to get syscall args filenames"
-
-    sudo dnf remove -y libtraceevent-devel
-    make clean
-    make NO_LIBTRACEEVENT=1 -j$(nproc)
-    ./perf check feature libtraceevent,bpf; echo Return Code: $?
-    ./perf check feature libtraceevent; echo Return Code: $?
-
-    sudo ./perf test -v "task-analyzer"
-    sudo ./perf test -v "probe libc's inet_pton & backtrace it with ping"
-    sudo ./perf test -v "Use vfs_getname probe to get syscall args filenames"
-
-Expected output of above commands (only the './perf check feature' command
-outputs):
-    ...
-             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-                       bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-    Return Code: 0
-             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
-    Return Code: 0
-    ...
-             libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
-                       bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
-    Return Code: 1
-             libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
-    Return Code: 1
-
-Git tree
-========
-
-Git tree with this patch series applied for testing:
-https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v13
-
-Changelog
-=========
-
-v14:
-+ rebase on commit 39c24341 ("perf sched timehist: Fixed timestamp ...")
-
-v13:
-+ patch #1: add fix for parse_options_subcommand not setting usage string
-+ patch #2: if unknown feature name passed, print "please use 'perf version
-  --build-options' to see which ones are available"
-+ patch #6: fix inconsistency in feature names (dwarf-unwind-support & get_cpuid)
-+ patch #7: add more features to feature_list
-
-v12
-+ patch #1: fix comment to mention argv[0] instead of argv[1]
-+ patch #2: fix alignment
-
-v11
-+ patch #1: fix build error due to const *const instead of const*
-
-v10
-+ patch #1: use 'strdup' instead of 'malloc+memcpy'
-+ patch #1: replace '-q' with '--quiet' in doc
-+ patch #1: add usage for perf check
-
-V9
-+ make 'feature' a subcommand instead of an option
-+ make feature name/macro check case-insensitive
-+ rename 'FEATURE_SUPPORT' as 'FEATURE_STATUS'
-+ rebase on upstream perf-tools-next
-
-V8
-+ handle return value of 'malloc' in patch #1
-+ fix error due to strncpy depending on source string's length
-
-V7
-+ modified patch #1 to fix compile issue, and add feature to allow
-  multiple comma-separated features
-
-V6
-+ rebased to perf-tools-next/perf-tools-next
-+ modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL)
-
-V5
-+ invert return value of 'has_support', but return value of perf check --feature
-according to shell convention
-
-V4
-+ invert return value of perf check --feature
-
-V3
-+ simplified has_support code in builtin-check.c (patch #1)
-+ modified patch #3 and patch #4 according to change in return value in patch #1
-
-V2
-+ improved the patch series with suggestions from Namhyung
-+ fix incorrect return value, added -q option, and moved array definition to
-  perf-check.c
-
-V1
-+ changed subcommand name to 'perf check --feature'
-+ added documentation for perf check
-+ support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
-  input to 'perf check --feature'
-+ change subject and descriptions of all patch mentioning perf check instead of
-  perf build
-
-V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
-
-Aditya Gupta (6):
-  tools/lib/subcmd: Don't free the usage string
-  perf check: Introduce 'check' subcommand
-  perf version: Update --build-options to use 'supported_features' array
-  tools/perf/tests: Update test_task_analyzer.sh to use perf check
-    feature
-  perf: Fix inconsistencies in feature names
-  perf: Add more features to supported_features list
-
-Athira Rajeev (1):
-  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
-    feature
-
- tools/lib/subcmd/parse-options.c              |   8 +-
- tools/perf/Build                              |   1 +
- tools/perf/Documentation/perf-check.txt       | 106 +++++++++
- tools/perf/builtin-check.c                    | 205 ++++++++++++++++++
- tools/perf/builtin-kmem.c                     |   2 +
- tools/perf/builtin-kvm.c                      |   3 +
- tools/perf/builtin-kwork.c                    |   3 +
- tools/perf/builtin-lock.c                     |   3 +
- tools/perf/builtin-mem.c                      |   3 +
- tools/perf/builtin-sched.c                    |   3 +
- tools/perf/builtin-version.c                  |  43 +---
- tools/perf/builtin.h                          |  17 ++
- tools/perf/perf.c                             |   1 +
- .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
- .../shell/record+probe_libc_inet_pton.sh      |   5 +-
- .../shell/record+script_probe_vfs_getname.sh  |   5 +-
- tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
- 17 files changed, 370 insertions(+), 46 deletions(-)
- create mode 100644 tools/perf/Documentation/perf-check.txt
- create mode 100644 tools/perf/builtin-check.c
-
---
-2.45.2
+diff --git a/tools/lib/subcmd/parse-options.c b/tools/lib/subcmd/parse-options.c
+index 4b60ec03b0bb..eb896d30545b 100644
+--- a/tools/lib/subcmd/parse-options.c
++++ b/tools/lib/subcmd/parse-options.c
+@@ -633,10 +633,11 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+ 			const char *const subcommands[], const char *usagestr[], int flags)
+ {
+ 	struct parse_opt_ctx_t ctx;
+-	char *buf = NULL;
+ 
+ 	/* build usage string if it's not provided */
+ 	if (subcommands && !usagestr[0]) {
++		char *buf = NULL;
++
+ 		astrcatf(&buf, "%s %s [<options>] {", subcmd_config.exec_name, argv[0]);
+ 
+ 		for (int i = 0; subcommands[i]; i++) {
+@@ -678,10 +679,7 @@ int parse_options_subcommand(int argc, const char **argv, const struct option *o
+ 			astrcatf(&error_buf, "unknown switch `%c'", *ctx.opt);
+ 		usage_with_options(usagestr, options);
+ 	}
+-	if (buf) {
+-		usagestr[0] = NULL;
+-		free(buf);
+-	}
++
+ 	return parse_options_end(&ctx);
+ }
+ 
+diff --git a/tools/perf/builtin-kmem.c b/tools/perf/builtin-kmem.c
+index b3cbac40b8c7..a756147e2eec 100644
+--- a/tools/perf/builtin-kmem.c
++++ b/tools/perf/builtin-kmem.c
+@@ -2057,6 +2057,8 @@ int cmd_kmem(int argc, const char **argv)
+ 
+ out_delete:
+ 	perf_session__delete(session);
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kmem_usage[0]);
+ 
+ 	return ret;
+ }
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 692267b1b7e8..55ea17c5ff02 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -2184,5 +2184,8 @@ int cmd_kvm(int argc, const char **argv)
+ 	else
+ 		usage_with_options(kvm_usage, kvm_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kvm_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-kwork.c b/tools/perf/builtin-kwork.c
+index 6a4281b8fd10..c1daf82c9b92 100644
+--- a/tools/perf/builtin-kwork.c
++++ b/tools/perf/builtin-kwork.c
+@@ -2519,5 +2519,8 @@ int cmd_kwork(int argc, const char **argv)
+ 	} else
+ 		usage_with_options(kwork_usage, kwork_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)kwork_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-lock.c b/tools/perf/builtin-lock.c
+index 2c216427e929..062e2b56a2ab 100644
+--- a/tools/perf/builtin-lock.c
++++ b/tools/perf/builtin-lock.c
+@@ -2712,6 +2712,9 @@ int cmd_lock(int argc, const char **argv)
+ 		usage_with_options(lock_usage, lock_options);
+ 	}
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)lock_usage[0]);
++
+ 	zfree(&lockhash_table);
+ 	return rc;
+ }
+diff --git a/tools/perf/builtin-mem.c b/tools/perf/builtin-mem.c
+index 18e5f9a0ddc2..bb38bb5a1c26 100644
+--- a/tools/perf/builtin-mem.c
++++ b/tools/perf/builtin-mem.c
+@@ -546,5 +546,8 @@ int cmd_mem(int argc, const char **argv)
+ 	else
+ 		usage_with_options(mem_usage, mem_options);
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)mem_usage[0]);
++
+ 	return 0;
+ }
+diff --git a/tools/perf/builtin-sched.c b/tools/perf/builtin-sched.c
+index 1c386ebe4b98..5531b3581c36 100644
+--- a/tools/perf/builtin-sched.c
++++ b/tools/perf/builtin-sched.c
+@@ -3807,5 +3807,8 @@ int cmd_sched(int argc, const char **argv)
+ 		usage_with_options(sched_usage, sched_options);
+ 	}
+ 
++	/* free usage string allocated by parse_options_subcommand */
++	free((void *)sched_usage[0]);
++
+ 	return 0;
+ }
+-- 
+2.46.0
 
