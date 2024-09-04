@@ -1,105 +1,178 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C528913AD20;
-	Wed,  4 Sep 2024 06:41:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42A41CCEE3
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 09:56:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725432099; cv=none; b=t6cGYj4aNnPV2h1g/ZJYmIo73VJk09YkMCgtDrOsArtJjuZRAxrYCfH+20BQLX8MKN16tkm7RgbHDLdGzL2z1FgmMMSGJZp1ISopVFLfZA8sE8IvK0XGM+pKPT1uBBswqDqntDN4O+AgSN10VEv4xPZj6y9X5iTWJbPyX5mrNjQ=
+	t=1725443805; cv=none; b=ot/rPCcYWduvWguIciw+oXFrTv4wKHzdnlwnN2J8h52EnGMkc22GEKqlYmY3kh6wO0SdfdP4ZZQW3L1I5x/8b8sl5G12FDLv0Az2Y44ajL+4VDDcllwuXfvSrUnIpw8AubZQlgi/2Z0Hjxg7gXagD+SPZZkkzks3JdiPZCpF43E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725432099; c=relaxed/simple;
-	bh=fJvW9+KOOQiYHrzVIueBlhdfWUeSt3NI3rnFw8+S5ek=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u6PrEbmcTO84ipLctQlFD1sNBVAUo2KrfYWfE7qlu8SSH9UvTHb5+tz//9LDiBeahnjGOSaIrXDwh2UQjS0V6cxeFSikoPA66bEn6ZGajrdLX/52T8L2cmmEhcGYzzbna4qsghROVjd6LgD7vB+sM1w1P61SydUN52lErTiYT7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gzq675cZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725443805; c=relaxed/simple;
+	bh=j7d7+SJDD2TGyNhvLnv/7wUKLARgA6jThTpmxjWen4w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jLh1bwgq83Y0KaLFbMVkAppUoo/8rOcYORN8u3igZEl4MLg3Edfg5LvsI5JsH4exFyabNVPOsu4XxYrl9Q3wlWWhYqANLsOmwUh3BlN+wvdr7Bnqf7CLEuVF5+LvEocdottU0qc8K8hffs2AH8yhogzkciSyNzGS+Y1a+qz9WLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LG96+EOQ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gzq675cZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B18E1C4CEC3;
-	Wed,  4 Sep 2024 06:41:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725432099;
-	bh=fJvW9+KOOQiYHrzVIueBlhdfWUeSt3NI3rnFw8+S5ek=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Gzq675cZmGqQoCOIk+pb2drHDbFQbxN3ggodNzgZ+6wLpOt6vI+j+W+iy9AiQwu0h
-	 f+KUK5Ijn22uPs5aFv7Bq41IfQpGfx+tGWKObDLluYzvUWt4qXQndIW6gS5RczJ1IW
-	 DNMjsUGipMci2PIt+Pc6M/rCXeWPWn1cTz3GEPw5QPInhT+fkPPMuCIz62ZYgMzJMy
-	 2V378N6on2eWK6G+ND+ThWumMfaap9yCcJtH6DpjCKAcLZlv/8g7lTJvxFqy+yPj4g
-	 cyR3yAeZpRiPXqUF/nLWwRLq93HGcCPepAVRW3WUrcnLRvC1IKMXcqcL+ZdxNWKU0X
-	 mMxf7q2V523jw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LG96+EOQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725443801;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nBE9muUVCuFZMT5coYFm3HHWrhocogLIqDyjWLoRgw8=;
+	b=LG96+EOQ5WPp3AT1ZIyLCj9fhV8rujM/oR99jsFjklVbwQM45diAowjiKK2xZwrFt4GpKG
+	mH8BIQKXZ9IwZ5dI1GUthzvlkep9TMSRVBtrF2hrpxet4X1slr4FWBvV1GOl+3zI/F+COu
+	p7J8jReCCD22xIfnPo6ScH7JR1ld89Q=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-kBEUWc58OOeCqLAoIbDK7g-1; Wed,
+ 04 Sep 2024 05:56:37 -0400
+X-MC-Unique: kBEUWc58OOeCqLAoIbDK7g-1
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D81701955F45;
+	Wed,  4 Sep 2024 09:56:34 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.25])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ACD4C1956086;
+	Wed,  4 Sep 2024 09:56:28 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed,  4 Sep 2024 11:56:24 +0200 (CEST)
+Date: Wed, 4 Sep 2024 11:56:17 +0200
+From: Oleg Nesterov <oleg@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sven Schnelle <svens@linux.ibm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
 	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Ravi Bangoria <ravi.bangoria@amd.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
-	James Clark <james.clark@arm.com>,
-	Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-	Kajol Jain <kjain@linux.ibm.com>,
-	Thomas Richter <tmricht@linux.ibm.com>,
-	Atish Patra <atishp@atishpatra.org>,
-	Palmer Dabbelt <palmer@rivosinc.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: [PATCH 8/8] perf tools: Check fallback error and order
-Date: Tue,  3 Sep 2024 23:41:31 -0700
-Message-ID: <20240904064131.2377873-9-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
-In-Reply-To: <20240904064131.2377873-1-namhyung@kernel.org>
-References: <20240904064131.2377873-1-namhyung@kernel.org>
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
+Message-ID: <20240904095449.GA28781@redhat.com>
+References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
+ <20240903073629.2442754-1-svens@linux.ibm.com>
+ <20240903090843.GA17936@redhat.com>
+ <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-The perf_event_open might fail due to various reasons, so blindly
-reducing precise_ip level might not be the best way to deal with it.
+I didn't have time to write a full reply yesterday.
 
-It seems the kernel return -EOPNOTSUPP when PMU doesn't support the
-given precise level.  Let's try again with the correct error code.
+On 09/03, Linus Torvalds wrote:
+>
+> On Tue, 3 Sept 2024 at 02:09, Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > but with or without this fix __create_xol_area() also needs
+> >
+> >         area->xol_mapping.mremap = NULL;
+>
+> I think the whole thing needs to be zeroed out.
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+Again, this is what Sven did and I agree with this fix for now.
+
+> It was always horribly buggy. The close thing just made it more
+> *obviously* buggy, because closing a vma is a lot more common than
+> mremap'ing it.
+
+Well, this code is very old, I don't think it was "always" buggy.
+But at least today it is horribly ugly, and
+
+> Either use kzalloc(), or do a proper initializer something like this:
+>
+> -       area->xol_mapping.name = "[uprobes]";
+> -       area->xol_mapping.fault = NULL;
+> -       area->xol_mapping.pages = area->pages;
+> +       area->xol_mapping = (struct vm_special_mapping) {
+> +               .name = "[uprobes]",
+> +               .pages = area->pages,
+> +               .close = uprobe_clear_state,
+> +       };
+
+either way the code is still ugly, imo.
+
+How about the (untested) patch below?
+
+I am not going to send this patch right now, it conflicts with the ongoing
+close/mremap changes, but what do you think?
+
+We do not need to add the instance of vm_special_mapping into mm_struct,
+a single instance (xol_mapping below) with .fault = xol_fault() is enough.
+And, with this change xol_area no longer needs "struct page *pages[2]", it
+can be turned into "struct page *page".
+
+Oleg.
 ---
- tools/perf/util/evsel.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 8c4d70f7b2f5b880..0133c9ad3ce07a24 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -2565,9 +2565,6 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	return 0;
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -101,7 +101,6 @@ struct xol_area {
+ 	atomic_t 			slot_count;	/* number of in-use slots */
+ 	unsigned long 			*bitmap;	/* 0 = free slot */
  
- try_fallback:
--	if (evsel__precise_ip_fallback(evsel))
--		goto retry_open;
--
- 	if (evsel__ignore_missing_thread(evsel, perf_cpu_map__nr(cpus),
- 					 idx, threads, thread, err)) {
- 		/* We just removed 1 thread, so lower the upper nthreads limit. */
-@@ -2584,11 +2581,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
- 	if (err == -EMFILE && rlimit__increase_nofile(&set_rlimit))
- 		goto retry_open;
+-	struct vm_special_mapping	xol_mapping;
+ 	struct page 			*pages[2];
+ 	/*
+ 	 * We keep the vma's vm_start rather than a pointer to the vma
+@@ -1453,6 +1452,21 @@ void uprobe_munmap(struct vm_area_struct *vma, unsigned long start, unsigned lon
+ 		set_bit(MMF_RECALC_UPROBES, &vma->vm_mm->flags);
+ }
  
--	if (err != -EINVAL || idx > 0 || thread > 0)
--		goto out_close;
-+	if (err == -EOPNOTSUPP && evsel__precise_ip_fallback(evsel))
-+		goto retry_open;
- 
--	if (evsel__detect_missing_features(evsel))
-+	if (err == -EINVAL && evsel__detect_missing_features(evsel))
- 		goto fallback_missing_features;
++static vm_fault_t xol_fault(const struct vm_special_mapping *sm,
++			    struct vm_area_struct *vma, struct vm_fault *vmf)
++{
++	struct xol_area *area = vma->vm_mm->uprobes_state.xol_area;
 +
- out_close:
- 	if (err)
- 		threads->err_thread = thread;
--- 
-2.46.0.469.g59c65b2a67-goog
++	vmf->page = area->pages[0];
++	get_page(vmf->page);
++	return 0;
++}
++
++static const struct vm_special_mapping xol_mapping = {
++	.name = "[uprobes]",
++	.fault = xol_fault,
++};
++
+ /* Slot allocation for XOL */
+ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ {
+@@ -1479,7 +1493,7 @@ static int xol_add_vma(struct mm_struct *mm, struct xol_area *area)
+ 
+ 	vma = _install_special_mapping(mm, area->vaddr, PAGE_SIZE,
+ 				VM_EXEC|VM_MAYEXEC|VM_DONTCOPY|VM_IO,
+-				&area->xol_mapping);
++				&xol_mapping);
+ 	if (IS_ERR(vma)) {
+ 		ret = PTR_ERR(vma);
+ 		goto fail;
+@@ -1518,9 +1532,6 @@ static struct xol_area *__create_xol_area(unsigned long vaddr)
+ 	if (!area->bitmap)
+ 		goto free_area;
+ 
+-	area->xol_mapping.name = "[uprobes]";
+-	area->xol_mapping.fault = NULL;
+-	area->xol_mapping.pages = area->pages;
+ 	area->pages[0] = alloc_page(GFP_HIGHUSER);
+ 	if (!area->pages[0])
+ 		goto free_bitmap;
 
