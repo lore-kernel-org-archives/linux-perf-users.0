@@ -1,458 +1,291 @@
-Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60F948121F;
-	Wed,  4 Sep 2024 19:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3236E13B597
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 19:01:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725476481; cv=none; b=p/T/roB0K/FwtROKmz9+E9LRQJhF8h5IsiRKsEpKq2ZShqTmCCxGX9utk9AqVctM/z5XcZ7tqHNjEtzne4Ppyzv/OUUzEoTjQZrJ1C6wsum1M53rzFu56KZHgsLCFhYD5df/BKHhvRgIyeXI9cd26kMiRIrh/h5JNNS++tOpy0U=
+	t=1725476509; cv=none; b=jo6bGvSdRdD6ULYaskzqtfBa4LbkARwhHogIBODn9wRhfYHezVkleg0Lx1BAc9tXQkKCbHSaUsAmIufFAn0eyTNYHd7eDSSAtH9yLK4cI7ANF/n0uvVbFYv2Hsp1P/a7Gu+XCdSThtWSEHSBSghV4j7BKVFkD4AwsoaCTDuJgvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725476481; c=relaxed/simple;
-	bh=7eVPAWD7u0oCwemb5UaskDkmMCiOKdzg7B5GaQvolZg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KOR2X6TLf3B3hmJ31SiQ3A6l4GflgBPhJC3n+Z23riENweWjCczq7He6NcIt4poZ7GeKE6Haa4bI9jzjsq5KnN7kNm76xj68LJabD8t8qqV+xuGJ27L6IuZMIiwWAeBAUc36nsHco3b7eOzNXGWR68YyBp/KGi5su7NLMl2jq8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com; spf=pass smtp.mailfrom=cyphar.com; dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b=YnsRoz7u; arc=none smtp.client-ip=80.241.56.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyphar.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cyphar.com
+	s=arc-20240116; t=1725476509; c=relaxed/simple;
+	bh=SvLq0SmDu41CSdY8eLxhCUSompygr+oV3jlNUeRNaG8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TgkfYMrZtAJIzreskKb24qicXp5UehcoRXWs12lFzKSSP2vJ/ExhIp9PXodftTzwelx7KTlO1BM72npl1RqaQbBxuD5/DNGkRAiOt1PJVFQn6maiLl7NBD2y1AHvt9H0W1xZAbPRM9k5f5drPZaSXrUdgGBqjj6jsJFSAjCirSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=VfdVK67Q; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cyphar.com header.i=@cyphar.com header.b="YnsRoz7u"
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4WzWzl4gk9z9sxJ;
-	Wed,  4 Sep 2024 21:01:07 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyphar.com; s=MBO0001;
-	t=1725476467;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Pv1gX6AoAYOONckDDkDyKlXT6qAc0DAgmLU0m9ZD2A0=;
-	b=YnsRoz7uFI8BlTSonn5pLqCf8FyDxogOJqiKXZVTetL1KVCKLiBqgBTvHkLjRxGPH9yw1W
-	vRtYCWXKcphzigWD4GIa7Dw0DoAy91YVKL0MIDIeUOlGl/E++Kvurw8Bqn47DIfAFBHmOM
-	YYDNHatPNphiSlGBYbcvnOyFm00oxFUxtnICNpi1vXGe5PKNWp0PYOTMA3aNx40os476dm
-	7Kqh9IFu8Mq+mX+VkBxXGylBDVmoRvNEWs195ns/C5tXWWAfixubMbg9zgUZPCMTV+/uZQ
-	mIxLyc9cEdZ1oQ3bJHBTpCnacdYmL1iQvKSmUSoOhjnxPFTt46CQIUX+kqVUzg==
-Date: Thu, 5 Sep 2024 05:00:45 +1000
-From: Aleksa Sarai <cyphar@cyphar.com>
-To: Amir Goldstein <amir73il@gmail.com>
-Cc: fstests@vger.kernel.org, Alexander Viro <viro@zeniv.linux.org.uk>, 
-	Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, Chuck Lever <chuck.lever@oracle.com>, 
-	Jeff Layton <jlayton@kernel.org>, Alexander Aring <alex.aring@gmail.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
-	Adrian Hunter <adrian.hunter@intel.com>, "Liang, Kan" <kan.liang@linux.intel.com>, 
-	Christoph Hellwig <hch@infradead.org>, Josef Bacik <josef@toxicpanda.com>, 
-	linux-fsdevel@vger.kernel.org, linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-api@vger.kernel.org, linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH xfstests v3 2/2] generic/756: test
- name_to_handle_at(AT_HANDLE_MNT_ID_UNIQUE) explicitly
-Message-ID: <20240904.185915-mundane.creels.ceramic.region-AXUMFBqDC1ZD@cyphar.com>
-References: <20240828-exportfs-u64-mount-id-v3-0-10c2c4c16708@cyphar.com>
- <20240904175639.2269694-1-cyphar@cyphar.com>
- <20240904175639.2269694-2-cyphar@cyphar.com>
- <CAOQ4uxj0X2GJLvB=HyR7_kr=SvqQ0dGapVnf9Ft1hWcaXXCJVw@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="VfdVK67Q"
+Received: from pps.filterd (m0356517.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 484Imw3x024830;
+	Wed, 4 Sep 2024 19:01:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
+	:to:cc:subject:date:message-id:content-transfer-encoding
+	:mime-version; s=pp1; bh=cL6Qa2dMm/vBdVnIR/5f+tWKthguBTAp3ZFX2vu
+	JNCQ=; b=VfdVK67Q3iEMbptW8fwG1bhGCBFHnmENLMAt+vdTNJAjcBvtCBcUvfa
+	7buLVmj0k8vxp73YEhevlrP1P1C0I/SW/2aWlYU4wZik5APwVvejowBdCzHViLIc
+	cF7MFnUgdwM7V2LjOdGMBrIrttKmLjXxuNFVJYj1AejGOqffOy6s3tuurQlx9aTd
+	uD68kCmfnHd9tqHdQaRcV8/KxelCby9MR8/mSlOldgIYpFzcvza5Yzv8jL3fxEP3
+	MgLK81psYhZ3ReaGJS2v/FSe7r2MrBmfZOzeUsxu3AY/BgEvnXFPCnopfDK8X2QR
+	wgHBNUUG+rMpm7R+An87zW+yz/YakdQ==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btwb4tc5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Sep 2024 19:01:42 +0000 (GMT)
+Received: from m0356517.ppops.net (m0356517.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 484J1fe8019061;
+	Wed, 4 Sep 2024 19:01:41 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41btwb4tc3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Sep 2024 19:01:41 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 484GmA73012045;
+	Wed, 4 Sep 2024 19:01:40 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41cegq15h6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 04 Sep 2024 19:01:40 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 484J1aHS55640434
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 4 Sep 2024 19:01:36 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4A2E820043;
+	Wed,  4 Sep 2024 19:01:36 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id EDD4F20040;
+	Wed,  4 Sep 2024 19:01:33 +0000 (GMT)
+Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.ibm.com.com (unknown [9.39.16.11])
+	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Wed,  4 Sep 2024 19:01:33 +0000 (GMT)
+From: Aditya Gupta <adityag@linux.ibm.com>
+To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
+Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+Subject: [PATCH v15 0/7] Introduce perf check subcommand
+Date: Thu,  5 Sep 2024 00:31:25 +0530
+Message-ID: <20240904190132.415212-1-adityag@linux.ibm.com>
+X-Mailer: git-send-email 2.46.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Eh_kOJVVsGnbbG90RGEjQrcJyH2Qwtv4
+X-Proofpoint-GUID: 5uaJoR2V5ZcaQ9il8z7pfCMCRbQoFyx6
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z42o635q3rq4mue5"
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxj0X2GJLvB=HyR7_kr=SvqQ0dGapVnf9Ft1hWcaXXCJVw@mail.gmail.com>
-X-Rspamd-Queue-Id: 4WzWzl4gk9z9sxJ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-04_16,2024-09-04_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 bulkscore=0 mlxscore=0 clxscore=1015 malwarescore=0
+ lowpriorityscore=0 adultscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2409040140
 
+The Problem
+===========
 
---z42o635q3rq4mue5
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently the presence of a feature is checked with a combination of
+perf version --build-options and greps, such as:
 
-On 2024-09-04, Amir Goldstein <amir73il@gmail.com> wrote:
-> On Wed, Sep 4, 2024 at 7:57=E2=80=AFPM Aleksa Sarai <cyphar@cyphar.com> w=
-rote:
-> >
-> > In order to make sure we are actually testing AT_HANDLE_MNT_ID_UNIQUE,
-> > add a test (based on generic/426) which runs the open_by_handle in a
-> > mode where it will error out if there is a problem with getting mount
-> > IDs. The test is skipped if the kernel doesn't support the necessary
-> > features.
-> >
-> > Suggested-by: Amir Goldstein <amir73il@gmail.com>
-> > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
->=20
-> Apart from one minor nits below, you may add:
->=20
-> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
->=20
-> > ---
-> >  common/rc             | 24 ++++++++++++++++
-> >  src/open_by_handle.c  | 63 ++++++++++++++++++++++++++++++++++-------
-> >  tests/generic/756     | 65 +++++++++++++++++++++++++++++++++++++++++++
-> >  tests/generic/756.out |  5 ++++
-> >  4 files changed, 147 insertions(+), 10 deletions(-)
-> >  create mode 100755 tests/generic/756
-> >  create mode 100644 tests/generic/756.out
-> >
-> > diff --git a/common/rc b/common/rc
-> > index 9da9fe188297..0beaf2ff1126 100644
-> > --- a/common/rc
-> > +++ b/common/rc
-> > @@ -5178,6 +5178,30 @@ _require_fibmap()
-> >         rm -f $file
-> >  }
-> >
-> > +_require_statx_unique_mountid()
-> > +{
-> > +       # statx(STATX_MNT_ID=3D0x1000) was added in Linux 5.8.
-> > +       # statx(STATX_MNT_ID_UNIQUE=3D0x4000) was added in Linux 6.9.
-> > +       # We only need to check the latter.
-> > +
-> > +       export STATX_MNT_ID_UNIQUE=3D0x4000
-> > +       local statx_mask=3D$(
-> > +               ${XFS_IO_PROG} -c "statx -m $STATX_MNT_ID_UNIQUE -r" "$=
-TEST_DIR" |
-> > +               sed -En 's/stat\.mask =3D (0x[0-9a-f]+)/\1/p'
-> > +       )
-> > +
-> > +       [[ $(( statx_mask & STATX_MNT_ID_UNIQUE )) =3D=3D $((STATX_MNT_=
-ID_UNIQUE)) ]] ||
-> > +               _notrun "statx does not support STATX_MNT_ID_UNIQUE on =
-this kernel"
-> > +}
-> > +
-> > +_require_open_by_handle_unique_mountid()
-> > +{
-> > +       _require_test_program "open_by_handle"
-> > +
-> > +       $here/src/open_by_handle -C AT_HANDLE_MNT_ID_UNIQUE 2>&1 \
-> > +               || _notrun "name_to_handle_at does not support AT_HANDL=
-E_MNT_ID_UNIQUE"
-> > +}
-> > +
-> >  _try_wipe_scratch_devs()
-> >  {
-> >         test -x "$WIPEFS_PROG" || return 0
-> > diff --git a/src/open_by_handle.c b/src/open_by_handle.c
-> > index 920ec7d9170b..b5c1a30abbbc 100644
-> > --- a/src/open_by_handle.c
-> > +++ b/src/open_by_handle.c
-> > @@ -106,9 +106,11 @@ struct handle {
-> >
-> >  void usage(void)
-> >  {
-> > -       fprintf(stderr, "usage: open_by_handle [-cludmrwapknhs] [<-i|-o=
-> <handles_file>] <test_dir> [num_files]\n");
-> > +       fprintf(stderr, "usage: open_by_handle [-cludmMrwapknhs] [<-i|-=
-o> <handles_file>] <test_dir> [num_files]\n");
-> > +       fprintf(stderr, "       open_by_handle -C <feature>\n");
-> >         fprintf(stderr, "\n");
-> >         fprintf(stderr, "open_by_handle -c <test_dir> [N] - create N te=
-st files under test_dir, try to get file handles and exit\n");
-> > +       fprintf(stderr, "open_by_handle -c <test_dir> [N] - create N te=
-st files under test_dir, try to get file handles and exit\n");
-> >         fprintf(stderr, "open_by_handle    <test_dir> [N] - get file ha=
-ndles of test files, drop caches and try to open by handle\n");
-> >         fprintf(stderr, "open_by_handle -n <test_dir> [N] - get file ha=
-ndles of test files and try to open by handle without drop caches\n");
-> >         fprintf(stderr, "open_by_handle -k <test_dir> [N] - get file ha=
-ndles of files that are kept open, drop caches and try to open by handle\n"=
-);
-> > @@ -117,19 +119,23 @@ void usage(void)
-> >         fprintf(stderr, "open_by_handle -a <test_dir> [N] - write data =
-to test files after open by handle\n");
-> >         fprintf(stderr, "open_by_handle -l <test_dir> [N] - create hard=
-links to test files, drop caches and try to open by handle\n");
-> >         fprintf(stderr, "open_by_handle -u <test_dir> [N] - unlink (har=
-dlinked) test files, drop caches and try to open by handle\n");
-> > -       fprintf(stderr, "open_by_handle -U <test_dir> [N] - verify the =
-mount ID returned with AT_HANDLE_MNT_ID_UNIQUE is correct\n");
->=20
-> I guess this was not supposed to be in the first patch
+    perf version --build-options | grep " on .* HAVE_FEATURE"
 
-Yeah, it got mixed up when splitting the patch. I'll fix it up.
+This relies on the output of perf version, and is a common pattern in tests.
 
-> >         fprintf(stderr, "open_by_handle -d <test_dir> [N] - unlink test=
- files and hardlinks, drop caches and try to open by handle\n");
-> >         fprintf(stderr, "open_by_handle -m <test_dir> [N] - rename test=
- files, drop caches and try to open by handle\n");
-> > +       fprintf(stderr, "open_by_handle -M <test_dir> [N] - do not sile=
-ntly skip the mount ID verifications\n");
-> >         fprintf(stderr, "open_by_handle -p <test_dir>     - create/dele=
-te and try to open by handle also test_dir itself\n");
-> >         fprintf(stderr, "open_by_handle -i <handles_file> <test_dir> [N=
-] - read test files handles from file and try to open by handle\n");
-> >         fprintf(stderr, "open_by_handle -o <handles_file> <test_dir> [N=
-] - get file handles of test files and write handles to file\n");
-> >         fprintf(stderr, "open_by_handle -s <test_dir> [N] - wait in sle=
-ep loop after opening files by handle to keep them open\n");
-> >         fprintf(stderr, "open_by_handle -z <test_dir> [N] - query files=
-ystem required buffer size\n");
-> > +       fprintf(stderr, "\n");
-> > +       fprintf(stderr, "open_by_handle -C <feature>      - check if <f=
-eature> is supported by the kernel.\n");
-> > +       fprintf(stderr, "  <feature> can be any of the following values=
-:\n");
-> > +       fprintf(stderr, "  - AT_HANDLE_MNT_ID_UNIQUE\n");
-> >         exit(EXIT_FAILURE);
-> >  }
-> >
-> >  static int do_name_to_handle_at(const char *fname, struct file_handle =
-*fh,
-> > -                               int bufsz)
-> > +                               int bufsz, bool force_check_mountid)
-> >  {
-> >         int ret;
-> >         int mntid_short;
-> > @@ -145,10 +151,15 @@ static int do_name_to_handle_at(const char *fname=
-, struct file_handle *fh,
-> >                         fprintf(stderr, "%s: statx(STATX_MNT_ID): %m\n"=
-, fname);
-> >                         return EXIT_FAILURE;
-> >                 }
-> > -               if (!(statxbuf.stx_mask & STATX_MNT_ID))
-> > +               if (!(statxbuf.stx_mask & STATX_MNT_ID)) {
-> > +                       if (force_check_mountid) {
-> > +                               fprintf(stderr, "%s: statx(STATX_MNT_ID=
-) not supported by running kernel\n", fname);
-> > +                               return EXIT_FAILURE;
-> > +                       }
-> >                         skip_mntid =3D true;
-> > -               else
-> > +               } else {
-> >                         statx_mntid_short =3D statxbuf.stx_mnt_id;
-> > +               }
-> >         }
-> >
-> >         if (!skip_mntid_unique) {
-> > @@ -160,10 +171,15 @@ static int do_name_to_handle_at(const char *fname=
-, struct file_handle *fh,
-> >                  * STATX_MNT_ID_UNIQUE was added fairly recently in Lin=
-ux 6.8, so if the
-> >                  * kernel doesn't give us a unique mount ID just skip i=
-t.
-> >                  */
-> > -               if (!(statxbuf.stx_mask & STATX_MNT_ID_UNIQUE))
-> > +               if (!(statxbuf.stx_mask & STATX_MNT_ID_UNIQUE)) {
-> > +                       if (force_check_mountid) {
-> > +                               fprintf(stderr, "%s: statx(STATX_MNT_ID=
-_UNIQUE) not supported by running kernel\n", fname);
-> > +                               return EXIT_FAILURE;
-> > +                       }
-> >                         skip_mntid_unique =3D true;
-> > -               else
-> > +               } else {
-> >                         statx_mntid_unique =3D statxbuf.stx_mnt_id;
-> > +               }
-> >         }
-> >
-> >         fh->handle_bytes =3D bufsz;
-> > @@ -204,6 +220,10 @@ static int do_name_to_handle_at(const char *fname,=
- struct file_handle *fh,
-> >                                 return EXIT_FAILURE;
-> >                         }
-> >                         /* EINVAL means AT_HANDLE_MNT_ID_UNIQUE is not =
-supported */
-> > +                       if (force_check_mountid) {
-> > +                               fprintf(stderr, "%s: name_to_handle_at(=
-AT_HANDLE_MNT_ID_UNIQUE) not supported by running kernel\n", fname);
-> > +                               return EXIT_FAILURE;
-> > +                       }
-> >                         skip_mntid_unique =3D true;
-> >                 } else {
-> >                         if (mntid_unique !=3D statx_mntid_unique) {
-> > @@ -216,6 +236,22 @@ static int do_name_to_handle_at(const char *fname,=
- struct file_handle *fh,
-> >         return 0;
-> >  }
-> >
-> > +static int check_feature(const char *feature)
-> > +{
-> > +       if (!strcmp(feature, "AT_HANDLE_MNT_ID_UNIQUE")) {
-> > +               int ret =3D name_to_handle_at(AT_FDCWD, ".", NULL, NULL=
-, AT_HANDLE_MNT_ID_UNIQUE);
-> > +               /* If AT_HANDLE_MNT_ID_UNIQUE is supported, we get EFAU=
-LT. */
-> > +               if (ret < 0 && errno =3D=3D EINVAL) {
-> > +                       fprintf(stderr, "name_to_handle_at(AT_HANDLE_MN=
-T_ID_UNIQUE) not supported by running kernel\n");
-> > +                       return EXIT_FAILURE;
-> > +               }
-> > +               return 0;
-> > +       }
-> > +
-> > +       fprintf(stderr, "unknown feature name '%s'\n", feature);
-> > +       return EXIT_FAILURE;
-> > +}
-> > +
-> >  int main(int argc, char **argv)
-> >  {
-> >         int     i, c;
-> > @@ -235,16 +271,20 @@ int main(int argc, char **argv)
-> >         int     create =3D 0, delete =3D 0, nlink =3D 1, move =3D 0;
-> >         int     rd =3D 0, wr =3D 0, wrafter =3D 0, parent =3D 0;
-> >         int     keepopen =3D 0, drop_caches =3D 1, sleep_loop =3D 0;
-> > +       int force_check_mountid =3D 0;
-> >         int     bufsz =3D MAX_HANDLE_SZ;
-> >
-> >         if (argc < 2)
-> >                 usage();
-> >
-> > -       while ((c =3D getopt(argc, argv, "cludmrwapknhi:o:sz")) !=3D -1=
-) {
-> > +       while ((c =3D getopt(argc, argv, "cC:ludmMrwapknhi:o:sz")) !=3D=
- -1) {
-> >                 switch (c) {
-> >                 case 'c':
-> >                         create =3D 1;
-> >                         break;
-> > +               case 'C':
-> > +                       /* Check kernel feature support. */
-> > +                       return check_feature(optarg);
-> >                 case 'w':
-> >                         /* Write data before open_by_handle_at() */
-> >                         wr =3D 1;
-> > @@ -271,6 +311,9 @@ int main(int argc, char **argv)
-> >                 case 'm':
-> >                         move =3D 1;
-> >                         break;
-> > +               case 'M':
-> > +                       force_check_mountid =3D 1;
-> > +                       break;
-> >                 case 'p':
-> >                         parent =3D 1;
-> >                         break;
-> > @@ -403,7 +446,7 @@ int main(int argc, char **argv)
-> >                                 return EXIT_FAILURE;
-> >                         }
-> >                 } else {
-> > -                       ret =3D do_name_to_handle_at(fname, &handle[i].=
-fh, bufsz);
-> > +                       ret =3D do_name_to_handle_at(fname, &handle[i].=
-fh, bufsz, force_check_mountid);
-> >                         if (ret)
-> >                                 return EXIT_FAILURE;
-> >                 }
-> > @@ -433,7 +476,7 @@ int main(int argc, char **argv)
-> >                                 return EXIT_FAILURE;
-> >                         }
-> >                 } else {
-> > -                       ret =3D do_name_to_handle_at(test_dir, &dir_han=
-dle.fh, bufsz);
-> > +                       ret =3D do_name_to_handle_at(test_dir, &dir_han=
-dle.fh, bufsz, force_check_mountid);
-> >                         if (ret)
-> >                                 return EXIT_FAILURE;
-> >                 }
-> > diff --git a/tests/generic/756 b/tests/generic/756
-> > new file mode 100755
-> > index 000000000000..c7a82cfd25f4
-> > --- /dev/null
-> > +++ b/tests/generic/756
-> > @@ -0,0 +1,65 @@
-> > +#! /bin/bash
-> > +# SPDX-License-Identifier: GPL-2.0
-> > +# Copyright (C) 2017 CTERA Networks. All Rights Reserved.
-> > +# Copyright (C) 2024 Aleksa Sarai <cyphar@cyphar.com>
-> > +#
-> > +# FS QA Test No. 756
-> > +#
-> > +# Check stale handles pointing to unlinked files and non-stale handles=
- pointing
-> > +# to linked files while verifying that u64 mount IDs are correctly ret=
-urned.
-> > +#
-> > +. ./common/preamble
-> > +_begin_fstest auto quick exportfs
-> > +
-> > +# Import common functions.
-> > +. ./common/filter
-> > +
-> > +
-> > +# Modify as appropriate.
-> > +_require_test
-> > +# _require_exportfs and  already requires open_by_handle, but let's no=
-t count on it
-> > +_require_test_program "open_by_handle"
-> > +_require_exportfs
-> > +# We need both STATX_MNT_ID_UNIQUE and AT_HANDLE_MNT_ID_UNIQUE.
-> > +_require_statx_unique_mountid
-> > +_require_open_by_handle_unique_mountid
-> > +
-> > +NUMFILES=3D1024
-> > +testdir=3D$TEST_DIR/$seq-dir
-> > +mkdir -p $testdir
-> > +
-> > +# Create empty test files in test dir
-> > +create_test_files()
-> > +{
-> > +       local dir=3D$1
-> > +
-> > +       mkdir -p $dir
-> > +       rm -f $dir/*
-> > +       $here/src/open_by_handle -c $dir $NUMFILES
-> > +}
-> > +
-> > +# Test encode/decode file handles
-> > +test_file_handles()
-> > +{
-> > +       local dir=3D$1
-> > +       local opt=3D$2
-> > +
-> > +       echo test_file_handles $* | _filter_test_dir
-> > +       $here/src/open_by_handle $opt $dir $NUMFILES
-> > +}
-> > +
-> > +# Check stale handles to deleted files
-> > +create_test_files $testdir
-> > +test_file_handles $testdir -Md
-> > +
-> > +# Check non-stale handles to linked files
-> > +create_test_files $testdir
-> > +test_file_handles $testdir -M
-> > +
-> > +# Check non-stale handles to files that were hardlinked and original d=
-eleted
-> > +create_test_files $testdir
-> > +test_file_handles $testdir -Ml
-> > +test_file_handles $testdir -Mu
-> > +
-> > +status=3D0
-> > +exit
-> > diff --git a/tests/generic/756.out b/tests/generic/756.out
-> > new file mode 100644
-> > index 000000000000..48aed88d87b9
-> > --- /dev/null
-> > +++ b/tests/generic/756.out
-> > @@ -0,0 +1,5 @@
-> > +QA output created by 756
-> > +test_file_handles TEST_DIR/756-dir -Md
-> > +test_file_handles TEST_DIR/756-dir -M
-> > +test_file_handles TEST_DIR/756-dir -Ml
-> > +test_file_handles TEST_DIR/756-dir -Mu
-> > --
-> > 2.46.0
-> >
+Proposed solution
+=================
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+As suggested by contributors in:
+https://lore.kernel.org/linux-perf-users/ZMPWk5K63tadmDlU@kernel.org/
 
---z42o635q3rq4mue5
-Content-Type: application/pgp-signature; name="signature.asc"
+Introduce a subcommand "perf check feature", with which
+scripts can test for presence of a feature or multiple features, such as:
 
------BEGIN PGP SIGNATURE-----
+    perf check feature HAVE_LIBTRACEEVENT  (feature macro)
 
-iHUEABYKAB0WIQS2TklVsp+j1GPyqQYol/rSt+lEbwUCZtiuXQAKCRAol/rSt+lE
-b/m0AQCzKGryUMf1YN9bsLh9plqsyDcabEjPN3fz+B9z5DB0eQD/TbZk5nMKY+uC
-nsyr6JXdGtadISbB0yrwK4a4wHcCogo=
-=0331
------END PGP SIGNATURE-----
+    or
 
---z42o635q3rq4mue5--
+    perf check feature libtraceevent       (feature name)
+
+    or
+
+    perf check feature LibTraceEvent       (case-insensitive)
+
+    or
+
+    perf check feature libtraceevent,bpf   (multiple features)
+
+The usage of "perf version --build-options | grep" has been replaced in two
+tests, with "perf check feature" command
+
+Also, to not duplicate the same feature list at multiple places, a new global
+'supported_features' array has been introduced in builtin.h, so both commands
+'perf check feature' and 'perf version --build-options' use the same array
+
+'supported_features' feature is an array of 'struct feature_support', which
+also has the name of the feature, macro used to test it's presence, and a
+is_builtin member, which will be 0 if feature not built-in, and 1 if built-in
+
+Architectures Tested
+====================
+* x86_64
+* ppc64le
+
+Commands ran for testing (Fedora & RHEL):
+
+    sudo dnf install -y libtraceevent-devel
+    make clean
+    make -j$(nproc)
+    ./perf check feature libtraceevent,bpf; echo Return Code: $?
+    ./perf check feature libtraceevent; echo Return Code: $?
+
+    sudo ./perf test -v "task-analyzer"
+    sudo ./perf test -v "probe libc's inet_pton & backtrace it with ping"
+    sudo ./perf test -v "Use vfs_getname probe to get syscall args filenames"
+
+    sudo dnf remove -y libtraceevent-devel
+    make clean
+    make NO_LIBTRACEEVENT=1 -j$(nproc)
+    ./perf check feature libtraceevent,bpf; echo Return Code: $?
+    ./perf check feature libtraceevent; echo Return Code: $?
+
+    sudo ./perf test -v "task-analyzer"
+    sudo ./perf test -v "probe libc's inet_pton & backtrace it with ping"
+    sudo ./perf test -v "Use vfs_getname probe to get syscall args filenames"
+
+Expected output of above commands (only the './perf check feature' command
+outputs):
+    ...
+             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+                       bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+    Return Code: 0
+             libtraceevent: [ on  ]  # HAVE_LIBTRACEEVENT
+    Return Code: 0
+    ...
+             libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
+                       bpf: [ on  ]  # HAVE_LIBBPF_SUPPORT
+    Return Code: 1
+             libtraceevent: [ OFF ]  # HAVE_LIBTRACEEVENT
+    Return Code: 1
+
+Git tree
+========
+
+Git tree with this patch series applied for testing:
+https://github.com/adi-g15-ibm/linux/tree/perf-check-feature-v15
+
+Changelog
+=========
+
+v15:
++ rebase on commit 98ad0b7 ("perf check: Introduce 'check' subcommand")
++ patch #1 and patch #2 are exactly same, as applied in perf-tools-next/tmp.perf-tools-next
+
+v14:
++ rebase on commit 39c24341 ("perf sched timehist: Fixed timestamp ...")
+
+v13:
++ patch #1: add fix for parse_options_subcommand not setting usage string
++ patch #2: if unknown feature name passed, print "please use 'perf version
+  --build-options' to see which ones are available"
++ patch #6: fix inconsistency in feature names (dwarf-unwind-support & get_cpuid)
++ patch #7: add more features to feature_list
+
+v12
++ patch #1: fix comment to mention argv[0] instead of argv[1]
++ patch #2: fix alignment
+
+v11
++ patch #1: fix build error due to const *const instead of const*
+
+v10
++ patch #1: use 'strdup' instead of 'malloc+memcpy'
++ patch #1: replace '-q' with '--quiet' in doc
++ patch #1: add usage for perf check
+
+V9
++ make 'feature' a subcommand instead of an option
++ make feature name/macro check case-insensitive
++ rename 'FEATURE_SUPPORT' as 'FEATURE_STATUS'
++ rebase on upstream perf-tools-next
+
+V8
++ handle return value of 'malloc' in patch #1
++ fix error due to strncpy depending on source string's length
+
+V7
++ modified patch #1 to fix compile issue, and add feature to allow
+  multiple comma-separated features
+
+V6
++ rebased to perf-tools-next/perf-tools-next
++ modified patch #1 to include FEATURE_SUPPORT("bpf_skeletons", HAVE_BPF_SKEL)
+
+V5
++ invert return value of 'has_support', but return value of perf check --feature
+according to shell convention
+
+V4
++ invert return value of perf check --feature
+
+V3
++ simplified has_support code in builtin-check.c (patch #1)
++ modified patch #3 and patch #4 according to change in return value in patch #1
+
+V2
++ improved the patch series with suggestions from Namhyung
++ fix incorrect return value, added -q option, and moved array definition to
+  perf-check.c
+
+V1
++ changed subcommand name to 'perf check --feature'
++ added documentation for perf check
++ support both macro (eg. HAVE_LIBTRACEEVENT), and name (eg. libtraceevent) as
+  input to 'perf check --feature'
++ change subject and descriptions of all patch mentioning perf check instead of
+  perf build
+
+V0: Previous patch series: https://lore.kernel.org/linux-perf-users/20230825061125.24312-1-adityag@linux.ibm.com/
+
+Aditya Gupta (6):
+  tools/lib/subcmd: Don't free the usage string
+  perf check: Introduce 'check' subcommand
+  perf version: Update --build-options to use 'supported_features' array
+  tools/perf/tests: Update test_task_analyzer.sh to use perf check
+    feature
+  perf: Fix inconsistencies in feature names
+  perf: Add more features to supported_features list
+
+Athira Rajeev (1):
+  tools/perf/tests: Update probe_vfs_getname.sh script to use perf check
+    feature
+
+ tools/lib/subcmd/parse-options.c              |   8 +-
+ tools/perf/Build                              |   1 +
+ tools/perf/Documentation/perf-check.txt       | 106 +++++++++
+ tools/perf/builtin-check.c                    | 205 ++++++++++++++++++
+ tools/perf/builtin-kmem.c                     |   2 +
+ tools/perf/builtin-kvm.c                      |   3 +
+ tools/perf/builtin-kwork.c                    |   3 +
+ tools/perf/builtin-lock.c                     |   3 +
+ tools/perf/builtin-mem.c                      |   3 +
+ tools/perf/builtin-sched.c                    |   3 +
+ tools/perf/builtin-version.c                  |  43 +---
+ tools/perf/builtin.h                          |  17 ++
+ tools/perf/perf.c                             |   1 +
+ .../perf/tests/shell/lib/probe_vfs_getname.sh |   4 +-
+ .../shell/record+probe_libc_inet_pton.sh      |   5 +-
+ .../shell/record+script_probe_vfs_getname.sh  |   5 +-
+ tools/perf/tests/shell/test_task_analyzer.sh  |   4 +-
+ 17 files changed, 370 insertions(+), 46 deletions(-)
+ create mode 100644 tools/perf/Documentation/perf-check.txt
+ create mode 100644 tools/perf/builtin-check.c
+
+--
+2.45.2
+
