@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE0E13A25F;
-	Wed,  4 Sep 2024 06:41:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53A8313CF82;
+	Wed,  4 Sep 2024 06:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725432093; cv=none; b=ki7Sh/jhEY3vZ04ltmU5JrJjJqo3NX0b+6GyrG1ax6RZ6xbEop31Yewh0hI81SqwXtVz6SBMi0jge8C4hc4nteuxppr95qy078NY6XL2N6ASV/e8riil2BQru7Erya425tU1PJbaq6ESk1VeNcSDhmxIkOkKONj4YD2iVwnqBHo=
+	t=1725432094; cv=none; b=pqwLTsM1t5oBRKDF6OapK0M6OPy2GNgZpuB+Zsec1NxOn1iNdbbKzfWJUJIPeG0/eunTeRC4LHRoA+1nKqJTP2maSiwIQ1iciOgmBg9uPdEnBxecPqYQfqVnrX4FwWzm+FdRfW4bhUbFv5FmSLd397O2REoP1HICYzRTpDWtrLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725432093; c=relaxed/simple;
-	bh=hzXWzi1y0DuOGU4NJLtdQrc8GWfSE/4EwLwJIKZsKBI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=krKHaYDh0MF7p2gXXtTymKjeSg/zkvV5Zef/W9Wk47DQ298eXwoqKkl3EZB/Mg/Ak9z7d4QNFj3Bf1lc7IrxuBaDHBuDiCHc9OM8EWN/qGDjp05zUy2Y/l+EszI+JVAbq0H4740G94cYOptrlg7bzexrwpG8rw5+GFM/AeblIM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tCvY/X+U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725432094; c=relaxed/simple;
+	bh=TXTb1FQFICnOWQQNi5h+nqsyMJaMiEbi5E4HrzZD3NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=H8TmjJp/Aqb6sgtjRmZvq3oO7jJcV6XATLzKD0lbivpptzGzb78MrwBjSfvXFCvQJ4D74RGoG5t6ZN8VEbRnaP3KZ1Azxlejz4e5L681ZGK5a10q7n4sx0XttnKvPFQjytZEgANwp0AaHsmSgMyLkBfAOTnkZSnDVhlrzg9vV50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQLDWSC2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tCvY/X+U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7747CC4CEC2;
-	Wed,  4 Sep 2024 06:41:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQLDWSC2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41004C4CEC9;
+	Wed,  4 Sep 2024 06:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1725432093;
-	bh=hzXWzi1y0DuOGU4NJLtdQrc8GWfSE/4EwLwJIKZsKBI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=tCvY/X+UYUoYTohDTPTsx2gbI2U+xbLsB2ockvLJjiC5aX9I6vAsroRaUytUfJmYN
-	 D4Mnn/GKkoo+41qqQ08Uy2zpdn4wq5yW5KWzohZbOxDC/LFjf2UBpkjWc07I/Ojhzy
-	 cK+kMyWParGT2zdiRSbJABi2Jhro5ntYL24YSo5Hhm3WCTQ69b9zq8nzOW5HFEEHsV
-	 7ILp2LGoHy46G2JIAU7PM1AwK/yeOcdzhvJOCj2EDvWS7z0NAXVnTY3L6WwVvsFqnw
-	 gfaMSNjAzEg7Kv6Qp8IN4VqfSsLUth86E2xR+XcHWaYw3wGPna4dl00+LvHncUJeru
-	 c/SVToBM1qP5Q==
+	bh=TXTb1FQFICnOWQQNi5h+nqsyMJaMiEbi5E4HrzZD3NQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lQLDWSC2ApgWg0qzem3p17AgYL6IXVu60vv+76A/GegwlaZXU2t+RzC2c7mn0q3J7
+	 xIH+e/zukl2dUx0oIgviNfsBTeHZeYCOpqsDOLi+qTqRSr7l5xYXyOkyvXVEslb5jl
+	 MDOnHP7X+P255+UtlMhCFMZmrnwBfYBic2cRDaW6+6AbfTtlIZ3EhbL+JJFJ306uvp
+	 fbnjV2avcB8scy1fuLOI39+rc5vYW+NXBwmAoiIGAo7ZTEZvHyPk4Ct4iKG2oo9AVL
+	 lDa1l4H5Ty1mB1d+GeJA/ScGXX74mZLUlELsmbZig0VS7GewgP46tZ2LsAQhX5Q8+8
+	 c8Xl1fI7JHifw==
 From: Namhyung Kim <namhyung@kernel.org>
 To: Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Ian Rogers <irogers@google.com>,
@@ -43,11 +44,14 @@ Cc: Jiri Olsa <jolsa@kernel.org>,
 	Thomas Richter <tmricht@linux.ibm.com>,
 	Atish Patra <atishp@atishpatra.org>,
 	Palmer Dabbelt <palmer@rivosinc.com>,
-	Mingwei Zhang <mizhang@google.com>
-Subject: [RFC/PATCHSET 0/8] perf tools: Do not set attr.exclude_guest by default (v2)
-Date: Tue,  3 Sep 2024 23:41:23 -0700
-Message-ID: <20240904064131.2377873-1-namhyung@kernel.org>
+	Mingwei Zhang <mizhang@google.com>,
+	James Clark <james.clark@linaro.org>
+Subject: [PATCH 1/8] perf tools: Don't set attr.exclude_guest by default
+Date: Tue,  3 Sep 2024 23:41:24 -0700
+Message-ID: <20240904064131.2377873-2-namhyung@kernel.org>
 X-Mailer: git-send-email 2.46.0.469.g59c65b2a67-goog
+In-Reply-To: <20240904064131.2377873-1-namhyung@kernel.org>
+References: <20240904064131.2377873-1-namhyung@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -56,59 +60,218 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hello,
+The exclude_guest in the event attribute is to limit profiling in the
+host environment.  But I'm not sure why we want to set it by default
+cause we don't care about it in most cases and I feel like it just
+makes new PMU implementation complicated.
 
-I found perf tools set exclude_guest bit inconsistently.  It used to
-set the bit but now the default event for perf record doesn't.  So I'm
-wondering why we want the bit in the first place.
+Of course it's useful for perf kvm command so I added the
+exclude_GH_default variable to preserve the old behavior for perf kvm
+and other commands like perf record and stat won't set the exclude bit.
+This is helpful for AMD IBS case since having exclude_guest bit will
+clear new feature bit due to the missing feature check logic.
 
-Actually it's not good for PMUs don't support any exclusion like AMD
-IBS because it disables new features after the exclude_guest due to
-the missing feature detection logic.
+  $ sysctl kernel.perf_event_paranoid
+  kernel.perf_event_paranoid = 0
 
-v2 changes)
- * update the missing feature detection logic
- * separate exclude_hv fallback
- * add new fallback for exclude_guest
+  $ perf record -W -e ibs_op// -vv true 2>&1 | grep switching
+  switching off PERF_FORMAT_LOST support
+  switching off weight struct support
+  switching off bpf_event
+  switching off ksymbol
+  switching off cloexec flag
+  switching off mmap2
+  switching off exclude_guest, exclude_host
 
-v1) https://lore.kernel.org/lkml/20240902014621.2002343-1-namhyung@kernel.org/
+Maybe Apple M1 users will scream but actually the default event for
+perf record was converted to "cycles:P" which doesn't set the
+exclude_guest bit already.  So they need to specify the necessary
+modifier manually like "cycles:PH" and I think it's ok.
 
-AFAIK it doesn't matter for the most cases but perf kvm.  If users
-need to set the bit, they can still use :H modifier.  For vPMU pass-
-through or Apple M1, it'd add the exclude_guest during the fallback
-logic.  Please let me know if it's ok for you.
+Intestingly, I found it sets the exclude_bit if "u" modifier is used.
+I don't know why but it's neither intuitive nor consistent.  Let's
+remove the bit there too.
 
-The code is available at 'perf/exclude-v2' branch in
-git://git.kernel.org/pub/scm/linux/kernel/git/namhyung/linux-perf.git
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: James Clark <james.clark@linaro.org>
+Cc: Ravi Bangoria <ravi.bangoria@amd.com>
+Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+---
+ tools/perf/builtin-kvm.c                   |  1 +
+ tools/perf/tests/attr/test-record-dummy-C0 |  2 +-
+ tools/perf/tests/parse-events.c            | 18 +++++++++---------
+ tools/perf/util/parse-events.c             |  2 +-
+ tools/perf/util/util.c                     | 10 ++++++++--
+ tools/perf/util/util.h                     |  3 +++
+ 6 files changed, 23 insertions(+), 13 deletions(-)
 
-Thanks,
-Namhyung
-
-
-Namhyung Kim (8):
-  perf tools: Don't set attr.exclude_guest by default
-  perf tools: Simplify evsel__add_modifier()
-  perf stat: Add --exclude-guest option
-  perf tools: Do not set exclude_guest for precise_ip
-  perf tools: Detect missing kernel features properly
-  perf tools: Separate exclude_hv fallback
-  perf tools: Add fallback for exclude_guest
-  perf tools: Check fallback error and order
-
- tools/perf/Documentation/perf-stat.txt      |   7 +
- tools/perf/builtin-kvm.c                    |   1 +
- tools/perf/builtin-stat.c                   |   2 +
- tools/perf/dlfilters/dlfilter-test-api-v0.c |   2 +-
- tools/perf/dlfilters/dlfilter-test-api-v2.c |   2 +-
- tools/perf/tests/attr/test-record-dummy-C0  |   2 +-
- tools/perf/tests/parse-events.c             |  30 +-
- tools/perf/util/evsel.c                     | 393 ++++++++++++++------
- tools/perf/util/evsel.h                     |   1 -
- tools/perf/util/parse-events.c              |   6 +-
- tools/perf/util/util.c                      |  10 +-
- tools/perf/util/util.h                      |   3 +
- 12 files changed, 322 insertions(+), 137 deletions(-)
-
+diff --git a/tools/perf/builtin-kvm.c b/tools/perf/builtin-kvm.c
+index 692267b1b7e8311f..ca94dd3de04d34a3 100644
+--- a/tools/perf/builtin-kvm.c
++++ b/tools/perf/builtin-kvm.c
+@@ -2147,6 +2147,7 @@ int cmd_kvm(int argc, const char **argv)
+ 						"buildid-list", "stat", NULL };
+ 	const char *kvm_usage[] = { NULL, NULL };
+ 
++	exclude_HG_default = true;
+ 	perf_host  = 0;
+ 	perf_guest = 1;
+ 
+diff --git a/tools/perf/tests/attr/test-record-dummy-C0 b/tools/perf/tests/attr/test-record-dummy-C0
+index 576ec48b3aafaa6a..8ce6f0a5df5b7013 100644
+--- a/tools/perf/tests/attr/test-record-dummy-C0
++++ b/tools/perf/tests/attr/test-record-dummy-C0
+@@ -37,7 +37,7 @@ precise_ip=0
+ mmap_data=0
+ sample_id_all=1
+ exclude_host=0
+-exclude_guest=1
++exclude_guest=0
+ exclude_callchain_kernel=0
+ exclude_callchain_user=0
+ mmap2=1
+diff --git a/tools/perf/tests/parse-events.c b/tools/perf/tests/parse-events.c
+index edc2adcf1baed195..9179bf3084c302c1 100644
+--- a/tools/perf/tests/parse-events.c
++++ b/tools/perf/tests/parse-events.c
+@@ -932,7 +932,7 @@ static int test__group2(struct evlist *evlist)
+ 			TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 			TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 			TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+-			TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++			TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 			TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 			TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 			TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
+@@ -947,7 +947,7 @@ static int test__group2(struct evlist *evlist)
+ 			TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 			TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 			TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+-			TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++			TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 			TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 			TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 			if (evsel__has_leader(evsel, leader))
+@@ -1072,7 +1072,7 @@ static int test__group3(struct evlist *evlist __maybe_unused)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
+@@ -1222,7 +1222,7 @@ static int test__group5(struct evlist *evlist __maybe_unused)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong leader", evsel__is_group_leader(evsel));
+@@ -1437,7 +1437,7 @@ static int test__leader_sample1(struct evlist *evlist)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+@@ -1453,7 +1453,7 @@ static int test__leader_sample1(struct evlist *evlist)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong leader", evsel__has_leader(evsel, leader));
+@@ -1468,7 +1468,7 @@ static int test__leader_sample1(struct evlist *evlist)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", !evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", !evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+@@ -1497,7 +1497,7 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+@@ -1513,7 +1513,7 @@ static int test__leader_sample2(struct evlist *evlist __maybe_unused)
+ 		TEST_ASSERT_VAL("wrong exclude_user", !evsel->core.attr.exclude_user);
+ 		TEST_ASSERT_VAL("wrong exclude_kernel", evsel->core.attr.exclude_kernel);
+ 		TEST_ASSERT_VAL("wrong exclude_hv", evsel->core.attr.exclude_hv);
+-		TEST_ASSERT_VAL("wrong exclude guest", evsel->core.attr.exclude_guest);
++		TEST_ASSERT_VAL("wrong exclude guest", !evsel->core.attr.exclude_guest);
+ 		TEST_ASSERT_VAL("wrong exclude host", !evsel->core.attr.exclude_host);
+ 		TEST_ASSERT_VAL("wrong precise_ip", !evsel->core.attr.precise_ip);
+ 		TEST_ASSERT_VAL("wrong group name", !evsel->group_name);
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index fab01ba54e34da7d..ab73b3d45f0467f9 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -1739,7 +1739,7 @@ static int parse_events__modifier_list(struct parse_events_state *parse_state,
+ 		if (mod.user) {
+ 			if (!exclude)
+ 				exclude = eu = ek = eh = 1;
+-			if (!exclude_GH && !perf_guest)
++			if (!exclude_GH && !perf_guest && exclude_HG_default)
+ 				eG = 1;
+ 			eu = 0;
+ 		}
+diff --git a/tools/perf/util/util.c b/tools/perf/util/util.c
+index 9d55a13787ce3c05..7e3159faaa1991df 100644
+--- a/tools/perf/util/util.c
++++ b/tools/perf/util/util.c
+@@ -78,17 +78,23 @@ bool sysctl__nmi_watchdog_enabled(void)
+ 
+ bool test_attr__enabled;
+ 
++bool exclude_HG_default;
++
+ bool perf_host  = true;
+ bool perf_guest = false;
+ 
+ void event_attr_init(struct perf_event_attr *attr)
+ {
++	/* to capture ABI version */
++	attr->size = sizeof(*attr);
++
++	if (!exclude_HG_default)
++		return;
++
+ 	if (!perf_host)
+ 		attr->exclude_host  = 1;
+ 	if (!perf_guest)
+ 		attr->exclude_guest = 1;
+-	/* to capture ABI version */
+-	attr->size = sizeof(*attr);
+ }
+ 
+ int mkdir_p(char *path, mode_t mode)
+diff --git a/tools/perf/util/util.h b/tools/perf/util/util.h
+index 9966c21aaf048479..d33ae883a54f2f2f 100644
+--- a/tools/perf/util/util.h
++++ b/tools/perf/util/util.h
+@@ -21,6 +21,9 @@ extern const char perf_more_info_string[];
+ 
+ extern const char *input_name;
+ 
++/* This will control if perf_{host,guest} will set attr.exclude_{host,guest}. */
++extern bool exclude_HG_default;
++
+ extern bool perf_host;
+ extern bool perf_guest;
+ 
 -- 
 2.46.0.469.g59c65b2a67-goog
 
