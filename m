@@ -1,370 +1,286 @@
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E9984047;
-	Wed,  4 Sep 2024 21:11:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 756BF154445;
+	Wed,  4 Sep 2024 21:13:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725484308; cv=none; b=AwVLfnnuCsOZCeokPhF/ShqE4zdR8/a3kFAY5d2g0KFo+6mv7ZLeVmuiAh97faf/C8dYnOduvV5kanLMX9Td8HLtF0fTJEX8dWtA6Vc2Rlfao85BpXQsp68QnxkhduH+g6vYB6SkI9MehSqyCj4jWeWf6REWNzNBteAvLAnyu/0=
+	t=1725484396; cv=none; b=o/VR5scEqTMF+Rfy0cIxsDhHOIHn8LA1G8i3Ra1h8GHTZ6FzMA2XWuUZNkHBXkvkyR7EhmvWYOC0lgS9btP9CukMazAlrbGt8suElf0jB7Ch9Njh5AoXlgucig1ht3gIcMGxVqGA8km+0bgOvSvpVDr0j2BOqvEnZvuX0xgHRZA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725484308; c=relaxed/simple;
-	bh=SH+L3rB/khEoF6XjAAaXUYc53ekBjksTFPF9lDOwH18=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lGyoxXvrDz9J/syUHvfHCBa4SpUx5PcjEnAbAWPC7zmkVmYGGV3bwqCo0u7Q6kExkPMxzWt/OdznZmTpEIdz+qypgdCR/+Em2ieTZuVQGFfgJtm4l/+Xi5F1nbgyG1sB1k2Llz61g9Heo524rx0pNXMq+OXyOnKLazKxWTCkNqs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SrNcxayl; arc=none smtp.client-ip=209.85.128.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SrNcxayl"
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-6d5a4615a56so12883407b3.0;
-        Wed, 04 Sep 2024 14:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725484306; x=1726089106; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6F5DN8VG4etoFkTw4aSiBhFWv4u4w1haZzJw1wqLHPw=;
-        b=SrNcxayln8X/1oU4va6gV+hbKU2DnRIGeTNRFIVJMMuAYF4aSGXtLIQ7/7VNy3qCLC
-         /hIAgSRXznC7sWLa66c7WpjQ2anoBg5K/wgNnnqPI4MesEY4S1A6LOsACdQnTcH2EM9G
-         gSsDoOAh5KqCqvMArWOOU9hZl0mt7qGTSUvMHA1gHdSwfANFYncgNO6rBePtGcOrYtqU
-         ZC3WSzZoZKomh4CSSBnlCVIWwKUSUJptRFIhoo0PivCThZn5fSdeeXDRDJB0cVFGnFIN
-         mCBUfnCrThUPN6BxwPkeNHsEd46PaweXoKOOWXpjyE8L3O2jTj8GWq1KlgV5wiz+uVOQ
-         663Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725484306; x=1726089106;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6F5DN8VG4etoFkTw4aSiBhFWv4u4w1haZzJw1wqLHPw=;
-        b=qeASymz7OQpDBGUYte+Z2GzyMo0OcBytUcPjv1qTW3v0r5rED3yo7GF7Z1ekfdA9c/
-         joozZG5xmgHiP6za6TnQbTkhlyqPLQxH3HCWGkwiqwDd/Uuxg2ymWQAo26Jz5qxiEgBI
-         KbAdau2lNLWXp0O+IzAISy/y2IeGJBsO/uvNk6u/OPxmtwv0z9fOSBdNxQC0IKjvTzjp
-         rYbdXPx9ivi7C/vgRF207LkMzCbSp6xAQShAQHq6D4xhR02rye4DgijTVRIXEvps7Mt0
-         t99BUvEHUXrJm80SFgMGimJL8NvYFud1JoNNlwqeweCLK+WDup7aPceG3voxSKyLplJZ
-         EZhw==
-X-Forwarded-Encrypted: i=1; AJvYcCVfN8M4gLYrZ4hdF37MCBpceDgvelczFlQ5yXS5xKBzXcTe8VD5QywyHHlrxkNzzj9ekBXHEqgO9aMZKVRYWrFJOg==@vger.kernel.org, AJvYcCVfSFre355lwS2Q9PfaIgW4Rsi7McLiGzu824ejKM2hcHwNsuvdLr2jqlgTWaQQJD/TUzZ5GKI0lOSzar0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywgy9ZRuScLozyywTZEqEMMgJDPXs+wyHD//xywU9bMJdKhU9iH
-	+s7bD+TOIB+pGNg/XU2B44BnPWT8IU6rY0ohtxnI+IUEw0MoalnVPFPLdbnRMmXjwlx6UrReLmV
-	yb3W5ZNHA6GRKN7F5tZQiPLtRYhA=
-X-Google-Smtp-Source: AGHT+IFC9FBEyB4E58BcbWrE8kJhWa503in7k0Hew0aHWs0f/gFLefKmGDwvp2AnSC2VIjLTXsV+PfV7M9CMpeegz2w=
-X-Received: by 2002:a05:690c:6c13:b0:6b0:70fc:f6e4 with SMTP id
- 00721157ae682-6db234bf55emr43468167b3.15.1725484305865; Wed, 04 Sep 2024
- 14:11:45 -0700 (PDT)
+	s=arc-20240116; t=1725484396; c=relaxed/simple;
+	bh=60TeuMnpfB13HnAaI1nDlQN8xQaPq3nXkxbwmi32LwI=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=DkWi/z11Vmq2ueQc1glMawJ6LgHHt6mflfTSiTluIN2er0mC/k5X4gL6yah0azQkONNiz/2KNhxheCCjOUgUqYNeXOF+yvF88OJLH1rU+s7h02iEkQkpjA9uf5pk3xjKflmi8ryJZLmp7pxa+OVhhKDN94g321hP7tdVSf3HPqA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 83B5CFEC;
+	Wed,  4 Sep 2024 14:13:38 -0700 (PDT)
+Received: from [10.57.81.194] (unknown [10.57.81.194])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6A9E3F73F;
+	Wed,  4 Sep 2024 14:13:09 -0700 (PDT)
+Message-ID: <a25103a1-47e3-472a-bfa8-abdfbc843cd3@arm.com>
+Date: Wed, 4 Sep 2024 22:13:07 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240824163322.60796-1-howardchu95@gmail.com> <20240824163322.60796-7-howardchu95@gmail.com>
- <Zti6mc3Lt5jC1owY@x1>
-In-Reply-To: <Zti6mc3Lt5jC1owY@x1>
-From: Howard Chu <howardchu95@gmail.com>
-Date: Wed, 4 Sep 2024 14:11:35 -0700
-Message-ID: <CAH0uvojWQz_K5S7nLavGW6K6mU6Y7TKoZAWpcut=AgbXtr6Wng@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] perf trace: Collect augmented data using BPF
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: adrian.hunter@intel.com, irogers@google.com, jolsa@kernel.org, 
-	kan.liang@linux.intel.com, namhyung@kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Leo Yan <leo.yan@arm.com>
+Subject: Re: [PATCH v6 4/8] perf auxtrace: Introduce
+ auxtrace_record__validate_events()
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20240823113306.2310957-1-leo.yan@arm.com>
+ <20240823113306.2310957-5-leo.yan@arm.com>
+ <3f03541e-6dab-472f-bad9-4cdc0c0dc061@intel.com>
+Content-Language: en-US
+In-Reply-To: <3f03541e-6dab-472f-bad9-4cdc0c0dc061@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Arnaldo,
+On 9/3/2024 4:26 PM, Adrian Hunter wrote:
+> On 23/08/24 14:33, Leo Yan wrote:
+>> A prerequisite for multiple AUX events is that the AUX events cannot
+>> overlap CPU maps. The reason is that every CPU has only one AUX trace
+>> buffer and maps it to an unique buffer index for CPU and system tracing
+>> mode.
+>>
+>> To prevent the case of CPU maps overlapping occurring within multiple
+>> AUX events, the auxtrace_record__validate_events() function is
+>> introduced. It iterates through all AUX events and returns failure if
+>> it detects CPU maps overlapping.
+>>
+>> Signed-off-by: Leo Yan <leo.yan@arm.com>
+>> ---
+>>  tools/perf/builtin-record.c |  4 +++
+>>  tools/perf/util/auxtrace.c  | 64 +++++++++++++++++++++++++++++++++++++
+>>  tools/perf/util/auxtrace.h  |  7 ++++
+>>  3 files changed, 75 insertions(+)
+>>
+>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>> index adbaf80b398c..2c618efba97d 100644
+>> --- a/tools/perf/builtin-record.c
+>> +++ b/tools/perf/builtin-record.c
+>> @@ -862,6 +862,10 @@ static int record__auxtrace_init(struct record *rec)
+>>
+>>       auxtrace_regroup_aux_output(rec->evlist);
+>>
+>> +     err = auxtrace_validate_events(rec->evlist);
+>> +     if (err)
+>> +             return err;
+>> +
+>>       return auxtrace_parse_filters(rec->evlist);
+>>  }
+>>
+>> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+>> index ca8682966fae..87e4f21b6edf 100644
+>> --- a/tools/perf/util/auxtrace.c
+>> +++ b/tools/perf/util/auxtrace.c
+>> @@ -2828,6 +2828,70 @@ int auxtrace_parse_filters(struct evlist *evlist)
+>>       return 0;
+>>  }
+>>
+>> +int auxtrace_validate_events(struct evlist *evlist)
+> 
+> 'auxtrace_validate_aux_events' would better indicate that it is
+> looking only at AUX area events.
 
-On Wed, Sep 4, 2024 at 12:53=E2=80=AFPM Arnaldo Carvalho de Melo
-<acme@kernel.org> wrote:
->
-> On Sun, Aug 25, 2024 at 12:33:20AM +0800, Howard Chu wrote:
-> > Include trace_augment.h for TRACE_AUG_MAX_BUF, so that BPF reads
-> > TRACE_AUG_MAX_BUF bytes of buffer maximum.
-> >
-> > Determine what type of argument and how many bytes to read from user sp=
-ace, us ing the
-> > value in the beauty_map. This is the relation of parameter type and its=
- corres ponding
-> > value in the beauty map, and how many bytes we read eventually:
-> >
-> > string: 1                          -> size of string (till null)
-> > struct: size of struct             -> size of struct
-> > buffer: -1 * (index of paired len) -> value of paired len (maximum: TRA=
-CE_AUG_ MAX_BUF)
-> >
-> > After reading from user space, we output the augmented data using
-> > bpf_perf_event_output().
-> >
-> > If the struct augmenter, augment_sys_enter() failed, we fall back to
-> > using bpf_tail_call().
-> >
-> > I have to make the payload 6 times the size of augmented_arg, to pass t=
-he
-> > BPF verifier.
-> >
-> > Committer notes:
-> >
-> > It works, but we need to wire it up to the userspace specialized pretty
-> > printer, otherwise we get things like:
-> >
-> >   root@number:~# perf trace -e connect ssh localhost
-> >        0.000 ( 0.010 ms): :784442/784442 connect(fd: 3, uservaddr: {2,}=
-, addrlen: 16)                          =3D 0
-> >        0.016 ( 0.006 ms): :784442/784442 connect(fd: 3, uservaddr: {10,=
-}, addrlen: 28)                         =3D 0
-> >        0.033 ( 0.096 ms): :784442/784442 connect(fd: 3, uservaddr: {10,=
-}, addrlen: 28)                         =3D 0
-> >   root@localhost's password:     71.292 ( 0.037 ms): ssh/784442 connect=
-(fd: 4, uservaddr: {1,{['/','v','a','r','/','r','u','n','/','.','h','e','i'=
-,'m',],},}, addrlen: 110) =3D 0
-> >       72.087 ( 0.013 ms): ssh/784442 connect(fd: 4, uservaddr: {1,{['/'=
-,'v','a','r','/','r','u','n','/','.','h','e','i','m',],},}, addrlen: 110) =
-=3D 0
-> >
-> >   root@number:~#
-> >
-> > When we used to have:
-> >
-> >   root@number:~# perf trace -e connect ssh localhost
-> >        0.000 ( 0.011 ms): ssh/786564 connect(fd: 3, uservaddr: { .famil=
-y: INET, port: 22, addr: 127.0.0.1 }, addrlen: 16) =3D 0
-> >        0.017 ( 0.006 ms): ssh/786564 connect(fd: 3, uservaddr: { .famil=
-y: INET6, port: 22, addr: ::1 }, addrlen: 28) =3D 0
-> >        0.263 ( 0.043 ms): ssh/786564 connect(fd: 3, uservaddr: { .famil=
-y: INET6, port: 22, addr: ::1 }, addrlen: 28) =3D 0
-> >       63.770 ( 0.044 ms): ssh/786564 connect(fd: 4, uservaddr: { .famil=
-y: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) =3D 0
-> >       65.467 ( 0.042 ms): ssh/786564 connect(fd: 4, uservaddr: { .famil=
-y: LOCAL, path: /var/run/.heim_org.h5l.kcm-socket }, addrlen: 110) =3D 0
-> >   root@localhost's password:
-> >
-> > That is closer to what strace produces:
-> >
-> >   root@number:~# strace -e connect ssh localhost
-> >   connect(3, {sa_family=3DAF_INET, sin_port=3Dhtons(22), sin_addr=3Dine=
-t_addr("127.0.0.1")}, 16) =3D 0
-> >   connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(22), sin6_flowinf=
-o=3Dhtonl(0), inet_pton(AF_INET6, "::1", &sin6_addr), sin6_scope_id=3D0}, 2=
-8) =3D 0
-> >   connect(3, {sa_family=3DAF_INET6, sin6_port=3Dhtons(22), sin6_flowinf=
-o=3Dhtonl(0), inet_pton(AF_INET6, "::1", &sin6_addr), sin6_scope_id=3D0}, 2=
-8) =3D 0
-> >   connect(4, {sa_family=3DAF_UNIX, sun_path=3D"/var/run/.heim_org.h5l.k=
-cm-socket"}, 110) =3D 0
-> >   connect(4, {sa_family=3DAF_UNIX, sun_path=3D"/var/run/.heim_org.h5l.k=
-cm-socket"}, 110) =3D 0
-> >   root@localhost's password:
-> >
-> > Signed-off-by: Howard Chu <howardchu95@gmail.com>
-> > Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > Cc: Ian Rogers <irogers@google.com>
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Kan Liang <kan.liang@linux.intel.com>
-> > Cc: Namhyung Kim <namhyung@kernel.org>
-> > Link: https://lore.kernel.org/r/20240815013626.935097-10-howardchu95@gm=
-ail.com
-> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > ---
-> >  .../bpf_skel/augmented_raw_syscalls.bpf.c     | 114 +++++++++++++++++-
-> >  1 file changed, 113 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/to=
-ols/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > index 0acbd74e8c76..f29a8dfca044 100644
-> > --- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > +++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
-> > @@ -7,6 +7,8 @@
-> >   */
-> >
-> >  #include "vmlinux.h"
-> > +#include "../trace_augment.h"
-> > +
-> >  #include <bpf/bpf_helpers.h>
-> >  #include <linux/limits.h>
-> >
-> > @@ -124,6 +126,25 @@ struct augmented_args_tmp {
-> >       __uint(max_entries, 1);
-> >  } augmented_args_tmp SEC(".maps");
-> >
-> > +struct beauty_payload_enter {
-> > +     struct syscall_enter_args args;
-> > +     struct augmented_arg aug_args[6];
-> > +};
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ pahole -C augmented_arg /tmp/bui=
-ld/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
-> struct augmented_arg {
->         unsigned int               size;                 /*     0     4 *=
-/
->         int                        err;                  /*     4     4 *=
-/
->         char                       value[4096];          /*     8  4096 *=
-/
->
->         /* size: 4104, cachelines: 65, members: 3 */
->         /* last cacheline: 8 bytes */
-> };
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$
->
-> =E2=AC=A2[acme@toolbox perf-tools-next]$ pahole -C syscall_enter_args /tm=
-p/build/perf-tools-next/util/bpf_skel/.tmp/augmented_raw_syscalls.bpf.o
-> struct syscall_enter_args {
->         unsigned long long         common_tp_fields;     /*     0     8 *=
-/
->         long                       syscall_nr;           /*     8     8 *=
-/
->         unsigned long              args[6];              /*    16    48 *=
-/
->
->         /* size: 64, cachelines: 1, members: 3 */
-> };
->
-> So the entry has the theoretical max limit for the augmented payload
-> which would be 6 * sizeof(struct augmented_arg) + the common header for
-> tracepoints (unaugmented), a lot of space, but...
+Will fix.
 
-Yes, if I don't use this much space, and try to do a flexible payload
-length, I won't be able to pass the BPF verifier. I will try to fix
-this wasting problem.
+>> +{
+>> +     struct evsel *evsel;
+>> +     struct perf_cpu_map *cpu_map = NULL;
+>> +     struct perf_cpu_map *cpu_map_intersect = NULL;
+>> +     struct perf_cpu_map *cpu_map_merged = NULL;
+>> +     int ret = 0;
+>> +
+>> +     if (!evlist)
+>> +             return 0;
+> 
+> Elsewhere we assume it is not NULL, might as well here too.
 
->
-> > +static int augment_sys_enter(void *ctx, struct syscall_enter_args *arg=
-s)
-> > +{
-> > +     bool augmented, do_output =3D false;
-> > +     int zero =3D 0, size, aug_size, index, output =3D 0,
-> > +         value_size =3D sizeof(struct augmented_arg) - offsetof(struct=
- augmented_arg, value);
-> > +     unsigned int nr, *beauty_map;
-> > +     struct beauty_payload_enter *payload;
-> > +     void *arg, *payload_offset;
-> > +
-> > +     /* fall back to do predefined tail call */
-> > +     if (args =3D=3D NULL)
-> > +             return 1;
-> > +
-> > +     /* use syscall number to get beauty_map entry */
-> > +     nr             =3D (__u32)args->syscall_nr;
-> > +     beauty_map     =3D bpf_map_lookup_elem(&beauty_map_enter, &nr);
->
-> If we don't set up the entry for this syscall, then there are no
-> pointers to collect, we return early and the tracepoint will not filter
-> it and there it goes, up unmodified, if not already filtered by a
-> tracepoint filter, ok, I'll add these comments here.
+Sure, will drop this checking.
 
-Thank you.
+>> +
+>> +     /*
+>> +      * Currently the tool only supports multiple AUX events without
+>> +      * overlapping CPU maps and every CPU has its unique AUX buffer
+>> +      * for CPU or system mode tracing.
+>> +      *
+>> +      * Returns failure if detects CPU maps overlapping.
+>> +      */
+>> +     evlist__for_each_entry(evlist, evsel) {
+>> +             if (!evsel__is_aux_event(evsel))
+>> +                     continue;
+>> +
+>> +             if (perf_cpu_map__is_empty(evsel->pmu->cpus))
+>> +                     continue;
+> 
+> Unless perf_cpu_map__intersect() is broken, the empty check
+> should not be needed.
 
->
-> > +     /* set up payload for output */
-> > +     payload        =3D bpf_map_lookup_elem(&beauty_payload_enter_map,=
- &zero);
-> > +     payload_offset =3D (void *)&payload->aug_args;
-> > > +   if (beauty_map =3D=3D NULL || payload =3D=3D NULL)
-> > +             return 1;
->
-> We can save the lookup for payload if the one for beauty_map returned
-> NULL, I'll do this fixup.
+Perf's CPU map implementation is tricky. IIRC, if without this checking, it
+will break the tool.
 
-Thanks that makes sense.
+In below code, we invokes perf_cpu_map__merge() for merging maps. It does
+_not_ always allocate a new map for merging. Based on testing, it only
+allocates a new map if two passed map pointers are not NULL. If a passed CPU
+map pointer is NULL, then it will directly return the another map's pointer.
 
->
-> > +     /* copy the sys_enter header, which has the syscall_nr */
-> > +     __builtin_memcpy(&payload->args, args, sizeof(struct syscall_ente=
-r_args));
->
->
-> > +     /*
-> > +      * Determine what type of argument and how many bytes to read fro=
-m user space, using the
-> > +      * value in the beauty_map. This is the relation of parameter typ=
-e and its corresponding
-> > +      * value in the beauty map, and how many bytes we read eventually=
-:
-> > +      *
-> > +      * string: 1                          -> size of string
-> > +      * struct: size of struct             -> size of struct
-> > +      * buffer: -1 * (index of paired len) -> value of paired len (max=
-imum: TRACE_AUG_MAX_BUF)
->
-> 'paired_len'? Ok, 1, size of string or struct
+This leads the difficulty for releasing the merged map. If the returned merged
+map is a new allocated one, it is safe us to release it. Otherwise, we might
+release a CPU map unexpectedly - though it is returned by
+perf_cpu_map__merge(), but the CPU map comes from a PMU and should not be
+released.
 
-I mean the buffer always comes with a size indicator. For instance
-read syscall's 'buf' and 'count', in this case 'count' will pair with
-'buf'. Sorry for the confusion. See below:
+Anyway, I will remove the empty check and see if fix the perf CPU map issue.
 
-read: (unsigned int fd, char *buf, size_t count)
+> Shouldn't we be looking at evsel->cpus ?
 
->
->
-> Will continue the detailed analysis later, as I need to change the
-> existing BPF collector, before applying this, to match the protocol here
-> (that will always have the size of each argument encoded in the ring
-> buffer, easier, but uses more space).
+I don't find the field `evsel->cpus`, I assume you are referring to
+evsel__cpus(evsel)?  If so, I will change to use the CPU map from evsel.
 
-Thank you for adding the protocol data size fix.
+> Possibly need to consider the perf_cpu_map__has_any_cpu() case?
+> e.g.
+>                 if (cpu_map && (perf_cpu_map__has_any_cpu(evsel->cpus) ||
+>                                 perf_cpu_map__has_any_cpu(cpu_map)) {
+>                         ret = -EINVAL;
+>                         break;
+>                 }
 
->
-> - Arnaldo
->
-> > +      */
-> > +     for (int i =3D 0; i < 6; i++) {
-> > +             arg =3D (void *)args->args[i];
-> > +             augmented =3D false;
-> > +             size =3D beauty_map[i];
-> > +             aug_size =3D size; /* size of the augmented data read fro=
-m user space */
-> > +
-> > +             if (size =3D=3D 0 || arg =3D=3D NULL)
-> > +                     continue;
-> > +
-> > +             if (size =3D=3D 1) { /* string */
-> > +                     aug_size =3D bpf_probe_read_user_str(((struct aug=
-mented_arg *)payload_offset)->value, value_size, arg);
-> > +                     /* minimum of 0 to pass the verifier */
-> > +                     if (aug_size < 0)
-> > +                             aug_size =3D 0;
-> > +
-> > +                     augmented =3D true;
-> > +             } else if (size > 0 && size <=3D value_size) { /* struct =
-*/
-> > +                     if (!bpf_probe_read_user(((struct augmented_arg *=
-)payload_offset)->value, size, arg))
-> > +                             augmented =3D true;
-> > +             } else if (size < 0 && size >=3D -6) { /* buffer */
-> > +                     index =3D -(size + 1);
-> > +                     aug_size =3D args->args[index];
-> > +
-> > +                     if (aug_size > TRACE_AUG_MAX_BUF)
-> > +                             aug_size =3D TRACE_AUG_MAX_BUF;
-> > +
-> > +                     if (aug_size > 0) {
-> > +                             if (!bpf_probe_read_user(((struct augment=
-ed_arg *)payload_offset)->value, aug_size, arg))
-> > +                                     augmented =3D true;
-> > +                     }
-> > +             }
-> > +
-> > +             /* write data to payload */
-> > +             if (augmented) {
-> > +                     int written =3D offsetof(struct augmented_arg, va=
-lue) + aug_size;
-> > +
-> > +                     ((struct augmented_arg *)payload_offset)->size =
-=3D aug_size;
-> > +                     output +=3D written;
-> > +                     payload_offset +=3D written;
-> > +                     do_output =3D true;
-> > +             }
-> > +     }
-> > +
-> > +     if (!do_output)
-> > +             return 1;
-> > +
-> > +     return augmented__beauty_output(ctx, payload, sizeof(struct sysca=
-ll_enter_args) + output);
->
-> We end up pushing up to the ring buffer all the way to
+Will add.
 
-Thanks,
-Howard
+>> +
+>> +             cpu_map_intersect = perf_cpu_map__intersect(cpu_map, evsel->pmu->cpus);
+>> +             if (cpu_map_intersect) {
+>> +                     perf_cpu_map__put(cpu_map_intersect);
+>> +                     pr_err("Doesn't support AUX events with overlapping CPU masks\n");
+>> +                     ret = -EINVAL;
+>> +                     break;
+>> +             }
+>> +             perf_cpu_map__put(cpu_map_intersect);
+> 
+> Maybe add a helper:
+> 
+> static bool perf_cpu_map__do_maps_intersect(struct perf_cpu_map *a, struct perf_cpu_map *b)
+> {
+>         struct perf_cpu_map *intersection = perf_cpu_map__intersect(a, b);
+>         bool ret = !perf_cpu_map__is_empty(intersection);
+> 
+>         perf_cpu_map__put(intersection);
+> 
+>         return ret;
+> }
+
+Will do.
+
+>> +
+>> +             cpu_map_merged = perf_cpu_map__merge(cpu_map, evsel->pmu->cpus);
+>> +             if (!cpu_map_merged) {
+>> +                     ret = -ENOMEM;
+>> +                     break;
+>> +             }
+>> +
+>> +             /* Update the CPU maps after merging */
+>> +             perf_cpu_map__put(cpu_map);
+>> +             cpu_map = cpu_map_merged;
+> 
+> perf_cpu_map__merge() is a bit tricky - see its comments.  This
+> should probably all just be:
+> 
+>                 cpu_map = perf_cpu_map__merge(cpu_map, evsel->pmu->cpus);
+
+This might lead to memory leak for the 'old' cpu_map after merging.
+
+We cannot assume the `cpu_map` variable is extended from its old value, a new
+CPU map is allocated during the merging. This is why the patch always release
+the old cpu_map (perf_cpu_map__put(cpu_map)) and then assign the new merged
+CPU map.
+
+>> +     }
+>> +
+>> +     if (!ret)
+>> +             goto out;
+> 
+> Could we put the error path last i.e.
+> 
+>         perf_cpu_map__put(cpu_map);
+> 
+>         if (ret)
+>                 goto out_err;
+> 
+>         return 0;
+> 
+> out_err:
+
+Makes sense. Will fix.
+
+>> +
+>> +     /* If fails, dump CPU maps for debugging */
+>> +     evlist__for_each_entry(evlist, evsel) {
+>> +             char buf[200];
+>> +
+>> +             if (!evsel__is_aux_event(evsel))
+>> +                     continue;
+>> +
+>> +             cpu_map__snprint(evsel->pmu->cpus, buf, sizeof(buf));
+>> +             pr_debug("AUX event [%s]'s cpu map is: %s\n", evsel->pmu->name, buf);
+> 
+> Could probably use cpu_map__fprintf(pmu->cpus, debug_file()) and
+> not need buf.
+
+Will do.
+
+Thanks for suggestions!
+
+Leo
+
+>> +     }
+>> +
+>> +out:
+>> +     perf_cpu_map__put(cpu_map);
+>> +     return ret;
+>> +}
+>> +
+>>  int auxtrace__process_event(struct perf_session *session, union perf_event *event,
+>>                           struct perf_sample *sample, const struct perf_tool *tool)
+>>  {
+>> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+>> index a1895a4f530b..67a74ad0c383 100644
+>> --- a/tools/perf/util/auxtrace.h
+>> +++ b/tools/perf/util/auxtrace.h
+>> @@ -636,6 +636,7 @@ void addr_filters__exit(struct addr_filters *filts);
+>>  int addr_filters__parse_bare_filter(struct addr_filters *filts,
+>>                                   const char *filter);
+>>  int auxtrace_parse_filters(struct evlist *evlist);
+>> +int auxtrace_validate_events(struct evlist *evlist);
+>>
+>>  int auxtrace__process_event(struct perf_session *session, union perf_event *event,
+>>                           struct perf_sample *sample, const struct perf_tool *tool);
+>> @@ -875,6 +876,12 @@ int auxtrace_parse_filters(struct evlist *evlist __maybe_unused)
+>>       return 0;
+>>  }
+>>
+>> +static inline
+>> +int auxtrace_validate_events(struct evlist *evlist __maybe_unused)
+>> +{
+>> +     return 0;
+>> +}
+>> +
+>>  int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
+>>                       struct auxtrace_mmap_params *mp,
+>>                       void *userpg, int fd);
+> 
