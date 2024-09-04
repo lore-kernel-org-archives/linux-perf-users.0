@@ -1,63 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1571E00B7;
-	Wed,  4 Sep 2024 19:16:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BDF84A27;
+	Wed,  4 Sep 2024 19:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725477405; cv=none; b=M7raF1BR25mfoXcYX7iU7Lnt9kDaHVXh1vOdqGQlUhveqGSo4tMU5E3l5+dREUmtEWJvMOL6D/qIroGIhW6Pm9KJX5P+MowJlujIDyxvo1aozc0Xjy/QLzX7hNqQCVP5Kw+YO3GnuqR6oEU9nL++c36iDIbX6XwTjvZZfBtaiSU=
+	t=1725478575; cv=none; b=hc0M+nmElwGpKW5kGUjhroeBrHOUwb/BEz917htL0PLnwDcX98dnFKu9b8bHfr2cQOAzox9Q2ZUD2NDeNpXgmEmDdvDiIWqf5WFHxT6TZHCWi/5MKwm8lmBFqV1XATl6KgUdYsI7QsaZOlT3y54x98WDyy9hx1w+EVPLCuTtfLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725477405; c=relaxed/simple;
-	bh=f7II1IdWzs3cfE7wiW+hiFpacAuoS9NMzhqHSHGuJgs=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fxmQsFZbB8ZsRKYWutkUw1KtHuor4w6QDIjatecz8FLnV7oyfdfYUFZhBQpQeUWoIlMugQEQttWEntXoBeJGpOdo5fynBi7vJrUNNspk7+JWvfEUMiRaDmLOUxhSZtadFefHVDXr8qyhmtmPMDK2QQbb0GVfQ9KkD30MF83c2/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSIO3OGA; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSIO3OGA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C00C4CEC2;
-	Wed,  4 Sep 2024 19:16:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725477404;
-	bh=f7II1IdWzs3cfE7wiW+hiFpacAuoS9NMzhqHSHGuJgs=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=OSIO3OGABy5nshvJSKow+aJJj40eIFDh3RDP6EZP2ZJSnZCxWlHXGs6F399seJ0aR
-	 iq2/vKWXbp/8cqqi8izm/YwU5MzBWuHzGKFQNkeFF/vDhGS/PhRqfBuu6ybbGNianW
-	 pZBWvo8nioxzkn6BVo6XnMArO8ZpkAE4aRGV6h8TTBxZaAszG79c/hJDUc1EK14AKI
-	 2FFkHrq7QYfBcPeaAyvNYCiZcpXDi+jmc3K8HyMqXXk1VwPdZs5cyRfMjK5I9bxXbo
-	 8CENaacmFaobPYYHXZHNH/Fr8kE6WXXPn1NMsTmcu7pejdR5jo3FjCjLtMSdPkNxJa
-	 S6O4V3ChSZ2fw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE3473822D30;
-	Wed,  4 Sep 2024 19:16:46 +0000 (UTC)
-Subject: Re: [GIT PULL] perf-tools fixes for v6.11-rc7
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240904190540.4086525-1-namhyung@kernel.org>
-References: <20240904190540.4086525-1-namhyung@kernel.org>
-X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240904190540.4086525-1-namhyung@kernel.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.11-2024-09-04
-X-PR-Tracked-Commit-Id: e162cb25c410afc42051a582c46a47dde597f51c
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 2adad548f74c30739c35994da419eb2318e6fbd1
-Message-Id: <172547740521.1139567.12804773063239725703.pr-tracker-bot@kernel.org>
-Date: Wed, 04 Sep 2024 19:16:45 +0000
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
+	s=arc-20240116; t=1725478575; c=relaxed/simple;
+	bh=V8H9h4D/vsbMRsslKFibMKC/nC5ZrOYPvFPXzzeUJPI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=fe7Etg5626W4xw5gy5fGhvsKpI9PqXmtXXA10CflzTs7xeYZG2KBGLPbwd+vAvkRmpAslSCT3zrZCj2jsysuK8niNypQHrXEY3rsDp7+MydPRi4JEd9yg8vizBWCc7OH+L9brhCIsKAoqavNWU5CLQhCe9zS7SR5O9v0KU9MNuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2F95FEC;
+	Wed,  4 Sep 2024 12:36:37 -0700 (PDT)
+Received: from [10.57.81.194] (unknown [10.57.81.194])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBAC93F73B;
+	Wed,  4 Sep 2024 12:36:08 -0700 (PDT)
+Message-ID: <adfbd1ba-62ca-49c9-893a-3c10780ee186@arm.com>
+Date: Wed, 4 Sep 2024 20:35:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 1/8] perf/core: Allow multiple AUX PMU events with the
+ same module
+To: Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
+ linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20240823113306.2310957-1-leo.yan@arm.com>
+ <20240823113306.2310957-2-leo.yan@arm.com>
+ <70a58dca-01dc-408b-a2f7-a854718a405b@intel.com>
+Content-Language: en-US
+From: Leo Yan <leo.yan@arm.com>
+In-Reply-To: <70a58dca-01dc-408b-a2f7-a854718a405b@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The pull request you sent on Wed,  4 Sep 2024 12:05:40 -0700:
+On 9/3/2024 11:06 AM, Adrian Hunter wrote:
+>> @@ -12345,9 +12345,16 @@ perf_event_set_output(struct perf_event *event, struct perf_event *output_event)
+>>
+>>       /*
+>>        * If both events generate aux data, they must be on the same PMU
+>> +      * module but can be with different PMU instances.
+>> +      *
+>> +      * For a built-in PMU module, the 'pmu->module' pointer is NULL,
+>> +      * thus it is not feasible to compare the module pointers when
+>> +      * AUX PMU drivers are built into the kernel image. Instead,
+>> +      * comparing the .setup_aux() callback pointer can determine if
+>> +      * the two PMU events come from the same PMU driver.
+>>        */
+>>       if (has_aux(event) && has_aux(output_event) &&
+>> -         event->pmu != output_event->pmu)
+>> +         event->pmu->setup_aux != output_event->pmu->setup_aux)
+> 
+> It is not very flexible and risks someone adding aux PMUs that
+> do not want that rule but accidentally support it.  Another
+> option is to add a PMU callback, but really you need to Peter's
+> feedback.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.11-2024-09-04
+Thanks a lot for sharing opinion, Adrian!
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/2adad548f74c30739c35994da419eb2318e6fbd1
+How about below code? An alternative way is to compare the PMU's parent
+device driver, e.g. for Arm SPE PMU events, this can compare if two PMU
+events are using the Arm SPE driver.
 
-Thank you!
+/*
+ * If both events generate aux data, they must be on the same PMU
+ * module but can be with different PMU instances.
+ */
+if (has_aux(event) && has_aux(output_event)) {
+        /* It isn't allowed if it fails to find driver pointer */
+        if (!event->pmu->parent || !event->pmu->parent->driver)
+                goto out;
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+        if (!output_event->pmu->parent || !output_event->pmu->parent->driver)
+                goto out;
+
+        /*
+         * It isn't allowed if aux events are not same type of PMU
+         * device. This is determined by comparing the associated
+         * driver pointers.
+         */
+        if (event->pmu->parent->driver != output_event->pmu->parent->driver)
+                goto out;
+}
+
+I verified the code above, it also works well at my side.
+
+@Peter.Z, Please let me know if this is okay for you.
+
+Thanks,
+Leo
