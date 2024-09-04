@@ -1,122 +1,145 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B14371D88DF;
-	Wed,  4 Sep 2024 15:21:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6775D1DA63A;
+	Wed,  4 Sep 2024 15:34:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725463263; cv=none; b=uN7jCmo9WEDebUSlK2iuTwnKGNwBtQsH7MKwjwLAn1wArTujJH7K3fE1AJC1l9cPLM79fzPOrjTTYy0hdKtpRymYSzZoLWZjwOx/yiA/J4buGEBm2hfpXRtz+EinFDLyhWKFzRomZd63khlm10psY7Ex/elAcoR71WtVoJwYAso=
+	t=1725464085; cv=none; b=MLe0OcpcIlW+zhkrskPV2VolWWsxw++vdKp7TQCEXe68maR1OpkvRLItcntDmHLJmkDu3BRua9x0NDzJMVFTIeEByGGGpmq4v81jmtDMopDA5ExCdCseRBKktcnWGjbUiPR9i3X8/sbqgJAAT5e1OpgGASaI2E+X7qUu0noE73I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725463263; c=relaxed/simple;
-	bh=G6e42ZvLcKnMUFQznAoffYFdr8gDHDsObIEdwNyWko8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cRIcKHwAAUSSs0Yr+ZDBDwkmJg91wG85X8Bfh7L/TBclLqSG/ubiLLI6ME6k8AP3n6fiwK2ROarNbWI0B2K4bTwyeNS+0Qx0W8lucNfTL9ewnVAswKnebE/0ov5aTe1eW3HoJ16+Xn6nbItX648UXKaj07N4KERtpC0Oqhx4b7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NFmQxOsG; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725464085; c=relaxed/simple;
+	bh=5rjogA+IPNpv3Q2rnXJqD03vvnleraaCLdUQNMypHv0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OQD8kY+PPg67USZ1HvVn6OX1VvwoMFzIXIPb8arRKGS0EkzwMH4B2N7OG7+mwDwFbFzOhnMkaJcaKa4DLuxrHpGQUrnfPasgvH2yLHWyOnW1n9AGUZ4VNspAuJqSraYLdvbycRqtxFAhd+t8mVo4l5APAo1T2dK4ikEWbczIeR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAAJR3cx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NFmQxOsG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725463262; x=1756999262;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=G6e42ZvLcKnMUFQznAoffYFdr8gDHDsObIEdwNyWko8=;
-  b=NFmQxOsGKo7kBofzNtyQpitB4MipJhmbbnsuoclVVW4lLZRFtdjyFCrB
-   ybiHJ1hjZKcC+XLRwLdGvG1+T8YioTHaeS1cRurIVlc7cW6w27y/lKHJj
-   VtZ7b9jx3o7+/3upJJG8wp/pPvIIxWNAw9a3bwbXQO/kxYIGSRE7EkO5f
-   Fpi+hZLH1zriaqxGawVcQmMxC57KtAQly9o9Nubg5EK4oVjDs9qv0G9Ow
-   1tScqlyF9LleD6xIMxr2LEL2ozP4OYYbt0BBuc1jk61a5TdI3cI3SN2xJ
-   qto8uCy2Z5Sxp6Ql8x1To/CbS7QjrvEsVWT39RVHZdkx0KWsfWqllwQJw
-   w==;
-X-CSE-ConnectionGUID: ra5IEnK+QJCRvI6Wm6HXYg==
-X-CSE-MsgGUID: ywoUmu+gQYqgDlykkmOk/A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="24292936"
-X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
-   d="scan'208";a="24292936"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 08:21:01 -0700
-X-CSE-ConnectionGUID: H2idS7vzTOaZxLKVe+ijoA==
-X-CSE-MsgGUID: cE2UTth3RR2G7qhtwDel8Q==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,202,1719903600"; 
-   d="scan'208";a="64966311"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmviesa006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 08:20:59 -0700
-Received: from [10.212.117.74] (hantran-MOBL1.amr.corp.intel.com [10.212.117.74])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id 45EA520B5782;
-	Wed,  4 Sep 2024 08:20:58 -0700 (PDT)
-Message-ID: <e848ad7b-bc9d-4eca-8918-0dd5a67c347e@linux.intel.com>
-Date: Wed, 4 Sep 2024 11:20:57 -0400
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAAJR3cx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63F62C4CEC3;
+	Wed,  4 Sep 2024 15:34:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725464084;
+	bh=5rjogA+IPNpv3Q2rnXJqD03vvnleraaCLdUQNMypHv0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mAAJR3cxNrSEnMGt2JIWtjueuIlAJFLOMYXjFJC+CRxXRodEFlqmi2xa1oG5zAa6I
+	 fZRqEEaW2ofZlTn2gY7MC3IEXlCsbcQfjBCbYMpRQY7RTdxjFKgjofm39QJPKxxv/H
+	 CmKgOhDdvxbTLlfP4RLqJA5yL1t6e2tEcI6emJuvTfTaUnMURw61BjOPpGfajI/bOK
+	 Pk9KChYCmvtHJbRNuWhKhiTasoDnK3kPyK0E/52gEgTU/LDVEY07aCZUlnYrKXDsH1
+	 zqRPhC1SwsYRnuBKALwVx1dsOC8tBdTOsKpKIJ5XmPersVoR6Ch0ayES1R4G1LbExN
+	 wWAWJvIE2pQ5g==
+Date: Wed, 4 Sep 2024 12:34:36 -0300
+From: Arnaldo Carvalho de Melo <acme@kernel.org>
+To: "Liang, Kan" <kan.liang@linux.intel.com>
+Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	linux-perf-users@vger.kernel.org,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: perf mem record not getting the mem_load_aux events by default
+Message-ID: <Zth-DBdaSXodeFqn@x1>
+References: <Zthu81fA3kLC2CS2@x1>
+ <e848ad7b-bc9d-4eca-8918-0dd5a67c347e@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: perf mem record not getting the mem_load_aux events by default
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
- Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
- linux-perf-users@vger.kernel.org,
- Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <Zthu81fA3kLC2CS2@x1>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <Zthu81fA3kLC2CS2@x1>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <e848ad7b-bc9d-4eca-8918-0dd5a67c347e@linux.intel.com>
 
+On Wed, Sep 04, 2024 at 11:20:57AM -0400, Liang, Kan wrote:
+> 
+> 
+> On 2024-09-04 10:30 a.m., Arnaldo Carvalho de Melo wrote:
+> > Hi Kan,
+> > 
+> > Recently I presented about 'perf mem record' and found that I had use
+> > 'perf record' directly as 'perf mem record' on a Intel Hybrid system
+> > wasn't selecting the required aux event:
+> > 
+> >   http://vger.kernel.org/~acme/prez/lsfmm-bpf-2024/#/19
+> > 
+> > The previous slides show the problem and the one above shows what worked
+> > for me.
+> > 
+> > I saw this while trying to fix that:
+> > 
+> > Author: Kan Liang <kan.liang@linux.intel.com>
+> > commit abbdd79b786e036e60f01b7907977943ebe7a74d
+> > Date:   Tue Jan 23 10:50:32 2024 -0800
+> > 
+> >     perf mem: Clean up perf_mem_events__name()
+> >     
+> >     Introduce a generic perf_mem_events__name(). Remove the ARCH-specific
+> >     one.
+> >     
+> >     The mem_load events may have a different format. Add ldlat and aux_event
+> >     in the struct perf_mem_event to indicate the format and the extra aux
+> >     event.
+> >     
+> >     Add perf_mem_events_intel_aux[] to support the extra mem_load_aux event.
+> >     
+> >     Rename perf_mem_events__name to perf_pmu__mem_events_name.
+> > 
+> > --------------------------´
+> > 
+> > So there are provisions for selecting the right events, but it doesn't
+> > seem to be working when I tried, can you take a look at what I describe
+> > on those slides and see what am I doing wrong?
+> > 
+> 
+> If I understand the example in the slides correctly, the issue is that
+> no mem events from big core are selected when running perf mem record,
+> rather than wrong mem events are selected.
+> 
+> I don't see an obvious issue. That looks like a regression of the perf
+> mem record. I will find a Alder Lake or Raptor Lake to take a deep look.
 
+My expectation was for whatever is needed for having those events to be
+put in place, like I did manually, and indeed, limiting it to cpu_core:
 
-On 2024-09-04 10:30 a.m., Arnaldo Carvalho de Melo wrote:
-> Hi Kan,
-> 
-> Recently I presented about 'perf mem record' and found that I had use
-> 'perf record' directly as 'perf mem record' on a Intel Hybrid system
-> wasn't selecting the required aux event:
-> 
->   http://vger.kernel.org/~acme/prez/lsfmm-bpf-2024/#/19
-> 
-> The previous slides show the problem and the one above shows what worked
-> for me.
-> 
-> I saw this while trying to fix that:
-> 
-> Author: Kan Liang <kan.liang@linux.intel.com>
-> commit abbdd79b786e036e60f01b7907977943ebe7a74d
-> Date:   Tue Jan 23 10:50:32 2024 -0800
-> 
->     perf mem: Clean up perf_mem_events__name()
->     
->     Introduce a generic perf_mem_events__name(). Remove the ARCH-specific
->     one.
->     
->     The mem_load events may have a different format. Add ldlat and aux_event
->     in the struct perf_mem_event to indicate the format and the extra aux
->     event.
->     
->     Add perf_mem_events_intel_aux[] to support the extra mem_load_aux event.
->     
->     Rename perf_mem_events__name to perf_pmu__mem_events_name.
-> 
-> --------------------------Â´
-> 
-> So there are provisions for selecting the right events, but it doesn't
-> seem to be working when I tried, can you take a look at what I describe
-> on those slides and see what am I doing wrong?
-> 
+taskset -c 0 \
+  perf record --weight --data \
+              --event '{cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/P}:S' \
+	      --event cpu_core/mem-stores/ find / > /dev/null
 
-If I understand the example in the slides correctly, the issue is that
-no mem events from big core are selected when running perf mem record,
-rather than wrong mem events are selected.
+I.e. lots of boilerplate for using 'perf mem record', we should at least
+have some sort of warning about the 'perf mem record' experience having
+to be restricted to workloads running on PMUs where it can take place,
+perhaps making 'perf mem record' to restrict the CPUs used for a session
+to be the ones with the needed resources... and we have that already:
 
-I don't see an obvious issue. That looks like a regression of the perf
-mem record. I will find a Alder Lake or Raptor Lake to take a deep look.
+root@number:~# perf mem record sleep 1
+Memory events are enabled on a subset of CPUs: 16-27
+[ perf record: Woken up 1 times to write data ]
+[ perf record: Captured and wrote 0.032 MB perf.data ]
+root@number:~#
 
-Thanks,
-Kan
+But...
+
+root@number:~# perf evlist
+cpu_atom/mem-loads,ldlat=30/P
+cpu_atom/mem-stores/P
+dummy:u
+root@number:~# perf evlist -v
+cpu_atom/mem-loads,ldlat=30/P: type: 10 (cpu_atom), size: 136, config: 0x5d0 (mem-loads), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1, { bp_addr, config1 }: 0x1f
+cpu_atom/mem-stores/P: type: 10 (cpu_atom), size: 136, config: 0x6d0 (mem-stores), { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, disabled: 1, inherit: 1, freq: 1, enable_on_exec: 1, precise_ip: 3, sample_id_all: 1
+dummy:u: type: 1 (software), size: 136, config: 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq }: 1, sample_type: IP|TID|TIME|ADDR|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format: ID|LOST, inherit: 1, exclude_kernel: 1, exclude_hv: 1, mmap: 1, comm: 1, task: 1, mmap_data: 1, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1
+root@number:~# 
+
+It is not setting up the required
+
+  --event '{cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/P}:S'
+
+part, right?
+
+To make this more useful perhaps we should, in addition to warning that
+is running just on those CPUs, when we specify a workload (sleep 1) in
+the above case, limit that workload to that set of CPUs so that we can
+get those mem events on all of the workload runtime?
+
+We would just add a new warning for that behaviour, etc.
+
+- Arnaldo
