@@ -1,48 +1,48 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B42A41CCEE3
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 09:56:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD431CEAA4
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 10:03:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725443805; cv=none; b=ot/rPCcYWduvWguIciw+oXFrTv4wKHzdnlwnN2J8h52EnGMkc22GEKqlYmY3kh6wO0SdfdP4ZZQW3L1I5x/8b8sl5G12FDLv0Az2Y44ajL+4VDDcllwuXfvSrUnIpw8AubZQlgi/2Z0Hjxg7gXagD+SPZZkkzks3JdiPZCpF43E=
+	t=1725444210; cv=none; b=nrLpH4IlSHcO+zSNX1lq8HgdTYf4IoBLI0EiuR6jZIip1nbUyS31MD15dg62BEXLzNC0nZL8x4TwUomKLERQE7jCeDiVj+r8877LojQ7kG5pHlZlediCFjC23eTkjZEcE5BYdBe2cbp3MlljFw0rtcr/b56eMfZ1K55eNkeSdtk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725443805; c=relaxed/simple;
-	bh=j7d7+SJDD2TGyNhvLnv/7wUKLARgA6jThTpmxjWen4w=;
+	s=arc-20240116; t=1725444210; c=relaxed/simple;
+	bh=/YFcA0hHFK7wxmhycoMDjnNSVweA+PN3D4jUjA8GRqE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jLh1bwgq83Y0KaLFbMVkAppUoo/8rOcYORN8u3igZEl4MLg3Edfg5LvsI5JsH4exFyabNVPOsu4XxYrl9Q3wlWWhYqANLsOmwUh3BlN+wvdr7Bnqf7CLEuVF5+LvEocdottU0qc8K8hffs2AH8yhogzkciSyNzGS+Y1a+qz9WLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LG96+EOQ; arc=none smtp.client-ip=170.10.133.124
+	 Content-Type:Content-Disposition:In-Reply-To; b=iFFSZf5EJnhMY7vOvKq77AdYqadbyE/qT1xJ46tx3MksY+cTJl5QrI5Ln6EHNfKHFuu//VoskzJa5mXU3DW9dG/Qd5mNQOlGNzfQ22q9dxc/V5vvFhD3URRaBoeiyyveD/bx+JWnGFZxDHkM/a2ul1NcwfuY0SNwmSBMuuYaPDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HQwJkBnk; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LG96+EOQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HQwJkBnk"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725443801;
+	s=mimecast20190719; t=1725444207;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=nBE9muUVCuFZMT5coYFm3HHWrhocogLIqDyjWLoRgw8=;
-	b=LG96+EOQ5WPp3AT1ZIyLCj9fhV8rujM/oR99jsFjklVbwQM45diAowjiKK2xZwrFt4GpKG
-	mH8BIQKXZ9IwZ5dI1GUthzvlkep9TMSRVBtrF2hrpxet4X1slr4FWBvV1GOl+3zI/F+COu
-	p7J8jReCCD22xIfnPo6ScH7JR1ld89Q=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	bh=a3XuyEXPhJaj55f2rtMVRpx/iwXEgw9cTGMNchlnke0=;
+	b=HQwJkBnkxoAsnPYJ28wIEpN3VslJAEe1w+t0VdZBwynpKfkeXXbIzUrE5hl04CQqUf7/ZG
+	lgZJjlWIlfthVgR+w0jecUlqA0ISFDz+ybLciBkUAvJXeze7xCNhAW38w++tmPpk/68/Yd
+	l5wVV65Wg7E4zxOrl13vJEiChdeBy6U=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-490-kBEUWc58OOeCqLAoIbDK7g-1; Wed,
- 04 Sep 2024 05:56:37 -0400
-X-MC-Unique: kBEUWc58OOeCqLAoIbDK7g-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-487-toYVwjZePhefBL4CrNY2_w-1; Wed,
+ 04 Sep 2024 06:03:23 -0400
+X-MC-Unique: toYVwjZePhefBL4CrNY2_w-1
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D81701955F45;
-	Wed,  4 Sep 2024 09:56:34 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 022AE1956088;
+	Wed,  4 Sep 2024 10:03:21 +0000 (UTC)
 Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.25])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id ACD4C1956086;
-	Wed,  4 Sep 2024 09:56:28 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 693D2195605A;
+	Wed,  4 Sep 2024 10:03:13 +0000 (UTC)
 Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed,  4 Sep 2024 11:56:24 +0200 (CEST)
-Date: Wed, 4 Sep 2024 11:56:17 +0200
+	oleg@redhat.com; Wed,  4 Sep 2024 12:03:10 +0200 (CEST)
+Date: Wed, 4 Sep 2024 12:03:03 +0200
 From: Oleg Nesterov <oleg@redhat.com>
 To: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Sven Schnelle <svens@linux.ibm.com>,
@@ -60,7 +60,7 @@ Cc: Sven Schnelle <svens@linux.ibm.com>,
 	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org
 Subject: Re: [PATCH] uprobes: use vm_special_mapping close() functionality
-Message-ID: <20240904095449.GA28781@redhat.com>
+Message-ID: <20240904100302.GA29648@redhat.com>
 References: <CAHk-=wjD0XLhkzou89J-TK=L6B88pFoNYxN1uTWRQB3U5Czywg@mail.gmail.com>
  <20240903073629.2442754-1-svens@linux.ibm.com>
  <20240903090843.GA17936@redhat.com>
@@ -75,7 +75,7 @@ Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <CAHk-=wi=qJr4r2DTLDMDh=ryK-x9sciGEeL+ZaWExpiHGyPhiQ@mail.gmail.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
 I didn't have time to write a full reply yesterday.
 
@@ -114,7 +114,7 @@ either way the code is still ugly, imo.
 How about the (untested) patch below?
 
 I am not going to send this patch right now, it conflicts with the ongoing
-close/mremap changes, but what do you think?
+xol_mapping.close changes, but what do you think?
 
 We do not need to add the instance of vm_special_mapping into mm_struct,
 a single instance (xol_mapping below) with .fault = xol_fault() is enough.
