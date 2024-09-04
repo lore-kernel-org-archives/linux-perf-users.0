@@ -1,131 +1,63 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA92B13AD1D
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 19:15:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1571E00B7;
+	Wed,  4 Sep 2024 19:16:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725477310; cv=none; b=VBFSTzoom6zepEC6nURuJp3uSHPIKgB2mMYK8+3jTui4Xk7aIZKMHA1BdkoS9sg9e1S4lgA9ddVIXizBQ4es/yMguliJSzqpGAourEn7GWIK41qBMxVwpz4WWtrtkIcvFTakc3xYKgu0Iz8ELMosMwYUKQy9Shh8B6JpxLaVZTQ=
+	t=1725477405; cv=none; b=M7raF1BR25mfoXcYX7iU7Lnt9kDaHVXh1vOdqGQlUhveqGSo4tMU5E3l5+dREUmtEWJvMOL6D/qIroGIhW6Pm9KJX5P+MowJlujIDyxvo1aozc0Xjy/QLzX7hNqQCVP5Kw+YO3GnuqR6oEU9nL++c36iDIbX6XwTjvZZfBtaiSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725477310; c=relaxed/simple;
-	bh=8ZWSVSGEDVSfeeFzj7EcaAGptbsIuiMjZebU2Prh7cQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uGEP1q0+LxQcTbLBiXQwpIOfc3+B4ry/evkGRLnQ4Kg3+Mon6/hCT6hdqrWdkXkqcqaz/xfxgVahMZnnRXRqjEVnpJN7p7LjNIQoUm5xQPkyc8o/OVrISDTPmC+oMWtg2q+EXzUoLd7P+0umkkCky6bNaKUw1m7+IJ5OsoJsHvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EbGTUwD8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725477405; c=relaxed/simple;
+	bh=f7II1IdWzs3cfE7wiW+hiFpacAuoS9NMzhqHSHGuJgs=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=fxmQsFZbB8ZsRKYWutkUw1KtHuor4w6QDIjatecz8FLnV7oyfdfYUFZhBQpQeUWoIlMugQEQttWEntXoBeJGpOdo5fynBi7vJrUNNspk7+JWvfEUMiRaDmLOUxhSZtadFefHVDXr8qyhmtmPMDK2QQbb0GVfQ9KkD30MF83c2/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSIO3OGA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EbGTUwD8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CC46C4CEC2;
-	Wed,  4 Sep 2024 19:15:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSIO3OGA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1C00C4CEC2;
+	Wed,  4 Sep 2024 19:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725477309;
-	bh=8ZWSVSGEDVSfeeFzj7EcaAGptbsIuiMjZebU2Prh7cQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=EbGTUwD8qBRvylMVZqOndk4sKO72mPG01YXJFC4w1D+wQxx4njBr3sDqRrsck5C56
-	 tBK66q1ZZLvIhSw/7zyXQqkTGYfIFZwNb/FEz9wvJtCc9Cpr3O3OAijAOPqPHQqLCx
-	 c0c7LvoABe+zsrYTKYJwK6tCtb4sfyAq6RioXov9Xwz6p5ZT2Nbygs8ig6WrAGbYHI
-	 ZFAtsv4naDdLu3WRLISnvZ+SqQdRozgCpEWekgYV2uFOnCnyI/U+CoisGCPQKj3Faz
-	 QFecxnJyyF/uKBhDbkHAF8V7QfJDGmZhtVcdk/3Hd0uvJ9sixBK6I+bLsI5528ALTN
-	 i5jGxotxnRfMA==
-Date: Wed, 4 Sep 2024 16:15:01 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Namhyung Kim <namhyung@kernel.org>,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v14 3/7] perf version: Update --build-options to use
- 'supported_features' array
-Message-ID: <ZtixtQiG20UFWEkd@x1>
-References: <20240904061836.55873-1-adityag@linux.ibm.com>
- <20240904061836.55873-4-adityag@linux.ibm.com>
- <ZthbFDYPX3Opb8Ij@x1>
- <b48b172e-d465-4dc5-abd6-7da7a47e5c9c@linux.ibm.com>
+	s=k20201202; t=1725477404;
+	bh=f7II1IdWzs3cfE7wiW+hiFpacAuoS9NMzhqHSHGuJgs=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=OSIO3OGABy5nshvJSKow+aJJj40eIFDh3RDP6EZP2ZJSnZCxWlHXGs6F399seJ0aR
+	 iq2/vKWXbp/8cqqi8izm/YwU5MzBWuHzGKFQNkeFF/vDhGS/PhRqfBuu6ybbGNianW
+	 pZBWvo8nioxzkn6BVo6XnMArO8ZpkAE4aRGV6h8TTBxZaAszG79c/hJDUc1EK14AKI
+	 2FFkHrq7QYfBcPeaAyvNYCiZcpXDi+jmc3K8HyMqXXk1VwPdZs5cyRfMjK5I9bxXbo
+	 8CENaacmFaobPYYHXZHNH/Fr8kE6WXXPn1NMsTmcu7pejdR5jo3FjCjLtMSdPkNxJa
+	 S6O4V3ChSZ2fw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE3473822D30;
+	Wed,  4 Sep 2024 19:16:46 +0000 (UTC)
+Subject: Re: [GIT PULL] perf-tools fixes for v6.11-rc7
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240904190540.4086525-1-namhyung@kernel.org>
+References: <20240904190540.4086525-1-namhyung@kernel.org>
+X-PR-Tracked-List-Id: <linux-perf-users.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240904190540.4086525-1-namhyung@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.11-2024-09-04
+X-PR-Tracked-Commit-Id: e162cb25c410afc42051a582c46a47dde597f51c
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 2adad548f74c30739c35994da419eb2318e6fbd1
+Message-Id: <172547740521.1139567.12804773063239725703.pr-tracker-bot@kernel.org>
+Date: Wed, 04 Sep 2024 19:16:45 +0000
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>, Kan Liang <kan.liang@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b48b172e-d465-4dc5-abd6-7da7a47e5c9c@linux.ibm.com>
 
-On Thu, Sep 05, 2024 at 12:36:21AM +0530, Aditya Gupta wrote:
-> Hi Arnaldo,
-> 
-> On 04/09/24 18:35, Arnaldo Carvalho de Melo wrote:
-> 
-> > On Wed, Sep 04, 2024 at 11:48:32AM +0530, Aditya Gupta wrote:
-> > > Now that the feature list has been duplicated in a global
-> > > 'supported_features' array, use that array instead of manually checking
-> > > status of built-in features.
-> > > 
-> > > This helps in being consistent with commands such as 'perf check feature',
-> > > so commands can use the same array, and any new feature can be added at
-> > > one place, in the 'supported_features' array
-> > So I tested and applied the first two patches, but it is failing for
-> > this 3rd, please rebase from what is in the tmp.perf-tools-next branch
-> > at:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools-next.git
-> 
-> Thank you !
-> 
-> I have rebased the patches in v15.
-> 
-> Patch #1 & #2, are same as already applied in tmp.perf-tools-next branch, so
-> they can be ignored or even if applied git am should ignore them.
+The pull request you sent on Wed,  4 Sep 2024 12:05:40 -0700:
 
-I dit it with:
+> git://git.kernel.org/pub/scm/linux/kernel/git/perf/perf-tools.git perf-tools-fixes-for-v6.11-2024-09-04
 
-[acme@toolbox perf-tools-next]$ b4 am -P3-7 -ctsl --cc-trailers 20240904190132.415212-1-adityag@linux.ibm.com
-Grabbing thread from lore.kernel.org/all/20240904190132.415212-1-adityag@linux.ibm.com/t.mbox.gz
-Checking for newer revisions
-Grabbing search results from lore.kernel.org
-Nothing matching that query.
-Analyzing 8 messages in the thread
-Looking for additional code-review trailers on lore.kernel.org
-Checking attestation on all messages, may take a moment...
----
-  ✓ [PATCH v15 3/7] perf version: Update --build-options to use 'supported_features' array
-    + Link: https://lore.kernel.org/r/20240904190132.415212-4-adityag@linux.ibm.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v15 4/7] tools/perf/tests: Update test_task_analyzer.sh to use perf check feature
-    + Link: https://lore.kernel.org/r/20240904190132.415212-5-adityag@linux.ibm.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v15 5/7] tools/perf/tests: Update probe_vfs_getname.sh script to use perf check feature
-    + Link: https://lore.kernel.org/r/20240904190132.415212-6-adityag@linux.ibm.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v15 6/7] perf: Fix inconsistencies in feature names
-    + Link: https://lore.kernel.org/r/20240904190132.415212-7-adityag@linux.ibm.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ✓ [PATCH v15 7/7] perf: Add more features to supported_features list
-    + Link: https://lore.kernel.org/r/20240904190132.415212-8-adityag@linux.ibm.com
-    + Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-  ---
-  ✓ Signed: DKIM/ibm.com (From: adityag@linux.ibm.com)
----
-Total patches: 5 (cherrypicked: 3-7)
----
-Cover: ./v15_20240905_adityag_introduce_perf_check_subcommand.cover
- Link: https://lore.kernel.org/r/20240904190132.415212-1-adityag@linux.ibm.com
- Base: not specified
-       git am ./v15_20240905_adityag_introduce_perf_check_subcommand.mbx
-⬢[acme@toolbox perf-tools-next]$
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/2adad548f74c30739c35994da419eb2318e6fbd1
 
-⬢[acme@toolbox perf-tools-next]$        git am ./v15_20240905_adityag_introduce_perf_check_subcommand.mbx
-Applying: perf version: Update --build-options to use 'supported_features' array
-Applying: tools/perf/tests: Update test_task_analyzer.sh to use perf check feature
-Applying: tools/perf/tests: Update probe_vfs_getname.sh script to use perf check feature
-Applying: perf: Fix inconsistencies in feature names
-Applying: perf: Add more features to supported_features list
-⬢[acme@toolbox perf-tools-next]$
+Thank you!
 
-Now test building it one after the other and then the container builds,
-eventually will flow to perf-tools-next.
-
-Thanks for persisting and collaborating!
-
-- Arnaldo
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
