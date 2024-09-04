@@ -1,100 +1,103 @@
 Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB56512E1E9
-	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 06:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D1C312FF70
+	for <linux-perf-users@vger.kernel.org>; Wed,  4 Sep 2024 06:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725430741; cv=none; b=KonldpI7lvwYvJ6hNkMdZSuXGgZo50NNM9nhTjmqe6hEFto/RG6G1JeLSH1VPJYDgZahY1of9j282x/X4/I0q3nAy/ZdfexWpXD8pA91DQxq6m9lr5CPhsWKLKVzKbZ9NaUDTn6FBj5X3hDQDB0KKFQRJJwd8nphi6ePvCRPT/4=
+	t=1725430743; cv=none; b=j3jUILL9c2Bs2LwNrZ4kSyMRu6WDjlt7mtMgatuA0lxFTDc1QHpgOhmJvmH1NhBBEi37jp0+VSM6M2JEAvLoi2Ne2WVPTLMMQySgUZ8ZxPvzyDcmI2vXn+o35xGQeu03LsvtZM9mWXRAH1HcE1gPb7hs4YDgXasaVoA2UXFWHhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725430741; c=relaxed/simple;
-	bh=ijX1m5Uqa2w5xV8nzWmXrQ+N755ByJeiST7E5UunhVc=;
+	s=arc-20240116; t=1725430743; c=relaxed/simple;
+	bh=s07O5YPhi1ys0vomXtO9ZiMPVZFW8YPPEjkYcnRMiWA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=i9JeNZd+ai1fRd3l/EiD1qzfJ1hB8y/aEQfZEpKplz04kFLDqUS9CR94KKHEUFlGBmOw8X96AamP90CeyUPNh09a6KRKGStESBT5528DHmqcQL7QdoDaRv8TwKgc1olyE/OUtOoDwkez161aZB2ZT1qU7QCxxfC29Prrbndf3gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=QShIvWix; arc=none smtp.client-ip=148.163.158.5
+	 MIME-Version; b=p9gY8TuoY5AXy7+4c/iU4B/zFpEKK5PRm4Iu+BsykNyjSoGqdsKDk31Zig0RlsNDh0FAfiIrm3GFk3nPmW/Wqe8kb5MFZHBhJ5+5WB33t/sYrQkXlrhT18SCFt5qcFVhn4LtdcUkgqQOiQvzXqjK1biZbApSR+0Ze5/GoFPswZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=cgalDEH8; arc=none smtp.client-ip=148.163.158.5
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="QShIvWix"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="cgalDEH8"
 Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 48466SrW016955;
-	Wed, 4 Sep 2024 06:18:56 GMT
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4843lePX006165;
+	Wed, 4 Sep 2024 06:18:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from
 	:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding; s=pp1; bh=TmSc76eMvJF49
-	5YpdHPA/W5pa4CxgnL7MPesKVMvGro=; b=QShIvWixEIpP0obHNjJRJlWLK35nJ
-	retNKk9ltOGjvC8SkAmt05yMj8xxaRVf7GOhIvFxf5PhBxhsNcx5LxUlAT9yFrvH
-	yFsXvGRvRWRHRnYMGxxC5oK66x+s1zzDtjt488bmYYLrJWI38IrnS5SJXqG0JGfe
-	LWJ5QCqwD/Sj1L+7pVl0W+tkJZLvczbw3EYe79ivo4lyIxNBBaG3r3CJYcPrJthN
-	yXDRKX6nzjT+dK591fRwxRdyPacqYuoDFLo6BYd+XniqCoHk6oJzkernRxWqRSlt
-	uixYXoZmHv/NQpVu7S4Q7SuuGvp+sfzC/bEX+XONYoZ37tKiUj89qT6nQ==
+	:content-transfer-encoding:mime-version; s=pp1; bh=DmTPCOnHSp11r
+	HyK2YG/oCReYCyQ6l65ErMlT8CGBXQ=; b=cgalDEH8IyaiFJZExaylU3EogUoQt
+	YFUeAYdhPABqYQ3EtmCxdmMZtWdUJpoUkHYcEkNU72kDJEK4UjBDEoPg229h2ZTy
+	rBdYysTmNT96APu0FuQqGZ3rnd1G9R5XBUvIoPkSsriAbqfkj1Z/5gp/x8+oKuhs
+	keuUwN5qX22W/xC2H3SGh4DtDskXFHXehTNSlSZFdqRnxDjSNXgMTsSjlmG+Ycg9
+	djLxhR/sXEuvyntHB/yhwEb8Hcu5vnKWb1arV/FJgZOFO9WFXCXXUvQPXDquOwCi
+	Kj8wXlpS97+lM6xYOd0nUmu73tjT98yUUGdhcAk3XleY+AjQLyAY0UIXg==
 Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bttyhfqp-1
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bttyhfr4-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:56 +0000 (GMT)
+	Wed, 04 Sep 2024 06:18:58 +0000 (GMT)
 Received: from m0360072.ppops.net (m0360072.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4846ImID004648;
-	Wed, 4 Sep 2024 06:18:55 GMT
-Received: from ppma12.dal12v.mail.ibm.com (dc.9e.1632.ip4.static.sl-reverse.com [50.22.158.220])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bttyhfqm-1
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 4846FgRn031891;
+	Wed, 4 Sep 2024 06:18:58 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bttyhfqy-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:55 +0000 (GMT)
-Received: from pps.filterd (ppma12.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma12.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 48444RRE000438;
-	Wed, 4 Sep 2024 06:18:54 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-	by ppma12.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cdgupk8e-1
+	Wed, 04 Sep 2024 06:18:58 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 4841fH2O009141;
+	Wed, 4 Sep 2024 06:18:57 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 41cg73p1gm-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 04 Sep 2024 06:18:54 +0000
+	Wed, 04 Sep 2024 06:18:57 +0000
 Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-	by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4846Ipx044827036
+	by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 4846Is0047055336
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 4 Sep 2024 06:18:51 GMT
+	Wed, 4 Sep 2024 06:18:54 GMT
 Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56EDF20049;
+	by IMSVA (Postfix) with ESMTP id 36F7620049;
+	Wed,  4 Sep 2024 06:18:54 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B9A6120040;
 	Wed,  4 Sep 2024 06:18:51 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 31F1620040;
-	Wed,  4 Sep 2024 06:18:49 +0000 (GMT)
 Received: from li-3c92a0cc-27cf-11b2-a85c-b804d9ca68fa.in.ibm.com (unknown [9.109.199.38])
 	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed,  4 Sep 2024 06:18:48 +0000 (GMT)
+	Wed,  4 Sep 2024 06:18:51 +0000 (GMT)
 From: Aditya Gupta <adityag@linux.ibm.com>
 To: acme@kernel.org, jolsa@kernel.org, irogers@google.com, namhyung@kernel.org
 Cc: linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
         atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
         disgoel@linux.vnet.ibm.com
-Subject: [PATCH v14 5/7] tools/perf/tests: Update probe_vfs_getname.sh script to use perf check feature
-Date: Wed,  4 Sep 2024 11:48:34 +0530
-Message-ID: <20240904061836.55873-6-adityag@linux.ibm.com>
+Subject: [PATCH v14 6/7] perf: Fix inconsistencies in feature names
+Date: Wed,  4 Sep 2024 11:48:35 +0530
+Message-ID: <20240904061836.55873-7-adityag@linux.ibm.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20240904061836.55873-1-adityag@linux.ibm.com>
 References: <20240904061836.55873-1-adityag@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: klfoc8WRtYbNZUL4KCsgznQXxBHK3Ta6
+X-Proofpoint-ORIG-GUID: Gw-2kce_rziYp87iREqprxTdUIA7P-XV
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Yqmd9uq_E_TrTkbo766yOMGtdiagnwHO
-X-Proofpoint-ORIG-GUID: JwPrwWoHrOQxyJsU3rDuvbWWbLrQI-Kx
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
  definitions=2024-09-04_04,2024-09-03_01,2024-09-02_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=999
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=736
  suspectscore=0 mlxscore=0 bulkscore=0 malwarescore=0 lowpriorityscore=0
  phishscore=0 spamscore=0 adultscore=0 impostorscore=0 priorityscore=1501
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2407110000
  definitions=main-2409040045
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Fix two inconsistencies in feature names as discussed in [1]:
+1. Rename "dwarf-unwind-support" to "dwarf-unwind"
+2. 'get_cpuid' feature and 'HAVE_AUXTRACE_SUPPORT' names don't
+   look related, change the feature name to 'auxtrace' to match the
+   macro name, as 'get_cpuid' string is not used anywhere to check the
+   feature presence
 
-In probe_vfs_getname.sh, current we use "perf record --dry-run"
-to check for libtraceevent and skip the test if perf is not
-build with libtraceevent. Change the check to use "perf check feature"
-option
+[1]: https://lore.kernel.org/linux-perf-users/ZoRw5we4HLSTZND6@x1/
 
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
@@ -104,60 +107,42 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: Kajol Jain <kjain@linux.ibm.com>
 Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Acked-by: Namhyung Kim <namhyung@kernel.org>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Signed-off-by: Aditya Gupta <adityag@linux.ibm.com>
 ---
- tools/perf/tests/shell/lib/probe_vfs_getname.sh           | 4 ++--
- tools/perf/tests/shell/record+probe_libc_inet_pton.sh     | 5 ++++-
- tools/perf/tests/shell/record+script_probe_vfs_getname.sh | 5 ++++-
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ tools/perf/Documentation/perf-check.txt | 4 ++--
+ tools/perf/builtin-check.c              | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-index b3802d9494b4..0606e693eb59 100644
---- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
-@@ -32,7 +32,7 @@ skip_if_no_debuginfo() {
- # check if perf is compiled with libtraceevent support
- skip_no_probe_record_support() {
- 	if [ $had_vfs_getname -eq 1 ] ; then
--		perf record --dry-run -e $1 2>&1 | grep "libtraceevent is necessary for tracepoint support" && return 2
--		return 1
-+		perf check feature -q libtraceevent && return 1
-+		return 2
- 	fi
- }
-diff --git a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-index 72c65570db37..f38c8ead0b03 100755
---- a/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-+++ b/tools/perf/tests/shell/record+probe_libc_inet_pton.sh
-@@ -63,7 +63,10 @@ trace_libc_inet_pton_backtrace() {
- 
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "$event_name/$eventattr/"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test trace_libc_inet_pton_backtrace. No libtraceevent support."
-+		return 2
-+	fi
- 
- 	perf record -e $event_name/$eventattr/ -o $perf_data ping -6 -c 1 ::1 > /dev/null 2>&1
- 	# check if perf data file got created in above step.
-diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-index 5eedbe29bba1..9a61928e3c9a 100755
---- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-+++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
-@@ -21,7 +21,10 @@ record_open_file() {
- 	echo "Recording open file:"
- 	# Check presence of libtraceevent support to run perf record
- 	skip_no_probe_record_support "probe:vfs_getname*"
--	[ $? -eq 2 ] && return 2
-+	if [ $? -eq 2 ]; then
-+		echo "WARN: Skipping test record_open_file. No libtraceevent support"
-+		return 2
-+	fi
- 	perf record -o ${perfdata} -e probe:vfs_getname\* touch $file
- }
- 
+diff --git a/tools/perf/Documentation/perf-check.txt b/tools/perf/Documentation/perf-check.txt
+index b081514d240a..10f69fb6850b 100644
+--- a/tools/perf/Documentation/perf-check.txt
++++ b/tools/perf/Documentation/perf-check.txt
+@@ -49,8 +49,8 @@ feature::
+                 debuginfod              /  HAVE_DEBUGINFOD_SUPPORT
+                 dwarf                   /  HAVE_DWARF_SUPPORT
+                 dwarf_getlocations      /  HAVE_DWARF_GETLOCATIONS_SUPPORT
+-                dwarf-unwind-support    /  HAVE_DWARF_UNWIND_SUPPORT
+-                get_cpuid               /  HAVE_AUXTRACE_SUPPORT
++                dwarf-unwind            /  HAVE_DWARF_UNWIND_SUPPORT
++                auxtrace                /  HAVE_AUXTRACE_SUPPORT
+                 libaudit                /  HAVE_LIBAUDIT_SUPPORT
+                 libbfd                  /  HAVE_LIBBFD_SUPPORT
+                 libcapstone             /  HAVE_LIBCAPSTONE_SUPPORT
+diff --git a/tools/perf/builtin-check.c b/tools/perf/builtin-check.c
+index 16a04b5456d9..0b76b6e42b78 100644
+--- a/tools/perf/builtin-check.c
++++ b/tools/perf/builtin-check.c
+@@ -29,8 +29,8 @@ struct feature_status supported_features[] = {
+ 	FEATURE_STATUS("debuginfod", HAVE_DEBUGINFOD_SUPPORT),
+ 	FEATURE_STATUS("dwarf", HAVE_DWARF_SUPPORT),
+ 	FEATURE_STATUS("dwarf_getlocations", HAVE_DWARF_GETLOCATIONS_SUPPORT),
+-	FEATURE_STATUS("dwarf-unwind-support", HAVE_DWARF_UNWIND_SUPPORT),
+-	FEATURE_STATUS("get_cpuid", HAVE_AUXTRACE_SUPPORT),
++	FEATURE_STATUS("dwarf-unwind", HAVE_DWARF_UNWIND_SUPPORT),
++	FEATURE_STATUS("auxtrace", HAVE_AUXTRACE_SUPPORT),
+ 	FEATURE_STATUS("libaudit", HAVE_LIBAUDIT_SUPPORT),
+ 	FEATURE_STATUS("libbfd", HAVE_LIBBFD_SUPPORT),
+ 	FEATURE_STATUS("libcapstone", HAVE_LIBCAPSTONE_SUPPORT),
 -- 
 2.46.0
 
