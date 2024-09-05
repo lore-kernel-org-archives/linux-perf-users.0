@@ -1,57 +1,57 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E091990A3
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 10:51:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECE11991C6
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 10:51:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725533470; cv=none; b=U4pdXzyTjoV4m+zdu/Y9+/Cirma1mRZwp5W47zDeCYWT9iNe8Zz5gD8EKEDReYu9KOWkdlB/09giuzzQJhs8iSQPLvHxlQVSD2es8IDCoEuA7aRZBsjz+DkhUKbwCNBn9pYN/VhQGsuTSh98DUPZzb7cp907DKiH6VkFfByNNtE=
+	t=1725533474; cv=none; b=WKohgi4o7Wi0MECFxpQDiulm4Z4O3cUZ/6lynGVnj8icHBikx59QH6Ka5maxXC6aDij7dZsJHvkdE0YHs/1oGNRMggHv3YN5h2XBQFNQpCpjsEixwahA71TKHcNvzALbbgb+d5Jc4YnI9gNUBJ/td8nRey1aBEtb8MFFcgqZ60U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725533470; c=relaxed/simple;
-	bh=TQjF7jPPLYqbnWfFtn0ZeCefM3gftDDsQw5DBnhz4Lk=;
+	s=arc-20240116; t=1725533474; c=relaxed/simple;
+	bh=PxZK1UYoQiEz/5XZdh+TkbpX8o1b6IrqnscJH918Tbw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NuXsvr3miLs6nggzosHm7fLosMkLJGMoWffTQtKg3psVeVQ9aaOhmtsYUX5ahyGYOKrS3SBrKMFR0WrbmkYgUlzbaUxucOkdtN4vZBfpjt2HqMZbOr++kvcRhDDKwW0Y0ZOL1CdsLBC8l2L+9VEK0rEpIyDFEGElfXbaFm1k6bc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=StlV5EhQ; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=EE72oLCmHFRUpXYDq1d2nrssDazWOVY9bioOw1i/4HCDn8mClE7xHnztEGncsc9yyHGFegWsb47DlZh8mB8MgV2OMEmf42s5Tp1WTqW44DyIW+okX84uGb+S4QhLWNxYOdyAqKE9ZTDLiFOxiHs2uabcsik0UbL2MMLUeq1ypZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gemYYS5H; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="StlV5EhQ"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-42bb7298bdeso6160485e9.1
-        for <linux-perf-users@vger.kernel.org>; Thu, 05 Sep 2024 03:51:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gemYYS5H"
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-42bbbff40bbso4680995e9.2
+        for <linux-perf-users@vger.kernel.org>; Thu, 05 Sep 2024 03:51:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1725533465; x=1726138265; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1725533471; x=1726138271; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wCSBDf6vejOduoC/+lNg91tRBdxB4ctW3PuO513YgaA=;
-        b=StlV5EhQimy+NGpAsUm6ToloBCen8AHv6WYuaFXIR//tRkCYfDcCsRFw+WiD72z269
-         Tx1deb25fPOhHTONwDpsujvsf630YhxxEopmnC4apUFcB/vewugCrbtg6k+zky6azloM
-         94EXjjmOPzDlSztJX1GLOWd7SLfqAB32yIoLeECgPX9PiDcK+WW0uFbn+P3AtUEEuMkO
-         JedoVPA5sSdatGu0iXMLFq8Lyg/xkqKvta8pVHPpXzsb1eSIfgf29KqAbPF7bTZBvukV
-         znNtEKPaWbT1DwMAD79euIpg7UoROfuxCc/jKwqxts/zuHgJisAb9X/ilUOVqts5QV60
-         fmDQ==
+        bh=Pve9lnNvOpeZGUhzPh1pcaBloPgbua89KV6dx7HbhcI=;
+        b=gemYYS5HX/jIdB8RFQ/VlJfB6jAMM6GDNoUoJn0MTVm+WpH72ltkwcLCGVK5Y1T7r0
+         o+pRJSdp+SdgMnH5PUueO7ng+CmDHp0gOz140vkVM1jLIeH6aEpGob27hzfFPBSuWYl7
+         AYNqCkLeEnxjalx/DuKfboV2fFOgtiYrhp0/GagTTtV2KKTcC27fajFLp/Dw0pMriVv3
+         9p3UUlkmGL4z+xVBE4XkFF8JbTLFGYeOfGGa5oBkHA/wV3Sm4idk4Xbt0nLzOGXaI6lV
+         cz6QFKIxpW9vqOa/C+DRo0tXQr4z7/IwzzMvNEyMry7p+lqGzh24vii8VvhzpBOD1k/q
+         E3Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725533465; x=1726138265;
+        d=1e100.net; s=20230601; t=1725533471; x=1726138271;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wCSBDf6vejOduoC/+lNg91tRBdxB4ctW3PuO513YgaA=;
-        b=bY5Jk7sHaBS8tGLlpxmWPKT8Dcwjenea4JGqEPbO8IOZ9/zAJnYPZ61J0hGk7y6BHc
-         CK0Jk3wFaJMa78ozREEwScqRk8HN8SoxSdg9PmC33geKH2iSo7JwS4LtuKdksT3fc7rK
-         Wi0N7SAiB3pwjqnrwcnL1EQ2hVYzuFnW44D/dOwkMQCW5tXRBTVjBzgWoXY5cynuxl9+
-         hCZNV7iJ62+cgtb/wsK36s2Jp3q8d3FNIjdVZB/B+qMDfkAHAzg+woQSlNotNbjXrViG
-         0CylS74J3UlGj363xqHsZbwPtpJOVSBj7zpaT+CGVfGoa3e7FTFogA8vldfZbn7aqm4g
-         SQXA==
-X-Gm-Message-State: AOJu0YwmnNe3k0hJhLUsbwQRSeu8r1SzJZxvMNqN2a567Kt18zOVoYA5
-	uNSy30JFd7xyfc7/f3IUKKOU4WcWA6isUtOPuRC0t09PCrZjnZqax+wjd20/92Kcc7ybBx9K6nu
-	O3Q8=
-X-Google-Smtp-Source: AGHT+IEvKTt/6e8xWeLQPHZ+Y88gea0Wee1acuIi7mFkLMpU6DekcEkaro14JQNPOmXmgU7w0uaIgg==
-X-Received: by 2002:a05:600c:1c8a:b0:426:59d3:8cae with SMTP id 5b1f17b1804b1-42c9a365902mr18084165e9.13.1725533464564;
-        Thu, 05 Sep 2024 03:51:04 -0700 (PDT)
+        bh=Pve9lnNvOpeZGUhzPh1pcaBloPgbua89KV6dx7HbhcI=;
+        b=WHkOr19tTyO87ai8+mj+bJ2v8B2cE3jqazbJKlXyiVA+6PHwRHSpMfuLdtQljNXZZV
+         i8xcG1NMa2A05y4KWAxxy9YyFisYynLESh/TVK5ZX67R19dOFJqSIB7u8C5/C2KXmAS+
+         WplBwqyqKmOwUZXmWAN9JdA+PAmCPCJYHhtStneqZE/vOCsdvyicSefVbpl0ZuB+oqEH
+         TQn40zH+9G8YgTCBHq66aaD+HMB6mqvUbiDxy2qdqpjalIXeD18+oRJeeFGZKFAo5wy5
+         6XSyeYqadakrLNpQsPB6wPwL2eRCctg60xKUN+kIxwmd41Zw2xuJm4nfrn4iIkNYoCS9
+         p5TA==
+X-Gm-Message-State: AOJu0YyTB1FDTEmzwkWEfYYVHcJFJ06sgUj5LSLb7+aRP0+FGVxPmcfH
+	Yum/8XkBuMwyZTCQ+HmIBSUCNpBdo8VT2NdrLqQozn5PQm9AdpDuYG77XN92XQl1yVvk8kcDgXJ
+	pzvA=
+X-Google-Smtp-Source: AGHT+IGNR6IhhEwS/jgcksvn9DO/af4hIbBkDS8ADbe7BTQ8BnykRnU/aKDonHdKsUgmQWK1V7Lc5w==
+X-Received: by 2002:a05:600c:34c3:b0:426:5fe1:ec7a with SMTP id 5b1f17b1804b1-42bbb440201mr138466235e9.31.1725533470807;
+        Thu, 05 Sep 2024 03:51:10 -0700 (PDT)
 Received: from localhost.localdomain ([89.47.253.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df0dbcsm231089965e9.17.2024.09.05.03.51.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42bb6df0dbcsm231089965e9.17.2024.09.05.03.51.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 03:51:04 -0700 (PDT)
+        Thu, 05 Sep 2024 03:51:10 -0700 (PDT)
 From: James Clark <james.clark@linaro.org>
 To: linux-perf-users@vger.kernel.org,
 	gankulkarni@os.amperecomputing.com,
@@ -80,9 +80,9 @@ Cc: James Clark <james.clark@linaro.org>,
 	Mathieu Poirier <mathieu.poirier@linaro.org>,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 1/8] perf cs-etm: Don't flush when packet_queue fills up
-Date: Thu,  5 Sep 2024 11:50:32 +0100
-Message-Id: <20240905105043.160225-2-james.clark@linaro.org>
+Subject: [PATCH 2/8] perf cs-etm: Use new OpenCSD consistency checks
+Date: Thu,  5 Sep 2024 11:50:33 +0100
+Message-Id: <20240905105043.160225-3-james.clark@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240905105043.160225-1-james.clark@linaro.org>
 References: <20240905105043.160225-1-james.clark@linaro.org>
@@ -94,61 +94,39 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cs_etm__flush(), like cs_etm__sample() is an operation that generates a
-sample and then swaps the current with the previous packet. Calling
-flush after processing the queues results in two swaps which corrupts
-the next sample. Therefore it wasn't appropriate to call flush here so
-remove it.
+Previously when the incorrect binary was used for decode, Perf would
+silently continue to generate incorrect samples. With OpenCSD 1.5.4 we
+can enable consistency checks that do a best effort to detect a mismatch
+in the image. When one is detected a warning is printed and sample
+generation stops until the trace resynchronizes with a good part of the
+image.
 
-Flushing is still done on a discontinuity to explicitly clear the last
-branch buffer, but when the packet_queue fills up before reaching a
-timestamp, that's not a discontinuity and the call to
-cs_etm__process_traceid_queue() already generated samples and drained
-the buffers correctly.
-
-This is visible by looking for a branch that has the same target as the
-previous branch and the following source is before the address of the
-last target, which is impossible as execution would have had to have
-gone backwards:
-
-  ffff800080849d40 _find_next_and_bit+0x78 => ffff80008011cadc update_sg_lb_stats+0x94
-   (packet_queue fills here before a timestamp, resulting in a flush and
-    branch target ffff80008011cadc is duplicated.)
-  ffff80008011cb1c update_sg_lb_stats+0xd4 => ffff80008011cadc update_sg_lb_stats+0x94
-  ffff8000801117c4 cpu_util+0x24 => ffff8000801117d4 cpu_util+0x34
-
-After removing the flush the correct branch target is used for the
-second sample, and ffff8000801117c4 is no longer before the previous
-address:
-
-  ffff800080849d40 _find_next_and_bit+0x78 => ffff80008011cadc update_sg_lb_stats+0x94
-  ffff80008011cb1c update_sg_lb_stats+0xd4 => ffff8000801117a0 cpu_util+0x0
-  ffff8000801117c4 cpu_util+0x24 => ffff8000801117d4 cpu_util+0x34
-
-Fixes: 21fe8dc1191a ("perf cs-etm: Add support for CPU-wide trace scenarios")
 Reported-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
 Closes: https://lore.kernel.org/all/20240719092619.274730-1-gankulkarni@os.amperecomputing.com/
 Signed-off-by: James Clark <james.clark@linaro.org>
 ---
- tools/perf/util/cs-etm.c | 6 ------
- 1 file changed, 6 deletions(-)
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 90f32f327b9b..602e791ff5ba 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -2490,12 +2490,6 @@ static void cs_etm__clear_all_traceid_queues(struct cs_etm_queue *etmq)
- 
- 		/* Ignore return value */
- 		cs_etm__process_traceid_queue(etmq, tidq);
--
--		/*
--		 * Generate an instruction sample with the remaining
--		 * branchstack entries.
--		 */
--		cs_etm__flush(etmq, tidq);
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index b78ef0262135..b85a8837bddc 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -685,9 +685,14 @@ cs_etm_decoder__create_etm_decoder(struct cs_etm_decoder_params *d_params,
  	}
- }
+ 
+ 	if (d_params->operation == CS_ETM_OPERATION_DECODE) {
++		int decode_flags = OCSD_CREATE_FLG_FULL_DECODER;
++#ifdef OCSD_OPFLG_N_UNCOND_DIR_BR_CHK
++		decode_flags |= OCSD_OPFLG_N_UNCOND_DIR_BR_CHK | OCSD_OPFLG_CHK_RANGE_CONTINUE |
++				ETM4_OPFLG_PKTDEC_AA64_OPCODE_CHK;
++#endif
+ 		if (ocsd_dt_create_decoder(decoder->dcd_tree,
+ 					   decoder->decoder_name,
+-					   OCSD_CREATE_FLG_FULL_DECODER,
++					   decode_flags,
+ 					   trace_config, &csid))
+ 			return -1;
  
 -- 
 2.34.1
