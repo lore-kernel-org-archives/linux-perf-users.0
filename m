@@ -1,38 +1,73 @@
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2063.outbound.protection.outlook.com [40.107.244.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18637FBAC;
-	Thu,  5 Sep 2024 15:27:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725550060; cv=none; b=C+kkIEtuRrL0ceeNd/FoQ7IGNStxDWdlMFQmzw1T1hg65OYn98x2A3I+UsLc/2AwnTtOxfKteDGBjpa9/ywmsERdxQTbtmjz+zzWCJX5YLvmapTxsX3WVuuHd9FNDvowX/UAlxki/xdxgcm4ZJi8pwv/uBDKV+V6PRbIshVozpY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725550060; c=relaxed/simple;
-	bh=Ev/v1tmtEmcgft9I/mZSDFgz3zzn6joI4rVzVipKP/U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=pk4ez8rn3hV5w/CpG+5OLW+aZAstzXB3u8PU7AFR86LS2C+yg6ypJpfSIuhIKHMi+E0++Tioe+kA3/LPMDNaJteYlrQejYHSPkrS4X+8YIhjYvuxBcuM6igaORJMQ9fqq5UN5fu/Hd2sPwWAUK3xuJ/UBhMKmYPP97IL/3g5d6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4X038g0pdxzpVQQ;
-	Thu,  5 Sep 2024 23:25:39 +0800 (CST)
-Received: from kwepemm600003.china.huawei.com (unknown [7.193.23.202])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8BA6A1800FE;
-	Thu,  5 Sep 2024 23:27:33 +0800 (CST)
-Received: from huawei.com (10.175.124.71) by kwepemm600003.china.huawei.com
- (7.193.23.202) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Thu, 5 Sep
- 2024 23:27:32 +0800
-From: Nanyong Sun <sunnanyong@huawei.com>
-To: <akpm@linux-foundation.org>, <mhiramat@kernel.org>, <oleg@redhat.com>,
-	<peterz@infradead.org>
-CC: <wangkefeng.wang@huawei.com>, <sunnanyong@huawei.com>,
-	<linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<linux-trace-kernel@vger.kernel.org>, <linux-perf-users@vger.kernel.org>
-Subject: [PATCH] mm: move mm flags to mm_types.h
-Date: Thu, 5 Sep 2024 23:26:22 +0800
-Message-ID: <20240905152622.1205046-1-sunnanyong@huawei.com>
-X-Mailer: git-send-email 2.33.0
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B5019D895;
+	Thu,  5 Sep 2024 15:39:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.244.63
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725550800; cv=fail; b=rF6ssP4xA9hg6rY6uXKyPlnNl4MO9Yc7VDk3Ql/K6tr/J/8azkYz5IqFowFBA5zex3v6KIQ/rCsgQ7f2BRnoMRp3wYmcI2nn5/Q+ghKjqBYa1cqRZz1CU05h9/Vvc+vmr74ZuG8lNmKxwAjKX9GHmt3xcniV45aMpGhYag1iypc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725550800; c=relaxed/simple;
+	bh=Rb829x9oQJFdv2OxT0QPNC/s12v70Qs9QhNXSq0R79o=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ZGMrNYbgN6A5dfYyoY6+MaDATnJtjhROVnHB0SciHzEuqlBa5QPIvAxebVEJQ3z3lcd+H5383H6746msSHqN6Rx29PcRZRHHMiXravh615snx1qadr5ZLrNS1vLsm0+eCkvzIgbx1QYOEbHI8kpBoYifqGaMu0IJQNf1GllVsLs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=OkqZSa8O; arc=fail smtp.client-ip=40.107.244.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="OkqZSa8O"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=MvkYi2z/m4+I50R5RbcN6rO6YJOBPsuZygJav7nKChvEmk66AQzvHMMe9ym8HVj4Qkn47uOOnAjqEUa5P20eWcSgw9iG0+7j3uniQjwKMLlwAoUYUDXzidkzCHaoG5l+pCe8p2U43uuPqOWPtm7TWwFR83nB0X2nfEYxrbR1XjpBKN2mE8FWEgVTVBnSIHj/reSrQFZ4gwP27lN9BTEWTVxQ6nFF857oPeyhzQ4bFBgWUR+l6u/VawZAROb8OIPgM3BIZNahMLfsM7xerzjiRZ8hJtgV/cSyKiIihOWL6l5fYFV4DpU4lnIOYJ8WYMPYUi6Jq1Yy5OuJIhMsQv7qOQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=3iqIqbZGulQ/uZhRoL9Ek3wyo3CTBfhEY4Xms29MzRk=;
+ b=abt8jkHBR/r1QRGguOpCNxthJ3Oq6iIkNyRSKqr+szuxpCRVzg7VY8yxZfef2n4ffPo7UWPIWqJctC8kSpgjMNohYU8XXjJVsn4fIcF7okVUKGslJxXXpSLKXPj8WcGwh/BOCtcr7usY2ZqpffjgvzAQ+gDe93dW0SOnQOjsAnUpgjdJ3Ytx1SfzMBBj5Qiz59I9waLcsEm/FIxpbGyDlMLqaU6WyX2DVA2LUviZZOQlB6kBNnczSQhXit82MuSeGlVhIGSAKYDNmQO7l7+he8NsGTms3fYNDP2ve2PgZuh3RRkdNKv2YRIhTGoIJeDad0+Pi49NnlBfVw0wDwpAgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=infradead.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3iqIqbZGulQ/uZhRoL9Ek3wyo3CTBfhEY4Xms29MzRk=;
+ b=OkqZSa8OIxtpLtn4qF6rcDmGKbFa5ltE1usSdTymfXjxTzdUBo1Wzlr5yW3z+6Nd82ijUhrVN3n9OWQt3gMmYGgDrAbjEYE5MjpWAUM/GXMoYcIiejDXZTVexzHdWyGw97UwgC9GzezpRUo4rIGq173uXvb0KwTJxm+44zLx0QY=
+Received: from MW4PR03CA0279.namprd03.prod.outlook.com (2603:10b6:303:b5::14)
+ by DS0PR12MB8573.namprd12.prod.outlook.com (2603:10b6:8:162::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.25; Thu, 5 Sep
+ 2024 15:39:52 +0000
+Received: from SJ1PEPF00001CE0.namprd05.prod.outlook.com
+ (2603:10b6:303:b5:cafe::32) by MW4PR03CA0279.outlook.office365.com
+ (2603:10b6:303:b5::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7918.27 via Frontend
+ Transport; Thu, 5 Sep 2024 15:39:52 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
+Received: from SATLEXMB03.amd.com (165.204.84.17) by
+ SJ1PEPF00001CE0.mail.protection.outlook.com (10.167.242.8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7918.13 via Frontend Transport; Thu, 5 Sep 2024 15:39:52 +0000
+Received: from shatadru.amd.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 5 Sep
+ 2024 10:39:45 -0500
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+To: <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+	<namhyung@kernel.org>, <mark.rutland@arm.com>,
+	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
+	<irogers@google.com>, <adrian.hunter@intel.com>, <kan.liang@linux.intel.com>,
+	<tglx@linutronix.de>, <bp@alien8.de>, <dave.hansen@linux.intel.com>,
+	<x86@kernel.org>, <hpa@zytor.com>
+CC: <gautham.shenoy@amd.com>, <ravi.bangoria@amd.com>,
+	<linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	"Dhananjay Ugwekar" <Dhananjay.Ugwekar@amd.com>
+Subject: [PATCH v4] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
+Date: Thu, 5 Sep 2024 15:38:22 +0000
+Message-ID: <20240905153821.3822-1-Dhananjay.Ugwekar@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -41,354 +76,165 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB03.amd.com
+ (10.181.40.144)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ1PEPF00001CE0:EE_|DS0PR12MB8573:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0037439a-752a-45f6-cf78-08dccdc0fbfb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?qJQ/70a3GB6imH1k09JuHA3kXnlzKCoD/8hG69QLu991MQ2OisNu/OV6cbCX?=
+ =?us-ascii?Q?yRTNttpBqTH1WlX/ihYBVOTmVgUFB1DCjz2sTFgs/JCALO0VD8U969QqnK3B?=
+ =?us-ascii?Q?qPr/0hn7nfs62/xRbrPZw9DqF3f/hKAsi8zN8sOqcJEotNr5HoHlRSgtVZ4Y?=
+ =?us-ascii?Q?fJG722yZfFa6vK5/S8m+oNHsq/jbqrqdu/HSSpCdG6Xdrkkbq4og5BrWbZiU?=
+ =?us-ascii?Q?Nu315q0GnM5JeoskmL5SN6uMHHFQ5hNQ25GCK0ONkQzM8xtOQWhX3aUcn5Ux?=
+ =?us-ascii?Q?Q//lMq3+58aQ9NuUBxEpiFuQHIikiCamz3mK4rrXfS9yt28XNvT2a9HKsFh9?=
+ =?us-ascii?Q?97dcpvDMP2QwchoZ6CoeneAxHNwlPkCrwuYq9CpsWreAVnc7sy536cg4cvfi?=
+ =?us-ascii?Q?0/8d8u5Mwe45I9DDDy7m9hQAOFQExXQU8iS7BEfe57eq8Fx50pWk6/p9oarU?=
+ =?us-ascii?Q?gyh8opTgdDLl6xmXnUNPs9Xxaa3B/uIuGiKC85lRKXY1m2zeQRzB2gCUKwDo?=
+ =?us-ascii?Q?vgNwPxM8YI7r4uX4uIc7mCKGx21bsu9B6borKjxKVDnuTtsCB5sdVhSvnbqY?=
+ =?us-ascii?Q?e2HscJmjGS9LCIpuoLF3o3fqkulPHHR8rkfCmVEMOZld+qR8IA6bRD3xCKm/?=
+ =?us-ascii?Q?g3+yg/1ZzMIkfYhdV/c2u9gRgUHwii1DD6+a7DazzdFzjxRG7LlR2FnRO3/r?=
+ =?us-ascii?Q?YB2am/l3Vnn1pPAhawtHtcxFzvJ43FK2/8nmfjWSPWOr+tx3kRcIPREQwg2F?=
+ =?us-ascii?Q?mbsmRqpPn1HeN7BPc6cGAU4zSekXOjNdPBLIGVXW+2v2OxaW3xqw+IpbaIuL?=
+ =?us-ascii?Q?0qNXzCPbOo2iJwZJQqk3CNY7xBjnHYQWqeaR2nVKZNB+ZjUCQYG2mvz2Rnir?=
+ =?us-ascii?Q?TjtbNVeBWX7g6h3NgeE3WufIeOA0ItBEyG7QwzOKlfTGbQjKZRikYQY9TSB9?=
+ =?us-ascii?Q?1PX96G88xCqJY3hjGULGBuwswGUg8rG8ZWOoP46VsYM4rwrI6u0rMaX2ng14?=
+ =?us-ascii?Q?sdxuKM9KaSxdSjo5DLPUSMDPLRCDi9d3EdrDBCnv3MR6pkxh+Vf4eIPD/oec?=
+ =?us-ascii?Q?fQKNuxPQ0TtAYnOWhEmQE8Trr5ulmtMdqz6B9qSnqhHZaVqmzY+fbjucKZ/P?=
+ =?us-ascii?Q?VyzfdmroQzqOD53fYgIm+28cuY9oU1g7qqduwIiTBeBx2DVDUlKIBorJGBZF?=
+ =?us-ascii?Q?SFhkzCIrRxfSbsT/TCiG6/vbJbaOAX23d9c29qxzAOkmcfGuJetYHtq/BRqb?=
+ =?us-ascii?Q?efWhpAj4LMRYXV5D5I0lQFOv7tje2m06c/s6TQyIveDe4Dwzbq4Y8xkcmKhI?=
+ =?us-ascii?Q?nR3jUXtP23c5R+q0DBsGXMhq8FMjOfgfIIbUV1gyN2WxzppWNYQrXBjdxB4J?=
+ =?us-ascii?Q?c8+5K6a+CwBl+Oj+Oax9O8jiWNelgt5TTz3dp/VpQUgoKl2gxbMy99TX5g92?=
+ =?us-ascii?Q?PLTIiGAkCsLTiuJ6j3u3dmTZPTILgKC5wM94bCgjqe7El0rw9B/uLg=3D=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Sep 2024 15:39:52.3204
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0037439a-752a-45f6-cf78-08dccdc0fbfb
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SJ1PEPF00001CE0.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8573
 
-The types of mm flags are now far beyond the core dump related features.
-This patch moves mm flags from linux/sched/coredump.h to linux/mm_types.h.
-The linux/sched/coredump.h has include the mm_types.h, so the C files
-related to coredump does not need to change head file inclusion.
-In addition, the inclusion of sched/coredump.h now can be deleted from
-the C files that irrelevant to core dump.
+After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
+on AMD processors that support extended CPUID leaf 0x80000026, the
+topology_die_cpumask() and topology_logical_die_id() macros, no longer
+return the package cpumask and package id, instead they return the CCD
+(Core Complex Die) mask and id respectively. This leads to the energy-pkg
+event scope to be modified to CCD instead of package.
 
-Signed-off-by: Nanyong Sun <sunnanyong@huawei.com>
+So, change the PMU scope for AMD and Hygon back to package.
+
+On a 12 CCD 1 Package AMD Zen4 Genoa machine:
+
+Before:
+$ cat /sys/devices/power/cpumask
+0,8,16,24,32,40,48,56,64,72,80,88.
+
+The expected cpumask here is supposed to be just "0", as it is a package
+scope event, only one CPU will be collecting the event for all the CPUs in
+the package.
+
+After:
+$ cat /sys/devices/power/cpumask
+0
+
+Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
 ---
- include/linux/huge_mm.h        |  1 -
- include/linux/khugepaged.h     |  2 -
- include/linux/ksm.h            |  1 -
- include/linux/mm_types.h       | 81 +++++++++++++++++++++++++++++++++
- include/linux/oom.h            |  1 -
- include/linux/sched/coredump.h | 82 ----------------------------------
- kernel/events/uprobes.c        |  1 -
- kernel/fork.c                  |  1 -
- mm/huge_memory.c               |  1 -
- mm/khugepaged.c                |  1 -
- mm/ksm.c                       |  1 -
- mm/memory.c                    |  1 -
- mm/oom_kill.c                  |  1 -
- 13 files changed, 81 insertions(+), 94 deletions(-)
+v3 Link: https://lore.kernel.org/all/20240904100934.3260-1-Dhananjay.Ugwekar@amd.com/
 
-diff --git a/include/linux/huge_mm.h b/include/linux/huge_mm.h
-index e25d9ebfdf89..322ac8606840 100644
---- a/include/linux/huge_mm.h
-+++ b/include/linux/huge_mm.h
-@@ -2,7 +2,6 @@
- #ifndef _LINUX_HUGE_MM_H
- #define _LINUX_HUGE_MM_H
+Changes from v3:
+* Move the rapl_pmu_is_pkg_scope() check before the memory allocation for rapl_pmus
+
+tip/master + PMU scope patchset [1] to be taken as base for testing this patch. 
+
+[1]: https://lore.kernel.org/all/20240802151643.1691631-1-kan.liang@linux.intel.com/
+---
+ arch/x86/events/rapl.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
+index b70ad880c5bc..b13db61fc256 100644
+--- a/arch/x86/events/rapl.c
++++ b/arch/x86/events/rapl.c
+@@ -139,9 +139,32 @@ static unsigned int rapl_cntr_mask;
+ static u64 rapl_timer_ms;
+ static struct perf_msr *rapl_msrs;
  
--#include <linux/sched/coredump.h>
- #include <linux/mm_types.h>
- 
- #include <linux/fs.h> /* only for vma_is_dax() */
-diff --git a/include/linux/khugepaged.h b/include/linux/khugepaged.h
-index f68865e19b0b..70c9ad255fbd 100644
---- a/include/linux/khugepaged.h
-+++ b/include/linux/khugepaged.h
-@@ -2,8 +2,6 @@
- #ifndef _LINUX_KHUGEPAGED_H
- #define _LINUX_KHUGEPAGED_H
- 
--#include <linux/sched/coredump.h> /* MMF_VM_HUGEPAGE */
--
- #ifdef CONFIG_TRANSPARENT_HUGEPAGE
- extern struct attribute_group khugepaged_attr_group;
- 
-diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-index 11690dacd986..d4675416f0c2 100644
---- a/include/linux/ksm.h
-+++ b/include/linux/ksm.h
-@@ -13,7 +13,6 @@
- #include <linux/pagemap.h>
- #include <linux/rmap.h>
- #include <linux/sched.h>
--#include <linux/sched/coredump.h>
- 
- #ifdef CONFIG_KSM
- int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 485424979254..d5f7dc917604 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -1485,4 +1485,85 @@ enum {
- 	/* See also internal only FOLL flags in mm/internal.h */
- };
- 
-+/* mm flags */
-+
-+/* for SUID_DUMP_* above */
-+#define MMF_DUMPABLE_BITS 2
-+#define MMF_DUMPABLE_MASK ((1 << MMF_DUMPABLE_BITS) - 1)
-+/* coredump filter bits */
-+#define MMF_DUMP_ANON_PRIVATE	2
-+#define MMF_DUMP_ANON_SHARED	3
-+#define MMF_DUMP_MAPPED_PRIVATE	4
-+#define MMF_DUMP_MAPPED_SHARED	5
-+#define MMF_DUMP_ELF_HEADERS	6
-+#define MMF_DUMP_HUGETLB_PRIVATE 7
-+#define MMF_DUMP_HUGETLB_SHARED  8
-+#define MMF_DUMP_DAX_PRIVATE	9
-+#define MMF_DUMP_DAX_SHARED	10
-+
-+#define MMF_DUMP_FILTER_SHIFT	MMF_DUMPABLE_BITS
-+#define MMF_DUMP_FILTER_BITS	9
-+#define MMF_DUMP_FILTER_MASK \
-+	(((1 << MMF_DUMP_FILTER_BITS) - 1) << MMF_DUMP_FILTER_SHIFT)
-+#define MMF_DUMP_FILTER_DEFAULT \
-+	((1 << MMF_DUMP_ANON_PRIVATE) |	(1 << MMF_DUMP_ANON_SHARED) |\
-+	 (1 << MMF_DUMP_HUGETLB_PRIVATE) | MMF_DUMP_MASK_DEFAULT_ELF)
-+
-+#ifdef CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS
-+# define MMF_DUMP_MASK_DEFAULT_ELF	(1 << MMF_DUMP_ELF_HEADERS)
-+#else
-+# define MMF_DUMP_MASK_DEFAULT_ELF	0
-+#endif
-+					/* leave room for more dump flags */
-+#define MMF_VM_MERGEABLE	16	/* KSM may merge identical pages */
-+#define MMF_VM_HUGEPAGE		17	/* set when mm is available for khugepaged */
++/*
++ * RAPL Package energy counter scope:
++ * 1. AMD/HYGON platforms have a per-PKG package energy counter
++ * 2. For Intel platforms
++ *	2.1. CLX-AP is multi-die and its RAPL MSRs are die-scope
++ *	2.2. Other Intel platforms are single die systems so the scope can be
++ *	     considered as either pkg-scope or die-scope, and we are considering
++ *	     them as die-scope.
++ */
++#define rapl_pmu_is_pkg_scope()				\
++	(boot_cpu_data.x86_vendor == X86_VENDOR_AMD ||	\
++	 boot_cpu_data.x86_vendor == X86_VENDOR_HYGON)
 +
 +/*
-+ * This one-shot flag is dropped due to necessity of changing exe once again
-+ * on NFS restore
++ * Helper function to get the correct topology id according to the
++ * RAPL PMU scope.
 + */
-+//#define MMF_EXE_FILE_CHANGED	18	/* see prctl_set_mm_exe_file() */
-+
-+#define MMF_HAS_UPROBES		19	/* has uprobes */
-+#define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
-+#define MMF_OOM_SKIP		21	/* mm is of no interest for the OOM killer */
-+#define MMF_UNSTABLE		22	/* mm is unstable for copy_from_user */
-+#define MMF_HUGE_ZERO_PAGE	23      /* mm has ever used the global huge zero page */
-+#define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
-+#define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
-+#define MMF_OOM_REAP_QUEUED	25	/* mm was queued for oom_reaper */
-+#define MMF_MULTIPROCESS	26	/* mm is shared between processes */
-+/*
-+ * MMF_HAS_PINNED: Whether this mm has pinned any pages.  This can be either
-+ * replaced in the future by mm.pinned_vm when it becomes stable, or grow into
-+ * a counter on its own. We're aggresive on this bit for now: even if the
-+ * pinned pages were unpinned later on, we'll still keep this bit set for the
-+ * lifecycle of this mm, just for simplicity.
-+ */
-+#define MMF_HAS_PINNED		27	/* FOLL_PIN has run, never cleared */
-+
-+#define MMF_HAS_MDWE		28
-+#define MMF_HAS_MDWE_MASK	(1 << MMF_HAS_MDWE)
-+
-+
-+#define MMF_HAS_MDWE_NO_INHERIT	29
-+
-+#define MMF_VM_MERGE_ANY	30
-+#define MMF_VM_MERGE_ANY_MASK	(1 << MMF_VM_MERGE_ANY)
-+
-+#define MMF_TOPDOWN		31	/* mm searches top down by default */
-+#define MMF_TOPDOWN_MASK	(1 << MMF_TOPDOWN)
-+
-+#define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
-+				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
-+				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
-+
-+static inline unsigned long mmf_init_flags(unsigned long flags)
++static inline unsigned int get_rapl_pmu_idx(int cpu)
 +{
-+	if (flags & (1UL << MMF_HAS_MDWE_NO_INHERIT))
-+		flags &= ~((1UL << MMF_HAS_MDWE) |
-+			   (1UL << MMF_HAS_MDWE_NO_INHERIT));
-+	return flags & MMF_INIT_MASK;
++	return rapl_pmu_is_pkg_scope() ? topology_logical_package_id(cpu) :
++					 topology_logical_die_id(cpu);
 +}
 +
- #endif /* _LINUX_MM_TYPES_H */
-diff --git a/include/linux/oom.h b/include/linux/oom.h
-index 7d0c9c48a0c5..1e0fc6931ce9 100644
---- a/include/linux/oom.h
-+++ b/include/linux/oom.h
-@@ -7,7 +7,6 @@
- #include <linux/types.h>
- #include <linux/nodemask.h>
- #include <uapi/linux/oom.h>
--#include <linux/sched/coredump.h> /* MMF_* */
- #include <linux/mm.h> /* VM_FAULT* */
+ static inline struct rapl_pmu *cpu_to_rapl_pmu(unsigned int cpu)
+ {
+-	unsigned int rapl_pmu_idx = topology_logical_die_id(cpu);
++	unsigned int rapl_pmu_idx = get_rapl_pmu_idx(cpu);
  
- struct zonelist;
-diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredump.h
-index e62ff805cfc9..6eb65ceed213 100644
---- a/include/linux/sched/coredump.h
-+++ b/include/linux/sched/coredump.h
-@@ -8,12 +8,6 @@
- #define SUID_DUMP_USER		1	/* Dump as user of process */
- #define SUID_DUMP_ROOT		2	/* Dump as root */
+ 	/*
+ 	 * The unsigned check also catches the '-1' return value for non
+@@ -617,7 +640,7 @@ static void __init init_rapl_pmu(void)
+ 		pmu->timer_interval = ms_to_ktime(rapl_timer_ms);
+ 		rapl_hrtimer_init(pmu);
  
--/* mm flags */
--
--/* for SUID_DUMP_* above */
--#define MMF_DUMPABLE_BITS 2
--#define MMF_DUMPABLE_MASK ((1 << MMF_DUMPABLE_BITS) - 1)
--
- extern void set_dumpable(struct mm_struct *mm, int value);
- /*
-  * This returns the actual value of the suid_dumpable flag. For things
-@@ -31,80 +25,4 @@ static inline int get_dumpable(struct mm_struct *mm)
- 	return __get_dumpable(mm->flags);
+-		rapl_pmus->pmus[topology_logical_die_id(cpu)] = pmu;
++		rapl_pmus->pmus[get_rapl_pmu_idx(cpu)] = pmu;
+ 	}
+ 
+ 	cpus_read_unlock();
+@@ -626,6 +649,12 @@ static void __init init_rapl_pmu(void)
+ static int __init init_rapl_pmus(void)
+ {
+ 	int nr_rapl_pmu = topology_max_packages() * topology_max_dies_per_package();
++	int rapl_pmu_scope = PERF_PMU_SCOPE_DIE;
++
++	if (rapl_pmu_is_pkg_scope()) {
++		nr_rapl_pmu		= topology_max_packages();
++		rapl_pmu_scope		= PERF_PMU_SCOPE_PKG;
++	}
+ 
+ 	rapl_pmus = kzalloc(struct_size(rapl_pmus, pmus, nr_rapl_pmu), GFP_KERNEL);
+ 	if (!rapl_pmus)
+@@ -643,9 +672,10 @@ static int __init init_rapl_pmus(void)
+ 	rapl_pmus->pmu.start		= rapl_pmu_event_start;
+ 	rapl_pmus->pmu.stop		= rapl_pmu_event_stop;
+ 	rapl_pmus->pmu.read		= rapl_pmu_event_read;
++	rapl_pmus->pmu.scope		= rapl_pmu_scope;
+ 	rapl_pmus->pmu.module		= THIS_MODULE;
+-	rapl_pmus->pmu.scope		= PERF_PMU_SCOPE_DIE;
+ 	rapl_pmus->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
++
+ 	return 0;
  }
  
--/* coredump filter bits */
--#define MMF_DUMP_ANON_PRIVATE	2
--#define MMF_DUMP_ANON_SHARED	3
--#define MMF_DUMP_MAPPED_PRIVATE	4
--#define MMF_DUMP_MAPPED_SHARED	5
--#define MMF_DUMP_ELF_HEADERS	6
--#define MMF_DUMP_HUGETLB_PRIVATE 7
--#define MMF_DUMP_HUGETLB_SHARED  8
--#define MMF_DUMP_DAX_PRIVATE	9
--#define MMF_DUMP_DAX_SHARED	10
--
--#define MMF_DUMP_FILTER_SHIFT	MMF_DUMPABLE_BITS
--#define MMF_DUMP_FILTER_BITS	9
--#define MMF_DUMP_FILTER_MASK \
--	(((1 << MMF_DUMP_FILTER_BITS) - 1) << MMF_DUMP_FILTER_SHIFT)
--#define MMF_DUMP_FILTER_DEFAULT \
--	((1 << MMF_DUMP_ANON_PRIVATE) |	(1 << MMF_DUMP_ANON_SHARED) |\
--	 (1 << MMF_DUMP_HUGETLB_PRIVATE) | MMF_DUMP_MASK_DEFAULT_ELF)
--
--#ifdef CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS
--# define MMF_DUMP_MASK_DEFAULT_ELF	(1 << MMF_DUMP_ELF_HEADERS)
--#else
--# define MMF_DUMP_MASK_DEFAULT_ELF	0
--#endif
--					/* leave room for more dump flags */
--#define MMF_VM_MERGEABLE	16	/* KSM may merge identical pages */
--#define MMF_VM_HUGEPAGE		17	/* set when mm is available for
--					   khugepaged */
--/*
-- * This one-shot flag is dropped due to necessity of changing exe once again
-- * on NFS restore
-- */
--//#define MMF_EXE_FILE_CHANGED	18	/* see prctl_set_mm_exe_file() */
--
--#define MMF_HAS_UPROBES		19	/* has uprobes */
--#define MMF_RECALC_UPROBES	20	/* MMF_HAS_UPROBES can be wrong */
--#define MMF_OOM_SKIP		21	/* mm is of no interest for the OOM killer */
--#define MMF_UNSTABLE		22	/* mm is unstable for copy_from_user */
--#define MMF_HUGE_ZERO_PAGE	23      /* mm has ever used the global huge zero page */
--#define MMF_DISABLE_THP		24	/* disable THP for all VMAs */
--#define MMF_DISABLE_THP_MASK	(1 << MMF_DISABLE_THP)
--#define MMF_OOM_REAP_QUEUED	25	/* mm was queued for oom_reaper */
--#define MMF_MULTIPROCESS	26	/* mm is shared between processes */
--/*
-- * MMF_HAS_PINNED: Whether this mm has pinned any pages.  This can be either
-- * replaced in the future by mm.pinned_vm when it becomes stable, or grow into
-- * a counter on its own. We're aggresive on this bit for now: even if the
-- * pinned pages were unpinned later on, we'll still keep this bit set for the
-- * lifecycle of this mm, just for simplicity.
-- */
--#define MMF_HAS_PINNED		27	/* FOLL_PIN has run, never cleared */
--
--#define MMF_HAS_MDWE		28
--#define MMF_HAS_MDWE_MASK	(1 << MMF_HAS_MDWE)
--
--
--#define MMF_HAS_MDWE_NO_INHERIT	29
--
--#define MMF_VM_MERGE_ANY	30
--#define MMF_VM_MERGE_ANY_MASK	(1 << MMF_VM_MERGE_ANY)
--
--#define MMF_TOPDOWN		31	/* mm searches top down by default */
--#define MMF_TOPDOWN_MASK	(1 << MMF_TOPDOWN)
--
--#define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
--				 MMF_DISABLE_THP_MASK | MMF_HAS_MDWE_MASK |\
--				 MMF_VM_MERGE_ANY_MASK | MMF_TOPDOWN_MASK)
--
--static inline unsigned long mmf_init_flags(unsigned long flags)
--{
--	if (flags & (1UL << MMF_HAS_MDWE_NO_INHERIT))
--		flags &= ~((1UL << MMF_HAS_MDWE) |
--			   (1UL << MMF_HAS_MDWE_NO_INHERIT));
--	return flags & MMF_INIT_MASK;
--}
--
- #endif /* _LINUX_SCHED_COREDUMP_H */
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 73cc47708679..5954afce3836 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -15,7 +15,6 @@
- #include <linux/slab.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/export.h>
- #include <linux/rmap.h>		/* anon_vma_prepare */
- #include <linux/mmu_notifier.h>
-diff --git a/kernel/fork.c b/kernel/fork.c
-index cc760491f201..cf8ccfc9367c 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -16,7 +16,6 @@
- #include <linux/slab.h>
- #include <linux/sched/autogroup.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/user.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/sched/stat.h>
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index c5349c2a8275..68af4357fb18 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -8,7 +8,6 @@
- #include <linux/mm.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/highmem.h>
- #include <linux/hugetlb.h>
-diff --git a/mm/khugepaged.c b/mm/khugepaged.c
-index cdd1d8655a76..c5dd495fe6d4 100644
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -4,7 +4,6 @@
- #include <linux/mm.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/mmu_notifier.h>
- #include <linux/rmap.h>
- #include <linux/swap.h>
-diff --git a/mm/ksm.c b/mm/ksm.c
-index 14d9e53b1ec2..f008d417f975 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -20,7 +20,6 @@
- #include <linux/mman.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/cputime.h>
- #include <linux/rwsem.h>
- #include <linux/pagemap.h>
-diff --git a/mm/memory.c b/mm/memory.c
-index 3c01d68065be..5691de41c03d 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -44,7 +44,6 @@
- #include <linux/mm.h>
- #include <linux/mm_inline.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/numa_balancing.h>
- #include <linux/sched/task.h>
- #include <linux/hugetlb.h>
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 4d7a0004df2c..1c485beb0b93 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -24,7 +24,6 @@
- #include <linux/gfp.h>
- #include <linux/sched.h>
- #include <linux/sched/mm.h>
--#include <linux/sched/coredump.h>
- #include <linux/sched/task.h>
- #include <linux/sched/debug.h>
- #include <linux/swap.h>
 -- 
-2.33.0
+2.34.1
 
