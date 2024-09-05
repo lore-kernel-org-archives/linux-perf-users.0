@@ -1,138 +1,162 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A6C19E7F6
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 14:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE68A19DF74
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 15:11:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725548341; cv=none; b=SzMGzDrN7Z230kN+P8o8h4ParJAu98hDOYOFGwC8lanYJu0cSTajpnoaMdGNFDS6ZWiJeahUPkbpkcrO1ALiGPnF0xFwlLZ7C0JQChczbqB1kc/Gtnyo5dhoyMY1Mq4FVTemqP7dDy77lWhLzmSzhpk+FZTK0tLrAcSO/cc+oPc=
+	t=1725549067; cv=none; b=dskno6G9ssPmkFsgI5tampr3++BzeiMtLDxJ6Th1wCgQcnETcy0c1INC0LEg66U37XM4afMG6fOYQuq01ZtZfr2KOefXh+Te2f5oMxQo0WhuVq2M8my/Cy1oPVHFwvmeEj+W4sYffZc5Td+fnJbjXgaCCtPoZl5oq2ZRW6BzHOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725548341; c=relaxed/simple;
-	bh=OwKQ8gefJtlo9/FKC0YJ4+xfuKBWJQAA4VRzKkk7VJk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=QIwwyyhQuoVeJy0uW1mKkLOos78HuS2J25kt/BhbwoR9rG+eYQqCFX0WqmV4Nb0LaQ5ASF7RaWfIdVtUBe5hsP6As44SUNkY0JagWsg+FxRc4esraDf9eFe7gpEdNo7rZA50y13T1vIkQ8oGthvWXtDfah0AW8NfsJW5JTN/Rgo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M5V7UZF0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725549067; c=relaxed/simple;
+	bh=P10f6fmwLDCWWVpb4RRl+mEYnf1C+GJE5Ve7yn0m5Fk=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=MVNXpaZphlkChe7X1X9BrnUZg7sMO7JCePQ9Iv3UoPwH+sbnCNhq1v/4LhIyYxCMZ1WALlGemAaiVuoFjxSr9ESH2qmXzTAl0A1iCgbr7ywnsyzC/9hgny29wCCaSX91+I70NIW/6dLgp2fCpYPRYiQgM421MdPdiNLUGMjq7kA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcXi3AJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M5V7UZF0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7D57C4CEC3;
-	Thu,  5 Sep 2024 14:58:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcXi3AJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC64C4CEC3;
+	Thu,  5 Sep 2024 15:11:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725548340;
-	bh=OwKQ8gefJtlo9/FKC0YJ4+xfuKBWJQAA4VRzKkk7VJk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=M5V7UZF03z126KaIyBArIZDQHba5Svw1e0umNZc6CoqKQTQNtOnv+lRgjWpwluRa3
-	 7f0A5SIJFIxcJlYT0ZU1Hioxw5tM+zNNZ/vzzC36bN2oFKWmqnzUnsh+np+kR5iqxx
-	 XyTLV3P2cieMOEnpEFA+ATC2Baylo2u2Cj8RwcEIen6hbmeewWOmQvE1AQOW6vw1RE
-	 LcudqCN90xdnvofBmz2pG4Ks0Zx0owZP3qxRvW8T98pqOLoZMfIki5bqDdL8Ez9m2U
-	 Ye5spmadAjApq8ZUqbOj71MDDnxVLVPmgHPgZnfX3cbdkFuLtgUXxTZtCsvITEjf4C
-	 pH3BFbcTVKBrQ==
-Date: Thu, 5 Sep 2024 11:58:56 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: Aditya Gupta <adityag@linux.ibm.com>
-Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
-	linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
-	atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
-	disgoel@linux.vnet.ibm.com
-Subject: Re: [PATCH v15 7/7] perf: Add more features to supported_features
- list
-Message-ID: <ZtnHMKBHYr5hrRyM@x1>
-References: <20240904190132.415212-1-adityag@linux.ibm.com>
- <20240904190132.415212-8-adityag@linux.ibm.com>
- <Zti81yV0jRIB7oQ6@x1>
- <b8d14ee1-c97e-4cac-8668-9476ab2b61d7@linux.ibm.com>
+	s=k20201202; t=1725549067;
+	bh=P10f6fmwLDCWWVpb4RRl+mEYnf1C+GJE5Ve7yn0m5Fk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=KcXi3AJ8DWMFGtWVK9sZs9+aXyd0KU8u32iIFq1+1yg3Y04tHYKlJolbx1Q4//A/0
+	 rrdMxKDNOtBB1GxNCbDIZP2hWOKjkXhf4QHX2Xx3PEWqX/AvegtnL/1lpxGGkLp/PJ
+	 lD+YFXHI2hGRlbBiailMUd4PQvn1JD786i+10lSy8k17DD8JL96YNgsK97u+QV7Q7g
+	 70iMzSVUVdpBcNluUZeGzYLKJMxoEn8rJgRPp+Tluf7wgMatbVc0gOYgDWQf/22Vnm
+	 8WOYt/CWiQXMRUzIJxLOUtXMzSf83rxY4GW+d7l79IVy1VgYsNewLLXf8S2hvtit38
+	 N7EK3VEQjfMsg==
+Date: Fri, 6 Sep 2024 00:11:04 +0900
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Veronika Molnarova <vmolnaro@redhat.com>,
+ linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
+ mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com, Masami
+ Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
+Message-Id: <20240906001104.9314082caaf0268f09cc45b2@kernel.org>
+In-Reply-To: <ZtYIElLzMIzEVH9t@x1>
+References: <Zn3n0JwfdfFdjbzj@google.com>
+	<20240702110849.31904-1-vmolnaro@redhat.com>
+	<66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
+	<Zs-LEEutfp0hkjh5@x1>
+	<ZtHk6Tj7KioLRd10@x1>
+	<6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com>
+	<ZtXMRffIGVmjptcf@x1>
+	<ZtXOrJdxvrI7Kk6n@x1>
+	<b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
+	<ZtYIElLzMIzEVH9t@x1>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b8d14ee1-c97e-4cac-8668-9476ab2b61d7@linux.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 05, 2024 at 08:03:08PM +0530, Aditya Gupta wrote:
-> On 05/09/24 01:32, Arnaldo Carvalho de Melo wrote:
-> 
-> > On Thu, Sep 05, 2024 at 12:31:32AM +0530, Aditya Gupta wrote:
-> > > As suggested in [1], add more feature names and corresponding names,
-> > > based on the information in Makefile.config
-> > > 
-> > > The entries were added after seeing the corresponding -D option which is
-> > > added to CFLAGS, based on the presence of a feature in Makefile.config,
-> > > such as:
-> > > 
-> > >      ifeq ($(feature-file-handle), 1)
-> > >        CFLAGS += -DHAVE_FILE_HANDLE
-> > >      endif
-> > > 
-> > > For above feature 'file-handle', corresponding entry has been added to
-> > > supported_features as below:
-> > > 
-> > >      FEATURE_STATUS("file-handle", HAVE_FILE_HANDLE)
-> > > 
-> > > [1]: https://lore.kernel.org/linux-perf-users/Zn7EvDbsnlbLXj4g@x1/
-> > I'll remove this now because there were some that sounds really strange,
-> > like:
-> Okay.
-> > acme@x1:~/git/perf-tools-next$ sudo su -
-> > [sudo] password for acme:
-> > root@x1:~# perf -vv
-> > perf version 6.11.rc3.g15dc9f274b8e
-> >                   glibc: [ OFF ]  # LIBC_SUPPORT
-> > libslang-include-subdir: [ OFF ]  # HAVE_SLANG_INCLUDE_SUBDIR
+On Mon, 2 Sep 2024 15:46:42 -0300
+Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+
+> On Mon, Sep 02, 2024 at 05:10:48PM +0200, Veronika Molnarova wrote:
 > > 
 > > 
-> > The first one is the strange one, how come, no LIBC_SUPPORT? glibc?
-> Debugged it:
-> 
-> 
-> Output of `make` says glibc is there:
-> 
-> 
->     Auto-detecting system features:
-> 
->     ...                                   ...
-> 
->     ...                                   glibc: [ on  ]
-> 
->     ...                                   ...
-> 
->     ...                                  libelf: [ on  ]
-> 
-> 
-> But, in Makefile.config, 'LIBC_SUPPORT' is only defined if libelf is NOT
-> there:
-> 
-> 
->     ifeq ($(feature-libelf), 0)
->         ifeq ($(feature-glibc), 1)
->             LIBC_SUPPORT := 1
->         endif
->      ifeq ($(BIONIC),1)
->           LIBC_SUPPORT := 1
->       endif
-> 
-> 
-> Hence since LIBC_SUPPORT is not defined, the check --feature command says
-> glibc is OFF.
-> 
-> I think we can simply remove libc entry from the features array in this
-> patch, as glibc is kind of obvious to be there if compilation worked.
+> > On 9/2/24 16:41, Arnaldo Carvalho de Melo wrote:
+> > > On Mon, Sep 02, 2024 at 11:31:36AM -0300, Arnaldo Carvalho de Melo wrote:
+> > >> On Mon, Sep 02, 2024 at 04:05:04PM +0200, Veronika Molnarova wrote:
+> > >>> On 8/30/24 17:27, Arnaldo Carvalho de Melo wrote:
+> > >>>> On Wed, Aug 28, 2024 at 05:39:48PM -0300, Arnaldo Carvalho de Melo wrote:
+> > >>>>> On Wed, Aug 28, 2024 at 04:10:55PM +0200, Veronika Molnarova wrote:
+> > >>>> So, is there some other knob to get further output from that FAIL case?
+> > >>>> Like the command that is failing? I'll try to take a look at the
+> > >>>> sources, but are you seeing this problem with what is in
+> > >>>> perf-tools-next/perf-tools-next?
+> > > 
+> > >>> Couldn't reproduce the issue on multiple systems. There is no further way
+> > >>> of getting more logs from the test case. The output of the failure is from
+> > >>> the regex checking when a line wasn't matched to any possible regex.
+> > >>> Looking at the test case "adding blacklisted function warn_thunk_thunk",
+> > >>> the failure is caused by command 'perf probe warn_thunk_thunk', which is
+> > >>> a blacklisted function taken from "/sys/kernel/debug/kprobes/blacklist".
+> > > 
+> > > root@x1:~# grep thunk_thunk /sys/kernel/debug/kprobes/blacklist
+> > > 0xffffffff97004af0-0xffffffff97004b20	warn_thunk_thunk
+> > > root@x1:~#
+> > > 
 
-Right, but please put some thought, if you have the time and
-inclination, to try to make this LIBC_SUPPORT thing make sense, as it is
-it is nuts :-)
- 
-> Meanwhile I will check all feature entries added in this patch again. I can
-> post this patch as an independent patch.
+right, thunk functions should not be probed.
 
-Sure
- 
-> > The second looks irrelevant, I'll see.
+> > > <SNIP>
+> > > 
+> > >> /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err:A function DIE doesn't have decl_line. Maybe broken DWARF?
+> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err
+> > >> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> > >> A function DIE doesn't have decl_line. Maybe broken DWARF?
+> > >> Probe point 'warn_thunk_thunk' not found.
+
+Yeah, thunk functions are defined by asm code. No DWARF is available.
+
+> > >>   Error: Failed to add events.
+> > >> root@x1:~#
+> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted_list.log 
+> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.log 
+> > >> root@x1:~#
+> > >>
+> > >> So is it just a matter of adding this output to the expected outputs?
+> > >> In test_adding_blacklisted.sh?
+> > > 
+> > > Did the patch below, now it passes, Ack?
+> > > 
+> > > root@x1:~# export PERFTEST_KEEP_LOGS=y
+> > > root@x1:~# perf test 88
+> > >  88: perftool-testsuite_probe                                        : Ok
+> > > root@x1:~#
+> > > 
+> > > Or am I missing the point? :-)
+> > > 
+> > > - Arnaldo
+> > 
+> > Yeah, that would fix the test case, the question is whether we should
 > 
-> Sure.
+> I was lazy, but yeah, that thought crossed my mind, good thing you did
+> the due diligence and found that patch! Looking at it now.
+> 
+> > accept it as a possible output. Found some old patch that should have
+> > fixed the mentioned issue: 
+> > https://lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/
+> 
+> I updated Masami's e-mail to a more recent one, Masami-san, wdyt? Can I
+> have your opinion on the patch pointed out by Veronika?
 
-Thanks!
+Thanks for update my email. Yeah, it looks good to me.
 
-- Arnaldo
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> 
+> Thanks in advance!
+> 
+> - Arnaldo
+>  
+> > > 
+> > > diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+> > > index b5dc10b2a73810b3..14290d08a4a96eaf 100755
+> > > --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+> > > +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
+> > > @@ -42,7 +42,8 @@ REGEX_ERROR_MESSAGE="Error: Failed to add events."
+> > >  REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
+> > >  REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
+> > >  REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
+> > > -../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
+> > > +REGEX_MISSING_DECL_LINE="A function DIE doesn't have decl_line. Maybe broken DWARF?"
+> > > +../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" "$REGEX_MISSING_DECL_LINE" < $LOGS_DIR/adding_blacklisted.err
+> > >  CHECK_EXIT_CODE=$?
+> > >  
+> > >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
+> > > 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
