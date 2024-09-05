@@ -1,150 +1,318 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1754E2B9A8;
-	Thu,  5 Sep 2024 03:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DFB87FD;
+	Thu,  5 Sep 2024 04:01:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725506185; cv=none; b=UBD/176MGLXQcWuY/2gPRUwWWqsWW2Fm4MGiMMKxMJqPQ5+OKqxcicnnFtzSdxdQpIjDdnUNOs6yBYJsqQP3Z6poBVgBA2ruyI6ajjDg712A5MHfGJuph/TZmRitiLmHbTzFCx39qA0oVCGHi6ypCxuYeYaTU2xs6mOprQdSYlo=
+	t=1725508871; cv=none; b=AF0s95soBATaR0TjT1SM368a/bHkD0Dxvulp/sX6SzpEQ1N9r/PaZAYEpFwB2dQVnTP2kbVhUBxElRUpPK513emU9nXJYkbFcITiO8drDR6+rj6Foj49f5Rfk+eIITSpI3XX4egLM15DR3XPJPiqL5O/JDzdrrMFEgqOjDPbiWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725506185; c=relaxed/simple;
-	bh=+jIeBKrZyWvjOfMijD7iCJlICqgfNmV2HwI+cXbrejA=;
-	h=CC:Subject:To:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=I3U+rMe4d39sQNdB/qTnWcBpUWBkxftD0dPsaVlWq8DTHsvjFXfBx2HMzZZOB0FpnD1ZtqwHHe91lyLY93KhTEk8QOiKpLAmReX/1Zge8RNtpF8gL4vBfNYhkn2235jTi+7GYP7WT9QJTMeAWKtSRxDClrLMfZ8RCW6ayxOlkVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.252])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Wzky16KBWz146Yf;
-	Thu,  5 Sep 2024 11:15:21 +0800 (CST)
-Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2D2D91800CF;
-	Thu,  5 Sep 2024 11:16:20 +0800 (CST)
-Received: from [10.67.121.177] (10.67.121.177) by
- kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Thu, 5 Sep 2024 11:16:19 +0800
-CC: <yangyicong@hisilicon.com>, <linux-perf-users@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <jonathan.cameron@huawei.com>,
-	<linuxarm@huawei.com>, <prime.zeng@hisilicon.com>
-Subject: Re: [PATCH] perf metrics: Fixes stat cmd cannot parse sys metrics
- when cpus MIDR mismatch
-To: Junhao He <hejunhao3@huawei.com>, <irogers@google.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
-References: <20240807040002.47119-1-hejunhao3@huawei.com>
-From: Yicong Yang <yangyicong@huawei.com>
-Message-ID: <00b3d618-628f-3366-7195-2300468eb450@huawei.com>
-Date: Thu, 5 Sep 2024 11:16:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+	s=arc-20240116; t=1725508871; c=relaxed/simple;
+	bh=Cq55vOaoUdNt9YDbuIEXFWORsEN46O+vPyE1Fey6dCI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fT0oladQXdZYWJDC5xJ0a43mE2f9bOss+Y110+IFBWkvsVwBaLSHMhM1Uty9hnS2bt2A8GFQG1JDXhBVISGUqaXFXMHdq3DIKLRhJ1tEkPm1ZvKvVJMRXUmM6MhsIis58p1vq5y0gQR2cxUY8TAZvjaqaWF0tOAdnDAkvwaQcbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mWKxZD35; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mWKxZD35"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 804D4C4CEC4;
+	Thu,  5 Sep 2024 04:01:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725508871;
+	bh=Cq55vOaoUdNt9YDbuIEXFWORsEN46O+vPyE1Fey6dCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mWKxZD35iM+uwhzfINmvNi4M5OHGM/MvTYbuc31bblal1XIXPPeEw4XrBPd6Eyj4U
+	 /vzRNPiujP4SHWSEDWEfqcwUwm780j5z9bM4m7vE6+rdU/g4UXNIvp0wft1jbt85Jt
+	 ocpTXOW28XAD4Wu0LoHcxjhAZ2s74UdAmVuQZDNeI6ql0/Y0pymUw3DDWtKyV74Ob3
+	 V60aAVKp1WPlZnKoRW6QCAhk0Wz+xwJhsayZjxfXGz+GeMUeOFI6MUDrBJGYZ/fNeH
+	 gCIDYGU+i3STD4ZwkLNEuNXJ4IT581GcPX1HKo3aAeptD0JtNzv5CSl2eWLA0cHMtF
+	 M30uW1QkEbenA==
+Date: Wed, 4 Sep 2024 21:01:09 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Tengda Wu <wutengda@huaweicloud.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
+	bpf@vger.kernel.org
+Subject: Re: [PATCH -next 1/2] perf stat: Support inherit events during
+ fork() for bperf
+Message-ID: <ZtktBbcjSdVt4WtJ@google.com>
+References: <20240904123103.732507-1-wutengda@huaweicloud.com>
+ <20240904123103.732507-2-wutengda@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20240807040002.47119-1-hejunhao3@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemd200014.china.huawei.com (7.221.188.8)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20240904123103.732507-2-wutengda@huaweicloud.com>
 
-On 2024/8/7 12:00, Junhao He wrote:
-> On some platforms that do not use cpu MIDR mapping, such as hisilicon
-> HIP09 platform. The list cmd can display the CPA metrics, but the stat
-> cmd cannot work well to parse of CPA metrics.
-> 
->   $ perf list metric
->   Metrics:
->     cpa_p0_avg_bw
->          [Average bandwidth of CPA Port 0]
->     cpa_p1_avg_bw
->          [Average bandwidth of CPA Port 1]
->   $ perf stat -M cpa_p0_avg_bw --timeout 1000 --> No error messages output
->   $ echo $?
->   234
-> 
-> Currently, the metricgroup__parse_groups() expects to find an cpu metric
-> table, but the hisilicon/hip09 doesn't uses cpus MIDR to map json events
-> and metrics, so pmu_metrics_table__find() will return NULL, than the cmd
-> run failed.
-> But in metricgroup__add_metric(), the function parse for each sys metric
-> and add it to metric_list, which also will get an valid sys metric table.
-> So, we can ignore the NULL result of pmu_metrics_table__find() and to use
-> the sys metric table.
-> 
-> metricgroup__parse_groups
->  -> parse_groups
->      -> metricgroup__add_metric_list
->          -> metricgroup__add_metric
->              -> pmu_for_each_sys_metric   --> We've got the sys metric
-> 
-> Testing:
->   [root@localhost ~]# perf stat -M cpa_p0_avg_bw --no-merge --timeout 1000
-> 
->    Performance counter stats for 'system wide':
-> 
->    CPU0        1,001,121,239      cpa_cycles [hisi_sicl0_cpa0]     #     0.00 cpa_p0_avg_bw
->    CPU0                    0      cpa_p0_wr_dat [hisi_sicl0_cpa0]
->    CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl0_cpa0]
->    CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl0_cpa0]
->    CPU0        1,001,094,851      cpa_cycles [hisi_sicl2_cpa0]     #     0.00 cpa_p0_avg_bw
->    CPU0                    0      cpa_p0_wr_dat [hisi_sicl2_cpa0]
->    CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl2_cpa0]
->    CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl2_cpa0]
-> 
->        1.001306160 seconds time elapsed
-> 
-> Signed-off-by: Junhao He <hejunhao3@huawei.com>
+Hello,
 
-Tested-by: Yicong Yang <yangyicong@hisilicon.com>
+On Wed, Sep 04, 2024 at 12:31:02PM +0000, Tengda Wu wrote:
+> bperf has a nice ability to share PMUs, but it still does not support
+> inherit events during fork(), resulting in some deviations in its stat
+> results compared with perf.
+> 
+> perf stat result:
+>   $ ./perf stat -e cycles,instructions -- ./perf test -w sqrtloop
+> 
+>    Performance counter stats for './perf test -w sqrtloop':
+> 
+>        2,316,038,116      cycles
+>        2,859,350,725      instructions                     #    1.23  insn per cycle
+> 
+>          1.009603637 seconds time elapsed
+> 
+>          1.004196000 seconds user
+>          0.003950000 seconds sys
+> 
+> bperf stat result:
+>   $ ./perf stat --bpf-counters -e cycles,instructions -- ./perf test -w sqrtloop
+> 
+>    Performance counter stats for './perf test -w sqrtloop':
+> 
+>           18,762,093      cycles
+>           23,487,766      instructions                     #    1.25  insn per cycle
+> 
+>          1.008913769 seconds time elapsed
+> 
+>          1.003248000 seconds user
+>          0.004069000 seconds sys
+> 
+> In order to support event inheritance, two new bpf programs are added
+> to monitor the fork and exit of tasks respectively. When a task is
+> created, add it to the filter map to enable counting, and reuse the
+> `accum_key` of its parent task to count together with the parent task.
+> When a task exits, remove it from the filter map to disable counting.
 
-The changes looks fine to me, I'd prefer to add some documents for this. See below.
+Right, I think we may need this for other BPF programs.
 
+> 
+> After support:
+>   $ ./perf stat --bpf-counters -e cycles,instructions -- ./perf test -w sqrtloop
+> 
+>    Performance counter stats for './perf test -w sqrtloop':
+> 
+>        2,316,543,537      cycles
+>        2,859,677,779      instructions                     #    1.23  insn per cycle
+> 
+>          1.009566332 seconds time elapsed
+> 
+>          1.004414000 seconds user
+>          0.003545000 seconds sys
+> 
+> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
 > ---
->  tools/perf/util/metricgroup.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  tools/perf/util/bpf_counter.c                 |  9 +--
+>  tools/perf/util/bpf_skel/bperf_follower.bpf.c | 75 +++++++++++++++++--
+>  tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
+>  3 files changed, 78 insertions(+), 11 deletions(-)
 > 
-> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
-> index 69f6a46402c3..fa62fb3418b6 100644
-> --- a/tools/perf/util/metricgroup.c
-> +++ b/tools/perf/util/metricgroup.c
-> @@ -1123,7 +1123,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
+> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
+> index 7a8af60e0f51..e07ff04b934f 100644
+> --- a/tools/perf/util/bpf_counter.c
+> +++ b/tools/perf/util/bpf_counter.c
+> @@ -529,9 +529,6 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>  	/* set up reading map */
+>  	bpf_map__set_max_entries(evsel->follower_skel->maps.accum_readings,
+>  				 filter_entry_cnt);
+> -	/* set up follower filter based on target */
+> -	bpf_map__set_max_entries(evsel->follower_skel->maps.filter,
+> -				 filter_entry_cnt);
+>  	err = bperf_follower_bpf__load(evsel->follower_skel);
+>  	if (err) {
+>  		pr_err("Failed to load follower skeleton\n");
+> @@ -543,6 +540,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>  	for (i = 0; i < filter_entry_cnt; i++) {
+>  		int filter_map_fd;
+>  		__u32 key;
+> +		struct bperf_filter_value fval = { i, 0 };
 >  
->  	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
->  			 d->metric_no_threshold, d->user_requested_cpu_list,
-> -			 d->system_wide, d->root_metric, d->visited, d->table);
-> +			 d->system_wide, d->root_metric, d->visited, d->table ?: table);
->  	if (ret)
->  		goto out;
+>  		if (filter_type == BPERF_FILTER_PID ||
+>  		    filter_type == BPERF_FILTER_TGID)
+> @@ -553,10 +551,11 @@ static int bperf__load(struct evsel *evsel, struct target *target)
+>  			break;
 >  
-> @@ -1239,7 +1239,7 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
->  	int ret;
->  	bool has_match = false;
+>  		filter_map_fd = bpf_map__fd(evsel->follower_skel->maps.filter);
+> -		bpf_map_update_elem(filter_map_fd, &key, &i, BPF_ANY);
+> +		bpf_map_update_elem(filter_map_fd, &key, &fval, BPF_ANY);
+>  	}
 >  
-> -	{
-> +	if (table) {
+>  	evsel->follower_skel->bss->type = filter_type;
+> +	evsel->follower_skel->bss->init_filter_entries = filter_entry_cnt;
 
-may add a comment here. If !table then the metrics may belong to a system PMU.
+Do you need this in the BPF program?
 
->  		struct metricgroup__add_metric_data data = {
->  			.list = &list,
->  			.pmu = pmu,
-> @@ -1696,8 +1696,6 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
+>  
+>  	err = bperf_follower_bpf__attach(evsel->follower_skel);
+>  
+> @@ -623,7 +622,7 @@ static int bperf__read(struct evsel *evsel)
+>  	bperf_sync_counters(evsel);
+>  	reading_map_fd = bpf_map__fd(skel->maps.accum_readings);
+>  
+> -	for (i = 0; i < bpf_map__max_entries(skel->maps.accum_readings); i++) {
+> +	for (i = 0; i < skel->bss->init_filter_entries; i++) {
+>  		struct perf_cpu entry;
+>  		__u32 cpu;
+>  
+> diff --git a/tools/perf/util/bpf_skel/bperf_follower.bpf.c b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> index f193998530d4..59fab421526a 100644
+> --- a/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> +++ b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
+> @@ -5,6 +5,8 @@
+>  #include <bpf/bpf_tracing.h>
+>  #include "bperf_u.h"
+>  
+> +#define MAX_ENTRIES 102400
+> +
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
+>  	__uint(key_size, sizeof(__u32));
+> @@ -22,25 +24,29 @@ struct {
+>  struct {
+>  	__uint(type, BPF_MAP_TYPE_HASH);
+>  	__uint(key_size, sizeof(__u32));
+> -	__uint(value_size, sizeof(__u32));
+> +	__uint(value_size, sizeof(struct bperf_filter_value));
+> +	__uint(max_entries, MAX_ENTRIES);
+> +	__uint(map_flags, BPF_F_NO_PREALLOC);
+>  } filter SEC(".maps");
+>  
+>  enum bperf_filter_type type = 0;
+>  int enabled = 0;
+> +__u32 init_filter_entries = 0;
+>  
+>  SEC("fexit/XXX")
+>  int BPF_PROG(fexit_XXX)
 >  {
->  	const struct pmu_metrics_table *table = pmu_metrics_table__find();
+>  	struct bpf_perf_event_value *diff_val, *accum_val;
+>  	__u32 filter_key, zero = 0;
+> -	__u32 *accum_key;
+> +	__u32 accum_key;
+> +	struct bperf_filter_value *fval;
 >  
-> -	if (!table)
-> -		return -EINVAL;
-
-may add a debug message to mention we're parsing metrics of system PMUs.
-
-Thanks.
-
->  	if (hardware_aware_grouping)
->  		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
+>  	if (!enabled)
+>  		return 0;
 >  
+>  	switch (type) {
+>  	case BPERF_FILTER_GLOBAL:
+> -		accum_key = &zero;
+> +		accum_key = zero;
+>  		goto do_add;
+>  	case BPERF_FILTER_CPU:
+>  		filter_key = bpf_get_smp_processor_id();
+> @@ -55,16 +61,20 @@ int BPF_PROG(fexit_XXX)
+>  		return 0;
+>  	}
+>  
+> -	accum_key = bpf_map_lookup_elem(&filter, &filter_key);
+> -	if (!accum_key)
+> +	fval = bpf_map_lookup_elem(&filter, &filter_key);
+> +	if (!fval)
+>  		return 0;
+>  
+> +	accum_key = fval->accum_key;
+> +	if (fval->exited)
+> +		bpf_map_delete_elem(&filter, &filter_key);
+> +
+>  do_add:
+>  	diff_val = bpf_map_lookup_elem(&diff_readings, &zero);
+>  	if (!diff_val)
+>  		return 0;
+>  
+> -	accum_val = bpf_map_lookup_elem(&accum_readings, accum_key);
+> +	accum_val = bpf_map_lookup_elem(&accum_readings, &accum_key);
+>  	if (!accum_val)
+>  		return 0;
+>  
+> @@ -75,4 +85,57 @@ int BPF_PROG(fexit_XXX)
+>  	return 0;
+>  }
+>  
+> +SEC("tp_btf/task_newtask")
+> +int BPF_PROG(on_newtask, struct task_struct *task, __u64 clone_flags)
+> +{
+> +	__u32 parent_pid, child_pid;
+> +	struct bperf_filter_value *parent_fval;
+> +	struct bperf_filter_value child_fval = { 0 };
+> +
+> +	if (!enabled)
+> +		return 0;
+> +
+> +	if (type != BPERF_FILTER_PID && type != BPERF_FILTER_TGID)
+> +		return 0;
+
+I think you can load/attach this program only if the type is either
+PID or TGID.  Then it'd reduce the overhead.
+
+> +
+> +	parent_pid = bpf_get_current_pid_tgid() >> 32;
+> +	child_pid = task->pid;
+> +
+> +	/* Check if the current task is one of the target tasks to be counted */
+> +	parent_fval = bpf_map_lookup_elem(&filter, &parent_pid);
+> +	if (!parent_fval)
+> +		return 0;
+> +
+> +	/* Start counting for the new task by adding it into filter map,
+> +	 * inherit the accum key of its parent task so that they can be
+> +	 * counted together.
+> +	 */
+> +	child_fval.accum_key = parent_fval->accum_key;
+> +	child_fval.exited = 0;
+> +	bpf_map_update_elem(&filter, &child_pid, &child_fval, BPF_NOEXIST);
+> +
+> +	return 0;
+> +}
+> +
+> +SEC("tp_btf/sched_process_exit")
+> +int BPF_PROG(on_exittask, struct task_struct *task)
+> +{
+> +	__u32 pid;
+> +	struct bperf_filter_value *fval;
+> +
+> +	if (!enabled)
+> +		return 0;
+> +
+> +	if (type != BPERF_FILTER_PID && type != BPERF_FILTER_TGID)
+> +		return 0;
+
+Ditto.
+
+Thanks,
+Namhyung
+
+> +
+> +	/* Stop counting for this task by removing it from filter map */
+> +	pid = task->pid;
+> +	fval = bpf_map_lookup_elem(&filter, &pid);
+> +	if (fval)
+> +		fval->exited = 1;
+> +
+> +	return 0;
+> +}
+> +
+>  char LICENSE[] SEC("license") = "Dual BSD/GPL";
+> diff --git a/tools/perf/util/bpf_skel/bperf_u.h b/tools/perf/util/bpf_skel/bperf_u.h
+> index 1ce0c2c905c1..4a4a753980be 100644
+> --- a/tools/perf/util/bpf_skel/bperf_u.h
+> +++ b/tools/perf/util/bpf_skel/bperf_u.h
+> @@ -11,4 +11,9 @@ enum bperf_filter_type {
+>  	BPERF_FILTER_TGID,
+>  };
+>  
+> +struct bperf_filter_value {
+> +	__u32 accum_key;
+> +	__u8 exited;
+> +};
+> +
+>  #endif /* __BPERF_STAT_U_H */
+> -- 
+> 2.34.1
 > 
