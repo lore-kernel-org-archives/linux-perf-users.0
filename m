@@ -1,162 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE68A19DF74
-	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 15:11:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D3B19DF74
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 15:11:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725549067; cv=none; b=dskno6G9ssPmkFsgI5tampr3++BzeiMtLDxJ6Th1wCgQcnETcy0c1INC0LEg66U37XM4afMG6fOYQuq01ZtZfr2KOefXh+Te2f5oMxQo0WhuVq2M8my/Cy1oPVHFwvmeEj+W4sYffZc5Td+fnJbjXgaCCtPoZl5oq2ZRW6BzHOg=
+	t=1725549074; cv=none; b=Vcsz4/fKkIZCsTSf6Xl+bif7ONfZU/CRKanWTHdzc19EkpMDX2y4IMGJnN5nu4dQ3OyiUSHVWK3KwhDi5wabbpMA+ux6sEPJavLPAVkAuN0I4qWUMjctbZ/eK3fCYo3li1k5yZwX9M5pp//DTUcj20QtkfH4LYPKW9SAkDtaOqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725549067; c=relaxed/simple;
-	bh=P10f6fmwLDCWWVpb4RRl+mEYnf1C+GJE5Ve7yn0m5Fk=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=MVNXpaZphlkChe7X1X9BrnUZg7sMO7JCePQ9Iv3UoPwH+sbnCNhq1v/4LhIyYxCMZ1WALlGemAaiVuoFjxSr9ESH2qmXzTAl0A1iCgbr7ywnsyzC/9hgny29wCCaSX91+I70NIW/6dLgp2fCpYPRYiQgM421MdPdiNLUGMjq7kA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KcXi3AJ8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725549074; c=relaxed/simple;
+	bh=P6LIOlLcorXFL6kjZ/gtv4m/ERDX7C1fKxQW+shzASo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZuTROhGHSeLHWtNUDjZlUqFM5U4vsuSPYT1h7V/btwuvV/zrq44LX+2Wct7ov8k3fMLaFiEAZt1QyIke8g67RO/9JKf52xZeDRMsAa5qAQhRB5cF+edaUW8EZ4gIr4MPbJmb2urB8Zc7GDnsMnZxIIQK5poAd9n/GSHTdEAYj4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Dv0Ya3U2; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KcXi3AJ8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCC64C4CEC3;
-	Thu,  5 Sep 2024 15:11:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725549067;
-	bh=P10f6fmwLDCWWVpb4RRl+mEYnf1C+GJE5Ve7yn0m5Fk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=KcXi3AJ8DWMFGtWVK9sZs9+aXyd0KU8u32iIFq1+1yg3Y04tHYKlJolbx1Q4//A/0
-	 rrdMxKDNOtBB1GxNCbDIZP2hWOKjkXhf4QHX2Xx3PEWqX/AvegtnL/1lpxGGkLp/PJ
-	 lD+YFXHI2hGRlbBiailMUd4PQvn1JD786i+10lSy8k17DD8JL96YNgsK97u+QV7Q7g
-	 70iMzSVUVdpBcNluUZeGzYLKJMxoEn8rJgRPp+Tluf7wgMatbVc0gOYgDWQf/22Vnm
-	 8WOYt/CWiQXMRUzIJxLOUtXMzSf83rxY4GW+d7l79IVy1VgYsNewLLXf8S2hvtit38
-	 N7EK3VEQjfMsg==
-Date: Fri, 6 Sep 2024 00:11:04 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Veronika Molnarova <vmolnaro@redhat.com>,
- linux-perf-users@vger.kernel.org, acme@redhat.com, namhyung@kernel.org,
- mpetlan@redhat.com, irogers@google.com, atrajeev@linux.vnet.ibm.com, Masami
- Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH v2 00/11] perftool-testsuite 2nd batch
-Message-Id: <20240906001104.9314082caaf0268f09cc45b2@kernel.org>
-In-Reply-To: <ZtYIElLzMIzEVH9t@x1>
-References: <Zn3n0JwfdfFdjbzj@google.com>
-	<20240702110849.31904-1-vmolnaro@redhat.com>
-	<66bed21e-1ea6-4676-b202-dd7c2f2f847c@redhat.com>
-	<Zs-LEEutfp0hkjh5@x1>
-	<ZtHk6Tj7KioLRd10@x1>
-	<6b8245be-7fbf-41e9-8622-f8990ae7a880@redhat.com>
-	<ZtXMRffIGVmjptcf@x1>
-	<ZtXOrJdxvrI7Kk6n@x1>
-	<b87e2c58-8696-48bc-92ca-93964917bf9a@redhat.com>
-	<ZtYIElLzMIzEVH9t@x1>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Dv0Ya3U2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725549072; x=1757085072;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=P6LIOlLcorXFL6kjZ/gtv4m/ERDX7C1fKxQW+shzASo=;
+  b=Dv0Ya3U2DSEB2Yw4D2oD5uw77vg7UrnMg20UyQege1yWpHFyfXEt4fce
+   ptfPTW+Eg0BnXwHlOcAnGXCz4FIARS/F3DZcd4OC5Lu1qEI3CL4M89+Ea
+   neHa3jVI9WhtAIctRAYqzMpr2JVnv3kWe1SQED4BrRc+/Fm00hF9LfgxV
+   fb1CYnX2FFJ9udjNx2o24x1XQs2AH2bvRKVQwsfjPamNEuJr7az9E2dwC
+   jRvnCaitkG7aLLKUBd3mk03f6n2uXfEJlPAbkbwiIU8oOCuncRw2bPO6G
+   lfidhq2yHFhRjw7H7xe21UuEwsuCwhdu95Xorbhwxbelt5aYPVEs4UcC+
+   Q==;
+X-CSE-ConnectionGUID: R2C/K20MT/Wg1ksu4VyeSg==
+X-CSE-MsgGUID: 0EXOlEgAQmOJO6GIKWhj/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="49688969"
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="49688969"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 08:11:12 -0700
+X-CSE-ConnectionGUID: tMoLhMF8Syys+rp9qgxkYw==
+X-CSE-MsgGUID: jffebEVGRCC1vCldNqK/ZA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
+   d="scan'208";a="70456093"
+Received: from tassilo.jf.intel.com ([10.54.38.190])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 08:11:12 -0700
+From: Andi Kleen <ak@linux.intel.com>
+To: linux-perf-users@vger.kernel.org
+Cc: adrian.hunter@intel.com,
+	namhyung@kernel.org,
+	acme@kernel.org
+Subject: [RESEND] More dwarf support in python interface
+Date: Thu,  5 Sep 2024 08:07:54 -0700
+Message-ID: <20240905151058.2127122-1-ak@linux.intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2 Sep 2024 15:46:42 -0300
-Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
+[resend because I typoed the mailing list address in the first try.
+Apologies if you see it twice]
 
-> On Mon, Sep 02, 2024 at 05:10:48PM +0200, Veronika Molnarova wrote:
-> > 
-> > 
-> > On 9/2/24 16:41, Arnaldo Carvalho de Melo wrote:
-> > > On Mon, Sep 02, 2024 at 11:31:36AM -0300, Arnaldo Carvalho de Melo wrote:
-> > >> On Mon, Sep 02, 2024 at 04:05:04PM +0200, Veronika Molnarova wrote:
-> > >>> On 8/30/24 17:27, Arnaldo Carvalho de Melo wrote:
-> > >>>> On Wed, Aug 28, 2024 at 05:39:48PM -0300, Arnaldo Carvalho de Melo wrote:
-> > >>>>> On Wed, Aug 28, 2024 at 04:10:55PM +0200, Veronika Molnarova wrote:
-> > >>>> So, is there some other knob to get further output from that FAIL case?
-> > >>>> Like the command that is failing? I'll try to take a look at the
-> > >>>> sources, but are you seeing this problem with what is in
-> > >>>> perf-tools-next/perf-tools-next?
-> > > 
-> > >>> Couldn't reproduce the issue on multiple systems. There is no further way
-> > >>> of getting more logs from the test case. The output of the failure is from
-> > >>> the regex checking when a line wasn't matched to any possible regex.
-> > >>> Looking at the test case "adding blacklisted function warn_thunk_thunk",
-> > >>> the failure is caused by command 'perf probe warn_thunk_thunk', which is
-> > >>> a blacklisted function taken from "/sys/kernel/debug/kprobes/blacklist".
-> > > 
-> > > root@x1:~# grep thunk_thunk /sys/kernel/debug/kprobes/blacklist
-> > > 0xffffffff97004af0-0xffffffff97004b20	warn_thunk_thunk
-> > > root@x1:~#
-> > > 
+This patch kit adds better support for resolving DWARF from
+perf script python scripts:
 
-right, thunk functions should not be probed.
+- Add new perf_brstack_srcline / perf_ip_srcline functions
+to resolve full brstacks or individual IPs.
+- Support the DWARF discriminator in addition to the line number
+- Report the inline stack to python
+- Report the build-id and executable name.
 
-> > > <SNIP>
-> > > 
-> > >> /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err:A function DIE doesn't have decl_line. Maybe broken DWARF?
-> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.err
-> > >> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> > >> A function DIE doesn't have decl_line. Maybe broken DWARF?
-> > >> Probe point 'warn_thunk_thunk' not found.
+Most of the patch is just plumbing to pass all this information
+around.
 
-Yeah, thunk functions are defined by asm code. No DWARF is available.
+The first patch is a bug fix and can be applied independently.
 
-> > >>   Error: Failed to add events.
-> > >> root@x1:~#
-> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted_list.log 
-> > >> root@x1:~# cat /tmp/perftool-testsuite_probe.RJh/perf_probe/logs/adding_blacklisted.log 
-> > >> root@x1:~#
-> > >>
-> > >> So is it just a matter of adding this output to the expected outputs?
-> > >> In test_adding_blacklisted.sh?
-> > > 
-> > > Did the patch below, now it passes, Ack?
-> > > 
-> > > root@x1:~# export PERFTEST_KEEP_LOGS=y
-> > > root@x1:~# perf test 88
-> > >  88: perftool-testsuite_probe                                        : Ok
-> > > root@x1:~#
-> > > 
-> > > Or am I missing the point? :-)
-> > > 
-> > > - Arnaldo
-> > 
-> > Yeah, that would fix the test case, the question is whether we should
-> 
-> I was lazy, but yeah, that thought crossed my mind, good thing you did
-> the due diligence and found that patch! Looking at it now.
-> 
-> > accept it as a possible output. Found some old patch that should have
-> > fixed the mentioned issue: 
-> > https://lore.kernel.org/all/20230628082337.1857302-3-georgmueller@gmx.net/
-> 
-> I updated Masami's e-mail to a more recent one, Masami-san, wdyt? Can I
-> have your opinion on the patch pointed out by Veronika?
+-andi
 
-Thanks for update my email. Yeah, it looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks,
-
-> 
-> Thanks in advance!
-> 
-> - Arnaldo
->  
-> > > 
-> > > diff --git a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > > index b5dc10b2a73810b3..14290d08a4a96eaf 100755
-> > > --- a/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > > +++ b/tools/perf/tests/shell/base_probe/test_adding_blacklisted.sh
-> > > @@ -42,7 +42,8 @@ REGEX_ERROR_MESSAGE="Error: Failed to add events."
-> > >  REGEX_INVALID_ARGUMENT="Failed to write event: Invalid argument"
-> > >  REGEX_SYMBOL_FAIL="Failed to find symbol at $RE_ADDRESS"
-> > >  REGEX_OUT_SECTION="$BLACKFUNC is out of \.\w+, skip it"
-> > > -../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" < $LOGS_DIR/adding_blacklisted.err
-> > > +REGEX_MISSING_DECL_LINE="A function DIE doesn't have decl_line. Maybe broken DWARF?"
-> > > +../common/check_all_lines_matched.pl "$REGEX_SKIP_MESSAGE" "$REGEX_NOT_FOUND_MESSAGE" "$REGEX_ERROR_MESSAGE" "$REGEX_SCOPE_FAIL" "$REGEX_INVALID_ARGUMENT" "$REGEX_SYMBOL_FAIL" "$REGEX_OUT_SECTION" "$REGEX_MISSING_DECL_LINE" < $LOGS_DIR/adding_blacklisted.err
-> > >  CHECK_EXIT_CODE=$?
-> > >  
-> > >  print_results $PERF_EXIT_CODE $CHECK_EXIT_CODE "adding blacklisted function $BLACKFUNC"
-> > > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
