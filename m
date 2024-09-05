@@ -1,190 +1,107 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58F6E198A35;
-	Thu,  5 Sep 2024 12:00:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0654B19AD87;
+	Thu,  5 Sep 2024 12:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725537625; cv=none; b=ohpJD3VzbCGWVs9LnW5ID8X35aeX1V2s03vc1GBhr4WbD4tLP0nT9l3c/u0/lv1RktSIKTTlLSHlNfOAIhLmvCmx4IQpOMmVv6SK/wS+d/WHPd/E1+Q9nXAQBMX9YFiqnnYM1Ywfw7gCyApjs32DxuTH2SYaWUY2kncvav4FBp0=
+	t=1725538219; cv=none; b=FfPcXBqAQcAapZ+dBLa+iiXX+OTuxbosN4HkeB+qew4X+yclmGb2XcNTAqa0IYvqMyPp9qQg9O/KrS1qesAuUrDD3VAHtvQHHXuJyGCpj/sCxGNzUMDBg0uffkwL1rGNLQ3lnMvfv2Ghw0pSNZCOgKIml4VcnFCQu0Zrp85OCBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725537625; c=relaxed/simple;
-	bh=RIkzm8s+UqO9ZE+38HTFnfVOxc5zFK1dr9ab+2KoDs8=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=r3g/d+YZOakxm8uswzBCqKgVJGJ/q2ocqnn/67Dvd0pDVTUHuSYta8LwsqbqMX/LxKFJgdNQIAXhqyzcq+aHhhKze/KrmjQcMxpdJnG3rjUVQoZPGS3NRoE03GN3ywxJN+iN9IItS0nBAzbqQhCRn7+p/H5IaoOs8vMFcJIEFPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QrmxIsHh; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QrmxIsHh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725537623; x=1757073623;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RIkzm8s+UqO9ZE+38HTFnfVOxc5zFK1dr9ab+2KoDs8=;
-  b=QrmxIsHhpdXxWTmEfhGGJsPVlJpzKsHaRCZ8jYWBzVy5EG85neI3TmIS
-   XGNH8lEYom9IFi3eUAsGpsNkbHOaVmRnkXNbfx1qYlkiMf7nBHT7pUNrO
-   x2wyFZzllGjcWG649pau0I02ETzBa3wyYxlBeFjpcXMqibhP/AKx36Pfw
-   BLY6XfckEYDFT8R5RdSS4uR6VvI72y+QIr+EHozI+RoG6DM0O9fVW+WrB
-   P4TWfqzrDcRTsbQfHzZF/cC3OGgEeSMjxEyMKc6dtQIAXrNukviW+U8aM
-   fNfNkFXeOZ2TsjZ04fHqLAwigqCKU6WPJleDA9X2XLg6ONa2ppKBAeRs7
-   A==;
-X-CSE-ConnectionGUID: y2KsRjvLSnqdmCdoJY6tBw==
-X-CSE-MsgGUID: TeuL+pMgRz6nJXD9b/DUYA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="27169828"
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="27169828"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 05:00:22 -0700
-X-CSE-ConnectionGUID: 29OoTbtNQqeIduw2pmf4gw==
-X-CSE-MsgGUID: 1+LwMTQhRL2kWWH9xPGzFQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
-   d="scan'208";a="70196418"
-Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.96.163])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 05:00:17 -0700
-From: Adrian Hunter <adrian.hunter@intel.com>
+	s=arc-20240116; t=1725538219; c=relaxed/simple;
+	bh=FJm4MYAt2+ZJPcqMtMsR5Yex53gHjT2gT5lGYS/t2eQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KlzwltQy6ONUp9tMAd/nOLJZoZ+7cF0XU3VxLAD7K4PdIWMhq+REo0jAmiPetZqoUqsR5QMj/i7Jbnr1KexdjNrSXdCWPf/fXA7/Lv8LZs/yADm1vCM8e/RN+pTaAUQ8lUgDdIcQXSF6nPY53nenbBUL+sNdD83D/AGNY+BMwDU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4Wzypy55YVz4f3kKd;
+	Thu,  5 Sep 2024 20:10:02 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.112])
+	by mail.maildlp.com (Postfix) with ESMTP id 133891A1123;
+	Thu,  5 Sep 2024 20:10:13 +0800 (CST)
+Received: from huawei.com (unknown [10.67.174.45])
+	by APP1 (Coremail) with SMTP id cCh0CgBXgi6In9lmBpPPAQ--.58346S2;
+	Thu, 05 Sep 2024 20:10:11 +0800 (CST)
+From: Tengda Wu <wutengda@huaweicloud.com>
 To: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	H Peter Anvin <hpa@zytor.com>,
+Cc: song@kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
 	Mark Rutland <mark.rutland@arm.com>,
 	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
 	Jiri Olsa <jolsa@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
 	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	linux-perf-users@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] perf/x86/intel/pt: Fix buffer full but size is 0 case
-Date: Thu,  5 Sep 2024 15:00:07 +0300
-Message-ID: <20240905120007.11943-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.43.0
+	bpf@vger.kernel.org
+Subject: [PATCH -next v2 0/2] perf stat: Support inherit events for bperf
+Date: Thu,  5 Sep 2024 11:59:16 +0000
+Message-Id: <20240905115918.772234-1-wutengda@huaweicloud.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:cCh0CgBXgi6In9lmBpPPAQ--.58346S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7GFy5XFyfurW8tw4xAF4ktFb_yoWkArc_CF
+	yIqa4ktrWkAF97ta47KF1rAr95JFWfZry8Ja1kWFWUCw13XF18WF4kZryUAryrXF48Xrsx
+	twn5tryrua42gjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbI8YFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20E
+	Y4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwV
+	A0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x02
+	67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I
+	0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+	0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1lc7CjxVAa
+	w2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxV
+	Aqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q
+	6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6x
+	kF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AK
+	xVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvj
+	xUI5fHUUUUU
+X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
-If the trace data buffer becomes full, a truncated flag [T] is reported
-in PERF_RECORD_AUX.  In some cases, the size reported is 0, even though
-data must have been added to make the buffer full.
+Hi,
 
-That happens when the buffer fills up from empty to full before the
-Intel PT driver has updated the buffer position.  Then the driver
-calculates the new buffer position before calculating the data size.
-If the old and new positions are the same, the data size is reported
-as 0, even though it is really the whole buffer size.
+bperf (perf-stat --bpf-counter) has not supported inherit events
+during fork() since it was first introduced.
 
-Fix by detecting when the buffer position is wrapped, and adjust the
-data size calculation accordingly.
+This patch series tries to add this support by:
+ 1) adding two new bpf programs to monitor task lifecycle;
+ 2) recording new tasks in the filter map dynamically;
+ 3) reusing `accum_key` of parent task for new tasks.
 
-Example
+Thanks,
+Tengda
 
-  Use a very small buffer size (8K) and observe the size of truncated [T]
-  data. Before the fix, it is possible to see records of 0 size.
 
-  Before:
+Changelog:
+---------
+v2: (Address comments from Namhyung)
+ * Remove the unused init_filter_entries in follower bpf, declare
+   a global filter_entry_count in bpf_counter instead
+ * Attach on_newtask and on_exittask progs only if the filter type
+   is either PID or TGID
 
-    $ perf record -m,8K -e intel_pt// uname
-    Linux
-    [ perf record: Woken up 2 times to write data ]
-    [ perf record: Captured and wrote 0.105 MB perf.data ]
-    $ perf script -D --no-itrace | grep AUX | grep -F '[T]'
-    Warning:
-    AUX data lost 2 times out of 3!
+v1: https://lore.kernel.org/all/20240904123103.732507-1-wutengda@huaweicloud.com/
 
-    5 19462712368111 0x19710 [0x40]: PERF_RECORD_AUX offset: 0 size: 0 flags: 0x1 [T]
-    5 19462712700046 0x19ba8 [0x40]: PERF_RECORD_AUX offset: 0x170 size: 0xe90 flags: 0x1 [T]
 
- After:
+Tengda Wu (2):
+  perf stat: Support inherit events during fork() for bperf
+  perf test: Use sqrtloop workload to test bperf event
 
-    $ perf record -m,8K -e intel_pt// uname
-    Linux
-    [ perf record: Woken up 3 times to write data ]
-    [ perf record: Captured and wrote 0.040 MB perf.data ]
-    $ perf script -D --no-itrace | grep AUX | grep -F '[T]'
-    Warning:
-    AUX data lost 2 times out of 3!
+ tools/perf/tests/shell/stat_bpf_counters.sh   |  2 +-
+ tools/perf/util/bpf_counter.c                 | 32 +++++++--
+ tools/perf/util/bpf_skel/bperf_follower.bpf.c | 70 +++++++++++++++++--
+ tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
+ 4 files changed, 95 insertions(+), 14 deletions(-)
 
-    1 113720802995 0x4948 [0x40]: PERF_RECORD_AUX offset: 0 size: 0x2000 flags: 0x1 [T]
-    1 113720979812 0x6b10 [0x40]: PERF_RECORD_AUX offset: 0x2000 size: 0x2000 flags: 0x1 [T]
-
-Fixes: 52ca9ced3f70 ("perf/x86/intel/pt: Add Intel PT PMU driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- arch/x86/events/intel/pt.c | 11 ++++++++---
- arch/x86/events/intel/pt.h |  2 ++
- 2 files changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/events/intel/pt.c b/arch/x86/events/intel/pt.c
-index fd4670a6694e..a087bc0c5498 100644
---- a/arch/x86/events/intel/pt.c
-+++ b/arch/x86/events/intel/pt.c
-@@ -828,11 +828,13 @@ static void pt_buffer_advance(struct pt_buffer *buf)
- 	buf->cur_idx++;
- 
- 	if (buf->cur_idx == buf->cur->last) {
--		if (buf->cur == buf->last)
-+		if (buf->cur == buf->last) {
- 			buf->cur = buf->first;
--		else
-+			buf->wrapped = true;
-+		} else {
- 			buf->cur = list_entry(buf->cur->list.next, struct topa,
- 					      list);
-+		}
- 		buf->cur_idx = 0;
- 	}
- }
-@@ -846,8 +848,11 @@ static void pt_buffer_advance(struct pt_buffer *buf)
- static void pt_update_head(struct pt *pt)
- {
- 	struct pt_buffer *buf = perf_get_aux(&pt->handle);
-+	bool wrapped = buf->wrapped;
- 	u64 topa_idx, base, old;
- 
-+	buf->wrapped = false;
-+
- 	if (buf->single) {
- 		local_set(&buf->data_size, buf->output_off);
- 		return;
-@@ -865,7 +870,7 @@ static void pt_update_head(struct pt *pt)
- 	} else {
- 		old = (local64_xchg(&buf->head, base) &
- 		       ((buf->nr_pages << PAGE_SHIFT) - 1));
--		if (base < old)
-+		if (base < old || (base == old && wrapped))
- 			base += buf->nr_pages << PAGE_SHIFT;
- 
- 		local_add(base - old, &buf->data_size);
-diff --git a/arch/x86/events/intel/pt.h b/arch/x86/events/intel/pt.h
-index f5e46c04c145..a1b6c04b7f68 100644
---- a/arch/x86/events/intel/pt.h
-+++ b/arch/x86/events/intel/pt.h
-@@ -65,6 +65,7 @@ struct pt_pmu {
-  * @head:	logical write offset inside the buffer
-  * @snapshot:	if this is for a snapshot/overwrite counter
-  * @single:	use Single Range Output instead of ToPA
-+ * @wrapped:	buffer advance wrapped back to the first topa table
-  * @stop_pos:	STOP topa entry index
-  * @intr_pos:	INT topa entry index
-  * @stop_te:	STOP topa entry pointer
-@@ -82,6 +83,7 @@ struct pt_buffer {
- 	local64_t		head;
- 	bool			snapshot;
- 	bool			single;
-+	bool			wrapped;
- 	long			stop_pos, intr_pos;
- 	struct topa_entry	*stop_te, *intr_te;
- 	void			**data_pages;
 -- 
-2.43.0
+2.34.1
 
