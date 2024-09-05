@@ -1,129 +1,182 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10D38D528;
-	Thu,  5 Sep 2024 14:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9017D47F69
+	for <linux-perf-users@vger.kernel.org>; Thu,  5 Sep 2024 14:33:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725546729; cv=none; b=gFRzczP6pxPDXeo4yFrxCYKM0kafdco9H+yeeUYnCMFng2LWXQXawKSyeWwo+xYVcOrqs4JQbo+RkHLbc3rNUAZU9wUP3OH04OhoaRA1iwqrPXZERrUu1MU/iVWi16bZS6G1xsHHd1CdmiW7f59H2HJFHgQPlYzXrTQQeyFNMJk=
+	t=1725546805; cv=none; b=B7l0HpE08GzQPph8v24ZO6mjbqlcCyuTitmyYYqPG6q08LrWOLMHqNP6NhPHSjlWD9BLBhYq3Xbvf/UKuFLQe+O7ybsB46HL1d4A0PtMnVZ2/HoZps9Sp7XMo+yuckX8lwnSc8CqaDodJUR3PHM4vY+dz771QUqp3efM3Iv3ltI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725546729; c=relaxed/simple;
-	bh=/plNwCDXFb9Kra/aJzLEsGp/XhfgAI9L6luigV9tfHI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JurOlHGAEpoTJIL/mqdNqP1FNSdQrKYR2cvBzgDh/HmijfLdNPAwuodOwyq6G3weNu8R12O2aDcyYaKJ4g360fYrI3f3Mim+hWAhso7uwb9ia3p2dxzNiQe+l2TtqsMyXp2YH8Qh4uFhKSLKe+egiC+hEepUFtmgHcyyVlOVh64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hvbkwRdR; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1725546805; c=relaxed/simple;
+	bh=ZszTKPvv5ZYJSr2FWx+dyrGg0NKkT167FFUDdtyrfc4=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=HPTvrhqJjNDUzF8p/qqpJDetSc/m+pUqC1cjnMCnf1Dr1HB1iqDVRAVz57BlkmWnj0Yj1P3G+K3KEBLrAKTdMLmNkCfit+KLIltmhRqNdBsBRJt2/3JdSesKo//2fm1+mOZn5Bb2P2HFIg8mssOKniR64TD2BKQ+euwLu3k77JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=K/8SWyx9; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hvbkwRdR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1725546728; x=1757082728;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=/plNwCDXFb9Kra/aJzLEsGp/XhfgAI9L6luigV9tfHI=;
-  b=hvbkwRdRyRZeRnpLCudm1iD7BFJWi4U6H4Z6nbKfaQBKjD6rGHfG9lL1
-   d4uLHYQB1ryn+q4CSRzGOEHfyLz5TDWfq5/jc0/cTwSQMXr2J3+10yr1/
-   f+OSCiU+hRuUmtftkWodFMr4RsSdCg/KXChI7ZIqKXdr3im0Sf9de2+PK
-   7qlMLNldCRWiXwGhl40CnPHv2vkS7JjdqXqux49U8pViZ5N939em5wQeN
-   tB8d5fsZ3hEWIszDjOC1oBV9q5tUBvDPrMV0VqLh1ZWA6+7ZnN/0LLNo2
-   lGHFcuj7xe4IwO+QZdiVKUTrvZYDFXJv15TmbIT+98RrsmCynbuwoScqw
-   w==;
-X-CSE-ConnectionGUID: Gnyb/4JWQN2q4zfvsZHdgw==
-X-CSE-MsgGUID: jzS5eSr8Q62xhPapSL4fUQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="27189196"
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="27189196"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 07:30:23 -0700
-X-CSE-ConnectionGUID: +GaIiGkmQOS1wChJClC14Q==
-X-CSE-MsgGUID: x1Ftpg/pRXiJ1jaP6s1deg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,205,1719903600"; 
-   d="scan'208";a="65480748"
-Received: from linux.intel.com ([10.54.29.200])
-  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Sep 2024 07:30:22 -0700
-Received: from [10.212.68.73] (kliang2-mobl1.ccr.corp.intel.com [10.212.68.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by linux.intel.com (Postfix) with ESMTPS id C499C20B5782;
-	Thu,  5 Sep 2024 07:30:19 -0700 (PDT)
-Message-ID: <01d4c489-8830-4fd4-b369-fe2d3ec0b980@linux.intel.com>
-Date: Thu, 5 Sep 2024 10:30:18 -0400
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="K/8SWyx9"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 485CGULe017262;
+	Thu, 5 Sep 2024 14:33:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	message-id:date:subject:to:cc:references:from:in-reply-to
+	:content-type:content-transfer-encoding:mime-version; s=pp1; bh=
+	bfbdJuIrRteYwfawh+FzEhUWVptKqRZluAyTuANwUpI=; b=K/8SWyx9qngNcLY2
+	uNKDZq2GHCf1x6V1z/Zi2l3xMXNerFmYh4bmlKN0LadmnNzqiBsY/ApJZRhNNE03
+	PSBktDF/S096S2gK9NbHfpF6PcQ9cOA3O1E9p1XSDhdBLC5Vn0pJNP7hxGx/i06a
+	i55B0QoNe0O8yiOh/udFCjidS7DQGlhfgiWFTPsTSofhVPQDUCUfwmtrQFWy9tMg
+	kx3l7CjKMK5VzaAf3gCWhEZuPMCt0MxZdCt/hGOyEy7OnOOzngT91u8Tca+l1rSs
+	K8Zhkisj88hQ3n472rp8KjciUugHbZ5h0W8v8zlxjQUbF8nZlmRSrgHfg44ArhXd
+	b776ig==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bskm9hmb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Sep 2024 14:33:17 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 485EXH2P018795;
+	Thu, 5 Sep 2024 14:33:17 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 41bskm9hm8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Sep 2024 14:33:17 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 485EEY2G012023;
+	Thu, 5 Sep 2024 14:33:16 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 41cegq55j8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 05 Sep 2024 14:33:16 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+	by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 485EXCFg36372900
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 5 Sep 2024 14:33:12 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 9BDF52004E;
+	Thu,  5 Sep 2024 14:33:12 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A8EA020040;
+	Thu,  5 Sep 2024 14:33:09 +0000 (GMT)
+Received: from [9.124.218.179] (unknown [9.124.218.179])
+	by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Thu,  5 Sep 2024 14:33:09 +0000 (GMT)
+Message-ID: <b8d14ee1-c97e-4cac-8668-9476ab2b61d7@linux.ibm.com>
+Date: Thu, 5 Sep 2024 20:03:08 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v15 7/7] perf: Add more features to supported_features
+ list
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: jolsa@kernel.org, irogers@google.com, namhyung@kernel.org,
+        linux-perf-users@vger.kernel.org, maddy@linux.ibm.com,
+        atrajeev@linux.vnet.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com
+References: <20240904190132.415212-1-adityag@linux.ibm.com>
+ <20240904190132.415212-8-adityag@linux.ibm.com> <Zti81yV0jRIB7oQ6@x1>
+Content-Language: en-US
+From: Aditya Gupta <adityag@linux.ibm.com>
+In-Reply-To: <Zti81yV0jRIB7oQ6@x1>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: QendMHZRZ5XcU0O3SJY16_bQ4H2F1MPi
+X-Proofpoint-ORIG-GUID: wFq0LW2kf3qyqLquUVV3Ubi803xpvZ84
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, peterz@infradead.org,
- mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
- mark.rutland@arm.com, alexander.shishkin@linux.intel.com, jolsa@kernel.org,
- irogers@google.com, adrian.hunter@intel.com, tglx@linutronix.de,
- bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
- gautham.shenoy@amd.com, ravi.bangoria@amd.com,
- linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240904100934.3260-1-Dhananjay.Ugwekar@amd.com>
- <90028792-19b0-4371-a8b4-0a37612b4c9b@linux.intel.com>
- <ZtmC8hhpUvQTXFDn@gmail.com>
-Content-Language: en-US
-From: "Liang, Kan" <kan.liang@linux.intel.com>
-In-Reply-To: <ZtmC8hhpUvQTXFDn@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1039,Hydra:6.0.680,FMLib:17.12.60.29
+ definitions=2024-09-05_09,2024-09-04_01,2024-09-02_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=894 clxscore=1015 phishscore=0 spamscore=0 bulkscore=0
+ impostorscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2407110000 definitions=main-2409050108
 
+On 05/09/24 01:32, Arnaldo Carvalho de Melo wrote:
 
-
-On 2024-09-05 6:07 a.m., Ingo Molnar wrote:
-> 
-> * Liang, Kan <kan.liang@linux.intel.com> wrote:
-> 
+> On Thu, Sep 05, 2024 at 12:31:32AM +0530, Aditya Gupta wrote:
+>> As suggested in [1], add more feature names and corresponding names,
+>> based on the information in Makefile.config
 >>
+>> The entries were added after seeing the corresponding -D option which is
+>> added to CFLAGS, based on the presence of a feature in Makefile.config,
+>> such as:
 >>
->> On 2024-09-04 6:09 a.m., Dhananjay Ugwekar wrote:
->>> After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
->>> on AMD processors that support extended CPUID leaf 0x80000026, the
->>> topology_die_cpumask() and topology_logical_die_id() macros, no longer
->>> return the package cpumask and package id, instead they return the CCD
->>> (Core Complex Die) mask and id respectively. This leads to the energy-pkg
->>> event scope to be modified to CCD instead of package.
->>>
->>> So, change the PMU scope for AMD and Hygon back to package.
->>>
->>> On a 12 CCD 1 Package AMD Zen4 Genoa machine:
->>>
->>> Before:
->>> $ cat /sys/devices/power/cpumask
->>> 0,8,16,24,32,40,48,56,64,72,80,88.
->>>
->>> The expected cpumask here is supposed to be just "0", as it is a package
->>> scope event, only one CPU will be collecting the event for all the CPUs in
->>> the package.
->>>
->>> After:
->>> $ cat /sys/devices/power/cpumask
->>> 0
->>>
->>> Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+>>      ifeq ($(feature-file-handle), 1)
+>>        CFLAGS += -DHAVE_FILE_HANDLE
+>>      endif
 >>
->> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-> 
-> Note that I just merged the older v2 version into perf/urgent, because it's 
-> a regression fix, and to not create a backporting complication. I added 
-> your Reviewed-by to it if that's fine with you.
-> 
-> Your hotplug series can essentially revert this:
-> 
->   8d72eba1cf8c ("perf/x86/rapl: Fix the energy-pkg event for AMD CPUs")
-> 
-> and apply the v3 patch to gain the simpler version.
-> 
+>> For above feature 'file-handle', corresponding entry has been added to
+>> supported_features as below:
+>>
+>>      FEATURE_STATUS("file-handle", HAVE_FILE_HANDLE)
+>>
+>> [1]: https://lore.kernel.org/linux-perf-users/Zn7EvDbsnlbLXj4g@x1/
+> I'll remove this now because there were some that sounds really strange,
+> like:
+Okay.
+> acme@x1:~/git/perf-tools-next$ sudo su -
+> [sudo] password for acme:
+> root@x1:~# perf -vv
+> perf version 6.11.rc3.g15dc9f274b8e
+>                   glibc: [ OFF ]  # LIBC_SUPPORT
+> libslang-include-subdir: [ OFF ]  # HAVE_SLANG_INCLUDE_SUBDIR
+>
+>
+> The first one is the strange one, how come, no LIBC_SUPPORT? glibc?
+Debugged it:
 
-Sure, sounds good to me.
+
+Output of `make` says glibc is there:
+
+
+     Auto-detecting system features:
+
+     ...                                   ...
+
+     ...                                   glibc: [ on  ]
+
+     ...                                   ...
+
+     ...                                  libelf: [ on  ]
+
+
+But, in Makefile.config, 'LIBC_SUPPORT' is only defined if libelf is NOT 
+there:
+
+
+     ifeq ($(feature-libelf), 0)
+         ifeq ($(feature-glibc), 1)
+             LIBC_SUPPORT := 1
+         endif
+      ifeq ($(BIONIC),1)
+           LIBC_SUPPORT := 1
+       endif
+
+
+Hence since LIBC_SUPPORT is not defined, the check --feature command 
+says glibc is OFF.
+
+I think we can simply remove libc entry from the features array in this 
+patch, as glibc is kind of obvious to be there if compilation worked.
+
+
+Meanwhile I will check all feature entries added in this patch again. I 
+can post this patch as an independent patch.
+
+
+> The second looks irrelevant, I'll see.
+
+Sure.
+
 
 Thanks,
-Kan
+
+Aditya Gupta
+
+>
+> - Arnaldo
