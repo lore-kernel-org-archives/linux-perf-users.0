@@ -1,30 +1,50 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BA6E158D9C;
-	Thu,  5 Sep 2024 06:44:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FF8C1922FD;
+	Thu,  5 Sep 2024 06:45:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725518662; cv=none; b=H9okijVo8GQ4CTgywfO0i9AoXmbCyhFxVUNI9Qm/puxmeOzcJvovrEOLxZp/d+TtD+i1u+eILNq1+ioUcdyqcuGJLMpCzEQr0R0YvTY0bxXBQzh1OyUPQkIvBzETUdcohBjBkynL5LUrnLTEjJ++eZWGVqLi2IHcq/wEeYrZk+s=
+	t=1725518706; cv=none; b=WK1PK0GzmoTUMmyBO7KMJiLMWu+Gapq1lir34kfLODlyOaXJOt/5bAQYuZVbvU6KfDo4LdhKKNFkLqoRSG+nv7rbZsB9Ph/0oDvGeuoJVomu8hSBEVBJKpMsgw+/fecQ+WR75wVNaKXGkBMPsJptk2WpZ8X9H78sR8nkQAPzA2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725518662; c=relaxed/simple;
-	bh=uFBU8Zqb5FJ7YeXXQBo1MneKu4BqCdNdlbJN+gArwlQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YOWmn5mLk6R1IBezFxGUvPNs1Xlb1GfoIm4Iqt7EsfB9sUKtANrOfAZLirrHvz84DzPJMeoddqvZgq38d1v4rQRuUvdznjis2/J61kIBrxW1IXJ4onS/R9sbgVuIHQQpU6OllbFL3NTaosIObXJDoZTSRohOuSXn0XDCXUJSnms=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4WzqZm6q1lz4f3jXn;
-	Thu,  5 Sep 2024 14:44:00 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 04AB21A13AA;
-	Thu,  5 Sep 2024 14:44:16 +0800 (CST)
-Received: from [10.67.110.36] (unknown [10.67.110.36])
-	by APP3 (Coremail) with SMTP id _Ch0CgCH24c+U9lmf7q3AQ--.55069S2;
-	Thu, 05 Sep 2024 14:44:15 +0800 (CST)
-Message-ID: <9570ce3e-5372-48b3-beca-ea251431326b@huaweicloud.com>
-Date: Thu, 5 Sep 2024 14:44:14 +0800
+	s=arc-20240116; t=1725518706; c=relaxed/simple;
+	bh=LCGL7vwew473xxNLZVNKy/1l+M8TqmCJBI5QzXlv0tk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=HlgTb4xHLQweq9U0+DKufmouyrmQYs5EKzw034v3SAlcQM2vQOA+7q2DDzHgdeTvP9uU/+roUD/n8VfB/YCuMnSEeH2D2RDqdHoNAHvEkhwC5i6Vgcl7XZvCq4estsIx45JrdU4YsYG1h5QHmaDws5fGaFU621LmRbP7TBGq+bI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hHlzyYfE; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hHlzyYfE"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725518703; x=1757054703;
+  h=message-id:date:mime-version:subject:to:references:from:
+   in-reply-to:content-transfer-encoding;
+  bh=LCGL7vwew473xxNLZVNKy/1l+M8TqmCJBI5QzXlv0tk=;
+  b=hHlzyYfE9Fm058r3rb96qNWWXyHBMy8I4GPB+E+phVvY2Mn/7Eyg77b1
+   6uWd8kW3geCHH6GIgbjJMyo8+nKqszmqnUBedofID8blO2JtevkfUSL/h
+   cvwRC0knhhAM47ikyA1ikZJNQomrQIWnkNtAF1LJxqQ1SSRE/8ub70Fba
+   aRI6Yp3l2jbG2A0L9guUS/D1Ut62eH4RYgZkUMgNdq9AzG6LN3ooOlBMB
+   KbZzXP4HHAc2+VZ4E/SAKeM40oUqt5EZ2hYVjpS8oRSu/QUPAyhd7u8jg
+   lR9kIlGbGN3XiJP666dMvjb69SjzNEC89IQw2t/0lFSwz6+w3TA1x9u2o
+   A==;
+X-CSE-ConnectionGUID: DUMno9ZsSZu185m+ZndhWQ==
+X-CSE-MsgGUID: +FdqnukURLeop/hJJzQetw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11185"; a="41719145"
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="41719145"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 23:45:01 -0700
+X-CSE-ConnectionGUID: CL8d2KbuT/iD/DTtOcgAYA==
+X-CSE-MsgGUID: /iV5Z3DbQAinTbGpYKJW/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,204,1719903600"; 
+   d="scan'208";a="70325566"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO [10.0.2.15]) ([10.245.96.163])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Sep 2024 23:44:56 -0700
+Message-ID: <81e3ef63-06d5-492a-8c82-da941d014ffb@intel.com>
+Date: Thu, 5 Sep 2024 09:44:51 +0300
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -32,319 +52,296 @@ List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH -next 1/2] perf stat: Support inherit events during fork()
- for bperf
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+Subject: Re: [PATCH v6 4/8] perf auxtrace: Introduce
+ auxtrace_record__validate_events()
+To: Leo Yan <leo.yan@arm.com>, Peter Zijlstra <peterz@infradead.org>,
  Arnaldo Carvalho de Melo <acme@kernel.org>,
- Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
  Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
- Adrian Hunter <adrian.hunter@intel.com>, kan.liang@linux.intel.com,
+ "Liang, Kan" <kan.liang@linux.intel.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Mike Leach
+ <mike.leach@linaro.org>, James Clark <james.clark@linaro.org>,
+ John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>,
+ Yicong Yang <yangyicong@hisilicon.com>,
+ Jonathan Cameron <jonathan.cameron@huawei.com>,
  linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
- bpf@vger.kernel.org, Song Liu <song@kernel.org>
-References: <20240904123103.732507-1-wutengda@huaweicloud.com>
- <20240904123103.732507-2-wutengda@huaweicloud.com>
- <ZtktBbcjSdVt4WtJ@google.com>
+ linux-arm-kernel@lists.infradead.org, coresight@lists.linaro.org
+References: <20240823113306.2310957-1-leo.yan@arm.com>
+ <20240823113306.2310957-5-leo.yan@arm.com>
+ <3f03541e-6dab-472f-bad9-4cdc0c0dc061@intel.com>
+ <a25103a1-47e3-472a-bfa8-abdfbc843cd3@arm.com>
 Content-Language: en-US
-From: Tengda Wu <wutengda@huaweicloud.com>
-In-Reply-To: <ZtktBbcjSdVt4WtJ@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+In-Reply-To: <a25103a1-47e3-472a-bfa8-abdfbc843cd3@arm.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_Ch0CgCH24c+U9lmf7q3AQ--.55069S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3Gr1DArW7Kw15GFy7Gw1xZrb_yoWfGw4xpF
-	WkCFyvkrW0qry7GwnIqw4kCFsay34furW5WFn3K3yIyF1kArn3Kr1xGFWY93W3ZrnrCF1S
-	vr1UKw4UC3yDX3DanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUv0b4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x
-	0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-	6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-	Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxkF7I0En4kS
-	14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I
-	8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8
-	ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x
-	0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_
-	Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU1
-	7KsUUUUUU==
-X-CM-SenderInfo: pzxwv0hjgdqx5xdzvxpfor3voofrz/
 
+On 5/09/24 00:13, Leo Yan wrote:
+> On 9/3/2024 4:26 PM, Adrian Hunter wrote:
+>> On 23/08/24 14:33, Leo Yan wrote:
+>>> A prerequisite for multiple AUX events is that the AUX events cannot
+>>> overlap CPU maps. The reason is that every CPU has only one AUX trace
+>>> buffer and maps it to an unique buffer index for CPU and system tracing
+>>> mode.
+>>>
+>>> To prevent the case of CPU maps overlapping occurring within multiple
+>>> AUX events, the auxtrace_record__validate_events() function is
+>>> introduced. It iterates through all AUX events and returns failure if
+>>> it detects CPU maps overlapping.
+>>>
+>>> Signed-off-by: Leo Yan <leo.yan@arm.com>
+>>> ---
+>>>  tools/perf/builtin-record.c |  4 +++
+>>>  tools/perf/util/auxtrace.c  | 64 +++++++++++++++++++++++++++++++++++++
+>>>  tools/perf/util/auxtrace.h  |  7 ++++
+>>>  3 files changed, 75 insertions(+)
+>>>
+>>> diff --git a/tools/perf/builtin-record.c b/tools/perf/builtin-record.c
+>>> index adbaf80b398c..2c618efba97d 100644
+>>> --- a/tools/perf/builtin-record.c
+>>> +++ b/tools/perf/builtin-record.c
+>>> @@ -862,6 +862,10 @@ static int record__auxtrace_init(struct record *rec)
+>>>
+>>>       auxtrace_regroup_aux_output(rec->evlist);
+>>>
+>>> +     err = auxtrace_validate_events(rec->evlist);
+>>> +     if (err)
+>>> +             return err;
+>>> +
+>>>       return auxtrace_parse_filters(rec->evlist);
+>>>  }
+>>>
+>>> diff --git a/tools/perf/util/auxtrace.c b/tools/perf/util/auxtrace.c
+>>> index ca8682966fae..87e4f21b6edf 100644
+>>> --- a/tools/perf/util/auxtrace.c
+>>> +++ b/tools/perf/util/auxtrace.c
+>>> @@ -2828,6 +2828,70 @@ int auxtrace_parse_filters(struct evlist *evlist)
+>>>       return 0;
+>>>  }
+>>>
+>>> +int auxtrace_validate_events(struct evlist *evlist)
+>>
+>> 'auxtrace_validate_aux_events' would better indicate that it is
+>> looking only at AUX area events.
+> 
+> Will fix.
+> 
+>>> +{
+>>> +     struct evsel *evsel;
+>>> +     struct perf_cpu_map *cpu_map = NULL;
+>>> +     struct perf_cpu_map *cpu_map_intersect = NULL;
+>>> +     struct perf_cpu_map *cpu_map_merged = NULL;
+>>> +     int ret = 0;
+>>> +
+>>> +     if (!evlist)
+>>> +             return 0;
+>>
+>> Elsewhere we assume it is not NULL, might as well here too.
+> 
+> Sure, will drop this checking.
+> 
+>>> +
+>>> +     /*
+>>> +      * Currently the tool only supports multiple AUX events without
+>>> +      * overlapping CPU maps and every CPU has its unique AUX buffer
+>>> +      * for CPU or system mode tracing.
+>>> +      *
+>>> +      * Returns failure if detects CPU maps overlapping.
+>>> +      */
+>>> +     evlist__for_each_entry(evlist, evsel) {
+>>> +             if (!evsel__is_aux_event(evsel))
+>>> +                     continue;
+>>> +
+>>> +             if (perf_cpu_map__is_empty(evsel->pmu->cpus))
+>>> +                     continue;
+>>
+>> Unless perf_cpu_map__intersect() is broken, the empty check
+>> should not be needed.
+> 
+> Perf's CPU map implementation is tricky. IIRC, if without this checking, it
+> will break the tool.
+> 
+> In below code, we invokes perf_cpu_map__merge() for merging maps. It does
+> _not_ always allocate a new map for merging. Based on testing, it only
+> allocates a new map if two passed map pointers are not NULL. If a passed CPU
+> map pointer is NULL, then it will directly return the another map's pointer.
+> 
+> This leads the difficulty for releasing the merged map. If the returned merged
+> map is a new allocated one, it is safe us to release it. Otherwise, we might
+> release a CPU map unexpectedly - though it is returned by
+> perf_cpu_map__merge(), but the CPU map comes from a PMU and should not be
+> released.
 
-
-On 2024/9/5 12:01, Namhyung Kim wrote:
-> Hello,
-> 
-> On Wed, Sep 04, 2024 at 12:31:02PM +0000, Tengda Wu wrote:
->> bperf has a nice ability to share PMUs, but it still does not support
->> inherit events during fork(), resulting in some deviations in its stat
->> results compared with perf.
->>
->> perf stat result:
->>   $ ./perf stat -e cycles,instructions -- ./perf test -w sqrtloop
->>
->>    Performance counter stats for './perf test -w sqrtloop':
->>
->>        2,316,038,116      cycles
->>        2,859,350,725      instructions                     #    1.23  insn per cycle
->>
->>          1.009603637 seconds time elapsed
->>
->>          1.004196000 seconds user
->>          0.003950000 seconds sys
->>
->> bperf stat result:
->>   $ ./perf stat --bpf-counters -e cycles,instructions -- ./perf test -w sqrtloop
->>
->>    Performance counter stats for './perf test -w sqrtloop':
->>
->>           18,762,093      cycles
->>           23,487,766      instructions                     #    1.25  insn per cycle
->>
->>          1.008913769 seconds time elapsed
->>
->>          1.003248000 seconds user
->>          0.004069000 seconds sys
->>
->> In order to support event inheritance, two new bpf programs are added
->> to monitor the fork and exit of tasks respectively. When a task is
->> created, add it to the filter map to enable counting, and reuse the
->> `accum_key` of its parent task to count together with the parent task.
->> When a task exits, remove it from the filter map to disable counting.
-> 
-> Right, I think we may need this for other BPF programs.
-> 
->>
->> After support:
->>   $ ./perf stat --bpf-counters -e cycles,instructions -- ./perf test -w sqrtloop
->>
->>    Performance counter stats for './perf test -w sqrtloop':
->>
->>        2,316,543,537      cycles
->>        2,859,677,779      instructions                     #    1.23  insn per cycle
->>
->>          1.009566332 seconds time elapsed
->>
->>          1.004414000 seconds user
->>          0.003545000 seconds sys
->>
->> Signed-off-by: Tengda Wu <wutengda@huaweicloud.com>
->> ---
->>  tools/perf/util/bpf_counter.c                 |  9 +--
->>  tools/perf/util/bpf_skel/bperf_follower.bpf.c | 75 +++++++++++++++++--
->>  tools/perf/util/bpf_skel/bperf_u.h            |  5 ++
->>  3 files changed, 78 insertions(+), 11 deletions(-)
->>
->> diff --git a/tools/perf/util/bpf_counter.c b/tools/perf/util/bpf_counter.c
->> index 7a8af60e0f51..e07ff04b934f 100644
->> --- a/tools/perf/util/bpf_counter.c
->> +++ b/tools/perf/util/bpf_counter.c
->> @@ -529,9 +529,6 @@ static int bperf__load(struct evsel *evsel, struct target *target)
->>  	/* set up reading map */
->>  	bpf_map__set_max_entries(evsel->follower_skel->maps.accum_readings,
->>  				 filter_entry_cnt);
->> -	/* set up follower filter based on target */
->> -	bpf_map__set_max_entries(evsel->follower_skel->maps.filter,
->> -				 filter_entry_cnt);
->>  	err = bperf_follower_bpf__load(evsel->follower_skel);
->>  	if (err) {
->>  		pr_err("Failed to load follower skeleton\n");
->> @@ -543,6 +540,7 @@ static int bperf__load(struct evsel *evsel, struct target *target)
->>  	for (i = 0; i < filter_entry_cnt; i++) {
->>  		int filter_map_fd;
->>  		__u32 key;
->> +		struct bperf_filter_value fval = { i, 0 };
->>  
->>  		if (filter_type == BPERF_FILTER_PID ||
->>  		    filter_type == BPERF_FILTER_TGID)
->> @@ -553,10 +551,11 @@ static int bperf__load(struct evsel *evsel, struct target *target)
->>  			break;
->>  
->>  		filter_map_fd = bpf_map__fd(evsel->follower_skel->maps.filter);
->> -		bpf_map_update_elem(filter_map_fd, &key, &i, BPF_ANY);
->> +		bpf_map_update_elem(filter_map_fd, &key, &fval, BPF_ANY);
->>  	}
->>  
->>  	evsel->follower_skel->bss->type = filter_type;
->> +	evsel->follower_skel->bss->init_filter_entries = filter_entry_cnt;
-> 
-> Do you need this in the BPF program?
-
-No need. Actually, this variable is only used in bperf__read(). 
-Since bperf__read() does not have a `struct target` parameter, it is not possible to check the
-filter_entry_cnt value again through bperf_check_target(). We can only put it in a global scope,
-one way is the current implementation, and another way is to declare a global variable in bpf_counter.
-Maybe the second way is more appropriate? If so, I will modify it.
+If it returns a different map, it adjusts the reference counts
+accordingly.  perf_cpu_map__merge() is still a problem though.
+See below.
 
 > 
->>  
->>  	err = bperf_follower_bpf__attach(evsel->follower_skel);
->>  
->> @@ -623,7 +622,7 @@ static int bperf__read(struct evsel *evsel)
->>  	bperf_sync_counters(evsel);
->>  	reading_map_fd = bpf_map__fd(skel->maps.accum_readings);
->>  
->> -	for (i = 0; i < bpf_map__max_entries(skel->maps.accum_readings); i++) {
->> +	for (i = 0; i < skel->bss->init_filter_entries; i++) {
->>  		struct perf_cpu entry;
->>  		__u32 cpu;
->>  
->> diff --git a/tools/perf/util/bpf_skel/bperf_follower.bpf.c b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
->> index f193998530d4..59fab421526a 100644
->> --- a/tools/perf/util/bpf_skel/bperf_follower.bpf.c
->> +++ b/tools/perf/util/bpf_skel/bperf_follower.bpf.c
->> @@ -5,6 +5,8 @@
->>  #include <bpf/bpf_tracing.h>
->>  #include "bperf_u.h"
->>  
->> +#define MAX_ENTRIES 102400
->> +
->>  struct {
->>  	__uint(type, BPF_MAP_TYPE_PERCPU_ARRAY);
->>  	__uint(key_size, sizeof(__u32));
->> @@ -22,25 +24,29 @@ struct {
->>  struct {
->>  	__uint(type, BPF_MAP_TYPE_HASH);
->>  	__uint(key_size, sizeof(__u32));
->> -	__uint(value_size, sizeof(__u32));
->> +	__uint(value_size, sizeof(struct bperf_filter_value));
->> +	__uint(max_entries, MAX_ENTRIES);
->> +	__uint(map_flags, BPF_F_NO_PREALLOC);
->>  } filter SEC(".maps");
->>  
->>  enum bperf_filter_type type = 0;
->>  int enabled = 0;
->> +__u32 init_filter_entries = 0;
->>  
->>  SEC("fexit/XXX")
->>  int BPF_PROG(fexit_XXX)
->>  {
->>  	struct bpf_perf_event_value *diff_val, *accum_val;
->>  	__u32 filter_key, zero = 0;
->> -	__u32 *accum_key;
->> +	__u32 accum_key;
->> +	struct bperf_filter_value *fval;
->>  
->>  	if (!enabled)
->>  		return 0;
->>  
->>  	switch (type) {
->>  	case BPERF_FILTER_GLOBAL:
->> -		accum_key = &zero;
->> +		accum_key = zero;
->>  		goto do_add;
->>  	case BPERF_FILTER_CPU:
->>  		filter_key = bpf_get_smp_processor_id();
->> @@ -55,16 +61,20 @@ int BPF_PROG(fexit_XXX)
->>  		return 0;
->>  	}
->>  
->> -	accum_key = bpf_map_lookup_elem(&filter, &filter_key);
->> -	if (!accum_key)
->> +	fval = bpf_map_lookup_elem(&filter, &filter_key);
->> +	if (!fval)
->>  		return 0;
->>  
->> +	accum_key = fval->accum_key;
->> +	if (fval->exited)
->> +		bpf_map_delete_elem(&filter, &filter_key);
->> +
->>  do_add:
->>  	diff_val = bpf_map_lookup_elem(&diff_readings, &zero);
->>  	if (!diff_val)
->>  		return 0;
->>  
->> -	accum_val = bpf_map_lookup_elem(&accum_readings, accum_key);
->> +	accum_val = bpf_map_lookup_elem(&accum_readings, &accum_key);
->>  	if (!accum_val)
->>  		return 0;
->>  
->> @@ -75,4 +85,57 @@ int BPF_PROG(fexit_XXX)
->>  	return 0;
->>  }
->>  
->> +SEC("tp_btf/task_newtask")
->> +int BPF_PROG(on_newtask, struct task_struct *task, __u64 clone_flags)
->> +{
->> +	__u32 parent_pid, child_pid;
->> +	struct bperf_filter_value *parent_fval;
->> +	struct bperf_filter_value child_fval = { 0 };
->> +
->> +	if (!enabled)
->> +		return 0;
->> +
->> +	if (type != BPERF_FILTER_PID && type != BPERF_FILTER_TGID)
->> +		return 0;
+> Anyway, I will remove the empty check and see if fix the perf CPU map issue.
 > 
-> I think you can load/attach this program only if the type is either
-> PID or TGID.  Then it'd reduce the overhead.
+>> Shouldn't we be looking at evsel->cpus ?
+> 
+> I don't find the field `evsel->cpus`, I assume you are referring to
+> evsel__cpus(evsel)?  If so, I will change to use the CPU map from evsel.
+> 
+>> Possibly need to consider the perf_cpu_map__has_any_cpu() case?
+>> e.g.
+>>                 if (cpu_map && (perf_cpu_map__has_any_cpu(evsel->cpus) ||
+>>                                 perf_cpu_map__has_any_cpu(cpu_map)) {
+>>                         ret = -EINVAL;
+>>                         break;
+>>                 }
+> 
+> Will add.
+> 
+>>> +
+>>> +             cpu_map_intersect = perf_cpu_map__intersect(cpu_map, evsel->pmu->cpus);
+>>> +             if (cpu_map_intersect) {
+>>> +                     perf_cpu_map__put(cpu_map_intersect);
+>>> +                     pr_err("Doesn't support AUX events with overlapping CPU masks\n");
+>>> +                     ret = -EINVAL;
+>>> +                     break;
+>>> +             }
+>>> +             perf_cpu_map__put(cpu_map_intersect);
+>>
+>> Maybe add a helper:
+>>
+>> static bool perf_cpu_map__do_maps_intersect(struct perf_cpu_map *a, struct perf_cpu_map *b)
+>> {
+>>         struct perf_cpu_map *intersection = perf_cpu_map__intersect(a, b);
+>>         bool ret = !perf_cpu_map__is_empty(intersection);
+>>
+>>         perf_cpu_map__put(intersection);
+>>
+>>         return ret;
+>> }
+> 
+> Will do.
+> 
+>>> +
+>>> +             cpu_map_merged = perf_cpu_map__merge(cpu_map, evsel->pmu->cpus);
+>>> +             if (!cpu_map_merged) {
+>>> +                     ret = -ENOMEM;
+>>> +                     break;
+>>> +             }
+>>> +
+>>> +             /* Update the CPU maps after merging */
+>>> +             perf_cpu_map__put(cpu_map);
+>>> +             cpu_map = cpu_map_merged;
+>>
+>> perf_cpu_map__merge() is a bit tricky - see its comments.  This
+>> should probably all just be:
+>>
+>>                 cpu_map = perf_cpu_map__merge(cpu_map, evsel->pmu->cpus);
+> 
+> This might lead to memory leak for the 'old' cpu_map after merging.
+> 
+> We cannot assume the `cpu_map` variable is extended from its old value, a new
+> CPU map is allocated during the merging. This is why the patch always release
+> the old cpu_map (perf_cpu_map__put(cpu_map)) and then assign the new merged
+> CPU map.
 
-Great suggestion, I'll give it a try.
+I agree, perf_cpu_map__merge() is a bit broken.  Maybe add
+another helper like:
+
+static int perf_cpu_map__merge_in(struct perf_cpu_map **orig, struct perf_cpu_map *other)
+{
+	struct perf_cpu_map *merged;
+
+	/* Avoid being unable to tell if perf_cpu_map__merge() failed */
+	if (perf_cpu_map__is_empty(*orig) && perf_cpu_map__is_empty(other))
+		return 0;
+
+	merged = perf_cpu_map__merge(*orig, other);
+	if (!merged)
+		return -ENOMEM;
+
+	*orig = merged;
+
+	return 0;
+}
+
+Then it can be:
+
+	ret = perf_cpu_map__merge_in(&cpu_map, evsel__cpus(evsel));
+	if (ret)
+		break;
 
 > 
->> +
->> +	parent_pid = bpf_get_current_pid_tgid() >> 32;
->> +	child_pid = task->pid;
->> +
->> +	/* Check if the current task is one of the target tasks to be counted */
->> +	parent_fval = bpf_map_lookup_elem(&filter, &parent_pid);
->> +	if (!parent_fval)
->> +		return 0;
->> +
->> +	/* Start counting for the new task by adding it into filter map,
->> +	 * inherit the accum key of its parent task so that they can be
->> +	 * counted together.
->> +	 */
->> +	child_fval.accum_key = parent_fval->accum_key;
->> +	child_fval.exited = 0;
->> +	bpf_map_update_elem(&filter, &child_pid, &child_fval, BPF_NOEXIST);
->> +
->> +	return 0;
->> +}
->> +
->> +SEC("tp_btf/sched_process_exit")
->> +int BPF_PROG(on_exittask, struct task_struct *task)
->> +{
->> +	__u32 pid;
->> +	struct bperf_filter_value *fval;
->> +
->> +	if (!enabled)
->> +		return 0;
->> +
->> +	if (type != BPERF_FILTER_PID && type != BPERF_FILTER_TGID)
->> +		return 0;
+>>> +     }
+>>> +
+>>> +     if (!ret)
+>>> +             goto out;
+>>
+>> Could we put the error path last i.e.
+>>
+>>         perf_cpu_map__put(cpu_map);
+>>
+>>         if (ret)
+>>                 goto out_err;
+>>
+>>         return 0;
+>>
+>> out_err:
 > 
-> Ditto.
+> Makes sense. Will fix.
 > 
-> Thanks,
-> Namhyung
+>>> +
+>>> +     /* If fails, dump CPU maps for debugging */
+>>> +     evlist__for_each_entry(evlist, evsel) {
+>>> +             char buf[200];
+>>> +
+>>> +             if (!evsel__is_aux_event(evsel))
+>>> +                     continue;
+>>> +
+>>> +             cpu_map__snprint(evsel->pmu->cpus, buf, sizeof(buf));
+>>> +             pr_debug("AUX event [%s]'s cpu map is: %s\n", evsel->pmu->name, buf);
+>>
+>> Could probably use cpu_map__fprintf(pmu->cpus, debug_file()) and
+>> not need buf.
 > 
->> +
->> +	/* Stop counting for this task by removing it from filter map */
->> +	pid = task->pid;
->> +	fval = bpf_map_lookup_elem(&filter, &pid);
->> +	if (fval)
->> +		fval->exited = 1;
->> +
->> +	return 0;
->> +}
->> +
->>  char LICENSE[] SEC("license") = "Dual BSD/GPL";
->> diff --git a/tools/perf/util/bpf_skel/bperf_u.h b/tools/perf/util/bpf_skel/bperf_u.h
->> index 1ce0c2c905c1..4a4a753980be 100644
->> --- a/tools/perf/util/bpf_skel/bperf_u.h
->> +++ b/tools/perf/util/bpf_skel/bperf_u.h
->> @@ -11,4 +11,9 @@ enum bperf_filter_type {
->>  	BPERF_FILTER_TGID,
->>  };
->>  
->> +struct bperf_filter_value {
->> +	__u32 accum_key;
->> +	__u8 exited;
->> +};
->> +
->>  #endif /* __BPERF_STAT_U_H */
->> -- 
->> 2.34.1
+> Will do.
+> 
+> Thanks for suggestions!
+> 
+> Leo
+> 
+>>> +     }
+>>> +
+>>> +out:
+>>> +     perf_cpu_map__put(cpu_map);
+>>> +     return ret;
+>>> +}
+>>> +
+>>>  int auxtrace__process_event(struct perf_session *session, union perf_event *event,
+>>>                           struct perf_sample *sample, const struct perf_tool *tool)
+>>>  {
+>>> diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+>>> index a1895a4f530b..67a74ad0c383 100644
+>>> --- a/tools/perf/util/auxtrace.h
+>>> +++ b/tools/perf/util/auxtrace.h
+>>> @@ -636,6 +636,7 @@ void addr_filters__exit(struct addr_filters *filts);
+>>>  int addr_filters__parse_bare_filter(struct addr_filters *filts,
+>>>                                   const char *filter);
+>>>  int auxtrace_parse_filters(struct evlist *evlist);
+>>> +int auxtrace_validate_events(struct evlist *evlist);
+>>>
+>>>  int auxtrace__process_event(struct perf_session *session, union perf_event *event,
+>>>                           struct perf_sample *sample, const struct perf_tool *tool);
+>>> @@ -875,6 +876,12 @@ int auxtrace_parse_filters(struct evlist *evlist __maybe_unused)
+>>>       return 0;
+>>>  }
+>>>
+>>> +static inline
+>>> +int auxtrace_validate_events(struct evlist *evlist __maybe_unused)
+>>> +{
+>>> +     return 0;
+>>> +}
+>>> +
+>>>  int auxtrace_mmap__mmap(struct auxtrace_mmap *mm,
+>>>                       struct auxtrace_mmap_params *mp,
+>>>                       void *userpg, int fd);
 >>
 
