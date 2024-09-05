@@ -1,73 +1,57 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14A4413AA2B;
-	Thu,  5 Sep 2024 10:07:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39AAD1990A1;
+	Thu,  5 Sep 2024 10:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725530873; cv=none; b=oCA95WOSBKxCgIu5wg92oi8Sg94qw/VwBl3BaBYf3r6Kh1ME1P8cjdfCJDIvfYWXuhjpok8+pVG+JM0yI2CWNS9sVJhucPBUDjodCZ3z41BWAugBOznx9yJnHNcuDW6sxG/Q5Hfxy/sH9fpCflqvDSDbx+7/O1tMPlXKEK3xjM4=
+	t=1725531925; cv=none; b=oDe33Xm22FZdlWocwT35sAdUNuyCEDjz6HezkceRN1Ih/U9VlbBM7wyeGmoBjtmaW9oFt+ur8RK6Bv96nHT4I4bbV9u/bMblHKMDUr98GYC3ffj+9Glf5AV7UXXrP9hyxEX1qS341NheiFIHEAPq5DkL78S9UQ3IcY4IA5JiMTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725530873; c=relaxed/simple;
-	bh=8+yEYQloSb35AbD/c6EivzKKFCvB3oHMSwHLT/lrbC0=;
+	s=arc-20240116; t=1725531925; c=relaxed/simple;
+	bh=fm7S5KGbuLe9W5HkTosNITMnTz+xAKNDodVv8VFktOY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Toagxl5WnEvHEdjntA6ivikOklbdXFHqMIB2HM+mr6DSR/YOniLINcumxT5M6gNZ/D5HBY6TYNMBNYnMND/KwvIHu84VKVMMbcIyHRkeZlWK/TSXq5Zd4KmjFm67xmLz8S3+p28rKAou/ox5kt6LlAKxllrRt6qXJBKUvYNgB7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbm1rfkl; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=quarantine dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbm1rfkl"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-42bbe908380so4547455e9.2;
-        Thu, 05 Sep 2024 03:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725530870; x=1726135670; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FVBpYbN9FUlDCPdRPdnCD8BoUHCMkop99PjMh0L2J1M=;
-        b=jbm1rfkl5dKXRoxNDubT36iXdfL4gACi/4KP3hU4g2AzaxFwvTSej6OWrwP7foNX+O
-         z89jLzDicXAUn/n5B41pLoWloKwvS1L7riU65yBxfolkfPaRg6yqbem1tc/u1Y5DwO1t
-         lZWkLf1H2i7yeM7Wi1SdY/yrvSU823/5lokniqg5rT6yCqndktYbiBoQxCgOgGu6s/M0
-         YAb9ccZQ7/QXOuObwMIDj+uaQlgmjfI6KkaV7HjoEGzdVk8ALKbbMRp2QDFTiuHxr9Lg
-         LabikWu/m3BcwxNx2pBLObYpHcP61Gmr02rUXAPbZl+OAJMQHakk7elmoL+Ka0IyLP+b
-         ZIyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725530870; x=1726135670;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FVBpYbN9FUlDCPdRPdnCD8BoUHCMkop99PjMh0L2J1M=;
-        b=ukL/nXRrkaljayG3S6tqtLpDrSjCJl4DDAmMMpxXc0HdGjjz7Zd7OLs3CDwfi9dob4
-         x4XRRCWM427OszSlQ52OIYf9a2L+ck1GbKJ98vv89+Y33GdGJXdfQLu4dzNv9wo1fcDu
-         v1YBGFGu7FYyRd9srwFMtWAtIbwVqhtqWwRSH9DaR51tM0/d4J+OeCR40F1Uma/8btZE
-         xADpWMH0/YMGYnKCfCy3usmZF+B9Eq+TxxJHQWqA+mli5TlLvQHts8RVNOjdzn/1aI3g
-         /I13eHaMvZJKxfRLqzz21hxop7D677So2MWSZRzNIuJqfYc88VAXqwuF/ECLFwCQDlKh
-         UO/A==
-X-Forwarded-Encrypted: i=1; AJvYcCVdH1vd17p0VsoRmDh9Tih8jJVF/p8K9JAd1sPOT3l8YOS6utQCvxm27jsTdsh2di/dpiMZEjCxPKKn8iOFgZiXeg==@vger.kernel.org, AJvYcCXcNaoj2IqidRFt7JX2uVIYlIC7Rtc/WSgtiUzYoab6jRPZ7zDF7KyL4OmvEaoDrcY9Gdtw8PfQZwZ7m24=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyhuu4c4+P34Ann3GCtTNPbr39e32gm30LKlZp7mp7enGhi/hEP
-	mb59+xQcHK8l8fKvnsnJFfJaDFhDB9jWez62ekxmkRP0Q7hSHhCH
-X-Google-Smtp-Source: AGHT+IHlDKo45UTAojMx1v/LjuS5FK6JXSOUdUDY8gr5BSXfjdq70WWCwyA/s/Ptpb4/5mRyjF9V5Q==
-X-Received: by 2002:a05:600c:4eca:b0:426:5471:156a with SMTP id 5b1f17b1804b1-42bdc6334cbmr125451395e9.13.1725530870011;
-        Thu, 05 Sep 2024 03:07:50 -0700 (PDT)
-Received: from gmail.com (1F2EF525.unconfigured.pool.telekom.hu. [31.46.245.37])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42ba639671dsm266679645e9.5.2024.09.05.03.07.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Sep 2024 03:07:49 -0700 (PDT)
-Sender: Ingo Molnar <mingo.kernel.org@gmail.com>
-Date: Thu, 5 Sep 2024 12:07:46 +0200
-From: Ingo Molnar <mingo@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, peterz@infradead.org,
-	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org,
-	mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-	jolsa@kernel.org, irogers@google.com, adrian.hunter@intel.com,
-	tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
-	x86@kernel.org, hpa@zytor.com, gautham.shenoy@amd.com,
-	ravi.bangoria@amd.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] perf/x86/rapl: Fix the energy-pkg event for AMD CPUs
-Message-ID: <ZtmC8hhpUvQTXFDn@gmail.com>
-References: <20240904100934.3260-1-Dhananjay.Ugwekar@amd.com>
- <90028792-19b0-4371-a8b4-0a37612b4c9b@linux.intel.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=SJ4TaQd+IfBj5raX5XUnqzUkgj/PKJzU7NsYsJ7puB9iwagWtBbk+3HA//ETxjYZFmH42XfjNOOBSlm9k7WFsOnixMZKWrhSYKPuwaRYku5vf0dqO1y/zn11Wxgv2qe1m88pwGufvhkJFOTe6/fcplfIWitvU5hBYgZDWBF81ms=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06AA5FEC;
+	Thu,  5 Sep 2024 03:25:49 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BBA503F73F;
+	Thu,  5 Sep 2024 03:25:16 -0700 (PDT)
+Date: Thu, 5 Sep 2024 11:25:10 +0100
+From: Mark Rutland <mark.rutland@arm.com>
+To: Colton Lewis <coltonlewis@google.com>
+Cc: kvm@vger.kernel.org, Oliver Upton <oliver.upton@linux.dev>,
+	Sean Christopherson <seanjc@google.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Will Deacon <will@kernel.org>, Russell King <linux@armlinux.org.uk>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	Nicholas Piggin <npiggin@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Naveen N Rao <naveen@kernel.org>,
+	Heiko Carstens <hca@linux.ibm.com>,
+	Vasily Gorbik <gor@linux.ibm.com>,
+	Alexander Gordeev <agordeev@linux.ibm.com>,
+	Christian Borntraeger <borntraeger@linux.ibm.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 1/5] arm: perf: Drop unused functions
+Message-ID: <ZtmHBuggqUr3ncw6@J2N7QTR9R3>
+References: <20240904204133.1442132-1-coltonlewis@google.com>
+ <20240904204133.1442132-2-coltonlewis@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -76,51 +60,74 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90028792-19b0-4371-a8b4-0a37612b4c9b@linux.intel.com>
+In-Reply-To: <20240904204133.1442132-2-coltonlewis@google.com>
 
+On Wed, Sep 04, 2024 at 08:41:29PM +0000, Colton Lewis wrote:
+> perf_instruction_pointer() and perf_misc_flags() aren't used anywhere
+> in this particular perf implementation. Drop them.
 
-* Liang, Kan <kan.liang@linux.intel.com> wrote:
+I think it'd be better to say that arch/arm's implementation of these is
+equivalent to the generic versions in include/linux/perf_event.h, and so
+arch/arm doesn't need to provide its own versions. It doesn't matter if
+arch/arm uses them itself since they're being provided for the core perf
+code.
+
+With words to that effect:
+
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
 
 > 
+> Signed-off-by: Colton Lewis <coltonlewis@google.com>
+> ---
+>  arch/arm/include/asm/perf_event.h |  7 -------
+>  arch/arm/kernel/perf_callchain.c  | 17 -----------------
+>  2 files changed, 24 deletions(-)
 > 
-> On 2024-09-04 6:09 a.m., Dhananjay Ugwekar wrote:
-> > After commit ("x86/cpu/topology: Add support for the AMD 0x80000026 leaf"),
-> > on AMD processors that support extended CPUID leaf 0x80000026, the
-> > topology_die_cpumask() and topology_logical_die_id() macros, no longer
-> > return the package cpumask and package id, instead they return the CCD
-> > (Core Complex Die) mask and id respectively. This leads to the energy-pkg
-> > event scope to be modified to CCD instead of package.
-> > 
-> > So, change the PMU scope for AMD and Hygon back to package.
-> > 
-> > On a 12 CCD 1 Package AMD Zen4 Genoa machine:
-> > 
-> > Before:
-> > $ cat /sys/devices/power/cpumask
-> > 0,8,16,24,32,40,48,56,64,72,80,88.
-> > 
-> > The expected cpumask here is supposed to be just "0", as it is a package
-> > scope event, only one CPU will be collecting the event for all the CPUs in
-> > the package.
-> > 
-> > After:
-> > $ cat /sys/devices/power/cpumask
-> > 0
-> > 
-> > Signed-off-by: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+> diff --git a/arch/arm/include/asm/perf_event.h b/arch/arm/include/asm/perf_event.h
+> index bdbc1e590891..c08f16f2e243 100644
+> --- a/arch/arm/include/asm/perf_event.h
+> +++ b/arch/arm/include/asm/perf_event.h
+> @@ -8,13 +8,6 @@
+>  #ifndef __ARM_PERF_EVENT_H__
+>  #define __ARM_PERF_EVENT_H__
+>  
+> -#ifdef CONFIG_PERF_EVENTS
+> -struct pt_regs;
+> -extern unsigned long perf_instruction_pointer(struct pt_regs *regs);
+> -extern unsigned long perf_misc_flags(struct pt_regs *regs);
+> -#define perf_misc_flags(regs)	perf_misc_flags(regs)
+> -#endif
+> -
+>  #define perf_arch_fetch_caller_regs(regs, __ip) { \
+>  	(regs)->ARM_pc = (__ip); \
+>  	frame_pointer((regs)) = (unsigned long) __builtin_frame_address(0); \
+> diff --git a/arch/arm/kernel/perf_callchain.c b/arch/arm/kernel/perf_callchain.c
+> index 1d230ac9d0eb..a2601b1ef318 100644
+> --- a/arch/arm/kernel/perf_callchain.c
+> +++ b/arch/arm/kernel/perf_callchain.c
+> @@ -96,20 +96,3 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+>  	arm_get_current_stackframe(regs, &fr);
+>  	walk_stackframe(&fr, callchain_trace, entry);
+>  }
+> -
+> -unsigned long perf_instruction_pointer(struct pt_regs *regs)
+> -{
+> -	return instruction_pointer(regs);
+> -}
+> -
+> -unsigned long perf_misc_flags(struct pt_regs *regs)
+> -{
+> -	int misc = 0;
+> -
+> -	if (user_mode(regs))
+> -		misc |= PERF_RECORD_MISC_USER;
+> -	else
+> -		misc |= PERF_RECORD_MISC_KERNEL;
+> -
+> -	return misc;
+> -}
+> -- 
+> 2.46.0.469.g59c65b2a67-goog
 > 
-> Reviewed-by: Kan Liang <kan.liang@linux.intel.com>
-
-Note that I just merged the older v2 version into perf/urgent, because it's 
-a regression fix, and to not create a backporting complication. I added 
-your Reviewed-by to it if that's fine with you.
-
-Your hotplug series can essentially revert this:
-
-  8d72eba1cf8c ("perf/x86/rapl: Fix the energy-pkg event for AMD CPUs")
-
-and apply the v3 patch to gain the simpler version.
-
-Thanks,
-
-	Ingo
