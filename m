@@ -1,200 +1,108 @@
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0393D193434;
-	Thu,  5 Sep 2024 20:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFAA14F125;
+	Thu,  5 Sep 2024 20:54:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725568394; cv=none; b=o9pzmPBVONGOQoCUy4s8oHlOP4g84gOOQSYgUE6wlb1j6h75I/C78VedmvCg2oAK2Wvpo3cgu9EaZfcCW+0SolJmYEM4EHDp/2vX9HpSyipG8eqhWYqgC1tPP9stDnLDeT36cuIEPtOzK5WpFb0bEDhdRJ4uuOkJpL74mvt6PW0=
+	t=1725569651; cv=none; b=kLMnAPuxgcZ/RUPfLdTJfvyIyXOItQ8WbEqV8xrPUuuwePyB5Wu2BY1Q90U+wKRWQAdPDSAvWlXQ1hamMz92XM92d2mVO2/suQxGP5fi7vkBFVLg+UPbQ+MxksUBTyD1HJ1Z9543d0VblLbq7Kc1/SI9k9HyuXbmODi+HUnduOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725568394; c=relaxed/simple;
-	bh=viMiY27T/DgIEp5cOuLMmVddL2dV80RqDvknoGpCrPE=;
+	s=arc-20240116; t=1725569651; c=relaxed/simple;
+	bh=VtVcaTA8kr3xNL3ypmIYlIJ3WomRggFUtrSaomEP5wM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oWuA5I7DcH7c6LuemNeZZiTbx2ZUnuLX3nwlZCjM6HYe/63THInV0sp8UEnEiCWBrmJxWW11O/ekKkpnP/YXHEa9dhaenWn0Ycdv5djIlBUMBHEuMRWwfXKCPYcpz9Aid/szl6Tf8PCBppEbjpulfOMHari/zLW6qxEaB9rl2W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TuXMphDT; arc=none smtp.client-ip=209.85.216.43
+	 To:Cc:Content-Type; b=OdKRmpiMEWkcGQDDJI9RH22Cq7VmvLCi4SaZZlsR328nx5iiPYsLTtmy+NzlDEOgeobnIHh3K5ROnPtYtK+p4Xqy+Y3fanelByOFrY0HxpjJ4HBNCy7O1oklpwvnLJEBY+QUaEEhBx9PwpCUhUmNSit+fl7r0mT8iCZFtf+4Rns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F9c3j/qX; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TuXMphDT"
-Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-2d873dc644dso940609a91.3;
-        Thu, 05 Sep 2024 13:33:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F9c3j/qX"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2d8a54f1250so924615a91.0;
+        Thu, 05 Sep 2024 13:54:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725568392; x=1726173192; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1725569649; x=1726174449; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AkO2Onh5KBMN7JfbUKWIxqBcqXRVZ028mK8ANWdd19g=;
-        b=TuXMphDTBPY050SJUZr8hUXoDh87KqxEqDqDdtMToaCQyHEHu0wrdHXSxHlJIy+dWY
-         WVjpep2SAqR+Kh0dnyU0kr9qUrzd7WS729ZZkXKA8PkH4o/uohDKDqlcepFnF9Yjtg8/
-         lyo6zO6tkO0VWKGagV8Hi302a3Q6ZIgbZPA8LMBzrIScG6IDQtZNw0ygGxHLgAqji1UL
-         prCEMMFYstQWrch+lJ9wvIwCo8VkGq2NjFSdnggjRYydbi6Ogy8vUTjRHgazM6EY8gFG
-         zCCYd3bfUrlPmDn+AlfJQBK7LbySPnDhBzES2ytVLuKVkn6w8eCIUXgZng0xOGZ+cUk0
-         sIBg==
+        bh=D/vVqpOqdrwI/OeALxCbnulyGAi+e45HkWSWpudnHpg=;
+        b=F9c3j/qXdvv0mT1jhhJ+4xNM5vSppNfos/sLXjKoxXox8ir5GAAE178CyzLiD4drCI
+         sy+PzqZrvtg+mlPkHfedW4w9EnuD7RYC8Y6WcOb+cnPmYGD5hHqOqwZ8XNDUu7miu+zZ
+         6BktRpp6SL40+xaguZoBSti8pdcWF5k4vFy4dW/g46tmU/jPYi8CtmRJYK/RFLpWTjNB
+         SRYH1IbR44+HqejU+qwM4OZKb935uAlPWpvLFx3/RcSriRLqfGxBRB87QZsOcG0EET9E
+         Coa9gtFguQ9cmpXe43HQ9QmH1i83EInqNo6SGXnr49c3Wz7C26Albs76dWpKChWRunuL
+         ff6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725568392; x=1726173192;
+        d=1e100.net; s=20230601; t=1725569649; x=1726174449;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AkO2Onh5KBMN7JfbUKWIxqBcqXRVZ028mK8ANWdd19g=;
-        b=OiZAjEWRSPmajvfjVGzA8a+RrABMubQEKLDBCoQA3Qi+ecmMJO1p9VCYqtLvdUGW3T
-         Yv/X3sBMhZ6uBDaxD+cXDN983zm5GulL85e8pxnu9wOw593+L93eOGhISX8oup/iBvZE
-         nNrv119abokVjZO/9EiSogeJ5kp7HA8ry1rslXxVbvapYmHyJj2P0pexFRg8b9ZkhRPx
-         HJPaKH6vZOO6TjlptkZb8LokBh/yfc5ftkt6IvxaG2pyJ2PdJccdMccuQggkA/eVOX9B
-         Hme0RrfWGK5ls1/le21TobFqsHDr+p9PuJMDW1FUdO/oBTUdRt2CuKRzg+By3fsVKgck
-         jIrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUBz1yKoWtoVa7iHU++Wo57v5m2Gy2Va6CvKN3UUX/+h68EipJW8eBsooFX1hW6Qw9XWOs=@vger.kernel.org, AJvYcCVDyBJ5ogz+TwLW70Hi2S3gsmfewzgjaUki+Ht+Yy9JS/Ac4y6wUuLqqpriyVjWZ2FqcqRT2uIs@vger.kernel.org, AJvYcCWRF9B7biMnpNZHNnorfkLoVmR50JeSPDrqETQZbFJXNMlinYTE+e9YI4VsBtgLadiCqIfPTNpBFPlnHUBd@vger.kernel.org, AJvYcCXjXqei4JxIZazSbDRLKuBMjsdlj4c9XrfYG90ogOnKtl5he6PjKhfUXKDMWt4nJ7C9ixJywEl9BRqNzsJiDTvsaw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzHRl7+A02UxXBdJw/j0JVygBjIdtuJDNG26ZYXd1Ao3iVtiTT
-	kmDe0i/2kspoLS4LfHwuCAPgQ6IvXAvNuJhw2yu9zgEfqQtUsM3dvnuO3hsUlHMKz7DkL67cy8I
-	UZ998wK/7sy9Sr2BjeFuxnIFSUwU=
-X-Google-Smtp-Source: AGHT+IFGJCAgnJYeXefctM/aCpjEwCU9o1FLKd+Gk9XLYIoN+C+xgJO+mQaDQ59X4EEpegOzU+jpbnScO/xrznGIrIQ=
-X-Received: by 2002:a17:90a:2f04:b0:2d8:83ce:d4c0 with SMTP id
- 98e67ed59e1d1-2d883ceeab5mr23306821a91.13.1725568392151; Thu, 05 Sep 2024
- 13:33:12 -0700 (PDT)
+        bh=D/vVqpOqdrwI/OeALxCbnulyGAi+e45HkWSWpudnHpg=;
+        b=i8sDACoNsbsahyzSXDJy6ii8pfNshHJFb6A5DjFVjjRrBZJe8zPiVQ2E7GVUXgPVGy
+         83l9bmVKOppePD81gS10NVlNd5pgKndEbBqOieYVbocFIU21RuoJ6oTZHrJ6MFhATJRS
+         4fBN+Ky2lWugnurSt9eRZ9wPQZDb4sd3ExJ1fgffSDqYsbtmfW4iWZhjLV6KrPIp0Rcz
+         vKH17ikc/v02azlAZ8IfDcYJmEL/l8JU8Qc9Q0TdzHPN6MQogfkNkDUfpzl4TUL3Zhzw
+         l9eENh/NIx0rs+kXVKTOT9QXr41ULEcrbhZTQa9B3q6uEGAshs5t0lD292sYXLxq9+Od
+         3YdA==
+X-Forwarded-Encrypted: i=1; AJvYcCVtmnAkwDATrRbeRFEXoXIIy88t+in8uk5w9Bn5dDse1Kg9ishybJC+noZEkJQ0ua7ZShdGMBC76JfUrhJlBsOAms46@vger.kernel.org, AJvYcCW+WKM1cfucTD6DfhPqKEuh5LKf8lYo2aDv6Gbqd8ZzO1i1yBDyau59wU3qm84CCVzpHS7OAzsAFMmkfKsf@vger.kernel.org, AJvYcCX1PXSRqyytKZSaj+QC5LLdIicT0LjQLkEtH7QLQs98tj8tuEctCAyhlYCjM6vDgpfvsT5KwM05GII5QHJaMIJ2Aw==@vger.kernel.org, AJvYcCXGINPb/dAeHuI4+0+eBcO/9ackQtX5WPsaCTbv0CTj5ifUByZrjJ9fnBV6+qhrr2cS9Rs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkI1+xZh2flR9rz3f22iOkBUw0mSMrdOFmzFO5/280O1M97Gsm
+	c8FTMEpgbvRtUbGI0Dpl6KIXuqTiOPtaNoa+0Q9I5xyqnAcC0ylSeCjCrW18RChJ6XEbWoso0Mw
+	wD9EjyHEDdmFCuuqyG4lIDzHnam0=
+X-Google-Smtp-Source: AGHT+IHOuBGq+ApkrAU0UbGfZKbR2eyqTNiruaFgO7adc5dpEztHv7s7Y4n/YPRGObOuuW2gmX2Yz+GWvEg1scR93j0=
+X-Received: by 2002:a17:90b:4b06:b0:2c9:9658:d704 with SMTP id
+ 98e67ed59e1d1-2dad511280fmr554489a91.40.1725569649131; Thu, 05 Sep 2024
+ 13:54:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240905180055.1221620-1-andrii@kernel.org> <ddfd906c-83cc-490a-a4bb-4fa43793d882@linux.intel.com>
- <CAEf4Bza9H=nH4+=dDNm55X5LZp4MVSkKyBcnuNq3+8cP6qt=uQ@mail.gmail.com> <e7e0ef26-2335-4e67-984c-705cb33ff4c3@linux.intel.com>
-In-Reply-To: <e7e0ef26-2335-4e67-984c-705cb33ff4c3@linux.intel.com>
+References: <20240809061004.2112369-1-liaochang1@huawei.com>
+ <20240809061004.2112369-2-liaochang1@huawei.com> <20240812120738.GC11656@redhat.com>
+ <2971107e-75e7-8438-c858-b95202d7b5ea@huawei.com> <20240813124737.GA31977@redhat.com>
+In-Reply-To: <20240813124737.GA31977@redhat.com>
 From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date: Thu, 5 Sep 2024 13:33:00 -0700
-Message-ID: <CAEf4BzYOxpLAowE=4A=qUreLkgKBkDYbOxnidbnQNKQdLx7=WQ@mail.gmail.com>
-Subject: Re: [PATCH] perf/x86: fix wrong assumption that LBR is only useful
- for sampling events
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>, linux-perf-users@vger.kernel.org, 
-	peterz@infradead.org, x86@kernel.org, mingo@redhat.com, 
-	linux-kernel@vger.kernel.org, bpf@vger.kernel.org, acme@kernel.org, 
-	kernel-team@meta.com, stable@vger.kernel.org
+Date: Thu, 5 Sep 2024 13:53:56 -0700
+Message-ID: <CAEf4Bza9UYWv1uM38wBbvmGCEtcvOK3DeybQ9+QGwVf3QyTTyA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] uprobes: Remove redundant spinlock in uprobe_deny_signal()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: "Liao, Chang" <liaochang1@huawei.com>, mhiramat@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, irogers@google.com, 
+	adrian.hunter@intel.com, kan.liang@linux.intel.com, andrii@kernel.org, 
+	rostedt@goodmis.org, linux-kernel@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+	bpf@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 5, 2024 at 1:29=E2=80=AFPM Liang, Kan <kan.liang@linux.intel.co=
-m> wrote:
+On Tue, Aug 13, 2024 at 5:47=E2=80=AFAM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
+> On 08/13, Liao, Chang wrote:
+> >
+> >
+> > Oleg, your explaination is more accurate. So I will reword the commit l=
+og and
+> > quote some of your note like this:
 >
+> Oh, please don't. I just tried to explain the history of this spin_lock(s=
+iglock).
 >
-> On 2024-09-05 4:22 p.m., Andrii Nakryiko wrote:
-> > On Thu, Sep 5, 2024 at 12:21=E2=80=AFPM Liang, Kan <kan.liang@linux.int=
-el.com> wrote:
-> >>
-> >>
-> >>
-> >> On 2024-09-05 2:00 p.m., Andrii Nakryiko wrote:
-> >>> It's incorrect to assume that LBR can/should only be used with sampli=
-ng
-> >>> events. BPF subsystem provides bpf_get_branch_snapshot() BPF helper,
-> >>> which expects a properly setup and activated perf event which allows
-> >>> kernel to capture LBR data.
-> >>>
-> >>> For instance, retsnoop tool ([0]) makes an extensive use of this
-> >>> functionality and sets up perf event as follows:
-> >>>
-> >>>       struct perf_event_attr attr;
-> >>>
-> >>>       memset(&attr, 0, sizeof(attr));
-> >>>       attr.size =3D sizeof(attr);
-> >>>       attr.type =3D PERF_TYPE_HARDWARE;
-> >>>       attr.config =3D PERF_COUNT_HW_CPU_CYCLES;
-> >>>       attr.sample_type =3D PERF_SAMPLE_BRANCH_STACK;
-> >>>       attr.branch_sample_type =3D PERF_SAMPLE_BRANCH_KERNEL;
-> >>>
-> >>> Commit referenced in Fixes tag broke this setup by making invalid ass=
-umption
-> >>> that LBR is useful only for sampling events. Remove that assumption.
-> >>>
-> >>> Note, earlier we removed a similar assumption on AMD side of LBR supp=
-ort,
-> >>> see [1] for details.
-> >>>
-> >>>   [0] https://github.com/anakryiko/retsnoop
-> >>>   [1] 9794563d4d05 ("perf/x86/amd: Don't reject non-sampling events w=
-ith configured LBR")
-> >>>
-> >>> Cc: stable@vger.kernel.org # 6.8+
-> >>> Fixes: 85846b27072d ("perf/x86: Add PERF_X86_EVENT_NEEDS_BRANCH_STACK=
- flag")
-> >>> Signed-off-by: Andrii Nakryiko <andrii@kernel.org>
-> >>> ---
-> >>>  arch/x86/events/intel/core.c | 2 +-
-> >>>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/cor=
-e.c
-> >>> index 9e519d8a810a..f82a342b8852 100644
-> >>> --- a/arch/x86/events/intel/core.c
-> >>> +++ b/arch/x86/events/intel/core.c
-> >>> @@ -3972,7 +3972,7 @@ static int intel_pmu_hw_config(struct perf_even=
-t *event)
-> >>>                       x86_pmu.pebs_aliases(event);
-> >>>       }
-> >>>
-> >>> -     if (needs_branch_stack(event) && is_sampling_event(event))
-> >>> +     if (needs_branch_stack(event))
-> >>>               event->hw.flags  |=3D PERF_X86_EVENT_NEEDS_BRANCH_STACK=
-;
-> >>
-> >> To limit the LBR for a sampling event is to avoid unnecessary branch
-> >> stack setup for a counting event in the sample read. The above change
-> >> should break the sample read case.
-> >>
-> >> How about the below patch (not test)? Is it good enough for the BPF us=
-age?
-> >>
-> >> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core=
-.c
-> >> index 0c9c2706d4ec..8d67cbda916b 100644
-> >> --- a/arch/x86/events/intel/core.c
-> >> +++ b/arch/x86/events/intel/core.c
-> >> @@ -3972,8 +3972,12 @@ static int intel_pmu_hw_config(struct perf_even=
-t
-> >> *event)
-> >>                 x86_pmu.pebs_aliases(event);
-> >>         }
-> >>
-> >> -       if (needs_branch_stack(event) && is_sampling_event(event))
-> >> -               event->hw.flags  |=3D PERF_X86_EVENT_NEEDS_BRANCH_STAC=
-K;
-> >> +       if (needs_branch_stack(event)) {
-> >> +               /* Avoid branch stack setup for counting events in SAM=
-PLE READ */
-> >> +               if (is_sampling_event(event) ||
-> >> +                   !(event->attr.sample_type & PERF_SAMPLE_READ))
-> >> +                       event->hw.flags  |=3D PERF_X86_EVENT_NEEDS_BRA=
-NCH_STACK;
-> >> +       }
-> >>
-> >
-> > I'm sure it will be fine for my use case, as I set only
-> > PERF_SAMPLE_BRANCH_STACK.
-> >
-> > But I'll leave it up to perf subsystem experts to decide if this
-> > condition makes sense, because looking at what PERF_SAMPLE_READ is:
-> >
-> >           PERF_SAMPLE_READ
-> >                  Record counter values for all events in a group,
-> >                  not just the group leader.
-> >
-> > It's not clear why this would disable LBR, if specified.
+> >   Since we already have the lockless user of clear_thread_flag(TIF_SIGP=
+ENDING).
+> >   And for uprobe singlestep case, it doesn't break the rule of "the sta=
+te of
+> >   TIF_SIGPENDING of every thread is stable with sighand->siglock held".
 >
-> It only disables the counting event with SAMPLE_READ, since LBR is only
-> read in the sampling event's overflow.
+> It obviously does break the rule above. Please keep your changelog as is.
+>
+> Oleg.
 >
 
-Ok, sounds good! Would you like to send a proper patch with your
-proposed changes?
+Liao,
 
-> Thanks,
-> Kan
-> >
-> >>         if (branch_sample_counters(event)) {
-> >>                 struct perf_event *leader, *sibling;
-> >>
-> >>
-> >> Thanks,
-> >> Kan
-> >>>
-> >>>       if (branch_sample_counters(event)) {
+Can you please rebase and resend your patches now that the first part
+of my uprobe patches landed in perf/core? Seems like there is some
+tiny merge conflict or something.
+
+Thanks!
