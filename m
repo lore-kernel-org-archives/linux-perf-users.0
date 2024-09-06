@@ -1,132 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDFC11C9EAB
-	for <linux-perf-users@vger.kernel.org>; Fri,  6 Sep 2024 11:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B1B1CCB37;
+	Fri,  6 Sep 2024 13:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725622074; cv=none; b=VCNxAt5SLx6hnV13Wb8RkA9cQBD9gxgsEut2o0c/tGxQo+FGprbgUK8eFWnCz4ZMCZk4+nC2gjv+1mdmIQbwUF1fsIYUzhuj0AsMEx1o228zcv9tnllliPDi5CYzPjRolepIIvB3yOkn8AyUvU4toN7N67/HADgzdQ9DEJAdDTQ=
+	t=1725627650; cv=none; b=syimzL+4nBwzFY3xp2h3UoLid/J7J3WYiN5mJ9Ibb8QkHCInngj0GE5xvEDZJCuGr2hYWVtx3VlZspRjwxlOhFnRiAziKybYuBgpdZkApwZ1P50KV3hhepAPFP6ZLLzq/3NpY9HVVa016yQcUAfYGpaE/5YzPVVrY5vPiwsAHyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725622074; c=relaxed/simple;
-	bh=H6sogblLvkOZCm9NCnqjp2i5FW2XOSQEy2wDEaSSDiA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ql9CwnT+In4JACuAPk5+g6j1OQXBj3iUi0ha+DdbUZKWIF0sS08Vv6/oV3OpU69sbDJRtejLrNCc5YyAnhfh67X4J7HNNwqgJskczJ4oytbbKL4EbN0Rm+pELqygqcjA91eixZ629XQqHx8erRuGdrjAz+kSVqZG+RnyX0weYKo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6BF0FEC;
-	Fri,  6 Sep 2024 04:28:19 -0700 (PDT)
-Received: from [10.2.76.71] (e132581.arm.com [10.2.76.71])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66F7E3F73B;
-	Fri,  6 Sep 2024 04:27:51 -0700 (PDT)
-Message-ID: <22f7ecdb-14e7-4bb1-a20a-bdb447bcb64f@arm.com>
-Date: Fri, 6 Sep 2024 12:27:49 +0100
+	s=arc-20240116; t=1725627650; c=relaxed/simple;
+	bh=IxqmJ2aBpGqM30mv7r+ou/hAbtXsh6zJU+QgP43Z8jU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PbUhJET2Po41GbZv9S28HI0XjoR26ytDPX6UYINdGUdwytN318J4JRgW+Q26izCGjcX31+ZOMb2i6AFpEY7mX+fIBfTlaYvMiJCPUNU7T2vmRJcQ0pfQJlg7y5QpUHaJUh+msZINYuwjVtvZMGv/OVGn+5UP1leVaivReXz5z/k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k11X7UMY; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k11X7UMY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725627649; x=1757163649;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=IxqmJ2aBpGqM30mv7r+ou/hAbtXsh6zJU+QgP43Z8jU=;
+  b=k11X7UMYNGYStyHNFTpwidFFjFI6na3i1tJ4EZc8MESScy3MOnR0GKos
+   74ncRnKRk+YT+W5Vz53TwzfuSHeW5cy9F0J8oh0OEaNuNlcKA3tgH1Zhs
+   VNsFlNz1iJEI9k6kPplDt2MAMnq3Fg9MY5NvmOVxtOdtzgycrRKYzuay5
+   r+OedX1oxm69Hq5SC10N7tk2Pb1M5J/8bwihOVar3BPgNhRTEFVdQRgAr
+   XgCsqTPsr0Y+sV7uNYmz/Fx/gN7WchfbklWkza810CNrXAPErLU7DuH6w
+   CoNGMJ23BbYrbot+3YvInG+Y2WS1GBg1EqSKxfQlJLz7x5VGhf9oSTWYc
+   w==;
+X-CSE-ConnectionGUID: GzaQNaSeT/SMWR3JtwA/Rw==
+X-CSE-MsgGUID: TyH/iSUzQbq1tf+1plQYNA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="34959876"
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="34959876"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 06:00:47 -0700
+X-CSE-ConnectionGUID: SfnFIX3yRC6ClsGuVTXf/w==
+X-CSE-MsgGUID: bUyXa9k8Q6mncniJXlRbSw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="65929487"
+Received: from ahunter6-mobl1.ger.corp.intel.com (HELO localhost.localdomain) ([10.245.115.59])
+  by orviesa009-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 06:00:39 -0700
+From: Adrian Hunter <adrian.hunter@intel.com>
+To: Sean Christopherson <seanjc@google.com>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>
+Cc: Zhenyu Wang <zhenyuw@linux.intel.com>,
+	kvm@vger.kernel.org,
+	Shuah Khan <shuah@kernel.org>,
+	linux-kselftest@vger.kernel.org,
+	Ingo Molnar <mingo@redhat.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	x86@kernel.org,
+	H Peter Anvin <hpa@zytor.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH 0/3] KVM: x86: Fix Intel PT Host/Guest mode when host tracing also
+Date: Fri,  6 Sep 2024 16:00:23 +0300
+Message-ID: <20240906130026.10705-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 4/4] Adjust objdump start/end range per map pgoff
- parameter
-To: Steve Clevenger <scclevenger@os.amperecomputing.com>,
- james.clark@linaro.org, mike.leach@linaro.org
-Cc: suzuki.poulose@arm.com, ilkka@os.amperecomputing.com,
- coresight@lists.linaro.org, linux-perf-users@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <cover.1725573309.git.scclevenger@os.amperecomputing.com>
- <d730ad217936d952008edf703ba4c34393d89dad.1725573309.git.scclevenger@os.amperecomputing.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <d730ad217936d952008edf703ba4c34393d89dad.1725573309.git.scclevenger@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Content-Transfer-Encoding: 8bit
 
+Hi
+
+There is a long-standing problem whereby running Intel PT on host and guest
+in Host/Guest mode, causes VM-Entry failure.
+
+The motivation for this patch set is to provide a fix for stable kernels
+prior to the advent of the "Mediated Passthrough vPMU" patch set:
+
+	https://lore.kernel.org/kvm/20240801045907.4010984-1-mizhang@google.com/
+
+which would render a large part of the fix unnecessary but likely not be
+suitable for backport to stable due to its size and complexity.
+
+Ideally, this patch set would be applied before "Mediated Passthrough vPMU"
+
+Note that the fix does not conflict with "Mediated Passthrough vPMU", it
+is just that "Mediated Passthrough vPMU" will make the code to stop and
+restart Intel PT unnecessary.
 
 
-On 9/5/24 23:28, Steve Clevenger wrote:
-> 
-> Extract map_pgoff parameter from the dictionary, and adjust start/end
-> range passed to objdump based on the value.
-> 
-> A zero start_addr is filtered to prevent output of dso address range
-> check failures. This script repeatedly sees a zero value passed
-> in for
->       start_addr = cpu_data[str(cpu) + 'addr']
-> 
-> These zero values are not a new problem. The start_addr/stop_addr warning
-> clutters the instruction trace output, hence this change.
-> 
-> Signed-off-by: Steve Clevenger <scclevenger@os.amperecomputing.com>
-> ---
->   tools/perf/scripts/python/arm-cs-trace-disasm.py | 14 +++++++++-----
->   1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> index 7aff02d84ffb..a867e0db02b8 100755
-> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
-> @@ -187,6 +187,7 @@ def process_event(param_dict):
->          dso_start = get_optional(param_dict, "dso_map_start")
->          dso_end = get_optional(param_dict, "dso_map_end")
->          symbol = get_optional(param_dict, "symbol")
-> +       map_pgoff = get_optional(param_dict, "map_pgoff")
+Adrian Hunter (3):
+      KVM: x86: Fix Intel PT IA32_RTIT_CTL MSR validation
+      KVM: x86: Fix Intel PT Host/Guest mode when host tracing also
+      KVM: selftests: Add guest Intel PT test
+
+ arch/x86/events/intel/pt.c                         | 131 ++++++-
+ arch/x86/events/intel/pt.h                         |  10 +
+ arch/x86/include/asm/intel_pt.h                    |   4 +
+ arch/x86/kvm/vmx/vmx.c                             |  26 +-
+ arch/x86/kvm/vmx/vmx.h                             |   1 -
+ tools/testing/selftests/kvm/Makefile               |   1 +
+ .../selftests/kvm/include/x86_64/processor.h       |   1 +
+ tools/testing/selftests/kvm/x86_64/intel_pt.c      | 381 +++++++++++++++++++++
+ 8 files changed, 532 insertions(+), 23 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/intel_pt.c
+
+base-commit: d45aab436cf06544abeeffc607110f559a3af3b4
 
 
-I am concerned the two sentences below are inconsistence: one uses
-'start_addr + map_pgoff' and the other uses 'start_addr + int(map_pgoff)'.
-
-Here about below code?
-
-            map_pgoff_str = get_optional(param_dict, "map_pgoff")
-	   if map_pgoff_str == "":
-		map_pgoff = 0
-            else:
-		map_pgoff = int(map_pgoff_str)
-
-With above change, 'map_pgoff' is an int type. As a result, the changes
-below can simply add 'map_pgoff'.
-
-With these changes, LGTM:
-
-Reviewed-by: Leo Yan <leo.yan@arm.com>
-
-
->          cpu = sample["cpu"]
->          ip = sample["ip"]
-> @@ -243,9 +244,11 @@ def process_event(param_dict):
->          # Record for previous sample packet
->          cpu_data[str(cpu) + 'addr'] = addr
-> 
-> -       # Handle CS_ETM_TRACE_ON packet if start_addr=0 and stop_addr=4
-> -       if (start_addr == 0 and stop_addr == 4):
-> -               print("CPU%d: CS_ETM_TRACE_ON packet is inserted" % cpu)
-> +       # Filter out zero start_address. Optionally identify CS_ETM_TRACE_ON packet
-> +       # if start_addr=0 and stop_addr=4.
-> +       if (start_addr == 0):
-> +               if ((stop_addr == 4) and (options.verbose == True)):
-> +                       print("CPU%d: CS_ETM_TRACE_ON packet is inserted" % cpu)
->                  return
-> 
->          if (start_addr < int(dso_start) or start_addr > int(dso_end)):
-> @@ -262,13 +265,14 @@ def process_event(param_dict):
->                  # vm_start to zero.
->                  if (dso == "[kernel.kallsyms]" or dso_start == 0x400000):
->                          dso_vm_start = 0
-> +                       map_pgoff = 0
->                  else:
->                          dso_vm_start = int(dso_start)
-> 
->                  dso_fname = get_dso_file_path(dso, dso_bid)
->                  if path.exists(dso_fname):
-> -                       print_disam(dso_fname, dso_vm_start, start_addr, stop_addr)
-> +                       print_disam(dso_fname, dso_vm_start, start_addr + map_pgoff, stop_addr + map_pgoff)
->                  else:
-> -                       print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr, stop_addr))
-> +                       print("Failed to find dso %s for address range [ 0x%x .. 0x%x ]" % (dso, start_addr + int(map_pgoff), stop_addr + int(map_pgoff)))
-
-> 
->          print_srccode(comm, param_dict, sample, symbol, dso)
-> --
-> 2.44.0
-> 
+Regards
+Adrian
