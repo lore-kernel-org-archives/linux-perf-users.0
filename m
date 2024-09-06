@@ -1,30 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3149F6EB7C;
-	Fri,  6 Sep 2024 19:50:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE1F6EB7C;
+	Fri,  6 Sep 2024 19:50:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725652228; cv=none; b=HhYw3remShbnfis12aBLJlnS27lbq1MFJEU1xwGEiBam5ny7qPSptO6W1SNRhaG8LT14ch/BFD91RmbCBtNIJ3PbSSeeHNXSuRQYBENRDelnZRPUZE/V0D7rDGFHnxaWyj3H1YpqDBIReKRTegV0dt9QwZvu1mQ8De06My3m9I4=
+	t=1725652231; cv=none; b=hpDebYqHSzE3Ezg6enRYgVK0gFUd45dCbGCujNqNUYks4fFlWyInc3ZidUEXojiBipv5huLko7W6JmRWKRybnvtc82gLhW95zwCYOIZEhl3U3pSBRQzUn+0lQcMkhgUas5ZfqVOs6OEHdkv4jpwo+AfiEhA9gfC72FYUpkwwtPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725652228; c=relaxed/simple;
-	bh=+0rvTR6As1EkOBNin/ToxockoK5ir2C06ATLrbPoXso=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nn7CasVRaGq1JjvEHxtUjJxkzh9g9rscAiH/X1FNZZuuNkVkl3OvMDHHa0GZuOsJ5QmQDualr9SNX3SyNUyV4i+bwmdnX9fdVLwIw5SEspHlTUr34OOjNyg1ITxYaVNS95SZr8VGRH/v/rHCPjEaLLnbgND4reBuUa58R2yhTpE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lj9cfqPh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725652231; c=relaxed/simple;
+	bh=RBOfFtIfaBzbZk1V1Wn7nJAMmGniCI6WDUhM9EGwzuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=pi7xwf/P2ddmuJ07ZcHA4G8LcEwYLHp/z1Cy+PhXdtrZ4GmTjLF6P1ZWzh1Kb+ZltDzjaozmNAk1+S0F7/kvNkYOd68YU7570TLxDG7ryDHI26vSonrlnifHxdKs+fmVp/i047XCV/kDwPw9GXzFtsEauS9ZoPi1wCIFPOtCDA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YCaGpExI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lj9cfqPh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3B6BC4CEC4;
-	Fri,  6 Sep 2024 19:50:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YCaGpExI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D80C4CEC7;
+	Fri,  6 Sep 2024 19:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725652227;
-	bh=+0rvTR6As1EkOBNin/ToxockoK5ir2C06ATLrbPoXso=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lj9cfqPhy0acNXN1iK6bJ4nOw2ZsKB66j6nu2lxZaQ20/se+l4g6pbJHPoDxFUZRK
-	 QIiRrDvDlyifAxSLXeUef64V8RoYc/BzWesEThebB+XoMbETkJFFYUXTXlM98/M92E
-	 L4vaNHfs0swGUhpX3dI42lVXOComZFcXZGRDbznIb1y8bEvxJPSAJ2pEINHEEnMbe4
-	 YLxNuVmWSxsXgD1xW5Fpc+qZsIStJFydbF8DIRg53uZx49FIQHNmMbi0P4557Kl59v
-	 s9jNQuTdGHEyX+7cRWYOkc03WrrSd75mUHWNEQlG2EDWQL6QhWMMWEPZpYqT8SB2Fd
-	 Db+zyYvJkXC7A==
+	s=k20201202; t=1725652231;
+	bh=RBOfFtIfaBzbZk1V1Wn7nJAMmGniCI6WDUhM9EGwzuo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YCaGpExIluIecU8/BLryuZIDkx1qP3Ac7oaspBFM9FmjeiAZ020wQDHGpsQF4RDdx
+	 wOlFWAbOqsIfnXCfrQm1yzPGLccfjj50jjxrOj3a8iG7WHSPzfMwRLNd2ofBWrlpqZ
+	 ib+hNXGNW/jzIbRHekPeXFmz5SH/aVTJN+YJ/w2rX7Kzp4gzjMZ68kVFQtDJRS8MZA
+	 l/1AIq4KmMGexBXxZ4ZhRgl7GRJc8WJLmrMw0w35/bfrY26vcOFwsrlPC4IKAHvv5G
+	 3fvVwIgMoUNysRk/SH0cTaGVbCFOL27zwpGxaDo4aYjWQ6aIX8PmuieMj+Q7viRAnB
+	 SpQhmx4ZzA+GA==
 From: Arnaldo Carvalho de Melo <acme@kernel.org>
 To: Namhyung Kim <namhyung@kernel.org>
 Cc: Ingo Molnar <mingo@kernel.org>,
@@ -36,14 +37,16 @@ Cc: Ingo Molnar <mingo@kernel.org>,
 	Clark Williams <williams@redhat.com>,
 	linux-kernel@vger.kernel.org,
 	linux-perf-users@vger.kernel.org,
-	Howard Chu <howardchu95@gmail.com>,
-	Andrii Nakryiko <andrii@kernel.org>,
+	Arnaldo Carvalho de Melo <acme@redhat.com>,
 	Alan Maguire <alan.maguire@oracle.com>,
-	Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH RFC 0/2] Prep perf trace for a generic BPF+BTF pretty printer
-Date: Fri,  6 Sep 2024 16:50:18 -0300
-Message-ID: <20240906195020.481841-1-acme@kernel.org>
+	Howard Chu <howardchu95@gmail.com>,
+	Andrii Nakryiko <andrii@kernel.org>
+Subject: [PATCH 1/2] perf trace augmented_syscalls.bpf: Move the renameat augmenter to renameat2, temporarily
+Date: Fri,  6 Sep 2024 16:50:19 -0300
+Message-ID: <20240906195020.481841-2-acme@kernel.org>
 X-Mailer: git-send-email 2.46.0
+In-Reply-To: <20240906195020.481841-1-acme@kernel.org>
+References: <20240906195020.481841-1-acme@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -54,37 +57,55 @@ Content-Transfer-Encoding: 8bit
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-Hi,
+While trying to shape Howard Chu's generic BPF augmenter transition into
+the codebase I got stuck with the renameat2 syscall.
 
-	This is an attempt at paving the way for the remaining parts of
-Howard's work on this years GSoC to be merged, as we want to keep the
-existing pretty printers for the few structs we have, that have special
-characteristics (see the commit logs) while having the generic BPF + BTF
-collector/pretty printer, using the libbpf BPF dumper (see more ideas on
-the commit log on how to improve it, maybe even getting
-tools/perf/trace/beauty/ into tools/lib/beauty/ to get reused by
-libbpf).
+Until I noticed that the attempt at reusing augmenters were making it
+use the 'openat' syscall augmenter, that collect just one string syscall
+arg, for the 'renameat2' syscall, that takes two strings.
 
-	I plan to work on the weekend to plugging his latest series on
-top of these patches so that we can get it merged in the next merge
-window.
+So, for the moment, just to help in this transition period, since
+'renameat2' is what is used these days in the 'mv' utility, just make
+the BPF collector be associated with the more widely used syscall,
+hopefully the transition to Howard's generic BPF augmenter will cure
+this, so get this out of the way for now!
 
-	Any comment/test is more than welcome,
+So now we still have that odd "reuse", but for something we're not
+testing so won't get in the way anymore:
 
-- Arnaldo
+  root@number:~# rm -f 987654 ; touch 123456 ; perf trace -vv -e rename* mv 123456 987654 |& grep renameat
+  Reusing "openat" BPF sys_enter augmenter for "renameat"
+       0.000 ( 0.079 ms): mv/1158612 renameat2(olddfd: CWD, oldname: "123456", newdfd: CWD, newname: "987654", flags: NOREPLACE) = 0
+  root@number:~#
 
-Arnaldo Carvalho de Melo (2):
-  perf trace augmented_syscalls.bpf: Move the renameat augmenter to
-    renameat2, temporarily
-  perf trace: Use a common encoding for augmented arguments, with size +
-    error + payload
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Howard Chu <howardchu95@gmail.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>
+Cc: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
- tools/perf/trace/beauty/perf_event_open.c     |   2 +-
- tools/perf/trace/beauty/sockaddr.c            |   2 +-
- tools/perf/trace/beauty/timespec.c            |   2 +-
- .../bpf_skel/augmented_raw_syscalls.bpf.c     | 108 +++++++++++-------
- 4 files changed, 68 insertions(+), 46 deletions(-)
-
+diff --git a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+index 0acbd74e8c760956..0f9bd2690d4e5295 100644
+--- a/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
++++ b/tools/perf/util/bpf_skel/augmented_raw_syscalls.bpf.c
+@@ -260,8 +260,8 @@ int sys_enter_rename(struct syscall_enter_args *args)
+ 	return augmented__output(args, augmented_args, len);
+ }
+ 
+-SEC("tp/syscalls/sys_enter_renameat")
+-int sys_enter_renameat(struct syscall_enter_args *args)
++SEC("tp/syscalls/sys_enter_renameat2")
++int sys_enter_renameat2(struct syscall_enter_args *args)
+ {
+ 	struct augmented_args_payload *augmented_args = augmented_args_payload();
+ 	const void *oldpath_arg = (const void *)args->args[1],
 -- 
 2.46.0
 
