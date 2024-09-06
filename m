@@ -1,97 +1,279 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8A81459FA;
-	Fri,  6 Sep 2024 10:19:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725617942; cv=pass; b=QexGxZXiqtnFYqk3UMsM9+CcbvZZ516QEHFZ+dJO+LDAOERx2hE4gazbKrNnFvQGb04q9Kxd4EqkbEv/E2eZczD8faPvlPDqdsEMWUWjCpAsWB7dPbEb6fcrpjHfk7b2i+dMqZQdqXhUxMoGQi09406riENxbWOhlEcvfP3+FGQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725617942; c=relaxed/simple;
-	bh=BRWofQge9sexGsoBhj4FyqYH8VnowpJU4XLwvMOPe1w=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=knVgvX4F0TFFem5viNPuU6V6Pog6OefS2po13XnHFB4j58bnEGKJzQC37oFcGVPnMXccIRSeBToJIes4sihA+eO9h+s2X6zZ9dYCRwNbqEXHd+4CsaxM91nYX06Z8F97ybTgEWa8hercV+UoLHc5BieZC7eOIxMd9wrAJge1eEQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=IgMyyyps; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81AE31C9ED5;
+	Fri,  6 Sep 2024 10:59:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725620360; cv=none; b=jlOXIO6RrwDepQ/8s2UR5bw+VKFFRh2+Hy1na2mQU7qdoD0y9Patd3pswbC2fBNCg4f7cEi9ypW/kmnR5nlPLLYdEkE4yxjq1FqV9cb0i6bWPy0bXBNInAqC+9CAcpSSCk2zuVOsR5/RSw8pO4GjOHNPd5VwtJSZzCN0+MlwyyU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725620360; c=relaxed/simple;
+	bh=kWIRrhMCqetcKJLrjuemzYmUBwzxx2mZ/11YD72kPxk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u/ccTLHgLFoTKgGHbLIOiZG73cVMVbmUA4+L5FSh9QTXGmB0eBCJQJLm0BHELG5kMVPVv0tDrCi2uSQ5unzOr76ooAzTKX7Mwht8xGW9UDJgnnuePF7TldtM++9FSR3SXrJMa0hwRzTY0DO7Hj7fxWEtO8Fa7hDMtXH/iM+I7P4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JUkwxZQk; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="IgMyyyps"
-ARC-Seal: i=1; a=rsa-sha256; t=1725617921; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=oCjCSHpi+yyNyBYa+Tx9U2AxjABzZ+IwSseUgnFz56D3+h8+TGkJldaQ79wKSPT+52ke+00+gRHNuw4S1Zs51pAeUS8YfKIRDNaAs4L/GTPCcG36eE4n5P+B0PyylAmHBozU2mzyLumUntVe7XrwCVhFkA0ROhiR1yT46YCOf3o=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1725617921; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=SoQoRpH+NUi/aH/TnvZGg42kAhbku15tBQ88cZXF1y0=; 
-	b=in+8XObwNnFp5hMAmRcU3UECH0RhlXRBBDXlYkY/74Um1eam9unxHMX2VKlN/QsggtKrltCwNIH9ntBDWTSx67sBCjIqNtM/1OjNFXeC91fGeDwb4hJYZC54fliBfgWu1sbduIbLS7UqqQXMtzYinpqcFIJmWtUDuMFFpJ2OqS4=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
-	dmarc=pass header.from=<usama.anjum@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1725617921;
-	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
-	bh=SoQoRpH+NUi/aH/TnvZGg42kAhbku15tBQ88cZXF1y0=;
-	b=IgMyyypsWp8/qexA4jlxBe4u2lIIGOP1SwDX7BiSw9hYjx7Id3peHgQ4puiCRHFz
-	lSXTum+jw0A+L2Ce7n24qXlB86/BdsuVYcPKROlqVhJqWZn7kFLcuXfJW9EPXTqMNYI
-	n1/JHpjTrb6R+5ocv4OKnsUgnTLQEXo52br5XzG4=
-Received: by mx.zohomail.com with SMTPS id 1725617920753531.4294471338798;
-	Fri, 6 Sep 2024 03:18:40 -0700 (PDT)
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Oleg Nesterov <oleg@redhat.com>,
-	Sven Schnelle <svens@linux.ibm.com>,
-	Andrew Morton <akpm@linux-foundation.org>
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	kernel@collabora.com,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH] uprobes: remove unneeded condition
-Date: Fri,  6 Sep 2024 15:18:25 +0500
-Message-Id: <20240906101825.177490-1-usama.anjum@collabora.com>
-X-Mailer: git-send-email 2.39.2
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JUkwxZQk"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725620358; x=1757156358;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=kWIRrhMCqetcKJLrjuemzYmUBwzxx2mZ/11YD72kPxk=;
+  b=JUkwxZQkO5NkHFtVDRt8xHjpuPzF+OewmxWZEOt7iFd7bFBG9PdstiW5
+   JuvTDFtyLFYWdBeYftJukNyg38lNN0FdXaymkiO8yrF4eJIGUANJ2oSZ2
+   zPvqzeVl69rhPpaOclrIJjb+k3oH12YTT3Ow9wa+uR8MPiY3mIfsdYd4m
+   4KhBurM1BNTPz0rnptTm35ZznVD9g0PMz4HnMbSERkKNatMWcVYUnRSfu
+   BFKnYOYh6sPo2eizHSrWdlARkf/v/SI4z5XXdozTTODvDEsHid+uNviwf
+   3bKgM6vF8Fl7FVo0NxCOBYo2S//da3udOjomijRFuFymMLFoJWdUq+scV
+   g==;
+X-CSE-ConnectionGUID: eOZ12nnnRmi+JlQAWGxiTA==
+X-CSE-MsgGUID: GMniTc/iQYqfsSn7JRwqfw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11186"; a="35727115"
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="35727115"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 03:59:18 -0700
+X-CSE-ConnectionGUID: KwyU2Gl0Qcqosa1wUyVFlQ==
+X-CSE-MsgGUID: qig+13V8TwCYv2ke9SYhAQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,207,1719903600"; 
+   d="scan'208";a="65624579"
+Received: from dapengmi-mobl1.ccr.corp.intel.com (HELO [10.124.233.125]) ([10.124.233.125])
+  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 03:59:12 -0700
+Message-ID: <f7b2c537-840d-4043-944e-59926f0fa3bb@linux.intel.com>
+Date: Fri, 6 Sep 2024 18:59:09 +0800
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v3 06/58] perf: Support get/put passthrough PMU
+ interfaces
+To: Mingwei Zhang <mizhang@google.com>,
+ Sean Christopherson <seanjc@google.com>, Paolo Bonzini
+ <pbonzini@redhat.com>, Xiong Zhang <xiong.y.zhang@intel.com>,
+ Kan Liang <kan.liang@intel.com>, Zhenyu Wang <zhenyuw@linux.intel.com>,
+ Manali Shukla <manali.shukla@amd.com>, Sandipan Das <sandipan.das@amd.com>
+Cc: Jim Mattson <jmattson@google.com>, Stephane Eranian <eranian@google.com>,
+ Ian Rogers <irogers@google.com>, Namhyung Kim <namhyung@kernel.org>,
+ gce-passthrou-pmu-dev@google.com, Samantha Alt <samantha.alt@intel.com>,
+ Zhiyuan Lv <zhiyuan.lv@intel.com>, Yanfei Xu <yanfei.xu@intel.com>,
+ Like Xu <like.xu.linux@gmail.com>, Peter Zijlstra <peterz@infradead.org>,
+ Raghavendra Rao Ananta <rananta@google.com>, kvm@vger.kernel.org,
+ linux-perf-users@vger.kernel.org
+References: <20240801045907.4010984-1-mizhang@google.com>
+ <20240801045907.4010984-7-mizhang@google.com>
+Content-Language: en-US
+From: "Mi, Dapeng" <dapeng1.mi@linux.intel.com>
+In-Reply-To: <20240801045907.4010984-7-mizhang@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The area cannot be NULL as we are getting it through container_of().
-Hence there is no need to check its validity. Remove the if condition
-and return statement.
 
-Fixes: c67907222c56 ("uprobes: use vm_special_mapping close() functionality")
-Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
----
- kernel/events/uprobes.c | 3 ---
- 1 file changed, 3 deletions(-)
+On 8/1/2024 12:58 PM, Mingwei Zhang wrote:
+> From: Kan Liang <kan.liang@linux.intel.com>
+>
+> Currently, the guest and host share the PMU resources when a guest is
+> running. KVM has to create an extra virtual event to simulate the
+> guest's event, which brings several issues, e.g., high overhead, not
+> accuracy and etc.
+>
+> A new passthrough PMU method is proposed to address the issue. It requires
+> that the PMU resources can be fully occupied by the guest while it's
+> running. Two new interfaces are implemented to fulfill the requirement.
+> The hypervisor should invoke the interface while creating a guest which
+> wants the passthrough PMU capability.
+>
+> The PMU resources should only be temporarily occupied as a whole when a
+> guest is running. When the guest is out, the PMU resources are still
+> shared among different users.
+>
+> The exclude_guest event modifier is used to guarantee the exclusive
+> occupation of the PMU resources. When creating a guest, the hypervisor
+> should check whether there are !exclude_guest events in the system.
+> If yes, the creation should fail. Because some PMU resources have been
+> occupied by other users.
+> If no, the PMU resources can be safely accessed by the guest directly.
+> Perf guarantees that no new !exclude_guest events are created when a
+> guest is running.
+>
+> Only the passthrough PMU is affected, but not for other PMU e.g., uncore
+> and SW PMU. The behavior of those PMUs are not changed. The guest
+> enter/exit interfaces should only impact the supported PMUs.
+> Add a new PERF_PMU_CAP_PASSTHROUGH_VPMU flag to indicate the PMUs that
+> support the feature.
+>
+> Add nr_include_guest_events to track the !exclude_guest events of PMU
+> with PERF_PMU_CAP_PASSTHROUGH_VPMU.
+>
+> Suggested-by: Sean Christopherson <seanjc@google.com>
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>  include/linux/perf_event.h | 10 ++++++
+>  kernel/events/core.c       | 66 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+>
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index a5304ae8c654..45d1ea82aa21 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -291,6 +291,7 @@ struct perf_event_pmu_context;
+>  #define PERF_PMU_CAP_NO_EXCLUDE			0x0040
+>  #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+>  #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+> +#define PERF_PMU_CAP_PASSTHROUGH_VPMU		0x0200
+>  
+>  struct perf_output_handle;
+>  
+> @@ -1728,6 +1729,8 @@ extern void perf_event_task_tick(void);
+>  extern int perf_event_account_interrupt(struct perf_event *event);
+>  extern int perf_event_period(struct perf_event *event, u64 value);
+>  extern u64 perf_event_pause(struct perf_event *event, bool reset);
+> +int perf_get_mediated_pmu(void);
+> +void perf_put_mediated_pmu(void);
+>  #else /* !CONFIG_PERF_EVENTS: */
+>  static inline void *
+>  perf_aux_output_begin(struct perf_output_handle *handle,
+> @@ -1814,6 +1817,13 @@ static inline u64 perf_event_pause(struct perf_event *event, bool reset)
+>  {
+>  	return 0;
+>  }
+> +
+> +static inline int perf_get_mediated_pmu(void)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline void perf_put_mediated_pmu(void)			{ }
+>  #endif
+>  
+>  #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 8f908f077935..45868d276cde 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -402,6 +402,20 @@ static atomic_t nr_bpf_events __read_mostly;
+>  static atomic_t nr_cgroup_events __read_mostly;
+>  static atomic_t nr_text_poke_events __read_mostly;
+>  static atomic_t nr_build_id_events __read_mostly;
+> +static atomic_t nr_include_guest_events __read_mostly;
+> +
+> +static atomic_t nr_mediated_pmu_vms;
+> +static DEFINE_MUTEX(perf_mediated_pmu_mutex);
+> +
+> +/* !exclude_guest event of PMU with PERF_PMU_CAP_PASSTHROUGH_VPMU */
+> +static inline bool is_include_guest_event(struct perf_event *event)
+> +{
+> +	if ((event->pmu->capabilities & PERF_PMU_CAP_PASSTHROUGH_VPMU) &&
+> +	    !event->attr.exclude_guest)
+> +		return true;
+> +
+> +	return false;
+> +}
+>  
+>  static LIST_HEAD(pmus);
+>  static DEFINE_MUTEX(pmus_lock);
+> @@ -5212,6 +5226,9 @@ static void _free_event(struct perf_event *event)
+>  
+>  	unaccount_event(event);
+>  
+> +	if (is_include_guest_event(event))
+> +		atomic_dec(&nr_include_guest_events);
+> +
+>  	security_perf_event_free(event);
+>  
+>  	if (event->rb) {
+> @@ -5769,6 +5786,36 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
+>  }
+>  EXPORT_SYMBOL_GPL(perf_event_pause);
+>  
+> +/*
+> + * Currently invoked at VM creation to
+> + * - Check whether there are existing !exclude_guest events of PMU with
+> + *   PERF_PMU_CAP_PASSTHROUGH_VPMU
+> + * - Set nr_mediated_pmu_vms to prevent !exclude_guest event creation on
+> + *   PMUs with PERF_PMU_CAP_PASSTHROUGH_VPMU
+> + *
+> + * No impact for the PMU without PERF_PMU_CAP_PASSTHROUGH_VPMU. The perf
+> + * still owns all the PMU resources.
+> + */
+> +int perf_get_mediated_pmu(void)
+> +{
+> +	guard(mutex)(&perf_mediated_pmu_mutex);
+> +	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
+> +		return 0;
+> +
+> +	if (atomic_read(&nr_include_guest_events))
+> +		return -EBUSY;
+> +
+> +	atomic_inc(&nr_mediated_pmu_vms);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(perf_get_mediated_pmu);
+> +
+> +void perf_put_mediated_pmu(void)
+> +{
+> +	atomic_dec(&nr_mediated_pmu_vms);
+> +}
+> +EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
+> +
+>  /*
+>   * Holding the top-level event's child_mutex means that any
+>   * descendant process that has inherited this event will block
+> @@ -11907,6 +11954,17 @@ static void account_event(struct perf_event *event)
+>  	account_pmu_sb_event(event);
+>  }
+>  
+> +static int perf_account_include_guest_event(void)
+> +{
+> +	guard(mutex)(&perf_mediated_pmu_mutex);
+> +
+> +	if (atomic_read(&nr_mediated_pmu_vms))
+> +		return -EACCES;
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index 778f1978538ce..9f864504a7e92 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -1474,9 +1474,6 @@ static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_ar
- 	delayed_uprobe_remove(NULL, vma->vm_mm);
- 	mutex_unlock(&delayed_uprobe_lock);
- 
--	if (!area)
--		return;
--
- 	put_page(area->pages[0]);
- 	kfree(area->bitmap);
- 	kfree(area);
--- 
-2.39.2
+Kan, Namhyung posted a patchset
+https://lore.kernel.org/all/20240904064131.2377873-1-namhyung@kernel.org/
+which would remove to set exclude_guest flag from perf tools by default.
+This may impact current mediated vPMU solution, but fortunately the
+patchset provides a fallback mechanism to add exclude_guest flag if kernel
+returns "EOPNOTSUPP".
 
+So we'd better return "EOPNOTSUPP" instead of "EACCES" here. BTW, returning
+"EOPNOTSUPP" here looks more reasonable than "EACCES".
+
+
+> +
+> +	atomic_inc(&nr_include_guest_events);
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Allocate and initialize an event structure
+>   */
+> @@ -12114,11 +12172,19 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+>  	if (err)
+>  		goto err_callchain_buffer;
+>  
+> +	if (is_include_guest_event(event)) {
+> +		err = perf_account_include_guest_event();
+> +		if (err)
+> +			goto err_security_alloc;
+> +	}
+> +
+>  	/* symmetric to unaccount_event() in _free_event() */
+>  	account_event(event);
+>  
+>  	return event;
+>  
+> +err_security_alloc:
+> +	security_perf_event_free(event);
+>  err_callchain_buffer:
+>  	if (!event->parent) {
+>  		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
