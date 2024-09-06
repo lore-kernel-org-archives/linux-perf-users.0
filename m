@@ -1,165 +1,97 @@
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52820156887;
-	Fri,  6 Sep 2024 08:44:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725612252; cv=none; b=A+IzveJ3xMGH07tVww+QOcc1S5PpEn6tU81Znl5X1ZIDLgz7qxEWhcBShqw7wVWuB7rN5DIi+MlSzHBshTtnQ4RLxaLwqwtLKwuq7qoG9HD667B/CKjBgeaQqY9cXS3tpK1MiuY0dwjw/3duAyiJ9SICvIkKESQajrN7Lere3gM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725612252; c=relaxed/simple;
-	bh=y9dnPvC36xO+z9EToCzGrlnSVPtP/LEMuO1W8WGXtIo=;
-	h=Subject:To:References:CC:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=N0fipSB3K187P8fqO5/hh7/nwxrfDNWiO3yV7RClUgmDoQCZTIA9ayky3Hc3ECRaGngRdobF4B/xI/6Fh/02/hD9FWCHL7wBKm2qRM0tkTsZ8HkuLstP8UAONM3qnwxIsCP2mOCX4f+G8SffVHjTcFtI8zzzc6wVDmRiaU5OPek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4X0V9k2ZGPzyR72;
-	Fri,  6 Sep 2024 16:43:06 +0800 (CST)
-Received: from dggpeml500002.china.huawei.com (unknown [7.185.36.158])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8CC2F1800F2;
-	Fri,  6 Sep 2024 16:44:06 +0800 (CST)
-Received: from [10.67.120.218] (10.67.120.218) by
- dggpeml500002.china.huawei.com (7.185.36.158) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Fri, 6 Sep 2024 16:44:06 +0800
-Subject: Re: [PATCH] perf metrics: Fixes stat cmd cannot parse sys metrics
- when cpus MIDR mismatch
-To: Yicong Yang <yangyicong@huawei.com>, <irogers@google.com>,
-	<peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-	<namhyung@kernel.org>, <mark.rutland@arm.com>,
-	<alexander.shishkin@linux.intel.com>, <jolsa@kernel.org>,
-	<adrian.hunter@intel.com>, <kan.liang@linux.intel.com>
-References: <20240807040002.47119-1-hejunhao3@huawei.com>
- <00b3d618-628f-3366-7195-2300468eb450@huawei.com>
-CC: <linux-perf-users@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-	<prime.zeng@hisilicon.com>
-From: hejunhao <hejunhao3@huawei.com>
-Message-ID: <9a2dd2ea-c38d-ba3d-99b4-d377250060bd@huawei.com>
-Date: Fri, 6 Sep 2024 16:44:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8A81459FA;
+	Fri,  6 Sep 2024 10:19:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725617942; cv=pass; b=QexGxZXiqtnFYqk3UMsM9+CcbvZZ516QEHFZ+dJO+LDAOERx2hE4gazbKrNnFvQGb04q9Kxd4EqkbEv/E2eZczD8faPvlPDqdsEMWUWjCpAsWB7dPbEb6fcrpjHfk7b2i+dMqZQdqXhUxMoGQi09406riENxbWOhlEcvfP3+FGQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725617942; c=relaxed/simple;
+	bh=BRWofQge9sexGsoBhj4FyqYH8VnowpJU4XLwvMOPe1w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=knVgvX4F0TFFem5viNPuU6V6Pog6OefS2po13XnHFB4j58bnEGKJzQC37oFcGVPnMXccIRSeBToJIes4sihA+eO9h+s2X6zZ9dYCRwNbqEXHd+4CsaxM91nYX06Z8F97ybTgEWa8hercV+UoLHc5BieZC7eOIxMd9wrAJge1eEQ=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b=IgMyyyps; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=usama.anjum@collabora.com header.b="IgMyyyps"
+ARC-Seal: i=1; a=rsa-sha256; t=1725617921; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=oCjCSHpi+yyNyBYa+Tx9U2AxjABzZ+IwSseUgnFz56D3+h8+TGkJldaQ79wKSPT+52ke+00+gRHNuw4S1Zs51pAeUS8YfKIRDNaAs4L/GTPCcG36eE4n5P+B0PyylAmHBozU2mzyLumUntVe7XrwCVhFkA0ROhiR1yT46YCOf3o=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1725617921; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=SoQoRpH+NUi/aH/TnvZGg42kAhbku15tBQ88cZXF1y0=; 
+	b=in+8XObwNnFp5hMAmRcU3UECH0RhlXRBBDXlYkY/74Um1eam9unxHMX2VKlN/QsggtKrltCwNIH9ntBDWTSx67sBCjIqNtM/1OjNFXeC91fGeDwb4hJYZC54fliBfgWu1sbduIbLS7UqqQXMtzYinpqcFIJmWtUDuMFFpJ2OqS4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=usama.anjum@collabora.com;
+	dmarc=pass header.from=<usama.anjum@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1725617921;
+	s=zohomail; d=collabora.com; i=usama.anjum@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Transfer-Encoding:Reply-To;
+	bh=SoQoRpH+NUi/aH/TnvZGg42kAhbku15tBQ88cZXF1y0=;
+	b=IgMyyypsWp8/qexA4jlxBe4u2lIIGOP1SwDX7BiSw9hYjx7Id3peHgQ4puiCRHFz
+	lSXTum+jw0A+L2Ce7n24qXlB86/BdsuVYcPKROlqVhJqWZn7kFLcuXfJW9EPXTqMNYI
+	n1/JHpjTrb6R+5ocv4OKnsUgnTLQEXo52br5XzG4=
+Received: by mx.zohomail.com with SMTPS id 1725617920753531.4294471338798;
+	Fri, 6 Sep 2024 03:18:40 -0700 (PDT)
+From: Muhammad Usama Anjum <usama.anjum@collabora.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Oleg Nesterov <oleg@redhat.com>,
+	Sven Schnelle <svens@linux.ibm.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
+	kernel@collabora.com,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org
+Subject: [PATCH] uprobes: remove unneeded condition
+Date: Fri,  6 Sep 2024 15:18:25 +0500
+Message-Id: <20240906101825.177490-1-usama.anjum@collabora.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <00b3d618-628f-3366-7195-2300468eb450@huawei.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml500002.china.huawei.com (7.185.36.158)
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Hi, Yicong
+The area cannot be NULL as we are getting it through container_of().
+Hence there is no need to check its validity. Remove the if condition
+and return statement.
 
+Fixes: c67907222c56 ("uprobes: use vm_special_mapping close() functionality")
+Signed-off-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+---
+ kernel/events/uprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-Thanks for your comments.
-
-On 2024/9/5 11:16, Yicong Yang wrote:
-> On 2024/8/7 12:00, Junhao He wrote:
->> On some platforms that do not use cpu MIDR mapping, such as hisilicon
->> HIP09 platform. The list cmd can display the CPA metrics, but the stat
->> cmd cannot work well to parse of CPA metrics.
->>
->>    $ perf list metric
->>    Metrics:
->>      cpa_p0_avg_bw
->>           [Average bandwidth of CPA Port 0]
->>      cpa_p1_avg_bw
->>           [Average bandwidth of CPA Port 1]
->>    $ perf stat -M cpa_p0_avg_bw --timeout 1000 --> No error messages output
->>    $ echo $?
->>    234
->>
->> Currently, the metricgroup__parse_groups() expects to find an cpu metric
->> table, but the hisilicon/hip09 doesn't uses cpus MIDR to map json events
->> and metrics, so pmu_metrics_table__find() will return NULL, than the cmd
->> run failed.
->> But in metricgroup__add_metric(), the function parse for each sys metric
->> and add it to metric_list, which also will get an valid sys metric table.
->> So, we can ignore the NULL result of pmu_metrics_table__find() and to use
->> the sys metric table.
->>
->> metricgroup__parse_groups
->>   -> parse_groups
->>       -> metricgroup__add_metric_list
->>           -> metricgroup__add_metric
->>               -> pmu_for_each_sys_metric   --> We've got the sys metric
->>
->> Testing:
->>    [root@localhost ~]# perf stat -M cpa_p0_avg_bw --no-merge --timeout 1000
->>
->>     Performance counter stats for 'system wide':
->>
->>     CPU0        1,001,121,239      cpa_cycles [hisi_sicl0_cpa0]     #     0.00 cpa_p0_avg_bw
->>     CPU0                    0      cpa_p0_wr_dat [hisi_sicl0_cpa0]
->>     CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl0_cpa0]
->>     CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl0_cpa0]
->>     CPU0        1,001,094,851      cpa_cycles [hisi_sicl2_cpa0]     #     0.00 cpa_p0_avg_bw
->>     CPU0                    0      cpa_p0_wr_dat [hisi_sicl2_cpa0]
->>     CPU0                    0      cpa_p0_rd_dat_64b [hisi_sicl2_cpa0]
->>     CPU0                    0      cpa_p0_rd_dat_32b [hisi_sicl2_cpa0]
->>
->>         1.001306160 seconds time elapsed
->>
->> Signed-off-by: Junhao He <hejunhao3@huawei.com>
-> Tested-by: Yicong Yang <yangyicong@hisilicon.com>
->
-> The changes looks fine to me, I'd prefer to add some documents for this. See below.
->
->> ---
->>   tools/perf/util/metricgroup.c | 6 ++----
->>   1 file changed, 2 insertions(+), 4 deletions(-)
->>
->> diff --git a/tools/perf/util/metricgroup.c b/tools/perf/util/metricgroup.c
->> index 69f6a46402c3..fa62fb3418b6 100644
->> --- a/tools/perf/util/metricgroup.c
->> +++ b/tools/perf/util/metricgroup.c
->> @@ -1123,7 +1123,7 @@ static int metricgroup__add_metric_sys_event_iter(const struct pmu_metric *pm,
->>   
->>   	ret = add_metric(d->metric_list, pm, d->modifier, d->metric_no_group,
->>   			 d->metric_no_threshold, d->user_requested_cpu_list,
->> -			 d->system_wide, d->root_metric, d->visited, d->table);
->> +			 d->system_wide, d->root_metric, d->visited, d->table ?: table);
->>   	if (ret)
->>   		goto out;
->>   
->> @@ -1239,7 +1239,7 @@ static int metricgroup__add_metric(const char *pmu, const char *metric_name, con
->>   	int ret;
->>   	bool has_match = false;
->>   
->> -	{
->> +	if (table) {
-> may add a comment here. If !table then the metrics may belong to a system PMU.
-
-Yes, I will do that.
-
->>   		struct metricgroup__add_metric_data data = {
->>   			.list = &list,
->>   			.pmu = pmu,
->> @@ -1696,8 +1696,6 @@ int metricgroup__parse_groups(struct evlist *perf_evlist,
->>   {
->>   	const struct pmu_metrics_table *table = pmu_metrics_table__find();
->>   
->> -	if (!table)
->> -		return -EINVAL;
-> may add a debug message to mention we're parsing metrics of system PMUs.
->
-> Thanks.
-
-Yes, I will do that.
-
-Best regards,
-Junhao.
-
->
->>   	if (hardware_aware_grouping)
->>   		pr_debug("Use hardware aware grouping instead of traditional metric grouping method\n");
->>   
->>
-> .
->
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 778f1978538ce..9f864504a7e92 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -1474,9 +1474,6 @@ static void uprobe_clear_state(const struct vm_special_mapping *sm, struct vm_ar
+ 	delayed_uprobe_remove(NULL, vma->vm_mm);
+ 	mutex_unlock(&delayed_uprobe_lock);
+ 
+-	if (!area)
+-		return;
+-
+ 	put_page(area->pages[0]);
+ 	kfree(area->bitmap);
+ 	kfree(area);
+-- 
+2.39.2
 
