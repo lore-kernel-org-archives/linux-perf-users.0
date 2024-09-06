@@ -1,146 +1,158 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3215D1CEAC9;
-	Fri,  6 Sep 2024 14:17:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB1F1D04A0;
+	Fri,  6 Sep 2024 14:33:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725632254; cv=none; b=Samcx0KmajObVx37b2T5dXABcSdxu5Or3+h0VZYffDUa5rgdIzNnjI5T96N31X47BHz8D+qoJ3cx8+2pXwoK1ZWI92XCzzReNnW9e7h4YnEj7euiBwIvq8adgHJJ6GrHIz1Z21kqXL/F3njuEYhIlbNsso3zSL29Wlnp+zWX6Kw=
+	t=1725633192; cv=none; b=BSsFU1uUFUfncXiXN/3Y1nYx45UdQFlP3JLeUqxXRdSLP4lqFe7PlOSTKjSDdiBCp3EiQOjkLs2fkdMixL2hWzYQvwZiHlpM8a05oCxLv+l7Of0lNaOyG6aMBzovcQORNzTxqzOf6AKvRGNbTD3xbQzz+29m0GmJsLY3hSgG+JQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725632254; c=relaxed/simple;
-	bh=0wRpQFO2+nHGw4Jou2zEKKHanK4ShNcIMY4wYr4+OIE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PtTWyBIoUNqzArO0/dyUUlM9naxTFc0QsnfyGNEch0gQMe0yp12IBr5bKAP5Wgcv0XKfawTCo3SilI7F7mZomHn42yBgvry5YicaOYhk7rRedH0wxqgpQKWu9OoZG8pYMX1yU2xZFl5RKo8PcsS4OHazYA0t+YS3j32SKRIWokE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YOz7DNL+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725633192; c=relaxed/simple;
+	bh=8dpaCdue66SpPxJeJyg203ScP5Exdrq0AoQXlpDpZUw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Y4t4eoNwJ1z4nw9PF0oy1Zng6ZEc/OIpF8LcoJ4T5KebJfjppXX2oDO8N3WBtoBqNgnALUMgdcdTbOnRq5jWK8UTFYlmhjXJXuCuiQxeT3/xahBCXbbOYk/w+ER3b3PEYaKmkfxhwuT1Y39s7ar2nIidWgJmuUnof3vkU9Y0MxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=K+/MypGK; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YOz7DNL+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C4ADC4CEC4;
-	Fri,  6 Sep 2024 14:17:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725632253;
-	bh=0wRpQFO2+nHGw4Jou2zEKKHanK4ShNcIMY4wYr4+OIE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YOz7DNL+O2gVFj02kyvwj5HAaTOtQc14KHX0uDmy6RLWlgs3rEc1NqByjZW7/SCXS
-	 j5Uqeo1zdFaOOEKiT9xGc0H+OjoiULbK1e00bV4D3+bjp8DMXZVmqnHtZfihnrKHWe
-	 C1RTxbVARN0IEhKBMfLu3NKAjDvIZAxb4I6VQeQTQMouW8AP6Yj9PDSDq2ta0kGELB
-	 7bYS0Mc/guqcQLJAlOqc5oF6K+2Kg5guYCg290Y3qDCdFKgpUdPvKncHMzhQn2AbTj
-	 m4rQywTeZwKy13kv6m8pvasUMN6h3l+V+qHEWZ25WW805QFwodFPh6vMbZUFmvPqW0
-	 hYx4p+DtDeX/w==
-Date: Fri, 6 Sep 2024 11:17:30 -0300
-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-To: "Liang, Kan" <kan.liang@linux.intel.com>
-Cc: namhyung@kernel.org, irogers@google.com, jolsa@kernel.org,
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] perf mem: Fix missed p-core mem events on ADL and RPL
-Message-ID: <ZtsO-v3pUVezKBgE@x1>
-References: <20240905170737.4070743-1-kan.liang@linux.intel.com>
- <20240905170737.4070743-2-kan.liang@linux.intel.com>
- <ZtoHgMqNhnDdvAIi@x1>
- <1a339858-74a3-414a-9fc1-bef47c513728@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="K+/MypGK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725633190; x=1757169190;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=8dpaCdue66SpPxJeJyg203ScP5Exdrq0AoQXlpDpZUw=;
+  b=K+/MypGKLLx/qbxZ6imDe0q6AL9QUwEEmd0YOBF9vY5p/FOUVXhawV79
+   /51gsOq49iPBG+JT9LNEQGwVw/m2rrDeQzS4kPbCyTbG4jsealoBLlbKB
+   k9I5YTedSRcAsYaXyQ1Hx0zEyGOIgac1Elm7wUhzyAD0rSglYadOjSLm/
+   69xw07zRDjrK7OvVdCC4f+PJwKd/LT/t78jj9eJeNpW2nCnvParqMgj2r
+   BTW4mXeG2u9u+dMxg8g/Ng9qEM9q9gyIvG0HySI7cajXSKzuNnDO56qqk
+   lEqbQhy4crdnAZd+55tlKQaX8u/48TW9W0gyuR6VzdE3HIj/LcgIYLUxB
+   g==;
+X-CSE-ConnectionGUID: VpG5O3mvT7a90WfDUeUTNg==
+X-CSE-MsgGUID: yi3lAZxFRJCztOtAU5jilQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11187"; a="41902996"
+X-IronPort-AV: E=Sophos;i="6.10,208,1719903600"; 
+   d="scan'208";a="41902996"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 07:33:07 -0700
+X-CSE-ConnectionGUID: iw3PU8QNSY2AZN1WMu2O0Q==
+X-CSE-MsgGUID: +sM4bXIZSW2mRVRbmZ35pQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,208,1719903600"; 
+   d="scan'208";a="66003875"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Sep 2024 07:33:07 -0700
+Received: from [10.212.119.23] (kliang2-mobl1.ccr.corp.intel.com [10.212.119.23])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by linux.intel.com (Postfix) with ESMTPS id E796920B56FE;
+	Fri,  6 Sep 2024 07:33:04 -0700 (PDT)
+Message-ID: <b1002dc7-78bf-40ed-83af-12a50622fb76@linux.intel.com>
+Date: Fri, 6 Sep 2024 10:33:03 -0400
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1a339858-74a3-414a-9fc1-bef47c513728@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 04/10] perf stat: Add --exclude-guest option
+To: Namhyung Kim <namhyung@kernel.org>,
+ Arnaldo Carvalho de Melo <acme@kernel.org>, Ian Rogers <irogers@google.com>
+Cc: Jiri Olsa <jolsa@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>,
+ Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>,
+ LKML <linux-kernel@vger.kernel.org>, linux-perf-users@vger.kernel.org,
+ Ravi Bangoria <ravi.bangoria@amd.com>, Mark Rutland <mark.rutland@arm.com>,
+ James Clark <james.clark@arm.com>, Kajol Jain <kjain@linux.ibm.com>,
+ Thomas Richter <tmricht@linux.ibm.com>, Atish Patra <atishp@atishpatra.org>,
+ Palmer Dabbelt <palmer@rivosinc.com>, Mingwei Zhang <mizhang@google.com>
+References: <20240905202426.2690105-1-namhyung@kernel.org>
+ <20240905202426.2690105-5-namhyung@kernel.org>
+Content-Language: en-US
+From: "Liang, Kan" <kan.liang@linux.intel.com>
+In-Reply-To: <20240905202426.2690105-5-namhyung@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Sep 05, 2024 at 03:47:03PM -0400, Liang, Kan wrote:
-> On 2024-09-05 3:33 p.m., Arnaldo Carvalho de Melo wrote:
-> > On Thu, Sep 05, 2024 at 10:07:36AM -0700, kan.liang@linux.intel.com wrote:
-> >> From: Kan Liang <kan.liang@linux.intel.com>
-> >>
-> >> The p-core mem events are missed when launching perf mem record on ADL
-> >> and RPL.
-> >>
-> >> root@number:~# perf mem record sleep 1
-> >> Memory events are enabled on a subset of CPUs: 16-27
-> >> [ perf record: Woken up 1 times to write data ]
-> >> [ perf record: Captured and wrote 0.032 MB perf.data ]
-> >> root@number:~# perf evlist
-> >> cpu_atom/mem-loads,ldlat=30/P
-> >> cpu_atom/mem-stores/P
-> >> dummy:u
-> >>
-> >> A variable 'record' in the struct perf_mem_event is to indicate whether
-> >> a mem event in a mem_events[] should be recorded. The current code only
-> >> configure the variable for the first eligible PMU. It's good enough for
-> >> a non-hybrid machine or a hybrid machine which has the same
-> >> mem_events[]. However, if a different mem_events[] is used for different
-> >> PMUs on a hybrid machine, e.g., ADL or RPL, the 'record' for the second
-> >> PMU never get a chance to be set. The mem_events[] of the second PMU
-> >> are always ignored.
-> >>
-> >> Perf mem doesn't support the per-PMU configuration now. A
-> >> per-PMU mem_events[] 'record' variable doesn't make sense. Make it
-> >> global. That could also avoid searching for the per-PMU mem_events[]
-> >> via perf_pmu__mem_events_ptr every time.
-> >>
-> >> Fixes: abbdd79b786e ("perf mem: Clean up perf_mem_events__name()")
-> >> Reported-by: Arnaldo Carvalho de Melo <acme@kernel.org>
-> >> Closes: https://lore.kernel.org/lkml/Zthu81fA3kLC2CS2@x1/
-> >> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-> > 
-> > Looks better:
-> > 
-> > root@number:~# perf report --header-only | grep 'cmdline\|event'
-> > # cmdline : /home/acme/bin/perf mem record ls 
-> > # event : name = cpu_atom/mem-loads,ldlat=30/P, , id = { 500, 501, 502, 503, 504, 505, 506, 507, 508, 509, 510, 511 }, type = 10 (cpu_atom), size = 136, config = 0x5d0 (mem-loads), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, precise_ip = 3, sample_id_all = 1, { bp_addr, config1 } = 0x1f
-> > # event : name = cpu_atom/mem-stores/P, , id = { 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523 }, type = 10 (cpu_atom), size = 136, config = 0x6d0 (mem-stores), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, precise_ip = 3, sample_id_all = 1
-> > # event : name = cpu_core/mem-loads-aux/, , id = { 524, 525, 526, 527, 528, 529, 530, 531, 532, 533, 534, 535, 536, 537, 538, 539 }, type = 4 (cpu_core), size = 136, config = 0x8203 (mem-loads-aux), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, precise_ip = 3, sample_id_all = 1, exclude_guest = 1
-> > # event : name = cpu_core/mem-loads,ldlat=30/, , id = { 541, 542, 543, 544, 545, 546, 547, 548, 549, 550, 551, 552, 553, 554, 555, 556 }, type = 4 (cpu_core), size = 136, config = 0x1cd (mem-loads), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, inherit = 1, freq = 1, precise_ip = 2, sample_id_all = 1, exclude_guest = 1, { bp_addr, config1 } = 0x1f
-> > # event : name = cpu_core/mem-stores/P, , id = { 557, 558, 559, 560, 561, 562, 563, 564, 565, 566, 567, 568, 569, 570, 571, 572 }, type = 4 (cpu_core), size = 136, config = 0x2cd (mem-stores), { sample_period, sample_freq } = 4000, sample_type = IP|TID|TIME|ADDR|PERIOD|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, disabled = 1, inherit = 1, freq = 1, enable_on_exec = 1, precise_ip = 3, sample_id_all = 1
-> > # event : name = dummy:u, , id = { 573, 574, 575, 576, 577, 578, 579, 580, 581, 582, 583, 584, 585, 586, 587, 588, 589, 590, 591, 592, 593, 594, 595, 596, 597, 598, 599, 600 }, type = 1 (software), size = 136, config = 0x9 (PERF_COUNT_SW_DUMMY), { sample_period, sample_freq } = 1, sample_type = IP|TID|TIME|ADDR|IDENTIFIER|DATA_SRC|WEIGHT_STRUCT, read_format = ID|LOST, inherit = 1, exclude_kernel = 1, exclude_hv = 1, mmap = 1, comm = 1, task = 1, mmap_data = 1, sample_id_all = 1, exclude_guest = 1, mmap2 = 1, comm_exec = 1, ksymbol = 1, bpf_event = 1
-> > # intel_pt pmu capabilities: topa_multiple_entries=1, psb_cyc=1, single_range_output=1, mtc_periods=249, ip_filtering=1, output_subsys=0, cr3_filtering=1, psb_periods=3f, event_trace=0, cycle_thresholds=3f, power_event_trace=0, mtc=1, payloads_lip=0, ptwrite=1, num_address_ranges=2, max_subleaf=1, topa_output=1, tnt_disable=0
-> > root@number:~# perf evlist
-> > cpu_atom/mem-loads,ldlat=30/P
-> > cpu_atom/mem-stores/P
-> > cpu_core/mem-loads-aux/
-> > cpu_core/mem-loads,ldlat=30/
-> > cpu_core/mem-stores/P
-> > dummy:u
-> > root@number:~#
-> > 
-> > But can we reconstruct the events relationship (group, :S, etc) from
-> > what we have in the perf.data header?
-> > 
+
+
+On 2024-09-05 4:24 p.m., Namhyung Kim wrote:
+> This option is to support the old behavior of setting exclude_guest by
+> default.  Now it doesn't set the bit so users want the old behavior can
+> use this option.
 > 
-> Do you mean show the group relation in the perf evlist?
+>   $ perf stat true
 > 
-> $perf mem record sleep 1
-> [ perf record: Woken up 1 times to write data ]
-> [ perf record: Captured and wrote 0.027 MB perf.data (10 samples) ]
+>    Performance counter stats for 'true':
 > 
-> $perf evlist -g
-> cpu_atom/mem-loads,ldlat=30/P
-> cpu_atom/mem-stores/P
-> {cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
-> cpu_core/mem-stores/P
-> dummy:u
+>                 0.86 msec task-clock:u                     #    0.443 CPUs utilized
+>                    0      context-switches:u               #    0.000 /sec
+>                    0      cpu-migrations:u                 #    0.000 /sec
+>                   49      page-faults:u                    #   56.889 K/sec
+>                  ...
 > 
-> The -g option already did it, although the group modifier looks lost.
+>   $ perf stat --exclude-guest true
+> 
+>    Performance counter stats for 'true':
+> 
+>                 0.79 msec task-clock:Hu                    #    0.490 CPUs utilized
+>                    0      context-switches:Hu              #    0.000 /sec
+>                    0      cpu-migrations:Hu                #    0.000 /sec
+>                   49      page-faults:Hu                   #   62.078 K/sec
+>                  ...
+> 
+> Signed-off-by: Namhyung Kim <namhyung@kernel.org>
+> ---
+>  tools/perf/Documentation/perf-stat.txt | 7 +++++++
+>  tools/perf/builtin-stat.c              | 2 ++
+>  2 files changed, 9 insertions(+)
+> 
+> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
+> index 2bc06367248691dd..d28d8370a856598f 100644
+> --- a/tools/perf/Documentation/perf-stat.txt
+> +++ b/tools/perf/Documentation/perf-stat.txt
+> @@ -382,6 +382,13 @@ color the metric's computed value.
+>  Don't print output, warnings or messages. This is useful with perf stat
+>  record below to only write data to the perf.data file.
+>  
+> +--exclude-guest::
+> +Don't count event in the guest mode.  It was the old behavior but the
+> +default is changed to count guest events also.  Use this option if you
+> +want the old behavior (host only).  Note that this option needs to be
+> +before other events in case you added -e/--event option in the command
+> +line.
 
-Right, I can reproduce that, but I wonder if we shouldn't make this '-g'
-option the default?
+I'm not sure if we really need this option. I think it may bring more
+trouble than what we get.
 
------
+The name of the "--exclude-guest" sounds like a replacement of the event
+modifier "H". But in fact, it's not. It should only affect the default.
+It doesn't set the "H" for any events.
 
-Committer testing:
+Except for the perf kvm user, I don't think there are many users which
+care the exclude_guest. The behavior of the perf kvm is not changed. So
+the option seems not that important. If we really want an option to
+restore the old behavior, it's better to choose a better name and update
+the description.
 
-  root@number:~# perf evlist -g
-  cpu_atom/mem-loads,ldlat=30/P
-  cpu_atom/mem-stores/P
-  {cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}
-  cpu_core/mem-stores/P
-  dummy:u
-  root@number:~#
-
-The :S for '{cpu_core/mem-loads-aux/,cpu_core/mem-loads,ldlat=30/}' is
-not being added by 'perf evlist -g', to be checked.
-
------
-
-- Arnaldo
+Thanks,
+Kan
+> +
+>  STAT RECORD
+>  -----------
+>  Stores stat data into perf data file.
+> diff --git a/tools/perf/builtin-stat.c b/tools/perf/builtin-stat.c
+> index d8315dae930184ba..4d47675af5cc3094 100644
+> --- a/tools/perf/builtin-stat.c
+> +++ b/tools/perf/builtin-stat.c
+> @@ -2491,6 +2491,8 @@ int cmd_stat(int argc, const char **argv)
+>  		OPT_BOOLEAN_FLAG(0, "all-user", &stat_config.all_user,
+>  				"Configure all used events to run in user space.",
+>  				PARSE_OPT_EXCLUSIVE),
+> +		OPT_BOOLEAN(0, "exclude-guest", &exclude_HG_default,
+> +			"Don't count events in the guest mode"),
+>  		OPT_BOOLEAN(0, "percore-show-thread", &stat_config.percore_show_thread,
+>  			"Use with 'percore' event qualifier to show the event "
+>  			"counts of one hardware thread by sum up total hardware "
