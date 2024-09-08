@@ -1,86 +1,131 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B8752B9CD
-	for <linux-perf-users@vger.kernel.org>; Sun,  8 Sep 2024 18:52:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1F9BF9EC;
+	Sun,  8 Sep 2024 20:28:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725821571; cv=none; b=XgRnsFXoDMk2AmHXpepinRjqhOdMOv5YsOho8v50Qx2IywzQ69IBR34Eu39SvteTBHhNY+TsBbqCsGIlduRThDmSGhsm8NM5IoGX0oQUtGmcJ/3qZrRX2lpdWMCc9jvqsyZZBWrspsFCqnEOu4XNH+SFn2VKHzhVO3fu0ykE6DA=
+	t=1725827304; cv=none; b=BW2u3QR1LlxhqGMkiU+D7NhGs0tNF69SBf7DZx1S2yk5c1etxrn2vOv3Qb6X9fWa7PwLJXpIavIWCvm/iIKZLzizbPODLyPQFHnhD0DUtaoo2TGY+0fOC1xeJPMKvlONnq9cwd9WbyWE1UGrqtsvEthP39rrkmggmo5gtIlXJs8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725821571; c=relaxed/simple;
-	bh=3WFWfnOhZubsw9sT5LHqgJIjcv2aaryT82I4lxFX+OA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iMj3uMhAgSBkEbYmU8B4zPLwruc0blzjxXpBGaCS3ZPnMVj2qQ6bUYLil/kv7fhbnsSgg94vsjVGERJxtak/QQHaSt+IKyfl7NuoyjxpbnUZFRFQqHcJa15tZJ5W5qjmISJM4aQ78mYmGH1vurZ9mzlWmNKTdco1HegIyTpXtt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=s33DcSrJ; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1725827304; c=relaxed/simple;
+	bh=9lJbxYAq0pQArWPt6MRJRLmNOUsJkWmIbCPf3UCfggo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GKVXSxLLVdVpnfs3Grzv26z4xh74Y4KeeOSI9RKZiPNaK17jjdrRxiH4tmKrpF04QzzJN8SJJHYvVR9Mgy9Ictzg2Xh3oU3Ywyxgn/KA5x0VB4lsKg2Y8D/vxMY/15Iw4dCVLgRXqByFWsLbnicGsP84aPkgxBQmj6EWIS3Z0rc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GswIuH2N; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s33DcSrJ"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-53659867cbdso3611848e87.3
-        for <linux-perf-users@vger.kernel.org>; Sun, 08 Sep 2024 11:52:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725821568; x=1726426368; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3WFWfnOhZubsw9sT5LHqgJIjcv2aaryT82I4lxFX+OA=;
-        b=s33DcSrJXTXvmgrw2r8c6+qRMDQsUQPrURo1pb2kinxIdlCtWPfQ9YuJG+dcUnqpeF
-         WdRy5ZafCNuTpp6E7WnW6FJAId0Ybna8yPJfMys4HEUWwQS13cD4n6O2bhmgrKWBX2AE
-         IJPQiyoqLxkKkkd0n4M0ruUNzSelt4axBgxMKrRkLfXOYm8IzFJUCQA7pzvMf91yX+MD
-         bPQKxjBaFTuFQzhJIBebC7IxnMAfIUsltSrInIWpF9CLUk8a1JMWqtfRI3oPIrgRtcok
-         QJxOapA6ncKcc4nEsuOyB3+85aZ8930i5ZQMJkNYttcJVcfy86V9iGNamEfpb4ljx0Ue
-         FZHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725821568; x=1726426368;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3WFWfnOhZubsw9sT5LHqgJIjcv2aaryT82I4lxFX+OA=;
-        b=nTQ9GNESyP/z2heUAQP0XSQeL1EskFcfG/MqYrPXwVZiqZWXxVRNMMjM6nZ5nsUK4N
-         6dFzuCmD8k31GjLWxlmIPRNf8EEjbkOxFkoMboZyPMCUpd4J8eFXLS8eXqHW6KtuTVGL
-         PPThXKUwbJT/4UM33RWT/jgVTk7DW1COm8qsEQ5wW6gbqs5eSNJfhlf3mfWxyh8/vsn/
-         Pb9TC8DJsqeM2K3et8pZFINH5b7rPt99AKs/mI87M8Aj66cVqmEQ2WZZA7UvzPK6cMDx
-         1OFuKkWUz+HlY2eRklJ4loVYFxM7PVXDtPAhheUXU8CT1iM1Fjt+StSez+9zLgcIBgRQ
-         avbw==
-X-Gm-Message-State: AOJu0YwV5vy0UTh1+apsyebI11E8Bhkp3cbQCvyYAtNUTWLZYxr+CLnw
-	KIsW7Uadd/+IzZol7znwM71Dc0IG6wAV/MWZ+2fZv1vmzGtyDf+BeKLnK2QhEh9L3mvfdaVH+Oj
-	O/unG
-X-Google-Smtp-Source: AGHT+IF2HmdZdV+xLoqlCpRMWUDenH/fKLqGGrNlpg2XhiKa4f3SsF4G99fJzppscsFxpMcAjrMOLg==
-X-Received: by 2002:a05:6512:2215:b0:530:ad8d:dcdb with SMTP id 2adb3069b0e04-536587ae7aemr8612521e87.19.1725821568055;
-        Sun, 08 Sep 2024 11:52:48 -0700 (PDT)
-Received: from google.com ([2a00:79e0:18:10:d151:c3a8:f652:8df7])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-5365f903d54sm521483e87.228.2024.09.08.11.52.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2024 11:52:47 -0700 (PDT)
-Date: Sun, 8 Sep 2024 20:52:42 +0200
-From: "Steinar H. Gunderson" <sesse@google.com>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-	irogers@google.com, Arnaldo Carvalho de Melo <acme@redhat.com>,
-	Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH v9 1/3] perf report: Support LLVM for addr2line()
-Message-ID: <Zt3yemuoUCXTaClB@google.com>
-References: <20240719150051.520317-1-sesse@google.com>
- <ZqlCIJ4khe2_xyp9@x1>
- <ZqlDuIj_nMVXhYou@x1>
- <ZtRIla5pCqlMIKvN@google.com>
- <Ztbga0xLyt1eaehi@x1>
- <ZtcWwANOWyXEnGdC@x1>
- <ZtcaC5WOTj-fh_Px@x1>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GswIuH2N"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1725827303; x=1757363303;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9lJbxYAq0pQArWPt6MRJRLmNOUsJkWmIbCPf3UCfggo=;
+  b=GswIuH2NxfEwTEALmXV5J2PGMZu7hIr1bLng0NQriCVNHroQ5iSsc0eI
+   vEC6+jR+aVpkKGfFI5Dj3RdxVpxMsQdbQq1pLK05nEruovF06afhx+clS
+   pEMQsaCjVjACVriHL9DB1QSB3OqtlFG5ZDson9zKpGR6fegX0A4uGzRqu
+   5eWd0IFIHwQsAQZBuJhNMj+A7IzWC2Vf/jVFC/FP3khXsjrIi/aGKHclN
+   fjjYLM65INqBhdGAlXR4Dev9ALym23c6WeU/c+zWo1sS/b2NC/R5ObC9n
+   r+LoQP7uqKO+QK7pzrx4OUWo9c84ND2gAhXW7l+HM8EsuBS8ghVsH1/bR
+   Q==;
+X-CSE-ConnectionGUID: eqXejJaMQHyYaFD4+h08xA==
+X-CSE-MsgGUID: ETOgFb7LTZ2H6/vTukEbew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11189"; a="28392593"
+X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
+   d="scan'208";a="28392593"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Sep 2024 13:28:22 -0700
+X-CSE-ConnectionGUID: OQnRXdWmRS+k8z6WOMwfjw==
+X-CSE-MsgGUID: K5QnxdVmTj2supDBlDERBA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.10,212,1719903600"; 
+   d="scan'208";a="70583604"
+Received: from kanliang-dev.jf.intel.com ([10.165.154.102])
+  by fmviesa003.fm.intel.com with ESMTP; 08 Sep 2024 13:28:21 -0700
+From: kan.liang@linux.intel.com
+To: acme@kernel.org,
+	namhyung@kernel.org
+Cc: irogers@google.com,
+	jolsa@kernel.org,
+	adrian.hunter@intel.com,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH] perf evlist: Print hint for group
+Date: Sun,  8 Sep 2024 13:28:47 -0700
+Message-Id: <20240908202847.176280-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.38.1
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZtcaC5WOTj-fh_Px@x1>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Sep 03, 2024 at 11:15:39AM -0300, Arnaldo Carvalho de Melo wrote:
-> Or, as I'll do with debian:11, just remove llvm-dev and not build the
-> features it enables:
+From: Kan Liang <kan.liang@linux.intel.com>
 
-Thanks for looking into this! Is there anything I should be doing,
-or are the patches you posted earlier sufficient?
+An event group is a critical relationship. There is a -g option that can
+display the relationship. But it's hard for a user to know when should
+this option be applied.
 
-/* Steinar */
+If there is an event group in the perf record, print a hint to suggest
+the user apply the -g to display the group information.
+
+With the patch,
+
+ $perf record -e "{cycles,instructions},instructions" sleep 1
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.024 MB perf.data (4 samples) ]
+
+ $perf evlist
+ cycles
+ instructions
+ instructions
+ # Tip: use 'perf evlist -g' to show group information
+
+ $perf evlist -g
+ {cycles,instructions}
+ instructions
+
+Suggested-by: Arnaldo Carvalho de Melo <acme@kernel.org>
+Closes: https://lore.kernel.org/lkml/ZttgvduaKsVn1r4p@x1/
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/perf/builtin-evlist.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/builtin-evlist.c b/tools/perf/builtin-evlist.c
+index 818ab21c3f73..a9bd7bbef5a9 100644
+--- a/tools/perf/builtin-evlist.c
++++ b/tools/perf/builtin-evlist.c
+@@ -36,7 +36,7 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 		.force     = details->force,
+ 	};
+ 	struct perf_tool tool;
+-	bool has_tracepoint = false;
++	bool has_tracepoint = false, has_group = false;
+ 
+ 	perf_tool__init(&tool, /*ordered_events=*/false);
+ 	/* only needed for pipe mode */
+@@ -54,11 +54,17 @@ static int __cmd_evlist(const char *file_name, struct perf_attr_details *details
+ 
+ 		if (pos->core.attr.type == PERF_TYPE_TRACEPOINT)
+ 			has_tracepoint = true;
++
++		if (!evsel__is_group_leader(pos))
++			has_group = true;
+ 	}
+ 
+ 	if (has_tracepoint && !details->trace_fields)
+ 		printf("# Tip: use 'perf evlist --trace-fields' to show fields for tracepoint events\n");
+ 
++	if (has_group && !details->event_group)
++		printf("# Tip: use 'perf evlist -g' to show group information\n");
++
+ 	perf_session__delete(session);
+ 	return 0;
+ }
+-- 
+2.38.1
+
