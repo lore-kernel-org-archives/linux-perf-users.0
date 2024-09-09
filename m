@@ -1,57 +1,57 @@
 Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DEFC18B47F
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:37:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D82C318B47F
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:37:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725914272; cv=none; b=qDFkE0koKZMt1Hfd+Cy0dmQU1K85UBTHQvdPt8FEqwNdXYKyTnzQstQdlnDYzyX+EezGLln5BIDm8AKHHI9WQgYnJcclvSCnp96c8ewEwLL34RkaGY2YU5IgGoEqTWZX1Rw9g46o/Mk0ZpMO8k3FPValTSsmFtASvuYg/76RIhY=
+	t=1725914275; cv=none; b=AFHaqCABUrL/kxZSQVeDDcVPqRcWPWLg3t9n3yZnHGz1BsfOoShmpm3YHnZVGfYW1FpQfhXl/eysO6EX5TtRFUItSqo1LJCuS4z7ctD6GBTVQaW6Uo1Mv9ZXDuJOsOY/hzdDPSMrW5V/SZn++kziXK6SYRGpAGARtByp4VKEAIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725914272; c=relaxed/simple;
-	bh=eHJGHN9ZgfSRD5mYwKtP3gfcwoonvdu8rY9fnz8dm6I=;
+	s=arc-20240116; t=1725914275; c=relaxed/simple;
+	bh=Clp56WWuXS/PFSTUhYjihAny4rJ1a82Jl6raVIJiC88=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=G+IFCDP/LMFYEsBuzGprMNWzU/ZBjQ2LbRKWTPjclK6fZ1ps5i3gcbiEmeJ9U7QGbLaMIVJ4T7F9o2CZqASH9FtDRbH0SqDGp0X+W6EVLFZFAXM7dKQha8oWOtxuG5om/N2XQ9ivAl/wJqX40sEA/2h4L4vMMk9UBKw4towtdlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=o5CjpmER; arc=none smtp.client-ip=209.85.219.201
+	 To:Content-Type; b=Dq41jNIn9QAMgq1PkwaWravPLfJFNINTgnle8YVmgpStoCbjSkHrQrorWUM1SA2Rq2P8X6JWyNMzc2k8XhL7pfJ/vD/g97WZvOWzRvW2v0bjmYTEiNvuihqb+5A0d0pvPvjUgjEnghOSWfLhXHQadP9mAUZ8mGuZcWpTaUuvYPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NhywGSBZ; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o5CjpmER"
-Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1d46cee0b0so4536732276.2
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Sep 2024 13:37:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NhywGSBZ"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e1a8eedf001so9228516276.0
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Sep 2024 13:37:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725914269; x=1726519069; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1725914272; x=1726519072; darn=vger.kernel.org;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=riE2Y5T5o1PrdK09V4CHcR+iYujERLclBkWQoR+wdM8=;
-        b=o5CjpmERJauWo5qdhqf+OMHDqK82YMgMwVCtwbs1JOWSuEvHsahREbnenc0z/o+lej
-         tgZDSjDgDQG7zj9P284t/WK24xew1SGYACC2WDkWk2rIU1S6BNatbWs7WjUj3BgWRg6U
-         /+6/i+MkI5WTSMfm1mFKSzUIoMvzp1IfGGh274DCSrK3SKoTdY4Fzchb6H9SOnOVRHyj
-         WhyBrmhRc7GDim6vSdqZMyztO8d7FAA12h/9w/IQbEBp27gn8CRalKdnLJiBTzoEwZrR
-         7xYEV4EeYz4pPhZqiYbrT3sdkANktYAipqOlRH3ncbF8FZIDFE8iP7imYMXTLxuPMBML
-         niVw==
+        bh=seNNgOYd+yOyVPoC1OLWCPYg4+Zlk5hIs7OYJde/eng=;
+        b=NhywGSBZGfFlhp8sYIzXaLo0YN4GWh/E2oTU2lznCdtmADelD8s2S7IsO5/g+VHzZ7
+         y7MZOHJO6coLdwmT7xNtml5WLuGixAAYHnlrZ+Ex6zCQUT4zg0WfAl2x5U5u5IoU9sQd
+         QQ3pfn4/CU/atY0m/PIteuqpwSv/GzsdD0Khn5PvqvJf4H7Jj3HAwtVD9uDmBJ4iUpSY
+         wpOtAACtnLZck6aHO2V1xEhLGvG12mVnln+eDdmW1N1RGDDmL+STJ5QavC1mRV3QtYhy
+         BwcIUMTJZLeHYmZO0ptv5r56TOobcKurZ99GL7MmYCFrPzgcgqCEKNPqzPydHUPxZRy7
+         F4Pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725914269; x=1726519069;
+        d=1e100.net; s=20230601; t=1725914272; x=1726519072;
         h=to:from:subject:references:mime-version:message-id:in-reply-to:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=riE2Y5T5o1PrdK09V4CHcR+iYujERLclBkWQoR+wdM8=;
-        b=mmWDa4z1NOBtPcILpWlfX7gt1NvuHyYkWalQcsRonC6uFrsY3jT66BaIWUx8oHU3VP
-         py+7ieRDG/tfYw9U9Fszw3MIEi8g+LR2eq1av0VGNNFS02ax9cSlP7Sdhspy17va079D
-         Gc6e13nHwME0M7nWYhiqWroiVD7dVDaiRNlRiTPn/a04i1m4p/fj6xJkYCF3wRJri2Gy
-         PmHw0sSbFuv2V0l1caxN7AqVZrXprEYIisZ+imv8lpGJL9fCvyEBupOLgNPUSL4Jke0G
-         E+3H74Bbn8Oi7i8/GrqHNoC0t+8NIfxXOnL1UTsChCaSHWYdhayF2eYkJOLTzatixffD
-         qZAw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9+7Fz0WMHGuse9Fh1Sqct2JE3hR2S9yXzan6Xazy3WtkBlg0vgEYCpEpj3dgTuE607pHnC6doeaIWIIm8WAHx@vger.kernel.org
-X-Gm-Message-State: AOJu0Yya2rtpZrk/5QZKEidbkOsuoFPeaA81TeifEk2me75PDkgd7nY6
-	rn4jzMyA+isDnw//ExMsrvh5cjMY8BWeObt3BJOY5FE0OoKX58bSUkUqT09qNOj0KFJYUP5rSRT
-	A+hh/xg==
-X-Google-Smtp-Source: AGHT+IFw0v/ERsDoQPrmRfi2lZR9SLEXkvKbz5hWc62/lKRxJULkEExCOOiC1kLbivngwG7zCyAiIKtjDHLk
+        bh=seNNgOYd+yOyVPoC1OLWCPYg4+Zlk5hIs7OYJde/eng=;
+        b=ayDBHcFFpfp73rQMyPl+wRCwTX8PR7+Q+ZLiXcwchXp235idEeD5YXtZ2+1J2FRcDi
+         9G1UH2PN8oIKHGiyvstle5ToTXByuLsKbdw49VevLSUNbmXtftOycFW/ME/BnZeyyaKo
+         JvLtuxfuK7bn3FttJNUlWJAx1/JQ2DqMp5YipbdCG169wdJGIeHqO/amGkNow6gq7GlS
+         Miem56G0t+piLF79r2jlt8c2ko3uuT4NgbVYaNcytUG00/vcr2wGjWoNR/zHIzyY/T44
+         b1Lscd4ohFnvPW+UQHg2tvxdMgChxwhBO84fadvGOEFTDdpypc/K8MdP65Y2W17j7Ym+
+         U85A==
+X-Forwarded-Encrypted: i=1; AJvYcCWJHZreg9y3V+Yd7glJp6AuMCVpe+keDIQl+Ze5r5iuV8UUqdomKgs1sMmUtyvhzxuiRTFXUh7SHUTnpRLRD4Bm@vger.kernel.org
+X-Gm-Message-State: AOJu0YyEv8IxWOVmyfeeBe3DTZ5sn+x1l3rzGI+LslAQ3BalFEtUp3sp
+	OjhKo5+kTDoH0kO3Q23CAE/Z7Suh152be775zCyI5o9s8Mslyy7UT2GsB4Z/O8tjMxCGRVj9gJD
+	B9HeyVQ==
+X-Google-Smtp-Source: AGHT+IFRBqcIA/UKEfCNHcx4yJDQCt0HfpV4MJhN7slNa5TRF1tb1g+qjA9LwMlX6igzKJbD8DS0ZpMxkUpD
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b7b9:f9a0:1197:ff33])
- (user=irogers job=sendgmr) by 2002:a05:6902:2d43:b0:dfa:8ed1:8f1b with SMTP
- id 3f1490d57ef6-e1d34864d44mr21429276.1.1725914269332; Mon, 09 Sep 2024
- 13:37:49 -0700 (PDT)
-Date: Mon,  9 Sep 2024 13:37:37 -0700
+ (user=irogers job=sendgmr) by 2002:a25:d884:0:b0:e11:5807:1072 with SMTP id
+ 3f1490d57ef6-e1d34a32110mr21878276.8.1725914271660; Mon, 09 Sep 2024 13:37:51
+ -0700 (PDT)
+Date: Mon,  9 Sep 2024 13:37:38 -0700
 In-Reply-To: <20240909203740.143492-1-irogers@google.com>
-Message-Id: <20240909203740.143492-2-irogers@google.com>
+Message-Id: <20240909203740.143492-3-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20240909203740.143492-1-irogers@google.com>
 X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-Subject: [PATCH v2 1/4] perf inject: Fix build ID injection
+Subject: [PATCH v2 2/4] perf inject: Add new mmap2-buildid-all option
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -73,414 +73,291 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 
-Build ID injection wasn't inserting a sample ID and aligning events to
-64 bytes rather than 8. No sample ID means events are unordered and
-two different build_id events for the same path, as happens when a
-file is replaced, can't be differentiated.
+Add an option that allows all mmap or mmap2 events to be rewritten as
+mmap2 events with build IDs. This is similar to the existing
+-b/--build-ids and --buildid-all options except instead of adding a
+build_id event an existing mmap/mmap2 event is used as a template and
+a new mmap2 event synthesized from it. As mmap2 events are typical
+this avoids the insertion of build_id events.
 
-Add in sample ID insertion for the build_id events alongside some
-refactoring. The refactoring better aligns the function arguments for
-different use cases, such as synthesizing build_id events without
-needing to have a dso. The misc bits are explicitly passed as with
-callchains the maps/dsos may span user and kernel land, so using
-sample->cpumode isn't good enough.
+Add test coverage to the pipe test.
 
 Acked-by: Namhyung Kim <namhyung@kernel.org>
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/builtin-inject.c        | 170 ++++++++++++++++++++++-------
- tools/perf/util/build-id.c         |   6 +-
- tools/perf/util/synthetic-events.c |  44 ++++++--
- tools/perf/util/synthetic-events.h |  10 +-
- 4 files changed, 175 insertions(+), 55 deletions(-)
+ tools/perf/builtin-inject.c         | 88 ++++++++++++++++++++++++++++-
+ tools/perf/tests/shell/pipe_test.sh |  1 +
+ tools/perf/util/synthetic-events.c  | 57 +++++++++++++++++++
+ tools/perf/util/synthetic-events.h  | 11 ++++
+ 4 files changed, 154 insertions(+), 3 deletions(-)
 
 diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 0ccf80fe8399..24470c57527d 100644
+index 24470c57527d..5a27fa46e93d 100644
 --- a/tools/perf/builtin-inject.c
 +++ b/tools/perf/builtin-inject.c
-@@ -130,6 +130,7 @@ struct perf_inject {
- 	struct perf_file_section secs[HEADER_FEAT_BITS];
- 	struct guest_session	guest_session;
- 	struct strlist		*known_build_ids;
-+	const struct evsel	*mmap_evsel;
+@@ -107,6 +107,7 @@ enum build_id_rewrite_style {
+ 	BID_RWS__NONE = 0,
+ 	BID_RWS__INJECT_HEADER_LAZY,
+ 	BID_RWS__INJECT_HEADER_ALL,
++	BID_RWS__MMAP2_BUILDID_ALL,
  };
  
- struct event_entry {
-@@ -138,8 +139,13 @@ struct event_entry {
- 	union perf_event event[];
- };
- 
--static int dso__inject_build_id(struct dso *dso, const struct perf_tool *tool,
--				struct machine *machine, u8 cpumode, u32 flags);
-+static int tool__inject_build_id(const struct perf_tool *tool,
-+				 struct perf_sample *sample,
-+				 struct machine *machine,
-+				 const struct evsel *evsel,
-+				 __u16 misc,
-+				 const char *filename,
-+				 struct dso *dso, u32 flags);
+ struct perf_inject {
+@@ -146,6 +147,16 @@ static int tool__inject_build_id(const struct perf_tool *tool,
+ 				 __u16 misc,
+ 				 const char *filename,
+ 				 struct dso *dso, u32 flags);
++static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
++				      struct perf_sample *sample,
++				      struct machine *machine,
++				      const struct evsel *evsel,
++				      __u16 misc,
++				      __u32 pid, __u32 tid,
++				      __u64 start, __u64 len, __u64 pgoff,
++				      struct dso *dso,
++				      __u32 prot, __u32 flags,
++				      const char *filename);
  
  static int output_bytes(struct perf_inject *inject, void *buf, size_t sz)
  {
-@@ -422,6 +428,28 @@ static struct dso *findnew_dso(int pid, int tid, const char *filename,
- 	return dso;
- }
+@@ -161,6 +172,7 @@ static int output_bytes(struct perf_inject *inject, void *buf, size_t sz)
  
-+/*
-+ * The evsel used for the sample ID for mmap events. Typically stashed when
-+ * processing mmap events. If not stashed, search the evlist for the first mmap
-+ * gathering event.
-+ */
-+static const struct evsel *inject__mmap_evsel(struct perf_inject *inject)
-+{
-+	struct evsel *pos;
+ static int perf_event__repipe_synth(const struct perf_tool *tool,
+ 				    union perf_event *event)
 +
-+	if (inject->mmap_evsel)
-+		return inject->mmap_evsel;
-+
-+	evlist__for_each_entry(inject->session->evlist, pos) {
-+		if (pos->core.attr.mmap) {
-+			inject->mmap_evsel = pos;
-+			return pos;
-+		}
-+	}
-+	pr_err("No mmap events found\n");
-+	return NULL;
-+}
-+
- static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
+ {
+ 	struct perf_inject *inject = container_of(tool, struct perf_inject,
+ 						  tool);
+@@ -454,7 +466,9 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
  					  union perf_event *event,
  					  struct perf_sample *sample,
-@@ -469,12 +497,28 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
+ 					  struct machine *machine,
+-					  __u32 pid, __u32 tid, __u32 flags,
++					  __u32 pid, __u32 tid,
++					  __u64 start, __u64 len, __u64 pgoff,
++					  __u32 flags, __u32 prot,
+ 					  const char *filename,
+ 					  const struct dso_id *dso_id,
+ 					  int (*perf_event_process)(const struct perf_tool *tool,
+@@ -525,6 +539,26 @@ static int perf_event__repipe_common_mmap(const struct perf_tool *tool,
+ 			return err;
  		}
- 
- 		if (dso && !dso__hit(dso)) {
--			dso__set_hit(dso);
--			dso__inject_build_id(dso, tool, machine, sample->cpumode, flags);
-+			struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
+ 	}
++	if ((inject->build_id_style == BID_RWS__MMAP2_BUILDID_ALL) &&
++	    !(event->header.misc & PERF_RECORD_MISC_MMAP_BUILD_ID)) {
++		struct evsel *evsel = evlist__event2evsel(inject->session->evlist, event);
 +
-+			if (evsel) {
-+				dso__set_hit(dso);
-+				tool__inject_build_id(tool, sample, machine, evsel,
-+						      /*misc=*/sample->cpumode,
-+						      filename, dso, flags);
-+			}
- 		}
- 	} else {
-+		int err;
-+
-+		/*
-+		 * Remember the evsel for lazy build id generation. It is used
-+		 * for the sample id header type.
-+		 */
-+		if (inject->build_id_style == BID_RWS__INJECT_HEADER_LAZY &&
-+		    !inject->mmap_evsel)
-+			inject->mmap_evsel = evlist__event2evsel(inject->session->evlist, event);
-+
- 		/* Create the thread, map, etc. Not done for the unordered inject all case. */
--		int err = perf_event_process(tool, event, sample, machine);
-+		err = perf_event_process(tool, event, sample, machine);
- 
- 		if (err) {
- 			dso__put(dso);
-@@ -667,16 +711,20 @@ static bool perf_inject__lookup_known_build_id(struct perf_inject *inject,
- 	return false;
++		if (evsel && !dso_sought) {
++			dso = findnew_dso(pid, tid, filename, dso_id, machine);
++			dso_sought = true;
++		}
++		if (evsel && dso &&
++		    !tool__inject_mmap2_build_id(tool, sample, machine, evsel,
++						 sample->cpumode | PERF_RECORD_MISC_MMAP_BUILD_ID,
++						 pid, tid, start, len, pgoff,
++						 dso,
++						 prot, flags,
++						 filename)) {
++			/* Injected mmap2 so no need to repipe. */
++			dso__put(dso);
++			return 0;
++		}
++	}
+ 	dso__put(dso);
+ 	return perf_event__repipe(tool, event, sample, machine);
  }
- 
--static int dso__inject_build_id(struct dso *dso, const struct perf_tool *tool,
--				struct machine *machine, u8 cpumode, u32 flags)
-+static int tool__inject_build_id(const struct perf_tool *tool,
-+				 struct perf_sample *sample,
-+				 struct machine *machine,
-+				 const struct evsel *evsel,
-+				 __u16 misc,
-+				 const char *filename,
-+				 struct dso *dso, u32 flags)
+@@ -536,7 +570,9 @@ static int perf_event__repipe_mmap(const struct perf_tool *tool,
  {
--	struct perf_inject *inject = container_of(tool, struct perf_inject,
--						  tool);
-+	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	int err;
+ 	return perf_event__repipe_common_mmap(
+ 		tool, event, sample, machine,
+-		event->mmap.pid, event->mmap.tid, /*flags=*/0,
++		event->mmap.pid, event->mmap.tid,
++		event->mmap.start, event->mmap.len, event->mmap.pgoff,
++		/*flags=*/0, PROT_EXEC,
+ 		event->mmap.filename, /*dso_id=*/NULL,
+ 		perf_event__process_mmap);
+ }
+@@ -559,7 +595,9 @@ static int perf_event__repipe_mmap2(const struct perf_tool *tool,
  
--	if (is_anon_memory(dso__long_name(dso)) || flags & MAP_HUGETLB)
-+	if (is_anon_memory(filename) || flags & MAP_HUGETLB)
- 		return 0;
--	if (is_no_dso_memory(dso__long_name(dso)))
-+	if (is_no_dso_memory(filename))
- 		return 0;
- 
- 	if (inject->known_build_ids != NULL &&
-@@ -684,24 +732,65 @@ static int dso__inject_build_id(struct dso *dso, const struct perf_tool *tool,
- 		return 1;
- 
- 	if (dso__read_build_id(dso) < 0) {
--		pr_debug("no build_id found for %s\n", dso__long_name(dso));
-+		pr_debug("no build_id found for %s\n", filename);
- 		return -1;
- 	}
- 
--	err = perf_event__synthesize_build_id(tool, dso, cpumode,
--					      perf_event__repipe, machine);
-+	err = perf_event__synthesize_build_id(tool, sample, machine,
-+					      perf_event__repipe,
-+					      evsel, misc, dso__bid(dso),
-+					      filename);
- 	if (err) {
--		pr_err("Can't synthesize build_id event for %s\n", dso__long_name(dso));
-+		pr_err("Can't synthesize build_id event for %s\n", filename);
- 		return -1;
- 	}
- 
+ 	return perf_event__repipe_common_mmap(
+ 		tool, event, sample, machine,
+-		event->mmap2.pid, event->mmap2.tid, event->mmap2.flags,
++		event->mmap2.pid, event->mmap2.tid,
++		event->mmap2.start, event->mmap2.len, event->mmap2.pgoff,
++		event->mmap2.flags, event->mmap2.prot,
+ 		event->mmap2.filename, dso_id,
+ 		perf_event__process_mmap2);
+ }
+@@ -748,6 +786,45 @@ static int tool__inject_build_id(const struct perf_tool *tool,
  	return 0;
  }
  
-+static int mark_dso_hit(const struct perf_tool *tool,
-+			struct perf_sample *sample,
-+			struct machine *machine,
-+			const struct evsel *mmap_evsel,
-+			struct map *map, bool sample_in_dso)
++static int tool__inject_mmap2_build_id(const struct perf_tool *tool,
++				       struct perf_sample *sample,
++				       struct machine *machine,
++				       const struct evsel *evsel,
++				       __u16 misc,
++				       __u32 pid, __u32 tid,
++				       __u64 start, __u64 len, __u64 pgoff,
++				       struct dso *dso,
++				       __u32 prot, __u32 flags,
++				       const char *filename)
 +{
-+	struct dso *dso;
-+	u16 misc = sample->cpumode;
++	int err;
 +
-+	if (!map)
-+		return 0;
++	/* Return to repipe anonymous maps. */
++	if (is_anon_memory(filename) || flags & MAP_HUGETLB)
++		return 1;
++	if (is_no_dso_memory(filename))
++		return 1;
 +
-+	if (!sample_in_dso) {
-+		u16 guest_mask = PERF_RECORD_MISC_GUEST_KERNEL |
-+			PERF_RECORD_MISC_GUEST_USER;
-+
-+		if ((misc & guest_mask) != 0) {
-+			misc &= PERF_RECORD_MISC_HYPERVISOR;
-+			misc |= __map__is_kernel(map)
-+				? PERF_RECORD_MISC_GUEST_KERNEL
-+				: PERF_RECORD_MISC_GUEST_USER;
-+		} else {
-+			misc &= PERF_RECORD_MISC_HYPERVISOR;
-+			misc |= __map__is_kernel(map)
-+				? PERF_RECORD_MISC_KERNEL
-+				: PERF_RECORD_MISC_USER;
-+		}
++	if (dso__read_build_id(dso)) {
++		pr_debug("no build_id found for %s\n", filename);
++		return -1;
 +	}
-+	dso = map__dso(map);
-+	if (dso && !dso__hit(dso)) {
-+		dso__set_hit(dso);
-+		tool__inject_build_id(tool, sample, machine,
-+				      mmap_evsel, misc, dso__long_name(dso), dso,
-+				      map__flags(map));
++
++	err = perf_event__synthesize_mmap2_build_id(tool, sample, machine,
++						    perf_event__repipe,
++						    evsel,
++						    misc, pid, tid,
++						    start, len, pgoff,
++						    dso__bid(dso),
++						    prot, flags,
++						    filename);
++	if (err) {
++		pr_err("Can't synthesize build_id event for %s\n", filename);
++		return -1;
 +	}
 +	return 0;
 +}
 +
- struct mark_dso_hit_args {
- 	const struct perf_tool *tool;
-+	struct perf_sample *sample;
- 	struct machine *machine;
--	u8 cpumode;
-+	const struct evsel *mmap_evsel;
- };
+ static int mark_dso_hit(const struct perf_tool *tool,
+ 			struct perf_sample *sample,
+ 			struct machine *machine,
+@@ -2261,12 +2338,15 @@ int cmd_inject(int argc, const char **argv)
+ 	const char *known_build_ids = NULL;
+ 	bool build_ids;
+ 	bool build_id_all;
++	bool mmap2_build_id_all;
  
- static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
-@@ -709,16 +798,8 @@ static int mark_dso_hit_callback(struct callchain_cursor_node *node, void *data)
- 	struct mark_dso_hit_args *args = data;
- 	struct map *map = node->ms.map;
- 
--	if (map) {
--		struct dso *dso = map__dso(map);
--
--		if (dso && !dso__hit(dso)) {
--			dso__set_hit(dso);
--			dso__inject_build_id(dso, args->tool, args->machine,
--					     args->cpumode, map__flags(map));
--		}
--	}
--	return 0;
-+	return mark_dso_hit(args->tool, args->sample, args->machine,
-+			    args->mmap_evsel, map, /*sample_in_dso=*/false);
- }
- 
- int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *event,
-@@ -728,10 +809,16 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
- {
- 	struct addr_location al;
- 	struct thread *thread;
-+	struct perf_inject *inject = container_of(tool, struct perf_inject, tool);
- 	struct mark_dso_hit_args args = {
- 		.tool = tool,
-+		/*
-+		 * Use the parsed sample data of the sample event, which will
-+		 * have a later timestamp than the mmap event.
-+		 */
-+		.sample = sample,
- 		.machine = machine,
--		.cpumode = sample->cpumode,
-+		.mmap_evsel = inject__mmap_evsel(inject),
- 	};
- 
- 	addr_location__init(&al);
-@@ -743,13 +830,8 @@ int perf_event__inject_buildid(const struct perf_tool *tool, union perf_event *e
+ 	struct option options[] = {
+ 		OPT_BOOLEAN('b', "build-ids", &build_ids,
+ 			    "Inject build-ids into the output stream"),
+ 		OPT_BOOLEAN(0, "buildid-all", &build_id_all,
+ 			    "Inject build-ids of all DSOs into the output stream"),
++		OPT_BOOLEAN(0, "mmap2-buildid-all", &mmap2_build_id_all,
++			    "Rewrite all mmap events as mmap2 events with build IDs"),
+ 		OPT_STRING(0, "known-build-ids", &known_build_ids,
+ 			   "buildid path [,buildid path...]",
+ 			   "build-ids to use for given paths"),
+@@ -2363,6 +2443,8 @@ int cmd_inject(int argc, const char **argv)
+ 			return -1;
+ 		}
  	}
++	if (mmap2_build_id_all)
++		inject.build_id_style = BID_RWS__MMAP2_BUILDID_ALL;
+ 	if (build_ids)
+ 		inject.build_id_style = BID_RWS__INJECT_HEADER_LAZY;
+ 	if (build_id_all)
+diff --git a/tools/perf/tests/shell/pipe_test.sh b/tools/perf/tests/shell/pipe_test.sh
+index a3c94b4182c2..250574cd68b6 100755
+--- a/tools/perf/tests/shell/pipe_test.sh
++++ b/tools/perf/tests/shell/pipe_test.sh
+@@ -118,6 +118,7 @@ test_inject_bids() {
+ test_record_report
+ test_inject_bids -b
+ test_inject_bids --buildid-all
++test_inject_bids --mmap2-buildid-all
  
- 	if (thread__find_map(thread, sample->cpumode, sample->ip, &al)) {
--		struct dso *dso = map__dso(al.map);
--
--		if (!dso__hit(dso)) {
--			dso__set_hit(dso);
--			dso__inject_build_id(dso, tool, machine,
--					     sample->cpumode, map__flags(al.map));
--		}
-+		mark_dso_hit(tool, sample, machine, args.mmap_evsel, al.map,
-+			     /*sample_in_dso=*/true);
- 	}
- 
- 	sample__for_each_callchain_node(thread, evsel, sample, PERF_MAX_STACK_DEPTH,
-@@ -1159,17 +1241,27 @@ static int process_build_id(const struct perf_tool *tool,
- static int synthesize_build_id(struct perf_inject *inject, struct dso *dso, pid_t machine_pid)
- {
- 	struct machine *machine = perf_session__findnew_machine(inject->session, machine_pid);
--	u8 cpumode = dso__is_in_kernel_space(dso) ?
--			PERF_RECORD_MISC_GUEST_KERNEL :
--			PERF_RECORD_MISC_GUEST_USER;
-+	struct perf_sample synth_sample = {
-+		.pid	   = -1,
-+		.tid	   = -1,
-+		.time	   = -1,
-+		.stream_id = -1,
-+		.cpu	   = -1,
-+		.period	   = 1,
-+		.cpumode   = dso__is_in_kernel_space(dso)
-+		? PERF_RECORD_MISC_GUEST_KERNEL
-+		: PERF_RECORD_MISC_GUEST_USER,
-+	};
- 
- 	if (!machine)
- 		return -ENOMEM;
- 
- 	dso__set_hit(dso);
- 
--	return perf_event__synthesize_build_id(&inject->tool, dso, cpumode,
--					       process_build_id, machine);
-+	return perf_event__synthesize_build_id(&inject->tool, &synth_sample, machine,
-+					       process_build_id, inject__mmap_evsel(inject),
-+					       /*misc=*/synth_sample.cpumode,
-+					       dso__bid(dso), dso__long_name(dso));
- }
- 
- static int guest_session__add_build_ids_cb(struct dso *dso, void *data)
-diff --git a/tools/perf/util/build-id.c b/tools/perf/util/build-id.c
-index 451d145fa4ed..8982f68e7230 100644
---- a/tools/perf/util/build-id.c
-+++ b/tools/perf/util/build-id.c
-@@ -277,8 +277,8 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
- 	struct perf_record_header_build_id b;
- 	size_t len;
- 
--	len = name_len + 1;
--	len = PERF_ALIGN(len, NAME_ALIGN);
-+	len = sizeof(b) + name_len + 1;
-+	len = PERF_ALIGN(len, sizeof(u64));
- 
- 	memset(&b, 0, sizeof(b));
- 	memcpy(&b.data, bid->data, bid->size);
-@@ -286,7 +286,7 @@ static int write_buildid(const char *name, size_t name_len, struct build_id *bid
- 	misc |= PERF_RECORD_MISC_BUILD_ID_SIZE;
- 	b.pid = pid;
- 	b.header.misc = misc;
--	b.header.size = sizeof(b) + len;
-+	b.header.size = len;
- 
- 	err = do_write(fd, &b, sizeof(b));
- 	if (err < 0)
+ cleanup
+ exit $err
 diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
-index 0a7f93ae76fb..6bb62e4e2d5d 100644
+index 6bb62e4e2d5d..a58444c4aed1 100644
 --- a/tools/perf/util/synthetic-events.c
 +++ b/tools/perf/util/synthetic-events.c
-@@ -2225,28 +2225,48 @@ int perf_event__synthesize_tracing_data(const struct perf_tool *tool, int fd, st
- }
- #endif
+@@ -2266,6 +2266,63 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
  
--int perf_event__synthesize_build_id(const struct perf_tool *tool, struct dso *pos, u16 misc,
--				    perf_event__handler_t process, struct machine *machine)
-+int perf_event__synthesize_build_id(const struct perf_tool *tool,
-+				    struct perf_sample *sample,
-+				    struct machine *machine,
-+				    perf_event__handler_t process,
-+				    const struct evsel *evsel,
-+				    __u16 misc,
-+				    const struct build_id *bid,
-+				    const char *filename)
- {
- 	union perf_event ev;
- 	size_t len;
- 
--	if (!dso__hit(pos))
--		return 0;
-+	len = sizeof(ev.build_id) + strlen(filename) + 1;
-+	len = PERF_ALIGN(len, sizeof(u64));
- 
--	memset(&ev, 0, sizeof(ev));
-+	memset(&ev, 0, len);
- 
--	len = dso__long_name_len(pos) + 1;
--	len = PERF_ALIGN(len, NAME_ALIGN);
--	ev.build_id.size = min(dso__bid(pos)->size, sizeof(dso__bid(pos)->data));
--	memcpy(&ev.build_id.build_id, dso__bid(pos)->data, ev.build_id.size);
-+	ev.build_id.size = min(bid->size, sizeof(ev.build_id.build_id));
-+	memcpy(ev.build_id.build_id, bid->data, ev.build_id.size);
- 	ev.build_id.header.type = PERF_RECORD_HEADER_BUILD_ID;
- 	ev.build_id.header.misc = misc | PERF_RECORD_MISC_BUILD_ID_SIZE;
- 	ev.build_id.pid = machine->pid;
--	ev.build_id.header.size = sizeof(ev.build_id) + len;
--	memcpy(&ev.build_id.filename, dso__long_name(pos), dso__long_name_len(pos));
-+	ev.build_id.header.size = len;
-+	strcpy(ev.build_id.filename, filename);
+ 		ev.header.size += ret;
+ 	}
 +
-+	if (evsel) {
-+		void *array = &ev;
-+		int ret;
- 
--	return process(tool, &ev, NULL, machine);
-+		array += ev.header.size;
-+		ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
-+		if (ret < 0)
-+			return ret;
-+
-+		if (ret & 7) {
-+			pr_err("Bad id sample size %d\n", ret);
-+			return -EINVAL;
-+		}
-+
-+		ev.header.size += ret;
-+	}
 +	return process(tool, &ev, sample, machine);
++}
++
++int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
++					  struct perf_sample *sample,
++					  struct machine *machine,
++					  perf_event__handler_t process,
++					  const struct evsel *evsel,
++					  __u16 misc,
++					  __u32 pid, __u32 tid,
++					  __u64 start, __u64 len, __u64 pgoff,
++					  const struct build_id *bid,
++					  __u32 prot, __u32 flags,
++					  const char *filename)
++{
++	union perf_event ev;
++	size_t ev_len;
++	void *array;
++	int ret;
++
++	ev_len = sizeof(ev.mmap2) - sizeof(ev.mmap2.filename) + strlen(filename) + 1;
++	ev_len = PERF_ALIGN(ev_len, sizeof(u64));
++
++	memset(&ev, 0, ev_len);
++
++	ev.mmap2.header.type = PERF_RECORD_MMAP2;
++	ev.mmap2.header.misc = misc | PERF_RECORD_MISC_MMAP_BUILD_ID;
++	ev.mmap2.header.size = ev_len;
++
++	ev.mmap2.pid = pid;
++	ev.mmap2.tid = tid;
++	ev.mmap2.start = start;
++	ev.mmap2.len = len;
++	ev.mmap2.pgoff = pgoff;
++
++	ev.mmap2.build_id_size = min(bid->size, sizeof(ev.mmap2.build_id));
++	memcpy(ev.mmap2.build_id, bid->data, ev.mmap2.build_id_size);
++
++	ev.mmap2.prot = prot;
++	ev.mmap2.flags = flags;
++
++	memcpy(ev.mmap2.filename, filename, min(strlen(filename), sizeof(ev.mmap.filename)));
++
++	array = &ev;
++	array += ev.header.size;
++	ret = perf_event__synthesize_id_sample(array, evsel->core.attr.sample_type, sample);
++	if (ret < 0)
++		return ret;
++
++	if (ret & 7) {
++		pr_err("Bad id sample size %d\n", ret);
++		return -EINVAL;
++	}
++
++	ev.header.size += ret;
++
+ 	return process(tool, &ev, sample, machine);
  }
  
- int perf_event__synthesize_stat_events(struct perf_stat_config *config, const struct perf_tool *tool,
 diff --git a/tools/perf/util/synthetic-events.h b/tools/perf/util/synthetic-events.h
-index 31df7653677f..795bf3e18396 100644
+index 795bf3e18396..b9c936b5cfeb 100644
 --- a/tools/perf/util/synthetic-events.h
 +++ b/tools/perf/util/synthetic-events.h
-@@ -9,6 +9,7 @@
- #include <perf/cpumap.h>
- 
- struct auxtrace_record;
-+struct build_id;
- struct dso;
- struct evlist;
- struct evsel;
-@@ -45,7 +46,14 @@ typedef int (*perf_event__handler_t)(const struct perf_tool *tool, union perf_ev
- 
- int perf_event__synthesize_attrs(const struct perf_tool *tool, struct evlist *evlist, perf_event__handler_t process);
- int perf_event__synthesize_attr(const struct perf_tool *tool, struct perf_event_attr *attr, u32 ids, u64 *id, perf_event__handler_t process);
--int perf_event__synthesize_build_id(const struct perf_tool *tool, struct dso *pos, u16 misc, perf_event__handler_t process, struct machine *machine);
-+int perf_event__synthesize_build_id(const struct perf_tool *tool,
-+				    struct perf_sample *sample,
-+				    struct machine *machine,
-+				    perf_event__handler_t process,
-+				    const struct evsel *evsel,
-+				    __u16 misc,
-+				    const struct build_id *bid,
-+				    const char *filename);
+@@ -54,6 +54,17 @@ int perf_event__synthesize_build_id(const struct perf_tool *tool,
+ 				    __u16 misc,
+ 				    const struct build_id *bid,
+ 				    const char *filename);
++int perf_event__synthesize_mmap2_build_id(const struct perf_tool *tool,
++					  struct perf_sample *sample,
++					  struct machine *machine,
++					  perf_event__handler_t process,
++					  const struct evsel *evsel,
++					  __u16 misc,
++					  __u32 pid, __u32 tid,
++					  __u64 start, __u64 len, __u64 pgoff,
++					  const struct build_id *bid,
++					  __u32 prot, __u32 flags,
++					  const char *filename);
  int perf_event__synthesize_cpu_map(const struct perf_tool *tool, const struct perf_cpu_map *cpus, perf_event__handler_t process, struct machine *machine);
  int perf_event__synthesize_event_update_cpus(const struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
  int perf_event__synthesize_event_update_name(const struct perf_tool *tool, struct evsel *evsel, perf_event__handler_t process);
