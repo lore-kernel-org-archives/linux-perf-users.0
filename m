@@ -1,118 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f74.google.com (mail-io1-f74.google.com [209.85.166.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B60718C90E;
-	Mon,  9 Sep 2024 21:42:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D05018C937
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 22:11:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725918173; cv=none; b=GO6HBofG49olgeY+4WlHyCO3QbLMXdi1dXOZKUZdDx3qzt/KYSoPlJtzJ7CcgNykpZrMp+bgu7qqhFjak5G5axF8zEt0brZOQrZOvSzGGvyTNjKXc3uwBskzSqTkeYsnu+m4PyqKoxwjdDv0cowjRbRTT/xRLQxRRnrExsxvjEE=
+	t=1725919867; cv=none; b=p7GAYcxRZWKLmUKhY2L3uklmfyXiRzcRBDYPdXzzqgv4yXduXcwERkHOFivVuvOkPeJXkUd2TpKn5ha1IFCIwD5LRNKPJt6UdAai3235ZXxZSmGdyPTw0FFLONoMgB9ISU4gGhEf1dkEY6Fltq8aYu7BKSFzUHd4YkNYD42GvOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725918173; c=relaxed/simple;
-	bh=uZ+OSYg5bTrQDtQdjQGUwjTCZ7XxikIsQL3P7hK97xk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rb010mQnuM+DH/wftXYmUr5KOVqq42CxBBItVbVPnuUjnhretDTDouuV5Bk83oe3UUooDbOHwOYhe+J/71pQOs4EitaJrDJkrBouL4hdrADHr+PJcru6W9/YJ11tFNtiZN2N75pdocm16DcOC7V9wnj0AfhgJSsl4XuMrHn8wPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDJ7I0g6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725919867; c=relaxed/simple;
+	bh=Ym4S4z4hZUnUMnFN/gZ0bWxo/cR/CmX26LwWeCa4kJM=;
+	h=Date:In-Reply-To:Mime-Version:Message-ID:Subject:From:To:Cc:
+	 Content-Type; b=G310biM1xS5yVWHEJWkJuaYmP52JxUqOhP0DwlLP0yTTzWNCfeyRZrs+xHCId5Vs1LchAqrg0UyCgSXAfws4LFRiuJrm20IOw6VhK89fnuNek45UvrYavOpIv2nSsFghHzzHOOgoqrW8ifkP1wKv3yKCopzi/LzKLlweKQRwwPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=e2o5TrJX; arc=none smtp.client-ip=209.85.166.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--coltonlewis.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDJ7I0g6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B8B9C4CEC6;
-	Mon,  9 Sep 2024 21:42:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725918173;
-	bh=uZ+OSYg5bTrQDtQdjQGUwjTCZ7XxikIsQL3P7hK97xk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KDJ7I0g6o3Mw6MywIb/5vdLUvXOHchg/PTdvk2CxOF1Rq5lFAWomDZoINWtgwGZzY
-	 2MnJbcceBFbueyAFbS6lAeIag1VaLoT6YS8qqMU0Ke7xDexTbMvGbM21iRtPrWYcDN
-	 1N/7rTLRU4DsEeP2ri+Lq9cT0YFrb3/Her68z0rAihRrX3IWAgzU/Tb+C7FEauLrwC
-	 WB5WoeqYmX9Oq84vIbb/kmHhfW2+rnrULP5/fns8bTmL3RxNXefJwiAhrzFB37jWzR
-	 UDlcWMqDwAReSj6UG3L+Xw6xN2DU/noCOpws6y9ibzM/94JnpDk3AxjpyfmBikBdnt
-	 yG6PSEqGBc1Nw==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org
-Subject: [PATCH 2/2] perf annotate-data: Add pr_debug_scope()
-Date: Mon,  9 Sep 2024 14:42:51 -0700
-Message-ID: <20240909214251.3033827-2-namhyung@kernel.org>
-X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
-In-Reply-To: <20240909214251.3033827-1-namhyung@kernel.org>
-References: <20240909214251.3033827-1-namhyung@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="e2o5TrJX"
+Received: by mail-io1-f74.google.com with SMTP id ca18e2360f4ac-82cf30e0092so272770039f.3
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Sep 2024 15:11:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1725919864; x=1726524664; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=mwiDGbxq8H2WD4p4wklx1FUjJYJSGOrjotVinFQ/oRw=;
+        b=e2o5TrJXFXfBcuMD+t+elWncMrLOoX2iFRq4AUKJzqB3k6YAndb+DI8/ctx1D/fzqs
+         zpZXiGRUPCCxBkS0ld2EdR/+STuab5wBxAcu5/D0TVGCAihXHhZfcWPFzosi4vAozrUs
+         bR4UPzpnBjQCS8LKoVosj1Ea4JTfOeDWXKbQdjDkPUNOe5OC0wHGzgatFwXjw6GjfB9q
+         kMM5cRugJFnBhv4QYDJsZqzu8I72fGvM7c2hU28FLuh50uNy77v2Kn/BFQezPcfKrb1G
+         kW5POJ52reEz3WJ4/w411m9FD3vGjNuYMiyJbQ6D2paDo0PzU4/l+1QqJrj64A2znYTI
+         Tbdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725919864; x=1726524664;
+        h=cc:to:from:subject:message-id:mime-version:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mwiDGbxq8H2WD4p4wklx1FUjJYJSGOrjotVinFQ/oRw=;
+        b=dYKHCSs8IwX1Wr75DF7B/MKCAaUMeGllJO0N5X+YOAqnmzTRKj8Pzo1XmWbxdmRhw7
+         t+oAxDE/g0JyCVkeISmYIRC4IqlHIN2Uv76TVXrB1wGyNWiU/yvg9nxEGw253EkQEq8M
+         +urceB728uxQwflxdvAY6p0yt+OY6Ox8RFGPf21I5z4/xboZpG3O/AtCTs8fcVa2mwq7
+         c1rtoKS0B77Q4rtZWQDUpuOh8chq5aGec2P18l9PEHjil5SlXwd1Y4FhQkQ7RtY9CrsO
+         k/6D0RT4NZVQiUu3IjmRrY2ojqxVefzI+tZ+1KZx/bmDp1xaW5+Hif4q43/Ad038JwMH
+         zseA==
+X-Forwarded-Encrypted: i=1; AJvYcCX4XQFUmk8hyDcstPNDh7b99ziDEI4dTH139//VjhIGK20i/Axmhg8kHbj3uNUkNCdujeRMsE8LJco9QjVpSnLr@vger.kernel.org
+X-Gm-Message-State: AOJu0YxRaPLgrXJDLiZeHER2FUb4l01rBkJn4ADNLFa7Zhq5Px83r0WI
+	AH1+rtcIY283lEZZsY29rRL111eVbqosRTLwxK50EbyTmvQrQoPARMef0ngSpGB0QSvL7JJCDaA
+	05PdaDhr3+rJ2Lwy9iKOGkQ==
+X-Google-Smtp-Source: AGHT+IFbOAZC8OkGbMlqnvGhe3VdEHbkA3wy16Kyk/Po0dvS9tvD9w+NBX/fV1WUh9kizCTu6HK4wQe3yBUVcQQyFQ==
+X-Received: from coltonlewis-kvm.c.googlers.com ([fda3:e722:ac3:cc00:11b:3898:ac11:fa18])
+ (user=coltonlewis job=sendgmr) by 2002:a05:6602:342a:b0:82c:e924:d7d1 with
+ SMTP id ca18e2360f4ac-82ce924de3amr2500639f.0.1725919864441; Mon, 09 Sep 2024
+ 15:11:04 -0700 (PDT)
+Date: Mon, 09 Sep 2024 22:11:03 +0000
+In-Reply-To: <20240801045907.4010984-13-mizhang@google.com> (message from
+ Mingwei Zhang on Thu,  1 Aug 2024 04:58:21 +0000)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Message-ID: <gsnt7cbkeavc.fsf@coltonlewis-kvm.c.googlers.com>
+Subject: Re: [RFC PATCH v3 12/58] perf: core/x86: Register a new vector for
+ KVM GUEST PMI
+From: Colton Lewis <coltonlewis@google.com>
+To: Mingwei Zhang <mizhang@google.com>
+Cc: seanjc@google.com, pbonzini@redhat.com, xiong.y.zhang@intel.com, 
+	dapeng1.mi@linux.intel.com, kan.liang@intel.com, zhenyuw@linux.intel.com, 
+	manali.shukla@amd.com, sandipan.das@amd.com, jmattson@google.com, 
+	eranian@google.com, irogers@google.com, namhyung@kernel.org, 
+	mizhang@google.com, gce-passthrou-pmu-dev@google.com, samantha.alt@intel.com, 
+	zhiyuan.lv@intel.com, yanfei.xu@intel.com, like.xu.linux@gmail.com, 
+	peterz@infradead.org, rananta@google.com, kvm@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 
-The pr_debug_scope() is to print more information about the scope DIE
-during the instruction tracking so that it can help finding relevant
-debug info and the source code like inlined functions more easily.
+Hello,
 
-  $ perf --debug type-profile annotate --data-type
-  ...
-  -----------------------------------------------------------
-  find data type for 0(reg0, reg12) at set_task_cpu+0xdd
-  CU for kernel/sched/core.c (die:0x1268dae)
-  frame base: cfa=1 fbreg=7
-  scope: [3/3] (die:12b6d28) [inlined] set_task_rq       <<<--- (here)
-  bb: [9f - dd]
-  var [9f] reg3 type='struct task_struct*' size=0x8 (die:0x126aff0)
-  var [9f] reg6 type='unsigned int' size=0x4 (die:0x1268e0d)
+Mingwei Zhang <mizhang@google.com> writes:
 
-Signed-off-by: Namhyung Kim <namhyung@kernel.org>
----
- tools/perf/util/annotate-data.c | 25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+> From: Xiong Zhang <xiong.y.zhang@linux.intel.com>
 
-diff --git a/tools/perf/util/annotate-data.c b/tools/perf/util/annotate-data.c
-index a0ea4e07e57031ff..976abedca09ef547 100644
---- a/tools/perf/util/annotate-data.c
-+++ b/tools/perf/util/annotate-data.c
-@@ -131,6 +131,26 @@ static void pr_debug_location(Dwarf_Die *die, u64 pc, int reg)
- 	}
- }
- 
-+static void pr_debug_scope(Dwarf_Die *scope_die)
-+{
-+	int tag;
-+
-+	if (!debug_type_profile && verbose < 3)
-+		return;
-+
-+	pr_info("(die:%lx) ", (long)dwarf_dieoffset(scope_die));
-+
-+	tag = dwarf_tag(scope_die);
-+	if (tag == DW_TAG_subprogram)
-+		pr_info("[function] %s\n", dwarf_diename(scope_die));
-+	else if (tag == DW_TAG_inlined_subroutine)
-+		pr_info("[inlined] %s\n", dwarf_diename(scope_die));
-+	else if (tag == DW_TAG_lexical_block)
-+		pr_info("[block]\n");
-+	else
-+		pr_info("[unknown] tag=%x\n", tag);
-+}
-+
- bool has_reg_type(struct type_state *state, int reg)
- {
- 	return (unsigned)reg < ARRAY_SIZE(state->regs);
-@@ -1305,8 +1325,9 @@ static enum type_match_result find_data_type_block(struct data_loc_info *dloc,
- 		if (dwarf_ranges(&scopes[i], 0, &base, &start, &end) < 0)
- 			break;
- 
--		pr_debug_dtp("scope: [%d/%d] (die:%lx)\n",
--			     i + 1, nr_scopes, (long)dwarf_dieoffset(&scopes[i]));
-+		pr_debug_dtp("scope: [%d/%d] ", i + 1, nr_scopes);
-+		pr_debug_scope(&scopes[i]);
-+
- 		src_ip = map__objdump_2rip(dloc->ms->map, start);
- 
- again:
--- 
-2.46.0.598.g6f2099f65c-goog
+> Create a new vector in the host IDT for kvm guest PMI handling within
+> mediated passthrough vPMU. In addition, guest PMI handler registration
+> is added into x86_set_kvm_irq_handler().
 
+> This is the preparation work to support mediated passthrough vPMU to
+> handle kvm guest PMIs without interference from PMI handler of the host
+> PMU.
+
+> Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
+> Signed-off-by: Xiong Zhang <xiong.y.zhang@linux.intel.com>
+> Tested-by: Yongwei Ma <yongwei.ma@intel.com>
+> Signed-off-by: Mingwei Zhang <mizhang@google.com>
+> ---
+>   arch/x86/include/asm/hardirq.h                |  1 +
+>   arch/x86/include/asm/idtentry.h               |  1 +
+>   arch/x86/include/asm/irq_vectors.h            |  5 ++++-
+>   arch/x86/kernel/idt.c                         |  1 +
+>   arch/x86/kernel/irq.c                         | 21 +++++++++++++++++++
+>   .../beauty/arch/x86/include/asm/irq_vectors.h |  5 ++++-
+>   6 files changed, 32 insertions(+), 2 deletions(-)
+
+> diff --git a/arch/x86/include/asm/hardirq.h  
+> b/arch/x86/include/asm/hardirq.h
+> index c67fa6ad098a..42a396763c8d 100644
+> --- a/arch/x86/include/asm/hardirq.h
+> +++ b/arch/x86/include/asm/hardirq.h
+> @@ -19,6 +19,7 @@ typedef struct {
+>   	unsigned int kvm_posted_intr_ipis;
+>   	unsigned int kvm_posted_intr_wakeup_ipis;
+>   	unsigned int kvm_posted_intr_nested_ipis;
+> +	unsigned int kvm_guest_pmis;
+>   #endif
+>   	unsigned int x86_platform_ipis;	/* arch dependent */
+>   	unsigned int apic_perf_irqs;
+> diff --git a/arch/x86/include/asm/idtentry.h  
+> b/arch/x86/include/asm/idtentry.h
+> index d4f24499b256..7b1e3e542b1d 100644
+> --- a/arch/x86/include/asm/idtentry.h
+> +++ b/arch/x86/include/asm/idtentry.h
+> @@ -745,6 +745,7 @@ DECLARE_IDTENTRY_SYSVEC(IRQ_WORK_VECTOR,		 
+> sysvec_irq_work);
+>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_VECTOR,		sysvec_kvm_posted_intr_ipi);
+>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_WAKEUP_VECTOR,	 
+> sysvec_kvm_posted_intr_wakeup_ipi);
+>   DECLARE_IDTENTRY_SYSVEC(POSTED_INTR_NESTED_VECTOR,	 
+> sysvec_kvm_posted_intr_nested_ipi);
+> +DECLARE_IDTENTRY_SYSVEC(KVM_GUEST_PMI_VECTOR,	         
+> sysvec_kvm_guest_pmi_handler);
+>   #else
+>   # define fred_sysvec_kvm_posted_intr_ipi		NULL
+>   # define fred_sysvec_kvm_posted_intr_wakeup_ipi		NULL
+> diff --git a/arch/x86/include/asm/irq_vectors.h  
+> b/arch/x86/include/asm/irq_vectors.h
+> index 13aea8fc3d45..ada270e6f5cb 100644
+> --- a/arch/x86/include/asm/irq_vectors.h
+> +++ b/arch/x86/include/asm/irq_vectors.h
+> @@ -77,7 +77,10 @@
+>    */
+>   #define IRQ_WORK_VECTOR			0xf6
+
+> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
+> +#if IS_ENABLED(CONFIG_KVM)
+> +#define KVM_GUEST_PMI_VECTOR		0xf5
+> +#endif
+> +
+>   #define DEFERRED_ERROR_VECTOR		0xf4
+
+>   /* Vector on which hypervisor callbacks will be delivered */
+> diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
+> index f445bec516a0..0bec4c7e2308 100644
+> --- a/arch/x86/kernel/idt.c
+> +++ b/arch/x86/kernel/idt.c
+> @@ -157,6 +157,7 @@ static const __initconst struct idt_data apic_idts[]  
+> = {
+>   	INTG(POSTED_INTR_VECTOR,		asm_sysvec_kvm_posted_intr_ipi),
+>   	INTG(POSTED_INTR_WAKEUP_VECTOR,		asm_sysvec_kvm_posted_intr_wakeup_ipi),
+>   	INTG(POSTED_INTR_NESTED_VECTOR,		asm_sysvec_kvm_posted_intr_nested_ipi),
+> +	INTG(KVM_GUEST_PMI_VECTOR,		asm_sysvec_kvm_guest_pmi_handler),
+
+
+There is a subtle inconsistency in that this code is guarded on
+CONFIG_HAVE_KVM when the #define KVM_GUEST_PMI_VECTOR is guarded on
+CONFIG_KVM. Beats me why there are two different flags that are so
+similar, but it is possible they have different values leading to
+compilation errors.
+
+I happened to hit this compilation error because make defconfig will
+define CONFIG_HAVE_KVM but not CONFIG_KVM. CONFIG_KVM is the more strict
+of the two because it depends on CONFIG_HAVE_KVM.
+
+This code should also be guarded on CONFIG_KVM.
+
+>   # endif
+>   # ifdef CONFIG_IRQ_WORK
+>   	INTG(IRQ_WORK_VECTOR,			asm_sysvec_irq_work),
+> diff --git a/arch/x86/kernel/irq.c b/arch/x86/kernel/irq.c
+> index 18cd418fe106..b29714e23fc4 100644
+> --- a/arch/x86/kernel/irq.c
+> +++ b/arch/x86/kernel/irq.c
+> @@ -183,6 +183,12 @@ int arch_show_interrupts(struct seq_file *p, int  
+> prec)
+>   		seq_printf(p, "%10u ",
+>   			   irq_stats(j)->kvm_posted_intr_wakeup_ipis);
+>   	seq_puts(p, "  Posted-interrupt wakeup event\n");
+> +
+> +	seq_printf(p, "%*s: ", prec, "VPMU");
+> +	for_each_online_cpu(j)
+> +		seq_printf(p, "%10u ",
+> +			   irq_stats(j)->kvm_guest_pmis);
+> +	seq_puts(p, " KVM GUEST PMI\n");
+>   #endif
+>   #ifdef CONFIG_X86_POSTED_MSI
+>   	seq_printf(p, "%*s: ", prec, "PMN");
+> @@ -311,6 +317,7 @@ DEFINE_IDTENTRY_SYSVEC(sysvec_x86_platform_ipi)
+>   #if IS_ENABLED(CONFIG_KVM)
+>   static void dummy_handler(void) {}
+>   static void (*kvm_posted_intr_wakeup_handler)(void) = dummy_handler;
+> +static void (*kvm_guest_pmi_handler)(void) = dummy_handler;
+
+>   void x86_set_kvm_irq_handler(u8 vector, void (*handler)(void))
+>   {
+> @@ -321,6 +328,10 @@ void x86_set_kvm_irq_handler(u8 vector, void  
+> (*handler)(void))
+>   	    (handler == dummy_handler ||
+>   	     kvm_posted_intr_wakeup_handler == dummy_handler))
+>   		kvm_posted_intr_wakeup_handler = handler;
+> +	else if (vector == KVM_GUEST_PMI_VECTOR &&
+> +		 (handler == dummy_handler ||
+> +		  kvm_guest_pmi_handler == dummy_handler))
+> +		kvm_guest_pmi_handler = handler;
+>   	else
+>   		WARN_ON_ONCE(1);
+
+> @@ -356,6 +367,16 @@  
+> DEFINE_IDTENTRY_SYSVEC_SIMPLE(sysvec_kvm_posted_intr_nested_ipi)
+>   	apic_eoi();
+>   	inc_irq_stat(kvm_posted_intr_nested_ipis);
+>   }
+> +
+> +/*
+> + * Handler for KVM_GUEST_PMI_VECTOR.
+> + */
+> +DEFINE_IDTENTRY_SYSVEC(sysvec_kvm_guest_pmi_handler)
+> +{
+> +	apic_eoi();
+> +	inc_irq_stat(kvm_guest_pmis);
+> +	kvm_guest_pmi_handler();
+> +}
+>   #endif
+
+>   #ifdef CONFIG_X86_POSTED_MSI
+> diff --git a/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h  
+> b/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
+> index 13aea8fc3d45..670dcee46631 100644
+> --- a/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
+> +++ b/tools/perf/trace/beauty/arch/x86/include/asm/irq_vectors.h
+> @@ -77,7 +77,10 @@
+>    */
+>   #define IRQ_WORK_VECTOR			0xf6
+
+> -/* 0xf5 - unused, was UV_BAU_MESSAGE */
+> +#if IS_ENABLED(CONFIG_KVM)
+> +#define KVM_GUEST_PMI_VECTOR           0xf5
+> +#endif
+> +
+>   #define DEFERRED_ERROR_VECTOR		0xf4
+
+>   /* Vector on which hypervisor callbacks will be delivered */
