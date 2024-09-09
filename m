@@ -1,242 +1,245 @@
-Received: from mail-il1-f172.google.com (mail-il1-f172.google.com [209.85.166.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CH1PR05CU001.outbound.protection.outlook.com (mail-northcentralusazon11020096.outbound.protection.outlook.com [52.101.193.96])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1861224F6
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:43:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725914589; cv=none; b=kd0DIEClbOXTBt46V4K0XQL+cjD+EASuyF8v10gc1zhv8QIluBsFAQ2ybQgYDYS/sRDZfNHf/TzPOhFUY/F6aNHlOvhD6keuwAjdVtiM1rjHbTD+F0RW5yqlsTmWWja/cWmVTdZfHXP4eMsZWSEOToZy5fkabPbymGzxbAvTTYE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725914589; c=relaxed/simple;
-	bh=CEQycjdSqCG/wH/xA7Nsyogt0a/N/Fodz7icJnE7OL4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lo31qLaQe08kgaOBOzJO2WM9NTe28u2hHrRh8a11PIY5S7avz45UchfDfTXNb07M5+LfV+s8OVH38hwdjNHE8lP+mm2/bn35kA7hvIe2mCdysCd1PzF2MhO49bd5FDtx6QI7XPqcnRugbptOzqB0cN+ujSIfkeshHstn3/YM07g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fl0e6O9r; arc=none smtp.client-ip=209.85.166.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA24D18A94C
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:56:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.193.96
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1725915372; cv=fail; b=OudaMQe0YiG28peqomo6YyQkCuq2gPK5G/ypdnh9Foh27CCblP2B2kyt9wLfdMUrgs9FQ7gPaHXyKn9cYPeEzY4ctxkbwHepWAsPMnsadnPw3fzFRH24vTeIfHmusbMaA2C1+9uNhogLs4DCv4wHmxKQZlgIPYWURgk2vaE+jgU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1725915372; c=relaxed/simple;
+	bh=CGkupTPF3kLtF2pjIHRvHdd+Sw2W2vNqz1Qw2pE4lkY=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=Yzg26qW+aBQv8UH1AQzMQLAeVUoU+oV6LYkoApY6A2+nK+aB77fA1wf7/DKJIHHYIH8Ip8ZjnelxJXJ7W4EkdCquVw/yf9KXRFwOoxy892bgk7cHOnoyZsIY0gvEti5OXg7tpYbVocCkmBAXAIsFH3/0aIaeDzJ8W9GDDnqvRVI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com; spf=pass smtp.mailfrom=os.amperecomputing.com; dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b=mbPD0Bze; arc=fail smtp.client-ip=52.101.193.96
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=os.amperecomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=os.amperecomputing.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fl0e6O9r"
-Received: by mail-il1-f172.google.com with SMTP id e9e14a558f8ab-39d3ad05f8eso13535ab.1
-        for <linux-perf-users@vger.kernel.org>; Mon, 09 Sep 2024 13:43:07 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=os.amperecomputing.com header.i=@os.amperecomputing.com header.b="mbPD0Bze"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=rUkxDaoPo7hhVZhC7uNyGZ1lKx+qBxWTFXcNsqLW9vwEO0fjq0D8DjHbpIkxUlQdgslB8LIQCtP+h38gL76MxvcKSdFpTymvfqYSvIh6cAX+ANmr+vrNMg84xrtG+Cf+WPD+AyVScJcghIe2wpvCMHapOpEolpT/kkvidgP1AnzHPz/MBiTSlxFRaWHSRCOlQQMoyzbgNCz3CK/NAEsOpbpsFdAVzdsPgZMrmXqBl3MB9E5ZV9LBc5B8nhz8Ah7wA7ol8BDbHTUztcjImHYyJCOB5Mgb1ay+s65rQnVxl+DPaZpGzV67BMAHF5weiOG/eVOOGZ7BUsI6omeOh6iGSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=S55Rm26tG6UrO4sjff495MSisDNpFUv83Wz4vwlr5b4=;
+ b=OOztSj/qJYGDdT5HyXqQPqq0iQq8erY4SK+JOeCOwAt3br+h/5/vHyjyy20vVV0XC8z1/tlAhOSILnu7/ajizbAXW675BRaKalkoJqbEPp+MVdWprp9RY5aRV5g/G/jJGBf4AXho+GYfa5b1WIKIS/ritR2JPu32OT4y5GZn32KqfFtGzG+zEKuyrJMYU+GZzimVNpXhF5yWcyY3NWFQr00w9OwpibNihJmN/f/y+/dz5dMRSxqKmodzaJXUuyP/QULY3g26A2ahJgQDR6MGozFfLDZW9FDkHI6LBLovwmk86/Q8FhKXSqhSGFLbAON0adcZzdRJcycVKx89FEdSkQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1725914587; x=1726519387; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MD7TFpuwj1EtsCo2pgXURtlXNry0GSQ8o4yk76QlzWU=;
-        b=fl0e6O9rM16AvmCSjALFQkFt5vg5MP61qwNoiPfL5Cf6jPu8yhtI9ch+Czc/AzJRiz
-         n6TVyaEiXsQR5CDiY5IWax94DWLt90TRw8Tqc214wC+rRzzOYQSm128U7S7roF3o/sD0
-         OTZIQ7f2f5dSumamv9vUlmGcUS+xpqptZfVpQSLII9kPExw+o4jLMd52bnexoZ4IMS2i
-         aRmGhO2YwjZT53MXYvDRHZmGgEGo/21vlLGnC/UhVoDIvd8tbv82WnByM+el4s6bz3WJ
-         GpCy9kcEac7WqotSETpdgzmOr+4TuRaRhjQsSqfEyIR4vL7Ge+y8td4swOvIP7+CrNDJ
-         0MAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725914587; x=1726519387;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MD7TFpuwj1EtsCo2pgXURtlXNry0GSQ8o4yk76QlzWU=;
-        b=vGRwk7hv7Wvqa1SUuxfHVnT2nR2LXrVghb8Z8nBqHHolEkd2gXlnzagtgyusg5LW4i
-         +Dn9LzjbYxq0IU8AiQqvl8zQKyindQZrHObJVpcdAK3+ICqRWwgDTyd2Q6QxgFi7hFKV
-         /B7PkxNBZpgiL/RT/pKhcUPlxhQ8dPNeqb5poH6e/+dxiVt5S2K/wl6so64+JK9d7x0s
-         gsrBQkYc/IgJhyQ3XHJdhSizXXrnKctGuHr81r/TBNdVHN9l0aJar1NifqohjVPo+adz
-         +QamyLK+ZphWs7WxBBsya1j92tV245DKX0RLszxsOJQnElBDAm0sIELhSSoS2IDBX2Tq
-         B9MQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVAeAT6hJ0QGWflCBYu2ZSEwcpEu2Cqh7azke2GoQ2zD8MJz6MaXmtqkanWeRrjbBj6w8zSOo+QWrovua6+d9Pg@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx4Innefkg1+QPECI7O9PmqWYNuGTiwo/refLxn4hUPJLVBS0Vq
-	g5A/IH8spCe2Zu9uSVFrOdXYv0zZosqswv0QwvtbHwO9VzkM8mTlP6mRMqq/sX/9DwuUheM2MJT
-	9KUer0KTmAKtw5AdPnMoDzK5MhPfDqAa1tkMK
-X-Google-Smtp-Source: AGHT+IGAxDE23lbT+wgQdEQJm18EM/ah8ajTrOMydlUxhIQ/jGF3POaK7rB5tXpvmhN9nmRTw80hGAlqNMdCYt5FM3w=
-X-Received: by 2002:a05:6e02:1c45:b0:377:14ab:42ea with SMTP id
- e9e14a558f8ab-3a06bae3ad1mr901025ab.16.1725914586653; Mon, 09 Sep 2024
- 13:43:06 -0700 (PDT)
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=S55Rm26tG6UrO4sjff495MSisDNpFUv83Wz4vwlr5b4=;
+ b=mbPD0BzeK/s170k+9MCMdGXD0oI9lEqvydHuxne1hI2qecM/DXwoAGIdhR/t+2De4o3FjwqfoJPHeVIOmjEt4HuPJj9kawb9NzUjSUt32vXdSvP/2Ao/jYybmJiQCe1MgdWc7Ju4PJKb+G/CWW5HC1l4Pe9u9aeyB9U5Am8glVM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from PH7PR01MB8146.prod.exchangelabs.com (2603:10b6:510:2bd::18) by
+ SA1PR01MB8353.prod.exchangelabs.com (2603:10b6:806:375::15) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7939.24; Mon, 9 Sep 2024 20:56:06 +0000
+Received: from PH7PR01MB8146.prod.exchangelabs.com
+ ([fe80::2972:642:93d1:e9d4]) by PH7PR01MB8146.prod.exchangelabs.com
+ ([fe80::2972:642:93d1:e9d4%5]) with mapi id 15.20.7918.024; Mon, 9 Sep 2024
+ 20:56:05 +0000
+Message-ID: <cbe79aea-52c0-4694-b0e4-d8b4dcece4b4@os.amperecomputing.com>
+Date: Mon, 9 Sep 2024 13:56:03 -0700
+User-Agent: Mozilla Thunderbird
+Reply-To: scclevenger@os.amperecomputing.com
+Subject: Re: [PATCH V7 4/4] Adjust objdump start/end range per map pgoff
+ parameter
+To: Leo Yan <leo.yan@arm.com>, james.clark@linaro.org, mike.leach@linaro.org
+Cc: ilkka@os.amperecomputing.com, coresight@lists.linaro.org,
+ linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <cover.1725573309.git.scclevenger@os.amperecomputing.com>
+ <d730ad217936d952008edf703ba4c34393d89dad.1725573309.git.scclevenger@os.amperecomputing.com>
+ <22f7ecdb-14e7-4bb1-a20a-bdb447bcb64f@arm.com>
+ <723912a5-4d9a-4fe0-ad86-bbd79ccd4a45@os.amperecomputing.com>
+ <22539ca0-551d-4cfc-94f9-4a291998a363@os.amperecomputing.com>
+ <fc2870a0-3e0e-464c-b468-70c5ee4a6ebb@arm.com>
+Content-Language: en-US
+From: Steve Clevenger <scclevenger@os.amperecomputing.com>
+Organization: Ampere Computing
+In-Reply-To: <fc2870a0-3e0e-464c-b468-70c5ee4a6ebb@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SJ0PR05CA0098.namprd05.prod.outlook.com
+ (2603:10b6:a03:334::13) To PH7PR01MB8146.prod.exchangelabs.com
+ (2603:10b6:510:2bd::18)
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240909184201.553519-1-kan.liang@linux.intel.com>
-In-Reply-To: <20240909184201.553519-1-kan.liang@linux.intel.com>
-From: Ian Rogers <irogers@google.com>
-Date: Mon, 9 Sep 2024 13:42:55 -0700
-Message-ID: <CAP-5=fVpEUJOx1Sqw6uC_0Y_DqGLprYTCFH4mgSaY4mrPmNOHw@mail.gmail.com>
-Subject: Re: [PATCH] perf env: Find correct branch counter info on hybrid
-To: kan.liang@linux.intel.com
-Cc: acme@kernel.org, namhyung@kernel.org, jolsa@kernel.org, 
-	adrian.hunter@intel.com, linux-perf-users@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH7PR01MB8146:EE_|SA1PR01MB8353:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4443e586-1051-4792-e914-08dcd111d28b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UDU3VE1XaEMrVlJNOXBmemNGY2NpV2o1UUtyZHZPaWhSb01ySCtEVWE3di9S?=
+ =?utf-8?B?TjlHOEk2ZWlTQmtDSFhtYkVacVBCN2o5TVV5cjZLRjI1U2ZCNWxiL2NOMFNU?=
+ =?utf-8?B?b3ZVbmJlYkQzU2pRZGJ1MXBWOHI3SGJtRTgzeEYyQnJtK3RGS2d0OXdmYVRp?=
+ =?utf-8?B?ZDB3cXJGU1pZYUowWnF1SUpUZ1dhTC8yWmd2MlpUMHBBTzZmdVVRTjU1Ykhy?=
+ =?utf-8?B?Vlg0VVFHdDVyZmorbFlYSWpPMEtMTFFRQnZDV2RGc1BJZVFXUWszUUt5K2gw?=
+ =?utf-8?B?RDNBQ0hYN2FEbUtxR3BablcwMEhKVklLY29QOEhxV2pMckcwRGtGMFVGQjAz?=
+ =?utf-8?B?bmE2UjlScTMxaDRWcU5jMjduWFQwNGdwK3JsYUt5V2U0bTZ6WkE1d3BjWGdO?=
+ =?utf-8?B?bzJFQ2NMajhobjdQTmZiMXVlQkYxQ2t5WXMyNjdhV3pCMGU1N3BaRlJjNVpw?=
+ =?utf-8?B?OHNySzlUQ2g5T0FhaGErOWVkVlo1S0dXOGFMaHE0Nk8xZkpFVzhGYjFNTTc4?=
+ =?utf-8?B?SXJEUkkvdWl2QzN3dXQzVEJ6SWtwTVJBbU43UHBKSmFoOUM3akQrdTdIMW9m?=
+ =?utf-8?B?TVBsbURwY1c1dGl3VU9UQjFjdklXTVVod00wY3I2Wk9PRWlQU3ZRSTg0ckNL?=
+ =?utf-8?B?eFR4TjNvaUFzUEJYdDZCTXNFM3RRcTJ1bHpuUmMwcVJGbW1LQUVWc2hUSjVy?=
+ =?utf-8?B?MHRhcTJ2dDF0N3BBaWhZdG1mOEg3aGpJTWdjV1hGNEdMMGluTGJLd0xYb1NT?=
+ =?utf-8?B?Y01oZ2tXWVJPQWxHNVdkaHZYMnBNSW53VGhBbXduME5nejFTek9TR1RQajVY?=
+ =?utf-8?B?OG40TlFheU5hcmNJUlp6RWZRKzJ0UVY5LzcrOFR0QTdrclFDeVlhRlVVMU8w?=
+ =?utf-8?B?OHpGUm5qSk4wd3h2d2ZxUDBkQVBwL2F6WFN2WWZqVnFwQjFzeXhORnVmS0RY?=
+ =?utf-8?B?UjZPWmpwc2dqcGtaMmNMSWRQdFVaWGpRSXBCUkxpaVM0d2szTlNpbnRZcThx?=
+ =?utf-8?B?UmJrZ2NOeTBVZFkxbVlhMCswUjNNdTBsb2hkekorZnJMbEV3UG9BdHZHLzNm?=
+ =?utf-8?B?eTk4WC9sNzFXQkF1MTF0akwzeWR2Rkl3MVRPdzFiTnBPdlhQUkpidnZsQ1Jh?=
+ =?utf-8?B?UHp2MngrYU90RjAvdUsvV05nZVo1bmFrTG9wQUdXTFBoK2lVeHNEQW1uQ1Zm?=
+ =?utf-8?B?KzN6YmFWSWU5RG9IWUFOS3RyNXZzOG5YUWVrZktOQTUwN3dLeFA5Zk9uTjVY?=
+ =?utf-8?B?dnNWWG1JcTdibHVlbHhhMFhkcnFGdm9SRTJWcmEzQllWc21vd0tqWHRvT09w?=
+ =?utf-8?B?eFU2cjFlazdWMThXU2M5Z1FqbGEyeUc0WFFkVXk2cFljNHV5UkJtbGtiQ1dv?=
+ =?utf-8?B?cG5vcFJwWk0yTjdYTjAzMUdZZGYwcnVkc2ZpYkNtSlY3WWxGN3JFL3lTM1NK?=
+ =?utf-8?B?cTdLQktVQUlSSG5vV29CNGM1TEFWckNNL2hYYklCUHFZeWEzSDVjdktEMUdG?=
+ =?utf-8?B?d0c0dHdvaHZNN3ZIZ1dGbHlvbE82N1B4UUpVZ1BoZzU2UDFGSDg5V3BLbHhN?=
+ =?utf-8?B?bVltbENMQmVhUUVKSEU5aUhod1dCdHdaZHM5VUFQdHg0cElLYXY5NnByVmsy?=
+ =?utf-8?B?VkxSNzAzdGNJWEtueTJuYWg2S1FFUUE3YnNIeGFscHVyNzBRY1NsbGlGQXpi?=
+ =?utf-8?B?UEJ1dytUVzEwWHRsci9ZeWJNdzM5L0I4SE1VUUs4dUNWRUczV2tVYXN5OGlJ?=
+ =?utf-8?B?emNLTVpBNjhYMzFqbkFwUWlVeW5ybkxwT2xWM0YyZ1NqWlVMSFBEb216NVZ1?=
+ =?utf-8?B?VUtFcEFzSHIxZ1UwSzdJdz09?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR01MB8146.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NkNTSVg2ZU14ZmtYZnpCL0ZHeVdlUWxaTHQxR2poS2F5dkNZc1cxcnh3OEdU?=
+ =?utf-8?B?ZGVXcVRlL0E4MEVkZ0lRNFZ4WU1EcXBDLzlESXUwZEYwbmRwcUtkaDJrQjFx?=
+ =?utf-8?B?QTB2bmxJa1NXTTBEa293YkhlYXhIdmhmWFhHanhsN1pBZmRTbW9YblNKcmZH?=
+ =?utf-8?B?bFAvZWE0Q09GWkZzdzltMEwrWW9oNDJqb1NHdEpwOHlIQkdDODEyOVZ6S3I0?=
+ =?utf-8?B?VlJUT281QTVuSnQ0S05seDJPdXFFSUNGUXZiNmpadWxHSUc0ZjVRMFUzTEcy?=
+ =?utf-8?B?Tk15blMxMk8zWjVidS84N3NSN2s0WXZLckhQTUhReW4vWUx3MFlZS1RvL3Zl?=
+ =?utf-8?B?ZnVqYnVFK1IrdUJOckVPRG56bTdhaWE3d2w1UTBmYlNaVFJ5dm0vc1lTSmVR?=
+ =?utf-8?B?L1FjcUJhWlNqQysyc2hGd0VsaWxzdXIyUmQ2WXN1TGRENXdMTkVkQTRMc08w?=
+ =?utf-8?B?Rm8wRTFsS1ZrZTRjNFRuc2ZxemtKV1JkODlJQkpTU0FYYStHV3ZLc0U2Z2g4?=
+ =?utf-8?B?OFVRSlJRa1J5UUptNTdiUmxjb3NYZHREYjNHTG9BOU9xNjhDY01ZQThLSWdp?=
+ =?utf-8?B?TTIzVVUvbUtiUWpISks0SHowWEJOMnpFdThkdTBQZkE0OEw3Tmd1QUd1eng1?=
+ =?utf-8?B?c2NnTVE1T2YvQ2JUS3RwRjJjREhrUU5tOWZVbU9ub3dLOFpTeCtxL2JrZkhj?=
+ =?utf-8?B?cnphbUpJand0VGdvMlBiQTVBRnlySGdLeTBqdGVvanZXMjZxR3NuVGhOVEFH?=
+ =?utf-8?B?SXhoM1pTMlY0emZzdEhlcjRLcGJkRXB4N2VpV2tpSzByNlNOakcvcjdDSGk2?=
+ =?utf-8?B?YlhnLzFnUGhIdXFtWnBpUGFOSjFDZVpwZ1VKVlFKTmM5d1Y3cGJwVnRSOG9y?=
+ =?utf-8?B?L0xhQzBSRDlTYnplOTZqTzJMMkx3TTB6RHNQaU04akQ4Q1NzanZSUUZJazI1?=
+ =?utf-8?B?emxuU0hMa3RGWDlHTkV0Nk84bWhUZnVzUEtzeWFqOEVrS1ZJaFVDWnpOYmNq?=
+ =?utf-8?B?dzk2WE5yaDBmNXkybitOaGErakFwTGs2cWlRN3oyWE5QUzl4VVE5QkxpWHds?=
+ =?utf-8?B?VXJvYlJ3KzBqeDRkMTBoeUNDYm0wUk80ZHFPeno1Sk5GSGo4VTVCdlpKN2Jl?=
+ =?utf-8?B?TklrTlJMZHdrUjBzb2dWeXZNM3VFOHpsZ21KeVVrd2xUSmNmT0RYbEU4TkJV?=
+ =?utf-8?B?U0txdmE2OXh5WEt1Sm1VandYb3A3bnBrOU1vdGpNQjJYdzZxN0FQUDZrb2Zt?=
+ =?utf-8?B?SVpyaGF3NUVQa2t5SHNwaFBsTGVpMUlzRTVSbDlIU2NTc29maFdWNXhlY2RT?=
+ =?utf-8?B?ZmFiQTQ2MTlBVjVIcWNnaXRQRnM0T3hGTnY2MjYva2FjNkxLcitFd3JyM2l5?=
+ =?utf-8?B?Q2hPRG9pOFNNeVNhZ1g2UVlpb3Mya0NVcE41a3o5UllFV21KekNlMHd4cG9k?=
+ =?utf-8?B?S2Y4YzE3TzdROWtMa2psKzhtMGs5bWkzSkVXRXAxOU5ta1RYS01iWktqWDB3?=
+ =?utf-8?B?U2NKbDVoMXU3NFcxa0JlcWw0bmtTY3JRcWJGalpHZ1dDNFRSRmd0ZUpMcEk0?=
+ =?utf-8?B?TGhnNU1pSE5tZVlSWEtnNUJyWCtuN042czdqSjh2eEljUThpa0VrY09kVGQ4?=
+ =?utf-8?B?TDZReWVURUtsRFdTek1seFVxVUx3aEZsWjY3SGdmTnZTWktKRk9HaDJQaDlH?=
+ =?utf-8?B?b0dnakQrb0RuN3Q1aXR0Znc5ZUE1TEROR2daU3pXdWxpOVplYXJBNkhYZVlF?=
+ =?utf-8?B?eno3ZVRjOGRZUGt0bHNHZXRoTlkwR1pzWmhpRUdXVlVpVUR5RUVaWlZuNEZ6?=
+ =?utf-8?B?SWdMc1gxMkVZT2tENnhBc0tjYmh2eGJ6b2dXemNjcjF6SzE2MldSZ2RVb0th?=
+ =?utf-8?B?VGgyd3RIUTIrMThmcGJHbHlJbFo2MTQ3WFlUWHVRNUYvZVYvWGxKT1dodVVv?=
+ =?utf-8?B?QnRlOEdNdklNQmF6eGhDRU1hYXlOdWRkVm9FZzNiYUFLTkRURFhTZDJoZER3?=
+ =?utf-8?B?N2RBbHEybFBSUFpwTyt6TmlxcG1hbHRGbm1sdzB5QndPSkJ5WVAzRFFXYUF2?=
+ =?utf-8?B?bEpSajFGZlI2MEpWSFZxUjJKSmZjQ0YxdjY4QldIemtlNmNQU1h3TjlRdzdS?=
+ =?utf-8?B?SnI5TkI3OFlybStlSVN4YmhSYXBoZFU2QnpmQ2thR3BtZUIyQzZXclB6YVBN?=
+ =?utf-8?Q?fpiWlIGGBTWsUhZ/7tKblGrgqheN0MokhW2LXC2A0E7d?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4443e586-1051-4792-e914-08dcd111d28b
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR01MB8146.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Sep 2024 20:56:05.8793
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: uSvKHASvvkuTYEyczCqsDM2xPXTYLAmdFFb2m4Uj9uDRVoJ4nBabzM/ECP+6Svv2B2Yze1X9VmXFLPSBzAMlik/kRtAMWy2lvhZt05LrO9KTxYkAS4Fm1Y6oukacAH1E
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR01MB8353
 
-On Mon, Sep 9, 2024 at 11:41=E2=80=AFAM <kan.liang@linux.intel.com> wrote:
->
-> From: Kan Liang <kan.liang@linux.intel.com>
->
-> No event is printed in the "Branch Counter" column on hybrid machines.
->
-> For example,
->  $perf record -e "{cpu_core/branch-instructions/pp,cpu_core/branches/}:S"
->  -j any,counter
->  $perf report --total-cycles
->
->  # Branch counter abbr list:
->  # cpu_core/branch-instructions/pp =3D A
->  # cpu_core/branches/ =3D B
->  # '-' No event occurs
->  # '+' Event occurrences may be lost due to branch counter saturated
->  #
->  # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles  Branch Count=
-er
->  # ...............  ..............  ...........  ..........  ............=
-..
->            44.54%          727.1K        0.00%           1   |+   |+   |
->            36.31%          592.7K        0.00%           2   |+   |+   |
->            17.83%          291.1K        0.00%           1   |+   |+   |
->
-> The branch counter information (br_cntr_width and br_cntr_nr) in the
-> perf_env is retrieved from the CPU_PMU_CAPS. However, the CPU_PMU_CAPS
-> is not available on hybrid machines. Without the width information, the
-> number of occurrences of an event cannot be calculated.
->
-> For a hybrid machine, the caps information should be retrieved from the
-> PMU_CAPS, and stored in the perf_env->pmu_caps.
->
-> Add a perf_env__find_br_cntr_info() to return the correct branch counter
-> information from the corresponding fields.
->
-> Fixes: 6f9d8d1de2c6 ("perf script: Add branch counters")
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 
-Reviewed-by: Ian Rogers <irogers@google.com>
 
-Thanks,
-Ian
+On 9/9/2024 1:33 PM, Leo Yan wrote:
+> On 9/7/2024 12:20 AM, Steve Clevenger wrote:
+> 
+> [...]
+> 
+>>>>> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/
+>>>>> perf/scripts/python/arm-cs-trace-disasm.py
+>>>>> index 7aff02d84ffb..a867e0db02b8 100755
+>>>>> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
+>>>>> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
+>>>>> @@ -187,6 +187,7 @@ def process_event(param_dict):
+>>>>>          dso_start = get_optional(param_dict, "dso_map_start")
+>>>>>          dso_end = get_optional(param_dict, "dso_map_end")
+>>>>>          symbol = get_optional(param_dict, "symbol")
+>>>>> +       map_pgoff = get_optional(param_dict, "map_pgoff")
+>>>>
+>>>>
+>>>> I am concerned the two sentences below are inconsistence: one uses
+>>>> 'start_addr + map_pgoff' and the other uses 'start_addr + int(map_pgoff)'.
+>>>>
+>>>
+>>> Valid point. It's working fine as is, but how is it even working? I look
+>>> at print_disam/read_disasm, and no type conversion is done in either
+>>> call. The dso_start parameter for these calls is actually dso_vm_start
+>>> which is the dso_start integer conversion.
+> 
+> I agreed with you. After reading code, I have same conclusion that we don't
+> need to type conversion to int type.
+> 
+>> Python thinks the map_pgoff object is already an integer. For example,
+>>         map_pgoff = get_optional(param_dict, "map_pgoff")
+>>         print("%d" % map_pgoff.isdigit())
+>>
+>> AttributeError: 'int' object has no attribute 'isdigit'
+>> Fatal Python error: handler_call die: problem in Python trace event handler
+>>
+>> Converting map_pgoff to a string works in the print statement.
+>>
+>> print("%d" % str(map_pgoff).isdigit())
+>> 1
+>>
+>> I'm not sure, but it's possible get_optional() during some call had
+>> converted it to '[unknown]' which would cause a problem.
+>>
+>> I can explicitly force to integer.
+> 
+> For backward compatibility, we can use below code:
+> 
+>    map_pgoff = get_optional(param_dict, "map_pgoff")
+>    if (map_pgoff == '[unknown]'):
+>        map_pgoff = 0
+> 
+> Then in the later flow, we should can always use "map_pgoff" as an int type.
+> 
+> I struggled for James reported issue.
+> 
+> The variables “map_pgoff,” “dso_start,” and “dso_end” are set together in the
+> Python engine. All of them should be of type int if the DSO is found, or all
+> should be ‘[unknown]’ if the DSO is missing. We have checked the types for
+> “dso_start” and “dso_end”, and if either is ‘[unknown]’ the flow will directly
+> bail out. Thus, in theory, “map_pgoff” will not cause trouble if it is an
+> ‘[unknown]’ string.
+> 
+> One possibility is that James has applied your patches but has not built perf.
+> So, the field “map_pgoff” is not passed from the Python engine, which will
+> cause the reported error. I think the proposed above change can effectively
+> avoid the error.
+> 
+> Thanks,
+> Leo
 
-> ---
->  tools/perf/builtin-script.c |  5 +++--
->  tools/perf/util/annotate.c  |  5 +++--
->  tools/perf/util/env.c       | 15 +++++++++++++++
->  tools/perf/util/env.h       |  3 +++
->  tools/perf/util/session.c   |  6 ++++--
->  5 files changed, 28 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-> index dbe792b52c5c..a644787fa9e1 100644
-> --- a/tools/perf/builtin-script.c
-> +++ b/tools/perf/builtin-script.c
-> @@ -1241,10 +1241,11 @@ static int ip__fprintf_jump(uint64_t ip, struct b=
-ranch_entry *en,
->         }
->
->         if (PRINT_FIELD(BRCNTR)) {
-> -               unsigned int width =3D evsel__env(evsel)->br_cntr_width;
-> -               unsigned int i =3D 0, j, num, mask =3D (1L << width) - 1;
->                 struct evsel *pos =3D evsel__leader(evsel);
-> +               unsigned int i =3D 0, j, num, mask, width;
->
-> +               perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &wid=
-th);
-> +               mask =3D (1L << width) - 1;
->                 printed +=3D fprintf(fp, "br_cntr: ");
->                 evlist__for_each_entry_from(evsel->evlist, pos) {
->                         if (!(pos->core.attr.branch_sample_type & PERF_SA=
-MPLE_BRANCH_COUNTERS))
-> diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-> index 4990c70b1794..c6ebde9d40a8 100644
-> --- a/tools/perf/util/annotate.c
-> +++ b/tools/perf/util/annotate.c
-> @@ -333,14 +333,15 @@ static int symbol__account_br_cntr(struct annotated=
-_branch *branch,
->  {
->         unsigned int br_cntr_nr =3D evsel__leader(evsel)->br_cntr_nr;
->         unsigned int base =3D evsel__leader(evsel)->br_cntr_idx;
-> -       unsigned int width =3D evsel__env(evsel)->br_cntr_width;
->         unsigned int off =3D offset * evsel->evlist->nr_br_cntr;
-> -       unsigned int i, mask =3D (1L << width) - 1;
->         u64 *branch_br_cntr =3D branch->br_cntr;
-> +       unsigned int i, mask, width;
->
->         if (!br_cntr || !branch_br_cntr)
->                 return 0;
->
-> +       perf_env__find_br_cntr_info(evsel__env(evsel), NULL, &width);
-> +       mask =3D (1L << width) - 1;
->         for (i =3D 0; i < br_cntr_nr; i++) {
->                 u64 cntr =3D (br_cntr >> i * width) & mask;
->
-> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-> index a459374d0a1a..1edbccfc3281 100644
-> --- a/tools/perf/util/env.c
-> +++ b/tools/perf/util/env.c
-> @@ -624,3 +624,18 @@ char *perf_env__find_pmu_cap(struct perf_env *env, c=
-onst char *pmu_name,
->         free(cap_eq);
->         return NULL;
->  }
-> +
-> +void perf_env__find_br_cntr_info(struct perf_env *env,
-> +                                unsigned int *nr,
-> +                                unsigned int *width)
-> +{
-> +       if (nr) {
-> +               *nr =3D env->cpu_pmu_caps ? env->br_cntr_nr :
-> +                                         env->pmu_caps->br_cntr_nr;
-> +       }
-> +
-> +       if (width) {
-> +               *width =3D env->cpu_pmu_caps ? env->br_cntr_width :
-> +                                            env->pmu_caps->br_cntr_width=
-;
-> +       }
-> +}
-> diff --git a/tools/perf/util/env.h b/tools/perf/util/env.h
-> index 2a2c37cc40b7..51b36c36019b 100644
-> --- a/tools/perf/util/env.h
-> +++ b/tools/perf/util/env.h
-> @@ -192,4 +192,7 @@ char *perf_env__find_pmu_cap(struct perf_env *env, co=
-nst char *pmu_name,
->                              const char *cap);
->
->  bool perf_env__has_pmu_mapping(struct perf_env *env, const char *pmu_nam=
-e);
-> +void perf_env__find_br_cntr_info(struct perf_env *env,
-> +                                unsigned int *nr,
-> +                                unsigned int *width);
->  #endif /* __PERF_ENV_H */
-> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-> index b492300ec959..dbaf07bf6c5f 100644
-> --- a/tools/perf/util/session.c
-> +++ b/tools/perf/util/session.c
-> @@ -856,7 +856,6 @@ static void branch_stack__printf(struct perf_sample *=
-sample,
->         struct branch_entry *entries =3D perf_sample__branch_entries(samp=
-le);
->         bool callstack =3D evsel__has_branch_callstack(evsel);
->         u64 *branch_stack_cntr =3D sample->branch_stack_cntr;
-> -       struct perf_env *env =3D evsel__env(evsel);
->         uint64_t i;
->
->         if (!callstack) {
-> @@ -900,8 +899,11 @@ static void branch_stack__printf(struct perf_sample =
-*sample,
->         }
->
->         if (branch_stack_cntr) {
-> +               unsigned int br_cntr_width, br_cntr_nr;
-> +
-> +               perf_env__find_br_cntr_info(evsel__env(evsel), &br_cntr_n=
-r, &br_cntr_width);
->                 printf("... branch stack counters: nr:%" PRIu64 " (counte=
-r width: %u max counter nr:%u)\n",
-> -                       sample->branch_stack->nr, env->br_cntr_width, env=
-->br_cntr_nr);
-> +                       sample->branch_stack->nr, br_cntr_width, br_cntr_=
-nr);
->                 for (i =3D 0; i < sample->branch_stack->nr; i++)
->                         printf("..... %2"PRIu64": %016" PRIx64 "\n", i, b=
-ranch_stack_cntr[i]);
->         }
-> --
-> 2.38.1
->
+I added that exact'[unknown]' check in last week. There's no need to
+explicitly convert to an integer although Python doesn't complain when
+about integer to integer conversions. It's probably just a no op. I'll
+commit the change later today.
+
+Steve
+
