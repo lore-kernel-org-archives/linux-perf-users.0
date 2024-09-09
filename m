@@ -1,115 +1,119 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 850E018A95F
-	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:33:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2F7318A950
+	for <linux-perf-users@vger.kernel.org>; Mon,  9 Sep 2024 20:37:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725914014; cv=none; b=qEk3zwNdQMOvazsSWTO4azfwn+s7R5BZ4oO9Rt2k3MLs8OeGPYkLdUc8XCZR50FCg6d9kqv4nPAWjjV1hKS+cPONMF0Yzs23N4nqZJL0uP5xvKei54K4tqBVnC3py0DvyM4oB4K3IklotC/sAkeXO87bI7PCnMkaqAqbjX6kGL4=
+	t=1725914269; cv=none; b=TTXvb73Mr9Y9p4A4b+HdWwAUd2AUXneURElkyP5T1r8k6tIbaujfHL2HIFIdV08cenIASfqfp8mDKfonTsHKl0oHaVY5HGIwSRlDDcCtdy/n6uiR1/+CbN7vF18pFMfoj0S6Ln/2//woE7PK2KAMT7Hv4S0e8riWuWT3XvhAtms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725914014; c=relaxed/simple;
-	bh=nFla+BLl8EOTUAzWvRGBNBwgtqEibdMwosEuRj2mBeA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dSY4Z7PwuHAm7i6nRCdv19fRr9k/DHK5D7MVrWG/aqvQ9iSFvwhhU/roKlXuR00D5WoD4g4QPRgVpqzi+xxqibUXOxZAM80yGNPDY2wcrFnmctoneZ9T6EVFykgf7unyDq9pPIMcQAVfhfcs6HQnvdeJpONEyiiNX6yI7hxoi8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52995106F;
-	Mon,  9 Sep 2024 13:33:59 -0700 (PDT)
-Received: from [10.57.82.33] (unknown [10.57.82.33])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34B5A3F73B;
-	Mon,  9 Sep 2024 13:33:29 -0700 (PDT)
-Message-ID: <fc2870a0-3e0e-464c-b468-70c5ee4a6ebb@arm.com>
-Date: Mon, 9 Sep 2024 21:33:27 +0100
+	s=arc-20240116; t=1725914269; c=relaxed/simple;
+	bh=DW2EcfOQy2W5Jmza9VbPs7QjtIGUqL290Rk2S6cyo+g=;
+	h=Date:Message-Id:Mime-Version:Subject:From:To:Content-Type; b=ayOn94NEG5/HPeJN6y+Smi21naROMiyXmtQUADeTCCK5y1qDeqnqvHxge9V3YMVjInIEETF1Rh7bnwAVODgV4WvusSHo3BfK2jkZ+sDgUYcmVScBi0v/6f19RrXR11OGg7Bp7vPEmCK2Ggl9OTxWQZZHbXDyRhQpdCip8kjc3Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=0F/29vZ1; arc=none smtp.client-ip=209.85.128.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="0F/29vZ1"
+Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6b47ff8a5c4so164626987b3.2
+        for <linux-perf-users@vger.kernel.org>; Mon, 09 Sep 2024 13:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1725914267; x=1726519067; darn=vger.kernel.org;
+        h=to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=L6unlErgHNzcfcaOSF844WY49vPWncZCWe3dSt1GbFk=;
+        b=0F/29vZ1foLn7D46jUjEumOnBQh3mfEAhEABFoPzx0FahNBSbIJlZNEcZyupIdVatb
+         1tCaXDZI8j2r3blkts/vL3EJk/YJE5UJso1AuL8Ym0Z3VwyZy7FCCKVktbiXtD6mXk1Q
+         kQ9+PmkhwGvqJgR4j/xzt9MBy8EkqAymXqiRQD5Fxw6YEkfli9x6UqIq7OePBMv8acVo
+         u0dc9MD/KUxvTeS6n5dZuAY3+VLmK3VSdaB2jaBYwN0NjA5C6ADX5RTpqbucjhwozYJi
+         QhJETQZA/QJ+ALBCAkuz2leu9p4vCnqRrLfi7Mmur21ep4MQagIyd4rj9rR5xkxZvwp1
+         g6+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725914267; x=1726519067;
+        h=to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L6unlErgHNzcfcaOSF844WY49vPWncZCWe3dSt1GbFk=;
+        b=r2PNpjYaFNScVatdh+8jV7Vv/QYHn1cdVEEUmhaKJ2HqN3z5eTOOuM3f9yUgi7KFla
+         9b2hOguyTOxdlqo9Gy7PXo1GE2P3KzbRTLJQtevz00P0UKnHm2STkKK7qSe+K9oM3ra+
+         XEQMfNBvzOlfqggHnCjRlAmvZ0PoL/FQfBOVUsuZB2QKQVswm3Ju21HV4tPLngruKlP/
+         yNsVzv0KYfPo/BgsDiS0mHrnNiByKwfMzYcgGh5wtvbuTH3fxlzoFv21YEEdsRqT0wdl
+         KG02Jtpnds1m6rUmRweo3g0opmVhQdLK4VuemHNVgapGaBtwfRF0PkjRET5ivRcWMNL5
+         zycg==
+X-Forwarded-Encrypted: i=1; AJvYcCVQlyrCFFHDo/UR7tLGOVlIhEA45/ov0yxqXIN6rxN57Sgiy+q7tKH7cC79R0oIg+122jzUE/Qf3vkPCpiH3DXn@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw69H2XypE42rygJ2JjlyTC4cVddMY5o6k4sjZt/qcZPauxo0tZ
+	gn4P7KgOrwHTg+Lojtjq5bAuxqhU0pfBy09HREgYDrQXWOK2KDNBHdU1hU/sjgmKCLQXOAWhuiw
+	4FF4ssg==
+X-Google-Smtp-Source: AGHT+IHYf14xz+KMmoxbUzIZayaT/NO0P22QobwybS9PKjpUBmLTjDj8gWarY65loFkwM5whBvjlGTXv2yCX
+X-Received: from irogers.svl.corp.google.com ([2620:15c:2a3:200:b7b9:f9a0:1197:ff33])
+ (user=irogers job=sendgmr) by 2002:a05:690c:6a04:b0:6ad:e9c1:fc4f with SMTP
+ id 00721157ae682-6db4516ff0cmr3800187b3.5.1725914266795; Mon, 09 Sep 2024
+ 13:37:46 -0700 (PDT)
+Date: Mon,  9 Sep 2024 13:37:36 -0700
+Message-Id: <20240909203740.143492-1-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-perf-users@vger.kernel.org
 List-Id: <linux-perf-users.vger.kernel.org>
 List-Subscribe: <mailto:linux-perf-users+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-perf-users+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V7 4/4] Adjust objdump start/end range per map pgoff
- parameter
-To: scclevenger@os.amperecomputing.com, james.clark@linaro.org,
- mike.leach@linaro.org
-Cc: ilkka@os.amperecomputing.com, coresight@lists.linaro.org,
- linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <cover.1725573309.git.scclevenger@os.amperecomputing.com>
- <d730ad217936d952008edf703ba4c34393d89dad.1725573309.git.scclevenger@os.amperecomputing.com>
- <22f7ecdb-14e7-4bb1-a20a-bdb447bcb64f@arm.com>
- <723912a5-4d9a-4fe0-ad86-bbd79ccd4a45@os.amperecomputing.com>
- <22539ca0-551d-4cfc-94f9-4a291998a363@os.amperecomputing.com>
-Content-Language: en-US
-From: Leo Yan <leo.yan@arm.com>
-In-Reply-To: <22539ca0-551d-4cfc-94f9-4a291998a363@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.46.0.598.g6f2099f65c-goog
+Subject: [PATCH v2 0/4] perf inject improvements
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Colin Ian King <colin.i.king@gmail.com>, 
+	Casey Chen <cachen@purestorage.com>, Anne Macedo <retpolanne@posteo.net>, 
+	Sun Haiyong <sunhaiyong@loongson.cn>, linux-perf-users@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 9/7/2024 12:20 AM, Steve Clevenger wrote:
+Fix the existing build id injection by adding sample IDs on to the
+synthesized events. This correctly orders the events and addresses
+issues such as a profiled executable being replaced during its
+execution.
 
-[...]
+Add a new --mmap2-buildid-all option that rewrites all mmap events as
+mmap2 events containing build IDs. This removes the need for build_id
+events.
 
->>>> diff --git a/tools/perf/scripts/python/arm-cs-trace-disasm.py b/tools/
->>>> perf/scripts/python/arm-cs-trace-disasm.py
->>>> index 7aff02d84ffb..a867e0db02b8 100755
->>>> --- a/tools/perf/scripts/python/arm-cs-trace-disasm.py
->>>> +++ b/tools/perf/scripts/python/arm-cs-trace-disasm.py
->>>> @@ -187,6 +187,7 @@ def process_event(param_dict):
->>>>          dso_start = get_optional(param_dict, "dso_map_start")
->>>>          dso_end = get_optional(param_dict, "dso_map_end")
->>>>          symbol = get_optional(param_dict, "symbol")
->>>> +       map_pgoff = get_optional(param_dict, "map_pgoff")
->>>
->>>
->>> I am concerned the two sentences below are inconsistence: one uses
->>> 'start_addr + map_pgoff' and the other uses 'start_addr + int(map_pgoff)'.
->>>
->>
->> Valid point. It's working fine as is, but how is it even working? I look
->> at print_disam/read_disasm, and no type conversion is done in either
->> call. The dso_start parameter for these calls is actually dso_vm_start
->> which is the dso_start integer conversion.
+Add a new -B option that like --mmap2-buildid-all synthesizes mmap2
+with build id events. With -B the behavior is to do it lazily, so only
+when a sample references the particular map. With system wide
+profiling that synthesizes mmap events for all running processes the
+perf.data file savings can be greater than 50%.
 
-I agreed with you. After reading code, I have same conclusion that we don't
-need to type conversion to int type.
+Reduce the memory footprint of perf inject by avoiding creating
+symbols in the callchain, the symbols aren't used during perf inject
+and necessitate the loading of dsos.
 
-> Python thinks the map_pgoff object is already an integer. For example,
->         map_pgoff = get_optional(param_dict, "map_pgoff")
->         print("%d" % map_pgoff.isdigit())
-> 
-> AttributeError: 'int' object has no attribute 'isdigit'
-> Fatal Python error: handler_call die: problem in Python trace event handler
-> 
-> Converting map_pgoff to a string works in the print statement.
-> 
-> print("%d" % str(map_pgoff).isdigit())
-> 1
-> 
-> I'm not sure, but it's possible get_optional() during some call had
-> converted it to '[unknown]' which would cause a problem.
-> 
-> I can explicitly force to integer.
+v2: Rename dso__inject* functions to tool__inject* addressing feedback
+    from Arnaldo and a suggestion from Namhyung that the name should
+    reflect the first argument's type. Rebase, in particular over the
+    perf inject pipe mode fixes. Add Namhyung's acked-by.
 
-For backward compatibility, we can use below code:
+Ian Rogers (4):
+  perf inject: Fix build ID injection
+  perf inject: Add new mmap2-buildid-all option
+  perf inject: Lazy build-id mmap2 event insertion
+  perf callchain: Allow symbols to be optional when resolving a
+    callchain
 
-   map_pgoff = get_optional(param_dict, "map_pgoff")
-   if (map_pgoff == '[unknown]'):
-       map_pgoff = 0
+ tools/perf/builtin-inject.c         | 304 +++++++++++++++++++++++-----
+ tools/perf/tests/shell/pipe_test.sh |   2 +
+ tools/perf/util/build-id.c          |   6 +-
+ tools/perf/util/callchain.c         |   8 +-
+ tools/perf/util/callchain.h         |   2 +-
+ tools/perf/util/machine.c           |  92 +++++----
+ tools/perf/util/machine.h           |  33 ++-
+ tools/perf/util/map.c               |   1 +
+ tools/perf/util/map.h               |  11 +
+ tools/perf/util/synthetic-events.c  | 101 +++++++--
+ tools/perf/util/synthetic-events.h  |  21 +-
+ 11 files changed, 468 insertions(+), 113 deletions(-)
 
-Then in the later flow, we should can always use "map_pgoff" as an int type.
+-- 
+2.46.0.598.g6f2099f65c-goog
 
-I struggled for James reported issue.
-
-The variables “map_pgoff,” “dso_start,” and “dso_end” are set together in the
-Python engine. All of them should be of type int if the DSO is found, or all
-should be ‘[unknown]’ if the DSO is missing. We have checked the types for
-“dso_start” and “dso_end”, and if either is ‘[unknown]’ the flow will directly
-bail out. Thus, in theory, “map_pgoff” will not cause trouble if it is an
-‘[unknown]’ string.
-
-One possibility is that James has applied your patches but has not built perf.
-So, the field “map_pgoff” is not passed from the Python engine, which will
-cause the reported error. I think the proposed above change can effectively
-avoid the error.
-
-Thanks,
-Leo
